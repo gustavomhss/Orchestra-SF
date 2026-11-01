@@ -21,7 +21,9 @@ export const Cost = Schema.Literals(["low", "medium", "high"])
 export const Status = Schema.Literals(["probation", "active", "demoted", "dropped"])
 
 /** Manifests and extensions that select an entry at base or head; `absent` are negative signals (Bazel, Nix). Empty `manifests` and `extensions` match every change. */
-export const Detection = Schema.Struct({ manifests: Ids, extensions: Ids, absent: Ids })
+// File names and globs, not catalog ids, so they keep their case (`Cargo.toml`, `BUILD.bazel`).
+const Files = Schema.Array(Schema.NonEmptyString)
+export const Detection = Schema.Struct({ manifests: Files, extensions: Files, absent: Files })
 
 export const Pack = Schema.Struct({
   id: Id,
