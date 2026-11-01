@@ -419,11 +419,9 @@ describe("readGovernance", () => {
     expect(blocked).toMatchObject({ state: "hold", review: { routing } })
     expect(blocked.reason).toBeUndefined()
     expect(blocked.outcome).toBeUndefined()
-    expect(task({ card: { parsed: false, messageID: "msg_card" } })[0]).toMatchObject({
-      state: "hold",
-      reason: "unreadable",
-      review: undefined,
-    })
+    const unreadable = task({ card: { parsed: false, messageID: "msg_card" } })[0]
+    expect(unreadable).toMatchObject({ state: "hold", reason: "unreadable" })
+    expect(unreadable.review).toBeUndefined()
     expect(task({ review: { ...card, routing: { ...routing, version: "route-v0" } } })[0]).toMatchObject({
       state: "hold",
       reason: "unreadable",
