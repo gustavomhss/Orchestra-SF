@@ -1,4 +1,4 @@
-export * as ReviewScratch from "./scratch"
+export * as ReviewScratch from "./scratch-copy"
 
 import os from "os"
 import path from "path"

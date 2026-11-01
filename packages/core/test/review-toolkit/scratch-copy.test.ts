@@ -5,7 +5,7 @@ import { mkdir, readdir, readFile, readlink, symlink, writeFile } from "fs/promi
 import { Effect, Exit } from "effect"
 import { LayerNode } from "../../src/effect/layer-node"
 import { AppProcess } from "../../src/process"
-import { ReviewScratch } from "../../src/review-toolkit/scratch"
+import { ReviewScratch } from "../../src/review-toolkit/scratch-copy"
 import { testEffect } from "../lib/effect"
 import { expectSpawn } from "../fixture/omni-expect"
 import { git } from "../fixture/git"
