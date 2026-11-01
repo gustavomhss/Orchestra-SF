@@ -125,7 +125,7 @@ describe("review noise pipeline", () => {
         entry({ line: 30, snippet: "new and suppressed", suppressions: [{ kind: "external", status: "accepted" }] }),
         entry({ line: 40, snippet: "under review", suppressions: [{ kind: "inSource", status: "underReview" }] }),
       ],
-      addedSuppressions: [{ path: "src/other.ts", line: 7, rule: "guardrail-ignore", snippet: "// guardrail-ignore: godfile reason" }],
+      addedSuppressions: [{ path: "src/other.ts", line: 7, rule: "baseline", snippet: "baseline entry for src/other.ts:7" }],
     })
     expect(result.debt).toEqual([])
     expect(result.items.security.map((item) => item.line)).toEqual([40])
@@ -134,7 +134,7 @@ describe("review noise pipeline", () => {
     expect(change.every((item) => item.class === ReviewNoise.SUPPRESSION_CLASS)).toBe(true)
     expect(change[0].fingerprint).not.toBe(newlySuppressed.item.fingerprint)
     expect(change[0].sources).toEqual([{ pack: "opengrep", rule: "js.eval" }])
-    expect(change[2]).toMatchObject({ pack: "suppression", rule: "guardrail-ignore", onChangedLine: true })
+    expect(change[2]).toMatchObject({ pack: "suppression", rule: "baseline", onChangedLine: true })
     change.forEach((item) => expect(Schema.decodeUnknownSync(ReviewItem.ToolItem)(item)).toEqual(item))
   })
 
