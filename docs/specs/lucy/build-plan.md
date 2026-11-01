@@ -416,6 +416,16 @@ queued; the refusal applies at the next `board_queue`.
 | R21 | Verified answer 10 does not support several §14 claims (§6 G10) and three pack licences (G10L) | Gates G10 and G10L; the compliance leaves ship with verified content and open questions; the approved choices (D9, D11) stand |
 | R22 | `personal-data` routes a leaf under `lucy-audit`, so phase 3 lists a fourth root before audit profiles exist | The `lucy-audit` root ships in phase 3 with its final body and only `compliance/privacy` below it; per-Session scope keeps it out of every diff-review listing except as the delivered leaf (§8.3) |
 
+### Corrections recorded while building phase 1
+
+| # | Where | What could not work as written | Smallest correction |
+|---|---|---|---|
+| B1 | WP 1.3, K7 | `packages/core/src/review-toolkit/scratch.ts` and its test trip the `agent-scratch` guard (`**/scratch.*`), which gates every added file of that name | The files are `scratch-copy.ts` and `scratch-copy.test.ts`; the module is still `ReviewScratch` |
+| B2 | §9 R2, §11 | No WP owned the approved R2 setting | Built as its own phase 1 slice: board project settings `review.tier` (the §5.3 per-project tier pin) and `review.acceptedUnavailable`, stored on `board_project`, set through `board_settings`, read by `ReviewSettings.read`/`accepted` (`packages/core/src/review/settings.ts`) |
+| B3 | WP 1.10, K5 | The design names one class id (`concurrency.atomicity`); the leaves need one per kind they raise | The tree cites 24 class ids in `<family>.<kind>` form (the race kinds of §4.2, plus logic, edges, reliability, tests, security, `plan.coverage`, `plan.requirement`, `docs.contradiction`); the catalog defines exactly these |
+| B4 | WP 1.10, §2 Quality Standards | The `lucy-review` root must hold the procedure, finding bar, severity, verdict rules, card and do-not-report list, which cannot fit the ~300-token group guideline | The root is about 1,150 tokens; every other group node stays under 300 and every leaf under 2,000 |
+| B5 | §2 Definition of Done | The per-WP `typecheck.yml` dispatch needs a pushed ref, and this headless run cannot push | Each slice is gated by its named `test:ci` run and `check:guards`; the typecheck dispatch runs once on `lucy-core` after the operator pushes it |
+
 ## 10. Work packages
 
 Owning seat: backend writes code, tests, catalog data and the prompt wiring; `archie` writes skill trees, the prompt
