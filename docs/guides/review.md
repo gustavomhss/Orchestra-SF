@@ -98,7 +98,7 @@ change deserved more than this release can do", not as a pass.
 ### Pinning a tier
 
 - **Per request**: ask Maestro for the tier ("review this at Standard"). Maestro passes it with the review request.
-- **Per project**: set `TODO(setting-name: project review tier pin)` to `quick` or `standard`.
+- **Per project**: set the project's review tier (`review.tier`, in the board project settings) to `quick` or `standard`.
 
 The order is: the request's tier, else the project pin, else the risk rule above.
 
@@ -141,7 +141,7 @@ A long "not examined" list on an `APPROVE` is a reason to look closer, not a def
 Some checks cannot run in some projects: tests may be blocked locally, the sandbox may be unavailable on your
 platform, or a tool may be missing. By default, a check the review needs that cannot run makes the card `blocked`.
 
-To accept that, list those lanes in the project setting `TODO(setting-name: accepted unavailable lanes)`. A lane
+To accept that, list those lanes in the project setting `review.acceptedUnavailable` (board project settings). A lane
 on that list that cannot run no longer blocks: the card reports it as `not-run` with its reason, lists it under "not
 examined", and cites the checks the run recorded instead, such as your CI results. It can then `APPROVE`. A lane not
 on the list still blocks.
