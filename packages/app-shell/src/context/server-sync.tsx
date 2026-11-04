@@ -220,8 +220,11 @@ export function createServerSyncContextInner(
 
   let bootedAt = 0
   let bootingRoot = false
-  // The first server.connected is the initial load; any later one follows a stream gap whose events are gone.
+  // The first server.connected is the initial load. A later one is a gap only when the previous connection lived
+  // long enough to have missed events. A finite event response ends at once and the client reconnects (250ms);
+  // that next greeting is not a gap, and treating it as one reloads the open session on every retry.
   let connectedBefore = false
+  let connectedAt = 0
   let eventFrame: number | undefined
   let eventTimer: ReturnType<typeof setTimeout> | undefined
 
@@ -502,8 +505,11 @@ export function createServerSyncContextInner(
     if (directory === "global") {
       if (eventType === "server.connected" && activeSessionsQuery.data === undefined && !activeSessionsQuery.isFetching)
         void activeSessionsQuery.refetch()
+      const now = Date.now()
+      const gap = eventType === "server.connected" && connectedBefore && now - connectedAt >= 5_000
       if (eventType === "server.connected") {
-        if (connectedBefore)
+        connectedAt = now
+        if (gap)
           void queryClient
             .fetchQuery({ ...activeSessions(), staleTime: 0 })
             .then(
@@ -515,12 +521,12 @@ export function createServerSyncContextInner(
       applyGlobalEvent({
         event,
         refresh: () => {
-          if (recent) return
+          if (recent || !gap) return
           bootstrap.refetch()
         },
       })
       if (eventType === "catalog.updated" || eventType === "project.directories.updated") bootstrap.refetch()
-      if (eventType === "server.connected") {
+      if (gap) {
         if (recent) return
         for (const directory of Object.keys(children.children)) {
           if (!children.active(directory)) continue
