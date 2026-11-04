@@ -17,5 +17,8 @@ export function createWarm<T>(limit: number, options?: { detach?: boolean }) {
       entries.set(key, copy(value))
       while (entries.size > limit) entries.delete(entries.keys().next().value!)
     },
+    clear() {
+      entries.clear()
+    },
   }
 }

@@ -114,6 +114,10 @@ function setup(respond?: (request: Request) => Promise<Response>) {
     list: () => queryClient.getQueryData<RelayDocument[]>(key("documents")) ?? [],
     documents: { isSuccess: true, isPending: false, isError: false },
     runs: { data: [] }, runsState: () => "ready", invalidate() {},
+    // A spread that replaces `documents` still has to answer `loaded()` for the object the page sees.
+    loaded(this: { documents: { isSuccess?: boolean }; list: () => readonly unknown[] }) {
+      return this.documents.isSuccess === true || this.list().length > 0
+    },
   } as unknown as RelaySource
   const flows = new Map(documents.map((document) => [document.id, flowFromDocument(document, "workflow")]))
   return { source, flows, requests, queryClient, key }
