@@ -236,5 +236,6 @@ The rules that were only prompt text are now enforced by the host, the same in n
   module; an `<orchestra-guide>` index lists the leaves every turn, and playbook names are reserved against project and
   user skills.
 
-Queue receipts (a structured record of each queue run that Maestro reads back) were left out here: they belong to the
-`lucy-queue-receipts` slice of the Lucy campaign (`docs/specs/lucy/build-plan.md`).
+Left out of this campaign, and owned by the Lucy campaign's `lucy-queue-receipts` slice
+(`docs/specs/lucy/build-plan.md`): a review note's verdict bound to the PR head it judged, and the queue receipt
+Maestro reads back. This campaign enforces neither.
