@@ -177,11 +177,11 @@ describe("review receipt", () => {
     const receipt = {
       ...legacy,
       reviewMethodVersion: ReviewResultV2.method({ profile: "code", tier: "standard" }),
-      stage: "code",
+      stage: "code" as const,
       findings: [{ ...card.findings[0], message: "lost update", cause: { path: "src/jobs/drain.ts", line: 44 } }],
       routingDigest: ReviewRouting.digest(routing),
       catalogDigest: digestA,
-      items: [{ pack: "gitleaks", rule: "generic-api-key", fingerprint: "fp1", outcome: "refuted" }],
+      items: [{ pack: "gitleaks", rule: "generic-api-key", fingerprint: "fp1", outcome: "refuted" as const }],
     }
     expect(decode(receipt)).toEqual(receipt)
     expect(() => decode({ ...receipt, items: [{ ...receipt.items[0], outcome: "maybe" }] })).toThrow()
