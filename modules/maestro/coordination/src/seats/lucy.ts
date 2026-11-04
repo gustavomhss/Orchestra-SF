@@ -20,6 +20,8 @@ export default define({
   prompt: PROMPT,
   profile: "review",
   description: "Cold review and audit; records governed reviews. Read-only: reads and searches files, runs allowlisted analyzers and probes in a scratch copy, never edits. Returns a cited APPROVE/FIX_FIRST/REJECT verdict.",
+  routing: "Cold review of finished work before it ships.",
+  approves: true,
   skills: ["lucy-review", "lucy-lens", "team-stack"],
   workResult: "review-work-result-v1",
   writeRoots: false,
