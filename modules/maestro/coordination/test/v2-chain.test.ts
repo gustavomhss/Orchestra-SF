@@ -125,6 +125,25 @@ async function fixture() {
 
 const directory = await fixture()
 
+// The fan-out delivers these nodes into the brief. The chain fixture is not the repo, so the list points at the real trees.
+function reviewSkills() {
+  const root = path.resolve(import.meta.dir, "../../../../packages/lucy-specialist/skills")
+  const skill = (name: string, file: string) => ({
+    name,
+    location: AbsolutePath.make(path.join(root, file)),
+    content: "Procedure.",
+  })
+  return [
+    skill("lucy-review", "lucy-review/SKILL.md"),
+    skill("lucy-review-plan", "lucy-review/plan/SKILL.md"),
+    skill("lucy-lens-correctness-logic", "lucy-lens/correctness/logic/SKILL.md"),
+    skill("lucy-lens-correctness-edges", "lucy-lens/correctness/edges/SKILL.md"),
+    skill("lucy-lens-correctness-reliability", "lucy-lens/correctness/reliability/SKILL.md"),
+    skill("lucy-lens-tests", "lucy-lens/tests/SKILL.md"),
+    skill("lucy-review-prove-quote", "lucy-review/prove/quote/SKILL.md"),
+  ]
+}
+
 // The cold reviewer's child Session: request_review creates and prompts it, and the drain runs its one receipt call.
 const child = {
   create: (_input: { readonly id: SessionSchema.ID; readonly parentID: SessionSchema.ID }) => Effect.void,
@@ -182,7 +201,7 @@ const host = AppNodeBuilder.build(
         }),
       ),
     ],
-    [SkillV2.node, Layer.mock(SkillV2.Service, { list: () => Effect.succeed([]) })],
+    [SkillV2.node, Layer.mock(SkillV2.Service, { list: () => Effect.succeed(reviewSkills()) })],
     [MaestroSeats.node, Layer.succeed(MaestroSeats.Service, MaestroSeats.make(["backend", "archie", "lucy"]))],
     [
       AgentV2.node,
@@ -243,7 +262,7 @@ function reviewHistory(sessionID: SessionSchema.ID) {
         type: "assistant",
         agent: "lucy",
         model,
-        content: [{ type: "text", text }],
+        content: [{ type: "text", id: "text", text }],
         time: { created: time.created, completed: time.created },
         finish: "stop",
       }),
@@ -508,6 +527,8 @@ test("the governed chain records the earlier runtime's events end to end, refuse
         workCard,
         reviewMethodVersion: "review-v1",
       })
+      if (child.reviews.length === 0)
+        throw new Error(`no receipt. tool=${reviewed.text} prompts=${child.prompts.map((prompt) => prompt.slice(0, 80)).join(" || ")}`)
       expect(child.reviews).toEqual([{ type: "text", text: expect.stringMatching(/^APPROVE: evt_maestro_review_/) }])
       expect(reviewed.text).toStartWith("APPROVE: evt_maestro_review_")
       expect(promptJSON(child.prompts.findLast((prompt) => prompt.includes("artifact JSON:")) ?? "", "artifact")).toMatchObject({
