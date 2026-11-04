@@ -152,7 +152,7 @@ describe("review receipt", () => {
     grantHash: "e".repeat(64),
     reviewPolicyHash: "f".repeat(64),
     actor: { version: "rfc8785-v1" as const, bytes: "{}", sha256: "0".repeat(64) },
-    reviewerID: "lucy",
+    reviewerID: "lucy" as const,
     reviewMethodVersion: "v1",
     artifact: {
       workCardHash: "c".repeat(64),

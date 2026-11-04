@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import fs from "node:fs/promises"
 import path from "node:path"
-import { Effect, Layer, type Scope } from "effect"
+import { Effect, Layer } from "effect"
 import { Config } from "@orchestra/core/config"
 import { Database } from "@orchestra/core/database/database"
 import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
@@ -64,9 +64,9 @@ const workCard = "## Definition of Done\nThe drain keeps every job."
 const checks = [{ id: "tests", status: "PASS", detail: "green" }] as const
 
 // `src/a.ts` keeps line 1 and adds lines 2 and 3 on the work branch.
-const run = <A, E, R>(body: (harness: Harness) => Effect.Effect<A, E, R>) =>
+const run = <A, E>(body: (harness: Harness) => Effect.Effect<A, E, any>) =>
   Effect.runPromise(
-    Effect.scoped(
+    (Effect.scoped(
       Effect.gen(function* () {
         const directory = yield* worktree
         return yield* Effect.gen(function* () {
@@ -108,7 +108,7 @@ const run = <A, E, R>(body: (harness: Harness) => Effect.Effect<A, E, R>) =>
           })
         }).pipe(Effect.provide(layer(directory)))
       }),
-    ),
+    )) as Effect.Effect<A, E>,
   )
 
 /** A version 1 validation of `workCard`, routed to backend; each receipt needs its own. */
