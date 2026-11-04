@@ -183,9 +183,9 @@ describe("review receipt", () => {
       catalogDigest: digestA,
       items: [{ pack: "gitleaks", rule: "generic-api-key", fingerprint: "fp1", outcome: "refuted" as const }],
     }
-    expect(decode(receipt)).toEqual(receipt)
-    expect(() => decode({ ...receipt, items: [{ ...receipt.items[0], outcome: "maybe" }] })).toThrow()
-    expect(() => decode({ ...receipt, routingDigest: "short" })).toThrow()
+    expect(decode(receipt as unknown)).toEqual(receipt)
+    expect(() => decode({ ...receipt, items: [{ ...receipt.items[0], outcome: "maybe" }] } as unknown)).toThrow()
+    expect(() => decode({ ...receipt, routingDigest: "short" } as unknown)).toThrow()
   })
 })
 

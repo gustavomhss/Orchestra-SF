@@ -647,10 +647,10 @@ const codeArtifact = Effect.fn("MaestroReviewTools.codeArtifact")(function* (
 
 const PROBE_TIMEOUT_SECONDS = 60
 
-const analysisStore = (cache: string) => path.join(os.tmpdir(), "orchestra-review", cache)
+export const analysisStore = (cache: string) => path.join(os.tmpdir(), "orchestra-review", cache)
 
 /** The binding a review Session holds until the review's scope closes. Scratch copies are made once, for verifiers. */
-const reviewBinding = (held: {
+export const reviewBinding = (held: {
   readonly worktree: string
   readonly diff: string
   readonly cache: string
