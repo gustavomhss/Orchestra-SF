@@ -34,6 +34,7 @@ const location = Location.Ref.make({ directory: AbsolutePath.make("/project") })
 /** Every drain blocks until interrupted; `wakeAfterInterrupt` simulates a prompt that lands right after a stop. */
 const gated = Effect.fnUntraced(function* (log: string[], options: { wakeAfterInterrupt: boolean }) {
   const started = yield* Queue.unbounded<SessionV2.ID>()
+  const interruptions: { sessionID: SessionV2.ID; discardPending: boolean | undefined }[] = []
   const layer = Layer.effect(
     SessionExecution.Service,
     Effect.gen(function* () {
@@ -50,8 +51,9 @@ const gated = Effect.fnUntraced(function* (log: string[], options: { wakeAfterIn
         active: coordinator.active,
         resume: coordinator.run,
         wake: coordinator.wake,
-        interrupt: (sessionID) =>
-          coordinator.interrupt(sessionID).pipe(
+        interrupt: (sessionID, interruptOptions) =>
+          Effect.sync(() => interruptions.push({ sessionID, discardPending: interruptOptions?.discardPending })).pipe(
+            Effect.andThen(coordinator.interrupt(sessionID, interruptOptions)),
             Effect.andThen(
               Effect.suspend(() => {
                 if (woken) return Effect.void
@@ -66,7 +68,7 @@ const gated = Effect.fnUntraced(function* (log: string[], options: { wakeAfterIn
       })
     }),
   )
-  return { started, layer }
+  return { started, layer, interruptions }
 })
 
 const provide = (execution: Layer.Layer<SessionExecution.Service>) =>
@@ -98,6 +100,10 @@ describe("SessionV2 stops runs on archive and remove", () => {
         expect(yield* session.active).toEqual(new Set())
         // The racing wake's drain was interrupted before the row was deleted, and none started after.
         expect(log).toEqual([`drain ${created.id}`, `interrupted ${created.id}`, "deleted"])
+        expect(execution.interruptions).toEqual([
+          { sessionID: created.id, discardPending: true },
+          { sessionID: created.id, discardPending: true },
+        ])
       }).pipe(provide(execution.layer))
     }),
   )
@@ -117,8 +123,62 @@ describe("SessionV2 stops runs on archive and remove", () => {
         yield* session.remove(parent.id)
         expect(yield* session.active).toEqual(new Set())
         expect(log).toEqual([`drain ${grandchild.id}`, `interrupted ${grandchild.id}`])
+        expect(execution.interruptions).toEqual([
+          { sessionID: parent.id, discardPending: true },
+          { sessionID: child.id, discardPending: true },
+          { sessionID: grandchild.id, discardPending: true },
+        ])
         yield* Fiber.await(owner)
         expect((yield* session.get(grandchild.id).pipe(Effect.flip))._tag).toBe("Session.NotFoundError")
+        expect((yield* session.get(child.id).pipe(Effect.flip))._tag).toBe("Session.NotFoundError")
+        expect((yield* session.get(parent.id).pipe(Effect.flip))._tag).toBe("Session.NotFoundError")
+      }).pipe(provide(execution.layer))
+    }),
+  )
+
+  it.live("removing a parent discards wakes registered while its root and descendant drains were active", () =>
+    Effect.gen(function* () {
+      const log: string[] = []
+      const execution = yield* gated(log, { wakeAfterInterrupt: false })
+      yield* Effect.gen(function* () {
+        const session = yield* SessionV2.Service
+        const runs = yield* SessionExecution.Service
+        const events = yield* EventV2.Service
+        const unsubscribe = yield* events.listen((event) =>
+          Effect.sync(() => {
+            if (Schema.is(SessionEvent.Deleted)(event)) log.push(`deleted ${event.sessionID}`)
+          }),
+        )
+        yield* Effect.addFinalizer(() => unsubscribe)
+        const parent = yield* session.create({ location })
+        const child = yield* session.create({ location, parentID: parent.id })
+        const parentOwner = yield* session.resume(parent.id).pipe(Effect.forkChild)
+        expect(yield* Queue.take(execution.started)).toBe(parent.id)
+        const childOwner = yield* session.resume(child.id).pipe(Effect.forkChild)
+        expect(yield* Queue.take(execution.started)).toBe(child.id)
+        expect(yield* session.active).toEqual(new Set([parent.id, child.id]))
+        // These wakes are admitted before removal interrupts either drain, not during cleanup or an exclusive hold.
+        yield* runs.wake(parent.id)
+        yield* runs.wake(child.id)
+        yield* session.remove(parent.id)
+        yield* Fiber.await(parentOwner)
+        yield* Fiber.await(childOwner)
+        yield* Effect.yieldNow
+        expect(yield* session.active).toEqual(new Set())
+        expect(execution.interruptions).toEqual([
+          { sessionID: parent.id, discardPending: true },
+          { sessionID: child.id, discardPending: true },
+        ])
+        expect(log).toEqual([
+          `drain ${parent.id}`,
+          `drain ${child.id}`,
+          `interrupted ${parent.id}`,
+          `interrupted ${child.id}`,
+          `deleted ${child.id}`,
+          `deleted ${parent.id}`,
+        ])
+        expect((yield* session.get(child.id).pipe(Effect.flip))._tag).toBe("Session.NotFoundError")
+        expect((yield* session.get(parent.id).pipe(Effect.flip))._tag).toBe("Session.NotFoundError")
       }).pipe(provide(execution.layer))
     }),
   )
@@ -133,6 +193,18 @@ describe("SessionV2 stops runs on archive and remove", () => {
         yield* session.archive({ sessionID: created.id, archived: true })
         expect(yield* session.active).toEqual(new Set())
         expect(log).toEqual([`drain ${created.id}`, `interrupted ${created.id}`])
+        expect(execution.interruptions).toEqual([
+          { sessionID: created.id, discardPending: undefined },
+          { sessionID: created.id, discardPending: undefined },
+        ])
+        const runs = yield* SessionExecution.Service
+        const owner = yield* runs.resume(created.id, { interruptOnCancel: true }).pipe(Effect.forkChild)
+        expect(yield* Queue.take(execution.started)).toBe(created.id)
+        const interruptions = execution.interruptions.slice()
+        yield* session.archive({ sessionID: created.id, archived: false })
+        expect(execution.interruptions).toEqual(interruptions)
+        expect(yield* session.active).toEqual(new Set([created.id]))
+        yield* Fiber.interrupt(owner)
       }).pipe(provide(execution.layer))
     }),
   )
