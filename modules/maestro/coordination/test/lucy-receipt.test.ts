@@ -64,7 +64,7 @@ const workCard = "## Definition of Done\nThe drain keeps every job."
 const checks = [{ id: "tests", status: "PASS", detail: "green" }] as const
 
 // `src/a.ts` keeps line 1 and adds lines 2 and 3 on the work branch.
-const run = <A, E>(body: (harness: Harness) => Effect.Effect<A, E, Scope.Scope>) =>
+const run = <A, E, R>(body: (harness: Harness) => Effect.Effect<A, E, R>) =>
   Effect.runPromise(
     Effect.scoped(
       Effect.gen(function* () {
@@ -215,6 +215,8 @@ test("a review-v2 receipt carries the K1 findings, both digests and the item out
       })
       expect(recorded.reviewMethodVersion).toBe("review-v2/plan/standard")
       expect(recorded.findings).toEqual([full()] as never)
+      if (!("routingDigest" in recorded) || !("catalogDigest" in recorded) || !("items" in recorded))
+        throw new Error("expected a review-v2 receipt")
       expect(recorded.routingDigest).toBe(digest)
       // The catalog's `sha256:` form records as the event's bare digest.
       expect(`sha256:${recorded.catalogDigest}`).toBe(ReviewCatalog.catalogDigest(ReviewCatalog.current))
@@ -302,7 +304,9 @@ test("an unchanged-line finding records only with a cause on an added line (D10)
         verdict: "FIX_FIRST",
         findings: [full({ path: "src/caller.ts", line: 7, cause: { path: "src/a.ts", line: 3 } })],
       })
-      expect(recorded.findings[0]?.cause).toEqual({ path: "src/a.ts", line: 3 })
+      const caused = recorded.findings[0]
+      if (!caused || !("cause" in caused)) throw new Error("expected a routed finding")
+      expect(caused.cause).toEqual({ path: "src/a.ts", line: 3 })
       expect(MaestroReviewRecords.renderFindings(recorded.findings).join("\n")).toContain('caused by "src/a.ts":3')
     }),
   ))
@@ -330,7 +334,7 @@ test("APPROVE carries only P2 and P3; FIX_FIRST and REJECT need a confirmed P0 o
       ).toBe("REJECT")
       const approved = yield* record(harness, id, { findings: [full({ severity: "P2" }), full({ id: "f2", severity: "P3" })] })
       expect(approved.verdict).toBe("APPROVE")
-      expect(approved.findings.map((finding) => finding.severity)).toEqual(["P2", "P3"])
+      expect(approved.findings.map((finding) => ("severity" in finding ? finding.severity : undefined))).toEqual(["P2", "P3"])
     }),
   ))
 

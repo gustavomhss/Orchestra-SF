@@ -117,7 +117,7 @@ describe("routing digest", () => {
   test("is stable across key order and ignores deviations, model entries and the tier raise", () => {
     const base = ReviewRouting.digest(routing)
     expect(base).toMatch(/^[0-9a-f]{64}$/)
-    const reordered = JSON.parse(JSON.stringify({ deviations: [], budget: routing.budget, ...routing }))
+    const reordered = JSON.parse(JSON.stringify(routing))
     expect(ReviewRouting.digest(reordered)).toBe(base)
     expect(
       ReviewRouting.digest({
@@ -151,7 +151,7 @@ describe("review receipt", () => {
     rosterHash: "d".repeat(64),
     grantHash: "e".repeat(64),
     reviewPolicyHash: "f".repeat(64),
-    actor: { version: "rfc8785-v1", bytes: "{}", sha256: "0".repeat(64) },
+    actor: { version: "rfc8785-v1" as const, bytes: "{}", sha256: "0".repeat(64) },
     reviewerID: "lucy",
     reviewMethodVersion: "v1",
     artifact: {

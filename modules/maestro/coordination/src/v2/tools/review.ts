@@ -17,6 +17,7 @@ import { ReviewRouting } from "@orchestra/core/review/routing"
 import { ReviewSeatTools } from "@orchestra/core/review/seat-tools"
 import { ReviewSettings } from "@orchestra/core/review/settings"
 import { ReviewAnalyze } from "@orchestra/core/review-toolkit/analyze"
+import { AppProcess } from "@orchestra/core/process"
 import { SessionSchema, type SessionV2 } from "@orchestra/core/session"
 import { SessionExecution } from "@orchestra/core/session/execution"
 import { TaskTool } from "@orchestra/core/tool/task"
@@ -119,7 +120,7 @@ export type Analyze = (
   },
 ) => Effect.Effect<ReviewFanoutV2.Analysis, Tool.Failure>
 
-const analyzeStep: Analyze = (input) => {
+const analyzeStep = (processes: AppProcess.Interface): Analyze => (input) => {
   const changed: Record<string, { start: number; end: number }[]> = {}
   for (const change of input.changes ?? []) {
     const lines = change.added.map((line) => line.line)
@@ -138,7 +139,10 @@ const analyzeStep: Analyze = (input) => {
     packs: input.packs.map((pack) => pack.id),
     scope: "diff",
     files: [...input.files],
-  }).pipe(Effect.mapError((error) => new Tool.Failure({ message: `ReviewAnalyzeFailed: ${String(error)}` })))
+  }).pipe(
+    Effect.provideService(AppProcess.Service, processes),
+    Effect.mapError((error) => new Tool.Failure({ message: `ReviewAnalyzeFailed: ${String(error)}` })),
+  )
 }
 
 const seatStages: ReviewFanoutV2.Stages = {
@@ -157,9 +161,10 @@ export function tools(input: {
   // Seams over the review toolkit and the seat's stage tool sets; the defaults are the running build's.
   readonly analyze?: Analyze
   readonly stages?: ReviewFanoutV2.Stages
+  readonly processes: AppProcess.Interface
 }) {
   const services = input.services
-  const analyze = input.analyze ?? analyzeStep
+  const analyze = input.analyze ?? analyzeStep(input.processes)
   const stages = input.stages ?? seatStages
   // Lead Sessions in their final turn: the only place the record tool opens for a scoped review Session.
   const finishing = new Set<string>()

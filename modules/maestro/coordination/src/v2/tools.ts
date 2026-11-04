@@ -115,6 +115,7 @@ const layer = Layer.effectDiscard(
           gate,
           sessions: yield* GovernanceBackgroundV2.Sessions,
           execution: yield* MaestroReviewTools.Execution,
+          processes: yield* AppProcess.Service,
         }),
         ...MaestroResultTools.tools({ gate }),
         ...MaestroWorkflowTools.tools({ services, gate, publication }),

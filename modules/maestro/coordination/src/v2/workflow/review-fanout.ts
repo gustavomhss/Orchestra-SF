@@ -676,7 +676,7 @@ function merge(
     .map((fingerprint) => {
       const group = keyed.filter((item) => item.fingerprint === fingerprint)
       const best = group.toSorted((left, right) => SEVERITY[left.candidate.severity] - SEVERITY[right.candidate.severity] || Number(left.observation) - Number(right.observation))[0]
-      const end = best.candidate.endLine ?? best.candidate.line
+      const end = "endLine" in best.candidate ? best.candidate.endLine ?? best.candidate.line : best.candidate.line
       const tools = items.filter(
         (item) => item.class === best.candidate.class && item.path === best.candidate.path && item.line <= end && (item.endLine ?? item.line) >= best.candidate.line,
       ).length

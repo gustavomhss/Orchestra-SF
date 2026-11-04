@@ -42,7 +42,9 @@ test("the seat declaration and its stage sets derive from one list", () => {
   expect(ReviewSeatTools.verifier).toEqual([...ReviewSeatTools.lead, "review_probe"])
   expect(ReviewSeatTools.final).toEqual([...ReviewSeatTools.lead, "maestro_record_review"])
   const stages = new Set([...ReviewSeatTools.lens, ...ReviewSeatTools.verifier, ...ReviewSeatTools.final])
-  expect([...stages].toSorted()).toEqual([...ReviewSeatTools.OWN, ...ReviewSeatTools.LOOP, ReviewSeatTools.RECORD].toSorted())
+  expect([...stages].toSorted()).toEqual(
+    [...ReviewSeatTools.OWN, ...ReviewSeatTools.LOOP, ReviewSeatTools.RECORD].toSorted() as string[],
+  )
   expect([...stages, "probe_run"].toSorted()).not.toEqual([...ReviewSeatTools.OWN, ...ReviewSeatTools.LOOP, ReviewSeatTools.RECORD].toSorted())
   // Each Claude Code built-in the seat gets is the engine's name for one of its loop ids, and no other.
   expect(ReviewSeatTools.CLAUDE.map((name) => name.toLowerCase())).toEqual([...ReviewSeatTools.LOOP])
