@@ -1,6 +1,8 @@
 export * as MaestroReviewTools from "./review"
 
 import { createHash } from "node:crypto"
+import os from "node:os"
+import path from "node:path"
 import { and, desc, eq } from "drizzle-orm"
 import { Context, Effect, Layer, Option, Schema } from "effect"
 import { AgentV2 } from "@orchestra/core/agent"
@@ -11,6 +13,7 @@ import type { Database } from "@orchestra/core/database/database"
 import { EventV2 } from "@orchestra/core/event"
 import type { GitCli } from "@orchestra/core/git-cli"
 import { ReviewCatalog } from "@orchestra/core/review/catalog"
+import { ReviewRouting } from "@orchestra/core/review/routing"
 import { ReviewSeatTools } from "@orchestra/core/review/seat-tools"
 import { ReviewSettings } from "@orchestra/core/review/settings"
 import { ReviewAnalyze } from "@orchestra/core/review-toolkit/analyze"
@@ -112,13 +115,31 @@ export type Analyze = (
     readonly base: string
     readonly head: string
     readonly sessionID: SessionSchema.ID
+    readonly changes?: ReadonlyArray<{ readonly path: string; readonly added: ReadonlyArray<{ readonly line: number }> }>
   },
 ) => Effect.Effect<ReviewFanoutV2.Analysis, Tool.Failure>
 
-const analyzeStep: Analyze = (input) =>
-  ReviewAnalyze.run({ op: "run", ...input }).pipe(
-    Effect.mapError((error) => new Tool.Failure({ message: `ReviewAnalyzeFailed: ${String(error)}` })),
-  )
+const analyzeStep: Analyze = (input) => {
+  const changed: Record<string, { start: number; end: number }[]> = {}
+  for (const change of input.changes ?? []) {
+    const lines = change.added.map((line) => line.line)
+    if (lines.length === 0) continue
+    changed[change.path] = [{ start: Math.min(...lines), end: Math.max(...lines) }]
+  }
+  return ReviewAnalyze.run({
+    worktree: input.worktree,
+    base: input.base,
+    head: input.head,
+    tier: ReviewRouting.tier(input.routing),
+    store: path.join(os.tmpdir(), "orchestra-review", input.cache),
+    changed,
+    trusted: true,
+    lane: "repo",
+    packs: input.packs.map((pack) => pack.id),
+    scope: "diff",
+    files: [...input.files],
+  }).pipe(Effect.mapError((error) => new Tool.Failure({ message: `ReviewAnalyzeFailed: ${String(error)}` })))
+}
 
 const seatStages: ReviewFanoutV2.Stages = {
   lead: ReviewSeatTools.lead,
@@ -360,7 +381,7 @@ export function tools(input: {
                 )
               }),
             analyze: (step) =>
-              analyze({ ...step, worktree, base: artifact.baseSHA, head: artifact.headSHA, sessionID: lead }),
+              analyze({ ...step, worktree, base: artifact.baseSHA, head: artifact.headSHA, sessionID: lead, changes }),
             region: (file, start, end) =>
               git
                 .run(["show", `${artifact.headSHA}:${file}`], { cwd: worktree })
