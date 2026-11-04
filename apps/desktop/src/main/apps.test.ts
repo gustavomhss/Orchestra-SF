@@ -6,7 +6,6 @@ import { checkAppExists, openDesktopPath, resolveAppPath, resolveExecutable } fr
 import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 
 test("desktop recovery: openPath treats shell error text as failure and never falls back for a missing app", async () => {
-  if (process.platform !== "linux") expectSpawn(import.meta.path)
   const opened: string[] = []
   expect(
     await openDesktopPath("/missing", undefined, async (path) => {
