@@ -99,7 +99,8 @@ const layer = Layer.effectDiscard(
     const decodeCalled = Schema.decodeUnknownOption(taskInput)
     yield* tools.register({
       [name]: Tool.make({
-        description,
+        description:
+          governance.roster === undefined ? description : `${description}\n\nSeats:\n${governance.roster}`,
         input: taskInput,
         output: Output,
         toModelOutput: ({ output }) => [

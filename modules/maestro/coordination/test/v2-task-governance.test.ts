@@ -10,6 +10,9 @@ import { Config } from "@orchestra/core/config"
 import { Database } from "@orchestra/core/database/database"
 import { EventV2 } from "@orchestra/core/event"
 import { TaskGovernance } from "@orchestra/core/tool/task-governance"
+import { roster } from "@orchestra/maestro/roster"
+import { Seats } from "@orchestra/maestro/seats"
+import { MaestroGovernanceV2 } from "../src/v2/governance"
 import { GovernanceInputV2 } from "../src/v2/governance/input"
 import { WorkflowGateV2 } from "../src/v2/governance/workflow"
 import { ResumeAdmissionV2 } from "../src/v2/governance/resume-admission"
@@ -49,6 +52,7 @@ test("Task carries legacy governance fields, so a recorded legacy call decodes o
         ["allowedDomains", "authorizationID", "background", "card", "effort", "governed", "memoryUnit", "workflow", "writePaths"],
       )
       expect(governance.input).toBe(GovernanceInputV2.fields)
+      expect(governance.roster).toBe(MaestroGovernanceV2.roster)
     }),
   ))
 
@@ -232,6 +236,45 @@ test("an unstaffed seat is refused to every caller", () =>
         expect(yield* refusal(admit({ directory, caller, target: "billy" }))).toBe("Task denied: seat-unstaffed: `billy` is not staffed yet.")
     }),
   ))
+
+test("a resumed dispatch to an unstaffed seat does not return seat-unstaffed", () =>
+  run((directory) =>
+    Effect.gen(function* () {
+      for (const caller of ["maestro", "custom"]) {
+        const parentID = yield* session({ directory, agent: caller })
+        const child = yield* session({ directory, agent: "billy", parentID })
+        expect(yield* admit({ directory, caller, target: "billy", parentID, extra: { task_id: child } })).toEqual({})
+      }
+    }),
+  ))
+
+test("a resumed dispatch that names a cut card does not return is cut", () =>
+  run((directory) =>
+    Effect.gen(function* () {
+      const board = yield* Board.Service
+      yield* board.project({ key: "CRD", name: "Cards", reason: "Start." })
+      yield* board.issue({ project: "CRD", title: "Dropped", reason: "Plan." })
+      yield* board.move({ project: "CRD", number: 1, stage: "cut", reason: "Dropped." })
+      const parentID = yield* session({ directory, agent: "custom" })
+      const child = yield* session({ directory, agent: "general", parentID })
+      expect(yield* admit({ directory, caller: "custom", target: "general", parentID, extra: { task_id: child, card: "CRD-1" } })).toEqual({})
+      expect((yield* board.snapshot("CRD")).issues[0]).toMatchObject({ stage: "cut", seat: "general", sessionID: child })
+    }),
+  ))
+
+test("the task roster lists every non-direct seat by id and routing, and no default display name", () => {
+  const listed = MaestroGovernanceV2.roster
+  const seats = Object.values(Seats.all).filter((seat) => !seat.direct)
+  const lines = listed.split("\n")
+  expect(lines).toHaveLength(seats.length)
+  for (const seat of seats) {
+    const line = lines.find((item) => item.startsWith(`- \`${seat.id}\`: `))
+    expect(line).toContain(`- \`${seat.id}\`: ${seat.routing}`)
+    expect(line?.includes("Not staffed.")).toBe(!Seats.staffed(seat))
+  }
+  expect(listed).not.toContain("`live`")
+  for (const member of roster) expect(listed).not.toContain(member.displayName)
+})
 
 test("Maestro binds an agent outside the seats that can write to the write paths it states", () =>
   run((directory) =>
