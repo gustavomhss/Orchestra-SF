@@ -177,7 +177,7 @@ describe("coalesceServerEvents", () => {
 
 describe("createServerEventReader", () => {
   const malformed = (id: string) =>
-    ({ id, created: 1, type: SessionEvent.Tool.Success.type, location: { directory: "/repo" }, data: {} }) as ClientEvent
+    ({ id, created: 1, type: SessionEvent.Tool.Success.type, location: { directory: "/repo" }, data: {} }) as unknown as ClientEvent
   const delta = (id: string) =>
     ({
       id,
