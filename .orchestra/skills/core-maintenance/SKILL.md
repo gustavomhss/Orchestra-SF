@@ -1,6 +1,6 @@
 ---
 name: core-maintenance
-description: Rules for code in packages/core that fetches over the network or writes temp files, and the traps in each. Use when changing webfetch, skill discovery, research capture, an MCP HTTP transport, FSUtil.writeAtomic or writeWithDirs, or the CLI daemon's password and registration files.
+description: Rules for code in packages/core that fetches over the network or writes temp files, and the traps in each. Use when changing webfetch, skill discovery, research capture, an MCP HTTP transport, FSUtil.writeAtomic or writeWithDirs, or the CLI daemon's password and registration files. Also use when adding or removing an environment flag in packages/core/src/flag/flag.ts.
 ---
 
 # Core maintenance
@@ -24,3 +24,9 @@ description: Rules for code in packages/core that fetches over the network or wr
 - `FSUtil.writeAtomic` does this. `FSUtil.writeWithDirs` passes its `mode` at creation. The CLI daemon does it by hand for the `password` and `server.json` files in `apps/cli/src/services/daemon.ts`.
 - Remove the temp file on a failure after it was created, never when the `wx` open itself failed: that file is not ours.
 - Tests (`packages/core/test/fs-util-temp.test.ts`, `apps/cli/test/daemon-password.test.ts`) run the real filesystem under a thin wrapper that records the temp file's mode at rename time, turns `chmod` into a no-op so only the creation mode shows, and plants a symlink at the temp path just before the write opens it.
+
+## Flags
+
+- A flag in `packages/core/src/flag/flag.ts` must have a reader. Remove it with its last reader, together with the lines that set it (tests, scripts, docs).
+- Read a flag through `Flag`, never `process.env`. A flag a test flips at runtime is a getter, not a load-time constant.
+- `ORCHESTRA_AGENT_TERMINAL` and `ORCHESTRA_SHELL_INTEGRATION` are permanent opt-in flags: keep them.

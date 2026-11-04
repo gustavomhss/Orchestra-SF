@@ -215,3 +215,52 @@ it.effect("historical prompts without sidecars keep the exact old serialized con
     ])
   }),
 )
+
+;(["overflow", "manual", "clear", "0"] as const).forEach((mode) => {
+  it.effect(`ORCHESTRA_DISABLE_AUTOCOMPACT blocks auto; ${mode} still compacts`, () =>
+    Effect.gen(function* () {
+      const previous = process.env.ORCHESTRA_DISABLE_AUTOCOMPACT
+      yield* Effect.addFinalizer(() =>
+        Effect.sync(() => {
+          if (previous === undefined) {
+            delete process.env.ORCHESTRA_DISABLE_AUTOCOMPACT
+            return
+          }
+          process.env.ORCHESTRA_DISABLE_AUTOCOMPACT = previous
+        }),
+      )
+      process.env.ORCHESTRA_DISABLE_AUTOCOMPACT = "1"
+      const fixture = yield* seed
+      yield* Effect.forEach([earlier, recent], (prompt, index) =>
+        fixture.events.publish(SessionEvent.Prompted, {
+          sessionID,
+          messageID: SessionMessage.ID.make(`msg_disabled_${mode}_${index}`),
+          timestamp: DateTime.makeUnsafe(index),
+          prompt,
+          delivery: "steer",
+        }),
+      )
+      const input = {
+        sessionID,
+        entries: yield* SessionHistory.entriesForRunner(fixture.db, sessionID, 0),
+        model,
+        request: fixture.request,
+      }
+      const compaction = fixture.compaction(200)
+      expect(yield* compaction.compactIfNeeded(input)).toBe(false)
+      expect(fixture.requests).toHaveLength(0)
+
+      if (mode === "clear") delete process.env.ORCHESTRA_DISABLE_AUTOCOMPACT
+      if (mode === "0") process.env.ORCHESTRA_DISABLE_AUTOCOMPACT = "0"
+      expect(
+        yield* (mode === "overflow"
+          ? compaction.compactAfterOverflow(input)
+          : mode === "manual"
+            ? compaction.compact(input)
+            : compaction.compactIfNeeded(input)),
+      ).toBe(true)
+      expect(fixture.requests).toHaveLength(1)
+      expect(yield* SessionHistory.load(fixture.db, sessionID)).toMatchObject([{ type: "compaction", summary }])
+    }),
+  )
+})
