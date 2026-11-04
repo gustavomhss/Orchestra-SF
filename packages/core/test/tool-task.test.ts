@@ -81,6 +81,10 @@ const client = Layer.effect(LLMClient.Service, Effect.gen(function* () {
       if (prompt === "fail") return Stream.fail(new LLMError({
         module: "test", method: "stream", reason: new TransportReason({ message: "child provider failed" }),
       }))
+      if (prompt === "provider-error") return Stream.fromIterable([
+        LLMEvent.stepStart({ index: 0 }),
+        LLMEvent.providerError({ message: "child provider event failed" }),
+      ])
       return Stream.fromIterable([
         LLMEvent.stepStart({ index: 0 }),
         LLMEvent.textStart({ id: "answer" }),
@@ -528,6 +532,36 @@ describe("TaskTool canonical delegation", () => {
     expect(String(settled.result.value)).toContain("child provider failed")
     expect((yield* settleTool(f.registry, call)).result).toMatchObject({ type: "error", value: expect.stringContaining("resume explicitly with task_id") })
     expect(f.harness.requests).toHaveLength(1)
+  }))
+
+  it.effect("recorded child provider error reaches the parent result and durable tool failure without implicit replay", () => Effect.gen(function* () {
+    const f = yield* setup
+    const call = yield* record(f.parent.id, "provider-error")
+    const settled = yield* settleTool(f.registry, call)
+    const child = (yield* f.sessions.list()).find((session) => session.parentID === f.parent.id)
+    if (!child) throw new Error("Missing provider-error child")
+    expect(settled.result).toEqual({
+      type: "error",
+      value: `Task ${child.id} failed: Task ${child.id} finished without a completed assistant reply: the child failed: child provider event failed`,
+    })
+    const messages = yield* f.sessions.messages({ sessionID: child.id, order: "asc" })
+    const assistants = messages.filter((message) => message.type === "assistant")
+    expect(assistants).toEqual(expect.arrayContaining([expect.objectContaining({
+      finish: "error", error: expect.objectContaining({ message: "child provider event failed" }),
+    })]))
+    expect(assistants.every((message) => message.finish === "error" && message.error?.message === "child provider event failed")).toBe(true)
+    const history = yield* f.sessions.history({ sessionID: f.parent.id, limit: 100 })
+    const failures = history.events.filter(Schema.is(SessionEvent.Tool.Failed))
+      .filter((event) => event.data.sessionID === f.parent.id && event.data.callID === call.call.id)
+    expect(failures).toHaveLength(1)
+    expect(failures[0].data.error.message).toContain(child.id)
+    expect(failures[0].data.error.message).toContain("the child failed: child provider event failed")
+    expect((yield* settleTool(f.registry, call)).result).toMatchObject({
+      type: "error", value: expect.stringContaining("resume explicitly with task_id"),
+    })
+    expect(f.harness.requests).toHaveLength(1)
+    const execution = yield* SessionExecution.Service
+    expect((yield* execution.active).size).toBe(0)
   }))
 
   it.effect("rejects forged invocation, hidden or primary targets, missing parents, cycles, and depth beyond eight", () => Effect.gen(function* () {
