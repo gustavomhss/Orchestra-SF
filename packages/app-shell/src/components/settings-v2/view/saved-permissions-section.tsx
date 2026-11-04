@@ -42,16 +42,23 @@ export function SavedPermissionsSection() {
     >
       <Show
         when={!saved.error}
-        fallback={<div class="mx-empty">{language.t("orchestra.settings.savedPermissions.loadFailed")}</div>}
+        fallback={
+          <div class="mx-empty" role="alert">
+            <p>{language.t("orchestra.settings.savedPermissions.loadFailed")}</p>
+            <button type="button" class="mx-btn" onClick={() => void refetch()}>
+              {language.t("orchestra.mcp.retry")}
+            </button>
+          </div>
+        }
       >
         <Show
           when={rules()}
-          fallback={<div class="mx-empty">{language.t("orchestra.settings.savedPermissions.loading")}</div>}
+          fallback={<div class="mx-empty" role="status">{language.t("orchestra.settings.savedPermissions.loading")}</div>}
         >
           {(rows) => (
             <Show
               when={rows().length > 0}
-              fallback={<div class="mx-empty">{language.t("orchestra.settings.savedPermissions.empty")}</div>}
+              fallback={<div class="mx-empty" role="status">{language.t("orchestra.settings.savedPermissions.empty")}</div>}
             >
               <div class="perm-table">
                 <For each={rows()}>
@@ -66,6 +73,10 @@ export function SavedPermissionsSection() {
                       <button
                         type="button"
                         class="mx-btn"
+                        aria-label={language.t("orchestra.settings.savedPermissions.removeLabel", {
+                          tool: toolName(row.action),
+                          resource: row.resource,
+                        })}
                         disabled={removing() === row.id}
                         onClick={() => remove(row.id)}
                       >

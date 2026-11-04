@@ -132,6 +132,7 @@ export const SETTINGS_COPY = {
   "orchestra.settings.savedPermissions.loading": "Loading saved permissions…",
   "orchestra.settings.savedPermissions.loadFailed": "Could not load saved permissions.",
   "orchestra.settings.savedPermissions.remove": "Remove",
+  "orchestra.settings.savedPermissions.removeLabel": "Remove saved permission: {{tool}} — {{resource}}",
 }
 
 export const SETTINGS_COPY_BR: Record<keyof typeof SETTINGS_COPY, string> = {
@@ -267,4 +268,5 @@ export const SETTINGS_COPY_BR: Record<keyof typeof SETTINGS_COPY, string> = {
   "orchestra.settings.savedPermissions.loading": "Carregando permissões salvas…",
   "orchestra.settings.savedPermissions.loadFailed": "Não foi possível carregar as permissões salvas.",
   "orchestra.settings.savedPermissions.remove": "Remover",
+  "orchestra.settings.savedPermissions.removeLabel": "Remover permissão salva: {{tool}} — {{resource}}",
 }
