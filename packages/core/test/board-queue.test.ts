@@ -206,6 +206,26 @@ describe("BoardQueue", () => {
     }),
   )
 
+  it.live("a refusal delivered during the PR-head read is rechecked before queue insertion", () =>
+    Effect.gen(function* () {
+      const board = yield* Board.Service
+      const repo = yield* repository("QRACE")
+      yield* card(repo, "QRACE", 1, "a.txt")
+      const found = yield* row(repo, 1)
+      yield* reviewNote(found.issue.id, "evt_validation", "code", 1)
+      const database = yield* Database.Service
+      expect(yield* BoardReviewReceipts.forIssue(database.db, found.issue.id)).toEqual([])
+      repo.remote.beforeHead = reviewReceipt("evt_during_admission", 1).pipe(Effect.provideService(Database.Service, database))
+      const refused = yield* board.queue({ project: "QRACE", number: 1, reason: "Head checked." }).pipe(Effect.exit)
+      expect(Exit.isFailure(refused)).toBe(true)
+      expect(JSON.stringify(refused)).toContain("ReviewOpen: code FIX_FIRST (evt_during_admission)")
+      expect(yield* stage(repo, 1)).toBe("review")
+      expect(yield* queued(repo, 1)).toBeNull()
+      expect((yield* BoardReviewReceipts.forIssue(database.db, found.issue.id)).map((held) => held.receipt.id))
+        .toEqual(["evt_during_admission"])
+    }),
+  )
+
   it.live("code approval cannot clear a plan refusal on the same validation", () =>
     Effect.gen(function* () {
       const board = yield* Board.Service
