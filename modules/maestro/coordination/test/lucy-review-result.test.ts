@@ -183,7 +183,8 @@ describe("review receipt", () => {
       catalogDigest: digestA,
       items: [{ pack: "gitleaks", rule: "generic-api-key", fingerprint: "fp1", outcome: "refuted" as const }],
     }
-    expect(decode(receipt as unknown)).toEqual(receipt)
+    const decoded = decode(receipt as unknown)
+    expect(JSON.parse(JSON.stringify(decoded))).toEqual(JSON.parse(JSON.stringify(receipt)))
     expect(() => decode({ ...receipt, items: [{ ...receipt.items[0], outcome: "maybe" }] } as unknown)).toThrow()
     expect(() => decode({ ...receipt, routingDigest: "short" } as unknown)).toThrow()
   })

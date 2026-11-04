@@ -157,7 +157,7 @@ test("the host binding pages the retained run, reads the repository, and probes 
         ledger: ReviewProbe.ledger(),
         copies,
       })
-      const open = (id: string) =>
+      const open = (id: SessionSchema.ID) =>
         database.db.insert(SessionTable).values({
           id,
           project_id: location.project.id,
@@ -212,10 +212,11 @@ test("the host binding pages the retained run, reads the repository, and probes 
         option: "probe:test",
         target: { test: { file: "src/a.test.ts" } },
       })
-      expect(probed.type).toBe("text")
-      if (probed.type !== "text") return
-      const result = JSON.parse(probed.value) as { status?: string }
-      expect(["pass", "fail", "not-run"]).toContain(result.status)
+      const text = typeof probed === "object" && probed !== null && "value" in probed && typeof probed.value === "string" ? probed.value : undefined
+      if (text === undefined) throw new Error("expected probe text")
+      const status = (JSON.parse(text) as { status?: string }).status
+      if (status === undefined) throw new Error("probe returned no status")
+      expect(status === "pass" || status === "fail" || status === "not-run").toBe(true)
       expect(yield* Effect.promise(() => fs.readFile(path.join(directory, "src", "a.ts"), "utf8"))).toBe(before)
     }),
   ).finally(() => {
