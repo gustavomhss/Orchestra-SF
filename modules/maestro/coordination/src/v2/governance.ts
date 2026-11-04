@@ -51,6 +51,15 @@ import { MaestroWorkflowHostV2 } from "./workflow/host"
 const decode = Schema.decodeUnknownOption(GovernanceInputV2.Input)
 const decodeReserved = Schema.decodeUnknownSync(MaestroEvent.Dispatch.ReservedV2.data)
 
+// One line per native seat (id and routing) for callers who do not get Maestro's team list. A direct seat is never listed.
+export const roster = Object.values(Seats.all)
+  .flatMap((seat) =>
+    seat.direct || !seat.routing
+      ? []
+      : [`- \`${seat.id}\`: ${seat.routing}${Seats.staffed(seat) ? "" : " Not staffed."}`],
+  )
+  .join("\n")
+
 /**
  * Maestro's Task governance on V2, in the earlier runtime's phase order: the caller seat's native profile, the phases whose host is not
  * on V2 yet (refused, never skipped), the workflow holds, logical-task resume, the authorized and governed
@@ -76,14 +85,15 @@ export const make = Effect.gen(function* () {
   const host = yield* MaestroWorkflowHostV2.Capture
   const background = yield* GovernanceBackgroundV2.make(events)
   // The roster loads lazily (see `seats.ts`); where it cannot load no agent is a seat, so no profile is read.
-  const roster = yield* Effect.tryPromise(() => import("../roster")).pipe(Effect.option)
-  const profiles = roster._tag === "Some" ? roster.value.nativeProfiles : {}
-  const canonical = (id: string): string => (roster._tag === "Some" ? roster.value.canonicalMemberId(id) : id)
+  const rosterModule = yield* Effect.tryPromise(() => import("../roster")).pipe(Effect.option)
+  const profiles = rosterModule._tag === "Some" ? rosterModule.value.nativeProfiles : {}
+  const canonical = (id: string): string => (rosterModule._tag === "Some" ? rosterModule.value.canonicalMemberId(id) : id)
   const services = { db: database.db, store, events, canonical, allowances, location, atlas: { config, git, fs, skills } }
   const seatOf = (id: string) => (seats.has(canonical(id)) ? Seats.all[canonical(id)] : undefined)
 
   return TaskGovernance.Service.of({
     input: GovernanceInputV2.fields,
+    roster,
     admit: (admission) =>
       Effect.gen(function* () {
         const decoded = decode(admission.input)
@@ -95,8 +105,6 @@ export const make = Effect.gen(function* () {
         const memberID = canonical(target)
         const seat = seatOf(target)
         yield* CallerGateV2.check(seats, profiles, caller, target)
-        if (seat && !Seats.staffed(seat))
-          return yield* new ToolFailure({ message: `Task denied: seat-unstaffed: \`${target}\` is not staffed yet.` })
         yield* WorkflowGateV2.check(database, { parentID: parent.id, taskID: input.task_id, workflow: !!input.workflow })
         const workflow = input.workflow
           ? yield* WorkflowAdmissionV2.before({ ...services, database }, { task: input, workflow: input.workflow, parent })
@@ -109,6 +117,11 @@ export const make = Effect.gen(function* () {
           projectID: parent.projectID,
           memberID,
         })
+        // A continuation is reserved, workflow or resumed, not `fresh` (which also requires Maestro). It skips the
+        // unstaffed gate even when the caller is not Maestro. A fresh dispatch of an unstaffed seat is still refused.
+        const continuing = !!(reserved || workflow || resumed)
+        if (!continuing && seat && !Seats.staffed(seat))
+          return yield* new ToolFailure({ message: `Task denied: seat-unstaffed: \`${target}\` is not staffed yet.` })
         // Every child starts from the rules core's TaskTool inherits from the parent (the earlier runtime's childPermissions); a resumed
         // child keeps its own recorded rules. A reserved child is created by its reservation, so its rules are the
         // snapshot, which therefore must already hold the inherited rules.
@@ -189,7 +202,7 @@ export const make = Effect.gen(function* () {
           : yield* GovernanceDispatchV2.groundedSkills(services, input.authorizationID)
         // The child core's Task prompts: the governance's, the resumed one, or core's own for this call.
         const child = childID ?? resumed?.id ?? TaskTool.taskChildID(admission.context)
-        if (input.card) yield* claim(input.card, child, memberID)
+        if (input.card) yield* claim(input.card, child, memberID, continuing)
         const atlasOwner = input.memoryUnit ? MaestroAtlasSourceV2.owner(memberID, seats) : undefined
         const added = yield* ResumeAdmissionV2.admit(
           { db: database.db, events, git, location },
@@ -241,14 +254,16 @@ export const make = Effect.gen(function* () {
         }
 
         // The card follows the dispatch, so Maestro's board never waits on Maestro remembering to write it.
-        function claim(card: string, session: string, seat: string) {
+        function claim(card: string, session: string, seat: string, continuation: boolean) {
           const at = card.indexOf("-")
           const project = card.slice(0, at)
           const number = Number(card.slice(at + 1))
           return Effect.gen(function* () {
             const issue = (yield* board.snapshot(project)).issues.find((item) => item.number === number)
             if (!issue) return yield* new ToolFailure({ message: `${card} is not on the board.` })
-            if (issue.stage === "shipped" || issue.stage === "cut")
+            // A continuation may name the card it already holds, including one that shipped or was cut. The seat and
+            // session still follow the dispatch, and a backlog or ready card still moves to building.
+            if (!continuation && (issue.stage === "shipped" || issue.stage === "cut"))
               return yield* new ToolFailure({ message: `${card} is ${issue.stage}; open a new card for new work.` })
             if (issue.seat !== seat || issue.sessionID !== session)
               yield* board.issue({ project, number, seat, session, reason: `Dispatched to ${seat}.` })
