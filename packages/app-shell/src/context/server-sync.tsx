@@ -521,12 +521,12 @@ export function createServerSyncContextInner(
       applyGlobalEvent({
         event,
         refresh: () => {
-          if (recent || !gap) return
+          if (recent) return
           bootstrap.refetch()
         },
       })
       if (eventType === "catalog.updated" || eventType === "project.directories.updated") bootstrap.refetch()
-      if (gap) {
+      if (eventType === "server.connected") {
         if (recent) return
         for (const directory of Object.keys(children.children)) {
           if (!children.active(directory)) continue

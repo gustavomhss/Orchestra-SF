@@ -1,6 +1,9 @@
 import { createMemo, createResource, type Accessor } from "solid-js"
+import { useGlobal } from "@/context/global"
 import { useLanguage } from "@/context/language"
+import { useLayout } from "@/context/layout"
 import { usePermission } from "@/context/permission"
+import { ServerConnection } from "@/context/server"
 import { useServerSDK } from "@/context/server-sdk"
 import { useServerSync } from "@/context/server-sync"
 import {
@@ -25,10 +28,22 @@ export type { ShellOption, ShellSelectOption } from "./general-controller-behavi
 export function createPermissionScopeController(sessionID: Accessor<string | undefined>) {
   const permission = usePermission()
   const serverSync = useServerSync()
+  const layout = useLayout()
+  const global = useGlobal()
+  // Settings opened from the shell sit on the selected server. A session route names its own server, and that
+  // is the store the page already resolved.
+  const scope = () => {
+    const id = sessionID()
+    const route = layout.route()
+    if (!id || route.type !== "session" || route.sessionId !== id || !route.server) return
+    const connection = global.servers.list().find((item) => ServerConnection.key(item) === route.server)
+    if (!connection) return
+    return { session: global.ensureServerCtx(connection).sync.session, permission: permission.ensureServerState(route.server) }
+  }
   const directory = createMemo(() => {
     const id = sessionID()
     if (!id) return undefined
-    return serverSync().session.lineage.peek(id)?.session.directory
+    return (scope()?.session ?? serverSync().session).lineage.peek(id)?.session.directory
   })
 
   return {
@@ -36,6 +51,8 @@ export function createPermissionScopeController(sessionID: Accessor<string | und
       const id = sessionID()
       const dir = directory()
       if (!id || !dir) return false
+      const found = scope()
+      if (found) return found.permission.isAutoAccepting(id, dir)
       return permission.isAutoAccepting(id, dir)
     }),
     enabled: createMemo(() => !!directory()),
@@ -43,6 +60,12 @@ export function createPermissionScopeController(sessionID: Accessor<string | und
       const id = sessionID()
       const dir = directory()
       if (!id || !dir) return
+      const found = scope()
+      if (found) {
+        if (checked) return found.permission.enableAutoAccept(id, dir)
+        found.permission.disableAutoAccept(id, dir)
+        return
+      }
       if (checked) return permission.enableAutoAccept(id, dir)
       permission.disableAutoAccept(id, dir)
     },
