@@ -167,7 +167,7 @@ describe("SkillTool", () => {
   )
 })
 
-const skillInfo = (name: string, location = `/skills/${name}/SKILL.md`) => SkillV2.Info.make({
+const skillInfo = (name: string, location = path.resolve("skills", name, "SKILL.md")) => SkillV2.Info.make({
   name, description: name, location: AbsolutePath.make(location), content: name,
 })
 
@@ -309,7 +309,7 @@ describe("SkillTool miss policy", () => {
 
   it.effect("does not promote an allowed child when its root is denied", () => {
     const fixture = missFixture({
-      skills: [skillInfo("denied-root"), skillInfo("allowed-child", "/skills/denied-root/child/SKILL.md"), skillInfo("public")],
+      skills: [skillInfo("denied-root"), skillInfo("allowed-child", path.resolve("skills", "denied-root", "child", "SKILL.md")), skillInfo("public")],
       rules: [
         { action: "skill", resource: "*", effect: "allow" },
         { action: "skill", resource: "denied-root", effect: "deny" },
