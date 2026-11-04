@@ -25,6 +25,7 @@ describe("test shard planner", () => {
       expect(rollback.map((lane) => lane.filters)).toEqual(name === "windows" ? ["--filter=@orchestra/atlas-boundary"] : [])
       const libs = lanes.find((lane) => lane.part.endsWith("libs"))
       expect(libs?.filters).toContain("--filter=!@orchestra/atlas-boundary")
+      expect(libs?.filters).toContain("--filter=!@orchestra/relay")
       expect(libs?.relay ?? libs?.repo_gates ?? libs?.rollback).toBeUndefined()
     }
   })

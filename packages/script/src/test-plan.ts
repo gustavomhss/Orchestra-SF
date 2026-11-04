@@ -150,13 +150,14 @@ function coreShards(name: Platform, host: string, count: number) {
 
 // The package lanes. Core is sharded by time above; these stay fixed and are sized from the round 2 epic run (seconds of test
 // time, Linux / Windows): app 283 / 301, cli 223 / 177, server 37 / 65, the four small clients 38 / 39, and `atlas-boundary`,
-// whose one generator test takes about 210 / 294 s and so gets a lane of its own. The last lane is the complement of every
-// other lane, so a package added later lands in it instead of in no lane. Repo-wide gates and the Relay suite are not
-// package tests: they share a lane with each other and with no bulk package (the lane that carried them with the other
-// packages ran past the 10-minute limit). The legacy rollback proof rides in the Windows atlas lane beside the process
-// query proof, for the same reason.
+// whose one generator test takes about 210 / 294 s and so gets a lane of its own. `@orchestra/relay` has its own turbo
+// lane on both platforms: its package tests took over 6 minutes inside the libs complement. The libs lane is the
+// complement of every claimed package, so a package added later lands in it instead of in no lane. Repo-wide gates and
+// the Relay pytest suite are not package tests: they share the Linux gates lane and share it with no bulk package (the
+// lane that carried them with the other packages ran past the 10-minute limit). The legacy rollback proof rides in the
+// Windows atlas lane beside the process query proof, for the same reason.
 export function packageLanes(name: Platform, host: string) {
-  const claimed = ["core", "cli", "app", "server", "sdk-next", "client", "tui", "session-ui", "atlas-boundary"].map((entry) => `@orchestra/${entry}`)
+  const claimed = ["core", "cli", "app", "server", "sdk-next", "client", "tui", "session-ui", "atlas-boundary", "relay"].map((entry) => `@orchestra/${entry}`)
   // httpapi-codegen is a build-time generator whose tests pin POSIX paths, so it runs on Linux only.
   const excluded = name === "windows" ? [...claimed, "@orchestra/httpapi-codegen"] : claimed
   const filters = (packages: string[]) => packages.map((entry) => `--filter=@orchestra/${entry}`).join(" ")
@@ -178,6 +179,7 @@ export function packageLanes(name: Platform, host: string) {
       hosted: !linux,
       rollback: !linux,
     }),
+    lane("relay", "relay", "--filter=@orchestra/relay"),
     lane("libs", "other packages", excluded.map((entry) => `--filter=!${entry}`).join(" "), { electron: linux }),
     ...(linux
       ? [
