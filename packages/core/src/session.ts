@@ -342,8 +342,11 @@ const layer = Layer.effect(
           ),
         )
 
-    const stopped = <A, E>(ids: ReadonlyArray<SessionSchema.ID>, effect: Effect.Effect<A, E>) =>
-      SessionLifecycle.stopped(execution, ids, effect)
+    const stopped = <A, E>(
+      ids: ReadonlyArray<SessionSchema.ID>,
+      effect: Effect.Effect<A, E>,
+      options?: { readonly discardPending?: boolean },
+    ) => SessionLifecycle.stopped(execution, ids, effect, options)
 
     // A turn after recorded context runs in the background; the request that recorded it does not wait for the turn.
     const resumeDetached = (sessionID: SessionSchema.ID) =>
@@ -439,7 +442,8 @@ const layer = Layer.effect(
       remove: Effect.fn("V2Session.remove")(function* (sessionID) {
         yield* result.get(sessionID)
         const ids = [sessionID, ...(yield* SessionLifecycle.descendants(db, sessionID))]
-        if (!(yield* stopped(ids, SessionLifecycle.remove(db, events, sessionID))))
+        // A wake admitted during the interrupt must not start a drain for a Session that is about to be gone.
+        if (!(yield* stopped(ids, SessionLifecycle.remove(db, events, sessionID), { discardPending: true })))
           return yield* new NotFoundError({ sessionID })
       }),
       list: (input) => SessionArchive.list(db, input),

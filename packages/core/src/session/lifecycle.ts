@@ -6,6 +6,7 @@ import { Database } from "../database/database"
 import { EventV2 } from "../event"
 import { SessionEvent } from "./event"
 import type { SessionExecution } from "./execution"
+import type { SessionRunCoordinator } from "./run-coordinator"
 import { SessionSchema } from "./schema"
 import { SessionTable } from "./sql"
 
@@ -71,14 +72,15 @@ export const stopped = <A, E>(
   execution: SessionExecution.Interface,
   ids: ReadonlyArray<SessionSchema.ID>,
   effect: Effect.Effect<A, E>,
+  options?: SessionRunCoordinator.InterruptOptions,
 ): Effect.Effect<A, E> =>
   ids.reduceRight(
     (inner, id): Effect.Effect<A, E> =>
-      Effect.uninterruptible(execution.interrupt(id)).pipe(
+      Effect.uninterruptible(execution.interrupt(id, options)).pipe(
         Effect.andThen(execution.exclusive(id, inner)),
         Effect.flatMap(
           Option.match({
-            onNone: () => stopped(execution, [id], inner),
+            onNone: () => stopped(execution, [id], inner, options),
             onSome: Effect.succeed,
           }),
         ),
