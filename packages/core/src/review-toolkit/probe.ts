@@ -160,8 +160,13 @@ const baseStep = Effect.fnUntraced(function* (base: ReviewScratch.Snapshot, test
     await mkdir(path.dirname(files[1]), { recursive: true })
     await Bun.write(files[1], await source.bytes())
   })
-  return yield* step("base", base, test, context).pipe(Effect.ensuring(Effect.promise(() =>
-    previous === undefined ? rm(files[1], { force: true }) : Bun.write(files[1], previous))))
+  return yield* step("base", base, test, context).pipe(Effect.ensuring(Effect.promise(async () => {
+    if (previous === undefined) {
+      await rm(files[1], { force: true })
+      return
+    }
+    await Bun.write(files[1], previous)
+  })))
 })
 
 /** One closed runner in a copy, confined: no network, writes only to the confine's own scratch. */

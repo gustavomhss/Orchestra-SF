@@ -118,8 +118,8 @@ export function parseSarif(text: string, options: Options): Parsed {
   }))
   return {
     status: "ok",
-    results: read.flatMap((entry) => ("raw" in entry ? [entry.raw] : [])),
-    excluded: count(read.flatMap((entry) => ("excluded" in entry ? [entry] : []))),
+    results: read.flatMap((entry) => (isRaw(entry) ? [entry.raw] : [])),
+    excluded: count(read.flatMap((entry) => (isExcluded(entry) ? [entry] : []))),
   }
 }
 
@@ -167,8 +167,8 @@ function parseGitleaks(text: string, options: Options): Parsed {
   })
   return {
     status: "ok",
-    results: read.flatMap((entry) => ("raw" in entry ? [entry.raw] : [])),
-    excluded: count(read.flatMap((entry) => ("excluded" in entry ? [entry] : []))),
+    results: read.flatMap((entry) => (isRaw(entry) ? [entry.raw] : [])),
+    excluded: count(read.flatMap((entry) => (isExcluded(entry) ? [entry] : []))),
   }
 }
 
@@ -218,6 +218,14 @@ function identity(raw: Raw) {
   if (raw.snippet !== undefined && ReviewItem.normalizeSnippet(raw.snippet)) return raw.snippet
   if (raw.toolFingerprint !== undefined) return `tool-fingerprint\n${raw.toolFingerprint}`
   return `message\n${raw.message}`
+}
+
+function isRaw(entry: { raw?: Raw; excluded?: ExcludedReason }): entry is { raw: Raw } {
+  return entry.raw !== undefined
+}
+
+function isExcluded(entry: { raw?: Raw; excluded?: ExcludedReason; rule?: string }): entry is { excluded: ExcludedReason; rule?: string } {
+  return entry.excluded !== undefined
 }
 
 function count(entries: { excluded: ExcludedReason; rule?: string }[]): Excluded[] {

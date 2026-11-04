@@ -152,7 +152,7 @@ describe("review route", () => {
   })
 
   test("an unsupported profile or tier is a named error, never a fallback", () => {
-    const fails = (request: ReviewRoute.Request, expected: string) => {
+    const fails = (request: ReviewRoute.Request, expected: ReviewRoute.RouteError["code"]) => {
       const error = (() => {
         try {
           ReviewRoute.route(request, docs.base, docs.head, catalog)

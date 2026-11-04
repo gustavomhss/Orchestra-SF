@@ -238,7 +238,8 @@ const gates = Effect.fnUntraced(function* (pack: Pack, context: Context) {
     const program = ReviewPackRepo.program(gate.argv[0], env)
     if (!program) return result("not-run", `${gate.argv[0]} absent`)
     const ran = yield* confined({
-      argv: [program.binary, ...gate.argv.slice(1)], cwd: root, write: [root], env: { ...env, ...program.env },
+      argv: [program.binary, ...gate.argv.slice(1)], cwd: root, write: [root],
+      env: Object.fromEntries(Object.entries({ ...env, ...program.env }).filter((entry): entry is [string, string] => entry[1] !== undefined)),
       timeoutMs: GATE_MS, maxBytes: GATE_BYTES, tailBytes: Probe.Limits.outputBytes,
     })
     if ("denied" in ran) return result("not-run", ran.denied)

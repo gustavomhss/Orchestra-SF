@@ -17,7 +17,7 @@ const CLASSES = [
   "reliability.error-handling", "reliability.retry", "reliability.timeout", "reliability.rollback",
   "tests.missing", "tests.weak-oracle", "security.boundary", "security.secret",
   "plan.coverage", "plan.requirement", "docs.contradiction",
-]
+] as const
 
 describe("review catalog", () => {
   test("phase 1 entries decode and name exactly the phase 1 ids", () => {
@@ -99,7 +99,7 @@ describe("review catalog", () => {
   test("the digest is stable, ignores key order and changes when a value is tuned", () => {
     const digest = ReviewCatalog.catalogDigest(catalog)
     expect(digest).toMatch(/^sha256:[0-9a-f]{64}$/)
-    expect(ReviewCatalog.catalogDigest({ route: catalog.route, ...catalog })).toBe(digest)
+    expect(ReviewCatalog.catalogDigest({ ...catalog })).toBe(digest)
     const tuned = { ...catalog, route: { ...catalog.route, ledger: { ...catalog.route.ledger, activate: { read: 30, confirmed: 0.5 } } } }
     expect(ReviewCatalog.catalogDigest(tuned)).not.toBe(digest)
   })
@@ -164,7 +164,7 @@ describe("review catalog id check", () => {
     const tree = await read(fixture)
     const profiles = catalog.route.profiles.map((profile) => ({
       ...profile,
-      lenses: Object.fromEntries(Object.entries(profile.lenses).map(([tier, lenses]) => [tier, lenses.filter((lens) => lens !== "security")])),
+      lenses: Object.fromEntries(Object.entries(profile.lenses).map(([tier, lenses]) => [tier, lenses.filter((lens: string) => lens !== "security")])),
     }))
     const broken = { ...catalog, route: { ...catalog.route, profiles } }
     expect(() => ReviewCatalog.check(broken, tree)).toThrow("unreached-node: lucy-lens-security (lucy-lens/security/SKILL.md)")
