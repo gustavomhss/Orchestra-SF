@@ -47,6 +47,7 @@ if (process.env.BOARD_VIEWS_DOM !== "1") {
     id: `epc_${number}`, number, ref: `LCH-E${number}`, title, goal: `${title} goal`, position: number, status,
     githubMilestone: null,
   })
+  const fullTitle = "Issue 7 — Preserve the complete payment and refund investigation across releases — العربية עברית 日本語 — without truncating the original title"
   const issues = [
     // Accounts: four shipped on different days and one in review, so it is closest to done.
     issue(1, "shipped", { epic: 1, stageEnteredAt: now - 9 * day }),
@@ -57,7 +58,7 @@ if (process.env.BOARD_VIEWS_DOM !== "1") {
     // Payments: one shipped, one building, one ready that waits on an issue outside the epic, one in backlog.
     issue(6, "shipped", { epic: 2, stageEnteredAt: now - 2 * day }),
     issue(7, "building", {
-      epic: 2, seat: "backend",
+      epic: 2, seat: "backend", title: fullTitle,
       steps: [{ title: "Schema", status: "done", now: null }, { title: "Handlers", status: "active", now: "wiring refunds" }],
     }),
     issue(8, "ready", { epic: 2, dependsOn: ["LCH-12"] }),
@@ -212,6 +213,8 @@ if (process.env.BOARD_VIEWS_DOM !== "1") {
     expect(text(groups()[1].querySelector(".board-table-done"))).toBe(`done ${range(payments.p50, payments.p85, "en")}`)
     expect(refs()).toEqual(["LCH-5", "LCH-7", "LCH-8", "LCH-9", "LCH-12", "LCH-11"])
     expect(text(table.querySelector('[data-ref="LCH-8"] .board-table-asked'))).toBe("asked you")
+    expect(table.querySelector<HTMLSpanElement>('[data-ref="LCH-7"] .board-table-name')?.title).toBe(fullTitle)
+    expect(table.querySelector('[data-ref="LCH-7"] .board-table-name')?.textContent).toBe(fullTitle)
 
     const fold = groups()[0].querySelector<HTMLButtonElement>(".board-table-fold")!
     expect(text(fold)).toBe("4 shipped")
@@ -294,6 +297,8 @@ if (process.env.BOARD_VIEWS_DOM !== "1") {
     await until(() => chart.querySelectorAll(".board-timeline-issue").length > 0, view.host)
     expect([...chart.querySelectorAll(".board-timeline-issue[data-stage] .board-id")].map((item) => text(item)))
       .toEqual(["LCH-7", "LCH-8", "LCH-9"])
+    expect(chart.querySelector<HTMLSpanElement>('.board-timeline-issue[data-stage="building"] .board-timeline-issue-title')?.title).toBe(fullTitle)
+    expect(chart.querySelector('.board-timeline-issue[data-stage="building"] .board-timeline-issue-title')?.textContent).toBe(fullTitle)
 
     const scope = chart.querySelector(".board-timeline-scope")!
     expect(text(scope.querySelector("h3 .board-count"))).toBe("3 of 12 shipped")

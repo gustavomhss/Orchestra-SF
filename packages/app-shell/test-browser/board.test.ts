@@ -34,10 +34,11 @@ if (process.env.BOARD_DOM !== "1") {
     position: number, estimate: null, seat: null, sessionID: null, branch: null, prNumber: null, holdBeforeMerge: false,
     paused: false, stageEnteredAt: now, githubNumber: null, steps: [], dependsOn: [], ...extra,
   })
+  const fullTitle = "Issue 1 — Preserve the complete deployment and review history across projects — العربية עברית 日本語 — without truncating the original title"
   const secretValue = "sk-live-board-fixture-never-render-0042"
   const state = {
     issues: [
-      issue(1, "backlog"),
+      issue(1, "backlog", { title: fullTitle }),
       issue(2, "ready"),
       issue(3, "building", {
         seat: "backend",
@@ -159,6 +160,8 @@ if (process.env.BOARD_DOM !== "1") {
     expect(view.host.querySelector('[data-ref="LCH-5"]')).toBeNull()
     expect(view.host.querySelector('[data-ref="LCH-6"]')).toBeNull()
     expect(view.host.querySelector(".board-intake")?.textContent).toContain("1")
+    expect(view.host.querySelector<HTMLSpanElement>('[data-ref="LCH-1"] .board-row-title')?.title).toBe(fullTitle)
+    expect(view.host.querySelector('[data-ref="LCH-1"] .board-row-title')?.textContent).toBe(fullTitle)
     // The building card shows the active step's now line and its seat by role letter.
     expect(view.host.querySelector('[data-ref="LCH-3"] .board-now')?.textContent).toContain("wiring the routes")
     expect(view.host.querySelector('[data-ref="LCH-3"] .board-seat')?.textContent).toBe("B")

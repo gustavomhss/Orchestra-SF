@@ -456,7 +456,7 @@ export default function Board() {
           <Ring stage="shipped" />
         </Show>
         <span class="board-row-text">
-          <span class="board-row-title">{props.issue.title}</span>
+          <span class="board-row-title" title={props.issue.title}>{props.issue.title}</span>
           <span class="board-row-meta">
             <span class="board-mono">{props.issue.prNumber ? `#${props.issue.prNumber}` : props.issue.ref}</span>
             <Show when={props.issue.stage === "shipped" ? props.issue.seat : epic()}>{(text) => <span>{text()}</span>}</Show>
