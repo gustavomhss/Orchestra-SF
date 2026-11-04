@@ -62,8 +62,8 @@ export type Context = {
   readonly head: ReviewScratch.Snapshot
   /** The base copy; with it `probe:regress` adds the base-versus-head differential. */
   readonly base?: ReviewScratch.Snapshot
-  /** The options the catalog offers for this candidate's class and language. */
-  readonly offered: ReadonlyArray<string>
+  /** Host-owned candidate IDs and the options offered for each candidate's class and language. */
+  readonly offered: Readonly<Record<string, ReadonlyArray<string>>>
   /** Probe attempts allowed per candidate at the review's tier (§8.4). */
   readonly cap: number
   /** The reviewed diff's hunks, host-computed; a regress target picks one by path and line range. */
@@ -110,7 +110,8 @@ export const run = Effect.fn("ReviewProbe.run")(function* (input: Input, context
 }, Effect.scoped)
 
 function refuse(input: Input, context: Context, key: string) {
-  if (!context.offered.includes(input.option)) return `refused: option-not-offered: ${input.option}`
+  if (!Object.hasOwn(context.offered, input.candidate)) return `refused: candidate-unknown: ${input.candidate}`
+  if (!context.offered[input.candidate].includes(input.option)) return `refused: option-not-offered: ${input.option}`
   if (!BUILT.some((option) => option === input.option)) return "not-built"
   if (context.ledger.runs.has(key)) return `refused: repeat: ${input.option} already ran on ${input.candidate} at this tree`
   if ((context.ledger.attempts.get(input.candidate) ?? 0) >= context.cap) return `refused: attempt-cap: ${context.cap}`

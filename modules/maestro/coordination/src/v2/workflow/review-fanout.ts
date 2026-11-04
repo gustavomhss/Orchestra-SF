@@ -82,8 +82,8 @@ export type BindInput = {
   readonly role: Role
   readonly lens?: string
   readonly lenses?: ReadonlyArray<string>
-  readonly retained: string
-  readonly offered?: ReadonlyArray<string>
+  readonly retained: string | (() => string)
+  readonly offered?: Readonly<Record<string, ReadonlyArray<string>>>
   readonly cap: number
 }
 
@@ -162,7 +162,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
   const open = (input.firstRound?.card.findings ?? []).filter((finding) => finding.status === "open")
 
   // 2. Analyze (host).
-  const analysis = yield* port.analyze({ routing: routed.record, packs: routable(routed.record.packs), cache: input.cache, files })
+  let analysis = yield* port.analyze({ routing: routed.record, packs: routable(routed.record.packs), cache: input.cache, files })
 
   // 3. Entry (the lead Session).
   const routedTier = runTier(catalog, routed.record.tier.id)
@@ -170,10 +170,10 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
   const bind = (
     sessionID: SessionSchema.ID,
     role: Role,
-    extra: { readonly lens?: string; readonly lenses?: ReadonlyArray<string>; readonly offered?: ReadonlyArray<string>; readonly cap: number },
+    extra: Omit<BindInput, "sessionID" | "role" | "retained">,
   ) =>
     Effect.gen(function* () {
-      const bound = yield* port.binding({ sessionID, role, retained: analysis.retained.uri, ...extra })
+      const bound = yield* port.binding({ sessionID, role, retained: () => analysis.retained.uri, ...extra })
       yield* ReviewTools.bind(sessionID, bound)
       return bound
     })
@@ -258,9 +258,8 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
 
   // Packs an entry addition routed run before the hunt reads items; the cache makes the rerun cheap.
   const added = afterEntry.packs.filter((pack) => !routed.record.packs.some((other) => other.id === pack.id))
-  const items = added.length
-    ? (yield* port.analyze({ routing: afterEntry, packs: routable(afterEntry.packs), cache: input.cache, files })).items
-    : analysis.items
+   if (added.length) analysis = yield* port.analyze({ routing: afterEntry, packs: routable(afterEntry.packs), cache: input.cache, files })
+   const items = analysis.items
   const lensCap = Math.max(tier.budget.lenses.max, routed.record.lenses.length)
   const routedLenses = afterEntry.lenses.slice(0, lensCap)
   const running = routedLenses.filter((lens) => routed.runs(lens, open))
@@ -365,7 +364,8 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
     (batch) =>
       Effect.gen(function* () {
         const child = yield* port.create({ key: `verify:${batch.class}`, role: "verifier" })
-        const offered = unique(batch.candidates.flatMap((candidate) => options(catalog, tier, afterEntry, candidate).map((option) => option.id)))
+        const offered = Object.fromEntries(batch.candidates.map((candidate) =>
+          [candidate.id, options(catalog, tier, afterEntry, candidate).map((option) => option.id)]))
         const bound = yield* bind(child, "verifier", { offered, cap: tier.probeAttempts })
         const proof = catalog.classes.find((entry) => entry.id === batch.class)?.node ?? QUOTE_NODE
         const scope: SessionScope.Scope = {

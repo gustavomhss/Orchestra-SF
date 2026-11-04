@@ -667,7 +667,7 @@ export const reviewBinding = (held: {
       for (const id of bound.lenses) if (!held.lenses.includes(id)) held.lenses.push(id)
     }
     const pageable = bound.lens !== undefined || (bound.lenses?.length ?? 0) > 0
-    const needsProbe = bound.role === "verifier" && (bound.offered ?? []).some((id) => ReviewProbe.BUILT.some((built) => built === id))
+    const needsProbe = bound.role === "verifier" && Object.values(bound.offered ?? {}).flat().some((id) => ReviewProbe.BUILT.some((built) => built === id))
     const made = needsProbe ? yield* held.copies.pipe(Effect.catch(() => Effect.succeed(undefined))) : undefined
     return {
       repository: held.worktree,
@@ -679,7 +679,7 @@ export const reviewBinding = (held: {
               page: (input: ReviewTools.Page) =>
                 ReviewAnalyze.page({
                   store: analysisStore(held.cache),
-                  uri: bound.retained,
+                  uri: typeof bound.retained === "function" ? bound.retained() : bound.retained,
                   lens: input.lens,
                   ...(input.filter ? { filter: input.filter } : {}),
                   ...(input.cursor ? { cursor: input.cursor } : {}),
@@ -693,7 +693,7 @@ export const reviewBinding = (held: {
               reviewID: held.cache,
               head: made.head,
               base: made.base,
-              offered: bound.offered ?? [],
+              offered: bound.offered ?? {},
               cap: bound.cap,
               hunks: ReviewFanoutV2.hunks(held.diff),
               ledger: held.ledger,
