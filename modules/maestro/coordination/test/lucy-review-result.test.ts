@@ -162,7 +162,7 @@ describe("review receipt", () => {
       worktree: "/repo",
       changedPaths: ["src/a.ts"],
     },
-    verdict: "FIX_FIRST",
+    verdict: "FIX_FIRST" as const,
     findings: [{ path: "src/a.ts", line: 3, message: "wrong" }],
   }
 
