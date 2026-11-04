@@ -5,8 +5,9 @@ import { Seats } from "@orchestra/maestro/seats"
 import type { Revert } from "@orchestra/schema/revert"
 import { ConductorV2 } from "../src/v2/conductor"
 
-// Maestro's conductor limits: board reads before board changes, no merges, a read budget a dispatch resets, and a write
-// budget measured on the worktree. The worktree here is a list of trees, each the diff against the first one.
+// Maestro's conductor limits: a fresh board read before a board change, that issue read before a carded dispatch, no
+// merges, a read budget a dispatch resets, and a write budget measured on the worktree. The worktree here is a list of
+// trees, each the diff against the first one.
 
 const worktree = (trees: ReadonlyArray<ReadonlyArray<Revert.FileDiff>>) => {
   const state = { at: 0 }
@@ -29,14 +30,17 @@ const call = (conductor: ReturnType<typeof ConductorV2.make>, tool: string, args
 const refusal = (exit: Exit.Exit<unknown, unknown>) =>
   Exit.isFailure(exit) && exit.cause.toString().includes("Tool safety HOLD") ? String(exit.cause) : undefined
 
-test("a board change or a carded dispatch needs a board_read of its project this drain", async () => {
+test("a board change needs a fresh project read, and a carded dispatch needs that issue", async () => {
   const conductor = ConductorV2.make(worktree([]).snapshot)
   expect(refusal(await call(conductor, "board_issue", { project: "ORC", title: "x" }))).toContain("maestro-board-unread")
   expect(refusal(await call(conductor, "task", { subagent_type: "backend", card: "ORC-4" }))).toContain("maestro-board-unread")
   expect(refusal(await call(conductor, "board_read", {}))).toBeUndefined()
   expect(refusal(await call(conductor, "board_move", { project: "ORC", number: 4 }))).toContain("maestro-board-unread")
   await call(conductor, "board_read", { project: "ORC" })
+  expect(refusal(await call(conductor, "task", { subagent_type: "backend", card: "ORC-4" }))).toContain("maestro-board-unread")
   expect(refusal(await call(conductor, "board_move", { project: "ORC", number: 4 }))).toBeUndefined()
+  expect(refusal(await call(conductor, "board_move", { project: "ORC", number: 4 }))).toContain("maestro-board-unread")
+  await call(conductor, "board_read", { project: "ORC", issue: 4 })
   expect(refusal(await call(conductor, "task", { subagent_type: "backend", card: "ORC-4" }))).toBeUndefined()
   expect(refusal(await call(conductor, "board_project", { name: "New" }))).toBeUndefined()
   conductor.idle("ses_a")

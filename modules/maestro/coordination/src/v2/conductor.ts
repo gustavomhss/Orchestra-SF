@@ -35,8 +35,8 @@ const MERGE = /(^|[\s;&|(])gh\s+pr\s+merge\b/
 
 type Budget = {
   reads: number
-  /** Projects Maestro read with `board_read` this drain. */
-  readonly boards: Set<string>
+  /** `board_read` stamps this drain, by project. A key is a project read; its numbers are issue reads. */
+  readonly stamps: Map<string, Set<number>>
   /** The worktree when Maestro first edited or ran a shell this drain, and at its latest such call. */
   baseline?: Snapshot.ID
   last?: Snapshot.ID
@@ -50,7 +50,7 @@ export function make(snapshot: Snapshot.Interface) {
   const budget = (sessionID: string) => {
     const known = budgets.get(sessionID)
     if (known) return known
-    const made: Budget = { reads: 0, boards: new Set(), over: false, locked: false }
+    const made: Budget = { reads: 0, stamps: new Map(), over: false, locked: false }
     budgets.set(sessionID, made)
     return made
   }
@@ -75,23 +75,39 @@ export function make(snapshot: Snapshot.Interface) {
       const value = yield* call
       if (READ_TOOLS.has(input.tool)) state.reads++
       if (input.tool === "task" && args.background !== true) state.reads = 0
-      if (input.tool === "board_read" && typeof args.project === "string") state.boards.add(args.project)
+      if (input.tool === "board_read" && typeof args.project === "string") {
+        const read = state.stamps.get(args.project) ?? new Set<number>()
+        if (typeof args.issue === "number") read.add(args.issue)
+        state.stamps.set(args.project, read)
+      }
+      const written = BOARD_WRITES[input.tool]
+      const project = written ? args[written] : undefined
+      if (typeof project === "string") state.stamps.delete(project)
       return value
     })
 
-  // A board change, or a dispatch naming a card, needs a board_read of that project this drain.
+  // A board write needs a `board_read` of that project since its last write this drain; reading an issue counts. A task
+  // naming a card needs that issue read — a project-only read does not — and does not itself drop the stamps. The check
+  // runs before the call; stamps drop only after a write succeeds.
   const board = (state: Budget, tool: string, args: Record<string, unknown>) => {
     const field = BOARD_WRITES[tool]
-    const card = tool === "task" && typeof args.card === "string" ? args.card : undefined
-    const project = card ? card.slice(0, card.indexOf("-")) : field ? args[field] : undefined
-    if (typeof project !== "string" || state.boards.has(project)) return Effect.void
-    return Effect.fail(
+    const project = field ? args[field] : undefined
+    if (typeof project === "string" && !state.stamps.has(project)) return unread(project)
+    if (tool !== "task" || typeof args.card !== "string") return Effect.void
+    const at = args.card.indexOf("-")
+    const key = args.card.slice(0, at)
+    const issue = Number(args.card.slice(at + 1))
+    if (state.stamps.get(key)?.has(issue)) return Effect.void
+    return unread(key, issue)
+  }
+
+  const unread = (project: string, issue?: number) =>
+    Effect.fail(
       new ToolSafety.Denied({
         reason: "maestro-board-unread",
-        detail: `Read the board first: call board_read with project ${JSON.stringify(project)}, then retry.`,
+        detail: `Read the board first: call board_read with project ${JSON.stringify(project)}${issue === undefined ? "" : ` and issue ${issue}`}, then retry.`,
       }),
     )
-  }
 
   // Git decides what changed, whatever wrote it. The worktree is measured before each Maestro edit or shell, so the
   // call that crosses the limit stands and the next one is refused. Without snapshots (no git, or `snapshots: false`)
