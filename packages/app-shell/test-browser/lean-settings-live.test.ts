@@ -201,8 +201,10 @@ if (process.env.LEAN_SETTINGS_DOM !== "1") {
         await settle()
         expect(savedIO.list).toHaveBeenCalledTimes(2)
         expect(savedIO.remove).not.toHaveBeenCalled()
-        expect(screen.host.querySelector('[role="status"]')?.textContent)
-          .toBe(fixture.copy["orchestra.settings.savedPermissions.loading"])
+        expect(screen.host.querySelector('[role="alert"] p')?.textContent)
+          .toBe(fixture.copy["orchestra.settings.savedPermissions.loadFailed"])
+        expect(screen.host.querySelector("[data-settings-sentinel]")?.textContent).toBe("Surrounding settings")
+        expect(screen.host.textContent).not.toContain("Page suspended")
 
         retry.resolve(rows)
         await settle()
