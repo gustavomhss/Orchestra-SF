@@ -50,10 +50,14 @@ export type Binding = {
   /** Lens children: the Session's lens and `ReviewAnalyze.page` (review-toolkit/analyze.ts) over the review's retained run. */
   readonly analyze?: {
     readonly lens: string
+    /** The Quick lead hunts more than one lens in its one Session; it may page any of these. */
+    readonly lenses?: ReadonlyArray<string>
     readonly page: (input: Page) => Effect.Effect<PageResult, Tool.Failure>
   }
   /** Verifiers: the review's probe context (offered options, cap, ledger, scratch copies). */
   readonly probe?: ReviewProbe.Context
+  /** A verifier whose scratch copy could not be made. Absent means this Session is not a verifier. */
+  readonly probeUnavailable?: string
   /** Retains a raw output under its citation uri. */
   readonly retain?: (artifact: { readonly uri: string; readonly text: string }) => Effect.Effect<void>
 }
@@ -110,14 +114,16 @@ export function tools(services: Services) {
           const binding = yield* bound(names.analyze, context)
           if (input.op === "run") return yield* new Tool.Failure({ message: "review_analyze run is host-only" })
           if (!binding.analyze) return yield* new Tool.Failure({ message: "review_analyze pages only in a lens Session" })
-          if (input.lens !== undefined && input.lens !== binding.analyze.lens)
-            return yield* new Tool.Failure({ message: `review_analyze pages only your lens: ${binding.analyze.lens}` })
+          const owned = binding.analyze.lenses
+          const requested = input.lens ?? binding.analyze.lens
+          if (owned ? !owned.includes(requested) : input.lens !== undefined && input.lens !== binding.analyze.lens)
+            return yield* new Tool.Failure({ message: `review_analyze pages only your lens: ${(owned ?? [binding.analyze.lens]).join(", ")}` })
           const page = yield* binding.analyze.page({
-            lens: binding.analyze.lens,
+            lens: owned ? requested : binding.analyze.lens,
             ...(input.filter ? { filter: input.filter } : {}),
             ...(input.cursor ? { cursor: input.cursor } : {}),
           })
-          return { title: `${binding.analyze.lens} items`, output: JSON.stringify(page), review: page }
+          return { title: `${requested} items`, output: JSON.stringify(page), review: page }
         }),
     }),
     [names.probe]: Tool.make({
@@ -129,7 +135,8 @@ export function tools(services: Services) {
       execute: (input, context) =>
         Effect.gen(function* () {
           const binding = yield* bound(names.probe, context)
-          if (!binding.probe) return yield* new Tool.Failure({ message: "review_probe runs only in a verifier Session" })
+          if (!binding.probe)
+            return yield* new Tool.Failure({ message: binding.probeUnavailable ?? "review_probe runs only in a verifier Session" })
           const probed = yield* ReviewProbe.run(input, binding.probe).pipe(
             Effect.provideService(AppProcess.Service, services.processes),
             Effect.mapError((error) => new Tool.Failure({ message: "review_probe could not run", error })),

@@ -216,6 +216,16 @@ const harness = (directory: string, prefix: string) =>
           return ANALYSIS
         }),
       region: (file, start, end) => Effect.succeed(`REGION ${file}:${start}-${end}`),
+      binding: (bound) =>
+        Effect.gen(function* () {
+          yield* Effect.acquireRelease(Effect.void, () => Effect.void)
+          calls.push(`bind:${keys.get(bound.sessionID)}`)
+          return { repository: directory }
+        }),
+      allow: (ids) =>
+        Effect.sync(() => {
+          calls.push(`allow:${ids.join(",")}`)
+        }),
     }
     const input = (tier: string | undefined, extra: Partial<ReviewFanoutV2.Input> = {}): ReviewFanoutV2.Input => ({
       request: { stage: "code", settings: { acceptedUnavailable: [] }, ...(tier ? { tier } : {}) },
@@ -268,6 +278,9 @@ test("a diff's changes carry the head line of every added line and the removed c
   ])
   expect(ReviewFanoutV2.sliceDiff(DIFF, ["src/a.ts"])).toBe(DIFF)
   expect(ReviewFanoutV2.sliceDiff(DIFF, ["src/b.ts"])).toBe("")
+  expect(ReviewFanoutV2.hunks(DIFF)).toEqual([
+    { path: "src/a.ts", line: 2, current: ["export const a = 2", "export const b = 3"], original: ["export const a = 1"] },
+  ])
 })
 
 test("Standard runs the seven steps in order, each Session with the scope and brief of its row", () =>
@@ -278,7 +291,12 @@ test("Standard runs the seven steps in order, each Session with the scope and br
       if (result.status !== "ran") throw new Error("expected a run")
 
       // Order: route (the analyze call already holds the routing), analyze, entry, hunt, verify, finish.
-      expect(h.calls.slice(0, 3)).toEqual(["analyze", "create:lead", "run:lead:entry"])
+      expect(h.calls.slice(0, 4)).toEqual(["analyze", "create:lead", "bind:lead", "run:lead:entry"])
+      for (const call of h.calls.filter((item) => item.startsWith("create:"))) {
+        const key = call.slice("create:".length)
+        expect(h.calls.indexOf(`bind:${key}`)).toBeGreaterThan(h.calls.indexOf(call))
+        expect(h.calls.findIndex((item) => item.startsWith(`run:${key}`))).toBeGreaterThan(h.calls.indexOf(`bind:${key}`))
+      }
       expect(h.analyzed[0].routing.tier.id).toBe("standard")
       expect(h.analyzed[0].packs.map((pack) => pack.id)).toEqual(["gitleaks", "repo"])
       expect(h.analyzed[0].cache).toBe("review_val_1_code")
@@ -393,7 +411,15 @@ test("Quick runs entry, hunt and finish in the one lead Session, verifying by qu
       const h = yield* harness(directory, "quick")
       const result = yield* ReviewFanoutV2.run(h.input("quick"), h.port)
       if (result.status !== "ran") throw new Error("expected a run")
-      expect(h.calls).toEqual(["analyze", "create:lead", "run:lead:entry", "run:lead:finish"])
+      expect(h.calls.filter((call) => !call.startsWith("allow:"))).toEqual([
+        "analyze",
+        "create:lead",
+        "bind:lead",
+        "run:lead:entry",
+        "run:lead:finish",
+      ])
+      expect(h.calls.some((call) => call.startsWith("allow:") && call.includes("correctness-logic") && call.includes("tests"))).toBe(true)
+      expect(h.calls.indexOf(h.calls.find((call) => call.startsWith("allow:")) ?? "")).toBeLessThan(h.calls.indexOf("run:lead:finish"))
       expect(yield* h.scope("lead")).toEqual({
         skills: { entry: "lucy-review", allow: ["lucy-lens-correctness-logic-invariants", "team-stack-js-ts"] },
         tools: ["read", "grep", "glob", "review_analyze", "maestro_record_review"],

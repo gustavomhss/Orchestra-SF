@@ -1,12 +1,13 @@
 export * as ReviewFanoutV2 from "./review-fanout"
 
 import { isDeepStrictEqual } from "node:util"
-import { Effect, Option, Schema, Semaphore } from "effect"
+import { Effect, Option, Schema, Semaphore, type Scope } from "effect"
 import type { FSUtil } from "@orchestra/core/fs-util"
 import type { GitCli } from "@orchestra/core/git-cli"
 import { ReviewCatalog } from "@orchestra/core/review/catalog"
 import { ReviewRoute } from "@orchestra/core/review/route"
 import { ReviewRouting } from "@orchestra/core/review/routing"
+import { ReviewTools } from "@orchestra/core/review/tools"
 import { ReviewItem } from "@orchestra/core/review-toolkit/item"
 import type { SessionSchema, SessionStore } from "@orchestra/core/session"
 import type { SessionScope } from "@orchestra/core/session/scope"
@@ -17,7 +18,7 @@ import { ReviewResultV2 } from "../governance/review-result"
 
 // The host fan-out of one lucy review (design §8.7, plan WP 1.6): route, analyze, entry in the lead Session, lens
 // children in parallel, merge, verifiers one per class, then the lead resumed for the card and the record call. The
-// host creates and scopes every Session before its first prompt (K4), so lucy has no delegation path. Children return
+// host creates, scopes and binds every Session before its first prompt (K4), so lucy has no delegation path. Children return
 // the fixed K9 schemas: the merge is mechanical and no child's prose reaches the lead.
 
 /** The fenced block each stage returns its K9 record in. */
@@ -70,6 +71,21 @@ export type Port = {
   readonly analyze: (input: AnalyzeInput) => Effect.Effect<Analysis, Tool.Failure>
   /** Lines `start..end` of a file at the reviewed head. */
   readonly region: (file: string, start: number, end: number) => Effect.Effect<string>
+  /** What this Session may reach. The fan-out binds it before the first turn and releases it when the review ends. */
+  readonly binding: (input: BindInput) => Effect.Effect<ReviewTools.Binding, Tool.Failure, Scope.Scope>
+  /** Adds lenses the Quick lead may page, after entry may have raised the route. */
+  readonly allow?: (lenses: ReadonlyArray<string>) => Effect.Effect<void>
+}
+
+/** What the host binds a review Session to. `retained` is the analyzer artifact the page reads. */
+export type BindInput = {
+  readonly sessionID: SessionSchema.ID
+  readonly role: Role
+  readonly lens?: string
+  readonly lenses?: ReadonlyArray<string>
+  readonly retained: string
+  readonly offered?: ReadonlyArray<string>
+  readonly cap: number
 }
 
 /** The tool ids each stage's scope may call (K7, `ReviewSeatTools`). */
@@ -152,8 +168,22 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
   // 3. Entry (the lead Session).
   const routedTier = runTier(catalog, routed.record.tier.id)
   const quick = !routedTier.budget.lensChildren
+  const bind = (
+    sessionID: SessionSchema.ID,
+    role: Role,
+    extra: { readonly lens?: string; readonly lenses?: ReadonlyArray<string>; readonly offered?: ReadonlyArray<string>; readonly cap: number },
+  ) =>
+    Effect.gen(function* () {
+      const bound = yield* port.binding({ sessionID, role, retained: analysis.retained.uri, ...extra })
+      yield* ReviewTools.bind(sessionID, bound)
+      return bound
+    })
   const teamStack = stackNodes(routed.record, catalog)
   const lead = yield* port.create({ key: "lead", role: "lead" })
+  yield* bind(lead, "lead", {
+    ...(quick ? { lenses: routed.record.lenses.map((lens) => lens.id) } : {}),
+    cap: routedTier.probeAttempts,
+  })
   const leadScope: SessionScope.Scope = {
     skills: {
       entry: ENTRY_NODE,
@@ -247,6 +277,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
     (analysis.retained.unread[lens] ?? 0) + capItems(lens).filter((item) => !read.includes(item.fingerprint)).length
 
   if (quick) {
+    if (port.allow) yield* port.allow(running.map((lens) => lens.id))
     const nodes = yield* Effect.forEach(running, (lens) => deliver(input, leadScope, lens.node))
     return yield* finishTurn(
       afterEntry,
@@ -277,6 +308,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
       Effect.gen(function* () {
         const key = `lens:${job.lens.id}:${job.slice.id}`
         const child = yield* port.create({ key, role: "lens" })
+        yield* bind(child, "lens", { lens: job.lens.id, cap: tier.probeAttempts })
         const scope: SessionScope.Scope = {
           skills: { entry: job.lens.node, allow: unique([...below(input.skills, job.lens.node), ...teamStack]) },
           tools: tools(input.stages.lens),
@@ -334,6 +366,8 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
     (batch) =>
       Effect.gen(function* () {
         const child = yield* port.create({ key: `verify:${batch.class}`, role: "verifier" })
+        const offered = unique(batch.candidates.flatMap((candidate) => options(catalog, tier, afterEntry, candidate).map((option) => option.id)))
+        const bound = yield* bind(child, "verifier", { offered, cap: tier.probeAttempts })
         const proof = catalog.classes.find((entry) => entry.id === batch.class)?.node ?? QUOTE_NODE
         const scope: SessionScope.Scope = {
           skills: { entry: proof, allow: unique([...batch.candidates.map((candidate) => candidate.node), ...teamStack]).filter((name) => name !== proof) },
@@ -376,6 +410,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
           batch,
           results: result?.value.results ?? [],
           deviations: [
+            ...(bound.probeUnavailable ? [deviation("verify", "check-unavailable", bound.probeUnavailable, child)] : []),
             ...(result?.deviations ?? []),
             ...scoped,
             ...(parsed ? [] : [deviation("verify", "stage-return", `the ${batch.class} return did not decode`, child)]),
@@ -506,6 +541,49 @@ export const baseRules = Effect.fn("ReviewFanoutV2.baseRules")(function* (
   )
   return found.flat()
 })
+
+/** Hunks a regress probe can revert: head lines (`current`) at `line`, replaced by the base lines (`original`). */
+export function hunks(diff: string) {
+  return sections(diff).flatMap((section) => {
+    const found: Array<{ path: string; line: number; current: string[]; original: string[] }> = []
+    let head = 0
+    let open: { line: number; current: string[]; original: string[] } | undefined
+    const flush = () => {
+      if (!open || (open.current.length === 0 && open.original.length === 0)) {
+        open = undefined
+        return
+      }
+      found.push({ path: section.path, ...open })
+      open = undefined
+    }
+    for (const line of section.text.split("\n")) {
+      const marker = /^@@ -\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@/.exec(line)
+      if (marker) {
+        flush()
+        head = Number(marker[1])
+        continue
+      }
+      if (head === 0 || line.startsWith("\\")) continue
+      if (line.startsWith(" ")) {
+        flush()
+        head += 1
+        continue
+      }
+      if (line.startsWith("-")) {
+        open ??= { line: head, current: [], original: [] }
+        open.original.push(line.slice(1))
+        continue
+      }
+      if (line.startsWith("+")) {
+        open ??= { line: head, current: [], original: [] }
+        open.current.push(line.slice(1))
+        head += 1
+      }
+    }
+    flush()
+    return found
+  })
+}
 
 /** The changes of a unified diff as routing reads them: added lines with their head line numbers, removed counts. */
 export function changes(diff: string): ReviewRoute.Change[] {

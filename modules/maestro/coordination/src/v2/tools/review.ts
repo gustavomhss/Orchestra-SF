@@ -4,7 +4,7 @@ import { createHash } from "node:crypto"
 import os from "node:os"
 import path from "node:path"
 import { and, desc, eq } from "drizzle-orm"
-import { Context, Effect, Layer, Option, Schema } from "effect"
+import { Context, Effect, Layer, Option, Schema, type Scope } from "effect"
 import { AgentV2 } from "@orchestra/core/agent"
 import { Node } from "@orchestra/core/effect/app-node"
 import { BoardProjectTable } from "@orchestra/core/board/sql"
@@ -16,7 +16,10 @@ import { ReviewCatalog } from "@orchestra/core/review/catalog"
 import { ReviewRouting } from "@orchestra/core/review/routing"
 import { ReviewSeatTools } from "@orchestra/core/review/seat-tools"
 import { ReviewSettings } from "@orchestra/core/review/settings"
+import { ReviewTools } from "@orchestra/core/review/tools"
 import { ReviewAnalyze } from "@orchestra/core/review-toolkit/analyze"
+import { ReviewProbe } from "@orchestra/core/review-toolkit/probe"
+import { ReviewScratch } from "@orchestra/core/review-toolkit/scratch-copy"
 import { AppProcess } from "@orchestra/core/process"
 import { SessionSchema, type SessionV2 } from "@orchestra/core/session"
 import { SessionExecution } from "@orchestra/core/session/execution"
@@ -132,7 +135,7 @@ const analyzeStep = (processes: AppProcess.Interface): Analyze => (input) => {
     base: input.base,
     head: input.head,
     tier: ReviewRouting.tier(input.routing),
-    store: path.join(os.tmpdir(), "orchestra-review", input.cache),
+    store: analysisStore(input.cache),
     changed,
     trusted: true,
     lane: "repo",
@@ -347,6 +350,19 @@ export function tools(input: {
           if (!current) return "LUCY_ERROR: Error: Review context changed before provider execution"
           const sessionID = (key: string) =>
             key === "lead" ? lead : SessionSchema.ID.make(`ses_lucy_review_${sha256(`${lead}\0${key}`)}`)
+          const cache = `review_${params.validationRecordID}_${stage}`
+          const leadLenses: string[] = []
+          const ledger = ReviewProbe.ledger()
+          const copies = yield* Effect.cached(
+            Effect.all(
+              {
+                head: ReviewScratch.create({ worktree, revision: artifact.headSHA }),
+                base: ReviewScratch.create({ worktree, revision: artifact.baseSHA }),
+              },
+              { concurrency: 1 },
+            ).pipe(Effect.provideService(AppProcess.Service, input.processes)),
+          )
+          const binding = reviewBinding({ worktree, diff, cache, lenses: leadLenses, ledger, copies })
           const port: ReviewFanoutV2.Port = {
             create: (child) =>
               sessions
@@ -393,8 +409,13 @@ export function tools(input: {
                 .pipe(
                   Effect.map((result) => (result.exitCode === 0 ? result.text().split("\n").slice(start - 1, end).join("\n") : "")),
                 ),
+            binding,
+            allow: (ids) =>
+              Effect.sync(() => {
+                for (const id of ids) if (!leadLenses.includes(id)) leadLenses.push(id)
+              }),
           }
-          const ran = yield* ReviewFanoutV2.run(
+          const ran = yield* Effect.scoped(ReviewFanoutV2.run(
             {
               request: {
                 stage,
@@ -411,7 +432,7 @@ export function tools(input: {
               fs: services.atlas.fs,
               store: services.store,
               verifierModel: "same",
-              cache: `review_${params.validationRecordID}_${stage}`,
+              cache,
               reviewed: artifact.headSHA,
               facts: {
                 workCard: params.workCard,
@@ -437,7 +458,7 @@ export function tools(input: {
               ...(first ? { firstRound: first } : {}),
             },
             port,
-          )
+          ))
           if (ran.status === "unaddressed")
             return `${WorkflowReviewV2.UNADDRESSED}: the workers left the reviewed tree ${artifact.headSHA} unchanged since the last review round.`
           const review = planned
@@ -623,3 +644,63 @@ const codeArtifact = Effect.fn("MaestroReviewTools.codeArtifact")(function* (
               : "Review artifact diff unavailable",
   })
 })
+
+const PROBE_TIMEOUT_SECONDS = 60
+
+const analysisStore = (cache: string) => path.join(os.tmpdir(), "orchestra-review", cache)
+
+/** The binding a review Session holds until the review's scope closes. Scratch copies are made once, for verifiers. */
+const reviewBinding = (held: {
+  readonly worktree: string
+  readonly diff: string
+  readonly cache: string
+  readonly lenses: string[]
+  readonly ledger: ReviewProbe.Ledger
+  readonly copies: Effect.Effect<
+    { readonly head: ReviewScratch.Snapshot; readonly base: ReviewScratch.Snapshot },
+    unknown,
+    Scope.Scope
+  >
+}) => (bound: ReviewFanoutV2.BindInput) =>
+  Effect.gen(function* () {
+    if (bound.lenses) {
+      for (const id of bound.lenses) if (!held.lenses.includes(id)) held.lenses.push(id)
+    }
+    const pageable = bound.lens !== undefined || (bound.lenses?.length ?? 0) > 0
+    const needsProbe = bound.role === "verifier" && (bound.offered ?? []).some((id) => ReviewProbe.BUILT.some((built) => built === id))
+    const made = needsProbe ? yield* held.copies.pipe(Effect.catch(() => Effect.succeed(undefined))) : undefined
+    return {
+      repository: held.worktree,
+      ...(pageable
+        ? {
+            analyze: {
+              lens: bound.lens ?? held.lenses[0] ?? "none",
+              ...(bound.role === "lead" ? { lenses: held.lenses } : {}),
+              page: (input: ReviewTools.Page) =>
+                ReviewAnalyze.page({
+                  store: analysisStore(held.cache),
+                  uri: bound.retained,
+                  lens: input.lens,
+                  ...(input.filter ? { filter: input.filter } : {}),
+                  ...(input.cursor ? { cursor: input.cursor } : {}),
+                }).pipe(Effect.mapError((error) => new Tool.Failure({ message: `review_analyze ${error.reason}` }))),
+            },
+          }
+        : {}),
+      ...(made
+        ? {
+            probe: {
+              reviewID: held.cache,
+              head: made.head,
+              base: made.base,
+              offered: bound.offered ?? [],
+              cap: bound.cap,
+              hunks: ReviewFanoutV2.hunks(held.diff),
+              ledger: held.ledger,
+              timeoutSeconds: PROBE_TIMEOUT_SECONDS,
+            },
+          }
+        : {}),
+      ...(needsProbe && !made ? { probeUnavailable: "review_probe could not make a scratch copy of the reviewed tree" } : {}),
+    }
+  })
