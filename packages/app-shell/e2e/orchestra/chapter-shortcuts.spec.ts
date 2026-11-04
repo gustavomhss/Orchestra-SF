@@ -86,7 +86,7 @@ test("edit captures a combination, rejects conflicts, fires the new binding inst
   await confirm.getByRole("button", { name: "Cancel" }).click()
   await expect(confirm).toHaveCount(0)
   await expect(row(page, "tab.new").locator("kbd")).toHaveText([keys.label.y])
-  await stays(page, () => keybinds(page), { "tab.new": expect.any(String) })
+  await expect.poll(() => keybinds(page)).toEqual({ "tab.new": expect.any(String) })
 
   await chapter.getByRole("button", { name: "Reset to defaults" }).click()
   await confirm.getByRole("button", { name: "Reset to defaults" }).click()
