@@ -649,6 +649,9 @@ const PROBE_TIMEOUT_SECONDS = 60
 
 export const analysisStore = (cache: string) => path.join(os.tmpdir(), "orchestra-review", cache)
 
+/** Logical citation URIs are keys, never filesystem paths supplied by a model. */
+export const rawArtifactPath = (cache: string, uri: string) => path.join(analysisStore(cache), "raw", `${sha256(uri)}.json`)
+
 /** The binding a review Session holds until the review's scope closes. Scratch copies are made once, for verifiers. */
 export const reviewBinding = (held: {
   readonly worktree: string
@@ -671,6 +674,9 @@ export const reviewBinding = (held: {
     const made = needsProbe ? yield* held.copies.pipe(Effect.catch(() => Effect.succeed(undefined))) : undefined
     return {
       repository: held.worktree,
+      retain: (artifact: { readonly uri: string; readonly text: string }) => Effect.promise(async () => {
+        await Bun.write(rawArtifactPath(held.cache, artifact.uri), JSON.stringify(artifact))
+      }),
       ...(pageable
         ? {
             analyze: {
