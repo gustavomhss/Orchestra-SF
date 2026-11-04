@@ -13,7 +13,7 @@ This is a first pass, not a security review. Find where the change touches a tru
 2. Follow each to where it lands: a shell, a query, a path, a template, a deserializer, a permission check, an outbound request, a log. A landing with no validation or encoding on the path is a `class:security.boundary` candidate; the trigger is the input.
 3. Check the change does not remove or weaken a check: authentication, authorization, a sandbox, a permission, an allowlist.
 
-For secrets, open `lucy-lens-security-secrets`.
+For matching hunks, open `lucy-lens-security-boundaries`, `lucy-lens-security-supply-chain`, `lucy-lens-security-ci`, or `lucy-lens-security-infra`. For secrets, open `lucy-lens-security-secrets`. These are perspectives in the same security pass.
 
 **Handoff.** When the change crosses a trust boundary (a new input source, authentication, authorization, crypto, a sandbox, a permission, network egress), record a handoff to the security lane with the reason and the lines. Until a security seat is built, that lane is not covered, and the handoff says `covered: false`. Never treat this first pass as the deep lane having passed.
 
