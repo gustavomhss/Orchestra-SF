@@ -30,6 +30,8 @@ export const ActionsTransferHandler = HttpApiBuilder.group(Api, "server.actionsT
       return HttpServerResponse.stream(actions.transfer(binding, target), {
         contentType: info.contentType,
         headers: { "content-disposition": `attachment; filename*=UTF-8''${encodeURIComponent(info.filename)}`,
+          "x-content-type-options": "nosniff",
+          "content-security-policy": "sandbox",
           ...(info.size === undefined ? {} : { "content-length": String(info.size) }) },
       })
     })),
