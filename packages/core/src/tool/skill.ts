@@ -197,7 +197,19 @@ const layer = Layer.effectDiscard(
             Effect.gen(function* () {
               const current = yield* skills.list()
               const skill = current.find((skill) => skill.name === input.name)
-              if (!skill) return yield* new ToolFailure({ message: missingSkill(input.name, current) })
+              if (!skill) {
+                // Find roots before filtering permissions: a denied parent must not promote its child.
+                const visible = yield* Effect.forEach(
+                  current.filter((candidate) => !SkillV2.nested(current, candidate)),
+                  (candidate) => permission.evaluate({
+                    action: name,
+                    resources: [candidate.name],
+                    sessionID: context.sessionID,
+                    agent: context.agent,
+                  }).pipe(Effect.map((effect) => effect === "deny" ? [] : [candidate])),
+                ).pipe(Effect.mapError((error) => unableToLoad(input.name, error)))
+                return yield* new ToolFailure({ message: missingSkill(input.name, visible.flat()) })
+              }
               return yield* Effect.gen(function* () {
                 yield* permission.assert({
                   action: name,
