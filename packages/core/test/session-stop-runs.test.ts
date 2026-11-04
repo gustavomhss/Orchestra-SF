@@ -146,7 +146,7 @@ describe("SessionV2 stops runs on archive and remove", () => {
         const events = yield* EventV2.Service
         const unsubscribe = yield* events.listen((event) =>
           Effect.sync(() => {
-            if (Schema.is(SessionEvent.Deleted)(event)) log.push(`deleted ${event.sessionID}`)
+            if (Schema.is(SessionEvent.Deleted)(event)) log.push(`deleted ${event.data.sessionID}`)
           }),
         )
         yield* Effect.addFinalizer(() => unsubscribe)
