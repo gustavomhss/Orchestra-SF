@@ -21,6 +21,7 @@ import type {
   GenesisReport,
   ResumeToken,
   RunCoverage,
+  RunFailure,
   SiteOutcome,
   Skeleton,
 } from "./types.js"
@@ -62,8 +63,7 @@ export interface GenesisApi {
   /** The TOTAL composition-root entry (GEN-8): `atlas-genesis <repo> --at <rev> [--budget N]
    *  [--scope <path>]` → `GenesisReport`. Runs S0→S4. TOTAL — a malformed repo/rev yields an honest
    *  empty/partial report carrying a `resumeToken`, NEVER a throw (GEN-8). `--scope` seeds a subtree, not
-   *  the whole repo (GEN-13). With all deepening loops off (`budget`) cost == the single-pass baseline
-   *  (GEN-14).
+   *  the whole repo (GEN-13).
    *
    *  [FLAG — arg carriers] the surface line (atlas-genesis:184) types none of the args; `repo`/`rev`
    *  transcribed as `string` (mirroring `scan`/`mine`; `rev` deliberately a malformable raw string, not a
@@ -94,18 +94,14 @@ export interface HandoffApi {
 /** The GEN-2 hard-ceiling cap: default budget is `min(frontier_size, 200)` sites/run (atlas-genesis:198). */
 export const CEILING_CAP = 200 as const
 
-/** All-off deepening (GEN-13/14 single-pass baseline) — this facet never opens a deepening loop (EPIC-31). */
-const LOOPS_OFF = { enabled: false, maxDepth: 0, epsilon: 0 } as const
-
-/** A cost policy at a CALLER-CHOSEN site ceiling, single-pass (all deepening loops off — the GEN-13/14
- *  baseline). The SAME shape `defaultBudget` returns; only the ceiling is the caller's, which is why it is
+/** A cost policy at a CALLER-CHOSEN site ceiling. The SAME shape `defaultBudget` returns; only the ceiling is the caller's, which is why it is
  *  the ONE source of that shape (`defaultBudget` is `cappedBudget(min(frontier, CEILING_CAP))`). The knob a
  *  metered `atlas mine` run reaches through `ATLAS_MINE_BUDGET` to cap real spend below the 200 default. */
 export function cappedBudget(ceiling: number): GenesisBudget {
-  return { ceiling, deepening: { review: LOOPS_OFF, enrich: LOOPS_OFF, expand: LOOPS_OFF } }
+  return { ceiling }
 }
 
-/** The GEN-2 default cost policy when the caller passes no `--budget`: `min(frontier_size, 200)`, loops off. */
+/** The GEN-2 default cost policy when the caller passes no `--budget`: `min(frontier_size, 200)`. */
 export function defaultBudget(frontierSize: number): GenesisBudget {
   return cappedBudget(Math.min(frontierSize, CEILING_CAP))
 }
@@ -178,8 +174,9 @@ interface PendingRun {
 }
 
 /** An honest empty/partial report — the total degrade shape (GEN-8b/8c). The ledger says `unavailable`:
- *  no frontier was ever obtained, which is a different claim from "the frontier was empty". */
-function emptyReport(token: ResumeToken | undefined, modelIdentity: string): GenesisReport {
+ *  no frontier was ever obtained, which is a different claim from "the frontier was empty". `failure` is the
+ *  error a catch below turned into this report — carried so the degrade is never mistaken for a clean run. */
+function emptyReport(token: ResumeToken | undefined, modelIdentity: string, failure?: RunFailure): GenesisReport {
   return {
     seeded: [],
     ratified: [],
@@ -191,6 +188,16 @@ function emptyReport(token: ResumeToken | undefined, modelIdentity: string): Gen
     ...answersWitness(undefined), // the same reason #210/#209's fields are stamped on a total-degrade report too.
     coverage: NO_FRONTIER,
     ...(token ? { resumeToken: token } : {}),
+    ...(failure !== undefined ? { failure } : {}),
+  }
+}
+
+/** A caught value as `RunFailure` data. A non-Error throw keeps its string form rather than being dropped. */
+function failureOf(e: unknown): RunFailure {
+  const err = e as { name?: unknown; message?: unknown } | null
+  return {
+    name: typeof err?.name === "string" ? err.name : "Error",
+    message: typeof err?.message === "string" ? err.message : String(e),
   }
 }
 
@@ -267,10 +274,11 @@ export function makeRunController(deps: ControllerDeps): GenesisApi & HandoffApi
       const plan = deps.plan(repo, rev, scope)
       const b = budget ?? defaultBudget(plan.sites.length)
       return runFresh(plan, b)
-    } catch {
-      // GEN-8c: a malformed repo/rev never throws — honest empty skeleton + resume cursor.
+    } catch (e) {
+      // GEN-8c: a malformed repo/rev never throws — honest empty skeleton + resume cursor, and the error
+      // itself on `failure` so the caller can tell this degrade from a clean empty run.
       pending = null
-      return emptyReport({ lastCompletedRank: -1 }, identity())
+      return emptyReport({ lastCompletedRank: -1 }, identity(), failureOf(e))
     }
   }
 
@@ -309,8 +317,8 @@ export function makeRunController(deps: ControllerDeps): GenesisApi & HandoffApi
       const report = toReport(res, false, planned, prior, identity(), deps.answerReceipts?.())
       if (!res.interrupted) deps.handoffTo() // the resumed run completed ⇒ hand off (GEN-7a)
       return report
-    } catch {
-      return emptyReport(token, identity())
+    } catch (e) {
+      return emptyReport(token, identity(), failureOf(e))
     }
   }
 
@@ -338,8 +346,8 @@ export function makeRunController(deps: ControllerDeps): GenesisApi & HandoffApi
       // Control returns to born-from-work after the incremental pass (GEN-7a); writes were idempotent (7b).
       if (!res.interrupted) deps.handoffTo()
       return report
-    } catch {
-      return emptyReport({ lastCompletedRank: -1 }, identity())
+    } catch (e) {
+      return emptyReport({ lastCompletedRank: -1 }, identity(), failureOf(e))
     }
   }
 
