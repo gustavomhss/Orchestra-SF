@@ -2,7 +2,7 @@ export * as FileSystem from "./filesystem"
 
 import { makeLocationNode } from "./effect/app-node"
 import path from "path"
-import { Context, Effect, Layer, Schema } from "effect"
+import { Context, Effect, Layer, Schema, Stream } from "effect"
 import { FSUtil } from "./fs-util"
 import { Location } from "./location"
 import { PositiveInt, RelativePath } from "./schema"
@@ -84,8 +84,17 @@ const baseLayer = Layer.effect(
         const info = yield* fs.stat(target.real).pipe(Effect.orDie)
         if (info.type !== "File") return yield* new PathError({ path: input.path, reason: "not-file" })
         if (Number(info.size) > READ_LIMIT) return yield* new PathError({ path: input.path, reason: "too-large" })
+        // Stat can race file growth; a sentinel byte detects overflow without reading the whole file.
+        const chunks = yield* fs.stream(target.real, { bytesToRead: READ_LIMIT + 1 }).pipe(Stream.runCollect, Effect.orDie)
+        const size = chunks.reduce((size, chunk) => size + chunk.byteLength, 0)
+        if (size > READ_LIMIT) return yield* new PathError({ path: input.path, reason: "too-large" })
+        const content = new Uint8Array(size)
+        chunks.reduce((offset, chunk) => {
+          content.set(chunk, offset)
+          return offset + chunk.byteLength
+        }, 0)
         return {
-          content: yield* fs.readFile(target.real).pipe(Effect.orDie),
+          content,
           mime: FSUtil.mimeType(target.real),
         }
       }),
