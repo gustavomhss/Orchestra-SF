@@ -39,7 +39,7 @@ import { Snapshot } from "@orchestra/core/snapshot"
 import { SystemContext } from "@orchestra/core/system-context"
 import { TaskTool } from "@orchestra/core/tool/task"
 import { ToolRegistry } from "@orchestra/core/tool/registry"
-import { Context, DateTime, Deferred, Effect, Fiber, Layer, LayerMap, Schema, Stream } from "effect"
+import { Cause, Context, DateTime, Deferred, Effect, Exit, Fiber, Layer, LayerMap, Schema, Stream } from "effect"
 import { asc, eq } from "drizzle-orm"
 import { Board } from "@orchestra/schema/board"
 import { testEffect } from "./lib/effect"
@@ -808,6 +808,14 @@ const worktrees = () => Effect.promise(async () => ({
   folders: (await fs.readdir(path.join(repo.path, ".worktrees")).catch(() => [] as string[])).filter((name) => name !== ".gitignore"),
 }))
 
+const assertDirectoryMissing = (directory: string) => Effect.promise(async () => {
+  const absent = await fs.lstat(directory).then(() => false, (error: unknown) => {
+    if (typeof error === "object" && error !== null && "code" in error && error.code === "ENOENT") return true
+    throw error
+  })
+  expect(absent).toBe(true)
+})
+
 const seedRepoProject = Effect.gen(function* () {
   const database = yield* Database.Service
   yield* database.db.insert(ProjectTable).values({
@@ -827,6 +835,79 @@ describe("TaskTool worktree lifecycle", () => {
     const settled = yield* settleTool(f.registry, yield* record(f.parent.id, "denied-worktree", { worktree: true, description: "Denied worktree task" }))
     expect(settled.result.type).toBe("error")
     expect(yield* worktrees()).toEqual(before)
+    expect((yield* f.sessions.list()).filter((session) => session.parentID === f.parent.id)).toHaveLength(0)
+    expect(f.harness.requests).toHaveLength(0)
+  }))
+
+  repoIt.live("a task rejected after observing its pending-permission worktree removes that worktree", () => Effect.gen(function* () {
+    yield* seedRepoProject
+    const f = yield* setupAt(repoDirectory)
+    const before = yield* worktrees()
+    yield* f.agents.transform((draft) => draft.update(caller, (agent) => {
+      agent.permissions = [{ action: "task", resource: "*", effect: "ask" }]
+    }))
+    const call = yield* record(f.parent.id, "observed-reject-worktree", { worktree: true, description: "Observed rejection task" })
+    const task = yield* settleTool(f.registry, call).pipe(Effect.forkChild)
+    const asked = yield* Effect.repeat(f.permission.forSession(f.parent.id), { until: (requests) => requests.length === 1 })
+    expect(asked[0]).toMatchObject({
+      action: "task", resources: [worker, `${providerID}/cheap`],
+      source: { type: "tool", messageID: call.assistantMessageID, callID: call.call.id },
+    })
+    expect((yield* f.sessions.list()).filter((session) => session.parentID === f.parent.id)).toHaveLength(0)
+    expect(f.harness.requests).toHaveLength(0)
+    // Permission waits after creation but before child adoption: this call must have something to clean up.
+    const during = yield* worktrees()
+    expect(during.registered).toHaveLength(before.registered.length + 1)
+    expect(during.folders).toHaveLength(before.folders.length + 1)
+    const added = during.registered.filter((entry) => !before.registered.includes(entry))
+    expect(added).toHaveLength(1)
+    const directory = added[0].slice("worktree ".length)
+    expect((yield* Effect.promise(() => fs.lstat(directory))).isDirectory()).toBe(true)
+    yield* f.permission.reply({ requestID: asked[0].id, reply: "reject" })
+    const outcome = yield* Fiber.await(task)
+    expect(Exit.isFailure(outcome)).toBe(true)
+    if (!Exit.isFailure(outcome)) throw new Error("Expected rejected Task failure")
+    // PermissionV2.assert turns an explicit rejection without feedback into a DeclinedError defect.
+    expect(outcome.cause.reasons.some((reason) =>
+      reason._tag === "Die" && Schema.is(PermissionV2.DeclinedError)(reason.defect),
+    )).toBe(true)
+    expect(yield* worktrees()).toEqual(before)
+    yield* assertDirectoryMissing(directory)
+    expect(yield* f.permission.forSession(f.parent.id)).toHaveLength(0)
+    expect((yield* f.sessions.list()).filter((session) => session.parentID === f.parent.id)).toHaveLength(0)
+    expect(f.harness.requests).toHaveLength(0)
+  }))
+
+  repoIt.live("a task interrupted after observing its pending-permission worktree removes that worktree", () => Effect.gen(function* () {
+    yield* seedRepoProject
+    const f = yield* setupAt(repoDirectory)
+    const before = yield* worktrees()
+    yield* f.agents.transform((draft) => draft.update(caller, (agent) => {
+      agent.permissions = [{ action: "task", resource: "*", effect: "ask" }]
+    }))
+    const call = yield* record(f.parent.id, "observed-interrupt-worktree", { worktree: true, description: "Observed interruption task" })
+    const task = yield* settleTool(f.registry, call).pipe(Effect.forkChild)
+    const asked = yield* Effect.repeat(f.permission.forSession(f.parent.id), { until: (requests) => requests.length === 1 })
+    expect(asked[0]).toMatchObject({
+      action: "task", resources: [worker, `${providerID}/cheap`],
+      source: { type: "tool", messageID: call.assistantMessageID, callID: call.call.id },
+    })
+    expect((yield* f.sessions.list()).filter((session) => session.parentID === f.parent.id)).toHaveLength(0)
+    expect(f.harness.requests).toHaveLength(0)
+    const during = yield* worktrees()
+    expect(during.registered).toHaveLength(before.registered.length + 1)
+    expect(during.folders).toHaveLength(before.folders.length + 1)
+    const added = during.registered.filter((entry) => !before.registered.includes(entry))
+    expect(added).toHaveLength(1)
+    const directory = added[0].slice("worktree ".length)
+    expect((yield* Effect.promise(() => fs.lstat(directory))).isDirectory()).toBe(true)
+    const outcome = yield* Fiber.interrupt(task)
+    expect(Exit.isFailure(outcome)).toBe(true)
+    if (!Exit.isFailure(outcome)) throw new Error("Expected interrupted Task failure")
+    expect(Cause.hasInterrupts(outcome.cause)).toBe(true)
+    expect(yield* worktrees()).toEqual(before)
+    yield* assertDirectoryMissing(directory)
+    expect(yield* f.permission.forSession(f.parent.id)).toHaveLength(0)
     expect((yield* f.sessions.list()).filter((session) => session.parentID === f.parent.id)).toHaveLength(0)
     expect(f.harness.requests).toHaveLength(0)
   }))
