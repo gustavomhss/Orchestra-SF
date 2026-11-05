@@ -108,6 +108,9 @@ export const nativeProfiles: Readonly<Record<string, NativeProfile>> = Object.fr
 })
 
 // Seat-specific grants extend the unchanged base. The root edit deny is worktree-relative and added by Agent.
+// Memory names are not in OWN today. The list stays so a later OWN edit cannot grant them through this floor.
+const reviewFloorExcluded: readonly string[] = ["read", "skill", "atlas_memory_recall", "atlas_memory_emit"]
+
 function seatProfile(seat: Seat): NativeProfile {
   const root = SeatSkillRoot.roots[seat.id]
   if (seat.skills.length > 0 && !root) throw new Error(`Missing native seat skill root: ${seat.id}`)
@@ -118,7 +121,7 @@ function seatProfile(seat: Seat): NativeProfile {
     // .env denial and skill is the seat's skills grant below. Atlas context arrives only through OWN. Memory tools
     // stay on the Atlas Memory owners below, even if a later OWN edit names them.
     ...(seat.review ? Object.fromEntries([...ReviewSeatTools.OWN, ...ReviewSeatTools.LOOP]
-      .filter((id) => id !== "read" && id !== "skill" && id !== "atlas_memory_recall" && id !== "atlas_memory_emit")
+      .filter((id) => !reviewFloorExcluded.includes(id))
       .map((id) => [id, "allow" as const])) : {}),
     ...(seat.atlasMemory ? { atlas_context: "allow" as const, atlas_memory_recall: "allow" as const, atlas_memory_emit: "allow" as const } : {}),
     ...(seat.id === "archie" ? {

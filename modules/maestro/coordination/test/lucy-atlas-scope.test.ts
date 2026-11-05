@@ -26,7 +26,7 @@ import { SessionStore } from "@orchestra/core/session/store"
 import { SkillV2 } from "@orchestra/core/skill"
 import { ToolRegistry } from "@orchestra/core/tool/registry"
 import { ToolOutputStore } from "@orchestra/core/tool-output-store"
-import { Effect, Layer } from "effect"
+import { Effect, Layer, Schema } from "effect"
 import { expectSpawn } from "../../../../packages/core/test/fixture/omni-expect"
 import { nativeProfiles } from "../src/roster"
 import { MaestroAtlasSourceV2 } from "../src/v2/atlas-source"
@@ -372,16 +372,23 @@ describe("lucy atlas stage scope", () => {
           assistantMessageID: SessionMessage.ID.make("msg_lucy_scope_held"),
           call: { type: "tool-call", id: "call_lucy_catalog", name: "atlas_context", input: { action: "catalog" } },
         })
-        const body = decoded(settled)
-        expect(body).toEqual({
-          status: "held",
-          notRun: true,
-          reason: "provider-unconfigured",
-          evidence: [projectID],
-        })
-        expect(body.coverage).toBeUndefined()
-        expect(body.units).toBeUndefined()
-        expect(body.unit).toBeUndefined()
+        if (settled.result.type !== "text") throw new Error(`atlas_context did not return text: ${settled.result.type}`)
+        const held = Schema.decodeUnknownSync(Schema.Struct({
+          status: Schema.Literal("held"),
+          notRun: Schema.Literal(true),
+          reason: Schema.Literal("provider-unconfigured"),
+          evidence: Schema.Array(Schema.String),
+          coverage: Schema.optional(Schema.Unknown),
+          units: Schema.optional(Schema.Unknown),
+          unit: Schema.optional(Schema.Unknown),
+        }))(JSON.parse(String(settled.result.value)))
+        expect(held.status).toBe("held")
+        expect(held.notRun).toBe(true)
+        expect(held.reason).toBe("provider-unconfigured")
+        expect(held.evidence).toEqual([projectID])
+        expect(held.coverage).toBeUndefined()
+        expect(held.units).toBeUndefined()
+        expect(held.unit).toBeUndefined()
       }).pipe(Effect.scoped, Effect.provide(layer as Layer.Layer<Database.Service | SessionStore.Service | AgentV2.Service | ToolRegistry.Service>)),
     )
   })

@@ -359,7 +359,7 @@ describe("lucy readonly Atlas Own", () => {
   test("the floor grants atlas_context only; memory stays denied. Session charge is lucy-atlas-scope.test.ts", () => {
     expect(ReviewSeatTools.lead.includes("atlas_context")).toBe(true)
     expect(ReviewSeatTools.lens.includes("atlas_context")).toBe(true)
-    expect(ReviewSeatTools.verifier.includes("atlas_context")).toBe(false)
+    expect(ReviewSeatTools.verifier).not.toContain("atlas_context")
     const rules = [...MaestroSeatsV2.floor(nativeProfiles.lucy), ...MaestroSeatsV2.visibility("lucy")]
     const configured = [{ action: "*", resource: "*", effect: "allow" as const }]
     expect(PermissionV2.evaluate("atlas_context", "lucy", configured, rules).effect).toBe("allow")
