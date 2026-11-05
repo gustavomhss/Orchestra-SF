@@ -9,6 +9,8 @@ import { ReviewRouting } from "@orchestra/core/review/routing"
 import { ReviewSeatTools } from "@orchestra/core/review/seat-tools"
 import { ReviewTools } from "@orchestra/core/review/tools"
 import type { ReviewAnalyze } from "@orchestra/core/review-toolkit/analyze"
+import type { ReviewLedger } from "@orchestra/core/review/ledger"
+import { ReviewOutcomes } from "@orchestra/core/review/outcomes"
 import { ReviewItem } from "@orchestra/core/review-toolkit/item"
 import { ReviewProbe } from "@orchestra/core/review-toolkit/probe"
 import type { SessionSchema, SessionStore } from "@orchestra/core/session"
@@ -54,6 +56,7 @@ export type FinishAuthorization = {
   readonly method: string
   readonly routingDigest: string
   readonly catalogDigest: string
+  readonly outcomes: ReadonlyArray<ReviewLedger.Read>
 }
 
 /** The analyze step's return (K6): checks, triaged items per lens after the §8.6 pipeline, and the retained artifact. */
@@ -106,6 +109,8 @@ export type BindInput = {
   readonly cap: number
   /** New settled attempts only. The shared ledger already holds them; do not copy `ledger.observed` here. */
   readonly observeProbes?: (items: ReadonlyArray<ReviewProbe.Observed>) => void
+  /** Successful pages for this Session only. Not a model delivery claim. */
+  readonly observeItems?: (items: ReadonlyArray<ReviewItem.ToolItem>) => void
 }
 
 /** The tool ids each stage's scope may call (K7, `ReviewSeatTools`). */
@@ -157,6 +162,7 @@ export type Result =
       readonly counts: Counts
       /** Host facts for this finish. Not read back from the model card. */
       readonly checkFacts: ReviewChecksV2.Facts
+      readonly outcomes: ReadonlyArray<ReviewLedger.Read>
     }
 
 type Counts = {
@@ -171,10 +177,11 @@ type Counts = {
 type Tier = ReviewCatalog.Catalog["route"]["tiers"][number]
 type Lens = ReviewRouting.Lens
 type Entry = Extract<ReviewResultV2.EntryRecord, { status: "eligible" }>
-type Merged = ReviewResultV2.Candidate & {
+type Merged = Omit<ReviewResultV2.Candidate, "source"> & {
   readonly id: string
   readonly fingerprint: string
   readonly lenses: ReadonlyArray<string>
+  readonly sources: ReadonlyArray<string>
   readonly agreement: number
   readonly observation: boolean
 }
@@ -209,9 +216,15 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
   const teamStack = stackNodes(routed.record, catalog)
   const auditNodes = new Set(["lucy-audit", ...below(input.skills, "lucy-audit")])
   const lead = yield* port.create({ key: "lead", role: "lead" })
+  const delivered = new Map<string, ReviewItem.ToolItem[]>()
+  const observeFor = (sessionID: string) => (items: ReadonlyArray<ReviewItem.ToolItem>) => {
+    const current = delivered.get(sessionID) ?? []
+    delivered.set(sessionID, current.concat(items))
+  }
   yield* bind(lead, "lead", {
     ...(quick ? { lenses: routed.record.lenses.map((lens) => lens.id) } : {}),
     cap: routedTier.probeAttempts,
+    observeItems: observeFor(lead),
   })
   const leadScope: SessionScope.Scope = {
     skills: {
@@ -266,6 +279,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
   const observeProbes = (items: ReadonlyArray<ReviewProbe.Observed>) => {
     for (const item of items) observed.push(item)
   }
+  let decisions: ReadonlyArray<ReviewOutcomes.Decision> = []
   const finishTurn = (
     sessionRecord: ReviewRouting.Record,
     body: ReadonlyArray<string>,
@@ -286,15 +300,22 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
         ...(entryBlocker ? { entryBlockers: [entryBlocker] } : {}),
         probes: observed.slice().sort(byProbeIdentity),
       })
+      const outcomes = ReviewOutcomes.reads({
+        delivered: [...delivered.values()].flat(),
+        decisions,
+        catalog: input.catalog,
+      })
       const authorization = {
         checkFacts,
         method,
         routingDigest: ReviewRouting.digest(sessionRecord),
         catalogDigest: sessionRecord.catalog,
+        outcomes,
       }
       const reply = yield* RUNNING.withPermit(port.run(lead, [
         ...body,
         `Host check facts (embed these checks and blockers verbatim; host authority, not model text):\n${JSON.stringify({ checks: checkFacts.checks, blockers: checkFacts.blockers })}`,
+        `Host outcomes (pass these exact pack, rule, fingerprint and outcome records as items; host authority, do not invent):\n${JSON.stringify(outcomes.map((item) => ({ pack: item.pack, rule: item.rule, fingerprint: item.fingerprint, outcome: item.outcome })))}`,
       ].join("\n\n"), {
         key: "finish",
         finish: !cardOnly,
@@ -310,6 +331,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
         confirmed,
         counts,
         checkFacts,
+        outcomes,
       } as Result
     })
 
@@ -349,6 +371,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
 
   if (quick) {
     if (port.allow) yield* port.allow(running.map((lens) => lens.id))
+    for (const lens of running) observeFor(lead)(capItems(lens.id))
     const nodes = yield* Effect.forEach(running, (lens) => deliver(input, leadScope, lens.node))
     return yield* finishTurn(
       afterEntry,
@@ -378,7 +401,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
       Effect.gen(function* () {
         const key = `lens:${job.lens.id}:${job.slice.id}`
         const child = yield* port.create({ key, role: "lens" })
-        yield* bind(child, "lens", { lens: job.lens.id, cap: tier.probeAttempts })
+        yield* bind(child, "lens", { lens: job.lens.id, cap: tier.probeAttempts, observeItems: observeFor(child) })
         const scope: SessionScope.Scope = {
           skills: { entry: job.lens.node, allow: unique([...below(input.skills, job.lens.node).filter((name) => !auditNodes.has(name)), ...teamStack]) },
           tools: stageTools(input.stages.lens),
@@ -386,6 +409,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
         }
         yield* narrow(input.store, child, scope)
         const shown = capItems(job.lens.id)
+        observeFor(child)(shown)
         const reopened = open.filter((finding) => finding.lens === job.lens.id)
         const brief = [
           `Stage: hunt, lens ${job.lens.id}, slice ${job.slice.id}. Return candidates only; every candidate names the node whose rule it applies. Return at most ${tier.budget.candidatesPerLens} candidates and ${ReviewResultV2.CAPS.observations} one-line observations outside your lens.`,
@@ -405,13 +429,16 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
         const reply = yield* RUNNING.withPermit(port.run(child, brief, { key: "hunt", finish: false }))
         const parsed = ReviewResultV2.parseLens(block(reply, TAGS.lens))
         const result = parsed ? ReviewResultV2.capLens(parsed, tier.budget.candidatesPerLens, child) : undefined
+        const boundSources = result ? admitSources(result.value.candidates, delivered.get(child) ?? []) : { sources: [], invalid: [] }
         const scoped = yield* deviationsOf(input.store, child, "hunt", 0)
         return {
           lens: job.lens,
           value: result?.value,
+          sources: boundSources.sources,
           deviations: [
             ...(result?.deviations ?? []),
             ...scoped,
+            ...(boundSources.invalid.length ? [deviation("hunt", "source-unbound", `claimed source not delivered to ${job.lens.id}: ${boundSources.invalid.join(", ")}`, child)] : []),
             ...(parsed ? [] : [deviation("hunt", "stage-return", `the ${job.lens.id} return did not decode`, child)]),
           ],
         }
@@ -421,7 +448,12 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
 
   // 5. Merge (host).
   const tool = Object.values(items).flat()
-  const merged = merge(hunts.flatMap((hunt) => (hunt.value ? [hunt.value] : [])), tool, catalog)
+  const merged = merge(hunts.flatMap((hunt) => hunt.value ? [{
+    lens: hunt.lens.id,
+    candidates: hunt.value.candidates,
+    observations: hunt.value.observations,
+    sources: hunt.sources,
+  }] : []), tool, catalog)
 
   // 6. Verify (one verifier per class, up to its candidate cap, in rank order).
   const classes = unique(merged.map((candidate) => candidate.class))
@@ -580,6 +612,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
     questions: questions.length,
     dropped,
   }
+  decisions = outcomeDecisions(settled, overflow)
   const read = hunts.flatMap((hunt) => (hunt.value?.items ?? []).map((item) => item.fingerprint))
   // K10: every analyzer item a lens child read, for the record call's `items` outcomes.
   const readItems = hunts.flatMap((hunt) =>
@@ -725,13 +758,74 @@ function applyEntry(record: ReviewRouting.Record, entry: Entry, catalog: ReviewC
 
 // Fingerprint dedup across lens children, with agreement counted per lens and per overlapping analyzer item. An
 // observation outside a lens becomes a candidate of its class with the lowest rank. Agreement only orders the queue.
+function decisionState(state: string | undefined) {
+  if (state === "confirmed") return "confirmed" as const
+  if (state === "dropped") return "refuted" as const
+  return "question" as const
+}
+
+function admitSources(candidates: ReadonlyArray<ReviewResultV2.Candidate>, items: ReadonlyArray<ReviewItem.ToolItem>) {
+  const sources: Array<string | undefined> = []
+  const invalid: string[] = []
+  for (const candidate of candidates) {
+    if (!candidate.source) {
+      sources.push(undefined)
+      continue
+    }
+    const item = items.find((entry) => entry.fingerprint === candidate.source)
+    const end = candidate.endLine ?? candidate.line
+    const overlaps = item !== undefined && item.class === candidate.class && item.path === candidate.path && item.line <= end && (item.endLine ?? item.line) >= candidate.line
+    if (!overlaps) {
+      invalid.push(candidate.source)
+      sources.push(undefined)
+      continue
+    }
+    sources.push(candidate.source)
+  }
+  return { sources, invalid }
+}
+
+function outcomeDecisions(
+  settled: ReadonlyArray<{ readonly candidate: Merged; readonly result?: { readonly state: string } }>,
+  overflow: ReadonlyArray<Merged>,
+): ReviewOutcomes.Decision[] {
+  const decided = [
+    ...settled.map((item) => ({
+      candidate: item.candidate,
+      state: decisionState(item.result?.state),
+    })),
+    ...overflow.map((candidate) => ({ candidate, state: "question" as const })),
+  ]
+  return decided.flatMap((item) => item.candidate.sources.map((source) => ({
+    source,
+    class: item.candidate.class,
+    path: item.candidate.path,
+    line: item.candidate.line,
+    ...(item.candidate.endLine ? { endLine: item.candidate.endLine } : {}),
+    state: item.state,
+  })))
+}
+
 function merge(
-  returns: ReadonlyArray<ReviewResultV2.LensReturn>,
+  returns: ReadonlyArray<{
+    readonly lens: string
+    readonly candidates: ReadonlyArray<ReviewResultV2.Candidate>
+    readonly observations: ReviewResultV2.LensReturn["observations"]
+    readonly sources: ReadonlyArray<string | undefined>
+  }>,
   items: ReadonlyArray<ReviewItem.ToolItem>,
   catalog: ReviewCatalog.Catalog,
 ): Merged[] {
   const raised = returns.flatMap((value) => [
-    ...value.candidates.map((candidate) => ({ candidate, lens: value.lens, observation: false })),
+    ...value.candidates.map((candidate, index) => {
+      const source = value.sources[index]
+      return {
+        candidate,
+        lens: value.lens,
+        observation: false,
+        sources: source ? [source] : [],
+      }
+    }),
     ...value.observations.map((item) => ({
       candidate: {
         class: item.class,
@@ -747,6 +841,7 @@ function merge(
       },
       lens: value.lens,
       observation: true,
+      sources: [] as string[],
     })),
   ])
   const keyed = raised.map((item) => ({
@@ -768,7 +863,16 @@ function merge(
         (item) => item.class === best.candidate.class && item.path === best.candidate.path && item.line <= end && (item.endLine ?? item.line) >= best.candidate.line,
       ).length
       const lenses = unique(group.map((item) => item.lens))
-      return { ...best.candidate, fingerprint, lenses, agreement: lenses.length + tools, observation: group.every((item) => item.observation) }
+      const { source: claimed, ...rest } = best.candidate
+      void claimed
+      return {
+        ...rest,
+        fingerprint,
+        lenses,
+        sources: unique(group.flatMap((item) => item.sources)),
+        agreement: lenses.length + tools,
+        observation: group.every((item) => item.observation),
+      }
     })
     .toSorted(
       (left, right) =>
