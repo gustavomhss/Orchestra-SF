@@ -10,7 +10,7 @@ import { ReviewRouting } from "../../src/review/routing"
 // loader, runtime discovery and catalog check live in the maestro tree test. This file
 // does not close analyzer acquisition, the PR-slice route suite, or A9 source gaps.
 
-const catalog = ReviewCatalog.current
+const catalog: ReviewCatalog.Catalog = ReviewCatalog.current
 const settings = { acceptedUnavailable: [] }
 
 const LENSES = [
@@ -235,13 +235,15 @@ describe("phase 3 acceptance", () => {
     for (const [id, file] of BINDINGS) {
       const record = ReviewRoute.route(request("code", "standard"), { files: [file] }, head(file, "const n = 1"), catalog)
       expect(record.overlays).toContainEqual({ id, source: "path", signal: file })
-      expect(routedOrCapped(record, id)).toEqual(catalog.overlays.find((overlay) => overlay.id === id)?.lenses.toSorted())
+      const overlay = catalog.overlays.find((overlay) => overlay.id === id)
+      if (!overlay) throw new Error(`missing catalog overlay: ${id}`)
+      expect(routedOrCapped(record, id)).toEqual(overlay.lenses.toSorted())
     }
     for (const [id, text] of SUGGESTIONS) {
       const record = ReviewRoute.route(request("code", "quick"), { files: ["src/plain.ts"] }, head("src/plain.ts", text), catalog)
       const overlay = record.overlays.find((entry) => entry.id === id)
       expect(overlay?.source).toBe("content")
-      expect(overlay?.signal.startsWith("src/plain.ts:1 ")).toBe(true)
+      expect(overlay?.signal?.startsWith("src/plain.ts:1 ")).toBe(true)
       expect(record.lenses.some((lens) => lens.because === `overlay:${id}`)).toBe(false)
     }
     const lookalike = ReviewRoute.route(
