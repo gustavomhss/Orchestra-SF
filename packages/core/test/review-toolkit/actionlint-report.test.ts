@@ -13,8 +13,17 @@ const outcome = (stdout: Buffer, exitCode: number | null = 1): ResearchProcess.O
   stdout: captured(stdout), stderr: captured(Buffer.alloc(0)),
 })
 const bytes = (value: unknown) => Buffer.from(JSON.stringify(value))
+const expectedRules = ["action", "credentials", "deprecated-commands", "env-var", "events", "expression", "glob", "id", "if-cond", "job-needs", "matrix", "permissions", "runner-label", "shell-name", "workflow-call"] as const
 
 describe("actionlint native report policy", () => {
+  test("pins and accepts exactly the native actionlint kinds", () => {
+    expect(ReviewActionlintReport.RULES).toEqual(expectedRules)
+    for (const kind of expectedRules)
+      expect(ReviewActionlintReport.parseReport(JSON.stringify([{ ...row, kind }]), options).status).toBe("ok")
+    for (const kind of ["invented-rule", "shellcheck", "pyflakes"])
+      expect(ReviewActionlintReport.parseReport(JSON.stringify([{ ...row, kind }]), options)).toMatchObject({ status: "acquisition-error", reason: "unknown-rule" })
+  })
+
   test("maps known diagnostics through projected paths without inventing endLine", () => {
     const parsed = ReviewActionlintReport.parseReport(JSON.stringify([row]), options)
     expect(parsed).toMatchObject({ status: "ok", results: [{ pack: "actionlint", rule: "expression", path: ".github/workflows/original.yaml", line: 4, message: row.message, snippet: row.snippet, suppressions: [] }] })
@@ -46,10 +55,20 @@ describe("actionlint native report policy", () => {
     expect(ReviewActionlintReport.parseReport("[]", { root: "relative", paths })).toMatchObject({ status: "acquisition-error" })
   })
 
+  test("uses Windows path identity without changing host platform or returned source spelling", () => {
+    const windowsRoot = "C:\\review\\project"
+    const windowsPaths = [{ file: ".github/workflows/a.yaml", path: ".github/workflows/Original.yaml" }]
+    const windowsOptions = { root: windowsRoot, paths: windowsPaths }
+    const windowsRow = { ...row, filepath: "c:\\REVIEW\\PROJECT\\.GITHUB\\WORKFLOWS\\A.YAML" }
+    expect(ReviewActionlintReport.parseReport(JSON.stringify([windowsRow]), windowsOptions)).toMatchObject({ status: "ok", results: [{ path: ".github/workflows/Original.yaml" }] })
+    expect(ReviewActionlintReport.parseReport("[]", { root: windowsRoot, paths: [...windowsPaths, { file: ".github/workflows/A.yaml", path: "other.yaml" }] }).status).toBe("acquisition-error")
+    expect(ReviewActionlintReport.parseReport("[]", { root: windowsRoot, paths: [...windowsPaths, { file: "other.yaml", path: ".GITHUB/WORKFLOWS/original.YAML" }] }).status).toBe("acquisition-error")
+  })
+
   test("settles strict process outcomes and exit agreement", () => {
     expect(ReviewActionlintResult.settle(outcome(bytes([]), 0), options)).toMatchObject({ status: "ok", results: [] })
     expect(ReviewActionlintResult.settle(outcome(bytes([row]), 1), options)).toMatchObject({ status: "ok", results: [{ path: paths[0].path }] })
-    for (const bad of [outcome(Buffer.from([0xff])), outcome(Buffer.alloc(0)), outcome(bytes([]), 1), outcome(bytes([row]), 0), outcome(bytes([row]), 2), { ...outcome(bytes([row])), exitCode: null }, { ...outcome(bytes([row])), stdout: captured(bytes([row]), true) }, { ...outcome(bytes([row])), overflow: true }, { ...outcome(bytes([row])), stderr: captured(Buffer.from([0xff])) }, { ...outcome(bytes([row])), stderr: captured(Buffer.from("bad")) }, { ...outcome(bytes([row])), stderr: captured(Buffer.from("bad"), true) }, { ...outcome(bytes([row])), failure: new Error("spawn") }])
+    for (const bad of [outcome(Buffer.from([0xff])), outcome(Buffer.alloc(0)), outcome(bytes([]), 1), outcome(bytes([row]), 0), outcome(bytes([row]), 2), { ...outcome(bytes([row])), exitCode: null }, { ...outcome(bytes([row])), stdout: captured(bytes([row]), true) }, { ...outcome(bytes([row])), overflow: true }, { ...outcome(bytes([row])), stderr: captured(Buffer.from([0xff])) }, { ...outcome(bytes([row])), stderr: captured(Buffer.from("bad")) }, { ...outcome(bytes([row])), stderr: captured(Buffer.from("bad"), true) }, { ...outcome(bytes([row])), failure: "spawn" }])
       expect(ReviewActionlintResult.settle(bad, options).status).toBe("acquisition-error")
     expect(ReviewActionlintResult.settle({ ...outcome(bytes([row])), timedOut: true }, options)).toMatchObject({ status: "not-run", reason: "timeout" })
     expect(ReviewActionlintResult.settle({ ...outcome(bytes([row])), memoryExceeded: true }, options)).toMatchObject({ status: "not-run", reason: "memory-exceeded" })

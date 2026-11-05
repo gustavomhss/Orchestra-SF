@@ -27,7 +27,7 @@ export function parseReport(text: string, options: { root: string; paths: readon
     if (typeof row.column !== "number" || !Number.isSafeInteger(row.column) || row.column < 1) return fail("column-invalid")
     if (row.snippet !== undefined && typeof row.snippet !== "string") return fail("snippet-invalid")
     const projected = ReviewNativeFiles.containedPath(options.root, row.filepath)
-    const path = projected ? map.paths.get(projected) : undefined
+    const path = projected ? map.paths.get(identity(options.root, projected)) : undefined
     if (!path) return fail(projected ? "path-unmapped" : "path-outside")
     results.push({ pack: "actionlint", rule: row.kind, path, line: row.line, message: row.message, suppressions: [], ...(typeof row.snippet === "string" ? { snippet: row.snippet } : {}) })
   }
@@ -39,13 +39,22 @@ function pathMap(options: { root: string; paths: readonly { file: string; path: 
   if (!options.paths.length) return fail("path-map-empty")
   const paths = new Map<string, string>()
   const originals = new Set<string>()
+  const projectedKeys = new Set<string>()
   for (const entry of options.paths) {
     if (typeof entry.file !== "string" || typeof entry.path !== "string" || !safeRelative(options.root, entry.file) || !safeRelative(options.root, entry.path)) return fail("path-map-invalid")
-    if (paths.has(entry.file) || originals.has(entry.path)) return fail("path-map-duplicate")
-    paths.set(entry.file, entry.path)
-    originals.add(entry.path)
+    const key = identity(options.root, entry.file)
+    const original = identity(options.root, entry.path)
+    if (projectedKeys.has(key) || originals.has(original)) return fail("path-map-duplicate")
+    paths.set(key, entry.path)
+    projectedKeys.add(key)
+    originals.add(original)
   }
   return { status: "ok" as const, paths }
+}
+
+function identity(root: string, value: string) {
+  const normalized = ReviewNativeFiles.flavor(root).sep === "\\" ? value.toLowerCase() : value
+  return normalized
 }
 
 function safeRelative(root: string, value: string) {
