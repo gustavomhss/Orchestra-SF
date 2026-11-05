@@ -179,7 +179,7 @@ type ScanInput = { executable: string; root: string; report: string }
 type Scanner = {
   readonly locate: typeof ReviewPackGitleaks.locate
   readonly templates: Readonly<Record<string, (input: ScanInput) => string[]>>
-  readonly prepare?: (directory: string) => Effect.Effect<void>
+  readonly prepare?: (directory: string, dropped?: readonly string[]) => Effect.Effect<void>
   readonly sink?: "stdout"
   readonly completedExits?: readonly number[]
 }
@@ -196,6 +196,8 @@ const scanned = Effect.fnUntraced(function* (pack: Pack, scanner: Scanner, conte
   if ("absent" in located) return only(check(pack, "not-run", located.absent))
   const template = scanner.templates[pack.template]
   if (!template) return only(check(pack, "not-run", `template unknown: ${pack.template}`))
+  const selected = nativeDrops(context.catalog, pack.id, knownNative(pack.id))
+  if (selected.status !== "ok") return only(check(pack, "not-run", selected.reason))
   const completed: readonly number[] = scanner.completedExits ?? [0]
   const scan = (copied: Copy, side: "head" | "base") => Effect.gen(function* () {
     if ("failed" in copied) return { status: "not-run" as const, reason: copied.failed }
@@ -203,7 +205,7 @@ const scanned = Effect.fnUntraced(function* (pack: Pack, scanner: Scanner, conte
     // Outside the scanned copy. A report-file scanner may write only that file; a stdout scanner writes nothing.
     const report = path.join(snapshot.scratch, "reports", `${pack.id}.${pack.output.format}`)
     yield* Effect.promise(() => mkdir(path.dirname(report), { recursive: true }))
-    if (scanner.prepare) yield* scanner.prepare(path.dirname(report))
+    if (scanner.prepare) yield* scanner.prepare(path.dirname(report), selected.dropped)
     if (scanner.sink !== "stdout") yield* Effect.promise(() => writeFile(report, ""))
     const ran = yield* confined({
       argv: template({ executable: located.executable, root: snapshot.root, report }),
@@ -233,7 +235,7 @@ const scanned = Effect.fnUntraced(function* (pack: Pack, scanner: Scanner, conte
     Effect.map((data) => data.toString("utf8").trim()),
     Effect.orElseSucceed(() => undefined),
   )
-  const key = tree === undefined ? undefined : `${pack.id}@${pack.version}:${pack.template}:${tree}`
+  const key = tree === undefined ? undefined : `${pack.id}@${pack.version}:${pack.template}:${tree}:${ReviewCatalog.catalogDigest(context.catalog)}`
   const cached = key === undefined ? undefined : baseCache.get(key)
   const base = cached ? { status: "ok" as const, ...cached } : yield* scan(yield* context.base, "base")
   // Without the base, every head item would pass as new: none reach the model.
@@ -255,6 +257,8 @@ const squawked = Effect.fnUntraced(function* (pack: Pack, context: RunContext) {
   if (pack.output.format !== "json") return only(check(pack, "not-run", `template unknown: ${pack.template}`))
   if (pack.output.parser !== "squawk" || pack.template !== "squawk-json")
     return only(check(pack, "not-run", `template unknown: ${pack.template}`))
+  const selected = nativeDrops(context.catalog, pack.id, ReviewPackSquawk.RULES)
+  if (selected.status !== "ok") return only(check(pack, "not-run", selected.reason))
   const located = yield* ReviewPackSquawk.locate()
   if ("absent" in located) return only(check(pack, "not-run", located.absent))
   // No Squawk baseCache: the key would have to include the selected files, and a tree-only key reuses another selection.
@@ -274,7 +278,7 @@ const squawked = Effect.fnUntraced(function* (pack: Pack, context: RunContext) {
       const uri = yield* context.write(`raw/${pack.id}-base.json`, JSON.stringify({ invoked: false, reason: "no-eligible-base-input" }))
       return { status: "ok" as const, results: [], uri, emptyBase: true as const }
     }
-    const config = yield* ReviewPackSquawk.prepare(path.join(snapshot.scratch, "squawk-host"))
+    const config = yield* ReviewPackSquawk.prepare(path.join(snapshot.scratch, "squawk-host"), selected.dropped)
     const built = yield* ReviewPackSquawk.argv({ executable: located.executable, config, root: snapshot.root, files: selected.files })
     if (built.status !== "ok") return { status: "not-run" as const, reason: built.reason }
     const ran = yield* confined({
@@ -428,6 +432,29 @@ function settle(outcome: ResearchProcess.Outcome) {
   if (outcome.overflow) return { status: "acquisition-error" as const, reason: "output cap" }
   if (outcome.failure !== undefined) return { status: "acquisition-error" as const, reason: outcome.failure }
   return undefined
+}
+
+function knownNative(id: string) {
+  if (id === ReviewPackAstGrep.manifest.id) return ReviewPackAstGrep.rules.map((rule) => rule.id)
+  return undefined
+}
+
+// Dropped native ids are excluded before the CLI. `*` is never passed to a tool. An open set cannot express a
+// dropped wildcard plus explicit keepers, so that case is not-run rather than a partial filter. Demoted still runs.
+function nativeDrops(catalog: ReviewCatalog.Catalog, pack: string, known: readonly string[] | undefined) {
+  const rules = catalog.rules.filter((rule) => rule.pack === pack)
+  const wildcard = rules.find((rule) => rule.rule === "*")
+  const explicit = rules.filter((rule) => rule.rule !== "*")
+  if (wildcard?.status === "dropped") {
+    if (known === undefined) return { status: "not-run" as const, reason: "wildcard-dropped" }
+    const kept = new Set(explicit.filter((rule) => rule.status !== "dropped").map((rule) => rule.rule))
+    const dropped = known.filter((id) => !kept.has(id))
+    if (dropped.length === known.length) return { status: "not-run" as const, reason: "no-active-rules" }
+    return { status: "ok" as const, dropped }
+  }
+  const dropped = explicit.filter((rule) => rule.status === "dropped").map((rule) => rule.rule)
+  if (known !== undefined && known.every((id) => dropped.includes(id))) return { status: "not-run" as const, reason: "no-active-rules" }
+  return { status: "ok" as const, dropped }
 }
 
 /** The catalog rule for a native rule id, else the pack's `*` rule. Dropped rules never reach the pipeline. */

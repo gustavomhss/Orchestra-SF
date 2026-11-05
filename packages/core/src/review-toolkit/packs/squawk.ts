@@ -38,11 +38,11 @@ export const locate = Effect.fn("ReviewPackSquawk.locate")(function* () {
   return { absent: "squawk absent" }
 })
 
-export const prepare = Effect.fn("ReviewPackSquawk.prepare")(function* (directory: string) {
+export const prepare = Effect.fn("ReviewPackSquawk.prepare")(function* (directory: string, excluded: readonly string[] = []) {
   const config = path.join(directory, "squawk.toml")
   yield* Effect.promise(async () => {
     await mkdir(directory, { recursive: true })
-    await Bun.write(config, hostToml)
+    await Bun.write(config, excluded.length === 0 ? hostToml : excludedToml(excluded))
   })
   return config
 })
@@ -81,6 +81,11 @@ export function settle(outcome: Outcome, root: string): Parsed | { status: "not-
   if (outcome.exitCode === 0 && parsed.results.length === 0) return parsed
   if (outcome.exitCode === 1 && parsed.results.length > 0) return parsed
   return { status: "acquisition-error", reason: "exit-mismatch" }
+}
+
+function excludedToml(excluded: readonly string[]) {
+  const quoted = excluded.map((id) => `"${id.replaceAll("\\", "\\\\").replaceAll("\"", "\\\"")}"`).join(", ")
+  return `assume_in_transaction = false\nincluded_rules = []\nexcluded_rules = [${quoted}]\n`
 }
 
 function stop(status: "not-run" | "unsupported", reason: string) {

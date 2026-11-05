@@ -45,11 +45,11 @@ export const locate = Effect.fn("ReviewPackAstGrep.locate")(function* () {
 })
 
 /** Writes the host config and rules into `directory`. The directory is outside the scanned tree. */
-export const prepare = Effect.fn("ReviewPackAstGrep.prepare")(function* (directory: string) {
+export const prepare = Effect.fn("ReviewPackAstGrep.prepare")(function* (directory: string, dropped: readonly string[] = []) {
   yield* Effect.promise(async () => {
     await mkdir(directory, { recursive: true })
     await writeFile(path.join(directory, configName), "ruleDirs: []\n")
-    await writeFile(path.join(directory, rulesName), hostRules())
+    await writeFile(path.join(directory, rulesName), hostRules(dropped))
   })
 })
 
@@ -73,8 +73,9 @@ export const templates: Readonly<Record<string, (input: { executable: string; ro
   },
 }
 
-function hostRules() {
-  return rules.map((rule) => [
+function hostRules(dropped: readonly string[] = []) {
+  const skip = new Set(dropped)
+  return rules.filter((rule) => !skip.has(rule.id)).map((rule) => [
     `id: ${rule.id}`,
     `language: ${rule.language}`,
     "severity: info",
