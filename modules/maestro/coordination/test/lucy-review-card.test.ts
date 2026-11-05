@@ -282,7 +282,7 @@ test("a failed required check cannot approve and does not become a finding; a fa
   const facts = collected(requiredRoute, [failed])
   expect(facts.checks.some((check) => check.status === "fail")).toBe(true)
   expect(facts.blockers.some((blocker) => blocker.kind === "check-unavailable")).toBe(false)
-  invalid(settled(requiredRoute, facts, { outcome: "done", verdict: "APPROVE" }), "verdict-mismatch", bound(requiredRoute, facts))
+  invalid(settled(requiredRoute, facts, { outcome: "done", verdict: "APPROVE" }), "checks-blocked", bound(requiredRoute, facts))
   const rejected = settled(requiredRoute, facts, { outcome: "done", verdict: "REJECT", findings: [] })
   expect(ReviewCardV2.validate(reply(rejected), bound(requiredRoute, facts)).findings).toEqual([])
   const probe: ReviewProbe.Observed = {

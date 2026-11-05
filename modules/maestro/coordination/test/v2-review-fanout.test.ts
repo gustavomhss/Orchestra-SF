@@ -381,10 +381,12 @@ test("Quick and blocked return no host-confirmed list", () =>
     const quickResult = yield* ReviewFanoutV2.run(quick.input("quick", { completion: "card-only" }), quick.port)
     if (quickResult.status !== "ran") throw new Error("expected Quick run")
     expect(quickResult.confirmed).toEqual([])
+    const settings = quick.input("quick").request.settings
     expect(quickResult.checkFacts).toEqual(ReviewChecksV2.collect({
       routing: quickResult.routing,
       checks: ANALYSIS.checks as ReadonlyArray<ReviewAnalyze.Check>,
-      settings: { review: { acceptedUnavailable: quick.input("quick").request.settings.acceptedUnavailable } },
+      settings: { review: { tier: settings.tier ?? null, acceptedUnavailable: settings.acceptedUnavailable } },
+      probes: [],
     }))
     const blocked = yield* harness(directory, "host_blocked")
     const blockedResult = yield* ReviewFanoutV2.run(blocked.input("standard", { completion: "card-only" }), {

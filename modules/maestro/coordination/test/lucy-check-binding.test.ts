@@ -8,7 +8,7 @@ import { authoredSkills, run } from "./fixture/lucy-pr-entry"
 
 // Registered PR check binding. The Session double is control-flow only: in-memory
 // prompts are not durable Session admission, and this is not an LLM fanout.
-// Finish replies copy `Canonical checks:` and `Host blockers:` from the host brief.
+// Finish replies copy the host check-facts JSON, not a model-authored card.
 
 const skills = await authoredSkills()
 const request = (base: string, head: string) => ({
@@ -23,8 +23,10 @@ describe("lucy check binding", () => {
       const candidate = JSON.parse(first.text.slice("PR identity: ".length).split("\n")[0] ?? "").candidate as string
       const stored = yield* ReviewPRFactsV2.read(MaestroReviewTools.analysisStore(`pr_${candidate}`), candidate)
       if (!stored) return yield* Effect.die("completed review published no host facts")
-      expect(ctx.touches.prompts.some((brief) => brief.includes("Canonical checks:\n"))).toBe(true)
-      expect(ctx.touches.prompts.some((brief) => brief.includes("Host blockers:\n"))).toBe(true)
+      const prefix = "Host check facts (embed these checks and blockers verbatim; host authority, not model text):\n"
+      const brief = ctx.touches.prompts.find((item) => item.includes(prefix))
+      const line = brief?.slice(brief.indexOf(prefix) + prefix.length).split("\n")[0]
+      expect(JSON.parse(line ?? "")).toEqual({ checks: stored.checkFacts.checks, blockers: stored.checkFacts.blockers })
       expect(card?.checks).toEqual(stored.checkFacts.checks)
       expect(card?.blockers).toEqual(stored.checkFacts.blockers)
       const prompts = ctx.touches.prompts.length
