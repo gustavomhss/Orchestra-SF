@@ -22,14 +22,15 @@ export type HostRound = {
   readonly routing: string
 }
 
-type Bound = {
+type CommonBound = {
   readonly reviewMethodVersion: string
-  readonly routingDigest: string | undefined
-  readonly catalogDigest: string | undefined
-  readonly executionTier: string | undefined
+  readonly routingDigest?: string
+  readonly catalogDigest?: string
 }
 
-export function publish(routing: ReviewRouting.Record, bound: Bound):
+type Bound = CommonBound
+
+export function publish(routing: ReviewRouting.Record, bound: Bound & { readonly executionTier?: string }):
   | { readonly status: "ok"; readonly hostRound: HostRound }
   | { readonly status: "corrupt" | "mismatch" | "too-large" } {
   const decoded = Option.getOrUndefined(decodeRouting(routing, strict))
@@ -60,7 +61,7 @@ export function read(receipt: {
   return { status: "ok", routing, findings, executionTier: receipt.hostRound.executionTier }
 }
 
-function agrees(routing: ReviewRouting.Record, executionTier: string, bound: Bound) {
+function agrees(routing: ReviewRouting.Record, executionTier: string, bound: CommonBound) {
   const catalog = bound.catalogDigest?.replace(/^sha256:/, "")
   if (bound.routingDigest === undefined || catalog === undefined) return false
   if (ReviewResultV2.method({ profile: routing.profile.id, tier: executionTier }) !== bound.reviewMethodVersion) return false
@@ -70,12 +71,14 @@ function agrees(routing: ReviewRouting.Record, executionTier: string, bound: Bou
 
 function canonicalJson(value: unknown): string {
   if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`
-  if (value && typeof value === "object") {
+  if (typeof value === "object" && value !== null) {
     return `{${Object.entries(value)
       .filter((item) => item[1] !== undefined)
       .sort((left, right) => (left[0] < right[0] ? -1 : left[0] > right[0] ? 1 : 0))
       .map((item) => `${JSON.stringify(item[0])}:${canonicalJson(item[1])}`)
       .join(",")}}`
   }
-  return JSON.stringify(value)
+  if (value === null || typeof value === "boolean" || typeof value === "number" || typeof value === "string")
+    return JSON.stringify(value)
+  throw new Error("host-round-corrupt")
 }
