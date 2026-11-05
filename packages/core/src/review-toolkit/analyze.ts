@@ -183,6 +183,9 @@ const runPack = Effect.fnUntraced(function* (packID: string, pack: Pack | undefi
   const lane = context.input.lane
   if (!pack) return only({ id: packID, pack: packID, version: "unknown", lane, status: "not-run", reason: "unknown pack", workspaceExecuted: false })
   const refused = (reason: string) => only(check(pack, "not-run", reason))
+  const files = context.input.files ?? []
+  if (context.input.scope === "files" && files.some((file) => !ReviewNativeFiles.containedPath(context.input.worktree, file)))
+    return refused(files.some((file) => file.includes("\0")) ? "nul" : "path-outside")
   if (LANES.indexOf(pack.lane) > LANES.indexOf(lane)) return refused(`lane: ${pack.lane} is above ${lane}`)
   if (pack.status === "dropped") return refused("dropped")
   // Squawk's argv is effectful (it stats the copy). The static template scanners stay as they are.
