@@ -411,10 +411,8 @@ const actionlinted = Effect.fnUntraced(function* (pack: Pack, context: RunContex
       return { status: "ok" as const, results: [], uri, emptyBase: true as const }
     }
     // The copy is itself inside snapshot.scratch; a distinct sibling avoids source/scratch overlap.
-    const staging = yield* Effect.acquireRelease(
-      Effect.promise(() => mkdtemp(path.join(snapshot.scratch, "actionlint-host-"))),
-      (directory) => Effect.promise(() => rm(directory, { recursive: true, force: true })),
-    )
+    const staging = yield* workflowStaging(snapshot.scratch)
+    if (typeof staging !== "string") return staging
     const projected = yield* ReviewPackActionlint.prepare({ root: snapshot.root, files: selected.files, scratch: staging }).pipe(
       Effect.catch((error) => Effect.succeed({ status: "not-run" as const, reason: workflowUnavailable(error) })),
     )
@@ -430,9 +428,10 @@ const actionlinted = Effect.fnUntraced(function* (pack: Pack, context: RunContex
     })
     if ("denied" in ran) return { status: "not-run" as const, reason: ran.denied }
     const uri = yield* context.write(`raw/actionlint-${side}.json`, ran.outcome.stdout.data)
+    const stderr = yield* context.write(`raw/actionlint-${side}-stderr.txt`, ran.outcome.stderr.data)
     const settled = ReviewPackActionlint.settle(ran.outcome, projected)
-    if (settled.status !== "ok") return { status: settled.status, reason: `${settled.reason}; path map: ${pathMap}`, uri }
-    return { status: "ok" as const, results: settled.results, uri, pathMap }
+    if (settled.status !== "ok") return { status: settled.status, reason: `${settled.reason}; path map: ${pathMap}; stderr: ${stderr}`, uri }
+    return { status: "ok" as const, results: settled.results, uri, pathMap, stderr }
   }))
   const head = yield* scan(yield* context.head, "head")
   if (head.status !== "ok") return only(check(pack, head.status, head.reason, "uri" in head ? head.uri : undefined))
@@ -444,6 +443,8 @@ const actionlinted = Effect.fnUntraced(function* (pack: Pack, context: RunContex
   const coverage = [
     "pathMap" in head ? `head path map: ${head.pathMap}` : undefined,
     "pathMap" in base ? `base path map: ${base.pathMap}` : undefined,
+    "stderr" in head ? `head stderr: ${head.stderr}` : undefined,
+    "stderr" in base ? `base stderr: ${base.stderr}` : undefined,
     "emptyBase" in base ? "base: no eligible workflow input; no base scanner invocation" : undefined,
   ].filter((entry) => entry !== undefined).join("; ")
   return {
@@ -452,6 +453,13 @@ const actionlinted = Effect.fnUntraced(function* (pack: Pack, context: RunContex
     base: ReviewSarif.toItems(base.results, lookup).items,
   } satisfies Outcome
 })
+
+export function workflowStaging(scratch: string) {
+  return Effect.acquireRelease(
+    Effect.tryPromise({ try: () => mkdtemp(path.join(scratch, "actionlint-host-")), catch: workflowUnavailable }),
+    (directory) => Effect.promise(() => rm(directory, { recursive: true, force: true })),
+  ).pipe(Effect.catch((reason) => Effect.succeed({ status: "not-run" as const, reason })))
+}
 
 function workflowUnavailable(error: unknown) {
   return `workflow-input-unavailable: ${error !== null && typeof error === "object" && "code" in error ? String(error.code) : "error"}`

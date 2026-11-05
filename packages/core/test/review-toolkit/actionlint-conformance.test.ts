@@ -54,6 +54,17 @@ it.live("actionlint conformance requires the Linux jail", () => Effect.sync(() =
   if (process.platform === "linux") expect(jail, "conformance-missing: sandbox").toBeTruthy()
 }))
 
+it.live("actionlint staging acquisition names filesystem failure and cleans successful acquisition", () =>
+  Effect.gen(function* () {
+    const f = yield* fixture
+    expect(yield* Effect.scoped(ReviewAnalyze.workflowStaging(path.join(f.scratch, "missing", "parent"))))
+      .toEqual({ status: "not-run", reason: "workflow-input-unavailable: ENOENT" })
+    const directory = yield* Effect.scoped(ReviewAnalyze.workflowStaging(f.scratch))
+    if (typeof directory !== "string") throw new Error(directory.reason)
+    expect(yield* Effect.promise(() => exists(directory))).toBe(false)
+  }),
+)
+
 it.live(process.platform === "win32" ? "Windows names unqualified actionlint before lookup" : "pinned actionlint ignores poisoned source and ancestor configs without changing source inputs", () =>
   Effect.gen(function* () {
     if (process.platform === "win32") {
@@ -90,7 +101,8 @@ it.live(process.platform === "win32" ? "Windows names unqualified actionlint bef
       expect(outcome.stderr.data.toString("utf8")).toBe("")
       const parsed = ReviewPackActionlint.settle(outcome, projected)
       if (parsed.status !== "ok") throw new Error(`native report refused: ${parsed.reason}`)
-      expect(parsed.results.some((entry) => entry.rule === "job-needs" && entry.path === BAD && entry.line === 5)).toBe(true)
+      // actionlint 1.7.12 anchors an undefined dependency at the job ID, not the needs value.
+      expect(parsed.results.some((entry) => entry.rule === "job-needs" && entry.path === BAD && entry.line === 4)).toBe(true)
       expect(parsed.results.every((entry) => entry.path === BAD)).toBe(true)
       expect(parsed.results.every((entry) => entry.endLine === undefined)).toBe(true)
       return projected.root
@@ -139,6 +151,9 @@ if (process.platform !== "win32") it.live("ReviewAnalyze retains mapped actionli
     expect(result.checks).toHaveLength(1)
     expect(result.checks[0]).toMatchObject({ pack: "actionlint", version: "1.7.12", status: "fail", workspaceExecuted: false })
     expect(result.checks[0].reason).toContain("no base scanner invocation")
+    const stderr = /head stderr: review:([0-9a-f-]+)\/raw\/actionlint-head-stderr\.txt/.exec(result.checks[0].reason ?? "")
+    if (!stderr) throw new Error("native evidence lost its stderr")
+    expect(yield* Effect.promise(() => Bun.file(path.join(f.temp.path, "artifacts", stderr[1], "raw/actionlint-head-stderr.txt")).text())).toBe("")
     expect(result.checks[0].uri).toMatch(/^review:/)
     expect(Object.values(result.items).flat().some((entry) => entry.rule === "job-needs" && entry.path === BAD)).toBe(true)
     const mapping = /head path map: review:([0-9a-f-]+)\/raw\/actionlint-head-paths\.json/.exec(result.checks[0].reason ?? "")
