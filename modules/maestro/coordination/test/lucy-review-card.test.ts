@@ -114,6 +114,28 @@ test("Quick cannot approve a resolved new P0 finding", () => {
     "unverified-finding", { routing: quick, scope })
 })
 
+test("Quick with an authoritative host list cannot omit its P1", () => {
+  const quick = { ...routing, tier: { ...routing.tier, id: "quick" } }
+  invalid({ ...card, routing: quick, tier: "quick", verdict: "APPROVE", findings: [] },
+    "unverified-finding", { routing: quick, scope, confirmed })
+})
+
+test("Quick with an authoritative host list rejects substituted identity or evidence", () => {
+  const quick = { ...routing, tier: { ...routing.tier, id: "quick" } }
+  for (const changed of [
+    { ...finding, lens: "security" }, { ...finding, rule: "other" }, { ...finding, trigger: "other" },
+    { ...finding, evidence: { ...finding.evidence, endLine: 3 } },
+  ]) invalid({ ...card, routing: quick, tier: "quick", findings: [changed] },
+    "unverified-finding", { routing: quick, scope, confirmed })
+  invalid({ ...card, routing: quick, tier: "quick" }, "unverified-finding", { routing: quick, scope, confirmed: [] })
+})
+
+test("Quick accepts a finding matching its supplied host list", () => {
+  const quick = { ...routing, tier: { ...routing.tier, id: "quick" } }
+  const value = { ...card, routing: quick, tier: "quick" }
+  expect(ReviewCardV2.validate(reply(value), { routing: quick, scope, confirmed })).toEqual(value)
+})
+
 test("host-confirmed lens, rule and trigger are immutable", () => {
   for (const changed of [
     { ...finding, lens: "security" }, { ...finding, rule: "different" }, { ...finding, trigger: "different" },

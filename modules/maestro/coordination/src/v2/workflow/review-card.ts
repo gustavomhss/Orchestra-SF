@@ -50,7 +50,7 @@ export function validate(reply: string, expected: {
     throw new ValidationError("unverified-finding")
   const ids = card.findings.map((finding) => finding.id)
   if (new Set(ids).size !== ids.length) throw new ValidationError("unverified-finding")
-  if (!quick && expected.confirmed?.some((finding) => !ids.includes(finding.id))) throw new ValidationError("unverified-finding")
+  if (expected.confirmed?.some((finding) => !ids.includes(finding.id))) throw new ValidationError("unverified-finding")
   for (const finding of card.findings) {
     if (finding.status !== "open") throw new ValidationError("unverified-finding")
     if (quick) {
@@ -59,9 +59,8 @@ export function validate(reply: string, expected: {
         finding.evidence.kind !== "quote" || finding.evidence.path !== finding.path ||
         finding.evidence.startLine !== finding.line || finding.evidence.endLine !== (finding.endLine ?? finding.line)
       ) throw new ValidationError("unverified-finding")
-      continue
     }
-    if (!expected.confirmed?.some((item) =>
+    if (expected.confirmed && !expected.confirmed.some((item) =>
       item.id === finding.id && item.path === finding.path && item.line === finding.line && item.endLine === finding.endLine &&
       item.severity === finding.severity && item.class === finding.class && item.node === finding.node &&
       item.lens === finding.lens && item.rule === finding.rule && item.trigger === finding.trigger &&
