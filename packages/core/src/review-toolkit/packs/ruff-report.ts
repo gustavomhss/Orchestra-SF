@@ -1,7 +1,7 @@
 export * as ReviewRuffReport from "./ruff-report"
 
-import { posix, win32 } from "node:path"
 import { Option, Schema } from "effect"
+import { ReviewNativeFiles } from "../native-files"
 import type { Parsed, Raw } from "../sarif"
 
 // Ruff 0.17.3 JSON is a flat array. Locations are one-indexed Unicode scalar columns. `TextRange` end is exclusive.
@@ -41,7 +41,7 @@ function rowOf(row: unknown, root: string): { status: "ok"; raw: Raw } | { statu
   if (!start || !end) return fail("range-invalid")
   const inclusive = inclusiveEnd(start, end)
   if (!inclusive) return fail("range-invalid")
-  const relative = containedPath(decoded.value.filename, root)
+  const relative = ReviewNativeFiles.containedPath(root, decoded.value.filename)
   if (!relative) return fail("path-outside")
   return {
     status: "ok",
@@ -73,20 +73,6 @@ function inclusiveEnd(start: { row: number; column: number }, end: { row: number
   if (!Number.isSafeInteger(row) || row < start.row) return undefined
   if (row === start.row && end.column !== 1 && end.column <= start.column) return undefined
   return { row }
-}
-
-function containedPath(file: string, root: string) {
-  if (!file || !root || file.includes("\0") || root.includes("\0")) return undefined
-  const path = flavor(root)
-  if (file.split(path.sep === "\\" ? /[\\/]/ : /\//).includes("..")) return undefined
-  if (!path.isAbsolute(root) || !path.isAbsolute(file)) return undefined
-  const relative = path.relative(path.resolve(root), path.resolve(file))
-  if (!relative || path.isAbsolute(relative) || relative === ".." || relative.startsWith(`..${path.sep}`)) return undefined
-  return path === win32 ? relative.replaceAll("\\", "/") : relative
-}
-
-function flavor(root: string) {
-  return /^[A-Za-z]:[\\/]/.test(root) || root.startsWith("\\\\") || root.startsWith("//") ? win32 : posix
 }
 
 function fail(reason: string): { status: "acquisition-error"; reason: string } {

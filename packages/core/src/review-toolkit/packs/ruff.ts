@@ -1,12 +1,12 @@
 export * as ReviewPackRuff from "./ruff"
 
-import path from "node:path"
 import { Effect } from "effect"
 import pinned from "../../backend-toolkit/packs/ruff"
 import { BackendToolkit } from "../../backend-toolkit"
 import type { Pack } from "../../backend-toolkit/manifest"
 import { ResearchProcess } from "../../research-toolkit/process"
 import type { Outcome } from "../../research-toolkit/process"
+import { ReviewNativeFiles } from "../native-files"
 import type { Parsed } from "../sarif"
 import { parseReport, RULES } from "./ruff-report"
 
@@ -35,8 +35,10 @@ export const locate = Effect.fn("ReviewPackRuff.locate")(function* () {
 
 // ResearchProcess.environment keeps RUFF_* and PYTHONPATH. This adapter removes them; it does not change the shared sanitizer.
 export function environment(input: NodeJS.ProcessEnv = process.env): Record<string, string> {
-  return Object.fromEntries(Object.entries(ResearchProcess.environment(input)).filter(([key]) =>
-    !key.toUpperCase().startsWith("RUFF_") && key !== "PYTHONPATH"))
+  return Object.fromEntries(Object.entries(ResearchProcess.environment(input)).filter(([key]) => {
+    const upper = key.toUpperCase()
+    return !upper.startsWith("RUFF_") && upper !== "PYTHONPATH"
+  }))
 }
 
 export const argv = Effect.fn("ReviewPackRuff.argv")(function* (input: {
@@ -46,23 +48,24 @@ export const argv = Effect.fn("ReviewPackRuff.argv")(function* (input: {
   excluded?: readonly string[]
 }) {
   if (process.platform === "win32") return stop("windows-api-unqualified")
-  if (input.files.length === 0) return stop("no-input")
+  if (!input.executable || !input.executable.startsWith("/") && !/^[A-Za-z]:[\\/]/.test(input.executable)) return stop("executable-missing")
+  if (input.executable.includes("\0")) return stop("nul")
   const excluded = input.excluded ?? []
   const known = new Set<string>(RULES)
   if (excluded.some((id) => !known.has(id))) return stop("unknown-excluded")
-  const selected = RULES.filter((id) => !excluded.includes(id))
-  if (selected.length === 0) return stop("no-active-rules")
-  const files = input.files.map((file) => held(file, input.root))
-  if (files.some((file) => typeof file !== "string")) return stop("path-outside")
+  const codes = RULES.filter((id) => !excluded.includes(id))
+  if (codes.length === 0) return stop("no-active-rules")
+  const selected = yield* ReviewNativeFiles.select({ root: input.root, files: input.files, extensions: [".py", ".pyi"] })
+  if (selected.status !== "ok") return selected
   return {
     status: "ok" as const,
     argv: [
       input.executable, "check",
-      "--isolated", "--no-cache", "--no-fix", "--no-preview", "--ignore-noqa",
+      "--isolated", "--no-cache", "--no-fix", "--no-fix-only", "--no-preview", "--ignore-noqa",
       "--target-version", "py311", "--output-format", "json",
-      "--select", selected.join(","),
+      "--select", codes.join(","),
       "--no-respect-gitignore", "--",
-      ...files.filter((file): file is string => typeof file === "string"),
+      ...selected.files,
     ],
   }
 })
@@ -85,14 +88,6 @@ export function settle(outcome: Outcome, root: string): Parsed | { status: "not-
   if (outcome.exitCode === 1 && parsed.results.length > 0) return parsed
   if (outcome.exitCode !== 0 && outcome.exitCode !== 1) return { status: "acquisition-error", reason: `exit-${outcome.exitCode}` }
   return { status: "acquisition-error", reason: "exit-mismatch" }
-}
-
-function held(file: string, root: string) {
-  if (!file || file.includes("\0") || !path.isAbsolute(file) || !path.isAbsolute(root)) return undefined
-  const relative = path.relative(root, file)
-  if (!relative || path.isAbsolute(relative) || relative === ".." || relative.startsWith(`..${path.sep}`) || relative.split(/[\\/]/).includes("..")) return undefined
-  if (!path.basename(file).endsWith(".py") && !path.basename(file).endsWith(".pyi")) return undefined
-  return file
 }
 
 function stop(reason: string) {
