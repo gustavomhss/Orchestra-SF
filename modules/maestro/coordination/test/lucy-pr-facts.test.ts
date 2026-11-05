@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import fs from "node:fs/promises"
 import path from "node:path"
-import { Effect } from "effect"
+import { Deferred, Effect, Fiber, Scheduler } from "effect"
 import { ReviewPRFactsV2 } from "../src/v2/tools/review-pr-facts"
 import { worktree } from "./fixture/v2-governance"
 
@@ -24,7 +24,7 @@ const facts: ReviewPRFactsV2.Facts = {
 test("completed host facts round-trip without a verdict or card, and absence is distinct", () =>
   Effect.runPromise(Effect.scoped(Effect.gen(function* () {
     const directory = yield* worktree
-    const store = path.join(directory, `pr_${candidate}`)
+    const store = path.join(directory, "orchestra-review", `pr_${candidate}`)
     expect(yield* ReviewPRFactsV2.read(store, candidate)).toBeUndefined()
     yield* ReviewPRFactsV2.write(store, facts)
     expect(yield* ReviewPRFactsV2.read(store, candidate)).toEqual(facts)
@@ -39,7 +39,7 @@ test("candidate filenames and file contents are strictly bound to host identity"
   expect(() => ReviewPRFactsV2.file("/tmp/pr_../bad", "../bad")).toThrow("pr-facts-identity")
   await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
     const directory = yield* worktree
-    const store = path.join(directory, `pr_${candidate}`)
+    const store = path.join(directory, "orchestra-review", `pr_${candidate}`)
     yield* ReviewPRFactsV2.write(store, facts)
     yield* Effect.promise(() => Bun.write(ReviewPRFactsV2.file(store, candidate), JSON.stringify({ ...facts, candidate: "c".repeat(64) })))
     const result = yield* Effect.flip(ReviewPRFactsV2.read(store, candidate))
@@ -50,7 +50,7 @@ test("candidate filenames and file contents are strictly bound to host identity"
 test("corrupt, excess, invalid UTF-8 and oversized retained facts fail explicitly", () =>
   Effect.runPromise(Effect.scoped(Effect.gen(function* () {
     const directory = yield* worktree
-    const store = path.join(directory, `pr_${candidate}`)
+    const store = path.join(directory, "orchestra-review", `pr_${candidate}`)
     yield* ReviewPRFactsV2.write(store, facts)
     const target = ReviewPRFactsV2.file(store, candidate)
     for (const bytes of ["{", JSON.stringify({ ...facts, verdict: "APPROVE" }),
@@ -66,7 +66,7 @@ test("corrupt, excess, invalid UTF-8 and oversized retained facts fail explicitl
 test("writer refuses excess fields and oversized host facts before publishing", () =>
   Effect.runPromise(Effect.scoped(Effect.gen(function* () {
     const directory = yield* worktree
-    const store = path.join(directory, `pr_${candidate}`)
+    const store = path.join(directory, "orchestra-review", `pr_${candidate}`)
     const withVerdict = { ...facts, verdict: "APPROVE" }
     expect((yield* Effect.flip(ReviewPRFactsV2.write(store, withVerdict))).message).toContain("pr-facts-corrupt")
     expect((yield* Effect.flip(ReviewPRFactsV2.write(store, { ...facts, method: "a".repeat(4 * 1024 * 1024) }))).message).toContain("pr-facts-oversized")
@@ -77,7 +77,7 @@ test("writer refuses excess fields and oversized host facts before publishing", 
 test("concurrent writers publish one immutable winner and accept only equivalent retries", () =>
   Effect.runPromise(Effect.scoped(Effect.gen(function* () {
     const directory = yield* worktree
-    const store = path.join(directory, `pr_${candidate}`)
+    const store = path.join(directory, "orchestra-review", `pr_${candidate}`)
     const alternate = { ...facts, method: "review-v2/pr/quick" }
     const attempts = yield* Effect.promise(() => Promise.allSettled([
       Effect.runPromise(ReviewPRFactsV2.write(store, facts)),
@@ -100,11 +100,70 @@ test("concurrent writers publish one immutable winner and accept only equivalent
 test("a corrupt existing file cannot be replaced by a later writer", () =>
   Effect.runPromise(Effect.scoped(Effect.gen(function* () {
     const directory = yield* worktree
-    const store = path.join(directory, `pr_${candidate}`)
+    const store = path.join(directory, "orchestra-review", `pr_${candidate}`)
     yield* ReviewPRFactsV2.write(store, facts)
     const target = ReviewPRFactsV2.file(store, candidate)
     yield* Effect.promise(() => Bun.write(target, "bad"))
     expect((yield* Effect.flip(ReviewPRFactsV2.write(store, facts))).message).toContain("pr-facts-corrupt")
     expect(yield* Effect.promise(() => Bun.file(target).text())).toBe("bad")
+  }))),
+)
+
+test("symlinked candidate directories and targets cannot supply or receive host facts", () =>
+  Effect.runPromise(Effect.scoped(Effect.gen(function* () {
+    const directory = yield* worktree
+    const parent = path.join(directory, "orchestra-review")
+    const store = path.join(parent, `pr_${candidate}`)
+    const outside = path.join(directory, "outside")
+    const forged = path.join(outside, "host-facts.json")
+    yield* Effect.promise(async () => {
+      await fs.mkdir(parent, { mode: 0o700 })
+      await fs.mkdir(outside, { mode: 0o700 })
+      await fs.writeFile(forged, JSON.stringify(facts), { mode: 0o600 })
+      await fs.symlink(outside, store)
+    })
+    const before = yield* Effect.promise(() => fs.stat(forged))
+    expect((yield* Effect.flip(ReviewPRFactsV2.read(store, candidate))).message).toContain("pr-facts-unavailable")
+    expect((yield* Effect.flip(ReviewPRFactsV2.write(store, facts))).message).toContain("pr-facts-unavailable")
+    yield* Effect.promise(async () => {
+      await fs.unlink(store)
+      await fs.mkdir(store, { mode: 0o700 })
+      await fs.symlink(forged, ReviewPRFactsV2.file(store, candidate))
+    })
+    expect((yield* Effect.flip(ReviewPRFactsV2.read(store, candidate))).message).toContain("pr-facts-unavailable")
+    expect((yield* Effect.flip(ReviewPRFactsV2.write(store, facts))).message).toContain("pr-facts-unavailable")
+    expect(yield* Effect.promise(() => Bun.file(forged).text())).toBe(JSON.stringify(facts))
+    expect((yield* Effect.promise(() => fs.stat(forged))).mode).toBe(before.mode)
+  }))),
+)
+
+test("cancellation waits for real publication and temporary cleanup before retirement", () =>
+  Effect.runPromise(Effect.scoped(Effect.gen(function* () {
+    const directory = yield* worktree
+    const store = path.join(directory, "orchestra-review", `pr_${candidate}`)
+    const started = yield* Deferred.make<void>()
+    const trace: string[] = []
+    let release = () => {}
+    const gate = new Promise<void>((resolve) => { release = resolve })
+    const owner = yield* ReviewPRFactsV2.write(store, facts).pipe(
+      Effect.provideService(ReviewPRFactsV2.BeforePublish, () => {
+        trace.push("before-link")
+        Effect.runSync(Deferred.succeed(started, undefined))
+        return gate
+      }),
+      Effect.ensuring(Effect.sync(() => trace.push("retired"))),
+      Effect.forkChild({ startImmediately: true }),
+    )
+    yield* Deferred.await(started)
+    const interrupt = yield* Fiber.interrupt(owner).pipe(
+      Effect.forkChild({ startImmediately: true }),
+      Effect.provideService(Scheduler.PreventSchedulerYield, true),
+    )
+    expect(trace).toEqual(["before-link"])
+    release()
+    yield* Fiber.join(interrupt)
+    expect(trace).toEqual(["before-link", "retired"])
+    expect(yield* ReviewPRFactsV2.read(store, candidate)).toEqual(facts)
+    expect(yield* Effect.promise(() => fs.readdir(store))).toEqual(["host-facts.json"])
   }))),
 )
