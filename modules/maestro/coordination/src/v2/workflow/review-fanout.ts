@@ -56,7 +56,10 @@ export type FinishAuthorization = {
   readonly method: string
   readonly routingDigest: string
   readonly catalogDigest: string
+  /** Live host reads until `seal()`. Not a const captured before the finish drain, and not serialized. */
   readonly outcomes: ReadonlyArray<ReviewLedger.Read>
+  /** Post-record delivery barrier. Snapshots the live reads once; not a model input or a fact field. */
+  readonly seal: () => ReadonlyArray<ReviewLedger.Read>
 }
 
 /** The analyze step's return (K6): checks, triaged items per lens after the §8.6 pipeline, and the retained artifact. */
@@ -217,7 +220,10 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
   const auditNodes = new Set(["lucy-audit", ...below(input.skills, "lucy-audit")])
   const lead = yield* port.create({ key: "lead", role: "lead" })
   const delivered = new Map<string, ReviewItem.ToolItem[]>()
+  let sealedReads: ReadonlyArray<ReviewLedger.Read> | undefined
   const observeFor = (sessionID: string) => (items: ReadonlyArray<ReviewItem.ToolItem>) => {
+    // Seal is the post-record delivery barrier. Refuse before appending so a late page cannot change the snapshot.
+    if (sealedReads) throw new Error("outcome-delivery-sealed")
     const current = delivered.get(sessionID) ?? []
     delivered.set(sessionID, current.concat(items))
   }
@@ -300,22 +306,32 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
         ...(entryBlocker ? { entryBlockers: [entryBlocker] } : {}),
         probes: observed.slice().sort(byProbeIdentity),
       })
-      const outcomes = ReviewOutcomes.reads({
+      const derive = () => ReviewOutcomes.reads({
         delivered: [...delivered.values()].flat(),
         decisions,
         catalog: input.catalog,
       })
+      const seal = () => {
+        if (sealedReads) return sealedReads
+        sealedReads = derive()
+        return sealedReads
+      }
+      const initial = derive()
       const authorization = {
         checkFacts,
         method,
         routingDigest: ReviewRouting.digest(sessionRecord),
         catalogDigest: sessionRecord.catalog,
-        outcomes,
+        get outcomes() {
+          return sealedReads ?? derive()
+        },
+        seal,
       }
       const reply = yield* RUNNING.withPermit(port.run(lead, [
         ...body,
         `Host check facts (embed these checks and blockers verbatim; host authority, not model text):\n${JSON.stringify({ checks: checkFacts.checks, blockers: checkFacts.blockers })}`,
-        `Host outcomes (pass these exact pack, rule, fingerprint and outcome records as items; host authority, do not invent):\n${JSON.stringify(outcomes.map((item) => ({ pack: item.pack, rule: item.rule, fingerprint: item.fingerprint, outcome: item.outcome })))}`,
+        `Host outcomes (initial pack, rule, fingerprint and outcome; generation stays host-only):\n${JSON.stringify(initial.map((item) => ({ pack: item.pack, rule: item.rule, fingerprint: item.fingerprint, outcome: item.outcome })))}`,
+        "Each successfully paged primary item is also required, not-pursued at Quick. Its pack, rule and fingerprint are on that page. Do not invent items, and do not treat this initial list as empty or closed after a page.",
       ].join("\n\n"), {
         key: "finish",
         finish: !cardOnly,
@@ -331,7 +347,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
         confirmed,
         counts,
         checkFacts,
-        outcomes,
+        outcomes: sealedReads ?? derive(),
       } as Result
     })
 

@@ -19,6 +19,7 @@ import { ReviewSeatTools } from "@orchestra/core/review/seat-tools"
 import { ReviewSettings } from "@orchestra/core/review/settings"
 import { ReviewTools } from "@orchestra/core/review/tools"
 import { ReviewAnalyze } from "@orchestra/core/review-toolkit/analyze"
+import { ReviewItem } from "@orchestra/core/review-toolkit/item"
 import { ReviewProbe } from "@orchestra/core/review-toolkit/probe"
 import { ReviewScratch } from "@orchestra/core/review-toolkit/scratch-copy"
 import { AppProcess } from "@orchestra/core/process"
@@ -516,7 +517,10 @@ export function tools(input: {
               return yield* new Tool.Failure({ message: "method-binding-mismatch: submitted method or digest does not match host finish", metadata: { reason: "method-binding-mismatch" } })
             if (!sameOutcomes(params.items, authority.outcomes))
               return yield* new Tool.Failure({ message: "outcome-binding-mismatch: submitted items do not match host outcomes", metadata: { reason: "outcome-binding-mismatch" } })
-            hostOutcomes = authority.outcomes
+            const snapshot = authority.seal()
+            if (!sameOutcomes(params.items, snapshot))
+              return yield* new Tool.Failure({ message: "outcome-binding-mismatch: submitted items do not match host outcomes", metadata: { reason: "outcome-binding-mismatch" } })
+            hostOutcomes = snapshot
             yield* Effect.try({
               try: () => ReviewChecksV2.authorize(params.verdict, authority.checkFacts),
               catch: (error) => new Tool.Failure({
@@ -577,6 +581,21 @@ function leadID(parentID: string, validationRecordID: string, stage: string, rev
 
 function sha256(value: string) {
   return createHash("sha256").update(value, "utf8").digest("hex")
+}
+
+function deliverPage<T extends { readonly items: ReadonlyArray<ReviewItem.ToolItem> }>(
+  result: T,
+  observeItems: ((items: ReadonlyArray<ReviewItem.ToolItem>) => void) | undefined,
+) {
+  if (!observeItems) return Effect.succeed(result)
+  try {
+    observeItems(result.items)
+  } catch (error) {
+    if (error instanceof Error && error.message === "outcome-delivery-sealed")
+      return Effect.fail(new Tool.Failure({ message: "outcome-delivery-sealed", metadata: { reason: "outcome-delivery-sealed" } }))
+    return Effect.die(error)
+  }
+  return Effect.succeed(result)
 }
 
 function catalogDigest(value: string | undefined) {
@@ -754,7 +773,7 @@ export const reviewBinding = (held: {
                   ...(input.cursor ? { cursor: input.cursor } : {}),
                 }).pipe(
                   Effect.mapError((error) => new Tool.Failure({ message: `review_analyze ${error.reason}` })),
-                  Effect.tap((result) => Effect.sync(() => bound.observeItems?.(result.items))),
+                  Effect.flatMap((result) => deliverPage(result, bound.observeItems)),
                 ),
             },
           }
