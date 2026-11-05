@@ -11,4 +11,4 @@ Read the change as the tester who must sign it off: derive the tests it needs fi
 
 The repository's own test rules, read from the base revision, are written rules: a test that breaks one is a candidate citing the rule.
 
-Open `lucy-lens-tests-adequacy` for the procedure.
+Open `lucy-lens-tests-adequacy` for the procedure. For matching hunks, open `lucy-lens-tests-oracles`, `lucy-lens-tests-smells`, `lucy-lens-tests-flaky`, or `lucy-lens-tests-strategy`; these are perspectives within this pass, not additional passes.
