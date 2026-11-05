@@ -150,22 +150,25 @@ if (process.env.BOARD_DOM !== "1") {
 
   test("each issue sits in its stage's column; intake is only counted and cut stays off the board", async () => {
     const view = await mount()
-    expect([...view.host.querySelectorAll(".board-col")].map((col) => col.getAttribute("data-stage")))
-      .toEqual(["backlog", "ready", "building", "review", "shipped"])
-    expect(view.lane("backlog")).toEqual(["LCH-1"])
-    expect(view.lane("ready")).toEqual(["LCH-2"])
-    expect(view.lane("building")).toEqual(["LCH-3"])
-    expect(view.lane("review")).toEqual([])
-    expect(view.lane("shipped")).toEqual(["LCH-4"])
-    expect(view.host.querySelector('[data-ref="LCH-5"]')).toBeNull()
-    expect(view.host.querySelector('[data-ref="LCH-6"]')).toBeNull()
-    expect(view.host.querySelector(".board-intake")?.textContent).toContain("1")
-    expect(view.host.querySelector<HTMLSpanElement>('[data-ref="LCH-1"] .board-row-title')?.title).toBe(fullTitle)
-    expect(view.host.querySelector('[data-ref="LCH-1"] .board-row-title')?.textContent).toBe(fullTitle)
-    // The building card shows the active step's now line and its seat by role letter.
-    expect(view.host.querySelector('[data-ref="LCH-3"] .board-now')?.textContent).toContain("wiring the routes")
-    expect(view.host.querySelector('[data-ref="LCH-3"] .board-seat')?.textContent).toBe("B")
-    view.done()
+    try {
+      expect([...view.host.querySelectorAll(".board-col")].map((col) => col.getAttribute("data-stage")))
+        .toEqual(["backlog", "ready", "building", "review", "shipped"])
+      expect(view.lane("backlog")).toEqual(["LCH-1"])
+      expect(view.lane("ready")).toEqual(["LCH-2"])
+      expect(view.lane("building")).toEqual(["LCH-3"])
+      expect(view.lane("review")).toEqual([])
+      expect(view.lane("shipped")).toEqual(["LCH-4"])
+      expect(view.host.querySelector('[data-ref="LCH-5"]')).toBeNull()
+      expect(view.host.querySelector('[data-ref="LCH-6"]')).toBeNull()
+      expect(view.host.querySelector(".board-intake")?.textContent).toContain("1")
+      expect(view.host.querySelector<HTMLSpanElement>('[data-ref="LCH-1"] .board-row-title')?.title).toBe(fullTitle)
+      expect(view.host.querySelector('[data-ref="LCH-1"] .board-row-title')?.textContent).toBe(fullTitle)
+      // The building card shows the active step's now line and its seat by role letter.
+      expect(view.host.querySelector('[data-ref="LCH-3"] .board-now')?.textContent).toContain("wiring the routes")
+      expect(view.host.querySelector('[data-ref="LCH-3"] .board-seat')?.textContent).toBe("B")
+    } finally {
+      view.done()
+    }
   }, 20000)
 
   test("board.changed for this project refetches the board and moves the card", async () => {
