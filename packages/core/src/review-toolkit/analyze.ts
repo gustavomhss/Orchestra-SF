@@ -1,8 +1,9 @@
 export * as ReviewAnalyze from "./analyze"
 
 import path from "path"
-import { mkdir, readdir, writeFile } from "fs/promises"
+import { lstat, mkdir, readdir, realpath, writeFile } from "fs/promises"
 import { Effect, Option, Schema } from "effect"
+import { FSUtil } from "../fs-util"
 import { ReviewCatalog } from "../review/catalog"
 import { ResearchProcess } from "../research-toolkit/process"
 import { ProbeRun } from "../research-toolkit/probe/run"
@@ -250,53 +251,71 @@ const squawked = Effect.fnUntraced(function* (pack: Pack, context: Context) {
     return only(check(pack, "not-run", `template unknown: ${pack.template}`))
   const located = yield* ReviewPackSquawk.locate()
   if ("absent" in located) return only(check(pack, "not-run", located.absent))
+  // No Squawk baseCache: the key would have to include the selected files, and a tree-only key reuses another selection.
   const scan = (copied: Copy, side: "head" | "base") => Effect.gen(function* () {
-    if ("failed" in copied) return { status: "not-run", reason: copied.failed }
+    if ("failed" in copied) return { status: "not-run" as const, reason: copied.failed }
     const snapshot = copied.snapshot
-    const files = yield* Effect.promise(() => sqlSelection(snapshot.root, context.input))
-    if (files.length === 0) return { status: "not-run", reason: "no-input" }
+    const selected = yield* Effect.promise(() => sqlSelection(snapshot.root, context.input, side))
+    if ("refused" in selected) return { status: "not-run" as const, reason: selected.refused }
+    if (selected.files.length === 0) {
+      if (side === "head") return { status: "not-run" as const, reason: "no-input" }
+      const uri = yield* context.write(`raw/${pack.id}-base.json`, JSON.stringify({ invoked: false, reason: "no-eligible-base-input" }))
+      return { status: "ok" as const, results: [], uri, emptyBase: true as const }
+    }
     const config = yield* ReviewPackSquawk.prepare(path.join(snapshot.scratch, "squawk-host"))
-    const built = yield* ReviewPackSquawk.argv({ executable: located.executable, config, root: snapshot.root, files })
-    if (built.status !== "ok") return { status: "not-run", reason: built.reason }
+    const built = yield* ReviewPackSquawk.argv({ executable: located.executable, config, root: snapshot.root, files: selected.files })
+    if (built.status !== "ok") return { status: "not-run" as const, reason: built.reason }
     const ran = yield* confined({
       argv: built.argv, cwd: snapshot.scratch, write: [], env: ResearchProcess.environment(),
       timeoutMs: SCAN_MS, maxBytes: Probe.Limits.outputBytes,
     })
-    if ("denied" in ran) return { status: "not-run", reason: ran.denied }
+    if ("denied" in ran) return { status: "not-run" as const, reason: ran.denied }
     // The captured stdout, including a truncated or unknown-rule report, is retained before settle classifies it.
     const text = ran.outcome.stdout.data.toString("utf8")
     const uri = yield* context.write(`raw/${pack.id}-${side}.json`, text)
     const settled = ReviewPackSquawk.settle(ran.outcome, snapshot.root)
-    if (settled.status === "not-run") return { status: "not-run", reason: settled.reason, uri }
-    if (settled.status !== "ok") return { status: "acquisition-error", reason: settled.reason, uri }
-    return { status: "ok", results: settled.results, uri }
+    if (settled.status === "not-run") return { status: "not-run" as const, reason: settled.reason, uri }
+    if (settled.status !== "ok") return { status: "acquisition-error" as const, reason: settled.reason, uri }
+    return { status: "ok" as const, results: settled.results, uri }
   })
   const head = yield* scan(yield* context.head, "head")
   if (head.status !== "ok") return only(check(pack, head.status, head.reason, head.uri))
-  const tree = yield* ResearchProcess.git(context.input.worktree, ["rev-parse", "--verify", `${context.input.base}^{tree}`]).pipe(
-    Effect.map((data) => data.toString("utf8").trim()),
-    Effect.orElseSucceed(() => undefined),
-  )
-  const key = tree === undefined ? undefined : `${pack.id}@${pack.version}:${pack.template}:${tree}`
-  const cached = key === undefined ? undefined : baseCache.get(key)
-  const base = cached ? { status: "ok" as const, ...cached } : yield* scan(yield* context.base, "base")
+  const base = yield* scan(yield* context.base, "base")
   if (base.status !== "ok") return only(check(pack, base.status, `base: ${base.reason}`, "uri" in base ? base.uri : undefined))
-  if (key !== undefined && !cached) remember(key, { results: base.results, uri: base.uri })
   const lookup = rules(context.catalog)
   const changed = context.input.changed
   const onChanged = (file: string, line: number, endLine?: number) =>
     (changed[file] ?? []).some((range) => line <= range.end && (endLine ?? line) >= range.start)
+  const coverage = "emptyBase" in base && base.emptyBase ? "base: no eligible SQL input; no base scanner invocation" : undefined
   return {
-    checks: [check(pack, head.results.length > 0 ? "fail" : "pass", undefined, head.uri)],
+    checks: [check(pack, head.results.length > 0 ? "fail" : "pass", coverage, head.uri)],
     head: ReviewSarif.toItems(head.results, lookup, onChanged).items,
     base: ReviewSarif.toItems(base.results, lookup).items,
   } satisfies Outcome
 })
 
-async function sqlSelection(root: string, input: RunInput) {
-  if (input.scope === "files")
-    return (input.files ?? []).filter((file) => path.basename(file).endsWith(".sql")).map((file) => path.resolve(root, file))
-  return regularSql(root)
+async function sqlSelection(root: string, input: RunInput, side: "head" | "base") {
+  if (input.scope !== "files") return { files: await regularSql(root) }
+  const requested = input.files ?? []
+  // Lexical containment before existence, so a missing base file is not how an escape gets through.
+  const escaped = requested.find((file) => file.includes("\0") || !FSUtil.contains(root, path.resolve(root, file)))
+  if (escaped) return { refused: escaped.includes("\0") ? "nul" : "path-outside" }
+  const files: string[] = []
+  for (const file of requested.filter((entry) => path.basename(entry).endsWith(".sql"))) {
+    const absolute = path.resolve(root, file)
+    const info = await lstat(absolute).catch((error: NodeJS.ErrnoException) => error)
+    if (info instanceof Error) {
+      if (side === "base" && (info.code === "ENOENT" || info.code === "ENOTDIR")) continue
+      return { refused: info.code === "ENOENT" ? "missing" : info.code === "EACCES" || info.code === "EPERM" ? "unreadable" : `fs-${info.code ?? "error"}` }
+    }
+    if (info.isSymbolicLink()) return { refused: "symlink" }
+    if (info.isDirectory()) return { refused: "directory" }
+    if (!info.isFile()) return { refused: "not-file" }
+    const physical = await realpath(absolute).catch((error: NodeJS.ErrnoException) => error)
+    if (physical instanceof Error || !FSUtil.contains(root, physical)) return { refused: "path-outside" }
+    files.push(absolute)
+  }
+  return { files }
 }
 
 async function regularSql(root: string) {
