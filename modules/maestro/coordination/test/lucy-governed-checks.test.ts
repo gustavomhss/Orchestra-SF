@@ -32,7 +32,6 @@ import { SkillV2 } from "@orchestra/core/skill"
 import { ToolRegistry } from "@orchestra/core/tool/registry"
 import { ToolOutputStore } from "@orchestra/core/tool-output-store"
 import { ToolSafety } from "@orchestra/core/tool-safety"
-import { ReviewItem } from "@orchestra/core/review-toolkit/item"
 import { GovernanceRecordsV2 } from "../src/v2/governance/records"
 import { GovernanceBackgroundV2 } from "../src/v2/governance/background"
 import { WriteRootsV2 } from "../src/v2/governance/write-roots"
@@ -41,6 +40,7 @@ import { MaestroToolsV2 } from "../src/v2/tools"
 import { MaestroReviewTools } from "../src/v2/tools/review"
 import { authoredSkills, reviewRows, run } from "./fixture/lucy-pr-entry"
 import { directory, projectID, restoreAlpha } from "./fixture/lucy-governed-repository"
+import { CONFIRMED, HOST_FACTS, HOST_OUTCOMES, LOGIC_LENS, PLANTED, QUOTE_LINE, eligibleEntry, field, lensReturn, line, requireBindings, requireRecordID, retainedArtifacts, validationChecks, verifierReturn, workCard } from "./fixture/lucy-governed-data"
 
 // Registered maestro_record_review during a scoped finish drain. The Session
 // double admits prompts in memory only; this is not durable Session execution.
@@ -48,21 +48,8 @@ import { directory, projectID, restoreAlpha } from "./fixture/lucy-governed-repo
 // Receipt refusal is counted before maestro.review publication and board notes.
 
 const sessionID = SessionSchema.ID.make("ses_governed_checks")
-const HOST_FACTS = "Host check facts (embed these checks and blockers verbatim; host authority, not model text):\n"
-const HOST_OUTCOMES = "Host outcomes (initial pack, rule, fingerprint and outcome; generation stays host-only):\n"
-const CONFIRMED = "confirmed findings, as the host merged them"
 const time = { created: DateTime.makeUnsafe(1_700_000_000_000) }
 const model = { id: ModelV2.ID.make("model"), providerID: ProviderV2.ID.make("provider") }
-const field = (value: string) => ({ value, source: "stakeholder" })
-const workCard = [
-  "## Definition of Done", "The report downloads as CSV.",
-  "## Invariants", "Existing reports keep their format.",
-  "## Quality Standards", "Typed, no new dependencies.",
-  "## Completeness Criteria", "Every report column is exported.",
-  "## Success Criteria", "The owner downloads a CSV.",
-].join("\n")
-const validationChecks = [{ id: "spec", status: "PASS", detail: "docs/export.md committed" }]
-
 const prompts: string[] = []
 const briefsBySession = new Map<string, string>()
 const child = {
@@ -149,93 +136,6 @@ function reviewHistory(id: SessionSchema.ID) {
   return [...turn("entry", entry), ...turn("finish", "recorded")]
 }
 
-const QUOTE = "The report downloads as CSV."
-const QUOTE_LINE = 3
-const LOGIC_LENS = "correctness-logic"
-const PLANTED = plantedItem()
-
-async function retainedArtifacts(store: string) {
-  const names = await fs.readdir(store).catch(() => [])
-  const files = await Promise.all(names.filter((name) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(name)).map(async (name) => {
-    const file = path.join(store, name, "retained.json")
-    return await Bun.file(file).exists() ? file : undefined
-  }))
-  return files.filter((file) => file !== undefined)
-}
-
-function plantedItem() {
-  const rule = "export-claim"
-  const snippetDigest = ReviewItem.snippetDigest(QUOTE)
-  return {
-    fingerprint: ReviewItem.fingerprint({ pack: "gitleaks", rule, path: "docs/export.md", snippetDigest }),
-    class: "logic.invariant",
-    lens: LOGIC_LENS,
-    pack: "gitleaks",
-    rule,
-    ruleStatus: "probation" as const,
-    severity: "P1" as const,
-    path: "docs/export.md",
-    line: QUOTE_LINE,
-    snippetDigest,
-    sources: [{ pack: "gitleaks", rule }],
-    triage: "planted",
-    onChangedLine: true,
-  }
-}
-
-function fenced(tag: string, value: unknown) {
-  return "```" + tag + "\n" + JSON.stringify(value) + "\n```"
-}
-
-function eligibleEntry() {
-  return fenced("review-entry", {
-    status: "eligible",
-    context: { intent: "nothing found", acceptance: "nothing found", invariants: "nothing found", assumptions: "nothing found" },
-    overlays: { confirmed: [], declined: [], added: [] },
-    slices: [],
-  })
-}
-
-function lensReturn(brief: string) {
-  const lens = /Stage: hunt, lens ([^,]+)/.exec(brief)?.[1] ?? LOGIC_LENS
-  const raised = lens === LOGIC_LENS
-  return fenced("review-lens", {
-    lens,
-    candidates: raised ? [{
-      class: "logic.invariant",
-      node: "lucy-review-prove-quote",
-      path: "docs/export.md",
-      line: QUOTE_LINE,
-      severity: "P1",
-      trigger: "The export claim is not held by the spec.",
-      quote: QUOTE,
-      source: PLANTED.fingerprint,
-    }] : [],
-    observations: [],
-    hunks: raised ? [{ path: "docs/export.md", startLine: 1, endLine: QUOTE_LINE }] : [],
-    items: raised ? [{ fingerprint: PLANTED.fingerprint, pursued: true }] : [],
-  })
-}
-
-function verifierReturn(brief: string) {
-  const klass = /Stage: verify, class (\S+)\./.exec(brief)?.[1] ?? "logic.invariant"
-  if (klass !== "logic.invariant") return fenced("review-verify", { class: klass, results: [] })
-  const parsed = /<data name="candidates">\n([\s\S]*?)\n<\/data>/.exec(brief)?.[1]
-  const candidates = JSON.parse(parsed ?? "[]") as { id: string; path: string; line: number }[]
-  const hit = candidates.find((item) => item.path === "docs/export.md" && item.line === QUOTE_LINE)
-  if (!hit) return fenced("review-verify", { class: klass, results: [] })
-  return fenced("review-verify", {
-    class: klass,
-    results: [{
-      candidate: hit.id,
-      state: "confirmed",
-      rung: "quote",
-      evidence: { kind: "quote", path: "docs/export.md", startLine: QUOTE_LINE, endLine: QUOTE_LINE },
-      history: [{ option: "quote", outcome: "settled" }],
-    }],
-  })
-}
-
 function turn(id: SessionSchema.ID, key: string, text: string) {
   const messageID = SessionMessage.ID.make(`msg_lucy_review_${createHash("sha256").update(`${id}\0${key}`).digest("hex")}`)
   return [
@@ -245,24 +145,6 @@ function turn(id: SessionSchema.ID, key: string, text: string) {
       content: [{ type: "text", id: "text", text }], time: { created: time.created, completed: time.created }, finish: "stop",
     }),
   ]
-}
-
-const line = (text: string, label: string) => text.split("\n").find((part) => part.startsWith(label))?.slice(label.length)
-
-function requireBindings(text: string, label: string) {
-  const row = text.split("\n").find((item) => item.startsWith("Bindings: "))
-  if (!row) throw new Error(`${label} refused before bindings: ${text.slice(0, 500)}`)
-  return JSON.parse(row.slice("Bindings: ".length)) as {
-    planRevisionID?: string
-    contextRecordID?: string
-    contextHash?: string
-    validationRecordID?: string
-  }
-}
-
-function requireRecordID(id: string | undefined, label: string) {
-  if (!id?.startsWith("evt_")) throw new Error(`${label} has no event id: ${id ?? "missing"}`)
-  return id
 }
 
 test("a scoped finish refuses a governed receipt before a review event or board note", () =>
