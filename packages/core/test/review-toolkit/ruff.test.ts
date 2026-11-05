@@ -33,6 +33,7 @@ describe("Ruff report policy (synthetic process outcomes)", () => {
     const invalid = [
       "{", JSON.stringify([row, { ...row, code: "F999" }]),
       JSON.stringify([{ ...row, code: null }]), JSON.stringify([{ ...row, code: "invalid-syntax" }]),
+      JSON.stringify([{ message: row.message, filename: row.filename, location: row.location, end_location: row.end_location }]),
       JSON.stringify([{ ...row, filename: "/outside/sample.py" }]),
       JSON.stringify([{ ...row, end_location: { row: 1, column: 6 } }]),
       JSON.stringify([{ ...row, end_location: row.location }]),
@@ -54,11 +55,13 @@ describe("Ruff report policy (synthetic process outcomes)", () => {
   })
 })
 
-test("review process sanitizer removes hostile Ruff and Python environment", () => {
-  const env = ResearchProcess.environment({
+test("Ruff adapter removes hostile Ruff and Python environment", () => {
+  const dirty = {
     PATH: "/usr/bin", RUFF_OUTPUT_FILE: "/outside/report", RUFF_OUTPUT_FORMAT: "text",
-    RUFF_CACHE_DIR: "/outside/cache", PYTHONPATH: "/outside/python",
-  })
+    RUFF_CACHE_DIR: "/outside/cache", PYTHONPATH: "/outside/python", rUfF_extra: "hostile", pythonpath: "hostile",
+  }
+  expect(ResearchProcess.environment(dirty).RUFF_OUTPUT_FILE).toBe(dirty.RUFF_OUTPUT_FILE)
+  const env = ReviewPackRuff.environment(dirty)
   expect(env.PATH).toBe("/usr/bin")
-  for (const key of ["RUFF_OUTPUT_FILE", "RUFF_OUTPUT_FORMAT", "RUFF_CACHE_DIR", "PYTHONPATH"]) expect(env[key]).toBeUndefined()
+  for (const key of ["RUFF_OUTPUT_FILE", "RUFF_OUTPUT_FORMAT", "RUFF_CACHE_DIR", "PYTHONPATH", "rUfF_extra", "pythonpath"]) expect(env[key]).toBeUndefined()
 })
