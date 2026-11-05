@@ -49,6 +49,12 @@ export function validate(card: ReviewResultV2.Card, facts: Facts): void {
   if (card.verdict === "APPROVE" && requiredGateFailed(facts)) throw new Error("checks-blocked")
 }
 
+/** Pre-publication receipt gate. A blocked card has no verdict, so validate does not call this. */
+export function authorize(verdict: string, facts: Facts): void {
+  if (facts.blockers.length > 0) throw new Error("checks-blocked")
+  if (verdict === "APPROVE" && requiredGateFailed(facts)) throw new Error("checks-blocked")
+}
+
 function projectAnalyzer(check: ReviewAnalyze.Check, accepts: (id: string, lane?: string) => boolean): Check {
   const status = check.status === "not-run" ? "check-unavailable" : check.status
   return projected(check, status, status === "check-unavailable" && accepts(check.id, check.lane))
