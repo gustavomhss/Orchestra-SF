@@ -1,7 +1,8 @@
 export * as ReviewPackSquawk from "./squawk"
 
-import path from "node:path"
-import { mkdir } from "node:fs/promises"
+import path, { posix, win32 } from "node:path"
+import { constants } from "node:fs"
+import { access, lstat, mkdir, realpath } from "node:fs/promises"
 import { Effect } from "effect"
 import pinned from "../../backend-toolkit/packs/squawk"
 import { BackendToolkit } from "../../backend-toolkit"
@@ -47,22 +48,18 @@ export const prepare = Effect.fn("ReviewPackSquawk.prepare")(function* (director
 })
 
 // glob 0.3.1 Pattern::escape is [?] [*] [[] []]; classes contain no separator. Verbatim/device prefixes yield nothing.
-export function argv(input: { executable: string; config: string; root: string; files: readonly string[] }) {
-  if (input.files.length === 0) return stop("not-run", "no-input")
-  if ([input.root, input.config, input.executable, ...input.files].some(unverified)) return stop("unsupported", "glob-literal-unverified")
-  if (!input.executable || input.executable.includes("\0")) return stop("not-run", "executable-missing")
-  const config = hostConfig(input.config, input.root)
-  if (config) return stop("not-run", config)
-  const escaped: string[] = []
-  for (const file of input.files) {
-    const reason = sqlFile(file, input.root)
-    if (reason) return stop("not-run", reason)
-    escaped.push(patternEscape(file))
-  }
-  const args = [input.executable, "--config", input.config, "--reporter", "json", "--", ...escaped]
-  if (args.reduce((sum, arg) => sum + Buffer.byteLength(arg), 0) > Probe.Limits.outputBytes) return stop("not-run", "argv-bound")
-  return { status: "ok" as const, argv: args }
-}
+// Lexical checks run first. FS preflight then requires a host-native root. It is not an atomic seal: a same-uid
+// process can replace a checked path before squawk opens it.
+export const argv = Effect.fn("ReviewPackSquawk.argv")(function* (input: {
+  executable: string
+  config: string
+  root: string
+  files: readonly string[]
+}) {
+  const refused = earlyRefusal(input)
+  if (refused) return refused
+  return yield* Effect.promise(() => physical(input))
+})
 
 export function settle(outcome: Outcome, root: string): Parsed | { status: "not-run"; reason: string } {
   if (outcome.failure) return { status: "not-run", reason: "spawn-failure" }
@@ -88,6 +85,88 @@ export function settle(outcome: Outcome, root: string): Parsed | { status: "not-
 
 function stop(status: "not-run" | "unsupported", reason: string) {
   return { status, reason }
+}
+
+function earlyRefusal(input: { executable: string; config: string; root: string; files: readonly string[] }) {
+  if (input.files.length === 0) return stop("not-run", "no-input")
+  if ([input.root, input.config, input.executable, ...input.files].some(unverified)) return stop("unsupported", "glob-literal-unverified")
+  if (!input.executable || input.executable.includes("\0")) return stop("not-run", "executable-missing")
+  if (flavor(input.root) !== (process.platform === "win32" ? win32 : posix)) return stop("unsupported", "nonnative-root")
+  const config = hostConfig(input.config, input.root)
+  if (config) return stop("not-run", config)
+  const escaped: string[] = []
+  for (const file of input.files) {
+    const reason = sqlFile(file, input.root)
+    if (reason) return stop("not-run", reason)
+    escaped.push(patternEscape(file))
+  }
+  const bytes = [input.executable, "--config", input.config, "--reporter", "json", "--", ...escaped]
+    .reduce((sum, arg) => sum + Buffer.byteLength(arg), 0)
+  if (bytes > Probe.Limits.outputBytes) return stop("not-run", "argv-bound")
+  return undefined
+}
+
+async function physical(input: { executable: string; config: string; root: string; files: readonly string[] }) {
+  const root = await canonicalRoot(input.root)
+  if (typeof root !== "string") return root
+  const config = await hostFile(input.config, root)
+  if (config) return stop("not-run", config)
+  const escaped: string[] = []
+  for (const file of input.files) {
+    const reason = await selected(file, root)
+    if (reason) return stop(reason === "symlink" ? "unsupported" : "not-run", reason)
+    escaped.push(patternEscape(file))
+  }
+  return { status: "ok" as const, argv: [input.executable, "--config", input.config, "--reporter", "json", "--", ...escaped] }
+}
+
+async function canonicalRoot(root: string) {
+  const canonical = await realpath(root).catch((error: NodeJS.ErrnoException) => error)
+  if (canonical instanceof Error) return stop("not-run", named(canonical, "root-missing"))
+  const info = await lstat(canonical).catch((error: NodeJS.ErrnoException) => error)
+  if (info instanceof Error) return stop("not-run", named(info, "root-missing"))
+  if (!info.isDirectory()) return stop("not-run", "root-not-directory")
+  return canonical
+}
+
+async function hostFile(config: string, root: string) {
+  const info = await lstat(config).catch((error: NodeJS.ErrnoException) => error)
+  if (info instanceof Error) return named(info, "config-missing")
+  if (info.isSymbolicLink()) return "config-symlink"
+  if (!info.isFile()) return "config-not-file"
+  const physicalPath = await realpath(config).catch((error: NodeJS.ErrnoException) => error)
+  if (physicalPath instanceof Error) return named(physicalPath, "config-missing")
+  if (inside(root, physicalPath)) return "config-inside"
+  return readable(config)
+}
+
+async function selected(file: string, root: string) {
+  const info = await lstat(file).catch((error: NodeJS.ErrnoException) => error)
+  if (info instanceof Error) return named(info, "missing")
+  if (info.isSymbolicLink()) return "symlink"
+  if (info.isDirectory()) return "directory"
+  if (!info.isFile()) return "not-file"
+  const physicalPath = await realpath(file).catch((error: NodeJS.ErrnoException) => error)
+  if (physicalPath instanceof Error) return named(physicalPath, "missing")
+  if (!inside(root, physicalPath)) return "path-outside"
+  return readable(file)
+}
+
+function inside(root: string, file: string) {
+  const relative = path.relative(root, file)
+  return relative.length > 0 && !path.isAbsolute(relative) && relative !== ".." && !relative.startsWith(`..${path.sep}`)
+}
+
+function named(error: NodeJS.ErrnoException, missing: string) {
+  if (error.code === "ENOENT") return missing
+  if (error.code === "EACCES" || error.code === "EPERM") return "unreadable"
+  return `fs-${error.code ?? "error"}`
+}
+
+async function readable(file: string) {
+  const opened = await access(file, constants.R_OK).then(() => undefined, (error: NodeJS.ErrnoException) => error)
+  if (!opened) return undefined
+  return named(opened, "missing")
 }
 
 function unverified(value: string) {
