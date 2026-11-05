@@ -9,6 +9,7 @@ import { Tool } from "@orchestra/core/tool/tool"
 import { MaestroEvent } from "@orchestra/schema/maestro-event"
 import { NonNegativeInt, PositiveInt } from "@orchestra/schema/schema"
 import { Context, Effect, Option, Schema } from "effect"
+import { ReviewPrecisionEvent } from "@orchestra/schema/review-precision-event"
 import { ReviewChecksV2 } from "../workflow/review-checks"
 import { ReviewPRStoreV2 } from "./review-pr-store"
 
@@ -29,6 +30,7 @@ export const Facts = Schema.Struct({
   scope: Schema.Struct({ base: Schema.NonEmptyString, head: Schema.NonEmptyString, files: NonNegativeInt, changedLines: NonNegativeInt }),
   confirmed: Schema.Array(Confirmed),
   checkFacts: ReviewChecksV2.Facts,
+  outcomes: Schema.Array(ReviewPrecisionEvent.Read),
 })
 export type Facts = typeof Facts.Type
 
