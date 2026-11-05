@@ -115,9 +115,10 @@ function seatProfile(seat: Seat): NativeProfile {
     ...baseProfiles[seat.profile],
     ...Object.fromEntries((seat.mcp ?? []).map((server) => [`${server}_*`, "allow" as const])),
     // The review seat's tools come from its one descriptor (@orchestra/core/review/seat-tools); read keeps the base's
-    // .env denial and skill is the seat's skills grant below.
+    // .env denial and skill is the seat's skills grant below. Atlas context arrives only through OWN. Memory tools
+    // stay on the Atlas Memory owners below, even if a later OWN edit names them.
     ...(seat.review ? Object.fromEntries([...ReviewSeatTools.OWN, ...ReviewSeatTools.LOOP]
-      .filter((id) => id !== "read" && id !== "skill")
+      .filter((id) => id !== "read" && id !== "skill" && id !== "atlas_memory_recall" && id !== "atlas_memory_emit")
       .map((id) => [id, "allow" as const])) : {}),
     ...(seat.atlasMemory ? { atlas_context: "allow" as const, atlas_memory_recall: "allow" as const, atlas_memory_emit: "allow" as const } : {}),
     ...(seat.id === "archie" ? {
