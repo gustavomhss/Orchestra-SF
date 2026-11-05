@@ -17,7 +17,18 @@ import { tmpdir } from "../fixture/tmpdir"
 
 // Jailed pinned-binary conformance. Every scanner and the write probe go through ToolSafetySandbox.confine
 // with write:[]. ResearchProcess.run only launches that confined argv. Not an unconfined CLI claim.
-// Host ensure is the only authorized network. Columns are squawk's own JSON fields, not a kernel byte map.
+// Network isolation is not tested and is not claimed: a jail deny-network setting is not an offline proof.
+// Columns are squawk's own JSON fields, not a kernel byte map.
+
+// Independent of the production manifest import. Frozen from ce2c386a7c backend squawk.ts.
+const APPROVED_VERSION = "2.67.0"
+const APPROVED_INTEGRITY = {
+  "darwin-arm64": "sha256-e5gACNJYxhvQZcrG8AtvnG/dzSPsoiSTuoem0ZktTD4=",
+  "darwin-x64": "sha256-GaB1M0nnKOMZGrqd1ZPICxhjVBWZfW8JW5EV2yrygsc=",
+  "linux-arm64": "sha256-JcT5X4G827Cg3JCYIMIutlehI4FVi3J1vWn5jyU7m2Q=",
+  "linux-x64": "sha256-A+/g5ma2O/M+JJNpPuCqnb7QfL3NIPeoKSJFwdqdeQo=",
+  "win32-x64": "sha256-1gBKh1opxNmyUfkm7s2MNT59ZESusZ+Zxkrfz5gZY8Q=",
+} as const
 
 const it = testEffect(LayerNode.compile(LayerNode.group([AppProcess.node])))
 const fixtureRoot = path.join(import.meta.dir, "../fixture/lucy-squawk")
@@ -34,6 +45,16 @@ const held = Effect.acquireRelease(
 it.live("conformance: pinned squawk under the jail, unsafe warning versus nonempty SELECT 1", () =>
   Effect.gen(function* () {
     expectSpawn(import.meta.path)
+    expect(pinGap(ReviewPackSquawk.manifest)).toBeUndefined()
+    expect(pinGap({ version: "9.9.9", targets: {} })).toBe("version:9.9.9")
+    expect(pinGap({ version: APPROVED_VERSION, targets: {} })).toBe("targets")
+    expect(pinGap({ version: APPROVED_VERSION, targets: {
+      "darwin-arm64": { artifact: { integrity: "sha256-no" } },
+      "darwin-x64": { artifact: { integrity: APPROVED_INTEGRITY["darwin-x64"] } },
+      "linux-arm64": { artifact: { integrity: APPROVED_INTEGRITY["linux-arm64"] } },
+      "linux-x64": { artifact: { integrity: APPROVED_INTEGRITY["linux-x64"] } },
+      "win32-x64": { artifact: { integrity: APPROVED_INTEGRITY["win32-x64"] } },
+    } })).toBe("integrity:darwin-arm64")
     const made = yield* held
     const fixture = yield* Effect.promise(() => readFile(path.join(fixtureRoot, "unsafe.sql")))
     expect(fixture.includes("ADD COLUMN") && fixture.includes("NOT NULL") && fixture.includes("café")).toBe(true)
@@ -48,8 +69,10 @@ it.live("conformance: pinned squawk under the jail, unsafe warning versus nonemp
     const tree = path.join(made.path, "tree")
     yield* Effect.promise(() => copy(tree, { "unsafe.sql": "unsafe.sql", "benign.sql": "benign.sql" }))
     yield* Effect.promise(() => writeFile(path.join(tree, "crlf.sql"), fixture.toString("utf8").replaceAll("\n", "\r\n")))
-    const before = yield* Effect.promise(() => shot(owned.map((name) => path.join(fixtureRoot, name)).concat([path.join(tree, "unsafe.sql")])))
-    expect(ReviewPackSquawk.argv({ executable: installed.executable, config: host, root: tree, files: [] })).toEqual({
+    const watched = [...owned.map((name) => path.join(fixtureRoot, name)), path.join(tree, "unsafe.sql"), path.join(tree, "benign.sql"), path.join(tree, "crlf.sql")]
+    const before = yield* Effect.promise(() => shot(watched))
+    yield* Effect.gen(function* () {
+    expect(yield* ReviewPackSquawk.argv({ executable: installed.executable, config: host, root: tree, files: [] })).toEqual({
       status: "not-run", reason: "no-input",
     })
     const probe = yield* scan(["/bin/sh", "-c", "/usr/bin/touch \"$TMPDIR/jail-ok\"; /usr/bin/touch ./jail-denied"], tree)
@@ -85,22 +108,33 @@ it.live("conformance: pinned squawk under the jail, unsafe warning versus nonemp
     }
     const spliced = JSON.stringify([...native, { ...native[0], rule_name: "not-a-native-rule" }])
     expect(ReviewSquawkReport.parseReport(spliced, { root: tree })).toEqual({ status: "acquisition-error", reason: "unknown-rule" })
-    expect(yield* Effect.promise(() => shot(owned.map((name) => path.join(fixtureRoot, name)).concat([path.join(tree, "unsafe.sql")])))).toEqual(before)
+    }).pipe(Effect.ensuring(Effect.promise(async () => {
+      expect(await shot(watched)).toEqual(before)
+    })))
   }), 600_000,
 )
 
 it.live("conformance: a broken repo config is ignored only with the host toml; bad host config and invalid SQL are not passes", () =>
   Effect.gen(function* () {
     expectSpawn(import.meta.path)
+    expect(pinGap(ReviewPackSquawk.manifest)).toBeUndefined()
     const made = yield* held
     const installed = yield* provision(path.join(made.path, "toolkit"))
     const host = yield* ReviewPackSquawk.prepare(path.join(made.path, "host"))
     const clean = path.join(made.path, "clean")
     const broken = path.join(made.path, "broken")
+    const invalidSql = path.join(broken, "invalid.sql")
     yield* Effect.promise(async () => {
       await copy(clean, { "unsafe.sql": "unsafe.sql" })
       await copy(broken, { "unsafe.sql": "unsafe.sql", ".squawk.toml": "broken.toml" })
+      await place(broken, "invalid.sql")
     })
+    const watched = [
+      ...owned.map((name) => path.join(fixtureRoot, name)),
+      path.join(clean, "unsafe.sql"), path.join(broken, "unsafe.sql"), path.join(broken, ".squawk.toml"), invalidSql,
+    ]
+    const before = yield* Effect.promise(() => shot(watched))
+    yield* Effect.gen(function* () {
     const baseline = yield* product(installed.executable, host, clean, [path.join(clean, "unsafe.sql")])
     const baseRules = rows(baseline.outcome).map((row) => row.rule_name).sort()
     expect(baseRules).toContain("adding-required-field")
@@ -113,22 +147,26 @@ it.live("conformance: a broken repo config is ignored only with the host toml; b
     expect(kept.outcome.exitCode, stderr(kept.outcome)).toBe(1)
     expect(rows(kept.outcome).map((row) => row.rule_name).sort()).toEqual(baseRules)
     expect(ReviewPackSquawk.settle(kept.outcome, broken).status).toBe("ok")
-    const missing = yield* scan(forced(installed.executable, path.join(made.path, "missing.toml"), broken, [path.join(broken, "unsafe.sql")]), broken)
-    expect(ReviewPackSquawk.settle(missing.outcome, broken)).toEqual({ status: "acquisition-error", reason: "configuration-error" })
+    expect(yield* ReviewPackSquawk.argv({
+      executable: installed.executable, config: path.join(made.path, "missing.toml"), root: broken, files: [path.join(broken, "unsafe.sql")],
+    })).toEqual({ status: "not-run", reason: "config-missing" })
     const invalidHost = path.join(made.path, "host", "bad.toml")
     yield* Effect.promise(() => writeFile(invalidHost, "included_rules = [\n"))
-    const invalid = yield* scan(forced(installed.executable, invalidHost, broken, [path.join(broken, "unsafe.sql")]), broken)
+    const invalid = yield* product(installed.executable, invalidHost, broken, [path.join(broken, "unsafe.sql")])
     expect(ReviewPackSquawk.settle(invalid.outcome, broken)).toEqual({ status: "acquisition-error", reason: "configuration-error" })
-    const invalidSql = yield* Effect.promise(() => place(broken, "invalid.sql"))
     const syntax = yield* product(installed.executable, host, broken, [invalidSql])
     expect(ReviewPackSquawk.settle(syntax.outcome, broken)).toEqual({ status: "acquisition-error", reason: "syntax-error" })
     expect(ReviewSquawkReport.parseReport(stdout(syntax.outcome), { root: broken }).status).not.toBe("ok")
+    }).pipe(Effect.ensuring(Effect.promise(async () => {
+      expect(await shot(watched)).toEqual(before)
+    })))
   }), 600_000,
 )
 
 it.live("conformance: glob metacharacters and spaces stay literal; a sibling match is not scanned", () =>
   Effect.gen(function* () {
     expectSpawn(import.meta.path)
+    expect(pinGap(ReviewPackSquawk.manifest)).toBeUndefined()
     const made = yield* held
     const installed = yield* provision(path.join(made.path, "toolkit"))
     const host = yield* ReviewPackSquawk.prepare(path.join(made.path, "host"))
@@ -141,8 +179,10 @@ it.live("conformance: glob metacharacters and spaces stay literal; a sibling mat
       await Promise.all([...selected, sibling].map((file) => writeFile(file, bytes)))
     })
     expect(yield* Effect.promise(() => readFile(sibling, "utf8"))).toContain("ADD COLUMN")
-    const before = yield* Effect.promise(() => shot([...selected, sibling]))
-    const built = ReviewPackSquawk.argv({ executable: installed.executable, config: host, root: tree, files: selected })
+    const watched = [...owned.map((name) => path.join(fixtureRoot, name)), ...selected, sibling]
+    const before = yield* Effect.promise(() => shot(watched))
+    yield* Effect.gen(function* () {
+    const built = yield* ReviewPackSquawk.argv({ executable: installed.executable, config: host, root: tree, files: selected })
     expect(built.status).toBe("ok")
     if (built.status !== "ok") throw new Error(built.reason)
     expect(built.argv).toContain(`${tree}/keep[[]a[]][?][*].sql`)
@@ -160,7 +200,9 @@ it.live("conformance: glob metacharacters and spaces stay literal; a sibling mat
     expect(parsed.status).toBe("ok")
     if (parsed.status === "ok") expect(new Set(parsed.results.map((result) => result.path))).toEqual(new Set(["my file.sql", "keep[a]?*.sql"]))
     expect(ReviewPackSquawk.settle(ran.outcome, tree).status).toBe("ok")
-    expect(yield* Effect.promise(() => shot([...selected, sibling]))).toEqual(before)
+    }).pipe(Effect.ensuring(Effect.promise(async () => {
+      expect(await shot(watched)).toEqual(before)
+    })))
   }), 600_000,
 )
 
@@ -183,15 +225,20 @@ function scan(argv: readonly string[], cwd: string) {
 }
 
 function product(executable: string, config: string, root: string, files: readonly string[]) {
-  const built = ReviewPackSquawk.argv({ executable, config, root, files })
-  if (built.status !== "ok") return Effect.die(new Error(`argv ${built.status}: ${built.reason}`))
-  return scan(built.argv, root)
+  return Effect.gen(function* () {
+    const built = yield* ReviewPackSquawk.argv({ executable, config, root, files })
+    if (built.status !== "ok") return yield* Effect.die(new Error(`argv ${built.status}: ${built.reason}`))
+    return yield* scan(built.argv, root)
+  })
 }
 
-function forced(executable: string, config: string, root: string, files: readonly string[]) {
-  const built = ReviewPackSquawk.argv({ executable, config, root, files })
-  if (built.status !== "ok") throw new Error(`argv ${built.status}: ${built.reason}`)
-  return built.argv
+function pinGap(manifest: { version: string; targets: Readonly<Record<string, { artifact: { integrity: string } }>> }) {
+  if (manifest.version !== APPROVED_VERSION) return `version:${manifest.version}`
+  const keys = Object.keys(APPROVED_INTEGRITY)
+  const actual = Object.keys(manifest.targets)
+  if (actual.length !== keys.length || keys.some((key) => !actual.includes(key))) return "targets"
+  const mismatch = keys.find((key) => manifest.targets[key]?.artifact.integrity !== APPROVED_INTEGRITY[key as keyof typeof APPROVED_INTEGRITY])
+  return mismatch ? `integrity:${mismatch}` : undefined
 }
 
 function stdout(outcome: ResearchProcess.Outcome) {
