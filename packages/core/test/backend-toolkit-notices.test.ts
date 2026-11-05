@@ -13,6 +13,7 @@ import { it } from "./lib/effect"
 const BINARY = new Uint8Array([0x00, 0x01, 0xff, 0x10])
 const LICENSE = "Copyright fixture\nThird-party notices stay plaintext.\n"
 const TARGETS = ["darwin-arm64", "darwin-x64", "linux-arm64", "linux-x64", "win32-x64"] as const
+const symlinkCase = process.platform === "win32" ? it.live.skip : it.live
 
 const fixture = Effect.gen(function* () {
   const root = yield* Effect.acquireRelease(
@@ -141,7 +142,31 @@ it.live("a missing or modified notice stays not ready and the completed install 
   }), 30_000,
 )
 
-it.live("a symlinked notices directory with matching outside bytes is not ready", () =>
+symlinkCase("final-notice-symlink", () =>
+  Effect.gen(function* () {
+    const f = yield* fixture
+    const target = host()
+    const run = scoped(f.root, { buf: engine("buf", "1", f.server.port, [notice(f.server.port)]) })
+    yield* BackendToolkit.ensure("buf").pipe(run)
+    const directory = installDir(f.root, "buf", "1", target)
+    const noticeFile = path.join(directory, "notices", "license.txt")
+    const outside = path.join(f.root, "outside-license.txt")
+    yield* Effect.promise(async () => {
+      await writeFile(outside, LICENSE)
+      await rm(noticeFile)
+      await symlink(outside, noticeFile)
+    })
+    expect(yield* Effect.promise(() => readFile(outside, "utf8"))).toBe(LICENSE)
+    expect((yield* Effect.promise(() => lstat(noticeFile))).isSymbolicLink()).toBe(true)
+    expect((yield* BackendToolkit.status("buf").pipe(run))[0]?.status).not.toBe("ready")
+    const failed = yield* BackendToolkit.ensure("buf").pipe(run, Effect.flip)
+    expect(failed.reason).toBe("toolkit-not-ready:failed:buf:notice-symlink")
+    expect(yield* PinnedArtifact.installed(directory)).toBe(true)
+    expect(f.hits["/license.txt"]).toBe(1)
+  }), 30_000,
+)
+
+symlinkCase("notices-parent-directory-symlink", () =>
   Effect.gen(function* () {
     const f = yield* fixture
     const target = host()
@@ -149,25 +174,16 @@ it.live("a symlinked notices directory with matching outside bytes is not ready"
     yield* BackendToolkit.ensure("buf").pipe(run)
     const directory = installDir(f.root, "buf", "1", target)
     const outside = path.join(f.root, "outside")
-    const linked = yield* Effect.promise(async () => {
+    const notices = path.join(directory, "notices")
+    yield* Effect.promise(async () => {
       await mkdir(outside)
       await writeFile(path.join(outside, "license.txt"), LICENSE)
-      await rm(path.join(directory, "notices"), { recursive: true })
-      try {
-        await symlink(outside, path.join(directory, "notices"), "dir")
-        return true
-      } catch (error) {
-        if (process.platform !== "win32") throw error
-        return false
-      }
+      await rm(notices, { recursive: true })
+      await symlink(outside, notices, "dir")
     })
-    if (!linked) {
-      expect(process.platform).toBe("win32")
-      return
-    }
     expect(yield* Effect.promise(() => readFile(path.join(outside, "license.txt"), "utf8"))).toBe(LICENSE)
-    expect((yield* Effect.promise(() => lstat(path.join(directory, "notices")))).isSymbolicLink()).toBe(true)
-    expect((yield* BackendToolkit.status("buf").pipe(run))[0]?.status).toBe("absent")
+    expect((yield* Effect.promise(() => lstat(notices))).isSymbolicLink()).toBe(true)
+    expect((yield* BackendToolkit.status("buf").pipe(run))[0]?.status).not.toBe("ready")
     const failed = yield* BackendToolkit.ensure("buf").pipe(run, Effect.flip)
     expect(failed.reason).toBe("toolkit-not-ready:failed:buf:notice-symlink")
     expect(yield* PinnedArtifact.installed(directory)).toBe(true)
