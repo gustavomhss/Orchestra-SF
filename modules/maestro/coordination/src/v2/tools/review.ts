@@ -606,7 +606,8 @@ function sameOutcomes(
   submitted: ReadonlyArray<{ readonly pack: string; readonly rule: string; readonly fingerprint: string; readonly outcome: string }> | undefined,
   host: ReadonlyArray<{ readonly pack: string; readonly rule: string; readonly fingerprint: string; readonly outcome: string }>,
 ) {
-  const got = submitted ?? []
+  if (submitted === undefined) return false
+  const got = submitted
   const key = (item: { readonly pack: string; readonly rule: string; readonly fingerprint: string }) => JSON.stringify([item.pack, item.rule, item.fingerprint])
   if (new Set(got.map(key)).size !== got.length) return false
   if (got.length !== host.length) return false

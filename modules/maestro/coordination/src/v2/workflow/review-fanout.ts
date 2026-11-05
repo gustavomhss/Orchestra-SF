@@ -347,7 +347,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
         confirmed,
         counts,
         checkFacts,
-        outcomes: sealedReads ?? derive(),
+        outcomes: seal(),
       } as Result
     })
 
@@ -382,8 +382,13 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
       .map((pack) => ({ item: `pack:${pack.id}`, reason: pack.reason ?? pack.status })),
   ]
   const capItems = (lens: string) => (items[lens] ?? []).slice(0, tier.budget.itemsPerLens)
-  const unreadOf = (lens: string, read: ReadonlyArray<string>) =>
-    (analysis.retained.unread[lens] ?? 0) + capItems(lens).filter((item) => !read.includes(item.fingerprint)).length
+  const unreadOf = (lens: string) => {
+    const seen = new Set<string>()
+    for (const batch of delivered.values()) {
+      for (const item of batch) if (item.lens === lens) seen.add(item.fingerprint)
+    }
+    return Math.max(0, (analysis.retained.unread[lens] ?? 0) + capItems(lens).length - seen.size)
+  }
 
   if (quick) {
     if (port.allow) yield* port.allow(running.map((lens) => lens.id))
@@ -629,18 +634,10 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
     dropped,
   }
   decisions = outcomeDecisions(settled, overflow)
-  const read = hunts.flatMap((hunt) => (hunt.value?.items ?? []).map((item) => item.fingerprint))
-  // K10: every analyzer item a lens child read, for the record call's `items` outcomes.
-  const readItems = hunts.flatMap((hunt) =>
-    (hunt.value?.items ?? []).flatMap((entry) => {
-      const found = tool.find((item) => item.fingerprint === entry.fingerprint)
-      return found ? [{ pack: found.pack, rule: found.rule, fingerprint: found.fingerprint, pursued: entry.pursued }] : []
-    }),
-  )
   const coverage = {
     examined: [...running.map((lens) => `lens:${lens.id}`), ...hunts.flatMap((hunt) => (hunt.value?.hunks ?? []).map((hunk) => `${hunk.path}:${hunk.startLine}-${hunk.endLine}`))],
     notExamined: notRun,
-    unread: running.map((lens) => ({ lens: lens.id, count: unreadOf(lens.id, read) })),
+    unread: running.map((lens) => ({ lens: lens.id, count: unreadOf(lens.id) })),
   }
   return yield* finishTurn(
     final,
@@ -653,7 +650,6 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
       `Coverage the host recorded:\n${JSON.stringify(coverage)}`,
       `Counts: ${JSON.stringify(counts)}`,
       `Scope: ${JSON.stringify(input.facts.scope)}`,
-      data(cardOnly ? "analyzer items the lens children read" : "analyzer items the lens children read; give each an outcome (confirmed, refuted or not-pursued) in the record call's items", JSON.stringify(readItems)),
       `routingDigest: ${ReviewRouting.digest(final)}`,
       `catalogDigest: ${final.catalog}`,
       ...record,
