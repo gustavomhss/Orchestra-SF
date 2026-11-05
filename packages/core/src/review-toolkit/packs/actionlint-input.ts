@@ -110,7 +110,7 @@ export function argv(executable: string, prepared: Prepared) {
     if (!pathApi.isAbsolute(file) || !validInside(file) || file !== pathApi.join(root, ".github", "workflows", `input-${index}.yaml`)) return refusal("invalid-projection")
     const mappedFile = forward(mapping.file)
     const mappedSource = pathApi.sep === "\\" ? mapping.path.toLowerCase() : mapping.path
-    if ((pathApi.sep === "\\" && mapping.file !== mappedFile) || mappedFile !== forward(relative(file)) || !/^\.github\/workflows\/input-\d+\.yaml$/.test(mappedFile) || !/^\.github\/workflows\/[^/]+\.ya?ml$/i.test(mapping.path) || mapping.path.includes("\0")) return refusal("invalid-projection")
+    if ((pathApi.sep === "\\" && mapping.file !== mappedFile) || mappedFile !== forward(relative(file)) || !/^\.github\/workflows\/input-\d+\.yaml$/.test(mappedFile) || ReviewNativeFiles.containedPath(root, mapping.path) !== mapping.path || !/^\.github\/workflows\/[^/]+\.ya?ml$/i.test(mapping.path)) return refusal("invalid-projection")
     if (pairs.has(mappedFile) || sources.has(mappedSource) || prepared.files.filter((candidate) => candidate === file).length !== 1) return refusal("invalid-projection")
     pairs.add(mappedFile)
     sources.add(mappedSource)

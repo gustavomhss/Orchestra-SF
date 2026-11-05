@@ -131,6 +131,9 @@ test("rejects raw invalid roots and validates Windows projections using Windows 
     config: "C:\\review\\project\\.github\\actionlint.yaml",
   }
   expect(ReviewActionlintInput.argv("C:\\tools\\actionlint.exe", winPrepared).status).toBe("ok")
+  for (const source of [".github/workflows/..\\outside.yml", ".github/workflows/../outside.yml"]) {
+    expect(ReviewActionlintInput.argv("C:\\tools\\actionlint.exe", { ...winPrepared, paths: [{ ...winPrepared.paths[0], path: source }] }).status).not.toBe("ok")
+  }
   for (const root of ["", "relative/project", "C:\\review\0project"]) {
     expect(ReviewActionlintInput.argv("/bin/actionlint", { ...winPrepared, root }).status).not.toBe("ok")
   }
