@@ -4,6 +4,7 @@ import { createHash } from "node:crypto"
 import { Cause, Effect, Option, Schema } from "effect"
 import { Database } from "@orchestra/core/database/database"
 import { EventV2 } from "@orchestra/core/event"
+import { ReviewPrecisionCatalog } from "@orchestra/core/review/precision-catalog"
 import { ReviewPrecisionStore } from "@orchestra/core/review/precision-store"
 import { AgentV2 } from "@orchestra/core/agent"
 import { ReviewCatalog } from "@orchestra/core/review/catalog"
@@ -91,6 +92,14 @@ export const run = Effect.fn("ReviewPRRequestV2.run")(function* (params: Input, 
       if (!reply) return yield* failure("pr-retry-incomplete", "completed finish reply unavailable")
       return yield* output(reply, retained, prepared, worktree, git, parent.projectID, input.services)
     }
+    const batches = yield* ReviewPrecisionStore.history().pipe(
+      Effect.provideService(Database.Service, { db: input.services.db }),
+      Effect.catchCause((cause) => Effect.fail(failure("precision-history", Cause.pretty(cause)))),
+    )
+    const catalog = yield* Effect.try({
+      try: () => ReviewPrecisionCatalog.effective({ project: parent.projectID, catalog: ReviewCatalog.current, batches }),
+      catch: (error) => failure("precision-history", error instanceof Error ? error.message : String(error)),
+    })
     const rules = yield* ReviewFanoutV2.baseRules(git, worktree, prepared.baseSHA, prepared.changedPaths)
     const lenses: string[] = []
     const ledger = ReviewProbe.ledger()
@@ -115,7 +124,7 @@ export const run = Effect.fn("ReviewPRRequestV2.run")(function* (params: Input, 
         yield* execution.resume(child, { interruptOnCancel: true }).pipe(Effect.mapError(() => failure("pr-execution-failed", "review execution failed")))
         return (yield* replyFor(child, prompt)) ?? ""
       }),
-      analyze: (step) => input.analyze({ ...step, worktree, base: prepared.baseSHA, head: prepared.headSHA, sessionID: lead, changes: prepared.changes }),
+      analyze: (step) => input.analyze({ ...step, catalog, worktree, base: prepared.baseSHA, head: prepared.headSHA, sessionID: lead, changes: prepared.changes }),
       region: (file, start, end) => git.run(["show", `${prepared.headSHA}:${file}`], { cwd: worktree }).pipe(
         Effect.map((result) => result.exitCode === 0 && !result.truncated ? result.text().split("\n").slice(start - 1, end).join("\n") : "")),
       binding,
@@ -126,7 +135,7 @@ export const run = Effect.fn("ReviewPRRequestV2.run")(function* (params: Input, 
     const ran = yield* Effect.scoped(ReviewFanoutV2.run({
       completion: "card-only", request: { stage: "code", profile: "pr", settings, ...(params.tier ? { tier: params.tier } : {}) },
       base: { files: prepared.baseFiles }, head: { files: prepared.headFiles, changes: prepared.changes },
-      catalog: ReviewCatalog.current, stages: input.stages, skills: yield* input.services.atlas.skills.list(),
+      catalog, stages: input.stages, skills: yield* input.services.atlas.skills.list(),
       fs: input.services.atlas.fs, store: input.services.store, verifierModel: "same", cache, reviewed: prepared.headSHA,
       facts: { workCard: JSON.stringify({ candidate, scope, changedPaths: prepared.changedPaths, diffSHA256: prepared.sha256 }),
         ...(params.prText === undefined ? {} : { prText: params.prText }), diff: prepared.diff, rules, scope, record: [] },

@@ -13,6 +13,7 @@ import { Database } from "@orchestra/core/database/database"
 import { EventV2 } from "@orchestra/core/event"
 import type { GitCli } from "@orchestra/core/git-cli"
 import { ReviewCatalog } from "@orchestra/core/review/catalog"
+import { ReviewPrecisionCatalog } from "@orchestra/core/review/precision-catalog"
 import { ReviewPrecisionStore } from "@orchestra/core/review/precision-store"
 import { ReviewRouting } from "@orchestra/core/review/routing"
 import { ReviewSeatTools } from "@orchestra/core/review/seat-tools"
@@ -124,6 +125,7 @@ export type Analyze = (
     readonly base: string
     readonly head: string
     readonly sessionID: SessionSchema.ID
+    readonly catalog: ReviewCatalog.Catalog
     readonly changes?: ReadonlyArray<{ readonly path: string; readonly added: ReadonlyArray<{ readonly line: number }> }>
   },
 ) => Effect.Effect<ReviewFanoutV2.Analysis, Tool.Failure>
@@ -143,6 +145,7 @@ const analyzeStep = (processes: AppProcess.Interface): Analyze => (input) => {
     store: analysisStore(input.cache),
     changed,
     trusted: true,
+    catalog: input.catalog,
     lane: "repo",
     packs: input.packs.map((pack) => pack.id),
     scope: "diff",
@@ -349,6 +352,20 @@ export function tools(input: {
               .pipe(Effect.map((result) => (result.exitCode === 0 ? result.text().split("\0").filter(Boolean) : [])))
           const rules = yield* ReviewFanoutV2.baseRules(git, worktree, artifact.baseSHA, artifact.changedPaths)
           const settings = yield* reviewSettings(services.db, parent.projectID)
+          const batches = yield* ReviewPrecisionStore.history().pipe(
+            Effect.provideService(Database.Service, { db: services.db }),
+            Effect.catchCause((cause) => Effect.fail(new Tool.Failure({
+              message: `precision-history: ${Cause.pretty(cause)}`,
+              metadata: { reason: "precision-history" },
+            }))),
+          )
+          const catalog = yield* Effect.try({
+            try: () => ReviewPrecisionCatalog.effective({ project: parent.projectID, catalog: ReviewCatalog.current, batches }),
+            catch: (error) => new Tool.Failure({
+              message: `precision-history: ${error instanceof Error ? error.message : String(error)}`,
+              metadata: { reason: "precision-history" },
+            }),
+          })
           // The earlier runtime rechecks just before the provider runs; V2 rechecks just before the first drain starts. The code
           // stage needs the workers' result to still be the exact tree under review.
           const current =
@@ -421,7 +438,7 @@ export function tools(input: {
                 )
               }),
             analyze: (step) =>
-              analyze({ ...step, worktree, base: artifact.baseSHA, head: artifact.headSHA, sessionID: lead, changes }),
+              analyze({ ...step, catalog, worktree, base: artifact.baseSHA, head: artifact.headSHA, sessionID: lead, changes }),
             region: (file, start, end) =>
               git
                 .run(["show", `${artifact.headSHA}:${file}`], { cwd: worktree })
@@ -445,7 +462,7 @@ export function tools(input: {
               },
               base: { files: yield* listed(artifact.baseSHA) },
               head: { files: yield* listed(artifact.headSHA), changes },
-              catalog: ReviewCatalog.current,
+              catalog,
               stages,
               skills: yield* services.atlas.skills.list(),
               fs: services.atlas.fs,
