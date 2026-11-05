@@ -24,6 +24,7 @@ import { ResearchRecords } from "@orchestra/core/research/records"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { SessionSchema, SessionStore, SessionV2 } from "@orchestra/core/session"
 import { SessionExecution } from "@orchestra/core/session/execution"
+import { SessionRunner } from "@orchestra/core/session/runner"
 import { SessionMessage } from "@orchestra/schema/session-message"
 import { SessionTable } from "@orchestra/core/session/sql"
 import { SkillV2 } from "@orchestra/core/skill"
@@ -47,8 +48,11 @@ import { ReviewRouting } from "@orchestra/core/review/routing"
 import { event, session, worktree } from "./v2-governance"
 
 export type Touches = { git: number; children: string[]; prompts: string[]; resumes: number }
+export type HostEnv = ToolRegistry.Service | Database.Service | GitCli.Service | SessionStore.Service
 export type HostControls = {
-  readonly beforeResume?: (sessionID: string, brief: string) => Effect.Effect<void>
+  /** Holds the provider resume. This is not candidate admission. */
+  readonly beforeResume?: (sessionID: string, brief: string) => Effect.Effect<void, SessionRunner.RunError>
+  /** Git observation only. This is not candidate admission. */
   readonly onGit?: (args: readonly string[]) => Effect.Effect<void>
 }
 export type Ctx = {
@@ -57,6 +61,7 @@ export type Ctx = {
   head: string
   touches: Touches
   parent: SessionSchema.ID
+  registry: ToolRegistry.Interface
   invoke: (agent: string, value: unknown, sessionID?: SessionSchema.ID) => ReturnType<typeof call>
 }
 
@@ -125,13 +130,19 @@ export function host(directory: string, skills: ReadonlyArray<SkillV2.Info>, tou
         ]
       })),
   } as unknown as SessionV2.Interface
-  const execution = {
-    resume: (id: string) => Effect.gen(function* () {
+  const execution: SessionExecution.Interface = {
+    active: Effect.succeed(new Set()),
+    resume: (id) => Effect.gen(function* () {
       touches.resumes += 1
       const brief = admitted.filter((item) => item.sessionID === id).at(-1)?.text ?? ""
       if (controls.beforeResume) yield* controls.beforeResume(id, brief)
     }),
-  } as unknown as SessionExecution.Interface
+    wake: () => Effect.void,
+    interrupt: () => Effect.void,
+    exclusive: <A, E>(_sessionID: SessionSchema.ID, _effect: Effect.Effect<A, E>) => Effect.succeed(Option.none<A>()),
+    withRunner: <A, E>(_sessionID: SessionSchema.ID, _use: (runner: SessionRunner.Interface) => Effect.Effect<A, E>) =>
+      Effect.die("fixture execution has no runner"),
+  }
   const git = Layer.effect(GitCli.Service, Effect.gen(function* () {
     const real = yield* GitCli.Service
     return GitCli.Service.of({
@@ -157,7 +168,7 @@ export function host(directory: string, skills: ReadonlyArray<SkillV2.Info>, tou
     [Global.node, Layer.unwrap(worktree.pipe(Effect.map((data) => Global.layerWith({ data }))))],
     [ToolOutputStore.node, ToolOutputStore.nodeWithoutConfig],
     [Config.node, Layer.mock(Config.Service, { entries: () => Effect.succeed([]) })],
-    [SkillV2.node, Layer.mock(SkillV2.Service, { list: () => Effect.succeed(skills) })],
+    [SkillV2.node, Layer.mock(SkillV2.Service, { list: () => Effect.succeed([...skills]) })],
     [AgentV2.node, Layer.mock(AgentV2.Service, {
       get: (id) => Effect.succeed(["maestro", "backend", "lucy"].includes(id) ? AgentV2.Info.empty(id) : undefined),
     })],
@@ -167,7 +178,7 @@ export function host(directory: string, skills: ReadonlyArray<SkillV2.Info>, tou
   ]) as Layer.Layer<ToolRegistry.Service | Database.Service | GitCli.Service | SessionStore.Service>
 }
 
-export function call(registry: ToolRegistry.Service, agent: string, sessionID: SessionSchema.ID, input: unknown, name = "maestro_request_review") {
+export function call(registry: ToolRegistry.Interface, agent: string, sessionID: SessionSchema.ID, input: unknown, name = "maestro_request_review") {
   return registry.materialize().pipe(
     Effect.flatMap((materialized) => materialized.settle({
       sessionID, agent: AgentV2.ID.make(agent), assistantMessageID: SessionMessage.ID.make("msg_pr_entry"),
@@ -241,7 +252,7 @@ export function repo(directory: string) {
   })
 }
 
-export function run<A, E, R>(
+export function run<A, E, R extends HostEnv>(
   skills: ReadonlyArray<SkillV2.Info>,
   controls: HostControls,
   body: (ctx: Ctx) => Effect.Effect<A, E, R>,
@@ -254,11 +265,11 @@ export function run<A, E, R>(
       const registry = yield* ToolRegistry.Service
       const parent = yield* session({ directory, agent: "maestro" })
       return yield* body({
-        directory, ...refs, touches, parent,
+        directory, ...refs, touches, parent, registry,
         invoke: (agent, value, sessionID = parent) => call(registry, agent, sessionID, value),
       })
     }).pipe(Effect.provide(host(directory, skills, touches, controls)))
-  })) as Effect.Effect<A, E>
+  }))
 }
 
 function stage(brief: string) {
