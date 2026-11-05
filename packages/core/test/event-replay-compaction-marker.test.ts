@@ -1,5 +1,5 @@
 import { expect } from "bun:test"
-import { Effect, Exit, Schema } from "effect"
+import { Effect, Exit, Layer, Schema } from "effect"
 import { asc, sql } from "drizzle-orm"
 import { Database } from "@orchestra/core/database/database"
 import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
@@ -130,7 +130,7 @@ it.effect("live service refuses new replay after marker insertion; local publish
       expect(state.projection).toEqual([{ event_id: first.id }])
       expect(state.projected).toEqual([first.id])
       expect(state.notified).toEqual([first.id])
-    }).pipe(Effect.provide(build()))
+    }).pipe(Effect.provide(Layer.fresh(build())))
     expect(yield* f.snapshot).toEqual(afterLocal)
   }),
 )
