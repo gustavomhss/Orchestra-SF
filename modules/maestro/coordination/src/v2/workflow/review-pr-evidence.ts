@@ -39,8 +39,8 @@ export const prepare = Effect.fn("ReviewPREvidenceV2.prepare")(function* (
   const changedPaths = yield* nulPaths(names.stdout)
   if (changedPaths.length === 0) return yield* refused("empty-diff", "committed diff has no paths")
   if (patch.stdout.length === 0) return yield* refused("unsupported-diff-path", "diff bytes are empty while paths were listed")
-  const diff = patch.stdout.toString("utf8")
-  const baseFiles = yield* listFiles(git, input.worktree, baseCommit)
+  const diff = yield* decodeUtf8(patch.stdout, "unsupported-diff-encoding")
+  const baseFiles = yield* listFiles(git, input.worktree, baseSHA)
   const headFiles = yield* listFiles(git, input.worktree, headCommit)
   const reconciled = yield* reconcile(diff, changedPaths)
   return {
@@ -81,7 +81,7 @@ const resolveCommit = Effect.fnUntraced(function* (git: GitCli.Interface, worktr
 })
 
 const mergeBase = Effect.fnUntraced(function* (git: GitCli.Interface, worktree: string, base: string, head: string) {
-  const result = yield* run(git, worktree, ["merge-base", "--all", "--end-of-options", base, head])
+  const result = yield* run(git, worktree, ["merge-base", "--all", base, head])
   const lines = result.exitCode === 0 ? result.stdout.toString("utf8").split("\n").filter((line) => line.length > 0) : []
   if (result.exitCode !== 0 || lines.length === 0 || lines.some((line) => !OID.test(line)))
     return yield* refused("merge-base-unavailable", result.stderr.toString("utf8").trim() || "no unique merge-base")
@@ -91,7 +91,7 @@ const mergeBase = Effect.fnUntraced(function* (git: GitCli.Interface, worktree: 
 })
 
 const listFiles = Effect.fnUntraced(function* (git: GitCli.Interface, worktree: string, commit: string) {
-  const result = yield* captured(git, worktree, ["ls-tree", "-r", "-z", "--end-of-options", commit])
+  const result = yield* captured(git, worktree, ["ls-tree", "-r", "-z", commit])
   const names: string[] = []
   for (const record of yield* nulPaths(result.stdout)) {
     const tab = record.indexOf("\t")
@@ -118,8 +118,16 @@ const run = (git: GitCli.Interface, worktree: string, args: string[]) =>
 
 function nulPaths(stdout: Buffer) {
   if (stdout.length > 0 && stdout[stdout.length - 1] !== 0) return refused("list-failed", "NUL listing is incomplete")
-  return Effect.succeed(stdout.toString("utf8").split("\0").filter((item) => item.length > 0))
+  return decodeUtf8(stdout, "list-encoding").pipe(
+    Effect.map((text) => text.split("\0").filter((item) => item.length > 0)),
+  )
 }
+
+const decodeUtf8 = (stdout: Buffer, reason: "unsupported-diff-encoding" | "list-encoding") =>
+  Effect.try({
+    try: () => new TextDecoder("utf-8", { fatal: true }).decode(stdout),
+    catch: () => new Tool.Failure({ message: `${reason}: bytes are not UTF-8`, metadata: { reason } }),
+  })
 
 function reconcile(diff: string, changedPaths: readonly string[]) {
   const parsed = changes(diff)
