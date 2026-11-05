@@ -44,7 +44,10 @@ describe("review route", () => {
         { id: "data-migration", source: "path", signal: "db/migrations/0042.sql" },
         { id: "performance", source: "content", signal: "src/jobs/drain.ts:60 for-await" },
       ],
-      languages: [{ id: "js-ts", source: "path", signal: "package.json" }],
+      languages: [
+        { id: "js-ts", source: "path", signal: "package.json" },
+        { id: "sql", source: "path", signal: "db/migrations/0042.sql" },
+      ],
       lenses: [
         { id: "correctness-logic", source: "catalog", node: "lucy-lens-correctness-logic", because: "profile" },
         { id: "correctness-edges", source: "catalog", node: "lucy-lens-correctness-edges", because: "tier:standard" },
@@ -57,6 +60,7 @@ describe("review route", () => {
         { id: "gitleaks", source: "catalog", lane: "no-build", status: "routed" },
         { id: "repo", source: "catalog", lane: "repo", status: "routed" },
         { id: "ast-grep", source: "catalog", lane: "no-build", status: "routed" },
+        { id: "squawk", source: "path", lane: "no-build", status: "routed" },
       ],
       budget: { ...STANDARD, lensChildren: 6 },
       deviations: [],

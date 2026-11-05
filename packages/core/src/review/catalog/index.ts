@@ -55,8 +55,8 @@ export const Pack = Schema.Struct({
 
 export const Rule = Schema.Struct({
   pack: Id,
-  // A tool rule id, or `*` for every rule the pinned pack ships with no rule of its own here.
-  rule: Id,
+  // A raw native tool id, including case and punctuation, or `*` for every rule the pinned pack ships with no rule of its own here.
+  rule: Schema.NonEmptyString.check(Schema.isMaxLength(240)),
   class: Id,
   lens: Id,
   // Tool severity (or `*`) to lucy severity.

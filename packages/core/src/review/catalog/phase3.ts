@@ -62,7 +62,7 @@ export const phase3 = {
       paths: ["**/migrations/**"],
       content: [{ id: "alter-table", pattern: "\\bALTER\\s+TABLE\\b" }],
       lenses: ["contracts"],
-      checks: [],
+      checks: ["squawk"],
     },
     {
       id: "performance",
