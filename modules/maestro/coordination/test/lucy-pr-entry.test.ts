@@ -28,7 +28,7 @@ const block = (brief: string, name: string) => {
 const skills = await authoredSkills()
 
 describe("lucy pr entry", () => {
-  const open = <A, E, R extends HostEnv>(body: (ctx: Ctx) => Effect.Effect<A, E, R>) =>
+  const open = <A, E>(body: (ctx: Ctx) => Effect.Effect<A, E, HostEnv>) =>
     Effect.runPromise(run(skills, {}, body))
 
   test("Maestro PR without validation returns one host-bound review-result", () =>
