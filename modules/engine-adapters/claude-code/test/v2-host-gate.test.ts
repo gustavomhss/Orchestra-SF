@@ -135,6 +135,82 @@ test("a request whose arguments differ from the hook's input still takes the old
   expect(executed).toEqual(["tu-1", "tu-2"])
 })
 
+test("concurrent requests arriving in reverse pair by recursively ordered object keys without reordering arrays", async () => {
+  const ab = { prompt: "same", options: { alpha: 1, nested: { x: 1, y: 2 } }, sequence: ["a", "b"] }
+  const ba = { prompt: "same", options: { alpha: 1, nested: { x: 1, y: 2 } }, sequence: ["b", "a"] }
+  const executed: { id: string; input: unknown; sequence: string }[] = []
+  const startedAB = Promise.withResolvers<void>()
+  const startedBA = Promise.withResolvers<void>()
+  const release = Promise.withResolvers<void>()
+  during = async (options) => {
+    await pre(options, "mcp__orchestra__task", ab, "tu-ab")
+    await pre(options, "mcp__orchestra__task", ba, "tu-ba")
+    const mcp = await connectMcp(options)
+    try {
+      const calledBA = mcp.callTool({ name: "task", arguments: { sequence: ["b", "a"], options: { nested: { y: 2, x: 1 }, alpha: 1 }, prompt: "same" } })
+      const calledAB = mcp.callTool({ name: "task", arguments: { sequence: ["a", "b"], options: { nested: { y: 2, x: 1 }, alpha: 1 }, prompt: "same" } })
+      const calls = Promise.all([calledBA, calledAB])
+      try {
+        // Both executions must enter before either can finish: Promise.all alone would not prove overlap.
+        await Promise.all([startedAB.promise, startedBA.promise])
+        expect(executed).toHaveLength(2)
+        expect(executed.filter((call) => call.sequence === "a,b")).toEqual([{ id: "tu-ab", input: ab, sequence: "a,b" }])
+        expect(executed.filter((call) => call.sequence === "b,a")).toEqual([{ id: "tu-ba", input: ba, sequence: "b,a" }])
+      } finally {
+        release.resolve()
+        await calls
+      }
+      const results = await calls
+      results.forEach((result) => {
+        expect(result.isError ?? false).toBe(false)
+        expect(result.content).toEqual([{ type: "text", text: "ok" }])
+      })
+    } finally {
+      release.resolve()
+      await mcp.close()
+    }
+  }
+  await collect(turnOf({
+    tools: [plainTool("task")],
+    execute: (call) => Effect.sync(() => {
+      const sequence = typeof call.input === "object" && call.input !== null && "sequence" in call.input ? call.input.sequence : undefined
+      const key = Array.isArray(sequence) ? sequence.join(",") : ""
+      executed.push({ id: call.id, input: call.input, sequence: key })
+      if (key === "a,b") startedAB.resolve()
+      if (key === "b,a") startedBA.resolve()
+    }).pipe(
+      Effect.andThen(Effect.promise(() => release.promise)),
+      Effect.as({ result: { type: "text" as const, value: "ok" } }),
+    ),
+  }))
+})
+
+test("identical exact argument keys consume both tool_use ids in FIFO order", async () => {
+  const executed: string[] = []
+  during = async (options) => {
+    await pre(options, "mcp__orchestra__task", { prompt: "same", nested: { a: 1, b: 2 } }, "tu-identical-1")
+    await pre(options, "mcp__orchestra__task", { prompt: "same", nested: { a: 1, b: 2 } }, "tu-identical-2")
+    const mcp = await connectMcp(options)
+    try {
+      const results = [
+        await mcp.callTool({ name: "task", arguments: { nested: { b: 2, a: 1 }, prompt: "same" } }),
+        await mcp.callTool({ name: "task", arguments: { nested: { b: 2, a: 1 }, prompt: "same" } }),
+      ]
+      results.forEach((result) => {
+        expect(result.isError ?? false).toBe(false)
+        expect(result.content).toEqual([{ type: "text", text: "ok" }])
+      })
+    } finally {
+      await mcp.close()
+    }
+  }
+  await collect(turnOf({
+    tools: [plainTool("task")],
+    execute: (call) => Effect.sync(() => void executed.push(call.id)).pipe(Effect.as({ result: { type: "text" as const, value: "ok" } })),
+  }))
+  expect(executed).toEqual(["tu-identical-1", "tu-identical-2"])
+})
+
 test("the governed playbook a session loaded belongs to its host and is let go past the bound", async () => {
   const probed: unknown[] = []
   let load = true
