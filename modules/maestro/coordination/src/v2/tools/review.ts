@@ -33,11 +33,11 @@ import { SessionMessage } from "@orchestra/schema/session-message"
 import { validateWorkContract, workContractSections, type WorkContractValidation } from "../../work-contract"
 import { GovernanceEvidenceV2 } from "../governance/evidence"
 import { GovernanceRecordsV2 } from "../governance/records"
-import { ReviewResultV2 } from "../governance/review-result"
 import { MaestroChainTools } from "./chain"
 import { MaestroToolGate } from "./gate"
 import { MaestroReviewRecords } from "./review-records"
 import { ReviewPRRequestV2 } from "./review-pr"
+import { ReviewRoundV2 } from "./review-round"
 import { ReviewChecksV2 } from "../workflow/review-checks"
 import { ReviewCardV2 } from "../workflow/review-card"
 import { ReviewFanoutV2 } from "../workflow/review-fanout"
@@ -142,7 +142,7 @@ const analyzeStep = (processes: AppProcess.Interface): Analyze => (input) => {
     worktree: input.worktree,
     base: input.base,
     head: input.head,
-    tier: ReviewRouting.tier(input.routing),
+    tier: input.executionTier ?? ReviewRouting.tier(input.routing),
     store: analysisStore(input.cache),
     changed,
     trusted: true,
@@ -331,11 +331,11 @@ export function tools(input: {
                 'ReviewRequestRejected: rereview-stage. A rereview continues a code-stage round after FIX_FIRST; pass stage "code" (a plan-stage receipt is recorded once per validation).',
             })
           const first =
-            profile === "rereview" ? yield* firstRound(services.db, sessions, parent.id, params.validationRecordID) : undefined
+            profile === "rereview" ? yield* firstRound(services.db, parent.id, params.validationRecordID) : undefined
           if (profile === "rereview" && !first)
             return yield* new Tool.Failure({
               message:
-                "ReviewRequestRejected: rereview-first-round-missing. No earlier code-stage review card exists for this validation; request profile \"code\" first.",
+                "ReviewRequestRejected: rereview-first-round-missing. No earlier code-stage review receipt exists for this validation; request profile \"code\" first.",
             })
           // The lead derives from the reviewed tree, so a retried call adopts the same Sessions and a rereview finds them.
           const lead = leadID(parent.id, params.validationRecordID, stage, artifact.headSHA)
@@ -459,7 +459,7 @@ export function tools(input: {
                 settings,
                 ...(params.profile ? { profile: params.profile } : {}),
                 ...(params.tier ? { tier: params.tier } : {}),
-                ...(first ? { firstRound: first.card.tier } : {}),
+                ...(first ? { firstRound: first.executionTier } : {}),
               },
               base: { files: yield* listed(artifact.baseSHA) },
               head: { files: yield* listed(artifact.headSHA), changes },
@@ -529,6 +529,8 @@ export function tools(input: {
           if (scoped && !finishing.has(context.sessionID))
             return yield* new Tool.Failure({ message: "Review recording opens only in the lead's final turn" })
           let hostOutcomes: ReviewFanoutV2.FinishAuthorization["outcomes"] | undefined
+          let hostRouting: ReviewFanoutV2.FinishAuthorization["routing"] | undefined
+          let hostExecutionTier: string | undefined
           if (scoped) {
             const authority = finishAuthority.get(context.sessionID)
             if (!authority || params.reviewMethodVersion !== authority.method || params.routingDigest !== authority.routingDigest || catalogDigest(params.catalogDigest) !== catalogDigest(authority.catalogDigest))
@@ -539,7 +541,7 @@ export function tools(input: {
               return yield* new Tool.Failure({ message: "method-binding-mismatch: finish has no host scope", metadata: { reason: "method-binding-mismatch" } })
             if (params.artifact.baseSHA !== authority.scope.base || params.artifact.headSHA !== authority.scope.head)
               return yield* new Tool.Failure({ message: "method-binding-mismatch: artifact does not match host scope", metadata: { reason: "method-binding-mismatch" } })
-            const quick = ReviewRouting.tier(authority.routing) === "quick"
+            const quick = authority.executionTier === "quick"
             yield* Effect.try({
               try: () => ReviewCardV2.validateFindings(params.findings, {
                 quick,
@@ -564,6 +566,8 @@ export function tools(input: {
                 metadata: { reason: "checks-blocked" },
               }),
             })
+            hostRouting = authority.routing
+            hostExecutionTier = authority.executionTier
           }
           const recorded = yield* MaestroReviewRecords.recordReview(services, {
             sessionID: child.parentID,
@@ -578,6 +582,7 @@ export function tools(input: {
             ...(params.routingDigest ? { routingDigest: params.routingDigest } : {}),
             ...(params.catalogDigest ? { catalogDigest: params.catalogDigest } : {}),
             ...(params.items ? { items: params.items } : {}),
+            ...(hostRouting ? { hostRouting, ...(hostExecutionTier ? { hostExecutionTier } : {}) } : {}),
           })
           if (hostOutcomes) yield* admitPrecision(services, { review: recorded.id, project: recorded.projectID, reads: hostOutcomes })
           return `${recorded.verdict}: ${recorded.id}`
@@ -632,6 +637,16 @@ function deliverPage<T extends { readonly items: ReadonlyArray<ReviewItem.ToolIt
     return Effect.die(error)
   }
   return Effect.succeed(result)
+}
+
+function codeReceipt(data: unknown, validationRecordID: string) {
+  if (!data || typeof data !== "object") return false
+  if (!("validationRecordID" in data) || data.validationRecordID !== validationRecordID) return false
+  return "stage" in data && data.stage === "code"
+}
+
+function roundFailure(reason: "round-authority-unavailable" | "round-authority-corrupt" | "round-authority-mismatch" | "round-not-fix-first", detail: string) {
+  return new Tool.Failure({ message: `${reason}: ${detail}`, metadata: { reason } })
 }
 
 function unverified(detail: string) {
@@ -689,10 +704,9 @@ function admitPrecision(services: MaestroChainTools.Services, input: { readonly 
 
 const decodeReceipt = Schema.decodeUnknownOption(MaestroEvent.Review.ReceivedV2.data)
 
-// The round a rereview continues: the newest code-stage receipt for the validation and the card its lead wrote.
+// The round a rereview continues: the newest code receipt and the host routing published on it.
 const firstRound = Effect.fn("MaestroReviewTools.firstRound")(function* (
   db: Database.Interface["db"],
-  sessions: SessionV2.Interface,
   parentID: SessionSchema.ID,
   validationRecordID: string,
 ) {
@@ -708,20 +722,20 @@ const firstRound = Effect.fn("MaestroReviewTools.firstRound")(function* (
     .orderBy(desc(EventV2.EventTable.seq))
     .all()
     .pipe(Effect.orDie)
-  const receipt = rows
-    .flatMap((row) => Option.toArray(decodeReceipt(row.data)))
-    .find((data) => data.validationRecordID === validationRecordID && data.stage === "code")
-  if (!receipt) return undefined
-  const messages = yield* sessions
-    .messages({ sessionID: leadID(parentID, validationRecordID, "code", receipt.artifact.headSHA), order: "asc" })
-    .pipe(Effect.orElseSucceed(() => []))
-  const card = messages
-    .flatMap((message) =>
-      message.type === "assistant" ? message.content.flatMap((part) => (part.type === "text" ? [part.text] : [])) : [],
-    )
-    .map((text) => ReviewResultV2.parse(text))
-    .findLast((parsed) => parsed !== undefined)
-  return card ? { card, reviewed: receipt.artifact.headSHA } : undefined
+  const row = rows.find((item) => codeReceipt(item.data, validationRecordID))
+  if (!row) return undefined
+  const receipt = Option.getOrUndefined(decodeReceipt(row.data, { onExcessProperty: "error" }))
+  if (!receipt) return yield* roundFailure("round-authority-corrupt", "newest code receipt does not decode")
+  const loaded = ReviewRoundV2.read(receipt)
+  if (loaded.status === "unavailable")
+    return yield* roundFailure("round-authority-unavailable", "newest code receipt has no host round")
+  if (loaded.status === "corrupt")
+    return yield* roundFailure("round-authority-corrupt", "host round or findings do not decode")
+  if (loaded.status === "mismatch")
+    return yield* roundFailure("round-authority-mismatch", "host round does not match the receipt binding")
+  if (receipt.verdict !== "FIX_FIRST")
+    return yield* roundFailure("round-not-fix-first", "rereview continues only a FIX_FIRST code receipt")
+  return { routing: loaded.routing, findings: loaded.findings, reviewed: receipt.artifact.headSHA, executionTier: loaded.executionTier }
 })
 
 // The tier pin and accepted-unavailable lanes of the board project over this repository; several name no single pin.
