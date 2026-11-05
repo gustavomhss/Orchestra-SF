@@ -1,7 +1,7 @@
 export * as ReviewAnalyze from "./analyze"
 
 import path from "path"
-import { lstat, mkdir, readdir, realpath, writeFile } from "fs/promises"
+import { lstat, mkdir, opendir, readdir, realpath, writeFile } from "fs/promises"
 import { Context, Effect, Option, Schema } from "effect"
 import { FSUtil } from "../fs-util"
 import { ReviewCatalog } from "../review/catalog"
@@ -19,6 +19,7 @@ import { ReviewPackGitleaks } from "./packs/gitleaks"
 import { ReviewPackRepo } from "./packs/repo"
 import { ReviewPackRuff } from "./packs/ruff"
 import { ReviewPackSquawk } from "./packs/squawk"
+import { ReviewPackActionlint } from "./packs/actionlint"
 
 // K6 analyze half (design §7.2, §8.6, plan WP 1.4): the host runs the routed packs before any model turn, each confined
 // in a scratch copy (head, and base for the new-only step), keeps every raw output as a citable artifact, normalizes it
@@ -191,6 +192,7 @@ const runPack = Effect.fnUntraced(function* (packID: string, pack: Pack | undefi
   // Squawk's argv is effectful (it stats the copy). The static template scanners stay as they are.
   if (pack.backend === "pinned" && pack.id === ReviewPackSquawk.manifest.id) return yield* squawked(pack, context)
   if (pack.backend === "pinned" && pack.id === ReviewPackRuff.manifest.id) return yield* ruffed(pack, context)
+  if (pack.backend === "pinned" && pack.id === ReviewPackActionlint.manifest.id) return yield* actionlinted(pack, context)
   const scanner = pack.backend === "pinned" ? pinnedScanner(pack.id) : undefined
   if (scanner) return yield* scanned(pack, scanner, context)
   if (pack.backend === "repo") return yield* gates(pack, context)
@@ -385,6 +387,102 @@ const ruffed = Effect.fnUntraced(function* (pack: Pack, context: RunContext) {
   } satisfies Outcome
 })
 
+/** Native lint runs only against a host-owned projection, never the copied repository's project/config. */
+const actionlinted = Effect.fnUntraced(function* (pack: Pack, context: RunContext) {
+  if (pack.output.format !== "json" || pack.output.parser !== ReviewPackActionlint.parserId || pack.template !== ReviewPackActionlint.templateId)
+    return only(check(pack, "not-run", `template unknown: ${pack.template}`))
+  const selection = nativeDrops(context.catalog, pack.id, ReviewPackActionlint.RULES)
+  if (selection.status !== "ok") return only(check(pack, "not-run", selection.reason))
+  // -ignore matches messages, not rule identities. Do not pretend it disables a dropped native check.
+  if (selection.dropped.length) return only(check(pack, "not-run", "native-rule-selection-unsupported"))
+  const located = yield* ReviewPackActionlint.locate()
+  if ("absent" in located) return only(check(pack, "not-run", located.absent))
+  const scan = (copied: Copy, side: "head" | "base") => Effect.scoped(Effect.gen(function* () {
+    if ("failed" in copied) return { status: "not-run" as const, reason: copied.failed }
+    const snapshot = copied.snapshot
+    const selected = yield* Effect.tryPromise({
+      try: () => workflowSelection(snapshot.root, context.input, side),
+      catch: (error) => error,
+    }).pipe(Effect.uninterruptible, Effect.catch((error) => Effect.succeed({ refused: workflowUnavailable(error) })))
+    if ("refused" in selected) return { status: "not-run" as const, reason: selected.refused }
+    if (!selected.files.length) {
+      if (side === "head") return { status: "not-run" as const, reason: "no-input" }
+      const uri = yield* context.write("raw/actionlint-base.json", JSON.stringify({ invoked: false, reason: "no-eligible-workflow-input" }))
+      return { status: "ok" as const, results: [], uri, emptyBase: true as const }
+    }
+    const projected = yield* ReviewPackActionlint.prepare({ root: snapshot.root, files: selected.files, scratch: snapshot.scratch }).pipe(
+      Effect.catch((error) => Effect.succeed({ status: "not-run" as const, reason: workflowUnavailable(error) })),
+    )
+    if (projected.status !== "ok") return { status: "not-run" as const, reason: projected.reason }
+    const built = ReviewPackActionlint.argv(located.executable, projected)
+    if (built.status !== "ok") return { status: "not-run" as const, reason: built.reason }
+    const pathMap = yield* context.write(`raw/actionlint-${side}-paths.json`, JSON.stringify({
+      version: "actionlint-projection-v1", paths: projected.paths,
+    }))
+    const ran = yield* confined({
+      argv: built.argv, cwd: projected.root, write: [], env: ReviewPackActionlint.environment(projected.root),
+      timeoutMs: SCAN_MS, maxBytes: Probe.Limits.outputBytes,
+    })
+    if ("denied" in ran) return { status: "not-run" as const, reason: ran.denied }
+    const uri = yield* context.write(`raw/actionlint-${side}.json`, ran.outcome.stdout.data)
+    const settled = ReviewPackActionlint.settle(ran.outcome, projected)
+    if (settled.status !== "ok") return { status: settled.status, reason: `${settled.reason}; path map: ${pathMap}`, uri }
+    return { status: "ok" as const, results: settled.results, uri, pathMap }
+  }))
+  const head = yield* scan(yield* context.head, "head")
+  if (head.status !== "ok") return only(check(pack, head.status, head.reason, "uri" in head ? head.uri : undefined))
+  const base = yield* scan(yield* context.base, "base")
+  if (base.status !== "ok") return only(check(pack, base.status, `base: ${base.reason}`, "uri" in base ? base.uri : undefined))
+  const lookup = rules(context.catalog)
+  const onChanged = (file: string, line: number, endLine?: number) =>
+    (context.input.changed[file] ?? []).some((range) => line <= range.end && (endLine ?? line) >= range.start)
+  const coverage = [
+    "pathMap" in head ? `head path map: ${head.pathMap}` : undefined,
+    "pathMap" in base ? `base path map: ${base.pathMap}` : undefined,
+    "emptyBase" in base ? "base: no eligible workflow input; no base scanner invocation" : undefined,
+  ].filter((entry) => entry !== undefined).join("; ")
+  return {
+    checks: [check(pack, head.results.length ? "fail" : "pass", coverage, head.uri)],
+    head: ReviewSarif.toItems(head.results, lookup, onChanged).items,
+    base: ReviewSarif.toItems(base.results, lookup).items,
+  } satisfies Outcome
+})
+
+function workflowUnavailable(error: unknown) {
+  return `workflow-input-unavailable: ${error !== null && typeof error === "object" && "code" in error ? String(error.code) : "error"}`
+}
+
+async function workflowSelection(root: string, input: RunInput, side: "head" | "base") {
+  const requested = (input.files ?? []).map((file) => ReviewNativeFiles.containedPath(input.worktree, file))
+  if (input.scope === "files" && requested.some((file) => file === undefined)) return { refused: "path-outside" }
+  const candidates = requested.filter((file): file is string => file !== undefined && /^\.github\/workflows\/[^/]+\.ya?ml$/.test(file))
+  if (input.scope === "files" && !candidates.length) return { files: [] }
+  for (const directory of [".github", ".github/workflows"]) {
+    const info = await lstat(path.join(root, directory)).catch((error: NodeJS.ErrnoException) => error)
+    if (info instanceof Error) {
+      if (info.code === "ENOENT" || side === "base" && info.code === "ENOTDIR") return { files: [] }
+      return { refused: workflowUnavailable(info) }
+    }
+    if (info.isSymbolicLink()) return { refused: "symlink" }
+    if (!info.isDirectory()) return side === "base" ? { files: [] } : { refused: "workflow-parent-not-directory" }
+  }
+  if (input.scope !== "files") {
+    for await (const entry of await opendir(path.join(root, ".github/workflows"))) {
+      if (!/\.ya?ml$/.test(entry.name)) continue
+      if (candidates.length >= 10_000) return { refused: "too-many-inputs" }
+      candidates.push(`.github/workflows/${entry.name}`)
+    }
+  }
+  const files: string[] = []
+  for (const relative of candidates.sort()) {
+    const file = await copiedFile(root, relative, side)
+    if (file === undefined) continue
+    if (typeof file !== "string") return file
+    files.push(file)
+  }
+  return { files }
+}
+
 function pythonUnavailable(error: unknown) {
   const code = error !== null && typeof error === "object" && "code" in error && typeof error.code === "string" ? error.code : "error"
   return `python-input-unavailable: ${code}`
@@ -400,7 +498,7 @@ async function pythonSelection(root: string, input: RunInput, side: "head" | "ba
   for (const file of requested.filter((entry) => pythonName(flavor.basename(entry)))) {
     const relative = ReviewNativeFiles.containedPath(root, file)
     if (!relative) return { refused: file.includes("\0") ? "nul" : "path-outside" }
-    const walked = await copiedPython(root, relative, side)
+    const walked = await copiedFile(root, relative, side)
     if (walked === undefined) continue
     if (typeof walked !== "string") return walked
     files.push(walked)
@@ -410,7 +508,7 @@ async function pythonSelection(root: string, input: RunInput, side: "head" | "ba
 
 // Parents are lstat'd in order. A base miss is absence only after each of them was a non-symlink; a symlink, including
 // a dangling one, is refused before the child is stated. ENOTDIR from a regular-file parent is that absence, not a link.
-async function copiedPython(root: string, relative: string, side: "head" | "base") {
+async function copiedFile(root: string, relative: string, side: "head" | "base") {
   const flavor = ReviewNativeFiles.flavor(root)
   const segments = relative.split("/").filter((segment) => segment !== "" && segment !== ".")
   if (segments.length === 0) return { refused: "missing" }
