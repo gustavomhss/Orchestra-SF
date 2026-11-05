@@ -1,8 +1,9 @@
 export * as ReviewAnalyze from "./analyze"
 
 import path from "path"
-import { mkdir, writeFile } from "fs/promises"
+import { lstat, mkdir, readdir, realpath, writeFile } from "fs/promises"
 import { Effect, Option, Schema } from "effect"
+import { FSUtil } from "../fs-util"
 import { ReviewCatalog } from "../review/catalog"
 import { ResearchProcess } from "../research-toolkit/process"
 import { ProbeRun } from "../research-toolkit/probe/run"
@@ -12,8 +13,10 @@ import { ReviewItem } from "./item"
 import { ReviewNoise } from "./noise"
 import { ReviewSarif } from "./sarif"
 import { ReviewScratch } from "./scratch-copy"
+import { ReviewPackAstGrep } from "./packs/ast-grep"
 import { ReviewPackGitleaks } from "./packs/gitleaks"
 import { ReviewPackRepo } from "./packs/repo"
+import { ReviewPackSquawk } from "./packs/squawk"
 
 // K6 analyze half (design §7.2, §8.6, plan WP 1.4): the host runs the routed packs before any model turn, each confined
 // in a scratch copy (head, and base for the new-only step), keeps every raw output as a citable artifact, normalizes it
@@ -158,33 +161,58 @@ const runPack = Effect.fnUntraced(function* (packID: string, pack: Pack | undefi
   const refused = (reason: string) => only(check(pack, "not-run", reason))
   if (LANES.indexOf(pack.lane) > LANES.indexOf(lane)) return refused(`lane: ${pack.lane} is above ${lane}`)
   if (pack.status === "dropped") return refused("dropped")
-  if (pack.backend === "pinned" && pack.id === ReviewPackGitleaks.manifest.id) return yield* scanned(pack, context)
+  // Squawk's argv is effectful (it stats the copy). The static template scanners stay as they are.
+  if (pack.backend === "pinned" && pack.id === ReviewPackSquawk.manifest.id) return yield* squawked(pack, context)
+  const scanner = pack.backend === "pinned" ? pinnedScanner(pack.id) : undefined
+  if (scanner) return yield* scanned(pack, scanner, context)
   if (pack.backend === "repo") return yield* gates(pack, context)
   return refused("not-built")
 })
 
+type ScanInput = { executable: string; root: string; report: string }
+type Scanner = {
+  readonly locate: typeof ReviewPackGitleaks.locate
+  readonly templates: Readonly<Record<string, (input: ScanInput) => string[]>>
+  readonly prepare?: (directory: string) => Effect.Effect<void>
+  readonly sink?: "stdout"
+  readonly completedExits?: readonly number[]
+}
+
+function pinnedScanner(id: string): Scanner | undefined {
+  if (id === ReviewPackGitleaks.manifest.id) return ReviewPackGitleaks
+  if (id === ReviewPackAstGrep.manifest.id) return ReviewPackAstGrep
+  return undefined
+}
+
 /** A pinned scanner over the head copy and, for the new-only step, the base copy. */
-const scanned = Effect.fnUntraced(function* (pack: Pack, context: Context) {
-  const located = yield* ReviewPackGitleaks.locate()
+const scanned = Effect.fnUntraced(function* (pack: Pack, scanner: Scanner, context: Context) {
+  const located = yield* scanner.locate()
   if ("absent" in located) return only(check(pack, "not-run", located.absent))
-  const template = ReviewPackGitleaks.templates[pack.template]
+  const template = scanner.templates[pack.template]
   if (!template) return only(check(pack, "not-run", `template unknown: ${pack.template}`))
+  const completed: readonly number[] = scanner.completedExits ?? [0]
   const scan = (copied: Copy, side: "head" | "base") => Effect.gen(function* () {
     if ("failed" in copied) return { status: "not-run" as const, reason: copied.failed }
     const snapshot = copied.snapshot
-    // Outside the scanned copy, and the only file the jail may write.
+    // Outside the scanned copy. A report-file scanner may write only that file; a stdout scanner writes nothing.
     const report = path.join(snapshot.scratch, "reports", `${pack.id}.${pack.output.format}`)
-    yield* Effect.promise(() => mkdir(path.dirname(report), { recursive: true }).then(() => writeFile(report, "")))
+    yield* Effect.promise(() => mkdir(path.dirname(report), { recursive: true }))
+    if (scanner.prepare) yield* scanner.prepare(path.dirname(report))
+    if (scanner.sink !== "stdout") yield* Effect.promise(() => writeFile(report, ""))
     const ran = yield* confined({
       argv: template({ executable: located.executable, root: snapshot.root, report }),
-      cwd: snapshot.scratch, write: [report], env: ResearchProcess.environment(), timeoutMs: SCAN_MS, maxBytes: Probe.Limits.outputBytes,
+      cwd: snapshot.scratch,
+      write: scanner.sink === "stdout" ? [] : [report],
+      env: ResearchProcess.environment(), timeoutMs: SCAN_MS, maxBytes: Probe.Limits.outputBytes,
     })
     if ("denied" in ran) return { status: "not-run" as const, reason: ran.denied }
-    const text = yield* Effect.promise(() => Bun.file(report).text().catch(() => ""))
+    const text = scanner.sink === "stdout"
+      ? ran.outcome.stdout.data.toString("utf8")
+      : yield* Effect.promise(() => Bun.file(report).text().catch(() => ""))
     const uri = yield* context.write(`raw/${pack.id}-${side}.${pack.output.format}`, text)
     const unsettled = settle(ran.outcome)
     if (unsettled) return { ...unsettled, uri }
-    if (ran.outcome.exitCode !== 0)
+    if (!completed.includes(ran.outcome.exitCode ?? -1))
       return { status: "acquisition-error" as const, reason: `exit ${ran.outcome.exitCode}: ${firstLine(ran.outcome.stderr.data)}`, uri }
     const options = { pack: pack.id, root: snapshot.root }
     const parsed = pack.output.format === "sarif"
@@ -203,7 +231,7 @@ const scanned = Effect.fnUntraced(function* (pack: Pack, context: Context) {
   const cached = key === undefined ? undefined : baseCache.get(key)
   const base = cached ? { status: "ok" as const, ...cached } : yield* scan(yield* context.base, "base")
   // Without the base, every head item would pass as new: none reach the model.
-  if (base.status !== "ok") return only(check(pack, base.status, `base: ${base.reason}`, head.uri))
+  if (base.status !== "ok") return only(check(pack, base.status, `base: ${base.reason}`, "uri" in base ? base.uri : undefined))
   if (key !== undefined && !cached) remember(key, { results: base.results, uri: base.uri })
   const lookup = rules(context.catalog)
   const changed = context.input.changed
@@ -215,6 +243,94 @@ const scanned = Effect.fnUntraced(function* (pack: Pack, context: Context) {
     base: ReviewSarif.toItems(base.results, lookup).items,
   } satisfies Outcome
 })
+
+/** Squawk over the copied tree only: host TOML, explicit regular `.sql` paths, stdout retained before settle. */
+const squawked = Effect.fnUntraced(function* (pack: Pack, context: Context) {
+  if (pack.output.format !== "json") return only(check(pack, "not-run", `template unknown: ${pack.template}`))
+  if (pack.output.parser !== "squawk" || pack.template !== "squawk-json")
+    return only(check(pack, "not-run", `template unknown: ${pack.template}`))
+  const located = yield* ReviewPackSquawk.locate()
+  if ("absent" in located) return only(check(pack, "not-run", located.absent))
+  // No Squawk baseCache: the key would have to include the selected files, and a tree-only key reuses another selection.
+  const scan = (copied: Copy, side: "head" | "base") => Effect.gen(function* () {
+    if ("failed" in copied) return { status: "not-run" as const, reason: copied.failed }
+    const snapshot = copied.snapshot
+    const selected = yield* Effect.promise(() => sqlSelection(snapshot.root, context.input, side))
+    if ("refused" in selected) return { status: "not-run" as const, reason: selected.refused }
+    if (selected.files.length === 0) {
+      if (side === "head") return { status: "not-run" as const, reason: "no-input" }
+      const uri = yield* context.write(`raw/${pack.id}-base.json`, JSON.stringify({ invoked: false, reason: "no-eligible-base-input" }))
+      return { status: "ok" as const, results: [], uri, emptyBase: true as const }
+    }
+    const config = yield* ReviewPackSquawk.prepare(path.join(snapshot.scratch, "squawk-host"))
+    const built = yield* ReviewPackSquawk.argv({ executable: located.executable, config, root: snapshot.root, files: selected.files })
+    if (built.status !== "ok") return { status: "not-run" as const, reason: built.reason }
+    const ran = yield* confined({
+      argv: built.argv, cwd: snapshot.scratch, write: [], env: ResearchProcess.environment(),
+      timeoutMs: SCAN_MS, maxBytes: Probe.Limits.outputBytes,
+    })
+    if ("denied" in ran) return { status: "not-run" as const, reason: ran.denied }
+    // The captured stdout, including a truncated or unknown-rule report, is retained before settle classifies it.
+    const text = ran.outcome.stdout.data.toString("utf8")
+    const uri = yield* context.write(`raw/${pack.id}-${side}.json`, text)
+    const settled = ReviewPackSquawk.settle(ran.outcome, snapshot.root)
+    if (settled.status === "not-run") return { status: "not-run" as const, reason: settled.reason, uri }
+    if (settled.status !== "ok") return { status: "acquisition-error" as const, reason: settled.reason, uri }
+    return { status: "ok" as const, results: settled.results, uri }
+  })
+  const head = yield* scan(yield* context.head, "head")
+  if (head.status !== "ok") return only(check(pack, head.status, head.reason, head.uri))
+  const base = yield* scan(yield* context.base, "base")
+  if (base.status !== "ok") return only(check(pack, base.status, `base: ${base.reason}`, "uri" in base ? base.uri : undefined))
+  const lookup = rules(context.catalog)
+  const changed = context.input.changed
+  const onChanged = (file: string, line: number, endLine?: number) =>
+    (changed[file] ?? []).some((range) => line <= range.end && (endLine ?? line) >= range.start)
+  const coverage = "emptyBase" in base && base.emptyBase ? "base: no eligible SQL input; no base scanner invocation" : undefined
+  return {
+    checks: [check(pack, head.results.length > 0 ? "fail" : "pass", coverage, head.uri)],
+    head: ReviewSarif.toItems(head.results, lookup, onChanged).items,
+    base: ReviewSarif.toItems(base.results, lookup).items,
+  } satisfies Outcome
+})
+
+async function sqlSelection(root: string, input: RunInput, side: "head" | "base") {
+  if (input.scope !== "files") return { files: await regularSql(root) }
+  const requested = input.files ?? []
+  // Lexical containment before existence, so a missing base file is not how an escape gets through.
+  const escaped = requested.find((file) => file.includes("\0") || !FSUtil.contains(root, path.resolve(root, file)))
+  if (escaped) return { refused: escaped.includes("\0") ? "nul" : "path-outside" }
+  const files: string[] = []
+  for (const file of requested.filter((entry) => path.basename(entry).endsWith(".sql"))) {
+    const absolute = path.resolve(root, file)
+    const info = await lstat(absolute).catch((error: NodeJS.ErrnoException) => error)
+    if (info instanceof Error) {
+      if (side === "base" && (info.code === "ENOENT" || info.code === "ENOTDIR")) continue
+      return { refused: info.code === "ENOENT" ? "missing" : info.code === "EACCES" || info.code === "EPERM" ? "unreadable" : `fs-${info.code ?? "error"}` }
+    }
+    if (info.isSymbolicLink()) return { refused: "symlink" }
+    if (info.isDirectory()) return { refused: "directory" }
+    if (!info.isFile()) return { refused: "not-file" }
+    const physical = await realpath(absolute).catch((error: NodeJS.ErrnoException) => error)
+    if (physical instanceof Error || !FSUtil.contains(root, physical)) return { refused: "path-outside" }
+    files.push(absolute)
+  }
+  return { files }
+}
+
+async function regularSql(root: string) {
+  const found: string[] = []
+  const walk = async (dir: string) => {
+    for (const entry of await readdir(dir, { withFileTypes: true })) {
+      if (entry.isSymbolicLink()) continue
+      const full = path.join(dir, entry.name)
+      if (entry.isDirectory()) await walk(full)
+      else if (entry.isFile() && entry.name.endsWith(".sql")) found.push(full)
+    }
+  }
+  await walk(root)
+  return found.sort()
+}
 
 /** The base revision's declared gates, each run confined in the head copy (plan R4); they yield checks, not items. */
 const gates = Effect.fnUntraced(function* (pack: Pack, context: Context) {

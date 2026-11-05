@@ -9,3 +9,5 @@ internal: true
 Facts about a stack, shared by every seat that reads or writes code in it. Each seat's own skills say what to do with them.
 
 Select by the component the work names, not by what merely appears in a lock file. The project's lock file governs versions; where it differs from a frozen tuple here, the version notes are unverified for that project.
+
+For an assigned PostgreSQL migration, open `team-stack-sql`.
