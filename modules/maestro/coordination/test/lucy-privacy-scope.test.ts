@@ -33,7 +33,7 @@ import { ReviewFanoutV2 } from "../src/v2/workflow/review-fanout"
 import { session, worktree } from "./fixture/v2-governance"
 
 const privacy = "lucy-audit-compliance-privacy"
-const sentinel = "lucy-audit-compliance-sentinel"
+const sentinel = "lucy-audit-compliance-privacy-sentinel"
 const fenced = (tag: string, value: unknown) => `\`\`\`${tag}\n${JSON.stringify(value)}\n\`\`\``
 const entry = fenced(ReviewFanoutV2.TAGS.entry, {
   status: "eligible", context: { intent: [], acceptance: [], invariants: "nothing found", assumptions: [] },
@@ -46,8 +46,8 @@ test("fanout grants only the routed privacy leaf and registered skill enforces e
     const root = AbsolutePath.make(directory)
     const tree = path.join(directory, "lucy-skills")
     yield* Effect.promise(() => fs.cp(SeatSkillRoot.roots.lucy, tree, { recursive: true }))
-    yield* Effect.promise(() => fs.mkdir(path.join(tree, "lucy-audit/compliance/sentinel"), { recursive: true }))
-    yield* Effect.promise(() => fs.writeFile(path.join(tree, "lucy-audit/compliance/sentinel/SKILL.md"),
+    yield* Effect.promise(() => fs.mkdir(path.join(tree, "lucy-audit/compliance/privacy/sentinel"), { recursive: true }))
+    yield* Effect.promise(() => fs.writeFile(path.join(tree, "lucy-audit/compliance/privacy/sentinel/SKILL.md"),
       `---\nname: ${sentinel}\ndescription: Unrelated sentinel\nwhen: unrelated\n---\nSentinel body\n`))
     const layer = AppNodeBuilder.build(LayerNode.group([
       ToolRegistry.node, ToolRegistry.toolsNode, SkillTool.node, PermissionV2.node, PermissionSaved.node,
@@ -113,6 +113,7 @@ test("fanout grants only the routed privacy leaf and registered skill enforces e
       const quick = yield* run("privacy_quick", "quick", "src/privacy/a.ts")
       const standard = yield* run("privacy_standard", "standard", "src/privacy/a.ts")
       const other = yield* run("privacy_other", "standard", "src/ordinary.ts")
+      const quickOther = yield* run("privacy_quick_other", "quick", "src/ordinary.ts")
       expect(quick.result.routing.lenses.map((lens) => lens.id)).toContain("privacy")
       expect(standard.result.routing.lenses.map((lens) => lens.id)).toContain("privacy")
       expect(other.result.routing.lenses.map((lens) => lens.id)).not.toContain("privacy")
@@ -120,14 +121,18 @@ test("fanout grants only the routed privacy leaf and registered skill enforces e
         sessionID: id, agent: AgentV2.ID.make("lucy"), assistantMessageID: SessionMessage.ID.make("msg_privacy"),
         call: { type: "tool-call", id: `call_${id}_${name}`, name: "skill", input: { name } },
       })
-      expect((yield* load(quick.id("lead"), privacy)).type).toBe("text")
+      const loaded = yield* load(quick.id("lead"), privacy)
+      expect(loaded.type).toBe("text")
+      expect(String(loaded.value)).not.toContain(sentinel)
       const lens = standard.id("lens:privacy:all")
       expect((yield* store.scope(quick.id("lead")))?.scope.skills.allow).toContain(privacy)
+      expect((yield* store.scope(quick.id("lead")))?.scope.skills.allow).not.toContain(sentinel)
       expect((yield* store.scope(lens))?.scope.skills.entry).toBe(privacy)
+      expect((yield* store.scope(lens))?.scope.skills.allow).not.toContain(sentinel)
       expect(standard.briefs.get("lens:privacy:all:hunt")).toContain(`name="${privacy}"`)
       expect(standard.briefs.get("lens:privacy:all:hunt")).not.toContain(sentinel)
       expect(yield* load(lens, privacy)).toMatchObject({ type: "error", value: expect.stringContaining("already in this Session's context") })
-      for (const [id, name] of [[standard.id("lead"), privacy], [other.id("lead"), privacy],
+      for (const [id, name] of [[standard.id("lead"), privacy], [other.id("lead"), privacy], [quickOther.id("lead"), privacy],
         [other.id("lens:tests:all"), privacy], [standard.id("verify:privacy.processing"), privacy],
         [standard.id("verify:privacy.processing"), "lucy-audit"], [standard.id("verify:privacy.processing"), "lucy-audit-compliance"],
         [lens, sentinel], [quick.id("lead"), sentinel]] as const) {
