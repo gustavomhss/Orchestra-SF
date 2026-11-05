@@ -242,37 +242,17 @@ describe("review catalog", () => {
 })
 
 describe("review catalog id check", () => {
-  test("the phase-1 fixture still holds the nodes phase 1 routed", async () => {
+  test("the fixture tree passes", async () => {
     const tree = await read(fixture)
-    const names = new Set(Object.keys(tree).filter((file) => file.endsWith("SKILL.md")).map((file) => file.slice(0, -"/SKILL.md".length).split("/").join("-")))
-    for (const node of ["lucy-review-plan", "lucy-review-code", "lucy-review-rereview", "lucy-lens-security", "lucy-review-prove-quote", "lucy-review-prove-regress"]) {
-      expect(names.has(node)).toBe(true)
-    }
-  })
-
-  // T1 authors the real nodes. A synthetic tree only proves catalog references; it is not a production skill tree.
-  test("phase-3 ids reference each other against a synthetic node set", () => {
-    const nodes = [
-      ...catalog.route.profiles.map((profile) => profile.node),
-      ...catalog.lenses.map((lens) => lens.node),
-      ...catalog.classes.map((entry) => entry.node),
-    ]
-    const tree = Object.fromEntries(nodes.map((node) => [`${node}/SKILL.md`, ""]))
     expect(() => ReviewCatalog.check(catalog, tree)).not.toThrow()
-    const pruned = { ...tree }
-    delete pruned["lucy-lens-contracts/SKILL.md"]
-    expect(() => ReviewCatalog.check(catalog, pruned)).toThrow("missing-node: lucy-lens-contracts (lens:contracts)")
   })
 
-  test("lucy's real tree still cites every phase-1 class", async () => {
+  test("lucy's real tree passes and cites every class", async () => {
     const tree = await read(lucy)
+    expect(() => ReviewCatalog.check(catalog, tree)).not.toThrow()
     const cited = new Set(Object.values(tree).flatMap((text) => Array.from(text.matchAll(/`class:([a-z.-]+)`/g), (match) => match[1])))
-    for (const id of PHASE1_CLASSES) expect(cited.has(id)).toBe(true)
+    expect([...cited].toSorted()).toEqual(CLASSES.toSorted())
   })
-
-  test.todo("pending T1 integration: real lucy tree passes ReviewCatalog.check, cites every declared class, and routes every new lens")
-
-  test.todo("pending T1 integration: phase-1 fixture tree passes ReviewCatalog.check once phase-3 nodes exist")
 
   test.each(["pack:nope", "rule:gitleaks/nope", "class:logic.nope", "lens:nope", "overlay:nope", "probe:nope"])(
     "a leaf citing unknown %s fails",
@@ -291,6 +271,12 @@ describe("review catalog id check", () => {
     expect(() => ReviewCatalog.check(broken, tree)).toThrow("missing-node: lucy-lens-testing (lens:tests)")
     const pruned = Object.fromEntries(Object.entries(tree).filter(([file]) => file !== "lucy-lens/correctness/edges/SKILL.md"))
     expect(() => ReviewCatalog.check(catalog, pruned)).toThrow("missing-node: lucy-lens-correctness-edges (lens:correctness-edges)")
+    const contracts = Object.fromEntries(Object.entries(tree).filter(([file]) => file !== "lucy-lens/contracts/SKILL.md"))
+    expect(() => ReviewCatalog.check(catalog, contracts)).toThrow("missing-node: lucy-lens-contracts (lens:contracts)")
+    const privacy = Object.fromEntries(Object.entries(tree).filter(([file]) => file !== "lucy-audit/compliance/privacy/SKILL.md"))
+    expect(() => ReviewCatalog.check(catalog, privacy)).toThrow("missing-node: lucy-audit-compliance-privacy (lens:privacy)")
+    const pr = Object.fromEntries(Object.entries(tree).filter(([file]) => file !== "lucy-review/pr/SKILL.md"))
+    expect(() => ReviewCatalog.check(catalog, pr)).toThrow("missing-node: lucy-review-pr (profile:pr)")
   })
 
   test("a class whose proof node is not in the tree fails", async () => {
@@ -302,8 +288,8 @@ describe("review catalog id check", () => {
   })
 
   test.each([
-    ["lucy-lens/contracts/SKILL.md", "lucy-lens-contracts"],
-    ["lucy-lens/correctness/resources/SKILL.md", "lucy-lens-correctness-resources"],
+    ["lucy-lens/unused/SKILL.md", "lucy-lens-unused"],
+    ["lucy-lens/correctness/unused/SKILL.md", "lucy-lens-correctness-unused"],
     ["lucy-review/prove/mutants/SKILL.md", "lucy-review-prove-mutants"],
   ])("a node no route reaches fails: %s", async (file, name) => {
     const tree = await read(fixture)
@@ -316,7 +302,8 @@ describe("review catalog id check", () => {
       ...profile,
       lenses: Object.fromEntries(Object.entries(profile.lenses).map(([tier, lenses]) => [tier, lenses.filter((lens: string) => lens !== "security")])),
     }))
-    const broken = { ...catalog, route: { ...catalog.route, profiles } }
+    const overlays = catalog.overlays.map((overlay) => ({ ...overlay, lenses: overlay.lenses.filter((lens) => lens !== "security") }))
+    const broken = { ...catalog, overlays, route: { ...catalog.route, profiles } }
     expect(() => ReviewCatalog.check(broken, tree)).toThrow("unreached-node: lucy-lens-security (lucy-lens/security/SKILL.md)")
     expect(() => ReviewCatalog.check(broken, tree)).toThrow("unreached-node: lucy-lens-security-secrets (lucy-lens/security/secrets/SKILL.md)")
     // A routed node is reached through its own lens, never through an unrouted sibling's classes.
