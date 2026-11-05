@@ -127,7 +127,7 @@ function canonicalRelative(value: string, windows: boolean) {
 async function captureIdentity(root: string, file: string) {
   const pathApi = ReviewNativeFiles.flavor(root)
   const relative = pathApi.relative(root, file)
-  const parents: { path: string; stat: Awaited<ReturnType<typeof lstat>> }[] = []
+  const parents: { path: string; stat: { dev: number; ino: number } }[] = []
   const pathRoot = pathApi.parse(root).root
   let cursor = pathRoot
   for (const segment of [...pathApi.relative(pathRoot, root).split(pathApi.sep), ...relative.split(pathApi.sep).slice(0, -1)].filter(Boolean)) {
@@ -149,7 +149,7 @@ function isRefusal(error: unknown): error is { status: "not-run" | "unsupported"
   return !!error && typeof error === "object" && "reason" in error && typeof error.reason === "string" && "status" in error && (error.status === "not-run" || error.status === "unsupported")
 }
 
-export function environment(root: string, input: NodeJS.ProcessEnv = process.env) {
+export function environment(root: string, input: NodeJS.ProcessEnv = process.env): Record<string, string> {
   const base = ResearchProcess.environment(input)
   return { ...Object.fromEntries(Object.entries(base).filter(([key]) => !/^(ACTIONLINT|SHELLCHECK|PYFLAKES|GO)/i.test(key))), HOME: root, USERPROFILE: root, XDG_CONFIG_HOME: path.join(root, ".config"), XDG_CACHE_HOME: path.join(root, ".cache"), TMPDIR: root, TMP: root, TEMP: root, NO_COLOR: "1" }
 }
