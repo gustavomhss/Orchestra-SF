@@ -53,10 +53,13 @@ export type Output = {
 /** K1 probe evidence. */
 export type Evidence = { readonly kind: "probe"; readonly option: string; readonly command: string; readonly result: string; readonly uri: string }
 
-/** Per-review record the host keeps for repeat and cap refusals. */
-export type Ledger = { readonly runs: Set<string>; readonly attempts: Map<string, number> }
+/** One settled probe attempt. The host records it; a model does not supply it. */
+export type Observed = { readonly candidate: string; readonly option: string; readonly result: Output }
 
-export const ledger = (): Ledger => ({ runs: new Set(), attempts: new Map() })
+/** Per-review record the host keeps for repeat and cap refusals, plus each settled attempt. */
+export type Ledger = { readonly runs: Set<string>; readonly attempts: Map<string, number>; readonly observed: Observed[] }
+
+export const ledger = (): Ledger => ({ runs: new Set(), attempts: new Map(), observed: [] })
 
 export type Context = {
   readonly reviewID: string
@@ -70,6 +73,8 @@ export type Context = {
   /** The reviewed diff's hunks, host-computed; a regress target picks one by path and line range. */
   readonly hunks: ReadonlyArray<ReviewScratch.Hunk>
   readonly ledger: Ledger
+  /** Called with only this attempt, after the ledger append. Absent is not a second copy of `ledger.observed`. */
+  readonly observe?: (items: ReadonlyArray<Observed>) => void
   readonly timeoutSeconds: number
   readonly queueSeconds?: number
 }
@@ -234,6 +239,9 @@ function settle(input: Input, context: Context, outcome: { uri: string; started:
     uri: outcome.uri,
     tree: context.head.digest,
   } satisfies Output
+  const item = { candidate: input.candidate, option: input.option, result }
+  context.ledger.observed.push(item)
+  context.observe?.([item])
   const text = [
     `option: ${input.option}`, `candidate: ${input.candidate}`, `tree: ${context.head.digest}`, `status: ${outcome.status}${outcome.reason ? ` (${outcome.reason})` : ""}`,
     ...steps.flatMap((step) => [`--- ${step.label}: ${step.reason ?? step.status}`, `$ ${step.argv.join(" ")}`, `exit: ${step.exitCode ?? "none"}`,
