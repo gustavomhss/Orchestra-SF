@@ -3,20 +3,22 @@ import fs from "node:fs/promises"
 import path from "node:path"
 import { Deferred, Effect, Fiber, Scheduler } from "effect"
 import { ReviewPRFactsV2 } from "../src/v2/tools/review-pr-facts"
+import { ReviewChecksV2 } from "../src/v2/workflow/review-checks"
 import { ReviewPRStoreV2 } from "../src/v2/tools/review-pr-store"
 import { worktree } from "./fixture/v2-governance"
 
 const candidate = "a".repeat(64)
+const routing = {
+  version: "route-v1", catalog: "b".repeat(64), profile: { id: "pr", source: "request" },
+  tier: { id: "standard", source: "risk", signals: [] }, overlays: [], languages: [], lenses: [], packs: [],
+  budget: { lensChildren: 1, samples: 1, verifiers: 1, itemsPerLens: 1, loadsPerSession: 1,
+    candidatesPerChild: 1, candidatesPerVerifier: 1, toolCallsPerSession: 1, probeAttempts: 1 },
+  deviations: [],
+} as const
 const facts: ReviewPRFactsV2.Facts = {
-  candidate, method: "review-v2/pr/standard",
-  routing: {
-    version: "route-v1", catalog: "b".repeat(64), profile: { id: "pr", source: "request" },
-    tier: { id: "standard", source: "risk", signals: [] }, overlays: [], languages: [], lenses: [], packs: [],
-    budget: { lensChildren: 1, samples: 1, verifiers: 1, itemsPerLens: 1, loadsPerSession: 1,
-      candidatesPerChild: 1, candidatesPerVerifier: 1, toolCallsPerSession: 1, probeAttempts: 1 },
-    deviations: [],
-  },
+  candidate, method: "review-v2/pr/standard", routing,
   scope: { base: "base", head: "head", files: 1, changedLines: 1 },
+  checkFacts: ReviewChecksV2.collect({ routing, checks: [], settings: undefined }),
   confirmed: [{ id: "C1", path: "src/a.ts", line: 1, severity: "P1", class: "logic.invariant", node: "node",
     lens: "correctness-logic", rule: "logic.invariant", trigger: "trigger", rungs: ["quote"],
     evidence: { kind: "quote", path: "src/a.ts", startLine: 1, endLine: 1 } }],

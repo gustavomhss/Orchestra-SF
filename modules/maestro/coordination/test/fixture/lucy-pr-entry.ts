@@ -304,12 +304,26 @@ function reply(brief: string, prior: readonly string[]) {
   if (kind === "verify") throw new Error("verifier stage is unexpected when candidates are empty")
   const routing = JSON.parse(brief.slice(brief.indexOf(ROUTING) + ROUTING.length).split("\n")[0] ?? "")
   const scope = hostScope(brief, prior)
+  const checks = labeled(brief, "Canonical checks:")
+  const blockers = labeled(brief, "Host blockers:")
+  if (!Array.isArray(checks) || !Array.isArray(blockers)) throw new Error("finish brief has no canonical checks")
+  const blocked = blockers.length > 0
   return fence(ReviewResultV2.TAG, {
-    outcome: "done", verdict: "APPROVE", profile: routing.profile.id, tier: ReviewRouting.tier(routing),
+    outcome: blocked ? "blocked" : "done",
+    ...(blocked ? {} : { verdict: "APPROVE" }),
+    profile: routing.profile.id, tier: ReviewRouting.tier(routing),
     overlays: routing.overlays.map((overlay: { id: string }) => overlay.id), routing, scope,
-    findings: [], questions: [], checks: [], coverage: { examined: [], notExamined: [] },
-    handoffs: [], blockers: [], risks: [], nextActions: [],
+    findings: [], questions: [], checks, coverage: { examined: [], notExamined: [] },
+    handoffs: [], blockers, risks: [], nextActions: [],
   })
+}
+
+function labeled(brief: string, label: string) {
+  const at = brief.indexOf(label + "\n")
+  if (at < 0) return undefined
+  const line = brief.slice(at + label.length + 1).split("\n")[0]
+  if (line === undefined) return undefined
+  return JSON.parse(line)
 }
 
 function hostScope(brief: string, prior: readonly string[]) {

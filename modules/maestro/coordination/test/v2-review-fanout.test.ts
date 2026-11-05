@@ -13,7 +13,9 @@ import { AbsolutePath } from "@orchestra/core/schema"
 import { SessionSchema, SessionStore } from "@orchestra/core/session"
 import type { SkillV2 } from "@orchestra/core/skill"
 import type { ReviewResultV2 } from "../src/v2/governance/review-result"
+import type { ReviewAnalyze } from "@orchestra/core/review-toolkit/analyze"
 import { ReviewFanoutV2 } from "../src/v2/workflow/review-fanout"
+import { ReviewChecksV2 } from "../src/v2/workflow/review-checks"
 import { governanceLayer, session, worktree } from "./fixture/v2-governance"
 
 // The host fan-out of one lucy review (§8.7) over the real Session store and a real skill tree on disk: each Session's
@@ -103,7 +105,7 @@ const item = (lens: string, index: number): ReviewItem.ToolItem => ({
 })
 
 const ANALYSIS: ReviewFanoutV2.Analysis = {
-  checks: [{ id: "gitleaks", pack: "gitleaks", lane: "no-build", status: "pass" }],
+  checks: [{ id: "gitleaks", pack: "gitleaks", version: "pinned", lane: "no-build", status: "pass", workspaceExecuted: false } satisfies ReviewAnalyze.Check],
   items: {
     "correctness-logic": Array.from({ length: 20 }, (_, index) => item("correctness-logic", index)),
     security: [item("security", 0)],
@@ -379,6 +381,11 @@ test("Quick and blocked return no host-confirmed list", () =>
     const quickResult = yield* ReviewFanoutV2.run(quick.input("quick", { completion: "card-only" }), quick.port)
     if (quickResult.status !== "ran") throw new Error("expected Quick run")
     expect(quickResult.confirmed).toEqual([])
+    expect(quickResult.checkFacts).toEqual(ReviewChecksV2.collect({
+      routing: quickResult.routing,
+      checks: ANALYSIS.checks as ReadonlyArray<ReviewAnalyze.Check>,
+      settings: { review: { acceptedUnavailable: quick.input("quick").request.settings.acceptedUnavailable } },
+    }))
     const blocked = yield* harness(directory, "host_blocked")
     const blockedResult = yield* ReviewFanoutV2.run(blocked.input("standard", { completion: "card-only" }), {
       ...blocked.port,
