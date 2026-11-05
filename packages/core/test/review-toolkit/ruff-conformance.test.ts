@@ -1,12 +1,13 @@
 import { expect } from "bun:test"
 import { createHash } from "node:crypto"
 import path from "node:path"
-import { access, lstat, mkdir, readFile, readdir, readlink, symlink, writeFile } from "node:fs/promises"
+import { access, lstat, mkdir, readFile, readdir, readlink, realpath, symlink, writeFile } from "node:fs/promises"
 import { Effect } from "effect"
 import { BackendToolkit } from "../../src/backend-toolkit"
 import { LayerNode } from "../../src/effect/layer-node"
 import { AppProcess } from "../../src/process"
 import { ResearchProcess } from "../../src/research-toolkit/process"
+import { ReviewNativeFiles } from "../../src/review-toolkit/native-files"
 import { ReviewPackRuff } from "../../src/review-toolkit/packs/ruff"
 import { ToolSafetySandbox } from "../../src/tool-safety-sandbox"
 import { expectSpawn } from "../fixture/omni-expect"
@@ -97,8 +98,18 @@ it.live("pinned Ruff under the real review confinement: report, selection and is
     }))
     const plan = (files: readonly string[], excluded: readonly string[] = []) =>
       ReviewPackRuff.argv({ executable: executable.executable, root: f.root, files, excluded })
-    const chosen = yield* plan([selected, shadow, clean, unicode, backslash])
-    if (chosen.status !== "ok") throw new Error(`ruff argv refused: ${JSON.stringify({ chosen, root: f.root, files: [selected, shadow, clean, unicode, backslash], executable: executable.executable })}`)
+    const files = [selected, shadow, clean, unicode, backslash]
+    const filesystem = yield* Effect.promise(async () => {
+      const inspect = async (file: string) => {
+        const stat = await lstat(file).then((value) => ({ file: value.isFile(), directory: value.isDirectory(), symlink: value.isSymbolicLink() }), (error: NodeJS.ErrnoException) => ({ error: error.code ?? error.message }))
+        const physical = await realpath(file).then((value) => value, (error: NodeJS.ErrnoException) => ({ error: error.code ?? error.message }))
+        return { path: file, stat, realpath: physical }
+      }
+      return { root: await inspect(f.root), entries: await readdir(f.root).then((value) => value, (error: NodeJS.ErrnoException) => ({ error: error.code ?? error.message })), files: await Promise.all(files.map(inspect)) }
+    })
+    const selections = yield* Effect.forEach(files, (file) => ReviewNativeFiles.select({ root: f.root, files: [file], extensions: [".py", ".pyi"] }).pipe(Effect.map((result) => ({ file, result }))))
+    const chosen = yield* plan(files)
+    if (chosen.status !== "ok") throw new Error(`ruff argv refused: ${JSON.stringify({ chosen, root: f.root, files, executable: executable.executable, filesystem, selections })}`)
     expect(chosen.status).toBe("ok")
     expect(chosen.argv.slice(0, 14)).toEqual([executable.executable, "check", "--isolated", "--no-cache", "--no-fix", "--no-fix-only", "--no-preview", "--ignore-noqa", "--target-version", "py311", "--output-format", "json", "--select", "F821,F823"])
     expect(chosen.argv).toContain("--no-respect-gitignore")
