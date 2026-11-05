@@ -11,14 +11,18 @@ import { ReviewPREvidenceV2 } from "../src/v2/workflow/review-pr-evidence"
 import { governanceLayer, session, worktree } from "./fixture/v2-governance"
 
 const gitLayer = AppNodeBuilder.build(GitCli.node) as Layer.Layer<GitCli.Service>
-const reason = (error: Tool.Failure) => error.metadata?.reason
+const reason = (error: Tool.Failure) => {
+  const value = error.metadata?.reason
+  if (typeof value !== "string") throw new Error("expected error has no reason")
+  return value
+}
 
-const run = <A>(
+const run = <A, E>(
   body: (
     directory: string,
     cli: GitCli.Interface,
     git: (...args: string[]) => Effect.Effect<string>,
-  ) => Effect.Effect<A, Tool.Failure, GitCli.Service | Scope.Scope>,
+  ) => Effect.Effect<A, E, GitCli.Service | Scope.Scope>,
 ) =>
   Effect.runPromise(
     Effect.scoped(
