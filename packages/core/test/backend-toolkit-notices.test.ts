@@ -12,7 +12,6 @@ import { it } from "./lib/effect"
 
 const BINARY = new Uint8Array([0x00, 0x01, 0xff, 0x10])
 const LICENSE = "Copyright fixture\nThird-party notices stay plaintext.\n"
-const TARGETS = ["darwin-arm64", "darwin-x64", "linux-arm64", "linux-x64", "win32-x64"] as const
 const symlinkCase = process.platform === "win32" ? it.live.skip : it.live
 
 const fixture = Effect.gen(function* () {
@@ -21,9 +20,9 @@ const fixture = Effect.gen(function* () {
     (directory) => Effect.promise(() => rm(directory, { recursive: true, force: true })),
   )
   const hits: Record<string, number> = {}
-  const files = new Map<string, Uint8Array>([
-    ["/tool", BINARY],
-    ["/license.txt", new TextEncoder().encode(LICENSE)],
+  const files = new Map<string, Blob>([
+    ["/tool", blob(BINARY)],
+    ["/license.txt", blob(new TextEncoder().encode(LICENSE))],
   ])
   const server = yield* Effect.acquireRelease(
     Effect.sync(() => Bun.serve({
@@ -39,8 +38,16 @@ const fixture = Effect.gen(function* () {
     })),
     (server) => Effect.promise(() => server.stop(true)),
   )
-  return { root, hits, server }
+  const port = server.port
+  if (typeof port !== "number") throw new Error("loopback port missing")
+  return { root, hits, port }
 })
+
+function blob(bytes: Uint8Array) {
+  const copy = new ArrayBuffer(bytes.byteLength)
+  new Uint8Array(copy).set(bytes)
+  return new Blob([copy])
+}
 
 function host() {
   const detected = detect()
@@ -55,8 +62,18 @@ function engine(id: string, version: string, port: number, notices?: NativeEngin
     format: "raw" as const,
     entries: [{ from: "tool", to: "tool", executable: true }],
   }
-  const targets = Object.fromEntries(TARGETS.map((target) => [target, { artifact, executable: "tool" }])) as NativeEngine["targets"]
-  return { id, version, license: "MIT", upstream: "fixture/engine", targets, ...(notices ? { notices } : {}) }
+  return { id, version, license: "MIT", upstream: "fixture/engine", targets: pins(artifact, "tool"), ...(notices ? { notices } : {}) }
+}
+
+function pins(artifact: PinnedArtifact.Artifact, executable: string): NativeEngine["targets"] {
+  const pin = { artifact, executable }
+  return {
+    "darwin-arm64": pin,
+    "darwin-x64": pin,
+    "linux-arm64": pin,
+    "linux-x64": pin,
+    "win32-x64": pin,
+  }
 }
 
 function notice(port: number, filename = "license.txt", integrity?: `sha256-${string}`): NonNullable<NativeEngine["notices"]>[number] {
@@ -81,7 +98,7 @@ it.live("a native install publishes the binary and notice together, and concurre
   Effect.gen(function* () {
     const f = yield* fixture
     const target = host()
-    const manifest = { buf: engine("buf", "1", f.server.port, [notice(f.server.port)]) }
+    const manifest = { buf: engine("buf", "1", f.port, [notice(f.port)]) }
     const run = scoped(f.root, manifest)
     const directory = installDir(f.root, "buf", "1", target)
     const [first, second] = yield* Effect.all([
@@ -92,7 +109,14 @@ it.live("a native install publishes the binary and notice together, and concurre
     expect(second).toEqual(first)
     expect(yield* PinnedArtifact.installed(directory)).toBe(true)
     expect(yield* Effect.promise(() => readFile(path.join(directory, "notices", "license.txt"), "utf8"))).toBe(LICENSE)
-    expect(yield* Effect.promise(() => readFile(path.join(directory, "tool")))).toEqual(BINARY)
+    const installed = yield* Effect.promise(() => readFile(path.join(directory, "tool")))
+    expect(installed.byteLength).toBe(BINARY.byteLength)
+    for (let index = 0; index < installed.byteLength; index++) {
+      const actual = installed[index]
+      const expected = BINARY[index]
+      if (actual === undefined || expected === undefined) throw new Error("binary byte missing")
+      expect(actual).toBe(expected)
+    }
     expect(f.hits["/tool"]).toBe(1)
     expect(f.hits["/license.txt"]).toBe(1)
     expect(yield* BackendToolkit.status("buf").pipe(run)).toEqual([
@@ -106,7 +130,7 @@ it.live("a wrong notice hash publishes no install and no completion marker", () 
     const f = yield* fixture
     const target = host()
     const bad = `sha256-${createHash("sha256").update("other-license").digest("base64")}` as const
-    const manifest = { buf: engine("buf", "1", f.server.port, [notice(f.server.port, "license.txt", bad)]) }
+    const manifest = { buf: engine("buf", "1", f.port, [notice(f.port, "license.txt", bad)]) }
     const failed = yield* BackendToolkit.ensure("buf").pipe(scoped(f.root, manifest), Effect.flip)
     const directory = installDir(f.root, "buf", "1", target)
     expect(failed.reason).toBe("toolkit-not-ready:failed:buf:integrity-mismatch")
@@ -121,7 +145,7 @@ it.live("a missing or modified notice stays not ready and the completed install 
   Effect.gen(function* () {
     const f = yield* fixture
     const target = host()
-    const noticed = (id: string) => engine(id, "1", f.server.port, [notice(f.server.port)])
+    const noticed = (id: string) => engine(id, "1", f.port, [notice(f.port)])
     const run = scoped(f.root, { buf: noticed("buf"), sqlc: noticed("sqlc") })
     yield* BackendToolkit.ensure("buf").pipe(run)
     yield* BackendToolkit.ensure("sqlc").pipe(run)
@@ -146,7 +170,7 @@ symlinkCase("final-notice-symlink", () =>
   Effect.gen(function* () {
     const f = yield* fixture
     const target = host()
-    const run = scoped(f.root, { buf: engine("buf", "1", f.server.port, [notice(f.server.port)]) })
+    const run = scoped(f.root, { buf: engine("buf", "1", f.port, [notice(f.port)]) })
     yield* BackendToolkit.ensure("buf").pipe(run)
     const directory = installDir(f.root, "buf", "1", target)
     const noticeFile = path.join(directory, "notices", "license.txt")
@@ -170,7 +194,7 @@ symlinkCase("notices-parent-directory-symlink", () =>
   Effect.gen(function* () {
     const f = yield* fixture
     const target = host()
-    const run = scoped(f.root, { buf: engine("buf", "1", f.server.port, [notice(f.server.port)]) })
+    const run = scoped(f.root, { buf: engine("buf", "1", f.port, [notice(f.port)]) })
     yield* BackendToolkit.ensure("buf").pipe(run)
     const directory = installDir(f.root, "buf", "1", target)
     const outside = path.join(f.root, "outside")
@@ -195,13 +219,13 @@ it.live("malformed notice metadata fails before any fetch and leaves the cache u
   Effect.gen(function* () {
     const f = yield* fixture
     const loose = (notices: unknown) => notices as NativeEngine["notices"]
-    const url = `http://127.0.0.1:${f.server.port}/license.txt`
+    const url = `http://127.0.0.1:${f.port}/license.txt`
     const cases: NativeEngine["notices"][] = [
-      [notice(f.server.port, "License.txt")],
-      [notice(f.server.port, "../license.txt")],
-      [notice(f.server.port, "notices/license.txt")],
-      [notice(f.server.port), notice(f.server.port)],
-      [notice(f.server.port, "license.txt", "sha256-not-a-digest")],
+      [notice(f.port, "License.txt")],
+      [notice(f.port, "../license.txt")],
+      [notice(f.port, "notices/license.txt")],
+      [notice(f.port), notice(f.port)],
+      [notice(f.port, "license.txt", "sha256-not-a-digest")],
       [{ url, integrity: "sha512-aa" as `sha256-${string}`, filename: "license.txt" }],
       loose([{ url, filename: "license.txt" }]),
       loose([{ url, filename: "license.txt", integrity: null }]),
@@ -212,7 +236,7 @@ it.live("malformed notice metadata fails before any fetch and leaves the cache u
       const id = `bad${index}`
       const before = { ...f.hits }
       const failed = yield* BackendToolkit.ensure<string>(id).pipe(
-        scoped(f.root, { [id]: engine(id, "1", f.server.port, notices) }),
+        scoped(f.root, { [id]: engine(id, "1", f.port, notices) }),
         Effect.flip,
       )
       expect(failed.reason).toBe(`toolkit-not-ready:failed:${id}:notice-invalid`)
@@ -226,7 +250,7 @@ it.live("an engine with no declared notices still becomes ready without a notice
   Effect.gen(function* () {
     const f = yield* fixture
     const target = host()
-    const run = scoped(f.root, { sqlc: engine("sqlc", "1", f.server.port) })
+    const run = scoped(f.root, { sqlc: engine("sqlc", "1", f.port) })
     const directory = installDir(f.root, "sqlc", "1", target)
     expect(yield* BackendToolkit.ensure("sqlc").pipe(run)).toEqual({ executable: path.join(directory, "tool") })
     expect(yield* PinnedArtifact.installed(directory)).toBe(true)
@@ -240,9 +264,9 @@ it.live("an invalid parent notice is refused before its dependency is fetched", 
   Effect.gen(function* () {
     const f = yield* fixture
     const target = host()
-    const child = engine("sqlc", "1", f.server.port)
-    const parent = { ...engine("buf", "1", f.server.port, [notice(f.server.port, "License.txt")]), dependencies: ["sqlc"] }
-    const unrelated = engine("gitleaks", "1", f.server.port, [notice(f.server.port, "../license.txt")])
+    const child = engine("sqlc", "1", f.port)
+    const parent = { ...engine("buf", "1", f.port, [notice(f.port, "License.txt")]), dependencies: ["sqlc"] }
+    const unrelated = engine("gitleaks", "1", f.port, [notice(f.port, "../license.txt")])
     const manifest = { buf: parent, sqlc: child, gitleaks: unrelated }
     const failed = yield* BackendToolkit.ensure("buf").pipe(scoped(f.root, manifest), Effect.flip)
     expect(failed.reason).toBe("toolkit-not-ready:failed:buf:notice-invalid")
@@ -260,10 +284,10 @@ it.live("duplicate notices on a completed install are not ready", () =>
   Effect.gen(function* () {
     const f = yield* fixture
     const target = host()
-    const installed = engine("buf", "1", f.server.port, [notice(f.server.port)])
+    const installed = engine("buf", "1", f.port, [notice(f.port)])
     yield* BackendToolkit.ensure("buf").pipe(scoped(f.root, { buf: installed }))
     const directory = installDir(f.root, "buf", "1", target)
-    const duplicated = { ...installed, notices: [notice(f.server.port), notice(f.server.port)] }
+    const duplicated = { ...installed, notices: [notice(f.port), notice(f.port)] }
     const run = scoped(f.root, { buf: duplicated })
     const fetches = f.hits["/license.txt"]
     expect((yield* BackendToolkit.status("buf").pipe(run))[0]?.status).toBe("absent")
@@ -278,13 +302,13 @@ it.live("a notice destination that collides with the executable or an artifact e
   Effect.gen(function* () {
     const f = yield* fixture
     const target = host()
-    const base = engine("buf", "1", f.server.port, [notice(f.server.port)])
+    const base = engine("buf", "1", f.port, [notice(f.port)])
     const occupy = (executable: string, entryTo: string) => {
-      const targets = Object.fromEntries(TARGETS.map((item) => [item, {
-        executable,
-        artifact: { ...base.targets[item].artifact, entries: [{ from: "tool", to: entryTo, executable: true }] },
-      }])) as NativeEngine["targets"]
-      return { ...base, targets }
+      const artifact: PinnedArtifact.Artifact = {
+        ...base.targets["linux-x64"].artifact,
+        entries: [{ from: "tool", to: entryTo, executable: true }],
+      }
+      return { ...base, targets: pins(artifact, executable) }
     }
     for (const [index, occupied] of [
       occupy("notices/license.txt", "tool"),
