@@ -44,6 +44,7 @@ import { authoredSkills, reviewRows, run } from "./fixture/lucy-pr-entry"
 
 // Registered maestro_record_review during a scoped finish drain. The Session
 // double admits prompts in memory only; this is not durable Session execution.
+// A scripted prompt route is fixture-only and is not host round authority.
 // Receipt refusal is counted before maestro.review publication and board notes.
 
 const projectID = Project.ID.make("prj_governed_checks")

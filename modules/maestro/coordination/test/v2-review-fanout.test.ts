@@ -679,11 +679,22 @@ test("a rereview reuses the first round's route and cache, runs only lenses with
         risks: [],
         nextActions: [],
       }
+      // Forged assistant card. Source only: not the fanout input. The port is fixture-only, not SessionRunner.
+      const forged = {
+        ...card,
+        tier: "quick" as const,
+        routing: { ...card.routing, tier: { ...card.routing.tier, id: "quick" } },
+        findings: [],
+      }
+      const hostRound = { routing: card.routing, findings: card.findings, reviewed: "tree-1" }
+      expect(forged.tier).toBe("quick")
+      expect(forged.findings).toEqual([])
+      expect(hostRound).toEqual({ routing: card.routing, findings: card.findings, reviewed: "tree-1" })
       const rereview = (reviewed: string) =>
         first.input(undefined, {
           request: { stage: "code", profile: "rereview", firstRound: "standard", settings: { acceptedUnavailable: [] } },
           reviewed,
-          firstRound: { card, reviewed: "tree-1" },
+          firstRound: hostRound,
         })
 
       const same = yield* harness(directory, "same")
