@@ -65,7 +65,7 @@ async function selectFiles(input: {
     chosen.push(physical)
   }
   const files = unique(chosen)
-  // realpath can lengthen a name through an ancestor alias or case fold. Bound the arguments actually returned.
+  // Bound the walked canonical arguments actually returned. Leaf realpath is not part of that name.
   if (argvBytes(files) > Probe.Limits.outputBytes) return refuse("not-run", "argv-bound")
   return { status: "ok" as const, files }
 }
@@ -127,12 +127,12 @@ async function selected(root: string, relative: string, path: typeof posix) {
   if (!info) return refuse("not-run", "missing")
   if (info.isDirectory()) return refuse("not-run", "directory")
   if (!info.isFile()) return refuse("not-run", "not-file")
-  const physical = await realpath(cursor).catch((error: NodeJS.ErrnoException) => error)
-  if (physical instanceof Error) return refuse("not-run", named(physical, "missing"))
-  if (!inside(root, physical)) return refuse("not-run", "path-outside")
+  // The walk already rejected every symlink, so this cursor is canonical by components. Leaf realpath
+  // reinterprets a POSIX backslash as a separator and reports ENOENT for a regular file that lstat sees.
+  if (!inside(root, cursor)) return refuse("not-run", "path-outside")
   const opened = await readable(cursor)
   if (opened) return refuse("not-run", opened)
-  return physical
+  return cursor
 }
 
 function inside(root: string, file: string) {
