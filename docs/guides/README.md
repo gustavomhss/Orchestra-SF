@@ -5,6 +5,7 @@ How Orchestra works:
 - [The agents](agents.md)
 - [Architecture and security](architecture.md)
 - [Context: continuity and Lean](context.md)
+- [Session compaction](session-compaction.md)
 - [Tools](tools.md)
 - [Coordination](coordination.md)
 - [Workflows and Relay](relay.md)

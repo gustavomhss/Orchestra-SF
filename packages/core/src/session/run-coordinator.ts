@@ -2,9 +2,23 @@ export * as SessionRunCoordinator from "./run-coordinator"
 
 import { Deferred, Effect, Exit, Fiber, FiberSet, Option, Scope } from "effect"
 
+export type InterruptOptions = {
+  /**
+   * Drops the wake recorded while the interrupted execution ran. By default that wake survives: it reports durable
+   * work admitted after the drain began, and nothing else would promote it once the Session goes idle.
+   */
+  readonly discardPending?: boolean
+}
+
 export type RunOptions = {
   /** Cancels only the active entry started by this waiter; joining never acquires ownership. */
   readonly interruptOnCancel?: boolean
+}
+
+export type ExclusiveOptions = {
+  readonly wait?: boolean
+  /** Opt-in discards wakes during this exclusive operation; the default retains them. */
+  readonly discardPending?: boolean
 }
 
 /** Serializes execution for each key while allowing different keys to run concurrently. */
@@ -15,21 +29,22 @@ export interface Coordinator<Key, E> {
   readonly run: (key: Key, options?: RunOptions) => Effect.Effect<void, E>
   /** Registers one coalesced follow-up after newly recorded work. */
   readonly wake: (key: Key) => Effect.Effect<void>
-  /** Stops active execution and waits for its cleanup. */
-  readonly interrupt: (key: Key) => Effect.Effect<void>
+  /** Stops active execution and waits for its cleanup. A wake recorded meanwhile still runs one follow-up. */
+  readonly interrupt: (key: Key, options?: InterruptOptions) => Effect.Effect<void>
   /**
-   * Runs `effect` as the key's active execution, so it never overlaps a drain: a wake meanwhile drains after it and an
-   * interrupt stops it. With an active execution it returns `None` at once, or after that execution when `wait` is set.
+   * Runs `effect` as the key's active execution, so it never overlaps a drain: a wake meanwhile drains after it unless
+   * `discardPending` is set, and an interrupt stops it. When busy it returns `None`, or waits when `wait` is set.
    */
   readonly exclusive: <A, E2>(
     key: Key,
     effect: Effect.Effect<A, E2>,
-    options?: { readonly wait?: boolean },
+    options?: ExclusiveOptions,
   ) => Effect.Effect<Option.Option<A>, E2>
 }
 
 type Entry<E> = {
   readonly done: Deferred.Deferred<void, E>
+  readonly discardPending: boolean
   owner?: Fiber.Fiber<void, never>
   pendingWake: boolean
   stopping: boolean
@@ -44,8 +59,9 @@ export const make = <Key, E>(options: {
 
     const drain = (key: Key, force: boolean) => Effect.suspend(() => options.drain(key, force))
 
-    const makeEntry = (): Entry<E> => ({
+    const makeEntry = (discardPending = false): Entry<E> => ({
       done: Deferred.makeUnsafe<void, E>(),
+      discardPending,
       pendingWake: false,
       stopping: false,
     })
@@ -100,6 +116,7 @@ export const make = <Key, E>(options: {
       Effect.sync(() => {
         const entry = active.get(key)
         if (entry !== undefined) {
+          if (entry.discardPending) return
           entry.pendingWake = true
           return
         }
@@ -112,7 +129,7 @@ export const make = <Key, E>(options: {
     const exclusive = <A, E2>(
       key: Key,
       effect: Effect.Effect<A, E2>,
-      exclusiveOptions?: { readonly wait?: boolean },
+      exclusiveOptions?: ExclusiveOptions,
     ): Effect.Effect<Option.Option<A>, E2> =>
       Effect.uninterruptibleMask((restore) => {
         const entry = active.get(key)
@@ -123,7 +140,7 @@ export const make = <Key, E>(options: {
             Effect.andThen(exclusive(key, effect, exclusiveOptions)),
           )
         }
-        const next = makeEntry()
+        const next = makeEntry(exclusiveOptions?.discardPending ?? false)
         active.set(key, next)
         const result = Deferred.makeUnsafe<A, E2>()
         // The caller hears the effect's own outcome; the entry only settles ownership, so it never fails.
@@ -133,13 +150,15 @@ export const make = <Key, E>(options: {
         return restore(Effect.raceFirst(Deferred.await(result), stopped)).pipe(Effect.map(Option.some))
       })
 
-    const stop = (key: Key, expected?: Entry<E>): Effect.Effect<void> =>
+    const stop = (key: Key, expected?: Entry<E>, stopOptions?: InterruptOptions): Effect.Effect<void> =>
       Effect.suspend(() => {
         const entry = active.get(key)
         // The entry object is process-local ownership. A completed waiter's successor is a different owner.
         if (entry?.owner === undefined || (expected !== undefined && entry !== expected)) return Effect.void
         entry.stopping = true
-        entry.pendingWake = false
+        // Interrupting drops the drain, not the inbox: a wake recorded meanwhile promotes at the follow-up, as a wake
+        // registered during cleanup already does.
+        if (stopOptions?.discardPending) entry.pendingWake = false
         return Fiber.interrupt(entry.owner)
       })
 
@@ -147,7 +166,7 @@ export const make = <Key, E>(options: {
       active: Effect.sync(() => new Set(active.keys())),
       run,
       wake,
-      interrupt: (key) => stop(key),
+      interrupt: (key, interruptOptions) => stop(key, undefined, interruptOptions),
       exclusive,
     }
   })

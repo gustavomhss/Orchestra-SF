@@ -51,6 +51,7 @@ const publicEventTypes = [
   "session.next.compaction.started",
   "session.next.compaction.delta",
   "session.next.compaction.ended",
+  "session.next.compaction.failed",
   "session.next.revert.staged",
   "session.next.revert.cleared",
   "session.next.revert.committed",
@@ -130,10 +131,10 @@ const retiredEventTypes = [
 
 describe("public event manifest", () => {
   test("owns the complete public event surface", () => {
-    expect(EventManifest.ServerDefinitions.length).toBe(86)
+    expect(EventManifest.ServerDefinitions.length).toBe(87)
     // The V2 server's HEAD watcher announces branch switches.
     expect(EventManifest.ServerDefinitions).toContain(VcsEvent.BranchUpdated)
-    expect(EventManifest.Definitions.length).toBe(106)
+    expect(EventManifest.Definitions.length).toBe(107)
     expect(EventManifest.Durable.get("session.next.created.1")).toBe(SessionEvent.Created)
     expect(EventManifest.Durable.get("session.next.renamed.1")).toBe(SessionEvent.Renamed)
     expect(EventManifest.Durable.get("session.next.deleted.1")).toBe(SessionEvent.Deleted)
@@ -142,7 +143,7 @@ describe("public event manifest", () => {
     expect(EventManifest.Latest.size).toBe(publicEventTypes.length)
     // Research's ten durable-only definitions are already canonical; the two Session settings events add two more,
     // and Maestro's durable-only workflow review hold, workflow rebind, review findings and resume admission four.
-    expect(EventManifest.Durable.size).toBe(75)
+    expect(EventManifest.Durable.size).toBe(76)
     expect(EventManifest.Durable.get("maestro.task.workflow_review_held.1")).toBe(MaestroEvent.Task.WorkflowReviewHeld)
     expect(EventManifest.Latest.has("maestro.task.workflow_review_held")).toBe(false)
     expect(EventManifest.Durable.get("maestro.task.workflow_rebound.1")).toBe(MaestroEvent.Task.WorkflowRebound)
@@ -197,9 +198,12 @@ describe("public event manifest", () => {
   test.each([
     ["session.next.subagent.models.changed", SessionEvent.SubagentModelsChanged],
     ["session.next.archive.changed", SessionEvent.ArchiveChanged],
+    ["session.next.compaction.failed", SessionEvent.Compaction.Failed],
   ] as const)("includes canonical current and durable definition %s", (type, definition) => {
     expect(definition.type).toBe(type)
     expect(definition.durable).toEqual({ aggregate: "sessionID", version: 1 })
+    expect(SessionEvent.DurableDefinitions).toContain(definition)
+    expect(SessionEvent.Definitions).toContain(definition)
     expect(EventManifest.ServerDefinitions.filter((event) => event.type === type)).toEqual([definition])
     expect(EventManifest.Definitions.filter((event) => event.type === type)).toEqual([definition])
     expect(EventManifest.ServerDefinitions).toContain(definition)
