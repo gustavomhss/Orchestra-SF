@@ -19,6 +19,7 @@ const facts: ReviewPRFactsV2.Facts = {
   candidate, method: "review-v2/pr/standard", routing,
   scope: { base: "base", head: "head", files: 1, changedLines: 1 },
   checkFacts: ReviewChecksV2.collect({ routing, checks: [], settings: undefined }),
+  outcomes: [],
   confirmed: [],
 }
 
