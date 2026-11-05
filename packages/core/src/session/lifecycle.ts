@@ -77,7 +77,7 @@ export const stopped = <A, E>(
   ids.reduceRight(
     (inner, id): Effect.Effect<A, E> =>
       Effect.uninterruptible(execution.interrupt(id, options)).pipe(
-        Effect.andThen(execution.exclusive(id, inner)),
+        Effect.andThen(execution.exclusive(id, inner, options)),
         Effect.flatMap(
           Option.match({
             onNone: () => stopped(execution, [id], inner, options),

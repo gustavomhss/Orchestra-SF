@@ -15,6 +15,12 @@ export type RunOptions = {
   readonly interruptOnCancel?: boolean
 }
 
+export type ExclusiveOptions = {
+  readonly wait?: boolean
+  /** Opt-in discards wakes during this exclusive operation; the default retains them. */
+  readonly discardPending?: boolean
+}
+
 /** Serializes execution for each key while allowing different keys to run concurrently. */
 export interface Coordinator<Key, E> {
   /** Snapshots keys with an execution owned by this coordinator. */
@@ -26,18 +32,19 @@ export interface Coordinator<Key, E> {
   /** Stops active execution and waits for its cleanup. A wake recorded meanwhile still runs one follow-up. */
   readonly interrupt: (key: Key, options?: InterruptOptions) => Effect.Effect<void>
   /**
-   * Runs `effect` as the key's active execution, so it never overlaps a drain: a wake meanwhile drains after it and an
-   * interrupt stops it. With an active execution it returns `None` at once, or after that execution when `wait` is set.
+   * Runs `effect` as the key's active execution, so it never overlaps a drain: a wake meanwhile drains after it unless
+   * `discardPending` is set, and an interrupt stops it. When busy it returns `None`, or waits when `wait` is set.
    */
   readonly exclusive: <A, E2>(
     key: Key,
     effect: Effect.Effect<A, E2>,
-    options?: { readonly wait?: boolean },
+    options?: ExclusiveOptions,
   ) => Effect.Effect<Option.Option<A>, E2>
 }
 
 type Entry<E> = {
   readonly done: Deferred.Deferred<void, E>
+  readonly discardPending: boolean
   owner?: Fiber.Fiber<void, never>
   pendingWake: boolean
   stopping: boolean
@@ -52,8 +59,9 @@ export const make = <Key, E>(options: {
 
     const drain = (key: Key, force: boolean) => Effect.suspend(() => options.drain(key, force))
 
-    const makeEntry = (): Entry<E> => ({
+    const makeEntry = (discardPending = false): Entry<E> => ({
       done: Deferred.makeUnsafe<void, E>(),
+      discardPending,
       pendingWake: false,
       stopping: false,
     })
@@ -108,6 +116,7 @@ export const make = <Key, E>(options: {
       Effect.sync(() => {
         const entry = active.get(key)
         if (entry !== undefined) {
+          if (entry.discardPending) return
           entry.pendingWake = true
           return
         }
@@ -120,7 +129,7 @@ export const make = <Key, E>(options: {
     const exclusive = <A, E2>(
       key: Key,
       effect: Effect.Effect<A, E2>,
-      exclusiveOptions?: { readonly wait?: boolean },
+      exclusiveOptions?: ExclusiveOptions,
     ): Effect.Effect<Option.Option<A>, E2> =>
       Effect.uninterruptibleMask((restore) => {
         const entry = active.get(key)
@@ -131,7 +140,7 @@ export const make = <Key, E>(options: {
             Effect.andThen(exclusive(key, effect, exclusiveOptions)),
           )
         }
-        const next = makeEntry()
+        const next = makeEntry(exclusiveOptions?.discardPending ?? false)
         active.set(key, next)
         const result = Deferred.makeUnsafe<A, E2>()
         // The caller hears the effect's own outcome; the entry only settles ownership, so it never fails.

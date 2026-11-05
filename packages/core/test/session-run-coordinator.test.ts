@@ -215,6 +215,54 @@ describe("SessionRunCoordinator", () => {
     ),
   )
 
+  for (const discardPending of [true, false]) {
+    it.effect(
+      discardPending
+        ? "discards wakes during an opt-in exclusive hold and settles its waiters"
+        : "retains one coalesced wake during an ordinary exclusive hold and settles its waiters",
+      () =>
+        Effect.scoped(
+          Effect.gen(function* () {
+            const held = yield* Deferred.make<void>()
+            const gate = yield* Deferred.make<void>()
+            const joining = yield* Deferred.make<void>()
+            const log: string[] = []
+            const coordinator = yield* SessionRunCoordinator.make<string, never>({
+              drain: (_key, force) => Effect.sync(() => log.push(`drain ${force}`)).pipe(Effect.asVoid),
+            })
+            // Release before the coordinator's scope finalizer waits for its owned fiber, even on assertion failure.
+            yield* Effect.addFinalizer(() => Deferred.succeed(gate, undefined))
+            const owner = yield* coordinator.exclusive(
+              "session",
+              Effect.sync(() => log.push("held")).pipe(
+                Effect.andThen(Deferred.succeed(held, undefined)),
+                Effect.andThen(Deferred.await(gate)),
+                Effect.andThen(Effect.sync(() => log.push("released"))),
+              ),
+              discardPending ? { discardPending: true } : undefined,
+            ).pipe(Effect.forkChild)
+            yield* Deferred.await(held)
+            const waiter = yield* Deferred.succeed(joining, undefined).pipe(
+              Effect.andThen(coordinator.run("session")),
+              Effect.forkChild,
+            )
+            yield* Deferred.await(joining)
+            yield* Effect.yieldNow
+            yield* coordinator.wake("session")
+            yield* coordinator.wake("session")
+            yield* coordinator.wake("session")
+            expect(yield* coordinator.active).toEqual(new Set(["session"]))
+            expect(log).toEqual(["held"])
+            yield* Deferred.succeed(gate, undefined)
+            expect((yield* Fiber.join(owner))._tag).toBe("Some")
+            yield* Fiber.join(waiter)
+            expect(yield* coordinator.active).toEqual(new Set())
+            expect(log).toEqual(discardPending ? ["held", "released"] : ["held", "released", "drain false"])
+          }),
+        ),
+    )
+  }
+
   it.effect("interrupts active execution and runs one follow-up for a wake recorded during it", () =>
     Effect.scoped(
       Effect.gen(function* () {

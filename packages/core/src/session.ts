@@ -432,7 +432,7 @@ const layer = Layer.effect(
           return
         }
         yield* result.get(input.sessionID)
-        if (!(yield* stopped([input.sessionID], SessionArchive.set(db, events, input))))
+        if (!(yield* stopped([input.sessionID], SessionArchive.set(db, events, input), { discardPending: true })))
           return yield* new NotFoundError({ sessionID: input.sessionID })
       }),
       rename: Effect.fn("V2Session.rename")(function* (input) {
