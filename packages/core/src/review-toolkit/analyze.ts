@@ -227,7 +227,7 @@ const scanned = Effect.fnUntraced(function* (pack: Pack, scanner: Scanner, conte
   const cached = key === undefined ? undefined : baseCache.get(key)
   const base = cached ? { status: "ok" as const, ...cached } : yield* scan(yield* context.base, "base")
   // Without the base, every head item would pass as new: none reach the model.
-  if (base.status !== "ok") return only(check(pack, base.status, `base: ${base.reason}`, head.uri))
+  if (base.status !== "ok") return only(check(pack, base.status, `base: ${base.reason}`, "uri" in base ? base.uri : undefined))
   if (key !== undefined && !cached) remember(key, { results: base.results, uri: base.uri })
   const lookup = rules(context.catalog)
   const changed = context.input.changed

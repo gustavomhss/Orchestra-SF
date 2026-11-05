@@ -210,6 +210,31 @@ live("an unreadable ast-grep report is acquisition-error, its stdout is kept, an
   }), 120_000,
 )
 
+live("an invalid base ast-grep report keeps the base artifact, not the head one", () =>
+  Effect.gen(function* () {
+    expectSpawn(import.meta.path)
+    const made = yield* fixture
+    const invalid = JSON.stringify([{ ruleId: "", file: "a.js", range: { start: { line: 0 } } }])
+    yield* Effect.promise(() => installAstGrep(made.toolkit, [
+      "#!/bin/sh",
+      "root=",
+      "for arg in \"$@\"; do if [ -f \"$arg/src/a.ts\" ]; then root=\"$arg\"; fi; done",
+      "if [ -n \"$root\" ] && grep -q \"a = 1\" \"$root/src/a.ts\"; then printf '%s' '" + invalid + "'; exit 0; fi",
+      "printf '%s' '[]'",
+      "exit 0",
+      "",
+    ].join("\n")))
+    const result = yield* ReviewAnalyze.run(input(made, { packs: ["ast-grep"], catalog: withAstGrep() })).pipe(
+      Effect.provideService(BackendToolkit.Root, made.toolkit),
+    )
+    expect(result.checks[0]).toMatchObject({ status: "acquisition-error", reason: "base: empty-rule" })
+    expect(result.checks[0].status).not.toBe("pass")
+    const uri = result.checks[0].uri!
+    expect(uri).toMatch(/^review:[0-9a-f-]{36}\/raw\/ast-grep-base\.json$/)
+    expect(yield* Effect.promise(() => readFile(path.join(made.store, uri.slice("review:".length)), "utf8"))).toBe(invalid)
+  }), 120_000,
+)
+
 live("an invalid ast-grep row is acquisition-error, its raw report is kept, and it is not a pass", () =>
   Effect.gen(function* () {
     expectSpawn(import.meta.path)
