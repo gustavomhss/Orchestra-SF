@@ -192,12 +192,12 @@ function pinnedScanner(id: string): Scanner | undefined {
 
 /** A pinned scanner over the head copy and, for the new-only step, the base copy. */
 const scanned = Effect.fnUntraced(function* (pack: Pack, scanner: Scanner, context: RunContext) {
-  const located = yield* scanner.locate()
-  if ("absent" in located) return only(check(pack, "not-run", located.absent))
   const template = scanner.templates[pack.template]
   if (!template) return only(check(pack, "not-run", `template unknown: ${pack.template}`))
-  const selected = nativeDrops(context.catalog, pack.id, knownNative(pack.id))
-  if (selected.status !== "ok") return only(check(pack, "not-run", selected.reason))
+  const ruleSelection = nativeDrops(context.catalog, pack.id, knownNative(pack.id))
+  if (ruleSelection.status !== "ok") return only(check(pack, "not-run", ruleSelection.reason))
+  const located = yield* scanner.locate()
+  if ("absent" in located) return only(check(pack, "not-run", located.absent))
   const completed: readonly number[] = scanner.completedExits ?? [0]
   const scan = (copied: Copy, side: "head" | "base") => Effect.gen(function* () {
     if ("failed" in copied) return { status: "not-run" as const, reason: copied.failed }
@@ -205,7 +205,7 @@ const scanned = Effect.fnUntraced(function* (pack: Pack, scanner: Scanner, conte
     // Outside the scanned copy. A report-file scanner may write only that file; a stdout scanner writes nothing.
     const report = path.join(snapshot.scratch, "reports", `${pack.id}.${pack.output.format}`)
     yield* Effect.promise(() => mkdir(path.dirname(report), { recursive: true }))
-    if (scanner.prepare) yield* scanner.prepare(path.dirname(report), selected.dropped)
+    if (scanner.prepare) yield* scanner.prepare(path.dirname(report), ruleSelection.dropped)
     if (scanner.sink !== "stdout") yield* Effect.promise(() => writeFile(report, ""))
     const ran = yield* confined({
       argv: template({ executable: located.executable, root: snapshot.root, report }),
@@ -257,8 +257,8 @@ const squawked = Effect.fnUntraced(function* (pack: Pack, context: RunContext) {
   if (pack.output.format !== "json") return only(check(pack, "not-run", `template unknown: ${pack.template}`))
   if (pack.output.parser !== "squawk" || pack.template !== "squawk-json")
     return only(check(pack, "not-run", `template unknown: ${pack.template}`))
-  const selected = nativeDrops(context.catalog, pack.id, ReviewPackSquawk.RULES)
-  if (selected.status !== "ok") return only(check(pack, "not-run", selected.reason))
+  const ruleSelection = nativeDrops(context.catalog, pack.id, undefined)
+  if (ruleSelection.status !== "ok") return only(check(pack, "not-run", ruleSelection.reason))
   const located = yield* ReviewPackSquawk.locate()
   if ("absent" in located) return only(check(pack, "not-run", located.absent))
   // No Squawk baseCache: the key would have to include the selected files, and a tree-only key reuses another selection.
@@ -278,7 +278,7 @@ const squawked = Effect.fnUntraced(function* (pack: Pack, context: RunContext) {
       const uri = yield* context.write(`raw/${pack.id}-base.json`, JSON.stringify({ invoked: false, reason: "no-eligible-base-input" }))
       return { status: "ok" as const, results: [], uri, emptyBase: true as const }
     }
-    const config = yield* ReviewPackSquawk.prepare(path.join(snapshot.scratch, "squawk-host"), selected.dropped)
+    const config = yield* ReviewPackSquawk.prepare(path.join(snapshot.scratch, "squawk-host"), ruleSelection.dropped)
     const built = yield* ReviewPackSquawk.argv({ executable: located.executable, config, root: snapshot.root, files: selected.files })
     if (built.status !== "ok") return { status: "not-run" as const, reason: built.reason }
     const ran = yield* confined({
@@ -439,21 +439,27 @@ function knownNative(id: string) {
   return undefined
 }
 
-// Dropped native ids are excluded before the CLI. `*` is never passed to a tool. An open set cannot express a
-// dropped wildcard plus explicit keepers, so that case is not-run rather than a partial filter. Demoted still runs.
+// Dropped native ids are excluded before the CLI. `*` is never passed to a tool. A dropped wildcard is expressible
+// only for a host-authored closed set: every keeper must already be in that set. Squawk's inventory is not that set
+// (aliases and opt-in rules still run). Demoted still runs.
 function nativeDrops(catalog: ReviewCatalog.Catalog, pack: string, known: readonly string[] | undefined) {
   const rules = catalog.rules.filter((rule) => rule.pack === pack)
   const wildcard = rules.find((rule) => rule.rule === "*")
   const explicit = rules.filter((rule) => rule.rule !== "*")
+  const keepers = explicit.filter((rule) => rule.status !== "dropped")
   if (wildcard?.status === "dropped") {
-    if (known === undefined) return { status: "not-run" as const, reason: "wildcard-dropped" }
-    const kept = new Set(explicit.filter((rule) => rule.status !== "dropped").map((rule) => rule.rule))
-    const dropped = known.filter((id) => !kept.has(id))
-    if (dropped.length === known.length) return { status: "not-run" as const, reason: "no-active-rules" }
-    return { status: "ok" as const, dropped }
+    if (known !== undefined && keepers.every((rule) => known.includes(rule.rule))) {
+      const kept = new Set(keepers.map((rule) => rule.rule))
+      const dropped = known.filter((id) => !kept.has(id))
+      if (dropped.length === known.length) return { status: "not-run" as const, reason: "no-active-rules" }
+      return { status: "ok" as const, dropped }
+    }
+    return { status: "not-run" as const, reason: "wildcard-dropped" }
   }
   const dropped = explicit.filter((rule) => rule.status === "dropped").map((rule) => rule.rule)
-  if (known !== undefined && known.every((id) => dropped.includes(id))) return { status: "not-run" as const, reason: "no-active-rules" }
+  if (known !== undefined && known.length > 0 && known.every((id) => dropped.includes(id))) {
+    return { status: "not-run" as const, reason: "no-active-rules" }
+  }
   return { status: "ok" as const, dropped }
 }
 
