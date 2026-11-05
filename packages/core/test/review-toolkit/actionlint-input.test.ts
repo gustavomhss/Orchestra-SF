@@ -189,7 +189,7 @@ test("detects leaf and ancestor replacement at the pre-open observation seam", a
   }
 })
 
-test("removes partial projection after a settled copy failure", async () => {
+test("cleanup removes partial projection after a settled copy failure", async () => {
   const base = await mkdtemp(path.join(os.tmpdir(), "actionlint-copy-fail-"))
   const source = path.join(base, "source")
   const scratch = path.join(base, "scratch")
@@ -209,7 +209,7 @@ test("removes partial projection after a settled copy failure", async () => {
   await rm(base, { recursive: true, force: true })
 })
 
-test("cleans the acquired projection when interrupted after the first settled copy", async () => {
+test("cleanup removes the acquired projection when interrupted after the first settled copy", async () => {
   const base = await mkdtemp(path.join(os.tmpdir(), "actionlint-interrupt-"))
   const source = path.join(base, "source")
   const scratch = path.join(base, "scratch")

@@ -77,7 +77,7 @@ export const prepare = (input: { root: string; files: readonly string[]; scratch
     }
     const dir = yield* Effect.acquireRelease(
       Effect.tryPromise({ try: () => mkdtemp(path.join(scratch, "actionlint-")), catch: () => refusal("projection-create-failed") }),
-      (value) => Effect.tryPromise({ try: () => rm(value, { recursive: true, force: true }), catch: () => new Error("projection-cleanup-failed") }),
+      (value) => Effect.tryPromise({ try: () => rm(value, { recursive: true, force: true }), catch: () => new Error("projection-cleanup-failed") }).pipe(Effect.orDie),
     )
     yield* Effect.tryPromise({ try: async () => { await mkdir(path.join(dir, ".github", "workflows"), { recursive: true }); await mkdir(path.join(dir, ".git")) }, catch: () => refusal("projection-create-failed") }).pipe(Effect.uninterruptible)
     const projected = contents.map((_, i) => path.join(dir, ".github", "workflows", `input-${i}.yaml`))
