@@ -711,6 +711,7 @@ export const reviewBinding = (held: {
               hunks: ReviewFanoutV2.hunks(held.diff),
               ledger: held.ledger,
               timeoutSeconds: PROBE_TIMEOUT_SECONDS,
+              ...(bound.observeProbes ? { observe: bound.observeProbes } : {}),
             },
           }
         : {}),

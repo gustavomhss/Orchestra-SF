@@ -8,7 +8,9 @@ import { ReviewRoute } from "@orchestra/core/review/route"
 import { ReviewRouting } from "@orchestra/core/review/routing"
 import { ReviewSeatTools } from "@orchestra/core/review/seat-tools"
 import { ReviewTools } from "@orchestra/core/review/tools"
+import type { ReviewAnalyze } from "@orchestra/core/review-toolkit/analyze"
 import { ReviewItem } from "@orchestra/core/review-toolkit/item"
+import { ReviewProbe } from "@orchestra/core/review-toolkit/probe"
 import type { SessionSchema, SessionStore } from "@orchestra/core/session"
 import type { SessionScope } from "@orchestra/core/session/scope"
 import { SkillV2 } from "@orchestra/core/skill"
@@ -16,6 +18,7 @@ import { SkillTool } from "@orchestra/core/tool/skill"
 import { Tool } from "@orchestra/core/tool/tool"
 import { ReviewResultV2 } from "../governance/review-result"
 import type { ReviewCardV2 } from "./review-card"
+import { ReviewChecksV2 } from "./review-checks"
 import { ReviewVerdictV2 } from "./review-verdict"
 import { sliceDiff } from "./review-diff"
 
@@ -47,7 +50,7 @@ export type Role = "lead" | "lens" | "verifier"
 
 /** The analyze step's return (K6): checks, triaged items per lens after the §8.6 pipeline, and the retained artifact. */
 export type Analysis = {
-  readonly checks: ReadonlyArray<unknown>
+  readonly checks: ReadonlyArray<ReviewAnalyze.Check>
   readonly items: Readonly<Record<string, ReadonlyArray<ReviewItem.ToolItem>>>
   readonly retained: { readonly uri: string; readonly total: number; readonly unread: Readonly<Record<string, number>> }
 }
@@ -88,6 +91,8 @@ export type BindInput = {
   readonly retained: string | (() => string)
   readonly offered?: Readonly<Record<string, ReadonlyArray<string>>>
   readonly cap: number
+  /** New settled attempts only. The shared ledger already holds them; do not copy `ledger.observed` here. */
+  readonly observeProbes?: (items: ReadonlyArray<ReviewProbe.Observed>) => void
 }
 
 /** The tool ids each stage's scope may call (K7, `ReviewSeatTools`). */
@@ -137,6 +142,8 @@ export type Result =
       /** Quick and blocked return []; omit the validator's confirmed argument for Quick quote-only reviews. */
       readonly confirmed: ReadonlyArray<ReviewCardV2.Confirmed>
       readonly counts: Counts
+      /** Host facts for this finish. Not read back from the model card. */
+      readonly checkFacts: ReviewChecksV2.Facts
     }
 
 type Counts = {
@@ -241,9 +248,35 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
     return yield* new Tool.Failure({ message: "Review route contains an unsupported audit lens" })
   const method = ReviewResultV2.method({ profile: afterEntry.profile.id, tier: tier.id })
   const record = [`reviewMethodVersion: ${method}`, ...(cardOnly ? [] : input.facts.record)]
-  const finishTurn = (sessionRecord: ReviewRouting.Record, body: ReadonlyArray<string>, counts: Counts, confirmed: ReadonlyArray<ReviewCardV2.Confirmed> = []) =>
+  const observed: ReviewProbe.Observed[] = []
+  // New attempts only. settle already appended the shared ledger; copying it would record the attempt twice.
+  const observeProbes = (items: ReadonlyArray<ReviewProbe.Observed>) => {
+    for (const item of items) observed.push(item)
+  }
+  const finishTurn = (
+    sessionRecord: ReviewRouting.Record,
+    body: ReadonlyArray<string>,
+    counts: Counts,
+    confirmed: ReadonlyArray<ReviewCardV2.Confirmed> = [],
+    entryBlocker?: { readonly kind: string; readonly reason: string },
+  ) =>
     Effect.gen(function* () {
-      const reply = yield* RUNNING.withPermit(port.run(lead, body.join("\n\n"), { key: "finish", finish: !cardOnly }))
+      const checkFacts = ReviewChecksV2.collect({
+        routing: sessionRecord,
+        checks: analysis.checks,
+        settings: {
+          review: {
+            tier: input.request.settings.tier ?? null,
+            acceptedUnavailable: input.request.settings.acceptedUnavailable,
+          },
+        },
+        ...(entryBlocker ? { entryBlockers: [entryBlocker] } : {}),
+        probes: observed.slice().sort(byProbeIdentity),
+      })
+      const reply = yield* RUNNING.withPermit(port.run(lead, [
+        ...body,
+        `Host check facts (embed these checks and blockers verbatim; host authority, not model text):\n${JSON.stringify({ checks: checkFacts.checks, blockers: checkFacts.blockers })}`,
+      ].join("\n\n"), { key: "finish", finish: !cardOnly }))
       const closing = yield* deviationsOf(input.store, lead, "finish", leadEntryDeviations.length)
       return {
         status: "ran",
@@ -253,6 +286,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
         reply,
         confirmed,
         counts,
+        checkFacts,
       } as Result
     })
 
@@ -267,6 +301,8 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
         `Reply with exactly one \`\`\`${ReviewResultV2.TAG} block.`,
       ],
       { lensChildren: 0, verifiers: 0, candidates: 0, confirmed: 0, questions: 0, dropped: 0 },
+      [],
+      blocker,
     )
   }
 
@@ -302,7 +338,6 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
           data(`analyzer items for ${lens.id} (${capItems(lens.id).length} shown, ${analysis.retained.unread[lens.id] ?? 0} more retained at ${analysis.retained.uri})`, JSON.stringify(capItems(lens.id))),
         ),
         `Routing record (embed it verbatim as the card's routing):\n${JSON.stringify(afterEntry)}`,
-        `Checks:\n${JSON.stringify(analysis.checks)}`,
         `Coverage the host recorded:\n${JSON.stringify({ examined: running.map((lens) => `lens:${lens.id}`), notExamined: notRun, unread: running.map((lens) => ({ lens: lens.id, count: analysis.retained.unread[lens.id] ?? 0 })) })}`,
         ...record,
         `Reply with exactly one \`\`\`${ReviewResultV2.TAG} block.`,
@@ -380,7 +415,27 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
         const child = yield* port.create({ key: `verify:${batch.class}`, role: "verifier" })
         const offered = Object.fromEntries(batch.candidates.map((candidate) =>
           [candidate.id, options(catalog, tier, afterEntry, candidate).map((option) => option.id)]))
-        const bound = yield* bind(child, "verifier", { offered, cap: tier.probeAttempts })
+        const bound = yield* bind(child, "verifier", { offered, cap: tier.probeAttempts, observeProbes })
+        if (bound.probeUnavailable) {
+          const reason = bound.probeUnavailable
+          for (const [candidate, ids] of Object.entries(offered)) {
+            for (const option of ids) {
+              if (!ReviewProbe.BUILT.some((built) => built === option)) continue
+              observed.push({
+                candidate,
+                option,
+                result: {
+                  status: "not-run",
+                  reason,
+                  durationMs: 0,
+                  excerpt: reason,
+                  uri: "scratch-unavailable",
+                  tree: input.reviewed,
+                },
+              })
+            }
+          }
+        }
         const proof = catalog.classes.find((entry) => entry.id === batch.class)?.node ?? QUOTE_NODE
         if (auditNodes.has(proof)) return yield* new Tool.Failure({ message: "Review verifier cannot receive an audit node" })
         const scope: SessionScope.Scope = {
@@ -523,7 +578,6 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
       data("confirmed findings, as the host merged them", JSON.stringify(confirmed)),
       data("questions", JSON.stringify(questions)),
       ...(open.length ? [data("open findings of the first round; mark each resolved or still open", JSON.stringify(open))] : []),
-      `Checks:\n${JSON.stringify(analysis.checks)}`,
       `Coverage the host recorded:\n${JSON.stringify(coverage)}`,
       `Counts: ${JSON.stringify(counts)}`,
       `Scope: ${JSON.stringify(input.facts.scope)}`,
@@ -539,6 +593,18 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
       rungs: item.rungs, evidence: item.evidence })),
   )
 })
+
+function byProbeIdentity(left: ReviewProbe.Observed, right: ReviewProbe.Observed) {
+  const order = probeIdentity(left)
+  const other = probeIdentity(right)
+  if (order < other) return -1
+  if (order > other) return 1
+  return 0
+}
+
+function probeIdentity(item: ReviewProbe.Observed) {
+  return JSON.stringify(["review-probe", item.option, `probe:${item.candidate}:${item.option}:${item.result.uri}`])
+}
 
 type Routed = {
   readonly record: ReviewRouting.Record
