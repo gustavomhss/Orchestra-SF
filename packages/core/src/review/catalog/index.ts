@@ -23,7 +23,7 @@ export const Status = Schema.Literals(["probation", "active", "demoted", "droppe
 /** Manifests and extensions that select an entry at base or head; `absent` are negative signals (Bazel, Nix). Empty `manifests` and `extensions` match every change. */
 // File names and globs, not catalog ids, so they keep their case (`Cargo.toml`, `BUILD.bazel`).
 const Files = Schema.Array(Schema.NonEmptyString)
-export const Detection = Schema.Struct({ manifests: Files, extensions: Files, absent: Files, paths: optional(Files) })
+export const Detection = Schema.Struct({ manifests: Files, extensions: Files, absent: Files })
 
 export const Pack = Schema.Struct({
   id: Id,
@@ -35,7 +35,7 @@ export const Pack = Schema.Struct({
   backend: Schema.Literals(["pinned", "path", "repo"]),
   // `any` serves every language, such as a secrets scanner over text.
   languages: Schema.Union([Schema.Literal("any"), Ids]),
-  detection: Detection,
+  detection: Schema.Struct({ ...Detection.fields, paths: optional(Files) }),
   lane: Schema.Literals(["no-build", "repo", "build"]),
   tiers: Ids,
   output: Schema.Union([
