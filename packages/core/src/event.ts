@@ -54,18 +54,23 @@ export class InvalidDurableEventError extends Schema.TaggedErrorClass<InvalidDur
   },
 ) {}
 
-const decodeSerializedEvent = (event: SerializedEvent): Payload => {
-  const definition = Durable.get(event.type)
-  if (!definition?.durable) {
-    throw new InvalidDurableEventError({ type: event.type, message: `Unknown durable event type ${event.type}` })
-  }
-  return {
-    id: event.id,
-    type: definition.type,
-    durable: { aggregateID: event.aggregateID, seq: event.seq, version: definition.durable.version },
-    data: Schema.decodeUnknownSync(definition.data)(event.data),
-  }
-}
+const decodeSerializedEvent = (event: SerializedEvent): Effect.Effect<Payload, InvalidDurableEventError> =>
+  Effect.gen(function* () {
+    const definition = Durable.get(event.type)
+    if (!definition?.durable)
+      return yield* Effect.fail(new InvalidDurableEventError({ type: event.type, message: `Unknown durable event type ${event.type}` }))
+    const data = yield* Schema.decodeUnknownEffect(definition.data)(event.data).pipe(
+      Effect.mapError(() => new InvalidDurableEventError({ type: event.type, message: "Stored durable event data is invalid" })),
+    )
+    return {
+      id: event.id,
+      type: definition.type,
+      durable: { aggregateID: event.aggregateID, seq: event.seq, version: definition.durable.version },
+      data,
+    }
+  })
+
+const DURABLE_PAGE_SIZE = 128
 
 export const readAggregate = Effect.fn("EventV2.readAggregate")(function* <A>(
   db: Database.Interface["db"],
@@ -146,7 +151,7 @@ export interface Interface {
   ) => Effect.Effect<Payload<D>>
   readonly subscribe: <D extends Definition>(definition: D) => Stream.Stream<Payload<D>>
   readonly all: () => Stream.Stream<Payload>
-  readonly durable: (input: { readonly aggregateID: string; readonly after?: number }) => Stream.Stream<Payload>
+  readonly durable: (input: { readonly aggregateID: string; readonly after?: number }) => Stream.Stream<Payload, InvalidDurableEventError>
   /** @deprecated Use `all()` and consume the returned stream. */
   readonly listen: (listener: Subscriber) => Effect.Effect<Unsubscribe>
   readonly project: <D extends Definition>(definition: D, projector: Projector<D>) => Effect.Effect<void>
@@ -654,13 +659,18 @@ export const layerWith = (options?: LayerOptions) =>
             db
               .select()
               .from(EventTable)
-              .where(and(eq(EventTable.aggregate_id, aggregateID), gt(EventTable.seq, after)))
+              .where(and(
+                eq(EventTable.aggregate_id, aggregateID),
+                gt(EventTable.seq, after),
+                inArray(EventTable.type, Array.from(Durable.keys())),
+              ))
               .orderBy(asc(EventTable.seq))
+              .limit(DURABLE_PAGE_SIZE)
               .all(),
           ),
           Effect.orDie,
-          Effect.map((rows) =>
-            rows.map((event) =>
+          Effect.flatMap((rows) =>
+            Effect.forEach(rows, (event) =>
               decodeSerializedEvent({
                 id: event.id,
                 aggregateID: event.aggregate_id,
@@ -692,24 +702,21 @@ export const layerWith = (options?: LayerOptions) =>
           return subscription
         })
 
-      const durable = (input: { readonly aggregateID: string; readonly after?: number }): Stream.Stream<Payload> =>
+      const durable = (input: { readonly aggregateID: string; readonly after?: number }): Stream.Stream<Payload, InvalidDurableEventError> =>
         Stream.unwrap(
           Effect.gen(function* () {
             const wakes = yield* subscribeDurable(input.aggregateID)
             let sequence = input.after ?? -1
-            const read = Effect.suspend(() => readAfter(input.aggregateID, sequence)).pipe(
-              Effect.tap((events) =>
-                Effect.sync(() => {
-                  sequence = events.at(-1)?.durable?.seq ?? sequence
-                }),
-              ),
+            const read = Stream.paginate(undefined, () =>
+              readAfter(input.aggregateID, sequence).pipe(Effect.map((events) => {
+                sequence = events.at(-1)?.durable?.seq ?? sequence
+                return [events, events.length === DURABLE_PAGE_SIZE ? Option.some(undefined) : Option.none()] as const
+              })),
             )
-            const historical = yield* read
             const live = Stream.fromSubscription(wakes).pipe(
-              Stream.mapEffect(() => read),
-              Stream.flattenIterable,
+              Stream.flatMap(() => read),
             )
-            return Stream.concat(Stream.fromIterable(historical), live)
+            return Stream.concat(read, live)
           }),
         )
 

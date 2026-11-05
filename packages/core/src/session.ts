@@ -179,7 +179,7 @@ export interface Interface {
   readonly events: (input: {
     sessionID: SessionSchema.ID
     after?: number
-  }) => Stream.Stream<SessionEvent.DurableEvent, NotFoundError>
+  }) => Stream.Stream<SessionEvent.DurableEvent, NotFoundError | EventV2.InvalidDurableEventError>
   readonly history: (input: {
     sessionID: SessionSchema.ID
     after?: number
