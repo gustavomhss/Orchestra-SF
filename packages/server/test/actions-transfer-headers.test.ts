@@ -4,16 +4,21 @@ import { Location } from "@orchestra/core/location"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { ActionsApiError } from "@orchestra/protocol/groups/actions-common"
 import { ActionsTransferGroup } from "@orchestra/protocol/groups/actions-transfer"
+import { Authorization } from "@orchestra/protocol/middleware/authorization"
 import { SchemaErrorMiddleware } from "@orchestra/protocol/middleware/schema-error"
 import { BindingID, BindingRef, TransferInput } from "@orchestra/schema/actions"
-import { Effect, Layer, Schema, Stream } from "effect"
+import { Context, Effect, Layer, Schema, Stream } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { HttpApi, HttpApiBuilder } from "effect/unstable/httpapi"
 import { location } from "../../core/test/fixture/location"
 import { ActionsTransferHandler } from "../src/handlers/actions-transfer"
+import { LocationMiddleware, type LocationServices } from "../src/location"
 import { schemaErrorLayer } from "../src/middleware/schema-error"
 
-const api = HttpApi.make("server").add(ActionsTransferGroup).middleware(SchemaErrorMiddleware)
+const api = HttpApi.make("server")
+  .add(ActionsTransferGroup.middleware(LocationMiddleware))
+  .middleware(Authorization)
+  .middleware(SchemaErrorMiddleware)
 const binding = BindingRef.make({ id: BindingID.make("ab_transfer_headers"), revision: 7 })
 const target = TransferInput.make({
   kind: "artifact", id: "artifact /42", runID: "run /24", attempt: 3, path: 'reports/résumé "draft".html',
@@ -22,8 +27,9 @@ const query = new URLSearchParams({
   revision: "7", kind: target.kind, id: target.id, runID: target.runID!, attempt: "3", path: target.path!,
 })
 
-// Only the Actions I/O boundary is a stand-in. These tests exercise the real Protocol group, handler,
-// schema-error middleware and HTTP response conversion, not provider permissions, auth or lifecycle.
+// Actions I/O and harness-only auth/location middleware are stand-ins. The Protocol group, handler,
+// schema-error middleware and HTTP conversion are real. Auth enforcement, Location boot and provider
+// permissions/lifecycle are not covered.
 function serve(metadata: ReturnType<Actions.Interface["transferInfo"]>, chunks: Uint8Array[]) {
   return Effect.gen(function* () {
     const infoCalls: Parameters<Actions.Interface["transferInfo"]>[] = []
@@ -38,13 +44,21 @@ function serve(metadata: ReturnType<Actions.Interface["transferInfo"]>, chunks: 
         return Stream.fromIterable(chunks)
       },
     } satisfies Pick<Actions.Interface, "transferInfo" | "transfer">
+    const context = yield* Layer.build(Layer.mergeAll(
+      Layer.mock(Actions.Service, actions),
+      // The group also declares the info route, whose response needs a Location.
+      Layer.succeed(Location.Service, location(Location.Ref.make({
+        directory: AbsolutePath.make("/transfer-headers-fixture"),
+      }))),
+    ))
     const routes = HttpApiBuilder.layer(api).pipe(
       Layer.provide(ActionsTransferHandler),
-      Layer.provide(Layer.mock(Actions.Service, actions)),
-      // The group also declares the info route, whose response needs a Location.
-      Layer.provide(Layer.succeed(Location.Service, location(Location.Ref.make({
-        directory: AbsolutePath.make("/transfer-headers-fixture"),
-      })))),
+      Layer.provide(Layer.succeedContext(context)),
+      // Fixture-only: supply exactly this handler's services, not the full production Location boot graph.
+      Layer.provide(Layer.succeed(LocationMiddleware, LocationMiddleware.of((effect) =>
+        effect.pipe(Effect.provide(context as unknown as Context.Context<LocationServices>)),
+      ))),
+      Layer.provide(Layer.succeed(Authorization, Authorization.of((effect) => effect))),
       Layer.provide(schemaErrorLayer),
       Layer.provide(HttpServer.layerServices),
     )
