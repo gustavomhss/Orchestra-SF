@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test"
 import type { ReviewAnalyze } from "@orchestra/core/review-toolkit/analyze"
+import { ReviewCatalog } from "@orchestra/core/review/catalog"
 import { ReviewRouting } from "@orchestra/core/review/routing"
 import type { ReviewResultV2 } from "../src/v2/governance/review-result"
 import { ReviewChecksV2 } from "../src/v2/workflow/review-checks"
@@ -213,7 +214,7 @@ test("a card must repeat the host checks exactly, in any order", () => {
   }), facts)).toThrow("checks-mismatch")
 })
 
-test("zero required checks can APPROVE; a required non-probe fail cannot", () => {
+test("zero required checks can APPROVE; a required repository command fail cannot", () => {
   const empty = collect([])
   expect(empty).toEqual({ checks: [], required: [], blockers: [] })
   expect(() => ReviewChecksV2.validate(card(empty), empty)).not.toThrow()
@@ -250,7 +251,40 @@ test("a failed probe is recorded and does not veto APPROVE; a refusal does not b
   expect(() => ReviewChecksV2.validate(passedOff, refused)).toThrow("checks-mismatch")
 })
 
-test("authorize refuses every receipt verdict on host blockers, and only APPROVE on a required gate fail", () => {
+test("a native diagnostic fail stays fail and does not veto APPROVE", () => {
+  expect(ReviewCatalog.current.packs.filter((entry) => entry.backend === "repo").map((entry) => entry.id)).toEqual(["repo"])
+  const repo = collect([pack("repo", "routed")], [analyzer({ id: "lint", pack: "repo", status: "fail", reason: "exit 1" })])
+  expect(repo.checks[0]?.status).toBe("fail")
+  expect(() => ReviewChecksV2.authorize("APPROVE", repo)).toThrow("checks-blocked")
+  expect(() => ReviewChecksV2.validate(card(repo, { verdict: "APPROVE" }), repo)).toThrow("checks-blocked")
+  const similar = collect([pack("repo-native", "routed")], [analyzer({ id: "lint", pack: "repo-native", status: "fail", reason: "red" })])
+  expect(() => ReviewChecksV2.authorize("APPROVE", similar)).not.toThrow()
+  for (const id of ["squawk", "gitleaks", "ast-grep", "future-scanner"]) {
+    const facts = collect([pack(id, "routed")], [analyzer({ id: "scan", pack: id, status: "fail", reason: "P2 diagnostic" })])
+    expect(facts.checks[0]).toMatchObject({ pack: id, status: "fail" })
+    expect(facts.blockers).toEqual([])
+    expect(() => ReviewChecksV2.authorize("APPROVE", facts)).not.toThrow()
+    expect(() => ReviewChecksV2.validate(card(facts, { verdict: "APPROVE" }), facts)).not.toThrow()
+    expect(() => ReviewChecksV2.validate(card(facts, { checks: [{ ...facts.checks[0]!, status: "pass" }] }), facts)).toThrow("checks-mismatch")
+  }
+  const debt = collect([pack("gitleaks", "routed")], [analyzer({ id: "scan", pack: "gitleaks", status: "fail", reason: "pre-existing debt" })])
+  expect(debt.checks[0]?.status).toBe("fail")
+  expect(() => ReviewChecksV2.authorize("APPROVE", debt)).not.toThrow()
+  const unavailable = collect(
+    [pack("squawk", "routed")],
+    [analyzer({ id: "scan", pack: "squawk", status: "not-run", reason: "absent" })],
+  )
+  expect(unavailable.blockers[0]?.kind).toBe("check-unavailable")
+  expect(() => ReviewChecksV2.authorize("APPROVE", unavailable)).toThrow("checks-blocked")
+  const acquisition = collect(
+    [pack("gitleaks", "routed")],
+    [analyzer({ id: "scan", pack: "gitleaks", status: "acquisition-error", reason: "unreadable" })],
+  )
+  expect(acquisition.checks[0]?.accepted).toBeUndefined()
+  expect(() => ReviewChecksV2.authorize("FIX_FIRST", acquisition)).toThrow("checks-blocked")
+})
+
+test("authorize refuses every receipt verdict on host blockers, and only APPROVE on a required repository command fail", () => {
   const blocked = collect([], [], undefined, { entryBlockers: [{ kind: "entry", reason: "no acceptance" }] })
   expect(() => ReviewChecksV2.validate(card(blocked), blocked)).not.toThrow()
   for (const verdict of ["APPROVE", "FIX_FIRST", "REJECT"]) {

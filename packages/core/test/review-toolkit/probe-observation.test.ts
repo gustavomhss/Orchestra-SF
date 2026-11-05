@@ -37,7 +37,10 @@ function watch(ledger: ReviewProbe.Ledger, blow?: string) {
   const observe = (items: ReadonlyArray<ReviewProbe.Observed>) => {
     expect(items, "observer must see only the new attempt").toHaveLength(1)
     expect(items, "observer must not receive the ledger array").not.toBe(ledger.observed)
-    expect(items[0]).toBe(ledger.observed.at(-1))
+    const item = items[0]
+    const observed = ledger.observed.at(-1)
+    if (!item || !observed) throw new Error("settled observation missing")
+    expect(item).toBe(observed)
     calls.push([...items])
     if (blow && items[0]?.candidate === blow) throw new Error("observer-after-settlement")
   }

@@ -2,6 +2,7 @@ export * as ReviewChecksV2 from "./review-checks"
 
 import type { ReviewAnalyze } from "@orchestra/core/review-toolkit/analyze"
 import type { ReviewProbe } from "@orchestra/core/review-toolkit/probe"
+import { ReviewCatalog } from "@orchestra/core/review/catalog"
 import { ReviewRouting } from "@orchestra/core/review/routing"
 import { ReviewSettings } from "@orchestra/core/review/settings"
 import { Schema } from "effect"
@@ -46,13 +47,13 @@ export function validate(card: ReviewResultV2.Card, facts: Facts): void {
   if (!sameChecks(card.checks, facts.checks)) throw new Error("checks-mismatch")
   if (facts.blockers.length > 0 && card.outcome !== "blocked") throw new Error("checks-blocked")
   if (facts.blockers.some((blocker) => count(card.blockers, blocker) !== 1)) throw new Error("checks-blocked")
-  if (card.verdict === "APPROVE" && requiredGateFailed(facts)) throw new Error("checks-blocked")
+  if (card.verdict === "APPROVE" && requiredCommandFailed(facts)) throw new Error("checks-blocked")
 }
 
 /** Pre-publication receipt gate. A blocked card has no verdict, so validate does not call this. */
 export function authorize(verdict: string, facts: Facts): void {
   if (facts.blockers.length > 0) throw new Error("checks-blocked")
-  if (verdict === "APPROVE" && requiredGateFailed(facts)) throw new Error("checks-blocked")
+  if (verdict === "APPROVE" && requiredCommandFailed(facts)) throw new Error("checks-blocked")
 }
 
 function projectAnalyzer(check: ReviewAnalyze.Check, accepts: (id: string, lane?: string) => boolean): Check {
@@ -164,10 +165,18 @@ function sameChecks(card: readonly Check[], facts: readonly Check[]) {
   return card.every((check) => shape(factsById.get(identity(check)) ?? check) === shape(check) && factsById.has(identity(check)))
 }
 
-function requiredGateFailed(facts: Facts) {
+// A fail on a catalog `backend: "repo"` pack is an authoritative command exit and vetoes APPROVE.
+// A native scanner fail is a diagnostic report (debt, P2, or an unconfirmed warning). It stays fail;
+// it is not rewritten to pass, accepted, or treated as a confirmed finding. Acquisition errors and
+// unaccepted unavailability still block every required pack. Finding severity is not decided here.
+const repositoryCommands = new Set(
+  ReviewCatalog.current.packs.flatMap((pack) => (pack.backend === "repo" ? [pack.id] : [])),
+)
+
+function requiredCommandFailed(facts: Facts) {
   const required = new Set(facts.required)
   return facts.checks.some(
-    (check) => required.has(identity(check)) && check.pack !== "review-probe" && check.status === "fail",
+    (check) => required.has(identity(check)) && check.pack !== undefined && repositoryCommands.has(check.pack) && check.status === "fail",
   )
 }
 
