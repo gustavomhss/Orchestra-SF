@@ -170,7 +170,7 @@ it.live("pinned Ruff under the real review confinement: report, selection and is
     // Preserve the native bytes as a test artifact, not as an analyzer-registered proof.
     const raw = path.join(f.temp.path, "syntax-raw.json")
     yield* Effect.promise(() => writeFile(raw, syntaxResult.stdout.data))
-    expect(yield* Effect.promise(() => readFile(raw))).toEqual(syntaxResult.stdout.data)
+    expect(yield* Effect.promise(() => readFile(raw))).toEqual(Buffer.from(syntaxResult.stdout.data))
     expect(JSON.parse(syntaxResult.stdout.data.toString("utf8")).some((item: { code: string }) => item.code === "invalid-syntax")).toBe(true)
     expect(ReviewPackRuff.settle(syntaxResult, f.root).status).toBe("acquisition-error")
     const bad = yield* run([executable.executable, "check", "--not-a-real-ruff-option"])
