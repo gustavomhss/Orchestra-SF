@@ -1,6 +1,7 @@
 export * as ReviewCardV2 from "./review-card"
 
 import { isDeepStrictEqual } from "node:util"
+import { Option, Schema } from "effect"
 import { ReviewRouting } from "@orchestra/core/review/routing"
 import type { MaestroEvent } from "@orchestra/schema/maestro-event"
 import { ReviewResultV2 } from "../governance/review-result"
@@ -48,29 +49,7 @@ export function validate(reply: string, expected: {
   if (card.outcome === "blocked" && card.blockers.length === 0) throw new ValidationError("verdict-mismatch")
   if (card.outcome === "done" && expected.verdictRequired !== false && card.verdict === undefined)
     throw new ValidationError("verdict-mismatch")
-  const quick = ReviewRouting.tier(expected.routing) === "quick"
-  if (!quick && expected.confirmed === undefined) throw new ValidationError("unverified-finding")
-  if (expected.confirmed && new Set(expected.confirmed.map((item) => item.id)).size !== expected.confirmed.length)
-    throw new ValidationError("unverified-finding")
-  const ids = card.findings.map((finding) => finding.id)
-  if (new Set(ids).size !== ids.length) throw new ValidationError("unverified-finding")
-  if (expected.confirmed?.some((finding) => !ids.includes(finding.id))) throw new ValidationError("unverified-finding")
-  for (const finding of card.findings) {
-    if (finding.status !== "open") throw new ValidationError("unverified-finding")
-    if (quick) {
-      if (
-        !["P0", "P1"].includes(finding.severity) || !finding.rungs.includes("quote") ||
-        finding.evidence.kind !== "quote" || finding.evidence.path !== finding.path ||
-        finding.evidence.startLine !== finding.line || finding.evidence.endLine !== (finding.endLine ?? finding.line)
-      ) throw new ValidationError("unverified-finding")
-    }
-    if (expected.confirmed && !expected.confirmed.some((item) =>
-      item.id === finding.id && item.path === finding.path && item.line === finding.line && item.endLine === finding.endLine &&
-      item.severity === finding.severity && item.class === finding.class && item.node === finding.node &&
-      item.lens === finding.lens && item.rule === finding.rule && item.trigger === finding.trigger &&
-      isDeepStrictEqual(item.rungs, finding.rungs) && isDeepStrictEqual(item.evidence, finding.evidence)
-    )) throw new ValidationError("unverified-finding")
-  }
+  validateFindings(card.findings, { quick: ReviewRouting.tier(expected.routing) === "quick", confirmed: expected.confirmed })
   if (card.outcome === "done" && card.verdict === "APPROVE" &&
     card.findings.some((finding) => finding.status === "open" && ["P0", "P1"].includes(finding.severity))
   ) throw new ValidationError("verdict-mismatch")
@@ -79,4 +58,59 @@ export function validate(reply: string, expected: {
   ) throw new ValidationError("verdict-mismatch")
   ReviewChecksV2.validate(card, expected.checkFacts)
   return card
+}
+
+const decodeFinding = Schema.decodeUnknownOption(ReviewResultV2.Finding)
+const strict = { onExcessProperty: "error" } as const
+
+// Receipt findings decode as card findings; omitted K1 fields are not inferred. Quick rungs must all be `quote`.
+// Host comparison is exact, including rungs and evidence. Quote bytes are not read here.
+export function validateFindings(
+  findings: ReadonlyArray<MaestroEvent.Review.Finding>,
+  expected: { readonly quick: boolean; readonly confirmed?: ReadonlyArray<Confirmed> },
+): void
+export function validateFindings(
+  findings: ReadonlyArray<ReviewResultV2.Finding>,
+  expected: { readonly quick: boolean; readonly confirmed?: ReadonlyArray<Confirmed> },
+): void
+export function validateFindings(
+  findings: ReadonlyArray<MaestroEvent.Review.Finding | ReviewResultV2.Finding>,
+  expected: { readonly quick: boolean; readonly confirmed?: ReadonlyArray<Confirmed> },
+): void {
+  const decoded = findings.map(readFinding)
+  if (!expected.quick && expected.confirmed === undefined) throw new ValidationError("unverified-finding")
+  if (expected.confirmed && new Set(expected.confirmed.map((item) => item.id)).size !== expected.confirmed.length)
+    throw new ValidationError("unverified-finding")
+  const ids = decoded.map((finding) => finding.id)
+  if (new Set(ids).size !== ids.length) throw new ValidationError("unverified-finding")
+  if (expected.confirmed?.some((finding) => ids.filter((id) => id === finding.id).length !== 1))
+    throw new ValidationError("unverified-finding")
+  for (const finding of decoded) {
+    if (finding.status !== "open") throw new ValidationError("unverified-finding")
+    if (expected.quick && !quoted(finding)) throw new ValidationError("unverified-finding")
+    if (expected.confirmed && !expected.confirmed.some((item) => sameConfirmed(item, finding)))
+      throw new ValidationError("unverified-finding")
+  }
+}
+
+function readFinding(finding: MaestroEvent.Review.Finding | ReviewResultV2.Finding) {
+  const decoded = Option.getOrUndefined(decodeFinding(finding, strict))
+  if (!decoded) throw new ValidationError("unverified-finding")
+  return decoded
+}
+
+function quoted(finding: ReviewResultV2.Finding) {
+  if (finding.severity !== "P0" && finding.severity !== "P1") return false
+  if (finding.rungs.length === 0 || finding.rungs.some((rung) => rung !== "quote")) return false
+  if (finding.evidence.kind !== "quote") return false
+  return finding.evidence.path === finding.path &&
+    finding.evidence.startLine === finding.line &&
+    finding.evidence.endLine === (finding.endLine ?? finding.line)
+}
+
+function sameConfirmed(item: Confirmed, finding: ReviewResultV2.Finding) {
+  return item.id === finding.id && item.path === finding.path && item.line === finding.line && item.endLine === finding.endLine &&
+    item.severity === finding.severity && item.class === finding.class && item.node === finding.node &&
+    item.lens === finding.lens && item.rule === finding.rule && item.trigger === finding.trigger &&
+    isDeepStrictEqual(item.rungs, finding.rungs) && isDeepStrictEqual(item.evidence, finding.evidence)
 }
