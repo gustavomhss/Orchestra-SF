@@ -1,0 +1,197 @@
+export * as ReviewChecksV2 from "./review-checks"
+
+import type { ReviewAnalyze } from "@orchestra/core/review-toolkit/analyze"
+import type { ReviewProbe } from "@orchestra/core/review-toolkit/probe"
+import { ReviewRouting } from "@orchestra/core/review/routing"
+import { ReviewSettings } from "@orchestra/core/review/settings"
+import { Schema } from "effect"
+import { ReviewResultV2 } from "../governance/review-result"
+
+// Host check evidence (docs/specs/lucy/host-check-freeze.md). Facts come from the host inputs below, never from a model card.
+
+export const Facts = Schema.Struct({
+  checks: ReviewResultV2.Card.fields.checks,
+  required: Schema.Array(Schema.NonEmptyString),
+  blockers: ReviewResultV2.Card.fields.blockers,
+})
+export type Facts = typeof Facts.Type
+
+type Check = Facts["checks"][number]
+type Blocker = Facts["blockers"][number]
+
+export function collect(input: {
+  readonly routing: ReviewRouting.Record
+  readonly checks: ReadonlyArray<ReviewAnalyze.Check>
+  readonly settings: ReviewSettings.Input | undefined
+  readonly entryBlockers?: Facts["blockers"]
+  readonly probes?: ReadonlyArray<ReviewProbe.Observed>
+}): Facts {
+  const accepted = new Set(ReviewSettings.read(input.settings ?? {}).acceptedUnavailable)
+  const accepts = (id: string, lane?: string) => accepted.has(id) || (lane !== undefined && accepted.has(lane))
+  const projected = input.checks.map((check) => projectAnalyzer(check, accepts))
+  const probes = (input.probes ?? []).map((probe) => projectProbe(probe, accepts))
+  const requiredPacks = input.routing.packs.filter((pack) => pack.status === "routed" || pack.source === "path")
+  const produced = new Set(projected.flatMap((check) => (check.pack ? [check.pack] : [])))
+  const missing = requiredPacks.flatMap((pack) => (produced.has(pack.id) ? [] : [missingCheck(pack, accepts)]))
+  const checks = sort(dedupe([...projected, ...probes, ...missing]))
+  const requiredIds = new Set(requiredPacks.map((pack) => pack.id))
+  const required = checks.flatMap((check) =>
+    requiredIds.has(check.pack ?? "") || check.pack === "review-probe" ? [identity(check)] : [],
+  )
+  const blockers = derived(checks, new Set(required), input.entryBlockers ?? [])
+  return { checks, required, blockers }
+}
+
+export function validate(card: ReviewResultV2.Card, facts: Facts): void {
+  if (!sameChecks(card.checks, facts.checks)) throw new Error("checks-mismatch")
+  if (facts.blockers.length > 0 && card.outcome !== "blocked") throw new Error("checks-blocked")
+  if (facts.blockers.some((blocker) => count(card.blockers, blocker) !== 1)) throw new Error("checks-blocked")
+  if (card.verdict === "APPROVE" && requiredGateFailed(facts)) throw new Error("checks-blocked")
+}
+
+function projectAnalyzer(check: ReviewAnalyze.Check, accepts: (id: string, lane?: string) => boolean): Check {
+  const status = check.status === "not-run" ? "check-unavailable" : check.status
+  return projected(check, status, status === "check-unavailable" && accepts(check.id, check.lane))
+}
+
+function projectProbe(probe: ReviewProbe.Observed, accepts: (id: string, lane?: string) => boolean): Check {
+  const id = `probe:${probe.candidate}:${probe.option}:${probe.result.uri}`
+  const status = probe.result.status === "not-run" ? "check-unavailable" : probe.result.status
+  return projected(
+    {
+      id,
+      pack: "review-probe",
+      lane: probe.option,
+      version: "review-v2",
+      reason: probe.result.reason,
+      workspaceExecuted: probe.result.status !== "not-run",
+    },
+    status,
+    status === "check-unavailable" && accepts(id, probe.option),
+  )
+}
+
+function missingCheck(pack: ReviewRouting.Pack, accepts: (id: string, lane?: string) => boolean): Check {
+  return projected(
+    {
+      id: pack.id,
+      pack: pack.id,
+      lane: pack.lane,
+      version: "unknown",
+      reason: "required pack produced no host check",
+      workspaceExecuted: false,
+    },
+    "check-unavailable",
+    accepts(pack.id, pack.lane),
+  )
+}
+
+function projected(
+  check: {
+    readonly id: string
+    readonly pack?: string
+    readonly lane?: string
+    readonly version?: string
+    readonly reason?: string
+    readonly workspaceExecuted: boolean
+  },
+  status: Check["status"],
+  accepted: boolean,
+): Check {
+  return {
+    id: check.id,
+    ...(check.lane ? { lane: check.lane } : {}),
+    ...(check.pack ? { pack: check.pack } : {}),
+    ...(check.version ? { version: check.version } : {}),
+    status,
+    ...(check.reason ? { reason: check.reason } : {}),
+    workspaceExecuted: check.workspaceExecuted,
+    // Acquisition errors stay unaccepted. Only projected unavailability carries the host boolean.
+    ...(status === "check-unavailable" ? { accepted } : {}),
+  }
+}
+
+function derived(checks: readonly Check[], required: ReadonlySet<string>, entry: readonly Blocker[]): Blocker[] {
+  return checks.reduce<Blocker[]>((blockers, check) => {
+    if (!required.has(identity(check))) return blockers
+    if (check.status === "acquisition-error") return add(blockers, blocker("acquisition-error", check))
+    if (check.status === "check-unavailable" && check.accepted !== true) return add(blockers, blocker("check-unavailable", check))
+    return blockers
+  }, canonical(entry))
+}
+
+function canonical(blockers: readonly Blocker[]) {
+  return blockers.reduce<Blocker[]>((kept, blocker) => add(kept, blocker), [])
+}
+
+function blocker(kind: string, check: Check): Blocker {
+  return { kind, reason: check.reason ?? kind, ref: identity(check) }
+}
+
+function add(blockers: readonly Blocker[], next: Blocker): Blocker[] {
+  if (blockers.some((item) => sameBlocker(item, next))) return [...blockers]
+  return [...blockers, next]
+}
+
+function dedupe(checks: readonly Check[]): Check[] {
+  const seen = new Map<string, Check>()
+  for (const check of checks) {
+    const key = identity(check)
+    const prior = seen.get(key)
+    if (!prior) {
+      seen.set(key, check)
+      continue
+    }
+    if (shape(prior) !== shape(check)) throw new Error("checks-mismatch")
+  }
+  return [...seen.values()]
+}
+
+function sort(checks: readonly Check[]) {
+  return [...checks].sort((left, right) => compare(identity(left), identity(right)))
+}
+
+function sameChecks(card: readonly Check[], facts: readonly Check[]) {
+  const left = card.map(identity)
+  if (new Set(left).size !== left.length || left.length !== facts.length) return false
+  const factsById = new Map(facts.map((check) => [identity(check), check]))
+  return card.every((check) => shape(factsById.get(identity(check)) ?? check) === shape(check) && factsById.has(identity(check)))
+}
+
+function requiredGateFailed(facts: Facts) {
+  const required = new Set(facts.required)
+  return facts.checks.some(
+    (check) => required.has(identity(check)) && check.pack !== "review-probe" && check.status === "fail",
+  )
+}
+
+function count(blockers: readonly Blocker[], blocker: Blocker) {
+  return blockers.filter((item) => sameBlocker(item, blocker)).length
+}
+
+function sameBlocker(left: Blocker, right: Blocker) {
+  return left.kind === right.kind && left.reason === right.reason && left.code === right.code && left.ref === right.ref
+}
+
+function identity(check: Check) {
+  return JSON.stringify([check.pack ?? "", check.lane ?? "", check.id])
+}
+
+function shape(check: Check) {
+  return JSON.stringify([
+    check.id,
+    check.lane ?? null,
+    check.pack ?? null,
+    check.version ?? null,
+    check.status,
+    check.reason ?? null,
+    check.workspaceExecuted ?? null,
+    check.accepted ?? null,
+  ])
+}
+
+function compare(left: string, right: string) {
+  if (left < right) return -1
+  if (left > right) return 1
+  return 0
+}

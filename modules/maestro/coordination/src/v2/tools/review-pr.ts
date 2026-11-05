@@ -129,7 +129,7 @@ export const run = Effect.fn("ReviewPRRequestV2.run")(function* (params: Input, 
         ...(params.prText === undefined ? {} : { prText: params.prText }), diff: prepared.diff, rules, scope, record: [] },
     }, port))
     if (ran.status !== "ran") return yield* failure("pr-unaddressed", "unexpected first-round state")
-    const facts = { candidate, method: ran.method, routing: ran.routing, scope, confirmed: ran.confirmed }
+    const facts = { candidate, method: ran.method, routing: ran.routing, scope, confirmed: ran.confirmed, checkFacts: ran.checkFacts }
     yield* ReviewPRFactsV2.write(store, facts)
     return yield* output(ran.reply, facts, prepared, worktree, git)
   }))
@@ -139,7 +139,7 @@ function output(reply: string, facts: ReviewPRFactsV2.Facts, prepared: ReviewPRE
   git: MaestroChainTools.Services["atlas"]["git"]) {
   return Effect.gen(function* () {
     const card = yield* Effect.try({
-      try: () => ReviewCardV2.validate(reply, { routing: facts.routing, scope: facts.scope,
+      try: () => ReviewCardV2.validate(reply, { routing: facts.routing, scope: facts.scope, checkFacts: facts.checkFacts,
         ...(ReviewRouting.tier(facts.routing) === "quick" ? {} : { confirmed: facts.confirmed }) }),
       catch: (error) => failure("pr-card-invalid", String(error)),
     })
