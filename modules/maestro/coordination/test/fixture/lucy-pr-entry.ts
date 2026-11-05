@@ -158,11 +158,15 @@ export function host(directory: string, skills: ReadonlyArray<SkillV2.Info>, tou
       }),
     })
   })).pipe(Layer.provide(AppNodeBuilder.build(GitCli.node) as Layer.Layer<GitCli.Service>))
+  // Native host captures Location and Event while constructing the registry.
+  // NativeBinding is not a fixture input.
   return AppNodeBuilder.build(LayerNode.group([
     MaestroToolsV2.node, MaestroGovernanceV2.node, MaestroResearchInquiryV2.node, SystemContextRegistry.node,
-    ToolRegistry.node, ReadTool.node, AgentV2.node, SessionStore.node, Database.node, FSUtil.node, EventV2.node,
+    ToolRegistry.node, ToolRegistry.toolsNode, ReadTool.node, AgentV2.node, SessionStore.node, Database.node, FSUtil.node, EventV2.node,
     GitCli.node, ResearchAllowance.node, ResearchRecords.node,
   ]), [
+    [ToolRegistry.node, ToolRegistry.nativeNode],
+    [ToolRegistry.toolsNode, ToolRegistry.nativeToolsNode],
     [ToolSafety.node, WriteRootsV2.safetyNode],
     [Location.node, Layer.succeed(Location.Service, Location.Service.of({
       directory: AbsolutePath.make(directory),
