@@ -22,7 +22,7 @@ const projects = Layer.succeed(
     commit: () => Effect.void,
   }),
 )
-const nodes = LayerNode.group([Database.node, EventV2.node, SessionV2.node])
+const nodes = LayerNode.group([Database.node, EventV2.node, SessionV2.node, SessionExecution.node])
 const it = testEffect(
   AppNodeBuilder.build(nodes, [
     [ProjectV2.node, projects],
