@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test"
 import { Actions } from "@orchestra/core/actions"
 import { Location } from "@orchestra/core/location"
 import { AbsolutePath } from "@orchestra/core/schema"
+import { InvalidRequestError } from "@orchestra/protocol/errors"
 import { ActionsApiError } from "@orchestra/protocol/groups/actions-common"
 import { ActionsTransferGroup } from "@orchestra/protocol/groups/actions-transfer"
 import { Authorization } from "@orchestra/protocol/middleware/authorization"
@@ -69,8 +70,8 @@ function serve(metadata: ReturnType<Actions.Interface["transferInfo"]>, chunks: 
     return {
       infoCalls,
       transferCalls,
-      request: () => Effect.promise(() => web.handler(new Request(
-        `http://orchestra.test/api/actions/transfer/${binding.id}?${query}`,
+      request: (input?: { rawBindingID?: string; query?: URLSearchParams }) => Effect.promise(() => web.handler(new Request(
+        `http://orchestra.test/api/actions/transfer/${input?.rawBindingID ?? binding.id}?${input?.query ?? query}`,
       ))),
     }
   })
@@ -137,6 +138,79 @@ describe("Actions transfer response headers", () => {
       expect(error.message).toBe("Transfer metadata rejected")
       expect(error.bindingID).toBe(binding.id)
       expect(server.infoCalls).toEqual([[binding, target]])
+      expect(server.transferCalls).toEqual([])
+    }))))
+
+  test.each([
+    ["ab_transfer%25literal", "ab_transfer%literal"],
+    ["ab_transfer%2525literal", "ab_transfer%25literal"],
+  ])("decodes binding %s exactly once", (rawBindingID, decoded) =>
+    Effect.runPromise(Effect.scoped(Effect.gen(function* () {
+      const bytes = new TextEncoder().encode("<title>percent</title>")
+      const server = yield* serve(Effect.succeed({
+        filename: "percent.html", contentType: "text/html", size: bytes.byteLength,
+      }), [bytes.subarray(0, 7), bytes.subarray(7)])
+
+      const response = yield* server.request({ rawBindingID })
+
+      expect(response.status).toBe(200)
+      expect(response.headers.get("x-content-type-options")).toBe("nosniff")
+      expect(response.headers.get("content-security-policy")).toBe("sandbox")
+      expect(response.headers.get("content-disposition")).toBe("attachment; filename*=UTF-8''percent.html")
+      expect(response.headers.get("content-type")).toBe("text/html")
+      expect(response.headers.get("content-length")).toBe(String(bytes.byteLength))
+      expect(new Uint8Array(yield* Effect.promise(() => response.arrayBuffer()))).toEqual(bytes)
+      const expectedBinding = { id: BindingID.make(decoded), revision: 7 }
+      expect(server.infoCalls).toEqual([[expectedBinding, target]])
+      expect(server.transferCalls).toEqual([[expectedBinding, target]])
+    }))))
+
+  // The pinned router rejects malformed URL escapes before route schema decoding or Actions I/O.
+  test.each(["ab_%", "ab_%ZZ", "ab_%E0%A4%A"])("rejects malformed raw binding %s at the router", (rawBindingID) =>
+    Effect.runPromise(Effect.scoped(Effect.gen(function* () {
+      const server = yield* serve(Effect.succeed({
+        filename: "unused.bin", contentType: "application/octet-stream",
+      }), [new Uint8Array([0, 255])])
+
+      const response = yield* server.request({ rawBindingID })
+
+      expect(response.status).toBe(404)
+      expect(yield* Effect.promise(() => response.text())).toBe("")
+      expect(server.infoCalls).toEqual([])
+      expect(server.transferCalls).toEqual([])
+    }))))
+
+  test("rejects a schema-invalid binding before Actions I/O", () =>
+    Effect.runPromise(Effect.scoped(Effect.gen(function* () {
+      const server = yield* serve(Effect.succeed({
+        filename: "unused.bin", contentType: "application/octet-stream",
+      }), [new Uint8Array([0, 255])])
+
+      const response = yield* server.request({ rawBindingID: "not-a-binding" })
+
+      expect(response.status).toBe(400)
+      const error = Schema.decodeUnknownSync(InvalidRequestError)(yield* Effect.promise(() => response.json()))
+      expect(error._tag).toBe("InvalidRequestError")
+      expect(error.kind).toBe("Params")
+      expect(server.infoCalls).toEqual([])
+      expect(server.transferCalls).toEqual([])
+    }))))
+
+  test("rejects a schema-invalid query before Actions I/O", () =>
+    Effect.runPromise(Effect.scoped(Effect.gen(function* () {
+      const server = yield* serve(Effect.succeed({
+        filename: "unused.bin", contentType: "application/octet-stream",
+      }), [new Uint8Array([0, 255])])
+      const invalidQuery = new URLSearchParams(query)
+      invalidQuery.set("revision", "not-a-number")
+
+      const response = yield* server.request({ query: invalidQuery })
+
+      expect(response.status).toBe(400)
+      const error = Schema.decodeUnknownSync(InvalidRequestError)(yield* Effect.promise(() => response.json()))
+      expect(error._tag).toBe("InvalidRequestError")
+      expect(error.kind).toBe("Query")
+      expect(server.infoCalls).toEqual([])
       expect(server.transferCalls).toEqual([])
     }))))
 })
