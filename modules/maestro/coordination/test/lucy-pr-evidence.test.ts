@@ -67,16 +67,18 @@ test("diverged refs use the unique merge-base and exclude dirty bytes", () =>
       yield* git("checkout", "-q", "head")
       yield* commit(directory, git, "src/a.ts", "export const a = 2\n", "head")
       yield* git("checkout", "-q", "base")
-      yield* commit(directory, git, "src/c.ts", "export const c = 1\n", "base-only")
+      yield* commit(directory, git, "package.json", "{}\n", "base-manifest-after-fork")
       yield* write(directory, "src/dirty.ts", "DIRTY_ONLY_BYTES\n")
       const prepared = yield* ReviewPREvidenceV2.prepare(cli, { worktree: directory, baseRef: "base", headRef: "head" })
       expect(prepared.baseSHA).not.toBe(prepared.baseCommit)
+      expect(prepared.baseCommit).toBe(yield* git("rev-parse", "base"))
       expect(prepared.headSHA).toBe(prepared.headCommit)
       expect(prepared.changedPaths).toEqual(["src/a.ts"])
+      expect(yield* git("ls-tree", "-r", "--name-only", prepared.baseCommit)).toContain("package.json")
       expect(prepared.baseFiles).toContain("src/a.ts")
-      expect(prepared.baseFiles).toContain("src/c.ts")
+      expect(prepared.baseFiles).not.toContain("package.json")
       expect(prepared.headFiles).toContain("src/a.ts")
-      expect(prepared.headFiles).not.toContain("src/c.ts")
+      expect(prepared.headFiles).not.toContain("package.json")
       expect(prepared.baseFiles).not.toContain("src/dirty.ts")
       expect(prepared.headFiles).not.toContain("src/dirty.ts")
       expect(prepared.diff).toContain("+export const a = 2")
@@ -166,6 +168,49 @@ test("a criss-cross history is an ambiguous merge-base, not a guessed one", () =
       yield* git("checkout", "-q", "base")
       yield* git("merge", "-q", "--no-ff", "-m", "MR", leftParent)
       expect(reason(yield* ReviewPREvidenceV2.prepare(cli, { worktree: directory, baseRef: "left", headRef: "base" }).pipe(Effect.flip))).toBe("merge-base-ambiguous")
+    }),
+  ),
+)
+
+test("HEAD~1 is a commit-ish and an empty merge-base tree is an empty inventory", () =>
+  run((directory, cli, git) =>
+    Effect.gen(function* () {
+      yield* git("commit", "--allow-empty", "-q", "-m", "empty")
+      yield* git("checkout", "-q", "-b", "head")
+      yield* commit(directory, git, "src/a.ts", "export const a = 1\n", "head")
+      const prepared = yield* ReviewPREvidenceV2.prepare(cli, { worktree: directory, baseRef: "HEAD~1", headRef: "HEAD" })
+      expect(prepared.baseFiles).toEqual([])
+      expect(prepared.changedPaths).toEqual(["src/a.ts"])
+      expect(prepared.changes.map((change) => change.path)).toEqual(["src/a.ts"])
+      expect(prepared.headFiles).toContain("src/a.ts")
+    }),
+  ),
+)
+
+test("non-UTF-8 diff bytes fail before a lossy string is used", () =>
+  run((directory, cli, git) =>
+    Effect.gen(function* () {
+      yield* commit(directory, git, "src/a.ts", "export const a = 1\n", "base")
+      yield* git("branch", "head")
+      yield* git("checkout", "-q", "head")
+      yield* write(directory, "src/bad.txt", Buffer.from([0x68, 0xc3, 0x28, 0x0a]))
+      yield* git("add", "-A")
+      yield* git("commit", "-q", "-m", "bad-text")
+      expect(reason(yield* ReviewPREvidenceV2.prepare(cli, { worktree: directory, baseRef: "base", headRef: "head" }).pipe(Effect.flip))).toBe("unsupported-diff-encoding")
+    }),
+  ),
+)
+
+test("a non-UTF-8 filename in the merge-base tree fails list-encoding", () =>
+  run((directory, cli, git) =>
+    Effect.gen(function* () {
+      yield* Effect.promise(() => fs.writeFile(Buffer.concat([Buffer.from(directory + path.sep), Buffer.from([0xc3, 0x28])]), "ok\n"))
+      yield* git("add", "-A")
+      yield* git("commit", "-q", "-m", "bad-name")
+      yield* git("branch", "head")
+      yield* git("checkout", "-q", "head")
+      yield* commit(directory, git, "src/a.ts", "export const a = 1\n", "head")
+      expect(reason(yield* ReviewPREvidenceV2.prepare(cli, { worktree: directory, baseRef: "base", headRef: "head" }).pipe(Effect.flip))).toBe("list-encoding")
     }),
   ),
 )
