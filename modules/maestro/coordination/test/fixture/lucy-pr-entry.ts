@@ -129,6 +129,10 @@ export function host(directory: string, skills: ReadonlyArray<SkillV2.Info>, tou
           }),
         ]
       })),
+    // Partial double only: registered-tool control flow and host analysis. These
+    // in-memory prompts are not durable SessionV2 messages, and this is not Session
+    // prompt admission, retry, or a core drain. TaskTool.completedReply reads the
+    // schema-shaped fixture messages; storage proof lives in separate tests.
   } as unknown as SessionV2.Interface
   const execution: SessionExecution.Interface = {
     active: Effect.succeed(new Set()),

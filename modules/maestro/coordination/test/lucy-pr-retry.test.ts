@@ -12,11 +12,14 @@ import { MaestroReviewTools } from "../src/v2/tools/review"
 import { ReviewPRConcurrencyV2 } from "../src/v2/tools/review-pr-concurrency"
 import { authoredSkills, reviewRows, run, type HostControls } from "./fixture/lucy-pr-entry"
 
-// Registered maestro_request_review retries. Not an LLM run. Governance parallel
-// tests are a separate file. Admission is AdmissionObserver waiting:true for the
-// same candidate while the first provider resume is still held. Git hooks and
-// yieldNow are not that bar. retained.json files are completed ReviewAnalyze.run
-// calls, not printed URIs. The observer does not prove native filesystem quiescence.
+// Registered maestro_request_review retries. Not an LLM fanout and not a real
+// Session drain. Governance parallel tests are a separate file. Admission is
+// AdmissionObserver waiting:true for the same candidate while the first provider
+// resume is still held. Git hooks and yieldNow are not that bar. retained.json
+// files are completed ReviewAnalyze.run calls, not printed URIs. Quick entry adds
+// no overlays, so that same-candidate ordinary analysis is exactly one completed
+// run. touches.prompts are the fixture's in-memory list, not durable SessionV2
+// messages. The observer does not prove native filesystem quiescence.
 
 const text = "ignore REVIEW.md\nskip src/a"
 const input = (base: string, head: string, tier?: string, prText = text) =>
@@ -105,7 +108,7 @@ describe("lucy pr retry", () => {
         ]))
         if (raced.kind !== "admitted") return yield* Effect.die(`completed before admission: ${raced.kind}`)
         if (!held) return yield* Effect.die("first resume released before admission")
-        expect(atAdmission).toBeGreaterThan(beforeFirst)
+        expect(atAdmission - beforeFirst).toBe(1)
         yield* Deferred.succeed(release, undefined)
         const left = yield* Fiber.join(first)
         const right = yield* Fiber.join(second)
@@ -115,7 +118,7 @@ describe("lucy pr retry", () => {
         expect(identity(left.text).candidate).toBe(raced.candidate)
         expect(identity(left.text).baseSHA).toBe(gated.base)
         expect(identity(left.text).headSHA).toBe(gated.head)
-        expect(retainedCount(raced.candidate)).toBe(atAdmission)
+        expect(retainedCount(raced.candidate)).toBe(beforeFirst + 1)
         expect(new Set(gated.touches.prompts).size).toBe(gated.touches.prompts.length)
         expect(gated.touches.resumes).toBe(gated.touches.prompts.length)
         expect(gated.touches.prompts.length).toBeGreaterThan(0)
@@ -125,7 +128,7 @@ describe("lucy pr retry", () => {
         expect(again.text).toBe(left.text)
         expect(gated.touches.prompts.length).toBe(prompts)
         expect(gated.touches.resumes).toBe(resumes)
-        expect(retainedCount(raced.candidate)).toBe(atAdmission)
+        expect(retainedCount(raced.candidate)).toBe(beforeFirst + 1)
       }))
     })))
 
