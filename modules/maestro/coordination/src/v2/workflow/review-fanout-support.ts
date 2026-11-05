@@ -10,7 +10,7 @@ import type { SessionScope } from "@orchestra/core/session/scope"
 import { SkillV2 } from "@orchestra/core/skill"
 import { SkillTool } from "@orchestra/core/tool/skill"
 import { Tool } from "@orchestra/core/tool/tool"
-import type { ReviewResultV2 } from "../../governance/review-result"
+import type { ReviewResultV2 } from "../governance/review-result"
 import type { ReviewFanoutV2 } from "./review-fanout"
 
 const DELEGATION = ["task"]

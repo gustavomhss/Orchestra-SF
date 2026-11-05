@@ -4,7 +4,7 @@ import { ReviewCatalog } from "@orchestra/core/review/catalog"
 import type { ReviewOutcomes } from "@orchestra/core/review/outcomes"
 import { ReviewRouting } from "@orchestra/core/review/routing"
 import { ReviewItem } from "@orchestra/core/review-toolkit/item"
-import type { ReviewResultV2 } from "../../governance/review-result"
+import type { ReviewResultV2 } from "../governance/review-result"
 
 const QUOTE_NODE = "lucy-review-prove-quote"
 const SEVERITY = { P0: 0, P1: 1, P2: 2, P3: 3 } as const
