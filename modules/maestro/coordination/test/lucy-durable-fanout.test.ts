@@ -77,7 +77,7 @@ describe("lucy durable fanout", () => {
       expect(again.text).toBe(settled.text)
       expect(ctx.requests.length).toBe(calls)
       expect(yield* database.db.select().from(SessionInputTable).all().pipe(Effect.orDie)).toEqual(admitted)
-    })), 60_000),
+    }))), 60_000),
 
   test("Quick drains hunt and finish in the lead and admits no extra user turn", () =>
     Effect.runPromise(run((ctx) => Effect.gen(function* () {
@@ -104,5 +104,5 @@ describe("lucy durable fanout", () => {
       const users = yield* database.db.select().from(SessionMessageTable).where(eq(SessionMessageTable.session_id, lead.id)).all().pipe(Effect.orDie)
       expect(users.filter((row) => row.type === "user").length).toBe(2)
       expect(users.filter((row) => row.type === "assistant").length).toBe(2)
-    })), 60_000),
+    }))), 60_000),
 })
