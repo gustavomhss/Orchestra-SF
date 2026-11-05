@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test"
 import { ReviewRouting } from "@orchestra/core/review/routing"
+import type { ReviewResultV2 } from "../src/v2/governance/review-result"
 import { ReviewCardV2 } from "../src/v2/workflow/review-card"
 
 const routing: ReviewRouting.Record = {
@@ -23,7 +24,7 @@ const card = {
   outcome: "done", verdict: "FIX_FIRST", profile: "pr", tier: "standard", overlays: ["docs"], routing, scope,
   findings: [finding], questions: [], checks: [], coverage: { examined: [], notExamined: [] },
   handoffs: [], blockers: [], risks: [], nextActions: [],
-}
+} satisfies ReviewResultV2.Card
 const reply = (value: unknown) => `\`\`\`review-result\n${JSON.stringify(value)}\n\`\`\``
 const expected = { routing, scope, confirmed }
 const invalid = (value: unknown, reason: string, wanted: Parameters<typeof ReviewCardV2.validate>[1] = expected) =>
@@ -42,7 +43,7 @@ test("accepts a Standard finding bound to the host's confirmed record", () => {
 })
 
 test("accepts an empty APPROVE and does not promote questions to findings", () => {
-  const value = { ...card, verdict: "APPROVE", findings: [], questions: [{ question: "Unverified?", severity: "P1" }] }
+  const value = { ...card, verdict: "APPROVE", findings: [], questions: [{ question: "Unverified?", severity: "P1" }] } satisfies ReviewResultV2.Card
   expect(ReviewCardV2.validate(reply(value), { ...expected, confirmed: [] })).toEqual(value)
 })
 
@@ -102,7 +103,7 @@ test("overlay summary retains declined routing metadata in host order, without a
     ...routing.overlays,
     { id: "concurrency", source: "content", signal: "src/a.ts:2", declined: "not applicable" },
   ] }
-  const value = { ...card, routing: route, overlays: ["docs", "concurrency"], findings: [], verdict: "APPROVE" }
+  const value = { ...card, routing: route, overlays: ["docs", "concurrency"], findings: [], verdict: "APPROVE" } satisfies ReviewResultV2.Card
   expect(ReviewCardV2.validate(reply(value), { routing: route, scope, confirmed: [] })).toEqual(value)
   invalid({ ...value, overlays: ["docs"] }, "routing-mismatch", { routing: route, scope, confirmed: [] })
   invalid({ ...value, overlays: ["concurrency", "docs"] }, "routing-mismatch", { routing: route, scope, confirmed: [] })
