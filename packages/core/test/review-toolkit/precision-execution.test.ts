@@ -45,7 +45,7 @@ function catalog(changes: { pack: string; rule: string; status: "dropped" | "dem
       status: item.status,
     }))
   const built = { ...ReviewCatalog.current, rules: [...rules, ...extra] }
-  const known = new Set(built.packs.map((pack) => pack.id))
+  const known = new Set<string>(built.packs.map((pack) => pack.id))
   expect(built.rules.filter((rule) => !known.has(rule.pack)).map((rule) => rule.pack)).toEqual([])
   return built
 }
