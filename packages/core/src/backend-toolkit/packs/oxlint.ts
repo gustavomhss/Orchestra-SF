@@ -18,10 +18,10 @@ export default {
   upstream: "oxc-project/oxc",
   fit: { role: "check", input: "JavaScript and TypeScript sources", skills: [] },
   targets: {
-    "darwin-arm64": artifact("oxlint-aarch64-apple-darwin.tar.gz", "sha256-0fYDeHik1dFKNtgQgDhZrmkaUDL3iYgRq/23X5AfkOk="),
-    "darwin-x64": artifact("oxlint-x86_64-apple-darwin.tar.gz", "sha256-tCKmpf/nU7EX1zaISOctLKNRPusba5hvbw3hR0d3KiY="),
-    "linux-arm64": artifact("oxlint-aarch64-unknown-linux-musl.tar.gz", "sha256-MOuDi5S5tUPktSJXKv/OAzfOmcqQ8j6W2GQB/4sucJc="),
-    "linux-x64": artifact("oxlint-x86_64-unknown-linux-musl.tar.gz", "sha256-K4F7c5V32dSl0tcvEZIzNU2US+kMrzgLuJqbou3ojGw="),
+    "darwin-arm64": artifact("oxlint-aarch64-apple-darwin.tar.gz", "sha256-0fYDd4Ck1eFKMtgQCDhZrmkaUDL3iTgaX/m3X5AfkOk="),
+    "darwin-x64": artifact("oxlint-x86_64-apple-darwin.tar.gz", "sha256-tCKmpf/nU7EX1zSKgOciyjUYPOsbbJh2bw3hR0dyeiY="),
+    "linux-arm64": artifact("oxlint-aarch64-unknown-linux-musl.tar.gz", "sha256-MOuEi5SbW0PktSJX2v/OAzfOncoJ8j6W2GQf6LLrcJc="),
+    "linux-x64": artifact("oxlint-x86_64-unknown-linux-musl.tar.gz", "sha256-K4F7c5V72U0qDVnPcZIztU2YR+kMrzgLuJpboe3ojGw="),
     "win32-x64": artifact("oxlint-x86_64-pc-windows-msvc.zip", "sha256-Tvqmn7XkU6WH2bS6Idh6Ulo1M2Lf14e8yz5u11T04Og=", "oxlint-x86_64-pc-windows-msvc.exe"),
   },
   floor: {
