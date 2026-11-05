@@ -245,17 +245,29 @@ live("a contained selection is scanned and a lexical escape is refused before in
       ReviewAnalyze.run({
         ...runInput(made, root), scope: "files", files: [...files], changed: CHANGED,
       }).pipe(Effect.provideService(BackendToolkit.Root, made.toolkit))
+    const expectedRule = "prefer-robust-stmts"
+    const readRaw = (uri: string | undefined) => {
+      if (!uri) throw new Error("missing squawk head raw")
+      return readFile(path.join(made.store, uri.slice("review:".length)), "utf8")
+    }
     const relative = yield* run(["db/a.sql"])
     expect(relative.checks[0]).toMatchObject({ status: "fail", workspaceExecuted: false })
-    expect(relative.checks[0].uri).toMatch(/^review:[0-9a-f-]{36}\/raw\/squawk-head\.json$/)
-    const relativeRules = squawkRules(yield* Effect.promise(() => readFile(path.join(made.store, relative.checks[0].uri!.slice("review:".length)), "utf8")))
-    expect(relativeRules.length, "positive control: the native warning must fire before a refusal is claimed").toBeGreaterThan(0)
-    const relativeItem = items(relative).find((item) => item.pack === "squawk" && item.path === "db/a.sql")
-    expect(relativeItem?.rule).toBe(relativeRules[0])
+    const relativeUri = relative.checks[0].uri
+    if (!relativeUri) throw new Error("missing squawk head raw")
+    expect(relativeUri).toMatch(/^review:[0-9a-f-]{36}\/raw\/squawk-head\.json$/)
+    const relativeRules = squawkRules(yield* Effect.promise(() => readRaw(relativeUri)))
+    expect(relativeRules.filter((rule) => rule === expectedRule), "positive control: prefer-robust-stmts must be in the native raw before a refusal is claimed").toEqual([expectedRule])
+    const relativeItem = items(relative).find((item) => item.pack === "squawk" && item.path === "db/a.sql" && item.rule === expectedRule)
+    if (!relativeItem) throw new Error("missing prefer-robust-stmts model item")
+    expect(relativeItem).toMatchObject({ pack: "squawk", path: "db/a.sql", rule: expectedRule, class: "contracts.data", severity: "P2", lens: "contracts" })
     const original = path.join(root, "db", "a.sql")
     const contained = yield* run([original])
-    expect(squawkRules(yield* Effect.promise(() => readFile(path.join(made.store, contained.checks[0].uri!.slice("review:".length)), "utf8")))).toContain(relativeItem?.rule)
-    expect(items(contained).some((item) => item.pack === "squawk" && item.path === "db/a.sql" && item.rule === relativeItem?.rule)).toBe(true)
+    const containedUri = contained.checks[0].uri
+    if (!containedUri) throw new Error("missing squawk head raw")
+    expect(squawkRules(yield* Effect.promise(() => readRaw(containedUri))).filter((rule) => rule === expectedRule)).toEqual([expectedRule])
+    const containedItem = items(contained).find((item) => item.fingerprint === relativeItem.fingerprint)
+    if (!containedItem) throw new Error("absolute selection lost prefer-robust-stmts identity")
+    expect(containedItem).toEqual(relativeItem)
     const refused = (files: readonly string[], reason: string) => Effect.gen(function* () {
       const result = yield* run(files)
       expect(result.checks[0]).toMatchObject({ status: "not-run", reason, workspaceExecuted: false })
