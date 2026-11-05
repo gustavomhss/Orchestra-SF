@@ -16,7 +16,7 @@ Code: `packages/core/src/tool/task.ts`, `tool/skill.ts`, `tool/registry.ts`. Tes
 ## Skill tool
 
 - `skills.list()` is already cached by the skills service (per source, invalidated by generation). The tool does not add a second cache: it would go stale against that invalidation.
-- A miss returns the loadable top-level names (all of them up to `NAME_LIMIT`, otherwise the `CLOSE_LIMIT` closest by edit distance). Tree nodes are left out because they load only through their parent. The list is not filtered by the agent's `skill` permissions, so it can name a skill the agent will then be denied.
+- A miss returns top-level names permitted by the caller's current `skill` policy (all of them up to `NAME_LIMIT`, otherwise the `CLOSE_LIMIT` closest by edit distance). Find roots against the full catalog **before** permission filtering: removing a denied parent first must not promote its child to a root. Read-only `permission.evaluate` keeps `allow` and `ask`, excludes `deny`, and never requests or grants approval. Counts and ranking use only those visible roots. Evaluation failures become a cause-bearing `ToolFailure`, never an unfiltered fallback. Actual loading still uses `permission.assert`; a suggestion with `ask` is not a grant. This is model-facing tool output, not the UI catalog's separate `internal: true` rule.
 - The file sample (`sampleFiles`) is breadth-first, shallowest first, and stops at `FILE_LIMIT` files or `DIRECTORY_LIMIT` directories read. It skips `.git` and `node_modules` and does not follow symlinks. Do not go back to a whole-tree glob.
 - A failed load keeps the cause on `ToolFailure.error` and in the message.
 
