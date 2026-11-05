@@ -82,9 +82,9 @@ Plain pull-request reviews currently require a Unix private replay store and
 refuse Windows before creating a review Session. Governed plan and code receipts
 do not use that store.
 
-Inside `code` and `rereview`, Orchestra may add an **overlay** for the kind of change. This release has two: `docs`,
-when every changed path is documentation, and `concurrency`, when added lines use locks, spawned processes,
-`Promise.all`, goroutines or `Deferred`. An overlay adds the reading that kind of change needs.
+Inside `code` and `rereview`, Orchestra may add an **overlay** for the kind of change: documentation,
+concurrency, API contracts, migrations, performance, CI and infrastructure, dependencies, UI, personal data,
+or GitHub workflows. An overlay adds the reading and host checks that kind of change needs.
 
 ## Tiers
 
@@ -134,6 +134,18 @@ For you, this means:
 - `routing.deviations` lists every place a Session left its route, for example a budget it ran out of.
 
 A changed `.py` or `.pyi` file on Standard or Deep can route the pinned Ruff check. It reports only `F821` (an undefined name) and `F823` (a local used before assignment). Orchestra provisions that binary with the host toolkit, outside the review, and does not install it during the review. The scanner's default target is Python 3.11; that is not the version the project deploys. Windows is unsupported for this check. A raw Ruff report is a diagnostic, not by itself a confirmed blocker.
+
+Changed `.github/workflows/*.yml` and `.yaml` files bind the pinned actionlint check.
+Orchestra copies selected workflow bytes into a separate host-owned project with
+its own empty configuration; actionlint does not load the repository's configuration.
+ShellCheck and Pyflakes subprocess integrations are disabled. Diagnostics are
+mapped back to the original workflow path and still need evidence before confirmation.
+
+This check does not run workflows or install tools during a review. Workflows
+requiring local action or reusable-workflow metadata return an explicit `not-run`,
+not a clean result. If a native rule is dropped, the check refuses rather than
+pretending actionlint can disable that rule by identity. Windows remains
+`windows-api-unqualified`; static binary-header inspection is not native runtime proof.
 
 ## "Not examined" and "not read"
 

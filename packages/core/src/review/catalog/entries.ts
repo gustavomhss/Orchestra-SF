@@ -1,5 +1,6 @@
 import gitleaks from "../../backend-toolkit/packs/gitleaks"
 import type { ReviewCatalog } from "./index"
+import { actionlint } from "./actionlint"
 import { phase3 } from "./phase3"
 import { phase4 } from "./phase4"
 import { ruff } from "./ruff"
@@ -72,6 +73,7 @@ export const current = {
     phase3.pack,
     phase4.pack,
     ruff.pack,
+    actionlint.pack,
   ],
   rules: [
     {
@@ -87,6 +89,7 @@ export const current = {
     ...phase3.rules,
     ...phase4.rules,
     ...ruff.rules,
+    ...actionlint.rules,
   ],
   overlays: [
     {
@@ -110,6 +113,7 @@ export const current = {
       checks: [],
     },
     ...phase3.overlays,
+    actionlint.overlay,
   ],
   lenses: [
     {

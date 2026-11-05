@@ -255,8 +255,9 @@ function routePacks(
       pack.licence !== "never" &&
       (pack.languages === "any" || pack.languages.some((id) => routedLanguages.includes(id))) &&
       !detection.absent.some((name) => names.has(name)) &&
-      ((detection.manifests.length === 0 && detection.extensions.length === 0) ||
+      ((detection.manifests.length === 0 && detection.extensions.length === 0 && (detection.paths?.length ?? 0) === 0) ||
         detection.manifests.some((name) => names.has(name)) ||
+        changes.some((change) => detection.paths?.some((glob) => Glob.match(glob, change.path))) ||
         changes.some((change) => detection.extensions.includes(path.posix.extname(change.path))))
     if (!fits) return []
     if (pack.tiers.includes(run)) return [{ id: pack.id, source: "catalog", lane: pack.lane, status: "routed" }]
