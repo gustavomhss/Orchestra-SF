@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { constants } from "node:fs"
 import { chmod, mkdtemp, mkdir, readFile, readdir, rename, rm, symlink, writeFile } from "node:fs/promises"
 import os from "node:os"
 import path from "node:path"
@@ -13,6 +14,14 @@ test("projects only selected workflow bytes into a host-owned isolated project",
   await mkdir(scratch)
   await writeFile(path.join(source, ".github", "workflows", "ci.yml"), "name: CI\n")
   await writeFile(path.join(source, ".github", "actionlint.yaml"), "self-hosted: true\n")
+  if (!constants.O_NOFOLLOW) {
+    const result = await Effect.runPromise(Effect.scoped(ReviewActionlintInput.prepare({ root: source, files: [".github/workflows/ci.yml"], scratch })))
+    expect(result).toEqual({ status: "not-run", reason: "no-follow-unavailable" })
+    expect(await readFile(path.join(source, ".github", "workflows", "ci.yml"), "utf8")).toBe("name: CI\n")
+    expect(await readdir(scratch)).toEqual([])
+    await rm(base, { recursive: true, force: true })
+    return
+  }
   let projection = ""
   await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
     const result = yield* ReviewActionlintInput.prepare({ root: source, files: [".github/workflows/ci.yml"], scratch })
@@ -41,6 +50,14 @@ test("keeps sorted/deduplicated projection bytes paired with their source names"
   await mkdir(scratch)
   await writeFile(path.join(source, ".github", "workflows", "a.yml"), "name: A\n")
   await writeFile(path.join(source, ".github", "workflows", "z.yaml"), "name: Z\n")
+  if (!constants.O_NOFOLLOW) {
+    const result = await Effect.runPromise(Effect.scoped(ReviewActionlintInput.prepare({ root: source, files: [".github/workflows/z.yaml", ".github/workflows/a.yml", ".github/workflows/z.yaml"], scratch })))
+    expect(result).toEqual({ status: "not-run", reason: "no-follow-unavailable" })
+    expect(await readFile(path.join(source, ".github", "workflows", "a.yml"), "utf8")).toBe("name: A\n")
+    expect(await readdir(scratch)).toEqual([])
+    await rm(base, { recursive: true, force: true })
+    return
+  }
   await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
     const result = yield* ReviewActionlintInput.prepare({ root: source, files: [".github/workflows/z.yaml", ".github/workflows/a.yml", ".github/workflows/z.yaml"], scratch })
     expect(result.status).toBe("ok")
@@ -52,18 +69,26 @@ test("keeps sorted/deduplicated projection bytes paired with their source names"
 })
 
 test("preserves literal backslashes in POSIX source filenames", async () => {
-  if (path.sep !== "/") return
   const base = await mkdtemp(path.join(os.tmpdir(), "actionlint-backslash-"))
   const source = path.join(base, "source")
   const scratch = path.join(base, "scratch")
   await mkdir(path.join(source, ".github", "workflows"), { recursive: true })
   await mkdir(scratch)
-  await writeFile(path.join(source, ".github", "workflows", "literal\\name.yml"), "name: Literal\n")
+  const workflow = path.sep === "/" ? ".github/workflows/literal\\name.yml" : ".github/workflows/native-name.yml"
+  await writeFile(path.join(source, workflow), "name: Literal\n")
+  if (!constants.O_NOFOLLOW) {
+    const result = await Effect.runPromise(Effect.scoped(ReviewActionlintInput.prepare({ root: source, files: [workflow], scratch })))
+    expect(result).toEqual({ status: "not-run", reason: "no-follow-unavailable" })
+    expect(await readFile(path.join(source, workflow), "utf8")).toBe("name: Literal\n")
+    expect(await readdir(scratch)).toEqual([])
+    await rm(base, { recursive: true, force: true })
+    return
+  }
   await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
-    const result = yield* ReviewActionlintInput.prepare({ root: source, files: [".github/workflows/literal\\name.yml"], scratch })
+    const result = yield* ReviewActionlintInput.prepare({ root: source, files: [workflow], scratch })
     expect(result.status).toBe("ok")
     if (result.status !== "ok") throw new Error("projection refused")
-    expect(result.paths[0].path).toBe(".github/workflows/literal\\name.yml")
+    expect(result.paths[0].path).toBe(workflow)
   })))
   await rm(base, { recursive: true, force: true })
 })
@@ -95,12 +120,23 @@ test("refuses selected symlinks and preserves source content, mode, and config",
   const original = path.join(source, ".github", "workflows", "real.yml")
   await writeFile(original, "name: Original\n")
   await chmod(original, 0o640)
+  const originalMode = (await Bun.file(original).stat()).mode & 0o777
   await writeFile(path.join(source, ".github", "actionlint.yaml"), "owner: repo\n")
   await symlink(original, path.join(source, ".github", "workflows", "link.yml"))
+  if (!constants.O_NOFOLLOW) {
+    const result = await Effect.runPromise(Effect.scoped(ReviewActionlintInput.prepare({ root: source, files: [".github/workflows/link.yml"], scratch })))
+    expect(result).toEqual({ status: "unsupported", reason: "symlink" })
+    expect(await readFile(original, "utf8")).toBe("name: Original\n")
+    expect((await Bun.file(original).stat()).mode & 0o777).toBe(originalMode)
+    expect(await readFile(path.join(source, ".github", "actionlint.yaml"), "utf8")).toBe("owner: repo\n")
+    expect(await readdir(scratch)).toEqual([])
+    await rm(base, { recursive: true, force: true })
+    return
+  }
   const result = await Effect.runPromise(Effect.scoped(ReviewActionlintInput.prepare({ root: source, files: [".github/workflows/link.yml"], scratch })))
   expect(result.status).not.toBe("ok")
   expect(await readFile(original, "utf8")).toBe("name: Original\n")
-  expect((await Bun.file(original).stat()).mode & 0o777).toBe(0o640)
+  expect((await Bun.file(original).stat()).mode & 0o777).toBe(originalMode)
   expect(await readFile(path.join(source, ".github", "actionlint.yaml"), "utf8")).toBe("owner: repo\n")
   await rm(base, { recursive: true, force: true })
 })
@@ -149,6 +185,14 @@ test("reads every byte of a workflow larger than one read chunk", async () => {
   const bytes = Buffer.from(`name: Chunked\n${"# padding\n".repeat(40_000)}`)
   const file = path.join(source, ".github", "workflows", "chunked.yml")
   await writeFile(file, bytes)
+  if (!constants.O_NOFOLLOW) {
+    const result = await Effect.runPromise(Effect.scoped(ReviewActionlintInput.prepare({ root: source, files: [".github/workflows/chunked.yml"], scratch })))
+    expect(result).toEqual({ status: "not-run", reason: "no-follow-unavailable" })
+    expect(await readFile(file)).toEqual(bytes)
+    expect(await readdir(scratch)).toEqual([])
+    await rm(base, { recursive: true, force: true })
+    return
+  }
   await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
     const result = yield* ReviewActionlintInput.prepare({ root: source, files: [".github/workflows/chunked.yml"], scratch })
     expect(result.status).toBe("ok")
@@ -171,6 +215,15 @@ test("detects leaf and ancestor replacement at the pre-open observation seam", a
     await mkdir(outside)
     await writeFile(file, "name: Inside\n")
     await writeFile(path.join(outside, "ci.yml"), "name: Outside\n")
+    if (!constants.O_NOFOLLOW) {
+      const result = await Effect.runPromise(Effect.scoped(ReviewActionlintInput.prepare({ root: source, files: [".github/workflows/ci.yml"], scratch })))
+      expect(result).toEqual({ status: "not-run", reason: "no-follow-unavailable" })
+      expect(await readFile(file, "utf8")).toBe("name: Inside\n")
+      expect(await readFile(path.join(outside, "ci.yml"), "utf8")).toBe("name: Outside\n")
+      expect(await readdir(scratch)).toEqual([])
+      await rm(base, { recursive: true, force: true })
+      continue
+    }
     const result = await Effect.runPromise(Effect.scoped(ReviewActionlintInput.prepare({ root: source, files: [".github/workflows/ci.yml"], scratch }).pipe(
       Effect.provideService(ReviewActionlintInput.BeforeRead, (observed) => Effect.tryPromise({ try: async () => {
         if (replaceAncestor) {
@@ -198,6 +251,15 @@ test("cleanup removes partial projection after a settled copy failure", async ()
   await mkdir(scratch)
   await writeFile(path.join(source, ".github", "workflows", "a.yml"), "name: A\n")
   await writeFile(path.join(source, ".github", "workflows", "b.yml"), "name: B\n")
+  if (!constants.O_NOFOLLOW) {
+    const result = await Effect.runPromise(Effect.scoped(ReviewActionlintInput.prepare({ root: source, files: [".github/workflows/a.yml", ".github/workflows/b.yml"], scratch })))
+    expect(result).toEqual({ status: "not-run", reason: "no-follow-unavailable" })
+    expect(await readFile(path.join(source, ".github", "workflows", "a.yml"), "utf8")).toBe("name: A\n")
+    expect(await readFile(path.join(source, ".github", "workflows", "b.yml"), "utf8")).toBe("name: B\n")
+    expect(await readdir(scratch)).toEqual([])
+    await rm(base, { recursive: true, force: true })
+    return
+  }
   let projection = ""
   const effect = Effect.scoped(ReviewActionlintInput.prepare({ root: source, files: [".github/workflows/a.yml", ".github/workflows/b.yml"], scratch }).pipe(Effect.provideService(ReviewActionlintInput.Copied, (input) => Effect.suspend(() => {
     projection = input.root
@@ -218,6 +280,15 @@ test("cleanup removes the acquired projection when interrupted after the first s
   await mkdir(scratch)
   await writeFile(path.join(source, ".github", "workflows", "a.yml"), "name: A\n")
   await writeFile(path.join(source, ".github", "workflows", "b.yml"), "name: B\n")
+  if (!constants.O_NOFOLLOW) {
+    const result = await Effect.runPromise(Effect.scoped(ReviewActionlintInput.prepare({ root: source, files: [".github/workflows/a.yml", ".github/workflows/b.yml"], scratch })))
+    expect(result).toEqual({ status: "not-run", reason: "no-follow-unavailable" })
+    expect(await readFile(path.join(source, ".github", "workflows", "a.yml"), "utf8")).toBe("name: A\n")
+    expect(await readFile(path.join(source, ".github", "workflows", "b.yml"), "utf8")).toBe("name: B\n")
+    expect(await readdir(scratch)).toEqual([])
+    await rm(base, { recursive: true, force: true })
+    return
+  }
   await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
     const copied = yield* Deferred.make<void>()
     const hold = yield* Deferred.make<void>()
