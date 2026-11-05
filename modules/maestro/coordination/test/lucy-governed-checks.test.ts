@@ -446,12 +446,24 @@ test("a scoped finish refuses a governed receipt before a review event or board 
 
 const skills = await authoredSkills()
 
-test("card-only finish cannot record a receipt", () =>
+// Names the Windows private-store refusal, not a successful card review.
+test(process.platform === "win32"
+  ? "card-only PR refuses the unsupported private replay store before a child or receipt"
+  : "card-only finish cannot record a receipt", () =>
   Effect.runPromise(run(skills, {}, (ctx) => Effect.gen(function* () {
-    yield* ctx.invoke("maestro", { kind: "pr", baseRef: ctx.base, headRef: ctx.head, tier: "quick", prText: "x" })
+    const before = yield* reviewRows()
+    const result = yield* ctx.invoke("maestro", { kind: "pr", baseRef: ctx.base, headRef: ctx.head, tier: "quick", prText: "x" })
+    if (process.platform === "win32") {
+      expect(result.type).toBe("error")
+      expect(result.text).toContain("pr-facts-unsupported")
+      expect(ctx.touches.children).toEqual([])
+      expect(ctx.touches.prompts).toEqual([])
+      expect(ctx.touches.resumes).toBe(0)
+      expect(yield* reviewRows()).toEqual(before)
+      return
+    }
     const child = ctx.touches.children[0]
     if (!child) return yield* Effect.die("no child")
-    const before = yield* reviewRows()
     const registry = yield* ToolRegistry.Service
     const recorded = yield* registry.materialize().pipe(
       Effect.flatMap((materialized) => materialized.settle({
