@@ -645,7 +645,7 @@ function codeReceipt(data: unknown, validationRecordID: string) {
   return "stage" in data && data.stage === "code"
 }
 
-function roundFailure(reason: "round-authority-unavailable" | "round-authority-corrupt" | "round-authority-mismatch", detail: string) {
+function roundFailure(reason: "round-authority-unavailable" | "round-authority-corrupt" | "round-authority-mismatch" | "round-not-fix-first", detail: string) {
   return new Tool.Failure({ message: `${reason}: ${detail}`, metadata: { reason } })
 }
 
@@ -733,6 +733,8 @@ const firstRound = Effect.fn("MaestroReviewTools.firstRound")(function* (
     return yield* roundFailure("round-authority-corrupt", "host round or findings do not decode")
   if (loaded.status === "mismatch")
     return yield* roundFailure("round-authority-mismatch", "host round does not match the receipt binding")
+  if (receipt.verdict !== "FIX_FIRST")
+    return yield* roundFailure("round-not-fix-first", "rereview continues only a FIX_FIRST code receipt")
   return { routing: loaded.routing, findings: loaded.findings, reviewed: receipt.artifact.headSHA, executionTier: loaded.executionTier }
 })
 
