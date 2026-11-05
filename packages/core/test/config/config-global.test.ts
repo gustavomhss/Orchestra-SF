@@ -170,7 +170,50 @@ describe("Config.updateGlobal", () => {
     ),
   )
 
-  it.live("reuses the decoded global settings until a file changes or updateGlobal writes", () =>
+  for (const name of ["orchestra.json", "orchestra.jsonc"]) {
+    it.live(`sees same-metadata external edits to ${name} on the next global settings read`, () =>
+      Effect.acquireRelease(
+        Effect.promise(() => tmpdir()),
+        (tmp) => Effect.promise(() => tmp[Symbol.asyncDispose]()),
+      ).pipe(
+        Effect.flatMap((tmp) => {
+          const file = path.join(tmp.path, name)
+          return Effect.gen(function* () {
+            yield* Effect.promise(async () => {
+              await fs.writeFile(file, `{"model":"a/one","trusted_projects":["/alpha"]}`)
+              await fs.utimes(file, new Date(1700000000000), new Date(1700000000000))
+            })
+            expect((yield* Config.readGlobal()).model).toBe("a/one")
+            expect((yield* Config.readGlobal()).trustedProjects).toEqual(["/alpha"])
+            const before = yield* Effect.promise(() => fs.stat(file))
+            yield* Effect.promise(async () => {
+              await fs.writeFile(file, `{"model":"b/two","trusted_projects":["/bravo"]}`)
+              await fs.utimes(file, before.atime, before.mtime)
+            })
+            const after = yield* Effect.promise(() => fs.stat(file))
+            expect([after.ino, after.size, after.mtimeMs]).toEqual([before.ino, before.size, before.mtimeMs])
+            expect((yield* Config.readGlobal()).model).toBe("b/two")
+            expect((yield* Config.readGlobal()).trustedProjects).toEqual(["/bravo"])
+          }).pipe(
+            Effect.provide(
+              AppNodeBuilder.build(LayerNode.group([FSUtil.node, Global.node]), [
+                [
+                  Location.node,
+                  Layer.succeed(
+                    Location.Service,
+                    Location.Service.of(location({ directory: AbsolutePath.make(tmp.path) })),
+                  ),
+                ],
+                [Global.node, Global.layerWith({ config: tmp.path })],
+              ]),
+            ),
+          )
+        }),
+      ),
+    )
+  }
+
+  it.live("returns independent global settings and follows external edits and writes", () =>
     Effect.acquireRelease(
       Effect.promise(() => tmpdir()),
       (tmp) => Effect.promise(() => tmp[Symbol.asyncDispose]()),
@@ -185,13 +228,13 @@ describe("Config.updateGlobal", () => {
           })
           expect((yield* Config.readGlobal()).model).toBe("a/one")
 
-          // Same size, inode and mtime: the cached value is served, which proves the file was not decoded again.
+          // Same size, inode and mtime must not hide an external edit.
           yield* Effect.promise(async () => {
             const before = await fs.stat(file)
             await fs.writeFile(file, `{"model":"b/two"}`)
             await fs.utimes(file, before.atime, new Date(Math.floor(before.mtimeMs)))
           })
-          expect((yield* Config.readGlobal()).model).toBe("a/one")
+          expect((yield* Config.readGlobal()).model).toBe("b/two")
 
           // A served value is a copy: editing it does not poison the cache.
           const first = yield* Config.readGlobal()

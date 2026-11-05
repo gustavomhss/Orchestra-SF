@@ -2,6 +2,7 @@ export * as Config from "./config"
 
 import { makeLocationNode } from "./effect/app-node"
 import path from "path"
+import { createHash } from "node:crypto"
 import { type ParseError, applyEdits, modify, parse, printParseErrorCode } from "jsonc-parser"
 import { Context, Effect, Layer, Option, Schema } from "effect"
 import { Permission } from "@orchestra/schema/permission"
@@ -318,33 +319,25 @@ export const updateGlobal = Effect.fn("Config.updateGlobal")(function* (patch: G
 
 /**
  * The settings `updateGlobal` writes, read back from the global config document. The decoded result is
- * cached per config directory and reused while both config files keep the same mtime, size and inode;
- * `updateGlobal` drops the entry. Callers get their own copy.
+ * cached per config directory and keyed by the selected file and a digest of the text being decoded;
+ * metadata alone cannot identify an external edit. `updateGlobal` drops the entry. Callers get their own copy.
  */
 export const readGlobal = Effect.fn("Config.readGlobal")(function* () {
-  const fs = yield* FSUtil.Service
   const directory = (yield* Global.Service).config
-  const signature = (yield* Effect.forEach(["orchestra.jsonc", "orchestra.json"], (name) =>
-    fs.stat(path.join(directory, name)).pipe(
-      Effect.map(
-        (info) =>
-          `${Option.getOrElse(Option.map(info.mtime, (date) => date.getTime()), () => 0)}:${info.size}:${Option.getOrElse(info.ino, () => 0)}`,
-      ),
-      Effect.orElseSucceed(() => "absent"),
-    ),
-  )).join("|")
+  const document = yield* globalDocument()
+  const signature = createHash("sha256").update(document.text ?? "{}").digest("hex")
   const cached = globalCache.get(directory)
-  if (cached?.signature === signature) return structuredClone(cached.value)
-  const value = yield* readGlobalDocument()
-  globalCache.set(directory, { signature, value })
+  if (cached?.file === document.file && cached.signature === signature) return structuredClone(cached.value)
+  const value = readGlobalDocument(document.text ?? "{}")
+  globalCache.set(directory, { file: document.file, signature, value })
   return structuredClone(value)
 })
 
-type GlobalSettings = Effect.Success<ReturnType<typeof readGlobalDocument>>
-const globalCache = new Map<string, { signature: string; value: GlobalSettings }>()
+type GlobalSettings = ReturnType<typeof readGlobalDocument>
+const globalCache = new Map<string, { file: string; signature: string; value: GlobalSettings }>()
 
-const readGlobalDocument = Effect.fn("Config.readGlobalDocument")(function* () {
-  const document = settings((yield* globalDocument()).text ?? "{}")
+function readGlobalDocument(text: string) {
+  const document = settings(text)
   return {
     ...(typeof document.model === "string" ? { model: document.model } : {}),
     ...(typeof document.shell === "string" ? { shell: document.shell } : {}),
@@ -365,7 +358,7 @@ const readGlobalDocument = Effect.fn("Config.readGlobalDocument")(function* () {
     permissions: document.permissions.flatMap((item) => Option.toArray(decodeRule(item))),
     trustedProjects: document.trustedProjects.filter((item): item is string => typeof item === "string"),
   }
-})
+}
 
 const decodeRule = Schema.decodeUnknownOption(Permission.Rule)
 
