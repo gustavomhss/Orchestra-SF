@@ -73,7 +73,13 @@ test("fanout grants only the routed privacy leaf and registered skill enforces e
       const store = yield* SessionStore.Service
       const registry = yield* ToolRegistry.Service
       const files = yield* FSUtil.Service
-      const run = (prefix: string, tier: string, file: string) => Effect.gen(function* () {
+      // Leave room under the unchanged cap to exercise privacy authority; this is not the default route.
+      const roomy: ReviewCatalog.Catalog = { ...ReviewCatalog.current, route: { ...ReviewCatalog.current.route,
+        profiles: ReviewCatalog.current.route.profiles.map((profile) => profile.id === "code"
+          ? { ...profile, lenses: { ...profile.lenses, quick: ["tests"], standard: ["tests"] } }
+          : profile),
+      } }
+      const run = (prefix: string, tier: string, file: string, catalog: ReviewCatalog.Catalog = ReviewCatalog.current) => Effect.gen(function* () {
         const keys = new Map<string, string>()
         const briefs = new Map<string, string>()
         const port: ReviewFanoutV2.Port = {
@@ -101,7 +107,7 @@ test("fanout grants only the routed privacy leaf and registered skill enforces e
         const result = yield* ReviewFanoutV2.run({
           request: { stage: "code", settings: { acceptedUnavailable: [] }, tier },
           base: { files: [file] }, head: { files: [file], changes: [{ path: file, added: [{ line: 1, text: "export const value = 1" }], removed: 0 }] },
-          catalog: ReviewCatalog.current,
+          catalog,
           stages: { lead: ReviewSeatTools.lead, lens: ReviewSeatTools.lens, verifier: ReviewSeatTools.verifier, final: ReviewSeatTools.final },
           skills: list, fs: files, store, verifierModel: "same", cache: prefix, reviewed: "head",
           facts: { workCard: "review", diff: "diff", rules: [], scope: { base: "base", head: "head", files: 1, changedLines: 1 }, record: [] },
@@ -110,13 +116,18 @@ test("fanout grants only the routed privacy leaf and registered skill enforces e
         const id = (key: string) => SessionSchema.ID.make(`ses_${prefix}_${key.replace(/[^a-z0-9]/gi, "_")}`)
         return { result, id, briefs }
       })
-      const quick = yield* run("privacy_quick", "quick", "src/privacy/a.ts")
-      const standard = yield* run("privacy_standard", "standard", "src/privacy/a.ts")
+      const quick = yield* run("privacy_quick", "quick", "src/privacy/a.ts", roomy)
+      const standard = yield* run("privacy_standard", "standard", "src/privacy/a.ts", roomy)
       const other = yield* run("privacy_other", "standard", "src/ordinary.ts")
       const quickOther = yield* run("privacy_quick_other", "quick", "src/ordinary.ts")
+      const capped = yield* run("privacy_quick_capped", "quick", "src/privacy/a.ts")
       expect(quick.result.routing.lenses.map((lens) => lens.id)).toContain("privacy")
       expect(standard.result.routing.lenses.map((lens) => lens.id)).toContain("privacy")
       expect(other.result.routing.lenses.map((lens) => lens.id)).not.toContain("privacy")
+      expect(capped.result.routing.overlays).toContainEqual(expect.objectContaining({ id: "personal-data", source: "path" }))
+      expect(capped.result.routing.lenses.map((lens) => lens.id)).toEqual(["correctness-logic", "tests"])
+      expect(capped.result.routing.deviations).toContainEqual(expect.objectContaining({ kind: "lens-cap", stage: "route", ref: "privacy" }))
+      expect((yield* store.scope(capped.id("lead")))?.scope.skills.allow).not.toContain(privacy)
       const load = (id: SessionSchema.ID, name: string) => executeTool(registry, {
         sessionID: id, agent: AgentV2.ID.make("lucy"), assistantMessageID: SessionMessage.ID.make("msg_privacy"),
         call: { type: "tool-call", id: `call_${id}_${name}`, name: "skill", input: { name } },
@@ -132,7 +143,7 @@ test("fanout grants only the routed privacy leaf and registered skill enforces e
       expect(standard.briefs.get("lens:privacy:all:hunt")).toContain(`name="${privacy}"`)
       expect(standard.briefs.get("lens:privacy:all:hunt")).not.toContain(sentinel)
       expect(yield* load(lens, privacy)).toMatchObject({ type: "error", value: expect.stringContaining("already in this Session's context") })
-      for (const [id, name] of [[standard.id("lead"), privacy], [other.id("lead"), privacy], [quickOther.id("lead"), privacy],
+      for (const [id, name] of [[standard.id("lead"), privacy], [other.id("lead"), privacy], [quickOther.id("lead"), privacy], [capped.id("lead"), privacy],
         [other.id("lens:tests:all"), privacy], [standard.id("verify:privacy.processing"), privacy],
         [standard.id("verify:privacy.processing"), "lucy-audit"], [standard.id("verify:privacy.processing"), "lucy-audit-compliance"],
         [lens, sentinel], [quick.id("lead"), sentinel]] as const) {
