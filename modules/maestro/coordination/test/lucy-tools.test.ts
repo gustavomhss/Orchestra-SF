@@ -23,6 +23,9 @@ import { ToolRegistry } from "@orchestra/core/tool/registry"
 import { ToolOutputStore } from "@orchestra/core/tool-output-store"
 import { Seats } from "@orchestra/maestro/seats"
 import { nativeProfiles } from "../src/roster"
+
+// Import evaluates roster.ts, which builds native profiles immediately. A throw there fails this file before any test.
+if (nativeProfiles.lucy.atlas_context !== "allow") throw new Error("roster profiles did not initialize")
 import { MaestroSeatsV2 } from "../src/v2/seats"
 import { MaestroToolsV2 } from "../src/v2/tools"
 
