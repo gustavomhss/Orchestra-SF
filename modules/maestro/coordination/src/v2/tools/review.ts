@@ -645,6 +645,16 @@ function codeReceipt(data: unknown, validationRecordID: string) {
   return "stage" in data && data.stage === "code"
 }
 
+const authorityFailure: {
+  readonly unavailable: { readonly reason: "round-authority-unavailable"; readonly detail: string }
+  readonly corrupt: { readonly reason: "round-authority-corrupt"; readonly detail: string }
+  readonly mismatch: { readonly reason: "round-authority-mismatch"; readonly detail: string }
+} = {
+  unavailable: { reason: "round-authority-unavailable", detail: "newest code receipt has no host round" },
+  corrupt: { reason: "round-authority-corrupt", detail: "host round or findings do not decode" },
+  mismatch: { reason: "round-authority-mismatch", detail: "host round does not match the receipt binding" },
+}
+
 function roundFailure(reason: "round-authority-unavailable" | "round-authority-corrupt" | "round-authority-mismatch" | "round-not-fix-first", detail: string) {
   return new Tool.Failure({ message: `${reason}: ${detail}`, metadata: { reason } })
 }
@@ -727,12 +737,7 @@ const firstRound = Effect.fn("MaestroReviewTools.firstRound")(function* (
   const receipt = Option.getOrUndefined(decodeReceipt(row.data, { onExcessProperty: "error" }))
   if (!receipt) return yield* roundFailure("round-authority-corrupt", "newest code receipt does not decode")
   const loaded = ReviewRoundV2.read(receipt)
-  if (loaded.status === "unavailable")
-    return yield* roundFailure("round-authority-unavailable", "newest code receipt has no host round")
-  if (loaded.status === "corrupt")
-    return yield* roundFailure("round-authority-corrupt", "host round or findings do not decode")
-  if (loaded.status === "mismatch")
-    return yield* roundFailure("round-authority-mismatch", "host round does not match the receipt binding")
+  if (loaded.status !== "ok") return yield* roundFailure(authorityFailure[loaded.status].reason, authorityFailure[loaded.status].detail)
   if (receipt.verdict !== "FIX_FIRST")
     return yield* roundFailure("round-not-fix-first", "rereview continues only a FIX_FIRST code receipt")
   return { routing: loaded.routing, findings: loaded.findings, reviewed: receipt.artifact.headSHA, executionTier: loaded.executionTier }
