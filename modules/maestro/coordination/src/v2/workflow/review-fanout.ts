@@ -431,6 +431,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
         ...nodes,
         yield* deliver(input, leadScope, QUOTE_NODE),
         ...(teamStack.length ? [`team-stack nodes you may load: ${teamStack.join(", ")}`] : []),
+        ...(open.length ? [data("open findings of the first round; mark each resolved or still open", JSON.stringify(open))] : []),
         ...running.map((lens) =>
           data(`analyzer items for ${lens.id} (${capItems(lens.id).length} shown, ${analysis.retained.unread[lens.id] ?? 0} more retained at ${analysis.retained.uri})`, JSON.stringify(capItems(lens.id))),
         ),
