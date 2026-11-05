@@ -230,6 +230,45 @@ test("unrelated catalog edits keep the generation, and a moved tuple does not ad
   expect(kept.overlays).toBe(source.overlays)
 })
 
+test("a raw native rule id keeps its case and still derives from the ledger", () => {
+  const native = { ...rule, rule: "F401" }
+  const generation = ReviewLedger.generation(pack, native)
+  expect(generation).not.toBe(ReviewLedger.generation(pack, { ...wildcard, rule: "F401" }))
+  const aws = "AWSKey"
+  const squawk = "ban_drop_column"
+  const awsGeneration = ReviewLedger.generation(pack, { ...wildcard, rule: aws })
+  const squawkGeneration = ReviewLedger.generation(pack, { ...wildcard, rule: squawk })
+  const batches = [
+    ...sequence(many(20, "f", generation, "confirmed", { rule: "F401" })),
+    ...sequence(many(20, "a", awsGeneration, "confirmed", { rule: aws }), "alpha", 21),
+    ...sequence([read("s0", squawkGeneration, "confirmed", { rule: squawk })], "alpha", 41),
+  ]
+  const result = run(batches, [native, wildcard])
+  expect(statusOf(result, "F401")).toBe("active")
+  expect(statusOf(result, aws)).toBe("active")
+  expect(statusOf(result, squawk)).toBe("probation")
+  expect(statusOf(result, "*")).toBe("probation")
+  expect(Schema.decodeUnknownSync(ReviewCatalog.Catalog)(result).rules.map((entry) => entry.rule)).toEqual([
+    "F401",
+    "*",
+    aws,
+    squawk,
+  ])
+  expect(Schema.decodeUnknownSync(ReviewCatalog.Rule.fields.rule)("F401")).toBe("F401")
+  expect(() => Schema.decodeUnknownSync(ReviewCatalog.Rule)({ ...rule, rule: "" })).toThrow()
+  expect(() => Schema.decodeUnknownSync(ReviewCatalog.Rule)({ ...rule, rule: "N".repeat(241) })).toThrow()
+  expect(Schema.decodeUnknownSync(ReviewCatalog.Rule)({ ...rule, rule: "N".repeat(240) }).rule).toBe("N".repeat(240))
+  expect(() => run(sequence([read("big", "gen", "confirmed", { rule: "N".repeat(241) })]), [wildcard])).toThrow()
+  expect(failed(() => run(sequence([read("empty", "gen", "confirmed", { rule: "" })]), [wildcard]))).toBe("precision-invalid")
+  expect(() => Schema.decodeUnknownSync(ReviewCatalog.Rule)({ ...rule, pack: "Alpha" })).toThrow()
+  expect(() => Schema.decodeUnknownSync(ReviewCatalog.Rule)({ ...rule, class: "Security.secret" })).toThrow()
+  expect(() => Schema.decodeUnknownSync(ReviewCatalog.Rule)({ ...rule, lens: "Security" })).toThrow()
+  expect(() => Schema.decodeUnknownSync(ReviewCatalog.Pack)({ ...pack, id: "Alpha" })).toThrow()
+  const lens = ReviewCatalog.current.lenses[0]
+  if (!lens) throw new Error("missing lens")
+  expect(() => Schema.decodeUnknownSync(ReviewCatalog.Lens)({ ...lens, node: "Lucy-Node" })).toThrow()
+})
+
 test("catalog thresholds are the ones on the input, not a baked-in window", () => {
   const generation = ReviewLedger.generation(pack, rule)
   const ledger = { ...ReviewCatalog.current.route.ledger, activate: { read: 1, confirmed: 0.5 } }

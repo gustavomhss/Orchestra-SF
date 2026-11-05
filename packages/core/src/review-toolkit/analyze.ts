@@ -130,7 +130,10 @@ export const page = Effect.fn("ReviewAnalyze.page")(function* (input: {
   const start = input.cursor === undefined ? 0 : Number(input.cursor)
   if (!Number.isSafeInteger(start) || start < 0) return yield* new Failed({ reason: `cursor-invalid: ${input.cursor}` })
   const filter = input.filter
+  // Demoted and dropped remain in the artifact. They are removed before the page window, so they never reach a model.
   const matching = retained.value.items.filter((item) =>
+    item.ruleStatus !== "demoted" &&
+    item.ruleStatus !== "dropped" &&
     item.lens === input.lens &&
     (filter?.rule === undefined || item.rule === filter.rule) &&
     (filter?.path === undefined || item.path === filter.path) &&
