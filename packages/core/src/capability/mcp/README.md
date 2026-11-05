@@ -19,7 +19,7 @@ Written against the MCP 2025-11-25 specification, consulted 2026-10-09:
 - https://modelcontextprotocol.io/specification/2025-11-25/basic/utilities/tasks
 
 The provider host table is transcribed from
-`packages/capability-assets/src/providers.ts` and provider names in `catalog.ts`
+`modules/capability-assets/src/providers.ts` and provider names in `catalog.ts`
 at `2a971d2a1372ea3598b567455de87d11c132de82`. Core does not import Assets.
 `prisma_postgres` is the discovery-normalized spelling of `prisma-postgres`.
 The original HTTPS endpoint must validate before an exact localhost HTTP
@@ -127,12 +127,13 @@ serializers, accessors, cycles and custom object/array prototypes are not execut
 
 ## Verification
 
-From `packages/core`, with the owner's local-test permission:
+From the repository root:
 
 ```sh
-ORCHESTRA_LOCAL_TESTS=1 bun test ./test/capability-mcp.test.ts
-bun typecheck
+bun run test:ci core test/capability-mcp-protocol.test.ts test/capability-mcp-bounds.test.ts test/capability-mcp-lifecycle.test.ts
 ```
+
+`bun typecheck` from `packages/core`, only when the owner permits it. Do not run local tests.
 
 Review boundaries: `index.ts` owns host selection, scoped lifetime and generations;
 `http.ts` owns fetch/readers, byte quotas and incremental SSE;
