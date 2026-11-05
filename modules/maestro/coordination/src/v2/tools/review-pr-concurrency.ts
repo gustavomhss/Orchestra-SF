@@ -1,0 +1,26 @@
+export * as ReviewPRConcurrencyV2 from "./review-pr-concurrency"
+
+import { Effect, Semaphore } from "effect"
+import { Tool } from "@orchestra/core/tool/tool"
+
+const active = new Map<string, { semaphore: ReturnType<typeof Semaphore.makeUnsafe>; references: number }>()
+
+/** Process-local serialization; this does not claim clustered Session ownership. */
+export function withCandidate<A, E, R>(candidate: string, work: Effect.Effect<A, E, R>) {
+  return Effect.acquireUseRelease(
+    Effect.suspend(() => {
+      const existing = active.get(candidate)
+      if (!existing && active.size >= 64)
+        return Effect.fail(new Tool.Failure({ message: "pr-busy: too many active PR candidates", metadata: { reason: "pr-busy" } }))
+      const entry = existing ?? { semaphore: Semaphore.makeUnsafe(1), references: 0 }
+      if (!existing) active.set(candidate, entry)
+      entry.references += 1
+      return Effect.succeed(entry)
+    }),
+    (entry) => entry.semaphore.withPermit(work),
+    (entry) => Effect.sync(() => {
+      entry.references -= 1
+      if (entry.references === 0) active.delete(candidate)
+    }),
+  )
+}
