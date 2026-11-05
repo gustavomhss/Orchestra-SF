@@ -49,6 +49,53 @@ function stageScope(tools: readonly string[]): SessionScope.Scope {
   }
 }
 
+function decoded(settled: { result: { type: string; value?: unknown } }) {
+  if (settled.result.type !== "text") throw new Error(`atlas_context did not return text: ${settled.result.type}`)
+  return JSON.parse(String(settled.result.value)) as {
+    status?: string
+    notRun?: boolean
+    reason?: string
+    unit?: string
+    content?: string
+    contentHash?: string
+    receiptHash?: string
+    units?: { unit: string; complete: boolean }[]
+    coverage?: { state?: string; freshness?: string; bodiesLoaded?: boolean }
+  }
+}
+
+function assertCatalog(body: ReturnType<typeof decoded>) {
+  expect(body.status).toBeUndefined()
+  expect(body.notRun).toBeUndefined()
+  expect(body).toMatchObject({
+    projectID,
+    units: [{ unit, complete: true }],
+    coverage: {
+      state: "complete",
+      scope: "verified-own-catalog",
+      bodiesLoaded: false,
+      units: { returned: 1, total: 1 },
+    },
+  })
+  return body
+}
+
+function assertUnit(body: ReturnType<typeof decoded>) {
+  expect(body.status).toBeUndefined()
+  expect(body.notRun).toBeUndefined()
+  expect(body.unit).toBe(unit)
+  expect(body.content).toContain(`${unit} owns bounded behavior.`)
+  expect(body.contentHash).toMatch(/^[a-f0-9]{64}$/)
+  expect(body.receiptHash).toMatch(/^[a-f0-9]{64}$/)
+  expect(body.coverage).toMatchObject({
+    state: "complete",
+    freshness: "FRESH",
+    currentBlobsChecked: true,
+    truncated: false,
+  })
+  return body
+}
+
 async function fixture() {
   const directory = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), "lucy-atlas-scope-")))
   const git = (args: string[]) =>
@@ -117,6 +164,50 @@ async function fixture() {
   return directory
 }
 
+function host(directory: string, configured: boolean) {
+  const root = AbsolutePath.make(directory)
+  const layer = AppNodeBuilder.build(
+    LayerNode.group([
+      MaestroAtlasToolV2.node,
+      ToolRegistry.node,
+      ToolRegistry.toolsNode,
+      PermissionV2.node,
+      SessionStore.node,
+      Database.node,
+      EventV2.node,
+      AgentV2.node,
+      PermissionSaved.node,
+    ]),
+    [
+      [Database.node, Database.layerFromPath(":memory:")],
+      [
+        Location.node,
+        Layer.succeed(Location.Service, Location.Service.of({ directory: root, project: { id: projectID, directory: root } })),
+      ],
+      [
+        Config.node,
+        Layer.mock(Config.Service, {
+          entries: () =>
+            Effect.succeed(
+              configured
+                ? [
+                    new Config.Document({
+                      type: "document",
+                      info: new Config.Info({ maestro: { atlas: { projectID, directory: "." } } }),
+                    }),
+                  ]
+                : [],
+            ),
+        }),
+      ],
+      [MaestroSeats.node, Layer.succeed(MaestroSeats.Service, MaestroSeats.make(["backend", "archie", "lucy"]))],
+      [SkillV2.node, Layer.mock(SkillV2.Service, { list: () => Effect.succeed([]) })],
+      [ToolOutputStore.node, ToolOutputStore.nodeWithoutConfig],
+    ],
+  )
+  return { root, layer }
+}
+
 describe("lucy atlas stage scope", () => {
   test("verifier does not inherit lead, and the floor does not open memory", () => {
     const inherited = [...ReviewSeatTools.lead, "review_probe"]
@@ -143,44 +234,10 @@ describe("lucy atlas stage scope", () => {
   test("a registered atlas_context call is admitted for lead and lens and refused for the verifier by SessionStore.charge", async () => {
     expectSpawn(import.meta.path)
     const directory = await fixture()
-    const root = AbsolutePath.make(directory)
-    const layer = AppNodeBuilder.build(
-      LayerNode.group([
-        MaestroAtlasToolV2.node,
-        ToolRegistry.node,
-        ToolRegistry.toolsNode,
-        PermissionV2.node,
-        SessionStore.node,
-        Database.node,
-        EventV2.node,
-        AgentV2.node,
-        PermissionSaved.node,
-      ]),
-      [
-        [Database.node, Database.layerFromPath(":memory:")],
-        [
-          Location.node,
-          Layer.succeed(Location.Service, Location.Service.of({ directory: root, project: { id: projectID, directory: root } })),
-        ],
-        [
-          Config.node,
-          Layer.mock(Config.Service, {
-            entries: () =>
-              Effect.succeed([
-                new Config.Document({
-                  type: "document",
-                  info: new Config.Info({ maestro: { atlas: { projectID, directory: "." } } }),
-                }),
-              ]),
-          }),
-        ],
-        [MaestroSeats.node, Layer.succeed(MaestroSeats.Service, MaestroSeats.make(["backend", "archie", "lucy"]))],
-        [SkillV2.node, Layer.mock(SkillV2.Service, { list: () => Effect.succeed([]) })],
-        [ToolOutputStore.node, ToolOutputStore.nodeWithoutConfig],
-      ],
-    )
+    const { root, layer } = host(directory, true)
     const lead = SessionV2.ID.make("ses_lucy_scope_lead")
     const lens = SessionV2.ID.make("ses_lucy_scope_lens")
+    const final = SessionV2.ID.make("ses_lucy_scope_final")
     const verifier = SessionV2.ID.make("ses_lucy_scope_verifier")
     const inherited = SessionV2.ID.make("ses_lucy_scope_inherited")
     const alias = SessionV2.ID.make("ses_lucy_scope_alias")
@@ -193,7 +250,7 @@ describe("lucy atlas stage scope", () => {
           .values({ id: projectID, worktree: root, sandboxes: [] })
           .run()
           .pipe(Effect.orDie)
-        yield* Effect.forEach([lead, lens, verifier, inherited, alias], (id) =>
+        yield* Effect.forEach([lead, lens, final, verifier, inherited, alias], (id) =>
           db
             .insert(SessionTable)
             .values({
@@ -228,20 +285,26 @@ describe("lucy atlas stage scope", () => {
             call: { type: "tool-call", id: `call_${agent}_${String(input.action)}`, name: "atlas_context", input },
           })
 
-        yield* store.narrow(lead, stageScope(ReviewSeatTools.lead))
-        expect(yield* store.charge(lead, { type: "tool", name: "atlas_context" })).toEqual({ admitted: true })
-        const catalog = yield* settle(lead, "lucy", { action: "catalog" })
-        const catalogText = catalog.result.type === "text" ? String(catalog.result.value) : ""
-        expect(JSON.parse(catalogText).coverage).toMatchObject({ state: "complete", bodiesLoaded: false })
-        expect(yield* store.charge(lead, { type: "tool", name: "atlas_context" })).toEqual({ admitted: true })
-        const loaded = yield* settle(lead, "lucy", { action: "unit", unit })
-        const loadedText = loaded.result.type === "text" ? String(loaded.result.value) : ""
-        expect(JSON.parse(loadedText).coverage).toMatchObject({ state: "complete", freshness: "FRESH" })
-
-        yield* store.narrow(lens, stageScope(ReviewSeatTools.lens))
-        expect(yield* store.charge(lens, { type: "tool", name: "atlas_context" })).toEqual({ admitted: true })
-        const lensCatalog = yield* settle(lens, "lucy", { action: "catalog" })
-        expect(lensCatalog.result.type).toBe("text")
+        const read = (sessionID: SessionV2.ID, tools: readonly string[]) =>
+          Effect.gen(function* () {
+            yield* store.narrow(sessionID, stageScope(tools))
+            expect(yield* store.charge(sessionID, { type: "tool", name: "atlas_context" })).toEqual({ admitted: true })
+            const catalog = assertCatalog(decoded(yield* settle(sessionID, "lucy", { action: "catalog" })))
+            expect(yield* store.charge(sessionID, { type: "tool", name: "atlas_context" })).toEqual({ admitted: true })
+            const loaded = assertUnit(decoded(yield* settle(sessionID, "lucy", { action: "unit", unit })))
+            return { catalog, loaded }
+          })
+        const leadRead = yield* read(lead, ReviewSeatTools.lead)
+        const lensRead = yield* read(lens, ReviewSeatTools.lens)
+        expect(lensRead.catalog).toEqual(leadRead.catalog)
+        expect(lensRead.loaded.content).toBe(leadRead.loaded.content)
+        expect(lensRead.loaded.contentHash).toBe(leadRead.loaded.contentHash)
+        expect(lensRead.loaded.receiptHash).toBe(leadRead.loaded.receiptHash)
+        expect(lensRead.loaded.unit).toBe(unit)
+        const finalRead = yield* read(final, ReviewSeatTools.final)
+        expect(finalRead.loaded.contentHash).toBe(leadRead.loaded.contentHash)
+        expect(finalRead.loaded.unit).toBe(unit)
+        expect(finalRead.loaded.coverage).toMatchObject({ freshness: "FRESH" })
 
         yield* store.narrow(verifier, stageScope(ReviewSeatTools.verifier))
         const refused = yield* store.charge(verifier, { type: "tool", name: "atlas_context" })
@@ -268,6 +331,57 @@ describe("lucy atlas stage scope", () => {
           admitted: false,
           deviation: { kind: "tool-outside-scope", name: "atlas_memory_recall" },
         })
+      }).pipe(Effect.scoped, Effect.provide(layer as Layer.Layer<Database.Service | SessionStore.Service | AgentV2.Service | ToolRegistry.Service>)),
+    )
+  })
+
+  test("an unconfigured provider is a held not-run, not a complete catalog", async () => {
+    expectSpawn(import.meta.path)
+    const directory = await fixture()
+    const { root, layer } = host(directory, false)
+    const sessionID = SessionV2.ID.make("ses_lucy_scope_held")
+    await Effect.runPromise(
+      Effect.gen(function* () {
+        const db = (yield* Database.Service).db
+        yield* db.insert(ProjectTable).values({ id: projectID, worktree: root, sandboxes: [] }).run().pipe(Effect.orDie)
+        yield* db
+          .insert(SessionTable)
+          .values({
+            id: sessionID,
+            project_id: projectID,
+            slug: sessionID,
+            directory: root,
+            title: "lucy scope held",
+            version: "test",
+            agent: "lucy",
+          })
+          .run()
+          .pipe(Effect.orDie)
+        yield* (yield* AgentV2.Service).transform((draft) =>
+          draft.update(AgentV2.ID.make("lucy"), (agent) => {
+            agent.permissions = rulesOf("lucy")
+          }),
+        )
+        const store = yield* SessionStore.Service
+        yield* store.narrow(sessionID, stageScope(ReviewSeatTools.lead))
+        expect(yield* store.charge(sessionID, { type: "tool", name: "atlas_context" })).toEqual({ admitted: true })
+        const registry = yield* ToolRegistry.Service
+        const settled = yield* (yield* registry.materialize()).settle({
+          sessionID,
+          agent: AgentV2.ID.make("lucy"),
+          assistantMessageID: SessionMessage.ID.make("msg_lucy_scope_held"),
+          call: { type: "tool-call", id: "call_lucy_catalog", name: "atlas_context", input: { action: "catalog" } },
+        })
+        const body = decoded(settled)
+        expect(body).toEqual({
+          status: "held",
+          notRun: true,
+          reason: "provider-unconfigured",
+          evidence: [projectID],
+        })
+        expect(body.coverage).toBeUndefined()
+        expect(body.units).toBeUndefined()
+        expect(body.unit).toBeUndefined()
       }).pipe(Effect.scoped, Effect.provide(layer as Layer.Layer<Database.Service | SessionStore.Service | AgentV2.Service | ToolRegistry.Service>)),
     )
   })
