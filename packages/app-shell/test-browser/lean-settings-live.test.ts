@@ -28,8 +28,9 @@ if (process.env.LEAN_SETTINGS_DOM !== "1") {
   const { solidDom } = await import("./solid-dom")
   type SavedApi = DirectorySDK["api"]["permission"]["saved"]
   type SavedRows = Awaited<ReturnType<SavedApi["list"]>>
+  const unavailableList = (): ReturnType<SavedApi["list"]> => Promise.reject(new Error("Unexpected saved permission read"))
   const savedIO = {
-    list: mock((): ReturnType<SavedApi["list"]> => Promise.reject(new Error("Unexpected saved permission read"))),
+    list: mock(unavailableList),
     remove: mock(async (_input: Parameters<SavedApi["remove"]>[0]) => undefined),
   } satisfies SavedApi
   const [state, setState] = createStore<{ ready: boolean; error: unknown; config: Config }>({
@@ -176,7 +177,8 @@ if (process.env.LEAN_SETTINGS_DOM !== "1") {
         { id: "saved-one", projectID: "project", action: "read", resource: "/repo/one" },
         { id: "saved-two", projectID: "project", action: "read", resource: "/repo/two" },
       ]
-      savedIO.list.mockClear()
+      savedIO.list.mockReset()
+      savedIO.list.mockImplementation(unavailableList)
       savedIO.list.mockImplementationOnce(() => initial.promise)
         .mockImplementationOnce(() => retry.promise)
         .mockImplementationOnce(() => refresh.promise)
@@ -232,7 +234,8 @@ if (process.env.LEAN_SETTINGS_DOM !== "1") {
 
     test(`saved permissions in ${fixture.locale} announce an empty list`, async () => {
       await loadLocaleDict(fixture.locale)
-      savedIO.list.mockClear()
+      savedIO.list.mockReset()
+      savedIO.list.mockImplementation(unavailableList)
       savedIO.list.mockImplementationOnce(async () => [])
       savedIO.remove.mockClear()
       const screen = mount(savedSection, fixture.locale)
