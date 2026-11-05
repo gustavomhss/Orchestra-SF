@@ -194,8 +194,8 @@ describe("SessionV2 stops runs on archive and remove", () => {
         expect(yield* session.active).toEqual(new Set())
         expect(log).toEqual([`drain ${created.id}`, `interrupted ${created.id}`])
         expect(execution.interruptions).toEqual([
-          { sessionID: created.id, discardPending: undefined },
-          { sessionID: created.id, discardPending: undefined },
+          { sessionID: created.id, discardPending: true },
+          { sessionID: created.id, discardPending: true },
         ])
         const runs = yield* SessionExecution.Service
         const owner = yield* runs.resume(created.id, { interruptOnCancel: true }).pipe(Effect.forkChild)
@@ -205,6 +205,67 @@ describe("SessionV2 stops runs on archive and remove", () => {
         expect(execution.interruptions).toEqual(interruptions)
         expect(yield* session.active).toEqual(new Set([created.id]))
         yield* Fiber.interrupt(owner)
+      }).pipe(provide(execution.layer))
+    }),
+  )
+
+  it.live("archiving discards a wake delivered by ArchiveChanged while the exclusive hold owns the Session", () =>
+    Effect.gen(function* () {
+      const log: string[] = []
+      const execution = yield* gated(log, { wakeAfterInterrupt: false })
+      yield* Effect.gen(function* () {
+        const session = yield* SessionV2.Service
+        const runs = yield* SessionExecution.Service
+        const events = yield* EventV2.Service
+        const created = yield* session.create({ location })
+        const ownership: boolean[] = []
+        const unsubscribe = yield* events.listen((event) =>
+          Effect.gen(function* () {
+            if (!Schema.is(SessionEvent.ArchiveChanged)(event) || event.data.sessionID !== created.id) return
+            ownership.push((yield* runs.active).has(event.data.sessionID))
+            log.push("archived")
+            yield* runs.wake(event.data.sessionID)
+          }),
+        )
+        yield* Effect.addFinalizer(() => unsubscribe)
+        const owner = yield* session.resume(created.id).pipe(Effect.forkChild)
+        expect(yield* Queue.take(execution.started)).toBe(created.id)
+        yield* session.archive({ sessionID: created.id, archived: true })
+        yield* Fiber.await(owner)
+        expect((yield* session.get(created.id)).time.archived).toBeDefined()
+        expect(ownership).toEqual([true])
+        expect(yield* session.active).toEqual(new Set())
+        expect(log).toEqual([`drain ${created.id}`, `interrupted ${created.id}`, "archived"])
+      }).pipe(provide(execution.layer))
+    }),
+  )
+
+  it.live("removing a parent discards wakes delivered during Deleted for both child and parent holds", () =>
+    Effect.gen(function* () {
+      const log: string[] = []
+      const execution = yield* gated(log, { wakeAfterInterrupt: false })
+      yield* Effect.gen(function* () {
+        const session = yield* SessionV2.Service
+        const runs = yield* SessionExecution.Service
+        const events = yield* EventV2.Service
+        const parent = yield* session.create({ location })
+        const child = yield* session.create({ location, parentID: parent.id })
+        const ownership: ReadonlySet<SessionV2.ID>[] = []
+        const unsubscribe = yield* events.listen((event) =>
+          Effect.gen(function* () {
+            if (!Schema.is(SessionEvent.Deleted)(event)) return
+            ownership.push(yield* runs.active)
+            log.push(`deleted ${event.data.sessionID}`)
+            yield* runs.wake(event.data.sessionID)
+          }),
+        )
+        yield* Effect.addFinalizer(() => unsubscribe)
+        yield* session.remove(parent.id)
+        expect(ownership).toEqual([new Set([parent.id, child.id]), new Set([parent.id, child.id])])
+        expect((yield* session.get(child.id).pipe(Effect.flip))._tag).toBe("Session.NotFoundError")
+        expect((yield* session.get(parent.id).pipe(Effect.flip))._tag).toBe("Session.NotFoundError")
+        expect(yield* session.active).toEqual(new Set())
+        expect(log).toEqual([`deleted ${child.id}`, `deleted ${parent.id}`])
       }).pipe(provide(execution.layer))
     }),
   )
