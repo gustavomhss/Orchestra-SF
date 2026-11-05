@@ -122,6 +122,8 @@ For you, this means:
   cannot rewrite the rules that judge it.
 - `routing.deviations` lists every place a Session left its route, for example a budget it ran out of.
 
+A changed `.py` or `.pyi` file on Standard or Deep can route the pinned Ruff check. It reports only `F821` (an undefined name) and `F823` (a local used before assignment). Orchestra provisions that binary with the host toolkit, outside the review, and does not install it during the review. The scanner's default target is Python 3.11; that is not the version the project deploys. Windows is unsupported for this check. A raw Ruff report is a diagnostic, not by itself a confirmed blocker.
+
 ## "Not examined" and "not read"
 
 Verifier probes may use only the options offered for that specific candidate; another candidate's options do not
