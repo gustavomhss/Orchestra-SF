@@ -142,7 +142,7 @@ const analyzeStep = (processes: AppProcess.Interface): Analyze => (input) => {
     worktree: input.worktree,
     base: input.base,
     head: input.head,
-    tier: ReviewRouting.tier(input.routing),
+    tier: input.executionTier ?? ReviewRouting.tier(input.routing),
     store: analysisStore(input.cache),
     changed,
     trusted: true,
@@ -541,7 +541,7 @@ export function tools(input: {
               return yield* new Tool.Failure({ message: "method-binding-mismatch: finish has no host scope", metadata: { reason: "method-binding-mismatch" } })
             if (params.artifact.baseSHA !== authority.scope.base || params.artifact.headSHA !== authority.scope.head)
               return yield* new Tool.Failure({ message: "method-binding-mismatch: artifact does not match host scope", metadata: { reason: "method-binding-mismatch" } })
-            const quick = ReviewRouting.tier(authority.routing) === "quick"
+            const quick = authority.executionTier === "quick"
             yield* Effect.try({
               try: () => ReviewCardV2.validateFindings(params.findings, {
                 quick,
@@ -724,7 +724,7 @@ const firstRound = Effect.fn("MaestroReviewTools.firstRound")(function* (
     .pipe(Effect.orDie)
   const row = rows.find((item) => codeReceipt(item.data, validationRecordID))
   if (!row) return undefined
-  const receipt = Option.getOrUndefined(decodeReceipt(row.data))
+  const receipt = Option.getOrUndefined(decodeReceipt(row.data, { onExcessProperty: "error" }))
   if (!receipt) return yield* roundFailure("round-authority-corrupt", "newest code receipt does not decode")
   const loaded = ReviewRoundV2.read(receipt)
   if (loaded.status === "unavailable")

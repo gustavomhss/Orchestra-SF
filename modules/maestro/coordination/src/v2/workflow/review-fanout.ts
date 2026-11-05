@@ -82,6 +82,8 @@ export type AnalyzeInput = {
   // Shared by every round of one validation, so a rereview reuses the analyzer cache by file digest.
   readonly cache: string
   readonly files: ReadonlyArray<string>
+  /** The tier this step actually runs. Absent only before a first round has an execution tier. */
+  readonly executionTier?: string
 }
 
 /** The Session work the host does for the fan-out; `tools/review.ts` binds it to the process's Session service. */
@@ -214,11 +216,18 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
   const open = (input.firstRound?.findings ?? []).filter((finding) => finding.status === "open")
 
   // 2. Analyze (host).
-  let analysis = yield* port.analyze({ routing: routed.record, packs: routable(routed.record.packs), cache: input.cache, files })
+  let analysis = yield* port.analyze({
+    routing: routed.record,
+    packs: routable(routed.record.packs),
+    cache: input.cache,
+    files,
+    ...(input.firstRound ? { executionTier: input.firstRound.executionTier } : {}),
+  })
 
   // 3. Entry (the lead Session).
-  const routedTier = runTier(catalog, routed.record.tier.id)
-  const quick = !routedTier.budget.lensChildren
+  // Execution mode is the tier this round runs, not the saved route's requested or raised id.
+  const routedTier = runTier(catalog, input.firstRound?.executionTier ?? routed.record.tier.id)
+  const quick = routedTier.id === "quick"
   const bind = (
     sessionID: SessionSchema.ID,
     role: Role,
@@ -339,7 +348,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
         executionTier: tier.id,
         routing: sessionRecord,
         scope: input.facts.scope,
-        confirmed: ReviewRouting.tier(sessionRecord) === "quick" ? undefined : confirmed,
+        confirmed: tier.id === "quick" ? undefined : confirmed,
         get outcomes() {
           return sealedReads ?? derive()
         },
@@ -390,7 +399,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
 
   // Packs an entry addition routed run before the hunt reads items; the cache makes the rerun cheap.
   const added = afterEntry.packs.filter((pack) => !routed.record.packs.some((other) => other.id === pack.id))
-   if (added.length) analysis = yield* port.analyze({ routing: afterEntry, packs: routable(afterEntry.packs), cache: input.cache, files })
+   if (added.length) analysis = yield* port.analyze({ routing: afterEntry, packs: routable(afterEntry.packs), cache: input.cache, files, executionTier: tier.id })
    const items = analysis.items
   const lensCap = Math.max(tier.budget.lenses.max, routed.record.lenses.length)
   const routedLenses = afterEntry.lenses.slice(0, lensCap)
@@ -411,7 +420,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
     return Math.max(0, (analysis.retained.unread[lens] ?? 0) + capItems(lens).length - seen.size)
   }
 
-  if (quick) {
+  if (tier.id === "quick") {
     if (port.allow) yield* port.allow(running.map((lens) => lens.id))
     for (const lens of running) observeFor(lead)(capItems(lens.id))
     const nodes = yield* Effect.forEach(running, (lens) => deliver(input, leadScope, lens.node))
