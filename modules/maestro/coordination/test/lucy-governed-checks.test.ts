@@ -583,6 +583,7 @@ test("a Standard finish refuses a forged finding and publishes the host-confirme
     const parent = SessionSchema.ID.make("ses_finding_governed")
     let calls = 0
     let recordHits = 0
+    const held = { validationRecordID: "" }
     const stages: string[] = []
     const call = (agent: string, name: string, input: unknown, session = parent) =>
       registry.materialize().pipe(
@@ -620,11 +621,10 @@ test("a Standard finish refuses a forged finding and publishes the host-confirme
       if (stage === "hunt") {
         const lens = /Stage: hunt, lens ([^,]+)/.exec(prompt)?.[1]
         if (lens !== LOGIC_LENS) return
-        const validationID = /validationRecordID: (\S+)/.exec(prompt)?.[1]
-        if (!validationID) return yield* Effect.die(`reach-blocker: hunt brief has no validation or lens. stages=${stages.join(",")}`)
+        if (!held.validationRecordID) return yield* Effect.die("reach-blocker: fixture order, host validation id empty")
         const retained = /review:([0-9a-f-]{36})\/retained\.json/.exec(prompt)
         if (!retained) return yield* Effect.die("reach-blocker: hunt brief has no retained page")
-        const file = path.join(MaestroReviewTools.analysisStore(`review_${validationID}_plan`), retained[1], "retained.json")
+        const file = path.join(MaestroReviewTools.analysisStore(`review_${held.validationRecordID}_plan`), retained[1], "retained.json")
         const text = yield* Effect.promise(() => Bun.file(file).text().catch(() => undefined))
         if (!text) return yield* Effect.die(`reach-blocker: retained artifact missing: ${file}`)
         const retainedItems = JSON.parse(text) as { items: Record<string, unknown>[] }
@@ -709,8 +709,10 @@ test("a Standard finish refuses a forged finding and publishes the host-confirme
       projectID, workCardID: "card_finding", workCard, routedMemberID: "backend", validatorVersion: "validator-v1", checks: validationChecks,
     })
     const validation = JSON.parse(validated.text.split("\n").find((item) => item.startsWith("Bindings: "))?.slice("Bindings: ".length) ?? "{}") as { validationRecordID: string }
+    held.validationRecordID = validation.validationRecordID
+    if (!held.validationRecordID) return yield* Effect.die("reach-blocker: fixture order, validation tool returned no id")
     const reviewed = yield* call("maestro", "maestro_request_review", {
-      validationRecordID: validation.validationRecordID, workCard, reviewMethodVersion: "review-v2/plan/standard", tier: "standard",
+      validationRecordID: held.validationRecordID, workCard, reviewMethodVersion: "review-v2/plan/standard", tier: "standard",
     })
     if (recordHits === 0)
       return yield* Effect.die(`callback never reached the record branch. stages=${stages.join(",") || "none"} result=${reviewed.text.slice(0, 240)}`)
