@@ -10,6 +10,8 @@ import { open, stage, type Ctx } from "./fixture/lucy-durable"
 
 // Registered maestro_request_review admits through SessionV2.prompt and drains through SessionExecution.
 // The captures are the real nodes. The model stream is the only script.
+// ReviewPRFactsV2.read is the Unix-only private replay writer; it refuses Windows before any child.
+// Governed review receipts are cross-platform and are not that store.
 
 const scope = (base: string, head: string) => ({ base, head, files: 2, changedLines: 4 })
 
@@ -19,13 +21,26 @@ function run<A, E>(body: (ctx: Ctx) => Effect.Effect<A, E, Database.Service>) {
 }
 
 describe("lucy durable fanout", () => {
-  test("Standard admits distinct lens children and reuses the completed facts", () =>
+  test(process.platform === "win32"
+    ? "Standard PR refuses the unsupported private replay store before durable admission"
+    : "Standard admits distinct lens children and reuses the completed facts", () =>
     Effect.runPromise(run((ctx) => Effect.gen(function* () {
       const model = ctx.parent.model
       if (!model) return yield* Effect.die("fixture parent has no model")
       const database = yield* Database.Service
       const before = yield* database.db.select().from(SessionInputTable).all().pipe(Effect.orDie)
-      const settled = yield* call(ctx.registry, "maestro", ctx.parent.id, { kind: "pr", baseRef: ctx.base, headRef: ctx.head, tier: "standard" }).pipe(
+      const request = call(ctx.registry, "maestro", ctx.parent.id, { kind: "pr", baseRef: ctx.base, headRef: ctx.head, tier: "standard" })
+      if (process.platform === "win32") {
+        const refused = yield* request
+        expect(refused.type).toBe("error")
+        expect(refused.text).toContain("pr-facts-unsupported")
+        expect(yield* database.db.select().from(SessionInputTable).all().pipe(Effect.orDie)).toEqual(before)
+        const sessions = yield* database.db.select().from(SessionTable).all().pipe(Effect.orDie)
+        expect(sessions.filter((row) => row.parent_id === ctx.parent.id)).toEqual([])
+        expect(ctx.requests).toEqual([])
+        return
+      }
+      const settled = yield* request.pipe(
         Effect.ensuring(database.db.select().from(SessionInputTable).all().pipe(Effect.orDie, Effect.tap((rows) => Effect.sync(() => {
           expect(rows.length, "registered review must durably admit its prompts, including when execution fails").toBeGreaterThan(before.length)
           expect(rows.some((row) => row.promoted_seq !== null), "the real runner must promote a durable review input").toBe(true)
@@ -87,13 +102,26 @@ describe("lucy durable fanout", () => {
       expect(yield* database.db.select().from(SessionInputTable).all().pipe(Effect.orDie)).toEqual(admitted)
     }))), 60_000)
 
-  test("Quick drains hunt and finish in the lead and admits no extra user turn", () =>
+  test(process.platform === "win32"
+    ? "Quick PR refuses the unsupported private replay store before durable admission"
+    : "Quick drains hunt and finish in the lead and admits no extra user turn", () =>
     Effect.runPromise(run((ctx) => Effect.gen(function* () {
       const model = ctx.parent.model
       if (!model) return yield* Effect.die("fixture parent has no model")
       const database = yield* Database.Service
       const before = yield* database.db.select().from(SessionInputTable).all().pipe(Effect.orDie)
-      const settled = yield* call(ctx.registry, "maestro", ctx.parent.id, { kind: "pr", baseRef: ctx.base, headRef: ctx.head, tier: "quick" }).pipe(
+      const request = call(ctx.registry, "maestro", ctx.parent.id, { kind: "pr", baseRef: ctx.base, headRef: ctx.head, tier: "quick" })
+      if (process.platform === "win32") {
+        const refused = yield* request
+        expect(refused.type).toBe("error")
+        expect(refused.text).toContain("pr-facts-unsupported")
+        expect(yield* database.db.select().from(SessionInputTable).all().pipe(Effect.orDie)).toEqual(before)
+        const sessions = yield* database.db.select().from(SessionTable).all().pipe(Effect.orDie)
+        expect(sessions.filter((row) => row.parent_id === ctx.parent.id)).toEqual([])
+        expect(ctx.requests).toEqual([])
+        return
+      }
+      const settled = yield* request.pipe(
         Effect.ensuring(database.db.select().from(SessionInputTable).all().pipe(Effect.orDie, Effect.tap((rows) => Effect.sync(() => {
           expect(rows.length, "registered review must durably admit its prompts, including when execution fails").toBeGreaterThan(before.length)
           expect(rows.some((row) => row.promoted_seq !== null), "the real runner must promote a durable review input").toBe(true)
