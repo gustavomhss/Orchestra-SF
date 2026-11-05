@@ -23,6 +23,7 @@ import type { ReviewCardV2 } from "./review-card"
 import { ReviewChecksV2 } from "./review-checks"
 import { ReviewVerdictV2 } from "./review-verdict"
 import { sliceDiff } from "./review-diff"
+import { ReviewCandidatesV2 } from "./review-candidates"
 
 export { baseRules, changes, hunks, RULE_FILES, sliceDiff } from "./review-diff"
 
@@ -195,14 +196,6 @@ type Counts = {
 type Tier = ReviewCatalog.Catalog["route"]["tiers"][number]
 type Lens = ReviewRouting.Lens
 type Entry = Extract<ReviewResultV2.EntryRecord, { status: "eligible" }>
-type Merged = Omit<ReviewResultV2.Candidate, "source"> & {
-  readonly id: string
-  readonly fingerprint: string
-  readonly lenses: ReadonlyArray<string>
-  readonly sources: ReadonlyArray<string>
-  readonly agreement: number
-  readonly observation: boolean
-}
 
 export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port: Port) {
   if (input.firstRound && input.firstRound.reviewed === input.reviewed) return { status: "unaddressed" } as Result
@@ -489,7 +482,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
         const reply = yield* RUNNING.withPermit(port.run(child, brief, { key: "hunt", finish: false }))
         const parsed = ReviewResultV2.parseLens(block(reply, TAGS.lens))
         const result = parsed ? ReviewResultV2.capLens(parsed, tier.budget.candidatesPerLens, child) : undefined
-        const boundSources = result ? admitSources(result.value.candidates, delivered.get(child) ?? []) : { sources: [], invalid: [] }
+        const boundSources = result ? ReviewCandidatesV2.admitSources(result.value.candidates, delivered.get(child) ?? []) : { sources: [], invalid: [] }
         const scoped = yield* deviationsOf(input.store, child, "hunt", 0)
         return {
           lens: job.lens,
@@ -631,7 +624,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
         ]
       : [],
   )
-  const question = (candidate: Merged, reason: string): ReviewResultV2.Question => ({
+  const question = (candidate: ReviewCandidatesV2.Merged, reason: string): ReviewResultV2.Question => ({
     id: candidate.id,
     path: candidate.path,
     line: candidate.line,
@@ -672,7 +665,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
     questions: questions.length,
     dropped,
   }
-  decisions = outcomeDecisions(settled, overflow)
+  decisions = ReviewCandidatesV2.outcomeDecisions(settled, overflow)
   const coverage = {
     examined: [...running.map((lens) => `lens:${lens.id}`), ...hunts.flatMap((hunt) => (hunt.value?.hunks ?? []).map((hunk) => `${hunk.path}:${hunk.startLine}-${hunk.endLine}`))],
     notExamined: notRun,
@@ -805,65 +798,6 @@ function applyEntry(record: ReviewRouting.Record, entry: Entry, catalog: ReviewC
   }
 }
 
-// Fingerprint dedup across lens children, with agreement counted per lens and per overlapping analyzer item. An
-// observation outside a lens becomes a candidate of its class with the lowest rank. Agreement only orders the queue.
-function decisionState(state: string | undefined) {
-  if (state === "confirmed") return "confirmed" as const
-  if (state === "dropped") return "refuted" as const
-  return "question" as const
-}
-
-function admitSources(candidates: ReadonlyArray<ReviewResultV2.Candidate>, items: ReadonlyArray<ReviewItem.ToolItem>) {
-  const sources: Array<string | undefined> = []
-  const invalid: string[] = []
-  for (const candidate of candidates) {
-    if (!candidate.source) {
-      sources.push(undefined)
-      continue
-    }
-    const end = candidate.endLine ?? candidate.line
-    const overlaps = items.some((entry) => entry.fingerprint === candidate.source && entry.class === candidate.class && entry.path === candidate.path && entry.line <= end && (entry.endLine ?? entry.line) >= candidate.line)
-    if (!overlaps) {
-      invalid.push(candidate.source)
-      sources.push(undefined)
-      continue
-    }
-    sources.push(candidate.source)
-  }
-  return { sources, invalid }
-}
-
-function outcomeDecisions(
-  settled: ReadonlyArray<{ readonly candidate: Merged; readonly result?: { readonly state: string } }>,
-  overflow: ReadonlyArray<Merged>,
-): ReviewOutcomes.Decision[] {
-  const decided = [
-    ...settled.map((item) => ({
-      candidate: item.candidate,
-      state: decisionState(item.result?.state),
-    })),
-    ...overflow.map((candidate) => ({ candidate, state: "question" as const })),
-  ]
-  return decided.flatMap((item) => item.candidate.sources.map((source) => ({
-    source,
-    class: item.candidate.class,
-    path: item.candidate.path,
-    line: item.candidate.line,
-    ...(item.candidate.endLine ? { endLine: item.candidate.endLine } : {}),
-    state: item.state,
-  })))
-}
-
-function omitSource(candidate: ReviewResultV2.Candidate) {
-  const { source: claimed, ...without } = candidate
-  void claimed
-  return without
-}
-
-function claimKey(fingerprint: string, candidate: { readonly line: number; readonly endLine?: number }) {
-  return JSON.stringify([fingerprint, candidate.line, candidate.endLine ?? candidate.line])
-}
-
 function merge(
   returns: ReadonlyArray<{
     readonly lens: string
@@ -873,7 +807,7 @@ function merge(
   }>,
   items: ReadonlyArray<ReviewItem.ToolItem>,
   catalog: ReviewCatalog.Catalog,
-): Merged[] {
+): ReviewCandidatesV2.Merged[] {
   const raised = returns.flatMap((value) => [
     ...value.candidates.map((candidate, index) => {
       const source = value.sources[index]
@@ -912,10 +846,10 @@ function merge(
     }),
   }))
   // Fingerprint is line-independent. Grouping by it alone would settle a source at a line the verifier never saw.
-  const places = unique(keyed.map((item) => claimKey(item.fingerprint, item.candidate)))
+  const places = unique(keyed.map((item) => ReviewCandidatesV2.claimKey(item.fingerprint, item.candidate)))
   const ranked = places
     .map((place) => {
-      const group = keyed.filter((item) => claimKey(item.fingerprint, item.candidate) === place)
+      const group = keyed.filter((item) => ReviewCandidatesV2.claimKey(item.fingerprint, item.candidate) === place)
       const fingerprint = group[0].fingerprint
       const best = group.toSorted((left, right) => SEVERITY[left.candidate.severity] - SEVERITY[right.candidate.severity] || Number(left.observation) - Number(right.observation))[0]
       const end = "endLine" in best.candidate ? best.candidate.endLine ?? best.candidate.line : best.candidate.line
@@ -923,7 +857,7 @@ function merge(
         (item) => item.class === best.candidate.class && item.path === best.candidate.path && item.line <= end && (item.endLine ?? item.line) >= best.candidate.line,
       ).length
       const lenses = unique(group.map((item) => item.lens))
-      const rest = "source" in best.candidate && best.candidate.source ? omitSource(best.candidate) : best.candidate
+      const rest = "source" in best.candidate && best.candidate.source ? ReviewCandidatesV2.omitSource(best.candidate) : best.candidate
       return {
         ...rest,
         fingerprint,
@@ -945,7 +879,7 @@ function merge(
 }
 
 // At most three options for the candidate's class and language, each on a rung its tier allows for its severity.
-function options(catalog: ReviewCatalog.Catalog, tier: Tier, record: ReviewRouting.Record, candidate: Merged) {
+function options(catalog: ReviewCatalog.Catalog, tier: Tier, record: ReviewRouting.Record, candidate: ReviewCandidatesV2.Merged) {
   const entry = catalog.classes.find((item) => item.id === candidate.class)
   if (!entry) return []
   const language = record.languages.map((item) => item.id).find((id) => entry.options[id])
