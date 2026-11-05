@@ -6,7 +6,7 @@ import type { MaestroEvent } from "@orchestra/schema/maestro-event"
 import { ReviewResultV2 } from "../governance/review-result"
 
 export class ValidationError extends Error {
-  readonly name = "ReviewCardValidationError"
+  override readonly name = "ReviewCardValidationError"
   constructor(readonly reason: "malformed-card" | "routing-mismatch" | "scope-mismatch" | "unverified-finding" | "verdict-mismatch") {
     super(reason)
   }
