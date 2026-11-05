@@ -85,6 +85,17 @@ const client = Layer.effect(LLMClient.Service, Effect.gen(function* () {
         LLMEvent.stepStart({ index: 0 }),
         LLMEvent.providerError({ message: "child provider event failed" }),
       ])
+      if (prompt === "parent-provider-error" && !request.messages.some((message) =>
+        message.role === "tool" && message.content.some((part) => part.type === "tool-result" && part.id === "provider-error-task"),
+      )) return Stream.fromIterable([
+        LLMEvent.stepStart({ index: 0 }),
+        LLMEvent.toolCall({
+          id: "provider-error-task", name: "task",
+          input: { description: "Focused task", prompt: "provider-error", subagent_type: worker },
+        }),
+        LLMEvent.stepFinish({ index: 0, reason: "tool-calls" }),
+        LLMEvent.finish({ reason: "tool-calls" }),
+      ])
       return Stream.fromIterable([
         LLMEvent.stepStart({ index: 0 }),
         LLMEvent.textStart({ id: "answer" }),
@@ -534,33 +545,68 @@ describe("TaskTool canonical delegation", () => {
     expect(f.harness.requests).toHaveLength(1)
   }))
 
-  it.effect("recorded child provider error reaches the parent result and durable tool failure without implicit replay", () => Effect.gen(function* () {
+  it.effect("recorded child provider error reaches parent durable history and the next model turn without implicit replay", () => Effect.gen(function* () {
     const f = yield* setup
-    const call = yield* record(f.parent.id, "provider-error")
-    const settled = yield* settleTool(f.registry, call)
-    const child = (yield* f.sessions.list()).find((session) => session.parentID === f.parent.id)
-    if (!child) throw new Error("Missing provider-error child")
-    expect(settled.result).toEqual({
-      type: "error",
-      value: `Task ${child.id} failed: Task ${child.id} finished without a completed assistant reply: the child failed: child provider event failed`,
-    })
+    yield* f.sessions.prompt({ sessionID: f.parent.id, prompt: { text: "parent-provider-error" }, resume: false })
+    yield* f.sessions.resume(f.parent.id)
+    const children = (yield* f.sessions.list()).filter((session) => session.parentID === f.parent.id)
+    expect(children).toHaveLength(1)
+    const child = children[0]
     const messages = yield* f.sessions.messages({ sessionID: child.id, order: "asc" })
     const assistants = messages.filter((message) => message.type === "assistant")
     expect(assistants).toEqual(expect.arrayContaining([expect.objectContaining({
       finish: "error", error: expect.objectContaining({ message: "child provider event failed" }),
     })]))
     expect(assistants.every((message) => message.finish === "error" && message.error?.message === "child provider event failed")).toBe(true)
+    const context = yield* f.sessions.context(f.parent.id)
+    const tools = context.flatMap((message) => message.type === "assistant" ? message.content : [])
+      .filter((part) => part.type === "tool" && part.id === "provider-error-task")
+    expect(tools).toEqual([expect.objectContaining({
+      id: "provider-error-task", name: "task", state: expect.objectContaining({
+        status: "error", error: expect.objectContaining({
+          message: `Task ${child.id} failed: Task ${child.id} finished without a completed assistant reply: the child failed: child provider event failed`,
+        }),
+      }),
+    })])
     const history = yield* f.sessions.history({ sessionID: f.parent.id, limit: 100 })
     const failures = history.events.filter(Schema.is(SessionEvent.Tool.Failed))
-      .filter((event) => event.data.sessionID === f.parent.id && event.data.callID === call.call.id)
+      .filter((event) => event.data.sessionID === f.parent.id && event.data.callID === "provider-error-task")
     expect(failures).toHaveLength(1)
     expect(failures[0].data.error.message).toContain(child.id)
     expect(failures[0].data.error.message).toContain("the child failed: child provider event failed")
-    expect((yield* settleTool(f.registry, call)).result).toMatchObject({
+    expect(f.harness.requests).toHaveLength(3)
+    expect(f.harness.requests.map((request) => request.messages.filter((message) => message.role === "user").at(-1)?.content
+      .flatMap((part) => part.type === "text" ? [part.text] : []).join("\n"))).toEqual([
+      "parent-provider-error", "provider-error", "parent-provider-error",
+    ])
+    expect(f.harness.requests.map((request) => String(request.model.id))).toEqual([
+      "deployment-cheap", "deployment-cheap", "deployment-cheap",
+    ])
+    const toolResult = f.harness.requests[2].messages.flatMap((message) => message.role === "tool" ? message.content : [])
+      .filter((part) => part.type === "tool-result").find((part) => part.id === "provider-error-task")
+    if (!toolResult) throw new Error("Missing parent model tool result")
+    expect(toolResult).toMatchObject({
+      id: "provider-error-task", name: "task",
+      result: { type: "error", value: { error: { message: expect.stringContaining(child.id) } } },
+    })
+    expect(toolResult.result.value).toMatchObject({
+      error: { message: expect.stringContaining("the child failed: child provider event failed") },
+    })
+    expect(context.at(-1)).toMatchObject({ type: "assistant", finish: "stop", content: [
+      expect.objectContaining({ type: "text", text: "answer:parent-provider-error" }),
+    ] })
+    const execution = yield* SessionExecution.Service
+    expect((yield* execution.active).size).toBe(0)
+    const called = history.events.filter(Schema.is(SessionEvent.Tool.Called))
+      .filter((event) => event.data.sessionID === f.parent.id && event.data.callID === "provider-error-task")
+    expect(called).toHaveLength(1)
+    expect((yield* settleTool(f.registry, {
+      sessionID: f.parent.id, agent: caller, assistantMessageID: called[0].data.assistantMessageID, model: cheap,
+      call: { type: "tool-call", id: called[0].data.callID, name: "task", input: called[0].data.input },
+    })).result).toMatchObject({
       type: "error", value: expect.stringContaining("resume explicitly with task_id"),
     })
-    expect(f.harness.requests).toHaveLength(1)
-    const execution = yield* SessionExecution.Service
+    expect(f.harness.requests).toHaveLength(3)
     expect((yield* execution.active).size).toBe(0)
   }))
 
