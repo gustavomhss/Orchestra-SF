@@ -71,6 +71,17 @@ The profile is what is being reviewed. Maestro picks it.
 
 A `rereview` says so when the work came back unchanged.
 
+Governed rereview continues the newest `FIX_FIRST` code receipt, using the host's
+saved route and validated findings, not a previous assistant card. It keeps the
+tier that actually ran, including Standard when Deep was requested but unavailable.
+If that retained tier is no longer built, the request refuses explicitly instead
+of switching tiers. An older receipt without host-round data cannot anchor this
+continuation; ask Maestro for a new review.
+
+Plain pull-request reviews currently require a Unix private replay store and
+refuse Windows before creating a review Session. Governed plan and code receipts
+do not use that store.
+
 Inside `code` and `rereview`, Orchestra may add an **overlay** for the kind of change. This release has two: `docs`,
 when every changed path is documentation, and `concurrency`, when added lines use locks, spawned processes,
 `Promise.all`, goroutines or `Deferred`. An overlay adds the reading that kind of change needs.

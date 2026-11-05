@@ -10,7 +10,7 @@ import { open, stage, type Ctx } from "./fixture/lucy-durable"
 
 // Registered maestro_request_review admits through SessionV2.prompt and drains through SessionExecution.
 // The captures are the real nodes. The model stream is the only script.
-// ReviewPRFactsV2.read is the Unix-only private replay writer; it refuses Windows before any child.
+// ReviewPRFactsV2.read is the Unix-only private replay reader; it refuses Windows before any child.
 // Governed review receipts are cross-platform and are not that store.
 
 const scope = (base: string, head: string) => ({ base, head, files: 2, changedLines: 4 })
