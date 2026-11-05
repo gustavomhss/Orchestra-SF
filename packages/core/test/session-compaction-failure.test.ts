@@ -306,3 +306,39 @@ it.effect("a summary stream defect retains the original defect and settles the s
     expectFailed(rows)
   }),
 )
+
+it.effect("cancellation during started notification settles the durable manual attempt without replacing interruption", () =>
+  Effect.gen(function* () {
+    const fixture = yield* setup(Stream.never, {}, "manual")
+    const events = yield* EventV2.Service
+    const entered = yield* Deferred.make<(typeof EventTable.$inferSelect)[]>()
+    const release = yield* Deferred.make<void>()
+    const unsubscribe = yield* events.listen((event) =>
+      Effect.gen(function* () {
+        if (event.type !== started) return
+        const rows = yield* fixture.rows
+        yield* Deferred.succeed(entered, rows)
+        yield* Deferred.await(release)
+      }),
+    )
+    yield* Effect.addFinalizer(() => unsubscribe)
+    // Release before environment teardown; child supervision cannot strand a masked listener on assertion failure.
+    yield* Effect.addFinalizer(() => Deferred.succeed(release, undefined))
+    const fiber = yield* fixture.compact.pipe(Effect.forkChild)
+    const rowsAtStart = yield* Deferred.await(entered)
+    yield* Effect.sync(() => fiber.interruptUnsafe())
+    yield* Deferred.succeed(release, undefined)
+    const exit = yield* Fiber.await(fiber)
+    const rows = yield* fixture.rows
+    const checkpoints = yield* fixture.checkpoints
+
+    expect(rowsAtStart.map((row) => row.type)).toEqual([started])
+    expect(Exit.isFailure(exit)).toBe(true)
+    if (Exit.isFailure(exit)) {
+      expect(exit.cause.reasons.length).toBeGreaterThan(0)
+      expect(exit.cause.reasons.every((reason) => reason._tag === "Interrupt")).toBe(true)
+    }
+    expect(checkpoints).toEqual([])
+    expectFailed(rows, "manual", "Compaction interrupted")
+  }),
+)
