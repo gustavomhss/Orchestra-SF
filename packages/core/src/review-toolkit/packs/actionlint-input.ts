@@ -1,6 +1,7 @@
 export * as ReviewActionlintInput from "./actionlint-input"
 
-import { mkdtemp, mkdir, open, realpath, rm, writeFile } from "node:fs/promises"
+import { constants } from "node:fs"
+import { lstat, mkdtemp, mkdir, open, realpath, rm, writeFile } from "node:fs/promises"
 import path from "node:path"
 import { Context, Effect, Scope } from "effect"
 import { Probe } from "../../research-toolkit/probe/types"
@@ -10,6 +11,7 @@ import { ReviewActionlintYaml } from "./actionlint-yaml"
 
 export type Prepared = { status: "ok"; root: string; files: readonly string[]; paths: readonly { file: string; path: string }[]; config: string }
 export const Copied = Context.Reference<(input: { root: string; index: number; file: string }) => Effect.Effect<void>>("@orchestra/ReviewActionlintInput/Copied", { defaultValue: () => () => Effect.void })
+export const BeforeRead = Context.Reference<(input: { root: string; file: string }) => Effect.Effect<void>>("@orchestra/ReviewActionlintInput/BeforeRead", { defaultValue: () => () => Effect.void })
 
 const MAX_BYTES = 4 * 1024 * 1024
 const MAX_FILES = 10_000
@@ -21,9 +23,10 @@ export const prepare = (input: { root: string; files: readonly string[]; scratch
     if (input.files.length > MAX_FILES) return refusal("too-many-inputs")
     const root = yield* Effect.tryPromise({ try: () => realpath(input.root), catch: () => refusal("root-missing") })
     const scratch = yield* Effect.tryPromise({ try: () => realpath(input.scratch), catch: () => refusal("scratch-missing") })
-    const rel = path.relative(root, scratch)
-    const back = path.relative(scratch, root)
-    const overlaps = (value: string) => value === "" || value === ".." || (!path.isAbsolute(value) && !value.startsWith(`..${path.sep}`))
+    const nativePath = ReviewNativeFiles.flavor(root)
+    const rel = nativePath.relative(root, scratch)
+    const back = nativePath.relative(scratch, root)
+    const overlaps = (value: string) => value === "" || value === ".." || (!nativePath.isAbsolute(value) && !value.startsWith(`..${nativePath.sep}`))
     if (overlaps(rel) || overlaps(back)) return refusal("scratch-overlaps-source")
     const requested = input.files.map((file) => ({ file, relative: ReviewNativeFiles.containedPath(root, file) }))
     if (requested.some((item) => !item.relative)) return refusal("path-outside")
@@ -35,16 +38,33 @@ export const prepare = (input: { root: string; files: readonly string[]; scratch
     let total = 0
     for (const file of selected.files) {
       const remaining = MAX_BYTES - total
+      if (!constants.O_NOFOLLOW) return refusal("no-follow-unavailable")
+      const identity = yield* Effect.tryPromise({ try: () => captureIdentity(root, file), catch: () => refusal("workflow-path-replaced") }).pipe(Effect.uninterruptible)
+      const beforeRead = yield* BeforeRead
+      yield* beforeRead({ root, file })
       const bytes = yield* Effect.tryPromise({
         try: async () => {
-          const handle = await open(file, "r")
+          const handle = await open(file, constants.O_RDONLY | constants.O_NOFOLLOW)
           try {
-            const chunk = Buffer.alloc(remaining + 1)
-            const { bytesRead } = await handle.read(chunk, 0, chunk.length, 0)
-            return chunk.subarray(0, bytesRead)
+            const opened = await handle.stat()
+            if (!sameIdentity(identity.file, opened) || !opened.isFile()) throw new Error("workflow-leaf-replaced")
+            for (const parent of identity.parents) {
+              const current = await lstat(parent.path)
+              if (current.isSymbolicLink() || !current.isDirectory() || !sameIdentity(parent.stat, current)) throw new Error("workflow-parent-replaced")
+            }
+            const chunks: Buffer[] = []
+            let offset = 0
+            while (offset <= remaining) {
+              const chunk = Buffer.alloc(Math.min(64 * 1024, remaining + 1 - offset))
+              const { bytesRead } = await handle.read(chunk, 0, chunk.length, offset)
+              if (bytesRead === 0) break
+              chunks.push(chunk.subarray(0, bytesRead))
+              offset += bytesRead
+            }
+            return Buffer.concat(chunks, offset)
           } finally { await handle.close() }
         },
-        catch: () => refusal("workflow-read-failed"),
+        catch: () => refusal("workflow-read-or-path-replaced"),
       }).pipe(Effect.uninterruptible)
       if (bytes.length > remaining) return refusal("workflow-too-large")
       let text: string
@@ -68,29 +88,65 @@ export const prepare = (input: { root: string; files: readonly string[]; scratch
     }
     const config = path.join(dir, ".github", "actionlint.yaml")
     yield* Effect.tryPromise({ try: () => writeFile(config, "{}\n"), catch: () => refusal("projection-config-failed") }).pipe(Effect.uninterruptible)
-    return { status: "ok" as const, root: dir, files: projected, paths: projected.map((file, i) => ({ file: path.relative(dir, file), path: originals[i] })), config }
-  }).pipe(Effect.catch(() => Effect.succeed(refusal("filesystem-error"))))
+    const projectionPath = ReviewNativeFiles.flavor(dir)
+    return { status: "ok" as const, root: dir, files: projected, paths: projected.map((file, i) => ({ file: canonicalRelative(projectionPath.relative(dir, file), projectionPath.sep === "\\"), path: originals[i] })), config }
+  }).pipe(Effect.catch((error) => Effect.succeed(isRefusal(error) ? error : refusal("filesystem-error"))))
 
 export function argv(executable: string, prepared: Prepared) {
-  const root = path.resolve(prepared.root)
-  const relative = (file: string) => path.relative(root, file)
-  const validInside = (file: string) => !!file && !file.includes("\0") && !path.isAbsolute(relative(file)) && relative(file) !== ".." && !relative(file).startsWith(`..${path.sep}`)
-  if (!executable || !path.isAbsolute(executable) || executable.includes("\0")) return refusal("invalid-executable")
-  if (!root || !path.isAbsolute(root) || !prepared.files.length || prepared.files.length > MAX_FILES || prepared.paths.length !== prepared.files.length) return refusal("invalid-projection")
-  if (prepared.config !== path.join(root, ".github", "actionlint.yaml") || !validInside(prepared.config)) return refusal("invalid-projection")
+  if (typeof prepared.root !== "string" || !prepared.root || prepared.root.includes("\0")) return refusal("invalid-projection")
+  const pathApi = ReviewNativeFiles.flavor(prepared.root)
+  if (!pathApi.isAbsolute(prepared.root)) return refusal("invalid-projection")
+  const root = pathApi.resolve(prepared.root)
+  const relative = (file: string) => pathApi.relative(root, file)
+  const forward = (value: string) => canonicalRelative(value, pathApi.sep === "\\")
+  const validInside = (file: string) => !!file && !file.includes("\0") && !pathApi.isAbsolute(relative(file)) && relative(file) !== ".." && !relative(file).startsWith(`..${pathApi.sep}`)
+  if (!executable || !pathApi.isAbsolute(executable) || executable.includes("\0")) return refusal("invalid-executable")
+  if (!prepared.files.length || prepared.files.length > MAX_FILES || prepared.paths.length !== prepared.files.length) return refusal("invalid-projection")
+  if (prepared.config !== pathApi.join(root, ".github", "actionlint.yaml") || !validInside(prepared.config)) return refusal("invalid-projection")
   const pairs = new Set<string>()
   const sources = new Set<string>()
   for (const [index, file] of prepared.files.entries()) {
     const mapping = prepared.paths[index]
-    if (!path.isAbsolute(file) || !validInside(file) || file !== path.join(root, ".github", "workflows", `input-${index}.yaml`)) return refusal("invalid-projection")
-    if (mapping.file !== path.relative(root, file) || !/^\.github\/workflows\/input-\d+\.yaml$/.test(mapping.file) || !/^\.github\/workflows\/[^/]+\.ya?ml$/i.test(mapping.path) || mapping.path.includes("\0")) return refusal("invalid-projection")
-    if (pairs.has(mapping.file) || sources.has(mapping.path) || prepared.files.filter((candidate) => candidate === file).length !== 1) return refusal("invalid-projection")
-    pairs.add(mapping.file)
-    sources.add(mapping.path)
+    if (!pathApi.isAbsolute(file) || !validInside(file) || file !== pathApi.join(root, ".github", "workflows", `input-${index}.yaml`)) return refusal("invalid-projection")
+    const mappedFile = forward(mapping.file)
+    const mappedSource = pathApi.sep === "\\" ? mapping.path.toLowerCase() : mapping.path
+    if ((pathApi.sep === "\\" && mapping.file !== mappedFile) || mappedFile !== forward(relative(file)) || !/^\.github\/workflows\/input-\d+\.yaml$/.test(mappedFile) || !/^\.github\/workflows\/[^/]+\.ya?ml$/i.test(mapping.path) || mapping.path.includes("\0")) return refusal("invalid-projection")
+    if (pairs.has(mappedFile) || sources.has(mappedSource) || prepared.files.filter((candidate) => candidate === file).length !== 1) return refusal("invalid-projection")
+    pairs.add(mappedFile)
+    sources.add(mappedSource)
   }
   const argv = [executable, "-no-color", "-shellcheck=", "-pyflakes=", "-config-file", prepared.config, "-format", "{{json .}}", "--", ...prepared.files]
   if (argv.some((arg) => arg.includes("\0")) || argv.reduce((sum, arg) => sum + Buffer.byteLength(arg) + 1, 0) > Probe.Limits.outputBytes) return refusal("argv-bound")
   return { status: "ok" as const, argv }
+}
+
+function canonicalRelative(value: string, windows: boolean) {
+  return windows ? value.replaceAll("\\", "/") : value
+}
+
+async function captureIdentity(root: string, file: string) {
+  const pathApi = ReviewNativeFiles.flavor(root)
+  const relative = pathApi.relative(root, file)
+  const parents: { path: string; stat: Awaited<ReturnType<typeof lstat>> }[] = []
+  const pathRoot = pathApi.parse(root).root
+  let cursor = pathRoot
+  for (const segment of [...pathApi.relative(pathRoot, root).split(pathApi.sep), ...relative.split(pathApi.sep).slice(0, -1)].filter(Boolean)) {
+    cursor = pathApi.join(cursor, segment)
+    const stat = await lstat(cursor)
+    if (stat.isSymbolicLink() || !stat.isDirectory()) throw new Error("workflow-parent-replaced")
+    parents.push({ path: cursor, stat })
+  }
+  const leaf = await lstat(file)
+  if (leaf.isSymbolicLink() || !leaf.isFile()) throw new Error("workflow-leaf-replaced")
+  return { file: leaf, parents }
+}
+
+function sameIdentity(left: { dev: number; ino: number }, right: { dev: number; ino: number }) {
+  return left.dev === right.dev && left.ino === right.ino
+}
+
+function isRefusal(error: unknown): error is { status: "not-run" | "unsupported"; reason: string } {
+  return !!error && typeof error === "object" && "reason" in error && typeof error.reason === "string" && "status" in error && (error.status === "not-run" || error.status === "unsupported")
 }
 
 export function environment(root: string, input: NodeJS.ProcessEnv = process.env) {
