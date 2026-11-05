@@ -18,11 +18,11 @@ export default {
   upstream: "zizmorcore/zizmor",
   fit: { role: "check", input: "GitHub Actions workflows", skills: [] },
   targets: {
-    "darwin-arm64": artifact("zizmor-aarch64-apple-darwin.tar.gz", "sha256-bv7RjEU5pmP9PcwrovpTP9hFbE5kbZQWIG2gWRVKDTw="),
-    "darwin-x64": artifact("zizmor-x86_64-apple-darwin.tar.gz", "sha256-aYMUPEcdsmhFpprE3SsswhX5cWYu/Ni7wmc4i4zlWWk="),
-    "linux-arm64": artifact("zizmor-aarch64-unknown-linux-gnu.tar.gz", "sha256-yxUrIHuBUXbX+nwd5GFPYViAAzUTkJUJCA95ea39n9A="),
-    "linux-x64": artifact("zizmor-x86_64-unknown-linux-gnu.tar.gz", "sha256-uxEMx2Xs6s1+JLKOSpVutuV8YAB7CXB/A5+YYKCKlXs="),
-    "win32-x64": artifact("zizmor-x86_64-pc-windows-msvc.zip", "sha256-0oShbgnZ30ziwAD7Xntb1TMuDpO+pXGByOIlsku1nUk=", "zizmor.exe"),
+    "darwin-arm64": artifact("zizmor-aarch64-apple-darwin.tar.gz", "sha256-bv7RjEU5pmP9PIUaK+lTP9hFbE5kbZQWIG2gWRVKDTw="),
+    "darwin-x64": artifact("zizmor-x86_64-apple-darwin.tar.gz", "sha256-aYMUPHGa2mhFppzE3SuswhX5cWYv7Ni70meDiOXOWWk="),
+    "linux-arm64": artifact("zizmor-aarch64-unknown-linux-gnu.tar.gz", "sha256-yxUrIH+BURbX+hwe5GFPYVeIAzUTlQUpCAleea39n9A="),
+    "linux-x64": artifact("zizmor-x86_64-unknown-linux-gnu.tar.gz", "sha256-uxEMx2Xsqc1++y4oSpVr5ZdMYAJ7CXDxY5fYYgiplXs="),
+    "win32-x64": artifact("zizmor-x86_64-pc-windows-msvc.zip", "sha256-0oShbgnZ30ziwAA1fntZvVMb4JO+pXGKHOIltEm1nUk=", "zizmor.exe"),
   },
   floor: {
     "darwin-arm64": { macos: "11.0" },

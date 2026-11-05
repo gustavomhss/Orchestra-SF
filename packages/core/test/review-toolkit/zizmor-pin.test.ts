@@ -6,18 +6,19 @@ test("zizmor 1.32.0 has independently verified release artifact and license pins
   expect(pinned.license).toBe("MIT")
   expect(pinned.upstream).toBe("zizmorcore/zizmor")
   expect(pinned.fit).toEqual({ role: "check", input: "GitHub Actions workflows", skills: [] })
+  const sri = (hex: string) => `sha256-${Buffer.from(hex, "hex").toString("base64")}`
   const approved = {
-    "darwin-arm64": { executable: "zizmor", url: "https://github.com/zizmorcore/zizmor/releases/download/v1.32.0/zizmor-aarch64-apple-darwin.tar.gz", integrity: "sha256-bv7RjEU5pmP9PcwrovpTP9hFbE5kbZQWIG2gWRVKDTw=", format: "tar.gz", entries: [{ from: "zizmor", to: "zizmor", executable: true }] },
-    "darwin-x64": { executable: "zizmor", url: "https://github.com/zizmorcore/zizmor/releases/download/v1.32.0/zizmor-x86_64-apple-darwin.tar.gz", integrity: "sha256-aYMUPEcdsmhFpprE3SsswhX5cWYu/Ni7wmc4i4zlWWk=", format: "tar.gz", entries: [{ from: "zizmor", to: "zizmor", executable: true }] },
-    "linux-arm64": { executable: "zizmor", url: "https://github.com/zizmorcore/zizmor/releases/download/v1.32.0/zizmor-aarch64-unknown-linux-gnu.tar.gz", integrity: "sha256-yxUrIHuBUXbX+nwd5GFPYViAAzUTkJUJCA95ea39n9A=", format: "tar.gz", entries: [{ from: "zizmor", to: "zizmor", executable: true }] },
-    "linux-x64": { executable: "zizmor", url: "https://github.com/zizmorcore/zizmor/releases/download/v1.32.0/zizmor-x86_64-unknown-linux-gnu.tar.gz", integrity: "sha256-uxEMx2Xs6s1+JLKOSpVutuV8YAB7CXB/A5+YYKCKlXs=", format: "tar.gz", entries: [{ from: "zizmor", to: "zizmor", executable: true }] },
-    "win32-x64": { executable: "zizmor.exe", url: "https://github.com/zizmorcore/zizmor/releases/download/v1.32.0/zizmor-x86_64-pc-windows-msvc.zip", integrity: "sha256-0oShbgnZ30ziwAD7Xntb1TMuDpO+pXGByOIlsku1nUk=", format: "zip", entries: [{ from: "zizmor.exe", to: "zizmor.exe", executable: true }] },
+    "darwin-arm64": { executable: "zizmor", url: "https://github.com/zizmorcore/zizmor/releases/download/v1.32.0/zizmor-aarch64-apple-darwin.tar.gz", hex: "6efed18c4539a663fd3c851a2be9533fd8456c4e646d9416206da059154a0d3c", format: "tar.gz", entries: [{ from: "zizmor", to: "zizmor", executable: true }] },
+    "darwin-x64": { executable: "zizmor", url: "https://github.com/zizmorcore/zizmor/releases/download/v1.32.0/zizmor-x86_64-apple-darwin.tar.gz", hex: "6983143c719ada6845a69cc4dd2bacc215f971662fecd8bbd2678388e5ce5969", format: "tar.gz", entries: [{ from: "zizmor", to: "zizmor", executable: true }] },
+    "linux-arm64": { executable: "zizmor", url: "https://github.com/zizmorcore/zizmor/releases/download/v1.32.0/zizmor-aarch64-unknown-linux-gnu.tar.gz", hex: "cb152b207f815116d7fa1c1ee4614f61578803351395052908095e79adfd9fd0", format: "tar.gz", entries: [{ from: "zizmor", to: "zizmor", executable: true }] },
+    "linux-x64": { executable: "zizmor", url: "https://github.com/zizmorcore/zizmor/releases/download/v1.32.0/zizmor-x86_64-unknown-linux-gnu.tar.gz", hex: "bb110cc765eca9cd7efb2e284a956be5974c60027b0970f16397d86208a9957b", format: "tar.gz", entries: [{ from: "zizmor", to: "zizmor", executable: true }] },
+    "win32-x64": { executable: "zizmor.exe", url: "https://github.com/zizmorcore/zizmor/releases/download/v1.32.0/zizmor-x86_64-pc-windows-msvc.zip", hex: "d284a16e09d9df4ce2c000357e7b59bd531be093bea5718a1ce225b449b59d49", format: "zip", entries: [{ from: "zizmor.exe", to: "zizmor.exe", executable: true }] },
   } as const
   expect(Object.keys(pinned.targets).sort()).toEqual(Object.keys(approved).sort())
   for (const [target, expected] of Object.entries(approved)) {
     expect(pinned.targets[target as keyof typeof pinned.targets]).toEqual({
       executable: expected.executable,
-      artifact: { url: expected.url, integrity: expected.integrity, format: expected.format, entries: [...expected.entries] },
+      artifact: { url: expected.url, integrity: sri(expected.hex), format: expected.format, entries: [...expected.entries] },
     })
   }
   expect(pinned.notices).toEqual([{
