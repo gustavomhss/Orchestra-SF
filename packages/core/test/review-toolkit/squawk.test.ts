@@ -137,16 +137,20 @@ test("prepare writes the host toml outside the tree and does not claim a postgre
 })
 
 test("argv lexical refusals stay named and do not become a clean report", async () => {
+  const nativeRoot = process.platform === "win32" ? "C:/repo" : "/repo"
+  const nativeConfig = process.platform === "win32" ? "C:/host/squawk.toml" : "/host/squawk.toml"
+  const native = (files: readonly string[], extra: { config?: string; root?: string } = {}) =>
+    invoke(files, { root: nativeRoot, config: extra.config ?? nativeConfig, ...extra })
   expect(await invoke([])).toEqual({ status: "not-run", reason: "no-input" })
-  expect(await invoke(["/other/a.sql"])).toEqual({ status: "not-run", reason: "path-outside" })
-  expect(await invoke(["/repo/a.sql"], { config: "/repo/squawk.toml" })).toEqual({ status: "not-run", reason: "config-inside" })
-  expect(await invoke(["/repo/a.txt"])).toEqual({ status: "not-run", reason: "not-sql" })
-  expect(await invoke(["/repo/a.sql/"])).toEqual({ status: "not-run", reason: "directory" })
-  expect(await invoke(["/repo/a\0.sql"])).toEqual({ status: "not-run", reason: "nul" })
+  expect(await native([process.platform === "win32" ? "C:/other/a.sql" : "/other/a.sql"])).toEqual({ status: "not-run", reason: "path-outside" })
+  expect(await native([`${nativeRoot}/a.sql`], { config: `${nativeRoot}/squawk.toml` })).toEqual({ status: "not-run", reason: "config-inside" })
+  expect(await native([`${nativeRoot}/a.txt`])).toEqual({ status: "not-run", reason: "not-sql" })
+  expect(await native([`${nativeRoot}/a.sql/`])).toEqual({ status: "not-run", reason: "directory" })
+  expect(await native([`${nativeRoot}/a\0.sql`])).toEqual({ status: "not-run", reason: "nul" })
   expect(await invoke(["\\\\?\\C:\\repo\\a.sql"], { root: "\\\\?\\C:\\repo", config: "\\\\?\\C:\\host\\squawk.toml" })).toEqual({
     status: "unsupported", reason: "glob-literal-unverified",
   })
-  expect(await invoke([`/repo/${"a".repeat(Probe.Limits.outputBytes)}.sql`])).toEqual({ status: "not-run", reason: "argv-bound" })
+  expect(await native([`${nativeRoot}/${"a".repeat(Probe.Limits.outputBytes)}.sql`])).toEqual({ status: "not-run", reason: "argv-bound" })
   const foreign = process.platform === "win32"
     ? { root: "/repo", config: "/host/squawk.toml", files: ["/repo/a.sql"] }
     : { root: "C:/repo", config: "C:/host/squawk.toml", files: ["C:/repo/a.sql"] }
@@ -155,17 +159,18 @@ test("argv lexical refusals stay named and do not become a clean report", async 
 
 test("argv checks the real file, not the .sql suffix, and leaves outside bytes untouched", async () => {
   await using made = await tmpdir()
-  const repo = path.join(made.path, "repo")
-  const outside = path.join(made.path, "outside")
+  const repo = path.resolve(made.path, "repo")
+  const outside = path.resolve(made.path, "outside")
   await mkdir(repo)
   await mkdir(outside)
-  const secret = path.join(outside, "secret.sql")
+  const secret = path.resolve(outside, "secret.sql")
   await writeFile(secret, "SELECT 1;\n")
   const image = await shot(secret)
   try {
-    const config = await Effect.runPromise(ReviewPackSquawk.prepare(path.join(made.path, "host")))
-    const space = path.join(repo, "my file.sql")
-    const glob = path.join(repo, "a?b*c[d]e.sql")
+    const config = await Effect.runPromise(ReviewPackSquawk.prepare(path.resolve(made.path, "host")))
+    const space = path.resolve(repo, "my file.sql")
+    // `?` and `*` are not Windows filenames. Linux and macOS create them; Windows uses spaces and brackets only.
+    const glob = path.resolve(repo, process.platform === "win32" ? "a[b]c.sql" : "a?b*c[d]e.sql")
     await writeFile(space, "SELECT 1;\n")
     await writeFile(glob, "SELECT 1;\n")
     const positive = await invoke([space, glob], { root: repo, config })
@@ -176,26 +181,27 @@ test("argv checks the real file, not the .sql suffix, and leaves outside bytes u
       expect(positive.argv).not.toContain("--no-config")
       expect(positive.argv.join("\0")).not.toContain("\"")
     }
-    const alias = path.join(made.path, "alias")
-    await symlink(repo, alias)
-    expect((await invoke([path.join(alias, "my file.sql")], { root: alias, config })).status).toBe("ok")
+    const alias = path.resolve(made.path, "alias")
+    await requireLink(repo, alias, "dir")
+    expect((await invoke([path.resolve(alias, "my file.sql")], { root: alias, config })).status).toBe("ok")
+    // Argv preflight only. Not a binary or settle proof that a /var alias was scanned.
     const canonical = await realpath(repo)
     if (canonical.startsWith("/private/var/")) {
       const varRoot = canonical.replace("/private/var/", "/var/")
-      expect((await invoke([path.join(varRoot, "my file.sql")], { root: varRoot, config })).status).toBe("ok")
+      expect((await invoke([path.resolve(varRoot, "my file.sql")], { root: varRoot, config })).status).toBe("ok")
     }
-    await mkdir(path.join(repo, "dir.sql"))
-    expect(await invoke([path.join(repo, "dir.sql")], { root: repo, config })).toEqual({ status: "not-run", reason: "directory" })
-    await symlink(secret, path.join(repo, "linked.sql"))
-    expect(await invoke([path.join(repo, "linked.sql")], { root: repo, config })).toEqual({ status: "unsupported", reason: "symlink" })
-    await symlink(outside, path.join(repo, "escape"))
-    expect(await invoke([path.join(repo, "escape", "secret.sql")], { root: repo, config })).toEqual({ status: "not-run", reason: "path-outside" })
-    expect(await invoke([path.join(repo, "missing.sql")], { root: repo, config })).toEqual({ status: "not-run", reason: "missing" })
-    await writeFile(path.join(repo, "inside.toml"), "x")
-    await symlink(path.join(repo, "inside.toml"), path.join(made.path, "smuggle.toml"))
-    expect(await invoke([space], { root: repo, config: path.join(made.path, "smuggle.toml") })).toEqual({ status: "not-run", reason: "config-symlink" })
-    await symlink(repo, path.join(made.path, "via-repo"))
-    expect(await invoke([space], { root: repo, config: path.join(made.path, "via-repo", "inside.toml") })).toEqual({
+    await mkdir(path.resolve(repo, "dir.sql"))
+    expect(await invoke([path.resolve(repo, "dir.sql")], { root: repo, config })).toEqual({ status: "not-run", reason: "directory" })
+    await requireLink(secret, path.resolve(repo, "linked.sql"), "file")
+    expect(await invoke([path.resolve(repo, "linked.sql")], { root: repo, config })).toEqual({ status: "unsupported", reason: "symlink" })
+    await requireLink(outside, path.resolve(repo, "escape"), "dir")
+    expect(await invoke([path.resolve(repo, "escape", "secret.sql")], { root: repo, config })).toEqual({ status: "not-run", reason: "path-outside" })
+    expect(await invoke([path.resolve(repo, "missing.sql")], { root: repo, config })).toEqual({ status: "not-run", reason: "missing" })
+    await writeFile(path.resolve(repo, "inside.toml"), "x")
+    await requireLink(path.resolve(repo, "inside.toml"), path.resolve(made.path, "smuggle.toml"), "file")
+    expect(await invoke([space], { root: repo, config: path.resolve(made.path, "smuggle.toml") })).toEqual({ status: "not-run", reason: "config-symlink" })
+    await requireLink(repo, path.resolve(made.path, "via-repo"), "dir")
+    expect(await invoke([space], { root: repo, config: path.resolve(made.path, "via-repo", "inside.toml") })).toEqual({
       status: "not-run", reason: "config-inside",
     })
     const sealed = path.join(repo, "sealed.sql")
@@ -207,6 +213,15 @@ test("argv checks the real file, not the .sql suffix, and leaves outside bytes u
     expect(await shot(secret)).toBe(image)
   }
 })
+
+async function requireLink(target: string, link: string, kind: "file" | "dir") {
+  try {
+    await symlink(target, link, process.platform === "win32" ? (kind === "dir" ? "junction" : "file") : undefined)
+  } catch (error) {
+    const code = error && typeof error === "object" && "code" in error ? String(error.code) : "error"
+    throw new Error(`conformance-missing: symlink ${code}`)
+  }
+}
 
 function specEscape(value: string) {
   let escaped = ""
