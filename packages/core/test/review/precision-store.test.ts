@@ -30,7 +30,7 @@ it.effect("precision admission is globally ordered across projects and reads act
     const database = yield* Database.Service
     const rows = yield* database.db.select().from(EventV2.EventTable)
       .where(eq(EventV2.EventTable.aggregate_id, ReviewPrecisionEvent.Aggregate)).all().pipe(Effect.orDie)
-    expect(rows.map((row) => [row.seq, row.id])).toEqual([[0, first.id], [1, second.id]])
+    expect(rows.map((row) => `${row.seq}:${row.id}`).toSorted()).toEqual([`0:${first.id}`, `1:${second.id}`])
     expect(DurableEventManifest.Durable.get("review.precision.observed.1")).toBe(ReviewPrecisionEvent.Observed)
   }),
 )
