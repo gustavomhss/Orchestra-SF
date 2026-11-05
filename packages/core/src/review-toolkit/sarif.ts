@@ -1,5 +1,6 @@
 export * as ReviewSarif from "./sarif"
 
+import { posix, win32 } from "node:path"
 import { Option, Schema } from "effect"
 import { knownRule } from "./packs/ast-grep-rules"
 import { ReviewItem } from "./item"
@@ -209,41 +210,30 @@ function ordered(start: { line: number; column?: number }, end: { line: number; 
   return end.column >= start.column
 }
 
-// Lexical containment. A sibling prefix (`/repo-evil` under `/repo`) and any `..` segment are outside, even if a
-// later collapse would land inside. This is not the SARIF path helper, which keeps an outside uri as its own path.
+// Containment uses the root's own path flavor. A drive letter or UNC root is win32; anything else is posix. Drive-relative
+// `C:foo` is rejected before resolve, which would otherwise borrow that drive's cwd. `/C:` is not rewritten into `C:`.
 function containedPath(file: string, root: string | undefined) {
-  if (!root || file.includes("\0") || file.replaceAll("\\", "/").split("/").includes("..")) return undefined
-  const base = collapse(trimSlash(slash(root)))
-  if (!base) return undefined
-  const local = driveSlash(slash(file))
-  const absolute = absolutePath(local) ? collapse(local) : collapse(`${base}/${local}`)
-  if (!absolute.startsWith(`${base}/`)) return undefined
-  const relative = absolute.slice(base.length + 1)
-  if (!relative || relative.split("/").some((part) => part === "" || part === "." || part === "..")) return undefined
-  return relative
+  if (!root || !file || file.includes("\0") || root.includes("\0")) return undefined
+  if (driveRelative(file) || driveRelative(root) || hasDotDot(file) || hasDotDot(root)) return undefined
+  const path = windowsRoot(root) ? win32 : posix
+  if (!path.isAbsolute(root)) return undefined
+  const resolvedRoot = path.resolve(root)
+  const resolvedFile = path.isAbsolute(file) ? path.resolve(file) : path.resolve(root, file)
+  const relative = path.relative(resolvedRoot, resolvedFile)
+  if (!relative || path.isAbsolute(relative) || relative === ".." || relative.startsWith(`..${path.sep}`)) return undefined
+  return relative.replaceAll("\\", "/")
 }
 
-function slash(value: string) {
-  return value.replaceAll("\\", "/")
+function driveRelative(value: string) {
+  return /^[A-Za-z]:(?![\\/])/.test(value)
 }
 
-function trimSlash(value: string) {
-  return value.replace(/\/+$/, "")
+function hasDotDot(value: string) {
+  return value.split(/[\\/]/).includes("..")
 }
 
-function driveSlash(value: string) {
-  return /^\/[A-Za-z]:\//.test(value) ? value.slice(1) : value
-}
-
-function absolutePath(value: string) {
-  return value.startsWith("/") || /^[A-Za-z]:\//.test(value)
-}
-
-function collapse(value: string) {
-  const drive = /^[A-Za-z]:\//.exec(value)?.[0] ?? ""
-  const abs = value.startsWith("/")
-  const body = drive ? value.slice(drive.length) : abs ? value.slice(1) : value
-  return `${drive}${abs ? "/" : ""}${body.split("/").filter((part) => part !== "" && part !== ".").join("/")}`
+function windowsRoot(root: string) {
+  return /^[A-Za-z]:[\\/]/.test(root) || root.startsWith("\\\\") || root.startsWith("//")
 }
 
 function parseGitleaks(text: string, options: Options): Parsed {

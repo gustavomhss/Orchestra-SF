@@ -6,7 +6,13 @@ import { ReviewPackAstGrep } from "../../src/review-toolkit/packs/ast-grep"
 import { ReviewSarif } from "../../src/review-toolkit/sarif"
 import { tmpdir } from "../fixture/tmpdir"
 
-const parse = (text: string) => ReviewSarif.parseJson(ReviewPackAstGrep.parserId, text, { pack: "ast-grep", root: "/repo" })
+const parse = (text: string, root = "/repo") => ReviewSarif.parseJson(ReviewPackAstGrep.parserId, text, { pack: "ast-grep", root })
+
+function reported(file: string, root: string) {
+  const parsed = parse(JSON.stringify([good({ file })]), root)
+  if (parsed.status !== "ok") return parsed.reason
+  return parsed.results[0]?.path
+}
 
 function good(extra: Record<string, unknown> = {}) {
   return {
@@ -99,6 +105,20 @@ test("an ast-grep path must resolve inside the scanned root", () => {
   expect(parse(JSON.stringify([good({ file: "../etc/passwd" })]))).toEqual({ status: "acquisition-error", reason: "path-outside" })
   expect(parse(JSON.stringify([good({ file: "/repo/../etc/passwd" })]))).toEqual({ status: "acquisition-error", reason: "path-outside" })
   expect(parse(JSON.stringify([good({ file: "/repo-evil/a.js" })]))).toEqual({ status: "acquisition-error", reason: "path-outside" })
+  expect(reported("/a.js", "/")).toBe("a.js")
+  expect(reported("C:/repo/a.js", "C:/repo")).toBe("a.js")
+  expect(reported("C:\\repo\\src\\a.js", "C:/repo")).toBe("src/a.js")
+  expect(reported("src\\a.js", "C:\\repo")).toBe("src/a.js")
+  expect(reported("\\\\server\\share\\repo\\src\\a.js", "\\\\server\\share\\repo")).toBe("src/a.js")
+  expect(reported("//server/share/repo/a.js", "//server/share/repo")).toBe("a.js")
+  expect(reported("\\\\other\\share\\a.js", "\\\\server\\share\\repo")).toBe("path-outside")
+  expect(reported("\\\\server\\other\\a.js", "\\\\server\\share\\repo")).toBe("path-outside")
+  expect(reported("C:foo.js", "C:/repo")).toBe("path-outside")
+  expect(reported("C:foo.js", "/repo")).toBe("path-outside")
+  expect(reported("/C:/repo/a.js", "/repo")).toBe("path-outside")
+  expect(reported("/C:/repo/a.js", "/C:/repo")).toBe("a.js")
+  expect(reported("a.js", "repo")).toBe("path-outside")
+  expect(reported("a.js\0", "/repo")).toBe("path-outside")
 })
 
 test("the host template scans with host rules and does not rewrite", () => {
