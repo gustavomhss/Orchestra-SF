@@ -15,6 +15,7 @@ export class ValidationError extends Error {
 export function validate(reply: string, expected: {
   readonly routing: ReviewRouting.Record
   readonly scope: { readonly base: string; readonly head: string; readonly files: number; readonly changedLines: number }
+  readonly verdictRequired?: boolean
   readonly confirmed?: ReadonlyArray<{
     readonly id: string
     readonly path: string
@@ -37,8 +38,13 @@ export function validate(reply: string, expected: {
   ) throw new ValidationError("routing-mismatch")
   if (!isDeepStrictEqual(card.scope, expected.scope)) throw new ValidationError("scope-mismatch")
   if (card.outcome === "blocked" && card.blockers.length === 0) throw new ValidationError("verdict-mismatch")
+  if (card.outcome === "done" && expected.verdictRequired !== false && card.verdict === undefined)
+    throw new ValidationError("verdict-mismatch")
   const quick = ReviewRouting.tier(expected.routing) === "quick"
   if (!quick && expected.confirmed === undefined) throw new ValidationError("unverified-finding")
+  const ids = card.findings.map((finding) => finding.id)
+  if (new Set(ids).size !== ids.length) throw new ValidationError("unverified-finding")
+  if (!quick && expected.confirmed?.some((finding) => !ids.includes(finding.id))) throw new ValidationError("unverified-finding")
   for (const finding of card.findings) {
     if (quick) {
       if (
@@ -48,6 +54,7 @@ export function validate(reply: string, expected: {
       ) throw new ValidationError("unverified-finding")
       continue
     }
+    if (finding.status !== "open") throw new ValidationError("unverified-finding")
     if (!expected.confirmed?.some((item) =>
       item.id === finding.id && item.path === finding.path && item.line === finding.line && item.endLine === finding.endLine &&
       item.severity === finding.severity && item.class === finding.class && item.node === finding.node &&

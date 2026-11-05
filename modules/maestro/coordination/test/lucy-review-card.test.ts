@@ -25,7 +25,7 @@ const card = {
 }
 const reply = (value: unknown) => `\`\`\`review-result\n${JSON.stringify(value)}\n\`\`\``
 const expected = { routing, scope, confirmed }
-const invalid = (value: unknown, reason: string, wanted = expected) =>
+const invalid = (value: unknown, reason: string, wanted: Parameters<typeof ReviewCardV2.validate>[1] = expected) =>
   expect(() => ReviewCardV2.validate(reply(value), wanted)).toThrow(reason)
 
 test("accepts Quick quote evidence without a host confirmed list", () => {
@@ -42,13 +42,13 @@ test("accepts a Standard finding bound to the host's confirmed record", () => {
 
 test("accepts an empty APPROVE and does not promote questions to findings", () => {
   const value = { ...card, verdict: "APPROVE", findings: [], questions: [{ question: "Unverified?", severity: "P1" }] }
-  expect(ReviewCardV2.validate(reply(value), expected)).toEqual(value)
+  expect(ReviewCardV2.validate(reply(value), { ...expected, confirmed: [] })).toEqual(value)
 })
 
 test("blocked requires a blocker and cannot have a verdict", () => {
   const value = { ...card, outcome: "blocked", verdict: undefined, findings: [], blockers: [{ kind: "entry", reason: "unavailable" }] }
-  expect(ReviewCardV2.validate(reply(value), expected).outcome).toBe("blocked")
-  invalid({ ...value, blockers: [] }, "verdict-mismatch")
+  expect(ReviewCardV2.validate(reply(value), { ...expected, confirmed: [] }).outcome).toBe("blocked")
+  invalid({ ...value, blockers: [] }, "verdict-mismatch", { ...expected, confirmed: [] })
   invalid({ ...value, verdict: "APPROVE" }, "malformed-card")
 })
 
@@ -77,4 +77,32 @@ test("rejects an invented finding and fabricated evidence even with a valid id",
 
 test("APPROVE cannot carry an open blocking finding", () => {
   invalid({ ...card, verdict: "APPROVE" }, "verdict-mismatch")
+})
+
+test("every host-confirmed finding must appear exactly once and remain open", () => {
+  invalid({ ...card, verdict: "APPROVE", findings: [] }, "unverified-finding", {
+    ...expected, confirmed: [{ ...confirmed[0], severity: "P0" }],
+  })
+  const p2 = { ...confirmed[0], id: "C2", severity: "P2" }
+  invalid(card, "unverified-finding", { ...expected, confirmed: [...confirmed, p2] })
+  invalid({ ...card, findings: [finding, finding] }, "unverified-finding")
+  invalid({ ...card, findings: [{ ...finding, status: "resolved" }] }, "unverified-finding")
+  expect(ReviewCardV2.validate(reply({ ...card, verdict: "APPROVE", findings: [] }), { ...expected, confirmed: [] }).verdict).toBe("APPROVE")
+})
+
+test("done requires a verdict by default, with an explicit future non-verdict opt-out", () => {
+  const value = { ...card, verdict: undefined, findings: [] }
+  invalid(value, "verdict-mismatch", { ...expected, confirmed: [] })
+  expect(ReviewCardV2.validate(reply(value), { ...expected, confirmed: [], verdictRequired: false }).verdict).toBeUndefined()
+})
+
+test("overlay summary retains declined routing metadata in host order, without asserting coverage", () => {
+  const route: ReviewRouting.Record = { ...routing, overlays: [
+    ...routing.overlays,
+    { id: "concurrency", source: "content", signal: "src/a.ts:2", declined: "not applicable" },
+  ] }
+  const value = { ...card, routing: route, overlays: ["docs", "concurrency"], findings: [], verdict: "APPROVE" }
+  expect(ReviewCardV2.validate(reply(value), { routing: route, scope, confirmed: [] })).toEqual(value)
+  invalid({ ...value, overlays: ["docs"] }, "routing-mismatch", { routing: route, scope, confirmed: [] })
+  invalid({ ...value, overlays: ["concurrency", "docs"] }, "routing-mismatch", { routing: route, scope, confirmed: [] })
 })
