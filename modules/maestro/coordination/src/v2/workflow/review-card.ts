@@ -4,6 +4,7 @@ import { isDeepStrictEqual } from "node:util"
 import { ReviewRouting } from "@orchestra/core/review/routing"
 import type { MaestroEvent } from "@orchestra/schema/maestro-event"
 import { ReviewResultV2 } from "../governance/review-result"
+import { ReviewChecksV2 } from "./review-checks"
 
 export class ValidationError extends Error {
   override readonly name = "ReviewCardValidationError"
@@ -33,6 +34,7 @@ export function validate(reply: string, expected: {
   readonly scope: { readonly base: string; readonly head: string; readonly files: number; readonly changedLines: number }
   readonly verdictRequired?: boolean
   readonly confirmed?: ReadonlyArray<Confirmed>
+  readonly checkFacts: ReviewChecksV2.Facts
 }): ReviewResultV2.Card {
   const card = ReviewResultV2.parse(reply)
   if (!card) throw new ValidationError("malformed-card")
@@ -75,5 +77,6 @@ export function validate(reply: string, expected: {
   if (card.outcome === "done" && card.verdict === "FIX_FIRST" &&
     !card.findings.some((finding) => finding.status === "open" && ["P0", "P1"].includes(finding.severity))
   ) throw new ValidationError("verdict-mismatch")
+  ReviewChecksV2.validate(card, expected.checkFacts)
   return card
 }

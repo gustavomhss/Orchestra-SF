@@ -9,6 +9,7 @@ import { Tool } from "@orchestra/core/tool/tool"
 import { MaestroEvent } from "@orchestra/schema/maestro-event"
 import { NonNegativeInt, PositiveInt } from "@orchestra/schema/schema"
 import { Context, Effect, Option, Schema } from "effect"
+import { ReviewChecksV2 } from "../workflow/review-checks"
 import { ReviewPRStoreV2 } from "./review-pr-store"
 
 const LIMIT = 4 * 1024 * 1024
@@ -27,6 +28,7 @@ export const Facts = Schema.Struct({
   routing: ReviewRouting.Record,
   scope: Schema.Struct({ base: Schema.NonEmptyString, head: Schema.NonEmptyString, files: NonNegativeInt, changedLines: NonNegativeInt }),
   confirmed: Schema.Array(Confirmed),
+  checkFacts: ReviewChecksV2.Facts,
 })
 export type Facts = typeof Facts.Type
 
