@@ -97,6 +97,7 @@ test("rejects empty or forged argv projections and strips case-insensitive tool 
   expect(ReviewActionlintInput.argv("relative/actionlint", prepared).status).not.toBe("ok")
   expect(ReviewActionlintInput.argv("/bin/actionlint\0evil", prepared).status).not.toBe("ok")
   expect(ReviewActionlintInput.argv("/bin/actionlint", { ...prepared, paths: [{ file: "..", path: ".github/workflows/source.yml" }] }).status).not.toBe("ok")
+  expect(ReviewActionlintInput.argv("/bin/actionlint", { ...prepared, files: [...prepared.files, path.join(root, ".github/workflows/input-1.yaml")], paths: [...prepared.paths, { file: ".github/workflows/input-1.yaml", path: ".github/workflows/source.yml" }] }).status).not.toBe("ok")
   const env = ReviewActionlintInput.environment(root, { ACTIONLINT: "x", actionlint_MORE: "x", SHELLCHECK: "x", SHELLCHECK_OPTS: "x", Pyflakes: "x", PYFLAKES_ARGS: "x", GO: "x", GOFLAGS: "x", SystemRoot: "keep" })
   for (const key of ["ACTIONLINT", "actionlint_MORE", "SHELLCHECK", "SHELLCHECK_OPTS", "Pyflakes", "PYFLAKES_ARGS", "GO", "GOFLAGS"]) expect(env[key]).toBeUndefined()
   expect(env.SystemRoot).toBe("keep")

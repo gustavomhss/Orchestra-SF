@@ -76,15 +76,17 @@ export function argv(executable: string, prepared: Prepared) {
   const relative = (file: string) => path.relative(root, file)
   const validInside = (file: string) => !!file && !file.includes("\0") && !path.isAbsolute(relative(file)) && relative(file) !== ".." && !relative(file).startsWith(`..${path.sep}`)
   if (!executable || !path.isAbsolute(executable) || executable.includes("\0")) return refusal("invalid-executable")
-  if (!root || !path.isAbsolute(root) || !prepared.files.length || prepared.paths.length !== prepared.files.length) return refusal("invalid-projection")
+  if (!root || !path.isAbsolute(root) || !prepared.files.length || prepared.files.length > MAX_FILES || prepared.paths.length !== prepared.files.length) return refusal("invalid-projection")
   if (prepared.config !== path.join(root, ".github", "actionlint.yaml") || !validInside(prepared.config)) return refusal("invalid-projection")
   const pairs = new Set<string>()
+  const sources = new Set<string>()
   for (const [index, file] of prepared.files.entries()) {
     const mapping = prepared.paths[index]
     if (!path.isAbsolute(file) || !validInside(file) || file !== path.join(root, ".github", "workflows", `input-${index}.yaml`)) return refusal("invalid-projection")
     if (mapping.file !== path.relative(root, file) || !/^\.github\/workflows\/input-\d+\.yaml$/.test(mapping.file) || !/^\.github\/workflows\/[^/]+\.ya?ml$/i.test(mapping.path) || mapping.path.includes("\0")) return refusal("invalid-projection")
-    if (pairs.has(mapping.file) || prepared.files.filter((candidate) => candidate === file).length !== 1) return refusal("invalid-projection")
+    if (pairs.has(mapping.file) || sources.has(mapping.path) || prepared.files.filter((candidate) => candidate === file).length !== 1) return refusal("invalid-projection")
     pairs.add(mapping.file)
+    sources.add(mapping.path)
   }
   const argv = [executable, "-no-color", "-shellcheck=", "-pyflakes=", "-config-file", prepared.config, "-format", "{{json .}}", "--", ...prepared.files]
   if (argv.some((arg) => arg.includes("\0")) || argv.reduce((sum, arg) => sum + Buffer.byteLength(arg) + 1, 0) > Probe.Limits.outputBytes) return refusal("argv-bound")
