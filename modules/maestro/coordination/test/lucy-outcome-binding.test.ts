@@ -119,6 +119,22 @@ test("only a matching source class path and inclusive range can confirm", () => 
   expect(settle([source], [unread])).toEqual([expectRead(source, "not-pursued")])
 })
 
+test("one fingerprint keeps every delivered range, and placement is not a conflict", () => {
+  const first = item({ line: 10, endLine: 10, onChangedLine: true })
+  const second = item({ line: 30, endLine: 32, onChangedLine: false })
+  expect(settle([first, second])).toEqual([expectRead(first, "not-pursued")])
+  expect(settle([first, second], [decision(second, "confirmed")])).toEqual([expectRead(first, "confirmed")])
+  expect(settle([first, second], [decision(first, "confirmed"), decision(second, "refuted")])).toEqual([expectRead(first, "not-pursued")])
+  expect(settle([first, second], [decision(first, "confirmed"), decision(second, "question")])).toEqual([expectRead(first, "confirmed")])
+  expect(settle([first, second], [decision(first, "confirmed", { line: 9, endLine: 9 })])).toEqual([expectRead(first, "not-pursued")])
+  expect(thrown(() => settle([first, item({ line: 30, class: "logic.invariant" })]))).toContain("outcome-source-conflict")
+  expect(thrown(() => settle([first, item({ line: 30, severity: "P0" })]))).toContain("outcome-source-conflict")
+  expect(thrown(() => settle([first, item({ line: 30, lens: "other" })]))).toContain("outcome-source-conflict")
+  expect(thrown(() => settle([first, item({ line: 30, snippetDigest: "other" })]))).toContain("outcome-source-conflict")
+  expect(thrown(() => settle([first, item({ line: 30, triage: "other" })]))).toContain("outcome-source-conflict")
+  expect(thrown(() => settle([first, item({ line: 30, ruleStatus: "active" })]))).toContain("outcome-source-conflict")
+})
+
 test("reads sort by pack rule generation and fingerprint and reject a bad source", () => {
   const left = item({ rule: "exact-rule", fingerprint: "fp-z" })
   const right = item({ rule: "generic-api-key", fingerprint: "fp-a" })

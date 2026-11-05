@@ -792,3 +792,131 @@ test("Quick finish pages retained items during the drain and the result includes
     expect(h.calls.filter((call) => call.startsWith("run:lead:"))).toEqual(["run:lead:entry", "run:lead:finish"])
   })),
 )
+
+test("the same quote at two delivered ranges is two verifier candidates and one native read", () =>
+  run((directory) => Effect.gen(function* () {
+    const quote = "export const a = 2"
+    const at = (line: number, fingerprint: string, rule: string, onChangedLine = true): ReviewItem.ToolItem => ({
+      ...item("correctness-logic", 0),
+      fingerprint, rule, line, endLine: line, onChangedLine,
+      sources: [{ pack: "gitleaks", rule }],
+    })
+    const claim = (line: number, source?: string, severity = "P1", text = quote) => ({
+      class: "logic.invariant", node: "lucy-lens-correctness-logic-invariants", path: "src/a.ts", line, severity,
+      trigger: `trigger at ${line}`, quote: text, ...(source === undefined ? {} : { source }),
+    })
+    const emptyLens = (lens: string) => fenced(ReviewFanoutV2.TAGS.lens, { lens, candidates: [], observations: [], hunks: [], items: [] })
+    const verdict = (id: string, line: number, state: "confirmed" | "refuted" | "question") => state === "question"
+      ? { candidate: id, state, reason: "needs a probe", history: [{ option: "quote", outcome: "unsettled" }] }
+      : state === "confirmed"
+        ? { candidate: id, state, rung: "quote", evidence: { kind: "quote", path: "src/a.ts", startLine: line, endLine: line }, history: [{ option: "quote", outcome: "settled" }] }
+        : { candidate: id, state: "dropped", refutation: "REFUTED-BECAUSE", history: [{ option: "quote", outcome: "settled" }] }
+    const cases = [
+      { name: "conflict", later: "refuted" as const, outcome: "not-pursued" as const },
+      { name: "question", later: "question" as const, outcome: "confirmed" as const },
+    ]
+    for (const spec of cases) {
+      const h = yield* harness(directory, `ranges_${spec.name}`)
+      const regions: Array<[string, number, number]> = []
+      const shared = "fp-shared"
+      const analysis: ReviewFanoutV2.Analysis = {
+        checks: ANALYSIS.checks,
+        items: { "correctness-logic": [at(10, shared, "rule", true), at(30, shared, "rule", false)] },
+        retained: { uri: "artifact:ranges", total: 2, unread: {} },
+      }
+      const result = yield* ReviewFanoutV2.run(h.input("standard", { completion: "card-only" }), {
+        ...h.port,
+        analyze: () => Effect.succeed(analysis),
+        region: (file, start, end) => Effect.sync(() => {
+          regions.push([file, start, end])
+          return `REGION ${file}:${start}-${end}`
+        }),
+        run: (id, text, turn) => {
+          if (turn.key === "hunt") {
+            const lens = /Stage: hunt, lens ([^,]+),/.exec(text)?.[1]
+            if (!lens) return Effect.die("hunt brief has no lens")
+            if (lens !== "correctness-logic") return Effect.succeed(emptyLens(lens))
+            return Effect.succeed(fenced(ReviewFanoutV2.TAGS.lens, {
+              lens, observations: [], hunks: [], items: [],
+              candidates: [claim(10, shared), claim(10, shared), claim(30, shared)],
+            }))
+          }
+          if (turn.key === "verify" && text.includes("class logic.invariant")) {
+            const shown = dataBlock(text, "candidates") as Array<{ id: string; line: number; region: string }>
+            expect(shown.map((entry) => entry.line).toSorted((left, right) => left - right)).toEqual([10, 30])
+            expect(new Set(shown.map((entry) => entry.id)).size).toBe(2)
+            expect(shown.map((entry) => entry.region)).toEqual(expect.arrayContaining(["REGION src/a.ts:7-13", "REGION src/a.ts:27-33"]))
+            expect(JSON.stringify(shown)).not.toContain("source-unbound")
+            return Effect.succeed(fenced(ReviewFanoutV2.TAGS.verify, {
+              class: "logic.invariant",
+              results: shown.map((entry) => verdict(entry.id, entry.line, entry.line === 30 ? spec.later : "confirmed")),
+            }))
+          }
+          return h.port.run(id, text, turn)
+        },
+      })
+      if (result.status !== "ran") return yield* Effect.die(`${spec.name} did not run`)
+      expect(regions).toEqual(expect.arrayContaining([["src/a.ts", 7, 13], ["src/a.ts", 27, 33]]))
+      expect(regions.filter(([file]) => file === "src/a.ts")).toHaveLength(2)
+      const questions = dataBlock(brief(h.briefs, "lead:finish"), "questions") as Array<{ line: number; reason: string }>
+      expect(JSON.stringify(result.routing.deviations)).not.toContain("source-unbound")
+      expect(JSON.stringify(questions)).not.toContain("source-unbound")
+      const read = result.outcomes.filter((entry) => entry.fingerprint === shared)
+      expect(read.map((entry) => entry.outcome)).toEqual([spec.outcome])
+      expect(read[0]).toMatchObject({ pack: "gitleaks", rule: "rule" })
+      expect(read[0].generation).toMatch(/^[0-9a-f]{64}$/)
+      expect(result.confirmed.some((finding) => finding.line === 30)).toBe(false)
+    }
+    const h = yield* harness(directory, "ranges_overflow")
+    const regions: Array<[string, number, number]> = []
+    const analysis: ReviewFanoutV2.Analysis = {
+      checks: ANALYSIS.checks,
+      items: {
+        "correctness-logic": [at(10, "fp-a", "rule-a"), at(30, "fp-b", "rule-b")],
+      },
+      retained: { uri: "artifact:overflow", total: 2, unread: {} },
+    }
+    const result = yield* ReviewFanoutV2.run(h.input("standard", { completion: "card-only" }), {
+      ...h.port,
+      analyze: () => Effect.succeed(analysis),
+      region: (file, start, end) => Effect.sync(() => {
+        regions.push([file, start, end])
+        return `REGION ${file}:${start}-${end}`
+      }),
+      run: (id, text, turn) => {
+        if (turn.key === "hunt") {
+          const lens = /Stage: hunt, lens ([^,]+),/.exec(text)?.[1]
+          if (!lens) return Effect.die("hunt brief has no lens")
+          if (lens !== "correctness-logic") return Effect.succeed(emptyLens(lens))
+          return Effect.succeed(fenced(ReviewFanoutV2.TAGS.lens, {
+            lens, observations: [], hunks: [], items: [],
+            candidates: [
+              claim(10, "fp-a"),
+              claim(12, undefined, "P1", "filler one"),
+              claim(13, undefined, "P1", "filler two"),
+              claim(14, undefined, "P1", "filler three"),
+              claim(30, "fp-b", "P3"),
+            ],
+          }))
+        }
+        if (turn.key === "verify" && text.includes("class logic.invariant")) {
+          const shown = dataBlock(text, "candidates") as Array<{ id: string; line: number }>
+          expect(shown.some((entry) => entry.line === 30)).toBe(false)
+          expect(shown.some((entry) => entry.line === 10)).toBe(true)
+          return Effect.succeed(fenced(ReviewFanoutV2.TAGS.verify, {
+            class: "logic.invariant",
+            results: shown.filter((entry) => entry.line === 10).map((entry) => verdict(entry.id, entry.line, "confirmed")),
+          }))
+        }
+        return h.port.run(id, text, turn)
+      },
+    })
+    if (result.status !== "ran") return yield* Effect.die("overflow did not run")
+    expect(regions.some(([, start]) => start === 27)).toBe(false)
+    const questions = dataBlock(brief(h.briefs, "lead:finish"), "questions") as Array<{ line: number; reason: string }>
+    expect(questions).toContainEqual(expect.objectContaining({ line: 30, reason: "not verified: budget" }))
+    expect(result.outcomes.find((entry) => entry.fingerprint === "fp-a")?.outcome).toBe("confirmed")
+    expect(result.outcomes.find((entry) => entry.fingerprint === "fp-b")?.outcome).toBe("not-pursued")
+    expect(JSON.stringify(result.routing.deviations)).not.toContain("source-unbound")
+  })),
+)
