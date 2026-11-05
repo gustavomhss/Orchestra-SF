@@ -585,13 +585,13 @@ describe("TaskTool canonical delegation", () => {
     const toolResult = f.harness.requests[2].messages.flatMap((message) => message.role === "tool" ? message.content : [])
       .filter((part) => part.type === "tool-result").find((part) => part.id === "provider-error-task")
     if (!toolResult) throw new Error("Missing parent model tool result")
+    const failure = Schema.decodeUnknownSync(Schema.Struct({ error: Schema.Struct({ message: Schema.String }) }))(toolResult.result.value)
     expect(toolResult).toMatchObject({
       id: "provider-error-task", name: "task",
-      result: { type: "error", value: { error: { message: expect.stringContaining(child.id) } } },
+      result: { type: "error" },
     })
-    expect(toolResult.result.value).toMatchObject({
-      error: { message: expect.stringContaining("the child failed: child provider event failed") },
-    })
+    expect(failure.error.message).toContain(child.id)
+    expect(failure.error.message).toContain("the child failed: child provider event failed")
     expect(context.at(-1)).toMatchObject({ type: "assistant", finish: "stop", content: [
       expect.objectContaining({ type: "text", text: "answer:parent-provider-error" }),
     ] })
