@@ -98,8 +98,13 @@ export const run = Effect.fn("ReviewAnalyze.run")(function* (input: RunInput, pi
   const observeCatalog = yield* ObserveCatalog
   observeCatalog(catalog)
   const id = Bun.randomUUIDv7()
+  // Worktree containment only: a contained absolute becomes the same host-relative spelling every pack and the
+  // final filter see. Outside and traversal stay unnormalized so the copy walk still refuses them. Not the scratch root.
+  const selected = input.scope === "files"
+    ? { ...input, files: (input.files ?? []).map((file) => ReviewNativeFiles.containedPath(input.worktree, file) ?? file) }
+    : input
   const context = {
-    input,
+    input: selected,
     catalog,
     write: (name: string, text: string | Uint8Array) =>
       Effect.promise(() => Bun.write(path.join(input.store, id, name), text)).pipe(Effect.as(`review:${id}/${name}`)),
@@ -113,7 +118,7 @@ export const run = Effect.fn("ReviewAnalyze.run")(function* (input: RunInput, pi
     .map((packID) => ({ packID, pack: catalog.packs.find((entry) => entry.id === packID) }))
     .toSorted((a, b) => LANES.indexOf(a.pack?.lane ?? "build") - LANES.indexOf(b.pack?.lane ?? "build"))
   const outcomes = yield* Effect.forEach(ordered, (entry) => runPack(entry.packID, entry.pack, context), { concurrency: 1 })
-  const inScope = (entry: ReviewSarif.Entry) => input.scope === "diff" || (input.files ?? []).includes(entry.item.path)
+  const inScope = (entry: ReviewSarif.Entry) => selected.scope === "diff" || (selected.files ?? []).includes(entry.item.path)
   const result = pipeline({
     head: outcomes.flatMap((outcome) => outcome.head).filter(inScope),
     base: outcomes.flatMap((outcome) => outcome.base).filter(inScope),
@@ -390,17 +395,36 @@ async function pythonSelection(root: string, input: RunInput, side: "head" | "ba
   if (escaped) return { refused: escaped.includes("\0") ? "nul" : "path-outside" }
   const files: string[] = []
   for (const file of requested.filter((entry) => pythonName(flavor.basename(entry)))) {
-    const absolute = flavor.resolve(root, file)
-    const info = await lstat(absolute).catch((error: NodeJS.ErrnoException) => error)
-    if (info instanceof Error) {
-      if (side === "base" && (info.code === "ENOENT" || info.code === "ENOTDIR")) continue
-      return { refused: info.code === "ENOENT" ? "missing" : info.code === "EACCES" || info.code === "EPERM" ? "unreadable" : `fs-${info.code ?? "error"}` }
-    }
-    if (info.isSymbolicLink()) return { refused: "symlink" }
-    if (!info.isFile()) return { refused: info.isDirectory() ? "directory" : "not-file" }
-    files.push(absolute)
+    const relative = ReviewNativeFiles.containedPath(root, file)
+    if (!relative) return { refused: file.includes("\0") ? "nul" : "path-outside" }
+    const walked = await copiedPython(root, relative, side)
+    if (walked === undefined) continue
+    if (typeof walked !== "string") return walked
+    files.push(walked)
   }
   return { files }
+}
+
+// Parents are lstat'd in order. A base miss is absence only after each of them was a non-symlink; a symlink, including
+// a dangling one, is refused before the child is stated. ENOTDIR from a regular-file parent is that absence, not a link.
+async function copiedPython(root: string, relative: string, side: "head" | "base") {
+  const flavor = ReviewNativeFiles.flavor(root)
+  const segments = relative.split("/").filter((segment) => segment !== "" && segment !== ".")
+  if (segments.length === 0) return { refused: "missing" }
+  let cursor = root
+  for (const [index, segment] of segments.entries()) {
+    cursor = flavor.join(cursor, segment)
+    const stat = await lstat(cursor).catch((error: NodeJS.ErrnoException) => error)
+    if (stat instanceof Error) {
+      if (side === "base" && (stat.code === "ENOENT" || stat.code === "ENOTDIR")) return undefined
+      return { refused: stat.code === "ENOENT" ? "missing" : stat.code === "EACCES" || stat.code === "EPERM" ? "unreadable" : `fs-${stat.code ?? "error"}` }
+    }
+    if (stat.isSymbolicLink()) return { refused: "symlink" }
+    const last = index === segments.length - 1
+    if (last && stat.isDirectory()) return { refused: "directory" }
+    if (last && !stat.isFile()) return { refused: "not-file" }
+  }
+  return cursor
 }
 
 function pythonName(name: string) {
