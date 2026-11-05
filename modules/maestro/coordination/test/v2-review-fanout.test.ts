@@ -427,7 +427,7 @@ test("entry reanalysis adopts the latest retained URI, checks and unread coverag
       overlays: [...ReviewCatalog.current.overlays, { id: "entry-overlay", paths: [], content: [], lenses: [], checks: ["entry-pack"] }],
     }
     const latest: ReviewFanoutV2.Analysis = {
-      checks: [{ id: "LATEST-CHECK", status: "pass" }],
+      checks: [{ id: "LATEST-CHECK", pack: "entry-pack", version: "test", lane: "no-build", workspaceExecuted: false, status: "pass" } satisfies ReviewAnalyze.Check],
       items: { "correctness-logic": [item("correctness-logic", 99)] },
       retained: { uri: "artifact:latest", total: 12, unread: { "correctness-logic": 11 } },
     }
