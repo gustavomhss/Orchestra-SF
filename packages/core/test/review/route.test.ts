@@ -281,6 +281,13 @@ describe("phase 3 overlays", () => {
     expect(found(routed(file, [text]), id)).toBeUndefined()
   })
 
+  test("Content-Type is a bounded header, not a prefix", () => {
+    const hit = routed("src/handler.ts", ["Content-Type: application/json"])
+    expect(found(hit, "api-wire")).toEqual({ id: "api-wire", source: "content", signal: "src/handler.ts:1 content-type" })
+    expect(found(routed("src/handler.ts", ["Content-Typed"]), "api-wire")).toBeUndefined()
+    expect(found(routed("src/handler.ts", ["Content-TypeExtra"]), "api-wire")).toBeUndefined()
+  })
+
   test("a binding path beats added-line content", () => {
     const record = routed("migrations/001.sql", ["ALTER TABLE job ADD COLUMN x INTEGER;"])
     expect(found(record, "data-migration")).toEqual({ id: "data-migration", source: "path", signal: "migrations/001.sql" })

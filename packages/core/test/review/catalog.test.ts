@@ -172,7 +172,7 @@ describe("review catalog", () => {
     expect(overlay("concurrency")?.paths).toEqual([])
     expect(overlay("concurrency")?.lenses).toEqual(["correctness-concurrency"])
     expect(overlay("concurrency")?.content.map((entry) => entry.id)).toEqual(["lock", "spawn", "promise-all", "goroutine", "deferred"])
-    expect(overlay("api-wire")).toMatchObject({ paths: ["**/*.proto", "**/openapi.{yaml,yml,json}"], lenses: ["contracts"], content: [{ id: "content-type", pattern: "Content-Type" }] })
+    expect(overlay("api-wire")).toMatchObject({ paths: ["**/*.proto", "**/openapi.{yaml,yml,json}"], lenses: ["contracts"], content: [{ id: "content-type", pattern: "\\bContent-Type\\b" }] })
     expect(overlay("data-migration")).toMatchObject({ paths: ["**/migrations/**"], lenses: ["contracts"], content: [{ id: "alter-table", pattern: "\\bALTER\\s+TABLE\\b" }] })
     expect(overlay("performance")).toMatchObject({
       paths: ["**/benchmarks/**"],
