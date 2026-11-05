@@ -197,40 +197,50 @@ describe("review route", () => {
 
 describe("phase 3 overlays", () => {
   test.each([
-    ["api-wire", "api.proto", "contracts"],
-    ["api-wire", "pkg/api/service.proto", "contracts"],
-    ["api-wire", "openapi.yaml", "contracts"],
-    ["api-wire", "services/openapi.json", "contracts"],
-    ["data-migration", "migrations/001.sql", "contracts"],
-    ["data-migration", "db/migrations/nested/001.sql", "contracts"],
-    ["performance", "benchmarks/hot.ts", "correctness-performance"],
-    ["performance", "pkg/benchmarks/hot.ts", "correctness-resources"],
-    ["ci-infra", ".github/workflows/ci.yml", "change"],
-    ["ci-infra", ".github/workflows/nested/ci.yml", "security"],
-    ["ci-infra", "main.tf", "change"],
-    ["ci-infra", "modules/vpc/main.tf", "security"],
-    ["dependency", "package.json", "contracts"],
-    ["dependency", "packages/core/package.json", "security"],
-    ["dependency", "bun.lock", "contracts"],
-    ["dependency", "apps/desktop/yarn.lock", "security"],
-    ["ui", "packages/app-shell/src/app.tsx", "experience"],
-    ["ui", "packages/app-shell/src/nested/view.css", "experience"],
-    ["ui", "button.tsx", "experience"],
-    ["ui", "src/button.css", "experience"],
-    ["personal-data", "privacy/fields.ts", "privacy"],
-    ["personal-data", "docs/privacy/fields.ts", "privacy"],
-  ] as const)("%s binds %s and adds %s", (id, file, lens) => {
+    ["api-wire", "api.proto", "contracts", "path", "overlay:api-wire", "lucy-lens-contracts"],
+    ["api-wire", "pkg/api/service.proto", "contracts", "path", "overlay:api-wire", "lucy-lens-contracts"],
+    ["api-wire", "openapi.yaml", "contracts", "path", "overlay:api-wire", "lucy-lens-contracts"],
+    ["api-wire", "services/openapi.json", "contracts", "path", "overlay:api-wire", "lucy-lens-contracts"],
+    ["data-migration", "migrations/001.sql", "contracts", "path", "overlay:data-migration", "lucy-lens-contracts"],
+    ["data-migration", "db/migrations/nested/001.sql", "contracts", "path", "overlay:data-migration", "lucy-lens-contracts"],
+    ["performance", "benchmarks/hot.ts", "correctness-performance", "path", "overlay:performance", "lucy-lens-correctness-performance"],
+    ["performance", "pkg/benchmarks/hot.ts", "correctness-resources", "capped", "overlay:performance", "lucy-lens-correctness-resources"],
+    ["ci-infra", ".github/workflows/ci.yml", "change", "path", "overlay:ci-infra", "lucy-lens-change"],
+    ["ci-infra", ".github/workflows/nested/ci.yml", "security", "catalog", "tier:standard", "lucy-lens-security"],
+    ["ci-infra", "main.tf", "change", "path", "overlay:ci-infra", "lucy-lens-change"],
+    ["ci-infra", "modules/vpc/main.tf", "security", "catalog", "tier:standard", "lucy-lens-security"],
+    ["dependency", "package.json", "contracts", "path", "overlay:dependency", "lucy-lens-contracts"],
+    ["dependency", "packages/core/package.json", "security", "catalog", "tier:standard", "lucy-lens-security"],
+    ["dependency", "bun.lock", "contracts", "path", "overlay:dependency", "lucy-lens-contracts"],
+    ["dependency", "apps/desktop/yarn.lock", "security", "catalog", "tier:standard", "lucy-lens-security"],
+    ["ui", "packages/app-shell/src/app.tsx", "experience", "path", "overlay:ui", "lucy-lens-experience"],
+    ["ui", "packages/app-shell/src/nested/view.css", "experience", "path", "overlay:ui", "lucy-lens-experience"],
+    ["ui", "button.tsx", "experience", "path", "overlay:ui", "lucy-lens-experience"],
+    ["ui", "src/button.css", "experience", "path", "overlay:ui", "lucy-lens-experience"],
+    ["personal-data", "privacy/fields.ts", "privacy", "path", "overlay:personal-data", "lucy-audit-compliance-privacy"],
+    ["personal-data", "docs/privacy/fields.ts", "privacy", "path", "overlay:personal-data", "lucy-audit-compliance-privacy"],
+  ] as const)("%s binds %s and accounts for %s as %s", (id, file, lens, kind, because, node) => {
     const record = routed(file)
     expect(found(record, id)).toEqual({ id, source: "path", signal: file })
-    expect(record.lenses.some((entry) => entry.id === lens && entry.source === "path" && entry.because === `overlay:${id}`)).toBe(true)
+    if (kind === "capped") {
+      expect(record.lenses.some((entry) => entry.id === lens)).toBe(false)
+      expect(record.deviations).toContainEqual(deviation(lens, because))
+      return
+    }
+    expect(record.lenses).toContainEqual({ id: lens, source: kind, node, because })
   })
 
-  test("a performance path binds both lenses", () => {
+  test("a performance path routes the first lens and caps the second", () => {
     const record = routed("benchmarks/hot.ts")
-    expect(record.lenses.filter((entry) => entry.because === "overlay:performance").map((entry) => entry.id)).toEqual([
-      "correctness-performance",
-      "correctness-resources",
-    ])
+    expect(found(record, "performance")).toEqual({ id: "performance", source: "path", signal: "benchmarks/hot.ts" })
+    expect(record.lenses).toContainEqual({
+      id: "correctness-performance",
+      source: "path",
+      node: "lucy-lens-correctness-performance",
+      because: "overlay:performance",
+    })
+    expect(record.lenses.some((entry) => entry.id === "correctness-resources")).toBe(false)
+    expect(record.deviations).toContainEqual(deviation("correctness-resources", "overlay:performance"))
   })
 
   test.each([
