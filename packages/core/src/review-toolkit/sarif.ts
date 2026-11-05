@@ -1,6 +1,7 @@
 export * as ReviewSarif from "./sarif"
 
 import { Option, Schema } from "effect"
+import { knownRule } from "./packs/ast-grep-rules"
 import { ReviewItem } from "./item"
 
 // §8.6 step 1 (normalize): SARIF 2.1.0 and pack-specific JSON reports become one raw shape, then ToolItems through the
@@ -147,48 +148,102 @@ const GitleaksReport = Schema.Array(Schema.Struct({
   Match: Schema.optionalKey(Schema.String),
 }))
 
-// ast-grep 0.45.3 `scan --json` (crates/cli/src/print/json_print.rs): an array of rule matches. `range.start.line` and
-// `range.end.line` are zero-based. `file` is the path the walk yielded. Extra fields (severity, language, labels) are
-// not findings data; the catalog maps the rule id.
-const AstGrepReport = Schema.Array(Schema.Struct({
-  ruleId: Schema.String,
-  message: Schema.optionalKey(Schema.String),
-  file: Schema.String,
-  text: Schema.optionalKey(Schema.String),
-  range: Schema.Struct({
-    start: Schema.Struct({ line: Schema.Int.check(Schema.isGreaterThanOrEqualTo(0)) }),
-    end: Schema.optionalKey(Schema.Struct({ line: Schema.Int.check(Schema.isGreaterThanOrEqualTo(0)) })),
-  }),
-}))
-
+// ast-grep 0.45.3 `scan --json`: an array of rule matches. Lines are zero-based. One invalid row fails the whole report;
+// excluded rows must not become an empty pass. Only the two host rule ids are known. SARIF and gitleaks stay as they are.
 function parseAstGrep(text: string, options: Options): Parsed {
   const json = Schema.decodeUnknownOption(Schema.UnknownFromJsonString)(text)
   if (Option.isNone(json)) return { status: "acquisition-error", reason: "malformed-json" }
-  const report = Schema.decodeUnknownOption(AstGrepReport)(json.value)
-  if (Option.isNone(report)) return { status: "acquisition-error", reason: "not-ast-grep-json" }
-  const read = report.value.map((finding) => {
-    const line = finding.range.start.line + 1
-    if (!finding.ruleId) return { excluded: "no-rule" as const }
-    if (!finding.file || !Number.isSafeInteger(line) || line < 1) return { excluded: "no-location" as const, rule: finding.ruleId }
-    const end = finding.range.end === undefined ? undefined : finding.range.end.line + 1
-    return {
-      raw: {
-        pack: options.pack,
-        rule: finding.ruleId,
-        path: relativePath(finding.file, options.root),
-        line,
-        ...endLine(line, end),
-        ...optional("snippet", finding.text),
-        message: finding.message ?? "",
-        suppressions: [],
-      } satisfies Raw,
-    }
-  })
+  if (!Array.isArray(json.value)) return { status: "acquisition-error", reason: "not-ast-grep-json" }
+  const read = json.value.map((row) => astGrepRow(row, options))
+  const failed = read.find((row) => row.status === "acquisition-error")
+  if (failed?.status === "acquisition-error") return failed
+  return { status: "ok", results: read.flatMap((row) => row.status === "ok" ? [row.raw] : []), excluded: [] }
+}
+
+function astGrepRow(row: unknown, options: Options): { status: "ok"; raw: Raw } | { status: "acquisition-error"; reason: string } {
+  if (!record(row)) return { status: "acquisition-error", reason: "not-ast-grep-json" }
+  if (typeof row.ruleId !== "string" || row.ruleId.length === 0) return { status: "acquisition-error", reason: "empty-rule" }
+  if (!knownRule(row.ruleId)) return { status: "acquisition-error", reason: `unknown-rule:${row.ruleId}` }
+  if (typeof row.file !== "string" || row.file.length === 0) return { status: "acquisition-error", reason: "file-missing" }
+  if (!record(row.range)) return { status: "acquisition-error", reason: "range-invalid" }
+  const start = point(row.range.start)
+  const end = point(row.range.end)
+  if (!start || !end || !ordered(start, end)) return { status: "acquisition-error", reason: "range-invalid" }
+  const path = containedPath(row.file, options.root)
+  if (!path) return { status: "acquisition-error", reason: "path-outside" }
+  const line = start.line + 1
+  const endLineNumber = end.line + 1
+  if (!Number.isSafeInteger(line) || !Number.isSafeInteger(endLineNumber)) return { status: "acquisition-error", reason: "range-invalid" }
   return {
     status: "ok",
-    results: read.flatMap((entry) => (isRaw(entry) ? [entry.raw] : [])),
-    excluded: count(read.flatMap((entry) => (isExcluded(entry) ? [entry] : []))),
+    raw: {
+      pack: options.pack,
+      rule: row.ruleId,
+      path,
+      line,
+      ...endLine(line, endLineNumber),
+      ...optional("snippet", typeof row.text === "string" ? row.text : undefined),
+      message: typeof row.message === "string" ? row.message : "",
+      suppressions: [],
+    },
   }
+}
+
+function record(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+}
+
+function point(value: unknown) {
+  if (!record(value) || !whole(value.line)) return undefined
+  if (value.column !== undefined && !whole(value.column)) return undefined
+  return whole(value.column) ? { line: value.line, column: value.column } : { line: value.line }
+}
+
+function whole(value: unknown): value is number {
+  return typeof value === "number" && Number.isSafeInteger(value) && value >= 0
+}
+
+function ordered(start: { line: number; column?: number }, end: { line: number; column?: number }) {
+  if (end.line !== start.line) return end.line > start.line
+  if (start.column === undefined || end.column === undefined) return true
+  return end.column >= start.column
+}
+
+// Lexical containment. A sibling prefix (`/repo-evil` under `/repo`) and any `..` segment are outside, even if a
+// later collapse would land inside. This is not the SARIF path helper, which keeps an outside uri as its own path.
+function containedPath(file: string, root: string | undefined) {
+  if (!root || file.includes("\0") || file.replaceAll("\\", "/").split("/").includes("..")) return undefined
+  const base = collapse(trimSlash(slash(root)))
+  if (!base) return undefined
+  const local = driveSlash(slash(file))
+  const absolute = absolutePath(local) ? collapse(local) : collapse(`${base}/${local}`)
+  if (!absolute.startsWith(`${base}/`)) return undefined
+  const relative = absolute.slice(base.length + 1)
+  if (!relative || relative.split("/").some((part) => part === "" || part === "." || part === "..")) return undefined
+  return relative
+}
+
+function slash(value: string) {
+  return value.replaceAll("\\", "/")
+}
+
+function trimSlash(value: string) {
+  return value.replace(/\/+$/, "")
+}
+
+function driveSlash(value: string) {
+  return /^\/[A-Za-z]:\//.test(value) ? value.slice(1) : value
+}
+
+function absolutePath(value: string) {
+  return value.startsWith("/") || /^[A-Za-z]:\//.test(value)
+}
+
+function collapse(value: string) {
+  const drive = /^[A-Za-z]:\//.exec(value)?.[0] ?? ""
+  const abs = value.startsWith("/")
+  const body = drive ? value.slice(drive.length) : abs ? value.slice(1) : value
+  return `${drive}${abs ? "/" : ""}${body.split("/").filter((part) => part !== "" && part !== ".").join("/")}`
 }
 
 function parseGitleaks(text: string, options: Options): Parsed {

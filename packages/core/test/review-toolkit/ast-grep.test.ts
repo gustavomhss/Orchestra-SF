@@ -6,6 +6,19 @@ import { ReviewPackAstGrep } from "../../src/review-toolkit/packs/ast-grep"
 import { ReviewSarif } from "../../src/review-toolkit/sarif"
 import { tmpdir } from "../fixture/tmpdir"
 
+const parse = (text: string) => ReviewSarif.parseJson(ReviewPackAstGrep.parserId, text, { pack: "ast-grep", root: "/repo" })
+
+function good(extra: Record<string, unknown> = {}) {
+  return {
+    ruleId: ReviewPackAstGrep.rules[0].id,
+    file: "src/a.js",
+    message: "direct eval",
+    text: "eval(input)",
+    range: { start: { line: 1, column: 0 }, end: { line: 1, column: 11 } },
+    ...extra,
+  }
+}
+
 test("normalizes ast-grep JSON to one-based rule, path and message", () => {
   const text = JSON.stringify([{
     text: "eval(input)",
@@ -40,26 +53,52 @@ test("normalizes ast-grep JSON to one-based rule, path and message", () => {
   })
 })
 
-test("an unreadable ast-grep report is an acquisition error, never a pass", () => {
-  expect(ReviewSarif.parseJson(ReviewPackAstGrep.parserId, "not json", { pack: "ast-grep" })).toEqual({
+test("an empty ast-grep array is a clean report; one invalid row fails the whole report", () => {
+  expect(parse("not json")).toEqual({ status: "acquisition-error", reason: "malformed-json" })
+  expect(parse(JSON.stringify({ matches: [] }))).toEqual({ status: "acquisition-error", reason: "not-ast-grep-json" })
+  expect(parse("[]")).toEqual({ status: "ok", results: [], excluded: [] })
+  expect(parse(JSON.stringify([{ ruleId: "", file: "a.js", range: { start: { line: 0 } } }]))).toEqual({
     status: "acquisition-error",
-    reason: "malformed-json",
+    reason: "empty-rule",
   })
-  expect(ReviewSarif.parseJson(ReviewPackAstGrep.parserId, JSON.stringify({ matches: [] }), { pack: "ast-grep" })).toEqual({
+  expect(parse(JSON.stringify([good({ ruleId: "" })]))).toEqual({ status: "acquisition-error", reason: "empty-rule" })
+  expect(parse(JSON.stringify([good({ file: "" })]))).toEqual({ status: "acquisition-error", reason: "file-missing" })
+  expect(parse(JSON.stringify([good({ range: { start: { line: 0 } } })]))).toEqual({
     status: "acquisition-error",
-    reason: "not-ast-grep-json",
+    reason: "range-invalid",
   })
-  expect(ReviewSarif.parseJson(ReviewPackAstGrep.parserId, "[]", { pack: "ast-grep" })).toEqual({
-    status: "ok",
-    results: [],
-    excluded: [],
+  expect(parse(JSON.stringify([good({ range: { start: { line: 4 }, end: { line: 1 } } })]))).toEqual({
+    status: "acquisition-error",
+    reason: "range-invalid",
   })
-  const emptyRule = ReviewSarif.parseJson(ReviewPackAstGrep.parserId, JSON.stringify([{
-    ruleId: "",
-    file: "a.js",
-    range: { start: { line: 0 } },
-  }]), { pack: "ast-grep" })
-  expect(emptyRule).toEqual({ status: "ok", results: [], excluded: [{ reason: "no-rule", count: 1 }] })
+  expect(parse(JSON.stringify([good({ range: { start: { line: 1.5 }, end: { line: 2 } } })]))).toEqual({
+    status: "acquisition-error",
+    reason: "range-invalid",
+  })
+  expect(parse(JSON.stringify([good(), { ruleId: "", file: "src/a.js", range: { start: { line: 0 }, end: { line: 0 } } }]))).toEqual({
+    status: "acquisition-error",
+    reason: "empty-rule",
+  })
+  expect(parse(JSON.stringify([good({ ruleId: "hostile-const" })]))).toEqual({
+    status: "acquisition-error",
+    reason: "unknown-rule:hostile-const",
+  })
+  for (const rule of ReviewPackAstGrep.rules) {
+    const parsed = parse(JSON.stringify([good({ ruleId: rule.id })]))
+    expect(parsed.status).toBe("ok")
+    if (parsed.status === "ok") expect(parsed.results.map((result) => result.rule)).toEqual([rule.id])
+  }
+})
+
+test("an ast-grep path must resolve inside the scanned root", () => {
+  const relative = parse(JSON.stringify([good({ file: "src/a.js" })]))
+  const inside = parse(JSON.stringify([good({ file: "/repo/src/a.js" })]))
+  expect(relative).toEqual(inside)
+  if (inside.status === "ok") expect(inside.results[0]?.path).toBe("src/a.js")
+  expect(parse(JSON.stringify([good({ file: "/other/a.js" })]))).toEqual({ status: "acquisition-error", reason: "path-outside" })
+  expect(parse(JSON.stringify([good({ file: "../etc/passwd" })]))).toEqual({ status: "acquisition-error", reason: "path-outside" })
+  expect(parse(JSON.stringify([good({ file: "/repo/../etc/passwd" })]))).toEqual({ status: "acquisition-error", reason: "path-outside" })
+  expect(parse(JSON.stringify([good({ file: "/repo-evil/a.js" })]))).toEqual({ status: "acquisition-error", reason: "path-outside" })
 })
 
 test("the host template scans with host rules and does not rewrite", () => {
