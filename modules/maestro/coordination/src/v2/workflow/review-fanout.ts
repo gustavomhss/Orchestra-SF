@@ -784,9 +784,8 @@ function admitSources(candidates: ReadonlyArray<ReviewResultV2.Candidate>, items
       sources.push(undefined)
       continue
     }
-    const item = items.find((entry) => entry.fingerprint === candidate.source)
     const end = candidate.endLine ?? candidate.line
-    const overlaps = item !== undefined && item.class === candidate.class && item.path === candidate.path && item.line <= end && (item.endLine ?? item.line) >= candidate.line
+    const overlaps = items.some((entry) => entry.fingerprint === candidate.source && entry.class === candidate.class && entry.path === candidate.path && entry.line <= end && (entry.endLine ?? entry.line) >= candidate.line)
     if (!overlaps) {
       invalid.push(candidate.source)
       sources.push(undefined)
@@ -816,6 +815,10 @@ function outcomeDecisions(
     ...(item.candidate.endLine ? { endLine: item.candidate.endLine } : {}),
     state: item.state,
   })))
+}
+
+function claimKey(fingerprint: string, candidate: { readonly line: number; readonly endLine?: number }) {
+  return JSON.stringify([fingerprint, candidate.line, candidate.endLine ?? candidate.line])
 }
 
 function merge(
@@ -865,10 +868,12 @@ function merge(
       snippetDigest: ReviewItem.snippetDigest(item.candidate.quote),
     }),
   }))
-  const fingerprints = unique(keyed.map((item) => item.fingerprint))
-  const ranked = fingerprints
-    .map((fingerprint) => {
-      const group = keyed.filter((item) => item.fingerprint === fingerprint)
+  // Fingerprint is line-independent. Grouping by it alone would settle a source at a line the verifier never saw.
+  const places = unique(keyed.map((item) => claimKey(item.fingerprint, item.candidate)))
+  const ranked = places
+    .map((place) => {
+      const group = keyed.filter((item) => claimKey(item.fingerprint, item.candidate) === place)
+      const fingerprint = group[0].fingerprint
       const best = group.toSorted((left, right) => SEVERITY[left.candidate.severity] - SEVERITY[right.candidate.severity] || Number(left.observation) - Number(right.observation))[0]
       const end = "endLine" in best.candidate ? best.candidate.endLine ?? best.candidate.line : best.candidate.line
       const tools = items.filter(
