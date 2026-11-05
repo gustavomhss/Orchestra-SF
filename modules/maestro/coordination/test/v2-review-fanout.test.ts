@@ -686,10 +686,10 @@ test("a rereview reuses the first round's route and cache, runs only lenses with
         routing: { ...card.routing, tier: { ...card.routing.tier, id: "quick" } },
         findings: [],
       }
-      const hostRound = { routing: card.routing, findings: card.findings, reviewed: "tree-1" }
+      const hostRound = { executionTier: card.tier, routing: card.routing, findings: card.findings, reviewed: "tree-1" }
       expect(forged.tier).toBe("quick")
       expect(forged.findings).toEqual([])
-      expect(hostRound).toEqual({ routing: card.routing, findings: card.findings, reviewed: "tree-1" })
+      expect(hostRound).toEqual({ executionTier: card.tier, routing: card.routing, findings: card.findings, reviewed: "tree-1" })
       const rereview = (reviewed: string) =>
         first.input(undefined, {
           request: { stage: "code", profile: "rereview", firstRound: "standard", settings: { acceptedUnavailable: [] } },
