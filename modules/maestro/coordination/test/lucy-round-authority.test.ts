@@ -65,5 +65,7 @@ test("read refuses an absent, unknown, or unbound host round and does not use a 
   expect(ReviewRoundV2.read({ ...bound, findings: [finding] }).status).toBe("unavailable")
   expect(ReviewRoundV2.read({ ...bound, findings: [finding], hostRound: { ...published.hostRound, version: "host-round-v0" } }).status).toBe("corrupt")
   expect(ReviewRoundV2.read({ ...bound, findings: [finding], hostRound: published.hostRound, reviewMethodVersion: "review-v2/code/quick" }).status).toBe("mismatch")
-  expect(ReviewRoundV2.read({ ...bound, findings: [{ ...finding, severity: "nope" }], hostRound: published.hostRound }).status).toBe("corrupt")
+  const { confidence, ...missing } = finding
+  void confidence
+  expect(ReviewRoundV2.read({ ...bound, findings: [missing], hostRound: published.hostRound }).status).toBe("corrupt")
 })
