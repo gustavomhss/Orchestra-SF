@@ -235,6 +235,42 @@ live("a different file selection on the same base tree does not turn an old warn
   }), 600_000,
 )
 
+live("a contained selection is scanned and a lexical escape is refused before invocation", () =>
+  Effect.gen(function* () {
+    expectSpawn(import.meta.path)
+    const made = yield* held()
+    yield* provision(made.toolkit)
+    const root = yield* repo(path.join(made.path, "select"), BENIGN, UNSAFE)
+    const run = (files: readonly string[]) =>
+      ReviewAnalyze.run({
+        ...runInput(made, root), scope: "files", files: [...files], changed: CHANGED,
+      }).pipe(Effect.provideService(BackendToolkit.Root, made.toolkit))
+    const relative = yield* run(["db/a.sql"])
+    expect(relative.checks[0]).toMatchObject({ status: "fail", workspaceExecuted: false })
+    expect(relative.checks[0].uri).toMatch(/^review:[0-9a-f-]{36}\/raw\/squawk-head\.json$/)
+    const relativeRules = squawkRules(yield* Effect.promise(() => readFile(path.join(made.store, relative.checks[0].uri!.slice("review:".length)), "utf8")))
+    expect(relativeRules.length, "positive control: the native warning must fire before a refusal is claimed").toBeGreaterThan(0)
+    const relativeItem = items(relative).find((item) => item.pack === "squawk" && item.path === "db/a.sql")
+    expect(relativeItem?.rule).toBe(relativeRules[0])
+    const original = path.join(root, "db", "a.sql")
+    const contained = yield* run([original])
+    expect(squawkRules(yield* Effect.promise(() => readFile(path.join(made.store, contained.checks[0].uri!.slice("review:".length)), "utf8")))).toContain(relativeItem?.rule)
+    expect(items(contained).some((item) => item.pack === "squawk" && item.path === "db/a.sql" && item.rule === relativeItem?.rule)).toBe(true)
+    const refused = (files: readonly string[], reason: string) => Effect.gen(function* () {
+      const result = yield* run(files)
+      expect(result.checks[0]).toMatchObject({ status: "not-run", reason, workspaceExecuted: false })
+      expect(result.checks[0].status).not.toBe("pass")
+      expect(result.checks[0].uri).toBeUndefined()
+      expect(items(result)).toEqual([])
+    })
+    // `db/../db/a.sql` resolves to the real file. Refusal is before lookup and copy, not a scanned warning dropped by the filter.
+    yield* refused(["db/../db/a.sql"], "path-outside")
+    yield* refused([path.join(made.path, "outside.sql")], "path-outside")
+    yield* refused([""], "path-outside")
+    yield* refused(["db/a.sql\0"], "nul")
+  }), 600_000,
+)
+
 const sealCopiedSql = (root: string) => Effect.gen(function* () {
   const dir = path.join(root, "db")
   yield* Effect.promise(() => chmod(dir, 0o000))
@@ -319,6 +355,12 @@ const plain = Effect.fn("SquawkAnalyze.plain")(function* (dir: string) {
   yield* git(root, ["tag", "base"])
   return root
 })
+
+function squawkRules(text: string) {
+  const json = JSON.parse(text) as { rule_name?: string }[]
+  if (!Array.isArray(json)) throw new Error("squawk raw is not an array")
+  return json.flatMap((row) => typeof row.rule_name === "string" ? [row.rule_name] : [])
+}
 
 async function shot(file: string) {
   const info = await lstat(file)
