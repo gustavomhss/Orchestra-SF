@@ -1,5 +1,6 @@
 import gitleaks from "../../backend-toolkit/packs/gitleaks"
 import type { ReviewCatalog } from "./index"
+import { phase3 } from "./phase3"
 
 // Phase 1 entries (plan WP 1.2). Budgets, rungs, caps and thresholds are design §8.3, §8.4 and §8.6's starting values
 // (D14): tuning one is a catalog change, which changes the digest receipts record. Until the precision ledger has
@@ -66,6 +67,7 @@ export const current = {
       lenses: ["correctness-logic", "tests"],
       status: "active",
     },
+    phase3.pack,
   ],
   rules: [
     {
@@ -78,6 +80,7 @@ export const current = {
       status: "probation",
       cwe: "CWE-798",
     },
+    ...phase3.rules,
   ],
   overlays: [
     {
@@ -100,6 +103,7 @@ export const current = {
       lenses: ["correctness-concurrency"],
       checks: [],
     },
+    ...phase3.overlays,
   ],
   lenses: [
     {
@@ -129,7 +133,8 @@ export const current = {
       classes: ["reliability.error-handling", "reliability.retry", "reliability.timeout", "reliability.rollback"],
     },
     { id: "tests", node: "lucy-lens-tests", classes: ["tests.missing", "tests.weak-oracle"] },
-    { id: "security", node: "lucy-lens-security", classes: ["security.boundary", "security.secret"] },
+    { id: "security", node: "lucy-lens-security", classes: ["security.boundary", "security.secret", ...phase3.securityClasses] },
+    ...phase3.lenses,
   ],
   classes: [
     ran("concurrency.atomicity", "the read, the scheduling point and the dependent write on one path"),
@@ -169,7 +174,17 @@ export const current = {
       node: "lucy-review-prove-regress",
       options: { "*": [quote("the assertion that cannot fail for the hunk it claims to cover"), regress] },
     },
-    quoted("security.boundary", "the untrusted input reaching its landing with no validation or encoding on the path"),
+    {
+      id: "security.boundary",
+      node: "lucy-review-prove-quote",
+      options: {
+        "*": [
+          quote("the untrusted input reaching its landing with no validation or encoding on the path"),
+          { option: "tool:ast-grep", proves: "the pinned ast-grep rule flags eval($$$ARGS) in the cited region" },
+          test,
+        ],
+      },
+    },
     {
       id: "security.secret",
       node: "lucy-review-prove-quote",
@@ -180,11 +195,13 @@ export const current = {
     plain("plan.coverage", "the criterion and the step that should deliver it, or that no step names it"),
     plain("plan.requirement", "the requirement and the attribute it fails, or the base-revision code that contradicts it"),
     plain("docs.contradiction", "the changed statement and the code at head that contradicts it"),
+    ...phase3.classes,
   ],
   options: [
     { id: "quote", rung: "quote", cost: "low" },
     { id: "tool:gitleaks", rung: "tool", cost: "low" },
     { id: "tool:repo", rung: "tool", cost: "high" },
+    phase3.option,
     { id: "probe:regress", rung: "probe", cost: "high" },
     { id: "probe:test", rung: "probe", cost: "medium" },
     { id: "probe:typecheck", rung: "probe", cost: "medium" },
@@ -251,6 +268,16 @@ export const current = {
         node: "lucy-review-rereview",
         stage: "first-round",
         tier: "first-round",
+        overlays: true,
+        lenses: { quick: ["correctness-logic", "tests"], standard: STANDARD_LENSES, deep: ALL_LENSES },
+        variants: 1,
+      },
+      {
+        // Metadata only. A governed request still defaults to the stage profile; wiring pr is separate.
+        id: "pr",
+        node: "lucy-review-pr",
+        stage: "code",
+        tier: "risk",
         overlays: true,
         lenses: { quick: ["correctness-logic", "tests"], standard: STANDARD_LENSES, deep: ALL_LENSES },
         variants: 1,
