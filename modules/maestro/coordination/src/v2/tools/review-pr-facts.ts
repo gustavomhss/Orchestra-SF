@@ -43,6 +43,7 @@ export function file(store: string, candidate: string) {
 
 /** Undefined means absent; invalid, oversized, unreadable and mismatched files fail closed. */
 export const read = Effect.fn("ReviewPRFactsV2.read")(function* (store: string, candidate: string) {
+  if (!ReviewPRStoreV2.supported()) return yield* reason("pr-facts-unsupported", "private replay store requires supported Unix")
   const target = yield* Effect.try({ try: () => file(store, candidate), catch: (error) => error instanceof Tool.Failure ? error : reason("pr-facts-identity", String(error)) })
   const bytes = yield* Effect.tryPromise({
     try: async () => {
@@ -75,6 +76,7 @@ export const read = Effect.fn("ReviewPRFactsV2.read")(function* (store: string, 
 
 /** Call only after completed fanout; no card, verdict, approval or review receipt belongs here. */
 export const write = (store: string, facts: Facts) => Effect.uninterruptible(Effect.gen(function* () {
+  if (!ReviewPRStoreV2.supported()) return yield* reason("pr-facts-unsupported", "private replay store requires supported Unix")
   const target = yield* Effect.try({ try: () => file(store, facts.candidate), catch: (error) => error instanceof Tool.Failure ? error : reason("pr-facts-identity", String(error)) })
   const decoded = decode(facts, { onExcessProperty: "error" })
   if (Option.isNone(decoded)) return yield* reason("pr-facts-corrupt", "invalid host facts")
