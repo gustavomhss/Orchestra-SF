@@ -59,7 +59,7 @@ it.live("conformance: pinned squawk under the jail, unsafe warning versus nonemp
     const fixture = yield* Effect.promise(() => readFile(path.join(fixtureRoot, "unsafe.sql")))
     expect(fixture.includes("ADD COLUMN") && fixture.includes("NOT NULL") && fixture.includes("café")).toBe(true)
     const installed = yield* provision(path.join(made.path, "toolkit"))
-    const located = yield* ReviewPackSquawk.locate.pipe(Effect.provideService(BackendToolkit.Root, path.join(made.path, "toolkit")))
+    const located = yield* ReviewPackSquawk.locate().pipe(Effect.provideService(BackendToolkit.Root, path.join(made.path, "toolkit")))
     expect(located).toEqual({ executable: installed.executable })
     expect(ReviewPackSquawk.pgVersion).toBe("unspecified")
     expect(ReviewPackSquawk.upstreamVersionDefault).toBe("15.0.0")
@@ -88,13 +88,15 @@ it.live("conformance: pinned squawk under the jail, unsafe warning versus nonemp
     expect(hit.outcome.exitCode, stderr(hit.outcome)).toBe(1)
     const native = rows(hit.outcome)
     expect(native.length > 0 && native.every((row) => row.level === "Warning" && known(row.rule_name))).toBe(true)
-    const parsed = ReviewPackSquawk.settle(hit.outcome, tree)
-    expect(parsed.status).toBe("ok")
-    expect(ReviewSquawkReport.parseReport(stdout(hit.outcome), { root: tree })).toEqual(parsed)
-    if (parsed.status === "ok") {
+    const settled = ReviewPackSquawk.settle(hit.outcome, tree)
+    expect(settled.status).not.toBe("not-run")
+    if (settled.status === "not-run") throw new Error(settled.reason)
+    expect(settled.status).toBe("ok")
+    expect(ReviewSquawkReport.parseReport(stdout(hit.outcome), { root: tree })).toEqual(settled)
+    if (settled.status === "ok") {
       for (const row of native) {
         const inclusive = row.column_end === 0 ? row.line_end - 1 : row.line_end
-        expect(parsed.results).toContainEqual(expect.objectContaining({
+        expect(settled.results).toContainEqual(expect.objectContaining({
           pack: "squawk", rule: row.rule_name, path: "unsafe.sql", line: row.line + 1, endLine: inclusive + 1,
         }))
       }
@@ -262,7 +264,7 @@ function rows(outcome: ResearchProcess.Outcome) {
 }
 
 function known(rule: string) {
-  return [...ReviewPackSquawk.RULES].includes(rule)
+  return ReviewPackSquawk.RULES.some((id) => id === rule)
 }
 
 async function copy(root: string, files: Record<string, string>) {
