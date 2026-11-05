@@ -80,6 +80,12 @@ export const BeforeSqlSelection = Context.Reference<(root: string) => Effect.Eff
   { defaultValue: () => () => Effect.void },
 )
 
+/** Host observation seam for asserting the catalog that actually reaches execution. */
+export const ObserveCatalog = Context.Reference<(catalog: ReviewCatalog.Catalog) => void>(
+  "@orchestra/ReviewAnalyze/ObserveCatalog",
+  { defaultValue: () => () => {} },
+)
+
 // Base results by pack, version, template and the base commit's tree: a rereview, or a second review over the same base,
 // reads them instead of scanning again.
 const baseCache = new Map<string, { results: ReadonlyArray<ReviewSarif.Raw>; uri: string }>()
@@ -87,6 +93,8 @@ const baseCache = new Map<string, { results: ReadonlyArray<ReviewSarif.Raw>; uri
 /** Host only: runs the routed packs and the noise pipeline once, before any model turn. */
 export const run = Effect.fn("ReviewAnalyze.run")(function* (input: RunInput, pipeline: Pipeline = ReviewNoise.pipeline) {
   const catalog = input.catalog ?? ReviewCatalog.current
+  const observeCatalog = yield* ObserveCatalog
+  observeCatalog(catalog)
   const id = Bun.randomUUIDv7()
   const context = {
     input,
