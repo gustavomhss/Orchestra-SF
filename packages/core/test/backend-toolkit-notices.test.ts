@@ -1,7 +1,7 @@
 import { expect } from "bun:test"
 import path from "path"
 import { createHash } from "crypto"
-import { access, lstat, mkdtemp, readFile, realpath, rm, symlink, writeFile } from "fs/promises"
+import { access, lstat, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from "fs/promises"
 import { tmpdir } from "os"
 import { Effect } from "effect"
 import { BackendToolkit } from "../src/backend-toolkit"
@@ -141,38 +141,56 @@ it.live("a missing or modified notice stays not ready and the completed install 
   }), 30_000,
 )
 
-it.live.skipIf(process.platform === "win32")("a symlinked notice is not ready", () =>
+it.live("a symlinked notices directory with matching outside bytes is not ready", () =>
   Effect.gen(function* () {
     const f = yield* fixture
     const target = host()
     const run = scoped(f.root, { buf: engine("buf", "1", f.server.port, [notice(f.server.port)]) })
     yield* BackendToolkit.ensure("buf").pipe(run)
     const directory = installDir(f.root, "buf", "1", target)
-    const noticeFile = path.join(directory, "notices", "license.txt")
-    const outside = path.join(f.root, "other-license.txt")
-    yield* Effect.promise(async () => {
-      await writeFile(outside, LICENSE)
-      await rm(noticeFile)
-      await symlink(outside, noticeFile)
+    const outside = path.join(f.root, "outside")
+    const linked = yield* Effect.promise(async () => {
+      await mkdir(outside)
+      await writeFile(path.join(outside, "license.txt"), LICENSE)
+      await rm(path.join(directory, "notices"), { recursive: true })
+      try {
+        await symlink(outside, path.join(directory, "notices"), "dir")
+        return true
+      } catch (error) {
+        if (process.platform !== "win32") throw error
+        return false
+      }
     })
-    expect((yield* Effect.promise(() => lstat(noticeFile))).isSymbolicLink()).toBe(true)
+    if (!linked) {
+      expect(process.platform).toBe("win32")
+      return
+    }
+    expect(yield* Effect.promise(() => readFile(path.join(outside, "license.txt"), "utf8"))).toBe(LICENSE)
+    expect((yield* Effect.promise(() => lstat(path.join(directory, "notices")))).isSymbolicLink()).toBe(true)
     expect((yield* BackendToolkit.status("buf").pipe(run))[0]?.status).toBe("absent")
     const failed = yield* BackendToolkit.ensure("buf").pipe(run, Effect.flip)
     expect(failed.reason).toBe("toolkit-not-ready:failed:buf:notice-symlink")
     expect(yield* PinnedArtifact.installed(directory)).toBe(true)
+    expect(f.hits["/license.txt"]).toBe(1)
   }), 30_000,
 )
 
 it.live("malformed notice metadata fails before any fetch and leaves the cache untouched", () =>
   Effect.gen(function* () {
     const f = yield* fixture
-    const cases = [
+    const loose = (notices: unknown) => notices as NativeEngine["notices"]
+    const url = `http://127.0.0.1:${f.server.port}/license.txt`
+    const cases: NativeEngine["notices"][] = [
       [notice(f.server.port, "License.txt")],
       [notice(f.server.port, "../license.txt")],
       [notice(f.server.port, "notices/license.txt")],
       [notice(f.server.port), notice(f.server.port)],
       [notice(f.server.port, "license.txt", "sha256-not-a-digest")],
-      [{ url: `http://127.0.0.1:${f.server.port}/license.txt`, integrity: "sha512-aa" as `sha256-${string}`, filename: "license.txt" }],
+      [{ url, integrity: "sha512-aa" as `sha256-${string}`, filename: "license.txt" }],
+      loose([{ url, filename: "license.txt" }]),
+      loose([{ url, filename: "license.txt", integrity: null }]),
+      loose([{ url, filename: "license.txt", integrity: 1 }]),
+      loose([null]),
     ]
     for (const [index, notices] of cases.entries()) {
       const id = `bad${index}`
@@ -199,5 +217,86 @@ it.live("an engine with no declared notices still becomes ready without a notice
     expect(yield* present(path.join(directory, "notices"))).toBe(false)
     expect(f.hits).toEqual({ "/tool": 1 })
     expect((yield* BackendToolkit.status("sqlc").pipe(run))[0]?.status).toBe("ready")
+  }), 30_000,
+)
+
+it.live("an invalid parent notice is refused before its dependency is fetched", () =>
+  Effect.gen(function* () {
+    const f = yield* fixture
+    const target = host()
+    const child = engine("sqlc", "1", f.server.port)
+    const parent = { ...engine("buf", "1", f.server.port, [notice(f.server.port, "License.txt")]), dependencies: ["sqlc"] }
+    const unrelated = engine("gitleaks", "1", f.server.port, [notice(f.server.port, "../license.txt")])
+    const manifest = { buf: parent, sqlc: child, gitleaks: unrelated }
+    const failed = yield* BackendToolkit.ensure("buf").pipe(scoped(f.root, manifest), Effect.flip)
+    expect(failed.reason).toBe("toolkit-not-ready:failed:buf:notice-invalid")
+    expect(f.hits).toEqual({})
+    expect(yield* present(installDir(f.root, "sqlc", "1", target))).toBe(false)
+    expect(yield* present(installDir(f.root, "buf", "1", target))).toBe(false)
+    expect(yield* BackendToolkit.ensure("sqlc").pipe(scoped(f.root, manifest))).toEqual({
+      executable: path.join(installDir(f.root, "sqlc", "1", target), "tool"),
+    })
+    expect(f.hits).toEqual({ "/tool": 1 })
+  }), 30_000,
+)
+
+it.live("duplicate notices on a completed install are not ready", () =>
+  Effect.gen(function* () {
+    const f = yield* fixture
+    const target = host()
+    const installed = engine("buf", "1", f.server.port, [notice(f.server.port)])
+    yield* BackendToolkit.ensure("buf").pipe(scoped(f.root, { buf: installed }))
+    const directory = installDir(f.root, "buf", "1", target)
+    const duplicated = { ...installed, notices: [notice(f.server.port), notice(f.server.port)] }
+    const run = scoped(f.root, { buf: duplicated })
+    const fetches = f.hits["/license.txt"]
+    expect((yield* BackendToolkit.status("buf").pipe(run))[0]?.status).toBe("absent")
+    const failed = yield* BackendToolkit.ensure("buf").pipe(run, Effect.flip)
+    expect(failed.reason).toBe("toolkit-not-ready:failed:buf:notice-invalid")
+    expect(yield* PinnedArtifact.installed(directory)).toBe(true)
+    expect(f.hits["/license.txt"]).toBe(fetches)
+  }), 30_000,
+)
+
+it.live("a notice destination that collides with the executable or an artifact entry is refused before fetch", () =>
+  Effect.gen(function* () {
+    const f = yield* fixture
+    const target = host()
+    const base = engine("buf", "1", f.server.port, [notice(f.server.port)])
+    const occupy = (executable: string, entryTo: string) => {
+      const targets = Object.fromEntries(TARGETS.map((item) => [item, {
+        executable,
+        artifact: { ...base.targets[item].artifact, entries: [{ from: "tool", to: entryTo, executable: true }] },
+      }])) as NativeEngine["targets"]
+      return { ...base, targets }
+    }
+    for (const [index, occupied] of [
+      occupy("notices/license.txt", "tool"),
+      occupy("tool", "notices"),
+      occupy("tool", "notices/license.txt"),
+    ].entries()) {
+      const id = `collide${index}`
+      const before = { ...f.hits }
+      const failed = yield* BackendToolkit.ensure<string>(id).pipe(
+        scoped(f.root, { [id]: { ...occupied, id } }),
+        Effect.flip,
+      )
+      expect(failed.reason).toBe(`toolkit-not-ready:failed:${id}:notice-invalid`)
+      expect(f.hits).toEqual(before)
+      expect(yield* present(installDir(f.root, id, "1", target))).toBe(false)
+    }
+    const folded = target === "win32-x64" || target.startsWith("darwin-")
+    const caseId = "casefold"
+    const before = { ...f.hits }
+    const caseEngine = { ...occupy("Notices/license.txt", "Notices/license.txt"), id: caseId }
+    if (folded) {
+      const failed = yield* BackendToolkit.ensure<string>(caseId).pipe(scoped(f.root, { [caseId]: caseEngine }), Effect.flip)
+      expect(failed.reason).toBe(`toolkit-not-ready:failed:${caseId}:notice-invalid`)
+      expect(f.hits).toEqual(before)
+      return
+    }
+    expect(yield* BackendToolkit.ensure<string>(caseId).pipe(scoped(f.root, { [caseId]: caseEngine }))).toEqual({
+      executable: path.join(installDir(f.root, caseId, "1", target), "Notices/license.txt"),
+    })
   }), 30_000,
 )
