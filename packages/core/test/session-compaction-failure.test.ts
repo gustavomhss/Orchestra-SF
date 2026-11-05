@@ -315,7 +315,7 @@ it.effect("cancellation during started notification settles the durable manual a
     const release = yield* Deferred.make<void>()
     const unsubscribe = yield* events.listen((event) =>
       Effect.gen(function* () {
-        if (event.type !== started) return
+        if (event.type !== "session.next.compaction.started") return
         const rows = yield* fixture.rows
         yield* Deferred.succeed(entered, rows)
         yield* Deferred.await(release)
