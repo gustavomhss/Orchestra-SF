@@ -8,6 +8,7 @@ import { PinnedArtifact } from "../pinned-artifact"
 import { attempts, INSTALL_MS, NotReady } from "./attempts"
 import { hosted } from "./hosted"
 import { executable, fileReady, launchText, shim } from "./launcher"
+import { noticeArtifacts, noticeReadiness } from "./native-notices"
 import { ENGINES, RUNTIMES, type Engine, type EngineId, type Runtime, type RuntimeId } from "./manifest"
 import { below, current, detect, type Host, type TargetId } from "./target"
 
@@ -205,10 +206,12 @@ const acquire = Effect.fnUntraced(function* (root: string, engine: Engine, runti
   const directory = path.join(root, "engines", id, `${engine.version}-${target}`)
   const unsupported = "runtime" in engine ? engine.unsupported?.[target] : undefined
   if (unsupported) return yield* new NotReady({ reason: `unsupported-target:${unsupported}` })
+  const notices = "runtime" in engine ? [] : noticeArtifacts(engine.notices)
+  if (typeof notices === "string") return yield* new NotReady({ reason: `toolkit-not-ready:failed:${id}:${notices}` })
   const work =
     "runtime" in engine
       ? hosted(root, engine, runtimes, directory, target, host)
-      : PinnedArtifact.install(directory, [engine.targets[target].artifact]).pipe(
+      : PinnedArtifact.install(directory, [engine.targets[target].artifact, ...notices]).pipe(
           Effect.andThen(
             host
               ? shim(root, engine.id, launchText(root, engine, runtimes, directory, target))
@@ -271,6 +274,10 @@ const readiness = Effect.fnUntraced(function* (root: string, engine: Engine, run
     const runtime = runtimes[engine.runtime]
     const home = path.join(root, "runtimes", runtime.id, `${runtime.version}-${target}`)
     if (!(yield* PinnedArtifact.installed(home)) || !(yield* fileReady(path.join(home, runtime.targets[target].executable), target))) return "runtime-executable-missing"
+  }
+  if (!("runtime" in engine)) {
+    const notice = yield* noticeReadiness(directory, engine.notices ?? [])
+    if (notice) return notice
   }
   if (!host) return
   const file = path.join(root, "bin", target === "win32-x64" ? `${engine.id}.cmd` : engine.id)
