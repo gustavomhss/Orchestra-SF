@@ -279,7 +279,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
   if (afterEntry.lenses.some((lens) => auditNodes.has(lens.node) && lens.node !== "lucy-audit-compliance-privacy"))
     return yield* new Tool.Failure({ message: "Review route contains an unsupported audit lens" })
   const method = ReviewResultV2.method({ profile: afterEntry.profile.id, tier: tier.id })
-  const record = [`reviewMethodVersion: ${method}`, ...(cardOnly ? [] : input.facts.record)]
+  const record = cardOnly ? [] : input.facts.record
   const observed: ReviewProbe.Observed[] = []
   // New attempts only. settle already appended the shared ledger; copying it would record the attempt twice.
   const observeProbes = (items: ReadonlyArray<ReviewProbe.Observed>) => {
@@ -329,6 +329,9 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
       }
       const reply = yield* RUNNING.withPermit(port.run(lead, [
         ...body,
+        `reviewMethodVersion: ${method}`,
+        `routingDigest: ${ReviewRouting.digest(sessionRecord)}`,
+        `catalogDigest: ${sessionRecord.catalog}`,
         `Host check facts (embed these checks and blockers verbatim; host authority, not model text):\n${JSON.stringify({ checks: checkFacts.checks, blockers: checkFacts.blockers })}`,
         `Host outcomes (initial pack, rule, fingerprint and outcome; generation stays host-only):\n${JSON.stringify(initial.map((item) => ({ pack: item.pack, rule: item.rule, fingerprint: item.fingerprint, outcome: item.outcome })))}`,
         "Each successfully paged primary item is also required, not-pursued at Quick. Its pack, rule and fingerprint are on that page. Do not invent items, and do not treat this initial list as empty or closed after a page.",
@@ -650,8 +653,6 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
       `Coverage the host recorded:\n${JSON.stringify(coverage)}`,
       `Counts: ${JSON.stringify(counts)}`,
       `Scope: ${JSON.stringify(input.facts.scope)}`,
-      `routingDigest: ${ReviewRouting.digest(final)}`,
-      `catalogDigest: ${final.catalog}`,
       ...record,
       `Reply with exactly one \`\`\`${ReviewResultV2.TAG} block.`,
     ],
