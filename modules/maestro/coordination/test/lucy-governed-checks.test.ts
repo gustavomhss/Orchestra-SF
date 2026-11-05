@@ -4,7 +4,7 @@ import fs from "node:fs/promises"
 import os from "node:os"
 import path from "node:path"
 import { eq, like } from "drizzle-orm"
-import { DateTime, Effect, Layer, Option } from "effect"
+import { DateTime, Effect, Layer, Option, Schema } from "effect"
 import { publishTerritoryCatalog } from "@orchestra/atlas-boundary"
 import { materializeStaticOwnSnapshot, parseOwnSnapshot } from "@orchestra/atlas-boundary/materialize"
 import { BoardNoteTable } from "@orchestra/core/board/sql"
@@ -28,7 +28,7 @@ import type { SessionV2 } from "@orchestra/core/session"
 import type { SessionExecution } from "@orchestra/core/session/execution"
 import { SessionMessage } from "@orchestra/core/session/message"
 import { SessionSchema } from "@orchestra/core/session/schema"
-import { SessionTable } from "@orchestra/core/session/sql"
+import { SessionMessageTable, SessionTable } from "@orchestra/core/session/sql"
 import { SkillV2 } from "@orchestra/core/skill"
 import { ToolRegistry } from "@orchestra/core/tool/registry"
 import { ToolOutputStore } from "@orchestra/core/tool-output-store"
@@ -210,6 +210,15 @@ test("a scoped finish refuses a governed receipt before a review event or board 
     yield* db.insert(SessionTable).values({
       id: sessionID, project_id: projectID, directory, slug: "chain", title: "chain", version: "test", agent: AgentV2.defaultID,
     }).run().pipe(Effect.orDie)
+    const encode = Schema.encodeSync(SessionMessage.Message)
+    const seq = { next: 1 }
+    yield* db.insert(SessionMessageTable).values([
+      SessionMessage.User.make({ id: SessionMessage.ID.make("msg_owner"), type: "user", text: "Ship the CSV export", time }),
+      SessionMessage.Assistant.make({ id: SessionMessage.ID.make("msg_calling"), type: "assistant", agent: "maestro", model, content: [], time }),
+    ].map((message) => {
+      const { id, type, ...data } = encode(message)
+      return { id: SessionMessage.ID.make(id), session_id: sessionID, type, seq: seq.next++, time_created: DateTime.toEpochMillis(message.time.created), data }
+    })).run().pipe(Effect.orDie)
     child.create = (input) => db.insert(SessionTable).values({
       id: input.id, project_id: projectID, parent_id: input.parentID, directory, slug: "lucy", title: "lucy", version: "test", agent: "lucy",
     }).onConflictDoNothing().run().pipe(Effect.orDie, Effect.asVoid)
@@ -258,6 +267,7 @@ test("a scoped finish refuses a governed receipt before a review event or board 
       methodVersion: "admit-request-v1",
       assessment: { kind: "work", goal: "Ship the CSV export", known: [{ text: "The owner wants CSV export", source: "stakeholder" }], proposals: [], unknowns: [], uncertainty: "low", activeWorkEffect: "none", reason: "Goal and scope are clear" },
     })
+    if (admission.type === "error") return yield* Effect.die(new Error(admission.text))
     expect(admission.type).toBe("text")
     const planned = yield* call("maestro", "maestro_record_plan_revision", {
       admissionMessageID: "msg_owner", methodVersion: "plan-v1", goal: field("CSV export"), acceptance: [field("A CSV downloads")],

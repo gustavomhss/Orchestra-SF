@@ -413,6 +413,14 @@ test("the governed chain records the earlier runtime's events end to end, refuse
           const routingDigest = prompt.split("\n").find((part) => part.startsWith("routingDigest: "))?.slice("routingDigest: ".length)
           const catalogDigest = prompt.split("\n").find((part) => part.startsWith("catalogDigest: "))?.slice("catalogDigest: ".length)
           if (!method || !routingDigest || !catalogDigest) return yield* Effect.die("finish brief has no host method or digests")
+          const itemBlocks = [...prompt.matchAll(/<data name="([^"]*analyzer items[^"]*)">\n([\s\S]*?)\n<\/data>/g)]
+          const delivered = itemBlocks.flatMap((match) => {
+            const parsed = JSON.parse(match[2])
+            if (!Array.isArray(parsed)) throw new Error("analyzer items block is not a list")
+            return parsed
+          })
+          expect(delivered).toEqual([])
+          if (prompt.includes("analyzer items")) expect(itemBlocks.length).toBeGreaterThan(0)
           const review = yield* call(
             "lucy",
             "maestro_record_review",
@@ -426,6 +434,7 @@ test("the governed chain records the earlier runtime's events end to end, refuse
               findings: [],
               artifact: promptJSON(prompt, "artifact"),
               checks: promptJSON(prompt, "checks"),
+              items: [],
               stage: "plan",
             },
             { session: id, message: "msg_lucy" },
