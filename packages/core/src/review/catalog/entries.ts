@@ -2,6 +2,7 @@ import gitleaks from "../../backend-toolkit/packs/gitleaks"
 import type { ReviewCatalog } from "./index"
 import { phase3 } from "./phase3"
 import { phase4 } from "./phase4"
+import { ruff } from "./ruff"
 
 // Phase 1 entries (plan WP 1.2). Budgets, rungs, caps and thresholds are design §8.3, §8.4 and §8.6's starting values
 // (D14): tuning one is a catalog change, which changes the digest receipts record. Until the precision ledger has
@@ -70,6 +71,7 @@ export const current = {
     },
     phase3.pack,
     phase4.pack,
+    ruff.pack,
   ],
   rules: [
     {
@@ -84,6 +86,7 @@ export const current = {
     },
     ...phase3.rules,
     ...phase4.rules,
+    ...ruff.rules,
   ],
   overlays: [
     {

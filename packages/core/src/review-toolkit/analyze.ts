@@ -12,10 +12,12 @@ import { ToolSafetySandbox } from "../tool-safety-sandbox"
 import { ReviewItem } from "./item"
 import { ReviewNoise } from "./noise"
 import { ReviewSarif } from "./sarif"
+import { ReviewNativeFiles } from "./native-files"
 import { ReviewScratch } from "./scratch-copy"
 import { ReviewPackAstGrep } from "./packs/ast-grep"
 import { ReviewPackGitleaks } from "./packs/gitleaks"
 import { ReviewPackRepo } from "./packs/repo"
+import { ReviewPackRuff } from "./packs/ruff"
 import { ReviewPackSquawk } from "./packs/squawk"
 
 // K6 analyze half (design §7.2, §8.6, plan WP 1.4): the host runs the routed packs before any model turn, each confined
@@ -96,10 +98,15 @@ export const run = Effect.fn("ReviewAnalyze.run")(function* (input: RunInput, pi
   const observeCatalog = yield* ObserveCatalog
   observeCatalog(catalog)
   const id = Bun.randomUUIDv7()
+  // Worktree containment only: a contained absolute becomes the same host-relative spelling every pack and the
+  // final filter see. Outside and traversal stay unnormalized so the copy walk still refuses them. Not the scratch root.
+  const selected = input.scope === "files"
+    ? { ...input, files: (input.files ?? []).map((file) => ReviewNativeFiles.containedPath(input.worktree, file) ?? file) }
+    : input
   const context = {
-    input,
+    input: selected,
     catalog,
-    write: (name: string, text: string) =>
+    write: (name: string, text: string | Uint8Array) =>
       Effect.promise(() => Bun.write(path.join(input.store, id, name), text)).pipe(Effect.as(`review:${id}/${name}`)),
     head: yield* Effect.cached(copy(input.head === undefined
       ? { worktree: input.worktree, tree: true }
@@ -111,7 +118,7 @@ export const run = Effect.fn("ReviewAnalyze.run")(function* (input: RunInput, pi
     .map((packID) => ({ packID, pack: catalog.packs.find((entry) => entry.id === packID) }))
     .toSorted((a, b) => LANES.indexOf(a.pack?.lane ?? "build") - LANES.indexOf(b.pack?.lane ?? "build"))
   const outcomes = yield* Effect.forEach(ordered, (entry) => runPack(entry.packID, entry.pack, context), { concurrency: 1 })
-  const inScope = (entry: ReviewSarif.Entry) => input.scope === "diff" || (input.files ?? []).includes(entry.item.path)
+  const inScope = (entry: ReviewSarif.Entry) => selected.scope === "diff" || (selected.files ?? []).includes(entry.item.path)
   const result = pipeline({
     head: outcomes.flatMap((outcome) => outcome.head).filter(inScope),
     base: outcomes.flatMap((outcome) => outcome.base).filter(inScope),
@@ -166,7 +173,7 @@ type Copy = { readonly snapshot: ReviewScratch.Snapshot } | { readonly failed: s
 type RunContext = {
   readonly input: RunInput
   readonly catalog: ReviewCatalog.Catalog
-  readonly write: (name: string, text: string) => Effect.Effect<string>
+  readonly write: (name: string, text: string | Uint8Array) => Effect.Effect<string>
   readonly head: ReturnType<typeof copy>
   readonly base: ReturnType<typeof copy>
 }
@@ -180,6 +187,7 @@ const runPack = Effect.fnUntraced(function* (packID: string, pack: Pack | undefi
   if (pack.status === "dropped") return refused("dropped")
   // Squawk's argv is effectful (it stats the copy). The static template scanners stay as they are.
   if (pack.backend === "pinned" && pack.id === ReviewPackSquawk.manifest.id) return yield* squawked(pack, context)
+  if (pack.backend === "pinned" && pack.id === ReviewPackRuff.manifest.id) return yield* ruffed(pack, context)
   const scanner = pack.backend === "pinned" ? pinnedScanner(pack.id) : undefined
   if (scanner) return yield* scanned(pack, scanner, context)
   if (pack.backend === "repo") return yield* gates(pack, context)
@@ -320,6 +328,122 @@ const squawked = Effect.fnUntraced(function* (pack: Pack, context: RunContext) {
     base: ReviewSarif.toItems(base.results, lookup).items,
   } satisfies Outcome
 })
+
+/** Ruff over the copied tree only. cwd is the scratch directory, not the copy root, so a target config is not the default. */
+const ruffed = Effect.fnUntraced(function* (pack: Pack, context: RunContext) {
+  if (pack.output.format !== "json") return only(check(pack, "not-run", `template unknown: ${pack.template}`))
+  if (pack.output.parser !== ReviewPackRuff.parserId || pack.template !== ReviewPackRuff.templateId)
+    return only(check(pack, "not-run", `template unknown: ${pack.template}`))
+  const ruleSelection = nativeDrops(context.catalog, pack.id, ReviewPackRuff.RULES)
+  if (ruleSelection.status !== "ok") return only(check(pack, "not-run", ruleSelection.reason))
+  const located = yield* ReviewPackRuff.locate()
+  if ("absent" in located) return only(check(pack, "not-run", located.absent))
+  const scan = (copied: Copy, side: "head" | "base") => Effect.gen(function* () {
+    if ("failed" in copied) return { status: "not-run" as const, reason: copied.failed }
+    const snapshot = copied.snapshot
+    const selected = yield* Effect.tryPromise({
+      try: () => pythonSelection(snapshot.root, context.input, side),
+      catch: (error) => error,
+    }).pipe(Effect.catch((error) => Effect.succeed({ refused: pythonUnavailable(error) })))
+    if ("refused" in selected) return { status: "not-run" as const, reason: selected.refused }
+    if (selected.files.length === 0) {
+      if (side === "head") return { status: "not-run" as const, reason: "no-input" }
+      const uri = yield* context.write(`raw/${pack.id}-base.json`, JSON.stringify({ invoked: false, reason: "no-eligible-python-input" }))
+      return { status: "ok" as const, results: [], uri, emptyBase: true as const }
+    }
+    const built = yield* ReviewPackRuff.argv({
+      executable: located.executable, root: snapshot.root, files: selected.files, excluded: ruleSelection.dropped,
+    })
+    if (built.status !== "ok") return { status: "not-run" as const, reason: built.reason }
+    const ran = yield* confined({
+      argv: built.argv, cwd: snapshot.scratch, write: [], env: ReviewPackRuff.environment(),
+      timeoutMs: SCAN_MS, maxBytes: Probe.Limits.outputBytes,
+    })
+    if ("denied" in ran) return { status: "not-run" as const, reason: ran.denied }
+    const uri = yield* context.write(`raw/${pack.id}-${side}.json`, ran.outcome.stdout.data)
+    const settled = ReviewPackRuff.settle(ran.outcome, snapshot.root)
+    if (settled.status === "not-run") return { status: "not-run" as const, reason: settled.reason, uri }
+    if (settled.status !== "ok") return { status: "acquisition-error" as const, reason: settled.reason, uri }
+    return { status: "ok" as const, results: settled.results, uri }
+  })
+  const head = yield* scan(yield* context.head, "head")
+  if (head.status !== "ok") return only(check(pack, head.status, head.reason, head.uri))
+  const base = yield* scan(yield* context.base, "base")
+  if (base.status !== "ok") return only(check(pack, base.status, `base: ${base.reason}`, "uri" in base ? base.uri : undefined))
+  const lookup = rules(context.catalog)
+  const changed = context.input.changed
+  const onChanged = (file: string, line: number, endLine?: number) =>
+    (changed[file] ?? []).some((range) => line <= range.end && (endLine ?? line) >= range.start)
+  const coverage = "emptyBase" in base && base.emptyBase ? "base: no eligible Python input; no base scanner invocation" : undefined
+  return {
+    checks: [check(pack, head.results.length > 0 ? "fail" : "pass", coverage, head.uri)],
+    head: ReviewSarif.toItems(head.results, lookup, onChanged).items,
+    base: ReviewSarif.toItems(base.results, lookup).items,
+  } satisfies Outcome
+})
+
+function pythonUnavailable(error: unknown) {
+  const code = error !== null && typeof error === "object" && "code" in error && typeof error.code === "string" ? error.code : "error"
+  return `python-input-unavailable: ${code}`
+}
+
+async function pythonSelection(root: string, input: RunInput, side: "head" | "base") {
+  if (input.scope !== "files") return { files: await regularPython(root) }
+  const requested = input.files ?? []
+  const flavor = ReviewNativeFiles.flavor(root)
+  const escaped = requested.find((file) => !ReviewNativeFiles.containedPath(root, file))
+  if (escaped) return { refused: escaped.includes("\0") ? "nul" : "path-outside" }
+  const files: string[] = []
+  for (const file of requested.filter((entry) => pythonName(flavor.basename(entry)))) {
+    const relative = ReviewNativeFiles.containedPath(root, file)
+    if (!relative) return { refused: file.includes("\0") ? "nul" : "path-outside" }
+    const walked = await copiedPython(root, relative, side)
+    if (walked === undefined) continue
+    if (typeof walked !== "string") return walked
+    files.push(walked)
+  }
+  return { files }
+}
+
+// Parents are lstat'd in order. A base miss is absence only after each of them was a non-symlink; a symlink, including
+// a dangling one, is refused before the child is stated. ENOTDIR from a regular-file parent is that absence, not a link.
+async function copiedPython(root: string, relative: string, side: "head" | "base") {
+  const flavor = ReviewNativeFiles.flavor(root)
+  const segments = relative.split("/").filter((segment) => segment !== "" && segment !== ".")
+  if (segments.length === 0) return { refused: "missing" }
+  let cursor = root
+  for (const [index, segment] of segments.entries()) {
+    cursor = flavor.join(cursor, segment)
+    const stat = await lstat(cursor).catch((error: NodeJS.ErrnoException) => error)
+    if (stat instanceof Error) {
+      if (side === "base" && (stat.code === "ENOENT" || stat.code === "ENOTDIR")) return undefined
+      return { refused: stat.code === "ENOENT" ? "missing" : stat.code === "EACCES" || stat.code === "EPERM" ? "unreadable" : `fs-${stat.code ?? "error"}` }
+    }
+    if (stat.isSymbolicLink()) return { refused: "symlink" }
+    const last = index === segments.length - 1
+    if (last && stat.isDirectory()) return { refused: "directory" }
+    if (last && !stat.isFile()) return { refused: "not-file" }
+  }
+  return cursor
+}
+
+function pythonName(name: string) {
+  return name.endsWith(".py") || name.endsWith(".pyi")
+}
+
+async function regularPython(root: string) {
+  const found: string[] = []
+  const walk = async (dir: string) => {
+    for (const entry of await readdir(dir, { withFileTypes: true })) {
+      if (entry.isSymbolicLink()) continue
+      const full = path.join(dir, entry.name)
+      if (entry.isDirectory()) await walk(full)
+      else if (entry.isFile() && pythonName(entry.name)) found.push(full)
+    }
+  }
+  await walk(root)
+  return found.sort()
+}
 
 function sqlUnavailable(error: unknown) {
   const code = error !== null && typeof error === "object" && "code" in error && typeof error.code === "string" ? error.code : "error"
