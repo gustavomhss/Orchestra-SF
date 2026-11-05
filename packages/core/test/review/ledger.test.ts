@@ -149,6 +149,12 @@ describe("ReviewLedger.status", () => {
     expect(ask(sequence([...many(4, "c"), ...many(16, "r", "refuted")]))).toBe("probation")
   })
 
+  test("zero of twenty is below a tiny positive share", () => {
+    expect(ask(sequence(many(20, "r", "refuted")), {
+      thresholds: { ...thresholds, demote: { window: 20, confirmedBelow: 1e-10 } },
+    })).toBe("demoted")
+  })
+
   test("trailing 4/20 after activation stays active; trailing 3/20 demotes without dropping", () => {
     expect(ask(sequence([...many(20, "c"), ...many(16, "r", "refuted")]))).toBe("active")
     expect(ask(sequence([...many(20, "c"), ...many(17, "r", "refuted")]))).toBe("demoted")

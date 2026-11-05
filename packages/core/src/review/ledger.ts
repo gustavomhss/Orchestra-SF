@@ -118,18 +118,16 @@ function admit(batches: ReadonlyArray<Batch>, query: Query) {
   if (query.repository !== true && query.repository !== false) fail("precision-invalid", "repository")
   if (!COSTS.has(query.cost)) fail("precision-invalid", "cost")
   requireThresholds(query.thresholds)
-  const normalized = batches.map(normalize)
-  const bodies = new Map<string, string>()
-  for (const batch of normalized) {
-    const body = canonical(batch)
-    const prior = bodies.get(batch.id)
+  const admitted = new Map<string, Batch>()
+  for (const batch of batches.map(normalize)) {
+    const prior = admitted.get(batch.id)
     if (prior === undefined) {
-      bodies.set(batch.id, body)
+      admitted.set(batch.id, batch)
       continue
     }
-    if (prior !== body) fail("precision-conflict", "batch")
+    if (canonical(prior) !== canonical(batch)) fail("precision-conflict", "batch")
   }
-  const unique = normalized.filter((batch, index) => normalized.findIndex((item) => item.id === batch.id) === index)
+  const unique = [...admitted.values()]
   const orders = new Set<number>()
   for (const batch of unique) {
     if (orders.has(batch.order)) fail("precision-conflict", "order")
@@ -275,12 +273,9 @@ function identity(sample: Sample, global: boolean) {
   return global ? JSON.stringify([sample.project, sample.fingerprint]) : sample.fingerprint
 }
 
-/** 4/20 is not strictly below 0.2. A float product that lands on an integer threshold stays equal. */
+/** Direct ratio. 4/20 is the literal 0.2, so strict < does not demote. No tolerance. */
 function strictlyBelow(confirmed: number, total: number, bound: number) {
-  const scaled = bound * total
-  const nearest = Math.round(scaled)
-  const threshold = Math.abs(scaled - nearest) <= 1e-8 * Math.max(1, Math.abs(nearest)) ? nearest : scaled
-  return confirmed < threshold
+  return confirmed / total < bound
 }
 
 function canonical(value: unknown): string {
@@ -291,7 +286,9 @@ function canonical(value: unknown): string {
       .toSorted(([left], [right]) => (left < right ? -1 : 1))
       .map(([key, entry]) => `${JSON.stringify(key)}:${canonical(entry)}`)
       .join(",")}}`
-  return JSON.stringify(value)
+  const encoded = JSON.stringify(value)
+  if (encoded === undefined) fail("precision-invalid", "canonical")
+  return encoded
 }
 
 function fail(name: "precision-invalid" | "precision-conflict", detail: string): never {
