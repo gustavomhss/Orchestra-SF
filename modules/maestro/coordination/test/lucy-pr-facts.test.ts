@@ -3,6 +3,7 @@ import fs from "node:fs/promises"
 import path from "node:path"
 import { Deferred, Effect, Fiber, Scheduler } from "effect"
 import { ReviewPRFactsV2 } from "../src/v2/tools/review-pr-facts"
+import { ReviewPRStoreV2 } from "../src/v2/tools/review-pr-store"
 import { worktree } from "./fixture/v2-governance"
 
 const candidate = "a".repeat(64)
@@ -21,7 +22,9 @@ const facts: ReviewPRFactsV2.Facts = {
     evidence: { kind: "quote", path: "src/a.ts", startLine: 1, endLine: 1 } }],
 }
 
-test("completed host facts round-trip without a verdict or card, and absence is distinct", () =>
+const posix = ReviewPRStoreV2.supported() ? test : test.skip
+
+posix("POSIX: completed host facts round-trip without a verdict or card, and absence is distinct", () =>
   Effect.runPromise(Effect.scoped(Effect.gen(function* () {
     const directory = yield* worktree
     const store = path.join(directory, "orchestra-review", `pr_${candidate}`)
@@ -35,7 +38,7 @@ test("completed host facts round-trip without a verdict or card, and absence is 
   }))),
 )
 
-test("candidate filenames and file contents are strictly bound to host identity", async () => {
+posix("POSIX: candidate filenames and file contents are strictly bound to host identity", async () => {
   expect(() => ReviewPRFactsV2.file("/tmp/pr_../bad", "../bad")).toThrow("pr-facts-identity")
   await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
     const directory = yield* worktree
@@ -47,7 +50,7 @@ test("candidate filenames and file contents are strictly bound to host identity"
   })))
 })
 
-test("corrupt, excess, invalid UTF-8 and oversized retained facts fail explicitly", () =>
+posix("POSIX: corrupt, excess, invalid UTF-8 and oversized retained facts fail explicitly", () =>
   Effect.runPromise(Effect.scoped(Effect.gen(function* () {
     const directory = yield* worktree
     const store = path.join(directory, "orchestra-review", `pr_${candidate}`)
@@ -63,7 +66,7 @@ test("corrupt, excess, invalid UTF-8 and oversized retained facts fail explicitl
   }))),
 )
 
-test("writer refuses excess fields and oversized host facts before publishing", () =>
+posix("POSIX: writer refuses excess fields and oversized host facts before publishing", () =>
   Effect.runPromise(Effect.scoped(Effect.gen(function* () {
     const directory = yield* worktree
     const store = path.join(directory, "orchestra-review", `pr_${candidate}`)
@@ -74,7 +77,7 @@ test("writer refuses excess fields and oversized host facts before publishing", 
   }))),
 )
 
-test("concurrent writers publish one immutable winner and accept only equivalent retries", () =>
+posix("POSIX: concurrent writers publish one immutable winner and accept only equivalent retries", () =>
   Effect.runPromise(Effect.scoped(Effect.gen(function* () {
     const directory = yield* worktree
     const store = path.join(directory, "orchestra-review", `pr_${candidate}`)
@@ -97,7 +100,7 @@ test("concurrent writers publish one immutable winner and accept only equivalent
   }))),
 )
 
-test("a corrupt existing file cannot be replaced by a later writer", () =>
+posix("POSIX: a corrupt existing file cannot be replaced by a later writer", () =>
   Effect.runPromise(Effect.scoped(Effect.gen(function* () {
     const directory = yield* worktree
     const store = path.join(directory, "orchestra-review", `pr_${candidate}`)
@@ -109,7 +112,7 @@ test("a corrupt existing file cannot be replaced by a later writer", () =>
   }))),
 )
 
-test("symlinked candidate directories and targets cannot supply or receive host facts", () =>
+posix("POSIX: symlinked candidate directories and targets cannot supply or receive host facts", () =>
   Effect.runPromise(Effect.scoped(Effect.gen(function* () {
     const directory = yield* worktree
     const parent = path.join(directory, "orchestra-review")
@@ -137,7 +140,7 @@ test("symlinked candidate directories and targets cannot supply or receive host 
   }))),
 )
 
-test("cancellation waits for real publication and temporary cleanup before retirement", () =>
+posix("POSIX: cancellation waits for real publication and temporary cleanup before retirement", () =>
   Effect.runPromise(Effect.scoped(Effect.gen(function* () {
     const directory = yield* worktree
     const store = path.join(directory, "orchestra-review", `pr_${candidate}`)
@@ -159,11 +162,25 @@ test("cancellation waits for real publication and temporary cleanup before retir
       Effect.forkChild({ startImmediately: true }),
       Effect.provideService(Scheduler.PreventSchedulerYield, true),
     )
-    expect(trace).toEqual(["before-link"])
-    release()
+    try {
+      expect(trace).toEqual(["before-link"])
+    } finally {
+      release()
+    }
     yield* Fiber.join(interrupt)
     expect(trace).toEqual(["before-link", "retired"])
     expect(yield* ReviewPRFactsV2.read(store, candidate)).toEqual(facts)
     expect(yield* Effect.promise(() => fs.readdir(store))).toEqual(["host-facts.json"])
+  }))),
+)
+
+if (!ReviewPRStoreV2.supported()) test("unsupported platform refuses read and write without creating the store", () =>
+  Effect.runPromise(Effect.scoped(Effect.gen(function* () {
+    const directory = yield* worktree
+    const store = path.join(directory, "orchestra-review", `pr_${candidate}`)
+    expect((yield* Effect.flip(ReviewPRFactsV2.read(store, candidate))).message).toContain("pr-facts-unsupported")
+    expect((yield* Effect.flip(ReviewPRFactsV2.write(store, facts))).message).toContain("pr-facts-unsupported")
+    expect(yield* Effect.promise(() => Bun.file(path.join(directory, "orchestra-review")).exists())).toBe(false)
+    expect(yield* Effect.promise(() => fs.readdir(directory))).toEqual([])
   }))),
 )
