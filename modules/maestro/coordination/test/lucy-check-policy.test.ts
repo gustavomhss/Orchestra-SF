@@ -249,3 +249,23 @@ test("a failed probe is recorded and does not veto APPROVE; a refusal does not b
   })
   expect(() => ReviewChecksV2.validate(passedOff, refused)).toThrow("checks-mismatch")
 })
+
+test("authorize refuses every receipt verdict on host blockers, and only APPROVE on a required gate fail", () => {
+  const blocked = collect([], [], undefined, { entryBlockers: [{ kind: "entry", reason: "no acceptance" }] })
+  expect(() => ReviewChecksV2.validate(card(blocked), blocked)).not.toThrow()
+  for (const verdict of ["APPROVE", "FIX_FIRST", "REJECT"]) {
+    expect(() => ReviewChecksV2.authorize(verdict, blocked)).toThrow("checks-blocked")
+  }
+  const failed = collect([pack("repo", "routed")], [analyzer({ id: "lint", status: "fail", reason: "red" })])
+  expect(() => ReviewChecksV2.authorize("APPROVE", failed)).toThrow("checks-blocked")
+  expect(() => ReviewChecksV2.authorize("FIX_FIRST", failed)).not.toThrow()
+  const probeFail = collect([], [], undefined, { probes: [probe("fail", "u1", "red")] })
+  expect(() => ReviewChecksV2.authorize("APPROVE", probeFail)).not.toThrow()
+  const accepted = collect(
+    [pack("repo", "routed")],
+    [analyzer({ id: "lint", status: "not-run", reason: "absent" })],
+    { review: { acceptedUnavailable: ["lint"] } },
+  )
+  expect(accepted.blockers).toEqual([])
+  expect(() => ReviewChecksV2.authorize("APPROVE", accepted)).not.toThrow()
+})

@@ -35,6 +35,7 @@ import { MaestroChainTools } from "./chain"
 import { MaestroToolGate } from "./gate"
 import { MaestroReviewRecords } from "./review-records"
 import { ReviewPRRequestV2 } from "./review-pr"
+import { ReviewChecksV2 } from "../workflow/review-checks"
 import { ReviewFanoutV2 } from "../workflow/review-fanout"
 import { WorkflowReviewV2 } from "../workflow/review"
 
@@ -173,6 +174,7 @@ export function tools(input: {
   const stages = input.stages ?? seatStages
   // Lead Sessions in their final turn: the only place the record tool opens for a scoped review Session.
   const finishing = new Set<string>()
+  const finishAuthority = new Map<string, ReviewFanoutV2.FinishAuthorization>()
   return {
     [names.validation]: Tool.make({
       description: "Record validation evidence for one routed work card. Maestro only.",
@@ -392,11 +394,19 @@ export function tools(input: {
                 yield* sessions
                   .prompt({ id: promptID, sessionID: child, prompt: { text: brief }, delivery: "queue", resume: false })
                   .pipe(Effect.mapError((error) => new Tool.Failure({ message: `Review delegation prompt refused: ${error._tag}` })))
-                if (turn.finish) finishing.add(child)
+                if (turn.finish && !turn.authorization)
+                  return yield* new Tool.Failure({ message: "method-binding-mismatch: finish has no host authorization", metadata: { reason: "method-binding-mismatch" } })
+                if (turn.finish && turn.authorization) {
+                  finishing.add(child)
+                  finishAuthority.set(child, turn.authorization)
+                }
                 const failed = yield* execution.resume(child, { interruptOnCancel: true }).pipe(
                   Effect.as(undefined),
                   Effect.catch((error) => Effect.succeed(error)),
-                  Effect.ensuring(Effect.sync(() => finishing.delete(child))),
+                  Effect.ensuring(Effect.sync(() => {
+                    finishing.delete(child)
+                    finishAuthority.delete(child)
+                  })),
                 )
                 if (failed !== undefined) return yield* new Tool.Failure({ message: `LUCY_ERROR: ${String(failed)}` })
                 const messages = yield* sessions
@@ -495,8 +505,21 @@ export function tools(input: {
           if (!child?.parentID)
             return yield* new Tool.Failure({ message: "Review recording requires a lucy child session" })
           // A scoped review Session holds the record tool for its final turn only (§8.7).
-          if ((yield* services.store.scope(context.sessionID)) && !finishing.has(context.sessionID))
+          const scoped = yield* services.store.scope(context.sessionID)
+          if (scoped && !finishing.has(context.sessionID))
             return yield* new Tool.Failure({ message: "Review recording opens only in the lead's final turn" })
+          if (scoped) {
+            const authority = finishAuthority.get(context.sessionID)
+            if (!authority || params.reviewMethodVersion !== authority.method || params.routingDigest !== authority.routingDigest || catalogDigest(params.catalogDigest) !== catalogDigest(authority.catalogDigest))
+              return yield* new Tool.Failure({ message: "method-binding-mismatch: submitted method or digest does not match host finish", metadata: { reason: "method-binding-mismatch" } })
+            yield* Effect.try({
+              try: () => ReviewChecksV2.authorize(params.verdict, authority.checkFacts),
+              catch: (error) => new Tool.Failure({
+                message: error instanceof Error && error.message.length > 0 ? error.message : "checks-blocked",
+                metadata: { reason: "checks-blocked" },
+              }),
+            })
+          }
           const recorded = yield* MaestroReviewRecords.recordReview(services, {
             sessionID: child.parentID,
             validationRecordID: params.validationRecordID,
@@ -548,6 +571,10 @@ function leadID(parentID: string, validationRecordID: string, stage: string, rev
 
 function sha256(value: string) {
   return createHash("sha256").update(value, "utf8").digest("hex")
+}
+
+function catalogDigest(value: string | undefined) {
+  return value?.replace(/^sha256:/, "")
 }
 
 const decodeReceipt = Schema.decodeUnknownOption(MaestroEvent.Review.ReceivedV2.data)
