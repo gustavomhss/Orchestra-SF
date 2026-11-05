@@ -4,6 +4,7 @@ import { Effect } from "effect"
 import pinned from "../../backend-toolkit/packs/ruff"
 import { BackendToolkit } from "../../backend-toolkit"
 import type { Pack } from "../../backend-toolkit/manifest"
+import { Probe } from "../../research-toolkit/probe/types"
 import { ResearchProcess } from "../../research-toolkit/process"
 import type { Outcome } from "../../research-toolkit/process"
 import { ReviewNativeFiles } from "../native-files"
@@ -57,17 +58,16 @@ export const argv = Effect.fn("ReviewPackRuff.argv")(function* (input: {
   if (codes.length === 0) return stop("no-active-rules")
   const selected = yield* ReviewNativeFiles.select({ root: input.root, files: input.files, extensions: [".py", ".pyi"] })
   if (selected.status !== "ok") return selected
-  return {
-    status: "ok" as const,
-    argv: [
-      input.executable, "check",
-      "--isolated", "--no-cache", "--no-fix", "--no-fix-only", "--no-preview", "--ignore-noqa",
-      "--target-version", "py311", "--output-format", "json",
-      "--select", codes.join(","),
-      "--no-respect-gitignore", "--",
-      ...selected.files,
-    ],
-  }
+  const argv = [
+    input.executable, "check",
+    "--isolated", "--no-cache", "--no-fix", "--no-fix-only", "--no-preview", "--ignore-noqa",
+    "--target-version", "py311", "--output-format", "json",
+    "--select", codes.join(","),
+    "--no-respect-gitignore", "--",
+    ...selected.files,
+  ]
+  if (argv.reduce((sum, arg) => sum + Buffer.byteLength(arg) + 1, 0) > Probe.Limits.outputBytes) return stop("argv-bound")
+  return { status: "ok" as const, argv }
 })
 
 export function settle(outcome: Outcome, root: string): Parsed | { status: "not-run"; reason: string } {
