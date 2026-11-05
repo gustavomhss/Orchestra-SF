@@ -1,151 +1,32 @@
 import { expect, test } from "bun:test"
-import { createHash } from "node:crypto"
 import fs from "node:fs/promises"
-import os from "node:os"
 import path from "node:path"
 import { eq, like } from "drizzle-orm"
-import { DateTime, Effect, Layer, Option, Schema } from "effect"
+import { DateTime, Effect, Schema } from "effect"
 import { Board } from "@orchestra/schema/board"
 import { BoardNoteTable, BoardProjectTable } from "@orchestra/core/board/sql"
 import { AgentV2 } from "@orchestra/core/agent"
-import { Config } from "@orchestra/core/config"
 import { Database } from "@orchestra/core/database/database"
-import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
-import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { EventV2 } from "@orchestra/core/event"
 import { RelayArm } from "@orchestra/schema/relay-arm"
 import { MaestroEvent } from "@orchestra/schema/maestro-event"
 import { EventTable } from "@orchestra/core/event/sql"
-import { Global } from "@orchestra/core/global"
-import { Location } from "@orchestra/core/location"
-import { ModelV2 } from "@orchestra/core/model"
-import { PermissionV2 } from "@orchestra/core/permission"
 import { ProjectTable } from "@orchestra/core/project/sql"
-import { ProviderV2 } from "@orchestra/core/provider"
-import { AbsolutePath } from "@orchestra/core/schema"
-import type { SessionV2 } from "@orchestra/core/session"
-import type { SessionExecution } from "@orchestra/core/session/execution"
 import { SessionMessage } from "@orchestra/core/session/message"
 import { SessionSchema } from "@orchestra/core/session/schema"
 import { SessionMessageTable, SessionTable } from "@orchestra/core/session/sql"
-import { SkillV2 } from "@orchestra/core/skill"
 import { ToolRegistry } from "@orchestra/core/tool/registry"
-import { ToolOutputStore } from "@orchestra/core/tool-output-store"
-import { ToolSafety } from "@orchestra/core/tool-safety"
 import { GovernanceRecordsV2 } from "../src/v2/governance/records"
-import { GovernanceBackgroundV2 } from "../src/v2/governance/background"
-import { WriteRootsV2 } from "../src/v2/governance/write-roots"
-import { MaestroSeats } from "../src/v2/seats-service"
-import { MaestroToolsV2 } from "../src/v2/tools"
 import { MaestroReviewTools } from "../src/v2/tools/review"
 import { authoredSkills, reviewRows, run } from "./fixture/lucy-pr-entry"
 import { directory, projectID, restoreAlpha } from "./fixture/lucy-governed-repository"
+import { briefsBySession, child, host, model, prompts, scripted, sessionID, time, turn } from "./fixture/lucy-governed-host"
 import { CONFIRMED, HOST_FACTS, HOST_OUTCOMES, LOGIC_LENS, PLANTED, QUOTE_LINE, eligibleEntry, field, lensReturn, line, requireBindings, requireRecordID, retainedArtifacts, validationChecks, verifierReturn, workCard } from "./fixture/lucy-governed-data"
 
 // Registered maestro_record_review during a scoped finish drain. The Session
 // double admits prompts in memory only; this is not durable Session execution.
 // A scripted prompt route is fixture-only and is not host round authority.
 // Receipt refusal is counted before maestro.review publication and board notes.
-
-const sessionID = SessionSchema.ID.make("ses_governed_checks")
-const time = { created: DateTime.makeUnsafe(1_700_000_000_000) }
-const model = { id: ModelV2.ID.make("model"), providerID: ProviderV2.ID.make("provider") }
-const prompts: string[] = []
-const briefsBySession = new Map<string, string>()
-const child = {
-  create: (_input: { readonly id: SessionSchema.ID; readonly parentID: SessionSchema.ID }) => Effect.void,
-  resume: (_id: SessionSchema.ID) => Effect.void,
-}
-const sessions = {
-  create: (input: { readonly id: SessionSchema.ID; readonly parentID: SessionSchema.ID }) =>
-    Effect.suspend(() => child.create(input)).pipe(Effect.as({ id: input.id })),
-  prompt: (input: { readonly prompt: { readonly text: string }; readonly sessionID?: SessionSchema.ID }) =>
-    Effect.sync(() => {
-      prompts.push(input.prompt.text)
-      if (input.sessionID) briefsBySession.set(input.sessionID, input.prompt.text)
-    }),
-  messages: (input: { readonly sessionID: SessionSchema.ID }) =>
-    Effect.succeed(scriptedMessages(input.sessionID) ?? reviewHistory(input.sessionID)),
-} as unknown as SessionV2.Interface
-let scriptedMessages: (sessionID: SessionSchema.ID) => ReturnType<typeof reviewHistory> | undefined = () => undefined
-const execution = { resume: (id: SessionSchema.ID) => Effect.suspend(() => child.resume(id)) } as unknown as SessionExecution.Interface
-
-function reviewSkills() {
-  const root = path.resolve(import.meta.dir, "../../../../packages/lucy-specialist/skills")
-  const skill = (name: string, file: string) => ({ name, location: AbsolutePath.make(path.join(root, file)), content: "Procedure." })
-  return [
-    skill("lucy-review", "lucy-review/SKILL.md"),
-    skill("lucy-review-plan", "lucy-review/plan/SKILL.md"),
-    skill("lucy-review-code", "lucy-review/code/SKILL.md"),
-    skill("lucy-review-rereview", "lucy-review/rereview/SKILL.md"),
-    skill("lucy-lens-correctness-logic", "lucy-lens/correctness/logic/SKILL.md"),
-    skill("lucy-lens-correctness-edges", "lucy-lens/correctness/edges/SKILL.md"),
-    skill("lucy-lens-correctness-reliability", "lucy-lens/correctness/reliability/SKILL.md"),
-    skill("lucy-lens-tests", "lucy-lens/tests/SKILL.md"),
-    skill("lucy-review-prove-quote", "lucy-review/prove/quote/SKILL.md"),
-  ]
-}
-
-const host = AppNodeBuilder.build(LayerNode.group([
-  MaestroToolsV2.node, ToolRegistry.node, ToolRegistry.toolsNode, Database.node, EventV2.node,
-]), [
-  [ToolRegistry.node, ToolRegistry.nativeNode],
-  [ToolRegistry.toolsNode, ToolRegistry.nativeToolsNode],
-  [ToolSafety.node, WriteRootsV2.safetyNode],
-  [Database.node, Database.layerFromPath(":memory:")],
-  [Global.node, Layer.unwrap(Effect.acquireRelease(
-    Effect.promise(() => fs.mkdtemp(path.join(os.tmpdir(), "maestro-governed-data-"))),
-    (data) => Effect.promise(() => fs.rm(data, { recursive: true, force: true })),
-  ).pipe(Effect.map((data) => Global.layerWith({ data }))))],
-  [Location.node, Layer.succeed(Location.Service, Location.Service.of({ directory, project: { id: projectID, directory } }))],
-  [ToolOutputStore.node, ToolOutputStore.nodeWithoutConfig],
-  [PermissionV2.node, Layer.succeed(PermissionV2.Service, PermissionV2.Service.of({
-    evaluate: () => Effect.die("unused"), authorize: () => Effect.die("unused"), askExplicit: () => Effect.die("unused"),
-    assert: () => Effect.void, ask: () => Effect.die("unused"), reply: () => Effect.die("unused"),
-    cancelSession: () => Effect.void, get: () => Effect.die("unused"), forSession: () => Effect.die("unused"), list: () => Effect.die("unused"),
-  }))],
-  [SkillV2.node, Layer.mock(SkillV2.Service, { list: () => Effect.succeed(reviewSkills()) })],
-  [MaestroSeats.node, Layer.succeed(MaestroSeats.Service, MaestroSeats.make(["backend", "lucy"]))],
-  [AgentV2.node, Layer.mock(AgentV2.Service, {
-    get: (id) => Effect.succeed(["maestro", "backend", "lucy"].includes(id) ? AgentV2.Info.empty(id) : undefined),
-  })],
-  [Config.node, Layer.mock(Config.Service, {
-    entries: () => Effect.succeed([new Config.Document({ type: "document", info: new Config.Info({ maestro: { atlas: { projectID, directory: "." } } }) })]),
-  })],
-  [GovernanceBackgroundV2.sessionsNode, Layer.succeed(GovernanceBackgroundV2.Sessions, Option.some(sessions))],
-  [MaestroReviewTools.executionNode, Layer.succeed(MaestroReviewTools.Execution, Option.some(execution))],
-]) as Layer.Layer<ToolRegistry.Service | Database.Service | EventV2.Service>
-
-function reviewHistory(id: SessionSchema.ID) {
-  const promptID = (key: string) => SessionMessage.ID.make(`msg_lucy_review_${createHash("sha256").update(`${id}\0${key}`).digest("hex")}`)
-  const entry = ["```review-entry", JSON.stringify({
-    status: "eligible",
-    context: { intent: "nothing found", acceptance: "nothing found", invariants: "nothing found", assumptions: "nothing found" },
-    overlays: { confirmed: [], declined: [], added: [] }, slices: [],
-  }), "```"].join("\n")
-  const turn = (key: string, text: string) => {
-    const messageID = promptID(key)
-    return [
-      SessionMessage.User.make({ id: messageID, type: "user", text: key, time }),
-      SessionMessage.Assistant.make({
-        id: SessionMessage.ID.make(`${messageID}_reply`), type: "assistant", agent: "lucy", model,
-        content: [{ type: "text", id: "text", text }], time: { created: time.created, completed: time.created }, finish: "stop",
-      }),
-    ]
-  }
-  return [...turn("entry", entry), ...turn("finish", "recorded")]
-}
-
-function turn(id: SessionSchema.ID, key: string, text: string) {
-  const messageID = SessionMessage.ID.make(`msg_lucy_review_${createHash("sha256").update(`${id}\0${key}`).digest("hex")}`)
-  return [
-    SessionMessage.User.make({ id: messageID, type: "user", text: key, time }),
-    SessionMessage.Assistant.make({
-      id: SessionMessage.ID.make(`${messageID}_reply`), type: "assistant", agent: "lucy", model,
-      content: [{ type: "text", id: "text", text }], time: { created: time.created, completed: time.created }, finish: "stop",
-    }),
-  ]
-}
 
 test("a scoped finish refuses a governed receipt before a review event or board note", () =>
   Effect.runPromise(Effect.gen(function* () {
@@ -435,7 +316,7 @@ test("a Standard finish refuses a forged finding and publishes the host-confirme
   Effect.runPromise(Effect.gen(function* () {
     prompts.length = 0
     briefsBySession.clear()
-    scriptedMessages = (sessionID) => {
+    scripted.messages = (sessionID) => {
       const brief = briefsBySession.get(sessionID) ?? ""
       const key = brief.includes("Stage: finish") ? "finish" : brief.includes("Stage: hunt") ? "hunt" : brief.includes("Stage: verify") ? "verify" : brief.includes("review-entry") ? "entry" : ""
       if (!key) return undefined
@@ -585,13 +466,13 @@ test("a Standard finish refuses a forged finding and publishes the host-confirme
       return yield* Effect.die(`callback never reached the record branch. stages=${stages.join(",") || "none"} result=${reviewed.text.slice(0, 240)}`)
     expect(recordHits).toBeGreaterThan(0)
     expect(reviewed.text.startsWith("FIX_FIRST:")).toBe(true)
-  }).pipe(Effect.provide(host), Effect.ensuring(Effect.sync(() => { scriptedMessages = () => undefined })))))
+  }).pipe(Effect.provide(host), Effect.ensuring(Effect.sync(() => { scripted.messages = () => undefined })))))
 
 test("a Quick finish refuses a fabricated quote and publishes an in-range P1", () =>
   Effect.runPromise(Effect.gen(function* () {
     prompts.length = 0
     briefsBySession.clear()
-    scriptedMessages = () => undefined
+    scripted.messages = () => undefined
     const database = yield* Database.Service
     const registry = yield* ToolRegistry.Service
     const db = database.db
@@ -699,14 +580,14 @@ test("a Quick finish refuses a fabricated quote and publishes an in-range P1", (
       return yield* Effect.die(`callback never reached the record branch. stages=${stages.join(",") || "none"} result=${reviewed.text.slice(0, 240)}`)
     expect(recordHits).toBeGreaterThan(0)
     expect(reviewed.text.startsWith("FIX_FIRST:")).toBe(true)
-  }).pipe(Effect.provide(host), Effect.ensuring(Effect.sync(() => { scriptedMessages = () => undefined })))))
+  }).pipe(Effect.provide(host), Effect.ensuring(Effect.sync(() => { scripted.messages = () => undefined })))))
 
 // PlanRevisionV3 below is a labeled prerequisite event, not a claim that plan publication was secured.
 test("registered plan APPROVE then code FIX_FIRST keeps the host round when the prior card is forged or absent", () =>
   Effect.runPromise(restoreAlpha(Effect.gen(function* () {
     prompts.length = 0
     briefsBySession.clear()
-    scriptedMessages = () => undefined
+    scripted.messages = () => undefined
     let phase: "plan" | "code" = "plan"
     const database = yield* Database.Service
     const registry = yield* ToolRegistry.Service
@@ -835,20 +716,20 @@ test("registered plan APPROVE then code FIX_FIRST keeps the host round when the 
     })
     expect(absent.text).not.toContain("rereview-first-round-missing")
     expect(absent.text).not.toContain("FORGED-CARD-QUICK")
-    scriptedMessages = (sessionID) => turn(sessionID, "entry", forged)
+    scripted.messages = (sessionID) => turn(sessionID, "entry", forged)
     const tampered = yield* call("maestro", "maestro_request_review", {
       validationRecordID, workCard, reviewMethodVersion: "review-v2/code/quick", stage: "code", profile: "rereview", tier: "standard",
     })
     expect(tampered.text).not.toContain("FORGED-CARD-QUICK")
     expect(tampered.text).not.toContain("review-v2/rereview/standard")
     expect(prompts.at(-1) ?? "").toContain("Q1")
-  }).pipe(Effect.provide(host), Effect.ensuring(Effect.sync(() => { scriptedMessages = () => undefined }))))))
+  }).pipe(Effect.provide(host), Effect.ensuring(Effect.sync(() => { scripted.messages = () => undefined }))))))
 
 test("a newer APPROVE or REJECT code receipt refuses rereview before any child prompt", () =>
   Effect.runPromise(restoreAlpha(Effect.gen(function* () {
     prompts.length = 0
     briefsBySession.clear()
-    scriptedMessages = () => undefined
+    scripted.messages = () => undefined
     let mode: "plan" | "fix" | "approve" | "reject" = "plan"
     let created = 0
     const database = yield* Database.Service
@@ -989,4 +870,4 @@ test("a newer APPROVE or REJECT code receipt refuses rereview before any child p
     })
     if (!rejected.text.startsWith("REJECT:")) return yield* Effect.die(new Error(rejected.text))
     yield* refuse(validationRecordID)
-  }).pipe(Effect.provide(host), Effect.ensuring(Effect.sync(() => { scriptedMessages = () => undefined }))))))
+  }).pipe(Effect.provide(host), Effect.ensuring(Effect.sync(() => { scripted.messages = () => undefined }))))))
