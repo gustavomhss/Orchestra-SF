@@ -271,6 +271,8 @@ export type ReviewInput = {
   readonly stage?: "plan" | "code"
   /** Scoped finish authority only. Not a tool parameter and not submitted by the model. */
   readonly hostRouting?: ReviewRouting.Record
+  /** Required with `hostRouting`. The fanout's captured `tier.id`, never a later catalog. */
+  readonly hostExecutionTier?: string
 }
 
 /**
@@ -355,6 +357,7 @@ export const recordReview = Effect.fn("MaestroReviewRecords.recordReview")(funct
         reviewMethodVersion: input.reviewMethodVersion,
         routingDigest: input.routingDigest,
         catalogDigest: input.catalogDigest,
+        executionTier: input.hostExecutionTier,
       })
     : undefined
   if (round?.status === "corrupt") return yield* reviewRejected("malformed-host-routing")

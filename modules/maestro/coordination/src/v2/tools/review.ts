@@ -459,7 +459,7 @@ export function tools(input: {
                 settings,
                 ...(params.profile ? { profile: params.profile } : {}),
                 ...(params.tier ? { tier: params.tier } : {}),
-                ...(first ? { firstRound: ReviewRouting.tier(first.routing) } : {}),
+                ...(first ? { firstRound: first.executionTier } : {}),
               },
               base: { files: yield* listed(artifact.baseSHA) },
               head: { files: yield* listed(artifact.headSHA), changes },
@@ -530,6 +530,7 @@ export function tools(input: {
             return yield* new Tool.Failure({ message: "Review recording opens only in the lead's final turn" })
           let hostOutcomes: ReviewFanoutV2.FinishAuthorization["outcomes"] | undefined
           let hostRouting: ReviewFanoutV2.FinishAuthorization["routing"] | undefined
+          let hostExecutionTier: string | undefined
           if (scoped) {
             const authority = finishAuthority.get(context.sessionID)
             if (!authority || params.reviewMethodVersion !== authority.method || params.routingDigest !== authority.routingDigest || catalogDigest(params.catalogDigest) !== catalogDigest(authority.catalogDigest))
@@ -566,6 +567,7 @@ export function tools(input: {
               }),
             })
             hostRouting = authority.routing
+            hostExecutionTier = authority.executionTier
           }
           const recorded = yield* MaestroReviewRecords.recordReview(services, {
             sessionID: child.parentID,
@@ -580,7 +582,7 @@ export function tools(input: {
             ...(params.routingDigest ? { routingDigest: params.routingDigest } : {}),
             ...(params.catalogDigest ? { catalogDigest: params.catalogDigest } : {}),
             ...(params.items ? { items: params.items } : {}),
-            ...(hostRouting ? { hostRouting } : {}),
+            ...(hostRouting ? { hostRouting, ...(hostExecutionTier ? { hostExecutionTier } : {}) } : {}),
           })
           if (hostOutcomes) yield* admitPrecision(services, { review: recorded.id, project: recorded.projectID, reads: hostOutcomes })
           return `${recorded.verdict}: ${recorded.id}`
@@ -731,7 +733,7 @@ const firstRound = Effect.fn("MaestroReviewTools.firstRound")(function* (
     return yield* roundFailure("round-authority-corrupt", "host round or findings do not decode")
   if (loaded.status === "mismatch")
     return yield* roundFailure("round-authority-mismatch", "host round does not match the receipt binding")
-  return { routing: loaded.routing, findings: loaded.findings, reviewed: receipt.artifact.headSHA }
+  return { routing: loaded.routing, findings: loaded.findings, reviewed: receipt.artifact.headSHA, executionTier: loaded.executionTier }
 })
 
 // The tier pin and accepted-unavailable lanes of the board project over this repository; several name no single pin.

@@ -143,6 +143,7 @@ export namespace Review {
       // `routing` is JSON text for Core `ReviewRouting.Record`. Schema does not import Core.
       hostRound: optional(Schema.Struct({
         version: Schema.Literal("host-round-v1"),
+        executionTier: Schema.NonEmptyString,
         routing: Schema.NonEmptyString,
       })),
     },

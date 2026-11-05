@@ -56,6 +56,8 @@ export type FinishAuthorization = {
   readonly method: string
   readonly routingDigest: string
   readonly catalogDigest: string
+  /** The built tier `runTier` actually ran. Not a later catalog lookup. */
+  readonly executionTier: string
   readonly routing: ReviewRouting.Record
   /** Omitted only by a pure fanout fixture. A scoped receipt requires it. */
   readonly scope?: Input["facts"]["scope"]
@@ -158,6 +160,8 @@ export type Input = {
     readonly routing: ReviewRouting.Record
     readonly findings: ReadonlyArray<ReviewResultV2.Finding>
     readonly reviewed: string
+    /** The tier the prior round actually ran. Not the requested id on the saved routing record. */
+    readonly executionTier: string
   }
 }
 
@@ -284,7 +288,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
       ...(parsedEntry ? [] : [deviation("entry", "stage-return", "the entry record did not decode", lead)]),
     ],
   }
-  const tier = runTier(catalog, ReviewRouting.tier(afterEntry))
+  const tier = runTier(catalog, input.firstRound?.executionTier ?? ReviewRouting.tier(afterEntry))
   if (afterEntry.lenses.some((lens) => auditNodes.has(lens.node) && lens.node !== "lucy-audit-compliance-privacy"))
     return yield* new Tool.Failure({ message: "Review route contains an unsupported audit lens" })
   const method = ReviewResultV2.method({ profile: afterEntry.profile.id, tier: tier.id })
@@ -332,6 +336,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
         method,
         routingDigest: ReviewRouting.digest(sessionRecord),
         catalogDigest: sessionRecord.catalog,
+        executionTier: tier.id,
         routing: sessionRecord,
         scope: input.facts.scope,
         confirmed: ReviewRouting.tier(sessionRecord) === "quick" ? undefined : confirmed,

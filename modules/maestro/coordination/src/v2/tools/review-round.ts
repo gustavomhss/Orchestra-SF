@@ -1,12 +1,12 @@
 export * as ReviewRoundV2 from "./review-round"
 
 import { Option, Schema } from "effect"
-import { ReviewCatalog } from "@orchestra/core/review/catalog"
 import { ReviewRouting } from "@orchestra/core/review/routing"
 import type { MaestroEvent } from "@orchestra/schema/maestro-event"
 import { ReviewResultV2 } from "../governance/review-result"
 
 // Durable host routing on the receipt. Not a private store, a model input, or a card parse.
+// `executionTier` is the fanout's captured run tier. A later catalog must not reinterpret it.
 
 export const VERSION = "host-round-v1"
 export const LIMIT = 4 * 1024 * 1024
@@ -16,12 +16,17 @@ const decodeJson = Schema.decodeUnknownOption(Schema.UnknownFromJsonString)
 const decodeFinding = Schema.decodeUnknownOption(ReviewResultV2.Finding)
 const strict = { onExcessProperty: "error" } as const
 
-export type HostRound = { readonly version: typeof VERSION; readonly routing: string }
+export type HostRound = {
+  readonly version: typeof VERSION
+  readonly executionTier: string
+  readonly routing: string
+}
 
 type Bound = {
   readonly reviewMethodVersion: string
   readonly routingDigest: string | undefined
   readonly catalogDigest: string | undefined
+  readonly executionTier: string | undefined
 }
 
 export function publish(routing: ReviewRouting.Record, bound: Bound):
@@ -29,46 +34,38 @@ export function publish(routing: ReviewRouting.Record, bound: Bound):
   | { readonly status: "corrupt" | "mismatch" | "too-large" } {
   const decoded = Option.getOrUndefined(decodeRouting(routing, strict))
   if (!decoded) return { status: "corrupt" }
-  if (!agrees(decoded, bound)) return { status: "mismatch" }
+  if (!bound.executionTier || !agrees(decoded, bound.executionTier, bound)) return { status: "mismatch" }
   const text = canonicalJson(decoded)
   if (Buffer.byteLength(text, "utf8") > LIMIT) return { status: "too-large" }
-  return { status: "ok", hostRound: { version: VERSION, routing: text } }
+  return { status: "ok", hostRound: { version: VERSION, executionTier: bound.executionTier, routing: text } }
 }
 
 export function read(receipt: {
   readonly reviewMethodVersion: string
   readonly routingDigest?: string
   readonly catalogDigest?: string
-  readonly hostRound?: HostRound
+  readonly hostRound?: { readonly version: string; readonly executionTier?: string; readonly routing: string }
   readonly findings: ReadonlyArray<MaestroEvent.Review.Finding>
 }):
-  | { readonly status: "ok"; readonly routing: ReviewRouting.Record; readonly findings: ReadonlyArray<ReviewResultV2.Finding> }
+  | { readonly status: "ok"; readonly routing: ReviewRouting.Record; readonly findings: ReadonlyArray<ReviewResultV2.Finding>; readonly executionTier: string }
   | { readonly status: "unavailable" | "corrupt" | "mismatch" } {
   if (!receipt.hostRound) return { status: "unavailable" }
-  if (receipt.hostRound.version !== VERSION || Buffer.byteLength(receipt.hostRound.routing, "utf8") > LIMIT)
+  if (receipt.hostRound.version !== VERSION || !receipt.hostRound.executionTier || Buffer.byteLength(receipt.hostRound.routing, "utf8") > LIMIT)
     return { status: "corrupt" }
   const routing = Option.getOrUndefined(Option.flatMap(decodeJson(receipt.hostRound.routing), (value) => decodeRouting(value, strict)))
   if (!routing) return { status: "corrupt" }
-  if (!agrees(routing, receipt)) return { status: "mismatch" }
+  if (!agrees(routing, receipt.hostRound.executionTier, receipt)) return { status: "mismatch" }
   const findings = receipt.findings.flatMap((finding) => Option.toArray(decodeFinding(finding, strict)))
   if (findings.length !== receipt.findings.length) return { status: "corrupt" }
-  return { status: "ok", routing, findings }
+  return { status: "ok", routing, findings, executionTier: receipt.hostRound.executionTier }
 }
 
-function agrees(routing: ReviewRouting.Record, bound: Bound) {
-  const tier = builtTier(ReviewRouting.tier(routing))
+function agrees(routing: ReviewRouting.Record, executionTier: string, bound: Bound) {
   const catalog = bound.catalogDigest?.replace(/^sha256:/, "")
-  if (!tier || bound.routingDigest === undefined || catalog === undefined) return false
-  if (ReviewResultV2.method({ profile: routing.profile.id, tier }) !== bound.reviewMethodVersion) return false
+  if (bound.routingDigest === undefined || catalog === undefined) return false
+  if (ReviewResultV2.method({ profile: routing.profile.id, tier: executionTier }) !== bound.reviewMethodVersion) return false
   if (bound.routingDigest !== ReviewRouting.digest(routing)) return false
   return catalog === routing.catalog
-}
-
-// The method names the built tier `ReviewRouting.tier` runs. An unbuilt raise still records that built tier.
-function builtTier(id: string) {
-  const tier = ReviewCatalog.current.route.tiers.find((item) => item.id === id)
-  if (tier?.built) return tier.id
-  return ReviewCatalog.current.route.tiers.find((item) => item.id === tier?.runs && item.built)?.id
 }
 
 function canonicalJson(value: unknown): string {
