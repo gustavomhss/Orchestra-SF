@@ -5,6 +5,7 @@ import { Database } from "@orchestra/core/database/database"
 import { EventTable } from "@orchestra/core/event/sql"
 import { Project } from "@orchestra/core/project"
 import { ReviewCatalog } from "@orchestra/core/review/catalog"
+import { ReviewAnalyze } from "@orchestra/core/review-toolkit/analyze"
 import { ReviewLedger } from "@orchestra/core/review/ledger"
 import { ReviewPrecisionCatalog } from "@orchestra/core/review/precision-catalog"
 import { ReviewPrecisionStore } from "@orchestra/core/review/precision-store"
@@ -65,6 +66,12 @@ const rows = () =>
     return yield* database.db.select().from(EventTable).where(eq(EventTable.aggregate_id, ReviewPrecisionEvent.Aggregate)).all().pipe(Effect.orDie)
   })
 
+const nativeStatus = (catalog: ReviewCatalog.Catalog) =>
+  catalog.rules.find((rule) => rule.pack === "gitleaks" && rule.rule === native)?.status
+
+// data-migration.checks is empty, so an entry overlay cannot add a pack. A second
+// analysis is not reachable on this registered fixture; do not invent one.
+
 test("a new PR routes the history snapshot, and a later local read starts probation", () =>
   Effect.runPromise(run(skills, {}, (ctx) => Effect.gen(function* () {
     expect(generation).toMatch(/^[0-9a-f]{64}$/)
@@ -75,14 +82,22 @@ test("a new PR routes the history snapshot, and a later local read starts probat
       project: Project.ID.global, pack: "gitleaks", rule: native, generation, repository: false, cost: "low",
       thresholds: ReviewCatalog.current.route.ledger,
     })).toBe("dropped")
-    const globalRequest = yield* ctx.invoke("maestro", request(ctx.base, ctx.head, "global prior"))
+    const snapshots: ReviewCatalog.Catalog[] = []
+    const watch = (value: unknown) => ctx.invoke("maestro", value).pipe(
+      Effect.provideService(ReviewAnalyze.ObserveCatalog, (catalog) => { snapshots.push(catalog) }),
+    )
+    const globalRequest = yield* watch(request(ctx.base, ctx.head, "global prior"))
     if (globalRequest.type === "error") return yield* Effect.die(new Error(globalRequest.text))
     const globalCandidate = candidateOf(globalRequest.text)
     const globalFacts = yield* storedOf(globalCandidate)
     if (!globalFacts) return yield* Effect.die("completed review published no host facts")
     const globalCatalog = ReviewPrecisionCatalog.effective({ project: Project.ID.global, catalog: ReviewCatalog.current, batches: dropped })
+    const seen = snapshots[0]
+    if (!seen) return yield* Effect.die("registered analyze did not observe a catalog")
+    expect(nativeStatus(seen)).toBe("dropped")
+    expect(globalFacts.routing.catalog).toBe(ReviewCatalog.catalogDigest(seen).slice("sha256:".length))
     expect(globalFacts.routing.catalog).toBe(digest(dropped, Project.ID.global))
-    expect(globalCatalog.rules.find((rule) => rule.pack === "gitleaks" && rule.rule === native)?.status).toBe("dropped")
+    expect(nativeStatus(globalCatalog)).toBe("dropped")
     expect(globalCatalog.packs.find((entry) => entry.id === "gitleaks")?.status).toBe(pack.status)
     expect(ctx.touches.prompts.join("\n")).not.toContain(generation)
     expect(ctx.touches.prompts.join("\n")).not.toContain("fp-ambient-")
@@ -95,10 +110,14 @@ test("a new PR routes the history snapshot, and a later local read starts probat
       project: Project.ID.global, pack: "gitleaks", rule: native, generation, repository: false, cost: "low",
       thresholds: ReviewCatalog.current.route.ledger,
     })).toBe("probation")
-    const localRequest = yield* ctx.invoke("maestro", request(ctx.base, ctx.head, "first local read"))
+    const localRequest = yield* watch(request(ctx.base, ctx.head, "first local read"))
     if (localRequest.type === "error") return yield* Effect.die(new Error(localRequest.text))
     const localFacts = yield* storedOf(candidateOf(localRequest.text))
     if (!localFacts) return yield* Effect.die("local review published no host facts")
+    const localSeen = snapshots[1]
+    if (!localSeen) return yield* Effect.die("second registered analyze did not observe a catalog")
+    expect(nativeStatus(localSeen)).toBe("probation")
+    expect(localFacts.routing.catalog).toBe(ReviewCatalog.catalogDigest(localSeen).slice("sha256:".length))
     expect(localFacts.routing.catalog).toBe(digest(localHistory, Project.ID.global))
     expect(localFacts.routing.catalog).not.toBe(globalFacts.routing.catalog)
     const retained = yield* rows()
@@ -124,11 +143,20 @@ test("a completed PR retry keeps the first snapshot after ambient history advanc
     yield* seed(Project.ID.global, 19, "before")
     const before = yield* ReviewPrecisionStore.history()
     const snapshot = digest(before, Project.ID.global)
-    const first = yield* ctx.invoke("maestro", request(ctx.base, ctx.head, "immutable retry"))
+    const snapshots: ReviewCatalog.Catalog[] = []
+    const watch = (value: unknown) => ctx.invoke("maestro", value).pipe(
+      Effect.provideService(ReviewAnalyze.ObserveCatalog, (catalog) => { snapshots.push(catalog) }),
+    )
+    const first = yield* watch(request(ctx.base, ctx.head, "immutable retry"))
     if (first.type === "error") return yield* Effect.die(new Error(first.text))
     const candidate = candidateOf(first.text)
     const facts = yield* storedOf(candidate)
     if (!facts) return yield* Effect.die("completed review published no host facts")
+    const seen = snapshots[0]
+    if (!seen) return yield* Effect.die("registered analyze did not observe a catalog")
+    expect(snapshots).toHaveLength(1)
+    expect(nativeStatus(seen)).toBe("probation")
+    expect(facts.routing.catalog).toBe(ReviewCatalog.catalogDigest(seen).slice("sha256:".length))
     expect(facts.routing.catalog).toBe(snapshot)
     expect(digest(yield* ReviewPrecisionStore.history(), Project.ID.global)).not.toBe(snapshot)
     const prompts = ctx.touches.prompts.length
@@ -137,7 +165,9 @@ test("a completed PR retry keeps the first snapshot after ambient history advanc
     const admitted = (yield* rows()).filter((row) => (row.data as { review?: string }).review === `pr:${candidate}`)
     expect(admitted).toHaveLength(1)
     yield* seed(other, 40, "after")
-    const again = yield* ctx.invoke("maestro", request(ctx.base, ctx.head, "immutable retry"))
+    const observed = snapshots.length
+    const again = yield* watch(request(ctx.base, ctx.head, "immutable retry"))
+    expect(snapshots).toHaveLength(observed)
     expect(again.text).toBe(first.text)
     expect(candidateOf(again.text)).toBe(candidate)
     expect(ctx.touches.prompts.length).toBe(prompts)
@@ -157,9 +187,13 @@ test("corrupt precision history fails before a child and does not become empty h
     yield* seed(Project.ID.global, 1, "corrupt-seed")
     const database = yield* Database.Service
     yield* database.db.update(EventTable).set({ type: "review.unexpected.1" }).where(eq(EventTable.aggregate_id, ReviewPrecisionEvent.Aggregate)).run().pipe(Effect.orDie)
-    const failed = yield* ctx.invoke("maestro", request(ctx.base, ctx.head, "corrupt history"))
+    const snapshots: ReviewCatalog.Catalog[] = []
+    const failed = yield* ctx.invoke("maestro", request(ctx.base, ctx.head, "corrupt history")).pipe(
+      Effect.provideService(ReviewAnalyze.ObserveCatalog, (catalog) => { snapshots.push(catalog) }),
+    )
     expect(failed.type).toBe("error")
     expect(failed.text.startsWith("PR identity:")).toBe(false)
+    expect(snapshots).toEqual([])
     expect(ctx.touches.children).toEqual([])
     expect(ctx.touches.prompts).toEqual([])
     expect(ctx.touches.resumes).toBe(0)
