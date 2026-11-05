@@ -636,7 +636,9 @@ function quoteOnHead(git: MaestroChainTools.Services["atlas"]["git"], finding: M
       catch: () => unverified("head blob is not UTF-8"),
     })
     const lines = text.split("\n")
-    if (end > lines.length || !lines.slice(start - 1, end).join("\n")) return yield* unverified("quote range is empty or outside the head blob")
+    const actualLineCount = text.length === 0 ? 0 : lines.length - Number(text.endsWith("\n"))
+    const quoted = lines.slice(start - 1, end).join("\n")
+    if (end > actualLineCount || quoted.trim().length === 0) return yield* unverified("quote range is empty or outside the head blob")
   })
 }
 

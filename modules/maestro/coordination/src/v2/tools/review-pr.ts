@@ -157,7 +157,9 @@ function output(reply: string, facts: ReviewPRFactsV2.Facts, prepared: ReviewPRE
       const text = yield* Effect.try({ try: () => new TextDecoder("utf-8", { fatal: true }).decode(blob.stdout),
         catch: () => failure("pr-quote-unavailable", "head blob is not UTF-8") })
       const lines = text.split("\n")
-      if (finding.evidence.endLine > lines.length || !lines.slice(finding.evidence.startLine - 1, finding.evidence.endLine).join("\n"))
+      const actualLineCount = text.length === 0 ? 0 : lines.length - Number(text.endsWith("\n"))
+      const quoted = lines.slice(finding.evidence.startLine - 1, finding.evidence.endLine).join("\n")
+      if (finding.evidence.endLine > actualLineCount || quoted.trim().length === 0)
         return yield* failure("pr-quote-unavailable", "quote range is empty or outside the head blob")
     }
     yield* ReviewPrecisionStore.append({ review: `pr:${facts.candidate}`, project, reads: facts.outcomes }).pipe(
