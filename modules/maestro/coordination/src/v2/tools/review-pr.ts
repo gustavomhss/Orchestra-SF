@@ -157,6 +157,8 @@ function output(reply: string, facts: ReviewPRFactsV2.Facts, prepared: ReviewPRE
       if (finding.evidence.endLine > lines.length || !lines.slice(finding.evidence.startLine - 1, finding.evidence.endLine).join("\n"))
         return yield* failure("pr-quote-unavailable", "quote range is empty or outside the head blob")
     }
-    return `PR identity: ${JSON.stringify({ candidate: facts.candidate, baseSHA: prepared.baseSHA, headSHA: prepared.headSHA, diffSHA256: prepared.sha256 })}\n\n\`\`\`${ReviewResultV2.TAG}\n${JSON.stringify(card)}\n\`\`\``
+    return `PR identity: ${JSON.stringify({ candidate: facts.candidate, baseRef: prepared.baseRef, headRef: prepared.headRef,
+      baseCommit: prepared.baseCommit, headCommit: prepared.headCommit, baseSHA: prepared.baseSHA, headSHA: prepared.headSHA,
+      diffSHA256: prepared.sha256 })}\n\n\`\`\`${ReviewResultV2.TAG}\n${JSON.stringify(card)}\n\`\`\``
   })
 }
