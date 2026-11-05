@@ -73,3 +73,38 @@ test("writer refuses excess fields and oversized host facts before publishing", 
     expect(yield* ReviewPRFactsV2.read(store, candidate)).toBeUndefined()
   }))),
 )
+
+test("concurrent writers publish one immutable winner and accept only equivalent retries", () =>
+  Effect.runPromise(Effect.scoped(Effect.gen(function* () {
+    const directory = yield* worktree
+    const store = path.join(directory, `pr_${candidate}`)
+    const alternate = { ...facts, method: "review-v2/pr/quick" }
+    const attempts = yield* Effect.promise(() => Promise.allSettled([
+      Effect.runPromise(ReviewPRFactsV2.write(store, facts)),
+      Effect.runPromise(ReviewPRFactsV2.write(store, alternate)),
+    ]))
+    expect(attempts.filter((item) => item.status === "fulfilled")).toHaveLength(1)
+    const failure = attempts.find((item) => item.status === "rejected")
+    if (!failure || failure.status !== "rejected") throw new Error("expected conflicting writer")
+    expect(String(failure.reason)).toContain("pr-facts-conflict")
+    const winner = yield* ReviewPRFactsV2.read(store, candidate)
+    if (!winner) throw new Error("missing winning facts")
+    expect([facts.method, alternate.method]).toContain(winner.method)
+    yield* ReviewPRFactsV2.write(store, winner)
+    expect(yield* ReviewPRFactsV2.read(store, candidate)).toEqual(winner)
+    expect((yield* Effect.promise(() => fs.stat(ReviewPRFactsV2.file(store, candidate)))).mode & 0o777).toBe(0o600)
+    expect(yield* Effect.promise(() => fs.readdir(store))).toEqual(["host-facts.json"])
+  }))),
+)
+
+test("a corrupt existing file cannot be replaced by a later writer", () =>
+  Effect.runPromise(Effect.scoped(Effect.gen(function* () {
+    const directory = yield* worktree
+    const store = path.join(directory, `pr_${candidate}`)
+    yield* ReviewPRFactsV2.write(store, facts)
+    const target = ReviewPRFactsV2.file(store, candidate)
+    yield* Effect.promise(() => Bun.write(target, "bad"))
+    expect((yield* Effect.flip(ReviewPRFactsV2.write(store, facts))).message).toContain("pr-facts-corrupt")
+    expect(yield* Effect.promise(() => Bun.file(target).text())).toBe("bad")
+  }))),
+)

@@ -3,6 +3,7 @@ export * as ReviewPRFactsV2 from "./review-pr-facts"
 import { randomUUID } from "node:crypto"
 import fs from "node:fs/promises"
 import path from "node:path"
+import { isDeepStrictEqual } from "node:util"
 import { ReviewRouting } from "@orchestra/core/review/routing"
 import { Tool } from "@orchestra/core/tool/tool"
 import { MaestroEvent } from "@orchestra/schema/maestro-event"
@@ -74,20 +75,34 @@ export const read = Effect.fn("ReviewPRFactsV2.read")(function* (store: string, 
 /** Call only after completed fanout; no card, verdict, approval or review receipt belongs here. */
 export const write = Effect.fn("ReviewPRFactsV2.write")(function* (store: string, facts: Facts) {
   const target = yield* Effect.try({ try: () => file(store, facts.candidate), catch: (error) => error instanceof Tool.Failure ? error : reason("pr-facts-identity", String(error)) })
-  if (Option.isNone(decode(facts, { onExcessProperty: "error" }))) return yield* reason("pr-facts-corrupt", "invalid host facts")
+  const decoded = decode(facts, { onExcessProperty: "error" })
+  if (Option.isNone(decoded)) return yield* reason("pr-facts-corrupt", "invalid host facts")
   const text = JSON.stringify(facts)
   if (Buffer.byteLength(text, "utf8") > LIMIT) return yield* reason("pr-facts-oversized", "host facts exceed 4 MiB")
-  yield* Effect.tryPromise({
+  const published = yield* Effect.tryPromise({
     try: async () => {
       await fs.mkdir(store, { recursive: true })
       const temporary = `${target}.${randomUUID()}.tmp`
+      const handle = await fs.open(temporary, "wx", 0o600)
       try {
-        await Bun.write(temporary, text)
-        await fs.rename(temporary, target)
+        try {
+          await handle.writeFile(text, "utf8")
+        } finally {
+          await handle.close()
+        }
+        return await fs.link(temporary, target).then(() => true, (error: NodeJS.ErrnoException) => {
+          if (error.code === "EEXIST") return false
+          throw error
+        })
       } finally {
         await fs.rm(temporary, { force: true })
       }
     },
     catch: (error) => reason("pr-facts-unavailable", String(error)),
   })
+  if (!published) {
+    const existing = yield* read(store, facts.candidate)
+    if (!existing || !isDeepStrictEqual(existing, decoded.value))
+      return yield* reason("pr-facts-conflict", "candidate already has different host facts")
+  }
 })
