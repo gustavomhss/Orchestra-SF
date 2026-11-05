@@ -2,7 +2,7 @@ export * as ReviewAnalyze from "./analyze"
 
 import path from "path"
 import { lstat, mkdir, readdir, realpath, writeFile } from "fs/promises"
-import { Effect, Option, Schema } from "effect"
+import { Context, Effect, Option, Schema } from "effect"
 import { FSUtil } from "../fs-util"
 import { ReviewCatalog } from "../review/catalog"
 import { ResearchProcess } from "../research-toolkit/process"
@@ -73,6 +73,12 @@ const GATE_MS = 10 * 60_000
 const GATE_BYTES = 16 * 1024 * 1024
 const CACHED = 64
 const RETAINED = /^review:([0-9a-f-]{36})\/retained\.json$/
+
+/** Test seam: runs after the copy exists and before SQL enumeration. Default does nothing. */
+export const BeforeSqlSelection = Context.Reference<(root: string) => Effect.Effect<void>>(
+  "@orchestra/ReviewAnalyze/BeforeSqlSelection",
+  { defaultValue: () => () => Effect.void },
+)
 
 // Base results by pack, version, template and the base commit's tree: a rereview, or a second review over the same base,
 // reads them instead of scanning again.
@@ -146,7 +152,7 @@ const Retained = Schema.Struct({ items: Schema.Array(ReviewItem.ToolItem) })
 
 type Pack = ReviewCatalog.Catalog["packs"][number]
 type Copy = { readonly snapshot: ReviewScratch.Snapshot } | { readonly failed: string }
-type Context = {
+type RunContext = {
   readonly input: RunInput
   readonly catalog: ReviewCatalog.Catalog
   readonly write: (name: string, text: string) => Effect.Effect<string>
@@ -155,7 +161,7 @@ type Context = {
 }
 type Outcome = { readonly checks: Check[]; readonly head: ReviewSarif.Entry[]; readonly base: ReviewSarif.Entry[] }
 
-const runPack = Effect.fnUntraced(function* (packID: string, pack: Pack | undefined, context: Context) {
+const runPack = Effect.fnUntraced(function* (packID: string, pack: Pack | undefined, context: RunContext) {
   const lane = context.input.lane
   if (!pack) return only({ id: packID, pack: packID, version: "unknown", lane, status: "not-run", reason: "unknown pack", workspaceExecuted: false })
   const refused = (reason: string) => only(check(pack, "not-run", reason))
@@ -185,7 +191,7 @@ function pinnedScanner(id: string): Scanner | undefined {
 }
 
 /** A pinned scanner over the head copy and, for the new-only step, the base copy. */
-const scanned = Effect.fnUntraced(function* (pack: Pack, scanner: Scanner, context: Context) {
+const scanned = Effect.fnUntraced(function* (pack: Pack, scanner: Scanner, context: RunContext) {
   const located = yield* scanner.locate()
   if ("absent" in located) return only(check(pack, "not-run", located.absent))
   const template = scanner.templates[pack.template]
@@ -245,7 +251,7 @@ const scanned = Effect.fnUntraced(function* (pack: Pack, scanner: Scanner, conte
 })
 
 /** Squawk over the copied tree only: host TOML, explicit regular `.sql` paths, stdout retained before settle. */
-const squawked = Effect.fnUntraced(function* (pack: Pack, context: Context) {
+const squawked = Effect.fnUntraced(function* (pack: Pack, context: RunContext) {
   if (pack.output.format !== "json") return only(check(pack, "not-run", `template unknown: ${pack.template}`))
   if (pack.output.parser !== "squawk" || pack.template !== "squawk-json")
     return only(check(pack, "not-run", `template unknown: ${pack.template}`))
@@ -255,7 +261,13 @@ const squawked = Effect.fnUntraced(function* (pack: Pack, context: Context) {
   const scan = (copied: Copy, side: "head" | "base") => Effect.gen(function* () {
     if ("failed" in copied) return { status: "not-run" as const, reason: copied.failed }
     const snapshot = copied.snapshot
-    const selected = yield* Effect.promise(() => sqlSelection(snapshot.root, context.input, side))
+    const before = yield* BeforeSqlSelection
+    yield* before(snapshot.root)
+    // A readdir rejection is unread input: not-run, not a defect and not a clean pass. Returned refusals stay their own class.
+    const selected = yield* Effect.tryPromise({
+      try: () => sqlSelection(snapshot.root, context.input, side),
+      catch: (error) => error,
+    }).pipe(Effect.catch((error) => Effect.succeed({ refused: sqlUnavailable(error) })))
     if ("refused" in selected) return { status: "not-run" as const, reason: selected.refused }
     if (selected.files.length === 0) {
       if (side === "head") return { status: "not-run" as const, reason: "no-input" }
@@ -293,6 +305,11 @@ const squawked = Effect.fnUntraced(function* (pack: Pack, context: Context) {
     base: ReviewSarif.toItems(base.results, lookup).items,
   } satisfies Outcome
 })
+
+function sqlUnavailable(error: unknown) {
+  const code = error !== null && typeof error === "object" && "code" in error && typeof error.code === "string" ? error.code : "error"
+  return `sql-input-unavailable: ${code}`
+}
 
 async function sqlSelection(root: string, input: RunInput, side: "head" | "base") {
   if (input.scope !== "files") return { files: await regularSql(root) }
@@ -333,7 +350,7 @@ async function regularSql(root: string) {
 }
 
 /** The base revision's declared gates, each run confined in the head copy (plan R4); they yield checks, not items. */
-const gates = Effect.fnUntraced(function* (pack: Pack, context: Context) {
+const gates = Effect.fnUntraced(function* (pack: Pack, context: RunContext) {
   const version = context.input.base
   const refused = (reason: string) => only({ ...check(pack, "not-run", reason), version })
   if (!context.input.trusted) return refused("untrusted target: repository code does not run (D6)")
