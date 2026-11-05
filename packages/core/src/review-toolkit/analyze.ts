@@ -447,6 +447,10 @@ function nativeDrops(catalog: ReviewCatalog.Catalog, pack: string, known: readon
   const wildcard = rules.find((rule) => rule.rule === "*")
   const explicit = rules.filter((rule) => rule.rule !== "*")
   const keepers = explicit.filter((rule) => rule.status !== "dropped")
+  // A dropped id that contains `*` is not an exact native exclusion. Do not guess a glob.
+  if (explicit.some((rule) => rule.status === "dropped" && rule.rule.includes("*"))) {
+    return { status: "not-run" as const, reason: "native-rule-pattern" }
+  }
   if (wildcard?.status === "dropped") {
     if (known !== undefined && keepers.every((rule) => known.includes(rule.rule))) {
       const kept = new Set(keepers.map((rule) => rule.rule))

@@ -72,6 +72,20 @@ it.live("a dropped wildcard over an open native set is not-run, not a partial fi
   }),
 )
 
+it.live("a dropped native id that contains a star is not an exclusion", () =>
+  Effect.gen(function* () {
+    expectSpawn(import.meta.path)
+    const made = yield* held()
+    const root = yield* planted(made.path)
+    const result = yield* ReviewAnalyze.run(run(made, root, ["gitleaks"], catalog([
+      { pack: "gitleaks", rule: "github-*", status: "dropped" },
+    ]))).pipe(Effect.provideService(BackendToolkit.Root, made.toolkit))
+    expect(result.checks[0]).toMatchObject({ status: "not-run", reason: "native-rule-pattern", workspaceExecuted: false })
+    expect(result.checks[0].status).not.toBe("pass")
+    expect(items(result)).toEqual([])
+  }),
+)
+
 it.live("dropping every host ast-grep rule is not-run, not a clean pass", () =>
   Effect.gen(function* () {
     expectSpawn(import.meta.path)
