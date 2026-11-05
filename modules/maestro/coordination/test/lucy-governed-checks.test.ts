@@ -208,6 +208,15 @@ const QUOTE_LINE = 3
 const LOGIC_LENS = "correctness-logic"
 const PLANTED = plantedItem()
 
+async function retainedArtifacts(store: string) {
+  const names = await fs.readdir(store).catch(() => [])
+  const files = await Promise.all(names.filter((name) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(name)).map(async (name) => {
+    const file = path.join(store, name, "retained.json")
+    return await Bun.file(file).exists() ? file : undefined
+  }))
+  return files.filter((file) => file !== undefined)
+}
+
 function plantedItem() {
   const rule = "export-claim"
   const snippetDigest = ReviewItem.snippetDigest(QUOTE)
@@ -622,9 +631,11 @@ test("a Standard finish refuses a forged finding and publishes the host-confirme
         const lens = /Stage: hunt, lens ([^,]+)/.exec(prompt)?.[1]
         if (lens !== LOGIC_LENS) return
         if (!held.validationRecordID) return yield* Effect.die("reach-blocker: fixture order, host validation id empty")
-        const retained = /review:([0-9a-f-]{36})\/retained\.json/.exec(prompt)
-        if (!retained) return yield* Effect.die("reach-blocker: hunt brief has no retained page")
-        const file = path.join(MaestroReviewTools.analysisStore(`review_${held.validationRecordID}_plan`), retained[1], "retained.json")
+        const store = MaestroReviewTools.analysisStore(`review_${held.validationRecordID}_plan`)
+        const found = yield* Effect.promise(() => retainedArtifacts(store))
+        if (found.length !== 1) return yield* Effect.die(`reach-blocker: fixture order, expected one retained artifact under ${store}, found ${found.length}: ${found.join(", ") || "none"}`)
+        const file = found[0]
+        if (!file) return yield* Effect.die(`reach-blocker: fixture order, retained artifact missing under ${store}`)
         const text = yield* Effect.promise(() => Bun.file(file).text().catch(() => undefined))
         if (!text) return yield* Effect.die(`reach-blocker: retained artifact missing: ${file}`)
         const retainedItems = JSON.parse(text) as { items: Record<string, unknown>[] }
