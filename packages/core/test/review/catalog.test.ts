@@ -75,6 +75,7 @@ describe("review catalog", () => {
       ["repo", "repo", "active"],
       ["ast-grep", "pinned", "probation"],
       ["squawk", "pinned", "probation"],
+      ["ruff", "pinned", "probation"],
     ])
     expect(catalog.rules.every((rule) => rule.status === "probation")).toBe(true)
   })
