@@ -1,7 +1,7 @@
 export * as SessionCompaction from "./compaction"
 
 import { LLM, LLMClient, LLMError, LLMEvent, Message, type LLMRequest, type Model } from "@orchestra/llm"
-import { Context, DateTime, Effect, Layer, Stream } from "effect"
+import { Cause, Context, DateTime, Effect, Exit, Layer, Stream } from "effect"
 import { Config } from "../config"
 import { Flag } from "../flag/flag"
 import { makeLocationNode } from "../effect/app-node"
@@ -222,48 +222,78 @@ export const make = (dependencies: Dependencies) => {
       reason,
     })
 
-    const chunks: string[] = []
-    // Every way the summary stream can fail lands here, so the single exit below reports it.
-    const failures: string[] = []
-    yield* dependencies.subagentModels.assert(input.sessionID, SessionRunnerModel.reference(input.model))
-    yield* dependencies.llm
-      .stream(
-        LLM.request({
-          model: input.model,
-          http: input.request.http,
-          messages: [Message.user(summaryPrompt)],
-          tools: [],
-          generation: { maxTokens: summaryOutput },
+    return yield* Effect.uninterruptibleMask((restore) =>
+      Effect.gen(function* () {
+        const summary = yield* restore(
+          Effect.gen(function* () {
+            const chunks: string[] = []
+            // Typed LLM failures and provider error events are collected for the existing warning/false path.
+            const failures: string[] = []
+            yield* dependencies.subagentModels.assert(input.sessionID, SessionRunnerModel.reference(input.model))
+            yield* dependencies.llm
+              .stream(
+                LLM.request({
+                  model: input.model,
+                  http: input.request.http,
+                  messages: [Message.user(summaryPrompt)],
+                  tools: [],
+                  generation: { maxTokens: summaryOutput },
+                }),
+              )
+              .pipe(
+                Stream.runForEach((event) => {
+                  if (LLMEvent.is.providerError(event)) failures.push(event.message)
+                  if (LLMEvent.is.textDelta(event)) chunks.push(event.text)
+                  return Effect.void
+                }),
+                Effect.catchTag("LLM.Error", (error) => Effect.sync(() => void failures.push(error.message))),
+              )
+            const summary = chunks.join("")
+            if (failures.length > 0 || !summary.trim()) {
+              // A false result lets the turn go on with the over-budget request, so the cause is recorded here: the provider
+              // error that stopped the summary, or the empty summary it returned.
+              yield* Effect.logWarning("Session compaction produced no summary; the Session was not compacted", {
+                sessionID: input.sessionID,
+                reason,
+                failure: failures.length > 0 ? failures.join("; ") : "empty summary",
+              })
+              return false as const
+            }
+            return summary
+          }),
+        )
+        if (summary === false) return false
+        // Keep the committed successful terminal and its true result masked through the onExit observer.
+        yield* dependencies.events.publish(SessionEvent.Compaction.Ended, {
+          sessionID: input.sessionID,
+          messageID,
+          timestamp: yield* DateTime.now,
+          reason,
+          text: summary,
+          recent: selected.recent,
+        })
+        return true
+      }).pipe(
+        Effect.onExit((exit) => {
+          if (Exit.isSuccess(exit) && exit.value) return Effect.void
+          return Effect.gen(function* () {
+            yield* dependencies.events.publish(SessionEvent.Compaction.Failed, {
+              sessionID: input.sessionID,
+              messageID,
+              timestamp: yield* DateTime.now,
+              reason,
+              error: {
+                type: "unknown",
+                message:
+                  Exit.isFailure(exit) && Cause.hasInterruptsOnly(exit.cause)
+                    ? "Compaction interrupted"
+                    : "Compaction failed",
+              },
+            })
+          })
         }),
-      )
-      .pipe(
-        Stream.runForEach((event) => {
-          if (LLMEvent.is.providerError(event)) failures.push(event.message)
-          if (LLMEvent.is.textDelta(event)) chunks.push(event.text)
-          return Effect.void
-        }),
-        Effect.catchTag("LLM.Error", (error) => Effect.sync(() => void failures.push(error.message))),
-      )
-    const summary = chunks.join("")
-    if (failures.length > 0 || !summary.trim()) {
-      // A false result lets the turn go on with the over-budget request, so the cause is recorded here: the provider
-      // error that stopped the summary, or the empty summary it returned.
-      yield* Effect.logWarning("Session compaction produced no summary; the Session was not compacted", {
-        sessionID: input.sessionID,
-        reason,
-        failure: failures.length > 0 ? failures.join("; ") : "empty summary",
-      })
-      return false
-    }
-    yield* dependencies.events.publish(SessionEvent.Compaction.Ended, {
-      sessionID: input.sessionID,
-      messageID,
-      timestamp: yield* DateTime.now,
-      reason,
-      text: summary,
-      recent: selected.recent,
-    })
-    return true
+      ),
+    )
   })
   const compactAfterOverflow = Effect.fn("SessionCompaction.compactAfterOverflow")(function* (input: Input) {
     const context = input.model.route.defaults.limits?.context
