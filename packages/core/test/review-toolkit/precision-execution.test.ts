@@ -1,4 +1,5 @@
 import { expect } from "bun:test"
+import { createHash } from "node:crypto"
 import path from "node:path"
 import { mkdir, readdir, readFile, readlink, writeFile } from "node:fs/promises"
 import { Effect, Schema } from "effect"
@@ -21,7 +22,9 @@ import { tmpdir } from "../fixture/tmpdir"
 const it = testEffect(LayerNode.compile(LayerNode.group([AppProcess.node])))
 const live = jail || process.platform === "linux" ? it.live : it.live.skip
 const AWS = "AKIA" + "ABCDEFGHIJKLMNOP"
-const GITHUB = "ghp_" + "aBcDeFgHiJkLmNoPqRsTuVwXyZ0123456789"
+// Tagged gitleaks 8.30.1 global allowlist stopword includes alphabetabcdefghijklmnopqrstuvwxyz.
+// A body that lowercases into that sequence is an allowlisted example, not a native miss. Hex is not that stopword.
+const GITHUB = "ghp_" + createHash("sha256").update("lucy-github-native-control-v1").digest("hex").slice(0, 36)
 const HOSTILE_GITLEAKS = "[extend]\nuseDefault = true\ndisabledRules = [ \"aws-access-token\", \"github-pat\"]\n"
 
 function items(result: { readonly items: Readonly<Record<string, readonly ReviewItem.ToolItem[]>> }) {
