@@ -8,9 +8,12 @@ import { ReviewRouting } from "@orchestra/core/review/routing"
 import { Tool } from "@orchestra/core/tool/tool"
 import { MaestroEvent } from "@orchestra/schema/maestro-event"
 import { NonNegativeInt, PositiveInt } from "@orchestra/schema/schema"
-import { Effect, Option, Schema } from "effect"
+import { Context, Effect, Option, Schema } from "effect"
+import { ReviewPRStoreV2 } from "./review-pr-store"
 
 const LIMIT = 4 * 1024 * 1024
+/** Test coordination before the real link; production has no asynchronous hook. */
+export const BeforePublish = Context.Reference<() => Promise<void>>("@orchestra/ReviewPRFacts/BeforePublish", { defaultValue: () => () => Promise.resolve() })
 const Digest = Schema.String.check(Schema.isPattern(/^[0-9a-f]{64}$/))
 const Confirmed = Schema.Struct({
   id: Schema.NonEmptyString, path: Schema.NonEmptyString, line: PositiveInt, endLine: Schema.optional(PositiveInt),
@@ -43,10 +46,8 @@ export const read = Effect.fn("ReviewPRFactsV2.read")(function* (store: string, 
   const target = yield* Effect.try({ try: () => file(store, candidate), catch: (error) => error instanceof Tool.Failure ? error : reason("pr-facts-identity", String(error)) })
   const bytes = yield* Effect.tryPromise({
     try: async () => {
-      const handle = await fs.open(target, "r").catch((error: NodeJS.ErrnoException) => {
-        if (error.code === "ENOENT") return undefined
-        throw error
-      })
+      if (!(await ReviewPRStoreV2.directory(store, false))) return undefined
+      const handle = await ReviewPRStoreV2.open(target)
       if (!handle) return undefined
       try {
         const buffer = Buffer.alloc(LIMIT + 1)
@@ -73,15 +74,18 @@ export const read = Effect.fn("ReviewPRFactsV2.read")(function* (store: string, 
 })
 
 /** Call only after completed fanout; no card, verdict, approval or review receipt belongs here. */
-export const write = Effect.fn("ReviewPRFactsV2.write")(function* (store: string, facts: Facts) {
+export const write = (store: string, facts: Facts) => Effect.uninterruptible(Effect.gen(function* () {
   const target = yield* Effect.try({ try: () => file(store, facts.candidate), catch: (error) => error instanceof Tool.Failure ? error : reason("pr-facts-identity", String(error)) })
   const decoded = decode(facts, { onExcessProperty: "error" })
   if (Option.isNone(decoded)) return yield* reason("pr-facts-corrupt", "invalid host facts")
   const text = JSON.stringify(facts)
   if (Buffer.byteLength(text, "utf8") > LIMIT) return yield* reason("pr-facts-oversized", "host facts exceed 4 MiB")
+  const beforePublish = yield* BeforePublish
   const published = yield* Effect.tryPromise({
     try: async () => {
-      await fs.mkdir(store, { recursive: true })
+      await ReviewPRStoreV2.directory(store, true)
+      const existing = await ReviewPRStoreV2.open(target)
+      if (existing) await existing.close()
       const temporary = `${target}.${randomUUID()}.tmp`
       const handle = await fs.open(temporary, "wx", 0o600)
       try {
@@ -90,6 +94,8 @@ export const write = Effect.fn("ReviewPRFactsV2.write")(function* (store: string
         } finally {
           await handle.close()
         }
+        await beforePublish()
+        await ReviewPRStoreV2.directory(store, false)
         return await fs.link(temporary, target).then(() => true, (error: NodeJS.ErrnoException) => {
           if (error.code === "EEXIST") return false
           throw error
@@ -105,4 +111,4 @@ export const write = Effect.fn("ReviewPRFactsV2.write")(function* (store: string
     if (!existing || !isDeepStrictEqual(existing, decoded.value))
       return yield* reason("pr-facts-conflict", "candidate already has different host facts")
   }
-})
+}))
