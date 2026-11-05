@@ -1,11 +1,11 @@
 import { describe, expect, test } from "bun:test"
 import squawk from "../../src/backend-toolkit/packs/squawk"
-import { RULES as exportedRules } from "../../src/review/catalog/phase4"
+import { phase4 } from "../../src/review/catalog/phase4"
+import { ReviewSquawkReport } from "../../src/review-toolkit/packs/squawk-report"
 import { ReviewCatalog } from "../../src/review/catalog"
 import { ReviewRoute } from "../../src/review/route"
 
-// Independent repeat of the pinned rule ids. Do not import the review-toolkit primitive:
-// it is not on this branch until the analyzer merge. That cross-check belongs there.
+// An independent inventory checks both the declarative catalog and the parser.
 
 const RULES = [
   "require-concurrent-index-creation", "require-concurrent-index-deletion", "constraint-missing-not-valid",
@@ -63,7 +63,8 @@ describe("squawk catalog", () => {
 
   test("all 45 native rules map to contracts.data at P2 probation with their own triage", () => {
     const rules = catalog.rules.filter((entry) => entry.pack === "squawk")
-    expect(exportedRules).toEqual([...RULES])
+    expect(phase4.rules.map((entry) => entry.rule)).toEqual([...RULES])
+    expect([...ReviewSquawkReport.RULES]).toEqual([...RULES])
     expect(rules.map((entry) => entry.rule)).toEqual([...RULES])
     expect(new Set(rules.map((entry) => entry.rule)).size).toBe(45)
     expect(new Set(rules.map((entry) => entry.triage)).size).toBe(45)

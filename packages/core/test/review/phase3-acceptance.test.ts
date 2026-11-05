@@ -147,7 +147,7 @@ describe("phase 3 acceptance", () => {
       ...catalog.overlays.flatMap((overlay) => overlay.lenses),
     ])
     for (const [id] of LENSES) expect(routed.has(id)).toBe(true)
-    expect(catalog.languages.map((language) => language.id)).toEqual(["js-ts", "python", "go", "ruby", "php"])
+    expect(catalog.languages.map((language) => language.id)).toEqual(["js-ts", "python", "go", "ruby", "php", "sql"])
     expect(catalog.route.tiers.map((tier) => [tier.id, tier.built, tier.runs])).toEqual([
       ["quick", true, "quick"],
       ["standard", true, "standard"],
