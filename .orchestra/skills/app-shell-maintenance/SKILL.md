@@ -76,3 +76,5 @@ destructive actions behave.
 - `happy-dom` lays nothing out, so every box is 0x0 at the origin; a unit test that needs "outside the box" uses any
   other point.
 - This skill and the guides in `docs/guides` stay in the repository; they do not ship with the app.
+
+Board truncated issue titles retain their full native `title` across row, table and timeline surfaces, covered by `test-browser/board.test.ts` and `test-browser/board-views.test.ts`.
