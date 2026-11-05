@@ -6,6 +6,9 @@ import { Effect } from "effect"
 import pinned from "../../backend-toolkit/packs/ast-grep"
 import { BackendToolkit } from "../../backend-toolkit"
 import type { Pack } from "../../backend-toolkit/manifest"
+import { pattern, rules } from "./ast-grep-rules"
+
+export { pattern, rules }
 
 // Lucy's scan entry over the backend toolkit's pinned ast-grep 0.45.3 (MIT, ast-grep/ast-grep). Same artifact, so the
 // same install directory. The fit is lucy's check, not the backend seat's generator grant. A review never installs it
@@ -17,11 +20,6 @@ export const manifest = {
 
 export const templateId = "ast-grep-scan-json"
 export const parserId = "ast-grep"
-export const pattern = "eval($$$ARGS)"
-export const rules = [
-  { id: "lucy-js-eval", language: "JavaScript" },
-  { id: "lucy-ts-eval", language: "TypeScript" },
-] as const
 
 // Host files, written beside the report and outside the scanned tree. `--config` must name one of them: without it,
 // 0.45.3 walks up from cwd for sgconfig.yml (crates/cli/src/config.rs) and would load the repository's rules.

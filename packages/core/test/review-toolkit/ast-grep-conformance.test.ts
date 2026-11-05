@@ -1,7 +1,7 @@
 import { expect } from "bun:test"
 import path from "path"
 import { mkdir, readFile, writeFile } from "fs/promises"
-import { Effect } from "effect"
+import { Effect, Option, Schema } from "effect"
 import { LayerNode } from "../../src/effect/layer-node"
 import { AppProcess } from "../../src/process"
 import { ResearchProcess } from "../../src/research-toolkit/process"
@@ -41,7 +41,7 @@ it.live("conformance: the pinned binary matches eval, not lookalikes, and ignore
     const discovered = yield* run([
       installed.executable, "scan", "--json=compact", "--color", "never", "--threads", "1", tree,
     ], tree)
-    expect(ids(discovered, tree), "positive control: a repo sgconfig must be visible when --config is omitted").toContain("hostile-const")
+    expect(nativeRuleIds(discovered), "positive control: a repo sgconfig must be visible when --config is omitted").toContain("hostile-const")
     const before = yield* Effect.promise(() => readFile(path.join(tree, "match.js"), "utf8"))
     const product = yield* run(template(installed.executable, tree, rules), tree)
     expect(product.exitCode, stderr(product)).toBe(0)
@@ -118,7 +118,7 @@ it.live("conformance: repository ignore files do not hide a match, and error sev
     ], tree)
     expect(diagnostic.exitCode, stderr(diagnostic)).toBe(1)
     expect(stderr(diagnostic)).toContain("error(s) found in code")
-    expect(ids(diagnostic, tree)).toContain("error-eval")
+    expect(nativeRuleIds(diagnostic)).toContain("error-eval")
   }), 600_000,
 )
 
@@ -148,6 +148,18 @@ function read(outcome: ResearchProcess.Outcome, root: string) {
 
 function ids(outcome: ResearchProcess.Outcome, root: string) {
   return read(outcome, root).results.map((result) => result.rule)
+}
+
+// Control ids are not host rules. Read the CLI array; do not send them through the production known-id parser.
+const NativeRows = Schema.Array(Schema.Struct({ ruleId: Schema.optionalKey(Schema.String) }))
+
+function nativeRuleIds(outcome: ResearchProcess.Outcome) {
+  const text = outcome.stdout.data.toString("utf8")
+  const json = Schema.decodeUnknownOption(Schema.UnknownFromJsonString)(text)
+  if (Option.isNone(json)) throw new Error(`control: not json: ${text.slice(0, 400)}`)
+  const rows = Schema.decodeUnknownOption(NativeRows)(json.value)
+  if (Option.isNone(rows)) throw new Error(`control: not an ast-grep array: ${text.slice(0, 400)}`)
+  return rows.value.flatMap((row) => row.ruleId ? [row.ruleId] : [])
 }
 
 async function materialize(root: string, files: Record<string, string>) {
