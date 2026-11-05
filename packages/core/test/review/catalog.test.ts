@@ -65,6 +65,7 @@ describe("review catalog", () => {
     expect(catalog.languages.map((language) => [language.id, language.node])).toEqual([
       ["js-ts", "team-stack-js-ts"], ["python", "team-stack-python"], ["go", "team-stack-go"],
       ["ruby", "team-stack-ruby"], ["php", "team-stack-php"],
+      ["sql", "team-stack-sql"],
     ])
   })
 
@@ -73,6 +74,7 @@ describe("review catalog", () => {
       ["gitleaks", "pinned", "probation"],
       ["repo", "repo", "active"],
       ["ast-grep", "pinned", "probation"],
+      ["squawk", "pinned", "probation"],
     ])
     expect(catalog.rules.every((rule) => rule.status === "probation")).toBe(true)
   })

@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import squawk from "../../src/backend-toolkit/packs/squawk"
+import { RULES as exportedRules } from "../../src/review/catalog/phase4"
 import { ReviewCatalog } from "../../src/review/catalog"
 import { ReviewRoute } from "../../src/review/route"
 
@@ -54,25 +55,33 @@ describe("squawk catalog", () => {
     expect(pack?.tiers).not.toContain("quick")
   })
 
-  test("sql detection is extension-only and does not name an unsourced team-stack node", () => {
+  test("sql detection is extension-only and names the sourced team-stack leaf", () => {
     const language = catalog.languages.find((entry) => entry.id === "sql")
     expect(language?.detection).toEqual({ manifests: [], extensions: [".sql"], absent: [] })
-    expect(language?.node).toBe("sql")
-    expect(language?.node.startsWith("team-stack")).toBe(false)
+    expect(language?.node).toBe("team-stack-sql")
   })
 
-  test("all 45 native rules map to contracts.data at P2 probation and name their trigger", () => {
+  test("all 45 native rules map to contracts.data at P2 probation with their own triage", () => {
     const rules = catalog.rules.filter((entry) => entry.pack === "squawk")
+    expect(exportedRules).toEqual([...RULES])
     expect(rules.map((entry) => entry.rule)).toEqual([...RULES])
     expect(new Set(rules.map((entry) => entry.rule)).size).toBe(45)
+    expect(new Set(rules.map((entry) => entry.triage)).size).toBe(45)
     for (const entry of rules) {
       expect(entry).toMatchObject({ pack: "squawk", class: "contracts.data", lens: "contracts", severity: { "*": "P2" }, status: "probation" })
       expect(entry.triage.startsWith(`${entry.rule}:`)).toBe(true)
-      expect(entry.triage).toContain("possible migration hazard")
-      expect(entry.triage).toContain("structural warning alone does not confirm")
-      expect(entry.triage).toContain("deployed project's data or operating constraint")
       expect(entry.triage.length).toBeLessThanOrEqual(240)
+      expect(entry.triage).not.toContain("all 45")
     }
+    expect(catalog.options.map((option) => option.id)).not.toContain("tool:squawk")
+    const triage = (rule: string) => rules.find((entry) => entry.rule === rule)?.triage ?? ""
+    expect(triage("ban-char-field")).toContain("actual harm")
+    expect(triage("prefer-identity")).toContain("actual harm")
+    expect(triage("require-timeout-settings")).toContain("deprecated alias")
+    expect(triage("require-timeout-settings")).toContain("not claim a distinct rule is emitted by default")
+    expect(triage("require-table-schema")).toContain("Opt-in")
+    expect(triage("ban-drop-trigger")).toContain("Opt-in")
+    expect(triage("unused-ignore")).toContain("unknown suppression-rule name")
     expect(catalog.overlays.find((overlay) => overlay.id === "data-migration")?.checks).toEqual(["squawk"])
   })
 
@@ -99,16 +108,21 @@ describe("squawk catalog", () => {
     expect(suggested.packs.some((pack) => pack.id === "squawk")).toBe(false)
   })
 
-  test("Quick does not run squawk on a plain .sql file, but a path-required migration still routes it", () => {
+  test("Quick skips an ordinary .sql file and still requires squawk on a migrations path", () => {
     const plain = route("quick", "src/schema.sql", "select 1;")
     expect(plain.tier.id).toBe("quick")
     expect(plain.packs.some((pack) => pack.id === "squawk")).toBe(false)
-    // routePacks returns a path-required pack before the tier filter. Squawk's tiers are standard/deep.
-    // Quick still records it routed. That policy is unchanged here; it needs a lead decision.
     const required = route("quick", "db/migrations/001.sql", "select 1;")
     expect(required.tier.id).toBe("quick")
     expect(required.overlays).toContainEqual({ id: "data-migration", source: "path", signal: "db/migrations/001.sql" })
     expect(required.packs).toContainEqual({ id: "squawk", source: "path", lane: "no-build", status: "routed" })
+    const waived = ReviewRoute.route(
+      { stage: "code", tier: "quick", settings: { acceptedUnavailable: ["squawk"] }, text: ["skip squawk", "no migration review"] },
+      { files: [] },
+      { files: ["db/migrations/001.sql"], changes: [{ path: "db/migrations/001.sql", added: [{ line: 1, text: "select 1;" }], removed: 0 }] },
+      catalog,
+    )
+    expect(waived.packs).toContainEqual({ id: "squawk", source: "path", lane: "no-build", status: "routed" })
   })
 })
 
