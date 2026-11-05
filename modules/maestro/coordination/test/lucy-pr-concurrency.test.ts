@@ -2,8 +2,9 @@ import { expect, test } from "bun:test"
 import { Deferred, Effect, Fiber, Scheduler } from "effect"
 import { ReviewPRConcurrencyV2 } from "../src/v2/tools/review-pr-concurrency"
 
-test("same candidate waits for its predecessor and a later call enters after release", () =>
-  Effect.runPromise(Effect.scoped(Effect.gen(function* () {
+test("same candidate waits for its predecessor and a later call enters after release", () => {
+  const admissions: { candidate: string; waiting: boolean }[] = []
+  return Effect.runPromise(Effect.scoped(Effect.gen(function* () {
     const started = yield* Deferred.make<void>()
     const release = yield* Deferred.make<void>()
     const order: string[] = []
@@ -21,13 +22,25 @@ test("same candidate waits for its predecessor and a later call enters after rel
       .pipe(Effect.forkScoped({ startImmediately: true }), Effect.provideService(Scheduler.PreventSchedulerYield, true))
     yield* Fiber.join(other)
     expect(order).toEqual(["first", "other"])
+    expect(admissions).toEqual([{ candidate: "same", waiting: false }, { candidate: "same", waiting: true }, { candidate: "other", waiting: false }])
     yield* Deferred.succeed(release, undefined)
     yield* Fiber.join(first)
     yield* Fiber.join(second)
     expect(order).toEqual(["first", "other", "second"])
     yield* ReviewPRConcurrencyV2.withCandidate("same", () => Effect.sync(() => order.push("third")))
     expect(order).toEqual(["first", "other", "second", "third"])
-  }))),
+  })).pipe(Effect.provideService(ReviewPRConcurrencyV2.AdmissionObserver, (event) => admissions.push(event))))
+})
+
+test("an observer failure still releases the registered candidate", () =>
+  Effect.runPromise(Effect.gen(function* () {
+    const result = yield* ReviewPRConcurrencyV2.withCandidate("observer-failure", () => Effect.void).pipe(
+      Effect.provideService(ReviewPRConcurrencyV2.AdmissionObserver, () => { throw new Error("observer failure") }),
+      Effect.exit,
+    )
+    expect(result._tag).toBe("Failure")
+    expect(yield* ReviewPRConcurrencyV2.withCandidate("observer-failure", (waited) => Effect.succeed(waited))).toBe(false)
+  })),
 )
 
 test("cancelling owner and queued waiter releases slots; 64 active keys enforce the limit", () =>
