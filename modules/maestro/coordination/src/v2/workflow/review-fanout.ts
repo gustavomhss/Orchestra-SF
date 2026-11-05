@@ -24,6 +24,7 @@ import { ReviewChecksV2 } from "./review-checks"
 import { ReviewVerdictV2 } from "./review-verdict"
 import { sliceDiff } from "./review-diff"
 import { ReviewCandidatesV2 } from "./review-candidates"
+import { ReviewFanoutSupportV2 } from "./review-fanout-support"
 
 export { baseRules, changes, hunks, RULE_FILES, sliceDiff } from "./review-diff"
 
@@ -193,9 +194,7 @@ type Counts = {
   readonly dropped: number
 }
 
-type Tier = ReviewCatalog.Catalog["route"]["tiers"][number]
-type Lens = ReviewRouting.Lens
-type Entry = Extract<ReviewResultV2.EntryRecord, { status: "eligible" }>
+
 
 export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port: Port) {
   if (input.firstRound && input.firstRound.reviewed === input.reviewed) return { status: "unaddressed" } as Result
@@ -213,7 +212,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
   const files = input.head.changes.map((change) => change.path)
 
   // 1. Route (host, no model).
-  const routed = yield* routeOf(input)
+  const routed = yield* ReviewFanoutSupportV2.routeOf(input)
   const open = (input.firstRound?.findings ?? []).filter((finding) => finding.status === "open")
 
   // 2. Analyze (host).
@@ -227,7 +226,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
 
   // 3. Entry (the lead Session).
   // Execution mode is the tier this round runs, not the saved route's requested or raised id.
-  const routedTier = retainedTier ?? runTier(catalog, routed.record.tier.id)
+  const routedTier = retainedTier ?? ReviewFanoutSupportV2.runTier(catalog, routed.record.tier.id)
   const quick = routedTier.id === "quick"
   const bind = (
     sessionID: SessionSchema.ID,
@@ -286,7 +285,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
   const capped = parsedEntry ? ReviewResultV2.capEntry(parsedEntry, lead) : undefined
   const value = capped?.value
   const entry = value && value.status === "eligible" ? value : undefined
-  const entered = entry ? applyEntry(routed.record, entry, catalog) : undefined
+  const entered = entry ? ReviewFanoutSupportV2.applyEntry(routed.record, entry, catalog) : undefined
   const leadEntryDeviations = yield* deviationsOf(input.store, lead, "entry", 0)
   const afterEntry: ReviewRouting.Record = {
     ...(entered?.record ?? routed.record),
@@ -295,10 +294,10 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
       ...(capped?.deviations ?? []),
       ...(entered?.deviations ?? []),
       ...leadEntryDeviations,
-      ...(parsedEntry ? [] : [deviation("entry", "stage-return", "the entry record did not decode", lead)]),
+      ...(parsedEntry ? [] : [ReviewFanoutSupportV2.deviation("entry", "stage-return", "the entry record did not decode", lead)]),
     ],
   }
-  const tier = retainedTier ?? runTier(catalog, ReviewRouting.tier(afterEntry))
+  const tier = retainedTier ?? ReviewFanoutSupportV2.runTier(catalog, ReviewRouting.tier(afterEntry))
   if (afterEntry.lenses.some((lens) => auditNodes.has(lens.node) && lens.node !== "lucy-audit-compliance-privacy"))
     return yield* new Tool.Failure({ message: "Review route contains an unsupported audit lens" })
   const method = ReviewResultV2.method({ profile: afterEntry.profile.id, tier: tier.id })
@@ -491,8 +490,8 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
           deviations: [
             ...(result?.deviations ?? []),
             ...scoped,
-            ...(boundSources.invalid.length ? [deviation("hunt", "source-unbound", `claimed source not delivered to ${job.lens.id}: ${boundSources.invalid.join(", ")}`, child)] : []),
-            ...(parsed ? [] : [deviation("hunt", "stage-return", `the ${job.lens.id} return did not decode`, child)]),
+            ...(boundSources.invalid.length ? [ReviewFanoutSupportV2.deviation("hunt", "source-unbound", `claimed source not delivered to ${job.lens.id}: ${boundSources.invalid.join(", ")}`, child)] : []),
+            ...(parsed ? [] : [ReviewFanoutSupportV2.deviation("hunt", "stage-return", `the ${job.lens.id} return did not decode`, child)]),
           ],
         }
       }),
@@ -587,10 +586,10 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
           batch,
           results: (result?.value.results ?? []).map((verdict) => ReviewVerdictV2.validate(verdict, offered[verdict.candidate] ?? [])),
           deviations: [
-            ...(bound.probeUnavailable ? [deviation("verify", "check-unavailable", bound.probeUnavailable, child)] : []),
+            ...(bound.probeUnavailable ? [ReviewFanoutSupportV2.deviation("verify", "check-unavailable", bound.probeUnavailable, child)] : []),
             ...(result?.deviations ?? []),
             ...scoped,
-            ...(parsed ? [] : [deviation("verify", "stage-return", `the ${batch.class} return did not decode`, child)]),
+            ...(parsed ? [] : [ReviewFanoutSupportV2.deviation("verify", "stage-return", `the ${batch.class} return did not decode`, child)]),
           ],
         }
       }),
@@ -653,7 +652,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
       ...hunts.flatMap((hunt) => hunt.deviations),
       ...verified.flatMap((entry) => entry.deviations),
       ...(overflow.length
-        ? [deviation("verify", "verifier-budget", `${overflow.length} candidates over the verifier budget became questions: ${overflow.map((candidate) => candidate.id).join(", ")}`)]
+        ? [ReviewFanoutSupportV2.deviation("verify", "verifier-budget", `${overflow.length} candidates over the verifier budget became questions: ${overflow.map((candidate) => candidate.id).join(", ")}`)]
         : []),
     ],
   }
@@ -704,106 +703,6 @@ function probeIdentity(item: ReviewProbe.Observed) {
   return JSON.stringify(["review-probe", item.option, `probe:${item.candidate}:${item.option}:${item.result.uri}`])
 }
 
-type Routed = {
-  readonly record: ReviewRouting.Record
-  readonly runs: (lens: Lens, open: ReadonlyArray<{ readonly lens: string }>) => boolean
-}
-
-function routeOf(input: Input) {
-  return Effect.try({
-    try: (): Routed => {
-      const delta = ReviewRoute.route(input.request, input.base, input.head, input.catalog)
-      const first = input.firstRound?.routing
-      if (!first) return { record: delta, runs: () => true }
-      // A rereview reuses the first round's route; the delta can only add lenses and packs to it.
-      const fresh = delta.lenses.filter((lens) => !first.lenses.some((other) => other.id === lens.id))
-      const record: ReviewRouting.Record = {
-        ...first,
-        profile: delta.profile,
-        lenses: [...first.lenses, ...fresh],
-        packs: [...first.packs, ...delta.packs.filter((pack) => !first.packs.some((other) => other.id === pack.id))],
-        deviations: [],
-      }
-      return {
-        record,
-        runs: (lens: Lens, open: ReadonlyArray<{ readonly lens: string }>) =>
-          open.some((finding) => finding.lens === lens.id) || fresh.some((other) => other.id === lens.id),
-      }
-    },
-    catch: (error) =>
-      new Tool.Failure({
-        message:
-          error instanceof ReviewRoute.RouteError
-            ? `ReviewRequestRejected: ${error.code}. ${error.message}`
-            : `ReviewRequestRejected: route-failed. ${String(error)}`,
-      }),
-  })
-}
-
-// Model additions are appended with their quotes; a confirmed or added overlay routes its lenses and packs.
-function applyEntry(record: ReviewRouting.Record, entry: Entry, catalog: ReviewCatalog.Catalog) {
-  const overlays = record.overlays.map((overlay): ReviewRouting.Overlay => {
-    if (overlay.source !== "content") return overlay
-    const confirmed = entry.overlays.confirmed.find((item) => item.id === overlay.id)
-    if (confirmed) return { ...overlay, confirmed: confirmed.quote }
-    const declined = entry.overlays.declined.find((item) => item.id === overlay.id)
-    return declined ? { ...overlay, declined: declined.reason } : overlay
-  })
-  const known = (id: string) => catalog.overlays.some((overlay) => overlay.id === id)
-  const added = entry.overlays.added.filter((item) => known(item.id) && !overlays.some((overlay) => overlay.id === item.id))
-  const confirmed = entry.overlays.confirmed.filter((item) =>
-    record.overlays.some((overlay) => overlay.id === item.id && overlay.source === "content"),
-  )
-  const routedBy = [...confirmed, ...added]
-  const lenses = routedBy.flatMap((item) =>
-    (catalog.overlays.find((overlay) => overlay.id === item.id)?.lenses ?? []).map((id) => ({ id, because: `overlay:${item.id}`, quote: item.quote })),
-  )
-  const order = catalog.route.tiers.map((tier) => tier.id)
-  const raise = entry.raise && order.indexOf(entry.raise.tier) === order.indexOf(record.tier.id) + 1 ? entry.raise : undefined
-  const profile = catalog.route.profiles.find((item) => item.id === record.profile.id)
-  const raised = raise
-    ? (profile?.lenses[runTier(catalog, raise.tier).id] ?? []).map((id) => ({ id, because: `tier:${raise.tier}`, quote: raise.quote }))
-    : []
-  const appended = [...lenses, ...raised]
-    .filter((lens, index, all) => all.findIndex((other) => other.id === lens.id) === index)
-    .filter((lens) => !record.lenses.some((other) => other.id === lens.id))
-    .flatMap((lens): ReviewRouting.Lens[] => {
-      const node = catalog.lenses.find((item) => item.id === lens.id)?.node
-      return node ? [{ id: lens.id, node, because: lens.because, source: "model", quote: lens.quote }] : []
-    })
-  const packs = routedBy
-    .flatMap((item) => (catalog.overlays.find((overlay) => overlay.id === item.id)?.checks ?? []).map((id) => ({ id, quote: item.quote })))
-    .filter((pack, index, all) => all.findIndex((other) => other.id === pack.id) === index)
-    .filter((pack) => !record.packs.some((other) => other.id === pack.id))
-    .flatMap((pack): ReviewRouting.Pack[] => {
-      const lane = catalog.packs.find((item) => item.id === pack.id)?.lane
-      return lane ? [{ id: pack.id, lane, status: "routed", source: "model", quote: pack.quote }] : []
-    })
-  return {
-    record: {
-      ...record,
-      tier: raise ? { ...record.tier, raise: { id: raise.tier, source: "model" as const, quote: raise.quote } } : record.tier,
-      overlays: [...overlays, ...added.map((item): ReviewRouting.Overlay => ({ id: item.id, source: "model", quote: item.quote }))],
-      lenses: [...record.lenses, ...appended],
-      packs: [...record.packs, ...packs],
-    },
-    deviations: [
-      ...entry.overlays.added
-        .filter((item) => !known(item.id))
-        .map((item) => deviation("entry", "overlay-unknown", `the lead added overlay ${item.id}, which the catalog lacks`)),
-      ...(entry.raise && !raise
-        ? [deviation("entry", "raise-refused", `the lead asked for tier ${entry.raise.tier}; only one step above ${record.tier.id} is allowed`)]
-        : []),
-    ],
-  }
-}
-
-function runTier(catalog: ReviewCatalog.Catalog, id: string): Tier {
-  const tier = catalog.route.tiers.find((item) => item.id === id)
-  const run = tier?.built ? tier : catalog.route.tiers.find((item) => item.id === tier?.runs && item.built)
-  if (!run) throw new Error(`Review tier ${id} has no built tier to run`)
-  return run
-}
 
 function stackNodes(record: ReviewRouting.Record, catalog: ReviewCatalog.Catalog) {
   return unique(record.languages.flatMap((language) => catalog.languages.find((item) => item.id === language.id)?.node ?? []))
@@ -850,9 +749,6 @@ function deviationsOf(store: SessionStore.Interface, sessionID: SessionSchema.ID
   )
 }
 
-function deviation(stage: ReviewRouting.Deviation["stage"], kind: string, detail: string, session?: string): ReviewRouting.Deviation {
-  return { kind, stage, detail, ...(session ? { session } : {}) }
-}
 
 function rules(input: Input) {
   if (input.facts.rules.length === 0) return []
