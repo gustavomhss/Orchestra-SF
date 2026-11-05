@@ -21,7 +21,16 @@ function run<A, E>(body: (ctx: Ctx) => Effect.Effect<A, E, Database.Service>) {
 describe("lucy durable fanout", () => {
   test("Standard admits distinct lens children and reuses the completed facts", () =>
     Effect.runPromise(run((ctx) => Effect.gen(function* () {
-      const settled = yield* call(ctx.registry, "maestro", ctx.parent.id, { kind: "pr", baseRef: ctx.base, headRef: ctx.head, tier: "standard" })
+      const model = ctx.parent.model
+      if (!model) return yield* Effect.die("fixture parent has no model")
+      const database = yield* Database.Service
+      const before = yield* database.db.select().from(SessionInputTable).all().pipe(Effect.orDie)
+      const settled = yield* call(ctx.registry, "maestro", ctx.parent.id, { kind: "pr", baseRef: ctx.base, headRef: ctx.head, tier: "standard" }).pipe(
+        Effect.ensuring(database.db.select().from(SessionInputTable).all().pipe(Effect.orDie, Effect.tap((rows) => Effect.sync(() => {
+          expect(rows.length, "registered review must durably admit its prompts, including when execution fails").toBeGreaterThan(before.length)
+          expect(rows.some((row) => row.promoted_seq !== null), "the real runner must promote a durable review input").toBe(true)
+        })))),
+      )
       expect(settled.type).not.toBe("error")
       expect(settled.text).not.toContain("session-execution-unavailable")
       const card = ReviewResultV2.parse(settled.text)
@@ -30,7 +39,6 @@ describe("lucy durable fanout", () => {
       expect(card?.scope).toEqual(scope(ctx.base, ctx.head))
       expect(card?.findings).toEqual([])
 
-      const database = yield* Database.Service
       const sessions = yield* database.db.select().from(SessionTable).all().pipe(Effect.orDie)
       const lead = sessions.find((row) => row.parent_id === ctx.parent.id)
       if (!lead) return yield* Effect.die("pr review created no lead")
@@ -49,7 +57,7 @@ describe("lucy durable fanout", () => {
       expect(leadScope?.scope.skills.allow).toEqual([])
       for (const row of [lead, ...lenses]) {
         expect(row.agent).toBe("lucy")
-        expect(row.model).toEqual(ctx.parent.model)
+        expect(row.model).toEqual(model)
       }
 
       const stages = ctx.requests.map((request) => stage(request.text))
@@ -81,7 +89,16 @@ describe("lucy durable fanout", () => {
 
   test("Quick drains hunt and finish in the lead and admits no extra user turn", () =>
     Effect.runPromise(run((ctx) => Effect.gen(function* () {
-      const settled = yield* call(ctx.registry, "maestro", ctx.parent.id, { kind: "pr", baseRef: ctx.base, headRef: ctx.head, tier: "quick" })
+      const model = ctx.parent.model
+      if (!model) return yield* Effect.die("fixture parent has no model")
+      const database = yield* Database.Service
+      const before = yield* database.db.select().from(SessionInputTable).all().pipe(Effect.orDie)
+      const settled = yield* call(ctx.registry, "maestro", ctx.parent.id, { kind: "pr", baseRef: ctx.base, headRef: ctx.head, tier: "quick" }).pipe(
+        Effect.ensuring(database.db.select().from(SessionInputTable).all().pipe(Effect.orDie, Effect.tap((rows) => Effect.sync(() => {
+          expect(rows.length, "registered review must durably admit its prompts, including when execution fails").toBeGreaterThan(before.length)
+          expect(rows.some((row) => row.promoted_seq !== null), "the real runner must promote a durable review input").toBe(true)
+        })))),
+      )
       expect(settled.type).not.toBe("error")
       expect(settled.text).not.toContain("session-execution-unavailable")
       const card = ReviewResultV2.parse(settled.text)
@@ -91,13 +108,12 @@ describe("lucy durable fanout", () => {
       expect(ctx.requests[1]?.text).toContain("Stage: hunt and finish")
       expect(new Set(ctx.requests.map((request) => request.sessionID)).size).toBe(1)
 
-      const database = yield* Database.Service
       const sessions = yield* database.db.select().from(SessionTable).all().pipe(Effect.orDie)
       const lead = sessions.find((row) => row.parent_id === ctx.parent.id)
       if (!lead) return yield* Effect.die("quick review created no lead")
       expect(sessions.filter((row) => row.parent_id === lead.id)).toEqual([])
       expect(lead.agent).toBe("lucy")
-      expect(lead.model).toEqual(ctx.parent.model)
+      expect(lead.model).toEqual(model)
       const inputs = yield* database.db.select().from(SessionInputTable).where(eq(SessionInputTable.session_id, lead.id)).all().pipe(Effect.orDie)
       expect(inputs.length).toBe(2)
       expect(inputs.every((row) => row.promoted_seq !== null)).toBe(true)
