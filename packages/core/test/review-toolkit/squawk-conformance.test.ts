@@ -108,8 +108,13 @@ it.live("conformance: pinned squawk under the jail, unsafe warning versus nonemp
     if (crlfParsed.status === "ok") {
       expect(crlfParsed.results.some((result) => result.line === crlfRows[0].line + 1 && result.path === "crlf.sql")).toBe(true)
     }
-    const spliced = JSON.stringify([...native, { ...native[0], rule_name: "not-a-native-rule" }])
-    expect(ReviewSquawkReport.parseReport(spliced, { root: tree })).toEqual({ status: "acquisition-error", reason: "unknown-rule" })
+    const full = rawRows(stdout(hit.outcome))
+    const source = full[0]
+    if (!source || typeof source.message !== "string" || typeof source.rule_name !== "string") {
+      throw new Error("conformance: raw row incomplete")
+    }
+    const mixed = full.map((row, index) => index === 0 ? { ...row, rule_name: "not-a-native-rule" } : row)
+    expect(ReviewSquawkReport.parseReport(JSON.stringify(mixed), { root: tree })).toEqual({ status: "acquisition-error", reason: "unknown-rule" })
     }).pipe(Effect.ensuring(Effect.promise(async () => {
       expect(await shot(watched)).toEqual(before)
     })))
@@ -253,6 +258,18 @@ function stderr(outcome: ResearchProcess.Outcome) {
 
 function text(outcome: ResearchProcess.Outcome) {
   return `${stdout(outcome)}${stderr(outcome)}`
+}
+
+function rawRows(text: string) {
+  const json = Schema.decodeUnknownOption(Schema.UnknownFromJsonString)(text)
+  if (Option.isNone(json) || !Array.isArray(json.value) || json.value.length === 0 || !json.value.every(rawRecord)) {
+    throw new Error(`conformance: not a raw squawk array: ${text.slice(0, 400)}`)
+  }
+  return json.value
+}
+
+function rawRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value)
 }
 
 function rows(outcome: ResearchProcess.Outcome) {
