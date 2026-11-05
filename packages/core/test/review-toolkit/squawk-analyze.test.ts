@@ -1,12 +1,13 @@
 import { expect } from "bun:test"
 import path from "node:path"
 import { chmod, lstat, mkdir, readFile, writeFile } from "node:fs/promises"
-import { Effect } from "effect"
+import { Effect, Schema } from "effect"
 import { BackendToolkit } from "../../src/backend-toolkit"
 import { LayerNode } from "../../src/effect/layer-node"
 import { AppProcess } from "../../src/process"
 import { ReviewCatalog } from "../../src/review/catalog"
 import { ReviewAnalyze } from "../../src/review-toolkit/analyze"
+import type { ReviewItem } from "../../src/review-toolkit/item"
 import { ReviewPackSquawk } from "../../src/review-toolkit/packs/squawk"
 import { testEffect } from "../lib/effect"
 import { jail } from "../lib/sandbox-host"
@@ -45,23 +46,35 @@ const squawkPack = {
 } satisfies ReviewCatalog.Catalog["packs"][number]
 
 function catalog(): ReviewCatalog.Catalog {
-  return {
-    ...ReviewCatalog.current,
-    packs: [...ReviewCatalog.current.packs, squawkPack],
-    rules: [
-      ...ReviewCatalog.current.rules,
-      ...ReviewPackSquawk.RULES.map((rule) => ({
-        pack: "squawk",
-        rule,
-        class: "contracts.data",
-        lens: "contracts",
-        severity: { "*": "P2" as const },
-        triage: "warns candidate not confirmed",
-        status: "probation" as const,
-      })),
-    ],
-  }
+  const packs = [...ReviewCatalog.current.packs.filter((entry) => entry.id !== squawkPack.id), squawkPack]
+  const rules = [
+    ...ReviewCatalog.current.rules.filter((entry) => entry.pack !== squawkPack.id),
+    ...ReviewPackSquawk.RULES.map((rule) => Schema.decodeUnknownSync(ReviewCatalog.Rule)({
+      pack: squawkPack.id,
+      rule,
+      class: "contracts.data",
+      lens: "contracts",
+      severity: { "*": "P2" },
+      triage: "warns candidate not confirmed",
+      status: "probation",
+    })),
+  ]
+  const known = new Set(packs.map((pack) => pack.id))
+  expect(rules.filter((rule) => !known.has(rule.pack)).map((rule) => `${rule.pack}/${rule.rule}`)).toEqual([])
+  return { ...ReviewCatalog.current, packs, rules }
 }
+
+function items(result: { readonly items: Readonly<Record<string, readonly ReviewItem.ToolItem[]>> }) {
+  return Object.values(result.items).flat()
+}
+
+it.live("the test catalog keeps one squawk pack and no rule for an unknown pack", () =>
+  Effect.sync(() => {
+    const built = catalog()
+    expect(built.packs.filter((entry) => entry.id === squawkPack.id)).toHaveLength(1)
+    expect(built.rules.some((rule) => rule.pack === squawkPack.id)).toBe(true)
+  }),
+)
 
 it.live("an absent squawk is not-run and is not installed", () =>
   Effect.gen(function* () {
@@ -72,7 +85,7 @@ it.live("an absent squawk is not-run and is not installed", () =>
     const result = yield* ReviewAnalyze.run(runInput(made, root)).pipe(Effect.provideService(BackendToolkit.Root, made.toolkit))
     expect(result.checks[0]).toMatchObject({ pack: "squawk", status: "not-run", reason: "squawk absent", workspaceExecuted: false })
     expect(result.checks[0].status).not.toBe("pass")
-    expect(result.items).toEqual([])
+    expect(items(result)).toEqual([])
     expect(yield* Effect.promise(() => shot(path.join(root, "db", "a.sql")))).toBe(before)
   }),
 )
@@ -89,13 +102,14 @@ live("a new squawk warning is an item, an unchanged one is not, and a hostile co
       })
     const fresh = yield* run("fresh", BENIGN, UNSAFE, { changed: CHANGED })
     expect(fresh.checks[0]).toMatchObject({ status: "fail", workspaceExecuted: false, version: "2.67.0" })
-    expect(fresh.items.some((item) => item.pack === "squawk" && item.class === "contracts.data" && item.severity === "P2" && item.lens === "contracts")).toBe(true)
+    expect(items(fresh).some((item) => item.pack === "squawk" && item.class === "contracts.data" && item.severity === "P2" && item.lens === "contracts")).toBe(true)
+    expect(Object.keys(fresh.items)).toEqual(["contracts"])
     const same = yield* run("same", UNSAFE, UNSAFE, { changed: CHANGED })
-    expect(same.items).toEqual([])
+    expect(items(same)).toEqual([])
     expect(same.debt.total).toBeGreaterThan(0)
     const clean = yield* run("clean", BENIGN, BENIGN)
     expect(clean.checks[0]).toMatchObject({ status: "pass", workspaceExecuted: false })
-    expect(clean.items).toEqual([])
+    expect(items(clean)).toEqual([])
     const hostileRoot = yield* Effect.promise(() => repo(path.join(made.path, "hostile"), BENIGN, UNSAFE, true))
     const before = yield* Effect.promise(() => shot(path.join(hostileRoot, "db", "a.sql")))
     const hostile = yield* ReviewAnalyze.run({ ...runInput(made, hostileRoot), changed: CHANGED }).pipe(
@@ -103,11 +117,12 @@ live("a new squawk warning is an item, an unchanged one is not, and a hostile co
     )
     expect(hostile.checks[0].status).toBe("fail")
     expect(hostile.checks[0].reason).not.toBe("configuration-error")
-    expect(hostile.items.some((item) => item.pack === "squawk")).toBe(true)
+    expect(items(hostile).some((item) => item.pack === "squawk")).toBe(true)
+    expect(Object.keys(hostile.items)).toEqual(["contracts"])
     expect(yield* Effect.promise(() => shot(path.join(hostileRoot, "db", "a.sql")))).toBe(before)
     const broken = yield* run("broken", BENIGN, INVALID)
     expect(broken.checks[0]).toMatchObject({ status: "acquisition-error", reason: "syntax-error", workspaceExecuted: false })
-    expect(broken.items).toEqual([])
+    expect(items(broken)).toEqual([])
     const raw = broken.checks[0].uri
     expect(raw).toMatch(/^review:[0-9a-f-]{36}\/raw\/squawk-head\.json$/)
     expect(yield* Effect.promise(() => readFile(path.join(made.store, raw!.slice("review:".length)), "utf8"))).toContain("syntax-error")
@@ -117,7 +132,7 @@ live("a new squawk warning is an item, an unchanged one is not, and a hostile co
     expect(none.checks[0].status).not.toBe("pass")
     const escaped = yield* run("escaped", BENIGN, UNSAFE, { scope: "files", files: ["../outside.sql"] })
     expect(escaped.checks[0]).toMatchObject({ status: "not-run", reason: "path-outside" })
-    expect(escaped.items).toEqual([])
+    expect(items(escaped)).toEqual([])
   }), 600_000,
 )
 
@@ -145,7 +160,7 @@ live("an unreadable copied SQL directory is not-run, not a pass", () =>
       workspaceExecuted: false,
     })
     expect(result.checks[0].status).not.toBe("pass")
-    expect(result.items).toEqual([])
+    expect(items(result)).toEqual([])
   }), 600_000,
 )
 
@@ -164,7 +179,8 @@ live("a first SQL file against an empty base is a new warning and the base scann
       reason: "base: no eligible SQL input; no base scanner invocation",
       workspaceExecuted: false,
     })
-    expect(added.items.some((item) => item.pack === "squawk" && item.path === "db/new.sql")).toBe(true)
+    expect(items(added).some((item) => item.pack === "squawk" && item.path === "db/new.sql")).toBe(true)
+    expect(Object.keys(added.items)).toEqual(["contracts"])
     expect(added.debt.total).toBe(0)
     const selected = yield* ReviewAnalyze.run({
       ...runInput(made, root), scope: "files", files: ["db/new.sql"], changed,
@@ -173,12 +189,13 @@ live("a first SQL file against an empty base is a new warning and the base scann
       status: "fail",
       reason: "base: no eligible SQL input; no base scanner invocation",
     })
-    expect(selected.items.some((item) => item.pack === "squawk" && item.path === "db/new.sql")).toBe(true)
+    expect(items(selected).some((item) => item.pack === "squawk" && item.path === "db/new.sql")).toBe(true)
+    expect(Object.keys(selected.items)).toEqual(["contracts"])
     const missing = yield* ReviewAnalyze.run({
       ...runInput(made, root), scope: "files", files: ["db/missing.sql"],
     }).pipe(Effect.provideService(BackendToolkit.Root, made.toolkit))
     expect(missing.checks[0]).toMatchObject({ status: "not-run", reason: "missing" })
-    expect(missing.items).toEqual([])
+    expect(items(missing)).toEqual([])
   }), 600_000,
 )
 
@@ -191,7 +208,7 @@ live("a head with no eligible SQL stays not-run", () =>
     const result = yield* ReviewAnalyze.run(runInput(made, root)).pipe(Effect.provideService(BackendToolkit.Root, made.toolkit))
     expect(result.checks[0]).toMatchObject({ status: "not-run", reason: "no-input", workspaceExecuted: false })
     expect(result.checks[0].status).not.toBe("pass")
-    expect(result.items).toEqual([])
+    expect(items(result)).toEqual([])
   }), 600_000,
 )
 
@@ -205,7 +222,7 @@ live("a different file selection on the same base tree does not turn an old warn
       ...runInput(made, root), scope: "files", files: ["db/b.sql"],
     }).pipe(Effect.provideService(BackendToolkit.Root, made.toolkit))
     expect(other.checks[0]).toMatchObject({ status: "pass", workspaceExecuted: false })
-    expect(other.items).toEqual([])
+    expect(items(other)).toEqual([])
     const old = yield* ReviewAnalyze.run({
       ...runInput(made, root),
       scope: "files",
@@ -213,7 +230,7 @@ live("a different file selection on the same base tree does not turn an old warn
       changed: { "db/a.sql": [{ start: 1, end: 20 }] },
     }).pipe(Effect.provideService(BackendToolkit.Root, made.toolkit))
     expect(old.checks[0]).toMatchObject({ status: "fail", workspaceExecuted: false })
-    expect(old.items).toEqual([])
+    expect(items(old)).toEqual([])
     expect(old.debt.total).toBeGreaterThan(0)
   }), 600_000,
 )
