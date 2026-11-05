@@ -53,13 +53,14 @@ test("literal spaces and brackets do not select a sibling", async () => {
 
 test.skipIf(process.platform === "win32")("a posix backslash is a filename and does not select the nested sibling", async () => {
   await using dir = await tmpdir()
-  await mkdir(path.join(dir.path, "foo"))
-  await writeFile(path.join(dir.path, "foo", "bar.py"), "nested\n")
-  await writeFile(path.join(dir.path, "foo\\bar.py"), "literal\n")
-  expect(await run(dir.path, ["foo\\bar.py"])).toEqual({
-    status: "ok",
-    files: [await realpath(path.join(dir.path, "foo\\bar.py"))],
-  })
+  await mkdir(path.join(dir.path, "literal"))
+  await writeFile(path.join(dir.path, "literal", "name.py"), "nested\n")
+  const literal = path.join(dir.path, "literal\\name.py")
+  await writeFile(literal, "literal\n")
+  const info = await lstat(literal)
+  expect(info.isFile()).toBe(true)
+  expect(info.isSymbolicLink()).toBe(false)
+  expect(await run(dir.path, ["literal\\name.py"])).toEqual({ status: "ok", files: [literal] })
 })
 
 test("a parent symlink inside or outside the root is refused", async () => {
