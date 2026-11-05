@@ -48,6 +48,14 @@ const DATA_RULE =
 
 export type Role = "lead" | "lens" | "verifier"
 
+/** Host metadata for one governed finish drain. Not a model input. */
+export type FinishAuthorization = {
+  readonly checkFacts: ReviewChecksV2.Facts
+  readonly method: string
+  readonly routingDigest: string
+  readonly catalogDigest: string
+}
+
 /** The analyze step's return (K6): checks, triaged items per lens after the §8.6 pipeline, and the retained artifact. */
 export type Analysis = {
   readonly checks: ReadonlyArray<ReviewAnalyze.Check>
@@ -71,7 +79,12 @@ export type Port = {
   readonly run: (
     sessionID: SessionSchema.ID,
     brief: string,
-    turn: { readonly key: string; readonly finish: boolean },
+    turn: {
+      readonly key: string
+      readonly finish: boolean
+      /** Host finish metadata. Present only when this drain may record; not parsed from the brief. */
+      readonly authorization?: FinishAuthorization
+    },
   ) => Effect.Effect<string, Tool.Failure>
   readonly analyze: (input: AnalyzeInput) => Effect.Effect<Analysis, Tool.Failure>
   /** Lines `start..end` of a file at the reviewed head. */
@@ -273,10 +286,20 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
         ...(entryBlocker ? { entryBlockers: [entryBlocker] } : {}),
         probes: observed.slice().sort(byProbeIdentity),
       })
+      const authorization = {
+        checkFacts,
+        method,
+        routingDigest: ReviewRouting.digest(sessionRecord),
+        catalogDigest: sessionRecord.catalog,
+      }
       const reply = yield* RUNNING.withPermit(port.run(lead, [
         ...body,
         `Host check facts (embed these checks and blockers verbatim; host authority, not model text):\n${JSON.stringify({ checks: checkFacts.checks, blockers: checkFacts.blockers })}`,
-      ].join("\n\n"), { key: "finish", finish: !cardOnly }))
+      ].join("\n\n"), {
+        key: "finish",
+        finish: !cardOnly,
+        ...(cardOnly ? {} : { authorization }),
+      }))
       const closing = yield* deviationsOf(input.store, lead, "finish", leadEntryDeviations.length)
       return {
         status: "ran",
