@@ -329,7 +329,10 @@ test("card-only returns the verifier-confirmed host identities shown in the fini
           )))
         : h.port.run(id, text, turn),
     }
-    const result = yield* ReviewFanoutV2.run(h.input("standard", { completion: "card-only" }), port)
+    const catalog = { ...ReviewCatalog.current, classes: ReviewCatalog.current.classes.map((item) => item.id === "logic.invariant"
+      ? { ...item, options: { "*": [{ option: "quote", proves: "quote" }, { option: "tool:ast-grep", proves: "tool" }] } }
+      : item) }
+    const result = yield* ReviewFanoutV2.run(h.input("standard", { completion: "card-only", catalog }), port)
     if (result.status !== "ran") throw new Error("expected a run")
     const shown: Array<Record<string, unknown>> = dataBlock(brief(h.briefs, "lead:finish"), "confirmed findings, as the host merged them")
     expect(result.confirmed).toHaveLength(2)
@@ -340,6 +343,33 @@ test("card-only returns the verifier-confirmed host identities shown in the fini
     expect(result.confirmed.some((finding) => finding.id === "C3")).toBe(false)
     expect(brief(h.briefs, "lead:finish")).toContain("preserve every confirmed finding ID")
     expect(brief(h.briefs, "lead:finish")).not.toContain("Merge the confirmed findings below by root cause")
+  })),
+)
+
+test("invalid confirmed rung histories become explicit questions, never host findings", () =>
+  run((directory) => Effect.gen(function* () {
+    const valid = { candidate: "C1", state: "confirmed", rung: "quote",
+      evidence: { kind: "quote", path: "src/a.ts", startLine: 2, endLine: 2 },
+      history: [{ option: "quote", outcome: "settled" }] }
+    const variants = [
+      { ...valid, history: [] },
+      { ...valid, rung: "tool:not-offered", history: [{ option: "tool:not-offered", outcome: "settled" }] },
+      { ...valid, history: [{ option: "quote", outcome: "settled" }, { option: "probe:invented", outcome: "unsettled" }] },
+    ]
+    for (const [index, bad] of variants.entries()) {
+      const h = yield* harness(directory, `invalid_rung_${index}`)
+      const result = yield* ReviewFanoutV2.run(h.input("standard", { completion: "card-only" }), {
+        ...h.port,
+        run: (id, text, turn) => turn.key === "verify" && text.includes("class logic.invariant")
+          ? h.port.run(id, text, turn).pipe(Effect.map((reply) => reply.replace(JSON.stringify(valid), JSON.stringify(bad))))
+          : h.port.run(id, text, turn),
+      })
+      if (result.status !== "ran") throw new Error("expected a run")
+      expect(result.confirmed.some((finding) => finding.id === "C1")).toBe(false)
+      const questions: Array<{ id: string; reason: string }> = dataBlock(brief(h.briefs, "lead:finish"), "questions")
+      expect(questions).toContainEqual(expect.objectContaining({ id: "C1", reason: "not verified: invalid-rung-history" }))
+      expect(result.counts.dropped).toBe(1)
+    }
   })),
 )
 

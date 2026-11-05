@@ -16,6 +16,7 @@ import { SkillTool } from "@orchestra/core/tool/skill"
 import { Tool } from "@orchestra/core/tool/tool"
 import { ReviewResultV2 } from "../governance/review-result"
 import type { ReviewCardV2 } from "./review-card"
+import { ReviewVerdictV2 } from "./review-verdict"
 import { sliceDiff } from "./review-diff"
 
 export { baseRules, changes, hunks, RULE_FILES, sliceDiff } from "./review-diff"
@@ -421,7 +422,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
         const scoped = yield* deviationsOf(input.store, child, "verify", 0)
         return {
           batch,
-          results: result?.value.results ?? [],
+          results: (result?.value.results ?? []).map((verdict) => ReviewVerdictV2.validate(verdict, offered[verdict.candidate] ?? [])),
           deviations: [
             ...(bound.probeUnavailable ? [deviation("verify", "check-unavailable", bound.probeUnavailable, child)] : []),
             ...(result?.deviations ?? []),
