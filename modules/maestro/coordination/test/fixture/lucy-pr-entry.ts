@@ -54,6 +54,8 @@ export type HostControls = {
   readonly beforeResume?: (sessionID: string, brief: string) => Effect.Effect<void, SessionRunner.RunError>
   /** Git observation only. This is not candidate admission. */
   readonly onGit?: (args: readonly string[]) => Effect.Effect<void>
+  /** Replaces the generated finish card. Not a durable prompt. */
+  readonly finishCard?: (card: string) => string
 }
 export type Ctx = {
   directory: string
@@ -124,7 +126,7 @@ export function host(directory: string, skills: ReadonlyArray<SkillV2.Info>, tou
           SessionMessage.User.make({ id: item.id, type: "user", text: item.text, time }),
           SessionMessage.Assistant.make({
             id: SessionMessage.ID.make(`${item.id}_reply`), type: "assistant", agent: "lucy", model,
-            content: [{ type: "text", id: "text", text: reply(item.text, prior) }],
+            content: [{ type: "text", id: "text", text: reply(item.text, prior, controls.finishCard) }],
             time: { created: time.created, completed: time.created }, finish: "stop",
           }),
         ]
@@ -288,7 +290,7 @@ function stage(brief: string) {
   return "unexpected"
 }
 
-function reply(brief: string, prior: readonly string[]) {
+function reply(brief: string, prior: readonly string[], finishCard?: (card: string) => string) {
   const kind = stage(brief)
   if (kind === "entry") return fence(ReviewFanoutV2.TAGS.entry, {
     status: "eligible",
@@ -306,7 +308,7 @@ function reply(brief: string, prior: readonly string[]) {
   const scope = hostScope(brief, prior)
   const facts = hostCheckFacts(brief)
   const blocked = facts.blockers.length > 0
-  return fence(ReviewResultV2.TAG, {
+  const card = fence(ReviewResultV2.TAG, {
     outcome: blocked ? "blocked" : "done",
     ...(blocked ? {} : { verdict: "APPROVE" }),
     profile: routing.profile.id, tier: ReviewRouting.tier(routing),
@@ -314,6 +316,7 @@ function reply(brief: string, prior: readonly string[]) {
     findings: [], questions: [], checks: facts.checks, coverage: { examined: [], notExamined: [] },
     handoffs: [], blockers: facts.blockers, risks: [], nextActions: [],
   })
+  return finishCard ? finishCard(card) : card
 }
 
 const HOST_CHECK_FACTS = "Host check facts (embed these checks and blockers verbatim; host authority, not model text):\n"

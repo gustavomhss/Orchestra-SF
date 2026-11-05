@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { randomUUID } from "node:crypto"
 import fs from "node:fs/promises"
 import path from "node:path"
 import { Effect, Layer, type Scope } from "effect"
@@ -8,12 +9,14 @@ import { FSUtil } from "@orchestra/core/fs-util"
 import { GitCli } from "@orchestra/core/git-cli"
 import { ReviewCatalog } from "@orchestra/core/review/catalog"
 import { ReviewRouting } from "@orchestra/core/review/routing"
+import { ReviewProbe } from "@orchestra/core/review-toolkit/probe"
 import type { ReviewItem } from "@orchestra/core/review-toolkit/item"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { SessionSchema, SessionStore } from "@orchestra/core/session"
 import type { SkillV2 } from "@orchestra/core/skill"
 import type { ReviewResultV2 } from "../src/v2/governance/review-result"
 import type { ReviewAnalyze } from "@orchestra/core/review-toolkit/analyze"
+import { MaestroReviewTools } from "../src/v2/tools/review"
 import { ReviewFanoutV2 } from "../src/v2/workflow/review-fanout"
 import { ReviewChecksV2 } from "../src/v2/workflow/review-checks"
 import { governanceLayer, session, worktree } from "./fixture/v2-governance"
@@ -381,6 +384,8 @@ test("Quick and blocked return no host-confirmed list", () =>
     const quickResult = yield* ReviewFanoutV2.run(quick.input("quick", { completion: "card-only" }), quick.port)
     if (quickResult.status !== "ran") throw new Error("expected Quick run")
     expect(quickResult.confirmed).toEqual([])
+    expect(quickResult.outcomes.every((read) => read.outcome === "not-pursued")).toBe(true)
+    expect(quickResult.outcomes.some((read) => read.fingerprint === "fp-correctness-logic-19")).toBe(false)
     const settings = quick.input("quick").request.settings
     expect(quickResult.checkFacts).toEqual(ReviewChecksV2.collect({
       routing: quickResult.routing,
@@ -726,3 +731,64 @@ test("review rules come from the base revision for every directory above a chang
       }).pipe(Effect.provide(gitLayer)),
     ),
   ))
+
+test("Quick finish pages retained items during the drain and the result includes that primary", () =>
+  run((directory) => Effect.gen(function* () {
+    const h = yield* harness(directory, "quick_page")
+    const id = randomUUID()
+    const cache = `quick-page-${id}`
+    const uri = `review:${id}/retained.json`
+    const shown = item("correctness-logic", 0)
+    const paged = item("correctness-logic", 8)
+    const unread = item("tests", 1)
+    yield* Effect.promise(() => Bun.write(
+      path.join(MaestroReviewTools.analysisStore(cache), id, "retained.json"),
+      JSON.stringify({ items: [shown, paged, unread] }),
+    ))
+    const analysis: ReviewFanoutV2.Analysis = {
+      checks: ANALYSIS.checks,
+      items: { "correctness-logic": [shown] },
+      retained: { uri, total: 3, unread: { "correctness-logic": 1, tests: 1 } },
+    }
+    let page: ((input: { lens: string }) => Effect.Effect<{ items: ReadonlyArray<ReviewItem.ToolItem> }, unknown>) | undefined
+    const result = yield* ReviewFanoutV2.run(h.input("quick", { cache }), {
+      ...h.port,
+      analyze: () => Effect.succeed(analysis),
+      binding: (bound) => Effect.gen(function* () {
+        yield* h.port.binding(bound)
+        const binding = yield* MaestroReviewTools.reviewBinding({
+          worktree: directory,
+          diff: DIFF,
+          cache,
+          lenses: [...(bound.lenses ?? (bound.lens ? [bound.lens] : []))],
+          ledger: ReviewProbe.ledger(),
+          copies: Effect.die("quick page proof does not copy a tree"),
+        })(bound)
+        const analyze = binding.analyze
+        if (bound.role === "lead" && analyze) page = (input) => analyze.page(input)
+        return binding
+      }),
+      run: (sessionID, brief, turn) => Effect.gen(function* () {
+        if (turn.key !== "finish") return yield* h.port.run(sessionID, brief, turn)
+        const before = turn.authorization?.outcomes.map((read) => read.fingerprint) ?? []
+        expect(before).not.toContain(paged.fingerprint)
+        if (!page) return yield* Effect.die("finish drain has no production page")
+        const delivered = yield* page({ lens: "correctness-logic" })
+        expect(delivered.items.map((entry) => entry.fingerprint)).toContain(paged.fingerprint)
+        expect(delivered.items.map((entry) => entry.fingerprint)).not.toContain(unread.fingerprint)
+        const during = turn.authorization?.outcomes.map((read) => read.fingerprint) ?? []
+        expect(during).toContain(paged.fingerprint)
+        expect(during.filter((fingerprint) => fingerprint === shown.fingerprint)).toHaveLength(1)
+        yield* h.port.run(sessionID, brief, turn)
+        return `model items [{"fingerprint":"${paged.fingerprint}","outcome":"confirmed"}]`
+      }),
+    })
+    if (result.status !== "ran") return yield* Effect.die("expected Quick run")
+    expect(result.outcomes.find((read) => read.fingerprint === paged.fingerprint)?.outcome).toBe("not-pursued")
+    expect(result.outcomes.filter((read) => read.fingerprint === shown.fingerprint)).toHaveLength(1)
+    expect(result.outcomes.some((read) => read.fingerprint === unread.fingerprint)).toBe(false)
+    expect(result.outcomes.every((read) => read.outcome === "not-pursued")).toBe(true)
+    expect(h.turns.filter((turn) => turn.key === "finish")).toHaveLength(1)
+    expect(h.calls.filter((call) => call.startsWith("run:lead:"))).toEqual(["run:lead:entry", "run:lead:finish"])
+  })),
+)

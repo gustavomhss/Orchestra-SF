@@ -7,7 +7,8 @@ import { eq, like } from "drizzle-orm"
 import { DateTime, Effect, Layer, Option, Schema } from "effect"
 import { publishTerritoryCatalog } from "@orchestra/atlas-boundary"
 import { materializeStaticOwnSnapshot, parseOwnSnapshot } from "@orchestra/atlas-boundary/materialize"
-import { BoardNoteTable } from "@orchestra/core/board/sql"
+import { Board } from "@orchestra/schema/board"
+import { BoardNoteTable, BoardProjectTable } from "@orchestra/core/board/sql"
 import { AgentV2 } from "@orchestra/core/agent"
 import { Config } from "@orchestra/core/config"
 import { Database } from "@orchestra/core/database/database"
@@ -206,10 +207,10 @@ test("a scoped finish refuses a governed receipt before a review event or board 
       )
     const reviewEvents = () => db.select().from(EventTable).where(like(EventTable.type, "maestro.review%")).all().pipe(Effect.orDie)
     const reviewNotes = () => db.select({ id: BoardNoteTable.id }).from(BoardNoteTable).where(eq(BoardNoteTable.kind, "review")).all().pipe(Effect.orDie)
-    yield* db.insert(ProjectTable).values({ id: projectID, worktree: directory, sandboxes: [] }).run().pipe(Effect.orDie)
+    yield* db.insert(ProjectTable).values({ id: projectID, worktree: directory, sandboxes: [] }).onConflictDoNothing().run().pipe(Effect.orDie)
     yield* db.insert(SessionTable).values({
       id: sessionID, project_id: projectID, directory, slug: "chain", title: "chain", version: "test", agent: AgentV2.defaultID,
-    }).run().pipe(Effect.orDie)
+    }).onConflictDoNothing().run().pipe(Effect.orDie)
     const encode = Schema.encodeSync(SessionMessage.Message)
     const seq = { next: 1 }
     yield* db.insert(SessionMessageTable).values([
@@ -218,7 +219,7 @@ test("a scoped finish refuses a governed receipt before a review event or board 
     ].map((message) => {
       const { id, type, ...data } = encode(message)
       return { id: SessionMessage.ID.make(id), session_id: sessionID, type, seq: seq.next++, time_created: DateTime.toEpochMillis(message.time.created), data }
-    })).run().pipe(Effect.orDie)
+    })).onConflictDoNothing().run().pipe(Effect.orDie)
     child.create = (input) => db.insert(SessionTable).values({
       id: input.id, project_id: projectID, parent_id: input.parentID, directory, slug: "lucy", title: "lucy", version: "test", agent: "lucy",
     }).onConflictDoNothing().run().pipe(Effect.orDie, Effect.asVoid)
@@ -309,3 +310,140 @@ test("card-only finish cannot record a receipt", () =>
     expect(recorded).toContain("Review recording opens only in the lead's final turn")
     expect(yield* reviewRows()).toEqual(before)
   }))))
+
+test("a Quick finish pages before record, then seals that snapshot", () =>
+  Effect.runPromise(Effect.gen(function* () {
+    prompts.length = 0
+    const database = yield* Database.Service
+    const registry = yield* ToolRegistry.Service
+    const db = database.db
+    const parent = SessionSchema.ID.make("ses_outcome_governed")
+    let calls = 0
+    const call = (agent: string, name: string, input: unknown, session = parent) =>
+      registry.materialize().pipe(
+        Effect.flatMap((materialized) => materialized.settle({
+          sessionID: session, agent: AgentV2.ID.make(agent), assistantMessageID: SessionMessage.ID.make("msg_calling_outcome"),
+          call: { type: "tool-call", id: `call_outcome_${calls++}`, name, input },
+        })),
+        Effect.map((settled) => ({ type: settled.result.type, text: String(settled.result.value) })),
+      )
+    const rows = (pattern: string) => db.select().from(EventTable).where(like(EventTable.type, pattern)).all().pipe(Effect.orDie)
+    yield* db.insert(ProjectTable).values({ id: projectID, worktree: directory, sandboxes: [] }).onConflictDoNothing().run().pipe(Effect.orDie)
+    yield* db.insert(SessionTable).values({
+      id: parent, project_id: projectID, directory, slug: "outcome", title: "outcome", version: "test", agent: AgentV2.defaultID,
+    }).onConflictDoNothing().run().pipe(Effect.orDie)
+    yield* db.insert(BoardProjectTable).values({
+      id: Board.ProjectID.create(), key: "OUTCOME", name: "Outcome", goal: "Governed page.", status: "active",
+      github_state: "off", next_issue_number: 1, next_epic_number: 1, repo_project_id: projectID,
+      review_accepted_unavailable: ["no-build"],
+    }).run().pipe(Effect.orDie)
+    const encode = Schema.encodeSync(SessionMessage.Message)
+    yield* db.insert(SessionMessageTable).values([
+      SessionMessage.User.make({ id: SessionMessage.ID.make("msg_owner_outcome"), type: "user", text: "Ship the CSV export", time }),
+      SessionMessage.Assistant.make({ id: SessionMessage.ID.make("msg_calling_outcome"), type: "assistant", agent: "maestro", model, content: [], time }),
+    ].map((message, index) => {
+      const { id, type, ...data } = encode(message)
+      return { id: SessionMessage.ID.make(id), session_id: parent, type, seq: index + 1, time_created: DateTime.toEpochMillis(message.time.created), data }
+    })).onConflictDoNothing().run().pipe(Effect.orDie)
+    child.create = (input) => db.insert(SessionTable).values({
+      id: input.id, project_id: projectID, parent_id: input.parentID, directory, slug: "lucy", title: "lucy", version: "test", agent: "lucy",
+    }).onConflictDoNothing().run().pipe(Effect.orDie, Effect.asVoid)
+    child.resume = (id) => Effect.gen(function* () {
+      const prompt = prompts.at(-1) ?? ""
+      if (!prompt.includes("artifact JSON:")) return
+      const retained = /review:([0-9a-f-]{36})\/retained\.json/.exec(prompt)
+      const lens = /analyzer items for ([^ (]+)/.exec(prompt)?.[1]
+      const validationID = /validationRecordID: (\S+)/.exec(prompt)?.[1]
+      if (!retained || !lens || !validationID) return yield* Effect.die("finish brief has no retained page")
+      const file = path.join(MaestroReviewTools.analysisStore(`review_${validationID}_plan`), retained[1], "retained.json")
+      const text = yield* Effect.promise(() => Bun.file(file).text().catch(() => undefined))
+      if (!text) return yield* Effect.die(`retained artifact missing: ${file}`)
+      const retainedItems = JSON.parse(text) as { items: Record<string, unknown>[] }
+      const extra = {
+        fingerprint: "fp-paged-primary", class: "logic.invariant", lens, pack: "gitleaks", rule: "paged-rule",
+        ruleStatus: "probation", severity: "P2", path: "docs/export.md", line: 1, snippetDigest: "digest",
+        sources: [{ pack: "gitleaks", rule: "paged-rule" }], triage: "triage", onChangedLine: true,
+      }
+      retainedItems.items.push(extra)
+      yield* Effect.promise(() => Bun.write(file, JSON.stringify(retainedItems)))
+      const paged = yield* call("lucy", "review_analyze", { op: "page", lens }, id)
+      if (paged.type === "error" || !paged.text.includes("fp-paged-primary")) return yield* Effect.die(new Error(paged.text))
+      const pageItems = JSON.parse(paged.text) as { items: { pack: string; rule: string; fingerprint: string }[] }
+      const initial = [...prompt.matchAll(/<data name="analyzer items for [^"]*">\n([\s\S]*?)\n<\/data>/g)].flatMap((match) => {
+        const parsed = JSON.parse(match[1]) as { pack: string; rule: string; fingerprint: string }[]
+        if (!Array.isArray(parsed)) throw new Error("analyzer items block is not a list")
+        return parsed
+      })
+      const projection = [...new Map([...initial, ...pageItems.items].map((entry) => [entry.fingerprint, {
+        pack: entry.pack, rule: entry.rule, fingerprint: entry.fingerprint, outcome: "not-pursued" as const,
+      }])).values()]
+      if (!projection.some((entry) => entry.fingerprint === "fp-paged-primary")) return yield* Effect.die("page did not deliver the primary")
+      const method = line(prompt, "reviewMethodVersion: ")
+      const routingDigest = line(prompt, "routingDigest: ")
+      const catalogDigest = line(prompt, "catalogDigest: ")
+      if (!method || !routingDigest || !catalogDigest) return yield* Effect.die("finish brief has no host method or digests")
+      const base = {
+        validationRecordID: validationID, workCard, findings: [],
+        artifact: JSON.parse(line(prompt, "artifact JSON: ") ?? "null"),
+        checks: JSON.parse(line(prompt, "checks JSON: ") ?? "null"),
+        stage: "plan" as const, reviewMethodVersion: method, routingDigest, catalogDigest,
+      }
+      expect((yield* rows("maestro.review%")).length).toBe(0)
+      expect((yield* rows("review.precision%")).length).toBe(0)
+      const omitted = yield* call("lucy", "maestro_record_review", { ...base, verdict: "APPROVE", items: [] }, id)
+      expect(omitted.text.startsWith("APPROVE:")).toBe(false)
+      const missing = yield* call("lucy", "maestro_record_review", { ...base, verdict: "APPROVE" }, id)
+      expect(missing.text.startsWith("APPROVE:")).toBe(false)
+      const changed = yield* call("lucy", "maestro_record_review", {
+        ...base, verdict: "APPROVE", items: projection.map((entry, index) => index === 0 ? { ...entry, outcome: "confirmed" as const } : entry),
+      }, id)
+      expect(changed.text.startsWith("APPROVE:")).toBe(false)
+      expect((yield* rows("maestro.review%")).length).toBe(0)
+      expect((yield* rows("review.precision%")).length).toBe(0)
+      const recorded = yield* call("lucy", "maestro_record_review", { ...base, verdict: "APPROVE", items: [...projection].reverse() }, id)
+      if (!recorded.text.startsWith("APPROVE:")) return yield* Effect.die(new Error(recorded.text))
+      const receipt = recorded.text.slice("APPROVE: ".length).trim()
+      expect((yield* rows("maestro.review%")).length).toBe(1)
+      const admitted = yield* rows("review.precision%")
+      expect(admitted).toHaveLength(1)
+      const admittedData = admitted[0].data as { review?: string; project?: string; reads?: { fingerprint: string; generation: string }[] }
+      expect(admittedData.review).toBe(receipt)
+      expect(admittedData.project).toBe(projectID)
+      expect(admittedData.reads?.some((read) => read.fingerprint === "fp-paged-primary")).toBe(true)
+      expect(admittedData.reads?.every((read) => /^[0-9a-f]{64}$/.test(read.generation))).toBe(true)
+      retainedItems.items.push({ ...extra, fingerprint: "fp-after-seal" })
+      yield* Effect.promise(() => Bun.write(file, JSON.stringify(retainedItems)))
+      const sealed = yield* call("lucy", "review_analyze", { op: "page", lens }, id)
+      expect(sealed.text).toContain("outcome-delivery-sealed")
+      expect(sealed.text).not.toContain("fp-after-seal")
+      expect(yield* rows("review.precision%")).toEqual(admitted)
+      const retry = yield* call("lucy", "maestro_record_review", { ...base, verdict: "APPROVE", items: projection }, id)
+      expect(retry.text).toBe(recorded.text)
+      expect((yield* rows("maestro.review%")).length).toBe(1)
+      const after = yield* rows("review.precision%")
+      expect(after).toHaveLength(1)
+      expect(after[0].id).toBe(admitted[0].id)
+      expect(after[0].seq).toBe(admitted[0].seq)
+    }).pipe(Effect.orDie)
+    const admission = yield* call("maestro", "maestro_record_admission", {
+      methodVersion: "admit-request-v1",
+      assessment: { kind: "work", goal: "Ship the CSV export", known: [{ text: "The owner wants CSV export", source: "stakeholder" }], proposals: [], unknowns: [], uncertainty: "low", activeWorkEffect: "none", reason: "Goal and scope are clear" },
+    })
+    if (admission.type === "error") return yield* Effect.die(new Error(admission.text))
+    const planned = yield* call("maestro", "maestro_record_plan_revision", {
+      admissionMessageID: "msg_owner_outcome", methodVersion: "plan-v1", goal: field("CSV export"), acceptance: [field("A CSV downloads")],
+      scope: [field("backend")], units: ["packages/alpha/shared"], constraints: [], reviewRequirement: field("cold review"), assumptions: [], risks: [],
+    })
+    const revision = JSON.parse(planned.text.split("\n").find((item) => item.startsWith("Bindings: "))?.slice("Bindings: ".length) ?? "{}") as { planRevisionID: string }
+    const context = yield* call("maestro", "maestro_record_context", { planRevisionID: revision.planRevisionID })
+    const contextBindings = JSON.parse(context.text.split("\n").find((item) => item.startsWith("Bindings: "))?.slice("Bindings: ".length) ?? "{}") as { contextRecordID: string; contextHash: string }
+    const validated = yield* call("maestro", "maestro_record_validation", {
+      planRevisionID: revision.planRevisionID, contextRecordID: contextBindings.contextRecordID, contextHash: contextBindings.contextHash,
+      projectID, workCardID: "card_outcome", workCard, routedMemberID: "backend", validatorVersion: "validator-v1", checks: validationChecks,
+    })
+    const validation = JSON.parse(validated.text.split("\n").find((item) => item.startsWith("Bindings: "))?.slice("Bindings: ".length) ?? "{}") as { validationRecordID: string }
+    const reviewed = yield* call("maestro", "maestro_request_review", {
+      validationRecordID: validation.validationRecordID, workCard, reviewMethodVersion: "review-v2/plan/quick", tier: "quick",
+    })
+    if ((yield* rows("maestro.review%")).length !== 1) return yield* Effect.die(new Error(reviewed.text))
+  }).pipe(Effect.provide(host))))
