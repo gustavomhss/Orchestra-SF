@@ -221,7 +221,8 @@ function containedPath(file: string, root: string | undefined) {
   const resolvedFile = path.isAbsolute(file) ? path.resolve(file) : path.resolve(root, file)
   const relative = path.relative(resolvedRoot, resolvedFile)
   if (!relative || path.isAbsolute(relative) || relative === ".." || relative.startsWith(`..${path.sep}`)) return undefined
-  return relative.replaceAll("\\", "/")
+  // Win32's relative form uses `\` as a separator. On posix a backslash is a filename character; Git can store it.
+  return path === win32 ? relative.replaceAll("\\", "/") : relative
 }
 
 function driveRelative(value: string) {
