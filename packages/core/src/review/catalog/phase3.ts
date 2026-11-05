@@ -53,7 +53,7 @@ export const phase3 = {
     {
       id: "api-wire",
       paths: ["**/*.proto", "**/openapi.{yaml,yml,json}"],
-      content: [{ id: "content-type", pattern: "Content-Type" }],
+      content: [{ id: "content-type", pattern: "\\bContent-Type\\b" }],
       lenses: ["contracts"],
       checks: [],
     },
