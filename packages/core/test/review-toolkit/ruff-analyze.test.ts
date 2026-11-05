@@ -1,7 +1,7 @@
 import { expect } from "bun:test"
 import { createHash } from "node:crypto"
 import path from "node:path"
-import { access, lstat, mkdir, readFile, readdir, readlink, writeFile } from "node:fs/promises"
+import { access, lstat, mkdir, readFile, readdir, readlink, rm, symlink, writeFile } from "node:fs/promises"
 import { Effect, Schema } from "effect"
 import { BackendToolkit } from "../../src/backend-toolkit"
 import { LayerNode } from "../../src/effect/layer-node"
@@ -17,9 +17,10 @@ import { expectSpawn } from "../fixture/omni-expect"
 import { tmpdir } from "../fixture/tmpdir"
 
 // Curated Ruff through ReviewAnalyze.run. Provisioning, including the full notice, happens outside the review.
-// Linux without a jail fails acquisition; it is not skipped. An unsupported host is a scoped not-run, not a green skip.
+// A native cell names diagnostics, so an unsupported host or a missing Linux jail fails conformance-missing there.
+// The suite's Linux jail cell is the other hard failure. Sandbox denial is not-run, not acquisition-error.
 // Windows asserts the named refusal only and makes no native claim. A warning is not confirmation of project binding.
-// Catalog registration is not this file.
+// Catalog registration is not this file. Path normalization and the base symlink walk are the analyzer's, not this fixture's.
 
 const it = testEffect(LayerNode.compile(LayerNode.group([AppProcess.node])))
 const NOTICE = "2597d854122b77ddc71971564ca2350a37608575ce324adc5650a2b2051c8f18"
@@ -127,7 +128,7 @@ if (process.platform !== "win32") it.live("a new head fires F821 and F823, an un
     const freshRoot = yield* repo(path.join(made.path, "fresh"), { "missing.py": BENIGN, "shadow.py": BENIGN }, {
       "missing.py": F821, "shadow.py": F823,
     })
-    if (!(yield* ready(made, freshRoot))) return
+    yield* ready(made.toolkit)
     const before = yield* Effect.promise(() => image(freshRoot))
     const fresh = yield* analyze(made, freshRoot, { changed: CHANGED })
     expect(fresh.checks[0]).toMatchObject({ status: "fail", workspaceExecuted: false, version: "0.17.3" })
@@ -179,7 +180,7 @@ if (process.platform !== "win32") it.live("a first Python file keeps base metada
     expectSpawn(import.meta.path)
     const made = yield* held()
     const root = yield* repo(path.join(made.path, "first"), { "README.md": "no python\n" }, { "new.py": F821 })
-    if (!(yield* ready(made, root))) return
+    yield* ready(made.toolkit)
     const added = yield* analyze(made, root, { changed: { "new.py": [{ start: 1, end: 1 }] } })
     expect(added.checks[0]).toMatchObject({ status: "fail", workspaceExecuted: false })
     expect(added.checks[0].uri).toMatch(/^review:[0-9a-f-]{36}\/raw\/ruff-head\.json$/)
@@ -201,7 +202,7 @@ if (process.platform !== "win32") it.live("a different file selection on the sam
     expectSpawn(import.meta.path)
     const made = yield* held()
     const root = yield* repo(path.join(made.path, "pair"), { "a.py": F821, "b.py": BENIGN })
-    if (!(yield* ready(made, root))) return
+    yield* ready(made.toolkit)
     const other = yield* analyze(made, root, { scope: "files", files: ["b.py"] })
     expect(other.checks[0]).toMatchObject({ status: "pass", workspaceExecuted: false })
     expect(items(other)).toEqual([])
@@ -225,7 +226,7 @@ if (process.platform !== "win32") it.live("dropped F821 is absent from raw while
     const root = yield* repo(path.join(made.path, "rules"), { "missing.py": BENIGN, "shadow.py": BENIGN }, {
       "missing.py": F821, "shadow.py": F823,
     })
-    if (!(yield* ready(made, root))) return
+    yield* ready(made.toolkit)
     const shot = yield* Effect.promise(() => image(root))
     const before = yield* analyze(made, root, { changed: CHANGED })
     const beforeCodes = codes(yield* Effect.promise(() => readRaw(made.store, before.checks[0].uri)))
@@ -257,35 +258,62 @@ if (process.platform !== "win32") it.live("dropped F821 is absent from raw while
   }), 600_000,
 )
 
-function ready(made: { toolkit: string; store: string }, root: string) {
+if (process.platform !== "win32") it.live("selected paths bind to the copied tree, and a base or head symlink is refused", () =>
+  Effect.gen(function* () {
+    expectSpawn(import.meta.path)
+    const made = yield* held()
+    const root = yield* repo(path.join(made.path, "paths"), { "missing.py": BENIGN }, { "missing.py": F821 })
+    yield* ready(made.toolkit)
+    const changed = { "missing.py": [{ start: 1, end: 1 }] }
+    const relative = yield* analyze(made, root, { scope: "files", files: ["missing.py"], changed })
+    expect(codes(yield* Effect.promise(() => readRaw(made.store, relative.checks[0].uri)))).toContain("F821")
+    expect(items(relative).some((item) => item.rule === "F821" && item.path === "missing.py")).toBe(true)
+    // Original worktree path. The analyzer normalizes it onto the copy; this test does not invent a scratch path.
+    const original = path.join(root, "missing.py")
+    expect(path.isAbsolute(original)).toBe(true)
+    expect(original.startsWith(root + path.sep)).toBe(true)
+    const selected = yield* analyze(made, root, { scope: "files", files: [original], changed })
+    expect(codes(yield* Effect.promise(() => readRaw(made.store, selected.checks[0].uri)))).toContain("F821")
+    expect(items(selected).some((item) => item.rule === "F821" && item.path === "missing.py" && item.class === "logic.invariant")).toBe(true)
+    expect(items(selected).every((item) => item.path === "missing.py")).toBe(true)
+    const outside = path.join(made.path, "outside.py")
+    expect(path.isAbsolute(outside)).toBe(true)
+    expect(outside.startsWith(root + path.sep)).toBe(false)
+    const escaped = yield* analyze(made, root, { scope: "files", files: [outside] })
+    expect(escaped.checks[0]).toMatchObject({ status: "not-run", reason: "path-outside", workspaceExecuted: false })
+    expect(escaped.checks[0].status).not.toBe("pass")
+    expect(items(escaped)).toEqual([])
+    const linked = yield* danglingBase(path.join(made.path, "dangling"))
+    const refused = yield* analyze(made, linked, {
+      scope: "files", files: ["link/a.py"], changed: { "link/a.py": [{ start: 1, end: 1 }] },
+    })
+    expect(refused.checks[0]).toMatchObject({ status: "not-run", workspaceExecuted: false })
+    expect(refused.checks[0].reason).toContain("symlink")
+    expect(refused.checks[0].status).not.toBe("pass")
+    expect(items(refused).some((item) => item.rule === "F821")).toBe(false)
+    expect(items(refused)).toEqual([])
+    const head = yield* headLink(path.join(made.path, "head-link"))
+    const link = yield* analyze(made, head, { scope: "files", files: ["alias.py"] })
+    expect(link.checks[0]).toMatchObject({ status: "not-run", reason: "symlink", workspaceExecuted: false })
+    expect(link.checks[0].status).not.toBe("pass")
+    expect(items(link)).toEqual([])
+    const gone = yield* analyze(made, head, { scope: "files", files: ["gone.py"] })
+    expect(gone.checks[0]).toMatchObject({ status: "not-run", reason: "missing", workspaceExecuted: false })
+    expect(gone.checks[0].status).not.toBe("pass")
+    expect(items(gone)).toEqual([])
+  }), 600_000,
+)
+
+function ready(toolkit: string) {
   return Effect.gen(function* () {
     const states = yield* BackendToolkit.status<string>("ruff").pipe(
-      Effect.provideService(BackendToolkit.Root, made.toolkit),
+      Effect.provideService(BackendToolkit.Root, toolkit),
       Effect.provideService(BackendToolkit.Manifest, { [ReviewPackRuff.manifest.id]: ReviewPackRuff.manifest }),
     )
     const state = states[0]
-    if (state?.status === "unsupported") {
-      const result = yield* analyze(made, root)
-      expect(result.checks[0]).toMatchObject({
-        status: "not-run",
-        reason: `ruff unsupported: ${state.reason}`,
-        workspaceExecuted: false,
-      })
-      expect(result.checks[0].status).not.toBe("pass")
-      expect(items(result)).toEqual([])
-      return false
-    }
-    yield* provision(made.toolkit)
-    if (process.platform === "linux" && !jail) {
-      const result = yield* analyze(made, root)
-      expect(result.checks[0].status, "conformance-missing: sandbox").toBe("acquisition-error")
-      expect(result.checks[0].status).not.toBe("pass")
-      expect(result.checks[0].status).not.toBe("not-run")
-      expect(result.checks[0].reason ?? "").toMatch(/sandbox/)
-      expect(items(result)).toEqual([])
-      return false
-    }
-    return true
+    if (state?.status === "unsupported") return yield* Effect.die(new Error(`conformance-missing: ruff unsupported: ${state.reason}`))
+    yield* provision(toolkit)
+    if (process.platform === "linux" && !jail) return yield* Effect.die(new Error("conformance-missing: sandbox"))
   })
 }
 
@@ -357,6 +385,51 @@ function repo(dir: string, base: Record<string, string>, head?: Record<string, s
     yield* writeTree(root, head)
     yield* git(root, ["add", "."])
     yield* git(root, ["commit", "-q", ...(allowEmpty ? ["--allow-empty"] : []), "-m", "head"])
+    return root
+  })
+}
+
+function danglingBase(dir: string) {
+  return Effect.gen(function* () {
+    const root = path.join(dir, "repo")
+    yield* Effect.promise(() => mkdir(root, { recursive: true }))
+    yield* identity(root)
+    yield* git(root, ["config", "core.symlinks", "true"])
+    yield* Effect.promise(() => symlink("missing-dir", path.join(root, "link")))
+    expect((yield* Effect.promise(() => lstat(path.join(root, "link")))).isSymbolicLink()).toBe(true)
+    yield* git(root, ["add", "--", "link"])
+    expect((yield* git(root, ["ls-files", "-s", "--", "link"])).toString()).toContain("120000")
+    yield* git(root, ["commit", "-q", "-m", "base"])
+    yield* git(root, ["tag", "base"])
+    yield* Effect.promise(async () => {
+      await rm(path.join(root, "link"))
+      await mkdir(path.join(root, "link"))
+      await writeFile(path.join(root, "link", "a.py"), F821)
+    })
+    expect((yield* Effect.promise(() => lstat(path.join(root, "link", "a.py")))).isFile()).toBe(true)
+    yield* git(root, ["add", "-A"])
+    yield* git(root, ["commit", "-q", "-m", "head"])
+    return root
+  })
+}
+
+function headLink(dir: string) {
+  return Effect.gen(function* () {
+    const root = path.join(dir, "repo")
+    yield* Effect.promise(() => mkdir(root, { recursive: true }))
+    yield* identity(root)
+    yield* git(root, ["config", "core.symlinks", "true"])
+    yield* Effect.promise(() => writeFile(path.join(root, "README.md"), "no selection\n"))
+    yield* git(root, ["add", "."])
+    yield* git(root, ["commit", "-q", "-m", "base"])
+    yield* git(root, ["tag", "base"])
+    yield* Effect.promise(() => symlink("nowhere", path.join(root, "alias.py")))
+    expect((yield* Effect.promise(() => lstat(path.join(root, "alias.py")))).isSymbolicLink()).toBe(true)
+    yield* git(root, ["add", "--", "alias.py"])
+    expect((yield* git(root, ["ls-files", "-s", "--", "alias.py"])).toString()).toContain("120000")
+    yield* git(root, ["commit", "-q", "-m", "head"])
+    const missing = yield* Effect.promise(() => lstat(path.join(root, "gone.py")).then(() => "present", (error: NodeJS.ErrnoException) => error.code))
+    expect(missing).toBe("ENOENT")
     return root
   })
 }
