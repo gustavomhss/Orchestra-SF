@@ -50,7 +50,8 @@ const OFFER = ["quote", "probe:test", "probe:script"]
 const OVERLAYS = [
   ["api-wire", ["contracts"]],
   ["data-migration", ["contracts"]],
-  ["performance", ["correctness-performance"]],
+  // Lead freeze 51c1cbd504: performance routes both lenses, in catalog declared order.
+  ["performance", ["correctness-performance", "correctness-resources"]],
   ["ci-infra", ["change", "security"]],
   ["dependency", ["contracts", "security"]],
   ["ui", ["experience"]],
@@ -133,6 +134,10 @@ describe("phase 3 acceptance", () => {
     expect(catalog.classes.find((entry) => entry.id === "tests.missing")?.id).toBe("tests.missing")
     expect(catalog.classes.find((entry) => entry.id === "tests.weak-oracle")?.id).toBe("tests.weak-oracle")
     expect(catalog.lenses.find((lens) => lens.id === "tests")?.classes.toSorted()).toEqual(["tests.missing", "tests.weak-oracle"])
+    expect(catalog.overlays.find((overlay) => overlay.id === "performance")?.lenses).toEqual([
+      "correctness-performance",
+      "correctness-resources",
+    ])
     for (const [id, lenses] of OVERLAYS) {
       expect(catalog.overlays.find((overlay) => overlay.id === id)?.lenses.toSorted()).toEqual([...lenses].toSorted())
     }
