@@ -210,6 +210,33 @@ live("an unreadable ast-grep report is acquisition-error, its stdout is kept, an
   }), 120_000,
 )
 
+live("an invalid ast-grep row is acquisition-error, its raw report is kept, and it is not a pass", () =>
+  Effect.gen(function* () {
+    expectSpawn(import.meta.path)
+    const made = yield* fixture
+    const empty = JSON.stringify([{ ruleId: "", file: "a.js", range: { start: { line: 0 } } }])
+    yield* Effect.promise(() => installAstGrep(made.toolkit, `#!/bin/sh\nprintf '%s' '${empty}'\nexit 0\n`))
+    const emptyResult = yield* ReviewAnalyze.run(input(made, { packs: ["ast-grep"], catalog: withAstGrep() })).pipe(
+      Effect.provideService(BackendToolkit.Root, made.toolkit),
+    )
+    expect(emptyResult.checks[0]).toMatchObject({ status: "acquisition-error", reason: "empty-rule", workspaceExecuted: false })
+    expect(emptyResult.checks[0].status).not.toBe("pass")
+    expect(emptyResult.items.security).toBeUndefined()
+    expect(yield* Effect.promise(() => readFile(path.join(made.store, emptyResult.checks[0].uri!.slice("review:".length)), "utf8"))).toBe(empty)
+    const unknown = JSON.stringify([{
+      ruleId: "hostile-const", file: "src/a.ts", message: "hostile", text: "const kept = 1",
+      range: { start: { line: 0, column: 0 }, end: { line: 0, column: 14 } },
+    }])
+    yield* Effect.promise(() => installAstGrep(made.toolkit, `#!/bin/sh\nprintf '%s' '${unknown}'\nexit 0\n`))
+    const unknownResult = yield* ReviewAnalyze.run(input(made, { packs: ["ast-grep"], catalog: withAstGrep() })).pipe(
+      Effect.provideService(BackendToolkit.Root, made.toolkit),
+    )
+    expect(unknownResult.checks[0]).toMatchObject({ status: "acquisition-error", reason: "unknown-rule:hostile-const" })
+    expect(unknownResult.checks[0].status).not.toBe("pass")
+    expect(yield* Effect.promise(() => readFile(path.join(made.store, unknownResult.checks[0].uri!.slice("review:".length)), "utf8"))).toBe(unknown)
+  }), 120_000,
+)
+
 it.live("conformance: pinned ast-grep keeps new evals, debts unchanged ones, and leaves the worktree", () =>
   Effect.gen(function* () {
     expect(jail, "conformance-missing: sandbox").toBeTruthy()
