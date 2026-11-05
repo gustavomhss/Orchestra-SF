@@ -179,3 +179,24 @@ test("equivalent deliveries dedupe, conflicting identity throws, and output orde
   ])
   expect(ReviewOutcomes.reads({ delivered: [delivered], decisions: [decision({ state: "question" })], catalog })[0]?.outcome).toBe("not-pursued")
 })
+
+test("line-independent native identity retains every delivered occurrence without another read", () => {
+  const first = item({ line: 10, endLine: 10 })
+  const second = item({ line: 30, endLine: 30, onChangedLine: false })
+  const atFirst = decision({ line: 10, endLine: 10 })
+  const atSecond = decision({ line: 30, endLine: 30 })
+  const delivered = [first, second, { ...second }]
+  const reads = ReviewOutcomes.reads({ delivered, decisions: [atSecond], catalog })
+  expect(reads).toHaveLength(1)
+  expect(reads[0]?.outcome).toBe("confirmed")
+  expect(ReviewOutcomes.reads({ delivered: delivered.toReversed(), decisions: [atSecond], catalog })).toEqual(reads)
+  expect(ReviewOutcomes.reads({
+    delivered, decisions: [atFirst, { ...atSecond, state: "refuted" }], catalog,
+  })[0]?.outcome).toBe("not-pursued")
+  expect(ReviewOutcomes.reads({
+    delivered, decisions: [{ ...atSecond, line: 20, endLine: 20 }], catalog,
+  })[0]?.outcome).toBe("not-pursued")
+  expect(() => ReviewOutcomes.reads({
+    delivered: [first, { ...second, snippetDigest: "different-source" }], decisions: [atSecond], catalog,
+  })).toThrow("outcome-source-conflict")
+})

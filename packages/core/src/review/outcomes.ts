@@ -2,7 +2,7 @@ export * as ReviewOutcomes from "./outcomes"
 
 import { Schema } from "effect"
 import { ReviewItem } from "../review-toolkit/item"
-import { ReviewCatalog } from "./catalog"
+import type { ReviewCatalog } from "./catalog"
 import { ReviewLedger } from "./ledger"
 
 // Host outcome admission. Delivered primary items are the only reads; a model card is not an input.
@@ -23,12 +23,12 @@ export function reads(input: {
 }): ReadonlyArray<ReviewLedger.Read> {
   const delivered = dedupe(input.delivered.map((item) => Schema.decodeUnknownSync(ReviewItem.ToolItem)(item)))
   return delivered
-    .map((item) => ({
-      pack: item.pack,
-      rule: item.rule,
-      generation: boundGeneration(item, input.catalog),
-      fingerprint: item.fingerprint,
-      outcome: outcome(item, input.decisions),
+    .map((occurrences) => ({
+      pack: occurrences[0].pack,
+      rule: occurrences[0].rule,
+      generation: boundGeneration(occurrences[0], input.catalog),
+      fingerprint: occurrences[0].fingerprint,
+      outcome: outcome(occurrences, input.decisions),
     }))
     .sort((left, right) => compare(identity(left), identity(right)))
 }
@@ -43,21 +43,24 @@ function boundGeneration(item: ReviewItem.ToolItem, catalog: ReviewCatalog.Catal
 }
 
 function dedupe(items: readonly ReviewItem.ToolItem[]) {
-  const seen = new Map<string, ReviewItem.ToolItem>()
+  const seen = new Map<string, ReviewItem.ToolItem[]>()
   for (const item of items) {
     const key = JSON.stringify([item.pack, item.rule, item.fingerprint])
     const prior = seen.get(key)
     if (!prior) {
-      seen.set(key, item)
+      seen.set(key, [item])
       continue
     }
-    if (primary(prior) !== primary(item)) throw new Error("outcome-source-conflict")
+    if (primary(prior[0]) !== primary(item)) throw new Error("outcome-source-conflict")
+    // A native fingerprint survives line movement and may occur more than once
+    // in one file. Keep the delivered ranges without counting another read.
+    prior.push(item)
   }
   return [...seen.values()]
 }
 
-function outcome(item: ReviewItem.ToolItem, decisions: ReadonlyArray<Decision>): ReviewLedger.Read["outcome"] {
-  const states = decisions.flatMap((decision) => (matches(item, decision) ? [decision.state] : []))
+function outcome(items: ReadonlyArray<ReviewItem.ToolItem>, decisions: ReadonlyArray<Decision>): ReviewLedger.Read["outcome"] {
+  const states = decisions.flatMap((decision) => (items.some((item) => matches(item, decision)) ? [decision.state] : []))
   if (states.includes("confirmed") && states.includes("refuted")) return "not-pursued"
   if (states.includes("confirmed")) return "confirmed"
   if (states.includes("refuted") && !states.includes("question")) return "refuted"
@@ -84,13 +87,10 @@ function primary(item: ReviewItem.ToolItem) {
     item.class,
     item.lens,
     item.path,
-    item.line,
-    item.endLine ?? null,
     item.severity,
     item.ruleStatus,
     item.snippetDigest,
     item.triage,
-    item.onChangedLine,
   ])
 }
 
