@@ -209,6 +209,14 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
   const cardOnly = input.completion === "card-only"
   const stageTools = (ids: ReadonlyArray<string>) => tools(cardOnly ? ids.filter((id) => id !== ReviewSeatTools.RECORD) : ids)
   const catalog = input.catalog
+  // Fail before analysis. A retained execution tier is that exact built id; do not reinterpret it through runTier.
+  const retainedTier = input.firstRound
+    ? catalog.route.tiers.find((item) => item.id === input.firstRound?.executionTier && item.built)
+    : undefined
+  if (input.firstRound && !retainedTier)
+    return yield* new Tool.Failure({
+      message: `ReviewRequestRejected: retained-tier-unavailable. Review tier ${input.firstRound.executionTier} is no longer built.`,
+    })
   const files = input.head.changes.map((change) => change.path)
 
   // 1. Route (host, no model).
@@ -226,7 +234,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
 
   // 3. Entry (the lead Session).
   // Execution mode is the tier this round runs, not the saved route's requested or raised id.
-  const routedTier = runTier(catalog, input.firstRound?.executionTier ?? routed.record.tier.id)
+  const routedTier = retainedTier ?? runTier(catalog, routed.record.tier.id)
   const quick = routedTier.id === "quick"
   const bind = (
     sessionID: SessionSchema.ID,
@@ -297,7 +305,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
       ...(parsedEntry ? [] : [deviation("entry", "stage-return", "the entry record did not decode", lead)]),
     ],
   }
-  const tier = runTier(catalog, input.firstRound?.executionTier ?? ReviewRouting.tier(afterEntry))
+  const tier = retainedTier ?? runTier(catalog, ReviewRouting.tier(afterEntry))
   if (afterEntry.lenses.some((lens) => auditNodes.has(lens.node) && lens.node !== "lucy-audit-compliance-privacy"))
     return yield* new Tool.Failure({ message: "Review route contains an unsupported audit lens" })
   const method = ReviewResultV2.method({ profile: afterEntry.profile.id, tier: tier.id })
