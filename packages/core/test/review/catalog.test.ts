@@ -250,7 +250,11 @@ describe("review catalog id check", () => {
   test("lucy's real tree passes and cites every class", async () => {
     const tree = await read(lucy)
     expect(() => ReviewCatalog.check(catalog, tree)).not.toThrow()
-    const cited = new Set(Object.values(tree).flatMap((text) => Array.from(text.matchAll(/`class:([a-z.-]+)`/g), (match) => match[1])))
+    // Repair: `[a-z.-]+` was blind to digits, so `experience.a11y` never entered the set.
+    // Backticks delimit the cite; capture every character until the closer, and never across a newline.
+    const cited = new Set(Object.values(tree).flatMap((text) => Array.from(text.matchAll(/`class:([^`\n]+)`/g), (match) => match[1])))
+    if (cited.size === 0) throw new Error("class citation extraction returned empty; the backtick reader broke")
+    expect(cited.has("experience.a11y")).toBe(true)
     expect([...cited].toSorted()).toEqual(CLASSES.toSorted())
   })
 
