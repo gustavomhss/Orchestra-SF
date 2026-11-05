@@ -35,7 +35,17 @@ function serve(metadata: ReturnType<Actions.Interface["transferInfo"]>, chunks: 
   return Effect.gen(function* () {
     const infoCalls: Parameters<Actions.Interface["transferInfo"]>[] = []
     const transferCalls: Parameters<Actions.Interface["transfer"]>[] = []
+    const unexpectedBindingOperation = () => Effect.die("Unexpected bindings operation in transfer fixture")
     const actions = {
+      bindings: {
+        list: unexpectedBindingOperation,
+        create: unexpectedBindingOperation,
+        update: unexpectedBindingOperation,
+        remove: unexpectedBindingOperation,
+        get: unexpectedBindingOperation,
+        policy: unexpectedBindingOperation,
+        updatePolicy: unexpectedBindingOperation,
+      },
       transferInfo: (binding, target) => Effect.suspend(() => {
         infoCalls.push([binding, target])
         return metadata
@@ -44,7 +54,7 @@ function serve(metadata: ReturnType<Actions.Interface["transferInfo"]>, chunks: 
         transferCalls.push([binding, target])
         return Stream.fromIterable(chunks)
       },
-    } satisfies Pick<Actions.Interface, "transferInfo" | "transfer">
+    } satisfies Pick<Actions.Interface, "bindings" | "transferInfo" | "transfer">
     const context = yield* Layer.build(Layer.mergeAll(
       Layer.mock(Actions.Service, actions),
       // The group also declares the info route, whose response needs a Location.
