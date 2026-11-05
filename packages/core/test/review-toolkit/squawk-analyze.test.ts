@@ -5,6 +5,7 @@ import { Effect, Schema } from "effect"
 import { BackendToolkit } from "../../src/backend-toolkit"
 import { LayerNode } from "../../src/effect/layer-node"
 import { AppProcess } from "../../src/process"
+import { ResearchProcess } from "../../src/research-toolkit/process"
 import { ReviewCatalog } from "../../src/review/catalog"
 import { ReviewAnalyze } from "../../src/review-toolkit/analyze"
 import type { ReviewItem } from "../../src/review-toolkit/item"
@@ -12,7 +13,6 @@ import { ReviewPackSquawk } from "../../src/review-toolkit/packs/squawk"
 import { testEffect } from "../lib/effect"
 import { jail } from "../lib/sandbox-host"
 import { expectSpawn } from "../fixture/omni-expect"
-import { git } from "../fixture/git"
 import { provision } from "../fixture/lucy-squawk/host"
 import { tmpdir } from "../fixture/tmpdir"
 
@@ -80,7 +80,7 @@ it.live("an absent squawk is not-run and is not installed", () =>
   Effect.gen(function* () {
     expectSpawn(import.meta.path)
     const made = yield* held()
-    const root = yield* Effect.promise(() => repo(made.path, BENIGN, BENIGN))
+    const root = yield* repo(made.path, BENIGN, BENIGN)
     const before = yield* Effect.promise(() => shot(path.join(root, "db", "a.sql")))
     const result = yield* ReviewAnalyze.run(runInput(made, root)).pipe(Effect.provideService(BackendToolkit.Root, made.toolkit))
     expect(result.checks[0]).toMatchObject({ pack: "squawk", status: "not-run", reason: "squawk absent", workspaceExecuted: false })
@@ -97,7 +97,7 @@ live("a new squawk warning is an item, an unchanged one is not, and a hostile co
     yield* provision(made.toolkit)
     const run = (name: string, baseSql: string, headSql: string, extra: Partial<ReviewAnalyze.RunInput> = {}) =>
       Effect.gen(function* () {
-        const root = yield* Effect.promise(() => repo(path.join(made.path, name), baseSql, headSql))
+        const root = yield* repo(path.join(made.path, name), baseSql, headSql)
         return yield* ReviewAnalyze.run({ ...runInput(made, root), ...extra }).pipe(Effect.provideService(BackendToolkit.Root, made.toolkit))
       })
     const fresh = yield* run("fresh", BENIGN, UNSAFE, { changed: CHANGED })
@@ -110,7 +110,7 @@ live("a new squawk warning is an item, an unchanged one is not, and a hostile co
     const clean = yield* run("clean", BENIGN, BENIGN)
     expect(clean.checks[0]).toMatchObject({ status: "pass", workspaceExecuted: false })
     expect(items(clean)).toEqual([])
-    const hostileRoot = yield* Effect.promise(() => repo(path.join(made.path, "hostile"), BENIGN, UNSAFE, true))
+    const hostileRoot = yield* repo(path.join(made.path, "hostile"), BENIGN, UNSAFE, true)
     const before = yield* Effect.promise(() => shot(path.join(hostileRoot, "db", "a.sql")))
     const hostile = yield* ReviewAnalyze.run({ ...runInput(made, hostileRoot), changed: CHANGED }).pipe(
       Effect.provideService(BackendToolkit.Root, made.toolkit),
@@ -126,7 +126,7 @@ live("a new squawk warning is an item, an unchanged one is not, and a hostile co
     const raw = broken.checks[0].uri
     expect(raw).toMatch(/^review:[0-9a-f-]{36}\/raw\/squawk-head\.json$/)
     expect(yield* Effect.promise(() => readFile(path.join(made.store, raw!.slice("review:".length)), "utf8"))).toContain("syntax-error")
-    const empty = yield* Effect.promise(() => plain(path.join(made.path, "empty")))
+    const empty = yield* plain(path.join(made.path, "empty"))
     const none = yield* ReviewAnalyze.run(runInput(made, empty)).pipe(Effect.provideService(BackendToolkit.Root, made.toolkit))
     expect(none.checks[0]).toMatchObject({ status: "not-run", reason: "no-input" })
     expect(none.checks[0].status).not.toBe("pass")
@@ -149,7 +149,7 @@ live("an unreadable copied SQL directory is not-run, not a pass", () =>
     expect(process.getuid?.() === 0, "conformance-missing: non-root uid required to obtain EACCES").toBe(false)
     const made = yield* held()
     yield* provision(made.toolkit)
-    const root = yield* Effect.promise(() => repo(path.join(made.path, "sealed"), BENIGN, BENIGN))
+    const root = yield* repo(path.join(made.path, "sealed"), BENIGN, BENIGN)
     const result = yield* ReviewAnalyze.run(runInput(made, root)).pipe(
       Effect.provideService(BackendToolkit.Root, made.toolkit),
       Effect.provideService(ReviewAnalyze.BeforeSqlSelection, sealCopiedSql),
@@ -169,7 +169,7 @@ live("a first SQL file against an empty base is a new warning and the base scann
     expectSpawn(import.meta.path)
     const made = yield* held()
     yield* provision(made.toolkit)
-    const root = yield* Effect.promise(() => firstSql(made.path))
+    const root = yield* firstSql(made.path)
     const changed = { "db/new.sql": [{ start: 1, end: 20 }] }
     const added = yield* ReviewAnalyze.run({ ...runInput(made, root), changed }).pipe(
       Effect.provideService(BackendToolkit.Root, made.toolkit),
@@ -204,7 +204,7 @@ live("a head with no eligible SQL stays not-run", () =>
     expectSpawn(import.meta.path)
     const made = yield* held()
     yield* provision(made.toolkit)
-    const root = yield* Effect.promise(() => plain(path.join(made.path, "empty")))
+    const root = yield* plain(path.join(made.path, "empty"))
     const result = yield* ReviewAnalyze.run(runInput(made, root)).pipe(Effect.provideService(BackendToolkit.Root, made.toolkit))
     expect(result.checks[0]).toMatchObject({ status: "not-run", reason: "no-input", workspaceExecuted: false })
     expect(result.checks[0].status).not.toBe("pass")
@@ -217,7 +217,7 @@ live("a different file selection on the same base tree does not turn an old warn
     expectSpawn(import.meta.path)
     const made = yield* held()
     yield* provision(made.toolkit)
-    const root = yield* Effect.promise(() => paired(made.path))
+    const root = yield* paired(made.path)
     const other = yield* ReviewAnalyze.run({
       ...runInput(made, root), scope: "files", files: ["db/b.sql"],
     }).pipe(Effect.provideService(BackendToolkit.Root, made.toolkit))
@@ -257,66 +257,68 @@ function runInput(made: { store: string }, root: string): ReviewAnalyze.RunInput
   }
 }
 
-async function repo(dir: string, baseSql: string, headSql: string, hostile = false) {
-  const root = path.join(dir, "repo")
-  await mkdir(path.join(root, "db"), { recursive: true })
-  await git(root, "init", "-q")
-  await git(root, "config", "user.email", "squawk@example.com")
-  await git(root, "config", "user.name", "Squawk")
-  await writeFile(path.join(root, "db", "a.sql"), baseSql)
-  if (hostile) await writeFile(path.join(root, ".squawk.toml"), "included_rules = [\n")
-  await git(root, "add", ".")
-  await git(root, "commit", "-q", "-m", "base")
-  await git(root, "tag", "base")
-  await writeFile(path.join(root, "db", "a.sql"), headSql)
-  await git(root, "add", ".")
-  await git(root, "commit", "-q", "-m", "head")
-  return root
-}
+const git = (root: string, args: ReadonlyArray<string>) => ResearchProcess.git(root, args)
 
-async function firstSql(dir: string) {
-  const root = path.join(dir, "repo")
-  await mkdir(root, { recursive: true })
-  await git(root, "init", "-q")
-  await git(root, "config", "user.email", "squawk@example.com")
-  await git(root, "config", "user.name", "Squawk")
-  await writeFile(path.join(root, "README.md"), "no sql\n")
-  await git(root, "add", ".")
-  await git(root, "commit", "-q", "-m", "base")
-  await git(root, "tag", "base")
-  await mkdir(path.join(root, "db"), { recursive: true })
-  await writeFile(path.join(root, "db", "new.sql"), UNSAFE)
-  await git(root, "add", ".")
-  await git(root, "commit", "-q", "-m", "head")
-  return root
-}
+const identity = (root: string) =>
+  Effect.gen(function* () {
+    yield* git(root, ["init", "-q"])
+    yield* git(root, ["config", "user.email", "squawk@example.com"])
+    yield* git(root, ["config", "user.name", "Squawk"])
+  })
 
-async function paired(dir: string) {
+const repo = Effect.fn("SquawkAnalyze.repo")(function* (dir: string, baseSql: string, headSql: string, hostile = false) {
   const root = path.join(dir, "repo")
-  await mkdir(path.join(root, "db"), { recursive: true })
-  await git(root, "init", "-q")
-  await git(root, "config", "user.email", "squawk@example.com")
-  await git(root, "config", "user.name", "Squawk")
-  await writeFile(path.join(root, "db", "a.sql"), UNSAFE)
-  await writeFile(path.join(root, "db", "b.sql"), BENIGN)
-  await git(root, "add", ".")
-  await git(root, "commit", "-q", "-m", "base")
-  await git(root, "tag", "base")
+  yield* Effect.promise(() => mkdir(path.join(root, "db"), { recursive: true }))
+  yield* identity(root)
+  yield* Effect.promise(() => writeFile(path.join(root, "db", "a.sql"), baseSql))
+  if (hostile) yield* Effect.promise(() => writeFile(path.join(root, ".squawk.toml"), "included_rules = [\n"))
+  yield* git(root, ["add", "."])
+  yield* git(root, ["commit", "-q", "-m", "base"])
+  yield* git(root, ["tag", "base"])
+  yield* Effect.promise(() => writeFile(path.join(root, "db", "a.sql"), headSql))
+  yield* git(root, ["add", "."])
+  // Same bytes are an intentional empty head, not a forced SQL edit.
+  yield* git(root, ["commit", "-q", ...(baseSql === headSql ? ["--allow-empty"] : []), "-m", "head"])
   return root
-}
+})
 
-async function plain(dir: string) {
+const firstSql = Effect.fn("SquawkAnalyze.firstSql")(function* (dir: string) {
   const root = path.join(dir, "repo")
-  await mkdir(root, { recursive: true })
-  await git(root, "init", "-q")
-  await git(root, "config", "user.email", "squawk@example.com")
-  await git(root, "config", "user.name", "Squawk")
-  await writeFile(path.join(root, "README.md"), "no sql\n")
-  await git(root, "add", ".")
-  await git(root, "commit", "-q", "-m", "base")
-  await git(root, "tag", "base")
+  yield* Effect.promise(() => mkdir(root, { recursive: true }))
+  yield* identity(root)
+  yield* Effect.promise(() => writeFile(path.join(root, "README.md"), "no sql\n"))
+  yield* git(root, ["add", "."])
+  yield* git(root, ["commit", "-q", "-m", "base"])
+  yield* git(root, ["tag", "base"])
+  yield* Effect.promise(() => mkdir(path.join(root, "db"), { recursive: true }))
+  yield* Effect.promise(() => writeFile(path.join(root, "db", "new.sql"), UNSAFE))
+  yield* git(root, ["add", "."])
+  yield* git(root, ["commit", "-q", "-m", "head"])
   return root
-}
+})
+
+const paired = Effect.fn("SquawkAnalyze.paired")(function* (dir: string) {
+  const root = path.join(dir, "repo")
+  yield* Effect.promise(() => mkdir(path.join(root, "db"), { recursive: true }))
+  yield* identity(root)
+  yield* Effect.promise(() => writeFile(path.join(root, "db", "a.sql"), UNSAFE))
+  yield* Effect.promise(() => writeFile(path.join(root, "db", "b.sql"), BENIGN))
+  yield* git(root, ["add", "."])
+  yield* git(root, ["commit", "-q", "-m", "base"])
+  yield* git(root, ["tag", "base"])
+  return root
+})
+
+const plain = Effect.fn("SquawkAnalyze.plain")(function* (dir: string) {
+  const root = path.join(dir, "repo")
+  yield* Effect.promise(() => mkdir(root, { recursive: true }))
+  yield* identity(root)
+  yield* Effect.promise(() => writeFile(path.join(root, "README.md"), "no sql\n"))
+  yield* git(root, ["add", "."])
+  yield* git(root, ["commit", "-q", "-m", "base"])
+  yield* git(root, ["tag", "base"])
+  return root
+})
 
 async function shot(file: string) {
   const info = await lstat(file)
