@@ -6,10 +6,12 @@ import { AgentV2 } from "@orchestra/core/agent"
 import { Board } from "@orchestra/schema/board"
 import { BoardIssueTable, BoardNoteTable, BoardProjectTable } from "@orchestra/core/board/sql"
 import { Config } from "@orchestra/core/config"
+import { ConfigMarkdown } from "@orchestra/core/config/markdown"
 import { Database } from "@orchestra/core/database/database"
 import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { EventV2 } from "@orchestra/core/event"
+import { FSUtil } from "@orchestra/core/fs-util"
 import { GitCli } from "@orchestra/core/git-cli"
 import { Global } from "@orchestra/core/global"
 import { Location } from "@orchestra/core/location"
@@ -17,12 +19,15 @@ import { ModelV2 } from "@orchestra/core/model"
 import { Project } from "@orchestra/core/project"
 import { ProjectTable } from "@orchestra/core/project/sql"
 import { ProviderV2 } from "@orchestra/core/provider"
+import { ResearchAllowance } from "@orchestra/core/research/allowance"
+import { ResearchRecords } from "@orchestra/core/research/records"
 import { AbsolutePath } from "@orchestra/core/schema"
-import { SessionSchema, SessionV2 } from "@orchestra/core/session"
+import { SessionSchema, SessionStore, SessionV2 } from "@orchestra/core/session"
 import { SessionExecution } from "@orchestra/core/session/execution"
 import { SessionMessage } from "@orchestra/schema/session-message"
 import { SessionTable } from "@orchestra/core/session/sql"
 import { SkillV2 } from "@orchestra/core/skill"
+import { SystemContextRegistry } from "@orchestra/core/system-context"
 import { ReadTool } from "@orchestra/core/tool/read"
 import { ToolRegistry } from "@orchestra/core/tool/registry"
 import { ToolOutputStore } from "@orchestra/core/tool-output-store"
@@ -32,173 +37,142 @@ import { SeatSkillContent } from "@orchestra/maestro/seat-skill-content"
 import { Seats } from "@orchestra/maestro/seats"
 import { GovernanceBackgroundV2 } from "../../src/v2/governance/background"
 import { WriteRootsV2 } from "../../src/v2/governance/write-roots"
-import { FSUtil } from "@orchestra/core/fs-util"
-import { ResearchAllowance } from "@orchestra/core/research/allowance"
-import { ResearchRecords } from "@orchestra/core/research/records"
-import { SystemContextRegistry } from "@orchestra/core/system-context"
-import { MaestroGovernanceV2 } from "../../src/v2/governance"
+import { ReviewResultV2 } from "../../src/v2/governance/review-result"
 import { MaestroResearchInquiryV2 } from "../../src/v2/research-inquiry-source"
+import { MaestroGovernanceV2 } from "../../src/v2/governance"
 import { MaestroToolsV2 } from "../../src/v2/tools"
 import { MaestroReviewTools } from "../../src/v2/tools/review"
+import { ReviewFanoutV2 } from "../../src/v2/workflow/review-fanout"
+import { ReviewRouting } from "@orchestra/core/review/routing"
 import { event, session, worktree } from "./v2-governance"
 
-// Real lucy/team skill files via SeatSkillContent.read. No placeholder nodes.
+export type Touches = { git: number; children: string[]; prompts: string[]; resumes: number }
+export type HostControls = {
+  readonly beforeResume?: (sessionID: string, brief: string) => Effect.Effect<void>
+  readonly onGit?: (args: readonly string[]) => Effect.Effect<void>
+}
+export type Ctx = {
+  directory: string
+  base: string
+  head: string
+  touches: Touches
+  parent: SessionSchema.ID
+  invoke: (agent: string, value: unknown, sessionID?: SessionSchema.ID) => ReturnType<typeof call>
+}
+
+const time = { created: DateTime.makeUnsafe(1_700_000_000_000) }
+const model = { id: ModelV2.ID.make("model"), providerID: ProviderV2.ID.make("provider") }
+const ROUTING = "Routing record (embed it verbatim as the card's routing):\n"
+
 export async function authoredSkills() {
   const own = Seats.find("lucy")?.skills.filter((skill) => !skill.startsWith("team-")) ?? []
   const lucyRoot = Seats.skillSource("lucy")
   const lucy = await SeatSkillContent.read("lucy", lucyRoot, own)
   const team = Seats.shared()
   const shared = team.length === 0 ? {} : await SeatSkillContent.read("team", Seats.sharedSource(), team)
-  return [
-    ...listed(lucyRoot, lucy),
-    ...listed(Seats.sharedSource(), shared),
-  ]
+  return [...infos(lucyRoot, lucy), ...infos(Seats.sharedSource(), shared)]
 }
 
-function listed(root: string, files: Readonly<Record<string, string>>) {
-  return Object.keys(files)
-    .filter((file) => file.endsWith("/SKILL.md"))
-    .map((file) => ({
-      name: file.slice(0, -"/SKILL.md".length).split("/").join("-"),
+function infos(root: string, files: Readonly<Record<string, string>>) {
+  return Object.entries(files).flatMap(([file, text]) => {
+    if (!file.endsWith("/SKILL.md")) return []
+    const parsed = ConfigMarkdown.parseOption(text)
+    const name = parsed?.data.name
+    if (!parsed || typeof name !== "string") throw new Error(`skill frontmatter missing name: ${file}`)
+    const description = parsed.data.description
+    return [SkillV2.Info.make({
+      name,
+      ...(typeof description === "string" ? { description } : {}),
       location: AbsolutePath.make(path.join(root, file)),
-      content: files[file] ?? "",
-    }))
+      content: parsed.content,
+    })]
+  })
 }
 
-export type Touches = { git: number; children: string[]; prompts: string[] }
-
-const time = { created: DateTime.makeUnsafe(1_700_000_000_000) }
-const model = { id: ModelV2.ID.make("model"), providerID: ProviderV2.ID.make("provider") }
-
-/** Host with the real registry, store, and event log. Sessions and execution are deterministic; git is the real CLI. */
-export function host(directory: string, skills: Awaited<ReturnType<typeof authoredSkills>>, touches: Touches) {
+export function host(directory: string, skills: ReadonlyArray<SkillV2.Info>, touches: Touches, controls: HostControls = {}) {
   const admitted: { sessionID: string; id: SessionMessage.ID; text: string }[] = []
   const sessions = {
     create: (input: { id: SessionSchema.ID; parentID: SessionSchema.ID }) =>
       Effect.gen(function* () {
         touches.children.push(input.id)
         const database = yield* Database.Service
-        yield* database.db
-          .insert(ProjectTable)
-          .values({ id: Project.ID.global, worktree: AbsolutePath.make(directory), sandboxes: [] })
-          .onConflictDoNothing()
-          .run()
-          .pipe(Effect.orDie)
-        yield* database.db
-          .insert(SessionTable)
-          .values({
-            id: input.id,
-            project_id: Project.ID.global,
-            parent_id: input.parentID,
-            slug: input.id,
-            directory,
-            title: input.id,
-            version: "test",
-            agent: "lucy",
-          })
-          .run()
-          .pipe(Effect.orDie)
+        yield* database.db.insert(ProjectTable).values({
+          id: Project.ID.global, worktree: AbsolutePath.make(directory), sandboxes: [],
+        }).onConflictDoNothing().run().pipe(Effect.orDie)
+        yield* database.db.insert(SessionTable).values({
+          id: input.id, project_id: Project.ID.global, parent_id: input.parentID, slug: input.id,
+          directory, title: input.id, version: "test", agent: "lucy",
+        }).run().pipe(Effect.orDie)
         return { id: input.id }
       }),
     prompt: (input: { id: SessionMessage.ID; sessionID: SessionSchema.ID; prompt: { text: string } }) =>
-      Effect.sync(() => {
-        touches.prompts.push(input.prompt.text)
-        admitted.push({ sessionID: input.sessionID, id: input.id, text: input.prompt.text })
+      Effect.gen(function* () {
+        const text = input.prompt.text
+        if (stage(text) === "unexpected") return yield* Effect.die(`unexpected review stage: ${text.slice(0, 96)}`)
+        touches.prompts.push(text)
+        admitted.push({ sessionID: input.sessionID, id: input.id, text })
       }),
     messages: (input: { sessionID: SessionSchema.ID }) =>
-      Effect.succeed(
-        admitted
-          .filter((item) => item.sessionID === input.sessionID)
-          .flatMap((item) => [
-            SessionMessage.User.make({ id: item.id, type: "user", text: item.text, time }),
-            SessionMessage.Assistant.make({
-              id: SessionMessage.ID.make(`${item.id}_reply`),
-              type: "assistant",
-              agent: "lucy",
-              model,
-              content: [{ type: "text", id: "text", text: cardReply() }],
-              time: { created: time.created, completed: time.created },
-              finish: "stop",
-            }),
-          ]),
-      ),
-  } as unknown as SessionV2.Interface
-  const execution = { resume: () => Effect.void } as unknown as SessionExecution.Interface
-  const git = Layer.effect(
-    GitCli.Service,
-    Effect.gen(function* () {
-      const real = yield* GitCli.Service
-      return GitCli.Service.of({
-        ...real,
-        run: (args, options) => {
-          touches.git += 1
-          return real.run(args, options)
-        },
-      })
-    }),
-  ).pipe(Layer.provide(AppNodeBuilder.build(GitCli.node) as Layer.Layer<GitCli.Service>))
-  return AppNodeBuilder.build(
-    LayerNode.group([
-      MaestroToolsV2.node,
-      MaestroGovernanceV2.node,
-      MaestroResearchInquiryV2.node,
-      SystemContextRegistry.node,
-      ToolRegistry.node,
-      ReadTool.node,
-      AgentV2.node,
-      SessionStore.node,
-      Database.node,
-      FSUtil.node,
-      EventV2.node,
-      GitCli.node,
-      ResearchAllowance.node,
-      ResearchRecords.node,
-    ]),
-    [
-      [ToolSafety.node, WriteRootsV2.safetyNode],
-      [
-        Location.node,
-        Layer.succeed(
-          Location.Service,
-          Location.Service.of({
-            directory: AbsolutePath.make(directory),
-            project: { id: Project.ID.global, directory: AbsolutePath.make(directory) },
+      Effect.succeed(admitted.filter((item) => item.sessionID === input.sessionID).flatMap((item) => {
+        const prior = admitted.filter((other) => other.sessionID === item.sessionID && other.id !== item.id).map((other) => other.text)
+        return [
+          SessionMessage.User.make({ id: item.id, type: "user", text: item.text, time }),
+          SessionMessage.Assistant.make({
+            id: SessionMessage.ID.make(`${item.id}_reply`), type: "assistant", agent: "lucy", model,
+            content: [{ type: "text", id: "text", text: reply(item.text, prior) }],
+            time: { created: time.created, completed: time.created }, finish: "stop",
           }),
-        ),
-      ],
-      [Database.node, Database.layerFromPath(":memory:")],
-      [Global.node, Layer.unwrap(worktree.pipe(Effect.map((data) => Global.layerWith({ data }))))],
-      [ToolOutputStore.node, ToolOutputStore.nodeWithoutConfig],
-      [Config.node, Layer.mock(Config.Service, { entries: () => Effect.succeed([]) })],
-      [SkillV2.node, Layer.mock(SkillV2.Service, { list: () => Effect.succeed(skills as SkillV2.Info[]) })],
-      [
-        AgentV2.node,
-        Layer.mock(AgentV2.Service, {
-          get: (id) => Effect.succeed(["maestro", "backend", "lucy"].includes(id) ? AgentV2.Info.empty(id) : undefined),
-        }),
-      ],
-      [GitCli.node, git],
-      [GovernanceBackgroundV2.sessionsNode, Layer.succeed(GovernanceBackgroundV2.Sessions, Option.some(sessions))],
-      [MaestroReviewTools.executionNode, Layer.succeed(MaestroReviewTools.Execution, Option.some(execution))],
-    ],
-  ) as Layer.Layer<ToolRegistry.Service | Database.Service | GitCli.Service | SessionStore.Service>
+        ]
+      })),
+  } as unknown as SessionV2.Interface
+  const execution = {
+    resume: (id: string) => Effect.gen(function* () {
+      touches.resumes += 1
+      const brief = admitted.filter((item) => item.sessionID === id).at(-1)?.text ?? ""
+      if (controls.beforeResume) yield* controls.beforeResume(id, brief)
+    }),
+  } as unknown as SessionExecution.Interface
+  const git = Layer.effect(GitCli.Service, Effect.gen(function* () {
+    const real = yield* GitCli.Service
+    return GitCli.Service.of({
+      ...real,
+      run: (args, options) => Effect.gen(function* () {
+        touches.git += 1
+        if (controls.onGit) yield* controls.onGit(args)
+        return yield* real.run(args, options)
+      }),
+    })
+  })).pipe(Layer.provide(AppNodeBuilder.build(GitCli.node) as Layer.Layer<GitCli.Service>))
+  return AppNodeBuilder.build(LayerNode.group([
+    MaestroToolsV2.node, MaestroGovernanceV2.node, MaestroResearchInquiryV2.node, SystemContextRegistry.node,
+    ToolRegistry.node, ReadTool.node, AgentV2.node, SessionStore.node, Database.node, FSUtil.node, EventV2.node,
+    GitCli.node, ResearchAllowance.node, ResearchRecords.node,
+  ]), [
+    [ToolSafety.node, WriteRootsV2.safetyNode],
+    [Location.node, Layer.succeed(Location.Service, Location.Service.of({
+      directory: AbsolutePath.make(directory),
+      project: { id: Project.ID.global, directory: AbsolutePath.make(directory) },
+    }))],
+    [Database.node, Database.layerFromPath(":memory:")],
+    [Global.node, Layer.unwrap(worktree.pipe(Effect.map((data) => Global.layerWith({ data }))))],
+    [ToolOutputStore.node, ToolOutputStore.nodeWithoutConfig],
+    [Config.node, Layer.mock(Config.Service, { entries: () => Effect.succeed([]) })],
+    [SkillV2.node, Layer.mock(SkillV2.Service, { list: () => Effect.succeed(skills) })],
+    [AgentV2.node, Layer.mock(AgentV2.Service, {
+      get: (id) => Effect.succeed(["maestro", "backend", "lucy"].includes(id) ? AgentV2.Info.empty(id) : undefined),
+    })],
+    [GitCli.node, git],
+    [GovernanceBackgroundV2.sessionsNode, Layer.succeed(GovernanceBackgroundV2.Sessions, Option.some(sessions))],
+    [MaestroReviewTools.executionNode, Layer.succeed(MaestroReviewTools.Execution, Option.some(execution))],
+  ]) as Layer.Layer<ToolRegistry.Service | Database.Service | GitCli.Service | SessionStore.Service>
 }
 
-export function call(
-  registry: ToolRegistry.Service,
-  agent: string,
-  sessionID: SessionSchema.ID,
-  input: unknown,
-) {
+export function call(registry: ToolRegistry.Service, agent: string, sessionID: SessionSchema.ID, input: unknown, name = "maestro_request_review") {
   return registry.materialize().pipe(
-    Effect.flatMap((materialized) =>
-      materialized.settle({
-        sessionID,
-        agent: AgentV2.ID.make(agent),
-        assistantMessageID: SessionMessage.ID.make("msg_pr_entry"),
-        call: { type: "tool-call", id: `call_${agent}`, name: "maestro_request_review", input },
-      }),
-    ),
+    Effect.flatMap((materialized) => materialized.settle({
+      sessionID, agent: AgentV2.ID.make(agent), assistantMessageID: SessionMessage.ID.make("msg_pr_entry"),
+      call: { type: "tool-call", id: `call_${agent}_${name}`, name, input },
+    })),
     Effect.map((settled) => ({ type: settled.result.type, text: String(settled.result.value) })),
   )
 }
@@ -208,82 +182,33 @@ export const reviewTypes = [1, 2].map((version) => EventV2.versionedType(Maestro
 export function reviewRows() {
   return Effect.gen(function* () {
     const database = yield* Database.Service
-    return yield* database.db
-      .select()
-      .from(EventV2.EventTable)
-      .where(inArray(EventV2.EventTable.type, reviewTypes))
-      .all()
-      .pipe(Effect.orDie)
+    return yield* database.db.select().from(EventV2.EventTable).where(inArray(EventV2.EventTable.type, reviewTypes)).all().pipe(Effect.orDie)
   })
 }
 
-/** A decodable V1 receipt on a sibling session, so an empty PR query is not a blind table. */
 export function seedReceipt(directory: string) {
   return Effect.gen(function* () {
     const sibling = yield* session({ directory, agent: "lucy" })
     const hex = "ab".repeat(32)
-    const data = {
-      sessionID: sibling,
-      projectID: Project.ID.global,
-      validationRecordID: "val_seed",
-      workCardHash: hex,
-      routedMemberID: "backend",
-      rosterHash: hex,
-      grantHash: hex,
-      reviewPolicyHash: hex,
-      actor: { version: "rfc8785-v1" as const, bytes: "{}", sha256: hex },
-      reviewerID: "lucy" as const,
-      reviewMethodVersion: "review-v1",
-      artifact: {
-        workCardHash: hex,
-        sha256: hex,
-        baseSHA: "a".repeat(40),
-        headSHA: "b".repeat(40),
-        worktree: directory,
-        changedPaths: ["src/app.ts"],
-        bytes: "diff",
-      },
-      verdict: "APPROVE" as const,
-      findings: [{ path: "src/app.ts", line: 1, message: "seeded sibling receipt" }],
-    }
-    yield* event(`evt_seed_${sibling}`, sibling, EventV2.versionedType(MaestroEvent.Review.Received.type, 1), data)
+    yield* event(`evt_seed_${sibling}`, sibling, reviewTypes[0], {
+      sessionID: sibling, projectID: Project.ID.global, validationRecordID: "val_seed", workCardHash: hex,
+      routedMemberID: "backend", rosterHash: hex, grantHash: hex, reviewPolicyHash: hex,
+      actor: { version: "rfc8785-v1", bytes: "{}", sha256: hex }, reviewerID: "lucy", reviewMethodVersion: "review-v1",
+      artifact: { workCardHash: hex, sha256: hex, baseSHA: "a".repeat(40), headSHA: "b".repeat(40), worktree: directory, changedPaths: ["src/a"], bytes: "diff" },
+      verdict: "APPROVE", findings: [{ path: "src/a", line: 1, message: "seeded sibling receipt" }],
+    })
     const project = Board.ProjectID.create()
     const issue = Board.IssueID.create()
     const database = yield* Database.Service
-    yield* database.db
-      .insert(BoardProjectTable)
-      .values({
-        id: project,
-        key: "PR",
-        name: "PR",
-        goal: "PR entry.",
-        status: "active",
-        github_state: "off",
-        next_issue_number: 2,
-        next_epic_number: 1,
-      })
-      .run()
-      .pipe(Effect.orDie)
-    yield* database.db
-      .insert(BoardIssueTable)
-      .values({
-        id: issue,
-        project_id: project,
-        number: 1,
-        title: "Seed",
-        body: "",
-        type: "feature",
-        stage: "building",
-        position: 1,
-        stage_entered_at: 0,
-      })
-      .run()
-      .pipe(Effect.orDie)
-    yield* database.db
-      .insert(BoardNoteTable)
-      .values({ id: Board.NoteID.create(), issue_id: issue, author: "lucy", kind: "review", body: "seeded review note" })
-      .run()
-      .pipe(Effect.orDie)
+    yield* database.db.insert(BoardProjectTable).values({
+      id: project, key: "PR", name: "PR", goal: "PR entry.", status: "active", github_state: "off", next_issue_number: 2, next_epic_number: 1,
+    }).run().pipe(Effect.orDie)
+    yield* database.db.insert(BoardIssueTable).values({
+      id: issue, project_id: project, number: 1, title: "Seed", body: "", type: "feature", stage: "building", position: 1, stage_entered_at: 0,
+    }).run().pipe(Effect.orDie)
+    yield* database.db.insert(BoardNoteTable).values({
+      id: Board.NoteID.create(), issue_id: issue, author: "lucy", kind: "review", body: "seeded review note",
+    }).run().pipe(Effect.orDie)
     return sibling
   })
 }
@@ -291,82 +216,93 @@ export function seedReceipt(directory: string) {
 export function reviewNotes() {
   return Effect.gen(function* () {
     const database = yield* Database.Service
-    return yield* database.db
-      .select({ id: BoardNoteTable.id })
-      .from(BoardNoteTable)
-      .where(eq(BoardNoteTable.kind, "review"))
-      .all()
-      .pipe(Effect.orDie)
+    return yield* database.db.select({ id: BoardNoteTable.id }).from(BoardNoteTable).where(eq(BoardNoteTable.kind, "review")).all().pipe(Effect.orDie)
   })
 }
 
 export function repo(directory: string) {
   return Effect.gen(function* () {
     const cli = yield* GitCli.Service
-    const git = (...args: string[]) =>
-      cli
-        .run(["-c", "user.email=review@example.com", "-c", "user.name=Review", "-c", "commit.gpgsign=false", ...args], {
-          cwd: directory,
-        })
-        .pipe(
-          Effect.flatMap((result) =>
-            result.exitCode === 0 ? Effect.succeed(result.text().trim()) : Effect.die(new Error(result.stderr.toString())),
-          ),
-        )
+    const git = (...args: string[]) => cli.run(["-c", "user.email=review@example.com", "-c", "user.name=Review", "-c", "commit.gpgsign=false", ...args], { cwd: directory }).pipe(
+      Effect.flatMap((result) => result.exitCode === 0 ? Effect.succeed(result.text().trim()) : Effect.die(new Error(result.stderr.toString()))),
+    )
     yield* Effect.promise(() => fs.mkdir(path.join(directory, "src"), { recursive: true }))
     yield* Effect.promise(() => fs.writeFile(path.join(directory, "REVIEW.md"), "BASE-RULE-TOKEN\n"))
-    yield* Effect.promise(() => fs.writeFile(path.join(directory, "src", "app.ts"), "export const value = 1\n"))
+    yield* Effect.promise(() => fs.writeFile(path.join(directory, "src", "a"), "export const value = 1\n"))
     yield* git("init", "-q", "-b", "main")
     yield* git("add", "-A")
     yield* git("commit", "-q", "-m", "base")
     const base = yield* git("rev-parse", "HEAD")
     yield* Effect.promise(() => fs.writeFile(path.join(directory, "REVIEW.md"), "HEAD-RULE-TOKEN\n"))
-    yield* Effect.promise(() => fs.writeFile(path.join(directory, "src", "app.ts"), "export const value = 2\n"))
+    yield* Effect.promise(() => fs.writeFile(path.join(directory, "src", "a"), "export const value = 2\n"))
     yield* git("add", "-A")
     yield* git("commit", "-q", "-m", "head")
-    const head = yield* git("rev-parse", "HEAD")
-    return { base, head }
+    return { base, head: yield* git("rev-parse", "HEAD") }
   })
 }
 
-function cardReply() {
-  const card = {
-    outcome: "done",
-    verdict: "APPROVE",
-    profile: "pr",
-    tier: "standard",
-    overlays: [],
-    routing: {
-      version: "route-v1",
-      catalog: "ab".repeat(32),
-      profile: { id: "pr", source: "request" },
-      tier: { id: "standard", source: "request", signals: [] },
-      overlays: [],
-      languages: [],
-      lenses: [],
-      packs: [],
-      budget: {
-        lensChildren: 0,
-        samples: 1,
-        verifiers: 0,
-        itemsPerLens: 5,
-        loadsPerSession: 2,
-        candidatesPerChild: 5,
-        candidatesPerVerifier: 0,
-        toolCallsPerSession: 15,
-        probeAttempts: 0,
-      },
-      deviations: [],
-    },
-    scope: { base: "model-base", head: "model-head", files: 1, changedLines: 1 },
-    findings: [],
-    questions: [],
-    checks: [],
-    coverage: { examined: [], notExamined: [] },
-    handoffs: [],
-    blockers: [],
-    risks: [],
-    nextActions: [],
+export function run<A, E, R>(
+  skills: ReadonlyArray<SkillV2.Info>,
+  controls: HostControls,
+  body: (ctx: Ctx) => Effect.Effect<A, E, R>,
+) {
+  return Effect.scoped(Effect.gen(function* () {
+    const directory = yield* worktree
+    const touches: Touches = { git: 0, children: [], prompts: [], resumes: 0 }
+    return yield* Effect.gen(function* () {
+      const refs = yield* repo(directory)
+      const registry = yield* ToolRegistry.Service
+      const parent = yield* session({ directory, agent: "maestro" })
+      return yield* body({
+        directory, ...refs, touches, parent,
+        invoke: (agent, value, sessionID = parent) => call(registry, agent, sessionID, value),
+      })
+    }).pipe(Effect.provide(host(directory, skills, touches, controls)))
+  })) as Effect.Effect<A, E>
+}
+
+function stage(brief: string) {
+  if (brief.includes("Stage: hunt and finish") || brief.includes("Stage: finish.")) return "finish"
+  if (brief.includes("Stage: entry")) return "entry"
+  if (brief.includes("Stage: hunt, lens ")) return "lens"
+  if (brief.includes("Stage: verify")) return "verify"
+  return "unexpected"
+}
+
+function reply(brief: string, prior: readonly string[]) {
+  const kind = stage(brief)
+  if (kind === "entry") return fence(ReviewFanoutV2.TAGS.entry, {
+    status: "eligible",
+    context: { intent: "nothing found", acceptance: "nothing found", invariants: "nothing found", assumptions: "nothing found" },
+    overlays: { confirmed: [], declined: [], added: [] },
+    slices: [],
+  })
+  if (kind === "lens") {
+    const lens = /Stage: hunt, lens ([^,]+),/.exec(brief)?.[1]
+    if (!lens) throw new Error("hunt brief has no lens id")
+    return fence(ReviewFanoutV2.TAGS.lens, { lens, candidates: [], observations: [], hunks: [], items: [] })
   }
-  return ["```review-result", JSON.stringify(card), "```"].join("\n")
+  if (kind === "verify") throw new Error("verifier stage is unexpected when candidates are empty")
+  const routing = JSON.parse(brief.slice(brief.indexOf(ROUTING) + ROUTING.length).split("\n")[0] ?? "")
+  const scope = hostScope(brief, prior)
+  return fence(ReviewResultV2.TAG, {
+    outcome: "done", verdict: "APPROVE", profile: routing.profile.id, tier: ReviewRouting.tier(routing),
+    overlays: routing.overlays.map((overlay: { id: string }) => overlay.id), routing, scope,
+    findings: [], questions: [], checks: [], coverage: { examined: [], notExamined: [] },
+    handoffs: [], blockers: [], risks: [], nextActions: [],
+  })
+}
+
+function hostScope(brief: string, prior: readonly string[]) {
+  const line = brief.split("\n").find((item) => item.startsWith("Scope: "))
+  if (line) return JSON.parse(line.slice("Scope: ".length))
+  for (const text of [brief, ...prior]) {
+    const block = /<data name="work card">\n([\s\S]*?)\n<\/data>/.exec(text)?.[1]
+    if (block) return JSON.parse(block).scope
+  }
+  throw new Error("finish brief has no host scope")
+}
+
+function fence(tag: string, value: unknown) {
+  return ["```" + tag, JSON.stringify(value), "```"].join("\n")
 }
