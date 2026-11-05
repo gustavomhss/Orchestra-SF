@@ -45,8 +45,7 @@ export function collect(input: {
 export function validate(card: ReviewResultV2.Card, facts: Facts): void {
   if (!sameChecks(card.checks, facts.checks)) throw new Error("checks-mismatch")
   if (facts.blockers.length > 0 && card.outcome !== "blocked") throw new Error("checks-blocked")
-  if (facts.blockers.some((blocker) => count(card.blockers, blocker) !== count(facts.blockers, blocker)))
-    throw new Error("checks-blocked")
+  if (facts.blockers.some((blocker) => count(card.blockers, blocker) !== 1)) throw new Error("checks-blocked")
   if (card.verdict === "APPROVE" && requiredGateFailed(facts)) throw new Error("checks-blocked")
 }
 
@@ -118,7 +117,11 @@ function derived(checks: readonly Check[], required: ReadonlySet<string>, entry:
     if (check.status === "acquisition-error") return add(blockers, blocker("acquisition-error", check))
     if (check.status === "check-unavailable" && check.accepted !== true) return add(blockers, blocker("check-unavailable", check))
     return blockers
-  }, [...entry])
+  }, canonical(entry))
+}
+
+function canonical(blockers: readonly Blocker[]) {
+  return blockers.reduce<Blocker[]>((kept, blocker) => add(kept, blocker), [])
 }
 
 function blocker(kind: string, check: Check): Blocker {

@@ -135,6 +135,55 @@ test("a required pack with no host check is synthesized; a skipped fallback is n
   expect(() => ReviewChecksV2.validate(card(ignored), ignored)).not.toThrow()
 })
 
+test("duplicate entry blockers become one host blocker, and a repeated card copy is rejected", () => {
+  const entry = { kind: "entry", reason: "no acceptance", code: "E1", ref: "gate" }
+  const facts = collect([], [], undefined, { entryBlockers: [entry, { ...entry }] })
+  expect(facts.blockers).toEqual([entry])
+  expect(() => ReviewChecksV2.validate(card(facts), facts)).not.toThrow()
+  expect(() => ReviewChecksV2.validate(card(facts, { blockers: [entry, entry] }), facts)).toThrow("checks-blocked")
+  const distinct = collect([], [], undefined, {
+    entryBlockers: [
+      { kind: "entry", reason: "no acceptance", ref: "a" },
+      { kind: "entry", reason: "no acceptance", ref: "b" },
+    ],
+  })
+  expect(distinct.blockers).toEqual([
+    { kind: "entry", reason: "no acceptance", ref: "a" },
+    { kind: "entry", reason: "no acceptance", ref: "b" },
+  ])
+})
+
+test("the same check id in another pack or lane is not the same host check", () => {
+  const facts = collect(
+    [pack("repo", "routed"), pack("other", "routed")],
+    [
+      analyzer({ id: "lint", pack: "repo", lane: "lint", status: "pass" }),
+      analyzer({ id: "lint", pack: "other", lane: "lint", status: "pass" }),
+      analyzer({ id: "lint", pack: "repo", lane: "types", status: "pass" }),
+    ],
+  )
+  expect(facts.checks.map((check) => [check.pack, check.lane, check.id])).toEqual([
+    ["other", "lint", "lint"],
+    ["repo", "lint", "lint"],
+    ["repo", "types", "lint"],
+  ])
+})
+
+test("a forged accepted, status, or omitted lane does not match the collected check", () => {
+  const facts = collect(
+    [pack("repo", "routed")],
+    [analyzer({ id: "lint", status: "not-run", reason: "absent" })],
+    { review: { acceptedUnavailable: ["lint"] } },
+  )
+  const host = facts.checks[0]
+  if (!host) throw new Error("missing collected check")
+  expect(host).toMatchObject({ status: "check-unavailable", accepted: true, lane: "lint" })
+  expect(() => ReviewChecksV2.validate(card(facts, { checks: [{ ...host, accepted: false }] }), facts)).toThrow("checks-mismatch")
+  expect(() => ReviewChecksV2.validate(card(facts, { checks: [{ ...host, status: "pass" }] }), facts)).toThrow("checks-mismatch")
+  const { lane: _lane, ...withoutLane } = host
+  expect(() => ReviewChecksV2.validate(card(facts, { checks: [withoutLane] }), facts)).toThrow("checks-mismatch")
+})
+
 test("keeps entry blockers and rejects a fabricated APPROVE", () => {
   const entry = [{ kind: "entry", reason: "no acceptance", code: "E1" }]
   const facts = collect([], [], undefined, { entryBlockers: entry })
