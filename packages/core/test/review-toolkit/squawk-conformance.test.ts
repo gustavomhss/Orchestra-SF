@@ -1,0 +1,241 @@
+import { expect } from "bun:test"
+import path from "node:path"
+import { lstat, mkdir, readFile, realpath, writeFile } from "node:fs/promises"
+import { Effect, Option, Schema } from "effect"
+import { LayerNode } from "../../src/effect/layer-node"
+import { AppProcess } from "../../src/process"
+import { BackendToolkit } from "../../src/backend-toolkit"
+import { Probe } from "../../src/research-toolkit/probe/types"
+import { ResearchProcess } from "../../src/research-toolkit/process"
+import { ReviewPackSquawk } from "../../src/review-toolkit/packs/squawk"
+import { ReviewSquawkReport } from "../../src/review-toolkit/packs/squawk-report"
+import { ToolSafetySandbox } from "../../src/tool-safety-sandbox"
+import { testEffect } from "../lib/effect"
+import { expectSpawn } from "../fixture/omni-expect"
+import { provision } from "../fixture/lucy-squawk/host"
+import { tmpdir } from "../fixture/tmpdir"
+
+// Jailed pinned-binary conformance. Every scanner and the write probe go through ToolSafetySandbox.confine
+// with write:[]. ResearchProcess.run only launches that confined argv. Not an unconfined CLI claim.
+// Host ensure is the only authorized network. Columns are squawk's own JSON fields, not a kernel byte map.
+
+const it = testEffect(LayerNode.compile(LayerNode.group([AppProcess.node])))
+const fixtureRoot = path.join(import.meta.dir, "../fixture/lucy-squawk")
+const owned = ["unsafe.sql", "benign.sql", "invalid.sql", "broken.toml"]
+const Native = Schema.Array(Schema.Struct({
+  file: Schema.String, line: Schema.Number, column: Schema.Number, line_end: Schema.Number, column_end: Schema.Number,
+  level: Schema.String, rule_name: Schema.String,
+}))
+const held = Effect.acquireRelease(
+  Effect.promise(() => tmpdir()),
+  (made) => Effect.promise(() => made[Symbol.asyncDispose]()),
+)
+
+it.live("conformance: pinned squawk under the jail, unsafe warning versus nonempty SELECT 1", () =>
+  Effect.gen(function* () {
+    expectSpawn(import.meta.path)
+    const made = yield* held
+    const fixture = yield* Effect.promise(() => readFile(path.join(fixtureRoot, "unsafe.sql")))
+    expect(fixture.includes("ADD COLUMN") && fixture.includes("NOT NULL") && fixture.includes("café")).toBe(true)
+    const installed = yield* provision(path.join(made.path, "toolkit"))
+    const located = yield* ReviewPackSquawk.locate.pipe(Effect.provideService(BackendToolkit.Root, path.join(made.path, "toolkit")))
+    expect(located).toEqual({ executable: installed.executable })
+    expect(ReviewPackSquawk.pgVersion).toBe("unspecified")
+    expect(ReviewPackSquawk.upstreamVersionDefault).toBe("15.0.0")
+    const host = yield* ReviewPackSquawk.prepare(path.join(made.path, "host"))
+    expect(yield* Effect.promise(() => readFile(host, "utf8"))).toBe(ReviewPackSquawk.hostToml)
+    expect(ReviewPackSquawk.hostToml.includes("pg_version")).toBe(false)
+    const tree = path.join(made.path, "tree")
+    yield* Effect.promise(() => copy(tree, { "unsafe.sql": "unsafe.sql", "benign.sql": "benign.sql" }))
+    yield* Effect.promise(() => writeFile(path.join(tree, "crlf.sql"), fixture.toString("utf8").replaceAll("\n", "\r\n")))
+    const before = yield* Effect.promise(() => shot(owned.map((name) => path.join(fixtureRoot, name)).concat([path.join(tree, "unsafe.sql")])))
+    expect(ReviewPackSquawk.argv({ executable: installed.executable, config: host, root: tree, files: [] })).toEqual({
+      status: "not-run", reason: "no-input",
+    })
+    const probe = yield* scan(["/bin/sh", "-c", "/usr/bin/touch \"$TMPDIR/jail-ok\"; /usr/bin/touch ./jail-denied"], tree)
+    expect(yield* Effect.promise(() => readFile(path.join(probe.scratch, "jail-ok"), "utf8"))).toBe("")
+    expect(yield* Effect.promise(() => lstat(path.join(tree, "jail-denied")).then(() => true, () => false))).toBe(false)
+    const version = yield* scan([installed.executable, "--version"], tree)
+    expect(text(version.outcome)).toContain(installed.version)
+    const clean = yield* product(installed.executable, host, tree, [path.join(tree, "benign.sql")])
+    expect(clean.outcome.exitCode, stderr(clean.outcome)).toBe(0)
+    expect(ReviewPackSquawk.settle(clean.outcome, tree)).toEqual({ status: "ok", results: [], excluded: [] })
+    expect(ReviewSquawkReport.parseReport(stdout(clean.outcome), { root: tree })).toEqual({ status: "ok", results: [], excluded: [] })
+    const hit = yield* product(installed.executable, host, tree, [path.join(tree, "unsafe.sql")])
+    expect(hit.outcome.exitCode, stderr(hit.outcome)).toBe(1)
+    const native = rows(hit.outcome)
+    expect(native.length > 0 && native.every((row) => row.level === "Warning" && known(row.rule_name))).toBe(true)
+    const parsed = ReviewPackSquawk.settle(hit.outcome, tree)
+    expect(parsed.status).toBe("ok")
+    expect(ReviewSquawkReport.parseReport(stdout(hit.outcome), { root: tree })).toEqual(parsed)
+    if (parsed.status === "ok") {
+      for (const row of native) {
+        const inclusive = row.column_end === 0 ? row.line_end - 1 : row.line_end
+        expect(parsed.results).toContainEqual(expect.objectContaining({
+          pack: "squawk", rule: row.rule_name, path: "unsafe.sql", line: row.line + 1, endLine: inclusive + 1,
+        }))
+      }
+    }
+    const crlf = yield* product(installed.executable, host, tree, [path.join(tree, "crlf.sql")])
+    const crlfRows = rows(crlf.outcome)
+    const crlfParsed = ReviewSquawkReport.parseReport(stdout(crlf.outcome), { root: tree })
+    expect(crlfParsed.status).toBe("ok")
+    if (crlfParsed.status === "ok") {
+      expect(crlfParsed.results.some((result) => result.line === crlfRows[0].line + 1 && result.path === "crlf.sql")).toBe(true)
+    }
+    const spliced = JSON.stringify([...native, { ...native[0], rule_name: "not-a-native-rule" }])
+    expect(ReviewSquawkReport.parseReport(spliced, { root: tree })).toEqual({ status: "acquisition-error", reason: "unknown-rule" })
+    expect(yield* Effect.promise(() => shot(owned.map((name) => path.join(fixtureRoot, name)).concat([path.join(tree, "unsafe.sql")])))).toEqual(before)
+  }), 600_000,
+)
+
+it.live("conformance: a broken repo config is ignored only with the host toml; bad host config and invalid SQL are not passes", () =>
+  Effect.gen(function* () {
+    expectSpawn(import.meta.path)
+    const made = yield* held
+    const installed = yield* provision(path.join(made.path, "toolkit"))
+    const host = yield* ReviewPackSquawk.prepare(path.join(made.path, "host"))
+    const clean = path.join(made.path, "clean")
+    const broken = path.join(made.path, "broken")
+    yield* Effect.promise(async () => {
+      await copy(clean, { "unsafe.sql": "unsafe.sql" })
+      await copy(broken, { "unsafe.sql": "unsafe.sql", ".squawk.toml": "broken.toml" })
+    })
+    const baseline = yield* product(installed.executable, host, clean, [path.join(clean, "unsafe.sql")])
+    const baseRules = rows(baseline.outcome).map((row) => row.rule_name).sort()
+    expect(baseRules).toContain("adding-required-field")
+    const omitted = yield* scan([installed.executable, "--reporter", "json", "--", path.join(broken, "unsafe.sql")], broken)
+    expect(omitted.outcome.exitCode, "positive control: omitting --config must read the broken repo toml").toBe(1)
+    expect(stderr(omitted.outcome)).toContain("Configuration error")
+    expect(stdout(omitted.outcome).trim().startsWith("[")).toBe(false)
+    expect(ReviewPackSquawk.settle(omitted.outcome, broken)).toEqual({ status: "acquisition-error", reason: "configuration-error" })
+    const kept = yield* product(installed.executable, host, broken, [path.join(broken, "unsafe.sql")])
+    expect(kept.outcome.exitCode, stderr(kept.outcome)).toBe(1)
+    expect(rows(kept.outcome).map((row) => row.rule_name).sort()).toEqual(baseRules)
+    expect(ReviewPackSquawk.settle(kept.outcome, broken).status).toBe("ok")
+    const missing = yield* scan(forced(installed.executable, path.join(made.path, "missing.toml"), broken, [path.join(broken, "unsafe.sql")]), broken)
+    expect(ReviewPackSquawk.settle(missing.outcome, broken)).toEqual({ status: "acquisition-error", reason: "configuration-error" })
+    const invalidHost = path.join(made.path, "host", "bad.toml")
+    yield* Effect.promise(() => writeFile(invalidHost, "included_rules = [\n"))
+    const invalid = yield* scan(forced(installed.executable, invalidHost, broken, [path.join(broken, "unsafe.sql")]), broken)
+    expect(ReviewPackSquawk.settle(invalid.outcome, broken)).toEqual({ status: "acquisition-error", reason: "configuration-error" })
+    const invalidSql = yield* Effect.promise(() => place(broken, "invalid.sql"))
+    const syntax = yield* product(installed.executable, host, broken, [invalidSql])
+    expect(ReviewPackSquawk.settle(syntax.outcome, broken)).toEqual({ status: "acquisition-error", reason: "syntax-error" })
+    expect(ReviewSquawkReport.parseReport(stdout(syntax.outcome), { root: broken }).status).not.toBe("ok")
+  }), 600_000,
+)
+
+it.live("conformance: glob metacharacters and spaces stay literal; a sibling match is not scanned", () =>
+  Effect.gen(function* () {
+    expectSpawn(import.meta.path)
+    const made = yield* held
+    const installed = yield* provision(path.join(made.path, "toolkit"))
+    const host = yield* ReviewPackSquawk.prepare(path.join(made.path, "host"))
+    const tree = path.join(made.path, "glob")
+    const selected = [path.join(tree, "my file.sql"), path.join(tree, "keep[a]?*.sql")]
+    const sibling = path.join(tree, "keepaZunsafe.sql")
+    yield* Effect.promise(async () => {
+      await mkdir(tree, { recursive: true })
+      const bytes = await readFile(path.join(fixtureRoot, "unsafe.sql"))
+      await Promise.all([...selected, sibling].map((file) => writeFile(file, bytes)))
+    })
+    expect(yield* Effect.promise(() => readFile(sibling, "utf8"))).toContain("ADD COLUMN")
+    const before = yield* Effect.promise(() => shot([...selected, sibling]))
+    const built = ReviewPackSquawk.argv({ executable: installed.executable, config: host, root: tree, files: selected })
+    expect(built.status).toBe("ok")
+    if (built.status !== "ok") throw new Error(built.reason)
+    expect(built.argv).toContain(`${tree}/keep[[]a[]][?][*].sql`)
+    expect(built.argv).toContain(`${tree}/my file.sql`)
+    expect(built.argv.join("\0")).not.toContain("\"")
+    const ran = yield* scan(built.argv, tree)
+    expect(ran.outcome.exitCode, stderr(ran.outcome)).toBe(1)
+    const native = rows(ran.outcome)
+    expect(native.every((row) => row.level === "Warning" && known(row.rule_name))).toBe(true)
+    const reported = yield* Effect.promise(() => Promise.all([...new Set(native.map((row) => row.file))].map((file) => realpath(file))))
+    const intended = yield* Effect.promise(() => Promise.all(selected.map((file) => realpath(file))))
+    expect(reported.sort()).toEqual(intended.sort())
+    expect(reported).not.toContain(yield* Effect.promise(() => realpath(sibling)))
+    const parsed = ReviewSquawkReport.parseReport(stdout(ran.outcome), { root: tree })
+    expect(parsed.status).toBe("ok")
+    if (parsed.status === "ok") expect(new Set(parsed.results.map((result) => result.path))).toEqual(new Set(["my file.sql", "keep[a]?*.sql"]))
+    expect(ReviewPackSquawk.settle(ran.outcome, tree).status).toBe("ok")
+    expect(yield* Effect.promise(() => shot([...selected, sibling]))).toEqual(before)
+  }), 600_000,
+)
+
+function scan(argv: readonly string[], cwd: string) {
+  return Effect.gen(function* () {
+    const command = argv[0]
+    if (!command) return yield* Effect.die(new Error("conformance-missing: empty argv"))
+    const launch = yield* ToolSafetySandbox.confine({
+      command, args: argv.slice(1), cwd, env: ResearchProcess.environment(), write: [],
+    }).pipe(Effect.catch((error) => Effect.die(new Error(`conformance-missing: ${error.reason}`))))
+    const scratch = launch.env.TMPDIR
+    if (typeof scratch !== "string") return yield* Effect.die(new Error("conformance-missing: jail scratch missing"))
+    const outcome = yield* ResearchProcess.run({
+      command: launch.command, args: launch.args, cwd,
+      env: Object.fromEntries(Object.entries(launch.env).filter((entry): entry is [string, string] => entry[1] !== undefined)),
+      timeoutMs: 60_000, maxBytes: Probe.Limits.outputBytes, maxRssBytes: Probe.Limits.rssBytes,
+    })
+    return { outcome, scratch }
+  })
+}
+
+function product(executable: string, config: string, root: string, files: readonly string[]) {
+  const built = ReviewPackSquawk.argv({ executable, config, root, files })
+  if (built.status !== "ok") return Effect.die(new Error(`argv ${built.status}: ${built.reason}`))
+  return scan(built.argv, root)
+}
+
+function forced(executable: string, config: string, root: string, files: readonly string[]) {
+  const built = ReviewPackSquawk.argv({ executable, config, root, files })
+  if (built.status !== "ok") throw new Error(`argv ${built.status}: ${built.reason}`)
+  return built.argv
+}
+
+function stdout(outcome: ResearchProcess.Outcome) {
+  return outcome.stdout.data.toString("utf8")
+}
+
+function stderr(outcome: ResearchProcess.Outcome) {
+  return outcome.stderr.data.toString("utf8")
+}
+
+function text(outcome: ResearchProcess.Outcome) {
+  return `${stdout(outcome)}${stderr(outcome)}`
+}
+
+function rows(outcome: ResearchProcess.Outcome) {
+  const json = Schema.decodeUnknownOption(Schema.UnknownFromJsonString)(stdout(outcome))
+  if (Option.isNone(json)) throw new Error(`conformance: not json: ${stdout(outcome).slice(0, 400)}`)
+  const decoded = Schema.decodeUnknownOption(Native)(json.value)
+  if (Option.isNone(decoded)) throw new Error(`conformance: not squawk rows: ${stdout(outcome).slice(0, 400)}`)
+  return decoded.value
+}
+
+function known(rule: string) {
+  return [...ReviewPackSquawk.RULES].includes(rule)
+}
+
+async function copy(root: string, files: Record<string, string>) {
+  await Promise.all(Object.entries(files).map(async ([name, source]) => {
+    const target = path.join(root, name)
+    await mkdir(path.dirname(target), { recursive: true })
+    await writeFile(target, await readFile(path.join(fixtureRoot, source)))
+  }))
+}
+
+async function place(root: string, source: string) {
+  const target = path.join(root, source)
+  await writeFile(target, await readFile(path.join(fixtureRoot, source)))
+  return target
+}
+
+async function shot(files: readonly string[]) {
+  return Promise.all(files.map(async (file) => {
+    const info = await lstat(file)
+    const bytes = await readFile(file)
+    return `${file}:${info.mode}:${info.nlink}:${bytes.toString("base64")}`
+  }))
+}
