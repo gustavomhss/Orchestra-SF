@@ -236,11 +236,13 @@ test("a scoped finish refuses a governed receipt before a review event or board 
       }
       const events = (yield* reviewEvents()).length
       const notes = (yield* reviewNotes()).length
-      const refused = yield* call("lucy", "maestro_record_review", { ...base, verdict: "APPROVE" }, id)
+      expect(events).toBe(0)
+      expect(notes).toBe(0)
+      const refused = yield* call("lucy", "maestro_record_review", { ...base, verdict: "APPROVE", findings: [] }, id)
       expect(refused.text).not.toContain("Review recording opens only in the lead's final turn")
       expect(refused.text).toContain("checks-blocked")
-      expect((yield* reviewEvents()).length).toBe(events)
-      expect((yield* reviewNotes()).length).toBe(notes)
+      expect((yield* reviewEvents()).length).toBe(0)
+      expect((yield* reviewNotes()).length).toBe(0)
       if (acquired) expect(facts.blockers.some((blocker) => blocker.kind === "acquisition-error")).toBe(true)
       const legacy = yield* call("lucy", "maestro_record_review", { ...base, reviewMethodVersion: "review-v1", verdict: "APPROVE" }, id)
       expect(legacy.text.startsWith("REJECT:") || legacy.text.startsWith("APPROVE:")).toBe(false)

@@ -210,7 +210,7 @@ test("a routed pack with no host check is one required unavailable check, and ze
   const missing = collected(requiredRoute)
   expect(missing.checks).toContainEqual({
     id: "repo", lane: "repo", pack: "repo", version: "unknown", status: "check-unavailable",
-    reason: "required pack produced no host check", workspaceExecuted: false,
+    reason: "required pack produced no host check", workspaceExecuted: false, accepted: false,
   })
   expect(missing.required).toContain(identity({ pack: "repo", lane: "repo", id: "repo" }))
   expect(missing.blockers).toContainEqual({
@@ -237,7 +237,9 @@ test("omitted, invented, altered and duplicate required checks are rejected; ord
   invalid({ ...value, checks: facts.checks.map((check) => ({ ...check, status: "pass" })) }, "checks-mismatch", wanted)
   invalid({ ...value, checks: facts.checks.map((check) => ({ ...check, accepted: true })) }, "checks-mismatch", wanted)
   invalid({ ...value, checks: [...facts.checks, facts.checks[0]] }, "checks-mismatch", wanted)
-  expect(ReviewCardV2.validate(reply({ ...value, checks: [...facts.checks].reverse() }), wanted).checks).toEqual(facts.checks)
+  const reversed = [...facts.checks].reverse()
+  expect(reversed).not.toEqual(facts.checks)
+  expect(ReviewCardV2.validate(reply({ ...value, checks: reversed }), wanted).checks).toEqual(reversed)
 })
 
 test("exact check id or lane may be accepted; a pack name, near-match, or acquisition error may not", () => {
@@ -269,7 +271,8 @@ test("a host-blocked entry rejects a fabricated APPROVE and keeps each host bloc
   expect(facts.blockers).toEqual(entryBlockers)
   const wanted = bound(routing, facts)
   invalid(settled(routing, facts, { outcome: "done", verdict: "APPROVE", blockers: [] }), "checks-blocked", wanted)
-  invalid({ ...settled(routing, facts), blockers: [] }, "checks-blocked", wanted)
+  invalid({ ...settled(routing, facts), blockers: [] }, "verdict-mismatch", wanted)
+  invalid({ ...settled(routing, facts), blockers: [{ kind: "unrelated", reason: "not the host blocker" }] }, "checks-blocked", wanted)
   invalid({ ...settled(routing, facts), blockers: [...entryBlockers, entryBlockers[0]] }, "checks-blocked", wanted)
   const extra = { kind: "model", reason: "noted" }
   expect(ReviewCardV2.validate(reply({ ...settled(routing, facts), blockers: [...entryBlockers, extra] }), wanted).blockers).toEqual([

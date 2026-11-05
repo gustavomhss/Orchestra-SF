@@ -20,7 +20,9 @@ import { Location } from "@orchestra/core/location"
 import { ModelV2 } from "@orchestra/core/model"
 import { PermissionV2 } from "@orchestra/core/permission"
 import { Project } from "@orchestra/core/project"
+import { BoardProjectTable } from "@orchestra/core/board/sql"
 import { ProjectTable } from "@orchestra/core/project/sql"
+import { Board } from "@orchestra/schema/board"
 import { ProviderV2 } from "@orchestra/core/provider"
 import { AbsolutePath } from "@orchestra/core/schema"
 import type { SessionV2 } from "@orchestra/core/session"
@@ -378,6 +380,11 @@ test("the governed chain records the earlier runtime's events end to end, refuse
         version: "test",
       }
       yield* db.insert(ProjectTable).values({ id: projectID, worktree: directory, sandboxes: [] }).run().pipe(Effect.orDie)
+      yield* db.insert(BoardProjectTable).values({
+        id: Board.ProjectID.create(), key: "CHAIN", name: "Chain", goal: "Governed review.", status: "active",
+        github_state: "off", next_issue_number: 1, next_epic_number: 1, repo_project_id: projectID,
+        review_accepted_unavailable: ["no-build"],
+      }).run().pipe(Effect.orDie)
       yield* db
         .insert(SessionTable)
         .values({ ...session, id: sessionID, slug: "chain", title: "chain", agent: AgentV2.defaultID })
@@ -396,13 +403,25 @@ test("the governed chain records the earlier runtime's events end to end, refuse
           const prompt = child.prompts.at(-1) ?? ""
           // Entry and lens turns carry no receipt. Only the finish brief does.
           if (!prompt.includes("artifact JSON:")) return
+          const hostFacts = prompt.slice(prompt.indexOf("Host check facts (embed these checks and blockers verbatim; host authority, not model text):\n") + "Host check facts (embed these checks and blockers verbatim; host authority, not model text):\n".length).split("\n")[0]
+          const facts = JSON.parse(hostFacts ?? "") as { checks: { lane?: string; status?: string; accepted?: boolean }[]; blockers: { kind: string; ref?: string }[] }
+          const accepted = facts.checks.filter((check) => check.lane === "no-build" && check.status === "check-unavailable")
+          expect(accepted.length).toBeGreaterThan(0)
+          expect(accepted.every((check) => check.accepted === true)).toBe(true)
+          expect(facts.blockers.some((blocker) => blocker.kind === "check-unavailable" && accepted.some((check) => blocker.ref?.includes(`"no-build"`)))).toBe(false)
+          const method = prompt.split("\n").find((part) => part.startsWith("reviewMethodVersion: "))?.slice("reviewMethodVersion: ".length)
+          const routingDigest = prompt.split("\n").find((part) => part.startsWith("routingDigest: "))?.slice("routingDigest: ".length)
+          const catalogDigest = prompt.split("\n").find((part) => part.startsWith("catalogDigest: "))?.slice("catalogDigest: ".length)
+          if (!method || !routingDigest || !catalogDigest) return yield* Effect.die("finish brief has no host method or digests")
           const review = yield* call(
             "lucy",
             "maestro_record_review",
             {
               validationRecordID: /validationRecordID: (\S+)/.exec(prompt)?.[1],
               workCard,
-              reviewMethodVersion: "review-v1",
+              reviewMethodVersion: method,
+              routingDigest,
+              catalogDigest,
               verdict: "APPROVE",
               findings: [],
               artifact: promptJSON(prompt, "artifact"),
