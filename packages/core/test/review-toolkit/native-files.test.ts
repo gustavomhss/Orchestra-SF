@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test"
 import { constants } from "node:fs"
 import { chmod, lstat, mkdir, realpath, symlink, writeFile } from "node:fs/promises"
+import { tmpdir as osTmpdir } from "node:os"
 import path from "node:path"
 import { Effect } from "effect"
 import { Probe } from "../../src/research-toolkit/probe/types"
@@ -11,7 +12,7 @@ const run = (root: string, files: ReadonlyArray<string>, extensions: ReadonlyArr
   Effect.runPromise(ReviewNativeFiles.select({ root, files, extensions }))
 
 test("lexical refusals do not touch the filesystem", async () => {
-  const missing = path.join("/no-such-native-files", `${Date.now()}`)
+  const missing = path.resolve(osTmpdir(), "no-such-native-files", `${Date.now()}`)
   expect(await run(missing, [])).toEqual({ status: "not-run", reason: "no-input" })
   expect(await run(missing, ["a.py\0"])).toEqual({ status: "not-run", reason: "nul" })
   expect(await run(missing, ["../outside.py"])).toEqual({ status: "not-run", reason: "path-outside" })
@@ -36,25 +37,28 @@ test("a regular file is returned at its canonical path, deduplicated and ordered
   })
 })
 
-test("literal spaces, brackets and a posix backslash do not select a sibling", async () => {
+test("literal spaces and brackets do not select a sibling", async () => {
   await using dir = await tmpdir()
   await writeFile(path.join(dir.path, "a.py"), "plain\n")
   await writeFile(path.join(dir.path, "a b.py"), "space\n")
   await writeFile(path.join(dir.path, "a[b].py"), "brackets\n")
+  const selected = await run(dir.path, ["a b.py", "a[b].py", "*.py"])
+  expect(selected).toEqual({ status: "not-run", reason: "missing" })
+  const literal = await run(dir.path, ["a b.py", "a[b].py"])
+  expect(literal).toEqual({
+    status: "ok",
+    files: [await realpath(path.join(dir.path, "a b.py")), await realpath(path.join(dir.path, "a[b].py"))].sort(),
+  })
+})
+
+test.skipIf(process.platform === "win32")("a posix backslash is a filename and does not select the nested sibling", async () => {
+  await using dir = await tmpdir()
   await mkdir(path.join(dir.path, "foo"))
   await writeFile(path.join(dir.path, "foo", "bar.py"), "nested\n")
   await writeFile(path.join(dir.path, "foo\\bar.py"), "literal\n")
-  const selected = await run(dir.path, ["a b.py", "a[b].py", "foo\\bar.py", "*.py"])
-  expect(selected.status).toBe("not-run")
-  if (selected.status !== "ok") expect(selected.reason).toBe("missing")
-  const literal = await run(dir.path, ["a b.py", "a[b].py", "foo\\bar.py"])
-  expect(literal).toEqual({
+  expect(await run(dir.path, ["foo\\bar.py"])).toEqual({
     status: "ok",
-    files: [
-      await realpath(path.join(dir.path, "a b.py")),
-      await realpath(path.join(dir.path, "a[b].py")),
-      await realpath(path.join(dir.path, "foo\\bar.py")),
-    ].sort(),
+    files: [await realpath(path.join(dir.path, "foo\\bar.py"))],
   })
 })
 
@@ -79,6 +83,24 @@ test("a directory, a missing file and a leaf symlink are refused", async () => {
   expect(await run(dir.path, ["pkg.py"])).toEqual({ status: "not-run", reason: "directory" })
   expect(await run(dir.path, ["missing.py"])).toEqual({ status: "not-run", reason: "missing" })
   expect(await run(dir.path, ["leaf.py"])).toEqual({ status: "unsupported", reason: "symlink" })
+})
+
+test("projected canonical arguments are bounded before missing candidates are stated", async () => {
+  await using dir = await tmpdir()
+  const root = path.join(dir.path, "segment")
+  await mkdir(root)
+  const canonical = await realpath(root)
+  const count = Math.ceil(Probe.Limits.outputBytes / (Buffer.byteLength(canonical) + 1)) + 2
+  const files = Array.from({ length: count }, (_, index) => `${index}.py`)
+  const inputBytes = files.reduce((sum, file) => sum + Buffer.byteLength(file), 0)
+  expect(inputBytes).toBeLessThanOrEqual(Probe.Limits.outputBytes)
+  // Guard precedence, not an existence proof: these candidates are not created.
+  expect(await run(root, files)).toEqual({ status: "not-run", reason: "argv-bound" })
+  await writeFile(path.join(root, "a.py"), "a\n")
+  expect(await run(root, Array.from({ length: count }, () => "a.py"))).toEqual({
+    status: "ok",
+    files: [await realpath(path.join(root, "a.py"))],
+  })
 })
 
 test("an unreadable root fails named", async () => {

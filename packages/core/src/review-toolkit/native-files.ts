@@ -48,15 +48,26 @@ async function selectFiles(input: {
   if (lexical) return lexical
   const root = await canonicalRoot(input.root)
   if (root.status !== "ok") return root
+  const path = flavor(input.root)
+  const projected = unique(input.files.flatMap((file) => {
+    const relative = containedPath(input.root, file)
+    return relative ? [project(root.canonical, relative, path)] : []
+  }))
+  if (input.files.some((file) => !containedPath(input.root, file))) return refuse("not-run", "path-outside")
+  // Guard precedence: projected canonical arguments can exceed the bound before any candidate is stated.
+  if (argvBytes(projected) > Probe.Limits.outputBytes) return refuse("not-run", "argv-bound")
   const chosen: string[] = []
   for (const file of input.files) {
     const relative = containedPath(input.root, file)
     if (!relative) return refuse("not-run", "path-outside")
-    const physical = await selected(root.canonical, relative, flavor(input.root))
+    const physical = await selected(root.canonical, relative, path)
     if (typeof physical !== "string") return physical
     chosen.push(physical)
   }
-  return { status: "ok" as const, files: [...new Set(chosen)].sort(order) }
+  const files = unique(chosen)
+  // realpath can lengthen a name through an ancestor alias or case fold. Bound the arguments actually returned.
+  if (argvBytes(files) > Probe.Limits.outputBytes) return refuse("not-run", "argv-bound")
+  return { status: "ok" as const, files }
 }
 
 function refuseLexical(input: {
@@ -75,8 +86,8 @@ function refuseLexical(input: {
       return refuse("not-run", "path-outside")
     if (!input.extensions.some((extension) => path.basename(file).endsWith(extension))) return refuse("not-run", "wrong-extension")
   }
-  const bytes = input.files.reduce((sum, file) => sum + Buffer.byteLength(file), 0)
-  if (bytes > Probe.Limits.outputBytes) return refuse("not-run", "argv-bound")
+  // Cheap spelling guard. The returned canonical arguments are bounded again after projection and realpath.
+  if (argvBytes(input.files) > Probe.Limits.outputBytes) return refuse("not-run", "argv-bound")
   return undefined
 }
 
@@ -141,6 +152,23 @@ async function readable(file: string) {
   const opened = await access(file, constants.R_OK).then(() => undefined, (error: NodeJS.ErrnoException) => error)
   if (!opened) return undefined
   return named(opened, "missing")
+}
+
+function project(root: string, relative: string, path: typeof posix) {
+  let cursor = root
+  for (const segment of relative.split("/")) {
+    if (!segment || segment === ".") continue
+    cursor = path.join(cursor, segment)
+  }
+  return cursor
+}
+
+function argvBytes(files: ReadonlyArray<string>) {
+  return files.reduce((sum, file) => sum + Buffer.byteLength(file) + 1, 0)
+}
+
+function unique(files: ReadonlyArray<string>) {
+  return [...new Set(files)].sort(order)
 }
 
 function refuse(status: "not-run" | "unsupported", reason: string) {
