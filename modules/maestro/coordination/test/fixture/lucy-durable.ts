@@ -1,3 +1,4 @@
+import fs from "node:fs/promises"
 import path from "node:path"
 import { LLMClient, Model, type LLMRequest } from "@orchestra/llm"
 import { route } from "@orchestra/llm/protocols/openai-chat"
@@ -66,6 +67,8 @@ export function open<A, E>(body: (ctx: Ctx) => Effect.Effect<A, E, Database.Serv
     const skills = yield* Effect.promise(() => authoredSkills())
     const refs = yield* repo(directory).pipe(Effect.provide(AppNodeBuilder.build(GitCli.node)))
     const requests: RequestLog[] = []
+    yield* Effect.promise(() => fs.mkdir(path.join(directory, ".data"), { recursive: true }))
+    yield* Effect.promise(() => fs.mkdir(path.join(directory, ".global"), { recursive: true }))
     return yield* Effect.gen(function* () {
       const sessions = yield* SessionV2.Service
       const parent = yield* sessions.create({
