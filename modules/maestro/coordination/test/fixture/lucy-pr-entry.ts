@@ -304,12 +304,28 @@ function reply(brief: string, prior: readonly string[]) {
   if (kind === "verify") throw new Error("verifier stage is unexpected when candidates are empty")
   const routing = JSON.parse(brief.slice(brief.indexOf(ROUTING) + ROUTING.length).split("\n")[0] ?? "")
   const scope = hostScope(brief, prior)
+  const facts = hostCheckFacts(brief)
+  const blocked = facts.blockers.length > 0
   return fence(ReviewResultV2.TAG, {
-    outcome: "done", verdict: "APPROVE", profile: routing.profile.id, tier: ReviewRouting.tier(routing),
+    outcome: blocked ? "blocked" : "done",
+    ...(blocked ? {} : { verdict: "APPROVE" }),
+    profile: routing.profile.id, tier: ReviewRouting.tier(routing),
     overlays: routing.overlays.map((overlay: { id: string }) => overlay.id), routing, scope,
-    findings: [], questions: [], checks: [], coverage: { examined: [], notExamined: [] },
-    handoffs: [], blockers: [], risks: [], nextActions: [],
+    findings: [], questions: [], checks: facts.checks, coverage: { examined: [], notExamined: [] },
+    handoffs: [], blockers: facts.blockers, risks: [], nextActions: [],
   })
+}
+
+const HOST_CHECK_FACTS = "Host check facts (embed these checks and blockers verbatim; host authority, not model text):\n"
+
+function hostCheckFacts(brief: string) {
+  const at = brief.indexOf(HOST_CHECK_FACTS)
+  if (at < 0) throw new Error("finish brief has no host check facts")
+  const line = brief.slice(at + HOST_CHECK_FACTS.length).split("\n")[0]
+  const parsed = line === undefined ? undefined : JSON.parse(line) as { checks?: unknown; blockers?: unknown }
+  if (!parsed || !Array.isArray(parsed.checks) || !Array.isArray(parsed.blockers))
+    throw new Error("finish brief has no host check facts")
+  return { checks: parsed.checks, blockers: parsed.blockers }
 }
 
 function hostScope(brief: string, prior: readonly string[]) {
