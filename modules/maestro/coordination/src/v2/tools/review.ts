@@ -13,6 +13,7 @@ import { Database } from "@orchestra/core/database/database"
 import { EventV2 } from "@orchestra/core/event"
 import type { GitCli } from "@orchestra/core/git-cli"
 import { ReviewCatalog } from "@orchestra/core/review/catalog"
+import { ReviewPrecisionCatalog } from "@orchestra/core/review/precision-catalog"
 import { ReviewPrecisionStore } from "@orchestra/core/review/precision-store"
 import { ReviewRouting } from "@orchestra/core/review/routing"
 import { ReviewSeatTools } from "@orchestra/core/review/seat-tools"
@@ -38,6 +39,7 @@ import { MaestroToolGate } from "./gate"
 import { MaestroReviewRecords } from "./review-records"
 import { ReviewPRRequestV2 } from "./review-pr"
 import { ReviewChecksV2 } from "../workflow/review-checks"
+import { ReviewCardV2 } from "../workflow/review-card"
 import { ReviewFanoutV2 } from "../workflow/review-fanout"
 import { WorkflowReviewV2 } from "../workflow/review"
 
@@ -124,6 +126,7 @@ export type Analyze = (
     readonly base: string
     readonly head: string
     readonly sessionID: SessionSchema.ID
+    readonly catalog: ReviewCatalog.Catalog
     readonly changes?: ReadonlyArray<{ readonly path: string; readonly added: ReadonlyArray<{ readonly line: number }> }>
   },
 ) => Effect.Effect<ReviewFanoutV2.Analysis, Tool.Failure>
@@ -143,6 +146,7 @@ const analyzeStep = (processes: AppProcess.Interface): Analyze => (input) => {
     store: analysisStore(input.cache),
     changed,
     trusted: true,
+    catalog: input.catalog,
     lane: "repo",
     packs: input.packs.map((pack) => pack.id),
     scope: "diff",
@@ -349,6 +353,20 @@ export function tools(input: {
               .pipe(Effect.map((result) => (result.exitCode === 0 ? result.text().split("\0").filter(Boolean) : [])))
           const rules = yield* ReviewFanoutV2.baseRules(git, worktree, artifact.baseSHA, artifact.changedPaths)
           const settings = yield* reviewSettings(services.db, parent.projectID)
+          const batches = yield* ReviewPrecisionStore.history().pipe(
+            Effect.provideService(Database.Service, { db: services.db }),
+            Effect.catchCause((cause) => Effect.fail(new Tool.Failure({
+              message: `precision-history: ${Cause.pretty(cause)}`,
+              metadata: { reason: "precision-history" },
+            }))),
+          )
+          const catalog = yield* Effect.try({
+            try: () => ReviewPrecisionCatalog.effective({ project: parent.projectID, catalog: ReviewCatalog.current, batches }),
+            catch: (error) => new Tool.Failure({
+              message: `precision-history: ${error instanceof Error ? error.message : String(error)}`,
+              metadata: { reason: "precision-history" },
+            }),
+          })
           // The earlier runtime rechecks just before the provider runs; V2 rechecks just before the first drain starts. The code
           // stage needs the workers' result to still be the exact tree under review.
           const current =
@@ -421,7 +439,7 @@ export function tools(input: {
                 )
               }),
             analyze: (step) =>
-              analyze({ ...step, worktree, base: artifact.baseSHA, head: artifact.headSHA, sessionID: lead, changes }),
+              analyze({ ...step, catalog, worktree, base: artifact.baseSHA, head: artifact.headSHA, sessionID: lead, changes }),
             region: (file, start, end) =>
               git
                 .run(["show", `${artifact.headSHA}:${file}`], { cwd: worktree })
@@ -445,7 +463,7 @@ export function tools(input: {
               },
               base: { files: yield* listed(artifact.baseSHA) },
               head: { files: yield* listed(artifact.headSHA), changes },
-              catalog: ReviewCatalog.current,
+              catalog,
               stages,
               skills: yield* services.atlas.skills.list(),
               fs: services.atlas.fs,
@@ -517,6 +535,24 @@ export function tools(input: {
               return yield* new Tool.Failure({ message: "method-binding-mismatch: submitted method or digest does not match host finish", metadata: { reason: "method-binding-mismatch" } })
             if (!sameOutcomes(params.items, authority.outcomes))
               return yield* new Tool.Failure({ message: "outcome-binding-mismatch: submitted items do not match host outcomes", metadata: { reason: "outcome-binding-mismatch" } })
+            if (!authority.scope)
+              return yield* new Tool.Failure({ message: "method-binding-mismatch: finish has no host scope", metadata: { reason: "method-binding-mismatch" } })
+            if (params.artifact.baseSHA !== authority.scope.base || params.artifact.headSHA !== authority.scope.head)
+              return yield* new Tool.Failure({ message: "method-binding-mismatch: artifact does not match host scope", metadata: { reason: "method-binding-mismatch" } })
+            const quick = ReviewRouting.tier(authority.routing) === "quick"
+            yield* Effect.try({
+              try: () => ReviewCardV2.validateFindings(params.findings, {
+                quick,
+                ...(authority.confirmed === undefined ? {} : { confirmed: authority.confirmed }),
+              }),
+              catch: (error) => new Tool.Failure({
+                message: error instanceof Error && error.message.length > 0 ? error.message : "unverified-finding",
+                metadata: { reason: "unverified-finding" },
+              }),
+            })
+            if (quick) {
+              for (const finding of params.findings) yield* quoteOnHead(services.atlas.git, finding, authority.scope.head, child.location.directory)
+            }
             const snapshot = authority.seal()
             if (!sameOutcomes(params.items, snapshot))
               return yield* new Tool.Failure({ message: "outcome-binding-mismatch: submitted items do not match host outcomes", metadata: { reason: "outcome-binding-mismatch" } })
@@ -596,6 +632,31 @@ function deliverPage<T extends { readonly items: ReadonlyArray<ReviewItem.ToolIt
     return Effect.die(error)
   }
   return Effect.succeed(result)
+}
+
+function unverified(detail: string) {
+  return new Tool.Failure({ message: `unverified-finding: ${detail}`, metadata: { reason: "unverified-finding" } })
+}
+
+function quoteOnHead(git: MaestroChainTools.Services["atlas"]["git"], finding: MaestroEvent.Review.Finding, head: string, cwd: string) {
+  return Effect.gen(function* () {
+    if (finding.evidence?.kind !== "quote") return yield* unverified("quote evidence is required")
+    const start = finding.evidence.startLine
+    const end = finding.evidence.endLine
+    if (!Number.isInteger(start) || !Number.isInteger(end) || start > end) return yield* unverified("quote range is reversed")
+    const blob = yield* git.run(["show", `${head}:${finding.path}`], { cwd, maxOutputBytes: 4 * 1024 * 1024 }).pipe(
+      Effect.mapError((error) => unverified(`head blob unavailable: ${String(error)}`)),
+    )
+    if (blob.exitCode !== 0 || blob.truncated) return yield* unverified("head blob unavailable")
+    const text = yield* Effect.try({
+      try: () => new TextDecoder("utf-8", { fatal: true }).decode(blob.stdout),
+      catch: () => unverified("head blob is not UTF-8"),
+    })
+    const lines = text.split("\n")
+    const actualLineCount = text.length === 0 ? 0 : lines.length - Number(text.endsWith("\n"))
+    const quoted = lines.slice(start - 1, end).join("\n")
+    if (end > actualLineCount || quoted.trim().length === 0) return yield* unverified("quote range is empty or outside the head blob")
+  })
 }
 
 function catalogDigest(value: string | undefined) {

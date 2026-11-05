@@ -101,7 +101,7 @@ function seenNatives(batches: ReadonlyArray<ReviewLedger.Batch>) {
   }, new Map<string, Set<string>>())
 }
 
-function packStatus(pack: ReviewCatalog.Catalog["packs"][number], rules: readonly ReviewCatalog.Catalog["rules"][number]) {
+function packStatus(pack: ReviewCatalog.Catalog["packs"][number], rules: ReadonlyArray<ReviewCatalog.Catalog["rules"][number]>) {
   if (pack.backend === "repo") return "active" as const
   const own = rules.filter((rule) => rule.pack === pack.id)
   const covered = own.some((rule) => rule.rule === "*" && rule.status !== "dropped")
