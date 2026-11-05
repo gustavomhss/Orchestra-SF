@@ -101,6 +101,9 @@ export const wrap = Effect.fn("ToolSafetySandbox.wrap")(function* (
       return yield* new ToolSafety.Denied({ reason: "sandbox-loopback-endpoint-invalid-port" })
   }), { discard: true })
   const reads = profile?.sandbox?.readRoots
+  // Explicit read confinement must not fall through to fixed AppContainer grants or host Git.
+  if (reads !== undefined && process.platform === "win32")
+    return yield* new ToolSafety.Denied({ reason: "sandbox-read-roots-platform-unsupported" })
   if (!profile?.requireSandbox && !profile?.sandbox?.enabled && grants.length === 0 && endpointGrants.length === 0 && !reads) return ordinary
   // Exact endpoint/socket capabilities never permit unconfined fallback, including during runtime acquisition.
   if (endpointGrants.length && !["darwin", "linux", "win32"].includes(process.platform))
