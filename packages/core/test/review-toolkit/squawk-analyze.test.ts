@@ -1,6 +1,6 @@
 import { expect } from "bun:test"
 import path from "node:path"
-import { lstat, mkdir, readFile, writeFile } from "node:fs/promises"
+import { chmod, lstat, mkdir, readFile, writeFile } from "node:fs/promises"
 import { Effect } from "effect"
 import { BackendToolkit } from "../../src/backend-toolkit"
 import { LayerNode } from "../../src/effect/layer-node"
@@ -15,11 +15,11 @@ import { git } from "../fixture/git"
 import { provision } from "../fixture/lucy-squawk/host"
 import { tmpdir } from "../fixture/tmpdir"
 
-// Binary integration runs only inside the host jail. Provisioning is outside the review; locate stays status-only.
-// A missing jail skips this file's binary case the same way the other analyzer tests do. Not a Windows shell proof.
+// Binary integration runs inside the host jail. Linux never skips: a missing jail fails the named conformance check.
+// Other hosts without a jail skip. Provisioning is outside the review; locate stays status-only. Not a Windows shell proof.
 
 const it = testEffect(LayerNode.compile(LayerNode.group([AppProcess.node])))
-const live = jail ? it.live : it.live.skip
+const live = jail || process.platform === "linux" ? it.live : it.live.skip
 const UNSAFE = "-- café\nALTER TABLE \"core_recipe\" ADD COLUMN \"foo\" integer NOT NULL;\n"
 const BENIGN = "SELECT 1;\n"
 const INVALID = "ALTER TABLE foo ALTER CONSTRAINT bar RENAME TO quux;\n"
@@ -121,6 +121,34 @@ live("a new squawk warning is an item, an unchanged one is not, and a hostile co
   }), 600_000,
 )
 
+it.live("linux conformance requires the jail", () =>
+  Effect.sync(() => {
+    if (process.platform !== "linux") return
+    expect(jail, "conformance-missing: sandbox").toBeTruthy()
+  }),
+)
+
+live("an unreadable copied SQL directory is not-run, not a pass", () =>
+  Effect.gen(function* () {
+    expectSpawn(import.meta.path)
+    expect(process.getuid?.() === 0, "conformance-missing: non-root uid required to obtain EACCES").toBe(false)
+    const made = yield* held()
+    yield* provision(made.toolkit)
+    const root = yield* Effect.promise(() => repo(path.join(made.path, "sealed"), BENIGN, BENIGN))
+    const result = yield* ReviewAnalyze.run(runInput(made, root)).pipe(
+      Effect.provideService(BackendToolkit.Root, made.toolkit),
+      Effect.provideService(ReviewAnalyze.BeforeSqlSelection, sealCopiedSql),
+    )
+    expect(result.checks[0]).toMatchObject({
+      status: "not-run",
+      reason: "sql-input-unavailable: EACCES",
+      workspaceExecuted: false,
+    })
+    expect(result.checks[0].status).not.toBe("pass")
+    expect(result.items).toEqual([])
+  }), 600_000,
+)
+
 live("a first SQL file against an empty base is a new warning and the base scanner is not invoked", () =>
   Effect.gen(function* () {
     expectSpawn(import.meta.path)
@@ -189,6 +217,12 @@ live("a different file selection on the same base tree does not turn an old warn
     expect(old.debt.total).toBeGreaterThan(0)
   }), 600_000,
 )
+
+const sealCopiedSql = (root: string) => Effect.gen(function* () {
+  const dir = path.join(root, "db")
+  yield* Effect.promise(() => chmod(dir, 0o000))
+  yield* Effect.addFinalizer(() => Effect.promise(() => chmod(dir, 0o755)))
+})
 
 function held() {
   return Effect.acquireRelease(Effect.promise(async () => {
