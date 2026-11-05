@@ -56,6 +56,11 @@ export type FinishAuthorization = {
   readonly method: string
   readonly routingDigest: string
   readonly catalogDigest: string
+  readonly routing: ReviewRouting.Record
+  /** Omitted only by a pure fanout fixture. A scoped receipt requires it. */
+  readonly scope?: Input["facts"]["scope"]
+  /** Undefined at Quick. Standard and Deep carry the host confirmed list, including empty. */
+  readonly confirmed: ReadonlyArray<ReviewCardV2.Confirmed> | undefined
   /** Live host reads until `seal()`. Not a const captured before the finish drain, and not serialized. */
   readonly outcomes: ReadonlyArray<ReviewLedger.Read>
   /** Post-record delivery barrier. Snapshots the live reads once; not a model input or a fact field. */
@@ -322,6 +327,9 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
         method,
         routingDigest: ReviewRouting.digest(sessionRecord),
         catalogDigest: sessionRecord.catalog,
+        routing: sessionRecord,
+        scope: input.facts.scope,
+        confirmed: ReviewRouting.tier(sessionRecord) === "quick" ? undefined : confirmed,
         get outcomes() {
           return sealedReads ?? derive()
         },
