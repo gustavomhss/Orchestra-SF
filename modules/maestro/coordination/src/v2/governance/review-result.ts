@@ -235,6 +235,8 @@ export const Candidate = Schema.Struct({
   severity: MaestroEvent.Review.Severity,
   trigger: Schema.NonEmptyString,
   quote: Schema.NonEmptyString,
+  // A claim that this candidate binds an analyzer item. Not evidence until the host admits it.
+  source: Schema.optional(Schema.NonEmptyString),
 })
 
 export interface LensReturn extends Schema.Schema.Type<typeof LensReturn> {}
