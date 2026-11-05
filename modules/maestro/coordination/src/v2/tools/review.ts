@@ -34,6 +34,7 @@ import { ReviewResultV2 } from "../governance/review-result"
 import { MaestroChainTools } from "./chain"
 import { MaestroToolGate } from "./gate"
 import { MaestroReviewRecords } from "./review-records"
+import { ReviewPRRequestV2 } from "./review-pr"
 import { ReviewFanoutV2 } from "../workflow/review-fanout"
 import { WorkflowReviewV2 } from "../workflow/review"
 
@@ -76,7 +77,7 @@ const ValidationInput = Schema.Struct({
   }),
 })
 
-const RequestInput = Schema.Struct({
+const GovernedInput = Schema.Struct({
   validationRecordID: Schema.String,
   workCard: Schema.String,
   reviewMethodVersion: Schema.String,
@@ -88,7 +89,8 @@ const RequestInput = Schema.Struct({
   // route's risk rule.
   profile: Schema.optional(Schema.NonEmptyString),
   tier: Schema.optional(Schema.NonEmptyString),
-})
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
+const RequestInput = Schema.Union([GovernedInput, ReviewPRRequestV2.Input])
 
 const ReviewInput = Schema.Struct({
   validationRecordID: Schema.String,
@@ -237,6 +239,11 @@ export function tools(input: {
       execute: (params, context) =>
         Effect.gen(function* () {
           yield* input.gate(context, AgentV2.defaultID, "Review delegation requires Maestro")
+          if ("kind" in params) return yield* ReviewPRRequestV2.run(params, {
+            sessionID: context.sessionID, services, sessions: input.sessions, execution: input.execution,
+            analyze, stages, processes: input.processes, binding: reviewBinding, analysisStore,
+            settings: (projectID) => reviewSettings(services.db, projectID),
+          })
           const card = params.card ? yield* BoardThread.card(services.db, params.card).pipe(Effect.orDie) : undefined
           if (params.card && !card) return yield* new Tool.Failure({ message: `Card ${params.card} is not on the board` })
           const validation = yield* GovernanceRecordsV2.readValidation(services.db, params.validationRecordID)

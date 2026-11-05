@@ -6,7 +6,7 @@ import { Tool } from "@orchestra/core/tool/tool"
 const active = new Map<string, { semaphore: ReturnType<typeof Semaphore.makeUnsafe>; references: number }>()
 
 /** Process-local serialization; this does not claim clustered Session ownership. */
-export function withCandidate<A, E, R>(candidate: string, work: Effect.Effect<A, E, R>) {
+export function withCandidate<A, E, R>(candidate: string, work: (waited: boolean) => Effect.Effect<A, E, R>) {
   return Effect.acquireUseRelease(
     Effect.suspend(() => {
       const existing = active.get(candidate)
@@ -15,12 +15,12 @@ export function withCandidate<A, E, R>(candidate: string, work: Effect.Effect<A,
       const entry = existing ?? { semaphore: Semaphore.makeUnsafe(1), references: 0 }
       if (!existing) active.set(candidate, entry)
       entry.references += 1
-      return Effect.succeed(entry)
+      return Effect.succeed({ entry, waited: existing !== undefined })
     }),
-    (entry) => entry.semaphore.withPermit(work),
-    (entry) => Effect.sync(() => {
-      entry.references -= 1
-      if (entry.references === 0) active.delete(candidate)
+    (held) => held.entry.semaphore.withPermit(Effect.suspend(() => work(held.waited))),
+    (held) => Effect.sync(() => {
+      held.entry.references -= 1
+      if (held.entry.references === 0) active.delete(candidate)
     }),
   )
 }
