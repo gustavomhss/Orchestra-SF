@@ -15,6 +15,7 @@ import { SkillV2 } from "@orchestra/core/skill"
 import { SkillTool } from "@orchestra/core/tool/skill"
 import { Tool } from "@orchestra/core/tool/tool"
 import { ReviewResultV2 } from "../governance/review-result"
+import type { ReviewCardV2 } from "./review-card"
 import { sliceDiff } from "./review-diff"
 
 export { baseRules, changes, hunks, RULE_FILES, sliceDiff } from "./review-diff"
@@ -132,6 +133,8 @@ export type Result =
       readonly routing: ReviewRouting.Record
       readonly lead: SessionSchema.ID
       readonly reply: string
+      /** Quick and blocked return []; omit the validator's confirmed argument for Quick quote-only reviews. */
+      readonly confirmed: ReadonlyArray<ReviewCardV2.Confirmed>
       readonly counts: Counts
     }
 
@@ -234,7 +237,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
   const tier = runTier(catalog, ReviewRouting.tier(afterEntry))
   const method = ReviewResultV2.method({ profile: afterEntry.profile.id, tier: tier.id })
   const record = [`reviewMethodVersion: ${method}`, ...(cardOnly ? [] : input.facts.record)]
-  const finishTurn = (sessionRecord: ReviewRouting.Record, body: ReadonlyArray<string>, counts: Counts) =>
+  const finishTurn = (sessionRecord: ReviewRouting.Record, body: ReadonlyArray<string>, counts: Counts, confirmed: ReadonlyArray<ReviewCardV2.Confirmed> = []) =>
     Effect.gen(function* () {
       const reply = yield* RUNNING.withPermit(port.run(lead, body.join("\n\n"), { key: "finish", finish: !cardOnly }))
       const closing = yield* deviationsOf(input.store, lead, "finish", leadEntryDeviations.length)
@@ -244,6 +247,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
         routing: { ...sessionRecord, deviations: [...sessionRecord.deviations, ...closing] },
         lead,
         reply,
+        confirmed,
         counts,
       } as Result
     })
@@ -442,6 +446,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
             lenses: item.candidate.lenses,
             class: item.candidate.class,
             node: item.candidate.node,
+            rule: item.result.evidence.kind === "tool" ? item.result.evidence.rule : item.candidate.class,
             trigger: item.candidate.trigger,
             rung: item.result.rung,
             rungs: item.result.history.map((rung) => rung.option),
@@ -508,7 +513,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
   return yield* finishTurn(
     final,
     [
-      `Stage: finish. Merge the confirmed findings below by root cause, rank them, apply the verdict rules, write coverage and the card${cardOnly ? "." : ", then call maestro_record_review."} Only these confirmed findings may carry a verdict; questions never do.`,
+      cardOnly ? "Stage: finish. Rank the confirmed findings below, preserve every confirmed finding ID exactly once with open status and unchanged host identity and evidence, apply the verdict rules, and write coverage and the card. Only these confirmed findings may carry a verdict; questions never do." : "Stage: finish. Merge the confirmed findings below by root cause, rank them, apply the verdict rules, write coverage and the card, then call maestro_record_review. Only these confirmed findings may carry a verdict; questions never do.",
       `Routing record (embed it verbatim as the card's routing):\n${JSON.stringify(final)}`,
       data("confirmed findings, as the host merged them", JSON.stringify(confirmed)),
       data("questions", JSON.stringify(questions)),
@@ -524,6 +529,9 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
       `Reply with exactly one \`\`\`${ReviewResultV2.TAG} block.`,
     ],
     counts,
+    confirmed.map((item) => ({ id: item.id, path: item.path, line: item.line, ...(item.endLine ? { endLine: item.endLine } : {}),
+      severity: item.severity, class: item.class, node: item.node, lens: item.lens, rule: item.rule, trigger: item.trigger,
+      rungs: item.rungs, evidence: item.evidence })),
   )
 })
 

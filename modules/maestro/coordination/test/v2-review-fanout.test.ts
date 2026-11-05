@@ -316,6 +316,49 @@ test("PR text is delimited untrusted data and does not influence the host route"
   })),
 )
 
+test("card-only returns the verifier-confirmed host identities shown in the finish brief", () =>
+  run((directory) => Effect.gen(function* () {
+    const h = yield* harness(directory, "host_findings")
+    const toolEvidence = { kind: "tool", pack: "gitleaks", rule: "tool-rule", version: "1" }
+    const port: ReviewFanoutV2.Port = {
+      ...h.port,
+      run: (id, text, turn) => turn.key === "verify" && text.includes("class logic.invariant")
+        ? h.port.run(id, text, turn).pipe(Effect.map((reply) => reply.replace(
+            JSON.stringify({ candidate: "C2", state: "dropped", refutation: "REFUTED-BECAUSE", history: [{ option: "quote", outcome: "settled" }] }),
+            JSON.stringify({ candidate: "C2", state: "confirmed", rung: "tool:ast-grep", evidence: toolEvidence, history: [{ option: "tool:ast-grep", outcome: "settled" }] }),
+          )))
+        : h.port.run(id, text, turn),
+    }
+    const result = yield* ReviewFanoutV2.run(h.input("standard", { completion: "card-only" }), port)
+    if (result.status !== "ran") throw new Error("expected a run")
+    const shown: Array<Record<string, unknown>> = dataBlock(brief(h.briefs, "lead:finish"), "confirmed findings, as the host merged them")
+    expect(result.confirmed).toHaveLength(2)
+    expect(result.confirmed.map((finding) => finding.id)).toEqual(["C1", "C2"])
+    expect(result.confirmed[0]).toMatchObject({ id: "C1", rule: "logic.invariant", lens: "correctness-logic", trigger: "trigger for export const a = 2", rungs: ["quote"], evidence: { kind: "quote", path: "src/a.ts", startLine: 2, endLine: 2 } })
+    expect(result.confirmed[1]).toMatchObject({ id: "C2", rule: "tool-rule", evidence: toolEvidence, rungs: ["tool:ast-grep"] })
+    for (const finding of result.confirmed) expect(shown).toContainEqual(expect.objectContaining(finding))
+    expect(result.confirmed.some((finding) => finding.id === "C3")).toBe(false)
+    expect(brief(h.briefs, "lead:finish")).toContain("preserve every confirmed finding ID")
+    expect(brief(h.briefs, "lead:finish")).not.toContain("Merge the confirmed findings below by root cause")
+  })),
+)
+
+test("Quick and blocked return no host-confirmed list", () =>
+  run((directory) => Effect.gen(function* () {
+    const quick = yield* harness(directory, "host_quick")
+    const quickResult = yield* ReviewFanoutV2.run(quick.input("quick", { completion: "card-only" }), quick.port)
+    if (quickResult.status !== "ran") throw new Error("expected Quick run")
+    expect(quickResult.confirmed).toEqual([])
+    const blocked = yield* harness(directory, "host_blocked")
+    const blockedResult = yield* ReviewFanoutV2.run(blocked.input("standard", { completion: "card-only" }), {
+      ...blocked.port,
+      run: (id, text, turn) => turn.key === "entry" ? blocked.port.run(id, text, turn).pipe(Effect.as("invalid")) : blocked.port.run(id, text, turn),
+    })
+    if (blockedResult.status !== "ran") throw new Error("expected blocked run")
+    expect(blockedResult.confirmed).toEqual([])
+  })),
+)
+
 test("a diff's changes carry the head line of every added line and the removed count", () => {
   expect(ReviewFanoutV2.changes(DIFF)).toEqual([
     {
@@ -484,6 +527,7 @@ test("Standard runs the seven steps in order, each Session with the scope and br
       expect(finish).not.toContain("ASSUMPTION-ONLY-FOR-FINDERS")
       expect(finish).not.toContain("fp-correctness-logic-1\"")
       expect(result.counts).toEqual({ lensChildren: 5, verifiers: 2, candidates: 6, confirmed: 1, questions: 4, dropped: 1 })
+      expect(result.confirmed.map((finding) => finding.id)).toEqual(["C1"])
       expect(result.routing.deviations.map((entry) => entry.kind)).toContain("verifier-budget")
       expect(result.method).toBe("review-v2/code/standard")
 

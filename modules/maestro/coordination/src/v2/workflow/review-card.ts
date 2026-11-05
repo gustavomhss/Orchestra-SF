@@ -12,25 +12,27 @@ export class ValidationError extends Error {
   }
 }
 
+export type Confirmed = {
+  readonly id: string
+  readonly path: string
+  readonly line: number
+  readonly endLine?: number
+  readonly severity: string
+  readonly class: string
+  readonly node: string
+  readonly lens: string
+  // Host selects evidence.rule for tool evidence, otherwise the candidate's class.
+  readonly rule: string
+  readonly trigger: string
+  readonly rungs: ReadonlyArray<string>
+  readonly evidence: MaestroEvent.Review.Evidence
+}
+
 export function validate(reply: string, expected: {
   readonly routing: ReviewRouting.Record
   readonly scope: { readonly base: string; readonly head: string; readonly files: number; readonly changedLines: number }
   readonly verdictRequired?: boolean
-  readonly confirmed?: ReadonlyArray<{
-    readonly id: string
-    readonly path: string
-    readonly line: number
-    readonly endLine?: number
-    readonly severity: string
-    readonly class: string
-    readonly node: string
-    readonly lens: string
-    // Host selects evidence.rule for tool evidence, otherwise the candidate's class.
-    readonly rule: string
-    readonly trigger: string
-    readonly rungs: ReadonlyArray<string>
-    readonly evidence: MaestroEvent.Review.Evidence
-  }>
+  readonly confirmed?: ReadonlyArray<Confirmed>
 }): ReviewResultV2.Card {
   const card = ReviewResultV2.parse(reply)
   if (!card) throw new ValidationError("malformed-card")
