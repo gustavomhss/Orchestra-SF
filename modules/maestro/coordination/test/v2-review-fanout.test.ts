@@ -459,7 +459,7 @@ test("Standard runs the seven steps in order, each Session with the scope and br
         expect(h.calls.findIndex((item) => item.startsWith(`run:${key}`))).toBeGreaterThan(h.calls.indexOf(`bind:${key}`))
       }
       expect(h.analyzed[0].routing.tier.id).toBe("standard")
-      expect(h.analyzed[0].packs.map((pack) => pack.id)).toEqual(["gitleaks", "repo"])
+      expect(h.analyzed[0].packs.map((pack) => pack.id)).toEqual(["gitleaks", "repo", "ast-grep"])
       expect(h.analyzed[0].cache).toBe("review_val_1_code")
       const hunts = h.calls.filter((call) => call.startsWith("run:lens:"))
       expect(hunts.toSorted()).toEqual(
