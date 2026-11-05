@@ -199,6 +199,106 @@ describe("server session", () => {
     expect(ctx.store.data.part.msg_2_assistant).toMatchObject([{ type: "text", text: "world" }])
   })
 
+  test("projects a rejected V2 step as idle with a completed error assistant", () => {
+    const ctx = setup({ ses_child: session("ses_child"), ses_other: session("ses_other") })
+    ctx.store.remember(session("ses_child"))
+    ctx.store.remember(session("ses_other"))
+    ctx.store.set("session_message", "ses_child", [v2User("msg_user", 1, "Ask a question")])
+    const apply = (input: ClientEvent) => ctx.store.applyV2(input)
+
+    apply({
+      id: "evt_other_step",
+      created: 2,
+      type: "session.step.started",
+      durable: { aggregateID: "ses_other", seq: 1, version: 1 },
+      location: { directory: "/repo" },
+      data: {
+        sessionID: "ses_other",
+        assistantMessageID: "msg_other_assistant",
+        agent: "build",
+        model: { id: "model", providerID: "provider" },
+      },
+    })
+    apply({
+      id: "evt_step",
+      created: 3,
+      type: "session.step.started",
+      durable: { aggregateID: "ses_child", seq: 1, version: 1 },
+      location: { directory: "/repo" },
+      data: {
+        sessionID: "ses_child",
+        assistantMessageID: "msg_assistant",
+        agent: "build",
+        model: { id: "model", providerID: "provider" },
+      },
+    })
+    expect(ctx.store.data.session_status.ses_child).toEqual({ type: "busy" })
+    expect(ctx.store.data.message.ses_child?.map((message) => message.id)).toEqual(["msg_user", "msg_assistant"])
+
+    apply({
+      id: "evt_retry",
+      created: 4,
+      type: "session.retry.scheduled",
+      durable: { aggregateID: "ses_child", seq: 2, version: 1 },
+      location: { directory: "/repo" },
+      data: {
+        sessionID: "ses_child",
+        assistantMessageID: "msg_assistant",
+        attempt: 1,
+        at: 5,
+        error: { type: "unknown", message: "Provider turn interrupted" },
+      },
+    })
+    expect(ctx.store.data.session_status.ses_child).toEqual({
+      type: "retry",
+      attempt: 1,
+      message: "Provider turn interrupted",
+      next: 5,
+    })
+    expect(ctx.store.data.session_message.ses_child?.at(-1)).toMatchObject({
+      id: "msg_assistant",
+      type: "assistant",
+      retry: {
+        attempt: 1,
+        at: 5,
+        error: { type: "unknown", message: "Provider turn interrupted" },
+      },
+    })
+
+    apply({
+      id: "evt_failed",
+      created: 6,
+      type: "session.step.failed",
+      durable: { aggregateID: "ses_child", seq: 3, version: 1 },
+      location: { directory: "/repo" },
+      data: {
+        sessionID: "ses_child",
+        assistantMessageID: "msg_assistant",
+        error: { type: "unknown", message: "Provider turn interrupted" },
+      },
+    })
+
+    expect(ctx.store.data.session_status.ses_child).toEqual({ type: "idle" })
+    expect(ctx.store.data.session_status.ses_other).toEqual({ type: "busy" })
+    const assistant = ctx.store.data.session_message.ses_child?.at(-1)
+    expect(assistant).toMatchObject({
+      id: "msg_assistant",
+      type: "assistant",
+      finish: "error",
+      error: { type: "unknown", message: "Provider turn interrupted" },
+      time: { completed: 6 },
+    })
+    if (assistant?.type !== "assistant") throw new Error("expected rejected assistant message")
+    expect(assistant.retry).toBeUndefined()
+    expect(ctx.store.data.message.ses_child?.at(-1)).toMatchObject({
+      id: "msg_assistant",
+      role: "assistant",
+      finish: "error",
+      error: { name: "UnknownError", data: { message: "Provider turn interrupted" } },
+      time: { completed: 6 },
+    })
+  })
+
   test("resolves lineage by session ID without directory", async () => {
     const ctx = setup({ ses_child: session("ses_child", "ses_root"), ses_root: session("ses_root") })
 
