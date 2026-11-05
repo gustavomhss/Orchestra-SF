@@ -105,6 +105,8 @@ test("an ast-grep path must resolve inside the scanned root", () => {
   expect(parse(JSON.stringify([good({ file: "../etc/passwd" })]))).toEqual({ status: "acquisition-error", reason: "path-outside" })
   expect(parse(JSON.stringify([good({ file: "/repo/../etc/passwd" })]))).toEqual({ status: "acquisition-error", reason: "path-outside" })
   expect(parse(JSON.stringify([good({ file: "/repo-evil/a.js" })]))).toEqual({ status: "acquisition-error", reason: "path-outside" })
+  expect(reported("/repo/src\\..\\a.js", "/repo")).toBe("src\\..\\a.js")
+  expect(reported("C:\\repo\\src\\..\\a.js", "C:/repo")).toBe("path-outside")
   expect(reported("/repo/src\\a.js", "/repo")).toBe("src\\a.js")
   expect(reported("C:/repo/src\\a.js", "C:/repo")).toBe("src/a.js")
   expect(reported("/a.js", "/")).toBe("a.js")
