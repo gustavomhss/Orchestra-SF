@@ -24,6 +24,10 @@ export function validate(reply: string, expected: {
     readonly severity: string
     readonly class: string
     readonly node: string
+    readonly lens: string
+    // Host selects evidence.rule for tool evidence, otherwise the candidate's class.
+    readonly rule: string
+    readonly trigger: string
     readonly rungs: ReadonlyArray<string>
     readonly evidence: MaestroEvent.Review.Evidence
   }>
@@ -42,10 +46,13 @@ export function validate(reply: string, expected: {
     throw new ValidationError("verdict-mismatch")
   const quick = ReviewRouting.tier(expected.routing) === "quick"
   if (!quick && expected.confirmed === undefined) throw new ValidationError("unverified-finding")
+  if (expected.confirmed && new Set(expected.confirmed.map((item) => item.id)).size !== expected.confirmed.length)
+    throw new ValidationError("unverified-finding")
   const ids = card.findings.map((finding) => finding.id)
   if (new Set(ids).size !== ids.length) throw new ValidationError("unverified-finding")
   if (!quick && expected.confirmed?.some((finding) => !ids.includes(finding.id))) throw new ValidationError("unverified-finding")
   for (const finding of card.findings) {
+    if (finding.status !== "open") throw new ValidationError("unverified-finding")
     if (quick) {
       if (
         !["P0", "P1"].includes(finding.severity) || !finding.rungs.includes("quote") ||
@@ -54,15 +61,18 @@ export function validate(reply: string, expected: {
       ) throw new ValidationError("unverified-finding")
       continue
     }
-    if (finding.status !== "open") throw new ValidationError("unverified-finding")
     if (!expected.confirmed?.some((item) =>
       item.id === finding.id && item.path === finding.path && item.line === finding.line && item.endLine === finding.endLine &&
       item.severity === finding.severity && item.class === finding.class && item.node === finding.node &&
+      item.lens === finding.lens && item.rule === finding.rule && item.trigger === finding.trigger &&
       isDeepStrictEqual(item.rungs, finding.rungs) && isDeepStrictEqual(item.evidence, finding.evidence)
     )) throw new ValidationError("unverified-finding")
   }
   if (card.outcome === "done" && card.verdict === "APPROVE" &&
     card.findings.some((finding) => finding.status === "open" && ["P0", "P1"].includes(finding.severity))
+  ) throw new ValidationError("verdict-mismatch")
+  if (card.outcome === "done" && card.verdict === "FIX_FIRST" &&
+    !card.findings.some((finding) => finding.status === "open" && ["P0", "P1"].includes(finding.severity))
   ) throw new ValidationError("verdict-mismatch")
   return card
 }

@@ -17,7 +17,8 @@ const finding = {
   rungs: ["quote"], evidence: { kind: "quote", path: "src/a.ts", startLine: 2, endLine: 2 }, status: "open",
 } as const
 const confirmed = [{ id: finding.id, path: finding.path, line: finding.line, severity: finding.severity,
-  class: finding.class, node: finding.node, rungs: finding.rungs, evidence: finding.evidence }]
+  class: finding.class, node: finding.node, lens: finding.lens, rule: finding.rule, trigger: finding.trigger,
+  rungs: finding.rungs, evidence: finding.evidence }]
 const card = {
   outcome: "done", verdict: "FIX_FIRST", profile: "pr", tier: "standard", overlays: ["docs"], routing, scope,
   findings: [finding], questions: [], checks: [], coverage: { examined: [], notExamined: [] },
@@ -105,4 +106,28 @@ test("overlay summary retains declined routing metadata in host order, without a
   expect(ReviewCardV2.validate(reply(value), { routing: route, scope, confirmed: [] })).toEqual(value)
   invalid({ ...value, overlays: ["docs"] }, "routing-mismatch", { routing: route, scope, confirmed: [] })
   invalid({ ...value, overlays: ["concurrency", "docs"] }, "routing-mismatch", { routing: route, scope, confirmed: [] })
+})
+
+test("Quick cannot approve a resolved new P0 finding", () => {
+  const quick = { ...routing, tier: { ...routing.tier, id: "quick" } }
+  invalid({ ...card, routing: quick, tier: "quick", verdict: "APPROVE", findings: [{ ...finding, severity: "P0", status: "resolved" }] },
+    "unverified-finding", { routing: quick, scope })
+})
+
+test("host-confirmed lens, rule and trigger are immutable", () => {
+  for (const changed of [
+    { ...finding, lens: "security" }, { ...finding, rule: "different" }, { ...finding, trigger: "different" },
+  ]) invalid({ ...card, findings: [changed] }, "unverified-finding")
+})
+
+test("duplicate host-confirmed IDs are ambiguous even if the card matches one", () => {
+  invalid(card, "unverified-finding", { ...expected, confirmed: [...confirmed, { ...confirmed[0], trigger: "different" }] })
+  invalid(card, "unverified-finding", { ...expected, confirmed: [...confirmed, confirmed[0]] })
+})
+
+test("FIX_FIRST requires an open P0 or P1, while REJECT is not finding-dependent", () => {
+  invalid({ ...card, findings: [], questions: [{ question: "Possible P1?", severity: "P1" }] }, "verdict-mismatch", { ...expected, confirmed: [] })
+  const p2 = { ...finding, severity: "P2" }
+  invalid({ ...card, findings: [p2] }, "verdict-mismatch", { ...expected, confirmed: [{ ...confirmed[0], severity: "P2" }] })
+  expect(ReviewCardV2.validate(reply({ ...card, verdict: "REJECT", findings: [] }), { ...expected, confirmed: [] }).verdict).toBe("REJECT")
 })
