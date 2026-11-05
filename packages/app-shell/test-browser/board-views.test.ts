@@ -47,6 +47,7 @@ if (process.env.BOARD_VIEWS_DOM !== "1") {
     id: `epc_${number}`, number, ref: `LCH-E${number}`, title, goal: `${title} goal`, position: number, status,
     githubMilestone: null,
   })
+  const fullTitle = "Issue 7 — Preserve the complete payment and refund investigation across releases — العربية עברית 日本語 — without truncating the original title"
   const issues = [
     // Accounts: four shipped on different days and one in review, so it is closest to done.
     issue(1, "shipped", { epic: 1, stageEnteredAt: now - 9 * day }),
@@ -57,7 +58,7 @@ if (process.env.BOARD_VIEWS_DOM !== "1") {
     // Payments: one shipped, one building, one ready that waits on an issue outside the epic, one in backlog.
     issue(6, "shipped", { epic: 2, stageEnteredAt: now - 2 * day }),
     issue(7, "building", {
-      epic: 2, seat: "backend",
+      epic: 2, seat: "backend", title: fullTitle,
       steps: [{ title: "Schema", status: "done", now: null }, { title: "Handlers", status: "active", now: "wiring refunds" }],
     }),
     issue(8, "ready", { epic: 2, dependsOn: ["LCH-12"] }),
@@ -125,6 +126,7 @@ if (process.env.BOARD_VIEWS_DOM !== "1") {
       event: { listen: () => () => {} },
     }),
   }))
+  const { lists, boards } = await import(solidDom("@/orchestra/chapters/board/warm", import.meta.dir))
   const { default: Board }: typeof import("@/orchestra/chapters/board/board") = await import(
     solidDom("@/orchestra/chapters/board/board", import.meta.dir)
   )
@@ -143,6 +145,8 @@ if (process.env.BOARD_VIEWS_DOM !== "1") {
     [...scope.querySelectorAll<HTMLButtonElement>("button")].find((item) => text(item) === label)
 
   const mount = async (ready = '.board-overview-row[data-key="LCH"]') => {
+    lists.clear()
+    boards.clear()
     const host = document.createElement("div")
     document.body.appendChild(host)
     const dispose = render(() => createComponent(PlatformProvider, {
@@ -197,37 +201,42 @@ if (process.env.BOARD_VIEWS_DOM !== "1") {
 
   test("the list groups by epic closest to done, folds shipped rows, filters and regroups by stage", async () => {
     const view = await mount()
-    await view.open("List")
-    await until(() => !!view.host.querySelector(".board-table-row"), view.host)
-    const table = view.host.querySelector(".board-table-view")!
-    const groups = () => [...table.querySelectorAll(".board-table-group")]
-    const refs = () => [...table.querySelectorAll(".board-table-row")].map((item) => item.getAttribute("data-ref"))
-    expect(view.host.querySelector(".board-grid")?.hasAttribute("hidden")).toBe(true)
+    try {
+      await view.open("List")
+      await until(() => !!view.host.querySelector(".board-table-row"), view.host)
+      const table = view.host.querySelector(".board-table-view")!
+      const groups = () => [...table.querySelectorAll(".board-table-group")]
+      const refs = () => [...table.querySelectorAll(".board-table-row")].map((item) => item.getAttribute("data-ref"))
+      expect(view.host.querySelector(".board-grid")?.hasAttribute("hidden")).toBe(true)
 
-    expect(groups().map((group) => text(group.querySelector(".board-table-group-name")))).toEqual(["Accounts", "Payments", "Docs", "No epic"])
-    expect(text(groups()[0].querySelector(".board-table-group-head > .board-count"))).toBe("4 of 5 shipped")
-    expect(text(groups()[1].querySelector(".board-table-done"))).toBe(`done ${range(payments.p50, payments.p85, "en")}`)
-    expect(refs()).toEqual(["LCH-5", "LCH-7", "LCH-8", "LCH-9", "LCH-12", "LCH-11"])
-    expect(text(table.querySelector('[data-ref="LCH-8"] .board-table-asked'))).toBe("asked you")
+      expect(groups().map((group) => text(group.querySelector(".board-table-group-name")))).toEqual(["Accounts", "Payments", "Docs", "No epic"])
+      expect(text(groups()[0].querySelector(".board-table-group-head > .board-count"))).toBe("4 of 5 shipped")
+      expect(text(groups()[1].querySelector(".board-table-done"))).toBe(`done ${range(payments.p50, payments.p85, "en")}`)
+      expect(refs()).toEqual(["LCH-5", "LCH-7", "LCH-8", "LCH-9", "LCH-12", "LCH-11"])
+      expect(text(table.querySelector('[data-ref="LCH-8"] .board-table-asked'))).toBe("asked you")
+      expect(table.querySelector<HTMLSpanElement>('[data-ref="LCH-7"] .board-table-name')?.title).toBe(fullTitle)
+      expect(table.querySelector('[data-ref="LCH-7"] .board-table-name')?.textContent).toBe(fullTitle)
 
-    const fold = groups()[0].querySelector<HTMLButtonElement>(".board-table-fold")!
-    expect(text(fold)).toBe("4 shipped")
-    fold.click()
-    await until(() => refs().includes("LCH-4"), view.host)
-    expect(refs().slice(0, 5)).toEqual(["LCH-5", "LCH-4", "LCH-3", "LCH-2", "LCH-1"])
+      const fold = groups()[0].querySelector<HTMLButtonElement>(".board-table-fold")!
+      expect(text(fold)).toBe("4 shipped")
+      fold.click()
+      await until(() => refs().includes("LCH-4"), view.host)
+      expect(refs().slice(0, 5)).toEqual(["LCH-5", "LCH-4", "LCH-3", "LCH-2", "LCH-1"])
 
-    const filters = table.querySelector(".board-filters")!
-    expect(text(filters.querySelector('[data-tone="warm"]'))).toBe("Needs you1")
-    filters.querySelector<HTMLButtonElement>('[data-tone="warm"]')!.click()
-    await until(() => refs().length === 1, view.host)
-    expect(refs()).toEqual(["LCH-8"])
-    button(filters, "All12")!.click()
+      const filters = table.querySelector(".board-filters")!
+      expect(text(filters.querySelector('[data-tone="warm"]'))).toBe("Needs you1")
+      filters.querySelector<HTMLButtonElement>('[data-tone="warm"]')!.click()
+      await until(() => refs().length === 1, view.host)
+      expect(refs()).toEqual(["LCH-8"])
+      button(filters, "All12")!.click()
 
-    button(table.querySelector(".board-table-bar > .board-segments")!, "Stage")!.click()
-    await until(() => !!table.querySelector(".board-table-group[data-stage]"), view.host)
-    expect(groups().map((group) => group.getAttribute("data-stage"))).toEqual(["review", "building", "ready", "backlog", "shipped"])
-    expect(refs()).toEqual(["LCH-5", "LCH-7", "LCH-8", "LCH-12", "LCH-9", "LCH-11"])
-    view.done()
+      button(table.querySelector(".board-table-bar > .board-segments")!, "Stage")!.click()
+      await until(() => !!table.querySelector(".board-table-group[data-stage]"), view.host)
+      expect(groups().map((group) => group.getAttribute("data-stage"))).toEqual(["review", "building", "ready", "backlog", "shipped"])
+      expect(refs()).toEqual(["LCH-5", "LCH-7", "LCH-8", "LCH-12", "LCH-9", "LCH-11"])
+    } finally {
+      view.done()
+    }
   }, 20000)
 
   test("the epic page shows the epic's forecast, that it sets the date, what it waits on and Maestro's question", async () => {
@@ -268,44 +277,49 @@ if (process.env.BOARD_VIEWS_DOM !== "1") {
 
   test("the timeline draws a bar per epic over ISO weeks, marks the epic that sets the date and logs scope changes", async () => {
     const view = await mount()
-    await view.open("Timeline")
-    await until(() => !!view.host.querySelector(".board-timeline-epic"), view.host)
-    const chart = view.host.querySelector(".board-timeline")!
-    const weeks = [...chart.querySelectorAll(".board-timeline-week")].map((item) => text(item))
-    expect(weeks.length).toBeGreaterThanOrEqual(3)
-    weeks.forEach((label) => expect(label).toMatch(/week \d+$/))
-    // Target dates read in local time, like the board's header.
-    expect(text(chart.querySelector(".board-timeline-target"))).toContain(local(target))
-    expect(chart.querySelector(".board-timeline-today")).not.toBeNull()
+    try {
+      await view.open("Timeline")
+      await until(() => !!view.host.querySelector(".board-timeline-epic"), view.host)
+      const chart = view.host.querySelector(".board-timeline")!
+      const weeks = [...chart.querySelectorAll(".board-timeline-week")].map((item) => text(item))
+      expect(weeks.length).toBeGreaterThanOrEqual(3)
+      weeks.forEach((label) => expect(label).toMatch(/week \d+$/))
+      // Target dates read in local time, like the board's header.
+      expect(text(chart.querySelector(".board-timeline-target"))).toContain(local(target))
+      expect(chart.querySelector(".board-timeline-today")).not.toBeNull()
 
-    const rows = [...chart.querySelectorAll(".board-timeline-epic")]
-    expect(rows.map((row) => text(row.querySelector(".board-timeline-epic-name")))).toEqual(["Accounts", "Payments", "Docs"])
-    const tones = (row: Element) => [...row.querySelectorAll(".board-timeline-bar")].map((bar) => bar.getAttribute("data-tone"))
-    expect(tones(rows[0])).toEqual(["shipped", "left", "cone"])
-    expect(text(rows[0].querySelector(".board-timeline-tag"))).toBe(range(accounts.p50, accounts.p85, "en"))
-    expect(text(rows[1].querySelector(".board-timeline-tag"))).toBe(`${range(payments.p50, payments.p85, "en")}sets the date`)
-    expect(tones(rows[2])).toEqual(["shipped"])
-    expect(text(rows[2].querySelector(".board-timeline-tag"))).toBe("All shipped")
+      const rows = [...chart.querySelectorAll(".board-timeline-epic")]
+      expect(rows.map((row) => text(row.querySelector(".board-timeline-epic-name")))).toEqual(["Accounts", "Payments", "Docs"])
+      const tones = (row: Element) => [...row.querySelectorAll(".board-timeline-bar")].map((bar) => bar.getAttribute("data-tone"))
+      expect(tones(rows[0])).toEqual(["shipped", "left", "cone"])
+      expect(text(rows[0].querySelector(".board-timeline-tag"))).toBe(range(accounts.p50, accounts.p85, "en"))
+      expect(text(rows[1].querySelector(".board-timeline-tag"))).toBe(`${range(payments.p50, payments.p85, "en")}sets the date`)
+      expect(tones(rows[2])).toEqual(["shipped"])
+      expect(text(rows[2].querySelector(".board-timeline-tag"))).toBe("All shipped")
 
-    rows[1].querySelector<HTMLButtonElement>(".board-timeline-toggle")!.click()
-    await until(() => chart.querySelectorAll(".board-timeline-issue").length > 0, view.host)
-    expect([...chart.querySelectorAll(".board-timeline-issue[data-stage] .board-id")].map((item) => text(item)))
-      .toEqual(["LCH-7", "LCH-8", "LCH-9"])
+      rows[1].querySelector<HTMLButtonElement>(".board-timeline-toggle")!.click()
+      await until(() => chart.querySelectorAll(".board-timeline-issue").length > 0, view.host)
+      expect([...chart.querySelectorAll(".board-timeline-issue[data-stage] .board-id")].map((item) => text(item)))
+        .toEqual(["LCH-7", "LCH-8", "LCH-9"])
+      expect(chart.querySelector<HTMLSpanElement>('.board-timeline-issue[data-stage="building"] .board-timeline-issue-title')?.title).toBe(fullTitle)
+      expect(chart.querySelector('.board-timeline-issue[data-stage="building"] .board-timeline-issue-title')?.textContent).toBe(fullTitle)
 
-    const scope = chart.querySelector(".board-timeline-scope")!
-    expect(text(scope.querySelector("h3 .board-count"))).toBe("3 of 12 shipped")
-    expect(text(scope.querySelector(".board-scope-log b"))).toBe("+2")
-    expect(text(scope.querySelector(".board-scope-log"))).toContain("Refunds joined after review")
+      const scope = chart.querySelector(".board-timeline-scope")!
+      expect(text(scope.querySelector("h3 .board-count"))).toBe("3 of 12 shipped")
+      expect(text(scope.querySelector(".board-scope-log b"))).toBe("+2")
+      expect(text(scope.querySelector(".board-scope-log"))).toContain("Refunds joined after review")
 
-    // A digit never answers a question the view does not show; on the board, where it shows, it does.
-    const root = view.host.querySelector(".board-root")!
-    root.dispatchEvent(new KeyboardEvent("keydown", { key: "1", bubbles: true }))
-    await new Promise((resolve) => setTimeout(resolve, 50))
-    expect(writes.some((path) => path.endsWith("/answer"))).toBe(false)
-    button(view.host.querySelector(".board-head-end .board-segments")!, "Board")!.click()
-    root.dispatchEvent(new KeyboardEvent("keydown", { key: "1", bubbles: true }))
-    await until(() => writes.includes("/api/board/LCH/question/bq_8/answer"), view.host)
-    view.done()
-    server.stop(true)
+      // A digit never answers a question the view does not show; on the board, where it shows, it does.
+      const root = view.host.querySelector(".board-root")!
+      root.dispatchEvent(new KeyboardEvent("keydown", { key: "1", bubbles: true }))
+      await new Promise((resolve) => setTimeout(resolve, 50))
+      expect(writes.some((path) => path.endsWith("/answer"))).toBe(false)
+      button(view.host.querySelector(".board-head-end .board-segments")!, "Board")!.click()
+      root.dispatchEvent(new KeyboardEvent("keydown", { key: "1", bubbles: true }))
+      await until(() => writes.includes("/api/board/LCH/question/bq_8/answer"), view.host)
+    } finally {
+      view.done()
+      server.stop(true)
+    }
   }, 20000)
 }

@@ -34,10 +34,11 @@ if (process.env.BOARD_DOM !== "1") {
     position: number, estimate: null, seat: null, sessionID: null, branch: null, prNumber: null, holdBeforeMerge: false,
     paused: false, stageEnteredAt: now, githubNumber: null, steps: [], dependsOn: [], ...extra,
   })
+  const fullTitle = "Issue 1 — Preserve the complete deployment and review history across projects — العربية עברית 日本語 — without truncating the original title"
   const secretValue = "sk-live-board-fixture-never-render-0042"
   const state = {
     issues: [
-      issue(1, "backlog"),
+      issue(1, "backlog", { title: fullTitle }),
       issue(2, "ready"),
       issue(3, "building", {
         seat: "backend",
@@ -113,6 +114,7 @@ if (process.env.BOARD_DOM !== "1") {
       } },
     }),
   }))
+  const { lists, boards } = await import(solidDom("@/orchestra/chapters/board/warm", import.meta.dir))
   const { default: Board }: typeof import("@/orchestra/chapters/board/board") = await import(
     solidDom("@/orchestra/chapters/board/board", import.meta.dir)
   )
@@ -128,6 +130,8 @@ if (process.env.BOARD_DOM !== "1") {
   }
 
   const mount = async () => {
+    lists.clear()
+    boards.clear()
     const host = document.createElement("div")
     document.body.appendChild(host)
     const dispose = render(() => createComponent(PlatformProvider, {
@@ -146,20 +150,25 @@ if (process.env.BOARD_DOM !== "1") {
 
   test("each issue sits in its stage's column; intake is only counted and cut stays off the board", async () => {
     const view = await mount()
-    expect([...view.host.querySelectorAll(".board-col")].map((col) => col.getAttribute("data-stage")))
-      .toEqual(["backlog", "ready", "building", "review", "shipped"])
-    expect(view.lane("backlog")).toEqual(["LCH-1"])
-    expect(view.lane("ready")).toEqual(["LCH-2"])
-    expect(view.lane("building")).toEqual(["LCH-3"])
-    expect(view.lane("review")).toEqual([])
-    expect(view.lane("shipped")).toEqual(["LCH-4"])
-    expect(view.host.querySelector('[data-ref="LCH-5"]')).toBeNull()
-    expect(view.host.querySelector('[data-ref="LCH-6"]')).toBeNull()
-    expect(view.host.querySelector(".board-intake")?.textContent).toContain("1")
-    // The building card shows the active step's now line and its seat by role letter.
-    expect(view.host.querySelector('[data-ref="LCH-3"] .board-now')?.textContent).toContain("wiring the routes")
-    expect(view.host.querySelector('[data-ref="LCH-3"] .board-seat')?.textContent).toBe("B")
-    view.done()
+    try {
+      expect([...view.host.querySelectorAll(".board-col")].map((col) => col.getAttribute("data-stage")))
+        .toEqual(["backlog", "ready", "building", "review", "shipped"])
+      expect(view.lane("backlog")).toEqual(["LCH-1"])
+      expect(view.lane("ready")).toEqual(["LCH-2"])
+      expect(view.lane("building")).toEqual(["LCH-3"])
+      expect(view.lane("review")).toEqual([])
+      expect(view.lane("shipped")).toEqual(["LCH-4"])
+      expect(view.host.querySelector('[data-ref="LCH-5"]')).toBeNull()
+      expect(view.host.querySelector('[data-ref="LCH-6"]')).toBeNull()
+      expect(view.host.querySelector(".board-intake")?.textContent).toContain("1")
+      expect(view.host.querySelector<HTMLSpanElement>('[data-ref="LCH-1"] .board-row-title')?.title).toBe(fullTitle)
+      expect(view.host.querySelector('[data-ref="LCH-1"] .board-row-title')?.textContent).toBe(fullTitle)
+      // The building card shows the active step's now line and its seat by role letter.
+      expect(view.host.querySelector('[data-ref="LCH-3"] .board-now')?.textContent).toContain("wiring the routes")
+      expect(view.host.querySelector('[data-ref="LCH-3"] .board-seat')?.textContent).toBe("B")
+    } finally {
+      view.done()
+    }
   }, 20000)
 
   test("board.changed for this project refetches the board and moves the card", async () => {

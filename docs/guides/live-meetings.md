@@ -44,7 +44,8 @@ The recording indicator stays visible while a meeting runs.
 
 The hotkeys exist only while a meeting runs and can be changed in the page's settings. If another app already holds a
 shortcut, the overlay says the shortcut "is taken by another app" and offers **Change shortcut**; the other shortcuts
-keep working. You can also click the overlay's "Ask about this call…" field and type a question; focus goes back to
+keep working. Resetting the hotkeys and removing the transcription key both ask you to confirm first.
+You can also click the overlay's "Ask about this call…" field and type a question; focus goes back to
 your call app when you send it. The overlay also has **Move**, **Captions**, **Suggestions** and **Copy** controls and a
 **Stop meeting** button. Quick actions ("What should I say?", "Follow-up questions", "Fact-check", "Recap so far") are
 one click each.
@@ -63,8 +64,10 @@ before a real meeting by watching your own share from a second device.
 ## After the meeting
 
 Stop ends capture and the hotkeys at once. The card arrives when the model finishes. On it you confirm, dispute or
-dismiss items, track commitments, and confirm new people. **Hand to Maestro** on an item sends that item to Maestro;
-**Send open items to Maestro** sends all the open ones as one message. Maestro does not act on them until you ask. Follow-up drafts are for you to copy: nothing is sent outside
+dismiss items, track commitments, and confirm new people. A dismiss or handoff that fails comes back with an error
+instead of staying hidden, and its buttons wait until the request ends. **Hand to Maestro** on an item sends that item
+to Maestro; **Send open items to Maestro** sends all the open ones as one message. Maestro does not act on them until
+you ask. Follow-up drafts are for you to copy: nothing is sent outside
 Orchestra.
 
 A card that fails shows its reason and is not retried.
