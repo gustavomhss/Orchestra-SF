@@ -29,6 +29,8 @@ The composer's **Ask** button switches the session to **Auto-accept**. While it 
 
 Settings, Permissions, lists every "Allow always" rule saved for the current project under **Saved permissions**. Each row shows the tool and the saved command, path or pattern.
 
+If saved permissions could not load, click **Retry** to load the list again.
+
 Click **Remove** to delete a rule. The next matching request asks again. Removing a rule does not stop a run that is already in progress.
 
 The per-tool settings above the list are different. They set the defaults for every agent and repository, and a project's config or an agent's own rules can override them.

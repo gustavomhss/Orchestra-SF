@@ -1,6 +1,8 @@
 import { expect, mock, test } from "bun:test"
 import path from "node:path"
 import type { Config } from "@/v2-wire"
+import type { DirectorySDK } from "@/context/sdk"
+import type { Locale } from "@/context/language"
 
 
 async function child(args: string[], env = process.env) {
@@ -22,7 +24,15 @@ if (process.env.LEAN_SETTINGS_DOM !== "1") {
   }, 240000)
 } else {
   const { createComponent, createStore, render } = await import("./lean-dom.test-helper")
+  const { Suspense } = await import("solid-js")
   const { solidDom } = await import("./solid-dom")
+  type SavedApi = DirectorySDK["api"]["permission"]["saved"]
+  type SavedRows = Awaited<ReturnType<SavedApi["list"]>>
+  const unavailableList = (): ReturnType<SavedApi["list"]> => Promise.reject(new Error("Unexpected saved permission read"))
+  const savedIO = {
+    list: mock(unavailableList),
+    remove: mock(async (_input: Parameters<SavedApi["remove"]>[0]) => undefined),
+  } satisfies SavedApi
   const [state, setState] = createStore<{ ready: boolean; error: unknown; config: Config }>({
     ready: false, error: undefined,
     config: { tool_output: { max_lines: 42, max_bytes: 900, lean: { enabled: false } } },
@@ -40,12 +50,16 @@ if (process.env.LEAN_SETTINGS_DOM !== "1") {
   // External context fixtures only, spread over the real module where it loads under Bun; render the real Settings
   // sections and provider. Fixtures replace the solidDom() copies (./solid-dom) those modules import.
   const sdk: typeof import("@/context/server-sdk") = await import(solidDom("@/context/server-sdk", import.meta.dir))
+  const directorySDK: typeof import("@/context/sdk") = await import(solidDom("@/context/sdk", import.meta.dir))
   const serverSync: typeof import("@/context/server-sync") = await import(solidDom("@/context/server-sync", import.meta.dir))
   const permission: typeof import("@/context/permission") = await import(solidDom("@/context/permission", import.meta.dir))
   const theme: typeof import("@orchestra/ui/theme/context") = await import(
     solidDom("@orchestra/ui/theme/context", import.meta.dir)
   )
   mock.module(solidDom("@/context/server-sync", import.meta.dir), () => ({ ...serverSync, useServerSync: () => () => sync }))
+  mock.module(solidDom("@/context/sdk", import.meta.dir), () => ({ ...directorySDK,
+    useSDK: () => () => ({ api: { permission: { saved: savedIO } } }),
+  }))
   mock.module(solidDom("@/context/server-sdk", import.meta.dir), () => ({ ...sdk,
     useServerReady: () => () => state.ready,
     useServerSDK: () => () => ({ ready: Promise.resolve(), client: { pty: { shells: async () => ({ data: [] }) } } }),
@@ -64,8 +78,11 @@ if (process.env.LEAN_SETTINGS_DOM !== "1") {
   const { SettingsGeneralV2 }: typeof import("@/components/settings-v2/general") = await import(
     solidDom("@/components/settings-v2/general", import.meta.dir)
   )
+  const { SavedPermissionsSection }: typeof import("@/components/settings-v2/view/saved-permissions-section") = await import(
+    solidDom("@/components/settings-v2/view/saved-permissions-section", import.meta.dir)
+  )
   const { PlatformProvider }: typeof import("@/context/platform") = await import(solidDom("@/context/platform", import.meta.dir))
-  const { LanguageProvider, useLanguage }: typeof import("@/context/language") = await import(
+  const { LanguageProvider, useLanguage, loadLocaleDict }: typeof import("@/context/language") = await import(
     solidDom("@/context/language", import.meta.dir)
   )
   const { SettingsProvider }: typeof import("@/context/settings") = await import(solidDom("@/context/settings", import.meta.dir))
@@ -73,6 +90,9 @@ if (process.env.LEAN_SETTINGS_DOM !== "1") {
     solidDom("@orchestra/ui/context/dialog", import.meta.dir)
   )
   const { dict }: typeof import("@/i18n/en") = await import(solidDom("@/i18n/en", import.meta.dir))
+  const { SETTINGS_COPY, SETTINGS_COPY_BR }: typeof import("@/i18n/orchestra-chapters/settings") = await import(
+    solidDom("@/i18n/orchestra-chapters/settings", import.meta.dir)
+  )
 
   // The first Lean UI, a global toggle in Settings, was rejected (2026-10-10) and its code removed: Lean lives on its
   // profile screen, with per-profile KPIs, covered items, bytes and tokens saved and per-item switches. That screen's live
@@ -86,15 +106,15 @@ if (process.env.LEAN_SETTINGS_DOM !== "1") {
     "Lean setting unavailable · read-only until a supported v1 server is ready.", "Saving Lean setting…",
     "Could not save the Lean setting",
   ]
-  const mount = (section: () => ReturnType<typeof createComponent>) => {
+  const mount = (section: () => ReturnType<typeof createComponent>, locale: Locale = "en") => {
     const host = document.createElement("div")
     document.body.appendChild(host)
     const dispose = render(() => createComponent(PlatformProvider, {
       value: { platform: "web", openExternal() {}, async restart() {}, async notify() {} },
       get children() { return createComponent(LanguageProvider, {
-        locale: "en",
+        locale,
         get children() {
-          useLanguage().setLocale("en")
+          useLanguage().setLocale(locale)
           return createComponent(SettingsProvider, { get children() {
             return createComponent(DialogProvider, { get children() { return section() } })
           } })
@@ -125,4 +145,108 @@ if (process.env.LEAN_SETTINGS_DOM !== "1") {
     const screen = mount(() => createComponent(SettingsGeneralV2, {}))
     try { await expectNoLean(screen.host) } finally { screen.close() }
   })
+
+  // Flush promise continuations through the next task, not an elapsed-time wait for correctness.
+  const settle = () => new Promise<void>((resolve) => setImmediate(resolve))
+  const savedSection = () => createComponent(Suspense, {
+    fallback: "Page suspended",
+    get children() {
+      const sentinel = document.createElement("p")
+      sentinel.setAttribute("data-settings-sentinel", "")
+      sentinel.textContent = "Surrounding settings"
+      return [sentinel, createComponent(SavedPermissionsSection, {})]
+    },
+  })
+  const locales: { locale: Locale; copy: typeof SETTINGS_COPY; retry: string; labels: string[] }[] = [
+    {
+      locale: "en", copy: SETTINGS_COPY, retry: "Retry",
+      labels: ["Remove saved permission: Read — /repo/one", "Remove saved permission: Read — /repo/two"],
+    },
+    {
+      locale: "br", copy: SETTINGS_COPY_BR, retry: "Tentar de novo",
+      labels: ["Remover permissão salva: Ler — /repo/one", "Remover permissão salva: Ler — /repo/two"],
+    },
+  ]
+  for (const fixture of locales) {
+    test(`saved permissions in ${fixture.locale} announce reads, retry failures and identify the removed rule`, async () => {
+      await loadLocaleDict(fixture.locale)
+      const initial = Promise.withResolvers<SavedRows>()
+      const retry = Promise.withResolvers<SavedRows>()
+      const refresh = Promise.withResolvers<SavedRows>()
+      const rows: SavedRows = [
+        { id: "saved-one", projectID: "project", action: "read", resource: "/repo/one" },
+        { id: "saved-two", projectID: "project", action: "read", resource: "/repo/two" },
+      ]
+      savedIO.list.mockReset()
+      savedIO.list.mockImplementation(unavailableList)
+      savedIO.list.mockImplementationOnce(() => initial.promise)
+        .mockImplementationOnce(() => retry.promise)
+        .mockImplementationOnce(() => refresh.promise)
+      savedIO.remove.mockClear()
+      const screen = mount(savedSection, fixture.locale)
+      try {
+        await settle()
+        expect(savedIO.list).toHaveBeenCalledTimes(1)
+        expect(screen.host.querySelector('[role="status"]')?.textContent)
+          .toBe(fixture.copy["orchestra.settings.savedPermissions.loading"])
+        expect(screen.host.querySelector("[data-settings-sentinel]")?.textContent).toBe("Surrounding settings")
+        expect(screen.host.textContent).not.toContain("Page suspended")
+
+        initial.reject(new Error("offline"))
+        await settle()
+        const alert = screen.host.querySelector('[role="alert"]')
+        expect(alert?.querySelector("p")?.textContent).toBe(fixture.copy["orchestra.settings.savedPermissions.loadFailed"])
+        const retryButton = alert?.querySelector("button")
+        expect(retryButton?.textContent).toBe(fixture.retry)
+        expect(retryButton?.type).toBe("button")
+        retryButton!.click()
+        await settle()
+        expect(savedIO.list).toHaveBeenCalledTimes(2)
+        expect(savedIO.remove).not.toHaveBeenCalled()
+        expect(screen.host.querySelector('[role="alert"] p')?.textContent)
+          .toBe(fixture.copy["orchestra.settings.savedPermissions.loadFailed"])
+        expect(screen.host.querySelector("[data-settings-sentinel]")?.textContent).toBe("Surrounding settings")
+        expect(screen.host.textContent).not.toContain("Page suspended")
+
+        retry.resolve(rows)
+        await settle()
+        const buttons = [...screen.host.querySelectorAll<HTMLButtonElement>("[data-saved-permission] button")]
+        expect(buttons.map((button) => button.getAttribute("aria-label"))).toEqual(fixture.labels)
+        expect(buttons.map((button) => button.textContent)).toEqual([
+          fixture.copy["orchestra.settings.savedPermissions.remove"], fixture.copy["orchestra.settings.savedPermissions.remove"],
+        ])
+        expect(screen.host.querySelector('[role="alert"]')).toBeNull()
+        buttons[0]!.click()
+        await settle()
+        expect(savedIO.remove).toHaveBeenCalledTimes(1)
+        expect(savedIO.remove).toHaveBeenCalledWith({ id: "saved-one" })
+        expect(savedIO.list).toHaveBeenCalledTimes(3)
+        // A pending refetch keeps the settled rows, rather than suspending the settings page.
+        expect(screen.host.querySelectorAll("[data-saved-permission]")).toHaveLength(2)
+        refresh.resolve([rows[1]!])
+        await settle()
+        expect(screen.host.querySelectorAll("[data-saved-permission]")).toHaveLength(1)
+        expect(screen.host.querySelector('[data-saved-permission="saved-one"]')).toBeNull()
+        expect(screen.host.querySelector('[data-saved-permission="saved-two"] button')?.getAttribute("aria-label"))
+          .toBe(fixture.labels[1])
+      } finally { screen.close() }
+    })
+
+    test(`saved permissions in ${fixture.locale} announce an empty list`, async () => {
+      await loadLocaleDict(fixture.locale)
+      savedIO.list.mockReset()
+      savedIO.list.mockImplementation(unavailableList)
+      savedIO.list.mockImplementationOnce(async () => [])
+      savedIO.remove.mockClear()
+      const screen = mount(savedSection, fixture.locale)
+      try {
+        await settle()
+        expect(savedIO.list).toHaveBeenCalledTimes(1)
+        expect(screen.host.querySelector('[role="status"]')?.textContent)
+          .toBe(fixture.copy["orchestra.settings.savedPermissions.empty"])
+        expect(screen.host.querySelectorAll("[data-saved-permission]")).toHaveLength(0)
+        expect(savedIO.remove).not.toHaveBeenCalled()
+      } finally { screen.close() }
+    })
+  }
 }
