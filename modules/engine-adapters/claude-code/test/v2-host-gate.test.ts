@@ -5,7 +5,7 @@ import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js"
 import { AgentV2 } from "@orchestra/core/agent"
 import { SessionSchema } from "@orchestra/core/session"
 import type { ExecutionHost } from "@orchestra/core/session/runner"
-import { ToolDefinition } from "@orchestra/llm"
+import { LLMEvent, ToolDefinition } from "@orchestra/llm"
 import { Effect, Layer, Stream } from "effect"
 import { ClaudeCodeSDK } from "../src/sdk"
 import { ClaudeCodeHost } from "../src/v2/host"
@@ -133,6 +133,96 @@ test("a request whose arguments differ from the hook's input still takes the old
     execute: (call) => Effect.sync(() => void executed.push(call.id)).pipe(Effect.as({ result: { type: "text" as const, value: "ok" } })),
   }))
   expect(executed).toEqual(["tu-1", "tu-2"])
+})
+
+test("concurrent requests arriving in reverse pair by recursively ordered object keys without reordering arrays", async () => {
+  const ab = { prompt: "same", options: { alpha: 1, nested: { x: 1, y: 2 } }, sequence: ["a", "b"] }
+  const ba = { prompt: "same", options: { alpha: 1, nested: { x: 1, y: 2 } }, sequence: ["b", "a"] }
+  const executed: { id: string; input: unknown; sequence: string }[] = []
+  const responses: { isError: boolean; content: unknown }[] = []
+  const startedAB = Promise.withResolvers<void>()
+  const startedBA = Promise.withResolvers<void>()
+  const release = Promise.withResolvers<void>()
+  during = async (options) => {
+    await pre(options, "mcp__orchestra__task", ab, "tu-ab")
+    await pre(options, "mcp__orchestra__task", ba, "tu-ba")
+    const mcp = await connectMcp(options)
+    try {
+      const calledBA = mcp.callTool({ name: "task", arguments: { sequence: ["b", "a"], options: { nested: { y: 2, x: 1 }, alpha: 1 }, prompt: "same" } })
+      const calledAB = mcp.callTool({ name: "task", arguments: { sequence: ["a", "b"], options: { nested: { y: 2, x: 1 }, alpha: 1 }, prompt: "same" } })
+      const calls = [calledBA, calledAB]
+      try {
+        // Both executions must enter before either can finish: Promise.all alone would not prove overlap.
+        await Promise.race([
+          Promise.all([startedAB.promise, startedBA.promise]),
+          Promise.all(calls).then(() => { throw new Error("MCP calls completed before both executions reached the overlap barrier") }),
+        ])
+        expect(executed).toHaveLength(2)
+        expect(executed.filter((call) => call.sequence === "a,b")).toEqual([{ id: "tu-ab", input: ab, sequence: "a,b" }])
+        expect(executed.filter((call) => call.sequence === "b,a")).toEqual([{ id: "tu-ba", input: ba, sequence: "b,a" }])
+      } finally {
+        release.resolve()
+        await Promise.allSettled(calls)
+      }
+      const results = await Promise.all(calls)
+      responses.push(...results.map((result) => ({ isError: result.isError ?? false, content: result.content })))
+    } finally {
+      release.resolve()
+      await mcp.close()
+    }
+  }
+  const events = await collect(turnOf({
+    tools: [plainTool("task")],
+    execute: (call) => Effect.sync(() => {
+      const sequence = typeof call.input === "object" && call.input !== null && "sequence" in call.input ? call.input.sequence : undefined
+      const key = Array.isArray(sequence) ? sequence.join(",") : ""
+      executed.push({ id: call.id, input: call.input, sequence: key })
+      if (key === "a,b") startedAB.resolve()
+      if (key === "b,a") startedBA.resolve()
+    }).pipe(
+      Effect.andThen(Effect.promise(() => release.promise)),
+      Effect.as({ result: { type: "text" as const, value: "ok" } }),
+    ),
+  }))
+  expect(events.filter(LLMEvent.is.providerError)).toEqual([])
+  expect(events.filter(LLMEvent.is.stepFinish)).toMatchObject([{ reason: "stop" }])
+  expect(responses).toEqual([
+    { isError: false, content: [{ type: "text", text: "ok" }] },
+    { isError: false, content: [{ type: "text", text: "ok" }] },
+  ])
+  expect(executed).toHaveLength(2)
+  expect(executed.filter((call) => call.sequence === "a,b")).toEqual([{ id: "tu-ab", input: ab, sequence: "a,b" }])
+  expect(executed.filter((call) => call.sequence === "b,a")).toEqual([{ id: "tu-ba", input: ba, sequence: "b,a" }])
+})
+
+test("identical exact argument keys consume both tool_use ids in FIFO order", async () => {
+  const executed: string[] = []
+  const responses: { isError: boolean; content: unknown }[] = []
+  during = async (options) => {
+    await pre(options, "mcp__orchestra__task", { prompt: "same", nested: { a: 1, b: 2 } }, "tu-identical-1")
+    await pre(options, "mcp__orchestra__task", { prompt: "same", nested: { a: 1, b: 2 } }, "tu-identical-2")
+    const mcp = await connectMcp(options)
+    try {
+      const results = [
+        await mcp.callTool({ name: "task", arguments: { nested: { b: 2, a: 1 }, prompt: "same" } }),
+        await mcp.callTool({ name: "task", arguments: { nested: { b: 2, a: 1 }, prompt: "same" } }),
+      ]
+      responses.push(...results.map((result) => ({ isError: result.isError ?? false, content: result.content })))
+    } finally {
+      await mcp.close()
+    }
+  }
+  const events = await collect(turnOf({
+    tools: [plainTool("task")],
+    execute: (call) => Effect.sync(() => void executed.push(call.id)).pipe(Effect.as({ result: { type: "text" as const, value: "ok" } })),
+  }))
+  expect(events.filter(LLMEvent.is.providerError)).toEqual([])
+  expect(events.filter(LLMEvent.is.stepFinish)).toMatchObject([{ reason: "stop" }])
+  expect(responses).toEqual([
+    { isError: false, content: [{ type: "text", text: "ok" }] },
+    { isError: false, content: [{ type: "text", text: "ok" }] },
+  ])
+  expect(executed).toEqual(["tu-identical-1", "tu-identical-2"])
 })
 
 test("the governed playbook a session loaded belongs to its host and is let go past the bound", async () => {
