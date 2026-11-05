@@ -1,7 +1,10 @@
 export * as ReviewPRRequestV2 from "./review-pr"
 
 import { createHash } from "node:crypto"
-import { Effect, Option, Schema } from "effect"
+import { Cause, Effect, Option, Schema } from "effect"
+import { Database } from "@orchestra/core/database/database"
+import { EventV2 } from "@orchestra/core/event"
+import { ReviewPrecisionStore } from "@orchestra/core/review/precision-store"
 import { AgentV2 } from "@orchestra/core/agent"
 import { ReviewCatalog } from "@orchestra/core/review/catalog"
 import type { ReviewRoute } from "@orchestra/core/review/route"
@@ -86,7 +89,7 @@ export const run = Effect.fn("ReviewPRRequestV2.run")(function* (params: Input, 
       if (!existing || !retained) return yield* failure("pr-retry-incomplete", "prior review did not finish")
       const reply = yield* replyFor(lead, finish)
       if (!reply) return yield* failure("pr-retry-incomplete", "completed finish reply unavailable")
-      return yield* output(reply, retained, prepared, worktree, git)
+      return yield* output(reply, retained, prepared, worktree, git, parent.projectID, input.services)
     }
     const rules = yield* ReviewFanoutV2.baseRules(git, worktree, prepared.baseSHA, prepared.changedPaths)
     const lenses: string[] = []
@@ -129,14 +132,14 @@ export const run = Effect.fn("ReviewPRRequestV2.run")(function* (params: Input, 
         ...(params.prText === undefined ? {} : { prText: params.prText }), diff: prepared.diff, rules, scope, record: [] },
     }, port))
     if (ran.status !== "ran") return yield* failure("pr-unaddressed", "unexpected first-round state")
-    const facts = { candidate, method: ran.method, routing: ran.routing, scope, confirmed: ran.confirmed, checkFacts: ran.checkFacts }
+    const facts = { candidate, method: ran.method, routing: ran.routing, scope, confirmed: ran.confirmed, checkFacts: ran.checkFacts, outcomes: ran.outcomes }
     yield* ReviewPRFactsV2.write(store, facts)
-    return yield* output(ran.reply, facts, prepared, worktree, git)
+    return yield* output(ran.reply, facts, prepared, worktree, git, parent.projectID, input.services)
   }))
 })
 
 function output(reply: string, facts: ReviewPRFactsV2.Facts, prepared: ReviewPREvidenceV2.Prepared, worktree: string,
-  git: MaestroChainTools.Services["atlas"]["git"]) {
+  git: MaestroChainTools.Services["atlas"]["git"], project: string, services: MaestroChainTools.Services) {
   return Effect.gen(function* () {
     const card = yield* Effect.try({
       try: () => ReviewCardV2.validate(reply, { routing: facts.routing, scope: facts.scope, checkFacts: facts.checkFacts,
@@ -157,6 +160,11 @@ function output(reply: string, facts: ReviewPRFactsV2.Facts, prepared: ReviewPRE
       if (finding.evidence.endLine > lines.length || !lines.slice(finding.evidence.startLine - 1, finding.evidence.endLine).join("\n"))
         return yield* failure("pr-quote-unavailable", "quote range is empty or outside the head blob")
     }
+    yield* ReviewPrecisionStore.append({ review: `pr:${facts.candidate}`, project, reads: facts.outcomes }).pipe(
+      Effect.provideService(Database.Service, { db: services.db }),
+      Effect.provideService(EventV2.Service, services.events),
+      Effect.catchCause((cause) => Effect.fail(failure("precision-admission", Cause.pretty(cause)))),
+    )
     return `PR identity: ${JSON.stringify({ candidate: facts.candidate, baseRef: prepared.baseRef, headRef: prepared.headRef,
       baseCommit: prepared.baseCommit, headCommit: prepared.headCommit, baseSHA: prepared.baseSHA, headSHA: prepared.headSHA,
       diffSHA256: prepared.sha256 })}\n\n\`\`\`${ReviewResultV2.TAG}\n${JSON.stringify(card)}\n\`\`\``

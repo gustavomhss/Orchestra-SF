@@ -4,15 +4,16 @@ import { createHash } from "node:crypto"
 import os from "node:os"
 import path from "node:path"
 import { and, desc, eq } from "drizzle-orm"
-import { Context, Effect, Layer, Option, Schema, type Scope } from "effect"
+import { Cause, Context, Effect, Layer, Option, Schema, type Scope } from "effect"
 import { AgentV2 } from "@orchestra/core/agent"
 import { Node } from "@orchestra/core/effect/app-node"
 import { BoardProjectTable } from "@orchestra/core/board/sql"
 import { BoardThread } from "@orchestra/core/board/thread"
-import type { Database } from "@orchestra/core/database/database"
+import { Database } from "@orchestra/core/database/database"
 import { EventV2 } from "@orchestra/core/event"
 import type { GitCli } from "@orchestra/core/git-cli"
 import { ReviewCatalog } from "@orchestra/core/review/catalog"
+import { ReviewPrecisionStore } from "@orchestra/core/review/precision-store"
 import { ReviewRouting } from "@orchestra/core/review/routing"
 import { ReviewSeatTools } from "@orchestra/core/review/seat-tools"
 import { ReviewSettings } from "@orchestra/core/review/settings"
@@ -508,10 +509,14 @@ export function tools(input: {
           const scoped = yield* services.store.scope(context.sessionID)
           if (scoped && !finishing.has(context.sessionID))
             return yield* new Tool.Failure({ message: "Review recording opens only in the lead's final turn" })
+          let hostOutcomes: ReviewFanoutV2.FinishAuthorization["outcomes"] | undefined
           if (scoped) {
             const authority = finishAuthority.get(context.sessionID)
             if (!authority || params.reviewMethodVersion !== authority.method || params.routingDigest !== authority.routingDigest || catalogDigest(params.catalogDigest) !== catalogDigest(authority.catalogDigest))
               return yield* new Tool.Failure({ message: "method-binding-mismatch: submitted method or digest does not match host finish", metadata: { reason: "method-binding-mismatch" } })
+            if (!sameOutcomes(params.items, authority.outcomes))
+              return yield* new Tool.Failure({ message: "outcome-binding-mismatch: submitted items do not match host outcomes", metadata: { reason: "outcome-binding-mismatch" } })
+            hostOutcomes = authority.outcomes
             yield* Effect.try({
               try: () => ReviewChecksV2.authorize(params.verdict, authority.checkFacts),
               catch: (error) => new Tool.Failure({
@@ -534,6 +539,7 @@ export function tools(input: {
             ...(params.catalogDigest ? { catalogDigest: params.catalogDigest } : {}),
             ...(params.items ? { items: params.items } : {}),
           })
+          if (hostOutcomes) yield* admitPrecision(services, { review: recorded.id, project: recorded.projectID, reads: hostOutcomes })
           return `${recorded.verdict}: ${recorded.id}`
         }),
     }),
@@ -575,6 +581,29 @@ function sha256(value: string) {
 
 function catalogDigest(value: string | undefined) {
   return value?.replace(/^sha256:/, "")
+}
+
+function sameOutcomes(
+  submitted: ReadonlyArray<{ readonly pack: string; readonly rule: string; readonly fingerprint: string; readonly outcome: string }> | undefined,
+  host: ReadonlyArray<{ readonly pack: string; readonly rule: string; readonly fingerprint: string; readonly outcome: string }>,
+) {
+  const got = submitted ?? []
+  const key = (item: { readonly pack: string; readonly rule: string; readonly fingerprint: string }) => JSON.stringify([item.pack, item.rule, item.fingerprint])
+  if (new Set(got.map(key)).size !== got.length) return false
+  if (got.length !== host.length) return false
+  const wanted = new Map(host.map((item) => [key(item), item.outcome]))
+  return got.every((item) => wanted.get(key(item)) === item.outcome)
+}
+
+function admitPrecision(services: MaestroChainTools.Services, input: { readonly review: string; readonly project: string; readonly reads: ReviewFanoutV2.FinishAuthorization["outcomes"] }) {
+  return ReviewPrecisionStore.append(input).pipe(
+    Effect.provideService(Database.Service, { db: services.db }),
+    Effect.provideService(EventV2.Service, services.events),
+    Effect.catchCause((cause) => Effect.fail(new Tool.Failure({
+      message: `precision-admission: ${Cause.pretty(cause)}`,
+      metadata: { reason: "precision-admission" },
+    }))),
+  )
 }
 
 const decodeReceipt = Schema.decodeUnknownOption(MaestroEvent.Review.ReceivedV2.data)
@@ -723,7 +752,10 @@ export const reviewBinding = (held: {
                   lens: input.lens,
                   ...(input.filter ? { filter: input.filter } : {}),
                   ...(input.cursor ? { cursor: input.cursor } : {}),
-                }).pipe(Effect.mapError((error) => new Tool.Failure({ message: `review_analyze ${error.reason}` }))),
+                }).pipe(
+                  Effect.mapError((error) => new Tool.Failure({ message: `review_analyze ${error.reason}` })),
+                  Effect.tap((result) => Effect.sync(() => bound.observeItems?.(result.items))),
+                ),
             },
           }
         : {}),
