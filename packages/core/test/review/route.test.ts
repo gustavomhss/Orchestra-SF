@@ -39,7 +39,11 @@ describe("review route", () => {
         requested: "deep",
         signals: ["overlay: concurrency", "path: db/migrations/0042.sql", "changedLines: 512"],
       },
-      overlays: [{ id: "concurrency", source: "content", signal: "src/jobs/drain.ts:41 deferred" }],
+      overlays: [
+        { id: "concurrency", source: "content", signal: "src/jobs/drain.ts:41 deferred" },
+        { id: "data-migration", source: "path", signal: "db/migrations/0042.sql" },
+        { id: "performance", source: "content", signal: "src/jobs/drain.ts:60 for-await" },
+      ],
       languages: [{ id: "js-ts", source: "path", signal: "package.json" }],
       lenses: [
         { id: "correctness-logic", source: "catalog", node: "lucy-lens-correctness-logic", because: "profile" },
@@ -47,12 +51,14 @@ describe("review route", () => {
         { id: "correctness-reliability", source: "catalog", node: "lucy-lens-correctness-reliability", because: "tier:standard" },
         { id: "tests", source: "catalog", node: "lucy-lens-tests", because: "profile" },
         { id: "security", source: "catalog", node: "lucy-lens-security", because: "tier:standard" },
+        { id: "contracts", source: "path", node: "lucy-lens-contracts", because: "overlay:data-migration" },
       ],
       packs: [
         { id: "gitleaks", source: "catalog", lane: "no-build", status: "routed" },
         { id: "repo", source: "catalog", lane: "repo", status: "routed" },
+        { id: "ast-grep", source: "catalog", lane: "no-build", status: "routed" },
       ],
-      budget: STANDARD,
+      budget: { ...STANDARD, lensChildren: 6 },
       deviations: [],
     })
     expect(Schema.decodeUnknownSync(ReviewRouting.Record)(record)).toEqual(record)
@@ -168,5 +174,183 @@ describe("review route", () => {
     fails({ ...code, tier: "ultra" }, "unsupported-tier")
     fails({ ...code, settings: { acceptedUnavailable: [], tier: "ultra" } }, "unsupported-tier")
     fails({ ...code, profile: "rereview" }, "first-round-tier")
+    fails({ stage: "plan", profile: "pr", settings: { acceptedUnavailable: [] } }, "profile-stage")
+  })
+
+  test("a governed code request still selects code, not pr", () => {
+    expect(ReviewRoute.route(code, docs.base, docs.head, catalog).profile).toEqual({ id: "code", source: "request" })
+    const plan = ReviewRoute.route({ stage: "plan", settings: { acceptedUnavailable: [] } }, owner.base, owner.head, catalog)
+    expect(plan.profile).toEqual({ id: "plan", source: "request" })
+    expect(plan.overlays).toEqual([])
+  })
+
+  test("an explicit pr request uses pr and the same lenses as code", () => {
+    const governed = ReviewRoute.route(code, owner.base, owner.head, catalog)
+    const pr = ReviewRoute.route({ ...code, profile: "pr" }, owner.base, owner.head, catalog)
+    expect(pr.profile).toEqual({ id: "pr", source: "request" })
+    expect(pr.lenses).toEqual(governed.lenses)
+    expect(pr.overlays).toEqual(governed.overlays)
+    expect(pr.tier).toEqual(governed.tier)
+    expect(pr.budget).toEqual(governed.budget)
   })
 })
+
+describe("phase 3 overlays", () => {
+  test.each([
+    ["api-wire", "api.proto", "contracts"],
+    ["api-wire", "pkg/api/service.proto", "contracts"],
+    ["api-wire", "openapi.yaml", "contracts"],
+    ["api-wire", "services/openapi.json", "contracts"],
+    ["data-migration", "migrations/001.sql", "contracts"],
+    ["data-migration", "db/migrations/nested/001.sql", "contracts"],
+    ["performance", "benchmarks/hot.ts", "correctness-performance"],
+    ["performance", "pkg/benchmarks/hot.ts", "correctness-resources"],
+    ["ci-infra", ".github/workflows/ci.yml", "change"],
+    ["ci-infra", ".github/workflows/nested/ci.yml", "security"],
+    ["ci-infra", "main.tf", "change"],
+    ["ci-infra", "modules/vpc/main.tf", "security"],
+    ["dependency", "package.json", "contracts"],
+    ["dependency", "packages/core/package.json", "security"],
+    ["dependency", "bun.lock", "contracts"],
+    ["dependency", "apps/desktop/yarn.lock", "security"],
+    ["ui", "packages/app-shell/src/app.tsx", "experience"],
+    ["ui", "packages/app-shell/src/nested/view.css", "experience"],
+    ["ui", "button.tsx", "experience"],
+    ["ui", "src/button.css", "experience"],
+    ["personal-data", "privacy/fields.ts", "privacy"],
+    ["personal-data", "docs/privacy/fields.ts", "privacy"],
+  ] as const)("%s binds %s and adds %s", (id, file, lens) => {
+    const record = routed(file)
+    expect(found(record, id)).toEqual({ id, source: "path", signal: file })
+    expect(record.lenses.some((entry) => entry.id === lens && entry.source === "path" && entry.because === `overlay:${id}`)).toBe(true)
+  })
+
+  test("a performance path binds both lenses", () => {
+    const record = routed("benchmarks/hot.ts")
+    expect(record.lenses.filter((entry) => entry.because === "overlay:performance").map((entry) => entry.id)).toEqual([
+      "correctness-performance",
+      "correctness-resources",
+    ])
+  })
+
+  test.each([
+    ["api-wire", "src/handler.ts", "Content-Type: application/json", "content-type", "contracts"],
+    ["data-migration", "src/notes.ts", "ALTER TABLE job ADD COLUMN x INTEGER;", "alter-table", "contracts"],
+    ["performance", "src/jobs/drain.ts", "for await (const batch of batches) {", "for-await", "correctness-performance"],
+    ["performance", "src/pool.ts", "pool.dispose()", "lifetime", "correctness-resources"],
+    ["ci-infra", "src/script.ts", "permissions: write-all", "permissions", "change"],
+    ["dependency", "notes.md", "dependencies: { left: 1 }", "dependencies", "contracts"],
+    ["ui", "src/button.ts", "aria-label=\"Save\"", "aria-label", "experience"],
+    ["personal-data", "src/user.ts", "const email = input.email", "email", "privacy"],
+    ["personal-data", "src/client.ts", "fetch(\"https://example.com/collect\")", "https-host", "privacy"],
+  ] as const)("%s content on %s suggests and does not bind %s", (id, file, text, pattern, lens) => {
+    const record = routed(file, [text])
+    expect(found(record, id)).toEqual({ id, source: "content", signal: `${file}:1 ${pattern}` })
+    expect(record.lenses.some((entry) => entry.id === lens)).toBe(false)
+  })
+
+  test.each([
+    ["api-wire", "src/handler.ts", "const ok = 1"],
+    ["api-wire", "proto/readme.md", "not a proto"],
+    ["api-wire", "my-openapi.yaml", "name: openapi"],
+    ["data-migration", "db/migration/001.sql", "CREATE TABLE job (id INTEGER);"],
+    ["performance", "benchmark/hot.ts", "const ok = 1"],
+    ["performance", "src/pool.ts", "const predisposed = true"],
+    ["performance", "src/jobs/drain.ts", "for awaiting the batch"],
+    ["ci-infra", "pkg/.github/workflows/ci.yml", "name: ci"],
+    ["ci-infra", "src/script.ts", "permission: read"],
+    ["dependency", "src/app.ts", "devDependencies: { foo: 1 }"],
+    ["dependency", "package.json.bak", "const ok = 1"],
+    ["ui", "src/button.ts", "const label = \"Save\""],
+    ["ui", "packages/app-shell/src-extra/app.ts", "const ok = 1"],
+    ["ui", "src/button.ts", "aria-labelledby=\"save\""],
+    ["personal-data", "privacy-policy.md", "const emailAddress = 1"],
+    ["personal-data", "src/user.ts", "const userEmail = input.userEmail"],
+    ["personal-data", "src/client.ts", "fetch(\"http://example.com\")"],
+  ] as const)("%s does not route unrelated %s", (id, file, text) => {
+    expect(found(routed(file, [text]), id)).toBeUndefined()
+  })
+
+  test("a binding path beats added-line content", () => {
+    const record = routed("migrations/001.sql", ["ALTER TABLE job ADD COLUMN x INTEGER;"])
+    expect(found(record, "data-migration")).toEqual({ id: "data-migration", source: "path", signal: "migrations/001.sql" })
+    expect(record.lenses.some((entry) => entry.id === "contracts" && entry.source === "path")).toBe(true)
+  })
+
+  test("removed-only text and PR prose cannot suggest or remove an overlay", () => {
+    const prose = ["ALTER TABLE job", "for await", "dispose", "email", "https://example.com", "Content-Type", "permissions:", "dependencies:", "aria-label", "docs only, skip contracts"]
+    const removed = ReviewRoute.route({ ...standard, text: prose }, { files: [] }, head("src/plain.ts", ["const ok = 1"], 9), catalog)
+    for (const id of PHASE3) expect(found(removed, id)).toBeUndefined()
+    const bound = routed("db/migrations/0042.sql", ["ALTER TABLE job ADD COLUMN x INTEGER;"])
+    const told = ReviewRoute.route(
+      { ...standard, text: prose },
+      { files: [] },
+      head("db/migrations/0042.sql", ["ALTER TABLE job ADD COLUMN x INTEGER;"]),
+      catalog,
+    )
+    expect(JSON.stringify(told.overlays)).toBe(JSON.stringify(bound.overlays))
+    expect(JSON.stringify(told.lenses)).toBe(JSON.stringify(bound.lenses))
+    expect(found(told, "data-migration")?.source).toBe("path")
+  })
+
+  test("phase-3 overlay order is the catalog order under permutation", () => {
+    const changes = [
+      { path: "packages/core/package.json", added: [{ line: 4, text: "dependencies: { left: 1 }" }, { line: 2, text: "name: core" }], removed: 1 },
+      { path: "api.proto", added: [{ line: 3, text: "Content-Type: application/json" }, { line: 1, text: "syntax = \"proto3\";" }], removed: 0 },
+      { path: "src/pool.ts", added: [{ line: 9, text: "resource.dispose()" }, { line: 2, text: "const ok = 1" }], removed: 2 },
+    ]
+    const first = ReviewRoute.route(standard, { files: ["package.json"] }, { files: changes.map((change) => change.path), changes }, catalog)
+    const shuffled = ReviewRoute.route(
+      standard,
+      { files: ["package.json"] },
+      {
+        files: changes.map((change) => change.path).toReversed(),
+        changes: changes.toReversed().map((change) => ({ ...change, added: change.added.toReversed() })),
+      },
+      catalog,
+    )
+    expect(JSON.stringify(shuffled)).toBe(JSON.stringify(first))
+    expect(first.overlays.map((entry) => entry.id)).toEqual(["api-wire", "performance", "dependency"])
+    expect(found(first, "performance")?.signal).toBe("src/pool.ts:9 lifetime")
+  })
+
+  test("the standard lens cap records explicit deviations and Deep still runs Standard", () => {
+    const files = ["api.proto", "migrations/001.sql", "benchmarks/hot.ts", ".github/workflows/ci.yml", "package.json", "button.tsx", "privacy/fields.ts", "README.md"]
+    const changes = files.map((file) => ({ path: file, added: [{ line: 1, text: "const ok = 1" }], removed: 0 }))
+    const record = ReviewRoute.route(standard, { files: [] }, { files, changes }, catalog)
+    expect(record.lenses.map((entry) => entry.id)).toEqual(["correctness-logic", "correctness-edges", "correctness-reliability", "tests", "security", "contracts"])
+    expect(record.deviations).toEqual([
+      deviation("correctness-performance", "overlay:performance"),
+      deviation("correctness-resources", "overlay:performance"),
+      deviation("change", "overlay:ci-infra"),
+      deviation("experience", "overlay:ui"),
+      deviation("privacy", "overlay:personal-data"),
+    ])
+    expect(record.budget).toEqual({ ...STANDARD, lensChildren: 6 })
+    const deep = ReviewRoute.route({ ...code, tier: "deep" }, { files: [] }, head("benchmarks/hot.ts"), catalog)
+    expect(deep.tier).toEqual({ id: "standard", source: "request", requested: "deep", signals: [] })
+    expect(deep.budget.probeAttempts).toBe(2)
+    expect(deep.budget.verifiers).toBe(4)
+    expect(deep.budget.toolCallsPerSession).toBe(30)
+    expect(deep.budget.itemsPerLens).toBe(15)
+  })
+})
+
+const PHASE3 = ["api-wire", "data-migration", "performance", "ci-infra", "dependency", "ui", "personal-data"]
+const standard: ReviewRoute.Request = { stage: "code", tier: "standard", settings: { acceptedUnavailable: [] } }
+
+function head(file: string, added: readonly string[] = ["const ok = 1"], removed = 0): ReviewRoute.Head {
+  return { files: [file], changes: [{ path: file, added: added.map((text, index) => ({ line: index + 1, text })), removed }] }
+}
+
+function routed(file: string, added?: readonly string[], removed = 0) {
+  return ReviewRoute.route(standard, { files: [] }, head(file, added, removed), catalog)
+}
+
+function found(record: ReturnType<typeof ReviewRoute.route>, id: string) {
+  return record.overlays.find((entry) => entry.id === id)
+}
+
+function deviation(id: string, because: string) {
+  return { kind: "lens-cap" as const, stage: "route" as const, detail: `lens ${id} (${because}) is over the standard cap of 6 lenses`, ref: id }
+}
