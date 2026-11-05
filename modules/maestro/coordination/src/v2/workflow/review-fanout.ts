@@ -154,7 +154,11 @@ export type Input = {
     // What the record call needs beside the method version: validation id, stage, artifact JSON, checks JSON.
     readonly record: ReadonlyArray<string>
   }
-  readonly firstRound?: { readonly card: ReviewResultV2.Card; readonly reviewed: string }
+  readonly firstRound?: {
+    readonly routing: ReviewRouting.Record
+    readonly findings: ReadonlyArray<ReviewResultV2.Finding>
+    readonly reviewed: string
+  }
 }
 
 export type Result =
@@ -203,7 +207,7 @@ export const run = Effect.fn("ReviewFanoutV2.run")(function* (input: Input, port
 
   // 1. Route (host, no model).
   const routed = yield* routeOf(input)
-  const open = (input.firstRound?.card.findings ?? []).filter((finding) => finding.status === "open")
+  const open = (input.firstRound?.findings ?? []).filter((finding) => finding.status === "open")
 
   // 2. Analyze (host).
   let analysis = yield* port.analyze({ routing: routed.record, packs: routable(routed.record.packs), cache: input.cache, files })
@@ -693,7 +697,7 @@ function routeOf(input: Input) {
   return Effect.try({
     try: (): Routed => {
       const delta = ReviewRoute.route(input.request, input.base, input.head, input.catalog)
-      const first = input.firstRound?.card.routing
+      const first = input.firstRound?.routing
       if (!first) return { record: delta, runs: () => true }
       // A rereview reuses the first round's route; the delta can only add lenses and packs to it.
       const fresh = delta.lenses.filter((lens) => !first.lenses.some((other) => other.id === lens.id))

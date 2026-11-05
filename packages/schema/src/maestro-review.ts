@@ -139,6 +139,12 @@ export namespace Review {
       routingDigest: optional(Digest),
       catalogDigest: optional(Digest),
       items: optional(Schema.Array(Item)),
+      // Host routing for a scoped finish. Optional so older receipts decode; absence is not a trust fallback.
+      // `routing` is JSON text for Core `ReviewRouting.Record`. Schema does not import Core.
+      hostRound: optional(Schema.Struct({
+        version: Schema.Literal("host-round-v1"),
+        routing: Schema.NonEmptyString,
+      })),
     },
   })
   export type ReceivedV2 = typeof ReceivedV2.Type

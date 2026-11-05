@@ -10,6 +10,7 @@ import { EventV2 } from "@orchestra/core/event"
 import type { GitCli } from "@orchestra/core/git-cli"
 import { ProjectTable } from "@orchestra/core/project/sql"
 import { ReviewCatalog } from "@orchestra/core/review/catalog"
+import { ReviewRouting } from "@orchestra/core/review/routing"
 import { SessionSchema } from "@orchestra/core/session"
 import { Tool } from "@orchestra/core/tool/tool"
 import { MaestroEvent } from "@orchestra/schema/maestro-event"
@@ -19,6 +20,7 @@ import { GovernanceRecordsV2 } from "../governance/records"
 import { ReviewResultV2 } from "../governance/review-result"
 import { WorkflowReviewV2 } from "../workflow/review"
 import type { MaestroChainTools } from "./chain"
+import { ReviewRoundV2 } from "./review-round"
 
 // Validation and review receipts. Records are
 // written as the earlier runtime wrote them (same event types, ids, hashes and refusals) and read back through GovernanceRecordsV2.
@@ -267,6 +269,8 @@ export type ReviewInput = {
   }
   readonly checks: readonly Check[]
   readonly stage?: "plan" | "code"
+  /** Scoped finish authority only. Not a tool parameter and not submitted by the model. */
+  readonly hostRouting?: ReviewRouting.Record
 }
 
 /**
@@ -346,6 +350,16 @@ export const recordReview = Effect.fn("MaestroReviewRecords.recordReview")(funct
   // Recheck evidence must exactly match validation's named checks, not reviewer prose.
   if (!isDeepStrictEqual(checks, record.checks)) return yield* reviewRejected("check-evidence-mismatch")
   const binding = yield* requireBinding(input, routed !== undefined)
+  const round = input.hostRouting
+    ? ReviewRoundV2.publish(input.hostRouting, {
+        reviewMethodVersion: input.reviewMethodVersion,
+        routingDigest: input.routingDigest,
+        catalogDigest: input.catalogDigest,
+      })
+    : undefined
+  if (round?.status === "corrupt") return yield* reviewRejected("malformed-host-routing")
+  if (round?.status === "mismatch") return yield* reviewRejected("host-round-mismatch")
+  if (round?.status === "too-large") return yield* reviewRejected("host-round-too-large")
   const wanted: ReviewData = {
     sessionID: input.sessionID,
     projectID: record.projectID,
@@ -363,6 +377,7 @@ export const recordReview = Effect.fn("MaestroReviewRecords.recordReview")(funct
     findings,
     stage,
     ...binding,
+    ...(round?.status === "ok" ? { hostRound: round.hostRound } : {}),
   }
   const key = [input.sessionID, input.validationRecordID]
   const id = EventV2.ID.make(
