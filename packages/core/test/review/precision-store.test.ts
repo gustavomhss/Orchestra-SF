@@ -1,5 +1,6 @@
 import { expect } from "bun:test"
-import { Effect, Exit } from "effect"
+import { createHash } from "node:crypto"
+import { Cause, Effect, Exit } from "effect"
 import { eq } from "drizzle-orm"
 import { Database } from "../../src/database/database"
 import { EventV2 } from "../../src/event"
@@ -10,7 +11,9 @@ import { ReviewPrecisionEvent } from "@orchestra/schema/review-precision-event"
 import { DurableEventManifest } from "@orchestra/schema/durable-event-manifest"
 import { testEffect } from "../lib/effect"
 
-const it = testEffect(AppNodeBuilder.build(LayerNode.group([Database.node, EventV2.node])))
+const it = testEffect(AppNodeBuilder.build(LayerNode.group([Database.node, EventV2.node]), [
+  [Database.node, Database.layerFromPath(":memory:")],
+]))
 const read = {
   pack: "squawk", rule: "adding-required-field", generation: "a".repeat(64),
   fingerprint: "source-a", outcome: "confirmed" as const,
@@ -26,7 +29,7 @@ it.effect("precision admission is globally ordered across projects and reads act
     expect(yield* ReviewPrecisionStore.history()).toEqual([first, second])
     const database = yield* Database.Service
     const rows = yield* database.db.select().from(EventV2.EventTable)
-      .where(eq(EventV2.EventTable.aggregate_id, ReviewPrecisionEvent.AGGREGATE)).all().pipe(Effect.orDie)
+      .where(eq(EventV2.EventTable.aggregate_id, ReviewPrecisionEvent.Aggregate)).all().pipe(Effect.orDie)
     expect(rows.map((row) => [row.seq, row.id])).toEqual([[0, first.id], [1, second.id]])
     expect(DurableEventManifest.Durable.get("review.precision.observed.1")).toBe(ReviewPrecisionEvent.Observed)
   }),
@@ -82,11 +85,60 @@ it.effect("conflicting same-item outcomes fail before any durable admission", ()
 it.effect("the precision event replays through the registered durable manifest without receipt inference", () =>
   Effect.gen(function* () {
     const events = yield* EventV2.Service
-    const id = EventV2.ID.make("evt_precision_replayed")
+    const id = EventV2.ID.make(`evt_review_precision_${createHash("sha256").update("replayed-review").digest("hex")}`)
     yield* events.replay({
-      id, type: "review.precision.observed.1", aggregateID: ReviewPrecisionEvent.AGGREGATE, seq: 0,
-      data: { ledgerID: ReviewPrecisionEvent.AGGREGATE, review: "replayed-review", project: "project-a", reads: [read] },
+      id, type: "review.precision.observed.1", aggregateID: ReviewPrecisionEvent.Aggregate, seq: 0,
+      data: { ledgerID: ReviewPrecisionEvent.Aggregate, review: "replayed-review", project: "project-a", reads: [read] },
     })
     expect(yield* ReviewPrecisionStore.history()).toEqual([{ id, project: "project-a", order: 1, reads: [read] }])
+    expect(yield* ReviewPrecisionStore.append({ review: "replayed-review", project: "project-a", reads: [read] }))
+      .toEqual({ id, project: "project-a", order: 1, reads: [read] })
+  }),
+)
+
+it.effect("a noncanonical replay id cannot be counted or admitted again as a new clean batch", () =>
+  Effect.gen(function* () {
+    const events = yield* EventV2.Service
+    yield* events.replay({
+      id: EventV2.ID.make("evt_noncanonical_precision"), type: "review.precision.observed.1",
+      aggregateID: ReviewPrecisionEvent.Aggregate, seq: 0,
+      data: { ledgerID: ReviewPrecisionEvent.Aggregate, review: "same-replayed-review", project: "project-a", reads: [read] },
+    })
+    expect(Exit.isFailure(yield* Effect.exit(ReviewPrecisionStore.history()))).toBe(true)
+    expect(Exit.isFailure(yield* Effect.exit(ReviewPrecisionStore.append({
+      review: "same-replayed-review", project: "project-a", reads: [read],
+    })))).toBe(true)
+    const database = yield* Database.Service
+    const rows = yield* database.db.select().from(EventV2.EventTable)
+      .where(eq(EventV2.EventTable.aggregate_id, ReviewPrecisionEvent.Aggregate)).all().pipe(Effect.orDie)
+    expect(rows).toHaveLength(1)
+  }),
+)
+
+it.effect("an unexpected event type in the private aggregate is not silently removed from history", () =>
+  Effect.gen(function* () {
+    const first = yield* ReviewPrecisionStore.append({ review: "valid-review", project: "project-a", reads: [read] })
+    expect(yield* ReviewPrecisionStore.history()).toEqual([first])
+    const database = yield* Database.Service
+    yield* database.db.update(EventV2.EventTable).set({ type: "review.unexpected.1" })
+      .where(eq(EventV2.EventTable.id, EventV2.ID.make(first.id))).run().pipe(Effect.orDie)
+    expect(Exit.isFailure(yield* Effect.exit(ReviewPrecisionStore.history()))).toBe(true)
+  }),
+)
+
+it.effect("a publication failure after a real commit is not converted to a successful retry", () =>
+  Effect.gen(function* () {
+    const events = yield* EventV2.Service
+    const failure = new Error("precision-notification-failed")
+    const input = { review: "notification-review", project: "project-a", reads: [read] }
+    const result = yield* Effect.exit(ReviewPrecisionStore.append(input).pipe(Effect.provideService(EventV2.Service, {
+      ...events,
+      publish: (definition, data, options) => events.publish(definition, data, options).pipe(Effect.andThen(Effect.die(failure))),
+    })))
+    expect(Exit.isFailure(result)).toBe(true)
+    if (Exit.isFailure(result)) expect(Cause.squash(result.cause)).toBe(failure)
+    const history = yield* ReviewPrecisionStore.history()
+    expect(history).toHaveLength(1)
+    expect(yield* ReviewPrecisionStore.append(input)).toEqual(history[0])
   }),
 )

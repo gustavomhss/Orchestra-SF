@@ -5,7 +5,8 @@ import { Event } from "./event"
 
 // Private host evidence, not a model tool input or a merge receipt. One aggregate
 // supplies an admission order across Sessions and projects in this database.
-export const AGGREGATE = "review-precision-v1"
+export const Aggregate = "review-precision-v1"
+export interface Read extends Schema.Schema.Type<typeof Read> {}
 export const Read = Schema.Struct({
   pack: Schema.NonEmptyString,
   rule: Schema.NonEmptyString,
@@ -18,7 +19,7 @@ export const Observed = Event.define({
   type: "review.precision.observed",
   durable: { version: 1, aggregate: "ledgerID" },
   schema: {
-    ledgerID: Schema.Literal(AGGREGATE),
+    ledgerID: Schema.Literal(Aggregate),
     review: Schema.NonEmptyString,
     project: Schema.NonEmptyString,
     reads: Schema.Array(Read),
