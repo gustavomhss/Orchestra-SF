@@ -214,8 +214,10 @@ function ordered(start: { line: number; column?: number }, end: { line: number; 
 // `C:foo` is rejected before resolve, which would otherwise borrow that drive's cwd. `/C:` is not rewritten into `C:`.
 function containedPath(file: string, root: string | undefined) {
   if (!root || !file || file.includes("\0") || root.includes("\0")) return undefined
-  if (driveRelative(file) || driveRelative(root) || hasDotDot(file) || hasDotDot(root)) return undefined
+  if (driveRelative(file) || driveRelative(root)) return undefined
   const path = windowsRoot(root) ? win32 : posix
+  // Flavor first: posix `\` is a filename character, so `src\..\a.js` is not a `..` segment. Win32 splits on both.
+  if (hasDotDot(file, path) || hasDotDot(root, path)) return undefined
   if (!path.isAbsolute(root)) return undefined
   const resolvedRoot = path.resolve(root)
   const resolvedFile = path.isAbsolute(file) ? path.resolve(file) : path.resolve(root, file)
@@ -229,8 +231,8 @@ function driveRelative(value: string) {
   return /^[A-Za-z]:(?![\\/])/.test(value)
 }
 
-function hasDotDot(value: string) {
-  return value.split(/[\\/]/).includes("..")
+function hasDotDot(value: string, path: typeof posix) {
+  return value.split(path === win32 ? /[\\/]/ : /\//).includes("..")
 }
 
 function windowsRoot(root: string) {
