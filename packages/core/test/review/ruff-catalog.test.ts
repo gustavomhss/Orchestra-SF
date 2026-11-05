@@ -36,7 +36,8 @@ describe("ruff catalog", () => {
     })
     expect(Object.keys(pack?.pin?.integrity ?? {}).sort()).toEqual(["darwin-arm64", "darwin-x64", "linux-arm64", "linux-x64", "win32-x64"])
     expect(pack?.tiers).not.toContain("quick")
-    expect(ruff.pack).toEqual(pack)
+    if (!pack) throw new Error("missing ruff pack")
+    expect(pack).toEqual(ruff.pack)
   })
 
   test("python detection already includes .py and .pyi and names the sourced team-stack leaf", () => {
