@@ -563,13 +563,38 @@ test("Standard runs the seven steps in order, each Session with the scope and br
       expect(finish).toContain("reviewMethodVersion: review-v2/code/standard")
       expect(finish).toContain(`routingDigest: ${ReviewRouting.digest(result.routing)}`)
       expect(finish).toContain(`catalogDigest: ${result.routing.catalog}`)
-      expect(
-        dataBlock(finish, "analyzer items the lens children read; give each an outcome \\(confirmed, refuted or not-pursued\\) in the record call's items"),
-      ).toEqual([{ pack: "gitleaks", rule: "rule", fingerprint: "fp-correctness-logic-0", pursued: true }])
+      const hostOutcomesLabel = "Host outcomes (initial pack, rule, fingerprint and outcome; generation stays host-only):\n"
+      const hostOutcomesAt = finish.indexOf(hostOutcomesLabel)
+      expect(hostOutcomesAt).toBeGreaterThanOrEqual(0)
+      const hostOutcomes = JSON.parse(finish.slice(hostOutcomesAt + hostOutcomesLabel.length).split("\n")[0] ?? "") as Array<{
+        pack: string
+        rule: string
+        fingerprint: string
+        outcome: string
+      }>
+      const cap = ReviewCatalog.current.route.tiers.find((tier) => tier.id === "standard")?.budget.itemsPerLens
+      if (cap === undefined) throw new Error("standard items cap missing")
+      const delivered = ["correctness-logic", "security"].flatMap((lens) => (ANALYSIS.items[lens] ?? []).slice(0, cap))
+      const projected = (reads: ReadonlyArray<{ pack: string; rule: string; fingerprint: string; outcome: string }>) =>
+        reads.map(({ pack, rule, fingerprint, outcome }) => ({ pack, rule, fingerprint, outcome })).toSorted((left, right) => {
+          const order = JSON.stringify([left.pack, left.rule, left.fingerprint])
+          const other = JSON.stringify([right.pack, right.rule, right.fingerprint])
+          return order < other ? -1 : order > other ? 1 : 0
+        })
+      expect(projected(hostOutcomes)).toEqual(projected(result.outcomes))
+      expect(hostOutcomes).toHaveLength(delivered.length)
+      expect(hostOutcomes.map((entry) => entry.fingerprint).toSorted()).toEqual(delivered.map((entry) => entry.fingerprint).toSorted())
+      expect(hostOutcomes).toEqual(expect.arrayContaining([
+        { pack: "gitleaks", rule: "rule", fingerprint: "fp-correctness-logic-0", outcome: "not-pursued" },
+        { pack: "gitleaks", rule: "rule", fingerprint: "fp-correctness-logic-1", outcome: "not-pursued" },
+        { pack: "gitleaks", rule: "rule", fingerprint: "fp-correctness-logic-14", outcome: "not-pursued" },
+        { pack: "gitleaks", rule: "rule", fingerprint: "fp-security-0", outcome: "not-pursued" },
+      ]))
+      expect(finish).not.toContain("fp-correctness-logic-15")
+      expect(finish).not.toContain("fp-correctness-logic-19")
       expect(finish).toContain("validationRecordID: val_1")
       expect(finish).not.toContain("REFUTED-BECAUSE")
       expect(finish).not.toContain("ASSUMPTION-ONLY-FOR-FINDERS")
-      expect(finish).not.toContain("fp-correctness-logic-1\"")
       expect(result.counts).toEqual({ lensChildren: 5, verifiers: 2, candidates: 6, confirmed: 1, questions: 4, dropped: 1 })
       expect(result.confirmed.map((finding) => finding.id)).toEqual(["C1"])
       expect(result.routing.deviations.map((entry) => entry.kind)).toContain("verifier-budget")
