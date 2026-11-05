@@ -164,9 +164,14 @@ describe("ReviewLedger.status", () => {
     expect(ask(sequence([...many(4, "c"), ...many(16, "r", "refuted")]), {
       thresholds: { activate: { read: 20, confirmed: 0.1 }, demote: { window: 20, confirmedBelow: 0.5 }, drop: thresholds.drop },
     })).toBe("active")
-    expect(ask(sequence([...many(20, "c"), ...many(20, "r", "refuted")]), {
-      thresholds: { activate: { read: 40, confirmed: 0.5 }, demote: { window: 20, confirmedBelow: 0.5 }, drop: thresholds.drop },
-    })).toBe("active")
+  })
+
+  test("an earlier demotion cannot be overridden by a later activation threshold", () => {
+    const reads = [...many(20, "c"), ...many(20, "r", "refuted")]
+    const overlap = { activate: { read: 40, confirmed: 0.5 }, demote: { window: 20, confirmedBelow: 0.5 }, drop: thresholds.drop }
+    expect(ask(sequence(reads.slice(0, 30)), { thresholds: overlap })).toBe("probation")
+    expect(ask(sequence(reads.slice(0, 31)), { thresholds: overlap })).toBe("demoted")
+    expect(ask(sequence(reads), { thresholds: overlap })).toBe("demoted")
   })
 
   test("a demoted generation does not reactivate", () => {
