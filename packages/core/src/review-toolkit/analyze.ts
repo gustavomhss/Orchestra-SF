@@ -1,7 +1,7 @@
 export * as ReviewAnalyze from "./analyze"
 
 import path from "path"
-import { lstat, mkdir, opendir, readdir, realpath, writeFile } from "fs/promises"
+import { lstat, mkdir, mkdtemp, opendir, readdir, realpath, rm, writeFile } from "fs/promises"
 import { Context, Effect, Option, Schema } from "effect"
 import { FSUtil } from "../fs-util"
 import { ReviewCatalog } from "../review/catalog"
@@ -410,7 +410,12 @@ const actionlinted = Effect.fnUntraced(function* (pack: Pack, context: RunContex
       const uri = yield* context.write("raw/actionlint-base.json", JSON.stringify({ invoked: false, reason: "no-eligible-workflow-input" }))
       return { status: "ok" as const, results: [], uri, emptyBase: true as const }
     }
-    const projected = yield* ReviewPackActionlint.prepare({ root: snapshot.root, files: selected.files, scratch: snapshot.scratch }).pipe(
+    // The copy is itself inside snapshot.scratch; a distinct sibling avoids source/scratch overlap.
+    const staging = yield* Effect.acquireRelease(
+      Effect.promise(() => mkdtemp(path.join(snapshot.scratch, "actionlint-host-"))),
+      (directory) => Effect.promise(() => rm(directory, { recursive: true, force: true })),
+    )
+    const projected = yield* ReviewPackActionlint.prepare({ root: snapshot.root, files: selected.files, scratch: staging }).pipe(
       Effect.catch((error) => Effect.succeed({ status: "not-run" as const, reason: workflowUnavailable(error) })),
     )
     if (projected.status !== "ok") return { status: "not-run" as const, reason: projected.reason }
