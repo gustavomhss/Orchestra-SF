@@ -1015,7 +1015,7 @@ test("registered plan APPROVE then code FIX_FIRST keeps the host round when the 
     expect(tampered.text).not.toContain("FORGED-CARD-QUICK")
     expect(tampered.text).not.toContain("review-v2/rereview/standard")
     expect(prompts.at(-1) ?? "").toContain("Q1")
-  }).pipe(Effect.provide(host), Effect.ensuring(Effect.sync(() => { scriptedMessages = () => undefined })))))
+  }).pipe(Effect.provide(host), Effect.ensuring(Effect.sync(() => { scriptedMessages = () => undefined }))))))
 
 test("a newer APPROVE or REJECT code receipt refuses rereview before any child prompt", () =>
   Effect.runPromise(restoreAlpha(Effect.gen(function* () {
@@ -1162,4 +1162,4 @@ test("a newer APPROVE or REJECT code receipt refuses rereview before any child p
     })
     if (!rejected.text.startsWith("REJECT:")) return yield* Effect.die(new Error(rejected.text))
     yield* refuse(validationRecordID)
-  }).pipe(Effect.provide(host), Effect.ensuring(Effect.sync(() => { scriptedMessages = () => undefined })))))
+  }).pipe(Effect.provide(host), Effect.ensuring(Effect.sync(() => { scriptedMessages = () => undefined }))))))
