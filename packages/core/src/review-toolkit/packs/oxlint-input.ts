@@ -33,6 +33,7 @@ const MAX_BYTES = 4 * 1024 * 1024
 const MAX_FILES = 10_000
 const rules = ["eslint(no-debugger)", "typescript(no-explicit-any)"] as const
 const configNames = ["eslint/no-debugger", "typescript/no-explicit-any"] as const
+const ENVIRONMENT_OVERRIDES = new Set(["HOME", "USERPROFILE", "TMPDIR", "TMP", "TEMP", "XDG_CONFIG_HOME", "XDG_CACHE_HOME"])
 const refuse = (reason: string): Refused => ({ status: "not-run", reason })
 
 export const prepare = (input: Input): Effect.Effect<Prepared | Refused, unknown, Scope.Scope> =>
@@ -69,6 +70,8 @@ export const prepare = (input: Input): Effect.Effect<Prepared | Refused, unknown
     const contents: { file: string; relative: string; bytes: Buffer; mode: number }[] = []
     for (const file of selected.files) {
       const relative = nativePath.relative(root, file).split(nativePath.sep).join("/")
+      const invalidName = invalidRelative(relative, nativePath.sep === "\\")
+      if (invalidName) return refuse(invalidName)
       const identity = yield* Effect.tryPromise({
         try: () => captureIdentity(root, file),
         catch: () => refuse("path-replaced"),
@@ -159,9 +162,10 @@ export function argv(executable: string, prepared: Prepared): { status: "ok"; ar
     const contained = ReviewNativeFiles.containedPath(root, prepared.files[index])
     const key = pathApi.sep === "\\" ? normalized.toLowerCase() : normalized
     const extension = [".js", ".jsx", ".ts", ".tsx", ".mjs", ".cjs", ".mts", ".cts"].some((value) => pathApi.basename(normalized).endsWith(value))
+    const invalidName = invalidRelative(normalized, pathApi.sep === "\\")
     if (
       !pathApi.isAbsolute(prepared.files[index]) || !contained || contained !== normalized ||
-      mapping.file !== normalized || mapping.path !== normalized || !extension || pairs.has(key)
+      mapping.file !== normalized || mapping.path !== normalized || !extension || invalidName || pairs.has(key)
     ) return refuse("invalid-projection")
     pairs.add(key)
   }
@@ -179,7 +183,8 @@ export function environment(root: string, input: NodeJS.ProcessEnv = process.env
   return {
     ...Object.fromEntries(Object.entries(base).filter(([key]) =>
       !/^(ZIZMOR|GH_|GITHUB_|RUST_|OXLINT|ESLINT|NODE_)/i.test(key) &&
-      !["FORCE_COLOR", "CLICOLOR_FORCE"].includes(key.toUpperCase()))),
+      !["FORCE_COLOR", "CLICOLOR_FORCE"].includes(key.toUpperCase()) &&
+      !ENVIRONMENT_OVERRIDES.has(key.toUpperCase()))),
     HOME: root,
     USERPROFILE: root,
     TMPDIR: root,
@@ -215,6 +220,18 @@ function safeAbsolute(value: string, pathApi: typeof path.posix) {
   if (!value || !pathApi.isAbsolute(value) || value.includes("\0")) return false
   const head = value.slice(0, 4).replaceAll("/", "\\")
   return head !== "\\\\?\\" && head !== "\\\\.\\" && !value.split(pathApi.sep === "\\" ? /[\\/]/ : /\//).includes("..")
+}
+
+function invalidRelative(value: string, windows: boolean) {
+  const segments = value.split("/")
+  if (segments.some((segment) => segment.toLowerCase() === ".git") || segments[0]?.toLowerCase() === ".host") return "projection-metadata-path-unsupported"
+  if (/[\%?#]/.test(value) || !windows && value.includes("\\")) return "native-uri-path-unsupported"
+  if (!windows) return undefined
+  if (segments.some((segment) => {
+    const base = segment.split(".")[0].replace(/[ .]+$/g, "").toUpperCase()
+    return segment.includes(":") || /[ .]$/.test(segment) || /^(CON|PRN|AUX|NUL|COM[1-9¹²³]|LPT[1-9¹²³])$/.test(base)
+  })) return "windows-device-path-unsupported"
+  return undefined
 }
 
 function isRefusal(error: unknown): error is Refused {
