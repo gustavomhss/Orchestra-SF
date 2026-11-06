@@ -19,7 +19,7 @@ const BROKEN = CLEAN.replace("      - run: echo ok", "      - uses: actions/chec
 const WORKFLOW = ".github/workflows/ci.yml"
 const POISON = "jobs: [deliberately invalid YAML\n"
 
-it.live("zizmor Linux native report conformance", () => Effect.gen(function* () {
+it.live.skipIf(process.platform !== "linux")("zizmor Linux-only native report conformance", () => Effect.gen(function* () {
   expect(process.platform).toBe("linux")
   expect(jail, "conformance-missing: sandbox").toBeTruthy()
   expectSpawn(import.meta.path)
@@ -55,8 +55,9 @@ it.live("zizmor Linux native report conformance", () => Effect.gen(function* () 
       args,
       root,
     })
-    // Keep bounded native evidence in the test log for both successful and failing phases.
-    console.info(`[zizmor ${phase}] stdout=${outcome.stdout.data.toString("utf8")} stderr=${outcome.stderr.data.toString("utf8")} exit=${outcome.exitCode}`)
+    // Preserve exact bounded bytes in logs; UTF-8 decoding is separately validated for stderr.
+    console.info(`[zizmor ${phase}] stdout-base64=${outcome.stdout.data.toString("base64")} stderr-base64=${outcome.stderr.data.toString("base64")} exit=${outcome.exitCode} failure=${outcome.failure ?? "none"} timedOut=${outcome.timedOut} overflow=${outcome.overflow} memoryExceeded=${outcome.memoryExceeded} stdoutTruncated=${outcome.stdout.truncated} stderrTruncated=${outcome.stderr.truncated}`)
+    new TextDecoder("utf-8", { fatal: true }).decode(outcome.stderr.data)
     expect(outcome.failure).toBeUndefined()
     expect(outcome.timedOut).toBe(false)
     expect(outcome.overflow).toBe(false)
