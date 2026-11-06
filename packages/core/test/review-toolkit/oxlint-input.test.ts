@@ -87,5 +87,6 @@ test("argv validates native paths without restricting literal names and strips c
   }
   expect(ReviewOxlintInput.argv(path.resolve("bin/oxlint"), { ...posix, files: [path.join(root, ".git/a.js")], paths: [{ file: ".git/a.js", path: ".git/a.js" }] }).status).not.toBe("ok")
   const env = ReviewOxlintInput.environment(root, { Force_Color: "1", cLiCoLoR_fOrCe: "1", hOmE: "outside", xDG_CONFIG_HOME: "outside", PATH: "/bin" })
-  for (const [key, value] of [["Force_Color", undefined], ["cLiCoLoR_fOrCe", undefined], ["hOmE", undefined], ["xDG_CONFIG_HOME", undefined], ["HOME", root]] as const) expect(env[key]).toBe(value)
+  for (const key of ["Force_Color", "cLiCoLoR_fOrCe", "hOmE", "xDG_CONFIG_HOME"]) expect(Object.hasOwn(env, key)).toBe(false)
+  expect(env.HOME).toBe(root)
 })
