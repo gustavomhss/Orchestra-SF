@@ -17,18 +17,20 @@ test("projects original source names and prepares only the curated rules", async
   await writeFile(path.join(root, ".gitignore"), "*\n")
   await writeFile(path.join(root, ".oxlintrc.json"), "{")
   try {
-    const prepared = await Effect.runPromise(Effect.scoped(ReviewOxlintInput.prepare({ root, scratch, files: ["nested/b.ts", "nested/a.js", "nested/a.js"] })))
-    if (!constants.O_NOFOLLOW) {
-      expect(prepared).toEqual({ status: "not-run", reason: "no-follow-unavailable" })
-      return
-    }
-    expect(prepared.status).toBe("ok")
-    if (prepared.status !== "ok") throw new Error(prepared.reason)
-    expect(prepared.paths).toEqual([{ file: "nested/a.js", path: "nested/a.js" }, { file: "nested/b.ts", path: "nested/b.ts" }])
-    expect(prepared.rules).toEqual(["eslint(no-debugger)", "typescript(no-explicit-any)"])
-    expect(JSON.parse(await readFile(prepared.config, "utf8"))).toEqual({ plugins: ["eslint", "typescript"], rules: { "eslint/no-debugger": "error", "typescript/no-explicit-any": "error" } })
-    expect(ReviewOxlintInput.argv(path.resolve("bin/oxlint"), prepared)).toMatchObject({ status: "ok", argv: expect.arrayContaining(["--allow", "all", "--deny", "eslint/no-debugger", "--deny", "typescript/no-explicit-any"]) })
-    expect(await readFile(prepared.files[0], "utf8")).toBe("debugger;\n")
+    await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
+      const prepared = yield* ReviewOxlintInput.prepare({ root, scratch, files: ["nested/b.ts", "nested/a.js", "nested/a.js"] })
+      if (!constants.O_NOFOLLOW) {
+        expect(prepared).toEqual({ status: "not-run", reason: "no-follow-unavailable" })
+        return
+      }
+      expect(prepared.status).toBe("ok")
+      if (prepared.status !== "ok") throw new Error(prepared.reason)
+      expect(prepared.paths).toEqual([{ file: "nested/a.js", path: "nested/a.js" }, { file: "nested/b.ts", path: "nested/b.ts" }])
+      expect(prepared.rules).toEqual(["eslint(no-debugger)", "typescript(no-explicit-any)"])
+      expect(JSON.parse(yield* Effect.promise(() => readFile(prepared.config, "utf8")))).toEqual({ plugins: ["eslint", "typescript"], rules: { "eslint/no-debugger": "error", "typescript/no-explicit-any": "error" } })
+      expect(ReviewOxlintInput.argv(path.resolve("bin/oxlint"), prepared)).toMatchObject({ status: "ok", argv: expect.arrayContaining(["--allow", "all", "--deny", "eslint/no-debugger", "--deny", "typescript/no-explicit-any"]) })
+      expect(yield* Effect.promise(() => readFile(prepared.files[0], "utf8"))).toBe("debugger;\n")
+    })))
   } finally {
     await rm(base, { recursive: true, force: true })
   }
