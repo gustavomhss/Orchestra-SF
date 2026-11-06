@@ -78,6 +78,8 @@ it.live.skipIf(process.platform !== "linux")("Linux zizmor owned projection igno
       const prepared = yield* ReviewZizmorInput.prepare({ ...f, files: [WORKFLOW] })
       expect(prepared.status).toBe("ok")
       if (prepared.status !== "ok") throw new Error(prepared.reason)
+      expect(yield* Effect.promise(() => readFile(prepared.files[0]))).toEqual(yield* Effect.promise(() => readFile(path.join(f.root, WORKFLOW))))
+      expect((yield* Effect.promise(() => lstat(prepared.files[0]))).mode & 0o777).toBe((yield* Effect.promise(() => lstat(path.join(f.root, WORKFLOW)))).mode & 0o777)
       const built = ReviewZizmorInput.argv(f.executable, prepared)
       expect(built.status).toBe("ok")
       if (built.status !== "ok") throw new Error(built.reason)
@@ -90,6 +92,7 @@ it.live.skipIf(process.platform !== "linux")("Linux zizmor owned projection igno
       if (phase === "clean") expect(settled.results).toEqual([])
       if (phase === "broken") {
         expect(settled.results.some((result) => result.rule === "zizmor/unpinned-uses")).toBe(true)
+        expect(settled.results.some((result) => result.rule === "zizmor/artipacked")).toBe(true)
         expect(settled.results.every((result) => result.path === WORKFLOW)).toBe(true)
       }
     }))
@@ -109,6 +112,8 @@ it.live.skipIf(process.platform !== "linux")("Linux oxlint owned projection enfo
       const prepared = yield* ReviewOxlintInput.prepare({ ...f, files: [TYPESCRIPT], excluded: phase === "excluded" ? ["typescript(no-explicit-any)"] : [] })
       expect(prepared.status).toBe("ok")
       if (prepared.status !== "ok") throw new Error(prepared.reason)
+      expect(yield* Effect.promise(() => readFile(prepared.files[0]))).toEqual(yield* Effect.promise(() => readFile(path.join(f.root, TYPESCRIPT))))
+      expect((yield* Effect.promise(() => lstat(prepared.files[0]))).mode & 0o777).toBe((yield* Effect.promise(() => lstat(path.join(f.root, TYPESCRIPT)))).mode & 0o777)
       const built = ReviewOxlintInput.argv(f.executable, prepared)
       expect(built.status).toBe("ok")
       if (built.status !== "ok") throw new Error(built.reason)

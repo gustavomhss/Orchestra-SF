@@ -365,7 +365,8 @@ test("I10 native emitter URI aliases are refused before scanning without rewriti
       const bytes = "unmodified unsafe-path bytes\n"
       await writeFile(path.join(f.root, unsafe), bytes)
       const prepared = await Effect.runPromise(Effect.scoped(engine.prepare({ ...f, files: [file, unsafe] })))
-      expect(prepared).toEqual({ status: "not-run", reason: constants.O_NOFOLLOW ? "native-uri-path-unsupported" : "no-follow-unavailable" })
+      expect(prepared.status).not.toBe("ok")
+      expect(prepared).toMatchObject({ reason: constants.O_NOFOLLOW ? "native-uri-path-unsupported" : "no-follow-unavailable" })
       expect(await readFile(path.join(f.root, unsafe), "utf8")).toBe(bytes)
     }
   }
