@@ -49,7 +49,7 @@ export const prepare = (input: Input): Effect.Effect<Prepared | Refused, unknown
     const named = input.files.map((file) => ({ file, path: ReviewNativeFiles.containedPath(root, file) }))
     if (named.some((item) => !item.path)) return refusal("path-outside")
     if (named.some((item) => !/^\.github\/workflows\/[^/]+\.ya?ml$/i.test(item.path!))) return refusal("invalid-workflow-path")
-    if (named.some((item) => !supportedWorkflowPath(item.path!, api))) return { status: "unsupported", reason: "native-uri-path-unsupported" }
+    if (named.some((item) => !supportedWorkflowPath(item.path!, api))) return { status: "unsupported" as const, reason: "native-uri-path-unsupported" }
     if (api === path.win32 && hasCaseAliases(named.map((item) => item.path!))) return refusal("duplicate-input")
     const selected = yield* ReviewNativeFiles.select({ root, files: named.map((item) => item.path!), extensions: [".yml", ".yaml"] })
     if (selected.status !== "ok") return selected
