@@ -113,6 +113,7 @@ function decodeNativeUri(uri: string, path: ReturnType<typeof ReviewNativeFiles.
     const slash = rest.indexOf("/")
     const authority = slash < 0 ? rest : rest.slice(0, slash)
     const encodedFilePath = slash < 0 ? "" : rest.slice(slash)
+    if (/%2f|%5c/i.test(authority)) return undefined
     const host = decodeURIComponent(authority)
     if (host && host.toLowerCase() !== "localhost" && path.sep !== "\\") return undefined
     if (/%2f/i.test(encodedFilePath) || (path.sep === "\\" && /%5c/i.test(encodedFilePath))) return undefined

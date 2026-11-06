@@ -33,6 +33,13 @@ test("native URI decoding rejects encoded separators and file authority aliases"
   expect(ReviewNativeSarif.parse(report("foo%25bar"), { ...posix, paths: [{ file: "foo%bar", path: "source.js" }] })).toMatchObject({ status: "ok" })
 })
 
+test("native UNC file URI authority separators cannot alias the trusted share", () => {
+  const unc: ReviewNativeSarif.Options = { pack: "fixture", version: "1.0.0", root: "\\\\server\\share", paths: [{ file: "a.js", path: "src/a.js" }], rules: ["rule"] }
+  expect(ReviewNativeSarif.parse(report("file://server/share/a.js"), unc)).toMatchObject({ status: "ok", results: [{ path: "src/a.js" }] })
+  expect(ReviewNativeSarif.parse(report("file://server%2Fshare/a.js"), unc).status).toBe("acquisition-error")
+  expect(ReviewNativeSarif.parse(report("file://server%5Cshare/a.js"), unc).status).toBe("acquisition-error")
+})
+
 test("native file URIs reject pre-normalization traversal and non-file scheme aliases", () => {
   const posix: ReviewNativeSarif.Options = { pack: "fixture", version: "1.0.0", root: "/native", paths: [{ file: "a.js", path: "src/a.js" }], rules: ["rule"] }
   expect(ReviewNativeSarif.parse(report("file:///native/../native/a.js"), posix).status).toBe("acquisition-error")
