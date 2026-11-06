@@ -1,9 +1,9 @@
 export * as ReviewOxlintResult from "./oxlint-result"
 
 import type { ResearchProcess } from "../../research-toolkit/process"
-import type { ReviewNativeSarif } from "../native-sarif"
 import type { ReviewSarif } from "../sarif"
 import { ReviewNativeSarif } from "../native-sarif"
+import oxlint from "../../backend-toolkit/packs/oxlint"
 
 export type Options = Omit<ReviewNativeSarif.Options, "pack" | "version">
 
@@ -17,7 +17,7 @@ export function settle(outcome: ResearchProcess.Outcome, options: Options): Revi
   const stderr = decode(outcome.stderr.data)
   if (stdout === undefined || stderr === undefined) return fail("not-utf8")
   if (stderr.trim() !== "") return fail("stderr")
-  const parsed = ReviewNativeSarif.parse(stdout, { ...options, pack: "oxlint", version: "1.91.0" })
+  const parsed = ReviewNativeSarif.parse(stdout, { ...options, pack: oxlint.id, version: oxlint.version })
   if (parsed.status !== "ok") return parsed
   if ((outcome.exitCode === 0 && parsed.nativeErrors === 0) || (outcome.exitCode === 1 && parsed.nativeErrors > 0)) {
     return { status: "ok", results: parsed.results, excluded: parsed.excluded }
@@ -25,5 +25,14 @@ export function settle(outcome: ResearchProcess.Outcome, options: Options): Revi
   return fail(outcome.exitCode === 0 || outcome.exitCode === 1 ? "exit-mismatch" : `exit-${outcome.exitCode}`)
 }
 
-function decode(data: Uint8Array) { try { return new TextDecoder("utf-8", { fatal: true }).decode(data) } catch { return undefined } }
-function fail(reason: string) { return { status: "acquisition-error" as const, reason } }
+function decode(data: Uint8Array) {
+  try {
+    return new TextDecoder("utf-8", { fatal: true }).decode(data)
+  } catch {
+    return undefined
+  }
+}
+
+function fail(reason: string) {
+  return { status: "acquisition-error" as const, reason }
+}
