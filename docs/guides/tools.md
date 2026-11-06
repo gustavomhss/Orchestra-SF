@@ -23,6 +23,10 @@ When you refuse a tool call, the agent is told why. If you wrote feedback in the
 
 `bash` keeps both ends of long output. Past 1 MB the start and the end are kept and the middle is marked as omitted, so the error at the bottom of a long build is still visible. A command that times out returns what it printed before the limit, with the timeout notice. `write` refuses to overwrite a file that changed after the agent last read it; the agent has to read it again first. A new file, or one the agent never read, is written as before.
 
+### Redirect checks are not a network sandbox
+
+The redirect guard checks the addresses a target name resolves to before the next request. It does not pin that checked address to the connection: a DNS answer can change between the check and the connection, so DNS rebinding is not covered. Direct local-address fetches also remain a permission decision. Do not treat these redirect checks as a complete guarantee against access to private services or as a replacement for network isolation.
+
 ## `read`
 
 Built so a small file costs as little as possible and a large one can be walked without guessing.
