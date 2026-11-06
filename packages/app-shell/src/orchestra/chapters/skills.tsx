@@ -17,16 +17,20 @@ import { SkillDialog, type SkillDialogState, type SkillSaveInput } from "./skill
 import {
   filterSkills,
   listedSkills,
+  readSkill,
+  readSkillCatalog,
   readSkills,
+  skillReply,
   skillAccess,
   skillErrorMessage,
   skillSource,
   sortSkills,
   type SkillEntry,
+  type SkillCatalogEntry,
 } from "./skills-data"
 import "./skills.css"
 
-const warm = createWarm<SkillEntry[]>(8)
+const warm = createWarm<SkillCatalogEntry[]>(8)
 
 export default function Skills(props: ChapterPageProps) {
   const language = useLanguage()
@@ -40,7 +44,7 @@ export default function Skills(props: ChapterPageProps) {
   const [state, setState] = createStore({
     status: (warmed ? "ready" : "loading") as "loading" | "ready" | "error" | "unavailable",
     cause: undefined as unknown,
-    skills: warmed ?? ([] as SkillEntry[]),
+    skills: warmed ?? ([] as SkillCatalogEntry[]),
     query: "",
     // A saved file the server has not listed yet (its configuration predates the skill folder).
     pending: undefined as string | undefined,
@@ -48,6 +52,7 @@ export default function Skills(props: ChapterPageProps) {
   // A signal, not a store field: setting a store path to an object merges into the previous object, so the keyed
   // dialog would not remount and the previous dialog's pending close event would clear the next one.
   const [dialog, setDialog] = createSignal<SkillDialogState>()
+  const [opening, setOpening] = createSignal(false)
   const close = (current: SkillDialogState) => {
     if (dialog() === current) setDialog(undefined)
   }
@@ -77,14 +82,29 @@ export default function Skills(props: ChapterPageProps) {
   async function load() {
     const entries = await serverSDK().ready.then(async () => {
       if (abort.signal.aborted) return []
-      return (
-        await serverSDK().currentApi.skill.list({ location: { directory: props.directory } }, { signal: abort.signal })
-      ).data
+      return skillReply(
+        async () => (await sdk().orchestra.skills.catalog({ location: { directory: props.directory } }, { signal: abort.signal })).data,
+        async () => (await serverSDK().currentApi.skill.list({ location: { directory: props.directory } }, { signal: abort.signal })).data,
+      )
     })
     if (abort.signal.aborted) return
-    const skills = sortSkills(listedSkills(readSkills(entries)), props.directory)
+    const skills = sortSkills(listedSkills(readSkillCatalog(entries)), props.directory)
     warm.write(warmKey, skills)
     setState({ skills, status: "ready" })
+  }
+
+  async function open(selected: SkillCatalogEntry) {
+    if (opening()) return
+    setOpening(true)
+    const result = await skillReply(
+      async () => (await sdk().orchestra.skills.get({ name: selected.name, location: { directory: props.directory } }, { signal: abort.signal })).data,
+      async () => readSkills((await serverSDK().currentApi.skill.list({ location: { directory: props.directory } }, { signal: abort.signal })).data)
+        .find((skill) => skill.name === selected.name),
+    ).then((value) => ({ skill: readSkill(value, selected) })).catch((cause: unknown) => ({ cause }))
+    if (abort.signal.aborted) return
+    setOpening(false)
+    if ("cause" in result) return setState({ status: "error", cause: result.cause })
+    setDialog({ type: "edit", skill: result.skill, access: skillAccess(result.skill.location, props.directory) })
   }
 
   function refresh(quiet = false) {
@@ -146,7 +166,7 @@ export default function Skills(props: ChapterPageProps) {
         <button
           type="button"
           class="mx-btn primary"
-          disabled={state.status !== "ready"}
+          disabled={state.status !== "ready" || opening()}
           onClick={() => setDialog({ type: "add" })}
         >
           {language.t("orchestra.skills.add")}
@@ -205,7 +225,8 @@ export default function Skills(props: ChapterPageProps) {
                     <button
                       type="button"
                       class="mx-btn"
-                      onClick={() => setDialog({ type: "edit", skill, access: access() })}
+                      disabled={opening()}
+                      onClick={() => void open(skill)}
                     >
                       {language.t(access() === "edit" ? "orchestra.skills.read" : "orchestra.skills.readOnly")}
                     </button>

@@ -185,6 +185,10 @@ import type {
   ServerLspStatusOutput,
   ServerFormatterStatusInput,
   ServerFormatterStatusOutput,
+  SkillsCatalogInput,
+  SkillsCatalogOutput,
+  SkillsGetInput,
+  SkillsGetOutput,
   SkillsListInput,
   SkillsListOutput,
   SkillsSaveInput,
@@ -1852,6 +1856,30 @@ export function make(options: ClientOptions) {
         ),
     },
     skills: {
+      catalog: (input?: SkillsCatalogInput, requestOptions?: RequestOptions) =>
+        request<SkillsCatalogOutput>(
+          {
+            method: "GET",
+            path: `/api/skill/catalog`,
+            query: { location: input?.["location"] },
+            successStatus: 200,
+            declaredStatuses: [400, 401],
+            empty: false,
+          },
+          requestOptions,
+        ),
+      get: (input: SkillsGetInput, requestOptions?: RequestOptions) =>
+        request<SkillsGetOutput>(
+          {
+            method: "GET",
+            path: `/api/skill/by-name`,
+            query: { location: input["location"], name: input["name"] },
+            successStatus: 200,
+            declaredStatuses: [400, 401],
+            empty: false,
+          },
+          requestOptions,
+        ),
       list: (input?: SkillsListInput, requestOptions?: RequestOptions) =>
         request<SkillsListOutput>(
           {

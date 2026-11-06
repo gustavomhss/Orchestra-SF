@@ -27,6 +27,24 @@ function located(validate: (value: unknown) => void) {
 }
 
 export const skillScenarios: Scenario[] = [
+  http.protected.get("/api/skill/catalog", "v2.skill.catalog")
+    .seeded((ctx) => ctx.file(taken, takenText))
+    .json(200, located((value) => {
+      array(value)
+      check(value.length > 0, "metadata catalog should include the seeded skill")
+      value.forEach((item) => { object(item); check(!Object.hasOwn(item, "content"), "catalog must omit instruction bodies") })
+      check(value.some((item) => { object(item); return item.name === "httpapi-taken" }), "seeded skill should be registered")
+    })),
+  http.protected.get("/api/skill/by-name", "v2.skill.get")
+    .seeded((ctx) => ctx.file(taken, takenText))
+    .at((ctx) => ({ path: "/api/skill/by-name?name=httpapi-taken", headers: ctx.headers() }))
+    .json(200, located((value) => {
+      object(value)
+      check(value.name === "httpapi-taken" && value.content === "# Taken\n", "exact-name read should include the registered body")
+    })),
+  http.protected.get("/api/skill/by-name", "v2.skill.get.missing")
+    .at((ctx) => ({ path: "/api/skill/by-name?name=missing-skill", headers: ctx.headers() }))
+    .json(200, located((value) => check(value === null, "missing registered name should return null"))),
   http.protected.get("/api/skill", "v2.skill.list").json(200, located(array)),
   http.protected
     .put("/api/skill", "v2.skill.save")

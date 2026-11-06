@@ -40,6 +40,33 @@ description: ${description}
 }
 
 describe("SkillV2", () => {
+  it.live("catalog omits body bytes while exact-name reads preserve the full registered skill", () =>
+    Effect.acquireRelease(
+      Effect.promise(() => tmpdir()),
+      (tmp) => Effect.promise(() => tmp[Symbol.asyncDispose]()),
+    ).pipe(Effect.flatMap((tmp) => Effect.gen(function* () {
+      const body = "BODY_ONLY_".repeat(4096)
+      yield* Effect.promise(async () => {
+        await fs.mkdir(path.join(tmp.path, "review"))
+        await fs.writeFile(path.join(tmp.path, "review", "SKILL.md"),
+          `---\nname: review\ndescription: Review changes\ninternal: true\nslash: true\n---\n${body}`)
+      })
+      const skill = yield* SkillV2.Service
+      yield* skill.transform((editor) => editor.source({ type: "directory", path: AbsolutePath.make(tmp.path) }))
+      const listed = yield* skill.list()
+      const catalog = yield* skill.catalog()
+      expect(listed[0]?.content).toBe(body)
+      expect(catalog).toEqual([{ name: "review", description: "Review changes", internal: true, slash: true,
+        location: listed[0]?.location, mtime: listed[0]?.mtime }])
+      expect(catalog.every((item) => !Object.hasOwn(item, "content"))).toBe(true)
+      expect(JSON.stringify(catalog)).not.toContain("BODY_ONLY_")
+      expect(Buffer.byteLength(JSON.stringify(listed)) - Buffer.byteLength(JSON.stringify(catalog))).toBeGreaterThan(body.length)
+      expect(yield* skill.get("review")).toEqual(listed[0])
+      expect(yield* skill.get("Review")).toBeUndefined()
+      expect(yield* skill.get("../review/SKILL.md")).toBeUndefined()
+    }))),
+  )
+
   it.live("reuses loaded skills until reload refreshes external directory edits", () =>
     Effect.acquireRelease(
       Effect.promise(() => tmpdir()),
@@ -235,6 +262,7 @@ describe("SkillV2", () => {
             ["lint", "Lint"],
             ["review", "Bundled"],
           ])
+          expect(yield* skill.get("review")).toEqual(listed.find((item) => item.name === "review"))
         }),
       ),
     ),

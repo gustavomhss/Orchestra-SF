@@ -73,6 +73,8 @@ describe("SkillTool", () => {
               reload: () => Effect.die("unused"),
               sources: () => Effect.die("unused"),
               list: () => Effect.succeed(current),
+              catalog: () => Effect.die("unused catalog HTTP projection"),
+              get: () => Effect.die("unused catalog HTTP body read"),
               save: () => Effect.die("unused"),
               remove: () => Effect.die("unused"),
             }),
@@ -207,6 +209,8 @@ const missFixture = (input: {
         }))],
         [SkillV2.node, Layer.succeed(SkillV2.Service, SkillV2.Service.of({
           list: () => Effect.succeed(input.skills),
+          catalog: () => unexpected("skill.catalog"),
+          get: () => unexpected("skill.get"),
           transform: () => Effect.die("unused skill transform"),
           reload: () => Effect.die("unused skill reload"),
           sources: () => Effect.die("unused skill sources"),

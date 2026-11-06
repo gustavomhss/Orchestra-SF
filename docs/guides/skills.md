@@ -1,4 +1,4 @@
-# Skills: catalog visibility
+# Skills: discovery, caching and loading
 
 The Skills chapter lists the skills Orchestra finds in the project's skill folders (`.orchestra/skills/`, `.claude/skills/`, `.agents/skills/`), the global folder and the built-in modules.
 
@@ -18,9 +18,37 @@ internal: true
 - The core skill loader preserves this metadata. It controls catalog visibility, not authorization; agent access still follows skill permissions.
 - Built-in examples: every seat tree root (`archie-*`, `backend-*`, `jimmy-*`, `team-stack`) and Maestro's playbooks (`maestro-*`, `frame-request`).
 
-## The skill list in the system prompt
+## Cached discovery
 
-Loaded source contents are cached between reads. An explicit source reload, or a source registration change, refreshes that cache; editing a file outside Orchestra alone does not trigger a filesystem watcher. Saving or removing a project skill through Orchestra invalidates its cached contents. A read already in progress may finish with its earlier snapshot, but cannot repopulate the current cache after a reload or successful write.
+Orchestra keeps the skills it has already read and interpreted in memory. Repeated catalog reads can reuse those results instead of scanning the source folders and parsing every Markdown file again. The cache belongs to the project's runtime services, not to a permanent file on disk or to the model provider.
+
+| What happens | What the next read sees |
+| --- | --- |
+| Read the same registered sources again | Reuses their loaded contents. |
+| Edit a skill file outside Orchestra | Keeps the cached version until the source is explicitly reloaded. There is no automatic filesystem watcher for this cache. |
+| Explicitly reload the sources | Loads their contents again into a fresh cache. |
+| Register or discard a source | Creates a fresh source state; registering the same folder again cannot revive an older cache. |
+| Successfully save or remove a project skill through Orchestra | Invalidates cached contents so the next read reflects the write. |
+
+For example, if Orchestra has loaded a skill whose description is “Review API changes”, editing that file to say “Review API and schema changes” in another editor does not update the cached description by itself. An explicit source reload makes the next read see the new description. Saving through Orchestra performs cache invalidation for you.
+
+A read already in progress may finish with its earlier snapshot. It cannot put that old content back into the current cache after a reload or successful write. This protects against a slow reader undoing a newer refresh.
+
+**A page refresh and a source reload are not the same operation.** Asking the server for the catalog again can still use its in-memory source cache. This section describes source reloads, not a promise that every UI refresh rescans the disk. Cache invalidation also does not rewrite messages already recorded in a session.
+
+## What this saves — and what it does not
+
+There are different costs involved:
+
+- **Discovery cache:** avoids repeated filesystem reads and Markdown parsing. By itself it does not shorten the instructions sent to a model, reduce billed input tokens or establish a provider prompt-cache hit.
+- **Catalog transport:** the Skills screen requests names, descriptions and other metadata first, then fetches one full skill when you open it to read or edit. Its warm catalog does not retain instruction bodies. This reduces bulk transfer and decoding, not model input tokens. Older servers without the split routes use the legacy full-list API as a compatibility fallback, so they do not receive the same transfer reduction.
+- **Selective model loading:** the agent initially sees names and descriptions, not every skill's full body. It loads instructions with the `skill` tool when needed. Skill trees let it follow only a relevant branch instead of loading the whole tree. This is the mechanism that limits how much skill text enters the conversation; actual token counts depend on what the agent loads and the model request.
+
+Cache membership is never permission to use a skill. Agent skill permissions and source precedence still apply independently.
+
+The transport split does not make source discovery lazy: a cold source still needs to be read and interpreted to build its catalog. It also does not remove the full-list API used by existing clients. If a skill's winning source file changes between listing and opening it, the screen asks you to reload rather than silently opening a different file for editing.
+
+## The skill list in the system prompt
 
 Agents see the skills they may load as a list in the system prompt, sorted by name. The list is bounded so a large catalog cannot crowd out the task:
 

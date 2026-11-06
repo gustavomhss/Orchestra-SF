@@ -3453,6 +3453,56 @@ export type ServerFormatterStatusOutput = {
   }>
 }
 
+export type SkillsCatalogInput = {
+  readonly location?: {
+    readonly location?: { readonly directory?: string | undefined; readonly workspace?: string | undefined } | undefined
+  }["location"]
+}
+
+export type SkillsCatalogOutput = {
+  readonly location: {
+    readonly directory: string
+    readonly workspaceID?: string
+    readonly project: { readonly id: string; readonly directory: string }
+  }
+  readonly data: ReadonlyArray<{
+    readonly name: string
+    readonly description?: string
+    readonly slash?: boolean
+    readonly internal?: boolean
+    readonly location: string
+    readonly mtime?: number
+  }>
+}
+
+export type SkillsGetInput = {
+  readonly location?: {
+    readonly location?: { readonly directory?: string | undefined; readonly workspace?: string | undefined } | undefined
+    readonly name: string
+  }["location"]
+  readonly name: {
+    readonly location?: { readonly directory?: string | undefined; readonly workspace?: string | undefined } | undefined
+    readonly name: string
+  }["name"]
+}
+
+export type SkillsGetOutput = {
+  readonly location: {
+    readonly directory: string
+    readonly workspaceID?: string
+    readonly project: { readonly id: string; readonly directory: string }
+  }
+  readonly data: {
+    readonly name: string
+    readonly description?: string
+    readonly slash?: boolean
+    readonly internal?: boolean
+    readonly location: string
+    readonly content: string
+    readonly mtime?: number
+  } | null
+}
+
 export type SkillsListInput = {
   readonly location?: {
     readonly location?: { readonly directory?: string | undefined; readonly workspace?: string | undefined } | undefined

@@ -114,6 +114,25 @@ test("sessions.get returns the wire projection", async () => {
   expect(result.time.created).toBe(1_717_171_717_000)
 })
 
+test("skills split catalog and exact-name body reads preserve the legacy list route", async () => {
+  const requests: URL[] = []
+  const location = { directory: "/repo", project: { id: "project", directory: "/repo" } }
+  const metadata = { name: "review + schema", location: "/repo/.orchestra/skills/review/SKILL.md" }
+  const full = { ...metadata, content: "# Full instructions" }
+  const client = Orchestra.make({ baseUrl: "http://localhost:3000", fetch: async (input) => {
+    const url = new URL(typeof input === "string" ? input : input instanceof URL ? input.href : input.url)
+    requests.push(url)
+    return Response.json({ location, data: url.pathname === "/api/skill/catalog" ? [metadata]
+      : url.pathname === "/api/skill/by-name" ? full : [full] })
+  } })
+  expect((await client.skills.catalog({ location: { directory: "/repo" } })).data).toEqual([metadata])
+  expect((await client.skills.get({ name: metadata.name, location: { directory: "/repo" } })).data).toEqual(full)
+  expect((await client.skills.list({ location: { directory: "/repo" } })).data).toEqual([full])
+  expect(requests.map((url) => url.pathname)).toEqual(["/api/skill/catalog", "/api/skill/by-name", "/api/skill"])
+  expect(requests[1]?.searchParams.get("name")).toBe(metadata.name)
+  expect(requests.map((url) => url.searchParams.get("location[directory]"))).toEqual(["/repo", "/repo", "/repo"])
+})
+
 test("research.artifact uses the public revision and cursor contract", async () => {
   const requests: Array<{ url: string; init?: RequestInit }> = []
   const page = {

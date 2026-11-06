@@ -29,6 +29,17 @@ export const Info = Schema.Struct({
   mtime: Schema.Finite.pipe(optional),
 }).annotate({ identifier: "SkillV2.Info" })
 
+export interface Metadata extends Schema.Schema.Type<typeof Metadata> {}
+/** Catalog fields only; load the body by exact registered name when it is needed. */
+export const Metadata = Schema.Struct({
+  name: Info.fields.name,
+  description: Info.fields.description,
+  slash: Info.fields.slash,
+  internal: Info.fields.internal,
+  location: Info.fields.location,
+  mtime: Info.fields.mtime,
+}).annotate({ identifier: "SkillV2.Metadata" })
+
 export interface SaveInput extends Schema.Schema.Type<typeof SaveInput> {}
 export const SaveInput = Schema.Struct({
   name: Schema.String,

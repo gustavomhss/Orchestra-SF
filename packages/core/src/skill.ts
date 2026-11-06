@@ -82,6 +82,8 @@ export type Draft = {
 export interface Interface extends State.Transformable<Draft> {
   readonly sources: () => Effect.Effect<Source[]>
   readonly list: () => Effect.Effect<Info[]>
+  readonly catalog: () => Effect.Effect<Skill.Metadata[]>
+  readonly get: (name: string) => Effect.Effect<Info | undefined>
   /** Writes a skill file for the catalog (see SkillFile.save) and reloads cached skill files. */
   readonly save: (directory: string, input: SkillFile.SaveInput) => Effect.Effect<Info, SkillFile.WriteError>
   readonly remove: (directory: string, location: string) => Effect.Effect<void, SkillFile.WriteError>
@@ -216,6 +218,11 @@ const layer = Layer.effect(
         return state.get().sources
       }),
       list,
+      catalog: () => list().pipe(Effect.map((skills) => skills.map((skill) => {
+        const { content, ...metadata } = skill
+        return metadata
+      }))),
+      get: (name) => list().pipe(Effect.map((skills) => skills.find((skill) => skill.name === name))),
       save,
       remove,
     })

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { filterSkills, isInternalSkill, listedSkills, readSkills, skillAccess, skillErrorMessage, skillSource, sortSkills } from "./skills-data"
+import { filterSkills, isInternalSkill, listedSkills, readSkill, readSkillCatalog, readSkills, skillAccess, skillErrorMessage, skillReply, skillSource, sortSkills } from "./skills-data"
 
 const skills = [
   { name: "Review", description: "Check boundaries", location: "/repo/review/SKILL.md", content: "  <b>review</b>\n" },
@@ -87,6 +87,46 @@ describe("skill write errors", () => {
 })
 
 describe("skills reply", () => {
+  test("metadata catalogs do not require or retain instruction bodies, including legacy replies", () => {
+    const metadata = { name: "review", description: "Review", location: "/repo/review/SKILL.md", mtime: 12 }
+    expect(readSkillCatalog([metadata])).toEqual([metadata])
+    expect(readSkillCatalog([{ ...metadata, content: "BODY_ONLY", unrelated: "ignored" }])).toEqual([metadata])
+    expect(() => readSkills([metadata])).toThrow("Skills response is malformed")
+    expect(() => readSkillCatalog([{ ...metadata, name: 12 }])).toThrow("Skills response is malformed")
+    expect(sortSkills(filterSkills(listedSkills(readSkillCatalog([metadata])), "review"), "/repo")).toEqual([metadata])
+  })
+  test("a lazy body must match the selected registered name and location", () => {
+    expect(readSkill(skills[0], skills[0])).toEqual(skills[0])
+    expect(() => readSkill({ ...skills[0], location: "/other/SKILL.md" }, skills[0])).toThrow("Skill changed")
+    expect(() => readSkill({ ...skills[0], name: "other" }, skills[0])).toThrow("Skill changed")
+    expect(() => readSkill(null, skills[0])).toThrow("Skills response is malformed")
+  })
+  test("split-route reads do not call the legacy list on success", async () => {
+    const requests: string[] = []
+    const reply = await skillReply(
+      async () => { requests.push("catalog"); return [{ name: "review", location: "/repo/review/SKILL.md" }] },
+      async () => { requests.push("legacy-list"); return skills },
+    )
+    expect(readSkillCatalog(reply).map((skill) => skill.name)).toEqual(["review"])
+    expect(requests).toEqual(["catalog"])
+  })
+  test("only unsupported routes fall back to a legacy full list", async () => {
+    for (const status of [404, 405, 501]) {
+      const requests: string[] = []
+      const reply = await skillReply(
+        async () => { requests.push("catalog"); throw new Error("unsupported", { cause: { status } }) },
+        async () => { requests.push("legacy-list"); return skills },
+      )
+      expect(readSkillCatalog(reply).every((skill) => !Object.hasOwn(skill, "content"))).toBe(true)
+      expect(requests).toEqual(["catalog", "legacy-list"])
+    }
+    for (const status of [401, 403, 429, 500]) {
+      const calls: string[] = []
+      const error = new Error("failed", { cause: { status } })
+      await expect(skillReply(async () => { throw error }, async () => { calls.push("legacy-list"); return skills })).rejects.toBe(error)
+      expect(calls).toEqual([])
+    }
+  })
   test("reads catalogs, with or without descriptions and times", () => {
     const entries = [...skills, { ...skills[0], description: null, mtime: 12 }]
     expect(readSkills(entries)).toEqual(entries)

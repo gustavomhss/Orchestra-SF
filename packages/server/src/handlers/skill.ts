@@ -9,6 +9,8 @@ import { response } from "../location"
 
 export const SkillHandler = HttpApiBuilder.group(Api, "server.skill", (handlers) =>
   handlers
+    .handle("skill.catalog", () => response(SkillV2.Service.use((skill) => skill.catalog())))
+    .handle("skill.get", (ctx) => response(SkillV2.Service.use((skill) => skill.get(ctx.query.name).pipe(Effect.map((item) => item ?? null)))))
     .handle("skill.list", () => response(SkillV2.Service.use((skill) => skill.list())))
     .handle(
       "skill.save",
