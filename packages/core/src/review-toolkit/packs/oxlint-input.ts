@@ -68,10 +68,14 @@ export const prepare = (input: Input): Effect.Effect<Prepared | Refused, unknown
     if (selected.files.length > MAX_FILES) return refuse("too-many-inputs")
     let total = 0
     const contents: { file: string; relative: string; bytes: Buffer; mode: number }[] = []
+    const selectedPaths = new Set<string>()
     for (const file of selected.files) {
       const relative = nativePath.relative(root, file).split(nativePath.sep).join("/")
       const invalidName = invalidRelative(relative, nativePath.sep === "\\")
       if (invalidName) return refuse(invalidName)
+      const key = nativePath.sep === "\\" ? relative.toLowerCase() : relative
+      if (selectedPaths.has(key)) return refuse("case-alias-path")
+      selectedPaths.add(key)
       const identity = yield* Effect.tryPromise({
         try: () => captureIdentity(root, file),
         catch: () => refuse("path-replaced"),
@@ -163,9 +167,11 @@ export function argv(executable: string, prepared: Prepared): { status: "ok"; ar
     const key = pathApi.sep === "\\" ? normalized.toLowerCase() : normalized
     const extension = [".js", ".jsx", ".ts", ".tsx", ".mjs", ".cjs", ".mts", ".cts"].some((value) => pathApi.basename(normalized).endsWith(value))
     const invalidName = invalidRelative(normalized, pathApi.sep === "\\")
+    if (invalidName) return refuse(invalidName)
     if (
       !pathApi.isAbsolute(prepared.files[index]) || !contained || contained !== normalized ||
-      mapping.file !== normalized || mapping.path !== normalized || !extension || invalidName || pairs.has(key)
+      prepared.files[index] !== pathApi.join(root, ...normalized.split("/")) ||
+      mapping.file !== normalized || mapping.path !== normalized || !extension || pairs.has(key)
     ) return refuse("invalid-projection")
     pairs.add(key)
   }
@@ -219,7 +225,8 @@ function sameIdentity(left: { dev: number; ino: number }, right: { dev: number; 
 function safeAbsolute(value: string, pathApi: typeof path.posix) {
   if (!value || !pathApi.isAbsolute(value) || value.includes("\0")) return false
   const head = value.slice(0, 4).replaceAll("/", "\\")
-  return head !== "\\\\?\\" && head !== "\\\\.\\" && !value.split(pathApi.sep === "\\" ? /[\\/]/ : /\//).includes("..")
+  const segments = value.split(pathApi.sep === "\\" ? /[\\/]/ : /\//)
+  return head !== "\\\\?\\" && head !== "\\\\.\\" && !segments.some((segment) => segment === ".." || segment === ".")
 }
 
 function invalidRelative(value: string, windows: boolean) {
