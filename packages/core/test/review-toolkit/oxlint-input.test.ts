@@ -43,7 +43,7 @@ test("refuses source suppression markers without rewriting source", async () => 
   const base = await mkdtemp(path.join(os.tmpdir(), "oxlint-input-"))
   const root = path.join(base, "source"), scratch = path.join(base, "scratch")
   await Promise.all([mkdir(path.join(root, ".git"), { recursive: true }), mkdir(path.join(root, ".host"), { recursive: true }), mkdir(scratch)])
-  const original = '// eslint-disable-next-line\ndebugger;\n'
+  const original = '// eslint-disable-next-line -- fixture proves source-marker refusal\ndebugger;\n'
   await writeFile(path.join(root, "a.js"), original)
   await writeFile(path.join(root, ".git/a.js"), "debugger;\n")
   await writeFile(path.join(root, ".host/a.js"), "debugger;\n")
