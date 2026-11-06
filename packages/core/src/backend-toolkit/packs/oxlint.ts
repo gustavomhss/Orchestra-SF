@@ -6,7 +6,7 @@ const artifact = (asset: string, integrity: `sha256-${string}`, executable = "ox
     url: `${RELEASE}/${asset}`,
     integrity,
     format: asset.endsWith(".zip") ? ("zip" as const) : ("tar.gz" as const),
-    entries: [{ from: executable, to: executable, executable: true }],
+    entries: [{ from: asset.endsWith(".zip") ? executable : asset.slice(0, -".tar.gz".length), to: executable, executable: true }],
   },
   executable,
 })
