@@ -152,7 +152,7 @@ const layer = Layer.effect(
     const governance = yield* TaskGovernance.Service
     const compaction = yield* SessionCompaction.Service
     const db = database.db
-    const nameSession = SessionTitle.make({ db, events, store, agents, models, subagentModels, llm })
+    const nameSession = yield* SessionTitle.scoped({ db, events, store, agents, models, subagentModels, llm })
     const getSession = Effect.fn("SessionRunner.getSession")(function* (sessionID: SessionSchema.ID) {
       const session = yield* store.get(sessionID).pipe(
         Effect.catchDefect((cause) =>
@@ -214,14 +214,7 @@ const layer = Layer.effect(
         if (promoted > 0) {
           currentStep = 1
           // Beside the turn, as the earlier runtime named a Session after its first prompt; a failed title leaves the default one.
-          yield* nameSession(session.id).pipe(
-            Effect.catchCause((cause) =>
-              Effect.logWarning("Session title generation failed", cause).pipe(
-                Effect.annotateLogs({ sessionID: session.id }),
-              ),
-            ),
-            Effect.forkDetach,
-          )
+          yield* nameSession(session.id)
           // Attachments are read once, as they are promoted; the admitted prompt keeps its URIs.
           yield* SessionDirectCommands.readMentions({ events, reader, mcp, fs }, session.id, yield* SessionInput.promotedAfter(db, session.id, cutoff))
         }

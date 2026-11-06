@@ -1,7 +1,7 @@
 export * as SessionTitle from "./title"
 
 import { LLM, LLMEvent, Message, SystemPart, type LLMError, type LLMRequest } from "@orchestra/llm"
-import { Effect, Stream } from "effect"
+import { Effect, FiberSet, Stream } from "effect"
 import { AgentV2 } from "../../agent"
 import type { Database } from "../../database/database"
 import type { EventV2 } from "../../event"
@@ -24,6 +24,18 @@ type Dependencies = {
   readonly subagentModels: SessionSubagentModels.Interface
   readonly llm: { readonly stream: (request: LLMRequest) => Stream.Stream<LLMEvent, LLMError> }
 }
+
+export const scoped = (dependencies: Dependencies) =>
+  Effect.gen(function* () {
+    const fibers = yield* FiberSet.make<void, never>()
+    const name = make(dependencies)
+    return (sessionID: SessionSchema.ID) =>
+      FiberSet.run(fibers, name(sessionID).pipe(
+        Effect.catchCause((cause) =>
+          Effect.logWarning("Session title generation failed", cause).pipe(Effect.annotateLogs({ sessionID })),
+        ),
+      ))
+  })
 
 /**
  * Names a root Session after its first prompt with the `title` agent. The new title is published as
