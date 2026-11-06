@@ -20,11 +20,11 @@ test("projects original source names and prepares only the curated rules", async
   try {
     await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
       const prepared = yield* ReviewOxlintInput.prepare({ root, scratch, files: ["nested/b.ts", "nested/space é name.js", "nested/space é name.js"] })
-      if (process.platform === "win32") expect(yield* ReviewOxlintInput.prepare({ root, scratch, files: ["nested/space é name.js", "nested/SPACE É NAME.js"] })).toEqual({ status: "not-run", reason: "case-alias-path" })
       if (!constants.O_NOFOLLOW) {
         expect(prepared).toEqual({ status: "not-run", reason: "no-follow-unavailable" })
         return
       }
+      if (process.platform === "win32") expect(yield* ReviewOxlintInput.prepare({ root, scratch, files: ["nested/space é name.js", "nested/SPACE É NAME.js"] })).toEqual({ status: "not-run", reason: "case-alias-path" })
       expect(prepared.status).toBe("ok")
       if (prepared.status !== "ok") throw new Error(prepared.reason)
       projection = prepared.root
@@ -39,7 +39,6 @@ test("projects original source names and prepares only the curated rules", async
     await rm(base, { recursive: true, force: true })
   }
 })
-
 test("refuses source suppression markers without rewriting source", async () => {
   const base = await mkdtemp(path.join(os.tmpdir(), "oxlint-input-"))
   const root = path.join(base, "source"), scratch = path.join(base, "scratch")
@@ -62,7 +61,6 @@ test("refuses source suppression markers without rewriting source", async () => 
     await rm(base, { recursive: true, force: true })
   }
 })
-
 test("argv validates native paths without restricting literal names and strips color toggles case-insensitively", () => {
   const root = path.resolve("projection")
   const relative = "nested/space é name.js"
@@ -82,8 +80,10 @@ test("argv validates native paths without restricting literal names and strips c
   expect(ReviewOxlintInput.argv("C:\\bin\\oxlint.exe", { ...windows, files: [...windows.files, "C:\\projection\\nested\\SPACE é NAME.js"], paths: [...windows.paths, { file: "nested/SPACE é NAME.js", path: "nested/SPACE é NAME.js" }] }).status).not.toBe("ok")
   expect(ReviewOxlintInput.argv("C:\\bin\\oxlint.exe", { ...windows, files: ["C:\\projection\\nested\\%61.js", "C:\\projection\\nested\\a.js"], paths: [{ file: "nested/%61.js", path: "nested/%61.js" }, { file: "nested/a.js", path: "nested/a.js" }] })).toEqual({ status: "not-run", reason: "native-uri-path-unsupported" })
   for (const [file, mapping] of [["nested/CON.js", "C:\\projection\\nested\\CON.js"], ["nested/file:stream.js", "C:\\projection\\nested\\file:stream.js"], [".GIT/a.js", "C:\\projection\\.GIT\\a.js"]]) expect(ReviewOxlintInput.argv("C:\\bin\\oxlint.exe", { ...windows, files: [mapping], paths: [{ file, path: file }] }).status).not.toBe("ok")
-  expect(ReviewOxlintInput.argv(path.resolve("bin/oxlint"), { ...posix, files: [path.join(root, "nested/a\\b.js")], paths: [{ file: "nested/a\\b.js", path: "nested/a\\b.js" }] })).toEqual({ status: "not-run", reason: "native-uri-path-unsupported" })
-  if (process.platform !== "win32") for (const forged of [{ ...posix, root: `${root}/./` }, { ...posix, files: [`${root}/nested//space é name.js`] }]) expect(ReviewOxlintInput.argv(path.resolve("bin/oxlint"), forged).status).not.toBe("ok")
+  if (process.platform !== "win32") {
+    expect(ReviewOxlintInput.argv(path.resolve("bin/oxlint"), { ...posix, files: [path.join(root, "nested/a\\b.js")], paths: [{ file: "nested/a\\b.js", path: "nested/a\\b.js" }] })).toEqual({ status: "not-run", reason: "native-uri-path-unsupported" })
+    for (const forged of [{ ...posix, root: `${root}/./` }, { ...posix, files: [`${root}/nested//space é name.js`] }]) expect(ReviewOxlintInput.argv(path.resolve("bin/oxlint"), forged).status).not.toBe("ok")
+  }
   expect(ReviewOxlintInput.argv(path.resolve("bin/oxlint"), { ...posix, files: [path.join(root, ".git/a.js")], paths: [{ file: ".git/a.js", path: ".git/a.js" }] }).status).not.toBe("ok")
   const env = ReviewOxlintInput.environment(root, { Force_Color: "1", cLiCoLoR_fOrCe: "1", hOmE: "outside", xDG_CONFIG_HOME: "outside", PATH: "/bin" })
   for (const [key, value] of [["Force_Color", undefined], ["cLiCoLoR_fOrCe", undefined], ["hOmE", undefined], ["xDG_CONFIG_HOME", undefined], ["HOME", root]] as const) expect(env[key]).toBe(value)
