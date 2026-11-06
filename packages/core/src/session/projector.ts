@@ -147,8 +147,8 @@ function run(db: DatabaseService, event: SessionEvent.Event, replay = false) {
       },
       getCurrentShell(callID) {
         return Effect.gen(function* () {
-          // The newest matching row wins. SQLite walks the (session, type, seq) index backwards and stops at the first
-          // match, and only that row is decoded, so a Shell end costs the same however many shells the Session ran.
+          // The newest matching row wins and only that row is decoded. The (session, type, seq) index supplies the
+          // reverse order, but callID is a JSON predicate: finding a match can still scan many shells, not constant time.
           const row = yield* db
             .select()
             .from(SessionMessageTable)
