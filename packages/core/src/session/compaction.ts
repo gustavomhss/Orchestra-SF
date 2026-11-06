@@ -13,6 +13,7 @@ import { SessionSchema } from "./schema"
 import { Token } from "../util/token"
 import { SessionSubagentModels } from "./subagent-models"
 import { SessionRunnerModel } from "./runner/model"
+import { PromptEstimate } from "./prompt-estimate"
 import type { ModelV2 } from "../model"
 
 const DEFAULT_BUFFER = 20_000
@@ -100,8 +101,6 @@ export const usable = (
   const window = context - Math.max(output, buffer)
   return limits?.input !== undefined && limits.input > 0 ? Math.min(window, limits.input - buffer) : window
 }
-
-const estimate = (value: unknown) => Token.estimate(JSON.stringify(value))
 
 const truncate = (value: string) =>
   value.length <= TOOL_OUTPUT_MAX_CHARS ? value : `${value.slice(0, TOOL_OUTPUT_MAX_CHARS)}\n[truncated]`
@@ -197,6 +196,7 @@ export const buildPrompt = (input: { readonly previousSummary?: string; readonly
 
 export const make = (dependencies: Dependencies) => {
   const config = settings(dependencies.config)
+  const estimate = PromptEstimate.make()
   const summarize = Effect.fnUntraced(function* (input: Input, reason: "auto" | "manual") {
     const context = input.model.route.defaults.limits?.context
     const output = input.request.generation?.maxTokens ?? input.model.route.defaults.limits?.output ?? 0

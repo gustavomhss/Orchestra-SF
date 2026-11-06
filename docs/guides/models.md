@@ -17,6 +17,8 @@ Which model providers Orchestra can use and how they are routed, plus Claude mod
 
 ## HTTP provider response inactivity
 
+For automatic compaction, the heuristic prompt estimate reuses bounded JSON-encoded lengths of identical long text values. The current request structure is serialized afresh for each estimate; whole requests or conversation histories are not cached.
+
 For native HTTP provider calls, including title and compaction requests, reading a response body fails with a non-retryable transport timeout after ten minutes while waiting for the next nonempty response-body chunk. This is a conservative per-pull inactivity limit, not a total response or turn deadline or an absolute wall-clock limit between chunks when the consumer is busy. Raw response bytes reset the wait before parsing, including SSE comments and heartbeats; empty chunks do not. A response that continues making progress can therefore run longer than ten minutes.
 
 This limit begins when the response body is consumed after headers; it is not a connection or header deadline and does not apply to WebSocket or hosted engine iterators such as Claude mode. Developers using a custom `httpJson` transport can set `idleTimeout` on its input or via `.with(...)` to another Effect duration, or `false` to disable it and retain owner-controlled cancellation.
