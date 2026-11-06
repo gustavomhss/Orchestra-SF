@@ -13,7 +13,7 @@ test("oxlint 1.91.0 pins the independently verified artifact and license bytes",
     "linux-x64": "2b817b73957bd94d2a0d59cf719233b54d9847e90caf380bb89a5ba1ede88c6c",
     "win32-x64": "4efaa69fb5e453a587d9b4ba21d87a525a353362dfd787bccb3e6ed754f4e0e8",
   } as const
-  const sri = (sha256: string) => `sha256-${Buffer.from(sha256, "hex").toString("base64")}`
+  const sri = (sha256: string): `sha256-${string}` => `sha256-${Buffer.from(sha256, "hex").toString("base64")}`
   const approved = {
     "darwin-arm64": { executable: "oxlint", url: "https://github.com/oxc-project/oxc/releases/download/oxlint_v1.91.0/oxlint-aarch64-apple-darwin.tar.gz", integrity: sri(releaseSha256["darwin-arm64"]), format: "tar.gz", entries: [{ from: "oxlint-aarch64-apple-darwin", to: "oxlint", executable: true }] },
     "darwin-x64": { executable: "oxlint", url: "https://github.com/oxc-project/oxc/releases/download/oxlint_v1.91.0/oxlint-x86_64-apple-darwin.tar.gz", integrity: sri(releaseSha256["darwin-x64"]), format: "tar.gz", entries: [{ from: "oxlint-x86_64-apple-darwin", to: "oxlint", executable: true }] },
@@ -28,9 +28,10 @@ test("oxlint 1.91.0 pins the independently verified artifact and license bytes",
       artifact: { url: expected.url, integrity: expected.integrity, format: expected.format, entries: [...expected.entries] },
     })
   }
+  expect(sri("95ced5ecf1133fbf41d409b5555c86c344f83f3b019926057ddbc07cfdcc27b3")).toBe(pinned.notices[0].integrity)
   expect(pinned.notices).toEqual([{
     url: "https://raw.githubusercontent.com/oxc-project/oxc/f3fcdcc61b08e9880476279ba21a363967940fa4/LICENSE",
-    integrity: sri("95ced5ecf1133fbf41d409b5555c86c344f83f3b019926057ddbc07cfdcc27b3"),
+    integrity: "sha256-lc7V7PETP79B1Am1VVyGw0T4PzsBmSYFfdvAfP3MJ7M=",
     filename: "oxlint-1.91.0-license.txt",
   }])
 })
