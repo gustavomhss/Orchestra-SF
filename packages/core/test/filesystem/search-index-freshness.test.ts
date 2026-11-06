@@ -33,15 +33,15 @@ describe("ripgrep fallback index freshness", () => {
         return []
       }))
       const service = Context.get(yield* Layer.build(layer), FileSystemSearch.Service)
-      expect((yield* service.find({ query: "needle" })).map((entry) => entry.path)).toEqual(["old/needle.ts"])
+      expect((yield* service.find({ query: "needle" })).map((entry) => entry.path)).toEqual([RelativePath.make("old/needle.ts")])
       scans.paths = ["new/needle.ts"]
       yield* TestClock.adjust("1999 millis")
-      expect((yield* service.find({ query: "needle" })).map((entry) => entry.path)).toEqual(["old/needle.ts"])
+      expect((yield* service.find({ query: "needle" })).map((entry) => entry.path)).toEqual([RelativePath.make("old/needle.ts")])
       expect(scans.count).toBe(1)
       yield* TestClock.adjust("1 millis")
-      expect((yield* service.find({ query: "needle" })).map((entry) => entry.path)).toEqual(["new/needle.ts"])
+      expect((yield* service.find({ query: "needle" })).map((entry) => entry.path)).toEqual([RelativePath.make("new/needle.ts")])
       expect((yield* service.find({ query: "old", type: "directory" }))).toEqual([])
-      expect((yield* service.find({ query: "new", type: "directory" })).map((entry) => entry.path)).toEqual(["new/"])
+      expect((yield* service.find({ query: "new", type: "directory" })).map((entry) => entry.path)).toEqual([RelativePath.make("new/")])
       expect(scans.count).toBe(2)
     }),
   )
@@ -72,8 +72,8 @@ describe("ripgrep fallback index freshness", () => {
         expect(second.pollUnsafe()).toBeUndefined()
         expect(scans.count).toBe(2)
         yield* Deferred.succeed(release, undefined)
-        expect((yield* Fiber.join(first)).map((entry) => entry.path)).toEqual(["new.ts"])
-        expect((yield* Fiber.join(second)).map((entry) => entry.path)).toEqual(["new.ts"])
+        expect((yield* Fiber.join(first)).map((entry) => entry.path)).toEqual([RelativePath.make("new.ts")])
+        expect((yield* Fiber.join(second)).map((entry) => entry.path)).toEqual([RelativePath.make("new.ts")])
         expect(scans.count).toBe(2)
       }).pipe(Effect.ensuring(Deferred.succeed(release, undefined)))
     }),
@@ -107,7 +107,7 @@ describe("ripgrep fallback index freshness", () => {
       const result = yield* Effect.flip(service.find({ query: ".ts" }))
       expect(result._tag).toBe("FileSystem.SearchError")
       expect(result.message).toBe("scan failed")
-      expect((yield* service.find({ query: ".ts" })).map((entry) => entry.path)).toEqual(["new.ts"])
+      expect((yield* service.find({ query: ".ts" })).map((entry) => entry.path)).toEqual([RelativePath.make("new.ts")])
       expect(scans.count).toBe(3)
     }),
   )
