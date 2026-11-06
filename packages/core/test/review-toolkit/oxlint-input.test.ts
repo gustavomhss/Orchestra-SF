@@ -50,11 +50,17 @@ test("refuses source suppression markers without rewriting source", async () => 
   await writeFile(path.join(root, "%61.js"), "debugger;\n")
   if (process.platform !== "win32") await writeFile(path.join(root, "literal\\slash.js"), "debugger;\n")
   try {
-    for (const input of [{ root: `${root}/../source`, scratch }, { root, scratch: `${scratch}/../scratch` }]) expect(await Effect.runPromise(Effect.scoped(ReviewOxlintInput.prepare({ ...input, files: ["a.js"] })))).toEqual(constants.O_NOFOLLOW ? { status: "not-run", reason: "unsafe-root-or-scratch" } : { status: "not-run", reason: "no-follow-unavailable" })
+    if (!constants.O_NOFOLLOW) {
+      expect(await Effect.runPromise(Effect.scoped(ReviewOxlintInput.prepare({ root, scratch, files: ["a.js"] })))).toEqual({ status: "not-run", reason: "no-follow-unavailable" })
+      expect(await readFile(path.join(root, "a.js"), "utf8")).toBe(original)
+      expect(await readdir(scratch)).toEqual([])
+      return
+    }
+    for (const input of [{ root: `${root}/../source`, scratch }, { root, scratch: `${scratch}/../scratch` }]) expect(await Effect.runPromise(Effect.scoped(ReviewOxlintInput.prepare({ ...input, files: ["a.js"] })))).toEqual({ status: "not-run", reason: "unsafe-root-or-scratch" })
     for (const file of [".git/a.js", ".host/a.js"]) expect(await Effect.runPromise(Effect.scoped(ReviewOxlintInput.prepare({ root, scratch, files: [file] })))).toEqual({ status: "not-run", reason: "projection-metadata-path-unsupported" })
     const unsafeNames = [["%61.js"], ["%61.js", "a.js"], ...(process.platform === "win32" ? [] : [["literal\\slash.js"]])]
     for (const files of unsafeNames) expect(await Effect.runPromise(Effect.scoped(ReviewOxlintInput.prepare({ root, scratch, files })))).toEqual({ status: "not-run", reason: "native-uri-path-unsupported" })
-    expect(await Effect.runPromise(Effect.scoped(ReviewOxlintInput.prepare({ root, scratch, files: ["a.js"] })))).toEqual({ status: "not-run", reason: constants.O_NOFOLLOW ? "inline-directive-marker-unsupported" : "no-follow-unavailable" })
+    expect(await Effect.runPromise(Effect.scoped(ReviewOxlintInput.prepare({ root, scratch, files: ["a.js"] })))).toEqual({ status: "not-run", reason: "inline-directive-marker-unsupported" })
     expect(await readFile(path.join(root, "a.js"), "utf8")).toBe(original)
     expect(await readdir(scratch)).toEqual([])
   } finally {
