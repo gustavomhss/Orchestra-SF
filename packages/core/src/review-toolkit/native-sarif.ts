@@ -21,15 +21,18 @@ export type Parsed =
 export function parse(text: string, options: Options): Parsed {
   const fail = (reason: string): Parsed => ({ status: "acquisition-error", reason })
   const path = ReviewNativeFiles.flavor(options.root)
-  if (!options.pack.trim() || !options.version.trim() || !path.isAbsolute(options.root) || options.root.includes("\0") || options.root.split(path.sep === "\\" ? /[\\/]/ : /\//).includes("..")) return fail("host-context-invalid")
+  if (!options.pack.trim() || !options.version.trim() || deviceNamespace(options.root) || !path.isAbsolute(options.root) || options.root.includes("\0") || options.root.split(path.sep === "\\" ? /[\\/]/ : /\//).includes("..")) return fail("host-context-invalid")
   if (!options.paths.length || !options.rules.length || options.rules.some((rule) => !rule || rule === "*") || new Set(options.rules).size !== options.rules.length) return fail("host-inventory-invalid")
   const keys = (value: string) => path.sep === "\\" ? value.toLowerCase() : value
   const mappings = new Map<string, string>()
   const sources = new Set<string>()
   for (const entry of options.paths) {
-    const file = ReviewNativeFiles.containedPath(options.root, entry.file), source = ReviewNativeFiles.containedPath(options.root, entry.path)
+    if (deviceNamespace(entry.file) || deviceNamespace(entry.path)) return fail("host-path-map-invalid")
+    const file = ReviewNativeFiles.containedPath(options.root, entry.file)
+    const source = ReviewNativeFiles.containedPath(options.root, entry.path)
     if (!file || !source || mappings.has(keys(file)) || sources.has(keys(source))) return fail("host-path-map-invalid")
-    mappings.set(keys(file), source); sources.add(keys(source))
+    mappings.set(keys(file), source)
+    sources.add(keys(source))
   }
   if (Buffer.byteLength(text, "utf8") > 4 * 1024 * 1024) return fail("report-too-large")
   const decoded = Schema.decodeUnknownOption(Schema.UnknownFromJsonString)(text)
@@ -39,7 +42,7 @@ export function parse(text: string, options: Options): Parsed {
   const run = data.runs[0]
   if (!record(run) || !record(run.tool) || !record(run.tool.driver) || run.tool.driver.name !== options.pack || run.tool.driver.version !== options.version || !Array.isArray(run.results)) return fail("native-driver-mismatch")
   if (run.tool.driver.semanticVersion !== undefined && run.tool.driver.semanticVersion !== options.version) return fail("native-version-mismatch")
-  if (run.invocations !== undefined && (!Array.isArray(run.invocations) || run.invocations.some((i) => !record(i) || (i.executionSuccessful !== undefined && typeof i.executionSuccessful !== "boolean") || [i.toolExecutionNotifications, i.toolConfigurationNotifications].some((ns) => ns !== undefined && (!Array.isArray(ns) || ns.some((n) => !record(n) || (n.level !== undefined && typeof n.level !== "string"))))))) return fail("native-invocation-invalid")
+  if (run.invocations !== undefined && (!Array.isArray(run.invocations) || run.invocations.some((i) => !record(i) || (i.executionSuccessful !== undefined && typeof i.executionSuccessful !== "boolean") || [i.toolExecutionNotifications, i.toolConfigurationNotifications].some((ns) => ns !== undefined && (!Array.isArray(ns) || ns.some((n) => !record(n) || (n.level !== undefined && (typeof n.level !== "string" || !["none", "note", "warning", "error"].includes(n.level))))))))) return fail("native-invocation-invalid")
   if (Array.isArray(run.invocations) && run.invocations.some((i) => record(i) && (i.executionSuccessful === false || [i.toolExecutionNotifications, i.toolConfigurationNotifications].some((ns) => Array.isArray(ns) && ns.some((n) => record(n) && n.level === "error"))))) return fail("native-invocation-failed")
   const projectedRows: { rule: string; line: number; source: string }[] = []
   const projectedRuns: unknown[] = []
@@ -62,7 +65,16 @@ export function parse(text: string, options: Options): Parsed {
     const opaque = `native-row-${projectedRows.length}`
     const location = row.locations[0]
     if (!record(location) || !record(location.physicalLocation) || !record(location.physicalLocation.artifactLocation)) return fail("native-location-invalid")
-    const projectedRow = { ...row, locations: [{ ...location, physicalLocation: { ...location.physicalLocation, artifactLocation: { ...location.physicalLocation.artifactLocation, uri: opaque } } }] }
+    const projectedRow = {
+      ...row,
+      locations: [{
+        ...location,
+        physicalLocation: {
+          ...location.physicalLocation,
+          artifactLocation: { ...location.physicalLocation.artifactLocation, uri: opaque },
+        },
+      }],
+    }
     projectedResultRows.push(projectedRow)
     projectedRows.push({ rule: row.ruleId, line: region.startLine, source })
     if ((row.level ?? "warning") === "error") nativeErrors++
@@ -83,19 +95,35 @@ function record(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value)
 }
 
+function deviceNamespace(value: string) {
+  const prefix = value.slice(0, 4).replaceAll("/", "\\")
+  return prefix === "\\\\?\\" || prefix === "\\\\.\\"
+}
+
 function decodeNativeUri(uri: string, path: ReturnType<typeof ReviewNativeFiles.flavor>) {
   try {
     if (uri.includes("\0") || uri.includes("?") || uri.includes("#")) return undefined
     const fileUri = uri.startsWith("file://")
+    if (!fileUri && /^[A-Za-z][A-Za-z0-9+.-]*:/.test(uri) && !(path.sep === "\\" && /^[A-Za-z]:[\\/]/.test(uri))) return undefined
     const encodedPath = fileUri ? uri.slice("file://".length).replace(/^[^/]*?(?=\/|$)/, "") : uri
     if (/%2f/i.test(encodedPath) || (path.sep === "\\" && /%5c/i.test(encodedPath))) return undefined
     if (!fileUri) return decodeURIComponent(uri)
     if (uri.includes("\\")) return undefined
-    const parsed = new URL(uri)
-    if (parsed.protocol !== "file:" || (parsed.hostname && parsed.hostname !== "localhost" && path.sep !== "\\")) return undefined
-    const pathname = decodeURIComponent(parsed.pathname)
-    if (parsed.hostname && parsed.hostname !== "localhost") return `\\\\${parsed.hostname}${pathname.replaceAll("/", "\\")}`
-    return path.sep === "\\" ? pathname.replace(/^\/[A-Za-z]:/, (drive) => drive.slice(1)).replaceAll("/", "\\") : pathname
+    const rest = uri.slice("file://".length)
+    const slash = rest.indexOf("/")
+    const authority = slash < 0 ? rest : rest.slice(0, slash)
+    const encodedFilePath = slash < 0 ? "" : rest.slice(slash)
+    const host = decodeURIComponent(authority)
+    if (host && host.toLowerCase() !== "localhost" && path.sep !== "\\") return undefined
+    if (/%2f/i.test(encodedFilePath) || (path.sep === "\\" && /%5c/i.test(encodedFilePath))) return undefined
+    const decodedPath = decodeURIComponent(encodedFilePath)
+    const nativePath = host && host.toLowerCase() !== "localhost"
+      ? `\\\\${host}${decodedPath.replaceAll("/", "\\")}`
+      : path.sep === "\\"
+        ? decodedPath.replace(/^\/[A-Za-z]:/, (drive) => drive.slice(1)).replaceAll("/", "\\")
+        : decodedPath
+    if (nativePath.split(path.sep === "\\" ? /[\\/]/ : /\//).includes("..")) return undefined
+    return nativePath
   } catch {
     return undefined
   }
