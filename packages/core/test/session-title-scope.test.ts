@@ -75,6 +75,7 @@ describe("Session title scope", () => {
     const deps = yield* setup()
     const gate = yield* held
     const owner = yield* Scope.make()
+    yield* Effect.addFinalizer(() => Scope.close(owner, Exit.void))
     const name = yield* Scope.provide(SessionTitle.scoped({ ...deps, llm: gate }), owner)
     const fiber = yield* name(id)
     yield* Deferred.await(gate.started)

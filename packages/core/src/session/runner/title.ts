@@ -25,6 +25,7 @@ type Dependencies = {
   readonly llm: { readonly stream: (request: LLMRequest) => Stream.Stream<LLMEvent, LLMError> }
 }
 
+/** Create once in the Location service scope: ordinary turn/drain completion must not cancel a title. */
 export const scoped = (dependencies: Dependencies) =>
   Effect.gen(function* () {
     const fibers = yield* FiberSet.make<void, never>()
