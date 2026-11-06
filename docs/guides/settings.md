@@ -21,6 +21,8 @@ Servers are Orchestra server connections, not model providers or MCP servers.
 - A saved HTTP connection's row menu offers **Edit** and **Delete**. Built-in connections cannot be edited or deleted there. **Delete** asks for confirmation: it removes the saved connection, its password and its open tabs from this app. It does not delete the remote server's projects or sessions.
 - Where choosing a default is supported, use **Set as default** or **Remove default** in the row menu; a **Default** tag marks the selected connection. Server availability depends on the app and platform; a saved address does not start a remote Orchestra server for you.
 
+Saving a connection does not secure the remote listener. The Orchestra CLI server uses its saved service password unless a nonempty `ORCHESTRA_SERVER_PASSWORD` overrides it. A network listener using plain HTTP sends that password and your traffic without encryption: use a trusted network or terminate HTTPS at a trusted proxy. Browser-origin/CORS checks are not authentication or a Host-header allowlist.
+
 ## Shortcuts
 
 **Reset to defaults** asks you to confirm, because it drops every shortcut you changed at once.
