@@ -15,10 +15,12 @@ internal: true
 ```
 
 - `internal: true` (or `yes`) hides the skill from the Skills chapter and from a workflow step's skill list. Agents still discover and load it as before, and a step that already names it still runs.
-- The core skill loader ignores the key, so no other change is needed.
+- The core skill loader preserves this metadata. It controls catalog visibility, not authorization; agent access still follows skill permissions.
 - Built-in examples: every seat tree root (`archie-*`, `backend-*`, `jimmy-*`, `team-stack`) and Maestro's playbooks (`maestro-*`, `frame-request`).
 
 ## The skill list in the system prompt
+
+Loaded source contents are cached between reads. An explicit source reload, or a source registration change, refreshes that cache; editing a file outside Orchestra alone does not trigger a filesystem watcher. Saving or removing a project skill through Orchestra invalidates its cached contents. A read already in progress may finish with its earlier snapshot, but cannot repopulate the current cache after a reload or successful write.
 
 Agents see the skills they may load as a list in the system prompt, sorted by name. The list is bounded so a large catalog cannot crowd out the task:
 

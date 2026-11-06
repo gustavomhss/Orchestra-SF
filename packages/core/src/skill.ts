@@ -150,20 +150,22 @@ const layer = Layer.effect(
       return skills
     })
 
-    // QUESTION(Dax): Should local skill sources invalidate on filesystem watch
-    // events, following the reload policy chosen for other context sources?
-    const cache = new Map<string, Info[]>()
+    // A reload or source registration/disposal publishes a new Data object. Old readers may
+    // finish, but can only populate their own materialization's cache, never the current one.
+    const caches = new WeakMap<Data, Map<string, Info[]>>()
     // A write bumps the generation, so a list() that started loading before it cannot refill the cache.
     const generation = { current: 0 }
     const invalidate = () => {
       generation.current++
-      cache.clear()
+      caches.delete(state.get())
     }
     // Each dropped skill file is reported once, not on every list.
     const shadowed = new Set<string>()
     const list = Effect.fn("SkillV2.list")(function* () {
       const started = generation.current
       const data = state.get()
+      const cache = caches.get(data) ?? new Map<string, Info[]>()
+      caches.set(data, cache)
       const sources: { key: string; skills: Info[] }[] = []
       for (const source of data.sources) {
         const key = Source.key(source)
