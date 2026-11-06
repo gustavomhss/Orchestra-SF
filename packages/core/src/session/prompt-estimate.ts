@@ -2,6 +2,7 @@ export * as PromptEstimate from "./prompt-estimate"
 
 import { Token } from "../util/token"
 
+// Cache immutable text lengths, never objects: normal JSON traversal and toJSON still observe each current request.
 export const make = (encodeString = (value: string) => JSON.stringify(value).length) => {
   const cache = new Map<string, number>()
   let retained = 0
@@ -19,6 +20,7 @@ export const make = (encodeString = (value: string) => JSON.stringify(value).len
         cache.set(item, length)
         retained += item.length
       }
+      // The placeholder retains its two quotes; restore only the omitted encoded contents before total rounding.
       removed += length - 2
       return ""
     })

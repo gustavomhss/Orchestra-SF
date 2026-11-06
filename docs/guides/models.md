@@ -15,9 +15,13 @@ Which model providers Orchestra can use and how they are routed, plus Claude mod
 | Gemini | Not yet (implemented in the model layer) |
 | OpenAI Chat | Not yet (implemented in the model layer) |
 
-## HTTP provider response inactivity
+## Prompt estimate
 
 For automatic compaction, the heuristic prompt estimate reuses bounded JSON-encoded lengths of identical long text values. The current request structure is serialized afresh for each estimate; whole requests or conversation histories are not cached.
+
+This reuses text-encoding work, not model tokens or provider prompt-cache entries. No token, billing or response-time saving is implied.
+
+## HTTP provider response inactivity
 
 For native HTTP provider calls, including title and compaction requests, reading a response body fails with a non-retryable transport timeout after ten minutes while waiting for the next nonempty response-body chunk. This is a conservative per-pull inactivity limit, not a total response or turn deadline or an absolute wall-clock limit between chunks when the consumer is busy. Raw response bytes reset the wait before parsing, including SSE comments and heartbeats; empty chunks do not. A response that continues making progress can therefore run longer than ten minutes.
 
