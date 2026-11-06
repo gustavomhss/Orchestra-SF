@@ -6,7 +6,7 @@ test("zizmor 1.32.0 has independently verified release artifact and license pins
   expect(pinned.license).toBe("MIT")
   expect(pinned.upstream).toBe("zizmorcore/zizmor")
   expect(pinned.fit).toEqual({ role: "check", input: "GitHub Actions workflows", skills: [] })
-  const sri = (hex: string) => `sha256-${Buffer.from(hex, "hex").toString("base64")}`
+  const sri = (hex: string): `sha256-${string}` => `sha256-${Buffer.from(hex, "hex").toString("base64")}`
   const approved = {
     "darwin-arm64": { executable: "zizmor", url: "https://github.com/zizmorcore/zizmor/releases/download/v1.32.0/zizmor-aarch64-apple-darwin.tar.gz", hex: "6efed18c4539a663fd3c851a2be9533fd8456c4e646d9416206da059154a0d3c", format: "tar.gz", entries: [{ from: "zizmor", to: "zizmor", executable: true }] },
     "darwin-x64": { executable: "zizmor", url: "https://github.com/zizmorcore/zizmor/releases/download/v1.32.0/zizmor-x86_64-apple-darwin.tar.gz", hex: "6983143c719ada6845a69cc4dd2bacc215f971662fecd8bbd2678388e5ce5969", format: "tar.gz", entries: [{ from: "zizmor", to: "zizmor", executable: true }] },
