@@ -50,7 +50,7 @@ export const prepare = (input: Input): Effect.Effect<Prepared | Refused, unknown
     if (!constants.O_NOFOLLOW || !(yield* NoFollow)) return refuse("no-follow-unavailable")
     const rawPath = ReviewNativeFiles.flavor(input.root)
     const hostPath = process.platform === "win32" ? path.win32 : path.posix
-    if (rawPath !== hostPath) return { status: "unsupported", reason: "nonnative-root" }
+    if (rawPath !== hostPath) return { status: "unsupported" as const, reason: "nonnative-root" }
     if (
       !safeAbsolute(input.root, rawPath) ||
       ReviewNativeFiles.flavor(input.scratch) !== rawPath ||
