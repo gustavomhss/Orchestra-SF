@@ -46,6 +46,12 @@ test("A2 native locate refuses unqualified hosts and does not acquire absent too
       Effect.provideService(BackendToolkit.Root, root),
       Effect.provideService(BackendToolkit.Target, { unsupported: "adapter-positive-control" }),
     ))).toEqual({ absent: `${adapter.manifest.id} unsupported: adapter-positive-control` })
+    for (const target of ["darwin-arm64", "darwin-x64", "linux-arm64", "win32-x64"] as const) {
+      expect(await Effect.runPromise(adapter.locate().pipe(
+        Effect.provideService(BackendToolkit.Root, root),
+        Effect.provideService(BackendToolkit.Target, { target }),
+      ))).toEqual({ absent: `${adapter.manifest.id} unsupported: native-runtime-unqualified` })
+    }
     expect(await readdir(root)).toEqual([])
     const directory = path.join(root, "engines", adapter.manifest.id, `${adapter.manifest.version}-linux-x64`)
     await mkdir(directory, { recursive: true })
