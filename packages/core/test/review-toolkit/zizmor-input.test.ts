@@ -48,8 +48,7 @@ test("rejects empty, oversized, escaped, excluded, and forged inputs", async () 
   expect(ReviewZizmorInput.argv("/bin/zizmor", { ...prepared, files: ["/tmp/project/.github/workflows/\0.yml"] })).toEqual({ status: "not-run", reason: "argv-bound" })
 })
 
-test("validates raw roots and preserves spaces, Unicode, and literal POSIX backslashes", async () => {
-  if (process.platform === "win32") return
+test.skipIf(process.platform === "win32")("validates raw roots and preserves spaces, Unicode, and literal POSIX backslashes", async () => {
   const base = await mkdtemp(path.join(os.tmpdir(), "zizmor-literal-"))
   const root = path.join(base, "source"), scratch = path.join(base, "scratch"), name = ".github/workflows/a space-é\\b.yml"
   await mkdir(path.dirname(path.join(root, name)), { recursive: true }); await mkdir(scratch); await writeFile(path.join(root, name), "name: literal\n")
