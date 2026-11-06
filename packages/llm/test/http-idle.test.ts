@@ -1,6 +1,6 @@
 import { describe, expect } from "bun:test"
 import { Cause, Deferred, Effect, Fiber, Queue, Ref, Stream } from "effect"
-import * as TestClock from "effect/testing/TestClock"
+import { adjust } from "effect/testing/TestClock"
 import { HttpClientRequest, type HttpClientResponse } from "effect/unstable/http"
 import { LLMError, type LLMRequest } from "../src/schema"
 import { Framing } from "../src/route/framing"
@@ -37,7 +37,7 @@ describe("HTTP response body idle timeout", () => {
       )
       yield* Effect.gen(function* () {
         yield* Deferred.await(f.started)
-        yield* TestClock.adjust("10 minutes")
+        yield* adjust("10 minutes")
         yield* Effect.yieldNow
         const result = fiber.pollUnsafe()
         expect(result?._tag).toBe("Success")
@@ -59,18 +59,18 @@ describe("HTTP response body idle timeout", () => {
       )
       yield* Effect.gen(function* () {
         yield* Deferred.await(f.started)
-        yield* TestClock.adjust("9 minutes")
+        yield* adjust("9 minutes")
         yield* Queue.offer(f.chunks, new TextEncoder().encode(": heartbeat\n\n"))
         yield* Queue.take(f.observed)
         yield* Effect.yieldNow
-        yield* TestClock.adjust("9 minutes")
+        yield* adjust("9 minutes")
         expect(fiber.pollUnsafe()).toBeUndefined()
         yield* Queue.offer(f.chunks, new TextEncoder().encode("data: hello\n\n"))
         yield* Queue.take(f.observed)
         yield* Queue.end(f.chunks)
         const frames = yield* Fiber.join(fiber)
         expect(Array.from(frames)).toEqual(["hello"])
-        yield* TestClock.adjust("20 minutes")
+        yield* adjust("20 minutes")
         expect(fiber.pollUnsafe()?._tag).toBe("Success")
         expect(yield* Ref.get(f.finalized)).toBe(1)
       }).pipe(Effect.ensuring(Fiber.interrupt(fiber)))
@@ -84,11 +84,11 @@ describe("HTTP response body idle timeout", () => {
       const fiber = yield* transport.frames(f.prepared, f.request, f.runtime).pipe(Stream.runCollect, Effect.flip, Effect.forkChild)
       yield* Effect.gen(function* () {
         yield* Deferred.await(f.started)
-        yield* TestClock.adjust("9 seconds")
+        yield* adjust("9 seconds")
         yield* Queue.offer(f.chunks, new Uint8Array())
         yield* Queue.take(f.observed)
         yield* Effect.yieldNow
-        yield* TestClock.adjust("1 second")
+        yield* adjust("1 second")
         yield* Effect.yieldNow
         const result = fiber.pollUnsafe()
         expect(result?._tag).toBe("Success")
@@ -108,7 +108,7 @@ describe("HTTP response body idle timeout", () => {
       )
       yield* Effect.gen(function* () {
         yield* Deferred.await(f.started)
-        yield* TestClock.adjust("30 minutes")
+        yield* adjust("30 minutes")
         expect(fiber.pollUnsafe()).toBeUndefined()
         yield* Fiber.interrupt(fiber)
         const exit = fiber.pollUnsafe()
