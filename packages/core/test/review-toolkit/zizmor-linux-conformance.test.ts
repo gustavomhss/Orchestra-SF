@@ -1,6 +1,6 @@
 import { expect } from "bun:test"
 import path from "node:path"
-import { mkdir, readFile, readdir, writeFile } from "node:fs/promises"
+import { lstat, mkdir, readFile, writeFile } from "node:fs/promises"
 import { Effect } from "effect"
 import { BackendToolkit } from "../../src/backend-toolkit"
 import pinned from "../../src/backend-toolkit/packs/zizmor"
@@ -37,21 +37,22 @@ it.live("zizmor Linux native report conformance", () => Effect.gen(function* () 
     await writeFile(path.join(root, ".github/zizmor.yml"), POISON)
     await writeFile(path.join(root, "nested/zizmor.yaml"), POISON)
   })
-  const before = yield* Effect.promise(() => Promise.all([
-    readFile(path.join(root, WORKFLOW), "utf8"),
-    readFile(path.join(root, ".github/zizmor.yml"), "utf8"),
-    readFile(path.join(root, "nested/zizmor.yaml"), "utf8"),
-    readdir(root),
-  ]))
+  const inputs = [WORKFLOW, ".github/zizmor.yml", "nested/zizmor.yaml"]
+  const image = () => Promise.all(inputs.map(async (file) => ({
+    file,
+    mode: (await lstat(path.join(root, file))).mode,
+    bytes: await readFile(path.join(root, file)),
+  })))
+  const original = yield* Effect.promise(image)
   const ready = yield* BackendToolkit.ensure<string>("zizmor").pipe(
     Effect.provideService(BackendToolkit.Root, install),
     Effect.provideService(BackendToolkit.Manifest, { zizmor: pinned }),
   )
   const executable = ready.executable
-  const scan = (phase: string) => Effect.gen(function* () {
+  const run = (phase: string, args: string[]) => Effect.gen(function* () {
     const outcome = yield* ReviewNativeFixture.run({
       executable,
-      args: ["--offline", "--no-config", "--no-ignores", "--format", "sarif", "--", WORKFLOW],
+      args,
       root,
     })
     // Keep bounded native evidence in the test log for both successful and failing phases.
@@ -64,26 +65,23 @@ it.live("zizmor Linux native report conformance", () => Effect.gen(function* () 
     expect(outcome.stderr.truncated).toBe(false)
     return outcome
   })
-  const version = yield* ReviewNativeFixture.run({ executable, args: ["--version"], root })
-  console.info(`[zizmor version] stdout=${version.stdout.data.toString("utf8")} stderr=${version.stderr.data.toString("utf8")} exit=${version.exitCode}`)
+  const version = yield* run("version", ["--version"])
   expect(version.exitCode).toBe(0)
   expect(version.stdout.data.toString("utf8").trim()).toBe("zizmor 1.32.0")
-  const clean = yield* scan("clean")
+  const args = ["--offline", "--no-config", "--no-ignores", "--format", "sarif", "--", WORKFLOW]
+  const clean = yield* run("clean", args)
   expect(clean.exitCode).toBe(0)
   const cleanParsed = ReviewSarif.parseSarif(clean.stdout.data.toString("utf8"), { pack: "zizmor", root })
   expect(cleanParsed).toEqual({ status: "ok", results: [], excluded: [] })
+  expect(yield* Effect.promise(image)).toEqual(original)
   yield* Effect.promise(() => writeFile(path.join(root, WORKFLOW), BROKEN))
-  const broken = yield* scan("broken")
+  const brokenBaseline = yield* Effect.promise(image)
+  const broken = yield* run("broken", args)
   // SARIF deliberately reports findings with exit 0; a plain run does not have that contract.
   expect(broken.exitCode).toBe(0)
   const parsed = ReviewSarif.parseSarif(broken.stdout.data.toString("utf8"), { pack: "zizmor", root })
   if (parsed.status !== "ok") throw new Error(`native SARIF refused: ${parsed.reason}`)
-  expect(parsed.results.some((entry) => entry.rule === "unpinned-uses" && entry.path === WORKFLOW && entry.line === 8)).toBe(true)
+  expect(parsed.results.some((entry) => entry.rule === "zizmor/unpinned-uses" && entry.path === WORKFLOW && entry.line === 8)).toBe(true)
   expect(parsed.excluded).toEqual([])
-  yield* Effect.promise(async () => {
-    expect(await readFile(path.join(root, WORKFLOW), "utf8")).toBe(BROKEN)
-    expect(await readFile(path.join(root, ".github/zizmor.yml"), "utf8")).toBe(before[1])
-    expect(await readFile(path.join(root, "nested/zizmor.yaml"), "utf8")).toBe(before[2])
-    expect(await readdir(root)).toEqual(before[3])
-  })
+  expect(yield* Effect.promise(image)).toEqual(brokenBaseline)
 }))
