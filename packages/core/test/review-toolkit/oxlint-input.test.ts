@@ -62,7 +62,7 @@ test("refuses source suppression markers without rewriting source", async () => 
   }
 })
 test("argv validates native paths without restricting literal names and strips color toggles case-insensitively", async () => {
-  if (process.platform !== "win32") expect(await Effect.runPromise(Effect.scoped(ReviewOxlintInput.prepare({ root: "C:\\source", scratch: "C:\\scratch", files: ["a.js"] })))).toEqual({ status: "unsupported", reason: "nonnative-root" })
+  if (process.platform !== "win32") expect(await Effect.runPromise(Effect.scoped(ReviewOxlintInput.prepare({ root: "C:\\source", scratch: "C:\\scratch", files: ["a.js"] })))).toEqual(constants.O_NOFOLLOW ? { status: "unsupported", reason: "nonnative-root" } : { status: "not-run", reason: "no-follow-unavailable" })
   const root = path.resolve("projection")
   const relative = "nested/space é name.js"
   const posix = {
