@@ -20,6 +20,7 @@ import { ReviewPackRepo } from "./packs/repo"
 import { ReviewPackRuff } from "./packs/ruff"
 import { ReviewPackSquawk } from "./packs/squawk"
 import { ReviewPackActionlint } from "./packs/actionlint"
+import { ReviewActionlintAnalyze } from "./actionlint-analyze"
 
 // K6 analyze half (design §7.2, §8.6, plan WP 1.4): the host runs the routed packs before any model turn, each confined
 // in a scratch copy (head, and base for the new-only step), keeps every raw output as a citable artifact, normalizes it
@@ -169,16 +170,28 @@ export const page = Effect.fn("ReviewAnalyze.page")(function* (input: {
 
 const Retained = Schema.Struct({ items: Schema.Array(ReviewItem.ToolItem) })
 
-type Pack = ReviewCatalog.Catalog["packs"][number]
-type Copy = { readonly snapshot: ReviewScratch.Snapshot } | { readonly failed: string }
-type RunContext = {
+export type Pack = ReviewCatalog.Catalog["packs"][number]
+export type Copy = { readonly snapshot: ReviewScratch.Snapshot } | { readonly failed: string }
+export type RunContext = {
   readonly input: RunInput
   readonly catalog: ReviewCatalog.Catalog
   readonly write: (name: string, text: string | Uint8Array) => Effect.Effect<string>
   readonly head: ReturnType<typeof copy>
   readonly base: ReturnType<typeof copy>
 }
-type Outcome = { readonly checks: Check[]; readonly head: ReviewSarif.Entry[]; readonly base: ReviewSarif.Entry[] }
+export type Outcome = { readonly checks: Check[]; readonly head: ReviewSarif.Entry[]; readonly base: ReviewSarif.Entry[] }
+
+export type ActionlintHooks = {
+  select: typeof workflowSelection
+  stage: typeof workflowStaging
+  unavailable: typeof workflowUnavailable
+  confine: typeof confined
+  drops: typeof nativeDrops
+  lookup: typeof rules
+  check: typeof check
+  only: typeof only
+  scanMs: number
+}
 
 const runPack = Effect.fnUntraced(function* (packID: string, pack: Pack | undefined, context: RunContext) {
   const lane = context.input.lane
@@ -192,7 +205,10 @@ const runPack = Effect.fnUntraced(function* (packID: string, pack: Pack | undefi
   // Squawk's argv is effectful (it stats the copy). The static template scanners stay as they are.
   if (pack.backend === "pinned" && pack.id === ReviewPackSquawk.manifest.id) return yield* squawked(pack, context)
   if (pack.backend === "pinned" && pack.id === ReviewPackRuff.manifest.id) return yield* ruffed(pack, context)
-  if (pack.backend === "pinned" && pack.id === ReviewPackActionlint.manifest.id) return yield* actionlinted(pack, context)
+  if (pack.backend === "pinned" && pack.id === ReviewPackActionlint.manifest.id) return yield* ReviewActionlintAnalyze.run(pack, context, {
+    select: workflowSelection, stage: workflowStaging, unavailable: workflowUnavailable, confine: confined, drops: nativeDrops,
+    lookup: rules, check, only, scanMs: SCAN_MS,
+  })
   const scanner = pack.backend === "pinned" ? pinnedScanner(pack.id) : undefined
   if (scanner) return yield* scanned(pack, scanner, context)
   if (pack.backend === "repo") return yield* gates(pack, context)
@@ -382,73 +398,6 @@ const ruffed = Effect.fnUntraced(function* (pack: Pack, context: RunContext) {
   const coverage = "emptyBase" in base && base.emptyBase ? "base: no eligible Python input; no base scanner invocation" : undefined
   return {
     checks: [check(pack, head.results.length > 0 ? "fail" : "pass", coverage, head.uri)],
-    head: ReviewSarif.toItems(head.results, lookup, onChanged).items,
-    base: ReviewSarif.toItems(base.results, lookup).items,
-  } satisfies Outcome
-})
-
-/** Native lint runs only against a host-owned projection, never the copied repository's project/config. */
-const actionlinted = Effect.fnUntraced(function* (pack: Pack, context: RunContext) {
-  if (pack.output.format !== "json" || pack.output.parser !== ReviewPackActionlint.parserId || pack.template !== ReviewPackActionlint.templateId)
-    return only(check(pack, "not-run", `template unknown: ${pack.template}`))
-  const selection = nativeDrops(context.catalog, pack.id, ReviewPackActionlint.RULES)
-  if (selection.status !== "ok") return only(check(pack, "not-run", selection.reason))
-  // -ignore matches messages, not rule identities. Do not pretend it disables a dropped native check.
-  if (selection.dropped.length) return only(check(pack, "not-run", "native-rule-selection-unsupported"))
-  const located = yield* ReviewPackActionlint.locate()
-  if ("absent" in located) return only(check(pack, "not-run", located.absent))
-  const scan = (copied: Copy, side: "head" | "base") => Effect.scoped(Effect.gen(function* () {
-    if ("failed" in copied) return { status: "not-run" as const, reason: copied.failed }
-    const snapshot = copied.snapshot
-    const selected = yield* Effect.tryPromise({
-      try: () => workflowSelection(snapshot.root, context.input, side),
-      catch: (error) => error,
-    }).pipe(Effect.uninterruptible, Effect.catch((error) => Effect.succeed({ refused: workflowUnavailable(error) })))
-    if ("refused" in selected) return { status: "not-run" as const, reason: selected.refused }
-    if (!selected.files.length) {
-      if (side === "head") return { status: "not-run" as const, reason: "no-input" }
-      const uri = yield* context.write("raw/actionlint-base.json", JSON.stringify({ invoked: false, reason: "no-eligible-workflow-input" }))
-      return { status: "ok" as const, results: [], uri, emptyBase: true as const }
-    }
-    // The copy is itself inside snapshot.scratch; a distinct sibling avoids source/scratch overlap.
-    const staging = yield* workflowStaging(snapshot.scratch)
-    if (typeof staging !== "string") return staging
-    const projected = yield* ReviewPackActionlint.prepare({ root: snapshot.root, files: selected.files, scratch: staging }).pipe(
-      Effect.catch((error) => Effect.succeed({ status: "not-run" as const, reason: workflowUnavailable(error) })),
-    )
-    if (projected.status !== "ok") return { status: "not-run" as const, reason: projected.reason }
-    const built = ReviewPackActionlint.argv(located.executable, projected)
-    if (built.status !== "ok") return { status: "not-run" as const, reason: built.reason }
-    const pathMap = yield* context.write(`raw/actionlint-${side}-paths.json`, JSON.stringify({
-      version: "actionlint-projection-v1", paths: projected.paths,
-    }))
-    const ran = yield* confined({
-      argv: built.argv, cwd: projected.root, write: [], env: ReviewPackActionlint.environment(projected.root),
-      timeoutMs: SCAN_MS, maxBytes: Probe.Limits.outputBytes,
-    })
-    if ("denied" in ran) return { status: "not-run" as const, reason: ran.denied }
-    const uri = yield* context.write(`raw/actionlint-${side}.json`, ran.outcome.stdout.data)
-    const stderr = yield* context.write(`raw/actionlint-${side}-stderr.txt`, ran.outcome.stderr.data)
-    const settled = ReviewPackActionlint.settle(ran.outcome, projected)
-    if (settled.status !== "ok") return { status: settled.status, reason: `${settled.reason}; path map: ${pathMap}; stderr: ${stderr}`, uri }
-    return { status: "ok" as const, results: settled.results, uri, pathMap, stderr }
-  }))
-  const head = yield* scan(yield* context.head, "head")
-  if (head.status !== "ok") return only(check(pack, head.status, head.reason, "uri" in head ? head.uri : undefined))
-  const base = yield* scan(yield* context.base, "base")
-  if (base.status !== "ok") return only(check(pack, base.status, `base: ${base.reason}`, "uri" in base ? base.uri : undefined))
-  const lookup = rules(context.catalog)
-  const onChanged = (file: string, line: number, endLine?: number) =>
-    (context.input.changed[file] ?? []).some((range) => line <= range.end && (endLine ?? line) >= range.start)
-  const coverage = [
-    "pathMap" in head ? `head path map: ${head.pathMap}` : undefined,
-    "pathMap" in base ? `base path map: ${base.pathMap}` : undefined,
-    "stderr" in head ? `head stderr: ${head.stderr}` : undefined,
-    "stderr" in base ? `base stderr: ${base.stderr}` : undefined,
-    "emptyBase" in base ? "base: no eligible workflow input; no base scanner invocation" : undefined,
-  ].filter((entry) => entry !== undefined).join("; ")
-  return {
-    checks: [check(pack, head.results.length ? "fail" : "pass", coverage, head.uri)],
     head: ReviewSarif.toItems(head.results, lookup, onChanged).items,
     base: ReviewSarif.toItems(base.results, lookup).items,
   } satisfies Outcome
