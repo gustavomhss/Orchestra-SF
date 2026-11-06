@@ -33,6 +33,10 @@ The following facts are **source-verified** against commit `f3fcdcc61b08e9880476
 
 Release assets were downloaded and statically inspected for the prior provisioning pin; the executable was not run. In particular, actual emitted output, exit statuses, config discovery, ignore behavior, and the proposed flag combination remain **native-unqualified**. This is a source-inspection record, not analyzer delivery or authorization to implement an adapter invocation.
 
+### Pending native qualification candidate
+
+The Linux-only conformance test proposes `[executable, "--config", hostJSON, "--disable-nested-config", "--no-ignore", "--format", "sarif", "--", explicitFile]`, with host JSON containing only `{ "rules": { "no-debugger": "error" } }`. It places malformed root and nested project configs on the explicit fixture's ancestry and exercises acquisition plus the production-confined native runner. `--no-ignore` is not claimed to disable Git ignore processing; the fixture has no `.gitignore` files. The pinned source supports the asserted diagnostic ID: `apps/oxlint/src/output_formatter/sarif.rs` constructs IDs as `plugin(rule)` and its `lint_diagnostic_uses_rule_metadata` test expects `eslint(no-debugger)`. It supports failure exit code 1: `apps/oxlint/src/result.rs` maps `LintFoundErrors` to `ExitCode::FAILURE`, which is 1 on Linux. The native execution remains pending lead CI; this source-derived contract is not a claim that the release executable has run.
+
 ## Sources
 
 - Tag ref: <https://api.github.com/repos/oxc-project/oxc/git/ref/tags/oxlint_v1.91.0>
