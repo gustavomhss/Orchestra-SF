@@ -11,3 +11,7 @@ Source inspected at immutable source commit `21bd300700d43d9ba04b0c1fce72a89391a
 - **ABI (static header observation only):** Mach-O headers declare macOS 11.0 for arm64 and 26.1 for x86_64. ELF symbol-version scanning found GLIBC_2.34 for each Linux payload. Windows PE was not runtime-qualified. These measurements do not constitute runtime qualification; the exact `26.1` value is retained rather than rounded.
 
 Source anchors: `crates/zizmor/src/cli.rs`, `main.rs`, and `config/mod.rs` at the commit above. No analyzer integration or runtime provisioning is claimed by this artifact pin.
+
+## Pending native qualification
+
+The Linux-only conformance test is a candidate qualification of the pinned executable and native SARIF normalization, not analyzer integration or approved adapter argv. It has not been run; qualification remains pending until the lead runs the exact test in CI. No Windows runtime qualification is claimed.
