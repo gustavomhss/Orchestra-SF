@@ -51,6 +51,7 @@ export function parse(text: string, options: Options): Parsed {
   projectedRuns.push(projectedRun)
   let nativeErrors = 0
   for (const row of run.results) {
+    // Native review/note is an informational candidate, not a review verdict.
     const review = record(row) && row.kind === "review" && row.level === "note"
     if (!record(row) || (row.kind !== undefined && row.kind !== "fail" && !review) || typeof row.ruleId !== "string" || !options.rules.includes(row.ruleId) || !record(row.message) || typeof row.message.text !== "string" || !Array.isArray(row.locations) || row.locations.length !== 1) return fail("native-row-invalid")
     if (row.level !== undefined && (typeof row.level !== "string" || !["error", "warning", "note"].includes(row.level))) return fail("native-level-invalid")
@@ -68,8 +69,6 @@ export function parse(text: string, options: Options): Parsed {
     if (!record(location) || !record(location.physicalLocation) || !record(location.physicalLocation.artifactLocation)) return fail("native-location-invalid")
     const projectedRow = {
       ...row,
-      // Legacy projection kind is not confirmation or a review verdict.
-      kind: review ? "fail" : row.kind,
       locations: [{
         ...location,
         physicalLocation: {
