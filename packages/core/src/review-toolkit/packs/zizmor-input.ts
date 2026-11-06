@@ -45,10 +45,12 @@ export const prepare = (input: Input): Effect.Effect<Prepared | Refused, unknown
     const reverse = api.relative(scratch, root)
     const overlaps = (value: string) => value === "" || value === ".." || (!api.isAbsolute(value) && !value.startsWith(`..${api.sep}`))
     if (overlaps(relative) || overlaps(reverse)) return refusal("scratch-overlaps-source")
+    if (input.files.some((file) => !validPathSpelling(file, api))) return refusal("path-outside")
     const named = input.files.map((file) => ({ file, path: ReviewNativeFiles.containedPath(root, file) }))
     if (named.some((item) => !item.path)) return refusal("path-outside")
     if (named.some((item) => !/^\.github\/workflows\/[^/]+\.ya?ml$/i.test(item.path!))) return refusal("invalid-workflow-path")
     if (named.some((item) => !supportedWorkflowPath(item.path!, api))) return { status: "unsupported", reason: "native-uri-path-unsupported" }
+    if (api === path.win32 && hasCaseAliases(named.map((item) => item.path!))) return refusal("duplicate-input")
     const selected = yield* ReviewNativeFiles.select({ root, files: named.map((item) => item.path!), extensions: [".yml", ".yaml"] })
     if (selected.status !== "ok") return selected
     const originals = [...new Set(selected.files.map((file) => ReviewNativeFiles.containedPath(root, file)!))].sort()
@@ -149,6 +151,7 @@ export function argv(executable: string, prepared: Prepared): { status: "ok"; ar
   const seen = new Set<string>()
   for (const [index, file] of prepared.files.entries()) {
     const mapping = prepared.paths[index]
+    if (!validRawPath(file, api) || !validRawRelativePath(mapping.file, api) || !validRawRelativePath(mapping.path, api)) return refusal("invalid-projection")
     const relative = ReviewNativeFiles.containedPath(root, file)
     const canonical = api === path.win32 ? relative?.replaceAll("\\", "/") : relative
     if (canonical && !supportedWorkflowPath(canonical, api)) return { status: "unsupported", reason: "native-uri-path-unsupported" }
@@ -196,9 +199,17 @@ function sameIdentity(left: { dev: number; ino: number }, right: { dev: number; 
 }
 
 function validRawPath(value: string, api: typeof path.posix | typeof path.win32) {
+  return api.isAbsolute(value) && validPathSpelling(value, api)
+}
+
+function validRawRelativePath(value: string, api: typeof path.posix | typeof path.win32) {
+  return !api.isAbsolute(value) && validPathSpelling(value, api)
+}
+
+function validPathSpelling(value: string, api: typeof path.posix | typeof path.win32) {
   const head = value.slice(0, 4).replaceAll("/", "\\")
   const segments = api === path.win32 ? value.split(/[\\/]/) : value.split("/")
-  return !!value && !value.includes("\0") && api.isAbsolute(value) && !segments.includes("..") && head !== "\\\\?\\" && head !== "\\\\.\\"
+  return !!value && !value.includes("\0") && !segments.some((segment) => segment === "." || segment === "..") && head !== "\\\\?\\" && head !== "\\\\.\\"
 }
 
 function supportedWorkflowPath(file: string, api: typeof path.posix | typeof path.win32) {
@@ -207,6 +218,17 @@ function supportedWorkflowPath(file: string, api: typeof path.posix | typeof pat
   const basename = file.slice(file.lastIndexOf("/") + 1)
   const device = basename.split(".", 1)[0].replace(/[ .]+$/g, "")
   return !basename.includes(":") && !/[ .]$/.test(basename) && !/^(CON|PRN|AUX|NUL|COM[1-9¹²³]|LPT[1-9¹²³])$/i.test(device)
+}
+
+function hasCaseAliases(files: readonly string[]) {
+  const spellings = new Map<string, Set<string>>()
+  for (const file of files) {
+    const key = file.toLowerCase()
+    const values = spellings.get(key) ?? new Set<string>()
+    values.add(file)
+    spellings.set(key, values)
+  }
+  return [...spellings.values()].some((values) => values.size > 1)
 }
 
 function isRefusal(error: unknown): error is Refused {

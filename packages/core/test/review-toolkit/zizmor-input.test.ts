@@ -55,15 +55,17 @@ test("validates raw roots and preserves spaces, Unicode, and literal POSIX backs
   await mkdir(path.dirname(path.join(root, name)), { recursive: true }); await mkdir(scratch); await writeFile(path.join(root, name), "name: literal\n")
   try {
     expect((await Effect.runPromise(Effect.scoped(ReviewZizmorInput.prepare({ root: `${root}/../source`, scratch, files: [name] })))).status).not.toBe("ok")
+    expect((await Effect.runPromise(Effect.scoped(ReviewZizmorInput.prepare({ root, scratch, files: [".github/workflows/./entry.yml"] })))).status).not.toBe("ok")
     const result = await Effect.runPromise(Effect.scoped(ReviewZizmorInput.prepare({ root, scratch, files: [name] })))
     if (!constants.O_NOFOLLOW) expect(result).toMatchObject({ status: "not-run", reason: "no-follow-unavailable" })
     else {
       expect(result).toMatchObject({ status: "ok", paths: [{ file: name, path: name }] })
       if (result.status === "ok") expect(path.basename(result.files[0])).toBe("a space-é\\b.yml")
     }
-    const encoded = ".github/workflows/alias%2e%2e.yml"
+    const encoded = ".github/workflows/%78.yml", decoded = ".github/workflows/x.yml"
     await writeFile(path.join(root, encoded), "name: encoded\n")
-    expect(await Effect.runPromise(Effect.scoped(ReviewZizmorInput.prepare({ root, scratch, files: [encoded] })))).toEqual({ status: "unsupported", reason: "native-uri-path-unsupported" })
+    await writeFile(path.join(root, decoded), "name: decoded\n")
+    expect(await Effect.runPromise(Effect.scoped(ReviewZizmorInput.prepare({ root, scratch, files: [encoded, decoded] })))).toEqual({ status: "unsupported", reason: "native-uri-path-unsupported" })
   } finally { await rm(base, { recursive: true, force: true }) }
 })
 
@@ -74,9 +76,10 @@ test("Windows argv accepts canonical paths and rejects case-aliased duplicates",
   expect(ReviewZizmorInput.argv("C:\\bin\\zizmor.exe", prepared).status).toBe("ok")
   const duplicate = { ...prepared, files: [first, path.win32.join(root, ".github\\workflows\\ENTRY.yml")], paths: [prepared.paths[0], { file: ".github/workflows/ENTRY.yml", path: ".github/workflows/ENTRY.yml" }] }
   expect(ReviewZizmorInput.argv("C:\\bin\\zizmor.exe", duplicate)).toEqual({ status: "not-run", reason: "invalid-projection" })
-  for (const invalid of ["\\\\?\\C:\\projection", "\\\\.\\C:\\projection", "C:\\projection\\..\\source"]) {
+  for (const invalid of ["\\\\?\\C:\\projection", "\\\\.\\C:\\projection", "C:\\projection\\..\\source", "C:\\projection\\.\\entry"]) {
     expect(ReviewZizmorInput.argv("C:\\bin\\zizmor.exe", { ...prepared, root: invalid }).status).not.toBe("ok")
   }
+  expect(ReviewZizmorInput.argv("C:\\bin\\zizmor.exe", { ...prepared, files: ["C:\\projection\\.github\\workflows\\.\\entry.yml"] })).toEqual({ status: "not-run", reason: "invalid-projection" })
   for (const name of ["CON.yml", "PRN.log.yml", "AUX.yaml", "NUL.yml", "COM1.yml", "COM¹.yml", "LPT9.yml", "stream.yml:ads", "trailing.yml.", "trailing.yml ", "percent%2e.yml", "query?.yml", "fragment#.yml"]) {
     const unsafe = { ...prepared, files: [path.win32.join(root, ".github", "workflows", name)], paths: [{ file: `.github/workflows/${name}`, path: `.github/workflows/${name}` }] }
     expect(ReviewZizmorInput.argv("C:\\bin\\zizmor.exe", unsafe)).toEqual({ status: "unsupported", reason: "native-uri-path-unsupported" })
