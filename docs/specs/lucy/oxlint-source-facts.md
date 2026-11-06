@@ -33,6 +33,10 @@ The following facts are **source-verified** against commit `f3fcdcc61b08e9880476
 
 Release assets were downloaded and statically inspected for the prior provisioning pin; the executable was not run. In particular, actual emitted output, exit statuses, config discovery, ignore behavior, and the proposed flag combination remain **native-unqualified**. This is a source-inspection record, not analyzer delivery or authorization to implement an adapter invocation.
 
+### Pending native qualification candidate
+
+The Linux-only conformance test proposes `[executable, "--config", hostJSON, "--disable-nested-config", "--no-ignore", "--format", "sarif", "--", explicitFile]`, with host JSON containing only `{ "rules": { "no-debugger": "error" } }`. It places malformed root and nested project configs beside explicit clean and `debugger` fixtures, and exercises acquisition plus the production-confined native runner. `--no-ignore` is not claimed to disable Git ignore processing; the test projection has no `.gitignore` files. The output and exit assertions are pending native execution in lead CI. Until that run confirms the candidate flags, exact SARIF rule ID and exit codes against the pinned release, this section and test are not a native qualification claim.
+
 ## Sources
 
 - Tag ref: <https://api.github.com/repos/oxc-project/oxc/git/ref/tags/oxlint_v1.91.0>
