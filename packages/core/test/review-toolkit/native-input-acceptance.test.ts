@@ -110,7 +110,7 @@ test("I3 both engines refuse unsafe inputs, unsupported selection and suppressio
   const f = await fixture()
   await using cleanup = { [Symbol.asyncDispose]: () => rm(f.base, { recursive: true, force: true }) }
   for (const engine of [{ prepare: ReviewZizmorInput.prepare, file: workflow }, { prepare: ReviewOxlintInput.prepare, file: javascript }]) {
-    for (const files of [[], ["../outside.js"], ["nested/../nested/original.js"], ["bad\0.js"], ["nested/missing.js"], ["zizmor.yaml"], Array.from({ length: 10_001 }, () => engine.file)]) {
+    for (const files of [[], ["../outside.js"], ["nested/../nested/original.js"], ["bad\0.js"], ["nested/missing.js"], ["zizmor.yaml"], ...(engine.file === workflow ? [[javascript]] : []), Array.from({ length: 10_001 }, () => engine.file)]) {
       const prepared = await Effect.runPromise(Effect.scoped(engine.prepare({ ...f, files })))
       expect(prepared.status).not.toBe("ok")
     }
@@ -196,7 +196,7 @@ test("I5 argv validation rejects forged projections and tool environments cannot
     for (const key of denied) expect(Object.hasOwn(env, key)).toBe(false)
     expect(env.RUST_LOG === undefined || env.RUST_LOG === "info").toBe(true)
     expect(env.ZIZMOR_OFFLINE === undefined || env.ZIZMOR_OFFLINE === "true").toBe(true)
-    expect(engine.argv(executable, { ...oxlint, paths: [{ ...prepared.paths[0], file: "../escape.js" }] }).status).not.toBe("ok")
+    expect(engine.argv(executable, { ...prepared, paths: [{ ...prepared.paths[0], file: "../escape.js" }] }).status).not.toBe("ok")
   }
   expect(ReviewOxlintInput.argv(executable, { ...oxlint, config: "/outside/config.json" }).status).not.toBe("ok")
   expect(ReviewOxlintInput.argv(executable, { ...oxlint, rules: ["unknown"] }).status).not.toBe("ok")
@@ -208,7 +208,7 @@ test("I6 both readers enforce physical containment and explicit no-follow refusa
   for (const engine of [ReviewZizmorInput, ReviewOxlintInput]) {
     const file = engine === ReviewZizmorInput ? workflow : javascript
     for (const root of ["\\\\?\\C:\\projection", "\\\\.\\C:\\projection"]) {
-      expect((await Effect.runPromise(Effect.scoped(engine.prepare({ ...f, root, files: [file] }))))).status).not.toBe("ok")
+      expect((await Effect.runPromise(Effect.scoped(engine.prepare({ ...f, root, files: [file] })))).status).not.toBe("ok")
     }
     expect(await Effect.runPromise(Effect.scoped(engine.prepare({ ...f, files: [file] }).pipe(Effect.provideService(engine.NoFollow, false))))).toEqual({ status: "not-run", reason: "no-follow-unavailable" })
     if (!constants.O_NOFOLLOW) continue
