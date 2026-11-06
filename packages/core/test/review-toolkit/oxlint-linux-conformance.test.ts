@@ -28,12 +28,12 @@ const fixture = Effect.acquireRelease(Effect.promise(async () => {
   return { temp, root, install: path.join(temp.path, "toolkit") }
 }), (value) => Effect.promise(() => value.temp[Symbol.asyncDispose]()))
 
-it.live("pinned oxlint native conformance requires Linux confinement", () => Effect.sync(() => {
+it.live.skipIf(process.platform !== "linux")("Linux-only pinned oxlint conformance requires confinement", () => Effect.sync(() => {
   expect(process.platform).toBe("linux")
   expect(jail, "conformance-missing: sandbox").toBeTruthy()
 }))
 
-it.live("pinned oxlint emits bounded SARIF findings under explicit host config", () => Effect.gen(function* () {
+it.live.skipIf(process.platform !== "linux")("Linux-only pinned oxlint emits bounded SARIF findings under explicit host config", () => Effect.gen(function* () {
   expect(process.platform).toBe("linux")
   expect(jail, "conformance-missing: sandbox").toBeTruthy()
   expectSpawn(import.meta.path)
@@ -71,10 +71,12 @@ it.live("pinned oxlint emits bounded SARIF findings under explicit host config",
   const clean = yield* run("clean", [...common, path.join(f.root, "nested", "clean.js")])
   expect(clean.exitCode).toBe(0)
   const cleanParsed = ReviewSarif.parseSarif(clean.stdout.data.toString("utf8"), { pack: "oxlint", root: f.root })
-  expect(cleanParsed).toMatchObject({ status: "ok", results: [] })
+  expect(cleanParsed).toEqual({ status: "ok", results: [], excluded: [] })
   const broken = yield* run("broken", [...common, path.join(f.root, "nested", "broken.js")])
   expect(broken.exitCode).toBe(1)
   const parsed = ReviewSarif.parseSarif(broken.stdout.data.toString("utf8"), { pack: "oxlint", root: f.root })
-  expect(parsed).toMatchObject({ status: "ok", results: [{ rule: "eslint(no-debugger)", path: "nested/broken.js", line: 1 }] })
+  if (parsed.status !== "ok") throw new Error(`native report refused: ${parsed.reason}`)
+  expect(parsed.excluded).toEqual([])
+  expect(parsed.results).toMatchObject([{ rule: "eslint(no-debugger)", path: "nested/broken.js", line: 1 }])
   expect(yield* Effect.promise(() => readFile(path.join(f.root, ".host", "oxlint.json"), "utf8"))).toBe(JSON.stringify({ rules: { "no-debugger": "error" } }))
 }), 180_000)
