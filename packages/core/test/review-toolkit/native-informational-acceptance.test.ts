@@ -16,13 +16,17 @@ const row = {
   locations: [{ physicalLocation: { artifactLocation: { uri: "input.yml" }, region: { startLine: 3, endLine: 4, snippet: { text: "original snippet" } } } }],
 } as const
 const report = (result: unknown = row) => JSON.stringify({ version: "2.1.0", runs: [{ tool: { driver: { name: zizmor.id, version: zizmor.version } }, results: [result] }] })
+const raw = {
+  pack: zizmor.id, rule: row.ruleId, path: "reviewed/workflow.yml", line: 3, endLine: 4,
+  snippet: "original snippet", toolFingerprint: JSON.stringify([["fixture", "original-fingerprint"]]),
+  message: row.message.text, suppressions: row.suppressions,
+}
+
+test("J0 legacy review/note interpretation remains unchanged", () => {
+  expect(ReviewSarif.parseSarif(report(), { pack: zizmor.id, root: options.root })).toEqual({ status: "ok", excluded: [], results: [{ ...raw, path: "input.yml" }] })
+})
 
 test("J1 native review/note findings retain raw metadata without a severity or verdict", () => {
-  const raw = {
-    pack: zizmor.id, rule: row.ruleId, path: "reviewed/workflow.yml", line: 3, endLine: 4,
-    snippet: "original snippet", toolFingerprint: JSON.stringify([["fixture", "original-fingerprint"]]),
-    message: row.message.text, suppressions: row.suppressions,
-  }
   const parsed = ReviewNativeSarif.parse(report(), options)
   expect(parsed).toEqual({ status: "ok", nativeErrors: 0, excluded: [], results: [raw] })
   if (parsed.status !== "ok") throw new Error(parsed.reason)
@@ -33,8 +37,6 @@ test("J1 native review/note findings retain raw metadata without a severity or v
   const mixed = JSON.parse(report())
   mixed.runs[0].results.push({ ...row, kind: "fail", level: "error", ruleId: "zizmor/unpinned-uses", message: { text: "second finding" } })
   expect(ReviewNativeSarif.parse(JSON.stringify(mixed), { ...options, rules: [...options.rules, "zizmor/unpinned-uses"] })).toEqual({ status: "ok", nativeErrors: 1, excluded: [], results: [raw, { ...raw, rule: "zizmor/unpinned-uses", message: "second finding" }] })
-  // Only native admission adapts this shape. The legacy generic parser remains unchanged.
-  expect(ReviewSarif.parseSarif(report(), { pack: zizmor.id, root: options.root })).toMatchObject({ status: "ok", results: [], excluded: [{ reason: "not-a-finding", count: 1 }] })
   const fixture = JSON.parse(report())
   fixture.runs[0].tool.driver = { name: "host-fixture", version: "host-version" }
   expect(ReviewNativeSarif.parse(JSON.stringify(fixture), { ...options, pack: "host-fixture", version: "host-version" })).toMatchObject({ status: "ok", nativeErrors: 0, results: [{ pack: "host-fixture", rule: row.ruleId }] })
