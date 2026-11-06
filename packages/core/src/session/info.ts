@@ -12,7 +12,30 @@ import { SessionMessage } from "./message"
 import { Snapshot } from "../snapshot"
 import { SessionSubagentModels } from "./subagent-models"
 
-export function fromRow(row: typeof SessionTable.$inferSelect): SessionSchema.Info {
+export const columns = {
+  id: SessionTable.id,
+  project_id: SessionTable.project_id,
+  title: SessionTable.title,
+  parent_id: SessionTable.parent_id,
+  agent: SessionTable.agent,
+  subagent_models: SessionTable.subagent_models,
+  model: SessionTable.model,
+  cost: SessionTable.cost,
+  tokens_input: SessionTable.tokens_input,
+  tokens_output: SessionTable.tokens_output,
+  tokens_reasoning: SessionTable.tokens_reasoning,
+  tokens_cache_read: SessionTable.tokens_cache_read,
+  tokens_cache_write: SessionTable.tokens_cache_write,
+  directory: SessionTable.directory,
+  workspace_id: SessionTable.workspace_id,
+  path: SessionTable.path,
+  revert: SessionTable.revert,
+  time_created: SessionTable.time_created,
+  time_updated: SessionTable.time_updated,
+  time_archived: SessionTable.time_archived,
+}
+
+export function fromRow(row: Pick<typeof SessionTable.$inferSelect, keyof typeof columns>): SessionSchema.Info {
   return SessionSchema.Info.make({
     id: SessionSchema.ID.make(row.id),
     projectID: ProjectV2.ID.make(row.project_id),
