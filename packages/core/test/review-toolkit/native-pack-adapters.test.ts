@@ -40,12 +40,12 @@ test("A2 native locate refuses unqualified hosts and does not acquire absent too
     expect(await Effect.runPromise(adapter.locate().pipe(
       Effect.provideService(BackendToolkit.Root, root),
       Effect.provideService(BackendToolkit.Manifest, {}),
-    )))).toEqual({ absent: qualified ? `${adapter.manifest.id} absent` : `${adapter.manifest.id} unsupported: native-runtime-unqualified` })
+    ))).toEqual({ absent: qualified ? `${adapter.manifest.id} absent` : `${adapter.manifest.id} unsupported: native-runtime-unqualified` })
     if (!qualified) continue
     expect(await Effect.runPromise(adapter.locate().pipe(
       Effect.provideService(BackendToolkit.Root, root),
       Effect.provideService(BackendToolkit.Target, { unsupported: "adapter-positive-control" }),
-    )))).toEqual({ absent: `${adapter.manifest.id} unsupported: adapter-positive-control` })
+    ))).toEqual({ absent: `${adapter.manifest.id} unsupported: adapter-positive-control` })
     expect(await readdir(root)).toEqual([])
     const directory = path.join(root, "engines", adapter.manifest.id, `${adapter.manifest.version}-linux-x64`)
     await mkdir(directory, { recursive: true })
