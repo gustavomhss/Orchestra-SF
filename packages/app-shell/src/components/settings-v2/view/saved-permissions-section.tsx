@@ -9,6 +9,9 @@ export function SavedPermissionsSection() {
   const language = useLanguage()
   const sdk = useSDK()
   const [saved, { refetch }] = createResource(() => sdk().api.permission.saved.list())
+  // `latest` is read only once the resource has settled: an unsettled read suspends the whole page instead of showing
+  // the section's own loading row, and a refetch keeps the rows on screen.
+  const rules = () => (saved.state === "unresolved" || saved.state === "pending" ? undefined : saved.latest)
   const [removing, setRemoving] = createSignal<string>()
 
   const remove = (id: string) => {
@@ -39,16 +42,23 @@ export function SavedPermissionsSection() {
     >
       <Show
         when={!saved.error}
-        fallback={<div class="mx-empty">{language.t("orchestra.settings.savedPermissions.loadFailed")}</div>}
+        fallback={
+          <div class="mx-empty" role="alert">
+            <p>{language.t("orchestra.settings.savedPermissions.loadFailed")}</p>
+            <button type="button" class="mx-btn" onClick={() => void refetch()}>
+              {language.t("orchestra.mcp.retry")}
+            </button>
+          </div>
+        }
       >
         <Show
-          when={saved()}
-          fallback={<div class="mx-empty">{language.t("orchestra.settings.savedPermissions.loading")}</div>}
+          when={rules()}
+          fallback={<div class="mx-empty" role="status">{language.t("orchestra.settings.savedPermissions.loading")}</div>}
         >
           {(rows) => (
             <Show
               when={rows().length > 0}
-              fallback={<div class="mx-empty">{language.t("orchestra.settings.savedPermissions.empty")}</div>}
+              fallback={<div class="mx-empty" role="status">{language.t("orchestra.settings.savedPermissions.empty")}</div>}
             >
               <div class="perm-table">
                 <For each={rows()}>
@@ -63,6 +73,10 @@ export function SavedPermissionsSection() {
                       <button
                         type="button"
                         class="mx-btn"
+                        aria-label={language.t("orchestra.settings.savedPermissions.removeLabel", {
+                          tool: toolName(row.action),
+                          resource: row.resource,
+                        })}
                         disabled={removing() === row.id}
                         onClick={() => remove(row.id)}
                       >

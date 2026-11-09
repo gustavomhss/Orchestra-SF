@@ -14,9 +14,9 @@ The dock shows:
 
 - **Deny** refuses this request and every other request still waiting in the same session. The agent may try another route.
 - **Allow once** lets this one request run. The next one asks again.
-- **Always allow in this project** lets matching requests run without asking again in this project. The dock says what it covers:
-  - "every Read request" means every request of that tool in this project.
-  - "only this Bash request" means only that exact command or path. Similar requests still ask.
+- **Always allow in this project** lets matching requests run without asking again in this project. For example, the scope may be explained as:
+  - "every Read request" would mean every request of that tool in this project.
+  - "only this Bash request" would mean only that exact command or path. Similar requests still ask.
 - **Stop** ends the whole run, not just this request. Every open permission and question of the session is rejected. See [Permission and question requests](session-requests.md).
 
 Permissions are saved per project. Allowing something always in one project does not allow it in another.
@@ -28,6 +28,8 @@ The composer's **Ask** button switches the session to **Auto-accept**. While it 
 ## Saved permissions
 
 Settings, Permissions, lists every "Allow always" rule saved for the current project under **Saved permissions**. Each row shows the tool and the saved command, path or pattern.
+
+If saved permissions could not load, click **Retry** to load the list again.
 
 Click **Remove** to delete a rule. The next matching request asks again. Removing a rule does not stop a run that is already in progress.
 

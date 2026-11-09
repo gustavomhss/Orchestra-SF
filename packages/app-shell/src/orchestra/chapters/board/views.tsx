@@ -1010,7 +1010,7 @@ export function Timeline(props: {
                             >
                               <Ring stage={issue.stage} />
                               <span class="board-id">{issue.ref}</span>
-                              <span class="board-timeline-issue-title">{issue.title}</span>
+                              <span class="board-timeline-issue-title" title={issue.title}>{issue.title}</span>
                             </button>
                             <div class="board-timeline-track">
                               <Show when={active()}>
@@ -1234,7 +1234,7 @@ function IssueRow(props: { snapshot: Snapshot; issue: Issue; focused?: string; o
         <span class="board-id">{props.issue.ref}</span>
       </span>
       <span class="board-table-title">
-        <span class="board-table-name">{props.issue.title}</span>
+        <span class="board-table-name" title={props.issue.title}>{props.issue.title}</span>
         <Switch>
           <Match when={open() && needsYou(props.snapshot, props.issue)}>
             <span class="board-table-asked">{t("orchestra.board.list.asked")}</span>

@@ -62,7 +62,7 @@ test("copied real Bun cannot masquerade as native Node; scoped override restored
   } finally {
     if (previous === undefined) delete process.env.OMNI_CAMPAIGN_NODE
     if (previous !== undefined) process.env.OMNI_CAMPAIGN_NODE = previous
-    if (!outcome.error?.message.includes("close unconfirmed")) rmSync(dir, { recursive: true, force: true })
+    if (!outcome.error?.message.includes("close unconfirmed")) rmSync(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 })
   }
 })
 

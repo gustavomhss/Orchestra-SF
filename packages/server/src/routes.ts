@@ -32,7 +32,9 @@ import { HttpApiBuilder } from "effect/unstable/httpapi"
 import { Layer, Option } from "effect"
 import { Api } from "./api"
 import { ServerAuth } from "./auth"
+import { BodyLimit } from "./body-limit"
 import { corsLayer } from "./cors"
+import { hostPolicyLayer } from "./host-policy"
 import { handlers } from "./handlers"
 import { authorizationLayer } from "./middleware/authorization"
 import { schemaErrorLayer } from "./middleware/schema-error"
@@ -86,6 +88,8 @@ export interface Options {
   readonly webRoot?: string
   /** Extra origins the server answers cross-origin, besides the local and desktop ones. */
   readonly cors?: ReadonlyArray<string>
+  /** Allowed HTTP hostnames; omitted leaves host admission to the embedding application. */
+  readonly allowedHosts?: ReadonlyArray<string>
   /** Replaces the capability operator; tests and sdk-next embed their own. */
   readonly operator?: CapabilityOperatorContract.Interface
   /** Replaces the capability setup verifier; tests avoid vendor calls with it. */
@@ -101,7 +105,7 @@ export function createRoutes(options: Options = {}) {
   )
 }
 
-export function createEmbeddedRoutes(options: Pick<Options, "host" | "operator" | "verifier"> = {}) {
+export function createEmbeddedRoutes(options: Pick<Options, "host" | "operator" | "verifier" | "allowedHosts"> = {}) {
   return makeRoutes(ServerAuth.Config.configLayer({ username: "orchestra", password: Option.none() }), options)
 }
 
@@ -135,8 +139,11 @@ function makeRoutes<AuthError, AuthServices>(
     Layer.provide(serviceLayer),
     // The desktop renderer (`oc://renderer`) calls a desktop-owned server cross-origin, as the earlier runtime did.
     Layer.provide(corsLayer({ cors: options.cors })),
+    Layer.provide(BodyLimit.layer),
   )
-  return Layer.merge(api, options.webRoot ? WebUi.layer(options.webRoot) : Layer.empty)
+  return Layer.merge(api, options.webRoot ? WebUi.layer(options.webRoot) : Layer.empty).pipe(
+    Layer.provide(hostPolicyLayer(options.allowedHosts)),
+  )
 }
 
 export const routes = createRoutes()

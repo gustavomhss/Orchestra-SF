@@ -2,7 +2,7 @@ export * as FileSystemSearch from "./search"
 
 import { makeLocationNode } from "../effect/app-node"
 import path from "path"
-import { Context, Deferred, Effect, Exit, Layer, Schema, Scope } from "effect"
+import { Clock, Context, Deferred, Effect, Exit, Layer, Schema, Scope } from "effect"
 import { Fff } from "#fff"
 import fuzzysort from "fuzzysort"
 import { FileSystem } from "../filesystem"
@@ -30,6 +30,7 @@ const searchError = (error: { readonly message: string }) => new SearchError({ m
 // fff runs without its watcher: a search rescans when the index is older than this, and waits at most that long.
 const FFF_RESCAN_AFTER_MS = 2_000
 const FFF_SCAN_WAIT_MS = 3_000
+const RIPGREP_RESCAN_AFTER_MS = 2_000
 
 export const ripgrepLayer = Layer.effect(
   Service,
@@ -41,6 +42,7 @@ export const ripgrepLayer = Layer.effect(
     const state = {
       files: [] as string[],
       directories: [] as string[],
+      scannedAt: undefined as number | undefined,
       index: Deferred.makeUnsafe<void, SearchError>(),
     }
 
@@ -60,14 +62,16 @@ export const ripgrepLayer = Layer.effect(
             Effect.sync(() => {
               files.push(entry.path)
               const parts = entry.path.split("/")
-              parts.slice(0, -1).forEach((_, index) => directories.add(parts.slice(0, index + 1).join("/") + path.sep))
+              parts.slice(0, -1).forEach((_, index) => directories.add(parts.slice(0, index + 1).join("/") + "/"))
             }),
         })
         .pipe(
           Effect.tap(() =>
-            Effect.sync(() => {
+            Effect.gen(function* () {
+              const now = yield* Clock.currentTimeMillis
               state.files = files
               state.directories = Array.from(directories)
+              state.scannedAt = now
             }),
           ),
           Effect.asVoid,
@@ -86,7 +90,8 @@ export const ripgrepLayer = Layer.effect(
     const indexed = Effect.gen(function* () {
       const attempt = state.index
       const first = yield* Effect.exit(Deferred.await(attempt))
-      if (Exit.isSuccess(first)) return
+      const now = yield* Clock.currentTimeMillis
+      if (Exit.isSuccess(first) && state.scannedAt !== undefined && now - state.scannedAt < RIPGREP_RESCAN_AFTER_MS) return
       const retry = yield* Effect.suspend(() => (state.index === attempt ? start() : Effect.succeed(state.index)))
       yield* Deferred.await(retry)
     })
@@ -154,7 +159,7 @@ export const ripgrepLayer = Layer.effect(
                 : [...state.files, ...state.directories]
           return fuzzysort.go(input.query, items, { limit: input.limit ?? 50 }).map((item) => {
             const relative = item.target
-            const type = relative.endsWith(path.sep) ? ("directory" as const) : ("file" as const)
+            const type = relative.endsWith("/") ? ("directory" as const) : ("file" as const)
             return FileSystem.Entry.make({
               path: RelativePath.make(relative),
               type,
@@ -291,7 +296,7 @@ export const fffLayer = Layer.effect(
               .map((item) => {
                 const relative = item.path.replaceAll("\\", "/").replace(/\/$/, "")
                 return FileSystem.Entry.make({
-                  path: RelativePath.make(relative + (item.type === "directory" ? path.sep : "")),
+                  path: RelativePath.make(relative + (item.type === "directory" ? "/" : "")),
                   type: item.type,
                 })
               })

@@ -48,10 +48,13 @@ test.describe("regression: session timeline context group resize", () => {
   test("paints a stable exploring to explored transition", async ({ page }) => {
     const events: { directory: string; payload: Record<string, unknown> }[] = []
     await page.setViewportSize({ width: 1400, height: 900 })
-    await mockServer(page, events, [
+    // The fixture history must stay coherent with the SSE successes: after each reconnect the app refetches
+    // history, and a still-"running" entry would reignite the active shimmer even after Explored.
+    const history = [
       ...Array.from({ length: 8 }, (_, index) => turn(index, false)).flat(),
       ...turn(10, true, "running"),
-    ])
+    ]
+    await mockServer(page, events, history)
     await configurePage(page)
 
     await page.goto(`/${base64Encode(directory)}/session/${sessionID}`)
@@ -75,8 +78,12 @@ test.describe("regression: session timeline context group resize", () => {
       },
     })
     await startVisualProbe(page, regions)
-    for (const [index, delay] of [120, 350, 80, 500].entries()) {
+    for (const index of contextIDs.keys()) {
       // Each running history tool settles through a V2 tool.success on its call.
+      for (const message of history) {
+        const part = message.parts.find((entry) => entry.id === contextIDs[index])
+        if (part) (part.state as { status: string }).status = "completed"
+      }
       events.push({
         directory,
         payload: {
@@ -96,11 +103,14 @@ test.describe("regression: session timeline context group resize", () => {
           },
         },
       })
-      await page.waitForTimeout(delay)
+      // The mock server hands out one event per SSE connection: an empty queue means this one reached the page, so the next
+      // tool settles in a later frame instead of the whole batch landing in one.
+      await expect.poll(() => events.length).toBe(0)
     }
 
     await expect(context.locator('[data-component="tool-status-title"]')).toHaveAttribute("aria-label", "Explored")
-    await page.waitForTimeout(700)
+    // The probe must see the group finish resizing: wait for its transitions to end instead of a fixed window.
+    await expect.poll(() => context.evaluate((element) => element.getAnimations({ subtree: true }).length)).toBe(0)
     const trace = await stopVisualProbe<keyof typeof regions>(page)
     const labels = trace.samples
       .map((sample) => sample.regions.status?.label)

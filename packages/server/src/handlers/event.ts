@@ -22,7 +22,8 @@ export const eventFrames = (encode: (data: unknown) => string = encodeEvent) => 
 
 // The renderer reads this stream on its main thread. On a loaded machine it can fall seconds behind while a model
 // streams token deltas, and a subscriber that overflows is cut and must resync everything. The capacity is large
-// enough to ride out such a stall; an event is a few hundred bytes, so a full queue is still small.
+// intended to ride out short stalls. This bounds queued items, not bytes: payload sizes vary, and large events can
+// still retain substantial memory per slow subscriber.
 export const subscriberCapacity = 4096
 
 export const eventStream = (events: EventV2.Interface, frame = eventFrames()) => {

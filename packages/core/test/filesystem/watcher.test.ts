@@ -288,6 +288,26 @@ describeWatcher("Watcher", () => {
     ),
   )
 
+  it.live("ignores new git metadata after the HEAD subscription is ready", () =>
+    withTmp(
+      (directory) =>
+        Effect.gen(function* () {
+          const fs = yield* FSUtil.Service
+          const head = path.join(directory, ".git", "HEAD")
+          yield* ready(directory)
+          const headText = yield* fs.readFileString(head)
+          yield* nextUpdate((event) => event.file === head, fs.writeFileString(head, headText))
+          const generated = path.join(directory, ".git", `cache-${Math.random().toString(36).slice(2)}`)
+          yield* noUpdate(
+            (event) => event.file === generated || event.file.startsWith(`${generated}${path.sep}`),
+            fs.ensureDir(generated).pipe(Effect.andThen(fs.writeFileString(path.join(generated, "entry"), "metadata"))),
+            1_000,
+          )
+        }),
+      { git: true },
+    ),
+  )
+
   const describeSymlink = process.platform !== "win32" ? describe : describe.skip
   describeSymlink("symlinked .git", () => {
     it.live("publishes .git/HEAD events through a symlinked .git directory", () =>

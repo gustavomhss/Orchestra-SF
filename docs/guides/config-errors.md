@@ -18,3 +18,5 @@ The error names the file and what is wrong:
 3. Start again. If you want to run without the file for now, rename or move it.
 
 An unknown extra key is not an error; it is ignored.
+
+When Orchestra next reads global settings, it detects external edits even if your editor preserves the file size and modification time. If both global files exist, `orchestra.jsonc` takes precedence over `orchestra.json`.

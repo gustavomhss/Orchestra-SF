@@ -152,7 +152,7 @@ const layer = Layer.effect(
     const governance = yield* TaskGovernance.Service
     const compaction = yield* SessionCompaction.Service
     const db = database.db
-    const nameSession = SessionTitle.make({ db, events, store, agents, models, subagentModels, llm })
+    const nameSession = yield* SessionTitle.scoped({ db, events, store, agents, models, subagentModels, llm })
     const getSession = Effect.fn("SessionRunner.getSession")(function* (sessionID: SessionSchema.ID) {
       const session = yield* store.get(sessionID).pipe(
         Effect.catchDefect((cause) =>
@@ -214,14 +214,7 @@ const layer = Layer.effect(
         if (promoted > 0) {
           currentStep = 1
           // Beside the turn, as the earlier runtime named a Session after its first prompt; a failed title leaves the default one.
-          yield* nameSession(session.id).pipe(
-            Effect.catchCause((cause) =>
-              Effect.logWarning("Session title generation failed", cause).pipe(
-                Effect.annotateLogs({ sessionID: session.id }),
-              ),
-            ),
-            Effect.forkDetach,
-          )
+          yield* nameSession(session.id)
           // Attachments are read once, as they are promoted; the admitted prompt keeps its URIs.
           yield* SessionDirectCommands.readMentions({ events, reader, mcp, fs }, session.id, yield* SessionInput.promotedAfter(db, session.id, cutoff))
         }
@@ -520,13 +513,12 @@ const layer = Layer.effect(
             yield* withPublication(publisher.failAssistant(INTERRUPTED_TURN))
             return yield* Effect.interrupt
           }
-          if (
+          const interrupted =
             (stream._tag === "Failure" && Cause.hasInterrupts(stream.cause)) ||
             (settled._tag === "Failure" && Cause.hasInterrupts(settled.cause))
-          ) {
+          if (interrupted) {
             yield* FiberSet.clear(toolFibers)
             yield* withPublication(publisher.failUnsettledTools("Tool execution interrupted"))
-            if (publisher.hasActiveAssistant()) yield* withPublication(publisher.failAssistant(INTERRUPTED_TURN))
           }
           if (settled._tag === "Failure" && !Cause.hasInterrupts(settled.cause)) {
             const failure = Cause.squash(settled.cause)
@@ -563,6 +555,9 @@ const layer = Layer.effect(
               ...(stepSettlement.contextWindow === undefined ? {} : { contextWindow: stepSettlement.contextWindow }),
             })
           }
+          // Terminal failure follows accounting even when the provider already finished the step.
+          if (interrupted && publisher.hasAssistantStarted())
+            yield* withPublication(publisher.failAssistant(INTERRUPTED_TURN))
           if (publisher.hasProviderError())
             yield* withPublication(publisher.failUnsettledTools("Tool execution interrupted"))
           if (stream._tag === "Success" && !publisher.hasProviderError())

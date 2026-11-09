@@ -12,6 +12,30 @@ export const SkillRemoveQuery = Schema.Struct({
 
 export const SkillGroup = HttpApiGroup.make("server.skill")
   .add(
+    HttpApiEndpoint.get("skill.catalog", "/api/skill/catalog", {
+      query: LocationQuery,
+      success: Location.response(Schema.Array(Skill.Metadata)),
+    })
+      .annotateMerge(locationQueryOpenApi)
+      .annotateMerge(OpenApi.annotations({
+        identifier: "v2.skill.catalog",
+        summary: "List skill metadata",
+        description: "Retrieve registered skill metadata without instruction bodies. The full list route remains available.",
+      })),
+  )
+  .add(
+    HttpApiEndpoint.get("skill.get", "/api/skill/by-name", {
+      query: Schema.Struct({ ...LocationQuery.fields, name: Schema.String }),
+      success: Location.response(Schema.NullOr(Skill.Info)),
+    })
+      .annotateMerge(locationQueryOpenApi)
+      .annotateMerge(OpenApi.annotations({
+        identifier: "v2.skill.get",
+        summary: "Read a registered skill",
+        description: "Retrieve one full skill by exact registered name, or null if absent. Does not read arbitrary paths.",
+      })),
+  )
+  .add(
     HttpApiEndpoint.get("skill.list", "/api/skill", {
       query: LocationQuery,
       success: Location.response(Schema.Array(Skill.Info)),

@@ -1,11 +1,11 @@
-import { Effect, Stream } from "effect"
+import { Cause, Duration, Effect, Stream } from "effect"
 import { Headers, HttpClientRequest } from "effect/unstable/http"
 import { Auth } from "../auth"
 import { render as renderEndpoint } from "../endpoint"
 import { Framing, type Framing as FramingDef } from "../framing"
 import type { Transport, TransportPrepareInput } from "./index"
 import * as ProviderShared from "../../protocols/shared"
-import { mergeJsonRecords, type LLMRequest } from "../../schema"
+import { LLMError, mergeJsonRecords, TransportReason, type LLMRequest } from "../../schema"
 
 export type JsonRequestInput<Body> = TransportPrepareInput<Body>
 
@@ -107,6 +107,7 @@ export const jsonRequestParts = <Body>(input: JsonRequestInput<Body>) =>
 
 export interface HttpJsonInput<_Body, Frame> {
   readonly framing: FramingDef<Frame>
+  readonly idleTimeout?: Duration.Input | false
 }
 
 export type HttpJsonPatch<Body, Frame> = Partial<HttpJsonInput<Body, Frame>>
@@ -135,12 +136,31 @@ export const httpJson = <Body, Frame>(input: HttpJsonInput<Body, Frame>): HttpJs
           Effect.map((response) =>
             prepared.framing.frame(
               response.stream.pipe(
+                Stream.filter((chunk) => chunk.length > 0),
+                (stream) =>
+                  input.idleTimeout === false
+                    ? stream
+                    : stream.pipe(
+                        Stream.timeoutOrElse({
+                          duration: input.idleTimeout ?? "10 minutes",
+                          orElse: () => Stream.fail(new Cause.TimeoutError()),
+                        }),
+                      ),
                 Stream.mapError((error) =>
-                  ProviderShared.eventError(
-                    `${request.model.provider}/${request.model.route.id}`,
-                    `Failed to read ${request.model.provider}/${request.model.route.id} stream`,
-                    ProviderShared.errorText(error),
-                  ),
+                  Cause.isTimeoutError(error)
+                    ? new LLMError({
+                        module: "HttpJsonTransport",
+                        method: "stream",
+                        reason: new TransportReason({
+                          message: "Provider response body was idle for too long",
+                          kind: "Timeout",
+                        }),
+                      })
+                    : ProviderShared.eventError(
+                        `${request.model.provider}/${request.model.route.id}`,
+                        `Failed to read ${request.model.provider}/${request.model.route.id} stream`,
+                        ProviderShared.errorText(error),
+                      ),
                 ),
               ),
             ),

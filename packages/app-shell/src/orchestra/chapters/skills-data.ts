@@ -9,6 +9,17 @@ export type SkillEntry = {
   internal?: boolean | null
 }
 
+export type SkillCatalogEntry = Omit<SkillEntry, "content">
+
+const Metadata = Schema.Struct({
+  name: Schema.String,
+  description: Schema.optional(Schema.NullOr(Schema.String)),
+  location: Schema.String,
+  mtime: Schema.optional(Schema.NullOr(Schema.Number)),
+  internal: Schema.optional(Schema.NullOr(Schema.Boolean)),
+})
+const decodeCatalog = Schema.decodeUnknownOption(Schema.Array(Metadata))
+
 const decodeSkills = Schema.decodeUnknownOption(
   Schema.Array(
     Schema.Struct({
@@ -27,6 +38,29 @@ export function readSkills(value: unknown): readonly SkillEntry[] {
   return Option.getOrThrowWith(decodeSkills(value), () => new Error("Skills response is malformed"))
 }
 
+/** Strip legacy bodies too: the warm catalog never needs to retain instruction text. */
+export function readSkillCatalog(value: unknown): readonly SkillCatalogEntry[] {
+  return Option.getOrThrowWith(decodeCatalog(value), () => new Error("Skills response is malformed"))
+}
+
+/** A refreshed name must not silently open a different source file than the selected card. */
+export function readSkill(value: unknown, selected: SkillCatalogEntry): SkillEntry {
+  const skill = readSkills([value])[0]
+  if (!skill || skill.name !== selected.name || skill.location !== selected.location)
+    throw new Error("Skill changed since the catalog was loaded. Reload the catalog and try again.")
+  return skill
+}
+
+/** Old servers do not expose the split routes. Other failures must remain failures, not extra requests. */
+export async function skillReply(current: () => Promise<unknown>, legacy: () => Promise<unknown>) {
+  return current().catch((error: unknown) => {
+    const cause = error instanceof Error ? error.cause : undefined
+    const status = cause && typeof cause === "object" && "status" in cause ? cause.status : undefined
+    if (status === 404 || status === 405 || status === 501) return legacy()
+    throw error
+  })
+}
+
 /** Skills for agent use only declare `internal: true` in their frontmatter; the server reports it and the catalog does not list them. */
 export function isInternalSkill(skill: Pick<SkillEntry, "internal">) {
   return skill.internal === true
@@ -36,7 +70,7 @@ export function isInternalSkill(skill: Pick<SkillEntry, "internal">) {
  * The skills the catalog lists: neither internal nor a skill tree node. A node is a `SKILL.md` inside the folder of
  * another listed `SKILL.md`; it loads only through its parent's index, the same rule as the server's `SkillV2.nested`.
  */
-export function listedSkills(skills: readonly SkillEntry[]) {
+export function listedSkills<T extends SkillCatalogEntry>(skills: readonly T[]) {
   const folders = skills
     .map((skill) => slash(skill.location))
     .filter((location) => location.endsWith("/SKILL.md"))
@@ -57,7 +91,7 @@ const GOVERNED_ROOT = ".orchestra/skills/own/"
 
 const SOURCE_ORDER: SkillSource[] = ["project", "global", "builtin"]
 
-export function filterSkills(skills: SkillEntry[], query: string) {
+export function filterSkills<T extends SkillCatalogEntry>(skills: readonly T[], query: string) {
   const search = query.trim().toLowerCase()
   return skills.filter((skill) =>
     [skill.name, skill.description ?? "", skill.location].some((value) => value.toLowerCase().includes(search)),
@@ -81,7 +115,7 @@ export function skillAccess(location: string, directory: string): SkillAccess {
 }
 
 /** Project skills first, then the user's global skills, then built-ins; names break ties. */
-export function sortSkills(skills: readonly SkillEntry[], directory: string) {
+export function sortSkills<T extends SkillCatalogEntry>(skills: readonly T[], directory: string) {
   return skills.toSorted(
     (a, b) =>
       SOURCE_ORDER.indexOf(skillSource(a.location, directory)) -

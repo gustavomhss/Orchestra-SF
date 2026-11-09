@@ -7,6 +7,7 @@ import { and, asc, eq, gt, inArray, sql } from "drizzle-orm"
 import { Database } from "./database/database"
 import { EventSequenceTable, EventTable } from "./event/sql"
 import { EventSeal } from "./event/seal"
+import { EventOrder } from "./event/order"
 import { SNAPSHOT_COMPACTION_MARKER } from "./event/compaction"
 export { SealWindowInput, SealWindowResult, SealWindowError } from "./event/seal"
 // Public through the event entry so product modules need no deep import (R7).
@@ -53,18 +54,23 @@ export class InvalidDurableEventError extends Schema.TaggedErrorClass<InvalidDur
   },
 ) {}
 
-const decodeSerializedEvent = (event: SerializedEvent): Payload => {
-  const definition = Durable.get(event.type)
-  if (!definition?.durable) {
-    throw new InvalidDurableEventError({ type: event.type, message: `Unknown durable event type ${event.type}` })
-  }
-  return {
-    id: event.id,
-    type: definition.type,
-    durable: { aggregateID: event.aggregateID, seq: event.seq, version: definition.durable.version },
-    data: Schema.decodeUnknownSync(definition.data)(event.data),
-  }
-}
+const decodeSerializedEvent = (event: SerializedEvent): Effect.Effect<Payload, InvalidDurableEventError> =>
+  Effect.gen(function* () {
+    const definition = Durable.get(event.type)
+    if (!definition?.durable)
+      return yield* Effect.fail(new InvalidDurableEventError({ type: event.type, message: `Unknown durable event type ${event.type}` }))
+    const data = yield* Schema.decodeUnknownEffect(definition.data)(event.data).pipe(
+      Effect.mapError(() => new InvalidDurableEventError({ type: event.type, message: "Stored durable event data is invalid" })),
+    )
+    return {
+      id: event.id,
+      type: definition.type,
+      durable: { aggregateID: event.aggregateID, seq: event.seq, version: definition.durable.version },
+      data,
+    }
+  })
+
+const DURABLE_PAGE_SIZE = 128
 
 export const readAggregate = Effect.fn("EventV2.readAggregate")(function* <A>(
   db: Database.Interface["db"],
@@ -145,7 +151,7 @@ export interface Interface {
   ) => Effect.Effect<Payload<D>>
   readonly subscribe: <D extends Definition>(definition: D) => Stream.Stream<Payload<D>>
   readonly all: () => Stream.Stream<Payload>
-  readonly durable: (input: { readonly aggregateID: string; readonly after?: number }) => Stream.Stream<Payload>
+  readonly durable: (input: { readonly aggregateID: string; readonly after?: number }) => Stream.Stream<Payload, InvalidDurableEventError>
   /** @deprecated Use `all()` and consume the returned stream. */
   readonly listen: (listener: Subscriber) => Effect.Effect<Unsubscribe>
   readonly project: <D extends Definition>(definition: D, projector: Projector<D>) => Effect.Effect<void>
@@ -180,6 +186,9 @@ export const allBounded = (events: Interface, capacity: number) =>
     return Stream.fromQueue(queue)
   })
 
+const committedPayload = (event: Payload, committed: { readonly aggregateID: string; readonly seq: number }, version: number) =>
+  ({ ...event, durable: { aggregateID: committed.aggregateID, seq: committed.seq, version } }) as Payload
+
 export interface LayerOptions {
   readonly beforeAggregateRead?: (aggregateID: string) => Effect.Effect<void>
 }
@@ -197,6 +206,7 @@ export const layerWith = (options?: LayerOptions) =>
       // TODO: Bind durable projectors to exact type+version before supporting incompatible historical payloads.
       const listeners = new Array<Subscriber>()
       const { db } = yield* Database.Service
+      const order = EventOrder.make()
 
       const getOrCreate = (definition: Definition) =>
         Effect.gen(function* () {
@@ -230,9 +240,11 @@ export const layerWith = (options?: LayerOptions) =>
         },
         commit?: (seq: number) => Effect.Effect<void>,
         persist = true,
+        ordered = false,
       ) {
         return Effect.gen(function* () {
           const origin = Object.freeze({ replay: input !== undefined })
+          const box: { ticket?: EventOrder.Ticket } = {}
           const durable = definition?.durable
           if (durable) {
             const aggregateID = (event.data as Record<string, unknown>)[durable.aggregate]
@@ -419,11 +431,13 @@ export const layerWith = (options?: LayerOptions) =>
                             .values([{ ...record, ...EventSeal.sealRow(record, predecessor) }])
                             .run()
                             .pipe(Effect.orDie)
-                          return { aggregateID, seq }
+                          // Last step of the transaction: the ticket order is the commit order.
+                          if (ordered) box.ticket = yield* order.take(aggregateID)
+                          return { aggregateID, seq, ticket: box.ticket }
                         }),
                       { behavior: "immediate" },
                     )
-                    .pipe(Effect.orDie)
+                    .pipe(order.guard(box), Effect.orDie)
                   if (committed) {
                     yield* Effect.forEach(
                       pubsub.durable.get(committed.aggregateID) ?? [],
@@ -461,19 +475,15 @@ export const layerWith = (options?: LayerOptions) =>
               }),
             )
           if (definition?.durable) {
-            const committed = yield* commitDurableEvent(definition, event as Payload, undefined, commit, persist)
-            if (committed) {
-              event = {
-                ...event,
-                durable: {
-                  aggregateID: committed.aggregateID,
-                  seq: committed.seq,
-                  version: definition.durable.version,
-                },
-              }
-              yield* notify(event as Payload, true)
-              return event
-            }
+            const durable = definition.durable
+            const published = yield* order.commit(
+              commitDurableEvent(definition, event as Payload, undefined, commit, persist, true),
+              (committed) => {
+                const result = committedPayload(event as Payload, committed, durable.version)
+                return notify(result, true).pipe(Effect.as(result))
+              },
+            )
+            if (published) return published as Payload<D>
           }
           yield* notify(event as Payload, false)
           return event
@@ -535,28 +545,32 @@ export const layerWith = (options?: LayerOptions) =>
               new InvalidDurableEventError({ type: event.type, message: `Unknown durable event type ${event.type}` }),
             )
           } else {
+            const durable = definition.durable
             const payload = {
               id: event.id,
               type: definition.type,
               data: Schema.decodeUnknownSync(definition.data)(event.data),
             } as Payload
-            const committed = yield* commitDurableEvent(definition, payload, {
-              seq: event.seq,
-              aggregateID: event.aggregateID,
-              ownerID: options?.ownerID,
-              strictOwner: options?.strictOwner,
-            })
-            if (!committed) return
-            const result = {
-              ...payload,
-              durable: {
-                aggregateID: committed.aggregateID,
-                seq: committed.seq,
-                version: definition.durable.version,
+            // Only a publishing replay takes a ticket; replayAll commits its events without one, inside its own transaction.
+            return yield* order.commit(
+              commitDurableEvent(
+                definition,
+                payload,
+                {
+                  seq: event.seq,
+                  aggregateID: event.aggregateID,
+                  ownerID: options?.ownerID,
+                  strictOwner: options?.strictOwner,
+                },
+                undefined,
+                true,
+                options?.publish === true,
+              ),
+              (committed) => {
+                const result = committedPayload(payload, committed, durable.version)
+                return options?.publish ? notify(result, true).pipe(Effect.as(result)) : Effect.succeed(result)
               },
-            } as Payload
-            if (options?.publish) yield* notify(result, true)
-            return result
+            )
           }
         })
       }
@@ -576,7 +590,8 @@ export const layerWith = (options?: LayerOptions) =>
               }),
             )
           }
-          const committed = yield* db
+          const box: { ticket?: EventOrder.Ticket } = {}
+          const batch = db
             .transaction(
               () =>
                 Effect.gen(function* () {
@@ -592,17 +607,21 @@ export const layerWith = (options?: LayerOptions) =>
                       )
                     }
                   }
-                  return yield* Effect.forEach(events, (event) => replay(event, { ...options, publish: false }))
+                  const replayed = yield* Effect.forEach(events, (event) => replay(event, { ...options, publish: false }))
+                  // One ticket for the whole batch, taken last so it follows the commit order.
+                  if (options?.publish) box.ticket = yield* order.take(source)
+                  return { replayed, ticket: box.ticket }
                 }),
               { behavior: "immediate" },
             )
-            .pipe(Effect.orDie)
-          if (options?.publish)
-            yield* Effect.forEach(
-              committed.filter((event): event is Payload => event !== undefined),
+            .pipe(order.guard(box), Effect.orDie)
+          yield* order.commit(batch, (committed) =>
+            Effect.forEach(
+              options?.publish ? committed.replayed.filter((event): event is Payload => event !== undefined) : [],
               (event) => notify(event, true),
               { discard: true },
-            )
+            ),
+          )
           return source
         })
       }
@@ -640,13 +659,18 @@ export const layerWith = (options?: LayerOptions) =>
             db
               .select()
               .from(EventTable)
-              .where(and(eq(EventTable.aggregate_id, aggregateID), gt(EventTable.seq, after)))
+              .where(and(
+                eq(EventTable.aggregate_id, aggregateID),
+                gt(EventTable.seq, after),
+                inArray(EventTable.type, Array.from(Durable.keys())),
+              ))
               .orderBy(asc(EventTable.seq))
+              .limit(DURABLE_PAGE_SIZE)
               .all(),
           ),
           Effect.orDie,
-          Effect.map((rows) =>
-            rows.map((event) =>
+          Effect.flatMap((rows) =>
+            Effect.forEach(rows, (event) =>
               decodeSerializedEvent({
                 id: event.id,
                 aggregateID: event.aggregate_id,
@@ -678,24 +702,21 @@ export const layerWith = (options?: LayerOptions) =>
           return subscription
         })
 
-      const durable = (input: { readonly aggregateID: string; readonly after?: number }): Stream.Stream<Payload> =>
+      const durable = (input: { readonly aggregateID: string; readonly after?: number }): Stream.Stream<Payload, InvalidDurableEventError> =>
         Stream.unwrap(
           Effect.gen(function* () {
             const wakes = yield* subscribeDurable(input.aggregateID)
             let sequence = input.after ?? -1
-            const read = Effect.suspend(() => readAfter(input.aggregateID, sequence)).pipe(
-              Effect.tap((events) =>
-                Effect.sync(() => {
-                  sequence = events.at(-1)?.durable?.seq ?? sequence
-                }),
-              ),
+            const read = Stream.paginate(undefined, () =>
+              readAfter(input.aggregateID, sequence).pipe(Effect.map((events) => {
+                sequence = events.at(-1)?.durable?.seq ?? sequence
+                return [events, events.length === DURABLE_PAGE_SIZE ? Option.some(undefined) : Option.none()] as const
+              })),
             )
-            const historical = yield* read
             const live = Stream.fromSubscription(wakes).pipe(
-              Stream.mapEffect(() => read),
-              Stream.flattenIterable,
+              Stream.flatMap(() => read),
             )
-            return Stream.concat(Stream.fromIterable(historical), live)
+            return Stream.concat(read, live)
           }),
         )
 

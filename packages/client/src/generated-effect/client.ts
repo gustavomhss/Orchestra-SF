@@ -1168,23 +1168,40 @@ const Endpoint16_0 = (raw: RawClient["server.formatter"]) => (input?: Endpoint16
 
 const adaptGroup16 = (raw: RawClient["server.formatter"]) => ({ status: Endpoint16_0(raw) })
 
-type Endpoint17_0Request = Parameters<RawClient["server.skill"]["skill.list"]>[0]
+type Endpoint17_0Request = Parameters<RawClient["server.skill"]["skill.catalog"]>[0]
 type Endpoint17_0Input = { readonly location?: Endpoint17_0Request["query"]["location"] }
 const Endpoint17_0 = (raw: RawClient["server.skill"]) => (input?: Endpoint17_0Input) =>
+  raw["skill.catalog"]({
+    query: { ...(input?.["location"] === undefined ? {} : { location: input?.["location"] }) },
+  }).pipe(Effect.mapError(mapClientError))
+
+type Endpoint17_1Request = Parameters<RawClient["server.skill"]["skill.get"]>[0]
+type Endpoint17_1Input = {
+  readonly location?: Endpoint17_1Request["query"]["location"]
+  readonly name: Endpoint17_1Request["query"]["name"]
+}
+const Endpoint17_1 = (raw: RawClient["server.skill"]) => (input: Endpoint17_1Input) =>
+  raw["skill.get"]({
+    query: { ...(input["location"] === undefined ? {} : { location: input["location"] }), name: input["name"] },
+  }).pipe(Effect.mapError(mapClientError))
+
+type Endpoint17_2Request = Parameters<RawClient["server.skill"]["skill.list"]>[0]
+type Endpoint17_2Input = { readonly location?: Endpoint17_2Request["query"]["location"] }
+const Endpoint17_2 = (raw: RawClient["server.skill"]) => (input?: Endpoint17_2Input) =>
   raw["skill.list"]({
     query: { ...(input?.["location"] === undefined ? {} : { location: input?.["location"] }) },
   }).pipe(Effect.mapError(mapClientError))
 
-type Endpoint17_1Request = Parameters<RawClient["server.skill"]["skill.save"]>[0]
-type Endpoint17_1Input = {
-  readonly location?: Endpoint17_1Request["query"]["location"]
-  readonly name: Endpoint17_1Request["payload"]["name"]
-  readonly description: Endpoint17_1Request["payload"]["description"]
-  readonly content: Endpoint17_1Request["payload"]["content"]
-  readonly path?: Endpoint17_1Request["payload"]["path"]
-  readonly mtime?: Endpoint17_1Request["payload"]["mtime"]
+type Endpoint17_3Request = Parameters<RawClient["server.skill"]["skill.save"]>[0]
+type Endpoint17_3Input = {
+  readonly location?: Endpoint17_3Request["query"]["location"]
+  readonly name: Endpoint17_3Request["payload"]["name"]
+  readonly description: Endpoint17_3Request["payload"]["description"]
+  readonly content: Endpoint17_3Request["payload"]["content"]
+  readonly path?: Endpoint17_3Request["payload"]["path"]
+  readonly mtime?: Endpoint17_3Request["payload"]["mtime"]
 }
-const Endpoint17_1 = (raw: RawClient["server.skill"]) => (input: Endpoint17_1Input) =>
+const Endpoint17_3 = (raw: RawClient["server.skill"]) => (input: Endpoint17_3Input) =>
   raw["skill.save"]({
     query: { ...(input["location"] === undefined ? {} : { location: input["location"] }) },
     payload: {
@@ -1196,20 +1213,22 @@ const Endpoint17_1 = (raw: RawClient["server.skill"]) => (input: Endpoint17_1Inp
     },
   }).pipe(Effect.mapError(mapClientError))
 
-type Endpoint17_2Request = Parameters<RawClient["server.skill"]["skill.remove"]>[0]
-type Endpoint17_2Input = {
-  readonly location?: Endpoint17_2Request["query"]["location"]
-  readonly path: Endpoint17_2Request["query"]["path"]
+type Endpoint17_4Request = Parameters<RawClient["server.skill"]["skill.remove"]>[0]
+type Endpoint17_4Input = {
+  readonly location?: Endpoint17_4Request["query"]["location"]
+  readonly path: Endpoint17_4Request["query"]["path"]
 }
-const Endpoint17_2 = (raw: RawClient["server.skill"]) => (input: Endpoint17_2Input) =>
+const Endpoint17_4 = (raw: RawClient["server.skill"]) => (input: Endpoint17_4Input) =>
   raw["skill.remove"]({
     query: { ...(input["location"] === undefined ? {} : { location: input["location"] }), path: input["path"] },
   }).pipe(Effect.mapError(mapClientError))
 
 const adaptGroup17 = (raw: RawClient["server.skill"]) => ({
-  list: Endpoint17_0(raw),
-  save: Endpoint17_1(raw),
-  remove: Endpoint17_2(raw),
+  catalog: Endpoint17_0(raw),
+  get: Endpoint17_1(raw),
+  list: Endpoint17_2(raw),
+  save: Endpoint17_3(raw),
+  remove: Endpoint17_4(raw),
 })
 
 type Endpoint18_0Request = Parameters<RawClient["server.behavior"]["behavior.set"]>[0]

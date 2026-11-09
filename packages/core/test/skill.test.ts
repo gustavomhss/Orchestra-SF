@@ -1,7 +1,7 @@
 import fs from "fs/promises"
 import path from "path"
 import { describe, expect } from "bun:test"
-import { Effect, Layer } from "effect"
+import { Deferred, Effect, Fiber, Layer } from "effect"
 import { AgentV2 } from "@orchestra/core/agent"
 import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
@@ -40,6 +40,143 @@ description: ${description}
 }
 
 describe("SkillV2", () => {
+  it.live("catalog omits body bytes while exact-name reads preserve the full registered skill", () =>
+    Effect.acquireRelease(
+      Effect.promise(() => tmpdir()),
+      (tmp) => Effect.promise(() => tmp[Symbol.asyncDispose]()),
+    ).pipe(Effect.flatMap((tmp) => Effect.gen(function* () {
+      const body = "BODY_ONLY_".repeat(4096)
+      yield* Effect.promise(async () => {
+        await fs.mkdir(path.join(tmp.path, "review"))
+        await fs.writeFile(path.join(tmp.path, "review", "SKILL.md"),
+          `---\nname: review\ndescription: Review changes\ninternal: true\nslash: true\n---\n${body}`)
+      })
+      const skill = yield* SkillV2.Service
+      yield* skill.transform((editor) => editor.source({ type: "directory", path: AbsolutePath.make(tmp.path) }))
+      const listed = yield* skill.list()
+      const catalog = yield* skill.catalog()
+      expect(listed[0]?.content).toBe(body)
+      expect(catalog).toEqual([{ name: "review", description: "Review changes", internal: true, slash: true,
+        location: listed[0]?.location, mtime: listed[0]?.mtime }])
+      expect(catalog.every((item) => !Object.hasOwn(item, "content"))).toBe(true)
+      expect(JSON.stringify(catalog)).not.toContain("BODY_ONLY_")
+      expect(Buffer.byteLength(JSON.stringify(listed)) - Buffer.byteLength(JSON.stringify(catalog))).toBeGreaterThan(body.length)
+      expect(yield* skill.get("review")).toEqual(listed[0])
+      expect(yield* skill.get("Review")).toBeUndefined()
+      expect(yield* skill.get("../review/SKILL.md")).toBeUndefined()
+    }))),
+  )
+
+  it.live("reuses loaded skills until reload refreshes external directory edits", () =>
+    Effect.acquireRelease(
+      Effect.promise(() => tmpdir()),
+      (tmp) => Effect.promise(() => tmp[Symbol.asyncDispose]()),
+    ).pipe(Effect.flatMap((tmp) => Effect.gen(function* () {
+      yield* Effect.promise(async () => {
+        await fs.mkdir(path.join(tmp.path, "review"))
+        await write(tmp.path, "review", "Before reload")
+      })
+      const skill = yield* SkillV2.Service
+      yield* skill.transform((editor) => editor.source({ type: "directory", path: AbsolutePath.make(tmp.path) }))
+      const first = (yield* skill.list())[0]
+      expect(first?.description).toBe("Before reload")
+      expect((yield* skill.list())[0]).toBe(first)
+      yield* Effect.promise(() => write(tmp.path, "review", "After reload"))
+      expect((yield* skill.list())[0]).toBe(first)
+      yield* skill.reload()
+      expect((yield* skill.list()).map((item) => item.description)).toEqual(["After reload"])
+    }))),
+  )
+
+  it.live("does not revive a disposed source cache when the same directory is registered again", () =>
+    Effect.acquireRelease(
+      Effect.promise(() => tmpdir()),
+      (tmp) => Effect.promise(() => tmp[Symbol.asyncDispose]()),
+    ).pipe(Effect.flatMap((tmp) => Effect.gen(function* () {
+      yield* Effect.promise(async () => {
+        await fs.mkdir(path.join(tmp.path, "review"))
+        await write(tmp.path, "review", "Original registration")
+      })
+      const skill = yield* SkillV2.Service
+      const registration = yield* skill.transform((editor) => editor.source({ type: "directory", path: AbsolutePath.make(tmp.path) }))
+      expect((yield* skill.list()).map((item) => item.description)).toEqual(["Original registration"])
+      yield* registration.dispose
+      expect(yield* skill.list()).toEqual([])
+      yield* Effect.promise(() => write(tmp.path, "review", "New registration"))
+      yield* skill.transform((editor) => editor.source({ type: "directory", path: AbsolutePath.make(tmp.path) }))
+      expect((yield* skill.list()).map((item) => item.description)).toEqual(["New registration"])
+    }))),
+  )
+
+  it.live("refreshes cached project skills after create, edit and remove", () =>
+    Effect.acquireRelease(
+      Effect.promise(() => tmpdir()),
+      (tmp) => Effect.promise(() => tmp[Symbol.asyncDispose]()),
+    ).pipe(Effect.flatMap((tmp) => Effect.gen(function* () {
+      const directory = path.join(tmp.path, ".orchestra", "skills")
+      yield* Effect.promise(() => fs.mkdir(directory, { recursive: true }))
+      const skill = yield* SkillV2.Service
+      yield* skill.transform((editor) => editor.source({ type: "directory", path: AbsolutePath.make(directory) }))
+      expect(yield* skill.list()).toEqual([])
+      const saved = yield* skill.save(tmp.path, { name: "review", description: "Created", content: "# Created" })
+      expect((yield* skill.list()).map((item) => [item.description, item.content])).toEqual([["Created", "# Created\n"]])
+      yield* skill.save(tmp.path, { name: "review", description: "Edited", content: "# Edited", location: saved.location })
+      expect((yield* skill.list()).map((item) => [item.description, item.content])).toEqual([["Edited", "# Edited\n"]])
+      yield* skill.remove(tmp.path, saved.location)
+      expect(yield* skill.list()).toEqual([])
+    }))),
+  )
+
+  for (const action of ["save", "reload"] as const) {
+    it.live(`does not let an old in-flight directory read refill the cache after ${action}`, () =>
+      Effect.acquireRelease(
+        Effect.promise(() => tmpdir()),
+        (tmp) => Effect.promise(() => tmp[Symbol.asyncDispose]()),
+      ).pipe(Effect.flatMap((tmp) => Effect.gen(function* () {
+        const directory = path.join(tmp.path, ".orchestra", "skills")
+        const file = path.join(directory, "review", "SKILL.md")
+        yield* Effect.promise(async () => {
+          await fs.mkdir(path.dirname(file), { recursive: true })
+          await write(directory, "review", "Captured before change")
+        })
+        const filesystem = yield* FSUtil.Service
+        const captured = yield* Deferred.make<void>()
+        const release = yield* Deferred.make<void>()
+        const gate = { pending: true }
+        const gated = Layer.succeed(FSUtil.Service, FSUtil.Service.of({
+          ...filesystem,
+          readFileStringSafe: (filepath) => Effect.gen(function* () {
+            const text = yield* filesystem.readFileStringSafe(filepath)
+            if (filepath.endsWith(path.join("review", "SKILL.md")) && gate.pending) {
+              gate.pending = false
+              yield* Deferred.succeed(captured, undefined)
+              yield* Deferred.await(release)
+            }
+            return text
+          }),
+        }))
+        yield* Effect.gen(function* () {
+          const skill = yield* SkillV2.Service
+          yield* skill.transform((editor) => editor.source({ type: "directory", path: AbsolutePath.make(directory) }))
+          const old = yield* skill.list().pipe(Effect.forkScoped)
+          yield* Effect.addFinalizer(() => Deferred.succeed(release, undefined))
+          yield* Deferred.await(captured).pipe(Effect.timeout("3 seconds"))
+          if (action === "save")
+            yield* skill.save(tmp.path, { name: "review", description: "Changed", content: "# Changed", location: file })
+          if (action === "reload") {
+            yield* Effect.promise(() => write(directory, "review", "Changed"))
+            yield* skill.reload()
+          }
+          yield* Deferred.succeed(release, undefined)
+          expect((yield* Fiber.join(old).pipe(Effect.timeout("3 seconds"))).map((item) => item.description)).toEqual(["Captured before change"])
+          expect((yield* skill.list()).map((item) => item.description)).toEqual(["Changed"])
+        }).pipe(Effect.provide(AppNodeBuilder.build(LayerNode.group([SkillV2.node, FSUtil.node]), [
+          [FSUtil.node, gated], [SkillDiscovery.node, discovery],
+        ]).pipe(Layer.fresh)))
+      }))),
+    )
+  }
+
   it.live("registers sources and resolves later source precedence", () =>
     Effect.acquireRelease(
       Effect.promise(() => tmpdir()),
@@ -125,6 +262,7 @@ describe("SkillV2", () => {
             ["lint", "Lint"],
             ["review", "Bundled"],
           ])
+          expect(yield* skill.get("review")).toEqual(listed.find((item) => item.name === "review"))
         }),
       ),
     ),

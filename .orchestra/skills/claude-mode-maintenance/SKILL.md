@@ -7,6 +7,8 @@ description: Who owns Claude mode (Orchestra on Claude Code as a meta-harness), 
 
 Design and decisions: `docs/specs/claude-mode/meta-harness.md`. User guide: `docs/guides/claude-mode.md`.
 
+App-side ownership is mapped in [settings-chapters-maintenance](../settings-chapters-maintenance/SKILL.md): the enable action in `packages/app-shell/src/orchestra/claude-mode-entry.ts`, account calls in `packages/app-shell/src/orchestra/chapters/claude-mode-account.ts`, the chapter's account state and refresh in `packages/app-shell/src/orchestra/chapters/claude-mode.tsx`, and the hook in `packages/app-shell/src/orchestra/use-claude-mode.ts`.
+
 Maestro itself (prompt, roster, dispatch, board, playbooks): `maestro-ownership`, `maestro-usage`, `maestro-maintenance`.
 
 ## Ownership

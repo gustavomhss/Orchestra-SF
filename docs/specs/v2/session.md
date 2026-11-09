@@ -32,7 +32,7 @@ sessions.active()
   -> absence means inactive; activity is not durable across process restarts
 ```
 
-`session_input` is the durable admission inbox. `PromptAdmitted` records and projects accepted input so pending queue state can be replayed, replicated, and observed by clients. Admitted inputs remain outside model-visible Session history until the serialized runner publishes `Prompted`. Its projector atomically writes the visible user message and marks the inbox row promoted in the same event transaction. The V1-to-V2 shadow bridge publishes the same `Prompted` event for already-visible V1 prompts.
+`session_input` is the durable admission inbox. `PromptAdmitted` records and projects accepted input so pending queue state can be replayed, replicated, and observed by clients. Admitted inputs remain outside model-visible Session history until the serialized runner publishes `Prompted`. Its projector atomically writes the visible user message and marks the inbox row promoted in the same event transaction.
 
 `admittedSeq` is the durable Session event sequence of `PromptAdmitted`. Clients may use the admission event to represent queued input before `Prompted` makes it part of visible conversation history.
 
@@ -164,7 +164,7 @@ Execution has two entry points:
 
 Post-crash continuation recovery is intentionally deferred. A wake does not infer that ambiguous provider work is safe to retry after an input has already been promoted. Explicit `run` may deliberately continue from durable projected history. A future recovery slice should model provider-dispatch ambiguity, required continuation, queued-input promotion, retry policy, and visible recovery status together. It must not assume an enclosing durable execution identity that the Session model does not otherwise need.
 
-A process-global `SessionRunCoordinator` serializes execution for each local Session while allowing different Sessions to run concurrently. Resumes join active execution, overlapping wakes coalesce into one follow-up, and interruption stops current process-local execution without deleting durable inbox work. The runner enters the Session's current Location when execution starts and fences each new provider turn against that Location.
+A process-global `SessionRunCoordinator` serializes execution for each local Session while allowing different Sessions to run concurrently. Resumes join active execution, overlapping wakes coalesce into one follow-up, and interruption stops current process-local execution without deleting durable inbox work. A wake recorded while the interrupted drain ran (an input admitted mid-drain) still runs one follow-up that promotes it, so an interrupt never strands a pending steer; a Session being removed interrupts with `discardPending` instead. A drain that fails gets the same single follow-up only for a wake that arrived meanwhile; inputs already pending when it began are not re-woken, because that would retry provider work. The runner enters the Session's current Location when execution starts and fences each new provider turn against that Location.
 
 The coordinator's active registry is also the source for `sessions.active()`. It represents only foreground Session drains owned by the current process; background subagents and tasks do not add parent Sessions to this registry. The snapshot is runtime state and is empty after a process restart.
 
@@ -201,7 +201,7 @@ resolve one path relative to the Location or a named project reference
 -> page directory results with one-based offset and next cursor
 ```
 
-V2 `bash` uses the normal permission semantics: configured agent rules plus saved project approvals, with `ask` as the default when no rule matches. Bash is not sandboxed: the spawned shell runs with the host user's filesystem, process, and network authority. Structured external `workdir` resolution remains an enforced `external_directory` authority check. Best-effort scans of absolute command arguments produce advisory warnings only; they are not sandbox boundaries and do not request or enforce `external_directory` approval.
+V2 `bash` uses the normal permission semantics: configured agent rules plus saved project approvals, with `ask` as the default when no rule matches. The spawned shell is prepared through `ToolSafetySandbox.wrap` (`packages/core/src/tool-safety-sandbox.ts`) under the active tool-safety profile. OS confinement depends on that profile and the available backend: a profile can leave confinement disabled or permit unconfined fallback. The bash execution path also applies git safety, `OutputInspector` and an output capture cap. Structured external `workdir` resolution remains an enforced `external_directory` authority check. Best-effort scans of absolute command arguments produce advisory warnings only; they are not sandbox boundaries and do not request or enforce `external_directory` approval.
 
 V2 `grep` and `glob` resolve their `path` through `LocationMutation` like `read`: a relative path must stay inside the Location, and an absolute path outside it requires `external_directory` approval before the `grep`/`glob` permission is asked.
 
@@ -217,19 +217,3 @@ The first V2 `apply_patch` leaf supports add, update, and delete hunks. It parse
 - Design any global multi-Session event stream separately; the finite history API deliberately reads one authorized Session aggregate and does not change global Event publication.
 - Decide whether UI-facing Session subscriptions should optionally interleave ephemeral deltas while connected without advancing the durable cursor.
 - Add provider-aware context control for provider-executed tool results. Generic text truncation cannot replace provider-native structured payloads that must round-trip exactly.
-
-## Remove Dedicated `session.init` Route
-
-The dedicated `POST /session/:sessionID/init` endpoint exists only as a compatibility wrapper around the normal `/init` command flow.
-
-Current behavior:
-
-- the route calls `SessionPrompt.command(...)`
-- it sends `Command.Default.INIT`
-- it does not provide distinct session-core behavior beyond running the existing init command in an existing session
-
-V2 plan:
-
-- remove the dedicated `session.init` endpoint
-- rely on the normal `/init` command flow instead
-- avoid reintroducing `Session.initialize`-style special cases in the session service layer

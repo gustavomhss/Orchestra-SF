@@ -1,7 +1,11 @@
 import { describe, expect, test } from "bun:test"
 import { EventV2 } from "@orchestra/core/event"
-import { Effect, Stream } from "effect"
+import { testEffect } from "@orchestra/core/test/lib/effect"
+import { Deferred, Effect, Layer, Queue, Ref, Stream } from "effect"
+import { TestClock } from "effect/testing"
 import { encodeEvent, eventFrames, eventStream } from "../src/handlers/event"
+
+const it = testEffect(Layer.empty)
 
 type Subscriber = Parameters<EventV2.Interface["listen"]>[0]
 
@@ -93,4 +97,49 @@ describe("event stream", () => {
         }),
       ),
     ))
+
+  it.effect("emits default heartbeat comments at the production 15-second cadence", () =>
+    Effect.gen(function* () {
+      const events = bus()
+      const decoder = new TextDecoder()
+      const connected = yield* Deferred.make<string>()
+      const heartbeats = yield* Queue.unbounded<void>()
+      const heartbeatCount = yield* Ref.make(0)
+      let buffer = ""
+
+      yield* Effect.forkScoped(
+        Stream.runForEach(eventStream(events.service), (bytes) =>
+          Effect.gen(function* () {
+            buffer += decoder.decode(bytes, { stream: true })
+            const frames = buffer.split("\n\n")
+            buffer = frames.pop()!
+            yield* Effect.forEach(frames, (frame) => {
+              if (frame.includes("server.connected")) return Deferred.succeed(connected, frame)
+              if (frame !== ": heartbeat") return Effect.void
+              return Ref.update(heartbeatCount, (count) => count + 1).pipe(
+                Effect.andThen(Queue.offer(heartbeats, undefined)),
+              )
+            }, { discard: true })
+          }),
+        ),
+      )
+
+      expect(yield* Deferred.await(connected)).toContain("server.connected")
+      yield* TestClock.adjust(0)
+      const baseline = yield* Ref.get(heartbeatCount)
+      expect(baseline === 0 || baseline === 1).toBe(true)
+
+      yield* TestClock.adjust(14_999)
+      expect(yield* Ref.get(heartbeatCount)).toBe(baseline)
+      yield* TestClock.adjust(1)
+      yield* Queue.take(heartbeats)
+      expect(yield* Ref.get(heartbeatCount)).toBe(baseline + 1)
+
+      yield* TestClock.adjust(14_999)
+      expect(yield* Ref.get(heartbeatCount)).toBe(baseline + 1)
+      yield* TestClock.adjust(1)
+      yield* Queue.take(heartbeats)
+      expect(yield* Ref.get(heartbeatCount)).toBe(baseline + 2)
+    }),
+  )
 })

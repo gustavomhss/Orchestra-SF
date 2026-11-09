@@ -7,7 +7,7 @@ import { makeGlobalNode } from "../effect/app-node"
 import { EventV2 } from "../event"
 import type { ListInput } from "../session"
 import { SessionEvent } from "./event"
-import { fromRow } from "./info"
+import { columns, fromRow } from "./info"
 import { SessionSchema } from "./schema"
 import { SessionTable } from "./sql"
 
@@ -38,8 +38,7 @@ export const set = Effect.fn("SessionArchive.set")(function* (
     )
 })
 
-/** Visibility is a SQL predicate, applied before pagination rather than trimming projected pages. */
-export const list = Effect.fn("SessionArchive.list")(function* (db: Database.Interface["db"], input: ListInput = {}) {
+export const query = (db: Database.Interface["db"], input: ListInput = {}) => {
   const direction = input.anchor?.direction ?? "next"
   const requestedOrder = input.order ?? "desc"
   const order = direction === "previous" ? (requestedOrder === "asc" ? "desc" : "asc") : requestedOrder
@@ -71,16 +70,22 @@ export const list = Effect.fn("SessionArchive.list")(function* (db: Database.Int
             and(eq(sortColumn, input.anchor.time), lt(SessionTable.id, input.anchor.id)),
           ),
     )
-  const query = db
-    .select()
+  const built = db
+    .select(columns)
     .from(SessionTable)
     .where(and(...conditions))
     .orderBy(
       order === "asc" ? asc(sortColumn) : desc(sortColumn),
       order === "asc" ? asc(SessionTable.id) : desc(SessionTable.id),
     )
-  const rows = yield* (input.limit === undefined ? query.all() : query.limit(input.limit).all()).pipe(Effect.orDie)
-  return (direction === "previous" ? rows.toReversed() : rows).map(fromRow)
+  return { direction, statement: input.limit === undefined ? built : built.limit(input.limit) }
+}
+
+/** Visibility is a SQL predicate, applied before pagination rather than trimming projected pages. */
+export const list = Effect.fn("SessionArchive.list")(function* (db: Database.Interface["db"], input: ListInput = {}) {
+  const built = query(db, input)
+  const rows = yield* built.statement.all().pipe(Effect.orDie)
+  return (built.direction === "previous" ? rows.toReversed() : rows).map(fromRow)
 })
 
 const layer = Layer.effectDiscard(

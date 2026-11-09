@@ -1,8 +1,9 @@
 export * as SessionCompaction from "./compaction"
 
 import { LLM, LLMClient, LLMError, LLMEvent, Message, type LLMRequest, type Model } from "@orchestra/llm"
-import { Context, DateTime, Effect, Layer, Stream } from "effect"
+import { Cause, Context, DateTime, Effect, Exit, Layer, Stream } from "effect"
 import { Config } from "../config"
+import { Flag } from "../flag/flag"
 import { makeLocationNode } from "../effect/app-node"
 import { llmClient } from "../effect/app-node-platform"
 import { EventV2 } from "../event"
@@ -12,6 +13,7 @@ import { SessionSchema } from "./schema"
 import { Token } from "../util/token"
 import { SessionSubagentModels } from "./subagent-models"
 import { SessionRunnerModel } from "./runner/model"
+import { PromptEstimate } from "./prompt-estimate"
 import type { ModelV2 } from "../model"
 
 const DEFAULT_BUFFER = 20_000
@@ -99,8 +101,6 @@ export const usable = (
   const window = context - Math.max(output, buffer)
   return limits?.input !== undefined && limits.input > 0 ? Math.min(window, limits.input - buffer) : window
 }
-
-const estimate = (value: unknown) => Token.estimate(JSON.stringify(value))
 
 const truncate = (value: string) =>
   value.length <= TOOL_OUTPUT_MAX_CHARS ? value : `${value.slice(0, TOOL_OUTPUT_MAX_CHARS)}\n[truncated]`
@@ -196,6 +196,7 @@ export const buildPrompt = (input: { readonly previousSummary?: string; readonly
 
 export const make = (dependencies: Dependencies) => {
   const config = settings(dependencies.config)
+  const estimate = PromptEstimate.make()
   const summarize = Effect.fnUntraced(function* (input: Input, reason: "auto" | "manual") {
     const context = input.model.route.defaults.limits?.context
     const output = input.request.generation?.maxTokens ?? input.model.route.defaults.limits?.output ?? 0
@@ -214,46 +215,86 @@ export const make = (dependencies: Dependencies) => {
     const summaryOutput = Math.min(output || SUMMARY_OUTPUT_TOKENS, SUMMARY_OUTPUT_TOKENS)
     if (context !== undefined && context > 0 && Token.estimate(summaryPrompt) > context - summaryOutput) return false
     const messageID = SessionMessage.ID.create()
-    yield* dependencies.events.publish(SessionEvent.Compaction.Started, {
-      sessionID: input.sessionID,
-      messageID,
-      timestamp: yield* DateTime.now,
-      reason,
-    })
-
-    const chunks: string[] = []
-    let failed = false
-    yield* dependencies.subagentModels.assert(input.sessionID, SessionRunnerModel.reference(input.model))
-    const summarized = yield* dependencies.llm
-      .stream(
-        LLM.request({
-          model: input.model,
-          http: input.request.http,
-          messages: [Message.user(summaryPrompt)],
-          tools: [],
-          generation: { maxTokens: summaryOutput },
-        }),
-      )
-      .pipe(
-        Stream.runForEach((event) => {
-          if (LLMEvent.is.providerError(event)) failed = true
-          if (LLMEvent.is.textDelta(event)) chunks.push(event.text)
-          return Effect.void
-        }),
-        Effect.as(true),
-        Effect.catchTag("LLM.Error", () => Effect.succeed(false)),
-      )
-    const summary = chunks.join("")
-    if (!summarized || failed || !summary.trim()) return false
-    yield* dependencies.events.publish(SessionEvent.Compaction.Ended, {
-      sessionID: input.sessionID,
-      messageID,
-      timestamp: yield* DateTime.now,
-      reason,
-      text: summary,
-      recent: selected.recent,
-    })
-    return true
+    return yield* Effect.uninterruptibleMask((restore) =>
+      Effect.gen(function* () {
+        yield* dependencies.events.publish(SessionEvent.Compaction.Started, {
+          sessionID: input.sessionID,
+          messageID,
+          timestamp: yield* DateTime.now,
+          reason,
+        })
+        return yield* Effect.gen(function* () {
+          const summary = yield* restore(
+            Effect.gen(function* () {
+              const chunks: string[] = []
+              // Typed LLM failures and provider error events are collected for the existing warning/false path.
+              const failures: string[] = []
+              yield* dependencies.subagentModels.assert(input.sessionID, SessionRunnerModel.reference(input.model))
+              yield* dependencies.llm
+                .stream(
+                  LLM.request({
+                    model: input.model,
+                    http: input.request.http,
+                    messages: [Message.user(summaryPrompt)],
+                    tools: [],
+                    generation: { maxTokens: summaryOutput },
+                  }),
+                )
+                .pipe(
+                  Stream.runForEach((event) => {
+                    if (LLMEvent.is.providerError(event)) failures.push(event.message)
+                    if (LLMEvent.is.textDelta(event)) chunks.push(event.text)
+                    return Effect.void
+                  }),
+                  Effect.catchTag("LLM.Error", (error) => Effect.sync(() => void failures.push(error.message))),
+                )
+              const summary = chunks.join("")
+              if (failures.length > 0 || !summary.trim()) {
+                // A false result lets the turn go on with the over-budget request, so the cause is recorded here: the provider
+                // error that stopped the summary, or the empty summary it returned.
+                yield* Effect.logWarning("Session compaction produced no summary; the Session was not compacted", {
+                  sessionID: input.sessionID,
+                  reason,
+                  failure: failures.length > 0 ? failures.join("; ") : "empty summary",
+                })
+                return false as const
+              }
+              return summary
+            }),
+          )
+          if (summary === false) return false
+          // Keep the committed successful terminal and its true result masked through the onExit observer.
+          yield* dependencies.events.publish(SessionEvent.Compaction.Ended, {
+            sessionID: input.sessionID,
+            messageID,
+            timestamp: yield* DateTime.now,
+            reason,
+            text: summary,
+            recent: selected.recent,
+          })
+          return true
+        }).pipe(
+          Effect.onExit((exit) => {
+            if (Exit.isSuccess(exit) && exit.value) return Effect.void
+            return Effect.gen(function* () {
+              yield* dependencies.events.publish(SessionEvent.Compaction.Failed, {
+                sessionID: input.sessionID,
+                messageID,
+                timestamp: yield* DateTime.now,
+                reason,
+                error: {
+                  type: "unknown",
+                  message:
+                    Exit.isFailure(exit) && Cause.hasInterruptsOnly(exit.cause)
+                      ? "Compaction interrupted"
+                      : "Compaction failed",
+                },
+              })
+            })
+          }),
+        )
+      }),
+    )
   })
   const compactAfterOverflow = Effect.fn("SessionCompaction.compactAfterOverflow")(function* (input: Input) {
     const context = input.model.route.defaults.limits?.context
@@ -263,7 +304,7 @@ export const make = (dependencies: Dependencies) => {
   /** Compacts on request, whatever the context size; false when there is nothing to summarize or the summary failed. */
   const compact = Effect.fn("SessionCompaction.compact")((input: Input) => summarize(input, "manual"))
   const compactIfNeeded = Effect.fn("SessionCompaction.compactIfNeeded")(function* (input: Input) {
-    if (!config.auto) return false
+    if (!config.auto || Flag.ORCHESTRA_DISABLE_AUTOCOMPACT) return false
     const context = input.model.route.defaults.limits?.context
     if (context === undefined || context <= 0) return false
     const output = input.request.generation?.maxTokens ?? input.model.route.defaults.limits?.output ?? 0

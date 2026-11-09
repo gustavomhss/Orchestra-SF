@@ -15,6 +15,18 @@ Which model providers Orchestra can use and how they are routed, plus Claude mod
 | Gemini | Not yet (implemented in the model layer) |
 | OpenAI Chat | Not yet (implemented in the model layer) |
 
+## Prompt estimate
+
+For automatic compaction, the heuristic prompt estimate reuses bounded JSON-encoded lengths of identical long text values. The current request structure is serialized afresh for each estimate; whole requests or conversation histories are not cached.
+
+This reuses text-encoding work, not model tokens or provider prompt-cache entries. No token, billing or response-time saving is implied.
+
+## HTTP provider response inactivity
+
+For native HTTP provider calls, including title and compaction requests, reading a response body fails with a non-retryable transport timeout after ten minutes while waiting for the next nonempty response-body chunk. This is a conservative per-pull inactivity limit, not a total response or turn deadline or an absolute wall-clock limit between chunks when the consumer is busy. Raw response bytes reset the wait before parsing, including SSE comments and heartbeats; empty chunks do not. A response that continues making progress can therefore run longer than ten minutes.
+
+This limit begins when the response body is consumed after headers; it is not a connection or header deadline and does not apply to WebSocket or hosted engine iterators such as Claude mode. Developers using a custom `httpJson` transport can set `idleTimeout` on its input or via `.with(...)` to another Effect duration, or `false` to disable it and retain owner-controlled cancellation.
+
 ## Claude mode
 
 Runs an agent's turns inside Claude Code, on your Claude subscription. Turn it on in Settings › Providers › Claude mode. Claude Code signs in with your own account (`claude auth login --claudeai`); Orchestra stores no Claude credential.

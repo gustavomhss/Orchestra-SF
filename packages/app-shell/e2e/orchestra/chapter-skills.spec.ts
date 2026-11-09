@@ -38,7 +38,7 @@ test(`catalog, filter, exact reader, safe text and keyboard in both directions`,
   expect(requests).toHaveLength(1)
   const url = new URL(requests[0])
   expect(url.origin).toBe(serverA)
-  expect(url.pathname).toBe("/api/skill")
+  expect(url.pathname).toBe("/api/skill/catalog")
   expect(url.searchParams.get("location[directory]")).toBe(directory)
 
   const dialog = page.getByRole("dialog")
@@ -324,7 +324,7 @@ test(`profile ownership, same directory and a late response from A`, async ({ pa
         failed.filter(
           (url) =>
             new URL(url).origin === serverA &&
-            new URL(url).pathname === ("/api/skill"),
+            new URL(url).pathname === ("/api/skill/catalog"),
         ).length,
     )
     .toBe(1)
@@ -349,8 +349,9 @@ async function openSkills(page: Page) {
   await expect(page).toHaveURL(/\/orchestra\/skills$/)
 }
 
+// A save or removal in flight cannot be closed away: a late failure would have no dialog left to show it in.
 for (const method of ["PUT", "DELETE"] as const) {
-  test(`audit: late skill ${method} cannot close a replacement draft`, async ({ page }) => {
+  test(`audit: skill ${method} in flight keeps the dialog open until it settles`, async ({ page }) => {
     const response = { status: 200, skills: [...catalog] }
     await setup(page, { response })
     const gate = Promise.withResolvers<void>()
@@ -376,20 +377,40 @@ for (const method of ["PUT", "DELETE"] as const) {
       await dialog.getByRole("button", { name: "Confirm", exact: true }).click()
     }
     await started.promise
-    await dialog.getByRole("button", { name: "Cancel", exact: true }).click()
-    await expect(dialog).toHaveCount(0)
-    await page.getByRole("button", { name: "Add skill", exact: true }).click()
-    await dialog.getByLabel("Name", { exact: true }).fill("Draft B")
-    await dialog.getByLabel("Instructions", { exact: true }).fill("Keep B's unsaved instructions")
+    await expect(dialog.getByRole("button", { name: "Cancel", exact: true })).toBeDisabled()
+    await expect(dialog.getByRole("button", { name: "Close dialog", exact: true })).toBeDisabled()
+    await page.keyboard.press("Escape")
+    // A click on the backdrop (outside the dialog box) must not close it either.
+    await page.mouse.click(2, 2)
+    await expect(dialog).toHaveCount(1)
     gate.resolve()
-    // The refreshed catalog proves A's completion callback ran, not merely that HTTP completed.
+    await expect(dialog).toHaveCount(0)
     await expect(page.locator(".skills-card h3")).toHaveText(
       method === "PUT" ? ["Saved A", catalog[1].name] : [catalog[1].name],
     )
-    await expect(dialog.getByLabel("Name", { exact: true })).toHaveValue("Draft B")
-    await expect(dialog.getByLabel("Instructions", { exact: true })).toHaveValue("Keep B's unsaved instructions")
   })
 }
+
+// A text drag-select that starts in a field and is released over the backdrop clicks the dialog element itself.
+test(`a drag-select released on the backdrop keeps the skill dialog and its draft`, async ({ page }) => {
+  await setup(page, { response: { status: 200, skills: [...catalog] } })
+  await openSkills(page)
+  await page.getByRole("button", { name: "Read & edit", exact: true }).click()
+  const dialog = page.getByRole("dialog")
+  const instructions = dialog.getByLabel("Instructions", { exact: true })
+  await instructions.fill("Draft that must survive the drag")
+  const box = await instructions.boundingBox()
+  if (!box) throw new Error("expected the instructions field to be laid out")
+  await page.mouse.move(box.x + 20, box.y + 10)
+  await page.mouse.down()
+  await page.mouse.move(2, 2, { steps: 8 })
+  await page.mouse.up()
+  await expect(dialog).toHaveCount(1)
+  await expect(instructions).toHaveValue("Draft that must survive the drag")
+  // A plain click on the backdrop still dismisses.
+  await page.mouse.click(2, 2)
+  await expect(dialog).toHaveCount(0)
+})
 
 test(`audit: submitting skill draft freezes, failure retains it for retry`, async ({ page }) => {
   await setup(page, { response: { status: 200, skills: [...catalog] } })
@@ -482,6 +503,39 @@ async function setup(
       const body: unknown = method === "PUT" ? route.request().postDataJSON() : undefined
       input.writes?.push({ method, url: url.toString(), body })
       return writeSkill(route, { path, method, body, url, location, skills: input.response })
+    }
+    // The catalog lists metadata without instruction bodies; the full entry loads by exact name when a card opens.
+    if (path === "/api/skill/catalog" && route.request().method() === "GET") {
+      input.requests?.push(url.toString())
+      if (url.origin === serverA) await input.beforeA?.()
+      const skills =
+        url.origin === serverA
+          ? (input.response?.raw ??
+            (input.response?.skills ?? catalog).filter((skill) => !input.response?.hidden?.includes(skill.location)))
+          : [{ ...catalog[1], name: "Server B instructions", content: "Only server B.\n" }]
+      await json(
+        route,
+        {
+          location,
+          data: (skills as SkillFixture[]).map((skill) => {
+            const { content, ...metadata } = skill
+            return metadata
+          }),
+        },
+        url.origin === serverA ? (input.response?.status ?? 200) : 200,
+      )
+      if (url.origin === serverA) input.afterA?.()
+      return
+    }
+    if (path === "/api/skill/by-name" && route.request().method() === "GET") {
+      const name = url.searchParams.get("name")
+      const skills =
+        url.origin === serverA
+          ? (input.response?.raw ??
+            (input.response?.skills ?? catalog).filter((skill) => !input.response?.hidden?.includes(skill.location)))
+          : [{ ...catalog[1], name: "Server B instructions", content: "Only server B.\n" }]
+      const skill = (skills as SkillFixture[]).find((entry) => entry.name === name) ?? null
+      return json(route, { location, data: skill })
     }
     if (path === "/skill" || path === "/api/skill") {
       input.requests?.push(url.toString())

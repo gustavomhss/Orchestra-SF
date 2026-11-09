@@ -1,5 +1,5 @@
 import { describe, expect } from "bun:test"
-import { Cause, Deferred, Effect, Exit, Fiber, Layer } from "effect"
+import { Cause, Deferred, Effect, Exit, Fiber, Layer, Option } from "effect"
 import { SessionRunCoordinator } from "@orchestra/core/session/run-coordinator"
 import { testEffect } from "./lib/effect"
 
@@ -215,7 +215,130 @@ describe("SessionRunCoordinator", () => {
     ),
   )
 
-  it.effect("interrupts active execution and clears its pending wake", () =>
+  for (const discardPending of [true, false]) {
+    it.effect(
+      discardPending
+        ? "discards wakes during an opt-in exclusive hold and settles its waiters"
+        : "retains one coalesced wake during an ordinary exclusive hold and settles its waiters",
+      () =>
+        Effect.scoped(
+          Effect.gen(function* () {
+            const held = yield* Deferred.make<void>()
+            const gate = yield* Deferred.make<void>()
+            const joining = yield* Deferred.make<void>()
+            const log: string[] = []
+            const coordinator = yield* SessionRunCoordinator.make<string, never>({
+              drain: (_key, force) => Effect.sync(() => log.push(`drain ${force}`)).pipe(Effect.asVoid),
+            })
+            // Release before the coordinator's scope finalizer waits for its owned fiber, even on assertion failure.
+            yield* Effect.addFinalizer(() => Deferred.succeed(gate, undefined))
+            const owner = yield* coordinator.exclusive(
+              "session",
+              Effect.sync(() => log.push("held")).pipe(
+                Effect.andThen(Deferred.succeed(held, undefined)),
+                Effect.andThen(Deferred.await(gate)),
+                Effect.andThen(Effect.sync(() => log.push("released"))),
+              ),
+              discardPending ? { discardPending: true } : undefined,
+            ).pipe(Effect.forkChild)
+            yield* Deferred.await(held)
+            const waiter = yield* Deferred.succeed(joining, undefined).pipe(
+              Effect.andThen(coordinator.run("session")),
+              Effect.forkChild,
+            )
+            yield* Deferred.await(joining)
+            yield* Effect.yieldNow
+            yield* coordinator.wake("session")
+            yield* coordinator.wake("session")
+            yield* coordinator.wake("session")
+            expect(yield* coordinator.active).toEqual(new Set(["session"]))
+            expect(log).toEqual(["held"])
+            yield* Deferred.succeed(gate, undefined)
+            expect((yield* Fiber.join(owner))._tag).toBe("Some")
+            yield* Fiber.join(waiter)
+            expect(yield* coordinator.active).toEqual(new Set())
+            expect(log).toEqual(discardPending ? ["held", "released"] : ["held", "released", "drain false"])
+          }),
+        ),
+    )
+  }
+
+  it.effect("interrupts active execution and runs one follow-up for a wake recorded during it", () =>
+    Effect.scoped(
+      Effect.gen(function* () {
+        const started = yield* Deferred.make<void>()
+        const interrupted = yield* Deferred.make<void>()
+        const followUp = yield* Deferred.make<void>()
+        let runs = 0
+        const coordinator = yield* SessionRunCoordinator.make({
+          drain: () =>
+            Effect.sync(() => ++runs).pipe(
+              Effect.flatMap((run) =>
+                run === 1
+                  ? Deferred.succeed(started, undefined).pipe(
+                      Effect.andThen(Effect.never),
+                      Effect.onInterrupt(() => Deferred.succeed(interrupted, undefined)),
+                    )
+                  : Deferred.succeed(followUp, undefined),
+              ),
+            ),
+        })
+
+        const resumed = yield* coordinator.run("session").pipe(Effect.forkChild)
+        yield* Deferred.await(started)
+        yield* Effect.all([coordinator.wake("session"), coordinator.wake("session")])
+        yield* coordinator.interrupt("session")
+        yield* Deferred.await(interrupted)
+        yield* Deferred.await(followUp)
+
+        const exit = yield* Fiber.await(resumed)
+        expect(Exit.isFailure(exit) && Cause.hasInterruptsOnly(exit.cause)).toBeTrue()
+        yield* Effect.yieldNow
+        expect(Array.from(yield* coordinator.active)).toEqual([])
+        expect(runs).toBe(2)
+      }),
+    ),
+  )
+
+  it.effect("promotes a steer admitted mid-drain after the drain is interrupted, never leaving it pending", () =>
+    Effect.scoped(
+      Effect.gen(function* () {
+        const started = yield* Deferred.make<void>()
+        const promoted = yield* Deferred.make<void>()
+        const inbox: string[] = []
+        const promotedInputs: string[] = []
+        let runs = 0
+        const coordinator = yield* SessionRunCoordinator.make({
+          // Stands in for the runner: the first drain is mid-provider-turn, later drains promote what is pending.
+          drain: () =>
+            Effect.sync(() => ++runs).pipe(
+              Effect.flatMap((run) =>
+                run === 1
+                  ? Deferred.succeed(started, undefined).pipe(Effect.andThen(Effect.never))
+                  : Effect.sync(() => promotedInputs.push(...inbox.splice(0))).pipe(
+                      Effect.andThen(Deferred.succeed(promoted, undefined)),
+                    ),
+              ),
+            ),
+        })
+
+        const resumed = yield* coordinator.run("session").pipe(Effect.forkChild)
+        yield* Deferred.await(started)
+        // PromptAdmitted records the durable row, then wakes.
+        inbox.push("steer")
+        yield* coordinator.wake("session")
+        yield* coordinator.interrupt("session")
+        yield* Fiber.await(resumed)
+        yield* Deferred.await(promoted)
+
+        expect(promotedInputs).toEqual(["steer"])
+        expect(inbox).toEqual([])
+        expect(runs).toBe(2)
+      }),
+    ),
+  )
+
+  it.effect("drops a wake recorded during the drain when interrupted with discardPending", () =>
     Effect.scoped(
       Effect.gen(function* () {
         const started = yield* Deferred.make<void>()
@@ -230,14 +353,13 @@ describe("SessionRunCoordinator", () => {
             ),
         })
 
-        const resumed = yield* coordinator.run("session").pipe(Effect.forkChild)
+        yield* coordinator.wake("session")
         yield* Deferred.await(started)
         yield* coordinator.wake("session")
-        yield* coordinator.interrupt("session")
+        yield* coordinator.interrupt("session", { discardPending: true })
         yield* Deferred.await(interrupted)
+        yield* Effect.yieldNow
 
-        const exit = yield* Fiber.await(resumed)
-        expect(Exit.isFailure(exit) && Cause.hasInterruptsOnly(exit.cause)).toBeTrue()
         expect(Array.from(yield* coordinator.active)).toEqual([])
         expect(runs).toBe(1)
       }),
@@ -348,6 +470,84 @@ describe("SessionRunCoordinator", () => {
     ),
   )
 
+  it.effect("promotes an input admitted mid-drain with exactly one successor when the drain fails", () =>
+    Effect.scoped(
+      Effect.gen(function* () {
+        const started = yield* Deferred.make<void>()
+        const gate = yield* Deferred.make<void>()
+        const promoted = yield* Deferred.make<void>()
+        const failure = new Error("provider failed")
+        const inbox: string[] = []
+        const promotedInputs: string[] = []
+        let runs = 0
+        const coordinator = yield* SessionRunCoordinator.make({
+          drain: () =>
+            Effect.sync(() => ++runs).pipe(
+              Effect.flatMap((run) =>
+                run === 1
+                  ? Deferred.succeed(started, undefined).pipe(
+                      Effect.andThen(Deferred.await(gate)),
+                      Effect.andThen(Effect.fail(failure)),
+                    )
+                  : Effect.sync(() => promotedInputs.push(...inbox.splice(0))).pipe(
+                      Effect.andThen(Deferred.succeed(promoted, undefined)),
+                    ),
+              ),
+            ),
+        })
+
+        const resumed = yield* coordinator.run("session").pipe(Effect.forkChild)
+        yield* Deferred.await(started)
+        inbox.push("queued")
+        yield* coordinator.wake("session")
+        yield* Deferred.succeed(gate, undefined)
+
+        expect(yield* Fiber.join(resumed).pipe(Effect.flip)).toBe(failure)
+        yield* Deferred.await(promoted)
+        yield* Effect.yieldNow
+        expect(promotedInputs).toEqual(["queued"])
+        expect(runs).toBe(2)
+        expect(Array.from(yield* coordinator.active)).toEqual([])
+      }),
+    ),
+  )
+
+  it.effect("does not chain successors when the successor of a failed drain fails too", () =>
+    Effect.scoped(
+      Effect.gen(function* () {
+        const started = yield* Deferred.make<void>()
+        const gate = yield* Deferred.make<void>()
+        const secondFailed = yield* Deferred.make<void>()
+        let runs = 0
+        const coordinator = yield* SessionRunCoordinator.make({
+          drain: () =>
+            Effect.sync(() => ++runs).pipe(
+              Effect.flatMap((run) =>
+                run === 1
+                  ? Deferred.succeed(started, undefined).pipe(
+                      Effect.andThen(Deferred.await(gate)),
+                      Effect.andThen(Effect.fail(new Error("first"))),
+                    )
+                  : Deferred.succeed(secondFailed, undefined).pipe(Effect.andThen(Effect.fail(new Error("second")))),
+              ),
+            ),
+        })
+
+        const resumed = yield* coordinator.run("session").pipe(Effect.forkChild)
+        yield* Deferred.await(started)
+        yield* coordinator.wake("session")
+        yield* Deferred.succeed(gate, undefined)
+        yield* Fiber.await(resumed)
+        yield* Deferred.await(secondFailed)
+        yield* Effect.yieldNow
+        yield* Effect.yieldNow
+
+        expect(runs).toBe(2)
+        expect(Array.from(yield* coordinator.active)).toEqual([])
+      }),
+    ),
+  )
+
   it.effect("does not cancel execution when a joined waiter is interrupted", () =>
     Effect.scoped(
       Effect.gen(function* () {
@@ -427,6 +627,235 @@ describe("SessionRunCoordinator", () => {
       expect(forces).toEqual([true, false])
       yield* coordinator.interrupt("session")
     })),
+  )
+
+  it.effect("coalesces wakes held by a successful exclusive operation into one non-forced drain", () =>
+    Effect.scoped(
+      Effect.gen(function* () {
+        const holdStarted = yield* Deferred.make<void>()
+        const holdGate = yield* Deferred.make<void>()
+        const drainStarted = yield* Deferred.make<void>()
+        const drainGate = yield* Deferred.make<void>()
+        const forces: boolean[] = []
+        const overlaps: boolean[] = []
+        let holding = false
+        const coordinator = yield* SessionRunCoordinator.make<string, never>({
+          drain: (_key, force) =>
+            Effect.sync(() => {
+              forces.push(force)
+              overlaps.push(holding)
+            }).pipe(
+              Effect.andThen(Deferred.succeed(drainStarted, undefined)),
+              Effect.andThen(Deferred.await(drainGate)),
+            ),
+        })
+        // Register after the coordinator so LIFO teardown releases gates before awaiting its fibers.
+        yield* Effect.addFinalizer(() =>
+          Deferred.succeed(holdGate, undefined).pipe(
+            Effect.andThen(Deferred.succeed(drainGate, undefined)),
+            Effect.asVoid,
+          ),
+        )
+        const holdEffect = Effect.sync(() => (holding = true)).pipe(
+          Effect.andThen(Deferred.succeed(holdStarted, undefined)),
+          Effect.andThen(Deferred.await(holdGate)),
+          Effect.as("held"),
+          Effect.ensuring(Effect.sync(() => (holding = false))),
+        )
+
+        const owner = yield* coordinator.exclusive("session", holdEffect).pipe(Effect.forkChild)
+        yield* Deferred.await(holdStarted)
+        yield* coordinator.wake("session")
+        yield* coordinator.wake("session")
+        yield* coordinator.wake("session")
+        expect(forces).toEqual([])
+        expect((yield* coordinator.active).has("session")).toBeTrue()
+        const joiner = yield* coordinator.run("session").pipe(Effect.forkChild)
+        yield* Effect.yieldNow
+        yield* Deferred.succeed(holdGate, undefined)
+        expect(Option.getOrThrow(yield* Fiber.join(owner))).toBe("held")
+        yield* Deferred.await(drainStarted)
+        expect(forces).toEqual([false])
+        expect(overlaps).toEqual([false])
+        yield* Deferred.succeed(drainGate, undefined)
+        yield* Fiber.join(joiner)
+        expect(Array.from(yield* coordinator.active)).toEqual([])
+        expect(forces).toEqual([false])
+      }),
+    ),
+  )
+
+  it.effect("retains and coalesces wakes through exclusive interruption cleanup", () =>
+    Effect.scoped(
+      Effect.gen(function* () {
+        const holdStarted = yield* Deferred.make<void>()
+        const cleanupStarted = yield* Deferred.make<void>()
+        const cleanupGate = yield* Deferred.make<void>()
+        const drainStarted = yield* Deferred.make<void>()
+        const drainGate = yield* Deferred.make<void>()
+        const forces: boolean[] = []
+        const overlaps: boolean[] = []
+        let holding = false
+        const coordinator = yield* SessionRunCoordinator.make<string, never>({
+          drain: (_key, force) =>
+            Effect.sync(() => {
+              forces.push(force)
+              overlaps.push(holding)
+            }).pipe(
+              Effect.andThen(Deferred.succeed(drainStarted, undefined)),
+              Effect.andThen(Deferred.await(drainGate)),
+            ),
+        })
+        // Register after the coordinator so LIFO teardown releases gates before awaiting its fibers.
+        yield* Effect.addFinalizer(() =>
+          Deferred.succeed(cleanupGate, undefined).pipe(
+            Effect.andThen(Deferred.succeed(drainGate, undefined)),
+            Effect.asVoid,
+          ),
+        )
+        const holdEffect = Effect.sync(() => (holding = true)).pipe(
+          Effect.andThen(Deferred.succeed(holdStarted, undefined)),
+          Effect.andThen(Effect.never),
+          Effect.onInterrupt(() =>
+            Deferred.succeed(cleanupStarted, undefined).pipe(Effect.andThen(Deferred.await(cleanupGate))),
+          ),
+          Effect.ensuring(Effect.sync(() => (holding = false))),
+        )
+
+        const owner = yield* coordinator.exclusive("session", holdEffect).pipe(Effect.forkChild)
+        yield* Deferred.await(holdStarted)
+        yield* coordinator.wake("session")
+        const interrupt = yield* coordinator.interrupt("session").pipe(Effect.forkChild)
+        yield* Deferred.await(cleanupStarted)
+        yield* coordinator.wake("session")
+        yield* coordinator.wake("session")
+        expect(forces).toEqual([])
+        expect((yield* coordinator.active).has("session")).toBeTrue()
+        yield* Deferred.succeed(cleanupGate, undefined)
+        yield* Fiber.join(interrupt)
+        const exit = yield* Fiber.await(owner)
+        expect(Exit.isFailure(exit) && Cause.hasInterruptsOnly(exit.cause)).toBeTrue()
+        yield* Deferred.await(drainStarted)
+        expect(forces).toEqual([false])
+        expect(overlaps).toEqual([false])
+        const joiner = yield* coordinator.run("session").pipe(Effect.forkChild)
+        yield* Effect.yieldNow
+        yield* Deferred.succeed(drainGate, undefined)
+        yield* Fiber.join(joiner)
+        expect(forces).toEqual([false])
+        expect(Array.from(yield* coordinator.active)).toEqual([])
+      }),
+    ),
+  )
+
+  it.effect("discardPending drops wakes recorded during an interrupted exclusive operation", () =>
+    Effect.scoped(
+      Effect.gen(function* () {
+        const holdStarted = yield* Deferred.make<void>()
+        const cleanupStarted = yield* Deferred.make<void>()
+        const cleanupGate = yield* Deferred.make<void>()
+        const forces: boolean[] = []
+        const overlaps: boolean[] = []
+        let holding = false
+        const coordinator = yield* SessionRunCoordinator.make<string, never>({
+          drain: (_key, force) =>
+            Effect.sync(() => {
+              forces.push(force)
+              overlaps.push(holding)
+            }),
+        })
+        // Register after the coordinator so LIFO teardown releases the gate before awaiting its fibers.
+        yield* Effect.addFinalizer(() => Deferred.succeed(cleanupGate, undefined).pipe(Effect.asVoid))
+        const holdEffect = Effect.sync(() => (holding = true)).pipe(
+          Effect.andThen(Deferred.succeed(holdStarted, undefined)),
+          Effect.andThen(Effect.never),
+          Effect.onInterrupt(() =>
+            Deferred.succeed(cleanupStarted, undefined).pipe(Effect.andThen(Deferred.await(cleanupGate))),
+          ),
+          Effect.ensuring(Effect.sync(() => (holding = false))),
+        )
+
+        const owner = yield* coordinator.exclusive("session", holdEffect).pipe(Effect.forkChild)
+        yield* Deferred.await(holdStarted)
+        yield* coordinator.wake("session")
+        yield* coordinator.wake("session")
+        const interrupt = yield* coordinator.interrupt("session", { discardPending: true }).pipe(Effect.forkChild)
+        yield* Deferred.await(cleanupStarted)
+        expect(forces).toEqual([])
+        expect((yield* coordinator.active).has("session")).toBeTrue()
+        yield* Deferred.succeed(cleanupGate, undefined)
+        yield* Fiber.join(interrupt)
+        const exit = yield* Fiber.await(owner)
+        expect(Exit.isFailure(exit) && Cause.hasInterruptsOnly(exit.cause)).toBeTrue()
+        expect(forces).toEqual([])
+        expect(overlaps).toEqual([])
+        expect(Array.from(yield* coordinator.active)).toEqual([])
+      }),
+    ),
+  )
+
+  it.effect("keeps a fresh cleanup wake after discardPending clears an exclusive hold's earlier wake", () =>
+    Effect.scoped(
+      Effect.gen(function* () {
+        const holdStarted = yield* Deferred.make<void>()
+        const cleanupStarted = yield* Deferred.make<void>()
+        const cleanupGate = yield* Deferred.make<void>()
+        const drainStarted = yield* Deferred.make<void>()
+        const drainGate = yield* Deferred.make<void>()
+        const forces: boolean[] = []
+        const overlaps: boolean[] = []
+        let holding = false
+        const coordinator = yield* SessionRunCoordinator.make<string, never>({
+          drain: (_key, force) =>
+            Effect.sync(() => {
+              forces.push(force)
+              overlaps.push(holding)
+            }).pipe(
+              Effect.andThen(Deferred.succeed(drainStarted, undefined)),
+              Effect.andThen(Deferred.await(drainGate)),
+            ),
+        })
+        // Register after the coordinator so LIFO teardown releases gates before awaiting its fibers.
+        yield* Effect.addFinalizer(() =>
+          Deferred.succeed(cleanupGate, undefined).pipe(
+            Effect.andThen(Deferred.succeed(drainGate, undefined)),
+            Effect.asVoid,
+          ),
+        )
+        const holdEffect = Effect.sync(() => (holding = true)).pipe(
+          Effect.andThen(Deferred.succeed(holdStarted, undefined)),
+          Effect.andThen(Effect.never),
+          Effect.onInterrupt(() =>
+            Deferred.succeed(cleanupStarted, undefined).pipe(Effect.andThen(Deferred.await(cleanupGate))),
+          ),
+          Effect.ensuring(Effect.sync(() => (holding = false))),
+        )
+
+        const owner = yield* coordinator.exclusive("session", holdEffect).pipe(Effect.forkChild)
+        yield* Deferred.await(holdStarted)
+        yield* coordinator.wake("session")
+        yield* coordinator.wake("session")
+        const interrupt = yield* coordinator.interrupt("session", { discardPending: true }).pipe(Effect.forkChild)
+        yield* Deferred.await(cleanupStarted)
+        yield* coordinator.wake("session")
+        yield* coordinator.wake("session")
+        expect(forces).toEqual([])
+        expect((yield* coordinator.active).has("session")).toBeTrue()
+        yield* Deferred.succeed(cleanupGate, undefined)
+        yield* Fiber.join(interrupt)
+        const exit = yield* Fiber.await(owner)
+        expect(Exit.isFailure(exit) && Cause.hasInterruptsOnly(exit.cause)).toBeTrue()
+        yield* Deferred.await(drainStarted)
+        expect(forces).toEqual([false])
+        expect(overlaps).toEqual([false])
+        const joiner = yield* coordinator.run("session").pipe(Effect.forkChild)
+        yield* Effect.yieldNow
+        yield* Deferred.succeed(drainGate, undefined)
+        yield* Fiber.join(joiner)
+        expect(forces).toEqual([false])
+        expect(Array.from(yield* coordinator.active)).toEqual([])
+      }),
+    ),
   )
 
   it.effect("runs different keys concurrently", () =>

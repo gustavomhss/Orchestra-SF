@@ -147,16 +147,25 @@ function run(db: DatabaseService, event: SessionEvent.Event, replay = false) {
       },
       getCurrentShell(callID) {
         return Effect.gen(function* () {
-          const rows = yield* db
+          // The newest matching row wins and only that row is decoded. The (session, type, seq) index supplies the
+          // reverse order, but callID is a JSON predicate: finding a match can still scan many shells, not constant time.
+          const row = yield* db
             .select()
             .from(SessionMessageTable)
-            .where(and(eq(SessionMessageTable.session_id, event.data.sessionID), eq(SessionMessageTable.type, "shell")))
+            .where(
+              and(
+                eq(SessionMessageTable.session_id, event.data.sessionID),
+                eq(SessionMessageTable.type, "shell"),
+                sql`json_extract(${SessionMessageTable.data}, '$.callID') = ${callID}`,
+              ),
+            )
             .orderBy(desc(SessionMessageTable.seq))
-            .all()
+            .limit(1)
+            .get()
             .pipe(Effect.orDie)
-          return rows
-            .map(decodeRow)
-            .find((message): message is SessionMessage.Shell => message.type === "shell" && message.callID === callID)
+          if (!row) return
+          const message = decodeRow(row)
+          return message.type === "shell" ? message : undefined
         })
       },
       updateAssistant: updateMessage,

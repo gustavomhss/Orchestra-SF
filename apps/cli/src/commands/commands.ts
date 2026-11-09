@@ -395,6 +395,10 @@ const web = Spec.make("web", {
       Flag.withDescription("custom domain name for mDNS service"),
     ),
     cors: Flag.string("cors").pipe(Flag.withDescription("additional domains to allow for CORS"), Flag.atMost(100)),
+    "allowed-host": Flag.string("allowed-host").pipe(
+      Flag.withDescription("additional HTTP hostname to allow (repeat for proxy names or aliases; bracket IPv6)"),
+      Flag.atMost(100),
+    ),
   },
 })
 
@@ -479,6 +483,10 @@ export const Commands = Spec.make(typeof ORCHESTRA_CLI_NAME === "string" ? ORCHE
         hostname: Flag.string("hostname").pipe(Flag.withDefault("127.0.0.1")),
         port: Flag.integer("port").pipe(Flag.optional),
         register: Flag.boolean("register").pipe(Flag.withDefault(false)),
+        "allowed-host": Flag.string("allowed-host").pipe(
+          Flag.withDescription("additional HTTP hostname to allow (repeat for proxy names or aliases; bracket IPv6)"),
+          Flag.atMost(100),
+        ),
       },
     }),
   ],

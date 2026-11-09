@@ -125,8 +125,8 @@ const layer = Layer.effect(
       }
     }
 
-    const subscribe = (directory: string, ignore: string[]) => {
-      const pending = w.subscribe(directory, callback, { ignore, backend })
+    const subscribe = (directory: string, ignore: string[], receive = callback) => {
+      const pending = w.subscribe(directory, receive, { ignore, backend })
       pendingSubscriptions.add(pending)
       return Effect.promise(() => pending).pipe(
         Effect.timeout(SUBSCRIBE_TIMEOUT_MS),
@@ -163,7 +163,7 @@ const layer = Layer.effect(
         const ignore = (yield* fs.readDirectoryEntries(vcs).pipe(Effect.catch(() => Effect.succeed([])))).flatMap(
           (entry) => (entry.name === "HEAD" ? [] : [entry.name]),
         )
-        yield* Effect.forkScoped(subscribe(vcs, ignore))
+        yield* Effect.forkScoped(subscribe(vcs, ignore, (error, updates) => callback(error, updates.filter((update) => update.path === head.file))))
       }
     }
 

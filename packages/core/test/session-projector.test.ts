@@ -1,6 +1,8 @@
 import { describe, expect } from "bun:test"
 import { DateTime, Effect, Schema } from "effect"
 import { asc, eq, sql } from "drizzle-orm"
+import { SessionDurable } from "@orchestra/schema/durable-event-manifest"
+import { EventManifest } from "@orchestra/schema/event-manifest"
 import { Database } from "@orchestra/core/database/database"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
@@ -372,6 +374,166 @@ describe("SessionProjector", () => {
     }),
   )
 
+  it.effect("decodes and replays failed compactions without creating or replacing a successful checkpoint", () =>
+    Effect.gen(function* () {
+      const database = yield* Database.Service
+      const events = yield* EventV2.Service
+      yield* database.db
+        .insert(ProjectTable)
+        .values({ id: Project.ID.global, worktree: AbsolutePath.make("/project"), sandboxes: [] })
+        .run()
+      yield* database.db
+        .insert(SessionTable)
+        .values({
+          id: sessionID,
+          project_id: Project.ID.global,
+          slug: "test",
+          directory: "/project",
+          title: "test",
+          version: "test",
+        })
+        .run()
+      const historyID = SessionMessage.ID.make("msg_retained_history")
+      yield* events.publish(SessionEvent.Prompted, {
+        sessionID,
+        messageID: historyID,
+        timestamp: created,
+        prompt: Prompt.make({ text: "retain this history" }),
+        delivery: "steer",
+      })
+      const firstID = SessionMessage.ID.make("msg_failed_before_checkpoint")
+      yield* events.publish(SessionEvent.Compaction.Started, {
+        sessionID,
+        messageID: firstID,
+        timestamp: created,
+        reason: "auto",
+      })
+      yield* events.publish(SessionEvent.Compaction.Failed, {
+        sessionID,
+        messageID: firstID,
+        timestamp: created,
+        reason: "auto",
+        error: { type: "unknown", message: "Compaction failed" },
+      })
+      const messages = database.db
+        .select()
+        .from(SessionMessageTable)
+        .where(eq(SessionMessageTable.session_id, sessionID))
+        .orderBy(asc(SessionMessageTable.seq))
+        .all()
+      expect((yield* messages).map((row) => row.id)).toEqual([historyID])
+
+      const checkpointID = SessionMessage.ID.make("msg_successful_checkpoint")
+      yield* events.publish(SessionEvent.Compaction.Started, {
+        sessionID,
+        messageID: checkpointID,
+        timestamp: created,
+        reason: "manual",
+      })
+      yield* events.publish(SessionEvent.Compaction.Ended, {
+        sessionID,
+        messageID: checkpointID,
+        timestamp: created,
+        reason: "manual",
+        text: "keep this successful summary",
+        recent: "keep this recent context",
+      })
+      const before = yield* messages
+      expect(before.map((row) => row.id)).toEqual([historyID, checkpointID])
+      const retryID = SessionMessage.ID.make("msg_failed_after_checkpoint")
+      yield* events.publish(SessionEvent.Compaction.Started, {
+        sessionID,
+        messageID: retryID,
+        timestamp: created,
+        reason: "manual",
+      })
+      const failed = yield* events.publish(SessionEvent.Compaction.Failed, {
+        sessionID,
+        messageID: retryID,
+        timestamp: created,
+        reason: "manual",
+        error: { type: "unknown", message: "Compaction interrupted" },
+      })
+      expect(yield* messages).toEqual(before)
+
+      // Exercise the production public inventory and Session durable codec, not a local event union.
+      const publicCodec = Schema.Union(EventManifest.Definitions, { mode: "oneOf" })
+      const encoded = Schema.encodeSync(publicCodec)(failed)
+      expect(Schema.decodeUnknownSync(publicCodec)(encoded)).toEqual(failed)
+      expect(Schema.decodeUnknownSync(SessionEvent.Durable)(encoded)).toEqual(failed)
+      const durable = yield* EventV2.readAggregate(database.db, {
+        aggregateID: sessionID,
+        limit: 100,
+        manifest: SessionDurable,
+      })
+      expect(durable.hasMore).toBe(false)
+      expect(durable.events.map((event) => event.type)).toEqual([
+        SessionEvent.Prompted.type,
+        SessionEvent.Compaction.Started.type,
+        SessionEvent.Compaction.Failed.type,
+        SessionEvent.Compaction.Started.type,
+        SessionEvent.Compaction.Ended.type,
+        SessionEvent.Compaction.Started.type,
+        SessionEvent.Compaction.Failed.type,
+      ])
+      expect(
+        durable.events.filter((event) => event.type === SessionEvent.Compaction.Failed.type).map((event) => event.data),
+      ).toEqual([
+        {
+          sessionID,
+          messageID: firstID,
+          timestamp: created,
+          reason: "auto",
+          error: { type: "unknown", message: "Compaction failed" },
+        },
+        failed.data,
+      ])
+      const memory = {
+        messages: before.map((row) =>
+          Schema.decodeUnknownSync(SessionMessage.Message)({ ...row.data, id: row.id, type: row.type }),
+        ),
+      }
+      yield* SessionMessageUpdater.update(SessionMessageUpdater.memory(memory), failed)
+      expect(memory.messages.map((message) => message.id)).toEqual([historyID, checkpointID])
+
+      const rows = yield* database.db
+        .select()
+        .from(EventTable)
+        .where(eq(EventTable.aggregate_id, sessionID))
+        .orderBy(asc(EventTable.seq))
+        .all()
+      expect(rows.map((row) => row.type)).toEqual([
+        "session.next.prompted.1",
+        "session.next.compaction.started.1",
+        "session.next.compaction.failed.1",
+        "session.next.compaction.started.1",
+        "session.next.compaction.ended.1",
+        "session.next.compaction.started.1",
+        "session.next.compaction.failed.1",
+      ])
+      yield* events.remove(sessionID)
+      yield* database.db.delete(SessionMessageTable).where(eq(SessionMessageTable.session_id, sessionID)).run()
+      yield* events.replayAll(
+        rows.map((row) => ({
+          id: row.id,
+          type: row.type,
+          seq: row.seq,
+          aggregateID: row.aggregate_id,
+          data: row.data,
+        })),
+      )
+      // Replay regenerates the row mutation timestamp, not the event creation time.
+      expect(yield* messages).toEqual(before.map((row) => ({ ...row, time_updated: expect.any(Number) })))
+      expect(
+        yield* EventV2.readAggregate(database.db, {
+          aggregateID: sessionID,
+          limit: 100,
+          manifest: SessionDurable,
+        }),
+      ).toEqual(durable)
+    }),
+  )
+
   it.effect("rejects distinct creator events that reuse one projected message ID", () =>
     Effect.gen(function* () {
       const { db } = yield* Database.Service
@@ -564,6 +726,115 @@ describe("SessionProjector", () => {
           time: { created },
         }),
       ])
+    }),
+  )
+
+  it.effect("ends a shell by decoding only the row for its call, not every shell of the Session", () =>
+    Effect.gen(function* () {
+      const { db } = yield* Database.Service
+      const events = yield* EventV2.Service
+      yield* db
+        .insert(ProjectTable)
+        .values({ id: Project.ID.global, worktree: AbsolutePath.make("/project"), sandboxes: [] })
+        .run()
+        .pipe(Effect.orDie)
+      yield* db
+        .insert(SessionTable)
+        .values({
+          id: sessionID,
+          project_id: Project.ID.global,
+          slug: "test",
+          directory: "/project",
+          title: "test",
+          version: "test",
+        })
+        .run()
+        .pipe(Effect.orDie)
+      yield* events.publish(SessionEvent.Shell.Started, {
+        sessionID,
+        messageID: SessionMessage.ID.make("msg_shell_target"),
+        timestamp: created,
+        callID: "shell-target",
+        command: "pwd",
+      })
+      // Rows of other calls that cannot be decoded: a scan that decodes every shell of the Session fails on them.
+      yield* db
+        .insert(SessionMessageTable)
+        .values(
+          Array.from({ length: 50 }, (_, index) => ({
+            id: SessionMessage.ID.make(`msg_shell_unrelated_${index}`),
+            session_id: sessionID,
+            type: "shell" as const,
+            seq: 1_000 + index,
+            time_created: 0,
+            data: { callID: `shell-unrelated-${index}`, undecodable: true } as never,
+          })),
+        )
+        .run()
+        .pipe(Effect.orDie)
+
+      yield* events.publish(SessionEvent.Shell.Ended, {
+        sessionID,
+        timestamp: DateTime.makeUnsafe(1),
+        callID: "shell-target",
+        output: "/project",
+      })
+
+      const row = yield* db
+        .select()
+        .from(SessionMessageTable)
+        .where(eq(SessionMessageTable.id, SessionMessage.ID.make("msg_shell_target")))
+        .get()
+        .pipe(Effect.orDie)
+      expect(row?.data).toMatchObject({ callID: "shell-target", output: "/project" })
+    }),
+  )
+
+  it.effect("ends the newest shell when a call ID repeats", () =>
+    Effect.gen(function* () {
+      const { db } = yield* Database.Service
+      const events = yield* EventV2.Service
+      yield* db
+        .insert(ProjectTable)
+        .values({ id: Project.ID.global, worktree: AbsolutePath.make("/project"), sandboxes: [] })
+        .run()
+        .pipe(Effect.orDie)
+      yield* db
+        .insert(SessionTable)
+        .values({
+          id: sessionID,
+          project_id: Project.ID.global,
+          slug: "test",
+          directory: "/project",
+          title: "test",
+          version: "test",
+        })
+        .run()
+        .pipe(Effect.orDie)
+      yield* Effect.forEach(["msg_shell_old", "msg_shell_new"], (id, index) =>
+        events.publish(SessionEvent.Shell.Started, {
+          sessionID,
+          messageID: SessionMessage.ID.make(id),
+          timestamp: DateTime.makeUnsafe(index),
+          callID: "shell-repeat",
+          command: "pwd",
+        }),
+      )
+      yield* events.publish(SessionEvent.Shell.Ended, {
+        sessionID,
+        timestamp: DateTime.makeUnsafe(5),
+        callID: "shell-repeat",
+        output: "done",
+      })
+
+      const rows = yield* db
+        .select()
+        .from(SessionMessageTable)
+        .where(eq(SessionMessageTable.type, "shell"))
+        .orderBy(asc(SessionMessageTable.seq))
+        .all()
+        .pipe(Effect.orDie)
+      expect(rows.map((row) => Reflect.get(row.data, "output"))).toEqual(["", "done"])
     }),
   )
 })

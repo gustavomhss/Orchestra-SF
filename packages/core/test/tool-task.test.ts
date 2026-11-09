@@ -1,5 +1,8 @@
-import { describe, expect } from "bun:test"
-import { LLMClient, LLMError, LLMEvent, TransportReason, type LLMRequest } from "@orchestra/llm"
+import { afterAll, describe, expect } from "bun:test"
+import { $ } from "bun"
+import fs from "fs/promises"
+import path from "path"
+import { LLMClient, LLMError, LLMEvent, ToolFailure, TransportReason, type LLMRequest } from "@orchestra/llm"
 import { AgentV2 } from "@orchestra/core/agent"
 import { Catalog } from "@orchestra/core/catalog"
 import { Config } from "@orchestra/core/config"
@@ -17,6 +20,7 @@ import { ModelV2 } from "@orchestra/core/model"
 import { PermissionV2 } from "@orchestra/core/permission"
 import { PermissionSaved } from "@orchestra/core/permission/saved"
 import { ProjectV2 } from "@orchestra/core/project"
+import { ProjectDirectoryTable, ProjectTable } from "@orchestra/core/project/sql"
 import { ProviderV2 } from "@orchestra/core/provider"
 import { ReferenceGuidance } from "@orchestra/core/reference/guidance"
 import { AbsolutePath } from "@orchestra/core/schema"
@@ -34,12 +38,14 @@ import { SkillGuidance } from "@orchestra/core/skill/guidance"
 import { Snapshot } from "@orchestra/core/snapshot"
 import { SystemContext } from "@orchestra/core/system-context"
 import { TaskTool } from "@orchestra/core/tool/task"
+import { TaskGovernance } from "@orchestra/core/tool/task-governance"
 import { ToolRegistry } from "@orchestra/core/tool/registry"
-import { Context, DateTime, Deferred, Effect, Fiber, Layer, LayerMap, Schema, Stream } from "effect"
+import { Cause, Context, DateTime, Deferred, Effect, Exit, Fiber, Layer, LayerMap, Schema, Stream } from "effect"
 import { asc, eq } from "drizzle-orm"
 import { Board } from "@orchestra/schema/board"
 import { testEffect } from "./lib/effect"
 import { settleTool } from "./lib/tool"
+import { tmpdir } from "./fixture/tmpdir"
 
 const directory = AbsolutePath.make("/task-fixture")
 const caller = AgentV2.ID.make("caller")
@@ -53,6 +59,7 @@ class Harness extends Context.Service<Harness, {
   readonly requests: LLMRequest[]
   readonly resumes: SessionV2.ID[]
   readonly gates: Map<string, { started: Deferred.Deferred<void>; release: Deferred.Deferred<void> }>
+  admission?: { started: Deferred.Deferred<void>; release: Deferred.Deferred<void>; refuse: boolean }
 }>()("test/TaskHarness") {}
 
 const harnessLayer = Layer.effect(Harness, Effect.gen(function* () {
@@ -64,7 +71,7 @@ const client = Layer.effect(LLMClient.Service, Effect.gen(function* () {
   return LLMClient.Service.of({
     prepare: () => Effect.die("Unexpected prepare"),
     generate: () => Effect.die("Unexpected generate"),
-    stream: (request) => Stream.unwrap(Effect.gen(function* () {
+    stream: (request) => Stream.unwrap<LLMEvent, LLMError, never, never, never>(Effect.gen(function* () {
       harness.requests.push(request)
       const prompt = request.messages.filter((message) => message.role === "user").at(-1)?.content
         .flatMap((part) => part.type === "text" ? [part.text] : []).join("\n") ?? ""
@@ -76,6 +83,55 @@ const client = Layer.effect(LLMClient.Service, Effect.gen(function* () {
       if (prompt === "fail") return Stream.fail(new LLMError({
         module: "test", method: "stream", reason: new TransportReason({ message: "child provider failed" }),
       }))
+      if (prompt === "provider-error") return Stream.fromIterable([
+        LLMEvent.stepStart({ index: 0 }),
+        LLMEvent.providerError({ message: "child provider event failed" }),
+      ])
+      if (prompt === "child-content-filter") return Stream.fromIterable([
+        LLMEvent.stepStart({ index: 0 }),
+        LLMEvent.stepFinish({ index: 0, reason: "content-filter" }),
+        LLMEvent.finish({ reason: "content-filter" }),
+      ])
+      // No step settlement: the runner emits no Step.Ended, so the child assistant stays incomplete. This
+      // characterizes the parent-facing incomplete wording; it is NOT evidence of a real interruption (an active
+      // interruption records a failure instead, by existing runner semantics).
+      if (prompt === "child-no-finish") return Stream.fromIterable([
+        LLMEvent.stepStart({ index: 0 }),
+        LLMEvent.textStart({ id: "answer" }),
+      ])
+      if (prompt === "parent-no-finish" && !request.messages.some((message) =>
+        message.role === "tool" && message.content.some((part) => part.type === "tool-result" && part.id === "no-finish-task"),
+      )) return Stream.fromIterable([
+        LLMEvent.stepStart({ index: 0 }),
+        LLMEvent.toolCall({
+          id: "no-finish-task", name: "task",
+          input: { description: "Focused task", prompt: "child-no-finish", subagent_type: worker },
+        }),
+        LLMEvent.stepFinish({ index: 0, reason: "tool-calls" }),
+        LLMEvent.finish({ reason: "tool-calls" }),
+      ])
+      if (prompt === "parent-content-filter" && !request.messages.some((message) =>
+        message.role === "tool" && message.content.some((part) => part.type === "tool-result" && part.id === "content-filter-task"),
+      )) return Stream.fromIterable([
+        LLMEvent.stepStart({ index: 0 }),
+        LLMEvent.toolCall({
+          id: "content-filter-task", name: "task",
+          input: { description: "Focused task", prompt: "child-content-filter", subagent_type: worker },
+        }),
+        LLMEvent.stepFinish({ index: 0, reason: "tool-calls" }),
+        LLMEvent.finish({ reason: "tool-calls" }),
+      ])
+      if (prompt === "parent-provider-error" && !request.messages.some((message) =>
+        message.role === "tool" && message.content.some((part) => part.type === "tool-result" && part.id === "provider-error-task"),
+      )) return Stream.fromIterable([
+        LLMEvent.stepStart({ index: 0 }),
+        LLMEvent.toolCall({
+          id: "provider-error-task", name: "task",
+          input: { description: "Focused task", prompt: "provider-error", subagent_type: worker },
+        }),
+        LLMEvent.stepFinish({ index: 0, reason: "tool-calls" }),
+        LLMEvent.finish({ reason: "tool-calls" }),
+      ])
       return Stream.fromIterable([
         LLMEvent.stepStart({ index: 0 }),
         LLMEvent.textStart({ id: "answer" }),
@@ -85,6 +141,21 @@ const client = Layer.effect(LLMClient.Service, Effect.gen(function* () {
         LLMEvent.finish({ reason: "stop" }),
       ])
     })),
+  })
+})).pipe(Layer.provide(harnessLayer))
+
+const governance = Layer.effect(TaskGovernance.Service, Effect.gen(function* () {
+  const harness = yield* Harness
+  return TaskGovernance.Service.of({
+    ...TaskGovernance.allowAll,
+    admit: () => Effect.gen(function* () {
+      const admission = harness.admission
+      if (!admission) return {}
+      yield* Deferred.succeed(admission.started, undefined)
+      yield* Deferred.await(admission.release)
+      if (admission.refuse) return yield* new ToolFailure({ message: "worktree admission refused" })
+      return {}
+    }),
   })
 })).pipe(Layer.provide(harnessLayer))
 
@@ -121,16 +192,14 @@ const execution = Layer.effect(SessionExecution.Service, Effect.gen(function* ()
   })
 })).pipe(Layer.provide(harnessLayer))
 
-const it = testEffect(AppNodeBuilder.build(LayerNode.group([
+const taskLayer = (location: Location.Interface, resolve: ProjectV2.Interface["resolve"]) => AppNodeBuilder.build(LayerNode.group([
   Database.node, EventV2.node, AgentV2.node, Catalog.node, Integration.node, PermissionV2.node, PermissionSaved.node,
   SessionSubagentModels.node, SessionExecution.node, SessionV2.node, Credential.node,
   ToolRegistry.node, ToolRegistry.toolsNode, TaskTool.node, node,
 ]), [
-  [Location.node, Layer.succeed(Location.Service, {
-    directory, project: { id: ProjectV2.ID.global, directory },
-  })],
+  [Location.node, Layer.succeed(Location.Service, location)],
   [ProjectV2.node, Layer.succeed(ProjectV2.Service, ProjectV2.Service.of({
-    resolve: (directory) => Effect.succeed({ id: ProjectV2.ID.global, directory }),
+    resolve,
     list: () => Effect.succeed([]),
     directories: () => Effect.die("Unexpected directories"),
     commit: () => Effect.die("Unexpected project commit"),
@@ -139,15 +208,21 @@ const it = testEffect(AppNodeBuilder.build(LayerNode.group([
     LayerMap.make((_ref: Location.Ref) =>
       Layer.effectContext<LocationServices, never, never>(Effect.die("Unexpected hook Location acquisition"))))],
   [SessionExecution.node, execution],
+  [TaskGovernance.node, governance],
   [ExecutionHost.node, Layer.succeed(ExecutionHost.Service, ExecutionHost.of([host]))],
   [LayerNodePlatform.llmClient, client],
   [Snapshot.node, Snapshot.noopLayer],
   [Config.node, Layer.succeed(Config.Service, { entries: () => Effect.succeed([]) })],
   [SkillGuidance.node, Layer.succeed(SkillGuidance.Service, { load: () => Effect.succeed(SystemContext.empty) })],
   [ReferenceGuidance.node, Layer.succeed(ReferenceGuidance.Service, { load: () => Effect.succeed(SystemContext.empty) })],
-]).pipe(Layer.provideMerge(harnessLayer)))
+]).pipe(Layer.provideMerge(harnessLayer))
 
-const setup = Effect.gen(function* () {
+const it = testEffect(taskLayer(
+  { directory, project: { id: ProjectV2.ID.global, directory } },
+  (directory) => Effect.succeed({ id: ProjectV2.ID.global, directory }),
+))
+
+const setupAt = (parentDirectory: AbsolutePath) => Effect.gen(function* () {
   const harness = yield* Harness
   const runner = yield* SessionRunner.Service
   yield* Deferred.succeed(harness.runner, runner)
@@ -169,7 +244,7 @@ const setup = Effect.gen(function* () {
     draft.model.default.set(providerID, cheap.id)
   })
   const sessions = yield* SessionV2.Service
-  const parent = yield* sessions.create({ location: { directory }, agent: caller, model: cheap })
+  const parent = yield* sessions.create({ location: { directory: parentDirectory }, agent: caller, model: cheap })
   return {
     harness, agents, catalog, sessions, parent,
     registry: yield* ToolRegistry.Service,
@@ -177,6 +252,8 @@ const setup = Effect.gen(function* () {
     permission: yield* PermissionV2.Service,
   }
 })
+
+const setup = setupAt(directory)
 
 const record = Effect.fn("TaskTest.record")(function* (
   sessionID: SessionV2.ID,
@@ -520,6 +597,143 @@ describe("TaskTool canonical delegation", () => {
     expect(f.harness.requests).toHaveLength(1)
   }))
 
+  it.effect("recorded child provider error reaches parent durable history and the next model turn without implicit replay", () => Effect.gen(function* () {
+    const f = yield* setup
+    yield* f.sessions.prompt({ sessionID: f.parent.id, prompt: { text: "parent-provider-error" }, resume: false })
+    yield* f.sessions.resume(f.parent.id)
+    const children = (yield* f.sessions.list()).filter((session) => session.parentID === f.parent.id)
+    expect(children).toHaveLength(1)
+    const child = children[0]
+    const messages = yield* f.sessions.messages({ sessionID: child.id, order: "asc" })
+    const assistants = messages.filter((message) => message.type === "assistant")
+    expect(assistants).toEqual(expect.arrayContaining([expect.objectContaining({
+      finish: "error", error: expect.objectContaining({ message: "child provider event failed" }),
+    })]))
+    expect(assistants.every((message) => message.finish === "error" && message.error?.message === "child provider event failed")).toBe(true)
+    const context = yield* f.sessions.context(f.parent.id)
+    const tools = context.flatMap((message) => message.type === "assistant" ? message.content : [])
+      .filter((part) => part.type === "tool" && part.id === "provider-error-task")
+    expect(tools).toEqual([expect.objectContaining({
+      id: "provider-error-task", name: "task", state: expect.objectContaining({
+        status: "error", error: expect.objectContaining({
+          message: `Task ${child.id} failed: Task ${child.id} finished without a completed assistant reply: the child failed: child provider event failed`,
+        }),
+      }),
+    })])
+    const history = yield* f.sessions.history({ sessionID: f.parent.id, limit: 100 })
+    const failures = history.events.filter(Schema.is(SessionEvent.Tool.Failed))
+      .filter((event) => event.data.sessionID === f.parent.id && event.data.callID === "provider-error-task")
+    expect(failures).toHaveLength(1)
+    expect(failures[0].data.error.message).toContain(child.id)
+    expect(failures[0].data.error.message).toContain("the child failed: child provider event failed")
+    expect(f.harness.requests).toHaveLength(3)
+    expect(f.harness.requests.map((request) => request.messages.filter((message) => message.role === "user").at(-1)?.content
+      .flatMap((part) => part.type === "text" ? [part.text] : []).join("\n"))).toEqual([
+      "parent-provider-error", "provider-error", "parent-provider-error",
+    ])
+    expect(f.harness.requests.map((request) => String(request.model.id))).toEqual([
+      "deployment-cheap", "deployment-cheap", "deployment-cheap",
+    ])
+    const toolResult = f.harness.requests[2].messages.flatMap((message) => message.role === "tool" ? message.content : [])
+      .filter((part) => part.type === "tool-result").find((part) => part.id === "provider-error-task")
+    if (!toolResult) throw new Error("Missing parent model tool result")
+    const failure = Schema.decodeUnknownSync(Schema.Struct({ error: Schema.Struct({ message: Schema.String }) }))(toolResult.result.value)
+    expect(toolResult).toMatchObject({
+      id: "provider-error-task", name: "task",
+      result: { type: "error" },
+    })
+    expect(failure.error.message).toContain(child.id)
+    expect(failure.error.message).toContain("the child failed: child provider event failed")
+    expect(context.at(-1)).toMatchObject({ type: "assistant", finish: "stop", content: [
+      expect.objectContaining({ type: "text", text: "answer:parent-provider-error" }),
+    ] })
+    const execution = yield* SessionExecution.Service
+    expect((yield* execution.active).size).toBe(0)
+    const called = history.events.filter(Schema.is(SessionEvent.Tool.Called))
+      .filter((event) => event.data.sessionID === f.parent.id && event.data.callID === "provider-error-task")
+    expect(called).toHaveLength(1)
+    expect((yield* settleTool(f.registry, {
+      sessionID: f.parent.id, agent: caller, assistantMessageID: called[0].data.assistantMessageID, model: cheap,
+      call: { type: "tool-call", id: called[0].data.callID, name: "task", input: called[0].data.input },
+    })).result).toMatchObject({
+      type: "error", value: expect.stringContaining("resume explicitly with task_id"),
+    })
+    expect(f.harness.requests).toHaveLength(3)
+    expect((yield* execution.active).size).toBe(0)
+  }))
+
+  it.effect("child content-filter finish reaches parent durable history and the next model turn", () => Effect.gen(function* () {
+    const f = yield* setup
+    yield* f.sessions.prompt({ sessionID: f.parent.id, prompt: { text: "parent-content-filter" }, resume: false })
+    yield* f.sessions.resume(f.parent.id)
+    const children = (yield* f.sessions.list()).filter((session) => session.parentID === f.parent.id)
+    expect(children).toHaveLength(1)
+    const child = children[0]
+    const messages = yield* f.sessions.messages({ sessionID: child.id, order: "asc" })
+    const assistant = messages.filter((message) => message.type === "assistant").at(-1)
+    expect(assistant?.time.completed).toBeDefined()
+    expect(assistant?.finish).toBe("content-filter")
+    expect(assistant?.error).toBeUndefined()
+    const reason = `Task ${child.id} failed: Task ${child.id} finished without a completed assistant reply: the child's reply ended with finish reason "content-filter"`
+    const context = yield* f.sessions.context(f.parent.id)
+    const tools = context.flatMap((message) => message.type === "assistant" ? message.content : [])
+      .filter((part) => part.type === "tool" && part.id === "content-filter-task")
+    expect(tools).toEqual([expect.objectContaining({
+      id: "content-filter-task", name: "task", state: expect.objectContaining({
+        status: "error", error: expect.objectContaining({ message: reason }),
+      }),
+    })])
+    const history = yield* f.sessions.history({ sessionID: f.parent.id, limit: 100 })
+    const failures = history.events.filter(Schema.is(SessionEvent.Tool.Failed))
+      .filter((event) => event.data.sessionID === f.parent.id && event.data.callID === "content-filter-task")
+    expect(failures).toHaveLength(1)
+    expect(failures[0].data.error.message).toBe(reason)
+    expect(f.harness.requests).toHaveLength(3)
+    expect(f.harness.requests.map((request) => request.messages.filter((message) => message.role === "user").at(-1)?.content
+      .flatMap((part) => part.type === "text" ? [part.text] : []).join("\n"))).toEqual([
+      "parent-content-filter", "child-content-filter", "parent-content-filter",
+    ])
+    const toolResult = f.harness.requests[2].messages.flatMap((message) => message.role === "tool" ? message.content : [])
+      .filter((part) => part.type === "tool-result").find((part) => part.id === "content-filter-task")
+    if (!toolResult) throw new Error("Missing parent model tool result")
+    expect(toolResult).toMatchObject({ id: "content-filter-task", name: "task", result: { type: "error" } })
+    const failure = Schema.decodeUnknownSync(Schema.Struct({ error: Schema.Struct({ message: Schema.String }) }))(toolResult.result.value)
+    expect(failure.error.message).toBe(reason)
+    expect(context.at(-1)).toMatchObject({ type: "assistant", finish: "stop", content: [
+      expect.objectContaining({ type: "text", text: "answer:parent-content-filter" }),
+    ] })
+  }))
+
+  // Characterization only: a child stream with no step settlement leaves an incomplete assistant, so the parent sees
+  // the incomplete wording. This is not evidence that a real interruption produced this state (an active
+  // interruption records a failure instead, by existing runner semantics) and does not reach the
+  // completed-without-finish branch.
+  it.effect("child with no step settlement characterizes the incomplete parent wording through the live fixture", () => Effect.gen(function* () {
+    const f = yield* setup
+    yield* f.sessions.prompt({ sessionID: f.parent.id, prompt: { text: "parent-no-finish" }, resume: false })
+    yield* f.sessions.resume(f.parent.id)
+    const children = (yield* f.sessions.list()).filter((session) => session.parentID === f.parent.id)
+    expect(children).toHaveLength(1)
+    const child = children[0]
+    const messages = yield* f.sessions.messages({ sessionID: child.id, order: "asc" })
+    const assistant = messages.filter((message) => message.type === "assistant").at(-1)
+    expect(assistant?.time.completed).toBeUndefined()
+    expect(assistant?.finish).toBeUndefined()
+    expect(assistant?.error).toBeUndefined()
+    const reason = `Task ${child.id} failed: Task ${child.id} finished without a completed assistant reply: the child's reply never completed (it was interrupted or cancelled)`
+    const history = yield* f.sessions.history({ sessionID: f.parent.id, limit: 100 })
+    const failures = history.events.filter(Schema.is(SessionEvent.Tool.Failed))
+      .filter((event) => event.data.sessionID === f.parent.id && event.data.callID === "no-finish-task")
+    expect(failures).toHaveLength(1)
+    expect(failures[0].data.error.message).toBe(reason)
+    expect(f.harness.requests).toHaveLength(3)
+    const toolResult = f.harness.requests[2].messages.flatMap((message) => message.role === "tool" ? message.content : [])
+      .filter((part) => part.type === "tool-result").find((part) => part.id === "no-finish-task")
+    if (!toolResult) throw new Error("Missing parent model tool result")
+    const failure = Schema.decodeUnknownSync(Schema.Struct({ error: Schema.Struct({ message: Schema.String }) }))(toolResult.result.value)
+    expect(failure.error.message).toBe(reason)
+  }))
+
   it.effect("rejects forged invocation, hidden or primary targets, missing parents, cycles, and depth beyond eight", () => Effect.gen(function* () {
     const f = yield* setup
     const call = yield* record(f.parent.id, "identity")
@@ -692,5 +906,233 @@ describe("TaskTool durable ownership regressions", () => {
     expect(stillActive).toBe(true)
     expect(result(yield* Fiber.join(owner)).text).toBe("answer:joined-cancel")
     expect(f.harness.requests).toHaveLength(1)
+  }))
+})
+
+// A real repository, so `worktree: true` creates and removes real worktrees.
+const repo = await tmpdir()
+await $`git init`.cwd(repo.path).quiet()
+await $`git config commit.gpgsign false`.cwd(repo.path).quiet()
+await $`git config user.email test@orchestra.test`.cwd(repo.path).quiet()
+await $`git config user.name Test`.cwd(repo.path).quiet()
+await $`git commit --allow-empty -m root`.cwd(repo.path).quiet()
+afterAll(() => repo[Symbol.asyncDispose]())
+
+const repoDirectory = AbsolutePath.make(repo.path)
+const repoProject = ProjectV2.ID.make("task-worktree-project")
+const repoStore = AbsolutePath.make(path.join(repo.path, ".git"))
+const repoIt = testEffect(taskLayer(
+  { directory: repoDirectory, project: { id: repoProject, directory: repoDirectory }, vcs: { type: "git", store: repoStore } },
+  (resolved) => Effect.succeed({ id: repoProject, directory: resolved, vcs: { type: "git" as const, store: repoStore } }),
+))
+
+// Every worktree the repository knows plus whatever the `.worktrees` folder holds: an orphan shows in either.
+const worktrees = () => Effect.promise(async () => ({
+  registered: (await $`git worktree list --porcelain`.cwd(repo.path).text()).split("\n").filter((line) => line.startsWith("worktree ")),
+  folders: (await fs.readdir(path.join(repo.path, ".worktrees")).catch(() => [] as string[])).filter((name) => name !== ".gitignore"),
+}))
+
+const assertDirectoryMissing = (directory: string) => Effect.promise(async () => {
+  const absent = await fs.lstat(directory).then(() => false, (error: unknown) => {
+    if (typeof error === "object" && error !== null && "code" in error && error.code === "ENOENT") return true
+    throw error
+  })
+  expect(absent).toBe(true)
+})
+
+const seedRepoProject = Effect.gen(function* () {
+  const database = yield* Database.Service
+  yield* database.db.insert(ProjectTable).values({
+    id: repoProject, worktree: repoDirectory, sandboxes: [], time_created: 1, time_updated: 1,
+  }).run().pipe(Effect.orDie)
+  yield* database.db.insert(ProjectDirectoryTable).values({ project_id: repoProject, directory: repoDirectory }).run().pipe(Effect.orDie)
+})
+
+describe("TaskTool worktree lifecycle", () => {
+  repoIt.live("a fresh worktree is removed when governance refuses admission", () => Effect.gen(function* () {
+    yield* seedRepoProject
+    const f = yield* setupAt(repoDirectory)
+    const before = yield* worktrees()
+    const admission = { ...(yield* gate), refuse: true }
+    f.harness.admission = admission
+    const task = yield* settleTool(f.registry, yield* record(f.parent.id, "admission-refused", {
+      worktree: true, description: "Admission refused task",
+    })).pipe(Effect.forkChild)
+    yield* Effect.gen(function* () {
+      yield* Effect.raceFirst(
+        Deferred.await(admission.started),
+        Fiber.await(task).pipe(Effect.flatMap(() => Effect.die(new Error("Admission refusal task settled before admission started")))),
+      )
+      const during = yield* worktrees()
+      const added = during.registered.filter((entry) => !before.registered.includes(entry))
+      expect(added).toHaveLength(1)
+      const directory = added[0].slice("worktree ".length)
+      expect((yield* Effect.promise(() => fs.stat(directory))).isDirectory()).toBe(true)
+      expect((yield* f.sessions.list()).filter((session) => session.parentID === f.parent.id)).toHaveLength(0)
+      yield* Deferred.succeed(admission.release, undefined)
+      expect((yield* Fiber.join(task)).result).toMatchObject({ type: "error", value: expect.stringContaining("worktree admission refused") })
+      expect(yield* worktrees()).toEqual(before)
+      yield* Effect.promise(async () => { await expect(fs.stat(directory)).rejects.toMatchObject({ code: "ENOENT" }) })
+      expect((yield* f.sessions.list()).filter((session) => session.parentID === f.parent.id)).toHaveLength(0)
+      expect(f.harness.requests).toHaveLength(0)
+    }).pipe(Effect.ensuring(Deferred.succeed(admission.release, undefined).pipe(Effect.asVoid)))
+  }))
+
+  repoIt.live("a fresh worktree is removed when model policy refuses the task", () => Effect.gen(function* () {
+    yield* seedRepoProject
+    const f = yield* setupAt(repoDirectory)
+    const before = yield* worktrees()
+    const admission = { ...(yield* gate), refuse: false }
+    f.harness.admission = admission
+    const task = yield* settleTool(f.registry, yield* record(f.parent.id, "policy-refused", {
+      worktree: true, model: `${providerID}/expensive`, description: "Policy refused task",
+    })).pipe(Effect.forkChild)
+    yield* Effect.gen(function* () {
+      yield* Effect.raceFirst(
+        Deferred.await(admission.started),
+        Fiber.await(task).pipe(Effect.flatMap(() => Effect.die(new Error("Policy refusal task settled before admission started")))),
+      )
+      const during = yield* worktrees()
+      const added = during.registered.filter((entry) => !before.registered.includes(entry))
+      expect(added).toHaveLength(1)
+      const directory = added[0].slice("worktree ".length)
+      expect((yield* Effect.promise(() => fs.stat(directory))).isDirectory()).toBe(true)
+      yield* f.policy.set(f.parent.id, { mode: "allowlist", models: [cheap] })
+      yield* Deferred.succeed(admission.release, undefined)
+      expect((yield* Fiber.join(task)).result).toMatchObject({ type: "error", value: expect.stringContaining("Subagent model denied") })
+      expect(yield* worktrees()).toEqual(before)
+      yield* Effect.promise(async () => { await expect(fs.stat(directory)).rejects.toMatchObject({ code: "ENOENT" }) })
+      expect((yield* f.sessions.list()).filter((session) => session.parentID === f.parent.id)).toHaveLength(0)
+      expect(f.harness.requests).toHaveLength(0)
+    }).pipe(Effect.ensuring(Deferred.succeed(admission.release, undefined).pipe(Effect.asVoid)))
+  }))
+
+  repoIt.live("an explicitly reused registered worktree survives a failed task", () => Effect.gen(function* () {
+    yield* seedRepoProject
+    const f = yield* setupAt(repoDirectory)
+    const directory = path.join(repo.path, ".worktrees", "reused-task")
+    yield* Effect.promise(() => fs.mkdir(path.dirname(directory), { recursive: true }))
+    yield* Effect.promise(() => $`git worktree add --detach ${directory} HEAD`.cwd(repo.path).quiet())
+    yield* Effect.gen(function* () {
+      const registered = yield* Effect.promise(() => fs.realpath(directory))
+      const before = yield* worktrees()
+      expect(before.registered).toContain(`worktree ${registered.replaceAll("\\", "/")}`)
+      expect((yield* Effect.promise(() => fs.stat(registered))).isDirectory()).toBe(true)
+      expect(yield* Effect.promise(() => fs.readdir(registered))).toContain(".git")
+      yield* f.policy.set(f.parent.id, { mode: "allowlist", models: [cheap] })
+      const settled = yield* settleTool(f.registry, yield* record(f.parent.id, "reuse-refused", {
+        directory: registered, model: `${providerID}/expensive`,
+      }))
+      expect(settled.result).toMatchObject({ type: "error", value: expect.stringContaining("Subagent model denied") })
+      expect(yield* worktrees()).toEqual(before)
+      expect((yield* Effect.promise(() => fs.stat(registered))).isDirectory()).toBe(true)
+      expect(yield* Effect.promise(() => fs.readdir(registered))).toContain(".git")
+      expect((yield* f.sessions.list()).filter((session) => session.parentID === f.parent.id)).toHaveLength(0)
+      expect(f.harness.requests).toHaveLength(0)
+    }).pipe(Effect.ensuring(Effect.promise(() => $`git worktree remove ${directory}`.cwd(repo.path).quiet()).pipe(Effect.asVoid)))
+  }))
+
+  repoIt.live("a task denied after its worktree was made removes the worktree", () => Effect.gen(function* () {
+    yield* seedRepoProject
+    const f = yield* setupAt(repoDirectory)
+    const before = yield* worktrees()
+    yield* f.agents.transform((draft) => draft.update(caller, (agent) => {
+      agent.permissions = [{ action: "task", resource: "*", effect: "deny" }]
+    }))
+    const settled = yield* settleTool(f.registry, yield* record(f.parent.id, "denied-worktree", { worktree: true, description: "Denied worktree task" }))
+    expect(settled.result.type).toBe("error")
+    expect(yield* worktrees()).toEqual(before)
+    expect((yield* f.sessions.list()).filter((session) => session.parentID === f.parent.id)).toHaveLength(0)
+    expect(f.harness.requests).toHaveLength(0)
+  }))
+
+  repoIt.live("a task rejected after observing its pending-permission worktree removes that worktree", () => Effect.gen(function* () {
+    yield* seedRepoProject
+    const f = yield* setupAt(repoDirectory)
+    const before = yield* worktrees()
+    yield* f.agents.transform((draft) => draft.update(caller, (agent) => {
+      agent.permissions = [{ action: "task", resource: "*", effect: "ask" }]
+    }))
+    const call = yield* record(f.parent.id, "observed-reject-worktree", { worktree: true, description: "Observed rejection task" })
+    const task = yield* settleTool(f.registry, call).pipe(Effect.forkChild)
+    const asked = yield* Effect.repeat(f.permission.forSession(f.parent.id), { until: (requests) => requests.length === 1 })
+    expect(asked[0]).toMatchObject({
+      action: "task", resources: [worker, `${providerID}/cheap`],
+      source: { type: "tool", messageID: call.assistantMessageID, callID: call.call.id },
+    })
+    expect((yield* f.sessions.list()).filter((session) => session.parentID === f.parent.id)).toHaveLength(0)
+    expect(f.harness.requests).toHaveLength(0)
+    // Permission waits after creation but before child adoption: this call must have something to clean up.
+    const during = yield* worktrees()
+    expect(during.registered).toHaveLength(before.registered.length + 1)
+    expect(during.folders).toHaveLength(before.folders.length + 1)
+    const added = during.registered.filter((entry) => !before.registered.includes(entry))
+    expect(added).toHaveLength(1)
+    const directory = added[0].slice("worktree ".length)
+    expect((yield* Effect.promise(() => fs.lstat(directory))).isDirectory()).toBe(true)
+    yield* f.permission.reply({ requestID: asked[0].id, reply: "reject" })
+    const outcome = yield* Fiber.await(task)
+    expect(Exit.isFailure(outcome)).toBe(true)
+    if (!Exit.isFailure(outcome)) throw new Error("Expected rejected Task failure")
+    // PermissionV2.assert turns an explicit rejection without feedback into a DeclinedError defect.
+    expect(outcome.cause.reasons.some((reason) =>
+      reason._tag === "Die" && Schema.is(PermissionV2.DeclinedError)(reason.defect),
+    )).toBe(true)
+    expect(yield* worktrees()).toEqual(before)
+    yield* assertDirectoryMissing(directory)
+    expect(yield* f.permission.forSession(f.parent.id)).toHaveLength(0)
+    expect((yield* f.sessions.list()).filter((session) => session.parentID === f.parent.id)).toHaveLength(0)
+    expect(f.harness.requests).toHaveLength(0)
+  }))
+
+  repoIt.live("a task interrupted after observing its pending-permission worktree removes that worktree", () => Effect.gen(function* () {
+    yield* seedRepoProject
+    const f = yield* setupAt(repoDirectory)
+    const before = yield* worktrees()
+    yield* f.agents.transform((draft) => draft.update(caller, (agent) => {
+      agent.permissions = [{ action: "task", resource: "*", effect: "ask" }]
+    }))
+    const call = yield* record(f.parent.id, "observed-interrupt-worktree", { worktree: true, description: "Observed interruption task" })
+    const task = yield* settleTool(f.registry, call).pipe(Effect.forkChild)
+    const asked = yield* Effect.repeat(f.permission.forSession(f.parent.id), { until: (requests) => requests.length === 1 })
+    expect(asked[0]).toMatchObject({
+      action: "task", resources: [worker, `${providerID}/cheap`],
+      source: { type: "tool", messageID: call.assistantMessageID, callID: call.call.id },
+    })
+    expect((yield* f.sessions.list()).filter((session) => session.parentID === f.parent.id)).toHaveLength(0)
+    expect(f.harness.requests).toHaveLength(0)
+    const during = yield* worktrees()
+    expect(during.registered).toHaveLength(before.registered.length + 1)
+    expect(during.folders).toHaveLength(before.folders.length + 1)
+    const added = during.registered.filter((entry) => !before.registered.includes(entry))
+    expect(added).toHaveLength(1)
+    const directory = added[0].slice("worktree ".length)
+    expect((yield* Effect.promise(() => fs.lstat(directory))).isDirectory()).toBe(true)
+    yield* Fiber.interrupt(task)
+    const outcome = yield* Fiber.await(task)
+    expect(Exit.isFailure(outcome)).toBe(true)
+    if (!Exit.isFailure(outcome)) throw new Error("Expected interrupted Task failure")
+    expect(Cause.hasInterrupts(outcome.cause)).toBe(true)
+    expect(yield* worktrees()).toEqual(before)
+    yield* assertDirectoryMissing(directory)
+    expect(yield* f.permission.forSession(f.parent.id)).toHaveLength(0)
+    expect((yield* f.sessions.list()).filter((session) => session.parentID === f.parent.id)).toHaveLength(0)
+    expect(f.harness.requests).toHaveLength(0)
+  }))
+
+  // Positive control: once the child Session exists it owns the worktree, so the finalizer must leave it. This
+  // fixture cannot run a child in another Location (its LocationServiceMap is a stub), so the call ends early; the
+  // worktree must survive that too.
+  repoIt.live("a task whose child Session exists keeps its worktree", () => Effect.gen(function* () {
+    yield* seedRepoProject
+    const f = yield* setupAt(repoDirectory)
+    const before = yield* worktrees()
+    yield* settleTool(f.registry, yield* record(f.parent.id, "kept-worktree", { worktree: true, description: "Kept worktree task" })).pipe(Effect.exit)
+    const children = (yield* f.sessions.list()).filter((session) => session.parentID === f.parent.id)
+    expect(children).toHaveLength(1)
+    const after = yield* worktrees()
+    expect(after.registered).toHaveLength(before.registered.length + 1)
+    expect(after.folders).toHaveLength(before.folders.length + 1)
+    expect(after.registered).toContain(`worktree ${children[0].location.directory.replaceAll("\\", "/")}`)
   }))
 })

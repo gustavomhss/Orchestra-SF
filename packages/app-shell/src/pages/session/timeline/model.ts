@@ -129,7 +129,9 @@ export function selectUserMessages(messages: Message[]) {
 }
 
 export function isTimelineReady(messages: Message[] | undefined, loading: boolean) {
-  return messages !== undefined && (messages.some((message) => message.role === "user") || !loading)
+  // An empty projection already in the store stays rendered during a refresh; unmounting it would drop
+  // in-progress UI (e.g. an open menu) on every background reload of an empty session.
+  return messages !== undefined && (messages.length === 0 || messages.some((message) => message.role === "user") || !loading)
 }
 
 export function selectVisibleUserMessages(messages: UserMessage[], revertMessageID?: string) {
