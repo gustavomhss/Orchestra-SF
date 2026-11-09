@@ -33,7 +33,7 @@ export const run = Effect.fnUntraced(function* (
     }
     const staging = yield* hooks.stage(snapshot.scratch)
     if (typeof staging !== "string") return staging
-    const projected = yield* ReviewPackOxlint.prepare({ root: snapshot.root, files: selected.files, scratch: staging }).pipe(
+    const projected = yield* ReviewPackOxlint.prepare({ root: snapshot.root, files: selected.files, scratch: staging, excluded: selection.dropped }).pipe(
       Effect.catch((error) => Effect.succeed({ status: "not-run" as const, reason: hooks.unavailable(error) })),
     )
     if (projected.status !== "ok") return { status: "not-run" as const, reason: projected.reason }
