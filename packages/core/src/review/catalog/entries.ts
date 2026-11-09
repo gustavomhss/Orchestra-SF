@@ -5,6 +5,7 @@ import { oxlint } from "./oxlint"
 import { phase3 } from "./phase3"
 import { phase4 } from "./phase4"
 import { ruff } from "./ruff"
+import { zizmor } from "./zizmor"
 
 // Phase 1 entries (plan WP 1.2). Budgets, rungs, caps and thresholds are design §8.3, §8.4 and §8.6's starting values
 // (D14): tuning one is a catalog change, which changes the digest receipts record. Until the precision ledger has
@@ -76,6 +77,7 @@ export const current = {
     ruff.pack,
     actionlint.pack,
     oxlint.pack,
+    zizmor.pack,
   ],
   rules: [
     {
@@ -93,6 +95,7 @@ export const current = {
     ...ruff.rules,
     ...actionlint.rules,
     ...oxlint.rules,
+    ...zizmor.rules,
   ],
   overlays: [
     {
