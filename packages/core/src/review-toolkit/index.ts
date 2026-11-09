@@ -1,4 +1,6 @@
 export { ReviewAnalyze } from "./analyze"
+export { ReviewActionlintAnalyze } from "./actionlint-analyze"
+export { ReviewOxlintAnalyze } from "./oxlint-analyze"
 export { ReviewHistory } from "./history"
 export { ReviewItem } from "./item"
 export { ReviewNoise } from "./noise"

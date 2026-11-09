@@ -135,6 +135,8 @@ For you, this means:
 
 A changed `.py` or `.pyi` file on Standard or Deep can route the pinned Ruff check. It reports only `F821` (an undefined name) and `F823` (a local used before assignment). Orchestra provisions that binary with the host toolkit, outside the review, and does not install it during the review. The scanner's default target is Python 3.11; that is not the version the project deploys. Windows is unsupported for this check. A raw Ruff report is a diagnostic, not by itself a confirmed blocker.
 
+Changed `.js`, `.jsx`, `.ts`, `.tsx`, `.mjs`, `.cjs`, `.mts` or `.cts` files on Standard or Deep can route the pinned oxlint check. It reports only `eslint(no-debugger)` and `typescript(no-explicit-any)`, both on probation. Orchestra copies selected source bytes into a separate host-owned project with its own curated config; oxlint does not load the repository's `.oxlintrc` or project plugins, and it runs with `--no-ignore` and `--disable-nested-config`. The check is qualified on Linux x64 only; other platforms return `not-run`. A raw oxlint report is a candidate, not a confirmed defect.
+
 Changed `.github/workflows/*.yml` and `.yaml` files bind the pinned actionlint check.
 Orchestra copies selected workflow bytes into a separate host-owned project with
 its own empty configuration; actionlint does not load the repository's configuration.

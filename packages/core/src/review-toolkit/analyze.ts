@@ -21,6 +21,8 @@ import { ReviewPackRuff } from "./packs/ruff"
 import { ReviewPackSquawk } from "./packs/squawk"
 import { ReviewPackActionlint } from "./packs/actionlint"
 import { ReviewActionlintAnalyze } from "./actionlint-analyze"
+import { ReviewPackOxlint } from "./packs/oxlint"
+import { ReviewOxlintAnalyze } from "./oxlint-analyze"
 
 // K6 analyze half (design §7.2, §8.6, plan WP 1.4): the host runs the routed packs before any model turn, each confined
 // in a scratch copy (head, and base for the new-only step), keeps every raw output as a citable artifact, normalizes it
@@ -193,6 +195,18 @@ export type ActionlintHooks = {
   scanMs: number
 }
 
+export type OxlintHooks = {
+  select: typeof sourceSelection
+  stage: typeof sourceStaging
+  unavailable: typeof sourceUnavailable
+  confine: typeof confined
+  drops: typeof nativeDrops
+  lookup: typeof rules
+  check: typeof check
+  only: typeof only
+  scanMs: number
+}
+
 const runPack = Effect.fnUntraced(function* (packID: string, pack: Pack | undefined, context: RunContext) {
   const lane = context.input.lane
   if (!pack) return only({ id: packID, pack: packID, version: "unknown", lane, status: "not-run", reason: "unknown pack", workspaceExecuted: false })
@@ -207,6 +221,10 @@ const runPack = Effect.fnUntraced(function* (packID: string, pack: Pack | undefi
   if (pack.backend === "pinned" && pack.id === ReviewPackRuff.manifest.id) return yield* ruffed(pack, context)
   if (pack.backend === "pinned" && pack.id === ReviewPackActionlint.manifest.id) return yield* ReviewActionlintAnalyze.run(pack, context, {
     select: workflowSelection, stage: workflowStaging, unavailable: workflowUnavailable, confine: confined, drops: nativeDrops,
+    lookup: rules, check, only, scanMs: SCAN_MS,
+  })
+  if (pack.backend === "pinned" && pack.id === ReviewPackOxlint.manifest.id) return yield* ReviewOxlintAnalyze.run(pack, context, {
+    select: sourceSelection, stage: sourceStaging, unavailable: sourceUnavailable, confine: confined, drops: nativeDrops,
     lookup: rules, check, only, scanMs: SCAN_MS,
   })
   const scanner = pack.backend === "pinned" ? pinnedScanner(pack.id) : undefined
@@ -412,6 +430,54 @@ export function workflowStaging(scratch: string) {
 
 function workflowUnavailable(error: unknown) {
   return `workflow-input-unavailable: ${error !== null && typeof error === "object" && "code" in error ? String(error.code) : "error"}`
+}
+
+// The oxlint projection stages source files, not workflows. Same scratch isolation, distinct name.
+export function sourceStaging(scratch: string) {
+  return Effect.acquireRelease(
+    Effect.tryPromise({ try: () => mkdtemp(path.join(scratch, "oxlint-host-")), catch: sourceUnavailable }),
+    (directory) => Effect.promise(() => rm(directory, { recursive: true, force: true })),
+  ).pipe(Effect.catch((reason) => Effect.succeed({ status: "not-run" as const, reason })))
+}
+
+function sourceUnavailable(error: unknown) {
+  return `source-input-unavailable: ${error !== null && typeof error === "object" && "code" in error ? String(error.code) : "error"}`
+}
+
+async function sourceSelection(root: string, input: RunInput, side: "head" | "base") {
+  if (input.scope !== "files") return { files: await regularSource(root) }
+  const requested = input.files ?? []
+  const flavor = ReviewNativeFiles.flavor(root)
+  const escaped = requested.find((file) => !ReviewNativeFiles.containedPath(root, file))
+  if (escaped) return { refused: escaped.includes("\0") ? "nul" : "path-outside" }
+  const files: string[] = []
+  for (const file of requested.filter((entry) => sourceName(flavor.basename(entry)))) {
+    const relative = ReviewNativeFiles.containedPath(root, file)
+    if (!relative) return { refused: file.includes("\0") ? "nul" : "path-outside" }
+    const walked = await copiedFile(root, relative, side)
+    if (walked === undefined) continue
+    if (typeof walked !== "string") return walked
+    files.push(walked)
+  }
+  return { files }
+}
+
+function sourceName(name: string) {
+  return [".js", ".jsx", ".ts", ".tsx", ".mjs", ".cjs", ".mts", ".cts"].some((extension) => name.endsWith(extension))
+}
+
+async function regularSource(root: string) {
+  const found: string[] = []
+  const walk = async (dir: string) => {
+    for (const entry of await readdir(dir, { withFileTypes: true })) {
+      if (entry.isSymbolicLink()) continue
+      const full = path.join(dir, entry.name)
+      if (entry.isDirectory()) await walk(full)
+      else if (entry.isFile() && sourceName(entry.name)) found.push(full)
+    }
+  }
+  await walk(root)
+  return found.sort()
 }
 
 async function workflowSelection(root: string, input: RunInput, side: "head" | "base") {
