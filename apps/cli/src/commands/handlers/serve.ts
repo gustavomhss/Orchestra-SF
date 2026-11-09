@@ -20,18 +20,22 @@ import { ProductHost } from "../../host"
 import { ChildProcessSpawner } from "effect/unstable/process/ChildProcessSpawner"
 import { Runtime } from "../../framework/runtime"
 import { Daemon } from "../../services/daemon"
+import { listenerHosts } from "./serve-host"
 import { addressInUse } from "./serve-port"
 import { ServeShutdown } from "./serve-shutdown"
 
 const SHUTDOWN_GRACE_MS = 2_000
 
-export default Runtime.handler(Commands.commands.serve, (input) => serveForever(input))
+export default Runtime.handler(Commands.commands.serve, (input) =>
+  serveForever({ ...input, allowedHosts: input["allowed-host"] }),
+)
 
 export type ServeInput = {
   readonly hostname: string
   readonly port: Option.Option<number>
   readonly register: boolean
   readonly cors?: ReadonlyArray<string>
+  readonly allowedHosts?: ReadonlyArray<string>
   /** Runs once the server answers, with the address it bound. */
   readonly onListening?: (address: HttpServer.Address, webRoot: string | undefined) => Effect.Effect<void, unknown, ChildProcessSpawner>
 }
@@ -90,7 +94,8 @@ export const serveForever = Effect.fn("cli.serve")(function* (input: ServeInput)
           Effect.provide(AppNodeBuilder.build(LayerNode.group([Database.node]))),
           Effect.catchCause((cause) => Effect.logError("legacy session import failed", cause)),
         )
-        const listening = yield* listen(input.hostname, input.port, password, hosts(), root, input.cors)
+        const allowedHosts = listenerHosts(input.hostname, input.allowedHosts)
+        const listening = yield* listen(input.hostname, input.port, password, hosts(), root, allowedHosts, input.cors)
         const address = listening.address
         // Closing the server waits for every open connection, and the event stream never ends on its own. Scope
         // finalizers run in reverse, so this drops the connections before the server closes.
@@ -110,19 +115,38 @@ export const serveForever = Effect.fn("cli.serve")(function* (input: ServeInput)
     )
 })
 
-function listen(hostname: string, port: Option.Option<number>, password: string, host: ReturnType<typeof hosts>, root: string | undefined, cors?: ReadonlyArray<string>) {
-  if (Option.isSome(port)) return bind(hostname, port.value, password, host, root, cors)
+function listen(
+  hostname: string,
+  port: Option.Option<number>,
+  password: string,
+  host: ReturnType<typeof hosts>,
+  root: string | undefined,
+  allowedHosts: ReadonlyArray<string>,
+  cors?: ReadonlyArray<string>,
+) {
+  if (Option.isSome(port)) return bind(hostname, port.value, password, host, root, allowedHosts, cors)
   const next = (port: number): ReturnType<typeof bind> =>
-    bind(hostname, port, password, host, root, cors).pipe(
+    bind(hostname, port, password, host, root, allowedHosts, cors).pipe(
       Effect.catch((error) => (port === 65_535 || !addressInUse(error) ? Effect.fail(error) : next(port + 1))),
     )
   return next(4096)
 }
 
-function bind(hostname: string, port: number, password: string, host: ReturnType<typeof hosts>, root: string | undefined, cors?: ReadonlyArray<string>) {
+function bind(
+  hostname: string,
+  port: number,
+  password: string,
+  host: ReturnType<typeof hosts>,
+  root: string | undefined,
+  allowedHosts: ReadonlyArray<string>,
+  cors?: ReadonlyArray<string>,
+) {
   const server = createServer()
   return Layer.build(
-    HttpRouter.serve(createRoutes({ password, host, webRoot: root, cors }), { disableListenLog: true, disableLogger: true }).pipe(
+    HttpRouter.serve(createRoutes({ password, host, webRoot: root, cors, allowedHosts }), {
+      disableListenLog: true,
+      disableLogger: true,
+    }).pipe(
       Layer.provideMerge(NodeHttpServer.layer(() => server, { port, host: hostname })),
       Layer.provide(AppNodeBuilder.build(LayerNode.group([Credential.node, PermissionSaved.node, ClaudeCodeAccount.node]))),
     ),

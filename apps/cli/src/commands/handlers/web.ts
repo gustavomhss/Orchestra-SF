@@ -19,6 +19,7 @@ export default Runtime.handler(
       port: input.port,
       register: false,
       cors: input.cors,
+      allowedHosts: input.mdns ? [...input["allowed-host"], input["mdns-domain"]] : input["allowed-host"],
       onListening: (address, root) =>
         Effect.gen(function* () {
           if (!root) return yield* Effect.fail(new Error("The web interface is not built in this install. Build apps/web or set ORCHESTRA_WEB_UI_DIR."))

@@ -21,7 +21,29 @@ Servers are Orchestra server connections, not model providers or MCP servers.
 - A saved HTTP connection's row menu offers **Edit** and **Delete**. Built-in connections cannot be edited or deleted there. **Delete** asks for confirmation: it removes the saved connection, its password and its open tabs from this app. It does not delete the remote server's projects or sessions.
 - Where choosing a default is supported, use **Set as default** or **Remove default** in the row menu; a **Default** tag marks the selected connection. Server availability depends on the app and platform; a saved address does not start a remote Orchestra server for you.
 
-Saving a connection does not secure the remote listener. The Orchestra CLI server uses its saved service password unless a nonempty `ORCHESTRA_SERVER_PASSWORD` overrides it. A network listener using plain HTTP sends that password and your traffic without encryption: use a trusted network or terminate HTTPS at a trusted proxy. Browser-origin/CORS checks are not authentication or a Host-header allowlist.
+Saving a connection does not secure the remote listener. The Orchestra CLI server uses its saved service password unless a nonempty `ORCHESTRA_SERVER_PASSWORD` overrides it. A network listener using plain HTTP sends that password and your traffic without encryption: use a trusted network or terminate HTTPS at a trusted proxy. Browser-origin/CORS checks are not authentication.
+
+### Listener hostnames
+
+The `serve` and `web` listeners accept `localhost`, `127.0.0.1`, `[::1]`, the bind hostname, and local IPv4/IPv6 interface addresses captured once at startup, without DNS lookups. IPv6 addresses use brackets; discovered addresses containing a zone identifier are omitted. Binding to `0.0.0.0` or `::` does not allow arbitrary HTTP Host values.
+
+For a reverse proxy or another hostname, repeat `--allowed-host` (up to 100 explicit values). Use hostnames, not full URLs, and brackets for IPv6. Invalid explicit values fail startup visibly.
+
+```sh
+orchestra serve --hostname 0.0.0.0 \
+  --allowed-host proxy.example.test \
+  --allowed-host orchestra.example.test
+
+orchestra web --allowed-host proxy.example.test
+```
+
+With `web --mdns`, the `--mdns-domain` value is also allowed. Supplying `--mdns-domain` without enabling mDNS does not add that name.
+
+Admission checks the actual HTTP `Host` header received by the listener. `Forwarded` and `X-Forwarded-Host` do not authorize a different Host. Configure the proxy's upstream Host accordingly. Unknown or malformed Host values receive HTTP **421 Misdirected Request**. An allowed Host still requires the usual authentication on protected API routes; CORS remains a separate policy.
+
+The host comparison ignores port, letter case and a final dot. Restart the listener to refresh its interface-address snapshot.
+
+Saving or editing a connection in Settings does not configure the remote listener's bind address, allowed hosts or authentication. Configure these on the machine running that server.
 
 ## Shortcuts
 
