@@ -150,7 +150,6 @@ describe("makePinnedClient", () => {
       for (let attempt = 0; attempt < 100 && !aborted; attempt++) {
         await new Promise((resolve) => setTimeout(resolve, 10))
       }
-      request.interrupt()
       expect(aborted).toBe(true)
     } finally {
       server.closeAllConnections()
