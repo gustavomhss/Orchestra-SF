@@ -455,7 +455,9 @@ async function mockServer(page: Page, events: EventPayload[], messages = [userMe
 
 // Mirror the streamed text in the history a reload would read: the server persists streamed content, so the
 // fixture history served by pageMessages should contain it too.
-function settleTextPart(history: typeof [userMessage, assistantMessage]) {
+type MockMessages = Parameters<typeof mockServer>[2]
+
+function settleTextPart(history: MockMessages) {
   const assistant = history.find((message) => message.info.id === assistantMessageID)
   if (!assistant || assistant.parts.some((part) => part.id === textPartID)) return
   assistant.parts.push({
@@ -467,7 +469,7 @@ function settleTextPart(history: typeof [userMessage, assistantMessage]) {
   })
 }
 
-function settleEditAdditions(history: typeof [userMessage, assistantMessage], additions: number) {
+function settleEditAdditions(history: MockMessages, additions: number) {
   for (const message of history) {
     const part = message.parts.find((entry) => entry.id === editPartID) as typeof editPart | undefined
     if (part) part.state.metadata.filediff.additions = additions
