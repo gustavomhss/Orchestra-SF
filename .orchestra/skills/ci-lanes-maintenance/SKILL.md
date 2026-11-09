@@ -5,7 +5,7 @@ description: How test.yml splits the epic suite into time-balanced shards, the j
 
 # CI lanes maintenance
 
-`.github/workflows/test.yml` runs the epic suite. No job may run longer than 10 minutes (`timeout-minutes: 10`); the aim is about 5 minutes of test time per job. The planner `packages/script/src/test-plan.ts` and its data file `packages/script/src/test-timings.json` decide how many shards exist and which test files each one runs.
+`.github/workflows/test.yml` runs the epic suite. No job may run longer than 10 minutes (`timeout-minutes: 10`), with one documented exception: the `e2e` lane has 15 job minutes and a 12-minute step, because a shard Chromium boots its own app server and needs about 8.5 minutes under the account's runner cap. The aim is about 5 minutes of test time per job. The planner `packages/script/src/test-plan.ts` and its data file `packages/script/src/test-timings.json` decide how many shards exist and which test files each one runs.
 
 ## Layout
 
