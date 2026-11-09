@@ -1500,13 +1500,8 @@ export default function Page() {
         ] as const,
       ([id, ready, more, loading, scrolled]) => {
         if (!id || !ready || !more || loading) return
-        if (scrolled) {
-          // The user reached the top during a history refresh, whose scroll attempt was dropped while loading.
-          // When loading finishes, re-trigger the request instead of losing the position entirely.
-          if (!historyFailed.has(sessionOwnership.key())) onHistoryScroll()
-          return
-        }
-        fill()
+        if (scrolled) { if (!historyFailed.has(sessionOwnership.key())) onHistoryScroll() }
+        else fill()
       },
       { defer: true },
     ),
