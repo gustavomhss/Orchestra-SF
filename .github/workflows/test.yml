@@ -499,7 +499,10 @@ jobs:
         # coverage; it runs only when dispatched with windows_e2e. Windows unit tests always run.
         settings: ${{ fromJSON(inputs.windows_e2e && '[{"name":"linux","host":"ubuntu-24.04"},{"name":"windows","host":"windows-latest"}]' || '[{"name":"linux","host":"ubuntu-24.04"}]') }}
     runs-on: ${{ matrix.settings.host }}
-    timeout-minutes: 10
+    # The e2e lane is the documented exception to the 10-minute per-job budget: each shard boots its own app
+    # server and Chromium, and under the account's max-parallel cap a whole shard needs ~8.5 minutes, so the
+    # lane gets 15 job minutes with a 12-minute step. All other test jobs stay at 10.
+    timeout-minutes: 15
     env:
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.playwright-browsers
     defaults:
@@ -584,7 +587,8 @@ jobs:
         env:
           CI: true
         # The unsharded single-worker suite took 20-30 minutes; a shard is planned at about 4.5.
-        timeout-minutes: 8
+        # The e2e job budget above documents the exception: under runner contention a shard needs ~8.5, so 12.
+        timeout-minutes: 12
 
       - name: Upload Playwright artifacts
         if: always() && steps.previous.outputs.hit != 'true'
