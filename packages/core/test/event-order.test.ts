@@ -1,5 +1,5 @@
 import { describe, expect } from "bun:test"
-import { Cause, Deferred, Effect, Exit, Fiber, Layer, Option, Schema, Stream } from "effect"
+import { Cause, Deferred, Effect, Exit, Fiber, Layer, Option, Schema, Scope, Stream } from "effect"
 import { EventV2 } from "@orchestra/core/event"
 import { Database } from "@orchestra/core/database/database"
 import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
@@ -53,7 +53,7 @@ describe("EventV2 notify order equals commit order", () => {
         : "retains the released tail ticket until its predecessor completes",
       () =>
         Effect.gen(function* () {
-          const order = EventOrder.make()
+          const order = EventOrder.make(yield* Scope.Scope)
           const first = yield* order.take("aggregate")
           const second = yield* order.take("aggregate")
           if (!first || !second) throw new Error("Expected ordered tickets")
