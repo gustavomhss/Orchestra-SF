@@ -38,7 +38,7 @@ test(`catalog, filter, exact reader, safe text and keyboard in both directions`,
   expect(requests).toHaveLength(1)
   const url = new URL(requests[0])
   expect(url.origin).toBe(serverA)
-  expect(url.pathname).toBe("/api/skill")
+  expect(url.pathname).toBe("/api/skill/catalog")
   expect(url.searchParams.get("location[directory]")).toBe(directory)
 
   const dialog = page.getByRole("dialog")
@@ -324,7 +324,7 @@ test(`profile ownership, same directory and a late response from A`, async ({ pa
         failed.filter(
           (url) =>
             new URL(url).origin === serverA &&
-            new URL(url).pathname === ("/api/skill"),
+            new URL(url).pathname === ("/api/skill/catalog"),
         ).length,
     )
     .toBe(1)
@@ -503,6 +503,39 @@ async function setup(
       const body: unknown = method === "PUT" ? route.request().postDataJSON() : undefined
       input.writes?.push({ method, url: url.toString(), body })
       return writeSkill(route, { path, method, body, url, location, skills: input.response })
+    }
+    // The catalog lists metadata without instruction bodies; the full entry loads by exact name when a card opens.
+    if (path === "/api/skill/catalog" && route.request().method() === "GET") {
+      input.requests?.push(url.toString())
+      if (url.origin === serverA) await input.beforeA?.()
+      const skills =
+        url.origin === serverA
+          ? (input.response?.raw ??
+            (input.response?.skills ?? catalog).filter((skill) => !input.response?.hidden?.includes(skill.location)))
+          : [{ ...catalog[1], name: "Server B instructions", content: "Only server B.\n" }]
+      await json(
+        route,
+        {
+          location,
+          data: (skills as SkillFixture[]).map((skill) => {
+            const { content, ...metadata } = skill
+            return metadata
+          }),
+        },
+        url.origin === serverA ? (input.response?.status ?? 200) : 200,
+      )
+      if (url.origin === serverA) input.afterA?.()
+      return
+    }
+    if (path === "/api/skill/by-name" && route.request().method() === "GET") {
+      const name = url.searchParams.get("name")
+      const skills =
+        url.origin === serverA
+          ? (input.response?.raw ??
+            (input.response?.skills ?? catalog).filter((skill) => !input.response?.hidden?.includes(skill.location)))
+          : [{ ...catalog[1], name: "Server B instructions", content: "Only server B.\n" }]
+      const skill = (skills as SkillFixture[]).find((entry) => entry.name === name) ?? null
+      return json(route, { location, data: skill })
     }
     if (path === "/skill" || path === "/api/skill") {
       input.requests?.push(url.toString())
