@@ -105,7 +105,7 @@ const assistantMessage = {
 test.describe("regression: session timeline local row state", () => {
   test("keeps a manually collapsed tool collapsed when later assistant content streams", async ({ page }) => {
     const events: EventPayload[] = []
-    await mockServer(page, events)
+    const server = await mockServer(page, events)
     await configurePage(page)
 
     await page.goto(`/${base64Encode(directory)}/session/${sessionID}`)
@@ -121,10 +121,25 @@ test.describe("regression: session timeline local row state", () => {
     await wrapper.locator('[data-slot="collapsible-trigger"]').first().click()
     await expectExpanded(wrapper, false)
 
+    await expect(page.locator(`[data-timeline-part-id="${textPartID}"]`)).toHaveCount(0)
+    // Keep history coherent with the stream, and hold reconnect reloads so visibility proves the SSE path.
+    server.holdHistoryResponses()
+    settleTextPart(server.history)
     events.push(...streamedText)
 
-    await expect(page.locator(`[data-timeline-part-id="${textPartID}"]`).first()).toBeVisible({ timeout: 10_000 })
+    try {
+      await expect(page.locator(`[data-timeline-part-id="${textPartID}"]`).first()).toBeVisible({ timeout: 10_000 })
+      expect(await readToolState(page)).toEqual({
+        expanded: false,
+        row: "AssistantPart",
+        streamedTextVisible: true,
+      })
+    } finally {
+      server.releaseHistoryResponses()
+    }
 
+    await expect.poll(() => server.historyResponses()).toBeGreaterThan(0)
+    await expect(page.locator(`[data-timeline-part-id="${textPartID}"]`).first()).toBeVisible({ timeout: 10_000 })
     expect(await readToolState(page)).toEqual({
       expanded: false,
       row: "AssistantPart",
@@ -134,8 +149,8 @@ test.describe("regression: session timeline local row state", () => {
 
   test("does not remount an edit diff when sibling parts or diff counts update", async ({ page }) => {
     const events: EventPayload[] = []
+    const server = await mockServer(page, events)
     await installDiffProbe(page)
-    await mockServer(page, events)
     await configurePage(page)
 
     await page.goto(`/${base64Encode(directory)}/session/${sessionID}`)
@@ -147,25 +162,44 @@ test.describe("regression: session timeline local row state", () => {
     await expectAppVisible(file)
     await markDiffProbe(page)
 
+    await expect(page.locator(`[data-timeline-part-id="${textPartID}"]`)).toHaveCount(0)
+    server.holdHistoryResponses()
+    settleTextPart(server.history)
     events.push(...streamedText)
 
+    try {
+      await expect(page.locator(`[data-timeline-part-id="${textPartID}"]`).first()).toBeVisible({ timeout: 10_000 })
+      const siblingProbe = await readDiffProbe(page)
+      expect(siblingProbe).toEqual({
+        fileMarker: "before",
+        frameMarker: "before",
+        rowKey: `assistant-part:${userMessageID}:part:${assistantMessageID}:${editPartID}`,
+        rowMarker: "before",
+        shadowRoots: 0,
+        toolMarker: "before",
+      })
+
+      await markDiffProbe(page)
+      settleEditAdditions(server.history, 2)
+      events.push(...editRerunWithAdditions(2))
+
+      await expect(wrapper.locator('[data-slot="diff-changes-additions"]').filter({ hasText: "+2" }).first()).toBeVisible(
+        { timeout: 10_000 },
+      )
+      expect(await readDiffProbe(page)).toEqual({
+        fileMarker: "before",
+        frameMarker: "before",
+        rowKey: `assistant-part:${userMessageID}:part:${assistantMessageID}:${editPartID}`,
+        rowMarker: "before",
+        shadowRoots: 0,
+        toolMarker: "before",
+      })
+    } finally {
+      server.releaseHistoryResponses()
+    }
+
+    await expect.poll(() => server.historyResponses()).toBeGreaterThan(0)
     await expect(page.locator(`[data-timeline-part-id="${textPartID}"]`).first()).toBeVisible({ timeout: 10_000 })
-    const siblingProbe = await readDiffProbe(page)
-    expect(siblingProbe).toEqual({
-      fileMarker: "before",
-      frameMarker: "before",
-      rowKey: `assistant-part:${userMessageID}:part:${assistantMessageID}:${editPartID}`,
-      rowMarker: "before",
-      shadowRoots: 0,
-      toolMarker: "before",
-    })
-
-    await markDiffProbe(page)
-    events.push(...editRerunWithAdditions(2))
-
-    await expect(wrapper.locator('[data-slot="diff-changes-additions"]').filter({ hasText: "+2" }).first()).toBeVisible(
-      { timeout: 10_000 },
-    )
     expect(await readDiffProbe(page)).toEqual({
       fileMarker: "before",
       frameMarker: "before",
@@ -381,16 +415,63 @@ function readExpanded(element: Element) {
 }
 
 async function mockServer(page: Page, events: EventPayload[], messages = [userMessage, assistantMessage]) {
+  // History the test may settle into coherence with the streamed events. Clone per invocation: the module-level
+  // fixtures are shared across the describe, and a history reload must read the state THIS test settled.
+  const history = JSON.parse(JSON.stringify(messages)) as typeof messages
+  let hold: Promise<void> | undefined
+  let releaseHold: (() => void) | undefined
+  let completedHistory = 0
   await mockOrchestraServer(page, {
     directory,
     project: project(),
     provider: provider(),
     sessions: [session()],
-    pageMessages: () => ({ items: messages }),
+    pageMessages: () => ({ items: history }),
+    beforeMessagesResponse: async () => {
+      // Later reconnect-driven reloads wait here; they must not repaint a stale history over fresh stream state.
+      await hold
+    },
+    onMessages: ({ phase }) => {
+      if (phase === "end") completedHistory++
+    },
     // One response carries a whole V2 batch, so a rerun settles in one render instead of passing through running.
     events: () => events.splice(0),
     eventRetry: 16,
   })
+  return {
+    history,
+    holdHistoryResponses() {
+      hold = new Promise<void>((resolve) => {
+        releaseHold = resolve
+      })
+    },
+    releaseHistoryResponses() {
+      releaseHold?.()
+      releaseHold = undefined
+    },
+    historyResponses: () => completedHistory,
+  }
+}
+
+// Mirror the streamed text in the history a reload would read: the server persists streamed content, so the
+// fixture history served by pageMessages should contain it too.
+function settleTextPart(history: typeof [userMessage, assistantMessage]) {
+  const assistant = history.find((message) => message.info.id === assistantMessageID)
+  if (!assistant || assistant.parts.some((part) => part.id === textPartID)) return
+  assistant.parts.push({
+    id: textPartID,
+    sessionID,
+    messageID: assistantMessageID,
+    type: "text",
+    text: "Streaming added a later assistant text part.",
+  })
+}
+
+function settleEditAdditions(history: typeof [userMessage, assistantMessage], additions: number) {
+  for (const message of history) {
+    const part = message.parts.find((entry) => entry.id === editPartID) as typeof editPart | undefined
+    if (part) part.state.metadata.filediff.additions = additions
+  }
 }
 
 function project() {
