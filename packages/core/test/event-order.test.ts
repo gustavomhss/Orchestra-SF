@@ -267,8 +267,15 @@ describe("EventV2 notify order equals commit order", () => {
         }),
         Effect.forkScoped,
       )
-      yield* events.publish(OrderedMessage, { id: probeID, text: "probe" })
-      yield* Deferred.await(streamReady)
+      // The probe confirms the all() stream pipeline is consuming before the real sequence begins. The
+      // subscription is async, so publish interleaved with a yield instead of relying on a fixed delay.
+      for (let attempt = 0; ; attempt++) {
+        yield* events.publish(OrderedMessage, { id: probeID, text: "probe" })
+        const ready = yield* Deferred.isDone(streamReady)
+        yield* Effect.yieldNow
+        if (ready) break
+        if (attempt >= 99) throw new Error("the all() stream never subscribed")
+      }
 
       yield* events.listen((event) => {
         if (event.type !== OrderedMessage.type || (event.data as { id: string }).id !== aggregateID) return Effect.void
