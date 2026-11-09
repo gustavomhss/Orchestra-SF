@@ -92,6 +92,24 @@ const client = Layer.effect(LLMClient.Service, Effect.gen(function* () {
         LLMEvent.stepFinish({ index: 0, reason: "content-filter" }),
         LLMEvent.finish({ reason: "content-filter" }),
       ])
+      // No step settlement: the runner emits no Step.Ended, so the child assistant stays incomplete. This
+      // characterizes the parent-facing incomplete wording; it is NOT evidence of a real interruption (an active
+      // interruption records a failure instead, by existing runner semantics).
+      if (prompt === "child-no-finish") return Stream.fromIterable([
+        LLMEvent.stepStart({ index: 0 }),
+        LLMEvent.textStart({ id: "answer" }),
+      ])
+      if (prompt === "parent-no-finish" && !request.messages.some((message) =>
+        message.role === "tool" && message.content.some((part) => part.type === "tool-result" && part.id === "no-finish-task"),
+      )) return Stream.fromIterable([
+        LLMEvent.stepStart({ index: 0 }),
+        LLMEvent.toolCall({
+          id: "no-finish-task", name: "task",
+          input: { description: "Focused task", prompt: "child-no-finish", subagent_type: worker },
+        }),
+        LLMEvent.stepFinish({ index: 0, reason: "tool-calls" }),
+        LLMEvent.finish({ reason: "tool-calls" }),
+      ])
       if (prompt === "parent-content-filter" && !request.messages.some((message) =>
         message.role === "tool" && message.content.some((part) => part.type === "tool-result" && part.id === "content-filter-task"),
       )) return Stream.fromIterable([
@@ -684,6 +702,36 @@ describe("TaskTool canonical delegation", () => {
     expect(context.at(-1)).toMatchObject({ type: "assistant", finish: "stop", content: [
       expect.objectContaining({ type: "text", text: "answer:parent-content-filter" }),
     ] })
+  }))
+
+  // Characterization only: a child stream with no step settlement leaves an incomplete assistant, so the parent sees
+  // the incomplete wording. This is not evidence that a real interruption produced this state (an active
+  // interruption records a failure instead, by existing runner semantics) and does not reach the
+  // completed-without-finish branch.
+  it.effect("child with no step settlement characterizes the incomplete parent wording through the live fixture", () => Effect.gen(function* () {
+    const f = yield* setup
+    yield* f.sessions.prompt({ sessionID: f.parent.id, prompt: { text: "parent-no-finish" }, resume: false })
+    yield* f.sessions.resume(f.parent.id)
+    const children = (yield* f.sessions.list()).filter((session) => session.parentID === f.parent.id)
+    expect(children).toHaveLength(1)
+    const child = children[0]
+    const messages = yield* f.sessions.messages({ sessionID: child.id, order: "asc" })
+    const assistant = messages.filter((message) => message.type === "assistant").at(-1)
+    expect(assistant?.time.completed).toBeUndefined()
+    expect(assistant?.finish).toBeUndefined()
+    expect(assistant?.error).toBeUndefined()
+    const reason = `Task ${child.id} failed: Task ${child.id} finished without a completed assistant reply: the child's reply never completed (it was interrupted or cancelled)`
+    const history = yield* f.sessions.history({ sessionID: f.parent.id, limit: 100 })
+    const failures = history.events.filter(Schema.is(SessionEvent.Tool.Failed))
+      .filter((event) => event.data.sessionID === f.parent.id && event.data.callID === "no-finish-task")
+    expect(failures).toHaveLength(1)
+    expect(failures[0].data.error.message).toBe(reason)
+    expect(f.harness.requests).toHaveLength(3)
+    const toolResult = f.harness.requests[2].messages.flatMap((message) => message.role === "tool" ? message.content : [])
+      .filter((part) => part.type === "tool-result").find((part) => part.id === "no-finish-task")
+    if (!toolResult) throw new Error("Missing parent model tool result")
+    const failure = Schema.decodeUnknownSync(Schema.Struct({ error: Schema.Struct({ message: Schema.String }) }))(toolResult.result.value)
+    expect(failure.error.message).toBe(reason)
   }))
 
   it.effect("rejects forged invocation, hidden or primary targets, missing parents, cycles, and depth beyond eight", () => Effect.gen(function* () {
