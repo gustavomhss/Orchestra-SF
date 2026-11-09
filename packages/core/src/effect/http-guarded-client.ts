@@ -117,7 +117,8 @@ export function makePinnedClient(currentFromReach: () => HopPolicy, lookup: Look
         },
         (response) => {
           const chunks: Buffer[] = []
-          response.on("data", (chunk: Buffer) => chunks.push(chunk))
+          // Some runtimes emit string chunks for HTTP responses; normalize before concat.
+          response.on("data", (chunk: Buffer | string) => chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk)))
           response.on("end", () => {
             const data = Buffer.concat(chunks)
             void resume(
