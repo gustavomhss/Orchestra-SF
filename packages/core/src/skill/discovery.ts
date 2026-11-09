@@ -93,7 +93,8 @@ const layer = Layer.effect(
     )
 
     // Redirects are followed by hand, so a catalog cannot send a download to a local or private address, and the
-    // body is read with a cap, so a catalog cannot fill the disk.
+    // body is read with a cap, so a catalog cannot fill the disk. This path keeps the generic follow seam: the
+    // webfetch tool is the enforced caller through followGuarded; discovery stays preflight-only (no regression).
     const get = (url: string, limit: () => number, tooLarge: () => Error) =>
       HttpRedirect.follow(http, HttpClientRequest.get(url)).pipe(
         Effect.flatMap(HttpClientResponse.filterStatusOk),

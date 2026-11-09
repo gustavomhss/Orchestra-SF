@@ -2,7 +2,7 @@ export * as WebFetchTool from "./webfetch"
 
 import { ToolFailure } from "@orchestra/llm"
 import { Duration, Effect, Layer, Schema } from "effect"
-import { HttpClient, HttpClientRequest, HttpClientResponse } from "effect/unstable/http"
+import { HttpClientRequest, HttpClientResponse } from "effect/unstable/http"
 import { Parser } from "htmlparser2"
 import TurndownService from "turndown"
 import { makeLocationNode } from "../effect/app-node"
@@ -90,14 +90,15 @@ const assertHttpUrl = (url: URL) => {
   if (url.protocol !== "http:" && url.protocol !== "https:") throw new Error("URL must use http:// or https://")
 }
 
+// Every hop dials through the guarded client, whose connector resolves and validates at connect time (see
+// `HttpGuardedClient`); the scoped session lives until the caller has collected the body.
 const execute = <E, R>(
-  http: HttpClient.HttpClient,
   url: string,
   format: Format,
   approve: ((url: URL) => Effect.Effect<void, E, R>) | undefined,
   userAgent = browserUserAgent,
 ) =>
-  HttpRedirect.follow(http, request(url, format, userAgent), { approve }).pipe(
+  HttpRedirect.followGuarded(request(url, format, userAgent), { approve }).pipe(
     Effect.flatMap(HttpClientResponse.filterStatusOk),
   )
 
@@ -134,7 +135,6 @@ export const convert = (content: string, contentType: string, format: Format) =>
  * redirect reaches that the first URL did not, and without it such a redirect is allowed.
  */
 export const fetch = <E = never, R = never>(
-  http: HttpClient.HttpClient,
   url: string,
   format: Format,
   timeout = DEFAULT_TIMEOUT_SECONDS,
@@ -142,14 +142,21 @@ export const fetch = <E = never, R = never>(
 ) =>
   Effect.gen(function* () {
     yield* Effect.try({ try: () => assertHttpUrl(new URL(url)), catch: (error) => error })
-    const response = yield* execute(http, url, format, approve).pipe(
-      Effect.catchIf(isCloudflareChallenge, () => execute(http, url, format, approve, "orchestra")),
+    const response = yield* Effect.scoped(
+      Effect.gen(function* () {
+        const followed = yield* execute(url, format, approve).pipe(
+          Effect.catchIf(isCloudflareChallenge, () => execute(url, format, approve, "orchestra")),
+        )
+        const contentType = followed.headers["content-type"] || ""
+        const mime = mimeFrom(contentType)
+        if (isImageAttachment(mime)) return yield* Effect.fail(new Error(`Unsupported fetched image content type: ${mime}`))
+        if (!isTextualMime(mime)) return yield* Effect.fail(new Error(`Unsupported fetched file content type: ${mime}`))
+        // The body is collected inside the guarded session scope, before the dispatcher is closed.
+        const body = yield* collectBody(followed)
+        return { url: followed.request.url, contentType, body }
+      }),
     )
-    const contentType = response.headers["content-type"] || ""
-    const mime = mimeFrom(contentType)
-    if (isImageAttachment(mime)) return yield* Effect.fail(new Error(`Unsupported fetched image content type: ${mime}`))
-    if (!isTextualMime(mime)) return yield* Effect.fail(new Error(`Unsupported fetched file content type: ${mime}`))
-    return { url: response.request.url, contentType, body: yield* collectBody(response) }
+    return response
   }).pipe(
     Effect.timeoutOrElse({
       duration: Duration.seconds(timeout),
@@ -160,7 +167,6 @@ export const fetch = <E = never, R = never>(
 const layer = Layer.effectDiscard(
   Effect.gen(function* () {
     const tools = yield* Tools.Service
-    const http = yield* HttpClient.HttpClient
     const permission = yield* PermissionV2.Service
 
     yield* tools
@@ -195,7 +201,7 @@ const layer = Layer.effectDiscard(
                 })
               yield* assert(input.url)
 
-              const { body, contentType } = yield* fetch(http, input.url, input.format, input.timeout, (url) =>
+              const { body, contentType } = yield* fetch(input.url, input.format, input.timeout, (url) =>
                 assert(url.href),
               )
               const content = new TextDecoder().decode(body)

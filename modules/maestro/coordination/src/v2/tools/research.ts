@@ -180,7 +180,7 @@ export function tools(services: Services) {
               Effect.mapError((error) => new Tool.Failure({ message: `Unable to fetch ${input.url}`, error })),
             )
             // A redirect to another origin asks the same permission again; a refused one names its target.
-            const fetched = yield* WebFetchTool.fetch(services.http, input.url, input.format, undefined, (url) => assert(url.href)).pipe(
+            const fetched = yield* WebFetchTool.fetch(input.url, input.format, undefined, (url) => assert(url.href)).pipe(
               Effect.mapError((error) =>
                 new Tool.Failure({ message: HttpRedirect.isRefusal(error) ? error.message : `Unable to fetch ${input.url}` })),
             )
