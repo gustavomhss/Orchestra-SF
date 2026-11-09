@@ -20,6 +20,7 @@ type ChapterPage = Component<ChapterPageProps> & { preload?: () => Promise<unkno
 // Implemented chapters register their page here (lazy). Navigation opens a page only for
 // registered chapters.
 export const chapterPages: Partial<Record<string, ChapterPage>> = {
+  inbox: lazy(() => import("./chapters/inbox/inbox")),
   "flight-engineer": lazy(() => import("./chapters/flight-engineer/flight-engineer")),
   lean: lazy(() => import("./chapters/lean")),
   mcp: lazy(() => import("./chapters/mcp")),
@@ -44,7 +45,7 @@ export const chapterPages: Partial<Record<string, ChapterPage>> = {
 }
 
 // These chapters span the whole server, so they render without a project (with an empty directory).
-const serverWideChapters = ["settings", "providers", "shortcuts", "board", "flight-engineer"]
+const serverWideChapters = ["settings", "providers", "shortcuts", "board", "flight-engineer", "inbox"]
 
 const ChapterEmpty = lazy(() => import("./chapter-empty"))
 
