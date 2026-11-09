@@ -565,30 +565,6 @@
       "reason": "D8: deep import into a cohesive module; retargets are optional later work"
     },
     {
-      "rule": "R5",
-      "file": "packages/server/test/actions-run-rename-http.test.ts",
-      "specifier": "../../../script/test-guard",
-      "reason": "D8: relative import across a package root; retargets are deferred"
-    },
-    {
-      "rule": "R5",
-      "file": "packages/server/test/actions-run-rename-http.test.ts",
-      "specifier": "../../../script/test-omni-control",
-      "reason": "D8: relative import across a package root; retargets are deferred"
-    },
-    {
-      "rule": "R5",
-      "file": "packages/server/test/actions-run-rename-http.test.ts",
-      "specifier": "../../core/test/actions/gitlab-command-fixture",
-      "reason": "D8: relative import across a package root; retargets are deferred"
-    },
-    {
-      "rule": "R5",
-      "file": "packages/server/test/actions-transfer-headers.test.ts",
-      "specifier": "../../core/test/fixture/location",
-      "reason": "D8: relative import across a package root; retargets are deferred"
-    },
-    {
       "rule": "R8",
       "file": "packages/core/README.md",
       "specifier": "README",

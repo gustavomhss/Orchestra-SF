@@ -1,9 +1,8 @@
-import "../../../script/test-guard"
-import "../../../script/test-omni-control"
+// The harness preloads (bunfig.toml) supply test-guard and the omni control; these fixtures only need expectSpawn.
 import { expect } from "bun:test"
 import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { Effect } from "effect"
-import { GitLabCommandFixture } from "../../core/test/actions/gitlab-command-fixture"
+import { GitLabCommandFixture } from "@orchestra/core/test/actions/gitlab-command-fixture"
 import { actionError, gitlab, httpFixture, it } from "./actions-http-fixture"
 
 const runID = "287"
