@@ -24,6 +24,11 @@ describe("timeline model", () => {
     expect(isTimelineReady([], false)).toBe(true)
   })
 
+  test("an already-empty projection stays rendered during a refresh", () => {
+    // A background reload of an empty session must not flip ready off and unmount the timeline (with its menu).
+    expect(isTimelineReady([], true)).toBe(true)
+  })
+
   test("loads exactly one opaque cursor page", async () => {
     let calls = 0
     const anchors: Array<string | boolean> = []
