@@ -125,6 +125,10 @@ describe("makePinnedClient", () => {
 
   test("closing the session destroys in-flight requests instead of letting them stream on", async () => {
     let aborted = false
+    let received: (() => void) | undefined
+    const receivedPromise = new Promise<void>((resolve) => {
+      received = resolve
+    })
     const server = createServer((request, response) => {
       request.on("aborted", () => {
         aborted = true
@@ -132,6 +136,7 @@ describe("makePinnedClient", () => {
       response.writeHead(200, { "content-type": "text/plain" })
       response.write("part-1\n")
       // The server intentionally never finishes; only the client's cancellation can close the socket.
+      received?.()
     })
     await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve))
     const bound = server.address()
@@ -140,10 +145,7 @@ describe("makePinnedClient", () => {
       const { makeSessionValue } = await import("../src/effect/http-guarded-client")
       const session = makeSessionValue({ lookup: async () => [address("127.0.0.1")] })
       const request = Effect.runFork(session.client.execute(HttpClientRequest.get(`http://pinned.local:${bound.port}/`)))
-      for (let attempt = 0; attempt < 100 && !aborted; attempt++) {
-        await new Promise((resolve) => setTimeout(resolve, 10))
-        if (attempt === 99) break
-      }
+      await receivedPromise
       await Effect.runPromise(session.close)
       for (let attempt = 0; attempt < 100 && !aborted; attempt++) {
         await new Promise((resolve) => setTimeout(resolve, 10))
