@@ -1499,8 +1499,13 @@ export default function Page() {
           visibleUserMessages().length,
         ] as const,
       ([id, ready, more, loading, scrolled]) => {
-        if (!id || !ready || loading || scrolled) return
-        if (!more) return
+        if (!id || !ready || !more || loading) return
+        if (scrolled) {
+          // The user reached the top during a history refresh, whose scroll attempt was dropped while loading.
+          // When loading finishes, re-trigger the request instead of losing the position entirely.
+          if (!historyFailed.has(sessionOwnership.key())) onHistoryScroll()
+          return
+        }
         fill()
       },
       { defer: true },
