@@ -62,7 +62,7 @@ export const ripgrepLayer = Layer.effect(
             Effect.sync(() => {
               files.push(entry.path)
               const parts = entry.path.split("/")
-              parts.slice(0, -1).forEach((_, index) => directories.add(parts.slice(0, index + 1).join("/") + path.sep))
+              parts.slice(0, -1).forEach((_, index) => directories.add(parts.slice(0, index + 1).join("/") + "/"))
             }),
         })
         .pipe(
@@ -159,7 +159,7 @@ export const ripgrepLayer = Layer.effect(
                 : [...state.files, ...state.directories]
           return fuzzysort.go(input.query, items, { limit: input.limit ?? 50 }).map((item) => {
             const relative = item.target
-            const type = relative.endsWith(path.sep) ? ("directory" as const) : ("file" as const)
+            const type = relative.endsWith("/") ? ("directory" as const) : ("file" as const)
             return FileSystem.Entry.make({
               path: RelativePath.make(relative),
               type,
@@ -296,7 +296,7 @@ export const fffLayer = Layer.effect(
               .map((item) => {
                 const relative = item.path.replaceAll("\\", "/").replace(/\/$/, "")
                 return FileSystem.Entry.make({
-                  path: RelativePath.make(relative + (item.type === "directory" ? path.sep : "")),
+                  path: RelativePath.make(relative + (item.type === "directory" ? "/" : "")),
                   type: item.type,
                 })
               })
