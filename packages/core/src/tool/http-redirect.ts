@@ -111,13 +111,16 @@ export const followGuarded = <E = never, R = never>(
     readonly maxHops?: number | undefined
     readonly approve?: ((url: URL) => Effect.Effect<void, E, R>) | undefined
     readonly deps?: HttpGuardedClient.GuardedSessionDeps | undefined
+    readonly session?: HttpGuardedClient.GuardedSession | undefined
   } = {},
 ) =>
   Effect.gen(function* () {
     const limit = options.maxHops ?? MAX_HOPS
     const approved = new Set([new URL(request.url).origin])
-    const session = yield* HttpGuardedClient.makeGuardedSession(options.deps)
-    yield* Effect.addFinalizer(() => session.close)
+    // A caller-supplied session owns its lifecycle (the webfetch tool closes it after collecting the body); an
+    // internally created session is finalized by this scope.
+    const session = options.session ?? (yield* HttpGuardedClient.makeGuardedSession(options.deps))
+    if (options.session === undefined) yield* Effect.addFinalizer(() => session.close)
     let current = request
     // The dial-time policy for a hop is the reach of the host that issued the redirect (the previous hop's
     // hostname); the first hop is a direct fetch and keeps the caller's permission semantics.

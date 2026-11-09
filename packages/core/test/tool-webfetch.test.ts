@@ -4,7 +4,7 @@ import * as TestClock from "effect/testing/TestClock"
 import { HttpClient, HttpClientRequest, HttpClientResponse } from "effect/unstable/http"
 import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
-import { LayerNodePlatform } from "@orchestra/core/effect/app-node-platform"
+import { HttpGuardedClient } from "../src/effect/http-guarded-client"
 import { PermissionV2 } from "@orchestra/core/permission"
 import { SessionV2 } from "@orchestra/core/session"
 import { ToolRegistry } from "@orchestra/core/tool/registry"
@@ -54,7 +54,19 @@ const toolLayer = (replacements: LayerNode.Replacements = []) =>
     [ToolOutputStore.node, ToolOutputStore.nodeWithoutConfig],
     ...replacements,
   ])
-const it = testEffect(toolLayer([[LayerNodePlatform.httpClient, http]]))
+const fakeClient = HttpClient.make((request) =>
+  Effect.sync(() => requests.push({ url: request.url, headers: request.headers })).pipe(
+    Effect.andThen(respond(request)),
+    Effect.map((response) => HttpClientResponse.fromWeb(request, response)),
+  ),
+)
+const fakeGuarded = Layer.succeed(
+  HttpGuardedClient.GuardedFetch,
+  HttpGuardedClient.GuardedFetch.of({
+    makeSession: () => ({ setPolicy: () => undefined, client: fakeClient, close: Effect.void }),
+  }),
+)
+const it = testEffect(toolLayer([[HttpGuardedClient.node, fakeGuarded]]))
 const live = testEffect(toolLayer())
 
 const reset = () => {

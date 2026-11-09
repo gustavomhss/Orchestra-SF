@@ -6,7 +6,7 @@ import { HttpClientRequest, HttpClientResponse } from "effect/unstable/http"
 import { Parser } from "htmlparser2"
 import TurndownService from "turndown"
 import { makeLocationNode } from "../effect/app-node"
-import { LayerNodePlatform } from "../effect/app-node-platform"
+import { HttpGuardedClient } from "../effect/http-guarded-client"
 import { PermissionV2 } from "../permission"
 import { collectBoundedResponseBody } from "./http-body"
 import { HttpRedirect } from "./http-redirect"
@@ -90,15 +90,16 @@ const assertHttpUrl = (url: URL) => {
   if (url.protocol !== "http:" && url.protocol !== "https:") throw new Error("URL must use http:// or https://")
 }
 
-// Every hop dials through the guarded client, whose connector resolves and validates at connect time (see
-// `HttpGuardedClient`); the scoped session lives until the caller has collected the body.
+// Every hop dials through the guarded session, whose client re-resolves and validates at connect time (see
+// `HttpGuardedClient`); the session lives until the caller has collected the body.
 const execute = <E, R>(
   url: string,
   format: Format,
   approve: ((url: URL) => Effect.Effect<void, E, R>) | undefined,
   userAgent = browserUserAgent,
+  session?: HttpGuardedClient.GuardedSession,
 ) =>
-  HttpRedirect.followGuarded(request(url, format, userAgent), { approve }).pipe(
+  HttpRedirect.followGuarded(request(url, format, userAgent), { approve, session }).pipe(
     Effect.flatMap(HttpClientResponse.filterStatusOk),
   )
 
@@ -139,13 +140,16 @@ export const fetch = <E = never, R = never>(
   format: Format,
   timeout = DEFAULT_TIMEOUT_SECONDS,
   approve?: (url: URL) => Effect.Effect<void, E, R>,
+  session?: HttpGuardedClient.GuardedSession,
 ) =>
   Effect.gen(function* () {
     yield* Effect.try({ try: () => assertHttpUrl(new URL(url)), catch: (error) => error })
     const response = yield* Effect.scoped(
       Effect.gen(function* () {
-        const followed = yield* execute(url, format, approve).pipe(
-          Effect.catchIf(isCloudflareChallenge, () => execute(url, format, approve, "orchestra")),
+        const owned = session ?? HttpGuardedClient.makeSessionValue()
+        if (session === undefined) yield* Effect.addFinalizer(() => owned.close)
+        const followed = yield* execute(url, format, approve, browserUserAgent, owned).pipe(
+          Effect.catchIf(isCloudflareChallenge, () => execute(url, format, approve, "orchestra", owned)),
         )
         const contentType = followed.headers["content-type"] || ""
         const mime = mimeFrom(contentType)
@@ -167,6 +171,7 @@ export const fetch = <E = never, R = never>(
 const layer = Layer.effectDiscard(
   Effect.gen(function* () {
     const tools = yield* Tools.Service
+    const guarded = yield* HttpGuardedClient.GuardedFetch
     const permission = yield* PermissionV2.Service
 
     yield* tools
@@ -202,7 +207,7 @@ const layer = Layer.effectDiscard(
               yield* assert(input.url)
 
               const { body, contentType } = yield* fetch(input.url, input.format, input.timeout, (url) =>
-                assert(url.href),
+                assert(url.href), guarded.makeSession(),
               )
               const content = new TextDecoder().decode(body)
               const output = yield* Effect.try({
@@ -233,7 +238,7 @@ const layer = Layer.effectDiscard(
 export const node = makeLocationNode({
   name: "tool/webfetch",
   layer,
-  deps: [ToolRegistry.node, PermissionV2.node, LayerNodePlatform.httpClient],
+  deps: [ToolRegistry.node, PermissionV2.node, HttpGuardedClient.node],
 })
 
 export function extractTextFromHTML(html: string) {

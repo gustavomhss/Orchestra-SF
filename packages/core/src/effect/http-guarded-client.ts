@@ -4,9 +4,10 @@ import { lookup as dnsLookup } from "dns/promises"
 import http from "node:http"
 import https from "node:https"
 import { isIP } from "node:net"
-import { Effect } from "effect"
+import { Context, Effect, Layer } from "effect"
 import { HttpClient, HttpClientRequest, HttpClientResponse } from "effect/unstable/http"
 import * as HttpClientError from "effect/unstable/http/HttpClientError"
+import { makeGlobalNode } from "./app-node"
 import { reach, type Reach } from "../tool/http-reach"
 
 export type HopPolicy = Reach | "direct"
@@ -162,14 +163,30 @@ export interface GuardedSession {
  * hops are sequential and the socket is dialed before the next policy is installed. Callers must run this inside a
  * scope and keep the scope open until the response body is consumed.
  */
-export const makeGuardedSession = (deps: GuardedSessionDeps = {}) =>
-  Effect.sync(() => {
-    let fromReach: HopPolicy = "direct"
-    return {
-      setPolicy: (next: HopPolicy) => {
-        fromReach = next
-      },
-      client: deps.client ?? makePinnedClient(() => fromReach, deps.lookup ?? defaultLookup),
-      close: Effect.void,
-    } satisfies GuardedSession
-  })
+export function makeSessionValue(deps: GuardedSessionDeps = {}): GuardedSession {
+  let fromReach: HopPolicy = "direct"
+  return {
+    setPolicy: (next: HopPolicy) => {
+      fromReach = next
+    },
+    client: deps.client ?? makePinnedClient(() => fromReach, deps.lookup ?? defaultLookup),
+    close: Effect.void,
+  }
+}
+
+export const makeGuardedSession = (deps: GuardedSessionDeps = {}) => Effect.sync(() => makeSessionValue(deps))
+
+/**
+ * The guarded-transport seam: production resolves a pinned session per execution; tests replace this node with a
+ * fake client session (see `tool-webfetch.test.ts`), which never performs I/O beyond the test double.
+ */
+export class GuardedFetch extends Context.Service<GuardedFetch, {
+  readonly makeSession: (deps?: GuardedSessionDeps) => GuardedSession
+}>()("@orchestra/v2/GuardedFetch") {}
+
+export const layer = Layer.succeed(
+  GuardedFetch,
+  GuardedFetch.of({ makeSession: (deps) => makeSessionValue(deps) }),
+)
+
+export const node = makeGlobalNode({ service: GuardedFetch, layer, deps: [] })
