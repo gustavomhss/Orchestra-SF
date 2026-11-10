@@ -48,7 +48,8 @@ function migrationSource(id: string) {
 }
 
 function createdTables(source: string) {
-  return [...source.matchAll(/CREATE TABLE `([^`]+)`/g)].map((match) => match[1]!)
+  // Migration sources write the SQL inside a template string, so the backtick is escaped.
+  return [...source.matchAll(/CREATE TABLE \\`([^`\\]+)\\`/g)].map((match) => match[1]!)
 }
 
 async function onlyBackup(file: string) {
