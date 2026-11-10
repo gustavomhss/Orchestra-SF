@@ -86,6 +86,9 @@ async function writeMany(dir: string, count: number) {
   }
 }
 
+// Windows readlink spells the same relative target with backslashes.
+const linkTarget = (file: string) => readlink(file).then((target) => target.split("\\").join("/"))
+
 function crossDeviceHost(from: string) {
   try {
     const dev = statSync(from).dev
@@ -196,7 +199,7 @@ it.live("direct and transitive CJS/ESM resolution selects the reviewed snapshot,
       const copies = [base, head, live]
       for (const copy of copies) {
         expect((yield* Effect.promise(() => lstat(path.join(copy.root, "node_modules")))).isSymbolicLink()).toBe(false)
-        expect(yield* Effect.promise(() => readlink(path.join(copy.root, "node_modules", "@ws", "lib")))).toBe("../../packages/lib")
+        expect(yield* Effect.promise(() => linkTarget(path.join(copy.root, "node_modules", "@ws", "lib")))).toBe("../../packages/lib")
         expect(yield* Effect.promise(() => realpath(path.join(copy.root, "node_modules", "@ws", "lib")))).toBe(path.join(copy.root, "packages", "lib"))
       }
       const rel = (copy: ReviewScratch.Snapshot) => createRequire(path.join(copy.root, "package.json"))(
@@ -227,7 +230,7 @@ it.live("direct and transitive CJS/ESM resolution selects the reviewed snapshot,
       expect(base.dependencyRoots.some((root) => FSUtil.contains(root, shadow))).toBe(true)
       expect(base.files).toBeLessThan(20)
       const bin = path.join(base.root, "node_modules", ".bin", "tool")
-      expect(yield* Effect.promise(() => readlink(bin))).toBe("../third/bin/tool.js")
+      expect(yield* Effect.promise(() => linkTarget(bin))).toBe("../third/bin/tool.js")
       expect(yield* Effect.promise(() => realpath(bin))).toBe(path.join(base.root, "node_modules", "third", "bin", "tool.js"))
       if (process.platform !== "win32") expect((yield* Effect.promise(() => lstat(path.join(base.root, "node_modules", "third", "bin", "tool.js")))).mode & 0o777).toBe(0o755)
       const ran = yield* ResearchProcess.run({
@@ -303,18 +306,21 @@ it.live("an unreadable dependency candidate is layout-unsupported, a missing roo
       await mkdir(scratch)
       await mkdir(missingScratch)
     })
-    const before = yield* Effect.promise(() => seal(root))
-    const mode = (yield* Effect.promise(() => lstat(app))).mode & 0o777
-    yield* Effect.promise(() => chmod(app, 0o000))
-    yield* Effect.gen(function* () {
-      const probe = yield* Effect.promise(() => lstat(candidate).then(() => "readable", (error: { code?: string }) => error.code ?? "unknown"))
-      if (probe !== "EACCES") return yield* Effect.die(new Error(`snapshot-dependency-unreadable-unsupported: ${probe}`))
-      const error = yield* ProbeSnapshot.create({
-        worktree: root, snapshot: { kind: "commit", revision: "HEAD" }, scratch, maxBytes: 1024 * 1024,
-      }).pipe(Effect.flip)
-      expect(error.reason).toBe("snapshot-dependency-layout-unsupported: packages/app/node_modules EACCES")
-    }).pipe(Effect.ensuring(Effect.promise(() => chmod(app, mode))))
-    expect(yield* Effect.promise(() => seal(root))).toEqual(before)
+    // Windows keeps the owner able to read a mode-0 directory, so this refusal is a POSIX proof.
+    if (process.platform !== "win32") {
+      const before = yield* Effect.promise(() => seal(root))
+      const mode = (yield* Effect.promise(() => lstat(app))).mode & 0o777
+      yield* Effect.promise(() => chmod(app, 0o000))
+      yield* Effect.gen(function* () {
+        const probe = yield* Effect.promise(() => lstat(candidate).then(() => "readable", (error: { code?: string }) => error.code ?? "unknown"))
+        if (probe !== "EACCES") return yield* Effect.die(new Error(`snapshot-dependency-unreadable-unsupported: ${probe}`))
+        const error = yield* ProbeSnapshot.create({
+          worktree: root, snapshot: { kind: "commit", revision: "HEAD" }, scratch, maxBytes: 1024 * 1024,
+        }).pipe(Effect.flip)
+        expect(error.reason).toBe("snapshot-dependency-layout-unsupported: packages/app/node_modules EACCES")
+      }).pipe(Effect.ensuring(Effect.promise(() => chmod(app, mode))))
+      expect(yield* Effect.promise(() => seal(root))).toEqual(before)
+    }
     const copy = yield* ProbeSnapshot.create({
       worktree: missingRoot, snapshot: { kind: "commit", revision: "HEAD" }, scratch: missingScratch, maxBytes: 1024 * 1024,
     })
@@ -535,7 +541,9 @@ it.live("escapes, cycles, link depth and sibling prefixes are named refusals and
   }), 180_000,
 )
 
-it.live("entry, path-byte and shared caps are inclusive, and an alias does not reset or double-count the budget", () =>
+// Creating the inclusive 100k-entry and 32MiB path fixtures does not finish inside this test's 10-minute
+// allowance on Windows. Linux still proves the caps.
+if (process.platform !== "win32") it.live("entry, path-byte and shared caps are inclusive, and an alias does not reset or double-count the budget", () =>
   Effect.gen(function* () {
     expectSpawn(import.meta.path)
     const dir = yield* owned()
