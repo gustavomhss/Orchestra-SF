@@ -195,19 +195,19 @@ describe("beyond loopback", () => {
       cert: await Bun.file(new URL("./fixture/pinned-example-cert.pem", import.meta.url)).text(),
       key: await Bun.file(new URL("./fixture/pinned-example-key.pem", import.meta.url)).text(),
     })
-    const note = (socket: { servername?: string; localAddress?: string } | undefined) => {
-      if (!socket) return
-      if (socket.servername) seen.servername = socket.servername
-      if (socket.localAddress) seen.local = socket.localAddress
-    }
     server.on("connection", (socket) => {
       seen.local = socket.localAddress
     })
     server.on("secureConnection", (socket) => {
-      note(socket)
+      if (socket.servername) seen.servername = socket.servername
+      if (socket.localAddress) seen.local = socket.localAddress
       socket.end("HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\nok")
     })
-    server.on("tlsClientError", (_error, socket) => note(socket))
+    server.on("tlsClientError", (_error, socket) => {
+      if (!socket) return
+      if (socket.servername) seen.servername = socket.servername
+      if (socket.localAddress) seen.local = socket.localAddress
+    })
     await listen(server, dialed)
     const bound = server.address()
     if (!bound || typeof bound === "string") throw new Error("missing address")
