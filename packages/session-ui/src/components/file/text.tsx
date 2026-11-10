@@ -232,7 +232,3 @@ export function TextViewer<T>(props: TextFileProps<T>) {
 
   return <ViewerShell mode="text" viewer={viewer} class={local.class} classList={local.classList} />
 }
-
-// ---------------------------------------------------------------------------
-// DiffViewer
-// ---------------------------------------------------------------------------

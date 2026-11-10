@@ -7,12 +7,6 @@ const viewKey = {
   timeline: "orchestra.board.view.timeline",
   list: "orchestra.board.view.list",
 } as const
-const segmentKey = {
-  all: "orchestra.board.overview.all",
-  running: "orchestra.board.overview.runningTab",
-  shipped: "orchestra.board.overview.shippedTab",
-  archived: "orchestra.board.overview.archivedTab",
-} as const
 
 export function ViewSwitch(props: { view: View; onChange: (view: View) => void }) {
   const t = useLanguage().t

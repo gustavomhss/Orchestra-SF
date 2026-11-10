@@ -279,7 +279,3 @@ export function DiffViewer<T>(props: DiffFileProps<T>) {
 
   return <ViewerShell mode="diff" viewer={viewer} class={local.class} classList={local.classList} />
 }
-
-// ---------------------------------------------------------------------------
-// Public API
-// ---------------------------------------------------------------------------
