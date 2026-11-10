@@ -34,7 +34,10 @@ export const failInterruptedTools = Effect.fn("SessionRunner.failInterruptedTool
   deps: { readonly events: EventV2.Interface; readonly store: SessionStore.Interface },
   sessionID: SessionSchema.ID,
 ) {
-  for (const message of yield* deps.store.context(sessionID)) {
+  // Context drops every row before the latest compaction. A tool left running there is still projected;
+  // scanning only the window would leave it running forever.
+  for (const entry of yield* deps.store.entries(sessionID)) {
+    const message = entry.message
     if (message.type !== "assistant") continue
     for (const tool of message.content) {
       if (tool.type !== "tool" || (tool.state.status !== "pending" && tool.state.status !== "running")) continue

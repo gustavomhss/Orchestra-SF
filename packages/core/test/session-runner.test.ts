@@ -2186,6 +2186,75 @@ describe("SessionRunnerLLM", () => {
     }),
   )
 
+  it.effect("durably fails a tool left running behind a compaction", () =>
+    Effect.gen(function* () {
+      yield* setup
+      const session = yield* SessionV2.Service
+      const events = yield* EventV2.Service
+      const store = yield* SessionStore.Service
+      yield* session.prompt({ sessionID, prompt: Prompt.make({ text: "Recover hidden tool" }), resume: false })
+      yield* SessionInput.promoteSteers((yield* Database.Service).db, events, sessionID, Number.MAX_SAFE_INTEGER)
+      const assistantMessageID = SessionMessage.ID.create()
+      yield* events.publish(SessionEvent.Step.Started, {
+        sessionID,
+        assistantMessageID,
+        timestamp: yield* DateTime.now,
+        agent: "maestro",
+        model: { id: ModelV2.ID.make("fake-model"), providerID: ProviderV2.ID.make("fake") },
+      })
+      yield* events.publish(SessionEvent.Tool.Input.Started, {
+        sessionID,
+        timestamp: yield* DateTime.now,
+        assistantMessageID,
+        callID: "call-hidden",
+        name: "echo",
+      })
+      yield* events.publish(SessionEvent.Tool.Input.Ended, {
+        sessionID,
+        timestamp: yield* DateTime.now,
+        assistantMessageID,
+        callID: "call-hidden",
+        text: "{\"text\":\"stale\"}",
+      })
+      yield* events.publish(SessionEvent.Tool.Called, {
+        sessionID,
+        timestamp: yield* DateTime.now,
+        assistantMessageID,
+        callID: "call-hidden",
+        tool: "echo",
+        input: { text: "stale" },
+        provider: { executed: false },
+      })
+      yield* events.publish(SessionEvent.Compaction.Ended, {
+        sessionID,
+        messageID: SessionMessage.ID.create(),
+        timestamp: yield* DateTime.now,
+        reason: "manual",
+        text: "summary hides the running tool",
+        recent: "",
+      })
+      expect(
+        (yield* store.context(sessionID)).some(
+          (message) => message.type === "assistant" && message.id === assistantMessageID,
+        ),
+      ).toBe(false)
+      requests.length = 0
+      response = []
+      yield* session.resume(sessionID)
+      const stored = (yield* store.entries(sessionID)).find((entry) => entry.message.id === assistantMessageID)
+      expect(stored?.message).toMatchObject({
+        type: "assistant",
+        content: [
+          {
+            type: "tool",
+            id: "call-hidden",
+            state: { status: "error", error: { type: "unknown", message: "Tool execution interrupted" } },
+          },
+        ],
+      })
+    }),
+  )
+
   it.effect("durably fails hosted tools left running by a prior process before continuing inline", () =>
     Effect.gen(function* () {
       yield* setup

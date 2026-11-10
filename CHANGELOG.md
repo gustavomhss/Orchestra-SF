@@ -13,6 +13,7 @@ All notable changes to HuGR Orchestra are recorded here. The format follows [Kee
 - Listing a path the server cannot serve returns the same declared 400 as reading one. It no longer becomes an empty 500.
 - A database created by a newer Orchestra is reported once. The app no longer restarts the local server six times for the same refusal.
 - A live event the app cannot decode no longer ends the event stream. The event is skipped and the connection stays up.
+- A tool left running before a compaction is marked interrupted on the next run. It no longer stays running because that history is outside the model window.
 
 ## 0.3.4 (2026-11-01)
 
