@@ -39,7 +39,9 @@ const REGRESS = ["resources.lifetime", "performance.cost"] as const
 describe("review catalog", () => {
   test("entries decode and name exactly the phase 1 and phase 3 ids", () => {
     expect(() => Schema.decodeUnknownSync(ReviewCatalog.Catalog)(catalog)).not.toThrow()
-    expect(catalog.route.profiles.map((profile) => profile.id)).toEqual(["plan", "code", "rereview", "pr"])
+    expect(catalog.route.profiles.map((profile) => profile.id)).toEqual([
+      "plan", "code", "rereview", "pr", "release", "audit", "diligence", "artifact",
+    ])
     expect(catalog.route.tiers.map((tier) => [tier.id, tier.built, tier.runs])).toEqual([
       ["quick", true, "quick"], ["standard", true, "standard"], ["deep", false, "standard"],
     ])
