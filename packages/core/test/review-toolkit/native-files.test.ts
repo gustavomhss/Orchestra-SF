@@ -104,7 +104,7 @@ test("projected canonical arguments are bounded before missing candidates are st
   })
 })
 
-test("an unreadable root fails named", async () => {
+test.skipIf(process.platform === "win32")("an unreadable root fails named", async () => {
   if (process.getuid?.() === 0) throw new Error("native-files-unreadable-root-unproven")
   await using dir = await tmpdir()
   await writeFile(path.join(dir.path, "a.py"), "a\n")

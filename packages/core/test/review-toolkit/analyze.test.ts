@@ -262,7 +262,7 @@ live("an invalid ast-grep row is acquisition-error, its raw report is kept, and 
   }), 120_000,
 )
 
-it.live("conformance: pinned ast-grep keeps new evals, debts unchanged ones, and leaves the worktree", () =>
+live("conformance: pinned ast-grep keeps new evals, debts unchanged ones, and leaves the worktree", () =>
   Effect.gen(function* () {
     expect(jail, "conformance-missing: sandbox").toBeTruthy()
     expectSpawn(import.meta.path)
