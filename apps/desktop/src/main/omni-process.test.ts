@@ -280,6 +280,35 @@ test.skipIf(!on)("owned serve: a spawn error fails health without waiting out th
   expect(Date.now() - started).toBeLessThan(15_000)
 }, 30_000)
 
+test.skipIf(!on)("owned serve: a newer database is not restarted", async () => {
+  expectSpawn(import.meta.path)
+  const dir = await mkdtemp(join(tmpdir(), "owned-serve-"))
+  await writeFile(
+    join(dir, "serve.ts"),
+    `console.error("This database was created by a newer Orchestra version (it has migrations this build does not know: 20261105094327_inbox). Update the app before opening it."); process.exit(1)`,
+  )
+  const messages: string[] = []
+  const owned = await startOwnedServe({
+    logger: {
+      log: (message) => messages.push(message),
+      error: (message) => messages.push(message),
+    },
+    command: [process.execPath, join(dir, "serve.ts")],
+    env: { PATH: process.env.PATH ?? "" },
+    cwd: dir,
+    write: () => {},
+  })
+  const failure = await owned.health.wait.then(
+    () => undefined,
+    (error: unknown) => error,
+  )
+  await owned.listener.stop()
+  expect(failure).toBeInstanceOf(Error)
+  expect((failure as Error).message).toContain("newer Orchestra version")
+  expect(messages).toContain("owned serve will not restart: the database is newer than this build")
+  expect(messages).not.toContain("owned serve restarting")
+}, 30_000)
+
 test.skipIf(!on)("owned serve: a server that dies at start fails health with its last output", async () => {
   expectSpawn(import.meta.path)
   const dir = await mkdtemp(join(tmpdir(), "owned-serve-"))

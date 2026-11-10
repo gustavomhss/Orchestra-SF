@@ -85,6 +85,12 @@ export async function startOwnedServe(options: {
         options.onEvent?.("utility-exit", { utilityPID: child.pid, code: requested ? 0 : code })
         options.logger.log("owned serve exited", { code, signal, stopping: state.stopping })
         if (state.stopping) return
+        // A database this build does not know will fail the same way on every start. Restarting only
+        // hides that behind a health timeout. The renderer already quotes the child's last lines.
+        if (recent.some((line) => line.includes("newer Orchestra version"))) {
+          options.logger.error("owned serve will not restart: the database is newer than this build", { url })
+          return
+        }
         state.failures = Date.now() - startedAt > STABLE_AFTER ? 0 : state.failures + 1
         const wait = BACKOFF[state.failures - 1]
         if (wait === undefined) return options.logger.error("owned serve crash loop; not restarting", { url })
