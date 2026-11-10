@@ -86,7 +86,6 @@ async function writeMany(dir: string, count: number) {
   }
 }
 
-// Windows readlink spells the same relative target with backslashes.
 const linkTarget = (file: string) => readlink(file).then((target) => target.split("\\").join("/"))
 
 function crossDeviceHost(from: string) {
@@ -95,9 +94,7 @@ function crossDeviceHost(from: string) {
     for (const candidate of ["/dev/shm", process.cwd(), os.tmpdir()]) {
       try {
         if (statSync(candidate).dev !== dev) return candidate
-      } catch {
-        // A missing candidate is not a second volume.
-      }
+      } catch { /* not a second volume */ }
     }
   } catch {
     return undefined
@@ -114,9 +111,7 @@ async function otherDevice(from: string) {
   return undefined
 }
 
-// Physical EXDEV needs two stat.dev values. Without a second volume this case is not evidence of
-// hardlink isolation: Mac and Windows register it skipped. Linux must fail closed, not skip.
-// A portable refusal and a Linux EXDEV run do not prove a Mac volume. Shared-inode checks still run.
+// EXDEV needs two volumes. Linux fails closed if it skips; Mac and Windows may skip. Shared-inode checks still run.
 const hardlinkHost = crossDeviceHost(os.tmpdir())
 const hardlinkRuns = Boolean(hardlinkHost) || process.platform === "linux"
 const hardlink = hardlinkRuns ? it.live : it.live.skip
@@ -306,7 +301,6 @@ it.live("an unreadable dependency candidate is layout-unsupported, a missing roo
       await mkdir(scratch)
       await mkdir(missingScratch)
     })
-    // Windows keeps the owner able to read a mode-0 directory, so this refusal is a POSIX proof.
     if (process.platform !== "win32") {
       const before = yield* Effect.promise(() => seal(root))
       const mode = (yield* Effect.promise(() => lstat(app))).mode & 0o777
@@ -541,8 +535,6 @@ it.live("escapes, cycles, link depth and sibling prefixes are named refusals and
   }), 180_000,
 )
 
-// Creating the inclusive 100k-entry and 32MiB path fixtures does not finish inside this test's 10-minute
-// allowance on Windows. Linux still proves the caps.
 if (process.platform !== "win32") it.live("entry, path-byte and shared caps are inclusive, and an alias does not reset or double-count the budget", () =>
   Effect.gen(function* () {
     expectSpawn(import.meta.path)
