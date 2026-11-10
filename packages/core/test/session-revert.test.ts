@@ -115,17 +115,18 @@ const stored = (project: string) =>
   })
 
 function boundary(id: string, seq: number) {
-  return {
-    id: SessionMessage.ID.make(id),
-    session_id: sessionID,
-    type: "user" as const,
-    seq,
-    time_created: 0,
-    data: { text: "", files: [], agents: [] },
-  }
+  const messageID = SessionMessage.ID.make(id)
+  const { id: _id, type, ...data } = encode(
+    SessionMessage.User.make({ id: messageID, type: "user", text: "", time: { created } }),
+  )
+  return { id: messageID, session_id: sessionID, type, seq, time_created: 0, data }
 }
 
-const assistant = (seq: number, id: string, snapshot: { start: string; end: string; files?: readonly string[] }) =>
+const assistant = (
+  seq: number,
+  id: string,
+  snapshot: { start: string; end: string; files?: readonly RelativePath[] },
+) =>
   Effect.gen(function* () {
     const messageID = SessionMessage.ID.make(id)
     const { id: _id, type, ...data } = encode(
