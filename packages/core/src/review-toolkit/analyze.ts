@@ -27,6 +27,8 @@ import { ReviewPackZizmor } from "./packs/zizmor"
 import { ReviewZizmorAnalyze } from "./zizmor-analyze"
 import { ReviewBuildLane } from "./build-lane"
 
+export const TYPECHECK_CI = ReviewBuildLane.TYPECHECK_CI
+
 // K6 analyze half (design §7.2, §8.6, plan WP 1.4): the host runs the routed packs before any model turn, each confined
 // in a scratch copy (head, and base for the new-only step), keeps every raw output as a citable artifact, normalizes it
 // through the catalog and hands the entries to the noise pipeline. The model sees only the capped items per lens and
