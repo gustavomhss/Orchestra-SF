@@ -179,7 +179,7 @@ describe("project and config routes", () => {
             body: JSON.stringify({ model: "anthropic/claude-opus" }),
           })
 
-          expect(response.status).not.toBe(204)
+          expect(response.status).toBe(500)
         }),
       ),
     ))
