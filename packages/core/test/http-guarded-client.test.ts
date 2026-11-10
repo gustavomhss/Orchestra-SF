@@ -1,4 +1,4 @@
-import { Effect } from "effect"
+import { Effect, Fiber } from "effect"
 import { createServer } from "node:http"
 import net, { type Server } from "node:net"
 import { networkInterfaces } from "node:os"
@@ -7,6 +7,7 @@ import { describe, expect, test } from "bun:test"
 import { HttpClientRequest } from "effect/unstable/http"
 import {
   makePinnedClient,
+  makeSessionValue,
   selectApprovedAddress,
   type Resolution,
 } from "../src/effect/http-guarded-client"
@@ -272,6 +273,70 @@ describe("beyond loopback", () => {
     }
   }, 30_000)
 
+  test("closing the session releases the proxy hold when an IP request is cancelled before headers", async () => {
+    const stuck = await ipWithoutHeaders()
+    const previous = {
+      HTTP_PROXY: process.env.HTTP_PROXY,
+      NO_PROXY: process.env.NO_PROXY,
+      no_proxy: process.env.no_proxy,
+    }
+    process.env.HTTP_PROXY = "http://127.0.0.1:9"
+    process.env.NO_PROXY = "example.test"
+    process.env.no_proxy = "example.test"
+    const session = makeSessionValue({
+      lookup: async () => {
+        throw new Error("IP_URL_MUST_NOT_LOOKUP")
+      },
+    })
+    const fiber = Effect.runFork(session.client.execute(HttpClientRequest.get(`http://127.0.0.1:${stuck.port}/`)))
+    try {
+      await stuck.connected
+      expect(process.env.NO_PROXY).toBe("*")
+      expect(process.env.no_proxy).toBe("*")
+      await Effect.runPromise(session.close)
+      expect(process.env.NO_PROXY).toBe("example.test")
+      expect(process.env.no_proxy).toBe("example.test")
+      expect(process.env.HTTP_PROXY).toBe("http://127.0.0.1:9")
+    } finally {
+      await Effect.runPromise(Fiber.interrupt(fiber))
+      process.env.HTTP_PROXY = previous.HTTP_PROXY ?? ""
+      process.env.NO_PROXY = previous.NO_PROXY ?? ""
+      process.env.no_proxy = previous.no_proxy ?? ""
+      stuck.server.close()
+    }
+  }, 30_000)
+
+  test("interrupting an IP request releases the proxy hold before headers", async () => {
+    const stuck = await ipWithoutHeaders()
+    const previous = {
+      HTTP_PROXY: process.env.HTTP_PROXY,
+      NO_PROXY: process.env.NO_PROXY,
+      no_proxy: process.env.no_proxy,
+    }
+    process.env.HTTP_PROXY = "http://127.0.0.1:9"
+    process.env.NO_PROXY = "example.test"
+    process.env.no_proxy = "example.test"
+    const client = makePinnedClient(() => "direct", async () => {
+      throw new Error("IP_URL_MUST_NOT_LOOKUP")
+    })
+    const fiber = Effect.runFork(client.execute(HttpClientRequest.get(`http://127.0.0.1:${stuck.port}/`)))
+    try {
+      await stuck.connected
+      expect(process.env.NO_PROXY).toBe("*")
+      expect(process.env.no_proxy).toBe("*")
+      await Effect.runPromise(Fiber.interrupt(fiber))
+      expect(process.env.NO_PROXY).toBe("example.test")
+      expect(process.env.no_proxy).toBe("example.test")
+      expect(process.env.HTTP_PROXY).toBe("http://127.0.0.1:9")
+    } finally {
+      await Effect.runPromise(Fiber.interrupt(fiber))
+      process.env.HTTP_PROXY = previous.HTTP_PROXY ?? ""
+      process.env.NO_PROXY = previous.NO_PROXY ?? ""
+      process.env.no_proxy = previous.no_proxy ?? ""
+      stuck.server.close()
+    }
+  }, 30_000)
+
   test("an IP dial releases the proxy hold", async () => {
     const server = createServer((_request, response) => {
       response.writeHead(200, { "content-type": "text/plain" })
@@ -331,6 +396,20 @@ describe("beyond loopback", () => {
     }
   }, 30_000)
 })
+
+async function ipWithoutHeaders() {
+  let connected: (() => void) | undefined
+  const connectedPromise = new Promise<void>((resolve) => {
+    connected = resolve
+  })
+  const server = net.createServer(() => {
+    connected?.()
+  })
+  await listen(server, "127.0.0.1")
+  const bound = server.address()
+  if (!bound || typeof bound === "string") throw new Error("missing address")
+  return { server, port: bound.port, connected: connectedPromise }
+}
 
 function listen(server: Server, host: string, port = 0) {
   return new Promise<void>((resolve, reject) => {

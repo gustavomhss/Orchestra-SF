@@ -22,6 +22,9 @@ export type LookupAll = (hostname: string) => Promise<ReadonlyArray<Resolution>>
 const proxyEnv = ["HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "http_proxy", "https_proxy", "NO_PROXY", "no_proxy"]
 let proxyHolds = 0
 let proxySaved: Array<readonly [string, string | undefined]> | null = null
+// Session close destroys the request without a fiber interrupt. Bun swallows AbortError, so the
+// releaser has to live on the request, not on an error event that may never fire.
+const heldProxy = new WeakMap<import("node:http").ClientRequest, () => void>()
 
 // Bun 1.3 reads the proxy from its own env map inside the lookup callback, after the constructor's
 // socket event. `delete process.env.HTTP_PROXY` does not update that map. Assignment does.
@@ -120,15 +123,20 @@ export function makePinnedClient(
 ) {
   return HttpClient.make((request, url) =>
     Effect.callback((resume) => {
+      let abandoned = false
       const pinnedLookup = (hostname: string, options: { all?: boolean }, callback: (...args: unknown[]) => void) => {
         void (async () => {
           try {
             const addresses = await lookup(hostname)
             const selected = selectApprovedAddress(hostname, currentFromReach(), addresses)
+            // An abort during lookup already restored the proxy env. Calling the dial callback now would
+            // read that restored map and send the cancelled request through the proxy.
+            if (abandoned) return
             if (!selected.ok) return callback(new Error(selected.reason))
             if (options.all) return callback(null, [{ address: selected.address, family: net.isIP(selected.address) }])
             return callback(null, selected.address, net.isIP(selected.address))
           } catch (error) {
+            if (abandoned) return
             return callback(error instanceof Error ? error : new Error(String(error)))
           } finally {
             // The dial reads the proxy map from this callback. Releasing on socket is too early.
@@ -212,19 +220,32 @@ export function makePinnedClient(
         releaseProxy()
         throw error
       }
-      const releaseOnce = () => releaseProxy()
-      req.on("error", releaseOnce)
-      if (body !== undefined && body.length > 0) req.write(body)
-      req.end()
+      const abandon = () => {
+        abandoned = true
+        releaseProxy()
+      }
+      heldProxy.set(req, abandon)
+      req.on("error", abandon)
+      req.on("close", () => {
+        abandon()
+        agent.destroy()
+      })
+      try {
+        if (body !== undefined && body.length > 0) req.write(body)
+        req.end()
+      } catch (error) {
+        abandon()
+        throw error
+      }
       req.on("error", (error) => {
         resume(Effect.fail(new HttpClientError.HttpClientError({
           reason: new HttpClientError.TransportError({ request, cause: error }),
         })))
       })
-      req.on("close", () => agent.destroy())
       closeBag?.add(req)
       return Effect.sync(() => {
         req.destroy()
+        abandon()
         closeBag?.delete(req)
       })
     })
@@ -255,7 +276,10 @@ export function makeSessionValue(deps: GuardedSessionDeps = {}): GuardedSession 
     close: deps.client
       ? Effect.void
       : Effect.sync(() => {
-          for (const req of openRequests) req.destroy()
+          for (const req of openRequests) {
+            req.destroy()
+            heldProxy.get(req)?.()
+          }
           openRequests.clear()
         }),
   }
