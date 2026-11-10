@@ -1,5 +1,8 @@
 import { Effect } from "effect"
 import { createServer } from "node:http"
+import { createServer as createNetServer, type Server } from "node:net"
+import { networkInterfaces } from "node:os"
+import { createServer as createTlsServer } from "node:tls"
 import { describe, expect, test } from "bun:test"
 import { HttpClientRequest } from "effect/unstable/http"
 import {
@@ -183,3 +186,130 @@ describe("makePinnedClient", () => {
     }
   }, 30_000)
 })
+
+describe("beyond loopback", () => {
+  test("a non-loopback TLS dial keeps the URL hostname as SNI, rejects the untrusted certificate, and ignores a proxy", async () => {
+    const seen: { servername?: string; local?: string } = {}
+    const proxyHits = { n: 0 }
+    const proxy = createNetServer((socket) => {
+      proxyHits.n++
+      socket.destroy()
+    })
+    await listen(proxy, "127.0.0.1")
+    const proxyBound = proxy.address()
+    if (!proxyBound || typeof proxyBound === "string") throw new Error("missing proxy")
+    const server = createTlsServer({
+      cert: await Bun.file(new URL("./fixture/pinned-example-cert.pem", import.meta.url)).text(),
+      key: await Bun.file(new URL("./fixture/pinned-example-key.pem", import.meta.url)).text(),
+    })
+    const note = (socket: { servername?: string; localAddress?: string } | undefined) => {
+      if (!socket) return
+      if (socket.servername) seen.servername = socket.servername
+      if (socket.localAddress) seen.local = socket.localAddress
+    }
+    server.on("connection", (socket) => {
+      seen.local = socket.localAddress
+    })
+    server.on("secureConnection", note)
+    server.on("tlsClientError", (_error, socket) => note(socket))
+    const dialed = await listenBeyond(server)
+    const bound = server.address()
+    if (!bound || typeof bound === "string") throw new Error("missing address")
+    const previous = {
+      HTTP_PROXY: process.env.HTTP_PROXY, HTTPS_PROXY: process.env.HTTPS_PROXY, ALL_PROXY: process.env.ALL_PROXY,
+      http_proxy: process.env.http_proxy, https_proxy: process.env.https_proxy,
+    }
+    const proxyUrl = `http://127.0.0.1:${proxyBound.port}`
+    process.env.HTTP_PROXY = proxyUrl
+    process.env.HTTPS_PROXY = proxyUrl
+    process.env.ALL_PROXY = proxyUrl
+    process.env.http_proxy = proxyUrl
+    process.env.https_proxy = proxyUrl
+    try {
+      const client = makePinnedClient(() => "direct", async () => [address(dialed)])
+      const failure = await Effect.runPromise(
+        client.execute(HttpClientRequest.get(`https://pinned.example:${bound.port}/`)).pipe(Effect.exit),
+      )
+      for (let attempt = 0; attempt < 50 && !seen.servername; attempt++) await new Promise((resolve) => setTimeout(resolve, 10))
+      expect(failure._tag).toBe("Failure")
+      expect(String(failure)).toMatch(/certificate|CERT/)
+      expect(seen.servername).toBe("pinned.example")
+      expect(seen.local).toBe(dialed)
+      expect(dialed).not.toBe("127.0.0.1")
+      expect(proxyHits.n).toBe(0)
+    } finally {
+      for (const [key, value] of Object.entries(previous)) {
+        if (value === undefined) {
+          delete process.env[key]
+          continue
+        }
+        process.env[key] = value
+      }
+      proxy.close()
+      server.close()
+    }
+  }, 30_000)
+
+  test("a second request dials the new lookup instead of reusing the first non-loopback socket", async () => {
+    let primary = 0
+    let lookups = 0
+    const server = createServer((_request, response) => {
+      primary++
+      response.writeHead(200, { "content-type": "text/plain" })
+      response.end("primary")
+    })
+    const dialed = await listenBeyond(server)
+    const bound = server.address()
+    if (!bound || typeof bound === "string") throw new Error("missing address")
+    try {
+      const client = makePinnedClient(() => "direct", async () => {
+        lookups++
+        return [address(lookups === 1 ? dialed : "127.0.0.1")]
+      })
+      const first = await Effect.runPromise(client.execute(HttpClientRequest.get(`http://pinned.example:${bound.port}/`)))
+      expect(await Effect.runPromise(first.text)).toBe("primary")
+      const second = await Effect.runPromise(
+        client.execute(HttpClientRequest.get(`http://pinned.example:${bound.port}/`)).pipe(Effect.exit),
+      )
+      expect(second._tag).toBe("Failure")
+      expect(primary).toBe(1)
+      expect(lookups).toBe(2)
+      expect(dialed).not.toBe("127.0.0.1")
+    } finally {
+      server.closeAllConnections()
+      await new Promise<void>((resolve) => server.close(() => resolve()))
+    }
+  }, 30_000)
+})
+
+function listen(server: Server, host: string, port = 0) {
+  return new Promise<void>((resolve, reject) => {
+    const fail = (error: Error) => reject(error)
+    server.once("error", fail)
+    server.listen(port, host, () => {
+      server.removeListener("error", fail)
+      resolve()
+    })
+  })
+}
+
+async function listenBeyond(server: Server) {
+  const candidates = Object.values(networkInterfaces()).flatMap((entries) =>
+    (entries ?? []).flatMap((entry) => {
+      const family = String(entry.family)
+      if ((family !== "IPv4" && family !== "4") || entry.internal || entry.address.startsWith("169.254.")) return []
+      return [entry.address]
+    }),
+  )
+  if (candidates.length === 0) throw new Error("GUARDED_DIAL_NO_NON_LOOPBACK")
+  let last: unknown
+  for (const candidate of candidates) {
+    try {
+      await listen(server, candidate)
+      return candidate
+    } catch (error) {
+      last = error
+    }
+  }
+  throw last instanceof Error ? last : new Error("GUARDED_DIAL_NO_NON_LOOPBACK")
+}

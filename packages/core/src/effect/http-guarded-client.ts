@@ -125,6 +125,8 @@ export function makePinnedClient(
           // Keep the URL hostname as SNI/Host; the socket addresses come only from the pinned lookup.
           servername: url.hostname,
           rejectUnauthorized: true,
+          // The global agent reuses a socket and skips lookup. A later hop would keep a dial made under an old pin.
+          agent: false,
         },
         (response) => {
           const chunks: Buffer[] = []
