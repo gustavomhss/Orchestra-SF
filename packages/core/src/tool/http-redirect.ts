@@ -99,7 +99,7 @@ export const follow = <E = never, R = never>(
   })
 
 /**
- * Like `follow`, but every hop dials through a guarded Undici client whose connector resolves and validates the
+ * Like `follow`, but every hop dials through a guarded native HTTP client whose lookup resolves and validates the
  * target at connect time (see `HttpGuardedClient`). The preflight guard remains as early refusal; the connector is
  * the enforcement, so a DNS answer that changes between the check and the connect cannot smuggle a refused address.
  * Requires a `Scope`: the guarded HTTP client lives until the caller consumes the body inside the scope. The initial request
