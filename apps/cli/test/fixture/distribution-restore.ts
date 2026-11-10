@@ -37,6 +37,18 @@ export async function holdBackLastMigration(file: string) {
     db.run(`DROP TABLE "${table}"`)
     db.run("DELETE FROM migration WHERE id = ?", [last.id])
     db.run("PRAGMA wal_checkpoint(TRUNCATE)")
+    return { id: last.id, table }
+  } finally {
+    db.close()
+  }
+}
+
+export function isolatedMigrationApplied(file: string, id: string, table: string) {
+  const db = new Database(file)
+  try {
+    const migrated = db.query("SELECT id FROM migration WHERE id = ?").get(id) !== null
+    const present = db.query("SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?").get(table) !== null
+    return migrated && present
   } finally {
     db.close()
   }

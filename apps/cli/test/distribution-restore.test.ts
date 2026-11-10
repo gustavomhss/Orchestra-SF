@@ -2,7 +2,7 @@ import { expect, test } from "bun:test"
 import { mkdtemp, readFile, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import { holdBackLastMigration, restoreIsolatedDatabase } from "./fixture/distribution-restore"
+import { holdBackLastMigration, isolatedMigrationApplied, restoreIsolatedDatabase } from "./fixture/distribution-restore"
 import { Database } from "bun:sqlite"
 
 test("isolated restore keeps the backup bytes and drops wal sidecars", async () => {
@@ -43,12 +43,17 @@ test("holding back the last single-table migration leaves that table pending", a
   db.run("CREATE TABLE inbox_calendar (owner text)")
   db.close()
 
-  await holdBackLastMigration(file)
+  const held = await holdBackLastMigration(file)
+  expect(held).toEqual({ id: "20261105235919_inbox-calendar", table: "inbox_calendar" })
+  expect(isolatedMigrationApplied(file, held.id, held.table)).toBe(false)
 
   const opened = new Database(file)
   expect(opened.query("SELECT id FROM migration").all()).toEqual([])
   expect(opened.query("SELECT name FROM sqlite_master WHERE name = 'inbox_calendar'").get()).toBeNull()
+  opened.run("INSERT INTO migration (id, time_completed) VALUES (?, 2)", [held.id])
+  opened.run(`CREATE TABLE "${held.table}" (owner text)`)
   opened.close()
+  expect(isolatedMigrationApplied(file, held.id, held.table)).toBe(true)
 })
 
 test("holding back refuses a migration that is not one table", async () => {

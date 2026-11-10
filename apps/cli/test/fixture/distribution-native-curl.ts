@@ -5,7 +5,7 @@ import { verifyDistribution } from "../../script/distribution-payload"
 import { assertVersion, cli, command, sandbox, successful, snapshot, skillIdentity, target } from "./distribution-native"
 import type { Built } from "./distribution-native"
 import { qualify, stopServices } from "./distribution-native-proof"
-import { holdBackLastMigration, restoreIsolatedDatabase } from "./distribution-restore"
+import { holdBackLastMigration, isolatedMigrationApplied, restoreIsolatedDatabase } from "./distribution-restore"
 
 export async function curlChannel(directory: string, built: Built) {
   const box = await sandbox(join(directory, "curl"))
@@ -102,9 +102,13 @@ async function qualifyRestored(input: Omit<Parameters<typeof qualify>[0], "negat
   if (!database.startsWith(box + sep)) throw new Error("ISOLATED_DB_OUTSIDE_SANDBOX")
   // A fresh open writes no backup. Hold back the last table so the next open of
   // this installed CLI takes one, then restore that file and open it again.
-  await holdBackLastMigration(file)
+  // Health is not the proof: the restored file must lack that table, and the
+  // second open of this same CLI must put the table and journal id back.
+  const held = await holdBackLastMigration(file)
   await qualify({ ...input, reopen: true })
   await restoreIsolatedDatabase(file)
+  if (isolatedMigrationApplied(file, held.id, held.table)) throw new Error("ISOLATED_DB_RESTORE_NOT_HELD")
   await qualify({ ...input, reopen: true })
+  if (!isolatedMigrationApplied(file, held.id, held.table)) throw new Error("ISOLATED_DB_RESTORE_NOT_REAPPLIED")
   return root
 }
