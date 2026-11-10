@@ -164,7 +164,9 @@ describe("project and config routes", () => {
                 reload: () => Effect.void,
               } as unknown as AgentV2.Interface),
               Layer.succeed(Catalog.Service, {
-                reload: () => Effect.die(new Error(`catalog reload failed: ${ref.directory}`)),
+                // A defect is not what Effect.ignore swallows. A typed failure is, and this endpoint declares none,
+                // so the HTTP layer still answers 500. Restoring Effect.ignore would report 204.
+                reload: () => Effect.fail(new Error(`catalog reload failed: ${ref.directory}`)),
               } as unknown as Catalog.Interface),
             ),
           )
