@@ -1,11 +1,11 @@
 import { expect } from "bun:test"
 import { chmod, lstat, readFile, readlink, readdir, rm, writeFile } from "node:fs/promises"
-import { join } from "node:path"
+import { join, sep } from "node:path"
 import { verifyDistribution } from "../../script/distribution-payload"
 import { assertVersion, cli, command, sandbox, successful, snapshot, skillIdentity, target } from "./distribution-native"
 import type { Built } from "./distribution-native"
 import { qualify, stopServices } from "./distribution-native-proof"
-import { restoreIsolatedDatabase } from "./distribution-restore"
+import { holdBackLastMigration, restoreIsolatedDatabase } from "./distribution-restore"
 
 export async function curlChannel(directory: string, built: Built) {
   const box = await sandbox(join(directory, "curl"))
@@ -94,8 +94,17 @@ export async function curlChannel(directory: string, built: Built) {
   }
 }
 
-async function qualifyRestored(input: Omit<Parameters<typeof qualify>[0], "negative">) {
-  await qualify(input)
-  await restoreIsolatedDatabase(input.box.env.ORCHESTRA_DB)
-  return qualify(input)
+async function qualifyRestored(input: Omit<Parameters<typeof qualify>[0], "negative" | "reopen">) {
+  const root = await qualify(input)
+  const file = input.box.env.ORCHESTRA_DB
+  const box = process.platform === "win32" ? input.box.directory.toLowerCase() : input.box.directory
+  const database = process.platform === "win32" ? file.toLowerCase() : file
+  if (!database.startsWith(box + sep)) throw new Error("ISOLATED_DB_OUTSIDE_SANDBOX")
+  // A fresh open writes no backup. Hold back the last table so the next open of
+  // this installed CLI takes one, then restore that file and open it again.
+  await holdBackLastMigration(file)
+  await qualify({ ...input, reopen: true })
+  await restoreIsolatedDatabase(file)
+  await qualify({ ...input, reopen: true })
+  return root
 }

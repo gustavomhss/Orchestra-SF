@@ -2,7 +2,8 @@ import { expect, test } from "bun:test"
 import { mkdtemp, readFile, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import { restoreIsolatedDatabase } from "./fixture/distribution-restore"
+import { holdBackLastMigration, restoreIsolatedDatabase } from "./fixture/distribution-restore"
+import { Database } from "bun:sqlite"
 
 test("isolated restore keeps the backup bytes and drops wal sidecars", async () => {
   const dir = await mkdtemp(join(tmpdir(), "isolated-restore-"))
@@ -30,6 +31,40 @@ test("isolated restore accepts a hyphenated migration id", async () => {
   await restoreIsolatedDatabase(file)
 
   expect(await readFile(file, "utf8")).toBe("pre")
+})
+
+test("holding back the last single-table migration leaves that table pending", async () => {
+  const dir = await mkdtemp(join(tmpdir(), "isolated-restore-"))
+  const file = join(dir, "proof.sqlite")
+  const db = new Database(file)
+  db.run("CREATE TABLE session (id text PRIMARY KEY)")
+  db.run("CREATE TABLE migration (id text PRIMARY KEY, time_completed integer NOT NULL)")
+  db.run("INSERT INTO migration (id, time_completed) VALUES ('20261105235919_inbox-calendar', 1)")
+  db.run("CREATE TABLE inbox_calendar (owner text)")
+  db.close()
+
+  await holdBackLastMigration(file)
+
+  const opened = new Database(file)
+  expect(opened.query("SELECT id FROM migration").all()).toEqual([])
+  expect(opened.query("SELECT name FROM sqlite_master WHERE name = 'inbox_calendar'").get()).toBeNull()
+  opened.close()
+})
+
+test("holding back refuses a migration that is not one table", async () => {
+  const dir = await mkdtemp(join(tmpdir(), "isolated-restore-"))
+  const file = join(dir, "proof.sqlite")
+  const db = new Database(file)
+  db.run("CREATE TABLE session (id text PRIMARY KEY)")
+  db.run("CREATE TABLE migration (id text PRIMARY KEY, time_completed integer NOT NULL)")
+  db.run("INSERT INTO migration (id, time_completed) VALUES ('20260428004200_add_session_path', 1)")
+  db.run("CREATE TABLE session_kept (id text)")
+  db.close()
+
+  await expect(holdBackLastMigration(file)).rejects.toThrow("ISOLATED_DB_MIGRATION_NOT_ONE_TABLE")
+  const opened = new Database(file)
+  expect(opened.query("SELECT id FROM migration").get()).toEqual({ id: "20260428004200_add_session_path" })
+  opened.close()
 })
 
 test("isolated restore refuses a missing, extra, or unnamed backup", async () => {
