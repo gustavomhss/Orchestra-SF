@@ -5,6 +5,7 @@ All notable changes to HuGR Orchestra are recorded here. The format follows [Kee
 ## [Unreleased]
 
 - Undo recomputes the changed paths when a turn stored both snapshots and no file list. It no longer treats that missing list as no files.
+- Subscribing to events for a session that does not exist returns the declared 404. It no longer dies inside an open event stream.
 - A settings change that cannot reload an open location is no longer reported as applied.
 - The agent guide and the shipped playbook now match the host. Maestro cannot run `gh pr merge`. Claude mode may still ask you, and allowing that ask does not run the command. A backend result is not host-verified. A research time budget warns. A spent tool-call budget still allows inquiry close. A spent provider budget refuses further turns.
 - A credential database that cannot be read no longer gets a new encryption key. Orchestra stops instead of sealing new secrets under a key that cannot open the old ones.
