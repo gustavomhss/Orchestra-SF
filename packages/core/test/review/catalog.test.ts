@@ -70,6 +70,7 @@ describe("review catalog", () => {
       ["js-ts", "team-stack-js-ts"], ["python", "team-stack-python"], ["go", "team-stack-go"],
       ["ruby", "team-stack-ruby"], ["php", "team-stack-php"],
       ["sql", "team-stack-sql"],
+      ["rust", "team-stack-compiled-rust"], ["jvm", "team-stack-compiled-jvm"], ["native", "team-stack-compiled-native"],
     ])
   })
 
@@ -245,9 +246,16 @@ describe("review catalog", () => {
   })
 
   test("every language names a team-stack node that exists", async () => {
-    await Promise.all(catalog.languages.map(async (language) => {
-      expect(await Bun.file(path.join(team, language.node.replace(/^team-stack-/, "team-stack/"), "SKILL.md")).exists()).toBe(true)
-    }))
+    const names = new Set<string>()
+    const walk = async (dir: string, prefix: string) => {
+      for (const entry of await fs.readdir(dir, { withFileTypes: true })) {
+        const next = prefix ? `${prefix}/${entry.name}` : entry.name
+        if (entry.isDirectory()) await walk(path.join(dir, entry.name), next)
+        else if (entry.name === "SKILL.md") names.add(next.slice(0, -"/SKILL.md".length).split("/").join("-"))
+      }
+    }
+    await walk(team, "")
+    for (const language of catalog.languages) expect(names.has(language.node)).toBe(true)
   })
 })
 
