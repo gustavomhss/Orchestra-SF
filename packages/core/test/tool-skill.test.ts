@@ -240,7 +240,7 @@ describe("SkillTool", () => {
             expect(assertions).toEqual([])
             // The agent's own deny still holds inside the scope, and a refused load costs nothing.
             deny = true
-            expect(yield* load("lens-logic")).toEqual({ type: "error", value: "Unable to load skill lens-logic" })
+            expect(yield* load("lens-logic")).toEqual({ type: "error", value: "Unable to load skill lens-logic: PermissionV2.BlockedError" })
             deny = false
             expect(yield* load("lens-logic")).toEqual({ type: "text", value: SkillTool.toModelOutput(current[1]!, []) })
             expect(yield* load("lens-logic")).toMatchObject({ type: "error", value: expect.stringContaining("already in this Session's context") })
