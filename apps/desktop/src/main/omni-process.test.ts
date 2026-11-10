@@ -260,6 +260,26 @@ test.skipIf(!on)("owned serve: readiness, redaction, cwd, crash restart, SIGTERM
   expect(exits[1]).toEqual({ code: 0, signal: null, stopping: true })
 }, 30_000)
 
+test.skipIf(!on)("owned serve: a spawn error fails health without waiting out the timeout", async () => {
+  const started = Date.now()
+  const owned = await startOwnedServe({
+    logger: { log: () => {}, error: () => {} },
+    command: [join(tmpdir(), "orchestra-missing-binary")],
+    env: { PATH: process.env.PATH ?? "" },
+    cwd: tmpdir(),
+    write: () => {},
+  })
+  const failure = await owned.health.wait.then(
+    () => undefined,
+    (error: unknown) => error,
+  )
+  await owned.listener.stop()
+  expect(failure).toBeInstanceOf(Error)
+  expect((failure as Error).message).toContain("ENOENT")
+  expect((failure as Error).message).not.toContain("not healthy within")
+  expect(Date.now() - started).toBeLessThan(15_000)
+}, 30_000)
+
 test.skipIf(!on)("owned serve: a server that dies at start fails health with its last output", async () => {
   expectSpawn(import.meta.path)
   const dir = await mkdtemp(join(tmpdir(), "owned-serve-"))

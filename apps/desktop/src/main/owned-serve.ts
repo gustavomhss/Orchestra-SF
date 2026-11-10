@@ -66,7 +66,15 @@ export async function startOwnedServe(options: {
     child.once("spawn", () => options.onSpawn?.(child.pid))
     forward(child.stdout, (line) => write("stdout", line.replaceAll(password, "[redacted]")))
     forward(child.stderr, (line) => write("stderr", line.replaceAll(password, "[redacted]")))
-    child.once("error", (error) => options.logger.error("owned serve error", { message: error.message }))
+    // A failed spawn emits error and never exit. Without this, health waits out the two-minute timeout
+    // and the renderer never sees why the process did not start.
+    const failed = new Promise<never>((_, reject) => {
+      child.once("error", (error) => {
+        options.logger.error("owned serve error", { message: error.message })
+        reject(error instanceof Error ? error : new Error(String(error)))
+      })
+    })
+    void failed.catch(() => undefined)
     const exited = new Promise<void>((resolve) =>
       child.once("exit", (code, signal) => {
         resolve()
@@ -86,7 +94,7 @@ export async function startOwnedServe(options: {
         }, wait).unref()
       }),
     )
-    return { child, exited }
+    return { child, exited, failed }
   }
 
   options.logger.log("owned serve starting", { command: options.command, url })
@@ -94,6 +102,7 @@ export async function startOwnedServe(options: {
   const health = Promise.race([
     poll(() => healthy(url, password)),
     first.exited.then(() => Promise.reject(new Error("Owned serve exited before its health check passed"))),
+    first.failed,
     delay(READY_TIMEOUT).then(() => Promise.reject(new Error(`Owned serve not healthy within ${READY_TIMEOUT}ms`))),
   ]).catch((error: unknown) => {
     // The renderer shows this message, so it carries what the server last said about why it did not come up.
