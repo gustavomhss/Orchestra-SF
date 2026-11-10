@@ -9,6 +9,7 @@ All notable changes to HuGR Orchestra are recorded here. The format follows [Kee
 - A live event stream no longer drops events already received when one read is larger than 1 MiB. An unfinished frame past that cap is still refused.
 - An unsigned macOS app that already has a credential key file no longer asks for the Keychain password on every launch.
 - A local server that fails to start says why at once. It no longer waits two minutes and then reports only a timeout.
+- Listing a path the server cannot serve returns the same declared 400 as reading one. It no longer becomes an empty 500.
 
 ## 0.3.4 (2026-11-01)
 
