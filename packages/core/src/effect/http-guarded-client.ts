@@ -3,7 +3,8 @@ export * as HttpGuardedClient from "./http-guarded-client"
 import { lookup as dnsLookup } from "dns/promises"
 import http from "node:http"
 import https from "node:https"
-import { isIP } from "node:net"
+import net from "node:net"
+import tls from "node:tls"
 import { Context, Effect, Layer } from "effect"
 import { HttpClient, HttpClientRequest, HttpClientResponse } from "effect/unstable/http"
 import * as HttpClientError from "effect/unstable/http/HttpClientError"
@@ -36,7 +37,7 @@ export function selectApprovedAddress(
   addresses: ReadonlyArray<Resolution>,
 ): { readonly ok: true; readonly address: string } | { readonly ok: false; readonly reason: string } {
   const clean = hostname.toLowerCase().replace(/^\[|\]$/g, "").replace(/\.$/, "")
-  const literal = isIP(clean)
+  const literal = net.isIP(clean)
   const candidates = literal !== 0 ? [{ address: clean, family: literal }] : addresses
   if (candidates.length === 0) return { ok: false, reason: "the host does not resolve" }
   if (fromReach === "direct") return { ok: true, address: candidates[0]!.address }
@@ -63,6 +64,18 @@ export interface GuardedSessionDeps {
    * carries no dial-time guarantee, by construction.
    */
   readonly client?: HttpClient.HttpClient | undefined
+}
+
+function dialApproved(url: URL, fromReach: HopPolicy, lookup: LookupAll) {
+  return lookup(url.hostname).then((addresses) => {
+    const selected = selectApprovedAddress(url.hostname, fromReach, addresses)
+    if (!selected.ok) throw new Error(selected.reason)
+    const port = url.port ? Number(url.port) : url.protocol === "https:" ? 443 : 80
+    if (url.protocol === "https:") {
+      return tls.connect({ host: selected.address, port, servername: url.hostname, rejectUnauthorized: true })
+    }
+    return net.connect({ host: selected.address, port })
+  })
 }
 
 function encodeBody(request: HttpClientRequest.HttpClientRequest): Uint8Array | string | undefined {
@@ -94,19 +107,6 @@ export function makePinnedClient(
 ) {
   return HttpClient.make((request, url) =>
     Effect.callback((resume) => {
-      const pinnedLookup = (hostname: string, options: { all?: boolean }, callback: (...args: unknown[]) => void) => {
-        void (async () => {
-          try {
-            const addresses = await lookup(hostname)
-            const selected = selectApprovedAddress(hostname, currentFromReach(), addresses)
-            if (!selected.ok) return callback(new Error(selected.reason))
-            if (options.all) return callback(null, [{ address: selected.address, family: isIP(selected.address) }])
-            return callback(null, selected.address, isIP(selected.address))
-          } catch (error) {
-            return callback(error instanceof Error ? error : new Error(String(error)))
-          }
-        })()
-      }
       const body = encodeBody(request)
       const headers: Record<string, string> = {}
       for (const [key, value] of Object.entries(request.headers)) headers[key] = Array.isArray(value) ? value.join(", ") : value
@@ -121,12 +121,17 @@ export function makePinnedClient(
           path: `${url.pathname}${url.search}${url.hash}`,
           method: request.method,
           headers,
-          lookup: pinnedLookup as never,
-          // Keep the URL hostname as SNI/Host; the socket addresses come only from the pinned lookup.
+          // Dial here. A lookup option still goes through the global agent, which can reuse a socket or follow
+          // HTTPS_PROXY and skip the pin. Each request opens its own socket to the approved address.
+          agent: false,
           servername: url.hostname,
           rejectUnauthorized: true,
-          // The global agent reuses a socket and skips lookup. A later hop would keep a dial made under an old pin.
-          agent: false,
+          createConnection: (_options, callback) => {
+            void dialApproved(url, currentFromReach(), lookup).then(
+              (socket) => callback(null, socket),
+              (error: unknown) => callback(error instanceof Error ? error : new Error(String(error))),
+            )
+          },
         },
         (response) => {
           const chunks: Buffer[] = []

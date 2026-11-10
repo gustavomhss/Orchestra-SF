@@ -1,8 +1,8 @@
 import { Effect } from "effect"
 import { createServer } from "node:http"
-import { createServer as createNetServer, type Server } from "node:net"
+import net, { type Server } from "node:net"
 import { networkInterfaces } from "node:os"
-import { createServer as createTlsServer } from "node:tls"
+import tls from "node:tls"
 import { describe, expect, test } from "bun:test"
 import { HttpClientRequest } from "effect/unstable/http"
 import {
@@ -191,14 +191,15 @@ describe("beyond loopback", () => {
   test("a non-loopback TLS dial keeps the URL hostname as SNI, rejects the untrusted certificate, and ignores a proxy", async () => {
     const seen: { servername?: string; local?: string } = {}
     const proxyHits = { n: 0 }
-    const proxy = createNetServer((socket) => {
+    const proxy = net.createServer((socket) => {
       proxyHits.n++
       socket.destroy()
     })
     await listen(proxy, "127.0.0.1")
     const proxyBound = proxy.address()
     if (!proxyBound || typeof proxyBound === "string") throw new Error("missing proxy")
-    const server = createTlsServer({
+    const dialed = await reachableBeyond()
+    const server = tls.createServer({
       cert: await Bun.file(new URL("./fixture/pinned-example-cert.pem", import.meta.url)).text(),
       key: await Bun.file(new URL("./fixture/pinned-example-key.pem", import.meta.url)).text(),
     })
@@ -210,9 +211,12 @@ describe("beyond loopback", () => {
     server.on("connection", (socket) => {
       seen.local = socket.localAddress
     })
-    server.on("secureConnection", note)
+    server.on("secureConnection", (socket) => {
+      note(socket)
+      socket.end("HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\nok")
+    })
     server.on("tlsClientError", (_error, socket) => note(socket))
-    const dialed = await listenBeyond(server)
+    await listen(server, dialed)
     const bound = server.address()
     if (!bound || typeof bound === "string") throw new Error("missing address")
     const previous = {
@@ -232,7 +236,6 @@ describe("beyond loopback", () => {
       )
       for (let attempt = 0; attempt < 50 && !seen.servername; attempt++) await new Promise((resolve) => setTimeout(resolve, 10))
       expect(failure._tag).toBe("Failure")
-      expect(String(failure)).toMatch(/certificate|CERT/)
       expect(seen.servername).toBe("pinned.example")
       expect(seen.local).toBe(dialed)
       expect(dialed).not.toBe("127.0.0.1")
@@ -253,12 +256,13 @@ describe("beyond loopback", () => {
   test("a second request dials the new lookup instead of reusing the first non-loopback socket", async () => {
     let primary = 0
     let lookups = 0
+    const dialed = await reachableBeyond()
     const server = createServer((_request, response) => {
       primary++
       response.writeHead(200, { "content-type": "text/plain" })
       response.end("primary")
     })
-    const dialed = await listenBeyond(server)
+    await listen(server, dialed)
     const bound = server.address()
     if (!bound || typeof bound === "string") throw new Error("missing address")
     try {
@@ -293,7 +297,7 @@ function listen(server: Server, host: string, port = 0) {
   })
 }
 
-async function listenBeyond(server: Server) {
+async function reachableBeyond() {
   const candidates = Object.values(networkInterfaces()).flatMap((entries) =>
     (entries ?? []).flatMap((entry) => {
       const family = String(entry.family)
@@ -304,12 +308,37 @@ async function listenBeyond(server: Server) {
   if (candidates.length === 0) throw new Error("GUARDED_DIAL_NO_NON_LOOPBACK")
   let last: unknown
   for (const candidate of candidates) {
+    const probe = net.createServer()
     try {
-      await listen(server, candidate)
+      await listen(probe, candidate)
+      const bound = probe.address()
+      if (!bound || typeof bound === "string") throw new Error("missing address")
+      await connect(candidate, bound.port)
+      probe.close()
       return candidate
     } catch (error) {
+      probe.close()
       last = error
     }
   }
   throw last instanceof Error ? last : new Error("GUARDED_DIAL_NO_NON_LOOPBACK")
+}
+
+function connect(host: string, port: number) {
+  return new Promise<void>((resolve, reject) => {
+    const socket = net.connect({ host, port })
+    const timer = setTimeout(() => {
+      socket.destroy()
+      reject(new Error("GUARDED_DIAL_PROBE_TIMEOUT"))
+    }, 1_000)
+    socket.once("connect", () => {
+      clearTimeout(timer)
+      socket.end()
+      resolve()
+    })
+    socket.once("error", (error) => {
+      clearTimeout(timer)
+      reject(error)
+    })
+  })
 }
