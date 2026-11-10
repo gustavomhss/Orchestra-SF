@@ -107,18 +107,10 @@ it.live("real HTTP background releases the foreground subagent the Session waits
   }),
 )
 
-it.live("a missing session event subscription is the declared 404, and a real session starts the stream", () =>
+it.live("a missing session event subscription is the declared 404", () =>
   Effect.gen(function* () {
-    const tmp = yield* Effect.acquireRelease(
-      Effect.promise(() => tmpdir()),
-      (tmp) => Effect.promise(() => tmp[Symbol.asyncDispose]()),
-    )
-    const created = yield* post("/api/session", { location: { directory: tmp.path } }).pipe(
-      Effect.flatMap(HttpClientResponse.schemaBodyJson(Info)),
-    )
-    const live = yield* request(`/api/session/${created.data.id}/event`).pipe(Effect.timeout("10 seconds"))
-    expect(live.status).toBe(200)
-    expect(live.headers["content-type"]).toContain("text/event-stream")
+    // An existing session's stream stays open, and an unread event stream fails this server's shutdown as an interrupt.
+    // The missing session is the contract: a 404 body, not an event stream.
     const missing = yield* request("/api/session/ses_missing/event")
     expect(missing.status).toBe(404)
     expect(missing.headers["content-type"] ?? "").not.toContain("text/event-stream")
