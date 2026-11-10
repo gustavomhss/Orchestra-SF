@@ -107,10 +107,31 @@ it.live("real HTTP background releases the foreground subagent the Session waits
   }),
 )
 
-it.live("a missing session event subscription is the declared 404", () =>
+// The real session-location middleware already 404s a missing row before the handler runs. This one lets the request
+// through, so the test fails if session.events still returns the stream and Stream.orDie.
+const reachHandler = Layer.succeed(
+  SessionLocationMiddleware,
+  SessionLocationMiddleware.of((effect) => effect),
+)
+const handlerRoutes = HttpApiBuilder.layer(
+  HttpApi.make("server").add(makeSessionGroup(SessionLocationMiddleware)).middleware(SchemaErrorMiddleware),
+).pipe(
+  Layer.provide(SessionHandler),
+  Layer.provide(reachHandler),
+  Layer.provide(schemaErrorLayer),
+  Layer.provide(authorizationLayer),
+  Layer.provide(ServerAuth.Config.configLayer({ username: "orchestra", password: Option.none() })),
+)
+const handlerIt = testEffect(
+  HttpRouter.serve(handlerRoutes, { disableListenLog: true, disableLogger: true }).pipe(
+    Layer.provideMerge(NodeHttpServer.layerTest),
+    Layer.provideMerge(NodeServices.layer),
+    Layer.provideMerge(services),
+  ),
+)
+
+handlerIt.live("a missing session that reaches the handler is the declared 404, not an event stream", () =>
   Effect.gen(function* () {
-    // An existing session's stream stays open, and an unread event stream fails this server's shutdown as an interrupt.
-    // The missing session is the contract: a 404 body, not an event stream.
     const missing = yield* request("/api/session/ses_missing/event")
     expect(missing.status).toBe(404)
     expect(missing.headers["content-type"] ?? "").not.toContain("text/event-stream")
