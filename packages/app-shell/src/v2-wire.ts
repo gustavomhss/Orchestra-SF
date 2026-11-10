@@ -88,6 +88,17 @@ export type {
 } from "@orchestra/session-ui/transcript-model"
 
 export type {
+  EventMaestroReviewReceived,
+  MaestroReviewEvidence,
+  MaestroReviewFinding,
+  MaestroReviewCardFinding,
+  MaestroReviewItem,
+  ReviewRoutingSource,
+  ReviewRoutingEntry,
+  ReviewRoutingRecord,
+} from "./v2-wire-review"
+
+export type {
   Agent,
   AgentColor,
   AgentConfig,
@@ -141,7 +152,6 @@ export type {
   EventMaestroDispatchReserved,
   EventMaestroHeldEntered,
   EventMaestroPlanRevisionRecorded,
-  EventMaestroReviewReceived,
   EventMaestroScopeDecided,
   EventMaestroTaskBound,
   EventMaestroTaskWorkflowBound,

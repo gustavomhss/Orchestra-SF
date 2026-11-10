@@ -263,42 +263,6 @@ export type EventMaestroPlanRevisionRecorded = {
     grounding?: MaestroGrounding
   }
 }
-export type EventMaestroReviewReceived = {
-  id: string
-  type: "maestro.review.received"
-  properties: {
-    sessionID: string
-    projectID: string
-    validationRecordID: string
-    workCardHash: string
-    routedMemberID: string
-    rosterHash: string
-    grantHash: string
-    reviewPolicyHash: string
-    actor: {
-      version: "rfc8785-v1"
-      bytes: string
-      sha256: string
-    }
-    reviewerID: "lucy"
-    reviewMethodVersion: string
-    artifact: {
-      workCardHash: string
-      sha256: string
-      baseSHA: string
-      headSHA: string
-      worktree: string
-      changedPaths: Array<string>
-    }
-    verdict: "APPROVE" | "FIX_FIRST" | "REJECT"
-    findings: Array<{
-      path: string
-      line: number
-      message: string
-    }>
-    stage?: "plan" | "code"
-  }
-}
 export type EventMaestroScopeDecided = {
   id: string
   type: "maestro.scope.decided"

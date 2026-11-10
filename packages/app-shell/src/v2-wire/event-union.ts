@@ -26,13 +26,14 @@ import type {
   EventMaestroDispatchReserved,
   EventMaestroHeldEntered,
   EventMaestroPlanRevisionRecorded,
-  EventMaestroReviewReceived,
   EventMaestroScopeDecided,
   EventMaestroTaskBound,
   EventMaestroTaskWorkflowBound,
   EventMaestroValidationRecorded,
   EventMaestroWorkResultDecided,
 } from "./event-maestro"
+
+import type { EventMaestroReviewReceived } from "../v2-wire-review"
 
 import type {
   EventPermissionV2Asked,
