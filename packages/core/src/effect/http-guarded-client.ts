@@ -20,22 +20,32 @@ export interface Resolution {
 export type LookupAll = (hostname: string) => Promise<ReadonlyArray<Resolution>>
 
 const proxyEnv = ["HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "http_proxy", "https_proxy"]
+let proxyHolds = 0
+let proxySaved: Array<readonly [string, string | undefined]> | null = null
 
-// Bun's node:http follows these even when the caller passes its own agent. Read them out for the
-// request() call only. The window is synchronous; the destination is fixed before the call returns.
-function withoutEnvProxy<T>(body: () => T) {
-  const saved = proxyEnv.map((key) => [key, process.env[key]] as const)
-  for (const key of proxyEnv) delete process.env[key]
-  try {
-    return body()
-  } finally {
-    for (const [key, value] of saved) {
+// Bun builds the ClientRequest in request() and dials from end(), possibly after that call returns.
+// Hold the env proxy clear until the socket exists. The agent also has no proxy property: that is
+// the field Bun's fetch path forwards.
+function holdEnvProxy() {
+  if (proxyHolds === 0) {
+    proxySaved = proxyEnv.map((key) => [key, process.env[key]] as const)
+    for (const key of proxyEnv) delete process.env[key]
+  }
+  proxyHolds++
+  let released = false
+  return () => {
+    if (released) return
+    released = true
+    proxyHolds--
+    if (proxyHolds !== 0 || !proxySaved) return
+    for (const [key, value] of proxySaved) {
       if (value === undefined) {
         delete process.env[key]
         continue
       }
       process.env[key] = value
     }
+    proxySaved = null
   }
 }
 
@@ -134,10 +144,12 @@ export function makePinnedClient(
         headers["content-length"] = String(body.length)
       }
       const transport = url.protocol === "https:" ? https : http
-      // A fresh agent does not join the global pool, so a later hop cannot keep a socket dialed under an old pin.
-      // `agent: false` still follows HTTP_PROXY on Bun and would skip this lookup.
+      // A fresh agent does not join the global pool and has no proxy property for Bun's dial to forward.
       const agent = new transport.Agent({ keepAlive: false })
-      const req = withoutEnvProxy(() => transport.request(
+      const releaseProxy = holdEnvProxy()
+      let req: ReturnType<typeof transport.request>
+      try {
+        req = transport.request(
         {
           host: url.hostname,
           port: url.port ? Number(url.port) : url.protocol === "https:" ? 443 : 80,
@@ -194,15 +206,25 @@ export function makePinnedClient(
             reason: new HttpClientError.TransportError({ request, cause: error }),
           }))))
         },
-      ))
+        )
+      } catch (error) {
+        releaseProxy()
+        throw error
+      }
+      const releaseOnce = () => releaseProxy()
+      req.on("socket", releaseOnce)
+      req.on("error", releaseOnce)
+      if (body !== undefined && body.length > 0) req.write(body)
+      req.end()
       req.on("error", (error) => {
         resume(Effect.fail(new HttpClientError.HttpClientError({
           reason: new HttpClientError.TransportError({ request, cause: error }),
         })))
       })
-      req.on("close", () => agent.destroy())
-      if (body !== undefined && body.length > 0) req.write(body)
-      req.end()
+      req.on("close", () => {
+        releaseOnce()
+        agent.destroy()
+      })
       closeBag?.add(req)
       return Effect.sync(() => {
         req.destroy()
