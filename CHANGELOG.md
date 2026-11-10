@@ -4,6 +4,7 @@ All notable changes to HuGR Orchestra are recorded here. The format follows [Kee
 
 ## [Unreleased]
 
+- The agent guide and the shipped playbook now match the host. Maestro cannot run `gh pr merge`. Claude mode may still ask you, and allowing that ask does not run the command. A backend result is not host-verified. A research time budget warns. A spent tool-call budget still allows inquiry close. A spent provider budget refuses further turns.
 - A credential database that cannot be read no longer gets a new encryption key. Orchestra stops instead of sealing new secrets under a key that cannot open the old ones.
 - `orchestra stats` stops when a message page cannot be read. It no longer prints totals that left those messages out.
 - A live event stream no longer drops events already received when one read is larger than 1 MiB. An unfinished frame past that cap is still refused.
