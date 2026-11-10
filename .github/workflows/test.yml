@@ -506,7 +506,7 @@ jobs:
     runs-on: ${{ matrix.settings.host }}
     # The e2e lane is the documented exception to the 10-minute per-job budget: each shard boots its own app
     # server and Chromium, and under the account's max-parallel cap a whole shard needs ~8.5 minutes, so the
-    # lane gets 15 job minutes with a 12-minute step. All other test jobs stay at 10.
+    # lane gets 15 job minutes with a 12-minute step. The Windows libs lane is the other 15/12 exception; every other test job stays at 10.
     timeout-minutes: 15
     env:
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.playwright-browsers
