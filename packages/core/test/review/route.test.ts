@@ -62,6 +62,7 @@ describe("review route", () => {
         { id: "ast-grep", source: "catalog", lane: "no-build", status: "routed" },
         { id: "squawk", source: "path", lane: "no-build", status: "routed" },
         { id: "oxlint", source: "catalog", lane: "no-build", status: "routed" },
+        { id: "tsc", source: "catalog", lane: "build", status: "not-run", reason: "not-built" },
       ],
       budget: { ...STANDARD, lensChildren: 6 },
       deviations: [],

@@ -25,6 +25,7 @@ import { ReviewPackOxlint } from "./packs/oxlint"
 import { ReviewOxlintAnalyze } from "./oxlint-analyze"
 import { ReviewPackZizmor } from "./packs/zizmor"
 import { ReviewZizmorAnalyze } from "./zizmor-analyze"
+import { ReviewBuildLane } from "./build-lane"
 
 // K6 analyze half (design §7.2, §8.6, plan WP 1.4): the host runs the routed packs before any model turn, each confined
 // in a scratch copy (head, and base for the new-only step), keeps every raw output as a citable artifact, normalizes it
@@ -218,6 +219,8 @@ const runPack = Effect.fnUntraced(function* (packID: string, pack: Pack | undefi
   const files = context.input.files ?? []
   if (context.input.scope === "files" && files.some((file) => !ReviewNativeFiles.containedPath(context.input.worktree, file)))
     return refused(files.some((file) => file.includes("\0")) ? "nul" : "path-outside")
+  // A generic lane refusal would mark a build pack workspace-executed. Trust, the cap and R19 live in the lane.
+  if (pack.lane === "build") return yield* ReviewBuildLane.run(pack, context, confined)
   if (LANES.indexOf(pack.lane) > LANES.indexOf(lane)) return refused(`lane: ${pack.lane} is above ${lane}`)
   if (pack.status === "dropped") return refused("dropped")
   // Squawk's argv is effectful (it stats the copy). The static template scanners stay as they are.
@@ -702,6 +705,8 @@ const confined = Effect.fnUntraced(function* (input: {
   })
   return { outcome }
 })
+
+export type Confine = typeof confined
 
 const copy = (input: Parameters<typeof ReviewScratch.create>[0]) =>
   ReviewScratch.create(input).pipe(
