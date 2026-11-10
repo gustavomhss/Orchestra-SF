@@ -145,6 +145,8 @@ function coreShards(name: Platform, host: string, count: number) {
     shard: `${index + 1}/${count}`,
     turbo: true,
     filters: "--filter=@orchestra/core",
+    // The dependency-shadow cap proof is allowed 10 minutes. An 8-minute step killed the Windows shard that held it.
+    ...(name === "windows" ? { budget: 15 } : {}),
   }))
 }
 

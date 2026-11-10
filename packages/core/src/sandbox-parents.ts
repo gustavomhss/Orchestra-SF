@@ -50,7 +50,7 @@ export const prepare = Effect.fn("SandboxParents.prepare")(function* (
   directory: string,
   targets: readonly string[],
 ) {
-  const created: { path: string; dev: number; ino: number }[] = []
+  const created: { path: string; dev: number; ino: number; birthtimeMs: number }[] = []
   return yield* Effect.gen(function* () {
     yield* Effect.forEach(targets, (target) => Effect.gen(function* () {
       if ((yield* fs.realPath(path.dirname(target)).pipe(
@@ -61,7 +61,7 @@ export const prepare = Effect.fn("SandboxParents.prepare")(function* (
         try: () => {
           mkdirSync(target, { mode: 0o755 })
           const info = lstatSync(target)
-          created.push({ path: target, dev: info.dev, ino: info.ino })
+          created.push({ path: target, dev: info.dev, ino: info.ino, birthtimeMs: info.birthtimeMs })
           return info
         },
         catch: () => new ToolSafety.Denied({ reason: "sandbox-parent-exclusive-mkdir" }),
@@ -83,7 +83,9 @@ export const prepare = Effect.fn("SandboxParents.prepare")(function* (
     // Synchronous cleanup also runs on interruption with this Effect version.
     created.toReversed().forEach((entry) => Result.try(() => {
       const info = lstatSync(entry.path)
+      // Windows can reuse a file index for the replacement directory. Birth time keeps that identity distinct.
       if (!info.isDirectory() || info.isSymbolicLink() || info.dev !== entry.dev || info.ino !== entry.ino ||
+        info.birthtimeMs !== entry.birthtimeMs ||
         realpathSync(path.dirname(entry.path)) !== path.dirname(entry.path) || realpathSync(entry.path) !== entry.path)
         return
       rmdirSync(entry.path)

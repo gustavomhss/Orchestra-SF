@@ -701,7 +701,6 @@ export function make(options: ClientOptions) {
             throw new ClientError("Transport", { cause })
           }
           buffer += decoder.decode(next.value, { stream: !next.done })
-          if (buffer.length > 1_048_576) throw new ClientError("MalformedResponse")
           const trailingCarriageReturn = !next.done && buffer.endsWith("\r")
           if (trailingCarriageReturn) buffer = buffer.slice(0, -1)
           buffer = buffer.replaceAll("\r\n", "\n").replaceAll("\r", "\n")
@@ -711,6 +710,7 @@ export function make(options: ClientOptions) {
           while (boundary >= 0) {
             const block = buffer.slice(0, boundary)
             buffer = buffer.slice(boundary + 2)
+            if (block.length > 1_048_576) throw new ClientError("MalformedResponse")
             const data = block
               .split("\n")
               .flatMap((line) => (line.startsWith("data:") ? [line.slice(5).trimStart()] : []))
@@ -724,6 +724,7 @@ export function make(options: ClientOptions) {
             }
             boundary = buffer.indexOf("\n\n")
           }
+          if (buffer.length > 1_048_576) throw new ClientError("MalformedResponse")
           if (next.done) return
         }
       } finally {
