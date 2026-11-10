@@ -2,11 +2,16 @@ import { SessionProcess } from "@orchestra/core/session-process"
 import { MoveSession } from "@orchestra/core/control-plane/move-session"
 import { TaskBackground } from "@orchestra/core/tool/task-background"
 import { expect } from "bun:test"
+import fs from "fs/promises"
+import os from "os"
+import path from "path"
 import { NodeHttpServer, NodeServices } from "@effect/platform-node"
 import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
 import { Database } from "@orchestra/core/database/database"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
+import { Location } from "@orchestra/core/location"
 import { LocationServiceMap } from "@orchestra/core/location-service-map"
+import { AbsolutePath } from "@orchestra/core/schema"
 import { AppProcess } from "@orchestra/core/process"
 import { FSUtil } from "@orchestra/core/fs-util"
 import { SessionV2 } from "@orchestra/core/session"
@@ -23,6 +28,7 @@ import { testEffect } from "@orchestra/core/test/lib/effect"
 import { ServerAuth } from "../src/auth"
 import { SessionHandler } from "../src/handlers/session"
 import { authorizationLayer } from "../src/middleware/authorization"
+import { bootLocation } from "../src/location"
 import { SessionLocationMiddleware, sessionLocationLayer } from "../src/middleware/session-location"
 import { schemaErrorLayer } from "../src/middleware/schema-error"
 
@@ -107,11 +113,20 @@ it.live("real HTTP background releases the foreground subagent the Session waits
   }),
 )
 
-// The real session-location middleware already 404s a missing row before the handler runs. This one lets the request
-// through, so the test fails if session.events still returns the stream and Stream.orDie.
-const reachHandler = Layer.succeed(
+// The real session-location middleware already 404s a missing row before the handler runs. This one boots a location
+// and does not look up the session, so the test fails if session.events still returns the stream and Stream.orDie.
+const reachHandler = Layer.effect(
   SessionLocationMiddleware,
-  SessionLocationMiddleware.of((effect) => effect),
+  Effect.gen(function* () {
+    const locations = yield* LocationServiceMap.Service
+    const directory = yield* Effect.promise(() => fs.mkdtemp(path.join(os.tmpdir(), "orchestra-events-")))
+    const location = Location.Ref.make({ directory: AbsolutePath.make(directory) })
+    return SessionLocationMiddleware.of((effect) =>
+      Effect.gen(function* () {
+        return yield* effect.pipe(Effect.provide(bootLocation(locations.get(location), location)))
+      }),
+    )
+  }),
 )
 const handlerRoutes = HttpApiBuilder.layer(
   HttpApi.make("server").add(makeSessionGroup(SessionLocationMiddleware)).middleware(SchemaErrorMiddleware),
