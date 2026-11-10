@@ -224,7 +224,7 @@ export function repository(key: string, size = 2, full?: object, scoped?: "scrip
       await commit(directory, "base")
       await git(directory, "remote", "add", "origin", pathToFileURL(remote).href)
       await git(directory, "push", "--quiet", "origin", "main")
-      return { root, directory, key, remote: { origin: remote, pulls: new Map<number, string>(), bodies: new Map<number, string>(), conclusion: "", seeded: [] as ReadonlyArray<string>, cancelled: [] as ReadonlyArray<string>, infraAttempts: 1, attempts: new Map<number, number>(), job: "unit (linux)", log: "", baseRuns: GREEN_BASE, calls: [] as Remote["calls"], beforeHead: undefined, dispatches: [] as Remote["dispatches"], labels: new Map<number, ReadonlyArray<string>>() } }
+      return { root, directory, key, remote: { origin: remote, pulls: new Map<number, string>(), bodies: new Map<number, string>(), conclusion: "", seeded: [] as ReadonlyArray<string>, cancelled: [] as ReadonlyArray<string>, infraAttempts: 1, attempts: new Map<number, number>(), job: "unit (linux)", log: "", baseRuns: GREEN_BASE, calls: [] as Remote["calls"], beforeHead: undefined as Remote["beforeHead"], dispatches: [] as Remote["dispatches"], labels: new Map<number, ReadonlyArray<string>>() } }
     })
     remotes.set(`acme/${key}`, made.remote)
     const database = yield* Database.Service
