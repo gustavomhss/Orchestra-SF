@@ -29,7 +29,7 @@ const TSCONFIG = `${JSON.stringify({
 const GUARD = "echo 'do not run tests from root' && exit 1"
 
 describe("build lane catalog", () => {
-  test("tsc is deep-only, and the unbuilt probes stay out of the live catalog", () => {
+  test("standard routes tsc, quick does not, and the unbuilt probes stay out", () => {
     const ids = ReviewCatalog.current.options.map((option) => option.id)
     expect(ids).toContain("probe:test")
     for (const id of ["probe:mutants", "probe:interleave", "probe:race", "probe:property"]) expect(ids).not.toContain(id)
@@ -40,11 +40,14 @@ describe("build lane catalog", () => {
       changes: [{ path: "src/a.ts", added: [{ line: 1, text: "export const a = 1" }], removed: 0 }],
     }
     const settings = { acceptedUnavailable: [] }
+    const routed = { id: "tsc", source: "catalog" as const, lane: "build", status: "routed" as const }
     const standard = ReviewRoute.route({ stage: "code", tier: "standard", settings }, base, head, ReviewCatalog.current)
-    expect(standard.packs.some((pack) => pack.id === "tsc")).toBe(false)
+    expect(standard.packs).toContainEqual(routed)
+    const quick = ReviewRoute.route({ stage: "code", tier: "quick", settings }, base, head, ReviewCatalog.current)
+    expect(quick.packs.some((pack) => pack.id === "tsc")).toBe(false)
     const deep = ReviewRoute.route({ stage: "code", tier: "deep", settings }, base, head, ReviewCatalog.current)
     expect(deep.tier).toMatchObject({ id: "standard", requested: "deep" })
-    expect(deep.packs).toContainEqual({ id: "tsc", source: "catalog", lane: "build", status: "not-run", reason: "not-built" })
+    expect(deep.packs).toContainEqual(routed)
   })
 
   test("this repository cites typecheck.yml, and a near-miss does not", async () => {

@@ -139,8 +139,13 @@ not silently examined; even the privacy lens can be capped at Quick. Routing `pe
 audit. Check the card's coverage and deviations for what actually ran.
 
 When a review asks for Deep, the card shows `tier.requested: "deep"` in the routing record, runs Standard, records the
-method as `standard`, and lists every Deep lane under "not examined" with the reason `not-built`. Read that as "this
-change deserved more than this release can do", not as a pass.
+method as `standard`, and lists every unbuilt Deep lane under "not examined" with the reason `not-built`. Read that as
+"this change deserved more than this release can do", not as a pass. Deep itself is not built.
+
+A trusted review at Standard or Deep also typechecks a TypeScript change with the project's own `tsc`, confined in a
+scratch copy. It does not install a compiler. A missing one is unavailable. Approval waits until that check is listed
+in `review.acceptedUnavailable`, or the compiler is present. In this repository the card cites `typecheck.yml`
+instead, and that citation does not block approval. Quick does not run it.
 
 ### Pinning a tier
 

@@ -130,6 +130,11 @@ export type Analyze = (
   },
 ) => Effect.Effect<ReviewFanoutV2.Analysis, Tool.Failure>
 
+/** D6 ceiling. The opened project may enter the build lane. An external target must pass false and stay at repo. */
+export function analyzeLane(trusted: boolean) {
+  return trusted ? "build" as const : "repo" as const
+}
+
 const analyzeStep = (processes: AppProcess.Interface): Analyze => (input) => {
   const changed: Record<string, { start: number; end: number }[]> = {}
   for (const change of input.changes ?? []) {
@@ -137,6 +142,8 @@ const analyzeStep = (processes: AppProcess.Interface): Analyze => (input) => {
     if (lines.length === 0) continue
     changed[change.path] = [{ start: Math.min(...lines), end: Math.max(...lines) }]
   }
+  // This call reviews the project the owner opened. An external target must not reuse it with trusted true.
+  const trusted = true
   return ReviewAnalyze.run({
     worktree: input.worktree,
     base: input.base,
@@ -144,9 +151,9 @@ const analyzeStep = (processes: AppProcess.Interface): Analyze => (input) => {
     tier: input.executionTier ?? ReviewRouting.tier(input.routing),
     store: ReviewBindingV2.analysisStore(input.cache),
     changed,
-    trusted: true,
+    trusted,
     catalog: input.catalog,
-    lane: "repo",
+    lane: analyzeLane(trusted),
     packs: input.packs.map((pack) => pack.id),
     scope: "diff",
     files: [...input.files],

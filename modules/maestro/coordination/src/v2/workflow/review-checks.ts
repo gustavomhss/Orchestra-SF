@@ -1,6 +1,6 @@
 export * as ReviewChecksV2 from "./review-checks"
 
-import type { ReviewAnalyze } from "@orchestra/core/review-toolkit/analyze"
+import { ReviewAnalyze } from "@orchestra/core/review-toolkit/analyze"
 import type { ReviewProbe } from "@orchestra/core/review-toolkit/probe"
 import type { ReviewCatalog } from "@orchestra/core/review/catalog"
 import { ReviewRouting } from "@orchestra/core/review/routing"
@@ -75,6 +75,8 @@ function requireFacts(facts: unknown): Facts {
 }
 
 function projectAnalyzer(check: ReviewAnalyze.Check, accepts: (id: string, lane?: string) => boolean): Check {
+  // R19: this repository cites typecheck.yml instead of running tsc. That is the evidence, not a missing tool.
+  if (check.status === "not-run" && check.reason === ReviewAnalyze.TYPECHECK_CI) return projected(check, "not-run", false)
   const status = check.status === "not-run" ? "check-unavailable" : check.status
   return projected(check, status, status === "check-unavailable" && accepts(check.id, check.lane))
 }
