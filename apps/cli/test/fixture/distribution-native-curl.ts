@@ -94,7 +94,7 @@ export async function curlChannel(directory: string, built: Built) {
   }
 }
 
-async function qualifyRestored(input: Omit<Parameters<typeof qualify>[0], "negative" | "reopen">) {
+export async function qualifyRestored(input: Omit<Parameters<typeof qualify>[0], "negative" | "reopen">) {
   const root = await qualify(input)
   const file = input.box.env.ORCHESTRA_DB
   const box = process.platform === "win32" ? input.box.directory.toLowerCase() : input.box.directory
