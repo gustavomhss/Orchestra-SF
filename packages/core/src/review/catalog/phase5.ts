@@ -1,3 +1,4 @@
+// Not spread into the live catalog. probe.ts BUILT does not run these, and deep.built stays false.
 export const phase5Options = [
   { id: "probe:mutants", rung: "probe", cost: "high" },
   { id: "probe:interleave", rung: "probe", cost: "high" },
