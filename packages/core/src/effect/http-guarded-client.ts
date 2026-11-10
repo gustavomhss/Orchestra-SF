@@ -19,17 +19,19 @@ export interface Resolution {
 
 export type LookupAll = (hostname: string) => Promise<ReadonlyArray<Resolution>>
 
-const proxyEnv = ["HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "http_proxy", "https_proxy"]
+const proxyEnv = ["HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "http_proxy", "https_proxy", "NO_PROXY", "no_proxy"]
 let proxyHolds = 0
 let proxySaved: Array<readonly [string, string | undefined]> | null = null
 
-// Bun builds the ClientRequest in request() and dials from end(), possibly after that call returns.
-// Hold the env proxy clear until the socket exists. The agent also has no proxy property: that is
-// the field Bun's fetch path forwards.
+// Bun 1.3 reads the proxy from its own env map inside the lookup callback, after the constructor's
+// socket event. `delete process.env.HTTP_PROXY` does not update that map. Assignment does.
+// `NO_PROXY=*` is the skip Bun honors if a proxy value is still present. Restore by assignment too.
 function holdEnvProxy() {
   if (proxyHolds === 0) {
     proxySaved = proxyEnv.map((key) => [key, process.env[key]] as const)
-    for (const key of proxyEnv) delete process.env[key]
+    for (const key of proxyEnv) process.env[key] = ""
+    process.env.NO_PROXY = "*"
+    process.env.no_proxy = "*"
   }
   proxyHolds++
   let released = false
@@ -38,13 +40,7 @@ function holdEnvProxy() {
     released = true
     proxyHolds--
     if (proxyHolds !== 0 || !proxySaved) return
-    for (const [key, value] of proxySaved) {
-      if (value === undefined) {
-        delete process.env[key]
-        continue
-      }
-      process.env[key] = value
-    }
+    for (const [key, value] of proxySaved) process.env[key] = value ?? ""
     proxySaved = null
   }
 }
@@ -134,6 +130,9 @@ export function makePinnedClient(
             return callback(null, selected.address, net.isIP(selected.address))
           } catch (error) {
             return callback(error instanceof Error ? error : new Error(String(error)))
+          } finally {
+            // The dial reads the proxy map from this callback. Releasing on socket is too early.
+            releaseProxy()
           }
         })()
       }
@@ -212,7 +211,6 @@ export function makePinnedClient(
         throw error
       }
       const releaseOnce = () => releaseProxy()
-      req.on("socket", releaseOnce)
       req.on("error", releaseOnce)
       if (body !== undefined && body.length > 0) req.write(body)
       req.end()
@@ -221,10 +219,7 @@ export function makePinnedClient(
           reason: new HttpClientError.TransportError({ request, cause: error }),
         })))
       })
-      req.on("close", () => {
-        releaseOnce()
-        agent.destroy()
-      })
+      req.on("close", () => agent.destroy())
       closeBag?.add(req)
       return Effect.sync(() => {
         req.destroy()

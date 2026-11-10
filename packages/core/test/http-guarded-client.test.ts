@@ -226,7 +226,7 @@ describe("beyond loopback", () => {
     }
   }, 30_000)
 
-  test("an env proxy does not receive a guarded dial", async () => {
+  test("an env proxy does not receive a guarded dial to a non-loopback address", async () => {
     let proxyHits = 0
     let hits = 0
     const proxy = net.createServer((socket) => {
@@ -236,17 +236,19 @@ describe("beyond loopback", () => {
     await listen(proxy, "127.0.0.1")
     const proxyBound = proxy.address()
     if (!proxyBound || typeof proxyBound === "string") throw new Error("missing proxy")
+    const dialed = await reachableBeyond()
     const server = createServer((_request, response) => {
       hits++
       response.writeHead(200, { "content-type": "text/plain" })
       response.end("direct")
     })
-    await listen(server, "127.0.0.1")
+    await listen(server, dialed)
     const bound = server.address()
     if (!bound || typeof bound === "string") throw new Error("missing address")
     const previous = {
       HTTP_PROXY: process.env.HTTP_PROXY, HTTPS_PROXY: process.env.HTTPS_PROXY, ALL_PROXY: process.env.ALL_PROXY,
       http_proxy: process.env.http_proxy, https_proxy: process.env.https_proxy,
+      NO_PROXY: process.env.NO_PROXY, no_proxy: process.env.no_proxy,
     }
     const proxyUrl = `http://127.0.0.1:${proxyBound.port}`
     process.env.HTTP_PROXY = proxyUrl
@@ -254,20 +256,17 @@ describe("beyond loopback", () => {
     process.env.ALL_PROXY = proxyUrl
     process.env.http_proxy = proxyUrl
     process.env.https_proxy = proxyUrl
+    process.env.NO_PROXY = ""
+    process.env.no_proxy = ""
     try {
-      const client = makePinnedClient(() => "direct", async () => [address("127.0.0.1")])
-      const response = await Effect.runPromise(client.execute(HttpClientRequest.get(`http://pinned.local:${bound.port}/`)))
+      const client = makePinnedClient(() => "direct", async () => [address(dialed)])
+      const response = await Effect.runPromise(client.execute(HttpClientRequest.get(`http://pinned.example:${bound.port}/`)))
       expect(await Effect.runPromise(response.text)).toBe("direct")
       expect(hits).toBe(1)
       expect(proxyHits).toBe(0)
+      expect(dialed).not.toBe("127.0.0.1")
     } finally {
-      for (const [key, value] of Object.entries(previous)) {
-        if (value === undefined) {
-          delete process.env[key]
-          continue
-        }
-        process.env[key] = value
-      }
+      for (const [key, value] of Object.entries(previous)) process.env[key] = value ?? ""
       proxy.close()
       server.close()
     }
