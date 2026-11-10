@@ -161,6 +161,8 @@ export function makePinnedClient(
           rejectUnauthorized: true,
         },
         (response) => {
+          // An IP URL never calls lookup, so this is the release for that dial.
+          releaseProxy()
           const chunks: Buffer[] = []
           let received = 0
           // Some runtimes emit string chunks for HTTP responses; normalize before concat.

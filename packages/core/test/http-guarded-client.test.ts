@@ -272,6 +272,32 @@ describe("beyond loopback", () => {
     }
   }, 30_000)
 
+  test("an IP dial releases the proxy hold", async () => {
+    const server = createServer((_request, response) => {
+      response.writeHead(200, { "content-type": "text/plain" })
+      response.end("ip")
+    })
+    await listen(server, "127.0.0.1")
+    const bound = server.address()
+    if (!bound || typeof bound === "string") throw new Error("missing address")
+    const previous = { HTTP_PROXY: process.env.HTTP_PROXY, NO_PROXY: process.env.NO_PROXY }
+    process.env.HTTP_PROXY = "http://127.0.0.1:9"
+    process.env.NO_PROXY = "example.test"
+    try {
+      const client = makePinnedClient(() => "direct", async () => {
+        throw new Error("IP_URL_MUST_NOT_LOOKUP")
+      })
+      const response = await Effect.runPromise(client.execute(HttpClientRequest.get(`http://127.0.0.1:${bound.port}/`)))
+      expect(await Effect.runPromise(response.text)).toBe("ip")
+      expect(process.env.NO_PROXY).toBe("example.test")
+      expect(process.env.HTTP_PROXY).toBe("http://127.0.0.1:9")
+    } finally {
+      process.env.HTTP_PROXY = previous.HTTP_PROXY ?? ""
+      process.env.NO_PROXY = previous.NO_PROXY ?? ""
+      server.close()
+    }
+  }, 30_000)
+
   test("a second request dials the new lookup instead of reusing the first socket", async () => {
     let primary = 0
     let lookups = 0
