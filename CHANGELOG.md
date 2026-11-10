@@ -10,6 +10,8 @@ All notable changes to HuGR Orchestra are recorded here. The format follows [Kee
 - An unsigned macOS app that already has a credential key file no longer asks for the Keychain password on every launch.
 - A local server that fails to start says why at once. It no longer waits two minutes and then reports only a timeout.
 - Listing a path the server cannot serve returns the same declared 400 as reading one. It no longer becomes an empty 500.
+- A database created by a newer Orchestra is reported once. The app no longer restarts the local server six times for the same refusal.
+- A live event the app cannot decode no longer ends the event stream. The event is skipped and the connection stays up.
 
 ## 0.3.4 (2026-11-01)
 

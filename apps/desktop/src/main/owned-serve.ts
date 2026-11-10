@@ -64,8 +64,15 @@ export async function startOwnedServe(options: {
     state.closed = new Promise<void>((resolve) => child.once("close", () => resolve()))
     // An omni child learns its pid asynchronously, so the witness waits for the spawn event.
     child.once("spawn", () => options.onSpawn?.(child.pid))
-    forward(child.stdout, (line) => write("stdout", line.replaceAll(password, "[redacted]")))
-    forward(child.stderr, (line) => write("stderr", line.replaceAll(password, "[redacted]")))
+    // This child's lines only. `recent` is the shared 15-line health tail and must not decide a restart.
+    const output: string[] = []
+    const record = (stream: "stdout" | "stderr", line: string) => {
+      const text = line.replaceAll(password, "[redacted]")
+      output.push(text)
+      write(stream, text)
+    }
+    forward(child.stdout, (line) => record("stdout", line))
+    forward(child.stderr, (line) => record("stderr", line))
     // A failed spawn emits error and never exit. Without this, health waits out the two-minute timeout
     // and the renderer never sees why the process did not start.
     const failed = new Promise<never>((_, reject) => {
@@ -84,16 +91,41 @@ export async function startOwnedServe(options: {
         const requested = state.stopping && !state.killed && (code === 143 || signal === "SIGTERM" || process.platform === "win32")
         options.onEvent?.("utility-exit", { utilityPID: child.pid, code: requested ? 0 : code })
         options.logger.log("owned serve exited", { code, signal, stopping: state.stopping })
-        if (state.stopping) return
-        state.failures = Date.now() - startedAt > STABLE_AFTER ? 0 : state.failures + 1
-        const wait = BACKOFF[state.failures - 1]
-        if (wait === undefined) return options.logger.error("owned serve crash loop; not restarting", { url })
-        options.logger.log("owned serve restarting", { attempt: state.failures, wait })
-        setTimeout(() => {
-          if (!state.stopping) launch()
-        }, wait).unref()
       }),
     )
+    // `close` is emitted before stdout/stderr emit "end", and forward flushes a partial line only on end.
+    // Decide once both have ended, against this child's full output.
+    const drained = { stdout: false, stderr: false, closed: false, decided: false }
+    const decide = () => {
+      if (drained.decided || !drained.closed || !drained.stdout || !drained.stderr) return
+      drained.decided = true
+      if (state.stopping) return
+      // A database this build does not know will fail the same way on every start. Restarting only
+      // hides that behind a health timeout.
+      if (output.some((line) => line.includes("newer Orchestra version"))) {
+        options.logger.error("owned serve will not restart: the database is newer than this build", { url })
+        return
+      }
+      state.failures = Date.now() - startedAt > STABLE_AFTER ? 0 : state.failures + 1
+      const wait = BACKOFF[state.failures - 1]
+      if (wait === undefined) return options.logger.error("owned serve crash loop; not restarting", { url })
+      options.logger.log("owned serve restarting", { attempt: state.failures, wait })
+      setTimeout(() => {
+        if (!state.stopping) launch()
+      }, wait).unref()
+    }
+    child.stdout.once("end", () => {
+      drained.stdout = true
+      decide()
+    })
+    child.stderr.once("end", () => {
+      drained.stderr = true
+      decide()
+    })
+    child.once("close", () => {
+      drained.closed = true
+      decide()
+    })
     return { child, exited, failed }
   }
 

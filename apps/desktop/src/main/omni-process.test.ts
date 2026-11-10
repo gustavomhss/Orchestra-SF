@@ -280,6 +280,86 @@ test.skipIf(!on)("owned serve: a spawn error fails health without waiting out th
   expect(Date.now() - started).toBeLessThan(15_000)
 }, 30_000)
 
+const newerDatabase =
+  "This database was created by a newer Orchestra version (it has migrations this build does not know: 20261105094327_inbox). Update the app before opening it."
+const newerRefusal = "owned serve will not restart: the database is newer than this build"
+
+test.skipIf(!on)("owned serve: a newer database is not restarted", async () => {
+  expectSpawn(import.meta.path)
+  const dir = await mkdtemp(join(tmpdir(), "owned-serve-"))
+  await writeFile(join(dir, "serve.ts"), `console.error(${JSON.stringify(newerDatabase)}); process.exit(1)`)
+  const messages: string[] = []
+  const owned = await startOwnedServe({
+    logger: {
+      log: (message) => messages.push(message),
+      error: (message) => messages.push(message),
+    },
+    command: [process.execPath, join(dir, "serve.ts")],
+    env: { PATH: process.env.PATH ?? "" },
+    cwd: dir,
+    write: () => {},
+  })
+  const failure = await owned.health.wait.then(
+    () => undefined,
+    (error: unknown) => error,
+  )
+  // The refusal is logged on close, after health has already rejected on exit. Stopping first would skip it.
+  await until(() => messages.includes(newerRefusal))
+  await owned.listener.stop()
+  expect(failure).toBeInstanceOf(Error)
+  expect((failure as Error).message).toContain("newer Orchestra version")
+  expect(messages).toContain(newerRefusal)
+  expect(messages).not.toContain("owned serve restarting")
+}, 30_000)
+
+test.skipIf(!on)("owned serve: a newer database written without a trailing newline is not restarted", async () => {
+  expectSpawn(import.meta.path)
+  const started = await ownedScript(`process.stderr.write(${JSON.stringify(newerDatabase)}); process.exit(1)`)
+  try {
+    await until(() => started.messages.includes(newerRefusal) && started.spawns.length >= 1)
+    await new Promise((resolve) => setTimeout(resolve, 2_000))
+    expect(started.messages).not.toContain("owned serve restarting")
+    expect(started.spawns).toHaveLength(1)
+  } finally {
+    await started.owned.listener.stop()
+  }
+}, 30_000)
+
+test.skipIf(!on)("owned serve: a newer database followed by more than 15 lines is not restarted", async () => {
+  expectSpawn(import.meta.path)
+  const tail = Array.from({ length: 16 }, (_, index) => `effect stack ${index}`)
+  const started = await ownedScript(
+    `console.error(${JSON.stringify([newerDatabase, ...tail].join("\n"))}); process.exit(1)`,
+  )
+  try {
+    await until(() => started.messages.includes(newerRefusal) && started.spawns.length >= 1)
+    await new Promise((resolve) => setTimeout(resolve, 2_000))
+    expect(started.messages).not.toContain("owned serve restarting")
+    expect(started.spawns).toHaveLength(1)
+  } finally {
+    await started.owned.listener.stop()
+  }
+}, 30_000)
+
+test.skipIf(!on)("owned serve: a newer database phrase does not suppress a later unrelated restart", async () => {
+  expectSpawn(import.meta.path)
+  // The phrase child is not restarted, so the later child is a new supervisor. A refusal kept past that child would suppress it.
+  const previous = await ownedScript(`console.error(${JSON.stringify(newerDatabase)}); process.exit(1)`)
+  try {
+    await until(() => previous.messages.includes(newerRefusal))
+    expect(previous.messages).not.toContain("owned serve restarting")
+  } finally {
+    await previous.owned.listener.stop()
+  }
+  const later = await ownedScript(`console.error("cannot open database: disk full"); process.exit(2)`)
+  try {
+    await until(() => later.messages.includes("owned serve restarting") && later.spawns.length >= 2)
+    expect(later.messages).not.toContain(newerRefusal)
+  } finally {
+    await later.owned.listener.stop()
+  }
+}, 30_000)
+
 test.skipIf(!on)("owned serve: a server that dies at start fails health with its last output", async () => {
   expectSpawn(import.meta.path)
   const dir = await mkdtemp(join(tmpdir(), "owned-serve-"))
@@ -300,6 +380,30 @@ test.skipIf(!on)("owned serve: a server that dies at start fails health with its
   expect((failure as Error).message).toContain("exited before its health check passed")
   expect((failure as Error).message).toContain("cannot open database: disk full")
 }, 30_000)
+
+async function ownedScript(script: string) {
+  const dir = await mkdtemp(join(tmpdir(), "owned-serve-"))
+  await writeFile(join(dir, "serve.ts"), script)
+  const messages: string[] = []
+  const spawns: Array<number | undefined> = []
+  const owned = await startOwnedServe({
+    logger: {
+      log: (message) => messages.push(message),
+      error: (message) => messages.push(message),
+    },
+    command: [process.execPath, join(dir, "serve.ts")],
+    env: { PATH: process.env.PATH ?? "" },
+    cwd: dir,
+    write: () => {},
+    onSpawn: (pid) => spawns.push(pid),
+  })
+  // Health rejects on exit, before close decides. Hold the rejection so it does not fail the test early.
+  const failure = owned.health.wait.then(
+    () => undefined,
+    (error: unknown) => error,
+  )
+  return { owned, messages, spawns, failure }
+}
 
 async function until(check: () => boolean | Promise<boolean>) {
   const deadline = Date.now() + 15_000
