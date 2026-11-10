@@ -153,6 +153,37 @@ describe("project and config routes", () => {
       ),
     ))
 
+  test("a location that fails to reload is not reported as applied", () =>
+    Effect.runPromise(
+      Effect.scoped(
+        Effect.gen(function* () {
+          const directory = yield* scratch()
+          const locations = yield* LayerMap.make((ref: Location.Ref) =>
+            Layer.mergeAll(
+              Layer.succeed(AgentV2.Service, {
+                reload: () => Effect.void,
+              } as unknown as AgentV2.Interface),
+              Layer.succeed(Catalog.Service, {
+                reload: () => Effect.die(new Error(`catalog reload failed: ${ref.directory}`)),
+              } as unknown as Catalog.Interface),
+            ),
+          )
+          yield* locations.contextEffect(Location.Ref.make({ directory: AbsolutePath.make("/repo") }))
+          const server = yield* serve({
+            config: directory,
+            locations: locations as unknown as Locations,
+          })
+
+          const response = yield* server.request("/api/config", {
+            method: "PATCH",
+            body: JSON.stringify({ model: "anthropic/claude-opus" }),
+          })
+
+          expect(response.status).not.toBe(204)
+        }),
+      ),
+    ))
+
   test("stores disabled providers as provider.use denials and reads them back", () =>
     Effect.runPromise(
       Effect.scoped(
