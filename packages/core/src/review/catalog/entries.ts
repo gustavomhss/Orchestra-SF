@@ -2,6 +2,7 @@ import gitleaks from "../../backend-toolkit/packs/gitleaks"
 import type { ReviewCatalog } from "./index"
 import { actionlint } from "./actionlint"
 import { oxlint } from "./oxlint"
+import { languagesRest } from "./languages-rest"
 import { phase3 } from "./phase3"
 import { phase4 } from "./phase4"
 import { ruff } from "./ruff"
@@ -250,6 +251,7 @@ export const current = {
     },
     { id: "php", detection: { manifests: ["composer.json", "composer.lock"], extensions: [".php"], absent: [] }, node: "team-stack-php" },
     phase4.language,
+    ...languagesRest,
   ],
   route: {
     version: "route-v1",
