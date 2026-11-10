@@ -106,7 +106,8 @@ function requireProfile(request: Request, catalog: Catalog) {
       "unsupported-profile",
       `Unsupported review profile "${id}"; this build supports ${catalog.route.profiles.map((entry) => entry.id).join(", ")}.`,
     )
-  if (profile.stage !== "first-round" && profile.stage !== request.stage)
+  // `outside-validation` is an explicit engagement profile. It does not record a receipt and does not have to match the request stage.
+  if (profile.stage !== "first-round" && profile.stage !== "outside-validation" && profile.stage !== request.stage)
     throw new RouteError("profile-stage", `Review profile "${id}" records under stage "${profile.stage}", not "${request.stage}".`)
   return profile
 }

@@ -3,8 +3,10 @@ import type { ReviewCatalog } from "./index"
 import { actionlint } from "./actionlint"
 import { oxlint } from "./oxlint"
 import { languagesRest } from "./languages-rest"
+import { releaseProfile } from "./phase5"
 import { phase3 } from "./phase3"
 import { phase4 } from "./phase4"
+import { engagementProfiles } from "./phase6"
 import { ruff } from "./ruff"
 import { zizmor } from "./zizmor"
 
@@ -301,6 +303,8 @@ export const current = {
         lenses: { quick: ["correctness-logic", "tests"], standard: STANDARD_LENSES, deep: ALL_LENSES },
         variants: 1,
       },
+      releaseProfile,
+      ...engagementProfiles,
     ],
     tiers: [
       {

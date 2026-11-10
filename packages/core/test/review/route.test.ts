@@ -174,7 +174,7 @@ describe("review route", () => {
       expect(error).toBeInstanceOf(ReviewRoute.RouteError)
       expect((error as ReviewRoute.RouteError).code).toBe(expected)
     }
-    fails({ ...code, profile: "audit" }, "unsupported-profile")
+    fails({ ...code, profile: "nope" }, "unsupported-profile")
     fails({ ...code, profile: "plan" }, "profile-stage")
     fails({ ...code, tier: "ultra" }, "unsupported-tier")
     fails({ ...code, settings: { acceptedUnavailable: [], tier: "ultra" } }, "unsupported-tier")
@@ -187,6 +187,16 @@ describe("review route", () => {
     const plan = ReviewRoute.route({ stage: "plan", settings: { acceptedUnavailable: [] } }, owner.base, owner.head, catalog)
     expect(plan.profile).toEqual({ id: "plan", source: "request" })
     expect(plan.overlays).toEqual([])
+  })
+
+  test("an explicit engagement profile does not replace the governed code request", () => {
+    expect(ReviewRoute.route(code, docs.base, docs.head, catalog).profile).toEqual({ id: "code", source: "request" })
+    const audit = ReviewRoute.route({ ...code, profile: "audit" }, docs.base, docs.head, catalog)
+    expect(audit.profile).toEqual({ id: "audit", source: "request" })
+    expect(audit.overlays).toEqual([])
+    const release = ReviewRoute.route({ ...code, profile: "release" }, docs.base, docs.head, catalog)
+    expect(release.profile).toEqual({ id: "release", source: "request" })
+    expect(release.tier).toEqual({ id: "standard", source: "catalog", requested: "deep", signals: [] })
   })
 
   test("an explicit pr request uses pr and the same lenses as code", () => {
