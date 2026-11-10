@@ -114,6 +114,9 @@ export function makePinnedClient(
         headers["content-length"] = String(body.length)
       }
       const transport = url.protocol === "https:" ? https : http
+      // A fresh agent does not join the global pool, so a later hop cannot keep a socket dialed under an old pin.
+      // `agent: false` still follows HTTP_PROXY on Bun and would skip this lookup.
+      const agent = new transport.Agent({ keepAlive: false })
       const req = transport.request(
         {
           host: url.hostname,
@@ -122,8 +125,7 @@ export function makePinnedClient(
           method: request.method,
           headers,
           lookup: pinnedLookup as never,
-          // The global agent reuses a socket and skips lookup. A later hop would keep a dial made under an old pin.
-          agent: false,
+          agent,
           servername: url.hostname,
           rejectUnauthorized: true,
         },
@@ -178,6 +180,7 @@ export function makePinnedClient(
           reason: new HttpClientError.TransportError({ request, cause: error }),
         })))
       })
+      req.on("close", () => agent.destroy())
       if (body !== undefined && body.length > 0) req.write(body)
       req.end()
       closeBag?.add(req)

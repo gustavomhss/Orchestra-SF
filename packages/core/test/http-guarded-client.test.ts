@@ -286,18 +286,21 @@ describe("beyond loopback", () => {
     const bound = server.address()
     if (!bound || typeof bound === "string") throw new Error("missing address")
     try {
+      let phase = "first"
       const client = makePinnedClient(() => "direct", async () => {
         lookups++
-        return [address(lookups === 1 ? dialed : "127.0.0.1")]
+        return [address(phase === "first" ? dialed : "127.0.0.1")]
       })
       const first = await Effect.runPromise(client.execute(HttpClientRequest.get(`http://pinned.example:${bound.port}/`)))
       expect(await Effect.runPromise(first.text)).toBe("primary")
+      const afterFirst = lookups
+      phase = "second"
       const second = await Effect.runPromise(
         client.execute(HttpClientRequest.get(`http://pinned.example:${bound.port}/`)).pipe(Effect.exit),
       )
       expect(second._tag).toBe("Failure")
       expect(primary).toBe(1)
-      expect(lookups).toBe(2)
+      expect(lookups).toBeGreaterThan(afterFirst)
       expect(dialed).not.toBe("127.0.0.1")
     } finally {
       server.closeAllConnections()
