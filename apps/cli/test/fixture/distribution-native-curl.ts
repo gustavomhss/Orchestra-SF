@@ -5,6 +5,7 @@ import { verifyDistribution } from "../../script/distribution-payload"
 import { assertVersion, cli, command, sandbox, successful, snapshot, skillIdentity, target } from "./distribution-native"
 import type { Built } from "./distribution-native"
 import { qualify, stopServices } from "./distribution-native-proof"
+import { restoreIsolatedDatabase } from "./distribution-restore"
 
 export async function curlChannel(directory: string, built: Built) {
   const box = await sandbox(join(directory, "curl"))
@@ -48,7 +49,9 @@ export async function curlChannel(directory: string, built: Built) {
       expect(await verifyDistribution(installed, { version: payload.version, target })).toEqual(payload.manifest)
       expect(await snapshot(installed)).toEqual(payload.snapshot)
       retained.set(installed, await snapshot(installed))
-      const root = await qualify({ launcher, payload: installed, box, version: payload.version, oracle: built.oracle, negative: index === 1 })
+      const root = index === 0
+        ? await qualifyRestored({ launcher, payload: installed, box, version: payload.version, oracle: built.oracle })
+        : await qualify({ launcher, payload: installed, box, version: payload.version, oracle: built.oracle, negative: index === 1 })
       skills.set(root, await snapshot(root))
       for (const [old, expected] of retained) expect(await snapshot(old)).toEqual(expected)
       for (const [old, expected] of skills) expect(await snapshot(old)).toEqual(expected)
@@ -89,4 +92,10 @@ export async function curlChannel(directory: string, built: Built) {
   } finally {
     await stopServices().finally(() => server.stop(true))
   }
+}
+
+async function qualifyRestored(input: Omit<Parameters<typeof qualify>[0], "negative">) {
+  await qualify(input)
+  await restoreIsolatedDatabase(input.box.env.ORCHESTRA_DB)
+  return qualify(input)
 }
