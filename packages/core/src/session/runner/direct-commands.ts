@@ -34,10 +34,7 @@ export const failInterruptedTools = Effect.fn("SessionRunner.failInterruptedTool
   deps: { readonly events: EventV2.Interface; readonly store: SessionStore.Interface },
   sessionID: SessionSchema.ID,
 ) {
-  // Context drops every row before the latest compaction. A tool left running there is still projected;
-  // scanning only the window would leave it running forever.
-  for (const entry of yield* deps.store.entries(sessionID)) {
-    const message = entry.message
+  for (const message of yield* deps.store.context(sessionID)) {
     if (message.type !== "assistant") continue
     for (const tool of message.content) {
       if (tool.type !== "tool" || (tool.state.status !== "pending" && tool.state.status !== "running")) continue
@@ -53,6 +50,20 @@ export const failInterruptedTools = Effect.fn("SessionRunner.failInterruptedTool
         },
       })
     }
+  }
+  // Those publishes have committed. A failure reading rows hidden by compaction may fail the drain; it must not skip them.
+  for (const tool of yield* deps.store.unsettledHiddenTools(sessionID)) {
+    yield* deps.events.publish(SessionEvent.Tool.Failed, {
+      sessionID,
+      timestamp: yield* DateTime.now,
+      assistantMessageID: tool.assistantMessageID,
+      callID: tool.callID,
+      error: { type: "unknown", message: "Tool execution interrupted" },
+      provider: {
+        executed: tool.provider.executed === true,
+        ...(tool.provider.metadata === undefined ? {} : { metadata: tool.provider.metadata }),
+      },
+    })
   }
 })
 
