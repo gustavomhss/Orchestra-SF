@@ -638,11 +638,12 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
       )
       .handle(
         "session.events",
-        Effect.fn((ctx) =>
-          Effect.succeed(
-            session.events({ sessionID: ctx.params.sessionID, after: ctx.query.after }).pipe(Stream.orDie),
-          ),
-        ),
+        Effect.fn(function* (ctx) {
+          // The stream's missing-session error is raised when the stream is pulled, after this handler has already
+          // succeeded. Check first so the declared 404 is the response, not a defect inside an open event stream.
+          yield* session.get(ctx.params.sessionID).pipe(typedNotFound)
+          return session.events({ sessionID: ctx.params.sessionID, after: ctx.query.after }).pipe(Stream.orDie)
+        }),
       )
       .handle(
         "session.interrupt",

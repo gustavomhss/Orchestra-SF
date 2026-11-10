@@ -106,3 +106,27 @@ it.live("real HTTP background releases the foreground subagent the Session waits
     expect(yield* missing.json).toMatchObject({ _tag: "SessionNotFoundError", sessionID: "ses_missing" })
   }),
 )
+
+it.live("a missing session event subscription is the declared 404, and a real session starts the stream", () =>
+  Effect.gen(function* () {
+    const tmp = yield* Effect.acquireRelease(
+      Effect.promise(() => tmpdir()),
+      (tmp) => Effect.promise(() => tmp[Symbol.asyncDispose]()),
+    )
+    const created = yield* post("/api/session", { location: { directory: tmp.path } }).pipe(
+      Effect.flatMap(HttpClientResponse.schemaBodyJson(Info)),
+    )
+    const live = yield* request(`/api/session/${created.data.id}/event`).pipe(
+      Effect.timeoutFail({
+        duration: "10 seconds",
+        onTimeout: () => new Error("event stream did not answer"),
+      }),
+    )
+    expect(live.status).toBe(200)
+    expect(live.headers["content-type"]).toContain("text/event-stream")
+    const missing = yield* request("/api/session/ses_missing/event")
+    expect(missing.status).toBe(404)
+    expect(missing.headers["content-type"] ?? "").not.toContain("text/event-stream")
+    expect(yield* missing.json).toMatchObject({ _tag: "SessionNotFoundError", sessionID: "ses_missing" })
+  }),
+)
