@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import path from "path"
-import { cp, mkdir, readFile, readdir, writeFile } from "fs/promises"
+import { cp, mkdir, readFile, readdir, realpath, writeFile } from "fs/promises"
 import { Effect } from "effect"
 import { LayerNode } from "../../src/effect/layer-node"
 import { AppProcess } from "../../src/process"
@@ -182,9 +182,14 @@ live("a head that adds this repository's marker does not turn the lane off", () 
 live("the installed compiler passes a green file and fails a type error", () =>
   Effect.gen(function* () {
     expectSpawn(import.meta.path)
-    const installed = yield* Effect.promise(() => installedTypescript())
+    const installed = yield* Effect.promise(async () => realpath(await installedTypescript()))
     const made = yield* repo(sample())
-    yield* Effect.promise(() => cp(installed, path.join(made.root, "node_modules", "typescript"), { recursive: true }))
+    const dest = path.join(made.root, "node_modules", "typescript")
+    // Bun links node_modules/typescript into its store. Copy the package into a real directory.
+    yield* Effect.promise(async () => {
+      await mkdir(path.dirname(dest), { recursive: true })
+      await cp(installed, dest, { recursive: true, dereference: true })
+    })
     const version = yield* Effect.promise(() => packageVersion(path.join(installed, "package.json")))
     const green = yield* ReviewAnalyze.run(input(made, {}))
     expect(green.checks[0]?.status, yield* Effect.promise(() => readLog(made.store, green.checks[0]?.uri))).toBe("pass")
