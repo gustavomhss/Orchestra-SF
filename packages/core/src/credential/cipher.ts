@@ -96,9 +96,12 @@ async function hasSealedData(dir: string) {
   const sqlite = new Database(db, { readonly: true })
   try {
     return sqlite.query("SELECT 1 FROM credential WHERE value LIKE ? LIMIT 1").get(`${PREFIX}%`) !== null
-  } catch {
-    // No credential table yet: nothing is sealed.
-    return false
+  } catch (error) {
+    // A database that has not been migrated yet has no credential table. Any other failure
+    // (locked, unreadable, wrong shape) must not look like "nothing sealed": the caller would
+    // mint a new key and leave the old rows unreadable.
+    if (error instanceof Error && /no such table/i.test(error.message)) return false
+    throw error
   } finally {
     sqlite.close()
   }
