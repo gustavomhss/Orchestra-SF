@@ -188,16 +188,8 @@ describe("makePinnedClient", () => {
 })
 
 describe("beyond loopback", () => {
-  test("a non-loopback TLS dial keeps the URL hostname as SNI, rejects the untrusted certificate, and ignores a proxy", async () => {
+  test("a non-loopback TLS dial keeps the URL hostname as SNI and rejects the untrusted certificate", async () => {
     const seen: { servername?: string; local?: string } = {}
-    const proxyHits = { n: 0 }
-    const proxy = net.createServer((socket) => {
-      proxyHits.n++
-      socket.destroy()
-    })
-    await listen(proxy, "127.0.0.1")
-    const proxyBound = proxy.address()
-    if (!proxyBound || typeof proxyBound === "string") throw new Error("missing proxy")
     const dialed = await reachableBeyond()
     const server = tls.createServer({
       cert: await Bun.file(new URL("./fixture/pinned-example-cert.pem", import.meta.url)).text(),
@@ -219,6 +211,39 @@ describe("beyond loopback", () => {
     await listen(server, dialed)
     const bound = server.address()
     if (!bound || typeof bound === "string") throw new Error("missing address")
+    try {
+      const client = makePinnedClient(() => "direct", async () => [address(dialed)])
+      const failure = await Effect.runPromise(
+        client.execute(HttpClientRequest.get(`https://pinned.example:${bound.port}/`)).pipe(Effect.exit),
+      )
+      for (let attempt = 0; attempt < 50 && !seen.servername; attempt++) await new Promise((resolve) => setTimeout(resolve, 10))
+      expect(failure._tag).toBe("Failure")
+      expect(seen.servername).toBe("pinned.example")
+      expect(seen.local).toBe(dialed)
+      expect(dialed).not.toBe("127.0.0.1")
+    } finally {
+      server.close()
+    }
+  }, 30_000)
+
+  test("an env proxy does not receive a guarded dial", async () => {
+    let proxyHits = 0
+    let hits = 0
+    const proxy = net.createServer((socket) => {
+      proxyHits++
+      socket.destroy()
+    })
+    await listen(proxy, "127.0.0.1")
+    const proxyBound = proxy.address()
+    if (!proxyBound || typeof proxyBound === "string") throw new Error("missing proxy")
+    const server = createServer((_request, response) => {
+      hits++
+      response.writeHead(200, { "content-type": "text/plain" })
+      response.end("direct")
+    })
+    await listen(server, "127.0.0.1")
+    const bound = server.address()
+    if (!bound || typeof bound === "string") throw new Error("missing address")
     const previous = {
       HTTP_PROXY: process.env.HTTP_PROXY, HTTPS_PROXY: process.env.HTTPS_PROXY, ALL_PROXY: process.env.ALL_PROXY,
       http_proxy: process.env.http_proxy, https_proxy: process.env.https_proxy,
@@ -230,16 +255,11 @@ describe("beyond loopback", () => {
     process.env.http_proxy = proxyUrl
     process.env.https_proxy = proxyUrl
     try {
-      const client = makePinnedClient(() => "direct", async () => [address(dialed)])
-      const failure = await Effect.runPromise(
-        client.execute(HttpClientRequest.get(`https://pinned.example:${bound.port}/`)).pipe(Effect.exit),
-      )
-      for (let attempt = 0; attempt < 50 && !seen.servername; attempt++) await new Promise((resolve) => setTimeout(resolve, 10))
-      expect(failure._tag).toBe("Failure")
-      expect(seen.servername).toBe("pinned.example")
-      expect(seen.local).toBe(dialed)
-      expect(dialed).not.toBe("127.0.0.1")
-      expect(proxyHits.n).toBe(0)
+      const client = makePinnedClient(() => "direct", async () => [address("127.0.0.1")])
+      const response = await Effect.runPromise(client.execute(HttpClientRequest.get(`http://pinned.local:${bound.port}/`)))
+      expect(await Effect.runPromise(response.text)).toBe("direct")
+      expect(hits).toBe(1)
+      expect(proxyHits).toBe(0)
     } finally {
       for (const [key, value] of Object.entries(previous)) {
         if (value === undefined) {
