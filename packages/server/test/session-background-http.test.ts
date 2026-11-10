@@ -116,12 +116,7 @@ it.live("a missing session event subscription is the declared 404, and a real se
     const created = yield* post("/api/session", { location: { directory: tmp.path } }).pipe(
       Effect.flatMap(HttpClientResponse.schemaBodyJson(Info)),
     )
-    const live = yield* request(`/api/session/${created.data.id}/event`).pipe(
-      Effect.timeoutFail({
-        duration: "10 seconds",
-        onTimeout: () => new Error("event stream did not answer"),
-      }),
-    )
+    const live = yield* request(`/api/session/${created.data.id}/event`).pipe(Effect.timeout("10 seconds"))
     expect(live.status).toBe(200)
     expect(live.headers["content-type"]).toContain("text/event-stream")
     const missing = yield* request("/api/session/ses_missing/event")
