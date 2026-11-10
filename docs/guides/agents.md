@@ -34,7 +34,7 @@ Maestro agrees the goal with you, makes small changes itself, sends larger or pa
 | Enforced by | Rule |
 | --- | --- |
 | Playbook | Never merge a card's pull request directly. |
-| Host | Maestro cannot run `gh pr merge`. The host refuses that bash command and tells it to queue the card with `board_queue`. No setting lets that command succeed. Claude mode still asks on the publish rule before that refusal; allowing the ask does not run the command. The merge queue bundles cards, runs the full suite once and merges. |
+| Host | Maestro cannot run `gh pr merge`. The host refuses that bash command and tells it to queue the card with `board_queue`. No setting lets that command succeed. Claude mode still asks you on the publish rule before that refusal; allowing that ask does not run the command. The merge queue bundles cards, runs the full suite once and merges. |
 | Host | **Governed mode** (opt-in, for auditable work): needs Atlas, a clean tree and fresh ownership facts; the code review seat approves the plan first; each step leaves an immutable record; you approve one exact dispatch (seat, prompt, model) with "approve" or "aprovo". The approval covers one dispatch with byte-identical input and lapses if the input changes or you send a newer message. |
 
 *Example:* Maestro sends the "why" question to the research seat and the plan to the product and architecture seat, then routes the fix and its new test to the backend seat with the plan's brief. When the fix returns, it removes the fix's key line, checks that the new test goes red and restores the line. With your go-ahead to open the pull request, it queues the card.
