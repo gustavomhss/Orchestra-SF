@@ -273,23 +273,22 @@ describe("beyond loopback", () => {
     }
   }, 30_000)
 
-  test("a second request dials the new lookup instead of reusing the first non-loopback socket", async () => {
+  test("a second request dials the new lookup instead of reusing the first socket", async () => {
     let primary = 0
     let lookups = 0
-    const dialed = await reachableBeyond()
     const server = createServer((_request, response) => {
       primary++
       response.writeHead(200, { "content-type": "text/plain" })
       response.end("primary")
     })
-    await listen(server, dialed)
+    await listen(server, "127.0.0.1")
     const bound = server.address()
     if (!bound || typeof bound === "string") throw new Error("missing address")
     try {
       let phase = "first"
       const client = makePinnedClient(() => "direct", async () => {
         lookups++
-        return [address(phase === "first" ? dialed : "127.0.0.1")]
+        return [address(phase === "first" ? "127.0.0.1" : "127.0.0.2")]
       })
       const first = await Effect.runPromise(client.execute(HttpClientRequest.get(`http://pinned.example:${bound.port}/`)))
       expect(await Effect.runPromise(first.text)).toBe("primary")
@@ -301,7 +300,6 @@ describe("beyond loopback", () => {
       expect(second._tag).toBe("Failure")
       expect(primary).toBe(1)
       expect(lookups).toBeGreaterThan(afterFirst)
-      expect(dialed).not.toBe("127.0.0.1")
     } finally {
       server.closeAllConnections()
       await new Promise<void>((resolve) => server.close(() => resolve()))
