@@ -6,6 +6,7 @@ All notable changes to HuGR Orchestra are recorded here. The format follows [Kee
 
 - A credential database that cannot be read no longer gets a new encryption key. Orchestra stops instead of sealing new secrets under a key that cannot open the old ones.
 - `orchestra stats` stops when a message page cannot be read. It no longer prints totals that left those messages out.
+- A live event stream no longer drops events already received when one read is larger than 1 MiB. An unfinished frame past that cap is still refused.
 
 ## 0.3.4 (2026-11-01)
 
