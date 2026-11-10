@@ -91,7 +91,7 @@ export function AccountSourceList(props: {
   loading: () => boolean
   pressed: (source: string) => boolean
   busy: boolean
-  choose: (source: string) => void
+  choose: (source: (typeof accounts)[number]) => void
 }) {
   return (
     <div class="inbox-account-list">
