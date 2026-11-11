@@ -7,6 +7,9 @@ import type { ServerSDK } from "@/context/server-sdk"
 import type { ServerSync } from "./server-sync"
 import { useParams, useSearchParams } from "@solidjs/router"
 import { decode64 } from "@/utils/base64"
+import { useLanguage } from "./language"
+import { showToast } from "@/utils/toast"
+import { answerPendingAfterEnable } from "./permission-pending"
 import { useGlobal } from "./global"
 import { ServerConnection, useServer } from "./server"
 import { type DraftTab, useTabs } from "./tabs"
@@ -55,6 +58,13 @@ export const { use: usePermission, provider: PermissionProvider } = createSimple
   name: "Permission",
   gate: false,
   init: () => {
+    const language = useLanguage()
+    const reportPendingList = (error: unknown) =>
+      showToast({
+        variant: "error",
+        title: language.t("common.requestFailed"),
+        description: error instanceof Error ? error.message : String(error),
+      })
     const params = useParams<{ serverKey?: string; dir?: string; id?: string }>()
     const [search] = useSearchParams<{ draftId?: string }>()
     const global = useGlobal()
@@ -88,7 +98,7 @@ export const { use: usePermission, provider: PermissionProvider } = createSimple
         (dispose) => ({
           key,
           dispose,
-          state: createServerPermissionState({ sdk: ctx.sdk, sync: ctx.sync }),
+          state: createServerPermissionState({ sdk: ctx.sdk, sync: ctx.sync, report: reportPendingList }),
         }),
         owner ?? undefined,
       )
@@ -184,7 +194,11 @@ export const { use: usePermission, provider: PermissionProvider } = createSimple
 type PermissionState = ReturnType<typeof createServerPermissionState>
 type PermissionEvent = Parameters<Parameters<ServerSDK["event"]["listen"]>[0]>[0]
 
-function createServerPermissionState(input: { sdk: ServerSDK; sync: ServerSync }) {
+function createServerPermissionState(input: {
+  sdk: ServerSDK
+  sync: ServerSync
+  report: (error: unknown) => void
+}) {
   const [store, setStore, _, ready] = persisted(
     {
       ...Persist.serverGlobal(input.sdk.scope, "permission", ["permission.v3"]),
@@ -343,15 +357,14 @@ function createServerPermissionState(input: { sdk: ServerSDK; sync: ServerSync }
       }),
     )
 
-    list(directory)
-      .then((permissions) => {
-        if (meta.disposed) return
-        if (!isAutoAcceptingDirectory(directory)) return
-        for (const permission of permissions) {
-          void respondPending(permission, directory, () => isAutoAcceptingDirectory(directory))
-        }
-      })
-      .catch(() => undefined)
+    void answerPendingAfterEnable({
+      list: () => list(directory),
+      current: () => !meta.disposed && isAutoAcceptingDirectory(directory),
+      respond: (permission) => {
+        void respondPending(permission, directory, () => isAutoAcceptingDirectory(directory))
+      },
+      report: input.report,
+    })
   }
 
   function disableDirectory(directory: string) {
@@ -375,20 +388,18 @@ function createServerPermissionState(input: { sdk: ServerSDK; sync: ServerSync }
       }),
     )
 
-    list(directory)
-      .then((permissions) => {
-        if (meta.disposed) return
-        if (enableVersion.get(key) !== version) return
-        if (!isAutoAccepting(sessionID, directory)) return
-        for (const permission of permissions) {
-          void respondPending(
-            permission,
-            directory,
-            () => enableVersion.get(key) === version && isAutoAccepting(sessionID, directory),
-          )
-        }
-      })
-      .catch(() => undefined)
+    void answerPendingAfterEnable({
+      list: () => list(directory),
+      current: () => !meta.disposed && enableVersion.get(key) === version && isAutoAccepting(sessionID, directory),
+      respond: (permission) => {
+        void respondPending(
+          permission,
+          directory,
+          () => enableVersion.get(key) === version && isAutoAccepting(sessionID, directory),
+        )
+      },
+      report: input.report,
+    })
   }
 
   function disable(sessionID: string, directory?: string) {

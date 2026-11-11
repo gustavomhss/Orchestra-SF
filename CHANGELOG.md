@@ -4,6 +4,7 @@ All notable changes to HuGR Orchestra are recorded here. The format follows [Kee
 
 ## [Unreleased]
 
+- Turning on auto-accept no longer hides a failed permission list. Prompts already on screen are not treated as answered, and the failure is shown.
 - Replacing the server the app opens on launch no longer hides a failed default-server write. The old entry is still removed. The failure is shown, and the removed URL is not left as the server the next launch opens.
 - Undo recomputes the changed paths when a turn stored both snapshots and no file list. It no longer treats that missing list as no files.
 - Subscribing to events for a session that does not exist returns the declared 404. It no longer dies inside an open event stream.
