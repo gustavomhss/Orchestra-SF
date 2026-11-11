@@ -50,6 +50,27 @@ The §8.3 budgets, §8.4 rungs and probe attempts, the §5.3 triggers and the §
 - Deep is requestable with `built: false` and `runs: "standard"`; the route records `tier.requested` (R3). A profile,
   lens or option that is not built is refused or reported `not-built`, never silently skipped.
 
+## Adding a pack
+
+A review pack is not a backend-toolkit engine. Do not add it to `ENGINES` in
+`packages/core/src/backend-toolkit/packs/index.ts`. The osv-scanner pin is the shape:
+`packages/core/src/backend-toolkit/packs/osv-scanner.ts` is imported by the review catalog and is not an `ENGINES`
+entry.
+
+- A pinned pack needs the licence text read at the tag, an SRI per target from that release's checksum, the archive
+  member named, and an empty floor unless a floor was measured. Do not claim a minimum OS from memory.
+- The argv lives in a facts module. A test asserts that array. Do not invent a flag. Linux x64 is the only qualified
+  native runtime. Another host records `native-runtime-unqualified` and does not block. A missing pin on Linux blocks
+  until it is accepted in `review.acceptedUnavailable`. Copy that classification from the osv-scanner path; do not
+  soften it.
+- GPL and AGPL stay backend `path` and licence `invoke`. They are not bundled. A missing one is `not run: <tool> absent`
+  and does not block. shellcheck and hadolint are the current examples.
+- Each rule the pack actually emits gets a catalog entry with class, lens, severity, triage note, and status
+  `probation`. Do not add a rule for a tool that emits no defect rule.
+- Ledger thresholds already in `entries.ts` `route.ledger`: activate at 20 reads with at least half confirmed; demote
+  when fewer than one in five of the last 20 are confirmed; drop after a demoted window of 20, or 10 for a high cost
+  class. Only a catalog change returns a rule to probation. A precision number never goes in a prompt or a card.
+
 ## Tree
 
 Phase 1 roots: `lucy-review` (procedure; `plan`, `code`, `rereview`; `prove` with `quote`, `regress`), `lucy-lens`
