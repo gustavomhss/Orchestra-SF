@@ -4,6 +4,7 @@
 
 import { createSignal } from "solid-js"
 import { rendererHandlesZoomKey } from "../main/menu-zoom"
+import { noteFailedZoom, settleZoom } from "./zoom-failure"
 
 const OS_NAME = (() => {
   if (navigator.userAgent.includes("Mac")) return "macos"
@@ -33,19 +34,32 @@ const WHEEL_PINCH_END_DELAY = 160
 
 const clamp = (value: number) => Math.min(Math.max(value, MIN_ZOOM_LEVEL), MAX_ZOOM_LEVEL)
 
+let zoomFailed = false
+let reportZoom = (error: unknown) => {
+  console.error(error)
+}
+
+function setZoomFailureReport(report: (error: unknown) => void) {
+  reportZoom = report
+}
+
 const applyZoom = (next: number) => {
   const generation = ++zoomGeneration
   requestedZoom = next
-  void window.api
-    .setZoomFactor(next)
-    .then(() => {
-      if (generation !== zoomGeneration) return
+  void settleZoom({
+    write: window.api.setZoomFactor(next),
+    current: () => generation === zoomGeneration,
+    apply: () => {
+      zoomFailed = false
       setWebviewZoom(next)
-    })
-    .catch(() => {
-      if (generation !== zoomGeneration) return
+    },
+    revert: () => {
       requestedZoom = webviewZoom()
-    })
+    },
+    report: (error) => {
+      zoomFailed = noteFailedZoom({ error, shown: zoomFailed, report: reportZoom })
+    },
+  })
 }
 
 window.api.onZoomFactorChanged((factor) => {
@@ -55,6 +69,7 @@ window.api.onZoomFactorChanged((factor) => {
 })
 
 const initialZoomGeneration = zoomGeneration
+// Startup read of the current factor. A miss keeps the default; the next zoom the user asks for still reports.
 void window.api
   .getZoomFactor()
   .then((factor) => {
@@ -150,4 +165,4 @@ window.addEventListener("keydown", (event) => {
   }
 })
 
-export { webviewZoom, resetZoom, setPinchZoomEnabled, zoomIn, zoomOut }
+export { webviewZoom, resetZoom, setPinchZoomEnabled, zoomIn, zoomOut, setZoomFailureReport }
