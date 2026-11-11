@@ -23,8 +23,14 @@ const test = { option: "probe:test", proves: "a reproduction test drives the tri
 const script = { option: "probe:script", proves: "a short script prints the observed value beside the expected one" }
 const typecheck = { option: "probe:typecheck", proves: "a type error at the cited line shows the caller or implementation no longer matches" }
 const regress = { option: "probe:regress", proves: "the test stays green with the hunk reverted, or base and head differ on the input" }
+const race = { option: "probe:race", proves: "a race-instrumented run of the test that drives the concurrent path" }
 
 const ran = (id: string, proves: string) => ({ id, node: "lucy-review-prove-regress", options: { "*": [quote(proves), test, script] } })
+const raced = (id: string, proves: string) => ({
+  id,
+  node: "lucy-review-prove-regress",
+  options: { "*": [quote(proves), test, script], go: [quote(proves), test, race] },
+})
 const quoted = (id: string, proves: string) => ({ id, node: "lucy-review-prove-quote", options: { "*": [quote(proves), test, script] } })
 const plain = (id: string, proves: string) => ({ id, node: "lucy-review-prove-quote", options: { "*": [quote(proves)] } })
 
@@ -161,14 +167,14 @@ export const current = {
     ...phase3.lenses,
   ],
   classes: [
-    ran("concurrency.atomicity", "the read, the scheduling point and the dependent write on one path"),
-    ran("concurrency.order", "the action and the missing happens-before between it and its prerequisite"),
-    ran("concurrency.toctou", "the check, the window and the use of the same resource"),
-    ran("concurrency.double-execution", "two paths that start the same work with nothing that deduplicates them"),
-    ran("concurrency.use-after-dispose", "the release and the work that continues on the released resource"),
-    ran("concurrency.reentrancy", "the callback that re-enters the unit while its update is half done"),
-    ran("concurrency.stale-read", "the captured value, the scheduling point and its later use as current"),
-    ran("concurrency.aba", "the comparison that passes while the state behind the value moved"),
+    raced("concurrency.atomicity", "the read, the scheduling point and the dependent write on one path"),
+    raced("concurrency.order", "the action and the missing happens-before between it and its prerequisite"),
+    raced("concurrency.toctou", "the check, the window and the use of the same resource"),
+    raced("concurrency.double-execution", "two paths that start the same work with nothing that deduplicates them"),
+    raced("concurrency.use-after-dispose", "the release and the work that continues on the released resource"),
+    raced("concurrency.reentrancy", "the callback that re-enters the unit while its update is half done"),
+    raced("concurrency.stale-read", "the captured value, the scheduling point and its later use as current"),
+    raced("concurrency.aba", "the comparison that passes while the state behind the value moved"),
     quoted("logic.invariant", "the exit or update that leaves the stated invariant broken"),
     {
       id: "logic.contract",
@@ -230,6 +236,7 @@ export const current = {
     { id: "probe:test", rung: "probe", cost: "medium" },
     { id: "probe:typecheck", rung: "probe", cost: "medium" },
     { id: "probe:script", rung: "probe", cost: "medium" },
+    { id: "probe:race", rung: "probe", cost: "high" },
   ],
   languages: [
     {

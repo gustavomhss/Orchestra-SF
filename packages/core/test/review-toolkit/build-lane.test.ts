@@ -36,7 +36,8 @@ describe("build lane catalog", () => {
   test("standard routes tsc, quick does not, and the unbuilt probes stay out", () => {
     const ids = ReviewCatalog.current.options.map((option) => option.id)
     expect(ids).toContain("probe:test")
-    for (const id of ["probe:mutants", "probe:interleave", "probe:race", "probe:property"]) expect(ids).not.toContain(id)
+    expect(ids).toContain("probe:race")
+    for (const id of ["probe:mutants", "probe:interleave", "probe:property"]) expect(ids).not.toContain(id)
     expect(ReviewCatalog.current.route.tiers.find((tier) => tier.id === "deep")).toMatchObject({ built: false, runs: "standard" })
     const base = { files: ["package.json", "tsconfig.json"] }
     const head = {

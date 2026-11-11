@@ -66,8 +66,12 @@ describe("review catalog", () => {
     expect(new Set(catalog.classes.map((entry) => entry.node))).toEqual(new Set(["lucy-review-prove-quote", "lucy-review-prove-regress"]))
     expect(catalog.lenses.flatMap((lens) => lens.classes).toSorted()).toEqual(CLASSES.toSorted())
     expect(catalog.options.map((option) => option.id)).toEqual([
-      "quote", "tool:gitleaks", "tool:repo", "tool:ast-grep", "probe:regress", "probe:test", "probe:typecheck", "probe:script",
+      "quote", "tool:gitleaks", "tool:repo", "tool:ast-grep", "probe:regress", "probe:test", "probe:typecheck", "probe:script", "probe:race",
     ])
+    const order = catalog.classes.find((entry) => entry.id === "concurrency.order")
+    const go = order && "go" in order.options ? order.options.go : undefined
+    expect(go?.map((option) => option.option)).toEqual(["quote", "probe:test", "probe:race"])
+    expect(order?.options["*"]?.map((option) => option.option)).toEqual(["quote", "probe:test", "probe:script"])
     expect(catalog.languages.map((language) => [language.id, language.node])).toEqual([
       ["js-ts", "team-stack-js-ts"], ["python", "team-stack-python"], ["go", "team-stack-go"],
       ["ruby", "team-stack-ruby"], ["php", "team-stack-php"],

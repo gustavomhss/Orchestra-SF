@@ -17,7 +17,7 @@ import { withSnapshotMutation, writeSnapshot } from "./snapshot-mutation"
 // scratch copy through ResearchProcess (omni). The model picks an option and a target; it never names a binary or flag.
 
 /** The probe options this build runs; any other option id answers `not-run: not-built` (K6, phase 1). */
-export const BUILT = ["probe:regress", "probe:test", "probe:typecheck", "probe:script"] as const
+export const BUILT = ["probe:regress", "probe:test", "probe:typecheck", "probe:script", "probe:race"] as const
 
 const EXCERPT_BYTES = 4096
 const file = Schema.NonEmptyString.check(Schema.isMaxLength(8192))
@@ -137,6 +137,11 @@ const execute = Effect.fnUntraced(function* (input: Input, context: Context) {
   if (!target.test) return [notRun("target-missing: test")]
   const test = { kind: "test" as const, file: target.test.file, name: target.test.name }
   if (input.option === "probe:test") return [yield* step("head", context.head, test, context)]
+  // Go is the only catalogued race detector. Other languages are not run, and nothing is installed.
+  if (input.option === "probe:race") {
+    if (!target.test.file.endsWith(".go")) return [notRun("race-detector-absent")]
+    return [yield* step("head", context.head, test, context, true)]
+  }
   const hunk = target.hunk ? pick(context.hunks, target.hunk) : undefined
   if (target.hunk && !hunk) return [notRun(`hunk-unknown: ${target.hunk.path}:${target.hunk.startLine}-${target.hunk.endLine}`)]
   if (!hunk && !context.base) return [notRun("target-missing: regress needs a hunk or a base copy")]
@@ -177,12 +182,12 @@ const baseStep = Effect.fnUntraced(function* (base: ReviewScratch.Snapshot, test
 })
 
 /** One closed runner in a copy, confined: no network, writes only to the confine's own scratch. */
-const step = Effect.fnUntraced(function* (label: Step["label"], copy: ReviewScratch.Snapshot, runner: Probe.ProbeInput["runner"], context: Context) {
+const step = Effect.fnUntraced(function* (label: Step["label"], copy: ReviewScratch.Snapshot, runner: Probe.ProbeInput["runner"], context: Context, race = false) {
   // A fresh directory per run for the runner's script and version checks; the copy itself stays as taken.
   const scratch = yield* Effect.promise(() => mkdtemp(path.join(copy.scratch, "probe-")))
   const env = ResearchProcess.environment()
   return yield* Effect.gen(function* () {
-    const plan = yield* ProbeRunners.plan({ runner, snapshot: copy, scratch, heapMiB: Probe.Limits.heapMiB, env })
+    const plan = yield* ProbeRunners.plan({ runner, snapshot: copy, scratch, heapMiB: Probe.Limits.heapMiB, env, race })
     const launch = yield* ToolSafetySandbox.confine({ command: plan.argv[0], args: plan.argv.slice(1), cwd: plan.cwd, env: { ...env, ...plan.env }, write: [] })
       .pipe(Effect.mapError((error) => denied(`sandbox-unavailable: ${error.reason}`)))
     const outcome = yield* ResearchProcess.run({
