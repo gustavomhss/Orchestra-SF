@@ -3,6 +3,7 @@ import { createStore } from "solid-js/store"
 import type { LiveHotkey, LiveHotkeyAction, LiveSettings, LiveSource } from "@/context/platform"
 import { useLanguage } from "@/context/language"
 import { MxBadge, MxToggle } from "../kit"
+import { settleHotkeyWrite } from "./hotkey"
 import { accelerator } from "./model"
 import { Keys, mac, Note } from "./parts"
 import { settleProtectionWrite } from "./protection"
@@ -97,32 +98,63 @@ export function FlightSettings(props: { flight: Flight }) {
     })
   }
 
+  let hotkeyWrite = 0
+  const recordHotkey = (action: LiveHotkeyAction, next: string) => {
+    const started = ++hotkeyWrite
+    const current = seat()
+    if (!current) return
+    setStore("problem", undefined)
+    void settleHotkeyWrite({
+      write: current.setHotkey(action, next),
+      current: () => started === hotkeyWrite,
+      apply: (result) => setStore("errors", action, result.ok ? undefined : result.reason),
+      report: (error) => {
+        console.error(error)
+        setStore("problem", t("orchestra.flightEngineer.settings.failed"))
+      },
+    }).then(async (saved) => {
+      if (!saved || started !== hotkeyWrite) return
+      await props.flight.hotkeys()
+    })
+  }
+
   // While recording, the next key combination becomes the accelerator.
   createEffect(() => {
     const target = store.recording
     if (!target) return
-    const listen = async (event: KeyboardEvent) => {
+    const listen = (event: KeyboardEvent) => {
       event.preventDefault()
       event.stopPropagation()
       if (event.key === "Escape") return setStore("recording", undefined)
       const next = accelerator(event, mac)
       if (!next) return
       setStore("recording", undefined)
-      const result = await seat()?.setHotkey(target, next)
-      if (!result) return
-      setStore("errors", target, result.ok ? undefined : result.reason)
-      await props.flight.hotkeys()
+      recordHotkey(target, next)
     }
     window.addEventListener("keydown", listen, true)
     onCleanup(() => window.removeEventListener("keydown", listen, true))
   })
 
-  const resetAll = () =>
-    attempt(async () => {
-      setStore("errors", {})
-      await seat()?.resetHotkeys()
-      await props.flight.hotkeys()
+  const resetAll = () => {
+    if (store.busy) return
+    const current = seat()
+    if (!current) return
+    setStore({ busy: true, problem: undefined })
+    void settleHotkeyWrite({
+      write: current.resetHotkeys(),
+      current: () => seat() === current,
+      apply: () => setStore("errors", {}),
+      report: (error) => {
+        console.error(error)
+        setStore("problem", t("orchestra.flightEngineer.settings.failed"))
+      },
     })
+      .then(async (saved) => {
+        if (!saved || seat() !== current) return
+        if (await props.flight.hotkeys()) setStore("confirm", undefined)
+      })
+      .finally(() => setStore("busy", false))
+  }
 
   const accelOf = (action: LiveHotkeyAction): LiveHotkey | undefined => props.flight.store.hotkeys.find((item) => item.action === action)
 
@@ -131,7 +163,7 @@ export function FlightSettings(props: { flight: Flight }) {
       <Show when={store.problem}>
         <Note tone="bad">{store.problem}</Note>
       </Show>
-      <Show when={props.flight.store.readinessFailed || props.flight.store.protectionFailed}>
+      <Show when={props.flight.store.readinessFailed || props.flight.store.protectionFailed || props.flight.store.hotkeysFailed}>
         <Note tone="bad">{t("common.requestFailed")}</Note>
       </Show>
 
