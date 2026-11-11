@@ -118,6 +118,16 @@ test("a missing language server is recorded and does not block, and its error do
   expect(() => ReviewChecksV2.authorize("APPROVE", failed)).not.toThrow()
 })
 
+test("a missing osv advisory database is recorded and does not block", () => {
+  const absent = collect([], [analyzer({
+    id: "osv-scanner", pack: "osv-scanner", lane: "no-build", status: "not-run",
+    reason: ReviewAnalyze.OSV_DATABASE_ABSENT,
+  })])
+  expect(absent.checks[0]).toMatchObject({ status: "not-run", reason: ReviewAnalyze.OSV_DATABASE_ABSENT })
+  expect(absent.blockers).toEqual([])
+  expect(() => ReviewChecksV2.authorize("APPROVE", absent)).not.toThrow()
+})
+
 test("a missing invoke-if-installed tool is recorded and does not block", () => {
   const absent = collect([], [analyzer({
     id: "shellcheck", pack: "shellcheck", lane: "no-build", status: "not-run",

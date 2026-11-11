@@ -12,6 +12,7 @@ import { ReviewAnalyze } from "../../src/review-toolkit/analyze"
 import { ReviewBuildLane } from "../../src/review-toolkit/build-lane"
 import { ReviewGolangci } from "../../src/review-toolkit/golangci"
 import { ReviewInvoke } from "../../src/review-toolkit/invoke"
+import { ReviewOsv } from "../../src/review-toolkit/osv"
 import { ReviewGoPinned } from "../../src/review-toolkit/go-pinned"
 import { ReviewGoVet } from "../../src/review-toolkit/govet"
 import { testEffect } from "../lib/effect"
@@ -95,6 +96,18 @@ describe("build lane catalog", () => {
     expect(ReviewInvoke.argv("/opt/shellcheck", ["script.sh"])).toEqual(["/opt/shellcheck", "script.sh"])
     expect(ReviewInvoke.absent("shellcheck")).toBe("not run: shellcheck absent")
     expect(ReviewInvoke.files("hadolint", ["Dockerfile", "app.dockerfile", "script.sh"])).toEqual(["Dockerfile", "app.dockerfile"])
+    const lockBase = { files: ["bun.lock"] }
+    const lockHead = {
+      files: ["bun.lock"],
+      changes: [{ path: "bun.lock", added: [{ line: 1, text: "{}" }], removed: 0 }],
+    }
+    expect(ReviewRoute.route({ stage: "code", tier: "standard", settings }, lockBase, lockHead, ReviewCatalog.current).packs).toContainEqual({ id: "osv-scanner", source: "catalog", lane: "no-build", status: "routed" })
+    expect(ReviewRoute.route({ stage: "code", tier: "quick", settings }, lockBase, lockHead, ReviewCatalog.current).packs.some((pack) => pack.id === "osv-scanner")).toBe(false)
+    const scan = ReviewOsv.argv("/opt/osv-scanner", "/tmp/copy")
+    expect(scan).toEqual(["/opt/osv-scanner", "scan", "source", "-r", "/tmp/copy", "--offline"])
+    expect(scan.join(" ")).not.toContain("fix")
+    expect(scan.join(" ")).not.toContain("download")
+    expect(ReviewOsv.lockfiles(["bun.lock", "pkg/a.go", "../bun.lock"])).toEqual(["bun.lock"])
   })
 
   test("this repository cites typecheck.yml, and a near-miss does not", async () => {

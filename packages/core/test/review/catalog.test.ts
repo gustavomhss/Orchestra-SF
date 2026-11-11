@@ -98,6 +98,7 @@ describe("review catalog", () => {
       ["golangci-lint", "path", "probation"],
       ["shellcheck", "path", "probation"],
       ["hadolint", "path", "probation"],
+      ["osv-scanner", "pinned", "probation"],
       ["oxlint-type-aware", "pinned", "probation"],
     ])
     expect(catalog.rules.every((rule) => rule.status === "probation")).toBe(true)
@@ -106,7 +107,7 @@ describe("review catalog", () => {
   test("lucy's gitleaks entry carries the backend toolkit's pin", () => {
     const entry = catalog.packs.find((pack) => pack.id === "gitleaks")
     expect(entry?.version).toBe(gitleaks.version)
-    expect(entry?.pin?.integrity).toEqual(
+    expect(entry && "pin" in entry ? entry.pin?.integrity : undefined).toEqual(
       Object.fromEntries(Object.entries(gitleaks.targets).map(([target, value]) => [target, value.artifact.integrity])),
     )
   })
@@ -115,7 +116,7 @@ describe("review catalog", () => {
     const entry = catalog.packs.find((pack) => pack.id === "ast-grep")
     expect(entry?.version).toBe("0.45.3")
     expect(entry?.version).toBe(astGrep.version)
-    expect(entry?.pin).toEqual({
+    expect(entry && "pin" in entry ? entry.pin : undefined).toEqual({
       source: "backend-toolkit/packs/ast-grep",
       integrity: Object.fromEntries(Object.entries(astGrep.targets).map(([target, value]) => [target, value.artifact.integrity])),
     })
