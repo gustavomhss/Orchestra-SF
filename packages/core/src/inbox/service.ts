@@ -231,7 +231,9 @@ export const layer = (options: { workTransport?: Options; feedTransport?: Option
               // Legacy bindings are keyed to the open folder. Pulling them here would copy that folder into the installation inbox.
               const channels = [] as Pulled[]
               const started = yield* Clock.currentTimeMillis
-              const jira = (yield* accounts(credentials, owner)).find((account) => account.source === "jira")
+              const jira = (yield* accounts(credentials, owner).pipe(Effect.orDie)).find(
+                (account) => account.source === "jira",
+              )
               const cooling = yield* database.db
                 .select()
                 .from(InboxAccountTable)

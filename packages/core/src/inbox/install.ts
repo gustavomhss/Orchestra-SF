@@ -19,35 +19,58 @@ import {
 export const installOwner = "install"
 
 type Db = Database.Interface["db"]
+type Tx = Parameters<Parameters<Db["transaction"]>[0]>[0]
 
 export function hashOwner(owner: string) {
   return createHash("sha256").update(owner).digest("hex")
 }
 
-export function adoptRows(db: Db) {
+export function adoptRows(db: Db | Tx) {
   return Effect.gen(function* () {
-    yield* collapse(db, InboxRowTable, (row) => `${row.source}\0${row.external_id}`, (row) =>
-      and(eq(InboxRowTable.owner, row.owner), eq(InboxRowTable.source, row.source), eq(InboxRowTable.external_id, row.external_id)),
-    )
-    yield* collapse(db, InboxDraftTable, (row) => row.list_id, (row) =>
-      and(eq(InboxDraftTable.owner, row.owner), eq(InboxDraftTable.list_id, row.list_id)),
-    )
-    yield* collapse(db, InboxEgressTable, (row) => row.id, (row) =>
-      and(eq(InboxEgressTable.owner, row.owner), eq(InboxEgressTable.id, row.id)),
-    )
-    yield* collapse(db, InboxAccountTable, (row) => row.source, (row) =>
-      and(eq(InboxAccountTable.owner, row.owner), eq(InboxAccountTable.source, row.source)),
-    )
-    yield* collapse(db, InboxFeedTable, (row) => row.id, (row) =>
-      and(eq(InboxFeedTable.owner, row.owner), eq(InboxFeedTable.id, row.id)),
-    )
-    yield* collapse(db, InboxCalendarTable, (row) => `${row.generation}\0${row.calendar}`, (row) =>
-      and(
+    const rows = yield* db.select().from(InboxRowTable).all().pipe(Effect.orDie)
+    yield* collapse(rows, (row) => `${row.source}\0${row.external_id}`, (row, keep) => {
+      const match = and(
+        eq(InboxRowTable.owner, row.owner),
+        eq(InboxRowTable.source, row.source),
+        eq(InboxRowTable.external_id, row.external_id),
+      )
+      if (keep) return db.update(InboxRowTable).set({ owner: installOwner }).where(match).run().pipe(Effect.orDie)
+      return db.delete(InboxRowTable).where(match).run().pipe(Effect.orDie)
+    })
+    const drafts = yield* db.select().from(InboxDraftTable).all().pipe(Effect.orDie)
+    yield* collapse(drafts, (row) => row.list_id, (row, keep) => {
+      const match = and(eq(InboxDraftTable.owner, row.owner), eq(InboxDraftTable.list_id, row.list_id))
+      if (keep) return db.update(InboxDraftTable).set({ owner: installOwner }).where(match).run().pipe(Effect.orDie)
+      return db.delete(InboxDraftTable).where(match).run().pipe(Effect.orDie)
+    })
+    const sent = yield* db.select().from(InboxEgressTable).all().pipe(Effect.orDie)
+    yield* collapse(sent, (row) => row.id, (row, keep) => {
+      const match = and(eq(InboxEgressTable.owner, row.owner), eq(InboxEgressTable.id, row.id))
+      if (keep) return db.update(InboxEgressTable).set({ owner: installOwner }).where(match).run().pipe(Effect.orDie)
+      return db.delete(InboxEgressTable).where(match).run().pipe(Effect.orDie)
+    })
+    const accounts = yield* db.select().from(InboxAccountTable).all().pipe(Effect.orDie)
+    yield* collapse(accounts, (row) => row.source, (row, keep) => {
+      const match = and(eq(InboxAccountTable.owner, row.owner), eq(InboxAccountTable.source, row.source))
+      if (keep) return db.update(InboxAccountTable).set({ owner: installOwner }).where(match).run().pipe(Effect.orDie)
+      return db.delete(InboxAccountTable).where(match).run().pipe(Effect.orDie)
+    })
+    const feeds = yield* db.select().from(InboxFeedTable).all().pipe(Effect.orDie)
+    yield* collapse(feeds, (row) => row.id, (row, keep) => {
+      const match = and(eq(InboxFeedTable.owner, row.owner), eq(InboxFeedTable.id, row.id))
+      if (keep) return db.update(InboxFeedTable).set({ owner: installOwner }).where(match).run().pipe(Effect.orDie)
+      return db.delete(InboxFeedTable).where(match).run().pipe(Effect.orDie)
+    })
+    const calendars = yield* db.select().from(InboxCalendarTable).all().pipe(Effect.orDie)
+    yield* collapse(calendars, (row) => `${row.generation}\0${row.calendar}`, (row, keep) => {
+      const match = and(
         eq(InboxCalendarTable.owner, row.owner),
         eq(InboxCalendarTable.generation, row.generation),
         eq(InboxCalendarTable.calendar, row.calendar),
-      ),
-    )
+      )
+      if (keep) return db.update(InboxCalendarTable).set({ owner: installOwner }).where(match).run().pipe(Effect.orDie)
+      return db.delete(InboxCalendarTable).where(match).run().pipe(Effect.orDie)
+    })
     const slack = yield* db.select().from(InboxSlackTable).all().pipe(Effect.orDie)
     let kept = slack.some((row) => row.owner === installOwner)
     for (const row of slack) {
@@ -68,27 +91,17 @@ export function adoptRows(db: Db) {
 }
 
 function collapse<T extends { owner: string }>(
-  db: Db,
-  table: { owner: typeof InboxRowTable.owner },
+  rows: readonly T[],
   key: (row: T) => string,
-  where: (row: T) => ReturnType<typeof and>,
+  write: (row: T, keep: boolean) => Effect.Effect<unknown>,
 ) {
   return Effect.gen(function* () {
-    const rows = (yield* db.select().from(table as never).all().pipe(Effect.orDie)) as T[]
     const seen = new Set(rows.filter((row) => row.owner === installOwner).map(key))
     for (const row of rows) {
       if (row.owner === installOwner) continue
-      if (seen.has(key(row))) {
-        yield* db.delete(table as never).where(where(row)).run().pipe(Effect.orDie)
-        continue
-      }
-      yield* db
-        .update(table as never)
-        .set({ owner: installOwner })
-        .where(where(row))
-        .run()
-        .pipe(Effect.orDie)
-      seen.add(key(row))
+      const keep = !seen.has(key(row))
+      yield* write(row, keep)
+      if (keep) seen.add(key(row))
     }
   })
 }
