@@ -498,7 +498,14 @@ export function createAppDockController(api: AppDockAPI | undefined, t: Translat
     setState({ active: identity(tab), url: tab.url, ...placement(tab) })
     if (!tab.crashed) return void show(tab, generation)
     // A crashed tab is not shown, so the tab shown before it must not stay on screen in its place.
-    if (dock && previous && !sameTab(previous, tab)) void dock.appDockHide(identity(previous)).catch(() => undefined)
+    // A failed hide leaves that view up. Show it; do not pretend the selection replaced it.
+    if (dock && previous && !sameTab(previous, tab)) {
+      const current = generation
+      void dock.appDockHide(identity(previous)).catch((cause) => {
+        console.error(cause)
+        fail(current, t("orchestra.dock.error.hide"))(cause)
+      })
+    }
   }
   const refreshWindows = async () => {
     const tab = state.active
