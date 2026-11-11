@@ -5,10 +5,12 @@ import { Effect } from "effect"
 import { LayerNode } from "../../src/effect/layer-node"
 import { AppProcess } from "../../src/process"
 import { Probe } from "../../src/research-toolkit/probe/types"
+import { BackendToolkit } from "../../src/backend-toolkit"
 import { ReviewCatalog } from "../../src/review/catalog"
 import { ReviewRoute } from "../../src/review/route"
 import { ReviewAnalyze } from "../../src/review-toolkit/analyze"
 import { ReviewBuildLane } from "../../src/review-toolkit/build-lane"
+import { ReviewGoPinned } from "../../src/review-toolkit/go-pinned"
 import { ReviewGoVet } from "../../src/review-toolkit/govet"
 import { testEffect } from "../lib/effect"
 import { jail } from "../lib/sandbox-host"
@@ -64,7 +66,13 @@ describe("build lane catalog", () => {
     expect(ReviewRoute.route({ stage: "code", tier: "quick", settings }, goBase, goHead, ReviewCatalog.current).packs.some((pack) => pack.id === "go-vet")).toBe(false)
     expect(ReviewRoute.route({ stage: "code", tier: "deep", settings }, goBase, goHead, ReviewCatalog.current).packs).toContainEqual(vet)
     expect(ReviewGoVet.packages(["pkg/a.go", "pkg/b.go", "a.go", "notes.md"])).toEqual([".", "./pkg"])
-    expect(ReviewGoVet.argv("/usr/bin/go", ["./", "./pkg"])).toEqual(["/usr/bin/go", "vet", "./", "./pkg"])
+    expect(ReviewGoVet.argv("/usr/bin/go", [".", "./pkg"])).toEqual(["/usr/bin/go", "vet", ".", "./pkg"])
+    expect(ReviewRoute.route({ stage: "code", tier: "standard", settings }, goBase, goHead, ReviewCatalog.current).packs).toContainEqual({ id: "staticcheck", source: "catalog", lane: "build", status: "routed" })
+    expect(ReviewRoute.route({ stage: "code", tier: "standard", settings }, goBase, goHead, ReviewCatalog.current).packs).toContainEqual({ id: "gosec", source: "catalog", lane: "build", status: "routed" })
+    expect(ReviewRoute.route({ stage: "code", tier: "quick", settings }, goBase, goHead, ReviewCatalog.current).packs.some((pack) => pack.id === "staticcheck" || pack.id === "gosec")).toBe(false)
+    expect(ReviewGoPinned.staticcheckArgv("/opt/staticcheck", ["./pkg"])).toEqual(["/opt/staticcheck", "./pkg"])
+    expect(ReviewGoPinned.gosecArgv("/opt/gosec", "/tmp/gosec.sarif", ["./pkg"])).toEqual(["/opt/gosec", "-fmt", "sarif", "-out", "/tmp/gosec.sarif", "./pkg"])
+    expect(ReviewGoPinned.gosecArgv("/opt/gosec", "/tmp/gosec.sarif", ["./pkg"]).join(" ")).not.toContain("-ai-api")
   })
 
   test("this repository cites typecheck.yml, and a near-miss does not", async () => {
@@ -248,6 +256,34 @@ live("a trusted build lane runs go vet and adds no vet flag", () =>
     expect(text).not.toContain("./...")
   }),
   120_000,
+)
+
+const qualified = process.platform === "linux" && process.arch === "x64" && jail ? it.live : it.live.skip
+
+qualified("Linux x64 runs pinned staticcheck and gosec with the closed argv", () =>
+  Effect.gen(function* () {
+    expectSpawn(import.meta.path)
+    const made = yield* repo({
+      "go.mod": "module example.com/probe\n\ngo 1.22\n",
+      "pkg/a.go": "package pkg\n\nfunc OK() int { return 1 }\n",
+    })
+    const result = yield* ReviewAnalyze.run(input(made, {
+      packs: ["staticcheck", "gosec"],
+      changed: { "pkg/a.go": [{ start: 1, end: 1 }] },
+    })).pipe(Effect.provideService(BackendToolkit.Root, path.join(made.dir.path, "toolkit")))
+    for (const id of ["staticcheck", "gosec"]) {
+      const check = result.checks.find((item) => item.id === id)
+      const text = yield* Effect.promise(() => readLog(made.store, check?.uri))
+      expect(`${id} ${check?.status} ${check?.reason ?? ""} ${text}`).toContain(" ./pkg")
+      expect(text).not.toContain("-ai-api")
+      expect(check?.workspaceExecuted).toBe(true)
+    }
+    expect(result.checks.find((item) => item.id === "gosec") && true).toBe(true)
+    const gosecLog = yield* Effect.promise(() => readLog(made.store, result.checks.find((item) => item.id === "gosec")?.uri))
+    expect(gosecLog).toContain("-fmt sarif")
+    expect(gosecLog).toContain("-out")
+  }),
+  180_000,
 )
 
 unjailed("without a jail the build lane is not-run and does not pass", () =>

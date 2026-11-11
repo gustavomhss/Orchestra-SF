@@ -8,7 +8,9 @@ import { phase3 } from "./phase3"
 import { phase4 } from "./phase4"
 import { engagementProfiles } from "./phase6"
 import { ruff } from "./ruff"
+import { gosec } from "./gosec"
 import { govet } from "./govet"
+import { staticcheck } from "./staticcheck"
 import { tsc } from "./tsc"
 import { typeAware } from "./type-aware"
 import { zizmor } from "./zizmor"
@@ -92,6 +94,8 @@ export const current = {
     zizmor.pack,
     tsc.pack,
     govet.pack,
+    staticcheck.pack,
+    gosec.pack,
     typeAware.pack,
   ],
   rules: [
