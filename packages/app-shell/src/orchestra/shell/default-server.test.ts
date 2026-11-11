@@ -18,6 +18,7 @@ describe("moveDefaultWithReplacedEntry", () => {
       logged.push(args[0])
     }
     const removed: ServerConnection.Key[] = []
+    const written: Array<ServerConnection.Key | null> = []
     const reported: unknown[] = []
     const error = new Error("disk full")
 
@@ -26,15 +27,39 @@ describe("moveDefaultWithReplacedEntry", () => {
       next: key("new"),
       remove: (id) => removed.push(id),
       getDefault: async () => key("old"),
+      setDefault: async (id) => {
+        written.push(id)
+        if (id !== null) throw error
+      },
+      report: (failure) => reported.push(failure),
+    })
+
+    expect(removed).toEqual([key("old")])
+    expect(written).toEqual([key("new"), null])
+    expect(reported).toEqual([error])
+    expect(logged).toEqual([error])
+  })
+
+  test("a failed clear still reports the write that left the removed server", async () => {
+    console.error = (...args) => {
+      logged.push(args[0])
+    }
+    const error = new Error("disk full")
+    const reported: unknown[] = []
+
+    await moveDefaultWithReplacedEntry({
+      previous: key("old"),
+      next: key("new"),
+      remove: () => undefined,
+      getDefault: async () => key("old"),
       setDefault: async () => {
         throw error
       },
       report: (failure) => reported.push(failure),
     })
 
-    expect(removed).toEqual([key("old")])
     expect(reported).toEqual([error])
-    expect(logged).toEqual([error])
+    expect(logged).toEqual([error, error])
   })
 
   test("a successful write is not reported", async () => {
