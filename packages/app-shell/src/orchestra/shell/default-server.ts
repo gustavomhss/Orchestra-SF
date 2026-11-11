@@ -17,6 +17,16 @@ export async function moveDefaultWithReplacedEntry(input: {
     await input.setDefault(input.next)
   } catch (error) {
     console.error(error)
+    // The old entry is already gone. Leaving its URL stored opens a server the list no longer has.
+    await clearRemovedDefault(input.setDefault)
     input.report(error)
+  }
+}
+
+async function clearRemovedDefault(setDefault: (key: ServerConnection.Key | null) => Promise<void> | void) {
+  try {
+    await setDefault(null)
+  } catch (error) {
+    console.error(error)
   }
 }
