@@ -63,7 +63,8 @@ describe("review catalog", () => {
       ["privacy", "lucy-audit-compliance-privacy"],
     ])
     expect(catalog.classes.map((entry) => entry.id).toSorted()).toEqual(CLASSES.toSorted())
-    expect(new Set(catalog.classes.map((entry) => entry.node))).toEqual(new Set(["lucy-review-prove-quote", "lucy-review-prove-regress"]))
+    expect(new Set(catalog.classes.map((entry) => entry.node))).toEqual(new Set(["lucy-review-prove-quote", "lucy-review-prove-regress", "lucy-review-prove-race"]))
+    expect(catalog.classes.find((entry) => entry.id === "concurrency.order")?.node).toBe("lucy-review-prove-race")
     expect(catalog.lenses.flatMap((lens) => lens.classes).toSorted()).toEqual(CLASSES.toSorted())
     expect(catalog.options.map((option) => option.id)).toEqual([
       "quote", "tool:gitleaks", "tool:repo", "tool:ast-grep", "probe:regress", "probe:test", "probe:typecheck", "probe:script", "probe:race",

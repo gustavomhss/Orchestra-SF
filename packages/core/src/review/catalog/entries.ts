@@ -28,7 +28,7 @@ const race = { option: "probe:race", proves: "a race-instrumented run of the tes
 const ran = (id: string, proves: string) => ({ id, node: "lucy-review-prove-regress", options: { "*": [quote(proves), test, script] } })
 const raced = (id: string, proves: string) => ({
   id,
-  node: "lucy-review-prove-regress",
+  node: "lucy-review-prove-race",
   options: { "*": [quote(proves), test, script], go: [quote(proves), test, race] },
 })
 const quoted = (id: string, proves: string) => ({ id, node: "lucy-review-prove-quote", options: { "*": [quote(proves), test, script] } })
