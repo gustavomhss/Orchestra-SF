@@ -26,6 +26,7 @@ import { ReviewOxlintAnalyze } from "./oxlint-analyze"
 import { ReviewPackZizmor } from "./packs/zizmor"
 import { ReviewZizmorAnalyze } from "./zizmor-analyze"
 import { ReviewBuildLane } from "./build-lane"
+import { ReviewGoPinned } from "./go-pinned"
 import { ReviewGoVet } from "./govet"
 import { ReviewLspDiagnostics } from "./lsp-diagnostics"
 import { ReviewTypeAware } from "./type-aware"
@@ -236,6 +237,7 @@ const runPack = Effect.fnUntraced(function* (packID: string, pack: Pack | undefi
   // A generic lane refusal would mark a build pack workspace-executed. Trust, the cap and R19 live in the lane.
   if (pack.template === "oxlint-type-aware") return yield* ReviewTypeAware.run(pack, context, confined)
   if (pack.template === "go-vet") return yield* ReviewGoVet.run(pack, context, confined)
+  if (pack.template === "staticcheck" || pack.template === "gosec-sarif") return yield* ReviewGoPinned.run(pack, context, confined)
   if (pack.lane === "build") return yield* ReviewBuildLane.run(pack, context, confined)
   if (LANES.indexOf(pack.lane) > LANES.indexOf(lane)) return refused(`lane: ${pack.lane} is above ${lane}`)
   if (pack.status === "dropped") return refused("dropped")

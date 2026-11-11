@@ -154,6 +154,8 @@ does not by itself refuse approval. Deep is still not built.
 
 A trusted review at Standard or Deep also runs `go vet` on each changed Go package, in the scratch copy. The host fixes that command. It does not install Go, and it does not add a vet flag. A missing Go is unavailable, and approval waits until that check is listed in `review.acceptedUnavailable` or Go is present. Quick does not run it.
 
+The same review runs pinned staticcheck 2026.2.2 and pinned gosec 2.30.0 on those packages. The host names both binaries. staticcheck gets no flag. gosec gets only `-fmt sarif` and an output path in the copy. It does not send findings to an external service. On a machine that is not the qualified Linux x64 runtime the card records that and does not block approval. A missing pin on Linux still does.
+
 A Go concurrency candidate can be probed with `go test -race` in the scratch copy. The host fixes that command. The verifier reads the result from the race proof leaf and does not name the command. It does not install Go. A missing Go is unavailable, and approval waits until that check is listed in `review.acceptedUnavailable` or Go is present. Other languages are not offered that probe, because they have no race detector in the catalog. Mutants, interleave and property still do not run.
 
 The same trusted review also runs one pinned type-aware rule, `typescript(no-floating-promises)`, with the pinned
