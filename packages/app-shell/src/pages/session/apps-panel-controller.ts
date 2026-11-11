@@ -255,6 +255,12 @@ export function createAppDockController(api: AppDockAPI | undefined, t: Translat
     console.error(cause)
     fail(current, t("orchestra.dock.error.hide"))(cause)
   }
+  // A tab opened for an owner who already left must still come off screen. The new owner is what is showing.
+  const closeAbandoned = (api: AppDockAPI, tabID: string) =>
+    api.appDockCloseTab(tabID).catch((cause: unknown) => {
+      console.error(cause)
+      setState("error", message(cause, t("orchestra.dock.error.hide")))
+    })
   const load = async (owner: string) => {
     if (!dock) return
     const current = ++generation
@@ -313,7 +319,7 @@ export function createAppDockController(api: AppDockAPI | undefined, t: Translat
       // Skip stale or unavailable URLs during restore.
       const opened = await dock.appDockOpen(saved.url, frame(), profile).catch(() => undefined)
       if (current !== generation) {
-        if (opened) await dock.appDockCloseTab(opened.tabID).catch(() => undefined)
+        if (opened) await closeAbandoned(dock, opened.tabID)
         return []
       }
       if (opened) restored.push({ ...saved, ...opened })
@@ -468,7 +474,7 @@ export function createAppDockController(api: AppDockAPI | undefined, t: Translat
     const tab = await dock.appDockOpen(url, bounds(host), profile).catch(fail(current, fallback))
     if (!tab) return
     if (current !== generation) {
-      await dock.appDockCloseTab(tab.tabID).catch(() => undefined)
+      await closeAbandoned(dock, tab.tabID)
       return
     }
     // The desktop announces every tab it opens before replying, so the reply may find its tab admitted

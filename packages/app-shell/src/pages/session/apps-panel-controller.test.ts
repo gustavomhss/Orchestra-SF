@@ -183,6 +183,30 @@ describe("MCP Dock controller", () => {
     expect(dock.calls.at(-1)).toEqual(["close-tab", "tab-1"])
   })
 
+  test("a tab that opens after the owner changed is not left up when close fails", async () => {
+    const dock = fakeDock()
+    dock.failClose(true)
+    const controller = createAppDockController(dock.api, translate)
+    const logged = capture()
+    try {
+      controller.attach(element(), profileA)
+      await until(() => controller.state.status === "ready")
+      const gate = Promise.withResolvers<void>()
+      dock.gate(gate.promise)
+      controller.setURL("https://example.com/late")
+      const late = controller.launch()
+      controller.attach(element(), profileB)
+      await until(() => controller.state.status === "ready")
+      gate.resolve()
+      await late
+      await settle()
+    } finally {
+      logged.restore()
+    }
+    expect(controller.state.error).toBe("close failed")
+    expect((logged.errors[0] as Error).message).toBe("close failed")
+  })
+
   test("an overlay over the Dock occludes the browser; closing it releases whichever tab is current", async () => {
     const dock = fakeDock()
     const controller = createAppDockController(dock.api, translate)
@@ -814,6 +838,7 @@ function fakeDock() {
     gate: undefined as Promise<void> | undefined,
     failManifest: false,
     failHide: false,
+    failClose: false,
     linux: [] as Array<(result: LinuxOpenResult) => void>,
     closing: undefined as ((tabID: string) => void) | undefined,
   }
@@ -851,6 +876,7 @@ function fakeDock() {
     appDockCloseTab: async (tabID: string) => {
       calls.push(["close-tab", tabID])
       state.closing?.(tabID)
+      if (state.failClose) throw new Error("close failed")
     },
     appDockCloseTabs: async (tabID: string, scope: string) => {
       calls.push(["close-tabs", tabID, scope])
@@ -895,6 +921,7 @@ function fakeDock() {
     seed: (manifest: Pick<Manifest, "profiles" | "tabs">) => (state.manifest = { ...state.manifest, ...manifest }),
     failManifest: (value: boolean) => (state.failManifest = value),
     failHide: (value: boolean) => (state.failHide = value),
+    failClose: (value: boolean) => (state.failClose = value),
     linuxPending: () => state.linux.length,
     resolveLinux: (result: LinuxOpenResult) => state.linux.shift()?.(result),
     onCloseTab: (callback: (tabID: string) => void) => (state.closing = callback),
