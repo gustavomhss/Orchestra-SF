@@ -27,6 +27,7 @@ import { ReviewPackZizmor } from "./packs/zizmor"
 import { ReviewZizmorAnalyze } from "./zizmor-analyze"
 import { ReviewBuildLane } from "./build-lane"
 import { ReviewGolangci } from "./golangci"
+import { ReviewInvoke } from "./invoke"
 import { ReviewGoPinned } from "./go-pinned"
 import { ReviewGoVet } from "./govet"
 import { ReviewLspDiagnostics } from "./lsp-diagnostics"
@@ -241,6 +242,7 @@ const runPack = Effect.fnUntraced(function* (packID: string, pack: Pack | undefi
   if (pack.template === "go-vet") return yield* ReviewGoVet.run(pack, context, confined)
   if (pack.template === "staticcheck" || pack.template === "gosec-sarif") return yield* ReviewGoPinned.run(pack, context, confined)
   if (pack.template === "golangci-lint") return yield* ReviewGolangci.run(pack, context, confined)
+  if (pack.template === "invoke") return yield* ReviewInvoke.run(pack, context, confined)
   if (pack.lane === "build") return yield* ReviewBuildLane.run(pack, context, confined)
   if (LANES.indexOf(pack.lane) > LANES.indexOf(lane)) return refused(`lane: ${pack.lane} is above ${lane}`)
   if (pack.status === "dropped") return refused("dropped")
