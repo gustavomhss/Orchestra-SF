@@ -53,6 +53,7 @@ import { sidecarMode, startOwnedServe } from "./owned-serve"
 import { startDockChannel } from "./dock-channel"
 import { readWslExpectedVersion } from "./cli-version"
 import { nativeT, setNativeTranslations } from "./native-translations"
+import { startupFailureDialog } from "./startup-failure"
 import { OmniBoot } from "./omni-boot"
 import { OmniSmoke } from "./omni-smoke"
 import { createDeepLinkDelivery } from "./deep-links"
@@ -503,9 +504,7 @@ Effect.runFork(main).addObserver((exit) => {
   if (Exit.isSuccess(exit)) return
   const reason = Cause.pretty(exit.cause)
   writeLog("main", "desktop startup failed", { reason }, "error")
-  dialog.showErrorBox(
-    "HuGR Orchestra could not start",
-    `${reason.split("\n")[0]}\n\nLogs: ${join(app.getPath("userData"), "logs")}`,
-  )
+  const failure = startupFailureDialog(reason, join(app.getPath("userData"), "logs"))
+  dialog.showErrorBox(failure.title, failure.message)
   app.exit(1)
 })

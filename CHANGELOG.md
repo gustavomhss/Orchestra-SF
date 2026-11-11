@@ -4,6 +4,7 @@ All notable changes to HuGR Orchestra are recorded here. The format follows [Kee
 
 ## [Unreleased]
 
+- The last-resort startup dialog goes through the native translation bundle. The English text is unchanged.
 - Adopting an installation inbox typechecks again. A transaction can adopt its rows, and listing the inbox no longer fails the type of a read that cannot fail.
 - Stopping a background process no longer hides a failed reload of the list. The stop still counts, and that failure is shown.
 - A scheduled run that fails no longer hides a failed delete of the empty session it created. That failure is shown.
