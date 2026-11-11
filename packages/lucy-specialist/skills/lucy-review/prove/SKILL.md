@@ -13,7 +13,7 @@ Evidence climbs three rungs, and climbs only when the rung below did not settle 
 
 1. **quote**: the lines that show it (`lucy-review-prove-quote`).
 2. **tool**: `tool:<pack>` reruns one catalog rule on the region. It confirms alone only for an `active` rule; a `probation` rule's hit also needs a quote or a probe.
-3. **probe**: a run in the scratch copy (`lucy-review-prove-regress`).
+3. **probe**: a run in the scratch copy (`lucy-review-prove-regress`). A Go concurrency candidate whose brief offers `probe:race` uses `lucy-review-prove-race`.
 
 Pick only an offered option by its id; never name a command or a flag. An option that could not start is a `check-unavailable`, not a result.
 
