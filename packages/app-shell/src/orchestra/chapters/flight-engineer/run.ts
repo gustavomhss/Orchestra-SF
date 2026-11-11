@@ -6,6 +6,7 @@ import { useLanguage } from "@/context/language"
 import { showToast } from "@/utils/toast"
 import { devSeat } from "./dev"
 import type { StartOptions } from "./model"
+import { refreshReadiness, settlePermissionAsk } from "./readiness"
 
 // What the bridge's start() takes once it carries the consent answer. The frozen LiveSeatPlatform type declares only
 // the title, so the answer is handed over through this wider signature (a function with fewer parameters is assignable).
@@ -23,6 +24,7 @@ function create(seat: () => LiveSeatPlatform | undefined, t: ReturnType<typeof u
     dialog: "none" as Dialog,
     starting: false,
     waiting: false,
+    readinessFailed: false,
   })
   const [now, setNow] = createSignal(Date.now())
 
@@ -52,11 +54,18 @@ function create(seat: () => LiveSeatPlatform | undefined, t: ReturnType<typeof u
     onCleanup(() => window.removeEventListener("focus", refresh))
   })
 
+  const reportReadiness = (error: unknown) => {
+    console.error(error)
+    if (!store.readinessFailed) showToast({ variant: "error", title: t("common.requestFailed") })
+    setStore("readinessFailed", true)
+  }
   const readiness = () =>
-    seat()
-      ?.readiness()
-      .then((value) => setStore({ readiness: value, waiting: false }))
-      .catch(() => undefined)
+    refreshReadiness({
+      read: seat()?.readiness(),
+      apply: (value) => setStore({ readiness: value, readinessFailed: false }),
+      report: reportReadiness,
+      finish: () => setStore("waiting", false),
+    })
 
   const hotkeys = () =>
     seat()
@@ -110,8 +119,12 @@ function create(seat: () => LiveSeatPlatform | undefined, t: ReturnType<typeof u
     },
     async ask(source: LiveSource) {
       setStore("waiting", true)
-      await seat()?.requestPermission(source)
-      await readiness()
+      const opened = await settlePermissionAsk({
+        request: Promise.resolve().then(() => seat()?.requestPermission(source)),
+        report: reportReadiness,
+      })
+      if (!opened) setStore("waiting", false)
+      if (opened) await readiness()
     },
   }
 }

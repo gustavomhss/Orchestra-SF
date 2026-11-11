@@ -4,6 +4,7 @@ All notable changes to HuGR Orchestra are recorded here. The format follows [Kee
 
 ## [Unreleased]
 
+- Checking Flight Engineer readiness again, or reloading it after a permission request, no longer hides a failed read. The wait ends, and that failure is shown.
 - A failed permission reply is no longer silent. The prompt can be answered again, and the failure is shown.
 - The last-resort startup dialog goes through the native translation bundle. The English text is unchanged.
 - Adopting an installation inbox typechecks again. A transaction can adopt its rows, and listing the inbox no longer fails the type of a read that cannot fail.

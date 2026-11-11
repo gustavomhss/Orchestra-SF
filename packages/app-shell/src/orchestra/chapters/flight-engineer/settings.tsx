@@ -115,6 +115,9 @@ export function FlightSettings(props: { flight: Flight }) {
       <Show when={store.problem}>
         <Note tone="bad">{store.problem}</Note>
       </Show>
+      <Show when={props.flight.store.readinessFailed}>
+        <Note tone="bad">{t("common.requestFailed")}</Note>
+      </Show>
 
       <section class="mx-card fe-settings" aria-labelledby="fe-set-capture">
         <h3 id="fe-set-capture">{t("orchestra.flightEngineer.settings.capture")}</h3>
