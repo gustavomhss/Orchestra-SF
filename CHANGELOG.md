@@ -4,6 +4,7 @@ All notable changes to HuGR Orchestra are recorded here. The format follows [Kee
 
 ## [Unreleased]
 
+- A language change no longer hides a failed native-menu write. Renderer copy can update while the menus stay stale, and that failure is shown.
 - Selecting a crashed Apps tab no longer hides a failed hide of the view that was on screen. That failure is shown.
 - Turning on auto-accept no longer hides a failed permission list. Prompts already on screen are not treated as answered, and the failure is shown.
 - Replacing the server the app opens on launch no longer hides a failed default-server write. The old entry is still removed. The failure is shown, and the removed URL is not left as the server the next launch opens.
