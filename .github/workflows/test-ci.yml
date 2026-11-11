@@ -107,8 +107,19 @@ jobs:
       - name: Linux sandbox dependencies
         if: runner.os == 'Linux'
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq bubblewrap socat
+          # Hosted ubuntu-24.04 sometimes cannot resolve azure.archive.ubuntu.com. apt reads that
+          # name from apt-mirrors.txt. Fall back to archive.ubuntu.com only after the fetch fails.
+          install_sandbox() {
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq bubblewrap socat
+          }
+          if ! install_sandbox; then
+            for file in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/*.sources /etc/apt/sources.list.d/*.list; do
+              [ -f "$file" ] || continue
+              sudo sed -i 's|azure.archive.ubuntu.com|archive.ubuntu.com|g' "$file"
+            done
+            install_sandbox
+          fi
           # Ubuntu 24.04 blocks unprivileged user namespaces through AppArmor; bubblewrap needs them.
           sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 
