@@ -282,6 +282,26 @@ describe("MCP Dock controller", () => {
     ])
   })
 
+  test("a failed hide of a tab attached while no view shows the Dock is shown", async () => {
+    const dock = fakeDock()
+    dock.failHide(true)
+    dock.seed({
+      profiles: [{ id: "default", name: "default" }],
+      tabs: { default: [], [profileA]: [{ url: "https://example.com/a", pinned: false }] },
+    })
+    const controller = createAppDockController(dock.api, translate)
+    const logged = capture()
+    try {
+      controller.attach(element(), profileA)()
+      await until(() => controller.state.status === "ready")
+      await settle()
+    } finally {
+      logged.restore()
+    }
+    expect(controller.state.error).toBe("hide failed")
+    expect((logged.errors[0] as Error).message).toBe("hide failed")
+  })
+
   test("a tab the desktop attaches while no view shows the Dock is hidden by name", async () => {
     const dock = fakeDock()
     dock.seed({
