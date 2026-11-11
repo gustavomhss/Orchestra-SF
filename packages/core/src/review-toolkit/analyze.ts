@@ -26,6 +26,7 @@ import { ReviewOxlintAnalyze } from "./oxlint-analyze"
 import { ReviewPackZizmor } from "./packs/zizmor"
 import { ReviewZizmorAnalyze } from "./zizmor-analyze"
 import { ReviewBuildLane } from "./build-lane"
+import { ReviewGolangci } from "./golangci"
 import { ReviewGoPinned } from "./go-pinned"
 import { ReviewGoVet } from "./govet"
 import { ReviewLspDiagnostics } from "./lsp-diagnostics"
@@ -34,6 +35,7 @@ import { ReviewTypeAware } from "./type-aware"
 export const TYPECHECK_CI = ReviewBuildLane.TYPECHECK_CI
 export const LSP_ABSENT = ReviewLspDiagnostics.ABSENT
 export const NATIVE_UNQUALIFIED = ReviewTypeAware.UNQUALIFIED
+export const GOLANGCI_ABSENT = ReviewGolangci.ABSENT
 
 // K6 analyze half (design §7.2, §8.6, plan WP 1.4): the host runs the routed packs before any model turn, each confined
 // in a scratch copy (head, and base for the new-only step), keeps every raw output as a citable artifact, normalizes it
@@ -238,6 +240,7 @@ const runPack = Effect.fnUntraced(function* (packID: string, pack: Pack | undefi
   if (pack.template === "oxlint-type-aware") return yield* ReviewTypeAware.run(pack, context, confined)
   if (pack.template === "go-vet") return yield* ReviewGoVet.run(pack, context, confined)
   if (pack.template === "staticcheck" || pack.template === "gosec-sarif") return yield* ReviewGoPinned.run(pack, context, confined)
+  if (pack.template === "golangci-lint") return yield* ReviewGolangci.run(pack, context, confined)
   if (pack.lane === "build") return yield* ReviewBuildLane.run(pack, context, confined)
   if (LANES.indexOf(pack.lane) > LANES.indexOf(lane)) return refused(`lane: ${pack.lane} is above ${lane}`)
   if (pack.status === "dropped") return refused("dropped")

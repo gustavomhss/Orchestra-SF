@@ -118,6 +118,16 @@ test("a missing language server is recorded and does not block, and its error do
   expect(() => ReviewChecksV2.authorize("APPROVE", failed)).not.toThrow()
 })
 
+test("a missing golangci-lint is recorded and does not block", () => {
+  const absent = collect([], [analyzer({
+    id: "golangci-lint", pack: "golangci-lint", lane: "build", status: "not-run",
+    reason: ReviewAnalyze.GOLANGCI_ABSENT,
+  })])
+  expect(absent.checks[0]).toMatchObject({ status: "not-run", reason: ReviewAnalyze.GOLANGCI_ABSENT })
+  expect(absent.blockers).toEqual([])
+  expect(() => ReviewChecksV2.authorize("APPROVE", absent)).not.toThrow()
+})
+
 test("an unqualified native runtime is recorded and does not block", () => {
   const unqualified = collect([], [analyzer({
     id: "oxlint-type-aware", pack: "oxlint-type-aware", lane: "build", status: "not-run",
