@@ -348,6 +348,9 @@ const toolkit = Spec.make("toolkit", {
         ),
       },
     }),
+    Spec.make("osv", {
+      description: "Refresh the OSV advisory database outside a review",
+    }),
     Spec.make("prefetch", {
       description: "Download and verify backend toolkit engines ahead of first use",
       params: {

@@ -118,6 +118,16 @@ test("a missing language server is recorded and does not block, and its error do
   expect(() => ReviewChecksV2.authorize("APPROVE", failed)).not.toThrow()
 })
 
+test("an osv database age on the card does not turn a non-blocking absence into a blocker", () => {
+  const aged = collect([], [analyzer({
+    id: "osv-scanner", pack: "osv-scanner", lane: "no-build", status: "not-run",
+    reason: `${ReviewAnalyze.NATIVE_UNQUALIFIED}; ${ReviewAnalyze.OSV_DATABASE_AGE}2026-11-11T00:00:00.000Z`,
+  })])
+  expect(aged.checks[0]?.reason).toContain(ReviewAnalyze.OSV_DATABASE_AGE)
+  expect(aged.blockers).toEqual([])
+  expect(() => ReviewChecksV2.authorize("APPROVE", aged)).not.toThrow()
+})
+
 test("a missing osv advisory database is recorded and does not block", () => {
   const absent = collect([], [analyzer({
     id: "osv-scanner", pack: "osv-scanner", lane: "no-build", status: "not-run",
