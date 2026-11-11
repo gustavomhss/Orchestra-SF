@@ -80,7 +80,8 @@ function projectAnalyzer(check: ReviewAnalyze.Check, accepts: (id: string, lane?
     check.reason === ReviewAnalyze.TYPECHECK_CI ||
     check.reason === ReviewAnalyze.LSP_ABSENT ||
     check.reason === ReviewAnalyze.NATIVE_UNQUALIFIED ||
-    check.reason === ReviewAnalyze.GOLANGCI_ABSENT
+    check.reason === ReviewAnalyze.GOLANGCI_ABSENT ||
+    (check.reason?.startsWith("not run: ") && check.reason.endsWith(" absent"))
   )) return projected(check, "not-run", false)
   const status = check.status === "not-run" ? "check-unavailable" : check.status
   return projected(check, status, status === "check-unavailable" && accepts(check.id, check.lane))

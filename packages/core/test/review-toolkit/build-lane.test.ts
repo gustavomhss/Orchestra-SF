@@ -11,6 +11,7 @@ import { ReviewRoute } from "../../src/review/route"
 import { ReviewAnalyze } from "../../src/review-toolkit/analyze"
 import { ReviewBuildLane } from "../../src/review-toolkit/build-lane"
 import { ReviewGolangci } from "../../src/review-toolkit/golangci"
+import { ReviewInvoke } from "../../src/review-toolkit/invoke"
 import { ReviewGoPinned } from "../../src/review-toolkit/go-pinned"
 import { ReviewGoVet } from "../../src/review-toolkit/govet"
 import { testEffect } from "../lib/effect"
@@ -79,6 +80,21 @@ describe("build lane catalog", () => {
     expect(ReviewGolangci.argv("/opt/golangci-lint", "abc123", "/tmp/out.sarif")).toEqual([
       "/opt/golangci-lint", "run", "--new-from-merge-base=abc123", "--output.sarif.path=/tmp/out.sarif",
     ])
+    const shellBase = { files: ["script.sh", "Dockerfile"] }
+    const shellHead = {
+      files: ["script.sh", "Dockerfile"],
+      changes: [
+        { path: "script.sh", added: [{ line: 1, text: "echo hi" }], removed: 0 },
+        { path: "Dockerfile", added: [{ line: 1, text: "FROM scratch" }], removed: 0 },
+      ],
+    }
+    const standardShell = ReviewRoute.route({ stage: "code", tier: "standard", settings }, shellBase, shellHead, ReviewCatalog.current)
+    expect(standardShell.packs).toContainEqual({ id: "shellcheck", source: "catalog", lane: "no-build", status: "routed" })
+    expect(standardShell.packs).toContainEqual({ id: "hadolint", source: "catalog", lane: "no-build", status: "routed" })
+    expect(ReviewRoute.route({ stage: "code", tier: "quick", settings }, shellBase, shellHead, ReviewCatalog.current).packs.some((pack) => pack.id === "shellcheck" || pack.id === "hadolint")).toBe(false)
+    expect(ReviewInvoke.argv("/opt/shellcheck", ["script.sh"])).toEqual(["/opt/shellcheck", "script.sh"])
+    expect(ReviewInvoke.absent("shellcheck")).toBe("not run: shellcheck absent")
+    expect(ReviewInvoke.files("hadolint", ["Dockerfile", "app.dockerfile", "script.sh"])).toEqual(["Dockerfile", "app.dockerfile"])
   })
 
   test("this repository cites typecheck.yml, and a near-miss does not", async () => {

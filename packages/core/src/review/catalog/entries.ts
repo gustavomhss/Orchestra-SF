@@ -9,6 +9,7 @@ import { phase4 } from "./phase4"
 import { engagementProfiles } from "./phase6"
 import { ruff } from "./ruff"
 import { golangci } from "./golangci"
+import { hadolint, shellcheck } from "./invoke"
 import { gosec } from "./gosec"
 import { govet } from "./govet"
 import { staticcheck } from "./staticcheck"
@@ -98,6 +99,8 @@ export const current = {
     staticcheck.pack,
     gosec.pack,
     golangci.pack,
+    shellcheck.pack,
+    hadolint.pack,
     typeAware.pack,
   ],
   rules: [
