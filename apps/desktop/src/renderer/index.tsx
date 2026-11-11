@@ -31,7 +31,7 @@ import { openRendererPath } from "./open-path"
 import { listenForDeepLinks } from "./deep-links"
 import { checkedLocalServer, initializationData, recoverRemoteServer } from "./initialization"
 import { DesktopFirstLaunchOnboarding } from "./onboarding"
-import { resetZoom, setPinchZoomEnabled, webviewZoom, zoomIn, zoomOut } from "./webview-zoom"
+import { resetZoom, setPinchZoomEnabled, setZoomFailureReport, webviewZoom, zoomIn, zoomOut } from "./webview-zoom"
 import { windowFullscreen } from "./window-fullscreen"
 import { caffeinate, setCaffeinate } from "./caffeinate"
 import { createResponseDownloader } from "./response-download"
@@ -69,6 +69,13 @@ if (import.meta.env.VITE_SENTRY_DSN) {
 
 const [updaterState, setUpdaterState] = createSignal<UpdaterState>({ status: "disabled" })
 let requestFailed = () => dict["common.requestFailed"]
+setZoomFailureReport((error) => {
+  showToast({
+    variant: "error",
+    title: requestFailed(),
+    description: error instanceof Error ? error.message : String(error),
+  })
+})
 void window.api.updater.subscribe(setUpdaterState)
 
 type DesktopWindowState = {

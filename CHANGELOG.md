@@ -4,6 +4,7 @@ All notable changes to HuGR Orchestra are recorded here. The format follows [Kee
 
 ## [Unreleased]
 
+- A zoom the user asks for no longer hides a failed write. The factor stays where it was, and that failure is shown. A repeated failure in the same outage is logged, not toasted again.
 - Checking Flight Engineer readiness again, or reloading it after a permission request, no longer hides a failed read. The wait ends, and that failure is shown.
 - A failed permission reply is no longer silent. The prompt can be answered again, and the failure is shown.
 - The last-resort startup dialog goes through the native translation bundle. The English text is unchanged.
