@@ -1,5 +1,5 @@
 import { afterEach, expect, test } from "bun:test"
-import { noteFailedZoom, settleZoom } from "./zoom-failure"
+import { createZoomSession, noteFailedZoom, settleZoom } from "./zoom-failure"
 
 const logged: unknown[] = []
 const original = console.error
@@ -77,6 +77,66 @@ test("a stale successful zoom does not apply", async () => {
   })
   expect(ok).toBe(false)
   expect(applied).toEqual([])
+})
+
+test("an echoed success clears the failure so the next outage is shown", async () => {
+  const error = new Error("zoom failed")
+  const reported: unknown[] = []
+  let applied = 1
+  let mode: "fail" | "hold" | "ok" = "fail"
+  let release = () => undefined
+  const session = createZoomSession({
+    write: () => {
+      if (mode === "fail") return Promise.reject(error)
+      if (mode === "ok") return Promise.resolve()
+      return new Promise<void>((done) => {
+        release = done
+      })
+    },
+    report: (cause) => reported.push(cause),
+    apply: (factor) => {
+      applied = factor
+    },
+    revert: (factor) => {
+      applied = factor
+    },
+  })
+
+  await session.ask(1.2)
+  expect(reported).toEqual([error])
+  expect(applied).toBe(1)
+
+  mode = "hold"
+  const writing = session.ask(1.4)
+  session.echo(1.4)
+  release()
+  await writing
+  expect(applied).toBe(1.4)
+  expect(reported).toEqual([error])
+
+  mode = "fail"
+  await session.ask(1.6)
+  expect(reported).toEqual([error, error])
+  expect(applied).toBe(1.4)
+})
+
+test("a success that does not echo still clears the failure", async () => {
+  const error = new Error("zoom failed")
+  const reported: unknown[] = []
+  let fail = true
+  const session = createZoomSession({
+    write: () => (fail ? Promise.reject(error) : Promise.resolve()),
+    report: (cause) => reported.push(cause),
+    apply: () => undefined,
+    revert: () => undefined,
+  })
+
+  await session.ask(1.2)
+  fail = false
+  await session.ask(1.4)
+  fail = true
+  await session.ask(1.6)
+  expect(reported).toEqual([error, error])
 })
 
 test("the first failed zoom is shown and a repeat is only logged", () => {
