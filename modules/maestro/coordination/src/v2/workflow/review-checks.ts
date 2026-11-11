@@ -76,12 +76,14 @@ function requireFacts(facts: unknown): Facts {
 
 function projectAnalyzer(check: ReviewAnalyze.Check, accepts: (id: string, lane?: string) => boolean): Check {
   // R19 cites typecheck.yml instead of running tsc. A missing language server is recorded and is not a required gate.
+  // The database age is a suffix on the same reason; it does not change the classification.
+  const reason = classified(check.reason)
   if (check.status === "not-run" && (
-    check.reason === ReviewAnalyze.TYPECHECK_CI ||
-    check.reason === ReviewAnalyze.LSP_ABSENT ||
-    check.reason === ReviewAnalyze.NATIVE_UNQUALIFIED ||
-    check.reason === ReviewAnalyze.GOLANGCI_ABSENT ||
-    (check.reason?.startsWith("not run: ") && check.reason.endsWith(" absent"))
+    reason === ReviewAnalyze.TYPECHECK_CI ||
+    reason === ReviewAnalyze.LSP_ABSENT ||
+    reason === ReviewAnalyze.NATIVE_UNQUALIFIED ||
+    reason === ReviewAnalyze.GOLANGCI_ABSENT ||
+    (reason?.startsWith("not run: ") && reason.endsWith(" absent"))
   )) return projected(check, "not-run", false)
   const status = check.status === "not-run" ? "check-unavailable" : check.status
   return projected(check, status, status === "check-unavailable" && accepts(check.id, check.lane))
@@ -117,6 +119,12 @@ function missingCheck(pack: ReviewRouting.Pack, accepts: (id: string, lane?: str
     "check-unavailable",
     accepts(pack.id, pack.lane),
   )
+}
+
+function classified(reason?: string) {
+  const marker = `; ${ReviewAnalyze.OSV_DATABASE_AGE}`
+  const at = reason?.lastIndexOf(marker) ?? -1
+  return at === -1 ? reason : reason?.slice(0, at)
 }
 
 function projected(

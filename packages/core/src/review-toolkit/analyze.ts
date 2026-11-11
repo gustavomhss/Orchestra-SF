@@ -39,6 +39,7 @@ export const LSP_ABSENT = ReviewLspDiagnostics.ABSENT
 export const NATIVE_UNQUALIFIED = ReviewTypeAware.UNQUALIFIED
 export const GOLANGCI_ABSENT = ReviewGolangci.ABSENT
 export const OSV_DATABASE_ABSENT = ReviewOsv.DATABASE_ABSENT
+export const OSV_DATABASE_AGE = ReviewOsv.DATABASE_AGE
 
 // K6 analyze half (design §7.2, §8.6, plan WP 1.4): the host runs the routed packs before any model turn, each confined
 // in a scratch copy (head, and base for the new-only step), keeps every raw output as a citable artifact, normalizes it
