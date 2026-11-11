@@ -76,8 +76,11 @@ function requireFacts(facts: unknown): Facts {
 
 function projectAnalyzer(check: ReviewAnalyze.Check, accepts: (id: string, lane?: string) => boolean): Check {
   // R19 cites typecheck.yml instead of running tsc. A missing language server is recorded and is not a required gate.
-  if (check.status === "not-run" && (check.reason === ReviewAnalyze.TYPECHECK_CI || check.reason === ReviewAnalyze.LSP_ABSENT))
-    return projected(check, "not-run", false)
+  if (check.status === "not-run" && (
+    check.reason === ReviewAnalyze.TYPECHECK_CI ||
+    check.reason === ReviewAnalyze.LSP_ABSENT ||
+    check.reason === ReviewAnalyze.NATIVE_UNQUALIFIED
+  )) return projected(check, "not-run", false)
   const status = check.status === "not-run" ? "check-unavailable" : check.status
   return projected(check, status, status === "check-unavailable" && accepts(check.id, check.lane))
 }

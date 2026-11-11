@@ -118,6 +118,16 @@ test("a missing language server is recorded and does not block, and its error do
   expect(() => ReviewChecksV2.authorize("APPROVE", failed)).not.toThrow()
 })
 
+test("an unqualified native runtime is recorded and does not block", () => {
+  const unqualified = collect([], [analyzer({
+    id: "oxlint-type-aware", pack: "oxlint-type-aware", lane: "build", status: "not-run",
+    reason: ReviewAnalyze.NATIVE_UNQUALIFIED,
+  })])
+  expect(unqualified.checks[0]).toMatchObject({ status: "not-run", reason: ReviewAnalyze.NATIVE_UNQUALIFIED })
+  expect(unqualified.blockers).toEqual([])
+  expect(() => ReviewChecksV2.authorize("APPROVE", unqualified)).not.toThrow()
+})
+
 test("accepts an exact id, not a pack name or a similarly named gate", () => {
   const checks = [analyzer({ id: "lint", status: "not-run", reason: "absent" })]
   const exact = collect([pack("repo", "routed")], checks, { review: { acceptedUnavailable: ["lint"] } })

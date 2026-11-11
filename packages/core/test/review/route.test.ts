@@ -63,6 +63,7 @@ describe("review route", () => {
         { id: "squawk", source: "path", lane: "no-build", status: "routed" },
         { id: "oxlint", source: "catalog", lane: "no-build", status: "routed" },
         { id: "tsc", source: "catalog", lane: "build", status: "routed" },
+        { id: "oxlint-type-aware", source: "catalog", lane: "build", status: "routed" },
       ],
       budget: { ...STANDARD, lensChildren: 6 },
       deviations: [],
