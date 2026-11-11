@@ -3,7 +3,7 @@ import type { LivePermission, LiveReadiness, LiveSource } from "@/context/platfo
 import { useLanguage } from "@/context/language"
 import { MxBadge } from "../kit"
 import { clock } from "./model"
-import { Glyph, Keys, Meter } from "./parts"
+import { Glyph, Keys, Meter, Note } from "./parts"
 import type { useFlight } from "./run"
 
 type Flight = ReturnType<typeof useFlight>
@@ -56,7 +56,17 @@ function Idle(props: { flight: Flight; openSettings: () => void }) {
           <h3 id="fe-ready-title" class="fe-card-title">
             {t("orchestra.flightEngineer.readiness")}
           </h3>
-          <Show when={readiness()} fallback={<p class="fe-quiet">{t("orchestra.flightEngineer.readiness.loading")}</p>}>
+          <Show when={props.flight.store.readinessFailed}>
+            <Note tone="bad">{t("common.requestFailed")}</Note>
+          </Show>
+          <Show
+            when={readiness()}
+            fallback={
+              <Show when={!props.flight.store.readinessFailed}>
+                <p class="fe-quiet">{t("orchestra.flightEngineer.readiness.loading")}</p>
+              </Show>
+            }
+          >
             {(value) => <Readiness flight={props.flight} value={value()} openSettings={props.openSettings} />}
           </Show>
         </section>
