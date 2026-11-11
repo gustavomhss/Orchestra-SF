@@ -250,6 +250,11 @@ export function createAppDockController(api: AppDockAPI | undefined, t: Translat
     (cause: unknown) => {
       if (current === generation) setState("error", message(cause, fallback))
     }
+  // A failed hide leaves the previous view up. Show it; do not pretend the view was replaced.
+  const reportHide = (current: number) => (cause: unknown) => {
+    console.error(cause)
+    fail(current, t("orchestra.dock.error.hide"))(cause)
+  }
   const load = async (owner: string) => {
     if (!dock) return
     const current = ++generation
@@ -501,10 +506,7 @@ export function createAppDockController(api: AppDockAPI | undefined, t: Translat
     // A failed hide leaves that view up. Show it; do not pretend the selection replaced it.
     if (dock && previous && !sameTab(previous, tab)) {
       const current = generation
-      void dock.appDockHide(identity(previous)).catch((cause) => {
-        console.error(cause)
-        fail(current, t("orchestra.dock.error.hide"))(cause)
-      })
+      void dock.appDockHide(identity(previous)).catch(reportHide(current))
     }
   }
   const refreshWindows = async () => {
@@ -632,7 +634,7 @@ export function createAppDockController(api: AppDockAPI | undefined, t: Translat
         ...(linux ? { windows: [] } : {}),
       })
       if (next) return void (await show(next, current))
-      if (attached && !sameTab(attached, requested)) await dock.appDockHide(identity(attached)).catch(() => undefined)
+      if (attached && !sameTab(attached, requested)) await dock.appDockHide(identity(attached)).catch(reportHide(current))
     },
     async closeTabs(tab: Tab, scope: "others" | "right") {
       if (!dock) return
@@ -687,9 +689,10 @@ export function createAppDockController(api: AppDockAPI | undefined, t: Translat
         state.tabs.find((item) => !isLinux(item.url))
       if (tab) return select(tab)
       const previous = state.active
+      const current = generation
       selection++
       setState({ mode: "browser", active: undefined, url: home })
-      if (dock && previous) void dock.appDockHide(identity(previous)).catch(() => undefined)
+      if (dock && previous) void dock.appDockHide(identity(previous)).catch(reportHide(current))
     },
     // Opens (or reconnects) the Linux workspace tab. Returns the desktop's result so the Linux menu can
     // report a failure; a result overtaken by a newer intent, owner or profile is dropped.
@@ -700,7 +703,13 @@ export function createAppDockController(api: AppDockAPI | undefined, t: Translat
       const current = generation
       setState({ mode: "linux", windowError: false })
       const previous = activeTab()
-      if (previous && !isLinux(previous.url)) await dock.appDockHide(identity(previous)).catch(() => undefined)
+      if (previous && !isLinux(previous.url)) {
+        const hidden = await dock.appDockHide(identity(previous)).then(() => true, (cause) => {
+          reportHide(current)(cause)
+          return false
+        })
+        if (!hidden || current !== generation) return { status: "failed", code: "failed" }
+      }
       const result = await dock
         .appDockLinuxOpen(bounds(host), profile)
         .catch(() => ({ status: "failed", code: "failed" }) as const)
