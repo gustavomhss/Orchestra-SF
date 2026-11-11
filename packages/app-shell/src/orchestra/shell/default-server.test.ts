@@ -63,7 +63,7 @@ describe("moveDefaultWithReplacedEntry", () => {
   })
 
   test("a successful write is not reported", async () => {
-    const written: ServerConnection.Key[] = []
+    const written: Array<ServerConnection.Key | null> = []
     const reported: unknown[] = []
 
     await moveDefaultWithReplacedEntry({
@@ -71,8 +71,8 @@ describe("moveDefaultWithReplacedEntry", () => {
       next: key("new"),
       remove: () => undefined,
       getDefault: async () => key("old"),
-      setDefault: async (key) => {
-        written.push(key)
+      setDefault: async (id) => {
+        written.push(id)
       },
       report: (failure) => reported.push(failure),
     })
