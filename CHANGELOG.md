@@ -4,6 +4,9 @@ All notable changes to HuGR Orchestra are recorded here. The format follows [Kee
 
 ## [Unreleased]
 
+- A tab that opens after its Apps owner has changed is no longer left on screen when closing it fails. That failure is shown.
+- Cancelling a provider sign-in no longer leaves the dialog when the server cancel fails. The failure is shown and the attempt stays.
+- Checking a meeting again, or reloading it after a change, no longer hides a failed read. The meeting stays, and that failure is shown.
 - A tab the Apps view attaches while it is not on screen no longer hides a failed hide. That failure is shown.
 - Cancelling a Slack sign-in no longer clears the attempt when the server cancel fails. The failure is shown and the attempt stays.
 - Closing the last Apps tab, returning to the browser, or opening the Linux workspace no longer hides a failed hide of the view that was on screen. That failure is shown.
