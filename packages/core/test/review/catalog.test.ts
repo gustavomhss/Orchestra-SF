@@ -92,6 +92,7 @@ describe("review catalog", () => {
       ["oxlint", "pinned", "probation"],
       ["zizmor", "pinned", "probation"],
       ["tsc", "path", "probation"],
+      ["go-vet", "path", "probation"],
       ["oxlint-type-aware", "pinned", "probation"],
     ])
     expect(catalog.rules.every((rule) => rule.status === "probation")).toBe(true)

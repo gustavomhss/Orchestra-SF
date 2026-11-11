@@ -152,6 +152,8 @@ the changed TypeScript and JavaScript files. It opens them in the scratch copy a
 not install a server. A missing one is recorded and does not block approval. An error it publishes is on the card; it
 does not by itself refuse approval. Deep is still not built.
 
+A trusted review at Standard or Deep also runs `go vet` on each changed Go package, in the scratch copy. The host fixes that command. It does not install Go, and it does not add a vet flag. A missing Go is unavailable, and approval waits until that check is listed in `review.acceptedUnavailable` or Go is present. Quick does not run it.
+
 A Go concurrency candidate can be probed with `go test -race` in the scratch copy. The host fixes that command. The verifier reads the result from the race proof leaf and does not name the command. It does not install Go. A missing Go is unavailable, and approval waits until that check is listed in `review.acceptedUnavailable` or Go is present. Other languages are not offered that probe, because they have no race detector in the catalog. Mutants, interleave and property still do not run.
 
 The same trusted review also runs one pinned type-aware rule, `typescript(no-floating-promises)`, with the pinned

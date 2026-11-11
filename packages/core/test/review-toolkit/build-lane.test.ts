@@ -9,6 +9,7 @@ import { ReviewCatalog } from "../../src/review/catalog"
 import { ReviewRoute } from "../../src/review/route"
 import { ReviewAnalyze } from "../../src/review-toolkit/analyze"
 import { ReviewBuildLane } from "../../src/review-toolkit/build-lane"
+import { ReviewGoVet } from "../../src/review-toolkit/govet"
 import { testEffect } from "../lib/effect"
 import { jail } from "../lib/sandbox-host"
 import { expectSpawn } from "../fixture/omni-expect"
@@ -53,6 +54,17 @@ describe("build lane catalog", () => {
     const deep = ReviewRoute.route({ stage: "code", tier: "deep", settings }, base, head, ReviewCatalog.current)
     expect(deep.tier).toMatchObject({ id: "standard", requested: "deep" })
     expect(deep.packs).toContainEqual(routed)
+    const goBase = { files: ["go.mod", "pkg/a.go"] }
+    const goHead = {
+      files: ["go.mod", "pkg/a.go"],
+      changes: [{ path: "pkg/a.go", added: [{ line: 1, text: "package pkg" }], removed: 0 }],
+    }
+    const vet = { id: "go-vet", source: "catalog" as const, lane: "build", status: "routed" as const }
+    expect(ReviewRoute.route({ stage: "code", tier: "standard", settings }, goBase, goHead, ReviewCatalog.current).packs).toContainEqual(vet)
+    expect(ReviewRoute.route({ stage: "code", tier: "quick", settings }, goBase, goHead, ReviewCatalog.current).packs.some((pack) => pack.id === "go-vet")).toBe(false)
+    expect(ReviewRoute.route({ stage: "code", tier: "deep", settings }, goBase, goHead, ReviewCatalog.current).packs).toContainEqual(vet)
+    expect(ReviewGoVet.packages(["pkg/a.go", "pkg/b.go", "a.go", "notes.md"])).toEqual([".", "./pkg"])
+    expect(ReviewGoVet.argv("/usr/bin/go", ["./", "./pkg"])).toEqual(["/usr/bin/go", "vet", "./", "./pkg"])
   })
 
   test("this repository cites typecheck.yml, and a near-miss does not", async () => {
@@ -211,6 +223,29 @@ live("the installed compiler passes a green file and fails a type error", () =>
     expect(redLog).toContain("TS2322")
     expect(yield* Effect.promise(() => readFile(path.join(made.root, "src", "a.ts"), "utf8"))).toBe(RED)
     expect(yield* Effect.promise(() => readdir(made.root))).not.toContain("tsconfig.tsbuildinfo")
+  }),
+  120_000,
+)
+
+live("a trusted build lane runs go vet and adds no vet flag", () =>
+  Effect.gen(function* () {
+    expectSpawn(import.meta.path)
+    const made = yield* repo({
+      "go.mod": "module example.com/probe\n\ngo 1.22\n",
+      "pkg/a.go": "package pkg\n\nfunc OK() int { return 1 }\n",
+    })
+    const result = yield* ReviewAnalyze.run(input(made, {
+      packs: ["go-vet"],
+      changed: { "pkg/a.go": [{ start: 1, end: 1 }] },
+    }))
+    const check = result.checks.find((item) => item.id === "go-vet")
+    if (check?.reason === "go absent") return
+    const text = yield* Effect.promise(() => readLog(made.store, check?.uri))
+    expect(`${check?.status} ${check?.reason ?? ""} ${text}`).toContain(" vet ./pkg")
+    expect(check?.workspaceExecuted).toBe(true)
+    expect(text).toContain(" vet ./pkg")
+    expect(text).not.toContain("-json")
+    expect(text).not.toContain("./...")
   }),
   120_000,
 )
