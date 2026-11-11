@@ -492,8 +492,10 @@ export function createAppDockController(api: AppDockAPI | undefined, t: Translat
   // tab it recovers in place. Conceal arrivals while no host or live selection can show them: an earlier
   // Hide named the tab attached then and cannot reach a newer tab or recovery generation.
   const conceal = (tab: TabIdentity | undefined) => {
-    if (dock && tab && (!host || !state.active || activeTab()?.crashed))
-      return dock.appDockHide(identity(tab)).catch(() => undefined)
+    if (dock && tab && (!host || !state.active || activeTab()?.crashed)) {
+      const current = generation
+      return dock.appDockHide(identity(tab)).catch(reportHide(current))
+    }
   }
 
   const select = (tab: Tab) => {
