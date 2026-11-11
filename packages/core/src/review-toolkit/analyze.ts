@@ -26,8 +26,10 @@ import { ReviewOxlintAnalyze } from "./oxlint-analyze"
 import { ReviewPackZizmor } from "./packs/zizmor"
 import { ReviewZizmorAnalyze } from "./zizmor-analyze"
 import { ReviewBuildLane } from "./build-lane"
+import { ReviewLspDiagnostics } from "./lsp-diagnostics"
 
 export const TYPECHECK_CI = ReviewBuildLane.TYPECHECK_CI
+export const LSP_ABSENT = ReviewLspDiagnostics.ABSENT
 
 // K6 analyze half (design §7.2, §8.6, plan WP 1.4): the host runs the routed packs before any model turn, each confined
 // in a scratch copy (head, and base for the new-only step), keeps every raw output as a citable artifact, normalizes it
@@ -97,6 +99,12 @@ export const ObserveCatalog = Context.Reference<(catalog: ReviewCatalog.Catalog)
   { defaultValue: () => () => {} },
 )
 
+/** E7b seam. The default reads the scratch copy's own language server and does not install one. */
+export const ReadDiagnostics = Context.Reference<typeof ReviewLspDiagnostics.read>(
+  "@orchestra/ReviewAnalyze/ReadDiagnostics",
+  { defaultValue: () => ReviewLspDiagnostics.read },
+)
+
 // Base results by pack, version, template and the base commit's tree: a rereview, or a second review over the same base,
 // reads them instead of scanning again.
 const baseCache = new Map<string, { results: ReadonlyArray<ReviewSarif.Raw>; uri: string }>()
@@ -138,8 +146,9 @@ export const run = Effect.fn("ReviewAnalyze.run")(function* (input: RunInput, pi
   })
   const retained = yield* context.write("retained.json", JSON.stringify(result.retained))
   const debt = yield* context.write("debt.json", JSON.stringify(result.debt))
+  const diagnostics = yield* languageServer(selected, context)
   return {
-    checks: outcomes.flatMap((outcome) => outcome.checks),
+    checks: [...outcomes.flatMap((outcome) => outcome.checks), ...diagnostics],
     items: result.items,
     retained: { uri: retained, total: result.retained.total, unread: result.retained.unread },
     debt: { uri: debt, total: result.debt.length },
@@ -709,6 +718,40 @@ const confined = Effect.fnUntraced(function* (input: {
 })
 
 export type Confine = typeof confined
+
+const SOURCE = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".mts", ".cts"])
+
+/** Read-only diagnostics for a trusted build-lane review. No server in the copy is absence, not a fetch. */
+const languageServer = Effect.fnUntraced(function* (input: RunInput, context: RunContext) {
+  if (input.lane !== "build" || !input.trusted) return []
+  const files = Object.keys(input.changed).filter(sourceFile).sort()
+  if (files.length === 0) return []
+  const head = yield* context.head
+  if ("failed" in head) return []
+  const read = yield* ReadDiagnostics
+  const report = yield* read({ root: head.snapshot.root, files })
+  const uri = report.workspaceExecuted ? yield* context.write("raw/lsp.log", formatDiagnostics(report)) : undefined
+  return [{
+    id: "lsp",
+    pack: "lsp",
+    version: "project",
+    lane: "build" as const,
+    status: report.status,
+    ...(report.reason === undefined ? {} : { reason: report.reason }),
+    workspaceExecuted: report.workspaceExecuted,
+    ...(uri === undefined ? {} : { uri }),
+  }]
+})
+
+function sourceFile(file: string) {
+  if (!SOURCE.has(path.posix.extname(file)) || file.includes("\0") || path.isAbsolute(file)) return false
+  return file.split(/[/\\]/).every((part) => part !== "" && part !== "." && part !== "..")
+}
+
+function formatDiagnostics(report: { diagnostics: readonly { path: string; severity: number; line: number; character: number; message: string }[]; opened: number; skipped: number }) {
+  const lines = report.diagnostics.map((item) => `${item.path}:${item.line}:${item.character} ${item.message}`)
+  return [`opened ${report.opened}`, `skipped ${report.skipped}`, ...lines].join("\n")
+}
 
 const copy = (input: Parameters<typeof ReviewScratch.create>[0]) =>
   ReviewScratch.create(input).pipe(
