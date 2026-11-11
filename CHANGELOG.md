@@ -4,6 +4,7 @@ All notable changes to HuGR Orchestra are recorded here. The format follows [Kee
 
 ## [Unreleased]
 
+- Closing the last Apps tab, returning to the browser, or opening the Linux workspace no longer hides a failed hide of the view that was on screen. That failure is shown.
 - A language change no longer hides a failed native-menu write. Renderer copy can update while the menus stay stale, and that failure is shown.
 - Selecting a crashed Apps tab no longer hides a failed hide of the view that was on screen. That failure is shown.
 - Turning on auto-accept no longer hides a failed permission list. Prompts already on screen are not treated as answered, and the failure is shown.

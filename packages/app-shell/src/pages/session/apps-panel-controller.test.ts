@@ -669,6 +669,56 @@ describe("MCP Dock controller with the Linux workspace", () => {
     await setup.controller.duplicate(linux)
     expect(setup.dock.calls.slice(calls).filter((call) => call[0] === "navigate" || call[0] === "open")).toEqual([])
   })
+
+  test("a failed hide when the last browser tab closes is shown", async () => {
+    const setup = await ready()
+    await openLinux(setup, workspace("linux-1", 10))
+    setup.controller.showBrowser()
+    setup.dock.failHide(true)
+    setup.dock.onCloseTab(() => setup.dock.emit({ type: "tab-selected", payload: tab("linux-1", 10) }))
+    const logged = capture()
+    try {
+      await setup.controller.close()
+    } finally {
+      logged.restore()
+    }
+    expect(setup.controller.state.error).toBe("hide failed")
+    expect((logged.errors[0] as Error).message).toBe("hide failed")
+  })
+
+  test("a failed hide when returning to an empty browser is shown", async () => {
+    const setup = await ready()
+    await openLinux(setup, workspace("linux-1", 10))
+    setup.controller.showBrowser()
+    const linux = setup.controller.state.tabs.find((item) => item.tabID === "linux-1")!
+    await setup.controller.closeTabs(linux, "others")
+    setup.dock.failHide(true)
+    const logged = capture()
+    try {
+      setup.controller.showBrowser()
+      await settle()
+    } finally {
+      logged.restore()
+    }
+    expect(setup.controller.state.error).toBe("hide failed")
+    expect((logged.errors[0] as Error).message).toBe("hide failed")
+  })
+
+  test("a failed hide when opening the Linux workspace is shown", async () => {
+    const setup = await ready()
+    setup.dock.failHide(true)
+    const logged = capture()
+    try {
+      const pending = setup.controller.openLinux()
+      await until(() => setup.dock.linuxPending() === 1)
+      setup.dock.resolveLinux({ status: "opened", tab: workspace("linux-1", 10) })
+      await pending
+    } finally {
+      logged.restore()
+    }
+    expect(setup.controller.state.error).toBe("hide failed")
+    expect((logged.errors[0] as Error).message).toBe("hide failed")
+  })
 })
 
 function element() {
@@ -706,6 +756,15 @@ function sized<T extends Element>(item: T, area: { x: number; y: number; width: 
     value: () => new DOMRect(area.x, area.y, area.width, area.height),
   })
   return item
+}
+
+function capture() {
+  const errors: unknown[] = []
+  const original = console.error
+  console.error = (...args) => {
+    errors.push(args[0])
+  }
+  return { errors, restore: () => (console.error = original) }
 }
 
 async function settle() {
