@@ -8,6 +8,7 @@ import { phase3 } from "./phase3"
 import { phase4 } from "./phase4"
 import { engagementProfiles } from "./phase6"
 import { ruff } from "./ruff"
+import { govet } from "./govet"
 import { tsc } from "./tsc"
 import { typeAware } from "./type-aware"
 import { zizmor } from "./zizmor"
@@ -90,6 +91,7 @@ export const current = {
     oxlint.pack,
     zizmor.pack,
     tsc.pack,
+    govet.pack,
     typeAware.pack,
   ],
   rules: [
