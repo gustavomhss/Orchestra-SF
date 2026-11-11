@@ -10,6 +10,7 @@ import { ReviewCatalog } from "../../src/review/catalog"
 import { ReviewRoute } from "../../src/review/route"
 import { ReviewAnalyze } from "../../src/review-toolkit/analyze"
 import { ReviewBuildLane } from "../../src/review-toolkit/build-lane"
+import { ReviewGolangci } from "../../src/review-toolkit/golangci"
 import { ReviewGoPinned } from "../../src/review-toolkit/go-pinned"
 import { ReviewGoVet } from "../../src/review-toolkit/govet"
 import { testEffect } from "../lib/effect"
@@ -73,6 +74,11 @@ describe("build lane catalog", () => {
     expect(ReviewGoPinned.staticcheckArgv("/opt/staticcheck", ["./pkg"])).toEqual(["/opt/staticcheck", "./pkg"])
     expect(ReviewGoPinned.gosecArgv("/opt/gosec", "/tmp/gosec.sarif", ["./pkg"])).toEqual(["/opt/gosec", "-fmt", "sarif", "-out", "/tmp/gosec.sarif", "./pkg"])
     expect(ReviewGoPinned.gosecArgv("/opt/gosec", "/tmp/gosec.sarif", ["./pkg"]).join(" ")).not.toContain("-ai-api")
+    expect(ReviewRoute.route({ stage: "code", tier: "standard", settings }, goBase, goHead, ReviewCatalog.current).packs).toContainEqual({ id: "golangci-lint", source: "catalog", lane: "build", status: "routed" })
+    expect(ReviewRoute.route({ stage: "code", tier: "quick", settings }, goBase, goHead, ReviewCatalog.current).packs.some((pack) => pack.id === "golangci-lint")).toBe(false)
+    expect(ReviewGolangci.argv("/opt/golangci-lint", "abc123", "/tmp/out.sarif")).toEqual([
+      "/opt/golangci-lint", "run", "--new-from-merge-base=abc123", "--output.sarif.path=/tmp/out.sarif",
+    ])
   })
 
   test("this repository cites typecheck.yml, and a near-miss does not", async () => {

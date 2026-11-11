@@ -95,6 +95,7 @@ describe("review catalog", () => {
       ["go-vet", "path", "probation"],
       ["staticcheck", "pinned", "probation"],
       ["gosec", "pinned", "probation"],
+      ["golangci-lint", "path", "probation"],
       ["oxlint-type-aware", "pinned", "probation"],
     ])
     expect(catalog.rules.every((rule) => rule.status === "probation")).toBe(true)
