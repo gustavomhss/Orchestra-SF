@@ -4,6 +4,8 @@ All notable changes to HuGR Orchestra are recorded here. The format follows [Kee
 
 ## [Unreleased]
 
+- Changing a Flight Engineer hotkey, or resetting them, no longer hides a failed write. The keys stay as they were, and that failure is shown. Reloading them after the change, or when Flight Engineer opens, no longer hides a failed read.
+
 ## 0.3.6 (2026-11-11)
 
 Command line and desktop release candidate, unsigned like 0.3.4. Publication reuses the exact artifacts validated for this cut; the release receipt records their source, runtime checks and SHA256 digests.
