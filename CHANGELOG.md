@@ -4,6 +4,9 @@ All notable changes to HuGR Orchestra are recorded here. The format follows [Kee
 
 ## [Unreleased]
 
+- Stopping a background process no longer hides a failed reload of the list. The stop still counts, and that failure is shown.
+- A scheduled run that fails no longer hides a failed delete of the empty session it created. That failure is shown.
+- Stopping a turn no longer hides a failed read of whether it is still running. That failure is shown.
 - A tab that opens after its Apps owner has changed is no longer left on screen when closing it fails. That failure is shown.
 - Cancelling a provider sign-in no longer leaves the dialog when the server cancel fails. The failure is shown and the attempt stays.
 - Checking a meeting again, or reloading it after a change, no longer hides a failed read. The meeting stays, and that failure is shown.
