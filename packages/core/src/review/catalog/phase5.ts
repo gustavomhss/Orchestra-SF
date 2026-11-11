@@ -1,8 +1,8 @@
 // Not spread into the live catalog. probe.ts BUILT does not run these, and deep.built stays false.
+// probe:race is live: Go only, `go test -race`, nothing installed.
 export const phase5Options = [
   { id: "probe:mutants", rung: "probe", cost: "high" },
   { id: "probe:interleave", rung: "probe", cost: "high" },
-  { id: "probe:race", rung: "probe", cost: "high" },
   { id: "probe:property", rung: "probe", cost: "high" },
 ]
 export const releaseProfile = {
