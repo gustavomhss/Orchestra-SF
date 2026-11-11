@@ -366,6 +366,35 @@ describe("MCP Dock controller", () => {
     ])
   })
 
+  test("a failed hide of the tab shown before a crashed selection is shown", async () => {
+    const dock = fakeDock()
+    const controller = createAppDockController(dock.api, translate)
+    controller.attach(element(), profileA)
+    await until(() => controller.state.status === "ready")
+    controller.setURL("https://example.com/a")
+    await controller.launch()
+    await controller.openNewTab()
+    dock.emit({ type: "tab-crashed", payload: { identity: tab("tab-1", 1), reason: "crashed" } })
+    dock.failHide(true)
+    const logged: unknown[] = []
+    const original = console.error
+    console.error = (...args) => {
+      logged.push(args[0])
+    }
+
+    try {
+      controller.select(controller.state.tabs[0]!)
+      await settle()
+    } finally {
+      console.error = original
+    }
+
+    expect(controller.state.error).toBe("hide failed")
+    expect(logged.length).toBe(1)
+    expect(logged[0]).toBeInstanceOf(Error)
+    expect((logged[0] as Error).message).toBe("hide failed")
+  })
+
   test("an evicted tab leaves the strip", async () => {
     const dock = fakeDock()
     const controller = createAppDockController(dock.api, translate)
@@ -707,6 +736,7 @@ function fakeDock() {
     tabs: 0,
     gate: undefined as Promise<void> | undefined,
     failManifest: false,
+    failHide: false,
     linux: [] as Array<(result: LinuxOpenResult) => void>,
     closing: undefined as ((tabID: string) => void) | undefined,
   }
@@ -733,6 +763,7 @@ function fakeDock() {
     },
     appDockHide: async (target: TabIdentity) => {
       calls.push(["hide", target])
+      if (state.failHide) throw new Error("hide failed")
     },
     appDockOcclude: async (occluded: boolean) => {
       calls.push(["occlude", occluded])
@@ -786,6 +817,7 @@ function fakeDock() {
     gate: (promise: Promise<void>) => (state.gate = promise),
     seed: (manifest: Pick<Manifest, "profiles" | "tabs">) => (state.manifest = { ...state.manifest, ...manifest }),
     failManifest: (value: boolean) => (state.failManifest = value),
+    failHide: (value: boolean) => (state.failHide = value),
     linuxPending: () => state.linux.length,
     resolveLinux: (result: LinuxOpenResult) => state.linux.shift()?.(result),
     onCloseTab: (callback: (tabID: string) => void) => (state.closing = callback),
