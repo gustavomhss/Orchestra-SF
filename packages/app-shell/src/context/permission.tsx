@@ -10,6 +10,7 @@ import { decode64 } from "@/utils/base64"
 import { useLanguage } from "./language"
 import { showToast } from "@/utils/toast"
 import { answerPendingAfterEnable } from "./permission-pending"
+import { noteFailedPermissionReply } from "./permission-reply"
 import { useGlobal } from "./global"
 import { ServerConnection, useServer } from "./server"
 import { type DraftTab, useTabs } from "./tabs"
@@ -251,8 +252,15 @@ function createServerPermissionState(input: {
         reply: request.response,
         location: request.directory ? { directory: request.directory } : undefined,
       })
-      .catch(() => {
-        responded.delete(request.permissionID)
+      .catch((error) => {
+        noteFailedPermissionReply({
+          permissionID: request.permissionID,
+          error,
+          forget: (id) => {
+            responded.delete(id)
+          },
+          report: input.report,
+        })
       })
   }
 
