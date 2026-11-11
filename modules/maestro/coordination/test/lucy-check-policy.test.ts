@@ -101,6 +101,23 @@ test("citing typecheck.yml is not a missing tool, and a missing compiler still b
   expect(() => ReviewChecksV2.authorize("APPROVE", absent)).toThrow("checks-blocked")
 })
 
+test("a missing language server is recorded and does not block, and its error does not veto", () => {
+  const absent = collect([], [analyzer({
+    id: "lsp", pack: "lsp", lane: "build", status: "not-run", reason: ReviewAnalyze.LSP_ABSENT,
+  })])
+  expect(absent.checks[0]).toMatchObject({ status: "not-run", reason: ReviewAnalyze.LSP_ABSENT })
+  expect(absent.checks[0]?.accepted).toBeUndefined()
+  expect(absent.blockers).toEqual([])
+  expect(() => ReviewChecksV2.authorize("APPROVE", absent)).not.toThrow()
+
+  const failed = collect([], [analyzer({
+    id: "lsp", pack: "lsp", lane: "build", status: "fail", reason: "fixture-diagnostic", workspaceExecuted: true,
+  })])
+  expect(failed.checks[0]?.status).toBe("fail")
+  expect(failed.blockers).toEqual([])
+  expect(() => ReviewChecksV2.authorize("APPROVE", failed)).not.toThrow()
+})
+
 test("accepts an exact id, not a pack name or a similarly named gate", () => {
   const checks = [analyzer({ id: "lint", status: "not-run", reason: "absent" })]
   const exact = collect([pack("repo", "routed")], checks, { review: { acceptedUnavailable: ["lint"] } })

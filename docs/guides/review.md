@@ -147,6 +147,11 @@ scratch copy. It does not install a compiler. A missing one is unavailable. Appr
 in `review.acceptedUnavailable`, or the compiler is present. In this repository the card cites `typecheck.yml`
 instead, and that citation does not block approval. Quick does not run it.
 
+The same trusted review asks the project's own language server, if the repository already has one, for diagnostics on
+the changed TypeScript and JavaScript files. It opens them in the scratch copy and does not write them, and it does
+not install a server. A missing one is recorded and does not block approval. An error it publishes is on the card; it
+does not by itself refuse approval. Deep is still not built.
+
 ### Pinning a tier
 
 - **Per request**: ask Maestro for the tier ("review this at Standard"). Maestro passes it with the review request.

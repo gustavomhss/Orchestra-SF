@@ -20,6 +20,10 @@ const live = jail ? it.live : it.live.skip
 const unjailed = jail ? it.live.skip : it.live
 
 const TOKEN = "fixture-tsc"
+const lspAbsent = {
+  id: "lsp", pack: "lsp", version: "project", lane: "build", status: "not-run" as const,
+  reason: ReviewAnalyze.LSP_ABSENT, workspaceExecuted: false,
+}
 const GREEN = "export const value: number = 1\n"
 const RED = "export const value: number = \"nope\"\n"
 const TSCONFIG = `${JSON.stringify({
@@ -125,7 +129,7 @@ it.live("a missing compiler is not-run, and nothing is fetched", () =>
     expect(result.checks).toEqual([{
       id: "tsc", pack: "tsc", version: "project", lane: "build", status: "not-run",
       reason: "tsc absent", workspaceExecuted: false,
-    }])
+    }, lspAbsent])
     expect(result.checks[0]?.uri).toBeUndefined()
   }),
 )
@@ -143,7 +147,7 @@ it.live("this repository's base cites typecheck.yml and does not run tsc", () =>
     expect(result.checks).toEqual([{
       id: "tsc", pack: "tsc", version: "project", lane: "build", status: "not-run",
       reason: ReviewBuildLane.TYPECHECK_CI, workspaceExecuted: false,
-    }])
+    }, lspAbsent])
     expect(result.checks[0]?.uri).toBeUndefined()
   }),
 )
