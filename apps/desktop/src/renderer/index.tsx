@@ -25,6 +25,8 @@ import { render } from "solid-js/web"
 import pkg from "../../package.json"
 import { t } from "./i18n"
 import { dict } from "../../../../packages/app-shell/src/i18n/en"
+import { showToast } from "../../../../packages/app-shell/src/utils/toast"
+import { publishNativeTranslations } from "./native-menu"
 import { openRendererPath } from "./open-path"
 import { listenForDeepLinks } from "./deep-links"
 import { checkedLocalServer, initializationData, recoverRemoteServer } from "./initialization"
@@ -483,7 +485,17 @@ function DesktopRoot(props: { windowState: DesktopWindowState }) {
     <PlatformProvider value={platform}>
       <AppBaseProviders
         locale={locale.latest}
-        onNativeTranslations={(bundle) => void window.api.setNativeTranslations(bundle).catch(() => undefined)}
+        onNativeTranslations={(bundle) => {
+          void publishNativeTranslations({
+            write: () => window.api.setNativeTranslations(bundle),
+            report: (error) =>
+              showToast({
+                variant: "error",
+                title: requestFailed(),
+                description: error instanceof Error ? error.message : String(error),
+              }),
+          })
+        }}
       >
         <Show when={true}>{(_) => <App />}</Show>
       </AppBaseProviders>
