@@ -703,7 +703,13 @@ export function createAppDockController(api: AppDockAPI | undefined, t: Translat
       const current = generation
       setState({ mode: "linux", windowError: false })
       const previous = activeTab()
-      if (previous && !isLinux(previous.url)) await dock.appDockHide(identity(previous)).catch(reportHide(current))
+      if (previous && !isLinux(previous.url)) {
+        const hidden = await dock.appDockHide(identity(previous)).then(() => true, (cause) => {
+          reportHide(current)(cause)
+          return false
+        })
+        if (!hidden || current !== generation) return { status: "failed", code: "failed" }
+      }
       const result = await dock
         .appDockLinuxOpen(bounds(host), profile)
         .catch(() => ({ status: "failed", code: "failed" }) as const)

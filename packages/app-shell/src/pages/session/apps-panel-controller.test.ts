@@ -709,13 +709,11 @@ describe("MCP Dock controller with the Linux workspace", () => {
     setup.dock.failHide(true)
     const logged = capture()
     try {
-      const pending = setup.controller.openLinux()
-      await until(() => setup.dock.linuxPending() === 1)
-      setup.dock.resolveLinux({ status: "opened", tab: workspace("linux-1", 10) })
-      await pending
+      expect(await setup.controller.openLinux()).toEqual({ status: "failed", code: "failed" })
     } finally {
       logged.restore()
     }
+    expect(setup.dock.linuxPending()).toBe(0)
     expect(setup.controller.state.error).toBe("hide failed")
     expect((logged.errors[0] as Error).message).toBe("hide failed")
   })
