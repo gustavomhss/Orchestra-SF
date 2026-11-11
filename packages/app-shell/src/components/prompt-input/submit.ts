@@ -744,13 +744,33 @@ function interruptPendingSession(
     ;[...jobs].reverse().forEach((job) => { job.abort.abort(); job.cleanup() })
   }
   // The run may have ended or kept going while events were missed: read its status back instead of keeping a stale spinner.
-  const readBack = () =>
-    Promise.resolve()
-      .then(() => api.active())
-      .then((active) => state.session.set("session_status", sessionID, active[sessionID] ? { type: "busy" } : { type: "idle" }))
-      .catch(() => {})
-  return api.interrupt({ sessionID }).then(readBack, (error: unknown) => {
-    failed(error)
-    return readBack()
-  })
+  const readBack = (report: boolean) =>
+    readBackStatus(
+      Promise.resolve()
+        .then(() => api.active())
+        .then((active) =>
+          state.session.set("session_status", sessionID, active[sessionID] ? { type: "busy" } : { type: "idle" }),
+        ),
+      (error) => {
+        console.error(error)
+        if (report) failed(error)
+      },
+    )
+  return api.interrupt({ sessionID }).then(
+    () => readBack(true),
+    (error: unknown) => {
+      failed(error)
+      return readBack(false)
+    },
+  )
+}
+
+/** The status read after stop. Failure is reported and does not reject, so a stop that landed is not lost. */
+export function readBackStatus(read: Promise<unknown>, report: (error: unknown) => void) {
+  return read.then(
+    () => undefined,
+    (error: unknown) => {
+      report(error)
+    },
+  )
 }
