@@ -169,6 +169,16 @@ The same trusted review also runs one pinned type-aware rule, `typescript(no-flo
 that is not the qualified Linux x64 runtime the card records that and does not block approval. In this repository the
 card cites `typecheck.yml` instead, and that citation does not block approval. A missing pin on Linux still does.
 
+## Languages and packs
+
+The host picks the pack from the changed files. The reader does not choose the command.
+
+A pinned pack is fetched and checked by hash. The licences that may be pinned are MIT, BSD, Apache-2.0, ISC and MPL.
+
+GPL and AGPL tools are not bundled. If one is already installed, the host may run it. A missing one is recorded as `not run: <tool> absent` and does not block approval. `shellcheck` and `hadolint` are the examples.
+
+A raw hit from a rule on probation is a candidate. It is not, by itself, a confirmed defect. The card keeps that label.
+
 ### Pinning a tier
 
 - **Per request**: ask Maestro for the tier ("review this at Standard"). Maestro passes it with the review request.
