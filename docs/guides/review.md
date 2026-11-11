@@ -152,6 +152,11 @@ the changed TypeScript and JavaScript files. It opens them in the scratch copy a
 not install a server. A missing one is recorded and does not block approval. An error it publishes is on the card; it
 does not by itself refuse approval. Deep is still not built.
 
+The same trusted review also runs one pinned type-aware rule, `typescript(no-floating-promises)`, with the pinned
+`oxlint` and `tsgolint`. It does not install a project tool and it does not search `PATH` for a binary. On a machine
+that is not the qualified Linux x64 runtime the card records that and does not block approval. In this repository the
+card cites `typecheck.yml` instead, and that citation does not block approval. A missing pin on Linux still does.
+
 ### Pinning a tier
 
 - **Per request**: ask Maestro for the tier ("review this at Standard"). Maestro passes it with the review request.

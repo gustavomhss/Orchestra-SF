@@ -9,6 +9,7 @@ import { phase4 } from "./phase4"
 import { engagementProfiles } from "./phase6"
 import { ruff } from "./ruff"
 import { tsc } from "./tsc"
+import { typeAware } from "./type-aware"
 import { zizmor } from "./zizmor"
 
 // Phase 1 entries (plan WP 1.2). Budgets, rungs, caps and thresholds are design §8.3, §8.4 and §8.6's starting values
@@ -83,6 +84,7 @@ export const current = {
     oxlint.pack,
     zizmor.pack,
     tsc.pack,
+    typeAware.pack,
   ],
   rules: [
     {
@@ -100,6 +102,7 @@ export const current = {
     ...ruff.rules,
     ...actionlint.rules,
     ...oxlint.rules,
+    ...typeAware.rules,
     ...zizmor.rules,
   ],
   overlays: [
