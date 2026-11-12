@@ -4,6 +4,8 @@ All notable changes to HuGR Orchestra are recorded here. The format follows [Kee
 
 ## [Unreleased]
 
+- Opening Settings no longer turns a failed live-seat read into a stopped meeting, a missing key, and protection on. Changing content protection no longer hides a failed write. The switch goes back, and that failure is shown.
+
 ## 0.3.7 (2026-11-12)
 
 Command line and desktop release candidate, unsigned like 0.3.6. Publication reuses the exact artifacts validated for this cut; the release receipt records their source, runtime checks and SHA256 digests.
