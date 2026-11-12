@@ -6,6 +6,7 @@ import type { ChapterPageProps } from "@/orchestra/chapter-route"
 import { MxBadge } from "../kit"
 import { pipelineClaim } from "./pipeline"
 import { roster, statusKey, statusTone, type SourceStatus } from "./roster"
+import { settleSourceRead, sourceClaim } from "./source-read"
 
 import { SourceText } from "./source-text"
 
@@ -43,9 +44,17 @@ export function Question(props: ChapterPageProps) {
     sense: "off" as "off" | "missing" | "fused",
     saved: false,
     error: false,
+    sourceKnown: false,
+    sourceFailed: false,
   })
   const location = () => ({ directory: props.directory })
   const claim = () => pipelineClaim(roster.pipelineKnown, roster.embeddingModel)
+  const sourcePane = () => sourceClaim(state.sourceKnown, state.sourceFailed)
+  let askRead = 0
+  const reportSource = (error: unknown) => {
+    console.error(error)
+    setState({ error: true, sourceFailed: true, sourceKnown: false })
+  }
 
   return (
     <section>
@@ -88,18 +97,78 @@ export function Question(props: ChapterPageProps) {
           event.preventDefault()
           const text = state.text.trim()
           if (!text || state.busy) return
+          const directory = props.directory
+          const started = ++askRead
           setState({ busy: true, saved: false, error: false })
+          const current = () => started === askRead && props.directory === directory
+          const abandon = () => {
+            if (started !== askRead) return true
+            if (props.directory === directory) return false
+            setState({ busy: false })
+            return true
+          }
           void sdk()
-            .orchestra.ragStudio.revision({ location: location() })
-            .then((opened) => sdk().orchestra.ragStudio.ask({ location: location(), revisionId: opened.data.id, text }))
+            .orchestra.ragStudio.revision({ location: { directory } })
+            .then((opened) =>
+              sdk().orchestra.ragStudio.ask({ location: { directory }, revisionId: opened.data.id, text }),
+            )
             .then(async (result) => {
+              if (abandon()) return
               const span = result.data.span
-              const opened = span
-                ? await sdk()
-                    .orchestra.ragStudio.source({ location: location(), sourceId: span.sourceId })
-                    .catch(() => undefined)
-                : undefined
-              const chunks = opened?.data.chunks ?? []
+              const loaded = await settleSourceRead({
+                read: span
+                  ? sdk().orchestra.ragStudio.source({ location: { directory }, sourceId: span.sourceId })
+                  : undefined,
+                current,
+                apply: (opened) => {
+                  const chunks = opened.data.chunks
+                  setState({
+                    sourcePath: opened.data.source.path,
+                    source: opened.data.text,
+                    dropped: result.data.dropped.map((id) => chunks.find((chunk) => chunk.id === id)?.text ?? ""),
+                    sourceKnown: true,
+                    sourceFailed: false,
+                  })
+                },
+                report: reportSource,
+              })
+              if (abandon()) return
+              if (span && !loaded) {
+                setState({
+                  busy: false,
+                  asked: true,
+                  askedText: text,
+                  revisionId: result.data.revisionId,
+                  light: result.data.light,
+                  status: result.data.fileStatus ?? "",
+                  optional: result.data.retrievalOptional,
+                  span,
+                  prompt: result.data.promptText,
+                  sense: result.data.sense,
+                })
+                return
+              }
+              if (!span) {
+                setState({
+                  busy: false,
+                  asked: true,
+                  askedText: text,
+                  revisionId: result.data.revisionId,
+                  light: result.data.light,
+                  status: result.data.fileStatus ?? "",
+                  optional: result.data.retrievalOptional,
+                  span,
+                  prompt: result.data.promptText,
+                  sense: result.data.sense,
+                  sourcePath: "",
+                  source: "",
+                  dropped: result.data.dropped.map(() => ""),
+                  sourceKnown: false,
+                  sourceFailed: false,
+                  error: false,
+                })
+                return
+              }
               setState({
                 busy: false,
                 asked: true,
@@ -109,15 +178,20 @@ export function Question(props: ChapterPageProps) {
                 status: result.data.fileStatus ?? "",
                 optional: result.data.retrievalOptional,
                 span,
-                sourcePath: opened?.data.source.path ?? "",
-                source: opened?.data.text ?? "",
-                dropped: result.data.dropped.map((id) => chunks.find((chunk) => chunk.id === id)?.text ?? ""),
                 prompt: result.data.promptText,
                 sense: result.data.sense,
                 error: false,
+                sourceFailed: false,
               })
             })
-            .catch(() => setState({ busy: false, error: true }))
+            .catch(() => {
+              if (started !== askRead) return
+              if (props.directory !== directory) {
+                setState({ busy: false })
+                return
+              }
+              setState({ busy: false, error: true })
+            })
         }}
       >
         <label class="mx-field">
@@ -147,7 +221,7 @@ export function Question(props: ChapterPageProps) {
       <Show when={state.asked}>
         <div class="rag-follow">
           <Switch>
-            <Match when={state.sourcePath && state.source}>
+            <Match when={sourcePane() === "recorded" && state.sourcePath && state.source}>
               <div class="rag-open-head">
                 <p class="mx-note rag-path" dir="ltr">
                   <bdi>{state.sourcePath}</bdi>
@@ -158,7 +232,7 @@ export function Question(props: ChapterPageProps) {
               </div>
               <SourceText text={state.source} cuts={state.span ? [state.span] : []} />
             </Match>
-            <Match when={true}>
+            <Match when={sourcePane() !== "failed"}>
               <Show when={fileStatus(state.status)}>
                 {(status) => (
                   <div class="rag-open-head">
@@ -210,7 +284,7 @@ export function Question(props: ChapterPageProps) {
           {language.t("orchestra.ragStudio.actionError")}
         </p>
       </Show>
-      <Show when={state.dropped.length > 0}>
+      <Show when={state.dropped.length > 0 && sourcePane() !== "failed"}>
         <div class="rag-follow">
           <p class="mx-note">{language.t("orchestra.ragStudio.leftOut")}</p>
           <div class="mx-table">
