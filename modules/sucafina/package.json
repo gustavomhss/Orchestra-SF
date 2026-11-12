@@ -4,7 +4,7 @@
   "type": "module",
   "description": "Native Sucafina business module for Orchestra-SF.",
   "scripts": {
-    "typecheck": "bun --cwd Sucafinav1 typecheck"
+    "typecheck": "tsgo --noEmit"
   },
   "dependencies": {
     "docx": "9.5.1",
@@ -19,5 +19,8 @@
     "@playwright/test": "catalog:",
     "@types/bun": "catalog:",
     "@typescript/native-preview": "catalog:"
+  },
+  "exports": {
+    "./native": "./src/native.ts"
   }
 }

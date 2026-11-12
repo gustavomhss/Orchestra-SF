@@ -8,8 +8,8 @@ function settings() {
   return {
     currency: "USD",
     levels: [
-      { id: "L1", name: "CIO-1 (Level 1)", threshold: 0, holderId: null },
-      { id: "L2", name: "CIO (Level 2)", threshold: 30000, holderId: null },
+      { id: "L1", name: "CIO-1 (Level 1)", threshold: 0, holderId: null as string | null },
+      { id: "L2", name: "CIO (Level 2)", threshold: 30000, holderId: null as string | null },
     ],
     prApprovalMode: "first" as const,
     blockSelfApproval: false,
@@ -76,7 +76,7 @@ function refused(req: unknown, action: unknown, who = actor("ada", ["admin"])) {
   const before = structuredClone(req)
   const result = act(req, action, who, settings(), AT, ISSUED, null)
   expect(result).toEqual({ ok: false, code: "not_a_transition" })
-  expect(req).toEqual(before)
+  expect<unknown>(req).toEqual(before)
 }
 
 test("L-create requester mints a draft and create on draft is not a transition", () => {
@@ -110,7 +110,7 @@ test("L-submit-pr replaces approval and submit on sourcing is not a transition",
   expect(result.request.prApproval?.amount).toBe(100)
   expect(result.request.prApproval?.fxRate).toBeNull()
   expect(result.request.history.at(-1)).toEqual({ at: AT, by: "ada", action: "Requisition submitted for approval", note: "CIO-1 (Level 1)" })
-  expect(req).toEqual(before)
+  expect<unknown>(req).toEqual(before)
   const blankHolder = settings()
   blankHolder.levels = [{ id: "L1", name: "CIO-1 (Level 1)", threshold: 0, holderId: "" }]
   const copied = act(request({ status: "draft" }), { type: "submit_pr" }, actor("ada", ["requester"]), blankHolder, AT, ISSUED, null)
@@ -129,7 +129,7 @@ test("L-approve-pr-resta keeps the status and approve on draft is not a transiti
   expect(result.request.status).toBe("pr_pending")
   expect(result.request.prApproval?.steps.map((item) => item.status)).toEqual(["approved", "pending"])
   expect(result.request.history.at(-1)).toEqual({ at: AT, by: "bea", action: "Requisition approved by CIO-1 (Level 1)", note: "ok" })
-  expect(req).toEqual(before)
+  expect<unknown>(req).toEqual(before)
   refused(request(), { type: "approve" })
 })
 
@@ -201,7 +201,7 @@ test("L-select writes the proposal and select on draft is not a transition", () 
     issuedAt: null,
   })
   expect(result.request.history.at(-1)).toEqual({ at: AT, by: "bea", action: "Quotation selected \u2014 PO proposal generated", note: "Acme" })
-  expect(req).toEqual(before)
+  expect<unknown>(req).toEqual(before)
   const numbered = request({
     status: "sourcing",
     sourcing: { quotes: [quote()], selectedId: null, fxSnapshot: null, approval: null, contractStrategy: "" },
@@ -383,7 +383,7 @@ test("L-issue stamps at and does not change the number", () => {
   expect(result.request.po?.issuedAt).toBe(AT)
   expect(result.request.po?.number).toBe("PO-2026-0004")
   expect(result.request.history.at(-1)).toEqual({ at: AT, by: "bea", action: "PO issued to supplier", note: "PO-2026-0004" })
-  expect(req).toEqual(before)
+  expect<unknown>(req).toEqual(before)
   refused(request(), { type: "issue" })
 })
 

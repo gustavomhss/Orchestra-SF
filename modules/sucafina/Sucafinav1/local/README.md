@@ -1,6 +1,8 @@
 # Acesso local neste Mac
 
-A execução gerenciada deste Mac fica em `~/Library/Application Support/Sucafina`: `runtime` contém a cópia aprovada do módulo e do host; `installation` guarda configurações, chaves, bancos e bases do scanner com acesso privado. Os fontes em Documents permanecem preservados. O macOS recusou o início direto de executáveis em Documents pelo launchd; por isso os três serviços apontam para a cópia em Application Support. O atalho em Documents abre essa instalação.
+> Referência da instalação anterior. O Orchestra-SF está recebendo uma integração nativa; consulte [o contrato atual](../../NATIVE-CONTRACT.md). URLs, comandos de factory externo e contagens históricas de testes desta página não qualificam essa nova integração.
+
+A execução gerenciada deste Mac fica em `~/Library/Application Support/Sucafina`: `runtime` contém a cópia aprovada do módulo e do host; `installation` guarda configurações, chaves, bancos e bases do scanner com acesso privado. Os fontes em Documents permanecem preservados. O macOS recusou o início direto de executáveis em Documents pelo launchd; por isso os três serviços base apontam para a cópia em Application Support. A réplica de recuperação, quando configurada, acrescenta um quarto LaunchAgent exclusivo. O atalho em Documents abre essa instalação.
 
 A homologação está disponível em `http://localhost:4110/sucafina/dashboard`. O perfil ativo é **local-operator**, com a conta real do macOS. Não representa uma conta nem grupos do Microsoft 365. A faixa amarela identifica esse perfil em todas as telas.
 
