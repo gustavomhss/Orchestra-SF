@@ -23,7 +23,7 @@ const memberFields = [
   "outlook",
   "notes",
 ]
-const topicFields = ["action", "owner", "due", "status", "priority", "notes"]
+const topicFields = ["action", "responsible", "owner", "due", "status", "priority", "notes"]
 const leaderFields = ["name", "title", "domain", "location", "start"]
 const cioFields = ["name", "title", "location", "start"]
 
@@ -72,7 +72,7 @@ export const domain: Domain = {
     if (command.page === pages[2]) {
       if (!["saveCio", "saveLeader", "deleteLeader", "saveMember", "deleteMember"].includes(command.action))
         return { ok: false, status: 400 }
-      if (!admin)
+      if (!admin && !actor.roles.includes("domain leader"))
         return {
           ok: false,
           status: 403,
@@ -112,6 +112,7 @@ export const domain: Domain = {
       data.hotTopics = rows(snapshot.data.hotTopics).map((row) => ({
         id: idOf(row.id),
         ...pick(row, topicFields),
+        responsible: hotTopicResponsible(row),
       }))
     if (people) {
       data.members = readMembers(snapshot, actor, environment)
@@ -154,6 +155,12 @@ function pick(values: Record<string, unknown>, keys: string[]): Record<string, u
       )
       .map((key) => [key, values[key]]),
   )
+}
+
+// Missing responsible is the legacy owner. An explicit empty string stays empty.
+function hotTopicResponsible(row: Record<string, unknown>) {
+  if (row.responsible !== undefined) return text(row.responsible)
+  return text(row.owner)
 }
 
 function readMembers(snapshot: Snapshot, actor: Actor, environment: Environment): Record<string, unknown>[] {
@@ -205,6 +212,11 @@ function saveRecord(
   const key = `${collection}:${id}`
   const stale = conflict(snapshot, key, command, stored ?? null)
   if (stale) return stale
+  // Non-admin team saves ignore posted classification, outlook, and notes.
+  const recordKeys =
+    collection === "members" && !actor.roles.includes("admin")
+      ? keys.filter((field) => field !== "cls" && field !== "outlook" && field !== "notes")
+      : keys
   const next: Record<string, unknown> = {
     ...(collection === "members"
       ? { type: "Employee", status: "Active", cls: "", outlook: "" }
@@ -212,7 +224,7 @@ function saveRecord(
         ? { status: "open", priority: "normal" }
         : {}),
     ...stored,
-    ...pick(command.values, keys),
+    ...pick(command.values, recordKeys),
     id: stored?.id ?? id,
   }
   if (command.action !== "delete") {
@@ -394,7 +406,9 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
   if (!(pages as readonly string[]).includes(page)) return undefined
   const admin = context.actor.roles.includes("admin")
   const disabled =
-    !context.actor.canWrite || (!admin && !(page === pages[0] && context.actor.roles.includes("domain leader")))
+    !context.actor.canWrite ||
+    (!admin &&
+      !(context.actor.roles.includes("domain leader") && (page === pages[0] || page === pages[2])))
   const version = (key: string) => context.versions[key]?.version ?? 0
   if (page === pages[0]) {
     const edit = (row: Record<string, unknown>) =>
@@ -410,6 +424,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
             value: row.action,
             required: true,
           },
+          { name: "responsible", label: "Responsible", value: hotTopicResponsible(row) },
           { name: "owner", label: "Owner", value: row.owner },
           { name: "due", label: "Due", type: "date", value: row.due },
           {
@@ -433,20 +448,36 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
       )
     const midnight = new Date(context.at)
     midnight.setHours(0, 0, 0, 0)
+    const topicStatus = text(data.topicStatus)
+    const topicPriority = text(data.priority)
     return (
-      filterForm(page, context.year, {
-        name: "topicStatus",
-        label: "Filter status",
-        type: "select",
-        options: ["", "open", "progress", "blocked", "done"],
-        value: data.topicStatus,
-      }) +
+      filterForm(page, context.year, [
+        {
+          name: "topicStatus",
+          label: "Filter status",
+          type: "select",
+          options: ["", "open", "progress", "blocked", "done"],
+          value: data.topicStatus,
+        },
+        {
+          name: "priority",
+          label: "Priority",
+          type: "select",
+          options: ["", "critical", "high", "normal"],
+          value: data.priority,
+        },
+      ]) +
       table(
-        ["Action", "Status", "Priority", "Due", "Edit", "Delete"],
+        ["Action", "Responsible", "Status", "Priority", "Due", "Edit", "Delete"],
         rows(data.hotTopics)
-          .filter((row) => !data.topicStatus || row.status === data.topicStatus)
+          .filter(
+            (row) =>
+              (!topicStatus || text(row.status) === topicStatus) &&
+              (!topicPriority || text(row.priority) === topicPriority),
+          )
           .map((row) => [
             esc(text(row.action)),
+            esc(hotTopicResponsible(row)),
             esc(text(row.status)),
             esc(text(row.priority)),
             esc(text(row.due)) +
@@ -734,8 +765,9 @@ function idOf(value: unknown): string {
   return typeof value === "string" ? value : typeof value === "number" && Number.isFinite(value) ? String(value) : ""
 }
 
-function filterForm(page: string, year: number, field: Field) {
-  return `<form method="get"><input type="hidden" name="page" value="${esc(page)}"><input type="hidden" name="year" value="${year}">${fields([field])}<button type="submit">Apply filter</button></form>`
+function filterForm(page: string, year: number, field: Field | readonly Field[]) {
+  const items = Array.isArray(field) ? [...field] : [field]
+  return `<form method="get"><input type="hidden" name="page" value="${esc(page)}"><input type="hidden" name="year" value="${year}">${fields(items)}<button type="submit">Apply filter</button></form>`
 }
 
 export const DashboardPeople = { pages, domain, render }

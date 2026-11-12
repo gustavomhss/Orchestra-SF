@@ -298,11 +298,19 @@ function topic(snapshot: Snapshot, actor: Actor, environment: Environment, name:
         became: { read: true, member: String(member.id ?? "") },
       })
   }
+  const visible =
+    name === "Hot Topics & Actions"
+      ? records.map((record) => {
+          const next: Record<string, unknown> = { ...record }
+          next.responsible = record.responsible !== undefined ? record.responsible : record.owner
+          return next
+        })
+      : records
   const columns =
     name === "Talent Review"
       ? ["name", "status", "cls", "outlook", "notes"]
       : name === "Hot Topics & Actions"
-        ? ["action", "status", "priority", "due"]
+        ? ["action", "responsible", "status", "priority", "due"]
         : name === "Headcount Overview"
           ? ["name", "title", "type", "status"]
           : name === "Vendor Contracts"
@@ -310,14 +318,14 @@ function topic(snapshot: Snapshot, actor: Actor, environment: Environment, name:
             : ["name", "title", "status", "priority"]
   return {
     title: name,
-    bullets: records.map((record) =>
+    bullets: visible.map((record) =>
       columns
         .map((column) => display(record[column]))
         .filter(Boolean)
         .join(" · "),
     ),
     metrics: [{ label: "Records", value: String(records.length) }],
-    table: records.map((record) => columns.map((column) => display(record[column]))),
+    table: visible.map((record) => columns.map((column) => display(record[column]))),
   }
 }
 function display(value: unknown) {

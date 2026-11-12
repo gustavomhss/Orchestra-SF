@@ -148,6 +148,15 @@ export const domain: Domain = {
       return { ok: false, status: 400 }
     const stored = rows(snapshot.data[collection]).find((row) => recordId(row.id) === command.id)
     if (command.id && !stored) return { ok: false, status: 404 }
+    if (
+      collection === "risks" &&
+      riskScoped(actor) &&
+      (command.action === "save" || command.action === "delete") &&
+      (stored || command.action === "save")
+    ) {
+      const denied = deniedRisk(actor, environment, stored, command)
+      if (denied) return denied
+    }
     const id = command.id || environment.id()
     const key = `${collection}:${id}`
     if (
@@ -223,7 +232,7 @@ export const domain: Domain = {
           : undefined,
     }
   },
-  view(snapshot, actor) {
+  view(snapshot, actor, environment) {
     const summaries = Array.isArray(snapshot.data.summaries)
       ? snapshot.data.summaries.filter((entry): entry is string => typeof entry === "string")
       : []
@@ -232,7 +241,7 @@ export const domain: Domain = {
         .map((page) => collections[page])
         .filter(Boolean),
     )
-    const data = Object.fromEntries(
+    const data: Record<string, unknown> = Object.fromEntries(
       [...allowed].map((collection) => [
         collection,
         collection === "itperf"
@@ -240,6 +249,16 @@ export const domain: Domain = {
           : rows(snapshot.data[collection]).map((row) => publicRecord(collection, row)),
       ]),
     )
+    // Transient only: directory resolution is not a stored grant.
+    if (allowed.has("risks") && riskScoped(actor)) {
+      const riskActorName = uniqueDirectoryName(actor, environment.directory) ?? ""
+      data.riskActorName = riskActorName
+      data.canCreateRisk = riskActorName !== ""
+      data.editableRisks = rows(snapshot.data.risks).flatMap((row) => {
+        const id = recordId(row.id)
+        return id !== "" && responsibleActorId(row.responsible, environment.directory) === actor.id ? [id] : []
+      })
+    }
     return {
       data,
       versions: Object.fromEntries(
@@ -259,10 +278,70 @@ function recordId(value: unknown) {
 function writable(actor: Actor, collection: string) {
   if (!actor.canWrite) return false
   if (actor.roles.includes("admin")) return true
+  if (actor.roles.includes("domain leader") && (collection === "projects" || collection === "risks")) return true
   return (
     actor.roles.includes("contributor") &&
     ["projects", "risks", "contracts"].includes(collection) &&
     (actor.assigned ?? []).includes(collection)
+  )
+}
+function riskScoped(actor: Actor) {
+  if (!actor.canWrite || !actor.roles.includes("domain leader") || actor.roles.includes("admin")) return false
+  if (actor.roles.includes("contributor") && (actor.assigned ?? []).includes("risks")) return false
+  return true
+}
+function directoryName(value: unknown) {
+  return text(value).trim()
+}
+function responsibleActorId(responsible: unknown, directory: Environment["directory"]) {
+  const name = directoryName(responsible)
+  if (!name) return undefined
+  const matches = directory.filter((person) => directoryName(person.name) === name)
+  const match = matches.length === 1 ? matches[0] : undefined
+  if (!match?.id) return undefined
+  return match.id
+}
+function uniqueDirectoryName(actor: Actor, directory: Environment["directory"]) {
+  const ownNames = directory.flatMap((person) => {
+    const name = person.id === actor.id ? directoryName(person.name) : ""
+    return name ? [name] : []
+  })
+  const name = ownNames.length > 0 && ownNames.every((entry) => entry === ownNames[0]) ? ownNames[0] : undefined
+  if (!name) return undefined
+  const matches = directory.filter((person) => directoryName(person.name) === name)
+  const match = matches.length === 1 ? matches[0] : undefined
+  if (match?.id !== actor.id) return undefined
+  return name
+}
+// Stored responsible decides. A posted ownerId or leaderId never grants the row.
+function deniedRisk(
+  actor: Actor,
+  environment: Environment,
+  stored: Record<string, unknown> | undefined,
+  command: Command,
+): Result | undefined {
+  const allowed = uniqueDirectoryName(actor, environment.directory)
+  if (!stored) {
+    if (!allowed || directoryName(command.values.responsible) !== allowed)
+      return { ok: false, status: 403, errors: ["You do not have permission to edit these records."] }
+    return undefined
+  }
+  if (responsibleActorId(stored.responsible, environment.directory) !== actor.id)
+    return { ok: false, status: 403, errors: ["You do not have permission to edit these records."] }
+  if (command.action === "delete" || !Object.hasOwn(command.values, "responsible")) return undefined
+  const posted = directoryName(command.values.responsible)
+  const storedName = directoryName(stored.responsible)
+  if (posted === allowed || (posted !== "" && posted === storedName)) return undefined
+  return { ok: false, status: 403, errors: ["You do not have permission to edit these records."] }
+}
+function editableRiskIds(value: unknown) {
+  return new Set(
+    Array.isArray(value)
+      ? value.flatMap((id) => {
+          const record = recordId(id)
+          return record ? [record] : []
+        })
+      : [],
   )
 }
 function pick(value: Record<string, unknown>, keys: string[]) {
@@ -659,9 +738,19 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
   )
   const filters = `<form method="get">${hidden("page", page)}${fields([{ name: "q", label: "Search", value: query }, ...(collection === "projects" || collection === "risks" ? [{ name: "status", label: "Status", type: "select" as const, value: status, options: ["", ...(collection === "projects" ? projectStatus : riskStatus)] }] : []), { name: "filter", label: collection === "risks" ? "Risk tier" : "Show", type: "select", value: filter, options: collection === "projects" ? ["", "watch", "at-risk"] : collection === "risks" ? ["", "Critical", "Very High", "High", "Medium", "Low"] : [""] }])}<button type="submit">Apply filters</button></form>`
   const definitions = recordFields(collection)
+  const scopedRisks = collection === "risks" && riskScoped(context.actor)
+  const editableRisks = editableRiskIds(data.editableRisks)
+  const actorRiskName = text(data.riskActorName).trim()
   const editor = (row: Record<string, unknown>) => {
     const id = recordId(row.id)
     const version = context.versions[`${collection}:${id}`]?.version ?? 0
+    const formDisabled = scopedRisks
+      ? id
+        ? !editableRisks.has(id)
+        : data.canCreateRisk !== true || actorRiskName === ""
+      : disabled
+    const keptName = directoryName(row.responsible)
+    const choiceName = actorRiskName || keptName
     return (
       form(
         page,
@@ -669,20 +758,28 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         id,
         version,
         fields(
-          definitions.map((field) => ({
-            ...field,
-            value:
-              row[field.name] ??
-              (field.name === "status" ? (collection === "projects" ? "Planning" : "open") : undefined),
-            readonly: disabled,
-          })),
+          definitions.map((field) => {
+            const responsibleChoice =
+              scopedRisks && field.name === "responsible" && !formDisabled && choiceName
+                ? { type: "select" as const, options: [choiceName], value: choiceName }
+                : undefined
+            return {
+              ...field,
+              ...(responsibleChoice ?? {}),
+              value:
+                responsibleChoice?.value ??
+                row[field.name] ??
+                (field.name === "status" ? (collection === "projects" ? "Planning" : "open") : undefined),
+              readonly: formDisabled,
+            }
+          }),
         )
           .replace(/(value="action"[^>]*>)action<\/option>/g, "$1Action Plan Required</option>")
           .replace(/(value="monitor"[^>]*>)monitor<\/option>/g, "$1Monitored</option>")
           .replace(/(value="low"[^>]*>)low<\/option>/g, "$1Low</option>"),
         id ? "Save changes" : "Add record",
-        disabled,
-      ) + (id ? form(page, "delete", id, version, "", "Delete record", disabled) : "")
+        formDisabled,
+      ) + (id ? form(page, "delete", id, version, "", "Delete record", formDisabled) : "")
     )
   }
   const header =

@@ -26,11 +26,12 @@ describe("dashboard portfolio runtime", () => {
     expect(state.versions["risks:new-id"]?.version).toBe(1)
     expect(JSON.stringify(state.data)).not.toContain('"score"')
   })
-  test("denied actors and missing ownership predicate never mutate or audit", () => {
+  test("read-only and unassigned actors never mutate or audit", () => {
     for (const actor of [
       { ...admin, canWrite: false },
       { id: "c", canWrite: true, roles: ["contributor"], assigned: [] },
-      { id: "l", canWrite: true, roles: ["domain leader"] },
+      { id: "l", canWrite: false, roles: ["domain leader"] },
+      { id: "v", canWrite: true, roles: ["viewer"] },
     ]) {
       const state = snapshot({
         projects: [{ id: "p", name: "Old", leaderId: actor.id }],
