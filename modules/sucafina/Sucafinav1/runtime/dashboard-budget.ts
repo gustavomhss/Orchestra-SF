@@ -18,6 +18,7 @@ import {
   itUsersForMonth,
   itUsersWrite,
   onTargetCount,
+  parseYearAmount,
   riskScore,
   SECURITY_KPIS,
   securityKpiStatus,
@@ -340,18 +341,6 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     for (const row of rows(value.rows)) {
       const name = text(row.name ?? row.Owner ?? row.Name ?? row.Leader).trim()
       if (!name) return { ok: false, status: 422 }
-      const found = rows(snapshot.data.opexOwners).find(
-        (owner) => text(owner.name).toLowerCase() === name.toLowerCase(),
-      )
-      const id = found ? String(found.id ?? "") : environment.id()
-      if (!found) {
-        const result = write(collection, id, {
-          id,
-          name,
-          budget: finite(row.Annual, finite(row.Total)),
-        })
-        if (!result.ok) return result
-      }
       const months = Array.from({ length: 12 }, (_, index) =>
         Number(
           object(row.months)[index + 1] ??
@@ -361,9 +350,21 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
         ),
       )
       if (months.some((amount) => !Number.isFinite(amount))) return { ok: false, status: 422 }
-      const imported = months.every((amount) => amount === 0)
-        ? (Array(12).fill(Math.round(finite(row.Annual, finite(row.Total)) / 12)) as number[])
-        : months
+      const fallback = finite(row.Annual, finite(row.Total))
+      const sum = months.reduce((total, amount) => total + amount, 0)
+      const ownerBudget = sum === 0 ? fallback : sum
+      const imported =
+        sum === 0 ? (Array(12).fill(Math.round(fallback / 12)) as number[]) : months
+      const found = rows(snapshot.data.opexOwners).find(
+        (owner) => text(owner.name).toLowerCase() === name.toLowerCase(),
+      )
+      const id = found ? String(found.id ?? "") : environment.id()
+      const ownerResult = write(
+        collection,
+        id,
+        found ? { ...found, budget: ownerBudget } : { id, name, budget: ownerBudget },
+      )
+      if (!ownerResult.ok) return ownerResult
       for (const [index, budget] of imported.entries()) {
         const existing = rows(snapshot.data[entries]).find(
           (entry) => String(entry.ownerId) === id && entry.year === year && entry.month === index + 1,
@@ -471,13 +472,19 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
   const current = currentBudgetMonth(snapshot.data, year, environment.at)
   const kind = capex ? "capex" : "opex"
   const ytdKey = `${year}:${line.id}`
-  const applied = applyYearAmount(typeof value.amount === "number" ? value.amount : text(value.amount), current)
-  if (command.action === "year-amount") {
+  const parsedYear = command.action === "year-amount" ? parseYearAmount(value.amount) : undefined
+  if (parsedYear?.kind === "invalid") return { ok: false, status: 422 }
+  const applied =
+    parsedYear === undefined
+      ? undefined
+      : applyYearAmount(parsedYear.kind === "value" ? parsedYear.amount : null, current)
+  if (command.action === "year-amount" && applied) {
+    const amount = parsedYear?.kind === "value" ? parsedYear.amount : undefined
     const group = { ...object(object(snapshot.data.budgetYtd)[kind]) }
-    if (applied.cleared) delete group[ytdKey]
-    if (!applied.cleared)
+    if (applied.cleared || amount === undefined) delete group[ytdKey]
+    if (amount !== undefined && !applied.cleared)
       group[ytdKey] = {
-        amount: typeof value.amount === "number" ? value.amount : Number(text(value.amount).replace(/[^0-9.\-]/g, "")),
+        amount,
         months: current,
         perMonth: applied.per,
         at: environment.at,
@@ -515,7 +522,7 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
       month: index + 1,
       ...(command.action === "annual-entry"
         ? { [field]: annualEntryMonths(annual)[index] }
-        : !applied.cleared
+        : applied && !applied.cleared
           ? { actual: applied.actual[index], forecast: applied.forecast[index] }
           : {}),
     })
