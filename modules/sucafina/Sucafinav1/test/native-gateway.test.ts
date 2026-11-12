@@ -6,7 +6,7 @@ import type { RoleRow, Surface } from "../src/identity.ts"
 import { dashboardPages } from "../src/nav.ts"
 import { roleMap } from "../runtime/admin.ts"
 import type { Actor, Command, Snapshot } from "../runtime/contract.ts"
-import { domain as people } from "../runtime/dashboard-people.ts"
+import { DashboardPeople } from "../runtime/dashboard-people.ts"
 import { empty, testPersistence } from "./fixture/persistence.ts"
 
 const ORIGIN = "https://installation.example"
@@ -118,7 +118,7 @@ function actor(id: string, roles: string[], canWrite: boolean, assigned: string[
 }
 
 function masked(snapshot: Snapshot, person: Actor) {
-  return people.view(structuredClone(snapshot), person, {
+  return DashboardPeople.domain.view(structuredClone(snapshot), person, {
     at: AT,
     id: () => "view-oracle",
     directory: DIRECTORY.map((entry) => ({ ...entry })),

@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { ciRepository, requireCiIdentity, requireCiOrigin } from "../../../script/test-ci-repository"
+import { ciRepository, requireCiIdentity, requireCiOrigin } from "../src/ci-repository"
 
 test("SF CI resolves its exact origin and repository identity", () => {
   expect(ciRepository).toEqual({ name: "gustavomhss/Orchestra-SF", id: 1455724710 })

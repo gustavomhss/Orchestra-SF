@@ -79,7 +79,7 @@ function refuse(req: unknown, action: unknown, who: unknown = actor(), set: unkn
 
 function expectCode(code: string, seen: ReturnType<typeof refuse>) {
   expect(seen.result).toEqual({ ok: false, code })
-  if (seen.req != null) expect<unknown>(seen.req).toEqual(seen.before)
+  if (seen.req != null) expect(seen.req).toEqual(seen.before!)
 }
 
 test("C-actor-invalid extra field", () => {

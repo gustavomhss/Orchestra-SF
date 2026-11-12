@@ -36,4 +36,4 @@ The fork needs its own app IDs, URL scheme, storage paths, daemon ownership and 
 
 Tests run only through change-scoped hosted CI. Typechecks run from package directories. Public API changes require regenerating Client. The final gate includes guards against `origin/dev` and the complete imported fork baseline, independent review, native browser workflows and original-installation preservation checks.
 
-The existing 38 business findings, four confirmed static deep-audit findings, operational gaps and native integration packages remain tracked in the external delivery ledger. A registered workspace, successful generation or fail-closed scaffold is not delivery.
+All audited business findings, operational gaps and native integration packages remain tracked in the external delivery ledger. A registered workspace, successful generation or fail-closed scaffold is not delivery.
