@@ -70,8 +70,7 @@ export const RagTraceTable = sqliteTable("rag_trace", {
   k: integer(),
 })
 
-// Not in the spec table list. readPipeline/setPipeline have nowhere else to persist. lexical stays true.
-// embedding is on when embedding_model is non-empty.
+// readPipeline/setPipeline persist here. lexical stays true. embedding is on when embedding_model is non-empty.
 export const RagPipelineTable = sqliteTable("rag_pipeline", {
   location_id: text().primaryKey(),
   parser: text().notNull(),

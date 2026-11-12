@@ -39,13 +39,17 @@ One SQLite database. Drizzle `sqliteTable`, snake_case, no quoted column names. 
 
 `rag_chunk`: `id`, `source_id`, `start`, `end`, `text`, `source_hash`.
 
-`rag_revision`: `id`, `snapshot`, `pipeline_hash`, `fill`.
+`rag_revision`: `id`, `location_id`, `snapshot`, `pipeline_hash`, `fill`, `parser`, `boundary`, `tokenizer`, `k`, `embedding_model`.
 
 `rag_revision_source`: `revision_id`, `source_id`, `content_hash`.
 
 `rag_question`: `id`, `revision_id`, `text`, `span_source_id`, `span_start`, `span_end`.
 
-`rag_trace`: `question_id`, `hits`, `dropped`. Both lists are JSON arrays of chunk ids. Missing list is not stored as the string `not_recorded`.
+`rag_trace`: `question_id`, `hits`, `dropped`, `k`. Both lists are JSON arrays of chunk ids. Missing list is not stored as the string `not_recorded`.
+
+`rag_pipeline`: `location_id`, `parser`, `boundary`, `tokenizer`, `k`, `blocked`, `embedding_model`, `query_model`, `dimension`, `numeric_type`, `metric`.
+
+`rag_vector`: `chunk_id`, `model`, `location_id`, `values`. Vectors are not written under `.atlas/`.
 
 Every read joins to `rag_source.location_id` and filters by the request location.
 
@@ -67,7 +71,7 @@ These names are closed. An implementer does not invent another.
 | `saveQuestion` | Stores text, span coordinates, and revision id. |
 | `retrievalProof` | True only when the saved span's chunk id is in that revision's prompt chunk ids. |
 | `citationProof` | True only when the stored text of the resolved span contains the given sentence. |
-| `compareRevisions` | Rejected unless the proof-set id and snapshot match and exactly one of `parser`, `boundary`, `tokenizer`, `k` differs. Result rows are `{ id, text, startChanged, endChanged, textChanged }`. The text is the saved question, not a label kept in memory. |
+| `compareRevisions` | Rejected unless the proof-set id and snapshot match and exactly one of `parser`, `boundary`, `tokenizer`, `k`, `embeddingModel` differs. Result rows are `{ id, text, startChanged, endChanged, textChanged }`. The text is the saved question, not a label kept in memory. A new span is a chunk whose stored text contains that sentence. |
 | `enableEmbedding` | Always `{ refused: "embedding_off" }`. Writes nothing. |
 | `runPass` | One pass. While no model is named, `redo_numbers` returns `{ pass: "redo_numbers", result: "not_applicable" }` and writes nothing. After a model is named, it writes vectors only when a key is present at that call. |
 | `runPasses` | If `passes.length !== 1`, returns `{ refused: "one_pass" }` and writes nothing. |
