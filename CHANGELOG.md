@@ -4,6 +4,7 @@ All notable changes to HuGR Orchestra are recorded here. The format follows [Kee
 
 ## [Unreleased]
 
+- Opening Flight Engineer settings no longer hides a failed read. The speech-to-text key is not shown as saved until a read says it is, and that failure is shown. The other settings stay as they were.
 - Changing a Flight Engineer hotkey, or resetting them, no longer hides a failed write. The keys stay as they were, and that failure is shown. Reloading them after the change, or when Flight Engineer opens, no longer hides a failed read.
 
 ## 0.3.6 (2026-11-11)
