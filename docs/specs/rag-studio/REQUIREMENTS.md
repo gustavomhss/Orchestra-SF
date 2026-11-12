@@ -30,7 +30,7 @@ A52 A74 A79 A19 A48
 
 ## R5 Embedding stays off
 
-No path invokes an embedding model or writes a vector. A request to turn it on is rejected. Redo-numbers returns `not_applicable` and writes nothing.
+Embedding stays off until a model is named. Naming a model does not write a vector. Redo-numbers writes vectors for that model only when a key is present at that call, and writes nothing under `.atlas/`. A request to turn embedding on with no model is rejected.
 
 A65 A83 A87 A92
 

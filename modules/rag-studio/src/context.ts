@@ -19,14 +19,32 @@ export function canonical(file: string) {
   return path.posix.normalize(file)
 }
 
-// A path that exists is compared by its real path, so /var and /private/var are the same directory.
-// A path that does not exist stays lexical, so tests can use roots that are not on disk.
+// Compare by the real path of the longest prefix that exists, so /var and /private/var are one directory
+// even when the file itself has not been created yet. A path with no existing prefix stays lexical.
 export function placed(file: string) {
   const normalized = canonical(file)
+  const existing = existingAncestor(normalized)
+  if (!existing) return normalized
   try {
-    return fs.realpathSync(normalized)
+    const real = fs.realpathSync(existing)
+    if (real === existing) return normalized
+    return canonical(`${real}${normalized.slice(existing.length)}`)
   } catch {
     return normalized
+  }
+}
+
+function existingAncestor(file: string) {
+  let current = file
+  while (true) {
+    try {
+      if (fs.existsSync(current)) return current
+    } catch {
+      return undefined
+    }
+    const parent = path.posix.dirname(current)
+    if (parent === current) return undefined
+    current = parent
   }
 }
 
@@ -49,7 +67,7 @@ export function gate(
   locationId: string,
   file: string,
 ): { path: string } | { refused: "atlas" | "permission" } {
-  const normalized = canonical(file)
+  const normalized = placed(file)
   if (inProject(normalized, store.projectRoot)) return { refused: "atlas" }
   if (!insideLocation(normalized, locationId, store.locationRoot) && store.permission(locationId, normalized) !== "allow") {
     return { refused: "permission" }

@@ -1,7 +1,7 @@
 export { admit, listSources } from "./admit"
 export { ask } from "./ask"
 export { compareRevisions } from "./compare"
-export { canonical, memoryStore, withStore } from "./context"
+export { canonical, memoryStore, placed, withStore } from "./context"
 export type { Store } from "./context"
 export { withEncoder } from "./embed"
 export type { Encoder } from "./embed"

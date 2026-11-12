@@ -15,6 +15,6 @@ Isolated server `127.0.0.1:4097`. Not the owner's Orchestra. The screen and the 
 
 Limits, not failures of these items:
 
-- A file inside a nested git repo is admitted when the open folder is not that repo. The refusal is the open location's project tree.
+- A file inside a nested git repo is admitted when the open folder is not that repo. The refusal is the open location's project tree. The same file admitted through `/var` and `/private/var` is one source.
 - A failed file has no text, so a question cannot name it as the only relevant file. The files screen still shows failed.
 - The preview query hack in `chapter-route.tsx` is not part of this change.

@@ -1,8 +1,8 @@
-import { Credential } from "@orchestra/core/credential"
-import { Integration } from "@orchestra/schema/integration"
+import { Integration } from "@orchestra/core/integration"
 import {
   admit,
   ask,
+  placed,
   citationProof,
   compareRevisions,
   enableEmbedding,
@@ -54,9 +54,12 @@ function call<A>(db: Database.Interface["db"], run: (store: Store, locationId: s
 export const RagStudioHandler = HttpApiBuilder.group(Api, "server.ragStudio", (handlers) =>
   Effect.gen(function* () {
     const db = (yield* Database.Service).db
-    const key = yield* openRouterKey()
-    const encoder = key ? openRouterEncoder(key) : undefined
-    const bound = <A>(run: (store: Store, locationId: string) => Promise<A>) => call(db, run, encoder)
+    const integrations = yield* Integration.Service
+    const bound = <A>(run: (store: Store, locationId: string) => Promise<A>) =>
+      Effect.gen(function* () {
+        const key = yield* openRouterKey(integrations)
+        return yield* call(db, run, key ? openRouterEncoder(key) : undefined)
+      })
     return handlers
     .handle("ragStudio.sources", () => response(bound( (_store, id) => listSources(id))))
     .handle("ragStudio.pipeline", () => response(bound( (_store, id) => readPipeline(id))))
@@ -64,9 +67,10 @@ export const RagStudioHandler = HttpApiBuilder.group(Api, "server.ragStudio", (h
       response(
         bound( async (store, id) => {
           const read = await extract(ctx.payload.path)
-          if ("text" in read) store.writeFile(ctx.payload.path, read.text)
-          if ("failed" in read && read.failed === "no_text_layer") store.writeFile(ctx.payload.path, read)
-          return admit({ locationId: id, path: ctx.payload.path })
+          const path = placed(ctx.payload.path)
+          if ("text" in read) store.writeFile(path, read.text)
+          if ("failed" in read && read.failed === "no_text_layer") store.writeFile(path, read)
+          return admit({ locationId: id, path })
         }),
       ),
     )
@@ -130,13 +134,15 @@ export const RagStudioHandler = HttpApiBuilder.group(Api, "server.ragStudio", (h
   }),
 )
 
-function openRouterKey() {
+function openRouterKey(integrations: Integration.Interface) {
   return Effect.gen(function* () {
-    const credentials = yield* Credential.Service
-    const listed = yield* credentials.list(Integration.ID.make("openrouter")).pipe(Effect.orElseSucceed(() => []))
-    const found = listed.find((row) => row.value.type === "key")
-    if (!found || found.value.type !== "key") return undefined
-    return found.value.key
+    const connection = yield* integrations.connection
+      .active(Integration.ID.make("openrouter"))
+      .pipe(Effect.orElseSucceed(() => undefined))
+    if (!connection) return undefined
+    const resolved = yield* integrations.connection.resolve(connection).pipe(Effect.orElseSucceed(() => undefined))
+    if (!resolved || resolved.type !== "key") return undefined
+    return resolved.key
   })
 }
 

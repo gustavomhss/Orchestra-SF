@@ -28,7 +28,7 @@ export async function ask(revisionId: string, text: string): Promise<QuestionRes
     words,
     pipeline: store.pipeline(revision.locationId),
   })
-  const matches = fused.matches
+  const matches = fused.matches.filter((chunk) => chunk.text.includes(text))
   const owners = store
     .sources()
     .filter((row) => row.locationId === revision.locationId && row.text.includes(text))
