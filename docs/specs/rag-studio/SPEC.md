@@ -1,6 +1,6 @@
 # Rag Studio — spec v1
 
-Status: fix-first from the cold review, then corrected. Not started. Contract `a5d1d160`.
+Status: fix-first from the cold review, then corrected. Not started. Contract `5ec0ab82`.
 
 The acceptance id is the requirement. This spec closes the forks that review found. It does not add a product feature.
 
@@ -22,7 +22,7 @@ One SQLite database. Drizzle `sqliteTable`, snake_case, no quoted column names. 
 
 ## Frozen values
 
-- `parser` default `"plain"`. `boundary` default `"document"`. `tokenizer` default `"utf16"`. `k` default `4`. `lexical` is `true`. `embedding` is `false`.
+- `parser` default `"plain"`. `boundary` default `"document"`. `tokenizer` default `"utf16"`. `k` default `4`. `lexical` is `true`. `embedding` is `false` until a model is named.
 - A plain-text or markdown file is UTF-8 text. Markdown is not a second parser. PDF text is `unpdf` page strings joined by `"\n"`. A PDF page with no text layer sets the source to `failed`.
 - Offsets are UTF-16 code units in that string. `chunk.text` equals `admittedString.slice(start, end)`.
 - Word match is a case-sensitive substring of `chunk.text`. Search returns every match, ordered by source path, then `start`.
@@ -61,7 +61,7 @@ These names are closed. An implementer does not invent another.
 | `removeSource` | Deletes the `rag_source` row. Does not delete chunks. Does not run `orphan_delete`. |
 | `parseSource` | Plain text with extracted text becomes `read`. PDF with no text layer becomes `failed`. |
 | `replaceChunkText` | Always returns `{ refused: "not_source_text" }`. Writes nothing. |
-| `readPipeline` / `setPipeline` | `setPipeline` changes exactly one of `parser`, `boundary`, `tokenizer`, `k`. That changes `pipeline_hash`. Other fields stay. A boundary change makes existing chunks ineligible for the new revision: `ask` does not light `sent` until `rechunk`. |
+| `readPipeline` / `setPipeline` | `setPipeline` changes exactly one of `parser`, `boundary`, `tokenizer`, `k`, `embedding_model`, `query_model`, `dimension`, `numeric_type`, `metric`. That changes `pipeline_hash`. Naming `embedding_model` turns embedding on and does not write a vector. Other fields stay. A boundary change makes existing chunks ineligible for the new revision: `ask` does not light `sent` until `rechunk`. |
 | `searchWords` | Substring match on current `read` chunks only. |
 | `ask` | Requires a revision id. Rejected, no light, if the id is missing, fill is `failed`, or any hit chunk is hash-stale. Does not create a chat. Does not change source ids, hashes, chunk text, or the snapshot. |
 | `saveQuestion` | Stores text, span coordinates, and revision id. |

@@ -20,6 +20,7 @@ export function session<A>(db: Database.Interface["db"], run: (store: Store, loc
   return Effect.gen(function* () {
     const location = yield* Location.Service
     const locationId = placed(location.directory)
+    yield* adopt(db, locationId)
     const sources = yield* db
       .select()
       .from(RagSourceTable)
@@ -167,6 +168,89 @@ export function session<A>(db: Database.Interface["db"], run: (store: Store, loc
     const result = yield* Effect.promise(() => withStore(store, () => run(store, locationId)))
     yield* save(db, store, locationId, revisionIds, questionIds)
     return result
+  })
+}
+
+function adopt(db: Database.Interface["db"], locationId: string) {
+  return Effect.gen(function* () {
+    const aliases = (yield* storedLocationIds(db)).filter(
+      (alias) => alias !== locationId && placed(alias) === locationId,
+    )
+    yield* Effect.forEach(aliases, (alias) => moveCorpus(db, alias, locationId), { discard: true })
+  })
+}
+
+function storedLocationIds(db: Database.Interface["db"]) {
+  return Effect.gen(function* () {
+    const rows = [
+      yield* db
+        .selectDistinct({ location_id: RagSourceTable.location_id })
+        .from(RagSourceTable)
+        .all()
+        .pipe(Effect.orDie),
+      yield* db.selectDistinct({ location_id: RagChunkTable.location_id }).from(RagChunkTable).all().pipe(Effect.orDie),
+      yield* db
+        .selectDistinct({ location_id: RagPipelineTable.location_id })
+        .from(RagPipelineTable)
+        .all()
+        .pipe(Effect.orDie),
+      yield* db
+        .selectDistinct({ location_id: RagRevisionTable.location_id })
+        .from(RagRevisionTable)
+        .all()
+        .pipe(Effect.orDie),
+      yield* db
+        .selectDistinct({ location_id: RagVectorTable.location_id })
+        .from(RagVectorTable)
+        .all()
+        .pipe(Effect.orDie),
+    ]
+    return [...new Set(rows.flat().map((row) => row.location_id))]
+  })
+}
+
+function moveCorpus(db: Database.Interface["db"], from: string, to: string) {
+  return Effect.gen(function* () {
+    const destination = yield* db
+      .select()
+      .from(RagPipelineTable)
+      .where(eq(RagPipelineTable.location_id, to))
+      .get()
+      .pipe(Effect.orDie)
+    if (destination)
+      yield* db.delete(RagPipelineTable).where(eq(RagPipelineTable.location_id, from)).run().pipe(Effect.orDie)
+    if (!destination) {
+      yield* db
+        .update(RagPipelineTable)
+        .set({ location_id: to })
+        .where(eq(RagPipelineTable.location_id, from))
+        .run()
+        .pipe(Effect.orDie)
+    }
+    yield* db
+      .update(RagSourceTable)
+      .set({ location_id: to })
+      .where(eq(RagSourceTable.location_id, from))
+      .run()
+      .pipe(Effect.orDie)
+    yield* db
+      .update(RagChunkTable)
+      .set({ location_id: to })
+      .where(eq(RagChunkTable.location_id, from))
+      .run()
+      .pipe(Effect.orDie)
+    yield* db
+      .update(RagRevisionTable)
+      .set({ location_id: to })
+      .where(eq(RagRevisionTable.location_id, from))
+      .run()
+      .pipe(Effect.orDie)
+    yield* db
+      .update(RagVectorTable)
+      .set({ location_id: to })
+      .where(eq(RagVectorTable.location_id, from))
+      .run()
+      .pipe(Effect.orDie)
   })
 }
 

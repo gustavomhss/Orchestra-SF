@@ -1,5 +1,5 @@
 // Lead-owned. Work packages import this file. They do not edit it.
-// Contract rag-studio-v1 @ a5d1d160. The spec stub stays in docs/specs/rag-studio/seam.ts.
+// Contract rag-studio-v1 @ 5ec0ab82. The spec stub stays in docs/specs/rag-studio/seam.ts.
 // The package keeps its own copy of those shapes so production code does not import outside itself.
 
 import { AsyncLocalStorage } from "node:async_hooks"

@@ -1,6 +1,6 @@
 # Rag Studio — contrato congelado
 
-Id: `rag-studio-v1`. Hash: `a5d1d160`. The hash is the first 8 hex chars of sha256 of this file with the hash slot empty. Re-frozen so a named model may turn embedding on. `fb61d451` denied that. The hash `2f0ba82b` did not include `readRevision`. `7c2ae7a5` contradicted A65 and A84.
+Id: `rag-studio-v1`. Hash: `5ec0ab82`. The hash is the first 8 hex chars of sha256 of this file with the hash slot empty. Re-frozen so a named model may turn embedding on. `fb61d451` denied that. The hash `2f0ba82b` did not include `readRevision`. `7c2ae7a5` contradicted A65 and A84.
 
 Ninguém renegocia estes tipos. O comportamento está na suíte `ACCEPTANCE.md`. O que não está aqui fica livre dentro de um único pacote de trabalho.
 
@@ -29,12 +29,31 @@ interface Chunk {
   sourceHash: string
 }
 
+type NumericType = "float32" | "int8" | "binary"
+type Metric = "cosine" | "dot" | "distance"
+type Sense = "off" | "missing" | "fused"
+type PipelineField =
+  | "parser"
+  | "boundary"
+  | "tokenizer"
+  | "k"
+  | "embedding_model"
+  | "query_model"
+  | "dimension"
+  | "numeric_type"
+  | "metric"
+
 interface Pipeline {
   parser: string
   boundary: string
   tokenizer: string
   lexical: true
   embedding: boolean
+  embeddingModel: string
+  queryModel: string
+  dimension: number
+  numericType: NumericType
+  metric: Metric
   k: number
 }
 
@@ -62,6 +81,7 @@ interface QuestionResult {
   promptText: string
   promptChunkIds: string[]
   retrievalOptional: boolean
+  sense: Sense
 }
 ```
 

@@ -4,6 +4,7 @@ import { join } from "node:path"
 import { expect, test } from "bun:test"
 import { Database } from "@orchestra/core/database/database"
 import { Location } from "@orchestra/core/location"
+import { RagSourceTable } from "@orchestra/core/rag-studio/sql"
 import { admit, listSources, placed } from "@orchestra/rag-studio"
 import { extract } from "@orchestra/rag-studio/extract"
 import { Context, Effect, Layer } from "effect"
@@ -33,6 +34,16 @@ test("opening the folder as a symlink and as its real path is one corpus", async
               directory,
               project: { directory: project, id: "prj" },
             } as unknown as Location.Interface)
+          yield* database.db
+            .insert(RagSourceTable)
+            .values({
+              id: "src_old",
+              location_id: link,
+              path: placed(file),
+              content_hash: "old",
+              status: "read",
+            })
+            .run()
           const admitted = yield* session(database.db, async (store, locationId) => {
             const read = await extract(file)
             const path = placed(file)
@@ -42,7 +53,8 @@ test("opening the folder as a symlink and as its real path is one corpus", async
           const listed = yield* session(database.db, async (_store, locationId) => {
             return { locationId, sources: await listSources(locationId) }
           }).pipe(Effect.provideService(Location.Service, opened(root)))
-          return { admitted, listed }
+          const stored = yield* database.db.select().from(RagSourceTable).all()
+          return { admitted, listed, stored }
         }),
       ),
     )
@@ -50,7 +62,9 @@ test("opening the folder as a symlink and as its real path is one corpus", async
     expect(result.listed.locationId).toBe(result.admitted.locationId)
     expect("id" in result.admitted.source).toBe(true)
     if (!("id" in result.admitted.source)) return
-    expect(result.listed.sources.map((row) => row.id)).toEqual([result.admitted.source.id])
+    expect(result.admitted.source.id).toBe("src_old")
+    expect(result.listed.sources.map((row) => row.id)).toEqual(["src_old"])
+    expect(result.stored.map((row) => row.location_id)).toEqual([placed(link)])
   } finally {
     await rm(root, { recursive: true, force: true })
     await rm(linkParent, { recursive: true, force: true })

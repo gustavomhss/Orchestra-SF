@@ -49,18 +49,21 @@ test("a named OpenRouter model stores vectors and does not touch project source"
   })
 })
 
-test("a higher-scoring neighbor that lacks the word does not push the lexical chunk past K", async () => {
+test("a higher-scoring neighbor does not push a word chunk past K", async () => {
+  const late = "/location/a/zeta.txt"
   const store = memoryStore({
     projectRoot: "/repo",
-    files: { [path]: "alpha beta", [other]: "gamma only" },
+    files: { [path]: "alpha beta", [other]: "gamma only", [late]: "beta too" },
   })
   await withStore(store, async () => {
     const admitted = await admit({ locationId: "a", path })
     const neighbor = await admit({ locationId: "a", path: other })
-    if (!("id" in admitted) || !("id" in neighbor)) throw new Error("admit")
+    const second = await admit({ locationId: "a", path: late })
+    if (!("id" in admitted) || !("id" in neighbor) || !("id" in second)) throw new Error("admit")
     await parseSource(admitted.id)
     await parseSource(neighbor.id)
-    await setPipeline("a", "k", 1)
+    await parseSource(second.id)
+    await setPipeline("a", "k", 2)
     await setPipeline("a", "embedding_model", "nvidia/nemotron-3-embed-1b:free")
     await withEncoder(
       async ({ texts }) => {
@@ -75,17 +78,20 @@ test("a higher-scoring neighbor that lacks the word does not push the lexical ch
         expect(await runPass("redo_numbers", neighbor.id)).toEqual({ pass: "redo_numbers", fill: "complete" })
         const lexical = store.chunks().find((chunk) => chunk.sourceId === admitted.id)
         const neighborChunk = store.chunks().find((chunk) => chunk.sourceId === neighbor.id)
-        if (!lexical || !neighborChunk) throw new Error("chunks")
-        expect(store.vector(lexical.id, "nvidia/nemotron-3-embed-1b:free")).toEqual([0, 1])
+        const lateChunk = store.chunks().find((chunk) => chunk.sourceId === second.id)
+        if (!lexical || !neighborChunk || !lateChunk) throw new Error("chunks")
         expect(store.vector(neighborChunk.id, "nvidia/nemotron-3-embed-1b:free")).toEqual([1, 0])
+        expect(store.vector(lateChunk.id, "nvidia/nemotron-3-embed-1b:free")).toBeUndefined()
         const revision = await openRevision("a")
-        expect(revision.k).toBe(1)
+        expect(revision.k).toBe(2)
         const result = await ask(revision.id, "beta")
         expect(result.sense).toBe("fused")
-        expect(result.hits).toEqual([lexical.id])
-        expect(result.promptChunkIds).toEqual([lexical.id])
-        expect(result.dropped).not.toContain(lexical.id)
-        expect(result.dropped).not.toContain(neighborChunk.id)
+        expect(result.hits).toContain(lexical.id)
+        expect(result.hits).toContain(lateChunk.id)
+        expect(result.promptChunkIds).toContain(lateChunk.id)
+        expect(result.hits).not.toContain(neighborChunk.id)
+        expect(result.promptChunkIds).not.toContain(neighborChunk.id)
+        expect(result.dropped).not.toContain(lateChunk.id)
       },
     )
   })
