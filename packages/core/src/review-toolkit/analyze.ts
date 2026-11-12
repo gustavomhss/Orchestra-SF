@@ -9,6 +9,7 @@ import { ResearchProcess } from "../research-toolkit/process"
 import { ProbeRun } from "../research-toolkit/probe/run"
 import { Probe } from "../research-toolkit/probe/types"
 import { ToolSafetySandbox } from "../tool-safety-sandbox"
+import type { ReviewReleaseEvidence } from "./release-evidence"
 import type { ReviewImpactCache } from "./impact-cache"
 import { ReviewItem } from "./item"
 import { ReviewNoise } from "./noise"
@@ -76,6 +77,9 @@ export type RunInput = {
   /** The head revision; omitted, the working tree as it is now. */
   readonly head?: string
   readonly tier: string
+  readonly profile?: string
+  /** Immutable host capture, admitted before the review identity is selected. */
+  readonly release?: ReviewReleaseEvidence.Captured
   readonly catalog?: ReviewCatalog.Catalog
   /** The host directory that keeps this review's artifacts. */
   readonly store: string
@@ -157,6 +161,20 @@ export const run = Effect.fn("ReviewAnalyze.run")(function* (input: RunInput, pi
   const impact = requested?.id === "deep" && requested.built && requested.runs === "deep"
     ? yield* readImpact(context)
     : undefined
+  // Candidate bytes were captured before the host selected the review identity, never from a mutable path here.
+  const releaseChecks: Check[] = []
+  if (input.profile === "release") {
+    const { ReviewReleaseChecks } = yield* Effect.promise(() => import("./release-checks"))
+    const { ReviewReleaseEvidence } = yield* Effect.promise(() => import("./release-evidence"))
+    const captured = input.release ?? (yield* ReviewReleaseEvidence.capture(input.worktree))
+    const release = yield* ReviewReleaseChecks.run(captured)
+    const uri = yield* context.write("raw/release.json", JSON.stringify(release.raw))
+    releaseChecks.push(...release.checks.map((check) => ({
+      ...check,
+      uri,
+      reason: `${check.reason ?? check.status}; release-evidence:${captured.identity}; raw:${uri}`,
+    })))
+  }
   // No-build packs first: a repository gate may rewrite files in the head copy.
   const ordered = input.packs
     .map((packID) => ({ packID, pack: catalog.packs.find((entry) => entry.id === packID) }))
@@ -174,9 +192,10 @@ export const run = Effect.fn("ReviewAnalyze.run")(function* (input: RunInput, pi
   })
   const retained = yield* context.write("retained.json", JSON.stringify(result.retained))
   const debt = yield* context.write("debt.json", JSON.stringify(result.debt))
-  const diagnostics = yield* languageServer(selected, context)
+  const readDiagnostics = yield* ReadDiagnostics
+  const diagnostics = yield* ReviewLspDiagnostics.analyze(selected, context, readDiagnostics)
   return {
-    checks: [...outcomes.flatMap((outcome) => outcome.checks), ...diagnostics, ...(impact === undefined ? [] : [impact.check])],
+    checks: [...releaseChecks, ...outcomes.flatMap((outcome) => outcome.checks), ...diagnostics, ...(impact === undefined ? [] : [impact.check])],
     items: result.items,
     retained: { uri: retained, total: result.retained.total, unread: result.retained.unread },
     debt: { uri: debt, total: result.debt.length },
@@ -754,40 +773,6 @@ const confined = Effect.fnUntraced(function* (input: {
 })
 
 export type Confine = typeof confined
-
-const SOURCE = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".mts", ".cts"])
-
-/** Read-only diagnostics for a trusted build-lane review. No server in the copy is absence, not a fetch. */
-const languageServer = Effect.fnUntraced(function* (input: RunInput, context: RunContext) {
-  if (input.lane !== "build" || !input.trusted) return []
-  const files = Object.keys(input.changed).filter(sourceFile).sort()
-  if (files.length === 0) return []
-  const head = yield* context.head
-  if ("failed" in head) return []
-  const read = yield* ReadDiagnostics
-  const report = yield* read({ root: head.snapshot.root, files })
-  const uri = report.workspaceExecuted ? yield* context.write("raw/lsp.log", formatDiagnostics(report)) : undefined
-  return [{
-    id: "lsp",
-    pack: "lsp",
-    version: "project",
-    lane: "build" as const,
-    status: report.status,
-    ...(report.reason === undefined ? {} : { reason: report.reason }),
-    workspaceExecuted: report.workspaceExecuted,
-    ...(uri === undefined ? {} : { uri }),
-  }]
-})
-
-function sourceFile(file: string) {
-  if (!SOURCE.has(path.posix.extname(file)) || file.includes("\0") || path.isAbsolute(file)) return false
-  return file.split(/[/\\]/).every((part) => part !== "" && part !== "." && part !== "..")
-}
-
-function formatDiagnostics(report: { diagnostics: readonly { path: string; severity: number; line: number; character: number; message: string }[]; opened: number; skipped: number }) {
-  const lines = report.diagnostics.map((item) => `${item.path}:${item.line}:${item.character} ${item.message}`)
-  return [`opened ${report.opened}`, `skipped ${report.skipped}`, ...lines].join("\n")
-}
 
 const copy = (input: Parameters<typeof ReviewScratch.create>[0]) =>
   ReviewScratch.create(input).pipe(
