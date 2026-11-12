@@ -7,6 +7,7 @@ import { showToast } from "@/utils/toast"
 import { devSeat } from "./dev"
 import type { StartOptions } from "./model"
 import { settleHotkeyRead } from "./hotkey"
+import { settleRename } from "./rename"
 import { settleProtectionRead } from "./protection"
 import { refreshReadiness, settlePermissionAsk } from "./readiness"
 
@@ -29,10 +30,12 @@ function create(seat: () => LiveSeatPlatform | undefined, t: ReturnType<typeof u
     readinessFailed: false,
     protectionFailed: false,
     hotkeysFailed: false,
+    renameFailed: false,
   })
   const [now, setNow] = createSignal(Date.now())
   let protectionRead = 0
   let hotkeyRead = 0
+  let renameWrite = 0
 
   const reportProtection = (error: unknown) => {
     console.error(error)
@@ -59,6 +62,12 @@ function create(seat: () => LiveSeatPlatform | undefined, t: ReturnType<typeof u
     void readiness()
     void hotkeys()
     void loadProtection()
+  })
+
+  // The note belongs to the meeting on screen. Stopping ends it; the toast already reported the failed rename.
+  createEffect(() => {
+    if (store.run.running) return
+    setStore("renameFailed", false)
   })
 
   createEffect(() => {
@@ -147,7 +156,20 @@ function create(seat: () => LiveSeatPlatform | undefined, t: ReturnType<typeof u
     async rename(title: string) {
       const run = store.run
       if (!run.running) return
-      await seat()?.rename(run.meetingID, title)
+      const current = seat()
+      if (!current) return
+      const started = ++renameWrite
+      const meetingID = run.meetingID
+      await settleRename({
+        write: current.rename(meetingID, title),
+        current: () => started === renameWrite && seat() === current,
+        clear: () => setStore("renameFailed", false),
+        report: (error) => {
+          console.error(error)
+          if (store.run.running && store.run.meetingID === meetingID) setStore("renameFailed", true)
+          showToast({ variant: "error", title: t("orchestra.flightEngineer.settings.failed") })
+        },
+      })
     },
     async ask(source: LiveSource) {
       setStore("waiting", true)

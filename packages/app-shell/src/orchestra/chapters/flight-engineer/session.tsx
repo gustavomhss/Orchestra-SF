@@ -241,6 +241,9 @@ function Running(props: { flight: Flight; run: RunningState }) {
             }}
           />
         </Show>
+        <Show when={props.flight.store.renameFailed}>
+          <Note tone="bad">{t("orchestra.flightEngineer.settings.failed")}</Note>
+        </Show>
         <p class="fe-meta">
           {t("orchestra.flightEngineer.startedAt", {
             time: new Intl.DateTimeFormat(language.intl(), { hour: "numeric", minute: "2-digit" }).format(props.run.startedAt),
