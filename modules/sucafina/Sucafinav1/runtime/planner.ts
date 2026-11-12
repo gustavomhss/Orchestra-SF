@@ -201,12 +201,13 @@ function calculated(version: Version) {
       position.rateOverride as number | string | null | undefined,
     )
     const fx = rate ? convert(1, rate.cur) : 0
+    const fte = clampFte(finite(position.fte, 1))
     return {
       ...position,
       domain: text(position.domain) || "Unassigned",
       hasRate: !!rate,
       include: position.include === true,
-      fte: finite(position.fte, 1),
+      fte,
       start: finite(position.start, 1),
       end: finite(position.end, 12),
       type: text(position.type),
@@ -214,7 +215,7 @@ function calculated(version: Version) {
         hrMonth(
           position.include === true,
           !!rate,
-          finite(position.fte, 1),
+          fte,
           rate?.annual ?? 0,
           fx,
           i + 1,
@@ -2548,18 +2549,25 @@ function readWorkbookRates(
     issue.result = { ok: false, status: 422, errors: [message] }
   }
   // FX runs first so currencies added in this workbook are available to later sheets.
+  // Blank rate stays null. A bad currency or rate warns and skips only that row. USD is never stored.
   if (sheets["FX rates"]) {
     if (!can("fx")) issue.warnings.push("FX rates unchanged: budget or role is read-only")
     else
-      for (const row of sheets["FX rates"]) {
-        const currency = text(row.Currency).trim().toUpperCase()
-        const rate = workbookNumber(row["USD per 1 unit"], null)
-        if (!/^[A-Z]{3}$/.test(currency) || rate == null || rate <= 0) {
-          fail("FX requires a three letter currency and a positive rate")
-          break
+      for (const [index, row] of sheets["FX rates"].entries()) {
+        const currency = (typeof row.Currency === "string" || typeof row.Currency === "number"
+          ? String(row.Currency)
+          : ""
+        )
+          .trim()
+          .toUpperCase()
+        if (!currency || currency === "USD") continue
+        if (!/^[A-Z]{3}$/.test(currency)) {
+          issue.warnings.push(`FX rates row ${index + 2}: "${currency}" is not a 3-letter currency code. Skipped.`)
+          continue
         }
-        if (currency === "USD") {
-          if (rate !== 1) fail("USD is fixed at 1")
+        const rate = parseWorkbookRate(row["USD per 1 unit"])
+        if (typeof rate === "number" && Number.isNaN(rate)) {
+          issue.warnings.push(`FX rates row ${index + 2}: rate for ${currency} is not a positive number. Skipped.`)
           continue
         }
         const found = version.fx.find((item) => item.cur === currency)
@@ -2567,11 +2575,7 @@ function readWorkbookRates(
           ...found,
           id: idOf(found?.id) || currency,
           cur: currency,
-          rate: Math.round(rate * 1e6) / 1e6,
-        }
-        if (next.rate <= 0) {
-          fail("FX rate rounds to zero")
-          break
+          rate,
         }
         if (found) version.fx.splice(version.fx.indexOf(found), 1, next)
         else version.fx.push(next)
@@ -2603,6 +2607,18 @@ function readWorkbookRates(
         else version.hc.rates.push(next)
       }
   }
+}
+
+function parseWorkbookRate(value: unknown): number | null {
+  if (value == null) return null
+  if (typeof value !== "number" && typeof value !== "string") return Number.NaN
+  const token = String(value).trim().replace(/\s/g, "")
+  if (!token) return null
+  const normalized = /^\d+,\d+$/.test(token) ? token.replace(",", ".") : token
+  const parsed = Number(normalized)
+  if (!Number.isFinite(parsed) || parsed <= 0) return Number.NaN
+  const rate = Math.round(parsed * 1e6) / 1e6
+  return rate > 0 ? rate : Number.NaN
 }
 
 function workbookForm(page: string, version: Version, context: RenderContext): string {
