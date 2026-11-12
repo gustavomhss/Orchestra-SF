@@ -2,7 +2,7 @@
 
 The requirement is the acceptance item. This file groups them. It does not restate them in looser words. The statement that must go red to green is the line in `ACCEPTANCE.md` with the same id. A second paraphrase would drift.
 
-Contract: `CONTRACT.md` @ `17a340bf`. Seam: `seam.ts`, emitted by `stub-gen`. Critic: two consecutive covers. Nothing is built.
+Contract: `CONTRACT.md` @ `17a340bf`. Seam: `seam.ts`. The studio is on `dev`. J01–J10 remain a sitting.
 
 ## R1 Admit
 

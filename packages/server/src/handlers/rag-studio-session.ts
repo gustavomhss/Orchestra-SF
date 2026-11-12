@@ -217,6 +217,26 @@ function moveCorpus(db: Database.Interface["db"], from: string, to: string) {
       .where(eq(RagPipelineTable.location_id, to))
       .get()
       .pipe(Effect.orDie)
+    const alias = yield* db
+      .select()
+      .from(RagPipelineTable)
+      .where(eq(RagPipelineTable.location_id, from))
+      .get()
+      .pipe(Effect.orDie)
+    if (destination && alias && destination.embedding_model.length === 0 && alias.embedding_model.length > 0) {
+      yield* db
+        .update(RagPipelineTable)
+        .set({
+          embedding_model: alias.embedding_model,
+          query_model: alias.query_model,
+          dimension: alias.dimension,
+          numeric_type: alias.numeric_type,
+          metric: alias.metric,
+        })
+        .where(eq(RagPipelineTable.location_id, to))
+        .run()
+        .pipe(Effect.orDie)
+    }
     if (destination)
       yield* db.delete(RagPipelineTable).where(eq(RagPipelineTable.location_id, from)).run().pipe(Effect.orDie)
     if (!destination) {

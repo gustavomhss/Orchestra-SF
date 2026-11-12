@@ -4,8 +4,8 @@ import { join } from "node:path"
 import { expect, test } from "bun:test"
 import { Database } from "@orchestra/core/database/database"
 import { Location } from "@orchestra/core/location"
-import { RagSourceTable } from "@orchestra/core/rag-studio/sql"
-import { admit, listSources, placed } from "@orchestra/rag-studio"
+import { RagPipelineTable, RagSourceTable } from "@orchestra/core/rag-studio/sql"
+import { admit, listSources, placed, readPipeline } from "@orchestra/rag-studio"
 import { extract } from "@orchestra/rag-studio/extract"
 import { Context, Effect, Layer } from "effect"
 import { session } from "../src/handlers/rag-studio-session"
@@ -65,6 +65,54 @@ test("opening the folder as a symlink and as its real path is one corpus", async
     expect(result.admitted.source.id).toBe("src_old")
     expect(result.listed.sources.map((row) => row.id)).toEqual(["src_old"])
     expect(result.stored.map((row) => row.location_id)).toEqual([placed(link)])
+  } finally {
+    await rm(root, { recursive: true, force: true })
+    await rm(linkParent, { recursive: true, force: true })
+  }
+})
+
+test("a named model on the old spelling survives a default pipeline on the real path", async () => {
+  const root = await realpath(await mkdtemp(join(tmpdir(), "rag-pipe-")))
+  const linkParent = await mkdtemp(join(tmpdir(), "rag-pipe-link-"))
+  const link = join(linkParent, "open")
+  await symlink(root, link)
+  const project = join(root, "project")
+  await mkdir(project)
+  const model = "nvidia/nemotron-3-embed-1b:free"
+  try {
+    const pipeline = await Effect.runPromise(
+      Effect.scoped(
+        Effect.gen(function* () {
+          const database = Context.get(
+            yield* Layer.build(Database.layerFromPath(join(root, "orchestra.sqlite"))),
+            Database.Service,
+          )
+          const row = {
+            parser: "plain",
+            boundary: "document",
+            tokenizer: "utf16",
+            k: 4,
+          }
+          yield* database.db
+            .insert(RagPipelineTable)
+            .values({ ...row, location_id: root, embedding_model: "" })
+            .run()
+          yield* database.db
+            .insert(RagPipelineTable)
+            .values({ ...row, location_id: link, embedding_model: model })
+            .run()
+          const opened = Location.Service.of({
+            directory: root,
+            project: { directory: project, id: "prj" },
+          } as unknown as Location.Interface)
+          return yield* session(database.db, async (_store, locationId) => readPipeline(locationId)).pipe(
+            Effect.provideService(Location.Service, opened),
+          )
+        }),
+      ),
+    )
+    expect(pipeline.embeddingModel).toBe(model)
+    expect(pipeline.embedding).toBe(true)
   } finally {
     await rm(root, { recursive: true, force: true })
     await rm(linkParent, { recursive: true, force: true })

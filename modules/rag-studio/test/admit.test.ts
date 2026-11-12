@@ -66,6 +66,8 @@ test("the same file through a symlink is one source", async () => {
     expect(first.id).toBe(second.id)
     expect(first.path).toBe(stored)
     expect(store.sources()).toHaveLength(2)
+    const gone = path.join(link, "gone", "note.txt")
+    expect(placed(gone)).toBe(path.join(fs.realpathSync(link), "gone", "note.txt"))
   })
 })
 
