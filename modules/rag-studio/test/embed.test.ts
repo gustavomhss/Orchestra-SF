@@ -1,10 +1,12 @@
 import { expect, test } from "bun:test"
 import { ask } from "../src/ask"
+import { compareRevisions } from "../src/compare"
 import { memoryStore, withStore } from "../src/context"
 import { withEncoder } from "../src/embed"
 import { admit } from "../src/admit"
 import { parseSource } from "../src/parse"
 import { runPass } from "../src/passes"
+import { saveQuestion } from "../src/proof"
 import { openRevision, readPipeline, setPipeline } from "../src/revision"
 
 const path = "/location/a/note.txt"
@@ -92,6 +94,52 @@ test("a higher-scoring neighbor does not push a word chunk past K", async () => 
         expect(result.hits).not.toContain(neighborChunk.id)
         expect(result.promptChunkIds).not.toContain(neighborChunk.id)
         expect(result.dropped).not.toContain(lateChunk.id)
+      },
+    )
+  })
+})
+
+test("a closer neighbor that lacks the sentence does not move the saved span", async () => {
+  const store = memoryStore({
+    projectRoot: "/repo",
+    files: { [path]: "alpha beta", [other]: "gamma only" },
+  })
+  await withStore(store, async () => {
+    const admitted = await admit({ locationId: "a", path })
+    const neighbor = await admit({ locationId: "a", path: other })
+    if (!("id" in admitted) || !("id" in neighbor)) throw new Error("admit")
+    await parseSource(admitted.id)
+    await parseSource(neighbor.id)
+    const lexical = store.chunks().find((chunk) => chunk.sourceId === admitted.id)
+    if (!lexical) throw new Error("chunk")
+    const start = lexical.text.indexOf("beta")
+    await setPipeline("a", "embedding_model", "model-a")
+    await withEncoder(
+      async ({ texts }) => texts.map((text) => (text === "beta" || !text.includes("beta") ? [1, 0] : [0, 1])),
+      async () => {
+        expect(await runPass("redo_numbers", admitted.id)).toEqual({ pass: "redo_numbers", fill: "complete" })
+        expect(await runPass("redo_numbers", neighbor.id)).toEqual({ pass: "redo_numbers", fill: "complete" })
+        const left = await openRevision("a")
+        const saved = await saveQuestion(left.id, "beta", {
+          sourceId: admitted.id,
+          start,
+          end: start + "beta".length,
+        })
+        await setPipeline("a", "embedding_model", "model-b")
+        expect(await runPass("redo_numbers", admitted.id)).toEqual({ pass: "redo_numbers", fill: "complete" })
+        expect(await runPass("redo_numbers", neighbor.id)).toEqual({ pass: "redo_numbers", fill: "complete" })
+        const right = await openRevision("a")
+        const compared = await compareRevisions(left.id, right.id, left.snapshot)
+        if ("rejected" in compared) throw new Error("compare")
+        expect(compared.questions).toEqual([
+          {
+            id: saved.id,
+            text: "beta",
+            startChanged: false,
+            endChanged: false,
+            textChanged: false,
+          },
+        ])
       },
     )
   })
