@@ -122,7 +122,10 @@ export const QuestionResult = Schema.Struct({
   sense: Sense,
 }).annotate({ identifier: "RagStudioQuestionResult" })
 
-export const AdmitResult = Schema.Union([Source, Schema.Struct({ refused: Schema.Literals(["atlas", "permission"]) })]).annotate({
+export const AdmitResult = Schema.Union([
+  Source,
+  Schema.Struct({ refused: Schema.Literals(["atlas", "permission"]) }),
+]).annotate({
   identifier: "RagStudioAdmitResult",
 })
 export type AdmitResult = typeof AdmitResult.Type
@@ -175,6 +178,7 @@ export const CompareResult = Schema.Union([
     questions: Schema.Array(
       Schema.Struct({
         id: Schema.String,
+        text: Schema.String,
         startChanged: Schema.Boolean,
         endChanged: Schema.Boolean,
         textChanged: Schema.Boolean,

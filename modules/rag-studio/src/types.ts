@@ -11,6 +11,7 @@ export interface Chunk {
 
 export interface CompareRow {
   id: string
+  text: string
   startChanged: boolean
   endChanged: boolean
   textChanged: boolean

@@ -21,10 +21,10 @@ export async function compareRevisions(
   return {
     questions: store.questions().map((question) => {
       if (!recut || right.boundary === left.boundary) {
-        return { id: question.id, startChanged: false, endChanged: false, textChanged: false }
+        return { id: question.id, text: question.text, startChanged: false, endChanged: false, textChanged: false }
       }
       const after = resolve(right, question.text)
-      return moved(question.id, question.span, after)
+      return moved(question.id, question.text, question.span, after)
     }),
   }
 }
@@ -43,7 +43,7 @@ async function embeddingDiff(right: StoredRevision): Promise<{ rejected: true } 
       pipeline: { ...pipeline, embeddingModel: right.embeddingModel ?? "" },
     })
     if (fused.sense !== "fused") return { rejected: true }
-    questions.push(moved(question.id, question.span, spanOf(fused.matches[0], question.text)))
+    questions.push(moved(question.id, question.text, question.span, spanOf(fused.matches[0], question.text)))
   }
   return { questions }
 }
@@ -65,9 +65,10 @@ function spanOf(chunk: Chunk | undefined, sentence: string): SpanRef {
   return { sourceId: chunk.sourceId, start: chunk.start + at, end: chunk.start + at + sentence.length }
 }
 
-function moved(id: string, before: SpanRef, after: SpanRef) {
+function moved(id: string, text: string, before: SpanRef, after: SpanRef) {
   return {
     id,
+    text,
     startChanged: before.start !== after.start,
     endChanged: before.end !== after.end,
     textChanged: textOf(before) !== textOf(after),
@@ -78,7 +79,11 @@ function resolve(revision: StoredRevision, sentence: string): SpanRef {
   const store = requireStore()
   const hit = store.chunks().find((chunk) => {
     const source = store.sources().find((row) => row.id === chunk.sourceId)
-    return source?.locationId === revision.locationId && store.chunkCut(chunk.id) === revision.boundary && chunk.text.includes(sentence)
+    return (
+      source?.locationId === revision.locationId &&
+      store.chunkCut(chunk.id) === revision.boundary &&
+      chunk.text.includes(sentence)
+    )
   })
   if (hit) return { sourceId: hit.sourceId, start: hit.start, end: hit.end }
   const source = store.sources().find((row) => row.locationId === revision.locationId && row.text.includes(sentence))
@@ -88,7 +93,9 @@ function resolve(revision: StoredRevision, sentence: string): SpanRef {
 }
 
 function textOf(span: SpanRef) {
-  const source = requireStore().sources().find((row) => row.id === span.sourceId)
+  const source = requireStore()
+    .sources()
+    .find((row) => row.id === span.sourceId)
   if (!source) return ""
   return source.text.slice(span.start, span.end)
 }

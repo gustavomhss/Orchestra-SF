@@ -1,6 +1,6 @@
 # Rag Studio — spec v1
 
-Status: fix-first from the cold review, then corrected. Not started. Contract `5ec0ab82`.
+Status: fix-first from the cold review, then corrected. Not started. Contract `17a340bf`.
 
 The acceptance id is the requirement. This spec closes the forks that review found. It does not add a product feature.
 
@@ -67,7 +67,7 @@ These names are closed. An implementer does not invent another.
 | `saveQuestion` | Stores text, span coordinates, and revision id. |
 | `retrievalProof` | True only when the saved span's chunk id is in that revision's prompt chunk ids. |
 | `citationProof` | True only when the stored text of the resolved span contains the given sentence. |
-| `compareRevisions` | Rejected unless the proof-set id and snapshot match and exactly one of `parser`, `boundary`, `tokenizer`, `k` differs. Result rows are `{ id, startChanged, endChanged, textChanged }`. |
+| `compareRevisions` | Rejected unless the proof-set id and snapshot match and exactly one of `parser`, `boundary`, `tokenizer`, `k` differs. Result rows are `{ id, text, startChanged, endChanged, textChanged }`. The text is the saved question, not a label kept in memory. |
 | `enableEmbedding` | Always `{ refused: "embedding_off" }`. Writes nothing. |
 | `runPass` | One pass. While no model is named, `redo_numbers` returns `{ pass: "redo_numbers", result: "not_applicable" }` and writes nothing. After a model is named, it writes vectors only when a key is present at that call. |
 | `runPasses` | If `passes.length !== 1`, returns `{ refused: "one_pass" }` and writes nothing. |

@@ -5,14 +5,24 @@ import { useSDK } from "@/context/sdk"
 import type { ChapterPageProps } from "@/orchestra/chapter-route"
 import { MxBadge } from "../kit"
 import { roster, setRoster, statusKey, statusTone, touchRoster } from "./roster"
-import { questionLabel } from "./saved"
+
 import { pathDir, pathName } from "./source-text"
 
 const passes = [
   { pass: "reparse", label: "orchestra.ragStudio.readAgain", note: "orchestra.ragStudio.pass.read", needsFile: true },
   { pass: "rechunk", label: "orchestra.ragStudio.cutAgain", note: "orchestra.ragStudio.pass.cut", needsFile: true },
-  { pass: "redo_numbers", label: "orchestra.ragStudio.redoNumbers", note: "orchestra.ragStudio.pass.numbers", needsFile: true },
-  { pass: "orphan_delete", label: "orchestra.ragStudio.removePieces", note: "orchestra.ragStudio.pass.orphan", needsFile: false },
+  {
+    pass: "redo_numbers",
+    label: "orchestra.ragStudio.redoNumbers",
+    note: "orchestra.ragStudio.pass.numbers",
+    needsFile: true,
+  },
+  {
+    pass: "orphan_delete",
+    label: "orchestra.ragStudio.removePieces",
+    note: "orchestra.ragStudio.pass.orphan",
+    needsFile: false,
+  },
 ] as const
 
 const boundaries = [
@@ -370,7 +380,9 @@ export function Maintain(props: ChapterPageProps) {
               <strong>{language.t("orchestra.ragStudio.fusion")}</strong>
               <small>{language.t("orchestra.ragStudio.fusionNote")}</small>
             </div>
-            <MxBadge>{language.t(named() ? "orchestra.ragStudio.fusionRank" : "orchestra.ragStudio.fusionOff")}</MxBadge>
+            <MxBadge>
+              {language.t(named() ? "orchestra.ragStudio.fusionRank" : "orchestra.ragStudio.fusionOff")}
+            </MxBadge>
           </div>
         </div>
         <Show when={state.pipeError}>
@@ -542,7 +554,7 @@ export function Maintain(props: ChapterPageProps) {
                     compared: true,
                     rows: compared.data.questions
                       .map((row) => ({
-                        label: questionLabel(row.id) ?? language.t("orchestra.ragStudio.savedQuestion"),
+                        label: row.text,
                         changed: row.startChanged || row.endChanged || row.textChanged,
                       }))
                       .sort((left, right) => Number(right.changed) - Number(left.changed)),
@@ -582,7 +594,9 @@ export function Maintain(props: ChapterPageProps) {
                       <bdi>{row.label}</bdi>
                     </strong>
                   </div>
-                  <MxBadge>{language.t(row.changed ? "orchestra.ragStudio.changed" : "orchestra.ragStudio.unchanged")}</MxBadge>
+                  <MxBadge>
+                    {language.t(row.changed ? "orchestra.ragStudio.changed" : "orchestra.ragStudio.unchanged")}
+                  </MxBadge>
                 </div>
               )}
             </For>
