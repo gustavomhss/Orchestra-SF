@@ -54,9 +54,9 @@ function call<A>(db: Database.Interface["db"], run: (store: Store, locationId: s
 export const RagStudioHandler = HttpApiBuilder.group(Api, "server.ragStudio", (handlers) =>
   Effect.gen(function* () {
     const db = (yield* Database.Service).db
-    const integrations = yield* Integration.Service
     const bound = <A>(run: (store: Store, locationId: string) => Promise<A>) =>
       Effect.gen(function* () {
+        const integrations = yield* Integration.Service
         const key = yield* openRouterKey(integrations)
         return yield* call(db, run, key ? openRouterEncoder(key) : undefined)
       })
