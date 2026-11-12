@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "Preserve",
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "types": [
+      "bun"
+    ]
+  },
+  "include": [
+    "installation.ts",
+    "src/**/*.ts",
+    "test/**/*.ts",
+    "../porta/act.ts",
+    "runtime/**/*.ts",
+    "index.ts",
+    "local/**/*.ts"
+  ]
+}

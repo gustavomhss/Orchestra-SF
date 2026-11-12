@@ -1,0 +1,95 @@
+{
+  "baseline": "1fc20c76d10f0dd39e8ef648ee8cf75cb955528f82d9436192d49904bdf61584",
+  "authorization": "User explicitly authorizes parallel agents, superseding Plano.md prohibition on dispatch. Other scope limits remain.",
+  "items": [
+    {
+      "id": "dashboard-records",
+      "required": "4.1,5,7.2-7.15",
+      "status": "verified-in-ci",
+      "evidence": "https://github.com/gustavomhss/hugr-orchestra/actions/runs/43131455145"
+    },
+    {
+      "id": "planner-operations",
+      "required": "4.2,5,8.1-8.9",
+      "status": "verified-in-ci",
+      "evidence": "https://github.com/gustavomhss/hugr-orchestra/actions/runs/43131455145"
+    },
+    {
+      "id": "procurement-operations",
+      "required": "4.3,5,9.1-9.6",
+      "status": "verified-in-ci",
+      "evidence": "https://github.com/gustavomhss/hugr-orchestra/actions/runs/43131455145"
+    },
+    {
+      "id": "http-transactions",
+      "required": "1-5,9.1,13",
+      "status": "verified-in-ci",
+      "evidence": "https://github.com/gustavomhss/hugr-orchestra/actions/runs/43131455145"
+    },
+    {
+      "id": "files",
+      "required": "7.4,7.8,7.13,7.16,8.9,9.5,9.6",
+      "status": "verified-in-ci",
+      "evidence": "https://github.com/gustavomhss/hugr-orchestra/actions/runs/43131455145"
+    },
+    {
+      "id": "surface-operability",
+      "required": "7.0,8.0,9.0",
+      "status": "verified-in-ci",
+      "evidence": "https://github.com/gustavomhss/hugr-orchestra/actions/runs/43131455145"
+    },
+    {
+      "id": "independent-review",
+      "required": "Spec D2,S1,S3-S6",
+      "status": "reviewed",
+      "evidence": "https://github.com/gustavomhss/hugr-orchestra/actions/runs/43131455145"
+    }
+  ],
+  "verification": {
+    "moduleLinux": {
+      "run": 43131455145,
+      "pass": 467,
+      "skip": 2,
+      "fail": 0
+    },
+    "foreignUidFixtures": {
+      "run": 43132252401,
+      "pass": 2,
+      "fail": 0
+    },
+    "hostMacIntel": {
+      "run": 43134828297,
+      "pass": 94,
+      "fail": 0
+    },
+    "scope": "Automated synthetic-identity verification and independent code review; not real Microsoft activation.",
+    "localOperator": {
+      "run": 43144444968,
+      "sha": "441808dc28398919b0f927cdad36eb474f2dbf05",
+      "pass": 45,
+      "fail": 0,
+      "browserScreens": 28
+    }
+  },
+  "activation": {
+    "microsoft": "deferred-by-owner",
+    "decision": "microsoft nao tem ainda, vamos ter que pular",
+    "businessAccess": "authenticated local-operator profile active; corporate profile remains unavailable until real Microsoft configuration",
+    "notifications": "local profile: durable in-app delivery to actual local owner; unresolved/corporate recipients remain queued; external transport not invented",
+    "host": "isolated localhost:4110",
+    "scanner": "private ClamAV qualified with clean content and EICAR",
+    "localProfile": "existing macOS owner; explicit private enrollment; separate business-local data; no fabricated Entra identity or groups"
+  },
+  "closeout": {
+    "scope": [
+      "readable display labels",
+      "chartaxes/legends/empty states",
+      "browserbusinessworkflows",
+      "privatebackupandrestore",
+      "localinbox/reminders",
+      "logout",
+      "ownerLoginLaunchAgents"
+    ],
+    "activationEvidence": "separate delivery closeout validation records; source manifest is not itself proof of live activation"
+  }
+}

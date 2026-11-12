@@ -1,0 +1,41 @@
+{
+  "baseline": "1fc20c76d10f0dd39e8ef648ee8cf75cb955528f82d9436192d49904bdf61584",
+  "mode": "parallel",
+  "contract": "runtime/contract.ts + runtime/ui.ts",
+  "ownerFiles": {
+    "dashboard-people": [
+      "runtime/dashboard-people.ts",
+      "test/dashboard-people-runtime.test.ts"
+    ],
+    "dashboard-budget": [
+      "runtime/dashboard-budget.ts",
+      "test/dashboard-budget-runtime.test.ts"
+    ],
+    "dashboard-operations": [
+      "runtime/dashboard-operations.ts",
+      "test/dashboard-operations-runtime.test.ts"
+    ],
+    "planner": [
+      "runtime/planner.ts",
+      "test/planner-runtime.test.ts"
+    ],
+    "procurement": [
+      "runtime/procurement.ts",
+      "test/procurement-runtime.test.ts"
+    ]
+  },
+  "leadOwns": [
+    "HTTP integration",
+    "storage transaction contract",
+    "browser shell",
+    "exports/files",
+    "customer-free host seam",
+    "final review and hosted tests"
+  ],
+  "subsequent": [
+    "dashboard portfolio/risk/contracts/stakeholders/performance",
+    "actual document/workbook IO",
+    "private attachments and notices",
+    "independent review"
+  ]
+}

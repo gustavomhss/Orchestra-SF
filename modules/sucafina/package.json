@@ -1,0 +1,23 @@
+{
+  "name": "@orchestra/sucafina",
+  "private": true,
+  "type": "module",
+  "description": "Native Sucafina business module for Orchestra-SF.",
+  "scripts": {
+    "typecheck": "bun --cwd Sucafinav1 typecheck"
+  },
+  "dependencies": {
+    "docx": "9.5.1",
+    "exceljs": "4.4.0",
+    "jose": "6.2.16",
+    "jszip": "3.10.1",
+    "pptxgenjs": "4.0.1",
+    "saxes": "5.0.1",
+    "xlsx": "./Sucafinav1/vendor/xlsx-0.20.3.tgz"
+  },
+  "devDependencies": {
+    "@playwright/test": "catalog:",
+    "@types/bun": "catalog:",
+    "@typescript/native-preview": "catalog:"
+  }
+}

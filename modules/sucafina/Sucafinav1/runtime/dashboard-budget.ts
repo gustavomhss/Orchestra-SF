@@ -1,0 +1,1013 @@
+import type { Actor, Command, Domain, Environment, Result, Snapshot } from "./contract.ts"
+import { changed, conflict, finite, object, rows, text } from "./contract.ts"
+import type { RenderContext } from "./ui.ts"
+import { fields, form, metric, metricGrid, table } from "./ui.ts"
+import { esc } from "../src/screen-shell.ts"
+import {
+  annualEntryMonths,
+  applyYearAmount,
+  attritionTone,
+  attritionYtd,
+  budgetChartSeries,
+  computeBudgetTotals,
+  costPerUser,
+  costPerUserTone,
+  dashboardMoney,
+  effectiveMonthlyBudget,
+  isYearDeparture,
+  itUsersForMonth,
+  itUsersWrite,
+  onTargetCount,
+  riskScore,
+  SECURITY_KPIS,
+  securityKpiStatus,
+  socClosureValue,
+} from "../src/dashboard-accounts.ts"
+import type { BudgetData } from "../src/dashboard-accounts.ts"
+export const pages = ["Executive Dashboard", "Budget Overview", "OPEX Detail", "CAPEX Projects"] as const
+const budgetKeys = [
+  "opexOwners",
+  "opexEntries",
+  "capexProjects",
+  "capexEntries",
+  "budgetYtd",
+  "budgetCurrentMonth",
+  "revenueByYear",
+  "itUsersMonthly",
+  "costPerUserBenchmarks",
+  "deviations",
+]
+
+export const domain: Domain = {
+  execute(snapshot, actor, command, environment) {
+    if (!actor.canWrite) return { ok: false, status: 403 }
+    if (!pages.some((page) => page === command.page)) return { ok: false, status: 400 }
+    if (!actor.roles.includes("admin") && !actor.roles.includes("domain leader")) return { ok: false, status: 403 }
+    // Prepare and validate the complete business action before publishing any changes.
+    const next = structuredClone(snapshot)
+    const result = execute(next, actor, command, environment)
+    if (result.ok) {
+      snapshot.data = next.data
+      snapshot.versions = next.versions
+      snapshot.audit = next.audit
+    }
+    return result
+  },
+  view(snapshot, actor, environment) {
+    if (!actor.roles.some((role) => ["admin", "domain leader", "viewer"].includes(role)))
+      return { data: {}, versions: {} }
+    const data = Object.fromEntries(
+      budgetKeys
+        .filter((key) => Object.hasOwn(snapshot.data, key))
+        .map((key) => [key, structuredClone(snapshot.data[key])]),
+    )
+    // Executive metrics are derived here; private member notes/classification never leave this boundary.
+    const members = rows(snapshot.data.members)
+    // Aggregate reads still identify every member read, without logging talent or changing record versions.
+    members.forEach((member) =>
+      snapshot.audit.push({
+        who: actor.id,
+        at: environment.at,
+        record: `members:${String(member.id ?? "")}`,
+        was: null,
+        became: null,
+      }),
+    )
+    data.executive = {
+      active: members.filter((row) => row.status === "Active").length,
+      departures: members.filter((row) => isYearDeparture(text(row.status), text(row.end), environment.at.slice(0, 4)))
+        .length,
+      monthlyDepartures: members.filter(
+        (row) => row.status === "Terminated" && text(row.end).startsWith(environment.at.slice(0, 7)),
+      ).length,
+      pmoActive: rows(snapshot.data.projects).filter((row) => row.status !== "Completed").length,
+      pmoAtRisk: rows(snapshot.data.projects).filter(
+        (row) => row.status !== "Completed" && ["High", "Medium"].includes(text(row.risk)),
+      ).length,
+      activeRisks: rows(snapshot.data.risks).filter((row) => row.status !== "closed").length,
+    }
+    data.executiveByYear = Object.fromEntries(
+      [2024, 2025, 2026, 2027].map((year) => [
+        year,
+        {
+          active: members.filter((row) => row.status === "Active").length,
+          departures: members.filter((row) => isYearDeparture(text(row.status), text(row.end), String(year))).length,
+          monthlyDepartures: Array.from(
+            { length: 12 },
+            (_, index) =>
+              members.filter(
+                (row) =>
+                  row.status === "Terminated" &&
+                  text(row.end).startsWith(`${year}-${String(index + 1).padStart(2, "0")}`),
+              ).length,
+          ),
+        },
+      ]),
+    )
+    data.executive = {
+      ...object(data.executive),
+      topRisks: rows(snapshot.data.risks).filter(
+        (row) => row.status !== "closed" && riskScore(finite(row.impact), finite(row.probability)) >= 16,
+      ).length,
+      onTarget: onTargetCount(
+        rows(object(snapshot.data.itperf).items)
+          .flatMap((item) => rows(item.subs))
+          .map((sub) => ({
+            status: text(sub.status),
+            score: typeof sub.score === "number" ? sub.score : null,
+            totalWeight: finite(sub.totalWeight),
+          })),
+      ),
+    }
+    data.opsDefaultMonth = Object.fromEntries(
+      [2024, 2025, 2026, 2027].map((year) => [
+        year,
+        Math.max(
+          0,
+          ...rows(snapshot.data.opsTickets)
+            .filter((row) => row.year === year)
+            .map((row) => finite(row.month)),
+          ...rows(snapshot.data.opsSLA)
+            .filter((row) => row.year === year)
+            .map((row) => finite(row.month)),
+        ) || Number(environment.at.slice(5, 7)),
+      ]),
+    )
+    data.executiveMonths = Object.fromEntries(
+      [2024, 2025, 2026, 2027].flatMap((year) =>
+        Array.from({ length: 12 }, (_, index) => {
+          const month = index + 1
+          const tickets = rows(snapshot.data.opsTickets)
+            .filter((row) => row.year === year && finite(row.month) <= month)
+            .sort((a, b) => finite(a.month) - finite(b.month))
+          const slas = rows(snapshot.data.opsSLA)
+            .filter((row) => row.year === year && finite(row.month) <= month)
+            .sort((a, b) => finite(a.month) - finite(b.month))
+          const ticket = tickets.find((row) => row.month === month)
+          const sla = slas.find((row) => row.month === month)
+          const average = (key: string) => {
+            const present = slas.filter((row) => typeof row[key] === "number" && Number.isFinite(row[key]))
+            return present.length ? present.reduce((sum, row) => sum + finite(row[key]), 0) / present.length : null
+          }
+          const categories =
+            Array.isArray(snapshot.data.opsCats) && snapshot.data.opsCats.length
+              ? snapshot.data.opsCats.filter((category): category is string => typeof category === "string")
+              : ["IT Security", "Infrastructure", "Application", "IT Operations", "Others (Beyers OT)"]
+          const total = (row: Record<string, unknown> | undefined, metric: string) =>
+            categories
+              .flatMap((category) =>
+                ["Incidents", "Service Requests"].map((type) => finite(row?.[`${category}|${type}|${metric}`])),
+              )
+              .reduce((sum, value) => sum + value, 0)
+          const opened = total(ticket, "Open")
+          const closed = total(ticket, "Closed")
+          const latest = tickets.at(-1)
+          const security = rows(snapshot.data.secKpi)
+            .filter((row) => row.year === year && finite(row.month) <= month)
+            .sort((a, b) => finite(b.month) - finite(a.month))
+          const kpis = SECURITY_KPIS.map((def) => {
+            const latest = security
+              .map((entry) => (def.key === "socClosure" ? socClosureValue(entry) : entry[def.key]))
+              .find((value) => value !== undefined && value !== null && value !== "")
+            const value = latest === undefined ? null : Number(latest)
+            return {
+              key: def.key,
+              value,
+              status: securityKpiStatus(def.better, def.target, def.moderate, value),
+            }
+          })
+          return [
+            `${year}:${month}`,
+            {
+              opened,
+              closed,
+              backlog: Math.max(opened - closed, 0),
+              p1: rows(snapshot.data.opsHeatmap)
+                .filter((row) => row.year === year && row.month === month)
+                .reduce((sum, row) => sum + finite(row.p1), 0),
+              incSLA: sla?.incSLA ?? null,
+              svcSLA: sla?.svcSLA ?? null,
+              incYtd: average("incSLA"),
+              svcYtd: average("svcSLA"),
+              backlogYtd: Math.max(total(latest, "Open") - total(latest, "Closed"), 0),
+              kpis,
+              openIncidents: rows(snapshot.data.secIncidents).filter(
+                (row) => !row.contained || !row.remediated || !row.rootCause,
+              ).length,
+            },
+          ]
+        }),
+      ),
+    )
+    data.budgetLineIds = structuredClone(object(snapshot.data.budgetLineIds)[actor.id] ?? [])
+    return {
+      data,
+      versions: Object.fromEntries(
+        Object.entries(snapshot.versions).filter(([key]) =>
+          budgetKeys.some((collection) => key === collection || key.startsWith(`${collection}:`)),
+        ),
+      ),
+    }
+  },
+}
+function execute(snapshot: Snapshot, actor: Actor, command: Command, environment: Environment): Result {
+  const admin = actor.roles.includes("admin")
+  const allowed = object(snapshot.data.budgetLineIds)[actor.id]
+  // Raw legacy IDs are deliberately inert until an admin explicitly reselects each collection-qualified row.
+  const canLine = (collection: string, id: unknown) =>
+    admin || (Array.isArray(allowed) && allowed.includes(`${collection}:${String(id ?? "")}`))
+  const value: Record<string, unknown> = {
+    ...command.values,
+    versions:
+      typeof command.values.versions === "string" ? parseObject(command.values.versions) : command.values.versions,
+  }
+  if (typeof value.rows === "string") value.rows = parseRows(value.rows)
+  const year = Number(value.year)
+  const month = Number(value.month)
+  const yearValid = Number.isInteger(year) && year >= 2024 && year <= 2027
+  const write = (collection: string, id: string | undefined, became: unknown): Result => {
+    const key = id === undefined ? collection : `${collection}:${id}`
+    const was =
+      id === undefined
+        ? snapshot.data[collection]
+        : collection === "deviations"
+          ? object(snapshot.data.deviations)[id]
+          : rows(snapshot.data[collection]).find((row) => String(row.id ?? "") === id)
+    const version = object(value.versions)[key]
+    const primary =
+      command.action === "save-month"
+        ? "budgetCurrentMonth"
+        : command.action === "save-revenue"
+          ? "revenueByYear"
+          : command.action === "year-amount"
+            ? "budgetYtd"
+            : command.action === "save-deviation"
+              ? `deviations:${command.page === "CAPEX Projects" ? "capex" : "opex"}-${command.id}-${year}-${month}`
+              : undefined
+    const stale = conflict(
+      snapshot,
+      key,
+      {
+        ...command,
+        version:
+          key === primary || (id !== undefined && id === command.id)
+            ? command.version
+            : typeof version === "number"
+              ? version
+              : was === undefined && ["year-amount", "annual-entry", "import", "delete"].includes(command.action)
+                ? 0
+                : command.version,
+      },
+      was,
+    )
+    if (stale) return stale
+    const saved =
+      collection === "capexEntries" && became !== undefined
+        ? Object.fromEntries(Object.entries(object(became)).filter(([key]) => key !== "projectId"))
+        : became
+    if (id === undefined) snapshot.data[collection] = saved
+    if (id !== undefined && collection === "deviations")
+      snapshot.data.deviations = {
+        ...object(snapshot.data.deviations),
+        [id]: saved,
+      }
+    if (id !== undefined && collection !== "deviations")
+      snapshot.data[collection] =
+        saved === undefined
+          ? rows(snapshot.data[collection]).filter((row) => String(row.id ?? "") !== id)
+          : rows(snapshot.data[collection]).some((row) => String(row.id ?? "") === id)
+            ? rows(snapshot.data[collection]).map((row) => (String(row.id ?? "") === id ? saved : row))
+            : [...rows(snapshot.data[collection]), saved]
+    changed(snapshot, key, actor, environment.at, was, saved)
+    return { ok: true, value: saved }
+  }
+  if (command.page === "Executive Dashboard") {
+    if (!["save-users", "save-benchmark"].includes(command.action)) return { ok: false, status: 400 }
+    if (!admin) return { ok: false, status: 403 }
+    if (!yearValid || !Number.isInteger(month) || month < 1 || month > 12) return { ok: false, status: 422 }
+    const collection = command.action === "save-users" ? "itUsersMonthly" : "costPerUserBenchmarks"
+    const existing = rows(snapshot.data[collection]).find(
+      (row) => row.year === year && (collection === "costPerUserBenchmarks" || row.month === month),
+    )
+    const id = existing ? String(existing.id ?? "") : environment.id()
+    const amount = itUsersWrite(typeof value.value === "number" ? value.value : text(value.value))
+    return write(collection, id, {
+      ...existing,
+      id,
+      year,
+      ...(collection === "itUsersMonthly" ? { month, users: amount } : { value: amount }),
+    })
+  }
+  if (command.page === "Budget Overview") {
+    if (!["save-month", "save-revenue"].includes(command.action)) return { ok: false, status: 400 }
+    if (!admin) return { ok: false, status: 403 }
+    if (!yearValid) return { ok: false, status: 422 }
+    if (command.action === "save-month") {
+      if (!Number.isInteger(month) || month < 1 || month > 12) return { ok: false, status: 422 }
+      return write("budgetCurrentMonth", undefined, {
+        ...object(snapshot.data.budgetCurrentMonth),
+        [year]: month,
+      })
+    }
+    const revenue = Number(value.revenue)
+    if (!Number.isFinite(revenue)) return { ok: false, status: 422 }
+    const next = { ...object(snapshot.data.revenueByYear) }
+    if (revenue > 0) next[year] = revenue
+    if (revenue <= 0) delete next[year]
+    return write("revenueByYear", undefined, next)
+  }
+  const capex = command.page === "CAPEX Projects"
+  const collection = capex ? "capexProjects" : "opexOwners"
+  const entries = capex ? "capexEntries" : "opexEntries"
+  const ref = capex ? "projId" : "ownerId"
+  const owners = rows(snapshot.data[collection])
+  const owner = owners.find((row) => String(row.id ?? "") === command.id)
+  if (
+    ![
+      "save",
+      "delete",
+      "save-entry",
+      "save-deviation",
+      "annual-entry",
+      "year-amount",
+      ...(!capex ? ["import"] : []),
+    ].includes(command.action)
+  )
+    return { ok: false, status: 400 }
+  if (command.action === "import") {
+    if (!admin) return { ok: false, status: 403 }
+    if (!yearValid || !rows(value.rows).length) return { ok: false, status: 422 }
+    for (const row of rows(value.rows)) {
+      const name = text(row.name ?? row.Owner ?? row.Name ?? row.Leader).trim()
+      if (!name) return { ok: false, status: 422 }
+      const found = rows(snapshot.data.opexOwners).find(
+        (owner) => text(owner.name).toLowerCase() === name.toLowerCase(),
+      )
+      const id = found ? String(found.id ?? "") : environment.id()
+      if (!found) {
+        const result = write(collection, id, {
+          id,
+          name,
+          budget: finite(row.Annual, finite(row.Total)),
+        })
+        if (!result.ok) return result
+      }
+      const months = Array.from({ length: 12 }, (_, index) =>
+        Number(
+          object(row.months)[index + 1] ??
+            (Array.isArray(row.months) ? row.months[index] : undefined) ??
+            row[["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][index]!] ??
+            0,
+        ),
+      )
+      if (months.some((amount) => !Number.isFinite(amount))) return { ok: false, status: 422 }
+      const imported = months.every((amount) => amount === 0)
+        ? (Array(12).fill(Math.round(finite(row.Annual, finite(row.Total)) / 12)) as number[])
+        : months
+      for (const [index, budget] of imported.entries()) {
+        const existing = rows(snapshot.data[entries]).find(
+          (entry) => String(entry.ownerId) === id && entry.year === year && entry.month === index + 1,
+        )
+        const entryId = existing ? String(existing.id ?? "") : environment.id()
+        const result = write(entries, entryId, {
+          ...existing,
+          id: entryId,
+          ownerId: found?.id ?? id,
+          year,
+          month: index + 1,
+          budget,
+        })
+        if (!result.ok) return result
+      }
+    }
+    return { ok: true }
+  }
+  if (command.action === "save") {
+    if (!canLine(collection, owner?.id ?? command.id) || (!owner && !admin)) return { ok: false, status: 403 }
+    if (command.id && !owner) return { ok: false, status: 404 }
+    const name = text(value.name).trim()
+    const budget = Number(value.budget)
+    if (!name || !Number.isFinite(budget)) return { ok: false, status: 422 }
+    const id = owner ? String(owner.id ?? "") : environment.id()
+    return write(collection, id, {
+      ...owner,
+      id: owner?.id ?? id,
+      name,
+      budget,
+      ...(capex ? { status: owner ? owner.status || "Planning" : "In Progress" } : {}),
+    })
+  }
+  const entry = rows(snapshot.data[entries]).find((row) => String(row.id ?? "") === command.id)
+  if (command.action === "save-entry" && command.id && !entry) return { ok: false, status: 404 }
+  const target =
+    command.action === "save-entry"
+      ? entry
+        ? (entry[ref] ?? (capex ? entry.projectId : undefined))
+        : (value[ref] ?? (capex ? value.projectId : undefined))
+      : owner?.id
+  if (!canLine(collection, target)) return { ok: false, status: 403 }
+  const line = owners.find((row) => String(row.id ?? "") === String(target))
+  if (!line) return { ok: false, status: 404 }
+  if (command.action === "save-deviation") {
+    if (!yearValid || !Number.isInteger(month) || month < 1 || month > 12) return { ok: false, status: 422 }
+    const flag = text(value.flag)
+    if (!["", "dev-green", "dev-amber", "dev-red"].includes(flag)) return { ok: false, status: 422 }
+    return write("deviations", `${capex ? "capex" : "opex"}-${line.id}-${year}-${month}`, {
+      flag,
+      text: text(value.text),
+    })
+  }
+  if (command.action === "delete") {
+    const result = write(collection, String(line.id ?? ""), undefined)
+    if (!result.ok) return result
+    for (const entry of rows(snapshot.data[entries]).filter(
+      (row) => String(row[ref] ?? row.projectId ?? "") === String(line.id ?? ""),
+    )) {
+      const result = write(entries, String(entry.id ?? ""), undefined)
+      if (!result.ok) return result
+    }
+    return { ok: true }
+  }
+  if (!yearValid) return { ok: false, status: 422 }
+  if (command.action === "save-entry") {
+    if (!Number.isInteger(month) || month < 1 || month > 12) return { ok: false, status: 422 }
+    const existing =
+      entry ??
+      rows(snapshot.data[entries]).find(
+        (row) =>
+          String(row[ref] ?? row.projectId ?? "") === String(line.id ?? "") && row.year === year && row.month === month,
+      )
+    // A submitted parent never grants permission over an already stored entry.
+    if (
+      [value[ref], ...(capex ? [value.projectId] : [])].some(
+        (parent) => parent !== undefined && String(parent) !== String(line.id),
+      )
+    )
+      return { ok: false, status: 422 }
+    if (
+      existing &&
+      (existing.year !== year ||
+        existing.month !== month ||
+        (capex &&
+          existing.projId !== undefined &&
+          existing.projectId !== undefined &&
+          String(existing.projId) !== String(existing.projectId)))
+    )
+      return { ok: false, status: 422 }
+    const amounts = Object.fromEntries(
+      ["budget", "actual", "forecast"].map((key) => [key, Number(value[key] ?? existing?.[key] ?? 0)]),
+    )
+    if (Object.values(amounts).some((amount) => !Number.isFinite(amount))) return { ok: false, status: 422 }
+    const id = existing ? String(existing.id ?? "") : environment.id()
+    return write(entries, id, {
+      ...existing,
+      id: existing?.id ?? id,
+      [ref]: line.id,
+      year,
+      month,
+      ...amounts,
+    })
+  }
+  const current = currentBudgetMonth(snapshot.data, year, environment.at)
+  const kind = capex ? "capex" : "opex"
+  const ytdKey = `${year}:${line.id}`
+  const applied = applyYearAmount(typeof value.amount === "number" ? value.amount : text(value.amount), current)
+  if (command.action === "year-amount") {
+    const group = { ...object(object(snapshot.data.budgetYtd)[kind]) }
+    if (applied.cleared) delete group[ytdKey]
+    if (!applied.cleared)
+      group[ytdKey] = {
+        amount: typeof value.amount === "number" ? value.amount : Number(text(value.amount).replace(/[^0-9.\-]/g, "")),
+        months: current,
+        perMonth: applied.per,
+        at: environment.at,
+      }
+    const next = { ...object(snapshot.data.budgetYtd), [kind]: group }
+    const result = write("budgetYtd", undefined, next)
+    if (!result.ok) return result
+    if (applied.cleared) return { ok: true }
+  }
+  const annual = Number(value.annual)
+  const field = text(value.field) || "budget"
+  if (command.action === "annual-entry" && !["budget", "actual", "forecast"].includes(field))
+    return { ok: false, status: 422 }
+  if (command.action === "annual-entry" && !Number.isFinite(annual)) return { ok: false, status: 422 }
+  if (command.action === "annual-entry" && field === "budget") {
+    const result = write(collection, String(line.id ?? ""), {
+      ...line,
+      budget: annual,
+    })
+    if (!result.ok) return result
+  }
+  for (const index of Array.from({ length: 12 }, (_, index) => index)) {
+    const existing = rows(snapshot.data[entries]).find(
+      (row) =>
+        String(row[ref] ?? row.projectId ?? "") === String(line.id ?? "") &&
+        row.year === year &&
+        row.month === index + 1,
+    )
+    const id = existing ? String(existing.id ?? "") : environment.id()
+    const result = write(entries, id, {
+      ...existing,
+      id,
+      [ref]: line.id,
+      year,
+      month: index + 1,
+      ...(command.action === "annual-entry"
+        ? { [field]: annualEntryMonths(annual)[index] }
+        : !applied.cleared
+          ? { actual: applied.actual[index], forecast: applied.forecast[index] }
+          : {}),
+    })
+    if (!result.ok) return result
+  }
+  return { ok: true }
+}
+
+function currentBudgetMonth(data: Record<string, unknown>, year: number, at: string): number {
+  return Number(
+    object(data.budgetCurrentMonth)[year] ??
+      (year === Number(at.slice(0, 4)) ? Number(at.slice(5, 7)) : year < Number(at.slice(0, 4)) ? 12 : 1),
+  )
+}
+function parseObject(value: string): Record<string, unknown> {
+  try {
+    return object(JSON.parse(value))
+  } catch {
+    return {}
+  }
+}
+function parseRows(value: string): unknown {
+  try {
+    return JSON.parse(value) as unknown
+  } catch {
+    return undefined
+  }
+}
+function budgetData(data: Record<string, unknown>): BudgetData {
+  return {
+    opexOwners: rows(data.opexOwners).map((row) => ({
+      id: String(row.id ?? ""),
+      budget: finite(row.budget),
+    })),
+    capexProjects: rows(data.capexProjects).map((row) => ({
+      id: String(row.id ?? ""),
+      budget: finite(row.budget),
+    })),
+    opexEntries: rows(data.opexEntries).map((row) => ({
+      ...row,
+      year: finite(row.year),
+      month: finite(row.month),
+      ownerId: String(row.ownerId ?? ""),
+      budget: finite(row.budget),
+      actual: finite(row.actual),
+      forecast: finite(row.forecast),
+    })),
+    capexEntries: rows(data.capexEntries).map((row) => ({
+      ...row,
+      year: finite(row.year),
+      month: finite(row.month),
+      projId: String(row.projId ?? row.projectId ?? ""),
+      budget: finite(row.budget),
+      actual: finite(row.actual),
+      forecast: finite(row.forecast),
+    })),
+  }
+}
+export function render(page: string, data: Record<string, unknown>, context: RenderContext): string | undefined {
+  if (!pages.some((owned) => owned === page)) return undefined
+  const totals = computeBudgetTotals(budgetData(data), context.year)
+  const current = currentBudgetMonth(data, context.year, context.at)
+  const admin = context.actor.canWrite && context.actor.roles.includes("admin")
+  const control = (action: string, id: string, key: string, body: string, label = "Save", allowed = admin) =>
+    form(
+      page,
+      action,
+      id,
+      context.versions[key]?.version ?? 0,
+      fields([{ name: "year", label: "Year", type: "number", value: context.year }]) +
+        `<input type="hidden" name="versions" value="${esc(JSON.stringify(Object.fromEntries(Object.entries(context.versions).map(([key, value]) => [key, value.version]))))}">` +
+        body,
+      label,
+      !allowed,
+    )
+  const money = dashboardMoney
+  const summary =
+    metricGrid([
+      metric("Budget — 12 months", money(totals.totalBudget)),
+      metric("Actuals — 12 months", money(totals.totalActual)),
+      metric("Forecast — 12 months", money(totals.totalForecast)),
+    ], 3) +
+    table(
+      ["12 months", "Budget", "Actuals", "Forecast", "Variance (under if positive)", "Actuals / budget"],
+      [
+        ["OPEX", totals.opexBudget, totals.opexActual, totals.opexForecast],
+        ["CAPEX", totals.capexBudget, totals.capexActual, totals.capexForecast],
+      ].map(([label, budget, actual, forecast]) => [
+        String(label),
+        money(Number(budget)),
+        money(Number(actual)),
+        money(Number(forecast)),
+        money(Number(budget) - Number(forecast)),
+        Number(budget) ? `${(Number(actual) / Number(budget)) * 100}%` : "—",
+      ]),
+    )
+  if (page === "Executive Dashboard") {
+    const users = itUsersForMonth(
+      rows(data.itUsersMonthly).map((row) => ({
+        year: finite(row.year),
+        month: finite(row.month),
+        users: finite(row.users),
+      })),
+      context.month,
+      context.year,
+    )
+    const benchmark = rows(data.costPerUserBenchmarks).find((row) => row.year === context.year)
+    const executive = {
+      ...object(data.executive),
+      ...object(object(data.executiveByYear)[context.year]),
+    }
+    const monthly = object(object(data.executiveMonths)[`${context.year}:${context.month}`])
+    const opsMonth = Number(data.opsMonth ?? object(data.opsDefaultMonth)[context.year] ?? context.month)
+    const ops = object(object(data.executiveMonths)[`${context.year}:${opsMonth}`])
+    const slaMetric = (label: string, value: unknown, target: number) =>
+      `<section class="metric-tone" data-tone="${typeof value !== "number" ? "none" : value >= target ? "green" : value >= target - 3 ? "amber" : "red"}">${metric(label, typeof value === "number" ? `${value}%` : "—")}</section>`
+    return (
+      `<form method="get" class="filter-bar"><input type="hidden" name="page" value="Executive Dashboard"><input type="hidden" name="year" value="${finite(data.sidebarYear, 2026)}">${fields(
+        [
+          {
+            name: "execYear",
+            label: "Year",
+            type: "select",
+            value: context.year,
+            options: ["2024", "2025", "2026", "2027"],
+          },
+          {
+            name: "executiveMonth",
+            label: "Month",
+            type: "select",
+            value: context.month,
+            options: Array.from({ length: 12 }, (_, index) => String(index + 1)),
+          },
+        ],
+      )}<button>Show snapshot</button></form>` +
+      summary +
+      `<h2>People &amp; efficiency</h2>` +
+      metricGrid([
+        metric("Total IT Users", String(users)),
+        ...[
+          ["OPEX", totals.opexBudget, finite(benchmark?.value)],
+          ["OPEX + CAPEX", totals.totalBudget, finite(benchmark?.value)],
+        ].map(
+          ([label, total, target]) =>
+            `<section class="metric-tone" data-tone="${costPerUserTone(costPerUser(Number(total), users), Number(target))}">${metric(`Cost per User (${label})`, money(costPerUser(Number(total), users)))}</section>`,
+        ),
+        `<section class="metric-tone" data-tone="${attritionTone(attritionYtd(finite(executive.departures), finite(executive.active)) || 0)}">${metric("Attrition YTD", `${attritionYtd(finite(executive.departures), finite(executive.active)) || 0}%`)}</section>`,
+      ], 4) +
+      `<h2>Delivery &amp; risk</h2>` +
+      metricGrid([
+        metric("Active PMO projects", String(finite(executive.pmoActive))),
+        metric("PMO at risk", String(finite(executive.pmoAtRisk))),
+        metric("Active risks", String(finite(executive.activeRisks))),
+        metric("Top risks", String(finite(executive.topRisks))),
+        metric("IT Performance on target", String(finite(executive.onTarget))),
+        metric(
+          "Departures this month",
+          String(Array.isArray(executive.monthlyDepartures) ? (executive.monthlyDepartures[context.month - 1] ?? 0) : 0),
+        ),
+      ], 3) +
+      `<h2>Service operations</h2>` +
+      `<form method="get" class="filter-bar"><input type="hidden" name="page" value="Executive Dashboard"><input type="hidden" name="year" value="${finite(data.sidebarYear, 2026)}"><input type="hidden" name="execYear" value="${context.year}"><input type="hidden" name="executiveMonth" value="${context.month}">${fields([{ name: "opsMonth", label: "Operations month", type: "select", value: opsMonth, options: Array.from({ length: 12 }, (_, index) => String(index + 1)) }])}<button>Show operations</button></form>` +
+      metricGrid([
+        metric("Tickets opened", String(finite(ops.opened))),
+        metric("Tickets closed", String(finite(ops.closed))),
+        `<section class="metric-tone" data-tone="${finite(ops.backlog) > 20 ? "amber" : "green"}">${metric("Final backlog", String(finite(ops.backlog)))}</section>`,
+        metric("Backlog YTD — latest month", String(finite(ops.backlogYtd))),
+      ], 4) +
+      `<h2>Service levels</h2>` +
+      metricGrid([
+        slaMetric("Incidents SLA", ops.incSLA, 95),
+        slaMetric("Service Requests SLA", ops.svcSLA, 90),
+        slaMetric("Incidents SLA YTD", ops.incYtd, 95),
+        slaMetric("Service Requests SLA YTD", ops.svcYtd, 90),
+      ], 4) +
+      `<h2>Security overview</h2>` +
+      metricGrid([
+        `<section class="metric-tone" data-tone="${finite(ops.p1) > 0 ? "red" : "green"}">${metric("P1", String(finite(ops.p1)))}</section>`,
+        metric("Open security incidents", String(finite(monthly.openIncidents))),
+      ], 2) +
+      table(
+        ["Security KPI", "Latest value", "Status"],
+        rows(monthly.kpis).map((row) => [
+          esc(text(row.key)),
+          row.value == null ? "—" : esc(String(row.value)),
+          esc(text(row.status)),
+        ]),
+      ) +
+      `<section><h2>Dashboard inputs</h2>` +
+      control(
+        "save-users",
+        String(
+          rows(data.itUsersMonthly).find((row) => row.year === context.year && row.month === context.month)?.id ?? "",
+        ),
+        `itUsersMonthly:${rows(data.itUsersMonthly).find((row) => row.year === context.year && row.month === context.month)?.id ?? ""}`,
+        fields([
+          {
+            name: "month",
+            label: "Month",
+            type: "number",
+            value: context.month,
+            min: 1,
+            max: 12,
+          },
+          {
+            name: "value",
+            label: "Total IT Users",
+            type: "number",
+            value: users,
+          },
+        ]),
+      ) +
+      control(
+        "save-benchmark",
+        String(benchmark?.id ?? ""),
+        `costPerUserBenchmarks:${benchmark?.id ?? ""}`,
+        fields([
+          {
+            name: "month",
+            label: "Month",
+            type: "number",
+            value: context.month,
+          },
+          {
+            name: "value",
+            label: "Cost per User Benchmark",
+            type: "number",
+            value: benchmark?.value,
+          },
+        ]),
+      ) +
+      `</section>`
+    )
+  }
+  if (page === "Budget Overview") {
+    const revenue = finite(object(data.revenueByYear)[context.year])
+    const series = budgetChartSeries(totals.totalBudget)
+    const minimum = Math.min(0, ...series)
+    const maximum = Math.max(0, ...series)
+    const graphY = (amount: number) =>
+      160 - (maximum === minimum ? 0 : ((amount - minimum) / (maximum - minimum)) * 110)
+    return (
+      summary +
+      metricGrid([
+        metric("Variance — budget minus forecast", money(totals.totalBudget - totals.totalForecast)),
+        metric("Actuals / budget", totals.totalBudget ? `${(totals.totalActual / totals.totalBudget) * 100}%` : "—"),
+      ], 2) +
+      metricGrid([
+        ["OPEX", totals.opexBudget, totals.opexForecast],
+        ["CAPEX", totals.capexBudget, totals.capexForecast],
+        ["Total", totals.totalBudget, totals.totalForecast],
+      ]
+        .map(([label, budget, forecast]) =>
+          metric(
+            `${label} / revenue`,
+            revenue
+              ? `${((Number(budget) / revenue) * 100).toFixed(2)}% (forecast ${((Number(forecast) / revenue) * 100).toFixed(2)}%)`
+              : "—",
+          ),
+        ), 3) +
+      `<label>Actuals / budget<progress aria-label="Actuals / budget" max="100" value="${totals.totalBudget ? Math.max(0, (totals.totalActual / totals.totalBudget) * 100) : 0}" style="display:block;width:100%"></progress></label>` +
+      `<figure><svg role="img" aria-label="Monthly budget — flat total divided by twelve" viewBox="0 0 700 200" style="display:block;width:100%;height:auto"><title>Monthly budget — flat total divided by twelve</title><line x1="45" y1="${graphY(0)}" x2="665" y2="${graphY(0)}" stroke="currentColor"/><text x="45" y="30" fill="currentColor">${esc(money(totals.totalBudget / 12))} per month</text><polyline data-budget-series="flat" points="${series.map((amount, index) => `${45 + index * 55},${graphY(amount)}`).join(" ")}" fill="none" stroke="#0f766e" stroke-width="3"/>${series.map((amount, index) => `<circle cx="${45 + index * 55}" cy="${graphY(amount)}" r="4" fill="#0f766e"><title>Month ${index + 1}: ${esc(money(amount))}</title></circle><text x="${45 + index * 55}" y="185" text-anchor="middle" fill="currentColor">${index + 1}</text>`).join("")}</svg><figcaption>Budget — twelve equal monthly values</figcaption></figure>` +
+      table(
+        ["Month", "Budget chart — flat /12"],
+        budgetChartSeries(totals.totalBudget).map((amount, index) => [String(index + 1), money(amount)]),
+      ) +
+      control(
+        "save-month",
+        "",
+        "budgetCurrentMonth",
+        fields([
+          {
+            name: "month",
+            label: "Current month",
+            type: "number",
+            min: 1,
+            max: 12,
+            value: current,
+          },
+        ]),
+      ) +
+      control(
+        "save-revenue",
+        "",
+        "revenueByYear",
+        fields([
+          {
+            name: "revenue",
+            label: "Revenue",
+            type: "number",
+            value: revenue || "",
+          },
+        ]),
+      )
+    )
+  }
+  const capex = page === "CAPEX Projects"
+  const collection = capex ? "capexProjects" : "opexOwners"
+  const entries = capex ? "capexEntries" : "opexEntries"
+  const owners = rows(data[collection])
+  return (
+    summary +
+    owners
+      .map((owner) => {
+        const id = String(owner.id ?? "")
+        const allowed =
+          context.actor.canWrite &&
+          (admin ||
+            (context.actor.roles.includes("domain leader") &&
+              Array.isArray(data.budgetLineIds) &&
+              data.budgetLineIds.includes(`${collection}:${id}`)))
+        const monthEntries = rows(data[entries]).filter(
+          (row) => String(row.ownerId ?? row.projId ?? row.projectId ?? "") === id && row.year === context.year,
+        )
+        const total = Array.from({ length: 12 }, (_, index) =>
+          effectiveMonthlyBudget(
+            finite(monthEntries.find((row) => row.month === index + 1)?.budget),
+            finite(owner.budget),
+          ),
+        ).reduce((sum, amount) => sum + amount, 0)
+        return (
+          `<section><h2>${esc(text(owner.name))}</h2>` +
+          metricGrid([
+            metric("Total 12mo", money(total)),
+            metric("Overridden", String(Math.round(total) !== Math.round(finite(owner.budget)))),
+          ], 2) +
+          control(
+            "save",
+            id,
+            `${collection}:${id}`,
+            fields([
+              { name: "name", label: "Name", value: owner.name },
+              {
+                name: "budget",
+                label: "Annual budget",
+                type: "number",
+                value: owner.budget,
+              },
+            ]),
+            "Save",
+            allowed,
+          ) +
+          table(
+            ["Month", "Effective budget", "Actual", "Forecast", "Deviation", "Flag", "Utilization", "Edit all months"],
+            Array.from({ length: 12 }, (_, index) => {
+              const entry = monthEntries.find((row) => row.month === index + 1)
+              const budget = effectiveMonthlyBudget(finite(entry?.budget), finite(owner.budget))
+              const deviation = finite(entry?.forecast) - budget
+              const pct = budget ? (deviation / budget) * 100 : 0
+              const utilization = Math.min((finite(entry?.actual) / budget) * 100, 100) || 0
+              const utilizationTone = utilization > 110 ? "red" : utilization > 90 ? "amber" : "teal"
+              const deviationId = `${capex ? "capex" : "opex"}-${id}-${context.year}-${index + 1}`
+              const saved = object(object(data.deviations)[deviationId])
+              const flag =
+                text(
+                  object(object(data.deviations)[`${capex ? "capex" : "opex"}-${id}-${context.year}-${index + 1}`])
+                    .flag,
+                ) ||
+                text(entry?.flag) ||
+                (Math.abs(pct) < 10 ? "green" : Math.abs(pct) < 25 ? "amber" : "red")
+              return [
+                String(index + 1),
+                money(budget),
+                money(finite(entry?.actual)),
+                money(finite(entry?.forecast)),
+                `<span data-tone="${deviation > 0 ? "red" : "green"}">${money(deviation)}</span>`,
+                esc(flag) +
+                  control(
+                    "save-deviation",
+                    id,
+                    `deviations:${deviationId}`,
+                    fields([
+                      {
+                        name: "month",
+                        label: "Month",
+                        type: "number",
+                        value: index + 1,
+                      },
+                      {
+                        name: "flag",
+                        label: "Flag",
+                        type: "select",
+                        value: saved.flag,
+                        options: ["", "dev-green", "dev-amber", "dev-red"],
+                      },
+                      {
+                        name: "text",
+                        label: "Deviation notes",
+                        value: saved.text,
+                      },
+                    ]),
+                    "Save deviation",
+                    allowed,
+                  ),
+                `<span data-utilization="${utilization}" data-tone="${utilizationTone}" style="color:${utilizationTone === "red" ? "#dc2626" : utilizationTone === "amber" ? "#b45309" : "#0f766e"}">${utilization}%</span>`,
+                control(
+                  "save-entry",
+                  String(entry?.id ?? ""),
+                  `${entries}:${entry?.id ?? ""}`,
+                  `<input type="hidden" name="${capex ? "projId" : "ownerId"}" value="${esc(String(owner.id ?? ""))}">` +
+                    fields([
+                      {
+                        name: "month",
+                        label: "Month",
+                        type: "number",
+                        value: index + 1,
+                      },
+                      ...(["budget", "actual", "forecast"] as const).map((name) => ({
+                        name,
+                        label: name,
+                        type: "number" as const,
+                        value: entry?.[name],
+                        step: "0.01",
+                      })),
+                    ]),
+                  "Save month",
+                  allowed,
+                ),
+              ]
+            }),
+          ) +
+          control(
+            "annual-entry",
+            id,
+            `${collection}:${id}`,
+            fields([
+              {
+                name: "annual",
+                label: "Annual Entry ÷12",
+                type: "number",
+                step: "0.01",
+              },
+              {
+                name: "field",
+                label: "Field",
+                type: "select",
+                options: ["budget", "actual", "forecast"],
+              },
+            ]),
+            "Apply annual entry",
+            allowed,
+          ) +
+          control(
+            "year-amount",
+            id,
+            "budgetYtd",
+            fields([
+              {
+                name: "amount",
+                label: "Year amount",
+                type: "number",
+                step: "0.01",
+                value: object(object(object(data.budgetYtd)[capex ? "capex" : "opex"])[`${context.year}:${id}`]).amount,
+              },
+            ]),
+            "Apply year amount",
+            allowed,
+          ) +
+          (object(object(object(data.budgetYtd)[capex ? "capex" : "opex"])[`${context.year}:${id}`]).months !==
+            undefined &&
+          object(object(object(data.budgetYtd)[capex ? "capex" : "opex"])[`${context.year}:${id}`]).months !== current
+            ? "<p>Year amount hint is stale; months have not been recalculated.</p>"
+            : "") +
+          control("delete", id, `${collection}:${id}`, "", "Delete", allowed) +
+          "</section>"
+        )
+      })
+      .join("") +
+    control(
+      "save",
+      "",
+      `${collection}:`,
+      fields([
+        {
+          name: "name",
+          label: capex ? "Project name" : "Owner name",
+          required: true,
+        },
+        { name: "budget", label: "Annual budget", type: "number", value: 0 },
+      ]),
+      "Add",
+    ) +
+    (!capex
+      ? control(
+          "import",
+          "",
+          "opexEntries:",
+          `<label>Import Excel budget<input type="file" data-workbook="opex" accept=".xlsx"></label><input type="hidden" name="rows" data-workbook-rows><p data-import-notice></p>`,
+          "Import Excel",
+        ) + `<a download="opex-template.xlsx" href="?download=opex-template">Download Excel template</a>`
+      : "")
+  )
+}
+
+export const DashboardBudget = { pages, domain, render }

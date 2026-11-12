@@ -31,10 +31,11 @@ import { RUNNER_QUEUE_WAIT_MS, shouldWaitForRunners } from "./test-ci-queue.ts"
 import { controlVerdict, parseOptions, preloadsControl, reportLines, requireTestJobs, validateRequest } from "./test-ci-request.ts"
 import { resolveTestPackage } from "./test-ci-package.ts"
 import { testPathsAt } from "./test-ci-paths.ts"
+import { ciRepository, requireCiIdentity, requireCiOrigin } from "./test-ci-repository.ts"
 
 const USAGE =
   "Usage: bun run test:ci <package> [test files...] [-t pattern] [--os linux|linux-arm64|windows|macos|macos-intel|both|all] [--timeout ms] [--env KEY=VALUE] [--runner bun|node|playwright [--config <config> [--benchmark-renderer current|legacy]]]\nExtension: --os linux-arm64 selects only ubuntu-24.04-arm (native Linux ARM64 distribution qualification)."
-const repo = process.env.ORCHESTRA_CI_REPO ?? "gustavomhss/hugr-orchestra"
+const repo = ciRepository.name
 // Set when GitHub first rate-limits this run; waiting for the limit to lift must end by then.
 let rateLimitDeadline = 0
 const root = (await $`git rev-parse --show-toplevel`.text()).trim()
@@ -181,13 +182,10 @@ async function findRemote() {
     !isFile(`${request.directory}/requirements-dev.txt`)
   )
     fail(`${request.directory} is not a package in this checkout`, 2)
-  const pattern = new RegExp(`github\\.com[:/]${repo.replace(".", "\\.")}(\\.git)?$`)
-  const line = (await $`git remote -v`.cwd(root).text())
-    .split("\n")
-    .map((entry) => entry.split(/\s+/))
-    .find((parts) => pattern.test(parts[1] ?? ""))
-  if (!line) fail(`No git remote points at github.com/${repo}; set ORCHESTRA_CI_REPO or add the remote.`)
-  return line[0]!
+  const origin = (await $`git remote get-url origin`.cwd(root).text()).trim()
+  requireCiOrigin(origin, process.env.ORCHESTRA_CI_REPO)
+  requireCiIdentity(await api("GET", `repos/${repo}`))
+  return "origin"
 }
 
 // GitHub already has the merge-bases with the pushed copy of this branch and with dev. After dev is merged into a pushed
