@@ -133,7 +133,43 @@ export function Question(props: ChapterPageProps) {
                 report: reportSource,
               })
               if (abandon()) return
-              const asked = {
+              if (span && !loaded) {
+                setState({
+                  busy: false,
+                  asked: true,
+                  askedText: text,
+                  revisionId: result.data.revisionId,
+                  light: result.data.light,
+                  status: result.data.fileStatus ?? "",
+                  optional: result.data.retrievalOptional,
+                  span,
+                  prompt: result.data.promptText,
+                  sense: result.data.sense,
+                })
+                return
+              }
+              if (!span) {
+                setState({
+                  busy: false,
+                  asked: true,
+                  askedText: text,
+                  revisionId: result.data.revisionId,
+                  light: result.data.light,
+                  status: result.data.fileStatus ?? "",
+                  optional: result.data.retrievalOptional,
+                  span,
+                  prompt: result.data.promptText,
+                  sense: result.data.sense,
+                  sourcePath: "",
+                  source: "",
+                  dropped: result.data.dropped.map(() => ""),
+                  sourceKnown: false,
+                  sourceFailed: false,
+                  error: false,
+                })
+                return
+              }
+              setState({
                 busy: false,
                 asked: true,
                 askedText: text,
@@ -144,24 +180,9 @@ export function Question(props: ChapterPageProps) {
                 span,
                 prompt: result.data.promptText,
                 sense: result.data.sense,
-              }
-              if (span && !loaded) {
-                setState(asked)
-                return
-              }
-              if (!span) {
-                setState({
-                  ...asked,
-                  sourcePath: "",
-                  source: "",
-                  dropped: result.data.dropped.map(() => ""),
-                  sourceKnown: false,
-                  sourceFailed: false,
-                  error: false,
-                })
-                return
-              }
-              setState({ ...asked, error: false, sourceFailed: false })
+                error: false,
+                sourceFailed: false,
+              })
             })
             .catch(() => {
               if (started !== askRead) return
