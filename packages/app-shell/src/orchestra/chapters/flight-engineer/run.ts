@@ -10,6 +10,7 @@ import { settleHotkeyRead } from "./hotkey"
 import { settleRename } from "./rename"
 import { settleProtectionRead } from "./protection"
 import { refreshReadiness, settlePermissionAsk } from "./readiness"
+import { settleRunRead, settleRunStop } from "./run-state"
 
 // What the bridge's start() takes once it carries the consent answer. The frozen LiveSeatPlatform type declares only
 // the title, so the answer is handed over through this wider signature (a function with fewer parameters is assignable).
@@ -31,11 +32,17 @@ function create(seat: () => LiveSeatPlatform | undefined, t: ReturnType<typeof u
     protectionFailed: false,
     hotkeysFailed: false,
     renameFailed: false,
+    runKnown: false,
+    runFailed: false,
+    stopFailed: false,
+    stopBusy: false,
   })
   const [now, setNow] = createSignal(Date.now())
   let protectionRead = 0
   let hotkeyRead = 0
   let renameWrite = 0
+  let runRead = 0
+  let stopWrite = 0
 
   const reportProtection = (error: unknown) => {
     console.error(error)
@@ -53,11 +60,32 @@ function create(seat: () => LiveSeatPlatform | undefined, t: ReturnType<typeof u
     })
   }
 
+  const reportRun = (error: unknown) => {
+    console.error(error)
+    if (!store.runFailed) showToast({ variant: "error", title: t("common.requestFailed") })
+    setStore("runFailed", true)
+  }
+  const reportStop = (error: unknown) => {
+    console.error(error)
+    if (!store.stopFailed) showToast({ variant: "error", title: t("common.requestFailed") })
+    setStore("stopFailed", true)
+  }
   createEffect(() => {
     const current = seat()
-    if (!current) return setStore("run", { running: false })
-    void current.runState().then((state) => setStore("run", state))
-    const off = current.onRunState((state) => setStore("run", state))
+    const started = ++runRead
+    if (!current) return setStore({ run: { running: false }, runKnown: false, runFailed: false, stopFailed: false, stopBusy: false })
+    setStore({ runKnown: false, runFailed: false, stopFailed: false, stopBusy: false })
+    void settleRunRead({
+      read: Promise.resolve().then(() => current.runState()),
+      current: () => started === runRead && seat() === current,
+      apply: (state) => setStore({ run: state, runKnown: true, runFailed: false }),
+      report: reportRun,
+    })
+    const off = current.onRunState((state) => {
+      if (seat() !== current) return
+      runRead++
+      setStore({ run: state, runKnown: true, runFailed: false })
+    })
     onCleanup(off)
     void readiness()
     void hotkeys()
@@ -67,11 +95,11 @@ function create(seat: () => LiveSeatPlatform | undefined, t: ReturnType<typeof u
   // The note belongs to the meeting on screen. Stopping ends it; the toast already reported the failed rename.
   createEffect(() => {
     if (store.run.running) return
-    setStore("renameFailed", false)
+    setStore({ renameFailed: false, stopFailed: false })
   })
 
   createEffect(() => {
-    if (!store.run.running) return
+    if (!store.runKnown || !store.run.running) return
     setNow(Date.now())
     const timer = setInterval(() => setNow(Date.now()), 1000)
     onCleanup(() => clearInterval(timer))
@@ -152,7 +180,22 @@ function create(seat: () => LiveSeatPlatform | undefined, t: ReturnType<typeof u
       setStore("dialog", "none")
       fail(result.reason)
     },
-    stop: () => seat()?.stop(),
+    stop: () => {
+      if (store.stopBusy) return
+      const current = seat()
+      if (!current) return
+      const started = ++stopWrite
+      setStore("stopBusy", true)
+      return settleRunStop({
+        write: Promise.resolve().then(() => current.stop()),
+        current: () => started === stopWrite && seat() === current,
+        clear: () => setStore("stopFailed", false),
+        report: reportStop,
+      }).then((saved) => {
+        if (started === stopWrite) setStore("stopBusy", false)
+        return saved
+      })
+    },
     async rename(title: string) {
       const run = store.run
       if (!run.running) return

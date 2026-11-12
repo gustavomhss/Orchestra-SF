@@ -4,6 +4,7 @@ All notable changes to HuGR Orchestra are recorded here. The format follows [Kee
 
 ## [Unreleased]
 
+- Opening Flight Engineer no longer treats a failed run-state read as a stopped meeting. Stopping a meeting no longer hides a failed write. That failure is shown.
 - Opening Settings no longer turns a failed live-seat read into a stopped meeting, a missing key, and protection on. Changing content protection no longer hides a failed write. The switch goes back, and that failure is shown.
 
 ## 0.3.7 (2026-11-12)
