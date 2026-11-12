@@ -54,7 +54,12 @@ jobs:
           node-version: "24.15"
 
       - name: Foundation smokes
-        run: node --test packages/script/test/azure-foundation.node-smoke.mjs packages/script/test/azure-workflow.node-smoke.mjs
+        run: >
+          node --test
+          packages/script/test/azure-foundation.node-smoke.mjs
+          packages/script/test/azure-workflow.node-smoke.mjs
+          packages/script/test/azure-bootstrap.node-smoke.mjs
+          packages/script/test/azure-deploy.node-smoke.mjs
 
   cloud:
     needs: validate
