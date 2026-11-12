@@ -1,6 +1,6 @@
 # Rag Studio — spec v1
 
-Status: fix-first from the cold review, then corrected. Not started. Contract `fb61d451`.
+Status: fix-first from the cold review, then corrected. Not started. Contract `a5d1d160`.
 
 The acceptance id is the requirement. This spec closes the forks that review found. It does not add a product feature.
 

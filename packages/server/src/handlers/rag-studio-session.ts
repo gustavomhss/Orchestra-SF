@@ -11,7 +11,7 @@ import {
   RagVectorTable,
 } from "@orchestra/core/rag-studio/sql"
 import { extract } from "@orchestra/rag-studio/extract"
-import { canonical, memoryStore, noteBytes, withStore } from "@orchestra/rag-studio"
+import { memoryStore, noteBytes, placed, withStore } from "@orchestra/rag-studio"
 import type { Store } from "@orchestra/rag-studio"
 import { eq, inArray } from "drizzle-orm"
 import { Effect } from "effect"
@@ -19,9 +19,19 @@ import { Effect } from "effect"
 export function session<A>(db: Database.Interface["db"], run: (store: Store, locationId: string) => Promise<A>) {
   return Effect.gen(function* () {
     const location = yield* Location.Service
-    const locationId = location.directory
-    const sources = yield* db.select().from(RagSourceTable).where(eq(RagSourceTable.location_id, locationId)).all().pipe(Effect.orDie)
-    const chunks = yield* db.select().from(RagChunkTable).where(eq(RagChunkTable.location_id, locationId)).all().pipe(Effect.orDie)
+    const locationId = placed(location.directory)
+    const sources = yield* db
+      .select()
+      .from(RagSourceTable)
+      .where(eq(RagSourceTable.location_id, locationId))
+      .all()
+      .pipe(Effect.orDie)
+    const chunks = yield* db
+      .select()
+      .from(RagChunkTable)
+      .where(eq(RagChunkTable.location_id, locationId))
+      .all()
+      .pipe(Effect.orDie)
     const pipeline = yield* db
       .select()
       .from(RagPipelineTable)
@@ -44,11 +54,21 @@ export function session<A>(db: Database.Interface["db"], run: (store: Store, loc
           .pipe(Effect.orDie)
       : []
     const questions = revisionIds.length
-      ? yield* db.select().from(RagQuestionTable).where(inArray(RagQuestionTable.revision_id, revisionIds)).all().pipe(Effect.orDie)
+      ? yield* db
+          .select()
+          .from(RagQuestionTable)
+          .where(inArray(RagQuestionTable.revision_id, revisionIds))
+          .all()
+          .pipe(Effect.orDie)
       : []
     const questionIds = questions.map((row) => row.id)
     const traces = questionIds.length
-      ? yield* db.select().from(RagTraceTable).where(inArray(RagTraceTable.question_id, questionIds)).all().pipe(Effect.orDie)
+      ? yield* db
+          .select()
+          .from(RagTraceTable)
+          .where(inArray(RagTraceTable.question_id, questionIds))
+          .all()
+          .pipe(Effect.orDie)
       : []
     const files = yield* Effect.promise(async () => {
       const next: Record<string, string | { failed: "no_text_layer"; bytes: string }> = {}
@@ -60,8 +80,8 @@ export function session<A>(db: Database.Interface["db"], run: (store: Store, loc
       return next
     })
     const store = memoryStore({
-      projectRoot: location.project.directory,
-      locationRoot: canonical(location.directory),
+      projectRoot: placed(location.project.directory),
+      locationRoot: locationId,
       files,
     })
     if (pipeline?.blocked) store.fail(locationId)
@@ -103,7 +123,12 @@ export function session<A>(db: Database.Interface["db"], run: (store: Store, loc
       })
       store.setChunkCut(row.id, row.boundary)
     }
-    const vectors = yield* db.select().from(RagVectorTable).where(eq(RagVectorTable.location_id, locationId)).all().pipe(Effect.orDie)
+    const vectors = yield* db
+      .select()
+      .from(RagVectorTable)
+      .where(eq(RagVectorTable.location_id, locationId))
+      .all()
+      .pipe(Effect.orDie)
     for (const row of vectors) store.putVector(row.chunk_id, row.model, JSON.parse(row.values) as number[])
     for (const row of revisions) {
       store.putRevision({
@@ -154,10 +179,18 @@ function save(
 ) {
   return Effect.gen(function* () {
     if (previousQuestionIds.length) {
-      yield* db.delete(RagTraceTable).where(inArray(RagTraceTable.question_id, previousQuestionIds)).run().pipe(Effect.orDie)
+      yield* db
+        .delete(RagTraceTable)
+        .where(inArray(RagTraceTable.question_id, previousQuestionIds))
+        .run()
+        .pipe(Effect.orDie)
     }
     if (previousRevisionIds.length) {
-      yield* db.delete(RagQuestionTable).where(inArray(RagQuestionTable.revision_id, previousRevisionIds)).run().pipe(Effect.orDie)
+      yield* db
+        .delete(RagQuestionTable)
+        .where(inArray(RagQuestionTable.revision_id, previousRevisionIds))
+        .run()
+        .pipe(Effect.orDie)
       yield* db
         .delete(RagRevisionSourceTable)
         .where(inArray(RagRevisionSourceTable.revision_id, previousRevisionIds))

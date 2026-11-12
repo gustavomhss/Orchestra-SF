@@ -1,6 +1,6 @@
 # Rag Studio — contrato congelado
 
-Id: `rag-studio-v1`. Hash: `fb61d451`. Re-frozen after the cold spec review, including `readRevision`. The hash `2f0ba82b` did not include that call. `7c2ae7a5` contradicted A65 and A84.
+Id: `rag-studio-v1`. Hash: `a5d1d160`. The hash is the first 8 hex chars of sha256 of this file with the hash slot empty. Re-frozen so a named model may turn embedding on. `fb61d451` denied that. The hash `2f0ba82b` did not include `readRevision`. `7c2ae7a5` contradicted A65 and A84.
 
 Ninguém renegocia estes tipos. O comportamento está na suíte `ACCEPTANCE.md`. O que não está aqui fica livre dentro de um único pacote de trabalho.
 
@@ -34,7 +34,7 @@ interface Pipeline {
   boundary: string
   tokenizer: string
   lexical: true
-  embedding: false
+  embedding: boolean
   k: number
 }
 
@@ -67,7 +67,7 @@ interface QuestionResult {
 
 ## Funções
 
-Os nomes estão fechados na spec. `redo_numbers` devolve `not_applicable`, não `wrote: false`.
+Os nomes estão fechados na spec. Sem modelo, `redo_numbers` devolve `not_applicable`, não `wrote: false`. Com modelo e chave, escreve vetores.
 
 ```ts
 admit(input: { locationId: string; path: string }): Promise<Source | { refused: "atlas" | "permission" }>
@@ -85,14 +85,14 @@ retrievalProof(questionId: string, revisionId: string): Promise<boolean>
 citationProof(questionId: string, sentence: string): Promise<boolean>
 compareRevisions(leftId: string, rightId: string, proofSetId: string): Promise<{ rejected: true } | { questions: CompareRow[] }>
 enableEmbedding(): Promise<{ refused: "embedding_off" }>
-runPass(pass: PassName, sourceId: string): Promise<{ pass: "redo_numbers"; result: "not_applicable" } | { pass: PassName; fill: Fill }>
+runPass(pass: PassName, sourceId: string): Promise<{ pass: "redo_numbers"; result: "not_applicable" | "no_key" } | { pass: PassName; fill: Fill }>
 runPasses(passes: PassName[]): Promise<{ refused: "one_pass" }>
 ```
 
 ## Decisões que o contrato já tomou
 
 - Código do projeto não entra. Caminho que só canonicamente cai na árvore também não. A resposta é `{ refused: "atlas" }`. Nada é escrito em `.atlas/`.
-- Embedding não liga. `enableEmbedding` recusa. `redo_numbers` devolve `not_applicable` e não escreve.
+- Embedding fica desligado até um modelo ser nomeado. `enableEmbedding` sem modelo recusa. Nomear um modelo liga embedding e não escreve vetor. `redo_numbers` escreve vetores só quando há chave nessa chamada, e não escreve em `.atlas/`.
 - O intervalo é `start` e `end` no texto admitido. Busca é substring, não FTS5.
 - Uma pergunta não cria chat e não devolve resposta de modelo.
 - Quatro passes, uma chamada cada. `runPasses` com tamanho diferente de 1 recusa e não escreve.
