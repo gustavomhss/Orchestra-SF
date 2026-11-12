@@ -133,6 +133,11 @@ test("pipeline hash, revision identity, and embedding stays off", async () => {
       tokenizer: "utf16",
       lexical: true,
       embedding: false,
+      embeddingModel: "",
+      queryModel: "",
+      dimension: 0,
+      numericType: "float32",
+      metric: "cosine",
       k: 4,
     })
     const first = await openRevision("a")

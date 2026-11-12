@@ -24,16 +24,36 @@ export type Light = "not_in_corpus" | "search_miss" | "dropped_before_model" | "
 
 export type PassName = "reparse" | "rechunk" | "redo_numbers" | "orphan_delete"
 
+export type NumericType = "float32" | "int8" | "binary"
+
+export type Metric = "cosine" | "dot" | "distance"
+
+export type Sense = "off" | "missing" | "fused"
+
 export interface Pipeline {
   parser: string
   boundary: string
   tokenizer: string
   lexical: true
-  embedding: false
+  embedding: boolean
+  embeddingModel: string
+  queryModel: string
+  dimension: number
+  numericType: NumericType
+  metric: Metric
   k: number
 }
 
-export type PipelineField = "parser" | "boundary" | "tokenizer" | "k"
+export type PipelineField =
+  | "parser"
+  | "boundary"
+  | "tokenizer"
+  | "k"
+  | "embedding_model"
+  | "query_model"
+  | "dimension"
+  | "numeric_type"
+  | "metric"
 
 export interface QuestionResult {
   revisionId: string
@@ -46,6 +66,7 @@ export interface QuestionResult {
   promptText: string
   promptChunkIds: string[]
   retrievalOptional: boolean
+  sense: Sense
 }
 
 export interface Revision {
