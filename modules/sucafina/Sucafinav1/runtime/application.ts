@@ -30,6 +30,7 @@ export type Application = {
   maxJsonBytes: number
   workbookLimits?: Partial<WorkbookLimits>
   assets?: { persistence: AssetPersistence; services: AssetServices }
+  presentation?: "native"
 }
 
 /** Mount this in the installation's existing fetch composition. It starts no listener and selects no database. */
@@ -52,6 +53,12 @@ export function createApplication(mount: string, application: Application) {
       ((origin && origin !== url.origin) || request.headers.get("sec-fetch-site") === "cross-site")
     )
       return reply("Access denied", 403)
+    // Native PageState and Command have no file or blob transports. Direct callers cannot bypass the gateway.
+    if (
+      application.presentation === "native" &&
+      ["download", "upload", "asset", "asset-link"].some((key) => url.searchParams.has(key))
+    )
+      return reply("Not found", 404)
     const uploading = request.method === "POST" && url.searchParams.has("upload")
     const parsed =
       request.method === "POST" && !uploading ? await readCommand(request, application.maxJsonBytes) : undefined
@@ -413,6 +420,32 @@ export function createApplication(mount: string, application: Application) {
           : sidebar
       const auditBefore = snapshot.audit.length
       const view = contribution.domain.view(snapshot, actor, environment)
+      if (application.presentation === "native") {
+        const name = environment.directory.find((person) => person.id === actor.id && person.name.trim())?.name
+        if (!name)
+          return {
+            commit: false,
+            value: reply("Directory display name is unavailable", 503),
+          }
+        // view may append member-read audit. Commit those exact rows with the JSON page.
+        return {
+          commit: snapshot.audit.length !== auditBefore,
+          value: json(
+            {
+              surface,
+              page,
+              pages: allowed,
+              actor: { ...actor, name },
+              year: selected,
+              month: monthParam ? Number(monthParam) : now.getMonth() + 1,
+              data: view.data,
+              versions: view.versions,
+              directory: environment.directory,
+            },
+            200,
+          ),
+        }
+      }
       const filters = Object.fromEntries(
         [
           "version",

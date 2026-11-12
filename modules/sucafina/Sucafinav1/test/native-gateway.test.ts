@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
 import { createNativeGateway } from "../../src/native.ts"
-import type { ModuleServices } from "../index.ts"
+import { createModule, type ModuleServices } from "../index.ts"
 import { emptyMap, plugGroup, resolve } from "../src/identity.ts"
 import type { RoleRow, Surface } from "../src/identity.ts"
 import { dashboardPages } from "../src/nav.ts"
@@ -87,7 +87,7 @@ function installation() {
     }),
     maxJsonBytes: 100000,
   } satisfies ModuleServices
-  return { ...storage, seen, handler: createNativeGateway(MOUNT, services) }
+  return { ...storage, seen, handler: createNativeGateway(MOUNT, services), direct: createModule(MOUNT, { ...services, presentation: "native" }) }
 }
 
 function seeded(): Snapshot {
@@ -344,3 +344,29 @@ test("routes outside the mount are ignored and unknown surfaces, routes and verb
   expect(app.state).toEqual(before)
   expect(app.seen).toEqual([])
 })
+
+// Native state and commands have no legacy file or blob transports.
+for (const entry of ["adapter", "direct"] as const) {
+  for (const method of ["GET", "POST"] as const) {
+    for (const key of ["download", "upload", "asset", "asset-link"] as const) {
+      for (const token of [undefined, "session-admin"]) {
+        test(`native ${entry} ${method} refuses legacy ${key} (${token ? "authenticated" : "anonymous"}) before business work`, async () => {
+          const app = installation()
+          const before = structuredClone(app.state)
+          const route = entry === "adapter" ? `/dashboard/${method === "GET" ? "state" : "commands"}` : "/dashboard"
+          const url = new URL(`${ORIGIN}${MOUNT}${route}`)
+          url.searchParams.set("page", "Talent Review")
+          url.searchParams.set(key, key === "download" ? "members" : key === "upload" ? "contract" : "private-object")
+          const headers = new Headers({ Origin: ORIGIN, "Content-Type": "application/json" })
+          if (token) headers.set("authorization", `Bearer ${token}`)
+          const request = new Request(url.href, { method, headers, ...(method === "POST" ? { body: JSON.stringify(save) } : {}) })
+          const response = await (entry === "adapter" ? app.handler(request) : app.direct(request))
+          expect(response?.status).toBe(404)
+          expect(await response?.text()).toBe("Not found")
+          expect(app.state).toEqual(before)
+          expect(app.seen).toEqual([])
+        })
+      }
+    }
+  }
+}
