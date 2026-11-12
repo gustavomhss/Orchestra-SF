@@ -43,7 +43,8 @@ async function embeddingDiff(right: StoredRevision): Promise<{ rejected: true } 
       pipeline: { ...pipeline, embeddingModel: right.embeddingModel ?? "" },
     })
     if (fused.sense !== "fused") return { rejected: true }
-    questions.push(moved(question.id, question.text, question.span, spanOf(fused.matches[0], question.text)))
+    const hit = fused.matches.find((chunk) => chunk.text.includes(question.text))
+    questions.push(moved(question.id, question.text, question.span, spanOf(hit, question.text)))
   }
   return { questions }
 }
