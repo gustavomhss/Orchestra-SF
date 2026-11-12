@@ -28,7 +28,7 @@ Word search returns only chunks whose stored text contains the word, and never a
 
 A52 A74 A79 A19 A48
 
-## R5 Embedding stays off
+## R5 Embedding
 
 Embedding stays off until a model is named. Naming a model does not write a vector. Redo-numbers writes vectors for that model only when a key is present at that call, and writes nothing under `.atlas/`. A request to turn embedding on with no model is rejected.
 

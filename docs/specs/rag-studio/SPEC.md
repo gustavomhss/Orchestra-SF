@@ -69,7 +69,7 @@ These names are closed. An implementer does not invent another.
 | `citationProof` | True only when the stored text of the resolved span contains the given sentence. |
 | `compareRevisions` | Rejected unless the proof-set id and snapshot match and exactly one of `parser`, `boundary`, `tokenizer`, `k` differs. Result rows are `{ id, startChanged, endChanged, textChanged }`. |
 | `enableEmbedding` | Always `{ refused: "embedding_off" }`. Writes nothing. |
-| `runPass` | One pass. `redo_numbers` returns `{ pass: "redo_numbers", result: "not_applicable" }` and writes nothing. |
+| `runPass` | One pass. While no model is named, `redo_numbers` returns `{ pass: "redo_numbers", result: "not_applicable" }` and writes nothing. After a model is named, it writes vectors only when a key is present at that call. |
 | `runPasses` | If `passes.length !== 1`, returns `{ refused: "one_pass" }` and writes nothing. |
 
 `runPass("reparse")` reads the file, sets `content_hash` and status `read`, writes no chunks. `runPass("rechunk")` before that reparse writes nothing eligible. `runPass("orphan_delete")` deletes chunks whose source row is gone and does not recreate them.
@@ -100,4 +100,4 @@ Prompt block length is at most `k`. Fewer matches means the length equals the su
 
 ## Out
 
-Chat session. Assistant answer. Node canvas. Graph. 3D view. Python parser. Generated screen. FTS5. A second parser for markdown. A dry-run preview. An embedding field other than `false`.
+Chat session. Assistant answer. Node canvas. Graph. 3D view. Python parser. Generated screen. FTS5. A second parser for markdown. A dry-run preview. Turning embedding on with no model named.
