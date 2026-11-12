@@ -1,10 +1,11 @@
-import { createEffect, For, Match, Show, Switch } from "solid-js"
+import { For, Match, Show, Switch } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { useSDK } from "@/context/sdk"
 import type { ChapterPageProps } from "@/orchestra/chapter-route"
 import { MxBadge } from "../kit"
-import { roster, setRoster, statusKey, statusTone, type SourceStatus } from "./roster"
+import { pipelineClaim } from "./pipeline"
+import { roster, statusKey, statusTone, type SourceStatus } from "./roster"
 
 import { SourceText } from "./source-text"
 
@@ -44,23 +45,26 @@ export function Question(props: ChapterPageProps) {
     error: false,
   })
   const location = () => ({ directory: props.directory })
-
-  createEffect(() => {
-    props.directory
-    setRoster("embeddingModel", "")
-    void sdk()
-      .orchestra.ragStudio.pipeline({ location: location() })
-      .then((result) => setRoster("embeddingModel", result.data.embeddingModel))
-      .catch(() => undefined)
-  })
+  const claim = () => pipelineClaim(roster.pipelineKnown, roster.embeddingModel)
 
   return (
     <section>
       <div class="rag-section-head">
         <h3 class="mx-section">{language.t("orchestra.ragStudio.question")}</h3>
         <Show
-          when={roster.embeddingModel}
-          fallback={<MxBadge>{language.t("orchestra.ragStudio.embeddingOff")}</MxBadge>}
+          when={claim() === "named" ? roster.embeddingModel : undefined}
+          fallback={
+            <Show
+              when={claim() === "off"}
+              fallback={
+                <Show when={roster.pipelineFailed}>
+                  <p role="alert">{language.t("common.requestFailed")}</p>
+                </Show>
+              }
+            >
+              <MxBadge>{language.t("orchestra.ragStudio.embeddingOff")}</MxBadge>
+            </Show>
+          }
         >
           {(model) => <MxBadge>{language.t("orchestra.ragStudio.embeddingNamed", { model: model() })}</MxBadge>}
         </Show>

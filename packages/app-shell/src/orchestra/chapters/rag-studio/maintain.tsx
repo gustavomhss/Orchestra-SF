@@ -2,8 +2,10 @@ import { createEffect, For, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { useSDK } from "@/context/sdk"
+import { showToast } from "@/utils/toast"
 import type { ChapterPageProps } from "@/orchestra/chapter-route"
 import { MxBadge } from "../kit"
+import { settlePipelineRead } from "./pipeline"
 import { roster, setRoster, statusKey, statusTone, touchRoster } from "./roster"
 
 import { pathDir, pathName } from "./source-text"
@@ -65,6 +67,12 @@ export function Maintain(props: ChapterPageProps) {
     rows: [] as Array<{ label: string; changed: boolean }>,
   })
   const location = () => ({ directory: props.directory })
+  let pipelineRead = 0
+  const reportPipeline = (error: unknown) => {
+    console.error(error)
+    if (!roster.pipelineFailed) showToast({ variant: "error", title: language.t("common.requestFailed") })
+    setRoster("pipelineFailed", true)
+  }
   const selected = () => roster.sources.find((source) => source.id === state.sourceId)
   const named = () => roster.embeddingModel.length > 0
 
@@ -132,12 +140,18 @@ export function Maintain(props: ChapterPageProps) {
       })
 
   createEffect(() => {
-    props.directory
-    setRoster("embeddingModel", "")
-    void sdk()
-      .orchestra.ragStudio.pipeline({ location: location() })
-      .then((result) => apply(result.data))
-      .catch(() => undefined)
+    const directory = props.directory
+    const started = ++pipelineRead
+    setRoster({ pipelineKnown: false, pipelineFailed: false })
+    void settlePipelineRead({
+      read: Promise.resolve().then(() => sdk().orchestra.ragStudio.pipeline({ location: { directory } })),
+      current: () => started === pipelineRead && props.directory === directory,
+      apply: (result) => {
+        apply(result.data)
+        setRoster({ pipelineKnown: true, pipelineFailed: false })
+      },
+      report: reportPipeline,
+    })
   })
 
   createEffect(() => {
@@ -171,6 +185,16 @@ export function Maintain(props: ChapterPageProps) {
         </div>
       </Show>
       <Show when={roster.status === "ready"}>
+        <Show
+          when={roster.pipelineKnown}
+          fallback={
+            <Show when={roster.pipelineFailed}>
+              <p class="mx-error rag-follow" role="alert">
+                {language.t("common.requestFailed")}
+              </p>
+            </Show>
+          }
+        >
         <h3 class="mx-section">{language.t("orchestra.ragStudio.pipeline")}</h3>
         <div class="mx-table">
           <div class="mx-row rag-stage">
@@ -389,6 +413,7 @@ export function Maintain(props: ChapterPageProps) {
           <p class="mx-error rag-follow" role="alert">
             {language.t("orchestra.ragStudio.actionError")}
           </p>
+        </Show>
         </Show>
 
         <h3 class="mx-section">{language.t("orchestra.ragStudio.passes")}</h3>

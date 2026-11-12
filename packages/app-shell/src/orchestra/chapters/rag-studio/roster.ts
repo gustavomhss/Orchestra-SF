@@ -9,6 +9,8 @@ export const [roster, setRoster] = createStore({
   openId: "",
   revision: 0,
   embeddingModel: "",
+  pipelineKnown: false,
+  pipelineFailed: false,
 })
 
 export function statusKey(status: SourceStatus) {
