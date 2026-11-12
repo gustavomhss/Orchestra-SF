@@ -377,6 +377,14 @@ function mergedLineScope(stored: Row, values: Row) {
   return { ownerId, domain: domain || undefined, hr: current?.hr }
 }
 
+// A logical HR domain is an own hrAF key or a real position domain. Missing storage is not a domain.
+// An hrAF-only domain reuses structure authority, which is an unlocked admin on a version that is not official.
+function hrDomainAuthorized(version: Version, domain: string, officialId: string | undefined, actor: Actor) {
+  if (Object.hasOwn(version.hc.hrAF, domain) || version.hc.positions.some((position) => text(position.domain) === domain))
+    return true
+  return officialId !== version.id && plannerField("structure", version, officialId, actor)
+}
+
 function readJson(raw: string): { ok: true; value: unknown } | { ok: false } {
   try {
     return { ok: true, value: JSON.parse(raw) }
@@ -613,7 +621,12 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
   const id = command.id || environment.id()
   const synthetic = id.startsWith("HR:") && collection === "lines"
   if (synthetic && command.page !== "OPEX") return { ok: false, status: 400 }
-  const stored = synthetic ? object(version.hc.hrAF[id.slice(3)]) : records.find((row) => row.id === id)
+  const hrDomain = synthetic ? id.slice(3) : ""
+  const stored = synthetic
+    ? Object.hasOwn(version.hc.hrAF, hrDomain)
+      ? object(version.hc.hrAF[hrDomain])
+      : undefined
+    : records.find((row) => row.id === id)
   if (stored && collection === "lines" && !synthetic && stored.sec !== (command.page === "OPEX" ? "opex" : "capex"))
     return { ok: false, status: 400 }
   const key = `${version.id}:${synthetic ? "hrAF" : collection}:${id}`
@@ -685,7 +698,7 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
                       : field === "cur"
                         ? "currency"
                         : "budget"
-  const target = synthetic ? { ...stored, domain: id.slice(3), synthetic: true } : stored
+  const target = synthetic ? { ...stored, domain: hrDomain, synthetic: true } : stored
   const authLine = stored || synthetic ? lineScope(target) : postedLineScope(values)
   const may = (field: string) => {
     if (allowed(field, target)) return true
@@ -702,6 +715,7 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
           ? "fx"
           : "structure"
   if (!stored && !synthetic && !may(recordField)) return reject
+  if (synthetic && command.action === "save" && !hrDomainAuthorized(version, hrDomain, official, actor)) return reject
   if (command.action === "delete") {
     if (synthetic || !stored) return invalid("Cannot delete this record")
     if (!may(recordField)) return reject
@@ -2212,6 +2226,8 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
         fail("HR domain is required")
         break
       }
+      if (synthetic && !hrDomainAuthorized(version, domain, asNew ? undefined : official, actor))
+        return { ok: false, status: 403 }
       const found = synthetic
         ? object(version.hc.hrAF[domain])
         : version.lines.find((line) => !!suppliedId && line.id === suppliedId && line.sec === sec) ||

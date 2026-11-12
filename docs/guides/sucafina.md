@@ -13,3 +13,5 @@ The native chapter is under integration. Its private installation connection and
 The current local operator mode uses the explicitly enrolled Mac owner. Microsoft authentication is deferred because no Microsoft application has been supplied. A missing configuration must produce a clear setup state, rather than an unusable Microsoft login or a substitute administrator.
 
 Budgets, attachments, roles, approval authority and audit history remain private. A public source repository does not include installation keys or business databases. Local backups do not protect against loss of the Mac; no external backup destination has been configured.
+
+Creating an HR domain in Planner requires an administrator editing an unlocked version that is not official. Updating an existing domain still follows the field permissions for that version and the user's scope. These checks also apply to workbook imports; a forbidden new domain rejects the entire import.
