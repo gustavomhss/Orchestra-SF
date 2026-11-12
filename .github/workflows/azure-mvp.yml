@@ -1,0 +1,126 @@
+name: azure-mvp
+
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: Validar, pré-visualizar ou aplicar a fundação
+        type: choice
+        default: validate
+        options:
+          - validate
+          - preview
+          - apply
+      vm_size:
+        description: Tamanho candidato da VM
+        type: choice
+        default: Standard_D2as_v5
+        options:
+          - Standard_D2as_v5
+          - Standard_D4as_v5
+      image_version:
+        description: Versão exata da imagem Ubuntu
+        type: string
+        default: ""
+      confirm:
+        description: Confirmação exigida apenas pelo apply
+        type: string
+        default: ""
+
+concurrency:
+  group: azure-mvp
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+
+      - name: Foundation smokes
+        run: node --test packages/script/test/azure-foundation.node-smoke.mjs packages/script/test/azure-workflow.node-smoke.mjs
+
+  cloud:
+    needs: validate
+    if: "github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/dev' && (inputs.operation == 'preview' || inputs.operation == 'apply')"
+    runs-on: ubuntu-24.04
+    environment: azure-mvp
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+
+      - name: Install pinned Bicep
+        run: |
+          set -euo pipefail
+          umask 077
+          if [[ "$(uname -m)" != "x86_64" ]]; then
+            printf '%s\n' "runner rejected" >&2
+            exit 1
+          fi
+          pin_dir="${RUNNER_TEMP:?}/bicep-pin"
+          mkdir -p "$pin_dir"
+          python3 - "$pin_dir" <<'PY'
+          import json, pathlib, sys
+          dest = pathlib.Path(sys.argv[1])
+          pin = json.loads(pathlib.Path("infra/azure/tools.json").read_text())["bicep"]
+          version, url, digest = pin["version"], pin["url"], pin["sha256"]
+          if not isinstance(version, str) or not version:
+              raise SystemExit("bicep.version rejected")
+          if not isinstance(url, str) or not url.startswith("https://github.com/Azure/bicep/releases/download/") or not url.endswith(f"/{version}/bicep-linux-x64"):
+              raise SystemExit("bicep.url rejected")
+          if not isinstance(digest, str) or len(digest) != 64 or any(char not in "0123456789abcdef" for char in digest):
+              raise SystemExit("bicep.sha256 rejected")
+          (dest / "url").write_text(url)
+          (dest / "sha256").write_text(digest)
+          PY
+          url="$(<"${pin_dir}/url")"
+          digest="$(<"${pin_dir}/sha256")"
+          curl --fail --silent --show-error --location --proto '=https' --tlsv1.2 --output "${pin_dir}/bicep" -- "$url"
+          printf '%s  %s\n' "$digest" "${pin_dir}/bicep" | sha256sum --check --status
+          bin_dir="${RUNNER_TEMP:?}/bin"
+          mkdir -p "$bin_dir"
+          install -m 0755 "${pin_dir}/bicep" "${bin_dir}/bicep"
+          printf '%s\n' "$bin_dir" >> "${GITHUB_PATH:?}"
+          "${bin_dir}/bicep" --version
+
+      - name: Azure login
+        uses: azure/login@7184910d9eb2b1c5e48f7073824a90609bb9b6d6
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Preview or apply
+        env:
+          OPERATION: ${{ inputs.operation }}
+          VM_SIZE: ${{ inputs.vm_size }}
+          IMAGE_VERSION: ${{ inputs.image_version }}
+          CONFIRM: ${{ inputs.confirm }}
+          AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+          AZURE_VM_SSH_PUBLIC_KEY: ${{ vars.AZURE_VM_SSH_PUBLIC_KEY }}
+        run: bash infra/azure/deploy.sh
