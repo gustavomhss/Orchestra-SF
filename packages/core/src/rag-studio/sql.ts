@@ -1,7 +1,7 @@
 import { index, integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core"
 
 // Corpus tables from docs/specs/rag-studio/SPEC.md. Chunks have no foreign key: removeSource deletes the
-// source row and leaves chunks for orphan_delete. Embedding has no column and no vector table.
+// source row and leaves chunks for orphan_delete. Vectors sit beside a chunk and a named model, never in .atlas/.
 
 export const RagSourceTable = sqliteTable(
   "rag_source",
@@ -41,6 +41,7 @@ export const RagRevisionTable = sqliteTable("rag_revision", {
   boundary: text().notNull(),
   tokenizer: text().notNull(),
   k: integer().notNull(),
+  embedding_model: text().notNull().default(""),
 })
 
 export const RagRevisionSourceTable = sqliteTable(
@@ -78,4 +79,20 @@ export const RagPipelineTable = sqliteTable("rag_pipeline", {
   tokenizer: text().notNull(),
   k: integer().notNull(),
   blocked: integer().notNull().default(0),
+  embedding_model: text().notNull().default(""),
+  query_model: text().notNull().default(""),
+  dimension: integer().notNull().default(0),
+  numeric_type: text().notNull().default("float32"),
+  metric: text().notNull().default("cosine"),
 })
+
+export const RagVectorTable = sqliteTable(
+  "rag_vector",
+  {
+    chunk_id: text().notNull(),
+    model: text().notNull(),
+    location_id: text().notNull(),
+    values: text().notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.chunk_id, table.model] }), index("rag_vector_location_idx").on(table.location_id)],
+)

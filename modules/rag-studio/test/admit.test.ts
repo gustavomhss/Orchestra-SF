@@ -22,6 +22,22 @@ test("A76 — With no admit call, the location inventory contains zero sources, 
   })
 })
 
+test("a redundant slash in the location root still admits a file inside that location", async () => {
+  const file = "/var/folders/T/studio/work/corpus/note.txt"
+  const store = memoryStore({
+    projectRoot: "/",
+    locationRoot: "/var/folders/T//studio/work",
+    files: { [file]: "The harbor light is blue." },
+  })
+  await withStore(store, async () => {
+    const admitted = await admit({ locationId: "/var/folders/T//studio/work", path: file })
+    expect("id" in admitted).toBe(true)
+    if (!("id" in admitted)) return
+    expect(admitted.path).toBe(file)
+    expect(admitted.status).toBe("not_yet_read")
+  })
+})
+
 test("A01 — Admitting a file inside the location, and outside the project source tree, creates one source with a stable id and a content hash. Editing the bytes keeps the same id and changes the hash.", async () => {
   const store = memoryStore({
     projectRoot: "/repo",

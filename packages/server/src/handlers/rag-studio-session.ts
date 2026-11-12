@@ -8,9 +8,10 @@ import {
   RagRevisionTable,
   RagSourceTable,
   RagTraceTable,
+  RagVectorTable,
 } from "@orchestra/core/rag-studio/sql"
 import { extract } from "@orchestra/rag-studio/extract"
-import { memoryStore, noteBytes, withStore } from "@orchestra/rag-studio"
+import { canonical, memoryStore, noteBytes, withStore } from "@orchestra/rag-studio"
 import type { Store } from "@orchestra/rag-studio"
 import { eq, inArray } from "drizzle-orm"
 import { Effect } from "effect"
@@ -60,7 +61,7 @@ export function session<A>(db: Database.Interface["db"], run: (store: Store, loc
     })
     const store = memoryStore({
       projectRoot: location.project.directory,
-      locationRoot: location.directory,
+      locationRoot: canonical(location.directory),
       files,
     })
     if (pipeline?.blocked) store.fail(locationId)
@@ -70,7 +71,12 @@ export function session<A>(db: Database.Interface["db"], run: (store: Store, loc
         boundary: pipeline.boundary,
         tokenizer: pipeline.tokenizer,
         lexical: true,
-        embedding: false,
+        embedding: pipeline.embedding_model.length > 0,
+        embeddingModel: pipeline.embedding_model,
+        queryModel: pipeline.query_model,
+        dimension: pipeline.dimension,
+        numericType: numeric(pipeline.numeric_type),
+        metric: metric(pipeline.metric),
         k: pipeline.k,
       })
     }
@@ -97,6 +103,8 @@ export function session<A>(db: Database.Interface["db"], run: (store: Store, loc
       })
       store.setChunkCut(row.id, row.boundary)
     }
+    const vectors = yield* db.select().from(RagVectorTable).where(eq(RagVectorTable.location_id, locationId)).all().pipe(Effect.orDie)
+    for (const row of vectors) store.putVector(row.chunk_id, row.model, JSON.parse(row.values) as number[])
     for (const row of revisions) {
       store.putRevision({
         id: row.id,
@@ -108,6 +116,7 @@ export function session<A>(db: Database.Interface["db"], run: (store: Store, loc
         boundary: row.boundary,
         tokenizer: row.tokenizer,
         k: row.k,
+        embeddingModel: row.embedding_model,
         members: members
           .filter((member) => member.revision_id === row.id)
           .map((member) => ({ sourceId: member.source_id, contentHash: member.content_hash })),
@@ -158,6 +167,7 @@ function save(
     yield* db.delete(RagRevisionTable).where(eq(RagRevisionTable.location_id, locationId)).run().pipe(Effect.orDie)
     yield* db.delete(RagChunkTable).where(eq(RagChunkTable.location_id, locationId)).run().pipe(Effect.orDie)
     yield* db.delete(RagSourceTable).where(eq(RagSourceTable.location_id, locationId)).run().pipe(Effect.orDie)
+    yield* db.delete(RagVectorTable).where(eq(RagVectorTable.location_id, locationId)).run().pipe(Effect.orDie)
     yield* db.delete(RagPipelineTable).where(eq(RagPipelineTable.location_id, locationId)).run().pipe(Effect.orDie)
     const sources = store.sources().filter((row) => row.locationId === locationId)
     if (sources.length) {
@@ -205,6 +215,11 @@ function save(
         tokenizer: pipeline.tokenizer,
         k: pipeline.k,
         blocked: store.failed(locationId) ? 1 : 0,
+        embedding_model: pipeline.embeddingModel,
+        query_model: pipeline.queryModel,
+        dimension: pipeline.dimension,
+        numeric_type: pipeline.numericType,
+        metric: pipeline.metric,
       })
       .run()
       .pipe(Effect.orDie)
@@ -223,6 +238,7 @@ function save(
             boundary: row.boundary ?? pipeline.boundary,
             tokenizer: row.tokenizer ?? pipeline.tokenizer,
             k: row.k ?? pipeline.k,
+            embedding_model: row.embeddingModel ?? pipeline.embeddingModel,
           })),
         )
         .run()
@@ -273,7 +289,32 @@ function save(
         .run()
         .pipe(Effect.orDie)
     }
+    const vectors = store.vectors().filter((row) => store.chunks().some((chunk) => chunk.id === row.chunkId))
+    if (vectors.length) {
+      yield* db
+        .insert(RagVectorTable)
+        .values(
+          vectors.map((row) => ({
+            chunk_id: row.chunkId,
+            model: row.model,
+            location_id: locationId,
+            values: JSON.stringify(row.values),
+          })),
+        )
+        .run()
+        .pipe(Effect.orDie)
+    }
   })
+}
+
+function numeric(value: string) {
+  if (value === "int8" || value === "binary") return value
+  return "float32" as const
+}
+
+function metric(value: string) {
+  if (value === "dot" || value === "distance") return value
+  return "cosine" as const
 }
 
 function status(value: string) {

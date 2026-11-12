@@ -3,6 +3,7 @@
 // The package keeps its own copy of those shapes so production code does not import outside itself.
 
 import { AsyncLocalStorage } from "node:async_hooks"
+import fs from "node:fs"
 import path from "node:path"
 import { blake3 } from "@noble/hashes/blake3"
 import { bytesToHex, utf8ToBytes } from "@noble/hashes/utils"
@@ -18,16 +19,29 @@ export function canonical(file: string) {
   return path.posix.normalize(file)
 }
 
-export function inProject(file: string, projectRoot: string) {
+// A path that exists is compared by its real path, so /var and /private/var are the same directory.
+// A path that does not exist stays lexical, so tests can use roots that are not on disk.
+export function placed(file: string) {
   const normalized = canonical(file)
-  return normalized === projectRoot || normalized.startsWith(`${projectRoot}/`)
+  try {
+    return fs.realpathSync(normalized)
+  } catch {
+    return normalized
+  }
+}
+
+export function inProject(file: string, projectRoot: string) {
+  const normalized = placed(file)
+  const root = placed(projectRoot)
+  return normalized === root || normalized.startsWith(`${root}/`)
 }
 
 export function insideLocation(file: string, locationId: string, locationRoot?: string) {
-  const normalized = canonical(file)
+  const normalized = placed(file)
   if (normalized.startsWith(`/location/${locationId}/`)) return true
   if (!locationRoot) return false
-  return normalized === locationRoot || normalized.startsWith(`${locationRoot}/`)
+  const root = placed(locationRoot)
+  return normalized === root || normalized.startsWith(`${root}/`)
 }
 
 export function gate(
@@ -50,6 +64,11 @@ export function defaultPipeline(): Pipeline {
     tokenizer: "utf16",
     lexical: true,
     embedding: false,
+    embeddingModel: "",
+    queryModel: "",
+    dimension: 0,
+    numericType: "float32",
+    metric: "cosine",
     k: 4,
   }
 }
@@ -85,6 +104,13 @@ export interface StoredRevision extends Revision {
   boundary?: string
   tokenizer?: string
   k?: number
+  embeddingModel?: string
+}
+
+export interface VectorRow {
+  chunkId: string
+  model: string
+  values: number[]
 }
 
 export type ReadBytes = { text: string } | { failed: "no_text_layer"; bytes: string } | { failed: "missing" }
@@ -111,6 +137,9 @@ export interface Store {
   deleteChunk(id: string): void
   chunkCut(id: string): string
   setChunkCut(id: string, boundary: string): void
+  vectors(): VectorRow[]
+  putVector(chunkId: string, model: string, values: number[]): void
+  vector(chunkId: string, model: string): number[] | undefined
   pipeline(locationId: string): Pipeline
   setPipeline(locationId: string, pipeline: Pipeline): void
   revision(id: string): StoredRevision | undefined
@@ -157,6 +186,7 @@ export function memoryStore(input: {
   const sources = new Map<string, SourceRow>()
   const chunks = new Map<string, Chunk>()
   const cuts = new Map<string, string>()
+  const vectors = new Map<string, number[]>()
   const pipelines = new Map<string, Pipeline>()
   const revisions = new Map<string, StoredRevision>()
   const failed = new Set<string>()
@@ -195,8 +225,15 @@ export function memoryStore(input: {
       return found
     },
     allocate(prefix) {
-      seq += 1
-      return `${prefix}_${seq}`
+      const used = prefix === "rev" ? revisions : prefix === "q" ? questions : undefined
+      if (!used) {
+        seq += 1
+        return `${prefix}_${seq}`
+      }
+      // The store is rebuilt per request. A fresh counter would reuse q_1 and rev_1 and erase the loaded row.
+      let n = 1
+      while (used.has(`${prefix}_${n}`)) n += 1
+      return `${prefix}_${n}`
     },
     sources: () => [...sources.values()],
     putSource(row) {
@@ -212,12 +249,26 @@ export function memoryStore(input: {
     deleteChunk(id) {
       chunks.delete(id)
       cuts.delete(id)
+      for (const key of [...vectors.keys()]) {
+        if (key.startsWith(`${id}\t`)) vectors.delete(key)
+      }
     },
     chunkCut(id) {
       return cuts.get(id) ?? "document"
     },
     setChunkCut(id, boundary) {
       cuts.set(id, boundary)
+    },
+    vectors: () =>
+      [...vectors.entries()].map(([key, values]) => {
+        const split = key.indexOf("\t")
+        return { chunkId: key.slice(0, split), model: key.slice(split + 1), values }
+      }),
+    putVector(chunkId, model, values) {
+      vectors.set(`${chunkId}\t${model}`, values)
+    },
+    vector(chunkId, model) {
+      return vectors.get(`${chunkId}\t${model}`)
     },
     pipeline(locationId) {
       return pipelines.get(locationId) ?? defaultPipeline()
