@@ -4751,6 +4751,7 @@ export type RagStudioCompareOutput = {
     | {
         readonly questions: ReadonlyArray<{
           readonly id: string
+          readonly text: string
           readonly startChanged: boolean
           readonly endChanged: boolean
           readonly textChanged: boolean

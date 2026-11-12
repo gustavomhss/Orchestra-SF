@@ -5,7 +5,7 @@ import { useSDK } from "@/context/sdk"
 import type { ChapterPageProps } from "@/orchestra/chapter-route"
 import { MxBadge } from "../kit"
 import { roster, setRoster, statusKey, statusTone, type SourceStatus } from "./roster"
-import { rememberQuestion } from "./saved"
+
 import { SourceText } from "./source-text"
 
 const lights = ["not_in_corpus", "search_miss", "dropped_before_model", "sent"] as const
@@ -62,15 +62,16 @@ export function Question(props: ChapterPageProps) {
           when={roster.embeddingModel}
           fallback={<MxBadge>{language.t("orchestra.ragStudio.embeddingOff")}</MxBadge>}
         >
-          {(model) => (
-            <MxBadge>{language.t("orchestra.ragStudio.embeddingNamed", { model: model() })}</MxBadge>
-          )}
+          {(model) => <MxBadge>{language.t("orchestra.ragStudio.embeddingNamed", { model: model() })}</MxBadge>}
         </Show>
       </div>
       <ol class="rag-lights">
         <For each={lights}>
           {(light) => (
-            <li data-on={state.light === light ? "true" : "false"} aria-current={state.light === light ? "true" : undefined}>
+            <li
+              data-on={state.light === light ? "true" : "false"}
+              aria-current={state.light === light ? "true" : undefined}
+            >
               <span class="rag-light-mark" aria-hidden="true" />
               <span class="rag-light-name">{language.t(lightKey(light))}</span>
             </li>
@@ -117,7 +118,11 @@ export function Question(props: ChapterPageProps) {
       >
         <label class="mx-field">
           <span>{language.t("orchestra.ragStudio.questionText")}</span>
-          <input value={state.text} autocomplete="off" onInput={(event) => setState({ text: event.currentTarget.value })} />
+          <input
+            value={state.text}
+            autocomplete="off"
+            onInput={(event) => setState({ text: event.currentTarget.value })}
+          />
         </label>
         <button class="mx-btn primary" type="submit" disabled={state.busy || !state.text.trim()}>
           {language.t("orchestra.ragStudio.ask")}
@@ -181,8 +186,7 @@ export function Question(props: ChapterPageProps) {
                   text: state.askedText,
                   span,
                 })
-                .then((saved) => {
-                  rememberQuestion(saved.data.id, state.askedText)
+                .then(() => {
                   setState({ busy: false, saved: true, error: false })
                 })
                 .catch(() => setState({ busy: false, error: true }))
