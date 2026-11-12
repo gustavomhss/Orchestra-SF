@@ -283,6 +283,22 @@ function attach() {
     if (key !== "own") url.searchParams.delete("own")
     location.assign(url.toString())
   }) })
+  document.querySelectorAll('form[data-command] input[type="hidden"][name="budgetEdited"]').forEach((marker) => {
+    const form = marker.form
+    if (!form || form.dataset.budgetMonths) return
+    form.dataset.budgetMonths = "true"
+    form.addEventListener("input", (event) => {
+      const input = event.target
+      if (!input || !input.name || input === marker) return
+      const match = /^b([0-9]|1[01])$/.exec(input.name)
+      if (!match) return
+      const index = Number(match[1])
+      const parsed = (() => { try { return JSON.parse(marker.value || "[]") } catch { return [] } })()
+      const marks = Array.isArray(parsed) ? parsed.filter((item) => Number.isInteger(item) && item >= 0 && item <= 11 && item !== index) : []
+      marks.push(index)
+      marker.value = JSON.stringify(marks)
+    })
+  })
 }
 function applyRefresh() {
   if (!pending.html || document.querySelector("form[data-dirty], dialog[open]") || document.activeElement && document.activeElement.closest("form")) return

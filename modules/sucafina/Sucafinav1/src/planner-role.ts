@@ -57,6 +57,28 @@ export function plannerField(
   return false
 }
 
+// A populated domain matches actor.domains, even when the owner id is the actor. A blank domain matches only that owner id.
+export function ownerLineScope(actor: PlannerActor, line: PlannerLine | undefined): boolean {
+  if (!line) return false
+  const domain = line.domain?.trim() ?? ""
+  if (domain) return actor.domains?.includes(domain) === true
+  return !!line.ownerId && line.ownerId === actor.id
+}
+
+const OWNER_LINE_FIELDS = new Set(["budget", "structure", "name", "owner", "entity", "allocation", "currency", "classification"])
+
+export function ownerMayEdit(
+  field: string,
+  version: PlanVersion,
+  officialId: string | undefined,
+  actor: PlannerActor,
+  line?: PlannerLine,
+): boolean {
+  if (!actor.canWrite || !actor.roles.includes("budget owner") || line?.hr) return false
+  if (!OWNER_LINE_FIELDS.has(field) || !ownerLineScope(actor, line)) return false
+  return lockAllows(field, version.locked, officialId === version.id, true)
+}
+
 function financeField(field: string, locked: boolean): boolean {
   if (field === "closedThrough" || field === "actual" || field === "forecast") return true
   if (field === "fx") return !locked
@@ -69,10 +91,8 @@ function hrField(field: string, locked: boolean): boolean {
 }
 
 function ownerField(field: string, actor: PlannerActor, line: PlannerLine | undefined): boolean {
-  if (field !== "forecast" || !line) return false
-  if (line.ownerId === actor.id) return true
-  if (!line.domain) return false
-  return actor.domains?.includes(line.domain) === true
+  if (field !== "forecast") return false
+  return ownerLineScope(actor, line)
 }
 
 export function deleteRate(id: string, positions: { rateId?: string | null }[], canWrite: boolean): { ok: boolean } {

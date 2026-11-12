@@ -3,7 +3,7 @@ import { changed, conflict, finite, object, rows, text } from "./contract.ts"
 import type { RenderContext } from "./ui.ts"
 import { fields, form, metric, metricGrid, table } from "./ui.ts"
 import { esc } from "../src/screen-shell.ts"
-import { assignOwner, deleteRate, plannerField } from "../src/planner-role.ts"
+import { assignOwner, deleteRate, ownerLineScope, ownerMayEdit, plannerField } from "../src/planner-role.ts"
 import {
   changeAnnual,
   cents,
@@ -352,6 +352,60 @@ export const domain: Domain = {
     }
   },
 }
+function lineScope(line: Row | undefined) {
+  if (!line) return undefined
+  const ownerId = text(line.ownerId) || text(object(line.owner).id) || text(line.owner)
+  const domain = text(line.domain)
+  return { ownerId, domain: domain || undefined, hr: line.synthetic === true }
+}
+
+function postedLineScope(values: Row) {
+  const owner = values.owner
+  const ownerId = owner !== null && typeof owner === "object" ? text(object(owner).id) : text(owner)
+  const domain = text(values.domain)
+  return { ownerId, domain: domain || undefined }
+}
+
+function mergedLineScope(stored: Row, values: Row) {
+  const current = lineScope(stored)
+  const ownerId = Object.hasOwn(values, "owner")
+    ? values.owner !== null && typeof values.owner === "object"
+      ? text(object(values.owner).id)
+      : text(values.owner)
+    : current?.ownerId
+  const domain = Object.hasOwn(values, "domain") ? text(values.domain) : text(current?.domain)
+  return { ownerId, domain: domain || undefined, hr: current?.hr }
+}
+
+function readJson(raw: string): { ok: true; value: unknown } | { ok: false } {
+  try {
+    return { ok: true, value: JSON.parse(raw) }
+  } catch {
+    return { ok: false }
+  }
+}
+
+// budgetEdited is a JSON string of unique month indexes. Absent keeps the legacy "every posted bN is manual" rule.
+function budgetMarks(values: Row): { ok: true; marks?: number[] } | { ok: false } {
+  if (!Object.hasOwn(values, "budgetEdited")) return { ok: true }
+  const raw = values.budgetEdited
+  if (typeof raw !== "string") return { ok: false }
+  const parsed = readJson(raw)
+  if (!parsed.ok || !Array.isArray(parsed.value)) return { ok: false }
+  const marks: number[] = []
+  for (const item of parsed.value) {
+    if (typeof item !== "number" || !Number.isInteger(item) || item < 0 || item > 11 || marks.includes(item))
+      return { ok: false }
+    const key = `b${item}`
+    if (!Object.hasOwn(values, key)) return { ok: false }
+    const posted = values[key]
+    const amount = posted === null || posted === "" ? 0 : posted
+    if (typeof amount !== "number" || !Number.isFinite(amount)) return { ok: false }
+    marks.push(item)
+  }
+  return { ok: true, marks }
+}
+
 function execute(snapshot: Snapshot, actor: Actor, command: Command, environment: Environment): Result {
   const versions = rows(snapshot.data.versions).map(versionOf)
   const values = command.values
@@ -605,7 +659,7 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     Object.keys(values).some(
       (field) =>
         !["versionId", "collection", ...fieldsByCollection[collection]].includes(field) &&
-        !(collection === "lines" && /^[baf](?:[0-9]|1[01])$/.test(field)),
+        !(collection === "lines" && (field === "budgetEdited" || /^[baf](?:[0-9]|1[01])$/.test(field))),
     )
   )
     return invalid("Unknown field")
@@ -632,34 +686,25 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
                         ? "currency"
                         : "budget"
   const target = synthetic ? { ...stored, domain: id.slice(3), synthetic: true } : stored
-  if (
-    !stored &&
-    !synthetic &&
-    !allowed(
-      collection === "positions"
-        ? "headcount"
-        : collection === "rates"
-          ? "rate"
-          : collection === "fx"
-            ? "fx"
-            : "structure",
-    )
-  )
-    return reject
+  const authLine = stored || synthetic ? lineScope(target) : postedLineScope(values)
+  const may = (field: string) => {
+    if (allowed(field, target)) return true
+    if (collection !== "lines" || !ownerMayEdit(field, version, official, actor, authLine)) return false
+    if (!stored) return true
+    return ownerLineScope(actor, mergedLineScope(stored, values))
+  }
+  const recordField =
+    collection === "positions"
+      ? "headcount"
+      : collection === "rates"
+        ? "rate"
+        : collection === "fx"
+          ? "fx"
+          : "structure"
+  if (!stored && !synthetic && !may(recordField)) return reject
   if (command.action === "delete") {
     if (synthetic || !stored) return invalid("Cannot delete this record")
-    if (
-      !allowed(
-        collection === "positions"
-          ? "headcount"
-          : collection === "rates"
-            ? "rate"
-            : collection === "fx"
-              ? "fx"
-              : "structure",
-      )
-    )
-      return reject
+    if (!may(recordField)) return reject
     if (collection === "rates" && !deleteRate(id, version.hc.positions, true).ok) return invalid("Rate card is in use")
     if (collection === "projects" && version.lines.some((line) => line.proj === id)) return invalid("Project is in use")
     if (
@@ -674,9 +719,9 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     return { ok: true }
   }
   if (!["save", "spread", "reset"].includes(command.action)) return { ok: false, status: 400 }
-  if (command.action !== "save" && (collection !== "lines" || synthetic || !allowed("budget", target))) return reject
-  for (const field of Object.keys(values).filter((field) => !["versionId", "collection"].includes(field)))
-    if (!allowed(permission(field), target)) return reject
+  if (command.action !== "save" && (collection !== "lines" || synthetic || !may("budget"))) return reject
+  for (const field of Object.keys(values).filter((field) => !["versionId", "collection", "budgetEdited"].includes(field)))
+    if (!may(permission(field))) return reject
   if (
     synthetic &&
     Object.keys(values).some(
@@ -686,6 +731,8 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     )
   )
     return reject
+  const marker = collection === "lines" && !synthetic ? budgetMarks(values) : undefined
+  if (marker && !marker.ok) return invalid("Invalid budget edit marker")
   if (collection === "lines" && values.domain !== undefined) return invalid("Domain belongs to synthetic HR lines")
   if (collection === "lines" && !synthetic && !stored && command.page === "OPEX") {
     const element = text(values.el) || "licenses"
@@ -696,7 +743,8 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
   const next: Row = { ...stored, id }
   for (const [field, value] of Object.entries(values).filter(
     ([field]) =>
-      !["versionId", "collection", "month", "value"].includes(field) && !/^[baf](?:[0-9]|1[01])$/.test(field),
+      !["versionId", "collection", "month", "value", "budgetEdited"].includes(field) &&
+      !/^[baf](?:[0-9]|1[01])$/.test(field),
   ))
     next[field] = value
   const warnings: string[] = []
@@ -784,13 +832,17 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
               : values.annual !== undefined
                 ? changeAnnual(base, Number(values.annual))
                 : base
-    const edited = Object.entries(values)
-      .filter(([field]) => /^b(?:[0-9]|1[01])$/.test(field))
-      .reduce(
-        (line, [field, value]) =>
-          typeMonth(line, Number(field.slice(1)), value === "" || value === null ? 0 : Number(value)),
-        plan,
-      )
+    const postedBudget = Object.entries(values).filter(([field]) => /^b(?:[0-9]|1[01])$/.test(field))
+    const explicit = marker && marker.ok ? marker.marks : undefined
+    const chosen = postedBudget.filter(([field]) => {
+      if (explicit === undefined) return true
+      return explicit.includes(Number(field.slice(1)))
+    })
+    const edited = chosen.reduce(
+      (line, [field, value]) =>
+        typeMonth(line, Number(field.slice(1)), value === "" || value === null ? 0 : Number(value)),
+      plan,
+    )
     Object.assign(next, edited)
     next.a = months(next.a, true)
     next.f = months(next.f, true)
@@ -1291,7 +1343,7 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
               "projects",
               fields([
                 { name: "name", label: "Project", value: project.name },
-                { name: "code", label: "Code", value: project.code },
+                { name: "code", label: "Code", value: project.code, readonly: version.locked },
                 {
                   name: "owner",
                   label: "Owner",
@@ -1372,7 +1424,7 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
                     type: "number" as const,
                     value: numericMonths(line.b)[i],
                   })),
-                ),
+                ) + `<input type="hidden" name="budgetEdited" value="[]">`,
                 "Save budget",
                 key,
               ),

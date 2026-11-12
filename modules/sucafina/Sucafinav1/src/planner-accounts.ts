@@ -240,6 +240,7 @@ export function effectiveOwner(lineOwner: string, sec: string, projectOwner: str
 const LOCKED_FIELDS = new Set([
   "budget",
   "structure",
+  "code",
   "entity",
   "allocation",
   "classification",
