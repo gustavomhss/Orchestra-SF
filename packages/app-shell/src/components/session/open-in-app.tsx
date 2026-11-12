@@ -61,7 +61,6 @@ export function useOpenInApp(input: { directory: () => string }) {
     const list = apps()
     const started = ++appCheck
     setCheck("failed", false)
-    setExists(Object.fromEntries(list.map((app) => [app.id, undefined])) as Partial<Record<OpenApp, boolean>>)
     for (const app of list) {
       void settleAppCheck({
         read: Promise.resolve()
