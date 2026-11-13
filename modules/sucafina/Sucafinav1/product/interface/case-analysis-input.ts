@@ -11,6 +11,30 @@ export function hasCaseAnalysisInput(skillId: string) {
   return skillId === "sf-comparar-cenarios" || skillId === "sf-enquadrar-decisao"
 }
 
+/** A native-analysis grant never substitutes for the saved case's own read grant. */
+export async function readCaseAnalysisProjection(request: Request, runtime: Pick<SfHostServices, "ui" | "dispatch">,
+  caseRef: SfAnalysisRequest["caseRef"]): Promise<PortResult<AuthorizedCaseProjection>> {
+  const payload = { caseRef: encodeCaseRef(caseRef) }
+  const admitted = await runtime.ui.admit(request, "sf_case_read", digestSfValue(payload))
+  if (admitted.status !== "ok") return { status: admitted.status === "unavailable" ? "unavailable" : "denied", reason: "case-access-unavailable" }
+  try {
+    const result = await runtime.dispatch("sf_case_read", payload, admitted.value).catch(() => undefined)
+    if (!result) return { status: "unavailable", reason: "case-read-unavailable" }
+    if (result.status !== "ok") return { status: result.status === "denied" ? "denied" : result.status === "stale" ? "stale" : "unavailable", reason: "case-read-unavailable" }
+    const decoded = decodeSfOperationOutput("sf_case_read", result.result)
+    if (!decoded.ok) return { status: "unavailable", reason: "case-projection-invalid" }
+    const value = decoded.value
+    const binding = admitted.value.binding
+    if (value.context.installationId !== binding.installationId || value.context.projectId !== binding.projectId ||
+      value.context.principalRef !== binding.principalRef || value.context.policyVersion !== binding.policyVersion ||
+      value.context.accessRevision !== binding.accessRevision || value.case.id !== caseRef.id ||
+      value.case.incarnation !== caseRef.incarnation || !await runtime.ui.revalidate(admitted.value))
+      return { status: "denied", reason: "case-access-changed" }
+    if (value.case.version !== caseRef.version) return { status: "stale", reason: "case-changed" }
+    return { status: "ok", value }
+  } finally { runtime.ui.finish(admitted.value) }
+}
+
 /** Project an authorized saved case. The existing analysis-start verifier still
  * replays the domain calculation and validates all sources before native work. */
 export async function prepareCaseAnalysisInput(request: Request, runtime: SfHostServices, input: {
@@ -26,28 +50,7 @@ export async function prepareCaseAnalysisInput(request: Request, runtime: SfHost
     return { status: "needs-input", reason: "scenario-selection-invalid" }
   if (!scenario && Object.keys(wanted.selection).length) return { status: "needs-input", reason: "intent-selection-invalid" }
 
-  const read = async (): Promise<PortResult<AuthorizedCaseProjection>> => {
-    const payload = { caseRef: encodeCaseRef(wanted.request.caseRef) }
-    // Analysis permission does not substitute for permission to read the case.
-    const admitted = await runtime.ui.admit(request, "sf_case_read", digestSfValue(payload))
-    if (admitted.status !== "ok") return { status: admitted.status === "unavailable" ? "unavailable" : "denied", reason: "case-access-unavailable" }
-    try {
-      const result = await runtime.dispatch("sf_case_read", payload, admitted.value).catch(() => undefined)
-      if (!result) return { status: "unavailable", reason: "case-read-unavailable" }
-      if (result.status !== "ok") return { status: result.status === "denied" ? "denied" : result.status === "stale" ? "stale" : "unavailable", reason: "case-read-unavailable" }
-      const decoded = decodeSfOperationOutput("sf_case_read", result.result)
-      if (!decoded.ok) return { status: "unavailable", reason: "case-projection-invalid" }
-      const value = decoded.value
-      const binding = admitted.value.binding
-      if (value.context.installationId !== binding.installationId || value.context.projectId !== binding.projectId ||
-        value.context.principalRef !== binding.principalRef || value.context.policyVersion !== binding.policyVersion ||
-        value.context.accessRevision !== binding.accessRevision || value.case.id !== wanted.request.caseRef.id ||
-        value.case.incarnation !== wanted.request.caseRef.incarnation || !await runtime.ui.revalidate(admitted.value))
-        return { status: "denied", reason: "case-access-changed" }
-      if (value.case.version !== wanted.request.caseRef.version) return { status: "stale", reason: "case-changed" }
-      return { status: "ok", value }
-    } finally { runtime.ui.finish(admitted.value) }
-  }
+  const read = () => readCaseAnalysisProjection(request, runtime, wanted.request.caseRef)
   const current = await read()
   if (current.status !== "ok") return current
   const domain = current.value.case

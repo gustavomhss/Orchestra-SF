@@ -76,13 +76,46 @@ document.querySelectorAll('[data-analysis-history]').forEach((section) => {
   const status = section.querySelector('[role=status]')
   const output = section.querySelector('[data-results]')
   let timer; let signature; let loading = false; let again = false; let unavailable = false; let accessRevoked = false
-  const revoke = () => { accessRevoked = true; clearTimeout(timer); output.replaceChildren(); delete section.dataset.case; status.textContent = 'Analysis access changed. Reopen the decision with your current access.' }
+  const clearResults = () => { output.querySelectorAll('[data-review-analysis]').forEach((form) => form.dispatchEvent(new Event('sf-review-revoked'))); output.replaceChildren() }
+  const revoke = () => { accessRevoked = true; clearTimeout(timer); clearResults(); delete section.dataset.case; status.textContent = 'Analysis access changed. Reopen the decision with your current access.' }
   addEventListener('sf-access-revoked', () => { if (section.isConnected) revoke() })
-  const send = async (payload) => {
+  const send = async (payload, key = crypto.randomUUID()) => {
     const url = new URL(location.href); url.search = '?sf=workbench-analysis'
-    const response = await fetch(url, { method: 'POST', credentials: 'same-origin', signal: AbortSignal.timeout(15000), headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() }, body: JSON.stringify(payload) })
-    if (response.status === 401 || response.status === 403) throw Object.assign(new Error('access-changed'), { accessDenied: true })
-    const result = await response.json(); if (!response.ok || result.status !== 'ok') throw Object.assign(new Error('unavailable'), { rejected: [400, 409, 422].includes(response.status) && ['invalid', 'needs-input', 'stale', 'conflict'].includes(result.status) }); return result.value
+    const response = await fetch(url, { method: 'POST', credentials: 'same-origin', signal: AbortSignal.timeout(15000), headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify(payload) })
+    if (accessRevoked || response.status === 401 || response.status === 403) throw Object.assign(new Error('access-changed'), { accessDenied: true })
+    const result = await response.json(); if (accessRevoked) throw Object.assign(new Error('access-changed'), { accessDenied: true }); if (!response.ok || result.status !== 'ok') throw Object.assign(new Error('unavailable'), { rejected: [400, 409, 422].includes(response.status) && ['invalid', 'needs-input', 'conflict'].includes(result.status) }); return result.value
+  }
+  const appendReview = (entry, offered) => {
+    const form = document.createElement('form'); form.dataset.reviewAnalysis = 'true'
+    const button = document.createElement('button'); button.type = 'submit'; button.textContent = 'Request independent review'
+    const message = document.createElement('p'); message.setAttribute('role', 'status'); message.setAttribute('aria-live', 'polite')
+    let config = structuredClone(offered); let pending; let prepareKey = crypto.randomUUID(); let startKey = crypto.randomUUID(); let busy = false; let uncertain = false; let started = false; let reconciliationRequired = false; let closed = false
+    const active = () => !closed && !accessRevoked && entry.isConnected && !entry.dataset.analysisStale
+    form.addEventListener('sf-review-revoked', () => { closed = true; config = undefined; pending = undefined; delete form.dataset.dirty; button.disabled = true; message.textContent = '' })
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault(); if (!active() || busy || started || reconciliationRequired || button.disabled) return
+      const reconciling = uncertain; busy = true; button.disabled = true; form.dataset.dirty = 'true'; message.textContent = pending ? 'Confirming the same independent review…' : 'Preparing independent review…'
+      try {
+        if (!pending) {
+          const skillInput = await send({ action: 'prepare', input: { request: config.request, selection: { authorAnalysis: config.authorAnalysis } } }, prepareKey)
+          if (!active()) return
+          pending = { action: 'start', input: { request: config.request, skillInput, model: config.model } }
+        }
+        uncertain = true
+        const run = await send(pending, startKey)
+        if (!active()) return
+        if (!run.runRef) throw new Error('unavailable')
+        started = true; uncertain = false; delete form.dataset.dirty
+        message.textContent = 'Independent review started. Follow its progress in analysis history.'; section.dispatchEvent(new Event('sf-analysis-refresh'))
+      } catch (error) {
+        if (error?.accessDenied) { revoke(); return }
+        if (!active()) return
+        if (error?.rejected) { if (reconciling) reconciliationRequired = true; else { uncertain = false; pending = undefined; prepareKey = crypto.randomUUID(); startKey = crypto.randomUUID() } }
+        if (!uncertain) delete form.dataset.dirty
+        message.textContent = reconciliationRequired ? 'The retry was rejected but the earlier review request is still unconfirmed. Reconcile analysis history before requesting another review.' : uncertain ? 'Could not confirm whether the review started. Retry the same request to recover its result.' : 'Independent review could not be prepared. Reopen the current result and check access and model availability before retrying.'
+      } finally { busy = false; button.disabled = !active() || started || reconciliationRequired; button.textContent = started ? 'Review requested' : uncertain ? 'Retry the same review request' : 'Request independent review' }
+    })
+    form.append(button, message); entry.append(form)
   }
   const load = async () => {
     if (!section.isConnected || accessRevoked) return
@@ -96,13 +129,13 @@ document.querySelectorAll('[data-analysis-history]').forEach((section) => {
       if (signature === nextSignature) { status.textContent = unavailable ? 'An analysis is no longer available. Its previous details have been removed.' : runs.length ? '' : 'No analyses yet.'; if (runs.length) timer = setTimeout(load, 3000); return }
       output.querySelectorAll('[data-run-ref]').forEach((entry) => {
         const current = runs.find((run) => run.runRef === entry.dataset.runRef)
-        if (!current) { unavailable = true; entry.remove(); return }
+        if (!current) { unavailable = true; entry.querySelector('[data-review-analysis]')?.dispatchEvent(new Event('sf-review-revoked')); entry.remove(); return }
         if (entry.querySelector('form[data-dirty]') && (current.state !== 'ready' || (current.outputRef && current.outputRef !== entry.dataset.outputRef))) {
-          entry.dataset.analysisStale = 'true'; entry.querySelector('[data-analysis-body]')?.remove(); entry.querySelectorAll('button').forEach((button) => { button.disabled = true }); entry.querySelector('[data-analysis-state]').textContent = 'Analysis: ' + current.state + '. This result changed. Your reason is preserved; review the current result before accepting.'
+          entry.dataset.analysisStale = 'true'; entry.querySelector('[data-analysis-body]')?.remove(); entry.querySelectorAll('button').forEach((button) => { button.disabled = true }); entry.querySelector('[data-analysis-state]').textContent = 'Analysis: ' + current.state + (entry.querySelector('[data-review-analysis][data-dirty]') ? '. This result changed. Your review request is preserved; reconcile analysis history before requesting another review.' : '. This result changed. Your reason is preserved; review the current result before accepting.')
         }
       })
       if (section.querySelector('form[data-dirty]')) { status.textContent = unavailable ? 'An analysis is no longer available. Its previous details have been removed; your other drafts remain.' : 'Analysis history changed. Your reason is preserved.'; timer = setTimeout(load, 3000); return }
-      signature = nextSignature; output.replaceChildren(); status.textContent = unavailable ? 'An analysis is no longer available. Its previous details have been removed.' : runs.length ? '' : 'No analyses yet.'
+      signature = nextSignature; clearResults(); status.textContent = unavailable ? 'An analysis is no longer available. Its previous details have been removed.' : runs.length ? '' : 'No analyses yet.'
       for (const run of runs) {
         const entry = document.createElement('article'); entry.dataset.runRef = run.runRef; entry.dataset.outputRef = run.outputRef || ''; const state = document.createElement('p'); state.dataset.analysisState = 'true'; state.textContent = 'Analysis: ' + run.state; entry.append(state); output.append(entry)
         if (['preparing', 'queued', 'running'].includes(run.state)) {
@@ -116,6 +149,8 @@ document.querySelectorAll('[data-analysis-history]').forEach((section) => {
         open.disabled = true
         try {
           const result = await send({ action: 'output', runRef: run.runRef }); if (accessRevoked || !entry.isConnected || entry.dataset.analysisStale) return; const body = document.createElement('div'); body.dataset.analysisBody = 'true'; body.innerHTML = result.html; entry.append(body)
+          if (result.review) { appendReview(entry, result.review); delete result.review }
+          else if (result.reviewUnavailable) { const message = document.createElement('p'); message.textContent = 'Independent review is currently unavailable for this result. It requires current decision access, a ready comparison and an available reviewer model.'; entry.append(message) }
           if (!result.outputRef) { open.remove(); return }
           const form = document.createElement('form'); const label = document.createElement('label'); label.textContent = 'Reason for accepting this contribution'
           const rationale = document.createElement('textarea'); rationale.required = true; label.append(rationale)

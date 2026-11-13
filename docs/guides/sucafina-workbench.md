@@ -10,7 +10,7 @@ Use **Find a record** para procurar um registro pelo nome ou por um valor visív
 
 Se alguma página estiver temporariamente indisponível, a busca informa que a lista está incompleta. Uma mudança de acesso limpa os resultados. A consulta continua preenchida para você tentar novamente. A busca encontra registros que as páginas apresentam com uma identidade ou um link de detalhe; não procura conteúdo oculto de documentos ou campos que a aplicação não apresenta.
 
-Em **My work**, informe as datas de início e fim e selecione **Find work**. A lista mostra os itens atribuídos que podem ser consultados nesse período. Quando houver um destino disponível, selecione **Open work** para abri-lo; o acesso é conferido novamente. Se a lista estiver vazia, confira o período; se disser que o serviço está indisponível ou que o acesso mudou, atualize a página e confirme suas permissões.
+Quando **My work** estiver disponível na instalação, informe as datas de início e fim e selecione **Find work**. A lista mostra os itens atribuídos que podem ser consultados nesse período. Quando houver um destino disponível, selecione **Open work** para abri-lo; o acesso é conferido novamente. Se a lista estiver vazia, confira o período. Se a instalação ainda não oferecer essa lista, a tela informa a indisponibilidade e mantém as páginas operacionais como caminho de entrada. Erros de seleção preservam o período para correção e nova tentativa.
 
 Em **Search documents**, procure documentos que você tem autorização para consultar. Abra o resultado para verificar a origem. Um resultado pode deixar de estar disponível se o acesso ou a fonte mudar.
 
@@ -35,7 +35,13 @@ Se a confirmação de salvar, remover ou definir a página inicial não chegar, 
 
 Use **Create a decision** quando precisar manter objetivo, critérios, alternativas e histórico juntos. Informe o objetivo, as datas, a moeda e um critério por linha; depois selecione **Create decision**. A tela abre o caso criado. Você pode editar objetivo, período, moeda e critérios em **Edit decision**.
 
+Se o salvamento de uma edição ficar sem confirmação, os campos ficam preservados e bloqueados. Use **Retry same save** para consultar o resultado da mesma solicitação. Um conflito confirmado antes de salvar mostra os valores atuais e sua tentativa; uma resposta perdida seguida de conflito mantém a tentativa inconclusiva até você conferir o caso salvo.
+
+Em **Dashboard → Vendor Contracts**, a ação **Create decision** de cada contrato abre uma decisão contextual. O contrato e o ano efetivo acompanham a criação; informe a moeda explicitamente. A fonte é conferida novamente ao salvar. No caso criado, **Return to contract** retoma a página, os filtros e o registro de origem. Se o contrato mudar ou seu acesso for revogado, a criação não utiliza silenciosamente a referência anterior.
+
 Quando a confirmação de criação não chegar, os campos permanecem preenchidos e bloqueados para repetir a mesma tentativa. Isso evita transformar uma resposta perdida em uma segunda decisão com conteúdo diferente.
+
+Quando houver um serviço de análise disponível, **Frame this decision → Prepare decision framing** usa o objetivo atual e as fontes anexadas para preparar uma contribuição. A preparação relê o caso e verifica sua versão; ela não cria fontes nem registra uma escolha. A contribuição aparece no histórico para revisão.
 
 O detalhe mostra o estado e a versão do caso, seus critérios, alternativas e resultados disponíveis. Em cada alternativa, leia o estado da comparação e as condições. **Known subtotal** e **Known difference** mostram somente o que pode ser calculado com as informações atuais; não equivalem a um total ou diferença completos. Uma categoria pendente ou ausente não é zero. Abra **Coverage and sources** para consultar a cobertura e as fontes.
 
@@ -51,6 +57,8 @@ Com pelo menos duas alternativas, use **Compare and choose**. Para pedir uma an�
 
 Comparar não registra uma escolha. Registrar a escolha guarda seu motivo no caso, mas não altera por si só o Planner nem aprova um pedido. Quando houver uma mudança preparada, use **Review current changes** para conferir destino, versão e valores anteriores e propostos. Somente depois marque a confirmação e selecione **Apply reviewed change**. Se a revisão estiver indisponível ou desatualizada, atualize o caso; consulte o recibo e o estado retornado para saber o que foi efetivamente aplicado.
 
+Se a resposta de uma escolha ou aplicação não chegar, a comparação, o motivo e a solicitação permanecem bloqueados para repetição exata. Use **Retry the same choice** ou **Retry same application**, conforme a ação. Uma aplicação pode retornar conflito depois de o domínio observar um recibo; confira o recibo e o caso atual antes de iniciar outra mudança. A interface não interpreta esse conflito como prova de que nada foi gravado.
+
 Em **Explore a portfolio**, você pode selecionar decisões e alternativas autorizadas, definir qual decisão guardará a avaliação, período, moeda e limite de combinações e selecionar **Preview portfolio**. Leia elegibilidade, estados de comparação, restrições e limitações antes de selecionar **Save this evaluation**. A avaliação salva fica no histórico do caso. Um resultado parcial ou condicionado continua assim no histórico.
 
 ## Explicar uma previsão
@@ -63,22 +71,28 @@ Essa opção depende de duas fontes de Planner anexadas ao caso e de um modelo d
 
 Enquanto o início de uma análise estiver sem confirmação, as seleções e o modelo ficam preservados para repetir a mesma tentativa. Falhas transitórias na atualização do histórico conservam o resultado aberto e a justificativa digitada. Um resultado desatualizado deixa de poder ser aceito; uma revogação de acesso remove o conteúdo anterior.
 
+### Pedir uma revisão independente
+
+Abra no histórico uma comparação concluída. Quando o resultado, o acesso e um modelo de revisão estiverem disponíveis, selecione **Request independent review**. A revisão usa a comparação salva e o caso atual; acompanhe sua execução própria no histórico. Ela não registra uma escolha nem aplica mudanças nos registros oficiais.
+
+Se o início ficar sem confirmação, use **Retry the same review request**. A tentativa conserva o resultado original que seria revisado. Se esse resultado mudar, confira o histórico antes de pedir outra revisão. Quando a ação estiver indisponível, a tela informa os requisitos; reabra a contribuição atual depois de conferir acesso e disponibilidade do serviço.
+
 ## Colar e salvar valores mensais no Planner
 
 No Dashboard, abra o diálogo da linha OPEX ou CAPEX para editar seus campos mensais. Em **Annual Entry** ou **Year amount**, confira o alcance apresentado antes de confirmar a aplicação. Ao abrir um projeto de uma lista filtrada, os filtros de busca, estado e responsável são mantidos no retorno. A navegação a partir do Executivo também preserva o ano e o mês de Operations.
 
 Nas páginas **OPEX** e **CAPEX**, a seção **Edit monthly values together** permite colar um intervalo de valores:
 
-1. Escolha **Budget**, **Actual** ou **Forecast** em **Measure**.
+1. Abra a grade de **Budget**, **Actual** ou **Forecast** desejada e selecione a mesma medida em **Measure**. Só as células oferecidas pela página autorizada podem ser editadas em lote.
 2. Cole os valores nas células editáveis. A grade usa 12 meses; o intervalo precisa caber nas linhas e células disponíveis.
 3. Selecione **Preview changes** e leia os erros ou alterações apresentados.
 4. Quando a prévia estiver correta, selecione **Save changes**.
 
 O sistema pode aceitar algumas linhas e sinalizar outras separadamente. Em caso de conflito, a tela mostra o valor atual e a sua tentativa; suas entradas são preservadas. Compare os valores, atualize a página se necessário e faça uma nova prévia antes de salvar.
 
-Se a gravação perder a resposta, a grade e as operações de orçamento ficam bloqueadas e o botão repete exatamente a tentativa original. Um conflito nessa repetição não confirma que a primeira gravação falhou. Nesse caso, confira o registro persistido antes de iniciar outra alteração; o estado continua inconclusivo até essa reconciliação.
+Se a gravação perder a resposta ou exceder o tempo de espera, a grade fica bloqueada e o botão repete exatamente a tentativa original. Um conflito nessa repetição não confirma que a primeira gravação falhou. Nesse caso, confira o registro persistido antes de iniciar outra alteração; o estado continua inconclusivo até essa reconciliação.
 
-As operações anuais, de distribuição e de reset da grade dependem da integração do serviço correspondente. Enquanto ele não estiver publicado, a solicitação é recusada antes de gravar. Os formulários operacionais já disponíveis nas páginas continuam sendo os pontos de entrada para essas tarefas.
+O editor em lote oferece alterações mensais. Para operações anuais, distribuição e reset, use as ações disponíveis no registro da página original. O serviço em lote atual não publica essas operações; por isso elas não são oferecidas como ações do editor mensal.
 
 ## Importar com prévia
 

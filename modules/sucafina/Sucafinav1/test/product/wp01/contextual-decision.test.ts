@@ -26,10 +26,18 @@ import type { SfHostServices } from "../../../product/contracts/host-context.ts"
 import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
 import { decorateSfProductHtml } from "../../../product/interface/html.ts"
 
+async function within<T>(operation: Promise<T>, step: string): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined
+  try {
+    return await Promise.race([operation, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`Contextual decision timed out: ${step}`)), 10000) })])
+  } finally { clearTimeout(timer) }
+}
+
 test("contract context uses mounted evidence, survives a lost response, and rejects tamper and revocation", async () => {
+  let phase = "open store"
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-contextual-decision-"))
   await chmod(directory, 0o700)
-  const driver = await openLocalStore(directory)
+  const driver = await within(openLocalStore(directory), phase)
   const routed: { handle?: (request: Request) => Promise<Response | undefined> } = {}
   const server = Bun.serve({ hostname: "localhost", port: 0, fetch: async (request) => await routed.handle?.(request) ?? new Response(null, { status: 503 }) })
   const origin = server.url.origin
@@ -40,12 +48,14 @@ test("contract context uses mounted evidence, survives a lost response, and reje
   const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator, secrets: driver.secrets, key: randomBytes(32) })
   const location = Location.Ref.make({ directory: AbsolutePath.make(directory) })
   const environment = async (request: Request) => ({ at: now(), id: randomUUID, directory: await identity.directory(request) })
+  let failure: unknown
   try {
-    await persistence.initializeSources("dashboard")
-    await persistence.transaction("dashboard", async (snapshot) => {
+    phase = "initialize contract sources"
+    await within(persistence.initializeSources("dashboard"), phase)
+    await within(persistence.transaction("dashboard", async (snapshot) => {
       snapshot.data.contracts = [{ id: "contract-a", vendor: "Context contract Alpha", amount: 120, currency: "USD" }, { id: "contract-b", vendor: "Context contract Beta", amount: 240, currency: "USD" }]
       return { commit: true, value: undefined }
-    })
+    }), "seed contracts")
     const authority = createSfProductAuthority({ identity: () => ({ installationId: operator.installationId, projectId: "project", hostId: "host", location }), installationId: operator.installationId, origin, policyVersion: "policy", persistence, authenticate: identity.authenticate, environment,
       grants: [{ principalRef: person, namespaces: ["cases"], operations: ["sf_case_draft", "sf_case_read", "sf_work_list"] }], createId: randomUUID, now: Date.now,
       commandIdentity: async (request, operation) => request.method === "GET" || request.method === "HEAD" ? randomUUID() : request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
@@ -62,11 +72,13 @@ test("contract context uses mounted evidence, survives a lost response, and reje
     const product = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
     const app = createModule("/sucafina", { persistence, authenticate: identity.authenticate, environment, product, productHtml: decorateSfProductHtml, maxJsonBytes: 100000 })
     routed.handle = async (request) => await identity.handle(request) ?? await app(request)
-    const authenticated = await identity.handle(new Request(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`))
+    phase = "enroll actual operator"
+    const authenticated = await within(identity.handle(new Request(`${origin}/sucafina/auth/local?code=${await within(identity.enroll(), phase)}`)), phase)
     const cookie = authenticated!.headers.get("set-cookie")!.split(";")[0]!
     const returnTo = "/sucafina/dashboard?page=Vendor+Contracts&year=2027&q=Context&filter=#record-contract-a"
     const contextUrl = (back = returnTo) => `${origin}/sucafina/dashboard?${new URLSearchParams({ sf: "workbench-context", recordId: "contract-a", start: "2027-01-01", end: "2027-12-31", returnTo: back })}`
-    const get = (url: string) => app(new Request(url, { headers: { cookie } }))
+    const get = (url: string) => within(app(new Request(url, { headers: { cookie } })), `GET ${new URL(url).searchParams.get("sf")}`)
+    phase = "validate work and contextual boundaries"
     const unavailableWork = await get(`${origin}/sucafina/dashboard?sf=workbench-work-select&start=2027-01-01&end=2027-12-31`)
     expect(unavailableWork?.status).toBe(503)
     expect(unavailableWork?.headers.get("content-type")).toContain("text/html")
@@ -80,20 +92,37 @@ test("contract context uses mounted evidence, survives a lost response, and reje
       expect(await response!.text()).not.toContain("data-source-refs=")
     }
     const absentSource = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => ({ ...services, host: { ...authority.host, persistence: driver } }) })
-    expect((await absentSource(new Request(contextUrl(), { headers: { cookie } }), "dashboard"))?.status).toBe(503)
+    expect((await within(absentSource(new Request(contextUrl(), { headers: { cookie } }), "dashboard"), "missing source port"))?.status).toBe(503)
+    const issuedContext = await get(contextUrl())
+    expect(issuedContext?.status).toBe(200)
+    expect(await issuedContext!.text()).toContain("Create a decision from Context contract Alpha")
     const { chromium } = await import("@playwright/test")
-    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+    phase = "launch browser"
+    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 10000 })
+    let tab: import("@playwright/test").Page | undefined
+    const errors: string[] = []
+    let browserFailure: unknown
     try {
-      const tab = await browser.newPage()
+      tab = await within(browser.newPage(), "open page")
       tab.setDefaultTimeout(10000)
       tab.setDefaultNavigationTimeout(15000)
       const separator = cookie.indexOf("=")
       await tab.context().addCookies([{ name: cookie.slice(0, separator), value: cookie.slice(separator + 1), url: origin }])
-      const errors: string[] = []
       tab.on("pageerror", (error) => { errors.push(error.message) })
+      const dialogs: string[] = []
+      tab.on("dialog", async (dialog) => { dialogs.push(dialog.type()); await dialog.accept() })
+      phase = "open source contract and confirm discard once"
       await tab.goto(`${origin}${returnTo}`, { waitUntil: "domcontentloaded" })
+      // Enter an unsaved draft in the real record form before the contextual link.
+      await tab.locator('form[data-record="contract-a"] input[name="vendor"]').evaluate((node) => {
+        const field = node as HTMLInputElement
+        field.value = "Unsaved local vendor"
+        field.dispatchEvent(new Event("input", { bubbles: true }))
+      })
+      expect(await tab.locator('form[data-dirty="true"]').count()).toBeGreaterThan(0)
       await tab.getByRole("button", { name: "Create decision for Context contract Alpha", exact: true }).click()
       await tab.getByRole("heading", { name: "Create a decision from Context contract Alpha", exact: true }).waitFor()
+      expect(dialogs).toEqual(["confirm"])
       const form = tab.locator("[data-decision-create]")
       const sourceRefs: BusinessEvidenceRef[] = JSON.parse(await form.getAttribute("data-source-refs") ?? "[]")
       expect(sourceRefs).toHaveLength(1)
@@ -105,8 +134,9 @@ test("contract context uses mounted evidence, survives a lost response, and reje
       expect(original.target.period).toEqual({ start: "2027-01-01", end: "2027-12-31" })
       expect(original.refDigest).toBe(digestSfEvidenceRef(original))
       const draft = (refs: readonly BusinessEvidenceRef[]) => ({ objective: "Review contextual renewal", horizon: original.target.period!, currency: "USD", criteria: ["Cost", "Continuity"], sourceRefs: refs })
-      const post = (refs: readonly BusinessEvidenceRef[], key: string) => app(new Request(`${origin}/sucafina/dashboard?sf=workbench-command`, { method: "POST", headers: { cookie, origin, "content-type": "application/json", "idempotency-key": key }, body: JSON.stringify({ operation: "sf_case_draft", input: draft(refs) }) }))
-      const readCases = () => authority.state.read(new Request(`${origin}/sucafina/dashboard`, { headers: { cookie } }), "cases", (state) => Object.values(state.cases))
+      const post = (refs: readonly BusinessEvidenceRef[], key: string) => within(app(new Request(`${origin}/sucafina/dashboard?sf=workbench-command`, { method: "POST", headers: { cookie, origin, "content-type": "application/json", "idempotency-key": key }, body: JSON.stringify({ operation: "sf_case_draft", input: draft(refs) }) })), "create case command")
+      const readCases = () => within(authority.state.read(new Request(`${origin}/sucafina/dashboard`, { headers: { cookie } }), "cases", (state) => Object.values(state.cases)), "read persisted cases")
+      phase = "reject altered source evidence"
       const corrupted = { ...original, refDigest: "0".repeat(64) }
       // A self-consistent digest still cannot move an issued selector to a different record.
       const substituted = { ...original, target: { ...original.target, recordId: "contract-b" } }
@@ -119,10 +149,11 @@ test("contract context uses mounted evidence, survives a lost response, and reje
       expect(before.status === "ok" ? before.value.length : before.status === "unavailable" && before.reason === "product-state-uninitialized" ? 0 : -1).toBe(0)
       const seen: { key: string | undefined; body: string | null }[] = []
       let deliveredStatus = 0
+      phase = "lose delivery after real commit"
       await tab.route("**/dashboard?sf=workbench-command", async (route) => {
         seen.push({ key: route.request().headers()["idempotency-key"], body: route.request().postData() })
         if (seen.length !== 1) { await route.continue(); return }
-        const committed = await route.fetch()
+        const committed = await route.fetch({ timeout: 10000 })
         deliveredStatus = committed.status()
         await route.abort("failed")
       })
@@ -139,6 +170,7 @@ test("contract context uses mounted evidence, survives a lost response, and reje
       expect(uncertain.value).toHaveLength(1)
       expect(uncertain.value[0]!.sourceRefs).toEqual(sourceRefs)
       await form.evaluate((node, ref) => { node.setAttribute("data-source-refs", JSON.stringify([ref])); const objective = node.querySelector<HTMLInputElement>('input[name="objective"]'); if (objective) objective.value = "Changed after lost response" }, substituted)
+      phase = "reconcile identical request and return to source"
       await form.getByRole("button", { name: "Retry same creation", exact: true }).click()
       await tab.getByRole("heading", { name: "Review contextual renewal", exact: true }).waitFor()
       expect(seen).toHaveLength(2)
@@ -157,7 +189,8 @@ test("contract context uses mounted evidence, survives a lost response, and reje
       await tab.locator("#record-contract-a").waitFor()
       expect(new URL(tab.url()).searchParams.get("q")).toBe("Context")
       expect(new URL(tab.url()).searchParams.get("year")).toBe("2027")
-      await persistence.transaction("dashboard", async (snapshot) => { snapshot.data.contracts = [{ id: "contract-a", vendor: "Context contract Alpha", amount: 180, currency: "USD" }]; return { commit: true, value: undefined } })
+      phase = "reject stale source and revoked session"
+      await within(persistence.transaction("dashboard", async (snapshot) => { snapshot.data.contracts = [{ id: "contract-a", vendor: "Context contract Alpha", amount: 180, currency: "USD" }]; return { commit: true, value: undefined } }), "change source contract")
       expect((await post(sourceRefs, "changed-source"))?.status).toBe(503)
       const unchanged = await readCases()
       expect(unchanged.status === "ok" && unchanged.value.length).toBe(1)
@@ -165,13 +198,29 @@ test("contract context uses mounted evidence, survives a lost response, and reje
       await form.getByLabel("Decision objective", { exact: true }).fill("Must not persist after logout")
       await form.getByLabel("Currency", { exact: true }).fill("USD")
       await form.getByLabel("Criteria, one per line", { exact: true }).fill("Cost")
-      expect(await tab.evaluate(async () => (await fetch("/sucafina/auth/logout", { method: "POST", credentials: "same-origin" })).status)).toBe(204)
+      expect(await within(tab.evaluate(async () => (await fetch("/sucafina/auth/logout", { method: "POST", credentials: "same-origin", signal: AbortSignal.timeout(5000) })).status), "logout operator")).toBe(204)
       await form.getByRole("button", { name: "Create decision", exact: true }).click()
       await tab.getByText("Your access changed. Reload before creating a decision.", { exact: true }).waitFor()
       expect(await tab.locator("[data-source-refs], [data-decision-context] h2, [data-decision-context] input").count()).toBe(0)
       expect((await get(contextUrl()))?.status).toBe(403)
       expect((await post(sourceRefs, "revoked-session"))?.status).toBe(403)
       expect(errors).toEqual([])
-    } finally { await browser.close() }
-  } finally { await server.stop(true); await driver.dispose(); await rm(directory, { recursive: true, force: true }) }
+    } catch (error) {
+      browserFailure = error
+      console.error("WP01 contextual browser failure", { phase, url: tab?.url(), errors })
+      throw error
+    } finally {
+      const cleanup: unknown[] = []
+      try { if (tab && !tab.isClosed()) await within(tab.close({ runBeforeUnload: false }), "close page") } catch (error) { cleanup.push(error) }
+      try { await within(browser.close(), "close browser") } catch (error) { cleanup.push(error) }
+      if (cleanup.length) throw new AggregateError(browserFailure ? [browserFailure, ...cleanup] : cleanup, "Contextual browser cleanup failed")
+    }
+  } catch (error) { failure = error; console.error("WP01 contextual failure", { phase }); throw error }
+  finally {
+    const cleanup: unknown[] = []
+    try { await within(Promise.resolve(server.stop(true)), "stop server") } catch (error) { cleanup.push(error) }
+    try { await within(driver.dispose(), "dispose store") } catch (error) { cleanup.push(error) }
+    try { await within(rm(directory, { recursive: true, force: true }), "remove directory") } catch (error) { cleanup.push(error) }
+    if (cleanup.length) throw new AggregateError(failure ? [failure, ...cleanup] : cleanup, "Contextual persistence cleanup failed")
+  }
 }, 90000)

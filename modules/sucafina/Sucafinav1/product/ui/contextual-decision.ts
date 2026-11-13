@@ -14,7 +14,6 @@ export const contextualDecisionScript = `
     button.textContent = 'Create decision'; button.setAttribute('aria-label', 'Create decision for ' + (anchor.textContent.trim() || 'contract'))
     button.addEventListener('click', () => {
       if (!anchor.isConnected) return
-      if (document.querySelector('form[data-dirty="true"]') && !confirm('Discard unsaved changes?')) return
       const current = new URL(location.href); const returnTo = new URL(current)
       const year = document.querySelector('select[data-year="sidebar"]')?.value || current.searchParams.get('year')
       if (!year || !/^202[4-7]$/.test(year)) { status.textContent = 'Choose an available year before creating a contextual decision.'; return }
@@ -22,6 +21,10 @@ export const contextualDecisionScript = `
       returnTo.search = new URLSearchParams([...current.searchParams].filter(([key]) => allowed.includes(key))).toString()
       returnTo.searchParams.set('page', 'Vendor Contracts'); returnTo.searchParams.set('year', year); returnTo.hash = 'record-' + encodeURIComponent(recordId)
       const target = new URL(current); target.hash = ''; target.search = new URLSearchParams({ sf: 'workbench-context', recordId, start: year + '-01-01', end: year + '-12-31', returnTo: returnTo.pathname + returnTo.search + returnTo.hash }).toString()
+      if (document.querySelector('form[data-dirty="true"]')) {
+        if (!confirm('Discard unsaved changes?')) return
+        document.querySelectorAll('form[data-dirty="true"]').forEach((form) => delete form.dataset.dirty)
+      }
       location.assign(target)
     })
     anchor.after(document.createTextNode(' '), button, status)

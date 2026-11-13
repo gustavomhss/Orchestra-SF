@@ -15,7 +15,19 @@ import { enumerateSfSources } from "../../../product/integration/source-inventor
 import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
 import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
 import { decodeSfOperationOutput } from "../../../product/contracts/schema-admission.ts"
-import { digestSfValue } from "../../../product/contracts/canonical.ts"
+import { digestSfContribution, digestSfValue } from "../../../product/contracts/canonical.ts"
+import { createResidentAiBundle } from "../../../product/ai/resident.ts"
+import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
+import { createSfHumanAuthority } from "../../../product/integration/human-authority.ts"
+import { prepareReviewAnalysisInput } from "../../../product/interface/review-analysis-input.ts"
+import { handleSfAnalysis } from "../../../product/interface/analysis-http.ts"
+import type { SfHostServices } from "../../../product/contracts/host-context.ts"
+import type { SfAnalysisRequest } from "../../../product/interface/analysis-input-port.ts"
+import type { AuthorizedCaseProjection } from "../../../product/contracts/business-context.ts"
+import type { ScenarioComparison, ScenarioResult } from "../../../product/contracts/decisions.ts"
+import type { ContributionEnvelope } from "../../../product/contracts/resident-ai.ts"
+import type { SfNativeRunRecord } from "../../../product/contracts/state.ts"
+import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
 
 test("Workbench analysis HTTP enforces human authority and hides forged run references", async () => {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-analysis-http-"))
@@ -111,6 +123,15 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
       alternatives: [{ id: "same", version: 1 }, { id: "same", version: 1 }] } } })).status).toBe(400)
     expect((await post({ ...scenarioPrepare, input: { ...scenarioPrepare.input, selection: { ...scenarioPrepare.input.selection,
       caseRef: { ...scenarioRequest.caseRef, id: "another-case" } } } })).status).toBe(400)
+    const reviewer = services.selected.find((item) => item.profile.id === "sf_reviewer")
+    const reviewSkill = reviewer?.skills.find((item) => item.id === "sf-contestar-decisao")
+    if (!reviewer || !reviewSkill) throw new Error("independent reviewer must be registered")
+    const reviewPrepare = { action: "prepare", input: { request: { ...intentRequest, profileId: reviewer.profile.id,
+      profileVersion: reviewer.profile.version, skillId: reviewSkill.id, skillVersion: reviewSkill.version, manifestDigest: reviewer.manifestDigest,
+      requestedOperationScope: reviewSkill.allowedOperations }, selection: { authorAnalysis: { runRef: "missing-author-run", outputDigest: "a".repeat(64) } } } }
+    expect((await post(reviewPrepare)).status).toBe(403)
+    expect((await post({ ...reviewPrepare, input: { ...reviewPrepare.input, selection: { ...reviewPrepare.input.selection,
+      comparison: { fabricated: true } } } })).status).toBe(400)
     const model = (await services.models().catch(() => []))[0]
     const selection = services.selected.find((item) => item.skills.some((skill) => skill.id === "sf-explicar-forecast"))
     const skill = selection?.skills.find((item) => item.id === "sf-explicar-forecast")
@@ -184,3 +205,152 @@ test("Workbench analysis returns unavailable when its host services are absent",
   expect((await handler(request, "dashboard"))?.status).toBe(503)
 })
 
+type ReviewFixtureMode = "valid" | "financial" | "read-denied" | "wrong-case" | "wrong-digest" | "wrong-provenance" | "missing-native" | "case-changed" | "author-changed" | "revoked"
+
+/** These deliberately synthetic author/case ports test the consumer's closed
+ * contract and repeated reads. The UI/human lease registries are real, but their
+ * policy below is an explicit test policy. No native Session exists, and these
+ * fixtures are not evidence of native execution or a production author receipt.
+ * The full-host/SQLite/authenticated integration above remains independently required. */
+async function reviewConsumerFixture(mode: ReviewFixtureMode = "valid") {
+  const origin = "http://localhost"
+  const sourceRoot = path.resolve(import.meta.dir, "../../../product/ai")
+  const bundle = await createResidentAiBundle({ root: sourceRoot, manifestPath: path.join(sourceRoot, "manifests/resident.json") })
+  const profile = bundle.profiles.find((item) => item.id === "sf_finance")!
+  const skill = bundle.skills.find((item) => item.id === "sf-comparar-cenarios")!
+  const reviewer = bundle.profiles.find((item) => item.id === "sf_reviewer")!
+  const reviewSkill = bundle.skills.find((item) => item.id === "sf-contestar-decisao")!
+  const identity = { installationId: "consumer-fixture-installation", projectId: "consumer-fixture-project", principalRef: "consumer-fixture-reader", policyVersion: "consumer-policy", accessRevision: "consumer-access" }
+  const state = { allowed: true, caseReads: 0, authorReads: 0, outputReads: 0, readAdmissions: 0, readFinishes: 0 }
+  const contexts: TrustedUiContext[] = []
+  const ui = createSfUiAuthority({
+    privateCommands: ["sf-human:analysis.read", "sf-human:analysis.start"], createId: randomUUID, now: Date.now,
+    commandIdentity: async (request, operation) => request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
+    authorize: async (request, operation) => state.allowed && new URL(request.url).origin === origin && request.headers.get("origin") === origin &&
+      ["sf_case_read", "sf-human:analysis.read", "sf-human:analysis.start"].includes(operation) && !(mode === "read-denied" && operation === "sf-human:analysis.read") ? identity : undefined,
+  })
+  const baseHuman = createSfHumanAuthority({ origin, ui })
+  const human: SfHostServices["human"] = { ...baseHuman,
+    admit: async (request, action, payload) => {
+      const admitted = await baseHuman.admit(request, action, payload)
+      if (admitted.status === "ok" && action === "analysis.read") { state.readAdmissions++; contexts.push(admitted.value) }
+      return admitted
+    },
+    finish: (context) => { if (contexts.includes(context)) state.readFinishes++; baseHuman.finish(context) },
+  }
+  const caseRef = { id: "consumer-case", incarnation: "consumer-incarnation", version: 1 }
+  const horizon = { start: "2027-01-01", end: "2027-12-31" }
+  const comparison: ScenarioComparison = { baselineResultRef: "decision-result:baseline", alternativeResultRef: "decision-result:alternative",
+    costCoverageRefs: ["coverage:baseline", "coverage:alternative"], criterionResults: [], unresolvedConditions: ["Training remains unconfirmed"],
+    comparisonStatus: "conditioned", knownDifference: 0, completeDifference: null }
+  const result: ScenarioResult = { id: "scenario-id-is-not-a-persisted-result-ref", version: 1, components: [], currency: "USD", horizon, sourceRefs: [],
+    unresolvedConditions: [], restrictions: [], comparisonStatus: "conditioned", knownSubtotal: 0, total: null,
+    costCoverage: { basisId: "consumer-basis", basisVersion: 1, alternativeId: "current-alternative", alternativeVersion: 1, currency: "USD", horizon,
+      issues: [], evaluatedSourceRefs: [], entries: [], derivedMissingCategoryIds: ["training"], coverageState: "pending" } }
+  const projection: AuthorizedCaseProjection = { context: { ...identity, kind: "ui" }, checkedAt: "2026-11-13T01:00:00Z", events: [], evidenceRefs: [],
+    case: { ...caseRef, state: "comparing", objective: "Review the saved comparison", horizon, currency: "USD", criteria: [], participants: [identity.principalRef],
+      sourceRefs: [], costCoverageBases: [], assumptions: [], questions: [], preparedChanges: [], receipts: [], ledger: [],
+      alternatives: [{ id: "current-alternative", version: 1, title: "Saved alternative", scenario: { baseRef: "baseline-source", operations: [], assumptions: [] }, result }],
+      choices: [{ id: "matching-choice", alternativeId: "current-alternative", alternativeVersion: 1, basisVersion: 1, criteria: [], values: [], evidenceRefs: [],
+        principalRef: identity.principalRef, reason: "Saved conditional choice", at: "2026-11-13T01:00:00Z", scenario: { baseRef: "baseline-source", operations: [], assumptions: [] },
+        result, comparison, comparisonStatus: "conditioned", costCoverage: result.costCoverage }],
+    } }
+  const receipt = { runId: "consumer-author-run", nativeSessionId: "synthetic-author-session-for-contract-test", profileId: profile.id,
+    profileVersion: profile.version, profileDigest: profile.sourceDigest, skillId: skill.id, skillVersion: skill.version, sourceDigest: skill.sourceDigest,
+    instructionsDigest: skill.instructionsDigest, loadedMessageId: "synthetic-load-observation", loadedAt: "2026-11-13T01:00:00Z", manifestDigest: bundle.manifestDigest }
+  const run: SfNativeRunRecord = { schema: "sf-native-run-v1", runRef: receipt.runId, version: 1, requestDigest: digestSfValue("consumer-request"), skillInputDigest: digestSfValue("consumer-input"),
+    principalRef: identity.principalRef, accessRevision: identity.accessRevision, policyVersion: identity.policyVersion, caseRef,
+    selection: { profile, skills: [skill], manifestDigest: bundle.manifestDigest, operationIds: skill.allowedOperations }, model: { providerID: "consumer-provider", id: "consumer-model" },
+    skillId: skill.id, objective: projection.case.objective, contextFingerprint: digestSfValue("consumer-context"), createdAt: "2026-11-13T01:00:00Z", updatedAt: "2026-11-13T01:00:00Z",
+    state: "ready", native: { sessionID: receipt.nativeSessionId, skillReceipt: receipt }, outputRef: "consumer-author-output" }
+  const base = { id: run.outputRef!, caseRef, schemaVersion: "sf-contribution-v1" as const, evidenceRefs: [], accessRevision: identity.accessRevision,
+    createdAt: "2026-11-13T01:00:00Z", outputDigest: "", runProvenance: { ...receipt, actualModel: "consumer-provider/consumer-model", contextFingerprint: run.contextFingerprint } }
+  const domain = { context: { ...identity, surface: "planner" as const, period: horizon, currency: "USD", sourceRefs: [], capabilities: [] },
+    version: 1, engineVersion: "consumer-engine", components: [], values: [], missing: [] }
+  const output: ContributionEnvelope = mode === "financial" ? { ...base, kind: "FinancialAnalysis", state: "ready", payload: { baseline: domain, candidate: domain,
+    sourceRefs: [], gaps: [], explanation: "Conditional comparison", comparison, knownDifference: 0, completeDifference: null, analysisBasis: "domain", domainApplied: false } }
+    : { ...base, kind: "ScenarioComparison", state: "ready", payload: comparison }
+  if (mode === "wrong-case") output.caseRef = { ...caseRef, incarnation: "another-incarnation" }
+  if (mode === "wrong-provenance") output.runProvenance.nativeSessionId = "different-synthetic-session"
+  if (mode === "missing-native") Reflect.deleteProperty(run, "native")
+  output.outputDigest = digestSfContribution(output)
+  const wanted: SfAnalysisRequest = { caseRef, objective: projection.case.objective, profileId: reviewer.id, profileVersion: reviewer.version, skillId: reviewSkill.id,
+    skillVersion: reviewSkill.version, manifestDigest: bundle.manifestDigest, outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: reviewSkill.allowedOperations }
+  const input = { request: wanted, selection: { authorAnalysis: { runRef: run.runRef, outputDigest: mode === "wrong-digest" ? "0".repeat(64) : output.outputDigest } } }
+  const services: Pick<SfHostServices, "ui" | "human" | "analyses" | "dispatch"> = {
+    ui, human,
+    dispatch: async (operation, payload, context) => {
+      if (context.kind !== "ui" || operation !== "sf_case_read" || !await ui.validate(context, operation, digestSfValue(payload)))
+        return { status: "denied", reason: "consumer-case-denied", receipt: { kind: "unbound", operation, code: "invalid-binding", at: "2026-11-13T01:00:00Z" } }
+      const receipt = ui.receiptFor(context, operation, digestSfValue(payload))
+      if (!receipt) throw new Error("case fixture requires its own consumed UI read lease")
+      state.caseReads++
+      const value = structuredClone(projection)
+      if (mode === "case-changed" && state.caseReads === 2) value.case.version++
+      return { status: "ok", result: value, receipt }
+    },
+    analyses: {
+      start: async () => { throw new Error("this consumer fixture cannot execute native analysis") },
+      cancel: async () => ({ status: "unavailable", reason: "consumer-fixture" }),
+      list: async () => ({ status: "unavailable", reason: "consumer-fixture" }),
+      read: async (context, runRef) => {
+        if (!await human.authorize(context, "analysis.read", { runRef }) || runRef !== run.runRef) return { status: "denied", reason: "consumer-author-denied" }
+        state.authorReads++
+        const value = structuredClone(run)
+        if (mode === "author-changed" && state.authorReads === 2) value.updatedAt = "2026-11-13T01:00:01Z"
+        return { status: "ok", value }
+      },
+      output: async (context, runRef) => {
+        if (!await human.authorize(context, "analysis.read", { runRef }) || runRef !== run.runRef) return { status: "denied", reason: "consumer-author-denied" }
+        state.outputReads++
+        if (mode === "revoked" && state.outputReads === 2) state.allowed = false
+        return { status: "ok", value: structuredClone(output) }
+      },
+    },
+  }
+  const request = (body?: unknown) => new Request(`${origin}/sucafina/dashboard?sf=workbench-analysis`, { method: "POST",
+    headers: { origin, "content-type": "application/json", "idempotency-key": randomUUID() }, body: body === undefined ? undefined : JSON.stringify(body) })
+  return { services, state, contexts, input, request, comparison, origin, output }
+}
+
+for (const kind of ["valid", "financial"] as const) test(`Reviewer consumer projects the actual ${kind === "financial" ? "FinancialAnalysis comparison" : "ScenarioComparison"} from its supplied ports and rereads both sources`, async () => {
+  const f = await reviewConsumerFixture(kind)
+  const prepared = await prepareReviewAnalysisInput(f.request(), f.services, f.input)
+  expect(prepared).toEqual({ status: "ok", value: { alternativeRefs: ["current-alternative"], choiceRefs: ["matching-choice"], comparison: f.comparison,
+    authorAnalysis: f.input.selection.authorAnalysis, authorizedEvidenceRefs: [] } })
+  expect(f.state).toMatchObject({ caseReads: 2, authorReads: 2, outputReads: 2, readAdmissions: 2, readFinishes: 2 })
+  expect(await Promise.all(f.contexts.map((context) => f.services.ui.revalidate(context)))).toEqual([false, false])
+  expect(JSON.stringify(prepared)).not.toContain("synthetic-author-session")
+})
+
+for (const [mode, status] of [["read-denied", "denied"], ["wrong-case", "unavailable"], ["wrong-digest", "unavailable"], ["wrong-provenance", "unavailable"],
+  ["missing-native", "unavailable"], ["case-changed", "stale"], ["author-changed", "stale"], ["revoked", "denied"]] as const)
+  test(`Reviewer consumer refuses ${mode} through the existing read grants and saved-author checks`, async () => {
+    const f = await reviewConsumerFixture(mode)
+    expect((await prepareReviewAnalysisInput(f.request(), f.services, f.input)).status).toBe(status)
+    expect(f.state.readFinishes).toBe(f.state.readAdmissions)
+    if (mode === "read-denied") expect(f.state.authorReads).toBe(0)
+    expect((await Promise.all(f.contexts.map((context) => f.services.ui.revalidate(context)))).every((value) => !value)).toBe(true)
+  })
+
+test("Reviewer consumer rejects a supplied comparison, evidence or nonreviewer profile before reading ports", async () => {
+  const f = await reviewConsumerFixture()
+  for (const selection of [{ ...f.input.selection, comparison: f.comparison }, { ...f.input.selection, authorizedEvidenceRefs: ["injected"] },
+    { authorAnalysis: { ...f.input.selection.authorAnalysis, nativeSessionId: "caller-session" } }]) {
+    expect((await prepareReviewAnalysisInput(f.request(), f.services, { ...f.input, selection })).status).toBe("needs-input")
+  }
+  expect((await prepareReviewAnalysisInput(f.request(), f.services, { ...f.input, request: { ...f.input.request, profileId: "sf_finance" } })).status).toBe("denied")
+  expect(f.state.caseReads).toBe(0)
+  expect(f.state.authorReads).toBe(0)
+})
+
+test("analysis output returns a denial when access changes during optional review discovery", async () => {
+  const f = await reviewConsumerFixture()
+  // Only the HTTP consumer's declared read/model methods are exercised here.
+  // Neither this adapter fixture nor its fake model catalog executes a native run.
+  const runtime = { ...f.services, selected: [], models: async () => { f.state.allowed = false; return [] } } as SfHostServices
+  const response = await handleSfAnalysis(f.request({ action: "output", runRef: f.input.selection.authorAnalysis.runRef }), f.origin, runtime)
+  expect(response.status).toBe(403)
+  expect(await response.json()).toEqual({ status: "denied" })
+  expect(f.state.readFinishes).toBe(f.state.readAdmissions)
+})

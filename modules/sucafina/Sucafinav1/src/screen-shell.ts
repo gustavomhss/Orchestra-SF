@@ -98,7 +98,9 @@ async function press(name) {
 function attach() {
   const current = new URL(location.href)
   const stateKeys = document.body.dataset.surface === "dashboard" ? ["year", "execYear", "opsYear", "secYear", "executiveMonth", "operationsMonth", "securityMonth", "opsMonth"] : document.body.dataset.surface === "planner" ? ["year", "version"] : []
-  const scopedPeriod = document.body.dataset.surface === "dashboard" && { "Executive Dashboard": ["execYear", "executiveMonth"], "IT Operations": ["opsYear", "operationsMonth"], "IT Security KPIs": ["secYear", "securityMonth"] }[document.querySelector("main")?.dataset.page]
+  const periodYear = document.body.dataset.surface === "dashboard" ? document.querySelector('main select[data-year="own"][data-query]')?.dataset.query : undefined
+  const periodMonth = { execYear: "executiveMonth", opsYear: "operationsMonth", secYear: "securityMonth" }[periodYear]
+  const scopedPeriod = periodMonth ? [periodYear, periodMonth] : undefined
   if (scopedPeriod) {
     if (current.searchParams.has("own") && !current.searchParams.has(scopedPeriod[0])) current.searchParams.set(scopedPeriod[0], current.searchParams.get("own"))
     if (current.searchParams.has("month") && !current.searchParams.has(scopedPeriod[1])) current.searchParams.set(scopedPeriod[1], current.searchParams.get("month"))

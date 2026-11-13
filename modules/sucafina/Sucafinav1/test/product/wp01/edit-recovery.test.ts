@@ -1,8 +1,11 @@
-import { expect, test } from "bun:test"
-import type { Browser, Page } from "@playwright/test"
+import { afterAll, beforeAll, expect, test } from "bun:test"
+import type { Browser, BrowserContext, Page } from "@playwright/test"
 import { plannerMonthlyScript } from "../../../product/ui/planner-monthly.ts"
 import { caseQuestionScript } from "../../../product/ui/work-collaboration.ts"
 import { forecastAnalysisScript } from "../../../product/ui/forecast-analysis.ts"
+import { decisionChoiceForm, decisionChoiceScript } from "../../../product/ui/decision-choice.ts"
+import type { AuthorizedCaseProjection } from "../../../product/contracts/business-context.ts"
+import type { ScenarioResult } from "../../../product/contracts/decisions.ts"
 
 // These transport fixtures exercise the shipped browser consumers, including a lost
 // response after admission. They do not qualify native execution or domain policy.
@@ -13,23 +16,42 @@ async function within<T>(operation: Promise<T>, step: string, timeout = 5_000): 
   } finally { clearTimeout(timer) }
 }
 
+// Reuse only the Chromium process after S2 encountered a process/stdio launch
+// failure. Each case still receives isolated cookies, storage, pages and routes.
+let browser: Browser | undefined
+beforeAll(async () => {
+  const { chromium } = await import("@playwright/test")
+  browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 8_000 })
+}, 10_000)
+afterAll(async () => {
+  if (browser) await within(browser.close(), "close shared browser")
+}, 8_000)
+
 async function browserCase(body: string, post: (request: Request) => Response | Promise<Response>, check: (page: Page) => Promise<void>, release?: () => void) {
   const server = Bun.serve({ hostname: "localhost", port: 0, idleTimeout: 30, fetch: (request) => request.method === "GET"
     ? new Response(`<!doctype html><html><body>${body}</body></html>`, { headers: { "Content-Type": "text/html" } })
     : post(request) })
-  let browser: Browser | undefined
+  let context: BrowserContext | undefined
+  let page: Page | undefined
+  let failure: unknown
   try {
-    const { chromium } = await import("@playwright/test")
-    browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 8_000 })
-    const page = await within(browser.newPage(), "open browser page")
+    if (!browser?.isConnected()) throw new Error("Recovery browser is unavailable")
+    context = await within(browser.newContext(), "open isolated browser context")
+    page = await within(context.newPage(), "open browser page")
     page.setDefaultTimeout(5_000)
     page.setDefaultNavigationTimeout(8_000)
     await page.goto(server.url.href)
     await check(page)
-  } finally {
-    release?.()
-    try { if (browser) await within(browser.close(), "close browser") }
-    finally { await within(Promise.resolve(server.stop(true)), "stop fixture server") }
+  } catch (error) { failure = error; throw error }
+  finally {
+    const cleanup: unknown[] = []
+    // Close the page first to stop its polling and pending transport before the
+    // isolated context. Preserve the original assertion if cleanup also fails.
+    try { release?.() } catch (error) { cleanup.push(error) }
+    try { if (page && !page.isClosed()) await within(page.close({ runBeforeUnload: false }), "close page") } catch (error) { cleanup.push(error) }
+    try { if (context) await within(context.close(), "close isolated browser context") } catch (error) { cleanup.push(error) }
+    try { await within(Promise.resolve(server.stop(true)), "stop fixture server") } catch (error) { cleanup.push(error) }
+    if (cleanup.length) throw new AggregateError(failure ? [failure, ...cleanup] : cleanup, "Recovery fixture failed during cleanup")
   }
 }
 
@@ -252,6 +274,342 @@ test("forecast start recovers an uncertain admission without changing its model 
 }, 30_000)
 
 const history = `<section data-analysis-history data-case='${JSON.stringify(caseRef)}'><h3>Analysis history</h3><p role="status"></p><div data-results></div></section><script>${forecastAnalysisScript}</script>`
+
+const choiceHorizon = { start: "2027-01-01", end: "2027-12-31" }
+const choiceResult = (id: string): ScenarioResult => ({ id: `scenario:${id}`, version: 1, components: [], currency: "USD", horizon: choiceHorizon,
+  sourceRefs: [], unresolvedConditions: [], restrictions: [], comparisonStatus: "conditioned", knownSubtotal: 0, total: null,
+  costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: id, alternativeVersion: 1, currency: "USD", horizon: choiceHorizon,
+    issues: [], evaluatedSourceRefs: [], entries: [], derivedMissingCategoryIds: ["training"], coverageState: "pending" } })
+const choiceProjection: AuthorizedCaseProjection = { context: { installationId: "fixture", projectId: "fixture", principalRef: "fixture", policyVersion: "fixture", accessRevision: "fixture", kind: "ui" },
+  checkedAt: "2026-11-13T01:00:00Z", evidenceRefs: [], events: [], case: { ...caseRef, state: "comparing", objective: "Choose a saved alternative", horizon: choiceHorizon,
+    currency: "USD", criteria: [{ id: "cost", description: "Private cost criterion", required: true }], participants: [], sourceRefs: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [],
+    alternatives: ["baseline", "alternative"].map((id) => ({ id, version: 1, title: `Private ${id}`, scenario: { baseRef: "source", operations: [], assumptions: [] }, result: choiceResult(id) })),
+  } }
+const choice = `${decisionChoiceForm(choiceProjection)}<script>${decisionChoiceScript}</script>`
+const choiceComparison = { request: { scenarioRefs: ["decision-result:baseline", "decision-result:alternative"], criteria: ["cost"] },
+  comparison: { comparisonStatus: "conditioned", knownDifference: 0, completeDifference: null, unresolvedConditions: ["Private comparison condition"],
+    criterionResults: [{ criterionId: "cost", state: "unknown", reason: "Training remains pending" }] } }
+async function prepareChoice(page: Page) {
+  await page.locator('[data-decision-choice] select[name="alternative"]').selectOption("alternative")
+  await page.getByRole("button", { name: "Compare", exact: true }).click()
+  await page.getByText("Comparison: conditioned · Known difference: 0", { exact: true }).waitFor()
+  await page.getByLabel("Reason for choosing", { exact: true }).fill("My preserved choice reason")
+}
+
+test("choice freezes the comparison and reason and retries the exact serialized intention after a lost response", async () => {
+  const calls: { body: string; key: string | null }[] = []
+  const delayed: { started?: () => void; release?: () => void } = {}
+  const started = new Promise<void>((resolve) => { delayed.started = resolve })
+  let comparisons = 0
+  await browserCase(choice, async (incoming) => {
+    if (new URL(incoming.url).searchParams.get("sf") === "decision-compare") { comparisons++; return Response.json({ status: "ok", value: choiceComparison }) }
+    calls.push({ body: await incoming.text(), key: incoming.headers.get("idempotency-key") })
+    if (calls.length === 1) { await new Promise<void>((resolve) => { delayed.release = resolve; delayed.started?.() }); return new Response("lost choice response") }
+    return Response.json({ status: "ok", value: { caseRef: { ...caseRef, version: 2 } } })
+  }, async (page) => {
+    await prepareChoice(page)
+    await page.getByRole("button", { name: "Record choice", exact: true }).click()
+    await within(started, "choice write entered delayed handler")
+    const reason = page.getByLabel("Reason for choosing", { exact: true })
+    expect(await reason.isDisabled()).toBe(true)
+    expect(await page.locator('[data-decision-choice] select[name="alternative"]').isDisabled()).toBe(true)
+    await reason.evaluate((element) => { if (!(element instanceof HTMLTextAreaElement)) throw new Error("expected textarea"); element.value = "Different reason"; element.dispatchEvent(new Event("input", { bubbles: true })) })
+    expect(await reason.inputValue()).toBe("My preserved choice reason")
+    await page.locator('[data-decision-choice] select[name="alternative"]').evaluate((element) => { if (!(element instanceof HTMLSelectElement)) throw new Error("expected select"); element.value = "baseline"; element.dispatchEvent(new Event("change", { bubbles: true })) })
+    expect(await page.locator('[data-decision-choice] select[name="alternative"]').inputValue()).toBe("alternative")
+    await page.locator("[data-decision-choice]").dispatchEvent("submit")
+    expect(calls).toHaveLength(1)
+    delayed.release?.()
+    await page.getByText("Could not confirm the choice. Your reason and comparison are locked; retry the same request.", { exact: true }).waitFor()
+    expect(await page.getByRole("button", { name: "Compare", exact: true }).isDisabled()).toBe(true)
+    expect(await page.getByRole("button", { name: "Use these alternatives in portfolio", exact: true }).isDisabled()).toBe(true)
+    await Promise.all([page.waitForEvent("load"), page.getByRole("button", { name: "Retry the same choice", exact: true }).click()])
+    expect(calls).toHaveLength(2)
+    expect(calls[1]).toEqual(calls[0])
+    expect(comparisons).toBe(1)
+    expect(JSON.parse(calls[0]!.body)).toEqual({ caseRef, alternativeId: "alternative", alternativeVersion: 1, comparison: choiceComparison.request, criteria: ["cost"], reason: "My preserved choice reason" })
+  }, () => delayed.release?.())
+}, 30_000)
+
+test("an unverifiable choice acknowledgement followed by a conflict remains frozen for reconciliation", async () => {
+  const calls: { body: string; key: string | null }[] = []
+  await browserCase(choice, async (incoming) => {
+    if (new URL(incoming.url).searchParams.get("sf") === "decision-compare") return Response.json({ status: "ok", value: choiceComparison })
+    calls.push({ body: await incoming.text(), key: incoming.headers.get("idempotency-key") })
+    return calls.length === 1 ? Response.json({ status: "ok", value: {} }) : Response.json({ status: "conflict" }, { status: 409 })
+  }, async (page) => {
+    await prepareChoice(page)
+    await page.getByRole("button", { name: "Record choice", exact: true }).click()
+    await page.getByText("Could not confirm the choice. Your reason and comparison are locked; retry the same request.", { exact: true }).waitFor()
+    await page.getByRole("button", { name: "Retry the same choice", exact: true }).click()
+    await page.getByText("The retry was rejected but the earlier choice is still unconfirmed. Reopen the decision to reconcile its current state.", { exact: true }).waitFor()
+    expect(calls).toHaveLength(2)
+    expect(calls[1]).toEqual(calls[0])
+    expect(await page.getByRole("button", { name: "Retry the same choice", exact: true }).isDisabled()).toBe(true)
+    expect(await page.getByLabel("Reason for choosing", { exact: true }).inputValue()).toBe("My preserved choice reason")
+    expect(await page.getByLabel("Reason for choosing", { exact: true }).isDisabled()).toBe(true)
+    expect(await page.getByText("Private comparison condition", { exact: true }).isVisible()).toBe(true)
+    await page.locator("[data-decision-choice]").dispatchEvent("submit")
+    expect(calls).toHaveLength(2)
+  })
+}, 30_000)
+
+for (const denial of [401, 403]) test(`choice ${denial} removes the comparison, reason and context and blocks another submission`, async () => {
+  let choices = 0
+  await browserCase(choice, async (incoming) => {
+    if (new URL(incoming.url).searchParams.get("sf") === "decision-compare") return Response.json({ status: "ok", value: choiceComparison })
+    choices++; return Response.json({ status: "denied", reason: "PRIVATE-CHOICE-DENIAL" }, { status: denial })
+  }, async (page) => {
+    await prepareChoice(page)
+    await page.getByRole("button", { name: "Record choice", exact: true }).click()
+    await page.getByText("Decision access changed. Reopen it with your current access.", { exact: true }).waitFor()
+    expect(await page.locator("[data-decision-choice] textarea, [data-decision-choice] select").count()).toBe(0)
+    expect(await page.locator("[data-decision-choice]").getAttribute("data-context")).toBeNull()
+    expect(await page.locator("[data-decision-choice]").getAttribute("data-dirty")).toBeNull()
+    expect(await page.locator("[data-decision-choice]").innerHTML()).not.toContain("Private")
+    expect(await page.locator("[data-decision-choice]").innerHTML()).not.toContain("My preserved choice reason")
+    await page.locator("[data-decision-choice]").dispatchEvent("submit")
+    expect(choices).toBe(1)
+  })
+}, 30_000)
+
+test("a comparison read finishing after access revocation cannot restore private choice data", async () => {
+  const delayed: { started?: () => void; release?: () => void } = {}
+  const started = new Promise<void>((resolve) => { delayed.started = resolve })
+  await browserCase(choice, async () => {
+    await new Promise<void>((resolve) => { delayed.release = resolve; delayed.started?.() })
+    return Response.json({ status: "ok", value: choiceComparison }, { headers: { "X-Fixture-Choice-Released": "yes" } })
+  }, async (page) => {
+    await page.locator('[data-decision-choice] select[name="alternative"]').selectOption("alternative")
+    await page.getByLabel("Reason for choosing", { exact: true }).fill("Private draft before comparison")
+    await page.getByRole("button", { name: "Compare", exact: true }).click()
+    await within(started, "comparison read entered delayed handler")
+    await page.evaluate(() => window.dispatchEvent(new Event("sf-access-revoked")))
+    await page.getByText("Decision access changed. Reopen it with your current access.", { exact: true }).waitFor()
+    const released = page.waitForResponse((response) => response.headers()["x-fixture-choice-released"] === "yes")
+    delayed.release?.()
+    expect(await within((await released).finished(), "finish stale comparison response")).toBeNull()
+    await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))))
+    expect(await page.locator("[data-decision-choice]").innerHTML()).not.toContain("Private")
+    expect(await page.getByRole("button", { name: "Record choice", exact: true }).count()).toBe(0)
+  }, () => delayed.release?.())
+}, 30_000)
+
+test("choice deadline includes a stalled response body and preserves its exact request for retry", async () => {
+  const calls: { body: string; key: string | null }[] = []
+  const stream: { close?: () => void } = {}
+  await browserCase(choice, async (incoming) => {
+    if (new URL(incoming.url).searchParams.get("sf") === "decision-compare") return Response.json({ status: "ok", value: choiceComparison })
+    calls.push({ body: await incoming.text(), key: incoming.headers.get("idempotency-key") })
+    if (calls.length === 1) return new Response(new ReadableStream<Uint8Array>({
+      start(controller) { controller.enqueue(new TextEncoder().encode('{"status":"ok","value":')); stream.close = () => { stream.close = undefined; controller.close() } },
+      cancel() { stream.close = undefined },
+    }), { headers: { "Content-Type": "application/json", "X-Fixture-Choice-Body-Pending": "yes" } })
+    return Response.json({ status: "ok", value: { caseRef: { ...caseRef, version: 2 } } })
+  }, async (page) => {
+    await prepareChoice(page)
+    const headers = page.waitForResponse((response) => response.headers()["x-fixture-choice-body-pending"] === "yes")
+    const aborted = page.waitForEvent("requestfailed", { predicate: (request) => new URL(request.url()).searchParams.get("sf") === "decision-choose", timeout: 15_000 })
+    await page.getByRole("button", { name: "Record choice", exact: true }).click()
+    expect((await headers).status()).toBe(200)
+    expect((await aborted).failure()?.errorText).toContain("ERR_ABORTED")
+    await page.getByText("Could not confirm the choice. Your reason and comparison are locked; retry the same request.", { exact: true }).waitFor({ timeout: 15_000 })
+    expect(await page.getByLabel("Reason for choosing", { exact: true }).inputValue()).toBe("My preserved choice reason")
+    expect(await page.getByLabel("Reason for choosing", { exact: true }).isDisabled()).toBe(true)
+    await Promise.all([page.waitForEvent("load"), page.getByRole("button", { name: "Retry the same choice", exact: true }).click()])
+    expect(calls).toHaveLength(2)
+    expect(calls[1]).toEqual(calls[0])
+  }, () => stream.close?.())
+}, 30_000)
+
+test("an initially rejected choice preserves editable entries and uses a new intention after correction", async () => {
+  const calls: { body: string; key: string | null }[] = []
+  await browserCase(choice, async (incoming) => {
+    if (new URL(incoming.url).searchParams.get("sf") === "decision-compare") return Response.json({ status: "ok", value: choiceComparison })
+    calls.push({ body: await incoming.text(), key: incoming.headers.get("idempotency-key") })
+    return Response.json({ status: "needs-input" }, { status: 400 })
+  }, async (page) => {
+    await prepareChoice(page)
+    await page.getByRole("button", { name: "Record choice", exact: true }).click()
+    await page.getByText("The choice was rejected. Your entries are preserved; review the current decision before retrying.", { exact: true }).waitFor()
+    const reason = page.getByLabel("Reason for choosing", { exact: true })
+    expect(await reason.isEnabled()).toBe(true)
+    expect(await reason.inputValue()).toBe("My preserved choice reason")
+    await reason.fill("Corrected choice reason")
+    await page.getByRole("button", { name: "Record choice", exact: true }).click()
+    await page.getByText("The choice was rejected. Your entries are preserved; review the current decision before retrying.", { exact: true }).waitFor()
+    expect(calls).toHaveLength(2)
+    expect(calls[1]!.key).not.toBe(calls[0]!.key)
+    expect(JSON.parse(calls[1]!.body).reason).toBe("Corrected choice reason")
+  })
+}, 30_000)
+
+test("a sensitivity conflict preserves its request and a known result is reread without evaluating again", async () => {
+  const evaluations: { body: string; key: string | null }[] = []
+  const reads: unknown[] = []
+  const units = { baselineRef: "decision-result:baseline", parameterRef: "cost-parameter", parameterUnit: "USD", resultUnit: "USD", engineVersion: "fixture-engine" }
+  await browserCase(choice, async (incoming) => {
+    const action = new URL(incoming.url).searchParams.get("sf")
+    if (action === "decision-compare") return Response.json({ status: "ok", value: choiceComparison })
+    if (action === "decision-criterion-read") return Response.json({ status: "ok", value: { criterionId: "cost", operator: "lte", value: 10, unit: "USD", sensitivity: units } })
+    if (action === "decision-sensitivity-units") return Response.json({ status: "ok", value: { caseRef, units } })
+    if (action === "decision-sensitivity-evaluate") {
+      evaluations.push({ body: await incoming.text(), key: incoming.headers.get("idempotency-key") })
+      return evaluations.length === 1 ? Response.json({ status: "conflict" }, { status: 409 }) : Response.json({ status: "ok", value: { sensitivityResultRef: "saved-sensitivity" } })
+    }
+    if (action !== "decision-sensitivity-read") throw new Error("unexpected sensitivity fixture action")
+    reads.push(await incoming.json())
+    return reads.length === 1 ? Response.json({ status: "unavailable" }, { status: 503 }) : Response.json({ status: "ok", value: { sensitivity: {
+      comparisonStatus: "conditioned", thresholdEvidence: { state: "unavailable", reason: "Training remains pending" }, unit: "USD", evaluated: [], unresolvedConditions: [],
+    } } })
+  }, async (page) => {
+    await prepareChoice(page)
+    await page.locator('[data-sensitivity] summary').click()
+    await page.locator('[data-sensitivity-criterion]').selectOption("cost")
+    await page.getByRole("button", { name: "Load criterion and units", exact: true }).click()
+    await page.getByText(/Parameter unit: USD; result unit: USD/).waitFor()
+    await page.locator('[data-sensitivity-min]').fill("0")
+    await page.locator('[data-sensitivity-max]').fill("10")
+    await page.locator('[data-sensitivity-steps]').fill("5")
+    await page.getByRole("button", { name: "Evaluate sensitivity", exact: true }).click()
+    await page.getByText("Could not confirm sensitivity. Your entries are locked; retry the same request.", { exact: true }).waitFor()
+    expect(await page.locator('[data-sensitivity-min]').isDisabled()).toBe(true)
+    expect(await page.getByRole("button", { name: "Record choice", exact: true }).isDisabled()).toBe(true)
+    await page.getByRole("button", { name: "Retry the same sensitivity request", exact: true }).click()
+    await page.getByText("Could not confirm sensitivity. Your entries are locked; retry the same request.", { exact: true }).waitFor()
+    expect(evaluations).toHaveLength(2)
+    expect(evaluations[1]).toEqual(evaluations[0])
+    expect(reads).toHaveLength(1)
+    await page.getByRole("button", { name: "Retry the same sensitivity request", exact: true }).click()
+    await page.getByText("Sensitivity: conditioned · Threshold unavailable: Training remains pending USD", { exact: true }).waitFor()
+    expect(evaluations).toHaveLength(2)
+    expect(reads).toEqual([{ caseRef, resultRef: "saved-sensitivity" }, { caseRef, resultRef: "saved-sensitivity" }])
+    expect(await page.locator('[data-sensitivity-min]').isEnabled()).toBe(true)
+  })
+}, 30_000)
+
+const reviewOffer = {
+  request: { ...request, profileId: "sf_reviewer", skillId: "sf-contestar-decisao" },
+  model: { id: "review-model", providerID: "provider" },
+  authorAnalysis: { runRef: "author-run", outputDigest: "a".repeat(64) },
+}
+const critiqueInput = {
+  alternativeRefs: ["saved-alternative"], choiceRefs: [], authorizedEvidenceRefs: [], authorAnalysis: reviewOffer.authorAnalysis,
+  comparison: { baselineResultRef: "decision-result:baseline", alternativeResultRef: "decision-result:alternative", costCoverageRefs: [],
+    criterionResults: [], unresolvedConditions: ["Source requires review"], comparisonStatus: "conditioned", knownDifference: null, completeDifference: null },
+}
+
+test("independent review freezes the original author and replays its prepared request after a lost start response", async () => {
+  const starts: { body: string; key: string | null }[] = []
+  const prepares: unknown[] = []
+  const delayed: { started?: () => void; release?: () => void } = {}
+  const started = new Promise<void>((resolve) => { delayed.started = resolve })
+  await browserCase(history, async (incoming) => {
+    const body = await incoming.text()
+    const input = JSON.parse(body)
+    if (input.action === "list") return Response.json({ status: "ok", value: [{ runRef: "author-run", state: "ready", version: 1, outputRef: "author-output" }] })
+    if (input.action === "output") return Response.json({ status: "ok", value: { html: "<p>Saved comparison for review</p>", outputRef: "author-output", review: reviewOffer } })
+    if (input.action === "prepare") { prepares.push(input); return Response.json({ status: "ok", value: critiqueInput }) }
+    if (input.action !== "start") throw new Error("unexpected review fixture action")
+    starts.push({ body, key: incoming.headers.get("idempotency-key") })
+    if (starts.length === 1) {
+      await new Promise<void>((resolve) => { delayed.release = resolve; delayed.started?.() })
+      return new Response("lost response after the requested review start")
+    }
+    return Response.json({ status: "ok", value: { runRef: "review-run" } })
+  }, async (page) => {
+    await page.getByRole("button", { name: "Open result", exact: true }).click()
+    await page.getByRole("button", { name: "Request independent review", exact: true }).click()
+    await within(started, "independent review start entered delayed handler")
+    expect(await page.getByRole("button", { name: "Request independent review", exact: true }).isDisabled()).toBe(true)
+    await page.locator("[data-review-analysis]").dispatchEvent("submit")
+    expect(starts).toHaveLength(1)
+    delayed.release?.()
+    await page.getByText("Could not confirm whether the review started. Retry the same request to recover its result.", { exact: true }).waitFor()
+    expect(await page.locator("[data-review-analysis]").getAttribute("data-dirty")).toBe("true")
+    await page.locator("[data-analysis-history]").dispatchEvent("sf-analysis-refresh")
+    await page.getByRole("button", { name: "Retry the same review request", exact: true }).click()
+    await page.getByText("Independent review started. Follow its progress in analysis history.", { exact: true }).waitFor()
+    expect(prepares).toEqual([{ action: "prepare", input: { request: reviewOffer.request, selection: { authorAnalysis: reviewOffer.authorAnalysis } } }])
+    expect(starts).toHaveLength(2)
+    expect(starts[1]).toEqual(starts[0])
+    expect(JSON.parse(starts[0]!.body)).toEqual({ action: "start", input: { request: reviewOffer.request, skillInput: critiqueInput, model: reviewOffer.model } })
+    expect(starts[0]!.body).not.toContain("nativeSessionId")
+    expect(await page.getByRole("button", { name: "Review requested", exact: true }).isDisabled()).toBe(true)
+    await page.locator("[data-review-analysis]").dispatchEvent("submit")
+    expect(starts).toHaveLength(2)
+  }, () => delayed.release?.())
+}, 30_000)
+
+test("independent review does not replace an uncertain author request after a conflict", async () => {
+  const starts: { body: string; key: string | null }[] = []
+  let prepares = 0
+  await browserCase(history, async (incoming) => {
+    const body = await incoming.text()
+    const input = JSON.parse(body)
+    if (input.action === "list") return Response.json({ status: "ok", value: [{ runRef: "author-run", state: "ready", version: 1, outputRef: "author-output" }] })
+    if (input.action === "output") return Response.json({ status: "ok", value: { html: "<p>Saved comparison</p>", outputRef: "author-output", review: reviewOffer } })
+    if (input.action === "prepare") { prepares++; return Response.json({ status: "ok", value: critiqueInput }) }
+    starts.push({ body, key: incoming.headers.get("idempotency-key") })
+    return starts.length === 1 ? new Response("start response interrupted") : Response.json({ status: "conflict" }, { status: 409 })
+  }, async (page) => {
+    await page.getByRole("button", { name: "Open result", exact: true }).click()
+    await page.getByRole("button", { name: "Request independent review", exact: true }).click()
+    await page.getByText("Could not confirm whether the review started. Retry the same request to recover its result.", { exact: true }).waitFor()
+    await page.getByRole("button", { name: "Retry the same review request", exact: true }).click()
+    await page.getByText("The retry was rejected but the earlier review request is still unconfirmed. Reconcile analysis history before requesting another review.", { exact: true }).waitFor()
+    expect(starts).toHaveLength(2)
+    expect(starts[1]).toEqual(starts[0])
+    expect(prepares).toBe(1)
+    expect(await page.getByRole("button", { name: "Retry the same review request", exact: true }).isDisabled()).toBe(true)
+    expect(await page.locator("[data-review-analysis]").getAttribute("data-dirty")).toBe("true")
+    await page.locator("[data-review-analysis]").dispatchEvent("submit")
+    expect(starts).toHaveLength(2)
+  })
+}, 30_000)
+
+test("a delayed review preparation cannot start or restore data after analysis access is revoked", async () => {
+  const delayed: { started?: () => void; release?: () => void } = {}
+  const started = new Promise<void>((resolve) => { delayed.started = resolve })
+  const state = { denied: false, starts: 0 }
+  await browserCase(history, async (incoming) => {
+    const input = await incoming.json()
+    if (input.action === "list") return state.denied ? Response.json({ status: "denied" }, { status: 403 }) : Response.json({ status: "ok", value: [{ runRef: "author-run", state: "ready", version: 1, outputRef: "author-output" }] })
+    if (input.action === "output") return Response.json({ status: "ok", value: { html: "<p>Private review comparison</p>", outputRef: "author-output", review: reviewOffer } })
+    if (input.action === "prepare") {
+      await new Promise<void>((resolve) => { delayed.release = resolve; delayed.started?.() })
+      return Response.json({ status: "ok", value: critiqueInput }, { headers: { "X-Fixture-Review-Released": "yes" } })
+    }
+    state.starts++; return Response.json({ status: "ok", value: { runRef: "should-not-start" } })
+  }, async (page) => {
+    await page.getByRole("button", { name: "Open result", exact: true }).click()
+    await page.getByRole("button", { name: "Request independent review", exact: true }).click()
+    await within(started, "review preparation entered delayed handler")
+    state.denied = true
+    await page.locator("[data-analysis-history]").dispatchEvent("sf-analysis-refresh")
+    await page.getByText("Analysis access changed. Reopen the decision with your current access.", { exact: true }).waitFor()
+    const released = page.waitForResponse((response) => response.headers()["x-fixture-review-released"] === "yes")
+    delayed.release?.()
+    expect(await within((await released).finished(), "finish delayed review preparation")).toBeNull()
+    await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))))
+    expect(state.starts).toBe(0)
+    expect(await page.locator("[data-review-analysis]").count()).toBe(0)
+    expect(await page.getByText("Private review comparison", { exact: true }).count()).toBe(0)
+    expect(await page.locator("[data-analysis-history]").getAttribute("data-case")).toBeNull()
+  }, () => delayed.release?.())
+}, 30_000)
+
+test("an opened result without an available reviewer offers no fabricated review action", async () => {
+  await browserCase(history, async (incoming) => (await incoming.json()).action === "output"
+    ? Response.json({ status: "ok", value: { html: "<p>Authorized comparison</p>", outputRef: "author-output", reviewUnavailable: true } })
+    : Response.json({ status: "ok", value: [{ runRef: "author-run", state: "ready", version: 1, outputRef: "author-output" }] }), async (page) => {
+    await page.getByRole("button", { name: "Open result", exact: true }).click()
+    await page.getByText("Independent review is currently unavailable for this result. It requires current decision access, a ready comparison and an available reviewer model.", { exact: true }).waitFor()
+    expect(await page.getByRole("button", { name: "Request independent review", exact: true }).count()).toBe(0)
+    expect(await page.getByText("Authorized comparison", { exact: true }).isVisible()).toBe(true)
+    expect(await page.getByRole("button", { name: "Accept contribution", exact: true }).isEnabled()).toBe(true)
+  })
+}, 30_000)
 
 test("history preserves a reason on transient failure, then removes restricted output on revocation", async () => {
   const state = { mode: "ready" }

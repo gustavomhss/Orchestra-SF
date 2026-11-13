@@ -142,7 +142,12 @@ export const recordSearchScript = `
     form.addEventListener('submit', (event) => { event.preventDefault(); if (form.reportValidity()) search() })
     const previous = history.state?.sfRecordSearch
     if (previous && typeof previous.query === 'string' && pages[previous.surface]) { form.elements.query.value = previous.query; form.elements.surface.value = previous.surface; search() }
-    addEventListener('pageshow', (event) => { if (event.persisted && section.isConnected && form.elements.query.value.trim()) search() })
+    addEventListener('pageshow', (event) => {
+      // Native fragment navigation can replace the focus set while parsing. Apply
+      // record focus after it settles, once per navigation rather than per mutation.
+      requestAnimationFrame(() => { if (section.isConnected) focusRecord(true) })
+      if (event.persisted && section.isConnected && form.elements.query.value.trim()) search()
+    })
   })
 })();
 `

@@ -64,16 +64,28 @@ test("Planner grid previews pasted values and preserves a conflicting draft", as
       await tab.goto(`${origin}/sucafina/planner?page=OPEX&mode=forecast`)
       await tab.getByLabel("Measure", { exact: true }).selectOption("forecast")
       const first = tab.locator('section input[data-row="line"][data-month="1"]')
+      const second = tab.locator('section input[data-row="line"][data-month="2"]')
       expect(await first.isEnabled()).toBe(true)
-      await first.dispatchEvent("paste", { clipboardData: await tab.evaluateHandle(() => { const data = new DataTransfer(); data.setData("text/plain", "42\t99"); return data }) })
-      expect(await tab.locator('section input[data-row="line"][data-month="2"]').inputValue()).toBe("99")
+      expect(await second.isEnabled()).toBe(true)
+      // Keep the clipboard and ClipboardEvent in the same browser realm. A generic
+      // serialized Event init does not establish that the consumer received data.
+      const paste = await first.evaluate((element) => {
+        const clipboardData = new DataTransfer()
+        clipboardData.setData("text/plain", "42\t99")
+        const event = new ClipboardEvent("paste", { bubbles: true, cancelable: true, clipboardData })
+        element.dispatchEvent(event)
+        return { type: event.constructor.name, text: event.clipboardData?.getData("text/plain"), handled: event.defaultPrevented }
+      })
+      expect(paste).toEqual({ type: "ClipboardEvent", text: "42\t99", handled: true })
+      expect(await first.inputValue()).toBe("42")
+      expect(await second.inputValue()).toBe("99")
       await tab.getByRole("button", { name: "Preview changes" }).click()
       await tab.getByText("Preview complete. Review the entries and save when ready.").waitFor()
       await store.transaction("planner", async (snapshot) => { snapshot.versions["v1:lines:line"] = { version: 1, by: "another" }; return { commit: true, value: undefined } })
       await tab.getByRole("button", { name: "Save changes" }).click()
       await tab.getByText(/Changed by another user/).waitFor()
       expect(await first.inputValue()).toBe("42")
-      expect(await tab.locator('section input[data-row="line"][data-month="2"]').inputValue()).toBe("99")
+      expect(await second.inputValue()).toBe("99")
     } finally { await browser.close() }
   } finally { await server.stop(true); await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 }, 60000)

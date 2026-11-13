@@ -5,6 +5,7 @@ import { getSfAnalysisInputs } from "./analysis-input-port.ts"
 import { decodeSfSkillInput } from "../contracts/schema-admission.ts"
 import type { SfSkillInputMap } from "../contracts/skill-inputs.ts"
 import { hasCaseAnalysisInput, prepareCaseAnalysisInput } from "./case-analysis-input.ts"
+import { prepareReviewAnalysisInput, reviewAnalysisOffer } from "./review-analysis-input.ts"
 
 /** The host owns authorization and execution; this boundary exposes no native binding. */
 export async function handleSfAnalysis(request: Request, origin: string, runtime: SfHostServices) {
@@ -30,6 +31,7 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
       if (!skill || !selected || input.request.requestedOperationScope.some((operation) => !skill.allowedOperations.includes(operation) || !selected.operationIds.includes(operation))) return reply({ status: "denied" }, 403)
       const prepared = await (hasCaseAnalysisInput(skill.id)
         ? prepareCaseAnalysisInput(request, runtime, input)
+        : skill.id === "sf-contestar-decisao" ? prepareReviewAnalysisInput(request, runtime, input)
         : inputs?.prepare(admitted.value, input) ?? Promise.resolve(undefined)).catch(() => undefined)
       if (!prepared) return reply({ status: "unavailable" }, 503)
       if (prepared.status !== "ok") return reply({ status: prepared.status }, prepared.status === "denied" ? 403 : prepared.status === "stale" || prepared.status === "conflict" ? 409 : prepared.status === "needs-input" ? 400 : 503)
@@ -52,8 +54,12 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
     if (action === "output" && "kind" in result.value) {
       const output = result.value
       const html = await Promise.resolve().then(() => contribution(output)).catch(() => undefined)
-      if (!html || !await runtime.ui.revalidate(admitted.value)) return reply({ status: "unavailable" }, 503)
-      return reply({ status: "ok", value: { html, ...(output.state === "ready" ? { outputRef: output.id } : {}) } }, 200)
+      const reviewable = output.state === "ready" && (output.kind === "ScenarioComparison" || output.kind === "FinancialAnalysis")
+      const review = reviewable && "runRef" in input ? await reviewAnalysisOffer(request, runtime, input.runRef, output).catch(() => undefined) : undefined
+      if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
+      if (!html) return reply({ status: "unavailable" }, 503)
+      return reply({ status: "ok", value: { html, ...(output.state === "ready" ? { outputRef: output.id } : {}),
+        ...(review ? { review } : reviewable ? { reviewUnavailable: true } : {}) } }, 200)
     }
     return reply({ status: "ok", value: result.value }, 200)
   } finally { runtime.human.finish(admitted.value) }

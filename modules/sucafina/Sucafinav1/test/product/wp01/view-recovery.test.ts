@@ -1,12 +1,13 @@
-import { expect, test } from "bun:test"
-import type { Browser, Page } from "@playwright/test"
+import { afterAll, beforeAll, expect, test } from "bun:test"
+import type { Browser, BrowserContext, Page } from "@playwright/test"
 import type { SfPersonalViewRecord } from "../../../product/interface/personal-views.ts"
 import { decisionCreateForm, decisionCreateScript } from "../../../product/ui/decision-create.ts"
 import { personalViewsScript, personalViewsWidget } from "../../../product/ui/personal-views.ts"
 import { documentHtml, pageMain } from "../../../src/screen-shell.ts"
 import { fields, form } from "../../../runtime/ui.ts"
 
-const browsers = new WeakMap<Page, Browser>()
+let browser: Browser | undefined
+const contexts = new WeakMap<Page, BrowserContext>()
 
 async function within<T>(operation: Promise<T>, step: string, timeout = 5_000): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | undefined
@@ -15,28 +16,47 @@ async function within<T>(operation: Promise<T>, step: string, timeout = 5_000): 
   } finally { clearTimeout(timer) }
 }
 
+// S2 failed in Chromium's process/stdio creation before the preferred-409 fixture
+// ran. Keep one process for this file, with a fresh context for every case; do not
+// retry launch or reuse cookies, pages, storage, routes or request state.
+beforeAll(async () => {
+  const { chromium } = await import("@playwright/test")
+  browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 8_000 })
+}, 10_000)
+afterAll(async () => {
+  if (browser) await within(browser.close(), "close shared browser")
+}, 8_000)
+
 type FixtureServer = { stop(closeActiveConnections?: boolean): void | Promise<void> }
 async function fixturePage(server: FixtureServer) {
-  let browser: Browser | undefined
+  let context: BrowserContext | undefined
   try {
-    const { chromium } = await import("@playwright/test")
-    browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 8_000 })
-    const page = await within(browser.newPage(), "open browser page")
-    browsers.set(page, browser)
+    if (!browser?.isConnected()) throw new Error("View recovery browser is unavailable")
+    context = await within(browser.newContext(), "open isolated browser context")
+    const page = await within(context.newPage(), "open browser page")
+    contexts.set(page, context)
     page.setDefaultTimeout(5_000)
     page.setDefaultNavigationTimeout(8_000)
     return page
   } catch (error) {
-    try { if (browser) await within(browser.close(), "close unopened browser") }
-    finally { await within(Promise.resolve(server.stop(true)), "stop unopened fixture server") }
-    throw error
+    const failures: unknown[] = [error]
+    try { if (context) await within(context.close(), "close unopened browser context") } catch (cleanupError) { failures.push(cleanupError) }
+    try { await within(Promise.resolve(server.stop(true)), "stop unopened fixture server") } catch (cleanupError) { failures.push(cleanupError) }
+    throw failures.length === 1 ? error : new AggregateError(failures, "View recovery setup/lifecycle failures")
   }
 }
 async function closeFixture(page: Page, server: FixtureServer) {
-  const browser = browsers.get(page)
-  browsers.delete(page)
-  try { await within(browser ? browser.close() : page.close({ runBeforeUnload: false }), "close isolated browser") }
-  finally { await within(Promise.resolve(server.stop(true)), "stop fixture server") }
+  const context = contexts.get(page)
+  contexts.delete(page)
+  const failures: unknown[] = []
+  for (const [step, close] of [
+    ["close fixture page", () => page.close({ runBeforeUnload: false })],
+    ["close isolated browser context", () => context?.close()],
+    ["stop fixture server", () => server.stop(true)],
+  ] as const) {
+    try { await within(Promise.resolve(close()), step) } catch (error) { failures.push(error) }
+  }
+  if (failures.length) throw new AggregateError(failures, "View recovery lifecycle failures")
 }
 
 async function finishRead(page: Page, pending: ReturnType<Page["waitForResponse"]>) {

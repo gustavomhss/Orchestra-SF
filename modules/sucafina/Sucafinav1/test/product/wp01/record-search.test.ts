@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import type { Page } from "@playwright/test"
+import type { Browser, Page } from "@playwright/test"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -12,6 +12,13 @@ import { initialProcurementSettings } from "../../../src/initial-settings.ts"
 
 type SearchPolicy = { role: "admin" | "viewer"; urls: string[]; entryReads: number; downgradeAtRevalidation: boolean }
 type SearchFixture = { page: Page; origin: string; policy: SearchPolicy; errors: string[]; store: Awaited<ReturnType<typeof openLocalStore>> }
+
+async function within<T>(operation: Promise<T>, step: string, timeout = 5_000): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined
+  try {
+    return await Promise.race([operation, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`Record search fixture timed out: ${step}`)), timeout) })])
+  } finally { clearTimeout(timer) }
+}
 
 async function withSearch(role: SearchPolicy["role"], check: (fixture: SearchFixture) => Promise<void>) {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-record-search-"))
@@ -44,6 +51,10 @@ async function withSearch(role: SearchPolicy["role"], check: (fixture: SearchFix
   const environment = async (request: Request) => ({ at: "2026-11-13T08:00:00Z", id: randomUUID, directory: await identity.directory(request) })
   const app = createModule("/sucafina", { persistence: store, authenticate, environment, productHtml: decorateSfProductHtml, maxJsonBytes: 100000 })
   state.handle = async (request) => await identity.handle(request) ?? await app(request)
+  let browser: Browser | undefined
+  let page: Page | undefined
+  const errors: string[] = []
+  const failures: unknown[] = []
   try {
     await store.transaction("dashboard", async (snapshot) => {
       snapshot.data.summaries = ["All Projects"]
@@ -55,26 +66,37 @@ async function withSearch(role: SearchPolicy["role"], check: (fixture: SearchFix
       return { commit: true, value: undefined }
     })
     const { chromium } = await import("@playwright/test")
-    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
-    try {
-      const page = await browser.newPage()
-      page.setDefaultTimeout(10_000)
-      page.setDefaultNavigationTimeout(15_000)
-      const errors: string[] = []
-      page.on("pageerror", (error) => { errors.push(error.message) })
-      await page.goto(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`)
-      try {
-        await check({ page, origin, policy, errors, store })
-      } catch (error) {
-        console.error("WP01 record-search failure context", { url: page.url(), errors, searchStatus: await page.locator('[data-record-search] [role="status"]').textContent().catch(() => null) })
-        throw error
-      }
-    } finally { await browser.close() }
+    browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 8_000 })
+    page = await within(browser.newPage(), "open browser page")
+    page.setDefaultTimeout(10_000)
+    page.setDefaultNavigationTimeout(15_000)
+    page.on("pageerror", (error) => { errors.push(error.message) })
+    await page.goto(`${origin}/sucafina/auth/local?code=${await within(identity.enroll(), "enroll the real operator")}`)
+    await check({ page, origin, policy, errors, store })
+  } catch (error) {
+    failures.push(error)
+    console.error("WP01 record-search failure", error)
+    if (page) console.error("WP01 record-search failure context", { url: page.url(), errors, document: await within(page.evaluate(() => ({
+      title: document.title, ready: document.readyState, surface: document.body?.dataset.surface,
+      searchStatus: document.querySelector('[data-record-search] [role="status"]')?.textContent ?? null,
+      active: { tag: document.activeElement?.tagName, id: document.activeElement?.id },
+      excerpt: document.body?.innerText.slice(0, 1500),
+    })), "read immediate failure context", 1000).catch((diagnosticError) => String(diagnosticError)) })
   } finally {
-    await server.stop(true)
-    await store.dispose()
-    await rm(directory, { recursive: true, force: true })
+    // Closing the page explicitly stops polling. Preserve the original assertion
+    // even if browser shutdown stalls; a finally error must not erase the cause.
+    for (const [step, close] of [
+      ["close page", () => page?.close({ runBeforeUnload: false })],
+      ["close browser", () => browser?.close()],
+      ["stop server", () => server.stop(true)],
+      ["dispose store", () => store.dispose()],
+      ["remove fixture directory", () => rm(directory, { recursive: true, force: true })],
+    ] as const) {
+      try { await within(Promise.resolve(close()), step) } catch (error) { failures.push(error) }
+    }
   }
+  if (failures.length === 1) throw failures[0]
+  if (failures.length) throw new AggregateError(failures, "Record search assertion/lifecycle failures")
 }
 
 test("record search opens an actual authorized project with year, canonical anchor and focus, restores back and clears after logout", async () => {
@@ -175,7 +197,10 @@ test("Planner record search pins the effective default plan from authorized HTML
       return { commit: true, value: undefined }
     })
     const page = fixture.page
-    await page.goto(`${fixture.origin}/sucafina/planner?page=Overview&year=2027`)
+    const response = await page.goto(`${fixture.origin}/sucafina/planner?page=Overview&year=2027`)
+    expect(response?.status()).toBe(200)
+    expect(await page.locator('main[data-drawn="true"]').count()).toBe(1)
+    expect(await page.locator('[data-record-search]').count()).toBe(1)
     expect(new URL(page.url()).searchParams.has("version")).toBe(false)
     expect(await page.locator('select[name="version"]').inputValue()).toBe("default-plan")
     await page.getByLabel("Record name or value", { exact: true }).fill("Renewal Needle")
