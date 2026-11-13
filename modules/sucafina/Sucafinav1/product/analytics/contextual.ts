@@ -26,9 +26,12 @@ export function createContextualBiSelectionReader(input: {
   revalidate: (context: TrustedDomainContext) => Promise<boolean>
 }) {
   const catalog = createApprovedCatalog(input.approvedViews)
-  return async (caseRef: { id: string; incarnation: string; version: number }, context: TrustedDomainContext) => {
+  return async (incomingCaseRef: { id: string; incarnation: string; version: number }, context: TrustedDomainContext) => {
+    const caseRef = structuredClone(incomingCaseRef)
     if (!caseRef.id.trim() || !caseRef.incarnation.trim() || !Number.isSafeInteger(caseRef.version) || caseRef.version < 1 || !await input.revalidate(context)) return { status: "denied", reason: "context-unavailable" } as const
-    const selected = await input.readHumanSelection(caseRef, context)
+    const selectionCase = structuredClone(caseRef)
+    const selected = await input.readHumanSelection(selectionCase, context)
+    if (digestSfValue(selectionCase) !== digestSfValue(caseRef)) return { status: "denied", reason: "bi-case-changed" } as const
     if (selected.status !== "ok") return selected
     const selection = structuredClone(selected.value)
     const state: { artifacts?: ContextualBiArtifacts } = {}
@@ -51,8 +54,9 @@ export function createContextualBiSelectionReader(input: {
     if (projection.context.installationId !== context.binding.installationId || projection.context.projectId !== context.binding.projectId || projection.context.principalRef !== context.binding.principalRef || projection.context.accessRevision !== context.binding.accessRevision || projection.context.policyVersion !== context.binding.policyVersion || !artifacts.dashboardSelection.selectionRef.trim() || digestSfValue(projection.context.period) !== digestSfValue(artifacts.dashboardSelection.period)) return { status: "denied", reason: "bi-context-mismatch" } as const
     const refs = new Set(artifacts.projectionRefs.map(digestSfValue))
     if (!refs.size || artifacts.projectionRefs.length !== refs.size || projection.values.some((value) => (value.value !== null && !value.sourceRefs.length) || value.sourceRefs.some((reference) => !refs.has(digestSfValue(reference))) || (value.drilldown && !refs.has(digestSfValue(value.drilldown))))) return { status: "unavailable", reason: "bi-evidence-unavailable" } as const
+    const verification = structuredClone({ caseRef, selection, artifacts })
     const revision = digestSfValue({ caseRef, selection, artifacts })
-    if (!await input.verifyArtifacts(caseRef, selection, artifacts, context) || !await input.revalidate(context) || revision !== digestSfValue({ caseRef, selection, artifacts })) return { status: "denied", reason: "bi-artifacts-unavailable" } as const
+    if (!await input.verifyArtifacts(verification.caseRef, verification.selection, verification.artifacts, context) || !await input.revalidate(context) || revision !== digestSfValue(verification)) return { status: "denied", reason: "bi-artifacts-unavailable" } as const
     return { status: "ok", value: { approvedViews: catalog.views.map((view) => ({ ...view, allowedFilters: [...view.allowedFilters] })), authorizedFilters: selection.filters, dashboardSelection: structuredClone(dashboardSelection.value), projectionRefs: artifacts.projectionRefs, projection, viewId: resolved.viewId, canonicalProjectionRefs: artifacts.canonicalProjectionRefs, tableRef: artifacts.tableRef } } as const
   }
 }
@@ -64,18 +68,21 @@ export function createStoredContextualBiSelectionReader(input: {
   readArtifact: (reference: string, context: TrustedDomainContext) => Promise<PortResult<SfBiArtifact>>
   revalidate: (context: TrustedDomainContext) => Promise<boolean>
 }) {
-  return async (caseRef: { id: string; incarnation: string; version: number }, context: TrustedDomainContext) => {
+  return async (incomingCaseRef: { id: string; incarnation: string; version: number }, context: TrustedDomainContext) => {
+    const caseRef = structuredClone(incomingCaseRef)
     if (!await input.revalidate(context)) return { status: "denied", reason: "context-unavailable" } as const
-    const selected = await input.readHumanChoice(caseRef, context)
+    const selectionCase = structuredClone(caseRef)
+    const selected = await input.readHumanChoice(selectionCase, context)
+    if (digestSfValue(selectionCase) !== digestSfValue(caseRef)) return { status: "denied", reason: "bi-case-changed" } as const
     if (selected.status !== "ok") return selected
     const choice = structuredClone(selected.value)
     if (!choice.projectionRef.trim() || !choice.tableRef.trim() || choice.projectionRef === choice.tableRef) return { status: "unavailable", reason: "bi-artifact-reference-unavailable" } as const
     const open = async (selection: ApprovedSelection, binding: TrustedDomainContext) => {
       const projection = await input.readArtifact(choice.projectionRef, binding)
       if (projection.status !== "ok") return projection
+      const artifact = structuredClone(projection.value)
       const table = await input.readArtifact(choice.tableRef, binding)
       if (table.status !== "ok") return table
-      const artifact = projection.value
       if (digestSfValue(artifact) !== digestSfValue(table.value) || digestSfValue(artifact.caseRef) !== digestSfValue(caseRef) || digestSfValue(artifact.selection) !== digestSfValue(selection) || artifact.projectionRef !== choice.projectionRef || artifact.tableRef !== choice.tableRef) return { status: "stale", reason: "bi-artifact-mismatch" } as const
       return { status: "ok", value: { dashboardSelection: artifact.dashboardSelection, projectionRefs: artifact.projectionRefs, projection: artifact.projection, canonicalProjectionRefs: [artifact.projectionRef], tableRef: artifact.tableRef } } as const
     }
@@ -85,8 +92,9 @@ export function createStoredContextualBiSelectionReader(input: {
       readArtifacts: open,
       verifyArtifacts: async (_caseRef, selection, artifacts, binding) => {
         const current = await open(selection, binding)
-        const latestChoice = await input.readHumanChoice(caseRef, binding)
-        return current.status === "ok" && latestChoice.status === "ok" && digestSfValue(latestChoice.value) === digestSfValue(choice) && digestSfValue(current.value) === digestSfValue(artifacts)
+        const latestCase = structuredClone(caseRef)
+        const latestChoice = await input.readHumanChoice(latestCase, binding)
+        return digestSfValue(latestCase) === digestSfValue(caseRef) && current.status === "ok" && latestChoice.status === "ok" && digestSfValue(latestChoice.value) === digestSfValue(choice) && digestSfValue(current.value) === digestSfValue(artifacts)
       },
       revalidate: input.revalidate,
     })(caseRef, context)

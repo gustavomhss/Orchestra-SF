@@ -259,7 +259,7 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
     if (groups.some((group) => group.currency === "unspecified")) status.textContent = `${status.textContent} Moeda não especificada: escalas independentes.`.trim()
     if (!aligned) status.textContent = "Painéis indisponíveis: alinhamento entre capacidade e custo não fornecido. A tabela conserva os dados disponíveis."
     if (!semantic || semantic.status !== "ok") status.textContent = "Gráfico indisponível: identificação das séries não fornecida pelo produtor. A tabela conserva os dados disponíveis."
-    if (aligned && semantic?.status === "ok" && !groups.length && !waterfall && !timeline) status.textContent = "Gráfico indisponível para esta visão ou período. A tabela conserva os dados disponíveis."
+    if (!decision && aligned && semantic?.status === "ok" && !groups.length && !waterfall && !timeline) status.textContent = "Gráfico indisponível para esta visão ou período. A tabela conserva os dados disponíveis."
     if (request.viewId === "BI03" && groups.some((group) => group.role === "contribution")) {
       const plan = presentation?.waterfall
       const proof = plan ? resolveWaterfall(projection, plan) : undefined

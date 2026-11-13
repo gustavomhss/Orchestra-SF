@@ -31,16 +31,16 @@ const november = { start: "2027-11-01", end: "2027-11-30" }
 const now = () => "2026-11-13T00:00:00Z"
 const actor = { id: "finance", roles: ["finance"], canWrite: true, assigned: [], domains: [] }
 type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
-type FixtureOptions = { mode?: "eur-missing-fx" | "renewal-usd"; training?: "bundled" | "omitted" | "confirmed" }
+type FixtureOptions = { mode?: "eur-missing-fx" | "renewal-usd"; training?: "bundled" | "omitted" | "confirmed" | "zero" | "null" }
 
 function initial(options: FixtureOptions): Snapshot {
-  const line = (id: string, amount: number) => ({ id, sec: "opex", el: "licenses", cur: "USD", b: Array.from({ length: 12 }, (_, month) => month === 10 ? amount : 0), a: Array(12).fill(null), f: Array.from({ length: 12 }, (_, month) => month === 10 ? amount : 0) })
+  const line = (id: string, amount: number | null) => ({ id, sec: "opex", el: "licenses", cur: "USD", b: Array.from({ length: 12 }, (_, month) => month === 10 ? amount : 0), a: Array(12).fill(null), f: Array.from({ length: 12 }, (_, month) => month === 10 ? amount : 0) })
   const version = (id: string, lines: ReturnType<typeof line>[]) => ({ id, year: 2027, closed: 0, lines, fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} })
   return {
     data: {
       roleMap: [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }],
       versions: options.mode === "renewal-usd"
-        ? [version("renewal", [line("renewal", 240000)]), version(`transition-${options.training ?? "bundled"}`, [line("bridge", 60000), line("implementation", 45000), line("new-service", 105000), ...(options.training === "confirmed" ? [line("training", 40000)] : [])])]
+        ? [version("renewal", [line("renewal", 240000)]), version(`transition-${options.training ?? "bundled"}`, [line("bridge", 60000), line("implementation", 45000), line("new-service", 105000), ...(options.training === "confirmed" ? [line("training", 40000)] : options.training === "zero" ? [line("training", 0)] : options.training === "null" ? [line("training", null)] : [])])]
         // Planner admits a registered currency with an unknown rate, while retaining missing FX.
         : [{ id: "v0", year: 2027, closed: 9, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "EUR", b: Array(12).fill(100000), a: Array(12).fill(null), f: [null, null, null, null, null, null, null, null, null, 100000, 112000, 100000] }], fx: [{ id: "EUR", cur: "EUR", rate: null }], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }],
     },
@@ -58,7 +58,7 @@ export async function createWp05SensitivityFixture(options: FixtureOptions = {})
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-wp05-engine-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
-  const access = { allowed: true }
+  const access = { allowed: true, revokedSources: new Set<string>() }
   const request = new Request("https://example.test/wp05", { headers: { authorization: "wp05-fixture" } })
   const identity = { installationId: "install", projectId: "project", principalRef: "finance", policyVersion: "policy", accessRevision: "access" }
   const authorize = async (incoming: Request) => access.allowed && incoming === request && incoming.headers.get("authorization") === "wp05-fixture" ? identity : undefined
@@ -85,7 +85,7 @@ export async function createWp05SensitivityFixture(options: FixtureOptions = {})
       const ref: RecordEvidence = { schema: "sf-evidence-v1", refId: id, installationId: "install", projectId: "project", refDigest: "", evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "planner-version", recordId: id, incarnation: `planner-${id}`, version: 1, fields: Object.keys(projection), period: wp05Horizon, projectionDigest: digestSfValue({ versionId: id, projection }) } }
       return { ...ref, refDigest: digestSfEvidenceRef(ref) }
     })
-    const sourceMatches = (ref: BusinessEvidenceRef) => sourceRefs.some((source) => digestSfValue(source) === digestSfValue(ref))
+    const sourceMatches = (ref: BusinessEvidenceRef) => !access.revokedSources.has(ref.refId) && sourceRefs.some((source) => digestSfValue(source) === digestSfValue(ref))
     const basis: CostCoverageBasis = { id: "renewal-transition", version: 1, decisionType: "renewal-transition-v1", categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs }
     const coverageAccess: { resolve?: PlannerSourceHost["resolveForecastCoverage"] } = {}
     const host: DomainPortHost = {
@@ -98,9 +98,10 @@ export async function createWp05SensitivityFixture(options: FixtureOptions = {})
     const sources: PlannerSourceHost = {
       resolveForecastSource: async (reference) => {
         const evidence = sourceRefs.find((ref) => ref.refId === reference)
-        return evidence ? { status: "ok", value: { versionId: reference, evidence } } : { status: "unavailable", reason: "planner-source-unavailable" }
+        return evidence && sourceMatches(evidence) ? { status: "ok", value: { versionId: reference, evidence } } : { status: "unavailable", reason: "planner-source-unavailable" }
       },
       resolveForecastCoverage: async (reference, trusted) => {
+        if (access.revokedSources.has(reference)) return { status: "unavailable", reason: "planner-coverage-unavailable" }
         if (sourceRefs.some((ref) => ref.refId === reference)) {
           // Explicitly incomplete bootstrap inventory; downstream tests assess real components.
           const assessment: CostCoverageAssessment = { basisId: basis.id, basisVersion: basis.version, alternativeId: reference, alternativeVersion: 1, currency: "USD", horizon: wp05Horizon, issues: [], evaluatedSourceRefs: sourceRefs, coverageState: "pending", entries: RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => ({ status: "pending", categoryId, reason: "missing-category" })), derivedMissingCategoryIds: [...RENEWAL_TRANSITION_CATEGORIES] }
@@ -181,7 +182,11 @@ export async function createWp05SensitivityFixture(options: FixtureOptions = {})
       context, host, planner, plannerWithCriteria, sources, sourceRefs, basis, cases, caseRef,
       scenario, baselineScenario, selectedResult, baselineResult, selectedRef, baselineRef,
       results, persistent, comparisonBindings, comparisonRef, comparison: compared.value,
-      saved: saved.value, sensitivityRequest, issuer, exact, exactCalls, preview,
+      saved: saved.value, sensitivityRequest, issuer, exact, exactCalls, preview, evidence: evidenceService,
+      revokeSource: (reference: string) => {
+        if (!sourceRefs.some((source) => source.refId === reference)) throw new Error("Unknown fixture source")
+        access.revokedSources.add(reference)
+      },
       reviseRule: () => { ruleOperation.id = "wp05-criterion-revision"; return rules.register({ ...ruleInput, value: criterion.value + 1, expectedRuleVersion: 1 }, context) },
       cleanup,
     }

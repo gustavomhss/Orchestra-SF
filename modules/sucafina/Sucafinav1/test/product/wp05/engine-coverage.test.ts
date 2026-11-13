@@ -31,7 +31,7 @@ async function readBi(fixture: Fixture) {
 }
 
 /** Classify the pack's unique Planner components; category reuse must never add money. */
-function assess(fixture: Fixture, actual: DomainProjection, training: "bundled" | "omitted" | "confirmed") {
+async function assess(fixture: Fixture, actual: DomainProjection, training: "bundled" | "omitted" | "confirmed" | "zero" | "null") {
   const source = fixture.sourceRefs.find((ref) => ref.refId === fixture.scenario.baseRef)
   if (!source) throw new Error("Planner source unavailable")
   const statements = {
@@ -55,7 +55,7 @@ function assess(fixture: Fixture, actual: DomainProjection, training: "bundled" 
     ...Object.entries(statements).map(([categoryId, justification]): CostCoverageEntry => ({ categoryId, status: "not-applicable", justification, evidenceRefs: [statement] })),
     ...(training === "omitted" ? [] : [included("training", componentRefs(training === "bundled" ? "implementation" : "training"), training === "bundled" ? "Training is already included in implementation." : "The separate training quote supplies the additional component.")]),
   ]
-  const evidence: BusinessEvidenceResolution[] = [...fixture.sourceRefs, statement].map((ref) => ({ state: "fresh", ref, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" }))
+  const evidence: BusinessEvidenceResolution[] = [...await Promise.all(fixture.sourceRefs.map((ref) => fixture.evidence.resolve(ref, fixture.context))), { state: "fresh", ref: statement, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" }]
   const request = { caseRef: fixture.caseRef, source, basis: fixture.basis, entries, expectedVersion: 0 }
   const classification = classifyCoverage(request, actual, 1)
   const assessment = assessCostCoverage({
@@ -100,7 +100,7 @@ test("Planner's canonical known-subtotal solver proves the 55000 boundary; its i
 
     // Seed WP11 rejects the pack's legitimate reuse of a component across coverage categories.
     // This characterizes an upstream blocker; it is not acceptance of T05's complete fixture.
-    const coverage = assess(fixture, await projection(fixture), "bundled")
+    const coverage = await assess(fixture, await projection(fixture), "bundled")
     expect(coverage.assessment.derivedMissingCategoryIds).toEqual([])
     expect(coverage.assessment.entries.every((entry) => entry.status !== "pending")).toBe(true)
     expect(coverage.assessment.coverageState).toBe("pending")
@@ -116,7 +116,7 @@ test("real Planner results retain omitted training as unknown, then include its 
     const beforeSnapshot = structuredClone(before.selectedResult)
     const beforeProjection = await projection(before)
     expect(beforeProjection.components.some((item) => item.id.startsWith("training:"))).toBe(false)
-    const omitted = assess(before, beforeProjection, "omitted")
+    const omitted = await assess(before, beforeProjection, "omitted")
     expect(omitted.entries.some((entry) => entry.categoryId === "training")).toBe(false)
     expect(omitted.assessment.derivedMissingCategoryIds).toEqual(["training"])
     expect(omitted.assessment.entries.find((entry) => entry.categoryId === "training")).toEqual({ categoryId: "training", status: "pending", reason: "missing-category" })
@@ -135,7 +135,7 @@ test("real Planner results retain omitted training as unknown, then include its 
     try {
       const afterProjection = await projection(after)
       expect(afterProjection.components.find((item) => item.id === "training:11")).toMatchObject({ amount: 40000, currency: "USD", evidenceState: "confirmed" })
-      const confirmed = assess(after, afterProjection, "confirmed")
+      const confirmed = await assess(after, afterProjection, "confirmed")
       expect(confirmed.assessment.derivedMissingCategoryIds).toEqual([])
       expect(confirmed.assessment.entries.find((entry) => entry.categoryId === "training")?.status).toBe("included")
       expect(after.selectedResult.knownSubtotal).toBe(250000)
@@ -168,5 +168,81 @@ test("real Planner results retain omitted training as unknown, then include its 
     }
   } finally {
     await before.cleanup()
+  }
+}, 180000)
+
+
+test("real Planner and persisted BI distinguish explicit zero training from an unresolved price", async () => {
+  for (const training of ["zero", "null"] as const) {
+    const fixture = await createWp05SensitivityFixture({ mode: "renewal-usd", training })
+    try {
+      const actual = await projection(fixture)
+      const expected = { amount: training === "zero" ? 0 : null, currency: "USD", evidenceState: training === "zero" ? "confirmed" : "absent" }
+      expect(actual.components.find((component) => component.id === "training:11")).toMatchObject(expected)
+      expect(fixture.selectedResult.components.find((component) => component.id === "training:11")).toMatchObject(expected)
+      const assessed = await assess(fixture, actual, training)
+      expect(assessed.assessment.derivedMissingCategoryIds).toEqual([])
+      const category = assessed.assessment.entries.find((entry) => entry.categoryId === "training")
+      if (training === "zero") {
+        expect(category?.status).toBe("included")
+        if (category?.status !== "included") throw new Error("Explicit zero training was not included")
+        expect(category.componentRefs).toContain("training:11")
+        expect(category.evidenceRefs.some((ref) => ref.refId === fixture.scenario.baseRef)).toBe(true)
+      }
+      if (training === "null") expect(category).toEqual({ categoryId: "training", status: "pending", reason: "component-unresolved" })
+      // Shared-category completeness remains an upstream blocker; no fixture promotes it.
+      expect(assessed.assessment.coverageState).toBe("pending")
+      expect(assessed.assessment.issues).toContain("uncategorized-component")
+      expect(fixture.selectedResult.knownSubtotal).toBe(210000)
+      expect(fixture.comparison.knownDifference).toBe(-30000)
+      const bi = await readBi(fixture)
+      expect(bi.scenario).toEqual(fixture.selectedResult)
+      expect(bi.scenario.components.find((component) => component.id === "training:11")).toMatchObject(expected)
+      expect(bi.scenario.total).toBeNull()
+      expect(bi.comparison.comparisonStatus).toBe("conditioned")
+      expect(bi.sensitivity).toEqual(fixture.saved.sensitivity)
+      expect(bi.sensitivity?.threshold).toBeNull()
+    } finally {
+      await fixture.cleanup()
+    }
+  }
+}, 180000)
+
+test("source-specific revocation with a valid UI session withholds persisted BI values and coverage", async () => {
+  const fixture = await createWp05SensitivityFixture({ mode: "renewal-usd", training: "confirmed" })
+  try {
+    const current = await projection(fixture)
+    const selected = fixture.sourceRefs.find((ref) => ref.refId === fixture.scenario.baseRef)
+    if (!selected) throw new Error("Selected Planner source missing")
+    const selection = { selectionRef: "authorized-selection", scenarioResultRef: fixture.selectedRef, comparisonRef: fixture.comparisonRef, sensitivityResultRef: fixture.saved.sensitivityResultRef }
+    const observations = { projectionReads: 0 }
+    const read = createStoredScenarioBiProjection({
+      results: fixture.results,
+      readSensitivity: fixture.persistent.read,
+      readProjection: async (reference) => {
+        observations.projectionReads++
+        return reference === selection.selectionRef ? { status: "ok", value: current } : { status: "unavailable", reason: "selection-unavailable" }
+      },
+      revalidateProjection: async (incoming, actual, caseRef, context) => digestSfValue(incoming) === digestSfValue(selection) && digestSfValue(actual) === digestSfValue(current) && await fixture.host.revalidate(context) && (await fixture.comparisonBindings.read({ caseRef, resultRef: incoming.comparisonRef }, context)).status === "ok",
+    })
+    expect((await read(selection, fixture.context)).status).toBe("ok")
+    const before = observations.projectionReads
+    fixture.revokeSource(selected.refId)
+    // The session/case remains admitted; it is the source grant that changed.
+    expect(await fixture.host.revalidate(fixture.context)).toBe(true)
+    expect((await fixture.evidence.resolve(selected, fixture.context)).state).toBe("revoked")
+    const assessed = await assess(fixture, current, "confirmed")
+    expect(assessed.assessment.coverageState).toBe("unavailable")
+    expect(assessed.assessment.entries).toEqual([])
+    expect(assessed.assessment.issues).toEqual(["evidence-unavailable"])
+    expect(assessed.assessment.evaluatedSourceRefs.some((ref) => ref.refId === selected.refId)).toBe(false)
+    const denied = { status: "denied", reason: "result-access-unavailable" }
+    expect(await fixture.results.read({ kind: "scenario", resultRef: fixture.selectedRef }, fixture.context)).toEqual(denied)
+    expect(await fixture.results.readHistoricalScenario({ resultRef: fixture.selectedRef }, fixture.context)).toEqual(denied)
+    expect(await fixture.results.read({ kind: "comparison", resultRef: fixture.comparisonRef }, fixture.context)).toEqual(denied)
+    expect(await read(selection, fixture.context)).toEqual(denied)
+    expect(observations.projectionReads).toBe(before)
+  } finally {
+    await fixture.cleanup()
   }
 }, 180000)

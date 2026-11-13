@@ -17,6 +17,7 @@ import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../produc
 import type { SfDomainValidation } from "../../../product/contracts/runtime.ts"
 import type { DomainPortHost } from "../../../product/contracts/ports.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
+import { localBrowser } from "../../fixture/local-browser.ts"
 
 const period = { start: "2026-01-01", end: "2026-12-31" }
 
@@ -103,6 +104,76 @@ test("real procurement registry and port supply scoped BI stock and deny revoked
     expect(agingView.value.presentation.series).toEqual([expect.objectContaining({ id: "aging", role: "aging", valueIds: published.values.filter((value) => value.id.endsWith(":ageDays")).map((value) => value.id) })])
     expect(agingView.value.presentation.limitations.join(" ")).toContain("indisponíveis")
     for (const row of listed.value.aging) for (const value of row.values) if (value.evidenceState === "absent" || value.evidenceState === "estimated") expect(published.values.find((item) => item.drilldown?.kind === "record" && value.drilldown?.kind === "record" && item.drilldown.target.recordId === value.drilldown.target.recordId && item.id.endsWith(`:${value.id}`))).toMatchObject({ value: value.value, evidenceState: value.evidenceState })
+
+    const built = await Bun.build({ entrypoints: [path.resolve(import.meta.dir, "../../../product/analytics/view.ts")], target: "browser", format: "esm" })
+    if (!built.success || !built.outputs[0]) throw new Error("analytics browser bundle failed")
+    const url = `data:text/javascript;base64,${Buffer.from(await built.outputs[0].text()).toString("base64")}`
+    const browser = await localBrowser()
+    try {
+      const page = await browser.browser.newPage()
+      await page.goto("about:blank")
+      await page.evaluate(async (input) => {
+        const module = await import(input.url)
+        for (const entry of input.entries) {
+          const section = module.renderBiView(entry.request, entry.value.projection, (selection: unknown) => { document.body.dataset.selection = JSON.stringify(selection) }, entry.value.presentation)
+          section.id = entry.id
+          document.body.append(section)
+        }
+      }, { url, entries: [{ id: "scoped-stock", request: payload, value: uiProjection.value }, { id: "scoped-aging", request: agingPayload, value: agingView.value }] })
+      for (const entry of [{ id: "scoped-stock", value: uiProjection.value }, { id: "scoped-aging", value: agingView.value }]) {
+        const section = page.locator(`#${entry.id}`)
+        const renderedRows = await section.locator("table tbody tr").evaluateAll((rows) => rows.map((row) => Array.from(row.querySelectorAll("td")).slice(0, 6).map((cell) => cell.textContent)))
+        expect(renderedRows).toEqual(entry.value.projection.values.map((value) => [
+          value.id,
+          value.evidenceState === "absent" || value.value === null ? "Indisponível" : String(value.value),
+          value.unit ?? value.currency ?? "—",
+          `${value.period.start} – ${value.period.end}`,
+          value.granularity,
+          value.evidenceState,
+        ]))
+        for (const value of entry.value.projection.values) {
+          if (!value.drilldown) continue
+          const row = section.getByRole("row").filter({ has: page.getByRole("cell", { name: value.id, exact: true }) })
+          await row.getByRole("button", { name: "Abrir origem" }).click()
+          const selection = JSON.parse(await page.locator("body").getAttribute("data-selection") ?? "null")
+          expect(selection.valueId).toBe(value.id)
+          expect(selection.reference).toEqual(value.drilldown)
+          expect(selection.context).toEqual(entry.value.projection.context)
+          expect(selection.visualPeriod).toEqual(period)
+          expect(JSON.stringify(selection)).not.toContain("hidden")
+          expect(JSON.stringify(selection)).not.toContain("2025-12-01")
+        }
+      }
+      const stock = page.locator("#scoped-stock")
+      expect(await stock.locator('svg [data-bi-series="stock"]').count()).toBe(3)
+      for (const value of uiProjection.value.projection.values) {
+        const mark = stock.locator(`svg [data-bi-focus="${value.id}"]`)
+        expect(await mark.count()).toBe(1)
+        expect(await mark.getAttribute("aria-label")).toContain(`${value.id}: ${value.value} `)
+        await mark.click()
+        expect(JSON.parse(await page.locator("body").getAttribute("data-selection") ?? "null").reference).toEqual(value.drilldown)
+      }
+      const aged = page.locator("#scoped-aging")
+      expect(await aged.locator('svg [data-bi-series="aging"]').count()).toBe(1)
+      expect(await aged.textContent()).toContain("Idade indisponível: 1 de 2 pedidos nesta seleção.")
+      const known = published.values.find((value) => value.id.startsWith("resubmitted:") && value.id.endsWith(":ageDays"))
+      expect(known).toBeDefined()
+      if (!known) throw new Error("real scoped producer omitted known age")
+      const point = aged.locator(`svg [data-bi-focus="${known.id}"]`)
+      expect(await point.getAttribute("aria-label")).toContain(": 2 ")
+      await point.click()
+      expect(JSON.parse(await page.locator("body").getAttribute("data-selection") ?? "null").reference).toEqual(known.drilldown)
+      const unavailable = aged.getByRole("list", { name: "Pedidos com idade indisponível" })
+      expect(await unavailable.getByRole("listitem").count()).toBe(1)
+      await unavailable.getByRole("button", { name: "Abrir waiting", exact: true }).click()
+      const unknown = JSON.parse(await page.locator("body").getAttribute("data-selection") ?? "null")
+      expect(unknown.reference.target.recordId).toBe("waiting")
+      const html = await page.content()
+      expect(html).not.toContain("hidden")
+      expect(html).not.toContain("2025-12-01")
+    } finally {
+      await browser.dispose()
+    }
     access.enabled = false
     expect((await readBiPresentation(payload, admitted.value, source, authority)).status).toBe("denied")
     expect((await readBiPresentation(agingPayload, agingAdmission.value, source, authority)).status).toBe("denied")
@@ -110,4 +181,5 @@ test("real procurement registry and port supply scoped BI stock and deny revoked
     await store.dispose()
     await rm(directory, { recursive: true, force: true })
   }
-})
+}, 180000)
+

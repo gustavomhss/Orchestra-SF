@@ -1,4 +1,8 @@
 import { expect, test } from "bun:test"
+import path from "node:path"
+import type { Page } from "@playwright/test"
+import { localBrowser } from "../../fixture/local-browser.ts"
+import { resolveWaterfall } from "../../../product/analytics/waterfall.ts"
 import { dispatchSfCapability } from "../../../product/host-binding/capability-dispatch.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../product/contracts/schema-admission.ts"
 import { plannerDifferencePresentation } from "../../../product/planner/bi-difference.ts"
@@ -72,7 +76,27 @@ test("real planner projection reaches BI with distinct missing and zero values",
     if (output.ok) expect(output.value.values.find((value) => value.id === "line:2:actual")?.value).toBe(0)
   }
   expect((await dispatch()).status).toBe("denied")
-})
+
+  await inspectBiProjection(request, result.value, async (page) => {
+    const mark = page.getByRole("button", { name: /^actual · month:2:actual: 0 / })
+    expect(await mark.count()).toBe(1)
+    await mark.click()
+    const clicked = JSON.parse(await page.locator("body").getAttribute("data-selection") ?? "null")
+    await page.evaluate(() => { delete document.body.dataset.selection })
+    await mark.focus()
+    await page.keyboard.press("Enter")
+    const keyed = JSON.parse(await page.locator("body").getAttribute("data-selection") ?? "null")
+    expect(keyed).toEqual(clicked)
+    const row = page.getByRole("row").filter({ has: page.getByRole("cell", { name: "month:2:actual", exact: true }) })
+    expect(await row.getByRole("cell").nth(1).textContent()).toBe("0")
+    await row.getByRole("button", { name: "Abrir origem" }).click()
+    const tabular = JSON.parse(await page.locator("body").getAttribute("data-selection") ?? "null")
+    expect(tabular).toEqual(clicked)
+    expect(clicked).toMatchObject({ selectionRef: request.selectionRef, valueId: "month:2:actual", context: { period }, visualPeriod: period, reference: { refId: "v1" } })
+    expect(clicked.reference).toEqual(values.find((value) => value.id === "month:2:actual")?.drilldown)
+    expect(await page.getByRole("row").filter({ has: page.getByRole("cell", { name: "month:1:actual", exact: true }) }).getByRole("cell").nth(1).textContent()).toBe("Indisponível")
+  })
+}, 180000)
 
 
 test("real planner comparison supplies the same reconciled waterfall to BI and dispatcher", async () => {
@@ -107,16 +131,45 @@ test("real planner comparison supplies the same reconciled waterfall to BI and d
   if (uiProjection.status !== "ok") return
   expect(uiProjection.value.projection).toEqual(output.value)
   expect(uiProjection.value.presentation.waterfall?.reconciliation).toBe("reconciled")
-})
+
+  const plan = uiProjection.value.presentation.waterfall
+  expect(plan).toBeDefined()
+  if (!plan) return
+  const resolved = resolveWaterfall(uiProjection.value.projection, plan)
+  expect(resolved.status).toBe("ok")
+  if (resolved.status !== "ok") return
+  const zero = resolved.segments.find((segment) => segment.amount === 0)
+  expect(zero).toBeDefined()
+  if (!zero) return
+  expect(zero.start).not.toBeNull()
+  expect(zero.end).toBe(zero.start)
+  expect(zero.source.evidenceState).not.toBe("absent")
+  await inspectBiProjection(request, uiProjection.value, async (page) => {
+    const mark = page.locator(`svg g[data-bi-value="${zero.componentValueId}"]`)
+    expect(await mark.count()).toBe(1)
+    expect(await mark.locator("circle").count()).toBe(1)
+    const line = mark.locator("line")
+    expect(await line.getAttribute("y1")).toBe(await line.getAttribute("y2"))
+    expect(await mark.locator("title").textContent()).toBe(`${zero.label}: 0 USD`)
+    const composition = page.locator("table").filter({ has: page.locator("caption", { hasText: "Composição e origens" }) })
+    const row = composition.getByRole("row").filter({ has: page.getByRole("cell", { name: zero.label, exact: true }) })
+    expect(await row.getByRole("cell").nth(2).textContent()).toBe("0")
+    const equivalent = page.locator("table").filter({ has: page.locator("caption", { hasText: "Dados e referências" }) })
+    expect(await equivalent.getByRole("row").filter({ has: page.getByRole("cell", { name: zero.componentValueId, exact: true }) }).getByRole("cell").nth(1).textContent()).toBe("0")
+    expect(await page.locator("body").textContent()).toContain("Reconciliação: reconciled")
+  })
+}, 180000)
 
 
-test("real planner capacity presents aligned FTE and unavailable HR cost without invented values", async () => {
+for (const role of ["finance", "viewer"] as const) test(`real planner capacity preserves aligned filtered panels and personal-data absence for ${role}`, async () => {
   const data = initial()
-  const versions = data.data.versions as { hc: { positions: { id: string; include: boolean; fte: number; start: number; end: number; type: string }[] } }[]
-  versions[1]!.hc.positions = [{ id: "position", include: true, fte: 0.5, start: 1, end: 3, type: "Employee" }]
+  data.data.roleMap = [{ surface: "planner", role, entra: "finance-group", version: 1, by: "admin" }]
+  const scopedActor = { ...actor, roles: [role], canWrite: role === "finance" }
+  const versions = data.data.versions as { hc: { positions: { id: string; include: boolean; fte: number; start: number; end: number; type: string; name: string; salary: number }[] } }[]
+  versions[1]!.hc.positions = [{ id: "position", include: true, fte: 0.5, start: 1, end: 3, type: "Employee", name: "PRIVATE_NAME_WP05", salary: 97531.25 }]
   const storage = testPersistence({ planner: data })
   const refs = ["v0", "v1"].map((id): Extract<BusinessEvidenceRef, { kind: "record" }> => {
-    const source = projectPlannerSource(storage.state.planner, actor, id)!
+    const source = projectPlannerSource(storage.state.planner, scopedActor, id)!
     const ref: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", refId: id, installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "planner-version", recordId: id, incarnation: `inc-${id}`, version: 1, fields: Object.keys(source), period, projectionDigest: digestSfValue({ versionId: id, projection: source }) } }
     ref.refDigest = digestSfEvidenceRef(ref)
     return ref
@@ -139,4 +192,67 @@ test("real planner capacity presents aligned FTE and unavailable HR cost without
   expect(result.value.projection.values.find((value) => value.id === "month:1:hr-budget")).toMatchObject({ value: null, evidenceState: "absent" })
   expect(result.value.presentation.series.map((series) => series.role)).toEqual(["fte", "cost"])
   expect(result.value.presentation.series[0]?.alignmentKeys).toEqual(result.value.presentation.series[1]?.alignmentKeys)
-})
+
+  expect(JSON.stringify(storage.state.planner.data)).toContain("PRIVATE_NAME_WP05")
+  expect(JSON.stringify(storage.state.planner.data)).toContain("97531.25")
+  expect(JSON.stringify(result.value)).not.toContain("PRIVATE_NAME_WP05")
+  expect(JSON.stringify(result.value)).not.toContain("97531.25")
+  if (role === "viewer") {
+    const restricted = projectPlannerSource(storage.state.planner, scopedActor, "v1")
+    expect(JSON.stringify(restricted)).not.toContain("97531.25")
+  }
+  await inspectBiProjection(request, result.value, async (page) => {
+    const filtered = { start: "2027-02-01", end: "2027-03-31" }
+    await page.getByLabel("Início do período", { exact: true }).fill(filtered.start)
+    await page.getByLabel("Fim do período", { exact: true }).fill(filtered.end)
+    await page.getByRole("button", { name: "Aplicar filtro" }).click()
+    expect(await page.locator('svg [data-bi-series="fte"]').count()).toBe(2)
+    expect(await page.locator('svg [data-bi-series="cost"]').count()).toBe(0)
+    expect(await page.locator("body").textContent()).toContain("Orçamento de pessoas · USD: indisponível")
+    for (const month of [2, 3]) {
+      const fte = page.getByRole("row").filter({ has: page.getByRole("cell", { name: `month:${month}:fte`, exact: true }) })
+      const cost = page.getByRole("row").filter({ has: page.getByRole("cell", { name: `month:${month}:hr-budget`, exact: true }) })
+      expect(await fte.getByRole("cell").nth(1).textContent()).toBe("0.5")
+      expect(await fte.getByRole("cell").nth(2).textContent()).toBe("fte")
+      expect(await cost.getByRole("cell").nth(1).textContent()).toBe("Indisponível")
+      expect(await cost.getByRole("cell").nth(2).textContent()).toBe("USD")
+      expect(await fte.getByRole("cell").nth(3).textContent()).toBe(await cost.getByRole("cell").nth(3).textContent())
+      for (const row of [fte, cost]) {
+        await row.getByRole("button", { name: "Abrir origem" }).click()
+        const selection = JSON.parse(await page.locator("body").getAttribute("data-selection") ?? "null")
+        expect(selection.context.period).toEqual(period)
+        expect(selection.visualPeriod).toEqual(filtered)
+        expect(selection.reference).toEqual(refs[1])
+        expect(JSON.stringify(selection)).not.toContain("PRIVATE_NAME_WP05")
+        expect(JSON.stringify(selection)).not.toContain("97531.25")
+      }
+    }
+    for (const id of ["month:1:fte", "month:1:hr-budget", "month:4:fte", "month:4:hr-budget"]) expect(await page.getByRole("cell", { name: id, exact: true }).count()).toBe(0)
+    const rendered = await page.content()
+    expect(rendered).not.toContain("PRIVATE_NAME_WP05")
+    expect(rendered).not.toContain("97531.25")
+  })
+}, 180000)
+
+async function inspectBiProjection(
+  request: Parameters<typeof readBiPresentation>[0],
+  value: Extract<Awaited<ReturnType<typeof readBiPresentation>>, { status: "ok" }>["value"],
+  inspect: (page: Page) => Promise<void>,
+) {
+  const built = await Bun.build({ entrypoints: [path.resolve(import.meta.dir, "../../../product/analytics/view.ts")], target: "browser", format: "esm" })
+  if (!built.success || !built.outputs[0]) throw new Error("analytics browser bundle failed")
+  const url = `data:text/javascript;base64,${Buffer.from(await built.outputs[0].text()).toString("base64")}`
+  const fixture = await localBrowser()
+  try {
+    const page = await fixture.browser.newPage()
+    await page.goto("about:blank")
+    await page.evaluate(async (input) => {
+      const module = await import(input.url)
+      document.body.append(module.renderBiView(input.request, input.value.projection, (selection: unknown) => { document.body.dataset.selection = JSON.stringify(selection) }, input.value.presentation))
+    }, { url, request, value })
+    await inspect(page)
+  } finally {
+    await fixture.dispose()
+  }
+}
+
