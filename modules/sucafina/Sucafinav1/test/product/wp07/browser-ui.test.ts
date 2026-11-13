@@ -24,7 +24,7 @@ import { captureChromiumCleanup } from "./chromium-cleanup.ts"
 test("Chromium preserves the chosen agenda, recovers a lost response and removes revoked content", async () => {
   const started = Date.now()
   const checkpoint = (phase: string) => console.info(`WP07 browser: ${phase} +${Date.now() - started}ms`)
-  const timed = async <T>(phase: string, work: () => Promise<T>, milliseconds = 10000): Promise<T> => {
+  const timed = async <T>(phase: string, work: () => Promise<T>, milliseconds = 5000): Promise<T> => {
     checkpoint(`${phase}:start`)
     const deadline = { timer: undefined as ReturnType<typeof setTimeout> | undefined }
     try {
@@ -48,12 +48,18 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
   checkpoint("server-created")
   const runtime: { browser?: Browser; closeBrowser?: () => Promise<void> } = {}
   try {
-    const control = { allowed: true, available: true, dropPreserveResponse: false, preserveCalls: [] as { key: string; reviewRef?: string }[] }
+    const control = {
+      allowed: true, available: true, dropPreserveResponse: false, sourceDestinationAllowed: true,
+      preserveCalls: [] as { key: string; reviewRef?: string }[],
+      updateChecks: [] as string[], sourceNavigations: [] as { reviewRef: string; refDigest: string }[],
+      reviewNavigations: [] as { reviewRef: string; sectionId: string }[],
+    }
     const period = { start: "2027-01-01", end: "2027-12-31" }
     const at = "2026-11-13T08:00:00Z"
     const origin = server.url.origin
     const operator = { installationId: randomUUID(), uid: process.getuid!(), name: "WP07 isolated test operator" }
     const principalRef = `macos:${operator.installationId}:${operator.uid}`
+    const commentText = "Owner note: check the renewal timing before deciding."
     const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator, secrets: store.secrets, key: randomBytes(32) })
     checkpoint("authority-create")
     const authority = createSfProductAuthority({
@@ -97,12 +103,20 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
       requiredAuthority: [], maxBytes: 5_000_000, now: () => at,
       evidence: { resolve: async (ref, context) => ({ state: await authority.host.revalidate(context) && catalog.has(ref.refDigest) && digestSfValue(catalog.get(ref.refDigest)) === digestSfValue(ref) ? "historical" : "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: at }) },
       access: { revalidate: revalidateSources, authorizeSections: (context, sections) => revalidateSources(context, sections.flatMap((section) => section.sourceRefs)), authorizeOutcomeComparison: async (_context, values) => values.length === 0, authorizeOutcome: async (_context, values) => values.length === 0, authorizeDecision: async (_context, values) => values.length === 0, authorizeSensitivity: async (_context, values) => values.length === 0 },
-      collaboration: { threads: { read: unavailable }, history: { readVersion: unavailable }, authorizeSourceMapping: async () => false, maxMessages: 100 },
+      collaboration: {
+        // Controlled thread producer: captures a real consumer comment without claiming WP08 history.
+        threads: { read: async (threadId, context) => threadId === "browser-comment" && await authority.host.revalidate(context)
+          ? { status: "ok", value: { id: threadId, kind: "comment", sourceRef: "fixture-planner-v1", sourceIncarnation: "inc-v1", observedVersion: 1, period, evidenceRefs: [], messages: [{ id: "owner-note", incarnation: "owner-note-inc", version: 1, authorRef: principalRef, body: commentText, createdAt: at }] } }
+          : { status: "denied", reason: "fixture-thread-unavailable" } },
+        history: { readVersion: unavailable },
+        authorizeSourceMapping: async (thread, sources, context) => thread.id === "browser-comment" && sources.length === 1 && sources[0]?.id === "v1" && sources[0]?.incarnation === "inc-v1" && await revalidateSources(context, sources),
+        maxMessages: 100,
+      },
       ports: { planner, selectDashboardAgenda: unavailable, procurement: { read: unavailable, readSupplier: unavailable, readContract: unavailable } },
     })
     const items: ReviewAgendaItem[] = [
       { id: "first", kind: "forecast-comparison", title: "First forecast", baseRef: "v0", candidateRef: "v1", sides: ["baseline", "candidate"], currency: "USD", period, agendaNote: "Retain this agenda note" },
-      { id: "second", kind: "forecast-comparison", title: "Second forecast", baseRef: "v0", candidateRef: "v1", sides: ["candidate"], currency: "USD", period },
+      { id: "second", kind: "forecast-comparison", title: "Second forecast", baseRef: "v0", candidateRef: "v1", sides: ["candidate"], currency: "USD", period, threadIds: ["browser-comment"] },
       { id: "third", kind: "forecast-comparison", title: "Third forecast", baseRef: "v0", candidateRef: "v1", sides: ["candidate"], currency: "USD", period },
     ]
     serverState.handle = async (request) => {
@@ -110,6 +124,45 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
       if (authentication) return authentication
       const url = new URL(request.url)
       if (url.pathname === "/sucafina/browser-ui.js") return new Response(bundle, { headers: { "Content-Type": "application/javascript" } })
+      if (url.pathname === "/sucafina/test-review-host") {
+        // Explicit fixture adapters for host callbacks; production UI/HTTP/readers remain unmodified.
+        const operation = url.searchParams.get("operation")
+        const reviewRef = url.searchParams.get("reviewRef") ?? ""
+        const denied = () => Response.json({ status: "denied", reason: "test-host-access-unavailable" }, { status: 403 })
+        if (request.method !== "GET" || !["check-update", "open-source", "open-review"].includes(operation ?? "") || !reviewRef) return denied()
+        const digest = digestSfValue([...url.searchParams.entries()])
+        const admitted = await authority.ui.admit(request, "sf_review_prepare", digest)
+        if (admitted.status !== "ok") return denied()
+        try {
+          if (!await authority.ui.validate(admitted.value, "sf_review_prepare", digest) || authority.ui.requestFor(admitted.value) !== request) return denied()
+          const review = await app.reviews.read(reviewRef, admitted.value)
+          if (review.status !== "ok") return denied()
+          if (operation === "check-update") {
+            const current = await planner.compareForecast({ baseRef: "v0", candidateRef: "v1", currency: "USD", period }, admitted.value)
+            if (current.status !== "ok") return Response.json(current, { status: 503 })
+            const available = review.value.sections.some((section) => {
+              const projection = section.content as DomainProjection
+              const latest = projection.context.sourceRefs[0]?.id === "v0" ? current.value.baseline : current.value.candidate
+              return digestSfValue(projection.values) !== digestSfValue(latest.values)
+            })
+            if (!await authority.host.revalidate(admitted.value)) return denied()
+            control.updateChecks.push(reviewRef)
+            return Response.json({ status: "ok", value: { available } })
+          }
+          if (operation === "open-source") {
+            const refDigest = url.searchParams.get("refDigest") ?? ""
+            const reference = review.value.sections.flatMap((section) => (section.content as DomainProjection).values.flatMap((value) => value.sourceRefs)).find((ref) => ref.refDigest === refDigest)
+            const registered = catalog.get(refDigest)
+            if (!control.sourceDestinationAllowed || !reference || !registered || digestSfValue(registered) !== digestSfValue(reference) || !await authority.host.revalidate(admitted.value)) return denied()
+            control.sourceNavigations.push({ reviewRef, refDigest })
+            return Response.json({ status: "ok" })
+          }
+          const sectionId = url.searchParams.get("sectionId") ?? ""
+          if (review.value.sections[0]?.id !== sectionId || !await authority.host.revalidate(admitted.value)) return denied()
+          control.reviewNavigations.push({ reviewRef, sectionId })
+          return Response.json({ status: "ok" })
+        } finally { authority.ui.finish(admitted.value) }
+      }
       if (url.pathname !== "/sucafina/dashboard") return new Response(null, { status: 404 })
       const mode = url.searchParams.get("sf")
       if (mode) checkpoint(`http:${mode}:start`)
@@ -139,16 +192,16 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
       return { commit: true, value: undefined }
     })
     const storedReviews = () => store.transaction("dashboard", async (snapshot) => ({ commit: false, value: Object.keys(object(object(snapshot.data.__sfProductV1).reviews)) }))
-    runtime.browser = await timed("chrome-launch", () => chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15000 }), 20000)
+    runtime.browser = await timed("chrome-launch", () => chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 5000 }), 10000)
     runtime.closeBrowser = await timed("chrome-ownership", () => captureChromiumCleanup(runtime.browser!))
     const context = await timed("browser-context", () => runtime.browser!.newContext({ viewport: { width: 1440, height: 1000 } }))
     const page = await timed("browser-page", () => context.newPage())
-    page.setDefaultTimeout(10000)
-    page.setDefaultNavigationTimeout(10000)
+    page.setDefaultTimeout(5000)
+    page.setDefaultNavigationTimeout(5000)
     const errors: string[] = []
     page.on("pageerror", (error) => { errors.push(error.message) })
     const code = await timed("operator-enrollment", () => identity.enroll())
-    await timed("authenticated-navigation", () => page.goto(`${origin}/sucafina/auth/local?code=${code}`, { waitUntil: "domcontentloaded", timeout: 10000 }))
+    await timed("authenticated-navigation", () => page.goto(`${origin}/sucafina/auth/local?code=${code}`, { waitUntil: "domcontentloaded", timeout: 5000 }))
     const view = page.getByRole("region", { name: "Prepare review", exact: true })
     await expect(view.getByRole("button", { name: "Load selection", exact: true })).toBeEnabled()
     checkpoint("selection-load")
@@ -205,7 +258,7 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
     await expect(view.getByRole("heading", { name: "Preserved review", exact: true })).toBeVisible()
     expect(await storedReviews()).toHaveLength(2)
     checkpoint("original-snapshot-read")
-    const original = await page.request.get(`${origin}/sucafina/dashboard?sf=review-read&reviewRef=${encodeURIComponent(successful[0]!.reviewRef!)}`, { timeout: 10000 })
+    const original = await page.request.get(`${origin}/sucafina/dashboard?sf=review-read&reviewRef=${encodeURIComponent(successful[0]!.reviewRef!)}`, { timeout: 5000 })
     expect(original.status()).toBe(200)
     const recovered = await original.json() as PortResult<PreservedReview>
     if (recovered.status !== "ok") throw new Error(recovered.reason)
@@ -213,7 +266,7 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
     expect((recovered.value.sections[0]!.content as DomainProjection).values.find((value) => value.id === "license:1:forecast")?.value).toBe(120)
     const screenshot = fileURLToPath(new URL("../../../../../../test-ci-evidence/wp07-browser-ui.png", import.meta.url))
     await mkdir(path.dirname(screenshot), { recursive: true })
-    await timed("screenshot", () => page.screenshot({ path: screenshot, timeout: 10000 }))
+    await timed("screenshot", () => page.screenshot({ path: screenshot, timeout: 5000 }))
     checkpoint("selection-revoke")
     control.allowed = false
     await view.getByRole("button", { name: "Prepare current data as a new revision", exact: true }).click()
@@ -223,6 +276,121 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
     await expect(view.getByText("Agenda note: Retain this agenda note", { exact: true })).toHaveCount(0)
     await expect(view.getByRole("button", { name: "Load selection", exact: true })).toBeEnabled()
     expect(await storedReviews()).toHaveLength(2)
+    checkpoint("meeting-open-preserved")
+    control.allowed = true
+    const originalRef = successful[0]!.reviewRef!
+    const currentRef = (await storedReviews()).find((ref) => ref !== originalRef)
+    if (!currentRef) throw new Error("WP07_CURRENT_REVIEW_NOT_PRESERVED")
+    const currentUrl = `${origin}/sucafina/dashboard?review=${encodeURIComponent(currentRef)}`
+    const originalUrl = `${origin}/sucafina/dashboard?review=${encodeURIComponent(originalRef)}`
+    await page.goto(currentUrl, { waitUntil: "domcontentloaded" })
+    const meeting = page.getByRole("main")
+    await expect(meeting.getByRole("heading", { name: "Second forecast · candidate", exact: true })).toBeVisible()
+    const currentValue = meeting.getByRole("listitem").filter({ hasText: /^license:1:forecast: 130 USD · / })
+    await expect(currentValue).toBeVisible()
+    await expect(meeting.getByRole("heading", { name: "Preserved comments", exact: true })).toBeVisible()
+    await expect(meeting.getByText(`${principalRef} · ${at} · v1: ${commentText}`, { exact: true })).toBeVisible()
+    await changeForecast(140)
+    await meeting.getByRole("button", { name: "Next topic", exact: true }).click()
+    await expect(meeting.getByRole("heading", { name: "First forecast · candidate", exact: true })).toBeVisible()
+    await expect(currentValue).toBeVisible()
+    await meeting.getByRole("button", { name: "Previous topic", exact: true }).click()
+    await expect(meeting.getByRole("heading", { name: "Second forecast · candidate", exact: true })).toBeVisible()
+    await expect(currentValue).toBeVisible()
+    expect(control.updateChecks).toEqual([])
+    await expect(meeting.getByRole("button", { name: "Create an updated review", exact: true })).toHaveCount(0)
+
+    checkpoint("meeting-explicit-update-check")
+    await meeting.getByRole("button", { name: "Check for updates", exact: true }).click()
+    await expect(meeting.getByRole("button", { name: "Create an updated review", exact: true })).toBeVisible()
+    await expect(currentValue).toBeVisible()
+    expect(control.updateChecks).toEqual([currentRef])
+    expect(await storedReviews()).toHaveLength(2)
+    await meeting.getByRole("button", { name: "Create an updated review", exact: true }).click()
+    await expect(page).toHaveURL(`${origin}/sucafina/dashboard?previousReviewRef=${encodeURIComponent(currentRef)}`)
+    await expect(page.getByRole("button", { name: "Load selection", exact: true })).toBeEnabled()
+    expect(await storedReviews()).toHaveLength(2)
+
+    checkpoint("meeting-compare-snapshots")
+    await page.goto(currentUrl, { waitUntil: "domcontentloaded" })
+    await expect(currentValue).toBeVisible()
+    await meeting.getByRole("button", { name: "Compare reviews", exact: true }).click()
+    await expect(meeting.getByRole("status")).toHaveText("Changes between preserved reviews.")
+    const changed = meeting.getByRole("listitem").filter({ hasText: /^section second:candidate · .* · license:1:forecast · changed: 120 → 130 \(Δ 10\) · / })
+    await expect(changed).toBeVisible()
+    await expect(changed).not.toContainText(commentText)
+    await expect(meeting.getByRole("heading", { name: "Preserved comments", exact: true })).toBeVisible()
+    await expect(meeting.getByRole("listitem").filter({ hasText: commentText })).toHaveText([
+      `${originalRef} · ${principalRef} · ${at} · v1: ${commentText}`,
+      `${currentRef} · ${principalRef} · ${at} · v1: ${commentText}`,
+    ])
+    await changed.getByRole("button", { name: "Open after item", exact: true }).click()
+    await expect(meeting.getByRole("heading", { name: "Second forecast · candidate", exact: true })).toBeVisible()
+    await expect(currentValue).toBeVisible()
+    await meeting.getByRole("button", { name: "Compare reviews", exact: true }).click()
+    await expect(changed).toBeVisible()
+    await changed.getByRole("button", { name: "Open before item", exact: true }).click()
+    await expect(page).toHaveURL(originalUrl)
+    await expect(meeting.getByRole("heading", { name: "Second forecast · candidate", exact: true })).toBeVisible()
+    const originalValue = meeting.getByRole("listitem").filter({ hasText: /^license:1:forecast: 120 USD · / })
+    await expect(originalValue).toBeVisible()
+    expect(control.reviewNavigations).toEqual([{ reviewRef: originalRef, sectionId: "second:candidate" }])
+
+    checkpoint("meeting-first-review")
+    await meeting.getByRole("button", { name: "Compare reviews", exact: true }).click()
+    await expect(meeting.getByRole("status")).toHaveText("First review; no previous comparison.")
+    await expect(meeting.getByRole("button", { name: "Open before item", exact: true })).toHaveCount(0)
+    await expect(meeting.getByRole("button", { name: "Open after item", exact: true })).toHaveCount(0)
+    await expect(meeting.getByRole("listitem").filter({ hasText: / · (changed|incompatible|added|removed): / })).toHaveCount(0)
+    await expect(meeting.getByRole("listitem").filter({ hasText: commentText })).toHaveText([`${originalRef} · ${principalRef} · ${at} · v1: ${commentText}`])
+    await meeting.getByRole("button", { name: "Next topic", exact: true }).click()
+    await expect(meeting.getByRole("heading", { name: "First forecast · candidate", exact: true })).toBeVisible()
+    await expect(originalValue).toBeVisible()
+    await meeting.getByRole("button", { name: "Previous topic", exact: true }).click()
+    await expect(meeting.getByRole("heading", { name: "Second forecast · candidate", exact: true })).toBeVisible()
+    await expect(originalValue).toBeVisible()
+
+    checkpoint("meeting-source-handoff")
+    const source = (recovered.value.sections[0]!.content as DomainProjection).values.find((value) => value.id === "license:1:forecast")?.sourceRefs[0]
+    if (!source) throw new Error("WP07_PRESERVED_SOURCE_NOT_AVAILABLE")
+    const sourceButton = meeting.getByRole("button", { name: `Open source ${source.refId}`, exact: true })
+    await sourceButton.click()
+    await expect(meeting.getByRole("status")).toHaveText("Source navigation requested.")
+    expect(control.sourceNavigations).toEqual([{ reviewRef: originalRef, refDigest: source.refDigest }])
+    await expect(originalValue).toBeVisible()
+    control.sourceDestinationAllowed = false
+    await sourceButton.click()
+    await expect(meeting.getByRole("status")).toHaveText("Source navigation is unavailable under current access.")
+    await expect(meeting.getByRole("heading")).toHaveCount(0)
+    await expect(meeting.getByRole("listitem")).toHaveCount(0)
+    expect(control.sourceNavigations).toHaveLength(1)
+
+    checkpoint("meeting-source-revocation")
+    control.sourceDestinationAllowed = true
+    await page.goto(originalUrl, { waitUntil: "domcontentloaded" })
+    await expect(sourceButton).toBeVisible()
+    control.allowed = false
+    await sourceButton.click()
+    await expect(meeting.getByRole("status")).toHaveText("Source is unavailable or review access has changed.")
+    await expect(meeting.getByRole("heading")).toHaveCount(0)
+    await expect(meeting.getByRole("listitem")).toHaveCount(0)
+    expect(control.sourceNavigations).toHaveLength(1)
+
+    checkpoint("meeting-review-revocation")
+    control.allowed = true
+    await page.goto(currentUrl, { waitUntil: "domcontentloaded" })
+    await expect(currentValue).toBeVisible()
+    await meeting.getByRole("button", { name: "Compare reviews", exact: true }).click()
+    await expect(changed).toBeVisible()
+    control.allowed = false
+    await changed.getByRole("button", { name: "Open before item", exact: true }).click()
+    await expect(meeting.getByRole("status")).toHaveText("Review item is unavailable or access has changed.")
+    await expect(meeting.getByRole("heading")).toHaveCount(0)
+    await expect(meeting.getByRole("listitem")).toHaveCount(0)
+    await expect(page).toHaveURL(currentUrl)
+    expect(control.reviewNavigations).toHaveLength(1)
+    expect(await storedReviews()).toHaveLength(2)
+
     expect(errors).toEqual([])
     checkpoint("body-done")
   } catch (error) {

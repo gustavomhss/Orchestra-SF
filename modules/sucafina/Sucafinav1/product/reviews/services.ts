@@ -1,4 +1,4 @@
-import { digestSfValue } from "../contracts/canonical.ts"
+import { canonicalSfValue, digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessContextService } from "../contracts/business-context.ts"
 import type { DomainPortHost } from "../contracts/ports.ts"
 import type { SfDomainValidation } from "../contracts/runtime.ts"
@@ -30,9 +30,16 @@ export function createReviewServices(input: {
     requestFor: input.host.requestFor,
     ...input.selection,
     revalidateEvidence: async (context, refs) => {
+      // Many captured cells refer to the same immutable source. Resolve each complete
+      // reference once per pass; never reuse authorization across passes or requests.
+      // Keep the expected body independent of caller/resolver mutation during awaits.
+      const references = new Map(refs.map((ref) => [canonicalSfValue(ref), structuredClone(ref)]))
       if (!await input.host.revalidate(context)) return false
-      const resolutions = await Promise.all(refs.map((ref) => input.evidence.resolve(ref, context)))
-      return resolutions.every((result, index) => (result.state === "fresh" || result.state === "historical") && result.accessRevision === context.binding.accessRevision && digestSfValue(result.ref) === digestSfValue(refs[index])) && await input.host.revalidate(context)
+      const resolutions = await Promise.all([...references].map(async ([expected, ref]) => {
+        const result = await input.evidence.resolve(ref, context)
+        return (result.state === "fresh" || result.state === "historical") && result.accessRevision === context.binding.accessRevision && canonicalSfValue(result.ref) === expected
+      }))
+      return resolutions.every(Boolean) && await input.host.revalidate(context)
     },
   })
   const artifacts = createReviewArtifactStorage({ state: input.state, host: input.host, reviews, creationTarget: input.creationTarget, operationIdentity: (context, entry) => input.operationIdentity(context) ?? (context.kind === "native" ? input.authority.receiptFor(context, "sf_report_prepare", digestSfValue({ reviewRef: entry.reviewRef, format: entry.format, sectionRefs: entry.sectionRefs }))?.callId : undefined), maxBytes: input.maxBytes })
