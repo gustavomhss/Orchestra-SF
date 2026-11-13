@@ -11,8 +11,6 @@ jobs:
   planner-checks:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
-    env:
-      WP03_CHECK_EVIDENCE: ${{ runner.temp }}/astra-wp03-evidence
     defaults:
       run:
         shell: bash
@@ -29,6 +27,8 @@ jobs:
           git merge-base --is-ancestor 73ee7fd812d233f898ef79a9378014d4339d9875 HEAD
           git fetch --no-tags origin dev:refs/remotes/origin/dev
           git merge-base HEAD origin/dev
+          export WP03_CHECK_EVIDENCE="$RUNNER_TEMP/astra-wp03-evidence"
+          echo "WP03_CHECK_EVIDENCE=$WP03_CHECK_EVIDENCE" >> "$GITHUB_ENV"
           mkdir -p "$WP03_CHECK_EVIDENCE"
           node --input-type=module <<'NODE'
           import { execFileSync } from 'node:child_process'

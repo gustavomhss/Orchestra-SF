@@ -14,7 +14,7 @@ test("C10 keeps the 30000 apparent savings conditional until training changes 21
     version.closed = 0
     const service = index === 0 ? 240000 : 210000
     version.lines = [{ id: "service", sec: "opex", el: "licenses", cur: "USD", b: Array(12).fill(service / 12), a: Array(12).fill(null), f: Array(12).fill(service / 12) }]
-    if (index === 2) version.lines = [...rows(version.lines), { id: "training", sec: "opex", el: "other", cur: "USD", b: [...Array(11).fill(0), 40000], a: Array(12).fill(null), f: [...Array(11).fill(0), 40000] }]
+    if (index === 2) version.lines = [...rows(version.lines), { id: "training", sec: "opex", el: "oth", cur: "USD", b: [...Array(11).fill(0), 40000], a: Array(12).fill(null), f: [...Array(11).fill(0), 40000] }]
   }
   const fixture = await plannerFixture(snapshot)
   try {
