@@ -16,6 +16,7 @@ import type { ConfirmationWork } from "./work-port.ts"
 import { createCollaborationCapabilities } from "./capabilities.ts"
 import type { CollaborationCapabilityHost } from "./capabilities.ts"
 import { createCollaborationAuthority } from "./authority.ts"
+import type { CollaborationRecipientAuthority } from "./recipient-authority.ts"
 import { createCollaborationComposition } from "./composition.ts"
 import { createCollaborationDispatch } from "./dispatch.ts"
 import { createWorkSelectionPort } from "./selection.ts"
@@ -58,6 +59,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   cases: Pick<DecisionCasePort, "read">
   authority: SfDomainValidation
   human: CollaborationHumanAuthority
+  recipientAuthority?: CollaborationRecipientAuthority
   issueForActor?: (target: Extract<BusinessEvidenceRef, { kind: "record" }>["target"], context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>>
   captureWorkSource?: (memberRef: string, context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>>
   prepareReissueScope?: (original: Extract<BusinessEvidenceRef, { kind: "record" }>, current: Extract<BusinessEvidenceRef, { kind: "record" }>, context: TrustedDomainContext) => Promise<PortResult<{ fence: () => Promise<boolean> }>>
@@ -73,7 +75,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
 }) {
   const issueRecord = createDashboardRecordSourceIssuer({ host: input.host, scopedSources: input.scopedSources })
   const recordEvidence = createDashboardRecordEvidenceHost({ host: input.host, scopedSources: input.scopedSources, issueRecord })
-  const authority = createCollaborationAuthority({ host: input.host, evidence: input.evidence })
+  const authority = createCollaborationAuthority({ host: input.host, evidence: input.evidence, recipientAuthority: input.recipientAuthority })
   const reissue = input.issueForActor ? createCollaborationReissuer({ host: input.host, issueForActor: input.issueForActor, authorize: (ref, context) => authority.sources([ref], context), prepareMaterialScope: input.prepareReissueScope }) : undefined
   const baseSelections = input.workSelections ?? createWorkSelectionPort({ collections: input.collections, authority, captureMember: input.captureWorkSource })
   const caseSelection = input.caseSelectionWrites ? createCaseWorkSelection({ host: input.host, state: input.state, cases: input.cases, authority, human: input.human, fence: createCollaborationMutationFence(input.host), fallback: baseSelections, reissue, target: input.creationTarget, createId: input.createId, caseSelectionWrites: input.caseSelectionWrites }) : undefined
@@ -96,14 +98,14 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
       if (stored.status !== "ok" || !stored.value || stored.value.authorId !== context.binding.principalRef) return { status: "unavailable", reason: "confirmation-work-unavailable" }
       const validity = await port.project(id, context)
       if (validity.status !== "ok" || validity.value.state === "unavailable") return { status: "unavailable", reason: "confirmation-work-unavailable" }
-      if (validity.value.state === "valid") return { status: "ok", value: { state: "valid", sourceRefs: [], period: stored.value.scope.period, observedVersion: stored.value.observedSourceVersion } }
+      if (validity.value.state === "valid") return { status: "ok", value: { state: "valid", reason: validity.value.reason, sourceRefs: [], period: stored.value.scope.period, observedVersion: stored.value.observedSourceVersion } }
       const current = await observe(stored.value.scope, context)
       if (current.state !== "available") return { status: "unavailable", reason: "confirmation-work-source-unavailable" }
       const refs = [current.evidence]
       if (!await authority.sources(refs, context)) return { status: "unavailable", reason: "confirmation-work-source-unavailable" }
       const again = await port.project(id, context)
       if (again.status !== "ok" || again.value.state !== "stale" || (again.value.reason !== validity.value.reason || again.value.evaluatedSourceVersion !== validity.value.evaluatedSourceVersion || again.value.scopeFingerprint !== validity.value.scopeFingerprint) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "confirmation-work-changed" }
-      return { status: "ok", value: { state: "stale", sourceRefs: refs, period: stored.value.scope.period, observedVersion: stored.value.observedSourceVersion, sourceVersion: current.sourceVersion } }
+      return { status: "ok", value: { state: "stale", reason: validity.value.reason, sourceRefs: refs, period: stored.value.scope.period, observedVersion: stored.value.observedSourceVersion, sourceVersion: current.sourceVersion } }
     }
     const prepare = async (scope: ConfirmationScope, context: TrustedDomainContext) => {
       const result = await observations.prepare(scope, context)
@@ -118,13 +120,9 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
     }
     return { prepare, confirm, project: port.project, find: port.find, inspect: port.inspect, work }
   })()
-  const collaboration = createCollaborationComposition({ host: input.host, state: input.state, creationTarget: input.creationTarget, evidence: input.evidence, procurement: input.procurement, selections, signals: input.workSignals, recordEvidence, human: input.human, recipientThread, reissue, captureWorkSource: input.captureWorkSource, confirmationWork: confirmation?.work, createId: input.createId, now: input.now })
+  const collaboration = createCollaborationComposition({ host: input.host, state: input.state, creationTarget: input.creationTarget, evidence: input.evidence, procurement: input.procurement, selections, signals: input.workSignals, recordEvidence, human: input.human, recipientAuthority: input.recipientAuthority, recipientThread, reissue, captureWorkSource: input.captureWorkSource, confirmationWork: confirmation?.work, createId: input.createId, now: input.now })
   const threadReads = createRecipientAwareThreadReads(collaboration.threads, recipientThread)
   const resolveWorkDestination = input.workDestination ? createWorkDestinationResolver({ ...input.workDestination, host: input.host, work: collaboration.work }) : undefined
-  const dispatch = createCollaborationDispatch({ collaboration, threadReads, cases: input.cases, requiredAuthority: input.requiredAuthority, createReceipt: async (context, operation, digest, resultDigest) => {
-    if (!await input.authority.revalidateDomainContext(context)) return undefined
-    return input.authority.receiptFor(context, operation, digest, resultDigest)
-  } })
   const captureWorkSource = async (memberRef: string, context: TrustedDomainContext): Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>> => {
     if (!input.captureWorkSource || typeof memberRef !== "string" || !memberRef.trim()) return { status: "unavailable", reason: "work-source-capture-unavailable" }
     const captured = await input.captureWorkSource(memberRef, context)
@@ -158,6 +156,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   const answerReuse = input.confirmationSource ? createAnswerReusePort({
     host: input.host,
     state: input.state,
+    now: () => Date.parse(input.now()),
     target: input.creationTarget,
     answer: async (questionId, context) => {
       const request = input.host.requestFor(context)
@@ -170,7 +169,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
       if (evidence.status !== "ok") return evidence
       const raw = await input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[questionId] : undefined)
       if (raw.status !== "ok" || !isThread(raw.value) || raw.value.id !== questionId || digestSfValue(raw.value.messages) !== digestSfValue(visible.value.messages) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "answer-unavailable" }
-      return { status: "ok", value: { id: message.id, ref: evidence.value.refId, authorRef: message.authorRef, questionId, body: message.body, digest: digestSfValue(raw.value) } }
+      return { status: "ok", value: { id: message.id, ref: evidence.value.refId, authorRef: message.authorRef, questionId, body: message.body, digest: digestSfValue({ questionId, ...message }), threadDigest: digestSfValue(raw.value) } }
     },
     belongsToQuestion: answerEvidence.belongsToQuestion,
     scopeForAnswer: async (questionId, answerRef, context) => {
@@ -193,6 +192,12 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
     authorizeConfirmation: (context, questionId, answerRef, mutation) => input.human.authorize(context, "collaboration.answer.confirm", { questionId, answerRef, mutation }),
   }) : undefined
 
+  const dispatch = createCollaborationDispatch({ collaboration, threadReads, answerReuse, cases: input.cases, requiredAuthority: input.requiredAuthority, createReceipt: async (context, operation, digest, resultDigest) => {
+    if (!await input.authority.revalidateDomainContext(context)) return undefined
+    return input.authority.receiptFor(context, operation, digest, resultDigest)
+  } })
+
   const cycle = createCollaborationCycleView({ cases: input.cases, work: collaboration.work, host: input.host, resolveCase: caseSelection?.resolveCase })
   return { ...collaboration, cycle, caseSelection, confirmation, answerReuse, threadHistory, listRecipients, storageVersion, recipientThread, recipientActions, captureWorkSource, resolveWorkDestination, recordEvidence, selections, sourceFence: createCollaborationSourceFence({ host: input.host, scopedSources: input.scopedSources }), resolveQuestion: createQuestionSource(threadReads), answerEvidence, resolveAnswer: answerEvidence.resolve, projectAnswer: answerEvidence.project, capabilities: createCollaborationCapabilities(dispatch) }
 }
+

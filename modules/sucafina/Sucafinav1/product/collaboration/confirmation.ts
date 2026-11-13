@@ -69,7 +69,7 @@ export function createConfirmationPort<T extends AvailableConfirmationScopeObser
       if (!await input.host.revalidate(context)) return { status: "denied", reason: "authority-unavailable" }
       const record: ConfirmationRecord & ConfirmationBaseline = { physicalIncarnation: displayed.physicalIncarnation, sourceFingerprint: observation.sourceFingerprint, dependencyFingerprint: observation.dependencyFingerprint, id: input.createId(), sourceRef: selected.scope.sourceRef, scope: selected.scope, observedSourceVersion: selected.observedSourceVersion, observedScopeFingerprint: selected.expectedScopeFingerprint, authorId: context.binding.principalRef, confirmedAt: input.now(), auditRef: input.createId() }
       if (!record.id.trim() || !record.auditRef.trim()) return { status: "unavailable", reason: "identity-unavailable" }
-      const saved = await input.state.transaction(request, { namespace: "confirmations", sourceFence: "all", expectedStorageVersion: selected.expectedStorageVersion, idempotencyKey: selected.idempotencyKey, commandDigest: digestSfValue({ scope: selected.scope, observedSourceVersion: selected.observedSourceVersion, expectedScopeFingerprint: selected.expectedScopeFingerprint }), targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation }, async (state, authority) => {
+      const saved = await input.state.transaction(request, { namespace: "confirmations", expectedStorageVersion: selected.expectedStorageVersion, idempotencyKey: selected.idempotencyKey, commandDigest: digestSfValue({ scope: selected.scope, observedSourceVersion: selected.observedSourceVersion, expectedScopeFingerprint: selected.expectedScopeFingerprint }), targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation }, async (state, authority) => {
         if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, "collaboration.confirmation.confirm", selected) || state.confirmations[record.id]) return { commit: false, value: null }
         if (!await input.fence(structuredClone(selected.scope), observation, context)) return { commit: false, value: null }
         state.confirmations[record.id] = record
@@ -126,6 +126,7 @@ export function createConfirmationPort<T extends AvailableConfirmationScopeObser
       const record = found.value
       const validity = await port.project(id, context)
       if (validity.status !== "ok") return validity
+      if (validity.value.state === "unavailable") return { status: "unavailable", reason: "confirmation-unavailable" }
       const again = await input.state.read(request, "confirmations", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.confirmations[id] : undefined)
       if (again.status !== "ok" || !again.value || digestSfValue(again.value) !== digestSfValue(record) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "confirmation-unavailable" }
       const current = await port.project(id, context)

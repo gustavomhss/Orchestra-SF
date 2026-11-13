@@ -41,7 +41,7 @@ export function createRecipientThreadActions(input: {
     const messageId = selected.action.kind === "reply" ? input.createId() : undefined
     const incarnation = selected.action.kind === "reply" ? input.createId() : undefined
     if (selected.action.kind === "reply" && (!messageId?.trim() || !incarnation?.trim() || prior.messages.some((message) => message.id === messageId || message.incarnation === incarnation))) return { status: "unavailable", reason: "identity-unavailable" }
-    const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, sourceFence: "all", commandDigest: digestSfValue({ id, action: selected.action }), targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation }, async (state, authority) => {
+    const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, commandDigest: digestSfValue({ id, action: selected.action }), targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation }, async (state, authority) => {
       if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, humanAction, payload) || !input.mutationFence.check(fence) || digestSfValue(state.threads[id]) !== digestSfValue(prior) || prior.state !== "open") return { commit: false, value: false }
       state.threads[id] = selected.action.kind === "reply" ? { ...prior, messages: [...prior.messages, { id: messageId!, incarnation: incarnation!, version: 1, authorRef: context.binding.principalRef, body: selected.action.body, createdAt: input.now() }] } : { ...prior, state: "resolved" }
       return { commit: true, value: true }
@@ -56,3 +56,4 @@ export function createRecipientThreadActions(input: {
     resolve: (id: string, mutation: Mutation, context: TrustedDomainContext) => change(id, { kind: "resolve" }, mutation, context),
   }
 }
+

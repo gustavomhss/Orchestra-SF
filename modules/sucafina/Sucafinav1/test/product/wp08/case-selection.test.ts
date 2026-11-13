@@ -7,12 +7,13 @@ const context = { kind: "ui", binding: { installationId: "i", projectId: "p", pr
 const period = { start: "2026-03-01", end: "2026-03-31" }
 
 function fixture() {
-  const state = { preferences: {}, cases: { c1: { id: "c1", incarnation: "inc", version: 1, horizon: { start: "2026-01-01", end: "2026-12-31" } } } } as unknown as SfProductState
+  const state = { versions: { preferences: 0, cases: 2 }, preferences: {}, cases: { c1: { id: "c1", incarnation: "inc", version: 1, horizon: { start: "2026-01-01", end: "2026-12-31" } } } } as unknown as SfProductState
   const writes = new WeakSet<object>()
   let allowed = true
   let reads = 0
   let mutateOnPreferenceReread = false
   let preferenceReadsAfterMutationArmed = 0
+  let caseChangeBeforeCommit = false
   const port = createCaseWorkSelection({
     host: { requestFor: () => allowed ? new Request("https://local.invalid") : undefined, revalidate: async () => allowed },
     state: {
@@ -24,6 +25,7 @@ function fixture() {
         return { status: "ok" as const, storageVersion: namespace === "cases" ? 2 : mutateOnPreferenceReread ? 0 : reads > 1 ? 1 : 0, aggregateRevision: 2, incarnation: "store", value: read(state, { principalRef: "u", accessRevision: "a", policyVersion: "v" }) }
       },
       transaction: async (_request: Request, _command: unknown, work: (value: SfProductState, authority: { principalRef: string; accessRevision: string; policyVersion: string }) => Promise<{ commit: boolean; value: string }>) => {
+        if (caseChangeBeforeCommit) state.versions.cases += 1
         const result = await work(state, { principalRef: "u", accessRevision: "a", policyVersion: "v" })
         if (!result.commit) return { status: "conflict" as const, reason: "not-committed" }
         reads++
@@ -39,7 +41,7 @@ function fixture() {
     caseSelectionWrites: writes,
     createId: () => "selection-1",
   })
-  return { port, state, writes, revoke: () => { allowed = false }, changeDuringList: () => { mutateOnPreferenceReread = true } }
+  return { port, state, writes, revoke: () => { allowed = false }, changeDuringList: () => { mutateOnPreferenceReread = true }, changeBeforeCommit: () => { caseChangeBeforeCommit = true } }
 }
 
 test("creates and resolves an explicit empty-source case selection", async () => {
@@ -74,4 +76,12 @@ test("case changes invalidate the selected case version", async () => {
   if (created.status !== "ok") throw new Error("selection failed")
   state.cases.c1!.version = 2
   expect(await port.resolveCase(created.value.selectionRef, period, context)).toMatchObject({ status: "unavailable" })
+})
+
+test("case namespace change before commit refuses selection without persisting it", async () => {
+  const { port, state, changeBeforeCommit } = fixture()
+  changeBeforeCommit()
+  const result = await port.create({ caseRef: "case:c1:inc", period, sourceRefs: [] }, { expectedStorageVersion: 0, idempotencyKey: "create-1" }, context)
+  expect(result.status).not.toBe("ok")
+  expect(state.preferences).toEqual({})
 })

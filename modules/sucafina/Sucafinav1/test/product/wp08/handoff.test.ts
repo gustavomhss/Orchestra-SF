@@ -3,7 +3,7 @@ import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { createCollaborationMutationFence } from "../../../product/collaboration/mutation-fence.ts"
-import { createSfHumanAuthority } from "../../../product/integration/human-authority.ts"
+import { createCollaborationHumanAuthority } from "../../../product/collaboration/human.ts"
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
 import { createHandoffPort } from "../../../product/collaboration/handoff.ts"
 import { createRelationPort } from "../../../product/collaboration/relations.ts"
@@ -59,7 +59,7 @@ test("handoff and its relation require the exact real human admission", async ()
   const store = await openLocalStore(directory)
   try {
     const ui = createSfUiAuthority({ authorize: async () => ({ installationId: "install", projectId: "project", principalRef: "person-A", policyVersion: "policy", accessRevision: "access" }), commandIdentity: async () => "command", createId: () => "request", now: () => Date.parse("2026-11-13T00:00:00Z"), privateCommands: ["sf-human:collaboration.handoff.confirm"] })
-    const human = createSfHumanAuthority({ origin: "https://example.test", ui })
+    const human = createCollaborationHumanAuthority({ origin: "https://example.test", ui })
     const source = { schema: "sf-evidence-v1", refId: "source", installationId: "install", projectId: "project", refDigest: "a".repeat(64), evidenceLevel: "observed", kind: "record", target: { surface: "dashboard", recordType: "projects", recordId: "project-A", incarnation: "inc-A", version: 1, fields: ["name"], projectionDigest: "b".repeat(64) } } as const
     const snapshot: Snapshot = { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
     const correlations: Record<string, { digest: string; id: string; result?: HotTopic }> = {}
@@ -103,3 +103,4 @@ test("handoff update authorizes and reads while the human action lease is active
   expect(await port.update({ topicId: "topic", expectedVersion: 1, idempotencyKey: "update", values: { due: "2026-12-15" }, sourceRefs: [source], sourceRef: "source", relationKey: "link" }, context)).toMatchObject({ status: "ok", value: { state: "updated", relationId: "relation" } })
   expect(lease.active).toBe(false)
 })
+

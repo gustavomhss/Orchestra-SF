@@ -6,7 +6,9 @@ import type { SfProductStatePort } from "../contracts/state.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { createCollaborationMutationFence } from "./mutation-fence.ts"
 import { createCollaborationAuthority } from "./authority.ts"
+import type { CollaborationRecipientAuthority } from "./recipient-authority.ts"
 import { createCollaborationHotTopicHost } from "./hot-topic-host.ts"
+import { createCollaborationHotTopicReadHost } from "./hot-topic-read-host.ts"
 import { createRelationPort } from "./relations.ts"
 import { createThreadPort } from "./threads.ts"
 import { createHandoffPort } from "./handoff.ts"
@@ -30,6 +32,7 @@ export function createCollaborationComposition(input: {
   selections: WorkSelectionPort
   signals?: WorkSignals
   human: CollaborationHumanAuthority
+  recipientAuthority?: CollaborationRecipientAuthority
   recipientThread?: ReturnType<typeof createRecipientThreadReader>
   reissue?: ReturnType<typeof createCollaborationReissuer>
   captureWorkSource?: (memberRef: string, context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>>
@@ -38,13 +41,15 @@ export function createCollaborationComposition(input: {
   now: () => string
 }) {
   const mutationFence = createCollaborationMutationFence(input.host)
-  const authority = createCollaborationAuthority({ host: input.host, evidence: input.evidence })
+  const authority = createCollaborationAuthority({ host: input.host, evidence: input.evidence, recipientAuthority: input.recipientAuthority })
   const activeHandoffs = new WeakMap<TrustedDomainContext, unknown>()
   const handoffPermit = Symbol("handoff")
-  const hotTopics = createHotTopicPort(createCollaborationHotTopicHost({ host: input.host, state: input.state, evidence: input.evidence, creationTarget: input.creationTarget, mutationFence, authorizeMutation: async (context) => {
+  const hotTopicWriter = createHotTopicPort(createCollaborationHotTopicHost({ host: input.host, state: input.state, evidence: input.evidence, creationTarget: input.creationTarget, mutationFence, authorizeMutation: async (context) => {
     const request = activeHandoffs.get(context)
     return request !== undefined && input.human.authorize(context, "collaboration.handoff.confirm", request)
   } }))
+  const hotTopicReader = createHotTopicPort(createCollaborationHotTopicReadHost({ host: input.host, state: input.state, evidence: input.evidence, mutationFence }))
+  const hotTopics = { create: hotTopicWriter.create, update: hotTopicWriter.update, read: hotTopicReader.read }
   const topicSource = { issue: async (topic: HotTopic, context: TrustedDomainContext): Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>> => {
     const request = input.host.requestFor(context)
     if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "topic-source-unavailable" }
@@ -66,7 +71,7 @@ export function createCollaborationComposition(input: {
     const owner = request.values.owner ?? topic.value.owner
     if (!request.recipientRef) return !owner.trim()
     const person = await authority.recipient(request.recipientRef, context)
-    return !!person && person.name === owner
+    return !!person && person.name === owner && await authority.recipientSources(person.id, request.sourceRefs, context)
   }, resolveTopic: async (topic, context) => {
     const issued = await topicSource.issue(topic, context)
     if (issued.status !== "ok") return issued
@@ -77,3 +82,4 @@ export function createCollaborationComposition(input: {
   const work = createCollaborationWorkPort({ host: input.host, state: input.state, collaboration: { authority, hotTopics, threads, recipientThread: input.recipientThread, reissue: input.reissue, captureWorkSource: input.captureWorkSource, confirmationWork: input.confirmationWork }, procurement: input.procurement, topicSource, selections: input.selections, signals: input.signals })
   return { authority, hotTopics: { read: hotTopics.read }, relations: { read: relations.read, create: relations.create, remove: relations.remove, storageVersion: relations.storageVersion, readVersioned: relations.readVersioned }, threads, handoff, work }
 }
+

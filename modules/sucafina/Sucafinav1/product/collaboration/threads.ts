@@ -48,8 +48,8 @@ export function createThreadPort(input: {
       if (!fence) return { status: "unavailable", reason: "thread-source-fence-unavailable" }
       const thread: CollaborationThread = { id: input.createId(), kind: selected.draft.kind, sourceRef: selected.draft.sourceRef, sourceIncarnation: selected.draft.sourceIncarnation, observedVersion: selected.draft.observedVersion, period: selected.draft.period, ...(selected.draft.recipientRef ? { recipientRef: selected.draft.recipientRef } : {}), state: "open", messages: [{ id: input.createId(), incarnation: input.createId(), version: 1, authorRef: context.binding.principalRef, body: selected.draft.body, createdAt: input.now() }], evidenceRefs: selected.draft.evidenceRefs }
       if (!thread.id.trim() || !thread.messages[0]?.id.trim() || !thread.messages[0]?.incarnation.trim()) return { status: "unavailable", reason: "identity-unavailable" }
-      const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, sourceFence: "all", commandDigest: digestSfValue(selected.draft), targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation }, async (state, authority) => {
-        if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, "collaboration.thread.create", selected) || !input.mutationFence.check(fence) || state.threads[thread.id]) return { commit: false, value: null }
+      const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, commandDigest: digestSfValue(selected.draft), targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation }, async (state, authority) => {
+        if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, "collaboration.thread.create", selected) || !input.mutationFence.check(fence) || !await input.authorize(structuredClone(selected.draft), context, "write") || state.threads[thread.id]) return { commit: false, value: null }
         state.threads[thread.id] = thread
         return { commit: true, value: thread }
       })
@@ -61,6 +61,7 @@ export function createThreadPort(input: {
     reply: (id: string, body: string, mutation: Mutation, context: TrustedDomainContext) => change(id, { kind: "reply", body }, mutation, context),
     resolve: (id: string, mutation: Mutation, context: TrustedDomainContext) => change(id, { kind: "resolve" }, mutation, context),
     read: async (id: string, context: TrustedDomainContext): Promise<PortResult<CollaborationThread>> => {
+      if (typeof id !== "string" || !id.trim()) return { status: "needs-input", reason: "invalid-thread-reference" }
       const request = input.host.requestFor(context)
       if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "thread-access-unavailable" }
       const read = await input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[id] : undefined)
@@ -91,8 +92,8 @@ export function createThreadPort(input: {
     const messageId = selected.action.kind === "reply" ? input.createId() : undefined
     const incarnation = selected.action.kind === "reply" ? input.createId() : undefined
     if (selected.action.kind === "reply" && (!messageId?.trim() || !incarnation?.trim() || prior.messages.some((message) => message.id === messageId || message.incarnation === incarnation))) return { status: "unavailable", reason: "identity-unavailable" }
-    const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, sourceFence: "all", commandDigest: digestSfValue({ id, action: selected.action }), targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation }, async (state, authority) => {
-      if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, humanAction, payload) || !input.mutationFence.check(fence) || digestSfValue(state.threads[id]) !== digestSfValue(prior) || prior.state !== "open") return { commit: false, value: null }
+    const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, commandDigest: digestSfValue({ id, action: selected.action }), targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation }, async (state, authority) => {
+      if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, humanAction, payload) || !input.mutationFence.check(fence) || !await input.authorize(structuredClone(prior), context, "write") || digestSfValue(state.threads[id]) !== digestSfValue(prior) || prior.state !== "open") return { commit: false, value: null }
       const next: CollaborationThread = selected.action.kind === "reply" ? { ...prior, messages: [...prior.messages, { id: messageId!, incarnation: incarnation!, version: 1, authorRef: context.binding.principalRef, body: selected.action.body, createdAt: input.now() }] } : { ...prior, state: "resolved" }
       state.threads[id] = next
       return { commit: true, value: next }
@@ -111,9 +112,14 @@ function validMutation(value: Mutation) {
 export function isThread(value: unknown): value is CollaborationThread {
   if (!value || typeof value !== "object") return false
   const thread = value as Record<string, unknown>
-  return typeof thread.id === "string" && !!thread.id.trim() && typeof thread.sourceRef === "string" && !!thread.sourceRef.trim() && typeof thread.sourceIncarnation === "string" && !!thread.sourceIncarnation.trim() && ["comment", "clarification", "review"].includes(String(thread.kind)) && ["open", "resolved"].includes(String(thread.state)) && Number.isSafeInteger(thread.observedVersion) && Number(thread.observedVersion) > 0 && isSfPeriod(thread.period) && Array.isArray(thread.messages) && thread.messages.every((value: unknown) => {
+  if (typeof thread.id !== "string" || !thread.id.trim() || typeof thread.sourceRef !== "string" || !thread.sourceRef.trim() || typeof thread.sourceIncarnation !== "string" || !thread.sourceIncarnation.trim() || !["comment", "clarification", "review"].includes(String(thread.kind)) || !["open", "resolved"].includes(String(thread.state)) || !Number.isSafeInteger(thread.observedVersion) || Number(thread.observedVersion) < 1 || !isSfPeriod(thread.period) || !Array.isArray(thread.messages) || !thread.messages.length || !Array.isArray(thread.evidenceRefs) || !thread.evidenceRefs.length || (thread.recipientRef !== undefined && (typeof thread.recipientRef !== "string" || !thread.recipientRef.trim())) || (thread.kind !== "comment" && !thread.recipientRef)) return false
+  const sources = thread.evidenceRefs.filter((ref: unknown) => !!ref && typeof ref === "object" && "refId" in ref && ref.refId === thread.sourceRef)
+  const source = sources[0] as Extract<BusinessEvidenceRef, { kind: "record" }> | undefined
+  if (sources.length !== 1 || !source || source.kind !== "record" || !source.target || source.target.incarnation !== thread.sourceIncarnation || source.target.version !== thread.observedVersion || !isSfPeriod(source.target.period) || source.target.period.start > thread.period.start || source.target.period.end < thread.period.end) return false
+  return thread.messages.every((value: unknown) => {
     if (!value || typeof value !== "object") return false
     const message = value as Record<string, unknown>
     return [message.id, message.incarnation, message.authorRef, message.body, message.createdAt].every((part) => typeof part === "string" && !!part.trim()) && Number.isSafeInteger(message.version) && Number(message.version) > 0
-  }) && new Set(thread.messages.map((message: unknown) => (message as Record<string, unknown>).id)).size === thread.messages.length && new Set(thread.messages.map((message: unknown) => (message as Record<string, unknown>).incarnation)).size === thread.messages.length && Array.isArray(thread.evidenceRefs) && thread.evidenceRefs.length > 0
+  }) && new Set(thread.messages.map((message: unknown) => (message as Record<string, unknown>).id)).size === thread.messages.length && new Set(thread.messages.map((message: unknown) => (message as Record<string, unknown>).incarnation)).size === thread.messages.length
 }
+

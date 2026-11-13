@@ -2,7 +2,7 @@ import { object } from "../../runtime/contract.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
-import type { Period } from "../contracts/context.ts"
+import type { ConfirmationValidityProjection, Period } from "../contracts/context.ts"
 import type { WorkListRequest } from "../contracts/operations.ts"
 import type { AuthorizedWorkList } from "../contracts/outputs.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
@@ -16,6 +16,7 @@ import type { createRecipientThreadReader } from "./recipient-thread.ts"
 import type { createThreadPort } from "./threads.ts"
 import type { WorkSelectionPort } from "./selection.ts"
 import { projectMyWork } from "./work.ts"
+import { latestConfirmationWork } from "./confirmation-work.ts"
 
 export type WorkPresentationItem = {
   kind: "clarification" | "handoff" | "procurement" | "confirmation" | "signal"
@@ -34,7 +35,7 @@ export type WorkPresentationItem = {
   sourceRefs: readonly BusinessEvidenceRef[]
 }
 
-export type ConfirmationWork = { state: "valid" | "stale"; sourceRefs: readonly BusinessEvidenceRef[]; period: Period; observedVersion: number; sourceVersion?: number }
+export type ConfirmationWork = { state: "valid" | "stale"; reason?: ConfirmationValidityProjection["reason"]; sourceRefs: readonly BusinessEvidenceRef[]; period: Period; observedVersion: number; sourceVersion?: number }
 export type WorkSignals = (selectionRef: string, period: Period, context: TrustedDomainContext) => Promise<{ status: "ok"; signals: readonly { workRef: string; label: string; impact: { state: string; reason: string }; recipientRef: string; destination: string; sourceRefs: readonly BusinessEvidenceRef[] }[] } | { status: "unavailable" }>
 
 /** Projects canonical producers on every read; it never stores operational status. */
@@ -64,9 +65,9 @@ export function createCollaborationWorkPort(input: {
       const threadIds = threads.status === "ok" ? threads.value : []
       const relationData = relations.status === "ok" ? relations.value : {}
       const confirmationRecords = confirmations.status === "ok" ? confirmations.value : []
-      const confirmationIds = confirmationRecords && [...new Map(confirmationRecords.toSorted((a, b) => a.confirmedAt.localeCompare(b.confirmedAt)).map((record) => [digestSfValue({ ...record.scope, fields: [...record.scope.fields].sort(), materialDependencies: record.scope.materialDependencies.toSorted((a, b) => digestSfValue(a).localeCompare(digestSfValue(b))) }), record.id])).values()]
-      if (!threadIds || !relationData || !confirmationIds) return { status: "denied", reason: "work-access-unavailable" }
-      if (confirmationIds.length && !input.collaboration.confirmationWork) return { status: "unavailable", reason: "confirmation-work-source-unavailable" }
+      const confirmationScopes = confirmationRecords && latestConfirmationWork(confirmationRecords)
+      if (!threadIds || !relationData || !confirmationScopes) return { status: "denied", reason: "work-access-unavailable" }
+      if (confirmationScopes.length && !input.collaboration.confirmationWork) return { status: "unavailable", reason: "confirmation-work-source-unavailable" }
       const items: AuthorizedWorkList["items"][number][] = []
       const presentation: WorkPresentationItem[] = []
       const presentationProofs: BusinessEvidenceRef[] = []
@@ -81,15 +82,15 @@ export function createCollaborationWorkPort(input: {
         items.push({ actionRef, ownerRef: own, state: signal.impact.state, sourceRefs: signal.sourceRefs })
         presentation.push({ kind: "signal", actionRef, title: signal.label, ownerRef: own, period: selected.period, reason: signal.impact.reason, state: signal.impact.state, destination: { kind: "signal", ref: signal.destination }, sourceRefs: signal.sourceRefs })
       }
-      for (const id of confirmationIds) {
-        const confirmation = await input.collaboration.confirmationWork!(id, context)
+      for (const { actionRef, record } of confirmationScopes) {
+        const confirmation = await input.collaboration.confirmationWork!(record.id, context)
         if (confirmation.status !== "ok") return confirmation
         if (confirmation.value.state === "valid") continue
         const membership = await input.selections.contains(scope.value, confirmation.value.sourceRefs, context)
         if (membership.status !== "ok") return membership
         if (!membership.value) continue
-        items.push({ actionRef: id, ownerRef: own, state: "confirmation-stale", sourceRefs: confirmation.value.sourceRefs })
-        presentation.push({ kind: "confirmation", actionRef: id, title: null, ownerRef: own, period: confirmation.value.period, observedVersion: confirmation.value.observedVersion, ...(confirmation.value.sourceVersion === undefined ? {} : { sourceVersion: confirmation.value.sourceVersion }), state: "confirmation-stale", destination: { kind: "confirmation", confirmationId: id }, sourceRefs: confirmation.value.sourceRefs })
+        items.push({ actionRef, ownerRef: own, state: "confirmation-stale", sourceRefs: confirmation.value.sourceRefs })
+        presentation.push({ kind: "confirmation", actionRef, title: null, ownerRef: own, period: confirmation.value.period, observedVersion: confirmation.value.observedVersion, ...(confirmation.value.reason ? { reason: confirmation.value.reason } : {}), ...(confirmation.value.sourceVersion === undefined ? {} : { sourceVersion: confirmation.value.sourceVersion }), state: "confirmation-stale", destination: { kind: "confirmation", confirmationId: record.id }, sourceRefs: confirmation.value.sourceRefs })
       }
       for (const entry of threadIds) {
         if (entry.recipientRef !== own || entry.state === "resolved") continue
@@ -135,6 +136,7 @@ export function createCollaborationWorkPort(input: {
       const procurement = scope.value.procurement.state === "selected" ? await input.procurement.list(scope.value.procurement.selectionRef, context) : { status: "ok" as const, value: { aging: [] } }
       if (procurement.status !== "ok") return procurement
       for (const projection of procurement.value.aging) {
+        if (projection.context.surface !== "procurement" || projection.context.principalRef !== own || projection.context.installationId !== context.binding.installationId || projection.context.projectId !== context.binding.projectId || projection.context.accessRevision !== context.binding.accessRevision || projection.context.policyVersion !== context.binding.policyVersion) return { status: "unavailable", reason: "procurement-work-source-unavailable" }
         if (projection.context.period.start !== selected.period.start || projection.context.period.end !== selected.period.end) return { status: "unavailable", reason: "work-period-mismatch" }
         const holder = projection.values.find((value) => value.id === "holder")
         const status = projection.values.find((value) => value.id === "status")
@@ -143,6 +145,10 @@ export function createCollaborationWorkPort(input: {
         if (!refs.length || !await input.collaboration.authority.sources(refs, context)) return { status: "unavailable", reason: "procurement-work-source-unavailable" }
         const target = refs[0]
         if (!target || target.kind !== "record" || target.target.surface !== "procurement" || target.target.recordType !== "procurement-request") return { status: "unavailable", reason: "work-destination-unavailable" }
+        const displayed = projection.values.filter((value) => ["holder", "status", "subject", "approvalStage"].includes(value.id) && value.value !== null)
+        const displayedRefs = displayed.flatMap((value) => value.sourceRefs)
+        if (new Set(displayed.map((value) => value.id)).size !== displayed.length || displayed.some((value) => !value.sourceRefs.length || value.sourceRefs.some((ref) => ref.kind !== "record" || ref.target.surface !== "procurement" || ref.target.recordType !== "procurement-request" || ref.target.recordId !== target.target.recordId || !ref.target.fields.includes(value.id))) || !await input.collaboration.authority.sources(displayedRefs, context)) return { status: "unavailable", reason: "procurement-work-source-unavailable" }
+        presentationProofs.push(...displayedRefs)
         const subject = projection.values.find((value) => value.id === "subject")?.value
         const approvalStage = projection.values.find((value) => value.id === "approvalStage")
         if (typeof approvalStage?.value === "string" && (!approvalStage.sourceRefs.length || !await input.collaboration.authority.sources(approvalStage.sourceRefs, context))) return { status: "unavailable", reason: "procurement-work-source-unavailable" }
@@ -150,6 +156,7 @@ export function createCollaborationWorkPort(input: {
         const captured = input.collaboration.captureWorkSource ? await input.collaboration.captureWorkSource(target.refId, context) : undefined
         if (captured && (captured.status !== "ok" || !await input.collaboration.authority.sources([captured.value], context))) return { status: "unavailable", reason: "procurement-work-source-unavailable" }
         const individual = captured?.status === "ok" ? captured.value : undefined
+        if (individual && (individual.target.surface !== "procurement" || individual.target.recordType !== "procurement-request" || individual.target.recordId !== target.target.recordId || digestSfValue(individual.target.period) !== digestSfValue(projection.context.period))) return { status: "unavailable", reason: "work-destination-unavailable" }
         if (individual) presentationProofs.push(individual)
         items.push({ actionRef: target.refId, ownerRef: own, state: status.value, sourceRefs: refs })
         presentation.push({ kind: "procurement", actionRef: target.refId, title: typeof subject === "string" && subject.trim() ? subject : null, ownerRef: own, ...(typeof approvalStage?.value === "string" && approvalStage.value.trim() ? { approvalStage: approvalStage.value } : {}), period: projection.context.period, ...(individual ? { sourceVersion: individual.target.version, destination: { kind: "procurement-request" as const, recordId: individual.target.recordId, incarnation: individual.target.incarnation } } : {}), state: status.value, sourceRefs: refs })

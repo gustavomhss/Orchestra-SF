@@ -131,12 +131,12 @@ export function createCaseWorkSelection(input: {
       if (!fence) return { status: "unavailable", reason: "selection-unavailable" }
       const work = async (state: SfProductState, authority: SfStateAuthority) => {
         const live = state.cases[stored.caseIdentity.id]
-        if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !live || live.id !== stored.caseIdentity.id || live.incarnation !== stored.caseIdentity.incarnation || live.version !== stored.caseIdentity.version || !await input.human.authorize(context, "collaboration.selection.create", selected) || !input.fence.check(fence) || state.preferences[stored.id]) return { commit: false, value: "" }
+        if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || state.versions.cases !== cases.storageVersion || !live || live.id !== stored.caseIdentity.id || live.incarnation !== stored.caseIdentity.incarnation || live.version !== stored.caseIdentity.version || !await input.human.authorize(context, "collaboration.selection.create", selected) || !input.fence.check(fence) || state.preferences[stored.id]) return { commit: false, value: "" }
         state.preferences[stored.id] = stored
         return { commit: true, value: stored.id }
       }
       input.caseSelectionWrites.add(work)
-      const saved = await input.state.transaction(request, { namespace: "preferences", ...selected.mutation, sourceFence: "all", checkNamespaces: [{ namespace: "cases", expectedStorageVersion: cases.storageVersion }], commandDigest: digestSfValue(selected.draft), targetRef: input.target.ref, targetIncarnation: input.target.incarnation }, work).finally(() => input.caseSelectionWrites.delete(work))
+      const saved = await input.state.transaction(request, { namespace: "preferences", ...selected.mutation, commandDigest: digestSfValue(selected.draft), targetRef: input.target.ref, targetIncarnation: input.target.incarnation }, work).finally(() => input.caseSelectionWrites.delete(work))
       if (saved.status === "preview") return { status: "conflict", reason: "selection-not-committed" }
       if (saved.status !== "ok" || !saved.value) return { status: "unavailable", reason: "selection-unavailable" }
       const verified = await load(saved.value, stored.period, context)

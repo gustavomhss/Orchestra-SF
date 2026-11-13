@@ -55,7 +55,7 @@ export function createThreadHistory(input: {
         return { commit: true, value: message.version + 1 }
       }
       input.threadHistoryWrites.add(work)
-      const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, sourceFence: "all", commandDigest: digestSfValue({ id, messageId, expectedVersion, body }), targetRef: input.target.ref, targetIncarnation: input.target.incarnation }, work).finally(() => input.threadHistoryWrites.delete(work))
+      const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, commandDigest: digestSfValue({ id, messageId, expectedVersion, body }), targetRef: input.target.ref, targetIncarnation: input.target.incarnation }, work).finally(() => input.threadHistoryWrites.delete(work))
       if (saved.status === "preview") return { status: "conflict", reason: "thread-changed" }
       if (saved.status !== "ok" || !saved.value) return { status: "unavailable", reason: "thread-access-unavailable" }
       const current = await load(id, context)
@@ -74,3 +74,4 @@ export function createThreadHistory(input: {
     },
   }
 }
+
