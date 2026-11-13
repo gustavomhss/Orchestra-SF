@@ -2,7 +2,7 @@ import type { Application } from "../../runtime/application.ts"
 import type { Actor, Environment, Persistence, Snapshot } from "../../runtime/contract.ts"
 import type { ForecastCompareRequest, CaseDraftRequest, CaseReadRequest, DashboardReadRequest, RequestReadRequest, JsonValue } from "./operations.ts"
 import type { DomainProjection, ImportManifest, PreservedReview, RoutineResult } from "./context.ts"
-import type { DecisionCase, ScenarioResult, ScenarioComparison, PortfolioResult, ObservedResultProjection } from "./decisions.ts"
+import type { DecisionCase, ScenarioResult, ScenarioComparison, PortfolioResult, ObservedResultProjection, CostCoverageAssessment } from "./decisions.ts"
 import type { BusinessEvidenceRef, BusinessContextService, AuthorizedCaseProjection } from "./business-context.ts"
 import type { TrustedDomainContext, CapabilityResult } from "./sf-execution.ts"
 import type { ContributionEnvelope } from "./resident-ai.ts"
@@ -38,6 +38,10 @@ export type SfDocumentReadPort = {
 }
 export type PlannerPort = {
   compareForecast: (request: ForecastCompareRequest, binding: TrustedDomainContext) => Promise<PortResult<FinancialAnalysis>>
+}
+export type PlannerSourceHost = {
+  resolveForecastSource: (reference: string, context: TrustedDomainContext) => Promise<PortResult<{ versionId: string; evidence: Extract<BusinessEvidenceRef, { kind: "record" }> }>>
+  resolveForecastCoverage: (reference: string, context: TrustedDomainContext) => Promise<PortResult<{ coverageRef: string; assessment: CostCoverageAssessment }>>
 }
 export type DecisionCasePort = {
   draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>

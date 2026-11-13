@@ -3997,6 +3997,12 @@ const definitions = {
       "at": {
         "type": "string"
       },
+      "result": {
+        "$ref": "#/definitions/ScenarioResult_107"
+      },
+      "comparison": {
+        "$ref": "#/definitions/ScenarioComparison_51"
+      },
       "comparisonStatus": {
         "const": "complete"
       },
@@ -4015,6 +4021,8 @@ const definitions = {
       "principalRef",
       "reason",
       "at",
+      "result",
+      "comparison",
       "comparisonStatus",
       "costCoverage"
     ]
@@ -4090,6 +4098,12 @@ const definitions = {
       "at": {
         "type": "string"
       },
+      "result": {
+        "$ref": "#/definitions/ScenarioResult_107"
+      },
+      "comparison": {
+        "$ref": "#/definitions/ScenarioComparison_51"
+      },
       "comparisonStatus": {
         "$ref": "#/definitions/Shape_49"
       },
@@ -4108,6 +4122,8 @@ const definitions = {
       "principalRef",
       "reason",
       "at",
+      "result",
+      "comparison",
       "comparisonStatus",
       "costCoverage"
     ]

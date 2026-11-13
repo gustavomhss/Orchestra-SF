@@ -65,6 +65,8 @@ type ChoiceRecordBase = {
   principalRef: string
   reason: string
   at: string
+  result: ScenarioResult
+  comparison: ScenarioComparison
 }
 export type ChoiceRecord = ChoiceRecordBase & (
   | { comparisonStatus: "complete"; costCoverage: Extract<CostCoverageAssessment, { coverageState: "complete" }> }
