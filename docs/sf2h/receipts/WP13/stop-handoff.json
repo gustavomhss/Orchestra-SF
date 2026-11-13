@@ -1,0 +1,67 @@
+{
+  "wp": "WP13",
+  "status": "STOPPED_INCOMPLETE",
+  "branch": "sf2-portfolio-ready",
+  "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/portfolio-ready",
+  "implementation_head_before_handoff": "e70f9bca6946200b9c633b848a77fd3c427d60e7",
+  "implementation_tree_before_handoff": "9e751810527208b912e45ec172c4e1653d856654",
+  "source_baseline": "9f0c6a066ffc56b7ef21df079796827cfe141d40",
+  "tasks": {
+    "WP13.T01": "PARTIAL: editable campaign, C17 records, candidate and historical authorization; host/UI and C11 promotion integration pending",
+    "WP13.T02": "PARTIAL: finite portfolio evaluation and C08/bindings; composite mixed-domain producer/consumer and host C16 pending",
+    "WP13.T03": "PARTIAL: real Planner sampled sensitivity, C10 pending fails closed; interval certificate/complete domain proof and host integration pending",
+    "WP13.T04": "PARTIAL: human handoff, candidate revalidation, historical provenance and controlled partial retry test; real choice reassessment/adoption/materiality/UI integration pending"
+  },
+  "inputs": {
+    "WP00": "dba19dcb68 mixed composite contract; ac3bface2f C11 AlternativeDraft; separate shared worktree, not copied",
+    "WP01": "interface worktree; actual UI host integration incomplete",
+    "WP02": "bc1109ddec dashboard command preview and C17 source",
+    "WP03": "f46bd57869 operation verifier; 07cd1c7fec current choice source fence; cef067af24 interval proof",
+    "WP04": "procurement scenario preparation/contract C17 source",
+    "WP05": "BI fixture consumer depends WP13 sensitivity-fixture.ts",
+    "WP10": "09fbe48fe3 read-only CAS and source fences; 5625accd52 protected campaign metadata; host composition incomplete",
+    "WP11": "70def76ba9 case operation verification; d57167c6b1 choice reassessment; 0610c4634a interval registry; composite producer pending",
+    "WP12": "9c553f134d historical contribution reader; C11 publication bridge incomplete",
+    "WP14": "722b6f7563 registry revise and 94d7098091 materiality access; cross-domain current-condition proof pending"
+  },
+  "workers": [
+    {
+      "seat": "Terra",
+      "model": "gpt-6.1-terra",
+      "state": "stopping; sole index owner"
+    },
+    {
+      "seat": "Luna",
+      "model": "gpt-6-luna",
+      "state": "interrupted by owner; no active lease"
+    },
+    {
+      "seat": "G1",
+      "model": "grok-4.7-build",
+      "state": "terminal HTTP 402; lease revoked; no retry"
+    },
+    {
+      "seat": "G2",
+      "model": "grok-4.7-build",
+      "state": "terminal HTTP 402; lease revoked; no retry"
+    }
+  ],
+  "validation": {
+    "hosted_tests": "NOT_RUN",
+    "local_tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "guardrails": "NOT_RUN",
+    "diff_check": "git diff --check origin/dev...HEAD passed before stop"
+  },
+  "risks": [
+    "Do not expose exact threshold from conditioned C10 or equate known subtotal with complete decision.",
+    "No claim of finished WP, production host wiring, end-to-end proof or PR readiness.",
+    "WP13 sensitivity fixture has controlled authorization/fence callbacks; it is not host proof.",
+    "Historical campaign and portfolio reads require actual source authorization and replay.",
+    "Multi-domain result must retain full original request and per-operation C17; never label Planner subset complete.",
+    "WP03/WP11/WP12/WP14 inputs are separate commits not present in this branch; stack and resolve contract compatibility before testing."
+  ],
+  "resume": "Explicit owner instruction required: reopen this branch, inspect status and this handoff, restore only accepted dependencies via coordinated stack, wire WP10/WP01 real consumers, complete C11 human confirmation and mixed-domain C08, connect universal C10 interval certificate and current-choice adoption/materiality, review all edits, then obtain serial hosted CI lease, run scoped hosted tests and package typecheck/guardrails, fix findings, and only then prepare a complete WP PR.",
+  "remote_checkpoint": "To be filled in external handoff after GitHub MCP publication; embedded implementation head is pre-handoff to avoid self-referential hashes."
+}

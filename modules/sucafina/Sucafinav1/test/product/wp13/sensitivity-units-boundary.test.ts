@@ -56,7 +56,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
   await chmod(directory, 0o700)
   const request = new Request("https://example.test")
   const context = { kind: "ui", binding: { installationId: "install", projectId: "project", principalRef: "finance", requestId: "request", policyVersion: "policy", accessRevision: "access", expiresAt: "2100-01-01T00:00:00Z" }, lease: {} } as unknown as TrustedUiContext
-  const access = { allowed: true }
+  const access = { allowed: true, historical: false }
   const store = await openLocalStore(directory)
   try {
     const seededPlanner = await store.transaction("planner", async (snapshot) => {
@@ -91,7 +91,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     expect(comparison.value.baseline.missing.some((item) => item.reason === "missing-fx")).toBe(true)
     const proposalCoverageWrites = new WeakSet<object>()
     const state = createSfProductState({ persistence: store, proposalCoverageWrites, createId: () => "state-incarnation", resolveTarget: async () => ({ incarnation: caseRef.incarnation }), authorize: async () => access.allowed ? { principalRef: "finance", policyVersion: "policy", accessRevision: "access" } : undefined })
-    const evidenceService: BusinessContextService = { resolve: async (ref) => ({ state: access.allowed ? "fresh" : "revoked", ref, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" }), context: async ({ refs }) => refs.map((ref) => ({ state: access.allowed ? "fresh" : "revoked", ref, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" })), recall: async () => [], emitFromLedger: async () => { throw new Error("unexpected memory") } }
+    const evidenceService: BusinessContextService = { resolve: async (ref) => ({ state: access.allowed ? access.historical ? "historical" : "fresh" : "revoked", ref, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" }), context: async ({ refs }) => refs.map((ref) => ({ state: access.allowed ? access.historical ? "historical" : "fresh" : "revoked", ref, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" })), recall: async () => [], emitFromLedger: async () => { throw new Error("unexpected memory") } }
     const scenario = { baseRef: "v0", operations: [{ kind: "replace" as const, targetRef: "line:11", amount: 112000, currency: "EUR", period: november }], assumptions: [] }
     const baselineScenario = { ...scenario, operations: [{ ...scenario.operations[0], amount: 100000 }] }
     const selectedPreview = await planner.simulateScenario(scenario, context)
@@ -114,7 +114,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     if (selectedStored.status !== "ok" || baselineStored.status !== "ok") return
     const selectedRef = selectedStored.value.resultRef
     const baselineRef = baselineStored.value.resultRef
-    const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => "case-op", authorizeCase: async () => access.allowed, evidence: evidenceService, createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
+    const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => "case-op", authorizeCase: async () => access.allowed, verifyScenarioOperations: async () => access.allowed, evidence: evidenceService, createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
     coverageAccess.resolve = createDecisionCoverageAccess({ state, host, authorizeCase: async () => access.allowed, verifyEvidence: async () => access.allowed })
     const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
     const ruleOperation = { id: "criterion-op" }
@@ -156,6 +156,9 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     const productCatalog = await product.http.catalog([otherCase, caseRef], context)
     expect(productCatalog.status === "ok" && productCatalog.value.cases.map((entry) => entry.caseRef)).toEqual([otherCase, caseRef])
     if (productCatalog.status === "ok") expect(new Set(productCatalog.value.cases.map((entry) => entry.alternatives[0].candidateRef)).size).toBe(2)
+    access.historical = true
+    expect((await product.http.catalog([caseRef], context)).status).toBe("unavailable")
+    access.historical = false
     expect((await product.http.preview(portfolioRequest, { ...caseRef, version: 2 }, context)).status).toBe("denied")
     expect((await product.http.preview(portfolioRequest, caseRef, context)).status).toBe("ok")
     const unitsFromHttp = await product.http.sensitivityUnits({ caseRef, scenarioRef: selectedRef, baselineRef, parameterRef: "line:11" }, context)
