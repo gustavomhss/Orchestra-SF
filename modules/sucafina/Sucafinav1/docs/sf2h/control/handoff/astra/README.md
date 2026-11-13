@@ -1,6 +1,6 @@
-# Astra — primeiros seis WPs
+# Astra — WPs 00–08
 
-Uma conversa independente por WP. Cada Astra implementa o WP completo, publica commit/PR e executa CI cirúrgico. S0 revisa e integra depois em sf2-stack; epic/global somente após o bundle. As sessões antigas permanecem paradas e a Goal pausada.
+Uma conversa independente por WP. Cada Astra implementa o WP completo, publica commit/PR e executa CI cirúrgico. S0 revisa e integra depois em sf2-stack; epic/global somente após o bundle. Sessões antigas continuam paradas e a Goal pausada.
 
 | Handoff | Tasks | Critérios próprios | Branch | Base da PR |
 |---|---:|---:|---|---|
@@ -10,9 +10,10 @@ Uma conversa independente por WP. Cada Astra implementa o WP completo, publica c
 | [WP03](WP03.md) |5|112|astra-wp03|sf2-stack|
 | [WP04](WP04.md) |5|111|astra-wp04|sf2-stack|
 | [WP05](WP05.md) |5|108|astra-wp05|sf2-stack|
+| [WP06](WP06.md) |5|140|astra-wp06|sf2-stack|
+| [WP07](WP07.md) |4|86|astra-wp07|sf2-stack|
+| [WP08](WP08.md) |6|132|astra-wp08|sf2-stack|
 
-28 tasks e 569 critérios próprios; a campanha completa continua 15 WPs/74 tasks/1.610 critérios. Critérios globais também estão nos packs para composição final. Seeds partem da mesma base e preservam apenas arquivos próprios, evitando deleções cruzadas dos antigos snapshots. Packs são derivados operacionais da fonte fixa, sem alterar planejamento ou reduzir escopo.
+43 tasks e 927 critérios próprios nesses nove WPs; a campanha completa continua 15 WPs/74 tasks/1.610 critérios. Os packs preservam os WPs completos e os vínculos de provas. Seeds partem da mesma base, com arquivos próprios recuperados e sem deleções cruzadas ou inputs estrangeiros dirty.
 
-Cole em cada chat: “Execute integralmente o handoff WPxx.md deste diretório. Leia o pack completo vinculado. Entregue commit publicado, PR contra sf2-stack e CI cirúrgico comprovado. Você implementa e testa; S0 revisa e integra. Não só planeje.”
-
-[Protocolo de CI](CI.md). [Branches/SHAs preparados](seed-results.json). Nenhuma das seis novas branches foi testada ou considerada pronta só por ter sido preparada.
+[Protocolo de CI](CI.md). [Seeds e SHAs](seed-results.json). Preparação das branches não comprova implementação concluída ou testes aprovados.
