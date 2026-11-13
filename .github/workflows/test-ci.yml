@@ -151,9 +151,10 @@ jobs:
             case "$key" in
               ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER) pattern='^(1|strict)$' ;;
               ORCHESTRA_CHANNEL) pattern='^prod$' ;;
+              VITE_ORCHESTRA_SF_NATIVE) pattern='^1$' ;;
               *) echo "::error::.ci-run.json env key $key is not allow-listed"; exit 2 ;;
             esac
-            # Omni permits only its two on states; channel checks permit only the production value.
+            # Omni permits its two on states; channel and native checks permit only their explicit values.
             if ! printf '%s' "$value" | grep -Eq "$pattern"; then
               echo "::error::.ci-run.json env value for $key is not allowed"
               exit 2
