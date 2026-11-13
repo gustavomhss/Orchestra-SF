@@ -73,6 +73,7 @@ export type Persistence = {
   // commit=false, cancellation, callback failure or commit failure writes nothing, including after restart.
   // Production adapters must run the conformance suite against their real driver; the test Map adapter is not durability proof.
   transaction: <T>(surface: Surface, work: (snapshot: Snapshot) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
+  transactionAll?: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
 }
 
 export function object(value: unknown): Record<string, unknown> {

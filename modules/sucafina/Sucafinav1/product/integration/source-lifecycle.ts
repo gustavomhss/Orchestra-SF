@@ -1,4 +1,4 @@
-import type { Snapshot } from "../../runtime/contract.ts"
+import type { Persistence, Snapshot, TransactionOptions } from "../../runtime/contract.ts"
 import type { AssetPersistence } from "../../runtime/assets.ts"
 import type { Surface } from "../../src/identity.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
@@ -7,19 +7,53 @@ export type SfSourceScope = NonNullable<NonNullable<Snapshot["sfSources"]>["scop
 export type SfScopedSourcePort = {
   resolveScopedSource: (surface: Surface, incarnation: string, authorize: (snapshot: Snapshot, scope: SfSourceScope) => Promise<boolean>) => Promise<{ scope: SfSourceScope; projection: unknown; incarnation: string; version: number; inputDigest: string } | undefined>
   readScopedSource: (surface: Surface, scope: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>) => Promise<{ projection: unknown; incarnation: string; version: number; inputDigest: string } | undefined>
+  checkScopedSource?: (surface: Surface, scope: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>, expected: { incarnation: string; version: number; inputDigest: string }) => Promise<boolean>
 }
 
 export type SfSourceIdentityInput = { recordType: string; recordId: string; inputDigest: string }
 
 /** Wrap the installation's existing driver once, shared by HTTP, jobs and restore. No new store. */
 export function createSfSourcePersistence(input: {
-  persistence: AssetPersistence
+  persistence: AssetPersistence & Pick<Persistence, "transactionAll">
   enumerate: (surface: Surface, snapshot: Snapshot) => readonly SfSourceIdentityInput[]
   createId: () => string
   purpose?: "business-restore"
   projectScope?: (surface: Surface, snapshot: Snapshot, scope: SfSourceScope) => unknown | undefined
-}): AssetPersistence & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } {
-  const persistence: AssetPersistence & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } = {
+}): AssetPersistence & Pick<Persistence, "transactionAll"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } {
+  const observe = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>) => {
+    requireSourceIdentities(snapshot)
+    const scope = structuredClone(requested)
+    if (![scope.principalRef, scope.accessRevision, scope.policyVersion, scope.recordType, scope.recordId].every((value) => typeof value === "string" && value.trim())) throw new Error("SF_SOURCE_SCOPE_INVALID")
+    if (!input.projectScope) throw new Error("SF_SOURCE_SCOPE_PROJECTOR_UNAVAILABLE")
+    const before = digestSfValue(snapshot)
+    if (!await authorize(snapshot)) return undefined
+    const projection = input.projectScope(surface, structuredClone(snapshot), structuredClone(scope))
+    const source = sfSourceIdentity(snapshot, scope.recordType, scope.recordId)
+    if (projection === undefined || !source || !await authorize(snapshot)) return undefined
+    if (digestSfValue(snapshot) !== before) throw new Error("SF_SOURCE_SCOPE_CALLBACK_MUTATION")
+    return { scope, projection, source, inputDigest: digestSfValue(projection) }
+  }
+  const guard = (surface: Surface, snapshot: Snapshot) => {
+    const before = digestSfValue(snapshot.sfSources)
+    const auditStart = snapshot.audit.length
+    const auditPrefix = digestSfValue(snapshot.audit)
+    const productState = structuredClone(snapshot.data.__sfProductV1)
+    return () => {
+      requireSourceIdentities(snapshot)
+      if (before !== digestSfValue(snapshot.sfSources)) throw new Error("SF_SOURCE_IDENTITY_MUTATION")
+      if (snapshot.audit.length < auditStart || digestSfValue(snapshot.audit.slice(0, auditStart)) !== auditPrefix) throw new Error("SF_SOURCE_AUDIT_REWRITTEN")
+      const replacement = snapshot.audit.slice(auditStart).some((event) => event.record === "dataset")
+      if (input.purpose === "business-restore") {
+        if (!replacement) throw new Error("SF_RESTORE_MARKER_MISSING")
+        if (productState === undefined) delete snapshot.data.__sfProductV1
+        if (productState !== undefined) snapshot.data.__sfProductV1 = productState
+      }
+      synchronizeSources(snapshot, input.enumerate(surface, snapshot), input.createId, replacement)
+      synchronizeScopes(surface, snapshot, input.projectScope, input.createId)
+      requireSourceIdentities(snapshot)
+    }
+  }
+  const persistence: AssetPersistence & Pick<Persistence, "transactionAll"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } = {
     resolveScopedSource: async (surface, incarnation, authorize) => {
       const scope = await input.persistence.transaction(surface, async (snapshot) => {
         requireSourceIdentities(snapshot)
@@ -33,19 +67,11 @@ export function createSfSourcePersistence(input: {
       return value?.incarnation === incarnation ? { ...value, scope } : undefined
     },
     readScopedSource: (surface, requested, authorize) => input.persistence.transaction(surface, async (snapshot) => {
-      requireSourceIdentities(snapshot)
-      const scope = structuredClone(requested)
-      if (![scope.principalRef, scope.accessRevision, scope.policyVersion, scope.recordType, scope.recordId].every((value) => typeof value === "string" && value.trim())) throw new Error("SF_SOURCE_SCOPE_INVALID")
-      if (!input.projectScope) throw new Error("SF_SOURCE_SCOPE_PROJECTOR_UNAVAILABLE")
-      const before = digestSfValue(snapshot)
-      if (!await authorize(snapshot)) return { commit: false, value: undefined }
-      const projection = input.projectScope(surface, structuredClone(snapshot), structuredClone(scope))
-      const source = sfSourceIdentity(snapshot, scope.recordType, scope.recordId)
-      if (projection === undefined || !source || !await authorize(snapshot)) return { commit: false, value: undefined }
-      if (digestSfValue(snapshot) !== before) throw new Error("SF_SOURCE_SCOPE_CALLBACK_MUTATION")
+      const observed = await observe(surface, snapshot, requested, authorize)
+      if (!observed) return { commit: false, value: undefined }
+      const { scope, projection, source, inputDigest } = observed
       const key = digestSfValue(scope)
       const prior = snapshot.sfSources!.scopes?.[key]
-      const inputDigest = digestSfValue(projection)
       const entry = {
         scope, sourceIncarnation: source.incarnation, incarnation: prior?.sourceIncarnation === source.incarnation ? prior.incarnation : createScopedIncarnation(snapshot, input.createId), alive: true, inputDigest,
         version: !prior || prior.sourceIncarnation !== source.incarnation ? 1 : prior.version + Number(!prior.alive || prior.inputDigest !== inputDigest),
@@ -54,6 +80,13 @@ export function createSfSourcePersistence(input: {
       snapshot.sfSources!.scopes[key] = entry
       requireSourceIdentities(snapshot)
       return { commit: digestSfValue(prior) !== digestSfValue(entry), value: { projection: structuredClone(projection), incarnation: entry.incarnation, version: entry.version, inputDigest } }
+    }),
+    checkScopedSource: (surface, scope, authorize, expected) => input.persistence.transaction(surface, async (snapshot) => {
+      const observed = await observe(surface, snapshot, scope, authorize)
+      if (!observed) return { commit: false, value: false }
+      const current = sfScopedSourceIdentity(snapshot, observed.scope)
+      return { commit: false, value: !!current && current.incarnation === expected.incarnation && current.version === expected.version &&
+        current.inputDigest === expected.inputDigest && observed.inputDigest === expected.inputDigest }
     }),
     initializeSources: (surface) => input.persistence.transaction(surface, async (snapshot) => {
       if (snapshot.sfSources) {
@@ -66,26 +99,26 @@ export function createSfSourcePersistence(input: {
     }),
     transaction: (surface, work, options) => input.persistence.transaction(surface, async (snapshot, blobs) => {
       requireSourceIdentities(snapshot)
-      const before = digestSfValue(snapshot.sfSources)
-      const auditStart = snapshot.audit.length
-      const auditPrefix = digestSfValue(snapshot.audit)
-      const productState = structuredClone(snapshot.data.__sfProductV1)
+      const finish = guard(surface, snapshot)
       const result = await work(snapshot, blobs)
       if (!result.commit) return result
-      if (before !== digestSfValue(snapshot.sfSources)) throw new Error("SF_SOURCE_IDENTITY_MUTATION")
-      if (snapshot.audit.length < auditStart || digestSfValue(snapshot.audit.slice(0, auditStart)) !== auditPrefix) throw new Error("SF_SOURCE_AUDIT_REWRITTEN")
-      // Dataset import/restore already appends this canonical audit record inside its transaction.
-      const replacement = snapshot.audit.slice(auditStart).some((event) => event.record === "dataset")
-      if (input.purpose === "business-restore") {
-        if (!replacement) throw new Error("SF_RESTORE_MARKER_MISSING")
-        if (productState === undefined) delete snapshot.data.__sfProductV1
-        if (productState !== undefined) snapshot.data.__sfProductV1 = productState
-      }
-      synchronizeSources(snapshot, input.enumerate(surface, snapshot), input.createId, replacement)
-      synchronizeScopes(surface, snapshot, input.projectScope, input.createId)
-      requireSourceIdentities(snapshot)
+      finish()
       return result
     }, options),
+    ...(input.persistence.transactionAll ? { transactionAll: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) =>
+      input.persistence.transactionAll!(async (snapshots) => {
+        const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
+        const original = surfaces.map((surface) => snapshots[surface])
+        const before = surfaces.map((surface) => digestSfValue(snapshots[surface]))
+        const finish = surfaces.map((surface) => guard(surface, snapshots[surface]))
+        const result = await work(snapshots)
+        if (result.commit) {
+          if (surfaces.some((surface, index) => Object.getOwnPropertyDescriptor(snapshots, surface)?.value !== original[index]))
+            throw new Error("SF_SOURCE_SNAPSHOT_REPLACED")
+          surfaces.forEach((surface, index) => { if (digestSfValue(snapshots[surface]) !== before[index]) finish[index]!() })
+        }
+        return result
+      }, options) } : {}),
   }
   return persistence
 }

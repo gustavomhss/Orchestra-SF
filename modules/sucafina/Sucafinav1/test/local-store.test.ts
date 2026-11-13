@@ -11,6 +11,44 @@ import type { Snapshot } from "../runtime/contract.ts"
 const bytes = new Uint8Array([0, 255, 17, 128])
 const empty: Snapshot = { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
 
+test("all-surface transaction exposes staged nested reads and rejects nested writes", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    expect(store.transactionAll).toBeDefined()
+    if (!store.transactionAll) return
+    await store.transactionAll(async (snapshots) => {
+      snapshots.dashboard.data.value = "dashboard-staged"
+      snapshots.planner.data.value = "planner-staged"
+      expect(await store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot.data.value }))).toBe("planner-staged")
+      return { commit: true, value: undefined }
+    })
+    await expect(store.transactionAll(async (snapshots) => {
+      snapshots.dashboard.data.value = "should-rollback"
+      await expect(store.transaction("planner", async () => ({ commit: true, value: undefined }))).rejects.toThrow("Nested local writes")
+      return { commit: true, value: undefined }
+    })).rejects.toThrow("Nested local write attempted")
+    expect(await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot.data.value }))).toBe("dashboard-staged")
+    expect(await store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot.data.value }))).toBe("planner-staged")
+    const release = Promise.withResolvers<void>()
+    const started = Promise.withResolvers<void>()
+    const child: { pending?: Promise<unknown> } = {}
+    await expect(store.transactionAll(async (snapshots) => {
+      snapshots.dashboard.data.value = "detached-rollback"
+      child.pending = store.transaction("planner", async () => {
+        started.resolve()
+        await release.promise
+        return { commit: false, value: undefined }
+      })
+      void child.pending.catch(() => undefined)
+      await started.promise
+      return { commit: true, value: undefined }
+    })).rejects.toThrow("Nested local read still active")
+    release.resolve()
+    await expect(child.pending).rejects.toThrow("scope has ended")
+    expect(await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot.data.value }))).toBe("dashboard-staged")
+  })
+})
+
 async function fixture(work: (directory: string, open: (options?: { lockTimeoutMs?: number }) => Promise<LocalStore>) => Promise<void>) {
   const root = await mkdtemp(join(await realpath(tmpdir()), "sucafina-store-test-"))
   const stores: LocalStore[] = []
