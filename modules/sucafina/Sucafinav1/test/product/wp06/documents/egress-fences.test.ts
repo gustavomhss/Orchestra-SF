@@ -23,7 +23,8 @@ async function uploadQuotes(fixture: Fixture, count: number) {
   })
   for (let index = 1; index <= count; index++) {
     const uploaded = await fixture.store.transaction("procurement", async (snapshot, blobs) => {
-      const value = await uploadAsset(snapshot, blobs, { id: fixture.principal.id, roles: ["buyer"], canWrite: true, assigned: [], domains: [] }, { page: "Requests", action: "upload", id: "r1", version: 0, values: {} }, { at: fixture.at, id: () => `asset-${index}`, directory: [] }, fixture.runtime.assets.services, "quote", { name: `terms-${index}.txt`, type: "text/plain", bytes: new TextEncoder().encode(`Price: ${index + 41}`) })
+      const version = snapshot.versions["requests:r1"]?.version ?? 0
+      const value = await uploadAsset(snapshot, blobs, { id: fixture.principal.id, roles: ["buyer"], canWrite: true, assigned: [], domains: [] }, { page: "Requests", action: "upload", id: "r1", version, values: {} }, { at: fixture.at, id: () => `asset-${index}`, directory: [] }, fixture.runtime.assets.services, "quote", { name: `terms-${index}.txt`, type: "text/plain", bytes: new TextEncoder().encode(`Price: ${index + 41}`) })
       return { commit: value.ok, value }
     })
     expect(uploaded.ok).toBe(true)

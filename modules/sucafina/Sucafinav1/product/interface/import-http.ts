@@ -70,7 +70,7 @@ export function createSfImportHttp(input: { origin: string; mount: string; runti
       const format = /\.xlsx$/i.test(file.name) ? "xlsx" : /\.xls$/i.test(file.name) ? "xls" : /\.json$/i.test(file.name) ? "json" : undefined
       const options: unknown = await Promise.resolve().then(() => JSON.parse(rawOptions)).catch(() => undefined)
       if (!format || !options || typeof options !== "object" || Array.isArray(options) || Object.keys(options).some((key) => !["newVersion", "removeMissing", "preview"].includes(key)) || !("newVersion" in options) || !("removeMissing" in options) || !("preview" in options) || typeof options.newVersion !== "boolean" || typeof options.removeMissing !== "boolean" || !options.preview || typeof options.preview !== "object" || Array.isArray(options.preview) || Object.keys(options.preview).some((key) => !["sheet", "replace", "headerRow"].includes(key))) return reply({ status: "invalid" }, 400)
-      const selection = { surface: targetSurface, selectionRef, options: options as ImportTarget["options"] }
+      const selection: Pick<ImportTarget, "surface" | "selectionRef" | "options"> = { surface: targetSurface, selectionRef, options: options as ImportTarget["options"] }
       const selectionDigest = digestSfValue(selection)
       const admitted = await runtime.ui.admit(request, "sf_import_preview", selectionDigest)
       if (admitted.status !== "ok") return reply({ status: admitted.status }, 403)

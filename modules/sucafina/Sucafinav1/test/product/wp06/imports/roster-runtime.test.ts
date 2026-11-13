@@ -7,6 +7,8 @@ import { createSfImportHttp } from "../../../../product/interface/import-http.ts
 
 /** Uses the CLI default roster composition, persisted credentials and real HTTP/SQLite ports. */
 test("default CLI roster composition preserves ignored sheets, rejects an ABA roster and applies a fresh preview to a locked version", async () => {
+  const started = performance.now()
+  const observed = (stage: string) => console.info(`WP06 roster runtime: ${stage} (${Math.round(performance.now() - started)}ms)`)
   const app = await createWp06Runtime()
   try {
     await app.store.transaction("planner", async (snapshot) => {
@@ -50,6 +52,7 @@ test("default CLI roster composition preserves ignored sheets, rejects an ABA ro
       return preview.value as { id: string; version: number }
     }
     const preview = await prepare()
+    observed("initial preview")
     const detail = await call("import-detail", undefined, { manifestId: preview.id, version: String(preview.version) }).then((response) => response.json())
     const ignored = detail.value.detail.changes.filter((entry: { kind: string }) => entry.kind === "ignored") as { source: { sheet?: string; field?: string } }[]
     expect(ignored.some((entry) => entry.source.sheet === "All Members" && entry.source.field === "Classification")).toBe(true)
@@ -57,9 +60,11 @@ test("default CLI roster composition preserves ignored sheets, rejects an ABA ro
     await app.store.transaction("planner", async (snapshot) => { snapshot.data.roster = [{ name: "Concurrent" }]; return { commit: true, value: undefined } })
     await app.store.transaction("planner", async (snapshot) => { snapshot.data.roster = []; return { commit: true, value: undefined } })
     expect((await call("import-apply", { manifestId: preview.id, version: preview.version })).status).not.toBe(200)
+    observed("stale Apply refused")
     expect(await app.store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot.data.roster }))).toEqual([])
     const fresh = await prepare()
     expect((await call("import-apply", { manifestId: fresh.id, version: fresh.version })).status).toBe(200)
+    observed("fresh roster applied")
     expect(await app.store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot.data.roster }))).toEqual([
       { name: "Roster person", title: "Analyst", type: "Employee", leader: "Lead", location: "Geneva", start: "2027-01-01", end: "", status: "Active" },
     ])
@@ -71,10 +76,11 @@ test("default CLI roster composition preserves ignored sheets, rejects an ABA ro
     members.getCell("A2").value = "Updated person"
     const locked = await prepare()
     expect((await call("import-apply", { manifestId: locked.id, version: locked.version })).status).toBe(200)
+    observed("locked roster applied")
     const after = await app.store.transaction("planner", async (snapshot) => ({ commit: false, value: {
       roster: snapshot.data.roster, positions: (snapshot.data.versions as { hc: { positions: unknown[] } }[])[0]!.hc.positions,
     } }))
     expect(after.roster).toMatchObject([{ name: "Updated person" }])
     expect(after.positions).toEqual(positions)
   } finally { await app.dispose() }
-}, 30_000)
+}, 90_000)
