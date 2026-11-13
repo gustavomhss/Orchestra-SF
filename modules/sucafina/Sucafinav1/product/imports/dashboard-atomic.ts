@@ -9,7 +9,7 @@ import type { SfProductStatePort } from "../contracts/state.ts"
 import type { ImportFileHost } from "./files.ts"
 import { createDashboardImportMutation } from "./dashboard.ts"
 import { dashboardImportImpact, verifyDashboardImportEvidence } from "./dashboard.ts"
-import { settleSfImportReceipt } from "./store.ts"
+import { rejectedReceiptId, settleSfImportReceipt, settleSfImportRejection } from "./store.ts"
 import type { ImportExecution } from "./store.ts"
 import type { ImportTarget } from "./staged-files.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
@@ -46,6 +46,7 @@ export function createSfDashboardImportAtomic(input: {
     const stateCommand = { namespace: "documents" as const, domainSurface: "dashboard" as const, expectedStorageVersion: docs.storageVersion, additionalNamespaces: [{ namespace: "receipts" as const, expectedStorageVersion: receipts.storageVersion }], targetRef: scope.target.selectionRef, targetIncarnation: scope.target.incarnation, idempotencyKey: execution.idempotencyKey, commandDigest: execution.commandDigest }
     const saved = await input.state.transaction(request, stateCommand, async (state, authority, snapshot) => {
       if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion) return { commit: false, value: false }
+      if (!await input.files.revalidate(scope.fileRef, manifest.sourceDigest, context)) return { commit: false, value: false }
       const file = object(state.documents[`import-file:${scope.fileRef}`])
       if (file.schema !== "sf-import-file-v1" || file.id !== scope.fileRef || file.digest !== manifest.sourceDigest || file.principalRef !== authority.principalRef || file.accessRevision !== authority.accessRevision || file.policyVersion !== authority.policyVersion || digestSfValue(file.target) !== digestSfValue(scope.target) || typeof file.expiresAt !== "string" || !Number.isFinite(Date.parse(environment.at)) || !Number.isFinite(Date.parse(file.expiresAt)) || Date.parse(file.expiresAt) <= Date.parse(environment.at)) return { commit: false, value: false }
       const principal = await input.host.authenticate(request, { surface: "dashboard", roleMap: roleMap(snapshot, "dashboard") })
@@ -53,13 +54,19 @@ export function createSfDashboardImportAtomic(input: {
       const access = object(object(snapshot.data.access)[principal.id])
       const roles = principal.roles.filter((row) => row.surface === "dashboard").map((row) => row.role)
       const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((value): value is string => typeof value === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((value): value is string => typeof value === "string") : [] }
+      const rejection = { manifestId: manifest.id, previewDigest: scope.previewDigest, idempotencyKey: execution.idempotencyKey, commandDigest: execution.commandDigest, principalRef: actor.id }
+      if (state.documents[`import-rejection:${rejectedReceiptId(rejection)}`]) return { commit: false, value: false }
       const staged = mutation.execute(snapshot, actor, environment)
-      if (!staged.commit) return { commit: false, value: false }
+      if (!staged.commit) {
+        if ("reason" in staged.value && staged.value.reason === "command-rejected" && (staged.value.status === "denied" || staged.value.status === "failed") && settleSfImportRejection(state, rejection)) return { commit: true, value: "rejected" as const }
+        return { commit: false, value: false }
+      }
       const receipt = { id: digestSfValue({ principal: actor.id, target: scope.target.incarnation, key: execution.idempotencyKey }), idempotencyKey: execution.idempotencyKey, commandDigest: execution.commandDigest, targetIncarnation: scope.target.incarnation, principalRef: actor.id, surface: "dashboard" as const, version: execution.format === "backup" ? snapshot.versions.dataset?.version ?? command.expectedVersion : snapshot.versions[`${command.target.type}:${command.target.id}`]?.version ?? command.expectedVersion, result: { ok: true as const, value: staged.value }, at: environment.at }
       if (!settleSfImportReceipt(state, { manifestId: manifest.id, expectedDigest: scope.previewDigest, receipt })) return { commit: false, value: false }
       return { commit: true, value: true }
     })
     if (saved.status !== "ok" || !saved.value) return { status: saved.status === "conflict" || saved.status === "preview" ? "conflict" : "unavailable", reason: "import-not-applied" }
+    if (saved.value === "rejected") return { status: "denied", reason: "import-rejected" }
     if (!await input.host.revalidate(context) || !await input.authorizeTarget(scope.target, context, "receipt")) return { status: "denied", reason: "import-access-unavailable" }
     return input.readView(manifest.id, context)
   }

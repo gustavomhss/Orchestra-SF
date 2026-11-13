@@ -3,6 +3,7 @@ import { digestSfValue } from "../contracts/canonical.ts"
 import type { SourceRef } from "../contracts/context.ts"
 import { applyDashboardImport, previewDashboardImport } from "../dashboard/imports.ts"
 import type { DashboardImportFormat } from "../dashboard/imports.ts"
+import type { DashboardBackupAdapter } from "../dashboard/imports.ts"
 import { plannerImportEnvironment } from "./planner.ts"
 import { executeDashboardBackupImport } from "../../runtime/dashboard-backup.ts"
 import { publicSfData } from "../integration/public-state.ts"
@@ -12,7 +13,7 @@ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import { projectDashboardScope } from "../dashboard/scope.ts"
 import { compareImportProjections } from "./changes.ts"
 
-type ImportFormat = DashboardImportFormat | "backup"
+type ImportFormat = DashboardImportFormat
 
 export function dashboardImportImpact(snapshot: Snapshot, staged: Snapshot, command: Command, period: Period) {
   if (command.action !== "backup-import") return dashboardMutationImpact(snapshot, staged, command, period)
@@ -42,7 +43,19 @@ function simulateBackup(snapshot: Snapshot, actor: Actor, command: Command, envi
   const staged = structuredClone(snapshot)
   const result = executeDashboardBackupImport(staged, actor, command, environment)
   if (!result.commit) return { status: result.status === 403 ? "denied" as const : result.status === 409 ? "conflict" as const : "invalid" as const, reason: "backup-rejected" }
-  return { status: "preview" as const, before, after: publicSfData(staged.data), baseDigest: digestSfValue({ before, dataset: snapshot.versions.dataset }), changes: [], warnings: [], summary: undefined, commandDigest: digestSfValue({ actor, command }) }
+  const after = publicSfData(staged.data)
+  return { status: "preview" as const, before, after, baseDigest: digestSfValue({ before, dataset: snapshot.versions.dataset }), changedFields: [...new Set([...Object.keys(before), ...Object.keys(after)])].sort().filter((key) => digestSfValue(before[key]) !== digestSfValue(after[key])), changes: [], warnings: [], summary: undefined, commandDigest: digestSfValue({ actor, command }) }
+}
+
+const backup: DashboardBackupAdapter = {
+  preview: simulateBackup,
+  apply: (snapshot, actor, command, environment, baseDigest, commandDigest) => {
+    const preview = simulateBackup(snapshot, actor, command, environment)
+    if (preview.status !== "preview" || preview.baseDigest !== baseDigest || preview.commandDigest !== commandDigest) return { ok: false, status: 409, errors: ["Preview is stale"] }
+    const result = executeDashboardBackupImport(snapshot, actor, command, environment)
+    if (!result.commit) return { ok: false, status: result.status === 403 ? 403 : result.status === 409 ? 409 : 422, errors: ["Backup was rejected"] }
+    return { ok: true }
+  },
 }
 
 /** Confirmation here is internal to the disposable simulation, never accepted from a request. */
@@ -51,7 +64,7 @@ export function previewDashboardWorkbook(input: { format: ImportFormat; snapshot
   const command = structuredClone(input.command)
   const internal = { ...command, confirmed: true }
   const environment = plannerImportEnvironment(input.environment, input.operationId)
-  const simulated = input.format === "backup" ? simulateBackup(input.snapshot, input.actor, internal, environment) : previewDashboardImport(input.format, input.snapshot, input.actor, internal, environment)
+  const simulated = previewDashboardImport(input.format, input.snapshot, input.actor, internal, environment, backup)
   if (simulated.status !== "preview") return simulated
   const previewDigest = digestSfValue({ after: simulated.after, changes: simulated.changes, warnings: simulated.warnings, summary: simulated.summary })
   const identity = { format: input.format, command, actorId: input.actor.id, operationId: input.operationId, idempotencyKey: input.idempotencyKey, target: input.target, baseDigest: simulated.baseDigest, previewDigest, at: input.environment.at }
@@ -70,10 +83,10 @@ export function createDashboardImportMutation(input: { format: ImportFormat; com
       const staged = structuredClone(snapshot)
       const internal = { ...prepared.command, confirmed: true }
       const effective = plannerImportEnvironment({ ...environment, at: prepared.at }, prepared.operationId)
-      const preview = prepared.format === "backup" ? simulateBackup(staged, actor, internal, effective) : previewDashboardImport(prepared.format, staged, actor, internal, effective)
+      const preview = previewDashboardImport(prepared.format, staged, actor, internal, effective, backup)
       if (preview.status !== "preview" || preview.baseDigest !== prepared.baseDigest || digestSfValue({ after: preview.after, changes: preview.changes, warnings: preview.warnings, summary: preview.summary }) !== prepared.previewDigest) return { commit: false, value: { status: "conflict", reason: "preview-changed" } }
-      const applied = prepared.format === "backup" ? executeDashboardBackupImport(staged, actor, internal, effective) : applyDashboardImport(prepared.format, staged, actor, internal, effective, preview.baseDigest, preview.commandDigest)
-      if (!("commit" in applied ? applied.commit : applied.ok)) return { commit: false, value: { status: "failed", reason: "command-rejected" } }
+      const applied = applyDashboardImport(prepared.format, staged, actor, internal, effective, preview.baseDigest, preview.commandDigest, backup)
+      if (!applied.ok) return { commit: false, value: { status: "failed", reason: "command-rejected" } }
       if (!input.verifyScope(snapshot, staged, actor)) return { commit: false, value: { status: "denied", reason: "source-access-unavailable" } }
       const changedFields = compareImportProjections({ data: publicSfData(snapshot.data), sequences: snapshot.sequences }, { data: publicSfData(staged.data), sequences: staged.sequences }).length
       if (changedFields) Object.assign(snapshot, staged)

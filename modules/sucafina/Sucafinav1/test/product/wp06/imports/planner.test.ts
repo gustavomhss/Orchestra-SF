@@ -1,11 +1,19 @@
 import { expect, test } from "bun:test"
-import { createPlannerImportMutation, preparePlannerWorkbook, plannerImportEnvironment } from "../../../../product/imports/planner.ts"
+import { createPlannerImportMutation, preparePlannerWorkbook, plannerImportEnvironment, plannerWorkbookHasRoster } from "../../../../product/imports/planner.ts"
 import { domain } from "../../../../runtime/planner.ts"
 import { projectPlannerSource } from "../../../../product/planner/port.ts"
 import type { Snapshot } from "../../../../runtime/contract.ts"
+import { exportPlanner, parseWorkbook } from "../../../../runtime/workbooks.ts"
+import { emptyFlags } from "../../../../src/planner-accounts.ts"
 
 const actor = { id: "finance", roles: ["finance"], canWrite: true }
 const environment = { at: "2026-11-13T00:00:00Z", id: () => "host-id", directory: [] }
+
+test("roster scope is required for both All Members and roster-shaped Headcount", () => {
+  expect(plannerWorkbookHasRoster({ "All Members": [] })).toBe(true)
+  expect(plannerWorkbookHasRoster({ Headcount: [{ Name: "Person", Leader: "Lead" }] })).toBe(true)
+  expect(plannerWorkbookHasRoster({ Headcount: [{ Name: "Person", Leader: "Lead", "Position ID": "p1" }] })).toBe(false)
+})
 
 test("workbook preview and real Planner command agree without mutating the source", () => {
   const snapshot: Snapshot = { data: { versions: [{ id: "v1", year: 2027, closed: 0, locked: false, lines: [{ id: "42", sec: "opex", el: "licenses", name: "Licences", cur: "USD", b: Array(12).fill(100), a: Array(12).fill(null), f: Array(12).fill(null) }], projects: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, lists: {} }], officials: {}, entities: [], allocations: [] }, versions: {}, sequences: {}, audit: [], notices: [] }
@@ -64,4 +72,54 @@ test("forecast workbook replaces the included amount without changing budget or 
   const appliedLine = (applied.data.versions as { lines: { b: unknown; a: unknown }[] }[])[0].lines[0]
   expect(appliedLine.b).toEqual(originalLine.b)
   expect(appliedLine.a).toEqual(originalLine.a)
+})
+
+test("exported workbook reimports through the Planner engine without new lines and normalizes absent bm", async () => {
+  const flat = Array(12).fill(10)
+  const varied = [10, 20, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+  const actual = [0, null, null, null, null, null, null, null, null, null, null, null]
+  const snapshot: Snapshot = { data: { app: { entities: [], allocations: [] }, versions: [{ id: "v1", name: "Plan", year: 2027, closed: 0, locked: false, lines: [
+    { id: "flat", sec: "opex", el: "licenses", name: "Flat", cur: "USD", b: flat, bm: Array(12).fill(true), a: actual, f: Array(12).fill(null) },
+    { id: "varied", sec: "opex", el: "licenses", name: "Varied", cur: "USD", b: varied, bm: emptyFlags(), a: actual, f: Array(12).fill(null) },
+  ], projects: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, lists: {} }], officials: {}, entities: [], allocations: [] }, versions: {}, sequences: {}, audit: [], notices: [] }
+  const before = structuredClone(snapshot)
+  const file = await exportPlanner(snapshot, actor, environment, "v1")
+  expect(file.ok).toBe(true)
+  if (!file.ok) return
+  const parsed = await parseWorkbook(file.bytes)
+  expect(parsed.ok).toBe(true)
+  if (!parsed.ok) return
+  expect(parsed.sheets.OPEX.every((row) => !("bm" in row))).toBe(true)
+  const preview = preparePlannerWorkbook({ snapshot, actor, environment, versionId: "v1", sheets: parsed.sheets, newVersion: false, removeMissing: false, operationId: "roundtrip", idempotencyKey: "roundtrip-key", targetIncarnation: "inc-1" })
+  expect(preview.result.ok).toBe(true)
+  const applied = structuredClone(snapshot)
+  const mutation = createPlannerImportMutation({ command: preview.command, commandDigest: preview.commandDigest, previewDigest: preview.previewDigest, actorId: actor.id, operationId: "roundtrip", idempotencyKey: "roundtrip-key", targetIncarnation: "inc-1", previewAt: environment.at, verifyTarget: () => true })
+  expect(mutation?.execute(applied, actor, environment).commit).toBe(true)
+  const lines = (applied.data.versions as { lines: { id: string; b: number[]; bm: boolean[]; a: (number | null)[] }[] }[])[0].lines
+  expect(lines.map((line) => line.id)).toEqual(["flat", "varied"])
+  expect(lines[0].b).toEqual(flat)
+  expect(lines[0].a[0]).toBe(0)
+  expect(lines[0].bm).toEqual(emptyFlags())
+  expect(lines[1].b).toEqual(varied)
+  expect(lines[1].bm).toEqual(Array(12).fill(true))
+  expect(snapshot).toEqual(before)
+})
+
+test("budget owner workbook with one foreign forecast is refused without a commit", () => {
+  const snapshot: Snapshot = { data: { versions: [{ id: "v1", year: 2027, closed: 0, locked: false, lines: [
+    { id: "a", sec: "opex", el: "licenses", name: "A", cur: "USD", owner: "owner-1", b: Array(12).fill(0), a: Array(12).fill(null), f: Array(12).fill(null) },
+    { id: "b", sec: "opex", el: "licenses", name: "B", cur: "USD", b: Array(12).fill(0), a: Array(12).fill(null), f: Array(12).fill(null) },
+  ], projects: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, lists: {} }], officials: {}, entities: [], allocations: [] }, versions: {}, sequences: {}, audit: [], notices: [] }
+  const owner = { id: "owner-1", roles: ["budget owner"], canWrite: true }
+  const before = structuredClone(snapshot)
+  const preview = preparePlannerWorkbook({ snapshot, actor: owner, environment, versionId: "v1", sheets: { OPEX: [
+    { "Line ID": "a", "Cost element": "Licenses", "Vendor / item": "A", Currency: "USD", Measure: "Forecast", Jan: 0 },
+    { "Line ID": "b", "Cost element": "Licenses", "Vendor / item": "B", Currency: "USD", Measure: "Forecast", Jan: 200 },
+  ] }, newVersion: false, removeMissing: false, operationId: "foreign", idempotencyKey: "foreign-key", targetIncarnation: "inc-1" })
+  expect(preview.result).toMatchObject({ ok: false, status: 403 })
+  const mutation = createPlannerImportMutation({ command: preview.command, commandDigest: preview.commandDigest, previewDigest: preview.previewDigest, actorId: owner.id, operationId: "foreign", idempotencyKey: "foreign-key", targetIncarnation: "inc-1", previewAt: environment.at, verifyTarget: () => true })
+  const applied = structuredClone(snapshot)
+  expect(mutation?.execute(applied, owner, environment)).toMatchObject({ commit: false, value: { status: "denied" } })
+  expect(applied).toEqual(before)
+  expect(snapshot).toEqual(before)
 })
