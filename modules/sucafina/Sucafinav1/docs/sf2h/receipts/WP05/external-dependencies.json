@@ -238,6 +238,18 @@
       "observation_kind": "preserved-owner-snapshot",
       "remote_access": "GitHub MCP",
       "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/27375325788fa571d39137728ec7f0666e89f22c/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts"
+    },
+    {
+      "owner": "WP02",
+      "commit": "38d340a8857b96904f7246320091c14c051f1929",
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/scope.ts",
+      "blob": "f53d0509b6f727947ec9b00888bce9dae1420094",
+      "seed_blob": "0e5df729ea0e793ec0784d4c2278c72a49fd77ed",
+      "same_as_seed": false,
+      "observation_kind": "current-owner-branch",
+      "remote_access": "GitHub MCP, confirmed by root reviewer",
+      "branch": "astra-wp02",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/38d340a8857b96904f7246320091c14c051f1929/modules/sucafina/Sucafinav1/product/dashboard/scope.ts"
     }
   ],
   "ownership_actions": [
@@ -272,9 +284,10 @@
         "S0"
       ],
       "paths": [
+        "product/dashboard/scope.ts",
         "product/dashboard/port.ts"
       ],
-      "delta": "Consume the current producer delta preserving status and explicitly projecting an absent date for undated milestones. BI cannot reconstruct milestones already discarded by the seed producer."
+      "delta": "Consume both owner producer deltas: scope must preserve the undated record and current status, and port must project absent date/status. The seed drops undated at scope.ts and again at port.ts; renderer cannot restore a discarded record."
     },
     {
       "owners": [

@@ -51,3 +51,7 @@ The immutable dependency inventory and per-criterion blocker map are in external
 - ContextualBI must consume a persisted human-approved choice and actual projection/table artifacts, including reload and changed/revoked evidence; in-memory object equality is not the final durable witness.
 - The 55,000 implementation boundary must originate in the canonical producer, while omitted training remains absent from both component and coverage-entry inputs and is detected by the nine-category inventory. Training 40,000 must cause 210,000→250,000 and 30,000→−10,000 in the actual engine result, while the prior choice/result snapshot remains unchanged. BI must display the producer's actual qualification and reference, including a sampled interval if no exact proof is admitted.
 
+
+## Final observed resolution
+
+**R1: VERIFIED_SCOPED in S2**, product `fe75fd8b5daa25647bc4938025c82dbfc287a0a1`, snapshot `988877105aff091ee9881a812282d677c63be5bb`, [run 43519544728](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43519544728). The consumer-dashboard test passed with the Chromium-emitted brushed selection, production C02/persistence/source issuer and C17 page resolver, plus fresh UI admission. Invalid crops, altered contexts and references remain refused in the passing consumer tests. Scope: BI01 harness, about:blank, fixture principal, authorized Dashboard page. No native runtime or eight destination journeys are claimed. The original finding and static-review narrative above are retained as history.

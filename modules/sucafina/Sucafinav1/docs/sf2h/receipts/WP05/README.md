@@ -1,46 +1,82 @@
-# WP05 — candidato Astra
+# WP05 — implementação publicada e evidência de CI
 
-Estado: **DRAFT / BLOCKED**. A primeira execução foi concluída e a correção WP05 será revalidada. Estes recibos não constituem aceitação integrada nem prova de runtime nativo. A PR é https://github.com/gustavomhss/Orchestra-SF/pull/24.
+**Estado de entrega: DRAFT / BLOCKED.** A implementação e os recibos estão na [PR #24 contra sf2-stack](https://github.com/gustavomhss/Orchestra-SF/pull/24). O CI foi executado e inspecionado. Os critérios integrados ainda não estão todos satisfeitos: há uma falha preservada no produtor Dashboard, um typecheck bloqueado por contratos/integração herdados e provas de host/nativo pendentes. Nenhum resultado parcial foi promovido a READY.
 
-## Pins e escopo
+## Identidade e escopo
 
-- Handoff: `c4bd6592718b3862afbc7bb601c001365e593c20`.
-- Plano imutável: `dbf9547211d9b0fade619790de7c19c0869b7c7d`.
-- Seed real: `b33541ede0fd715fc0990aebeb3fe484d0991cb7` (tree `89fae3f30d4dc319dcd96aba68798a2e3410ec08`).
-- Base da PR: `sf2-stack`; branch própria: `astra-wp05`.
-- Produto/testes alterados exclusivamente em `product/analytics/`, `test/product/wp05/` e estes recibos. O workflow `.github/workflows/astra-wp05-check.yml` é a exceção expressamente autorizada por `control/handoff/astra/CI.md`.
+| Papel | Commit / tree |
+| --- | --- |
+| Seed real de WP05 | `b33541ede0fd715fc0990aebeb3fe484d0991cb7` |
+| Produto final testado W2 | `fe75fd8b5daa25647bc4938025c82dbfc287a0a1` |
+| Tree de W2 | `9e8847f921e3fdefdbd7b6cf92bc9536442f322b` |
+| Snapshot de testes S2 | `988877105aff091ee9881a812282d677c63be5bb` |
+| Tree de S2 | `dd702dc4f1fa58ba0a2ff0ef2500b542571c8566` |
+| Descendente de recibos D1, examinado no último check | `a87c526d29106efc295dfeade1b1d754e2617783` |
+| Tree de D1 | `116e6b994b9dec9c9280c088a14a6cfd636d8ff6` |
 
-## Implementação
+S2 é filho direto de W2 e acrescenta apenas `.ci-run.json`. A comparação remota e as 43 entradas originais da raiz têm hashes idênticos; [snapshot-equality.json](snapshot-equality.json) contém a prova. D1 remove três logs brutos rejeitados pelo guard e atualiza um recibo; produto, testes, fixtures e configuração permanecem iguais a W2. O fechamento posterior acrescenta apenas documentação de evidência; a PR identifica seu SHA e a comparação contra W2.
 
-O consumidor `dispatchBiPresentation` usa o dispatcher e a autoridade reais, valida a saída C16 e exige que a apresentação mantenha exatamente a projeção entregue. O factory fixa o produtor por contexto e request; mudanças entre fases assíncronas falham sem fornecer dados. Snapshots são separados dos objetos de callbacks antes das verificações assíncronas.
+O handoff é `c4bd6592718b3862afbc7bb601c001365e593c20`; o plano imutável é `dbf9547211d9b0fade619790de7c19c0869b7c7d`; o pack lido tem blob `e58fa5f9ca42fefa0a9453114c6146d4e8942a5b`. A implementação respeita `product/analytics/`, `test/product/wp05/` e estes recibos. O workflow `.github/workflows/astra-wp05-check.yml` usa a exceção expressa do protocolo de CI. Publicação, PR e disparos de Actions foram feitos pelo GitHub MCP. Não houve merge, deploy ou alteração do plano, autenticação, infraestrutura ou produto de outro owner.
 
-`readBiDestination` revalida a marca e sua referência C17 inteira, resolve essa referência e verifica acesso na saída. O recorte `visualPeriod` do brush preserva o período de autorização e só pode reduzi-lo para exibição. O teste de Dashboard usa persistência, issuer, C02 e resolver C17 reais; a seleção realmente emitida pelo browser retorna ao consumidor com nova admissão.
+## O que mudou
 
-Os filtros de etapa/responsável/buyer pedem uma nova seleção autorizada ao host. O BI não calcula contagem, aging ou autoridade. Ausência não produz marca nem escala numérica. Waterfall mostra totais/endpoints fornecidos pelo domínio e sinais das contribuições; não calcula residual. Marcos sem data permanecem após o brush. Há tabela equivalente da sensibilidade e qualificador junto ao limiar.
+- **Consumidor comum:** `dispatchBiPresentation` usa o dispatcher e a autoridade reais, valida a saída C16 e exige que a apresentação corresponda à projeção entregue. O factory fixa o produtor por contexto/request. Snapshots ficam separados dos objetos de callbacks antes de verificações assíncronas.
+- **Destino C17:** `readBiDestination` relê a seleção, confere valueId, versão, motor, contexto e referência C17 inteira, resolve essa referência e verifica acesso novamente na saída. Estados revogado, histórico, substituído e ausente não retornam conteúdo como se fosse atual.
+- **Brush:** o recorte `visualPeriod` mantém o período original de autorização e é validado como subconjunto. O teste novo liga a seleção realmente emitida pelo Chromium ao consumidor, com Dashboard C02, persistência, issuer e resolver C17 reais. É um harness BI01 em about:blank, com principal de fixture e destino C17 de página; não demonstra oito destinos granulares nem host nativo instalado.
+- **Filtros e gráficos:** etapa/responsável/buyer solicitam nova seleção ao host. Ausência não cria marca nem influencia a escala; zero confirmado permanece. Waterfall mostra endpoints/totais fornecidos e sinais das contribuições. Marcos sem data fornecidos pelo produtor permanecem após o brush. Sensibilidade tem tabela equivalente, unidades declaradas e condição junto ao limiar.
+- **Provas dos produtores:** a fixture própria substitui uma importação ausente de WP13 e chama Planner, solver, avaliação de critérios e store C08 reais. A variante EUR cadastra a moeda com `rate: null`, preservando câmbio ausente. Nenhuma asserção anterior de sensibilidade ou do marco sem data foi removida.
+- **Discriminantes adicionais:** Top N sem agregado não vira total; o grupo “outros” conserva a referência fornecida; mudar apenas status atual não reescreve a série recebida; mudar apenas data não inventa economia nem elimina obrigação. Esses três casos têm escopo explícito de componente.
 
-A fixture própria dos motores substitui uma importação ausente de WP13 sem remover asserções. Os testes usam os motores e o store reais; controles da fronteira do host continuam explicitamente identificados como fixtures.
+O [mapa de implementação](implementation-map.md) liga as onze perguntas aos arquivos e aos testes, distinguindo consumidores de teste da composição instalada.
 
-## Validação planejada
+## CI observado
 
-`ci-request.json` seleciona os 27 arquivos do seed e sete novos arquivos (34 no total). A primeira execução selecionou 33; a segunda acrescenta `semantic-discriminants.test.ts`. `request-validation.json` registra a validação por funções reais do candidato e os hashes do request. Nenhum teste de produto foi executado localmente.
+| Execução | Resultado |
+| --- | --- |
+| [Testes S1 — 43518126352](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43518126352) | 98 PASS / 2 FAIL; 100 testes, 33 arquivos. A falha da fixture EUR foi corrigida em W2. |
+| [Testes finais S2 — 43519544728](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43519544728) | **102 PASS / 1 FAIL; 103 testes, 34 arquivos, 480 asserções, 157,21 s.** |
+| [Check W1 — 43518137324](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43518137324) | Guards PASS; typecheck FAIL com 186 diagnósticos. |
+| [Check W2 — 43519560894](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43519560894) | Os dois erros novos da fixture desapareceram; typecheck 184. Guards rejeitaram três logs brutos incluídos nos recibos. |
+| [Check final D1 — 43520127151](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43520127151) | **Guards PASS:** 78 regras, 605 paths, 0 gate, 11 warnings herdados, 0 errors. Typecheck FAIL com os mesmos 184 diagnósticos. |
 
-Actions examina W (produto) e S (snapshot descendente com apenas `.ci-run.json`). O workflow específico executa `bun typecheck` em `modules/sucafina` e `bun run check:guards --base origin/dev` com a base disponível e registrada. Os resultados devem ser lidos nos jobs/logs, sem atribuir green de outro WP a este candidato.
+O request final contém os **27 arquivos do handoff e sete novos**, sem exclusões, duplicatas ou filtro amplo. A ordem observada nos logs coincide com os 34 caminhos solicitados. `validateRequest`, `locateTestPackage`, `parseOptions`, `testPathsAt` e `omniControlScope` reais validaram os metadados; o workflow validou novamente o request. Os comandos foram `bun test` com essa lista explícita, `bun typecheck` em `modules/sucafina` e `bun run check:guards --base origin/dev`. Nenhum teste de produto foi executado localmente.
 
-## Aceitação e dependências
+Request SHA256: `8ee2345d98c785d8bdee518c9625e6cf04e4f5926367aae30c5efe6e42748f4c`; forma compacta canônica do workflow: `5a3cb5e4ee782bb73db35adb975ea4b2d8f3f3b1b78ce8fe796b5559f6e55f8f`. A base real dos guards foi `a1d37698a7bb097c1578f827eba6a19b9917ef07`, com merge-base `9e4f3d35833f9b2cea6abdf58f42331f3973d9bf`.
 
-`criteria.json` contém exatamente os 108 IDs do pack, textos canônicos, implementação candidata, consumidor e discriminantes. A matriz será enriquecida com resultados reais; teste preparado não significa critério aceito.
+Omni registrou **not applicable (focused: no declaring test ran)**; não há alegação de spawn/nativo. A lane bun não publica o artefato Playwright: a lista de artefatos dos testes é `[]`, confirmada pela API. Os três ZIPs de checks foram baixados, tiveram seus SHA256 conferidos e os membros product.json/typecheck.log/guards.log inspecionados. O [artefato final](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43520127151/artifacts/14081743852) tem 8304 bytes e SHA256 `4b89aef56a9df3b21aff85c529d374464eedc0036c88f9530bf3aeee9c9f34f5`.
 
-Há dependências concretas fora do ownership: contratos e schema BI de WP00, composição/authority/store e oito destinos do host WP10, produtores Dashboard/Procurement e o caminho de sensibilidade/cobertura WP11/WP13. `engine-boundary.md` descreve por que solver exato isolado não é limiar integrado, e por que duas variantes reais de treinamento não provam confirmação humana/reconsideração na mesma instância. Esses bloqueios exigem PR draft; não são dispensas dos critérios.
+A identidade W2/S2 prova os inputs Git. O workflow de testes existente usa bun install e registra “Saved lockfile”; não oferece uma comparação pós-instalação da árvore de dependências. O job específico de checks usa frozen-lockfile e confirmou que os arquivos rastreados ficaram intactos. Esta evidência não amplia o que cada workflow efetivamente mede.
 
-C/G7, D/G8, AM01–AM06, GNATIVE e as oito seleções finais continuam sem alegação de PASS nesta entrega. Não houve merge, deploy nem alteração de infraestrutura, autenticação ou plano.
+## Resultados numéricos e seu limite
 
-## Primeira execução observada
+Os testes de motores passaram usando os resultados reais do Planner:
 
-- Produto W1: `19a8d725584b89ad97cd9a9bdbb018b5339b9d16`; snapshot S1: `0b6ffc6b2dfdfc63e73d11684b7173f3b7f52f41`.
-- Testes: [43518126352](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43518126352), **98 pass / 2 fail**, 100 testes em 33 arquivos. O request real e todos os casos constam de `test1-summary.json`.
-- Checks: [43518137324](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43518137324), guards **PASS** (78 regras, 0 gate, 0 errors), typecheck **FAIL** (186 diagnósticos). `check1-triage.json` separa fontes herdadas, dependências WP00 e os dois erros de narrowing novos na fixture.
-- Passaram o consumer com UI authority real, o drilldown emitido por Chromium sobre C02 real, os negativos de revogação/stale, as mudanças de renderer e os dois testes dos motores para as fronteiras 55000/15000 e treinamento omitido/40000.
-- A primeira falha conserva a asserção do marco sem data que o produtor WP02 do seed elimina. A segunda foi diagnosticada na própria fixture: EUR faltava no catálogo FX; a correção registra EUR com `rate: null`, mantendo câmbio ausente. O narrowing dos previews conditioned também foi corrigido. As correções só recebem crédito após a segunda execução.
-- O ZIP de checks foi baixado pelo GitHub MCP e verificado pelo SHA256 `b3a306fce9e37af68157f8d3a6f185cfe6c84e8b857c366b957b6d357e284e97`; seus três arquivos (`product.json`, `typecheck.log`, `guards.log`) foram inspecionados. A lane bun de testes não publicou artefatos, conforme workflow; o estado é `[]`, não um upload omitido silenciosamente.
+| Controle | Resultado observado |
+| --- | --- |
+| Renovação / transição | Subtotais conhecidos 240000 / 210000; diferença canônica −30000 |
+| Vantagem com ordem explicitamente invertida no comparador | +30000 antes; −10000 após treinamento |
+| Solver canônico isolado | Fronteira próxima de 55000; previews em 55000/55001 produzem diferenças −20000/−19999 |
+| Treinamento integralmente omitido | Categoria pending/missing-category, sem zero inventado |
+| Fonte independente com treinamento de 40000 | Subtotal conhecido 250000; solver próximo de 15000 |
 
-O pack lido tem blob `e58fa5f9ca42fefa0a9453114c6146d4e8942a5b`. A matriz final deve manter exatamente seus 108 IDs. Falha de requisito não foi convertida em sucesso esperado nem removida da seleção.
+A integração de sensibilidade conserva `conditioned`, `total: null` e intervalo amostrado; o BI não promove o solver isolado a limiar integrado exato. As variantes de treinamento usam stores distintos. Elas conservam o resultado anterior, mas não provam confirmação humana e ChoiceRecord na mesma instância de caso. [engine-boundary.md](engine-boundary.md) identifica os bloqueios de cobertura multicategoria e preview condicionado nos produtores.
+
+## Bloqueios para READY
+
+1. **WP02/S0 — marco sem data:** `dashboard-integration.test.ts:87` continua falhando porque `dashboard/scope.ts` e `dashboard/port.ts` do seed eliminam o marco antes do BI. O teste não foi enfraquecido. O owner pin `38d340a8857b96904f7246320091c14c051f1929` contém a correção dos produtores a integrar.
+2. **WP00/S0 e composição do pacote — typecheck:** os 184 diagnósticos são 141 em arquivos herdados externos, quatro imports WP05 de contratos ausentes e 39 cascatas desse contrato (35 existentes e quatro callbacks novos). Não há diagnóstico na fixture corrigida ou no novo teste semântico. Os tipos/schema BI e SfBiArtifact estão identificados no pin WP00 `72342f0efbbe099231aa2e30a964769b14e4fbb2`; os demais sites externos estão enumerados na triagem.
+3. **WP10 — consumidor instalado:** catálogo comum das onze perguntas, oito destinos exatos, ciclo de filtros autorizados, armazenamento/reabertura de artefatos e paridade UI/native/MCP permanecem sem prova integrada. [wp10-bi-http.patch](wp10-bi-http.patch) é um delta proposto, mecanicamente aplicável ao blob verificado; ele não foi aplicado ao produto de outro owner e não resolve sozinho o catálogo ou o drilldown.
+4. **WP11/WP13 — decisão completa:** o preview publicado exige conditioned/total null enquanto o caminho integrado exato exige cobertura completa. A regra de classificação também rejeita a reutilização de um componente em múltiplas categorias permitida pelo pack. BI conserva os resultados e condições existentes; não contorna esses gates.
+
+A [matriz dos 108 critérios](criteria.md) e [sua versão estruturada](criteria.json) atribuem implementação, consumidor, casos executados, run, escopo e lacuna a cada ID. A classificação final é **43 VERIFIED_SCOPED, 27 PARTIAL e 38 BLOCKED_EXTERNAL**, sem critérios sem avaliação. VERIFIED_SCOPED significa somente o comportamento observado naquele escopo; não é aceitação global. C/G7, D/G8, AM01–AM06, GNATIVE e as oito seleções finais não são declarados aprovados.
+
+## Índice de evidências
+
+- [ci-evidence.json](ci-evidence.json): identidades, runs, resultados, artefatos, hashes e limites.
+- [test2-summary.json](test2-summary.json): os 103 casos da execução final, incluindo a falha preservada.
+- [check3-triage.json](check3-triage.json) e [check3-triage.md](check3-triage.md): os 184 diagnósticos e os guards finais.
+- [ci-request.json](ci-request.json) e [request-validation.json](request-validation.json): seleção normalizada e validação canônica.
+- [dependency-ledger.md](dependency-ledger.md), [external-dependencies.json](external-dependencies.json) e [blocker-map.json](blocker-map.json): owners, pins e arquivos exatos.
+- [cold-review-01.md](cold-review-01.md): finding do brush, correção e fechamento no harness, conservando o histórico.
+
+Os logs completos permanecem no Actions, referenciados por run/job e hashes. Nenhum log bruto foi renomeado para contornar o guard.

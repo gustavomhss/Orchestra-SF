@@ -110,7 +110,7 @@
       "kind": "missing-origin-record",
       "status": "OWNER_DELTA_AVAILABLE_NOT_INTEGRATED",
       "source_commit": "38d340a8857b96904f7246320091c14c051f1929",
-      "facts": "WP02 current dashboard/port.ts projects undated milestones as absent and preserves status; seed logic discards an item without a string date. A WP05 renderer can list injected undated items but cannot recover a source item discarded upstream.",
+      "facts": "WP02 current scope.ts (blob f53d0509b6f727947ec9b00888bce9dae1420094) and port.ts preserve the undated milestone/current status and project an absent date. The seed drops undated at both scope and port; a renderer fixture cannot recover the missing source row.",
       "criterion_ids": [
         "WP05.T04.CMP.01",
         "WP05.T04.CHK.03"

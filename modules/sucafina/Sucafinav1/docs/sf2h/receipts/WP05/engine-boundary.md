@@ -42,3 +42,7 @@ This blocks claiming the pack's financially complete AI-RENEWAL and confirmed-tr
 The seed lacks WP00's `BiPresentation`, `BiViewId`, `SfBiArtifact` and decision `sensitivityResultRef` contracts/schema. The current WP00 branch was observed to publish them at `72342f0efbbe099231aa2e30a964769b14e4fbb2`; integrating that owner dependency is separate from changing WP05.
 
 The seed live `product/integration/bi-http.ts` is dashboard/UI only. Component adapters, real UI admission and fixture callbacks do not establish a GNATIVE dispatch or consumer route for all BI views. Root owns the exact delta/PR wording and must keep these boundaries explicit.
+
+## Observed hosted execution
+
+Both engine-coverage tests passed in [S2 run 43519544728](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43519544728), as did the corrected EUR/USD sensitivity integration. This verifies the specific numerical assertions and stored-result consumption described above. It does not remove either producer blocker or establish human confirmation/ChoiceRecord preservation in one case. No product test was executed locally.

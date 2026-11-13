@@ -2997,16 +2997,40 @@
     }
   ],
   "log": {
-    "path": "ci-evidence/check1-132205264384.log",
     "utf8Bytes": 137570,
     "sha256": "75ea3c6737789e3c45874476a56c18af5e40f9ad57c2f413f02074ce65de4ea6",
     "source": "GitHub MCP fetch_workflow_job_logs",
-    "completeDecodedResponse": true
+    "completeDecodedResponse": true,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43518137324"
   },
   "fixtureCorrection": {
     "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
     "state": "local-pending-CI",
     "type": "explicit runtime narrowing; no cast and no removed assertion"
   },
-  "productTestsExecutedLocally": false
+  "productTestsExecutedLocally": false,
+  "historicalCapture": true,
+  "artifactInspection": {
+    "performed": true,
+    "members": [
+      "product.json",
+      "typecheck.log",
+      "guards.log"
+    ],
+    "zipDigestVerified": true,
+    "productIdentityVerified": true,
+    "contentsRemainInActions": true
+  },
+  "laterResolution": {
+    "checkRun": 43520127151,
+    "productSha": "a87c526d29106efc295dfeade1b1d754e2617783",
+    "fixtureDiagnostics": 0,
+    "remainingDiagnostics": 184,
+    "guards": "PASS",
+    "gates": 0,
+    "testRun": 43519544728,
+    "testsPassed": 102,
+    "testsFailed": 1,
+    "note": "Historic numbers above remain attributed to their original commit; this later record does not rewrite that execution."
+  }
 }

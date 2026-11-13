@@ -53,3 +53,11 @@ Other retained files: `check1-run.json`, `check1-jobs.json`, `check1-artifacts.j
 ## Additional fixture correction after Test 1
 
 The independent test run later identified a fixture setup failure for EUR: the actual Planner save command rejects a non-USD line whose currency is absent from its FX catalog (`runtime/planner.ts`, the `Unknown currency` guard). A registered EUR entry with `rate: null` is explicitly supported by the same runtime and preserves missing FX. The WP05 fixture now provides `{ id: "EUR", cur: "EUR", rate: null }`; it supplies no rate or computed financial result. The existing EUR/USD, unavailable-threshold, persisted-reference and stale-criterion assertions remain intact. This correction, like the type narrowing, requires the next published CI result before being called verified.
+
+## Later resolution — historical record retained
+
+The final check [43520127151](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43520127151) on receipt-only descendant `a87c526d29106efc295dfeade1b1d754e2617783` has 184 unchanged upstream/contract-dependent diagnostics, zero fixture diagnostics and passing guards with zero gates. The final test run [43519544728](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43519544728) passed the corrected EUR sensitivity fixture; 102 of 103 tests passed. The only test failure is the preserved undated-milestone assertion against the seed Dashboard producer. The earlier values and pending language above are the historical state of that earlier candidate.
+
+## Artifact inspection
+
+The root audit used the supported GitHub MCP artifact-download tool, verified the published ZIP SHA256, and read product.json, typecheck.log and guards.log. Raw logs remain in Actions. The repository retains structured diagnostics and links; it does not keep raw scratch logs under another extension. Workspace capture paths in the historical audit are provenance, not repository deliverable links.

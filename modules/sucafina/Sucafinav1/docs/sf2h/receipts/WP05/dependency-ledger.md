@@ -43,6 +43,7 @@ All paths below are relative to `modules/sucafina/Sucafinav1/`. The linked sourc
 | WP13 | [product/portfolio/planner-sensitivity.ts](https://github.com/gustavomhss/Orchestra-SF/blob/27375325788fa571d39137728ec7f0666e89f22c/modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts) | `e6313ad315f5235a87442c7094ff47f2c74ca6c3` | different blob |
 | WP13 | [product/portfolio/sensitivity-store.ts](https://github.com/gustavomhss/Orchestra-SF/blob/27375325788fa571d39137728ec7f0666e89f22c/modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts) | `3d7d19b1de537638d0b1f9918c27c3712e2f534d` | same blob |
 | WP13 | [test/product/wp13/sensitivity-fixture.ts](https://github.com/gustavomhss/Orchestra-SF/blob/27375325788fa571d39137728ec7f0666e89f22c/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts) | `b86eae347ac509e5e10bd859a6d3e8682916b36b` | absent in seed tree |
+| WP02 | [product/dashboard/scope.ts](https://github.com/gustavomhss/Orchestra-SF/blob/38d340a8857b96904f7246320091c14c051f1929/modules/sucafina/Sucafinav1/product/dashboard/scope.ts) | `f53d0509b6f727947ec9b00888bce9dae1420094` | different blob; confirmed by root via GitHub MCP |
 
 Seed blob hashes and the complete metadata are in `external-dependencies.json`; the independently retrieved metadata is also retained in `pinned-primary-files.json` and `pinned-preserved-files.json`.
 
@@ -100,7 +101,7 @@ Owner action: WP10 runs UI/native/MCP against the same handler and source bindin
 
 Status: **OWNER_DELTA_AVAILABLE_NOT_INTEGRATED**. Kind: `missing-origin-record`.
 
-WP02 current dashboard/port.ts projects undated milestones as absent and preserves status; seed logic discards an item without a string date. A WP05 renderer can list injected undated items but cannot recover a source item discarded upstream.
+WP02 current dashboard/scope.ts and dashboard/port.ts together retain the undated record/current status and project its absent date; seed scope and port both discard an item without a string date. A WP05 renderer can list injected undated items but cannot recover a source item discarded upstream.
 
 Direct criterion dependencies: `WP05.T04.CMP.01`, `WP05.T04.CHK.03`.
 
@@ -108,7 +109,7 @@ Related criteria whose local invariant may still be provable: `WP05.T04.DOD.01`,
 
 Hard dependency applies to the real-producer undated witness, not to the renderer invariant itself. Do not mark the no-artificial-date invariant failed solely because upstream omits the record.
 
-Owner action: Integrate the WP02 producer delta and run actual planned/completed/undated producer-to-renderer evidence.
+Owner action: Integrate both WP02 scope.ts and port.ts producer deltas and run actual planned/completed/undated producer-to-renderer evidence.
 
 ## Initial acceptance state
 
@@ -164,3 +165,7 @@ The two opaque artifact refs must open the same stored artifact with the exact p
 
 `cold-review-01.md` records R1 and the independently re-read correction: ProductContext is preserved, visualPeriod is carried separately and validated as a subset, and prepared consumer-dashboard/consumer tests join the brushed renderer selection to the real Dashboard C17 source-access reader. Review status is CORRECTED_STATIC_AWAITING_CI. No criterion is accepted from that static reread, and the scoped BI01 integration harness is not the installed full host or native runtime.
 
+
+## Observed CI closure for R1
+
+R1 is verified at the BI01 domain/store/browser harness level in [S2 run 43519544728](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43519544728): consumer-dashboard.test.ts passes after obtaining the selection from the real renderer, preserving the authorized annual context and monthly visualPeriod, and resolving the original C17 Dashboard page with a fresh UI admission. This supersedes the initial static-pending review status. The installed host, native/MCP parity and eight granular destinations remain unproved. The undated producer assertion remains failed and unchanged.

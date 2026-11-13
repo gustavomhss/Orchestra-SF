@@ -131,17 +131,17 @@
       "job_id": 132205226949,
       "job_name": "test (ubuntu-24.04)",
       "conclusion": "failure",
-      "path": "/workspace/scratch/b9370847f7d4/ci-evidence/test1-132205226949.log",
       "bytes": 110253,
-      "sha256": "94beaf80839adc43b272f125d7b1f4a35cb5b6de5ea038d0f667624ac655a9be"
+      "sha256": "94beaf80839adc43b272f125d7b1f4a35cb5b6de5ea038d0f667624ac655a9be",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43518126352/job/132205226949"
     },
     {
       "job_id": 132207006518,
       "job_name": "cleanup",
       "conclusion": "success",
-      "path": "/workspace/scratch/b9370847f7d4/ci-evidence/test1-132207006518.log",
       "bytes": 2312,
-      "sha256": "a7668b4b5cd6cb1ab680c80d9c05de16816caa73041b91c2a5005ae5fc6904ed"
+      "sha256": "a7668b4b5cd6cb1ab680c80d9c05de16816caa73041b91c2a5005ae5fc6904ed",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43518126352/job/132207006518"
     }
   ],
   "failures": [
@@ -1113,5 +1113,6 @@
       "duration_ms": 753.09,
       "log_line": 1387
     }
-  ]
+  ],
+  "scope_note": "Executed tests are evidence only for their explicit component or domain/store harness scope; no installed native/MCP acceptance is inferred."
 }
