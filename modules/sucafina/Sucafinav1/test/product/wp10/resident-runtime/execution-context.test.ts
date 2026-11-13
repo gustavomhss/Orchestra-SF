@@ -53,6 +53,7 @@ describe("SF native execution registry", () => {
     expect(competing.status).toBe("ok")
     if (lease.status !== "ok" || competing.status !== "ok") return
     expect(registry.requestFor(lease.value)).toBeUndefined()
+    expect(registry.operationIdentity?.(lease.value)).toBeUndefined()
     expect(registry.receiptFor(lease.value, "sf_forecast_compare", "e".repeat(64))).toBeUndefined()
     expect(registry.consume({ ...lease.value, binding: { ...bound.value } }, "sf_forecast_compare", "e".repeat(64))).toBe(false)
     expect(registry.consume(lease.value, "sf_forecast_compare", "f".repeat(64))).toBe(false)
@@ -65,6 +66,16 @@ describe("SF native execution registry", () => {
     expect(first?.callId).toBe("call-1")
     expect(second?.callId).toBe("call-1")
     expect(second?.resultDigest).toBe("f".repeat(64))
+    const identity = registry.operationIdentity?.(lease.value)
+    expect(identity).toMatch(/^[a-f0-9]{64}$/)
+    const otherMessage = await registry.lease({ ...native, assistantMessageID: SessionMessage.ID.make("msg_other") }, "sf_forecast_compare", "e".repeat(64))
+    expect(otherMessage.status).toBe("ok")
+    if (otherMessage.status === "ok") {
+      expect(registry.consume(otherMessage.value, "sf_forecast_compare", "e".repeat(64))).toBe(true)
+      expect(registry.operationIdentity?.(otherMessage.value)).not.toBe(identity)
+      registry.finish(otherMessage.value)
+      expect(registry.operationIdentity?.(otherMessage.value)).toBeUndefined()
+    }
     expect(registry.consume(lease.value, "sf_forecast_compare", "e".repeat(64))).toBe(false)
     expect((await registry.lease(native, "sf_forecast_compare", "e".repeat(64))).status).toBe("denied")
     // The canonical route table lists one witness per operation, not every valid grant.

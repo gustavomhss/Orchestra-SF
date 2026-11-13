@@ -97,9 +97,10 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     recall: (request, call) => evidence.current ? evidence.current.recall(request, call) : Promise.reject(new Error("SF_ATLAS_UNAVAILABLE")),
     emitFromLedger: (ref, call) => evidence.current ? evidence.current.emitFromLedger(ref, call) : Promise.resolve({ status: "unavailable", sourceEventId: ref.kind === "case-event" ? ref.target.eventId : "", scanner: { name: "", version: "", status: "unavailable" }, reason: "atlas-unavailable" }),
   }
+  const operationIdentity = (call: TrustedDomainContext) => call.kind === "ui" ? input.authority.ui.operationIdentity(call) : input.authority.native.operationIdentity?.(call)
   const authorizeCase = async (value: DecisionCase, call: TrustedDomainContext) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call)
   const cases = createDecisionCasePort({ state: input.authority.state, host, creationTarget: input.authority.creationTarget,
-    operationIdentity: (call) => call.kind === "ui" ? input.authority.ui.operationIdentity(call) : undefined,
+    operationIdentity,
     authorizeCase,
     evidence: context, createId: randomUUID, now: () => new Date().toISOString() })
   type CaseRef = { id: string; incarnation: string; version: number }
@@ -260,7 +261,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     return { status: "ok" as const, value: { forecastComparison: result.value, selectedPeriod: wanted.period, currency: wanted.currency, sourceRefs: refs, registeredReasons: [] } }
     })
   } }
-  return { dashboard, procurement, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, results, scenarioLookup, sourcingEvidence, resolveCase, withCase, readSourceFences, lockedSourceFences, descriptors, procurementSelections, forecastInputs, initializeAtlas,
+  return { dashboard, procurement, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, results, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, descriptors, procurementSelections, forecastInputs, initializeAtlas,
     remainingOperations: () => freeze.operations.map((entry) => entry.operation).filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation)),
     dispose: () => { periods.clear(); evidence.current = undefined; descriptors.splice(baseCount) } }
 }
