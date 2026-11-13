@@ -133,7 +133,7 @@ test("real request commands traverse every open procurement stage without histor
     const observe = async (expected: string) => {
       const view = await fixture.read("BI05")
       expect(view.projection.values.map((value) => [value.id, value.value])).toEqual([["stock:" + expected, 1]])
-      expect(view.presentation.series.map((series) => series.role)).toEqual(["stock"])
+      expect(view.presentation.series).toEqual([expect.objectContaining({ role: "stock" })])
       expect(view.presentation.limitations.join(" ")).toContain("não representa coorte ou conversão")
       expect(view.projection.values[0]?.sourceRefs.map((reference) => reference.kind === "record" ? reference.target.recordId : undefined)).toEqual([id])
       expect(view.projection.values.some((value) => /conversion|cohort|rate/.test(value.id))).toBe(false)

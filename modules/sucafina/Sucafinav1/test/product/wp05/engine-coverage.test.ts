@@ -236,7 +236,7 @@ test("source-specific revocation with a valid UI session withholds persisted BI 
     expect(assessed.assessment.entries).toEqual([])
     expect(assessed.assessment.issues).toEqual(["evidence-unavailable"])
     expect(assessed.assessment.evaluatedSourceRefs.some((ref) => ref.refId === selected.refId)).toBe(false)
-    const denied = { status: "denied", reason: "result-access-unavailable" }
+    const denied = { status: "denied", reason: "result-access-unavailable" } as const
     expect(await fixture.results.read({ kind: "scenario", resultRef: fixture.selectedRef }, fixture.context)).toEqual(denied)
     expect(await fixture.results.readHistoricalScenario({ resultRef: fixture.selectedRef }, fixture.context)).toEqual(denied)
     expect(await fixture.results.read({ kind: "comparison", resultRef: fixture.comparisonRef }, fixture.context)).toEqual(denied)
