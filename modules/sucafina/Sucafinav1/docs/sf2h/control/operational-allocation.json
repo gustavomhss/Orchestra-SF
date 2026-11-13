@@ -1,0 +1,1732 @@
+{
+  "id": "sf2h-global8-v1",
+  "source_plan_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "canonical_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "scope": {
+    "work_packages": 15,
+    "tasks": 74,
+    "actors": 23,
+    "criteria": 1610,
+    "handoffs": 19,
+    "skills": 18,
+    "operations": 39
+  },
+  "preset_N4_admitted": false,
+  "reason": "Five independent sessions exist, but independent four-slot pools and aggregate20 provider concurrency are not proven. Do not weaken N4 validator. Use separately validated global resource regime.",
+  "capacity": {
+    "host_tool_collaboration_limit": 21,
+    "operational_global_active_limit_including_coordinators": 8,
+    "coordinator_reserved_slots": [],
+    "floating_active_slots": 7,
+    "native_sessions_scope": "independent task lifecycle; no inferred independent provider pool",
+    "RAM_bytes": 17179869184,
+    "cpu_count": 12,
+    "provider_concurrency": "4 Terra independent tasks overlapped and ACKed; 8 active task instances require own ACK before capacity admission",
+    "fixed_reserved_slots": [
+      "S0"
+    ],
+    "shared_ready_slots": 7,
+    "slot_rule": "All logical coordinators remain accountable; quiescent observed sessions hold no active execution claim. S0 lends their physical slot only after verified checkpoint/idle, resumes them only with a free slot, and preserves writing leases/fences. Global active work cap remains8; no N4 admission."
+  },
+  "actors": [
+    {
+      "actor_id": "S0",
+      "primary_tasks": [
+        "WP00.T01",
+        "WP00.T02",
+        "WP10.T01",
+        "WP10.T05"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "pack": "execution/actors/S0.json",
+      "pack_sha256": "c963114c688a112aad5dc0e45e9a3bad2bd7c652bc82b476b7f47fe7c2f8ff2b",
+      "write_boundaries": [
+        {
+          "actor": "S0",
+          "logical_owner": "WP10",
+          "branch": "sf2-integrate",
+          "paths_rule": "Arquivos existentes da WP10 e product/integration/ e compositionroots; exclui todos os paths delegados abaixo. Único writer da ref integradora. Integra blobs/commits recebidos dos autores, sem substituição de arquivo antigo. Controle transitório pertence apenas a sf2-control. Em D, somente os paths completos de delivery receipts previamente alocados são admitidos dentro de control; nunca o prefixo inteiro."
+        },
+        {
+          "actor": "S0",
+          "logical_owner": "WP10",
+          "task": "WP10.T01/WP10.T04/WP10.T05",
+          "branch": "sf2-control",
+          "new_prefixes": [
+            "modules/sucafina/Sucafinav1/docs/sf2h/control/"
+          ],
+          "paths_rule": "Somente roster, leases, fila, índices operacionais e alocações exatas de delivery. Nenhum produto, harness ou workflow executável. Branch nunca mergeada nem usada como base de snapshot CI.",
+          "window": [
+            0,
+            120
+          ],
+          "notes": "Mesmo S0 e mesmas reservas; não cria slot. Produto C e entrega D ficam em sf2-integrate; control transitório não altera C."
+        }
+      ],
+      "skill_leases": [],
+      "slot_class": "coordinator",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": false
+    },
+    {
+      "actor_id": "S0-A",
+      "primary_tasks": [
+        "WP00.T03",
+        "WP10.T07"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "pack": "execution/actors/S0-A.json",
+      "pack_sha256": "9eba95a91797a0c57934ee5be337dca38d278cc48296014fb9454f17cd4f2f37",
+      "write_boundaries": [
+        {
+          "actor": "S0-A",
+          "logical_owner": "WP10",
+          "task": "WP10.T07",
+          "branch": "sf2-atlas",
+          "existing_files": [
+            "modules/atlas/boundary/package.json",
+            "modules/atlas/boundary/script/build.ts",
+            "modules/atlas/packages/adapter-io/src/native-bound.ts",
+            "modules/atlas/boundary/src/generated/native-memory.js",
+            "modules/atlas/boundary/src/generated/native-memory.d.ts"
+          ],
+          "new_files": [
+            "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+            "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+            "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+            "modules/atlas/boundary/src/business-memory-entry.ts",
+            "modules/atlas/boundary/src/generated/business-memory-ports.js",
+            "modules/atlas/boundary/src/generated/business-memory-ports.d.ts",
+            "modules/atlas/boundary/test/business-memory-ports.test.ts",
+            "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+            "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts"
+          ],
+          "new_prefixes": [
+            "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/T07/"
+          ],
+          "window": [
+            10,
+            118
+          ]
+        },
+        {
+          "actor": "S0-A",
+          "logical_owner": "WP00",
+          "task": "WP00.T03",
+          "branch": "sf2-fixtures",
+          "new_prefixes": [
+            "modules/sucafina/Sucafinav1/test/product/wp00/fixtures/",
+            "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP00/T03/"
+          ],
+          "window": [
+            0,
+            10
+          ],
+          "notes": "Somente fixtures, oráculos e recibos; os contratos product/contracts continuam exclusivos de S0."
+        }
+      ],
+      "skill_leases": [],
+      "slot_class": "global-floating",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": false
+    },
+    {
+      "actor_id": "S0-B",
+      "primary_tasks": [
+        "WP10.T06"
+      ],
+      "support_tasks": [
+        "WP00.T04"
+      ],
+      "correction_wps": [],
+      "pack": "execution/actors/S0-B.json",
+      "pack_sha256": "c8889afba65defa16bf86f2aa89241eeaa5ad252bc280f6b31b0350a4765a770",
+      "write_boundaries": [
+        {
+          "actor": "S0-B",
+          "logical_owner": "WP10",
+          "task": "WP10.T06",
+          "branch": "sf2-runtime",
+          "new_files": [
+            "modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts",
+            "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+            "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+            "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+            "apps/cli/src/sucafina-product/contribution.ts"
+          ],
+          "new_prefixes": [
+            "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/T06/"
+          ],
+          "window": [
+            10,
+            118
+          ]
+        },
+        {
+          "actor": "S0-B",
+          "logical_owner": "WP00",
+          "task": "WP00.T04",
+          "branch": "sf2-native-preflight",
+          "new_prefixes": [
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP00/native-preflight/"
+          ],
+          "window": [
+            0,
+            10
+          ],
+          "notes": "Preflight e evidência de serviços; nenhuma alteração de contas, credenciais, host ou deploy."
+        }
+      ],
+      "skill_leases": [],
+      "slot_class": "global-floating",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": false
+    },
+    {
+      "actor_id": "S0-C",
+      "primary_tasks": [
+        "WP10.T02",
+        "WP10.T04",
+        "WP14.T03",
+        "WP14.T04"
+      ],
+      "support_tasks": [],
+      "correction_wps": [
+        "WP14"
+      ],
+      "pack": "execution/actors/S0-C.json",
+      "pack_sha256": "73aefa0871ef12b3929249d82d52999313d91fb8c9f90beed39fa6d4af69ec36",
+      "write_boundaries": [
+        {
+          "actor": "S0-C",
+          "logical_owner": "WP10",
+          "task": "WP10.T02/WP10.T04",
+          "branch": "sf2-harness",
+          "new_files": [
+            "packages/app-shell/e2e/sucafina/operations.spec.ts",
+            "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+            "packages/app-shell/e2e/sucafina/reports.spec.ts"
+          ],
+          "new_prefixes": [
+            "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/ci/"
+          ],
+          "active_windows": [
+            [
+              0,
+              40
+            ],
+            [
+              75,
+              118
+            ]
+          ],
+          "notes": "Depois 40, S2 escreve novos receipts de CI em subdiretório próprio; S0-C não edita harness 43-75, quando implementa WP14."
+        },
+        {
+          "actor": "S4",
+          "logical_owner": "WP14",
+          "branch": "sf2-memory",
+          "new_prefixes": [
+            "modules/sucafina/Sucafinav1/product/decision-memory/",
+            "modules/sucafina/Sucafinav1/test/product/wp14/",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/"
+          ],
+          "window": [
+            10,
+            43
+          ],
+          "transfer_at": 43,
+          "transfer_to": "S0-C",
+          "notes": "Publicar head e parar escrita antes aceite S0-C. S4 continua somente leitura após 43."
+        },
+        {
+          "actor": "S0-C",
+          "logical_owner": "WP14",
+          "branch": "sf2-memory",
+          "new_prefixes": [
+            "modules/sucafina/Sucafinav1/product/decision-memory/",
+            "modules/sucafina/Sucafinav1/test/product/wp14/",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/"
+          ],
+          "window": [
+            43,
+            118
+          ],
+          "precondition": "Lease S4 fechado e aceito no mesmo SHA; não tomar posse se S4 ainda estiver escrevendo."
+        }
+      ],
+      "skill_leases": [],
+      "slot_class": "global-floating",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": false
+    },
+    {
+      "actor_id": "S1",
+      "primary_tasks": [],
+      "support_tasks": [
+        "WP12.T01",
+        "WP12.T02"
+      ],
+      "correction_wps": [
+        "WP02"
+      ],
+      "pack": "execution/actors/S1.json",
+      "pack_sha256": "9c662cef3ded97a9f1c797c43114f10fd9124d1cd2e0ada54ea6d5bfb13b10b7",
+      "write_boundaries": [
+        {
+          "actor": "S1-B",
+          "logical_owner": "WP02",
+          "paths_rule": "Todos os arquivos/prefixos exclusivos do WP, sem mudanças no escopo lógico.",
+          "window": [
+            0,
+            72
+          ],
+          "transfer_at": 72,
+          "transfer_to": "S1",
+          "notes": "Encerrar worker após head/lease; reviewer novo usa o slot liberado."
+        },
+        {
+          "actor": "S1",
+          "logical_owner": "WP02",
+          "paths_rule": "Correções nos mesmos arquivos/prefixos do WP após lease confirmado.",
+          "window": [
+            72,
+            118
+          ],
+          "notes": "A coordenadora assume autoria, mas não assina revisão independente; retorno do antigo builder proibido enquanto ocupados os 4 slots."
+        }
+      ],
+      "skill_leases": [
+        {
+          "skill_id": "sf-explicar-forecast",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-explicar-forecast/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T01",
+          "writer": "S1",
+          "writer_session": "S1",
+          "branch": "sf2-skills-finance",
+          "active_windows": [
+            [
+              10,
+              13
+            ]
+          ],
+          "exclusive_lease_until": 29,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": 13
+        },
+        {
+          "skill_id": "sf-comparar-cenarios",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-cenarios/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S1",
+          "writer_session": "S1",
+          "branch": "sf2-skills-finance",
+          "active_windows": [
+            [
+              16,
+              29
+            ]
+          ],
+          "exclusive_lease_until": 29,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-avaliar-sensibilidade",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-avaliar-sensibilidade/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S1",
+          "writer_session": "S1",
+          "branch": "sf2-skills-finance",
+          "active_windows": [
+            [
+              16,
+              29
+            ]
+          ],
+          "exclusive_lease_until": 29,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-revisar-dependencias",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-dependencias/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S1",
+          "writer_session": "S1",
+          "branch": "sf2-skills-finance",
+          "active_windows": [
+            [
+              16,
+              29
+            ]
+          ],
+          "exclusive_lease_until": 29,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-compor-portfolio",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-compor-portfolio/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S1",
+          "writer_session": "S1",
+          "branch": "sf2-skills-finance",
+          "active_windows": [
+            [
+              16,
+              29
+            ]
+          ],
+          "exclusive_lease_until": 29,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-reavaliar-compromissos",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-reavaliar-compromissos/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S1",
+          "writer_session": "S1",
+          "branch": "sf2-skills-finance",
+          "active_windows": [
+            [
+              16,
+              29
+            ]
+          ],
+          "exclusive_lease_until": 29,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        }
+      ],
+      "slot_class": "coordinator",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": false
+    },
+    {
+      "actor_id": "S2",
+      "primary_tasks": [
+        "WP06.T05"
+      ],
+      "support_tasks": [
+        "WP10.T04"
+      ],
+      "correction_wps": [
+        "WP05"
+      ],
+      "pack": "execution/actors/S2.json",
+      "pack_sha256": "1c9f58d1c0b61fa2d64a800d82c78b1d21be8e0c4365014c49d1e65d0cbe7623",
+      "write_boundaries": [
+        {
+          "actor": "S2",
+          "logical_owner": "WP06",
+          "task": "WP06.T05",
+          "branch": "sf2-documents",
+          "new_prefixes": [
+            "modules/sucafina/Sucafinav1/product/documents/",
+            "modules/sucafina/Sucafinav1/test/product/wp06/documents/",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/T05/"
+          ],
+          "window": [
+            13,
+            53
+          ],
+          "active_windows": [
+            [
+              13,
+              22
+            ],
+            [
+              24,
+              35
+            ]
+          ],
+          "transfer_at": 53,
+          "transfer_to": "S2-C",
+          "transfer_branch": "sf2-imports",
+          "notes": "S2-C recebe a árvore e permite consumo de T05 por T07/WP12; antes de 53, S2-C escreve somente imports e testes de imports."
+        },
+        {
+          "actor": "S2",
+          "logical_owner": "WP10",
+          "task": "WP10.T04",
+          "branch": "sf2-ci-receipts",
+          "new_prefixes": [
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/ci-s2/"
+          ],
+          "window": [
+            40,
+            75
+          ],
+          "notes": "Somente evidências e inventário; não altera workflows, validators, harness ou código de outro autor."
+        },
+        {
+          "actor": "S2-B",
+          "logical_owner": "WP05",
+          "paths_rule": "Todos os arquivos/prefixos exclusivos do WP, sem mudanças no escopo lógico.",
+          "window": [
+            0,
+            72
+          ],
+          "transfer_at": 72,
+          "transfer_to": "S2",
+          "notes": "Encerrar worker após head/lease; reviewer novo usa o slot liberado."
+        },
+        {
+          "actor": "S2",
+          "logical_owner": "WP05",
+          "paths_rule": "Correções nos mesmos arquivos/prefixos do WP após lease confirmado.",
+          "window": [
+            72,
+            118
+          ],
+          "notes": "A coordenadora assume autoria, mas não assina revisão independente; retorno do antigo builder proibido enquanto ocupados os 4 slots."
+        }
+      ],
+      "skill_leases": [],
+      "slot_class": "coordinator",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": false
+    },
+    {
+      "actor_id": "S3",
+      "primary_tasks": [
+        "WP00.T04"
+      ],
+      "support_tasks": [
+        "WP12.T02"
+      ],
+      "correction_wps": [
+        "WP07"
+      ],
+      "pack": "execution/actors/S3.json",
+      "pack_sha256": "bef39aaeafcb1d165c116116c939739d41dac7c29b07194d24038e5e551b4182",
+      "write_boundaries": [
+        {
+          "actor": "S3-A",
+          "logical_owner": "WP07",
+          "paths_rule": "Todos os arquivos/prefixos exclusivos do WP, sem mudanças no escopo lógico.",
+          "window": [
+            0,
+            75
+          ],
+          "transfer_at": 75,
+          "transfer_to": "S3",
+          "notes": "Encerrar worker após head/lease; reviewer novo usa o slot liberado."
+        },
+        {
+          "actor": "S3",
+          "logical_owner": "WP07",
+          "paths_rule": "Correções nos mesmos arquivos/prefixos do WP após lease confirmado.",
+          "window": [
+            75,
+            118
+          ],
+          "notes": "A coordenadora assume autoria, mas não assina revisão independente; retorno do antigo builder proibido enquanto ocupados os 4 slots."
+        },
+        {
+          "actor": "S3",
+          "logical_owner": "WP00",
+          "task": "WP00.T04",
+          "branch": "sf2-native-proof",
+          "new_prefixes": [
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP00/gnative/"
+          ],
+          "window": [
+            10,
+            20
+          ],
+          "notes": "Qualificação e recibo do gate nativo; não escreve os componentes exercidos."
+        }
+      ],
+      "skill_leases": [
+        {
+          "skill_id": "sf-enquadrar-decisao",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-enquadrar-decisao/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S3",
+          "writer_session": "S3",
+          "branch": "sf2-skills-maestro",
+          "active_windows": [
+            [
+              23,
+              38
+            ]
+          ],
+          "exclusive_lease_until": 38,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-preparar-revisao-executiva",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S3",
+          "writer_session": "S3",
+          "branch": "sf2-skills-maestro",
+          "active_windows": [
+            [
+              23,
+              38
+            ]
+          ],
+          "exclusive_lease_until": 38,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-coordenar-perguntas",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-coordenar-perguntas/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S3",
+          "writer_session": "S3",
+          "branch": "sf2-skills-maestro",
+          "active_windows": [
+            [
+              23,
+              38
+            ]
+          ],
+          "exclusive_lease_until": 38,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-contestar-decisao",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-contestar-decisao/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S3",
+          "writer_session": "S3",
+          "branch": "sf2-skills-maestro",
+          "active_windows": [
+            [
+              23,
+              38
+            ]
+          ],
+          "exclusive_lease_until": 38,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-revisar-evidencias",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-evidencias/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S3",
+          "writer_session": "S3",
+          "branch": "sf2-skills-maestro",
+          "active_windows": [
+            [
+              23,
+              38
+            ]
+          ],
+          "exclusive_lease_until": 38,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        }
+      ],
+      "slot_class": "coordinator",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": false
+    },
+    {
+      "actor_id": "S4",
+      "primary_tasks": [
+        "WP14.T01",
+        "WP14.T02",
+        "WP14.T05"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "pack": "execution/actors/S4.json",
+      "pack_sha256": "31b644457c14098f1ecb0662868d5d4f1b64d116082bef0930625ee985607e28",
+      "write_boundaries": [
+        {
+          "actor": "S4",
+          "logical_owner": "WP14",
+          "branch": "sf2-memory",
+          "new_prefixes": [
+            "modules/sucafina/Sucafinav1/product/decision-memory/",
+            "modules/sucafina/Sucafinav1/test/product/wp14/",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/"
+          ],
+          "window": [
+            10,
+            43
+          ],
+          "transfer_at": 43,
+          "transfer_to": "S0-C",
+          "notes": "Publicar head e parar escrita antes aceite S0-C. S4 continua somente leitura após 43."
+        }
+      ],
+      "skill_leases": [],
+      "slot_class": "coordinator",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": false
+    },
+    {
+      "actor_id": "S1-A",
+      "primary_tasks": [
+        "WP01.T01",
+        "WP01.T02",
+        "WP01.T03",
+        "WP01.T04",
+        "WP01.T05"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "pack": "execution/actors/S1-A.json",
+      "pack_sha256": "f69157f616377a71428be6702c6fd4d960acdf1f8f617940cc3e72ae32570eaa",
+      "write_boundaries": [],
+      "skill_leases": [],
+      "slot_class": "global-floating",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": false
+    },
+    {
+      "actor_id": "S1-B",
+      "primary_tasks": [
+        "WP02.T01",
+        "WP02.T02",
+        "WP02.T03",
+        "WP02.T04"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "pack": "execution/actors/S1-B.json",
+      "pack_sha256": "0862acbc55773218e5be426cda7822d40a8574def8cf6e96007bbf2ca4b0bd95",
+      "write_boundaries": [
+        {
+          "actor": "S1-B",
+          "logical_owner": "WP02",
+          "paths_rule": "Todos os arquivos/prefixos exclusivos do WP, sem mudanças no escopo lógico.",
+          "window": [
+            0,
+            72
+          ],
+          "transfer_at": 72,
+          "transfer_to": "S1",
+          "notes": "Encerrar worker após head/lease; reviewer novo usa o slot liberado."
+        }
+      ],
+      "skill_leases": [],
+      "slot_class": "global-floating",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": false
+    },
+    {
+      "actor_id": "S1-C",
+      "primary_tasks": [
+        "WP03.T01",
+        "WP03.T02",
+        "WP03.T03",
+        "WP03.T04",
+        "WP03.T05"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "pack": "execution/actors/S1-C.json",
+      "pack_sha256": "80cb4de030f2121a671f7d4ae37fd6f614330951772a90052347a0f8cbd272b9",
+      "write_boundaries": [],
+      "skill_leases": [],
+      "slot_class": "global-floating",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": false
+    },
+    {
+      "actor_id": "S2-A",
+      "primary_tasks": [
+        "WP04.T01",
+        "WP04.T02",
+        "WP04.T03",
+        "WP04.T04",
+        "WP04.T05"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "pack": "execution/actors/S2-A.json",
+      "pack_sha256": "912d62bbffb99a70ca880c255036c31bad9ad694288f7c6c4267d05b0c49fed8",
+      "write_boundaries": [],
+      "skill_leases": [],
+      "slot_class": "global-floating",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": false
+    },
+    {
+      "actor_id": "S2-B",
+      "primary_tasks": [
+        "WP05.T01",
+        "WP05.T02",
+        "WP05.T03",
+        "WP05.T04",
+        "WP05.T05"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "pack": "execution/actors/S2-B.json",
+      "pack_sha256": "351680f3146cb7d4f23fba82ebab866f948b5bf0e00b0068a5bc996d68c35e11",
+      "write_boundaries": [
+        {
+          "actor": "S2-B",
+          "logical_owner": "WP05",
+          "paths_rule": "Todos os arquivos/prefixos exclusivos do WP, sem mudanças no escopo lógico.",
+          "window": [
+            0,
+            72
+          ],
+          "transfer_at": 72,
+          "transfer_to": "S2",
+          "notes": "Encerrar worker após head/lease; reviewer novo usa o slot liberado."
+        }
+      ],
+      "skill_leases": [],
+      "slot_class": "global-floating",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": false
+    },
+    {
+      "actor_id": "S2-C",
+      "primary_tasks": [
+        "WP06.T01",
+        "WP06.T02",
+        "WP06.T03",
+        "WP06.T04"
+      ],
+      "support_tasks": [
+        "WP06.T05"
+      ],
+      "correction_wps": [],
+      "pack": "execution/actors/S2-C.json",
+      "pack_sha256": "7fff8d0e4f107407280f74fcd12ef53804d237f8bd7114f356dde249cac00a1b",
+      "write_boundaries": [
+        {
+          "actor": "S2",
+          "logical_owner": "WP06",
+          "task": "WP06.T05",
+          "branch": "sf2-documents",
+          "new_prefixes": [
+            "modules/sucafina/Sucafinav1/product/documents/",
+            "modules/sucafina/Sucafinav1/test/product/wp06/documents/",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/T05/"
+          ],
+          "window": [
+            13,
+            53
+          ],
+          "active_windows": [
+            [
+              13,
+              22
+            ],
+            [
+              24,
+              35
+            ]
+          ],
+          "transfer_at": 53,
+          "transfer_to": "S2-C",
+          "transfer_branch": "sf2-imports",
+          "notes": "S2-C recebe a árvore e permite consumo de T05 por T07/WP12; antes de 53, S2-C escreve somente imports e testes de imports."
+        },
+        {
+          "actor": "S2-C",
+          "logical_owner": "WP06",
+          "branch": "sf2-imports",
+          "paths_rule": "Arquivos existentes WP06, product/imports/, testes/receipts de imports; product/documents e testes documentais somente após lease 53."
+        }
+      ],
+      "skill_leases": [],
+      "slot_class": "global-floating",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": false
+    },
+    {
+      "actor_id": "S3-A",
+      "primary_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP07.T03",
+        "WP07.T04"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "pack": "execution/actors/S3-A.json",
+      "pack_sha256": "40c0c362d277cdf840005fef2c09135a43b082e177460b0a41e69e959ee8bb56",
+      "write_boundaries": [
+        {
+          "actor": "S3-A",
+          "logical_owner": "WP07",
+          "paths_rule": "Todos os arquivos/prefixos exclusivos do WP, sem mudanças no escopo lógico.",
+          "window": [
+            0,
+            75
+          ],
+          "transfer_at": 75,
+          "transfer_to": "S3",
+          "notes": "Encerrar worker após head/lease; reviewer novo usa o slot liberado."
+        }
+      ],
+      "skill_leases": [],
+      "slot_class": "global-floating",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": false
+    },
+    {
+      "actor_id": "S3-B",
+      "primary_tasks": [
+        "WP08.T01",
+        "WP08.T02",
+        "WP08.T03",
+        "WP08.T04",
+        "WP08.T05",
+        "WP08.T06"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "pack": "execution/actors/S3-B.json",
+      "pack_sha256": "2e988a40b09985cf258d244f0a62e0472c4ce35ff623d95843e79aab7f01601e",
+      "write_boundaries": [],
+      "skill_leases": [],
+      "slot_class": "global-floating",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": false
+    },
+    {
+      "actor_id": "S3-C",
+      "primary_tasks": [
+        "WP09.T01",
+        "WP09.T07",
+        "WP09.T02",
+        "WP09.T03",
+        "WP09.T04",
+        "WP09.T05",
+        "WP09.T06"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "pack": "execution/actors/S3-C.json",
+      "pack_sha256": "def4eb44e04764588eb996ceaf7fb22f95e8bd9f63777afd85f44a77a38e2bd9",
+      "write_boundaries": [],
+      "skill_leases": [],
+      "slot_class": "global-floating",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": false
+    },
+    {
+      "actor_id": "S4-A",
+      "primary_tasks": [
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP11.T04"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "pack": "execution/actors/S4-A.json",
+      "pack_sha256": "f5ecbabbfba0a4c997341f0c6a7b8d58acdc1f056768dd078ca1fc277aed2c99",
+      "write_boundaries": [],
+      "skill_leases": [],
+      "slot_class": "global-floating",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": false
+    },
+    {
+      "actor_id": "S4-B",
+      "primary_tasks": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP12.T04"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "pack": "execution/actors/S4-B.json",
+      "pack_sha256": "fc1e51bf83fa30fd2daff082f81da3a1f81c600b4985a19b883ea2b0140e2744",
+      "write_boundaries": [
+        {
+          "actor": "S4-B",
+          "logical_owner": "WP12",
+          "branch": "sf2-ai",
+          "new_prefixes": [
+            "modules/sucafina/Sucafinav1/product/ai/profiles/",
+            "modules/sucafina/Sucafinav1/product/ai/manifests/"
+          ],
+          "paths_rule": "DemaisarquivosAI exclusivos, exceto 18 leases exatos enquanto ativos. Manifest final é somente S4-B; sources finance/portfolio/maestro/reviewer são consumidas por hash, não copiadasreescritas."
+        }
+      ],
+      "skill_leases": [
+        {
+          "skill_id": "sf-explicar-forecast",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-explicar-forecast/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T01",
+          "writer": "S1",
+          "writer_session": "S1",
+          "branch": "sf2-skills-finance",
+          "active_windows": [
+            [
+              10,
+              13
+            ]
+          ],
+          "exclusive_lease_until": 29,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": 13
+        },
+        {
+          "skill_id": "sf-comparar-cenarios",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-cenarios/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S1",
+          "writer_session": "S1",
+          "branch": "sf2-skills-finance",
+          "active_windows": [
+            [
+              16,
+              29
+            ]
+          ],
+          "exclusive_lease_until": 29,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-avaliar-sensibilidade",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-avaliar-sensibilidade/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S1",
+          "writer_session": "S1",
+          "branch": "sf2-skills-finance",
+          "active_windows": [
+            [
+              16,
+              29
+            ]
+          ],
+          "exclusive_lease_until": 29,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-revisar-dependencias",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-dependencias/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S1",
+          "writer_session": "S1",
+          "branch": "sf2-skills-finance",
+          "active_windows": [
+            [
+              16,
+              29
+            ]
+          ],
+          "exclusive_lease_until": 29,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-compor-portfolio",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-compor-portfolio/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S1",
+          "writer_session": "S1",
+          "branch": "sf2-skills-finance",
+          "active_windows": [
+            [
+              16,
+              29
+            ]
+          ],
+          "exclusive_lease_until": 29,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-reavaliar-compromissos",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-reavaliar-compromissos/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S1",
+          "writer_session": "S1",
+          "branch": "sf2-skills-finance",
+          "active_windows": [
+            [
+              16,
+              29
+            ]
+          ],
+          "exclusive_lease_until": 29,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-enquadrar-decisao",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-enquadrar-decisao/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S3",
+          "writer_session": "S3",
+          "branch": "sf2-skills-maestro",
+          "active_windows": [
+            [
+              23,
+              38
+            ]
+          ],
+          "exclusive_lease_until": 38,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-preparar-revisao-executiva",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S3",
+          "writer_session": "S3",
+          "branch": "sf2-skills-maestro",
+          "active_windows": [
+            [
+              23,
+              38
+            ]
+          ],
+          "exclusive_lease_until": 38,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-coordenar-perguntas",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-coordenar-perguntas/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S3",
+          "writer_session": "S3",
+          "branch": "sf2-skills-maestro",
+          "active_windows": [
+            [
+              23,
+              38
+            ]
+          ],
+          "exclusive_lease_until": 38,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-contestar-decisao",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-contestar-decisao/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S3",
+          "writer_session": "S3",
+          "branch": "sf2-skills-maestro",
+          "active_windows": [
+            [
+              23,
+              38
+            ]
+          ],
+          "exclusive_lease_until": 38,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-revisar-evidencias",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-evidencias/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S3",
+          "writer_session": "S3",
+          "branch": "sf2-skills-maestro",
+          "active_windows": [
+            [
+              23,
+              38
+            ]
+          ],
+          "exclusive_lease_until": 38,
+          "handoff_to": "S4-B",
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-comparar-sourcing",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-sourcing/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S4-B",
+          "writer_session": "S4",
+          "branch": "sf2-ai",
+          "active_windows": [
+            [
+              25,
+              42
+            ]
+          ],
+          "exclusive_lease_until": 120,
+          "handoff_to": null,
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-revisar-condicoes-contratuais",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-condicoes-contratuais/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S4-B",
+          "writer_session": "S4",
+          "branch": "sf2-ai",
+          "active_windows": [
+            [
+              25,
+              42
+            ]
+          ],
+          "exclusive_lease_until": 120,
+          "handoff_to": null,
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-preparar-compra",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-compra/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S4-B",
+          "writer_session": "S4",
+          "branch": "sf2-ai",
+          "active_windows": [
+            [
+              25,
+              42
+            ]
+          ],
+          "exclusive_lease_until": 120,
+          "handoff_to": null,
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-extrair-evidencias",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-extrair-evidencias/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S4-B",
+          "writer_session": "S4",
+          "branch": "sf2-ai",
+          "active_windows": [
+            [
+              25,
+              42
+            ]
+          ],
+          "exclusive_lease_until": 120,
+          "handoff_to": null,
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-produzir-bi-contextual",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-produzir-bi-contextual/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S4-B",
+          "writer_session": "S4",
+          "branch": "sf2-ai",
+          "active_windows": [
+            [
+              25,
+              42
+            ]
+          ],
+          "exclusive_lease_until": 120,
+          "handoff_to": null,
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-produzir-material-reuniao",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-produzir-material-reuniao/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S4-B",
+          "writer_session": "S4",
+          "branch": "sf2-ai",
+          "active_windows": [
+            [
+              25,
+              42
+            ]
+          ],
+          "exclusive_lease_until": 120,
+          "handoff_to": null,
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        },
+        {
+          "skill_id": "sf-consultar-memoria-decisoria",
+          "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-consultar-memoria-decisoria/SKILL.md",
+          "logical_owner": "WP12",
+          "owner_task": "WP12.T02",
+          "writer": "S4-B",
+          "writer_session": "S4",
+          "branch": "sf2-ai",
+          "active_windows": [
+            [
+              25,
+              42
+            ]
+          ],
+          "exclusive_lease_until": 120,
+          "handoff_to": null,
+          "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+          "early_output_minute": null
+        }
+      ],
+      "slot_class": "global-floating",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": false
+    },
+    {
+      "actor_id": "S4-C",
+      "primary_tasks": [
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "pack": "execution/actors/S4-C.json",
+      "pack_sha256": "1594efa92a3037505f8e89d09bb5908af2205e5d2c25a2e4c48b30a50765f2ce",
+      "write_boundaries": [],
+      "skill_leases": [],
+      "slot_class": "global-floating",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": false
+    },
+    {
+      "actor_id": "S1-R1",
+      "primary_tasks": [
+        "WP10.T03"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "pack": "execution/actors/S1-R1.json",
+      "pack_sha256": "3b86aa8ce96f304d6f65af92fa20b185928e9c3220473eda25dd301065bc28c0",
+      "write_boundaries": [
+        {
+          "actor": "S1-R1",
+          "logical_owner": "WP10",
+          "task": "WP10.T03",
+          "branch": "sf2-review-ux",
+          "new_prefixes": [
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/R1/"
+          ],
+          "window": [
+            72,
+            120
+          ],
+          "notes": "Escreve somente parecer e recibos. Todo código, conteúdo de skills, manifest e teste de produto permanece somente leitura para o reviewer."
+        }
+      ],
+      "skill_leases": [],
+      "slot_class": "global-floating",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": true
+    },
+    {
+      "actor_id": "S2-R2",
+      "primary_tasks": [
+        "WP10.T03"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "pack": "execution/actors/S2-R2.json",
+      "pack_sha256": "5f80b52c27f08a63b43f3933b0a3ad69e7c28cc475de609a20228b38a56bfa8f",
+      "write_boundaries": [
+        {
+          "actor": "S2-R2",
+          "logical_owner": "WP10",
+          "task": "WP10.T03",
+          "branch": "sf2-review-integrity",
+          "new_prefixes": [
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/R2/"
+          ],
+          "window": [
+            72,
+            120
+          ],
+          "notes": "Escreve somente parecer e recibos. Todo código, conteúdo de skills, manifest e teste de produto permanece somente leitura para o reviewer."
+        }
+      ],
+      "skill_leases": [],
+      "slot_class": "global-floating",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": true
+    },
+    {
+      "actor_id": "S3-R3",
+      "primary_tasks": [
+        "WP10.T03"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "pack": "execution/actors/S3-R3.json",
+      "pack_sha256": "82c746193453a4c2b0a1d245829c2caffcdc230f8116d36a73497b2e60ecda86",
+      "write_boundaries": [
+        {
+          "actor": "S3-R3",
+          "logical_owner": "WP10",
+          "task": "WP10.T03",
+          "branch": "sf2-review-native",
+          "new_prefixes": [
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/R3/"
+          ],
+          "window": [
+            75,
+            120
+          ],
+          "notes": "Escreve somente parecer e recibos. Todo código, conteúdo de skills, manifest e teste de produto permanece somente leitura para o reviewer."
+        }
+      ],
+      "skill_leases": [],
+      "slot_class": "global-floating",
+      "resume_policy": "same independent native thread if idle/completed; interrupted state requires authorized resume; lease fenced before replacement",
+      "read_only_product": true
+    }
+  ],
+  "task_primary_actors": {
+    "WP00.T01": [
+      "S0"
+    ],
+    "WP00.T02": [
+      "S0"
+    ],
+    "WP10.T01": [
+      "S0"
+    ],
+    "WP10.T05": [
+      "S0"
+    ],
+    "WP00.T03": [
+      "S0-A"
+    ],
+    "WP10.T07": [
+      "S0-A"
+    ],
+    "WP10.T06": [
+      "S0-B"
+    ],
+    "WP10.T02": [
+      "S0-C"
+    ],
+    "WP10.T04": [
+      "S0-C"
+    ],
+    "WP14.T03": [
+      "S0-C"
+    ],
+    "WP14.T04": [
+      "S0-C"
+    ],
+    "WP06.T05": [
+      "S2"
+    ],
+    "WP00.T04": [
+      "S3"
+    ],
+    "WP14.T01": [
+      "S4"
+    ],
+    "WP14.T02": [
+      "S4"
+    ],
+    "WP14.T05": [
+      "S4"
+    ],
+    "WP01.T01": [
+      "S1-A"
+    ],
+    "WP01.T02": [
+      "S1-A"
+    ],
+    "WP01.T03": [
+      "S1-A"
+    ],
+    "WP01.T04": [
+      "S1-A"
+    ],
+    "WP01.T05": [
+      "S1-A"
+    ],
+    "WP02.T01": [
+      "S1-B"
+    ],
+    "WP02.T02": [
+      "S1-B"
+    ],
+    "WP02.T03": [
+      "S1-B"
+    ],
+    "WP02.T04": [
+      "S1-B"
+    ],
+    "WP03.T01": [
+      "S1-C"
+    ],
+    "WP03.T02": [
+      "S1-C"
+    ],
+    "WP03.T03": [
+      "S1-C"
+    ],
+    "WP03.T04": [
+      "S1-C"
+    ],
+    "WP03.T05": [
+      "S1-C"
+    ],
+    "WP04.T01": [
+      "S2-A"
+    ],
+    "WP04.T02": [
+      "S2-A"
+    ],
+    "WP04.T03": [
+      "S2-A"
+    ],
+    "WP04.T04": [
+      "S2-A"
+    ],
+    "WP04.T05": [
+      "S2-A"
+    ],
+    "WP05.T01": [
+      "S2-B"
+    ],
+    "WP05.T02": [
+      "S2-B"
+    ],
+    "WP05.T03": [
+      "S2-B"
+    ],
+    "WP05.T04": [
+      "S2-B"
+    ],
+    "WP05.T05": [
+      "S2-B"
+    ],
+    "WP06.T01": [
+      "S2-C"
+    ],
+    "WP06.T02": [
+      "S2-C"
+    ],
+    "WP06.T03": [
+      "S2-C"
+    ],
+    "WP06.T04": [
+      "S2-C"
+    ],
+    "WP07.T01": [
+      "S3-A"
+    ],
+    "WP07.T02": [
+      "S3-A"
+    ],
+    "WP07.T03": [
+      "S3-A"
+    ],
+    "WP07.T04": [
+      "S3-A"
+    ],
+    "WP08.T01": [
+      "S3-B"
+    ],
+    "WP08.T02": [
+      "S3-B"
+    ],
+    "WP08.T03": [
+      "S3-B"
+    ],
+    "WP08.T04": [
+      "S3-B"
+    ],
+    "WP08.T05": [
+      "S3-B"
+    ],
+    "WP08.T06": [
+      "S3-B"
+    ],
+    "WP09.T01": [
+      "S3-C"
+    ],
+    "WP09.T07": [
+      "S3-C"
+    ],
+    "WP09.T02": [
+      "S3-C"
+    ],
+    "WP09.T03": [
+      "S3-C"
+    ],
+    "WP09.T04": [
+      "S3-C"
+    ],
+    "WP09.T05": [
+      "S3-C"
+    ],
+    "WP09.T06": [
+      "S3-C"
+    ],
+    "WP11.T01": [
+      "S4-A"
+    ],
+    "WP11.T02": [
+      "S4-A"
+    ],
+    "WP11.T03": [
+      "S4-A"
+    ],
+    "WP11.T04": [
+      "S4-A"
+    ],
+    "WP12.T01": [
+      "S4-B"
+    ],
+    "WP12.T02": [
+      "S4-B"
+    ],
+    "WP12.T03": [
+      "S4-B"
+    ],
+    "WP12.T04": [
+      "S4-B"
+    ],
+    "WP13.T01": [
+      "S4-C"
+    ],
+    "WP13.T02": [
+      "S4-C"
+    ],
+    "WP13.T03": [
+      "S4-C"
+    ],
+    "WP13.T04": [
+      "S4-C"
+    ],
+    "WP10.T03": [
+      "S1-R1",
+      "S2-R2",
+      "S3-R3"
+    ]
+  },
+  "scheduler": {
+    "policy": "dispatch-on-ready, merge-on-green; resource-aware quiescent lease holders do not write without an active slot claim",
+    "priority": [
+      "G0/contract corrections",
+      "AI-NATIVE/NATIVE-CASE/NATIVE-PLANNER/NATIVE-RUNTIME",
+      "ATLAS-PACKAGE/PROTECTED-STORE/DOCUMENT/ATLAS-MAP",
+      "remaining producer/consumer outputs and required corrections",
+      "candidate/mandatory CI/AM01–06",
+      "independent reviews/rechecks/D envelope"
+    ],
+    "preemption": "Only after actual checkpoint/OUTPUT_READY and terminal or idle observed turn; preserve writer/lease unless explicitly transferred. Never infer silence as stopped.",
+    "integration": "S0 only; never merge sf2-control; expected head CAS and epoch fencing",
+    "CI": "one dispatcher lease; adopt existing request/run by tree/request/workflow/runtime/fixture digest; no duplicate dispatch",
+    "reviewer_transitions": [
+      {
+        "released_builder": "S1-B",
+        "reviewer": "S1-R1",
+        "correction_writer": "S1"
+      },
+      {
+        "released_builder": "S2-B",
+        "reviewer": "S2-R2",
+        "correction_writer": "S2"
+      },
+      {
+        "released_builder": "S3-A",
+        "reviewer": "S3-R3",
+        "correction_writer": "S3"
+      }
+    ],
+    "precedences": "All 74 original task dependencies, output dependencies, consumers and handoffs retained from immutable canonical; G0 releases deterministic construction independent of GNATIVE. No window<=120 claim.",
+    "ready_initial_product": [
+      "S1-C Planner",
+      "S4-A decision case",
+      "S4-B AI catalog",
+      "S0-B runtime",
+      "S0-A Atlas packaging",
+      "S2 documents",
+      "S1-A UI"
+    ]
+  },
+  "duration": {
+    "T0": "2026-11-13T04:01:10Z",
+    "ETA": "UNKNOWN until construction/CI/live proof/review measurements; max8 can exceed120, preserve scope and CONTINUING_LATE",
+    "source_windows": "retained as immutable preset hypotheses, not asserted feasible for this regime"
+  },
+  "validation": {
+    "source_N4_validator": "UNCHANGED; no claim this allocation passes the20-slot preset",
+    "separate_checks": [
+      "15 WPs",
+      "74 tasks exact primary-owner mapping",
+      "23 actors exact pack digests",
+      "17 contracts",
+      "1610 original criteria retained",
+      "18 skill leases and39 operations retained",
+      "review authorship separated",
+      "5+3=8 active slot cap",
+      "all source dependency maps retained by digest",
+      "single writer per live path claim; source actor boundaries and explicit transfers preserved"
+    ]
+  },
+  "revision": 2
+}

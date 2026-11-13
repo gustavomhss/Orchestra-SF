@@ -2,8 +2,8 @@
   "campaign": "sf2h-integral-20261112",
   "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
   "T0": "2026-11-13T04:01:10Z",
-  "revision": 2,
-  "state": "STARTING",
+  "revision": 9,
+  "state": "EXECUTING_G0_CONSUMER_ACK",
   "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
   "canonical_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
   "code_baseline": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
@@ -99,7 +99,7 @@
       "write_paths": [
         "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S0-A"
       ],
-      "state": "staging-only"
+      "state": "REVOKED_FENCED_EPOCH1"
     },
     {
       "actor": "S0-B",
@@ -107,7 +107,7 @@
       "write_paths": [
         "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S0-B"
       ],
-      "state": "staging-only"
+      "state": "REVOKED_FENCED_EPOCH1"
     },
     {
       "actor": "S0-C",
@@ -115,7 +115,7 @@
       "write_paths": [
         "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S0-C"
       ],
-      "state": "staging-only"
+      "state": "REVOKED_FENCED_EPOCH1"
     },
     {
       "actor": "S1",
@@ -123,7 +123,7 @@
       "write_paths": [
         "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S1"
       ],
-      "state": "staging-only"
+      "state": "REVOKED_FENCED_EPOCH1"
     },
     {
       "actor": "S2",
@@ -131,7 +131,7 @@
       "write_paths": [
         "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S2"
       ],
-      "state": "staging-only"
+      "state": "REVOKED_FENCED_EPOCH1"
     },
     {
       "actor": "S3",
@@ -139,7 +139,7 @@
       "write_paths": [
         "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S3"
       ],
-      "state": "staging-only"
+      "state": "REVOKED_FENCED_EPOCH1"
     },
     {
       "actor": "S4",
@@ -147,19 +147,282 @@
       "write_paths": [
         "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S4"
       ],
-      "state": "staging-only"
+      "state": "REVOKED_FENCED_EPOCH1"
+    },
+    {
+      "actor": "S1",
+      "epoch": 2,
+      "session_id": "01a1d321-948f-7841-9846-2dfee4da5ca0",
+      "write_paths": [
+        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S1-e2"
+      ],
+      "state": "CLOSED_QUIESCENT_HANDOFF"
+    },
+    {
+      "actor": "S2",
+      "epoch": 2,
+      "session_id": "01a1d321-bd1b-7be3-8c1c-86ed7e732067",
+      "write_paths": [
+        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S2-e2"
+      ],
+      "state": "STAGING_ONLY_ACKNOWLEDGED"
+    },
+    {
+      "actor": "S3",
+      "epoch": 2,
+      "session_id": "01a1d321-bf63-7fb2-8132-7eaf9e5ed86b",
+      "write_paths": [
+        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S3-e2"
+      ],
+      "state": "CLOSED_QUIESCENT_HANDOFF"
+    },
+    {
+      "actor": "S4",
+      "epoch": 2,
+      "session_id": "01a1d321-c227-7c23-a31c-6d8114724ee9",
+      "write_paths": [
+        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S4-e2"
+      ],
+      "state": "CLOSED_QUIESCENT_HANDOFF"
+    },
+    {
+      "actor": "S1-C",
+      "epoch": 1,
+      "session_id": "01a1d367-887f-7071-8485-d0b73d370522",
+      "branch": "sf2-planner",
+      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/planner",
+      "write_paths": [
+        {
+          "id": "WP03",
+          "branch": "sf2-planner",
+          "existing_files": [
+            "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "modules/sucafina/Sucafinav1/src/planner-accounts.ts",
+            "modules/sucafina/Sucafinav1/src/planner-role.ts",
+            "modules/sucafina/Sucafinav1/src/planner-screen.ts",
+            "modules/sucafina/Sucafinav1/test/parity-planner.test.ts",
+            "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts"
+          ],
+          "new_prefixes": [
+            "modules/sucafina/Sucafinav1/product/planner/",
+            "modules/sucafina/Sucafinav1/test/product/wp03/",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/"
+          ],
+          "allowed_purpose": "Planner: cálculo/projeção/preview puro, sete superfícies, edição mensal, HR/FX/cadastros e cenários; preservar finanças, locks e privacidade, sem escrever importadores ou composição comum."
+        }
+      ],
+      "state": "CONDITIONAL_G0_READ_ACK_ONLY",
+      "mission_sha256": "a7af7cb9154b26fcc8e65322250f7020255a5effc2a513c6fdf6bf28b16ddc79"
+    },
+    {
+      "actor": "S4-A",
+      "epoch": 1,
+      "session_id": "01a1d367-892e-78d0-9bdc-1ea2c53a57ed",
+      "branch": "sf2-decisions",
+      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/decisions",
+      "write_paths": [
+        {
+          "id": "WP11",
+          "branch": "sf2-decisions",
+          "existing_files": [],
+          "new_prefixes": [
+            "modules/sucafina/Sucafinav1/product/decisions/",
+            "modules/sucafina/Sucafinav1/test/product/wp11/",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/"
+          ],
+          "allowed_purpose": "Implementar somente casos de decisão e execução preparada no namespace próprio; consumir contratos e portas reais; não editar UI, persistência concreta, domínio produtor ou scheduler de outros WPs."
+        }
+      ],
+      "state": "CONDITIONAL_G0_READ_ACK_ONLY",
+      "mission_sha256": "d3b787763d0896e4dbb0da03b6b8ab40773499a45d502d17d3f23ec19df5e127"
+    },
+    {
+      "actor": "S4-B",
+      "epoch": 1,
+      "session_id": "01a1d367-89f6-7151-aac5-8911e8159d48",
+      "branch": "sf2-ai",
+      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/ai",
+      "write_paths": [
+        {
+          "id": "WP12",
+          "branch": "sf2-ai",
+          "existing_files": [],
+          "new_prefixes": [
+            "modules/sucafina/Sucafinav1/product/ai/",
+            "modules/sucafina/Sucafinav1/test/product/wp12/",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/"
+          ],
+          "allowed_purpose": "Implementar somente ia contextual e análise verificável no namespace próprio; consumir contratos e portas reais; não editar UI, persistência concreta, domínio produtor ou scheduler de outros WPs."
+        }
+      ],
+      "state": "CONDITIONAL_G0_READ_ACK_ONLY",
+      "mission_sha256": "7b7996403ba20dc0fbbb9d638e0c2fd95715304a66f620a09027a202b93c43f9"
     }
   ],
   "ci": {
-    "dispatcher": "S0-C",
+    "dispatcher": "S0",
     "in_flight": [],
-    "requests": []
+    "requests": [
+      {
+        "id": "sf2h-development-0",
+        "candidate": "3bbe2b467303271fa769ee15418cc721ebeb761a",
+        "tree": "af95d7141646150130802e1e65f0bf8f54047957",
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/wp00/contracts.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {}
+        },
+        "omni": "declared",
+        "normalized_digest": "f910b0368dc79bf42897c973b8568fbed8087e864cc5d50f741b04f9d07f31fb",
+        "status": "SUPERSEDED_BY_EXACT_FILE_NORMALIZATION_NOT_DISPATCHED",
+        "final_selection": false
+      },
+      {
+        "id": "sf2h-development-0-exact",
+        "candidate": "3bbe2b467303271fa769ee15418cc721ebeb761a",
+        "tree": "af95d7141646150130802e1e65f0bf8f54047957",
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/wp00/contracts.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {}
+        },
+        "request_digest": "ef294cd70dfce9a270da65e3dd1a3687ff13f0ba0b7ec285d926f25be858886c",
+        "snapshot_tree": "1bba469b44ed59622a068ea132eba4f9f646e89f",
+        "snapshot_sha": "568db2cdcdc68f784c8d1777aa7b17c8c0fa1086",
+        "branch": "ci-run-linux-sf2h-dev0",
+        "status": "TESTS_PASSED_RECEIPT_REVIEW",
+        "final_selection": false,
+        "run_id": 43365537471,
+        "job_id": 131688939543,
+        "tests": {
+          "pass": 4,
+          "fail": 0,
+          "files": 1,
+          "expect_calls": 286
+        },
+        "omni": "not applicable; focused: no declaring test ran",
+        "artifacts": [],
+        "receipt_gap": "evaluate mandatory artifact requirement; no claim of final selection PASS"
+      },
+      {
+        "id": "sf2h-development-1",
+        "candidate": "5fa3f41e0f38399af48eb10377fe6a1721ef31a0",
+        "tree": "4b04649863936ddccbe913f40622f51022475254",
+        "snapshot_sha": "144cd6de301ba5c193c997fb8169d9784ea7ca8e",
+        "snapshot_tree": "a41dbf60a99f65b57863da81a8aaa0e0d7aea84b",
+        "branch": "ci-run-linux-sf2h-dev1",
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/wp00/contracts.test.ts",
+            "./Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {}
+        },
+        "request_digest": "dbeadd9ca7e337bf52588af77febd871a8c89ecc6d5f34427906dd18f63aa9d7",
+        "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+        "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+        "status": "TESTS_PASSED_RECEIPT_REVIEW",
+        "run_id": 43372139290,
+        "final_selection": false,
+        "job_id": 131710119252,
+        "tests": {
+          "pass": 24,
+          "fail": 0,
+          "files": 2,
+          "expects": 351
+        },
+        "artifacts": [],
+        "log": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/validation/development-1-job.log"
+      }
+    ],
+    "dispatcher_epoch": 2,
+    "handoff_reason": "S0-C correction turn interrupted/unknown; writer not automatically restarted. S0 operates already authorized independent CI on own increment; no run in flight."
   },
   "candidate_C": null,
   "delivery_D": null,
-  "required_findings": [],
+  "required_findings": [
+    {
+      "id": "G0-GROK-01",
+      "state": "OPEN",
+      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
+    },
+    {
+      "id": "G0-GROK-02",
+      "state": "OPEN",
+      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
+    },
+    {
+      "id": "G0-GROK-03",
+      "state": "OPEN",
+      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
+    },
+    {
+      "id": "G0-GROK-04",
+      "state": "OPEN",
+      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
+    },
+    {
+      "id": "G0-GROK-05",
+      "state": "OPEN",
+      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
+    },
+    {
+      "id": "G0-GROK-06",
+      "state": "OPEN",
+      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
+    },
+    {
+      "id": "G0-GROK-07",
+      "state": "OPEN",
+      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
+    },
+    {
+      "id": "G0-GROK-08",
+      "state": "OPEN",
+      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
+    },
+    {
+      "id": "G0-GROK-09",
+      "state": "OPEN",
+      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
+    },
+    {
+      "id": "G0-GROK-10",
+      "state": "OPEN",
+      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
+    },
+    {
+      "id": "G0-GROK-11",
+      "state": "OPEN",
+      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
+    },
+    {
+      "id": "G0-GROK-12",
+      "state": "OPEN",
+      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
+    }
+  ],
   "blockers": [],
-  "next_action": "Integrate reviewed C08 acceptance test, typecheck imported product, complete G0 port/schema seams, publish control checkpoint via GitHub MCP",
+  "next_action": "Accept G0 after bounded contract delta review/consumer ACK; launch actual Planner/Case/AI/runtime writers from5fa3. Existing dev1 run completed24/0, never redispatch.",
   "resume": {
     "api": "same native Goal thread; collaboration followup_task for recorded agent paths",
     "cli_supported": "codex resume <SESSION_ID>; no automatic restart on human interruption",
@@ -271,14 +534,157 @@
     }
   ],
   "product_progress": {
+    "head": "5fa3f41e0f38399af48eb10377fe6a1721ef31a0",
+    "tree": "4b04649863936ddccbe913f40622f51022475254",
     "branch": "sf2-integrate",
-    "base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
-    "uncommitted": [
-      "product/contracts/",
-      "product/host-binding/state-provider.ts"
+    "remote_tree_verified": true,
+    "G0": "CONTRACT_CANDIDATE_VALIDATING",
+    "freeze_manifest_sha256": "846602341700c6a2c052ba797fd13c89a2b2c6f49f51209e59721b8ccc8fdbee",
+    "typecheck": "fresh project install; bun typecheck SF passed including real Core public types",
+    "guards": "78 rules26paths zeroGATE/ERROR;5dependency advisories, rationale contracts-v1.md",
+    "GNATIVE": "NOT_RUN",
+    "final_C": null,
+    "final_D": null
+  },
+  "lifecycle_delta": {
+    "native_continuation_observed": true,
+    "collaboration_registry_now": [
+      "/root"
     ],
-    "typecheck": "baseline package typecheck passes but product is excluded until test imports; not product proof",
-    "G0": "IN_PROGRESS; schemas and port seams not fully frozen",
-    "GNATIVE": "NOT_RUN"
-  }
+    "completed_old_actors": [
+      "S0-A",
+      "S0-B",
+      "S1",
+      "S2",
+      "S3",
+      "S4"
+    ],
+    "S0-C": "latest correction turn interrupted; reason unknown; do not auto-resume",
+    "native_send_to_subagent": "rejected -32600 direct app-server input is not allowed for multi-agent v2 sub-agents",
+    "recovery": "Fenced all epoch1 staging leases; completed actors may receive new independently managed instances at epoch2. Interrupted S0-C remains held. Native create_thread supports separate tasks explicitly requested by user; verify ACK/lifecycle before admission."
+  },
+  "remote_control": {
+    "sha": "478c546392768f8be8364a75d895d60ffdfc20bb",
+    "tree": "2adc4d8331c44639c9610f9b60f1970d32ea7b68",
+    "verified_via": "GitHub MCP git/ref + git/commits",
+    "local_object_import": "matched Git commit object with author/committer timezone -0300; no git remote operation"
+  },
+  "independent_sessions": {
+    "S1": "01a1d321-948f-7841-9846-2dfee4da5ca0",
+    "S2": "01a1d321-bd1b-7be3-8c1c-86ed7e732067",
+    "S3": "01a1d321-bf63-7fb2-8132-7eaf9e5ed86b",
+    "S4": "01a1d321-c227-7c23-a31c-6d8114724ee9",
+    "S0-A": "01a1d331-1be3-7a53-a9b7-a964185f20e0",
+    "S0-B": "01a1d331-1d75-7c62-b12f-a95876ffa4de",
+    "S0-C": "01a1d32b-8064-76f0-a8f0-c69af512988e"
+  },
+  "grok_review": {
+    "process_handle": 67065,
+    "output": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json",
+    "state": "COMPLETED_HOLD_12_FINDINGS",
+    "final_review": false,
+    "delta": {
+      "process": 96793,
+      "session_id": "01a1d322-6bfd-75a1-b9c7-552a2d2cb518",
+      "output": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-g0-delta-1.json",
+      "state": "RUNNING",
+      "scope": "contract delta; not finalreview"
+    }
+  },
+  "owner_delta": "Owner requests autonomous continuation; helper interruption holds superseded by explicit authorization. No questions waiting.",
+  "epoch2_roster": [
+    {
+      "actor": "S1",
+      "session_id": "01a1d321-948f-7841-9846-2dfee4da5ca0",
+      "requested_model": "gpt-6.1-terra",
+      "confirmed_host_model": "gpt-6.1-terra",
+      "status": "ACK_RECEIVED",
+      "lease_epoch": 2,
+      "write_paths": [
+        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S1-e2"
+      ],
+      "backend": "independent native task",
+      "provider_response_model_id": "not exposed separately by host"
+    },
+    {
+      "actor": "S2",
+      "session_id": "01a1d321-bd1b-7be3-8c1c-86ed7e732067",
+      "requested_model": "gpt-6.1-terra",
+      "confirmed_host_model": "gpt-6.1-terra",
+      "status": "ACK_RECEIVED",
+      "lease_epoch": 2,
+      "write_paths": [
+        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S2-e2"
+      ],
+      "backend": "independent native task",
+      "provider_response_model_id": "not exposed separately by host"
+    },
+    {
+      "actor": "S3",
+      "session_id": "01a1d321-bf63-7fb2-8132-7eaf9e5ed86b",
+      "requested_model": "gpt-6.1-terra",
+      "confirmed_host_model": "gpt-6.1-terra",
+      "status": "ACK_RECEIVED",
+      "lease_epoch": 2,
+      "write_paths": [
+        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S3-e2"
+      ],
+      "backend": "independent native task",
+      "provider_response_model_id": "not exposed separately by host"
+    },
+    {
+      "actor": "S4",
+      "session_id": "01a1d321-c227-7c23-a31c-6d8114724ee9",
+      "requested_model": "gpt-6.1-terra",
+      "confirmed_host_model": "gpt-6.1-terra",
+      "status": "ACK_RECEIVED",
+      "lease_epoch": 2,
+      "write_paths": [
+        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S4-e2"
+      ],
+      "backend": "independent native task",
+      "provider_response_model_id": "not exposed separately by host"
+    },
+    {
+      "actor": "S0-A",
+      "session_id": "01a1d331-1be3-7a53-a9b7-a964185f20e0",
+      "requested_model": "gpt-6-luna",
+      "confirmed_host_model": "gpt-6-luna",
+      "status": "ACK_RECEIVED",
+      "lease_epoch": 2,
+      "write_paths": [
+        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S0-A-e2"
+      ],
+      "backend": "independent native task",
+      "provider_response_model_id": "not exposed separately by host"
+    },
+    {
+      "actor": "S0-B",
+      "session_id": "01a1d331-1d75-7c62-b12f-a95876ffa4de",
+      "requested_model": "gpt-6.1-terra",
+      "confirmed_host_model": "gpt-6.1-terra",
+      "status": "ACK_RECEIVED",
+      "lease_epoch": 2,
+      "write_paths": [
+        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S0-B-e2"
+      ],
+      "backend": "independent native task",
+      "provider_response_model_id": "not exposed separately by host"
+    },
+    {
+      "actor": "S0-C",
+      "session_id": "01a1d32b-8064-76f0-a8f0-c69af512988e",
+      "requested_model": "gpt-6.1-terra",
+      "confirmed_host_model": "gpt-6.1-terra",
+      "status": "ACK_RECEIVED",
+      "lease_epoch": 2,
+      "write_paths": [
+        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S0-C-e2"
+      ],
+      "backend": "independent native task",
+      "provider_response_model_id": "not exposed separately by host"
+    }
+  ],
+  "native_resume": "Native Goal same root; native send_message_to_thread exact independent sessionIDs. Epoch1 collaboration fenced; never duplicate supervisor.",
+  "resource_note": "11GiB free on98% disk; use sparse isolated writer worktrees and shared read-only installed dependencies; do not delete user worktrees. Native task cap8 active includingS0; do not infer20 independent pools."
 }
