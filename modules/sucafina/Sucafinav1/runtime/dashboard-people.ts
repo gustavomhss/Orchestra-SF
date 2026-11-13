@@ -124,6 +124,10 @@ export const domain: Domain = {
       data.cio = pick(object(snapshot.data.cio), cioFields)
       data.itUsersMonthly = structuredClone(snapshot.data.itUsersMonthly ?? [])
     }
+    if (allowed.includes(pages[1]))
+      data.nativeHeadcountSummaryByYear = Object.fromEntries(
+        [2024, 2025, 2026, 2027].map((year) => [year, headcountSummary(data, year, environment.at, actor.roles.includes("admin"))]),
+      )
     return {
       data,
       versions: Object.fromEntries(
@@ -502,48 +506,24 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
   }
   const members = rows(data.members)
   if (page === pages[1]) {
-    const active = members.filter((member) => member.status === "Active")
-    const terminated = members.filter((member) => member.status === "Terminated")
-    const departures = terminated.filter((member) => text(member.end).startsWith(String(context.year))).length
-    const denominator = active.length + departures / 2
-    const now = new Date(context.at)
-    const tenure = active
-      .filter((member) => text(member.start) && Number.isFinite(new Date(text(member.start)).getTime()))
-      .map(
-        (member) =>
-          (now.getFullYear() - new Date(text(member.start)).getFullYear()) * 12 +
-          now.getMonth() -
-          new Date(text(member.start)).getMonth(),
-      )
-    const month = context.year === now.getFullYear() ? now.getMonth() + 1 : 12
-    const users = monthlyUsers(data.itUsersMonthly, context.year, month)
+    const summary = headcountSummary(data, context.year, context.at, admin)
     return (
       metricGrid([
-        metric("Active", String(active.length)),
-        metric("Terminated", String(terminated.length)),
-        metric("Attrition YTD", `${(denominator ? (departures / denominator) * 100 : 0).toFixed(1)}%`),
-        metric(
-          "Average tenure (months)",
-          tenure.length ? (tenure.reduce((total, value) => total + value, 0) / tenure.length).toFixed(1) : "—",
-        ),
-        metric("Staff ratio", users && active.length ? String(Math.round(users / active.length)) : "—"),
-        metric("Contractors", String(active.filter((member) => member.type === "Contractor").length)),
-        metric("Employees", String(active.filter((member) => member.type !== "Contractor").length)),
-        (admin ? metric("Talent", String(members.filter((member) => member.cls === "Talent").length)) : ""),
+        metric("Active", String(summary.active)),
+        metric("Terminated", String(summary.terminated)),
+        metric("Attrition YTD", `${summary.attritionPercent.toFixed(1)}%`),
+        metric("Average tenure (months)", summary.averageTenureMonths === null ? "—" : summary.averageTenureMonths.toFixed(1)),
+        metric("Staff ratio", summary.staffRatio === null ? "—" : String(summary.staffRatio)),
+        metric("Contractors", String(summary.contractors)),
+        metric("Employees", String(summary.employees)),
+        (admin ? metric("Talent", String(summary.talent)) : ""),
       ], 4) +
       table(
         ["Leader", "Active", ...(admin ? ["Talent (active)"] : [])],
-        [...rows(data.leaders), { id: "", name: "No leader" }].map((leader) => [
-          esc(text(leader.name)),
-          String(active.filter((member) => idOf(member.leaderId) === idOf(leader.id)).length),
-          ...(admin
-            ? [
-                String(
-                  active.filter((member) => idOf(member.leaderId) === idOf(leader.id) && member.cls === "Talent")
-                    .length,
-                ),
-              ]
-            : []),
+        [...summary.leaders, { ...summary.unassigned, name: "No leader" }].map((leader) => [
+          esc(leader.name),
+          String(leader.active),
+          ...(admin ? [String(leader.talent)] : []),
         ]),
       ) +
       '<a href="?page=Team%20Structure">Team Structure</a>'
@@ -743,6 +723,59 @@ function memberForm(
     "Save member",
     disabled,
   )
+}
+
+function headcountSummary(data: Record<string, unknown>, year: number, at: string, talentVisible: boolean) {
+  const members = rows(data.members)
+  const active = members.filter((member) => member.status === "Active")
+  const terminated = members.filter((member) => member.status === "Terminated")
+  const departed = terminated.filter((member) => text(member.end).startsWith(String(year)))
+  const now = new Date(at)
+  const tenure = (people: Record<string, unknown>[]) => people
+    .filter((member) => text(member.start) && Number.isFinite(new Date(text(member.start)).getTime()))
+    .map((member) => (now.getFullYear() - new Date(text(member.start)).getFullYear()) * 12 +
+      now.getMonth() - new Date(text(member.start)).getMonth())
+  const average = (values: number[]) => values.length ? values.reduce((total, value) => total + value, 0) / values.length : null
+  const classifications = (people: Record<string, unknown>[]) => talentVisible ? {
+    talent: people.filter((member) => member.cls === "Talent").length,
+    solid: people.filter((member) => member.cls === "Solid Contributor").length,
+    laggers: people.filter((member) => member.cls === "Lagger").length,
+  } : {}
+  const leaderSummary = (leader: Record<string, unknown>) => {
+    const assigned = active.filter((member) => idOf(member.leaderId) === idOf(leader.id))
+    const contractors = assigned.filter((member) => member.type === "Contractor").length
+    return {
+      id: idOf(leader.id), name: text(leader.name), domain: text(leader.domain), location: text(leader.location),
+      active: assigned.length, employees: assigned.length - contractors, contractors,
+      averageTenureMonths: average(tenure(assigned)), ...classifications(assigned),
+    }
+  }
+  const leaders = rows(data.leaders).map(leaderSummary)
+  const unassigned = leaderSummary({})
+  const leaderTotals = {
+    employees: leaders.reduce((sum, leader) => sum + leader.employees, 0),
+    contractors: leaders.reduce((sum, leader) => sum + leader.contractors, 0),
+    active: leaders.reduce((sum, leader) => sum + leader.active, 0),
+    ...(talentVisible ? {
+      talent: leaders.reduce((sum, leader) => sum + (leader.talent ?? 0), 0),
+      solid: leaders.reduce((sum, leader) => sum + (leader.solid ?? 0), 0),
+      laggers: leaders.reduce((sum, leader) => sum + (leader.laggers ?? 0), 0),
+    } : {}),
+  }
+  const usersMonth = year === now.getFullYear() ? now.getMonth() + 1 : 12
+  const users = monthlyUsers(data.itUsersMonthly, year, usersMonth)
+  const averageHeadcount = active.length + departed.length / 2
+  const tenures = tenure(active)
+  const contractors = active.filter((member) => member.type === "Contractor").length
+  return {
+    active: active.length, terminated: terminated.length, departures: departed.length,
+    attritionPercent: averageHeadcount ? departed.length / averageHeadcount * 100 : 0,
+    averageTenureMonths: average(tenures), staffRatio: users && active.length ? Math.round(users / active.length) : null,
+    users, usersMonth, averageHeadcount, tenureCount: tenures.length, staffPercent: users !== 0 ? active.length / users * 100 : null,
+    employees: active.length - contractors, contractors, itLeaders: leaders.length, ...classifications(members),
+    leaders, unassigned, leaderTotals,
+    departureDetails: departed.map((member) => ({ id: idOf(member.id), name: text(member.name), end: text(member.end) })),
+  }
 }
 
 function monthlyUsers(value: unknown, year: number, month: number) {
