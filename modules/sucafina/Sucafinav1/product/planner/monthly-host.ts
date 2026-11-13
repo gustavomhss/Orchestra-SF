@@ -6,11 +6,12 @@ import { plannerKeys } from "../../src/nav.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
-import { prepareMonthlyDrafts, previewMonthlyDrafts } from "./monthly-edit.ts"
-import type { MonthlyDraft } from "./monthly-edit.ts"
+import { prepareMonthlyDrafts, previewMonthlyDrafts, previewMonthlyOperation } from "./monthly-edit.ts"
+import type { MonthlyDraft, MonthlySpreadPreview } from "./monthly-edit.ts"
 
-export type MonthlyRequest = { page: "OPEX" | "CAPEX"; versionId: string; drafts: readonly MonthlyDraft[] }
-export type MonthlyResult = { view: View; rows: readonly { draft: MonthlyDraft; errors: readonly { cell?: MonthlyDraft["cells"][number]; reason: string }[]; result?: Result }[] }
+export type MonthlyEntityOperation = { collection: "lines" | "projects"; kind: "create" | "edit" | "delete"; id?: string; revision: number; values?: Record<string, unknown> }
+export type MonthlyRequest = { page: "OPEX" | "CAPEX"; versionId: string; drafts?: readonly MonthlyDraft[]; operation?: { rowId: string; revision: number; kind: "annual" | "spread" | "reset"; annual?: number }; entity?: MonthlyEntityOperation }
+export type MonthlyResult = { view: View; rows: readonly { draft: MonthlyDraft; errors: readonly { cell?: MonthlyDraft["cells"][number]; reason: string }[]; result?: Result }[]; operation?: Omit<MonthlySpreadPreview, "command">; entityResult?: { ok: boolean; status?: number; errors?: readonly string[] } }
 
 /** Host-private entrypoint: the browser supplies edits, never the actor or snapshot. */
 export function createPlannerMonthlyHost(input: { host: DomainPortHost; humanAuthorize: (context: TrustedDomainContext, action: "planner.preview" | "planner.apply", payload: MonthlyRequest) => Promise<boolean> }) {
@@ -36,24 +37,113 @@ export function createPlannerMonthlyHost(input: { host: DomainPortHost; humanAut
       if (!actor || !await allowed()) return { commit: false, value: { status: "denied" as const, reason: "monthly-authority-unavailable" } }
       const version = rows(domain.view(snapshot, actor, environment).data.versions).find((item) => item.id === request.versionId)
       if (!version) return { commit: false, value: { status: "needs-input" as const, reason: "planner-version-unavailable" } }
+      if (request.entity) {
+        const entity = request.entity
+        if (entity.collection === "projects" && request.page !== "CAPEX" || entity.collection === "lines" && entity.id?.startsWith("HR:")) return { commit: false, value: { status: "needs-input" as const, reason: "entity-unavailable" } }
+        if (entity.kind !== "create") {
+          const entries = entity.collection === "projects" ? rows(version.projects) : rows(object(version.summary).lines).filter((line) => line.sec === (request.page === "OPEX" ? "opex" : "capex") && line.synthetic !== true)
+          if (entries.filter((entry) => entry.id === entity.id).length !== 1) return { commit: false, value: { status: "needs-input" as const, reason: "entity-unavailable" } }
+        }
+        const command: import("../../runtime/contract.ts").Command = { page: request.page, action: entity.kind === "delete" ? "delete" : "save", ...(entity.kind !== "create" && entity.id ? { id: entity.id } : {}), version: entity.revision, values: { versionId: request.versionId, collection: entity.collection, ...entity.values } }
+        if (action === "planner.preview") {
+          const previewSnapshot = structuredClone(snapshot)
+          const simulated = domain.execute(previewSnapshot, actor, command, environment)
+          if (digestSfValue(await identify(snapshot).catch(() => undefined)) !== digestSfValue(actor) || !await allowed()) return { commit: false, value: { status: "denied" as const, reason: "monthly-authority-changed" } }
+          return { commit: false, value: { status: "ok" as const, value: { view: monthlyView(domain.view(previewSnapshot, actor, environment), actor), rows: [], entityResult: sanitizeEntityResult(simulated) } } }
+        }
+        const entityResult = domain.execute(snapshot, actor, command, environment)
+        if (digestSfValue(await identify(snapshot).catch(() => undefined)) !== digestSfValue(actor) || !await allowed()) return { commit: false, value: { status: "denied" as const, reason: "monthly-authority-changed" } }
+        return { commit: entityResult.ok, value: { status: "ok" as const, value: { view: monthlyView(domain.view(snapshot, actor, environment), actor), rows: [], entityResult: sanitizeEntityResult(entityResult) } } }
+      }
+      if (request.operation) {
+        if (request.operation.rowId.startsWith("HR:")) return { commit: false, value: { status: "needs-input" as const, reason: "row-unavailable" } }
+        const operation = previewMonthlyOperation(snapshot, actor, environment, request.page, request.versionId, request.operation.rowId, request.operation.revision, request.operation.kind, request.operation.annual)
+        if (operation.errors.length) {
+          if (digestSfValue(await identify(snapshot).catch(() => undefined)) !== digestSfValue(actor) || !await allowed()) return { commit: false, value: { status: "denied" as const, reason: "monthly-authority-changed" } }
+          return { commit: false, value: { status: "ok" as const, value: { view: monthlyView(domain.view(snapshot, actor, environment), actor), rows: [], operation: omitCommand(operation) } } }
+        }
+        if (action === "planner.preview") {
+          if (digestSfValue(await identify(snapshot).catch(() => undefined)) !== digestSfValue(actor) || !await allowed()) return { commit: false, value: { status: "denied" as const, reason: "monthly-authority-changed" } }
+          return { commit: false, value: { status: "ok" as const, value: { view: monthlyView(domain.view(snapshot, actor, environment), actor), rows: [], operation: omitCommand(operation) } } }
+        }
+        const applied = operation.command ? domain.execute(snapshot, actor, operation.command, environment) : undefined
+        if (!applied?.ok) {
+          if (digestSfValue(await identify(snapshot).catch(() => undefined)) !== digestSfValue(actor) || !await allowed()) return { commit: false, value: { status: "denied" as const, reason: "monthly-authority-changed" } }
+          return { commit: false, value: { status: "ok" as const, value: { view: monthlyView(domain.view(snapshot, actor, environment), actor), rows: [], operation: { ...omitCommand(operation), errors: ["operation-rejected"] } } } }
+        }
+        if (digestSfValue(await identify(snapshot).catch(() => undefined)) !== digestSfValue(actor) || !await allowed()) return { commit: false, value: { status: "denied" as const, reason: "monthly-authority-changed" } }
+        return { commit: true, value: { status: "ok" as const, value: { view: monthlyView(domain.view(snapshot, actor, environment), actor), rows: [], operation: omitCommand(operation) } } }
+      }
+      if (!request.drafts?.length) return { commit: false, value: { status: "needs-input" as const, reason: "monthly-drafts-required" } }
       const visible = rows(object(version.summary).lines).filter((line) => line.sec === (request.page === "OPEX" ? "opex" : "capex"))
       const prepared = prepareMonthlyDrafts(request.page, request.versionId, request.drafts).map((row) => visible.filter((line) => line.id === row.draft.rowId).length === 1 ? row : { ...row, command: undefined, errors: [...row.errors, { reason: "row-unavailable" }] })
       const admitted = prepared.filter((row) => row.command !== undefined)
       if (action === "planner.preview") {
         const preview = previewMonthlyDrafts(snapshot, actor, environment, request.page, request.versionId, admitted.map((row) => row.draft))
         if (digestSfValue(await identify(snapshot).catch(() => undefined)) !== digestSfValue(actor) || !await allowed()) return { commit: false, value: { status: "denied" as const, reason: "monthly-authority-changed" } }
-        return { commit: false, value: { status: "ok" as const, value: { view: preview.view, rows: prepared.map((row) => ({ draft: row.draft, errors: row.errors, ...(row.command && preview.rows[admitted.indexOf(row)]?.result ? { result: preview.rows[admitted.indexOf(row)]!.result } : {}) })) } } }
+        return { commit: false, value: { status: "ok" as const, value: { view: monthlyView(preview.view, actor), rows: prepared.map((row) => ({ draft: row.draft, errors: row.errors, ...(row.command && preview.rows[admitted.indexOf(row)]?.result ? { result: sanitizeMonthlyResult(preview.rows[admitted.indexOf(row)]!.result!, snapshot, actor, environment, request.versionId, row.draft.rowId) } : {}) })) } } }
       }
-      const results = prepared.map((row) => ({ ...row, result: row.command ? domain.execute(snapshot, actor, row.command, environment) : undefined }))
+      const results = prepared.map((row) => {
+        if (!row.command) return { ...row, result: undefined }
+        const result = domain.execute(snapshot, actor, row.command, environment)
+        return { ...row, result: sanitizeMonthlyResult(result, snapshot, actor, environment, request.versionId, row.draft.rowId) }
+      })
       if (digestSfValue(await identify(snapshot).catch(() => undefined)) !== digestSfValue(actor) || !await allowed()) return { commit: false, value: { status: "denied" as const, reason: "monthly-authority-changed" } }
-      return { commit: results.some((row) => row.result?.ok === true), value: { status: "ok" as const, value: { rows: results.map((row) => ({ draft: row.draft, errors: row.errors, ...(row.result ? { result: row.result } : {}) })), view: domain.view(snapshot, actor, environment) } } }
+      const commit = results.some((row) => row.result?.ok === true)
+      const response = { rows: results.map((row) => ({ draft: row.draft, errors: row.errors, ...(row.result ? { result: row.result } : {}) })), view: monthlyView(domain.view(snapshot, actor, environment), actor) }
+      return { commit, value: { status: "ok" as const, value: response } }
     }, { signal: http.signal }).catch(() => ({ status: "unavailable" as const, reason: "monthly-storage-unavailable" }))
-    if (!await allowed()) return { status: "denied" as const, reason: "monthly-authority-changed" }
+    if (action === "planner.apply" && result.status === "ok" && !await allowed()) return { status: "unavailable" as const, reason: "monthly-apply-outcome-requires-reconciliation" }
+    if (!await allowed()) {
+      const applied = action === "planner.apply" && result.status === "ok" && (result.value.entityResult?.ok === true || result.value.rows.some((row) => row.result?.ok === true) || !!result.value.operation && !result.value.operation.errors.length)
+      return applied ? { status: "unavailable" as const, reason: "monthly-apply-outcome-requires-reconciliation" } : { status: "denied" as const, reason: "monthly-authority-changed" }
+    }
     return result
   }
   return { preview: (request: MonthlyRequest, context: TrustedDomainContext) => run(request, context, "planner.preview"), apply: (request: MonthlyRequest, context: TrustedDomainContext) => run(request, context, "planner.apply") }
 }
 
 function validMonthlyRequest(request: MonthlyRequest) {
-  return !!request && Object.keys(request).every((key) => ["page", "versionId", "drafts"].includes(key)) && (request.page === "OPEX" || request.page === "CAPEX") && typeof request.versionId === "string" && !!request.versionId.trim() && Array.isArray(request.drafts) && request.drafts.length > 0 && request.drafts.every((draft) => !!draft && Object.keys(draft).every((key) => ["rowId", "revision", "cells"].includes(key)) && typeof draft.rowId === "string" && Number.isSafeInteger(draft.revision) && draft.revision >= 0 && Array.isArray(draft.cells) && draft.cells.length > 0 && draft.cells.every((cell) => !!cell && Object.keys(cell).every((key) => ["measure", "month", "text"].includes(key)) && ["budget", "actual", "forecast"].includes(cell.measure) && Number.isInteger(cell.month) && cell.month >= 1 && cell.month <= 12 && typeof cell.text === "string"))
+  if (!request || Object.keys(request).some((key) => !["page", "versionId", "drafts", "operation", "entity"].includes(key)) || (request.page !== "OPEX" && request.page !== "CAPEX") || typeof request.versionId !== "string" || !request.versionId.trim()) return false
+  if (request.entity) {
+    const entity = request.entity
+    if (Object.keys(entity).some((key) => !["collection", "kind", "id", "revision", "values"].includes(key)) || !["lines", "projects"].includes(entity.collection) || !["create", "edit", "delete"].includes(entity.kind) || !Number.isSafeInteger(entity.revision) || entity.revision < 0) return false
+    if (entity.kind === "create" ? entity.id !== undefined : typeof entity.id !== "string" || !entity.id.trim()) return false
+    const fields = entity.collection === "lines" ? ["name", "desc", "owner", "entity", "alloc", "cls", "cur", "annual", "b", "a", "f", "el", "proj", "domain", "month", "value"] : ["name", "desc", "owner", "code"]
+    if (entity.kind === "delete") return entity.values === undefined && !request.drafts && !request.operation
+    if (!entity.values || Object.keys(entity.values).some((key) => !fields.includes(key) && !(entity.collection === "lines" && /^[baf](?:[0-9]|1[01])$/.test(key))) || !validEntityValues(entity.values)) return false
+    return !request.drafts && !request.operation
+  }
+  if (request.operation) return Object.keys(request.operation).every((key) => ["rowId", "revision", "kind", "annual"].includes(key)) && typeof request.operation.rowId === "string" && !!request.operation.rowId.trim() && Number.isSafeInteger(request.operation.revision) && request.operation.revision >= 0 && ["annual", "spread", "reset"].includes(request.operation.kind) && (request.operation.kind !== "annual" || typeof request.operation.annual === "number" && Number.isFinite(request.operation.annual)) && !request.drafts
+  return Array.isArray(request.drafts) && request.drafts.length > 0 && request.drafts.every((draft) => !!draft && Object.keys(draft).every((key) => ["rowId", "revision", "cells"].includes(key)) && typeof draft.rowId === "string" && Number.isSafeInteger(draft.revision) && draft.revision >= 0 && Array.isArray(draft.cells) && draft.cells.length > 0 && draft.cells.every((cell) => !!cell && Object.keys(cell).every((key) => ["measure", "month", "text"].includes(key)) && ["budget", "actual", "forecast"].includes(cell.measure) && Number.isInteger(cell.month) && cell.month >= 1 && cell.month <= 12 && typeof cell.text === "string"))
+}
+
+function validEntityValues(values: Record<string, unknown>) {
+  return Object.values(values).every((value) => value === null || typeof value === "string" || typeof value === "boolean" || typeof value === "number" && Number.isFinite(value) || Array.isArray(value) && value.every((item) => item === null || typeof item === "number" && Number.isFinite(item)))
+}
+
+function monthlyView(view: View, actor: Actor): View {
+  if (actor.roles.includes("admin") || actor.roles.includes("hr") || actor.roles.includes("finance")) return view
+  return { ...view, data: { ...view.data, roster: [], versions: rows(view.data.versions).map((version) => {
+    const summary = { ...object(version.summary) }
+    for (const field of ["budget", "actual", "outlook", "total", "fullYear", "hrTotal", "positions", "hr"]) delete summary[field]
+    return { ...version, lines: rows(version.lines).filter((line) => line.el !== "hr" && typeof line.id === "string" && !line.id.startsWith("HR:")), hr: undefined, hc: undefined, summary: { ...summary, lines: rows(summary.lines).filter((line) => line.synthetic !== true && line.el !== "hr" && typeof line.id === "string" && !line.id.startsWith("HR:")) } }
+  }) } }
+}
+
+function omitCommand(operation: MonthlySpreadPreview): Omit<MonthlySpreadPreview, "command"> {
+  const { command: _command, ...safe } = operation
+  return safe
+}
+
+function sanitizeEntityResult(result: Result): MonthlyResult["entityResult"] {
+  return result.ok ? { ok: true } : { ok: false, status: result.status, errors: result.errors }
+}
+
+function sanitizeMonthlyResult(result: Result, snapshot: Snapshot, actor: Actor, environment: Parameters<typeof domain.view>[2], versionId: string, rowId: string): Result {
+  if (result.ok || result.stored === undefined) return result
+  const view = monthlyView(domain.view(snapshot, actor, environment), actor)
+  const version = rows(view.data.versions).find((entry) => entry.id === versionId)
+  const line = rows(object(version?.summary).lines).find((entry) => entry.id === rowId)
+  return { ...result, stored: line ? { id: line.id, b: line.b, bm: line.bm, a: line.a, f: line.f, annual: line.annual } : undefined }
 }

@@ -34,7 +34,15 @@ export function projectPlannerSource(snapshot: Snapshot, actor: Actor, versionId
     if (!original || typeof original.include !== "boolean") return false
     return !original.include || [original.fte, original.start, original.end].every((value) => typeof value === "number" && Number.isFinite(value))
   })
-  return { ...version, fteInputsKnown, sharedEntities: rows(view.data.entities), sharedAllocations: rows(view.data.allocations) }
+  const privateAccess = actor.roles.some((role) => ["admin", "hr", "finance"].includes(role))
+  const summary = object(version.summary)
+  const restrictedHr = !privateAccess && (Object.keys(object(object(version.hc).hrAF)).length > 0 || rows(summary.lines).some((line) => line.synthetic === true || line.el === "hr" || typeof line.id === "string" && line.id.startsWith("HR:")))
+  if (restrictedHr) {
+    const safeSummary: Record<string, unknown> = { ...summary, lines: rows(summary.lines).filter((line) => line.synthetic !== true && line.el !== "hr" && !(typeof line.id === "string" && line.id.startsWith("HR:"))) }
+    for (const field of ["budget", "actual", "outlook", "total", "fullYear", "hrTotal"]) delete safeSummary[field]
+    return { ...version, lines: rows(version.lines).filter((line) => line.el !== "hr" && !(typeof line.id === "string" && line.id.startsWith("HR:"))), hc: { ...object(version.hc), hrAF: {} }, hr: [], summary: safeSummary, restrictedHr, fteInputsKnown, sharedEntities: rows(view.data.entities), sharedAllocations: rows(view.data.allocations) }
+  }
+  return { ...version, restrictedHr: false, fteInputsKnown, sharedEntities: rows(view.data.entities), sharedAllocations: rows(view.data.allocations) }
 }
 
 export function createPlannerPort(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios?: PlannerScenarioHost; criteria?: PlannerCriteriaHost; scenarioInputs?: PlannerScenarioInputs; evidence?: BusinessContextService; sensitivity?: PlannerPort["evaluateSensitivity"] }): PlannerPort {
@@ -114,6 +122,7 @@ export function buildPlannerFinancialProjection(input: { projection: Record<stri
   const summary = object(input.projection.summary)
   const lines = rows(summary.lines)
   const missing: DomainProjection["missing"][number][] = []
+  if (input.projection.restrictedHr === true) missing.push({ field: "headcount", reason: "restricted" })
   const values: DomainProjection["values"][number][] = []
   if (Array.isArray(summary.warnings) && summary.warnings.length) missing.push({ field: "currency", reason: "missing-fx" })
   if (rows(object(input.projection.hc).positions).some((position) => position.include === true && position.hasRate === false)) missing.push({ field: "headcount:rate", reason: "missing-rate" })
