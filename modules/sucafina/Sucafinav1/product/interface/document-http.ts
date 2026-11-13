@@ -170,6 +170,7 @@ async function bounded(request: Request, limit: number) {
 }
 
 function documentFailure(reason: string | undefined) {
+  if (!reason) return "Document operation unavailable. Refresh the source and check your access."
   if (reason === "field-missing-or-ambiguous") return "A field is missing or ambiguous. Use an exact label and an unambiguous number or ISO date."
   if (["PDF has no text layer", "document has no extractable text"].includes(reason ?? "")) return "The document has no text layer. Scanned documents are not supported."
   if (["invalid or protected document", "protected DOCX", "invalid, protected, or oversized DOCX", "invalid PDF", "invalid UTF-8 document", "DOCX document XML missing"].includes(reason)) return "The document is invalid, protected, or cannot be decoded."

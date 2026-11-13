@@ -68,7 +68,8 @@ export async function extractDocumentEvidence(request: DocumentExtractRequest, c
     return [{ schema: "sf-document-v1" as const, snapshot, evidence, schemaRef: schema.value.id, schemaVersion: schema.value.version }]
   })
   const loaded = await input.state.read(hostRequest, "documents", (state) => documentAsset(state, request.documentRef))
-  if (loaded.status !== "ok") return { status: loaded.status === "preview" ? "unavailable" : loaded.status, reason: loaded.status === "preview" ? "state-preview" : loaded.reason }
+  if ("reason" in loaded) return { status: loaded.status, reason: loaded.reason }
+  if (loaded.status !== "ok") return { status: "unavailable", reason: "state-preview" }
   if (!loaded.value) return { status: "unavailable", reason: "document-unavailable" }
   if (!(await input.host.revalidate(context)) || !(await input.documents.revalidate(request.documentRef, { incarnation: document.value.incarnation, revision: document.value.revision, blobDigest: document.value.blobDigest.value }, context))) return { status: "stale", reason: "document-changed" }
   const saved = await input.state.transaction(hostRequest, { namespace: "documents", domainSurface: loaded.value.surface, expectedStorageVersion: loaded.storageVersion, idempotencyKey: operationId, commandDigest: digestSfValue({ request, document: document.value.blobDigest, schema: schema.value }), targetRef: document.value.documentId, targetIncarnation: document.value.incarnation }, async (state, authority, snapshot) => {

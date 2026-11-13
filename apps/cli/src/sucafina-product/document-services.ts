@@ -47,8 +47,8 @@ export function createSfDocumentServices(input: { runtime: Parameters<CreateSfHo
   ]
   const dispatch = (operation: "sf_document_extract" | "sf_knowledge_search", payload: unknown, context: TrustedDomainContext) => dispatchSfCapability({
     operation, payload, context, descriptors, authority: authority.authority,
-    validateInput: (descriptor, value) => decodeSfOperationInput(descriptor.id, value).ok,
-    validateOutput: (descriptor, value) => value.status !== "ok" || decodeSfOperationOutput(descriptor.id, value.result).ok,
+    validateInput: (descriptor, value) => descriptor.id === operation && decodeSfOperationInput(operation, value).ok,
+    validateOutput: (descriptor, value) => descriptor.id === operation && (value.status !== "ok" || decodeSfOperationOutput(operation, value.result).ok),
   })
   return { documents, schemas, ...selections, descriptors, dispatch }
 }

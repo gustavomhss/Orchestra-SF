@@ -3,7 +3,7 @@ import { roleMap } from "../../runtime/admin.ts"
 import { assetLink } from "../../runtime/assets.ts"
 import type { AssetPersistence, AssetServices } from "../../runtime/assets.ts"
 import { object, rows } from "../../runtime/contract.ts"
-import type { Actor } from "../../runtime/contract.ts"
+import type { Actor, Snapshot } from "../../runtime/contract.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { sfSourceIdentity } from "../integration/source-lifecycle.ts"
@@ -38,12 +38,16 @@ export function createSfDocumentSelections(input: {
     const request = input.host.requestFor(context)
     if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "document-access-unavailable" }
     const environment = await input.host.environment(request)
-    const groups = await Promise.all((["dashboard", "procurement"] as const).map((surface) => input.assets.transaction(surface, async (snapshot) => {
+    const actorFor = async (snapshot: Snapshot, surface: "dashboard" | "procurement"): Promise<Actor | undefined> => {
       const principal = await input.host.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
-      if (!principal || principal.id !== context.binding.principalRef || principal.id.startsWith("local:")) return { commit: false, value: [] as AuthorizedAsset[] }
+      if (!principal || principal.id !== context.binding.principalRef || principal.id.startsWith("local:")) return undefined
       const access = object(object(snapshot.data.access)[principal.id])
       const roles = principal.roles.filter((row) => row.surface === surface).map((row) => row.role)
-      const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((value): value is string => typeof value === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((value): value is string => typeof value === "string") : [] }
+      return { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((value): value is string => typeof value === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((value): value is string => typeof value === "string") : [] }
+    }
+    const groups = await Promise.all((["dashboard", "procurement"] as const).map((surface) => input.assets.transaction(surface, async (snapshot) => {
+      const actor = await actorFor(snapshot, surface)
+      if (!actor) return { commit: false, value: [] as AuthorizedAsset[] }
       const found = rows(snapshot.data.assets).flatMap((asset): AuthorizedAsset[] => {
         if (typeof asset.id !== "string" || typeof asset.name !== "string" || !asset.name.trim() || typeof asset.bytes !== "number" || asset.bytes < 1 || asset.bytes > input.maxBytes || !["text/plain", "application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"].includes(String(asset.type)) || !assetLink(snapshot, actor, environment, input.services, asset.id).ok) return []
         const source = sfSourceIdentity(snapshot, "document-asset", asset.id)
@@ -57,7 +61,29 @@ export function createSfDocumentSelections(input: {
     }, { signal: request.signal })))
     if (!await input.host.revalidate(context) || request.signal.aborted) return { status: "denied", reason: "document-access-unavailable" }
     const result = groups.flat()
-    return result.length > 100 ? { status: "unavailable", reason: "document-limit-exceeded" } : { status: "ok", value: result }
+    if (result.length > 100) return { status: "unavailable", reason: "document-limit-exceeded" }
+    if (!input.host.persistence.transactionAll) return { status: "unavailable", reason: "document-snapshot-unavailable" }
+    // Both discovery reads have completed. Fence every label against one current domain snapshot.
+    const valid = await input.host.persistence.transactionAll(async (snapshots) => {
+      for (const surface of ["dashboard", "procurement"] as const) {
+        const selected = result.filter((asset) => asset.surface === surface)
+        if (!selected.length) continue
+        const snapshot = snapshots[surface]
+        const actor = await actorFor(snapshot, surface)
+        if (!actor) return { commit: false, value: false }
+        const assets = rows(snapshot.data.assets)
+        if (selected.some((entry) => {
+          const asset = assets.find((value) => value.id === entry.assetId)
+          const source = sfSourceIdentity(snapshot, "document-asset", entry.assetId)
+          if (!entry.expected || !source || source.incarnation !== entry.expected.incarnation || source.version !== entry.expected.revision || !asset || asset.name !== entry.label || !assetLink(snapshot, actor, environment, input.services, entry.assetId).ok) return true
+          if (!entry.request) return false
+          const current = sfSourceIdentity(snapshot, "procurement-request", entry.request.recordId)
+          return asset.record !== entry.request.recordId || !current || current.incarnation !== entry.request.incarnation || current.version !== entry.request.revision
+        })) return { commit: false, value: false }
+      }
+      return { commit: false, value: !request.signal.aborted }
+    }, { signal: request.signal })
+    return valid ? { status: "ok", value: result } : { status: "stale", reason: "document-selection-changed" }
   }
   return {
     discoverRequests: async (context: TrustedDomainContext): Promise<PortResult<readonly { selectionRef: string; label: string }[]>> => {

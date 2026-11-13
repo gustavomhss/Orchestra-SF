@@ -116,6 +116,9 @@ test("the 72000 included forecast becomes 84000 and reconciles 590000 to 602000"
 })
 
 test("exported workbook reimports through the Planner engine without new lines and normalizes absent bm", async () => {
+  // Budget normalization is an administrator operation; Finance may only change
+  // actual/forecast and FX and must preserve the existing budget/manual flags.
+  const importer = { id: "admin", roles: ["admin"], canWrite: true }
   const flat = Array(12).fill(10)
   const varied = [10, 20, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
   const actual = [0, null, null, null, null, null, null, null, null, null, null, null]
@@ -124,18 +127,18 @@ test("exported workbook reimports through the Planner engine without new lines a
     { id: "varied", sec: "opex", el: "licenses", name: "Varied", cur: "USD", b: varied, bm: emptyFlags(), a: actual, f: Array(12).fill(null) },
   ], projects: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, lists: {} }], officials: {}, entities: [], allocations: [] }, versions: {}, sequences: {}, audit: [], notices: [] }
   const before = structuredClone(snapshot)
-  const file = await exportPlanner(snapshot, actor, environment, "v1")
+  const file = await exportPlanner(snapshot, importer, environment, "v1")
   expect(file.ok).toBe(true)
   if (!file.ok) return
   const parsed = await parseWorkbook(file.bytes)
   expect(parsed.ok).toBe(true)
   if (!parsed.ok) return
   expect(parsed.sheets.OPEX.every((row) => !("bm" in row))).toBe(true)
-  const preview = preparePlannerWorkbook({ snapshot, actor, environment, versionId: "v1", sheets: parsed.sheets, newVersion: false, removeMissing: false, operationId: "roundtrip", idempotencyKey: "roundtrip-key", targetIncarnation: "inc-1" })
+  const preview = preparePlannerWorkbook({ snapshot, actor: importer, environment, versionId: "v1", sheets: parsed.sheets, newVersion: false, removeMissing: false, operationId: "roundtrip", idempotencyKey: "roundtrip-key", targetIncarnation: "inc-1" })
   expect(preview.result.ok).toBe(true)
   const applied = structuredClone(snapshot)
-  const mutation = createPlannerImportMutation({ command: preview.command, commandDigest: preview.commandDigest, previewDigest: preview.previewDigest, actorId: actor.id, operationId: "roundtrip", idempotencyKey: "roundtrip-key", targetIncarnation: "inc-1", previewAt: environment.at, verifyTarget: () => true })
-  expect(mutation?.execute(applied, actor, environment).commit).toBe(true)
+  const mutation = createPlannerImportMutation({ command: preview.command, commandDigest: preview.commandDigest, previewDigest: preview.previewDigest, actorId: importer.id, operationId: "roundtrip", idempotencyKey: "roundtrip-key", targetIncarnation: "inc-1", previewAt: environment.at, verifyTarget: () => true })
+  expect(mutation?.execute(applied, importer, environment).commit).toBe(true)
   const lines = (applied.data.versions as { lines: { id: string; b: number[]; bm: boolean[]; a: (number | null)[] }[] }[])[0].lines
   expect(lines.map((line) => line.id)).toEqual(["flat", "varied"])
   expect(lines[0].b).toEqual(flat)
@@ -143,6 +146,16 @@ test("exported workbook reimports through the Planner engine without new lines a
   expect(lines[0].bm).toEqual(emptyFlags())
   expect(lines[1].b).toEqual(varied)
   expect(lines[1].bm).toEqual(Array(12).fill(true))
+  const financePreview = preparePlannerWorkbook({ snapshot, actor, environment, versionId: "v1", sheets: parsed.sheets, newVersion: false, removeMissing: false, operationId: "roundtrip-finance", idempotencyKey: "roundtrip-finance-key", targetIncarnation: "inc-1" })
+  expect(financePreview.result.ok).toBe(true)
+  const financeApplied = structuredClone(snapshot)
+  const financeMutation = createPlannerImportMutation({ command: financePreview.command, commandDigest: financePreview.commandDigest, previewDigest: financePreview.previewDigest, actorId: actor.id, operationId: "roundtrip-finance", idempotencyKey: "roundtrip-finance-key", targetIncarnation: "inc-1", previewAt: environment.at, verifyTarget: () => true })
+  expect(financeMutation?.execute(financeApplied, actor, environment).commit).toBe(true)
+  const financeLines = (financeApplied.data.versions as { lines: { b: number[]; bm: boolean[] }[] }[])[0]!.lines
+  expect(financeLines[0]!.b).toEqual(flat)
+  expect(financeLines[0]!.bm).toEqual(Array(12).fill(true))
+  expect(financeLines[1]!.b).toEqual(varied)
+  expect(financeLines[1]!.bm).toEqual(emptyFlags())
   expect(snapshot).toEqual(before)
 })
 

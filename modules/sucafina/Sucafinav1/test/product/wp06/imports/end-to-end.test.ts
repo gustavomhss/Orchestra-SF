@@ -15,6 +15,7 @@ import { createSfUiAuthority } from "../../../../product/integration/ui-authorit
 import { createSfHumanAuthority, sfHumanActions } from "../../../../product/integration/human-authority.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../../../../product/contracts/business-context.ts"
+import type { PortResult } from "../../../../product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../product/contracts/sf-execution.ts"
 import { projectPlannerSource } from "../../../../product/planner/port.ts"
 import { createSfImportHost } from "../../../../product/imports/host.ts"
@@ -53,7 +54,7 @@ test("human workbook admission, Planner preview, atomic receipt and retry surviv
     const state = createSfProductState({ persistence: app.store, createId: randomUUID, authorize: async (input, snapshot) => await app.identity.authenticate(input, { surface: "dashboard", roleMap: roleMap(snapshot, "dashboard") }) ? { principalRef: principal.id, accessRevision: "access", policyVersion: "policy" } : undefined, resolveTarget: async (_, __, ___, ref) => { const snapshot = (app.store as typeof app.store & { currentSnapshots?: () => { planner: Snapshot } | undefined }).currentSnapshots?.()?.planner; return snapshot ? sfSourceIdentity(snapshot, "planner-version", ref) : undefined } })
     const actor = { id: principal.id, roles: principal.roles.filter((row) => row.surface === "planner").map((row) => row.role), canWrite: principal.canWrite, assigned: [], domains: [] }
     const target = { surface: "planner" as const, selectionRef: "v1", incarnation: targetIdentity.incarnation, version: targetIdentity.version, options: { newVersion: false, removeMissing: false, preview: {} } }
-    const resolveTarget = async () => app.store.transaction("planner", async (snapshot) => {
+    const resolveTarget = async () => app.store.transaction<PortResult<{ versionId: string; evidence: Extract<BusinessEvidenceRef, { kind: "record" }> }>>("planner", async (snapshot) => {
       const source = sfSourceIdentity(snapshot, "planner-version", "v1")
       const projection = projectPlannerSource(snapshot, actor, "v1")
       if (!source || !projection) return { commit: false, value: { status: "unavailable" as const, reason: "source-unavailable" } }

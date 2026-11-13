@@ -5,10 +5,13 @@ import { createWp06Runtime } from "../runtime-fixture.ts"
 import { decodeSfOperationOutput } from "../../../../product/contracts/schema-admission.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { resolveSfDocumentEvidence } from "../../../../product/documents/evidence-resolver.ts"
+import { createSfBusinessContext } from "../../../../product/host-binding/business-context.ts"
+import { createSfDocumentSourceAccess } from "../../../../product/decision-memory/source-access.ts"
 
 test("Request attachments reach the document UI through scoped selection, shared dispatch and explicit confirmation", async () => {
   const fixture = await createWp06Runtime()
   try {
+    const business = createSfBusinessContext({ revalidate: fixture.authority.host.revalidate, resolveSource: createSfDocumentSourceAccess({ host: fixture.authority.host, read: fixture.documents.documents.reader }), proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => { throw new Error("Not an Atlas publication witness") } })
     await fixture.store.transaction("procurement", async (snapshot) => {
       snapshot.data.store = { settings: { uploadCap: 100_000 }, requests: {
         r1: { request: { id: "r1", status: "sourcing", createdBy: fixture.principal.id, title: "First Request" } },
@@ -61,6 +64,8 @@ test("Request attachments reach the document UI through scoped selection, shared
     expect(parsed.value).toMatchObject({ status: "extracted", fieldCandidate: "Price", value: 42, unit: "USD" })
     const beforeConfirm = await fixture.uiCall("sf_evidence_get", { evidenceRef: parsed.value.ref }, (context) => resolveSfDocumentEvidence(parsed.value.ref, context, fixture.documents.documents.reader))
     expect(beforeConfirm.authorizedProjection).toMatchObject({ status: "extracted", ref: parsed.value.ref })
+    const candidatePremise = await fixture.uiCall("sf_evidence_get", { evidenceRef: parsed.value.ref }, (context) => business.resolve(parsed.value.ref, context))
+    expect(candidatePremise.state).not.toBe("fresh")
     const confirmed = await fixture.documentRequest("document-confirm", parsed.value)
     expect(confirmed.status).toBe(200)
     const confirmedEvidence = decodeSfOperationOutput("sf_document_extract", (await confirmed.json()).value)
@@ -70,6 +75,8 @@ test("Request attachments reach the document UI through scoped selection, shared
     expect(confirmedEvidence.value.ref.target.segment).toEqual(parsed.value.ref.target.segment)
     const afterConfirm = await fixture.uiCall("sf_evidence_get", { evidenceRef: parsed.value.ref }, (context) => resolveSfDocumentEvidence(parsed.value.ref, context, fixture.documents.documents.reader))
     expect(afterConfirm.authorizedProjection).toMatchObject({ status: "confirmed", ref: parsed.value.ref })
+    const confirmedPremise = await fixture.uiCall("sf_evidence_get", { evidenceRef: confirmedEvidence.value.ref }, (context) => business.resolve(confirmedEvidence.value.ref, context))
+    expect(confirmedPremise).toMatchObject({ state: "fresh", currentRef: confirmedEvidence.value.ref, authorizedProjection: { status: "confirmed", ref: confirmedEvidence.value.ref } })
     const presentation = await fixture.documentRequest("document-open", undefined, { ref: JSON.stringify(confirmedEvidence.value.ref) })
     expect(presentation.status).toBe(200)
     expect(await presentation.json()).toMatchObject({ value: { title: "r1-terms.txt", excerpt: "42", location: parsed.value.location } })
@@ -84,6 +91,8 @@ test("Request attachments reach the document UI through scoped selection, shared
     expect(direct.status).toBe("denied")
     await fixture.store.transaction("procurement", async (snapshot) => { snapshot.data.assets = rows(snapshot.data.assets).filter((asset) => asset.id !== "asset-r1"); object(object(object(object(snapshot.data.store).requests).r1).request).attachments = []; return { commit: true, value: undefined } })
     expect((await fixture.documentRequest("document-open", undefined, { ref: JSON.stringify(confirmedEvidence.value.ref) })).status).not.toBe(200)
+    const revokedPremise = await fixture.uiCall("sf_evidence_get", { evidenceRef: confirmedEvidence.value.ref }, (context) => business.resolve(confirmedEvidence.value.ref, context))
+    expect(revokedPremise.state).not.toBe("fresh")
     const missing = await fixture.documentRequest("document-search", { query: "Price", documentRefs: [admitted.value.documentRef], limit: 5 })
     expect(await missing.json()).toMatchObject({ value: { matches: [] } })
     expect(await fixture.store.transaction("procurement", async (snapshot) => ({ commit: false, value: object(object(object(object(snapshot.data.store).requests).r1).request).status }))).toBe("sourcing")

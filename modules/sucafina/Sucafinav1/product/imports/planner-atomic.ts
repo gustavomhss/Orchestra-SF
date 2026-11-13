@@ -49,7 +49,7 @@ export function createSfPlannerImportAtomic(input: {
     if (docs.status !== "ok" || !docs.value || receipts.status !== "ok" || !receipts.value) return { status: "denied", reason: "import-access-unavailable" }
     const environment = await input.host.environment(request)
     const stateCommand = { namespace: "documents" as const, domainSurface: "planner" as const, expectedStorageVersion: docs.storageVersion, additionalNamespaces: [{ namespace: "receipts" as const, expectedStorageVersion: receipts.storageVersion }], targetRef: scope.target.selectionRef, targetIncarnation: scope.target.incarnation, idempotencyKey: execution.idempotencyKey, commandDigest: execution.commandDigest }
-    const saved = await input.state.transaction(request, stateCommand, async (state, authority, snapshot) => {
+    const saved = await input.state.transaction<boolean | "rejected">(request, stateCommand, async (state, authority, snapshot) => {
       if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion) return { commit: false, value: false }
       if (!await input.files.revalidate(scope.fileRef, manifest.sourceDigest, context)) return { commit: false, value: false }
       const file = object(state.documents[`import-file:${scope.fileRef}`])

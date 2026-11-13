@@ -3,7 +3,6 @@ import { digestSfValue } from "../contracts/canonical.ts"
 import type { SourceRef } from "../contracts/context.ts"
 import { applyDashboardImport, previewDashboardImport } from "../dashboard/imports.ts"
 import type { DashboardImportFormat } from "../dashboard/imports.ts"
-import type { DashboardBackupAdapter } from "../dashboard/imports.ts"
 import { plannerImportEnvironment } from "./planner.ts"
 import { executeDashboardBackupImport } from "../../runtime/dashboard-backup.ts"
 import { publicSfData } from "../integration/public-state.ts"
@@ -13,7 +12,11 @@ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import { projectDashboardScope } from "../dashboard/scope.ts"
 import { compareImportProjections } from "./changes.ts"
 
-type ImportFormat = DashboardImportFormat
+type ImportFormat = DashboardImportFormat | "backup"
+type DashboardBackupAdapter = {
+  preview: (snapshot: Snapshot, actor: Actor, command: Command, environment: Environment) => ReturnType<typeof previewDashboardImport>
+  apply: (snapshot: Snapshot, actor: Actor, command: Command, environment: Environment, baseDigest: string, commandDigest: string) => ReturnType<typeof applyDashboardImport>
+}
 
 export function dashboardImportImpact(snapshot: Snapshot, staged: Snapshot, command: Command, period: Period) {
   if (command.action !== "backup-import") return dashboardMutationImpact(snapshot, staged, command, period)
@@ -64,7 +67,10 @@ export function previewDashboardWorkbook(input: { format: ImportFormat; snapshot
   const command = structuredClone(input.command)
   const internal = { ...command, confirmed: true }
   const environment = plannerImportEnvironment(input.environment, input.operationId)
-  const simulated = previewDashboardImport(input.format, input.snapshot, input.actor, internal, environment, backup)
+  // WP06 owns the backup executor; workbook commands use the existing WP02 producer.
+  const simulated = input.format === "backup"
+    ? backup.preview(input.snapshot, input.actor, internal, environment)
+    : previewDashboardImport(input.format, input.snapshot, input.actor, internal, environment)
   if (simulated.status !== "preview") return simulated
   const previewDigest = digestSfValue({ after: simulated.after, changes: simulated.changes, warnings: simulated.warnings, summary: simulated.summary })
   const identity = { format: input.format, command, actorId: input.actor.id, operationId: input.operationId, idempotencyKey: input.idempotencyKey, target: input.target, baseDigest: simulated.baseDigest, previewDigest, at: input.environment.at }
@@ -83,9 +89,13 @@ export function createDashboardImportMutation(input: { format: ImportFormat; com
       const staged = structuredClone(snapshot)
       const internal = { ...prepared.command, confirmed: true }
       const effective = plannerImportEnvironment({ ...environment, at: prepared.at }, prepared.operationId)
-      const preview = previewDashboardImport(prepared.format, staged, actor, internal, effective, backup)
+      const preview = prepared.format === "backup"
+        ? backup.preview(staged, actor, internal, effective)
+        : previewDashboardImport(prepared.format, staged, actor, internal, effective)
       if (preview.status !== "preview" || preview.baseDigest !== prepared.baseDigest || digestSfValue({ after: preview.after, changes: preview.changes, warnings: preview.warnings, summary: preview.summary }) !== prepared.previewDigest) return { commit: false, value: { status: "conflict", reason: "preview-changed" } }
-      const applied = applyDashboardImport(prepared.format, staged, actor, internal, effective, preview.baseDigest, preview.commandDigest, backup)
+      const applied = prepared.format === "backup"
+        ? backup.apply(staged, actor, internal, effective, preview.baseDigest, preview.commandDigest)
+        : applyDashboardImport(prepared.format, staged, actor, internal, effective, preview.baseDigest, preview.commandDigest)
       if (!applied.ok) return { commit: false, value: { status: "failed", reason: "command-rejected" } }
       if (!input.verifyScope(snapshot, staged, actor)) return { commit: false, value: { status: "denied", reason: "source-access-unavailable" } }
       const changedFields = compareImportProjections({ data: publicSfData(snapshot.data), sequences: snapshot.sequences }, { data: publicSfData(staged.data), sequences: staged.sequences }).length

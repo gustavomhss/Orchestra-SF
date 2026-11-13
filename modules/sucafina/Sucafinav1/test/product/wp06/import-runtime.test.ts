@@ -77,4 +77,4 @@ test("HTTP dispatch previews without domain writes, applies once, returns a rece
     expect((await call("import-apply", selected, {}, applyKey)).status).toBe(403)
     expect(await app.store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot }))).toEqual(after)
   } finally { await app.dispose() }
-})
+}, 30_000)

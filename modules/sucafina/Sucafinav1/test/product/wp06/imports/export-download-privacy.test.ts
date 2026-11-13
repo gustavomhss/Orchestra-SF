@@ -18,7 +18,12 @@ test("the real Planner download entrypoint omits salary fields, individual cost 
         hc: {
           inc: 10,
           incMonth: 7,
-          positions: [{ id: "position", name: "Example person", title: "Analyst", include: true, domain: "Example", location: "Example", type: "Employee", fte: 1, start: 1, end: 12, rateId: "rate", rateOverride: 123456.78 }],
+          // Domain aggregates remain authorized. Distinct people distinguish an
+          // allowed aggregate from an individual salary or cached position cost.
+          positions: [
+            { id: "position", name: "Example person", title: "Analyst", include: true, domain: "Example", location: "Example", type: "Employee", fte: 1, start: 1, end: 12, rateId: "rate", rateOverride: 123456.78 },
+            { id: "second-position", name: "Another person", title: "Engineer", include: true, domain: "Example", location: "Example", type: "Employee", fte: 1, start: 1, end: 12, rateId: "rate", rateOverride: 22222.22 },
+          ],
           rates: [{ id: "rate", name: "PRIVATE_RATE_LABEL", locs: "Example", annual: 987654.32, cur: "EUR" }],
           hrAF: {},
         },
@@ -38,9 +43,13 @@ test("the real Planner download entrypoint omits salary fields, individual cost 
   const workbook = new Workbook()
   await workbook.xlsx.load(new Uint8Array(result.bytes).buffer)
   expect(workbook.getWorksheet("Rate cards")!.rowCount).toBe(1)
-  expect(workbook.getWorksheet("Headcount")!.getCell("H2").value).toBeNull()
-  expect(workbook.getWorksheet("Headcount")!.getCell("L2").value).toBeNull()
-  expect(workbook.getWorksheet("Headcount")!.getCell("M2").value).toBeNull()
+  for (const row of [2, 3]) {
+    expect(workbook.getWorksheet("Headcount")!.getCell(`H${row}`).value).toBeNull()
+    expect(workbook.getWorksheet("Headcount")!.getCell(`L${row}`).value).toBeNull()
+    expect(workbook.getWorksheet("Headcount")!.getCell(`M${row}`).value).toBeNull()
+  }
+  expect(workbook.getWorksheet("OPEX")!.getCell("I2").value).toBe("Budget (from headcount)")
+  expect(workbook.getWorksheet("OPEX")!.getCell("J2").value).toBe(14567.9)
 
   const { default: JSZip } = await import("jszip")
   const archive = await JSZip.loadAsync(result.bytes)
@@ -48,5 +57,17 @@ test("the real Planner download entrypoint omits salary fields, individual cost 
   expect(xml).not.toContain("PRIVATE_RATE_LABEL")
   expect(xml).not.toContain("987654.32")
   expect(xml).not.toContain("123456.78")
+  expect(xml).not.toContain("22222.22")
   expect(xml).not.toContain("155555.58")
+
+  const authorized = await download("xlsx", snapshot, { id: "admin", roles: ["admin"], canWrite: true, assigned: [], domains: [] }, { at: "2026-11-13T00:00:00Z", id: () => "id", directory: [] }, new URLSearchParams())
+  if (!authorized.ok) throw new Error("Missing authorized comparison workbook")
+  const privateWorkbook = new Workbook()
+  await privateWorkbook.xlsx.load(new Uint8Array(authorized.bytes).buffer)
+  for (const row of [2, 3]) {
+    const individualCost = privateWorkbook.getWorksheet("Headcount")!.getCell(`M${row}`).value
+    expect(typeof individualCost).toBe("number")
+    expect(Number(individualCost)).toBeGreaterThan(0)
+    expect(xml).not.toContain(String(individualCost))
+  }
 })

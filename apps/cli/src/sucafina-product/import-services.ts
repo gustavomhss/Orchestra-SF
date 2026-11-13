@@ -152,8 +152,8 @@ export function createSfImportServices(input: { runtime: Parameters<CreateSfHost
   const descriptors: readonly CapabilityDescriptor[] = [{ id: "sf_import_preview", pack: "documents_reports", mode: "simulate", inputSchema: sfOperationInputSchemas.sf_import_preview, outputSchema: sfOperationOutputSchemas.sf_import_preview, handler: preview, handlerExport: "previewImport", producerTask: "WP06.T02", grantProfiles: ["sf_maestro", "sf_finance"], requiredAuthority: ["documents:read"] }]
   const dispatch = (payload: unknown, context: TrustedDomainContext) => dispatchSfCapability({
     operation: "sf_import_preview", payload, context, descriptors, authority: authority.authority,
-    validateInput: (descriptor, value) => decodeSfOperationInput(descriptor.id, value).ok,
-    validateOutput: (descriptor, value) => value.status !== "ok" || decodeSfOperationOutput(descriptor.id, value.result).ok,
+    validateInput: (descriptor, value) => descriptor.id === "sf_import_preview" && decodeSfOperationInput("sf_import_preview", value).ok,
+    validateOutput: (descriptor, value) => descriptor.id === "sf_import_preview" && (value.status !== "ok" || decodeSfOperationOutput("sf_import_preview", value.result).ok),
   })
   return { imports, prepareTarget, discover, descriptors, dispatch }
 }
