@@ -1,6 +1,8 @@
 import type { Period, ProjectionComponent, SourceRef, PreparedCommand, CommandReceipt } from "./context.ts"
 import type { BusinessEvidenceRef } from "./business-context.ts"
 
+export const RENEWAL_TRANSITION_CATEGORIES = ["service", "service_overlap", "implementation", "contract_exit", "migration", "taxes", "training", "internal_costs", "other_relevant_costs"] as const
+
 export type CostCoverageBasis = {
   id: string
   version: number
@@ -13,43 +15,45 @@ export type CostCoverageEntry =
   | { status: "included"; categoryId: string; componentRefs: readonly string[]; evidenceRefs: readonly BusinessEvidenceRef[]; scopeNote: string }
   | { status: "not-applicable"; categoryId: string; justification: string; evidenceRefs: readonly BusinessEvidenceRef[] }
   | { status: "pending"; categoryId: string; reason: string; questionRef?: string }
-export type CostCoverageAssessment = {
+type CoverageAssessmentBase = {
   basisId: string
   basisVersion: number
   alternativeId: string
   alternativeVersion: number
   currency: string
   horizon: Period
-  entries: readonly CostCoverageEntry[]
-  derivedMissingCategoryIds: readonly string[]
-  coverageState: "complete" | "pending" | "unavailable"
   issues: readonly string[]
   evaluatedSourceRefs: readonly BusinessEvidenceRef[]
 }
-export type ScenarioResult = {
+export type CostCoverageAssessment = CoverageAssessmentBase & (
+  | { coverageState: "complete"; entries: readonly Exclude<CostCoverageEntry, { status: "pending" }>[]; derivedMissingCategoryIds: readonly never[] }
+  | { coverageState: "pending" | "unavailable"; entries: readonly CostCoverageEntry[]; derivedMissingCategoryIds: readonly string[] }
+)
+type ScenarioBase = {
   id: string
   version: number
   components: readonly ProjectionComponent[]
-  knownSubtotal: number
-  total: number | null
   currency: string
   horizon: Period
   sourceRefs: readonly BusinessEvidenceRef[]
-  costCoverage: CostCoverageAssessment
-  comparisonStatus: "complete" | "conditioned" | "incompatible" | "unavailable"
   unresolvedConditions: readonly string[]
   restrictions: readonly string[]
 }
-export type ScenarioComparison = {
+export type ScenarioResult = ScenarioBase & (
+  | { comparisonStatus: "complete"; costCoverage: Extract<CostCoverageAssessment, { coverageState: "complete" }>; knownSubtotal: number; total: number }
+  | { comparisonStatus: "conditioned" | "incompatible" | "unavailable"; costCoverage: CostCoverageAssessment; knownSubtotal: number | null; total: null }
+)
+type ComparisonBase = {
   baselineResultRef: string
   alternativeResultRef: string
   costCoverageRefs: readonly string[]
-  comparisonStatus: ScenarioResult["comparisonStatus"]
-  knownDifference: number | null
-  completeDifference: number | null
   criterionResults: readonly { criterionId: string; state: "satisfied" | "failed" | "unknown"; reason: string }[]
   unresolvedConditions: readonly string[]
 }
+export type ScenarioComparison = ComparisonBase & (
+  | { comparisonStatus: "complete"; knownDifference: number; completeDifference: number }
+  | { comparisonStatus: "conditioned" | "incompatible" | "unavailable"; knownDifference: number | null; completeDifference: null }
+)
 export type ChoiceRecord = {
   id: string
   alternativeId: string
@@ -58,7 +62,7 @@ export type ChoiceRecord = {
   costCoverage: CostCoverageAssessment
   comparisonStatus: ScenarioResult["comparisonStatus"]
   criteria: readonly string[]
-  values: Readonly<Record<string, unknown>>
+  values: readonly { criterionRef: string; value: number | null; unit: string; currency: string; horizon: Period }[]
   evidenceRefs: readonly BusinessEvidenceRef[]
   principalRef: string
   reason: string
@@ -77,6 +81,7 @@ export type PreparedChange = {
   state: "planned" | "applied" | "awaiting-approval" | "conflict" | "failed" | "cancelled"
   receipt?: CommandReceipt
 }
+export type PreparedChangeView = Omit<PreparedChange, "operation" | "receipt"> & { operationRef: string; receiptRef?: string }
 export type DecisionCase = {
   id: string
   incarnation: string
@@ -134,21 +139,19 @@ export type DocumentEvidence = {
   location: string
   textRange: { start: number; end: number; unit: "utf16" }
   fieldCandidate: string
-  value: unknown
+  value: string | number | boolean | null
   unit?: string
   status: "extracted" | "confirmed" | "rejected" | "stale"
   ref: Extract<BusinessEvidenceRef, { kind: "document" }>
 }
-export type PortfolioRequest = {
-  caseRefs: readonly { id: string; version: number; incarnation: string }[]
-  operations: readonly { id: string; kind: "include" | "exclude" | "defer" | "replace"; targetRef: string; replacementRef?: string }[]
-  horizon: Period
-  currency: string
-  restrictions: readonly { id: string; kind: string; limit: number | string; required: boolean }[]
-  priorities: readonly string[]
-}
+type PortfolioCombinationBase = { id: string; caseRefs: readonly string[]; components: readonly ProjectionComponent[]; costCoverageRefs: readonly string[]; conflicts: readonly string[]; restrictions: readonly string[] }
+export type PortfolioCombination = PortfolioCombinationBase & (
+  | { eligibility: "eligible-complete"; comparisonStatus: "complete" }
+  | { eligibility: "conditioned" | "unavailable"; comparisonStatus: "conditioned" | "incompatible" | "unavailable" }
+  | { eligibility: "ineligible"; comparisonStatus: ScenarioResult["comparisonStatus"] }
+)
 export type PortfolioResult = {
-  combinations: readonly { id: string; caseRefs: readonly string[]; components: readonly ProjectionComponent[]; costCoverageRefs: readonly string[]; comparisonStatus: ScenarioResult["comparisonStatus"]; eligibility: "eligible-complete" | "conditioned" | "ineligible" | "unavailable"; conflicts: readonly string[]; restrictions: readonly string[] }[]
+  combinations: readonly PortfolioCombination[]
   limitations: readonly string[]
   evidenceRefs: readonly BusinessEvidenceRef[]
 }

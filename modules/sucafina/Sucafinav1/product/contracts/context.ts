@@ -1,5 +1,6 @@
 import type { Surface } from "../../src/identity.ts"
 import type { Command, Result } from "../../runtime/contract.ts"
+import type { BusinessEvidenceRef } from "./business-context.ts"
 
 export type Period = { start: string; end: string }
 export type SourceRef = {
@@ -38,8 +39,8 @@ export type DomainProjection = {
   version: number
   engineVersion: string
   components: readonly ProjectionComponent[]
-  values: Readonly<Record<string, unknown>>
-  missing: readonly { field: string; reason: string }[]
+  values: readonly { id: string; value: string | number | boolean | null; unit?: string; currency?: string; period: Period; granularity: "record" | "month" | "year" | "aggregate"; sourceRefs: readonly BusinessEvidenceRef[]; drilldown: BusinessEvidenceRef | null; evidenceState: EvidenceState }[]
+  missing: readonly { field: string; reason: "missing" | "unavailable" | "restricted" | "not-applicable" | "incompatible-currency" | "missing-fx" | "missing-rate" | "unconfirmed" }[]
 }
 export type PreparedCommand = {
   id: string
@@ -47,6 +48,7 @@ export type PreparedCommand = {
   command: Command
   idempotencyKey: string
   commandDigest: string
+  expectedVersion: number
   requiredAuthority: readonly string[]
   preview: DomainProjection
 }
@@ -61,6 +63,8 @@ export type CommandReceipt = {
   result: Result
   at: string
 }
+export type CommandReceiptView = Omit<CommandReceipt, "result"> & { status: "applied" | "awaiting-approval" | "conflict" | "failed" | "cancelled"; resultRef?: string; errors: readonly string[] }
+export type PreparedCommandView = Omit<PreparedCommand, "command"> & { action: string; operationRef: string }
 export type ImportManifest = {
   id: string
   version: number
@@ -68,12 +72,13 @@ export type ImportManifest = {
   format: string
   context: ProductContext
   baseIdentity: readonly SourceRef[]
-  commands: readonly PreparedCommand[]
+  commands: readonly PreparedCommandView[]
   issues: readonly { row: number; field: string; reason: string }[]
   state: "preview" | "stale" | "blocked" | "applied"
   domainApplied: boolean
-  receipts: readonly CommandReceipt[]
+  receipts: readonly CommandReceiptView[]
 }
+export type StoredImportManifest = Omit<ImportManifest, "commands" | "receipts"> & { commands: readonly PreparedCommand[]; receipts: readonly CommandReceipt[] }
 export type ConfirmationScope = {
   sourceRef: Pick<SourceRef, "surface" | "type" | "id" | "incarnation">
   fields: readonly string[]
@@ -98,14 +103,17 @@ export type ConfirmationCommand = {
   expectedStorageVersion: number
   idempotencyKey: string
 }
-export type ConfirmationValidityProjection = {
+type ConfirmationEvaluation = {
   confirmationId: string
-  state: "valid" | "stale" | "unavailable"
   evaluatedSourceVersion: number
   evaluatedAt: string
-  scopeFingerprint?: string
   reason: "unchanged-scope" | "material-change" | "dependency-change" | "source-removed" | "source-replaced" | "access-unavailable" | "dependency-unavailable"
 }
+export type ConfirmationValidityProjection = ConfirmationEvaluation & (
+  | { state: "valid"; scopeFingerprint: string; reason: "unchanged-scope" }
+  | { state: "stale"; scopeFingerprint?: string; reason: "material-change" | "dependency-change" | "source-removed" | "source-replaced" }
+  | { state: "unavailable"; reason: "access-unavailable" | "dependency-unavailable" }
+)
 export type PreservedReview = {
   id: string
   version: number

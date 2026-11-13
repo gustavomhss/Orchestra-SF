@@ -1,7 +1,7 @@
 import type { Surface } from "../../src/identity.ts"
-import type { Period } from "./context.ts"
-import type { TrustedExecutionBinding } from "./sf-execution.ts"
-import type { DecisionCase, CaseLedgerEvent } from "./decisions.ts"
+import type { Period, DomainProjection, CommandReceiptView } from "./context.ts"
+import type { TrustedDomainContext } from "./sf-execution.ts"
+import type { DecisionCase, CaseLedgerEvent, DocumentEvidence, PreparedChangeView } from "./decisions.ts"
 
 type Digest = { algorithm: "sha256"; value: string }
 type EvidenceIdentity = {
@@ -24,8 +24,8 @@ export type BusinessEvidenceResolution = {
   state: "fresh" | "historical" | "stale" | "revoked" | "replaced" | "missing" | "invalid" | "unavailable"
   ref: BusinessEvidenceRef
   currentRef?: BusinessEvidenceRef
-  authorizedProjection?: unknown
-  differences?: readonly { field: string; before: unknown; after: unknown }[]
+  authorizedProjection?: DomainProjection | DocumentEvidence | CaseLedgerEvent | AuthorizedPolicyProjection
+  differences?: readonly { field: string; before: string | number | boolean | null; after: string | number | boolean | null }[]
   accessRevision: string
   checkedAt: string
 }
@@ -56,17 +56,30 @@ export type MemoryWriteReceipt = {
   reason?: string
 }
 export type BusinessContextService = {
-  resolve: (ref: BusinessEvidenceRef, trustedCall: TrustedExecutionBinding) => Promise<BusinessEvidenceResolution>
-  context: (request: { refs: readonly BusinessEvidenceRef[] }, trustedCall: TrustedExecutionBinding) => Promise<readonly BusinessEvidenceResolution[]>
-  recall: (request: { caseRefs: readonly { id: string; incarnation: string }[]; query: string }, trustedCall: TrustedExecutionBinding) => Promise<readonly { envelope: BusinessMemoryEnvelope; entry: unknown }[]>
-  emitFromLedger: (sourceEventRef: BusinessEvidenceRef, trustedCall: TrustedExecutionBinding) => Promise<MemoryWriteReceipt>
+  resolve: (ref: BusinessEvidenceRef, trustedCall: TrustedDomainContext) => Promise<BusinessEvidenceResolution>
+  context: (request: { refs: readonly BusinessEvidenceRef[] }, trustedCall: TrustedDomainContext) => Promise<readonly BusinessEvidenceResolution[]>
+  recall: (request: { caseRefs: readonly { id: string; incarnation: string }[]; query: string }, trustedCall: TrustedDomainContext) => Promise<readonly { envelope: BusinessMemoryEnvelope; entry: unknown }[]>
+  emitFromLedger: (sourceEventRef: BusinessEvidenceRef, trustedCall: TrustedDomainContext) => Promise<MemoryWriteReceipt>
 }
 export type AuthorizedCaseProjection = {
   context: { installationId: string; projectId: string; principalRef: string; profileId: string; policyVersion: string; accessRevision: string }
-  case: DecisionCase
+  case: Omit<DecisionCase, "preparedChanges" | "receipts"> & { preparedChanges: readonly PreparedChangeView[]; receipts: readonly CommandReceiptView[] }
   events: readonly CaseLedgerEvent[]
   evidenceRefs: readonly BusinessEvidenceRef[]
   checkedAt: string
+}
+export type AuthorizedPolicyProjection = {
+  context: AuthorizedCaseProjection["context"]
+  policyRef: Extract<BusinessEvidenceRef, { kind: "policy" }>
+  rule: string
+  scope: string
+  reviewedAt: string
+  reviewedBy: string
+  sourceDigest: string
+  ruleDigest: string
+  sourceEventId: string
+  validCitationCount: number
+  dependencies: readonly BusinessEvidenceRef[]
 }
 // Pure WP14 output precedes scanning; only WP10 may turn it into a committed envelope.
 export type SfAtlasProjection = {

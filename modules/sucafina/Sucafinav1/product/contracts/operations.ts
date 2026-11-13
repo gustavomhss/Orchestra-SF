@@ -1,4 +1,4 @@
-import type { Period, SourceRef } from "./context.ts"
+import type { Period } from "./context.ts"
 import type { BusinessEvidenceRef } from "./business-context.ts"
 
 export type ScenarioOperation = { kind: "replace" | "defer" | "include" | "exclude"; targetRef: string; replacementRef?: string; amount?: number; currency?: string; period?: Period }
@@ -36,7 +36,7 @@ export type ForecastCompareRequest = {
 export type ScenarioRequest = {
   baseRef: string
   operations: readonly ScenarioOperation[]
-  assumptions: Readonly<Record<string, JsonValue>>
+  assumptions: readonly { id: string; value: string | number | boolean | null; evidenceRefs: readonly BusinessEvidenceRef[]; state: "confirmed" | "estimated" | "hypothetical" | "absent" }[]
 }
 
 export type ScenarioCompareRequest = {
@@ -46,8 +46,8 @@ export type ScenarioCompareRequest = {
 
 export type SensitivityRequest = {
   scenarioRef: string
-  parameterBounds: Readonly<Record<string, JsonValue>>
-  criterion: Readonly<Record<string, JsonValue>>
+  parameterBounds: { parameterRef: string; minimum: number; maximum: number; steps: number }
+  criterion: { id: string; operator: "lte" | "gte" | "eq"; value: number }
 }
 
 export type PortfolioRequest = {
@@ -86,13 +86,13 @@ export type CaseDraftRequest = {
   horizon: Period
   currency: string
   criteria: readonly string[]
-  sourceRefs: readonly SourceRef[]
+  sourceRefs: readonly BusinessEvidenceRef[]
 }
 
 export type AlternativeDraftRequest = {
   caseRef: string
-  proposal: Readonly<Record<string, JsonValue>>
-  sourceRefs: readonly SourceRef[]
+  proposal: { title: string; description: string; sourceRefs: readonly BusinessEvidenceRef[] }
+  sourceRefs: readonly BusinessEvidenceRef[]
 }
 
 export type ChangePrepareRequest = {
@@ -112,8 +112,8 @@ export type WorkListRequest = {
 
 export type QuestionPrepareRequest = {
   caseRef: string
-  question: Readonly<Record<string, JsonValue>>
-  sourceRefs: readonly SourceRef[]
+  question: { text: string; criterionRef?: string }
+  sourceRefs: readonly BusinessEvidenceRef[]
   recipientRef?: string
 }
 
@@ -129,7 +129,7 @@ export type HandoffPrepareRequest = {
   caseRef: string
   actionRef: string
   recipientRef?: string
-  sourceRefs: readonly SourceRef[]
+  sourceRefs: readonly BusinessEvidenceRef[]
 }
 
 export type DocumentExtractRequest = {
@@ -140,7 +140,7 @@ export type DocumentExtractRequest = {
 export type ImportPreviewRequest = {
   admittedFileRef: string
   format: string
-  options: Readonly<Record<string, JsonValue>>
+  options: { sheet?: string; replace?: boolean; headerRow?: number }
 }
 
 export type ReviewPrepareRequest = {
@@ -193,7 +193,7 @@ export type RoutineCatalogRequest = {
 export type RoutinePrepareRequest = {
   publishedRecipeRef: string
   inputRefs: readonly string[]
-  parameters: Readonly<Record<string, JsonValue>>
+  parameters: { period?: Period; selectionRefs?: readonly string[]; reviewRef?: string }
 }
 
 export type RoutineRunRequest = {
@@ -212,7 +212,7 @@ export type RoutineResultRequest = {
 export type WatchPrepareRequest = {
   caseRef: string
   conditionRef: string
-  recurrence: Readonly<Record<string, JsonValue>>
+  recurrence: { recipeRef: string; schedule: string; timezone: string }
   recipientRef?: string
 }
 
@@ -258,7 +258,782 @@ export type SfOperationInputMap = {
   sf_watch_prepare: WatchPrepareRequest
 }
 
-export const sfOperationInputSchemas = {
+export const sfOperationDefinitions = {
+  "SourceRef": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "surface": {
+        "enum": [
+          "dashboard",
+          "planner",
+          "procurement"
+        ]
+      },
+      "type": {
+        "type": "string",
+        "minLength": 1
+      },
+      "id": {
+        "type": "string",
+        "minLength": 1
+      },
+      "incarnation": {
+        "type": "string",
+        "minLength": 1
+      },
+      "version": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "fields": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "period": {
+        "type": "object",
+        "additionalProperties": false,
+        "x-sf-period": true,
+        "properties": {
+          "start": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "end": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          }
+        },
+        "required": [
+          "start",
+          "end"
+        ]
+      },
+      "observedAt": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "required": [
+      "surface",
+      "type",
+      "id",
+      "incarnation",
+      "version",
+      "fields",
+      "period",
+      "observedAt"
+    ]
+  },
+  "BusinessEvidenceRef": {
+    "oneOf": [
+      {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "schema": {
+            "const": "sf-evidence-v1"
+          },
+          "refId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "installationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "refDigest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "evidenceLevel": {
+            "enum": [
+              "observed",
+              "claim",
+              "assumption",
+              "proposal",
+              "decision"
+            ]
+          },
+          "kind": {
+            "const": "record"
+          },
+          "target": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "surface": {
+                "enum": [
+                  "dashboard",
+                  "planner",
+                  "procurement"
+                ]
+              },
+              "recordType": {
+                "type": "string",
+                "minLength": 1
+              },
+              "recordId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "incarnation": {
+                "type": "string",
+                "minLength": 1
+              },
+              "version": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "fields": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "period": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  },
+                  "end": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  }
+                },
+                "required": [
+                  "start",
+                  "end"
+                ]
+              },
+              "projectionDigest": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "surface",
+              "recordType",
+              "recordId",
+              "incarnation",
+              "version",
+              "fields",
+              "projectionDigest"
+            ]
+          }
+        },
+        "required": [
+          "schema",
+          "refId",
+          "installationId",
+          "projectId",
+          "refDigest",
+          "evidenceLevel",
+          "kind",
+          "target"
+        ]
+      },
+      {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "schema": {
+            "const": "sf-evidence-v1"
+          },
+          "refId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "installationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "refDigest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "evidenceLevel": {
+            "enum": [
+              "observed",
+              "claim",
+              "assumption",
+              "proposal",
+              "decision"
+            ]
+          },
+          "kind": {
+            "const": "document"
+          },
+          "target": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "documentId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "incarnation": {
+                "type": "string",
+                "minLength": 1
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "blobDigest": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "algorithm": {
+                    "const": "sha256"
+                  },
+                  "value": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                },
+                "required": [
+                  "algorithm",
+                  "value"
+                ]
+              },
+              "segment": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "start": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "end": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "unit": {
+                    "const": "utf16"
+                  },
+                  "textDigest": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "algorithm": {
+                        "const": "sha256"
+                      },
+                      "value": {
+                        "type": "string",
+                        "pattern": "^[a-f0-9]{64}$"
+                      }
+                    },
+                    "required": [
+                      "algorithm",
+                      "value"
+                    ]
+                  }
+                },
+                "required": [
+                  "start",
+                  "end",
+                  "unit",
+                  "textDigest"
+                ]
+              },
+              "ragSourceId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "ragRevisionId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "ragSourceHash": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "algorithm": {
+                    "const": "blake3"
+                  },
+                  "value": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "algorithm",
+                  "value"
+                ]
+              },
+              "fieldCandidateId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "confirmationVersion": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "documentId",
+              "incarnation",
+              "revision",
+              "blobDigest",
+              "segment"
+            ]
+          }
+        },
+        "required": [
+          "schema",
+          "refId",
+          "installationId",
+          "projectId",
+          "refDigest",
+          "evidenceLevel",
+          "kind",
+          "target"
+        ]
+      },
+      {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "schema": {
+            "const": "sf-evidence-v1"
+          },
+          "refId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "installationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "refDigest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "evidenceLevel": {
+            "enum": [
+              "observed",
+              "claim",
+              "assumption",
+              "proposal",
+              "decision"
+            ]
+          },
+          "kind": {
+            "const": "calculation"
+          },
+          "target": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "calculationId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "runId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "engineVersion": {
+                "type": "string",
+                "minLength": 1
+              },
+              "inputDigest": {
+                "type": "string",
+                "minLength": 1
+              },
+              "resultDigest": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sourceRefs": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/BusinessEvidenceRef"
+                }
+              },
+              "period": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  },
+                  "end": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  }
+                },
+                "required": [
+                  "start",
+                  "end"
+                ]
+              },
+              "currency": {
+                "type": "string",
+                "pattern": "^[A-Z]{3}$"
+              }
+            },
+            "required": [
+              "calculationId",
+              "runId",
+              "engineVersion",
+              "inputDigest",
+              "resultDigest",
+              "sourceRefs",
+              "period",
+              "currency"
+            ]
+          }
+        },
+        "required": [
+          "schema",
+          "refId",
+          "installationId",
+          "projectId",
+          "refDigest",
+          "evidenceLevel",
+          "kind",
+          "target"
+        ]
+      },
+      {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "schema": {
+            "const": "sf-evidence-v1"
+          },
+          "refId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "installationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "refDigest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "evidenceLevel": {
+            "enum": [
+              "observed",
+              "claim",
+              "assumption",
+              "proposal",
+              "decision"
+            ]
+          },
+          "kind": {
+            "const": "receipt"
+          },
+          "target": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "surface": {
+                "enum": [
+                  "dashboard",
+                  "planner",
+                  "procurement"
+                ]
+              },
+              "receiptId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "idempotencyKey": {
+                "type": "string",
+                "minLength": 1
+              },
+              "targetIncarnation": {
+                "type": "string",
+                "minLength": 1
+              },
+              "commandDigest": {
+                "type": "string",
+                "minLength": 1
+              },
+              "version": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "surface",
+              "receiptId",
+              "idempotencyKey",
+              "targetIncarnation",
+              "commandDigest",
+              "version"
+            ]
+          }
+        },
+        "required": [
+          "schema",
+          "refId",
+          "installationId",
+          "projectId",
+          "refDigest",
+          "evidenceLevel",
+          "kind",
+          "target"
+        ]
+      },
+      {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "schema": {
+            "const": "sf-evidence-v1"
+          },
+          "refId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "installationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "refDigest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "evidenceLevel": {
+            "enum": [
+              "observed",
+              "claim",
+              "assumption",
+              "proposal",
+              "decision"
+            ]
+          },
+          "kind": {
+            "const": "case-event"
+          },
+          "target": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "caseId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "caseIncarnation": {
+                "type": "string",
+                "minLength": 1
+              },
+              "caseVersion": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "eventId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "outputDigest": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidenceRefs": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/BusinessEvidenceRef"
+                }
+              }
+            },
+            "required": [
+              "caseId",
+              "caseIncarnation",
+              "caseVersion",
+              "eventId",
+              "outputDigest",
+              "evidenceRefs"
+            ]
+          }
+        },
+        "required": [
+          "schema",
+          "refId",
+          "installationId",
+          "projectId",
+          "refDigest",
+          "evidenceLevel",
+          "kind",
+          "target"
+        ]
+      },
+      {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "schema": {
+            "const": "sf-evidence-v1"
+          },
+          "refId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "installationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "refDigest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "evidenceLevel": {
+            "enum": [
+              "observed",
+              "claim",
+              "assumption",
+              "proposal",
+              "decision"
+            ]
+          },
+          "kind": {
+            "const": "policy"
+          },
+          "target": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "packageId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "version": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sourceDigest": {
+                "type": "string",
+                "minLength": 1
+              },
+              "ruleId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reviewRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "scope": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "packageId",
+              "version",
+              "sourceDigest",
+              "ruleId",
+              "reviewRef",
+              "scope"
+            ]
+          }
+        },
+        "required": [
+          "schema",
+          "refId",
+          "installationId",
+          "projectId",
+          "refDigest",
+          "evidenceLevel",
+          "kind",
+          "target"
+        ]
+      }
+    ]
+  },
+  "ScenarioOperation": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "kind": {
+        "enum": [
+          "replace",
+          "defer",
+          "include",
+          "exclude"
+        ]
+      },
+      "targetRef": {
+        "type": "string",
+        "minLength": 1
+      },
+      "replacementRef": {
+        "type": "string",
+        "minLength": 1
+      },
+      "amount": {
+        "type": "number"
+      },
+      "currency": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "period": {
+        "type": "object",
+        "additionalProperties": false,
+        "x-sf-period": true,
+        "properties": {
+          "start": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "end": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          }
+        },
+        "required": [
+          "start",
+          "end"
+        ]
+      }
+    },
+    "required": [
+      "kind",
+      "targetRef"
+    ]
+  }
+} as const
+
+const inputSchemas = {
   "sf_dashboard_read": {
     "type": "object",
     "additionalProperties": false,
@@ -275,20 +1050,21 @@ export const sfOperationInputSchemas = {
       "period": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "start",
-          "end"
-        ],
+        "x-sf-period": true,
         "properties": {
           "start": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           },
           "end": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           }
-        }
+        },
+        "required": [
+          "start",
+          "end"
+        ]
       },
       "fields": {
         "type": "array",
@@ -314,20 +1090,21 @@ export const sfOperationInputSchemas = {
       "period": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "start",
-          "end"
-        ],
+        "x-sf-period": true,
         "properties": {
           "start": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           },
           "end": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           }
-        }
+        },
+        "required": [
+          "start",
+          "end"
+        ]
       },
       "comparisonRef": {
         "type": "string",
@@ -355,20 +1132,21 @@ export const sfOperationInputSchemas = {
       "period": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "start",
-          "end"
-        ],
+        "x-sf-period": true,
         "properties": {
           "start": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           },
           "end": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           }
-        }
+        },
+        "required": [
+          "start",
+          "end"
+        ]
       }
     }
   },
@@ -405,24 +1183,25 @@ export const sfOperationInputSchemas = {
       "period": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "start",
-          "end"
-        ],
+        "x-sf-period": true,
         "properties": {
           "start": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           },
           "end": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           }
-        }
+        },
+        "required": [
+          "start",
+          "end"
+        ]
       },
       "currency": {
         "type": "string",
-        "minLength": 1
+        "pattern": "^[A-Z]{3}$"
       }
     }
   },
@@ -446,7 +1225,45 @@ export const sfOperationInputSchemas = {
         }
       },
       "assumptions": {
-        "type": "object"
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "value": {
+              "type": [
+                "string",
+                "number",
+                "boolean",
+                "null"
+              ]
+            },
+            "evidenceRefs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BusinessEvidenceRef"
+              }
+            },
+            "state": {
+              "enum": [
+                "confirmed",
+                "estimated",
+                "hypothetical",
+                "absent"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "value",
+            "evidenceRefs",
+            "state"
+          ]
+        }
       }
     }
   },
@@ -488,10 +1305,55 @@ export const sfOperationInputSchemas = {
         "minLength": 1
       },
       "parameterBounds": {
-        "type": "object"
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "parameterRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minimum": {
+            "type": "number"
+          },
+          "maximum": {
+            "type": "number"
+          },
+          "steps": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "parameterRef",
+          "minimum",
+          "maximum",
+          "steps"
+        ]
       },
       "criterion": {
-        "type": "object"
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "operator": {
+            "enum": [
+              "lte",
+              "gte",
+              "eq"
+            ]
+          },
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "operator",
+          "value"
+        ]
       }
     }
   },
@@ -647,24 +1509,25 @@ export const sfOperationInputSchemas = {
       "horizon": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "start",
-          "end"
-        ],
+        "x-sf-period": true,
         "properties": {
           "start": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           },
           "end": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           }
-        }
+        },
+        "required": [
+          "start",
+          "end"
+        ]
       },
       "currency": {
         "type": "string",
-        "minLength": 1
+        "pattern": "^[A-Z]{3}$"
       },
       "criteria": {
         "type": "array",
@@ -676,7 +1539,7 @@ export const sfOperationInputSchemas = {
       "sourceRefs": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/SourceRef"
+          "$ref": "#/definitions/BusinessEvidenceRef"
         }
       }
     }
@@ -695,12 +1558,34 @@ export const sfOperationInputSchemas = {
         "minLength": 1
       },
       "proposal": {
-        "type": "object"
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sourceRefs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/BusinessEvidenceRef"
+            }
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "sourceRefs"
+        ]
       },
       "sourceRefs": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/SourceRef"
+          "$ref": "#/definitions/BusinessEvidenceRef"
         }
       }
     }
@@ -758,20 +1643,21 @@ export const sfOperationInputSchemas = {
       "period": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "start",
-          "end"
-        ],
+        "x-sf-period": true,
         "properties": {
           "start": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           },
           "end": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           }
-        }
+        },
+        "required": [
+          "start",
+          "end"
+        ]
       }
     }
   },
@@ -789,12 +1675,26 @@ export const sfOperationInputSchemas = {
         "minLength": 1
       },
       "question": {
-        "type": "object"
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "criterionRef": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "text"
+        ]
       },
       "sourceRefs": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/SourceRef"
+          "$ref": "#/definitions/BusinessEvidenceRef"
         }
       },
       "recipientRef": {
@@ -856,7 +1756,7 @@ export const sfOperationInputSchemas = {
       "sourceRefs": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/SourceRef"
+          "$ref": "#/definitions/BusinessEvidenceRef"
         }
       }
     }
@@ -897,7 +1797,22 @@ export const sfOperationInputSchemas = {
         "minLength": 1
       },
       "options": {
-        "type": "object"
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "sheet": {
+            "type": "string",
+            "minLength": 1
+          },
+          "replace": {
+            "type": "boolean"
+          },
+          "headerRow": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": []
       }
     }
   },
@@ -917,20 +1832,21 @@ export const sfOperationInputSchemas = {
       "period": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "start",
-          "end"
-        ],
+        "x-sf-period": true,
         "properties": {
           "start": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           },
           "end": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           }
-        }
+        },
+        "required": [
+          "start",
+          "end"
+        ]
       },
       "sectionRefs": {
         "type": "array",
@@ -1003,20 +1919,21 @@ export const sfOperationInputSchemas = {
       "period": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "start",
-          "end"
-        ],
+        "x-sf-period": true,
         "properties": {
           "start": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           },
           "end": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           }
-        }
+        },
+        "required": [
+          "start",
+          "end"
+        ]
       }
     }
   },
@@ -1084,20 +2001,21 @@ export const sfOperationInputSchemas = {
       "period": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "start",
-          "end"
-        ],
+        "x-sf-period": true,
         "properties": {
           "start": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           },
           "end": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           }
-        }
+        },
+        "required": [
+          "start",
+          "end"
+        ]
       },
       "limit": {
         "type": "integer",
@@ -1154,7 +2072,40 @@ export const sfOperationInputSchemas = {
         }
       },
       "parameters": {
-        "type": "object"
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "period": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "start": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              "end": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              }
+            },
+            "required": [
+              "start",
+              "end"
+            ]
+          },
+          "selectionRefs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "reviewRef": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": []
       }
     }
   },
@@ -1220,7 +2171,27 @@ export const sfOperationInputSchemas = {
         "minLength": 1
       },
       "recurrence": {
-        "type": "object"
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "recipeRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "schedule": {
+            "type": "string",
+            "minLength": 1
+          },
+          "timezone": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "recipeRef",
+          "schedule",
+          "timezone"
+        ]
       },
       "recipientRef": {
         "type": "string",
@@ -1229,3 +2200,5 @@ export const sfOperationInputSchemas = {
     }
   }
 } as const
+
+export const sfOperationInputSchemas = Object.fromEntries(Object.entries(inputSchemas).map(([id, schema]) => [id, { ...schema, definitions: sfOperationDefinitions }])) as { [K in keyof typeof inputSchemas]: typeof inputSchemas[K] & { definitions: typeof sfOperationDefinitions } }

@@ -8,6 +8,9 @@ import type { ContributionEnvelope } from "../../../product/contracts/resident-a
 import type { SfProductStatePort } from "../../../product/contracts/state.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { testPersistence } from "../../fixture/persistence.ts"
+import { decodeSfOperationInput, decodeSfContributionOutput } from "../../../product/contracts/schema-admission.ts"
+import type { SfOutputSchemaBuild } from "../../../product/contracts/generate-output-schemas.ts"
+import type { CreateSfProductContribution } from "../../../product/contracts/runtime.ts"
 
 const context: ProductContext = {
   installationId: "installation-1", projectId: "project-1", principalRef: "principal-1",
@@ -16,25 +19,26 @@ const context: ProductContext = {
   sourceRefs: [{ surface: "planner", type: "forecast", id: "forecast-1", incarnation: "incarnation-1", version: 1,
     fields: ["amount"], period: { start: "2026-01-01", end: "2026-12-31" }, observedAt: "2026-11-13T04:01:10Z" }],
 }
+const selection = { surface: context.surface, period: context.period, currency: context.currency, sourceRefs: context.sourceRefs }
+const authority = { installationId: context.installationId, projectId: context.projectId, principalRef: context.principalRef, accessRevision: context.accessRevision, policyVersion: context.policyVersion, capabilities: context.capabilities }
 
 // These references make package typechecking traverse every shared seam before domain consumers land.
-type ContractSeams = [BusinessContextService, CapabilityDescriptor, ContributionEnvelope, SfProductStatePort]
-const seamCount: ContractSeams["length"] = 4
+type ContractSeams = [BusinessContextService, CapabilityDescriptor, ContributionEnvelope, SfProductStatePort, SfOutputSchemaBuild, CreateSfProductContribution]
 
 test("context admission preserves explicit scope without sharing mutable input", () => {
-  const result = decodeProductContext(context)
+  const result = decodeProductContext(selection, authority)
   expect(result).toEqual({ ok: true, value: context })
   if (result.ok) expect(result.value.sourceRefs).not.toBe(context.sourceRefs)
-  expect(seamCount).toBe(4)
 })
 
 test("context admission rejects absent or impossible periods and unversioned references", () => {
-  expect(decodeProductContext({ ...context, period: undefined }).ok).toBe(false)
-  expect(decodeProductContext({ ...context, period: { start: "2026-02-30", end: "2026-12-31" } }).ok).toBe(false)
-  expect(decodeProductContext({ ...context, period: { start: "2026-12-31", end: "2026-01-01" } }).ok).toBe(false)
-  expect(decodeProductContext({ ...context, sourceRefs: [{ ...context.sourceRefs[0], incarnation: "" }] }).ok).toBe(false)
-  expect(decodeProductContext({ ...context, currency: "USD+EUR" }).ok).toBe(false)
-  expect(decodeProductContext({ ...context, owner: "forged-owner" })).toEqual({ ok: false, reason: "unexpected-context-field" })
+  expect(decodeProductContext({ ...selection, period: undefined }, authority).ok).toBe(false)
+  expect(decodeProductContext({ ...selection, period: { start: "2026-02-30", end: "2026-12-31" } }, authority).ok).toBe(false)
+  expect(decodeProductContext({ ...selection, period: { start: "2026-12-31", end: "2026-01-01" } }, authority).ok).toBe(false)
+  expect(decodeProductContext({ ...selection, sourceRefs: [{ ...context.sourceRefs[0], incarnation: "" }] }, authority).ok).toBe(false)
+  expect(decodeProductContext({ ...selection, currency: "USD+EUR" }, authority).ok).toBe(false)
+  expect(decodeProductContext({ ...selection, owner: "forged-owner" }, authority)).toEqual({ ok: false, reason: "unexpected-context-field" })
+  expect(decodeProductContext({ ...selection, principalRef: "forged-principal" }, authority).ok).toBe(false)
 })
 
 test("all capability entry schemas close their host identity argument boundary", () => {
@@ -49,11 +53,24 @@ test("all capability entry schemas close their host identity argument boundary",
 test("reading an old installation never initializes or persists product state implicitly", async () => {
   const storage = testPersistence()
   const before = structuredClone(storage.state.dashboard)
-  const state = createSfProductState({ persistence: storage.persistence, createId: () => "incarnation-1", authorize: async () => ({ principalRef: "principal-1", policyVersion: "policy-1", accessRevision: "access-1" }) })
+  const state = createSfProductState({ persistence: storage.persistence, createId: () => "incarnation-1", resolveTarget: async () => ({ incarnation: "incarnation-1" }), authorize: async () => ({ principalRef: "principal-1", policyVersion: "policy-1", accessRevision: "access-1" }) })
   expect(await state.read(new Request("https://example.test/product"), "preferences", () => "content")).toEqual({ status: "unavailable", reason: "product-state-uninitialized-or-invalid" })
-  expect(await state.transaction(new Request("https://example.test/product"), { namespace: "preferences", expectedVersion: 0, idempotencyKey: "preview-1", commandDigest: "a".repeat(64) }, async (staged) => {
+  expect(await state.transaction(new Request("https://example.test/product"), { namespace: "preferences", expectedStorageVersion: 0, targetRef: "preferences:principal-1", targetIncarnation: "incarnation-1", idempotencyKey: "preview-1", commandDigest: "a".repeat(64) }, async (staged) => {
     staged.preferences.theme = "dark"
     return { commit: false, value: "preview" }
-  })).toMatchObject({ status: "ok", revision: 0, value: "preview" })
+  })).toMatchObject({ status: "preview", storageVersion: 0, value: "preview" })
   expect(storage.state.dashboard).toEqual(before)
+})
+
+test("capability schemas reject nested authority and dangling evidence references", () => {
+  expect(decodeSfOperationInput("sf_scenario_simulate", { baseRef: "baseline-1", operations: [{ kind: "replace", targetRef: "cost-1", amount: 84000 }], assumptions: [] }).ok).toBe(true)
+  expect(decodeSfOperationInput("sf_scenario_simulate", { baseRef: "baseline-1", operations: [{ kind: "replace", targetRef: "cost-1", principalRef: "forged" }], assumptions: [] }).ok).toBe(false)
+  expect(decodeSfOperationInput("sf_source_get", { evidenceRef: { refId: "invented" } }).ok).toBe(false)
+  expect(decodeSfOperationInput("sf_routine_prepare", { publishedRecipeRef: "recipe-1", inputRefs: [], parameters: { provider: "forged" } }).ok).toBe(false)
+})
+
+test("a conditioned comparison cannot publish a complete difference", () => {
+  const comparison = { baselineResultRef: "baseline-1", alternativeResultRef: "alternative-1", costCoverageRefs: ["coverage-1"], comparisonStatus: "conditioned", knownDifference: 30000, completeDifference: null, criterionResults: [], unresolvedConditions: ["training-missing"] }
+  expect(decodeSfContributionOutput("ScenarioComparison", comparison).ok).toBe(true)
+  expect(decodeSfContributionOutput("ScenarioComparison", { ...comparison, completeDifference: 30000 }).ok).toBe(false)
 })

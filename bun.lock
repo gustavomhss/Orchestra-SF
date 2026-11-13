@@ -315,7 +315,12 @@
     "modules/sucafina": {
       "name": "@orchestra/sucafina",
       "dependencies": {
+        "@modelcontextprotocol/sdk": "1.32.0",
+        "@orchestra/atlas-boundary": "workspace:*",
+        "@orchestra/core": "workspace:*",
+        "@orchestra/rag-studio": "workspace:*",
         "docx": "9.5.1",
+        "effect": "catalog:",
         "exceljs": "4.4.0",
         "jose": "6.2.16",
         "jszip": "3.10.1",

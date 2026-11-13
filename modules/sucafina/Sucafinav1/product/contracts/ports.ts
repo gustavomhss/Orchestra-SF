@@ -4,7 +4,7 @@ import type { ForecastCompareRequest, CaseDraftRequest, CaseReadRequest, Dashboa
 import type { DomainProjection, ImportManifest, PreservedReview, RoutineResult } from "./context.ts"
 import type { DecisionCase, ScenarioResult, ScenarioComparison, PortfolioResult, ObservedResultProjection } from "./decisions.ts"
 import type { BusinessEvidenceRef, BusinessContextService } from "./business-context.ts"
-import type { TrustedExecutionBinding, CapabilityResult } from "./sf-execution.ts"
+import type { TrustedDomainContext, CapabilityResult } from "./sf-execution.ts"
 import type { ContributionEnvelope } from "./resident-ai.ts"
 import type { SfProductStatePort } from "./state.ts"
 
@@ -12,13 +12,13 @@ export type DomainPortHost = {
   persistence: Persistence
   authenticate: Application["authenticate"]
   environment: Application["environment"]
-  requestFor: (binding: TrustedExecutionBinding) => Request | undefined
-  revalidate: (binding: TrustedExecutionBinding) => Promise<boolean>
+  requestFor: (binding: TrustedDomainContext) => Request | undefined
+  revalidate: (binding: TrustedDomainContext) => Promise<boolean>
 }
 export type PortResult<T> =
   | { status: "ok"; value: T }
-  | { status: "needs-input" | "stale" | "denied" | "unavailable" | "conflict" | "failed"; reason: string }
-export type FinancialAnalysis = {
+  | { status: "needs-input" | "stale" | "denied" | "unavailable" | "conflict" | "provider-conflict" | "failed"; reason: string }
+type FinancialAnalysisBase = {
   baseline: DomainProjection
   candidate: DomainProjection
   comparison: ScenarioComparison
@@ -27,22 +27,27 @@ export type FinancialAnalysis = {
   sourceRefs: readonly BusinessEvidenceRef[]
   gaps: readonly string[]
   explanation: string
-  analysisBasis: "domain" | "import-preview"
-  domainApplied: boolean
-  importPreviewRef?: string
+}
+export type FinancialAnalysis = FinancialAnalysisBase & (
+  | { analysisBasis: "domain"; domainApplied: boolean; importPreviewRef?: never }
+  | { analysisBasis: "import-preview"; domainApplied: false; importPreviewRef: string }
+)
+export type SfDocumentReadPort = {
+  read: (documentRef: string, context: TrustedDomainContext) => Promise<PortResult<{ documentId: string; incarnation: string; revision: number; fileName: string; mediaType: "text/plain" | "application/pdf" | "application/vnd.openxmlformats-officedocument.wordprocessingml.document"; blobDigest: { algorithm: "sha256"; value: string }; bytes: Uint8Array }>>
+  revalidate: (documentRef: string, identity: { incarnation: string; revision: number; blobDigest: string }, context: TrustedDomainContext) => Promise<boolean>
 }
 export type PlannerPort = {
-  compareForecast: (request: ForecastCompareRequest, binding: TrustedExecutionBinding) => Promise<PortResult<FinancialAnalysis>>
+  compareForecast: (request: ForecastCompareRequest, binding: TrustedDomainContext) => Promise<PortResult<FinancialAnalysis>>
 }
 export type DecisionCasePort = {
-  draft: (request: CaseDraftRequest, binding: TrustedExecutionBinding) => Promise<PortResult<DecisionCase>>
-  read: (request: CaseReadRequest, binding: TrustedExecutionBinding) => Promise<PortResult<DecisionCase>>
+  draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>
+  read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>
 }
 export type DashboardPort = {
-  read: (request: DashboardReadRequest, binding: TrustedExecutionBinding) => Promise<PortResult<DomainProjection>>
+  read: (request: DashboardReadRequest, binding: TrustedDomainContext) => Promise<PortResult<DomainProjection>>
 }
 export type ProcurementPort = {
-  read: (request: RequestReadRequest, binding: TrustedExecutionBinding) => Promise<PortResult<DomainProjection>>
+  read: (request: RequestReadRequest, binding: TrustedDomainContext) => Promise<PortResult<DomainProjection>>
 }
 export type PreparedDomainMutation = {
   surface: "dashboard" | "planner" | "procurement"
@@ -61,18 +66,26 @@ export type BusinessPorts = {
   procurement: ProcurementPort
   context: BusinessContextService
   analysis: {
-    create: (request: { caseRef: { id: string; version: number; incarnation: string }; profileId: string; skillId: string; manifestDigest: string; objective: string; contextFingerprint: string }, binding: TrustedExecutionBinding) => Promise<PortResult<ContributionEnvelope>>
-    read: (runRef: string, binding: TrustedExecutionBinding) => Promise<PortResult<ContributionEnvelope>>
-    cancel: (runRef: string, binding: TrustedExecutionBinding) => Promise<PortResult<{ cancelled: boolean }>>
+    create: (request: { caseRef: { id: string; version: number; incarnation: string }; profileId: string; profileVersion: string; skillId: string; skillVersion: string; manifestDigest: string; outputSchemaVersion: string; requestedOperationScope: readonly string[]; objective: string; contextFingerprint: string }, binding: TrustedDomainContext) => Promise<PortResult<ContributionEnvelope>>
+    read: (runRef: string, binding: TrustedDomainContext) => Promise<PortResult<ContributionEnvelope>>
+    cancel: (runRef: string, binding: TrustedDomainContext) => Promise<PortResult<{ cancelled: boolean }>>
   }
   routines: {
-    catalog: (purpose: string, binding: TrustedExecutionBinding) => Promise<PortResult<readonly { documentId: string; publishedVersion: string; title: string }[]>>
-    prepareAdmission: (request: { publishedRecipeRef: string; inputRefs: readonly string[]; parameters: Readonly<Record<string, JsonValue>> }, binding: TrustedExecutionBinding) => Promise<PortResult<RoutineResult>>
-    readAdmission: (admissionRef: string, binding: TrustedExecutionBinding) => Promise<PortResult<RoutineResult>>
-    readRun: (runRef: string, binding: TrustedExecutionBinding) => Promise<PortResult<RoutineResult>>
+    catalog: (purpose: string, binding: TrustedDomainContext) => Promise<PortResult<readonly { documentId: string; publishedVersion: string; planRevisionId: string; writeScope: readonly string[]; title: string }[]>>
+    prepareAdmission: (request: { publishedRecipeRef: string; planRevisionId: string; writeScope: readonly string[]; inputRefs: readonly string[]; parameters: Readonly<Record<string, JsonValue>> }, binding: TrustedDomainContext) => Promise<PortResult<RoutineResult>>
+    readAdmission: (admissionRef: string, binding: TrustedDomainContext) => Promise<PortResult<RoutineResult>>
+    readRun: (runRef: string, binding: TrustedDomainContext) => Promise<PortResult<RoutineResult>>
   }
-  directory: { lookup: (ids: readonly string[], binding: TrustedExecutionBinding) => Promise<PortResult<readonly { id: string; name: string }[]>> }
-  dispatch: (name: string, input: unknown, binding: TrustedExecutionBinding) => Promise<CapabilityResult>
+  result: { write: (request: { runRef: string; caseRef: { id: string; version: number; incarnation: string }; output: ContributionEnvelope }, binding: TrustedDomainContext) => Promise<PortResult<{ outputRef: string; caseVersion: number }>> }
+  schedules: {
+    create: (request: { conditionRef: string; recipeRef: string; recurrence: string; timezone: string }, binding: TrustedDomainContext) => Promise<PortResult<{ scheduleRef: string; version: number; state: "needs-review" | "active" | "paused" }>>
+    update: (request: { scheduleRef: string; expectedVersion: number; recurrence: string; timezone: string }, binding: TrustedDomainContext) => Promise<PortResult<{ scheduleRef: string; version: number }>>
+    pause: (request: { scheduleRef: string; expectedVersion: number }, binding: TrustedDomainContext) => Promise<PortResult<{ scheduleRef: string; version: number; state: "paused" }>>
+    list: (binding: TrustedDomainContext) => Promise<PortResult<readonly { scheduleRef: string; version: number; state: string }[]>>
+    readRun: (runRef: string, binding: TrustedDomainContext) => Promise<PortResult<RoutineResult>>
+  }
+  directory: { lookup: (ids: readonly string[], binding: TrustedDomainContext) => Promise<PortResult<readonly { id: string; name: string }[]>> }
+  dispatch: (name: string, input: unknown, binding: TrustedDomainContext) => Promise<CapabilityResult>
 }
 
 // Producers own implementation and validation; these aliases keep domain outputs common across UI/MCP.

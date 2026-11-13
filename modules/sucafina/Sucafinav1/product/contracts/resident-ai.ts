@@ -1,4 +1,5 @@
 import type { BusinessEvidenceRef } from "./business-context.ts"
+import type { SfContributionOutputMap } from "./outputs.ts"
 
 export type ResidentProfile = {
   id: "sf_maestro" | "sf_finance" | "sf_procurement" | "sf_portfolio" | "sf_reviewer"
@@ -6,7 +7,7 @@ export type ResidentProfile = {
   mission: string
   allowedSkills: readonly string[]
   allowedOperations: readonly string[]
-  outputTypes: readonly string[]
+  outputTypes: readonly (keyof SfContributionOutputMap)[]
   contextBudgetTokens: number
   maxSteps: number
   maxDelegations: number
@@ -44,19 +45,20 @@ export type SkillLoadReceipt = {
   loadedAt: string
   manifestDigest: string
 }
-export type ContributionEnvelope = {
+type ContributionBase = {
   id: string
   caseRef: { id: string; version: number; incarnation: string }
-  kind: string
-  schemaVersion: string
-  state: "queued" | "running" | "needs-input" | "ready" | "stale" | "cancelled" | "failed" | "unavailable"
-  payload: unknown
+  schemaVersion: "sf-contribution-v1"
   evidenceRefs: readonly BusinessEvidenceRef[]
   runProvenance: SkillLoadReceipt & { actualModel: string; contextFingerprint: string; reviewerRunId?: string; targetRunId?: string; targetOutputDigest?: string }
   accessRevision: string
   createdAt: string
   outputDigest: string
 }
+export type ContributionEnvelope = { [K in keyof SfContributionOutputMap]: ContributionBase & (
+  | { kind: K; state: "ready"; payload: SfContributionOutputMap[K] }
+  | { kind: K; state: "queued" | "running" | "needs-input" | "stale" | "cancelled" | "failed" | "unavailable"; reason: string; payload?: never }
+) }[keyof SfContributionOutputMap]
 export type ConsumptionReceipt = {
   outputRef: string
   outputDigest: string
