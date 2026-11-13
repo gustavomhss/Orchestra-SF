@@ -44,6 +44,15 @@ test("preserved review survives changed projections and is denied after access r
   section.chart = { status: "ok", viewId: "BI01", series: [{ id: "series", label: "Forecast", unit: "USD", role: "outlook", valueIds: ["forecast"], values: [{ ...section.projection.values[0]!, value: 999 }] }], limitations: [], unassigned: [] }
   expect(await port.preserve(input, binding)).toEqual({ status: "unavailable", reason: "chart-projection-mismatch" })
   section.chart = { status: "ok", viewId: "BI01", series: [{ id: "series", label: "Forecast", unit: "USD", role: "outlook", valueIds: ["forecast"], values: [section.projection.values[0]!] }], limitations: [], unassigned: [section.projection.values[1]!] }
+  expect((await port.preview("selection", ["forecast"], binding)).status).toBe("ok")
+  // Complete chart coverage does not authorize a changed value or evidence body with the same row ID.
+  const originalValues = section.projection.values
+  section.projection.values = [{ ...originalValues[0]!, value: 999 }, originalValues[1]!]
+  expect(await port.preview("selection", ["forecast"], binding)).toEqual({ status: "unavailable", reason: "chart-projection-mismatch" })
+  section.projection.values = [{ ...originalValues[0]!, sourceRefs: [{ ...evidence, target: { ...evidence.target, version: 2 } }] }, originalValues[1]!]
+  expect(await port.preview("selection", ["forecast"], binding)).toEqual({ status: "unavailable", reason: "chart-projection-mismatch" })
+  section.projection.values = originalValues
+  expect((await port.preview("selection", ["forecast"], binding)).status).toBe("ok")
   const second = structuredClone(section)
   second.id = "second"
   const paired = createReviewPort({

@@ -207,14 +207,18 @@ function validChart(projection: DomainProjection, chart: ReviewChart | undefined
   if (chart.limitations.some((limitation: string) => typeof limitation !== "string") || chart.series.some((series: Series) => !series || typeof series.id !== "string" || !series.id || typeof series.label !== "string" || !series.label || typeof series.unit !== "string" || !series.unit || typeof series.role !== "string" || !series.role || !Array.isArray(series.values) || !Array.isArray(series.valueIds) || (series.alignmentKeys !== undefined && (!Array.isArray(series.alignmentKeys) || series.alignmentKeys.length !== series.valueIds.length || series.alignmentKeys.some((key: string) => typeof key !== "string" || !key) || new Set(series.alignmentKeys).size !== series.alignmentKeys.length))) || chart.unassigned.some((value: Value) => !value || typeof value.id !== "string")) return false
   if (chart.sensitivity && (!isReviewSensitivityBound(projection, chart) || typeof chart.sensitivity.parameterUnit !== "string" || typeof chart.sensitivity.resultUnit !== "string" || !decodeSfOperationOutput("sf_sensitivity_evaluate", chart.sensitivity.result).ok)) return false
   if (!validateReviewWaterfall(projection, chart.waterfall)) return false
+  // Validate captured bodies against one per-pass index. Rehashing every candidate
+  // for every chart cell made authorized reads quadratic in the captured data.
+  // The full canonical body remains the identity; no digest survives this call.
+  const projectionValueDigests = new Set(projection.values.map((value) => digestSfValue(value)))
   if (chart.timeline && chart.timeline.status !== "ok" && chart.timeline.status !== "unavailable") return false
   if (chart.timeline?.status === "unavailable" && !chart.timeline.reason) return false
-  if (chart.timeline?.status === "ok" && (!Array.isArray(chart.timeline.items) || chart.timeline.items.some((item: TimelineItem) => !item || !item.source || typeof item.label !== "string" || item.dateValueId !== item.source.id || !["planned", "completed", "unknown"].includes(item.state) || !projection.values.some((value: Value) => digestSfValue(value) === digestSfValue(item.source)) || (item.date !== null && (item.source.evidenceState === "absent" || typeof item.source.value !== "string" || item.date !== item.source.value || !isSfPeriod({ start: item.date, end: item.date }))) || (item.state === "completed" && (item.date === null || item.source.evidenceState !== "confirmed"))))) return false
+  if (chart.timeline?.status === "ok" && (!Array.isArray(chart.timeline.items) || chart.timeline.items.some((item: TimelineItem) => !item || !item.source || typeof item.label !== "string" || item.dateValueId !== item.source.id || !["planned", "completed", "unknown"].includes(item.state) || !projectionValueDigests.has(digestSfValue(item.source)) || (item.date !== null && (item.source.evidenceState === "absent" || typeof item.source.value !== "string" || item.date !== item.source.value || !isSfPeriod({ start: item.date, end: item.date }))) || (item.state === "completed" && (item.date === null || item.source.evidenceState !== "confirmed"))))) return false
   const values = [...chart.series.flatMap((series: Series) => series.values), ...chart.unassigned]
   const ids = [...chart.series.flatMap((series: Series) => series.valueIds), ...chart.unassigned.map((value: Value) => value.id)]
   return values.length === projection.values.length && new Set(ids).size === values.length &&
     chart.series.every((series: Series) => series.valueIds.length === series.values.length && series.valueIds.every((id: string, index: number) => id === series.values[index]?.id)) &&
-    values.every((value: Value) => projection.values.some((candidate: Value) => digestSfValue(candidate) === digestSfValue(value)))
+    values.every((value: Value) => projectionValueDigests.has(digestSfValue(value)))
 }
 
 export function reviewChartEvidence(chart: ReviewChart | undefined): readonly BusinessEvidenceRef[] {

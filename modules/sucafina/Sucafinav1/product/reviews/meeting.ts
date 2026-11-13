@@ -241,37 +241,44 @@ export function createMeetingViewFromReads(input: {
     content.replaceChildren()
     status.textContent = "Loading comparison…"
     void (async () => {
-      const current = await input.read(input.reviewRef)
-      if (turn !== generation) return
-      if (current.status !== "ok" || !current.value) {
-        content.replaceChildren()
-        status.textContent = "Review is unavailable or access has changed."
-        return
+      let authorizedComparison: PortResult<ReviewComparisonRead> | undefined
+      let differences: ReturnType<typeof compareReviews>
+      if (input.readComparison) {
+        // The server port already rereads both reviews and revalidates the current host authority.
+        authorizedComparison = await input.readComparison(input.reviewRef)
+        if (turn !== generation) return
+        if (authorizedComparison.status !== "ok") {
+          content.replaceChildren()
+          status.textContent = "Comparison is unavailable or access has changed."
+          return
+        }
+        differences = authorizedComparison.value.comparison
+      } else {
+        const current = await input.read(input.reviewRef)
+        if (turn !== generation) return
+        if (current.status !== "ok" || !current.value) {
+          content.replaceChildren()
+          status.textContent = "Review is unavailable or access has changed."
+          return
+        }
+        const prior = current.value.previousReviewRef ? await input.read(current.value.previousReviewRef) : undefined
+        if (turn !== generation) return
+        if (prior && (prior.status !== "ok" || !prior.value)) {
+          content.replaceChildren()
+          status.textContent = "Previous review is unavailable or access has changed."
+          return
+        }
+        const latest = await input.read(input.reviewRef)
+        const priorAgain = current.value.previousReviewRef ? await input.read(current.value.previousReviewRef) : undefined
+        if (turn !== generation) return
+        // This detects a changed authorized payload locally; the reader supplies authority.
+        if (latest.status !== "ok" || !latest.value || canonicalSfValue(latest.value) !== canonicalSfValue(current.value) || (prior && (!priorAgain || priorAgain.status !== "ok" || !priorAgain.value || prior.status !== "ok" || canonicalSfValue(priorAgain.value) !== canonicalSfValue(prior.value)))) {
+          content.replaceChildren()
+          status.textContent = "Comparison is unavailable or access has changed."
+          return
+        }
+        differences = compareReviews(prior?.status === "ok" ? prior.value : null, current.value)
       }
-      const prior = current.value.previousReviewRef ? await input.read(current.value.previousReviewRef) : undefined
-      if (turn !== generation) return
-      if (prior && (prior.status !== "ok" || !prior.value)) {
-        content.replaceChildren()
-        status.textContent = "Previous review is unavailable or access has changed."
-        return
-      }
-      const latest = await input.read(input.reviewRef)
-      const priorAgain = current.value.previousReviewRef ? await input.read(current.value.previousReviewRef) : undefined
-      if (turn !== generation) return
-      // This detects a changed authorized payload locally; the reader supplies authority.
-      if (latest.status !== "ok" || !latest.value || canonicalSfValue(latest.value) !== canonicalSfValue(current.value) || (prior && (!priorAgain || priorAgain.status !== "ok" || !priorAgain.value || prior.status !== "ok" || canonicalSfValue(priorAgain.value) !== canonicalSfValue(prior.value)))) {
-        content.replaceChildren()
-        status.textContent = "Comparison is unavailable or access has changed."
-        return
-      }
-      const authorizedComparison = input.readComparison ? await input.readComparison(input.reviewRef) : undefined
-      if (turn !== generation) return
-      if (authorizedComparison && authorizedComparison.status !== "ok") {
-        content.replaceChildren()
-        status.textContent = "Comparison is unavailable or access has changed."
-        return
-      }
-      const differences = authorizedComparison?.status === "ok" ? authorizedComparison.value.comparison : compareReviews(prior?.status === "ok" ? prior.value : null, current.value)
       content.replaceChildren()
       status.textContent = differences.state === "first-review" ? "First review; no previous comparison." : differences.state === "unavailable" ? "Comparison is unavailable." : "Changes between preserved reviews."
       const list = document.createElement("ul")

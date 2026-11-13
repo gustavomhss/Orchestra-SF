@@ -86,3 +86,27 @@ test("first review and an unavailable referenced predecessor have different stat
   expect(await port.read("first", context)).toMatchObject({ status: "ok", value: { comparison: { state: "first-review", changes: [] }, forwardingCoverage: "unavailable" } })
   expect(await port.read("later", context)).toMatchObject({ status: "ok", value: { comparison: { state: "unavailable", changes: [] }, forwardings: [] } })
 })
+
+test("comparison rechecks both immutable bases and final authority before returning any data", async () => {
+  const previous = review("first", [value("forecast", "one", 1320)])
+  const current = review("second", [value("forecast", "one", 1400)], "first")
+  for (const changed of ["first", "second", "authority"] as const) {
+    const reads = new Map<string, number>()
+    let authorityChecks = 0
+    const port = createReviewComparisonPort({
+      host: { revalidate: async () => ++authorityChecks === 1 || changed !== "authority" },
+      reviews: { read: async (ref) => {
+        const count = (reads.get(ref) ?? 0) + 1
+        reads.set(ref, count)
+        const captured = ref === previous.id ? previous : current
+        return { status: "ok", value: changed === ref && count === 2 ? { ...captured, version: captured.version + 1 } : captured }
+      } },
+    })
+    const result = await port.read("second", context)
+    expect(result).toMatchObject({ status: "denied", reason: "comparison-access-unavailable" })
+    expect(result).not.toHaveProperty("value")
+    expect(reads.get("first")).toBe(2)
+    expect(reads.get("second")).toBe(2)
+    if (changed === "authority") expect(authorityChecks).toBe(2)
+  }
+})

@@ -35,8 +35,10 @@ export function createReviewComparisonPort(input: {
         const previous = current.value.previousReviewRef ? await input.reviews.read(current.value.previousReviewRef, context) : undefined
         const references = previous?.status === "ok" ? [previous.value.id, current.value.id] : [current.value.id]
         const closures = input.closures ? await Promise.all(references.map((ref) => input.closures!.listByReview(ref, context))) : undefined
-        const again = await input.reviews.read(reviewRef, context)
-        const previousAgain = current.value.previousReviewRef ? await input.reviews.read(current.value.previousReviewRef, context) : undefined
+        const [again, previousAgain] = await Promise.all([
+          input.reviews.read(reviewRef, context),
+          current.value.previousReviewRef ? input.reviews.read(current.value.previousReviewRef, context) : undefined,
+        ])
         if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(current.value) || previous?.status === "ok" && (previousAgain?.status !== "ok" || digestSfValue(previousAgain.value) !== digestSfValue(previous.value)) || !await input.host.revalidate(context)) return { status: "denied", reason: "comparison-access-unavailable" }
         const comparison = compareReviews(previous?.status === "ok" ? previous.value : null, again.value)
         if (comparison.state === "unavailable") return { status: "ok", value: { comparison, forwardings: [], forwardingCoverage: "unavailable", limitations: ["Forwardings are unavailable for this comparison."] } }
