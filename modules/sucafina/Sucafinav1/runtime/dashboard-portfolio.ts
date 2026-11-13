@@ -3,6 +3,7 @@ import { changed, conflict, finite, object, rows, text } from "./contract.ts"
 import type { Field, RenderContext } from "./ui.ts"
 import { fields, form, metric, metricGrid, table } from "./ui.ts"
 import { dashboardPages } from "../src/nav.ts"
+import { WorkbookDate } from "../src/workbook-date.ts"
 import { esc } from "../src/screen-shell.ts"
 import { budgetVariance, contractVendor } from "../src/dashboard-role.ts"
 import {
@@ -451,6 +452,9 @@ function importProjectRows(
       text(row.name).trim() !== "" &&
       !text(row.name).trim().startsWith("—"),
   )
+  if (imported.some((row) => row._status !== "error" &&
+    (WorkbookDate.parse(row.start) === undefined || WorkbookDate.parse(row.end) === undefined)))
+    return { ok: false, status: 422, errors: ["Invalid project date"] }
   const projects = rows(snapshot.data.projects).map((row) => ({
     ...row,
     id: recordId(row.id),
@@ -487,6 +491,8 @@ function importProjectRows(
       const pct = typeof row.pct === "string" ? row.pct.trim() : row.pct
       return {
         ...row,
+        ...(Object.hasOwn(row, "start") ? { start: WorkbookDate.parse(row.start) } : {}),
+        ...(Object.hasOwn(row, "end") ? { end: WorkbookDate.parse(row.end) } : {}),
         name: text(row.name),
         status: typeof row.status === "string" ? row.status.trim() || "Planning" : (row.status ?? "Planning"),
         risk: typeof row.risk === "string" ? row.risk.trim() || "Low" : (row.risk ?? "Low"),

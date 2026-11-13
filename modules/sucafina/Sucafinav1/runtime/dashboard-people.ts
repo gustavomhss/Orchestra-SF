@@ -5,6 +5,7 @@ import type { Field, RenderContext } from "./ui.ts"
 import { esc } from "../src/screen-shell.ts"
 import { dashboardPages } from "../src/nav.ts"
 import { itUsersForMonth } from "../src/dashboard-accounts.ts"
+import { WorkbookDate } from "../src/workbook-date.ts"
 
 export const pages = ["Hot Topics & Actions", "Headcount Overview", "Team Structure", "Talent Review"] as const
 const statuses = ["Active", "On Leave", "Terminated"]
@@ -333,13 +334,15 @@ function importMembers(snapshot: Snapshot, actor: Actor, command: Command, envir
     const stored = rows(staged.data.members).find(
       (member) => text(member.name).trim().toLowerCase() === name.toLowerCase(),
     )
+    const start = WorkbookDate.parse(row["Start Date"] ?? row.Start ?? row.start)
+    const end = WorkbookDate.parse(row["End Date"] ?? row.End ?? row.end)
+    if (start === undefined || end === undefined)
+      return { ok: false, status: 422, errors: ["Invalid member date"] }
     const mapping: Record<string, string> = {
       Name: "name",
       Title: "title",
       Type: "type",
       Location: "location",
-      Start: "start",
-      End: "end",
       Status: "status",
       Classification: "cls",
       Outlook: "outlook",
@@ -347,14 +350,20 @@ function importMembers(snapshot: Snapshot, actor: Actor, command: Command, envir
     }
     const values = Object.fromEntries(
       Object.entries(mapping).flatMap(([column, field]) => {
-        const value =
-          (field === "start" ? row["Start Date"] : field === "end" ? row["End Date"] : undefined) ??
-          row[column] ??
-          row[field]
+        const value = row[column] ?? row[field]
         if (typeof value !== "string" || (!value && !["cls", "outlook"].includes(field))) return []
         return [[field, value]]
       }),
     )
+    if (start) values.start = start
+    if (end) values.end = end
+    if (command.values.replace === true && !stored && (!start || !end)) {
+      const prior = rows(snapshot.data.members).find(
+        (member) => text(member.name).trim().toLowerCase() === name.toLowerCase(),
+      )
+      if (!start && typeof prior?.start === "string") values.start = prior.start
+      if (!end && typeof prior?.end === "string") values.end = prior.end
+    }
     if (typeof row.Leader === "string" && row.Leader.trim()) {
       const leader = rows(staged.data.leaders).find(
         (item) => text(item.name).trim().toLowerCase() === text(row.Leader).trim().toLowerCase(),

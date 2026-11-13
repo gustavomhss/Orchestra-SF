@@ -2,6 +2,7 @@ import { configure, controls, roleMap } from "./admin.ts"
 import { createHash } from "node:crypto"
 import type { ResolvedActor, RoleRow, Surface } from "../src/identity.ts"
 import { dashboardPages, plannerKeys, procurementKeys } from "../src/nav.ts"
+import { WorkbookDate } from "../src/workbook-date.ts"
 import { documentHtml, links, pageMain } from "../src/screen-shell.ts"
 import type { Actor, Command, Domain, Environment, Persistence, Result, Snapshot } from "./contract.ts"
 import { changed, conflict, object, rows, text } from "./contract.ts"
@@ -270,9 +271,13 @@ export function createApplication(mount: string, application: Application) {
                   : undefined
                 mapped.leaderId = leader?.id ?? ""
               }
+              const start = WorkbookDate.parse(mapped.start)
+              const end = WorkbookDate.parse(mapped.end)
               return {
                 ...mapped,
-                _status: text(mapped.name).trim() ? "valid" : "error",
+                ...(start !== undefined && Object.hasOwn(mapped, "start") ? { start } : {}),
+                ...(end !== undefined && Object.hasOwn(mapped, "end") ? { end } : {}),
+                _status: text(mapped.name).trim() && start !== undefined && end !== undefined ? "valid" : "error",
               }
             }).filter(
               (project) =>

@@ -4,6 +4,7 @@ import { changed, conflict, finite, object, rows, text } from "./contract.ts"
 import type { RenderContext } from "./ui.ts"
 import { fields, form, metric, metricGrid, table } from "./ui.ts"
 import { esc } from "../src/screen-shell.ts"
+import { WorkbookDate } from "../src/workbook-date.ts"
 import { assignOwner, deleteRate, ownerLineScope, ownerMayEdit, plannerField } from "../src/planner-role.ts"
 import {
   changeAnnual,
@@ -346,6 +347,7 @@ export const domain: Domain = {
       ...normalized,
       versions,
       directory: structuredClone(environment.directory),
+      headcountMappingVisible: privateAccess(actor),
     }
     return {
       data: privateAccess(actor) ? data : object(redact(data)),
@@ -2389,6 +2391,7 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
   if (lockedMembers) issue.warnings.push("Roster unchanged: version is locked")
   const headcountImport = readWorkbookHeadcount(
     lockedMembers ? undefined : sheets.Headcount,
+    rows(snapshot.data.roster),
     version,
     actor,
     can,
@@ -2560,21 +2563,10 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
     warnings: [...new Set(issue.warnings)],
   }
 }
-function workbookDate(value: unknown): string | undefined {
-  if (value == null || value === "") return ""
-  if (typeof value === "number" && Number.isFinite(value)) {
-    const date = new Date(Date.UTC(1899, 11, 30) + value * 86400000)
-    return Number.isFinite(date.valueOf()) ? date.toISOString().slice(0, 10) : undefined
-  }
-  const token = text(value).trim()
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(token)) return undefined
-  const date = new Date(`${token}T00:00:00Z`)
-  return Number.isFinite(date.valueOf()) && date.toISOString().slice(0, 10) === token ? token : undefined
-}
-
 type WorkbookPermission = (field: string, line?: Row) => boolean
 function readWorkbookHeadcount(
   headcount: Row[] | undefined,
+  previousRoster: Row[],
   version: Version,
   actor: Actor,
   can: WorkbookPermission,
@@ -2599,20 +2591,21 @@ function readWorkbookHeadcount(
           fail("Roster name is required")
           break
         }
-        const start = workbookDate(row["Start Date"] ?? row.Start),
-          end = workbookDate(row["End Date"] ?? row.End)
+        const start = WorkbookDate.parse(row["Start Date"] ?? row.Start),
+          end = WorkbookDate.parse(row["End Date"] ?? row.End)
         if (start === undefined || end === undefined) {
           fail("Invalid roster date")
           break
         }
+        const previous = previousRoster.find((person) => text(person.name).trim().toLowerCase() === text(row.Name).trim().toLowerCase())
         roster.push({
           name: text(row.Name).trim(),
           title: text(row.Title),
           type: text(row.Type),
           leader: text(row.Leader),
           location: text(row.Location),
-          start,
-          end,
+          start: start || previous?.start || "",
+          end: end || previous?.end || "",
           status: text(row.Status),
         })
       }
