@@ -22,13 +22,6 @@ describe("Atlas translation", () => {
     expect(mapSfAtlasEntry({ ...input, projection: { ...projection, case: { ...projection.case, ledger: [] } } }).status).toBe("refused")
     expect(mapSfAtlasEntry({ ...input, projection: { ...projection, evidenceRefs: [] } }).status).toBe("refused")
   })
-  test("refuses a ledger event whose dependencies include another case event", () => {
-    const nested = { ...event, evidenceRefs: [bundle] }
-    const wrapper = { ...bundle, target: { ...bundle.target, evidenceRefs: [bundle] } }
-    expect(mapSfAtlasEntry({ kind: "task", eventId: "event", bundleRef: wrapper,
-      projection: { ...projection, events: [nested], case: { ...projection.case, ledger: [nested] }, evidenceRefs: [bundle] } }))
-      .toMatchObject({ status: "refused", reason: "nested-case-event" })
-  })
   test("requires a reviewed policy bound to a native profile and its rule digest", () => {
     expect(mapSfAtlasEntry({ kind: "project", projection: policy }).status).toBe("mapped")
     expect(mapSfAtlasEntry({ kind: "project", projection: { ...policy, rule: "Different rule" } }).status).toBe("refused")

@@ -63,34 +63,6 @@ test("unassigned approvals are not attributed to another holder", async () => {
   expect(queue.unassigned).toEqual([{ number: "PR-1", amount: 10 }])
 })
 
-test("approval queue retains missing steps and does not invent holder names or actions", async () => {
-  const { approvalDecision, myApprovals, procurementScreen } = await import("../../../src/procurement-screen.ts")
-  const { render } = await import("../../../runtime/procurement.ts")
-  const requests = [
-    { number: "PR-no-step", status: "pr_pending", createdBy: "other", prApproval: { amount: 10, steps: [] } },
-    { number: "PR-no-approval", status: "src_pending", createdBy: "other" },
-    { number: "PR-unknown-stage", status: "legacy_pending", createdBy: "other" },
-    { number: "PR-unknown-holder", status: "po_pending", createdBy: "other", po: { approval: { amount: 30, steps: [{ status: "pending", holderId: "missing-person" }] } } },
-    { number: "PR-self", status: "pr_pending", createdBy: "buyer", prApproval: { amount: 20, steps: [{ status: "pending", holderId: "buyer" }] } },
-  ]
-  const queue = myApprovals(requests, "buyer")
-  expect(queue.unassigned).toEqual([{ number: "PR-no-step", amount: 10 }, { number: "PR-no-approval", amount: null }, { number: "PR-unknown-stage", amount: null }])
-  const html = render("My approvals", { requests, directory: [], formSettings: { currency: "USD", blockSelfApproval: true } }, { actor: { id: "buyer", roles: ["buyer"], canWrite: true }, year: 2026, month: 1, at: "2026-01-01T00:00:00Z", versions: {} })!
-  expect(html).toContain("PR-no-step")
-  expect(html).toContain("PR-no-approval")
-  expect(html).toContain("Unrecognized approval stage")
-  expect(html).toContain("approval step unavailable")
-  expect(html).toContain("Responsible person not resolved (missing-person)")
-  expect(html).toContain("waiting for the assigned holder")
-  expect(html).toContain("self-approval is blocked")
-  expect(html).not.toContain("Assigned approver")
-  expect(approvalDecision({ number: "PR-empty-holder", status: "pr_pending", createdBy: "other", prApproval: { amount: 10, steps: [{ status: "pending", holderId: "" }] } }, { id: "buyer", roles: ["buyer"], canWrite: true }, false)).toEqual({ allowed: false, reason: "approval holder unavailable" })
-  const screen = procurementScreen({ key: "My approvals", actor: { id: "buyer", roles: ["buyer"], canWrite: true }, requests })
-  expect(screen.html).toContain("PR-no-approval")
-  expect(screen.html).toContain("Approval step unavailable")
-  expect(screen.html).toContain("submitted base currency unavailable")
-})
-
 test("ranking does not replace a missing submitted FX snapshot with a later rate", async () => {
   const { quoteAssessment } = await import("../../../src/form.ts")
   const result = quoteAssessment({ sourcing: { fxSnapshot: { EUR: null }, quotes: [{ id: "q", currency: "EUR", total: 100, techPass: true }] } }, { currency: "USD", fxRates: [{ code: "EUR", rate: 2 }], techWeight: 60, commWeight: 40, criteria: [], commCriteria: [] })

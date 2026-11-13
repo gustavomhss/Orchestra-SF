@@ -92,11 +92,6 @@ export const createSfExecutionBindingRegistry: CreateSfExecutionBindingRegistry 
       return true
     },
     requestFor: (context) => active(context) && leases.get(context.lease)?.used ? bindings.get(context.binding)?.admission.request : undefined,
-    operationIdentity: (context) => {
-      const lease = leases.get(context.lease)
-      if (!active(context) || !lease?.used) return undefined
-      return digestSfValue({ runId: context.binding.runId, callKey: lease.callKey, operation: lease.operation, digest: lease.digest })
-    },
     receiptFor: (context, operation, digest, resultDigest) => {
       const lease = leases.get(context.lease)
       const matches = freeze.operations.filter((item) => item.operation === operation)

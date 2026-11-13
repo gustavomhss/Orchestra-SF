@@ -1,7 +1,9 @@
 import { expect, test } from "bun:test"
 import { dispatchSfCapability } from "../../../product/host-binding/capability-dispatch.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../product/contracts/schema-admission.ts"
-import { plannerMonthlyPresentation } from "../../../product/planner/bi.ts"
+import { plannerDifferencePresentation } from "../../../product/planner/bi-difference.ts"
+import { bindProjectedPlannerBiPort, createProjectedPlannerBiSource } from "../../../product/analytics/planner-projected.ts"
+import { plannerCapacityPresentation, plannerMonthlyPresentation } from "../../../product/planner/bi.ts"
 import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
@@ -70,4 +72,71 @@ test("real planner projection reaches BI with distinct missing and zero values",
     if (output.ok) expect(output.value.values.find((value) => value.id === "line:2:actual")?.value).toBe(0)
   }
   expect((await dispatch()).status).toBe("denied")
+})
+
+
+test("real planner comparison supplies the same reconciled waterfall to BI and dispatcher", async () => {
+  const initialState = initial()
+  const versions = initialState.data.versions as { lines: { a: (number | null)[] }[] }[]
+  versions.forEach((version) => { version.lines[0]!.a[0] = 40000; version.lines[0]!.a[1] = 40000 })
+  const storage = testPersistence({ planner: initialState })
+  const refs = ["v0", "v1"].map((id): Extract<BusinessEvidenceRef, { kind: "record" }> => {
+    const projection = projectPlannerSource(storage.state.planner, actor, id)!
+    const ref: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", refId: id, installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "planner-version", recordId: id, incarnation: `inc-${id}`, version: 1, fields: Object.keys(projection), period, projectionDigest: digestSfValue({ versionId: id, projection }) } }
+    ref.refDigest = digestSfEvidenceRef(ref)
+    return ref
+  })
+  const ui = createSfUiAuthority({ authorize: async () => ({ installationId: "i", projectId: "p", principalRef: "finance", policyVersion: "1", accessRevision: "1" }), commandIdentity: async () => "command", createId: () => "waterfall-request", now: () => Date.parse("2026-11-13T00:00:00Z") })
+  const request = { viewId: "BI02", selectionRef: "selection", period }
+  const admitted = await ui.admit(new Request("https://example.test"), "sf_bi_view", digestSfValue(request))
+  expect(admitted.status).toBe("ok")
+  if (admitted.status !== "ok") return
+  const authority: SfDomainValidation = { validateDomainContext: (input, operation, digest) => input.kind === "ui" ? ui.validate(input, operation, digest) : Promise.resolve(false), revalidateDomainContext: (input) => input.kind === "ui" ? ui.revalidate(input) : Promise.resolve(false), receiptFor: (input, operation, digest, result) => input.kind === "ui" ? ui.receiptFor(input, operation, digest, result) : undefined }
+  const planner = createPlannerPort({ host: { persistence: storage.persistence, authenticate: async (_request, input) => resolve("finance", [...input!.roleMap], (group) => group === "finance-group"), environment: async () => ({ at: "2026-11-13T00:00:00Z", id: () => "unused", directory: [] }), requestFor: (input) => input.kind === "ui" ? ui.requestFor(input) : undefined, revalidate: authority.revalidateDomainContext }, sources: { resolveForecastSource: async (id) => { const ref = refs.find((item) => item.refId === id); return ref ? { status: "ok", value: { versionId: id, evidence: ref } } : { status: "unavailable", reason: "missing" } }, resolveForecastCoverage: async () => ({ status: "unavailable", reason: "missing" }) } })
+  const source = createProjectedPlannerBiSource(bindProjectedPlannerBiPort({ planner, resolve: async () => ({ status: "ok", value: { comparison: { baseRef: "v0", candidateRef: "v1", period, currency: "USD" }, project: (analysis) => plannerDifferencePresentation(analysis, "BI02") } }), revalidate: async (_request, binding) => authority.revalidateDomainContext(binding) }))
+  const dispatched = await dispatchSfCapability({ operation: "sf_bi_view", payload: request, context: admitted.value, descriptors: [createBiDescriptor(source, authority)], authority, validateInput: (_descriptor, value) => decodeSfOperationInput("sf_bi_view", value).ok, validateOutput: (_descriptor, result) => result.status !== "ok" || decodeSfOperationOutput("sf_bi_view", result.result).ok })
+  expect(dispatched.status).toBe("ok")
+  if (dispatched.status !== "ok") return
+  const output = decodeSfOperationOutput("sf_bi_view", dispatched.result)
+  expect(output.ok).toBe(true)
+  if (!output.ok) return
+  expect(output.value.values.find((value) => value.id === "difference:baseline")?.value).toBe(590000)
+  expect(output.value.values.find((value) => value.id === "difference:candidate-total")?.value).toBe(602000)
+  const uiProjection = await readBiPresentation(request, admitted.value, source, authority)
+  expect(uiProjection.status).toBe("ok")
+  if (uiProjection.status !== "ok") return
+  expect(uiProjection.value.projection).toEqual(output.value)
+  expect(uiProjection.value.presentation.waterfall?.reconciliation).toBe("reconciled")
+})
+
+
+test("real planner capacity presents aligned FTE and unavailable HR cost without invented values", async () => {
+  const data = initial()
+  const versions = data.data.versions as { hc: { positions: { id: string; include: boolean; fte: number; start: number; end: number; type: string }[] } }[]
+  versions[1]!.hc.positions = [{ id: "position", include: true, fte: 0.5, start: 1, end: 3, type: "Employee" }]
+  const storage = testPersistence({ planner: data })
+  const refs = ["v0", "v1"].map((id): Extract<BusinessEvidenceRef, { kind: "record" }> => {
+    const source = projectPlannerSource(storage.state.planner, actor, id)!
+    const ref: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", refId: id, installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "planner-version", recordId: id, incarnation: `inc-${id}`, version: 1, fields: Object.keys(source), period, projectionDigest: digestSfValue({ versionId: id, projection: source }) } }
+    ref.refDigest = digestSfEvidenceRef(ref)
+    return ref
+  })
+  const ui = createSfUiAuthority({ authorize: async () => ({ installationId: "i", projectId: "p", principalRef: "finance", policyVersion: "1", accessRevision: "1" }), commandIdentity: async () => "command", createId: () => "capacity-request", now: () => Date.parse("2026-11-13T00:00:00Z") })
+  const request = { viewId: "BI04", selectionRef: "selection", period }
+  const admission = await ui.admit(new Request("https://example.test"), "sf_bi_view", digestSfValue(request))
+  expect(admission.status).toBe("ok")
+  if (admission.status !== "ok") return
+  const authority: SfDomainValidation = { validateDomainContext: (input, operation, digest) => input.kind === "ui" ? ui.validate(input, operation, digest) : Promise.resolve(false), revalidateDomainContext: (input) => input.kind === "ui" ? ui.revalidate(input) : Promise.resolve(false), receiptFor: (input, operation, digest, result) => input.kind === "ui" ? ui.receiptFor(input, operation, digest, result) : undefined }
+  const planner = createPlannerPort({ host: { persistence: storage.persistence, authenticate: async (_request, input) => resolve("finance", [...input!.roleMap], (group) => group === "finance-group"), environment: async () => ({ at: "2026-11-13T00:00:00Z", id: () => "unused", directory: [] }), requestFor: (input) => input.kind === "ui" ? ui.requestFor(input) : undefined, revalidate: authority.revalidateDomainContext }, sources: { resolveForecastSource: async (id) => { const ref = refs.find((item) => item.refId === id); return ref ? { status: "ok", value: { versionId: id, evidence: ref } } : { status: "unavailable", reason: "missing" } }, resolveForecastCoverage: async () => ({ status: "unavailable", reason: "missing" }) } })
+  const source = createPlannerBiSource(bindPlannerBiPort({ planner, resolve: async () => ({ status: "ok", value: { comparison: { baseRef: "v0", candidateRef: "v1", period, currency: "USD" }, side: "candidate", present: (analysis) => plannerCapacityPresentation(analysis.candidate) } }), revalidate: async (_request, binding) => authority.revalidateDomainContext(binding) }))
+  const output = await dispatchSfCapability({ operation: "sf_bi_view", payload: request, context: admission.value, descriptors: [createBiDescriptor(source, authority)], authority, validateInput: (_descriptor, value) => decodeSfOperationInput("sf_bi_view", value).ok, validateOutput: (_descriptor, result) => result.status !== "ok" || decodeSfOperationOutput("sf_bi_view", result.result).ok })
+  expect(output.status).toBe("ok")
+  if (output.status !== "ok") return
+  const result = await readBiPresentation(request, admission.value, source, authority)
+  expect(result.status).toBe("ok")
+  if (result.status !== "ok") return
+  expect(result.value.projection.values.find((value) => value.id === "month:1:fte")).toMatchObject({ value: 0.5, unit: "fte" })
+  expect(result.value.projection.values.find((value) => value.id === "month:1:hr-budget")).toMatchObject({ value: null, evidenceState: "absent" })
+  expect(result.value.presentation.series.map((series) => series.role)).toEqual(["fte", "cost"])
+  expect(result.value.presentation.series[0]?.alignmentKeys).toEqual(result.value.presentation.series[1]?.alignmentKeys)
 })

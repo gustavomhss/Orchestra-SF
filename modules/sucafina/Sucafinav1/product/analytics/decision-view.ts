@@ -85,6 +85,7 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
       }
       const button = document.createElement("button")
       button.type = "button"
+      button.setAttribute("data-bi-focus", source.id)
       button.textContent = `Abrir ${source.type} ${source.id} v${source.version}`
       button.addEventListener("click", () => openSource(source))
       origin.append(button)
@@ -104,6 +105,7 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
     if (entry.status === "pending" && entry.questionRef && openQuestion) {
       const button = document.createElement("button")
       button.type = "button"
+      button.setAttribute("data-bi-focus", entry.questionRef)
       button.textContent = `Abrir pergunta sobre ${entry.categoryId}`
       button.addEventListener("click", () => openQuestion(entry.questionRef!))
       item.append(button)
@@ -116,6 +118,7 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
         }
         const button = document.createElement("button")
         button.type = "button"
+        button.setAttribute("data-bi-focus", reference.refId)
         button.textContent = `Abrir evidência de ${entry.categoryId}: ${reference.refId}`
         button.addEventListener("click", () => openEvidence(reference))
         item.append(button)
@@ -143,6 +146,7 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
     }
     const button = document.createElement("button")
     button.type = "button"
+    button.setAttribute("data-bi-focus", reference)
     button.textContent = `Abrir cobertura ${reference}`
     button.addEventListener("click", () => openCoverage(reference))
     section.append(button)
@@ -156,6 +160,7 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
     }
     const button = document.createElement("button")
     button.type = "button"
+    button.setAttribute("data-bi-focus", reference.refId)
     button.textContent = `Abrir fonte do cenário ${reference.refId}`
     button.addEventListener("click", () => openEvidence(reference))
     section.append(button)
@@ -246,6 +251,7 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
       }
       const button = document.createElement("button")
       button.type = "button"
+      button.setAttribute("data-bi-focus", reference)
       button.textContent = `Abrir cobertura de sensibilidade ${reference}`
       button.addEventListener("click", () => openCoverage(reference))
       section.append(button)
@@ -260,6 +266,7 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
       }
       const button = document.createElement("button")
       button.type = "button"
+      button.setAttribute("data-bi-focus", reference.refId)
       button.textContent = `Abrir fonte da sensibilidade ${reference.refId}`
       button.addEventListener("click", () => openEvidence(reference))
       section.append(button)

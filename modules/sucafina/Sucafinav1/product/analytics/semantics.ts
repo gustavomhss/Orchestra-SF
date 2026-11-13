@@ -1,24 +1,8 @@
-import type { DomainProjection } from "../contracts/context.ts"
+import type { BiPresentation, DomainProjection } from "../contracts/context.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
-import type { BiViewId } from "./catalog.ts"
-import type { WaterfallPlan } from "./waterfall.ts"
-import type { TimelinePlan } from "./milestones.ts"
 
 /** Producer-supplied labels and roles; no semantic meaning is inferred from a value ID. */
-export type BiPresentation = {
-  viewId: BiViewId
-  series: readonly {
-    id: string
-    label: string
-    unit: string
-    role: "budget" | "actual" | "outlook" | "baseline" | "contribution" | "result" | "fte" | "cost" | "stock" | "aging" | "opened" | "closed" | "planned" | "completed" | "sensitivity" | "other"
-    valueIds: readonly string[]
-    alignmentKeys?: readonly string[]
-  }[]
-  limitations: readonly string[]
-  waterfall?: WaterfallPlan
-  timeline?: TimelinePlan
-}
+export type { BiPresentation } from "../contracts/context.ts"
 
 export function resolveBiPresentation(projection: DomainProjection, presentation: BiPresentation) {
   const values = new Map(projection.values.map((value) => [value.id, value]))

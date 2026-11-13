@@ -31,7 +31,7 @@ export async function readBiView(request: BiViewRequest, context: TrustedDomainC
   if (!await source.revalidate(request, context)) return { status: "denied", reason: "binding-unavailable" }
   const result = await source.read(request, context)
   if (result.status !== "ok") return result
-  if (["BI09", "BI10", "BI11"].includes(request.viewId) && !hasBiDecision(result.value)) return { status: "unavailable", reason: "decision-unavailable" }
+  if (["BI09", "BI10", "BI11"].includes(request.viewId) && !hasBiDecision(result.value, request.viewId)) return { status: "unavailable", reason: "decision-unavailable" }
   if (result.value.context.installationId !== context.binding.installationId || result.value.context.projectId !== context.binding.projectId || result.value.context.principalRef !== context.binding.principalRef || result.value.context.accessRevision !== context.binding.accessRevision || result.value.context.policyVersion !== context.binding.policyVersion) return { status: "denied", reason: "context-mismatch" }
   if (new Set(result.value.values.map((value) => value.id)).size !== result.value.values.length) return { status: "unavailable", reason: "duplicate-value-id" }
   if (result.value.context.period.start !== request.period.start || result.value.context.period.end !== request.period.end) return { status: "stale", reason: "period-mismatch" }

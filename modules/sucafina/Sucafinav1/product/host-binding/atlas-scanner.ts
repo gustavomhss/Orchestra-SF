@@ -1,20 +1,6 @@
 import { detectAvailableScanner, KNOWN_SCANNERS, NO_SCANNER_NAME, runScanner } from "@orchestra/atlas-boundary/native-memory"
 import type { ScannerBinarySpec } from "@orchestra/atlas-boundary/native-memory"
 import type { MemoryRecord, NamedScanner } from "@orchestra/atlas-boundary/business-memory-ports"
-import type { AppProcess } from "@orchestra/core/process"
-import { Effect } from "effect"
-import { ChildProcess } from "effect/unstable/process"
-
-/** Probe the same executable and invocation specification that the memory writer will pin. */
-export async function probeSfAtlasScanner(process: AppProcess.Interface) {
-  const spec = detectAvailableScanner()
-  if (!spec) return undefined
-  const result = await Effect.runPromise(process.run(ChildProcess.make(spec.command, ["--version"], { extendEnv: true, stdin: "ignore" }), { timeout: "5 seconds" })).catch(() => undefined)
-  if (!result || result.exitCode !== 0 || result.stdoutTruncated) return undefined
-  const version = result.stdout.toString("utf8").trim()
-  if (!version) return undefined
-  return { spec, version }
-}
 
 /** The host supplies this configuration; it is never taken from a model tool argument. */
 export function createSfAtlasScanner(config: { scanners?: readonly ScannerBinarySpec[]; timeoutMs?: number } = {}): NamedScanner {

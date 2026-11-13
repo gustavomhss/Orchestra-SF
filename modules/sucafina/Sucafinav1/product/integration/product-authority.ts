@@ -9,7 +9,7 @@ import type { SfHostRuntime } from "../contracts/host-context.ts"
 import type { DomainPortHost } from "../contracts/ports.ts"
 import type { SfNativeAdmission, SfSelectedRuntime } from "../contracts/runtime.ts"
 import type { TrustedExecutionBinding } from "../contracts/sf-execution.ts"
-import type { SfStateAuthority, SfStateNamespace } from "../contracts/state.ts"
+import type { SfStateNamespace } from "../contracts/state.ts"
 import { parseCaseRef } from "../decisions/case-port.ts"
 import { createSfExecutionBindingRegistry } from "../host-binding/execution-context.ts"
 import { createSfProductState } from "../host-binding/state-provider.ts"
@@ -36,9 +36,7 @@ export function createSfProductAuthority(input: {
   verifySelection: (selected: SfSelectedRuntime) => Promise<boolean>
   verifySkillReceipt: (admission: SfNativeAdmission) => Promise<boolean>
   providerGeneration: () => Promise<number | undefined>
-  /** Composition-owned capability; never returned in browser or model services. */
-  proposalCoverageWrites?: WeakSet<object>
-  authorizeDocument: (request: Request, snapshot: Snapshot, assetId: string, principal: string, authority: SfStateAuthority) => Promise<{ incarnation: string } | undefined>
+  authorizeDocument: (request: Request, snapshot: Snapshot, assetId: string, principal: string) => Promise<{ incarnation: string } | undefined>
 }) {
   const grants = structuredClone(input.grants)
   if (!input.installationId.trim() || !input.policyVersion.trim() || !URL.canParse(input.origin) || new URL(input.origin).origin !== input.origin ||
@@ -97,7 +95,7 @@ export function createSfProductAuthority(input: {
     return input.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await principal(request, snapshot) }), { signal: request.signal })
   }
   const state = createSfProductState({
-    persistence: input.persistence, createId: input.createId, nativeEvidenceWrites, proposalCoverageWrites: input.proposalCoverageWrites,
+    persistence: input.persistence, createId: input.createId, nativeEvidenceWrites,
     authorize: async (request, snapshot, namespace, mode) => {
       const actor = await principal(request, snapshot)
       if (!actor || !actor.grant.namespaces.includes(namespace) || (mode === "write" && !actor.canWrite)) return undefined
@@ -115,7 +113,7 @@ export function createSfProductAuthority(input: {
       const entry = Object.hasOwn(cases, id) ? object(cases[id]) : undefined
       if (entry && entry.id === id && typeof entry.incarnation === "string" && (!parsed || parsed.incarnation === entry.incarnation) &&
         Array.isArray(entry.participants) && entry.participants.includes(actor.principalRef)) return { incarnation: entry.incarnation }
-      if (namespace === "documents") return input.authorizeDocument(request, snapshot, targetRef, actor.principalRef, { principalRef: actor.principalRef, accessRevision: actor.accessRevision, policyVersion: actor.policyVersion })
+      if (namespace === "documents") return input.authorizeDocument(request, snapshot, targetRef, actor.principalRef)
       return undefined
     },
   })
@@ -125,24 +123,24 @@ export function createSfProductAuthority(input: {
     authorize: async (request, operation) => {
       const actor = await resolve(request).catch(() => undefined)
       if (!actor || !(operation.startsWith("sf-human:")
-        ? (actor.canWrite || operation === "sf-human:views.read" || operation === "sf-human:analysis.read" || operation === "sf-human:decisions.portfolio.read") && actor.grant.humanActions?.some((action) => operation === `sf-human:${action}`)
+        ? actor.canWrite && actor.grant.humanActions?.some((action) => operation === `sf-human:${action}`)
         : actor.grant.operations.includes(operation))) return undefined
       return { installationId: actor.identity.installationId, projectId: actor.identity.projectId,
         principalRef: actor.principalRef, policyVersion: actor.policyVersion, accessRevision: actor.accessRevision }
     },
   })
-  const admission = async (value: SfNativeAdmission, purpose: "execute" | "interrupt" = "execute", request = value.request) => {
-    const actor = await resolve(request).catch(() => undefined)
-    if (!actor || (purpose === "interrupt" && !actor.grant.humanActions?.includes("analysis.cancel")) || !actor.grant.namespaces.includes("contributions") || !actor.grant.operations.length ||
+  const admission = async (value: SfNativeAdmission) => {
+    const actor = await resolve(value.request).catch(() => undefined)
+    if (!actor || !actor.grant.namespaces.includes("contributions") || !actor.grant.operations.length ||
       value.selected.operationIds.some((operation) => !actor.grant.operations.includes(operation)) || value.skillReceipts.length !== 1 ||
       !await input.verifySelection(value.selected) || !await input.verifySkillReceipt(value)) return undefined
-    const record = await state.read(request, "contributions", (stored, authority) => {
+    const record = await state.read(value.request, "contributions", (stored, authority) => {
       const run = stored.nativeRuns?.[value.runId]
       const currentCase = stored.cases[value.caseRef.id]
-      if (!run || !(purpose === "interrupt" ? run.state === "cancelled" && !!run.native : ["preparing", "queued", "running"].includes(run.state)) || run.runRef !== value.runId || run.principalRef !== authority.principalRef || run.accessRevision !== authority.accessRevision ||
+      if (!run || !["preparing", "queued", "running"].includes(run.state) || run.runRef !== value.runId || run.principalRef !== authority.principalRef || run.accessRevision !== authority.accessRevision ||
         run.policyVersion !== authority.policyVersion || digestSfValue(run.caseRef) !== digestSfValue(value.caseRef) ||
         digestSfValue(run.selection) !== digestSfValue(value.selected) || value.skillReceipts[0]?.skillId !== run.skillId || !currentCase || currentCase.id !== value.caseRef.id ||
-        currentCase.incarnation !== value.caseRef.incarnation || (purpose === "interrupt" ? currentCase.version < value.caseRef.version : currentCase.version !== value.caseRef.version) ||
+        currentCase.incarnation !== value.caseRef.incarnation || currentCase.version !== value.caseRef.version ||
         !currentCase.participants.includes(authority.principalRef) || (run.native && (run.native.sessionID !== value.sessionID ||
           digestSfValue(value.skillReceipts[0]) !== digestSfValue(run.native.skillReceipt)))) return undefined
       return run
@@ -151,24 +149,16 @@ export function createSfProductAuthority(input: {
     const session = await input.inspectSession(value.sessionID)
     if (!session || session.id !== value.sessionID || session.agent !== value.profile.id || session.projectID !== actor.identity.projectId ||
       digestSfValue(session.location) !== digestSfValue(actor.identity.location) || digestSfValue(session.model) !== digestSfValue(record.value.model) ||
-      digestSfValue(identity()) !== digestSfValue(actor.identity) || request.signal.aborted) return undefined
+      digestSfValue(identity()) !== digestSfValue(actor.identity) || value.request.signal.aborted) return undefined
     return actor
   }
-  const authorizeBinding = async (value: SfNativeAdmission, binding: TrustedExecutionBinding, purpose: "execute" | "interrupt", request = value.request): Promise<boolean> => {
-    const actor = await admission(value, purpose, request).catch(() => undefined)
-    return !!actor && binding.nativeSessionId === value.sessionID && binding.runId === value.runId &&
-      binding.caseId === value.caseRef.id && binding.caseVersion === value.caseRef.version && binding.caseIncarnation === value.caseRef.incarnation &&
-      binding.profileId === value.profile.id && binding.profileVersion === value.profile.version && binding.manifestDigest === value.manifestDigest &&
-      digestSfValue(binding.skillReceipts) === digestSfValue(value.skillReceipts) && binding.entryMode === value.entryMode && binding.installationId === actor.identity.installationId && binding.hostId === actor.identity.hostId &&
+  const authorizeNative = async (value: SfNativeAdmission, binding: TrustedExecutionBinding): Promise<boolean> => {
+    const actor = await admission(value).catch(() => undefined)
+    return !!actor && binding.installationId === actor.identity.installationId && binding.hostId === actor.identity.hostId &&
       binding.projectId === actor.identity.projectId && binding.locationId === digestSfValue(actor.identity.location) &&
       binding.principalRef === actor.principalRef && binding.policyVersion === actor.policyVersion && binding.accessRevision === actor.accessRevision &&
       binding.providerGeneration === await input.providerGeneration()
   }
-  const authorizeNative = (value: SfNativeAdmission, binding: TrustedExecutionBinding) => authorizeBinding(value, binding, "execute")
-  // Cleanup after durable cancellation never reauthorizes model execution or tool leases.
-  const authorizeInterrupt = (value: SfNativeAdmission, binding: TrustedExecutionBinding, request: Request) =>
-    request.method === "POST" && request.headers.get("origin") === input.origin && request.headers.get("sec-fetch-site") !== "cross-site"
-      ? authorizeBinding(value, binding, "interrupt", request) : Promise.resolve(false)
   const native = createSfExecutionBindingRegistry({
     authenticateAndResolve: async (value) => {
       const actor = await admission(value).catch(() => undefined)
@@ -186,5 +176,5 @@ export function createSfProductAuthority(input: {
   const host: DomainPortHost = { persistence: input.persistence, authenticate: input.authenticate, environment: input.environment,
     requestFor: authority.requestFor, revalidate: authority.revalidateDomainContext }
   const human = createSfHumanAuthority({ origin: input.origin, ui })
-  return { state, ui, human, native, authority, host, creationTarget, nativeEvidenceWrites, authorizeNative, authorizeInterrupt }
+  return { state, ui, human, native, authority, host, creationTarget, nativeEvidenceWrites, authorizeNative }
 }

@@ -35,8 +35,6 @@ export type SfBindingRegistry = {
   lease: (context: Tool.Context, operation: string, inputDigest: string) => Promise<PortResult<TrustedCallContext>>
   consume: (context: TrustedCallContext, operation: string, inputDigest: string) => boolean
   requestFor: (context: TrustedCallContext) => Request | undefined
-  /** Private identity includes the authenticated assistant message and tool call. */
-  operationIdentity?: (context: TrustedCallContext) => string | undefined
   receiptFor: (context: TrustedCallContext, operation: string, inputDigest: string, resultDigest?: string) => BoundCapabilityReceipt | undefined
   revalidate: (context: TrustedCallContext) => Promise<boolean>
   finish: (context: TrustedCallContext) => void
