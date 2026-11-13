@@ -2,18 +2,9 @@
   "campaign": "sf2h-integral-20261112",
   "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
   "T0": "2026-11-13T04:01:10Z",
-  "revision": 19,
-  "state": "CONTINUING_LATE",
   "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
   "canonical_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
   "code_baseline": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
-  "observed_dev": "f08941a346ef0d072dff8e67e49823505ad7a12e",
-  "observed_native": "767e22ebce034b7f9834a29ccd051497bcdb0dc5",
-  "goal": {
-    "thread_id": "01a1d309-ba0e-7490-b044-0899d9fa008f",
-    "status": "active",
-    "continuation": "native Goal; no second supervisor"
-  },
   "scope": {
     "wps": 15,
     "tasks": 74,
@@ -27,656 +18,19 @@
   "acceptance": [
     "all product criteria implemented and consumed",
     "eight final CI selections plus mandatory epic/package/static gates on accepted C",
-    "AM01–AM06 actual native product proofs",
+    "AM01\u2013AM06 actual native product proofs",
     "three independent reviewer approvals and zero mandatory open findings",
     "D evidence-only envelope preserving all C product blobs",
     "actual C/G7 and D/G8 check:guards --base origin/dev with separate SHA receipts",
     "all necessary commits published and verified through GitHub MCP",
     "no orphaned authorized writers"
   ],
-  "roster": [
-    {
-      "session_id": "01a1d309-ba0e-7490-b044-0899d9fa008f",
-      "agent_path": null,
-      "confirmed_model": "gpt-6.1-sol",
-      "provider": "openai",
-      "host_version": "0.167.2"
-    },
-    {
-      "session_id": "01a1d318-c1cc-7233-a581-54666d63f6f3",
-      "agent_path": "/root/s4",
-      "confirmed_model": "gpt-6.1-terra",
-      "provider": "openai",
-      "host_version": "0.167.2"
-    },
-    {
-      "session_id": "01a1d318-9867-7f60-ac45-33bdcca59a73",
-      "agent_path": "/root/s3",
-      "confirmed_model": "gpt-6.1-terra",
-      "provider": "openai",
-      "host_version": "0.167.2"
-    },
-    {
-      "session_id": "01a1d318-7704-7853-975c-633cdbda36d5",
-      "agent_path": "/root/s2",
-      "confirmed_model": "gpt-6.1-terra",
-      "provider": "openai",
-      "host_version": "0.167.2"
-    },
-    {
-      "session_id": "01a1d318-51f5-7603-929d-955e257bf611",
-      "agent_path": "/root/s1",
-      "confirmed_model": "gpt-6.1-terra",
-      "provider": "openai",
-      "host_version": "0.167.2"
-    },
-    {
-      "session_id": "01a1d314-baca-77e0-bef7-23ea04ced98c",
-      "agent_path": "/root/s0_c",
-      "confirmed_model": "gpt-6.1-terra",
-      "provider": "openai",
-      "host_version": "0.167.2"
-    },
-    {
-      "session_id": "01a1d313-56e4-7082-a4a3-27428a14e966",
-      "agent_path": "/root/s0_b",
-      "confirmed_model": "gpt-6.1-terra",
-      "provider": "openai",
-      "host_version": "0.167.2"
-    },
-    {
-      "session_id": "01a1d313-2829-7071-9307-2226fdf76c01",
-      "agent_path": "/root/s0_a",
-      "confirmed_model": "gpt-6-luna",
-      "provider": "openai",
-      "host_version": "0.167.2"
-    }
-  ],
-  "leases": [
-    {
-      "actor": "S0-A",
-      "epoch": 1,
-      "write_paths": [
-        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S0-A"
-      ],
-      "state": "CLOSED_FENCED_SUPERSEDED"
-    },
-    {
-      "actor": "S0-B",
-      "epoch": 1,
-      "write_paths": [
-        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S0-B"
-      ],
-      "state": "CLOSED_FENCED_SUPERSEDED"
-    },
-    {
-      "actor": "S0-C",
-      "epoch": 1,
-      "write_paths": [
-        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S0-C"
-      ],
-      "state": "REVOKED_FENCED_EPOCH1"
-    },
-    {
-      "actor": "S1",
-      "epoch": 1,
-      "write_paths": [
-        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S1"
-      ],
-      "state": "REVOKED_FENCED_EPOCH1"
-    },
-    {
-      "actor": "S2",
-      "epoch": 1,
-      "write_paths": [
-        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S2"
-      ],
-      "state": "CLOSED_FENCED_SUPERSEDED"
-    },
-    {
-      "actor": "S3",
-      "epoch": 1,
-      "write_paths": [
-        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S3"
-      ],
-      "state": "REVOKED_FENCED_EPOCH1"
-    },
-    {
-      "actor": "S4",
-      "epoch": 1,
-      "write_paths": [
-        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S4"
-      ],
-      "state": "REVOKED_FENCED_EPOCH1"
-    },
-    {
-      "actor": "S1",
-      "epoch": 2,
-      "session_id": "01a1d321-948f-7841-9846-2dfee4da5ca0",
-      "write_paths": [
-        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S1-e2"
-      ],
-      "state": "CLOSED_QUIESCENT_HANDOFF"
-    },
-    {
-      "actor": "S2",
-      "epoch": 2,
-      "session_id": "01a1d321-bd1b-7be3-8c1c-86ed7e732067",
-      "write_paths": [
-        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S2-e2"
-      ],
-      "state": "CLOSED_FENCED_SUPERSEDED"
-    },
-    {
-      "actor": "S3",
-      "epoch": 2,
-      "session_id": "01a1d321-bf63-7fb2-8132-7eaf9e5ed86b",
-      "write_paths": [
-        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S3-e2"
-      ],
-      "state": "CLOSED_QUIESCENT_HANDOFF"
-    },
-    {
-      "actor": "S4",
-      "epoch": 2,
-      "session_id": "01a1d321-c227-7c23-a31c-6d8114724ee9",
-      "write_paths": [
-        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S4-e2"
-      ],
-      "state": "CLOSED_QUIESCENT_HANDOFF"
-    },
-    {
-      "actor": "S1-C",
-      "epoch": 1,
-      "session_id": "01a1d367-887f-7071-8485-d0b73d370522",
-      "branch": "sf2-planner",
-      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/planner",
-      "write_paths": [
-        {
-          "id": "WP03",
-          "branch": "sf2-planner",
-          "existing_files": [
-            "modules/sucafina/Sucafinav1/runtime/planner.ts",
-            "modules/sucafina/Sucafinav1/src/planner-accounts.ts",
-            "modules/sucafina/Sucafinav1/src/planner-role.ts",
-            "modules/sucafina/Sucafinav1/src/planner-screen.ts",
-            "modules/sucafina/Sucafinav1/test/parity-planner.test.ts",
-            "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts"
-          ],
-          "new_prefixes": [
-            "modules/sucafina/Sucafinav1/product/planner/",
-            "modules/sucafina/Sucafinav1/test/product/wp03/",
-            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/"
-          ],
-          "allowed_purpose": "Planner: cálculo/projeção/preview puro, sete superfícies, edição mensal, HR/FX/cadastros e cenários; preservar finanças, locks e privacidade, sem escrever importadores ou composição comum."
-        }
-      ],
-      "state": "G0_RELEASED_OWN_PATHS_ONLY",
-      "mission_sha256": "a7af7cb9154b26fcc8e65322250f7020255a5effc2a513c6fdf6bf28b16ddc79"
-    },
-    {
-      "actor": "S4-A",
-      "epoch": 1,
-      "session_id": "01a1d367-892e-78d0-9bdc-1ea2c53a57ed",
-      "branch": "sf2-decisions",
-      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/decisions",
-      "write_paths": [
-        {
-          "id": "WP11",
-          "branch": "sf2-decisions",
-          "existing_files": [],
-          "new_prefixes": [
-            "modules/sucafina/Sucafinav1/product/decisions/",
-            "modules/sucafina/Sucafinav1/test/product/wp11/",
-            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/"
-          ],
-          "allowed_purpose": "Implementar somente casos de decisão e execução preparada no namespace próprio; consumir contratos e portas reais; não editar UI, persistência concreta, domínio produtor ou scheduler de outros WPs."
-        }
-      ],
-      "state": "G0_RELEASED_OWN_PATHS_ONLY",
-      "mission_sha256": "d3b787763d0896e4dbb0da03b6b8ab40773499a45d502d17d3f23ec19df5e127"
-    },
-    {
-      "actor": "S4-B",
-      "epoch": 1,
-      "session_id": "01a1d367-89f6-7151-aac5-8911e8159d48",
-      "branch": "sf2-ai",
-      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/ai",
-      "write_paths": [
-        {
-          "id": "WP12",
-          "branch": "sf2-ai",
-          "existing_files": [],
-          "new_prefixes": [
-            "modules/sucafina/Sucafinav1/product/ai/",
-            "modules/sucafina/Sucafinav1/test/product/wp12/",
-            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/"
-          ],
-          "allowed_purpose": "Implementar somente ia contextual e análise verificável no namespace próprio; consumir contratos e portas reais; não editar UI, persistência concreta, domínio produtor ou scheduler de outros WPs."
-        }
-      ],
-      "state": "G0_RELEASED_OWN_PATHS_ONLY",
-      "mission_sha256": "7b7996403ba20dc0fbbb9d638e0c2fd95715304a66f620a09027a202b93c43f9"
-    },
-    {
-      "actor": "S0-A",
-      "epoch": 3,
-      "session_id": "01a1d378-b21f-77f0-b324-a2e4b8ac0e47",
-      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/atlas",
-      "branch": "sf2-atlas",
-      "mission": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/missions/S0-A-e3.json",
-      "mission_sha256": "9cf6222bfcc0eae6b5a3d40dd1eec36e4f6f05d622ac85dcaefd798e3f770f29",
-      "state": "G0_RELEASED_OWN_PATHS_ONLY"
-    },
-    {
-      "actor": "S1-A",
-      "epoch": 1,
-      "session_id": "01a1d378-b854-7e50-b74a-6b338f265e1d",
-      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/interface",
-      "branch": "sf2-ui",
-      "mission": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/missions/S1-A-e1.json",
-      "mission_sha256": "13f444e5507a09bfa1f9c71ad7ed59151e9c229ba3606586b9bafec4d487feae",
-      "state": "G0_RELEASED_OWN_PATHS_ONLY"
-    },
-    {
-      "actor": "S2",
-      "epoch": 3,
-      "session_id": "01a1d321-bd1b-7be3-8c1c-86ed7e732067",
-      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/documents",
-      "branch": "sf2-documents",
-      "mission": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/missions/S2-e3.json",
-      "mission_sha256": "898424930acb3e200af31851bb165a39c798c095750eb9fac60f154625955551",
-      "state": "G0_RELEASED_OWN_PATHS_ONLY"
-    },
-    {
-      "actor": "S0-B",
-      "epoch": 3,
-      "session_id": "01a1d331-1d75-7c62-b12f-a95876ffa4de",
-      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/runtime",
-      "branch": "sf2-runtime",
-      "mission": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/missions/S0-B-e3.json",
-      "mission_sha256": "8192c39168c8ae2a41f059fbdeef5af89a806e7d7cfad9eb57babc9b19f941d7",
-      "state": "G0_RELEASED_OWN_PATHS_ONLY",
-      "additional_authorized_paths": [
-        "apps/cli/src/sucafina-product/native-host.ts",
-        "apps/cli/src/sucafina-product/token-gate.ts",
-        "test/product/wp10/native-host/"
-      ],
-      "support_packet": "missions/S0-B-token-gate-seam.md"
-    },
-    {
-      "actor": "S1-B",
-      "epoch": 1,
-      "session_id": "01a1d3ab-ed3d-7bb1-b362-e5f8310a231d",
-      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/dashboard",
-      "mission": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/missions/S1-B-e1.json",
-      "mission_sha256": "460abba6b5599700e9aec5c33713c298bdf2c7401d5d6f3468e4b9f24b1a55dd",
-      "state": "CLOSED_VOLUNTARY_QUIESCENCE_RENEWED_E2_NOT_ACCEPTED_HANDOFF",
-      "exception": null
-    },
-    {
-      "actor": "S2-A",
-      "epoch": 1,
-      "session_id": "01a1d3ab-ee20-7592-9121-530cc81c069e",
-      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/procurement",
-      "mission": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/missions/S2-A-e1.json",
-      "mission_sha256": "a40e6713f8bd6efb678b891f73b2f56f00b83870584073a3f50444d6aa1ff4f1",
-      "state": "G0_RELEASED_OWN_PATHS_ONLY",
-      "exception": null
-    },
-    {
-      "actor": "S2-B",
-      "epoch": 1,
-      "session_id": "01a1d3ab-efa7-7fa0-9ef6-4571f963032e",
-      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/analytics",
-      "mission": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/missions/S2-B-e1.json",
-      "mission_sha256": "075fe0627b55f13cd0c03c3315cf4c715ef9ec0bf08c06873d2137a93d0f7083",
-      "state": "G0_RELEASED_OWN_PATHS_ONLY",
-      "exception": null
-    },
-    {
-      "actor": "S2-C",
-      "epoch": 1,
-      "session_id": "01a1d3ab-f105-7fa3-852f-58a17257a557",
-      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/imports",
-      "mission": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/missions/S2-C-e1.json",
-      "mission_sha256": "c3ebdb0cff0f3a910e6d49923cb7b93faf7cf7237527ac7a641f77ed72e35eda",
-      "state": "G0_RELEASED_OWN_PATHS_ONLY",
-      "exception": "S2-C excludes documents/T05 until transfer ACK"
-    },
-    {
-      "actor": "S3-A",
-      "epoch": 1,
-      "session_id": "01a1d3c6-51c8-7072-a055-b0c06bdd6e28",
-      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/reviews",
-      "mission": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/missions/S3-A-e1.json",
-      "mission_sha256": "af0c93645708f6372b6d1d02fc08a1c3fb8f088d1ac481ab81f43bcd3c9d7447",
-      "state": "G0_RELEASED_OWN_PATHS_ONLY_FULL_READ_PREREQUISITE"
-    },
-    {
-      "actor": "S3-B",
-      "epoch": 1,
-      "session_id": "01a1d3c6-528d-78e2-aab8-51c7e64b6ce7",
-      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/collaboration",
-      "mission": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/missions/S3-B-e1.json",
-      "mission_sha256": "db8ff14ebd1f1c1e9963e61bf741fdc4dfb00745d33489e7095b5f66a5ad43f8",
-      "state": "G0_RELEASED_OWN_PATHS_ONLY_FULL_READ_PREREQUISITE"
-    },
-    {
-      "actor": "S3-C",
-      "epoch": 1,
-      "session_id": "01a1d3c6-53bb-7150-8d14-69834193425d",
-      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/routines",
-      "mission": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/missions/S3-C-e1.json",
-      "mission_sha256": "df2d1d99c58b12cc3affebe2cee25b726c7753cfeb58791a00e48110c787ed92",
-      "state": "G0_RELEASED_OWN_PATHS_ONLY_FULL_READ_PREREQUISITE"
-    },
-    {
-      "actor": "S4-C",
-      "epoch": 1,
-      "session_id": "01a1d3c6-551e-7151-b436-2e8a3b7585e0",
-      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/portfolio",
-      "mission": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/missions/S4-C-e1.json",
-      "mission_sha256": "cba44531454c7c13f27857ce826dc7dba7bc18c83118d5c85a786ae72c6e5e5c",
-      "state": "G0_RELEASED_OWN_PATHS_ONLY_FULL_READ_PREREQUISITE"
-    },
-    {
-      "actor": "S4",
-      "epoch": 3,
-      "session_id": "01a1d321-c227-7c23-a31c-6d8114724ee9",
-      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/memory",
-      "mission": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/missions/S4-e3.json",
-      "mission_sha256": "8614c3bb0eeb9cc3e2cfdd41e1b2588b4f813d2ae2008989606d00c945347b2c",
-      "state": "G0_RELEASED_OWN_PURE_WP14_T01_T02_T05_ONLY"
-    },
-    {
-      "actor": "S1-B",
-      "epoch": 2,
-      "session_id": "01a1d3ab-ed3d-7bb1-b362-e5f8310a231d",
-      "mission": "missions/S1-B-e2.json",
-      "state": "ACTIVE_RENEWED_OWN_PATHS",
-      "write_paths": [
-        "work/dashboard own WP02 pack paths"
-      ]
-    },
-    {
-      "actor": "S1-R1",
-      "epoch": 1,
-      "session_id": "01a1d417-7d20-7de2-824b-f4c838a457b5",
-      "mission": "missions/S1-R1-e1.json",
-      "state": "ACTIVE_REVIEW_ONLY",
-      "write_paths": [
-        "staging/S1-R1-e1"
-      ]
-    },
-    {
-      "actor": "S2-R2",
-      "epoch": 1,
-      "session_id": "01a1d43b-969a-7a21-a8c1-166e882cddc0",
-      "state": "ACTIVE_REVIEW_ONLY",
-      "mission": "missions/S2-R2-e1.json",
-      "write_paths": [
-        "staging/S2-R2-e1"
-      ]
-    }
-  ],
-  "ci": {
-    "dispatcher": "S0",
-    "in_flight": [],
-    "requests": [
-      {
-        "id": "sf2h-development-0",
-        "candidate": "3bbe2b467303271fa769ee15418cc721ebeb761a",
-        "tree": "af95d7141646150130802e1e65f0bf8f54047957",
-        "request": {
-          "package": "sucafina",
-          "directory": "modules/sucafina",
-          "runner": "bun",
-          "args": [
-            "Sucafinav1/test/product/wp00/contracts.test.ts",
-            "--timeout",
-            "120000"
-          ],
-          "env": {}
-        },
-        "omni": "declared",
-        "normalized_digest": "f910b0368dc79bf42897c973b8568fbed8087e864cc5d50f741b04f9d07f31fb",
-        "status": "SUPERSEDED_BY_EXACT_FILE_NORMALIZATION_NOT_DISPATCHED",
-        "final_selection": false
-      },
-      {
-        "id": "sf2h-development-0-exact",
-        "candidate": "3bbe2b467303271fa769ee15418cc721ebeb761a",
-        "tree": "af95d7141646150130802e1e65f0bf8f54047957",
-        "request": {
-          "package": "sucafina",
-          "directory": "modules/sucafina",
-          "packageSelector": "packages/sucafina",
-          "runner": "bun",
-          "args": [
-            "./Sucafinav1/test/product/wp00/contracts.test.ts",
-            "--timeout",
-            "120000"
-          ],
-          "env": {}
-        },
-        "request_digest": "ef294cd70dfce9a270da65e3dd1a3687ff13f0ba0b7ec285d926f25be858886c",
-        "snapshot_tree": "1bba469b44ed59622a068ea132eba4f9f646e89f",
-        "snapshot_sha": "568db2cdcdc68f784c8d1777aa7b17c8c0fa1086",
-        "branch": "ci-run-linux-sf2h-dev0",
-        "status": "TESTS_PASSED_RECEIPT_REVIEW",
-        "final_selection": false,
-        "run_id": 43365537471,
-        "job_id": 131688939543,
-        "tests": {
-          "pass": 4,
-          "fail": 0,
-          "files": 1,
-          "expect_calls": 286
-        },
-        "omni": "not applicable; focused: no declaring test ran",
-        "artifacts": [],
-        "receipt_gap": "evaluate mandatory artifact requirement; no claim of final selection PASS"
-      },
-      {
-        "id": "sf2h-development-1",
-        "candidate": "5fa3f41e0f38399af48eb10377fe6a1721ef31a0",
-        "tree": "4b04649863936ddccbe913f40622f51022475254",
-        "snapshot_sha": "144cd6de301ba5c193c997fb8169d9784ea7ca8e",
-        "snapshot_tree": "a41dbf60a99f65b57863da81a8aaa0e0d7aea84b",
-        "branch": "ci-run-linux-sf2h-dev1",
-        "request": {
-          "package": "sucafina",
-          "directory": "modules/sucafina",
-          "packageSelector": "packages/sucafina",
-          "runner": "bun",
-          "args": [
-            "./Sucafinav1/test/product/wp00/contracts.test.ts",
-            "./Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
-            "--timeout",
-            "120000"
-          ],
-          "env": {}
-        },
-        "request_digest": "dbeadd9ca7e337bf52588af77febd871a8c89ecc6d5f34427906dd18f63aa9d7",
-        "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
-        "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
-        "status": "TESTS_PASSED_RECEIPT_REVIEW",
-        "run_id": 43372139290,
-        "final_selection": false,
-        "job_id": 131710119252,
-        "tests": {
-          "pass": 24,
-          "fail": 0,
-          "files": 2,
-          "expects": 351
-        },
-        "artifacts": [],
-        "log": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/validation/development-1-job.log"
-      },
-      {
-        "id": "sf2h-development-2",
-        "candidate": "9f0c6a066ffc56b7ef21df079796827cfe141d40",
-        "base_tree": "d0f9880bfd850eb2bbc1674e836437a4af6fd5ae",
-        "request": {
-          "package": "sucafina",
-          "directory": "modules/sucafina",
-          "runner": "bun",
-          "args": [
-            "./Sucafinav1/test/product/wp00/contracts.test.ts",
-            "./Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
-            "./Sucafinav1/test/product/wp10/integration/public-state.test.ts",
-            "./Sucafinav1/test/runtime-http.test.ts",
-            "--timeout",
-            "120000"
-          ],
-          "env": {}
-        },
-        "request_content": "{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"./Sucafinav1/test/product/wp00/contracts.test.ts\",\"./Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts\",\"./Sucafinav1/test/product/wp10/integration/public-state.test.ts\",\"./Sucafinav1/test/runtime-http.test.ts\",\"--timeout\",\"120000\"],\"env\":{}}",
-        "request_blob": "82b919cdb790198642cc04ecf98311a33036ef5c",
-        "request_digest": "088570cd5c00a18b156ce4586556e9b433c761325c6deee3cf34d63cc88aa0d0",
-        "snapshot_tree": "53839387aa13a194bea01184dbbe78b370f6ace9",
-        "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
-        "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
-        "branch": "ci-run-linux-sf2h-dev2",
-        "status": "TESTS_PASSED_RECEIPT_REVIEW",
-        "final_selection": false,
-        "snapshot_sha": "c003f77ee869e9c2057db779adc348ece4d70306",
-        "run_id": 43375302565,
-        "job_id": 131720278311,
-        "tests": {
-          "pass": 32,
-          "fail": 0,
-          "files": 4,
-          "expects": 403
-        },
-        "artifacts": [],
-        "log": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/validation/development-2-job.log"
-      },
-      {
-        "id": "sf2h-development-3",
-        "candidate": "a5488f458ce8a2071b48504106b854554aa28ddf",
-        "base_tree": "7e5a4fba735be016a8e0c0b744a82f3ce7e12b25",
-        "request": {
-          "package": "sucafina",
-          "directory": "modules/sucafina",
-          "runner": "bun",
-          "args": [
-            "./Sucafinav1/test/product/wp00/contracts.test.ts",
-            "./Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
-            "./Sucafinav1/test/product/wp10/integration/public-state.test.ts",
-            "./Sucafinav1/test/product/wp10/integration/ui-authority.test.ts",
-            "./Sucafinav1/test/runtime-http.test.ts",
-            "./Sucafinav1/test/product/wp03/adapter.test.ts",
-            "./Sucafinav1/test/product/wp03/port.test.ts",
-            "./Sucafinav1/test/product/wp03/coverage.test.ts",
-            "./Sucafinav1/test/product/wp11/case-port.test.ts",
-            "./Sucafinav1/test/product/wp12/resident.test.ts",
-            "./Sucafinav1/test/product/wp12/analysis.test.ts",
-            "--timeout",
-            "120000"
-          ],
-          "env": {}
-        },
-        "request_content": "{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"./Sucafinav1/test/product/wp00/contracts.test.ts\",\"./Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts\",\"./Sucafinav1/test/product/wp10/integration/public-state.test.ts\",\"./Sucafinav1/test/product/wp10/integration/ui-authority.test.ts\",\"./Sucafinav1/test/runtime-http.test.ts\",\"./Sucafinav1/test/product/wp03/adapter.test.ts\",\"./Sucafinav1/test/product/wp03/port.test.ts\",\"./Sucafinav1/test/product/wp03/coverage.test.ts\",\"./Sucafinav1/test/product/wp11/case-port.test.ts\",\"./Sucafinav1/test/product/wp12/resident.test.ts\",\"./Sucafinav1/test/product/wp12/analysis.test.ts\",\"--timeout\",\"120000\"],\"env\":{}}",
-        "request_blob": "1f4faddd0779eb072c1df5986f56e25ff191e103",
-        "request_digest": "c6b68eae49ec33f950cc01623a1c4a498a5d0a73b56dcc8a008c054df7eceff3",
-        "snapshot_tree": "9d3ee60d7429a2d632e448bc26e67861e83a93bd",
-        "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
-        "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
-        "branch": "ci-run-linux-sf2h-dev3",
-        "status": "TESTS_PASSED_RECEIPT_REVIEW",
-        "final_selection": false,
-        "snapshot_sha": "3907e8b76aa6d49d602e87b104ed8d5426474bb1",
-        "run_id": 43385260685,
-        "job_id": 131752118593,
-        "artifacts": [],
-        "log": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/validation/development-3-job.log",
-        "log_sha256": "7072579f81c34aa37c3bbc3e6c833d33ddf0b4aeef5061f2b5472dc78783bec8",
-        "tests": {
-          "pass": 68,
-          "fail": 0,
-          "files": 11,
-          "expects": 590
-        },
-        "omni": "not applicable (focused: no declaring test ran), no omni proof"
-      }
-    ],
-    "dispatcher_epoch": 2,
-    "handoff_reason": "Explicit S0 sole dispatcher; no worker dispatch authorization"
-  },
-  "candidate_C": null,
-  "delivery_D": null,
-  "required_findings": [
-    {
-      "id": "G0-GROK-01",
-      "state": "OPEN",
-      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
-    },
-    {
-      "id": "G0-GROK-02",
-      "state": "OPEN",
-      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
-    },
-    {
-      "id": "G0-GROK-03",
-      "state": "OPEN",
-      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
-    },
-    {
-      "id": "G0-GROK-04",
-      "state": "OPEN",
-      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
-    },
-    {
-      "id": "G0-GROK-05",
-      "state": "OPEN",
-      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
-    },
-    {
-      "id": "G0-GROK-06",
-      "state": "OPEN",
-      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
-    },
-    {
-      "id": "G0-GROK-07",
-      "state": "OPEN",
-      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
-    },
-    {
-      "id": "G0-GROK-08",
-      "state": "OPEN",
-      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
-    },
-    {
-      "id": "G0-GROK-09",
-      "state": "OPEN",
-      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
-    },
-    {
-      "id": "G0-GROK-10",
-      "state": "OPEN",
-      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
-    },
-    {
-      "id": "G0-GROK-11",
-      "state": "OPEN",
-      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
-    },
-    {
-      "id": "G0-GROK-12",
-      "state": "OPEN",
-      "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json"
-    }
-  ],
-  "blockers": [],
-  "next_action": "Collect v4 mergeACKs, scoped typechecks and ready native slices; integrate+hostedCI without duplicate dispatcher. Implement18C15inputs and real T01 source/UI/native/result/Apply composition. Complete remaining queued domain WPs as slots release; final8CIs/AMs/reviews/C/DallNOT_RUN.",
-  "resume": {
-    "api": "same native Goal thread; collaboration followup_task for recorded agent paths",
-    "cli_supported": "codex resume <SESSION_ID>; no automatic restart on human interruption",
-    "checkpoint": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/control/modules/sucafina/Sucafinav1/docs/sf2h/control/checkpoint.json"
-  },
   "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "goal": {
+    "thread_id": "01a1d309-ba0e-7490-b044-0899d9fa008f",
+    "status": "active",
+    "continuation": "native Goal; no second supervisor"
+  },
   "hook": {
     "path": "/Users/gustavoschneiter/Documents/HuGR/Orchestra-SF/.codex/hooks.json",
     "script": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/hooks/lifecycle.py",
@@ -688,254 +42,18 @@
     ],
     "active_not_claimed": true
   },
-  "capabilities": {
-    "collaboration_global_slots_including_root": 21,
-    "independent_pools_verified": false,
-    "resource_active_limit_including_S0": 8,
-    "RAM_bytes": 17179869184,
-    "cpu_count": 12,
-    "CLI_version": "0.167.1",
-    "host_version": "0.167.2",
-    "model_context_cache": {
-      "gpt-6.1-sol": 500000,
-      "gpt-6.1-terra": 500000,
-      "gpt-6-luna": 272000
-    },
-    "Grok": {
-      "binary_version": "1.0.77",
-      "requested_model": "grok-4.7",
-      "reported_usage_model": "grok-4.7-build",
-      "session_id": "01a1d315-3334-7bf3-984e-cc0b6b1d7d3c",
-      "receipt": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S0-B/grok-probe.json",
-      "native_product_proof": false
-    }
+  "coverage_ledger": {
+    "path": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S0-A-e2/coverage-ledger.json",
+    "sha256": "3aebcc045f6380224e57dab1b2fb9af85d4e260fe5f10eda126a8fb9af0f21b2",
+    "criteria": 1610,
+    "duplicates": 0,
+    "PASS": 0
   },
-  "outputs": [
-    {
-      "actor": "S0-A",
-      "state": "STAGING_PROPOSAL",
-      "paths": [
-        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/numeric-oracles.json",
-        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/measurement-protocol.md",
-        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/journeys-j01-j08.json",
-        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP00/T03/checkpoint.json",
-        "modules/sucafina/Sucafinav1/test/product/wp00/fixtures/corpus-v1.json"
-      ]
-    },
-    {
-      "actor": "S0-B",
-      "state": "STAGING_PROPOSAL",
-      "paths": [
-        "grok-probe.json",
-        "grok-probe.stderr",
-        "preflight.md"
-      ]
-    },
-    {
-      "actor": "S0-C",
-      "state": "STAGING_PROPOSAL",
-      "paths": [
-        "state-provider-checkpoint.md",
-        "reconciliation.md",
-        "ci-inventory.json",
-        "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts"
-      ]
-    },
-    {
-      "actor": "S1",
-      "state": "STAGING_PROPOSAL",
-      "paths": [
-        "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-dependencias/SKILL.md",
-        "modules/sucafina/Sucafinav1/product/ai/skills/sf-avaliar-sensibilidade/SKILL.md",
-        "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-cenarios/SKILL.md",
-        "modules/sucafina/Sucafinav1/product/ai/skills/sf-explicar-forecast/SKILL.md",
-        "modules/sucafina/Sucafinav1/product/ai/skills/sf-reavaliar-compromissos/SKILL.md",
-        "modules/sucafina/Sucafinav1/product/ai/skills/sf-compor-portfolio/SKILL.md"
-      ]
-    },
-    {
-      "actor": "S2",
-      "state": "STAGING_PROPOSAL",
-      "paths": [
-        "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
-        "modules/sucafina/Sucafinav1/product/documents/rag-adapter.ts"
-      ]
-    },
-    {
-      "actor": "S3",
-      "state": "STAGING_PROPOSAL",
-      "paths": [
-        "gnative-checklist.md",
-        "modules/sucafina/Sucafinav1/product/ai/skills/sf-enquadrar-decisao/SKILL.md",
-        "modules/sucafina/Sucafinav1/product/ai/skills/sf-contestar-decisao/SKILL.md",
-        "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-evidencias/SKILL.md",
-        "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
-        "modules/sucafina/Sucafinav1/product/ai/skills/sf-coordenar-perguntas/SKILL.md"
-      ]
-    },
-    {
-      "actor": "S4",
-      "state": "STAGING_PROPOSAL",
-      "paths": [
-        "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts"
-      ]
-    }
-  ],
-  "product_progress": {
-    "head": "10ec437623cc6a275530875d25a02b329cc72407",
-    "tree": "09456a6df46b0820ff58ba95a5983b0bd3eae299",
-    "branch": "sf2-integrate",
-    "remote_tree_verified": true,
-    "G0": "CONSTRUCTION_RELEASE_V4_NOT_TASK_DONE",
-    "freeze_manifest_sha256": "5b05835aa5c9810ffe248c77b3cb60a41f001015e0126c0aa22ec824b7043f7d",
-    "typecheck": "fresh project install; bun typecheck SF passed including real Core public types",
-    "guards": "78 rules26paths zeroGATE/ERROR;5dependency advisories, rationale contracts-v1.md",
-    "GNATIVE": "NOT_RUN",
-    "final_C": null,
-    "final_D": null
+  "resume": {
+    "api": "same native Goal thread; collaboration followup_task for recorded agent paths",
+    "cli_supported": "codex resume <SESSION_ID>; no automatic restart on human interruption",
+    "checkpoint": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/control/modules/sucafina/Sucafinav1/docs/sf2h/control/checkpoint.json"
   },
-  "lifecycle_delta": {
-    "native_continuation_observed": true,
-    "collaboration_registry_now": [
-      "/root"
-    ],
-    "completed_old_actors": [
-      "S0-A",
-      "S0-B",
-      "S1",
-      "S2",
-      "S3",
-      "S4"
-    ],
-    "S0-C": "latest correction turn interrupted; reason unknown; do not auto-resume",
-    "native_send_to_subagent": "rejected -32600 direct app-server input is not allowed for multi-agent v2 sub-agents",
-    "recovery": "Fenced all epoch1 staging leases; completed actors may receive new independently managed instances at epoch2. Interrupted S0-C remains held. Native create_thread supports separate tasks explicitly requested by user; verify ACK/lifecycle before admission."
-  },
-  "remote_control": {
-    "sha": "fea52455974d641a0f45728ab1c8a1ed44c6331e",
-    "tree": "8f40a8f67df170956e8a82ca6e850f0c8b39a20c",
-    "verified_via": "GitHub MCP gitcommit/ref; exact object imported local -0300 noLF"
-  },
-  "independent_sessions": {
-    "S1": "01a1d321-948f-7841-9846-2dfee4da5ca0",
-    "S2": "01a1d321-bd1b-7be3-8c1c-86ed7e732067",
-    "S3": "01a1d321-bf63-7fb2-8132-7eaf9e5ed86b",
-    "S4": "01a1d321-c227-7c23-a31c-6d8114724ee9",
-    "S0-A": "01a1d331-1be3-7a53-a9b7-a964185f20e0",
-    "S0-B": "01a1d331-1d75-7c62-b12f-a95876ffa4de",
-    "S0-C": "01a1d32b-8064-76f0-a8f0-c69af512988e"
-  },
-  "grok_review": {
-    "process_handle": 67065,
-    "output": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json",
-    "state": "COMPLETED_HOLD_12_FINDINGS",
-    "final_review": false,
-    "delta": {
-      "process": 96793,
-      "session_id": "01a1d322-6bfd-75a1-b9c7-552a2d2cb518",
-      "output": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-g0-delta-1.json",
-      "state": "RUNNING",
-      "scope": "contract delta; not finalreview"
-    }
-  },
-  "owner_delta": "Owner requests autonomous continuation; helper interruption holds superseded by explicit authorization. No questions waiting.",
-  "epoch2_roster": [
-    {
-      "actor": "S1",
-      "session_id": "01a1d321-948f-7841-9846-2dfee4da5ca0",
-      "requested_model": "gpt-6.1-terra",
-      "confirmed_host_model": "gpt-6.1-terra",
-      "status": "ACK_RECEIVED",
-      "lease_epoch": 2,
-      "write_paths": [
-        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S1-e2"
-      ],
-      "backend": "independent native task",
-      "provider_response_model_id": "not exposed separately by host"
-    },
-    {
-      "actor": "S2",
-      "session_id": "01a1d321-bd1b-7be3-8c1c-86ed7e732067",
-      "requested_model": "gpt-6.1-terra",
-      "confirmed_host_model": "gpt-6.1-terra",
-      "status": "ACK_RECEIVED",
-      "lease_epoch": 2,
-      "write_paths": [
-        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S2-e2"
-      ],
-      "backend": "independent native task",
-      "provider_response_model_id": "not exposed separately by host"
-    },
-    {
-      "actor": "S3",
-      "session_id": "01a1d321-bf63-7fb2-8132-7eaf9e5ed86b",
-      "requested_model": "gpt-6.1-terra",
-      "confirmed_host_model": "gpt-6.1-terra",
-      "status": "ACK_RECEIVED",
-      "lease_epoch": 2,
-      "write_paths": [
-        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S3-e2"
-      ],
-      "backend": "independent native task",
-      "provider_response_model_id": "not exposed separately by host"
-    },
-    {
-      "actor": "S4",
-      "session_id": "01a1d321-c227-7c23-a31c-6d8114724ee9",
-      "requested_model": "gpt-6.1-terra",
-      "confirmed_host_model": "gpt-6.1-terra",
-      "status": "ACK_RECEIVED",
-      "lease_epoch": 2,
-      "write_paths": [
-        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S4-e2"
-      ],
-      "backend": "independent native task",
-      "provider_response_model_id": "not exposed separately by host"
-    },
-    {
-      "actor": "S0-A",
-      "session_id": "01a1d331-1be3-7a53-a9b7-a964185f20e0",
-      "requested_model": "gpt-6-luna",
-      "confirmed_host_model": "gpt-6-luna",
-      "status": "ACK_RECEIVED",
-      "lease_epoch": 2,
-      "write_paths": [
-        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S0-A-e2"
-      ],
-      "backend": "independent native task",
-      "provider_response_model_id": "not exposed separately by host"
-    },
-    {
-      "actor": "S0-B",
-      "session_id": "01a1d331-1d75-7c62-b12f-a95876ffa4de",
-      "requested_model": "gpt-6.1-terra",
-      "confirmed_host_model": "gpt-6.1-terra",
-      "status": "ACK_RECEIVED",
-      "lease_epoch": 2,
-      "write_paths": [
-        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S0-B-e2"
-      ],
-      "backend": "independent native task",
-      "provider_response_model_id": "not exposed separately by host"
-    },
-    {
-      "actor": "S0-C",
-      "session_id": "01a1d32b-8064-76f0-a8f0-c69af512988e",
-      "requested_model": "gpt-6.1-terra",
-      "confirmed_host_model": "gpt-6.1-terra",
-      "status": "ACK_RECEIVED",
-      "lease_epoch": 2,
-      "write_paths": [
-        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S0-C-e2"
-      ],
-      "backend": "independent native task",
-      "provider_response_model_id": "not exposed separately by host"
-    }
-  ],
-  "native_resume": "Native Goal same root; native send_message_to_thread exact independent sessionIDs. Epoch1 collaboration fenced; never duplicate supervisor.",
-  "resource_note": "11GiB free on98% disk; use sparse isolated writer worktrees and shared read-only installed dependencies; do not delete user worktrees. Native task cap8 active includingS0; do not infer20 independent pools.",
-  "late_at": "2026-11-13T06:03:21Z",
-  "late_reason": "T0+120 exceeded; scope unchanged, implementation and evidence in progress",
   "G0_release": {
     "path": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/g0-release.json",
     "sha256": "7f2c1973d14d9fbf58e10495a7a109431023bbbda15b1999636b99b97c7b4d0d",
@@ -944,510 +62,6 @@
       "sha256": "0125f0822dfcfca07b8c48a652be499d51ff236ffcc08074ae3dc72f694d6145"
     },
     "full_task_not_DONE": true
-  },
-  "typecheck_queue": {
-    "active": [],
-    "next": [
-      "TC03:S4-A afterv4merge",
-      "TC02R:S1-C afterv4merge",
-      "TC04:S0-B afterfullread",
-      "TC05:S0 UIauthority"
-    ],
-    "max_concurrent": 2,
-    "preferred": 1,
-    "external_processes_untouched": true
-  },
-  "operational_amendments": [
-    {
-      "kind": "T06_exactpathlease",
-      "path": "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
-      "owner": "S0-B",
-      "epoch": 3,
-      "source_digest": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
-      "reason": "Task C16 export requires omitted exactpath; no other writer, source untouched"
-    },
-    {
-      "kind": "contract_consumption_v4",
-      "state": "LOCAL_DRAFT_NOT_FROZEN",
-      "paths": [
-        "contracts/runtime.ts receiptFor",
-        "contracts/decisions.ts costCoverageBases",
-        "contracts/ports.ts SourceHostbasis"
-      ],
-      "reason": "Concrete consumer findings; preserve approved17contracts and all criteria, no waiver"
-    }
-  ],
-  "coverage_ledger": {
-    "path": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S0-A-e2/coverage-ledger.json",
-    "sha256": "3aebcc045f6380224e57dab1b2fb9af85d4e260fe5f10eda126a8fb9af0f21b2",
-    "criteria": 1610,
-    "duplicates": 0,
-    "PASS": 0
-  },
-  "handoff_skills": {
-    "path": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/handoff-skills-s1-s3-e2.json",
-    "sha256": "e431b8e3cee8376407502fad39d80a725e710cf782002f5aab76ccf9cc5393b0",
-    "consumer": "S4-B11/11 ACK",
-    "sources_closed": [
-      "S1epoch2",
-      "S3epoch2"
-    ]
-  },
-  "active_slots": {
-    "S0": "root",
-    "S0-B": "runtime",
-    "S1-C": "Planner",
-    "S4-A": "case",
-    "S4-B": "AI",
-    "S0-A": "Atlas",
-    "S1-A": "UI",
-    "S2": "documents",
-    "cap": 8,
-    "N4_20_admitted": false,
-    "others": "quiescent/queued, not fabricated occupation"
-  },
-  "current_host_models": [
-    {
-      "session_id": "01a1d321-bd1b-7be3-8c1c-86ed7e732067",
-      "model": "gpt-6.1-terra",
-      "provider": "openai",
-      "host_version": "0.168.0"
-    },
-    {
-      "session_id": "01a1d331-1d75-7c62-b12f-a95876ffa4de",
-      "model": "gpt-6.1-terra",
-      "provider": "openai",
-      "host_version": "0.168.0"
-    },
-    {
-      "session_id": "01a1d367-887f-7071-8485-d0b73d370522",
-      "model": "gpt-6.1-terra",
-      "provider": "openai",
-      "host_version": "0.168.0"
-    },
-    {
-      "session_id": "01a1d367-892e-78d0-9bdc-1ea2c53a57ed",
-      "model": "gpt-6.1-terra",
-      "provider": "openai",
-      "host_version": "0.168.0"
-    },
-    {
-      "session_id": "01a1d367-89f6-7151-aac5-8911e8159d48",
-      "model": "gpt-6.1-terra",
-      "provider": "openai",
-      "host_version": "0.168.0"
-    },
-    {
-      "session_id": "01a1d378-b21f-77f0-b324-a2e4b8ac0e47",
-      "model": "gpt-6.1-terra",
-      "provider": "openai",
-      "host_version": "0.168.0"
-    },
-    {
-      "session_id": "01a1d378-b854-7e50-b74a-6b338f265e1d",
-      "model": "gpt-6.1-terra",
-      "provider": "openai",
-      "host_version": "0.168.0"
-    }
-  ],
-  "checkpoint_at": "2026-11-13T10:37:44.133434+00:00",
-  "pending_outputs": {
-    "S4-B": {
-      "head": "87cf6bc935",
-      "state": "TYPECHECK_PASS_WAIT_ROOT_REVIEW_CI",
-      "paths": "AI 5profiles/18skills/8packs39routes+bundler",
-      "C15_input_decoders": "missing mandatory, no native admission proof"
-    },
-    "S1-C": {
-      "head": "da4d3d5bd3",
-      "state": "DRAFT_TC_RETRY_QUEUED",
-      "C10": "conditioned until resolver/currentcoverage complete; sourceprojection/preview actualengine"
-    },
-    "S4-A": {
-      "head": "6969cb64f6",
-      "state": "DRAFT_TC_QUEUED_V4_ADAPTING",
-      "rest": "T02/T03/T04 remain incomplete"
-    },
-    "S0-B": {
-      "epoch": 3,
-      "state": "7FACTORY_PRELIMINARY_FULLPACK_READ_NOT_ATTESTED",
-      "note": "T06 read complete, wholepack still reading; edits suspended until complete read, no acceptance"
-    },
-    "S1-A": {
-      "state": "FULLREAD_ACK_UI_CODE_DRAFT"
-    },
-    "S2": {
-      "state": "FULLPACK_READING_OFFSET80000_DOCUMENTS_NOT_READY"
-    },
-    "S0-A": {
-      "state": "FULLPACK_READING_ATLAS_PACKAGING_NOT_READY"
-    }
-  },
-  "root_pending_paths": [
-    "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
-    "modules/sucafina/Sucafinav1/test/product/wp10/integration/ui-authority.test.ts"
-  ],
-  "updated_at": "2026-11-13T10:37:44.133434+00:00",
-  "accepted_product_head": "13aa4346f5137dd290a25a1dd0756eb0228c1cc7",
-  "accepted_product_tree": "fc8e4db7f02b8a34733539d5cdb1560c094030b8",
-  "g0_revision": 6,
-  "g0_release_sha256": "a08fc9b0b8b8d9a97e4292f736c2f9591abef9374d3a66cc58df4fdca8431204",
-  "allocation_admission": {
-    "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
-    "revision": 6,
-    "state": "ADMITTED_OPERATIONAL_GLOBAL17",
-    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
-    "canonical_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
-    "gate": "G0 v6; full own pack read and exact lease required",
-    "instances": [
-      {
-        "actor": "S1-B",
-        "session_id": "01a1d3ab-ed3d-7bb1-b362-e5f8310a231d",
-        "model_requested": "gpt-6.1-terra",
-        "model_host_confirmed": "gpt-6.1-terra",
-        "provider": "openai",
-        "host_version": "0.168.0",
-        "ACK": "actual native message, clean branch/head/lease acceptance",
-        "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/dashboard",
-        "branch": "sf2-dashboard",
-        "lease_epoch": 1,
-        "mission_sha256": "460abba6b5599700e9aec5c33713c298bdf2c7401d5d6f3468e4b9f24b1a55dd"
-      },
-      {
-        "actor": "S2-A",
-        "session_id": "01a1d3ab-ee20-7592-9121-530cc81c069e",
-        "model_requested": "gpt-6.1-terra",
-        "model_host_confirmed": "gpt-6.1-terra",
-        "provider": "openai",
-        "host_version": "0.168.0",
-        "ACK": "actual native message, clean branch/head/lease acceptance",
-        "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/procurement",
-        "branch": "sf2-procurement",
-        "lease_epoch": 1,
-        "mission_sha256": "a40e6713f8bd6efb678b891f73b2f56f00b83870584073a3f50444d6aa1ff4f1"
-      },
-      {
-        "actor": "S2-B",
-        "session_id": "01a1d3ab-efa7-7fa0-9ef6-4571f963032e",
-        "model_requested": "gpt-6.1-terra",
-        "model_host_confirmed": "gpt-6.1-terra",
-        "provider": "openai",
-        "host_version": "0.168.0",
-        "ACK": "actual native message, clean branch/head/lease acceptance",
-        "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/analytics",
-        "branch": "sf2-analytics",
-        "lease_epoch": 1,
-        "mission_sha256": "075fe0627b55f13cd0c03c3315cf4c715ef9ec0bf08c06873d2137a93d0f7083"
-      },
-      {
-        "actor": "S2-C",
-        "session_id": "01a1d3ab-f105-7fa3-852f-58a17257a557",
-        "model_requested": "gpt-6.1-terra",
-        "model_host_confirmed": "gpt-6.1-terra",
-        "provider": "openai",
-        "host_version": "0.168.0",
-        "ACK": "actual native message, clean branch/head/lease acceptance",
-        "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/imports",
-        "branch": "sf2-imports",
-        "lease_epoch": 1,
-        "mission_sha256": "c3ebdb0cff0f3a910e6d49923cb7b93faf7cf7237527ac7a641f77ed72e35eda"
-      },
-      {
-        "actor": "S3-A",
-        "session_id": "01a1d3c6-51c8-7072-a055-b0c06bdd6e28",
-        "model_requested": "gpt-6.1-terra",
-        "model_host_confirmed": "gpt-6.1-terra",
-        "provider": "openai",
-        "host_version": "0.168.0",
-        "ACK": "actual native message clean assigned branch/head and lease acceptance; full read still prerequisite",
-        "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/reviews",
-        "lease_epoch": 1,
-        "mission_sha256": "af0c93645708f6372b6d1d02fc08a1c3fb8f088d1ac481ab81f43bcd3c9d7447"
-      },
-      {
-        "actor": "S3-B",
-        "session_id": "01a1d3c6-528d-78e2-aab8-51c7e64b6ce7",
-        "model_requested": "gpt-6.1-terra",
-        "model_host_confirmed": "gpt-6.1-terra",
-        "provider": "openai",
-        "host_version": "0.168.0",
-        "ACK": "actual native message clean assigned branch/head and lease acceptance; full read still prerequisite",
-        "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/collaboration",
-        "lease_epoch": 1,
-        "mission_sha256": "db8ff14ebd1f1c1e9963e61bf741fdc4dfb00745d33489e7095b5f66a5ad43f8"
-      },
-      {
-        "actor": "S3-C",
-        "session_id": "01a1d3c6-53bb-7150-8d14-69834193425d",
-        "model_requested": "gpt-6.1-terra",
-        "model_host_confirmed": "gpt-6.1-terra",
-        "provider": "openai",
-        "host_version": "0.168.0",
-        "ACK": "actual native message clean assigned branch/head and lease acceptance; full read still prerequisite",
-        "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/routines",
-        "lease_epoch": 1,
-        "mission_sha256": "df2d1d99c58b12cc3affebe2cee25b726c7753cfeb58791a00e48110c787ed92"
-      },
-      {
-        "actor": "S4-C",
-        "session_id": "01a1d3c6-551e-7151-b436-2e8a3b7585e0",
-        "model_requested": "gpt-6.1-terra",
-        "model_host_confirmed": "gpt-6.1-terra",
-        "provider": "openai",
-        "host_version": "0.168.0",
-        "ACK": "actual native message clean assigned branch/head and lease acceptance; full read still prerequisite",
-        "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/portfolio",
-        "lease_epoch": 1,
-        "mission_sha256": "cba44531454c7c13f27857ce826dc7dba7bc18c83118d5c85a786ae72c6e5e5c"
-      },
-      {
-        "actor": "S4",
-        "session_id": "01a1d321-c227-7c23-a31c-6d8114724ee9",
-        "model_requested": "gpt-6.1-terra",
-        "model_host_confirmed": "gpt-6.1-terra",
-        "provider": "openai",
-        "host_version": "0.168.0",
-        "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/memory",
-        "branch": "sf2-memory",
-        "lease_epoch": 3,
-        "ACK": "actual native ACK after epoch2 closed, own WP14 pure tasks only",
-        "mission_sha256": "8614c3bb0eeb9cc3e2cfdd41e1b2588b4f813d2ae2008989606d00c945347b2c"
-      }
-    ],
-    "active_slot_ceiling_including_S0": 17,
-    "prior_verified_native_instances": 16,
-    "N4_20_pools_admitted": false,
-    "provider_peak12_throughput_not_claimed": true,
-    "hardware": "Mac16GiB RAM/12CPU, disk8.5GiB; sparseworktrees share one project dependency installation; no localmodel/runners added",
-    "heavy_jobs": {
-      "preferred_concurrent_typechecks": 1,
-      "absolute_ceiling": 2,
-      "existing_externalprocesses": "neverstop/kill/restart",
-      "build_dispatch": "S0 only slotapproval",
-      "tests": "GitHubActions only centralS0 dispatcher"
-    },
-    "scope_counts": {
-      "actors": 23,
-      "WPs": 15,
-      "tasks": 74,
-      "criteria": 1610,
-      "contracts": 17
-    },
-    "schedule": "All twelve domain builders plus S0-A/B/S4 and S0 active; S0-C awaits accepted WP14 transfer for T03/T04; three new independent reviewers await author handoff and slots. Complete 23 identities,74 tasks and1610 criteria retained. No N4/20 or provider peak17 claim.",
-    "writing": "Onewriterpath. S2-C excludes documents/T05 and receiptT05 until S2 e3 closes+ACKtransfer. S0 contracts/integration solewriter; root excluded delegatedpaths. All lane ownership is pack+mission+epoch.",
-    "evidence": "New4 realACKs + read-onlyhostDB requested/confirmedmodels above. This operational ceiling does not assert isolatedN4 pools or 20 peak slots.",
-    "at": "2026-11-13T07:42:01.018150+00:00",
-    "provider_peak16_throughput_not_claimed": true
-  },
-  "source_read_correction": {
-    "actor": "S0",
-    "path": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/plan/execution/actors/S0.json",
-    "sha256": "c963114c688a112aad5dc0e45e9a3bad2bd7c652bc82b476b7f47fe7c2f8ff2b",
-    "representation": "complete JSON semantic serialization, ensure_ascii=False, compact separators",
-    "characters": 393489,
-    "read_ranges": [
-      [
-        0,
-        393489
-      ]
-    ],
-    "correction": "Truncated aggregate reads not counted; all ranges reread individually including 210000:225000 after compaction.",
-    "status": "PACK_COMPLETE_READ",
-    "appendices": [
-      {
-        "path": "specs/product-acceptance.md",
-        "sha256": "a41222e3bed4a8a8134a7fd814c73a99f607457a7df1e38b74566a4d2589eee2",
-        "status": "COMPLETE_READ"
-      },
-      {
-        "path": "specs/resident-runtime.md",
-        "sha256": "024795abe175e756f93f1904eba23884bf4d9ad2416c6185b3eea2e6b13ca420",
-        "status": "COMPLETE_READ"
-      },
-      {
-        "path": "specs/atlas-packaging.md",
-        "sha256": "3118d3eb6be64c0df096d4850d3432a78d5d16067fba2f526a41ee618407b7f0",
-        "status": "COMPLETE_READ"
-      },
-      {
-        "path": "specs/execution-reconciliation.md",
-        "sha256": "2f259b023568cf0e0a66af60541a6ae3dc6dee5a73395dc3b12ae1c3c41dd55b",
-        "status": "COMPLETE_READ"
-      }
-    ]
-  },
-  "current_local_product": {
-    "sha": "9548b92bab",
-    "branch": "sf2-compose",
-    "state": "DEVELOPMENT_NOT_FINAL_C",
-    "new_behavior": "actual authenticated Dashboard BI HTTP composition and trusted CLI installation factory flag; not launched; typecheck09 in flight"
-  },
-  "typecheck_governor": {
-    "preferred": 1,
-    "max": 1,
-    "active": "NONE; root C5 typecheck exit0, S0-B v7 exit0; next slot S0 controls",
-    "queue": [
-      "TC-REVIEW03",
-      "TC-UI-v7",
-      "TC-DOCS",
-      "TC-IMPORTS",
-      "TC-MEMORY",
-      "TC-COLLABORATION"
-    ],
-    "user_processes_untouched": true
-  },
-  "next_executable_action": "Typecheck09 result; fix root compilation; add hosted real HTTP/browser BI/CLI tests; consume pending writer deltas in dev8 with one typecheck and deduplicated central CI. Then mount actual native host/C08 and test real providers. Preserve all remaining tasks and no GLOBAL_RELEASE.",
-  "mandatory_open_integration_findings": [
-    "Bun workflow has no artifact; no final PASS claimed",
-    "Scenario selectors require current ACL in authorizeCase",
-    "BI per-view metadata and producer stock/aging contract",
-    "Real native Session composition/consumers not yet qualified",
-    "All final CI/AM01-AM06/C/D/reviews remain pending",
-    "Atlas BUILD-ATLAS01 fails AST: Bun external alias retains ./scanner.js; no bypass",
-    "C11 AlternativeDraft needs explicit basis+coverageRef",
-    "C09 ledger needs typed atomic pending Atlas outbox",
-    "Prepared command/preview refs must be durable and ACL-resolvable",
-    "Source version vs CAS version are distinct; PreparedChange current equality must be corrected by WP11",
-    "Planner source effective app fallback and officials corrected pending CI",
-    "Suppliers array and dashboard-page aggregate identities corrected pending CI",
-    "All domain public ports need real host composition and actual UI consumers; callback signatures alone not delivery",
-    "P1 global source version leaks restricted activity: persisted authorized projection revisions required",
-    "C15 contextBudgetTokens has no confirmed public pre-stream enforcement seam; no proof claimed",
-    "C15 selected manifest and registered SkillV2 reserved source opaque capability required",
-    "C05 closure typed choices/actions evidence incomplete",
-    "PortfolioResult request-bound combination refs and SensitivityResult two-unit semantics incomplete"
-  ],
-  "active_session_authority": [
-    {
-      "actor": "S0",
-      "session_id": "01a1d309-ba0e-7490-b044-0899d9fa008f",
-      "model": "gpt-6.1-sol",
-      "lease": "sole integrator/dispatcher"
-    },
-    {
-      "actor": "S1-B",
-      "session_id": "01a1d3ab-ed3d-7bb1-b362-e5f8310a231d",
-      "model": "gpt-6.1-terra",
-      "lease_epoch": 2
-    },
-    {
-      "actor": "S2-A",
-      "session_id": "01a1d3ab-ee20-7592-9121-530cc81c069e",
-      "model": "gpt-6.1-terra",
-      "lease_epoch": 1
-    },
-    {
-      "actor": "S2-B",
-      "session_id": "01a1d3ab-efa7-7fa0-9ef6-4571f963032e",
-      "model": "gpt-6.1-terra",
-      "lease_epoch": 1
-    },
-    {
-      "actor": "S2-C",
-      "session_id": "01a1d3ab-f105-7fa3-852f-58a17257a557",
-      "model": "gpt-6.1-terra",
-      "lease_epoch": 1
-    },
-    {
-      "actor": "S3-A",
-      "session_id": "01a1d3c6-51c8-7072-a055-b0c06bdd6e28",
-      "model": "gpt-6.1-terra",
-      "lease_epoch": 1
-    },
-    {
-      "actor": "S3-B",
-      "session_id": "01a1d3c6-528d-78e2-aab8-51c7e64b6ce7",
-      "model": "gpt-6.1-terra",
-      "lease_epoch": 1
-    },
-    {
-      "actor": "S3-C",
-      "session_id": "01a1d3c6-53bb-7150-8d14-69834193425d",
-      "model": "gpt-6.1-terra",
-      "lease_epoch": 1
-    },
-    {
-      "actor": "S4-C",
-      "session_id": "01a1d3c6-551e-7151-b436-2e8a3b7585e0",
-      "model": "gpt-6.1-terra",
-      "lease_epoch": 1
-    },
-    {
-      "actor": "S1-C",
-      "session_id": "01a1d367-887f-7071-8485-d0b73d370522",
-      "lease_epoch": 1
-    },
-    {
-      "actor": "S4-A",
-      "session_id": "01a1d367-892e-78d0-9bdc-1ea2c53a57ed",
-      "lease_epoch": 1
-    },
-    {
-      "actor": "S4-B",
-      "session_id": "01a1d367-89f6-7151-aac5-8911e8159d48",
-      "lease_epoch": 1
-    },
-    {
-      "actor": "S0-A",
-      "session_id": "01a1d378-b21f-77f0-b324-a2e4b8ac0e47",
-      "lease_epoch": 3
-    },
-    {
-      "actor": "S1-A",
-      "session_id": "01a1d378-b854-7e50-b74a-6b338f265e1d",
-      "lease_epoch": 1
-    },
-    {
-      "actor": "S2",
-      "session_id": "01a1d321-bd1b-7be3-8c1c-86ed7e732067",
-      "lease_epoch": 3
-    },
-    {
-      "actor": "S0-B",
-      "session_id": "01a1d331-1d75-7c62-b12f-a95876ffa4de",
-      "lease_epoch": 3
-    },
-    {
-      "actor": "S4",
-      "session_id": "01a1d321-c227-7c23-a31c-6d8114724ee9",
-      "lease_epoch": 3,
-      "model": "gpt-6.1-terra"
-    },
-    {
-      "actor": "S0-C",
-      "session_id": "01a1d32b-8064-76f0-a8f0-c69af512988e",
-      "lease_epoch": 3,
-      "model": "gpt-6-luna",
-      "authority": "mechanical coverage only, NO CI dispatch/productwriting"
-    },
-    {
-      "actor": "S1-R1",
-      "session_id": "01a1d417-7d20-7de2-824b-f4c838a457b5",
-      "model": "gpt-6.1-terra",
-      "lease_epoch": 1,
-      "authority": "review only; no authorship"
-    },
-    {
-      "actor": "S2-R2",
-      "session_id": "01a1d43b-969a-7a21-a8c1-166e882cddc0",
-      "model": "gpt-6.1-terra",
-      "lease_epoch": 1,
-      "authority": "reviewonly"
-    }
-  ],
-  "adversarial_review": {
-    "backend": "xAI Grok",
-    "requested": "grok-4.7",
-    "session": "01a1d322-6bfd-75a1-b9c7-552a2d2cb518",
-    "exec_session": 61040,
-    "prompt": "grok-v6-source-review-prompt.txt",
-    "output": "grok-v6-source-review.json",
-    "state": "COMPLETED_HOLD",
-    "not_final_reviewer": true,
-    "actual_model": "grok-4.7-build",
-    "triage": "grok-v6-source-triage.json",
-    "raw": "grok-v6-source-review.json",
-    "audit_prefix_and_restore_purpose": "corrected in bdc9; tests NOT_RUN"
   },
   "operational_allocation": {
     "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
@@ -1632,338 +246,323 @@
     "at": "2026-11-13T09:49:33.522753+00:00",
     "provider_peak16_throughput_not_claimed": true
   },
-  "CI_development_3": {
-    "run": 43385260685,
-    "job": 131752118593,
-    "sha": "3907e8b76aa6d49d602e87b104ed8d5426474bb1",
-    "candidate": "a5488f458ce8a2071b48504106b854554aa28ddf",
-    "tests": 68,
-    "failures": 0,
-    "files": 11,
-    "artifacts": [],
-    "state": "TESTS_PASSED_RECEIPT_REVIEW_NOT_FINAL_CI_PASS"
+  "grok_review": {
+    "process_handle": 67065,
+    "output": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-contract-review.json",
+    "state": "COMPLETED_HOLD_12_FINDINGS",
+    "final_review": false,
+    "delta": {
+      "process": 96793,
+      "session_id": "01a1d322-6bfd-75a1-b9c7-552a2d2cb518",
+      "output": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/grok-g0-delta-1.json",
+      "state": "RUNNING",
+      "scope": "contract delta; not finalreview"
+    }
   },
-  "CI_development_4": {
-    "id": "sf2h-development-4",
-    "candidate": "bdc9a2f426e24eb2dacd8ca3a232f663ea8f432f",
-    "base_tree": "396b83a86b1488bc59a05d19adca16efedea1665",
-    "request": {
-      "package": "sucafina",
-      "directory": "modules/sucafina",
-      "runner": "bun",
-      "args": [
-        "./Sucafinav1/test/product/wp00/contracts.test.ts",
-        "./Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
-        "./Sucafinav1/test/product/wp10/integration/public-state.test.ts",
-        "./Sucafinav1/test/product/wp10/integration/ui-authority.test.ts",
-        "./Sucafinav1/test/runtime-http.test.ts",
-        "./Sucafinav1/test/product/wp03/adapter.test.ts",
-        "./Sucafinav1/test/product/wp03/port.test.ts",
-        "./Sucafinav1/test/product/wp03/coverage.test.ts",
-        "./Sucafinav1/test/product/wp11/case-port.test.ts",
-        "./Sucafinav1/test/product/wp12/resident.test.ts",
-        "./Sucafinav1/test/product/wp12/analysis.test.ts",
-        "./Sucafinav1/test/product/wp10/integration/source-lifecycle.test.ts",
-        "./Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts",
-        "./Sucafinav1/test/product/wp10/resident-runtime/capability-dispatch.test.ts",
-        "./Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
-        "./Sucafinav1/test/product/wp10/resident-runtime/resident-agents.test.ts",
-        "--timeout",
-        "120000"
-      ],
-      "env": {}
-    },
-    "request_content": "{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"./Sucafinav1/test/product/wp00/contracts.test.ts\",\"./Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts\",\"./Sucafinav1/test/product/wp10/integration/public-state.test.ts\",\"./Sucafinav1/test/product/wp10/integration/ui-authority.test.ts\",\"./Sucafinav1/test/runtime-http.test.ts\",\"./Sucafinav1/test/product/wp03/adapter.test.ts\",\"./Sucafinav1/test/product/wp03/port.test.ts\",\"./Sucafinav1/test/product/wp03/coverage.test.ts\",\"./Sucafinav1/test/product/wp11/case-port.test.ts\",\"./Sucafinav1/test/product/wp12/resident.test.ts\",\"./Sucafinav1/test/product/wp12/analysis.test.ts\",\"./Sucafinav1/test/product/wp10/integration/source-lifecycle.test.ts\",\"./Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts\",\"./Sucafinav1/test/product/wp10/resident-runtime/capability-dispatch.test.ts\",\"./Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts\",\"./Sucafinav1/test/product/wp10/resident-runtime/resident-agents.test.ts\",\"--timeout\",\"120000\"],\"env\":{}}",
-    "request_blob": "001ad4cffe947d4d669d01947a2e546a9e6a82f2",
-    "request_digest": "aeb0cedbfe5246a7dc0ecc608d96dd377f3fc4e63c2c6a28c373fb886e7c5d5f",
-    "snapshot_tree": "265e7b87f17d3c6e857ca042b0ff3f16870e116b",
-    "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
-    "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
-    "branch": "ci-run-linux-sf2h-dev4",
-    "status": "TESTS_PASSED_RECEIPT_REVIEW_NOT_FINAL_SELECTION",
-    "final_selection": false,
-    "snapshot_commit": "0ea5f278ce6d0222ade62d559c3e9cb9d20eb1af",
-    "at": "2026-11-13T08:35:54.725797+00:00",
-    "dispatcher": "S0",
-    "dedup": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f/ci-development-4/aeb0cedbfe5246a7dc0ecc608d96dd377f3fc4e63c2c6a28c373fb886e7c5d5f",
-    "run_id": 43394471943,
-    "job_id": 131781941231,
-    "tests": 79,
-    "files": 16,
-    "failures": 0,
-    "artifacts": [],
-    "omni": "not applicable focused:no declaring test ran; no omni proof",
-    "log": "development-4-job.log",
-    "finished_at": "2026-11-13T08:39:41.365810+00:00"
+  "revision": 20,
+  "state": "CONTINUING_LATE",
+  "checkpoint_at": "2026-11-13T13:10:57.784319+00:00",
+  "previous_checkpoint": {
+    "path": "checkpoints/rev19.json",
+    "sha256": "0429b97e11799efeb8ce539dc86592775b48d0682c788e5ec7469e9d89a89f65",
+    "remote_control": "c5a9b8a316af89e3a96a7579c8156d2847dfe7ec"
   },
-  "independent_review_R1": {
-    "session": "01a1d417-7d20-7de2-824b-f4c838a457b5",
-    "input_shas": [
-      "51a8e95b25",
-      "883f886260"
-    ],
-    "R1-01": "P1 C12 prepared fields/period bypass in51a8, failclosedfix08f8 reviewedstatic but NOT integrated; functionalC12missingmandatoryOPEN",
-    "full_pack_read": "in progress, no completeEOFproof yet",
-    "final_approval": "NOT_RUN_C_NOT_FROZEN"
+  "current_local_product": {
+    "head": "b7ea2cefa051c15d3d0565cd0fc456b81eb2005b",
+    "tree": "34811ac192874b32ab0c6897cefc77a1b860c93c",
+    "branch": "sf2-compose",
+    "state": "DEVELOPMENT_NOT_FINAL_C"
   },
-  "CI_development_5": {
-    "id": "sf2h-development-5",
-    "candidate": "b7ac78cbc66ab1a54be88424e5b5070021675509",
-    "local_original": "1ce6d2340b43d5380e3e3e6b23e9754f8c1bf428",
-    "base_tree": "5c3947dbc800f207d6972902f8a985ecb7fffaa4",
-    "request": {
-      "package": "sucafina",
-      "directory": "modules/sucafina",
-      "runner": "bun",
-      "args": [
-        "./Sucafinav1/test/product/wp00/contracts.test.ts",
-        "./Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
-        "./Sucafinav1/test/product/wp10/integration/public-state.test.ts",
-        "./Sucafinav1/test/product/wp10/integration/ui-authority.test.ts",
-        "./Sucafinav1/test/runtime-http.test.ts",
-        "./Sucafinav1/test/product/wp03/adapter.test.ts",
-        "./Sucafinav1/test/product/wp03/port.test.ts",
-        "./Sucafinav1/test/product/wp03/coverage.test.ts",
-        "./Sucafinav1/test/product/wp11/case-port.test.ts",
-        "./Sucafinav1/test/product/wp12/resident.test.ts",
-        "./Sucafinav1/test/product/wp12/analysis.test.ts",
-        "./Sucafinav1/test/product/wp10/integration/source-lifecycle.test.ts",
-        "./Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts",
-        "./Sucafinav1/test/product/wp10/resident-runtime/capability-dispatch.test.ts",
-        "./Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
-        "./Sucafinav1/test/product/wp10/resident-runtime/resident-agents.test.ts",
-        "./Sucafinav1/test/product/wp10/integration/dashboard-preview.test.ts",
-        "./Sucafinav1/test/dashboard-budget-runtime.test.ts",
-        "./Sucafinav1/test/dashboard-portfolio-runtime.test.ts",
-        "./Sucafinav1/test/product/wp02/port.test.ts",
-        "./Sucafinav1/test/product/wp02/sources.test.ts",
-        "./Sucafinav1/test/product/wp02/commands.test.ts",
-        "./Sucafinav1/test/product/wp02/hot-topics.test.ts",
-        "./Sucafinav1/test/product/wp02/imports.test.ts",
-        "./Sucafinav1/test/product/wp02/signals.test.ts",
-        "./Sucafinav1/test/product/wp02/prepared.test.ts",
-        "--timeout",
-        "120000"
-      ],
-      "env": {}
-    },
-    "request_content": "{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"./Sucafinav1/test/product/wp00/contracts.test.ts\",\"./Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts\",\"./Sucafinav1/test/product/wp10/integration/public-state.test.ts\",\"./Sucafinav1/test/product/wp10/integration/ui-authority.test.ts\",\"./Sucafinav1/test/runtime-http.test.ts\",\"./Sucafinav1/test/product/wp03/adapter.test.ts\",\"./Sucafinav1/test/product/wp03/port.test.ts\",\"./Sucafinav1/test/product/wp03/coverage.test.ts\",\"./Sucafinav1/test/product/wp11/case-port.test.ts\",\"./Sucafinav1/test/product/wp12/resident.test.ts\",\"./Sucafinav1/test/product/wp12/analysis.test.ts\",\"./Sucafinav1/test/product/wp10/integration/source-lifecycle.test.ts\",\"./Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts\",\"./Sucafinav1/test/product/wp10/resident-runtime/capability-dispatch.test.ts\",\"./Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts\",\"./Sucafinav1/test/product/wp10/resident-runtime/resident-agents.test.ts\",\"./Sucafinav1/test/product/wp10/integration/dashboard-preview.test.ts\",\"./Sucafinav1/test/dashboard-budget-runtime.test.ts\",\"./Sucafinav1/test/dashboard-portfolio-runtime.test.ts\",\"./Sucafinav1/test/product/wp02/port.test.ts\",\"./Sucafinav1/test/product/wp02/sources.test.ts\",\"./Sucafinav1/test/product/wp02/commands.test.ts\",\"./Sucafinav1/test/product/wp02/hot-topics.test.ts\",\"./Sucafinav1/test/product/wp02/imports.test.ts\",\"./Sucafinav1/test/product/wp02/signals.test.ts\",\"./Sucafinav1/test/product/wp02/prepared.test.ts\",\"--timeout\",\"120000\"],\"env\":{}}",
-    "request_blob": "e3b3c648b8d3c2c2762abd02033ed15714283d6b",
-    "request_digest": "9956127de46e3fcb98d86290dcac931c2a037b704bba85d037143632089a8923",
-    "snapshot_tree": "5e89173bef2fc4c21732de98dab1267ef64e7fd8",
-    "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
-    "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
-    "branch": "ci-run-linux-sf2h-dev5",
-    "status": "FAILED",
-    "final_selection": false,
-    "snapshot_commit": "4f6346c1dbaa93c15f0e3767bc824c80e6b615d6",
-    "at": "2026-11-13T09:04:15.440772+00:00",
-    "dispatcher": "S0",
-    "run_id": 43397560461,
-    "job_id": 131792130907,
-    "tests": 152,
-    "pass": 151,
-    "failures": 1,
-    "files": 26,
-    "failure": "runtime-http.test.ts169 hidden Add risk details; browser must open real summary",
-    "root_new_http_preview_sqlite_test": "PASS on testedcandidate, not finalrelease",
-    "log": "development-5-job.log"
+  "remote_product": {
+    "head": "308de1eac39bcc38ed664a037bb749a23887142b",
+    "tree": "e5de6a96e64eb712e477d47935d0cf10e051dfe5",
+    "branch": "sf2-integrate",
+    "verified": "GitHub MCP git/ref + git/commit",
+    "local_equivalent": "03a35cc19c883da409c1e1e55260a7a90c535d5d"
   },
-  "independent_review_R2": {
-    "session": "01a1d43b-969a-7a21-a8c1-166e882cddc0",
-    "model": "gpt-6.1-terra hostDBconfirmed",
-    "independence": "ACK noauthors/read-only",
-    "R2-01": "P1 scopedlookupX->Y race ACCEPTED, rootfixe6e9+SQLiteinterleavingtest written NOT_RUN, recheck/CIpending",
-    "token_gate": "counteradaptorunmounted knownmandatorygap; bodydigest/header notauthority; requestscopedprivateModel/routeclosure architecture underimplementation",
-    "final_approval": "NOT_RUN_C_NOT_FROZEN"
-  },
-  "atlas_packaging": {
-    "source_head": "789e137bc3122cdc813d417c671c941508eaa33b",
-    "new_negative_tests_head": "4d8b4fbbd4",
-    "construction_status": "9exclusivepaths consumed from789; fourartifacts SHAverified; canonicalgenerator esbuildexisting0.25.12 businessdescriptor only, othersBun; sourceAST/checkgenerated PASS byproducer; rootcompletegatespending",
-    "adaptation": "approvedoperational compiler route exactexternalalias samegenerator/name/predicate; no shim/input/outputrewriting/sourcealgorithm/guardallowlistchanges",
-    "root_lock": "declares esbuild/typescript/@orchestra-script, noinstall/globalupdate",
-    "AM05": "NOT_RUN"
-  },
-  "C17_source_map_semantics": {
-    "keys": "originalref.refDigest",
-    "numeric_sources": [
-      "record.version/incarnation",
-      "document.revision/incarnation",
-      "receipt.version/targetIncarnation",
-      "case-event.caseVersion/caseIncarnation"
-    ],
-    "immutable_sources": "calculation/policy targets and recursiveversioneddeps, no inventednumericversion",
-    "helper": "canonical.ts sfEvidenceSourceMaps written, NOT_RUN"
-  },
-  "token_gate_work": {
-    "adapter_sha": "38b4d2aad406d4a48f3bd6cad366572ff2f0e231",
-    "mounted": false,
-    "authenticated_live_oracle": "NOT_RUN",
-    "official_oracle": "https://developers.openai.com/api/docs/guides/token-counting.md",
-    "implementation_writer": "S0-B e3",
-    "packet": "missions/S0-B-token-gate-seam.md",
-    "packet_sha256": "311504bdad932850ed546d5d916091df717cc340ea44f9af795ceff547e6c727",
-    "authority": "privateactualModel capture via publicSessionRunnerModel replacement + perrequest route/runtime closure, retry guard; noheaders/digest/globalactivebindingasauthority",
-    "scope": "Core/engines unchanged; nonSF exactbaseline behavior required; unknownSFunsupportedfailsclosed"
-  },
-  "host_lifecycle": {
-    "native_goal": "active native continuation actually resumed same root thread, no new supervisor",
-    "transient_error": "send_message_to_thread serverShuttingDown once whilehostdraining; read/send sameIDs recovered, no replacement/restart",
-    "T0": "2026-11-13T04:01:10Z",
-    "state": "CONTINUING_LATE",
-    "hooks": "prepared but untrusted/inactive; no bypass or protection claim"
-  },
-  "CI_development_6": {
-    "run_id": 43401454219,
-    "job_id": 131805022441,
-    "candidate": "38b4d2aad406d4a48f3bd6cad366572ff2f0e231",
-    "snapshot": "c6ef5ce4945ada9e546c01954f946987e8566040",
-    "conclusion": "success",
-    "tests": 157,
-    "failed": 0,
-    "files": 28,
-    "expects": 1252,
-    "log_sha256": "f2e27436466d0d48443c6deb33288f2ecceb57272815807e5c485c359828a801",
-    "artifacts": [],
-    "final_selection_status": "NOT_RUN",
-    "proof_class": "DEVELOPMENT_TESTS_PASSED_RECEIPT_REVIEW",
-    "omni": "not applicable; no spawn proved"
-  },
-  "native_scope_findings": {
-    "fork_without_parent_scope": "OPEN; no authorized SessionV2 replacement seam; private marker cannot identify fork",
-    "crash_create_narrow": "root implementing durable deny-marker before create",
-    "gate": "UNMOUNTED_FAIL_CLOSED"
-  },
-  "support_leases_delta": [
+  "active_session_authority": [
     {
-      "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
-      "actor_id": "S1-B",
-      "lease_epoch": 2,
-      "support_task": "WP10.T01 Dashboard source integration support",
-      "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
-      "inputs": {
-        "root": "c00ab98978",
-        "dashboard": "4b05a9ed3fc10a0d27479aa9040bccc95bb8a925"
-      },
-      "write_paths": [
-        "modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
-        "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
-        "modules/sucafina/Sucafinav1/test/product/wp10/integration/dashboard-sources.test.ts"
-      ],
-      "consumer": "S0 sole integrator",
-      "fencing": "S0 will not edit these paths until returned handoff accepted",
-      "acceptance": "actual Request auth, scoped identity and projector/issuer, field/period isolation, no selector authority, failclosed; tests requested via S0 CI",
-      "state": "LEASED"
-    }
-  ],
-  "atlas_root_checks": {
-    "boundary_typecheck_01": "FAILED missing local Bun types",
-    "boundary_typecheck_02": "PASS existingcachelink repaired",
-    "check_generated_01": "IN_FLIGHT session74753",
-    "AM05": "NOT_RUN"
-  },
-  "CI_development_7": {
-    "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
-    "event_id": "dispatch-development-7",
-    "dispatcher": "S0",
-    "candidate": "13aa4346f5137dd290a25a1dd0756eb0228c1cc7",
-    "snapshot": "e3bf309a9d5cb0f43ea597af15dc54046ecff0c0",
-    "snapshot_tree": "1d5c7c6a96639f81d4dce0653dd9d44098505726",
-    "branch": "ci-run-linux-sf2h-dev7",
-    "files": 55,
-    "request_digest": "0058d0c515f74dcdf5c1181048fb360b9750c20b27e352ee75dd06bffdcf6682",
-    "status": "FAILED",
-    "final_selection": false,
-    "run_id": 43408854090,
-    "head_sha": "e3bf309a9d5cb0f43ea597af15dc54046ecff0c0",
-    "passed": 298,
-    "failed": 4,
-    "tests": 302,
-    "job_id": 131829895037
-  },
-  "root_checks_19": {
-    "typecheck08": {
-      "sha": "fa6ef5f2017699ab1c5dc8660615d2688ed70241",
-      "tree": "fc8e4db7f02b8a34733539d5cdb1560c094030b8",
-      "exit": 0
+      "actor": "S0",
+      "session_id": "01a1d309-ba0e-7490-b044-0899d9fa008f",
+      "model": "gpt-6.1-sol",
+      "lease": "sole integrator/dispatcher"
     },
-    "typecheck09": {
-      "sha": "9548b92bab",
-      "state": "IN_FLIGHT",
-      "session_id": 18139
+    {
+      "actor": "S1-B",
+      "session_id": "01a1d3ab-ed3d-7bb1-b362-e5f8310a231d",
+      "model": "gpt-6.1-terra",
+      "lease_epoch": 2
     },
-    "guards_development07": {
-      "candidate": "9290d71220",
-      "gate": 0,
-      "warn": 9,
-      "errors": 0,
-      "final_G7_G8": false
+    {
+      "actor": "S2-A",
+      "session_id": "01a1d3ab-ee20-7592-9121-530cc81c069e",
+      "model": "gpt-6.1-terra",
+      "lease_epoch": 1
     },
-    "spawn_imports07": {
-      "files": 4167,
-      "allowlisted": 66,
-      "exit": 0
+    {
+      "actor": "S2-B",
+      "session_id": "01a1d3ab-efa7-7fa0-9ef6-4571f963032e",
+      "model": "gpt-6.1-terra",
+      "lease_epoch": 1
     },
-    "Atlas": {
-      "boundary_typecheck02": "PASS",
-      "check_generated01": "PASS",
-      "AM05": "NOT_RUN"
+    {
+      "actor": "S2-C",
+      "session_id": "01a1d3ab-f105-7fa3-852f-58a17257a557",
+      "model": "gpt-6.1-terra",
+      "lease_epoch": 1
     },
-    "browser_build": {
-      "sha256": "6bc41000dd59aa842e49157719e0a9354c72b71b834bc70033828f6bd3c1b31e",
-      "source": "068c637dcb",
-      "test": "NOT_RUN"
-    }
-  },
-  "support_leases_19": {
-    "S1-B-source-support": {
-      "status": "CLOSED_ACCEPTED",
-      "head": "0ef0f1668b",
-      "consumed": "e14271fac6",
-      "root_reclaims": [
-        "integration/dashboard-sources.ts",
-        "integration/source-projections.ts"
-      ]
+    {
+      "actor": "S3-A",
+      "session_id": "01a1d3c6-51c8-7072-a055-b0c06bdd6e28",
+      "model": "gpt-6.1-terra",
+      "lease_epoch": 1
     },
-    "S2-A-source-support": {
-      "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
-      "actor_id": "S2-A",
+    {
+      "actor": "S3-B",
+      "session_id": "01a1d3c6-528d-78e2-aab8-51c7e64b6ce7",
+      "model": "gpt-6.1-terra",
+      "lease_epoch": 1
+    },
+    {
+      "actor": "S3-C",
+      "session_id": "01a1d3c6-53bb-7150-8d14-69834193425d",
+      "model": "gpt-6.1-terra",
+      "lease_epoch": 1
+    },
+    {
+      "actor": "S4-C",
+      "session_id": "01a1d3c6-551e-7151-b436-2e8a3b7585e0",
+      "model": "gpt-6.1-terra",
+      "lease_epoch": 1
+    },
+    {
+      "actor": "S1-C",
+      "session_id": "01a1d367-887f-7071-8485-d0b73d370522",
+      "lease_epoch": 1
+    },
+    {
+      "actor": "S4-A",
+      "session_id": "01a1d367-892e-78d0-9bdc-1ea2c53a57ed",
+      "lease_epoch": 1
+    },
+    {
+      "actor": "S4-B",
+      "session_id": "01a1d367-89f6-7151-aac5-8911e8159d48",
+      "lease_epoch": 1
+    },
+    {
+      "actor": "S0-A",
+      "session_id": "01a1d378-b21f-77f0-b324-a2e4b8ac0e47",
+      "lease_epoch": 3
+    },
+    {
+      "actor": "S1-A",
+      "session_id": "01a1d378-b854-7e50-b74a-6b338f265e1d",
+      "lease_epoch": 1
+    },
+    {
+      "actor": "S2",
+      "session_id": "01a1d321-bd1b-7be3-8c1c-86ed7e732067",
+      "lease_epoch": 3
+    },
+    {
+      "actor": "S0-B",
+      "session_id": "01a1d331-1d75-7c62-b12f-a95876ffa4de",
+      "lease_epoch": 3
+    },
+    {
+      "actor": "S4",
+      "session_id": "01a1d321-c227-7c23-a31c-6d8114724ee9",
+      "lease_epoch": 3,
+      "model": "gpt-6.1-terra"
+    },
+    {
+      "actor": "S0-C",
+      "session_id": "01a1d32b-8064-76f0-a8f0-c69af512988e",
+      "lease_epoch": 3,
+      "model": "gpt-6-luna",
+      "authority": "mechanical staging plus exclusive document-sources test; noCI/control/productroot writes"
+    },
+    {
+      "actor": "S1-R1",
+      "session_id": "01a1d417-7d20-7de2-824b-f4c838a457b5",
+      "model": "gpt-6.1-terra",
       "lease_epoch": 1,
-      "support_task": "WP10.T01 Procurement collection scoped source support",
-      "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
-      "input_sha": "e14271fac6",
-      "write_paths": [
-        "modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts",
-        "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-sources.test.ts"
-      ],
-      "consumer": "S0 root default source-projector; WP05 BI",
-      "acceptance": "Actual Request current auth/roleMap/actor scoped collection, no private field oracle, mutable status/current selectors, restore/ABA/incarnation, source refs select never grant",
-      "output": "bounded source + meaningful SQLite tests; exacthead/hashes and pending gates",
-      "status": "LEASED"
+      "authority": "review only; no authorship"
+    },
+    {
+      "actor": "S2-R2",
+      "session_id": "01a1d43b-969a-7a21-a8c1-166e882cddc0",
+      "model": "gpt-6.1-terra",
+      "lease_epoch": 1,
+      "authority": "reviewonly"
     }
-  },
-  "required_fixes_19": [
-    "CI7 scope internal digest key assertion -> writer658290, not yet CI8",
-    "CI7 3 IEEE binary noise/HTML failures -> writerf8cd850d, not yet CI8",
-    "Native runtime production contribution still not composed; token count live auth not qualified",
-    "S1-R1 actual Dashboard/BI route gap addressed draft9548, fresh proof pending",
-    "C12 human grants + atomic prepared receipt consumer still incomplete",
-    "C17 actual historical/current ACL projections and Atlas AM05 incomplete"
   ],
-  "pending_outputs_19": {
-    "S0-B": "fd97f02a6d onReady private scoped callback, not consumed",
-    "S1-B": "658290 privacy +66f BI tests+97ed helper, pending CI8",
-    "S2-A": "bef58f collection + f8cd850d numeric/UIfix, pending rootinventory/projector",
-    "S2-B": "25f242+069877 actualDash→BI consumer test",
-    "S4-B": "dc0b78 analysis-host/runstore, prior6ceTCpassonly",
-    "S4-C": "854af2 units/analysis, not integrated",
-    "S0-A": "BCS/store/scanner ongoing",
-    "S4": "ce6c6 recall with34efhelper, not consumed",
-    "S2": "documents partial b780",
-    "S2-C": "imports b1a8",
-    "S3-A": "reports a717",
-    "S3-B": "collab65e8",
-    "S3-C": "routines92e"
-  }
+  "ci": {
+    "dispatcher": "S0",
+    "inflight": [],
+    "latest": {
+      "id": "sf2h-development-8",
+      "candidate": "308de1eac39bcc38ed664a037bb749a23887142b",
+      "local_original": "03a35cc19c883da409c1e1e55260a7a90c535d5d",
+      "base_tree": "e5de6a96e64eb712e477d47935d0cf10e051dfe5",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp00/contracts.test.ts",
+          "./Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+          "./Sucafinav1/test/product/wp10/integration/public-state.test.ts",
+          "./Sucafinav1/test/product/wp10/integration/ui-authority.test.ts",
+          "./Sucafinav1/test/runtime-http.test.ts",
+          "./Sucafinav1/test/product/wp03/adapter.test.ts",
+          "./Sucafinav1/test/product/wp03/port.test.ts",
+          "./Sucafinav1/test/product/wp03/coverage.test.ts",
+          "./Sucafinav1/test/product/wp11/case-port.test.ts",
+          "./Sucafinav1/test/product/wp12/resident.test.ts",
+          "./Sucafinav1/test/product/wp12/analysis.test.ts",
+          "./Sucafinav1/test/product/wp10/integration/source-lifecycle.test.ts",
+          "./Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts",
+          "./Sucafinav1/test/product/wp10/resident-runtime/capability-dispatch.test.ts",
+          "./Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+          "./Sucafinav1/test/product/wp10/resident-runtime/resident-agents.test.ts",
+          "./Sucafinav1/test/product/wp10/integration/dashboard-preview.test.ts",
+          "./Sucafinav1/test/dashboard-budget-runtime.test.ts",
+          "./Sucafinav1/test/dashboard-portfolio-runtime.test.ts",
+          "./Sucafinav1/test/product/wp02/port.test.ts",
+          "./Sucafinav1/test/product/wp02/sources.test.ts",
+          "./Sucafinav1/test/product/wp02/commands.test.ts",
+          "./Sucafinav1/test/product/wp02/hot-topics.test.ts",
+          "./Sucafinav1/test/product/wp02/imports.test.ts",
+          "./Sucafinav1/test/product/wp02/signals.test.ts",
+          "./Sucafinav1/test/product/wp02/prepared.test.ts",
+          "./Sucafinav1/test/product/wp01/preview-browser.test.ts",
+          "./Sucafinav1/test/product/wp10/integration/token-budget.test.ts",
+          "./Sucafinav1/test/product/wp00/evidence-source-maps.test.ts",
+          "./Sucafinav1/test/product/wp02/scope.test.ts",
+          "./Sucafinav1/test/product/wp10/integration/dashboard-sources.test.ts",
+          "./Sucafinav1/test/product/wp10/integration/native-evidence.test.ts",
+          "./Sucafinav1/test/product/wp10/native-host/execution-host-guard.test.ts",
+          "./Sucafinav1/test/product/wp10/native-host/native-host.test.ts",
+          "./Sucafinav1/test/procurement-runtime.test.ts",
+          "./Sucafinav1/test/parity-procurement.test.ts",
+          "./porta/linha.test.ts",
+          "./Sucafinav1/test/product/wp04/capabilities.test.ts",
+          "./Sucafinav1/test/product/wp04/money.test.ts",
+          "./Sucafinav1/test/product/wp04/projection.test.ts",
+          "./Sucafinav1/test/product/wp04/sources.test.ts",
+          "./Sucafinav1/test/product/wp05/capability.test.ts",
+          "./Sucafinav1/test/product/wp05/dashboard.test.ts",
+          "./Sucafinav1/test/product/wp05/geometry.test.ts",
+          "./Sucafinav1/test/product/wp05/milestones.test.ts",
+          "./Sucafinav1/test/product/wp05/planner-integration.test.ts",
+          "./Sucafinav1/test/product/wp05/planner.test.ts",
+          "./Sucafinav1/test/product/wp05/portfolio.test.ts",
+          "./Sucafinav1/test/product/wp05/procurement.test.ts",
+          "./Sucafinav1/test/product/wp05/projection.test.ts",
+          "./Sucafinav1/test/product/wp05/scenario.test.ts",
+          "./Sucafinav1/test/product/wp05/selection.test.ts",
+          "./Sucafinav1/test/product/wp05/semantics.test.ts",
+          "./Sucafinav1/test/product/wp05/view-browser.test.ts",
+          "./Sucafinav1/test/product/wp05/waterfall.test.ts",
+          "./Sucafinav1/test/product/wp01/bi-browser.test.ts",
+          "./Sucafinav1/test/product/wp02/bi-metadata.test.ts",
+          "./Sucafinav1/test/product/wp02/keyed-update.test.ts",
+          "./Sucafinav1/test/product/wp02/privacy-egress.test.ts",
+          "./Sucafinav1/test/product/wp10/integration/procurement-sources.test.ts",
+          "./Sucafinav1/test/product/wp10/integration/store-read-scope.test.ts",
+          "./Sucafinav1/test/product/wp12/run-store.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "request_blob": "12bc018016853aad2469840ecf9597e33c3cad73",
+      "request_digest": "b9f17d01917b8d9b56bbbdebf3706e2fbef06fc2c3a2e0fa235cc9f39f010fcc",
+      "snapshot_tree": "f4b353dec7fd4aedc766ba64164caae2dd83622e",
+      "branch": "ci-run-linux-sf2h-dev8",
+      "status": "FAILED",
+      "final_selection": false,
+      "files": 62,
+      "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+      "event_id": "dispatch-development-8",
+      "dispatcher": "S0",
+      "snapshot": "5e43681dfe0bc828f5a996e00dbf900cc1d0e77b",
+      "run_id": 43429304143,
+      "head_sha": "5e43681dfe0bc828f5a996e00dbf900cc1d0e77b",
+      "job_id": 131898475166,
+      "passed": 325,
+      "failed": 2,
+      "errors": 1,
+      "expects": 2135,
+      "omni": "pass;16spawns; focused no declaring test ran",
+      "log": "validation/development-8-job.log"
+    },
+    "final_selections": "ALL_NOT_RUN"
+  },
+  "candidate_C": null,
+  "delivery_D": null,
+  "AM01_AM06": "ALL_NOT_RUN",
+  "three_final_reviews": "NOT_RUN",
+  "global_release": false,
+  "typecheck": {
+    "SF13": "PASS9722 exact receipt",
+    "CLI03": "exit0 started9722 product changed during check; DEVELOPMENT_ONLY",
+    "SF14": "FAILED owner fixes integrated",
+    "SF15": "FAILED2 Atlas preview reason+Planner present callback, fixes integrated",
+    "SF16": {
+      "handle": 94763,
+      "head": "b7ea2cefa051c15d3d0565cd0fc456b81eb2005b",
+      "state": "RUNNING",
+      "log": "validation/root-typecheck-16.log"
+    },
+    "policy": "one heavy compiler; package cwd only"
+  },
+  "required_findings": [
+    "R1-M01: memory source revalidation nested fix integrated; hosted proof pending",
+    "R1-M02: complete typed memory fixtures integrated; hosted proof pending",
+    "R1-BI08: ambiguous milestones missing disclosure fixed static recheck; hosted proof pending",
+    "R2 store owner P1: 11 hosted store tests PASS at308de1; not finalC approval",
+    "R2-01 source lookup race: test now uses external ALS writer; CI recheck pending",
+    "BI08 current vs historical: milestoneDates producer integrated; browser proof pending",
+    "Actual native host/token-gate/provider/39 operations composition not completed",
+    "Atlas protected historical authorization not completed; current unsupported kinds fail closed",
+    "C12 non-Dashboard atomic cross-surface Apply still missing"
+  ],
+  "next_executable_actions": [
+    "SF16 result, owner fixes if required",
+    "Complete actual product authority and native composition in host-context/localentry; use private C08 and actual ProjectV2 id",
+    "Publish candidate9 exacttree via MCP CAS and central CI scoped with new memory/Atlas/docs/resultstore/browser tests",
+    "Integrate remaining reports/collaboration/routines/portfolio/import consumers with typecheck and hosted proof"
+  ],
+  "resource_governor": {
+    "native_threads_admitted": 20,
+    "global_host_ceiling": 21,
+    "not_N4_five_pools": true,
+    "compiler_concurrency": 1,
+    "dispatcher_concurrency": 1,
+    "new_supervisor": false
+  },
+  "support_leases_20": {
+    "S0-B": [
+      "apps/cli/src/sucafina-product/native-execution.ts",
+      "apps/cli/test/native-execution.test.ts"
+    ],
+    "S0-C": [
+      "test/product/wp10/integration/document-sources.test.ts; source lane only"
+    ],
+    "S4-A": [
+      "product/decisions/result-store.ts",
+      "test/product/wp11/result-store.test.ts",
+      "product/decisions/prepared-apply.ts; same source lane"
+    ],
+    "S2": [
+      "product/documents/byte-port.ts; same source lane"
+    ],
+    "S3-A": [
+      "product/reports/storage.ts; same source lane"
+    ]
+  },
+  "scope_lock": "15WPs/74tasks/17contracts/1610criteria unchanged; no criterion PASS inferred from these development receipts"
 }
