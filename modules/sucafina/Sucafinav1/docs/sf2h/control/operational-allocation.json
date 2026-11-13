@@ -1728,5 +1728,32 @@
       "single writer per live path claim; source actor boundaries and explicit transfers preserved"
     ]
   },
-  "revision": 2
+  "revision": 3,
+  "current_actual_slots": {
+    "S0": "root",
+    "S0-B": "runtime",
+    "S1-C": "Planner",
+    "S4-A": "case",
+    "S4-B": "AI",
+    "S0-A": "Atlas",
+    "S1-A": "UI",
+    "S2": "documents",
+    "cap": 8,
+    "N4_20_admitted": false,
+    "others": "quiescent/queued, not fabricated occupation"
+  },
+  "current_typecheck_queue": {
+    "active": [
+      "TC01:S4-B",
+      "TC02:S1-C"
+    ],
+    "next": [
+      "TC03:S4-A",
+      "TC04:S0-B"
+    ],
+    "max_concurrent": 2,
+    "preferred": 1,
+    "resource_reason": "Observed4tsgo~6GiBRSS/16GiBhost, serialized followups; external processes untouched"
+  },
+  "rolling_rule": "All74tasks/23actors retained; activeglobal8with7workers; completed coordinators quiescent, review independence preserved. Later lanes queued, release upon read/implementation handoff. SourceN4 validators untouched."
 }

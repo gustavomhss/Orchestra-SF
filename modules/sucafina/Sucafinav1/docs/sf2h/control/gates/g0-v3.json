@@ -1,0 +1,38 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "state": "CONTRACT_FROZEN_CONSTRUCTION_RELEASE",
+  "accepted_by": "S0",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "code_sha": "9f0c6a066ffc56b7ef21df079796827cfe141d40",
+  "tree": "d0f9880bfd850eb2bbc1674e836437a4af6fd5ae",
+  "freeze_sha256": "9fcea69bc33961a453cdd364d414eed501058084bb6e96643e51a2d8cb4ff7e1",
+  "revision": 3,
+  "scope": "C01–C17,5profiles,18skills,8packs,39operations,24outputs,AM01–06; deterministic and native construction released",
+  "consumer_acks": {
+    "WP10": "S0-B typed runtime anchors+S0-C static consumer; root package typecheck realgraph",
+    "WP12": "S4-B fullpack+v2consumer typecheck ACK, resident/runtime unchanged",
+    "WP06": "S2 document byteport/C14 typed context review and staged adapter corrections",
+    "WP14": "S4 C17 read-only ACK with required implementation corrections",
+    "WP03": "S1-C realengine/fullpack/v2compile ACK+PlannerSourceHost callback accepted",
+    "WP11": "S4-A fullpack/v2compile ACK+approvedfactory+choice snapshot correction"
+  },
+  "static_validation": "bun typecheck SF latest exit0; output generator --check159 definitions; guards78 rules31paths0gate/0error5dependency advisories",
+  "hosted_development": "run43372139290 product5fa3 24pass0fail; v2/v3newtests pending hosted run, not finalCI proof",
+  "open_work": [
+    "new private-state HTTP tests hosted validation",
+    "all runtime implementations, all productconsumers, GNATIVE and allAMs",
+    "per-section persisted payload semantic validation; ACL and incarnationregistry realhost",
+    "C10 complete comparison/coverage validation using requiredSfCostCategories and actual engine",
+    "C06 fingerprint producer use and scope tests",
+    "all8finalCIs, requiredartifacts, reviews C/Dguards"
+  ],
+  "review": "Grok delta2 HOLD retained unchanged; root resolved remaining contract findings by coupled unions/inventoryguard/scope/choiceledger/IDs-only; implementation findings remain mandatory open. No reviewer/product approval inferred.",
+  "not_done": [
+    "WP00.T02 full criteria not DONE",
+    "GNATIVE NOT_RUN",
+    "GLOBAL_RELEASE NOT_RUN",
+    "finalC/D absent"
+  ],
+  "writer_rule": "Only own assigned writepaths and currentlease, never contracts or integrate. S0 sole integrator/dispatcher. Incremental handoffs required."
+}
