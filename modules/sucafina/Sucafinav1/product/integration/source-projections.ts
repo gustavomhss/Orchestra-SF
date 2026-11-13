@@ -57,6 +57,12 @@ export function projectSfSourceScope(surface: Surface, snapshot: Snapshot, scope
     }
     const period = object(selector.period)
     if (typeof period.start !== "string" || typeof period.end !== "string") return undefined
+    if (scope.recordType === "hotTopics") {
+      const today = asOf.slice(0, 10)
+      if (selector.page !== "Hot Topics & Actions" || period.start !== today || period.end !== today ||
+        selector.fields.some((field) => !["id", "action", "owner", "due", "status", "priority", "notes"].includes(field))) return undefined
+      return Object.fromEntries([...selector.fields].sort().map((field) => [field, record[field]]))
+    }
     const year = record.year === undefined ? Number(period.start.slice(0, 4)) : Number(record.year)
     const month = record.month === undefined ? undefined : Number(record.month)
     if (!Number.isInteger(year) || year < 2024 || year > 2027 || (month !== undefined && (!Number.isInteger(month) || month < 1 || month > 12))) return undefined

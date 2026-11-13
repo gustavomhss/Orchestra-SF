@@ -927,13 +927,13 @@ const definitions = {
         "$ref": "#/definitions/Shape_31"
       },
       {
-        "$ref": "#/definitions/Shape_47"
+        "$ref": "#/definitions/Shape_81"
       },
       {
-        "$ref": "#/definitions/Shape_48"
+        "$ref": "#/definitions/Shape_82"
       },
       {
-        "$ref": "#/definitions/Shape_51"
+        "$ref": "#/definitions/Shape_83"
       }
     ]
   },
@@ -963,7 +963,7 @@ const definitions = {
         "type": "string"
       },
       "comparison": {
-        "$ref": "#/definitions/Shape_44"
+        "$ref": "#/definitions/Shape_54"
       },
       "knownDifference": {
         "type": "number"
@@ -1007,22 +1007,25 @@ const definitions = {
       "engineVersion": {
         "type": "string"
       },
+      "decision": {
+        "$ref": "#/definitions/Shape_35"
+      },
       "components": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/ProjectionComponent_35"
+          "$ref": "#/definitions/ProjectionComponent_39"
         }
       },
       "values": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_38"
+          "$ref": "#/definitions/__type_75"
         }
       },
       "missing": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_42"
+          "$ref": "#/definitions/__type_79"
         }
       }
     },
@@ -1132,7 +1135,126 @@ const definitions = {
       "observedAt"
     ]
   },
-  "ProjectionComponent_35": {
+  "Shape_35": {
+    "anyOf": [
+      {
+        "$ref": "#/definitions/__type_36"
+      },
+      {
+        "$ref": "#/definitions/__type_67"
+      }
+    ]
+  },
+  "__type_36": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "kind": {
+        "const": "scenario"
+      },
+      "scenarioResultRef": {
+        "type": "string"
+      },
+      "scenario": {
+        "$ref": "#/definitions/ScenarioResult_37"
+      },
+      "comparisonRef": {
+        "type": "string"
+      },
+      "comparison": {
+        "$ref": "#/definitions/ScenarioComparison_53"
+      },
+      "sensitivity": {
+        "$ref": "#/definitions/SensitivityResult_58"
+      }
+    },
+    "required": [
+      "kind",
+      "scenarioResultRef",
+      "scenario",
+      "comparisonRef",
+      "comparison"
+    ]
+  },
+  "ScenarioResult_37": {
+    "anyOf": [
+      {
+        "$ref": "#/definitions/Shape_38"
+      },
+      {
+        "$ref": "#/definitions/Shape_46"
+      }
+    ]
+  },
+  "Shape_38": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "version": {
+        "type": "number"
+      },
+      "components": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ProjectionComponent_39"
+        }
+      },
+      "currency": {
+        "type": "string"
+      },
+      "horizon": {
+        "$ref": "#/definitions/Period_10"
+      },
+      "sourceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "unresolvedConditions": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "restrictions": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "comparisonStatus": {
+        "const": "complete"
+      },
+      "costCoverage": {
+        "$ref": "#/definitions/Shape_42"
+      },
+      "knownSubtotal": {
+        "type": "number"
+      },
+      "total": {
+        "type": "number"
+      }
+    },
+    "required": [
+      "id",
+      "version",
+      "components",
+      "currency",
+      "horizon",
+      "sourceRefs",
+      "unresolvedConditions",
+      "restrictions",
+      "comparisonStatus",
+      "costCoverage",
+      "knownSubtotal",
+      "total"
+    ]
+  },
+  "ProjectionComponent_39": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1140,7 +1262,7 @@ const definitions = {
         "type": "string"
       },
       "amount": {
-        "$ref": "#/definitions/Shape_36"
+        "$ref": "#/definitions/Shape_40"
       },
       "currency": {
         "type": "string"
@@ -1155,7 +1277,7 @@ const definitions = {
         }
       },
       "evidenceState": {
-        "$ref": "#/definitions/EvidenceState_37"
+        "$ref": "#/definitions/EvidenceState_41"
       }
     },
     "required": [
@@ -1167,7 +1289,7 @@ const definitions = {
       "evidenceState"
     ]
   },
-  "Shape_36": {
+  "Shape_40": {
     "anyOf": [
       {
         "type": "null"
@@ -1177,7 +1299,7 @@ const definitions = {
       }
     ]
   },
-  "EvidenceState_37": {
+  "EvidenceState_41": {
     "anyOf": [
       {
         "const": "confirmed"
@@ -1193,27 +1315,162 @@ const definitions = {
       }
     ]
   },
-  "__type_38": {
+  "Shape_42": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "basisId": {
+        "type": "string"
+      },
+      "basisVersion": {
+        "type": "number"
+      },
+      "alternativeId": {
+        "type": "string"
+      },
+      "alternativeVersion": {
+        "type": "number"
+      },
+      "currency": {
+        "type": "string"
+      },
+      "horizon": {
+        "$ref": "#/definitions/Period_10"
+      },
+      "issues": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "evaluatedSourceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "coverageState": {
+        "const": "complete"
+      },
+      "entries": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/Shape_43"
+        }
+      },
+      "derivedMissingCategoryIds": {
+        "type": "array",
+        "items": {
+          "not": {}
+        }
+      }
+    },
+    "required": [
+      "basisId",
+      "basisVersion",
+      "alternativeId",
+      "alternativeVersion",
+      "currency",
+      "horizon",
+      "issues",
+      "evaluatedSourceRefs",
+      "coverageState",
+      "entries",
+      "derivedMissingCategoryIds"
+    ]
+  },
+  "Shape_43": {
+    "anyOf": [
+      {
+        "$ref": "#/definitions/__type_44"
+      },
+      {
+        "$ref": "#/definitions/__type_45"
+      }
+    ]
+  },
+  "__type_44": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "status": {
+        "const": "included"
+      },
+      "categoryId": {
+        "type": "string"
+      },
+      "componentRefs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "scopeNote": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "status",
+      "categoryId",
+      "componentRefs",
+      "evidenceRefs",
+      "scopeNote"
+    ]
+  },
+  "__type_45": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "status": {
+        "const": "not-applicable"
+      },
+      "categoryId": {
+        "type": "string"
+      },
+      "justification": {
+        "type": "string"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      }
+    },
+    "required": [
+      "status",
+      "categoryId",
+      "justification",
+      "evidenceRefs"
+    ]
+  },
+  "Shape_46": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "id": {
         "type": "string"
       },
-      "value": {
-        "$ref": "#/definitions/Shape_39"
+      "version": {
+        "type": "number"
       },
-      "unit": {
-        "type": "string"
+      "components": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ProjectionComponent_39"
+        }
       },
       "currency": {
         "type": "string"
       },
-      "period": {
+      "horizon": {
         "$ref": "#/definitions/Period_10"
-      },
-      "granularity": {
-        "$ref": "#/definitions/Shape_40"
       },
       "sourceRefs": {
         "type": "array",
@@ -1221,128 +1478,190 @@ const definitions = {
           "$ref": "#/definitions/BusinessEvidenceRef_5"
         }
       },
-      "drilldown": {
-        "$ref": "#/definitions/Shape_41"
+      "unresolvedConditions": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
       },
-      "evidenceState": {
-        "$ref": "#/definitions/EvidenceState_37"
+      "restrictions": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "comparisonStatus": {
+        "$ref": "#/definitions/Shape_47"
+      },
+      "costCoverage": {
+        "$ref": "#/definitions/CostCoverageAssessment_48"
+      },
+      "knownSubtotal": {
+        "$ref": "#/definitions/Shape_40"
+      },
+      "total": {
+        "type": "null"
       }
     },
     "required": [
       "id",
-      "value",
-      "period",
-      "granularity",
+      "version",
+      "components",
+      "currency",
+      "horizon",
       "sourceRefs",
-      "drilldown",
-      "evidenceState"
+      "unresolvedConditions",
+      "restrictions",
+      "comparisonStatus",
+      "costCoverage",
+      "knownSubtotal",
+      "total"
     ]
   },
-  "Shape_39": {
+  "Shape_47": {
     "anyOf": [
-      {
-        "type": "null"
-      },
-      {
-        "type": "string"
-      },
-      {
-        "type": "number"
-      },
-      {
-        "const": false
-      },
-      {
-        "const": true
-      }
-    ]
-  },
-  "Shape_40": {
-    "anyOf": [
-      {
-        "const": "record"
-      },
-      {
-        "const": "month"
-      },
-      {
-        "const": "year"
-      },
-      {
-        "const": "aggregate"
-      }
-    ]
-  },
-  "Shape_41": {
-    "anyOf": [
-      {
-        "type": "null"
-      },
-      {
-        "$ref": "#/definitions/Shape_6"
-      },
-      {
-        "$ref": "#/definitions/Shape_11"
-      },
-      {
-        "$ref": "#/definitions/Shape_16"
-      },
-      {
-        "$ref": "#/definitions/Shape_18"
-      },
-      {
-        "$ref": "#/definitions/Shape_20"
-      },
-      {
-        "$ref": "#/definitions/Shape_22"
-      }
-    ]
-  },
-  "__type_42": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "field": {
-        "type": "string"
-      },
-      "reason": {
-        "$ref": "#/definitions/Shape_43"
-      }
-    },
-    "required": [
-      "field",
-      "reason"
-    ]
-  },
-  "Shape_43": {
-    "anyOf": [
-      {
-        "const": "missing"
-      },
       {
         "const": "unavailable"
       },
       {
-        "const": "restricted"
+        "const": "conditioned"
       },
       {
-        "const": "not-applicable"
-      },
-      {
-        "const": "incompatible-currency"
-      },
-      {
-        "const": "missing-fx"
-      },
-      {
-        "const": "missing-rate"
-      },
-      {
-        "const": "unconfirmed"
+        "const": "incompatible"
       }
     ]
   },
-  "Shape_44": {
+  "CostCoverageAssessment_48": {
+    "anyOf": [
+      {
+        "$ref": "#/definitions/Shape_42"
+      },
+      {
+        "$ref": "#/definitions/Shape_49"
+      }
+    ]
+  },
+  "Shape_49": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "basisId": {
+        "type": "string"
+      },
+      "basisVersion": {
+        "type": "number"
+      },
+      "alternativeId": {
+        "type": "string"
+      },
+      "alternativeVersion": {
+        "type": "number"
+      },
+      "currency": {
+        "type": "string"
+      },
+      "horizon": {
+        "$ref": "#/definitions/Period_10"
+      },
+      "issues": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "evaluatedSourceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "coverageState": {
+        "$ref": "#/definitions/Shape_50"
+      },
+      "entries": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/CostCoverageEntry_51"
+        }
+      },
+      "derivedMissingCategoryIds": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "required": [
+      "basisId",
+      "basisVersion",
+      "alternativeId",
+      "alternativeVersion",
+      "currency",
+      "horizon",
+      "issues",
+      "evaluatedSourceRefs",
+      "coverageState",
+      "entries",
+      "derivedMissingCategoryIds"
+    ]
+  },
+  "Shape_50": {
+    "anyOf": [
+      {
+        "const": "pending"
+      },
+      {
+        "const": "unavailable"
+      }
+    ]
+  },
+  "CostCoverageEntry_51": {
+    "anyOf": [
+      {
+        "$ref": "#/definitions/__type_44"
+      },
+      {
+        "$ref": "#/definitions/__type_45"
+      },
+      {
+        "$ref": "#/definitions/__type_52"
+      }
+    ]
+  },
+  "__type_52": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "status": {
+        "const": "pending"
+      },
+      "categoryId": {
+        "type": "string"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "questionRef": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "status",
+      "categoryId",
+      "reason"
+    ]
+  },
+  "ScenarioComparison_53": {
+    "anyOf": [
+      {
+        "$ref": "#/definitions/Shape_54"
+      },
+      {
+        "$ref": "#/definitions/Shape_57"
+      }
+    ]
+  },
+  "Shape_54": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1361,7 +1680,7 @@ const definitions = {
       "criterionResults": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_45"
+          "$ref": "#/definitions/__type_55"
         }
       },
       "unresolvedConditions": {
@@ -1391,7 +1710,7 @@ const definitions = {
       "completeDifference"
     ]
   },
-  "__type_45": {
+  "__type_55": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1399,7 +1718,7 @@ const definitions = {
         "type": "string"
       },
       "state": {
-        "$ref": "#/definitions/Shape_46"
+        "$ref": "#/definitions/Shape_56"
       },
       "reason": {
         "type": "string"
@@ -1411,7 +1730,7 @@ const definitions = {
       "reason"
     ]
   },
-  "Shape_46": {
+  "Shape_56": {
     "anyOf": [
       {
         "const": "satisfied"
@@ -1424,122 +1743,7 @@ const definitions = {
       }
     ]
   },
-  "Shape_47": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "baseline": {
-        "$ref": "#/definitions/DomainProjection_32"
-      },
-      "candidate": {
-        "$ref": "#/definitions/DomainProjection_32"
-      },
-      "sourceRefs": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/BusinessEvidenceRef_5"
-        }
-      },
-      "gaps": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "explanation": {
-        "type": "string"
-      },
-      "comparison": {
-        "$ref": "#/definitions/Shape_44"
-      },
-      "knownDifference": {
-        "type": "number"
-      },
-      "completeDifference": {
-        "type": "number"
-      },
-      "analysisBasis": {
-        "const": "import-preview"
-      },
-      "domainApplied": {
-        "const": false
-      },
-      "importPreviewRef": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "baseline",
-      "candidate",
-      "sourceRefs",
-      "gaps",
-      "explanation",
-      "comparison",
-      "knownDifference",
-      "completeDifference",
-      "analysisBasis",
-      "domainApplied",
-      "importPreviewRef"
-    ]
-  },
-  "Shape_48": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "baseline": {
-        "$ref": "#/definitions/DomainProjection_32"
-      },
-      "candidate": {
-        "$ref": "#/definitions/DomainProjection_32"
-      },
-      "sourceRefs": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/BusinessEvidenceRef_5"
-        }
-      },
-      "gaps": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "explanation": {
-        "type": "string"
-      },
-      "comparison": {
-        "$ref": "#/definitions/Shape_49"
-      },
-      "knownDifference": {
-        "$ref": "#/definitions/Shape_36"
-      },
-      "completeDifference": {
-        "type": "null"
-      },
-      "analysisBasis": {
-        "const": "domain"
-      },
-      "domainApplied": {
-        "type": "boolean"
-      },
-      "importPreviewRef": {
-        "not": {}
-      }
-    },
-    "required": [
-      "baseline",
-      "candidate",
-      "sourceRefs",
-      "gaps",
-      "explanation",
-      "comparison",
-      "knownDifference",
-      "completeDifference",
-      "analysisBasis",
-      "domainApplied"
-    ]
-  },
-  "Shape_49": {
+  "Shape_57": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1558,7 +1762,7 @@ const definitions = {
       "criterionResults": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_45"
+          "$ref": "#/definitions/__type_55"
         }
       },
       "unresolvedConditions": {
@@ -1568,10 +1772,10 @@ const definitions = {
         }
       },
       "comparisonStatus": {
-        "$ref": "#/definitions/Shape_50"
+        "$ref": "#/definitions/Shape_47"
       },
       "knownDifference": {
-        "$ref": "#/definitions/Shape_36"
+        "$ref": "#/definitions/Shape_40"
       },
       "completeDifference": {
         "type": "null"
@@ -1588,88 +1792,7 @@ const definitions = {
       "completeDifference"
     ]
   },
-  "Shape_50": {
-    "anyOf": [
-      {
-        "const": "unavailable"
-      },
-      {
-        "const": "conditioned"
-      },
-      {
-        "const": "incompatible"
-      }
-    ]
-  },
-  "Shape_51": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "baseline": {
-        "$ref": "#/definitions/DomainProjection_32"
-      },
-      "candidate": {
-        "$ref": "#/definitions/DomainProjection_32"
-      },
-      "sourceRefs": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/BusinessEvidenceRef_5"
-        }
-      },
-      "gaps": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "explanation": {
-        "type": "string"
-      },
-      "comparison": {
-        "$ref": "#/definitions/Shape_49"
-      },
-      "knownDifference": {
-        "$ref": "#/definitions/Shape_36"
-      },
-      "completeDifference": {
-        "type": "null"
-      },
-      "analysisBasis": {
-        "const": "import-preview"
-      },
-      "domainApplied": {
-        "const": false
-      },
-      "importPreviewRef": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "baseline",
-      "candidate",
-      "sourceRefs",
-      "gaps",
-      "explanation",
-      "comparison",
-      "knownDifference",
-      "completeDifference",
-      "analysisBasis",
-      "domainApplied",
-      "importPreviewRef"
-    ]
-  },
-  "ScenarioComparison_52": {
-    "anyOf": [
-      {
-        "$ref": "#/definitions/Shape_44"
-      },
-      {
-        "$ref": "#/definitions/Shape_49"
-      }
-    ]
-  },
-  "SensitivityResult_53": {
+  "SensitivityResult_58": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1680,19 +1803,19 @@ const definitions = {
         "type": "string"
       },
       "bounds": {
-        "$ref": "#/definitions/__type_54"
+        "$ref": "#/definitions/__type_59"
       },
       "evaluated": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_55"
+          "$ref": "#/definitions/__type_60"
         }
       },
       "threshold": {
-        "$ref": "#/definitions/Shape_36"
+        "$ref": "#/definitions/Shape_40"
       },
       "thresholdEvidence": {
-        "$ref": "#/definitions/Shape_56"
+        "$ref": "#/definitions/Shape_61"
       },
       "unit": {
         "type": "string"
@@ -1713,7 +1836,7 @@ const definitions = {
         }
       },
       "comparisonStatus": {
-        "$ref": "#/definitions/Shape_61"
+        "$ref": "#/definitions/Shape_66"
       },
       "unresolvedConditions": {
         "type": "array",
@@ -1743,7 +1866,7 @@ const definitions = {
       "evidenceRefs"
     ]
   },
-  "__type_54": {
+  "__type_59": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1763,7 +1886,7 @@ const definitions = {
       "steps"
     ]
   },
-  "__type_55": {
+  "__type_60": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1774,7 +1897,7 @@ const definitions = {
         "type": "string"
       },
       "value": {
-        "$ref": "#/definitions/Shape_36"
+        "$ref": "#/definitions/Shape_40"
       }
     },
     "required": [
@@ -1783,20 +1906,20 @@ const definitions = {
       "value"
     ]
   },
-  "Shape_56": {
+  "Shape_61": {
     "anyOf": [
       {
-        "$ref": "#/definitions/__type_57"
+        "$ref": "#/definitions/__type_62"
       },
       {
-        "$ref": "#/definitions/__type_58"
+        "$ref": "#/definitions/__type_63"
       },
       {
-        "$ref": "#/definitions/__type_60"
+        "$ref": "#/definitions/__type_65"
       }
     ]
   },
-  "__type_57": {
+  "__type_62": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1819,7 +1942,7 @@ const definitions = {
       "evidenceRefs"
     ]
   },
-  "__type_58": {
+  "__type_63": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1827,7 +1950,7 @@ const definitions = {
         "const": "sampled"
       },
       "interval": {
-        "$ref": "#/definitions/__type_59"
+        "$ref": "#/definitions/__type_64"
       },
       "evidenceRefs": {
         "type": "array",
@@ -1842,7 +1965,7 @@ const definitions = {
       "evidenceRefs"
     ]
   },
-  "__type_59": {
+  "__type_64": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1858,7 +1981,7 @@ const definitions = {
       "maximum"
     ]
   },
-  "__type_60": {
+  "__type_65": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1874,13 +1997,13 @@ const definitions = {
       "reason"
     ]
   },
-  "Shape_61": {
+  "Shape_66": {
     "anyOf": [
       {
-        "const": "unavailable"
+        "const": "complete"
       },
       {
-        "const": "complete"
+        "const": "unavailable"
       },
       {
         "const": "conditioned"
@@ -1890,7 +2013,599 @@ const definitions = {
       }
     ]
   },
-  "CommercialComparison_62": {
+  "__type_67": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "kind": {
+        "const": "portfolio"
+      },
+      "portfolioResultRef": {
+        "type": "string"
+      },
+      "portfolio": {
+        "$ref": "#/definitions/PortfolioResult_68"
+      }
+    },
+    "required": [
+      "kind",
+      "portfolioResultRef",
+      "portfolio"
+    ]
+  },
+  "PortfolioResult_68": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "combinations": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/PortfolioCombination_69"
+        }
+      },
+      "limitations": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      }
+    },
+    "required": [
+      "combinations",
+      "limitations",
+      "evidenceRefs"
+    ]
+  },
+  "PortfolioCombination_69": {
+    "anyOf": [
+      {
+        "$ref": "#/definitions/Shape_70"
+      },
+      {
+        "$ref": "#/definitions/Shape_72"
+      },
+      {
+        "$ref": "#/definitions/Shape_74"
+      }
+    ]
+  },
+  "Shape_70": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "analysis": {
+        "$ref": "#/definitions/__type_71"
+      },
+      "id": {
+        "type": "string"
+      },
+      "caseRefs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "components": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ProjectionComponent_39"
+        }
+      },
+      "costCoverageRefs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "conflicts": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "restrictions": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "eligibility": {
+        "const": "eligible-complete"
+      },
+      "comparisonStatus": {
+        "const": "complete"
+      }
+    },
+    "required": [
+      "id",
+      "caseRefs",
+      "components",
+      "costCoverageRefs",
+      "conflicts",
+      "restrictions",
+      "eligibility",
+      "comparisonStatus"
+    ]
+  },
+  "__type_71": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "scenarioResultRef": {
+        "type": "string"
+      },
+      "scenario": {
+        "$ref": "#/definitions/ScenarioResult_37"
+      },
+      "comparisonRef": {
+        "type": "string"
+      },
+      "comparison": {
+        "$ref": "#/definitions/ScenarioComparison_53"
+      }
+    },
+    "required": [
+      "scenarioResultRef",
+      "scenario",
+      "comparisonRef",
+      "comparison"
+    ]
+  },
+  "Shape_72": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "analysis": {
+        "$ref": "#/definitions/__type_71"
+      },
+      "id": {
+        "type": "string"
+      },
+      "caseRefs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "components": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ProjectionComponent_39"
+        }
+      },
+      "costCoverageRefs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "conflicts": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "restrictions": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "eligibility": {
+        "$ref": "#/definitions/Shape_73"
+      },
+      "comparisonStatus": {
+        "$ref": "#/definitions/Shape_47"
+      }
+    },
+    "required": [
+      "id",
+      "caseRefs",
+      "components",
+      "costCoverageRefs",
+      "conflicts",
+      "restrictions",
+      "eligibility",
+      "comparisonStatus"
+    ]
+  },
+  "Shape_73": {
+    "anyOf": [
+      {
+        "const": "unavailable"
+      },
+      {
+        "const": "conditioned"
+      }
+    ]
+  },
+  "Shape_74": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "analysis": {
+        "$ref": "#/definitions/__type_71"
+      },
+      "id": {
+        "type": "string"
+      },
+      "caseRefs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "components": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ProjectionComponent_39"
+        }
+      },
+      "costCoverageRefs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "conflicts": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "restrictions": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "eligibility": {
+        "const": "ineligible"
+      },
+      "comparisonStatus": {
+        "$ref": "#/definitions/Shape_66"
+      }
+    },
+    "required": [
+      "id",
+      "caseRefs",
+      "components",
+      "costCoverageRefs",
+      "conflicts",
+      "restrictions",
+      "eligibility",
+      "comparisonStatus"
+    ]
+  },
+  "__type_75": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "value": {
+        "$ref": "#/definitions/Shape_76"
+      },
+      "unit": {
+        "type": "string"
+      },
+      "currency": {
+        "type": "string"
+      },
+      "period": {
+        "$ref": "#/definitions/Period_10"
+      },
+      "granularity": {
+        "$ref": "#/definitions/Shape_77"
+      },
+      "sourceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "drilldown": {
+        "$ref": "#/definitions/Shape_78"
+      },
+      "evidenceState": {
+        "$ref": "#/definitions/EvidenceState_41"
+      }
+    },
+    "required": [
+      "id",
+      "value",
+      "period",
+      "granularity",
+      "sourceRefs",
+      "drilldown",
+      "evidenceState"
+    ]
+  },
+  "Shape_76": {
+    "anyOf": [
+      {
+        "type": "null"
+      },
+      {
+        "type": "string"
+      },
+      {
+        "type": "number"
+      },
+      {
+        "const": false
+      },
+      {
+        "const": true
+      }
+    ]
+  },
+  "Shape_77": {
+    "anyOf": [
+      {
+        "const": "record"
+      },
+      {
+        "const": "month"
+      },
+      {
+        "const": "year"
+      },
+      {
+        "const": "aggregate"
+      }
+    ]
+  },
+  "Shape_78": {
+    "anyOf": [
+      {
+        "type": "null"
+      },
+      {
+        "$ref": "#/definitions/Shape_6"
+      },
+      {
+        "$ref": "#/definitions/Shape_11"
+      },
+      {
+        "$ref": "#/definitions/Shape_16"
+      },
+      {
+        "$ref": "#/definitions/Shape_18"
+      },
+      {
+        "$ref": "#/definitions/Shape_20"
+      },
+      {
+        "$ref": "#/definitions/Shape_22"
+      }
+    ]
+  },
+  "__type_79": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "field": {
+        "type": "string"
+      },
+      "reason": {
+        "$ref": "#/definitions/Shape_80"
+      }
+    },
+    "required": [
+      "field",
+      "reason"
+    ]
+  },
+  "Shape_80": {
+    "anyOf": [
+      {
+        "const": "unavailable"
+      },
+      {
+        "const": "not-applicable"
+      },
+      {
+        "const": "missing"
+      },
+      {
+        "const": "restricted"
+      },
+      {
+        "const": "incompatible-currency"
+      },
+      {
+        "const": "missing-fx"
+      },
+      {
+        "const": "missing-rate"
+      },
+      {
+        "const": "unconfirmed"
+      }
+    ]
+  },
+  "Shape_81": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "baseline": {
+        "$ref": "#/definitions/DomainProjection_32"
+      },
+      "candidate": {
+        "$ref": "#/definitions/DomainProjection_32"
+      },
+      "sourceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "gaps": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "explanation": {
+        "type": "string"
+      },
+      "comparison": {
+        "$ref": "#/definitions/Shape_54"
+      },
+      "knownDifference": {
+        "type": "number"
+      },
+      "completeDifference": {
+        "type": "number"
+      },
+      "analysisBasis": {
+        "const": "import-preview"
+      },
+      "domainApplied": {
+        "const": false
+      },
+      "importPreviewRef": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "baseline",
+      "candidate",
+      "sourceRefs",
+      "gaps",
+      "explanation",
+      "comparison",
+      "knownDifference",
+      "completeDifference",
+      "analysisBasis",
+      "domainApplied",
+      "importPreviewRef"
+    ]
+  },
+  "Shape_82": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "baseline": {
+        "$ref": "#/definitions/DomainProjection_32"
+      },
+      "candidate": {
+        "$ref": "#/definitions/DomainProjection_32"
+      },
+      "sourceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "gaps": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "explanation": {
+        "type": "string"
+      },
+      "comparison": {
+        "$ref": "#/definitions/Shape_57"
+      },
+      "knownDifference": {
+        "$ref": "#/definitions/Shape_40"
+      },
+      "completeDifference": {
+        "type": "null"
+      },
+      "analysisBasis": {
+        "const": "domain"
+      },
+      "domainApplied": {
+        "type": "boolean"
+      },
+      "importPreviewRef": {
+        "not": {}
+      }
+    },
+    "required": [
+      "baseline",
+      "candidate",
+      "sourceRefs",
+      "gaps",
+      "explanation",
+      "comparison",
+      "knownDifference",
+      "completeDifference",
+      "analysisBasis",
+      "domainApplied"
+    ]
+  },
+  "Shape_83": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "baseline": {
+        "$ref": "#/definitions/DomainProjection_32"
+      },
+      "candidate": {
+        "$ref": "#/definitions/DomainProjection_32"
+      },
+      "sourceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "gaps": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "explanation": {
+        "type": "string"
+      },
+      "comparison": {
+        "$ref": "#/definitions/Shape_57"
+      },
+      "knownDifference": {
+        "$ref": "#/definitions/Shape_40"
+      },
+      "completeDifference": {
+        "type": "null"
+      },
+      "analysisBasis": {
+        "const": "import-preview"
+      },
+      "domainApplied": {
+        "const": false
+      },
+      "importPreviewRef": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "baseline",
+      "candidate",
+      "sourceRefs",
+      "gaps",
+      "explanation",
+      "comparison",
+      "knownDifference",
+      "completeDifference",
+      "analysisBasis",
+      "domainApplied",
+      "importPreviewRef"
+    ]
+  },
+  "CommercialComparison_84": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1906,7 +2621,7 @@ const definitions = {
       "proposals": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_63"
+          "$ref": "#/definitions/__type_85"
         }
       },
       "ranking": {
@@ -1938,7 +2653,7 @@ const definitions = {
       "sourceRefs"
     ]
   },
-  "__type_63": {
+  "__type_85": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1949,10 +2664,10 @@ const definitions = {
         "type": "boolean"
       },
       "score": {
-        "$ref": "#/definitions/Shape_36"
+        "$ref": "#/definitions/Shape_40"
       },
       "convertedAmount": {
-        "$ref": "#/definitions/Shape_36"
+        "$ref": "#/definitions/Shape_40"
       },
       "evidenceRefs": {
         "type": "array",
@@ -1976,7 +2691,7 @@ const definitions = {
       "issues"
     ]
   },
-  "CommercialGap_64": {
+  "CommercialGap_86": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1987,7 +2702,7 @@ const definitions = {
         "type": "string"
       },
       "issue": {
-        "$ref": "#/definitions/Shape_65"
+        "$ref": "#/definitions/Shape_87"
       },
       "evidenceRefs": {
         "type": "array",
@@ -2007,13 +2722,13 @@ const definitions = {
       "question"
     ]
   },
-  "Shape_65": {
+  "Shape_87": {
     "anyOf": [
       {
-        "const": "missing"
+        "const": "unavailable"
       },
       {
-        "const": "unavailable"
+        "const": "missing"
       },
       {
         "const": "unconfirmed"
@@ -2026,7 +2741,7 @@ const definitions = {
       }
     ]
   },
-  "EvidenceCandidate_66": {
+  "EvidenceCandidate_88": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2034,7 +2749,7 @@ const definitions = {
         "type": "string"
       },
       "value": {
-        "$ref": "#/definitions/Shape_39"
+        "$ref": "#/definitions/Shape_76"
       },
       "unit": {
         "type": "string"
@@ -2046,7 +2761,7 @@ const definitions = {
         }
       },
       "state": {
-        "$ref": "#/definitions/Shape_67"
+        "$ref": "#/definitions/Shape_89"
       }
     },
     "required": [
@@ -2056,7 +2771,7 @@ const definitions = {
       "state"
     ]
   },
-  "Shape_67": {
+  "Shape_89": {
     "anyOf": [
       {
         "const": "claim"
@@ -2072,7 +2787,7 @@ const definitions = {
       }
     ]
   },
-  "PreparedChangeSet_68": {
+  "PreparedChangeSet_90": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2085,7 +2800,7 @@ const definitions = {
       "changes": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_69"
+          "$ref": "#/definitions/__type_91"
         }
       },
       "conditions": {
@@ -2102,7 +2817,7 @@ const definitions = {
       "conditions"
     ]
   },
-  "__type_69": {
+  "__type_91": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2137,7 +2852,7 @@ const definitions = {
       "requiredAuthority"
     ]
   },
-  "DossierDraft_70": {
+  "DossierDraft_92": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2185,7 +2900,7 @@ const definitions = {
       "domainApplied"
     ]
   },
-  "DeliveryAssessment_71": {
+  "DeliveryAssessment_93": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2201,7 +2916,7 @@ const definitions = {
       "dependencies": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_72"
+          "$ref": "#/definitions/__type_94"
         }
       },
       "capacityConstraints": {
@@ -2225,7 +2940,7 @@ const definitions = {
       "unresolvedConditions"
     ]
   },
-  "__type_72": {
+  "__type_94": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2236,7 +2951,7 @@ const definitions = {
         "type": "string"
       },
       "state": {
-        "$ref": "#/definitions/Shape_73"
+        "$ref": "#/definitions/Shape_95"
       },
       "sourceRefs": {
         "type": "array",
@@ -2252,7 +2967,7 @@ const definitions = {
       "sourceRefs"
     ]
   },
-  "Shape_73": {
+  "Shape_95": {
     "anyOf": [
       {
         "const": "confirmed"
@@ -2265,7 +2980,7 @@ const definitions = {
       }
     ]
   },
-  "DependencyConflict_74": {
+  "DependencyConflict_96": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2288,7 +3003,7 @@ const definitions = {
         }
       },
       "state": {
-        "$ref": "#/definitions/Shape_75"
+        "$ref": "#/definitions/Shape_97"
       }
     },
     "required": [
@@ -2300,7 +3015,7 @@ const definitions = {
       "state"
     ]
   },
-  "Shape_75": {
+  "Shape_97": {
     "anyOf": [
       {
         "const": "unavailable"
@@ -2313,658 +3028,7 @@ const definitions = {
       }
     ]
   },
-  "PortfolioResult_76": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "combinations": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/PortfolioCombination_77"
-        }
-      },
-      "limitations": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "evidenceRefs": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/BusinessEvidenceRef_5"
-        }
-      }
-    },
-    "required": [
-      "combinations",
-      "limitations",
-      "evidenceRefs"
-    ]
-  },
-  "PortfolioCombination_77": {
-    "anyOf": [
-      {
-        "$ref": "#/definitions/Shape_78"
-      },
-      {
-        "$ref": "#/definitions/Shape_92"
-      },
-      {
-        "$ref": "#/definitions/Shape_94"
-      }
-    ]
-  },
-  "Shape_78": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "analysis": {
-        "$ref": "#/definitions/__type_79"
-      },
-      "id": {
-        "type": "string"
-      },
-      "caseRefs": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "components": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/ProjectionComponent_35"
-        }
-      },
-      "costCoverageRefs": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "conflicts": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "restrictions": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "eligibility": {
-        "const": "eligible-complete"
-      },
-      "comparisonStatus": {
-        "const": "complete"
-      }
-    },
-    "required": [
-      "id",
-      "caseRefs",
-      "components",
-      "costCoverageRefs",
-      "conflicts",
-      "restrictions",
-      "eligibility",
-      "comparisonStatus"
-    ]
-  },
-  "__type_79": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "scenarioResultRef": {
-        "type": "string"
-      },
-      "scenario": {
-        "$ref": "#/definitions/ScenarioResult_80"
-      },
-      "comparisonRef": {
-        "type": "string"
-      },
-      "comparison": {
-        "$ref": "#/definitions/ScenarioComparison_52"
-      }
-    },
-    "required": [
-      "scenarioResultRef",
-      "scenario",
-      "comparisonRef",
-      "comparison"
-    ]
-  },
-  "ScenarioResult_80": {
-    "anyOf": [
-      {
-        "$ref": "#/definitions/Shape_81"
-      },
-      {
-        "$ref": "#/definitions/Shape_86"
-      }
-    ]
-  },
-  "Shape_81": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "id": {
-        "type": "string"
-      },
-      "version": {
-        "type": "number"
-      },
-      "components": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/ProjectionComponent_35"
-        }
-      },
-      "currency": {
-        "type": "string"
-      },
-      "horizon": {
-        "$ref": "#/definitions/Period_10"
-      },
-      "sourceRefs": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/BusinessEvidenceRef_5"
-        }
-      },
-      "unresolvedConditions": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "restrictions": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "comparisonStatus": {
-        "const": "complete"
-      },
-      "costCoverage": {
-        "$ref": "#/definitions/Shape_82"
-      },
-      "knownSubtotal": {
-        "type": "number"
-      },
-      "total": {
-        "type": "number"
-      }
-    },
-    "required": [
-      "id",
-      "version",
-      "components",
-      "currency",
-      "horizon",
-      "sourceRefs",
-      "unresolvedConditions",
-      "restrictions",
-      "comparisonStatus",
-      "costCoverage",
-      "knownSubtotal",
-      "total"
-    ]
-  },
-  "Shape_82": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "basisId": {
-        "type": "string"
-      },
-      "basisVersion": {
-        "type": "number"
-      },
-      "alternativeId": {
-        "type": "string"
-      },
-      "alternativeVersion": {
-        "type": "number"
-      },
-      "currency": {
-        "type": "string"
-      },
-      "horizon": {
-        "$ref": "#/definitions/Period_10"
-      },
-      "issues": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "evaluatedSourceRefs": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/BusinessEvidenceRef_5"
-        }
-      },
-      "coverageState": {
-        "const": "complete"
-      },
-      "entries": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/Shape_83"
-        }
-      },
-      "derivedMissingCategoryIds": {
-        "type": "array",
-        "items": {
-          "not": {}
-        }
-      }
-    },
-    "required": [
-      "basisId",
-      "basisVersion",
-      "alternativeId",
-      "alternativeVersion",
-      "currency",
-      "horizon",
-      "issues",
-      "evaluatedSourceRefs",
-      "coverageState",
-      "entries",
-      "derivedMissingCategoryIds"
-    ]
-  },
-  "Shape_83": {
-    "anyOf": [
-      {
-        "$ref": "#/definitions/__type_84"
-      },
-      {
-        "$ref": "#/definitions/__type_85"
-      }
-    ]
-  },
-  "__type_84": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "status": {
-        "const": "included"
-      },
-      "categoryId": {
-        "type": "string"
-      },
-      "componentRefs": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "evidenceRefs": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/BusinessEvidenceRef_5"
-        }
-      },
-      "scopeNote": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "status",
-      "categoryId",
-      "componentRefs",
-      "evidenceRefs",
-      "scopeNote"
-    ]
-  },
-  "__type_85": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "status": {
-        "const": "not-applicable"
-      },
-      "categoryId": {
-        "type": "string"
-      },
-      "justification": {
-        "type": "string"
-      },
-      "evidenceRefs": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/BusinessEvidenceRef_5"
-        }
-      }
-    },
-    "required": [
-      "status",
-      "categoryId",
-      "justification",
-      "evidenceRefs"
-    ]
-  },
-  "Shape_86": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "id": {
-        "type": "string"
-      },
-      "version": {
-        "type": "number"
-      },
-      "components": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/ProjectionComponent_35"
-        }
-      },
-      "currency": {
-        "type": "string"
-      },
-      "horizon": {
-        "$ref": "#/definitions/Period_10"
-      },
-      "sourceRefs": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/BusinessEvidenceRef_5"
-        }
-      },
-      "unresolvedConditions": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "restrictions": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "comparisonStatus": {
-        "$ref": "#/definitions/Shape_50"
-      },
-      "costCoverage": {
-        "$ref": "#/definitions/CostCoverageAssessment_87"
-      },
-      "knownSubtotal": {
-        "$ref": "#/definitions/Shape_36"
-      },
-      "total": {
-        "type": "null"
-      }
-    },
-    "required": [
-      "id",
-      "version",
-      "components",
-      "currency",
-      "horizon",
-      "sourceRefs",
-      "unresolvedConditions",
-      "restrictions",
-      "comparisonStatus",
-      "costCoverage",
-      "knownSubtotal",
-      "total"
-    ]
-  },
-  "CostCoverageAssessment_87": {
-    "anyOf": [
-      {
-        "$ref": "#/definitions/Shape_82"
-      },
-      {
-        "$ref": "#/definitions/Shape_88"
-      }
-    ]
-  },
-  "Shape_88": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "basisId": {
-        "type": "string"
-      },
-      "basisVersion": {
-        "type": "number"
-      },
-      "alternativeId": {
-        "type": "string"
-      },
-      "alternativeVersion": {
-        "type": "number"
-      },
-      "currency": {
-        "type": "string"
-      },
-      "horizon": {
-        "$ref": "#/definitions/Period_10"
-      },
-      "issues": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "evaluatedSourceRefs": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/BusinessEvidenceRef_5"
-        }
-      },
-      "coverageState": {
-        "$ref": "#/definitions/Shape_89"
-      },
-      "entries": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/CostCoverageEntry_90"
-        }
-      },
-      "derivedMissingCategoryIds": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      }
-    },
-    "required": [
-      "basisId",
-      "basisVersion",
-      "alternativeId",
-      "alternativeVersion",
-      "currency",
-      "horizon",
-      "issues",
-      "evaluatedSourceRefs",
-      "coverageState",
-      "entries",
-      "derivedMissingCategoryIds"
-    ]
-  },
-  "Shape_89": {
-    "anyOf": [
-      {
-        "const": "unavailable"
-      },
-      {
-        "const": "pending"
-      }
-    ]
-  },
-  "CostCoverageEntry_90": {
-    "anyOf": [
-      {
-        "$ref": "#/definitions/__type_84"
-      },
-      {
-        "$ref": "#/definitions/__type_85"
-      },
-      {
-        "$ref": "#/definitions/__type_91"
-      }
-    ]
-  },
-  "__type_91": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "status": {
-        "const": "pending"
-      },
-      "categoryId": {
-        "type": "string"
-      },
-      "reason": {
-        "type": "string"
-      },
-      "questionRef": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "status",
-      "categoryId",
-      "reason"
-    ]
-  },
-  "Shape_92": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "analysis": {
-        "$ref": "#/definitions/__type_79"
-      },
-      "id": {
-        "type": "string"
-      },
-      "caseRefs": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "components": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/ProjectionComponent_35"
-        }
-      },
-      "costCoverageRefs": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "conflicts": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "restrictions": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "eligibility": {
-        "$ref": "#/definitions/Shape_93"
-      },
-      "comparisonStatus": {
-        "$ref": "#/definitions/Shape_50"
-      }
-    },
-    "required": [
-      "id",
-      "caseRefs",
-      "components",
-      "costCoverageRefs",
-      "conflicts",
-      "restrictions",
-      "eligibility",
-      "comparisonStatus"
-    ]
-  },
-  "Shape_93": {
-    "anyOf": [
-      {
-        "const": "unavailable"
-      },
-      {
-        "const": "conditioned"
-      }
-    ]
-  },
-  "Shape_94": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "analysis": {
-        "$ref": "#/definitions/__type_79"
-      },
-      "id": {
-        "type": "string"
-      },
-      "caseRefs": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "components": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/ProjectionComponent_35"
-        }
-      },
-      "costCoverageRefs": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "conflicts": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "restrictions": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "eligibility": {
-        "const": "ineligible"
-      },
-      "comparisonStatus": {
-        "$ref": "#/definitions/Shape_61"
-      }
-    },
-    "required": [
-      "id",
-      "caseRefs",
-      "components",
-      "costCoverageRefs",
-      "conflicts",
-      "restrictions",
-      "eligibility",
-      "comparisonStatus"
-    ]
-  },
-  "ReconsiderationProposal_95": {
+  "ReconsiderationProposal_98": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2977,7 +3041,7 @@ const definitions = {
       "impacts": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/ChangeImpact_96"
+          "$ref": "#/definitions/ChangeImpact_99"
         }
       },
       "affectedConditionRefs": {
@@ -3013,7 +3077,7 @@ const definitions = {
       "choiceChanged"
     ]
   },
-  "ChangeImpact_96": {
+  "ChangeImpact_99": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3027,7 +3091,7 @@ const definitions = {
         "type": "string"
       },
       "state": {
-        "$ref": "#/definitions/Shape_97"
+        "$ref": "#/definitions/Shape_100"
       },
       "chosen": {
         "type": "array",
@@ -3055,7 +3119,7 @@ const definitions = {
       "reason"
     ]
   },
-  "Shape_97": {
+  "Shape_100": {
     "anyOf": [
       {
         "const": "unknown"
@@ -3068,7 +3132,7 @@ const definitions = {
       }
     ]
   },
-  "CritiqueReport_98": {
+  "CritiqueReport_101": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3087,7 +3151,7 @@ const definitions = {
       "claimIssues": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/ClaimIssue_99"
+          "$ref": "#/definitions/ClaimIssue_102"
         }
       },
       "unresolvedConditions": {
@@ -3113,7 +3177,7 @@ const definitions = {
       "evidenceRefs"
     ]
   },
-  "ClaimIssue_99": {
+  "ClaimIssue_102": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3121,7 +3185,7 @@ const definitions = {
         "type": "string"
       },
       "kind": {
-        "$ref": "#/definitions/Shape_100"
+        "$ref": "#/definitions/Shape_103"
       },
       "reason": {
         "type": "string"
@@ -3140,7 +3204,7 @@ const definitions = {
       "evidenceRefs"
     ]
   },
-  "Shape_100": {
+  "Shape_103": {
     "anyOf": [
       {
         "const": "unsupported"
@@ -3162,7 +3226,7 @@ const definitions = {
       }
     ]
   },
-  "DocumentEvidence_101": {
+  "DocumentEvidence_104": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3179,19 +3243,19 @@ const definitions = {
         "type": "string"
       },
       "textRange": {
-        "$ref": "#/definitions/__type_102"
+        "$ref": "#/definitions/__type_105"
       },
       "fieldCandidate": {
         "type": "string"
       },
       "value": {
-        "$ref": "#/definitions/Shape_39"
+        "$ref": "#/definitions/Shape_76"
       },
       "unit": {
         "type": "string"
       },
       "status": {
-        "$ref": "#/definitions/Shape_103"
+        "$ref": "#/definitions/Shape_106"
       },
       "ref": {
         "$ref": "#/definitions/Shape_11"
@@ -3209,7 +3273,7 @@ const definitions = {
       "ref"
     ]
   },
-  "__type_102": {
+  "__type_105": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3229,7 +3293,7 @@ const definitions = {
       "unit"
     ]
   },
-  "Shape_103": {
+  "Shape_106": {
     "anyOf": [
       {
         "const": "confirmed"
@@ -3245,7 +3309,7 @@ const definitions = {
       }
     ]
   },
-  "ContextualBIProposal_104": {
+  "ContextualBIProposal_107": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3261,7 +3325,7 @@ const definitions = {
       "filters": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_105"
+          "$ref": "#/definitions/__type_108"
         }
       },
       "tableRef": {
@@ -3282,7 +3346,7 @@ const definitions = {
       "sourceRefs"
     ]
   },
-  "__type_105": {
+  "__type_108": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3301,7 +3365,7 @@ const definitions = {
       "values"
     ]
   },
-  "MeetingMaterialProposal_106": {
+  "MeetingMaterialProposal_109": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3317,7 +3381,7 @@ const definitions = {
       "coverage": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_107"
+          "$ref": "#/definitions/__type_110"
         }
       },
       "gaps": {
@@ -3334,7 +3398,7 @@ const definitions = {
       "gaps"
     ]
   },
-  "__type_107": {
+  "__type_110": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3354,14 +3418,14 @@ const definitions = {
       "totalCount"
     ]
   },
-  "CaseRecall_108": {
+  "CaseRecall_111": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "matches": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_109"
+          "$ref": "#/definitions/__type_112"
         }
       },
       "limitations": {
@@ -3380,18 +3444,18 @@ const definitions = {
       "accessRevision"
     ]
   },
-  "__type_109": {
+  "__type_112": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "caseRef": {
-        "$ref": "#/definitions/__type_110"
+        "$ref": "#/definitions/__type_113"
       },
       "memoryRecordRef": {
         "type": "string"
       },
       "explanation": {
-        "$ref": "#/definitions/MatchExplanation_111"
+        "$ref": "#/definitions/MatchExplanation_114"
       },
       "evidenceRefs": {
         "type": "array",
@@ -3407,7 +3471,7 @@ const definitions = {
       "evidenceRefs"
     ]
   },
-  "__type_110": {
+  "__type_113": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3427,12 +3491,12 @@ const definitions = {
       "version"
     ]
   },
-  "MatchExplanation_111": {
+  "MatchExplanation_114": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "candidateCaseRef": {
-        "$ref": "#/definitions/__type_112"
+        "$ref": "#/definitions/__type_115"
       },
       "matchedCriteria": {
         "type": "array",
@@ -3449,7 +3513,7 @@ const definitions = {
       "sourceStates": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/Shape_113"
+          "$ref": "#/definitions/Shape_116"
         }
       },
       "limitations": {
@@ -3467,7 +3531,7 @@ const definitions = {
       "limitations"
     ]
   },
-  "__type_112": {
+  "__type_115": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3487,13 +3551,13 @@ const definitions = {
       "version"
     ]
   },
-  "Shape_113": {
+  "Shape_116": {
     "anyOf": [
       {
-        "const": "missing"
+        "const": "unavailable"
       },
       {
-        "const": "unavailable"
+        "const": "missing"
       },
       {
         "const": "stale"
@@ -3515,26 +3579,26 @@ const definitions = {
       }
     ]
   },
-  "BusinessEvidenceResolution_114": {
+  "BusinessEvidenceResolution_117": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "state": {
-        "$ref": "#/definitions/Shape_113"
+        "$ref": "#/definitions/Shape_116"
       },
       "ref": {
         "$ref": "#/definitions/BusinessEvidenceRef_5"
       },
       "currentRef": {
-        "$ref": "#/definitions/Shape_115"
+        "$ref": "#/definitions/Shape_118"
       },
       "authorizedProjection": {
-        "$ref": "#/definitions/Shape_116"
+        "$ref": "#/definitions/Shape_119"
       },
       "differences": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_125"
+          "$ref": "#/definitions/__type_128"
         }
       },
       "accessRevision": {
@@ -3551,7 +3615,7 @@ const definitions = {
       "checkedAt"
     ]
   },
-  "Shape_115": {
+  "Shape_118": {
     "anyOf": [
       {
         "$ref": "#/definitions/Shape_6"
@@ -3573,23 +3637,23 @@ const definitions = {
       }
     ]
   },
-  "Shape_116": {
+  "Shape_119": {
     "anyOf": [
       {
         "$ref": "#/definitions/DomainProjection_32"
       },
       {
-        "$ref": "#/definitions/DocumentEvidence_101"
+        "$ref": "#/definitions/DocumentEvidence_104"
       },
       {
-        "$ref": "#/definitions/CaseLedgerEvent_117"
+        "$ref": "#/definitions/CaseLedgerEvent_120"
       },
       {
-        "$ref": "#/definitions/AuthorizedPolicyProjection_121"
+        "$ref": "#/definitions/AuthorizedPolicyProjection_124"
       }
     ]
   },
-  "CaseLedgerEvent_117": {
+  "CaseLedgerEvent_120": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3597,10 +3661,10 @@ const definitions = {
         "type": "string"
       },
       "caseRef": {
-        "$ref": "#/definitions/__type_118"
+        "$ref": "#/definitions/__type_121"
       },
       "kind": {
-        "$ref": "#/definitions/Shape_119"
+        "$ref": "#/definitions/Shape_122"
       },
       "principalRef": {
         "type": "string"
@@ -3624,7 +3688,7 @@ const definitions = {
         }
       },
       "lifecycleState": {
-        "$ref": "#/definitions/Shape_120"
+        "$ref": "#/definitions/Shape_123"
       },
       "rationale": {
         "type": "string"
@@ -3653,7 +3717,7 @@ const definitions = {
       "outputDigest"
     ]
   },
-  "__type_118": {
+  "__type_121": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3673,7 +3737,7 @@ const definitions = {
       "version"
     ]
   },
-  "Shape_119": {
+  "Shape_122": {
     "anyOf": [
       {
         "const": "analysis-accepted"
@@ -3686,7 +3750,7 @@ const definitions = {
       }
     ]
   },
-  "Shape_120": {
+  "Shape_123": {
     "anyOf": [
       {
         "const": "draft"
@@ -3714,12 +3778,12 @@ const definitions = {
       }
     ]
   },
-  "AuthorizedPolicyProjection_121": {
+  "AuthorizedPolicyProjection_124": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "context": {
-        "$ref": "#/definitions/Shape_122"
+        "$ref": "#/definitions/Shape_125"
       },
       "policyRef": {
         "$ref": "#/definitions/Shape_22"
@@ -3769,17 +3833,17 @@ const definitions = {
       "dependencies"
     ]
   },
-  "Shape_122": {
+  "Shape_125": {
     "anyOf": [
       {
-        "$ref": "#/definitions/Shape_123"
+        "$ref": "#/definitions/Shape_126"
       },
       {
-        "$ref": "#/definitions/Shape_124"
+        "$ref": "#/definitions/Shape_127"
       }
     ]
   },
-  "Shape_123": {
+  "Shape_126": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3815,7 +3879,7 @@ const definitions = {
       "profileId"
     ]
   },
-  "Shape_124": {
+  "Shape_127": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3850,7 +3914,7 @@ const definitions = {
       "kind"
     ]
   },
-  "__type_125": {
+  "__type_128": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3858,10 +3922,10 @@ const definitions = {
         "type": "string"
       },
       "before": {
-        "$ref": "#/definitions/Shape_39"
+        "$ref": "#/definitions/Shape_76"
       },
       "after": {
-        "$ref": "#/definitions/Shape_39"
+        "$ref": "#/definitions/Shape_76"
       }
     },
     "required": [
@@ -3870,20 +3934,20 @@ const definitions = {
       "after"
     ]
   },
-  "AuthorizedCaseProjection_126": {
+  "AuthorizedCaseProjection_129": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "context": {
-        "$ref": "#/definitions/Shape_122"
+        "$ref": "#/definitions/Shape_125"
       },
       "case": {
-        "$ref": "#/definitions/Shape_127"
+        "$ref": "#/definitions/Shape_130"
       },
       "events": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/CaseLedgerEvent_117"
+          "$ref": "#/definitions/CaseLedgerEvent_120"
         }
       },
       "evidenceRefs": {
@@ -3904,7 +3968,7 @@ const definitions = {
       "checkedAt"
     ]
   },
-  "Shape_127": {
+  "Shape_130": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3915,7 +3979,7 @@ const definitions = {
         }
       },
       "state": {
-        "$ref": "#/definitions/Shape_120"
+        "$ref": "#/definitions/Shape_123"
       },
       "id": {
         "type": "string"
@@ -3950,49 +4014,49 @@ const definitions = {
       "alternatives": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_128"
+          "$ref": "#/definitions/__type_131"
         }
       },
       "costCoverageBases": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/CostCoverageBasis_134"
+          "$ref": "#/definitions/CostCoverageBasis_137"
         }
       },
       "assumptions": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_135"
+          "$ref": "#/definitions/__type_138"
         }
       },
       "questions": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_137"
+          "$ref": "#/definitions/__type_140"
         }
       },
       "choices": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/ChoiceRecord_139"
+          "$ref": "#/definitions/ChoiceRecord_142"
         }
       },
       "ledger": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/CaseLedgerEvent_117"
+          "$ref": "#/definitions/CaseLedgerEvent_120"
         }
       },
       "preparedChanges": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/PreparedChangeView_143"
+          "$ref": "#/definitions/PreparedChangeView_146"
         }
       },
       "receipts": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/CommandReceiptView_145"
+          "$ref": "#/definitions/CommandReceiptView_148"
         }
       }
     },
@@ -4017,7 +4081,7 @@ const definitions = {
       "receipts"
     ]
   },
-  "__type_128": {
+  "__type_131": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4031,10 +4095,10 @@ const definitions = {
         "type": "string"
       },
       "scenario": {
-        "$ref": "#/definitions/ScenarioRequest_129"
+        "$ref": "#/definitions/ScenarioRequest_132"
       },
       "result": {
-        "$ref": "#/definitions/ScenarioResult_80"
+        "$ref": "#/definitions/ScenarioResult_37"
       }
     },
     "required": [
@@ -4045,7 +4109,7 @@ const definitions = {
       "result"
     ]
   },
-  "ScenarioRequest_129": {
+  "ScenarioRequest_132": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4055,13 +4119,13 @@ const definitions = {
       "operations": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/ScenarioOperation_130"
+          "$ref": "#/definitions/ScenarioOperation_133"
         }
       },
       "assumptions": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_132"
+          "$ref": "#/definitions/__type_135"
         }
       }
     },
@@ -4071,12 +4135,12 @@ const definitions = {
       "assumptions"
     ]
   },
-  "ScenarioOperation_130": {
+  "ScenarioOperation_133": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "kind": {
-        "$ref": "#/definitions/Shape_131"
+        "$ref": "#/definitions/Shape_134"
       },
       "targetRef": {
         "type": "string"
@@ -4099,7 +4163,7 @@ const definitions = {
       "targetRef"
     ]
   },
-  "Shape_131": {
+  "Shape_134": {
     "anyOf": [
       {
         "const": "replace"
@@ -4115,7 +4179,7 @@ const definitions = {
       }
     ]
   },
-  "__type_132": {
+  "__type_135": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4123,7 +4187,7 @@ const definitions = {
         "type": "string"
       },
       "value": {
-        "$ref": "#/definitions/Shape_39"
+        "$ref": "#/definitions/Shape_76"
       },
       "evidenceRefs": {
         "type": "array",
@@ -4132,7 +4196,7 @@ const definitions = {
         }
       },
       "state": {
-        "$ref": "#/definitions/Shape_133"
+        "$ref": "#/definitions/Shape_136"
       }
     },
     "required": [
@@ -4142,7 +4206,7 @@ const definitions = {
       "state"
     ]
   },
-  "Shape_133": {
+  "Shape_136": {
     "anyOf": [
       {
         "const": "confirmed"
@@ -4158,7 +4222,7 @@ const definitions = {
       }
     ]
   },
-  "CostCoverageBasis_134": {
+  "CostCoverageBasis_137": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4199,7 +4263,7 @@ const definitions = {
       "additionalCategoryIds"
     ]
   },
-  "__type_135": {
+  "__type_138": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4216,7 +4280,7 @@ const definitions = {
         }
       },
       "state": {
-        "$ref": "#/definitions/Shape_136"
+        "$ref": "#/definitions/Shape_139"
       }
     },
     "required": [
@@ -4226,7 +4290,7 @@ const definitions = {
       "state"
     ]
   },
-  "Shape_136": {
+  "Shape_139": {
     "anyOf": [
       {
         "const": "confirmed"
@@ -4239,7 +4303,7 @@ const definitions = {
       }
     ]
   },
-  "__type_137": {
+  "__type_140": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4250,7 +4314,7 @@ const definitions = {
         "type": "string"
       },
       "state": {
-        "$ref": "#/definitions/Shape_138"
+        "$ref": "#/definitions/Shape_141"
       },
       "answerRef": {
         "type": "string"
@@ -4262,7 +4326,7 @@ const definitions = {
       "state"
     ]
   },
-  "Shape_138": {
+  "Shape_141": {
     "anyOf": [
       {
         "const": "open"
@@ -4272,17 +4336,17 @@ const definitions = {
       }
     ]
   },
-  "ChoiceRecord_139": {
+  "ChoiceRecord_142": {
     "anyOf": [
       {
-        "$ref": "#/definitions/Shape_140"
+        "$ref": "#/definitions/Shape_143"
       },
       {
-        "$ref": "#/definitions/Shape_142"
+        "$ref": "#/definitions/Shape_145"
       }
     ]
   },
-  "Shape_140": {
+  "Shape_143": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4307,7 +4371,7 @@ const definitions = {
       "values": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_141"
+          "$ref": "#/definitions/__type_144"
         }
       },
       "evidenceRefs": {
@@ -4326,19 +4390,19 @@ const definitions = {
         "type": "string"
       },
       "scenario": {
-        "$ref": "#/definitions/ScenarioRequest_129"
+        "$ref": "#/definitions/ScenarioRequest_132"
       },
       "result": {
-        "$ref": "#/definitions/ScenarioResult_80"
+        "$ref": "#/definitions/ScenarioResult_37"
       },
       "comparison": {
-        "$ref": "#/definitions/ScenarioComparison_52"
+        "$ref": "#/definitions/ScenarioComparison_53"
       },
       "comparisonStatus": {
         "const": "complete"
       },
       "costCoverage": {
-        "$ref": "#/definitions/Shape_82"
+        "$ref": "#/definitions/Shape_42"
       }
     },
     "required": [
@@ -4359,7 +4423,7 @@ const definitions = {
       "costCoverage"
     ]
   },
-  "__type_141": {
+  "__type_144": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4367,7 +4431,7 @@ const definitions = {
         "type": "string"
       },
       "value": {
-        "$ref": "#/definitions/Shape_36"
+        "$ref": "#/definitions/Shape_40"
       },
       "unit": {
         "type": "string"
@@ -4387,7 +4451,7 @@ const definitions = {
       "horizon"
     ]
   },
-  "Shape_142": {
+  "Shape_145": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4412,7 +4476,7 @@ const definitions = {
       "values": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_141"
+          "$ref": "#/definitions/__type_144"
         }
       },
       "evidenceRefs": {
@@ -4431,19 +4495,19 @@ const definitions = {
         "type": "string"
       },
       "scenario": {
-        "$ref": "#/definitions/ScenarioRequest_129"
+        "$ref": "#/definitions/ScenarioRequest_132"
       },
       "result": {
-        "$ref": "#/definitions/ScenarioResult_80"
+        "$ref": "#/definitions/ScenarioResult_37"
       },
       "comparison": {
-        "$ref": "#/definitions/ScenarioComparison_52"
+        "$ref": "#/definitions/ScenarioComparison_53"
       },
       "comparisonStatus": {
-        "$ref": "#/definitions/Shape_50"
+        "$ref": "#/definitions/Shape_47"
       },
       "costCoverage": {
-        "$ref": "#/definitions/CostCoverageAssessment_87"
+        "$ref": "#/definitions/CostCoverageAssessment_48"
       }
     },
     "required": [
@@ -4464,12 +4528,12 @@ const definitions = {
       "costCoverage"
     ]
   },
-  "PreparedChangeView_143": {
+  "PreparedChangeView_146": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "state": {
-        "$ref": "#/definitions/Shape_144"
+        "$ref": "#/definitions/Shape_147"
       },
       "id": {
         "type": "string"
@@ -4490,7 +4554,7 @@ const definitions = {
         "type": "number"
       },
       "preview": {
-        "$ref": "#/definitions/ScenarioResult_80"
+        "$ref": "#/definitions/ScenarioResult_37"
       },
       "requiredAuthority": {
         "type": "array",
@@ -4522,7 +4586,7 @@ const definitions = {
       "operationRef"
     ]
   },
-  "Shape_144": {
+  "Shape_147": {
     "anyOf": [
       {
         "const": "failed"
@@ -4544,7 +4608,7 @@ const definitions = {
       }
     ]
   },
-  "CommandReceiptView_145": {
+  "CommandReceiptView_148": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4573,7 +4637,7 @@ const definitions = {
         "type": "string"
       },
       "status": {
-        "$ref": "#/definitions/Shape_146"
+        "$ref": "#/definitions/Shape_149"
       },
       "resultRef": {
         "type": "string"
@@ -4598,7 +4662,7 @@ const definitions = {
       "errors"
     ]
   },
-  "Shape_146": {
+  "Shape_149": {
     "anyOf": [
       {
         "const": "failed"
@@ -4617,7 +4681,7 @@ const definitions = {
       }
     ]
   },
-  "__type_147": {
+  "__type_150": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4625,10 +4689,10 @@ const definitions = {
         "type": "string"
       },
       "proposal": {
-        "$ref": "#/definitions/__type_128"
+        "$ref": "#/definitions/__type_131"
       },
       "costCoverageBasis": {
-        "$ref": "#/definitions/CostCoverageBasis_134"
+        "$ref": "#/definitions/CostCoverageBasis_137"
       },
       "coverageRef": {
         "type": "string"
@@ -4645,14 +4709,14 @@ const definitions = {
       "domainApplied"
     ]
   },
-  "__type_148": {
+  "__type_151": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "receipts": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/CommandReceiptView_145"
+          "$ref": "#/definitions/CommandReceiptView_148"
         }
       }
     },
@@ -4660,14 +4724,14 @@ const definitions = {
       "receipts"
     ]
   },
-  "__type_149": {
+  "__type_152": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "items": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_150"
+          "$ref": "#/definitions/__type_153"
         }
       }
     },
@@ -4675,7 +4739,7 @@ const definitions = {
       "items"
     ]
   },
-  "__type_150": {
+  "__type_153": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4702,7 +4766,7 @@ const definitions = {
       "ownerRef"
     ]
   },
-  "__type_151": {
+  "__type_154": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4719,7 +4783,7 @@ const definitions = {
         }
       },
       "state": {
-        "$ref": "#/definitions/Shape_152"
+        "$ref": "#/definitions/Shape_155"
       }
     },
     "required": [
@@ -4729,7 +4793,7 @@ const definitions = {
       "state"
     ]
   },
-  "Shape_152": {
+  "Shape_155": {
     "anyOf": [
       {
         "const": "confirmed"
@@ -4742,14 +4806,14 @@ const definitions = {
       }
     ]
   },
-  "__type_153": {
+  "__type_156": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "relations": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_154"
+          "$ref": "#/definitions/__type_157"
         }
       }
     },
@@ -4757,7 +4821,7 @@ const definitions = {
       "relations"
     ]
   },
-  "__type_154": {
+  "__type_157": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4796,7 +4860,7 @@ const definitions = {
       "evidenceRefs"
     ]
   },
-  "__type_155": {
+  "__type_158": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4826,7 +4890,7 @@ const definitions = {
       "domainApplied"
     ]
   },
-  "ImportManifest_156": {
+  "ImportManifest_159": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4854,17 +4918,17 @@ const definitions = {
       "commands": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/PreparedCommandView_157"
+          "$ref": "#/definitions/PreparedCommandView_160"
         }
       },
       "issues": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_158"
+          "$ref": "#/definitions/__type_161"
         }
       },
       "state": {
-        "$ref": "#/definitions/Shape_159"
+        "$ref": "#/definitions/Shape_162"
       },
       "domainApplied": {
         "type": "boolean"
@@ -4872,7 +4936,7 @@ const definitions = {
       "receipts": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/CommandReceiptView_145"
+          "$ref": "#/definitions/CommandReceiptView_148"
         }
       }
     },
@@ -4890,7 +4954,7 @@ const definitions = {
       "receipts"
     ]
   },
-  "PreparedCommandView_157": {
+  "PreparedCommandView_160": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4937,7 +5001,7 @@ const definitions = {
       "operationRef"
     ]
   },
-  "__type_158": {
+  "__type_161": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4957,7 +5021,7 @@ const definitions = {
       "reason"
     ]
   },
-  "Shape_159": {
+  "Shape_162": {
     "anyOf": [
       {
         "const": "stale"
@@ -4973,7 +5037,7 @@ const definitions = {
       }
     ]
   },
-  "__type_160": {
+  "__type_163": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5006,7 +5070,7 @@ const definitions = {
       "gaps"
     ]
   },
-  "AuthorizedArtifact_161": {
+  "AuthorizedArtifact_164": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5037,14 +5101,14 @@ const definitions = {
       "accessRevision"
     ]
   },
-  "__type_162": {
+  "__type_165": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "resolutions": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/BusinessEvidenceResolution_114"
+          "$ref": "#/definitions/BusinessEvidenceResolution_117"
         }
       },
       "accessRevision": {
@@ -5056,14 +5120,14 @@ const definitions = {
       "accessRevision"
     ]
   },
-  "__type_163": {
+  "__type_166": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "matches": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_164"
+          "$ref": "#/definitions/__type_167"
         }
       },
       "limitations": {
@@ -5078,7 +5142,7 @@ const definitions = {
       "limitations"
     ]
   },
-  "__type_164": {
+  "__type_167": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5098,14 +5162,14 @@ const definitions = {
       "lexicalScore"
     ]
   },
-  "__type_165": {
+  "__type_168": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "resolutions": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/BusinessEvidenceResolution_114"
+          "$ref": "#/definitions/BusinessEvidenceResolution_117"
         }
       }
     },
@@ -5113,14 +5177,14 @@ const definitions = {
       "resolutions"
     ]
   },
-  "AuthorizedRoutineCatalog_166": {
+  "AuthorizedRoutineCatalog_169": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "recipes": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_167"
+          "$ref": "#/definitions/__type_170"
         }
       },
       "limitations": {
@@ -5135,7 +5199,7 @@ const definitions = {
       "limitations"
     ]
   },
-  "__type_167": {
+  "__type_170": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5166,17 +5230,17 @@ const definitions = {
       "writeScope"
     ]
   },
-  "RoutineResult_168": {
+  "RoutineResult_171": {
     "anyOf": [
       {
-        "$ref": "#/definitions/Shape_169"
+        "$ref": "#/definitions/Shape_172"
       },
       {
-        "$ref": "#/definitions/Shape_170"
+        "$ref": "#/definitions/Shape_173"
       }
     ]
   },
-  "Shape_169": {
+  "Shape_172": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5245,7 +5309,7 @@ const definitions = {
       "admissionVersion"
     ]
   },
-  "Shape_170": {
+  "Shape_173": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5292,7 +5356,7 @@ const definitions = {
         }
       },
       "admission": {
-        "$ref": "#/definitions/Shape_171"
+        "$ref": "#/definitions/Shape_174"
       },
       "admissionRef": {
         "type": "string"
@@ -5312,7 +5376,7 @@ const definitions = {
       "admission"
     ]
   },
-  "Shape_171": {
+  "Shape_174": {
     "anyOf": [
       {
         "const": "unavailable"
@@ -5331,7 +5395,7 @@ const definitions = {
       }
     ]
   },
-  "__type_172": {
+  "__type_175": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5348,7 +5412,7 @@ const definitions = {
         "type": "string"
       },
       "state": {
-        "$ref": "#/definitions/Shape_173"
+        "$ref": "#/definitions/Shape_176"
       },
       "admissionRef": {
         "type": "string"
@@ -5361,7 +5425,7 @@ const definitions = {
       "state"
     ]
   },
-  "Shape_173": {
+  "Shape_176": {
     "anyOf": [
       {
         "const": "unavailable"
@@ -5374,7 +5438,7 @@ const definitions = {
       }
     ]
   },
-  "DecisionIntentInput_174": {
+  "DecisionIntentInput_177": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5382,10 +5446,10 @@ const definitions = {
         "type": "string"
       },
       "context": {
-        "$ref": "#/definitions/Selection_175"
+        "$ref": "#/definitions/Selection_178"
       },
       "case": {
-        "$ref": "#/definitions/CaseVersion_176"
+        "$ref": "#/definitions/CaseVersion_179"
       },
       "selectedSourceRefs": {
         "type": "array",
@@ -5394,7 +5458,7 @@ const definitions = {
         }
       },
       "importPreview": {
-        "$ref": "#/definitions/ImportPreviewRequest_177"
+        "$ref": "#/definitions/ImportPreviewRequest_180"
       }
     },
     "required": [
@@ -5404,7 +5468,7 @@ const definitions = {
       "selectedSourceRefs"
     ]
   },
-  "Selection_175": {
+  "Selection_178": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5431,7 +5495,7 @@ const definitions = {
       "period"
     ]
   },
-  "CaseVersion_176": {
+  "CaseVersion_179": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5451,7 +5515,7 @@ const definitions = {
       "version"
     ]
   },
-  "ImportPreviewRequest_177": {
+  "ImportPreviewRequest_180": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5462,7 +5526,7 @@ const definitions = {
         "type": "string"
       },
       "options": {
-        "$ref": "#/definitions/__type_178"
+        "$ref": "#/definitions/__type_181"
       }
     },
     "required": [
@@ -5471,7 +5535,7 @@ const definitions = {
       "options"
     ]
   },
-  "__type_178": {
+  "__type_181": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5479,7 +5543,7 @@ const definitions = {
         "type": "string"
       },
       "replace": {
-        "$ref": "#/definitions/Shape_179"
+        "$ref": "#/definitions/Shape_182"
       },
       "headerRow": {
         "type": "number"
@@ -5487,7 +5551,7 @@ const definitions = {
     },
     "required": []
   },
-  "Shape_179": {
+  "Shape_182": {
     "anyOf": [
       {
         "const": false
@@ -5497,36 +5561,36 @@ const definitions = {
       }
     ]
   },
-  "ExecutiveReviewInput_180": {
+  "ExecutiveReviewInput_183": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "reviewSelection": {
-        "$ref": "#/definitions/ReviewPrepareRequest_181"
+        "$ref": "#/definitions/ReviewPrepareRequest_184"
       },
       "factualRoutineResults": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/RoutineResult_168"
+          "$ref": "#/definitions/RoutineResult_171"
         }
       },
       "decisionRefs": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/CaseVersion_176"
+          "$ref": "#/definitions/CaseVersion_179"
         }
       },
       "confirmations": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/ConfirmationValidityProjection_182"
+          "$ref": "#/definitions/ConfirmationValidityProjection_185"
         }
       },
       "routinePreparation": {
-        "$ref": "#/definitions/RoutinePrepareRequest_188"
+        "$ref": "#/definitions/RoutinePrepareRequest_191"
       },
       "admittedRun": {
-        "$ref": "#/definitions/__type_190"
+        "$ref": "#/definitions/__type_193"
       }
     },
     "required": [
@@ -5536,7 +5600,7 @@ const definitions = {
       "confirmations"
     ]
   },
-  "ReviewPrepareRequest_181": {
+  "ReviewPrepareRequest_184": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5559,20 +5623,20 @@ const definitions = {
       "sectionRefs"
     ]
   },
-  "ConfirmationValidityProjection_182": {
+  "ConfirmationValidityProjection_185": {
     "anyOf": [
       {
-        "$ref": "#/definitions/Shape_183"
-      },
-      {
-        "$ref": "#/definitions/Shape_184"
-      },
-      {
         "$ref": "#/definitions/Shape_186"
+      },
+      {
+        "$ref": "#/definitions/Shape_187"
+      },
+      {
+        "$ref": "#/definitions/Shape_189"
       }
     ]
   },
-  "Shape_183": {
+  "Shape_186": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5604,7 +5668,7 @@ const definitions = {
       "scopeFingerprint"
     ]
   },
-  "Shape_184": {
+  "Shape_187": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5618,7 +5682,7 @@ const definitions = {
         "type": "string"
       },
       "reason": {
-        "$ref": "#/definitions/Shape_185"
+        "$ref": "#/definitions/Shape_188"
       },
       "state": {
         "const": "stale"
@@ -5635,7 +5699,7 @@ const definitions = {
       "state"
     ]
   },
-  "Shape_185": {
+  "Shape_188": {
     "anyOf": [
       {
         "const": "material-change"
@@ -5651,7 +5715,7 @@ const definitions = {
       }
     ]
   },
-  "Shape_186": {
+  "Shape_189": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5665,7 +5729,7 @@ const definitions = {
         "type": "string"
       },
       "reason": {
-        "$ref": "#/definitions/Shape_187"
+        "$ref": "#/definitions/Shape_190"
       },
       "state": {
         "const": "unavailable"
@@ -5679,7 +5743,7 @@ const definitions = {
       "state"
     ]
   },
-  "Shape_187": {
+  "Shape_190": {
     "anyOf": [
       {
         "const": "access-unavailable"
@@ -5689,7 +5753,7 @@ const definitions = {
       }
     ]
   },
-  "RoutinePrepareRequest_188": {
+  "RoutinePrepareRequest_191": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5703,7 +5767,7 @@ const definitions = {
         }
       },
       "parameters": {
-        "$ref": "#/definitions/__type_189"
+        "$ref": "#/definitions/__type_192"
       }
     },
     "required": [
@@ -5712,7 +5776,7 @@ const definitions = {
       "parameters"
     ]
   },
-  "__type_189": {
+  "__type_192": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5731,7 +5795,7 @@ const definitions = {
     },
     "required": []
   },
-  "__type_190": {
+  "__type_193": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5747,12 +5811,12 @@ const definitions = {
       "expectedAdmissionVersion"
     ]
   },
-  "QuestionPlanningInput_191": {
+  "QuestionPlanningInput_194": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "case": {
-        "$ref": "#/definitions/CaseVersion_176"
+        "$ref": "#/definitions/CaseVersion_179"
       },
       "unresolvedConditions": {
         "type": "array",
@@ -5763,7 +5827,7 @@ const definitions = {
       "relations": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/ConfirmedRelation_192"
+          "$ref": "#/definitions/ConfirmedRelation_195"
         }
       },
       "authorizedDirectoryRefs": {
@@ -5780,7 +5844,7 @@ const definitions = {
       "authorizedDirectoryRefs"
     ]
   },
-  "ConfirmedRelation_192": {
+  "ConfirmedRelation_195": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5815,7 +5879,7 @@ const definitions = {
       "evidenceRefs"
     ]
   },
-  "ForecastExplainInput_193": {
+  "ForecastExplainInput_196": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5837,11 +5901,11 @@ const definitions = {
       "registeredReasons": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_194"
+          "$ref": "#/definitions/__type_197"
         }
       },
       "importPreview": {
-        "$ref": "#/definitions/ImportPreviewRequest_177"
+        "$ref": "#/definitions/ImportPreviewRequest_180"
       }
     },
     "required": [
@@ -5852,7 +5916,7 @@ const definitions = {
       "registeredReasons"
     ]
   },
-  "__type_194": {
+  "__type_197": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5875,26 +5939,26 @@ const definitions = {
       "evidenceRefs"
     ]
   },
-  "ScenarioComparisonInput_195": {
+  "ScenarioComparisonInput_198": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "alternatives": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_196"
+          "$ref": "#/definitions/__type_199"
         }
       },
       "costCoverageBases": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/CostCoverageBasis_134"
+          "$ref": "#/definitions/CostCoverageBasis_137"
         }
       },
       "operations": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/ScenarioOperation_130"
+          "$ref": "#/definitions/ScenarioOperation_133"
         }
       },
       "currency": {
@@ -5912,7 +5976,7 @@ const definitions = {
       "horizon"
     ]
   },
-  "__type_196": {
+  "__type_199": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5926,7 +5990,7 @@ const definitions = {
         "type": "string"
       },
       "result": {
-        "$ref": "#/definitions/ScenarioResult_80"
+        "$ref": "#/definitions/ScenarioResult_37"
       }
     },
     "required": [
@@ -5936,23 +6000,23 @@ const definitions = {
       "result"
     ]
   },
-  "SensitivityInput_197": {
+  "SensitivityInput_200": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "comparison": {
-        "$ref": "#/definitions/ScenarioComparison_52"
+        "$ref": "#/definitions/ScenarioComparison_53"
       },
       "criteria": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/Criterion_198"
+          "$ref": "#/definitions/Criterion_201"
         }
       },
       "parameterRanges": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/ParameterRange_199"
+          "$ref": "#/definitions/ParameterRange_202"
         }
       },
       "costCoverageRefs": {
@@ -5969,7 +6033,7 @@ const definitions = {
       "costCoverageRefs"
     ]
   },
-  "Criterion_198": {
+  "Criterion_201": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -5989,7 +6053,7 @@ const definitions = {
       "required"
     ]
   },
-  "ParameterRange_199": {
+  "ParameterRange_202": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -6013,29 +6077,29 @@ const definitions = {
       "steps"
     ]
   },
-  "SourcingComparisonInput_200": {
+  "SourcingComparisonInput_203": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "request": {
-        "$ref": "#/definitions/__type_201"
+        "$ref": "#/definitions/__type_204"
       },
       "authorizedOffers": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_202"
+          "$ref": "#/definitions/__type_205"
         }
       },
       "submittedFx": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_203"
+          "$ref": "#/definitions/__type_206"
         }
       },
       "weightsAndEligibility": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_204"
+          "$ref": "#/definitions/__type_207"
         }
       },
       "sourceRefs": {
@@ -6053,7 +6117,7 @@ const definitions = {
       "sourceRefs"
     ]
   },
-  "__type_201": {
+  "__type_204": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -6073,7 +6137,7 @@ const definitions = {
       "stage"
     ]
   },
-  "__type_202": {
+  "__type_205": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -6087,7 +6151,7 @@ const definitions = {
         "type": "string"
       },
       "amount": {
-        "$ref": "#/definitions/Shape_36"
+        "$ref": "#/definitions/Shape_40"
       },
       "evidenceRefs": {
         "type": "array",
@@ -6104,7 +6168,7 @@ const definitions = {
       "evidenceRefs"
     ]
   },
-  "__type_203": {
+  "__type_206": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -6118,7 +6182,7 @@ const definitions = {
         "$ref": "#/definitions/Period_10"
       },
       "rate": {
-        "$ref": "#/definitions/Shape_36"
+        "$ref": "#/definitions/Shape_40"
       },
       "evidenceRefs": {
         "type": "array",
@@ -6135,7 +6199,7 @@ const definitions = {
       "evidenceRefs"
     ]
   },
-  "__type_204": {
+  "__type_207": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -6162,24 +6226,24 @@ const definitions = {
       "evidenceRefs"
     ]
   },
-  "ContractReviewInput_205": {
+  "ContractReviewInput_208": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "documentEvidence": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/DocumentEvidence_101"
+          "$ref": "#/definitions/DocumentEvidence_104"
         }
       },
       "contractProjectionRef": {
         "$ref": "#/definitions/BusinessEvidenceRef_5"
       },
       "decisionScope": {
-        "$ref": "#/definitions/__type_206"
+        "$ref": "#/definitions/__type_209"
       },
       "costCoverage": {
-        "$ref": "#/definitions/CostCoverageAssessment_87"
+        "$ref": "#/definitions/CostCoverageAssessment_48"
       }
     },
     "required": [
@@ -6189,12 +6253,12 @@ const definitions = {
       "costCoverage"
     ]
   },
-  "__type_206": {
+  "__type_209": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "case": {
-        "$ref": "#/definitions/CaseVersion_176"
+        "$ref": "#/definitions/CaseVersion_179"
       },
       "horizon": {
         "$ref": "#/definitions/Period_10"
@@ -6209,15 +6273,15 @@ const definitions = {
       "currency"
     ]
   },
-  "PurchasePreparationInput_207": {
+  "PurchasePreparationInput_210": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "choice": {
-        "$ref": "#/definitions/ChoiceRecord_139"
+        "$ref": "#/definitions/ChoiceRecord_142"
       },
       "request": {
-        "$ref": "#/definitions/__type_208"
+        "$ref": "#/definitions/__type_211"
       },
       "allowedChangeTargets": {
         "type": "array",
@@ -6228,7 +6292,7 @@ const definitions = {
       "commercialComparisons": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/CommercialComparison_62"
+          "$ref": "#/definitions/CommercialComparison_84"
         }
       }
     },
@@ -6239,7 +6303,7 @@ const definitions = {
       "commercialComparisons"
     ]
   },
-  "__type_208": {
+  "__type_211": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -6259,26 +6323,26 @@ const definitions = {
       "stage"
     ]
   },
-  "DependencyReviewInput_209": {
+  "DependencyReviewInput_212": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "relations": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/ConfirmedRelation_192"
+          "$ref": "#/definitions/ConfirmedRelation_195"
         }
       },
       "commitments": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_210"
+          "$ref": "#/definitions/__type_213"
         }
       },
       "milestones": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_211"
+          "$ref": "#/definitions/__type_214"
         }
       },
       "declaredConstraints": {
@@ -6295,7 +6359,7 @@ const definitions = {
       "declaredConstraints"
     ]
   },
-  "__type_210": {
+  "__type_213": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -6303,7 +6367,7 @@ const definitions = {
         "type": "string"
       },
       "case": {
-        "$ref": "#/definitions/CaseVersion_176"
+        "$ref": "#/definitions/CaseVersion_179"
       },
       "evidenceRefs": {
         "type": "array",
@@ -6318,7 +6382,7 @@ const definitions = {
       "evidenceRefs"
     ]
   },
-  "__type_211": {
+  "__type_214": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -6342,17 +6406,17 @@ const definitions = {
       "state"
     ]
   },
-  "PortfolioCompositionInput_212": {
+  "PortfolioCompositionInput_215": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "request": {
-        "$ref": "#/definitions/PortfolioRequest_213"
+        "$ref": "#/definitions/PortfolioRequest_216"
       },
       "candidates": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_215"
+          "$ref": "#/definitions/__type_218"
         }
       },
       "constraints": {
@@ -6375,12 +6439,12 @@ const definitions = {
       "costCoverageRefs"
     ]
   },
-  "PortfolioRequest_213": {
+  "PortfolioRequest_216": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "scope": {
-        "$ref": "#/definitions/__type_214"
+        "$ref": "#/definitions/__type_217"
       },
       "candidateRefs": {
         "type": "array",
@@ -6391,7 +6455,7 @@ const definitions = {
       "operations": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/ScenarioOperation_130"
+          "$ref": "#/definitions/ScenarioOperation_133"
         }
       },
       "constraints": {
@@ -6419,7 +6483,7 @@ const definitions = {
       "explorationLimit"
     ]
   },
-  "__type_214": {
+  "__type_217": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -6435,18 +6499,18 @@ const definitions = {
       "currency"
     ]
   },
-  "__type_215": {
+  "__type_218": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "case": {
-        "$ref": "#/definitions/CaseVersion_176"
+        "$ref": "#/definitions/CaseVersion_179"
       },
       "alternativeRef": {
         "type": "string"
       },
       "result": {
-        "$ref": "#/definitions/ScenarioResult_80"
+        "$ref": "#/definitions/ScenarioResult_37"
       }
     },
     "required": [
@@ -6455,21 +6519,21 @@ const definitions = {
       "result"
     ]
   },
-  "CommitmentReevaluationInput_216": {
+  "CommitmentReevaluationInput_219": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "changes": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/ChangeImpact_96"
+          "$ref": "#/definitions/ChangeImpact_99"
         }
       },
       "originalChoice": {
-        "$ref": "#/definitions/ChoiceRecord_139"
+        "$ref": "#/definitions/ChoiceRecord_142"
       },
       "currentComparison": {
-        "$ref": "#/definitions/ScenarioComparison_52"
+        "$ref": "#/definitions/ScenarioComparison_53"
       },
       "confirmedDependencyRefs": {
         "type": "array",
@@ -6485,7 +6549,7 @@ const definitions = {
       "confirmedDependencyRefs"
     ]
   },
-  "DecisionCritiqueInput_217": {
+  "DecisionCritiqueInput_220": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -6502,10 +6566,10 @@ const definitions = {
         }
       },
       "comparison": {
-        "$ref": "#/definitions/ScenarioComparison_52"
+        "$ref": "#/definitions/ScenarioComparison_53"
       },
       "authorAnalysis": {
-        "$ref": "#/definitions/__type_218"
+        "$ref": "#/definitions/__type_221"
       },
       "authorizedEvidenceRefs": {
         "type": "array",
@@ -6522,7 +6586,7 @@ const definitions = {
       "authorizedEvidenceRefs"
     ]
   },
-  "__type_218": {
+  "__type_221": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -6538,20 +6602,20 @@ const definitions = {
       "outputDigest"
     ]
   },
-  "EvidenceReviewInput_219": {
+  "EvidenceReviewInput_222": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "claims": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_220"
+          "$ref": "#/definitions/__type_223"
         }
       },
       "documentEvidence": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/DocumentEvidence_101"
+          "$ref": "#/definitions/DocumentEvidence_104"
         }
       },
       "businessEvidenceRefs": {
@@ -6563,7 +6627,7 @@ const definitions = {
       "currentSourceRevisions": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_221"
+          "$ref": "#/definitions/__type_224"
         }
       }
     },
@@ -6574,7 +6638,7 @@ const definitions = {
       "currentSourceRevisions"
     ]
   },
-  "__type_220": {
+  "__type_223": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -6597,7 +6661,7 @@ const definitions = {
       "evidenceRefs"
     ]
   },
-  "__type_221": {
+  "__type_224": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -6617,7 +6681,7 @@ const definitions = {
       "version"
     ]
   },
-  "EvidenceExtractionInput_222": {
+  "EvidenceExtractionInput_225": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -6628,10 +6692,10 @@ const definitions = {
         "type": "number"
       },
       "targetFieldSchema": {
-        "$ref": "#/definitions/FieldSchema_223"
+        "$ref": "#/definitions/FieldSchema_226"
       },
       "limits": {
-        "$ref": "#/definitions/__type_226"
+        "$ref": "#/definitions/__type_229"
       }
     },
     "required": [
@@ -6641,7 +6705,7 @@ const definitions = {
       "limits"
     ]
   },
-  "FieldSchema_223": {
+  "FieldSchema_226": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -6654,7 +6718,7 @@ const definitions = {
       "fields": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_224"
+          "$ref": "#/definitions/__type_227"
         }
       }
     },
@@ -6664,7 +6728,7 @@ const definitions = {
       "fields"
     ]
   },
-  "__type_224": {
+  "__type_227": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -6672,7 +6736,7 @@ const definitions = {
         "type": "string"
       },
       "type": {
-        "$ref": "#/definitions/Shape_225"
+        "$ref": "#/definitions/Shape_228"
       },
       "unit": {
         "type": "string"
@@ -6683,7 +6747,7 @@ const definitions = {
       "type"
     ]
   },
-  "Shape_225": {
+  "Shape_228": {
     "anyOf": [
       {
         "const": "string"
@@ -6699,14 +6763,14 @@ const definitions = {
       }
     ]
   },
-  "__type_226": {
+  "__type_229": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "formats": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/Shape_227"
+          "$ref": "#/definitions/Shape_230"
         }
       },
       "maxBytes": {
@@ -6738,7 +6802,7 @@ const definitions = {
       "timeoutMs"
     ]
   },
-  "Shape_227": {
+  "Shape_230": {
     "anyOf": [
       {
         "const": "text/plain"
@@ -6751,7 +6815,7 @@ const definitions = {
       }
     ]
   },
-  "ContextualBIInput_228": {
+  "ContextualBIInput_231": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -6761,7 +6825,7 @@ const definitions = {
       "approvedViews": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_229"
+          "$ref": "#/definitions/__type_232"
         }
       },
       "projectionRefs": {
@@ -6773,11 +6837,11 @@ const definitions = {
       "authorizedFilters": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_230"
+          "$ref": "#/definitions/__type_233"
         }
       },
       "dashboardSelection": {
-        "$ref": "#/definitions/DashboardReadRequest_231"
+        "$ref": "#/definitions/DashboardReadRequest_234"
       }
     },
     "required": [
@@ -6788,7 +6852,7 @@ const definitions = {
       "dashboardSelection"
     ]
   },
-  "__type_229": {
+  "__type_232": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -6811,7 +6875,7 @@ const definitions = {
       "allowedFilters"
     ]
   },
-  "__type_230": {
+  "__type_233": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -6830,7 +6894,7 @@ const definitions = {
       "values"
     ]
   },
-  "DashboardReadRequest_231": {
+  "DashboardReadRequest_234": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -6853,23 +6917,23 @@ const definitions = {
       "fields"
     ]
   },
-  "MeetingMaterialInput_232": {
+  "MeetingMaterialInput_235": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "preservedReviewRef": {
-        "$ref": "#/definitions/__type_233"
+        "$ref": "#/definitions/__type_236"
       },
       "decisionRefs": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/CaseVersion_176"
+          "$ref": "#/definitions/CaseVersion_179"
         }
       },
       "factualRoutineResults": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/RoutineResult_168"
+          "$ref": "#/definitions/RoutineResult_171"
         }
       },
       "authorizedSections": {
@@ -6886,7 +6950,7 @@ const definitions = {
       "authorizedSections"
     ]
   },
-  "__type_233": {
+  "__type_236": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -6902,15 +6966,15 @@ const definitions = {
       "version"
     ]
   },
-  "DecisionRecallInput_234": {
+  "DecisionRecallInput_237": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "currentCase": {
-        "$ref": "#/definitions/CaseVersion_176"
+        "$ref": "#/definitions/CaseVersion_179"
       },
       "recallScope": {
-        "$ref": "#/definitions/__type_235"
+        "$ref": "#/definitions/__type_238"
       },
       "query": {
         "type": "string"
@@ -6922,14 +6986,14 @@ const definitions = {
       "query"
     ]
   },
-  "__type_235": {
+  "__type_238": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "cases": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/CaseVersion_176"
+          "$ref": "#/definitions/CaseVersion_179"
         }
       },
       "period": {
@@ -6944,6 +7008,3003 @@ const definitions = {
       "period",
       "includeHistorical"
     ]
+  },
+  "ContributionEnvelope_239": {
+    "anyOf": [
+      {
+        "$ref": "#/definitions/Shape_240"
+      },
+      {
+        "$ref": "#/definitions/Shape_244"
+      },
+      {
+        "$ref": "#/definitions/Shape_246"
+      },
+      {
+        "$ref": "#/definitions/Shape_247"
+      },
+      {
+        "$ref": "#/definitions/Shape_248"
+      },
+      {
+        "$ref": "#/definitions/Shape_249"
+      },
+      {
+        "$ref": "#/definitions/Shape_250"
+      },
+      {
+        "$ref": "#/definitions/Shape_251"
+      },
+      {
+        "$ref": "#/definitions/Shape_252"
+      },
+      {
+        "$ref": "#/definitions/Shape_253"
+      },
+      {
+        "$ref": "#/definitions/Shape_254"
+      },
+      {
+        "$ref": "#/definitions/Shape_255"
+      },
+      {
+        "$ref": "#/definitions/Shape_256"
+      },
+      {
+        "$ref": "#/definitions/Shape_257"
+      },
+      {
+        "$ref": "#/definitions/Shape_258"
+      },
+      {
+        "$ref": "#/definitions/Shape_259"
+      },
+      {
+        "$ref": "#/definitions/Shape_260"
+      },
+      {
+        "$ref": "#/definitions/Shape_261"
+      },
+      {
+        "$ref": "#/definitions/Shape_262"
+      },
+      {
+        "$ref": "#/definitions/Shape_263"
+      },
+      {
+        "$ref": "#/definitions/Shape_264"
+      },
+      {
+        "$ref": "#/definitions/Shape_265"
+      },
+      {
+        "$ref": "#/definitions/Shape_266"
+      },
+      {
+        "$ref": "#/definitions/Shape_267"
+      },
+      {
+        "$ref": "#/definitions/Shape_268"
+      },
+      {
+        "$ref": "#/definitions/Shape_269"
+      },
+      {
+        "$ref": "#/definitions/Shape_270"
+      },
+      {
+        "$ref": "#/definitions/Shape_271"
+      },
+      {
+        "$ref": "#/definitions/Shape_272"
+      },
+      {
+        "$ref": "#/definitions/Shape_273"
+      },
+      {
+        "$ref": "#/definitions/Shape_274"
+      },
+      {
+        "$ref": "#/definitions/Shape_275"
+      },
+      {
+        "$ref": "#/definitions/Shape_276"
+      },
+      {
+        "$ref": "#/definitions/Shape_277"
+      },
+      {
+        "$ref": "#/definitions/Shape_278"
+      },
+      {
+        "$ref": "#/definitions/Shape_279"
+      },
+      {
+        "$ref": "#/definitions/Shape_280"
+      },
+      {
+        "$ref": "#/definitions/Shape_281"
+      },
+      {
+        "$ref": "#/definitions/Shape_282"
+      },
+      {
+        "$ref": "#/definitions/Shape_283"
+      },
+      {
+        "$ref": "#/definitions/Shape_284"
+      },
+      {
+        "$ref": "#/definitions/Shape_285"
+      },
+      {
+        "$ref": "#/definitions/Shape_286"
+      },
+      {
+        "$ref": "#/definitions/Shape_287"
+      },
+      {
+        "$ref": "#/definitions/Shape_288"
+      },
+      {
+        "$ref": "#/definitions/Shape_289"
+      },
+      {
+        "$ref": "#/definitions/Shape_290"
+      },
+      {
+        "$ref": "#/definitions/Shape_291"
+      }
+    ]
+  },
+  "Shape_240": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "IntentFrame"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/IntentFrame_1"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "__type_241": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "version": {
+        "type": "number"
+      },
+      "incarnation": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "version",
+      "incarnation"
+    ]
+  },
+  "Shape_242": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "runId": {
+        "type": "string"
+      },
+      "nativeSessionId": {
+        "type": "string"
+      },
+      "profileId": {
+        "$ref": "#/definitions/Shape_243"
+      },
+      "profileVersion": {
+        "type": "string"
+      },
+      "profileDigest": {
+        "type": "string"
+      },
+      "skillId": {
+        "type": "string"
+      },
+      "skillVersion": {
+        "type": "string"
+      },
+      "sourceDigest": {
+        "type": "string"
+      },
+      "instructionsDigest": {
+        "type": "string"
+      },
+      "loadedMessageId": {
+        "type": "string"
+      },
+      "loadedAt": {
+        "type": "string"
+      },
+      "manifestDigest": {
+        "type": "string"
+      },
+      "actualModel": {
+        "type": "string"
+      },
+      "contextFingerprint": {
+        "type": "string"
+      },
+      "reviewerRunId": {
+        "type": "string"
+      },
+      "targetRunId": {
+        "type": "string"
+      },
+      "targetOutputDigest": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "runId",
+      "nativeSessionId",
+      "profileId",
+      "profileVersion",
+      "profileDigest",
+      "skillId",
+      "skillVersion",
+      "sourceDigest",
+      "instructionsDigest",
+      "loadedMessageId",
+      "loadedAt",
+      "manifestDigest",
+      "actualModel",
+      "contextFingerprint"
+    ]
+  },
+  "Shape_243": {
+    "anyOf": [
+      {
+        "const": "sf_maestro"
+      },
+      {
+        "const": "sf_finance"
+      },
+      {
+        "const": "sf_procurement"
+      },
+      {
+        "const": "sf_portfolio"
+      },
+      {
+        "const": "sf_reviewer"
+      }
+    ]
+  },
+  "Shape_244": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "IntentFrame"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_245": {
+    "anyOf": [
+      {
+        "const": "unavailable"
+      },
+      {
+        "const": "failed"
+      },
+      {
+        "const": "needs-input"
+      },
+      {
+        "const": "stale"
+      },
+      {
+        "const": "cancelled"
+      },
+      {
+        "const": "queued"
+      },
+      {
+        "const": "running"
+      }
+    ]
+  },
+  "Shape_246": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "AnalysisPlan"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/AnalysisPlan_26"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_247": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "AnalysisPlan"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_248": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "DecisionBrief"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/DecisionBrief_28"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_249": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "DecisionBrief"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_250": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "QuestionProposal"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/QuestionProposal_29"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_251": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "QuestionProposal"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_252": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "FinancialAnalysis"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/FinancialAnalysis_30"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_253": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "FinancialAnalysis"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_254": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "ScenarioComparison"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/ScenarioComparison_53"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_255": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "ScenarioComparison"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_256": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "SensitivityResult"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/SensitivityResult_58"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_257": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "SensitivityResult"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_258": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "CommercialComparison"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/CommercialComparison_84"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_259": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "CommercialComparison"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_260": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "CommercialGap"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/CommercialGap_86"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_261": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "CommercialGap"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_262": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "EvidenceCandidate"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/EvidenceCandidate_88"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_263": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "EvidenceCandidate"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_264": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "PreparedChangeSet"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/PreparedChangeSet_90"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_265": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "PreparedChangeSet"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_266": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "DossierDraft"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/DossierDraft_92"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_267": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "DossierDraft"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_268": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "DeliveryAssessment"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/DeliveryAssessment_93"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_269": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "DeliveryAssessment"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_270": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "DependencyConflict"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/DependencyConflict_96"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_271": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "DependencyConflict"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_272": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "PortfolioComparison"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/PortfolioResult_68"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_273": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "PortfolioComparison"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_274": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "ReconsiderationProposal"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/ReconsiderationProposal_98"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_275": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "ReconsiderationProposal"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_276": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "CritiqueReport"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/CritiqueReport_101"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_277": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "CritiqueReport"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_278": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "UnresolvedCondition"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/UnresolvedCondition_24"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_279": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "UnresolvedCondition"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_280": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "ClaimIssue"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/ClaimIssue_102"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_281": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "ClaimIssue"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_282": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "DocumentEvidence"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/DocumentEvidence_104"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_283": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "DocumentEvidence"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_284": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "ContextualBIProposal"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/ContextualBIProposal_107"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_285": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "ContextualBIProposal"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_286": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "MeetingMaterialProposal"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/MeetingMaterialProposal_109"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_287": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "MeetingMaterialProposal"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_288": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "CaseRecall"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/CaseRecall_111"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_289": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "CaseRecall"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
+  },
+  "Shape_290": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "MatchExplanation"
+      },
+      "state": {
+        "const": "ready"
+      },
+      "payload": {
+        "$ref": "#/definitions/MatchExplanation_114"
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "payload"
+    ]
+  },
+  "Shape_291": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "caseRef": {
+        "$ref": "#/definitions/__type_241"
+      },
+      "schemaVersion": {
+        "const": "sf-contribution-v1"
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_5"
+        }
+      },
+      "runProvenance": {
+        "$ref": "#/definitions/Shape_242"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "outputDigest": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "MatchExplanation"
+      },
+      "state": {
+        "$ref": "#/definitions/Shape_245"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "payload": {
+        "not": {}
+      }
+    },
+    "required": [
+      "id",
+      "caseRef",
+      "schemaVersion",
+      "evidenceRefs",
+      "runProvenance",
+      "accessRevision",
+      "createdAt",
+      "outputDigest",
+      "kind",
+      "state",
+      "reason"
+    ]
   }
 } as const
 
@@ -6953,86 +10014,90 @@ export const sfContributionOutputSchemas = {
   "DecisionBrief": { ...{"$ref":"#/definitions/DecisionBrief_28"}, definitions },
   "QuestionProposal": { ...{"$ref":"#/definitions/QuestionProposal_29"}, definitions },
   "FinancialAnalysis": { ...{"$ref":"#/definitions/FinancialAnalysis_30"}, definitions },
-  "ScenarioComparison": { ...{"$ref":"#/definitions/ScenarioComparison_52"}, definitions },
-  "SensitivityResult": { ...{"$ref":"#/definitions/SensitivityResult_53"}, definitions },
-  "CommercialComparison": { ...{"$ref":"#/definitions/CommercialComparison_62"}, definitions },
-  "CommercialGap": { ...{"$ref":"#/definitions/CommercialGap_64"}, definitions },
-  "EvidenceCandidate": { ...{"$ref":"#/definitions/EvidenceCandidate_66"}, definitions },
-  "PreparedChangeSet": { ...{"$ref":"#/definitions/PreparedChangeSet_68"}, definitions },
-  "DossierDraft": { ...{"$ref":"#/definitions/DossierDraft_70"}, definitions },
-  "DeliveryAssessment": { ...{"$ref":"#/definitions/DeliveryAssessment_71"}, definitions },
-  "DependencyConflict": { ...{"$ref":"#/definitions/DependencyConflict_74"}, definitions },
-  "PortfolioComparison": { ...{"$ref":"#/definitions/PortfolioResult_76"}, definitions },
-  "ReconsiderationProposal": { ...{"$ref":"#/definitions/ReconsiderationProposal_95"}, definitions },
-  "CritiqueReport": { ...{"$ref":"#/definitions/CritiqueReport_98"}, definitions },
+  "ScenarioComparison": { ...{"$ref":"#/definitions/ScenarioComparison_53"}, definitions },
+  "SensitivityResult": { ...{"$ref":"#/definitions/SensitivityResult_58"}, definitions },
+  "CommercialComparison": { ...{"$ref":"#/definitions/CommercialComparison_84"}, definitions },
+  "CommercialGap": { ...{"$ref":"#/definitions/CommercialGap_86"}, definitions },
+  "EvidenceCandidate": { ...{"$ref":"#/definitions/EvidenceCandidate_88"}, definitions },
+  "PreparedChangeSet": { ...{"$ref":"#/definitions/PreparedChangeSet_90"}, definitions },
+  "DossierDraft": { ...{"$ref":"#/definitions/DossierDraft_92"}, definitions },
+  "DeliveryAssessment": { ...{"$ref":"#/definitions/DeliveryAssessment_93"}, definitions },
+  "DependencyConflict": { ...{"$ref":"#/definitions/DependencyConflict_96"}, definitions },
+  "PortfolioComparison": { ...{"$ref":"#/definitions/PortfolioResult_68"}, definitions },
+  "ReconsiderationProposal": { ...{"$ref":"#/definitions/ReconsiderationProposal_98"}, definitions },
+  "CritiqueReport": { ...{"$ref":"#/definitions/CritiqueReport_101"}, definitions },
   "UnresolvedCondition": { ...{"$ref":"#/definitions/UnresolvedCondition_24"}, definitions },
-  "ClaimIssue": { ...{"$ref":"#/definitions/ClaimIssue_99"}, definitions },
-  "DocumentEvidence": { ...{"$ref":"#/definitions/DocumentEvidence_101"}, definitions },
-  "ContextualBIProposal": { ...{"$ref":"#/definitions/ContextualBIProposal_104"}, definitions },
-  "MeetingMaterialProposal": { ...{"$ref":"#/definitions/MeetingMaterialProposal_106"}, definitions },
-  "CaseRecall": { ...{"$ref":"#/definitions/CaseRecall_108"}, definitions },
-  "MatchExplanation": { ...{"$ref":"#/definitions/MatchExplanation_111"}, definitions },
+  "ClaimIssue": { ...{"$ref":"#/definitions/ClaimIssue_102"}, definitions },
+  "DocumentEvidence": { ...{"$ref":"#/definitions/DocumentEvidence_104"}, definitions },
+  "ContextualBIProposal": { ...{"$ref":"#/definitions/ContextualBIProposal_107"}, definitions },
+  "MeetingMaterialProposal": { ...{"$ref":"#/definitions/MeetingMaterialProposal_109"}, definitions },
+  "CaseRecall": { ...{"$ref":"#/definitions/CaseRecall_111"}, definitions },
+  "MatchExplanation": { ...{"$ref":"#/definitions/MatchExplanation_114"}, definitions },
 } as const
 
 export const sfOperationOutputSchemas = {
   "sf_dashboard_read": { ...{"$ref":"#/definitions/DomainProjection_32"}, definitions },
   "sf_kpi_explain": { ...{"$ref":"#/definitions/DomainProjection_32"}, definitions },
   "sf_bi_view": { ...{"$ref":"#/definitions/DomainProjection_32"}, definitions },
-  "sf_source_get": { ...{"$ref":"#/definitions/BusinessEvidenceResolution_114"}, definitions },
+  "sf_source_get": { ...{"$ref":"#/definitions/BusinessEvidenceResolution_117"}, definitions },
   "sf_forecast_compare": { ...{"$ref":"#/definitions/FinancialAnalysis_30"}, definitions },
-  "sf_scenario_simulate": { ...{"$ref":"#/definitions/ScenarioResult_80"}, definitions },
-  "sf_scenario_compare": { ...{"$ref":"#/definitions/ScenarioComparison_52"}, definitions },
-  "sf_sensitivity_evaluate": { ...{"$ref":"#/definitions/SensitivityResult_53"}, definitions },
-  "sf_portfolio_evaluate": { ...{"$ref":"#/definitions/PortfolioResult_76"}, definitions },
+  "sf_scenario_simulate": { ...{"$ref":"#/definitions/ScenarioResult_37"}, definitions },
+  "sf_scenario_compare": { ...{"$ref":"#/definitions/ScenarioComparison_53"}, definitions },
+  "sf_sensitivity_evaluate": { ...{"$ref":"#/definitions/SensitivityResult_58"}, definitions },
+  "sf_portfolio_evaluate": { ...{"$ref":"#/definitions/PortfolioResult_68"}, definitions },
   "sf_request_read": { ...{"$ref":"#/definitions/DomainProjection_32"}, definitions },
   "sf_supplier_read": { ...{"$ref":"#/definitions/DomainProjection_32"}, definitions },
   "sf_contract_read": { ...{"$ref":"#/definitions/DomainProjection_32"}, definitions },
-  "sf_sourcing_compare": { ...{"$ref":"#/definitions/CommercialComparison_62"}, definitions },
-  "sf_case_read": { ...{"$ref":"#/definitions/AuthorizedCaseProjection_126"}, definitions },
+  "sf_sourcing_compare": { ...{"$ref":"#/definitions/CommercialComparison_84"}, definitions },
+  "sf_case_read": { ...{"$ref":"#/definitions/AuthorizedCaseProjection_129"}, definitions },
   "sf_case_draft": { ...{"$ref":"#/definitions/IntentFrame_1"}, definitions },
-  "sf_alternative_draft": { ...{"$ref":"#/definitions/__type_147"}, definitions },
-  "sf_change_prepare": { ...{"$ref":"#/definitions/PreparedChangeSet_68"}, definitions },
-  "sf_receipt_get": { ...{"$ref":"#/definitions/__type_148"}, definitions },
-  "sf_work_list": { ...{"$ref":"#/definitions/__type_149"}, definitions },
+  "sf_alternative_draft": { ...{"$ref":"#/definitions/__type_150"}, definitions },
+  "sf_change_prepare": { ...{"$ref":"#/definitions/PreparedChangeSet_90"}, definitions },
+  "sf_receipt_get": { ...{"$ref":"#/definitions/__type_151"}, definitions },
+  "sf_work_list": { ...{"$ref":"#/definitions/__type_152"}, definitions },
   "sf_question_prepare": { ...{"$ref":"#/definitions/QuestionProposal_29"}, definitions },
-  "sf_answer_read": { ...{"$ref":"#/definitions/__type_151"}, definitions },
-  "sf_relation_read": { ...{"$ref":"#/definitions/__type_153"}, definitions },
-  "sf_handoff_prepare": { ...{"$ref":"#/definitions/__type_155"}, definitions },
-  "sf_document_extract": { ...{"$ref":"#/definitions/DocumentEvidence_101"}, definitions },
-  "sf_import_preview": { ...{"$ref":"#/definitions/ImportManifest_156"}, definitions },
-  "sf_review_prepare": { ...{"$ref":"#/definitions/__type_160"}, definitions },
-  "sf_report_prepare": { ...{"$ref":"#/definitions/MeetingMaterialProposal_106"}, definitions },
-  "sf_artifact_get": { ...{"$ref":"#/definitions/AuthorizedArtifact_161"}, definitions },
-  "sf_context_get": { ...{"$ref":"#/definitions/__type_162"}, definitions },
-  "sf_knowledge_search": { ...{"$ref":"#/definitions/__type_163"}, definitions },
-  "sf_evidence_get": { ...{"$ref":"#/definitions/BusinessEvidenceResolution_114"}, definitions },
-  "sf_decision_recall": { ...{"$ref":"#/definitions/CaseRecall_108"}, definitions },
-  "sf_freshness_check": { ...{"$ref":"#/definitions/__type_165"}, definitions },
-  "sf_routine_catalog": { ...{"$ref":"#/definitions/AuthorizedRoutineCatalog_166"}, definitions },
-  "sf_routine_prepare": { ...{"$ref":"#/definitions/RoutineResult_168"}, definitions },
-  "sf_routine_run": { ...{"$ref":"#/definitions/RoutineResult_168"}, definitions },
-  "sf_routine_status": { ...{"$ref":"#/definitions/RoutineResult_168"}, definitions },
-  "sf_routine_result": { ...{"$ref":"#/definitions/RoutineResult_168"}, definitions },
-  "sf_watch_prepare": { ...{"$ref":"#/definitions/__type_172"}, definitions },
+  "sf_answer_read": { ...{"$ref":"#/definitions/__type_154"}, definitions },
+  "sf_relation_read": { ...{"$ref":"#/definitions/__type_156"}, definitions },
+  "sf_handoff_prepare": { ...{"$ref":"#/definitions/__type_158"}, definitions },
+  "sf_document_extract": { ...{"$ref":"#/definitions/DocumentEvidence_104"}, definitions },
+  "sf_import_preview": { ...{"$ref":"#/definitions/ImportManifest_159"}, definitions },
+  "sf_review_prepare": { ...{"$ref":"#/definitions/__type_163"}, definitions },
+  "sf_report_prepare": { ...{"$ref":"#/definitions/MeetingMaterialProposal_109"}, definitions },
+  "sf_artifact_get": { ...{"$ref":"#/definitions/AuthorizedArtifact_164"}, definitions },
+  "sf_context_get": { ...{"$ref":"#/definitions/__type_165"}, definitions },
+  "sf_knowledge_search": { ...{"$ref":"#/definitions/__type_166"}, definitions },
+  "sf_evidence_get": { ...{"$ref":"#/definitions/BusinessEvidenceResolution_117"}, definitions },
+  "sf_decision_recall": { ...{"$ref":"#/definitions/CaseRecall_111"}, definitions },
+  "sf_freshness_check": { ...{"$ref":"#/definitions/__type_168"}, definitions },
+  "sf_routine_catalog": { ...{"$ref":"#/definitions/AuthorizedRoutineCatalog_169"}, definitions },
+  "sf_routine_prepare": { ...{"$ref":"#/definitions/RoutineResult_171"}, definitions },
+  "sf_routine_run": { ...{"$ref":"#/definitions/RoutineResult_171"}, definitions },
+  "sf_routine_status": { ...{"$ref":"#/definitions/RoutineResult_171"}, definitions },
+  "sf_routine_result": { ...{"$ref":"#/definitions/RoutineResult_171"}, definitions },
+  "sf_watch_prepare": { ...{"$ref":"#/definitions/__type_175"}, definitions },
 } as const
 
 export const sfSkillInputSchemas = {
-  "DecisionIntentInput": { ...{"$ref":"#/definitions/DecisionIntentInput_174"}, definitions },
-  "ExecutiveReviewInput": { ...{"$ref":"#/definitions/ExecutiveReviewInput_180"}, definitions },
-  "QuestionPlanningInput": { ...{"$ref":"#/definitions/QuestionPlanningInput_191"}, definitions },
-  "ForecastExplainInput": { ...{"$ref":"#/definitions/ForecastExplainInput_193"}, definitions },
-  "ScenarioComparisonInput": { ...{"$ref":"#/definitions/ScenarioComparisonInput_195"}, definitions },
-  "SensitivityInput": { ...{"$ref":"#/definitions/SensitivityInput_197"}, definitions },
-  "SourcingComparisonInput": { ...{"$ref":"#/definitions/SourcingComparisonInput_200"}, definitions },
-  "ContractReviewInput": { ...{"$ref":"#/definitions/ContractReviewInput_205"}, definitions },
-  "PurchasePreparationInput": { ...{"$ref":"#/definitions/PurchasePreparationInput_207"}, definitions },
-  "DependencyReviewInput": { ...{"$ref":"#/definitions/DependencyReviewInput_209"}, definitions },
-  "PortfolioCompositionInput": { ...{"$ref":"#/definitions/PortfolioCompositionInput_212"}, definitions },
-  "CommitmentReevaluationInput": { ...{"$ref":"#/definitions/CommitmentReevaluationInput_216"}, definitions },
-  "DecisionCritiqueInput": { ...{"$ref":"#/definitions/DecisionCritiqueInput_217"}, definitions },
-  "EvidenceReviewInput": { ...{"$ref":"#/definitions/EvidenceReviewInput_219"}, definitions },
-  "EvidenceExtractionInput": { ...{"$ref":"#/definitions/EvidenceExtractionInput_222"}, definitions },
-  "ContextualBIInput": { ...{"$ref":"#/definitions/ContextualBIInput_228"}, definitions },
-  "MeetingMaterialInput": { ...{"$ref":"#/definitions/MeetingMaterialInput_232"}, definitions },
-  "DecisionRecallInput": { ...{"$ref":"#/definitions/DecisionRecallInput_234"}, definitions },
+  "DecisionIntentInput": { ...{"$ref":"#/definitions/DecisionIntentInput_177"}, definitions },
+  "ExecutiveReviewInput": { ...{"$ref":"#/definitions/ExecutiveReviewInput_183"}, definitions },
+  "QuestionPlanningInput": { ...{"$ref":"#/definitions/QuestionPlanningInput_194"}, definitions },
+  "ForecastExplainInput": { ...{"$ref":"#/definitions/ForecastExplainInput_196"}, definitions },
+  "ScenarioComparisonInput": { ...{"$ref":"#/definitions/ScenarioComparisonInput_198"}, definitions },
+  "SensitivityInput": { ...{"$ref":"#/definitions/SensitivityInput_200"}, definitions },
+  "SourcingComparisonInput": { ...{"$ref":"#/definitions/SourcingComparisonInput_203"}, definitions },
+  "ContractReviewInput": { ...{"$ref":"#/definitions/ContractReviewInput_208"}, definitions },
+  "PurchasePreparationInput": { ...{"$ref":"#/definitions/PurchasePreparationInput_210"}, definitions },
+  "DependencyReviewInput": { ...{"$ref":"#/definitions/DependencyReviewInput_212"}, definitions },
+  "PortfolioCompositionInput": { ...{"$ref":"#/definitions/PortfolioCompositionInput_215"}, definitions },
+  "CommitmentReevaluationInput": { ...{"$ref":"#/definitions/CommitmentReevaluationInput_219"}, definitions },
+  "DecisionCritiqueInput": { ...{"$ref":"#/definitions/DecisionCritiqueInput_220"}, definitions },
+  "EvidenceReviewInput": { ...{"$ref":"#/definitions/EvidenceReviewInput_222"}, definitions },
+  "EvidenceExtractionInput": { ...{"$ref":"#/definitions/EvidenceExtractionInput_225"}, definitions },
+  "ContextualBIInput": { ...{"$ref":"#/definitions/ContextualBIInput_231"}, definitions },
+  "MeetingMaterialInput": { ...{"$ref":"#/definitions/MeetingMaterialInput_235"}, definitions },
+  "DecisionRecallInput": { ...{"$ref":"#/definitions/DecisionRecallInput_237"}, definitions },
+} as const
+
+export const sfEnvelopeSchemas = {
+  "ContributionEnvelope": { ...{"$ref":"#/definitions/ContributionEnvelope_239"}, definitions },
 } as const

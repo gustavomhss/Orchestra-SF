@@ -1,5 +1,6 @@
 import type { Snapshot } from "../../runtime/contract.ts"
-import type { DecisionCase } from "./decisions.ts"
+import type { DecisionCase, ScenarioResult, ScenarioComparison, PortfolioResult } from "./decisions.ts"
+import type { SensitivityResult } from "./outputs.ts"
 import type { PreservedReview, ConfirmationRecord, CommandReceipt } from "./context.ts"
 import type { ContributionEnvelope, ResidentProfile, SkillManifest, SkillLoadReceipt } from "./resident-ai.ts"
 import type { BusinessEvidenceRef, MemoryWriteReceipt } from "./business-context.ts"
@@ -39,6 +40,25 @@ export type SfNativeRunRecord = {
   | { state: "queued" | "running" | "ready" | "stale" | "needs-input" | "unavailable" | "failed" | "cancelled"; reason?: string; native: { sessionID: string; skillReceipt: SkillLoadReceipt }; outputRef?: string }
 )
 
+/** Deterministic domain results are versioned with cases, without inventing AI provenance. */
+export type SfStoredDecisionResult = {
+  schema: "sf-decision-result-v1"
+  resultRef: string
+  caseRef: { id: string; incarnation: string; version: number }
+  principalRef: string
+  accessRevision: string
+  policyVersion: string
+  requestDigest: string
+  resultDigest: string
+  sourceRefs: readonly BusinessEvidenceRef[]
+  createdAt: string
+} & (
+  | { kind: "scenario"; result: ScenarioResult }
+  | { kind: "comparison"; result: ScenarioComparison }
+  | { kind: "sensitivity"; result: SensitivityResult }
+  | { kind: "portfolio"; result: PortfolioResult }
+)
+
 export type SfProductState = {
   schemaVersion: 1
   revision: number
@@ -50,6 +70,8 @@ export type SfProductState = {
   threads: Record<string, unknown>
   confirmations: Record<string, ConfirmationRecord>
   cases: Record<string, DecisionCase>
+  /** Owned by the existing cases namespace; older stores omit it. */
+  decisionResults?: Record<string, SfStoredDecisionResult>
   contributions: Record<string, ContributionEnvelope>
   /** Owned and versioned by the existing contributions namespace; omitted only in pre-admission stores. */
   nativeRuns?: Record<string, SfNativeRunRecord>

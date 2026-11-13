@@ -4,12 +4,13 @@ import type { BiViewRequest, PortfolioRequest } from "../contracts/operations.ts
 import type { PortResult } from "../contracts/ports.ts"
 import type { SfDomainValidation } from "../contracts/runtime.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+import { digestSfValue } from "../contracts/canonical.ts"
 import { readBiPresentation } from "./capabilities.ts"
 import { sameBiProjection } from "./projection.ts"
 import type { BiPresentation } from "./semantics.ts"
 import type { BiPresentationPort } from "./capabilities.ts"
 
-export type PortfolioBiBundle = { projection: DomainProjection; presentation: BiPresentation; portfolio: PortfolioResult }
+export type PortfolioBiBundle = { projection: DomainProjection; presentation: BiPresentation }
 /** Revalidate the binding, selection and all portfolio/evidence references even when bundle is omitted. */
 export type PortfolioBiHost = {
   readView: (request: BiViewRequest, context: TrustedDomainContext) => Promise<PortResult<PortfolioBiBundle>>
@@ -25,6 +26,7 @@ export async function readPortfolioBi(request: BiViewRequest, context: TrustedDo
       const result = await host.readView(input, binding)
       if (result.status !== "ok") return result
       const bundle = structuredClone(result.value)
+      if (bundle.projection.decision?.kind !== "portfolio" || !bundle.projection.decision.portfolioResultRef.trim()) return { status: "unavailable", reason: "decision-unavailable" }
       state.bundle = bundle
       return { status: "ok", value: bundle.projection }
     },
@@ -37,7 +39,7 @@ export async function readPortfolioBi(request: BiViewRequest, context: TrustedDo
   const result = await readBiPresentation(request, context, source, authority)
   if (result.status !== "ok") return result
   if (!state.bundle) return { status: "unavailable", reason: "bundle-unavailable" } as const
-  return { status: "ok", value: { ...result.value, portfolio: state.bundle.portfolio } } as const
+  return result
 }
 
 /** A trusted resolver binds a BI selection to the real portfolio evaluation and its projection. */
@@ -56,7 +58,31 @@ export function bindPortfolioBiPort(input: {
       if (portfolio.status !== "ok") return portfolio
       const projected = binding.value.project(portfolio.value)
       if (projected.projection.context.period.start !== request.period.start || projected.projection.context.period.end !== request.period.end) return { status: "stale", reason: "period-mismatch" }
-      return { status: "ok", value: { ...projected, portfolio: portfolio.value } }
+      const decision = projected.projection.decision
+      if (decision?.kind !== "portfolio" || !decision.portfolioResultRef.trim()) return { status: "unavailable", reason: "decision-unavailable" }
+      if (digestSfValue(decision.portfolio) !== digestSfValue(portfolio.value)) return { status: "stale", reason: "portfolio-mismatch" }
+      return { status: "ok", value: projected }
+    },
+  }
+}
+
+/** The host resolves a scoped BI selection to a persisted portfolio result, never a fabricated reference. */
+export function bindStoredPortfolioBiPort(input: {
+  readProjection: (request: { selectionRef: string; portfolioResultRef: string }, context: TrustedDomainContext) => Promise<PortResult<DomainProjection>>
+  resolve: (request: BiViewRequest, context: TrustedDomainContext) => Promise<PortResult<{ portfolioResultRef: string; present: (projection: DomainProjection) => BiPresentation }>>
+  revalidate: PortfolioBiHost["revalidate"]
+}): PortfolioBiHost {
+  return {
+    revalidate: input.revalidate,
+    async readView(request, context) {
+      const selection = await input.resolve(request, context)
+      if (selection.status !== "ok") return selection
+      if (!selection.value.portfolioResultRef.trim()) return { status: "unavailable", reason: "decision-unavailable" }
+      const projection = await input.readProjection({ selectionRef: request.selectionRef, portfolioResultRef: selection.value.portfolioResultRef }, context)
+      if (projection.status !== "ok") return projection
+      if (projection.value.context.period.start !== request.period.start || projection.value.context.period.end !== request.period.end) return { status: "stale", reason: "period-mismatch" }
+      if (projection.value.decision?.kind !== "portfolio" || projection.value.decision.portfolioResultRef !== selection.value.portfolioResultRef) return { status: "stale", reason: "portfolio-reference-mismatch" }
+      return { status: "ok", value: { projection: projection.value, presentation: selection.value.present(projection.value) } }
     },
   }
 }
@@ -70,6 +96,7 @@ export function createPortfolioBiSource(host: PortfolioBiHost): BiPresentationPo
       const result = await host.readView(request, context)
       if (result.status !== "ok") return result
       if (result.value.presentation.viewId !== request.viewId) return { status: "unavailable", reason: "view-mismatch" }
+      if (result.value.projection.decision?.kind !== "portfolio" || !result.value.projection.decision.portfolioResultRef.trim()) return { status: "unavailable", reason: "decision-unavailable" }
       return { status: "ok", value: result.value.projection }
     },
     async describe(request, context, projection) {

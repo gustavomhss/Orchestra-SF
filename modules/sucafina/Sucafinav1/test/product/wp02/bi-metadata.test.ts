@@ -9,7 +9,7 @@ const projection: DomainProjection = { context: { installationId: "i", projectId
 test("BI selections use producer fields and enforce their period", () => {
   expect(resolveDashboardBiSelection("BI01", period)).toEqual({ page: "Budget Overview", fields: ["budgetSeries"] })
   expect(resolveDashboardBiSelection("BI07", { start: "2026-02-01", end: "2026-02-28" })).toEqual({ page: "IT Operations", fields: ["opsTickets"] })
-  expect(resolveDashboardBiSelection("BI08", period)).toEqual({ page: "Portfolio Dashboard", fields: ["projects"] })
+  expect(resolveDashboardBiSelection("BI08", period)).toEqual({ page: "Portfolio Dashboard", fields: ["milestoneDates"] })
   expect(resolveDashboardBiSelection("BI01", { start: "2026-01-01", end: "2026-01-31" })).toEqual({ page: "Budget Overview", fields: ["budgetSeries"] })
   expect(resolveDashboardBiSelection("BI01", { start: "2026-01-02", end: "2026-01-31" })).toBeUndefined()
   expect(resolveDashboardBiSelection("BI07", { start: "2026-02-02", end: "2026-02-28" })).toBeUndefined()
@@ -34,7 +34,7 @@ test("ticket and milestone views use the producer's explicit semantics", () => {
   expect(tickets.status).toBe("ok")
   if (tickets.status === "ok") expect(tickets.value.series).toContainEqual(expect.objectContaining({ role: "opened", unit: "tickets", valueIds: [ticket.id] }))
   const milestone = { ...projection.values[0]!, id: "milestone:p:m:date", value: "2026-02-03", unit: "date", currency: undefined, granularity: "record" as const }
-  const projects = { ...projection, context: { ...projection.context, sourceRefs: [{ ...source, id: "Portfolio Dashboard", fields: ["projects"] }] }, values: [milestone] }
+  const projects = { ...projection, context: { ...projection.context, sourceRefs: [{ ...source, id: "Portfolio Dashboard", fields: ["milestoneDates"] }] }, values: [milestone] }
   const timeline = presentDashboardBi("BI08", projects)
   expect(timeline.status).toBe("ok")
   if (timeline.status === "ok") expect(timeline.value.series).toContainEqual(expect.objectContaining({ role: "planned", unit: "date", valueIds: [milestone.id] }))

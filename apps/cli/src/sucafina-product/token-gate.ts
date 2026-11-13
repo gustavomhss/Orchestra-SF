@@ -20,6 +20,7 @@ import freeze from "../../../../modules/sucafina/Sucafinav1/product/contracts/fr
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { SfNativeAdmission } from "../../../../modules/sucafina/Sucafinav1/product/contracts/runtime.ts"
 import type { TrustedExecutionBinding } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+import { sameNativeProject } from "./native-host.ts"
 import { enforceSfResponseTokenBudget } from "./token-count.ts"
 import type { SfTokenCountReceipt } from "./token-count.ts"
 
@@ -90,6 +91,7 @@ export function createSfTokenGate(input: SfTokenGateStorage & { upstream: Node.L
     return record.revalidate().pipe(Effect.catch(() => Effect.succeed(false)), Effect.map((ok) => ok === true && alive(record)))
   })
   const same = (session: SessionSchema.Info | undefined, record: RecordState) => !!session && session.id === record.admission.sessionID &&
+    sameNativeProject(session, record.binding) &&
     session.agent === record.admission.profile.id && !!session.model && digestSfValue(session.model) === digestSfValue(record.model) &&
     digestSfValue(session.location) === digestSfValue(record.location)
   const refusal = (reason: string) => new LLMError({ module: "SucafinaTokenGate", method: "admit", reason: new InvalidRequestReason({ message: reason }) })

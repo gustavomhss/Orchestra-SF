@@ -149,6 +149,10 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
             if (bound.status !== "ok") {
               return bound
             }
+            if (!sameNativeProject(created.success, bound.value)) {
+              input.registry.revoke(bound.value)
+              return { status: "denied", reason: "native-project-mismatch" } as const
+            }
             const ticket = yield* budget.gate.register({ admission, binding: bound.value, model: args.model, location: args.location,
               revalidate: () => input.authorize(admission, bound.value),
               persistReceipt: (receipt) => budget.persistReceipt(bound.value, receipt),
@@ -207,4 +211,9 @@ function freezeHostInput<T>(value: T): T {
   if (!value || typeof value !== "object") return value
   Object.values(value).forEach(freezeHostInput)
   return Object.freeze(value)
+}
+
+/** Project identity is resolved by Core; an installation ID is not a substitute. */
+export function sameNativeProject(session: SessionSchema.Info, binding: TrustedExecutionBinding) {
+  return session.projectID === binding.projectId
 }

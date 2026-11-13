@@ -19,7 +19,7 @@ export type NativeRunExecutionPort = {
     skillReceipt: SkillLoadReceipt
     executionTicket: SfNativeExecutionTicket
   }>>
-  /** Revalidate the ticket and budget, admit through the native host gate, and wait without retaining a call lease. */
+  /** Revalidate ticket, current authority and budget at the native host gate; persist lifecycle outcomes and wait without retaining a call lease. */
   execute: (ticket: SfNativeExecutionTicket) => Promise<PortResult<true>>
   /** Revalidate the ticket and authority, then read and decode the durable native result. */
   collect: (ticket: SfNativeExecutionTicket, context: TrustedDomainContext) => Promise<PortResult<ContributionEnvelope>>
@@ -37,6 +37,8 @@ export type SfAnalysisHost = {
   withRunContext: <T>(runRef: string, action: (context: TrustedDomainContext) => Promise<PortResult<T>>) => Promise<PortResult<T>>
   /** Persist an honest failed state for an admitted run; this must revalidate the binding and case. */
   fail: (runRef: string, reason: string, context: TrustedDomainContext) => Promise<PortResult<true>>
+  /** Persist non-executing outcomes under fresh, current authority. */
+  settle: (runRef: string, state: "unavailable" | "needs-input", reason: string, context: TrustedDomainContext) => Promise<PortResult<true>>
   /** Preserve a stale run and its safe references under the host's current access policy. */
   markStale: (runRef: string, reason: string, context: TrustedDomainContext) => Promise<PortResult<true>>
   /** Verify host-owned binding and load receipt, current evidence and C10 semantics against real domain results, and persisted review target; field shape alone is insufficient. */
@@ -144,15 +146,53 @@ export async function runSfAnalysis(input: {
     skillReceipts: [admission.skillReceipt],
     reviewTarget: input.reviewTarget,
   }))
+  if (authorized.status === "stale") {
+    const saved = await input.host.withRunContext(admission.runRef, (context) => input.host.markStale(admission.runRef, authorized.reason, context))
+    if (saved.status !== "ok") return saved
+    return authorized
+  }
+  if (authorized.status === "unavailable" || authorized.status === "needs-input") {
+    const state = authorized.status
+    const saved = await input.host.withRunContext(admission.runRef, (context) => input.host.settle(admission.runRef, state, authorized.reason, context))
+    if (saved.status !== "ok") return saved
+    return authorized
+  }
   if (authorized.status !== "ok") return authorized
-  const run = await input.host.execution.execute(admission.executionTicket)
+  const run = await Promise.resolve().then(() => input.host.execution.execute(admission.executionTicket)).catch(() => ({ status: "unavailable", reason: "native-execution-outcome-unknown" } as const))
   if (run.status === "failed") {
     const failed = await input.host.withRunContext(admission.runRef, (context) => input.host.fail(admission.runRef, run.reason, context))
     if (failed.status !== "ok") return failed
     return run
   }
+  if (run.status === "unavailable" || run.status === "needs-input") {
+    const state = run.status
+    const saved = await input.host.withRunContext(admission.runRef, (context) => input.host.settle(admission.runRef, state, run.reason, context))
+    if (saved.status !== "ok") return saved
+    return run
+  }
+  if (run.status === "stale") {
+    const saved = await input.host.withRunContext(admission.runRef, (context) => input.host.markStale(admission.runRef, run.reason, context))
+    if (saved.status !== "ok") return saved
+    return run
+  }
   if (run.status !== "ok") return run
-  const collected = await input.host.withRunContext(admission.runRef, (context) => input.host.execution.collect(admission.executionTicket, context))
+  const collected = await Promise.resolve().then(() => input.host.withRunContext(admission.runRef, (context) => input.host.execution.collect(admission.executionTicket, context))).catch(() => ({ status: "unavailable", reason: "native-collection-outcome-unknown" } as const))
+  if (collected.status === "failed") {
+    const saved = await input.host.withRunContext(admission.runRef, (context) => input.host.fail(admission.runRef, collected.reason, context))
+    if (saved.status !== "ok") return saved
+    return collected
+  }
+  if (collected.status === "unavailable" || collected.status === "needs-input") {
+    const state = collected.status
+    const saved = await input.host.withRunContext(admission.runRef, (context) => input.host.settle(admission.runRef, state, collected.reason, context))
+    if (saved.status !== "ok") return saved
+    return collected
+  }
+  if (collected.status === "stale") {
+    const saved = await input.host.withRunContext(admission.runRef, (context) => input.host.markStale(admission.runRef, collected.reason, context))
+    if (saved.status !== "ok") return saved
+    return collected
+  }
   if (collected.status !== "ok") return collected
   if (collected.value.caseRef.id !== input.request.caseRef.id || collected.value.caseRef.version !== input.request.caseRef.version ||
       collected.value.caseRef.incarnation !== input.request.caseRef.incarnation ||

@@ -11,7 +11,7 @@ export function resolveDashboardBiSelection(viewId: string, period: Period): { p
   if (!isSfPeriod(period) || period.start.slice(0, 4) !== period.end.slice(0, 4) || Number(period.start.slice(0, 4)) < 2024 || Number(period.start.slice(0, 4)) > 2027) return undefined
   if (viewId === "BI01") return period.start.slice(8) === "01" && Number(period.end.slice(8)) === new Date(Date.UTC(Number(period.end.slice(0, 4)), Number(period.end.slice(5, 7)), 0)).getUTCDate() ? { page: "Budget Overview", fields: ["budgetSeries"] } : undefined
   if (viewId === "BI07") return period.start.slice(8) === "01" && Number(period.end.slice(8)) === new Date(Date.UTC(Number(period.end.slice(0, 4)), Number(period.end.slice(5, 7)), 0)).getUTCDate() ? { page: "IT Operations", fields: ["opsTickets"] } : undefined
-  if (viewId === "BI08") return { page: "Portfolio Dashboard", fields: ["projects"] }
+  if (viewId === "BI08") return { page: "Portfolio Dashboard", fields: ["milestoneDates"] }
   return undefined
 }
 

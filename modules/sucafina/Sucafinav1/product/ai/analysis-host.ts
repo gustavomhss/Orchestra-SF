@@ -35,6 +35,13 @@ export function createSfAnalysisHost(input: {
       if (saved.status !== "ok") return saved
       return { status: "ok", value: true }
     },
+    settle: async (runRef, state, reason, context) => {
+      const run = await input.store.read(runRef, context)
+      if (run.status !== "ok") return run
+      const saved = await input.store.transition(runRef, run.value.version, state, reason, context)
+      if (saved.status !== "ok") return saved
+      return { status: "ok", value: true }
+    },
     markStale: async (runRef, reason, context) => {
       const saved = await input.store.markStale(runRef, reason, context)
       if (saved.status !== "ok") return saved

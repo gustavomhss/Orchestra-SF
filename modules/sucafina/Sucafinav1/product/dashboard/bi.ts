@@ -25,5 +25,5 @@ export function dashboardBiPresentation(viewId: "BI01" | "BI07" | "BI08", projec
     const status = projection.values.find((value) => value.id === `${prefix}:status`)
     return { label: typeof name?.value === "string" && name.value ? name.value : "Milestone", dateValueId: date.id, state: ["upcoming", "in-progress", "late"].includes(String(status?.value)) ? "planned" as const : "unknown" as const }
   })
-  return { viewId, series: [{ id: "milestones", label: "Milestone dates", unit: "date", role: "planned" as const, valueIds: dates.map((date) => date.id) }], timeline: { items }, limitations: ["Dashboard stores one milestone date and a status, not separate planned and actual completion dates; done is not evidence of a completion date.", "Drilldown currently identifies the authorized page source; record-level evidence requires the host registry."] }
+  return { viewId, series: [{ id: "milestones", label: "Milestone dates", unit: "date", role: "planned" as const, valueIds: dates.map((date) => date.id) }], timeline: { items }, limitations: ["Milestone names are current; stored dates do not establish historical status or completion dates. Undated milestones and milestones with missing or duplicate identifiers are excluded.", "Drilldown currently identifies the authorized page source; record-level evidence requires the host registry."] }
 }

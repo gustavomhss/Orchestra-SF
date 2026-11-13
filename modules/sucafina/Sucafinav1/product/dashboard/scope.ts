@@ -25,6 +25,7 @@ export function projectDashboardScope(snapshot: Snapshot, actor: Actor, selector
     const value = projection[field]
     if (field === "budgetMetrics") return [field, { [year]: object(value)[year] }]
     if (field === "budgetSeries") return [field, { [year]: (Array.isArray(object(value)[year]) ? object(value)[year] as unknown[] : []).map((amount, index) => index + 1 >= Number(selector.period.start.slice(5, 7)) && index + 1 <= Number(selector.period.end.slice(5, 7)) ? amount : null) }]
+    if (field === "milestoneDates") return [field, rows(value).filter((row) => typeof row.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(row.date) && Number.isFinite(Date.parse(row.date)) && new Date(row.date).toISOString().slice(0, 10) === row.date && row.date >= selector.period.start && row.date <= selector.period.end)]
     if (field === "executiveByYear") {
       const current = object(object(value)[year])
       const inYear = selector.period.start.slice(5) === "01-01" && selector.period.end.slice(5) === "12-31"

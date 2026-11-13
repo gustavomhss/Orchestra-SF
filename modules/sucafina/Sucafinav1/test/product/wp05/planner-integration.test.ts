@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test"
 import { dispatchSfCapability } from "../../../product/host-binding/capability-dispatch.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../product/contracts/schema-admission.ts"
+import { plannerMonthlyPresentation } from "../../../product/planner/bi.ts"
 import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
@@ -42,7 +43,7 @@ test("real planner projection reaches BI with distinct missing and zero values",
     host: { persistence: storage.persistence, authenticate: async (_request, input) => resolve("finance", [...input!.roleMap], (group) => group === "finance-group"), environment: async () => ({ at: new Date(Date.parse("2026-11-13T00:00:00Z") + ++observations.count * 1000).toISOString(), id: () => "unused", directory: [] }), requestFor: (input) => input.kind === "ui" ? ui.requestFor(input) : undefined, revalidate: async (input) => input.kind === "ui" && await ui.revalidate(input) },
     sources: { resolveForecastSource: async (id) => { const ref = refs.find((item) => item.refId === id); return ref ? { status: "ok", value: { versionId: id, evidence: ref } } : { status: "unavailable", reason: "missing" } }, resolveForecastCoverage: async () => ({ status: "unavailable", reason: "missing" }) },
   })
-  const host = bindPlannerBiPort({ planner, resolve: async () => ({ status: "ok", value: { comparison: { baseRef: "v0", candidateRef: "v1", period, currency: "USD" }, side: "candidate", present: () => ({ viewId: "BI01", series: [{ id: "actual", label: "Actual", role: "actual", unit: "USD", valueIds: ["line:1:actual", "line:2:actual"] }], limitations: [] }) } }), revalidate: async (_request, input) => input.kind === "ui" && await ui.revalidate(input) })
+  const host = bindPlannerBiPort({ planner, resolve: async () => ({ status: "ok", value: { comparison: { baseRef: "v0", candidateRef: "v1", period, currency: "USD" }, side: "candidate", present: (analysis) => plannerMonthlyPresentation(analysis.candidate) } }), revalidate: async (_request, input) => input.kind === "ui" && await ui.revalidate(input) })
   const result = await readBiPresentation(request, context, createPlannerBiSource(host), authority)
   expect(result.status).toBe("ok")
   if (result.status !== "ok") return
@@ -50,7 +51,10 @@ test("real planner projection reaches BI with distinct missing and zero values",
   expect(values.find((value) => value.id === "line:1:actual")?.value).toBeNull()
   expect(values.find((value) => value.id === "line:2:actual")?.value).toBe(0)
   expect(observations.count).toBeGreaterThan(1)
-  expect(result.value.presentation.series[0]?.valueIds).toEqual(["line:1:actual", "line:2:actual"])
+  expect(result.value.presentation.series.map((series) => series.role)).toEqual(["budget", "actual", "outlook"])
+  expect(result.value.presentation.series.find((series) => series.role === "actual")?.valueIds).toEqual(Array.from({ length: 12 }, (_, index) => `month:${index + 1}:actual`))
+  expect(values.find((value) => value.id === "month:1:actual")?.value).toBeNull()
+  expect(values.find((value) => value.id === "month:2:actual")?.value).toBe(0)
   expect(values.find((value) => value.id === "line:2:actual")?.drilldown?.refId).toBe("v1")
   const second = await ui.admit(new Request("https://example.test"), "sf_bi_view", digestSfValue(request))
   expect(second.status).toBe("ok")

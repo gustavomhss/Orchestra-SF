@@ -83,3 +83,12 @@ test("duplicate value identifiers are unavailable instead of targeting the wrong
   const source = { read: async () => ({ status: "ok" as const, value: { ...projection, values: [row, row] } }), revalidate: async () => true }
   expect(await readBiView(request, binding, source, authority)).toEqual({ status: "unavailable", reason: "duplicate-value-id" })
 })
+
+test("decision views require persisted decision metadata in the projection", async () => {
+  const input = { ...request, viewId: "BI09" }
+  const source = { read: async () => ({ status: "ok" as const, value: projection }), revalidate: async () => true }
+  expect(await readBiView(input, binding, source, authority)).toEqual({ status: "unavailable", reason: "decision-unavailable" })
+  const canonical: DomainProjection = { ...projection, decision: { kind: "portfolio", portfolioResultRef: "portfolio-ref", portfolio: { combinations: [], limitations: ["no combinations"], evidenceRefs: [] } } }
+  expect(await readBiView(input, binding, { ...source, read: async () => ({ status: "ok", value: canonical }) }, authority)).toEqual({ status: "ok", value: canonical })
+  expect(await readBiView(input, binding, { ...source, read: async () => ({ status: "ok", value: { ...canonical, decision: { kind: "portfolio", portfolioResultRef: " ", portfolio: { combinations: [], limitations: [], evidenceRefs: [] } } } }) }, authority)).toEqual({ status: "unavailable", reason: "decision-unavailable" })
+})

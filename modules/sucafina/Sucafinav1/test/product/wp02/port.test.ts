@@ -173,3 +173,35 @@ test("executive measurements preserve month, year-to-date and annual periods", a
     expect(february.value.values.some((value) => /\.departures$|\.incYtd$|\.svcYtd$|monthlyDepartures\[(?!1\])/.test(value.id))).toBe(false)
   }
 })
+
+test("milestone dates can be selected historically without claiming historical status", async () => {
+  const state = initial()
+  state.data.projects = [{ id: "p", notes: "restricted-project-note", milestones: [{ id: "m", name: "Launch", date: "2026-03-05", status: "done", notes: "restricted-milestone-note" }, { id: "outside", name: "Outside", date: "2026-09-01", status: "late" }] }]
+  const storage = testPersistence({ dashboard: state })
+  const selectedPeriod = { start: "2026-02-01", end: "2026-05-31" }
+  const page = "Portfolio Dashboard"
+  const scoped = projectDashboardScope(state, actor, { page, fields: ["milestoneDates"], period: selectedPeriod }, environment.at)!
+  const evidence: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", kind: "record", refId: "milestones", installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "observed", target: { surface: "dashboard", recordType: "dashboard-page", recordId: page, incarnation: "inc", version: 1, fields: ["milestoneDates"], period: selectedPeriod, projectionDigest: digestSfValue(scoped) } }
+  evidence.refDigest = digestSfEvidenceRef(evidence)
+  const port = createDashboardPort({ host: { persistence: storage.persistence, authenticate: async (_request, context) => resolve("admin", [...context!.roleMap], (group) => group === "admins"), environment: async () => environment, requestFor: () => new Request("https://example.test"), revalidate: async () => true }, sources: { resolveDashboardSource: async () => ({ status: "ok", value: { page, evidence } }), resolveDashboardMetric: async () => ({ status: "unavailable", reason: "not-registered" }) } })
+  const result = await port.read({ selectionRef: "milestones", period: selectedPeriod, fields: ["milestoneDates"] }, binding)
+  expect(result.status).toBe("ok")
+  if (result.status !== "ok") return
+  expect(result.value.values).toContainEqual(expect.objectContaining({ id: "milestone:p:m:date", value: "2026-03-05", period: { start: "2026-03-05", end: "2026-03-05" } }))
+  expect(result.value.values).toContainEqual(expect.objectContaining({ id: "milestone:p:m:name", value: "Launch" }))
+  expect(JSON.stringify(result)).not.toContain("restricted-project-note")
+  expect(JSON.stringify(result)).not.toContain("restricted-milestone-note")
+  expect(JSON.stringify(result)).not.toContain("milestone:p:outside")
+  expect(result.value.values.some((value) => value.id.endsWith(":status"))).toBe(false)
+  expect(dashboardBiPresentation("BI08", result.value).timeline?.items).toEqual([{ label: "Launch", dateValueId: "milestone:p:m:date", state: "unknown" }])
+  ;(storage.state.dashboard.data.projects as unknown[]).push({ id: "duplicate", milestones: [{ id: "x", name: "Hidden", date: "2026-03-10" }] }, { id: "duplicate", milestones: [{ id: "x", name: "Hidden too", date: "2026-03-11" }] }, { id: "valid", milestones: [{ id: "", name: "No identifier", date: "2026-03-12" }] })
+  evidence.target.projectionDigest = digestSfValue(projectDashboardScope(storage.state.dashboard, actor, { page, fields: ["milestoneDates"], period: selectedPeriod }, environment.at))
+  evidence.refDigest = digestSfEvidenceRef(evidence)
+  const ambiguous = await port.read({ selectionRef: "milestones", period: selectedPeriod, fields: ["milestoneDates"] }, binding)
+  expect(ambiguous.status).toBe("ok")
+  if (ambiguous.status === "ok") {
+    expect(ambiguous.value.missing).toContainEqual({ field: "milestoneDates:identity", reason: "unavailable" })
+    expect(JSON.stringify(ambiguous)).not.toContain("Hidden")
+    expect(JSON.stringify(ambiguous)).not.toContain("No identifier")
+  }
+})

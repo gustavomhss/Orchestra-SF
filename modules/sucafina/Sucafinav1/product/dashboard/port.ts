@@ -49,6 +49,18 @@ export function projectDashboardSource(snapshot: Snapshot, actor: Actor, environ
   if (!selected) return undefined
   const view = selected.domain.view(snapshot, actor, utcEnvironment)
   const projection = Object.fromEntries(pageFields[page].filter((field) => Object.hasOwn(view.data, field)).map((field) => [field, view.data[field]]))
+  if ((page === "Portfolio Dashboard" || page === "All Projects") && Array.isArray(projection.projects)) {
+    const projects = rows(projection.projects)
+    projection.milestoneDates = projects.flatMap((project) => {
+      const projectValid = typeof project.id === "string" && !!project.id && projects.filter((entry) => entry.id === project.id).length === 1
+      const milestones = rows(project.milestones)
+      return milestones.map((milestone) => {
+        const milestoneValid = typeof milestone.id === "string" && !!milestone.id && milestones.filter((entry) => entry.id === milestone.id).length === 1
+        if (!projectValid || !milestoneValid) return { date: milestone.date, issue: "ambiguous-identity" }
+        return { projectId: project.id, id: milestone.id, name: typeof milestone.name === "string" ? milestone.name : "", date: milestone.date }
+      })
+    })
+  }
   if (page === "Executive Dashboard") {
     if (!allowed.includes("Budget Overview")) ["opexOwners", "opexEntries", "capexProjects", "capexEntries"].forEach((key) => delete projection[key])
     if (!allowed.includes("Headcount Overview")) { delete projection.executiveByYear; delete projection.itUsersMonthly }
@@ -197,7 +209,7 @@ async function read(input: { host: DomainPortHost; sources: DashboardSourceHost 
       append(`${id}.${key}`, entry, recordPeriod, recordGranularity)
     })
   }
-  request.fields.filter((field) => field !== "opsTickets" && field !== "budgetMetrics" && field !== "budgetSeries").forEach((field) => append(field, projection[field]))
+  request.fields.filter((field) => field !== "opsTickets" && field !== "budgetMetrics" && field !== "budgetSeries" && field !== "milestoneDates").forEach((field) => append(field, projection[field]))
   if (request.fields.includes("opsTickets")) {
     const categories = Array.isArray(projection.opsCats) && projection.opsCats.length ? projection.opsCats.filter((value): value is string => typeof value === "string") : ["IT Security", "Infrastructure", "Application", "IT Operations", "Others (Beyers OT)"]
     rows(projection.opsTickets).forEach((row) => {
@@ -252,6 +264,18 @@ async function read(input: { host: DomainPortHost; sources: DashboardSourceHost 
       const total = months.length === 12 && months.every((value) => typeof value.value === "number") ? months.reduce((sum, value) => sum + Number(value.value), 0) : null
       values.push({ id: `budgetMetrics.${year}.${name}`, value: total, currency: "unspecified", period: request.period, granularity: "year", sourceRefs: [ref], drilldown: ref, evidenceState: total === null ? "absent" : measure === "effective" ? "estimated" : "confirmed" })
       if (total === null) missing.push({ field: `budgetMetrics.${year}.${name}`, reason: "missing" })
+    })
+  }
+  if (request.fields.includes("milestoneDates")) {
+    const milestones = rows(projection.milestoneDates)
+    if (milestones.some((milestone) => milestone.issue === "ambiguous-identity")) missing.push({ field: "milestoneDates:identity", reason: "unavailable" })
+    milestones.forEach((milestone) => {
+      if (typeof milestone.projectId !== "string" || typeof milestone.id !== "string" || typeof milestone.date !== "string") return
+      const prefix = `milestone:${encodeURIComponent(milestone.projectId)}:${encodeURIComponent(milestone.id)}`
+      const period = { start: milestone.date, end: milestone.date }
+      const name = typeof milestone.name === "string" ? milestone.name : ""
+      values.push({ id: `${prefix}:date`, value: milestone.date, unit: "date", period, granularity: "record", sourceRefs: [ref], drilldown: ref, evidenceState: "confirmed" })
+      values.push({ id: `${prefix}:name`, value: name, period, granularity: "record", sourceRefs: [ref], drilldown: ref, evidenceState: name ? "confirmed" : "absent" })
     })
   }
   if (request.fields.includes("projects")) {

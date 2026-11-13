@@ -8,6 +8,9 @@ import { resolveBiPresentation } from "./semantics.ts"
 import type { BiPresentation } from "./semantics.ts"
 import { renderWaterfall } from "./waterfall.ts"
 import { renderTimeline } from "./milestones.ts"
+import { hasBiDecision } from "./projection.ts"
+import { renderDecisionView } from "./decision-view.ts"
+import { renderPortfolioView } from "./portfolio-view.ts"
 
 /** The projection must be freshly authorized by its producer before rendering. */
 export function renderBiView(request: BiViewRequest, projection: DomainProjection, open: (selection: BiSelection) => void, presentation?: BiPresentation) {
@@ -16,6 +19,21 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
   if (!view || !request.selectionRef || !isSfPeriod(request.period) || projection.context.period.start !== request.period.start || projection.context.period.end !== request.period.end || new Set(projection.values.map((value) => value.id)).size !== projection.values.length) {
     section.textContent = "Visualização indisponível: seleção ou dados inconsistentes."
     return section
+  }
+  if (["BI09", "BI10", "BI11"].includes(request.viewId) && !hasBiDecision(projection)) {
+    section.textContent = "Visualização indisponível: decisão canônica não fornecida."
+    return section
+  }
+  const decision = projection.decision
+  if (decision?.kind === "scenario") {
+    const refs = document.createElement("p")
+    refs.textContent = `Cenário: ${decision.scenarioResultRef}; comparação: ${decision.comparisonRef}`
+    section.append(refs, renderDecisionView(decision.scenario, decision.comparison, decision.sensitivity))
+  }
+  if (decision?.kind === "portfolio") {
+    const ref = document.createElement("p")
+    ref.textContent = `Portfólio: ${decision.portfolioResultRef}`
+    section.append(ref, renderPortfolioView(decision.portfolio))
   }
   const data = presentProjection(projection, request.selectionRef)
   const semantic = presentation?.viewId === request.viewId ? resolveBiPresentation(projection, presentation) : undefined

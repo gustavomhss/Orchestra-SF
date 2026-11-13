@@ -2,6 +2,10 @@ import type { BusinessEvidenceRef, BusinessEvidenceResolution, AuthorizedCasePro
 import type { DomainProjection, ImportManifest, RoutineResult, CommandReceiptView } from "./context.ts"
 import type { DecisionCase, ScenarioResult, ScenarioComparison, PortfolioResult, DocumentEvidence, ChangeImpact, CostCoverageBasis } from "./decisions.ts"
 import type { FinancialAnalysis } from "./ports.ts"
+import type { ContributionEnvelope } from "./resident-ai.ts"
+
+/** Transport envelopes have the same closed schemas as their payloads. Authority stays host-owned. */
+export type SfEnvelopeMap = { ContributionEnvelope: ContributionEnvelope }
 
 export type UnresolvedCondition = { id: string; category: string; reason: string; evidenceRefs: readonly BusinessEvidenceRef[]; questionRef?: string }
 type IntentFrameBase = { objective: string; horizon: { start: string; end: string }; currency: string; criteria: DecisionCase["criteria"]; sourceRefs: readonly BusinessEvidenceRef[]; gaps: readonly UnresolvedCondition[]; domainApplied: false }

@@ -1,6 +1,8 @@
 import type { Surface } from "../../src/identity.ts"
 import type { Command, Result } from "../../runtime/contract.ts"
 import type { BusinessEvidenceRef } from "./business-context.ts"
+import type { PortfolioResult, ScenarioComparison, ScenarioResult } from "./decisions.ts"
+import type { SensitivityResult } from "./outputs.ts"
 
 export type Period = { start: string; end: string }
 export type SourceRef = {
@@ -38,6 +40,10 @@ export type DomainProjection = {
   context: ProductContext
   version: number
   engineVersion: string
+  /** The persisted domain result also consumed by UI, BI and C16; absence never implies complete coverage. */
+  decision?:
+    | { kind: "scenario"; scenarioResultRef: string; scenario: ScenarioResult; comparisonRef: string; comparison: ScenarioComparison; sensitivity?: SensitivityResult }
+    | { kind: "portfolio"; portfolioResultRef: string; portfolio: PortfolioResult }
   components: readonly ProjectionComponent[]
   values: readonly { id: string; value: string | number | boolean | null; unit?: string; currency?: string; period: Period; granularity: "record" | "month" | "year" | "aggregate"; sourceRefs: readonly BusinessEvidenceRef[]; drilldown: BusinessEvidenceRef | null; evidenceState: EvidenceState }[]
   missing: readonly { field: string; reason: "missing" | "unavailable" | "restricted" | "not-applicable" | "incompatible-currency" | "missing-fx" | "missing-rate" | "unconfirmed" }[]

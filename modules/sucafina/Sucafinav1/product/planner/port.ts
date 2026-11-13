@@ -90,6 +90,23 @@ async function compareForecast(input: { host: DomainPortHost; sources: PlannerSo
         return { id: `${line.id}:${month}`, amount: !unknown && typeof value === "number" ? value : null, currency: "USD", period, sourceRefs: [sourceRef], evidenceState: unknown ? "absent" as const : month > Number(projection.closed) && forecast === null ? "estimated" as const : "confirmed" as const }
       })
     })
+    // These monthly totals use the Planner's converted calculations; missing inputs stay unknown.
+    for (let month = Number(start[2]); month <= Number(end[2]); month++) {
+      const period = { start: `${start[1]}-${String(month).padStart(2, "0")}-01`, end: `${start[1]}-${String(month).padStart(2, "0")}-${String(new Date(Date.UTC(Number(start[1]), month, 0)).getUTCDate()).padStart(2, "0")}` }
+      const matching = components.filter((component) => component.period.start === period.start)
+      for (const measure of ["budget", "actual", "outlook"] as const) {
+        const totals = Array.isArray(summary[measure]) ? summary[measure] : []
+        const unknown = !lines.length || lines.some((line) => {
+          if (Array.isArray(summary.warnings) && (summary.warnings.includes(line.cur) || line.synthetic === true && summary.warnings.length > 0)) return true
+          if (line.synthetic === true && missing.some((entry) => entry.reason === "missing-rate")) return true
+          if (measure === "outlook") return false
+          const raw = measure === "budget" ? line.b : line.a
+          return !Array.isArray(raw) || typeof raw[month - 1] !== "number" || !Number.isFinite(raw[month - 1])
+        }) || measure === "outlook" && (matching.length !== lines.length || matching.some((component) => component.amount === null))
+        const value = !unknown && typeof totals[month - 1] === "number" && Number.isFinite(totals[month - 1]) ? totals[month - 1] : null
+        values.push({ id: `month:${month}:${measure}`, value, currency: "USD", period, granularity: "month", sourceRefs: [ref], drilldown: ref, evidenceState: value === null ? "absent" : measure === "outlook" && matching.some((component) => component.evidenceState === "estimated") ? "estimated" : "confirmed" })
+      }
+    }
     return { context: { installationId: binding.binding.installationId, projectId: binding.binding.projectId, principalRef: binding.binding.principalRef, accessRevision: binding.binding.accessRevision, policyVersion: binding.binding.policyVersion, surface: "planner", period: request.period, currency: "USD", sourceRefs: [sourceRef], capabilities: ["sf_forecast_compare"] }, version: ref.target.version, engineVersion: "planner-runtime-v1", components, values, missing }
   }
   const base = build(projections[0]!, evidence[0])

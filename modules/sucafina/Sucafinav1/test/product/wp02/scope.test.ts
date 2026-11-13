@@ -73,3 +73,20 @@ test("monthly budget series ignores other months while binding annual fallback",
   ;(changed.data.opexOwners as { budget: number }[])[0]!.budget = 2400
   expect(projectDashboardScope(changed, admin, selector, asOf)).not.toEqual(original)
 })
+
+test("milestone date scope isolates the selected dates and omits current private fields", () => {
+  const state: Snapshot = { data: { projects: [{ id: "p", notes: "confidential-project-notes", milestones: [{ id: "m1", name: "Earlier", date: "2026-03-05", status: "done", notes: "secret-milestone" }, { id: "m2", name: "Later", date: "2026-08-10", status: "late" }] }] }, versions: {}, sequences: {}, audit: [], notices: [] }
+  const selector = { page: "Portfolio Dashboard", fields: ["milestoneDates"], period: { start: "2026-02-01", end: "2026-05-31" } }
+  const before = projectDashboardScope(state, admin, selector, asOf)!
+  expect(before.selected.milestoneDates).toEqual([{ projectId: "p", id: "m1", name: "Earlier", date: "2026-03-05" }])
+  expect(JSON.stringify(before)).not.toContain("secret-milestone")
+  expect(JSON.stringify(before)).not.toContain("confidential-project-notes")
+  const changed = structuredClone(state)
+  const project = (changed.data.projects as { notes: string; milestones: { name: string; status: string }[] }[])[0]!
+  project.notes = "other private value"
+  project.milestones[0]!.status = "upcoming"
+  project.milestones[1]!.name = "Unrelated future milestone"
+  expect(projectDashboardScope(changed, admin, selector, asOf)).toEqual(before)
+  project.milestones[0]!.name = "New current label"
+  expect(projectDashboardScope(changed, admin, selector, asOf)).not.toEqual(before)
+})

@@ -192,18 +192,24 @@ test("resolving an old scoped incarnation refuses deletion and recreation betwee
     const scope = { principalRef: "principal-1", accessRevision: "access-1", policyVersion: "policy-1", recordType: "projects", recordId: "project-1", selector: { fields: ["name"] } }
     const original = await persistence.readScopedSource("dashboard", scope, async () => true)
     expect(original).toBeDefined()
-    const queued: Promise<unknown>[] = []
-    const phase = { queued: false }
+    const schedule = Promise.withResolvers<void>()
+    const enqueued = Promise.withResolvers<void>()
+    // Register the independent writer before entering the lookup's async transaction scope.
+    const writes = schedule.promise.then(() => {
+      const pending = [
+        persistence.transaction("dashboard", async (snapshot) => { snapshot.data.projects = []; return { commit: true, value: undefined } }),
+        persistence.transaction("dashboard", async (snapshot) => { snapshot.data.projects = [{ id: "project-1", name: "Recreated" }]; return { commit: true, value: undefined } }),
+      ]
+      enqueued.resolve()
+      return Promise.all(pending)
+    })
     const resolved = await persistence.resolveScopedSource("dashboard", original!.incarnation, async () => {
-      if (!phase.queued) {
-        phase.queued = true
-        // Queue both real writes under the held lookup lock, ahead of the subsequent observation.
-        queued.push(persistence.transaction("dashboard", async (snapshot) => { snapshot.data.projects = []; return { commit: true, value: undefined } }))
-        queued.push(persistence.transaction("dashboard", async (snapshot) => { snapshot.data.projects = [{ id: "project-1", name: "Recreated" }]; return { commit: true, value: undefined } }))
-      }
+      schedule.resolve()
+      // Both real writes must be queued ahead of the subsequent observation.
+      await enqueued.promise
       return true
     })
-    await Promise.all(queued)
+    await writes
     expect(resolved).toBeUndefined()
     const current = await persistence.readScopedSource("dashboard", scope, async () => true)
     expect(current?.incarnation).not.toBe(original!.incarnation)

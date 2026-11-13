@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { plannerMonthlyPresentation } from "../../../product/planner/bi.ts"
 import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
@@ -41,6 +42,13 @@ test("forecast port compares the real engine, and detects source changes", async
   expect(result.value.comparison.comparisonStatus).toBe("conditioned")
   expect(result.value.completeDifference).toBeNull()
   expect(result.value.baseline.components.reduce((sum, component) => sum + (component.amount ?? 0), 0)).toBe(590000)
+  expect(result.value.baseline.values.find((value) => value.id === "month:1:budget")).toMatchObject({ value: 40000, currency: "USD", evidenceState: "confirmed", drilldown: refs[0] })
+  expect(result.value.baseline.values.find((value) => value.id === "month:1:actual")).toMatchObject({ value: 40000, evidenceState: "confirmed" })
+  expect(result.value.baseline.values.find((value) => value.id === "month:10:outlook")).toMatchObject({ value: 38000, evidenceState: "confirmed" })
+  expect(result.value.baseline.values.find((value) => value.id === "month:10:actual")).toMatchObject({ value: null, evidenceState: "absent" })
+  const presentation = plannerMonthlyPresentation(result.value.baseline)
+  expect(presentation.series.map((series) => series.role)).toEqual(["budget", "actual", "outlook"])
+  expect(presentation.series[2].valueIds).toEqual(Array.from({ length: 12 }, (_, index) => `month:${index + 1}:outlook`))
   expect(storage.state.planner).toEqual(before)
   coverageMode.available = true
   const covered = await port.compareForecast({ baseRef: "v0", candidateRef: "v1", period, currency: "USD" }, binding)
@@ -101,12 +109,24 @@ test("forecast port compares the real engine, and detects source changes", async
     expect(unknownFx.value.knownDifference).toBeNull()
     expect(unknownFx.value.candidate.missing.some((entry) => entry.reason === "missing-fx")).toBe(true)
     expect(unknownFx.value.candidate.components.every((component) => component.amount === null && component.evidenceState === "absent")).toBe(true)
+    expect(unknownFx.value.candidate.values.find((value) => value.id === "month:1:budget")).toMatchObject({ value: null, evidenceState: "absent" })
+    expect(unknownFx.value.candidate.values.find((value) => value.id === "month:1:outlook")).toMatchObject({ value: null, evidenceState: "absent" })
   }
   coverageMode.available = true
   const scenarioWithoutFx = await port.simulateScenario({ baseRef: "v1", operations: [{ kind: "replace", targetRef: "line:11", amount: 124000, currency: "EUR" }], assumptions: [] }, binding)
   expect(scenarioWithoutFx.status).toBe("ok")
   if (scenarioWithoutFx.status === "ok") expect(scenarioWithoutFx.value.components[10]).toMatchObject({ amount: null, evidenceState: "absent" })
   coverageMode.available = false
+  modified[1].fx = [{ id: "EUR", cur: "EUR", rate: 2 }]
+  refs[1].target.projectionDigest = digestSfValue({ versionId: "v1", projection: projectPlannerSource(storage.state.planner, actor, "v1")! })
+  refs[1].refDigest = digestSfEvidenceRef(refs[1])
+  const knownFx = await port.compareForecast({ baseRef: "v0", candidateRef: "v1", period, currency: "USD" }, binding)
+  expect(knownFx.status).toBe("ok")
+  if (knownFx.status === "ok") {
+    expect(knownFx.value.candidate.values.find((value) => value.id === "month:1:budget")).toMatchObject({ value: 80000, currency: "USD", evidenceState: "confirmed" })
+    expect(knownFx.value.candidate.values.find((value) => value.id === "month:1:actual")).toMatchObject({ value: 80000, currency: "USD", evidenceState: "confirmed" })
+    expect(knownFx.value.candidate.values.find((value) => value.id === "month:10:outlook")).toMatchObject({ value: 76000, currency: "USD", evidenceState: "confirmed" })
+  }
   modified[1].lines[0].cur = "USD"
   const actual = storage.state.planner.data.versions as { lines: { a: (number | null)[] }[] }[]
   actual[1].lines[0].a[0] = null
@@ -120,5 +140,18 @@ test("forecast port compares the real engine, and detects source changes", async
     expect(missingActual.value.candidate.components[0]).toMatchObject({ amount: null, evidenceState: "absent" })
     expect(missingActual.value.candidate.components[1]).toMatchObject({ amount: 0, evidenceState: "confirmed" })
     expect(missingActual.value.candidate.components[2].amount).toBe(45000)
+    expect(missingActual.value.candidate.values.find((value) => value.id === "month:1:actual")).toMatchObject({ value: null, evidenceState: "absent" })
+    expect(missingActual.value.candidate.values.find((value) => value.id === "month:2:actual")).toMatchObject({ value: 0, evidenceState: "confirmed" })
+    expect(missingActual.value.candidate.values.find((value) => value.id === "month:2:outlook")).toMatchObject({ value: 0, evidenceState: "confirmed" })
+  }
+  versions[1].lines[0].f[9] = null
+  versions[1].lines[0].f[10] = 0
+  refs[1].target.projectionDigest = digestSfValue({ versionId: "v1", projection: projectPlannerSource(storage.state.planner, actor, "v1")! })
+  refs[1].refDigest = digestSfEvidenceRef(refs[1])
+  const fallback = await port.compareForecast({ baseRef: "v0", candidateRef: "v1", period, currency: "USD" }, binding)
+  expect(fallback.status).toBe("ok")
+  if (fallback.status === "ok") {
+    expect(fallback.value.candidate.values.find((value) => value.id === "month:10:outlook")).toMatchObject({ value: 50000, evidenceState: "estimated" })
+    expect(fallback.value.candidate.values.find((value) => value.id === "month:11:outlook")).toMatchObject({ value: 0, evidenceState: "confirmed" })
   }
 })

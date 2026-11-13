@@ -79,7 +79,8 @@ export function createSfProductState(input: {
         if (!input.nativeEvidenceWrites?.has(work) && digestSfValue(nativeMetadata(staged.preferences)) !== digestSfValue(nativeMetadata(state.preferences)))
           return { commit: false, value: { status: "denied", reason: "native-evidence-write-outside-authority" } }
         if (digestSfValue(staged.versions) !== digestSfValue(state.versions) || storedNamespaces.some((key) => !scope.some((entry) => entry.namespace === key) && digestSfValue(staged[key]) !== digestSfValue(state[key])) ||
-          (!scope.some((entry) => entry.namespace === "contributions") && digestSfValue(staged.nativeRuns) !== digestSfValue(state.nativeRuns)))
+          (!scope.some((entry) => entry.namespace === "contributions") && digestSfValue(staged.nativeRuns) !== digestSfValue(state.nativeRuns)) ||
+          (!scope.some((entry) => entry.namespace === "cases") && digestSfValue(staged.decisionResults) !== digestSfValue(state.decisionResults)))
           return { commit: false, value: { status: "denied", reason: "namespace-write-outside-authority" } }
         staged.revision += 1
         scope.forEach((entry) => staged.versions[entry.namespace] += 1)

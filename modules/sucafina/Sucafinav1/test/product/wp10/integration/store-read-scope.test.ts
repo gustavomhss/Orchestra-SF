@@ -4,9 +4,11 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
 import type { LocalStore } from "../../../../runtime/local-contract.ts"
-import type { BlobTransaction } from "../../../../runtime/assets.ts"
+import type { AssetPersistence, BlobTransaction } from "../../../../runtime/assets.ts"
 
-async function fixture(work: (store: LocalStore, second: LocalStore) => Promise<void>) {
+type Store = Omit<LocalStore, "transaction"> & AssetPersistence
+
+async function fixture(work: (store: Store, second: Store) => Promise<void>) {
   const root = await mkdtemp(join(await realpath(tmpdir()), "sf-read-scope-"))
   await chmod(root, 0o700)
   const store = await openLocalStore(join(root, "one"), { lockTimeoutMs: 2000 })

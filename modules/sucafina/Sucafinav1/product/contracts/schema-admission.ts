@@ -1,7 +1,8 @@
 import { isSfPeriod } from "./validation.ts"
 import { sfOperationInputSchemas } from "./operations.ts"
 import type { SfOperationInputMap } from "./operations.ts"
-import { sfContributionOutputSchemas, sfOperationOutputSchemas, sfSkillInputSchemas } from "./output-schemas.ts"
+import { sfContributionOutputSchemas, sfOperationOutputSchemas, sfSkillInputSchemas, sfEnvelopeSchemas } from "./output-schemas.ts"
+import type { ContributionEnvelope } from "./resident-ai.ts"
 import type { SfSkillInputMap } from "./skill-inputs.ts"
 import type { SfContributionOutputMap, SfOperationOutputMap } from "./outputs.ts"
 
@@ -22,6 +23,13 @@ type JsonSchema = {
   minLength?: number
   pattern?: string
   definitions?: Readonly<Record<string, JsonSchema>>
+}
+
+/** Structural admission only: native receipt, case, evidence and C10 checks still run in the host. */
+export function decodeSfContributionEnvelope(value: unknown): { ok: true; value: ContributionEnvelope } | { ok: false; reason: "invalid-contribution-envelope" } {
+  const schema = sfEnvelopeSchemas.ContributionEnvelope
+  if (!valid(schema, value, schema.definitions)) return { ok: false, reason: "invalid-contribution-envelope" }
+  return { ok: true, value: structuredClone(value) as ContributionEnvelope }
 }
 
 export function decodeSfSkillInput<K extends keyof SfSkillInputMap>(kind: K, value: unknown): { ok: true; value: SfSkillInputMap[K] } | { ok: false; reason: "invalid-skill-input" } {
