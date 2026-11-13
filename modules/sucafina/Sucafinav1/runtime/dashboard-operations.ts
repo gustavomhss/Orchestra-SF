@@ -163,6 +163,28 @@ function securityKpiValue(row: Record<string, unknown>, kpi: (typeof SECURITY_KP
   return socClosureValue({ ...row, socClosure })
 }
 
+function securityTiles(data: Record<string, unknown>, year: number, month: number) {
+  const tileEntries = rows(data.secKpi)
+    .filter(
+      (row) =>
+        row.year === year &&
+        typeof row.month === "number" &&
+        Number.isInteger(row.month) &&
+        row.month >= 1 &&
+        row.month <= 12 &&
+        row.month <= month,
+    )
+    .sort((a, b) => finite(b.month) - finite(a.month))
+  return SECURITY_KPIS.map((kpi) => {
+    const value = tileEntries.map((row) => securityKpiValue(row, kpi)).find(validSecurityKpiValue) ?? null
+    return {
+      key: kpi.key,
+      value,
+      status: securityKpiStatus(kpi.better, kpi.target, kpi.moderate, value),
+    }
+  })
+}
+
 export const domain: Domain = {
   execute(snapshot, actor, command, environment) {
     if (!actor.canWrite) return { ok: false, status: 403 }
@@ -441,12 +463,25 @@ export const domain: Domain = {
       ...(permitted.includes("opsTickets") ? ["ops:", "ops-list:"] : []),
       ...(permitted.includes("secKpi") ? ["security:", "secActions:", "secIncidents:", "secPhishing:"] : []),
     ]
-    return {
-      data: structuredClone(
-        Object.fromEntries(
-          permitted.filter((key) => snapshot.data[key] !== undefined).map((key) => [key, snapshot.data[key]]),
-        ),
+    const data = structuredClone(
+      Object.fromEntries(
+        permitted.filter((key) => snapshot.data[key] !== undefined).map((key) => [key, snapshot.data[key]]),
       ),
+    )
+    if (permitted.includes("secKpi") && Array.isArray(data.secKpi))
+      data.nativeSecuritySummaryByYear = Object.fromEntries(
+        [2024, 2025, 2026, 2027].map((year) => [
+          String(year),
+          Object.fromEntries(
+            Array.from({ length: 12 }, (_, index) => [
+              String(index + 1),
+              { tiles: securityTiles(data, year, index + 1) },
+            ]),
+          ),
+        ]),
+      )
+    return {
+      data,
       versions: structuredClone(
         Object.fromEntries(
           Object.entries(snapshot.versions).filter(([key]) => prefixes.some((prefix) => key.startsWith(prefix))),
@@ -627,22 +662,11 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
     .filter((row) => row.year === context.year)
     .sort((a, b) => finite(a.month) - finite(b.month))
   const entry = entries.find((row) => row.month === context.month) ?? {}
-  const tileEntries = entries
-    .filter(
-      (row) =>
-        typeof row.month === "number" &&
-        Number.isInteger(row.month) &&
-        row.month >= 1 &&
-        row.month <= 12 &&
-        row.month <= context.month,
-    )
-    .sort((a, b) => finite(b.month) - finite(a.month))
-  const tiles = SECURITY_KPIS.map((kpi) => {
-    const value = tileEntries.map((row) => securityKpiValue(row, kpi)).find(validSecurityKpiValue)
+  const tiles = securityTiles(data, context.year, context.month).map((tile) => {
     return (
       '<div class="metric-tile">' +
-      metric(kpi.key, value == null || value === "" ? "No data" : String(value)) +
-      `<p>${securityKpiStatus(kpi.better, kpi.target, kpi.moderate, typeof value === "number" || typeof value === "string" ? value : null)}</p></div>`
+      metric(tile.key, tile.value === null ? "No data" : String(tile.value)) +
+      `<p>${tile.status}</p></div>`
     )
   })
   const kpiForm = form(
