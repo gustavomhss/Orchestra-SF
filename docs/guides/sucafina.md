@@ -8,9 +8,11 @@ The planned Sucafina chapter brings three business areas into Orchestra's existi
 - Planner: budget versions, OPEX, CAPEX, headcount, entities, allocations and exchange rates.
 - Procurement: purchase requests, sourcing, approvals, purchase orders and suppliers.
 
-The native chapter is under integration. Its private installation connection and business screens are not yet ready for use. The older installation remains available separately while the new integration is qualified.
+The native Sucafina chapter is integrated into Orchestra navigation at `/orchestra/sucafina/dashboard`, `/orchestra/sucafina/planner` and `/orchestra/sucafina/procurement`, with page routes within each area. It is server-wide and opens without a project selected. Hosted checks cover the production entry and router using an HTTP fixture; they do not complete installation UAT or establish that every native card is complete.
 
-The current local operator mode uses the explicitly enrolled Mac owner. Microsoft authentication is deferred because no Microsoft application has been supplied. A missing configuration must produce a clear setup state, rather than an unusable Microsoft login or a substitute administrator.
+Before rendering the server-backed app, the native entry requires both an authenticated Orchestra host session at the current origin and the authenticated, explicitly enrolled local operator for that installation. A missing installation configuration shows a setup state; an unauthenticated session shows sign-in guidance. Signing out clears the verified identity and current business view immediately while the server logout request runs. Microsoft authentication remains deferred because no Microsoft application has been supplied; no substitute administrator is used.
+
+The isolated native launcher is not yet wired into the serve CLI; its implementation and qualification remain outstanding. The private-cookie Chrome 28-page workflow also still needs UAT. Native write editors and file I/O, along with some authoritative summaries, remain incomplete, so the hosted route checks do not mean the native cards are complete.
 
 Budgets, attachments, roles, approval authority and audit history remain private. A public source repository does not include installation keys or business databases. Local backups do not protect against loss of the Mac; no external backup destination has been configured.
 
@@ -23,6 +25,8 @@ Before PO approval, the request amount uses the selected quote converted to base
 
 Workbook imports normalize supported calendar dates to `YYYY-MM-DD`: ISO dates, unpadded ISO dates, day-first slash or dot dates, and numeric Excel serials. Blank start or end cells preserve the existing date when updating a matched team member or Planner roster record. An invalid date rejects an eligible team-member or Planner roster import before it changes stored records. Project previews mark invalid rows as errors; applying a preview skips those rows and can import the valid rows. Direct project import rejects unmarked rows containing invalid dates before applying changes.
 
+A focused hosted regression also verifies the security KPI's as-of period handling. That check does not establish that every native security summary is authoritative.
+
 The native Headcount leader-to-domain mapping follows the existing administrator, HR and Finance display permission. Budget owners and viewers retain their permitted aggregate HR totals. Supplier bank details remain visible only to administrators and supplier administrators; other authorized supplier views receive masked account identifiers and no remaining bank metadata.
 
-The native client transport pins the installation origin and expected principal supplied by its caller, forwards cancellation, and rejects mismatched or unauthorized page responses. A newer stored record returns a conflict for the editor to resolve. This connection component is qualified separately from the remaining server, screen and browser integration.
+The native client transport pins the installation origin and expected principal supplied by its caller, forwards cancellation, and rejects mismatched or unauthorized page responses. A newer stored record returns a conflict for the editor to resolve. Hosted entry/router checks used HTTP fixtures; private-cookie Chrome UAT remains outstanding.
