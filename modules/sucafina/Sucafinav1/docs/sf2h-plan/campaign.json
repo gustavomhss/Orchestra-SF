@@ -31733,19 +31733,22 @@
       ],
       "events": [
         "SESSION_ACK",
+        "JOB_STARTED",
         "OUTPUT_READY",
+        "CONSUMED",
         "INTEGRATION_RESULT",
-        "BLOCKED",
-        "FINDING",
+        "VALIDATION_REQUEST",
         "PROOF_RESULT",
+        "FINDING",
+        "BLOCKED",
+        "CHECKPOINT",
         "LEASE_RELEASED",
-        "SESSION_CLOSED"
+        "SESSION_CLOSED",
+        "GLOBAL_RELEASE"
       ],
       "event_idempotency_key": [
-        "campaign_id",
-        "lane_or_output_id",
-        "epoch",
-        "sha"
+        "execution_instance",
+        "event_id"
       ],
       "terminal_success": "Full scope on final candidate; all mandatory evidence accepted; three independent reviewers; no mandatory open findings; final commit and receipts verified.",
       "nonterminal_conditions": [
@@ -32350,7 +32353,7 @@
         "illustrative_base_wp_slice_min_bytes": 92415,
         "illustrative_base_wp_slice_max_bytes": 186628,
         "slice_limit": "Illustrative slices omit actor-specific runtime/proof/source appendices; not complete execution packs or a speed claim.",
-        "receipt": "context-volume-measurement.json"
+        "receipt": "formal-review/round-3/analysis/context-baseline.json"
       },
       "runtime_metrics": [
         "ready_to_integrated_minutes",

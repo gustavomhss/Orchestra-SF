@@ -1,0 +1,194 @@
+{
+  "review_id": "ROUND3-CONTEXT-INITIAL",
+  "candidate_sha": "10a99bf06c5578ec02dab590a680ab18766c7ff4",
+  "parent_sha": "0aa2405bb3668314f60d6a674d2bd53fd5003091",
+  "code_baseline_sha": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "snapshot": "/workspace/scratch/b5296ae7597d/sf2h-resume",
+  "scope": [
+    "Delta do compilador tools/render_fast_context.py e sua integração em tools/render_plan.py e tools/validate_plan.py.",
+    "COMMON, 23 actor packs JSON/Markdown, execution/manifest.json, execution/sources.json e instruções de entrada.",
+    "Seleção por ator de tasks, axiomas, contratos, leases, branches, anexos, produtores, consumidores, handoffs e dependências de leitura.",
+    "Preservação do inventário canônico e honestidade da medição de contexto."
+  ],
+  "verdict": "CHANGES_REQUIRED",
+  "verdict_reason": "Há dois P1 abertos na seleção por ator: contratos referenciados pelo próprio pack ausentes e três handoffs exigidos pela fase GNATIVE ausentes do pack S3. A reprodução determinística e a união global de IDs passam, mas não demonstram fechamento das dependências locais.",
+  "finding_counts": {"P0": 0, "P1": 2, "P2": 2},
+  "findings": [
+    {
+      "id": "R3-CTX-01",
+      "severity": "P1",
+      "status": "OPEN",
+      "title": "A seleção de contratos não fecha as referências das tarefas, operações e arestas selecionadas",
+      "requirement": "O protocolo da rodada exige seleção completa de tasks/axiomas/contratos e preservação de produtores/consumidores. WORKFLOW.md, seção 2, e os prompts apresentam os packs como contexto suficiente com os contratos pertinentes à atribuição. Uma referência normativa diretamente usada pelo ator deve estar no pacote ou em uma expansão obrigatória precisa.",
+      "locations": [
+        {"path": "tools/render_fast_context.py", "lines": "163-169, 207-209, 232, 235, 286-289", "detail": "contract_ids deriva apenas de contract_reads/contract_provides dos WPs. O compilador seleciona depois entidades que referenciam contratos adicionais e não verifica essa relação."},
+        {"path": "execution/actors/S1-A.json", "pointers": ["/work_packages/0/tasks/4/work/5", "/consumer_edges", "/contracts", "/mandatory_appendices"]},
+        {"path": "execution/actors/S1-C.json", "pointers": ["/consumer_edges", "/resident/mcp_packs", "/contracts"]},
+        {"path": "execution/actors/S4-B.json", "pointers": ["/consumer_edges", "/work_packages/0/tasks/2/work", "/contracts"]}
+      ],
+      "counterexample": {
+        "consumer_edges_missing_contracts": [
+          {"actor": "S1-A", "edge": "SKILL-UI-CONSUMPTION", "contract": "C15"},
+          {"actor": "S1-C", "edge": "AIEDGE05", "contract": "C10"},
+          {"actor": "S1", "edge": "PRODEDGE03", "contract": "C10"},
+          {"actor": "S3-B", "edge": "AIEDGE11", "contract": "C13"},
+          {"actor": "S4-A", "edge": "AIEDGE04", "contract": "C14"},
+          {"actor": "S4-A", "edge": "AIEDGE15", "contract": "C07"},
+          {"actor": "S4-B", "edge": "PRODEDGE03", "contract": "C10"},
+          {"actor": "S4-C", "edge": "AIEDGE08", "contract": "C12"}
+        ],
+        "direct_producer_examples": [
+          "S1-C produz sf_forecast_compare, sf_scenario_simulate e sf_scenario_compare; os descritores exigem C10, ausente de /contracts.",
+          "S2-A produz sf_contract_read e sf_sourcing_compare; C14 e C10/C14, respectivamente, estão ausentes.",
+          "S4-A produz sf_case_draft e sf_alternative_draft; C11 está ausente."
+        ],
+        "task_examples": [
+          "WP01.T05/work exige explicitamente a matriz de 18 skills C15. S1-A não recebe C15 nem specs/resident-runtime.md em mandatory_appendices.",
+          "WP03.T01/outputs cita C10 e WP12.T03/work cita C10, mas os packs dos respectivos autores S1-C/S4-B não contêm C10."
+        ],
+        "validator_result": "O candidato exato retorna PLAN_STRUCTURE_PASS e ambos os renderizadores retornam drift vazio. Portanto a lacuna já atravessa o gate documental; não depende de uma mutação hipotética."
+      },
+      "consequence": "O produtor ou consumidor recebe a obrigação de integrar um contrato sem a sua definição normativa no contexto declarado suficiente. Isso permite implementação baseada apenas em nome/resumo, exige redescoberta não explícita e compromete o argumento de redução completa de contexto. A falta de C15 também elimina automaticamente um anexo pertinente da UI.",
+      "minimum_correction": [
+        "Calcular dependências de leitura a partir do conteúdo selecionado e das referências estruturadas de tasks, consumer_edges, operações e contratos; normalizar IDs e rejeitar referência Cxx desconhecida.",
+        "Incluir os contratos necessários no pack ou declarar uma expansão obrigatória exata com path, selector e digest; calcular os anexos a partir dessas dependências efetivas.",
+        "Manter essa ampliação somente de leitura: não alterar assignment, write_authority, branches ou leases.",
+        "Acrescentar verificação por ator de resolução de todas as referências necessárias. Não corrigir apagando a aresta, a obrigação ou a operação. Regenerar packs, manifestos, hashes e medição."
+      ],
+      "recheck": "Reexecutar os três validadores documentais e conferir independentemente todas as arestas/operadores selecionados; nenhum dos contraexemplos pode permanecer sem definição ou expansão obrigatória precisa. Um controle de contrato omitido/desconhecido deve ser recusado."
+    },
+    {
+      "id": "R3-CTX-02",
+      "severity": "P1",
+      "status": "OPEN",
+      "title": "O pack S3 omite três handoffs explicitamente exigidos por sua fase GNATIVE",
+      "requirement": "A seleção deve acompanhar a borda alterada até produtor, consumidor e gate. WP00.T04 é tarefa primária de S3, e a fase GNATIVE18-20 declara cinco outputs obrigatórios em task_output_dependencies.requires.",
+      "locations": [
+        {"path": "tools/render_fast_context.py", "lines": "169-170, 202, 233-234, 287", "detail": "relevant_handoffs considera só producer_task e consumer_tasks da própria linha de output; não incorpora requires/full_runtime_requires das fases selecionadas."},
+        {"path": "execution/actors/S3.json", "pointers": ["/assignment/primary", "/task_output_dependencies/0", "/incoming_outgoing_handoffs"]},
+        {"path": "campaign.json", "pointers": ["/task_output_dependencies/0", "/output_handoffs"]}
+      ],
+      "counterexample": {
+        "actor": "S3",
+        "task": "WP00.T04",
+        "phase": "GNATIVE18-20",
+        "requires": ["AI-NATIVE", "NATIVE-CASE", "NATIVE-PLANNER", "NATIVE-RUNTIME", "NATIVE-COMPOSE"],
+        "missing_from_pack_handoffs": ["AI-NATIVE", "NATIVE-CASE", "NATIVE-PLANNER"],
+        "omitted_receipts": [
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/handoffs/ai-native.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/handoffs/native-case.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/handoffs/native-planner.json"
+        ],
+        "cause": "Esses outputs não enumeram WP00.T04 em consumer_tasks, embora a fase e as resident_handoff_interfaces o enumerem como consumidor. O protocolo anterior exigia output-handoffs.json integral; a projeção nova não fecha as referências da fase.",
+        "validator_result": "PLAN_STRUCTURE_PASS, render_fast_context drift=[] e render_plan drift=[]. A união global ainda contém os 19 handoffs e oculta a omissão de S3."
+      },
+      "consequence": "O qualificador de GNATIVE recebe IDs e resumos dos inputs, mas não os respectivos registros completos de aceite/recibo/status dos três produtores. A coleta de evidência no caminho crítico passa a depender de uma expansão implícita fora da seleção prometida.",
+      "minimum_correction": [
+        "Selecionar as fases pertinentes antes dos handoffs e unir todos os IDs de requires/full_runtime_requires à seleção direta por produtor/consumidor.",
+        "Verificar por ator que cada referência de handoff de uma fase selecionada resolve exatamente uma linha canônica, com conteúdo integral, receipt e proveniência.",
+        "Não reatribuir autoria, antecipar readiness ou declarar os outputs produzidos para resolver o problema."
+      ],
+      "recheck": "O pack S3 deve conter os cinco handoffs completos de GNATIVE. Repetir a verificação para todas as fases de todos os 23 packs; remover um handoff requerido em um controle deve falhar."
+    },
+    {
+      "id": "R3-CTX-03",
+      "severity": "P2",
+      "status": "OPEN",
+      "title": "Rotas MCP selecionadas deixam skills e prova referenciadas fora da seleção explícita",
+      "requirement": "Cada operação deve conservar a rota positiva perfil/skill carregada/operação e a prova AM02. A expansão de contexto pode ser seletiva, mas a dependência normativa necessária deve estar resolvida ou explicitamente marcada para leitura.",
+      "locations": [
+        {"path": "tools/render_fast_context.py", "lines": "171-201, 217-221, 240, 246-248", "detail": "Skills são escolhidas antes das operações produzidas; a escolha não é fechada por operation_call_routes.skill_id. integrated_ids não inclui os proof_ids dos packs/rotas selecionados."},
+        {"path": "execution/actors/S2-A.json", "pointers": ["/resident/skills", "/resident/operation_call_routes", "/resident/integrated_proofs", "/execution_proofs", "/resident_ui/skills"]}
+      ],
+      "counterexample": {
+        "actor": "S2-A",
+        "operations": ["sf_request_read", "sf_supplier_read", "sf_contract_read", "sf_sourcing_compare"],
+        "named_route_skill": "sf-comparar-sourcing",
+        "named_route_proof": "AM02",
+        "observed": {"resident.skills": [], "resident.integrated_proofs": [], "execution_proofs": [], "resident_ui.skills": []},
+        "additional_example": "S0-A tem cinco rotas selecionadas cujas skills não estão em resident.skills. Outras lacunas de referências estão enumeradas em context-evidence.json."
+      },
+      "consequence": "A rota aparece como referência sem o conteúdo normativo de carregamento/consumo/prova que a sustenta. O ator consegue recuperar a informação por expansão dos anexos e da fonte canônica, e o owner global de AM02 mantém a obrigação; por isso o achado é P2, sem afirmar que a prova global foi removida.",
+      "minimum_correction": [
+        "Fechar as dependências de leitura das rotas em suas skills, cenários UI pertinentes e proofs; alternativamente listar slices normativos obrigatórios com selectors/digests explícitos.",
+        "Verificar que cada skill_id/proof_id de rota selecionada está resolvido no pack ou nessa lista obrigatória. Isso não dá escrita da skill ao produtor do domínio.",
+        "Incluir o custo das expansões obrigatórias na medição correspondente."
+      ],
+      "disposition": "Corrigir junto do fechamento de seleção e rechecagem desta rodada; a obrigação de AM02 e a autorização por skill permanecem intactas. A mera menção ao ID não deve ser contada como contexto normativo entregue."
+    },
+    {
+      "id": "R3-CTX-04",
+      "severity": "P2",
+      "status": "OPEN",
+      "title": "A medição não corresponde exatamente aos bytes publicados e cita um receipt inexistente",
+      "requirement": "A redução deve ser verificável no candidato final, com referências válidas e sem confundir bytes com tokens ou tempo. Os totais registrados precisam refletir os próprios arquivos enumerados.",
+      "locations": [
+        {"path": "execution/context-measurement.json", "pointers": ["/new_five_session_conservative_startup_bytes", "/per_session"]},
+        {"path": "execution-workflow.json", "pointer": "/measurements/baseline/receipt", "line": 694}
+      ],
+      "counterexample": {
+        "recorded_new_total": 3392562,
+        "actual_new_total_from_enumerated_files": 3392597,
+        "difference_bytes": 35,
+        "per_session": [
+          {"actor": "S0", "recorded": 787428, "actual": 787435},
+          {"actor": "S1", "recorded": 641219, "actual": 641226},
+          {"actor": "S2", "recorded": 753896, "actual": 753903},
+          {"actor": "S3", "recorded": 689359, "actual": 689366},
+          {"actor": "S4", "recorded": 520660, "actual": 520667}
+        ],
+        "receipt_reference": "context-volume-measurement.json",
+        "receipt_exists_in_snapshot": false,
+        "baseline_confirmed": "Os 15 documentos exigidos pelos prompts do parent somam exatamente 2.598.019 bytes por coordenadora e 12.990.095 bytes nas cinco."
+      },
+      "consequence": "A diferença é pequena e não altera o percentual arredondado de 73,88%; não constitui falsa alegação de velocidade. Contudo, o receipt atual não é reproduzível byte a byte e sua referência baseline está quebrada. Os totais também precisarão ser refeitos após corrigir as seleções.",
+      "minimum_correction": [
+        "Recalcular os bytes depois do último ajuste de documentos, corrigir a referência para um receipt versionado existente e registrar o escopo exato da comparação.",
+        "Fazer a validação conferir totais, arquivos enumerados e existência do receipt; preservar as limitações sobre código real, expansão adicional, tokens e tempo."
+      ],
+      "disposition": "Regenerar no fechamento do candidato corrigido e revalidar os números; achado não bloqueia isoladamente o planejamento, mas a medição anterior não deve ser reapresentada como exata."
+    }
+  ],
+  "checks": [
+    {"id": "DOC-01", "result": "PASS", "detail": "AGENTS.md indicado e PROTOCOL.md da rodada 3 lidos; scripts lidos antes de qualquer execução. Somente comandos documentais python -B, sem produto, testes, Actions, deploy ou integração."},
+    {"id": "DOC-02", "result": "PASS", "command": "python -B tools/render_fast_context.py --plan campaign.json --check", "detail": "50 artefatos, 23 atores, drift vazio."},
+    {"id": "DOC-03", "result": "PASS", "command": "python -B tools/render_plan.py --plan campaign.json --check", "detail": "100 artefatos, drift vazio."},
+    {"id": "DOC-04", "result": "PASS_WITH_LIMITS", "command": "python -B tools/validate_plan.py --plan campaign.json --output /workspace/scratch/b5296ae7597d/reviews/context-structure.json", "detail": "PLAN_STRUCTURE_PASS. Esse resultado não cobre os fechamentos por ator ausentes descritos em R3-CTX-01/02/03."},
+    {"id": "PRESERVATION", "result": "PASS", "detail": "15 WPs e 74 tasks preservados por ID; 17 contratos e resident_ai integralmente iguais ao parent; 1.610 critérios sem adição/remoção e todos NOT_RUN. Os 23 textos de critérios alterados pertencem ao delta C/D e guias. Contagem estrutural de todos os objetos definidos: 1.852, distinta da contagem de critérios."},
+    {"id": "ACTOR-SELECTION", "result": "PARTIAL_FAIL", "detail": "Corpos de todas as tasks e metadados/axiomas dos WPs selecionados são cópias exatas da fonte. Primary/support/correction tasks e proof_bindings conferem. Só WP10.T03 tem três primários, os três reviewers declarados. União de 19 handoffs/18 skills/39 operações preservada, mas fechamento local falha nos achados."},
+    {"id": "AUTHORITY", "result": "PASS", "detail": "Todas as branches explícitas resolvem os pointers de proveniência canônicos. Leases de skill selecionados correspondem ao writer ou handoff_to. Packs mantêm distinção entre owner lógico, partes e permissão corrente; não foi observado novo grant amplo no delta."},
+    {"id": "PROVENANCE", "result": "PASS", "detail": "189 entradas de sha256.json conferidas; todos os 23 hashes/tamanhos de packs no execution/manifest.json e digests dos Markdown conferem. COMMON coincide com os digests. execution/sources.json copia exatamente baseline, 11 source_receipts e 61 resident_source_evidence."},
+    {"id": "PROMPTS-APPENDICES", "result": "PASS_WITH_FINDINGS", "detail": "Identidades e papéis são fixos e coerentes; arquivos de todos os mandatory_appendices e review_sources_read_only existem. Reviewers conservam fontes WP de leitura e a matriz UI pode ser expandida pelo anexo obrigatório product-acceptance. A falta de resident-runtime no pack S1-A decorre de R3-CTX-01."},
+    {"id": "MEASUREMENT", "result": "PARTIAL_FAIL", "detail": "A baseline e a distinção bytes/tokens/tempo são corretas. A comparação limita-se ao arranque das cinco coordenadoras e não declara economia total dos 23 atores ou execução de 120 minutos. Números publicados e referência precisam do ajuste R3-CTX-04."}
+  ],
+  "evidence_files": [
+    "/workspace/scratch/b5296ae7597d/reviews/context-evidence.json",
+    "/workspace/scratch/b5296ae7597d/reviews/context-structure.json",
+    "/workspace/scratch/b5296ae7597d/reviews/context-snapshot-before.json"
+  ],
+  "hashes": {
+    "campaign.json": "044c729f37c055bf81c1cf4832ad37ffcd96b77834e0c725b6a0da51c1a4421d",
+    "tools/render_fast_context.py": "151da2ea446177dfec7501cec5387415a21d12e59188575cfbaa6429a790df68",
+    "tools/render_plan.py": "7df6394361619b374a2dcc3a91dd63585d6d4314cb3289e2e66d5d2606e37a42",
+    "tools/validate_plan.py": "0625420f9102cdd8d81f474d6ff224ff50c44a1f7e91ccecdf52ea0111e1fa7e",
+    "tools/validate_execution_plan.py": "951c1fc4d6b110cf61f9983112ff0c212b29c018068f12a56864d4dc5a8b8842",
+    "tools/validate_resident_plan.py": "5eb446897c1bcd64a9497735267e5da98f7281ff313a0113347959a56f02fdde",
+    "execution/COMMON.md": "8e5a92df01791d602b3666533038d1bea6fe70e5ce84f2b8ffec4cd071658e86",
+    "execution/manifest.json": "7065f3e0eb36a9118cf45c3067b6f0961752cbefdb0a95620356da32f0823065",
+    "execution/sources.json": "fc75918615d53f0f5b226cd2f3272af362ba725f41c93b16098f0965780d9641",
+    "execution/context-measurement.json": "8a7cf106525c40b92a120e6cef56adbf3fc74cf2963d5491048970e4c2f66d0a",
+    "reviews/context-evidence.json": "cc1f6e4031d8232f6e147d29dd6120566416aba4b1ac19b2dc8a334291665eae",
+    "reviews/context-structure.json": "a140da78e8d718f7b98dcbb082bb91b41c84d46c075735f330c36e38c7aef9a9",
+    "reviews/context-snapshot-before.json": "975c8bc1b420d32bab18d61b80116c71d8648d792741e751cb410ec82ef5bc06"
+  },
+  "limits": [
+    "Parecer independente da seleção/contexto; não foram lidos pareceres de outros revisores desta rodada.",
+    "O SHA foi fornecido na atribuição. Esta revisão verificou os bytes do snapshot local e seus hashes; a correspondência remota por GitHub MCP foi tratada separadamente pela supervisora.",
+    "A revisão não reinspecionou implementação de produto inalterada nem comprovou interfaces contra código de runtime atual.",
+    "Não houve execução de produto, testes do repositório, CI, modelo, MCP de negócio, Atlas, Relay, deploy, publicação ou mensagem externa.",
+    "A leitura e as verificações foram determinísticas e documentais; não foi feita exploração exaustiva por mutação. Os contraexemplos principais existem no candidato exato e passam sua validação atual.",
+    "Economia em bytes não demonstra economia em tokens, latência, custo, duração total, capacidade de sessão ou cumprimento de 120 minutos.",
+    "A aprovação eventual depende da rechecagem proporcional do candidato corrigido. Produto e todas as provas de implementação permanecem NOT_RUN."
+  ],
+  "implementation_test_status": "NOT_RUN"
+}

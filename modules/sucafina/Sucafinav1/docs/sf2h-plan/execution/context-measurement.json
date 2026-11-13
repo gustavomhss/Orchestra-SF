@@ -1,12 +1,12 @@
 {
   "scope": "UTF-8 document bytes, not tokens, latency or implementation savings. Original fifteen shared docs exclude additional WP and code reads; new bound includes prompts, common, packs, full operational references/appendices and source index, but also excludes actual code reads and additional evidence-dependent expansion.",
   "baseline_commit": "0aa2405bb3668314f60d6a674d2bd53fd5003091",
-  "plan_sha256": "044c729f37c055bf81c1cf4832ad37ffcd96b77834e0c725b6a0da51c1a4421d",
+  "plan_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
   "original_five_session_shared_reading_bytes": 12990095,
-  "new_five_session_conservative_startup_bytes": 3392562,
-  "new_core_common_and_packs_bytes": 2334578,
-  "reduction_bytes": 9597533,
-  "reduction_pct": 73.88,
+  "new_five_session_conservative_startup_bytes": 3688283,
+  "new_core_common_and_packs_bytes": 2630329,
+  "reduction_bytes": 9301812,
+  "reduction_pct": 71.61,
   "per_session": [
     {
       "actor": "S0",
@@ -24,8 +24,8 @@
         "specs/product-acceptance.md",
         "specs/resident-runtime.md"
       ],
-      "bytes": 787428,
-      "core_common_and_pack_bytes": 570066
+      "bytes": 788588,
+      "core_common_and_pack_bytes": 571232
     },
     {
       "actor": "S1",
@@ -42,8 +42,8 @@
         "specs/product-acceptance.md",
         "specs/resident-runtime.md"
       ],
-      "bytes": 641219,
-      "core_common_and_pack_bytes": 437152
+      "bytes": 711403,
+      "core_common_and_pack_bytes": 507342
     },
     {
       "actor": "S2",
@@ -61,8 +61,8 @@
         "specs/product-acceptance.md",
         "specs/resident-runtime.md"
       ],
-      "bytes": 753896,
-      "core_common_and_pack_bytes": 537723
+      "bytes": 806833,
+      "core_common_and_pack_bytes": 590666
     },
     {
       "actor": "S3",
@@ -79,8 +79,8 @@
         "specs/product-acceptance.md",
         "specs/resident-runtime.md"
       ],
-      "bytes": 689359,
-      "core_common_and_pack_bytes": 485380
+      "bytes": 743698,
+      "core_common_and_pack_bytes": 539725
     },
     {
       "actor": "S4",
@@ -98,12 +98,12 @@
         "specs/product-acceptance.md",
         "specs/resident-runtime.md"
       ],
-      "bytes": 520660,
-      "core_common_and_pack_bytes": 304257
+      "bytes": 637761,
+      "core_common_and_pack_bytes": 421364
     }
   ],
-  "all_23_actor_packs_bytes": 8097518,
-  "pack_min_bytes": 204802,
-  "pack_max_bytes": 524987,
+  "all_23_actor_packs_bytes": 9516800,
+  "pack_min_bytes": 281827,
+  "pack_max_bytes": 545587,
   "implementation_test_status": "NOT_RUN"
 }

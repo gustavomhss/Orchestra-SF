@@ -1,0 +1,504 @@
+{
+  "schema_version": 1,
+  "review_round": 3,
+  "reviewer": "supervisor",
+  "created_at": "2026-11-13 03:05:27 UTC",
+  "candidate_sha": "10a99bf06c5578ec02dab590a680ab18766c7ff4",
+  "parent_sha": "0aa2405bb3668314f60d6a674d2bd53fd5003091",
+  "candidate_snapshot": "/workspace/scratch/b5296ae7597d/sf2h-resume",
+  "parent_snapshot": "/workspace/scratch/838a0195183d/sf2h-final-0aa2405",
+  "scope": {
+    "mode": "DELTA_ONLY_WITH_BOUNDARY_TRACING",
+    "areas": [
+      "Lançamento, ACK e admissão",
+      "Capacidade global versus pools, S0+N4 e rotação de slots",
+      "Reservas, relógio e caminho crítico",
+      "Transporte real e protocolo de eventos",
+      "Ownership, leases, epoch, CAS e retomada",
+      "GLOBAL_RELEASE e término",
+      "Sincronização de WORKFLOW, JSONs canônicos/derivados e prompts"
+    ],
+    "out_of_scope": [
+      "Implementação ou redesenho de produto",
+      "Reinvestigação de código de produto inalterado",
+      "Execução de testes de produto, CI, deploy ou integrações",
+      "Leitura de conclusões dos outros revisores desta rodada"
+    ]
+  },
+  "verdict": "APPROVED_FOR_EXECUTION",
+  "verdict_rationale": "Nenhum P0/P1 demonstrado no delta de supervisão. Um P2 de ambiguidade documental tem disposição explícita não bloqueante e correção mínima. A aprovação avalia o plano para execução futura condicionada aos gates; não admite o preset no backend atual nem inicia implementação.",
+  "finding_counts": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 1
+  },
+  "p2_disposition": "R3-SUP-P2-01: harmonização documental recomendada; usar a identidade específica execution_instance/event_id já definida no protocolo detalhado. Não bloqueia a aprovação do delta.",
+  "findings": [
+    {
+      "id": "R3-SUP-P2-01",
+      "severity": "P2",
+      "status": "OPEN_WITH_NONBLOCKING_DISPOSITION",
+      "title": "Duas chaves diferentes para a deduplicação dos mesmos eventos",
+      "requirement": "Cada evento distinto da campanha deve chegar à supervisora; somente a repetição do mesmo evento deve ser descartada. O protocolo específico já determina deduplicar event_id dentro de execution_instance e acompanhar a sequência por ator/tentativa.",
+      "locations": [
+        {
+          "path": "campaign.json",
+          "pointer": "/execution_workflow/topology/event_idempotency_key",
+          "line": 31744
+        },
+        {
+          "path": "campaign.json",
+          "pointer": "/execution_workflow/event_protocol/idempotency",
+          "line": 31999
+        },
+        {
+          "path": "execution-workflow.json",
+          "pointer": "/topology/event_idempotency_key",
+          "lines": [
+            85,
+            90
+          ]
+        },
+        {
+          "path": "execution-workflow.json",
+          "pointer": "/event_protocol/identity",
+          "lines": [
+            321,
+            327
+          ]
+        },
+        {
+          "path": "execution-workflow.json",
+          "pointer": "/event_protocol/idempotency",
+          "line": 340
+        }
+      ],
+      "concrete_counterexample": "No mesmo execution_instance, S3-R3 publica FINDING F01 com event_id r3-17 e depois FINDING F02 com event_id r3-18 sobre WP10.T06, lease_epoch 2 e candidato C idêntico. Ao projetar ambos pela tupla topology.event_idempotency_key (campaign_id, lane_or_output_id, epoch, sha), as chaves são iguais. Pela regra event_protocol.idempotency, (execution_instance, event_id), são diferentes e os dois achados devem ser entregues.",
+      "consequence": "Um operador ou futuro consumidor que siga o resumo da topologia pode descartar F02 como duplicata e atrasar o encaminhamento ao writer. O protocolo detalhado contém a regra correta; a falha identificada é a ambiguidade entre duas representações normativas, não uma perda observada em software executado.",
+      "minimum_correction": "Na fonte campaign.json, remover topology.event_idempotency_key em favor da referência a event_protocol ou substituí-la por ['execution_instance', 'event_id']; regenerar os espelhos. Manter lease_epoch, SHA e sequência para validação/ordenação, sem usá-los como substitutos da identidade do evento.",
+      "severity_rationale": "P2 porque o protocolo detalhado já define a identidade correta, nenhum dispatcher novo foi implementado por este delta e o restante dos gates continua explícito. Não há P0/P1 demonstrado. A inconsistência merece correção pequena para não depender de uma escolha de interpretação.",
+      "disposition": "Não bloqueante para a aprovação documental: usar a regra específica de event_protocol.idempotency, preservando ambos os eventos distintos. Recomenda-se harmonizar a chave na próxima regeneração antes do lançamento. Não se concede permissão para aplicar a chave ampla a todos os eventos.",
+      "proportional_recheck": "Conferir a chave no canônico e no execution-workflow gerado; render_plan.py --check sem drift. Contraprova documental: duas event_ids diferentes no mesmo C permanecem duas; retry com a mesma execution_instance/event_id permanece um evento."
+    }
+  ],
+  "checks": [
+    {
+      "id": "SUP-C01",
+      "status": "PASS_DOCUMENTARY",
+      "name": "Delta e integridade do insumo",
+      "result": "Comparação do snapshot com o parent por SHA256; os 47 arquivos efetivamente lidos/conferidos coincidem com sha256.json. Os relatórios de outros revisores da rodada não foram lidos.",
+      "evidence": [
+        "formal-review/round-3/PROTOCOL.md",
+        "sha256.json",
+        "reviewed_file_hashes"
+      ]
+    },
+    {
+      "id": "SUP-C02",
+      "status": "PASS_DOCUMENTARY",
+      "name": "Escopo e estado de prova",
+      "result": "15 WPs, 74 tasks, 17 contratos, 1.610 critérios. Os conjuntos de task IDs e criterion IDs coincidem com o parent; todos os critérios permanecem NOT_RUN.",
+      "evidence": [
+        "campaign.json:/work_packages",
+        "campaign.json:/contracts",
+        "campaign.json:/axioms",
+        "execution/manifest.json:/coverage"
+      ]
+    },
+    {
+      "id": "SUP-C03",
+      "status": "PASS_DOCUMENTARY",
+      "name": "Geração e sincronização",
+      "result": "PYTHONDONTWRITEBYTECODE=1 python tools/render_plan.py --check retornou exit 0, 100 artefatos e drift []. schedule.json == campaign.timebox; ownership.json == campaign.ownership; execution-workflow.json == campaign.execution_workflow. As 23 alocações dos actor packs coincidem com o canônico.",
+      "evidence": [
+        "tools/render_plan.py",
+        "tools/render_fast_context.py",
+        "schedule.json",
+        "ownership.json",
+        "execution-workflow.json",
+        "execution/actors/"
+      ]
+    },
+    {
+      "id": "SUP-C04",
+      "status": "PASS_DOCUMENTARY",
+      "name": "Capacidade estática e rotação",
+      "result": "validate_execution_plan.validate_execution: 456 asserções, nenhum erro; 20 slots físicos desejados, 23 identidades ao longo do tempo, 19 handoffs, 18 leases de skills e três reviewers novos. O cálculo valida o preset; não demonstra capacidade disponível.",
+      "evidence": [
+        "tools/validate_execution_plan.py",
+        "schedule.json:/slot_lifecycle",
+        "schedule.json:/actor_allocations"
+      ]
+    },
+    {
+      "id": "SUP-C05",
+      "status": "REVIEWED_NO_BLOCKER",
+      "name": "Lançamento → ACK → admissão",
+      "result": "Preflight não exige ACK de sessão inexistente. STARTING lança/reconhece instâncias por mecanismo real; missão fixa fornece SHA/pack/branch/lease; ACK traz identidade e digest; ACTIVE exige roster, leases e capacidade observados. Falta de capacidade leva a CAPACITY_HOLD, com trabalho independente válido somente dentro do limite real.",
+      "evidence": [
+        "execution-workflow.json:/startup_sequence",
+        "execution-workflow.json:/mission",
+        "execution-workflow.json:/state_transitions",
+        "prompts/S0.md",
+        "prompts/S1.md",
+        "prompts/S2.md",
+        "prompts/S3.md",
+        "prompts/S4.md"
+      ]
+    },
+    {
+      "id": "SUP-C06",
+      "status": "REVIEWED_NO_BLOCKER",
+      "name": "Teto global e pools",
+      "result": "A distinção entre quatro slots globais observados e vinte slots desejados está explícita no canônico, workflow, START, COMMON, cronograma e prompts. Cinco IDs não demonstram cinco pools. N4_preset_admitted continua false; outro N exige alocação completa validada.",
+      "evidence": [
+        "execution-workflow.json:/topology",
+        "execution-workflow.json:/transport/current_tree",
+        "campaign.json:/execution/concurrency",
+        "schedule.json:/capacity",
+        "START.md",
+        "WORKFLOW.md"
+      ]
+    },
+    {
+      "id": "SUP-C07",
+      "status": "REVIEWED_NO_BLOCKER",
+      "name": "Relógio, reservas e caminho crítico",
+      "result": "T0 inclui preflight, lançamento, ACK e setup, sem restart. S0 recebe e compõe os quatro inputs nativos dentro da reserva 10–18; não espera T25. Guias usam 55–60 e consumidores/ajustes 60–75. Memória 68→75 e cauda de CI/live/revisão são riscos condicionais explícitos. G2H usa recursos e durações observados; desconhecido não vira zero.",
+      "evidence": [
+        "WORKFLOW.md:seções 3 e 4",
+        "execution-workflow.json:/clock",
+        "execution-workflow.json:/dispatch",
+        "execution-workflow.json:/documentation_reservation",
+        "schedule.json:/actor_allocations/S0",
+        "schedule.json:/feasibility_gate",
+        "prompts/S0.md"
+      ]
+    },
+    {
+      "id": "SUP-C08",
+      "status": "PASS_WITH_P2",
+      "name": "Comunicação e eventos",
+      "result": "Transportes são vinculados a ferramentas realmente expostas. Git é ledger de heads/recibos e não launcher nem mecanismo de wake. Fallback faz polling agrupado de S1–S4 condicionado à disponibilidade de S0. Eventos possuem instância, ator, tentativa, epoch e sequência; consumo identifica produtor/consumidor e SHAs. A única inconsistência encontrada é R3-SUP-P2-01.",
+      "evidence": [
+        "execution-workflow.json:/transport",
+        "execution-workflow.json:/event_protocol",
+        "execution-workflow.json:/coordination",
+        "WORKFLOW.md:seções 1 e 3"
+      ]
+    },
+    {
+      "id": "SUP-C09",
+      "status": "REVIEWED_NO_BLOCKER",
+      "name": "Ownership, leases e isolamento",
+      "result": "S0 é única escritora de sf2-integrate; estado transitório vive em sf2-control, sem merge/base CI. Writers e dispatchers têm fronteiras próprias. Transferências exigem head recebido, encerramento/aceite e mecanismo suportado para cercar autoridade; substituição incrementa epoch, usa tentativa fresca, workspace isolado e CAS. Outputs do epoch revogado não integram.",
+      "evidence": [
+        "ownership.json:/coordination",
+        "ownership.json:/actor_boundaries",
+        "ownership.json:/shared_branch_policy",
+        "execution-workflow.json:/coordination",
+        "execution-workflow.json:/recovery",
+        "prompts/S0.md"
+      ]
+    },
+    {
+      "id": "SUP-C10",
+      "status": "REVIEWED_NO_BLOCKER",
+      "name": "Retomada e incerteza de sessão",
+      "result": "Silêncio, idade do checkpoint e espera de ferramenta não equivalem a CLOSED. Primeiro consultar estado real e checkpoint; mesma instância retoma pelo delta/trabalho remanescente. Enquanto não houver fencing real, não nasce writer concorrente; frentes disjuntas podem continuar. Modo assistido explicita que uma conversa encerrada depende de retomada real ou do usuário.",
+      "evidence": [
+        "execution-workflow.json:/recovery",
+        "execution-workflow.json:/transport/assisted",
+        "execution/COMMON.md",
+        "WORKFLOW.md:seção 7"
+      ]
+    },
+    {
+      "id": "SUP-C11",
+      "status": "REVIEWED_NO_BLOCKER",
+      "name": "Independência e slots liberados",
+      "result": "S1-B/S2-B e S3-A só cedem seus slots após handoff aceito e confirmação de liberação real. S1/S2/S3 assumem correções; reviewers novos não escrevem produto. Antecipação requer predecessor pronto, writer de correção aceito e reserva atualizada, sem 21º ator.",
+      "evidence": [
+        "execution-workflow.json:/dispatch/reviewer_early_start",
+        "execution-workflow.json:/recovery/reviewer_rotation",
+        "schedule.json:/slot_lifecycle",
+        "prompts/S0.md",
+        "prompts/S1.md",
+        "prompts/S2.md",
+        "prompts/S3.md"
+      ]
+    },
+    {
+      "id": "SUP-C12",
+      "status": "REVIEWED_NO_BLOCKER",
+      "name": "Término global",
+      "result": "READY_FOR_INTEGRATION não encerra a campanha. Coordenadoras mantêm obrigação de retomada; T120 incompleto exige CONTINUING_LATE com mesmo escopo. GLOBAL_RELEASE depende de aceite completo de C, provas/gates/revisões, envelope e guard de D, publicação remota conferida e resolução dos leases. Bloqueio externo só permite conclusão de turno depois de exaurir ações independentes autorizadas, preservando checkpoints e pendências.",
+      "evidence": [
+        "execution-workflow.json:/finish",
+        "execution-workflow.json:/state_transitions",
+        "WORKFLOW.md:seções 6 e 7",
+        "prompts/S0.md:seção Término",
+        "campaign.json:/gates"
+      ]
+    }
+  ],
+  "limits": [
+    "A capacidade observada continua sendo quatro slots globais incluindo root; não foi observado nem exercitado launcher de cinco sessões com pools independentes. O preset N4 permanece não admitido até suas próprias condições de admissão serem satisfeitas.",
+    "As janelas são reservas de planejamento e o alvo de 120 minutos permanece CONDITIONAL_NOT_MEASURED. Não foi demonstrada redução real de tempo, latência, custo ou número de tokens.",
+    "Nenhum produto, processo de CI, prova AM, guard de C/D, execução live, deploy ou integração externa foi executado. PLANNED/NOT_RUN permanece para o produto.",
+    "Os validadores executados são documentais. Igualdade dos espelhos e ausência de sobreposição nominal não certificam execução de backend, disponibilidade de modelo/runners, comportamento de produto ou todas as dependências semânticas.",
+    "A associação do snapshot ao SHA candidato é a identificação imutável fornecida pelo integrador. Esta revisão verificou os hashes locais pertinentes contra sha256.json; não consultou novamente GitHub para certificar branch/head remoto.",
+    "Leitura de actor packs foi focal para supervisão/alocação/autoridade; a seleção integral de contexto e as provas finais detalhadas pertencem aos outros escopos independentes e não foram presumidas aprovadas por este parecer.",
+    "Não foram lidas conclusões de outros revisores da rodada 3. Nenhum arquivo do candidato foi editado e nenhum comentário ou mensagem externa foi publicado."
+  ],
+  "independence": {
+    "authored_delta": false,
+    "read_other_round_3_reviewer_conclusions": false,
+    "modified_candidate": false,
+    "product_tests_run": false,
+    "external_messages_sent": false
+  },
+  "implementation_test_status": "NOT_RUN",
+  "reviewed_file_hashes": [
+    {
+      "path": "formal-review/round-3/PROTOCOL.md",
+      "sha256": "8d2544bf45b48cdc3f42a0c138a9e693a4bfb0c10effd202b125beccf9135b57",
+      "review_mode": "Leitura documental pertinente ao escopo; integridade SHA256 conferida."
+    },
+    {
+      "path": "WORKFLOW.md",
+      "sha256": "5be6e8fe0928160762897fb58b760f95c5949c8be6f332fb1393abec3f299a4c",
+      "review_mode": "Leitura documental pertinente ao escopo; integridade SHA256 conferida."
+    },
+    {
+      "path": "execution-workflow.json",
+      "sha256": "a85ca197fc08b66acc75e56636932988ab9eb52732ea989722fec78d4afc6ef6",
+      "review_mode": "Leitura documental pertinente ao escopo; integridade SHA256 conferida."
+    },
+    {
+      "path": "schedule.json",
+      "sha256": "dfe70767e81524bd6212690357c10715eb3cc04f749f732377ff56daef0cdc7d",
+      "review_mode": "Leitura de capacidade, reservas de coordenadoras, lifecycle e validação estrutural das 23 alocações."
+    },
+    {
+      "path": "campaign.json",
+      "sha256": "044c729f37c055bf81c1cf4832ad37ffcd96b77834e0c725b6a0da51c1a4421d",
+      "review_mode": "Delta estrutural e leitura semântica focal de execution, execution_workflow, timebox, ownership, gates e tasks WP00/WP10 pertinentes."
+    },
+    {
+      "path": "ownership.json",
+      "sha256": "3129c0156a21e319d71e8a4c4b38c12bbc8507226457af26752c4a049d5a1d32",
+      "review_mode": "Leitura focal de coordenação, transferência, branches, controle e limites dos writers afetados."
+    },
+    {
+      "path": "START.md",
+      "sha256": "2fe153c2360feec3e937ecdc2a8a9460032303d5c0fad2d61ae97853f6e4aa49",
+      "review_mode": "Leitura documental pertinente ao escopo; integridade SHA256 conferida."
+    },
+    {
+      "path": "README.md",
+      "sha256": "234fbfbc52655b215e512d08da6c2c09b4a8bc4c03358958594feb8482169285",
+      "review_mode": "Leitura documental pertinente ao escopo; integridade SHA256 conferida."
+    },
+    {
+      "path": "execution/COMMON.md",
+      "sha256": "8e5a92df01791d602b3666533038d1bea6fe70e5ce84f2b8ffec4cd071658e86",
+      "review_mode": "Regras comuns pertinentes a capacidade, propriedade, retomada e término; igualdade integral gerada conferida."
+    },
+    {
+      "path": "execution/manifest.json",
+      "sha256": "7065f3e0eb36a9118cf45c3067b6f0961752cbefdb0a95620356da32f0823065",
+      "review_mode": "Leitura documental pertinente ao escopo; integridade SHA256 conferida."
+    },
+    {
+      "path": "specs/execution-reconciliation.md",
+      "sha256": "2f259b023568cf0e0a66af60541a6ae3dc6dee5a73395dc3b12ae1c3c41dd55b",
+      "review_mode": "Delta operacional em relação ao parent."
+    },
+    {
+      "path": "tools/render_plan.py",
+      "sha256": "7df6394361619b374a2dcc3a91dd63585d6d4314cb3289e2e66d5d2606e37a42",
+      "review_mode": "Leitura documental pertinente ao escopo; integridade SHA256 conferida."
+    },
+    {
+      "path": "tools/render_fast_context.py",
+      "sha256": "151da2ea446177dfec7501cec5387415a21d12e59188575cfbaa6429a790df68",
+      "review_mode": "Leitura documental pertinente ao escopo; integridade SHA256 conferida."
+    },
+    {
+      "path": "tools/validate_execution_plan.py",
+      "sha256": "951c1fc4d6b110cf61f9983112ff0c212b29c018068f12a56864d4dc5a8b8842",
+      "review_mode": "Leitura documental pertinente ao escopo; integridade SHA256 conferida."
+    },
+    {
+      "path": "prompts/S0.md",
+      "sha256": "ce8c6f744c7bb49f8c0eff654561314dadb7d63acf7bfa51b5c1ad27e77ecd83",
+      "review_mode": "Leitura documental pertinente ao escopo; integridade SHA256 conferida."
+    },
+    {
+      "path": "prompts/S1.md",
+      "sha256": "10b40776f4f7d32784b45839a1477f9085c308b86ed3b539e4029660f5c9c5e7",
+      "review_mode": "Leitura documental pertinente ao escopo; integridade SHA256 conferida."
+    },
+    {
+      "path": "prompts/S2.md",
+      "sha256": "8622c0b542455e98e3173a321f4303d0580b631d95e02d80d7a443cc3979d406",
+      "review_mode": "Leitura documental pertinente ao escopo; integridade SHA256 conferida."
+    },
+    {
+      "path": "prompts/S3.md",
+      "sha256": "9086bef04de740bb88a71432ff5b7865c66d91f93dfe21708c9c39976f44c620",
+      "review_mode": "Leitura documental pertinente ao escopo; integridade SHA256 conferida."
+    },
+    {
+      "path": "prompts/S4.md",
+      "sha256": "fe18cc92d52f8ce6d381176241bae9d540bca8392cc05b3b0f8bb44cabe18975",
+      "review_mode": "Leitura documental pertinente ao escopo; integridade SHA256 conferida."
+    },
+    {
+      "path": "execution/actors/S0.md",
+      "sha256": "8013cbda6c9eee9668999d28e2be664896b675a986fc65974526a075118150c0",
+      "review_mode": "Leitura documental pertinente ao escopo; integridade SHA256 conferida."
+    },
+    {
+      "path": "execution/actors/S1.md",
+      "sha256": "096adbcd66af7aabf2eb83748ff836350952dab9ebb2a95d201a28c863acc04c",
+      "review_mode": "Leitura documental pertinente ao escopo; integridade SHA256 conferida."
+    },
+    {
+      "path": "execution/actors/S0-C.md",
+      "sha256": "33aca887d400ac81080c65d641990834ed4f278bd5b34eacc7fa039fd70bbb34",
+      "review_mode": "Leitura documental pertinente ao escopo; integridade SHA256 conferida."
+    },
+    {
+      "path": "execution/actors/S1-B.md",
+      "sha256": "eee0ef8f0d670082db98faa8a2cad287e703e743eb5d40daa69f248b9f2d577b",
+      "review_mode": "Leitura documental pertinente ao escopo; integridade SHA256 conferida."
+    },
+    {
+      "path": "execution/actors/S1-R1.md",
+      "sha256": "fe3b4a9c4cdc6b8b8b8b7a05e6c511f555f2a416288115d9d05a975e706c77c0",
+      "review_mode": "Leitura documental pertinente ao escopo; integridade SHA256 conferida."
+    },
+    {
+      "path": "execution/actors/S0.json",
+      "sha256": "2d759f9761217cf9c495f88cb8c66754f3c5e1c52d30061b989a3682d801eca8",
+      "review_mode": "Seleções de assignment, branch, write_authority, allocation e completion; igualdade gerada conferida."
+    },
+    {
+      "path": "execution/actors/S0-A.json",
+      "sha256": "53c96a40171ac82e999bbef9c274e4e941585b97c7ac43058c80a200e490931e",
+      "review_mode": "Alocação conferida mecanicamente contra o canônico e igualdade do artefato gerado; conteúdo de produto não reavaliado."
+    },
+    {
+      "path": "execution/actors/S0-B.json",
+      "sha256": "4441e156b5013d22ace7c5e876eabe6b094a9678fb16ab9612997f1b9fb49c0d",
+      "review_mode": "Alocação conferida mecanicamente contra o canônico e igualdade do artefato gerado; conteúdo de produto não reavaliado."
+    },
+    {
+      "path": "execution/actors/S0-C.json",
+      "sha256": "d0d5088fc86d77a155528ecdb5d63bdf13e85228d9d42809ef415cd64975fcdf",
+      "review_mode": "Seleções de assignment, branch, write_authority, allocation e completion; igualdade gerada conferida."
+    },
+    {
+      "path": "execution/actors/S1.json",
+      "sha256": "2b6791b48b22a0ccf84f61b5c077a7b47564153277002e764be24f193c9516da",
+      "review_mode": "Alocação conferida mecanicamente contra o canônico e igualdade do artefato gerado; conteúdo de produto não reavaliado."
+    },
+    {
+      "path": "execution/actors/S1-A.json",
+      "sha256": "aaf90f8b2481869db177c188760c8ba027ecbcf1d2f5e2503c55da12d0afae05",
+      "review_mode": "Alocação conferida mecanicamente contra o canônico e igualdade do artefato gerado; conteúdo de produto não reavaliado."
+    },
+    {
+      "path": "execution/actors/S1-B.json",
+      "sha256": "3f2dc699d545ffed7f642344c796562752082078aa5554e2da07efbbc6e0741f",
+      "review_mode": "Alocação conferida mecanicamente contra o canônico e igualdade do artefato gerado; conteúdo de produto não reavaliado."
+    },
+    {
+      "path": "execution/actors/S1-C.json",
+      "sha256": "84d7f9cce9f0a663f395d72564a38d0e57a278e687e06086c23596b44b55690f",
+      "review_mode": "Alocação conferida mecanicamente contra o canônico e igualdade do artefato gerado; conteúdo de produto não reavaliado."
+    },
+    {
+      "path": "execution/actors/S1-R1.json",
+      "sha256": "303e2c99dddb78bc422e77d80b9d68968fac88bb5eb6377f4f09514da992abf0",
+      "review_mode": "Alocação conferida mecanicamente contra o canônico e igualdade do artefato gerado; conteúdo de produto não reavaliado."
+    },
+    {
+      "path": "execution/actors/S2.json",
+      "sha256": "e3951055ff3e1b7145f7c23d4b19a8b096d804b93f1704e6ed21d51e899283b7",
+      "review_mode": "Seleções de assignment, branch, write_authority, allocation e completion; igualdade gerada conferida."
+    },
+    {
+      "path": "execution/actors/S2-A.json",
+      "sha256": "2f29384cf68357c24603ff85cf203c1244feeaa7c170e3a170a2c0b6ab0a1cc5",
+      "review_mode": "Alocação conferida mecanicamente contra o canônico e igualdade do artefato gerado; conteúdo de produto não reavaliado."
+    },
+    {
+      "path": "execution/actors/S2-B.json",
+      "sha256": "ce32b3047e5ebc981befc6e8aa7a7262afdf8aa6ff0c260c89b025b21d9eebe2",
+      "review_mode": "Alocação conferida mecanicamente contra o canônico e igualdade do artefato gerado; conteúdo de produto não reavaliado."
+    },
+    {
+      "path": "execution/actors/S2-C.json",
+      "sha256": "7ec77ec5440ac217d57f24857366b582c18b68cf8b21eae74da960a465c1500d",
+      "review_mode": "Alocação conferida mecanicamente contra o canônico e igualdade do artefato gerado; conteúdo de produto não reavaliado."
+    },
+    {
+      "path": "execution/actors/S2-R2.json",
+      "sha256": "8d3b42d72ca791da45bd366a415328b43ddf065f82fc16403c7bbac7099dc41b",
+      "review_mode": "Alocação conferida mecanicamente contra o canônico e igualdade do artefato gerado; conteúdo de produto não reavaliado."
+    },
+    {
+      "path": "execution/actors/S3.json",
+      "sha256": "95e93e2170ad99d384ffcd73fbc06dbbd22a270fa6786cbab84c9bc4d3c8998a",
+      "review_mode": "Alocação conferida mecanicamente contra o canônico e igualdade do artefato gerado; conteúdo de produto não reavaliado."
+    },
+    {
+      "path": "execution/actors/S3-A.json",
+      "sha256": "819eebd60e5563a3437cf3db7c972216db970f66287ba06ce348c70d8c166bdb",
+      "review_mode": "Alocação conferida mecanicamente contra o canônico e igualdade do artefato gerado; conteúdo de produto não reavaliado."
+    },
+    {
+      "path": "execution/actors/S3-B.json",
+      "sha256": "6ddf617f6d3fc6ff8e1b5830f594869cf0067c282483708f37c4e2c457d04187",
+      "review_mode": "Alocação conferida mecanicamente contra o canônico e igualdade do artefato gerado; conteúdo de produto não reavaliado."
+    },
+    {
+      "path": "execution/actors/S3-C.json",
+      "sha256": "4ab7c1be90c2e9c9b7c16ad11b66ce1c264c98ec3e748821db65aa7321b73327",
+      "review_mode": "Alocação conferida mecanicamente contra o canônico e igualdade do artefato gerado; conteúdo de produto não reavaliado."
+    },
+    {
+      "path": "execution/actors/S3-R3.json",
+      "sha256": "5c5edb170cc243dac99ca16fd798b85e519803404221b8deb4cc47408a9399da",
+      "review_mode": "Alocação conferida mecanicamente contra o canônico e igualdade do artefato gerado; conteúdo de produto não reavaliado."
+    },
+    {
+      "path": "execution/actors/S4.json",
+      "sha256": "43b3f7f5e9e54f3cf9c177f8b9f4abdb642e7fbc33d2ce209a94e22d0bdce64f",
+      "review_mode": "Seleções de assignment, branch, write_authority, allocation e completion; igualdade gerada conferida."
+    },
+    {
+      "path": "execution/actors/S4-A.json",
+      "sha256": "4348c707904f1a7379bc40805631474109f24e8c5311da03bd5b7a6016db4efe",
+      "review_mode": "Alocação conferida mecanicamente contra o canônico e igualdade do artefato gerado; conteúdo de produto não reavaliado."
+    },
+    {
+      "path": "execution/actors/S4-B.json",
+      "sha256": "e2869a044af5fc5b5c9beead46773f258679820c34911c2fb8a3b406aceaae71",
+      "review_mode": "Alocação conferida mecanicamente contra o canônico e igualdade do artefato gerado; conteúdo de produto não reavaliado."
+    },
+    {
+      "path": "execution/actors/S4-C.json",
+      "sha256": "e343808efb21fe4b2edeb716f43842d71d33ceb9c7db6ebdd5b95ae2b387fb35",
+      "review_mode": "Alocação conferida mecanicamente contra o canônico e igualdade do artefato gerado; conteúdo de produto não reavaliado."
+    }
+  ],
+  "instruction_file": {
+    "path": "/workspace/scratch/838a0195183d/sf2h-fixes/guards/materialization/candidate-0aa2405bb366/AGENTS.md",
+    "sha256": "f87f3c732f8aafec8d02501a5f11f050c07d33d350890fb12f69d8b288b830f9"
+  }
+}
+

@@ -2,7 +2,7 @@
 
 Você é **S4-C**, builder, job `sf2h-integral-20261112/S4-C`. Sua identidade já está atribuída. Não escolha outra fatia.
 
-Leia [COMMON](../COMMON.md) e [seu pacote completo](S4-C.json), no mesmo SHA de planejamento. Digest do pacote: `e343808efb21fe4b2edeb716f43842d71d33ceb9c7db6ebdd5b95ae2b387fb35`. Leia AGENTS e código real da sua fronteira. Não repita a leitura integral da campanha e dos quinze espelhos.
+Leia [COMMON](../COMMON.md) e [seu pacote completo](S4-C.json), no mesmo SHA de planejamento. Digest do pacote: `1594efa92a3037505f8e89d09bb5908af2205e5d2c25a2e4c48b30a50765f2ce`. Leia AGENTS e código real da sua fronteira. Não repita a leitura integral da campanha e dos quinze espelhos.
 
 **Tasks primárias:** WP13.T01, WP13.T02, WP13.T03, WP13.T04.
 

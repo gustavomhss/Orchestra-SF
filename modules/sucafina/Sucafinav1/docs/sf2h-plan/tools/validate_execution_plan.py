@@ -3,6 +3,16 @@ from collections import Counter
 
 
 def validate_execution(plan, require, tasks, definitions, evidence_ids):
+    workflow = plan.get('execution_workflow', {})
+    if workflow:
+        topology = workflow.get('topology', {})
+        protocol = workflow.get('event_protocol', {})
+        require(topology.get('event_idempotency_key') == ['execution_instance', 'event_id'],
+                'EVENT_IDENTITY_DRIFT', 'execution_workflow.topology.event_idempotency_key',
+                'Events are deduplicated by execution instance and event ID, never by lane or candidate SHA')
+        require(topology.get('events') == protocol.get('events') and bool(protocol.get('events')),
+                'EVENT_ROSTER_DRIFT', 'execution_workflow.topology.events',
+                'Topology and canonical event protocol must list the same events')
     timebox = plan['timebox']
     slots = timebox['slot_lifecycle']
     by_session = Counter(slot['session'] for slot in slots)

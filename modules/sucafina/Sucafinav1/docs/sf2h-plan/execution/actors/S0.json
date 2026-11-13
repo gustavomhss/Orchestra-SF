@@ -1,9 +1,9 @@
 {
   "provenance": {
     "canonical_path": "campaign.json",
-    "canonical_sha256": "044c729f37c055bf81c1cf4832ad37ffcd96b77834e0c725b6a0da51c1a4421d",
+    "canonical_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
     "compiler": "render_fast_context.py",
-    "compiler_version": "1.0.0",
+    "compiler_version": "1.0.1",
     "planning_commit": "Use the immutable planning SHA supplied at launch for every artifact; the source cannot embed its own future commit SHA.",
     "code_baseline": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
     "implementation_test_status": "NOT_RUN"
@@ -51,7 +51,7 @@
   ],
   "common": {
     "path": "execution/COMMON.md",
-    "sha256": "8e5a92df01791d602b3666533038d1bea6fe70e5ce84f2b8ffec4cd071658e86"
+    "sha256": "a518cf4b3136d5c1126d59304afedf71b5f93168314f1f2f56743dcae719c94e"
   },
   "write_authority": {
     "rule": "Only explicit primary/support/correction part and current actor/skill lease. WP ownership below is context, never a blanket actor grant. Reviewer writes only its review receipts.",
@@ -4307,6 +4307,16 @@
         "status": "NOT_RUN"
       },
       {
+        "id": "E10",
+        "title": "Decisão e execução",
+        "owners": [
+          "WP11",
+          "WP01"
+        ],
+        "coverage": "Caso persistente, alternativas, critérios, escolha, mudanças preparadas e recibos por domínio.  Cobertura C10 é comprovada com inventário completo e categoria inteiramente omitida, zero informado e escolha condicionada preservada; confirmar training = 40000 inverte a comparação210000→250000.",
+        "status": "NOT_RUN"
+      },
+      {
         "id": "E11",
         "title": "IA real e portfólio",
         "owners": [
@@ -4333,6 +4343,15 @@
           "WP09"
         ],
         "coverage": "Quatro preparações originais e decisão por Relay; admissão, versão, run e checks reais; nenhuma espera humana inventada.  Revisão usa validade material C06 sem recobrança irrelevante. Dossiê consome DocumentEvidence C14 do WP06 com evidência de candidato, confirmação e atualização/revogação. AM06: admissão Relay eproduto/perfil/skill retornam resultado verificável.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "E14",
+        "title": "Schedule e retomada",
+        "owners": [
+          "WP09"
+        ],
+        "coverage": "Schedule nativo; timezone, recorrência, pausa, falha, revogação e deduplicação de execução/sinal. AM06: retomada/recorrência/Schedule mantém limites atuais e correlação.",
         "status": "NOT_RUN"
       },
       {
@@ -9511,6 +9530,7 @@
       }
     ]
   },
+  "reference_context_rule": "Contract, route, skill and proof definitions are read dependencies. They do not transfer task ownership, write permission or proof execution. Execute only assigned primary/support/correction parts and current leases; the canonical execution_actor retains each integrated proof.",
   "resident_handoff_interfaces": [],
   "resident_gate_requirements": [
     {
@@ -11926,97 +11946,6 @@
     "WP10.T05.SUC.10"
   ],
   "completion": "All assigned primary outcomes, explicit support/correction parts, consumers and proofs must be delivered. No early DONE on a commit or a green unrelated check. Full task acceptance belongs to the owner plus all required contributors. Product proof status remains NOT_RUN until observed.",
-  "resident_packaging": {
-    "runtime_import": "@orchestra/atlas-boundary/business-memory-ports",
-    "owner_task": "WP10.T07",
-    "entry": "modules/atlas/boundary/src/business-memory-entry.ts",
-    "entry_policy": "Export-only factories/types/validators/fold canônicos. Sem scanner runtime exports, barrel adapter-io, concrete durable-store constructor, shim ou algoritmo paralelo.",
-    "generator": "modules/atlas/boundary/script/build.ts",
-    "generator_change": "Adicionar descritor real da business-memory entry e resolução exata da aresta memory-emit.ts → ./scanner.js para native-memory external somente nesse descritor. Preservar plugin canonical-atlas-build-boundary, demais descriptors, minification determinística e geração dts canônica. Não reescrever conteúdo gerado nem presumir tree-shaking.",
-    "generated": [
-      "modules/atlas/boundary/src/generated/business-memory-ports.js",
-      "modules/atlas/boundary/src/generated/business-memory-ports.d.ts"
-    ],
-    "package_change": "Adicionar exports['./business-memory-ports'] com types/default dos dois artefatos; dependência workspace @orchestra/atlas-boundary no pacote SF/CLI que importa a porta, escrita única por WP10. A dependência workspace @orchestra/rag-studio já existente na raiz é declarada no pacote SF que consome o adapter documental; nenhuma edição do RAG Studio. Para a inspeção AST em build/test, declarar devDependencies typescript:catalog: e @orchestra/script:workspace:* na boundary; root lock é atualizado pelo writer de manifest/lock existente WP10.T01/S0, sem nova dependência empresarial. O self-import native-memory usa o subpath já exportado.",
-    "ci": [
-      "bun run --cwd modules/atlas/boundary generate",
-      "bun run --cwd modules/atlas/boundary check:generated",
-      "bun run --cwd modules/atlas/boundary typecheck",
-      "bun run --cwd modules/atlas/boundary test",
-      "bun run check:spawn-imports"
-    ],
-    "not_allowed": [
-      "copiar código Atlas para SF",
-      "editar hand-written generated",
-      "alargar owners/kinds/templates para esconder incompatibilidade",
-      "import runtime @atlas/* sem resolução no workspace",
-      "store git empresarial",
-      "alterar script/spawn-allowlist.json ou script/guards/**",
-      "exportar scanner no novo business-memory-ports",
-      "exportar factories sem binding em native-bound.ts",
-      "computed imports ou alias global de scanner",
-      "externalizar scanner sem declarar o import público real",
-      "editar scanner.ts, memory-emit.ts ou native-memory.ts"
-    ],
-    "proof_ids": [
-      "AM05"
-    ],
-    "scanner_runtime_import": "@orchestra/atlas-boundary/native-memory",
-    "scanner_entry": "modules/atlas/packages/adapter-io/src/native-bound.ts",
-    "scanner_additive_value_exports": [
-      "detectAvailableScanner",
-      "runScanner",
-      "KNOWN_SCANNERS",
-      "NO_SCANNER_NAME"
-    ],
-    "scanner_additive_type_exports": [
-      "ScannerBinarySpec",
-      "ScanVerdict"
-    ],
-    "existing_generated_regenerated": [
-      "modules/atlas/boundary/src/generated/native-memory.js",
-      "modules/atlas/boundary/src/generated/native-memory.d.ts"
-    ],
-    "exact_atlas_paths": [
-      "modules/atlas/boundary/package.json",
-      "modules/atlas/boundary/script/build.ts",
-      "modules/atlas/boundary/src/business-memory-entry.ts",
-      "modules/atlas/boundary/src/generated/business-memory-ports.js",
-      "modules/atlas/boundary/src/generated/business-memory-ports.d.ts",
-      "modules/atlas/boundary/test/business-memory-ports.test.ts",
-      "modules/atlas/packages/adapter-io/src/native-bound.ts",
-      "modules/atlas/boundary/src/generated/native-memory.js",
-      "modules/atlas/boundary/src/generated/native-memory.d.ts"
-    ],
-    "actor": "S0-A",
-    "external_edges": [
-      {
-        "bundle": "business-memory-ports",
-        "importer": "modules/atlas/packages/adapter-io/src/memory-emit.ts",
-        "specifier": "./scanner.js",
-        "replacement": "@orchestra/atlas-boundary/native-memory",
-        "external": true,
-        "matching": "Compare absolute normalized importer and literal specifier; only this target descriptor may match. No global scanner alias.",
-        "preserved_semantics": "NO_SCANNER_NAME resolves from the same canonical scanner.ts reexport; no copied literal, shim, always-clean implementation or engine-source rewrite.",
-        "non_matching": "All other importer/specifier/descriptor combinations keep the existing canonical resolution; native-memory continues to bundle the original scanner.",
-        "failure": "If the exact import is absent, duplicated, changed or a spawning import remains in business-memory-ports, fail generation and HOLD ATLAS-PACKAGE."
-      }
-    ],
-    "native_bound_invariant": "Existing memory exports retain immutable AtlasBinding owner/root; additive scanner functions operate on supplied record and trusted binary spec, expose no memory store/owner/root. No raw memory factories are exported from native-bound.",
-    "ast_admission": {
-      "implementation_location": "modules/atlas/boundary/script/build.ts and modules/atlas/boundary/test/business-memory-ports.test.ts",
-      "parser": "Use TypeScript AST and the existing @orchestra/script/spawn-imports hits(file,source) parser; declare typescript catalog and @orchestra/script workspace:* as boundary devDependencies for deterministic direct resolution.",
-      "required": [
-        "Zero spawning-module hits in business-memory-ports.js and business-memory-entry.ts",
-        "No computed/dynamic imports, require, eval, Function constructor or alternate spelling used to hide a dependency",
-        "The memory-emit NO_SCANNER_NAME import resolves through a literal named import from @orchestra/atlas-boundary/native-memory",
-        "No scanner function body or scanner runtime export in business-memory-ports",
-        "native-memory retains all old bound exports, adds only the declared scanner exports/types and does not export unbound memory factories"
-      ],
-      "fail_closed": "Generator fails before publication when output violates admission; no new guard exception, custom bypass or output postprocessing."
-    },
-    "source_modules_changed": "Only native-bound.ts additive exports/comments among Atlas packages; algorithms and canonical scanner source remain unchanged."
-  },
   "ci_plan": {
     "status": "PLANNED_NOT_RUN",
     "mechanism": "GitData MCP cria snapshot S descendente do candidato C com .ci-run.json; criar branch ci-run-linux-<id> em S dispara test-ci.yml. Não criar workflow novo nem alterar validator.",
@@ -12394,5 +12323,96 @@
         "stop": "Sessões coordenadoras só encerram após handoff aceito e liberação global de S0. Nenhum bloqueio isolado encerra trabalho autorizado restante."
       }
     }
+  },
+  "resident_packaging": {
+    "runtime_import": "@orchestra/atlas-boundary/business-memory-ports",
+    "owner_task": "WP10.T07",
+    "entry": "modules/atlas/boundary/src/business-memory-entry.ts",
+    "entry_policy": "Export-only factories/types/validators/fold canônicos. Sem scanner runtime exports, barrel adapter-io, concrete durable-store constructor, shim ou algoritmo paralelo.",
+    "generator": "modules/atlas/boundary/script/build.ts",
+    "generator_change": "Adicionar descritor real da business-memory entry e resolução exata da aresta memory-emit.ts → ./scanner.js para native-memory external somente nesse descritor. Preservar plugin canonical-atlas-build-boundary, demais descriptors, minification determinística e geração dts canônica. Não reescrever conteúdo gerado nem presumir tree-shaking.",
+    "generated": [
+      "modules/atlas/boundary/src/generated/business-memory-ports.js",
+      "modules/atlas/boundary/src/generated/business-memory-ports.d.ts"
+    ],
+    "package_change": "Adicionar exports['./business-memory-ports'] com types/default dos dois artefatos; dependência workspace @orchestra/atlas-boundary no pacote SF/CLI que importa a porta, escrita única por WP10. A dependência workspace @orchestra/rag-studio já existente na raiz é declarada no pacote SF que consome o adapter documental; nenhuma edição do RAG Studio. Para a inspeção AST em build/test, declarar devDependencies typescript:catalog: e @orchestra/script:workspace:* na boundary; root lock é atualizado pelo writer de manifest/lock existente WP10.T01/S0, sem nova dependência empresarial. O self-import native-memory usa o subpath já exportado.",
+    "ci": [
+      "bun run --cwd modules/atlas/boundary generate",
+      "bun run --cwd modules/atlas/boundary check:generated",
+      "bun run --cwd modules/atlas/boundary typecheck",
+      "bun run --cwd modules/atlas/boundary test",
+      "bun run check:spawn-imports"
+    ],
+    "not_allowed": [
+      "copiar código Atlas para SF",
+      "editar hand-written generated",
+      "alargar owners/kinds/templates para esconder incompatibilidade",
+      "import runtime @atlas/* sem resolução no workspace",
+      "store git empresarial",
+      "alterar script/spawn-allowlist.json ou script/guards/**",
+      "exportar scanner no novo business-memory-ports",
+      "exportar factories sem binding em native-bound.ts",
+      "computed imports ou alias global de scanner",
+      "externalizar scanner sem declarar o import público real",
+      "editar scanner.ts, memory-emit.ts ou native-memory.ts"
+    ],
+    "proof_ids": [
+      "AM05"
+    ],
+    "scanner_runtime_import": "@orchestra/atlas-boundary/native-memory",
+    "scanner_entry": "modules/atlas/packages/adapter-io/src/native-bound.ts",
+    "scanner_additive_value_exports": [
+      "detectAvailableScanner",
+      "runScanner",
+      "KNOWN_SCANNERS",
+      "NO_SCANNER_NAME"
+    ],
+    "scanner_additive_type_exports": [
+      "ScannerBinarySpec",
+      "ScanVerdict"
+    ],
+    "existing_generated_regenerated": [
+      "modules/atlas/boundary/src/generated/native-memory.js",
+      "modules/atlas/boundary/src/generated/native-memory.d.ts"
+    ],
+    "exact_atlas_paths": [
+      "modules/atlas/boundary/package.json",
+      "modules/atlas/boundary/script/build.ts",
+      "modules/atlas/boundary/src/business-memory-entry.ts",
+      "modules/atlas/boundary/src/generated/business-memory-ports.js",
+      "modules/atlas/boundary/src/generated/business-memory-ports.d.ts",
+      "modules/atlas/boundary/test/business-memory-ports.test.ts",
+      "modules/atlas/packages/adapter-io/src/native-bound.ts",
+      "modules/atlas/boundary/src/generated/native-memory.js",
+      "modules/atlas/boundary/src/generated/native-memory.d.ts"
+    ],
+    "actor": "S0-A",
+    "external_edges": [
+      {
+        "bundle": "business-memory-ports",
+        "importer": "modules/atlas/packages/adapter-io/src/memory-emit.ts",
+        "specifier": "./scanner.js",
+        "replacement": "@orchestra/atlas-boundary/native-memory",
+        "external": true,
+        "matching": "Compare absolute normalized importer and literal specifier; only this target descriptor may match. No global scanner alias.",
+        "preserved_semantics": "NO_SCANNER_NAME resolves from the same canonical scanner.ts reexport; no copied literal, shim, always-clean implementation or engine-source rewrite.",
+        "non_matching": "All other importer/specifier/descriptor combinations keep the existing canonical resolution; native-memory continues to bundle the original scanner.",
+        "failure": "If the exact import is absent, duplicated, changed or a spawning import remains in business-memory-ports, fail generation and HOLD ATLAS-PACKAGE."
+      }
+    ],
+    "native_bound_invariant": "Existing memory exports retain immutable AtlasBinding owner/root; additive scanner functions operate on supplied record and trusted binary spec, expose no memory store/owner/root. No raw memory factories are exported from native-bound.",
+    "ast_admission": {
+      "implementation_location": "modules/atlas/boundary/script/build.ts and modules/atlas/boundary/test/business-memory-ports.test.ts",
+      "parser": "Use TypeScript AST and the existing @orchestra/script/spawn-imports hits(file,source) parser; declare typescript catalog and @orchestra/script workspace:* as boundary devDependencies for deterministic direct resolution.",
+      "required": [
+        "Zero spawning-module hits in business-memory-ports.js and business-memory-entry.ts",
+        "No computed/dynamic imports, require, eval, Function constructor or alternate spelling used to hide a dependency",
+        "The memory-emit NO_SCANNER_NAME import resolves through a literal named import from @orchestra/atlas-boundary/native-memory",
+        "No scanner function body or scanner runtime export in business-memory-ports",
+        "native-memory retains all old bound exports, adds only the declared scanner exports/types and does not export unbound memory factories"
+      ],
+      "fail_closed": "Generator fails before publication when output violates admission; no new guard exception, custom bypass or output postprocessing."
+    },
+    "source_modules_changed": "Only native-bound.ts additive exports/comments among Atlas packages; algorithms and canonical scanner source remain unchanged."
   }
 }

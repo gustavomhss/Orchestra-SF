@@ -1,0 +1,61 @@
+{
+  "initial_candidate": "10a99bf06c5578ec02dab590a680ab18766c7ff4",
+  "corrected_canonical_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "findings": [
+    {
+      "id": "R3-CTX-01",
+      "severity": "P1",
+      "change": "Close required contract definitions over selected tasks, criteria, operations, handoffs and contract references; reject unknown or missing definitions and require the resident appendix when applicable.",
+      "paths": [
+        "tools/render_fast_context.py",
+        "execution/actors/",
+        "execution/manifest.json"
+      ],
+      "status": "APPLIED_PENDING_INDEPENDENT_RECHECK"
+    },
+    {
+      "id": "R3-CTX-02",
+      "severity": "P1",
+      "change": "Include every handoff named by requires/full_runtime_requires of selected phases, with producer context; validate the complete handoff set per actor.",
+      "paths": [
+        "tools/render_fast_context.py",
+        "execution/actors/S3.json"
+      ],
+      "status": "APPLIED_PENDING_INDEPENDENT_RECHECK"
+    },
+    {
+      "id": "R3-CTX-03",
+      "severity": "P2",
+      "change": "Resolve selected MCP routes to skill/profile definitions and integrated proof/evidence context; explicit reference-only policy preserves task, lease and proof execution ownership.",
+      "paths": [
+        "tools/render_fast_context.py",
+        "execution/actors/S2-A.json"
+      ],
+      "status": "APPLIED_PENDING_INDEPENDENT_RECHECK"
+    },
+    {
+      "id": "R3-CTX-04",
+      "severity": "P2",
+      "change": "Point baseline measurement to the preserved analysis/context-baseline.json receipt and recompute coordinator startup bytes from the final enumerated files.",
+      "paths": [
+        "campaign.json",
+        "execution-workflow.json",
+        "execution/context-measurement.json"
+      ],
+      "status": "APPLIED_PENDING_INDEPENDENT_RECHECK"
+    },
+    {
+      "id": "R3-SUP-P2-01",
+      "severity": "P2",
+      "change": "Use execution_instance/event_id as the one event deduplication key, align topology event names with the canonical protocol and reject future drift.",
+      "paths": [
+        "campaign.json",
+        "tools/validate_execution_plan.py",
+        "execution-workflow.json"
+      ],
+      "status": "APPLIED_PENDING_INDEPENDENT_RECHECK"
+    }
+  ],
+  "controls": "correction-controls.json",
+  "implementation_test_status": "NOT_RUN"
+}

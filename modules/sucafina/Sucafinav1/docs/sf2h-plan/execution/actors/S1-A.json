@@ -1,9 +1,9 @@
 {
   "provenance": {
     "canonical_path": "campaign.json",
-    "canonical_sha256": "044c729f37c055bf81c1cf4832ad37ffcd96b77834e0c725b6a0da51c1a4421d",
+    "canonical_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
     "compiler": "render_fast_context.py",
-    "compiler_version": "1.0.0",
+    "compiler_version": "1.0.1",
     "planning_commit": "Use the immutable planning SHA supplied at launch for every artifact; the source cannot embed its own future commit SHA.",
     "code_baseline": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
     "implementation_test_status": "NOT_RUN"
@@ -31,7 +31,7 @@
   ],
   "common": {
     "path": "execution/COMMON.md",
-    "sha256": "8e5a92df01791d602b3666533038d1bea6fe70e5ce84f2b8ffec4cd071658e86"
+    "sha256": "a518cf4b3136d5c1126d59304afedf71b5f93168314f1f2f56743dcae719c94e"
   },
   "write_authority": {
     "rule": "Only explicit primary/support/correction part and current actor/skill lease. WP ownership below is context, never a blanket actor grant. Reviewer writes only its review receipts.",
@@ -1073,6 +1073,41 @@
       "proof": "Revisão velha não sobrescreve; entrada local permanece; simulação não grava."
     },
     {
+      "id": "C04",
+      "name": "Importação com impacto",
+      "definition_owner": "WP00",
+      "producers": [
+        "WP02",
+        "WP03",
+        "WP06"
+      ],
+      "consumers": [
+        "WP01",
+        "WP10",
+        "WP02",
+        "WP03",
+        "WP06"
+      ],
+      "content": "WP02/WP03 produzem adapters de comando; WP06 produz parse, prévia, manifesto, base identity, reprévia/Apply e recibo.",
+      "proof": "O mesmo comando de domínio governa preview e Apply; escrita é atômica e revalida contexto."
+    },
+    {
+      "id": "C05",
+      "name": "Revisão preservada",
+      "definition_owner": "WP00",
+      "producers": [
+        "WP07"
+      ],
+      "consumers": [
+        "WP01",
+        "WP08",
+        "WP09",
+        "WP10"
+      ],
+      "content": "Seleção, seções, conteúdo preservado, competência, contagens e captura imutável autorizada de comentários C06 com referência/versão; conversa corrente é separada. Revisão anterior preservada.",
+      "proof": "Origem alterada não muda a revisão; acesso revalidado na recuperação/export."
+    },
+    {
       "id": "C06",
       "name": "Colaboração e ação canônica",
       "definition_owner": "WP00",
@@ -1108,6 +1143,85 @@
         "ConfirmationCommand distingue observedSourceVersion de expectedStorageVersion. A primeira permanece a versão efetivamente apresentada (por exemplo, 7); a segunda é a revisão corrente da unidade de armazenamento protegida que será escrita, obtida/revalidada pelo host após ler o escopo atual. Se essa unidade está na revisão 8 e a diferença é comprovadamente irrelevante, submeter a confirmação de escopo observado 7 com expectedStorageVersion = 8, nunca reaplicar expectedVersion = 7 nem desativar CAS/lock C03/C08. A igualdade dos fingerprints permite conservar a revisão humana; não dispensa o controle de concorrência da gravação. Se o CAS falhar, reler a projeção autorizada, conferir novamente encarnação/acesso/fingerprint e usar a nova revisão de armazenamento numa tentativa idempotente; alteração material retorna conflito. Versões da fonte e da unidade de armazenamento são identificadores distintos e só coincidem no exemplo; múltiplas fontes mantêm suas próprias versões, sem transação global presumida."
       ],
       "proof": "E09/E13 executam CONFIRM-SCOPE: janeiro confirmado em v7; fevereiro isolado em v8 preserva valid e zero nova cobrança; janeiro ou dependência pertinente alterados tornam stale e uma pendência; concorrência material recusa; revogação impede uso e conteúdo restrito; substituição de encarnação não herda confirmação. AuditRef mantém a versão v7 e autoria em todos os casos."
+    },
+    {
+      "id": "C07",
+      "name": "Rotina e resultado",
+      "definition_owner": "WP00",
+      "producers": [
+        "WP09",
+        "WP08"
+      ],
+      "consumers": [
+        "WP01",
+        "WP07",
+        "WP08",
+        "WP10",
+        "WP04",
+        "WP09",
+        "WP12",
+        "WP14"
+      ],
+      "content": "Receita publicada/pinada, entrada autorizada, estado de admissão, run real, versão, output revisável, pendências e correlação. Principal de execução explicitamente identificado, autorização atual em cada fronteira; resultado factual mínimo independente de narrativa opcional.",
+      "proof": "Resultado pertence ao run/entrada reais, revalida acesso e nunca representa aprovação de negócio."
+    },
+    {
+      "id": "C08",
+      "name": "BusinessPorts e composição nativa",
+      "definition_owner": "WP00",
+      "producers": [
+        "WP10",
+        "WP04",
+        "WP05",
+        "WP07"
+      ],
+      "consumers": [
+        "WP00",
+        "WP01",
+        "WP02",
+        "WP03",
+        "WP04",
+        "WP05",
+        "WP06",
+        "WP07",
+        "WP08",
+        "WP09",
+        "WP10",
+        "WP11",
+        "WP12",
+        "WP13",
+        "WP14"
+      ],
+      "content": [
+        "bindingIdentity: installationID, hostID, projectID, locationID e policyVersion validados pelo host; nenhum endpoint ou credencial escolhido por texto do modelo",
+        "actorAuthority: principal empresarial autenticado + capabilities verificadas por requisição; selecionar destinatário não concede acesso às fontes",
+        "analysis.create/read/cancel: job com caseID, caseVersion, contextFingerprint, recipeVersion, nativeSessionID e outputSchemaVersion",
+        "routines.catalog/prepareAdmission/readAdmission/readRun: documentID + publishedVersion + parâmetros + write scope + planRevisionID/authorizationID/armRef/childSessionID quando disponíveis",
+        "schedules.create/update/pause/list/readRun: binding de dono/projeto + política existente, sem tratar Schedule como aprovação automática de workflow",
+        "result.write: retorno autenticado, escopado ao job/caso/versão; sem comando genérico de alteração de negócio",
+        "directory.lookup: somente IDs autorizados do diretório existente; sem inferência de identidade por nome",
+        "unavailable e stale são resultados explícitos, jamais dados sintéticos de sucesso",
+        "O integrador monta a contribuição de produto no host já autenticado, sem abrir listener, trocar store ou alterar deployment Azure.",
+        "Adaptador recebe as Services já compostas; não cria um runtime paralelo com credenciais globais nem passa tokens para Sucafina/browser.",
+        "IA de análise pode usar uma sessão dedicada e escopada via SessionV2.Service.create + generate (tool-less) ou prompt com ferramentas estritamente delimitadas; a saída é validada no schema do caso. Isso é análise, não execução de workflow.",
+        "Fluxos Relay usam a sessão Maestro nativa: catálogo publicado, preparação da revisão, review e aprovação, arm/dispatch e leitura do resultado. LLM.generateObject é reutilizável para conteúdo tipado, mas não substitui admissão de workflow.",
+        "Se for usada SessionV2.generate, não reutilizar histórico de outro usuário/caso; cada sessão tem proveniência e escopo verificados. O retorno textual é schema-decoded antes de aceitar operações.",
+        "Routines C08 registra referencia ao workflow interno (arm/binding/session); não inventa external runID nem usa ledger de outra espécie.",
+        "A factory recebe BusinessPorts como dependência explícita; Application/ModuleServices preservam capacidade ausente como erro de feature. Browser nunca recebe credenciais do host.",
+        "Um único adaptador product-handler coordena leitura multi-surface, serviço de casos e propostas de comandos. Comandos finais voltam aos execute/handlers próprios, com actor e CAS revalidados.",
+        "A frente cloud e o integrador têm handoff de patch sobre SHA combinado para host/factory compartilhados: um escreve, o outro consome. Não sobrescrever a frente cloud com um arquivo inteiro baseado em outra revisão.",
+        "Usar Host.Contribution de forma aditiva, respeitando serviços reservados, e Tools.Service no Location correto para ferramentas de produto. Não chamar o registro interno nem criar engine paralelo.",
+        "As capacidades de ferramentas são restringidas efetivamente por Permission/Agent e pelas portas de domínio. advertisedNames é metadata, não autorização. SessionV2.generate é tool-less; a prova de ferramentas restritas usa SessionV2.prompt com a configuração autorizada.",
+        "Persistir namespace protegido para C09–C14, escolhas, confirmações, proveniência, vínculos e recibos locais. Import JSON só substitui os dados de negócio permitidos: preserva metadados canônicos, rejeita os fornecidos no arquivo e invalida referências a encarnações substituídas.",
+        "C15 é a fonte única dos cinco perfis/dezoito skills e C16 define o único binding de execução SF. AgentV2 e SkillV2 são registrados por contribuição de Location, sem substituir serviços reservados, reutilizar IDs de engenharia ou alterar alçadas.",
+        "Tools.Service registra aliases sf_* que recebem Tool.Context nativo e invocam sucafina-workbench em par InMemoryTransport privado, fixado por objeto/generation. McpProvided não transporta identidade SF e NÃO é o caminho deste servidor. UI, agente e MCP convergem em dispatchSfCapability e na mesma porta final.",
+        "Application.authenticate(request,{surface, roleMap(snapshot, surface)}) é reexecutado no destino por request lease só no host; IDs C16 não substituem autenticação. Lease vencida, restart ou principal divergente exige nova ligação autenticada. Rotinas usam somente autoridade revalidável já admitida em C07.",
+        "Estado C09–C17 usa Snapshot.data.__sfProductV1 no surface dashboard existente, protegido por WP10.T01; não é um quarto Surface nem papel dashboard que concede acesso transversal. Domínios continuam pelas portas próprias fora da transação central; cada seção conserva revisão.",
+        "Provider remove __sfProductV1 de projeções genéricas, exports JSON, previews e auditoria visível. Import rejeita metadados SF fornecidos e preserva namespace confiável; substituição atualiza encarnações. Backup operacional conserva política existente e não vira export de negócio.",
+        "C17 compõe DurableMemory síncrono sobre snapshot isolado de Persistence.transaction async. append prepara evento; nenhum sucesso precede commit durável. Documentos/ACLs de outros domínios são coletados antes e revalidados no egress; sem transações aninhadas.",
+        "Empacotamento Atlas usa @orchestra/atlas-boundary/business-memory-ports gerado pelo build canônico com entry de reexports. Sem import runtime @atlas/* não resolvida, cópia manual de engines ou store git para dados SF."
+      ],
+      "proof": "GNATIVE T+20: sf_finance registrado, sf-explicar-forecast carregada por SessionV2.skill com digest observado, caso C09 real, sf_forecast_compare pelo MCP privado ao adapter WP03 real e resultado/proveniência no produto. Todos os 8 packs e C17 completos no G4/aceite. Implementação NOT_RUN."
     },
     {
       "id": "C09",
@@ -1304,6 +1418,388 @@
         "RAG contentHash é BLAKE3 do texto, distinto de blobDigest/textDigest SHA-256 de C17. Conservar algoritmo e valor em campos separados; nenhuma comparação de digests de algoritmos diferentes prova identidade. Resolver confere documento, revisão, Source.contentHash, offsets e texto do chunk autorizado antes de produzir EvidenceResolution."
       ],
       "proof": "Contrato validado por consumidor real e pacote de prova associado; fixtures somente aceleram desenvolvimento.  A prova do dossiê atravessa WP06→C14→WP09: campo extraído não é fato confirmado; confirmação reaproveita a mesma origem/versão, e revogação ou atualização da fonte impede reutilização silenciosa."
+    },
+    {
+      "id": "C15",
+      "name": "Perfis residentes, skills executadas e contribuições consumidas",
+      "definition_owner": "WP00",
+      "producers": [
+        "WP12",
+        "WP10"
+      ],
+      "consumers": [
+        "WP01",
+        "WP06",
+        "WP07",
+        "WP08",
+        "WP09",
+        "WP10",
+        "WP11",
+        "WP12",
+        "WP13",
+        "WP14"
+      ],
+      "content": [
+        "Manifests canônicos resident_ai e runtime resident.json declaram exatamente 5 perfis, 18 skills e 8 packs. Catálogo distribuído completo difere do subconjunto carregado por execução.",
+        "WP12.T01 escreve perfis/schema/manifests e native-probe (sf_finance+sf-explicar-forecast); WP12.T02 completa 17 fontes e resident.json. Leases por ID conservam escritor único e transferência explícita. São skills futuras do runtime de produto, não desta sessão.",
+        "Cada perfil declara missão, versão, skills/operations, outputs, budget, steps, delegation, resume, modelClass e autoridade. IDs AgentV2 sf_* são próprios, não aliases de seats; registro aditivo após configuração não assume permissões Maestro/Lucy/Atlas.",
+        "SkillV2.DirectorySource reservado carrega fontes embarcadas. loadSfSkill verifica manifest pin, path real contido, SHA-256 dos bytes e conteúdo parseado. SessionV2.skill(resume:false) carrega; SessionV2.messages/context prova a mensagem exata antes de prompt. Hash/versão/arquivo divergente impede job.",
+        "Digests reais são obrigatórios no build e recibos. No plano, required-at-build é explícito e SHA não é inventado. Probe/final gate rejeitam missing, placeholder e hash sem bytes.",
+        "Cada skill produz tipo declarado persistido C11/C09 e consumido após reload. Chat, catálogo, arquivo e trace sem consumerRef não encerram aceite.",
+        "Revisor usa execução própria com fontes atuais e alvo; sem autoridade adicional, mutação de domínio ou aprovação. Orçamento é máximo, não obrigação de convocar todos.",
+        "operation_call_routes declara uma rota perfil+skill carregada para cada operação MCP. A validação rejeita ferramentas sem concessão efetiva em ao menos uma skill; catálogo e chamada direta não abrem exceção à autoridade C16."
+      ],
+      "type_shapes": {
+        "ResidentProfile": "{id,version,mission,allowedSkills,allowedOperations,outputTypes,contextBudgetTokens,maxSteps,maxDelegations,modelClass,resumePolicy,sourcePath,sourceDigest}",
+        "SkillManifest": "{id,version,sourcePath,sourceDigest,instructionsDigest,inputSchemaRef,outputSchemaRefs,allowedProfiles,allowedOperations,workflow,limits,positiveAcceptance,negativeAcceptance}",
+        "SkillLoadReceipt": "{runId,nativeSessionId,profileId,profileVersion,profileDigest,skillId,skillVersion,sourceDigest,instructionsDigest,loadedMessageId,loadedAt,manifestDigest}",
+        "ContributionEnvelope": "{id,caseRef:{id,version,incarnation},kind,schemaVersion,state,payload,evidenceRefs,runProvenance,accessRevision,createdAt,outputDigest}",
+        "ConsumptionReceipt": "{outputRef,outputDigest,consumerTask,consumerRef,observedAction,observedAt,authorizedPrincipalRef,caseVersion}"
+      },
+      "exports": [
+        {
+          "owner_task": "WP00.T02",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/resident-ai.ts",
+          "exports": [
+            "ResidentProfile",
+            "SkillManifest",
+            "SkillLoadReceipt",
+            "ContributionEnvelope",
+            "ConsumptionReceipt"
+          ]
+        },
+        {
+          "owner_task": "WP12.T01",
+          "path": "modules/sucafina/Sucafinav1/product/ai/profiles/",
+          "exports": [
+            "residentProfiles"
+          ]
+        },
+        {
+          "owner_task": "WP12.T02",
+          "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+          "exports": [
+            "residentAiManifest"
+          ]
+        },
+        {
+          "owner_task": "WP10.T06",
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts",
+          "exports": [
+            "registerSfResidentAgents"
+          ]
+        },
+        {
+          "owner_task": "WP10.T06",
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+          "exports": [
+            "loadSfSkill"
+          ]
+        }
+      ],
+      "proof": "AM01/AM03 e matriz 5/18. Remover skill, trocar bytes sem versão, executar crítico na mesma sessão ou não consumir output após reload impede PASS."
+    },
+    {
+      "id": "C16",
+      "name": "Chamada SF confiável e servidor MCP privado com paridade",
+      "definition_owner": "WP00",
+      "producers": [
+        "WP10",
+        "WP12",
+        "WP02",
+        "WP03",
+        "WP04",
+        "WP05",
+        "WP06",
+        "WP07",
+        "WP08",
+        "WP09",
+        "WP11",
+        "WP13",
+        "WP14"
+      ],
+      "consumers": [
+        "WP00",
+        "WP01",
+        "WP09",
+        "WP10",
+        "WP12"
+      ],
+      "content": [
+        "Um servidor lógico sucafina-workbench versão1, com instâncias de transporte por chamada. SDK Server/Client/InMemoryTransport existentes; nenhum listener, OAuth ou endpoint empresarial novo.",
+        "Host.Contribution Location adiciona Tools.Service sf_* e C15. Instalação compõe explicitamente apps/cli/src/sucafina-product/contribution.ts sem import estático do cliente no grafo global.",
+        "Ingress SF autenticado cria SessionV2 dedicada, lê C09 real, fixa perfil/skills/manifest e guarda request lease privada por installation/project/location/session/run. BindingRegistry não exporta construtor de authority ao modelo. Perfil não é principal empresarial.",
+        "Tool.Context nativo traz sessionID, agent, messageID, toolCallID, model. Wrapper localiza binding exato e confere agent/profile, estado/versão, PermissionV2, allowlist C15, caso e ACL atual. Sem binding ou com sessão/usuário/caso trocados: denied.",
+        "Cada descoberta/chamada cria par privado capturando CallLease host-only imutável com principal handle, binding, operation, inputDigest, callID, expiry, generation. Actor/role/session/owner/provider/endpoint nunca seguem nos argumentos. Handlers ListTools/CallTool fecham sobre lease; controle extra falha schema.",
+        "Initialize usa client/server da factory pinada; versão/manifestDigest/object identity/generation correspondem. Nome declarado pelo servidor não autentica. Nova geração cancela leases e conexões antigas. CallLease de uso único limita name/inputDigest.",
+        "Não usar McpProvided nem Mcp.connect(name). Mcp.config() lê configuração efetiva sem conectar; nome sucafina-workbench ou colisão normalizada causa provider-conflict. Sem fallback a provider configurado. IDs mcp_* externos permanecem negados aos perfis SF.",
+        "ListTools só anuncia operações implementadas e concedidas; manifesto planned não é catálogo executável. CallTool revalida independentemente e chama dispatchSfCapability, o mesmo handler da UI, com authority fora dos argumentos.",
+        "Destino repete Application.authenticate com Request real retido só no host e roleMap/access corrente. Não reconstruir Request/credencial a partir de actorId. Domínio conserva autorização final, CAS/locks e C03/C12; nenhum cálculo paralelo.",
+        "Lease máxima de 5 min termina ao cancelar/finalizar, mudar caso/profile/manifest ou revogar. Operação longa revalida egress. Restart não reidrata credencial/grant: retoma com autenticação nova. C07 usa autoridade revalidável da admissão nativa, nunca perfil como usuário.",
+        "Egress revalida escopo/fontes antes de modelo, UI, memória ou arquivo. Stale/denied não vaza conteúdo. Recibo registra operation, handler/export, input/result digests, versões, principal opaco, run/call/generation sem credenciais.",
+        "sf_routine_run aceita só admissão real vigente. Nenhum pack expõe approve/apply genérico, alteração de papel ou envio externo.",
+        "Chamadas diretas de prova atravessam o mesmo wrapper/binding com SkillLoadReceipt válido; não há ingresso sem skill. Para rotinas, HostBoundEntryMode é fixado pelo host: interactive pode preparar e executar somente com admissão C07; routine-result bloqueia prepare/run e só consulta o run autorizado, impedindo recursão."
+      ],
+      "type_shapes": {
+        "TrustedExecutionBinding": "{installationId,hostId,projectId,locationId,nativeSessionId,runId,caseId,caseVersion,caseIncarnation,principalRef,profileId,profileVersion,manifestDigest,skillReceipts,policyVersion,accessRevision,providerGeneration,expiresAt}",
+        "TrustedCallLease": "objeto opaco privado validado por identidade no BindingRegistry; bindingRef/operation/inputDigest/callId/issuedAt/expiresAt/used; nunca serializado ao modelo/browser ou aceito em args",
+        "CapabilityDescriptor": "{id, pack, mode, inputSchema, outputSchema, handler, handlerExport, producerTask, grantProfiles, requiredAuthority}; handler recebe trusted context separado",
+        "CapabilityResult": "{status:ok|needs-input|stale|denied|unavailable|provider-conflict|failed, outputRef?, result?, receipt}; sem resultado fictício"
+      },
+      "execution_sequence": [
+        "1 Request SF autenticado -> authority existente -> C09 case/version/incarnation -> perfil e SkillLoadReceipt válidos -> sessão nova + BindingRegistry.",
+        "2 Tool.Context -> binding exato -> permissões/agent/lease atuais -> schema args/inputDigest -> CallLease.",
+        "3 Par Client/Server privado -> initialize generation pinada -> listTools autorizado; homônimo é recusado.",
+        "4 callTool(name, args) -> closure revalida lease/name/digest/expiry -> dispatchSfCapability -> mesma porta C01–C14 da UI.",
+        "5 Destino autentica com roleMap/access do snapshot e executa read/simulate/prepare/admitted routine.",
+        "6 Egress revalida, valida schema, persiste C11/C09 e trace, entrega output; fecha transporte e consome lease."
+      ],
+      "exports": [
+        {
+          "owner_task": "WP00.T02",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+          "exports": [
+            "CapabilityDescriptor",
+            "TrustedExecutionBinding",
+            "CapabilityResult"
+          ]
+        },
+        {
+          "owner_task": "WP10.T06",
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+          "exports": [
+            "createSfExecutionBindingRegistry",
+            "bindSfExecution"
+          ]
+        },
+        {
+          "owner_task": "WP10.T06",
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+          "exports": [
+            "createSfBusinessMcpBridge"
+          ]
+        },
+        {
+          "owner_task": "WP10.T06",
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+          "exports": [
+            "dispatchSfCapability"
+          ]
+        },
+        {
+          "owner_task": "WP10.T06",
+          "path": "apps/cli/src/sucafina-product/contribution.ts",
+          "exports": [
+            "createSfProductContribution"
+          ]
+        }
+      ],
+      "proof": "AM02 cobre as 39 operações/8 packs com resultado/versão iguais UI/native/MCP. AM03 força operação proibida, dois usuários/perfis iguais, duas sessões/casos, revogação após discovery, homônimo, generation stale e lease forjada/expirada."
+    },
+    {
+      "id": "C17",
+      "name": "BusinessEvidenceRef, BusinessContextService e memória Atlas protegida",
+      "definition_owner": "WP00",
+      "producers": [
+        "WP06",
+        "WP10",
+        "WP14"
+      ],
+      "consumers": [
+        "WP01",
+        "WP06",
+        "WP07",
+        "WP09",
+        "WP10",
+        "WP11",
+        "WP12",
+        "WP14"
+      ],
+      "content": [
+        "BusinessEvidenceRef é uma união empresarial versionada, distinta de StructRef. A forma string sf-evidence:v1:<refId>:<digest> é a única Ref Atlas usada; resolve exclusivamente no catálogo privado SF, nunca como arquivo/código/URL.",
+        "WP06 resolve documento/revisão/trecho; WP14 converte projeções C09/C13 em templates Atlas puros; WP10.T07 faz BusinessContextService, autorização, scanner, persistência e composição real createMemoryRead/createMemoryEmit. Nenhum desses owners edita engine Atlas.",
+        "Resolver cruza installation/project do binding, ID/incarnation/version/digest/fields/period da referência e fontes C01/C02/C09/C12/C14. Request muda apenas seletores; principal/policy/source resolver são injetados. Resultado distingue fresh/historical/stale/revoked/replaced/missing/invalid/unavailable, sem revelar se existe alvo alheio.",
+        "Ledger C09 é oficial. Caso/resultado aceito gera sourceEventId e item pending de projeção. Atlas é derivado: scanner/commit falho mantém evento oficial e projeção pending/refused; recuperação não inventa memória pronta.",
+        "Owners Atlas são namespaces de negócio deriváveis pelo host: sf-case-v1:<sha256(installationId, projectId, caseId, caseIncarnation)> para task; sf-policy-v1:<sha256(installationId, projectId, profileId, policyVersion)> para project. MemberId é string no engine, e essa chave é partição, não identidade de engenharia nem autorização. Principal escritor fica separado no envelope SF.",
+        "Somente task/project. taskId representa trabalho real: sf-work:<caseId>:<analysisRunId|decisionEventId>. attempted=alternativas/ações efetivamente consideradas; failedWith=falhas/lacunas verificadas; stoppedAt=estado real; lesson=razão/limites de decisão em linhas curtas; ref=ponteiro SF ao bundle de evidências. Não adicionar keys ao template.",
+        "project usa exatamente rule:string, scope:string, frecency:number finito e grounding?:string. Rule vem só de procedimento/política explicitamente revisados, scope é perfil/operação/período de aplicação e frecency é contagem determinística de citações válidas; sem preferências ocultas. pr/logbook são recusados antes de Atlas.",
+        "BusinessMemoryEnvelope externo ao MemoryRecord conserva schemaVersion, bindingScope, owner, sourceEventId, caseRef, complete evidenceRefs/field dependencies, sourceVersions/incarnations, projectionDigest, writerPrincipalRef, accessRevision e scannerReceipt. Metadados extras não entram no template Atlas.",
+        "Antes de recall, BCS resolve casos e cada dependência no escopo atual; referência inacessível/revogada/substituída suprime o registro inteiro, inclusive resumo/título/contagens. Versão histórica só é servida como historical se a fonte histórica continua autorizada, com diferenças atuais explícitas. Busca não adivinha owner; args owner/kind/rawAtlasQuery são recusados.",
+        "BCS passa a createMemoryRead somente facade de store já filtrado e owner derivado. recall recebe {kind:'task', owner:derivedOwner, taskId?} por owner autorizado. O default actor do Atlas não é presumido como filtro. projectSlab fornece procedimentos autorizados; não fabricar Awareness/StructRefs nem usar headers de engenharia.",
+        "Persistência reside apenas no namespace protegido __sfProductV1.atlas de Snapshot dashboard existente. Todas as entradas passam por port WP10; namespace nunca vai a JSON business exports, logs/git, browser snapshots, prompts sem ACL ou mensagens de erro. Auditoria pública usa ids/digests/estado, não conteúdo sensível.",
+        "DurableMemory é síncrono e snapshot-local; façade não possui I/O async. read folda log já hidratado/validado; append só acrescenta evento canônico ao snapshot em staging. Um await Persistence.transaction externo é a única fronteira de durabilidade; só depois pode existir MemoryWriteReceipt committed.",
+        "Transação serializa leitura da partição, cap/admissão/scanner, append, índice de refs, chave idempotente e outbox acknowledgment. callback ocorre uma vez, sem retry cego, e sem transações aninhadas. Concorrência de writers não perde evento nem admite sobre-cap; falha/cancelamento/commit=false deixa zero evento novo após restart.",
+        "createMemoryEmit/createMemoryRead, validators/fold e tipos vêm de @orchestra/atlas-boundary/business-memory-ports por reexports diretos dos arquivos canônicos; essa entry não exporta scanner nem importa o barrel adapter-io. O factory memory-emit tem uma dependência runtime NO_SCANNER_NAME → scanner.js: somente o descritor business-memory-ports resolve essa aresta exata como external @orchestra/atlas-boundary/native-memory. A constante continua vindo do scanner canônico; não depender de tree-shaking, copiar literal, criar shim ou alterar engine.",
+        "Scanner obrigatório e nomeado é importado por SF atlas-scanner.ts exclusivamente de @orchestra/atlas-boundary/native-memory. native-bound.ts recebe apenas reexports aditivos de detectAvailableScanner/runScanner/KNOWN_SCANNERS/NO_SCANNER_NAME e tipos ScannerBinarySpec/ScanVerdict de ./scanner.js; createNativeMemory e seus exports bound preservam identidade, assinatura e comportamento. Essa entry não passa a exportar factories de memória sem binding. O host fixa spec/path/version confiáveis; modelo não fornece comandos/argv/timeout. clean=>false, hit=>true, could-not-run=>throw; ausência/timeout/erro não admite append.",
+        "Cache key inclui installation/project/principal + accessRevision/policyVersion + scope/owner + sourceVersions/incarnations + boundary/schema/manifest/skill versions. Toda chamada revalida revisões; evento de revogação invalida índice/cache/leases, e fonte inacessível não permanece em prompt, arquivo ou link.",
+        "Busca documental mantém backend RAG/documental e memória usa Atlas. Paridade requer o consumidor real, instrumentação do módulo/bundle, commit/read após restart e recusa em dois atores usando mesmo perfil.",
+        "O gerador canônico produz os dois pares JS/d.ts. O novo bundle tem zero imports/exports-from/require/dynamic-import de módulos de spawn, zero computed imports e nenhuma implementação de scanner; a ligação literal à native-memory é verificável. Scanner continua no site generated/native-memory.js já admitido pelo guard, sem ampliar allowlist ou permissões. Native-bound mantém o isolamento de owner/root de suas APIs de memória.",
+        "ATLAS-PACKAGE exige geração, check:generated, typecheck, inspeção AST do bundle e bun run check:spawn-imports na raiz do candidato, com guard e allowlist inalterados. O nome lógico check:spawns não autoriza inventar script; o comando real é check:spawn-imports. Ausência de executor/prova mantém NOT_RUN/HOLD; nenhum teste de produto foi executado nesta correção do plano.",
+        "Nove caminhos Atlas exatos pertencem a WP10.T07/S0-A: seis já previstos e native-bound.ts + generated/native-memory.js/.d.ts. Gerados nunca são editados manualmente; alterações de guard/allowlist, scanner.ts, memory-emit.ts e native-memory.ts são proibidas."
+      ],
+      "type_shapes": {
+        "BusinessEvidenceRef": "{schema:'sf-evidence-v1',refId,installationId,projectId,kind:'record'|'document'|'calculation'|'receipt'|'case-event'|'policy',target:variant,refDigest,evidenceLevel:'observed'|'claim'|'assumption'|'proposal'|'decision'}",
+        "record_target": "{surface,recordType,recordId,incarnation,version,fields:string[],period?,projectionDigest}",
+        "document_target": "{documentId,incarnation,revision,blobDigest:{algorithm:'sha256',value},segment:{start,end,unit:'utf16',textDigest:{algorithm:'sha256',value}},ragSourceId?,ragRevisionId?,ragSourceHash?:{algorithm:'blake3',value},fieldCandidateId?,confirmationVersion?}",
+        "calculation_target": "{calculationId,runId,engineVersion,inputDigest,resultDigest,sourceRefs:BusinessEvidenceRef[],period,currency}",
+        "receipt_target": "{surface,receiptId,idempotencyKey,targetIncarnation,commandDigest,version}",
+        "case_event_target": "{caseId,caseIncarnation,caseVersion,eventId,outputDigest,evidenceRefs:BusinessEvidenceRef[]}",
+        "policy_target": "{packageId,version,sourceDigest,ruleId,reviewRef,scope}",
+        "BusinessEvidenceResolution": "{state:'fresh'|'historical'|'stale'|'revoked'|'replaced'|'missing'|'invalid'|'unavailable', ref, currentRef?, authorizedProjection?, differences?, accessRevision, checkedAt}; denied existence redacted",
+        "BusinessContextService": "resolve(ref, trustedCall); context(request, trustedCall); recall(request, trustedCall); emitFromLedger(sourceEventRef, trustedCall); outputs tagged and currently authorized",
+        "BusinessMemoryEnvelope": "{schemaVersion, eventId, owner, kind, caseRef?, sourceEventId, evidenceRefs, dependencies, sourceVersions, sourceIncarnations, projectionDigest, writerPrincipalRef, accessRevision, scannerReceipt, createdAt}; sealed outside MemoryEntry",
+        "MemoryWriteReceipt": "{status:'committed'|'already-committed'|'refused'|'conflict'|'unavailable',sourceEventId,eventId?,recordDigest?,committedRevision?,scanner:{name,version,status},reason?}"
+      },
+      "allowed_template_mappings": [
+        {
+          "source": "C09 accepted analysis/choice/reconsideration event",
+          "kind": "task",
+          "owner": "sf-case-v1:<hash of trusted installation/project/case/incarnation>",
+          "fields": {
+            "taskId": "real case work/event identifier",
+            "attempted": "string[] of considered alternatives/actions",
+            "failedWith": "string[] of factual failures/gaps",
+            "stoppedAt": "real lifecycle state",
+            "lesson": "source-linked decision rationale and bounds",
+            "ref": "sf-evidence:v1:<bundleRefId>:<digest>"
+          },
+          "forbidden": [
+            "businessId",
+            "caseId",
+            "actor",
+            "metadata",
+            "prId",
+            "kind inside entry"
+          ],
+          "validator": "memoryKindOf(entry)==task && validate('task', entry).valid"
+        },
+        {
+          "source": "explicit reviewed vocabulary/procedure policy",
+          "kind": "project",
+          "owner": "sf-policy-v1:<hash of trusted installation/project/profile/policyVersion>",
+          "fields": {
+            "rule": "single reviewed imperative",
+            "scope": "declared applicability",
+            "frecency": "finite deterministic value from cited ledger hits",
+            "grounding": "sf-evidence:v1:<policyRefId>:<digest>"
+          },
+          "forbidden": [
+            "personal inference",
+            "unreviewed model instruction",
+            "prId",
+            "kind inside entry"
+          ],
+          "validator": "memoryKindOf(entry)==project && validate('project', entry).valid"
+        },
+        {
+          "source": "pr/logbook and StructRef-shaped business substitutions",
+          "kind": "forbidden",
+          "reason": "No fake PR, engineering owner or code grounding; existing SF ledger records decision history."
+        }
+      ],
+      "transaction_sequence": [
+        "1 Bind trusted caller; gather authorized domain/document projections and their version/incarnation/access tokens outside the central metadata transaction.",
+        "2 Begin Persistence.transaction('dashboard', async snapshot=>...). Reauthenticate with current roleMap/access, read current source event/outbox, compare case/source projection digest and current binding generation.",
+        "3 Hydrate/validate the protected owner partition. Verify event content identity using Atlas versioned/respawnFromRecord; any partial/unreadable state is explicit refusal.",
+        "4 Construct synchronous createSfAtlasDurableMemory(snapshotPartition). Instantiate createMemoryEmit({store, actor:derivedBusinessOwner, scanner:namedRealScanner}); mapSfAtlasEntry supplies a closed template.",
+        "5 emit runs real kind/template/owner/cap/scanner gates and stages append. Append uses versioned([record]) canonical identity, monotonic seq under the serialized snapshot and duplicate-event detection.",
+        "6 In the same snapshot persist event + BusinessMemoryEnvelope + sourceEventId->payloadDigest idempotency entry + outbox result. Same key/digest returns prior receipt; changed digest conflicts.",
+        "7 callback returns commit:true only for admitted stable work; await durable transaction. Only then report committed. Commit/cancellation failure is unavailable and nothing new survives restart.",
+        "8 Read/recall obtains a fresh snapshot, resolves current access/source tokens, builds authorized store before createMemoryRead, explicitly binds owner/kind and validates refs again before egress. No old request credential is revived."
+      ],
+      "exports": [
+        {
+          "owner_task": "WP00.T02",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+          "exports": [
+            "BusinessEvidenceRef",
+            "BusinessEvidenceResolution",
+            "BusinessContextService",
+            "BusinessMemoryEnvelope",
+            "MemoryWriteReceipt"
+          ]
+        },
+        {
+          "owner_task": "WP06.T05",
+          "path": "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+          "exports": [
+            "resolveSfDocumentEvidence"
+          ]
+        },
+        {
+          "owner_task": "WP14.T05",
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts",
+          "exports": [
+            "mapSfAtlasEntry",
+            "deriveSfMemoryOwner",
+            "explainSfMemoryMatch"
+          ]
+        },
+        {
+          "owner_task": "WP10.T07",
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "exports": [
+            "createSfBusinessContext"
+          ]
+        },
+        {
+          "owner_task": "WP10.T07",
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "exports": [
+            "createSfAtlasMemory"
+          ]
+        },
+        {
+          "owner_task": "WP10.T07",
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+          "exports": [
+            "createSfAtlasDurableMemory"
+          ]
+        },
+        {
+          "owner_task": "WP10.T07",
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+          "exports": [
+            "createSfAtlasScanner"
+          ]
+        },
+        {
+          "owner_task": "WP10.T07",
+          "path": "modules/atlas/boundary/src/business-memory-entry.ts",
+          "exports": [
+            "createMemoryRead",
+            "createMemoryEmit",
+            "DurableMemory",
+            "MemoryRead",
+            "MemoryRecord",
+            "MemoryEntry",
+            "NamedScanner",
+            "versioned",
+            "respawnFromRecord",
+            "memoryKindOf",
+            "validate"
+          ],
+          "runtime_import": "@orchestra/atlas-boundary/business-memory-ports",
+          "source_policy": "Named exports from memory-read.ts, memory-emit.ts and pure memory/kernel modules; DurableMemory/MemoryRead only export type from memory-store.ts; never adapter-io/src/index.ts."
+        },
+        {
+          "owner_task": "WP10.T07",
+          "path": "modules/atlas/packages/adapter-io/src/native-bound.ts",
+          "exports": [
+            "detectAvailableScanner",
+            "runScanner",
+            "KNOWN_SCANNERS",
+            "NO_SCANNER_NAME"
+          ],
+          "type_exports": [
+            "ScannerBinarySpec",
+            "ScanVerdict"
+          ],
+          "runtime_import": "@orchestra/atlas-boundary/native-memory",
+          "policy": "Additive reexports from ./scanner.js only; preserve existing bound exports; never export createMemoryEmit/createMemoryRead/createDurableMemory here."
+        }
+      ],
+      "proof": "AM05 e AM03 exigem real Atlas module trace, append/recall após reinício, efeitos idempotentes, dois atores no mesmo perfil, owner omitido/forjado, revogação de campo/registro, import com mesma ID/nova encarnação, scanner hit/ausente/timeout e falha pré/pós commit. Nenhuma fixture ou memória própria substitui esta prova."
     }
   ],
   "incoming_outgoing_handoffs": [
@@ -2749,6 +3245,16 @@
     "missing_field_rule": "Campos não aplicáveis exigem motivo explícito. A ausência de um campo aplicável impede PASS. Os recibos não incluem credenciais nem dados sem autorização.",
     "packages": [
       {
+        "id": "E01",
+        "title": "Contratos montagem e integridade",
+        "owners": [
+          "WP00",
+          "WP10"
+        ],
+        "coverage": "Contratos compilados, exports registrados, ownership disjunto, entrypoint real e persistência após reload. C15–C17, AM02, checkpoints, distribuição de skills e Atlas boundary real.",
+        "status": "NOT_RUN"
+      },
+      {
         "id": "E02",
         "title": "Navegação e estados",
         "owners": [
@@ -2765,6 +3271,63 @@
           "WP01"
         ],
         "coverage": "Caso persistente, alternativas, critérios, escolha, mudanças preparadas e recibos por domínio.  Cobertura C10 é comprovada com inventário completo e categoria inteiramente omitida, zero informado e escolha condicionada preservada; confirmar training = 40000 inverte a comparação210000→250000.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "E11",
+        "title": "IA real e portfólio",
+        "owners": [
+          "WP12",
+          "WP13"
+        ],
+        "coverage": "IA real em variante não roteirizada; fontes, contradição, crítica, propostas tipadas e portfólio sob restrições.  Crítica e portfólio consomem a mesma cobertura C10 e não aprovam completude por soma. A variante omitida não deve trazer uma linha pending pré-cadastrada.  C15 exige18 witnesses de skill carregada+outputRef persistido+consumidor real, contribuição distinta dos 5 perfis e Revisor em run próprio; os witnesses podem compartilhar as seis provas integradas. WP01.T05.CHK.30/31 verificam uso pela interface e estados de falha. AM01: 5 perfis/18 skills com trace de carga/uso, modelos efetivos eRevisorindependente.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "E12",
+        "title": "Memória e reavaliação",
+        "owners": [
+          "WP14",
+          "WP11"
+        ],
+        "coverage": "Mudança material e irrelevante; escolha preservada; recuperação após commit e resposta perdida; memória e revogação.  Reavaliação após categoria resolvida/custo inversor preserva a escolha original e o estado condicionado de sua base; comparação posterior vem do domínio. AM05: ports reais de Atlas, owner/ACL/restart/ledger/cases e 5 perfis sem seat engenharia.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "E13",
+        "title": "Relay real",
+        "owners": [
+          "WP09"
+        ],
+        "coverage": "Quatro preparações originais e decisão por Relay; admissão, versão, run e checks reais; nenhuma espera humana inventada.  Revisão usa validade material C06 sem recobrança irrelevante. Dossiê consome DocumentEvidence C14 do WP06 com evidência de candidato, confirmação e atualização/revogação. AM06: admissão Relay eproduto/perfil/skill retornam resultado verificável.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "E14",
+        "title": "Schedule e retomada",
+        "owners": [
+          "WP09"
+        ],
+        "coverage": "Schedule nativo; timezone, recorrência, pausa, falha, revogação e deduplicação de execução/sinal. AM06: retomada/recorrência/Schedule mantém limites atuais e correlação.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "E15",
+        "title": "Documentos e injeção",
+        "owners": [
+          "WP06",
+          "WP12"
+        ],
+        "coverage": "PDF digital, DOCX e texto; trecho de origem e confirmação; documento malicioso, inválido ou sem texto tratado corretamente.  Handoff WP06.T05→WP09.T04 compartilha evidenceRef/versão/trecho; parser só no WP06 e candidato não é fato confirmado. AM03/AM05: referênciasdocumentais/injeção/scanner/isolation/revocation reais.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "E16",
+        "title": "Integração e regressão",
+        "owners": [
+          "WP10"
+        ],
+        "coverage": "Suites exigidas do epic e pacotes afetados, consumidores reais, compatibilidade, host binding e UI integrada. Oito recipes mínimas, AM01-AM06, oito packs com paridade e Atlas check:generated/typecheck.",
         "status": "NOT_RUN"
       }
     ]
@@ -7906,6 +8469,7 @@
       }
     ]
   },
+  "reference_context_rule": "Contract, route, skill and proof definitions are read dependencies. They do not transfer task ownership, write permission or proof execution. Execute only assigned primary/support/correction parts and current leases; the canonical execution_actor retains each integrated proof.",
   "resident_handoff_interfaces": [],
   "resident_gate_requirements": [
     {
@@ -8991,6 +9555,10 @@
   "mandatory_appendices": [
     {
       "path": "specs/product-acceptance.md",
+      "rule": "Read the portions applying to assigned outputs and their dependencies; headings or links never waive a requirement."
+    },
+    {
+      "path": "specs/resident-runtime.md",
       "rule": "Read the portions applying to assigned outputs and their dependencies; headings or links never waive a requirement."
     }
   ],

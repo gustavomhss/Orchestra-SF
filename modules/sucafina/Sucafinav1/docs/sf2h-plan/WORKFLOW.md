@@ -30,7 +30,7 @@ Cada ator lê [COMMON](execution/COMMON.md) e seu pacote no [manifesto de execu�
 
 Os quinze documentos integrais antes exigidos por cada coordenadora somavam **2.598.019 bytes UTF-8 por sessão**, antes dos WPs: **12.990.095 bytes repetidos nas cinco sessões**. A medição da seleção nova está em [context-measurement.json](execution/context-measurement.json). Bytes não são tokens nem uma medição de tempo economizado.
 
-O compilador confere cobertura de 74 tasks, 1.610 critérios, 19 handoffs, dezoito skills e 39 operações. Alteração de writer, roster ou branch sem atualizar o mapa explícito é rejeitada. Ler um pack não concede a um auxiliar todos os arquivos do WP; ele recebe somente sua parte e seus leases atuais.
+O compilador confere cobertura de 74 tasks, 1.610 critérios, 19 handoffs, dezoito skills e 39 operações. Alteração de writer, roster ou branch sem atualizar o mapa explícito é rejeitada. Ler um pack não concede a um auxiliar todos os arquivos do WP; ele recebe somente sua parte e seus leases atuais. A seleção também fecha os contratos referenciados no conteúdo, todos os handoffs exigidos pelas fases e as definições de skills/provas das rotas MCP. Essa expansão é contexto de leitura; as atribuições e a autoridade de escrita permanecem inalteradas.
 
 O [índice de fontes](execution/sources.json) reutiliza descobertas por repositório, commit, path e blob. O escritor continua lendo o código real e as instruções locais antes de editá-lo, ampliando a investigação quando a alteração ou uma dependência exigir. Autorização, disponibilidade de modelo, scanner e capacidade são fatos de execução e não ficam válidos por um cache de código.
 

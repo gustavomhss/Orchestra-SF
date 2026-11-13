@@ -2,7 +2,7 @@
 
 Leia este documento uma vez e o pacote JSON do ator atribuído. Os pacotes são seleções exatas do canônico; não é necessário ler também todos os seus espelhos. Expanda fontes/dependências sempre que necessário para implementar ou julgar corretamente.
 
-Fonte SHA256: `044c729f37c055bf81c1cf4832ad37ffcd96b77834e0c725b6a0da51c1a4421d`. Compilador: `1.0.0`. Plano e código são SHAs distintos; fixe ambos no lançamento.
+Fonte SHA256: `703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba`. Compilador: `1.0.1`. Plano e código são SHAs distintos; fixe ambos no lançamento.
 
 ## Missão
 

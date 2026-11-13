@@ -4,8 +4,9 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import re
 
-VERSION = '1.0.0'
+VERSION = '1.0.1'
 FAMILIES = ('dod', 'invariants', 'quality_standards', 'completeness_criteria', 'success_criteria')
 
 
@@ -71,6 +72,45 @@ def touch(row, task_ids, wp_ids):
     for key in ('consumers', 'producers', 'producer_tasks', 'consumer_tasks', 'owner_tasks', 'tasks'):
         values.extend(row.get(key, []))
     return bool(set(values) & (task_ids | wp_ids))
+
+
+def contract_references(value):
+    """Select read dependencies only; never infer write authority from prose."""
+    if isinstance(value, dict):
+        return set().union(*(contract_references(v) for v in value.values()))
+    if isinstance(value, list):
+        return set().union(*(contract_references(v) for v in value))
+    if not isinstance(value, str):
+        return set()
+    references = set(re.findall(r'\bC\d{2}\b', value))
+    for first, last in re.findall(r'\bC(\d{2})\s*[-–—]\s*C?(\d{2})\b', value):
+        assert int(first) <= int(last), ('Reversed contract range', value)
+        references.update(f'C{i:02}' for i in range(int(first), int(last) + 1))
+    return references
+
+
+def validate_contract_selection(pack, catalog):
+    selected = {row['id'] for row in pack['contracts']}
+    required = contract_references(pack)
+    assert required <= selected, (pack['actor'], 'Missing contract definitions', sorted(required - selected))
+    assert selected <= set(catalog), (pack['actor'], 'Unknown contract definitions', sorted(selected - set(catalog)))
+    assert all(row == catalog[row['id']] for row in pack['contracts']), (pack['actor'], 'Contract definition drift')
+    if selected & {'C15', 'C16', 'C17'}:
+        assert 'specs/resident-runtime.md' in {x['path'] for x in pack['mandatory_appendices']}, (pack['actor'], 'Missing resident runtime appendix')
+
+
+def validate_dependency_selection(pack):
+    handoffs = {row['id'] for row in pack['incoming_outgoing_handoffs']}
+    required = {ident for row in pack['task_output_dependencies'] for key in ('requires', 'full_runtime_requires') for ident in row.get(key, [])}
+    assert required <= handoffs, (pack['actor'], 'Missing phase handoffs', sorted(required - handoffs))
+    skills = {row['id'] for row in pack['resident']['skills']}
+    profiles = {row['id'] for row in pack['resident']['profiles']}
+    proofs = {row['id'] for row in pack['execution_proofs']}
+    resident_proofs = {row['id'] for row in pack['resident']['integrated_proofs']}
+    for route in pack['resident']['operation_call_routes']:
+        assert route['skill_id'] in skills, (pack['actor'], route['operation_id'], 'Missing route skill')
+        assert route['profile_id'] in profiles, (pack['actor'], route['operation_id'], 'Missing route profile')
+        assert route['proof_id'] in proofs & resident_proofs, (pack['actor'], route['operation_id'], 'Missing route proof')
 
 
 def _sources(c):
@@ -166,7 +206,10 @@ def artifacts(c):
         criterion_ids = {row[0] for entity in own_entities for row in criteria(entity)}
         assigned_criteria.update(criterion_ids)
         contract_ids = {ref for wid in read_wp_ids for ref in wps[wid]['contract_reads'] + wps[wid]['contract_provides']}
-        relevant_handoffs = [h for h in c['output_handoffs'] if h['producer_task'] in task_ids or task_ids.intersection(h['consumer_tasks'])]
+        phase_dependencies = [x for x in c['task_output_dependencies'] if touch(x, task_ids, own_wp_ids) or x.get('task') in task_ids]
+        required_handoffs = {ident for row in phase_dependencies for key in ('requires', 'full_runtime_requires') for ident in row.get(key, [])}
+        assert required_handoffs <= {h['id'] for h in c['output_handoffs']}, (actor, 'Unknown phase handoff')
+        relevant_handoffs = [h for h in c['output_handoffs'] if h['producer_task'] in task_ids or task_ids.intersection(h['consumer_tasks']) or h['id'] in required_handoffs]
         all_handoff_ids.update(h['id'] for h in relevant_handoffs)
         relevant_skill_leases = [x for x in c['ownership']['skill_leases'] if x['writer'] == actor or x.get('handoff_to') == actor]
         resident_task_ids = task_ids - set(assignment.get('support', {})) if actor in {'S1','S3'} else task_ids
@@ -174,8 +217,21 @@ def artifacts(c):
         if actor in {'S0', 'S0-B', 'S4-B', 'S3-R3'}:
             relevant_skills = c['resident_ai']['skills']
         skill_ids = {s['id'] for s in relevant_skills}
-        all_skill_ids.update(skill_ids)
         operation_ids = {op for s in relevant_skills for op in s['allowed_operations']}
+        operation_ids.update(op['id'] for p in c['resident_ai']['mcp_packs'] for op in p['operations'] if op['producer_task'] in task_ids)
+        # Route bindings are required read context even for a domain producer
+        # that does not own the resident skill or execute the integrated proof.
+        while True:
+            routes = [r for r in c['resident_ai']['operation_call_routes'] if r['operation_id'] in operation_ids]
+            referenced_skills = {r['skill_id'] for r in routes}
+            expanded_skills = skill_ids | referenced_skills
+            if expanded_skills == skill_ids:
+                break
+            assert expanded_skills <= {s['id'] for s in c['resident_ai']['skills']}, (actor, 'Unknown route skill')
+            skill_ids = expanded_skills
+            relevant_skills = [s for s in c['resident_ai']['skills'] if s['id'] in skill_ids]
+            operation_ids.update(op for s in relevant_skills for op in s['allowed_operations'])
+        all_skill_ids.update(skill_ids)
         packs = []
         for pack in c['resident_ai']['mcp_packs']:
             operations = [op for op in pack['operations'] if op['id'] in operation_ids or op['producer_task'] in task_ids]
@@ -199,7 +255,12 @@ def artifacts(c):
         integrated_ids = {p for b in bindings for p in b.get('integrated_proofs', [])}
         integrated_ids.update(p['id'] for p in c['execution_proofs'] if exact_actor(actor, p.get('execution_actor')) or p.get('reviewer') == actor or touch(p, task_ids, own_wp_ids))
         integrated_ids.update(p for s in relevant_skills for p in s.get('proof_ids', []))
+        integrated_ids.update(r['proof_id'] for r in routes)
+        integrated_ids.update(ident for pack in packs for ident in pack.get('proof_ids', []))
+        evidence_ids.update(ident for proof in c['execution_proofs'] if proof['id'] in integrated_ids for ident in proof['proof_packages'])
+        evidence_ids.update(ident for proof in c['resident_ai']['integrated_proofs'] if proof['id'] in integrated_ids for ident in proof['evidence_packages'])
         dependency_ids = {d for tid in task_ids for key in ('depends_on', 'integrates_with') for d in tasks[tid].get(key, []) if d in tasks and d not in task_ids}
+        dependency_ids.update(h['producer_task'] for h in relevant_handoffs if h['id'] in required_handoffs and h['producer_task'] not in task_ids)
         boundaries = [b for b in c['ownership']['actor_boundaries'] if b['actor'] == actor or b.get('transfer_to') == actor]
         other_boundaries = [b for b in c['ownership']['actor_boundaries'] if b['actor'] != actor and b.get('logical_owner') in own_wp_ids]
         wp_sections = [{**{k:v for k,v in wps[wid].items() if k != 'tasks'},
@@ -216,7 +277,7 @@ def artifacts(c):
                          'rule': 'Read the actual file; lookup missing local instructions on its path before editing.'} for path in source_paths]
         resident = {k: c['resident_ai'][k] for k in ['schema_version','server_name','profile_name','engine_baseline','skill_bundle_policy','operation_coverage_rule']}
         resident.update(profiles=[p for p in c['resident_ai']['profiles'] if p['id'] in profile_ids], skills=relevant_skills, mcp_packs=packs,
-                        operation_call_routes=[r for r in c['resident_ai']['operation_call_routes'] if r['operation_id'] in operation_ids],
+                        operation_call_routes=routes,
                         output_aliases=c['resident_ai']['output_aliases'],
                         integrated_proofs=[p for p in c['resident_ai']['integrated_proofs'] if p['id'] in integrated_ids])
         actor_pack = {
@@ -231,7 +292,7 @@ def artifacts(c):
             'work_packages': wp_sections,
             'contracts': [x for x in c['contracts'] if x['id'] in contract_ids],
             'incoming_outgoing_handoffs': relevant_handoffs,
-            'task_output_dependencies': [x for x in c['task_output_dependencies'] if touch(x, task_ids, own_wp_ids) or x.get('task') in task_ids],
+            'task_output_dependencies': phase_dependencies,
             'consumer_edges': [x for x in c['consumption_map'] if touch(x, task_ids, own_wp_ids)],
             'coverage': {k:[row for row in rows if not isinstance(row,dict) or touch(row, task_ids, own_wp_ids)] for k,rows in c['coverage'].items()},
             'dependency_context': [{k:tasks[tid][k] for k in ['id','title','inputs','outputs','build_window','depends_on','integrates_with'] if k in tasks[tid]} for tid in sorted(dependency_ids)],
@@ -241,6 +302,7 @@ def artifacts(c):
             'review_assignment': [r for r in c['review_assignments'] if r['actor']==actor],
             'review_sources_read_only': [{'wp':wid,'path':f'work-packages/{wid}.json','criterion_ids':[r[0] for e in [wps[wid],*wps[wid]['tasks']] for r in criteria(e)]} for wid in assignment.get('review_wps', [])],
             'resident': resident,
+            'reference_context_rule': 'Contract, route, skill and proof definitions are read dependencies. They do not transfer task ownership, write permission or proof execution. Execute only assigned primary/support/correction parts and current leases; the canonical execution_actor retains each integrated proof.',
             'resident_handoff_interfaces': [h for h in c.get('resident_handoff_interfaces', []) if touch(h,task_ids,own_wp_ids)],
             'resident_gate_requirements': c.get('resident_gate_requirements', {}),
             'resident_ui': {**{k:v for k,v in c['resident_ui_consumption'].items() if k not in ('profiles','skills')},
@@ -256,10 +318,25 @@ def artifacts(c):
             'criterion_ids': sorted(criterion_ids),
             'completion': 'All assigned primary outcomes, explicit support/correction parts, consumers and proofs must be delivered. No early DONE on a commit or a green unrelated check. Full task acceptance belongs to the owner plus all required contributors. Product proof status remains NOT_RUN until observed.'
         }
-        if 'C17' in contract_ids and actor in {'S0','S0-A','S0-C','S4','S4-B','S2-R2','S3-R3'}:
-            actor_pack['resident_packaging'] = c['resident_packaging']
         if actor in {'S0','S0-C','S2','S1-R1','S2-R2','S3-R3'}:
             actor_pack['ci_plan'] = c['ci_plan']
+        # WP summary lists alone omit dependencies stated in selected tasks,
+        # criteria, handoffs and proofs. Preserve their complete read closure.
+        catalog = {row['id']: row for row in c['contracts']}
+        required_contracts = contract_ids | contract_references(actor_pack)
+        while True:
+            assert required_contracts <= set(catalog), (actor, 'Unknown contract references', sorted(required_contracts - set(catalog)))
+            expanded = required_contracts | contract_references([catalog[ident] for ident in sorted(required_contracts)])
+            if expanded == required_contracts:
+                break
+            required_contracts = expanded
+        actor_pack['contracts'] = [row for row in c['contracts'] if row['id'] in required_contracts]
+        if required_contracts & {'C15', 'C16', 'C17'} and 'specs/resident-runtime.md' not in annexes:
+            actor_pack['mandatory_appendices'].append({'path': 'specs/resident-runtime.md', 'rule': 'Read the portions applying to assigned outputs and their dependencies; headings or links never waive a requirement.'})
+        if 'C17' in required_contracts and actor in {'S0','S0-A','S0-C','S4','S4-B','S2-R2','S3-R3'}:
+            actor_pack['resident_packaging'] = c['resident_packaging']
+        validate_contract_selection(actor_pack, catalog)
+        validate_dependency_selection(actor_pack)
         path = f'execution/actors/{actor}.json'
         out[path] = encoded(actor_pack)
         actor_results.append({'actor':actor,'job_id':actor_pack['job_id'],'path':path,'sha256':digest(out[path]),'bytes':len(out[path].encode()),

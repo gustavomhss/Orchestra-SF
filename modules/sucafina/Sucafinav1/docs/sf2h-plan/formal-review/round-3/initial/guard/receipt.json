@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "candidate": "10a99bf06c5578ec02dab590a680ab18766c7ff4",
+  "tree": "98e05ed55a5e69177ee5f21621c916d4685191cb",
+  "dev": "f08941a346ef0d072dff8e67e49823505ad7a12e",
+  "merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "command": "bun run check:guards --base origin/dev",
+  "started_at": "2026-11-13T03:02:08.979551+00:00",
+  "finished_at": "2026-11-13T03:02:13.368180+00:00",
+  "exit_code": 0,
+  "counts": {
+    "rules": 78,
+    "changed_paths": 190,
+    "gate_findings": 0,
+    "warn_findings": 1,
+    "errors": 0
+  },
+  "working_tree_after": "",
+  "approved": [],
+  "warn_flag": false,
+  "fidelity": "fidelity.json",
+  "stdout": "stdout.txt",
+  "stderr": "stderr.txt",
+  "scope": "Mandatory repository guard only. Product implementation/tests remain NOT_RUN."
+}

@@ -1,9 +1,9 @@
 {
   "provenance": {
     "canonical_path": "campaign.json",
-    "canonical_sha256": "044c729f37c055bf81c1cf4832ad37ffcd96b77834e0c725b6a0da51c1a4421d",
+    "canonical_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
     "compiler": "render_fast_context.py",
-    "compiler_version": "1.0.0",
+    "compiler_version": "1.0.1",
     "planning_commit": "Use the immutable planning SHA supplied at launch for every artifact; the source cannot embed its own future commit SHA.",
     "code_baseline": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
     "implementation_test_status": "NOT_RUN"
@@ -35,7 +35,7 @@
   ],
   "common": {
     "path": "execution/COMMON.md",
-    "sha256": "8e5a92df01791d602b3666533038d1bea6fe70e5ce84f2b8ffec4cd071658e86"
+    "sha256": "a518cf4b3136d5c1126d59304afedf71b5f93168314f1f2f56743dcae719c94e"
   },
   "write_authority": {
     "rule": "Only explicit primary/support/correction part and current actor/skill lease. WP ownership below is context, never a blanket actor grant. Reviewer writes only its review receipts.",
@@ -4067,6 +4067,16 @@
         "status": "NOT_RUN"
       },
       {
+        "id": "E10",
+        "title": "Decisão e execução",
+        "owners": [
+          "WP11",
+          "WP01"
+        ],
+        "coverage": "Caso persistente, alternativas, critérios, escolha, mudanças preparadas e recibos por domínio.  Cobertura C10 é comprovada com inventário completo e categoria inteiramente omitida, zero informado e escolha condicionada preservada; confirmar training = 40000 inverte a comparação210000→250000.",
+        "status": "NOT_RUN"
+      },
+      {
         "id": "E11",
         "title": "IA real e portfólio",
         "owners": [
@@ -4093,6 +4103,15 @@
           "WP09"
         ],
         "coverage": "Quatro preparações originais e decisão por Relay; admissão, versão, run e checks reais; nenhuma espera humana inventada.  Revisão usa validade material C06 sem recobrança irrelevante. Dossiê consome DocumentEvidence C14 do WP06 com evidência de candidato, confirmação e atualização/revogação. AM06: admissão Relay eproduto/perfil/skill retornam resultado verificável.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "E14",
+        "title": "Schedule e retomada",
+        "owners": [
+          "WP09"
+        ],
+        "coverage": "Schedule nativo; timezone, recorrência, pausa, falha, revogação e deduplicação de execução/sinal. AM06: retomada/recorrência/Schedule mantém limites atuais e correlação.",
         "status": "NOT_RUN"
       },
       {
@@ -9271,6 +9290,7 @@
       }
     ]
   },
+  "reference_context_rule": "Contract, route, skill and proof definitions are read dependencies. They do not transfer task ownership, write permission or proof execution. Execute only assigned primary/support/correction parts and current leases; the canonical execution_actor retains each integrated proof.",
   "resident_handoff_interfaces": [
     {
       "producer_task": "WP03.T01",

@@ -1,0 +1,294 @@
+{
+  "schema_version": 1,
+  "review_id": "R3-EVIDENCE-INITIAL",
+  "round": 3,
+  "reviewer": "/root/review_evidence",
+  "candidate_sha": "10a99bf06c5578ec02dab590a680ab18766c7ff4",
+  "parent_sha": "0aa2405bb3668314f60d6a674d2bd53fd5003091",
+  "candidate_root_tree": "98e05ed55a5e69177ee5f21621c916d4685191cb",
+  "snapshot_path": "/workspace/scratch/b5296ae7597d/sf2h-resume",
+  "baseline_path": "/workspace/scratch/838a0195183d/sf2h-final-0aa2405",
+  "assessed_date": "2026-11-13",
+  "independence": {
+    "authored_candidate_delta": false,
+    "current_peer_review_conclusions_read": false,
+    "candidate_modified": false,
+    "external_messages_or_comments_sent": false
+  },
+  "scope": {
+    "type": "Revisão focal independente do delta de planejamento e suas bordas de evidência",
+    "included": [
+      "Dispatcher exclusivo, deduplicação e transferência de requests/runs em voo",
+      "Invalidadores de código, contratos, consumidores, skills, fixtures, testes, ambiente e estado externo",
+      "Oito seleções finais mínimas, suites adicionais obrigatórias e AM01–AM06 no mesmo candidato de produto C",
+      "C versus D exclusivamente evidencial, sf2-control separado, proveniência, retries e alocação finita de paths exatos",
+      "Guias e conteúdo normativo antes do freeze; guards distintos de C/G7 e D/G8",
+      "Coerência campaign/execution-workflow/ci-recipes/evidence-plan/proof-map/prompts/WP10 e consumidores de CI nos packs"
+    ],
+    "excluded": [
+      "Auditoria de implementação de produto inalterado",
+      "Execução de produto, suites de testes, GitHub Actions, deploy ou integrações novas",
+      "Pareceres dos outros revisores da rodada atual"
+    ]
+  },
+  "verdict": "APPROVED_FOR_EXECUTION",
+  "verdict_scope": "Aprovação do delta de planejamento no escopo de evidência desta revisão; não constitui aceite de produto, início de implementação ou certificação da meta de 120 minutos.",
+  "findings": [],
+  "severity_counts": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0
+  },
+  "p2_disposition": "Nenhum achado P2 identificado; não há disposição pendente.",
+  "checks": [
+    {
+      "id": "EVID-IDENTITY",
+      "status": "PASS",
+      "method": "Conferência de metadados oficiais em candidate-mcp.json e cálculo independente do Git blob SHA-1 de 26 arquivos do escopo.",
+      "observed": {
+        "candidate_sha": "10a99bf06c5578ec02dab590a680ab18766c7ff4",
+        "parent_sha": "0aa2405bb3668314f60d6a674d2bd53fd5003091",
+        "root_tree": "98e05ed55a5e69177ee5f21621c916d4685191cb",
+        "scoped_blobs_checked": 26,
+        "mismatches": []
+      },
+      "limitation": "O snapshot não é um checkout Git. A consulta remota foi feita pela supervisora; esta revisão conferiu os blobs do seu escopo contra o mapa oficial recebido."
+    },
+    {
+      "id": "EVID-RENDER",
+      "status": "PASS",
+      "command": "python -B /workspace/scratch/b5296ae7597d/sf2h-resume/tools/render_plan.py --check",
+      "scripts_read_before_execution": [
+        "tools/render_plan.py",
+        "tools/render_fast_context.py"
+      ],
+      "exit_code": 0,
+      "observed": {
+        "mode": "check",
+        "artifacts": 100,
+        "drift": []
+      },
+      "product_execution": "NOT_RUN"
+    },
+    {
+      "id": "EVID-SCOPE",
+      "status": "PASS",
+      "observed": {
+        "work_packages": 15,
+        "tasks": 74,
+        "contracts": 17,
+        "criteria": 1610,
+        "required_recipes": 8,
+        "integrated_proofs": 6,
+        "AM02_operations": 39
+      },
+      "preserved": [
+        "Mesmos 1610 criterion_ids",
+        "scope",
+        "contracts",
+        "proof_assignments",
+        "Oito receitas CI completas",
+        "full_suite_rule"
+      ],
+      "proof_map_statuses": [
+        "NOT_RUN"
+      ],
+      "change_classification": "As alterações dos critérios de evidência explicitam C/D e movem os guias normativos para antes de C; não removem a cobertura anterior."
+    },
+    {
+      "id": "EVID-CANONICAL",
+      "status": "PASS",
+      "observed": [
+        "execution-workflow.json == campaign.execution_workflow",
+        "ci-recipes.json == campaign.ci_plan",
+        "evidence-plan.json == campaign.evidence",
+        "work-packages/WP10.json == campaign.work_packages[WP10]",
+        "delivery_envelope == campaign.execution.candidate_delivery",
+        "deduplication, invalidators, incremental e review coincidem entre workflow e ci-recipes",
+        "COMMON contém integralmente campaign.execution",
+        "Corpos locais S0–S4 coincidem com campaign.prompt_sections",
+        "Packs S0, S0-C, S2 e os três reviewers contêm ci_plan integral e atual"
+      ]
+    },
+    {
+      "id": "EVID-DISPATCH",
+      "status": "PASS",
+      "locations": [
+        "execution-workflow.json#/validation/supervision",
+        "execution-workflow.json#/validation/deduplication",
+        "ci-recipes.json#/dispatch_policy",
+        "work-packages/WP10.json#/tasks[WP10.T04]",
+        "ownership.json#/actor_boundaries",
+        "prompts/S2.md"
+      ],
+      "conclusion": "Um lease de dispatcher por vez; handoffs 40/75 transferem candidato, fila, request keys, run IDs, attempts, conclusões e ETA. Adotar execução em voo exige chave idêntica; aceitar concluída exige seleção, omni, artefatos e ausência de invalidadores. S0-C e S2 possuem destinos de CI distintos e os workers apenas solicitam validação."
+    },
+    {
+      "id": "EVID-FINAL-C",
+      "status": "PASS",
+      "locations": [
+        "execution-workflow.json#/validation/final_acceptance",
+        "ci-recipes.json#/receipt_rules",
+        "campaign.json#/gates[G6,G7]",
+        "resident-proof-plan.json#/proofs",
+        "work-packages/WP10.json#/tasks[WP10.T02,WP10.T04]"
+      ],
+      "required_recipes": [
+        "CI-SF",
+        "CI-CLI",
+        "CI-APP-SRC",
+        "CI-APP-BROWSER",
+        "CI-ATLAS-BUSINESS",
+        "CI-UI-OPERATIONS",
+        "CI-UI-DECISIONS",
+        "CI-UI-REPORTS"
+      ],
+      "required_live_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "conclusion": "Suites adicionais continuam obrigatórias. As seis provas permanecem idênticas ao baseline, exceto a política aditiva de streaming AM02. AM01 mantém cinco perfis, dezoito skills, fonte carregada, contribuição de cada skill e run independente do Revisor. O streaming AM02 não altera as 39 rotas, binding, SkillLoadReceipt, autorização ou requisito final do mesmo C."
+    },
+    {
+      "id": "EVID-INVALIDATION",
+      "status": "PASS",
+      "locations": [
+        "execution-workflow.json#/validation/invalidators",
+        "ci-recipes.json#/dispatch_policy/invalidation_matrix",
+        "evidence-plan.json#/validity"
+      ],
+      "conclusion": "A matriz cobre produtores e consumidores transitivos, contratos, finanças, identidade/ACL, perfis/skills, Atlas, UI, fixtures/oráculos/testes, compilador/runtime/workflow e fatos externos. Dependência desconhecida amplia a seleção ou bloqueia; evidência antiga conserva sua identidade. Os gates finais completos de C continuam prevalecendo sobre a seleção incremental."
+    },
+    {
+      "id": "EVID-CD-ENVELOPE",
+      "status": "PASS",
+      "locations": [
+        "campaign.json#/execution/candidate_delivery",
+        "execution-workflow.json#/validation/delivery_envelope",
+        "campaign.json#/gates[G7,G8]",
+        "work-packages/WP10.json#/tasks[WP10.T05]",
+        "WORKFLOW.md#6",
+        "ownership.json#/shared_branch_policy"
+      ],
+      "conclusion": "D admite apenas novos arquivos UTF-8 .json/.md/.txt, modo 100644, nos prefixes receipts enumerados ou em paths control exatos previamente alocados. Exige C ancestral, diff completo sem truncamento, blobs existentes preservados e recusa de novos inputs de import/glob/build/test/runtime. sf2-control não é mergeada nem usada como base CI. Incorporação de evidência preserva source commit/path/blob hash; não incorpora branches completas."
+    },
+    {
+      "id": "EVID-RETRY",
+      "status": "PASS",
+      "locations": [
+        "campaign.json#/execution/candidate_delivery/exact_delivery_receipt_allocation",
+        "campaign.json#/execution/candidate_delivery/append_only_receipts",
+        "prompts/S0.md"
+      ],
+      "conclusion": "Cada tentativa usa novo path completo, instância e inteiro positivo, vinculado ao mesmo C e parent esperado. A alocação é registrada antes de D e fixada por SHA. D2 só preserva adições de D1 que também satisfaçam o envelope, sem editar receipts anteriores. O template não concede o prefixo control; acrescentar receipt não cura mudança proibida."
+    },
+    {
+      "id": "EVID-DOCS-GUARDS-PROVENANCE",
+      "status": "PASS",
+      "locations": [
+        "work-packages/WP10.json#/tasks[WP10.T01,WP10.T04,WP10.T05]",
+        "campaign.json#/execution/candidate_delivery/normative_docs",
+        "ci-recipes.json#/static_gates[GUARDS]",
+        "execution-workflow.json#/documentation_reservation",
+        "proof-map.json",
+        "specs/execution-reconciliation.md"
+      ],
+      "conclusion": "Guia por papel, roteiro e changelog são outputs T01 no README de C, com reserva 55–60 e ajustes 60–75; T05 só os consome. Skills/prompts e guia normativo não podem ser classificados como evidência em D. Guard C/G7 e guard D/G8 identificam o checkout efetivo. O receipt em D aponta C e os runs originais, sem próprio SHA/hash ou resultado de guard posterior."
+    },
+    {
+      "id": "EVID-REPOSITORY-GUARD-RECEIPT",
+      "status": "PASS",
+      "source": "/workspace/scratch/b5296ae7597d/guards/10a99bf06c55-evidence/receipt.json",
+      "executed_by": "Supervisora /root; recibo lido por este revisor, não reexecutado.",
+      "observed": {
+        "candidate": "10a99bf06c5578ec02dab590a680ab18766c7ff4",
+        "command": "bun run check:guards --base origin/dev",
+        "exit_code": 0,
+        "rules": 78,
+        "changed_paths": 190,
+        "gate_findings": 0,
+        "warn_findings": 1,
+        "errors": 0,
+        "working_tree_after": ""
+      },
+      "limitation": "Guard de repositório sobre o candidato de planejamento; não demonstra produto ou CI futuro."
+    }
+  ],
+  "edge_walkthroughs": [
+    {
+      "case": "Duas solicitações idênticas chegam antes e depois da transferência do dispatcher.",
+      "disposition": "Adotar o mesmo run somente por chave completa; o handoff preserva run/attempt/request e impede novo dispatch por mera troca de operador."
+    },
+    {
+      "case": "Uma mudança final apenas de UI ou guia normativo ocorre depois de uma prova verde.",
+      "disposition": "Há C novo; resultados anteriores não recebem o SHA novo. A matriz incremental escolhe afetados, mas G7 ainda exige cobertura final obrigatória e AM01–AM06 no C aceito."
+    },
+    {
+      "case": "A política de acesso, o modelo ou o scanner muda sem alteração de código.",
+      "disposition": "A prova live afetada perde validade; o cache de código não certifica o fato externo. Identidades atuais e requalificação são exigidas."
+    },
+    {
+      "case": "D1 é válido; nova tentativa acrescenta receipt e mantém D1.",
+      "disposition": "Novo path e alocação exata para D2, lista finita do mesmo C/instância e diff integral C→D2; os receipts anteriores ficam byte a byte intactos."
+    },
+    {
+      "case": "D1 contém mudança de produto, modo indevido, input de glob ou receipt antigo editado; D2 acrescenta outro índice.",
+      "disposition": "Rejeitar D2 como entrega evidencial: o diff integral continua fora do envelope. Exige correção/requalificação explícita, não outro receipt."
+    },
+    {
+      "case": "O receipt precisa registrar o SHA ou guard do commit que o contém.",
+      "disposition": "O fechamento externo publica D e seu guard; o receipt interno não se autorreferencia nem força commit circular de evidência."
+    }
+  ],
+  "limits": [
+    "Produto, GitHub Actions, provas AM e execução do workflow permaneceram NOT_RUN por este revisor.",
+    "O veredicto avalia a consistência e suficiência documental deste delta; não prova desempenho de 120 minutos nem disponibilidade futura de runners, modelos ou sessões.",
+    "Não houve auditoria repetida do código de produto inalterado. As regras futuras de envelope e proveniência serão verificadas sobre C e D reais quando existirem.",
+    "Esta revisão não altera permissões, workflows, validators, capacidade ou escopo do produto.",
+    "A aprovação focal não substitui os pareceres independentes de supervisor/contexto nem autoriza publicação externa ou implementação além do pedido de planejamento."
+  ],
+  "hashes": {
+    "algorithm": "SHA-256",
+    "candidate_files": {
+      "campaign.json": "044c729f37c055bf81c1cf4832ad37ffcd96b77834e0c725b6a0da51c1a4421d",
+      "execution-workflow.json": "a85ca197fc08b66acc75e56636932988ab9eb52732ea989722fec78d4afc6ef6",
+      "ci-recipes.json": "ac598195282a917364ffb83aaef9d8e55e9023c58f6850f2a34c214a1a9c5777",
+      "evidence-plan.json": "7bfcd33469b2299cf7e98807479ebbebff82407a5621476e95a3a201a4676fee",
+      "proof-map.json": "ba1aff9bc8d716297bcc812bd9d5d5933262b0ef3d5734ff2bdbc859d85acf07",
+      "work-packages/WP10.json": "30686906dbfadb86d2022c06293423607a6ceb4cb7c1211bb9d1bd240a6dceb4",
+      "work-packages/WP10.md": "3017efb1c6a498c49d8a4b98970d3239421944eda3a93847854f257be7b2409a",
+      "ownership.json": "3129c0156a21e319d71e8a4c4b38c12bbc8507226457af26752c4a049d5a1d32",
+      "schedule.json": "dfe70767e81524bd6212690357c10715eb3cc04f749f732377ff56daef0cdc7d",
+      "resident-proof-plan.json": "34afd1e6f5b7031ddca47563b3fc4b6520574be93876f82d38e648bb0e22deae",
+      "WORKFLOW.md": "5be6e8fe0928160762897fb58b760f95c5949c8be6f332fb1393abec3f299a4c",
+      "execution/COMMON.md": "8e5a92df01791d602b3666533038d1bea6fe70e5ce84f2b8ffec4cd071658e86",
+      "tools/render_plan.py": "7df6394361619b374a2dcc3a91dd63585d6d4314cb3289e2e66d5d2606e37a42",
+      "tools/render_fast_context.py": "151da2ea446177dfec7501cec5387415a21d12e59188575cfbaa6429a790df68",
+      "formal-review/round-3/PROTOCOL.md": "8d2544bf45b48cdc3f42a0c138a9e693a4bfb0c10effd202b125beccf9135b57",
+      "prompts/S0.md": "ce8c6f744c7bb49f8c0eff654561314dadb7d63acf7bfa51b5c1ad27e77ecd83",
+      "prompts/S1.md": "10b40776f4f7d32784b45839a1477f9085c308b86ed3b539e4029660f5c9c5e7",
+      "prompts/S2.md": "8622c0b542455e98e3173a321f4303d0580b631d95e02d80d7a443cc3979d406",
+      "prompts/S3.md": "9086bef04de740bb88a71432ff5b7865c66d91f93dfe21708c9c39976f44c620",
+      "prompts/S4.md": "fe18cc92d52f8ce6d381176241bae9d540bca8392cc05b3b0f8bb44cabe18975",
+      "execution/actors/S0.json": "2d759f9761217cf9c495f88cb8c66754f3c5e1c52d30061b989a3682d801eca8",
+      "execution/actors/S0-C.json": "d0d5088fc86d77a155528ecdb5d63bdf13e85228d9d42809ef415cd64975fcdf",
+      "execution/actors/S2.json": "e3951055ff3e1b7145f7c23d4b19a8b096d804b93f1704e6ed21d51e899283b7",
+      "execution/actors/S1-R1.json": "303e2c99dddb78bc422e77d80b9d68968fac88bb5eb6377f4f09514da992abf0",
+      "execution/actors/S2-R2.json": "8d3b42d72ca791da45bd366a415328b43ddf065f82fc16403c7bbac7099dc41b",
+      "execution/actors/S3-R3.json": "5c5edb170cc243dac99ca16fd798b85e519803404221b8deb4cc47408a9399da",
+      "specs/execution-reconciliation.md": "2f259b023568cf0e0a66af60541a6ae3dc6dee5a73395dc3b12ae1c3c41dd55b"
+    },
+    "supporting_files": {
+      "/workspace/scratch/b5296ae7597d/candidate-mcp.json": "00d0d187697988dae584528d05400ea0e0b12491229c60c9b6eef2c1a4ceb9ef",
+      "/workspace/scratch/b5296ae7597d/guards/10a99bf06c55-evidence/receipt.json": "ed42c8f95b9628873fb7fccc189c5a963f1208f21b30bca646b149d10670e177",
+      "/workspace/scratch/b5296ae7597d/guards/10a99bf06c55-evidence/fidelity.json": "554d315a2ff9476afe4f2b60633880cfaee243835077df8d69505984659ffb08",
+      "/workspace/scratch/838a0195183d/sf2h-fixes/guards/materialization/candidate-0aa2405bb366/AGENTS.md": "f87f3c732f8aafec8d02501a5f11f050c07d33d350890fb12f69d8b288b830f9",
+      "/workspace/scratch/838a0195183d/sf2h-final-0aa2405/campaign.json": "aaba00217ac1978860853fb0c72748b1b275fe4ee4d3b998c42a9f730dfe98a2"
+    }
+  }
+}
+

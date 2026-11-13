@@ -1,0 +1,71 @@
+{
+  "status": "PASS",
+  "canonical_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "compiler_version": "1.0.1",
+  "actor_packs_checked": 23,
+  "authority_and_assignments_unchanged": true,
+  "negative_controls": [
+    {
+      "case": "S1-A missing required C15",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "('S1-A', 'Missing contract definitions', ['C15'])"
+    },
+    {
+      "case": "S1-C missing required C10",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "('S1-C', 'Missing contract definitions', ['C10'])"
+    },
+    {
+      "case": "S4-B missing required C10",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "('S4-B', 'Missing contract definitions', ['C10'])"
+    },
+    {
+      "case": "S1-A missing resident-runtime appendix",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "('S1-A', 'Missing resident runtime appendix')"
+    },
+    {
+      "case": "S3 missing phase handoff AI-NATIVE",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "('S3', 'Missing phase handoffs', ['AI-NATIVE'])"
+    },
+    {
+      "case": "S3 missing phase handoff NATIVE-CASE",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "('S3', 'Missing phase handoffs', ['NATIVE-CASE'])"
+    },
+    {
+      "case": "S3 missing phase handoff NATIVE-PLANNER",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "('S3', 'Missing phase handoffs', ['NATIVE-PLANNER'])"
+    },
+    {
+      "case": "S2-A route missing skill",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "('S2-A', 'sf_kpi_explain', 'Missing route skill')"
+    },
+    {
+      "case": "S2-A route missing AM02 proof",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "('S2-A', 'sf_kpi_explain', 'Missing route proof')"
+    },
+    {
+      "case": "Unknown contract C99 cannot be silently omitted",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "('S1-A', 'Unknown contract references', ['C99'])"
+    },
+    {
+      "case": "Event deduplication by lane/SHA",
+      "result": "REJECTED_AS_EXPECTED",
+      "code": "EVENT_IDENTITY_DRIFT"
+    },
+    {
+      "case": "Missing GLOBAL_RELEASE in topology",
+      "result": "REJECTED_AS_EXPECTED",
+      "code": "EVENT_ROSTER_DRIFT"
+    }
+  ],
+  "negative_control_count": 12,
+  "scope": "Planning selection/identity controls only; product and Actions NOT_RUN."
+}
