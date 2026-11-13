@@ -10,19 +10,24 @@ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { projectPlanner } from "./adapter.ts"
 import { plannerCoverageComplete } from "./coverage.ts"
+import { simulateScenario } from "./scenario-port.ts"
+import { compareScenarios } from "./scenario-comparison-port.ts"
+import type { PlannerScenarioHost } from "./scenario-comparison-port.ts"
 
 // The registry and port hash the same actor-filtered inputs and engine output.
-export function projectPlannerSource(snapshot: Snapshot, actor: Actor, versionId: string) {
+export function projectPlannerSource(snapshot: Snapshot, actor: Actor, versionId: string): Record<string, unknown> | undefined {
   if (!plannerKeys(actor).length) return undefined
   const view = projectPlanner(snapshot, actor, { at: "", id: () => "", directory: [] })
-  return rows(view.data.versions).find((version) => version.id === versionId)
+  const version = rows(view.data.versions).find((item) => item.id === versionId)
+  if (!version) return undefined
+  return { ...version, sharedEntities: rows(view.data.entities), sharedAllocations: rows(view.data.allocations) }
 }
 
-export function createPlannerPort(input: { host: DomainPortHost; sources: PlannerSourceHost }): PlannerPort {
+export function createPlannerPort(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios?: PlannerScenarioHost }): PlannerPort {
   return {
     compareForecast: (request, binding) => compareForecast(input, request, binding),
-    simulateScenario: async () => ({ status: "unavailable", reason: "scenario-simulation-not-connected" }),
-    compareScenarios: async () => ({ status: "unavailable", reason: "scenario-comparison-not-connected" }),
+    simulateScenario: (request, binding) => simulateScenario({ ...input, compare: (request, binding) => compareForecast(input, request, binding), project: projectPlannerSource }, request, binding),
+    compareScenarios: (request, binding) => input.scenarios ? compareScenarios({ ...input, scenarios: input.scenarios }, request, binding) : Promise.resolve({ status: "unavailable", reason: "scenario-comparison-not-connected" }),
     evaluateSensitivity: async () => ({ status: "unavailable", reason: "sensitivity-not-connected" }),
   }
 }

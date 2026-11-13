@@ -21,6 +21,8 @@ export function enqueueSfLedgerEvent(state: SfProductState, event: CaseLedgerEve
   }
   const eventRef = { ...value, refDigest: digestSfEvidenceRef(value) }
   const prior = state.outbox[key]
+  if (prior && prior.accessRevision !== scope.authority.accessRevision)
+    return { status: "denied", reason: "ledger-outbox-authority-changed" } as const
   if (prior && (digestSfValue(prior.eventRef) !== digestSfValue(eventRef) || prior.writerPrincipalRef !== scope.authority.principalRef))
     return { status: "conflict", reason: "ledger-outbox-content-changed" } as const
   if (!prior) state.outbox[key] = {

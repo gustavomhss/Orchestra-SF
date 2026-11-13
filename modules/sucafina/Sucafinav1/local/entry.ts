@@ -19,6 +19,8 @@ import { createLocalIdentity } from "../runtime/local-identity.ts"
 import { bootstrapLocalSurface } from "../runtime/local-bootstrap.ts"
 import { loadLocalConfiguration, requireLocalIsolation } from "../runtime/local-configuration.ts"
 import { scanLocalFile } from "../runtime/local-scanner.ts"
+import { createSfSourcePersistence } from "../product/integration/source-lifecycle.ts"
+import { enumerateSfSources } from "../product/integration/source-inventory.ts"
 
 /** Explicit factory loaded by Orchestra serve --installation. No listener, global config or host credentials. */
 export default async function installation(context: { origin: string }) {
@@ -33,7 +35,9 @@ export async function createLocalInstallation(context: { origin: string }, file:
   const config = loaded.config
   const operator = config.authentication === "local-operator" && config.localOperator ? { ...config.localOperator, name: userInfo().username } : undefined
   const client = !operator && config.tenantId && config.clientId ? createEntraClient({ tenantId: config.tenantId, clientId: config.clientId }) : undefined
-  const store = await openLocalStore(path.join(loaded.directory, operator ? "business-local" : "business"))
+  const driver = await openLocalStore(path.join(loaded.directory, operator ? "business-local" : "business"))
+  const store = { ...driver, ...createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, createId: randomUUID }) }
+  const restoration = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, createId: randomUUID, purpose: "business-restore" })
   const services = { jobs: undefined as Awaited<ReturnType<typeof createLocalJobs>> | undefined }
   const status = (request: Request) => {
     const url = new URL(request.url)
@@ -51,6 +55,7 @@ export async function createLocalInstallation(context: { origin: string }, file:
     handler: async (request: Request) => status(request) ?? new Response("Microsoft 365 application is not configured. Set tenantId and clientId in the private installation configuration, then start this isolated instance again.", { status: 503, headers: { "Cache-Control": "no-store", "Content-Type": "text/plain; charset=utf-8" } }),
     dispose: () => store.dispose(),
   }
+  for (const surface of ["dashboard", "planner", "procurement"] as const) await store.initializeSources(surface)
   const identity = operator
     ? createOperatorIdentity({ origin: config.origin, mount: config.mount, operator, secrets: store.secrets, key: loaded.keys.session })
     : createLocalIdentity({ origin: config.origin, mount: config.mount, client: client!, secrets: store.secrets, key: loaded.keys.session })
@@ -123,7 +128,7 @@ export async function createLocalInstallation(context: { origin: string }, file:
             const recovered = await withRecoveryPoint(recovery, values.at, (point) => backups.capture(point, surface, new Date().toISOString())).catch(() => undefined)
             if (!recovered) return utilityJson({ ok: false, errors: ["That recovery point is unavailable or could not be verified. Live data was not changed."] }, 422)
             await backups.capture(store, surface, new Date().toISOString())
-            const result = await restoreBackup(store, backups.source, surface, recovered.id, { id: person.id, canWrite: true, roles: ["admin"] }, true, Number(command.version), new Date().toISOString())
+            const result = await restoreBackup(restoration, backups.source, surface, recovered.id, { id: person.id, canWrite: true, roles: ["admin"] }, true, Number(command.version), new Date().toISOString())
             return utilityJson(result, result.ok ? 200 : result.status)
           }
           if (command.action !== "restore-backup" || command.confirmed !== true || typeof values.id !== "string" || !/^backup-[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/.test(values.id) || !Number.isSafeInteger(command.version) || Number(command.version) < 0) return utilityJson({ ok: false, errors: ["Confirmed restoration and current revision required."] }, 422)
@@ -133,7 +138,7 @@ export async function createLocalInstallation(context: { origin: string }, file:
           if (!pinned) return utilityJson({ ok: false, errors: ["Backup is no longer available."] }, 404)
           // Keep a verified copy of the current state before replacing business data.
           await backups.capture(store, surface, new Date().toISOString())
-          const restored = await restoreBackup(store, pinned, surface, values.id, { id: person.id, canWrite: true, roles: ["admin"] }, true, Number(command.version), new Date().toISOString())
+          const restored = await restoreBackup(restoration, pinned, surface, values.id, { id: person.id, canWrite: true, roles: ["admin"] }, true, Number(command.version), new Date().toISOString())
           return utilityJson(restored, restored.ok ? 200 : restored.status)
         }
         const surfaces = ["dashboard", "planner", "procurement"] as const

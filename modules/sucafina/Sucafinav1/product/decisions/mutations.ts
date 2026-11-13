@@ -1,5 +1,6 @@
 import { digestSfValue } from "../contracts/canonical.ts"
 import { validateScenarioCoverage } from "./cost-coverage.ts"
+import { enqueueSfLedgerEvent } from "../integration/ledger-outbox.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { PreparedCommand } from "../contracts/context.ts"
 import type { DecisionCase, ChoiceRecord, ScenarioResult } from "../contracts/decisions.ts"
@@ -151,10 +152,17 @@ async function replayMutation(input: MutationHost, ref: CaseRef, context: Truste
 async function saveCase(input: MutationHost, loaded: LoadedCase, context: TrustedDomainContext, operation: string, request: unknown, update: (value: DecisionCase) => DecisionCase): Promise<PortResult<MutationReceipt>> {
   const nextValue = { ...update(loaded.case), version: loaded.case.version + 1 }
   if (!await input.authorizeCase(loaded.case, context) || !await input.authorizeCase(nextValue, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "case-access-unavailable" }
-  const saved = await input.state.transaction(loaded.source, { namespace: "cases", expectedStorageVersion: loaded.storageVersion, targetRef: loaded.case.id, targetIncarnation: loaded.case.incarnation, idempotencyKey: `${loaded.identity}:${operation}`, commandDigest: digestSfValue(request) }, async (state, authority) => {
+  const outbox = operation === "record-choice" ? await input.state.read(loaded.source, "outbox", (_state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" })) : undefined
+  if (outbox && outbox.status !== "ok") return failure(outbox)
+  if (outbox && !outbox.value) return { status: "denied", reason: "outbox-access-unavailable" }
+  const saved = await input.state.transaction(loaded.source, { namespace: "cases", expectedStorageVersion: loaded.storageVersion, ...(outbox ? { additionalNamespaces: [{ namespace: "outbox" as const, expectedStorageVersion: outbox.storageVersion }] } : {}), targetRef: loaded.case.id, targetIncarnation: loaded.case.incarnation, idempotencyKey: `${loaded.identity}:${operation}`, commandDigest: digestSfValue(request) }, async (state, authority) => {
     const actual = state.cases[loaded.case.id]
     if (!actual || actual.version !== loaded.case.version || actual.incarnation !== loaded.case.incarnation || authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return { commit: false, value: null }
     state.cases[actual.id] = nextValue
+    if (outbox) {
+      const event = nextValue.ledger.at(-1)
+      if (!event || event.kind !== "choice-recorded" || enqueueSfLedgerEvent(state, event, { installationId: context.binding.installationId, projectId: context.binding.projectId, authority }).status !== "ok") return { commit: false, value: null }
+    }
     return { commit: true, value: nextValue }
   }).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
   if (saved.status !== "ok") return failure(saved)

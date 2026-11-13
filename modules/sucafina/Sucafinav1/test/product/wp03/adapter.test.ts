@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { projectPlanner, simulatePlannerCommand, simulatePlannerCommands } from "../../../product/planner/adapter.ts"
 import { simulatePlannerOperations } from "../../../product/planner/scenario.ts"
 import { prepareMonthlyDrafts } from "../../../product/planner/monthly-edit.ts"
@@ -92,4 +93,15 @@ test("scenario replacement uses domain command on a copy and rejects duplicate t
   if (result.status === "ok") expect((result.view.data.versions as { summary: { outlook: number[] } }[])[0].summary.outlook[1]).toBe(42)
   expect(snapshot).toEqual(before)
   expect(simulatePlannerOperations(snapshot, actor, environment, "v1", [{ kind: "replace", targetRef: "line:2", amount: 42 }, { kind: "replace", targetRef: "line:2", amount: 50 }])).toMatchObject({ status: "needs-input" })
+})
+
+test("source projection changes when relevant Planner inputs change", () => {
+  const snapshot = fixture()
+  const before = projectPlannerSource(snapshot, actor, "v1")!
+  const version = (snapshot.data.versions as Record<string, unknown>[])[0]
+  version.closed = 2
+  const after = projectPlannerSource(snapshot, actor, "v1")!
+  expect(digestSfValue({ versionId: "v1", projection: after })).not.toBe(digestSfValue({ versionId: "v1", projection: before }))
+  snapshot.data.allocations = [{ id: "alloc", name: "Shared" }]
+  expect(digestSfValue({ versionId: "v1", projection: projectPlannerSource(snapshot, actor, "v1") })).not.toBe(digestSfValue({ versionId: "v1", projection: after }))
 })

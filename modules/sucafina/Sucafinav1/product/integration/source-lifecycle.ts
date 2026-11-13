@@ -10,6 +10,7 @@ export function createSfSourcePersistence(input: {
   persistence: AssetPersistence
   enumerate: (surface: Surface, snapshot: Snapshot) => readonly SfSourceIdentityInput[]
   createId: () => string
+  purpose?: "business-restore"
 }): AssetPersistence & { initializeSources: (surface: Surface) => Promise<void> } {
   return {
     initializeSources: (surface) => input.persistence.transaction(surface, async (snapshot) => {
@@ -25,13 +26,16 @@ export function createSfSourcePersistence(input: {
       requireSourceIdentities(snapshot)
       const before = digestSfValue(snapshot.sfSources)
       const auditStart = snapshot.audit.length
+      const auditPrefix = digestSfValue(snapshot.audit)
       const productState = structuredClone(snapshot.data.__sfProductV1)
       const result = await work(snapshot, blobs)
       if (!result.commit) return result
       if (before !== digestSfValue(snapshot.sfSources)) throw new Error("SF_SOURCE_IDENTITY_MUTATION")
+      if (snapshot.audit.length < auditStart || digestSfValue(snapshot.audit.slice(0, auditStart)) !== auditPrefix) throw new Error("SF_SOURCE_AUDIT_REWRITTEN")
       // Dataset import/restore already appends this canonical audit record inside its transaction.
       const replacement = snapshot.audit.slice(auditStart).some((event) => event.record === "dataset")
-      if (replacement) {
+      if (input.purpose === "business-restore") {
+        if (!replacement) throw new Error("SF_RESTORE_MARKER_MISSING")
         if (productState === undefined) delete snapshot.data.__sfProductV1
         if (productState !== undefined) snapshot.data.__sfProductV1 = productState
       }

@@ -19,7 +19,7 @@ export function createDecisionProposalService(input: {
   resolveAlternative: (request: AlternativeDraftRequest, context: TrustedDomainContext) => Promise<PortResult<{ scenario: ScenarioRequest; coverageRef: string }>>
   authorizeProposal: (request: AlternativeDraftRequest, proposal: SfOperationOutputMap["sf_alternative_draft"]["proposal"], basis: CostCoverageBasis, context: TrustedDomainContext) => Promise<boolean>
 }) {
-  return async (request: AlternativeDraftRequest, context: TrustedDomainContext): Promise<PortResult<SfOperationOutputMap["sf_alternative_draft"] & { costCoverageBasis: CostCoverageBasis; coverageRef: string }>> => {
+  return async (request: AlternativeDraftRequest, context: TrustedDomainContext): Promise<PortResult<SfOperationOutputMap["sf_alternative_draft"]>> => {
     const parsed = decodeSfOperationInput("sf_alternative_draft", request)
     if (!parsed.ok || !request.proposal.title.trim() || !request.proposal.description.trim()) return { status: "needs-input", reason: "invalid-alternative-proposal" }
     const current = await callProposalPort(() => input.cases.read({ caseRef: parsed.value.caseRef }, context))

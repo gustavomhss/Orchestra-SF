@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { comparePlannerScenarios } from "../../../product/planner/comparison.ts"
 import { plannerCoverageComplete } from "../../../product/planner/coverage.ts"
 import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
 import type { CostCoverageAssessment, CostCoverageBasis } from "../../../product/contracts/decisions.ts"
@@ -17,4 +18,14 @@ test("coverage requires every category and a quantified current component", () =
   expect(plannerCoverageComplete(basis, { ...complete, entries: complete.entries.filter((entry) => entry.categoryId !== "training") }, projection, evidence)).toBe(false)
   expect(plannerCoverageComplete(basis, complete, { ...projection, components: [{ ...projection.components[0], amount: null, evidenceState: "absent" }] }, evidence)).toBe(false)
   expect(plannerCoverageComplete(basis, complete, { ...projection, missing: [{ field: "fx", reason: "missing-fx" }] }, evidence)).toBe(false)
+})
+
+test("comparison does not promote a conditioned or incompatible result", () => {
+  const common = { id: "base", version: 1, components: projection.components, currency: "USD", horizon: period, sourceRefs: [evidence], costCoverage: complete, unresolvedConditions: [], restrictions: [] }
+  const baseline = { ...common, comparisonStatus: "complete" as const, knownSubtotal: 0, total: 0 }
+  const conditioned = { ...common, id: "candidate", comparisonStatus: "conditioned" as const, knownSubtotal: 10, total: null, unresolvedConditions: ["training-missing"] }
+  const args = { baselineRef: "base", alternativeRef: "candidate", baselineCoverageRef: "coverage-base", alternativeCoverageRef: "coverage-candidate", baseline, alternative: conditioned }
+  expect(comparePlannerScenarios({ ...args, alternative: { ...baseline, id: "candidate" } })).toMatchObject({ comparisonStatus: "conditioned", completeDifference: null })
+  expect(comparePlannerScenarios(args)).toMatchObject({ comparisonStatus: "conditioned", knownDifference: 10, completeDifference: null })
+  expect(comparePlannerScenarios({ ...args, alternative: { ...conditioned, currency: "EUR" } })).toMatchObject({ comparisonStatus: "incompatible", knownDifference: null })
 })

@@ -5,7 +5,7 @@ import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
 import type { PlannerPort } from "../contracts/ports.ts"
 import type { BoundCapabilityReceipt, CapabilityDescriptor, CapabilityResult, TrustedDomainContext } from "../contracts/sf-execution.ts"
 
-type ReceiptFactory = (context: TrustedDomainContext, operation: string, inputDigest: string, resultDigest?: string) => Promise<BoundCapabilityReceipt | undefined>
+type ReceiptFactory = (context: TrustedDomainContext, operation: string, inputDigest: string, resultDigest?: string) => BoundCapabilityReceipt | undefined | Promise<BoundCapabilityReceipt | undefined>
 
 export async function compareForecast(payload: unknown, context: TrustedDomainContext, port: PlannerPort, createReceipt: ReceiptFactory): Promise<CapabilityResult> {
   const operation = "sf_forecast_compare"
