@@ -10,6 +10,7 @@ import { Effect, JsonSchema, Layer } from "effect"
 import { sfOperationInputSchemas } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import type { CreateSfProductContribution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/runtime.ts"
+import type { BusinessPorts } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import { dispatchSfCapability } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts"
 import { registerSfResidentAgents } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts"
 import { createSfBusinessMcpBridge } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts"
@@ -31,14 +32,7 @@ export const createSfProductContribution: CreateSfProductContribution = (input) 
       input.onRegistered({ skills, sourceCapability })
       const bridge = createSfBusinessMcpBridge({
         registry: input.registry, mcp, descriptors: input.descriptors,
-        dispatch: (operation, payload, context) => dispatchSfCapability({
-          operation, payload, context, descriptors: input.descriptors, authority: input.authority,
-          validateInput: (descriptor, value) => Object.hasOwn(sfOperationInputSchemas, descriptor.id) &&
-            decodeSfOperationInput(descriptor.id as keyof typeof sfOperationInputSchemas, value).ok,
-          validateOutput: (descriptor, result) => result.status !== "ok" ||
-            (Object.hasOwn(sfOperationInputSchemas, descriptor.id) &&
-              decodeSfOperationOutput(descriptor.id as keyof typeof sfOperationInputSchemas, result.result).ok),
-        }),
+        dispatch: createSfProductDispatch(input),
       })
       yield* tools.register(Object.fromEntries(input.descriptors.map((descriptor) => [descriptor.id, Tool.dynamic({
         description: `Sucafina ${descriptor.id}`,
@@ -54,3 +48,15 @@ export const createSfProductContribution: CreateSfProductContribution = (input) 
     })),
   })],
 })
+
+/** UI and resident tools share schemas, private authority and the same receipt checks. */
+export function createSfProductDispatch(input: Pick<Parameters<CreateSfProductContribution>[0], "descriptors" | "authority">): BusinessPorts["dispatch"] {
+  return (operation, payload, context) => dispatchSfCapability({
+    operation, payload, context, descriptors: input.descriptors, authority: input.authority,
+    validateInput: (descriptor, value) => Object.hasOwn(sfOperationInputSchemas, descriptor.id) &&
+      decodeSfOperationInput(descriptor.id as keyof typeof sfOperationInputSchemas, value).ok,
+    validateOutput: (descriptor, result) => result.status !== "ok" ||
+      (Object.hasOwn(sfOperationInputSchemas, descriptor.id) &&
+        decodeSfOperationOutput(descriptor.id as keyof typeof sfOperationInputSchemas, result.result).ok),
+  })
+}

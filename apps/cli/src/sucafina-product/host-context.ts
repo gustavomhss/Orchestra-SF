@@ -20,7 +20,7 @@ import { validSfSelection, sfSourceFor } from "../../../../modules/sucafina/Suca
 import { createDashboardPort } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/port.ts"
 import { createDashboardSourceHost } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/sources.ts"
 import { createDashboardCapabilities } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts"
-import { createSfProductContribution } from "./contribution.ts"
+import { createSfProductContribution, createSfProductDispatch } from "./contribution.ts"
 import { createSfTokenGate } from "./token-gate.ts"
 import { createSfNativeHostContribution } from "./native-host.ts"
 import type { SfNativeHostApi, SfLoadedSkillObservation } from "./native-host.ts"
@@ -146,7 +146,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
       }))
     })),
   })
-  const services: SfHostServices = { ...authority, selected, models: async () => state.models ? state.models() : [], sessions: {
+  const services: SfHostServices = { ...authority, selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
     prepare: async (request) => {
       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }
       if (requests.has(request.runId)) return { status: "conflict", reason: "native-run-already-admitted" }

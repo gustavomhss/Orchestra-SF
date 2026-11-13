@@ -6,7 +6,7 @@ import type { Application } from "../../runtime/application.ts"
 import type { SfScopedSourcePort } from "../integration/source-lifecycle.ts"
 import type { createSfProductAuthority, SfProductGrant } from "../integration/product-authority.ts"
 import type { SfNativeAdmission, SfSelectedRuntime } from "./runtime.ts"
-import type { PortResult } from "./ports.ts"
+import type { BusinessPorts, PortResult } from "./ports.ts"
 import type { TrustedExecutionBinding } from "./sf-execution.ts"
 
 /** In-process host API. Neither this object nor its bindings are serialized into a model request. */
@@ -20,6 +20,7 @@ export type SfHostSessionPort = {
   interrupt: (binding: TrustedExecutionBinding) => Promise<PortResult<true>>
 }
 export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
+  dispatch: BusinessPorts["dispatch"]
   sessions: SfHostSessionPort
   selected: readonly SfSelectedRuntime[]
   models: () => Promise<readonly ModelV2.Ref[]>
