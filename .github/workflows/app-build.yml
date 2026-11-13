@@ -1,0 +1,152 @@
+name: app-build
+
+on:
+  workflow_dispatch:
+    inputs:
+      revision:
+        description: Full 40-character source revision
+        type: string
+        required: false
+        default: ""
+
+concurrency:
+  group: app-build
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    if: "github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/dev'"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Select revision
+        id: source
+        env:
+          REQUESTED_REVISION: ${{ inputs.revision || github.sha }}
+        run: |
+          set -euo pipefail
+          if [[ ! "$REQUESTED_REVISION" =~ ^[0-9a-f]{40}$ ]]; then
+            printf '%s\n' "revision rejected" >&2
+            exit 1
+          fi
+          printf 'sha=%s\n' "$REQUESTED_REVISION" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ steps.source.outputs.sha }}
+          persist-credentials: false
+
+      - name: Setup Node
+        id: node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+
+      - name: Setup Bun
+        id: bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-download-url: https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64-baseline.zip
+          no-cache: true
+
+      - name: Install dependencies
+        id: install
+        run: bun install --frozen-lockfile
+
+      - name: Build native omni
+        id: native
+        working-directory: native/omni
+        run: |
+          set -euo pipefail
+          if [[ "$(uname -m)" != "x86_64" ]]; then
+            printf '%s\n' "runner rejected" >&2
+            exit 1
+          fi
+          rustup show active-toolchain || rustup toolchain install
+          cargo build --locked --release -p hugr-omni-node -p omni-supervisor
+
+      - name: Qualify web native distribution
+        id: qualify
+        working-directory: apps/cli
+        env:
+          SOURCE_REVISION: ${{ steps.source.outputs.sha }}
+          ORCHESTRA_OMNI_CONTROL: suite
+          ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+        run: |
+          set -euo pipefail
+          observed="$(git rev-parse HEAD)"
+          if [[ "$observed" != "$SOURCE_REVISION" ]]; then
+            printf '%s\n' "HEAD is not the selected revision" >&2
+            exit 1
+          fi
+          if [[ ! -f ./test/distribution-web-native.test.ts ]]; then
+            printf '%s\n' "qualifier missing" >&2
+            exit 1
+          fi
+          nonce="$(node -e 'process.stdout.write(require("node:crypto").randomBytes(16).toString("hex"))')"
+          export ORCHESTRA_OMNI_CONTROL_NONCE="$nonce"
+          bun test ./test/distribution-web-native.test.ts --timeout 1800000
+
+      - name: Check build receipt
+        id: receipt
+        env:
+          SOURCE_REVISION: ${{ steps.source.outputs.sha }}
+          WORKFLOW_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { createHash } from "node:crypto"
+          import { readFileSync } from "node:fs"
+          const die = (label) => { process.stderr.write(label + "\n"); process.exit(1) }
+          const hex = (value, size) => typeof value === "string" && new RegExp(`^[0-9a-f]{${size}}$`).test(value)
+          const receipt = JSON.parse(readFileSync("distribution-logs/build-receipt.json", "utf8"))
+          const version = JSON.parse(readFileSync("apps/cli/package.json", "utf8")).version
+          const selected = process.env.SOURCE_REVISION ?? ""
+          const workflow = process.env.WORKFLOW_SHA ?? ""
+          if (receipt.schema !== "orchestra-web-build-proof-v1") die("schema")
+          if (receipt.repository !== "gustavomhss/Orchestra-SF") die("repository")
+          if (!hex(selected, 40) || receipt.sourceSHA !== selected) die("sourceSHA")
+          if (!hex(workflow, 40) || receipt.workflowSHA !== workflow) die("workflowSHA")
+          if (receipt.target !== "linux-x64-baseline" || receipt.manifest?.target !== "linux-x64-baseline") die("target")
+          if (receipt.version !== version || receipt.manifest?.version !== version) die("version")
+          if (!hex(receipt.modelsSha256, 64)) die("modelsSha256")
+          if (receipt.inspected !== true) die("inspected")
+          if (receipt.providerProof !== false) die("providerProof")
+          if (receipt.archive?.file !== "orchestra-sf-linux-x64-baseline.tar.gz") die("archive.file")
+          const digest = createHash("sha256").update(readFileSync("distribution-logs/orchestra-sf-linux-x64-baseline.tar.gz")).digest("hex")
+          if (digest !== receipt.archive.sha256) die("archive.sha256")
+          if (receipt.manifest?.schema !== "orchestra-distribution-v1") die("manifest.schema")
+          const files = receipt.manifest.files
+          const entry = (file) => !!file && typeof file === "object" && !Array.isArray(file) && typeof file.path === "string" && hex(file.sha256, 64) && typeof file.executable === "boolean" && !file.path.startsWith("/") && !file.path.includes("\\") && !file.path.split("/").includes("..") && !file.path.split("/").includes("")
+          if (!Array.isArray(files) || files.length < 3 || !files.every(entry)) die("files")
+          const at = (name) => files.find((file) => file.path === name)
+          const binary = at("bin/orchestra")
+          const index = at("bin/web/index.html")
+          if (!binary || binary.executable !== true) die("bin/orchestra")
+          if (!index || index.executable !== false) die("bin/web/index.html")
+          const rel = receipt.web?.asset
+          if (typeof rel !== "string" || rel === "" || rel.startsWith("/") || rel.includes("\\") || rel.split("/").includes("..") || rel.split("/").includes("")) die("web.asset")
+          const assetPath = "bin/web/" + rel
+          const asset = at(assetPath)
+          if (!asset || asset.executable !== false || !assetPath.endsWith(".js") || assetPath === "bin/web/index.html") die("web.asset")
+          if (!hex(receipt.web.indexSha256, 64) || receipt.web.indexSha256 !== index.sha256 || receipt.web.assetSha256 !== asset.sha256) die("web.sha256")
+          NODE
+
+      - name: Upload distribution logs
+        id: upload
+        if: success()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: orchestra-sf-linux-${{ steps.source.outputs.sha }}
+          path: distribution-logs
+          if-no-files-found: error
+          retention-days: 7
