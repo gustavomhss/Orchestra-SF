@@ -55,7 +55,13 @@ jobs:
         working-directory: modules/sucafina
         run: |
           set -euo pipefail
+          set +e
           bun typecheck 2>&1 | tee "$RUNNER_TEMP/wp01-check-evidence/typecheck.log"
+          typecheck_pipeline=("${PIPESTATUS[@]}")
+          set -e
+          printf 'exit_code=%s\nlog_exit_code=%s\n' "${typecheck_pipeline[0]}" "${typecheck_pipeline[1]}" >> "$GITHUB_OUTPUT"
+          if [ "${typecheck_pipeline[0]}" -ne 0 ]; then exit "${typecheck_pipeline[0]}"; fi
+          exit "${typecheck_pipeline[1]}"
 
       - name: Run repository guards against dev
         id: guards
@@ -68,18 +74,22 @@ jobs:
         if: always()
         env:
           TYPECHECK_OUTCOME: ${{ steps.typecheck.outcome }}
+          TYPECHECK_EXIT_CODE: ${{ steps.typecheck.outputs.exit_code }}
+          TYPECHECK_LOG_EXIT_CODE: ${{ steps.typecheck.outputs.log_exit_code }}
           GUARDS_OUTCOME: ${{ steps.guards.outcome }}
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/wp01-check-evidence"
           jq -n --arg sha "$GITHUB_SHA" --arg typecheck "$TYPECHECK_OUTCOME" --arg guards "$GUARDS_OUTCOME" \
-            '{productSha:$sha,typecheck:$typecheck,guards:$guards}' \
+            --arg exitCode "$TYPECHECK_EXIT_CODE" --arg logExitCode "$TYPECHECK_LOG_EXIT_CODE" \
+            '{productSha:$sha,typecheck:$typecheck,typecheckExitCode:($exitCode|if . == "" then null else tonumber end),typecheckLogExitCode:($logExitCode|if . == "" then null else tonumber end),guards:$guards}' \
             | tee "$RUNNER_TEMP/wp01-check-evidence/outcomes.json"
           {
             echo "### WP01 scoped static checks"
             echo ""
             echo "- Product commit: $GITHUB_SHA"
             echo "- Typecheck: $TYPECHECK_OUTCOME"
+            echo "- Typecheck exit code: ${TYPECHECK_EXIT_CODE:-not recorded} (log writer: ${TYPECHECK_LOG_EXIT_CODE:-not recorded})"
             echo "- Guards: $GUARDS_OUTCOME"
           } >> "$GITHUB_STEP_SUMMARY"
 
@@ -89,6 +99,69 @@ jobs:
         with:
           name: astra-wp01-check-${{ github.run_attempt }}
           path: ${{ runner.temp }}/wp01-check-evidence
+          if-no-files-found: error
+          retention-days: 14
+
+  seed-typecheck:
+    # Run the same package check at the immutable seed to distinguish inherited
+    # integration diagnostics from this WP's changes. Its failure stays visible.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout immutable WP01 seed
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: b0fa725b835149e222d48bd023b8899311abaefd
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Record baseline identity
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = b0fa725b835149e222d48bd023b8899311abaefd
+          mkdir -p "$RUNNER_TEMP/wp01-seed-evidence"
+          jq -n --arg seed "$(git rev-parse HEAD)" --arg tree "$(git rev-parse 'HEAD^{tree}')" --arg product "$GITHUB_SHA" \
+            '{seedSha:$seed,seedTree:$tree,productEventSha:$product}' \
+            | tee "$RUNNER_TEMP/wp01-seed-evidence/source.json"
+
+      - name: Setup Bun
+        uses: ./.github/actions/setup-bun
+
+      - name: Typecheck immutable seed
+        id: typecheck
+        working-directory: modules/sucafina
+        run: |
+          set -euo pipefail
+          set +e
+          bun typecheck 2>&1 | tee "$RUNNER_TEMP/wp01-seed-evidence/typecheck.log"
+          typecheck_pipeline=("${PIPESTATUS[@]}")
+          set -e
+          printf 'exit_code=%s\nlog_exit_code=%s\n' "${typecheck_pipeline[0]}" "${typecheck_pipeline[1]}" >> "$GITHUB_OUTPUT"
+          if [ "${typecheck_pipeline[0]}" -ne 0 ]; then exit "${typecheck_pipeline[0]}"; fi
+          exit "${typecheck_pipeline[1]}"
+
+      - name: Record baseline outcome
+        if: always()
+        env:
+          TYPECHECK_OUTCOME: ${{ steps.typecheck.outcome }}
+          TYPECHECK_EXIT_CODE: ${{ steps.typecheck.outputs.exit_code }}
+          TYPECHECK_LOG_EXIT_CODE: ${{ steps.typecheck.outputs.log_exit_code }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/wp01-seed-evidence"
+          jq -n --arg outcome "$TYPECHECK_OUTCOME" --arg exitCode "$TYPECHECK_EXIT_CODE" --arg logExitCode "$TYPECHECK_LOG_EXIT_CODE" \
+            '{typecheck:$outcome,typecheckExitCode:($exitCode|if . == "" then null else tonumber end),typecheckLogExitCode:($logExitCode|if . == "" then null else tonumber end)}' \
+            > "$RUNNER_TEMP/wp01-seed-evidence/outcome.json"
+
+      - name: Upload immutable seed evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: astra-wp01-seed-typecheck-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/wp01-seed-evidence
           if-no-files-found: error
           retention-days: 14
 

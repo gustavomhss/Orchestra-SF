@@ -142,9 +142,11 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
         if (access.status !== "ok") return undefined
         try {
           if (!await runtime.ui.validate(access.value, "sf_routine_status", digest)) return undefined
-          const result = await runtime.routineRuns!.discoverRuns(access.value).catch(() => undefined)
-          if (!result || result.status !== "ok" || !await runtime.ui.revalidate(access.value)) return undefined
-          return result.value
+          const result: unknown = await runtime.routineRuns!.discoverRuns(access.value).catch(() => undefined)
+          if (!result || typeof result !== "object" || !("status" in result) || result.status !== "ok" || !("value" in result) || !Array.isArray(result.value) || !await runtime.ui.revalidate(access.value)) return undefined
+          const entries: unknown[] = result.value
+          if (!entries.every((run): run is { admission: string; runRef?: string } => !!run && typeof run === "object" && "admission" in run && typeof run.admission === "string" && (!("runRef" in run) || run.runRef === undefined || typeof run.runRef === "string"))) return undefined
+          return entries
         } finally { runtime.ui.finish(access.value) }
       })() : undefined
       const routines = runs ? `<h2>Routines</h2>${runs.length ? `<ul>${runs.map((run, index) => `<li>${run.runRef ? `<a href="?${esc(new URLSearchParams({ sf: "workbench-routine", runRef: run.runRef }).toString())}">Routine ${index + 1}</a>` : `Routine ${index + 1}`} · ${esc(run.admission)}</li>`).join("")}</ul>` : "<p>No accessible routine runs.</p>"}` : "<p>Routine list is currently unavailable.</p>"

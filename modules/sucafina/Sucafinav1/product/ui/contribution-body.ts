@@ -19,17 +19,17 @@ export function contributionBody(output: ContributionEnvelope): string {
       const payload = output.payload
       const position = (ref: string) => { const found = payload.proposals.flatMap((item, index) => item.proposalRef === ref ? [index + 1] : []); return found.length === 1 ? `Proposal ${found[0]}` : "Unmatched supplied entry" }
       const rows = payload.proposals.map((item, index) => {
-        const components = item.components
-        const money = item.money
+        const components = "components" in item && isCommercialScores(item.components) ? item.components : undefined
+        const money = "money" in item && isCommercialMoney(item.money) ? item.money : undefined
         const componentText = !components ? "Component scores not supplied" : [["Technical", components.technical], ["Price", components.price], ["Commercial", components.commercial], ["Overall", components.overall]].flatMap(([name, value]) => value === null ? [] : [`${name}: ${esc(String(value))}`]).join(", ") || "Component scores not supplied"
         const moneyText = !money ? "Money breakdown not supplied" : [money.originalAmount === null ? "" : `Original amount: ${esc(String(money.originalAmount))}`, money.originalCurrency ? `Original currency: ${esc(money.originalCurrency)}` : "", money.baseCurrency ? `Base currency: ${esc(money.baseCurrency)}` : "", money.fxRate === null ? "" : `FX rate: ${esc(String(money.fxRate))}`, money.fxSource ? `FX source: ${esc(money.fxSource)}` : ""].filter(Boolean).join(" · ") || "Money breakdown not supplied"
         const amount = item.convertedAmount === null ? "Amount unavailable" : `${esc(String(item.convertedAmount))} ${esc(payload.currency)}`
         return `<tr><th scope="row">Proposal ${index + 1}</th><td>${item.eligible ? "Eligible" : "Ineligible"}</td><td>${amount}</td><td>${item.score === null ? "Score not supplied" : esc(String(item.score))}</td><td>${componentText}</td><td>${moneyText}</td><td>${item.issues.length ? item.issues.map((issue) => esc(issue)).join(", ") : "No issues recorded"}</td></tr>`
       }).join("")
       const ranking = payload.ranking.length ? `<p>Recorded order: ${payload.ranking.map((ref) => esc(position(ref))).join(", ")}</p>` : "<p>No ranking is supplied.</p>"
-      const weights = payload.weights
+      const weights = "weights" in payload && isCommercialWeights(payload.weights) ? payload.weights : undefined
       const weightsBody = !weights ? "<p>Weights not supplied.</p>" : `<p>Technical weight: ${weights.technical === null ? "not supplied" : esc(String(weights.technical))}. Commercial weight: ${weights.commercial === null ? "not supplied" : esc(String(weights.commercial))}.</p>${list(weights.technicalCriteria.map((item) => `${item.name}: ${item.weight}`))}${list(weights.commercialCriteria.map((item) => `${item.name}: ${item.weight} · ${item.automatic ? "Automatic" : "Not automatic"}`))}`
-      const selection = payload.selection
+      const selection = "selection" in payload && isCommercialSelection(payload.selection) ? payload.selection : undefined
       const selectionText = !selection?.proposalRef ? "No selection recorded." : `${esc(position(selection.proposalRef))}. ${selection.reason ? `Selection reason: ${esc(selection.reason)}` : "Selection reason not supplied."}`
       const table = rows ? `<div class="table-scroll"><table><caption>Commercial comparison · ${esc(payload.currency)}</caption><thead><tr><th scope="col">Proposal</th><th scope="col">Eligibility</th><th scope="col">Amount</th><th scope="col">Score</th><th scope="col">Components</th><th scope="col">Money</th><th scope="col">Issues</th></tr></thead><tbody>${rows}</tbody></table></div>` : "<p>No proposals recorded.</p>"
       return `${table}${ranking}${weightsBody}<p>${selectionText}</p>${list(payload.conditions.map((item) => item.reason))}`
@@ -51,5 +51,34 @@ export function contributionBody(output: ContributionEnvelope): string {
     case "CaseRecall": return list(output.payload.matches.map((item) => `${item.caseRef.id}: ${item.explanation.matchedCriteria.join(", ")}; ${item.explanation.currentDifferences.join(", ")}`)) + list(output.payload.limitations)
     case "MatchExplanation": return list(output.payload.matchedCriteria) + list(output.payload.currentDifferences) + list(output.payload.limitations)
   }
+}
+
+// Optional producer presentation details are not yet fields of the shared CommercialComparison.
+// Accept only their known display shape; absence or malformed metadata never supplies a value.
+function record(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === "object" && !Array.isArray(value)
+}
+
+function nullableNumber(value: unknown): value is number | null {
+  return value === null || typeof value === "number" && Number.isFinite(value)
+}
+
+function isCommercialScores(value: unknown): value is { technical: number | null; price: number | null; commercial: number | null; overall: number | null } {
+  return record(value) && ["technical", "price", "commercial", "overall"].every((key) => nullableNumber(value[key]))
+}
+
+function isCommercialMoney(value: unknown): value is { originalAmount: number | null; originalCurrency: string | null; baseCurrency: string | null; fxRate: number | null; fxSource: string | null } {
+  return record(value) && nullableNumber(value.originalAmount) && nullableNumber(value.fxRate) &&
+    ["originalCurrency", "baseCurrency", "fxSource"].every((key) => value[key] === null || typeof value[key] === "string")
+}
+
+function isCommercialWeights(value: unknown): value is { technical: number | null; commercial: number | null; technicalCriteria: { name: string; weight: number | null }[]; commercialCriteria: { name: string; weight: number | null; automatic: boolean }[] } {
+  return record(value) && nullableNumber(value.technical) && nullableNumber(value.commercial) &&
+    Array.isArray(value.technicalCriteria) && value.technicalCriteria.every((entry: unknown) => record(entry) && typeof entry.name === "string" && nullableNumber(entry.weight)) &&
+    Array.isArray(value.commercialCriteria) && value.commercialCriteria.every((entry: unknown) => record(entry) && typeof entry.name === "string" && nullableNumber(entry.weight) && typeof entry.automatic === "boolean")
+}
+
+function isCommercialSelection(value: unknown): value is { proposalRef?: string; reason?: string } {
+  return record(value) && (value.proposalRef === undefined || typeof value.proposalRef === "string") && (value.reason === undefined || typeof value.reason === "string")
 }
 
