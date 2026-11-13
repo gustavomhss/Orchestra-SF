@@ -1,4 +1,12 @@
 import { SF_NATIVE_ACCESS_COPY, SF_NATIVE_ACCESS_COPY_BR } from "./orchestra-chapters/sucafina-native-access"
+import { SF_NATIVE_SHELL_COPY, SF_NATIVE_SHELL_COPY_BR } from "./orchestra-chapters/sucafina-native-shell"
+import { SF_NATIVE_DASHBOARD_BUDGET_COPY, SF_NATIVE_DASHBOARD_BUDGET_COPY_BR } from "./orchestra-chapters/sucafina-native-dashboard-budget"
+import { SF_NATIVE_DASHBOARD_PEOPLE_COPY, SF_NATIVE_DASHBOARD_PEOPLE_COPY_BR } from "./orchestra-chapters/sucafina-native-dashboard-people"
+import { SF_NATIVE_DASHBOARD_PORTFOLIO_COPY, SF_NATIVE_DASHBOARD_PORTFOLIO_COPY_BR } from "./orchestra-chapters/sucafina-native-dashboard-portfolio"
+import { SF_NATIVE_DASHBOARD_OPERATIONS_COPY, SF_NATIVE_DASHBOARD_OPERATIONS_COPY_BR } from "./orchestra-chapters/sucafina-native-dashboard-operations"
+import { SF_NATIVE_PLANNER_LINES_COPY, SF_NATIVE_PLANNER_LINES_COPY_BR } from "./orchestra-chapters/sucafina-native-planner-lines"
+import { SF_NATIVE_PLANNER_HEADCOUNT_COPY, SF_NATIVE_PLANNER_HEADCOUNT_COPY_BR } from "./orchestra-chapters/sucafina-native-planner-headcount"
+import { SF_NATIVE_PROCUREMENT_UI_COPY, SF_NATIVE_PROCUREMENT_UI_COPY_BR } from "./orchestra-chapters/sucafina-native-procurement-ui"
 import { HOME_COPY, HOME_COPY_BR } from "./orchestra-chapters/home"
 import { SHELL_COPY, SHELL_COPY_BR } from "./orchestra-chapters/shell"
 import { MCP_COPY, MCP_COPY_BR } from "./orchestra-chapters/mcp"
@@ -373,6 +381,14 @@ export const ORCHESTRA_COPY = {
   ...WORKFLOWS_STUDIO_COPY,
   ...PROVIDERS_COPY,
   ...INTEGRATIONS_COPY,
+  ...SF_NATIVE_SHELL_COPY,
+  ...SF_NATIVE_DASHBOARD_BUDGET_COPY,
+  ...SF_NATIVE_DASHBOARD_PEOPLE_COPY,
+  ...SF_NATIVE_DASHBOARD_PORTFOLIO_COPY,
+  ...SF_NATIVE_DASHBOARD_OPERATIONS_COPY,
+  ...SF_NATIVE_PLANNER_LINES_COPY,
+  ...SF_NATIVE_PLANNER_HEADCOUNT_COPY,
+  ...SF_NATIVE_PROCUREMENT_UI_COPY,
   ...CAPABILITIES_COPY,
   ...SHORTCUTS_COPY,
   ...CICD_COPY,
@@ -723,6 +739,14 @@ export const ORCHESTRA_COPY_BR: Partial<Record<keyof typeof ORCHESTRA_COPY, stri
   ...WORKFLOWS_STUDIO_COPY_BR,
   ...PROVIDERS_COPY_BR,
   ...INTEGRATIONS_COPY_BR,
+  ...SF_NATIVE_SHELL_COPY_BR,
+  ...SF_NATIVE_DASHBOARD_BUDGET_COPY_BR,
+  ...SF_NATIVE_DASHBOARD_PEOPLE_COPY_BR,
+  ...SF_NATIVE_DASHBOARD_PORTFOLIO_COPY_BR,
+  ...SF_NATIVE_DASHBOARD_OPERATIONS_COPY_BR,
+  ...SF_NATIVE_PLANNER_LINES_COPY_BR,
+  ...SF_NATIVE_PLANNER_HEADCOUNT_COPY_BR,
+  ...SF_NATIVE_PROCUREMENT_UI_COPY_BR,
   ...CAPABILITIES_COPY_BR,
   ...SHORTCUTS_COPY_BR,
   ...CICD_COPY_BR,

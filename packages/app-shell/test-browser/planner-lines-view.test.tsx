@@ -5,11 +5,19 @@ import { render } from "solid-js/web"
 import { domain } from "../../../modules/sucafina/Sucafinav1/runtime/planner.ts"
 import type { Snapshot } from "../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { NativeViewProps } from "../src/orchestra/chapters/sucafina/view-contract"
+import { createLocalePlatform } from "./native-locale-fixture"
 import { solidDom } from "./solid-dom"
 
 const { PlannerLinesView }: typeof import("../src/orchestra/chapters/sucafina/planner-lines-view") = await import(
   solidDom("../src/orchestra/chapters/sucafina/planner-lines-view", import.meta.dir)
 )
+const { PlatformProvider }: typeof import("@/context/platform") = await import(solidDom("@/context/platform", import.meta.dir))
+const { LanguageProvider, useLanguage }: typeof import("@/context/language") = await import(
+  solidDom("@/context/language", import.meta.dir)
+)
+const { SF_NATIVE_PLANNER_LINES_COPY, SF_NATIVE_PLANNER_LINES_COPY_BR }: typeof import(
+  "../src/i18n/orchestra-chapters/sucafina-native-planner-lines"
+) = await import(solidDom("../src/i18n/orchestra-chapters/sucafina-native-planner-lines", import.meta.dir))
 
 const authorizedPages = ["Overview", "OPEX", "CAPEX", "Versions"]
 const actor = { id: "budget-admin", name: "Nora Admin", canWrite: true, roles: ["admin"], assigned: [], domains: [] }
@@ -127,20 +135,30 @@ function page(pageName: string, view = projected(), pages = authorizedPages, pag
   }
 }
 
-function mount(props: NativeViewProps) {
+function mount(props: NativeViewProps, locale: "en" | "br" = "en") {
   const [current, setCurrent] = createSignal(props)
+  const scope: { language?: ReturnType<typeof useLanguage> } = {}
   const host = document.createElement("div")
   document.body.append(host)
   const dispose = render(
-    () => createComponent(PlannerLinesView, {
-      get page() { return current().page },
-      get query() { return current().query },
-      onQuery(query) { current().onQuery(query) },
+    () => createComponent(PlatformProvider, {
+      value: createLocalePlatform(),
+      get children() { return createComponent(LanguageProvider, {
+        locale,
+        get children() {
+          scope.language = useLanguage()
+          return createComponent(PlannerLinesView, {
+            get page() { return current().page },
+            get query() { return current().query },
+            onQuery(query) { current().onQuery(query) },
+          })
+        },
+      }) },
     }),
     host,
   )
   cleanups.push(() => { dispose(); host.remove() })
-  return { host, set: setCurrent }
+  return { host, set: setCurrent, language: scope.language! }
 }
 
 function props(pageState: Sucafina.PageState, query: Sucafina.PageQuery = {}, onQuery: NativeViewProps["onQuery"] = () => {}) {
@@ -155,12 +173,21 @@ function select(host: HTMLElement, label: string) {
   return control
 }
 
+function table(host: HTMLElement, tableName: string) {
+  return [...host.querySelectorAll("table")].find((item) => item.getAttribute("aria-label") === tableName)
+}
+
 function row(host: HTMLElement, tableName: string, rowName: string) {
-  const table = host.querySelector<HTMLTableElement>(`table[aria-label="${tableName}"]`)
-  if (!table) throw new Error(`Missing ${tableName} table`)
-  const found = [...table.querySelectorAll<HTMLTableRowElement>("tbody tr")].find((item) => item.textContent?.includes(rowName))
+  const target = table(host, tableName)
+  if (!target) throw new Error(`Missing ${tableName} table`)
+  const found = [...target.querySelectorAll<HTMLTableRowElement>("tbody tr")].find((item) => item.textContent?.includes(rowName))
   if (!found) throw new Error(`Missing ${rowName} row in ${tableName}`)
   return found
+}
+
+async function until(predicate: () => boolean) {
+  for (let attempt = 0; attempt < 200 && !predicate(); attempt++) await Bun.sleep(10)
+  expect(predicate()).toBe(true)
 }
 
 test("Overview renders projected plan metrics, monthly totals, and version comparison values", () => {
@@ -188,6 +215,78 @@ test("Overview renders projected plan metrics, monthly totals, and version compa
     .toEqual(["Prior Plan", "0", "0"])
 })
 
+test("planner lines preserves English copy across an EN to pt-BR to EN provider transition", async () => {
+  const screen = mount(props(page("CAPEX"), {
+    version: "plan-2026",
+    mode: "budget",
+    owner: "person-2",
+    class: "capex",
+    q: "Workstation",
+  }), "en")
+  await screen.language.ready.promise
+  expect(screen.language.locale()).toBe("en")
+  expect(screen.host.querySelector("section")?.getAttribute("aria-label"))
+    .toBe(SF_NATIVE_PLANNER_LINES_COPY["sucafina.native.planner-lines.section"].replace("{{page}}", "CAPEX"))
+  expect(screen.host.textContent).toContain(SF_NATIVE_PLANNER_LINES_COPY["sucafina.native.planner-lines.projects"])
+  expect(screen.host.textContent).toContain(SF_NATIVE_PLANNER_LINES_COPY["sucafina.native.planner-lines.field.search"])
+
+  const grid = select(screen.host, "Grid")
+  const owner = select(screen.host, "Owner")
+  const classification = select(screen.host, "Classification")
+  const search = screen.host.querySelector<HTMLInputElement>("input")!
+  const capexTable = table(screen.host, "CAPEX lines")!
+  const rowValues = () => {
+    const line = [...capexTable.querySelectorAll<HTMLTableRowElement>("tbody tr")]
+      .find((item) => item.textContent?.includes("Workstation deployment"))
+    if (!line) throw new Error("Missing projected CAPEX row")
+    return [...line.cells].map((cell) => cell.textContent?.trim())
+  }
+  const months = () => [...capexTable.querySelectorAll("thead th")]
+    .map((cell) => cell.textContent?.trim()).slice(-12)
+  const assertRetainedView = () => {
+    expect(grid.value).toBe("budget")
+    expect(owner.value).toBe("person-2")
+    expect(classification.value).toBe("capex")
+    expect(search.value).toBe("Workstation")
+    expect(rowValues()).toEqual([
+      "Hardware", "Workstation deployment", "Regional engineering equipment", "Ravi Costa",
+      "North Office", "Capital", "Research Hub", "capex", "USD", "600", "300", "300",
+      "—", "—", "—", "—", "—", "—", "—", "—", "—", "—",
+    ])
+  }
+  expect(capexTable.getAttribute("aria-label")).toBe("CAPEX lines")
+  expect([...grid.options].map((option) => option.textContent?.trim()))
+    .toEqual(["Budget", "Actual", "Forecast", "Compare"])
+  assertRetainedView()
+  expect(months()).toEqual(["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"])
+
+  screen.language.setLocale("br")
+  await screen.language.ready.promise
+  await until(() => screen.language.locale() === "br"
+    && screen.language.t("sucafina.native.planner-lines.month.jan") === "jan."
+    && screen.language.t("sucafina.native.planner-lines.mode.budget") === "Orçamento")
+  expect(screen.host.querySelector("section")?.getAttribute("aria-label"))
+    .toBe(SF_NATIVE_PLANNER_LINES_COPY_BR["sucafina.native.planner-lines.section"].replace("{{page}}", "CAPEX"))
+  expect(capexTable.getAttribute("aria-label")).toBe("Linhas de CAPEX")
+  expect(screen.host.textContent).toContain("Pesquisar")
+  expect([...grid.options].map((option) => option.textContent?.trim()))
+    .toEqual(["Orçamento", "Realizado", "Previsão", "Comparar"])
+  expect([...owner.options].map((option) => option.textContent?.trim())[0]).toBe("Todos")
+  expect([...classification.options].map((option) => option.textContent?.trim()))
+    .toEqual(["Todas", "CAPEX", "OPEX"])
+  assertRetainedView()
+  expect(months()).toEqual(["jan.", "fev.", "mar.", "abr.", "mai.", "jun.", "jul.", "ago.", "set.", "out.", "nov.", "dez."])
+
+  screen.language.setLocale("en")
+  await until(() => screen.language.locale() === "en"
+    && screen.language.t("sucafina.native.planner-lines.month.jan") === "Jan")
+  expect(capexTable.getAttribute("aria-label")).toBe("CAPEX lines")
+  expect([...grid.options].map((option) => option.textContent?.trim()))
+    .toEqual(["Budget", "Actual", "Forecast", "Compare"])
+  assertRetainedView()
+  expect(months()).toEqual(["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"])
+})
+
 test("OPEX renders a populated projected line and actual zero distinctly from missing values", () => {
   const view = projected()
   const projectedVersion = (view.data.versions as Record<string, unknown>[]).find((item) => item.id === "plan-2026")!
@@ -196,7 +295,7 @@ test("OPEX renders a populated projected line and actual zero distinctly from mi
 
   const screen = mount(props(page("OPEX", view), { version: "plan-2026", mode: "actual" }))
   const line = row(screen.host, "OPEX lines", "Analytics subscription")
-  expect([...screen.host.querySelectorAll('table[aria-label="OPEX lines"] thead th')].map((cell) => cell.textContent?.trim()).slice(0, 9))
+  expect([...table(screen.host, "OPEX lines")!.querySelectorAll("thead th")].map((cell) => cell.textContent?.trim()).slice(0, 9))
     .toEqual(["Element", "Line", "Description", "Owner", "Entity", "Allocation", "Currency", "Annual budget", "Jan"])
   expect([...line.cells].slice(0, 10).map((cell) => cell.textContent?.trim()))
     .toEqual(["Services", "Analytics subscription", unsafeDescription, "Morgan Lee", "North Office", "Operations", "USD", "300", "0", "—"])
@@ -288,7 +387,7 @@ test("unknown requested version is unavailable and does not fall back to another
   ]))
   const screen = mount(props(page("OPEX", view), { version: "unknown-plan", mode: "actual" }))
   expect(screen.host.textContent).toContain("No version. A plan can be created in Versions.")
-  expect(screen.host.querySelector("table[aria-label='OPEX lines']")).toBeNull()
+  expect(table(screen.host, "OPEX lines")).toBeUndefined()
   expect(screen.host.textContent).not.toContain("Analytics subscription")
   expect(screen.host.textContent).not.toContain("Workstation deployment")
 })
@@ -328,7 +427,7 @@ test("empty projected version, line, and project arrays render empty states with
   }])
   const noOpex = mount(props(page("OPEX", emptyPlan), { version: "empty-plan" }))
   expect(noOpex.host.textContent).toContain("No lines match this view.")
-  expect(noOpex.host.querySelectorAll("table[aria-label='OPEX lines'] tbody tr")).toHaveLength(0)
+  expect(table(noOpex.host, "OPEX lines")?.querySelectorAll("tbody tr") ?? []).toHaveLength(0)
 
   const noCapex = mount(props(page("CAPEX", emptyPlan), { version: "empty-plan" }))
   expect(noCapex.host.textContent).toContain("No projects yet.")

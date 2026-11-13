@@ -1,17 +1,21 @@
 import { For, Show } from "solid-js"
+import { useLanguage } from "@/context/language"
+import { SF_NATIVE_PROCUREMENT_UI_COPY } from "@/i18n/orchestra-chapters/sucafina-native-procurement-ui"
 import type { NativeViewProps } from "./view-contract"
 
 type RecordValue = Record<string, unknown>
-type Column = { label: string; value: (row: RecordValue) => unknown }
+type CopyKey = keyof typeof SF_NATIVE_PROCUREMENT_UI_COPY
+type Column = { label: CopyKey; value: (row: RecordValue) => unknown }
+type Field = [CopyKey, string]
 
 const pages = ["Dashboard", "Requests", "My approvals", "Suppliers", "Settings"]
 const object = (value: unknown): RecordValue => value !== null && typeof value === "object" && !Array.isArray(value) ? value as RecordValue : {}
 const rows = (value: unknown): RecordValue[] => Array.isArray(value) ? value.filter((item): item is RecordValue => item !== null && typeof item === "object" && !Array.isArray(item)) : []
-const display = (value: unknown): string => {
+const display = (value: unknown, t: (key: CopyKey) => string): string => {
   if (typeof value === "string") return value.trim() ? value : "—"
   if (typeof value === "number" && Number.isFinite(value)) return String(value)
-  if (typeof value === "boolean") return value ? "Yes" : "No"
-  if (Array.isArray(value)) return value.map(display).join(", ") || "—"
+  if (typeof value === "boolean") return value ? t("sucafina.native.procurement-ui.yes") : t("sucafina.native.procurement-ui.no")
+  if (Array.isArray(value)) return value.map((item) => display(item, t)).join(", ") || "—"
   return "—"
 }
 const id = (value: unknown): string | undefined => {
@@ -23,18 +27,19 @@ const sameId = (left: unknown, right: unknown) => {
   const normalized = id(left)
   return normalized !== undefined && normalized === id(right)
 }
-const columns = (fields: [string, string][]): Column[] => fields.map(([label, key]) => ({ label, value: (row) => row[key] }))
+const columns = (fields: [CopyKey, string][]): Column[] => fields.map(([label, key]) => ({ label, value: (row) => row[key] }))
 
-function ReadTable(props: { name: string; data: unknown; columns: Column[]; empty?: string }) {
+function ReadTable(props: { name: CopyKey; data: unknown; columns: Column[]; empty?: CopyKey }) {
+  const language = useLanguage()
   return (
-    <section class="mx-card" aria-label={props.name}>
-      <h3>{props.name}</h3>
-      <Show when={Array.isArray(props.data)} fallback={<p class="mx-note">Information is unavailable.</p>}>
-        <Show when={rows(props.data).length > 0} fallback={<p class="mx-empty">{props.empty ?? "No records."}</p>}>
+    <section class="mx-card" aria-label={language.t(props.name)}>
+      <h3>{language.t(props.name)}</h3>
+      <Show when={Array.isArray(props.data)} fallback={<p class="mx-note">{language.t("sucafina.native.procurement-ui.unavailable")}</p>}>
+        <Show when={rows(props.data).length > 0} fallback={<p class="mx-empty">{language.t(props.empty ?? "sucafina.native.procurement-ui.noRecords")}</p>}>
           <div style={{ "overflow-x": "auto", "max-width": "100%" }}>
             <table>
-              <thead><tr><For each={props.columns}>{(column) => <th scope="col">{column.label}</th>}</For></tr></thead>
-              <tbody><For each={rows(props.data)}>{(row) => <tr><For each={props.columns}>{(column) => <td>{display(column.value(row))}</td>}</For></tr>}</For></tbody>
+              <thead><tr><For each={props.columns}>{(column) => <th scope="col">{language.t(column.label)}</th>}</For></tr></thead>
+              <tbody><For each={rows(props.data)}>{(row) => <tr><For each={props.columns}>{(column) => <td><bdi dir="auto">{display(column.value(row), language.t)}</bdi></td>}</For></tr>}</For></tbody>
             </table>
           </div>
         </Show>
@@ -43,105 +48,227 @@ function ReadTable(props: { name: string; data: unknown; columns: Column[]; empt
   )
 }
 
-function Fields(props: { name: string; value: unknown; fields: [string, string][] }) {
+function Fields(props: { name: CopyKey; value: unknown; fields: Field[] }) {
+  const language = useLanguage()
   return (
-    <section class="mx-card" aria-label={props.name}>
-      <h3>{props.name}</h3>
+    <section class="mx-card" aria-label={language.t(props.name)}>
+      <h3>{language.t(props.name)}</h3>
       <dl class="mx-fields">
-        <For each={props.fields}>{(field) => <div class="mx-field"><dt>{field[0]}</dt><dd>{display(object(props.value)[field[1]])}</dd></div>}</For>
+        <For each={props.fields}>{(field) => <div class="mx-field"><dt>{language.t(field[0])}</dt><dd><bdi dir="auto">{display(object(props.value)[field[1]], language.t)}</bdi></dd></div>}</For>
       </dl>
     </section>
   )
 }
 
 const requestColumns: Column[] = [
-  { label: "Number", value: (row) => row.number },
-  { label: "Title", value: (row) => object(row.pr).title },
-  { label: "Requester", value: (row) => row.requesterName },
-  { label: "Status", value: (row) => row.status },
-  { label: "Amount", value: (row) => row.value },
-  { label: "Updated", value: (row) => row.updatedAt },
-  { label: "PO number", value: (row) => object(row.po).number },
-  { label: "Expense type", value: (row) => object(row.po).expenseType },
-  { label: "Recurring", value: (row) => object(row.pr).recurring },
+  { label: "sucafina.native.procurement-ui.column.number", value: (row) => row.number },
+  { label: "sucafina.native.procurement-ui.column.title", value: (row) => object(row.pr).title },
+  { label: "sucafina.native.procurement-ui.column.requester", value: (row) => row.requesterName },
+  { label: "sucafina.native.procurement-ui.column.status", value: (row) => row.status },
+  { label: "sucafina.native.procurement-ui.column.amount", value: (row) => row.value },
+  { label: "sucafina.native.procurement-ui.column.updated", value: (row) => row.updatedAt },
+  { label: "sucafina.native.procurement-ui.column.poNumber", value: (row) => object(row.po).number },
+  { label: "sucafina.native.procurement-ui.column.expenseType", value: (row) => object(row.po).expenseType },
+  { label: "sucafina.native.procurement-ui.column.recurring", value: (row) => object(row.pr).recurring },
 ]
-const prFields: [string, string][] = [["Title", "title"], ["Type", "type"], ["Description", "description"], ["Category", "category"], ["Estimated amount", "estAmount"], ["Cost centre", "costCenter"], ["Needed by", "needBy"], ["Business justification", "justification"], ["Recurring", "recurring"], ["Frequency", "frequency"], ["Estimated annual value", "estAnnual"], ["Expense type", "expenseType"]]
-const poFields: [string, string][] = [["Number", "number"], ["Supplier", "supplier"], ["Currency", "currency"], ["FX rate", "fxRate"], ["Expense type", "expenseType"], ["Description", "description"], ["Payment terms", "paymentTerms"], ["Delivery date", "deliveryDate"], ["Delivery conditions", "deliveryConditions"], ["Contract reference", "contractRef"], ["Incoterm", "incoterm"], ["Incoterms", "incoterms"], ["Asset reference", "assetRef"], ["Supplier contact", "supplierContact"], ["Quote reference", "quoteRef"], ["Billing address", "billingAddress"], ["Delivery address", "deliveryAddress"], ["Acceptance", "acceptance"], ["Warranty", "warranty"], ["Notes", "notes"], ["Issued at", "issuedAt"]]
-const supplierFields: [string, string][] = [["Number", "number"], ["Legal name", "legalName"], ["Trading name", "tradingName"], ["Type", "type"], ["Country", "country"], ["Address", "address"], ["Tax ID", "taxId"], ["Registration number", "regNo"], ["Status", "status"]]
+const prFields: Field[] = [
+  ["sucafina.native.procurement-ui.field.title", "title"],
+  ["sucafina.native.procurement-ui.field.type", "type"],
+  ["sucafina.native.procurement-ui.field.description", "description"],
+  ["sucafina.native.procurement-ui.field.category", "category"],
+  ["sucafina.native.procurement-ui.field.estimatedAmount", "estAmount"],
+  ["sucafina.native.procurement-ui.field.costCentre", "costCenter"],
+  ["sucafina.native.procurement-ui.field.neededBy", "needBy"],
+  ["sucafina.native.procurement-ui.field.businessJustification", "justification"],
+  ["sucafina.native.procurement-ui.field.recurring", "recurring"],
+  ["sucafina.native.procurement-ui.field.frequency", "frequency"],
+  ["sucafina.native.procurement-ui.field.estimatedAnnualValue", "estAnnual"],
+  ["sucafina.native.procurement-ui.field.expenseType", "expenseType"],
+]
+const poFields: Field[] = [
+  ["sucafina.native.procurement-ui.field.number", "number"],
+  ["sucafina.native.procurement-ui.field.supplier", "supplier"],
+  ["sucafina.native.procurement-ui.field.currency", "currency"],
+  ["sucafina.native.procurement-ui.field.fxRate", "fxRate"],
+  ["sucafina.native.procurement-ui.field.expenseType", "expenseType"],
+  ["sucafina.native.procurement-ui.field.description", "description"],
+  ["sucafina.native.procurement-ui.field.paymentTerms", "paymentTerms"],
+  ["sucafina.native.procurement-ui.field.deliveryDate", "deliveryDate"],
+  ["sucafina.native.procurement-ui.field.deliveryConditions", "deliveryConditions"],
+  ["sucafina.native.procurement-ui.field.contractReference", "contractRef"],
+  ["sucafina.native.procurement-ui.field.incoterm", "incoterm"],
+  ["sucafina.native.procurement-ui.field.incoterms", "incoterms"],
+  ["sucafina.native.procurement-ui.field.assetReference", "assetRef"],
+  ["sucafina.native.procurement-ui.field.supplierContact", "supplierContact"],
+  ["sucafina.native.procurement-ui.field.quoteReference", "quoteRef"],
+  ["sucafina.native.procurement-ui.field.billingAddress", "billingAddress"],
+  ["sucafina.native.procurement-ui.field.deliveryAddress", "deliveryAddress"],
+  ["sucafina.native.procurement-ui.field.acceptance", "acceptance"],
+  ["sucafina.native.procurement-ui.field.warranty", "warranty"],
+  ["sucafina.native.procurement-ui.field.notes", "notes"],
+  ["sucafina.native.procurement-ui.field.issuedAt", "issuedAt"],
+]
+const supplierFields: Field[] = [
+  ["sucafina.native.procurement-ui.column.number", "number"],
+  ["sucafina.native.procurement-ui.field.legalName", "legalName"],
+  ["sucafina.native.procurement-ui.field.tradingName", "tradingName"],
+  ["sucafina.native.procurement-ui.field.type", "type"],
+  ["sucafina.native.procurement-ui.field.country", "country"],
+  ["sucafina.native.procurement-ui.field.address", "address"],
+  ["sucafina.native.procurement-ui.field.taxId", "taxId"],
+  ["sucafina.native.procurement-ui.field.registrationNumber", "regNo"],
+  ["sucafina.native.procurement-ui.column.status", "status"],
+]
 
-function ApprovalDetails(props: { name: string; value: unknown; directory: readonly { id: string; name: string }[] }) {
+function ApprovalDetails(props: { name: CopyKey; stepsName: CopyKey; value: unknown; directory: readonly { id: string; name: string }[] }) {
+  const language = useLanguage()
   return (
     <Show when={props.value != null}>
-      <Fields name={props.name} value={props.value} fields={[["Amount", "amount"], ["Submitted", "submittedAt"]]} />
-      <ReadTable name={`${props.name} steps`} data={object(props.value).steps} columns={[
-        { label: "Level", value: (row) => row.levelName },
-        { label: "Approver", value: (row) => row.holderId ? props.directory.find((person) => person.id === row.holderId)?.name ?? "Assigned approver" : "Unassigned" },
-        { label: "Status", value: (row) => row.status },
-        { label: "Comment", value: (row) => row.comment },
-        { label: "At", value: (row) => row.at },
+      <Fields name={props.name} value={props.value} fields={[
+        ["sucafina.native.procurement-ui.field.amount", "amount"],
+        ["sucafina.native.procurement-ui.field.submitted", "submittedAt"],
+      ]} />
+      <ReadTable name={props.stepsName} data={object(props.value).steps} columns={[
+        { label: "sucafina.native.procurement-ui.field.level", value: (row) => row.levelName },
+        { label: "sucafina.native.procurement-ui.field.approver", value: (row) => row.holderId ? props.directory.find((person) => person.id === row.holderId)?.name ?? language.t("sucafina.native.procurement-ui.assignedApprover") : language.t("sucafina.native.procurement-ui.unassigned") },
+        { label: "sucafina.native.procurement-ui.column.status", value: (row) => row.status },
+        { label: "sucafina.native.procurement-ui.field.comment", value: (row) => row.comment },
+        { label: "sucafina.native.procurement-ui.field.at", value: (row) => row.at },
       ]} />
     </Show>
   )
 }
 
 function RequestDetail(props: { request: RecordValue; directory: readonly { id: string; name: string }[]; open?: boolean }) {
+  const language = useLanguage()
   const sourcing = () => object(props.request.sourcing)
   const po = () => object(props.request.po)
-  const historyName = (row: RecordValue) => object(props.request.historyNames)[`${display(row.at)}|${display(row.by)}`] ?? props.directory.find((person) => person.id === row.by)?.name ?? row.by
+  const historyName = (row: RecordValue) => object(props.request.historyNames)[`${display(row.at, language.t)}|${display(row.by, language.t)}`] ?? props.directory.find((person) => person.id === row.by)?.name ?? row.by
   return (
     <details class="mx-card" open={props.open}>
-      <summary>{display(props.request.number)} · {display(object(props.request.pr).title)}</summary>
-      <Fields name="Requisition" value={props.request.pr} fields={prFields} />
-      <ApprovalDetails name="Requisition approval" value={props.request.prApproval} directory={props.directory} />
+      <summary><bdi dir="auto">{display(props.request.number, language.t)}</bdi> · <bdi dir="auto">{display(object(props.request.pr).title, language.t)}</bdi></summary>
+      <Fields name="sucafina.native.procurement-ui.section.requisition" value={props.request.pr} fields={prFields} />
+      <ApprovalDetails name="sucafina.native.procurement-ui.section.requisitionApproval" stepsName="sucafina.native.procurement-ui.section.requisitionApprovalSteps" value={props.request.prApproval} directory={props.directory} />
       <Show when={props.request.sourcing != null}>
-        <Fields name="Sourcing" value={sourcing()} fields={[["Technical evaluator", "evaluator"], ["Fewer quotations justification", "fewQuotesJustification"], ["Selection justification", "selectionJustification"], ["Contract strategy", "contractStrategy"], ["Selected quote ID", "selectedId"]]} />
-        <ApprovalDetails name="Sourcing approval" value={sourcing().approval} directory={props.directory} />
-        <Fields name="Evaluation weights" value={sourcing().weights} fields={[["Technical weight", "tech"], ["Commercial weight", "comm"]]} />
-        <ReadTable name="Technical criteria" data={object(sourcing().weights).criteria} columns={columns([["Criterion", "name"], ["Weight", "weight"]])} />
-        <ReadTable name="Commercial criteria" data={object(sourcing().weights).commCriteria} columns={columns([["Criterion", "name"], ["Weight", "weight"], ["Automatic price criterion", "auto"]])} />
-        <ReadTable name="Quotations" data={sourcing().quotes} columns={columns([["Supplier", "supplier"], ["Currency", "currency"], ["Quantity", "qty"], ["Unit price", "unitPrice"], ["Total", "total"], ["Technically compliant", "techPass"], ["Technical scores", "scores"], ["Commercial scores", "cscores"]])} />
-        <ReadTable name="Quote evaluation" data={props.request.evaluation} columns={columns([["Supplier", "supplier"], ["Technical score", "technical"], ["Price", "price"], ["Commercial score", "commercial"], ["Overall score", "overall"], ["Rank", "rank"]])} />
+        <Fields name="sucafina.native.procurement-ui.section.sourcing" value={sourcing()} fields={[
+          ["sucafina.native.procurement-ui.field.technicalEvaluator", "evaluator"],
+          ["sucafina.native.procurement-ui.field.fewerQuotationsJustification", "fewQuotesJustification"],
+          ["sucafina.native.procurement-ui.field.selectionJustification", "selectionJustification"],
+          ["sucafina.native.procurement-ui.field.contractStrategy", "contractStrategy"],
+          ["sucafina.native.procurement-ui.field.selectedQuoteId", "selectedId"],
+        ]} />
+        <ApprovalDetails name="sucafina.native.procurement-ui.section.sourcingApproval" stepsName="sucafina.native.procurement-ui.section.sourcingApprovalSteps" value={sourcing().approval} directory={props.directory} />
+        <Fields name="sucafina.native.procurement-ui.section.evaluationWeights" value={sourcing().weights} fields={[
+          ["sucafina.native.procurement-ui.field.technicalWeight", "tech"],
+          ["sucafina.native.procurement-ui.field.commercialWeight", "comm"],
+        ]} />
+        <ReadTable name="sucafina.native.procurement-ui.section.technicalCriteria" data={object(sourcing().weights).criteria} columns={columns([
+          ["sucafina.native.procurement-ui.field.criterion", "name"],
+          ["sucafina.native.procurement-ui.field.weight", "weight"],
+        ])} />
+        <ReadTable name="sucafina.native.procurement-ui.section.commercialCriteria" data={object(sourcing().weights).commCriteria} columns={columns([
+          ["sucafina.native.procurement-ui.field.criterion", "name"],
+          ["sucafina.native.procurement-ui.field.weight", "weight"],
+          ["sucafina.native.procurement-ui.field.automaticPriceCriterion", "auto"],
+        ])} />
+        <ReadTable name="sucafina.native.procurement-ui.section.quotations" data={sourcing().quotes} columns={columns([
+          ["sucafina.native.procurement-ui.field.supplier", "supplier"],
+          ["sucafina.native.procurement-ui.field.currency", "currency"],
+          ["sucafina.native.procurement-ui.field.quantity", "qty"],
+          ["sucafina.native.procurement-ui.field.unitPrice", "unitPrice"],
+          ["sucafina.native.procurement-ui.field.total", "total"],
+          ["sucafina.native.procurement-ui.field.technicallyCompliant", "techPass"],
+          ["sucafina.native.procurement-ui.field.technicalScores", "scores"],
+          ["sucafina.native.procurement-ui.field.commercialScores", "cscores"],
+        ])} />
+        <ReadTable name="sucafina.native.procurement-ui.section.quoteEvaluation" data={props.request.evaluation} columns={columns([
+          ["sucafina.native.procurement-ui.field.supplier", "supplier"],
+          ["sucafina.native.procurement-ui.field.technicalScore", "technical"],
+          ["sucafina.native.procurement-ui.field.price", "price"],
+          ["sucafina.native.procurement-ui.field.commercialScore", "commercial"],
+          ["sucafina.native.procurement-ui.field.overallScore", "overall"],
+          ["sucafina.native.procurement-ui.field.rank", "rank"],
+        ])} />
       </Show>
       <Show when={props.request.po != null}>
-        <Fields name="Purchase order" value={po()} fields={poFields} />
-        <ApprovalDetails name="Purchase order approval" value={po().approval} directory={props.directory} />
-        <ReadTable name="Purchase order lines" data={po().lines} columns={[
-          { label: "Description", value: (row) => row.desc ?? row.description },
-          { label: "Quantity", value: (row) => row.qty },
-          { label: "Unit price", value: (row) => row.unitPrice },
-          { label: "Unit", value: (row) => row.uom ?? row.unit },
+        <Fields name="sucafina.native.procurement-ui.section.purchaseOrder" value={po()} fields={poFields} />
+        <ApprovalDetails name="sucafina.native.procurement-ui.section.purchaseOrderApproval" stepsName="sucafina.native.procurement-ui.section.purchaseOrderApprovalSteps" value={po().approval} directory={props.directory} />
+        <ReadTable name="sucafina.native.procurement-ui.section.purchaseOrderLines" data={po().lines} columns={[
+          { label: "sucafina.native.procurement-ui.field.description", value: (row) => row.desc ?? row.description },
+          { label: "sucafina.native.procurement-ui.field.quantity", value: (row) => row.qty },
+          { label: "sucafina.native.procurement-ui.field.unitPrice", value: (row) => row.unitPrice },
+          { label: "sucafina.native.procurement-ui.field.unit", value: (row) => row.uom ?? row.unit },
         ]} />
       </Show>
-      <ReadTable name="History" data={Array.isArray(props.request.history) ? [...rows(props.request.history)].reverse() : props.request.history} columns={[
-        { label: "At", value: (row) => row.at }, { label: "By", value: historyName }, { label: "Action", value: (row) => row.action }, { label: "Note", value: (row) => row.note },
+      <ReadTable name="sucafina.native.procurement-ui.section.history" data={Array.isArray(props.request.history) ? [...rows(props.request.history)].reverse() : props.request.history} columns={[
+        { label: "sucafina.native.procurement-ui.field.at", value: (row) => row.at },
+        { label: "sucafina.native.procurement-ui.field.by", value: historyName },
+        { label: "sucafina.native.procurement-ui.field.action", value: (row) => row.action },
+        { label: "sucafina.native.procurement-ui.field.note", value: (row) => row.note },
       ]} />
     </details>
   )
 }
 
 function SupplierDetail(props: { supplier: RecordValue; requests: unknown; bankVisible: boolean; open?: boolean }) {
+  const language = useLanguage()
   const linked = () => rows(props.requests).filter((request) => sameId(object(request.po).supplierId, props.supplier.id) || rows(object(request.sourcing).quotes).some((quote) => sameId(quote.supplierId, props.supplier.id)))
   return (
     <details class="mx-card" open={props.open}>
-      <summary>{display(props.supplier.number)} · {display(props.supplier.legalName)}</summary>
-      <Fields name="General" value={props.supplier} fields={supplierFields} />
-      <Fields name="Categories" value={props.supplier} fields={[["Categories", "categories"]]} />
-      <Fields name="Contacts" value={props.supplier} fields={[["Contact name", "contactName"], ["Contact email", "contactEmail"], ["Contact phone", "contactPhone"], ["Finance email", "financeEmail"]]} />
-      <ReadTable name="Additional contacts" data={props.supplier.contacts} columns={columns([["Name", "name"], ["Email", "email"], ["Phone", "phone"]])} />
-      <Fields name="Commercial" value={props.supplier} fields={[["Payment terms", "paymentTerms"], ["Currency", "currency"], ["Incoterm", "incoterm"]]} />
-      <Fields name="Commercial notes" value={props.supplier.commercial} fields={[["Notes", "notes"]]} />
+      <summary><bdi dir="auto">{display(props.supplier.number, language.t)}</bdi> · <bdi dir="auto">{display(props.supplier.legalName, language.t)}</bdi></summary>
+      <Fields name="sucafina.native.procurement-ui.section.general" value={props.supplier} fields={supplierFields} />
+      <Fields name="sucafina.native.procurement-ui.section.categories" value={props.supplier} fields={[["sucafina.native.procurement-ui.field.categories", "categories"]]} />
+      <Fields name="sucafina.native.procurement-ui.section.contacts" value={props.supplier} fields={[
+        ["sucafina.native.procurement-ui.field.contactName", "contactName"],
+        ["sucafina.native.procurement-ui.field.contactEmail", "contactEmail"],
+        ["sucafina.native.procurement-ui.field.contactPhone", "contactPhone"],
+        ["sucafina.native.procurement-ui.field.financeEmail", "financeEmail"],
+      ]} />
+      <ReadTable name="sucafina.native.procurement-ui.section.additionalContacts" data={props.supplier.contacts} columns={columns([
+        ["sucafina.native.procurement-ui.field.name", "name"],
+        ["sucafina.native.procurement-ui.field.email", "email"],
+        ["sucafina.native.procurement-ui.field.phone", "phone"],
+      ])} />
+      <Fields name="sucafina.native.procurement-ui.section.commercial" value={props.supplier} fields={[
+        ["sucafina.native.procurement-ui.field.paymentTerms", "paymentTerms"],
+        ["sucafina.native.procurement-ui.field.currency", "currency"],
+        ["sucafina.native.procurement-ui.field.incoterm", "incoterm"],
+      ]} />
+      <Fields name="sucafina.native.procurement-ui.section.commercialNotes" value={props.supplier.commercial} fields={[["sucafina.native.procurement-ui.field.notes", "notes"]]} />
       <Show when={props.bankVisible}>
-        <Fields name="Bank" value={props.supplier} fields={[["Bank name", "bankName"], ["Account holder", "accountHolder"], ["Bank country", "bankCountry"], ["IBAN", "iban"], ["Account", "account"], ["SWIFT", "swift"]]} />
+        <Fields name="sucafina.native.procurement-ui.section.bank" value={props.supplier} fields={[
+          ["sucafina.native.procurement-ui.field.bankName", "bankName"],
+          ["sucafina.native.procurement-ui.field.accountHolder", "accountHolder"],
+          ["sucafina.native.procurement-ui.field.bankCountry", "bankCountry"],
+          ["sucafina.native.procurement-ui.field.iban", "iban"],
+          ["sucafina.native.procurement-ui.field.account", "account"],
+          ["sucafina.native.procurement-ui.field.swift", "swift"],
+        ]} />
       </Show>
-      <Fields name="Compliance" value={props.supplier} fields={[["Risk rating", "riskRating"], ["Due diligence complete", "dueDiligence"], ["Sanctions screening date", "sanctionsDate"], ["NDA", "nda"], ["DPA", "dpa"], ["Certifications", "certifications"], ["Notes", "notes"]]} />
-      <Fields name="Compliance notes" value={props.supplier.compliance} fields={[["Notes", "notes"]]} />
-      <ReadTable name="Linked requests" data={Array.isArray(props.requests) ? linked() : undefined} columns={requestColumns} />
-      <ReadTable name="Audit" data={props.supplier.history} columns={columns([["Field", "field"], ["Action", "action"], ["At", "at"], ["By", "by"], ["Note", "note"]])} />
+      <Fields name="sucafina.native.procurement-ui.section.compliance" value={props.supplier} fields={[
+        ["sucafina.native.procurement-ui.field.riskRating", "riskRating"],
+        ["sucafina.native.procurement-ui.field.dueDiligenceComplete", "dueDiligence"],
+        ["sucafina.native.procurement-ui.field.sanctionsScreeningDate", "sanctionsDate"],
+        ["sucafina.native.procurement-ui.field.nda", "nda"],
+        ["sucafina.native.procurement-ui.field.dpa", "dpa"],
+        ["sucafina.native.procurement-ui.field.certifications", "certifications"],
+        ["sucafina.native.procurement-ui.field.notes", "notes"],
+      ]} />
+      <Fields name="sucafina.native.procurement-ui.section.complianceNotes" value={props.supplier.compliance} fields={[["sucafina.native.procurement-ui.field.notes", "notes"]]} />
+      <ReadTable name="sucafina.native.procurement-ui.section.linkedRequests" data={Array.isArray(props.requests) ? linked() : undefined} columns={requestColumns} />
+      <ReadTable name="sucafina.native.procurement-ui.section.audit" data={props.supplier.history} columns={columns([
+        ["sucafina.native.procurement-ui.field.field", "field"],
+        ["sucafina.native.procurement-ui.field.action", "action"],
+        ["sucafina.native.procurement-ui.field.at", "at"],
+        ["sucafina.native.procurement-ui.field.by", "by"],
+        ["sucafina.native.procurement-ui.field.note", "note"],
+      ])} />
     </details>
   )
 }
 
 export function ProcurementView(props: NativeViewProps) {
+  const language = useLanguage()
   const allowed = () => props.page.surface === "procurement" && pages.includes(props.page.page) && props.page.pages.includes(props.page.page)
   const requests = () => rows(props.page.data.requests)
   const suppliers = () => rows(props.page.data.suppliers)
@@ -171,60 +298,112 @@ export function ProcurementView(props: NativeViewProps) {
   const approval = (request: RecordValue) => object(request.status === "src_pending" ? object(request.sourcing).approval : request.status === "po_pending" ? object(request.po).approval : request.prApproval)
   const step = (request: RecordValue) => rows(approval(request).steps).find((item) => item.status === "pending") ?? {}
   const holder = (request: RecordValue) => {
-    const id = step(request).holderId
-    if (id == null || id === "") return "Unassigned"
-    return props.page.directory.find((person) => person.id === id)?.name ?? "Assigned approver"
+    const approverId = step(request).holderId
+    if (approverId == null || approverId === "") return language.t("sucafina.native.procurement-ui.unassigned")
+    return props.page.directory.find((person) => person.id === approverId)?.name ?? language.t("sucafina.native.procurement-ui.assignedApprover")
   }
   const settings = () => object(props.page.data.settings)
+  const requestFilters: { value: string; label: CopyKey }[] = [
+    { value: "Open", label: "sucafina.native.procurement-ui.filter.open" },
+    { value: "Awaiting approval", label: "sucafina.native.procurement-ui.filter.awaitingApproval" },
+    { value: "Requisition", label: "sucafina.native.procurement-ui.filter.requisition" },
+    { value: "Sourcing", label: "sucafina.native.procurement-ui.filter.sourcing" },
+    { value: "Purchase order", label: "sucafina.native.procurement-ui.filter.purchaseOrder" },
+    { value: "Closed", label: "sucafina.native.procurement-ui.filter.closed" },
+    { value: "All", label: "sucafina.native.procurement-ui.filter.all" },
+  ]
+  const supplierStatuses: { value: string; label: CopyKey }[] = [
+    { value: "All", label: "sucafina.native.procurement-ui.filter.all" },
+    { value: "pending", label: "sucafina.native.procurement-ui.status.pending" },
+    { value: "active", label: "sucafina.native.procurement-ui.status.active" },
+    { value: "blocked", label: "sucafina.native.procurement-ui.status.blocked" },
+    { value: "inactive", label: "sucafina.native.procurement-ui.status.inactive" },
+  ]
   return (
     <Show when={allowed()}>
       <Show when={props.page.page === "Dashboard"}>
-        <ReadTable name="Requests" data={props.page.data.requests} columns={requestColumns} empty="No requests yet." />
+        <ReadTable name="sucafina.native.procurement-ui.section.requests" data={props.page.data.requests} columns={requestColumns} empty="sucafina.native.procurement-ui.empty.requests" />
       </Show>
       <Show when={props.page.page === "Requests"}>
         <div class="mx-card mx-fields">
-          <label class="mx-field"><span>Filter</span><select value={props.query.filter ?? "Open"} onChange={(event) => props.onQuery({ ...props.query, filter: event.currentTarget.value, request: undefined })}>
-            <For each={["Open", "Awaiting approval", "Requisition", "Sourcing", "Purchase order", "Closed", "All"]}>{(item) => <option value={item}>{item}</option>}</For>
+          <label class="mx-field"><span>{language.t("sucafina.native.procurement-ui.filter.label")}</span><select value={props.query.filter ?? "Open"} onChange={(event) => props.onQuery({ ...props.query, filter: event.currentTarget.value, request: undefined })}>
+            <For each={requestFilters}>{(item) => <option value={item.value}>{language.t(item.label)}</option>}</For>
           </select></label>
-          <label class="mx-field"><span>Search</span><input type="search" value={props.query.q ?? ""} onInput={(event) => props.onQuery({ ...props.query, q: event.currentTarget.value, request: undefined })} /></label>
+          <label class="mx-field"><span>{language.t("sucafina.native.procurement-ui.search")}</span><input type="search" value={props.query.q ?? ""} onInput={(event) => props.onQuery({ ...props.query, q: event.currentTarget.value, request: undefined })} /></label>
         </div>
-        <ReadTable name="Requests" data={Array.isArray(props.page.data.requests) ? filterRequests() : undefined} columns={requestColumns} empty="No requests match." />
+        <ReadTable name="sucafina.native.procurement-ui.section.requests" data={Array.isArray(props.page.data.requests) ? filterRequests() : undefined} columns={requestColumns} empty="sucafina.native.procurement-ui.empty.requestsMatch" />
         <For each={filterRequests()}>{(request) => <RequestDetail request={request} directory={props.page.directory} open={props.query.request === request.number} />}</For>
       </Show>
       <Show when={props.page.page === "My approvals"}>
-        <ReadTable name="Pending approvals" data={Array.isArray(props.page.data.requests) ? pending() : undefined} columns={[
-          { label: "Number", value: (row) => row.number },
-          { label: "Title", value: (row) => object(row.pr).title },
-          { label: "Status", value: (row) => row.status },
-          { label: "Level", value: (row) => step(row).levelName },
-          { label: "Approver", value: holder },
-          { label: "Amount", value: (row) => approval(row).amount },
-          { label: "Submitted", value: (row) => approval(row).submittedAt },
+        <ReadTable name="sucafina.native.procurement-ui.section.pendingApprovals" data={Array.isArray(props.page.data.requests) ? pending() : undefined} columns={[
+          { label: "sucafina.native.procurement-ui.column.number", value: (row) => row.number },
+          { label: "sucafina.native.procurement-ui.column.title", value: (row) => object(row.pr).title },
+          { label: "sucafina.native.procurement-ui.column.status", value: (row) => row.status },
+          { label: "sucafina.native.procurement-ui.field.level", value: (row) => step(row).levelName },
+          { label: "sucafina.native.procurement-ui.field.approver", value: holder },
+          { label: "sucafina.native.procurement-ui.column.amount", value: (row) => approval(row).amount },
+          { label: "sucafina.native.procurement-ui.field.submitted", value: (row) => approval(row).submittedAt },
         ]} />
         <For each={pending()}>{(request) => <RequestDetail request={request} directory={props.page.directory} />}</For>
       </Show>
       <Show when={props.page.page === "Suppliers"}>
         <div class="mx-card mx-fields">
-          <label class="mx-field"><span>Status</span><select value={props.query.status ?? "All"} onChange={(event) => props.onQuery({ ...props.query, status: event.currentTarget.value, supplier: undefined })}>
-            <For each={["All", "pending", "active", "blocked", "inactive"]}>{(item) => <option value={item}>{item}</option>}</For>
+          <label class="mx-field"><span>{language.t("sucafina.native.procurement-ui.column.status")}</span><select value={props.query.status ?? "All"} onChange={(event) => props.onQuery({ ...props.query, status: event.currentTarget.value, supplier: undefined })}>
+            <For each={supplierStatuses}>{(item) => <option value={item.value}>{language.t(item.label)}</option>}</For>
           </select></label>
-          <label class="mx-field"><span>Search</span><input type="search" value={props.query.q ?? ""} onInput={(event) => props.onQuery({ ...props.query, q: event.currentTarget.value, supplier: undefined })} /></label>
+          <label class="mx-field"><span>{language.t("sucafina.native.procurement-ui.search")}</span><input type="search" value={props.query.q ?? ""} onInput={(event) => props.onQuery({ ...props.query, q: event.currentTarget.value, supplier: undefined })} /></label>
         </div>
-        <ReadTable name="Suppliers" data={Array.isArray(props.page.data.suppliers) ? filterSuppliers() : undefined} columns={columns([["Number", "number"], ["Legal name", "legalName"], ["Type", "type"], ["Country", "country"], ["Categories", "categories"], ["Risk", "riskRating"], ["Status", "status"]])} empty="No suppliers match." />
+        <ReadTable name="sucafina.native.procurement-ui.section.suppliers" data={Array.isArray(props.page.data.suppliers) ? filterSuppliers() : undefined} columns={columns([
+          ["sucafina.native.procurement-ui.column.number", "number"],
+          ["sucafina.native.procurement-ui.field.legalName", "legalName"],
+          ["sucafina.native.procurement-ui.field.type", "type"],
+          ["sucafina.native.procurement-ui.field.country", "country"],
+          ["sucafina.native.procurement-ui.field.categories", "categories"],
+          ["sucafina.native.procurement-ui.field.risk", "riskRating"],
+          ["sucafina.native.procurement-ui.column.status", "status"],
+        ])} empty="sucafina.native.procurement-ui.empty.suppliersMatch" />
         <For each={filterSuppliers()}>{(supplier) => <SupplierDetail supplier={supplier} requests={props.page.data.requests} bankVisible={props.page.data.bankVisible === true} open={sameId(props.query.supplier, supplier.id)} />}</For>
       </Show>
       <Show when={props.page.page === "Settings"}>
-        <Show when={Object.keys(settings()).length > 0} fallback={<p class="mx-empty">Settings are unavailable.</p>}>
-          <Fields name="General policy" value={settings()} fields={[["Currency", "currency"], ["PR approval mode", "prApprovalMode"], ["Minimum quotations", "minQuotes"], ["Technical weight", "techWeight"], ["Commercial weight", "commWeight"], ["Block self approval", "blockSelfApproval"], ["Require active supplier", "requireActiveSupplier"], ["Attachment limit (bytes)", "uploadCap"], ["Reminder after days", "reminderDays"], ["Escalation after days", "escalationDays"], ["Rates last updated", "fxUpdated"]]} />
-          <ReadTable name="Approval matrix" data={settings().levels} columns={[
-            { label: "Level", value: (row) => row.name },
-            { label: "Threshold", value: (row) => row.threshold },
-            { label: "Approval holder", value: (row) => row.holderId ? props.page.directory.find((person) => person.id === row.holderId)?.name ?? "Assigned approver" : "Unassigned" },
+        <Show when={Object.keys(settings()).length > 0} fallback={<p class="mx-empty">{language.t("sucafina.native.procurement-ui.section.settingsUnavailable")}</p>}>
+          <Fields name="sucafina.native.procurement-ui.section.generalPolicy" value={settings()} fields={[
+            ["sucafina.native.procurement-ui.field.currency", "currency"],
+            ["sucafina.native.procurement-ui.field.prApprovalMode", "prApprovalMode"],
+            ["sucafina.native.procurement-ui.field.minimumQuotations", "minQuotes"],
+            ["sucafina.native.procurement-ui.field.technicalWeightSetting", "techWeight"],
+            ["sucafina.native.procurement-ui.field.commercialWeightSetting", "commWeight"],
+            ["sucafina.native.procurement-ui.field.blockSelfApproval", "blockSelfApproval"],
+            ["sucafina.native.procurement-ui.field.requireActiveSupplier", "requireActiveSupplier"],
+            ["sucafina.native.procurement-ui.field.attachmentLimit", "uploadCap"],
+            ["sucafina.native.procurement-ui.field.reminderAfterDays", "reminderDays"],
+            ["sucafina.native.procurement-ui.field.escalationAfterDays", "escalationDays"],
+            ["sucafina.native.procurement-ui.field.ratesLastUpdated", "fxUpdated"],
           ]} />
-          <ReadTable name="Currencies" data={settings().fxRates} columns={columns([["Code", "code"], ["Rate", "rate"]])} />
-          <ReadTable name="Technical criteria" data={settings().criteria} columns={columns([["Name", "name"], ["Weight", "weight"]])} />
-          <ReadTable name="Commercial criteria" data={settings().commCriteria} columns={columns([["Name", "name"], ["Weight", "weight"], ["Automatic price criterion", "auto"]])} />
-          <Fields name="Defaults" value={settings()} fields={[["Payment terms", "paymentTerms"], ["Categories", "categories"], ["Incoterms", "incoterms"], ["Default invoice-to address", "billingAddress"], ["Default delivery address", "defaultDeliveryAddress"]]} />
+          <ReadTable name="sucafina.native.procurement-ui.section.approvalMatrix" data={settings().levels} columns={[
+            { label: "sucafina.native.procurement-ui.field.level", value: (row) => row.name },
+            { label: "sucafina.native.procurement-ui.field.threshold", value: (row) => row.threshold },
+            { label: "sucafina.native.procurement-ui.field.approvalHolder", value: (row) => row.holderId ? props.page.directory.find((person) => person.id === row.holderId)?.name ?? language.t("sucafina.native.procurement-ui.assignedApprover") : language.t("sucafina.native.procurement-ui.unassigned") },
+          ]} />
+          <ReadTable name="sucafina.native.procurement-ui.section.currencies" data={settings().fxRates} columns={columns([
+            ["sucafina.native.procurement-ui.field.code", "code"],
+            ["sucafina.native.procurement-ui.field.rate", "rate"],
+          ])} />
+          <ReadTable name="sucafina.native.procurement-ui.section.technicalCriteria" data={settings().criteria} columns={columns([
+            ["sucafina.native.procurement-ui.field.name", "name"],
+            ["sucafina.native.procurement-ui.field.weight", "weight"],
+          ])} />
+          <ReadTable name="sucafina.native.procurement-ui.section.commercialCriteria" data={settings().commCriteria} columns={columns([
+            ["sucafina.native.procurement-ui.field.name", "name"],
+            ["sucafina.native.procurement-ui.field.weight", "weight"],
+            ["sucafina.native.procurement-ui.field.automaticPriceCriterion", "auto"],
+          ])} />
+          <Fields name="sucafina.native.procurement-ui.section.defaults" value={settings()} fields={[
+            ["sucafina.native.procurement-ui.field.paymentTerms", "paymentTerms"],
+            ["sucafina.native.procurement-ui.field.categories", "categories"],
+            ["sucafina.native.procurement-ui.field.incoterms", "incoterms"],
+            ["sucafina.native.procurement-ui.field.defaultInvoiceAddress", "billingAddress"],
+            ["sucafina.native.procurement-ui.field.defaultDeliveryAddress", "defaultDeliveryAddress"],
+          ]} />
         </Show>
       </Show>
     </Show>

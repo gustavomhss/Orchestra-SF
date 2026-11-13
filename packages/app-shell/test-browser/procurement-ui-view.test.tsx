@@ -2,11 +2,17 @@ import { afterEach, expect, test } from "bun:test"
 import type { Sucafina } from "@orchestra/schema/sucafina"
 import { createComponent, createSignal } from "solid-js"
 import { render } from "solid-js/web"
+import { SF_NATIVE_PROCUREMENT_UI_COPY } from "../src/i18n/orchestra-chapters/sucafina-native-procurement-ui"
 import type { Actor, Environment, Snapshot } from "../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 
 const { solidDom } = await import("./solid-dom")
+const { createLocalePlatform } = await import("./native-locale-fixture")
 const { domain } = await import(solidDom("../../../modules/sucafina/Sucafinav1/runtime/procurement.ts", import.meta.dir))
 const { ProcurementView } = await import(solidDom("../src/orchestra/chapters/sucafina/procurement-ui-view.tsx", import.meta.dir))
+const { PlatformProvider }: typeof import("@/context/platform") = await import(solidDom("@/context/platform", import.meta.dir))
+const { LanguageProvider, loadLocaleDict, useLanguage }: typeof import("@/context/language") = await import(
+  solidDom("@/context/language", import.meta.dir)
+)
 
 const at = "2026-11-12T12:00:00Z"
 const ADA = "directory-ada"
@@ -145,27 +151,103 @@ function pageState(page: string, actor: Actor, state = populatedSnapshot(), page
   }
 }
 
-function mount(initial: Sucafina.PageState, initialQuery: Sucafina.PageQuery = {}) {
+function mount(initial: Sucafina.PageState, initialQuery: Sucafina.PageQuery = {}, locale: "en" | "br" = "en") {
   const [current, setCurrent] = createSignal(initial)
   const [query, setQuery] = createSignal(initialQuery)
+  const platform = createLocalePlatform()
+  const languageContext: { current?: ReturnType<typeof useLanguage> } = {}
   const calls: Sucafina.PageQuery[] = []
   const host = document.createElement("div")
   document.body.append(host)
-  const dispose = render(() => createComponent(ProcurementView, {
-    get page() { return current() },
-    get query() { return query() },
-    onQuery(value) {
-      calls.push(value)
-      setQuery(value)
-    },
+  const dispose = render(() => createComponent(PlatformProvider, {
+    value: platform,
+    get children() { return createComponent(LanguageProvider, { locale, get children() {
+      languageContext.current = useLanguage()
+      return createComponent(ProcurementView, {
+        get page() { return current() },
+        get query() { return query() },
+        onQuery(value) {
+          calls.push(value)
+          setQuery(value)
+        },
+      })
+    } }) },
   }), host)
   cleanups.push(() => { dispose(); host.remove() })
-  return { host, calls, current, setCurrent, setQuery }
+  return { host, calls, current, setCurrent, setQuery, language: () => languageContext.current! }
 }
 
 function text(host: HTMLElement) {
   return host.textContent?.replace(/\s+/g, " ").trim() ?? ""
 }
+
+async function until(check: () => boolean) {
+  const deadline = Date.now() + 3000
+  while (!check()) {
+    if (Date.now() > deadline) throw new Error("Timed out waiting for localized procurement copy")
+    await Bun.sleep(10)
+  }
+}
+
+test("English procurement labels preserve source copy exactly", async () => {
+  expect([
+    SF_NATIVE_PROCUREMENT_UI_COPY["sucafina.native.procurement-ui.filter.label"],
+    SF_NATIVE_PROCUREMENT_UI_COPY["sucafina.native.procurement-ui.filter.awaitingApproval"],
+    SF_NATIVE_PROCUREMENT_UI_COPY["sucafina.native.procurement-ui.empty.requestsMatch"],
+    SF_NATIVE_PROCUREMENT_UI_COPY["sucafina.native.procurement-ui.section.requisitionApprovalSteps"],
+  ]).toEqual(["Filter", "Awaiting approval", "No requests match.", "Requisition approval steps"])
+
+  const view = mount(pageState("Requests", admin))
+  await view.language().ready.promise
+  expect(view.language().locale()).toBe("en")
+  const table = view.host.querySelector('section[aria-label="Requests"] table')
+  expect([...table!.querySelectorAll("thead th")].map((header) => header.textContent?.trim())).toEqual([
+    "Number", "Title", "Requester", "Status", "Amount", "Updated", "PO number", "Expense type", "Recurring",
+  ])
+  expect([...view.host.querySelectorAll("label span")].map((label) => label.textContent?.trim())).toEqual(["Filter", "Search"])
+  const filter = view.host.querySelector("label select")!
+  expect([...filter.querySelectorAll("option")].map((option) => [option.value, option.textContent?.trim()])).toEqual([
+    ["Open", "Open"], ["Awaiting approval", "Awaiting approval"], ["Requisition", "Requisition"],
+    ["Sourcing", "Sourcing"], ["Purchase order", "Purchase order"], ["Closed", "Closed"], ["All", "All"],
+  ])
+})
+
+test("a mounted procurement view switches EN to BR to EN with reactive labels and option values", async () => {
+  const view = mount(pageState("Requests", admin))
+  const language = view.language()
+  await language.ready.promise
+  expect(language.locale()).toBe("en")
+  expect([...view.host.querySelectorAll("label span")].map((label) => label.textContent?.trim())).toEqual(["Filter", "Search"])
+  const filter = view.host.querySelector("label select")!
+  expect([...filter.querySelectorAll("option")].map((option) => [option.value, option.textContent?.trim()])).toEqual([
+    ["Open", "Open"], ["Awaiting approval", "Awaiting approval"], ["Requisition", "Requisition"],
+    ["Sourcing", "Sourcing"], ["Purchase order", "Purchase order"], ["Closed", "Closed"], ["All", "All"],
+  ])
+
+  language.setLocale("br")
+  await loadLocaleDict("br")
+  await until(() => language.locale() === "br" && view.host.querySelector('section[aria-label="Solicitações"]') !== null)
+  const table = view.host.querySelector('section[aria-label="Solicitações"] table')
+  expect(table).not.toBeNull()
+  expect([...table!.querySelectorAll("thead th")].map((header) => header.textContent?.trim())).toEqual([
+    "Número", "Título", "Solicitante", "Status", "Valor", "Atualizado", "Número do pedido de compra", "Tipo de despesa", "Recorrente",
+  ])
+  expect([...view.host.querySelectorAll("label span")].map((label) => label.textContent?.trim())).toEqual(["Filtro", "Pesquisar"])
+  expect([...filter.querySelectorAll("option")].map((option) => [option.value, option.textContent?.trim()])).toEqual([
+    ["Open", "Em aberto"], ["Awaiting approval", "Aguardando aprovação"], ["Requisition", "Requisição"],
+    ["Sourcing", "Sourcing"], ["Purchase order", "Pedido de compra"], ["Closed", "Encerrado"], ["All", "Todos"],
+  ])
+  expect(view.host.querySelector('section[aria-label="Requisição"]')).not.toBeNull()
+
+  language.setLocale("en")
+  await loadLocaleDict("en")
+  await until(() => language.locale() === "en" && view.host.querySelector('section[aria-label="Requests"]') !== null)
+  expect([...view.host.querySelectorAll("label span")].map((label) => label.textContent?.trim())).toEqual(["Filter", "Search"])
+  expect([...filter.querySelectorAll("option")].map((option) => [option.value, option.textContent?.trim()])).toEqual([
+    ["Open", "Open"], ["Awaiting approval", "Awaiting approval"], ["Requisition", "Requisition"],
+    ["Sourcing", "Sourcing"], ["Purchase order", "Purchase order"], ["Closed", "Closed"], ["All", "All"],
+  ])
+})
 
 function requestRow(host: HTMLElement, title: string) {
   const row = [...host.querySelectorAll("tbody tr")].find((item) => item.textContent?.includes(title))
@@ -208,6 +290,7 @@ test("My approvals resolves the actual pending holder through the supplied direc
   expect(pendingStep.holderId).toBe(HOLDER)
   expect(text(view.host)).toContain(String(request.number))
   expect(text(view.host)).toContain("Casey Approver")
+  expect([...view.host.querySelectorAll('bdi[dir="auto"]')].some((item) => item.textContent?.trim() === "Casey Approver")).toBe(true)
   expect(text(view.host)).toContain(String(approval.amount))
 })
 
@@ -218,6 +301,30 @@ test("Suppliers renders projected supplier labels and values", () => {
   expect(text(view.host)).toContain(String(supplier.legalName))
   expect(text(view.host)).toContain(String(supplier.number))
   expect(text(view.host)).toContain(String(supplier.status))
+})
+
+test("supplier audit and risk labels preserve their distinct English and pt-BR copy", async () => {
+  const view = mount(pageState("Suppliers", buyer))
+  const language = view.language()
+  await language.ready.promise
+  const supplierTable = view.host.querySelector('section[aria-label="Suppliers"] table')!
+  expect([...supplierTable.querySelectorAll("thead th")].map((header) => header.textContent?.trim())).toContain("Risk")
+  expect([...view.host.querySelectorAll('section[aria-label="Compliance"] dt')].map((field) => field.textContent?.trim())).toContain("Risk rating")
+  const auditTable = view.host.querySelector('section[aria-label="Audit"] table')!
+  expect([...auditTable.querySelectorAll("thead th")].map((header) => header.textContent?.trim())).toEqual([
+    "Field", "Action", "At", "By", "Note",
+  ])
+
+  language.setLocale("br")
+  await loadLocaleDict("br")
+  await until(() => language.locale() === "br" && view.host.querySelector('section[aria-label="Fornecedores"] table') !== null)
+  const localizedSupplierTable = view.host.querySelector('section[aria-label="Fornecedores"] table')!
+  expect([...localizedSupplierTable.querySelectorAll("thead th")].map((header) => header.textContent?.trim())).toContain("Risco")
+  expect([...view.host.querySelectorAll('section[aria-label="Conformidade"] dt')].map((field) => field.textContent?.trim())).toContain("Classificação de risco")
+  const localizedAuditTable = view.host.querySelector('section[aria-label="Auditoria"] table')!
+  expect([...localizedAuditTable.querySelectorAll("thead th")].map((header) => header.textContent?.trim())).toEqual([
+    "Campo", "Ação", "Em", "Por", "Observação",
+  ])
 })
 
 test("supplier projection hides bank secrets from buyer and viewer and renders authorized bank metadata", () => {

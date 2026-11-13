@@ -4,12 +4,18 @@ import { createComponent, createSignal } from "solid-js"
 import { render } from "solid-js/web"
 import { SucafinaRequestError } from "./contract"
 import type { ControllerState } from "./contract"
+import type { Platform } from "@/context/platform"
 
 // The shared DOM compiler lives outside the app's composite TypeScript project.
 const { solidDom } = await import("../../../../test-browser/" + "solid-dom") as {
   solidDom: (specifier: string, dir: string) => string
 }
 const { NativeShell }: typeof import("./native-shell") = await import(solidDom("./native-shell", import.meta.dir))
+const { PlatformProvider }: typeof import("@/context/platform") = await import(solidDom("@/context/platform", import.meta.dir))
+const { LanguageProvider, useLanguage }: typeof import("@/context/language") = await import(solidDom("@/context/language", import.meta.dir))
+const { createLocalePlatform } = await import("../../../../test-browser/" + "native-locale-fixture") as {
+  createLocalePlatform: () => Platform
+}
 
 const cleanups: (() => void)[] = []
 afterEach(() => cleanups.splice(0).forEach((close) => close()))
@@ -26,16 +32,22 @@ function draft(name = "Overview"): Sucafina.Command {
   return { page: name, action: "save", version: 1, values: {} }
 }
 
-function mount(initial: ControllerState = { page: page(), loading: false, saving: false, warnings: [] }) {
+function mount(initial: ControllerState = { page: page(), loading: false, saving: false, warnings: [] }, locale: "en" | "br" = "en") {
   const [state, setState] = createSignal(initial)
   const [surfaces, setSurfaces] = createSignal<readonly Sucafina.Surface[]>(["dashboard", "planner", "procurement"])
   const calls = { save: 0, refresh: 0, discard: 0, surfaces: [] as string[], pages: [] as string[] }
+  const context: { language?: ReturnType<typeof useLanguage> } = {}
   const host = document.createElement("div")
   const filter = document.createElement("div")
   filter.dataset.testid = "filter"
   filter.textContent = "Authorized filters"
   document.body.append(host)
-  const dispose = render(() => createComponent(NativeShell, {
+  const dispose = render(() => createComponent(PlatformProvider, {
+    value: createLocalePlatform(),
+    get children() { return createComponent(LanguageProvider, {
+      locale, get children() { return createComponent(() => {
+        context.language = useLanguage()
+        return createComponent(NativeShell, {
     controller: {
       state,
       async save() { calls.save++ },
@@ -53,9 +65,12 @@ function mount(initial: ControllerState = { page: page(), loading: false, saving
       child.textContent = `Authorized page: ${value.page}`
       return child
     },
+        })
+      }, {}) },
+    }) },
   }), host)
   cleanups.push(() => { dispose(); host.remove() })
-  return { host, calls, state, setState, setSurfaces }
+  return { host, calls, state, setState, setSurfaces, language: context.language! }
 }
 
 function button(host: HTMLElement, label: string) {
@@ -155,6 +170,7 @@ test("renders warnings, validation and conflict as text without exposing stored 
   expect(view.host.querySelector("img")).toBeNull()
   expect(view.host.textContent).not.toContain("do-not-display")
   expect(alerts[1]?.querySelector("bdi")?.textContent).toBe(hostile)
+  expect(alerts[1]?.textContent).toContain(`Last changed by ${hostile}.`)
 })
 
 test("removes filters, identity, page choices and children when authorization clears the page", () => {
@@ -176,4 +192,65 @@ test("removes filters, identity, page choices and children when authorization cl
   expect(view.host.querySelector('[data-testid="filter"]')).not.toBeNull()
   expect(view.host.querySelector('[data-testid="child"]')).not.toBeNull()
   expect(view.host.textContent).toContain("Read-only")
+})
+
+
+test("English shell copy retains exact text and page labels", () => {
+  const view = mount()
+  expect(view.host.querySelector("h1")?.textContent).toBe("Overview")
+  expect(view.host.querySelector("header p")?.textContent).toBe("Explore and manage Sucafina information.")
+  expect(view.host.textContent).toContain("Signed in as Owner")
+  expect([...select(view.host, "Page").options].map((option) => option.textContent)).toEqual(["Overview", "OPEX", "CAPEX", "Headcount", "Entities & allocations", "FX rates", "Versions"])
+})
+
+test("Portuguese shell translates labels without changing page values or exposing markup", async () => {
+  const current = page(false)
+  const hostile = '<img src=x onerror="alert(1)">'
+  const view = mount({ page: { ...current, actor: { ...current.actor, name: hostile }, pages: [...current.pages, hostile] }, loading: false, saving: false, warnings: [] }, "br")
+  await view.language.ready.promise
+  for (let attempt = 0; attempt < 100 && (view.language.locale() !== "br" || view.language.t("sucafina.native.shell.readOnly") !== "Somente leitura"); attempt++) await Bun.sleep(10)
+  expect(view.language.locale()).toBe("br")
+  expect(view.language.t("sucafina.native.shell.readOnly")).toBe("Somente leitura")
+  expect(view.host.textContent).toContain("Somente leitura")
+  expect(view.host.textContent).toContain(`Conectado como ${hostile}`)
+  expect(view.host.querySelector("h1")?.textContent).toBe("Visão geral")
+  expect(view.host.querySelector("img")).toBeNull()
+  const pages = select(view.host, "Página")
+  expect([...pages.options].map((option) => option.value)).toEqual([...current.pages, hostile])
+  expect([...pages.options].at(-1)?.textContent).toBe(hostile)
+  pages.value = "Headcount"
+  pages.dispatchEvent(new Event("change", { bubbles: true }))
+  expect(view.calls.pages).toEqual(["Headcount"])
+  expect(button(view.host, "Salvar").disabled).toBe(true)
+})
+
+
+test("changing locale updates the same shell and keeps route values", async () => {
+  const current = page(false)
+  const name = "ليلى Alice"
+  const view = mount({ page: { ...current, actor: { ...current.actor, name } }, loading: false, saving: false, warnings: [], conflict: new SucafinaRequestError(409, "Conflict", { by: name }) })
+  await view.language.ready.promise
+  expect(view.language.locale()).toBe("en")
+  expect(view.host.querySelector("h1")?.textContent).toBe("Overview")
+  expect(view.host.querySelector("bdi")?.textContent).toBe(name)
+  expect(view.host.querySelector('[role="alert"] bdi')?.textContent).toBe(name)
+  expect(view.host.textContent).toContain(`Signed in as ${name}`)
+  expect(view.host.textContent).toContain(`Last changed by ${name}.`)
+  view.language.setLocale("br")
+  for (let attempt = 0; attempt < 100 && (view.language.locale() !== "br" || view.language.t("sucafina.native.shell.page.overview") !== "Visão geral"); attempt++) await Bun.sleep(10)
+  expect(view.language.locale()).toBe("br")
+  expect(view.language.t("sucafina.native.shell.page.overview")).toBe("Visão geral")
+  expect(view.host.querySelector("h1")?.textContent).toBe("Visão geral")
+  expect(select(view.host, "Página").options[0]?.textContent).toBe("Visão geral")
+  expect(select(view.host, "Aplicativo").options[0]?.textContent).toBe("Painel")
+  expect([...select(view.host, "Página").options].map((option) => option.value)).toEqual([...current.pages])
+  expect(view.host.querySelector("bdi")?.textContent).toBe(name)
+  view.language.setLocale("en")
+  for (let attempt = 0; attempt < 100 && (view.language.locale() !== "en" || view.language.t("sucafina.native.shell.page.overview") !== "Overview"); attempt++) await Bun.sleep(10)
+  expect(view.language.locale()).toBe("en")
+  expect(view.language.t("sucafina.native.shell.page.overview")).toBe("Overview")
+  expect(view.host.querySelector("h1")?.textContent).toBe("Overview")
+  expect(select(view.host, "Page").options[0]?.textContent).toBe("Overview")
+  expect(select(view.host, "Application").options[0]?.textContent).toBe("Dashboard")
+  expect([...select(view.host, "Page").options].map((option) => option.value)).toEqual([...current.pages])
 })

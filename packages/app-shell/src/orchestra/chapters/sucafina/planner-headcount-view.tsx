@@ -1,4 +1,5 @@
 import { createMemo, For, Show } from "solid-js"
+import { useLanguage } from "@/context/language"
 import { MxPage } from "../kit"
 import type { NativeViewProps } from "./view-contract"
 
@@ -14,6 +15,7 @@ const tableCellStyle = {
 } as const
 
 export function PlannerHeadcountView(props: NativeViewProps) {
+  const language = useLanguage()
   const authorizedPage = () =>
     props.page.surface === "planner" &&
     OWNED_PAGES.has(props.page.page) &&
@@ -27,7 +29,7 @@ export function PlannerHeadcountView(props: NativeViewProps) {
   }
   const selectedVersionLabel = (version: Row) => {
     const name = string(version.name)
-    const year = display(version.year)
+    const year = display(version.year, language)
     return name ? `${name} · FY${year}` : `FY${year}`
   }
   const selectVersion = (id: string) => props.onQuery({ ...props.query, version: id || undefined })
@@ -36,21 +38,21 @@ export function PlannerHeadcountView(props: NativeViewProps) {
     <Show when={authorizedPage()} fallback={null}>
       <MxPage
         id="sucafina-planner-view"
-        eyebrow="Planner"
-        title={props.page.page}
-        description={pageDescription(props.page.page)}
+        eyebrow={language.t("sucafina.native.planner-headcount.page.planner")}
+        title={pageTitle(props.page.page, language)}
+        description={pageDescription(props.page.page, language)}
       >
         <Show when={props.page.page !== "Entities & allocations" && versions().length > 0}>
-          <div class="mx-card" aria-label="Budget version selection">
+          <div class="mx-card" aria-label={language.t("sucafina.native.planner-headcount.version.selection")}>
             <label class="mx-field">
-              <span>Budget version</span>
+              <span>{language.t("sucafina.native.planner-headcount.version.label")}</span>
               <select
-                aria-label="Budget version"
+                aria-label={language.t("sucafina.native.planner-headcount.version.label")}
                 value={props.query.version && !activeVersion() ? props.query.version : identifier(activeVersion()?.id) ?? ""}
                 onChange={(event) => selectVersion(event.currentTarget.value)}
               >
                 <Show when={props.query.version && !activeVersion()}>
-                  <option value={props.query.version} disabled>Requested version unavailable</option>
+                  <option value={props.query.version} disabled>{language.t("sucafina.native.planner-headcount.version.requestedUnavailable")}</option>
                 </Show>
                 <For each={versions()}>
                   {(version) => <option value={identifier(version.id) ?? ""}>{selectedVersionLabel(version)}</option>}
@@ -71,20 +73,20 @@ export function PlannerHeadcountView(props: NativeViewProps) {
         </Show>
         <Show when={props.page.page !== "Entities & allocations" && props.query.version && !activeVersion()}>
           <div class="mx-empty" role="status">
-            <strong>Selected budget version unavailable</strong>
-            The requested version is not present in the authorized version list.
+            <strong>{language.t("sucafina.native.planner-headcount.version.selectedUnavailable")}</strong>
+            {language.t("sucafina.native.planner-headcount.version.selectedUnavailableDetail")}
           </div>
         </Show>
         <Show when={props.page.page !== "Entities & allocations" && versionData() === undefined}>
           <div class="mx-empty" role="status">
-            <strong>Budget version data unavailable</strong>
-            No authorized version projection is present for this page.
+            <strong>{language.t("sucafina.native.planner-headcount.version.dataUnavailable")}</strong>
+            {language.t("sucafina.native.planner-headcount.version.dataUnavailableDetail")}
           </div>
         </Show>
         <Show when={props.page.page !== "Entities & allocations" && versionData()?.length === 0}>
           <div class="mx-empty" role="status">
-            <strong>No budget versions yet</strong>
-            No budget versions are present in this authorized view.
+            <strong>{language.t("sucafina.native.planner-headcount.version.none")}</strong>
+            {language.t("sucafina.native.planner-headcount.version.noneDetail")}
           </div>
         </Show>
       </MxPage>
@@ -99,6 +101,7 @@ function Headcount(props: {
   query: NativeViewProps["query"]
   onQuery: NativeViewProps["onQuery"]
 }) {
+  const language = useLanguage()
   const version = () => props.version
   const hc = () => row(version().hc)
   const summary = () => row(version().summary)
@@ -130,32 +133,32 @@ function Headcount(props: {
     props.onQuery({ ...props.query, [key]: value || undefined })
   const positionsColumns = createMemo<Column[]>(() => {
     const columns: Column[] = [
-      { label: "Include", value: (position) => position.include, format: yesNo },
-      { label: "Name", value: (position) => position.name },
-      { label: "Title", value: (position) => position.title },
-      { label: "Domain", value: (position) => position.domain },
-      { label: "Location", value: (position) => position.location },
-      { label: "Type", value: (position) => position.type },
+      { label: language.t("sucafina.native.planner-headcount.position.include"), value: (position) => position.include, format: (value) => yesNo(value, language) },
+      { label: language.t("sucafina.native.planner-headcount.position.name"), value: (position) => position.name },
+      { label: language.t("sucafina.native.planner-headcount.position.title"), value: (position) => position.title },
+      { label: language.t("sucafina.native.planner-headcount.domains.domain"), value: (position) => position.domain },
+      { label: language.t("sucafina.native.planner-headcount.position.location"), value: (position) => position.location },
+      { label: language.t("sucafina.native.planner-headcount.position.type"), value: (position) => position.type },
     ]
     if (ratesData() !== undefined) {
       columns.push({
-        label: "Rate card",
+        label: language.t("sucafina.native.planner-headcount.rates.name"),
         value: (position) => {
           const rateId = identifier(position.rateId)
-          if (rateId === undefined) return "Automatic"
+          if (rateId === undefined) return language.t("sucafina.native.planner-headcount.position.automatic")
           return ratesById().get(rateId)?.name
         },
       })
     }
     columns.push(
-      { label: "FTE", value: (position) => position.fte, format: numberDisplay },
-      { label: "From", value: (position) => position.start },
-      { label: "To", value: (position) => position.end },
+      { label: language.t("sucafina.native.planner-headcount.position.fte"), value: (position) => position.fte, format: numberDisplay },
+      { label: language.t("sucafina.native.planner-headcount.position.start"), value: (position) => position.start },
+      { label: language.t("sucafina.native.planner-headcount.position.end"), value: (position) => position.end },
     )
     if (positions().some((position) => Object.hasOwn(position, "rateOverride"))) {
-      columns.push({ label: "Rate override", value: (position) => position.rateOverride, format: numberDisplay })
+      columns.push({ label: language.t("sucafina.native.planner-headcount.position.rateOverride"), value: (position) => position.rateOverride, format: numberDisplay })
     }
-    columns.push({ label: "Status", value: positionStatus })
+    columns.push({ label: language.t("sucafina.native.planner-headcount.position.status"), value: (position) => positionStatus(position, language) })
     return columns
   })
   const domainRows = createMemo(() => arrayField(summary(), "hr") ?? arrayField(version(), "hr"))
@@ -169,52 +172,52 @@ function Headcount(props: {
   return (
     <>
       <Show when={summary().fte !== undefined || summary().hrTotal !== undefined}>
-        <dl class="mx-grid" aria-label="Headcount summary">
+        <dl class="mx-grid" aria-label={language.t("sucafina.native.planner-headcount.summary.label")}>
           <Show when={summary().fte !== undefined}>
-            <Metric label="FTE in December" value={summary().fte} format={numberDisplay} />
+            <Metric label={language.t("sucafina.native.planner-headcount.summary.fteDecember")} value={summary().fte} format={numberDisplay} />
           </Show>
           <Show when={summary().hrTotal !== undefined}>
-            <Metric label="HR Staff budget USD" value={summary().hrTotal} format={usdDisplay} />
+            <Metric label={language.t("sucafina.native.planner-headcount.summary.hrBudgetUsd")} value={summary().hrTotal} format={usdDisplay} />
           </Show>
         </dl>
       </Show>
 
       <Show when={hc().exampleRates === true || hc().ratesAreExamples === true}>
         <div class="mx-card" role="status">
-          <strong>Example rates</strong>
-          Replace the example values with the approved HR rate data before relying on this budget.
+          <strong>{language.t("sucafina.native.planner-headcount.exampleRates.title")}</strong>
+          {language.t("sucafina.native.planner-headcount.exampleRates.detail")}
         </div>
       </Show>
 
       <Show
         when={domainRows()}
-        fallback={<Unavailable title="Headcount by domain unavailable" detail="The authorized view does not include the computed HR domain rows." />}
+        fallback={<Unavailable title={language.t("sucafina.native.planner-headcount.domains.unavailable")} detail={language.t("sucafina.native.planner-headcount.domains.unavailableDetail")} />}
       >
         {(domainData) =>
           domainData().length > 0 ? (
             <ReadTable
-              title="HR Staff budget by domain"
-              label="HR Staff budget by domain"
+              title={language.t("sucafina.native.planner-headcount.domains.title")}
+              label={language.t("sucafina.native.planner-headcount.domains.title")}
               rows={domainData()}
               columns={[
-                { label: "Domain", value: (domain) => domain.domain },
-                { label: "Budget USD", value: (domain) => domain.annual, format: usdDisplay },
+                { label: language.t("sucafina.native.planner-headcount.domains.domain"), value: (domain) => domain.domain },
+                { label: language.t("sucafina.native.planner-headcount.domains.budgetUsd"), value: (domain) => domain.annual, format: usdDisplay },
               ]}
             />
           ) : (
             <div class="mx-empty" role="status">
-              <strong>No HR Staff budget by domain</strong>
-              No computed domain rows are present in this version.
+              <strong>{language.t("sucafina.native.planner-headcount.domains.none")}</strong>
+              {language.t("sucafina.native.planner-headcount.domains.noneDetail")}
             </div>
           )
         }
       </Show>
 
       <Show when={props.data.headcountMappingVisible === true && roster() !== undefined && leaderDomains() !== undefined}>
-        <Show when={leaders().length > 0} fallback={<div class="mx-empty" role="status"><strong>No roster leaders yet</strong></div>}>
-          <ReadTable title="Roster leader to domain mapping" label="Roster leader to domain mapping" rows={leaders()} columns={[
-            { label: "Roster leader", value: (leader) => leader.leader },
-            { label: "Domain", value: (leader) => leader.domain },
+        <Show when={leaders().length > 0} fallback={<div class="mx-empty" role="status"><strong>{language.t("sucafina.native.planner-headcount.roster.none")}</strong></div>}>
+          <ReadTable title={language.t("sucafina.native.planner-headcount.roster.title")} label={language.t("sucafina.native.planner-headcount.roster.title")} rows={leaders()} columns={[
+            { label: language.t("sucafina.native.planner-headcount.roster.leader"), value: (leader) => leader.leader },
+            { label: language.t("sucafina.native.planner-headcount.domains.domain"), value: (leader) => leader.domain },
           ]} />
         </Show>
       </Show>
@@ -223,54 +226,54 @@ function Headcount(props: {
         {(rateData) =>
           rateData().length > 0 ? (
             <ReadTable
-              title="Rate cards"
-              label="Headcount rate cards"
+              title={language.t("sucafina.native.planner-headcount.rates.title")}
+              label={language.t("sucafina.native.planner-headcount.rates.label")}
               rows={rateData()}
               columns={[
-                { label: "Rate card", value: (rate) => rate.name },
-                { label: "Locations it covers", value: (rate) => rate.locs },
-                { label: "Currency", value: (rate) => rate.cur },
-                { label: "Per FTE / year", value: (rate) => rate.annual, format: numberDisplay },
+                { label: language.t("sucafina.native.planner-headcount.rates.name"), value: (rate) => rate.name },
+                { label: language.t("sucafina.native.planner-headcount.rates.locations"), value: (rate) => rate.locs },
+                { label: language.t("sucafina.native.planner-headcount.rates.currency"), value: (rate) => rate.cur },
+                { label: language.t("sucafina.native.planner-headcount.rates.annual"), value: (rate) => rate.annual, format: numberDisplay },
               ]}
             />
           ) : (
             <div class="mx-empty" role="status">
-              <strong>No rate cards yet</strong>
-              No rate-card rows are present in this version.
+              <strong>{language.t("sucafina.native.planner-headcount.rates.none")}</strong>
+              {language.t("sucafina.native.planner-headcount.rates.noneDetail")}
             </div>
           )
         }
       </Show>
       <Show when={ratesData() === undefined}>
-        <Unavailable title="Rate-card details unavailable" detail="Rate-card salary fields are not present in this authorized view." />
+        <Unavailable title={language.t("sucafina.native.planner-headcount.rates.unavailable")} detail={language.t("sucafina.native.planner-headcount.rates.unavailableDetail")} />
       </Show>
 
       <Show
         when={positionData()}
-        fallback={<Unavailable title="Position data unavailable" detail="The authorized view does not include position rows." />}
+        fallback={<Unavailable title={language.t("sucafina.native.planner-headcount.positions.unavailable")} detail={language.t("sucafina.native.planner-headcount.positions.unavailableDetail")} />}
       >
         {(positionRows) =>
           positionRows().length > 0 ? (
             <>
               <div class="mx-toolbar">
                 <label class="mx-field">
-                  <span>Search name, title, location</span>
+                  <span>{language.t("sucafina.native.planner-headcount.positions.search")}</span>
                   <input
                     class="mx-search"
                     type="search"
-                    aria-label="Search name, title, location"
+                    aria-label={language.t("sucafina.native.planner-headcount.positions.search")}
                     value={props.query.q ?? ""}
                     onInput={(event) => updateQuery("q", event.currentTarget.value)}
                   />
                 </label>
                 <label class="mx-field">
-                  <span>Domain</span>
+                  <span>{language.t("sucafina.native.planner-headcount.domains.domain")}</span>
                   <select
-                    aria-label="Filter by domain"
+                    aria-label={language.t("sucafina.native.planner-headcount.positions.filterDomain")}
                     value={props.query.filter ?? ""}
                     onChange={(event) => updateQuery("filter", event.currentTarget.value)}
                   >
-                    <option value="">All domains</option>
+                    <option value="">{language.t("sucafina.native.planner-headcount.positions.allDomains")}</option>
                     <For each={domainOptions()}>{(domain) => <option value={domain}>{domain}</option>}</For>
                   </select>
                 </label>
@@ -279,14 +282,14 @@ function Headcount(props: {
                 when={filteredPositions().length > 0}
                 fallback={
                   <div class="mx-empty" role="status">
-                    <strong>No positions match these filters</strong>
-                    Clear the search or choose another domain to see positions.
+                    <strong>{language.t("sucafina.native.planner-headcount.positions.noMatches")}</strong>
+                    {language.t("sucafina.native.planner-headcount.positions.noMatchesDetail")}
                   </div>
                 }
               >
                 <ReadTable
-                  title="Positions"
-                  label="Headcount positions"
+                  title={language.t("sucafina.native.planner-headcount.positions.title")}
+                  label={language.t("sucafina.native.planner-headcount.positions.label")}
                   rows={filteredPositions()}
                   columns={positionsColumns()}
                 />
@@ -294,8 +297,8 @@ function Headcount(props: {
             </>
           ) : (
             <div class="mx-empty" role="status">
-              <strong>No positions yet</strong>
-              No position rows are present in this version.
+              <strong>{language.t("sucafina.native.planner-headcount.positions.none")}</strong>
+              {language.t("sucafina.native.planner-headcount.positions.noneDetail")}
             </div>
           )
         }
@@ -305,52 +308,53 @@ function Headcount(props: {
 }
 
 function Lists(props: { data: Row }) {
+  const language = useLanguage()
   const entityData = () => arrayField(props.data, "entities")
   const allocationData = () => arrayField(props.data, "allocations")
   return (
     <div class="mx-grid">
       <Show
         when={entityData()}
-        fallback={<Unavailable title="Entity list unavailable" detail="The authorized view does not include entity records." />}
+        fallback={<Unavailable title={language.t("sucafina.native.planner-headcount.lists.entityListUnavailable")} detail={language.t("sucafina.native.planner-headcount.lists.entityListUnavailableDetail")} />}
       >
         {(entities) =>
           entities().length > 0 ? (
             <ReadTable
-              title="Entities"
-              label="Entities"
+              title={language.t("sucafina.native.planner-headcount.lists.entities")}
+              label={language.t("sucafina.native.planner-headcount.lists.entities")}
               rows={entities()}
               columns={[
-                { label: "Name", value: (entity) => entity.name },
-                { label: "Code", value: (entity) => entity.code },
+                { label: language.t("sucafina.native.planner-headcount.lists.entityName"), value: (entity) => entity.name },
+                { label: language.t("sucafina.native.planner-headcount.lists.entityCode"), value: (entity) => entity.code },
               ]}
             />
           ) : (
             <div class="mx-empty" role="status">
-              <strong>No entities yet</strong>
-              No entity records are present in this authorized view.
+              <strong>{language.t("sucafina.native.planner-headcount.lists.noEntities")}</strong>
+              {language.t("sucafina.native.planner-headcount.lists.noEntitiesDetail")}
             </div>
           )
         }
       </Show>
       <Show
         when={allocationData()}
-        fallback={<Unavailable title="Allocation list unavailable" detail="The authorized view does not include allocation records." />}
+        fallback={<Unavailable title={language.t("sucafina.native.planner-headcount.lists.allocationListUnavailable")} detail={language.t("sucafina.native.planner-headcount.lists.allocationListUnavailableDetail")} />}
       >
         {(allocations) =>
           allocations().length > 0 ? (
             <ReadTable
-              title="Allocations"
-              label="Allocations"
+              title={language.t("sucafina.native.planner-headcount.lists.allocations")}
+              label={language.t("sucafina.native.planner-headcount.lists.allocations")}
               rows={allocations()}
               columns={[
-                { label: "Name", value: (allocation) => allocation.name },
-                { label: "Description", value: (allocation) => allocation.desc },
+                { label: language.t("sucafina.native.planner-headcount.lists.allocationName"), value: (allocation) => allocation.name },
+                { label: language.t("sucafina.native.planner-headcount.lists.allocationDescription"), value: (allocation) => allocation.desc },
               ]}
             />
           ) : (
             <div class="mx-empty" role="status">
-              <strong>No allocations yet</strong>
-              No allocation records are present in this authorized view.
+              <strong>{language.t("sucafina.native.planner-headcount.lists.noAllocations")}</strong>
+              {language.t("sucafina.native.planner-headcount.lists.noAllocationsDetail")}
             </div>
           )
         }
@@ -360,6 +364,7 @@ function Lists(props: { data: Row }) {
 }
 
 function FxRates(props: { version: Row }) {
+  const language = useLanguage()
   const fxData = () => arrayField(props.version, "fx")
   const warnings = createMemo(() => {
     const summary = row(props.version.summary)
@@ -369,8 +374,8 @@ function FxRates(props: { version: Row }) {
   return (
     <>
       <Show when={warnings().length > 0}>
-        <div class="mx-card" role="status" aria-label="FX conversion warnings">
-          <strong>FX conversion warnings</strong>
+        <div class="mx-card" role="status" aria-label={language.t("sucafina.native.planner-headcount.fx.warningsLabel")}>
+          <strong>{language.t("sucafina.native.planner-headcount.fx.warningsTitle")}</strong>
           <ul>
             <For each={warnings()}>{(warning) => <li>{warning}</li>}</For>
           </ul>
@@ -378,17 +383,17 @@ function FxRates(props: { version: Row }) {
       </Show>
       <Show
         when={fxData() !== undefined}
-        fallback={<Unavailable title="FX rate data unavailable" detail="The authorized view does not include version FX rows." />}
+        fallback={<Unavailable title={language.t("sucafina.native.planner-headcount.fx.unavailable")} detail={language.t("sucafina.native.planner-headcount.fx.unavailableDetail")} />}
       >
-        <Show when={(fxData()?.length ?? 0) > 0} fallback={<div class="mx-empty" role="status"><strong>No FX rates yet</strong></div>}>
+        <Show when={(fxData()?.length ?? 0) > 0} fallback={<div class="mx-empty" role="status"><strong>{language.t("sucafina.native.planner-headcount.fx.none")}</strong></div>}>
           <ReadTable
-            title="FX rates"
-            label="FX rates"
+            title={language.t("sucafina.native.planner-headcount.fx.title")}
+            label={language.t("sucafina.native.planner-headcount.fx.title")}
             rows={fxData() ?? []}
             columns={[
-              { label: "Currency", value: (rate) => rate.cur },
-              { label: "USD per 1 unit", value: (rate) => rate.rate, format: numberDisplay },
-              { label: "Rate status", value: (rate) => (rate.rate == null ? "No rate" : "Available") },
+              { label: language.t("sucafina.native.planner-headcount.fx.currency"), value: (rate) => rate.cur },
+              { label: language.t("sucafina.native.planner-headcount.fx.rate"), value: (rate) => rate.rate, format: numberDisplay },
+              { label: language.t("sucafina.native.planner-headcount.fx.rateStatus"), value: (rate) => language.t(rate.rate == null ? "sucafina.native.planner-headcount.fx.noRate" : "sucafina.native.planner-headcount.fx.available") },
             ]}
           />
         </Show>
@@ -398,10 +403,11 @@ function FxRates(props: { version: Row }) {
 }
 
 function ReadTable(props: { title: string; label: string; rows: Row[]; columns: Column[] }) {
+  const language = useLanguage()
   return (
     <section class="mx-card" aria-label={props.title}>
       <h2>{props.title}</h2>
-      <div class="mx-table" role="region" aria-label={`${props.label} table`} style={{ "overflow-x": "auto" }}>
+      <div class="mx-table" role="region" aria-label={language.t("sucafina.native.planner-headcount.table.region", { label: props.label })} style={{ "overflow-x": "auto" }}>
         <table aria-label={props.label} style={{ "border-collapse": "collapse", "min-width": "100%", width: "max-content" }}>
           <thead>
             <tr>
@@ -417,7 +423,7 @@ function ReadTable(props: { title: string; label: string; rows: Row[]; columns: 
                   <For each={props.columns}>
                     {(column) => {
                       const value = column.value(item)
-                      return <td style={tableCellStyle}>{column.format ? column.format(value) : display(value)}</td>
+                      return <td style={tableCellStyle}>{column.format ? column.format(value) : display(value, language)}</td>
                     }}
                   </For>
                 </tr>
@@ -448,10 +454,16 @@ function Unavailable(props: { title: string; detail: string }) {
   )
 }
 
-function pageDescription(page: string) {
-  if (page === "Headcount") return "Review authorized positions, rate cards, and projected HR Staff data for the selected budget version."
-  if (page === "Entities & allocations") return "Review the entity codes and allocation descriptions available to budget lines."
-  return "Review the selected version’s currency codes, USD rates, and server-provided conversion warnings."
+function pageTitle(page: string, language: ReturnType<typeof useLanguage>) {
+  if (page === "Headcount") return language.t("sucafina.native.planner-headcount.page.headcount")
+  if (page === "Entities & allocations") return language.t("sucafina.native.planner-headcount.page.entitiesAllocations")
+  return language.t("sucafina.native.planner-headcount.page.fxRates")
+}
+
+function pageDescription(page: string, language: ReturnType<typeof useLanguage>) {
+  if (page === "Headcount") return language.t("sucafina.native.planner-headcount.pageDescription.headcount")
+  if (page === "Entities & allocations") return language.t("sucafina.native.planner-headcount.pageDescription.entitiesAllocations")
+  return language.t("sucafina.native.planner-headcount.pageDescription.fxRates")
 }
 
 function row(value: unknown): Row {
@@ -485,10 +497,10 @@ function stringArray(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : []
 }
 
-function display(value: unknown): string {
+function display(value: unknown, language: ReturnType<typeof useLanguage>): string {
   if (value === null || value === undefined || value === "") return "—"
   if (typeof value === "string") return value
-  if (typeof value === "boolean") return value ? "Yes" : "No"
+  if (typeof value === "boolean") return language.t(value ? "sucafina.native.planner-headcount.value.yes" : "sucafina.native.planner-headcount.value.no")
   if (typeof value === "number") return Number.isFinite(value) ? String(value) : "—"
   return "—"
 }
@@ -509,14 +521,15 @@ function usdDisplay(value: unknown): string {
     : "—"
 }
 
-function yesNo(value: unknown): string {
-  return typeof value === "boolean" ? (value ? "Included" : "Excluded") : display(value)
+function yesNo(value: unknown, language: ReturnType<typeof useLanguage>): string {
+  if (typeof value !== "boolean") return display(value, language)
+  return language.t(value ? "sucafina.native.planner-headcount.position.included" : "sucafina.native.planner-headcount.position.excluded")
 }
 
-function positionStatus(position: Row): string {
-  if (position.include !== true) return "Excluded"
-  if (position.left === true) return "Not in roster"
-  if (position.hasRate === false) return "No rate"
-  if (position.src === "new") return "New hire"
-  return "In roster"
+function positionStatus(position: Row, language: ReturnType<typeof useLanguage>): string {
+  if (position.include !== true) return language.t("sucafina.native.planner-headcount.position.excluded")
+  if (position.left === true) return language.t("sucafina.native.planner-headcount.position.notInRoster")
+  if (position.hasRate === false) return language.t("sucafina.native.planner-headcount.position.noRate")
+  if (position.src === "new") return language.t("sucafina.native.planner-headcount.position.newHire")
+  return language.t("sucafina.native.planner-headcount.position.inRoster")
 }

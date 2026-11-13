@@ -2,6 +2,8 @@ import { afterEach, expect, test } from "bun:test"
 import type { Sucafina } from "@orchestra/schema/sucafina"
 import { createComponent, createSignal } from "solid-js"
 import { render } from "solid-js/web"
+import { SF_NATIVE_DASHBOARD_PORTFOLIO_COPY } from "../src/i18n/orchestra-chapters/sucafina-native-dashboard-portfolio"
+import { createLocalePlatform } from "./native-locale-fixture"
 import { DashboardPeople } from "../../../modules/sucafina/Sucafinav1/runtime/dashboard-people.ts"
 import { DashboardPortfolio } from "../../../modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts"
 import type { Actor, Environment, Snapshot } from "../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
@@ -10,6 +12,8 @@ import { solidDom } from "./solid-dom"
 
 const { DashboardPortfolioView }: typeof import("../src/orchestra/chapters/sucafina/dashboard-portfolio-view") =
   await import(solidDom("../src/orchestra/chapters/sucafina/dashboard-portfolio-view", import.meta.dir))
+const { PlatformProvider }: typeof import("@/context/platform") = await import(solidDom("@/context/platform", import.meta.dir))
+const { LanguageProvider, useLanguage }: typeof import("@/context/language") = await import(solidDom("@/context/language", import.meta.dir))
 
 const viewNames = ["Hot Topics & Actions", "Portfolio Dashboard", "All Projects", "IT Risks", "Stakeholder Management", "IT Performance Contract"]
 const admin: Actor = { id: "admin", name: "Admin", canWrite: true, roles: ["admin"], assigned: [], domains: [] }
@@ -33,19 +37,28 @@ function page(name: string, state: Snapshot, actor: Actor = admin): Sucafina.Pag
   }
 }
 
-function mount(initial: Sucafina.PageState, initialQuery: Sucafina.PageQuery = { page: initial.page, year: "2026" }) {
+function mount(initial: Sucafina.PageState, initialQuery: Sucafina.PageQuery = { page: initial.page, year: "2026" }, locale: "en" | "br" = "en") {
   const [current, setPage] = createSignal(initial)
   const [query, setQuery] = createSignal(initialQuery)
   const changes: Sucafina.PageQuery[] = []
+  const scope: { language?: ReturnType<typeof useLanguage> } = {}
   const host = document.createElement("div")
   document.body.append(host)
-  const dispose = render(() => createComponent(DashboardPortfolioView, {
-    get page() { return current() },
-    get query() { return query() },
-    onQuery(next) { changes.push(next); setQuery(next) },
+  const dispose = render(() => createComponent(PlatformProvider, {
+    value: createLocalePlatform(),
+    get children() { return createComponent(LanguageProvider, { locale, get children() {
+      return createComponent(() => {
+        scope.language = useLanguage()
+        return createComponent(DashboardPortfolioView, {
+          get page() { return current() },
+          get query() { return query() },
+          onQuery(next) { changes.push(next); setQuery(next) },
+        })
+      }, {})
+    } }) },
   }), host)
   closes.push(() => { dispose(); host.remove() })
-  return { host, setPage, changes }
+  return { host, setPage, changes, language: scope.language! }
 }
 
 const project = {
@@ -120,6 +133,7 @@ test("IT Performance Contract distinguishes the projected zero score from null",
   expect(scoreColumn).toBeGreaterThanOrEqual(0)
   expect(scored?.querySelectorAll("td")[scoreColumn]?.textContent?.trim()).toMatch(/^0(?:\.0+)?$/)
   expect(missing?.querySelectorAll("td")[scoreColumn]?.textContent?.trim()).toBe("—")
+  expect(view.host.querySelector("table[aria-label='Sub-items: Delivery objectives']")).not.toBeNull()
 })
 
 test("Hot Topics renders the actual authorized action projection", () => {
@@ -179,14 +193,15 @@ test("restricted viewer receives only the summarized project page and its projec
   const projected = page("Portfolio Dashboard", filledState, viewer)
   expect(projected.pages).toContain("Portfolio Dashboard")
   expect(projected.pages).not.toContain("All Projects")
+  expect(projected.data.projects).toHaveLength(2)
   expect(projected.data.projects).toMatchObject([
     { id: 713, name: "Atlas rollout", pm: "Ada Manager" },
     { id: 714, name: "Network refresh", pm: "Ada Manager" },
   ])
-  expect(projected.data.projects).toHaveLength(2)
   expect(projected.data.risks).toBeUndefined()
   const view = mount(projected)
   expect(view.host.textContent).toContain("Atlas rollout")
+  expect(view.host.textContent).toContain("Network refresh")
   expect(view.host.textContent).not.toContain("Network outage")
 })
 
@@ -216,7 +231,7 @@ test("project search, Status, and Show controls change visible rows and preserve
   expect(table?.textContent).toContain("Atlas rollout")
   expect(table?.textContent).toContain("Network refresh")
 
-  const search = [...(region?.querySelectorAll("label") ?? [])].find((item) => item.textContent?.includes("Search"))?.querySelector("input")
+  const search = [...(region?.querySelectorAll("label") ?? [])].find((item) => item.querySelector("span")?.textContent === SF_NATIVE_DASHBOARD_PORTFOLIO_COPY["sucafina.native.dashboard-portfolio.filter.search"])?.querySelector("input")
   if (!search) throw new Error("Expected the project Search control")
   search.value = "Atlas"
   search.dispatchEvent(new Event("input", { bubbles: true }))
@@ -225,7 +240,7 @@ test("project search, Status, and Show controls change visible rows and preserve
   expect(table?.textContent).not.toContain("Network refresh")
   expect(view.changes.at(-1)).toMatchObject({ page: "All Projects", year: "2026", owner: "Ada Manager", status: "", filter: "", q: "Atlas" })
 
-  const status = [...(region?.querySelectorAll("label") ?? [])].find((item) => item.querySelector("span")?.textContent?.trim() === "Status")?.querySelector("select")
+  const status = [...(region?.querySelectorAll("label") ?? [])].find((item) => item.querySelector("span")?.textContent === SF_NATIVE_DASHBOARD_PORTFOLIO_COPY["sucafina.native.dashboard-portfolio.filter.status"])?.querySelector("select")
   if (!status) throw new Error("Expected the project Status control")
   status.value = "Completed"
   status.dispatchEvent(new Event("change", { bubbles: true }))
@@ -244,7 +259,7 @@ test("project search, Status, and Show controls change visible rows and preserve
   expect(table?.textContent).toContain("Network refresh")
   expect(view.changes.at(-1)).toMatchObject({ page: "All Projects", year: "2026", owner: "Ada Manager", q: "", status: "", filter: "" })
 
-  const show = [...(region?.querySelectorAll("label") ?? [])].find((item) => item.querySelector("span")?.textContent?.trim() === "Show")?.querySelector("select")
+  const show = [...(region?.querySelectorAll("label") ?? [])].find((item) => item.querySelector("span")?.textContent === SF_NATIVE_DASHBOARD_PORTFOLIO_COPY["sucafina.native.dashboard-portfolio.filter.show"])?.querySelector("select")
   if (!show) throw new Error("Expected the project Show control")
   show.value = "watch"
   show.dispatchEvent(new Event("change", { bubbles: true }))
@@ -257,4 +272,84 @@ test("project search, Status, and Show controls change visible rows and preserve
   expect(table?.textContent).toContain("Atlas rollout")
   expect(table?.textContent).toContain("Network refresh")
   expect(view.changes.at(-1)).toMatchObject({ page: "All Projects", year: "2026", owner: "Ada Manager", q: "", status: "", filter: "" })
+})
+
+test("English dashboard portfolio copy preserves the source wording", () => {
+  expect(SF_NATIVE_DASHBOARD_PORTFOLIO_COPY["sucafina.native.dashboard-portfolio.page.allProjects"]).toBe("All Projects")
+  expect(SF_NATIVE_DASHBOARD_PORTFOLIO_COPY["sucafina.native.dashboard-portfolio.column.projectManager"]).toBe("Project manager")
+  expect(SF_NATIVE_DASHBOARD_PORTFOLIO_COPY["sucafina.native.dashboard-portfolio.option.onHold"]).toBe("On Hold")
+  expect(SF_NATIVE_DASHBOARD_PORTFOLIO_COPY["sucafina.native.dashboard-portfolio.status.riskTierUnavailable"]).toBe("Risk tier data is unavailable for the selected filter: {{filter}}.")
+  const view = mount(page("All Projects", filledState))
+  const region = [...view.host.querySelectorAll("section[aria-label]")].find((item) => item.getAttribute("aria-label") === "All Projects")
+  expect(region?.querySelector("table[aria-label='Projects'] thead th")?.textContent).toBe(
+    SF_NATIVE_DASHBOARD_PORTFOLIO_COPY["sucafina.native.dashboard-portfolio.column.project"],
+  )
+  const projectManager = [...(region?.querySelectorAll("table[aria-label='Projects'] thead th") ?? [])].find((item) => item.textContent === "Project manager")
+  expect(projectManager?.textContent).toBe(SF_NATIVE_DASHBOARD_PORTFOLIO_COPY["sucafina.native.dashboard-portfolio.column.projectManager"])
+})
+
+test("dashboard portfolio copy reacts EN to pt-BR and back through one real language provider", async () => {
+  const view = mount(page("All Projects", filledState), { page: "All Projects", year: "2026", owner: "Ada Manager", q: "" }, "en")
+  await view.language.ready.promise
+  expect(view.language.locale()).toBe("en")
+  const region = () => [...view.host.querySelectorAll("section[aria-label]")].find((item) => item.getAttribute("aria-label") === view.language.t("sucafina.native.dashboard-portfolio.page.allProjects"))
+  const statusControl = () => [...view.host.querySelectorAll("label")].find((item) => item.querySelector("span")?.textContent === view.language.t("sucafina.native.dashboard-portfolio.filter.status"))?.querySelector("select")
+  const showControl = () => [...view.host.querySelectorAll("label")].find((item) => item.querySelector("span")?.textContent === view.language.t("sucafina.native.dashboard-portfolio.filter.show"))?.querySelector("select")
+  const projectTable = () => region()?.querySelector("table")
+  const expectFilteredProjects = () => {
+    expect(projectTable()?.querySelectorAll("tbody tr")).toHaveLength(1)
+    expect(projectTable()?.textContent).toContain("Atlas rollout")
+    expect(projectTable()?.textContent).not.toContain("Network refresh")
+  }
+  const expectPreservedQuery = () => expect(view.changes.at(-1)).toMatchObject({
+    page: "All Projects", year: "2026", owner: "Ada Manager", q: "", status: "In Progress", filter: "watch",
+  })
+  const waitFor = async (condition: () => boolean) => {
+    for (let attempt = 0; attempt < 200 && !condition(); attempt++) await Bun.sleep(10)
+    expect(condition()).toBe(true)
+  }
+  expect(region()?.querySelector("table[aria-label='Projects'] thead th")?.textContent).toBe("Project")
+  expect(showControl()?.options[0]?.value).toBe("")
+  expect(showControl()?.options[1]?.value).toBe("watch")
+  expect(showControl()?.options[1]?.textContent).toBe("Watch list")
+  expect(view.host.textContent).toContain("2026-06-15")
+
+  const status = statusControl()
+  if (!status) throw new Error("Expected the project Status control")
+  status.value = "In Progress"
+  status.dispatchEvent(new Event("change", { bubbles: true }))
+  expect(projectTable()?.textContent).toContain("Atlas rollout")
+  expect(projectTable()?.textContent).not.toContain("Network refresh")
+  const show = showControl()
+  if (!show) throw new Error("Expected the project Show control")
+  show.value = "watch"
+  show.dispatchEvent(new Event("change", { bubbles: true }))
+  expect(status.value).toBe("In Progress")
+  expect(show.value).toBe("watch")
+  expectFilteredProjects()
+  expectPreservedQuery()
+
+  view.language.setLocale("br")
+  await waitFor(() => view.language.locale() === "br" && region()?.querySelector("table[aria-label='Projetos'] thead th")?.textContent === "Projeto")
+  expect(region()?.querySelector("table[aria-label='Projetos'] thead th:nth-child(2)")?.textContent).toBe("Gerente do projeto")
+  expect(statusControl()?.value).toBe("In Progress")
+  expect(statusControl()?.selectedOptions[0]?.textContent).toBe("Em andamento")
+  expect(showControl()?.value).toBe("watch")
+  expect(showControl()?.options[0]?.value).toBe("")
+  expect(showControl()?.options[1]?.value).toBe("watch")
+  expect(showControl()?.options[1]?.textContent).toBe("Lista de acompanhamento")
+  expectFilteredProjects()
+  expectPreservedQuery()
+  expect(view.host.textContent).toContain("2026-06-15")
+
+  view.language.setLocale("en")
+  await waitFor(() => view.language.locale() === "en" && region()?.querySelector("table[aria-label='Projects'] thead th")?.textContent === "Project")
+  expect(statusControl()?.value).toBe("In Progress")
+  expect(statusControl()?.selectedOptions[0]?.textContent).toBe("In Progress")
+  expect(showControl()?.value).toBe("watch")
+  expect(showControl()?.options[1]?.value).toBe("watch")
+  expect(showControl()?.options[1]?.textContent).toBe("Watch list")
+  expectFilteredProjects()
+  expectPreservedQuery()
+  expect(view.host.textContent).toContain("2026-06-15")
 })

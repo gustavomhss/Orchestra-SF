@@ -5,10 +5,16 @@ import { render } from "solid-js/web"
 import { DashboardBudget } from "../../../modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts"
 import type { Actor, Environment, Snapshot } from "../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { NativeViewProps } from "../src/orchestra/chapters/sucafina/view-contract"
+import { createLocalePlatform } from "./native-locale-fixture"
 
 const { solidDom } = await import("./solid-dom")
+const { PlatformProvider }: typeof import("@/context/platform") = await import(solidDom("@/context/platform", import.meta.dir))
+const { LanguageProvider, loadLocaleDict, useLanguage }: typeof import("@/context/language") = await import(solidDom("@/context/language", import.meta.dir))
 const { DashboardBudgetView }: typeof import("../src/orchestra/chapters/sucafina/dashboard-budget-view") = await import(
   solidDom("../src/orchestra/chapters/sucafina/dashboard-budget-view", import.meta.dir)
+)
+const { SF_NATIVE_DASHBOARD_BUDGET_COPY, SF_NATIVE_DASHBOARD_BUDGET_COPY_BR } = await import(
+  "../src/i18n/orchestra-chapters/sucafina-native-dashboard-budget"
 )
 
 const budgetPages = ["Executive Dashboard", "Budget Overview", "OPEX Detail", "CAPEX Projects"]
@@ -46,20 +52,34 @@ function projectedPage(
   }
 }
 
-function mount(initialPage: Sucafina.PageState, initialQuery: Sucafina.PageQuery = {}) {
+function mount(initialPage: Sucafina.PageState, initialQuery: Sucafina.PageQuery = {}, locale: "en" | "br" = "en") {
   const [page, setPage] = createSignal(initialPage)
   const [query, setQuery] = createSignal(initialQuery)
   const calls: Sucafina.PageQuery[] = []
   const host = document.createElement("div")
   document.body.append(host)
+  const scope: { language?: ReturnType<typeof useLanguage> } = {}
   const props: NativeViewProps = {
     get page() { return page() },
     get query() { return query() },
     onQuery(next) { calls.push(next); setQuery(next) },
   }
-  const dispose = render(() => createComponent(DashboardBudgetView, props), host)
+  const dispose = render(() => createComponent(PlatformProvider, {
+    value: createLocalePlatform(),
+    get children() { return createComponent(LanguageProvider, { locale, get children() {
+      scope.language = useLanguage()
+      return createComponent(DashboardBudgetView, props)
+    } }) },
+  }), host)
   cleanup.push(() => { dispose(); host.remove() })
-  return { host, calls, page, query, setPage }
+  const language = scope.language
+  if (!language) throw new Error("Language provider did not initialize")
+  return { host, calls, page, query, setPage, language }
+}
+
+async function until(predicate: () => boolean) {
+  for (let attempt = 0; attempt < 200 && !predicate(); attempt++) await Bun.sleep(10)
+  if (!predicate()) throw new Error("Timed out waiting for dashboard budget locale copy")
 }
 
 function changeSelect(host: HTMLElement, labelText: string, current: string, next: string) {
@@ -75,6 +95,10 @@ function cells(host: HTMLElement, tableLabel: string) {
   const table = [...host.querySelectorAll("table")].find((item) => item.getAttribute("aria-label") === tableLabel)
   const row = table?.querySelector("tbody tr")
   return row ? [...row.querySelectorAll("th, td")].map((cell) => cell.textContent?.trim()) : []
+}
+
+function monthOptionValues(host: HTMLElement) {
+  return [...(host.querySelectorAll("select")[1]?.options ?? [])].map((option) => option.value)
 }
 
 function fieldValue(host: HTMLElement, label: string) {
@@ -130,6 +154,7 @@ test("Budget Overview associates exact projected owner, project, month, revenue 
 
 test("OPEX Detail joins the projected owner and displays its exact raw entry cells", () => {
   const view = mount(projectedPage("OPEX Detail", sourceData()))
+  expect(view.host.querySelector("h2")?.textContent).toBe("OPEX owners · 2026")
   expect(cells(view.host, "Northern Operations monthly budget records")).toEqual([
     "3", "201", "173", "189", "dev-amber", "Review March actuals",
   ])
@@ -148,6 +173,7 @@ test("CAPEX numeric IDs and legacy projectId join exactly; orphan and unlinked e
     { id: "unlinked", year: 2026, month: 3, budget: 444, actual: 333, forecast: 222 },
   ]
   const view = mount(projectedPage("CAPEX Projects", data))
+  expect(view.host.querySelector("h2")?.textContent).toBe("CAPEX Projects · 2026")
   expect(cells(view.host, "Router Renewal monthly budget records")).toEqual(["3", "113", "83", "97", "—", "—"])
   const unmatched = [...view.host.querySelectorAll("section[aria-label]")].find((item) => item.getAttribute("aria-label") === "Unmatched Project")
   expect(unmatched?.textContent).toContain("No monthly records are available for 2026.")
@@ -305,4 +331,90 @@ test("Executive query filters call onQuery and retain prior selections and unrel
   changeSelect(view.host, "Operations month", "4", "5")
   expect(view.calls[2]).toEqual({ ...initial, execYear: "2027", executiveMonth: "6", opsMonth: "5" })
   expect(view.query()).toEqual(view.calls[2])
+})
+
+test("dashboard budget English copy preserves the frozen source wording byte for byte", () => {
+  expect(Object.keys(SF_NATIVE_DASHBOARD_BUDGET_COPY_BR)).toEqual(Object.keys(SF_NATIVE_DASHBOARD_BUDGET_COPY))
+  expect(Object.keys(SF_NATIVE_DASHBOARD_BUDGET_COPY).every((key) => key.startsWith("sucafina.native.dashboard-budget."))).toBe(true)
+  expect(Object.values(SF_NATIVE_DASHBOARD_BUDGET_COPY)).toEqual([
+    "Executive snapshot", "Year", "Month", "Executive snapshot projection is unavailable.",
+    "No executive snapshot is available for this year and month.", "Active people", "Departures this year",
+    "Departures this month", "Active PMO projects", "PMO at risk", "Active risks", "Top risks",
+    "IT performance on target", "Cost per User Benchmark", "Budget and cost per user metrics",
+    "Unavailable: authoritative budget summary projection is not supplied.", "Reported monthly IT users · {{year}}",
+    "Reported monthly IT users for {{year}}", "Monthly IT users projection is unavailable.",
+    "No monthly IT users records are available for {{year}}.", "Reported users", "Service operations",
+    "Operations month", "Operations projection is unavailable.", "Tickets opened", "Tickets closed",
+    "Final backlog", "Backlog YTD — latest month", "Incidents SLA", "Service Requests SLA", "Incidents SLA YTD",
+    "Service Requests SLA YTD", "P1", "Open security incidents for selected snapshot",
+    "Security KPI projection is unavailable.", "Security KPI", "Security KPI status", "Latest value", "Status",
+    "Budget summary",
+    "Budget, actual, forecast, variance, and cost per user totals require an authoritative server summary projection. No totals are calculated from budget rows in this view.",
+    "Budget Overview · {{year}}",
+    "OPEX/CAPEX totals, variance, actual-to-budget, revenue ratios, progress, and monthly budget series are unavailable until the server supplies the authoritative summary projection.",
+    "Current month", "Revenue", "{{collection}} records · {{year}}", "OPEX", "CAPEX",
+    "OPEX projection is unavailable.", "CAPEX projection is unavailable.",
+    "{{collection}} monthly entry projection is unavailable.", "No OPEX records are available.",
+    "No CAPEX records are available.", "Owner", "Project", "Annual budget", "Budget", "Actual", "Forecast",
+    "Read-only projection for fiscal year {{year}}. Monthly effective budgets, deviations, utilization, and 12-month totals are not supplied as authoritative fields.",
+    "OPEX owners", "CAPEX Projects", "Monthly entry projection is unavailable.",
+    "OPEX owners projection is unavailable.", "CAPEX Projects projection is unavailable.",
+    "No owners are available for this year.", "No projects are available for this year.", "Total 12mo",
+    "Unavailable: server projection required.", "Overridden", "No monthly records are available for {{year}}.",
+    "{{name}} monthly budget records", "{{collection}} · {{year}}", "OPEX budget records for {{year}}", "CAPEX budget records for {{year}}",
+    "Deviation flag", "Deviation notes", "January", "February", "March", "April", "May", "June", "July",
+    "August", "September", "October", "November", "December",
+  ])
+})
+
+test("dashboard budget copy and month options react EN to pt-BR and back through the real providers", async () => {
+  await loadLocaleDict("en")
+  await loadLocaleDict("br")
+  const source = sourceData()
+  source.members = [{ id: "member-active", status: "Active", end: "", fte: 1, flag: "classified" }]
+  const view = mount(projectedPage("Executive Dashboard", source))
+  await view.language.ready.promise
+  await until(() => view.host.querySelector("h2")?.textContent === "Executive snapshot")
+  expect(view.host.querySelector("label span")?.textContent).toBe("Year")
+  const monthOptions = view.host.querySelectorAll("select")[1]?.options
+  const monthWireValues = monthOptionValues(view.host)
+  expect(monthOptions?.[0]?.textContent).toBe("January")
+  expect(monthWireValues).toEqual(Array.from({ length: 12 }, (_, index) => String(index + 1)))
+  expect(view.host.querySelector('table[aria-label="Security KPI status"] thead th')?.textContent).toBe("Security KPI")
+  const usersRow = view.host.querySelector('table[aria-label="Reported monthly IT users for 2026"] tbody tr')
+  expect(cells(view.host, "Reported monthly IT users for 2026")).toEqual(["2026", "3", "142"])
+  expect(fieldValue(view.host, "Active people")).toBe("1")
+  expect(view.page().data).not.toHaveProperty("members")
+
+  view.language.setLocale("br")
+  await until(() => view.host.querySelector("h2")?.textContent === "Visão executiva")
+  expect(view.host.querySelector("label span")?.textContent).toBe("Ano")
+  expect([...view.host.querySelectorAll("select")][1]?.options[0]?.textContent).toBe("janeiro")
+  expect([...view.host.querySelectorAll("select")][1]?.options).toHaveLength(12)
+  expect(monthOptionValues(view.host)).toEqual(monthWireValues)
+  expect(view.host.querySelector('table[aria-label="Status do KPI de segurança"] thead th')?.textContent).toBe("KPI de segurança")
+  expect(view.host.querySelector('table[aria-label="Status do KPI de segurança"] thead th:nth-child(2)')?.textContent).toBe("Valor mais recente")
+  expect(fieldValue(view.host, "Pessoas ativas")).toBe("1")
+  expect(fieldValue(view.host, "Referência de custo por usuário")).toBe("87,25")
+  expect(cells(view.host, "Registros mensais de usuários de TI de 2026")).toEqual(["2026", "3", "142"])
+  expect(view.host.querySelector('table[aria-label="Registros mensais de usuários de TI de 2026"] tbody tr')).toBe(usersRow)
+  expect(view.host.textContent).toContain("Os totais de orçamento, valores realizados e previstos, variação e custo por usuário exigem uma projeção oficial do servidor. Esta tela não calcula totais a partir dos registros orçamentários.")
+
+  view.language.setLocale("en")
+  await until(() => view.host.querySelector("h2")?.textContent === "Executive snapshot")
+  expect(view.host.querySelector("label span")?.textContent).toBe("Year")
+  expect([...view.host.querySelectorAll("select")][1]?.options[0]?.textContent).toBe("January")
+  expect(monthOptionValues(view.host)).toEqual(monthWireValues)
+  expect(view.host.querySelector('table[aria-label="Security KPI status"] thead th')?.textContent).toBe("Security KPI")
+  expect(cells(view.host, "Reported monthly IT users for 2026")).toEqual(["2026", "3", "142"])
+  expect(view.host.querySelector('table[aria-label="Reported monthly IT users for 2026"] tbody tr')).toBe(usersRow)
+  expect(fieldValue(view.host, "Active people")).toBe("1")
+
+  const sourceAfterHeadcountChange = sourceData()
+  sourceAfterHeadcountChange.members = [{ id: "member-active", status: "Active", end: "", fte: null }]
+  view.setPage(projectedPage("Executive Dashboard", sourceAfterHeadcountChange))
+  expect(fieldValue(view.host, "Active people")).toBe("1")
+  expect(view.page().data).not.toHaveProperty("members")
+  expect(view.host.textContent).not.toContain("classified")
+  expect(view.host.textContent).not.toContain("member-active")
 })

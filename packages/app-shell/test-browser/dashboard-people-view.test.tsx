@@ -1,5 +1,6 @@
 import { afterEach, expect, test } from "bun:test"
 import type { Sucafina } from "@orchestra/schema/sucafina"
+import type { Locale } from "@/context/language"
 import { createComponent, createSignal } from "solid-js"
 import { render } from "solid-js/web"
 import { DashboardPeople } from "../../../modules/sucafina/Sucafinav1/runtime/dashboard-people.ts"
@@ -8,6 +9,15 @@ import { solidDom } from "./solid-dom"
 
 const { DashboardPeopleView }: typeof import("../src/orchestra/chapters/sucafina/dashboard-people-view") =
   await import(solidDom("../src/orchestra/chapters/sucafina/dashboard-people-view", import.meta.dir))
+const { LanguageProvider, loadLocaleDict, useLanguage }: typeof import("@/context/language") = await import(
+  solidDom("@/context/language", import.meta.dir)
+)
+const { PlatformProvider }: typeof import("@/context/platform") = await import(solidDom("@/context/platform", import.meta.dir))
+const { createLocalePlatform } = await import(solidDom("./native-locale-fixture", import.meta.dir))
+const { SF_NATIVE_DASHBOARD_PEOPLE_COPY, SF_NATIVE_DASHBOARD_PEOPLE_COPY_BR }:
+  typeof import("@/i18n/orchestra-chapters/sucafina-native-dashboard-people") = await import(
+    solidDom("@/i18n/orchestra-chapters/sucafina-native-dashboard-people", import.meta.dir)
+  )
 
 const pageNames = ["Headcount Overview", "Team Structure", "Talent Review"]
 const admin = { id: "admin-1", name: "Casey Admin", canWrite: true, roles: ["admin"], assigned: [], domains: [] }
@@ -70,7 +80,7 @@ function project(name: string, source: Snapshot, actor = admin): Sucafina.PageSt
   }
 }
 
-function mount(initial: Sucafina.PageState) {
+function mount(initial: Sucafina.PageState, locale: Locale = "en") {
   const [page, setPage] = createSignal(initial)
   const [query, setQuery] = createSignal<Sucafina.PageQuery>({
     page: initial.page,
@@ -80,20 +90,182 @@ function mount(initial: Sucafina.PageState) {
     tab: "keep tab",
   })
   const calls: Sucafina.PageQuery[] = []
+  const language: { current?: ReturnType<typeof useLanguage> } = {}
   const host = document.createElement("div")
   document.body.append(host)
-  const dispose = render(() => createComponent(DashboardPeopleView, {
-    get page() { return page() },
-    get query() { return query() },
-    onQuery(next) { calls.push(next); setQuery(next) },
+  const dispose = render(() => createComponent(PlatformProvider, {
+    value: createLocalePlatform(),
+    get children() { return createComponent(LanguageProvider, {
+      locale,
+      get children() {
+        language.current = useLanguage()
+        return createComponent(DashboardPeopleView, {
+          get page() { return page() },
+          get query() { return query() },
+          onQuery(next) { calls.push(next); setQuery(next) },
+        })
+      },
+    }) },
   }), host)
   cleanups.push(() => { dispose(); host.remove() })
-  return { host, setPage, calls }
+  return { host, setPage, calls, language: () => language.current! }
 }
 
 function contains(host: HTMLElement, ...values: string[]) {
   for (const value of values) expect(host.textContent).toContain(value)
 }
+
+async function waitForLocaleCopy(view: ReturnType<typeof mount>, locale: Locale, visible: string) {
+  for (let attempt = 0; attempt < 200; attempt++) {
+    if (view.language().locale() === locale && view.host.textContent?.includes(visible)) return
+    await Bun.sleep(10)
+  }
+  expect(view.language().locale()).toBe(locale)
+  expect(view.host.textContent).toContain(visible)
+}
+
+test("native people English copy keeps the source wording byte for byte", () => {
+  expect(SF_NATIVE_DASHBOARD_PEOPLE_COPY).toEqual({
+    "sucafina.native.dashboard-people.year": "Year",
+    "sucafina.native.dashboard-people.projectionLimited": "Projection limited",
+    "sucafina.native.dashboard-people.measuresUnavailable": "Headcount measures and leader aggregates are not included in the authorized page data.",
+    "sucafina.native.dashboard-people.headcountPeople": "Headcount people",
+    "sucafina.native.dashboard-people.name": "Name",
+    "sucafina.native.dashboard-people.leader": "Leader",
+    "sucafina.native.dashboard-people.domain": "Domain",
+    "sucafina.native.dashboard-people.location": "Location",
+    "sucafina.native.dashboard-people.type": "Type",
+    "sucafina.native.dashboard-people.status": "Status",
+    "sucafina.native.dashboard-people.noMemberRecords": "No member records in this authorized projection.",
+    "sucafina.native.dashboard-people.memberRecordsUnavailable": "No authorized projection was supplied for Member records.",
+    "sucafina.native.dashboard-people.leaderRecordsUnavailable": "No authorized projection was supplied for Leader records.",
+    "sucafina.native.dashboard-people.cioPositionUnavailable": "No authorized projection was supplied for CIO position.",
+    "sucafina.native.dashboard-people.leaderUnassigned": "Unassigned",
+    "sucafina.native.dashboard-people.leaderDataUnavailable": "Leader data unavailable",
+    "sucafina.native.dashboard-people.memberDataUnavailable": "Member data unavailable",
+    "sucafina.native.dashboard-people.cioPosition": "CIO position",
+    "sucafina.native.dashboard-people.title": "Title",
+    "sucafina.native.dashboard-people.start": "Start",
+    "sucafina.native.dashboard-people.teamLeaders": "Team leaders",
+    "sucafina.native.dashboard-people.teamLeadersUnavailable": "No authorized projection was supplied for Team leaders.",
+    "sucafina.native.dashboard-people.members": "Members",
+    "sucafina.native.dashboard-people.noLeaders": "No leaders in this authorized projection.",
+    "sucafina.native.dashboard-people.teamMembers": "Team members",
+    "sucafina.native.dashboard-people.teamMembersUnavailable": "No authorized projection was supplied for Team members.",
+    "sucafina.native.dashboard-people.startDate": "Start date",
+    "sucafina.native.dashboard-people.endDate": "End date",
+    "sucafina.native.dashboard-people.talentReview": "Talent review",
+    "sucafina.native.dashboard-people.activeDefault": "Active (default)",
+    "sucafina.native.dashboard-people.active": "Active",
+    "sucafina.native.dashboard-people.onLeave": "On Leave",
+    "sucafina.native.dashboard-people.terminated": "Terminated",
+    "sucafina.native.dashboard-people.reportsTo": "Reports To",
+    "sucafina.native.dashboard-people.classification": "Classification",
+    "sucafina.native.dashboard-people.outlook": "3-Yr Outlook",
+    "sucafina.native.dashboard-people.notes": "Notes",
+    "sucafina.native.dashboard-people.noStatusMatch": "No members match the selected status.",
+  })
+  expect(Object.keys(SF_NATIVE_DASHBOARD_PEOPLE_COPY_BR)).toEqual(Object.keys(SF_NATIVE_DASHBOARD_PEOPLE_COPY))
+})
+
+test("native people copy reacts en to pt-BR to en through the isolated real providers", async () => {
+  await loadLocaleDict("en")
+  await loadLocaleDict("br")
+  const view = mount(projected("Talent Review"), "en")
+  await view.language().ready.promise
+  await waitForLocaleCopy(view, "en", "Talent review")
+  const status = [...view.host.querySelectorAll("label")]
+    .find((label) => label.textContent?.includes("Status"))?.querySelector("select")
+  expect(status).toBeDefined()
+  if (!status) throw new Error("Missing Talent Review status selector")
+  const talentTable = view.host.querySelector('[role="table"]')
+  expect(talentTable).not.toBeNull()
+  if (!talentTable) throw new Error("Missing Talent Review table")
+  const expectProjectedSource = () => {
+    const memberRow = [...talentTable.querySelectorAll('[role="row"]')]
+      .find((row) => row.textContent?.includes("Nia Example"))
+    expect(memberRow).toBeDefined()
+    if (!memberRow) throw new Error("Missing projected Talent Review member row")
+    expect([...memberRow.querySelectorAll('[role="cell"]')].map((cell) => cell.textContent?.trim())).toEqual([
+      "Nia Example", "Systems Analyst", "Employee", "Ravi Example", "São Paulo", "Active", "Talent", "Promote", privateMarker,
+    ])
+  }
+  const expectStatusOptions = (options: [string, string][]) => {
+    expect(status.isConnected).toBe(true)
+    expect(view.host.querySelector("label select")).toBe(status)
+    expect(view.host.querySelector('[role="table"]')).toBe(talentTable)
+    expect([...status.options].map((option) => [option.textContent, option.value])).toEqual(options)
+    expectProjectedSource()
+  }
+
+  expectStatusOptions([
+    ["Active (default)", ""], ["Active", "Active"], ["On Leave", "On Leave"], ["Terminated", "Terminated"],
+  ])
+
+  view.language().setLocale("br")
+  await view.language().ready.promise
+  await waitForLocaleCopy(view, "br", "Avaliação de talentos")
+  expect(view.host.querySelector("label")?.textContent).toContain("Status")
+  expectStatusOptions([
+    ["Ativo (padrão)", ""], ["Ativo", "Active"], ["Afastado", "On Leave"], ["Desligado", "Terminated"],
+  ])
+
+  await loadLocaleDict("en")
+  view.language().setLocale("en")
+  await view.language().ready.promise
+  await waitForLocaleCopy(view, "en", "Talent review")
+  expectStatusOptions([
+    ["Active (default)", ""], ["Active", "Active"], ["On Leave", "On Leave"], ["Terminated", "Terminated"],
+  ])
+})
+
+test("Headcount year label reacts EN to pt-BR while numeric year options stay unchanged", async () => {
+  await loadLocaleDict("en")
+  await loadLocaleDict("br")
+  const view = mount(projected("Headcount Overview"), "en")
+  await view.language().ready.promise
+  await waitForLocaleCopy(view, "en", "Headcount people")
+  const year = [...view.host.querySelectorAll("label")]
+    .find((label) => label.textContent?.includes("Year"))?.querySelector("select")
+  expect(year).toBeDefined()
+  if (!year) throw new Error("Missing Headcount Overview year selector")
+  const yearOptions = () => [...year.options].map((option) => [option.textContent, option.value])
+  const expectedYears = [["2024", "2024"], ["2025", "2025"], ["2026", "2026"], ["2027", "2027"]]
+  expect(yearOptions()).toEqual(expectedYears)
+
+  view.language().setLocale("br")
+  await view.language().ready.promise
+  await waitForLocaleCopy(view, "br", "Pessoas do quadro")
+  expect(view.host.querySelector("label")?.textContent).toContain("Ano")
+  expect(view.host.querySelector("label select")).toBe(year)
+  expect(yearOptions()).toEqual(expectedYears)
+})
+
+test("Team Structure unavailable projection messages react EN to pt-BR through the real providers", async () => {
+  await loadLocaleDict("en")
+  await loadLocaleDict("br")
+  const team = projected("Team Structure", false)
+  const unavailableData = { ...team.data }
+  delete unavailableData.leaders
+  delete unavailableData.members
+  const view = mount({ ...team, data: unavailableData as Sucafina.PageState["data"] }, "en")
+  await view.language().ready.promise
+  await waitForLocaleCopy(view, "en", "No authorized projection was supplied for Team leaders.")
+  const unavailableMessages = () => [...view.host.querySelectorAll('[role="status"]')]
+    .map((status) => status.textContent?.trim())
+  expect(unavailableMessages()).toEqual([
+    "No authorized projection was supplied for Team leaders.",
+    "No authorized projection was supplied for Team members.",
+  ])
+
+  view.language().setLocale("br")
+  await view.language().ready.promise
+  await waitForLocaleCopy(view, "br", "A projeção autorizada de líderes da equipe não foi fornecida.")
+  expect(unavailableMessages()).toEqual([
+    "A projeção autorizada de líderes da equipe não foi fornecida.",
+    "A projeção autorizada de membros da equipe não foi fornecida.",
+  ])
+})
 
 test("Headcount Overview renders authorized member fields and its year query", () => {
   const view = mount(projected("Headcount Overview"))
@@ -222,12 +394,21 @@ test("missing or malformed people projections are unavailable, while valid empty
     if ("remove" in item) delete data[item.key]
     else data[item.key] = item.value
     const view = mount({ ...base, data: data as Sucafina.PageState["data"] })
-    const fallbackLabel = item.key === "members" ? "Team members" : item.key === "leaders" ? "Team leaders" : "CIO position"
+    const unavailableCopy = item.key === "members"
+      ? SF_NATIVE_DASHBOARD_PEOPLE_COPY["sucafina.native.dashboard-people.teamMembersUnavailable"]
+      : item.key === "leaders"
+        ? SF_NATIVE_DASHBOARD_PEOPLE_COPY["sucafina.native.dashboard-people.teamLeadersUnavailable"]
+        : SF_NATIVE_DASHBOARD_PEOPLE_COPY["sucafina.native.dashboard-people.cioPositionUnavailable"]
     const region = [...view.host.querySelectorAll('[role="status"]')]
-      .find((status) => status.textContent?.trim() === `No authorized projection was supplied for ${fallbackLabel}.`)
+      .find((status) => status.textContent?.trim() === unavailableCopy)
     expect(region).toBeDefined()
-    expect(region?.textContent?.trim()).toBe(`No authorized projection was supplied for ${fallbackLabel}.`)
-    expect(region?.textContent).not.toContain(item.key === "members" ? "No member records" : "No leaders in this authorized projection.")
+    expect(region?.textContent?.trim()).toBe(unavailableCopy)
+    if (item.key === "members") {
+      expect(region?.textContent).not.toContain(SF_NATIVE_DASHBOARD_PEOPLE_COPY["sucafina.native.dashboard-people.noMemberRecords"])
+    }
+    if (item.key === "leaders") {
+      expect(region?.textContent).not.toContain(SF_NATIVE_DASHBOARD_PEOPLE_COPY["sucafina.native.dashboard-people.noLeaders"])
+    }
   }
   const validEmpty = mount(base)
   expect(validEmpty.host.querySelector('[aria-label="Team members"]')?.textContent).toContain("No member records in this authorized projection.")

@@ -1,14 +1,19 @@
 import { afterEach, expect, test } from "bun:test"
 import type { Sucafina } from "@orchestra/schema/sucafina"
+import type { Locale } from "@/context/language"
 import { createComponent, createSignal } from "solid-js"
 import { render } from "solid-js/web"
+import { SF_NATIVE_DASHBOARD_OPERATIONS_COPY, SF_NATIVE_DASHBOARD_OPERATIONS_COPY_BR } from "../src/i18n/orchestra-chapters/sucafina-native-dashboard-operations"
 import { DashboardOperations } from "../../../modules/sucafina/Sucafinav1/runtime/dashboard-operations.ts"
 import { DashboardPortfolio } from "../../../modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts"
 import type { Snapshot } from "../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+import { createLocalePlatform } from "./native-locale-fixture"
 import { solidDom } from "./solid-dom"
 
 const { DashboardOperationsView }: typeof import("../src/orchestra/chapters/sucafina/dashboard-operations-view") =
   await import(solidDom("../src/orchestra/chapters/sucafina/dashboard-operations-view", import.meta.dir))
+const { PlatformProvider }: typeof import("@/context/platform") = await import(solidDom("@/context/platform", import.meta.dir))
+const { LanguageProvider, useLanguage }: typeof import("@/context/language") = await import(solidDom("@/context/language", import.meta.dir))
 
 const pages = ["IT Operations", "IT Security KPIs", "Vendor Contracts"]
 const actor = { id: "operator", name: "Operator", canWrite: true, roles: ["admin"], assigned: [], domains: [] }
@@ -16,6 +21,11 @@ const environment = { at: "2026-11-13T12:00:00Z", id: () => "unused", directory:
 const hostile = '<img src=x onerror="alert(1)">'
 const cleanups: (() => void)[] = []
 afterEach(() => cleanups.splice(0).forEach((dispose) => dispose()))
+
+async function until(predicate: () => boolean) {
+  for (let attempt = 0; attempt < 200 && !predicate(); attempt++) await Bun.sleep(10)
+  expect(predicate()).toBe(true)
+}
 
 function snapshot(populated = true): Snapshot {
   return {
@@ -45,19 +55,33 @@ function projected(name: string, populated = true, state = snapshot(populated)):
   }
 }
 
-function mount(initial: Sucafina.PageState, initialQuery?: Sucafina.PageQuery) {
+function mount(initial: Sucafina.PageState, initialQuery?: Sucafina.PageQuery, locale: Locale = "en") {
   const [page, setPage] = createSignal(initial)
   const [query, setQuery] = createSignal<Sucafina.PageQuery>(initialQuery ?? { page: initial.page, year: "2026", opsYear: "2026", secYear: "2026", operationsMonth: "3", securityMonth: "3" })
   const calls: Sucafina.PageQuery[] = []
+  const languageContext: { current: ReturnType<typeof useLanguage> | undefined } = { current: undefined }
   const host = document.createElement("div")
   document.body.append(host)
-  const dispose = render(() => createComponent(DashboardOperationsView, {
-    get page() { return page() },
-    get query() { return query() },
-    onQuery(next) { calls.push(next); setQuery(next) },
+  const dispose = render(() => createComponent(PlatformProvider, {
+    value: createLocalePlatform(),
+    get children() {
+      return createComponent(LanguageProvider, {
+        locale,
+        get children() {
+          return createComponent(() => {
+            languageContext.current = useLanguage()
+            return createComponent(DashboardOperationsView, {
+              get page() { return page() },
+              get query() { return query() },
+              onQuery(next: Sucafina.PageQuery) { calls.push(next); setQuery(next) },
+            })
+          }, {})
+        },
+      })
+    },
   }), host)
   cleanups.push(() => { dispose(); host.remove() })
-  return { host, setPage, calls }
+  return { host, setPage, calls, languageContext }
 }
 
 function contains(host: HTMLElement, ...values: string[]) {
@@ -117,12 +141,12 @@ test("ticket register and heat map retain other months in the selected year", ()
   expect(ticket).toBeDefined()
   if (!ticket) throw new Error("Missing ticket register")
   const headers = [...ticket.querySelectorAll("thead th")].map((cell) => cell.textContent?.trim() ?? "")
-  const april = [...ticket.querySelectorAll("tbody tr")].find((row) => row.cells[headers.indexOf("Month")]?.textContent?.trim() === "4" &&
+  const aprilTicket = [...ticket.querySelectorAll("tbody tr")].find((row) => row.cells[headers.indexOf("Month")]?.textContent?.trim() === "4" &&
     row.cells[headers.indexOf("Category")]?.textContent?.trim() === "Infrastructure" &&
     row.cells[headers.indexOf("Type")]?.textContent?.trim() === "Incidents" &&
     row.cells[headers.indexOf("Measure")]?.textContent?.trim() === "Open")
-  expect(april).toBeDefined()
-  expect(april?.cells[headers.indexOf("Value")]?.textContent?.trim()).toBe("13")
+  expect(aprilTicket).toBeDefined()
+  expect(aprilTicket?.cells[headers.indexOf("Value")]?.textContent?.trim()).toBe("13")
   const aprilClosed = [...ticket.querySelectorAll("tbody tr")].find((row) => row.cells[headers.indexOf("Month")]?.textContent?.trim() === "4" &&
     row.cells[headers.indexOf("Category")]?.textContent?.trim() === "Infrastructure" &&
     row.cells[headers.indexOf("Type")]?.textContent?.trim() === "Incidents" &&
@@ -133,18 +157,16 @@ test("ticket register and heat map retain other months in the selected year", ()
   expect(heat).toBeDefined()
   if (!heat) throw new Error("Missing heat map")
   const heatHeaders = [...heat.querySelectorAll("thead th")].map((cell) => cell.textContent?.trim() ?? "")
-  const heatRows = [...heat.querySelectorAll("tbody tr")]
-  const marchHeat = heatRows.find((row) => row.cells[heatHeaders.indexOf("Item")]?.textContent?.trim() === "Core network" &&
+  const march = [...heat.querySelectorAll("tbody tr")].find((row) => row.cells[heatHeaders.indexOf("Item")]?.textContent?.trim() === "Core network" &&
     row.cells[heatHeaders.indexOf("Month")]?.textContent?.trim() === "3")
-  const aprilHeat = heatRows.find((row) => row.cells[heatHeaders.indexOf("Item")]?.textContent?.trim() === "Core network" &&
+  expect(march).toBeDefined()
+  const aprilHeatmap = [...heat.querySelectorAll("tbody tr")].find((row) => row.cells[heatHeaders.indexOf("Item")]?.textContent?.trim() === "Core network" &&
     row.cells[heatHeaders.indexOf("Month")]?.textContent?.trim() === "4")
-  expect(marchHeat).toBeDefined()
-  expect(aprilHeat).toBeDefined()
-  if (!aprilHeat) throw new Error("Missing April heat-map source row")
-  expect(aprilHeat.cells[heatHeaders.indexOf("P1")]?.textContent?.trim()).toBe("3")
-  expect(aprilHeat.cells[heatHeaders.indexOf("P2")]?.textContent?.trim()).toBe("4")
-  expect(aprilHeat.cells[heatHeaders.indexOf("Tickets")]?.textContent?.trim()).toBe("17")
-  expect(aprilHeat.cells[heatHeaders.indexOf("Comments")]?.textContent?.trim()).toBe("April observation")
+  expect(aprilHeatmap).toBeDefined()
+  expect(aprilHeatmap?.cells[heatHeaders.indexOf("P1")]?.textContent?.trim()).toBe("3")
+  expect(aprilHeatmap?.cells[heatHeaders.indexOf("P2")]?.textContent?.trim()).toBe("4")
+  expect(aprilHeatmap?.cells[heatHeaders.indexOf("Tickets")]?.textContent?.trim()).toBe("17")
+  expect(aprilHeatmap?.cells[heatHeaders.indexOf("Comments")]?.textContent?.trim()).toBe("April observation")
 })
 
 test("missing and empty operation categories and heat-map items remain independent", () => {
@@ -353,3 +375,123 @@ test("exposed period filter delegates its query and preserves unrelated filters"
     expect(view.calls[0]).toMatchObject({ page: name, [key]: nextYear, q: "keep search", year: "2026", operationsMonth: "3", securityMonth: "3" })
   }
 })
+
+test("dashboard operations copy preserves English and renders from the Brazilian Portuguese provider", async () => {
+  const englishOperations = mount(projected("IT Operations"))
+  const englishSecurity = mount(projected("IT Security KPIs"))
+  const englishContracts = mount(projected("Vendor Contracts"))
+  const emptyContracts = mount(projected("Vendor Contracts", false), undefined, "br")
+  await Promise.all([englishOperations, englishSecurity, englishContracts].map(async (view) => {
+    const language = view.languageContext.current
+    expect(language).toBeDefined()
+    if (!language) throw new Error("Missing LanguageProvider context")
+    await language.ready.promise
+  }))
+  const emptyLanguage = emptyContracts.languageContext.current
+  expect(emptyLanguage).toBeDefined()
+  if (!emptyLanguage) throw new Error("Missing empty contracts LanguageProvider context")
+  await emptyLanguage.ready.promise
+  await until(() => emptyLanguage.locale() === "br" &&
+    emptyLanguage.t("sucafina.native.dashboard-operations.empty.contracts") === SF_NATIVE_DASHBOARD_OPERATIONS_COPY_BR["sucafina.native.dashboard-operations.empty.contracts"] &&
+    emptyContracts.host.textContent?.includes(SF_NATIVE_DASHBOARD_OPERATIONS_COPY_BR["sucafina.native.dashboard-operations.empty.contracts"]) === true)
+  contains(englishOperations.host, "IT Operations", "Read-only dashboard information from the authorized page projection.", "Ticket Register · source records", "SLA and Availability", "Availability")
+  contains(englishSecurity.host, "IT Security KPIs", "Monthly Entries · source values", "No interaction", "Management Actions")
+  contains(englishContracts.host, "Vendor Contracts", "Contract Register", "Contract name", "C-42", "Schedule.pdf")
+  expectEmptyRecordTable(emptyContracts.host, SF_NATIVE_DASHBOARD_OPERATIONS_COPY_BR["sucafina.native.dashboard-operations.table.contractRegister"], "Nenhum contrato corresponde a esses filtros.")
+  expect(SF_NATIVE_DASHBOARD_OPERATIONS_COPY["sucafina.native.dashboard-operations.page.operations"]).toBe("IT Operations")
+  expect(SF_NATIVE_DASHBOARD_OPERATIONS_COPY["sucafina.native.dashboard-operations.table.ticketRegister"]).toBe("Ticket Register · source records")
+
+  const language = englishContracts.languageContext.current
+  expect(language).toBeDefined()
+  if (!language) throw new Error("Missing LanguageProvider context")
+  const contractTable = englishContracts.host.querySelector("table")
+  const documentTable = [...englishContracts.host.querySelectorAll("table")].find((table) =>
+    [...table.querySelectorAll("thead th")].some((cell) => cell.textContent?.trim() === "Availability"))
+  const contractHeaders = [...(contractTable?.querySelectorAll("thead th") ?? [])].map((cell) => cell.textContent?.trim() ?? "")
+  const contractRow = [...(contractTable?.querySelectorAll("tbody tr") ?? [])].find((row) =>
+    row.cells[contractHeaders.indexOf("Contract #")]?.textContent?.trim() === "C-42")
+  const evaluationSelect = [...englishContracts.host.querySelectorAll("select")].find((select) =>
+    [...select.options].some((option) => option.value === "A"))
+  expect(contractTable).toBeDefined()
+  expect(documentTable).toBeDefined()
+  expect(contractRow).toBeDefined()
+  expect(evaluationSelect).toBeDefined()
+  if (!contractTable || !documentTable || !contractRow || !evaluationSelect) throw new Error("Missing contract row, document table, or evaluation options")
+  const allEvaluationsOption = evaluationSelect.options[0]
+  const gradeAOption = [...evaluationSelect.options].find((option) => option.value === "A")
+  if (!gradeAOption) throw new Error("Missing evaluation grade A option")
+  const contractOptionNodes = [...evaluationSelect.options]
+  const assertContractEnglish = () => {
+    const headers = [...contractTable.querySelectorAll("thead th")].map((cell) => cell.textContent?.trim() ?? "")
+    expect(englishContracts.host.querySelector("h1")?.textContent).toBe("Vendor Contracts")
+    expect(headers).toEqual(["Vendor", "Contract #", "Amount", "Type", "Currency", "Renewal", "Renewal date", "Eval", "Notes", "Documents"])
+    expect(documentTable.querySelector("thead th")?.textContent?.trim()).toBe("Document")
+    expect(englishContracts.host.querySelector("table")).toBe(contractTable)
+    expect(englishContracts.host.querySelector("select")).toBe(evaluationSelect)
+    expect([...contractTable.querySelectorAll("tbody tr")]).toContain(contractRow)
+    expect(contractRow.cells[headers.indexOf("Vendor")]?.textContent?.trim()).toBe(hostile)
+    expect(contractRow.cells[headers.indexOf("Contract #")]?.textContent?.trim()).toBe("C-42")
+    expect(contractRow.cells[headers.indexOf("Amount")]?.textContent?.trim()).toBe("1250")
+    expect([...evaluationSelect.options].map((option) => option.value)).toEqual(["", "A", "B", "C", "D"])
+    expect(evaluationSelect.options[0]).toBe(allEvaluationsOption)
+    expect(allEvaluationsOption.value).toBe("")
+    expect(allEvaluationsOption.textContent?.trim()).toBe("All evaluations")
+    expect(gradeAOption.value).toBe("A")
+    expect(evaluationSelect.options).toContain(gradeAOption)
+  }
+  assertContractEnglish()
+
+  language.setLocale("br")
+  await until(() => language.locale() === "br" &&
+    language.t("sucafina.native.dashboard-operations.page.contracts") === SF_NATIVE_DASHBOARD_OPERATIONS_COPY_BR["sucafina.native.dashboard-operations.page.contracts"] &&
+    allEvaluationsOption.textContent?.trim() === SF_NATIVE_DASHBOARD_OPERATIONS_COPY_BR["sucafina.native.dashboard-operations.empty.allEvaluations"])
+  const contractHeadersBr = [...contractTable.querySelectorAll("thead th")].map((cell) => cell.textContent?.trim() ?? "")
+  expect(englishContracts.host.querySelector("table")).toBe(contractTable)
+  expect(englishContracts.host.querySelector("select")).toBe(evaluationSelect)
+  expect(englishContracts.host.querySelector("h1")?.textContent).toBe("Contratos de fornecedores")
+  expect(contractHeadersBr).toEqual(["Fornecedor", "Nº do contrato", "Valor", "Tipo", "Moeda", "Renovação", "Data de renovação", "Avaliação", "Observações", "Documentos"])
+  expect(documentTable.querySelector("thead th")?.textContent?.trim()).toBe("Documento")
+  expect([...contractTable.querySelectorAll("tbody tr")]).toContain(contractRow)
+  expect(contractRow.cells[contractHeadersBr.indexOf("Nº do contrato")]?.textContent?.trim()).toBe("C-42")
+  expect(contractRow.cells[contractHeadersBr.indexOf("Fornecedor")]?.textContent?.trim()).toBe(hostile)
+  expect(contractRow.cells[contractHeadersBr.indexOf("Valor")]?.textContent?.trim()).toBe("1250")
+  expect(evaluationSelect.options).toHaveLength(contractOptionNodes.length)
+  for (const [index, option] of contractOptionNodes.entries()) expect(evaluationSelect.options[index]).toBe(option)
+  expect([...evaluationSelect.options].map((option) => option.value)).toEqual(["", "A", "B", "C", "D"])
+  expect(allEvaluationsOption.value).toBe("")
+  expect(allEvaluationsOption.textContent?.trim()).toBe("Todas as avaliações")
+  expect(gradeAOption.value).toBe("A")
+  contains(englishContracts.host, "Contratos de fornecedores", "Cadastro de contratos", "Nome do contrato")
+
+  language.setLocale("en")
+  await until(() => language.locale() === "en" && allEvaluationsOption.textContent?.trim() === "All evaluations")
+  assertContractEnglish()
+  englishContracts.setPage(projected("IT Operations"))
+  await until(() => englishContracts.host.querySelector("h1")?.textContent === "IT Operations")
+  englishContracts.setPage(projected("IT Security KPIs"))
+  await until(() => englishContracts.host.querySelector("h1")?.textContent === "IT Security KPIs")
+
+  const operationsLanguage = englishOperations.languageContext.current
+  const securityLanguage = englishSecurity.languageContext.current
+  expect(operationsLanguage).toBeDefined()
+  expect(securityLanguage).toBeDefined()
+  if (!operationsLanguage || !securityLanguage) throw new Error("Missing dashboard LanguageProvider context")
+  operationsLanguage.setLocale("br")
+  securityLanguage.setLocale("br")
+  await until(() => operationsLanguage.locale() === "br" && securityLanguage.locale() === "br" &&
+    englishOperations.host.textContent?.includes("Operações de TI") === true &&
+    englishSecurity.host.textContent?.includes("Indicadores de segurança de TI") === true)
+  contains(englishOperations.host, "Operações de TI", "Registro de chamados · registros de origem", "Infrastructure", "Core network", "98.5")
+  const emptyOperations = mount(projected("IT Operations", false), undefined, "br")
+  const emptyOperationsLanguage = emptyOperations.languageContext.current
+  if (!emptyOperationsLanguage) throw new Error("Missing empty operations LanguageProvider context")
+  await emptyOperationsLanguage.ready.promise
+  await until(() => emptyOperations.host.textContent?.includes("Não há registros de chamados neste ano.") === true)
+  contains(emptyOperations.host, "Operações de TI", "Não há registros de chamados neste ano.")
+  contains(englishSecurity.host, "Indicadores de segurança de TI", "Registros mensais · valores de origem", "Sem interação", "Ações de gestão")
+  expect(SF_NATIVE_DASHBOARD_OPERATIONS_COPY_BR["sucafina.native.dashboard-operations.page.operations"]).toBe("Operações de TI")
+  expect(SF_NATIVE_DASHBOARD_OPERATIONS_COPY_BR["sucafina.native.dashboard-operations.table.ticketRegister"]).toBe("Registro de chamados · registros de origem")
+  expect(SF_NATIVE_DASHBOARD_OPERATIONS_COPY_BR["sucafina.native.dashboard-operations.column.noInteraction"]).toBe("Sem interação")
+  expect(SF_NATIVE_DASHBOARD_OPERATIONS_COPY_BR["sucafina.native.dashboard-operations.detail.contractName"]).toBe("Nome do contrato")
+})
+

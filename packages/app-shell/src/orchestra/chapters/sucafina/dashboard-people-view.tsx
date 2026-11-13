@@ -1,5 +1,6 @@
 import { For, Match, Show, Switch } from "solid-js"
 import type { Sucafina } from "@orchestra/schema/sucafina"
+import { useLanguage } from "@/context/language"
 import { MxBadge } from "../kit"
 import type { NativeViewProps } from "./view-contract"
 
@@ -28,6 +29,7 @@ export function DashboardPeopleView(props: NativeViewProps) {
 }
 
 function HeadcountView(props: { props: NativeViewProps }) {
+  const language = useLanguage()
   const memberProjection = () => collection(props.props.page.data.members)
   const leaderProjection = () => collection(props.props.page.data.leaders)
   const year = () =>
@@ -44,8 +46,8 @@ function HeadcountView(props: { props: NativeViewProps }) {
         key: string(member.id) || `${string(member.name)}-${index}`,
         cells: [
           display(member.name),
-          leaderLabel(member.leaderId, leaders, "Unassigned"),
-          leaders.available ? display(leader?.domain) : "Leader data unavailable",
+          leaderLabel(member.leaderId, leaders, language.t("sucafina.native.dashboard-people.leaderUnassigned"), language.t("sucafina.native.dashboard-people.leaderDataUnavailable")),
+          leaders.available ? display(leader?.domain) : language.t("sucafina.native.dashboard-people.leaderDataUnavailable"),
           display(member.location),
           display(member.type),
           display(member.status),
@@ -59,7 +61,7 @@ function HeadcountView(props: { props: NativeViewProps }) {
       <div class="mx-card">
         <div class="mx-fields">
           <label class="mx-field">
-            <span>Year</span>
+            <span>{language.t("sucafina.native.dashboard-people.year")}</span>
             <select
               value={year()}
               onChange={(event) => props.props.onQuery({ ...props.props.query, year: event.currentTarget.value })}
@@ -69,16 +71,23 @@ function HeadcountView(props: { props: NativeViewProps }) {
           </label>
         </div>
         <div class="mx-meta">
-          <MxBadge>Projection limited</MxBadge>
-          <span>Headcount measures and leader aggregates are not included in the authorized page data.</span>
+          <MxBadge>{language.t("sucafina.native.dashboard-people.projectionLimited")}</MxBadge>
+          <span>{language.t("sucafina.native.dashboard-people.measuresUnavailable")}</span>
         </div>
       </div>
-      <Show when={memberProjection().available} fallback={<UnavailableProjection label="Member records" />}>
+      <Show when={memberProjection().available} fallback={<UnavailableProjection message={language.t("sucafina.native.dashboard-people.memberRecordsUnavailable")} />}>
         <ReadTable
-          label="Headcount people"
-          columns={["Name", "Leader", "Domain", "Location", "Type", "Status"]}
+          label={language.t("sucafina.native.dashboard-people.headcountPeople")}
+          columns={[
+            language.t("sucafina.native.dashboard-people.name"),
+            language.t("sucafina.native.dashboard-people.leader"),
+            language.t("sucafina.native.dashboard-people.domain"),
+            language.t("sucafina.native.dashboard-people.location"),
+            language.t("sucafina.native.dashboard-people.type"),
+            language.t("sucafina.native.dashboard-people.status"),
+          ]}
           rows={memberRows()}
-          empty="No member records in this authorized projection."
+          empty={language.t("sucafina.native.dashboard-people.noMemberRecords")}
         />
       </Show>
     </>
@@ -86,6 +95,7 @@ function HeadcountView(props: { props: NativeViewProps }) {
 }
 
 function TeamStructureView(props: { props: NativeViewProps }) {
+  const language = useLanguage()
   const memberProjection = () => collection(props.props.page.data.members)
   const leaderProjection = () => collection(props.props.page.data.leaders)
   const cioProjection = () => objectProjection(props.props.page.data.cio)
@@ -109,7 +119,7 @@ function TeamStructureView(props: { props: NativeViewProps }) {
           display(leader.domain),
           display(leader.location),
           display(leader.start),
-          members.available ? childNames || "—" : "Member data unavailable",
+          members.available ? childNames || "—" : language.t("sucafina.native.dashboard-people.memberDataUnavailable"),
         ],
       }
     })
@@ -122,7 +132,7 @@ function TeamStructureView(props: { props: NativeViewProps }) {
       key: string(member.id) || `${string(member.name)}-${index}`,
       cells: [
         display(member.name),
-        leaderLabel(member.leaderId, leaders, "Unassigned"),
+        leaderLabel(member.leaderId, leaders, language.t("sucafina.native.dashboard-people.leaderUnassigned"), language.t("sucafina.native.dashboard-people.leaderDataUnavailable")),
         display(member.title),
         display(member.type),
         display(member.location),
@@ -135,33 +145,49 @@ function TeamStructureView(props: { props: NativeViewProps }) {
 
   return (
     <>
-      <Show when={cioProjection()} fallback={<UnavailableProjection label="CIO position" />}>
+      <Show when={cioProjection()} fallback={<UnavailableProjection message={language.t("sucafina.native.dashboard-people.cioPositionUnavailable")} />}>
         {(cio) => (
           <section class="mx-card" aria-labelledby="people-cio-title">
-            <div class="mx-card-top"><h2 id="people-cio-title">CIO position</h2></div>
+            <div class="mx-card-top"><h2 id="people-cio-title">{language.t("sucafina.native.dashboard-people.cioPosition")}</h2></div>
             <dl class="mx-fields">
-              <Value label="Name" value={cio().name} />
-              <Value label="Title" value={cio().title} />
-              <Value label="Location" value={cio().location} />
-              <Value label="Start" value={cio().start} />
+              <Value label={language.t("sucafina.native.dashboard-people.name")} value={cio().name} />
+              <Value label={language.t("sucafina.native.dashboard-people.title")} value={cio().title} />
+              <Value label={language.t("sucafina.native.dashboard-people.location")} value={cio().location} />
+              <Value label={language.t("sucafina.native.dashboard-people.start")} value={cio().start} />
             </dl>
           </section>
         )}
       </Show>
-      <Show when={leaderProjection().available} fallback={<UnavailableProjection label="Team leaders" />}>
+      <Show when={leaderProjection().available} fallback={<UnavailableProjection message={language.t("sucafina.native.dashboard-people.teamLeadersUnavailable")} />}>
         <ReadTable
-          label="Team leaders"
-          columns={["Leader", "Title", "Domain", "Location", "Start", "Members"]}
+          label={language.t("sucafina.native.dashboard-people.teamLeaders")}
+          columns={[
+            language.t("sucafina.native.dashboard-people.leader"),
+            language.t("sucafina.native.dashboard-people.title"),
+            language.t("sucafina.native.dashboard-people.domain"),
+            language.t("sucafina.native.dashboard-people.location"),
+            language.t("sucafina.native.dashboard-people.start"),
+            language.t("sucafina.native.dashboard-people.members"),
+          ]}
           rows={leaderRows()}
-          empty="No leaders in this authorized projection."
+          empty={language.t("sucafina.native.dashboard-people.noLeaders")}
         />
       </Show>
-      <Show when={memberProjection().available} fallback={<UnavailableProjection label="Team members" />}>
+      <Show when={memberProjection().available} fallback={<UnavailableProjection message={language.t("sucafina.native.dashboard-people.teamMembersUnavailable")} />}>
         <ReadTable
-          label="Team members"
-          columns={["Name", "Leader", "Title", "Type", "Location", "Start date", "End date", "Status"]}
+          label={language.t("sucafina.native.dashboard-people.teamMembers")}
+          columns={[
+            language.t("sucafina.native.dashboard-people.name"),
+            language.t("sucafina.native.dashboard-people.leader"),
+            language.t("sucafina.native.dashboard-people.title"),
+            language.t("sucafina.native.dashboard-people.type"),
+            language.t("sucafina.native.dashboard-people.location"),
+            language.t("sucafina.native.dashboard-people.startDate"),
+            language.t("sucafina.native.dashboard-people.endDate"),
+            language.t("sucafina.native.dashboard-people.status"),
+          ]}
           rows={memberRows()}
-          empty="No member records in this authorized projection."
+          empty={language.t("sucafina.native.dashboard-people.noMemberRecords")}
         />
       </Show>
     </>
@@ -169,6 +195,7 @@ function TeamStructureView(props: { props: NativeViewProps }) {
 }
 
 function TalentReviewView(props: { props: NativeViewProps }) {
+  const language = useLanguage()
   const memberProjection = () => collection(props.props.page.data.members)
   const leaderProjection = () => collection(props.props.page.data.leaders)
   const members = () => {
@@ -182,16 +209,22 @@ function TalentReviewView(props: { props: NativeViewProps }) {
   const statusFilteredMembers = () => members().filter((member) => string(member.status) === (selectedStatus() || "Active"))
   const privateColumn = (field: "cls" | "outlook" | "notes") =>
     members().some((member) => Object.prototype.hasOwnProperty.call(member, field))
+  const statusLabel = (status: (typeof memberStatuses)[number]) => {
+    if (status === "") return language.t("sucafina.native.dashboard-people.activeDefault")
+    if (status === "Active") return language.t("sucafina.native.dashboard-people.active")
+    if (status === "On Leave") return language.t("sucafina.native.dashboard-people.onLeave")
+    return language.t("sucafina.native.dashboard-people.terminated")
+  }
   const talentColumns = () => [
-    "Name",
-    "Title",
-    "Type",
-    "Reports To",
-    "Location",
-    "Status",
-    ...(privateColumn("cls") ? ["Classification"] : []),
-    ...(privateColumn("outlook") ? ["3-Yr Outlook"] : []),
-    ...(privateColumn("notes") ? ["Notes"] : []),
+    language.t("sucafina.native.dashboard-people.name"),
+    language.t("sucafina.native.dashboard-people.title"),
+    language.t("sucafina.native.dashboard-people.type"),
+    language.t("sucafina.native.dashboard-people.reportsTo"),
+    language.t("sucafina.native.dashboard-people.location"),
+    language.t("sucafina.native.dashboard-people.status"),
+    ...(privateColumn("cls") ? [language.t("sucafina.native.dashboard-people.classification")] : []),
+    ...(privateColumn("outlook") ? [language.t("sucafina.native.dashboard-people.outlook")] : []),
+    ...(privateColumn("notes") ? [language.t("sucafina.native.dashboard-people.notes")] : []),
   ]
   const talentRows = (): TableRow[] =>
     statusFilteredMembers().map((member, index) => {
@@ -202,7 +235,7 @@ function TalentReviewView(props: { props: NativeViewProps }) {
           display(member.name),
           display(member.title),
           display(member.type),
-          leaderLabel(member.leaderId, leaders, "—"),
+          leaderLabel(member.leaderId, leaders, "—", language.t("sucafina.native.dashboard-people.leaderDataUnavailable")),
           display(member.location),
           display(member.status),
           ...(privateColumn("cls") ? [display(member.cls)] : []),
@@ -217,25 +250,27 @@ function TalentReviewView(props: { props: NativeViewProps }) {
       <div class="mx-card">
         <div class="mx-fields">
           <label class="mx-field">
-            <span>Status</span>
+            <span>{language.t("sucafina.native.dashboard-people.status")}</span>
             <select
               value={selectedStatus()}
               onChange={(event) => props.props.onQuery({ ...props.props.query, memberStatus: event.currentTarget.value })}
             >
-              <For each={memberStatuses}>{(status) => <option value={status}>{status || "Active (default)"}</option>}</For>
+              <For each={memberStatuses}>{(status) => <option value={status}>{statusLabel(status)}</option>}</For>
             </select>
           </label>
         </div>
       </div>
       <Show when={!leaderProjection().available}>
-        <UnavailableProjection label="Leader records" />
+        <UnavailableProjection message={language.t("sucafina.native.dashboard-people.leaderRecordsUnavailable")} />
       </Show>
-      <Show when={memberProjection().available} fallback={<UnavailableProjection label="Member records" />}>
+      <Show when={memberProjection().available} fallback={<UnavailableProjection message={language.t("sucafina.native.dashboard-people.memberRecordsUnavailable")} />}>
         <ReadTable
-          label="Talent review"
+          label={language.t("sucafina.native.dashboard-people.talentReview")}
           columns={talentColumns()}
           rows={talentRows()}
-          empty={members().length ? "No members match the selected status." : "No member records in this authorized projection."}
+          empty={members().length
+            ? language.t("sucafina.native.dashboard-people.noStatusMatch")
+            : language.t("sucafina.native.dashboard-people.noMemberRecords")}
         />
       </Show>
     </>
@@ -276,8 +311,8 @@ function Value(props: { label: string; value: unknown }) {
   )
 }
 
-function UnavailableProjection(props: { label: string }) {
-  return <div class="mx-empty" role="status">No authorized projection was supplied for {props.label}.</div>
+function UnavailableProjection(props: { message: string }) {
+  return <div class="mx-empty" role="status">{props.message}</div>
 }
 
 function collection(value: Sucafina.PageState["data"][string]): Collection {
@@ -296,10 +331,10 @@ function findLeader(leaderId: unknown, leaders: Collection): Row | undefined {
   return leaders.rows.find((leader) => identifier(leader.id) === normalizedLeaderId)
 }
 
-function leaderLabel(leaderId: unknown, leaders: Collection, emptyLabel: string): string {
+function leaderLabel(leaderId: unknown, leaders: Collection, emptyLabel: string, unavailableLabel: string): string {
   const normalizedLeaderId = identifier(leaderId)
   if (normalizedLeaderId === undefined) return emptyLabel
-  if (!leaders.available) return "Leader data unavailable"
+  if (!leaders.available) return unavailableLabel
   return display(findLeader(leaderId, leaders)?.name ?? leaderId)
 }
 
