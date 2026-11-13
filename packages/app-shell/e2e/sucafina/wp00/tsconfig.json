@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "rootDir": "../../../../..",
+    "noEmit": true
+  },
+  "include": ["./baseline-ui.spec.ts", "./prepare-installation.ts"]
+}

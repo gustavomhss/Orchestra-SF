@@ -26,3 +26,11 @@ O recibo deve conter `candidateCommit`, `baselineCommit`, `datasetDigest`, `flow
 `baseline-corpus-coverage.test.ts` consome o mesmo corpus pelo Planner real, pelo `quoteAssessment` real e por ambos os renderizadores DOCX/PPTX. `corpus-consumer.test.ts` cobre conversão/FX ausente, domínios sintéticos e volume. Isso valida os inputs e resultados declarados, sem validar latência visual, persistência após reload, toda a autorização do host ou jornadas nativas.
 
 As medições de 30 repetições, os três viewports e zoom 200% permanecem **NOT_RUN** enquanto não houver observação real. A futura execução deve anexar dados brutos e artefatos verificáveis; o relógio de um teste unitário não substitui esse recibo.
+
+## Harness da instalação real
+
+`packages/app-shell/e2e/sucafina/wp00/baseline-ui.spec.ts` usa o runner Playwright existente com `e2e/playwright.production.config.ts`. O helper no mesmo prefixo prepara uma instalação privada com o corpus sintético pelo `openLocalStore.transaction` existente. O teste inicia o CLI e o `local/entry.ts` originais por `AppProcess`, autentica pelo mecanismo real de operador local e visita as rotas do produto. Não substitui bundle residente, identidade, provider nem resposta HTTP.
+
+O escopo implementado desse primeiro harness é 30 repetições de filtro anual do Dashboard e abertura da tabela Procurement por viewport de 320, 768 e 1440 px. Resposta visual exige resultado de negócio atual visível; conclusão exige os demais valores e identidades esperados. Os anexos `wp00-raw-measurements` e `wp00-server.log` preservam a etapa e a causa quando o bootstrap falha, sem preencher tempos ausentes. O SHA do snapshot é registrado pelo runner e o recibo da entrega liga esse snapshot ao produto W.
+
+Esse harness é parcial: comparação Planner, ranking sourcing, preparação de relatório, reimportação exata, atores restritos, zoom real de 200% e tempo do baseline histórico continuam requisitos separados. A configuração de typecheck no prefixo próprio inclui explicitamente spec e helper; o job confere a configuração resolvida pelo script oficial do app antes de compilá-los. O resultado observado, inclusive zero medições em caso de falha, deve ser lido no recibo CI mais recente; a existência do harness não demonstra execução.
