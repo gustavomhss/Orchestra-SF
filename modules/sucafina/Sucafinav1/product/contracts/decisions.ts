@@ -54,13 +54,11 @@ export type ScenarioComparison = ComparisonBase & (
   | { comparisonStatus: "complete"; knownDifference: number; completeDifference: number }
   | { comparisonStatus: "conditioned" | "incompatible" | "unavailable"; knownDifference: number | null; completeDifference: null }
 )
-export type ChoiceRecord = {
+type ChoiceRecordBase = {
   id: string
   alternativeId: string
   alternativeVersion: number
   basisVersion: number
-  costCoverage: CostCoverageAssessment
-  comparisonStatus: ScenarioResult["comparisonStatus"]
   criteria: readonly string[]
   values: readonly { criterionRef: string; value: number | null; unit: string; currency: string; horizon: Period }[]
   evidenceRefs: readonly BusinessEvidenceRef[]
@@ -68,6 +66,10 @@ export type ChoiceRecord = {
   reason: string
   at: string
 }
+export type ChoiceRecord = ChoiceRecordBase & (
+  | { comparisonStatus: "complete"; costCoverage: Extract<CostCoverageAssessment, { coverageState: "complete" }> }
+  | { comparisonStatus: "conditioned" | "incompatible" | "unavailable"; costCoverage: CostCoverageAssessment }
+)
 export type PreparedChange = {
   id: string
   caseId: string
@@ -99,6 +101,7 @@ export type DecisionCase = {
   choices: readonly ChoiceRecord[]
   preparedChanges: readonly PreparedChange[]
   receipts: readonly CommandReceipt[]
+  ledger: readonly CaseLedgerEvent[]
 }
 export type ChangeImpact = {
   id: string

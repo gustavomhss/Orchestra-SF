@@ -51,7 +51,9 @@ export type SensitivityRequest = {
 }
 
 export type PortfolioRequest = {
+  scope: { horizon: Period; currency: string }
   candidateRefs: readonly string[]
+  operations: readonly ScenarioOperation[]
   constraints: readonly string[]
   priorities: readonly string[]
   explorationLimit: number
@@ -1358,42 +1360,83 @@ const inputSchemas = {
     }
   },
   "sf_portfolio_evaluate": {
-    "type": "object",
-    "additionalProperties": false,
-    "required": [
-      "candidateRefs",
-      "constraints",
-      "priorities",
-      "explorationLimit"
-    ],
-    "properties": {
-      "candidateRefs": {
-        "type": "array",
-        "items": {
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "candidateRefs",
+    "constraints",
+    "priorities",
+    "explorationLimit",
+    "scope",
+    "operations"
+  ],
+  "properties": {
+    "candidateRefs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "priorities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "explorationLimit": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "horizon": {
+          "type": "object",
+          "additionalProperties": false,
+          "x-sf-period": true,
+          "properties": {
+            "start": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "end": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            }
+          },
+          "required": [
+            "start",
+            "end"
+          ]
+        },
+        "currency": {
           "type": "string",
-          "minLength": 1
+          "pattern": "^[A-Z]{3}$"
         }
       },
-      "constraints": {
-        "type": "array",
-        "items": {
-          "type": "string",
-          "minLength": 1
-        }
-      },
-      "priorities": {
-        "type": "array",
-        "items": {
-          "type": "string",
-          "minLength": 1
-        }
-      },
-      "explorationLimit": {
-        "type": "integer",
-        "minimum": 1
+      "required": [
+        "horizon",
+        "currency"
+      ]
+    },
+    "operations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ScenarioOperation"
       }
     }
-  },
+  }
+},
   "sf_request_read": {
     "type": "object",
     "additionalProperties": false,

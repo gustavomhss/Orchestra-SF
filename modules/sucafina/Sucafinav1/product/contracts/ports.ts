@@ -3,7 +3,7 @@ import type { Actor, Environment, Persistence, Snapshot } from "../../runtime/co
 import type { ForecastCompareRequest, CaseDraftRequest, CaseReadRequest, DashboardReadRequest, RequestReadRequest, JsonValue } from "./operations.ts"
 import type { DomainProjection, ImportManifest, PreservedReview, RoutineResult } from "./context.ts"
 import type { DecisionCase, ScenarioResult, ScenarioComparison, PortfolioResult, ObservedResultProjection } from "./decisions.ts"
-import type { BusinessEvidenceRef, BusinessContextService } from "./business-context.ts"
+import type { BusinessEvidenceRef, BusinessContextService, AuthorizedCaseProjection } from "./business-context.ts"
 import type { TrustedDomainContext, CapabilityResult } from "./sf-execution.ts"
 import type { ContributionEnvelope } from "./resident-ai.ts"
 import type { SfProductStatePort } from "./state.ts"
@@ -21,14 +21,14 @@ export type PortResult<T> =
 type FinancialAnalysisBase = {
   baseline: DomainProjection
   candidate: DomainProjection
-  comparison: ScenarioComparison
-  knownDifference: number | null
-  completeDifference: number | null
   sourceRefs: readonly BusinessEvidenceRef[]
   gaps: readonly string[]
   explanation: string
 }
 export type FinancialAnalysis = FinancialAnalysisBase & (
+  | { comparison: Extract<ScenarioComparison, { comparisonStatus: "complete" }>; knownDifference: number; completeDifference: number }
+  | { comparison: Exclude<ScenarioComparison, { comparisonStatus: "complete" }>; knownDifference: number | null; completeDifference: null }
+) & (
   | { analysisBasis: "domain"; domainApplied: boolean; importPreviewRef?: never }
   | { analysisBasis: "import-preview"; domainApplied: false; importPreviewRef: string }
 )
@@ -41,7 +41,7 @@ export type PlannerPort = {
 }
 export type DecisionCasePort = {
   draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>
-  read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>
+  read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<PortResult<AuthorizedCaseProjection>>
 }
 export type DashboardPort = {
   read: (request: DashboardReadRequest, binding: TrustedDomainContext) => Promise<PortResult<DomainProjection>>
@@ -84,7 +84,7 @@ export type BusinessPorts = {
     list: (binding: TrustedDomainContext) => Promise<PortResult<readonly { scheduleRef: string; version: number; state: string }[]>>
     readRun: (runRef: string, binding: TrustedDomainContext) => Promise<PortResult<RoutineResult>>
   }
-  directory: { lookup: (ids: readonly string[], binding: TrustedDomainContext) => Promise<PortResult<readonly { id: string; name: string }[]>> }
+  directory: { lookup: (ids: readonly string[], binding: TrustedDomainContext) => Promise<PortResult<readonly { id: string }[]>> }
   dispatch: (name: string, input: unknown, binding: TrustedDomainContext) => Promise<CapabilityResult>
 }
 

@@ -11,6 +11,9 @@ import { testPersistence } from "../../fixture/persistence.ts"
 import { decodeSfOperationInput, decodeSfContributionOutput } from "../../../product/contracts/schema-admission.ts"
 import type { SfOutputSchemaBuild } from "../../../product/contracts/generate-output-schemas.ts"
 import type { CreateSfProductContribution } from "../../../product/contracts/runtime.ts"
+import type { PlannerPort, FinancialAnalysis, DecisionCasePort } from "../../../product/contracts/ports.ts"
+import { requiredSfCostCategories } from "../../../product/contracts/coverage-inventory.ts"
+import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
 
 const context: ProductContext = {
   installationId: "installation-1", projectId: "project-1", principalRef: "principal-1",
@@ -23,7 +26,7 @@ const selection = { surface: context.surface, period: context.period, currency: 
 const authority = { installationId: context.installationId, projectId: context.projectId, principalRef: context.principalRef, accessRevision: context.accessRevision, policyVersion: context.policyVersion, capabilities: context.capabilities }
 
 // These references make package typechecking traverse every shared seam before domain consumers land.
-type ContractSeams = [BusinessContextService, CapabilityDescriptor, ContributionEnvelope, SfProductStatePort, SfOutputSchemaBuild, CreateSfProductContribution]
+type ContractSeams = [BusinessContextService, CapabilityDescriptor, ContributionEnvelope, SfProductStatePort, SfOutputSchemaBuild, CreateSfProductContribution, PlannerPort, FinancialAnalysis, DecisionCasePort]
 
 test("context admission preserves explicit scope without sharing mutable input", () => {
   const result = decodeProductContext(selection, authority)
@@ -54,7 +57,7 @@ test("reading an old installation never initializes or persists product state im
   const storage = testPersistence()
   const before = structuredClone(storage.state.dashboard)
   const state = createSfProductState({ persistence: storage.persistence, createId: () => "incarnation-1", resolveTarget: async () => ({ incarnation: "incarnation-1" }), authorize: async () => ({ principalRef: "principal-1", policyVersion: "policy-1", accessRevision: "access-1" }) })
-  expect(await state.read(new Request("https://example.test/product"), "preferences", () => "content")).toEqual({ status: "unavailable", reason: "product-state-uninitialized-or-invalid" })
+  expect(await state.read(new Request("https://example.test/product"), "preferences", () => "content")).toEqual({ status: "unavailable", reason: "product-state-uninitialized" })
   expect(await state.transaction(new Request("https://example.test/product"), { namespace: "preferences", expectedStorageVersion: 0, targetRef: "preferences:principal-1", targetIncarnation: "incarnation-1", idempotencyKey: "preview-1", commandDigest: "a".repeat(64) }, async (staged) => {
     staged.preferences.theme = "dark"
     return { commit: false, value: "preview" }
@@ -73,4 +76,11 @@ test("a conditioned comparison cannot publish a complete difference", () => {
   const comparison = { baselineResultRef: "baseline-1", alternativeResultRef: "alternative-1", costCoverageRefs: ["coverage-1"], comparisonStatus: "conditioned", knownDifference: 30000, completeDifference: null, criterionResults: [], unresolvedConditions: ["training-missing"] }
   expect(decodeSfContributionOutput("ScenarioComparison", comparison).ok).toBe(true)
   expect(decodeSfContributionOutput("ScenarioComparison", { ...comparison, completeDifference: 30000 }).ok).toBe(false)
+})
+
+test("renewal inventory cannot omit training or invent a new decision inventory", () => {
+  const basis = { id: "basis-1", version: 1, decisionType: "renewal-transition-v1", categoryIds: RENEWAL_TRANSITION_CATEGORIES, additionalCategoryIds: [], sourceRefs: [] }
+  expect(requiredSfCostCategories(basis)).toEqual(RENEWAL_TRANSITION_CATEGORIES)
+  expect(requiredSfCostCategories({ ...basis, categoryIds: basis.categoryIds.filter((id) => id !== "training") })).toBeUndefined()
+  expect(requiredSfCostCategories({ ...basis, decisionType: "undeclared-inventory" })).toBeUndefined()
 })

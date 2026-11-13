@@ -1,5 +1,5 @@
 {
-  "revision": 1,
+  "revision": 2,
   "scope": "C01–C17,24 contribution outputs,39 operation entry/output schemas",
   "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
   "canonicalSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
@@ -1096,21 +1096,22 @@
     }
   ],
   "artifacts": {
-    "business-context.ts": "aa006d0968601d77724fc75ae8a78f7f5317cf865cdbd401385dd977c912dbe7",
+    "business-context.ts": "51bce13a057cdf28bf6f2f890ca3a38ac5cf8d38fcaa1944235ec76c5688c5f4",
     "canonical.ts": "04172e9cea776faca90b2ed7cb61bb65bfb0df1aacbe6ab2d6299293f91e3561",
     "context.ts": "215b4a24cd38ceb5d9f4bb72321e965f7bc46b14cec7a5efd7ad6e37dd8bb245",
-    "decisions.ts": "26d2b069783e96dcf32500595b40dfefb0b05c0d2a6a396070d7852dfdb27018",
+    "decisions.ts": "cdefc64ad0e30e44049410f751efa17499466db07a6df9af3f92944aa0b3ed67",
     "generate-output-schemas.ts": "a414ee290ed1d16866c93b086e55dce18b3d00b728d629ef588f91aa27a02e65",
-    "operations.ts": "be97a8e704a1250ad84004e1b4a674ce2354323f855eaf6db91af54047cead88",
-    "output-schemas.ts": "7e44747c185801ae1c9839959ee0e0129d6acfcd046d04970231ec9459187e80",
+    "operations.ts": "4b4dea78486ca436a03725e44d98951333ca15f353bdf02e204e8a0914f58527",
+    "output-schemas.ts": "791b7bf6ce5e042dbef5e350a52a357887d3a3756cc74f10d5ae80b06d2306f1",
     "outputs.ts": "420f15c6e9de97b5b1e42f70ee3deb93927db34e05eb5fbc98f114056d8163ad",
-    "ports.ts": "80c252969389d85903db0248575050549058c4212ad3ad84e12cd94a323051f1",
+    "ports.ts": "d9b58ed7a6ca6c72f2adf723a772960374c7270004c6372874bba29b1fbfcd0f",
     "resident-ai.ts": "12bd719f16aae9d41dc58baaaa090285cd9e5f11b3a790d67351c14d59e58697",
     "runtime.ts": "3e92affab6df463f19aec9444bd397a1d7e729099bf7ad66830b87c7d68f3c4b",
     "schema-admission.ts": "e651b89b09a89af5455b395c77bf9127bc2afd79dcadf0b5853db17025b6953d",
     "sf-execution.ts": "a3cf340b5c4e73b9a6cb64892ee47de1c2176bb77a34d93cec326b09f5fdc1d6",
     "state.ts": "08610e7798e24f21ef45f669b12a3c6156373debe43c2d7fede350062b9d2847",
-    "validation.ts": "2fe8236bd56162cb9e5398b1155320057fd12f5f51f3700eb46aee2a8d7b1b15"
+    "validation.ts": "2fe8236bd56162cb9e5398b1155320057fd12f5f51f3700eb46aee2a8d7b1b15",
+    "coverage-inventory.ts": "b55dbfb3edb5235cb6f8120773fee243d440f40fe118bde3c86c9a6e8a1d2da7"
   },
   "nativeProfiles": [
     {
@@ -2278,7 +2279,7 @@
     "AM05",
     "AM06"
   ],
-  "runtimeSeams": "runtime.ts factory types approved by S0; native Registry requires real Tool.Context/Request/Session/skill identity. UI registry remains distinct and host-only.",
+  "runtimeSeams": "runtime.ts factory types approved by S0; native Registry requires real Tool.Context/Request/Session/skill identity. UI registry remains distinct and host-only. Case ledger lives in DecisionCase.ledger. Case reads return AuthorizedCaseProjection, native/UI context discriminated. Creation target and operation identity are injected by private host; namespace permission never grants every case.",
   "errorPolicy": "No fabricated data or authority; structural decoders are not ACL. Denied/unavailable/stale/provider-conflict never become ok; domain authorization and semantic validation remain producer/consumer duties.",
   "implementationStatus": "NOT_ATTESTED_BY_CONTRACT_FREEZE",
   "nonCircularity": "This inventory hashes typed artifacts only, not itself, future commits or future guards. Its accepted commit/digest and consumer receipts are external."

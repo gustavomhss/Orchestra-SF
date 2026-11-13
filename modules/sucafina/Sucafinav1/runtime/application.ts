@@ -13,6 +13,7 @@ import { assetLink, captureRecordAssets, deleteRecordAssets, downloadAsset, uplo
 import type { AssetKind, AssetPersistence, AssetServices, BlobTransaction } from "./assets.ts"
 import { esc } from "../src/screen-shell.ts"
 import type { RenderContext } from "./ui.ts"
+import { publicSfData } from "../product/integration/public-state.ts"
 
 export type Contribution = {
   pages: readonly string[]
@@ -274,7 +275,9 @@ export function createApplication(mount: string, application: Application) {
               commit: false,
               value: json({ ok: false, status: 403 }, 403),
             }
-          const stale = conflict(snapshot, "dataset", parsed, snapshot.data)
+          if (Object.hasOwn(object(parsed.values.data), "__sfProductV1"))
+            return { commit: false, value: json({ ok: false, errors: ["Private product state cannot be imported."] }, 422) }
+          const stale = conflict(snapshot, "dataset", parsed, publicSfData(snapshot.data))
           if (stale) return { commit: false, value: json(stale, 409) }
           const imported = migrateDashboard(
             object(parsed.values.data),
@@ -291,6 +294,7 @@ export function createApplication(mount: string, application: Application) {
           if (!prepared.ok) return { commit: false, value: json({ ok: false, errors: prepared.errors }, 422) }
           const before = structuredClone(snapshot.data)
           snapshot.data = prepared.data
+          if (Object.hasOwn(before, "__sfProductV1")) snapshot.data.__sfProductV1 = before.__sfProductV1
           for (const [key, version] of Object.entries(snapshot.versions))
             if (key !== "dataset")
               snapshot.versions[key] = {
@@ -324,7 +328,7 @@ export function createApplication(mount: string, application: Application) {
           for (const key of ["itperf", "cio", "budgetCurrentMonth", "revenueByYear"])
             if (snapshot.data[key] !== undefined && !snapshot.versions[key])
               snapshot.versions[key] = { version: 1, by: actor.id }
-          changed(snapshot, "dataset", actor, environment.at, before, snapshot.data)
+          changed(snapshot, "dataset", actor, environment.at, publicSfData(before), publicSfData(snapshot.data))
           snapshot.audit[snapshot.audit.length - 1].name = environment.directory.find(
             (person) => person.id === actor.id,
           )?.name
@@ -412,7 +416,7 @@ export function createApplication(mount: string, application: Application) {
           ? (own ?? Math.min(2027, Math.max(2024, now.getFullYear())))
           : sidebar
       const auditBefore = snapshot.audit.length
-      const view = contribution.domain.view(snapshot, actor, environment)
+      const view = contribution.domain.view({ ...snapshot, data: publicSfData(snapshot.data) }, actor, environment)
       const filters = Object.fromEntries(
         [
           "version",
@@ -439,7 +443,7 @@ export function createApplication(mount: string, application: Application) {
       )
       const content = contribution.render(
         page,
-        { ...view.data, ...filters, sidebarYear: sidebar },
+        { ...publicSfData(view.data), ...filters, sidebarYear: sidebar },
         {
           actor,
           year: selected,
@@ -714,7 +718,7 @@ function auditValue(value: unknown): string {
   if (Array.isArray(value))
     return `<details><summary>${value.length} records</summary>${value.map(auditValue).join("")}</details>`
   if (typeof value === "object")
-    return `<dl>${Object.entries(value)
+    return `<dl>${Object.entries(publicSfData(object(value)))
       .map(
         ([key, entry]) =>
           `<dt>${esc(key)}</dt><dd>${["iban", "account", "swift"].includes(key.toLowerCase()) ? "Protected" : auditValue(entry)}</dd>`,
@@ -791,7 +795,7 @@ async function serveDownload(
         })
     return {
       commit: readsMembers && rows(snapshot.data.members).length > 0,
-      value: { snapshot: structuredClone(snapshot), actor },
+      value: { snapshot: structuredClone({ ...snapshot, data: publicSfData(snapshot.data) }), actor },
     }
   })
   if (prepared instanceof Response)

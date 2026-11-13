@@ -58,11 +58,14 @@ export type MemoryWriteReceipt = {
 export type BusinessContextService = {
   resolve: (ref: BusinessEvidenceRef, trustedCall: TrustedDomainContext) => Promise<BusinessEvidenceResolution>
   context: (request: { refs: readonly BusinessEvidenceRef[] }, trustedCall: TrustedDomainContext) => Promise<readonly BusinessEvidenceResolution[]>
-  recall: (request: { caseRefs: readonly { id: string; incarnation: string }[]; query: string }, trustedCall: TrustedDomainContext) => Promise<readonly { envelope: BusinessMemoryEnvelope; entry: unknown }[]>
+  recall: (request: { caseRefs: readonly { id: string; incarnation: string }[]; query: string }, trustedCall: TrustedDomainContext) => Promise<readonly { envelope: BusinessMemoryEnvelope; entry: SfAtlasProjection["entry"] }[]>
   emitFromLedger: (sourceEventRef: BusinessEvidenceRef, trustedCall: TrustedDomainContext) => Promise<MemoryWriteReceipt>
 }
 export type AuthorizedCaseProjection = {
-  context: { installationId: string; projectId: string; principalRef: string; profileId: string; policyVersion: string; accessRevision: string }
+  context: { installationId: string; projectId: string; principalRef: string; policyVersion: string; accessRevision: string } & (
+    | { kind: "native"; profileId: string }
+    | { kind: "ui"; profileId?: never }
+  )
   case: Omit<DecisionCase, "preparedChanges" | "receipts"> & { preparedChanges: readonly PreparedChangeView[]; receipts: readonly CommandReceiptView[] }
   events: readonly CaseLedgerEvent[]
   evidenceRefs: readonly BusinessEvidenceRef[]

@@ -893,7 +893,13 @@ const definitions = {
         "$ref": "#/definitions/Shape_30"
       },
       {
-        "$ref": "#/definitions/Shape_49"
+        "$ref": "#/definitions/Shape_46"
+      },
+      {
+        "$ref": "#/definitions/Shape_47"
+      },
+      {
+        "$ref": "#/definitions/Shape_50"
       }
     ]
   },
@@ -906,15 +912,6 @@ const definitions = {
       },
       "candidate": {
         "$ref": "#/definitions/DomainProjection_31"
-      },
-      "comparison": {
-        "$ref": "#/definitions/ScenarioComparison_43"
-      },
-      "knownDifference": {
-        "$ref": "#/definitions/Shape_35"
-      },
-      "completeDifference": {
-        "$ref": "#/definitions/Shape_35"
       },
       "sourceRefs": {
         "type": "array",
@@ -931,6 +928,15 @@ const definitions = {
       "explanation": {
         "type": "string"
       },
+      "comparison": {
+        "$ref": "#/definitions/Shape_43"
+      },
+      "knownDifference": {
+        "type": "number"
+      },
+      "completeDifference": {
+        "type": "number"
+      },
       "analysisBasis": {
         "const": "domain"
       },
@@ -944,12 +950,12 @@ const definitions = {
     "required": [
       "baseline",
       "candidate",
-      "comparison",
-      "knownDifference",
-      "completeDifference",
       "sourceRefs",
       "gaps",
       "explanation",
+      "comparison",
+      "knownDifference",
+      "completeDifference",
       "analysisBasis",
       "domainApplied"
     ]
@@ -1302,17 +1308,7 @@ const definitions = {
       }
     ]
   },
-  "ScenarioComparison_43": {
-    "anyOf": [
-      {
-        "$ref": "#/definitions/Shape_44"
-      },
-      {
-        "$ref": "#/definitions/Shape_47"
-      }
-    ]
-  },
-  "Shape_44": {
+  "Shape_43": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1331,7 +1327,7 @@ const definitions = {
       "criterionResults": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_45"
+          "$ref": "#/definitions/__type_44"
         }
       },
       "unresolvedConditions": {
@@ -1361,7 +1357,7 @@ const definitions = {
       "completeDifference"
     ]
   },
-  "__type_45": {
+  "__type_44": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1369,7 +1365,7 @@ const definitions = {
         "type": "string"
       },
       "state": {
-        "$ref": "#/definitions/Shape_46"
+        "$ref": "#/definitions/Shape_45"
       },
       "reason": {
         "type": "string"
@@ -1381,7 +1377,7 @@ const definitions = {
       "reason"
     ]
   },
-  "Shape_46": {
+  "Shape_45": {
     "anyOf": [
       {
         "const": "satisfied"
@@ -1394,7 +1390,122 @@ const definitions = {
       }
     ]
   },
+  "Shape_46": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "baseline": {
+        "$ref": "#/definitions/DomainProjection_31"
+      },
+      "candidate": {
+        "$ref": "#/definitions/DomainProjection_31"
+      },
+      "sourceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_4"
+        }
+      },
+      "gaps": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "explanation": {
+        "type": "string"
+      },
+      "comparison": {
+        "$ref": "#/definitions/Shape_43"
+      },
+      "knownDifference": {
+        "type": "number"
+      },
+      "completeDifference": {
+        "type": "number"
+      },
+      "analysisBasis": {
+        "const": "import-preview"
+      },
+      "domainApplied": {
+        "const": false
+      },
+      "importPreviewRef": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "baseline",
+      "candidate",
+      "sourceRefs",
+      "gaps",
+      "explanation",
+      "comparison",
+      "knownDifference",
+      "completeDifference",
+      "analysisBasis",
+      "domainApplied",
+      "importPreviewRef"
+    ]
+  },
   "Shape_47": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "baseline": {
+        "$ref": "#/definitions/DomainProjection_31"
+      },
+      "candidate": {
+        "$ref": "#/definitions/DomainProjection_31"
+      },
+      "sourceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_4"
+        }
+      },
+      "gaps": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "explanation": {
+        "type": "string"
+      },
+      "comparison": {
+        "$ref": "#/definitions/Shape_48"
+      },
+      "knownDifference": {
+        "$ref": "#/definitions/Shape_35"
+      },
+      "completeDifference": {
+        "type": "null"
+      },
+      "analysisBasis": {
+        "const": "domain"
+      },
+      "domainApplied": {
+        "type": "boolean"
+      },
+      "importPreviewRef": {
+        "not": {}
+      }
+    },
+    "required": [
+      "baseline",
+      "candidate",
+      "sourceRefs",
+      "gaps",
+      "explanation",
+      "comparison",
+      "knownDifference",
+      "completeDifference",
+      "analysisBasis",
+      "domainApplied"
+    ]
+  },
+  "Shape_48": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1413,7 +1524,7 @@ const definitions = {
       "criterionResults": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_45"
+          "$ref": "#/definitions/__type_44"
         }
       },
       "unresolvedConditions": {
@@ -1423,7 +1534,7 @@ const definitions = {
         }
       },
       "comparisonStatus": {
-        "$ref": "#/definitions/Shape_48"
+        "$ref": "#/definitions/Shape_49"
       },
       "knownDifference": {
         "$ref": "#/definitions/Shape_35"
@@ -1443,7 +1554,7 @@ const definitions = {
       "completeDifference"
     ]
   },
-  "Shape_48": {
+  "Shape_49": {
     "anyOf": [
       {
         "const": "unavailable"
@@ -1456,7 +1567,7 @@ const definitions = {
       }
     ]
   },
-  "Shape_49": {
+  "Shape_50": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1465,15 +1576,6 @@ const definitions = {
       },
       "candidate": {
         "$ref": "#/definitions/DomainProjection_31"
-      },
-      "comparison": {
-        "$ref": "#/definitions/ScenarioComparison_43"
-      },
-      "knownDifference": {
-        "$ref": "#/definitions/Shape_35"
-      },
-      "completeDifference": {
-        "$ref": "#/definitions/Shape_35"
       },
       "sourceRefs": {
         "type": "array",
@@ -1490,6 +1592,15 @@ const definitions = {
       "explanation": {
         "type": "string"
       },
+      "comparison": {
+        "$ref": "#/definitions/Shape_48"
+      },
+      "knownDifference": {
+        "$ref": "#/definitions/Shape_35"
+      },
+      "completeDifference": {
+        "type": "null"
+      },
       "analysisBasis": {
         "const": "import-preview"
       },
@@ -1503,18 +1614,28 @@ const definitions = {
     "required": [
       "baseline",
       "candidate",
-      "comparison",
-      "knownDifference",
-      "completeDifference",
       "sourceRefs",
       "gaps",
       "explanation",
+      "comparison",
+      "knownDifference",
+      "completeDifference",
       "analysisBasis",
       "domainApplied",
       "importPreviewRef"
     ]
   },
-  "SensitivityResult_50": {
+  "ScenarioComparison_51": {
+    "anyOf": [
+      {
+        "$ref": "#/definitions/Shape_43"
+      },
+      {
+        "$ref": "#/definitions/Shape_48"
+      }
+    ]
+  },
+  "SensitivityResult_52": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1525,19 +1646,19 @@ const definitions = {
         "type": "string"
       },
       "bounds": {
-        "$ref": "#/definitions/__type_51"
+        "$ref": "#/definitions/__type_53"
       },
       "evaluated": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_52"
+          "$ref": "#/definitions/__type_54"
         }
       },
       "threshold": {
         "$ref": "#/definitions/Shape_35"
       },
       "comparisonStatus": {
-        "$ref": "#/definitions/Shape_53"
+        "$ref": "#/definitions/Shape_55"
       },
       "unresolvedConditions": {
         "type": "array",
@@ -1563,7 +1684,7 @@ const definitions = {
       "evidenceRefs"
     ]
   },
-  "__type_51": {
+  "__type_53": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1583,7 +1704,7 @@ const definitions = {
       "steps"
     ]
   },
-  "__type_52": {
+  "__type_54": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1603,7 +1724,7 @@ const definitions = {
       "value"
     ]
   },
-  "Shape_53": {
+  "Shape_55": {
     "anyOf": [
       {
         "const": "unavailable"
@@ -1619,7 +1740,7 @@ const definitions = {
       }
     ]
   },
-  "CommercialComparison_54": {
+  "CommercialComparison_56": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1635,7 +1756,7 @@ const definitions = {
       "proposals": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_55"
+          "$ref": "#/definitions/__type_57"
         }
       },
       "ranking": {
@@ -1667,7 +1788,7 @@ const definitions = {
       "sourceRefs"
     ]
   },
-  "__type_55": {
+  "__type_57": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1705,7 +1826,7 @@ const definitions = {
       "issues"
     ]
   },
-  "CommercialGap_56": {
+  "CommercialGap_58": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1716,7 +1837,7 @@ const definitions = {
         "type": "string"
       },
       "issue": {
-        "$ref": "#/definitions/Shape_57"
+        "$ref": "#/definitions/Shape_59"
       },
       "evidenceRefs": {
         "type": "array",
@@ -1736,7 +1857,7 @@ const definitions = {
       "question"
     ]
   },
-  "Shape_57": {
+  "Shape_59": {
     "anyOf": [
       {
         "const": "missing"
@@ -1755,7 +1876,7 @@ const definitions = {
       }
     ]
   },
-  "EvidenceCandidate_58": {
+  "EvidenceCandidate_60": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1775,7 +1896,7 @@ const definitions = {
         }
       },
       "state": {
-        "$ref": "#/definitions/Shape_59"
+        "$ref": "#/definitions/Shape_61"
       }
     },
     "required": [
@@ -1785,7 +1906,7 @@ const definitions = {
       "state"
     ]
   },
-  "Shape_59": {
+  "Shape_61": {
     "anyOf": [
       {
         "const": "claim"
@@ -1801,7 +1922,7 @@ const definitions = {
       }
     ]
   },
-  "PreparedChangeSet_60": {
+  "PreparedChangeSet_62": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1814,7 +1935,7 @@ const definitions = {
       "changes": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_61"
+          "$ref": "#/definitions/__type_63"
         }
       },
       "conditions": {
@@ -1831,7 +1952,7 @@ const definitions = {
       "conditions"
     ]
   },
-  "__type_61": {
+  "__type_63": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1866,7 +1987,7 @@ const definitions = {
       "requiredAuthority"
     ]
   },
-  "DossierDraft_62": {
+  "DossierDraft_64": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1914,7 +2035,7 @@ const definitions = {
       "domainApplied"
     ]
   },
-  "DeliveryAssessment_63": {
+  "DeliveryAssessment_65": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1930,7 +2051,7 @@ const definitions = {
       "dependencies": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_64"
+          "$ref": "#/definitions/__type_66"
         }
       },
       "capacityConstraints": {
@@ -1954,7 +2075,7 @@ const definitions = {
       "unresolvedConditions"
     ]
   },
-  "__type_64": {
+  "__type_66": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1965,7 +2086,7 @@ const definitions = {
         "type": "string"
       },
       "state": {
-        "$ref": "#/definitions/Shape_65"
+        "$ref": "#/definitions/Shape_67"
       },
       "sourceRefs": {
         "type": "array",
@@ -1981,7 +2102,7 @@ const definitions = {
       "sourceRefs"
     ]
   },
-  "Shape_65": {
+  "Shape_67": {
     "anyOf": [
       {
         "const": "confirmed"
@@ -1994,7 +2115,7 @@ const definitions = {
       }
     ]
   },
-  "DependencyConflict_66": {
+  "DependencyConflict_68": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2017,7 +2138,7 @@ const definitions = {
         }
       },
       "state": {
-        "$ref": "#/definitions/Shape_67"
+        "$ref": "#/definitions/Shape_69"
       }
     },
     "required": [
@@ -2029,7 +2150,7 @@ const definitions = {
       "state"
     ]
   },
-  "Shape_67": {
+  "Shape_69": {
     "anyOf": [
       {
         "const": "unavailable"
@@ -2042,14 +2163,14 @@ const definitions = {
       }
     ]
   },
-  "PortfolioResult_68": {
+  "PortfolioResult_70": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "combinations": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/PortfolioCombination_69"
+          "$ref": "#/definitions/PortfolioCombination_71"
         }
       },
       "limitations": {
@@ -2071,20 +2192,20 @@ const definitions = {
       "evidenceRefs"
     ]
   },
-  "PortfolioCombination_69": {
+  "PortfolioCombination_71": {
     "anyOf": [
       {
-        "$ref": "#/definitions/Shape_70"
-      },
-      {
-        "$ref": "#/definitions/Shape_71"
+        "$ref": "#/definitions/Shape_72"
       },
       {
         "$ref": "#/definitions/Shape_73"
+      },
+      {
+        "$ref": "#/definitions/Shape_75"
       }
     ]
   },
-  "Shape_70": {
+  "Shape_72": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2139,7 +2260,7 @@ const definitions = {
       "comparisonStatus"
     ]
   },
-  "Shape_71": {
+  "Shape_73": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2177,10 +2298,10 @@ const definitions = {
         }
       },
       "eligibility": {
-        "$ref": "#/definitions/Shape_72"
+        "$ref": "#/definitions/Shape_74"
       },
       "comparisonStatus": {
-        "$ref": "#/definitions/Shape_48"
+        "$ref": "#/definitions/Shape_49"
       }
     },
     "required": [
@@ -2194,7 +2315,7 @@ const definitions = {
       "comparisonStatus"
     ]
   },
-  "Shape_72": {
+  "Shape_74": {
     "anyOf": [
       {
         "const": "unavailable"
@@ -2204,7 +2325,7 @@ const definitions = {
       }
     ]
   },
-  "Shape_73": {
+  "Shape_75": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2245,7 +2366,7 @@ const definitions = {
         "const": "ineligible"
       },
       "comparisonStatus": {
-        "$ref": "#/definitions/Shape_53"
+        "$ref": "#/definitions/Shape_55"
       }
     },
     "required": [
@@ -2259,7 +2380,7 @@ const definitions = {
       "comparisonStatus"
     ]
   },
-  "ReconsiderationProposal_74": {
+  "ReconsiderationProposal_76": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2272,7 +2393,7 @@ const definitions = {
       "impacts": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/ChangeImpact_75"
+          "$ref": "#/definitions/ChangeImpact_77"
         }
       },
       "affectedConditionRefs": {
@@ -2308,7 +2429,7 @@ const definitions = {
       "choiceChanged"
     ]
   },
-  "ChangeImpact_75": {
+  "ChangeImpact_77": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2322,7 +2443,7 @@ const definitions = {
         "type": "string"
       },
       "state": {
-        "$ref": "#/definitions/Shape_76"
+        "$ref": "#/definitions/Shape_78"
       },
       "chosen": {
         "type": "array",
@@ -2350,7 +2471,7 @@ const definitions = {
       "reason"
     ]
   },
-  "Shape_76": {
+  "Shape_78": {
     "anyOf": [
       {
         "const": "unknown"
@@ -2363,7 +2484,7 @@ const definitions = {
       }
     ]
   },
-  "CritiqueReport_77": {
+  "CritiqueReport_79": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2382,7 +2503,7 @@ const definitions = {
       "claimIssues": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/ClaimIssue_78"
+          "$ref": "#/definitions/ClaimIssue_80"
         }
       },
       "unresolvedConditions": {
@@ -2408,7 +2529,7 @@ const definitions = {
       "evidenceRefs"
     ]
   },
-  "ClaimIssue_78": {
+  "ClaimIssue_80": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2416,7 +2537,7 @@ const definitions = {
         "type": "string"
       },
       "kind": {
-        "$ref": "#/definitions/Shape_79"
+        "$ref": "#/definitions/Shape_81"
       },
       "reason": {
         "type": "string"
@@ -2435,7 +2556,7 @@ const definitions = {
       "evidenceRefs"
     ]
   },
-  "Shape_79": {
+  "Shape_81": {
     "anyOf": [
       {
         "const": "unsupported"
@@ -2457,7 +2578,7 @@ const definitions = {
       }
     ]
   },
-  "DocumentEvidence_80": {
+  "DocumentEvidence_82": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2474,7 +2595,7 @@ const definitions = {
         "type": "string"
       },
       "textRange": {
-        "$ref": "#/definitions/__type_81"
+        "$ref": "#/definitions/__type_83"
       },
       "fieldCandidate": {
         "type": "string"
@@ -2486,7 +2607,7 @@ const definitions = {
         "type": "string"
       },
       "status": {
-        "$ref": "#/definitions/Shape_82"
+        "$ref": "#/definitions/Shape_84"
       },
       "ref": {
         "$ref": "#/definitions/Shape_10"
@@ -2504,7 +2625,7 @@ const definitions = {
       "ref"
     ]
   },
-  "__type_81": {
+  "__type_83": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2524,7 +2645,7 @@ const definitions = {
       "unit"
     ]
   },
-  "Shape_82": {
+  "Shape_84": {
     "anyOf": [
       {
         "const": "confirmed"
@@ -2540,7 +2661,7 @@ const definitions = {
       }
     ]
   },
-  "ContextualBIProposal_83": {
+  "ContextualBIProposal_85": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2556,7 +2677,7 @@ const definitions = {
       "filters": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_84"
+          "$ref": "#/definitions/__type_86"
         }
       },
       "tableRef": {
@@ -2577,7 +2698,7 @@ const definitions = {
       "sourceRefs"
     ]
   },
-  "__type_84": {
+  "__type_86": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2596,7 +2717,7 @@ const definitions = {
       "values"
     ]
   },
-  "MeetingMaterialProposal_85": {
+  "MeetingMaterialProposal_87": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2612,7 +2733,7 @@ const definitions = {
       "coverage": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_86"
+          "$ref": "#/definitions/__type_88"
         }
       },
       "gaps": {
@@ -2629,7 +2750,7 @@ const definitions = {
       "gaps"
     ]
   },
-  "__type_86": {
+  "__type_88": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2649,14 +2770,14 @@ const definitions = {
       "totalCount"
     ]
   },
-  "CaseRecall_87": {
+  "CaseRecall_89": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "matches": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_88"
+          "$ref": "#/definitions/__type_90"
         }
       },
       "limitations": {
@@ -2675,18 +2796,18 @@ const definitions = {
       "accessRevision"
     ]
   },
-  "__type_88": {
+  "__type_90": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "caseRef": {
-        "$ref": "#/definitions/__type_89"
+        "$ref": "#/definitions/__type_91"
       },
       "memoryRecordRef": {
         "type": "string"
       },
       "explanation": {
-        "$ref": "#/definitions/MatchExplanation_90"
+        "$ref": "#/definitions/MatchExplanation_92"
       },
       "evidenceRefs": {
         "type": "array",
@@ -2700,66 +2821,6 @@ const definitions = {
       "memoryRecordRef",
       "explanation",
       "evidenceRefs"
-    ]
-  },
-  "__type_89": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "id": {
-        "type": "string"
-      },
-      "incarnation": {
-        "type": "string"
-      },
-      "version": {
-        "type": "number"
-      }
-    },
-    "required": [
-      "id",
-      "incarnation",
-      "version"
-    ]
-  },
-  "MatchExplanation_90": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "candidateCaseRef": {
-        "$ref": "#/definitions/__type_91"
-      },
-      "matchedCriteria": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "currentDifferences": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "sourceStates": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/Shape_92"
-        }
-      },
-      "limitations": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      }
-    },
-    "required": [
-      "candidateCaseRef",
-      "matchedCriteria",
-      "currentDifferences",
-      "sourceStates",
-      "limitations"
     ]
   },
   "__type_91": {
@@ -2782,7 +2843,67 @@ const definitions = {
       "version"
     ]
   },
-  "Shape_92": {
+  "MatchExplanation_92": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "candidateCaseRef": {
+        "$ref": "#/definitions/__type_93"
+      },
+      "matchedCriteria": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "currentDifferences": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "sourceStates": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/Shape_94"
+        }
+      },
+      "limitations": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "required": [
+      "candidateCaseRef",
+      "matchedCriteria",
+      "currentDifferences",
+      "sourceStates",
+      "limitations"
+    ]
+  },
+  "__type_93": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "incarnation": {
+        "type": "string"
+      },
+      "version": {
+        "type": "number"
+      }
+    },
+    "required": [
+      "id",
+      "incarnation",
+      "version"
+    ]
+  },
+  "Shape_94": {
     "anyOf": [
       {
         "const": "missing"
@@ -2810,26 +2931,26 @@ const definitions = {
       }
     ]
   },
-  "BusinessEvidenceResolution_93": {
+  "BusinessEvidenceResolution_95": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "state": {
-        "$ref": "#/definitions/Shape_92"
+        "$ref": "#/definitions/Shape_94"
       },
       "ref": {
         "$ref": "#/definitions/BusinessEvidenceRef_4"
       },
       "currentRef": {
-        "$ref": "#/definitions/Shape_94"
+        "$ref": "#/definitions/Shape_96"
       },
       "authorizedProjection": {
-        "$ref": "#/definitions/Shape_95"
+        "$ref": "#/definitions/Shape_97"
       },
       "differences": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_102"
+          "$ref": "#/definitions/__type_106"
         }
       },
       "accessRevision": {
@@ -2846,7 +2967,7 @@ const definitions = {
       "checkedAt"
     ]
   },
-  "Shape_94": {
+  "Shape_96": {
     "anyOf": [
       {
         "$ref": "#/definitions/Shape_5"
@@ -2868,23 +2989,23 @@ const definitions = {
       }
     ]
   },
-  "Shape_95": {
+  "Shape_97": {
     "anyOf": [
       {
         "$ref": "#/definitions/DomainProjection_31"
       },
       {
-        "$ref": "#/definitions/DocumentEvidence_80"
+        "$ref": "#/definitions/DocumentEvidence_82"
       },
       {
-        "$ref": "#/definitions/CaseLedgerEvent_96"
+        "$ref": "#/definitions/CaseLedgerEvent_98"
       },
       {
-        "$ref": "#/definitions/AuthorizedPolicyProjection_100"
+        "$ref": "#/definitions/AuthorizedPolicyProjection_102"
       }
     ]
   },
-  "CaseLedgerEvent_96": {
+  "CaseLedgerEvent_98": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2892,10 +3013,10 @@ const definitions = {
         "type": "string"
       },
       "caseRef": {
-        "$ref": "#/definitions/__type_97"
+        "$ref": "#/definitions/__type_99"
       },
       "kind": {
-        "$ref": "#/definitions/Shape_98"
+        "$ref": "#/definitions/Shape_100"
       },
       "principalRef": {
         "type": "string"
@@ -2919,7 +3040,7 @@ const definitions = {
         }
       },
       "lifecycleState": {
-        "$ref": "#/definitions/Shape_99"
+        "$ref": "#/definitions/Shape_101"
       },
       "rationale": {
         "type": "string"
@@ -2948,7 +3069,7 @@ const definitions = {
       "outputDigest"
     ]
   },
-  "__type_97": {
+  "__type_99": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2968,7 +3089,7 @@ const definitions = {
       "version"
     ]
   },
-  "Shape_98": {
+  "Shape_100": {
     "anyOf": [
       {
         "const": "analysis-accepted"
@@ -2981,7 +3102,7 @@ const definitions = {
       }
     ]
   },
-  "Shape_99": {
+  "Shape_101": {
     "anyOf": [
       {
         "const": "draft"
@@ -3009,12 +3130,12 @@ const definitions = {
       }
     ]
   },
-  "AuthorizedPolicyProjection_100": {
+  "AuthorizedPolicyProjection_102": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "context": {
-        "$ref": "#/definitions/__type_101"
+        "$ref": "#/definitions/Shape_103"
       },
       "policyRef": {
         "$ref": "#/definitions/Shape_21"
@@ -3064,7 +3185,17 @@ const definitions = {
       "dependencies"
     ]
   },
-  "__type_101": {
+  "Shape_103": {
+    "anyOf": [
+      {
+        "$ref": "#/definitions/Shape_104"
+      },
+      {
+        "$ref": "#/definitions/Shape_105"
+      }
+    ]
+  },
+  "Shape_104": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3077,13 +3208,16 @@ const definitions = {
       "principalRef": {
         "type": "string"
       },
-      "profileId": {
-        "type": "string"
-      },
       "policyVersion": {
         "type": "string"
       },
       "accessRevision": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "native"
+      },
+      "profileId": {
         "type": "string"
       }
     },
@@ -3091,12 +3225,48 @@ const definitions = {
       "installationId",
       "projectId",
       "principalRef",
-      "profileId",
       "policyVersion",
-      "accessRevision"
+      "accessRevision",
+      "kind",
+      "profileId"
     ]
   },
-  "__type_102": {
+  "Shape_105": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "installationId": {
+        "type": "string"
+      },
+      "projectId": {
+        "type": "string"
+      },
+      "principalRef": {
+        "type": "string"
+      },
+      "policyVersion": {
+        "type": "string"
+      },
+      "accessRevision": {
+        "type": "string"
+      },
+      "kind": {
+        "const": "ui"
+      },
+      "profileId": {
+        "not": {}
+      }
+    },
+    "required": [
+      "installationId",
+      "projectId",
+      "principalRef",
+      "policyVersion",
+      "accessRevision",
+      "kind"
+    ]
+  },
+  "__type_106": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3116,17 +3286,17 @@ const definitions = {
       "after"
     ]
   },
-  "ScenarioResult_103": {
+  "ScenarioResult_107": {
     "anyOf": [
       {
-        "$ref": "#/definitions/Shape_104"
+        "$ref": "#/definitions/Shape_108"
       },
       {
-        "$ref": "#/definitions/Shape_109"
+        "$ref": "#/definitions/Shape_113"
       }
     ]
   },
-  "Shape_104": {
+  "Shape_108": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3170,7 +3340,7 @@ const definitions = {
         "const": "complete"
       },
       "costCoverage": {
-        "$ref": "#/definitions/Shape_105"
+        "$ref": "#/definitions/Shape_109"
       },
       "knownSubtotal": {
         "type": "number"
@@ -3194,7 +3364,7 @@ const definitions = {
       "total"
     ]
   },
-  "Shape_105": {
+  "Shape_109": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3234,7 +3404,7 @@ const definitions = {
       "entries": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/Shape_106"
+          "$ref": "#/definitions/Shape_110"
         }
       },
       "derivedMissingCategoryIds": {
@@ -3258,17 +3428,17 @@ const definitions = {
       "derivedMissingCategoryIds"
     ]
   },
-  "Shape_106": {
+  "Shape_110": {
     "anyOf": [
       {
-        "$ref": "#/definitions/__type_107"
+        "$ref": "#/definitions/__type_111"
       },
       {
-        "$ref": "#/definitions/__type_108"
+        "$ref": "#/definitions/__type_112"
       }
     ]
   },
-  "__type_107": {
+  "__type_111": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3302,7 +3472,7 @@ const definitions = {
       "scopeNote"
     ]
   },
-  "__type_108": {
+  "__type_112": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3329,7 +3499,7 @@ const definitions = {
       "evidenceRefs"
     ]
   },
-  "Shape_109": {
+  "Shape_113": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3370,10 +3540,10 @@ const definitions = {
         }
       },
       "comparisonStatus": {
-        "$ref": "#/definitions/Shape_48"
+        "$ref": "#/definitions/Shape_49"
       },
       "costCoverage": {
-        "$ref": "#/definitions/CostCoverageAssessment_110"
+        "$ref": "#/definitions/CostCoverageAssessment_114"
       },
       "knownSubtotal": {
         "$ref": "#/definitions/Shape_35"
@@ -3397,17 +3567,17 @@ const definitions = {
       "total"
     ]
   },
-  "CostCoverageAssessment_110": {
+  "CostCoverageAssessment_114": {
     "anyOf": [
       {
-        "$ref": "#/definitions/Shape_105"
+        "$ref": "#/definitions/Shape_109"
       },
       {
-        "$ref": "#/definitions/Shape_111"
+        "$ref": "#/definitions/Shape_115"
       }
     ]
   },
-  "Shape_111": {
+  "Shape_115": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3442,12 +3612,12 @@ const definitions = {
         }
       },
       "coverageState": {
-        "$ref": "#/definitions/Shape_112"
+        "$ref": "#/definitions/Shape_116"
       },
       "entries": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/CostCoverageEntry_113"
+          "$ref": "#/definitions/CostCoverageEntry_117"
         }
       },
       "derivedMissingCategoryIds": {
@@ -3471,7 +3641,7 @@ const definitions = {
       "derivedMissingCategoryIds"
     ]
   },
-  "Shape_112": {
+  "Shape_116": {
     "anyOf": [
       {
         "const": "unavailable"
@@ -3481,20 +3651,20 @@ const definitions = {
       }
     ]
   },
-  "CostCoverageEntry_113": {
+  "CostCoverageEntry_117": {
     "anyOf": [
       {
-        "$ref": "#/definitions/__type_107"
+        "$ref": "#/definitions/__type_111"
       },
       {
-        "$ref": "#/definitions/__type_108"
+        "$ref": "#/definitions/__type_112"
       },
       {
-        "$ref": "#/definitions/__type_114"
+        "$ref": "#/definitions/__type_118"
       }
     ]
   },
-  "__type_114": {
+  "__type_118": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3517,20 +3687,20 @@ const definitions = {
       "reason"
     ]
   },
-  "AuthorizedCaseProjection_115": {
+  "AuthorizedCaseProjection_119": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "context": {
-        "$ref": "#/definitions/__type_101"
+        "$ref": "#/definitions/Shape_103"
       },
       "case": {
-        "$ref": "#/definitions/Shape_116"
+        "$ref": "#/definitions/Shape_120"
       },
       "events": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/CaseLedgerEvent_96"
+          "$ref": "#/definitions/CaseLedgerEvent_98"
         }
       },
       "evidenceRefs": {
@@ -3551,12 +3721,12 @@ const definitions = {
       "checkedAt"
     ]
   },
-  "Shape_116": {
+  "Shape_120": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "state": {
-        "$ref": "#/definitions/Shape_99"
+        "$ref": "#/definitions/Shape_101"
       },
       "id": {
         "type": "string"
@@ -3579,7 +3749,7 @@ const definitions = {
       "criteria": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_117"
+          "$ref": "#/definitions/__type_121"
         }
       },
       "participants": {
@@ -3597,37 +3767,43 @@ const definitions = {
       "alternatives": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_118"
+          "$ref": "#/definitions/__type_122"
         }
       },
       "assumptions": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_119"
+          "$ref": "#/definitions/__type_123"
         }
       },
       "questions": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_121"
+          "$ref": "#/definitions/__type_125"
         }
       },
       "choices": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/ChoiceRecord_123"
+          "$ref": "#/definitions/ChoiceRecord_127"
+        }
+      },
+      "ledger": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/CaseLedgerEvent_98"
         }
       },
       "preparedChanges": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/PreparedChangeView_125"
+          "$ref": "#/definitions/PreparedChangeView_131"
         }
       },
       "receipts": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/CommandReceiptView_127"
+          "$ref": "#/definitions/CommandReceiptView_133"
         }
       }
     },
@@ -3646,11 +3822,12 @@ const definitions = {
       "assumptions",
       "questions",
       "choices",
+      "ledger",
       "preparedChanges",
       "receipts"
     ]
   },
-  "__type_117": {
+  "__type_121": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3670,7 +3847,7 @@ const definitions = {
       "required"
     ]
   },
-  "__type_118": {
+  "__type_122": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3684,7 +3861,7 @@ const definitions = {
         "type": "string"
       },
       "result": {
-        "$ref": "#/definitions/ScenarioResult_103"
+        "$ref": "#/definitions/ScenarioResult_107"
       }
     },
     "required": [
@@ -3694,7 +3871,7 @@ const definitions = {
       "result"
     ]
   },
-  "__type_119": {
+  "__type_123": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3711,7 +3888,7 @@ const definitions = {
         }
       },
       "state": {
-        "$ref": "#/definitions/Shape_120"
+        "$ref": "#/definitions/Shape_124"
       }
     },
     "required": [
@@ -3721,7 +3898,7 @@ const definitions = {
       "state"
     ]
   },
-  "Shape_120": {
+  "Shape_124": {
     "anyOf": [
       {
         "const": "confirmed"
@@ -3734,7 +3911,7 @@ const definitions = {
       }
     ]
   },
-  "__type_121": {
+  "__type_125": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3745,7 +3922,7 @@ const definitions = {
         "type": "string"
       },
       "state": {
-        "$ref": "#/definitions/Shape_122"
+        "$ref": "#/definitions/Shape_126"
       },
       "answerRef": {
         "type": "string"
@@ -3757,7 +3934,7 @@ const definitions = {
       "state"
     ]
   },
-  "Shape_122": {
+  "Shape_126": {
     "anyOf": [
       {
         "const": "open"
@@ -3767,7 +3944,17 @@ const definitions = {
       }
     ]
   },
-  "ChoiceRecord_123": {
+  "ChoiceRecord_127": {
+    "anyOf": [
+      {
+        "$ref": "#/definitions/Shape_128"
+      },
+      {
+        "$ref": "#/definitions/Shape_130"
+      }
+    ]
+  },
+  "Shape_128": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3783,12 +3970,6 @@ const definitions = {
       "basisVersion": {
         "type": "number"
       },
-      "costCoverage": {
-        "$ref": "#/definitions/CostCoverageAssessment_110"
-      },
-      "comparisonStatus": {
-        "$ref": "#/definitions/Shape_53"
-      },
       "criteria": {
         "type": "array",
         "items": {
@@ -3798,7 +3979,7 @@ const definitions = {
       "values": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_124"
+          "$ref": "#/definitions/__type_129"
         }
       },
       "evidenceRefs": {
@@ -3815,6 +3996,12 @@ const definitions = {
       },
       "at": {
         "type": "string"
+      },
+      "comparisonStatus": {
+        "const": "complete"
+      },
+      "costCoverage": {
+        "$ref": "#/definitions/Shape_109"
       }
     },
     "required": [
@@ -3822,17 +4009,17 @@ const definitions = {
       "alternativeId",
       "alternativeVersion",
       "basisVersion",
-      "costCoverage",
-      "comparisonStatus",
       "criteria",
       "values",
       "evidenceRefs",
       "principalRef",
       "reason",
-      "at"
+      "at",
+      "comparisonStatus",
+      "costCoverage"
     ]
   },
-  "__type_124": {
+  "__type_129": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3860,12 +4047,77 @@ const definitions = {
       "horizon"
     ]
   },
-  "PreparedChangeView_125": {
+  "Shape_130": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "alternativeId": {
+        "type": "string"
+      },
+      "alternativeVersion": {
+        "type": "number"
+      },
+      "basisVersion": {
+        "type": "number"
+      },
+      "criteria": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "values": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/__type_129"
+        }
+      },
+      "evidenceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_4"
+        }
+      },
+      "principalRef": {
+        "type": "string"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "at": {
+        "type": "string"
+      },
+      "comparisonStatus": {
+        "$ref": "#/definitions/Shape_49"
+      },
+      "costCoverage": {
+        "$ref": "#/definitions/CostCoverageAssessment_114"
+      }
+    },
+    "required": [
+      "id",
+      "alternativeId",
+      "alternativeVersion",
+      "basisVersion",
+      "criteria",
+      "values",
+      "evidenceRefs",
+      "principalRef",
+      "reason",
+      "at",
+      "comparisonStatus",
+      "costCoverage"
+    ]
+  },
+  "PreparedChangeView_131": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "state": {
-        "$ref": "#/definitions/Shape_126"
+        "$ref": "#/definitions/Shape_132"
       },
       "id": {
         "type": "string"
@@ -3883,7 +4135,7 @@ const definitions = {
         "type": "number"
       },
       "preview": {
-        "$ref": "#/definitions/ScenarioResult_103"
+        "$ref": "#/definitions/ScenarioResult_107"
       },
       "requiredAuthority": {
         "type": "array",
@@ -3914,7 +4166,7 @@ const definitions = {
       "operationRef"
     ]
   },
-  "Shape_126": {
+  "Shape_132": {
     "anyOf": [
       {
         "const": "failed"
@@ -3936,7 +4188,7 @@ const definitions = {
       }
     ]
   },
-  "CommandReceiptView_127": {
+  "CommandReceiptView_133": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3965,7 +4217,7 @@ const definitions = {
         "type": "string"
       },
       "status": {
-        "$ref": "#/definitions/Shape_128"
+        "$ref": "#/definitions/Shape_134"
       },
       "resultRef": {
         "type": "string"
@@ -3990,7 +4242,7 @@ const definitions = {
       "errors"
     ]
   },
-  "Shape_128": {
+  "Shape_134": {
     "anyOf": [
       {
         "const": "failed"
@@ -4009,7 +4261,7 @@ const definitions = {
       }
     ]
   },
-  "__type_129": {
+  "__type_135": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4017,7 +4269,7 @@ const definitions = {
         "type": "string"
       },
       "proposal": {
-        "$ref": "#/definitions/__type_118"
+        "$ref": "#/definitions/__type_122"
       },
       "domainApplied": {
         "const": false
@@ -4029,14 +4281,14 @@ const definitions = {
       "domainApplied"
     ]
   },
-  "__type_130": {
+  "__type_136": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "receipts": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/CommandReceiptView_127"
+          "$ref": "#/definitions/CommandReceiptView_133"
         }
       }
     },
@@ -4044,14 +4296,14 @@ const definitions = {
       "receipts"
     ]
   },
-  "__type_131": {
+  "__type_137": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "items": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_132"
+          "$ref": "#/definitions/__type_138"
         }
       }
     },
@@ -4059,7 +4311,7 @@ const definitions = {
       "items"
     ]
   },
-  "__type_132": {
+  "__type_138": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4086,7 +4338,7 @@ const definitions = {
       "ownerRef"
     ]
   },
-  "__type_133": {
+  "__type_139": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4103,7 +4355,7 @@ const definitions = {
         }
       },
       "state": {
-        "$ref": "#/definitions/Shape_134"
+        "$ref": "#/definitions/Shape_140"
       }
     },
     "required": [
@@ -4113,7 +4365,7 @@ const definitions = {
       "state"
     ]
   },
-  "Shape_134": {
+  "Shape_140": {
     "anyOf": [
       {
         "const": "confirmed"
@@ -4126,14 +4378,14 @@ const definitions = {
       }
     ]
   },
-  "__type_135": {
+  "__type_141": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "relations": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_136"
+          "$ref": "#/definitions/__type_142"
         }
       }
     },
@@ -4141,7 +4393,7 @@ const definitions = {
       "relations"
     ]
   },
-  "__type_136": {
+  "__type_142": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4180,7 +4432,7 @@ const definitions = {
       "evidenceRefs"
     ]
   },
-  "__type_137": {
+  "__type_143": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4210,7 +4462,7 @@ const definitions = {
       "domainApplied"
     ]
   },
-  "ImportManifest_138": {
+  "ImportManifest_144": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4238,17 +4490,17 @@ const definitions = {
       "commands": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/PreparedCommandView_139"
+          "$ref": "#/definitions/PreparedCommandView_145"
         }
       },
       "issues": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_140"
+          "$ref": "#/definitions/__type_146"
         }
       },
       "state": {
-        "$ref": "#/definitions/Shape_141"
+        "$ref": "#/definitions/Shape_147"
       },
       "domainApplied": {
         "type": "boolean"
@@ -4256,7 +4508,7 @@ const definitions = {
       "receipts": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/CommandReceiptView_127"
+          "$ref": "#/definitions/CommandReceiptView_133"
         }
       }
     },
@@ -4274,7 +4526,7 @@ const definitions = {
       "receipts"
     ]
   },
-  "PreparedCommandView_139": {
+  "PreparedCommandView_145": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4321,7 +4573,7 @@ const definitions = {
       "operationRef"
     ]
   },
-  "__type_140": {
+  "__type_146": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4341,7 +4593,7 @@ const definitions = {
       "reason"
     ]
   },
-  "Shape_141": {
+  "Shape_147": {
     "anyOf": [
       {
         "const": "stale"
@@ -4357,7 +4609,7 @@ const definitions = {
       }
     ]
   },
-  "__type_142": {
+  "__type_148": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4390,7 +4642,7 @@ const definitions = {
       "gaps"
     ]
   },
-  "AuthorizedArtifact_143": {
+  "AuthorizedArtifact_149": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4421,14 +4673,14 @@ const definitions = {
       "accessRevision"
     ]
   },
-  "__type_144": {
+  "__type_150": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "resolutions": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/BusinessEvidenceResolution_93"
+          "$ref": "#/definitions/BusinessEvidenceResolution_95"
         }
       },
       "accessRevision": {
@@ -4440,14 +4692,14 @@ const definitions = {
       "accessRevision"
     ]
   },
-  "__type_145": {
+  "__type_151": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "matches": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_146"
+          "$ref": "#/definitions/__type_152"
         }
       },
       "limitations": {
@@ -4462,7 +4714,7 @@ const definitions = {
       "limitations"
     ]
   },
-  "__type_146": {
+  "__type_152": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4482,14 +4734,14 @@ const definitions = {
       "lexicalScore"
     ]
   },
-  "__type_147": {
+  "__type_153": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "resolutions": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/BusinessEvidenceResolution_93"
+          "$ref": "#/definitions/BusinessEvidenceResolution_95"
         }
       }
     },
@@ -4497,14 +4749,14 @@ const definitions = {
       "resolutions"
     ]
   },
-  "AuthorizedRoutineCatalog_148": {
+  "AuthorizedRoutineCatalog_154": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "recipes": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_149"
+          "$ref": "#/definitions/__type_155"
         }
       },
       "limitations": {
@@ -4519,7 +4771,7 @@ const definitions = {
       "limitations"
     ]
   },
-  "__type_149": {
+  "__type_155": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4550,7 +4802,7 @@ const definitions = {
       "writeScope"
     ]
   },
-  "RoutineResult_150": {
+  "RoutineResult_156": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4567,7 +4819,7 @@ const definitions = {
         "type": "string"
       },
       "admission": {
-        "$ref": "#/definitions/Shape_151"
+        "$ref": "#/definitions/Shape_157"
       },
       "runRef": {
         "type": "string"
@@ -4611,7 +4863,7 @@ const definitions = {
       "pending"
     ]
   },
-  "Shape_151": {
+  "Shape_157": {
     "anyOf": [
       {
         "const": "unavailable"
@@ -4633,7 +4885,7 @@ const definitions = {
       }
     ]
   },
-  "__type_152": {
+  "__type_158": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4650,7 +4902,7 @@ const definitions = {
         "type": "string"
       },
       "state": {
-        "$ref": "#/definitions/Shape_153"
+        "$ref": "#/definitions/Shape_159"
       },
       "admissionRef": {
         "type": "string"
@@ -4663,7 +4915,7 @@ const definitions = {
       "state"
     ]
   },
-  "Shape_153": {
+  "Shape_159": {
     "anyOf": [
       {
         "const": "unavailable"
@@ -4684,65 +4936,65 @@ export const sfContributionOutputSchemas = {
   "DecisionBrief": { ...{"$ref":"#/definitions/DecisionBrief_27"}, definitions },
   "QuestionProposal": { ...{"$ref":"#/definitions/QuestionProposal_28"}, definitions },
   "FinancialAnalysis": { ...{"$ref":"#/definitions/FinancialAnalysis_29"}, definitions },
-  "ScenarioComparison": { ...{"$ref":"#/definitions/ScenarioComparison_43"}, definitions },
-  "SensitivityResult": { ...{"$ref":"#/definitions/SensitivityResult_50"}, definitions },
-  "CommercialComparison": { ...{"$ref":"#/definitions/CommercialComparison_54"}, definitions },
-  "CommercialGap": { ...{"$ref":"#/definitions/CommercialGap_56"}, definitions },
-  "EvidenceCandidate": { ...{"$ref":"#/definitions/EvidenceCandidate_58"}, definitions },
-  "PreparedChangeSet": { ...{"$ref":"#/definitions/PreparedChangeSet_60"}, definitions },
-  "DossierDraft": { ...{"$ref":"#/definitions/DossierDraft_62"}, definitions },
-  "DeliveryAssessment": { ...{"$ref":"#/definitions/DeliveryAssessment_63"}, definitions },
-  "DependencyConflict": { ...{"$ref":"#/definitions/DependencyConflict_66"}, definitions },
-  "PortfolioComparison": { ...{"$ref":"#/definitions/PortfolioResult_68"}, definitions },
-  "ReconsiderationProposal": { ...{"$ref":"#/definitions/ReconsiderationProposal_74"}, definitions },
-  "CritiqueReport": { ...{"$ref":"#/definitions/CritiqueReport_77"}, definitions },
+  "ScenarioComparison": { ...{"$ref":"#/definitions/ScenarioComparison_51"}, definitions },
+  "SensitivityResult": { ...{"$ref":"#/definitions/SensitivityResult_52"}, definitions },
+  "CommercialComparison": { ...{"$ref":"#/definitions/CommercialComparison_56"}, definitions },
+  "CommercialGap": { ...{"$ref":"#/definitions/CommercialGap_58"}, definitions },
+  "EvidenceCandidate": { ...{"$ref":"#/definitions/EvidenceCandidate_60"}, definitions },
+  "PreparedChangeSet": { ...{"$ref":"#/definitions/PreparedChangeSet_62"}, definitions },
+  "DossierDraft": { ...{"$ref":"#/definitions/DossierDraft_64"}, definitions },
+  "DeliveryAssessment": { ...{"$ref":"#/definitions/DeliveryAssessment_65"}, definitions },
+  "DependencyConflict": { ...{"$ref":"#/definitions/DependencyConflict_68"}, definitions },
+  "PortfolioComparison": { ...{"$ref":"#/definitions/PortfolioResult_70"}, definitions },
+  "ReconsiderationProposal": { ...{"$ref":"#/definitions/ReconsiderationProposal_76"}, definitions },
+  "CritiqueReport": { ...{"$ref":"#/definitions/CritiqueReport_79"}, definitions },
   "UnresolvedCondition": { ...{"$ref":"#/definitions/UnresolvedCondition_23"}, definitions },
-  "ClaimIssue": { ...{"$ref":"#/definitions/ClaimIssue_78"}, definitions },
-  "DocumentEvidence": { ...{"$ref":"#/definitions/DocumentEvidence_80"}, definitions },
-  "ContextualBIProposal": { ...{"$ref":"#/definitions/ContextualBIProposal_83"}, definitions },
-  "MeetingMaterialProposal": { ...{"$ref":"#/definitions/MeetingMaterialProposal_85"}, definitions },
-  "CaseRecall": { ...{"$ref":"#/definitions/CaseRecall_87"}, definitions },
-  "MatchExplanation": { ...{"$ref":"#/definitions/MatchExplanation_90"}, definitions },
+  "ClaimIssue": { ...{"$ref":"#/definitions/ClaimIssue_80"}, definitions },
+  "DocumentEvidence": { ...{"$ref":"#/definitions/DocumentEvidence_82"}, definitions },
+  "ContextualBIProposal": { ...{"$ref":"#/definitions/ContextualBIProposal_85"}, definitions },
+  "MeetingMaterialProposal": { ...{"$ref":"#/definitions/MeetingMaterialProposal_87"}, definitions },
+  "CaseRecall": { ...{"$ref":"#/definitions/CaseRecall_89"}, definitions },
+  "MatchExplanation": { ...{"$ref":"#/definitions/MatchExplanation_92"}, definitions },
 } as const
 
 export const sfOperationOutputSchemas = {
   "sf_dashboard_read": { ...{"$ref":"#/definitions/DomainProjection_31"}, definitions },
   "sf_kpi_explain": { ...{"$ref":"#/definitions/DomainProjection_31"}, definitions },
   "sf_bi_view": { ...{"$ref":"#/definitions/DomainProjection_31"}, definitions },
-  "sf_source_get": { ...{"$ref":"#/definitions/BusinessEvidenceResolution_93"}, definitions },
+  "sf_source_get": { ...{"$ref":"#/definitions/BusinessEvidenceResolution_95"}, definitions },
   "sf_forecast_compare": { ...{"$ref":"#/definitions/FinancialAnalysis_29"}, definitions },
-  "sf_scenario_simulate": { ...{"$ref":"#/definitions/ScenarioResult_103"}, definitions },
-  "sf_scenario_compare": { ...{"$ref":"#/definitions/ScenarioComparison_43"}, definitions },
-  "sf_sensitivity_evaluate": { ...{"$ref":"#/definitions/SensitivityResult_50"}, definitions },
-  "sf_portfolio_evaluate": { ...{"$ref":"#/definitions/PortfolioResult_68"}, definitions },
+  "sf_scenario_simulate": { ...{"$ref":"#/definitions/ScenarioResult_107"}, definitions },
+  "sf_scenario_compare": { ...{"$ref":"#/definitions/ScenarioComparison_51"}, definitions },
+  "sf_sensitivity_evaluate": { ...{"$ref":"#/definitions/SensitivityResult_52"}, definitions },
+  "sf_portfolio_evaluate": { ...{"$ref":"#/definitions/PortfolioResult_70"}, definitions },
   "sf_request_read": { ...{"$ref":"#/definitions/DomainProjection_31"}, definitions },
   "sf_supplier_read": { ...{"$ref":"#/definitions/DomainProjection_31"}, definitions },
   "sf_contract_read": { ...{"$ref":"#/definitions/DomainProjection_31"}, definitions },
-  "sf_sourcing_compare": { ...{"$ref":"#/definitions/CommercialComparison_54"}, definitions },
-  "sf_case_read": { ...{"$ref":"#/definitions/AuthorizedCaseProjection_115"}, definitions },
+  "sf_sourcing_compare": { ...{"$ref":"#/definitions/CommercialComparison_56"}, definitions },
+  "sf_case_read": { ...{"$ref":"#/definitions/AuthorizedCaseProjection_119"}, definitions },
   "sf_case_draft": { ...{"$ref":"#/definitions/IntentFrame_1"}, definitions },
-  "sf_alternative_draft": { ...{"$ref":"#/definitions/__type_129"}, definitions },
-  "sf_change_prepare": { ...{"$ref":"#/definitions/PreparedChangeSet_60"}, definitions },
-  "sf_receipt_get": { ...{"$ref":"#/definitions/__type_130"}, definitions },
-  "sf_work_list": { ...{"$ref":"#/definitions/__type_131"}, definitions },
+  "sf_alternative_draft": { ...{"$ref":"#/definitions/__type_135"}, definitions },
+  "sf_change_prepare": { ...{"$ref":"#/definitions/PreparedChangeSet_62"}, definitions },
+  "sf_receipt_get": { ...{"$ref":"#/definitions/__type_136"}, definitions },
+  "sf_work_list": { ...{"$ref":"#/definitions/__type_137"}, definitions },
   "sf_question_prepare": { ...{"$ref":"#/definitions/QuestionProposal_28"}, definitions },
-  "sf_answer_read": { ...{"$ref":"#/definitions/__type_133"}, definitions },
-  "sf_relation_read": { ...{"$ref":"#/definitions/__type_135"}, definitions },
-  "sf_handoff_prepare": { ...{"$ref":"#/definitions/__type_137"}, definitions },
-  "sf_document_extract": { ...{"$ref":"#/definitions/DocumentEvidence_80"}, definitions },
-  "sf_import_preview": { ...{"$ref":"#/definitions/ImportManifest_138"}, definitions },
-  "sf_review_prepare": { ...{"$ref":"#/definitions/__type_142"}, definitions },
-  "sf_report_prepare": { ...{"$ref":"#/definitions/MeetingMaterialProposal_85"}, definitions },
-  "sf_artifact_get": { ...{"$ref":"#/definitions/AuthorizedArtifact_143"}, definitions },
-  "sf_context_get": { ...{"$ref":"#/definitions/__type_144"}, definitions },
-  "sf_knowledge_search": { ...{"$ref":"#/definitions/__type_145"}, definitions },
-  "sf_evidence_get": { ...{"$ref":"#/definitions/BusinessEvidenceResolution_93"}, definitions },
-  "sf_decision_recall": { ...{"$ref":"#/definitions/CaseRecall_87"}, definitions },
-  "sf_freshness_check": { ...{"$ref":"#/definitions/__type_147"}, definitions },
-  "sf_routine_catalog": { ...{"$ref":"#/definitions/AuthorizedRoutineCatalog_148"}, definitions },
-  "sf_routine_prepare": { ...{"$ref":"#/definitions/RoutineResult_150"}, definitions },
-  "sf_routine_run": { ...{"$ref":"#/definitions/RoutineResult_150"}, definitions },
-  "sf_routine_status": { ...{"$ref":"#/definitions/RoutineResult_150"}, definitions },
-  "sf_routine_result": { ...{"$ref":"#/definitions/RoutineResult_150"}, definitions },
-  "sf_watch_prepare": { ...{"$ref":"#/definitions/__type_152"}, definitions },
+  "sf_answer_read": { ...{"$ref":"#/definitions/__type_139"}, definitions },
+  "sf_relation_read": { ...{"$ref":"#/definitions/__type_141"}, definitions },
+  "sf_handoff_prepare": { ...{"$ref":"#/definitions/__type_143"}, definitions },
+  "sf_document_extract": { ...{"$ref":"#/definitions/DocumentEvidence_82"}, definitions },
+  "sf_import_preview": { ...{"$ref":"#/definitions/ImportManifest_144"}, definitions },
+  "sf_review_prepare": { ...{"$ref":"#/definitions/__type_148"}, definitions },
+  "sf_report_prepare": { ...{"$ref":"#/definitions/MeetingMaterialProposal_87"}, definitions },
+  "sf_artifact_get": { ...{"$ref":"#/definitions/AuthorizedArtifact_149"}, definitions },
+  "sf_context_get": { ...{"$ref":"#/definitions/__type_150"}, definitions },
+  "sf_knowledge_search": { ...{"$ref":"#/definitions/__type_151"}, definitions },
+  "sf_evidence_get": { ...{"$ref":"#/definitions/BusinessEvidenceResolution_95"}, definitions },
+  "sf_decision_recall": { ...{"$ref":"#/definitions/CaseRecall_89"}, definitions },
+  "sf_freshness_check": { ...{"$ref":"#/definitions/__type_153"}, definitions },
+  "sf_routine_catalog": { ...{"$ref":"#/definitions/AuthorizedRoutineCatalog_154"}, definitions },
+  "sf_routine_prepare": { ...{"$ref":"#/definitions/RoutineResult_156"}, definitions },
+  "sf_routine_run": { ...{"$ref":"#/definitions/RoutineResult_156"}, definitions },
+  "sf_routine_status": { ...{"$ref":"#/definitions/RoutineResult_156"}, definitions },
+  "sf_routine_result": { ...{"$ref":"#/definitions/RoutineResult_156"}, definitions },
+  "sf_watch_prepare": { ...{"$ref":"#/definitions/__type_158"}, definitions },
 } as const

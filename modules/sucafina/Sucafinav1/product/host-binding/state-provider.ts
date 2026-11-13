@@ -19,7 +19,7 @@ export function createSfProductState(input: {
         const authority = await input.authorize(request, snapshot, namespace, "read")
         if (!authority) return { commit: false, value: { status: "denied", reason: "product-access-unavailable" } }
         const state = readSfState(snapshot)
-        if (!state) return { commit: false, value: { status: "unavailable", reason: "product-state-uninitialized-or-invalid" } }
+        if (!state) return { commit: false, value: { status: "unavailable", reason: snapshot.data.__sfProductV1 === undefined ? "product-state-uninitialized" : "invalid-product-state" } }
         const value = await read(structuredClone(state), authority)
         if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
         const current = await input.authorize(request, snapshot, namespace, "read")

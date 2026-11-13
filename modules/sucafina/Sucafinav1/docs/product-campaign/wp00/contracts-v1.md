@@ -31,3 +31,9 @@ Os schemas das 24 contribuições e das 39 saídas são gerados dos tipos por `b
 As dependências adicionadas em `@orchestra/sucafina` são necessárias às portas já previstas: `@orchestra/core` e `effect` para o host nativo, `@modelcontextprotocol/sdk` 1.32.0 para o par MCP em memória, `@orchestra/atlas-boundary` para os módulos canônicos e `@orchestra/rag-studio` para documentos. Os três pacotes Orchestra são workspaces existentes; Effect usa o catálogo existente e o SDK usa a versão já pinada pelo Core. Nenhum cliente ou serviço global é instalado.
 
 O corpus financeiro v2 usa os vetores FX01/FX03 explicitamente fornecidos: budget 600000, actual fechado 400000 e forecast aberto 190000, com a licença de 72000 já incluída em novembro. Substituí-la por 84000/78000 produz outlook 602000/596000. O v1 de staging foi rejeitado para consumo; volume e medições só recebem aceite após os consumidores e provas correspondentes.
+
+## Consumer corrections before G0
+
+DecisionCase stores its append-only CaseLedgerEvent ledger; read returns AuthorizedCaseProjection. Its context discriminates native (profileId required) from UI (no resident profile fabricated). The case factory receives a host-resolved creation target tied to the current installation and a privately validated operation identity. Only an explicitly uninitialized state admits section version zero; invalid stored state fails closed. Case membership and each current evidence reference are authorized before disclosure and rechecked at egress without nested cross-surface transactions.
+
+Directory lookup returns authorized IDs only. Public backups, legacy projections, dataset conflicts and audit rendering exclude __sfProductV1; imported private product metadata is refused and existing private state survives ordinary business dataset replacement. These boundaries require hosted acceptance; this document is not their execution proof.
