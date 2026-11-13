@@ -2,7 +2,7 @@
   "campaign": "sf2h-integral-20261112",
   "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
   "T0": "2026-11-13T04:01:10Z",
-  "revision": 18,
+  "revision": 19,
   "state": "CONTINUING_LATE",
   "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
   "canonical_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
@@ -1050,7 +1050,7 @@
       "host_version": "0.168.0"
     }
   ],
-  "checkpoint_at": "2026-11-13T10:04:51.943098+00:00",
+  "checkpoint_at": "2026-11-13T10:37:44.133434+00:00",
   "pending_outputs": {
     "S4-B": {
       "head": "87cf6bc935",
@@ -1087,9 +1087,9 @@
     "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
     "modules/sucafina/Sucafinav1/test/product/wp10/integration/ui-authority.test.ts"
   ],
-  "updated_at": "2026-11-13T10:04:51.943098+00:00",
-  "accepted_product_head": "762d35f5db79f41a4c12606b6622815f9860aeac",
-  "accepted_product_tree": "d7cda37bd52ed1c8a28e23eb64b368e8e8b1a774",
+  "updated_at": "2026-11-13T10:37:44.133434+00:00",
+  "accepted_product_head": "13aa4346f5137dd290a25a1dd0756eb0228c1cc7",
+  "accepted_product_tree": "fc8e4db7f02b8a34733539d5cdb1560c094030b8",
   "g0_revision": 6,
   "g0_release_sha256": "a08fc9b0b8b8d9a97e4292f736c2f9591abef9374d3a66cc58df4fdca8431204",
   "allocation_admission": {
@@ -1277,16 +1277,10 @@
     ]
   },
   "current_local_product": {
+    "sha": "9548b92bab",
     "branch": "sf2-compose",
-    "sha": "a0074a7bb5",
     "state": "DEVELOPMENT_NOT_FINAL_C",
-    "consumed": [
-      "Atlas789e+4d8 packaging",
-      "C17helper34ef",
-      "sourceRacee6",
-      "Dashboard4b05C12+periods",
-      "tokenEffectcallbacksc00ab"
-    ]
+    "new_behavior": "actual authenticated Dashboard BI HTTP composition and trusted CLI installation factory flag; not launched; typecheck09 in flight"
   },
   "typecheck_governor": {
     "preferred": 1,
@@ -1302,7 +1296,7 @@
     ],
     "user_processes_untouched": true
   },
-  "next_executable_action": "Finish Atlas generation static receipt, typed root composition, durable native marker/token receipt authority; integrate current source issuers and real consumers; dispatch next unique development CI; no final candidate accepted.",
+  "next_executable_action": "Typecheck09 result; fix root compilation; add hosted real HTTP/browser BI/CLI tests; consume pending writer deltas in dev8 with one typecheck and deduplicated central CI. Then mount actual native host/C08 and test real providers. Preserve all remaining tasks and no GLOBAL_RELEASE.",
   "mandatory_open_integration_findings": [
     "Bun workflow has no artifact; no final PASS claimed",
     "Scenario selectors require current ACL in authorizeCase",
@@ -1868,5 +1862,108 @@
     "boundary_typecheck_02": "PASS existingcachelink repaired",
     "check_generated_01": "IN_FLIGHT session74753",
     "AM05": "NOT_RUN"
+  },
+  "CI_development_7": {
+    "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+    "event_id": "dispatch-development-7",
+    "dispatcher": "S0",
+    "candidate": "13aa4346f5137dd290a25a1dd0756eb0228c1cc7",
+    "snapshot": "e3bf309a9d5cb0f43ea597af15dc54046ecff0c0",
+    "snapshot_tree": "1d5c7c6a96639f81d4dce0653dd9d44098505726",
+    "branch": "ci-run-linux-sf2h-dev7",
+    "files": 55,
+    "request_digest": "0058d0c515f74dcdf5c1181048fb360b9750c20b27e352ee75dd06bffdcf6682",
+    "status": "FAILED",
+    "final_selection": false,
+    "run_id": 43408854090,
+    "head_sha": "e3bf309a9d5cb0f43ea597af15dc54046ecff0c0",
+    "passed": 298,
+    "failed": 4,
+    "tests": 302,
+    "job_id": 131829895037
+  },
+  "root_checks_19": {
+    "typecheck08": {
+      "sha": "fa6ef5f2017699ab1c5dc8660615d2688ed70241",
+      "tree": "fc8e4db7f02b8a34733539d5cdb1560c094030b8",
+      "exit": 0
+    },
+    "typecheck09": {
+      "sha": "9548b92bab",
+      "state": "IN_FLIGHT",
+      "session_id": 18139
+    },
+    "guards_development07": {
+      "candidate": "9290d71220",
+      "gate": 0,
+      "warn": 9,
+      "errors": 0,
+      "final_G7_G8": false
+    },
+    "spawn_imports07": {
+      "files": 4167,
+      "allowlisted": 66,
+      "exit": 0
+    },
+    "Atlas": {
+      "boundary_typecheck02": "PASS",
+      "check_generated01": "PASS",
+      "AM05": "NOT_RUN"
+    },
+    "browser_build": {
+      "sha256": "6bc41000dd59aa842e49157719e0a9354c72b71b834bc70033828f6bd3c1b31e",
+      "source": "068c637dcb",
+      "test": "NOT_RUN"
+    }
+  },
+  "support_leases_19": {
+    "S1-B-source-support": {
+      "status": "CLOSED_ACCEPTED",
+      "head": "0ef0f1668b",
+      "consumed": "e14271fac6",
+      "root_reclaims": [
+        "integration/dashboard-sources.ts",
+        "integration/source-projections.ts"
+      ]
+    },
+    "S2-A-source-support": {
+      "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+      "actor_id": "S2-A",
+      "lease_epoch": 1,
+      "support_task": "WP10.T01 Procurement collection scoped source support",
+      "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "input_sha": "e14271fac6",
+      "write_paths": [
+        "modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-sources.test.ts"
+      ],
+      "consumer": "S0 root default source-projector; WP05 BI",
+      "acceptance": "Actual Request current auth/roleMap/actor scoped collection, no private field oracle, mutable status/current selectors, restore/ABA/incarnation, source refs select never grant",
+      "output": "bounded source + meaningful SQLite tests; exacthead/hashes and pending gates",
+      "status": "LEASED"
+    }
+  },
+  "required_fixes_19": [
+    "CI7 scope internal digest key assertion -> writer658290, not yet CI8",
+    "CI7 3 IEEE binary noise/HTML failures -> writerf8cd850d, not yet CI8",
+    "Native runtime production contribution still not composed; token count live auth not qualified",
+    "S1-R1 actual Dashboard/BI route gap addressed draft9548, fresh proof pending",
+    "C12 human grants + atomic prepared receipt consumer still incomplete",
+    "C17 actual historical/current ACL projections and Atlas AM05 incomplete"
+  ],
+  "pending_outputs_19": {
+    "S0-B": "fd97f02a6d onReady private scoped callback, not consumed",
+    "S1-B": "658290 privacy +66f BI tests+97ed helper, pending CI8",
+    "S2-A": "bef58f collection + f8cd850d numeric/UIfix, pending rootinventory/projector",
+    "S2-B": "25f242+069877 actualDash→BI consumer test",
+    "S4-B": "dc0b78 analysis-host/runstore, prior6ceTCpassonly",
+    "S4-C": "854af2 units/analysis, not integrated",
+    "S0-A": "BCS/store/scanner ongoing",
+    "S4": "ce6c6 recall with34efhelper, not consumed",
+    "S2": "documents partial b780",
+    "S2-C": "imports b1a8",
+    "S3-A": "reports a717",
+    "S3-B": "collab65e8",
+    "S3-C": "routines92e"
   }
 }
