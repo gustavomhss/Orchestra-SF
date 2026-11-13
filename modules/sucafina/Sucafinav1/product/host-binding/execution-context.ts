@@ -1,3 +1,5 @@
+import { digestSfValue } from "../contracts/canonical.ts"
+import { validSfSelection } from "./resident-agents.ts"
 import routes from "../contracts/normative-contracts.json"
 import freeze from "../contracts/freeze-v1.json"
 import type { BindSfExecution, CreateSfExecutionBindingRegistry, SfNativeAdmission } from "../contracts/runtime.ts"
@@ -22,34 +24,35 @@ export const createSfExecutionBindingRegistry: CreateSfExecutionBindingRegistry 
   }
   return {
     bind: async (admission) => {
-      if (sessions.has(admission.sessionID) || admission.request.signal.aborted || !admission.runId ||
-        !admission.caseRef.id || !admission.caseRef.incarnation || !Number.isSafeInteger(admission.caseRef.version) ||
-        !admission.skillReceipts.length) return { status: "denied", reason: "invalid-native-admission" }
-      const checked = await Promise.resolve().then(() => input.authenticateAndResolve(admission)).catch(() => undefined)
-      if (!checked || !Number.isFinite(Date.parse(checked.expiresAt)) || Date.parse(checked.expiresAt) <= Date.now() ||
-        invalidGenerations.has(checked.providerGeneration) || sessions.has(admission.sessionID) || admission.request.signal.aborted)
-        return { status: "denied", reason: "native-authority-unavailable" }
-      const profile = structuredClone(admission.profile)
-      Object.freeze(profile.allowedOperations)
-      Object.freeze(profile.allowedSkills)
-      Object.freeze(profile.outputTypes)
-      Object.freeze(profile)
-      const receipts = structuredClone(admission.skillReceipts)
-      if (receipts.some((receipt) => receipt.runId !== admission.runId || receipt.nativeSessionId !== admission.sessionID ||
-        receipt.profileId !== profile.id || receipt.profileVersion !== profile.version || receipt.profileDigest !== profile.sourceDigest ||
-        receipt.manifestDigest !== admission.manifestDigest || !profile.allowedSkills.includes(receipt.skillId) || !receipt.loadedMessageId))
+      const saved = Object.freeze({
+        ...freezeAdmission(structuredClone({ selected: admission.selected, sessionID: admission.sessionID, runId: admission.runId,
+          caseRef: admission.caseRef, profile: admission.profile, manifestDigest: admission.manifestDigest,
+          skillReceipts: admission.skillReceipts, entryMode: admission.entryMode })),
+        request: admission.request,
+      })
+      if (!validSfSelection(saved.selected) || digestSfValue(saved.selected.profile) !== digestSfValue(saved.profile) ||
+        saved.selected.manifestDigest !== saved.manifestDigest || sessions.has(saved.sessionID) || saved.request.signal.aborted || !saved.runId ||
+        !saved.caseRef.id || !saved.caseRef.incarnation || !Number.isSafeInteger(saved.caseRef.version) ||
+        !saved.skillReceipts.length) return { status: "denied", reason: "invalid-native-admission" }
+      if (saved.skillReceipts.some((receipt) => receipt.runId !== saved.runId || receipt.nativeSessionId !== saved.sessionID ||
+        receipt.profileId !== saved.profile.id || receipt.profileVersion !== saved.profile.version || receipt.profileDigest !== saved.profile.sourceDigest ||
+        receipt.manifestDigest !== saved.manifestDigest || !saved.selected.skills.some((skill) => skill.id === receipt.skillId &&
+          skill.version === receipt.skillVersion && skill.sourceDigest === receipt.sourceDigest && skill.instructionsDigest === receipt.instructionsDigest) || !receipt.loadedMessageId))
         return { status: "denied", reason: "skill-receipt-mismatch" }
+      const checked = await Promise.resolve().then(() => input.authenticateAndResolve(saved)).catch(() => undefined)
+      if (!checked || !Number.isFinite(Date.parse(checked.expiresAt)) || Date.parse(checked.expiresAt) <= Date.now() ||
+        invalidGenerations.has(checked.providerGeneration) || sessions.has(saved.sessionID) || saved.request.signal.aborted)
+        return { status: "denied", reason: "native-authority-unavailable" }
       const binding = Object.freeze({
         installationId: checked.installationId, hostId: checked.hostId, projectId: checked.projectId, locationId: checked.locationId,
         principalRef: checked.principalRef, policyVersion: checked.policyVersion, accessRevision: checked.accessRevision,
-        providerGeneration: checked.providerGeneration, expiresAt: checked.expiresAt, nativeSessionId: admission.sessionID,
-        runId: admission.runId, caseId: admission.caseRef.id, caseVersion: admission.caseRef.version,
-        caseIncarnation: admission.caseRef.incarnation, profileId: profile.id, profileVersion: profile.version,
-        manifestDigest: admission.manifestDigest, skillReceipts: Object.freeze(receipts.map((receipt) => Object.freeze(receipt))),
-        entryMode: admission.entryMode,
+        providerGeneration: checked.providerGeneration, expiresAt: checked.expiresAt, nativeSessionId: saved.sessionID,
+        runId: saved.runId, caseId: saved.caseRef.id, caseVersion: saved.caseRef.version,
+        caseIncarnation: saved.caseRef.incarnation, profileId: saved.profile.id, profileVersion: saved.profile.version,
+        manifestDigest: saved.manifestDigest, skillReceipts: saved.skillReceipts, entryMode: saved.entryMode,
       }) as unknown as TrustedExecutionBinding
-      const saved = Object.freeze({ ...admission, profile, skillReceipts: Object.freeze(receipts), caseRef: Object.freeze({ ...admission.caseRef }) })
-      if (!(await Promise.resolve().then(() => input.revalidateAdmission(saved, binding)).catch(() => false)) || sessions.has(admission.sessionID) || admission.request.signal.aborted || Date.now() >= Date.parse(checked.expiresAt))
+      if (!(await Promise.resolve().then(() => input.revalidateAdmission(saved, binding)).catch(() => false)) ||
+        invalidGenerations.has(checked.providerGeneration) || sessions.has(saved.sessionID) || saved.request.signal.aborted || Date.now() >= Date.parse(checked.expiresAt))
         return { status: "denied", reason: "native-authority-changed" }
       bindings.set(binding, { admission: saved, revoked: false, issuedCalls: new Set() })
       sessions.set(binding.nativeSessionId, binding)
@@ -60,8 +63,8 @@ export const createSfExecutionBindingRegistry: CreateSfExecutionBindingRegistry 
       if (!binding || !current(binding) || binding.profileId !== context.agent || !context.assistantMessageID || !context.toolCallID ||
         !/^[a-f0-9]{64}$/.test(digest)) return { status: "denied", reason: "native-context-unavailable" }
       const state = bindings.get(binding)!
-      const granted = state.admission.profile.allowedOperations.includes(operation) && binding.skillReceipts.some((receipt) =>
-        state.admission.profile.allowedSkills.includes(receipt.skillId) && routes.resident.skills.some((skill) =>
+      const granted = state.admission.selected.operationIds.includes(operation) && state.admission.profile.allowedOperations.includes(operation) && binding.skillReceipts.some((receipt) =>
+        state.admission.selected.skills.some((skill) => skill.id === receipt.skillId && skill.allowedOperations.includes(operation)) && routes.resident.skills.some((skill) =>
           skill.id === receipt.skillId && skill.profiles.some((profile) => profile === binding.profileId) &&
           skill.allowed_operations.some((allowed) => allowed === operation)))
       if (!granted || (binding.entryMode === "routine-result" && (operation === "sf_routine_prepare" || operation === "sf_routine_run")))
@@ -114,3 +117,9 @@ export const createSfExecutionBindingRegistry: CreateSfExecutionBindingRegistry 
 }
 
 export const bindSfExecution: BindSfExecution = (input) => input.registry.bind(input.admission)
+
+function freezeAdmission<T>(value: T): T {
+  if (!value || typeof value !== "object") return value
+  Object.values(value).forEach(freezeAdmission)
+  return Object.freeze(value)
+}

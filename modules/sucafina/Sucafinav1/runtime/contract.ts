@@ -30,10 +30,15 @@ export type Snapshot = {
   sequences: Record<string, number>
   audit: Audit[]
   notices: Notice[]
+  sfCommandPreviews?: Record<string, { principalRef: string; actorDigest: string; command: Command; baseDigest: string; commandDigest: string; ids: string[]; expiresAt: string; receipt?: Result }>
   // Host-private source lifecycle metadata. Business views and JSON export expose only data/versions.
   sfSources?: {
     schemaVersion: 1
     records: Record<string, { incarnation: string; version: number; alive: boolean; inputDigest: string }>
+    scopes?: Record<string, {
+      scope: { principalRef: string; accessRevision: string; policyVersion: string; recordType: string; recordId: string; selector: unknown }
+      incarnation: string; sourceIncarnation: string; version: number; alive: boolean; inputDigest: string
+    }>
   }
 }
 export type Environment = {

@@ -116,3 +116,61 @@ test("dataset replacement renews identity and retains the trusted protected prod
     expect(await persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot }))).toEqual(committed)
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })
+
+
+test("authorized projection revisions persist and ignore restricted changes while observing intermediate writes", async () => {
+  const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-source-scoped-"))
+  await chmod(directory, 0o700)
+  const open = async () => {
+    const store = await openLocalStore(directory)
+    const persistence = createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources, createId: randomUUID,
+      projectScope: (_surface, snapshot, scope) => {
+        if (scope.principalRef !== "principal-1" || snapshot.data.revoked === true) return undefined
+        const projects = snapshot.data.projects
+        if (!Array.isArray(projects)) return undefined
+        const row = projects.find((value) => value.id === scope.recordId)
+        return row ? { name: row.name } : undefined
+      },
+    })
+    await persistence.initializeSources("dashboard")
+    return { store, persistence }
+  }
+  const scope = { principalRef: "principal-1", accessRevision: "access-1", policyVersion: "policy-1", recordType: "projects", recordId: "project-1", selector: { fields: ["name"] } }
+  const first = await open()
+  try {
+    await first.persistence.transaction("dashboard", async (snapshot) => {
+      snapshot.data.projects = [{ id: "project-1", name: "A", privateNote: "private-A" }]
+      return { commit: true, value: undefined }
+    })
+    const original = await first.persistence.readScopedSource("dashboard", scope, async () => true)
+    expect(original?.version).toBe(1)
+    await first.persistence.transaction("dashboard", async (snapshot) => {
+      snapshot.data.projects = [{ id: "project-1", name: "A", privateNote: "private-B" }]
+      return { commit: true, value: undefined }
+    })
+    expect(await first.persistence.readScopedSource("dashboard", scope, async () => true)).toEqual(original)
+    for (const name of ["B", "A"]) await first.persistence.transaction("dashboard", async (snapshot) => {
+      snapshot.data.projects = [{ id: "project-1", name, privateNote: "private-B" }]
+      return { commit: true, value: undefined }
+    })
+    const returned = await first.persistence.readScopedSource("dashboard", scope, async () => true)
+    expect(returned?.version).toBe(3)
+    expect(returned?.incarnation).toBe(original?.incarnation)
+    expect(returned?.projection).toEqual(original?.projection)
+    await first.store.dispose()
+    const second = await open()
+    try {
+      expect(await second.persistence.readScopedSource("dashboard", scope, async () => true)).toEqual(returned)
+      expect(await second.persistence.readScopedSource("dashboard", scope, async () => false)).toBeUndefined()
+      await second.persistence.transaction("dashboard", async (snapshot) => { snapshot.data.revoked = true; return { commit: true, value: undefined } })
+      expect(await second.persistence.readScopedSource("dashboard", scope, async () => true)).toBeUndefined()
+      await second.persistence.transaction("dashboard", async (snapshot) => { snapshot.data.revoked = false; return { commit: true, value: undefined } })
+      expect((await second.persistence.readScopedSource("dashboard", scope, async () => true))?.version).toBe(5)
+      await second.persistence.transaction("dashboard", async (snapshot) => { snapshot.data.projects = []; return { commit: true, value: undefined } })
+      await second.persistence.transaction("dashboard", async (snapshot) => { snapshot.data.projects = [{ id: "project-1", name: "A" }]; return { commit: true, value: undefined } })
+      const recreated = await second.persistence.readScopedSource("dashboard", scope, async () => true)
+      expect(recreated?.incarnation).not.toBe(original?.incarnation)
+      expect(recreated?.version).toBe(1)
+    } finally { await second.store.dispose() }
+  } finally { await first.store.dispose(); await rm(directory, { recursive: true, force: true }) }
+})

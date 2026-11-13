@@ -1,3 +1,4 @@
+import { selection } from "./fixture.ts"
 import { expect, test } from "bun:test"
 import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
@@ -10,7 +11,8 @@ import { AbsolutePath } from "@orchestra/core/schema"
 import { SkillV2 } from "@orchestra/core/skill"
 import { SkillDiscovery } from "@orchestra/core/skill/discovery"
 import { Effect, Layer } from "effect"
-import { registerSfResidentAgents } from "../../../../product/host-binding/resident-agents.ts"
+import { registerSfResidentAgents, sfSourceFor } from "../../../../product/host-binding/resident-agents.ts"
+import type { SfSourceCapability } from "../../../../product/contracts/runtime.ts"
 import type { ResidentProfile } from "../../../../product/contracts/resident-ai.ts"
 
 const profile: ResidentProfile = {
@@ -27,14 +29,21 @@ test("resident registration rejects a missing skill and accepts the same skill f
     const run = () => Effect.gen(function* () {
       const skills = yield* SkillV2.Service
       const agents = yield* AgentV2.Service
-      return yield* Effect.result(registerSfResidentAgents({ agents, skills, profiles: [profile], source: { type: "directory", path: AbsolutePath.make(root) } }))
+      const result = yield* Effect.result(registerSfResidentAgents({ agents, skills, selected: [selection(profile)], source: { type: "directory", path: AbsolutePath.make(root) } }))
+      if (result._tag === "Failure") return { result, skills }
+      expect(sfSourceFor(result.success, skills, selection(profile))).toBeDefined()
+      expect(sfSourceFor({} as SfSourceCapability, skills, selection(profile))).toBeUndefined()
+      expect(sfSourceFor(result.success, skills, { ...selection(profile), manifestDigest: "e".repeat(64) })).toBeUndefined()
+      return { result, skills }
     }).pipe(Effect.scoped, Effect.provide(layer), Effect.runPromise)
     const missing = await run()
-    expect(missing._tag).toBe("Failure")
-    if (missing._tag === "Failure") expect(missing.failure).toEqual({ code: "invalid-skill", reason: "resident-skill-missing" })
+    expect(missing.result._tag).toBe("Failure")
+    if (missing.result._tag === "Failure") expect(missing.result.failure).toEqual({ code: "invalid-skill", reason: "resident-skill-missing" })
     await mkdir(path.join(root, "sf-explicar-forecast"))
     await writeFile(path.join(root, "sf-explicar-forecast", "SKILL.md"), "---\nname: sf-explicar-forecast\ndescription: Explain forecast\n---\n# Instructions\n")
-    expect((await run())._tag).toBe("Success")
+    const loaded = await run()
+    expect(loaded.result._tag).toBe("Success")
+    if (loaded.result._tag === "Success") expect(sfSourceFor(loaded.result.success, loaded.skills, selection(profile))).toBeUndefined()
   } finally {
     await rm(root, { recursive: true, force: true })
   }

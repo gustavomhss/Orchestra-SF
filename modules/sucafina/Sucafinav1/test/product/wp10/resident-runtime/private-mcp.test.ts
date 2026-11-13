@@ -1,3 +1,4 @@
+import { selection } from "./fixture.ts"
 import { expect, test } from "bun:test"
 import { AgentV2 } from "@orchestra/core/agent"
 import type { Mcp } from "@orchestra/core/mcp"
@@ -21,7 +22,7 @@ test("private MCP traverses native lease and refuses a normalized configured nam
     authenticateAndResolve: async (admission) => admission.request === request ? { installationId: "installation", hostId: "host", projectId: "project", locationId: "location", principalRef: "person", policyVersion: "policy", accessRevision: "access", providerGeneration: 1, expiresAt: new Date(Date.now() + 60_000).toISOString() } : undefined,
     revalidateAdmission: async (admission) => admission.request === request,
   })
-  const binding = await registry.bind({ request, sessionID, runId: receipt.runId, caseRef: { id: "case", version: 1, incarnation: "inc" }, profile, manifestDigest: receipt.manifestDigest, skillReceipts: [receipt], entryMode: "interactive" })
+  const binding = await registry.bind({ request, selected: selection(profile), sessionID, runId: receipt.runId, caseRef: { id: "case", version: 1, incarnation: "inc" }, profile, manifestDigest: receipt.manifestDigest, skillReceipts: [receipt], entryMode: "interactive" })
   expect(binding.status).toBe("ok")
   if (binding.status !== "ok") return
   const context = { sessionID, agent: AgentV2.ID.make(profile.id), assistantMessageID: SessionMessage.ID.make("msg_assistant"), toolCallID: "call-private" }

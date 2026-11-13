@@ -109,10 +109,7 @@ export const domain: Domain = {
     const people = allowed.some((page) => page !== pages[0]) || dashboardPages(actor).includes("Executive Dashboard")
     const data: Record<string, unknown> = {}
     if (allowed.includes(pages[0]))
-      data.hotTopics = rows(snapshot.data.hotTopics).map((row) => ({
-        id: idOf(row.id),
-        ...pick(row, topicFields),
-      }))
+      data.hotTopics = hotTopicView(snapshot, actor)
     if (people) {
       data.members = readMembers(snapshot, actor, environment)
       data.leaders = rows(snapshot.data.leaders).map((row) => ({
@@ -133,6 +130,11 @@ export const domain: Domain = {
       ),
     }
   },
+}
+
+export function hotTopicView(snapshot: Snapshot, actor: Actor): Record<string, unknown>[] {
+  if (!canRead(snapshot, actor, pages[0])) return []
+  return rows(snapshot.data.hotTopics).map((row) => ({ id: idOf(row.id), ...pick(row, topicFields) }))
 }
 
 function canRead(snapshot: Snapshot, actor: Actor, page: string) {
@@ -446,7 +448,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         rows(data.hotTopics)
           .filter((row) => !data.topicStatus || row.status === data.topicStatus)
           .map((row) => [
-            esc(text(row.action)),
+            `<span id="record-${esc(idOf(row.id))}">${esc(text(row.action))}</span>`,
             esc(text(row.status)),
             esc(text(row.priority)),
             esc(text(row.due)) +
@@ -457,7 +459,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
             form(page, "delete", idOf(row.id), version(`hotTopics:${idOf(row.id)}`), "", "Delete", disabled),
           ]),
       ) +
-      edit({})
+      `<details><summary>Add action</summary>${edit({})}</details>`
     )
   }
   const members = rows(data.members)
@@ -532,7 +534,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         disabled,
       )
     return (
-      "<h2>CIO</h2>" +
+      "<h2>CIO</h2><details class=\"editor-panel\"><summary>Edit CIO</summary>" +
       form(
         page,
         "saveCio",
@@ -541,7 +543,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         fields(cioFields.map((name) => ({ name, label: name, value: cio[name] }))),
         "Save CIO",
         disabled,
-      ) +
+      ) + "</details>" +
       "<h2>Leaders</h2>" +
       table(
         ["Leader", "Domain", "Members", "Edit", "Delete"],
@@ -564,7 +566,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
           ),
         ]),
       ) +
-      leaderEditor({}) +
+      `<details class="editor-panel"><summary>Add leader</summary>${leaderEditor({})}</details>` +
       "<h2>Members</h2>" +
       table(
         ["Name", "Leader", "Edit", "Delete"],
@@ -583,7 +585,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
           ),
         ]),
       ) +
-      memberForm(page, {}, context, data, disabled, false)
+      `<details class="editor-panel"><summary>Add member</summary>${memberForm(page, {}, context, data, disabled, false)}</details>`
     )
   }
   if (!admin)
@@ -627,7 +629,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
           form(page, "delete", idOf(member.id), version(`members:${idOf(member.id)}`), "", "Delete", disabled),
         ]),
     ) +
-    memberForm(page, {}, context, data, disabled, true) +
+    `<details class="editor-panel"><summary>Add member</summary>${memberForm(page, {}, context, data, disabled, true)}</details>` +
     form(
       page,
       "import",

@@ -9,9 +9,19 @@ import type { ResidentProfile, SkillManifest, SkillLoadReceipt } from "./residen
 import type { CapabilityDescriptor, CapabilityResult, BoundCapabilityReceipt, TrustedExecutionBinding, TrustedCallContext, TrustedDomainContext } from "./sf-execution.ts"
 import type { PortResult } from "./ports.ts"
 
+declare const sfSourceCapability: unique symbol
+export type SfSourceCapability = { readonly [sfSourceCapability]: never }
+export type SfSelectedRuntime = Readonly<{
+  profile: ResidentProfile
+  manifestDigest: string
+  skills: readonly SkillManifest[]
+  operationIds: readonly string[]
+}>
+
 export type SfRuntimeError = { readonly code: "invalid-manifest" | "invalid-skill" | "invalid-binding" | "provider-conflict" | "denied" | "unavailable" | "failed"; readonly reason: string }
 export type SfNativeAdmission = Readonly<{
   request: Request
+  selected: SfSelectedRuntime
   sessionID: Parameters<SessionV2.Interface["get"]>[0]
   runId: string
   caseRef: { id: string; version: number; incarnation: string }
@@ -36,11 +46,13 @@ export type SfDomainValidation = {
   revalidateDomainContext: (context: TrustedDomainContext) => Promise<boolean>
   receiptFor: (context: TrustedDomainContext, operation: string, inputDigest: string, resultDigest?: string) => BoundCapabilityReceipt | undefined
 }
-export type SfResidentRegistration = { agents: AgentV2.Interface; skills: SkillV2.Interface; profiles: readonly ResidentProfile[]; source: SkillV2.Source }
-export type RegisterSfResidentAgents = (input: SfResidentRegistration) => Effect.Effect<void, SfRuntimeError, Scope.Scope>
+export type SfResidentRegistration = { agents: AgentV2.Interface; skills: SkillV2.Interface; selected: readonly SfSelectedRuntime[]; source: SkillV2.Source }
+export type RegisterSfResidentAgents = (input: SfResidentRegistration) => Effect.Effect<SfSourceCapability, SfRuntimeError, Scope.Scope>
 export type LoadSfSkill = (input: {
   session: SessionV2.Interface
   skills: SkillV2.Interface
+  sourceCapability: SfSourceCapability
+  selected: SfSelectedRuntime
   sessionID: Parameters<SessionV2.Interface["get"]>[0]
   profile: ResidentProfile
   skill: SkillManifest
@@ -70,4 +82,4 @@ export type DispatchSfCapability = (input: {
   validateInput: (descriptor: CapabilityDescriptor, payload: unknown) => boolean
   validateOutput: (descriptor: CapabilityDescriptor, result: CapabilityResult) => boolean
 }) => Promise<CapabilityResult>
-export type CreateSfProductContribution = (input: { registry: SfBindingRegistry; descriptors: readonly CapabilityDescriptor[]; authority: SfDomainValidation; profiles: readonly ResidentProfile[]; source: SkillV2.Source }) => Host.Contribution
+export type CreateSfProductContribution = (input: { registry: SfBindingRegistry; descriptors: readonly CapabilityDescriptor[]; authority: SfDomainValidation; selected: readonly SfSelectedRuntime[]; source: SkillV2.Source; onRegistered: (registration: { skills: SkillV2.Interface; sourceCapability: SfSourceCapability }) => void }) => Host.Contribution

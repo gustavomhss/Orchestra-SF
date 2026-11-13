@@ -13,6 +13,7 @@ import { assetLink, captureRecordAssets, deleteRecordAssets, downloadAsset, uplo
 import type { AssetKind, AssetPersistence, AssetServices, BlobTransaction } from "./assets.ts"
 import { esc } from "../src/screen-shell.ts"
 import type { RenderContext } from "./ui.ts"
+import { handleDashboardPreview } from "../product/integration/dashboard-preview.ts"
 import { publicSfData } from "../product/integration/public-state.ts"
 
 export type Contribution = {
@@ -213,6 +214,10 @@ export function createApplication(mount: string, application: Application) {
         }
       }
       if (parsed) {
+        if (surface === "dashboard") {
+          const preview = handleDashboardPreview(snapshot, actor, parsed, environment, decodeCommand)
+          if (preview) return { commit: preview.commit, value: json(preview.value, preview.value.ok ? 200 : preview.value.status) }
+        }
         if (!actor.canWrite)
           return {
             commit: false,
@@ -514,6 +519,10 @@ async function readCommand(request: Request, maximum: number): Promise<Command |
     return offset + chunk.byteLength
   }, 0)
   const decoded: unknown = await new Response(bytes).json().catch(() => undefined)
+  return decodeCommand(decoded) ?? reply("Invalid command", 400)
+}
+
+function decodeCommand(decoded: unknown): Command | undefined {
   const input = object(decoded)
   const allowed = ["page", "action", "id", "version", "values", "confirmed"]
   if (
@@ -530,7 +539,7 @@ async function readCommand(request: Request, maximum: number): Promise<Command |
     (input.id !== undefined && typeof input.id !== "string") ||
     (input.confirmed !== undefined && typeof input.confirmed !== "boolean")
   )
-    return reply("Invalid command", 400)
+    return undefined
   return {
     page: text(input.page),
     action: text(input.action),

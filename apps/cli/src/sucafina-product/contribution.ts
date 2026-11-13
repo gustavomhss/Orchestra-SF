@@ -27,7 +27,8 @@ export const createSfProductContribution: CreateSfProductContribution = (input) 
       const mcp = yield* Mcp.Service
       const plugins = yield* PluginV2.Service
       yield* plugins.wait(PluginV2.ID.make("config-agent"))
-      yield* registerSfResidentAgents({ agents, skills, profiles: input.profiles, source: input.source }).pipe(Effect.orDie)
+      const sourceCapability = yield* registerSfResidentAgents({ agents, skills, selected: input.selected, source: input.source }).pipe(Effect.orDie)
+      input.onRegistered({ skills, sourceCapability })
       const bridge = createSfBusinessMcpBridge({
         registry: input.registry, mcp, descriptors: input.descriptors,
         dispatch: (operation, payload, context) => dispatchSfCapability({

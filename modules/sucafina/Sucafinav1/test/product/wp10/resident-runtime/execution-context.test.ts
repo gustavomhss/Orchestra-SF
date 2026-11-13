@@ -1,3 +1,4 @@
+import { selection } from "./fixture.ts"
 import { describe, expect, test } from "bun:test"
 import { AgentV2 } from "@orchestra/core/agent"
 import { SessionMessage } from "@orchestra/core/session/message"
@@ -29,7 +30,11 @@ describe("SF native execution registry", () => {
       } : undefined,
       revalidateAdmission: async (admission) => admission.request === request,
     })
-    const bound = await registry.bind({ request, sessionID, runId: "run-1", caseRef: { id: "case", version: 1, incarnation: "inc" },
+    const rejected = await registry.bind({ request, selected: { ...selection(profile), manifestDigest: "e".repeat(64) }, sessionID,
+      runId: "run-1", caseRef: { id: "case", version: 1, incarnation: "inc" }, profile,
+      manifestDigest: receipt.manifestDigest, skillReceipts: [receipt], entryMode: "interactive" })
+    expect(rejected.status).toBe("denied")
+    const bound = await registry.bind({ request, selected: selection(profile), sessionID, runId: "run-1", caseRef: { id: "case", version: 1, incarnation: "inc" },
       profile, manifestDigest: receipt.manifestDigest, skillReceipts: [receipt], entryMode: "interactive" })
     expect(bound.status).toBe("ok")
     if (bound.status !== "ok") return
@@ -99,7 +104,7 @@ test("concurrent sessions with the same profile retain distinct request authorit
       sourceDigest: "b".repeat(64), instructionsDigest: "c".repeat(64), loadedMessageId: `msg_${suffix}`,
       loadedAt: new Date().toISOString(), manifestDigest: "d".repeat(64),
     }
-    const binding = await registry.bind({ request, sessionID, runId: receipt.runId,
+    const binding = await registry.bind({ request, selected: selection(profile), sessionID, runId: receipt.runId,
       caseRef: { id: `case-${suffix}`, version: 1, incarnation: `inc-${suffix}` }, profile,
       manifestDigest: receipt.manifestDigest, skillReceipts: [receipt], entryMode: "interactive" })
     const context = { sessionID, agent: AgentV2.ID.make(profile.id), assistantMessageID: SessionMessage.ID.make(`msg_${suffix}`), toolCallID: `call-${suffix}` }
@@ -126,4 +131,67 @@ test("concurrent sessions with the same profile retain distinct request authorit
   expect(registry.requestFor(firstLease.value)).toBeUndefined()
   registry.revoke(first.binding.value)
   expect(await registry.revalidate(secondLease.value)).toBe(true)
+})
+
+test("the selected manifest limits operations even when the profile and skill allow more", async () => {
+  const sessionID = SessionSchema.ID.make("ses_selected")
+  const request = new Request("https://example.test/")
+  const receipt: SkillLoadReceipt = {
+    runId: "run-selected", nativeSessionId: sessionID, profileId: profile.id, profileVersion: profile.version,
+    profileDigest: profile.sourceDigest, skillId: "sf-explicar-forecast", skillVersion: "1", sourceDigest: "b".repeat(64),
+    instructionsDigest: "c".repeat(64), loadedMessageId: "msg_loaded", loadedAt: new Date().toISOString(), manifestDigest: "d".repeat(64),
+  }
+  const registry = createSfExecutionBindingRegistry({
+    authenticateAndResolve: async () => ({ installationId: "i", hostId: "h", projectId: "p", locationId: "l", principalRef: "person",
+      policyVersion: "policy", accessRevision: "revision", providerGeneration: 1, expiresAt: new Date(Date.now() + 60_000).toISOString() }),
+    revalidateAdmission: async () => true,
+  })
+  const bound = await registry.bind({ request, selected: selection(profile, ["sf_forecast_compare"]), sessionID, runId: receipt.runId,
+    caseRef: { id: "case", version: 1, incarnation: "inc" }, profile, manifestDigest: receipt.manifestDigest,
+    skillReceipts: [receipt], entryMode: "interactive" })
+  expect(bound.status).toBe("ok")
+  const context = { sessionID, agent: AgentV2.ID.make(profile.id), assistantMessageID: SessionMessage.ID.make("msg_selected"), toolCallID: "call-selected" }
+  expect((await registry.lease(context, "sf_forecast_compare", "a".repeat(64))).status).toBe("ok")
+  expect((await registry.lease(context, "sf_context_get", "a".repeat(64))).status).toBe("denied")
+})
+
+test("authentication and binding retain the same admission when the caller mutates its inputs", async () => {
+  const sessionID = SessionSchema.ID.make("ses_snapshot")
+  const request = new Request("https://example.test/")
+  const mutableProfile = structuredClone(profile)
+  const operations = ["sf_forecast_compare"]
+  const selected = { ...selection(mutableProfile), operationIds: operations }
+  const caseRef = { id: "case-original", version: 1, incarnation: "inc" }
+  const receipt: SkillLoadReceipt = { runId: "run-original", nativeSessionId: sessionID, profileId: profile.id,
+    profileVersion: profile.version, profileDigest: profile.sourceDigest, skillId: "sf-explicar-forecast", skillVersion: "1",
+    sourceDigest: "b".repeat(64), instructionsDigest: "c".repeat(64), loadedMessageId: "msg_loaded",
+    loadedAt: new Date().toISOString(), manifestDigest: "d".repeat(64) }
+  const started = Promise.withResolvers<void>()
+  const release = Promise.withResolvers<void>()
+  const registry = createSfExecutionBindingRegistry({
+    authenticateAndResolve: async (admission) => {
+      started.resolve()
+      await release.promise
+      if (admission.caseRef.id !== "case-original" || admission.profile.sourceDigest !== "a".repeat(64) ||
+        admission.skillReceipts[0]?.loadedMessageId !== "msg_loaded" || admission.selected.operationIds.length !== 1) return undefined
+      return { installationId: "i", hostId: "h", projectId: "p", locationId: "l", principalRef: "person", policyVersion: "policy",
+        accessRevision: "revision", providerGeneration: 1, expiresAt: new Date(Date.now() + 60_000).toISOString() }
+    },
+    revalidateAdmission: async (admission, binding) => admission.caseRef.id === binding.caseId && admission.caseRef.id === "case-original",
+  })
+  const pending = registry.bind({ request, selected, sessionID, runId: "run-original", caseRef, profile: mutableProfile,
+    manifestDigest: receipt.manifestDigest, skillReceipts: [receipt], entryMode: "interactive" })
+  await started.promise
+  caseRef.id = "case-mutated"
+  mutableProfile.sourceDigest = "f".repeat(64)
+  receipt.loadedMessageId = "msg_mutated"
+  operations.push("sf_context_get")
+  release.resolve()
+  const bound = await pending
+  expect(bound.status).toBe("ok")
+  if (bound.status !== "ok") return
+  expect(bound.value.caseId).toBe("case-original")
+  expect(bound.value.skillReceipts[0]?.loadedMessageId).toBe("msg_loaded")
+  const context = { sessionID, agent: AgentV2.ID.make(profile.id), assistantMessageID: SessionMessage.ID.make("msg_snapshot"), toolCallID: "call-snapshot" }
+  expect((await registry.lease(context, "sf_context_get", "a".repeat(64))).status).toBe("denied")
 })
