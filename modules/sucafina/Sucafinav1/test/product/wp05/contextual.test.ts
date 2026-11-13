@@ -220,7 +220,8 @@ test("verification callbacks cannot mutate contextual evidence after successful 
     verifyArtifacts: async (received, selection, actual) => {
       change = () => {
         received.id = "different-case"
-        selection.filters = [{ field: "department", values: ["HR"] }]
+        selection.filters[0]!.field = "secret"
+        actual.projectionRefs[0]!.refId = "changed-source"
         actual.tableRef = "different-table"
         actual.canonicalProjectionRefs = ["different-projection"]
         actual.projectionRefs = []
