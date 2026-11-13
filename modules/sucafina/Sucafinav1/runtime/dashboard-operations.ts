@@ -151,6 +151,17 @@ function monthly(snapshot: Snapshot, period: { year: number; month: number }) {
     operations.slice(0, 3).map((key) => [key, rows(snapshot.data[key]).filter((row) => sameMonth(row, period))]),
   )
 }
+function validSecurityKpiValue(value: unknown): value is number | string {
+  if (typeof value === "number") return Number.isFinite(value)
+  return typeof value === "string" && value.trim() !== "" && Number.isFinite(Number(value.trim()))
+}
+function securityKpiValue(row: Record<string, unknown>, kpi: (typeof SECURITY_KPIS)[number]) {
+  if (kpi.key !== "socClosure") return row[kpi.key]
+  const manual = row.socClosure
+  const socClosure =
+    typeof manual === "number" ? manual : typeof manual === "string" && manual.trim() !== "" ? manual : null
+  return socClosureValue({ ...row, socClosure })
+}
 
 export const domain: Domain = {
   execute(snapshot, actor, command, environment) {
@@ -616,9 +627,18 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
     .filter((row) => row.year === context.year)
     .sort((a, b) => finite(a.month) - finite(b.month))
   const entry = entries.find((row) => row.month === context.month) ?? {}
-  const closure = socClosureValue(entry)
+  const tileEntries = entries
+    .filter(
+      (row) =>
+        typeof row.month === "number" &&
+        Number.isInteger(row.month) &&
+        row.month >= 1 &&
+        row.month <= 12 &&
+        row.month <= context.month,
+    )
+    .sort((a, b) => finite(b.month) - finite(a.month))
   const tiles = SECURITY_KPIS.map((kpi) => {
-    const value = kpi.key === "socClosure" ? closure : entry[kpi.key]
+    const value = tileEntries.map((row) => securityKpiValue(row, kpi)).find(validSecurityKpiValue)
     return (
       '<div class="metric-tile">' +
       metric(kpi.key, value == null || value === "" ? "No data" : String(value)) +
