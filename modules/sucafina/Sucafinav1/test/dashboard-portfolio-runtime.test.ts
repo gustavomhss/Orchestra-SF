@@ -54,14 +54,15 @@ describe("dashboard portfolio runtime", () => {
       risks: [{ id: "r", name: "Old", impact: 2, probability: 2, custom: "keep" }],
     })
     expect(domain.execute(state, actor, command("IT Risks", { name: "New" }, { id: "r" }), environment).ok).toBe(true)
+    expect(state.data.risks).toMatchObject([{ id: "r", name: "New", custom: "keep" }])
     const before = structuredClone(state)
     expect(
       domain.execute(state, actor, command("IT Risks", { name: "Stale" }, { id: "r" }), environment),
-    ).toMatchObject({
+    ).toEqual({
       ok: false,
       status: 409,
       by: "c",
-      stored: { name: "New", custom: "keep" },
+      stored: (domain.view(state, actor, environment).data.risks as Record<string, unknown>[])[0],
     })
     expect(state).toEqual(before)
     expect(domain.execute(state, actor, command("Vendor Contracts", { vendor: "X" }), environment)).toMatchObject({

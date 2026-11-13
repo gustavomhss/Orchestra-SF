@@ -165,7 +165,7 @@ export const domain: Domain = {
       (rows(snapshot.data[collection]).some((row) => recordId(row.id) === id) || snapshot.versions[key])
     )
       return { ok: false, status: 409 }
-    const stale = conflict(snapshot, key, command, stored)
+    const stale = conflict(snapshot, key, command, stored ? publicRecord(collection, stored) : undefined)
     if (stale) return stale
     if (command.action === "delete") {
       if (!stored) return { ok: false, status: 404 }
@@ -481,7 +481,7 @@ function importProjectRows(
         status: 422,
         errors: ["Read the latest project versions before importing."],
       }
-    const stale = conflict(snapshot, key, { ...command, version: Number(numericVersion) }, project)
+    const stale = conflict(snapshot, key, { ...command, version: Number(numericVersion) }, publicRecord("projects", project))
     if (stale) return stale
   }
   const result = importProjects(
