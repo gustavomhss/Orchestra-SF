@@ -258,3 +258,7 @@ await prepareDistribution({
   out: "<producer-owned destination, not inside dist or web>",
 })
 ```
+
+## Prova web nativa no CI central
+
+Execute `bun run test:ci cli test/distribution-web-native.test.ts --os linux --timeout 1800000` para qualificar CLI Linux e web da mesma revisão. O workflow manual `app-build` retém `distribution-logs/orchestra-sf-linux-x64-baseline.tar.gz` e `build-receipt.json`, com revisão de origem, versão e hashes do arquivo, web e catálogo público de modelos usado na compilação. O teste executa o CLI compilado do payload, sem inferência. Não é aceitação de UI, SSO nem negócio; o CI central mantém o recibo no log, enquanto a retenção do arquivo exige a execução manual do workflow.

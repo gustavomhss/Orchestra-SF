@@ -289,6 +289,7 @@ export async function qualify(input: {
   launcher: string; payload: string; version: string; box: Sandbox; oracle: Oracle; negative?: boolean
   // Skip companion and catalog probes. The open still uses this installed CLI.
   reopen?: boolean
+  inspectWeb?: (endpoint: URL) => Promise<void>
 }) {
   const launcher = await realpath(input.launcher)
   if (!launcher.startsWith((await realpath(input.box.directory)) + sep))
@@ -369,6 +370,7 @@ export async function qualify(input: {
     const health = await request(new URL("/api/health", endpoint), password)
     expect(health.status).toBe(200)
     expect(await health.json()).toMatchObject({ healthy: true })
+    await input.inspectWeb?.(endpoint)
     if (input.reopen) {
       expect((await readFile(input.box.env.ORCHESTRA_DB)).length).toBeGreaterThan(0)
       return ""
