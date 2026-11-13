@@ -6,6 +6,7 @@ import { hasPtyConnectTicketURL } from "@orchestra/protocol/groups/pty"
 import { hasCapabilityContentTicketURL } from "@orchestra/protocol/groups/capability-artifacts"
 import { Effect, Encoding, Layer, Redacted } from "effect"
 import { HttpEffect, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
+import { NativeInstallation } from "../native-installation"
 
 const AUTH_TOKEN_QUERY = "auth_token"
 // EventSource and WebSocket cannot set an Authorization header, so only their routes read credentials
@@ -43,18 +44,23 @@ export const authorizationLayer = Layer.effect(
   Authorization,
   Effect.gen(function* () {
     const config = yield* ServerAuth.Config
+    const native = yield* NativeInstallation.Service
     if (!ServerAuth.required(config)) return Authorization.of((effect) => effect)
     return Authorization.of((effect) =>
       Effect.gen(function* () {
         const request = yield* HttpServerRequest.HttpServerRequest
+        const url = new URL(request.url, "http://localhost")
+        // Native Sucafina handlers enforce their own installation and session policy.
+        if (url.pathname === "/api/sucafina" || url.pathname.startsWith("/api/sucafina/")) return yield* effect
         // Browsers cannot set headers on WebSocket upgrades, so a ticketed PTY connect skips
         // credential checks here; the connect handler consumes and validates the ticket.
-        const url = new URL(request.url, "http://localhost")
         if (hasPtyConnectTicketURL(url)) return yield* effect
         // Media elements cannot send headers either; the content handler verifies the HMAC ticket.
         if (hasCapabilityContentTicketURL(url)) return yield* effect
         const credential = yield* credentialFromRequest(request)
         if (ServerAuth.authorized(credential, config)) return yield* effect
+        const web = yield* HttpServerRequest.toWeb(request).pipe(Effect.option)
+        if (web._tag === "Some" && (yield* Effect.promise(() => NativeInstallation.verifyBridge(native, web.value)))) return yield* effect
         yield* HttpEffect.appendPreResponseHandler((_request, response) =>
           Effect.succeed(HttpServerResponse.setHeader(response, "www-authenticate", WWW_AUTHENTICATE)),
         )

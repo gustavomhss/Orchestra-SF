@@ -49,6 +49,7 @@ import { ServerContentTicket } from "./capability-content-ticket"
 import { ServerCapabilityVerification } from "./capability-verification"
 import type { CapabilityOperatorContract } from "@orchestra/core/capability/operator/contract"
 import type { CapabilityConnectionSetupContract } from "@orchestra/core/capability/connection/setup-contract"
+import { NativeInstallation } from "./native-installation"
 
 const applicationServices = LayerNode.group([
   Database.node,
@@ -95,6 +96,7 @@ export interface Options {
   readonly operator?: CapabilityOperatorContract.Interface
   /** Replaces the capability setup verifier; tests avoid vendor calls with it. */
   readonly verifier?: CapabilityConnectionSetupContract.Verifier
+  readonly nativeInstallation?: NativeInstallation.Interface
 }
 
 export function createRoutes(options: Options = {}) {
@@ -133,6 +135,7 @@ function makeRoutes<AuthError, AuthServices>(
     Layer.provide(locationLayer),
     Layer.provide(authorizationLayer),
     Layer.provide(capabilityAuthorizationLayer),
+    Layer.provide(options.nativeInstallation ? NativeInstallation.layer(options.nativeInstallation) : Layer.empty),
     Layer.provide(schemaErrorLayer),
     Layer.provide(auth),
     Layer.provide(options.operator ? Layer.succeed(ServerOperator.Service, options.operator) : ServerOperator.layer),
@@ -144,6 +147,7 @@ function makeRoutes<AuthError, AuthServices>(
     Layer.provide(BodyLimit.layer),
   )
   return Layer.merge(api, options.webRoot ? WebUi.layer(options.webRoot) : Layer.empty).pipe(
+    Layer.provide(options.nativeInstallation ? NativeInstallation.middleware(options.nativeInstallation) : Layer.empty),
     Layer.provide(hostPolicyLayer(options.allowedHosts)),
   )
 }
