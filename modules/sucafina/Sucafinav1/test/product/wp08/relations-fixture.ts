@@ -56,7 +56,7 @@ export async function createRelationsFixture() {
   const period = { start: "2026-01-01", end: "2026-12-31" }
   const gate = { active: true, dashboard: true, procurement: true, planner: true }
   const person = { id: "person", name: "Person" }
-  const environment = (id = randomUUID()) => ({ at, id: () => id, directory: [person] })
+  const environment = (id: string = randomUUID()) => ({ at, id: () => id, directory: [person] })
   const actor = { id: person.id, roles: ["admin", "buyer"], canWrite: true }
   const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at) })
   for (const surface of ["dashboard", "planner", "procurement"] as const) {

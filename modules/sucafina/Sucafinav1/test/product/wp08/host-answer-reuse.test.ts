@@ -30,8 +30,8 @@ import type { DomainPortHost, PortResult } from "../../../product/contracts/port
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 
 function ok<T>(result: PortResult<T>, label: string): T {
-  expect(result.status).toBe("ok")
   if (result.status !== "ok") throw new Error(`${label}: ${result.reason}`)
+  expect(result.status).toBe("ok")
   return result.value
 }
 
@@ -59,6 +59,9 @@ test("host-created capabilities consume a confirmed answer through shared dispat
     const read = await ui.admit(request(), "sf_work_list", digestSfValue({}))
     if (read.status !== "ok" || !await ui.validate(read.value, "sf_work_list", digestSfValue({}))) throw new Error("source admission failed")
     const period = { start: "2026-01-01", end: "2026-01-31" }
+    // Current signals are observed in November; the work horizon includes today,
+    // while the answer and its material source stay scoped strictly to January.
+    const workPeriod = { start: "2026-01-01", end: "2026-12-31" }
     const issued = await createDashboardSourceIssuer({ host, scopedSources: persistence })({ page: "Budget Overview", fields: ["budgetSeries"], period }, read.value)
     if (issued.status !== "ok") throw new Error("Dashboard source unavailable")
     const sources = createDashboardSourceHost({ host, scopedSources: persistence })
@@ -73,7 +76,7 @@ test("host-created capabilities consume a confirmed answer through shared dispat
     const creationTarget = { ref: "workspace", incarnation: "workspace-inc" }
     const authorizeCase = async (value: DecisionCase, context: TrustedDomainContext) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context)
     const cases = createDecisionCasePort({ state, host, creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, evidence, createId: randomUUID, now: () => at })
-    const caseDraft = { objective: "Review January answers", horizon: period, currency: "USD", criteria: ["January has a current answer"], sourceRefs: [source] }
+    const caseDraft = { objective: "Review January answers", horizon: workPeriod, currency: "USD", criteria: ["January has a current answer"], sourceRefs: [source] }
     const caseContext = ok(await ui.admit(request(), "sf_case_draft", digestSfValue(caseDraft)), "case admission")
     if (!await ui.validate(caseContext, "sf_case_draft", digestSfValue(caseDraft))) throw new Error("case validation failed")
     const decision = ok(await cases.draft(caseDraft, caseContext), "case draft")
@@ -87,10 +90,10 @@ test("host-created capabilities consume a confirmed answer through shared dispat
     }
     const factory = createCollaborationHost({ host, state, human, creationTarget, scopedSources: persistence, evidence, cases, workCaseAuthority: authorizeCase, issueForActor, prepareReissueScope: observer.prepareReissueScope, caseSelectionWrites: new WeakSet<object>(), workSignals, procurement: { list: async () => ({ status: "unavailable", reason: "not-selected" }) }, collections: { resolveRequestCollection: async () => ({ status: "unavailable", reason: "not-selected" }) }, confirmationSource: observer, authority, requiredAuthority: { sf_work_list: [], sf_question_prepare: [], sf_answer_read: [], sf_relation_read: [], sf_handoff_prepare: [] }, createId: randomUUID, now: () => at })
     if (!factory.caseSelection) throw new Error("case selection unavailable")
-    const selectionDraft = { caseRef: encodeCaseRef(decision), period, sourceRefs: [source] }
+    const selectionDraft = { caseRef: encodeCaseRef(decision), period: workPeriod, sourceRefs: [source] }
     const selectionMutation = { expectedStorageVersion: 0, idempotencyKey: "select-January-answers" }
     const selected = ok(await factory.caseSelection.create(selectionDraft, selectionMutation, ok(await human.admit(request(), "collaboration.selection.create", { draft: selectionDraft, mutation: selectionMutation }), "selection admission")), "work selection")
-    const selection = { selectionRef: selected.selectionRef, period }
+    const selection = { selectionRef: selected.selectionRef, period: workPeriod }
     const domains = () => Promise.all((["dashboard", "planner", "procurement"] as const).map((surface) => persistence.transaction(surface, async (snapshot) => ({ commit: false, value: { data: Object.fromEntries(Object.entries(snapshot.data).filter(([key]) => key !== "__sfProductV1")), versions: snapshot.versions } }))))
     const beforeCollaboration = await domains()
     const draft = { kind: "clarification" as const, sourceRef: source.refId, sourceIncarnation: source.target.incarnation, observedVersion: source.target.version, period, recipientRef: "person", body: "Is January unchanged?", evidenceRefs: [source] }
