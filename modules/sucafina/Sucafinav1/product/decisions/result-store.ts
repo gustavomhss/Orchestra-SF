@@ -21,7 +21,7 @@ export function createSfDecisionResultStore(input: {
   createId: () => string
   now: () => string
 }) {
-  const readResult = async (request: { resultRef: string; kind: keyof ResultMap }, context: TrustedDomainContext, historical: boolean): Promise<PortResult<StoredDecisionResult>> => {
+  const readResult = async (request: { resultRef: string; kind: keyof ResultMap }, context: TrustedDomainContext, historical: boolean, calculation = false): Promise<PortResult<StoredDecisionResult>> => {
     const source = input.host.requestFor(context)
     if (!source || !request.resultRef.trim() || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "invalid-authority" }
     const current = await input.state.read(source, "cases", (state, authority) => {
@@ -32,6 +32,7 @@ export function createSfDecisionResultStore(input: {
     if (current.status !== "ok") return { status: current.status === "preview" ? "unavailable" : current.status, reason: "result-unavailable" }
     const value = current.value
     if (!value || value.stored.kind !== request.kind || !validResult(value.stored) || value.stored.resultRef !== request.resultRef || value.stored.resultDigest !== digestSfValue(value.stored.result)) return { status: "unavailable", reason: "result-unavailable" }
+    if (calculation && (value.stored.kind !== "scenario" || [...value.stored.sourceRefs, ...value.stored.result.sourceRefs, ...value.stored.result.costCoverage.evaluatedSourceRefs, ...value.stored.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)].some((ref) => ref.kind !== "record"))) return { status: "unavailable", reason: "calculation-source-unsupported" }
     if (!allowedCase(value.current, value.stored.caseRef, context, historical) || !await input.authorizeCase(value.current!, context).catch(() => false) || !await input.verifySources(value.stored, value.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
     const again = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { current: state.cases[value.stored.caseRef.id], stored: (state as typeof state & { decisionResults?: Record<string, StoredDecisionResult> }).decisionResults?.[request.resultRef] } : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
     if (again.status !== "ok") return { status: "unavailable", reason: "result-unavailable" }
@@ -39,6 +40,7 @@ export function createSfDecisionResultStore(input: {
     return { status: "ok", value: structuredClone(value.stored) }
   }
   const read = (request: { resultRef: string; kind: keyof ResultMap }, context: TrustedDomainContext) => readResult(request, context, false)
+  const readForCalculation = (request: { resultRef: string }, context: TrustedDomainContext) => readResult({ resultRef: request.resultRef, kind: "scenario" }, context, false, true)
   const readHistoricalScenario = (request: { resultRef: string }, context: TrustedDomainContext) => readResult({ resultRef: request.resultRef, kind: "scenario" }, context, true)
   const readByRequest = async (request: { caseRef: CaseRef; kind: keyof ResultMap; idempotencyKey: string; requestDigest: string }, context: TrustedDomainContext): Promise<PortResult<{ state: "found"; result: StoredDecisionResult } | { state: "not-found" }>> => {
     const source = input.host.requestFor(context)
@@ -81,7 +83,7 @@ export function createSfDecisionResultStore(input: {
     if (!saved.value) return { status: "conflict", reason: "result-identity-conflict" }
     return read({ resultRef: saved.value.resultRef, kind: request.kind }, context)
   }
-  return { write, read, readHistoricalScenario, readByRequest }
+  return { write, read, readForCalculation, readHistoricalScenario, readByRequest }
 }
 
 function sameAuthority(authority: { principalRef: string; policyVersion: string; accessRevision: string }, context: TrustedDomainContext) {

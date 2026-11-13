@@ -6,25 +6,30 @@ import type { TrustedUiContext } from "../contracts/sf-execution.ts"
 import type { CriterionRuleInput, createCriterionRuleRegistry } from "./criterion-rules.ts"
 import type { createDecisionCaseManagement } from "./case-management.ts"
 import type { createDecisionMutations } from "./mutations.ts"
+import type { AnalysisPromotionRequest, createAnalysisAlternativePromotion } from "./analysis-promotion.ts"
 import type { createAnalysisAcceptance } from "./analysis-acceptance.ts"
 import type { createPreparedExecution } from "./apply.ts"
+import type { HotTopicDraftRequest, createHotTopicDraftStore } from "./hot-topic-draft.ts"
+import type { createChangeProposalStore } from "./change-proposal-store.ts"
 import type { createPortfolioHistory } from "./portfolio-history.ts"
 import type { createDecisionChoiceCatalog } from "./choice-catalog.ts"
 import type { createDecisionCoverageCatalog } from "./coverage-catalog.ts"
 import type { createDecisionComparisonService } from "./comparison.ts"
 import type { BaselineCoverageRequest, createDecisionBaselineCoverage } from "./baseline-coverage.ts"
 import type { PortfolioSelectionRequest, createDecisionPortfolioSelection } from "./portfolio-selection.ts"
+import type { AdmittedApply } from "./receipt-review-binding.ts"
 import { encodeCaseRef } from "./case-port.ts"
 
 type PortfolioAction = { caseRef: CaseRef; request: PortfolioRequest; selectedCandidateRefs: readonly string[]; combinationId: string; expectedEvaluationDigest: string }
 type CaseRef = { id: string; incarnation: string; version: number }
-type HumanAction = "decisions.edit" | "decisions.promote-alternative" | "decisions.prepare-changes" | "decisions.choose" | "decisions.accept-analysis" | "decisions.apply" | "decisions.criteria" | "decisions.coverage" | "decisions.select-portfolio" | "decisions.promote-portfolio" | "decisions.prepare-portfolio" | "decisions.portfolio.read" | "decisions.portfolio.evaluate" | "decisions.sensitivity.evaluate"
+type HumanAction = "decisions.edit" | "decisions.promote-alternative" | "decisions.prepare-changes" | "decisions.choose" | "decisions.accept-analysis" | "decisions.apply" | "decisions.criteria" | "decisions.coverage" | "decisions.select-portfolio" | "decisions.promote-portfolio" | "decisions.prepare-portfolio" | "decisions.portfolio.read" | "decisions.portfolio.evaluate" | "decisions.sensitivity.evaluate" | "decisions.add-question" | "decisions.answer-question" | "decisions.draft-hot-topic" | "decisions.promote-analysis"
 type Edit = Parameters<ReturnType<typeof createDecisionCaseManagement>["edit"]>[0]
 type Promote = Parameters<ReturnType<typeof createDecisionMutations>["addAlternative"]>[0]
 type Prepare = Parameters<ReturnType<typeof createDecisionMutations>["prepareChanges"]>[0]
 type Choose = Parameters<ReturnType<typeof createDecisionMutations>["recordChoice"]>[0]
+type AddQuestion = Parameters<ReturnType<typeof createDecisionMutations>["addQuestion"]>[0]
+type AnswerQuestion = Parameters<ReturnType<typeof createDecisionMutations>["answerQuestion"]>[0]
 type Accept = Parameters<ReturnType<typeof createAnalysisAcceptance>>[0]
-type Apply = Parameters<ReturnType<typeof createPreparedExecution>>[0]
 type Compare = Parameters<ReturnType<typeof createDecisionComparisonService>>[0]
 
 /** Private HTTP boundary. Human action grants bind the complete decoded payload. */
@@ -48,6 +53,8 @@ export function createDecisionHttp(input: {
     promote: (request: PortfolioAction & { title: string; coverageRef: string }, context: TrustedUiContext) => Promise<PortResult<unknown>>
     prepare: (request: PortfolioAction & { choiceId: string }, context: TrustedUiContext) => Promise<PortResult<unknown>>
   }
+  hotTopicDraft: ReturnType<typeof createHotTopicDraftStore>
+  changeStore: ReturnType<typeof createChangeProposalStore>
   history: ReturnType<typeof createPortfolioHistory>
   choiceCatalog: ReturnType<typeof createDecisionChoiceCatalog>
   coverageCatalog: ReturnType<typeof createDecisionCoverageCatalog>
@@ -57,8 +64,10 @@ export function createDecisionHttp(input: {
   compare: ReturnType<typeof createDecisionComparisonService>
   management: ReturnType<typeof createDecisionCaseManagement>
   mutations: ReturnType<typeof createDecisionMutations>
+  promoteAnalysis: ReturnType<typeof createAnalysisAlternativePromotion>
   accept: ReturnType<typeof createAnalysisAcceptance>
   apply: ReturnType<typeof createPreparedExecution>
+  bindAdmittedApply: (context: TrustedUiContext, request: AdmittedApply) => void
   criteria: ReturnType<typeof createCriterionRuleRegistry>
 }) {
   return async (request: Request): Promise<Response | undefined> => {
@@ -71,7 +80,7 @@ export function createDecisionHttp(input: {
       if (admitted.status !== "ok") return response(admitted)
       try { return response(await input.management.list(admitted.value)) } finally { input.human.finish(admitted.value) }
     }
-    const operations = { "decision-edit": "decisions.edit", "decision-promote": "decisions.promote-alternative", "decision-prepare-changes": "decisions.prepare-changes", "decision-choose": "decisions.choose", "decision-accept-analysis": "decisions.accept-analysis", "decision-apply": "decisions.apply", "decision-criteria": "decisions.criteria", "decision-coverage": "decisions.coverage", "decision-select-portfolio": "decisions.select-portfolio", "decision-promote-portfolio": "decisions.promote-portfolio", "decision-prepare-portfolio": "decisions.prepare-portfolio", "decision-portfolio-history": "decisions.portfolio.read", "decision-portfolio-history-read": "decisions.portfolio.read", "decision-choice-catalog": "decisions.portfolio.read", "decision-coverage-catalog": "decisions.portfolio.read", "decision-review": "decisions.portfolio.read", "decision-sensitivity-units": "decisions.portfolio.read", "decision-portfolio-results": "decisions.portfolio.read", "decision-criterion-read": "decisions.portfolio.read", "decision-portfolio-catalog": "decisions.portfolio.read", "decision-portfolio-preview": "decisions.portfolio.read", "decision-portfolio-evaluate": "decisions.portfolio.evaluate", "decision-portfolio-read": "decisions.portfolio.read", "decision-sensitivity-evaluate": "decisions.sensitivity.evaluate", "decision-sensitivity-read": "decisions.portfolio.read" } as const
+    const operations = { "decision-promote-analysis": "decisions.promote-analysis", "decision-hot-topic-draft": "decisions.draft-hot-topic", "decision-hot-topic-drafts": "decisions.portfolio.read", "decision-hot-topic-draft-read": "decisions.portfolio.read", "decision-add-question": "decisions.add-question", "decision-answer-question": "decisions.answer-question", "decision-edit": "decisions.edit", "decision-promote": "decisions.promote-alternative", "decision-prepare-changes": "decisions.prepare-changes", "decision-choose": "decisions.choose", "decision-accept-analysis": "decisions.accept-analysis", "decision-apply": "decisions.apply", "decision-criteria": "decisions.criteria", "decision-coverage": "decisions.coverage", "decision-select-portfolio": "decisions.select-portfolio", "decision-promote-portfolio": "decisions.promote-portfolio", "decision-prepare-portfolio": "decisions.prepare-portfolio", "decision-change-proposal-read": "decisions.portfolio.read", "decision-portfolio-history": "decisions.portfolio.read", "decision-portfolio-history-read": "decisions.portfolio.read", "decision-choice-catalog": "decisions.portfolio.read", "decision-coverage-catalog": "decisions.portfolio.read", "decision-review": "decisions.portfolio.read", "decision-sensitivity-units": "decisions.portfolio.read", "decision-portfolio-results": "decisions.portfolio.read", "decision-criterion-read": "decisions.portfolio.read", "decision-portfolio-catalog": "decisions.portfolio.read", "decision-portfolio-preview": "decisions.portfolio.read", "decision-portfolio-evaluate": "decisions.portfolio.evaluate", "decision-portfolio-read": "decisions.portfolio.read", "decision-sensitivity-evaluate": "decisions.sensitivity.evaluate", "decision-sensitivity-read": "decisions.portfolio.read" } as const
     if (!action || action !== "decision-compare" && action !== "decision-portfolio-selection" && !Object.hasOwn(operations, action)) return undefined
     if (request.method !== "POST") return response({ status: "needs-input", reason: "method-not-allowed" }, 405)
     if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return response({ status: "needs-input", reason: "invalid-content-type" }, 415)
@@ -86,6 +95,14 @@ export function createDecisionHttp(input: {
       try {
         const context = admitted.value
         const dispatch = async (): Promise<Response> => {
+        if (action === "decision-promote-analysis") return response(await input.promoteAnalysis(payload as AnalysisPromotionRequest, context))
+        if (action === "decision-hot-topic-draft") return response(await input.hotTopicDraft.register(payload as HotTopicDraftRequest, context))
+        if (action === "decision-hot-topic-drafts") return response(await input.hotTopicDraft.list(payload as { caseRef: CaseRef }, context))
+        if (action === "decision-hot-topic-draft-read") {
+          const draft = await input.hotTopicDraft.readCurrent(payload as { caseRef: CaseRef; draftRef: string }, context)
+          return draft.status === "ok" ? response({ status: "ok", value: { draftRef: draft.value.draftRef, version: draft.value.version, target: draft.value.target, fields: draft.value.fields, operation: { kind: "replace", targetRef: draft.value.targetEvidence.refId, replacementRef: draft.value.draftRef } } }) : response(draft)
+        }
+        if (action === "decision-change-proposal-read") return response(await input.changeStore.read(payload as { caseRef: CaseRef; changeRef: string }, context))
         if (action === "decision-portfolio-history") return response(await input.history.list(payload as { caseRef: CaseRef }, context))
         if (action === "decision-portfolio-history-read") return response(await input.history.read(payload as { caseRef: CaseRef; resultRef: string }, context))
         if (action === "decision-choice-catalog") return response(await input.choiceCatalog(payload as { caseRef: CaseRef }, context))
@@ -110,6 +127,8 @@ export function createDecisionHttp(input: {
         if (action === "decision-prepare-portfolio") return response(await input.portfolio.prepare(payload as PortfolioAction & { choiceId: string }, context))
         if (action === "decision-portfolio-selection") return response(await input.selection.inspect(payload as { caseRef: CaseRef }, context))
         if (action === "decision-compare") return response(await input.compare(payload as Compare, context))
+        if (action === "decision-add-question") return response(await input.mutations.addQuestion(payload as AddQuestion, context))
+        if (action === "decision-answer-question") return response(await input.mutations.answerQuestion(payload as AnswerQuestion, context))
         if (action === "decision-edit") return response(await input.management.edit(payload as Edit, context))
         if (action === "decision-promote") return response(await input.mutations.addAlternative(payload as Promote, context))
         if (action === "decision-prepare-changes") return response(await input.mutations.prepareChanges(payload as Prepare, context))
@@ -118,11 +137,13 @@ export function createDecisionHttp(input: {
         if (action === "decision-criteria") return response(await input.criteria.register(payload as CriterionRuleInput, context))
         if (action === "decision-select-portfolio") return response(await input.selection.register(payload as PortfolioSelectionRequest, context))
         if (action === "decision-coverage") return response(await input.baseline.register(payload as BaselineCoverageRequest, context))
-        const result = await input.apply(payload as Apply, context)
+        const admittedApply = payload as AdmittedApply
+        input.bindAdmittedApply(context, admittedApply)
+        const result = await input.apply({ caseRef: admittedApply.caseRef, choiceId: admittedApply.choiceId, changeId: admittedApply.changeId }, context)
         return result.status === "ok" ? response({ status: "ok", value: { receiptId: result.value.id, surface: result.value.surface, version: result.value.version } }) : response(result)
         }
         if (!object(payload) || !caseRef(payload.caseRef)) return await dispatch()
-        const allowHistoricalRetry = ["decision-edit", "decision-promote", "decision-prepare-changes", "decision-choose", "decision-accept-analysis", "decision-apply"].includes(action)
+        const allowHistoricalRetry = ["decision-promote-analysis", "decision-add-question", "decision-answer-question", "decision-edit", "decision-promote", "decision-prepare-changes", "decision-choose", "decision-accept-analysis", "decision-apply"].includes(action)
         const scoped = await input.withCase(context, payload.caseRef, { allowHistoricalRetry }, async () => ({ status: "ok", value: await dispatch() }))
         return scoped.status === "ok" ? scoped.value : response(scoped)
       } finally { input.human.finish(admitted.value) }
@@ -145,6 +166,11 @@ function valid(action: string, value: unknown) {
   if (!object(value)) return false
   if (action === "decision-portfolio-catalog") return closed(value, ["purpose", "caseRefs"], ["purpose", "caseRefs"]) && value.purpose === "catalog" && Array.isArray(value.caseRefs) && value.caseRefs.length > 0 && value.caseRefs.length <= 64 && value.caseRefs.every(caseRef) && new Set(value.caseRefs.map((ref) => JSON.stringify([ref.id, ref.incarnation, ref.version]))).size === value.caseRefs.length
   if (!caseRef(value.caseRef)) return false
+  if (action === "decision-promote-analysis") return closed(value, ["caseRef", "outputRef", "runRef", "outputDigest", "rationale"], ["caseRef", "outputRef", "runRef", "outputDigest", "rationale"]) && text(value.outputRef) && text(value.runRef) && typeof value.outputDigest === "string" && /^[a-f0-9]{64}$/.test(value.outputDigest) && text(value.rationale)
+  if (action === "decision-hot-topic-drafts") return closed(value, ["purpose", "caseRef"], ["purpose", "caseRef"]) && value.purpose === "hot-topic-drafts"
+  if (action === "decision-hot-topic-draft-read") return closed(value, ["purpose", "caseRef", "draftRef"], ["purpose", "caseRef", "draftRef"]) && value.purpose === "hot-topic-draft-read" && text(value.draftRef)
+  if (action === "decision-hot-topic-draft") return closed(value, ["caseRef", "target", "targetEvidence", "fields", "sourceRefs", "draftRef", "expectedVersion"], ["caseRef", "target", "targetEvidence", "fields", "sourceRefs", "expectedVersion"]) && object(value.target) && closed(value.target, ["surface", "type", "id", "incarnation", "version", "fields", "period", "observedAt"], ["surface", "type", "id", "incarnation", "version", "fields", "period", "observedAt"]) && value.target.surface === "dashboard" && value.target.type === "hotTopics" && text(value.target.id) && text(value.target.incarnation) && Number.isSafeInteger(value.target.version) && Number(value.target.version) >= 0 && Array.isArray(value.target.fields) && value.target.fields.every(text) && isSfPeriod(value.target.period) && text(value.target.observedAt) && decodeSfOperationInput("sf_source_get", { evidenceRef: value.targetEvidence }).ok && object(value.fields) && closed(value.fields, ["action", "owner", "due", "priority", "notes"], ["action", "owner", "due", "priority", "notes"]) && text(value.fields.action) && text(value.fields.owner) && text(value.fields.due) && ["critical", "high", "normal"].includes(String(value.fields.priority)) && typeof value.fields.notes === "string" && refs(value.sourceRefs) && (value.draftRef === undefined || text(value.draftRef)) && Number.isSafeInteger(value.expectedVersion) && Number(value.expectedVersion) >= 0
+  if (action === "decision-change-proposal-read") return closed(value, ["purpose", "caseRef", "changeRef"], ["purpose", "caseRef", "changeRef"]) && value.purpose === "change-proposal-read" && text(value.changeRef)
   if (action === "decision-portfolio-history") return closed(value, ["purpose", "caseRef"], ["purpose", "caseRef"]) && value.purpose === "history"
   if (action === "decision-portfolio-history-read") return closed(value, ["purpose", "caseRef", "resultRef"], ["purpose", "caseRef", "resultRef"]) && value.purpose === "history-read" && text(value.resultRef)
   if (action === "decision-choice-catalog") return closed(value, ["purpose", "caseRef"], ["purpose", "caseRef"]) && value.purpose === "choice-catalog"
@@ -160,12 +186,14 @@ function valid(action: string, value: unknown) {
   if (action === "decision-portfolio-selection") return closed(value, ["caseRef"], ["caseRef"])
   if (action === "decision-compare") return closed(value, ["caseRef", "baselineAlternativeId", "alternativeId", "criteria"], ["caseRef", "baselineAlternativeId", "alternativeId", "criteria"]) && text(value.baselineAlternativeId) && text(value.alternativeId) && Array.isArray(value.criteria) && value.criteria.every(text)
   if (action === "decision-select-portfolio") return closed(value, ["caseRef", "baselineAlternativeId", "alternativeId", "criteria", "expectedVersion"], ["caseRef", "baselineAlternativeId", "alternativeId", "criteria", "expectedVersion"]) && text(value.baselineAlternativeId) && text(value.alternativeId) && Array.isArray(value.criteria) && value.criteria.every(text) && Number.isSafeInteger(value.expectedVersion) && Number(value.expectedVersion) >= 0
+  if (action === "decision-add-question") return closed(value, ["caseRef", "questionRef"], ["caseRef", "questionRef"]) && text(value.questionRef)
+  if (action === "decision-answer-question") return closed(value, ["caseRef", "questionId", "answerRef"], ["caseRef", "questionId", "answerRef"]) && text(value.questionId) && text(value.answerRef)
   if (action === "decision-edit") return closed(value, ["caseRef", "objective", "criteria", "sourceRefs", "horizon", "currency", "assumptions"], ["caseRef", "objective", "criteria", "sourceRefs"]) && text(value.objective) && Array.isArray(value.criteria) && value.criteria.length > 0 && value.criteria.every((item) => object(item) && closed(item, ["id", "description", "required"], ["id", "description", "required"]) && text(item.id) && text(item.description) && typeof item.required === "boolean") && refs(value.sourceRefs) && (value.horizon === undefined || isSfPeriod(value.horizon)) && (value.currency === undefined || typeof value.currency === "string" && /^[A-Z]{3}$/.test(value.currency)) && (value.assumptions === undefined || Array.isArray(value.assumptions) && value.assumptions.every((item) => object(item) && closed(item, ["id", "text", "state", "evidenceRefs"], ["id", "text", "state", "evidenceRefs"]) && text(item.id) && text(item.text) && ["open", "confirmed", "rejected"].includes(String(item.state)) && refs(item.evidenceRefs)))
   if (action === "decision-promote") return closed(value, ["caseRef", "title", "scenario", "coverageRef", "alternativeRef"], ["caseRef", "title", "scenario", "coverageRef"]) && text(value.title) && text(value.coverageRef) && decodeSfOperationInput("sf_scenario_simulate", value.scenario).ok && (value.alternativeRef === undefined || object(value.alternativeRef) && closed(value.alternativeRef, ["id", "version"], ["id", "version"]) && text(value.alternativeRef.id) && version(value.alternativeRef.version))
   if (action === "decision-prepare-changes") return closed(value, ["caseRef", "choiceId", "operations"], ["caseRef", "choiceId", "operations"]) && text(value.choiceId) && decodeSfOperationInput("sf_change_prepare", { caseRef: encodeCaseRef(value.caseRef), choiceRef: value.choiceId, operations: value.operations }).ok
   if (action === "decision-choose") return closed(value, ["caseRef", "alternativeId", "alternativeVersion", "comparison", "criteria", "reason"], ["caseRef", "alternativeId", "alternativeVersion", "comparison", "criteria", "reason"]) && text(value.alternativeId) && version(value.alternativeVersion) && text(value.reason) && Array.isArray(value.criteria) && value.criteria.every(text) && decodeSfOperationInput("sf_scenario_compare", value.comparison).ok
   if (action === "decision-accept-analysis") return closed(value, ["caseRef", "outputRef", "runRef", "rationale"], ["caseRef", "outputRef", "runRef", "rationale"]) && text(value.outputRef) && text(value.runRef) && text(value.rationale)
-  if (action === "decision-apply") return closed(value, ["caseRef", "changeId", "choiceId"], ["caseRef", "changeId", "choiceId"]) && text(value.changeId) && text(value.choiceId)
+  if (action === "decision-apply") return closed(value, ["caseRef", "changeId", "choiceId", "reviewDigest"], ["caseRef", "changeId", "choiceId", "reviewDigest"]) && text(value.changeId) && text(value.choiceId) && typeof value.reviewDigest === "string" && /^[a-f0-9]{64}$/.test(value.reviewDigest)
   if (action === "decision-coverage") return closed(value, ["caseRef", "source", "basis", "entries", "expectedVersion"], ["caseRef", "source", "basis", "entries", "expectedVersion"]) && decodeSfOperationInput("sf_source_get", { evidenceRef: value.source }).ok && object(value.basis) && closed(value.basis, ["id", "version", "decisionType", "categoryIds", "additionalCategoryIds", "sourceRefs"], ["id", "version", "decisionType", "categoryIds", "additionalCategoryIds", "sourceRefs"]) && text(value.basis.id) && version(value.basis.version) && text(value.basis.decisionType) && Array.isArray(value.basis.categoryIds) && value.basis.categoryIds.every(text) && Array.isArray(value.basis.additionalCategoryIds) && value.basis.additionalCategoryIds.every(text) && refs(value.basis.sourceRefs) && Array.isArray(value.entries) && value.entries.every(coverageEntry) && Number.isSafeInteger(value.expectedVersion) && Number(value.expectedVersion) >= 0
   if (action === "decision-criteria") return closed(value, ["caseRef", "criterionId", "metricRef", "operator", "value", "unit", "period", "evidenceRefs", "expectedRuleVersion", "sensitivity"], ["caseRef", "criterionId", "metricRef", "operator", "value", "unit", "period", "evidenceRefs", "expectedRuleVersion"]) && text(value.criterionId) && text(value.metricRef) && ["lte", "gte", "eq"].includes(String(value.operator)) && typeof value.value === "number" && Number.isFinite(value.value) && text(value.unit) && isSfPeriod(value.period) && refs(value.evidenceRefs) && Number.isSafeInteger(value.expectedRuleVersion) && Number(value.expectedRuleVersion) >= 0 && (value.sensitivity === undefined || object(value.sensitivity) && closed(value.sensitivity, ["baselineRef", "parameterRef", "parameterUnit", "resultUnit", "engineVersion", "sourceRefs"], ["baselineRef", "parameterRef", "parameterUnit", "resultUnit", "engineVersion", "sourceRefs"]) && text(value.sensitivity.baselineRef) && text(value.sensitivity.parameterRef) && text(value.sensitivity.parameterUnit) && text(value.sensitivity.resultUnit) && text(value.sensitivity.engineVersion) && refs(value.sensitivity.sourceRefs))
   return false
