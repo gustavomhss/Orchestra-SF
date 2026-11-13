@@ -1,12 +1,13 @@
 import type { Application } from "../../runtime/application.ts"
 import type { Actor, Environment, Persistence, Snapshot } from "../../runtime/contract.ts"
-import type { ForecastCompareRequest, CaseDraftRequest, CaseReadRequest, DashboardReadRequest, RequestReadRequest, JsonValue } from "./operations.ts"
-import type { DomainProjection, ImportManifest, PreservedReview, RoutineResult } from "./context.ts"
-import type { DecisionCase, ScenarioResult, ScenarioComparison, PortfolioResult, ObservedResultProjection, CostCoverageAssessment } from "./decisions.ts"
+import type { ForecastCompareRequest, CaseDraftRequest, CaseReadRequest, DashboardReadRequest, RequestReadRequest, ScenarioRequest, ScenarioCompareRequest, SensitivityRequest, JsonValue } from "./operations.ts"
+import type { DomainProjection, ImportManifest, PreservedReview, RoutineResult, CommandReceipt } from "./context.ts"
+import type { DecisionCase, ScenarioResult, ScenarioComparison, PortfolioResult, ObservedResultProjection, CostCoverageAssessment, CostCoverageBasis } from "./decisions.ts"
 import type { BusinessEvidenceRef, BusinessContextService, AuthorizedCaseProjection } from "./business-context.ts"
 import type { TrustedDomainContext, CapabilityResult } from "./sf-execution.ts"
 import type { ContributionEnvelope } from "./resident-ai.ts"
 import type { SfProductStatePort } from "./state.ts"
+import type { SensitivityResult } from "./outputs.ts"
 
 export type DomainPortHost = {
   persistence: Persistence
@@ -38,10 +39,13 @@ export type SfDocumentReadPort = {
 }
 export type PlannerPort = {
   compareForecast: (request: ForecastCompareRequest, binding: TrustedDomainContext) => Promise<PortResult<FinancialAnalysis>>
+  simulateScenario: (request: ScenarioRequest, binding: TrustedDomainContext) => Promise<PortResult<ScenarioResult>>
+  compareScenarios: (request: ScenarioCompareRequest, binding: TrustedDomainContext) => Promise<PortResult<ScenarioComparison>>
+  evaluateSensitivity: (request: SensitivityRequest, binding: TrustedDomainContext) => Promise<PortResult<SensitivityResult>>
 }
 export type PlannerSourceHost = {
   resolveForecastSource: (reference: string, context: TrustedDomainContext) => Promise<PortResult<{ versionId: string; evidence: Extract<BusinessEvidenceRef, { kind: "record" }> }>>
-  resolveForecastCoverage: (reference: string, context: TrustedDomainContext) => Promise<PortResult<{ coverageRef: string; assessment: CostCoverageAssessment }>>
+  resolveForecastCoverage: (reference: string, context: TrustedDomainContext) => Promise<PortResult<{ coverageRef: string; basis: CostCoverageBasis; assessment: CostCoverageAssessment }>>
 }
 export type DecisionCasePort = {
   draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>
@@ -61,6 +65,10 @@ export type PreparedDomainMutation = {
   expectedVersion: number
   execute: (snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: boolean; value: JsonValue }
 }
+export type PreparedApplyPort = {
+  executePrepared: (request: { caseRef: { id: string; incarnation: string; version: number }; changeId: string; choiceId: string }, binding: TrustedDomainContext) => Promise<PortResult<CommandReceipt>>
+  readReceipt: (request: { surface: PreparedDomainMutation["surface"]; targetRef: string; targetIncarnation: string; idempotencyKey: string; commandDigest: string }, binding: TrustedDomainContext) => Promise<PortResult<{ state: "found"; receipt: CommandReceipt } | { state: "not-found" }>>
+}
 export type BusinessPorts = {
   identity: Readonly<{ installationId: string; hostId: string; projectId: string; locationId: string; policyVersion: string }>
   state: SfProductStatePort
@@ -68,6 +76,7 @@ export type BusinessPorts = {
   cases: DecisionCasePort
   dashboard: DashboardPort
   procurement: ProcurementPort
+  apply: PreparedApplyPort
   context: BusinessContextService
   analysis: {
     create: (request: { caseRef: { id: string; version: number; incarnation: string }; profileId: string; profileVersion: string; skillId: string; skillVersion: string; manifestDigest: string; outputSchemaVersion: string; requestedOperationScope: readonly string[]; objective: string; contextFingerprint: string }, binding: TrustedDomainContext) => Promise<PortResult<ContributionEnvelope>>
@@ -79,6 +88,7 @@ export type BusinessPorts = {
     prepareAdmission: (request: { publishedRecipeRef: string; planRevisionId: string; writeScope: readonly string[]; inputRefs: readonly string[]; parameters: Readonly<Record<string, JsonValue>> }, binding: TrustedDomainContext) => Promise<PortResult<RoutineResult>>
     readAdmission: (admissionRef: string, binding: TrustedDomainContext) => Promise<PortResult<RoutineResult>>
     readRun: (runRef: string, binding: TrustedDomainContext) => Promise<PortResult<RoutineResult>>
+    run: (request: { admissionRef: string; caseRef: { id: string; incarnation: string; version: number } }, binding: TrustedDomainContext) => Promise<PortResult<RoutineResult>>
   }
   result: { write: (request: { runRef: string; caseRef: { id: string; version: number; incarnation: string }; output: ContributionEnvelope }, binding: TrustedDomainContext) => Promise<PortResult<{ outputRef: string; caseVersion: number }>> }
   schedules: {

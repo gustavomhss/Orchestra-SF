@@ -3770,22 +3770,28 @@ const definitions = {
           "$ref": "#/definitions/__type_122"
         }
       },
+      "costCoverageBases": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/CostCoverageBasis_123"
+        }
+      },
       "assumptions": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_123"
+          "$ref": "#/definitions/__type_124"
         }
       },
       "questions": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_125"
+          "$ref": "#/definitions/__type_126"
         }
       },
       "choices": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/ChoiceRecord_127"
+          "$ref": "#/definitions/ChoiceRecord_128"
         }
       },
       "ledger": {
@@ -3797,13 +3803,13 @@ const definitions = {
       "preparedChanges": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/PreparedChangeView_131"
+          "$ref": "#/definitions/PreparedChangeView_132"
         }
       },
       "receipts": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/CommandReceiptView_133"
+          "$ref": "#/definitions/CommandReceiptView_134"
         }
       }
     },
@@ -3819,6 +3825,7 @@ const definitions = {
       "participants",
       "sourceRefs",
       "alternatives",
+      "costCoverageBases",
       "assumptions",
       "questions",
       "choices",
@@ -3871,7 +3878,48 @@ const definitions = {
       "result"
     ]
   },
-  "__type_123": {
+  "CostCoverageBasis_123": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "version": {
+        "type": "number"
+      },
+      "decisionType": {
+        "type": "string"
+      },
+      "categoryIds": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "sourceRefs": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BusinessEvidenceRef_4"
+        }
+      },
+      "additionalCategoryIds": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "required": [
+      "id",
+      "version",
+      "decisionType",
+      "categoryIds",
+      "sourceRefs",
+      "additionalCategoryIds"
+    ]
+  },
+  "__type_124": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3888,7 +3936,7 @@ const definitions = {
         }
       },
       "state": {
-        "$ref": "#/definitions/Shape_124"
+        "$ref": "#/definitions/Shape_125"
       }
     },
     "required": [
@@ -3898,7 +3946,7 @@ const definitions = {
       "state"
     ]
   },
-  "Shape_124": {
+  "Shape_125": {
     "anyOf": [
       {
         "const": "confirmed"
@@ -3911,7 +3959,7 @@ const definitions = {
       }
     ]
   },
-  "__type_125": {
+  "__type_126": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3922,7 +3970,7 @@ const definitions = {
         "type": "string"
       },
       "state": {
-        "$ref": "#/definitions/Shape_126"
+        "$ref": "#/definitions/Shape_127"
       },
       "answerRef": {
         "type": "string"
@@ -3934,7 +3982,7 @@ const definitions = {
       "state"
     ]
   },
-  "Shape_126": {
+  "Shape_127": {
     "anyOf": [
       {
         "const": "open"
@@ -3944,17 +3992,17 @@ const definitions = {
       }
     ]
   },
-  "ChoiceRecord_127": {
+  "ChoiceRecord_128": {
     "anyOf": [
       {
-        "$ref": "#/definitions/Shape_128"
+        "$ref": "#/definitions/Shape_129"
       },
       {
-        "$ref": "#/definitions/Shape_130"
+        "$ref": "#/definitions/Shape_131"
       }
     ]
   },
-  "Shape_128": {
+  "Shape_129": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -3979,7 +4027,7 @@ const definitions = {
       "values": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_129"
+          "$ref": "#/definitions/__type_130"
         }
       },
       "evidenceRefs": {
@@ -4027,7 +4075,7 @@ const definitions = {
       "costCoverage"
     ]
   },
-  "__type_129": {
+  "__type_130": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4055,7 +4103,7 @@ const definitions = {
       "horizon"
     ]
   },
-  "Shape_130": {
+  "Shape_131": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4080,7 +4128,7 @@ const definitions = {
       "values": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_129"
+          "$ref": "#/definitions/__type_130"
         }
       },
       "evidenceRefs": {
@@ -4128,12 +4176,12 @@ const definitions = {
       "costCoverage"
     ]
   },
-  "PreparedChangeView_131": {
+  "PreparedChangeView_132": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "state": {
-        "$ref": "#/definitions/Shape_132"
+        "$ref": "#/definitions/Shape_133"
       },
       "id": {
         "type": "string"
@@ -4143,6 +4191,9 @@ const definitions = {
       },
       "caseVersion": {
         "type": "number"
+      },
+      "choiceId": {
+        "type": "string"
       },
       "target": {
         "$ref": "#/definitions/SourceRef_33"
@@ -4174,6 +4225,7 @@ const definitions = {
       "id",
       "caseId",
       "caseVersion",
+      "choiceId",
       "target",
       "expectedVersion",
       "preview",
@@ -4182,7 +4234,7 @@ const definitions = {
       "operationRef"
     ]
   },
-  "Shape_132": {
+  "Shape_133": {
     "anyOf": [
       {
         "const": "failed"
@@ -4204,7 +4256,7 @@ const definitions = {
       }
     ]
   },
-  "CommandReceiptView_133": {
+  "CommandReceiptView_134": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4233,7 +4285,7 @@ const definitions = {
         "type": "string"
       },
       "status": {
-        "$ref": "#/definitions/Shape_134"
+        "$ref": "#/definitions/Shape_135"
       },
       "resultRef": {
         "type": "string"
@@ -4258,7 +4310,7 @@ const definitions = {
       "errors"
     ]
   },
-  "Shape_134": {
+  "Shape_135": {
     "anyOf": [
       {
         "const": "failed"
@@ -4277,7 +4329,7 @@ const definitions = {
       }
     ]
   },
-  "__type_135": {
+  "__type_136": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4297,14 +4349,14 @@ const definitions = {
       "domainApplied"
     ]
   },
-  "__type_136": {
+  "__type_137": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "receipts": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/CommandReceiptView_133"
+          "$ref": "#/definitions/CommandReceiptView_134"
         }
       }
     },
@@ -4312,14 +4364,14 @@ const definitions = {
       "receipts"
     ]
   },
-  "__type_137": {
+  "__type_138": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "items": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_138"
+          "$ref": "#/definitions/__type_139"
         }
       }
     },
@@ -4327,7 +4379,7 @@ const definitions = {
       "items"
     ]
   },
-  "__type_138": {
+  "__type_139": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4354,7 +4406,7 @@ const definitions = {
       "ownerRef"
     ]
   },
-  "__type_139": {
+  "__type_140": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4371,7 +4423,7 @@ const definitions = {
         }
       },
       "state": {
-        "$ref": "#/definitions/Shape_140"
+        "$ref": "#/definitions/Shape_141"
       }
     },
     "required": [
@@ -4381,7 +4433,7 @@ const definitions = {
       "state"
     ]
   },
-  "Shape_140": {
+  "Shape_141": {
     "anyOf": [
       {
         "const": "confirmed"
@@ -4394,14 +4446,14 @@ const definitions = {
       }
     ]
   },
-  "__type_141": {
+  "__type_142": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "relations": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_142"
+          "$ref": "#/definitions/__type_143"
         }
       }
     },
@@ -4409,7 +4461,7 @@ const definitions = {
       "relations"
     ]
   },
-  "__type_142": {
+  "__type_143": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4448,7 +4500,7 @@ const definitions = {
       "evidenceRefs"
     ]
   },
-  "__type_143": {
+  "__type_144": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4478,7 +4530,7 @@ const definitions = {
       "domainApplied"
     ]
   },
-  "ImportManifest_144": {
+  "ImportManifest_145": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4506,17 +4558,17 @@ const definitions = {
       "commands": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/PreparedCommandView_145"
+          "$ref": "#/definitions/PreparedCommandView_146"
         }
       },
       "issues": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_146"
+          "$ref": "#/definitions/__type_147"
         }
       },
       "state": {
-        "$ref": "#/definitions/Shape_147"
+        "$ref": "#/definitions/Shape_148"
       },
       "domainApplied": {
         "type": "boolean"
@@ -4524,7 +4576,7 @@ const definitions = {
       "receipts": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/CommandReceiptView_133"
+          "$ref": "#/definitions/CommandReceiptView_134"
         }
       }
     },
@@ -4542,7 +4594,7 @@ const definitions = {
       "receipts"
     ]
   },
-  "PreparedCommandView_145": {
+  "PreparedCommandView_146": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4589,7 +4641,7 @@ const definitions = {
       "operationRef"
     ]
   },
-  "__type_146": {
+  "__type_147": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4609,7 +4661,7 @@ const definitions = {
       "reason"
     ]
   },
-  "Shape_147": {
+  "Shape_148": {
     "anyOf": [
       {
         "const": "stale"
@@ -4625,7 +4677,7 @@ const definitions = {
       }
     ]
   },
-  "__type_148": {
+  "__type_149": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4658,7 +4710,7 @@ const definitions = {
       "gaps"
     ]
   },
-  "AuthorizedArtifact_149": {
+  "AuthorizedArtifact_150": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4689,7 +4741,7 @@ const definitions = {
       "accessRevision"
     ]
   },
-  "__type_150": {
+  "__type_151": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4708,14 +4760,14 @@ const definitions = {
       "accessRevision"
     ]
   },
-  "__type_151": {
+  "__type_152": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "matches": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_152"
+          "$ref": "#/definitions/__type_153"
         }
       },
       "limitations": {
@@ -4730,7 +4782,7 @@ const definitions = {
       "limitations"
     ]
   },
-  "__type_152": {
+  "__type_153": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4750,7 +4802,7 @@ const definitions = {
       "lexicalScore"
     ]
   },
-  "__type_153": {
+  "__type_154": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4765,14 +4817,14 @@ const definitions = {
       "resolutions"
     ]
   },
-  "AuthorizedRoutineCatalog_154": {
+  "AuthorizedRoutineCatalog_155": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "recipes": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/__type_155"
+          "$ref": "#/definitions/__type_156"
         }
       },
       "limitations": {
@@ -4787,7 +4839,7 @@ const definitions = {
       "limitations"
     ]
   },
-  "__type_155": {
+  "__type_156": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4818,7 +4870,7 @@ const definitions = {
       "writeScope"
     ]
   },
-  "RoutineResult_156": {
+  "RoutineResult_157": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4835,7 +4887,7 @@ const definitions = {
         "type": "string"
       },
       "admission": {
-        "$ref": "#/definitions/Shape_157"
+        "$ref": "#/definitions/Shape_158"
       },
       "runRef": {
         "type": "string"
@@ -4879,7 +4931,7 @@ const definitions = {
       "pending"
     ]
   },
-  "Shape_157": {
+  "Shape_158": {
     "anyOf": [
       {
         "const": "unavailable"
@@ -4901,7 +4953,7 @@ const definitions = {
       }
     ]
   },
-  "__type_158": {
+  "__type_159": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -4918,7 +4970,7 @@ const definitions = {
         "type": "string"
       },
       "state": {
-        "$ref": "#/definitions/Shape_159"
+        "$ref": "#/definitions/Shape_160"
       },
       "admissionRef": {
         "type": "string"
@@ -4931,7 +4983,7 @@ const definitions = {
       "state"
     ]
   },
-  "Shape_159": {
+  "Shape_160": {
     "anyOf": [
       {
         "const": "unavailable"
@@ -4989,28 +5041,28 @@ export const sfOperationOutputSchemas = {
   "sf_sourcing_compare": { ...{"$ref":"#/definitions/CommercialComparison_56"}, definitions },
   "sf_case_read": { ...{"$ref":"#/definitions/AuthorizedCaseProjection_119"}, definitions },
   "sf_case_draft": { ...{"$ref":"#/definitions/IntentFrame_1"}, definitions },
-  "sf_alternative_draft": { ...{"$ref":"#/definitions/__type_135"}, definitions },
+  "sf_alternative_draft": { ...{"$ref":"#/definitions/__type_136"}, definitions },
   "sf_change_prepare": { ...{"$ref":"#/definitions/PreparedChangeSet_62"}, definitions },
-  "sf_receipt_get": { ...{"$ref":"#/definitions/__type_136"}, definitions },
-  "sf_work_list": { ...{"$ref":"#/definitions/__type_137"}, definitions },
+  "sf_receipt_get": { ...{"$ref":"#/definitions/__type_137"}, definitions },
+  "sf_work_list": { ...{"$ref":"#/definitions/__type_138"}, definitions },
   "sf_question_prepare": { ...{"$ref":"#/definitions/QuestionProposal_28"}, definitions },
-  "sf_answer_read": { ...{"$ref":"#/definitions/__type_139"}, definitions },
-  "sf_relation_read": { ...{"$ref":"#/definitions/__type_141"}, definitions },
-  "sf_handoff_prepare": { ...{"$ref":"#/definitions/__type_143"}, definitions },
+  "sf_answer_read": { ...{"$ref":"#/definitions/__type_140"}, definitions },
+  "sf_relation_read": { ...{"$ref":"#/definitions/__type_142"}, definitions },
+  "sf_handoff_prepare": { ...{"$ref":"#/definitions/__type_144"}, definitions },
   "sf_document_extract": { ...{"$ref":"#/definitions/DocumentEvidence_82"}, definitions },
-  "sf_import_preview": { ...{"$ref":"#/definitions/ImportManifest_144"}, definitions },
-  "sf_review_prepare": { ...{"$ref":"#/definitions/__type_148"}, definitions },
+  "sf_import_preview": { ...{"$ref":"#/definitions/ImportManifest_145"}, definitions },
+  "sf_review_prepare": { ...{"$ref":"#/definitions/__type_149"}, definitions },
   "sf_report_prepare": { ...{"$ref":"#/definitions/MeetingMaterialProposal_87"}, definitions },
-  "sf_artifact_get": { ...{"$ref":"#/definitions/AuthorizedArtifact_149"}, definitions },
-  "sf_context_get": { ...{"$ref":"#/definitions/__type_150"}, definitions },
-  "sf_knowledge_search": { ...{"$ref":"#/definitions/__type_151"}, definitions },
+  "sf_artifact_get": { ...{"$ref":"#/definitions/AuthorizedArtifact_150"}, definitions },
+  "sf_context_get": { ...{"$ref":"#/definitions/__type_151"}, definitions },
+  "sf_knowledge_search": { ...{"$ref":"#/definitions/__type_152"}, definitions },
   "sf_evidence_get": { ...{"$ref":"#/definitions/BusinessEvidenceResolution_95"}, definitions },
   "sf_decision_recall": { ...{"$ref":"#/definitions/CaseRecall_89"}, definitions },
-  "sf_freshness_check": { ...{"$ref":"#/definitions/__type_153"}, definitions },
-  "sf_routine_catalog": { ...{"$ref":"#/definitions/AuthorizedRoutineCatalog_154"}, definitions },
-  "sf_routine_prepare": { ...{"$ref":"#/definitions/RoutineResult_156"}, definitions },
-  "sf_routine_run": { ...{"$ref":"#/definitions/RoutineResult_156"}, definitions },
-  "sf_routine_status": { ...{"$ref":"#/definitions/RoutineResult_156"}, definitions },
-  "sf_routine_result": { ...{"$ref":"#/definitions/RoutineResult_156"}, definitions },
-  "sf_watch_prepare": { ...{"$ref":"#/definitions/__type_158"}, definitions },
+  "sf_freshness_check": { ...{"$ref":"#/definitions/__type_154"}, definitions },
+  "sf_routine_catalog": { ...{"$ref":"#/definitions/AuthorizedRoutineCatalog_155"}, definitions },
+  "sf_routine_prepare": { ...{"$ref":"#/definitions/RoutineResult_157"}, definitions },
+  "sf_routine_run": { ...{"$ref":"#/definitions/RoutineResult_157"}, definitions },
+  "sf_routine_status": { ...{"$ref":"#/definitions/RoutineResult_157"}, definitions },
+  "sf_routine_result": { ...{"$ref":"#/definitions/RoutineResult_157"}, definitions },
+  "sf_watch_prepare": { ...{"$ref":"#/definitions/__type_159"}, definitions },
 } as const

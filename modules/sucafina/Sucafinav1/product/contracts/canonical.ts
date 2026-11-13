@@ -1,10 +1,23 @@
 /** Tagged canonical bytes distinguish absent, null, zero and inherited value descriptors. */
+import type { BusinessEvidenceRef } from "./business-context.ts"
+import type { ContributionEnvelope } from "./resident-ai.ts"
+
 export function canonicalSfValue(value: unknown): string {
   return JSON.stringify(canonical(value))
 }
 
 export function digestSfValue(value: unknown): string {
   return new Bun.CryptoHasher("sha256").update(canonicalSfValue(value)).digest("hex")
+}
+
+/** Integrity of the whole reference; authentication remains in the source resolver. */
+export function digestSfEvidenceRef(reference: BusinessEvidenceRef): string {
+  return digestSfValue(Object.fromEntries(Object.entries(reference).filter(([key]) => key !== "refDigest")))
+}
+
+/** The digest field itself is excluded; all other envelope fields are bound to this revision. */
+export function digestSfContribution(envelope: ContributionEnvelope): string {
+  return digestSfValue(Object.fromEntries(Object.entries(envelope).filter(([key]) => key !== "outputDigest")))
 }
 
 function canonical(value: unknown): unknown {

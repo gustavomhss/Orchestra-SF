@@ -76,6 +76,7 @@ export type PreparedChange = {
   id: string
   caseId: string
   caseVersion: number
+  choiceId: string
   target: SourceRef
   expectedVersion: number
   operation: PreparedCommand
@@ -98,6 +99,7 @@ export type DecisionCase = {
   participants: readonly string[]
   sourceRefs: readonly BusinessEvidenceRef[]
   alternatives: readonly { id: string; version: number; title: string; result: ScenarioResult }[]
+  costCoverageBases: readonly CostCoverageBasis[]
   assumptions: readonly { id: string; text: string; evidenceRefs: readonly BusinessEvidenceRef[]; state: "open" | "confirmed" | "rejected" }[]
   questions: readonly { id: string; text: string; state: "open" | "answered"; answerRef?: string }[]
   choices: readonly ChoiceRecord[]

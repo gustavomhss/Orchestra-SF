@@ -6,7 +6,7 @@ import type { Mcp } from "@orchestra/core/mcp"
 import type { Host } from "@orchestra/core/host"
 import type { Effect, Scope } from "effect"
 import type { ResidentProfile, SkillManifest, SkillLoadReceipt } from "./resident-ai.ts"
-import type { CapabilityDescriptor, CapabilityResult, TrustedExecutionBinding, TrustedCallContext, TrustedDomainContext } from "./sf-execution.ts"
+import type { CapabilityDescriptor, CapabilityResult, BoundCapabilityReceipt, TrustedExecutionBinding, TrustedCallContext, TrustedDomainContext } from "./sf-execution.ts"
 import type { PortResult } from "./ports.ts"
 
 export type SfRuntimeError = { readonly code: "invalid-manifest" | "invalid-skill" | "invalid-binding" | "provider-conflict" | "denied" | "unavailable" | "failed"; readonly reason: string }
@@ -25,6 +25,7 @@ export type SfBindingRegistry = {
   lease: (context: Tool.Context, operation: string, inputDigest: string) => Promise<PortResult<TrustedCallContext>>
   consume: (context: TrustedCallContext, operation: string, inputDigest: string) => boolean
   requestFor: (context: TrustedCallContext) => Request | undefined
+  receiptFor: (context: TrustedCallContext, operation: string, inputDigest: string, resultDigest?: string) => BoundCapabilityReceipt | undefined
   revalidate: (context: TrustedCallContext) => Promise<boolean>
   finish: (context: TrustedCallContext) => void
   invalidateGeneration: (generation: number) => void
