@@ -29,7 +29,8 @@ test("native execution denies forged tickets and rejected preflight without crea
   try {
     const state = createSfProductState({ persistence, authorize: async () => undefined, resolveTarget: async () => undefined, createId: () => "unused" })
     const store = createSfRunStore({ state, requestFor: () => undefined, revalidate: async () => false,
-      preflight: async () => ({ status: "denied", reason: "unavailable" }), now: () => "2026-11-13T00:00:00Z" })
+      preflight: async () => ({ status: "denied", reason: "unavailable" }),
+      revalidateForCommit: async () => ({ status: "denied", reason: "unavailable" }), now: () => "2026-11-13T00:00:00Z" })
     const registry = createSfExecutionBindingRegistry({ authenticateAndResolve: async () => undefined, revalidateAdmission: async () => false })
     const contribution = createSfNativeHostContribution({ registry, admit: () => Effect.succeed(false), authorize: () => Effect.succeed(false) })
     const layer = AppNodeBuilder.build(LayerNode.group([contribution.node]), [[SessionExecution.node, SessionExecutionLocal.node]])

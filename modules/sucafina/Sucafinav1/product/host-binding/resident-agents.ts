@@ -6,7 +6,7 @@ import { Effect } from "effect"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { RegisterSfResidentAgents, SfSelectedRuntime, SfSourceCapability } from "../contracts/runtime.ts"
 
-const sources = new WeakMap<SfSourceCapability, { skills: SkillV2.Interface; root: string; physical: string; selections: readonly string[]; active: boolean }>()
+const sources = new WeakMap<SfSourceCapability, { skills: SkillV2.Interface; root: string; physical: string; selections: readonly SfSelectedRuntime[]; active: boolean }>()
 
 export function validSfSelection(selected: SfSelectedRuntime) {
   return /^[a-f0-9]{64}$/.test(selected.manifestDigest) && selected.skills.length > 0 &&
@@ -20,7 +20,10 @@ export function validSfSelection(selected: SfSelectedRuntime) {
 
 export function sfSourceFor(capability: SfSourceCapability, skills: SkillV2.Interface, selected: SfSelectedRuntime) {
   const source = sources.get(capability)
-  if (!source?.active || source.skills !== skills || !source.selections.includes(digestSfValue(selected))) return undefined
+  if (!source?.active || source.skills !== skills || !validSfSelection(selected) || !source.selections.some((registered) =>
+    registered.manifestDigest === selected.manifestDigest && digestSfValue(registered.profile) === digestSfValue(selected.profile) &&
+    selected.skills.every((skill) => registered.skills.some((original) => digestSfValue(original) === digestSfValue(skill))) &&
+    selected.operationIds.every((operation) => registered.operationIds.includes(operation)))) return undefined
   return Object.freeze({ root: source.root, physical: source.physical })
 }
 
@@ -65,7 +68,7 @@ export const registerSfResidentAgents: RegisterSfResidentAgents = (input) => Eff
     }))
   })
   const capability = Object.freeze({}) as SfSourceCapability
-  const state = { skills: input.skills, root, physical, selections: selected.map(digestSfValue), active: true }
+  const state = { skills: input.skills, root, physical, selections: selected, active: true }
   sources.set(capability, state)
   yield* Effect.addFinalizer(() => Effect.sync(() => { state.active = false }))
   return capability

@@ -59,7 +59,7 @@ export async function createReport(
     (options.topics.includes("Talent Review") && !actor.roles.includes("admin"))
   )
     return { ok: false, status: 403 }
-  const topics = options.topics.map((name) => topic(snapshot, actor, environment, name, options.year))
+  const topics = options.topics.map((name) => topic(snapshot, actor, environment, name, options.year, allowed.includes("Budget Overview")))
   const title = options.title || "Sucafina IT — CIO Dashboard Report"
   if (options.format === "docx") {
     const script = wordScript(title, options.year, environment.at, topics)
@@ -97,68 +97,33 @@ export async function createReport(
   for (const selected of topics) {
     const slide = presentation.addSlide()
     slide.background = { color: "F3F6F2" }
-    slide.addText(selected.title, {
-      x: 0.6,
-      y: 0.35,
-      w: 12.1,
-      h: 0.6,
-      color: "173D2C",
-      fontSize: 27,
-      bold: true,
-    })
+    slide.addText(selected.title, { x: 0.6, y: 0.35, w: 12.1, h: 0.6, color: "173D2C", fontSize: 27, bold: true })
     slide.addText(`FY ${options.year} · ${environment.at.slice(0, 10)}`, {
-      x: 0.6,
-      y: 1.0,
-      w: 12,
-      h: 0.25,
-      fontSize: 10,
-      color: "607469",
+      x: 0.6, y: 1.0, w: 12, h: 0.25, fontSize: 10, color: "607469",
     })
-    const metrics = selected.metrics.slice(0, 6)
-    metrics.forEach((metric, index) =>
-      slide.addText(`${metric.label}\n${metric.value}`, {
-        x: 0.6 + (index % 3) * 4.1,
-        y: 1.45 + Math.floor(index / 3) * 0.8,
-        w: 3.8,
-        h: 0.7,
-        fontSize: 15,
-        color: "173D2C",
-        margin: 0.08,
-        fill: { color: "FFFFFF" },
-      }),
-    )
-    const table = selected.table.slice(0, 12)
-    if (table.length)
-      slide.addTable(
-        table.map((row) => row.map((cell) => ({ text: cell }))),
-        {
-          x: 0.6,
-          y: metrics.length > 3 ? 3.2 : 2.4,
-          w: 12.1,
-          h: 3.7,
-          fontSize: 10,
-          color: "243C30",
-          border: { type: "solid", color: "DCE5DA", pt: 0.3 },
-          fill: { color: "FFFFFF" },
-          margin: 0.06,
-        },
-      )
-    else
-      slide.addText(
-        selected.bullets
-          .slice(0, 12)
-          .map((bullet) => `• ${bullet}`)
-          .join("\n") || "No records.",
-        {
-          x: 0.6,
-          y: 3.2,
-          w: 12,
-          h: 3,
-          fontSize: 17,
-          color: "243C30",
-          breakLine: true,
-        },
-      )
+    if (selected.subtitle) slide.addText(selected.subtitle, { x: 0.6, y: 1.24, w: 12, h: 0.2, fontSize: 10, color: "607469", margin: 0 })
+    selected.metrics.forEach((metric, index) => {
+      const target = index < 6 ? slide : presentation.addSlide()
+      target.addText(`${metric.label}\n${metric.value}`, {
+        x: index < 6 ? 0.6 + (index % 3) * 4.1 : 0.6,
+        y: index < 6 ? 1.45 + Math.floor(index / 3) * 0.8 : 1.45,
+        w: 3.8, h: 0.7, fontSize: 15, color: "173D2C", margin: 0.08, fill: { color: "FFFFFF" },
+      })
+    })
+    const records = selected.table.length ? selected.table.map((row) => row.join(" · ")) : selected.bullets
+    if (!records.length) slide.addText("No records.", { x: 0.6, y: 3.2, w: 12, h: 0.5, fontSize: 17 })
+    records.forEach((record, recordIndex) => {
+      // Bounded text fragments prevent a long note from silently clipping in a fixed-height shape.
+      const fragments = record.replace(/\r\n|\r|\n/g, " ↵ ").match(/.{1,60}(?:\s|$)|\S{1,60}/gu)?.map((fragment) => fragment.trim()) ?? [""]
+      fragments.forEach((fragment, fragmentIndex) => {
+        const page = presentation.addSlide()
+        page.background = { color: "F3F6F2" }
+        page.addText(`${selected.title} · FY ${options.year} · ${recordIndex + 1}/${records.length}${fragments.length > 1 ? ` · ${fragmentIndex + 1}/${fragments.length}` : ""}`, {
+          x: 0.6, y: 0.35, w: 12.1, h: 0.6, color: "173D2C", fontSize: 20, bold: true,
+        })
+        page.addText(fragment, { x: 0.6, y: 1.3, w: 12.1, h: 5.4, fontSize: 14, color: "243C30", margin: 0.08, breakLine: true })
+      })
+    })
   }
   const output = await presentation.write({ outputType: "uint8array" })
   if (!(output instanceof Uint8Array)) throw new Error("Unexpected presentation output")
@@ -170,8 +135,9 @@ export async function createReport(
   }
 }
 
-function topic(snapshot: Snapshot, actor: Actor, environment: Environment, name: string, year: number): Topic {
+function topic(snapshot: Snapshot, actor: Actor, environment: Environment, name: string, year: number, canReadBudget: boolean): Topic {
   if (name === "Executive Dashboard" || name === "Executive Summary" || name === "Budget Overview") {
+    if (!canReadBudget) return { title: name, bullets: ["Budget figures are unavailable for this selection."], metrics: [], table: [] }
     const totals = computeBudgetTotals(budget(snapshot.data), year)
     return {
       title: name,

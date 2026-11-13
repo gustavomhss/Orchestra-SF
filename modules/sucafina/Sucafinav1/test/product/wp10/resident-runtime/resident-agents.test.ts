@@ -48,3 +48,36 @@ test("resident registration rejects a missing skill and accepts the same skill f
     await rm(root, { recursive: true, force: true })
   }
 })
+
+test("resident source grants only exact registered skills and operations or a strict subset", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "sf-resident-subset-"))
+  try {
+    const fullProfile = { ...profile, allowedSkills: [...profile.allowedSkills, "sf-outra"], allowedOperations: [...profile.allowedOperations, "sf_context_get", "sf_extra"] }
+    const base = selection(fullProfile, ["sf_forecast_compare", "sf_context_get"])
+    const first = { ...base, skills: [{ ...base.skills[0]!, allowedOperations: [...base.skills[0]!.allowedOperations, "sf_extra"] }] }
+    const second = { ...first.skills[0]!, id: "sf-outra", sourcePath: "ai/skills/sf-outra/SKILL.md", sourceDigest: "f".repeat(64) }
+    const registered = { ...first, skills: [...first.skills, second] }
+    for (const id of fullProfile.allowedSkills) {
+      await mkdir(path.join(root, id))
+      await writeFile(path.join(root, id, "SKILL.md"), `---\nname: ${id}\ndescription: Test skill\n---\n# Instructions\n`)
+    }
+    const expired = await Effect.gen(function* () {
+      const skills = yield* SkillV2.Service
+      const agents = yield* AgentV2.Service
+      const capability = yield* registerSfResidentAgents({ agents, skills, selected: [registered], source: { type: "directory", path: AbsolutePath.make(root) } })
+      const subset = { ...registered, skills: [registered.skills[0]!], operationIds: ["sf_forecast_compare"] }
+      expect(sfSourceFor(capability, skills, subset)).toBeDefined()
+      expect(sfSourceFor(capability, skills, { ...subset, operationIds: [...subset.operationIds, "sf_context_get", "sf_context_get"] })).toBeUndefined()
+      expect(sfSourceFor(capability, skills, { ...subset, skills: [...subset.skills, subset.skills[0]!] })).toBeUndefined()
+      expect(sfSourceFor(capability, skills, { ...subset, manifestDigest: "e".repeat(64) })).toBeUndefined()
+      expect(sfSourceFor(capability, skills, { ...subset, profile: { ...subset.profile, mission: "changed" } })).toBeUndefined()
+      expect(sfSourceFor(capability, skills, { ...subset, skills: [{ ...subset.skills[0]!, sourceDigest: "e".repeat(64) }] })).toBeUndefined()
+      expect(sfSourceFor(capability, skills, { ...subset, skills: [{ ...second, sourcePath: subset.skills[0]!.sourcePath }] })).toBeUndefined()
+      expect(sfSourceFor(capability, skills, { ...subset, operationIds: ["sf_extra"] })).toBeUndefined()
+      return { capability, skills, subset }
+    }).pipe(Effect.scoped, Effect.provide(layer), Effect.runPromise)
+    expect(sfSourceFor(expired.capability, expired.skills, expired.subset)).toBeUndefined()
+  } finally {
+    await rm(root, { recursive: true, force: true })
+  }
+})

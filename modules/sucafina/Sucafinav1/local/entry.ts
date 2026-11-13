@@ -24,6 +24,7 @@ import { enumerateSfSources } from "../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../product/integration/source-projections.ts"
 import { createSfBiHttp } from "../product/integration/bi-http.ts"
 import { digestSfValue } from "../product/contracts/canonical.ts"
+import freeze from "../product/contracts/freeze-v1.json"
 import biBrowser from "../product/integration/generated/bi-entry.txt" with { type: "text" }
 import type { CreateSfHostRuntime } from "../product/contracts/host-context.ts"
 
@@ -84,7 +85,10 @@ export async function createLocalInstallation(context: { origin: string; createH
   const requestEnvironment = async (request: Request) => ({ at: now(), id: randomUUID, directory: await identity.directory(request), bankKey: loaded.keys.bank })
   const installationId = operator?.installationId ?? digestSfValue({ origin: config.origin, mount: config.mount, directory: loaded.directory })
   const runtime = await context.createHostRuntime?.({ installationId, directory: loaded.directory, sourceRoot: path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
-    mount: config.mount, persistence: store, authenticate: identity.authenticate, environment: requestEnvironment })
+    mount: config.mount, persistence: store, authenticate: identity.authenticate, environment: requestEnvironment,
+    grants: operator ? [{ principalRef: `macos:${operator.installationId}:${operator.uid}`,
+      namespaces: ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox"],
+      operations: freeze.operations.map((operation) => operation.operation) }] : [] })
   const product = createSfBiHttp({ installationId, projectId: installationId, policyVersion: "sf-product-v1", origin: config.origin, mount: config.mount,
     persistence: store, authenticate: identity.authenticate, environment: requestEnvironment, browserScript: async () => biBrowser, ...(runtime ? { identity: runtime.identity } : {}) })
   const business = createModule(config.mount, {

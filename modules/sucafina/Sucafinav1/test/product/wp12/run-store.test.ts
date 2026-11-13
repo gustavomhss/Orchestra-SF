@@ -7,7 +7,7 @@ import type { TrustedDomainContext } from "../../../product/contracts/sf-executi
 import { testPersistence } from "../../fixture/persistence.ts"
 
 // Real product-state transactions with an injected host; this does not prove a native host or ACL.
-async function fixture() {
+async function fixture(options?: { mutateSnapshot?: boolean }) {
   const storage = testPersistence()
   const request = new Request("https://example.test/")
   const authority = { principalRef: "user", policyVersion: "policy", accessRevision: "access" }
@@ -17,7 +17,7 @@ async function fixture() {
     current.cases.case = { id: "case", incarnation: "inc", version: 1, participants: ["user"] } as unknown as typeof current.cases[string]
     return { commit: true, value: true }
   })
-  const store = createSfRunStore({ state, requestFor: () => request, revalidate: async () => true, preflight: async () => ({ status: "ok", value: { sourceFence: sfRunSourceFence(storage.state.dashboard) } }), now: () => "2026-11-13T00:00:00Z" })
+  const store = createSfRunStore({ state, requestFor: () => request, revalidate: async () => true, preflight: async () => ({ status: "ok", value: { sourceFence: sfRunSourceFence(storage.state.dashboard) } }), revalidateForCommit: async (_record, _context, snapshot) => { if (options?.mutateSnapshot) snapshot.data.injected = true; return { status: "ok", value: true } }, now: () => "2026-11-13T00:00:00Z" })
   const record = { schema: "sf-native-run-v1", runRef: "run", version: 1, requestDigest: "a".repeat(64), skillInputDigest: "b".repeat(64), principalRef: "user", accessRevision: "access", policyVersion: "policy", caseRef: { id: "case", incarnation: "inc", version: 1 }, selection: { profile: { id: "sf_finance", version: "1", outputTypes: [], sourceDigest: "d".repeat(64) }, skills: [{ id: "skill", version: "1", sourceDigest: "e".repeat(64), instructionsDigest: "f".repeat(64) }], operationIds: [], manifestDigest: "c".repeat(64) }, model: { providerID: "openai", id: "model" }, skillId: "skill", objective: "review", contextFingerprint: "context", createdAt: "2026-11-13T00:00:00Z", updatedAt: "2026-11-13T00:00:00Z", state: "preparing" } as unknown as SfNativeRunRecord
   return { storage, state, store, context, record }
 }
@@ -63,4 +63,12 @@ test("stale run is preserved when its case advances", async () => {
     return { commit: true, value: true }
   })
   expect(await f.store.markStale("run", "case-changed", f.context)).toMatchObject({ status: "ok", value: { state: "stale", version: 3, native: { sessionID: "session" } } })
+})
+
+
+test("commit validator cannot mutate the storage snapshot", async () => {
+  const f = await fixture({ mutateSnapshot: true })
+  expect(await f.store.create(f.record, f.context)).toEqual({ status: "denied", reason: "commit-revalidation-mutated-snapshot" })
+  expect(f.storage.state.dashboard.data.injected).toBeUndefined()
+  expect(await f.state.read(new Request("https://example.test/"), "contributions", (state) => state.nativeRuns?.run)).toMatchObject({ status: "ok", value: undefined })
 })

@@ -13,7 +13,7 @@ import { SessionStore } from "@orchestra/core/session/store"
 import { SessionSubagentModels } from "@orchestra/core/session/subagent-models"
 import { InvalidRequestReason, LLMError, LLMRequest, Model } from "@orchestra/llm"
 import { LLMClient, RequestExecutor } from "@orchestra/llm/route"
-import { Context, Effect, Layer, Stream } from "effect"
+import { Context, Effect, Exit, Layer, Stream } from "effect"
 import { HttpClient, HttpClientError } from "effect/unstable/http"
 import normative from "../../../../modules/sucafina/Sucafinav1/product/contracts/normative-contracts.json"
 import freeze from "../../../../modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json"
@@ -234,14 +234,23 @@ export function createSfTokenGate(input: SfTokenGateStorage & { upstream: Node.L
         !same(yield* store.get(admission.sessionID), record)) return undefined
       owned.add(admission.sessionID)
       sessions.set(admission.sessionID, record)
-      if (!(yield* check(record)) || !same(yield* store.get(admission.sessionID), record)) {
+      return yield* Effect.gen(function* () {
+        if (!(yield* check(record)) || !same(yield* store.get(admission.sessionID), record)) return undefined
+        const ticket: SfTokenGateTicket = Object.freeze({ [ticketBrand]: true })
+        tickets.set(ticket, record)
+        return ticket
+      }).pipe(Effect.onExit((exit) => Effect.sync(() => {
+        if (Exit.isSuccess(exit) && exit.value !== undefined) return
+        record.active = false
         if (sessions.get(admission.sessionID) === record) sessions.delete(admission.sessionID)
-        return undefined
-      }
-      const ticket: SfTokenGateTicket = Object.freeze({ [ticketBrand]: true })
-      tickets.set(ticket, record)
-      return ticket
+      })))
     }),
+    revokeSession: (sessionID: SessionSchema.ID) => {
+      const record = sessions.get(sessionID)
+      if (!record) return
+      record.active = false
+      if (sessions.get(sessionID) === record) sessions.delete(sessionID)
+    },
     valid: (ticket: SfTokenGateTicket, store: SessionStore.Interface) => Effect.gen(function* () {
       const record = tickets.get(ticket)
       if (!record || !same(yield* store.get(record.admission.sessionID), record) || !(yield* check(record))) return false

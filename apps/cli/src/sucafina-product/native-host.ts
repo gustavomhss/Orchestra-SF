@@ -54,9 +54,17 @@ export type SfNativeBudgetReservation = {
   profileId: SfNativeAdmission["profile"]["id"]
 }
 
+export type SfLoadedSkillObservation = Readonly<{
+  session: SessionSchema.Info
+  admission: SfNativeAdmission
+  skills: SkillV2.Interface
+  sourceCapability: SfSourceCapability
+}>
+
 export type SfNativeHostPolicy = {
   registry: SfBindingRegistry
   onReady?: (api: SfNativeHostApi) => () => void
+  onSkillLoaded?: (observation: SfLoadedSkillObservation) => () => void
   budget?: {
     gate: ReturnType<typeof createSfTokenGate>
     reserveSession: (input: SfNativeBudgetReservation) => Effect.Effect<void, unknown>
@@ -69,7 +77,9 @@ export type SfNativeHostPolicy = {
 /** Product-owned node and registration callback share one private Location-bound capability registry. */
 export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
   const sources = new WeakMap<SkillV2.Interface, SfSourceCapability>()
-  const runs = new WeakMap<TrustedExecutionBinding, { admission: SfNativeAdmission; ticket: SfTokenGateTicket; prompt: string; used: boolean }>()
+  const runs = new WeakMap<TrustedExecutionBinding, { admission: SfNativeAdmission; ticket: SfTokenGateTicket; prompt: string; used: boolean; release: () => void }>()
+  const observations = new Set<() => void>()
+  const lifetime = { open: true }
   const onRegistered = (registration: { skills: SkillV2.Interface; sourceCapability: SfSourceCapability }) => {
     sources.set(registration.skills, registration.sourceCapability)
   }
@@ -80,11 +90,16 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
         const session = yield* SessionV2.Service
         const store = yield* SessionStore.Service
         const locations = yield* LocationServiceMap.Service
+        yield* Effect.addFinalizer(() => Effect.gen(function* () {
+          lifetime.open = false
+          yield* Effect.forEach(observations, (release) => Effect.exit(Effect.sync(release)), { discard: true })
+          observations.clear()
+        }))
         const authorized = (binding: TrustedExecutionBinding) => {
           const run = runs.get(binding)
-          if (!run || run.admission.request.signal.aborted || Date.now() >= Date.parse(binding.expiresAt)) return Effect.succeed(false)
+          if (!lifetime.open || !run || run.admission.request.signal.aborted || Date.now() >= Date.parse(binding.expiresAt)) return Effect.succeed(false)
           return Effect.suspend(() => input.authorize(run.admission, binding)).pipe(Effect.catch(() => Effect.succeed(false)),
-            Effect.map((valid) => valid && runs.get(binding) === run && !run.admission.request.signal.aborted && Date.now() < Date.parse(binding.expiresAt)))
+            Effect.map((valid) => valid && lifetime.open && runs.get(binding) === run && !run.admission.request.signal.aborted && Date.now() < Date.parse(binding.expiresAt)))
         }
         const api = SfNativeHost.of({
           prepare: (request) => Effect.gen(function* () {
@@ -93,7 +108,7 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
               toolCallBudget: request.toolCallBudget, skillLoadBudget: request.skillLoadBudget })), request: request.request })
             if (args.request.signal.aborted || !(yield* Effect.suspend(() => input.admit(args)).pipe(Effect.catch(() => Effect.succeed(false)))))
               return { status: "denied", reason: "native-admission-denied" } as const
-            if (!input.budget) return { status: "unavailable", reason: "c15-context-budget-gate-unavailable" } as const
+            if (!lifetime.open || !input.budget) return { status: "unavailable", reason: "c15-context-budget-gate-unavailable" } as const
             const budget = input.budget
             const selected = args.selected
             const selectedSkill = selected.skills.find((skill) => skill.id === args.skillId)
@@ -141,28 +156,55 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
             const admission: SfNativeAdmission = { request: args.request, selected, sessionID, runId: args.runId,
               caseRef: args.caseRef, profile: selected.profile, manifestDigest: selected.manifestDigest,
               skillReceipts: Object.freeze([Object.freeze(loaded.success)]), entryMode: args.entryMode }
-            const attempted = yield* Effect.result(Effect.tryPromise({ try: () => input.registry.bind(admission), catch: () => "binding-unavailable" }))
-            if (attempted._tag === "Failure") {
-              return { status: "unavailable", reason: "native-binding-unavailable" } as const
-            }
-            const bound = attempted.success
-            if (bound.status !== "ok") {
-              return bound
-            }
-            if (!sameNativeProject(created.success, bound.value)) {
-              input.registry.revoke(bound.value)
-              return { status: "denied", reason: "native-project-mismatch" } as const
-            }
-            const ticket = yield* budget.gate.register({ admission, binding: bound.value, model: args.model, location: args.location,
-              revalidate: () => input.authorize(admission, bound.value),
-              persistReceipt: (receipt) => budget.persistReceipt(bound.value, receipt),
-            }).pipe(Effect.provideService(SessionStore.Service, store))
-            if (!ticket) {
-              input.registry.revoke(bound.value)
-              return { status: "unavailable", reason: "c15-context-budget-gate-unavailable" } as const
-            }
-            runs.set(bound.value, { admission, ticket, prompt: args.prompt, used: false })
-            return { status: "ok", value: { binding: bound.value, sessionID, skillReceipt: loaded.success } } as const
+            const acquired: { binding?: TrustedExecutionBinding; ticket?: SfTokenGateTicket; retained: boolean; closed: boolean } = { retained: false, closed: false }
+            return yield* Effect.acquireUseRelease(
+              Effect.sync(() => {
+                if (!lifetime.open) throw new Error("native-host-disposed")
+                return input.onSkillLoaded?.({ session: created.success, admission, skills: placed.success.skills,
+                  sourceCapability: placed.success.sourceCapability! })
+              }),
+              (release) => Effect.gen(function* () {
+                const attempted = yield* Effect.result(Effect.tryPromise({ try: () => input.registry.bind(admission).then((result) => {
+                  if (result.status === "ok") {
+                    if (acquired.closed) input.registry.revoke(result.value)
+                    else acquired.binding = result.value
+                  }
+                  return result
+                }), catch: () => "binding-unavailable" }))
+                if (attempted._tag === "Failure") return { status: "unavailable", reason: "native-binding-unavailable" } as const
+                const bound = attempted.success
+                if (bound.status !== "ok") return bound
+                if (!sameNativeProject(created.success, bound.value)) return { status: "denied", reason: "native-project-mismatch" } as const
+                const ticket = yield* budget.gate.register({ admission, binding: bound.value, model: args.model, location: args.location,
+                  revalidate: () => input.authorize(admission, bound.value),
+                  persistReceipt: (receipt) => budget.persistReceipt(bound.value, receipt),
+                }).pipe(Effect.provideService(SessionStore.Service, store))
+                if (!ticket) return { status: "unavailable", reason: "c15-context-budget-gate-unavailable" } as const
+                acquired.ticket = ticket
+                if (!lifetime.open) return { status: "unavailable", reason: "c15-context-budget-gate-unavailable" } as const
+                const discard = () => {
+                  if (!observations.delete(discard)) return
+                  budget.gate.revoke(ticket)
+                  input.registry.revoke(bound.value)
+                  runs.delete(bound.value)
+                  release?.()
+                }
+                observations.add(discard)
+                runs.set(bound.value, { admission, ticket, prompt: args.prompt, used: false, release: discard })
+                acquired.retained = true
+                return { status: "ok", value: { binding: bound.value, sessionID, skillReceipt: loaded.success } } as const
+              }),
+              (release) => Effect.sync(() => {
+                if (acquired.retained) return
+                acquired.closed = true
+                budget.gate.revokeSession(sessionID)
+                if (acquired.ticket) budget.gate.revoke(acquired.ticket)
+                if (acquired.binding) input.registry.revoke(acquired.binding)
+                release?.()
+              }),
+            ).pipe(Effect.onInterrupt(() => Effect.sync(() => {
+              if (acquired.binding) runs.get(acquired.binding)?.release()
+            })))
           }),
           collect: (binding) => Effect.gen(function* () {
             if (!(yield* authorized(binding))) return { status: "denied", reason: "native-authority-unavailable" } as const
@@ -192,9 +234,7 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
             if (!(yield* authorized(binding))) return { status: "denied", reason: "native-authority-unavailable" } as const
             const run = runs.get(binding)!
             yield* session.interrupt(run.admission.sessionID)
-            input.budget?.gate.revoke(run.ticket)
-            input.registry.revoke(binding)
-            runs.delete(binding)
+            run.release()
             return { status: "ok", value: true } as const
           }),
         })

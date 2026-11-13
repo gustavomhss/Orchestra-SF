@@ -166,7 +166,7 @@ test("revoked authority prevents settling an admitted run", async () => {
   expect(observed.writes).toBe(0)
 })
 
-test("real SQLite and C08 leases persist unavailable settlement after reopening", async () => {
+test("real SQLite and C08 reject a changed Planner source and persist settlement after reopening", async () => {
   const { chmod, mkdtemp, realpath, rm } = await import("node:fs/promises")
   const { tmpdir } = await import("node:os")
   const { join } = await import("node:path")
@@ -183,15 +183,18 @@ test("real SQLite and C08 leases persist unavailable settlement after reopening"
   const request = new Request("https://example.test/analysis")
   const sessionID = SessionSchema.ID.make("ses_sf_analysis")
   const caseRef = { id: "case", incarnation: "inc", version: 1 }
-  const profile = { id: "sf_finance", version: "1", mission: "Finance", allowedSkills: ["sf-explicar-forecast"], allowedOperations: ["sf_forecast_compare"], outputTypes: [], contextBudgetTokens: 1000, maxSteps: 2, maxDelegations: 0, modelClass: "reasoning", resumePolicy: "fresh", sourcePath: "profile.json", sourceDigest: "a".repeat(64) } as const
+  const profile = { id: "sf_finance", version: "1", mission: "Finance", allowedSkills: ["sf-explicar-forecast"], allowedOperations: ["sf_forecast_compare"], outputTypes: ["MatchExplanation"], contextBudgetTokens: 1000, maxSteps: 2, maxDelegations: 0, modelClass: "reasoning", resumePolicy: "fresh", sourcePath: "profile.json", sourceDigest: "a".repeat(64) } as const
   const skill = { id: "sf-explicar-forecast", version: "1", sourcePath: "skill/SKILL.md", sourceDigest: "b".repeat(64), instructionsDigest: "c".repeat(64), inputSchemaRef: "input", outputSchemaRefs: [], allowedProfiles: ["sf_finance"], allowedOperations: ["sf_forecast_compare"], workflow: [], limits: { maxSteps: 2, contextBudgetTokens: 1000 }, positiveAcceptance: [], negativeAcceptance: [] } as const
   const selection = { profile, skills: [skill], operationIds: ["sf_forecast_compare"], manifestDigest: "d".repeat(64) }
   const receipt = { runId: "run", nativeSessionId: sessionID, profileId: profile.id, profileVersion: profile.version, profileDigest: profile.sourceDigest, skillId: skill.id, skillVersion: skill.version, sourceDigest: skill.sourceDigest, instructionsDigest: skill.instructionsDigest, loadedMessageId: "msg_loaded", loadedAt: "2026-11-13T00:00:00Z", manifestDigest: selection.manifestDigest }
-  const access = { allowed: true, calls: 0 }
+  const access = { allowed: true, calls: 0, expectedPlanner: 0, preparingChecks: 0, revokeAtEgress: true }
   const registry = createSfExecutionBindingRegistry({ authenticateAndResolve: async () => access.allowed ? { installationId: "installation", hostId: "host", projectId: "project", locationId: "location", principalRef: "principal", policyVersion: "policy", accessRevision: "access", providerGeneration: 1, expiresAt: new Date(Date.now() + 600_000).toISOString() } : undefined, revalidateAdmission: async () => access.allowed })
   const bound = await registry.bind({ request, selected: selection, sessionID, runId: "run", caseRef, profile, manifestDigest: selection.manifestDigest, skillReceipts: [receipt], entryMode: "interactive" })
   expect(bound.status).toBe("ok")
-  if (bound.status !== "ok") return
+  if (bound.status !== "ok") {
+    await rm(directory, { recursive: true, force: true })
+    return
+  }
   const withRunContext = async <T>(_runRef: string, action: (context: import("../../../product/contracts/sf-execution.ts").TrustedDomainContext) => Promise<import("../../../product/contracts/ports.ts").PortResult<T>>) => {
     const call = `call-${++access.calls}`
     const lease = await registry.lease({ sessionID, agent: AgentV2.ID.make(profile.id), assistantMessageID: SessionMessage.ID.make("msg_assistant"), toolCallID: call }, "sf_forecast_compare", "e".repeat(64))
@@ -205,7 +208,18 @@ test("real SQLite and C08 leases persist unavailable settlement after reopening"
     const store = createSfRunStore({ state, requestFor: (context) => context.kind === "native" ? registry.requestFor(context) : undefined, revalidate: (context) => context.kind === "native" ? registry.revalidate(context) : Promise.resolve(false), preflight: async (_record, context) => {
       if (context.kind !== "native" || !await registry.revalidate(context)) return { status: "denied", reason: "invalid-authority" }
       const sourceFence = await persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: sfRunSourceFence(snapshot) }))
+      if (_record.state === "ready") {
+        access.expectedPlanner = await persistence.transaction("planner", async (snapshot) => ({ commit: false, value: Number(snapshot.data.revision ?? 0) }))
+        await persistence.transaction("planner", async (snapshot) => { snapshot.data.revision = access.expectedPlanner + 1; return { commit: true, value: true } })
+      }
+      if (_record.state === "preparing" && ++access.preparingChecks === 2 && access.revokeAtEgress) access.allowed = false
       return { status: "ok", value: { sourceFence } }
+    }, revalidateForCommit: async (_record, context, _snapshot, output) => {
+      if (context.kind !== "native" || !await registry.revalidate(context)) return { status: "denied", reason: "invalid-authority" }
+      if (!output) return { status: "ok", value: true }
+      const current = await persistence.transaction("planner", async (snapshot) => ({ commit: false, value: Number(snapshot.data.revision ?? 0) }))
+      if (current !== access.expectedPlanner) return { status: "stale", reason: "planner-source-changed" }
+      return { status: "ok", value: true }
     }, now: () => "2026-11-13T00:00:00Z" })
     return { persistence, state, store }
   }
@@ -216,13 +230,23 @@ test("real SQLite and C08 leases persist unavailable settlement after reopening"
       return { commit: true, value: true }
     })
     const record = { schema: "sf-native-run-v1", runRef: "run", version: 1, requestDigest: "1".repeat(64), skillInputDigest: "2".repeat(64), principalRef: "principal", accessRevision: "access", policyVersion: "policy", caseRef, selection, model: { providerID: "openai", id: "model" }, skillId: skill.id, objective: "review", contextFingerprint: "context", createdAt: "2026-11-13T00:00:00Z", updatedAt: "2026-11-13T00:00:00Z", state: "preparing" } as const
-    expect((await withRunContext("run", (context) => first.store.create(record, context))).status).toBe("ok")
+    expect(await withRunContext("run", (context) => first.store.create(record, context))).toEqual({ status: "denied", reason: "invalid-authority" })
+    access.allowed = true
+    access.revokeAtEgress = false
+    expect(await withRunContext("run", (context) => first.store.read("run", context))).toMatchObject({ status: "ok", value: { state: "preparing", version: 1 } })
     expect((await withRunContext("run", (context) => first.store.attach("run", 1, sessionID, receipt, context))).status).toBe("ok")
+    expect(await withRunContext("run", (context) => first.store.create(record, context))).toEqual({ status: "stale", reason: "run-or-output-changed" })
+    expect((await withRunContext("run", (context) => first.store.transition("run", 2, "running", undefined, context))).status).toBe("ok")
+    const { digestSfContribution } = await import("../../../product/contracts/canonical.ts")
+    const output = { id: "output", caseRef, kind: "MatchExplanation", schemaVersion: "sf-contribution-v1", state: "ready", payload: { candidateCaseRef: caseRef, matchedCriteria: [], currentDifferences: [], sourceStates: [], limitations: [] }, evidenceRefs: [], runProvenance: { ...receipt, actualModel: "model", contextFingerprint: "context" }, accessRevision: "access", createdAt: "2026-11-13T00:00:00Z", outputDigest: "" } as const
+    const contribution = { ...output, outputDigest: digestSfContribution(output) }
+    expect(await withRunContext("run", (context) => first.store.publish("run", 3, contribution, context))).toEqual({ status: "stale", reason: "planner-source-changed" })
+    expect(await first.state.read(request, "contributions", (state) => state.contributions.output)).toMatchObject({ status: "ok", value: undefined })
     const host = createSfAnalysisHost({ store: first.store, withRunContext, verify: async () => ({ status: "ok", value: true }) } as unknown as Parameters<typeof createSfAnalysisHost>[0])
     expect(await withRunContext("run", (context) => host.settle("run", "unavailable", "native-gate-unavailable", context))).toEqual({ status: "ok", value: true })
     await first.persistence.dispose()
     const reopened = await open()
-    expect(await withRunContext("run", (context) => reopened.store.read("run", context))).toMatchObject({ status: "ok", value: { state: "unavailable", reason: "native-gate-unavailable", version: 3 } })
+    expect(await withRunContext("run", (context) => reopened.store.read("run", context))).toMatchObject({ status: "ok", value: { state: "unavailable", reason: "native-gate-unavailable", version: 4 } })
     access.allowed = false
     expect((await withRunContext("run", (context) => reopened.store.read("run", context))).status).toBe("denied")
     await reopened.persistence.dispose()

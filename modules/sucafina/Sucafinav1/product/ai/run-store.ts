@@ -18,6 +18,8 @@ export function createSfRunStore(input: {
   requestFor: (context: TrustedDomainContext) => Request | undefined
   revalidate: (context: TrustedDomainContext) => Promise<boolean>
   preflight: (record: SfNativeRunRecord, context: TrustedDomainContext, output?: ContributionEnvelope) => Promise<PortResult<{ sourceFence: string }>>
+  /** Read-only source and authority revalidation under the shared SQLite transaction lock. */
+  revalidateForCommit: (record: SfNativeRunRecord, context: TrustedDomainContext, snapshot: Readonly<Snapshot>, output?: ContributionEnvelope) => Promise<PortResult<true>>
   now: () => string
 }) {
   async function readRecord(runRef: string, context: TrustedDomainContext): Promise<PortResult<SfNativeRunRecord>> {
@@ -54,7 +56,7 @@ export function createSfRunStore(input: {
     if (contributions.status !== "ok") return "reason" in contributions ? { status: contributions.status, reason: contributions.reason } : { status: "unavailable", reason: "unexpected-state-preview" }
     if (cases.status !== "ok") return "reason" in cases ? { status: cases.status, reason: cases.reason } : { status: "unavailable", reason: "unexpected-state-preview" }
     if (!await input.revalidate(context)) return { status: "denied", reason: "invalid-authority" }
-    const saved = await input.state.transaction(request, {
+    const saved = await input.state.transaction<PortResult<SfNativeRunRecord> | undefined>(request, {
       namespace: "contributions", expectedStorageVersion: contributions.storageVersion,
       additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: cases.storageVersion }],
       idempotencyKey: `run:${record.runRef}:${record.version}`, commandDigest: digestSfValue({ record, output }),
@@ -65,15 +67,31 @@ export function createSfRunStore(input: {
       if (authority.principalRef !== record.principalRef || authority.policyVersion !== record.policyVersion || authority.accessRevision !== record.accessRevision ||
           !currentCase || currentCase.incarnation !== record.caseRef.incarnation || ((record.state === "stale" || record.state === "cancelled") ? currentCase.version < record.caseRef.version : currentCase.version !== record.caseRef.version) || !currentCase.participants.includes(record.principalRef) ||
           sfRunSourceFence(snapshot) !== checked.value.sourceFence || (output && !!state.contributions[output.id]) || (expectedVersion === null ? !!previous : previous?.version !== expectedVersion)) return { commit: false, value: undefined }
+      const before = structuredClone(snapshot)
+      const current = await Promise.resolve().then(() => input.revalidateForCommit(record, context, snapshot, output)).catch(() => ({ status: "unavailable", reason: "commit-revalidation-unavailable" } as const))
+      if (!Bun.deepEquals(snapshot, before)) return { commit: false, value: { status: "denied", reason: "commit-revalidation-mutated-snapshot" } as const }
+      if (current.status !== "ok") return { commit: false, value: { status: current.status, reason: current.reason } as const }
       state.nativeRuns ??= {}
       state.nativeRuns[record.runRef] = record
       if (output) state.contributions[output.id] = output
-      return { commit: true, value: record }
+      return { commit: true, value: { status: "ok", value: record } as const }
     })
-    if (saved.status === "preview") return { status: "stale", reason: "run-case-or-source-changed" }
+    if (saved.status === "preview") return saved.value ?? { status: "stale", reason: "run-case-or-source-changed" }
     if (saved.status !== "ok") return "reason" in saved ? { status: saved.status, reason: saved.reason } : { status: "unavailable", reason: "unexpected-state-preview" }
     if (!saved.value) return { status: "stale", reason: "run-case-or-source-changed" }
-    return { status: "ok", value: saved.value }
+    if (saved.value.status !== "ok") return saved.value
+    const current = await input.state.read(request, "contributions", (state, authority) => {
+      if (authority.principalRef !== record.principalRef || authority.policyVersion !== record.policyVersion || authority.accessRevision !== record.accessRevision) return undefined
+      const actual = state.nativeRuns?.[record.runRef]
+      if (!actual || digestSfValue(actual) !== digestSfValue(record) || (output && (!state.contributions[output.id] || digestSfValue(state.contributions[output.id]) !== digestSfValue(output)))) return undefined
+      return actual
+    })
+    if (current.status !== "ok") return "reason" in current ? { status: current.status, reason: current.reason } : { status: "unavailable", reason: "unexpected-state-preview" }
+    if (!current.value) return { status: "stale", reason: "run-or-output-changed" }
+    const checkedAgain = await input.preflight(current.value, context, output)
+    if (checkedAgain.status !== "ok") return checkedAgain
+    if (!await input.revalidate(context)) return { status: "denied", reason: "invalid-authority" }
+    return { status: "ok", value: current.value }
   }
 
   return {
