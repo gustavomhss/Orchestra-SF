@@ -1,0 +1,31 @@
+diff --git a/modules/sucafina/Sucafinav1/product/contracts/host-context.ts b/modules/sucafina/Sucafinav1/product/contracts/host-context.ts
+index fa0d39f3dfc23bfce751d91b00ae6c8fc2a87686..92e00c36399534087f0f58718d79a1ead2f9789a 100644
+--- a/modules/sucafina/Sucafinav1/product/contracts/host-context.ts
++++ b/modules/sucafina/Sucafinav1/product/contracts/host-context.ts
+@@ -19,8 +19,11 @@
+ import type { ForecastExplainInput } from "./skill-inputs.ts"
+ import type { ForecastCompareRequest } from "./operations.ts"
+ import type { MonthlyDraft } from "../planner/monthly-edit.ts"
++import type { createPlannerProduct } from "../planner/product.ts"
+ import type { View, Result } from "../../runtime/contract.ts"
+ import type { runSfAnalysis } from "../ai/analysis-port.ts"
++
++type SfPlannerProduct = ReturnType<typeof createPlannerProduct>
+ 
+ export type SfPlannerMonthlyInput = { page: "OPEX" | "CAPEX"; versionId: string; drafts: readonly MonthlyDraft[] }
+ export type SfPlannerMonthlyResult = { view: View; rows: readonly { draft: MonthlyDraft; errors: readonly { cell?: MonthlyDraft["cells"][number]; reason: string }[]; result?: Result }[] }
+@@ -49,6 +52,14 @@
+   personalViews?: ReturnType<typeof createSfPersonalViews>
+   forecastInputs?: {
+     prepare: (context: TrustedUiContext, input: ForecastCompareRequest & { caseRef: { id: string; incarnation: string; version: number } }) => Promise<PortResult<ForecastExplainInput>>
++  }
++  plannerOverview?: {
++    read: (context: TrustedUiContext, input: Parameters<SfPlannerProduct["overview"]>[0]) => ReturnType<SfPlannerProduct["overview"]>
++  }
++  plannerVersions?: {
++    read: (context: TrustedUiContext, input: { selectedId?: string }) => ReturnType<SfPlannerProduct["versions"]["read"]>
++    preview: (context: TrustedUiContext, input: Parameters<SfPlannerProduct["versions"]["preview"]>[0]) => ReturnType<SfPlannerProduct["versions"]["preview"]>
++    apply: (context: TrustedUiContext, input: Parameters<SfPlannerProduct["versions"]["apply"]>[0]) => ReturnType<SfPlannerProduct["versions"]["apply"]>
+   }
+   plannerMonthly?: {
+     preview: (context: TrustedUiContext, input: SfPlannerMonthlyInput) => Promise<PortResult<SfPlannerMonthlyResult>>
