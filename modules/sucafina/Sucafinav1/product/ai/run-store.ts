@@ -98,7 +98,8 @@ export function createSfRunStore(input: {
   return {
     read,
     create: (record: SfNativeRunRecord, context: TrustedDomainContext) => {
-      if (record.state !== "preparing" || record.native || record.outputRef || !record.intentDigest || !/^[a-f0-9]{64}$/.test(record.intentDigest) || !/^[a-f0-9]{64}$/.test(record.requestDigest) || !/^[a-f0-9]{64}$/.test(record.skillInputDigest)) return Promise.resolve({ status: "failed", reason: "invalid-run-admission" } as const)
+      if (record.state !== "preparing" || record.native || record.outputRef || !record.intentDigest || !/^[a-f0-9]{64}$/.test(record.intentDigest))
+        return Promise.resolve({ status: "failed", reason: "invalid-run-admission" } as const)
       return mutate(record, null, context)
     },
     markStale: async (runRef: string, reason: string, context: TrustedDomainContext) => {

@@ -32,7 +32,7 @@ export const createSfProductContribution: CreateSfProductContribution = (input) 
       input.onRegistered({ skills, sourceCapability })
       const bridge = createSfBusinessMcpBridge({
         registry: input.registry, mcp, descriptors: input.descriptors,
-        dispatch: createSfProductDispatch(input),
+        dispatch: createSfProductDispatch(input), onVerifiedCall: input.onVerifiedCall,
       })
       yield* tools.register(Object.fromEntries(input.descriptors.map((descriptor) => [descriptor.id, Tool.dynamic({
         description: `Sucafina ${descriptor.id}`,

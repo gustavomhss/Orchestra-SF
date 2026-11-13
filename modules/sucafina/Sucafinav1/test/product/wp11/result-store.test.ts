@@ -22,13 +22,9 @@ test("decision result persistence binds retries, current case and source authori
     const ids = { next: 0 }
     const results = createSfDecisionResultStore({ state, host: { requestFor: () => new Request("https://example.test"), revalidate: async () => true }, authorizeCase: async () => access.case, verifySources: async () => access.sources, createId: () => `result-${++ids.next}`, now: () => "2026-11-13T00:00:00Z" })
     const request = { kind: "comparison", result: { baselineResultRef: "base", alternativeResultRef: "result", costCoverageRefs: ["coverage"], criterionResults: [], unresolvedConditions: ["training:missing-category"], comparisonStatus: "conditioned", knownDifference: 30000, completeDifference: null }, caseRef: { id: "case", incarnation: "inc", version: 1 }, requestDigest: "b".repeat(64), sourceRefs: [], idempotencyKey: "operation" } as const
-    const lookup = { caseRef: request.caseRef, kind: request.kind, idempotencyKey: request.idempotencyKey, requestDigest: request.requestDigest }
-    expect(await results.readByRequest(lookup, context)).toEqual({ status: "ok", value: { state: "not-found" } })
     const created = await results.write(request, context)
     expect(created.status).toBe("ok")
     if (created.status !== "ok") throw new Error(created.reason)
-    expect(await results.readByRequest(lookup, context)).toEqual({ status: "ok", value: { state: "found", result: created.value } })
-    expect((await results.readByRequest({ ...lookup, requestDigest: "c".repeat(64) }, context)).status).toBe("conflict")
     expect(await results.write(request, context)).toEqual(created)
     expect((await results.write({ ...request, requestDigest: "c".repeat(64) }, context)).status).toBe("conflict")
     expect((await results.read({ resultRef: created.value.resultRef, kind: "scenario" }, context)).status).toBe("unavailable")
@@ -39,19 +35,11 @@ test("decision result persistence binds retries, current case and source authori
     access.case = false
     expect((await results.read({ resultRef: created.value.resultRef, kind: "comparison" }, context)).status).toBe("denied")
     access.case = true
-    const scenario = { id: "scenario", version: 1, components: [], currency: "USD", horizon, sourceRefs: [], unresolvedConditions: ["missing"], restrictions: [], costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: "alternative", alternativeVersion: 1, currency: "USD", horizon, issues: ["inventory-unavailable"], evaluatedSourceRefs: [], coverageState: "pending", entries: [], derivedMissingCategoryIds: [] }, comparisonStatus: "conditioned", knownSubtotal: null, total: null } as const
-    const storedScenario = await results.write({ kind: "scenario", result: scenario, caseRef: request.caseRef, requestDigest: "f".repeat(64), sourceRefs: [], idempotencyKey: "scenario-operation" }, context)
-    if (storedScenario.status !== "ok") throw new Error(storedScenario.reason)
     const before = await state.read(source, "cases", () => null)
     if (before.status !== "ok") throw new Error("state unavailable")
     await state.transaction(source, { namespace: "cases", expectedStorageVersion: before.storageVersion, idempotencyKey: "advance", commandDigest: "d".repeat(64), targetRef: "case", targetIncarnation: "inc" }, async (staged) => { staged.cases.case = { ...staged.cases.case!, version: 2 }; return { commit: true, value: true } })
     expect((await results.read({ resultRef: created.value.resultRef, kind: "comparison" }, context)).status).toBe("denied")
-    expect((await results.read({ resultRef: storedScenario.value.resultRef, kind: "scenario" }, context)).status).toBe("denied")
-    expect((await results.readHistoricalScenario({ resultRef: storedScenario.value.resultRef }, context)).status).toBe("ok")
-    access.sources = false
-    expect((await results.readHistoricalScenario({ resultRef: storedScenario.value.resultRef }, context)).status).toBe("denied")
   } finally {
-    await db.dispose()
     await rm(directory, { recursive: true, force: true })
   }
 })

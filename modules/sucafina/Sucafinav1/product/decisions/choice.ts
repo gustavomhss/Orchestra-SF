@@ -8,7 +8,6 @@ export function createChoiceSnapshot(input: {
   alternativeId: string
   alternativeVersion: number
   comparison: ScenarioComparison
-  alternativeResultRef?: string
   criteria: readonly string[]
   values: ChoiceRecord["values"]
   evidenceRefs: readonly BusinessEvidenceRef[]
@@ -20,7 +19,7 @@ export function createChoiceSnapshot(input: {
   const alternative = input.case.alternatives.find((item) => item.id === input.alternativeId && item.version === input.alternativeVersion)
   if (!alternative || input.case.choices.some((choice) => choice.id === input.id) || !input.id.trim() || !input.principalRef.trim() || !input.reason.trim() || !Number.isFinite(Date.parse(input.at))) return { status: "conflict", reason: "invalid-choice-basis" }
   if (!input.criteria.length || new Set(input.criteria).size !== input.criteria.length || input.case.criteria.some((criterion) => criterion.required && !input.criteria.includes(criterion.id)) || input.criteria.some((id) => !input.case.criteria.some((criterion) => criterion.id === id)) || input.values.some((value) => !input.criteria.includes(value.criterionRef) || (value.value !== null && !Number.isFinite(value.value)) || value.currency !== input.case.currency || value.horizon.start !== input.case.horizon.start || value.horizon.end !== input.case.horizon.end)) return { status: "conflict", reason: "invalid-choice-criteria" }
-  if (input.comparison.alternativeResultRef !== (input.alternativeResultRef ?? alternative.result.id)) return { status: "conflict", reason: "comparison-alternative-mismatch" }
+  if (input.comparison.alternativeResultRef !== alternative.result.id) return { status: "conflict", reason: "comparison-alternative-mismatch" }
   const basis = input.case.costCoverageBases.find((item) => item.id === alternative.result.costCoverage.basisId && item.version === alternative.result.costCoverage.basisVersion)
   if (!basis) return { status: "conflict", reason: "coverage-inventory-unavailable" }
   if (alternative.result.currency !== input.case.currency || alternative.result.horizon.start !== input.case.horizon.start || alternative.result.horizon.end !== input.case.horizon.end) return { status: "conflict", reason: "scenario-basis-mismatch" }

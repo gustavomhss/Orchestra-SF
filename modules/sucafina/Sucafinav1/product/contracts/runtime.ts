@@ -74,6 +74,7 @@ export type CreateSfBusinessMcpBridge = (input: {
   mcp: Mcp.Interface
   descriptors: readonly CapabilityDescriptor[]
   dispatch: (operation: string, input: unknown, context: TrustedDomainContext) => Promise<CapabilityResult>
+  onVerifiedCall?: (operation: string, input: unknown, result: Extract<CapabilityResult, { status: "ok" }>, context: TrustedCallContext) => boolean
 }) => {
   list: (context: Tool.Context) => Promise<PortResult<readonly CapabilityDescriptor[]>>
   call: (context: Tool.Context, operation: string, input: unknown) => Promise<CapabilityResult>
@@ -84,4 +85,4 @@ export type DispatchSfCapability = (input: {
   validateInput: (descriptor: CapabilityDescriptor, payload: unknown) => boolean
   validateOutput: (descriptor: CapabilityDescriptor, result: CapabilityResult) => boolean
 }) => Promise<CapabilityResult>
-export type CreateSfProductContribution = (input: { registry: SfBindingRegistry; descriptors: readonly CapabilityDescriptor[]; authority: SfDomainValidation; selected: readonly SfSelectedRuntime[]; source: SkillV2.Source; onRegistered: (registration: { skills: SkillV2.Interface; sourceCapability: SfSourceCapability }) => void }) => Host.Contribution
+export type CreateSfProductContribution = (input: { registry: SfBindingRegistry; descriptors: readonly CapabilityDescriptor[]; authority: SfDomainValidation; selected: readonly SfSelectedRuntime[]; source: SkillV2.Source; onVerifiedCall?: Parameters<CreateSfBusinessMcpBridge>[0]["onVerifiedCall"]; onRegistered: (registration: { skills: SkillV2.Interface; sourceCapability: SfSourceCapability }) => void }) => Host.Contribution

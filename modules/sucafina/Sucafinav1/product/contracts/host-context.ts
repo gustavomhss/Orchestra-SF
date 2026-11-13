@@ -18,12 +18,11 @@ import type { SfNativeRunRecord } from "./state.ts"
 import type { TrustedUiContext } from "./sf-execution.ts"
 import type { ForecastExplainInput } from "./skill-inputs.ts"
 import type { ForecastCompareRequest } from "./operations.ts"
-import type { MonthlyDraft } from "../planner/monthly-edit.ts"
-import type { View, Result } from "../../runtime/contract.ts"
+import type { MonthlyRequest, MonthlyResult } from "../planner/monthly-host.ts"
 import type { runSfAnalysis } from "../ai/analysis-port.ts"
 
-export type SfPlannerMonthlyInput = { page: "OPEX" | "CAPEX"; versionId: string; drafts: readonly MonthlyDraft[] }
-export type SfPlannerMonthlyResult = { view: View; rows: readonly { draft: MonthlyDraft; errors: readonly { cell?: MonthlyDraft["cells"][number]; reason: string }[]; result?: Result }[] }
+export type SfPlannerMonthlyInput = MonthlyRequest
+export type SfPlannerMonthlyResult = MonthlyResult
 
 /** In-process host API. Neither this object nor its bindings are serialized into a model request. */
 export type SfHostSessionPort = {
@@ -54,11 +53,15 @@ export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
     preview: (context: TrustedUiContext, input: SfPlannerMonthlyInput) => Promise<PortResult<SfPlannerMonthlyResult>>
     apply: (context: TrustedUiContext, input: SfPlannerMonthlyInput) => Promise<PortResult<SfPlannerMonthlyResult>>
   }
+  /** Human-selected inputs are assembled from current authorized domain sources. */
+  analysisInputs?: {
+    prepare: (context: TrustedUiContext, input: { request: Omit<Parameters<BusinessPorts["analysis"]["create"]>[0], "contextFingerprint">; selection: unknown }) => Promise<PortResult<unknown>>
+  }
   /** Human-authorized product operations; native tickets and bindings never cross this boundary. */
   analyses?: {
     start: (context: TrustedUiContext, input: Omit<Parameters<typeof runSfAnalysis>[0], "host" | "request"> & { request: Omit<Parameters<typeof runSfAnalysis>[0]["request"], "contextFingerprint">; model: ModelV2.Ref }) => Promise<PortResult<{ runRef: string }>>
-    list: (context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number }) => Promise<PortResult<readonly { runRef: string; state: SfNativeRunRecord["state"]; version: number; outputRef?: string }[]>>
-    read: (context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>
+    list: (context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number }) => Promise<PortResult<readonly { runRef: string; state: SfNativeRunRecord["state"]; version: number }[]>>
+    read: (context: TrustedUiContext, runRef: string) => Promise<PortResult<{ runRef: string; version: number; state: SfNativeRunRecord["state"]; caseRef: SfNativeRunRecord["caseRef"]; updatedAt: string }>>
     output: (context: TrustedUiContext, runRef: string) => Promise<PortResult<ContributionEnvelope>>
     cancel: (context: TrustedUiContext, runRef: string) => Promise<PortResult<{ cancelled: boolean }>>
   }
