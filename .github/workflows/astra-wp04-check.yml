@@ -32,7 +32,16 @@ jobs:
       - name: Setup Bun
         id: setup
         uses: ./.github/actions/setup-bun
+      - name: Verify generated output contracts
+        working-directory: modules/sucafina/Sucafinav1
+        run: |
+          set -euo pipefail
+          bun product/contracts/generate-output-schemas.ts
+          bun product/contracts/generate-output-schemas.ts --check
+          cp product/contracts/output-schemas.ts "$RUNNER_TEMP/wp04-checks/output-schemas.ts"
+          git diff --exit-code -- product/contracts/output-schemas.ts
       - name: Package typecheck
+        if: always() && steps.setup.outcome == 'success'
         working-directory: modules/sucafina
         run: |
           set -o pipefail
