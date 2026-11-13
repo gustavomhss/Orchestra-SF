@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test"
 import { createPlannerImportMutation, preparePlannerWorkbook, plannerImportEnvironment } from "../../../../product/imports/planner.ts"
 import { domain } from "../../../../runtime/planner.ts"
+import { projectPlannerSource } from "../../../../product/planner/port.ts"
 import type { Snapshot } from "../../../../runtime/contract.ts"
 
 const actor = { id: "finance", roles: ["finance"], canWrite: true }
@@ -39,4 +40,21 @@ test("replayed operation identities are deterministic and distinct per operation
   const other = plannerImportEnvironment(environment, "two")
   expect([first.id(), first.id()]).toEqual([retry.id(), retry.id()])
   expect(other.id()).not.toBe(plannerImportEnvironment(environment, "one").id())
+})
+
+test("forecast workbook replaces the included amount without changing budget or actual", () => {
+  const snapshot: Snapshot = { data: { versions: [{ id: "v1", year: 2027, closed: 9, lines: [{ id: "line", sec: "opex", el: "licenses", name: "Licences", cur: "USD", b: [40000, 45000, 45000, 50000, 50000, 50000, 50000, 50000, 50000, 50000, 60000, 60000], a: [40000, 40000, 45000, 45000, 45000, 45000, 45000, 45000, 50000, null, null, null], f: [null, null, null, null, null, null, null, null, null, 38000, 112000, 40000] }], projects: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, lists: {} }], officials: {}, entities: [], allocations: [] }, versions: {}, sequences: {}, audit: [], notices: [] }
+  const before = projectPlannerSource(snapshot, actor, "v1")!
+  const preview = preparePlannerWorkbook({ snapshot, actor, environment, versionId: "v1", sheets: { OPEX: [{ "Line ID": "line", "Cost element": "Licenses", "Vendor / item": "Licences", Currency: "USD", Measure: "Forecast", Oct: 38000, Nov: 124000, Dec: 40000 }] }, newVersion: false, removeMissing: false, operationId: "forecast", idempotencyKey: "forecast-key", targetIncarnation: "inc-1" })
+  expect(preview.result.ok).toBe(true)
+  const applied = structuredClone(snapshot)
+  const mutation = createPlannerImportMutation({ command: preview.command, commandDigest: preview.commandDigest, previewDigest: preview.previewDigest, actorId: actor.id, operationId: "forecast", idempotencyKey: "forecast-key", targetIncarnation: "inc-1", previewAt: environment.at, verifyTarget: () => true })!
+  expect(mutation.execute(applied, actor, environment).commit).toBe(true)
+  const after = projectPlannerSource(applied, actor, "v1")!
+  expect((before.summary as { fullYear: number }).fullYear).toBe(590000)
+  expect((after.summary as { fullYear: number }).fullYear).toBe(602000)
+  const originalLine = (snapshot.data.versions as { lines: { b: unknown; a: unknown }[] }[])[0].lines[0]
+  const appliedLine = (applied.data.versions as { lines: { b: unknown; a: unknown }[] }[])[0].lines[0]
+  expect(appliedLine.b).toEqual(originalLine.b)
+  expect(appliedLine.a).toEqual(originalLine.a)
 })

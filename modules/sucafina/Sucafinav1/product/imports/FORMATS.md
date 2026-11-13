@@ -12,3 +12,15 @@ This catalog describes the existing workbook and backup producers. A parsed file
 | Dashboard JSON backup: `backup-import` | The shared backup producer migrates the admitted JSON and applies the existing dataset revision and admin checks. | Current installation configuration and private product state are preserved; existing contract attachments are retained by identity. | Imported private product state, new file references and removal of a contract with an attachment are rejected. Export uses the existing public JSON backup and excludes private product state. |
 
 The selected source scope may be narrower than a whole backup. In that case a replacement affecting fields or periods outside that scope is refused; a preview must not imply broader authority.
+
+## Proof inventory
+
+The following tests are authored evidence, not a statement that the hosted gate has passed. The final composed candidate must run them through the repository's hosted test gate.
+
+| Family or boundary | Discriminating proof | Remaining limitation |
+| --- | --- | --- |
+| Workbook input | `test/product/wp06/imports/workbook-provenance.test.ts`, `workbook-provenance-edge.test.ts`, `files.test.ts` cover XLSX/XLS, physical cells, cached zero and rejection. | Full supported-column roundtrip and date/ID cases require the composed gate and additional coverage. |
+| Planner workbook | `planner.test.ts`, `sqlite-planner.test.ts`, `end-to-end.test.ts` cover the actual command, 590000 to 602000 replacement, stale revision, explicit apply and receipt. Baseline `test/planner-runtime.test.ts` covers locks, salary, unknown owner and removeMissing; `test/parity-planner.test.ts` covers roster import and revision conflict. | All Members also changes the shared roster, which requires its own authorized source identity and fence; the current product preview refuses changes outside the selected version. Baseline domain tests do not prove the product flow. |
+| Dashboard workbooks | `dashboard.test.ts`, `dashboard-command.test.ts`, `dashboard-provenance.test.ts` cover selected commands and cell provenance. | Full operations, projects and owner-permission roundtrips require composed consumer coverage. |
+| Dashboard backup | `dashboard-backup-e2e.test.ts` covers the real SQLite restore, private-state preservation, source replacement and receipt retry. | Private blob restoration remains outside the baseline backup contract. |
+| Document evidence | `test/product/wp06/documents/runtime-e2e.test.ts`, `candidates.test.ts`, `resolver.test.ts`, `docx.test.ts` cover the host, confirmation and source fences. | The end-to-end scanner is a test double; it does not qualify a production scanner. Downstream dossier and BusinessContext consumption require their actual owners' integration proofs. |

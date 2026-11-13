@@ -207,10 +207,13 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         const checkGenerations = () => {
           if (!Bun.deepEquals(snapshot.sfBlobGenerations ?? {}, Object.fromEntries(generations))) throw new Error("Private blob generations changed outside storage")
         }
-        const advanceGeneration = (key: string) => {
+        const nextGeneration = (key: string) => {
           const current = generations.get(key) ?? 0
           if (!Number.isSafeInteger(current) || current < 0 || current >= Number.MAX_SAFE_INTEGER) throw new Error("Blob generation overflow")
-          generations.set(key, current + 1)
+          return current + 1
+        }
+        const recordGeneration = (key: string, generation: number) => {
+          generations.set(key, generation)
           snapshot.sfBlobGenerations = Object.fromEntries(generations)
         }
         const scope: ReadScope = { root: { db, snapshots, poisoned: false, readers: 0 }, open: true, signal: transactionOptions?.signal }
@@ -231,8 +234,9 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
             checkGenerations()
             const previous = db.query<{ payload: Uint8Array; type: string }, [string, string]>("SELECT payload, type FROM blobs WHERE surface = ? AND key = ?").get(surface, key)
             if (previous && previous.type === type && Bun.deepEquals(new Uint8Array(previous.payload), bytes)) return
+            const generation = nextGeneration(key)
             db.query("INSERT INTO blobs (surface, key, payload, type) VALUES (?, ?, ?, ?) ON CONFLICT (surface, key) DO UPDATE SET payload=excluded.payload, type=excluded.type").run(surface, key, bytes, type)
-            advanceGeneration(key)
+            recordGeneration(key, generation)
           },
           get: async (key) => {
             requireOpen()
@@ -244,8 +248,9 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
             checkGenerations()
             const existing = db.query<{ present: number }, [string, string]>("SELECT 1 AS present FROM blobs WHERE surface = ? AND key = ?").get(surface, key)
             if (!existing) return
+            const generation = nextGeneration(key)
             db.query("DELETE FROM blobs WHERE surface = ? AND key = ?").run(surface, key)
-            advanceGeneration(key)
+            recordGeneration(key, generation)
           },
         }
         const result = await (async () => {

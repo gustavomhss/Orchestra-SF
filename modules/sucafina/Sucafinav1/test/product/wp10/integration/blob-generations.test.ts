@@ -42,3 +42,35 @@ test("blob generations survive ABA, removal and restart while rollback and forge
     } finally { await reopened.dispose() }
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })
+
+test("caught generation overflow cannot commit blob changes", async () => {
+  const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-blob-overflow-"))
+  await chmod(directory, 0o700)
+  const store = await openLocalStore(directory)
+  try {
+    await store.transaction("dashboard", async (_snapshot, blobs) => {
+      await blobs.put("asset", new Uint8Array([1]), "binary")
+      return { commit: true, value: true }
+    })
+    await store.dispose()
+    const { Database } = await import("bun:sqlite")
+    const { decodeSnapshot, encodeSnapshot } = await import("../../../../runtime/local-store.ts")
+    const db = new Database(path.join(directory, "installation.sqlite"), { strict: true })
+    try {
+      const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get("dashboard")
+      if (!row) throw new Error("snapshot missing")
+      const snapshot = decodeSnapshot(row.payload)
+      snapshot.sfBlobGenerations = { asset: Number.MAX_SAFE_INTEGER }
+      db.query("UPDATE snapshots SET payload = ? WHERE surface = ?").run(encodeSnapshot(snapshot), "dashboard")
+    } finally { db.close() }
+    const reopened = await openLocalStore(directory)
+    try {
+      const caught = await reopened.transaction("dashboard", async (_snapshot, blobs) => {
+        const putFailed = await blobs.put("asset", new Uint8Array([2]), "binary").then(() => false, () => true)
+        const removeFailed = await blobs.remove("asset").then(() => false, () => true)
+        return { commit: true, value: { putFailed, removeFailed, bytes: await blobs.get("asset") } }
+      })
+      expect(caught).toEqual({ putFailed: true, removeFailed: true, bytes: new Uint8Array([1]) })
+    } finally { await reopened.dispose() }
+  } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
+})

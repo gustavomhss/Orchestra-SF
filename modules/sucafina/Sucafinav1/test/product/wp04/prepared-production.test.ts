@@ -20,6 +20,8 @@ import { enumerateSfSources } from "../../../product/integration/source-inventor
 import { projectSfProcurementScope } from "../../../product/integration/procurement-projections.ts"
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
 import { createProcurementSourceResolver } from "../../../product/procurement/sources.ts"
+import { createProcurementPort } from "../../../product/procurement/port.ts"
+import { createProcurementC12Bridge } from "../../../product/procurement/c12.ts"
 import { prepareProcurementMutation, procurementPreparedRevision, procurementPreparedScope, staleProcurementPreparedMutation } from "../../../product/procurement/prepared.ts"
 
 const period = { start: "2026-01-01", end: "2026-12-31" }
@@ -180,6 +182,9 @@ async function createFixture() {
     revalidate: (binding: TrustedDomainContext) => binding.kind === "ui" ? ui.revalidate(binding) : Promise.resolve(false),
   }
   const sourceResolver = createProcurementSourceResolver({ host, scopedSources: persistence, contextFor })
+  const unavailable = async () => ({ status: "unavailable" as const, reason: "unused" })
+  const procurementHost = { ...host, resolveRequestSource: sourceResolver.resolve, resolveSupplierSource: sourceResolver.resolve, isCurrentRequestSource: sourceResolver.isCurrent, isCurrentSupplierSource: sourceResolver.isCurrent, resolveRequestCollection: unavailable, isCurrentRequestCollection: () => false, readContractSource: unavailable }
+  const bridge = createProcurementC12Bridge({ host: procurementHost, individual: sourceResolver, port: createProcurementPort(procurementHost) })
   const source = await sourceResolver.issue("procurement-request", "PR-1", context)
   if (source.status !== "ok") throw new Error("Procurement source evidence unavailable")
   const evidence = await sourceResolver.resolveForPreparation(source.value, context)
@@ -278,15 +283,13 @@ async function createFixture() {
       const held = scopes.get(selected.target.id)
       if (!held || binding.binding.principalRef !== currentActor.id) return undefined
       if (digestSfValue(selected.operation) !== digestSfValue(prepared.command)) return undefined
-      const scope = procurementPreparedScope(domainSnapshot, selected.target, binding)
-      if (!scope) return staleProcurementPreparedMutation(domainSnapshot, currentActor, binding, selected.operation)
-      return prepareProcurementMutation({ snapshot: domainSnapshot, actor: currentActor, environment: { at: selected.target.observedAt, id: randomUUID, directory: [] }, context: binding, target: selected.target, scope, evidence: held.evidence, command: selected.operation.command, operationId: selected.operation.id, idempotencyKey: selected.idempotencyKey })?.mutation
+      return bridge.resolveMutation(domainSnapshot, selected, currentActor, binding)
     },
     verifyGrant: (domainSnapshot, _incoming, selected, currentActor, binding) => {
       const held = scopes.get(selected.target.id)
       return !!held && currentActor.id === binding.binding.principalRef && currentActor.canWrite && currentActor.roles.includes("requester") && digestSfValue(roleMap(domainSnapshot, "procurement")) === object(held.scope.selector).roleMapDigest
     },
-    receiptVersion: (domainSnapshot, selected) => procurementPreparedRevision(domainSnapshot, selected.operation.command),
+    receiptVersion: (domainSnapshot, selected) => bridge.receiptVersion(domainSnapshot, selected),
     environment: () => ({ at: appliedAt, id: randomUUID, directory: [{ id: "alice", name: "Alice" }] }),
     createId: randomUUID,
     now: () => appliedAt,
