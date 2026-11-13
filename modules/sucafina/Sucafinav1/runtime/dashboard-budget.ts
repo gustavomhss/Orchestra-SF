@@ -456,7 +456,7 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     )
       return { ok: false, status: 422 }
     const amounts = Object.fromEntries(
-      ["budget", "actual", "forecast"].map((key) => [key, Number(value[key] ?? existing?.[key] ?? 0)]),
+      ["budget", "actual", "forecast"].map((key) => [key, Number(value[key] === undefined ? existing?.[key] ?? 0 : value[key])]),
     )
     if (Object.values(amounts).some((amount) => !Number.isFinite(amount))) return { ok: false, status: 422 }
     const id = existing ? String(existing.id ?? "") : environment.id()
