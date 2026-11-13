@@ -12,7 +12,7 @@ import type { ReviewHost } from "./port.ts"
 /** Compose production review capabilities with source-owned selection and access checks. */
 export function createReviewServices(input: {
   state: SfProductStatePort
-  host: DomainPortHost
+  host: Pick<DomainPortHost, "requestFor" | "revalidate">
   authority: SfDomainValidation
   evidence: Pick<BusinessContextService, "resolve">
   selection: Pick<ReviewHost, "select" | "authorizeOutcomeComparison" | "authorizeOutcome" | "authorizeDecision" | "authorizeSections" | "authorizeComments" | "authorizeSensitivity" | "revalidate">

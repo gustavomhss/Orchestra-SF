@@ -81,7 +81,7 @@ export function createReviewAgendaSelection(input: {
   }
   const preview = async (selectionRef: string, incoming: readonly ReviewAgendaItem[], context: TrustedDomainContext): Promise<PortResult<ReviewAgendaPreview>> => {
     if (typeof selectionRef !== "string" || !selectionRef.trim() || !Array.isArray(incoming) || !incoming.length || incoming.some((item) => !validAgendaItem(item)) || new Set(incoming.map((item) => item.id)).size !== incoming.length) return { status: "needs-input", reason: "invalid-or-empty-agenda" }
-    const items = structuredClone(incoming)
+    const items: readonly ReviewAgendaItem[] = structuredClone(incoming)
     if (!await input.revalidate(context)) return { status: "denied", reason: "agenda-authority-unavailable" }
     const sections: ReviewSection[] = []
     const sectionRecordRefs: { sectionRef: string; recordRefs: readonly string[] }[] = []
@@ -149,7 +149,7 @@ export function createReviewAgendaSelection(input: {
   return {
     async create(incoming: readonly ReviewAgendaItem[], context: TrustedDomainContext) {
       if (!Array.isArray(incoming) || !incoming.length || incoming.some((item) => !validAgendaItem(item))) return { status: "needs-input" as const, reason: "invalid-or-empty-agenda" }
-      const items = structuredClone(incoming)
+      const items: readonly ReviewAgendaItem[] = structuredClone(incoming)
       const { installationId, projectId, principalRef, accessRevision, policyVersion } = context.binding
       const binding = { installationId, projectId, principalRef, accessRevision, policyVersion }
       const at = Date.parse(input.now())
@@ -233,7 +233,7 @@ function matchesContext(projection: DomainProjection, context: TrustedDomainCont
 }
 
 function validAgendaProjection(projection: DomainProjection) {
-  return !!projection && typeof projection === "object" && !!projection.context && isSfPeriod(projection.context.period) && Array.isArray(projection.context.sourceRefs) && projection.context.sourceRefs.every((ref) => !!ref && typeof ref === "object") && Array.isArray(projection.values) && projection.values.every((value) => !!value && typeof value.id === "string" && Array.isArray(value.sourceRefs) && (value.value === null || typeof value.value === "string" || typeof value.value === "boolean" || typeof value.value === "number" && Number.isFinite(value.value))) && Array.isArray(projection.components) && projection.components.every((component) => !!component && Array.isArray(component.sourceRefs) && component.sourceRefs.every((ref) => !!ref && typeof ref === "object") && (component.amount === null || typeof component.amount === "number" && Number.isFinite(component.amount))) && Array.isArray(projection.missing)
+  return !!projection && typeof projection === "object" && !!projection.context && isSfPeriod(projection.context.period) && Array.isArray(projection.context.sourceRefs) && projection.context.sourceRefs.every((ref: SourceRef) => !!ref && typeof ref === "object") && Array.isArray(projection.values) && projection.values.every((value: DomainProjection["values"][number]) => !!value && typeof value.id === "string" && Array.isArray(value.sourceRefs) && (value.value === null || typeof value.value === "string" || typeof value.value === "boolean" || typeof value.value === "number" && Number.isFinite(value.value))) && Array.isArray(projection.components) && projection.components.every((component: DomainProjection["components"][number]) => !!component && Array.isArray(component.sourceRefs) && component.sourceRefs.every((ref: SourceRef) => !!ref && typeof ref === "object") && (component.amount === null || typeof component.amount === "number" && Number.isFinite(component.amount))) && Array.isArray(projection.missing)
 }
 
 function digestRefs(refs: readonly string[]) { return JSON.stringify([...refs].sort()) }

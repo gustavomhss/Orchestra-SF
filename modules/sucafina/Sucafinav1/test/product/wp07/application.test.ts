@@ -64,13 +64,13 @@ function fixture() {
     collaboration: { threads: { read: unavailable }, history: { readVersion: unavailable }, authorizeSourceMapping: async () => false, maxMessages: 20 },
     ports: {
       selectDashboardAgenda: unavailable,
-      planner: { compareForecast: unavailable, simulateScenario: unavailable, compareScenarios: unavailable, evaluateSensitivity: unavailable },
+      planner: { compareForecast: unavailable },
       procurement: { read: async () => {
         if (!control.available) return { status: "unavailable", reason: "source-unavailable" }
         const value = projection()
         control.afterRead?.()
         return { status: "ok", value }
-      }, readSupplier: unavailable, readContract: unavailable, compareSourcing: unavailable },
+      }, readSupplier: unavailable, readContract: unavailable },
     },
   })
   const request = (mode: string, payload?: unknown) => new Request(`https://example.test/dashboard?sf=${mode}`, payload === undefined ? {} : { method: "POST", headers: { origin: "https://example.test", "content-type": "application/json" }, body: JSON.stringify(payload) })

@@ -233,8 +233,10 @@ test("agenda selection is bounded, expires, revalidates authority and rejects ho
   if (first.status !== "ok") throw new Error(first.reason)
   expect((await agenda.create([item], context)).status).toBe("unavailable")
   expect((await agenda.preview("hostile", [null] as unknown as readonly ReviewAgendaItem[], context)).status).toBe("needs-input")
-  expect((await agenda.preview("hostile", [{ ...item, principalRef: "other" }] as readonly ReviewAgendaItem[], context)).status).toBe("needs-input")
-  expect((await agenda.preview("hostile", [{ ...item, biView: { viewId: "BI01", selectionRef: "source", provider: "external" } }] as readonly ReviewAgendaItem[], context)).status).toBe("needs-input")
+  const hostileActor = { ...item, principalRef: "other" }
+  const hostileProvider = { ...item, biView: { viewId: "BI01", selectionRef: "source", provider: "external" } }
+  expect((await agenda.preview("hostile", [hostileActor], context)).status).toBe("needs-input")
+  expect((await agenda.preview("hostile", [hostileProvider], context)).status).toBe("needs-input")
   expect((await agenda.select(first.value.selectionRef, [null] as unknown as readonly string[], context)).status).toBe("needs-input")
   now = "2026-11-13T00:15:00Z"
   expect((await agenda.select(first.value.selectionRef, ["budget"], context)).status).toBe("denied")

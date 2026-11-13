@@ -121,7 +121,7 @@ function pairSection(sectionId: string, previous: PreservedReview, current: Pres
       if (after) return compositionChange(after, current.id, "added")
       return []
     }),
-    omissions: pairs.flatMap(({ before, after }) => {
+    omissions: pairs.flatMap<Omission>(({ before, after }) => {
       const valueId = after?.valueId ?? before!.valueId
       if (before && after && (!before.identity || !after.identity)) return [{ sectionId, valueId, reason: "identification-lost" as const }]
       if ((before && !after && !before.identity) || (after && !before && !after.identity)) return [{ sectionId, valueId, reason: "identification-unavailable" as const }]

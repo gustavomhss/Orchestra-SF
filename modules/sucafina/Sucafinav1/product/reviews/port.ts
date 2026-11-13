@@ -40,13 +40,13 @@ export type ReviewHost = {
 
 export function createReviewPort(host: ReviewHost) {
   return {
-    async preview(selectionRef: string, incomingRefs: readonly string[], binding: TrustedDomainContext, period?: Period) {
+    async preview(selectionRef: string, incomingRefs: readonly string[], binding: TrustedDomainContext, period?: Period): Promise<PortResult<readonly ReviewSection[]>> {
       if (typeof selectionRef !== "string" || !selectionRef.trim() || !Array.isArray(incomingRefs) || !incomingRefs.length || incomingRefs.some((ref) => typeof ref !== "string" || !ref.trim()) || new Set(incomingRefs).size !== incomingRefs.length || (period !== undefined && !isSfPeriod(period))) return { status: "needs-input", reason: "invalid-selection" } as const
       const sectionRefs = [...incomingRefs]
       const resolved = await host.select(selectionRef, sectionRefs, binding, period ? { ...period } : undefined)
       if (resolved.status !== "ok") return resolved
       if (!Array.isArray(resolved.value) || resolved.value.some((section) => !validSectionProjection(section))) return { status: "unavailable", reason: "invalid-section-projection" } as const
-      const selected = { status: "ok" as const, value: structuredClone(resolved.value) }
+      const selected: { status: "ok"; value: readonly ReviewSection[] } = { status: "ok", value: structuredClone(resolved.value) }
       if (selected.value.some((section) => !validOutcomeComparison(section.outcomeComparison) || (section.outcomeComparison && (!section.outcome || digestSfValue(section.outcomeComparison.observation) !== digestSfValue(section.outcome))))) return { status: "unavailable", reason: "invalid-outcome-comparison" } as const
       if (!(await host.authorizeOutcomeComparison(binding, selected.value.flatMap((section) => section.outcomeComparison ? [section.outcomeComparison] : [])))) return { status: "denied", reason: "access-unavailable" } as const
       if (selected.value.some((section) => !validReviewOutcome(section.outcome))) return { status: "unavailable", reason: "invalid-outcome-snapshot" } as const
@@ -77,7 +77,7 @@ export function createReviewPort(host: ReviewHost) {
         return { status: "denied", reason: "access-unavailable" } as const
       return { status: "ok", value: structuredClone(selected.value) } as const
     },
-    async preserve(incoming: { id: string; selectionRef: string; sectionRefs: readonly string[]; previousReviewRef?: string; expectedStorageVersion: number; idempotencyKey: string; targetIncarnation: string }, binding: TrustedDomainContext) {
+    async preserve(incoming: { id: string; selectionRef: string; sectionRefs: readonly string[]; previousReviewRef?: string; expectedStorageVersion: number; idempotencyKey: string; targetIncarnation: string }, binding: TrustedDomainContext): Promise<PortResult<PreservedReview>> {
       const request = host.requestFor(binding)
       if (!request) return { status: "denied", reason: "binding-unavailable" } as const
       if (!incoming || typeof incoming !== "object" || typeof incoming.id !== "string" || !incoming.id.trim()) return { status: "needs-input", reason: "invalid-review-identity" } as const
@@ -90,6 +90,7 @@ export function createReviewPort(host: ReviewHost) {
       }
       // Probe the durable idempotency record before consulting mutable source data.
       const prior = await host.state.transaction(request, command, async () => ({ commit: false, value: null as PreservedReview | null }))
+      if ("reason" in prior) return prior
       if (prior.status === "ok") {
         if (!prior.value) return { status: "unavailable", reason: "receipt-unavailable" } as const
         const existing = await this.read(input.id, binding)
@@ -97,7 +98,6 @@ export function createReviewPort(host: ReviewHost) {
         if (digestSfValue(existing.value) !== digestSfValue(prior.value)) return { status: "conflict", reason: "preserved-review-changed" } as const
         return existing
       }
-      if (prior.status !== "preview") return prior
       if (input.previousReviewRef) {
         const previous = await this.read(input.previousReviewRef, binding)
         if (previous.status !== "ok") return previous
@@ -118,7 +118,8 @@ export function createReviewPort(host: ReviewHost) {
         state.reviews[input.id] = structuredClone(review)
         return { commit: true, value: review }
       })
-      if (result.status !== "ok") return result.status === "preview" ? { status: "unavailable", reason: "not-committed" } as const : result
+      if ("reason" in result) return result
+      if (result.status !== "ok") return { status: "unavailable", reason: "not-committed" }
       if (!result.value) return { status: "conflict", reason: "review-exists" } as const
       if (!Array.isArray(result.value.sections) || !Array.isArray(result.value.comments)) return { status: "unavailable", reason: "invalid-review-sources" } as const
       if (!(await host.authorizeSections(binding, result.value.sections)) || !(await host.authorizeComments(binding, result.value.comments))) return { status: "denied", reason: "access-unavailable" } as const

@@ -84,7 +84,7 @@ export async function createReport(
       title,
       styles: {
         default: {
-          document: { run: { font: "Aptos", size: 22, color: "243C30" }, paragraph: { spacing: { after: 120, line: 280 }, widowControl: true } },
+          document: { run: { font: "Aptos", size: 22, color: "243C30" }, paragraph: { spacing: { after: 120, line: 280 } } },
           heading1: { run: { color: "173D2C", size: 30 }, paragraph: { spacing: { before: 260, after: 160 }, keepNext: true } },
         },
       },

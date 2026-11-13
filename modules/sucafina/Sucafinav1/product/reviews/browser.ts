@@ -19,6 +19,7 @@ export function createReviewBrowser(input: {
   openSource?: (reference: BusinessEvidenceRef) => void | Promise<void>
   openReviewSection?: (reviewRef: string, sectionId: string) => void | Promise<void>
 }) {
+  const post = createReviewPost()
   const read = async (reviewRef: string): Promise<PortResult<PreservedReview>> => {
     const url = new URL(window.location.href)
     url.search = ""
@@ -44,13 +45,8 @@ export function createReviewBrowser(input: {
     ...view,
     readComparison,
     async confirmAction(handoff: ReviewActionHandoff): Promise<PortResult<{ closureRef: string; review: PreservedReview; topic: HotTopic; relationId: string }>> {
-      const url = new URL(window.location.href)
-      url.search = ""
-      url.hash = ""
-      url.searchParams.set("sf", "review-close")
-      const response = await fetch(url, { method: "POST", credentials: "same-origin", cache: "no-store", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ reviewRef: input.reviewRef, handoff }) }).catch(() => undefined)
+      const { response, result } = await post("review-close", { reviewRef: input.reviewRef, handoff })
       if (!response?.ok) return { status: "unavailable", reason: "handoff-unavailable" }
-      const result: unknown = await response.json().catch(() => undefined)
       if (!result || typeof result !== "object" || !("status" in result) || result.status !== "ok" || !("value" in result) || !result.value || typeof result.value !== "object" || !("closureRef" in result.value) || typeof result.value.closureRef !== "string") return { status: "unavailable", reason: "handoff-unavailable" }
       return result as PortResult<{ closureRef: string; review: PreservedReview; topic: HotTopic; relationId: string }>
     },
@@ -71,11 +67,7 @@ export function createReviewBrowser(input: {
 
 /** Browser actions keep the selected order and require an explicit human preserve command. */
 export function createReviewPreparationBrowser() {
-  const post = async (mode: string, payload: unknown) => {
-    const response = await fetch(reviewUrl(mode), { method: "POST", credentials: "same-origin", cache: "no-store", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }).catch(() => undefined)
-    const result: unknown = await response?.json().catch(() => undefined)
-    return { response, result }
-  }
+  const post = createReviewPost()
   return {
     async contribution(payload: ReviewContributionRequest): Promise<PortResult<ReviewContribution>> {
       const { response, result } = await post("review-contribution", payload)
@@ -110,6 +102,19 @@ export function createReviewPreparationBrowser() {
       url.searchParams.set("artifactRef", artifactRef)
       return url.toString()
     },
+  }
+}
+
+function createReviewPost() {
+  const intents = new Map<string, string>()
+  return async (mode: string, payload: unknown) => {
+    const body = JSON.stringify(payload)
+    const intent = `${mode}:${body}`
+    const key = intents.get(intent) ?? crypto.randomUUID()
+    intents.set(intent, key)
+    const response = await fetch(reviewUrl(mode), { method: "POST", credentials: "same-origin", cache: "no-store", headers: { "Content-Type": "application/json", "Idempotency-Key": key }, body }).catch(() => undefined)
+    const result: unknown = await response?.json().catch(() => undefined)
+    return { response, result }
   }
 }
 

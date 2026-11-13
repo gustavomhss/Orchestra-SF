@@ -49,10 +49,16 @@ export function createReviewPreparationView(input: {
     state.order.forEach((id, index) => {
       const section = state.selection!.sections.find((entry) => entry.id === id)
       if (!section) return
+      const captured = state.review?.sections.find((entry) => entry.id === id)
+      const title = captured?.title ?? section.title
+      const period = captured?.period ?? section.period
+      const count = captured?.count ?? section.recordCount
+      const projection = captured?.content as (typeof section.projection & { reviewAgendaNote?: string }) | undefined
+      const agendaNote = captured ? projection?.reviewAgendaNote : section.agendaNote
       const row = document.createElement("li")
-      row.append(node("h3", section.title), node("p", `${section.period.start} – ${section.period.end} · ${section.recordCount} selected records`))
-      if (section.recordCount === 0) row.append(node("p", "No selected records in this section."))
-      if (section.agendaNote) row.append(node("p", `Agenda note: ${section.agendaNote}`))
+      row.append(node("h3", title), node("p", `${period.start} – ${period.end} · ${count} selected records`))
+      if (count === 0) row.append(node("p", "No selected records in this section."))
+      if (agendaNote) row.append(node("p", `Agenda note: ${agendaNote}`))
       if (!state.review) {
         row.append(action(`Move ${section.title} up`, () => move(index, -1), index === 0), action(`Move ${section.title} down`, () => move(index, 1), index === state.order.length - 1))
         row.append(action(`Remove ${section.title}`, () => { state.order = state.order.filter((ref) => ref !== id); render() }))
@@ -60,7 +66,7 @@ export function createReviewPreparationView(input: {
         records.forEach((ref) => row.append(action(`Remove record ${ref}`, () => removeRecord(id, ref))))
       }
       const table = document.createElement("table")
-      table.append(node("caption", `${section.title} · selected source values`))
+      table.append(node("caption", `${title} · selected source values`))
       const headings = document.createElement("tr")
       ;["Field", "Captured value", "Period"].forEach((label) => {
         const heading = node("th", label)
@@ -71,7 +77,6 @@ export function createReviewPreparationView(input: {
       head.append(headings)
       table.append(head)
       const body = document.createElement("tbody")
-      const projection = state.review?.sections.find((entry) => entry.id === id)?.content as typeof section.projection | undefined
       ;(projection ?? section.projection).values.forEach((value) => {
         const line = document.createElement("tr")
         line.append(node("td", value.id), node("td", `${value.value === null ? "Unavailable" : String(value.value)} ${value.currency ?? value.unit ?? ""}`.trim()), node("td", `${value.period.start} – ${value.period.end}`))
@@ -79,13 +84,17 @@ export function createReviewPreparationView(input: {
       })
       table.append(body)
       row.append(table)
-      if (section.comments?.length) {
+      if (!state.review && section.comments?.length) {
         row.append(node("h4", "Captured comments — separate from current conversation"))
         section.comments.forEach((comment) => row.append(node("p", `${comment.authorRef} · ${comment.createdAt} · version ${comment.version}: ${comment.content}`)))
       }
       list.append(row)
     })
     root.append(list)
+    if (state.review?.comments.length) {
+      root.append(node("h3", "Captured comments — separate from current conversation"))
+      state.review.comments.forEach((comment) => root.append(node("p", `${comment.authorRef} · ${comment.createdAt} · version ${comment.version}: ${comment.content}`)))
+    }
     if (!state.review) root.append(action("Preserve this review", preserve, state.order.length === 0))
     if (state.order.length === 0) root.append(node("p", "No sections selected. Load a selection before preserving."))
     state.material?.orderedResultRefs.forEach((ref) => {
@@ -107,14 +116,21 @@ export function createReviewPreparationView(input: {
     render()
   }
   const clearRestricted = () => { state.selection = undefined; state.review = undefined; state.material = undefined; state.order = [] }
+  const remainingItems = () => state.selection && state.order.length ? state.items.flatMap((item) => {
+    const selected = state.selection!.sectionRecordRefs.filter((section) => state.order.includes(section.sectionRef) && (section.sectionRef === item.id || (item.kind === "forecast-comparison" && item.sides.some((side) => section.sectionRef === `${item.id}:${side}`))))
+    return selected.length ? [{ ...item, recordRefs: selected.flatMap((section) => section.recordRefs) }] : []
+  }) : state.items
   const load = () => run("Loading authorized sources…", async () => {
-    const selection = await client.agenda(state.items)
+    const items = remainingItems()
+    const oldOrder = [...state.order]
+    const selection = await client.agenda(items)
     if (selection.status !== "ok") { if (selection.status === "denied") clearRestricted(); state.message = `Selection unavailable: ${selection.reason}`; return }
     if (state.review) state.previousReviewRef = state.review.id
     state.review = undefined
     state.material = undefined
+    state.items = items
     state.selection = selection.value
-    state.order = [...selection.value.sectionRefs]
+    state.order = oldOrder.length ? oldOrder.filter((ref) => selection.value.sectionRefs.includes(ref)) : [...selection.value.sectionRefs]
     state.message = "Review the selection, order and periods, then explicitly preserve it."
   })
   const removeRecord = (sectionId: string, recordRef: string) => run("Updating the authorized record selection…", async () => {
@@ -137,6 +153,7 @@ export function createReviewPreparationView(input: {
     const result = await client.preserve({ selectionRef: state.selection.selectionRef, sectionRefs: state.order, ...(state.previousReviewRef ? { previousReviewRef: state.previousReviewRef } : {}) })
     if (result.status !== "ok") { if (result.status === "denied") clearRestricted(); state.message = result.status === "denied" ? "Access is no longer available. Reload your selection after access is restored." : `Review was not saved: ${result.reason}. Refresh or retry the selection.`; return }
     state.review = result.value
+    state.order = result.value.sections.map((section) => section.id)
     state.message = "Review preserved. Source updates will not replace this meeting's captured values."
   })
   const report = (format: "pptx" | "docx") => run(`Generating ${format.toUpperCase()} from the preserved review…`, async () => {

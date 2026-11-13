@@ -39,7 +39,7 @@ test("artifact retry preserves the first bytes across ZIP timestamps, conflicts 
   expect(await storage.put({ ...entry, artifact: rerendered }, context)).toEqual(saved)
   const after = await state.read(request, "documents", () => null)
   expect(after).toEqual(before)
-  expect(new Uint8Array(await (await storage.download(saved.value.artifactRef, context)).arrayBuffer())).toEqual(first.bytes)
+  expect([...new Uint8Array(await (await storage.download(saved.value.artifactRef, context)).arrayBuffer())]).toEqual([...first.bytes])
   const renamed = await renderPreservedReview(preserved.value, { title: "Retry-report", format: "docx", sectionRefs: [section.id] })
   if (!renamed.ok) throw new Error("Changed render unavailable")
   expect(renamed.name).toBe(first.name)
