@@ -12,7 +12,7 @@
       "journeys": [
         "J08"
       ],
-      "evidence": "28 capacidades, C01–C14, oráculos e fronteiras congelados; IA01–IA18 incluídas na cobertura canônica."
+      "evidence": "28 capacidades, C01–C17, oráculos e fronteiras congelados; IA01–IA18 incluídas na cobertura canônica."
     },
     {
       "id": "R02",
@@ -367,7 +367,7 @@
         "J01",
         "J07"
       ],
-      "evidence": "Confirmação é da versão/período; fonte antiga ou dado ausente continua visível."
+      "evidence": "C06 guarda versão observada e fingerprint de escopo. Janeiro confirmado continua válido após fevereiro independente e não é cobrado novamente; mudança material, revogação e substituição têm estados distintos; idade/faltantes continuam visíveis."
     },
     {
       "id": "R32",
@@ -414,7 +414,7 @@
         "J05",
         "J07"
       ],
-      "evidence": "Pauta factual, cobertura/pendências; respeita confirmação sem alteração."
+      "evidence": "Pauta factual e pendências consomem a validade C06: versão irrelevante não recobra; stale material reabre uma vez; unavailable não divulga fonte nem imputa tarefa a pessoa sem acesso."
     },
     {
       "id": "R36",
@@ -438,7 +438,7 @@
         "J04",
         "J07"
       ],
-      "evidence": "Comparação/pendências conferíveis sem escolher, submeter ou aprovar."
+      "evidence": "Dossiê consome evidência extraída/confirmada C14 de WP06.T05, compara sem escolher/submeter/aprovar e conserva pendências de conteúdo não confirmado ou stale."
     },
     {
       "id": "R38",
@@ -949,10 +949,13 @@
       "tasks": [
         "WP11.T02",
         "WP12.T02",
-        "WP03.T01"
+        "WP03.T01",
+        "WP01.T05",
+        "WP05.T05"
       ],
       "status": "NOT_RUN",
-      "mandatory": true
+      "mandatory": true,
+      "evidence": "Inventário C10 detecta categoria inteiramente omitida, conserva comparação condicionada e recalcula após resolução com a mesma regra financeira."
     },
     {
       "id": "IA04",
@@ -961,7 +964,8 @@
         "WP12.T03"
       ],
       "status": "NOT_RUN",
-      "mandatory": true
+      "mandatory": true,
+      "evidence": "Crítica consome cobertura determinística C10, distingue omissão de hipótese e exige fonte sem inventar custo; resposta altera resultado consumido."
     },
     {
       "id": "IA05",
@@ -1025,17 +1029,20 @@
         "WP13.T04"
       ],
       "status": "NOT_RUN",
-      "mandatory": true
+      "mandatory": true,
+      "evidence": "Comparação de portfólio conserva cobertura C10 por candidato/interação e não promove subtotal condicionado a combinação elegível-completa."
     },
     {
       "id": "IA11",
       "title": "Documentos com fonte e confirmação",
       "tasks": [
         "WP06.T05",
-        "WP12.T02"
+        "WP12.T02",
+        "WP09.T04"
       ],
       "status": "NOT_RUN",
-      "mandatory": true
+      "mandatory": true,
+      "evidence": "WP06.T05 é produtor obrigatório; cenário e dossiê WP09.T04 consomem a mesma evidenceRef após confirmação, com atualização/revogação."
     },
     {
       "id": "IA12",
@@ -1122,7 +1129,7 @@
       ],
       "given": "Mesmo conjunto compartilhado, competência escolhida e registros atribuídos; um item sem dado e outro com zero.",
       "when": "Abrir Meu trabalho; editar três valores e justificativa; voltar; confirmar outro registro sem alteração; provocar conflito por edição do segundo ator.",
-      "then": "Filtros/posição preservados; projeção compartilhada atualizada; confirmação pertence à versão; conflito conserva rascunho; ausência continua visível.",
+      "then": "Filtros/posição preservados; projeção compartilhada atualizada; confirmação guarda versão observada e validade material C06. Fevereiro independente não recobra janeiro; alteração pertinente gera uma pendência. Conflito preserva rascunho e ausência continua visível.",
       "tasks": [
         "WP01.T03",
         "WP01.T04",
@@ -1318,9 +1325,10 @@
         "WP06.T05",
         "WP12.T02",
         "WP11.T02",
-        "WP01.T05"
+        "WP01.T05",
+        "WP09.T04"
       ],
-      "scenario": "PDF digital/DOCX/texto autorizado → candidatos com trecho → confirmação → cenário; conteúdo malicioso e texto ausente não viram instrução nem fato.",
+      "scenario": "PDF digital/DOCX/texto autorizado → candidatos com trecho → confirmação → cenário e dossiê WP09.T04 pela mesma evidência C14. Extração é de WP06; conteúdo malicioso, texto ausente, atualização e revogação não viram instrução/fato confirmado.",
       "evidence": "Entrypoint real, ator/versões/proveniência, esperado e observado, links de prova. Fixture sintética só define dados; comportamento é implementação real."
     },
     {
@@ -1349,6 +1357,89 @@
       ],
       "scenario": "Usar modelo e sessão reais, procedimento publicado e admissão válida; pedido de informação encerra run, resposta inicia nova versão/run; cancelar, retomar e rejeitar saída stale sem bypass.",
       "evidence": "Entrypoint real, ator/versões/proveniência, esperado e observado, links de prova. Fixture sintética só define dados; comportamento é implementação real."
+    }
+  ],
+  "resident_requirements": [
+    {
+      "id": "RA01",
+      "text": "Cinco perfis residentes registrados e contribuições distintas",
+      "tasks": [
+        "WP00.T02",
+        "WP12.T01",
+        "WP12.T02",
+        "WP10.T06"
+      ],
+      "proof_ids": [
+        "AM01"
+      ]
+    },
+    {
+      "id": "RA02",
+      "text": "Dezoito skills carregadas com digests e outputs persistidos consumidos",
+      "tasks": [
+        "WP00.T02",
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T04",
+        "WP10.T06"
+      ],
+      "proof_ids": [
+        "AM01"
+      ]
+    },
+    {
+      "id": "RA03",
+      "text": "Servidor sucafina-workbench e oito packs/39 operações com paridade",
+      "tasks": [
+        "WP00.T02",
+        "WP10.T06"
+      ],
+      "proof_ids": [
+        "AM02"
+      ]
+    },
+    {
+      "id": "RA04",
+      "text": "Identidade confiável por chamada, ACL/revogação e provider/generation pinados",
+      "tasks": [
+        "WP00.T02",
+        "WP00.T04",
+        "WP10.T06",
+        "WP10.T07"
+      ],
+      "proof_ids": [
+        "AM03"
+      ]
+    },
+    {
+      "id": "RA05",
+      "text": "BusinessContextService e memória Atlas real persistente/autorizada",
+      "tasks": [
+        "WP00.T02",
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07",
+        "WP10.T01"
+      ],
+      "proof_ids": [
+        "AM05"
+      ]
+    },
+    {
+      "id": "RA06",
+      "text": "Revisor em execução própria e contribuições usadas em decisão/rotina",
+      "tasks": [
+        "WP12.T03",
+        "WP12.T04",
+        "WP09.T07",
+        "WP10.T02"
+      ],
+      "proof_ids": [
+        "AM01",
+        "AM04",
+        "AM06"
+      ]
     }
   ]
 }

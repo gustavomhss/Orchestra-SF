@@ -19,7 +19,36 @@
     "ci_request_hash",
     "contract_version",
     "producer_refs",
-    "consumer_entrypoint"
+    "consumer_entrypoint",
+    "execution_actor",
+    "logical_owner",
+    "writer_lease",
+    "contract_versions",
+    "profile_id",
+    "profile_version",
+    "skill_ids",
+    "skill_versions",
+    "skill_digests",
+    "source_paths",
+    "bundle_digest",
+    "effective_model",
+    "native_session_id",
+    "case_id",
+    "case_version",
+    "case_incarnation",
+    "mcp_server_generation",
+    "mcp_operation",
+    "domain_port",
+    "domain_call_id",
+    "runtime_build_sha",
+    "atlas_engine_baseline",
+    "atlas_boundary_version",
+    "business_schema_version",
+    "scanner_binary_version",
+    "access_revision",
+    "expected_selection",
+    "selected_files",
+    "measured_duration_seconds"
   ],
   "allowed_status": [
     "NOT_RUN",
@@ -53,7 +82,7 @@
         "WP00",
         "WP10"
       ],
-      "coverage": "Contratos compilados, exports registrados, ownership disjunto, entrypoint real e persistência após reload.",
+      "coverage": "Contratos compilados, exports registrados, ownership disjunto, entrypoint real e persistência após reload. C15–C17, AM02, checkpoints, distribuição de skills e Atlas boundary real.",
       "status": "NOT_RUN"
     },
     {
@@ -98,7 +127,7 @@
       "owners": [
         "WP05"
       ],
-      "coverage": "8 perguntas analíticas originais e 3 novas; fontes, drilldown e tabela reconciliada com os valores dos gráficos.",
+      "coverage": "8 perguntas analíticas originais e 3 novas; fontes, drilldown e tabela reconciliada com os valores dos gráficos.  BI/tabela consumem C10: categoria omitida não desenha zero; subtotal e limiar condicionados mantêm a mesma condição da UI, crítica e portfólio.",
       "status": "NOT_RUN"
     },
     {
@@ -125,7 +154,7 @@
       "owners": [
         "WP08"
       ],
-      "coverage": "Primeiro ciclo, diretório autorizado, perguntas e respostas, confirmar sem alteração, escopo por período e Meu trabalho.",
+      "coverage": "Primeiro ciclo, diretório autorizado, perguntas e respostas, confirmar sem alteração, escopo por período e Meu trabalho.  CONFIRM-SCOPE é obrigatório: alteração só de fevereiro mantém janeiro válido e não recobra; janeiro/dependência material gera uma pendência; concorrência, revogação, substituição e auditoria original são conferidas no produtor e na rotina/fila reais.",
       "status": "NOT_RUN"
     },
     {
@@ -135,7 +164,7 @@
         "WP11",
         "WP01"
       ],
-      "coverage": "Caso persistente, alternativas, critérios, escolha, mudanças preparadas e recibos por domínio.",
+      "coverage": "Caso persistente, alternativas, critérios, escolha, mudanças preparadas e recibos por domínio.  Cobertura C10 é comprovada com inventário completo e categoria inteiramente omitida, zero informado e escolha condicionada preservada; confirmar training = 40000 inverte a comparação210000→250000.",
       "status": "NOT_RUN"
     },
     {
@@ -145,7 +174,7 @@
         "WP12",
         "WP13"
       ],
-      "coverage": "IA real em variante não roteirizada; fontes, contradição, crítica, propostas tipadas e portfólio sob restrições.",
+      "coverage": "IA real em variante não roteirizada; fontes, contradição, crítica, propostas tipadas e portfólio sob restrições.  Crítica e portfólio consomem a mesma cobertura C10 e não aprovam completude por soma. A variante omitida não deve trazer uma linha pending pré-cadastrada.  C15 exige18 witnesses de skill carregada+outputRef persistido+consumidor real, contribuição distinta dos 5 perfis e Revisor em run próprio; os witnesses podem compartilhar as seis provas integradas. WP01.T05.CHK.30/31 verificam uso pela interface e estados de falha. AM01: 5 perfis/18 skills com trace de carga/uso, modelos efetivos eRevisorindependente.",
       "status": "NOT_RUN"
     },
     {
@@ -155,7 +184,7 @@
         "WP14",
         "WP11"
       ],
-      "coverage": "Mudança material e irrelevante; escolha preservada; recuperação após commit e resposta perdida; memória e revogação.",
+      "coverage": "Mudança material e irrelevante; escolha preservada; recuperação após commit e resposta perdida; memória e revogação.  Reavaliação após categoria resolvida/custo inversor preserva a escolha original e o estado condicionado de sua base; comparação posterior vem do domínio. AM05: ports reais de Atlas, owner/ACL/restart/ledger/cases e 5 perfis sem seat engenharia.",
       "status": "NOT_RUN"
     },
     {
@@ -164,7 +193,7 @@
       "owners": [
         "WP09"
       ],
-      "coverage": "Quatro preparações originais e decisão por Relay; admissão, versão, run e checks reais; nenhuma espera humana inventada.",
+      "coverage": "Quatro preparações originais e decisão por Relay; admissão, versão, run e checks reais; nenhuma espera humana inventada.  Revisão usa validade material C06 sem recobrança irrelevante. Dossiê consome DocumentEvidence C14 do WP06 com evidência de candidato, confirmação e atualização/revogação. AM06: admissão Relay eproduto/perfil/skill retornam resultado verificável.",
       "status": "NOT_RUN"
     },
     {
@@ -173,7 +202,7 @@
       "owners": [
         "WP09"
       ],
-      "coverage": "Schedule nativo; timezone, recorrência, pausa, falha, revogação e deduplicação de execução/sinal.",
+      "coverage": "Schedule nativo; timezone, recorrência, pausa, falha, revogação e deduplicação de execução/sinal. AM06: retomada/recorrência/Schedule mantém limites atuais e correlação.",
       "status": "NOT_RUN"
     },
     {
@@ -183,7 +212,7 @@
         "WP06",
         "WP12"
       ],
-      "coverage": "PDF digital, DOCX e texto; trecho de origem e confirmação; documento malicioso, inválido ou sem texto tratado corretamente.",
+      "coverage": "PDF digital, DOCX e texto; trecho de origem e confirmação; documento malicioso, inválido ou sem texto tratado corretamente.  Handoff WP06.T05→WP09.T04 compartilha evidenceRef/versão/trecho; parser só no WP06 e candidato não é fato confirmado. AM03/AM05: referênciasdocumentais/injeção/scanner/isolation/revocation reais.",
       "status": "NOT_RUN"
     },
     {
@@ -192,7 +221,7 @@
       "owners": [
         "WP10"
       ],
-      "coverage": "Suites exigidas do epic e pacotes afetados, consumidores reais, compatibilidade, host binding e UI integrada.",
+      "coverage": "Suites exigidas do epic e pacotes afetados, consumidores reais, compatibilidade, host binding e UI integrada. Oito recipes mínimas, AM01-AM06, oito packs com paridade e Atlas check:generated/typecheck.",
       "status": "NOT_RUN"
     },
     {
@@ -201,7 +230,7 @@
       "owners": [
         "WP10"
       ],
-      "coverage": "Três pareceres independentes com achado, impacto, evidência, correção e reteste.",
+      "coverage": "Três pareceres independentes com achado, impacto, evidência, correção e reteste. Três reviewers novos após encerrar builders: autores ativos corrigem e reviewers não editam produto.",
       "status": "NOT_RUN"
     },
     {
@@ -210,7 +239,7 @@
       "owners": [
         "WP10"
       ],
-      "coverage": "Candidato de produto, snapshot de CI, request, run, jobs e resultado; guias, demo e matriz completa.",
+      "coverage": "Candidato de produto, snapshot de CI, request, run, jobs e resultado; guias, demo e matriz completa. Candidato→snapshot→request→selection→run/artifacts, manifests/skillhashes/leases e G2 Htemporal.",
       "status": "NOT_RUN"
     }
   ],
@@ -230,5 +259,14 @@
       "focus": "IA real, Relay, fontes, contradições e execução integrada",
       "independence": "Varia os dados e exige identificação de execução real; stub e schema isolado não fecham aceite."
     }
-  ]
+  ],
+  "integrated_proof_ids": [
+    "AM01",
+    "AM02",
+    "AM03",
+    "AM04",
+    "AM05",
+    "AM06"
+  ],
+  "missing_field_rule": "Campos não aplicáveis exigem motivo explícito. A ausência de um campo aplicável impede PASS. Os recibos não incluem credenciais nem dados sem autorização."
 }

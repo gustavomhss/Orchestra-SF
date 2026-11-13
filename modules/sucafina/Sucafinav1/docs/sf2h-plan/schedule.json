@@ -2,7 +2,7 @@
   "duration_minutes": 120,
   "clock_start": "T0 é a primeira execução da integradora; inclui preflight e início das outras quatro sessões. Não reiniciar o relógio depois da qualificação.",
   "scope_policy": "FULL_SCOPE_ONLY",
-  "feasibility": "Alvo agressivo, condicionado a capacidade efetivamente iniciada, serviços existentes e CI medido. Tokens não substituem slots, serviços ou tempo de testes. Não existe evidência empírica de que toda esta campanha termina em120 min.",
+  "feasibility": "Alvo condicional de 120 minutos, não duração medida nem garantia. O replanejamento usa exclusivamente cinco sessões com quatro slots incluindo coordenadora. As reservas abaixo são orçamento de trabalho a validar em GREADY/GNATIVE/G2H/G4; fila de CI, latência do provider, geração Atlas e correções não têm duração inventada.",
   "sessions": {
     "S0": {
       "role": "Integração e controle",
@@ -11,9 +11,9 @@
         "WP10"
       ],
       "workers": 3,
-      "review_slots": 3,
+      "review_slots": 0,
       "branch": "sf2-integrate",
-      "mode": "Os mesmos três slots mudam de função ao longo do tempo; não são seis agentes simultâneos."
+      "mode": "S0-A/B/C permanecem autores/provas. Três reviewers novos usam slots libera dos em S1/S2/S3; nunca criar um quarto e subagente em S0."
     },
     "S1": {
       "role": "Experiência e domínios financeiros",
@@ -22,7 +22,8 @@
         "WP02",
         "WP03"
       ],
-      "workers": 3
+      "workers": 3,
+      "additional_assignment": "Skills finance/portfolio 10-13/16-29; revisãofresh S1-R1 ocupa slot S1-B após encerramento 72. S1 assume somente correções WP02 após lease 72."
     },
     "S2": {
       "role": "Compras dados e BI",
@@ -31,7 +32,8 @@
         "WP05",
         "WP06"
       ],
-      "workers": 3
+      "workers": 3,
+      "additional_assignment": "Documentos 13-22/24-35 e coordenação 22-24/35-45/50-55/65-70. Controla CI 40-75 e entrega a S0-C. S2-R2 ocupa slot S2-B em 72; S2 assume somente correções WP05."
     },
     "S3": {
       "role": "Trabalho de equipe e rotinas",
@@ -40,7 +42,8 @@
         "WP08",
         "WP09"
       ],
-      "workers": 3
+      "workers": 3,
+      "additional_assignment": "GNATIVE16-20 e skills 23-38; coordenação 38-75. S3-R3 ocupa slot S3-A75; S3 assume somente correções WP07 após lease."
     },
     "S4": {
       "role": "Decisões IA e portfólio",
@@ -51,74 +54,79 @@
         "WP14"
       ],
       "workers": 3,
-      "coordinator_implementation": "WP14"
+      "coordinator_implementation": "WP14.T05/T01/T02 até 43; entrega a S0-C; coordena e executa provas live 55-118, sem julgamento independente."
     }
   },
-  "capacity": "Cinco conversas efetivamente iniciadas, cada uma com até quatro slots. Quatro coordenadoras com 12 builders dedicados; S4 também implementa WP14 parcialmente. S0 tem três auxiliares que depois viram revisores, respeitando independência de autoria. Pico: 20 agentes incluindo as cinco coordenadoras, não 20 builders.",
-  "wp14_budget": "S4 reserva T+10–30 para funções puras, T+30–40 para coordenação, T+40–65 para ligação real e T+65–75 para provas. Se não publicar producer até T+30, S0-A assume por transferência exclusiva e um coordenador sem autoria cobre sua revisão.",
+  "capacity": "Cinco conversas efetivamente abertas; no máximo quatro agentes vivos por conversa, incluindo a coordenadora. São quinze auxiliares e cinco coordenadoras, pico de vinte atores; uso da coordenadora para código consome seus próprios minutos. Runners de CI e concorrência de modelos são recursos externos observados, não slots presumidos.",
+  "wp14_budget": "WP14.T05 S4 10-20; coordenação 20-22; T01 S4 22-34; coordenação 34-35; T02 S4 35-43; transferência exclusiva em 43 para S0-C; T03 S0-C 43-56; T04 S0-C 56-68; consumo/provas 68-75. Não há resgate automático por S0-A, que está no Atlas. Se transferência falhar, S4 continua como escritor único e S1/S3 absorvem sua coordenação em janelas explicitamente revistas; recalcular ETA sem remover escopo.",
   "milestones": [
     {
       "minute": 0,
       "gate": "T0",
-      "condition": "Integradora registra T0 e baseline e publica os cinco prompts. A abertura e confirmação das demais sessões entram no relógio."
+      "condition": "S0 registra relógio e baseline, publica os cinco prompts e o mapa de escritores. Setup e abertura das outras quatro sessões entram no relógio; não reiniciar T0."
     },
     {
       "minute": 5,
       "gate": "GREADY",
-      "condition": "Cinco sessões confirmadas e ownership aceito. Se faltar capacidade, registrar efeito no prazo e iniciar as frentes já disponíveis, sem fingir paralelismo nem reduzir escopo."
+      "condition": "Cinco sessões e seus vinte slots máximos, contando cinco coordenadoras, têm presença observada. Confirmar atores, leases e minutos. Slot ausente causa realocação explícita e revisão do ETA; não reduzir escopo."
     },
     {
       "minute": 10,
       "gate": "G0",
-      "condition": "C01–C14, writers, exports e fixtures congelados; execução nativa continua em qualificação separada."
+      "condition": "C01–C17, schemas, operações dos oito packs, versões, paths, escritores e exemplos normativos congelados por WP00.T02. Manifest de execução ainda distingue fontes planejadas de bundles produzidos. Toda construção determinística é libera da por T02, mesmo com GNATIVE pendente."
     },
     {
       "minute": 20,
       "gate": "GNATIVE",
-      "condition": "Entrada real do produto chega ao modelo configurado e ao contexto correto de Maestro; acesso, proveniência e indisponibilidade explícitos. Não é gate de início de UI/BI/domínios."
+      "condition": "No mesmo candidato de qualificação: caso C09 real com principal/versão/encarnação, sf_finance registrado por AgentV2, sf-explicar-forecast carregada de fonte distribuída com digest, SessionV2.prompt e ponte MCP privada C16 chamam sf_forecast_compare sobre createPlannerPort.compareForecast real; resultado financeiro retorna ao produto com proveniência. UI e MCP usam o mesmo port, principal e base. Teste de chamada direta não concedida e provider homônimo falha. Oito packs têm contratos/concessões listados; operações ainda não implementadas retornam unavailable, não sucesso. AM02 completo dos oito packs é obrigatório em G4. Falha não retém construção determinística."
     },
     {
       "minute": 25,
       "gate": "G1",
-      "condition": "Primeiros providers no módulo real; contexto autorizado, persistência e uma rota composta. Primeira rodada de CI iniciada cedo."
+      "condition": "C08 protected-store provider publicado, runtime mínimo integrado, primeiros providers dos três domínios e corpus/caso reais. S0-C inicia probes de CI com seleção real e capta fila/setup, sem extrapolar duração do conjunto final."
     },
     {
       "minute": 40,
       "gate": "G2",
-      "condition": "Projeções/ações dos três módulos e consumidores novos conectados; imports/BI/reunião já em integração."
+      "condition": "Domínios e consumidores iniciais conectados; resolver documental real publicado em T+20 e extração em T+35; fontes de skills dos colaboradores recebidas até T+38. Integração incremental e primeira medição de CI identificadas por SHA."
+    },
+    {
+      "minute": 40,
+      "gate": "G2H",
+      "condition": "Recalcular caminho residual de construção, provas live, revisão e CI a partir de capacidade e durações observadas. Alvo 120 fica CONDITIONAL se qualquer duração/concurrency obrigatória for desconhecida. Se projeção ultrapassar 120, marcar AT_RISK e publicar sequência full-scope continuada com os mesmos owners, sem reclassificar entrega parcial."
     },
     {
       "minute": 55,
       "gate": "G3",
-      "condition": "Inferência real, contradição com fontes, simulação canônica e execução/admissão Relay demonstráveis. Execução C12 completa por domínio é exigida em T+75."
+      "condition": "Cinco perfis e dezoito fontes/skills finais empacotados e carregáveis, execução própria do Revisor disponível, inferência real/contradição/simulação e Relay demonstrados. Atlas real importado pela boundary de distribuição, com BCS, resolver e append/read protegido; prova de reinício/ACL continua até G4. Todos os consumidores tardios ainda têm entregas e ETAs explícitos."
     },
     {
       "minute": 75,
       "gate": "G4",
-      "condition": "Escopo funcional integral conectado, com persistência real e consumidores presentes; candidato disponível para suites e revisões."
+      "condition": "Escopo funcional integral conectado: cinco perfis, dezoito skills executáveis, oito packs operacionais, Atlas/ledger e documentos reais, aplicações C12 por domínio e UI/Relay consumidores. AM01-AM06 têm integração exercida e candidato cumulativo congelado. Nenhuma fixture satisfaz produção/consumo. Reavaliar G2H com seleção final de CI e provas live."
     },
     {
       "minute": 95,
       "gate": "G5",
-      "condition": "Primeiro conjunto completo de provas e revisões; defeitos atribuídos e correções em andamento."
+      "condition": "Primeiro conjunto de aceitação cumulativa do candidato concluído e três pareceres independentes por seção. Falhas vão ao único escritor; o prazo só permanece viável se CI, provas live e correções residuais observadas couberem."
     },
     {
       "minute": 103,
       "gate": "G6",
-      "condition": "Candidato corrigido congelado; verificação dos componentes afetados e cumulativa disparada."
+      "condition": "Último candidato corrigido congelado, se houve alteração; disparar gates cumulativos exigidos e repetições live afetadas com recibo do candidato. Se candidato G4 não mudou, não criar commit artificial para reiniciar provas."
     },
     {
       "minute": 118,
       "gate": "G7",
-      "condition": "Checks exigidos concluídos, três revisões reconciliadas e nenhum achado obrigatório aberto."
+      "condition": "Receipts completos para o candidato aceito: seleções distintas app/src e app/test-browser, Atlas boundary, demais suites obrigatórias, AM01-AM06, três revisões sem autojulgamento e nenhum achado obrigatório aberto."
     },
     {
       "minute": 120,
       "gate": "G8",
-      "condition": "Recibo de entrega integral ou relatório de atraso com pendências concretas; o prazo não relaxa os critérios de conclusão."
+      "condition": "Emitir aceite somente se G7 passar; caso contrário publicar atraso, pendências, próximo ETA, donos e continuação de todo o escopo. Não declarar meta de duas horas cumprida nem encerrar a execução por tempo esgotado."
     }
   ],
-  "ci_budget": "Duas janelas finais de aproximadamente 15 minutos são hipótese a medir cedo. O timeout de 45 minutos do workflow é um teto, não uma previsão; fila e setup também entram na conta.",
+  "ci_budget": "G4->G5 reserva 20 minutos e G6->G7 reserva 15 minutos como hipóteses condicionais para o conjunto observado de CI, provas live e rechecks. Timeout 45 minutos é limite de cada job, não previsão. O plano não presume oito runners livres nem extrapola seleção parcial para suíte final. Medir fila, setup, execução e coleta separadamente; desconhecido não conta como zero.",
   "central_allocation": [
     {
       "slot": "S0",
@@ -126,47 +134,1649 @@
         0,
         120
       ],
-      "work": "Integradora: WP00.T01/T02, autoria dos contratos e shared files de WP10, merge queue e encerramento. Janelas de integração/QA são atividades intercaladas, não quatro builders simultâneos."
+      "work": "Contrato e composition roots, protected-store C08, única escritora da branch sf 2-integrate, fila de integração e encerramento. Não implementa os arquivos delegados de runtime, Atlas, harness ou WP14."
     },
     {
       "slot": "S0-A",
       "window": [
         0,
-        20
+        10
       ],
-      "work": "Assistente de fixtures/oráculos WP00.T03 e consistência de contratos. Escreve somente artefatos auxiliares de WP00; S0 publica schema comum."
+      "work": "Fixtures/oráculos WP00.T03 em arquivos auxiliares exclusivos; entrega corpus e exemplos até 10."
+    },
+    {
+      "slot": "S0-A",
+      "window": [
+        10,
+        55
+      ],
+      "work": "Builder exclusivo WP10.T07: empacotamento Atlas, BusinessContextService, createSfAtlasMemory e facade DurableMemory. Slot indisponível para resgate WP14 ou revisão do próprio código."
     },
     {
       "slot": "S0-B",
       "window": [
         0,
-        25
+        10
       ],
-      "work": "Qualificação nativa WP00.T04: inspeção e exercício autorizado dos serviços; entrega achados/recibos sem editar host compartilhado."
+      "work": "Preflight técnico de host/modelo/Tools/transport e requisitos de GNATIVE; entrega fatos para S3. Sem alterar a configuração de contas."
+    },
+    {
+      "slot": "S0-B",
+      "window": [
+        10,
+        45
+      ],
+      "work": "Builder exclusivo WP10.T06: AgentV2, loader, contexto de execução e bridge MCP privada; incremento mínimo publicado até 16, completo até 45."
     },
     {
       "slot": "S0-C",
       "window": [
         0,
-        25
+        40
       ],
-      "work": "Qualifica receitas CI, seleção e inventário de regressão; prepara harness de aceite em namespace WP10 mediante ownership exclusivo de seus novos arquivos de teste."
+      "work": "Inventário/probes CI, request/seleção/proveniência e harness E2E em caminhos próprios. Controle de CI entregue a S2 em 40."
     },
     {
-      "slot": "S0-A/B/C",
+      "slot": "S0-C",
       "window": [
-        25,
-        55
+        40,
+        43
       ],
-      "work": "Provas de consumidores, inspeção de incrementos e apoio. Um slot pode assumir WP14 com transferência exclusiva; sua revisão vai para coordenador independente."
+      "work": "Confere lease e SHA para transferência WP14; não assume nenhum arquivo antes do aceite dos dois writers."
     },
     {
-      "slot": "S0-A/B/C",
+      "slot": "S0-C",
+      "window": [
+        43,
+        75
+      ],
+      "work": "Único builder WP14.T03/T04 e correções do namespace; integra e prova até 75. Não é revisor independente desse trabalho."
+    },
+    {
+      "slot": "S0-A",
       "window": [
         55,
+        75
+      ],
+      "work": "Provas Atlas/BCS/roundtrip com produtores reais e correção do próprio T07; S3-R3 julga independentemente no candidato."
+    },
+    {
+      "slot": "S0-B",
+      "window": [
+        45,
+        75
+      ],
+      "work": "Provas de perfil/skills/packs e correção do próprio T06; Os reviewers novos julgam as seções no candidato."
+    },
+    {
+      "slot": "S1-R1/S2-R2/S3-R3",
+      "window": [
+        72,
         118
       ],
-      "work": "Três revisões independentes por área e retestes. Ajudante que escreveu parte julgada é substituído nessa parte por coordenador S1/S2/S3 sem autoria."
+      "work": "Três agentes novos sem autoria em slots libera dos (R3 aos 75); autores S0-A/B/C continuamcorrigindo. Leitura+revisão 72/75-95 e rechecks 95-118 incluídos. Não emitir revisão independente de coordenadora autora."
+    },
+    {
+      "slot": "S1/S2/S3",
+      "window": [
+        72,
+        118
+      ],
+      "work": "Correções WP02/WP05/WP07 após transferência exclusiva dos builders encerrados; não assinam seus próprios pareceres."
+    }
+  ],
+  "actor_allocations": {
+    "S0": [
+      {
+        "window": [
+          0,
+          4
+        ],
+        "work": "WP00.T01 baseline/relógio"
+      },
+      {
+        "window": [
+          4,
+          10
+        ],
+        "work": "WP00.T02 contratosC01–C17"
+      },
+      {
+        "window": [
+          10,
+          18
+        ],
+        "work": "WP10.T01 composição native real"
+      },
+      {
+        "window": [
+          18,
+          25
+        ],
+        "work": "WP10.T01 protected-store C08"
+      },
+      {
+        "window": [
+          25,
+          40
+        ],
+        "work": "Integração incremental da primeira leva"
+      },
+      {
+        "window": [
+          40,
+          55
+        ],
+        "work": "Integração de documentos/skills/Atlas/rotinas"
+      },
+      {
+        "window": [
+          55,
+          75
+        ],
+        "work": "Integração de todos os consumidores e candidato G4"
+      },
+      {
+        "window": [
+          75,
+          95
+        ],
+        "work": "Fila de integração, atribuição de achados e candidate control"
+      },
+      {
+        "window": [
+          95,
+          103
+        ],
+        "work": "Integrar correções e congelar último candidato"
+      },
+      {
+        "window": [
+          103,
+          110
+        ],
+        "work": "Preparar recibo/guias; sem alegar aceite"
+      },
+      {
+        "window": [
+          110,
+          118
+        ],
+        "work": "Reconciliar gates e assinaturas finais"
+      },
+      {
+        "window": [
+          118,
+          120
+        ],
+        "work": "WP10.T05 entrega ou atraso com continuação"
+      }
+    ],
+    "S0-A": [
+      {
+        "window": [
+          0,
+          4
+        ],
+        "work": "Leitura/oráculos"
+      },
+      {
+        "window": [
+          4,
+          10
+        ],
+        "work": "WP00.T03 corpus/fixtures"
+      },
+      {
+        "window": [
+          10,
+          20
+        ],
+        "work": "WP10.T07 empacotamento Atlas real"
+      },
+      {
+        "window": [
+          20,
+          35
+        ],
+        "work": "WP10.T07 BCS/refresolver"
+      },
+      {
+        "window": [
+          35,
+          45
+        ],
+        "work": "WP10.T07 Atlas ports e armazenamento transacional"
+      },
+      {
+        "window": [
+          45,
+          55
+        ],
+        "work": "WP10.T07 fechamento/scanner/isolamento"
+      },
+      {
+        "window": [
+          55,
+          75
+        ],
+        "work": "AM05 provas reais e correção T07"
+      },
+      {
+        "window": [
+          75,
+          103
+        ],
+        "work": "Correções T07/execução de provas no candidato"
+      },
+      {
+        "window": [
+          103,
+          118
+        ],
+        "work": "Rechecks de Atlas do candidato final"
+      },
+      {
+        "window": [
+          118,
+          120
+        ],
+        "work": "Recibo de frente"
+      }
+    ],
+    "S0-B": [
+      {
+        "window": [
+          0,
+          10
+        ],
+        "work": "Preflight nativo WP00.T04 sem autoria de qualificação"
+      },
+      {
+        "window": [
+          10,
+          16
+        ],
+        "work": "WP10.T06 runtime mínimo"
+      },
+      {
+        "window": [
+          16,
+          20
+        ],
+        "work": "Suporte ao gate S3; correção do próprio runtime se necessária"
+      },
+      {
+        "window": [
+          20,
+          45
+        ],
+        "work": "WP10.T06 cinco perfis/loader/bridge/oito packs"
+      },
+      {
+        "window": [
+          45,
+          75
+        ],
+        "work": "AM01-AM03 execuções e correções runtime"
+      },
+      {
+        "window": [
+          75,
+          103
+        ],
+        "work": "Provas no candidato/fixesruntime"
+      },
+      {
+        "window": [
+          103,
+          118
+        ],
+        "work": "Rechecks perfis/MCP no candidato final"
+      },
+      {
+        "window": [
+          118,
+          120
+        ],
+        "work": "Recibo de frente"
+      }
+    ],
+    "S0-C": [
+      {
+        "window": [
+          0,
+          10
+        ],
+        "work": "WP10.T04 inventário de CI e seleção"
+      },
+      {
+        "window": [
+          10,
+          20
+        ],
+        "work": "WP10.T02 harnessUI e fixtures integração"
+      },
+      {
+        "window": [
+          20,
+          25
+        ],
+        "work": "Snapshotprobe CI validado"
+      },
+      {
+        "window": [
+          25,
+          40
+        ],
+        "work": "Controle de CI/harness; entregar a S2 em 40"
+      },
+      {
+        "window": [
+          40,
+          43
+        ],
+        "work": "Receber SHA e lease WP14"
+      },
+      {
+        "window": [
+          43,
+          56
+        ],
+        "work": "WP14.T03"
+      },
+      {
+        "window": [
+          56,
+          68
+        ],
+        "work": "WP14.T04"
+      },
+      {
+        "window": [
+          68,
+          75
+        ],
+        "work": "Consumo WP14/AM05"
+      },
+      {
+        "window": [
+          75,
+          95
+        ],
+        "work": "Retomar controle de CI de S2; coletarjornadas/harness e AM01-AM06 no candidato congelado"
+      },
+      {
+        "window": [
+          95,
+          103
+        ],
+        "work": "Writer WP14/harness para falhas; S0 acompanha CI enquanto este ator corrige, sem novo agente"
+      },
+      {
+        "window": [
+          103,
+          118
+        ],
+        "work": "Controle de CI/rechecksE2E e WP14 no candidato final"
+      },
+      {
+        "window": [
+          118,
+          120
+        ],
+        "work": "Recibo de frente/CI"
+      }
+    ],
+    "S1": [
+      {
+        "window": [
+          0,
+          10
+        ],
+        "work": "Abrir/atribuir S1-A/B/C e revisar contratos"
+      },
+      {
+        "window": [
+          10,
+          13
+        ],
+        "work": "WP12.T01 sf-explicar-forecast; source/hash 13"
+      },
+      {
+        "window": [
+          13,
+          16
+        ],
+        "work": "Coordenação/handoff de Planner 15"
+      },
+      {
+        "window": [
+          16,
+          29
+        ],
+        "work": "WP12.T02 outras 5 skills finance/portfolio"
+      },
+      {
+        "window": [
+          29,
+          40
+        ],
+        "work": "Transferirfontes/coordenação/integrarhandoffs"
+      },
+      {
+        "window": [
+          40,
+          55
+        ],
+        "work": "ConsumoUI/domínios e preparaçãoR1"
+      },
+      {
+        "window": [
+          55,
+          72
+        ],
+        "work": "Coordenação/pré-inspeção e handoff WP02; não emitir parecer independente"
+      },
+      {
+        "window": [
+          72,
+          75
+        ],
+        "work": "Aceitar lease WP02, encerrar S1-B e iniciar S1-R1 no mesmo slot"
+      },
+      {
+        "window": [
+          75,
+          103
+        ],
+        "work": "Único writer de correções WP02; coordenação/handoffs emfatias da reserva, semautojulgar"
+      },
+      {
+        "window": [
+          103,
+          118
+        ],
+        "work": "Corrigir/revalidar WP02 se solicitado; manter coordenação da frente"
+      },
+      {
+        "window": [
+          118,
+          120
+        ],
+        "work": "Recibo de frente"
+      }
+    ],
+    "S2": [
+      {
+        "window": [
+          0,
+          10
+        ],
+        "work": "Abrir/atribuir S2-A/B/C e ler contratos"
+      },
+      {
+        "window": [
+          10,
+          13
+        ],
+        "work": "Coordenação e delegação documental"
+      },
+      {
+        "window": [
+          13,
+          22
+        ],
+        "work": "WP06.T05 resolver/documentos; DOC-REF T+20"
+      },
+      {
+        "window": [
+          22,
+          24
+        ],
+        "work": "Coordenação/três builders"
+      },
+      {
+        "window": [
+          24,
+          35
+        ],
+        "work": "WP06.T05 extraçãocompleta/recusas"
+      },
+      {
+        "window": [
+          35,
+          40
+        ],
+        "work": "Handoffdoc/coordenação e receber controle de CI"
+      },
+      {
+        "window": [
+          40,
+          45
+        ],
+        "work": "Integração dafrente/coordenação"
+      },
+      {
+        "window": [
+          45,
+          50
+        ],
+        "work": "Controle de CI e revisão ETA"
+      },
+      {
+        "window": [
+          50,
+          55
+        ],
+        "work": "Lease documentos a S2-C em 53/handoffs"
+      },
+      {
+        "window": [
+          55,
+          65
+        ],
+        "work": "Controle de CI/provas"
+      },
+      {
+        "window": [
+          65,
+          70
+        ],
+        "work": "Coordenação prontidão G4"
+      },
+      {
+        "window": [
+          70,
+          72
+        ],
+        "work": "Prontidão G4 e preparar lease de revisão WP05"
+      },
+      {
+        "window": [
+          72,
+          75
+        ],
+        "work": "Aceitar WP05, encerrar S2-B/iniciar S2-R2; entregar CI a S0-C"
+      },
+      {
+        "window": [
+          75,
+          103
+        ],
+        "work": "Único writer de correções WP05 e coordenação da frente; CIcontrol jáem S0-C"
+      },
+      {
+        "window": [
+          103,
+          118
+        ],
+        "work": "Corrigir/revalidar WP05 e consumidores se solicitado"
+      },
+      {
+        "window": [
+          118,
+          120
+        ],
+        "work": "Recibo de frente"
+      }
+    ],
+    "S3": [
+      {
+        "window": [
+          0,
+          10
+        ],
+        "work": "Abrir/atribuir S3-A/B/C e ler contratos"
+      },
+      {
+        "window": [
+          10,
+          16
+        ],
+        "work": "Receberpreflight/caso/fixtures; preparar qualificação"
+      },
+      {
+        "window": [
+          16,
+          20
+        ],
+        "work": "WP00.T04/GNATIVE independente; execução 18-20"
+      },
+      {
+        "window": [
+          20,
+          23
+        ],
+        "work": "Coordenação e handoffs"
+      },
+      {
+        "window": [
+          23,
+          38
+        ],
+        "work": "WP12.T02 cinco fontes Maestro/Revisor"
+      },
+      {
+        "window": [
+          38,
+          55
+        ],
+        "work": "Transferirfontes/coordenação/consumidores"
+      },
+      {
+        "window": [
+          55,
+          75
+        ],
+        "work": "Coordenação/consumo WP07; preparar handoff sem emitir parecer independente"
+      },
+      {
+        "window": [
+          75,
+          103
+        ],
+        "work": "Aceitar lease WP07, encerrar S3-A/iniciar S3-R3; writer exclusivo de correções WP07"
+      },
+      {
+        "window": [
+          103,
+          118
+        ],
+        "work": "Corrigir/revalidar WP07 e coordenação"
+      },
+      {
+        "window": [
+          118,
+          120
+        ],
+        "work": "Recibo de frente"
+      }
+    ],
+    "S4": [
+      {
+        "window": [
+          0,
+          10
+        ],
+        "work": "Abrir/atribuir S4-A/B/C e ler contratos"
+      },
+      {
+        "window": [
+          10,
+          20
+        ],
+        "work": "WP14.T05 tradução Atlas pura"
+      },
+      {
+        "window": [
+          20,
+          22
+        ],
+        "work": "Coordenação e handoff de Atlas"
+      },
+      {
+        "window": [
+          22,
+          34
+        ],
+        "work": "WP14.T01 materialidade"
+      },
+      {
+        "window": [
+          34,
+          35
+        ],
+        "work": "Coordenação"
+      },
+      {
+        "window": [
+          35,
+          43
+        ],
+        "work": "WP14.T02 recall/ranking puro"
+      },
+      {
+        "window": [
+          43,
+          45
+        ],
+        "work": "Transferir WP14 a S0-C com SHA e lease"
+      },
+      {
+        "window": [
+          45,
+          55
+        ],
+        "work": "Coordenação e integração decisões"
+      },
+      {
+        "window": [
+          55,
+          75
+        ],
+        "work": "Execuçõeslive 5 perfis/18 skills/rotina com consumidores; qualifica resultados masnãoassina revisão independente"
+      },
+      {
+        "window": [
+          75,
+          95
+        ],
+        "work": "Reexecutar AM01/AM06 requeridos no candidato congelado; capacidade/latência reais em G2H"
+      },
+      {
+        "window": [
+          95,
+          103
+        ],
+        "work": "CoordenarcorreçõesC11 e consumidores, sem assumir paths de outro autor"
+      },
+      {
+        "window": [
+          103,
+          118
+        ],
+        "work": "Repetir provas live afetadas no candidato final/recibos"
+      },
+      {
+        "window": [
+          118,
+          120
+        ],
+        "work": "Recibo de frente"
+      }
+    ],
+    "S1-A": [
+      {
+        "window": [
+          0,
+          10
+        ],
+        "work": "Preflight/ownership/WP01"
+      },
+      {
+        "window": [
+          10,
+          72
+        ],
+        "work": "WP01 autoria e testes escopados; incrementos entregues nos checkpoints"
+      },
+      {
+        "window": [
+          72,
+          75
+        ],
+        "work": "WP01 conclusão de consumo e readiness G4"
+      },
+      {
+        "window": [
+          75,
+          103
+        ],
+        "work": "WP01 correções/provas de aceitação"
+      },
+      {
+        "window": [
+          103,
+          118
+        ],
+        "work": "WP01 rechecks de candidato final"
+      },
+      {
+        "window": [
+          118,
+          120
+        ],
+        "work": "WP01 recibo"
+      }
+    ],
+    "S1-B": [
+      {
+        "window": [
+          0,
+          10
+        ],
+        "work": "Preflight/ownership/WP02"
+      },
+      {
+        "window": [
+          10,
+          70
+        ],
+        "work": "WP02 autoria e testes escopados; incrementos entregues nos checkpoints"
+      },
+      {
+        "window": [
+          70,
+          72
+        ],
+        "work": "WP02 conclusão de consumo e readiness G4; fechar lease/receipt e encerrar agente, sem permanecer ocioso ocupando slot"
+      }
+    ],
+    "S1-C": [
+      {
+        "window": [
+          0,
+          10
+        ],
+        "work": "Preflight/ownership/WP03"
+      },
+      {
+        "window": [
+          10,
+          72
+        ],
+        "work": "WP03 autoria e testes escopados; incrementos entregues nos checkpoints"
+      },
+      {
+        "window": [
+          72,
+          75
+        ],
+        "work": "WP03 conclusão de consumo e readiness G4"
+      },
+      {
+        "window": [
+          75,
+          103
+        ],
+        "work": "WP03 correções/provas de aceitação"
+      },
+      {
+        "window": [
+          103,
+          118
+        ],
+        "work": "WP03 rechecks de candidato final"
+      },
+      {
+        "window": [
+          118,
+          120
+        ],
+        "work": "WP03 recibo"
+      }
+    ],
+    "S2-A": [
+      {
+        "window": [
+          0,
+          10
+        ],
+        "work": "Preflight/ownership/WP04"
+      },
+      {
+        "window": [
+          10,
+          72
+        ],
+        "work": "WP04 autoria e testes escopados; incrementos entregues nos checkpoints"
+      },
+      {
+        "window": [
+          72,
+          75
+        ],
+        "work": "WP04 conclusão de consumo e readiness G4"
+      },
+      {
+        "window": [
+          75,
+          103
+        ],
+        "work": "WP04 correções/provas de aceitação"
+      },
+      {
+        "window": [
+          103,
+          118
+        ],
+        "work": "WP04 rechecks de candidato final"
+      },
+      {
+        "window": [
+          118,
+          120
+        ],
+        "work": "WP04 recibo"
+      }
+    ],
+    "S2-B": [
+      {
+        "window": [
+          0,
+          10
+        ],
+        "work": "Preflight/ownership/WP05"
+      },
+      {
+        "window": [
+          10,
+          70
+        ],
+        "work": "WP05 autoria e testes escopados; incrementos entregues nos checkpoints"
+      },
+      {
+        "window": [
+          70,
+          72
+        ],
+        "work": "WP05 conclusão de consumo e readiness G4; fechar lease/receipt e encerrar agente, sem permanecer ocioso ocupando slot"
+      }
+    ],
+    "S3-A": [
+      {
+        "window": [
+          0,
+          10
+        ],
+        "work": "Preflight/ownership/WP07"
+      },
+      {
+        "window": [
+          10,
+          72
+        ],
+        "work": "WP07 autoria e testes escopados; incrementos entregues nos checkpoints"
+      },
+      {
+        "window": [
+          72,
+          75
+        ],
+        "work": "WP07 conclusão de consumo e readiness G4; fechar lease/receipt e encerrar agente, sem permanecer ocioso ocupando slot"
+      }
+    ],
+    "S3-B": [
+      {
+        "window": [
+          0,
+          10
+        ],
+        "work": "Preflight/ownership/WP08"
+      },
+      {
+        "window": [
+          10,
+          72
+        ],
+        "work": "WP08 autoria e testes escopados; incrementos entregues nos checkpoints"
+      },
+      {
+        "window": [
+          72,
+          75
+        ],
+        "work": "WP08 conclusão de consumo e readiness G4"
+      },
+      {
+        "window": [
+          75,
+          103
+        ],
+        "work": "WP08 correções/provas de aceitação"
+      },
+      {
+        "window": [
+          103,
+          118
+        ],
+        "work": "WP08 rechecks de candidato final"
+      },
+      {
+        "window": [
+          118,
+          120
+        ],
+        "work": "WP08 recibo"
+      }
+    ],
+    "S3-C": [
+      {
+        "window": [
+          0,
+          10
+        ],
+        "work": "Preflight/ownership/WP09"
+      },
+      {
+        "window": [
+          10,
+          72
+        ],
+        "work": "WP09 autoria e testes escopados; incrementos entregues nos checkpoints"
+      },
+      {
+        "window": [
+          72,
+          75
+        ],
+        "work": "WP09 conclusão de consumo e readiness G4"
+      },
+      {
+        "window": [
+          75,
+          103
+        ],
+        "work": "WP09 correções/provas de aceitação"
+      },
+      {
+        "window": [
+          103,
+          118
+        ],
+        "work": "WP09 rechecks de candidato final"
+      },
+      {
+        "window": [
+          118,
+          120
+        ],
+        "work": "WP09 recibo"
+      }
+    ],
+    "S4-A": [
+      {
+        "window": [
+          0,
+          10
+        ],
+        "work": "Preflight/ownership/WP11"
+      },
+      {
+        "window": [
+          10,
+          72
+        ],
+        "work": "WP11 autoria e testes escopados; incrementos entregues nos checkpoints"
+      },
+      {
+        "window": [
+          72,
+          75
+        ],
+        "work": "WP11 conclusão de consumo e readiness G4"
+      },
+      {
+        "window": [
+          75,
+          103
+        ],
+        "work": "WP11 correções/provas de aceitação"
+      },
+      {
+        "window": [
+          103,
+          118
+        ],
+        "work": "WP11 rechecks de candidato final"
+      },
+      {
+        "window": [
+          118,
+          120
+        ],
+        "work": "WP11 recibo"
+      }
+    ],
+    "S4-B": [
+      {
+        "window": [
+          0,
+          10
+        ],
+        "work": "Preflight/ownership/WP12"
+      },
+      {
+        "window": [
+          10,
+          72
+        ],
+        "work": "WP12 autoria e testes escopados; incrementos entregues nos checkpoints"
+      },
+      {
+        "window": [
+          72,
+          75
+        ],
+        "work": "WP12 conclusão de consumo e readiness G4"
+      },
+      {
+        "window": [
+          75,
+          103
+        ],
+        "work": "WP12 correções/provas de aceitação"
+      },
+      {
+        "window": [
+          103,
+          118
+        ],
+        "work": "WP12 rechecks de candidato final"
+      },
+      {
+        "window": [
+          118,
+          120
+        ],
+        "work": "WP12 recibo"
+      }
+    ],
+    "S4-C": [
+      {
+        "window": [
+          0,
+          10
+        ],
+        "work": "Preflight/ownership/WP13"
+      },
+      {
+        "window": [
+          10,
+          72
+        ],
+        "work": "WP13 autoria e testes escopados; incrementos entregues nos checkpoints"
+      },
+      {
+        "window": [
+          72,
+          75
+        ],
+        "work": "WP13 conclusão de consumo e readiness G4"
+      },
+      {
+        "window": [
+          75,
+          103
+        ],
+        "work": "WP13 correções/provas de aceitação"
+      },
+      {
+        "window": [
+          103,
+          118
+        ],
+        "work": "WP13 rechecks de candidato final"
+      },
+      {
+        "window": [
+          118,
+          120
+        ],
+        "work": "WP13 recibo"
+      }
+    ],
+    "S2-C": [
+      {
+        "window": [
+          0,
+          10
+        ],
+        "work": "WP06 preflight imports"
+      },
+      {
+        "window": [
+          10,
+          53
+        ],
+        "work": "WP06.T01-T04 parsers/preview/Apply/roundtrip"
+      },
+      {
+        "window": [
+          53,
+          75
+        ],
+        "work": "Receber lease documentos de S2; corrigir/provar WP06.T05 e imports"
+      },
+      {
+        "window": [
+          75,
+          103
+        ],
+        "work": "WP06 correções e aceitação"
+      },
+      {
+        "window": [
+          103,
+          118
+        ],
+        "work": "WP06 rechecks"
+      },
+      {
+        "window": [
+          118,
+          120
+        ],
+        "work": "WP06 recibo"
+      }
+    ],
+    "S1-R1": [
+      {
+        "window": [
+          72,
+          95
+        ],
+        "work": "Novo agente sem autoria: receber SHA/plano/evidências, revisar Produto/UX/capacidades e fontes de contribuição visível; incluir leitura no orçamento.",
+        "physical_slot": "S1-B"
+      },
+      {
+        "window": [
+          95,
+          103
+        ],
+        "work": "Julgar correções por critério, sem editar produto nem assumir writer.",
+        "physical_slot": "S1-B"
+      },
+      {
+        "window": [
+          103,
+          118
+        ],
+        "work": "Recheck no candidato congelado e assinar somente após evidência obrigatória.",
+        "physical_slot": "S1-B"
+      },
+      {
+        "window": [
+          118,
+          120
+        ],
+        "work": "Publicar parecer final/pendências e encerrar.",
+        "physical_slot": "S1-B"
+      }
+    ],
+    "S2-R2": [
+      {
+        "window": [
+          72,
+          95
+        ],
+        "work": "Novo agente sem autoria: receber SHA/plano/evidências, revisar Semântica financeira/integridade/C03/C06/C12/custos/Atlas atomicidade; incluir leitura no orçamento.",
+        "physical_slot": "S2-B"
+      },
+      {
+        "window": [
+          95,
+          103
+        ],
+        "work": "Julgar correções por critério, sem editar produto nem assumir writer.",
+        "physical_slot": "S2-B"
+      },
+      {
+        "window": [
+          103,
+          118
+        ],
+        "work": "Recheck no candidato congelado e assinar somente após evidência obrigatória.",
+        "physical_slot": "S2-B"
+      },
+      {
+        "window": [
+          118,
+          120
+        ],
+        "work": "Publicar parecer final/pendências e encerrar.",
+        "physical_slot": "S2-B"
+      }
+    ],
+    "S3-R3": [
+      {
+        "window": [
+          75,
+          95
+        ],
+        "work": "Novo agente sem autoria: receber SHA/plano/evidências, revisar IA 5/18/MCP 8/Atlas/Relay/documentos/isolamento e distribuição; incluir leitura no orçamento.",
+        "physical_slot": "S3-A"
+      },
+      {
+        "window": [
+          95,
+          103
+        ],
+        "work": "Julgar correções por critério, sem editar produto nem assumir writer.",
+        "physical_slot": "S3-A"
+      },
+      {
+        "window": [
+          103,
+          118
+        ],
+        "work": "Recheck no candidato congelado e assinar somente após evidência obrigatória.",
+        "physical_slot": "S3-A"
+      },
+      {
+        "window": [
+          118,
+          120
+        ],
+        "work": "Publicar parecer final/pendências e encerrar.",
+        "physical_slot": "S3-A"
+      }
+    ]
+  },
+  "actor_capacity_check": {
+    "physical_slots": 20,
+    "sessions": 5,
+    "max_live_per_session": 4,
+    "unique_actor_lifetimes": 23,
+    "max_simultaneous_actors": 20,
+    "termination_required": true,
+    "notes": "Vinte e três identidades ao longo do tempo não são vinte e três simultâneas: três builders encerrados cedem os mesmos slots para três reviewers novos. Coordenadores passam a autores de correção dos WPs cedidos; os antigos builders não retomam em paralelo."
+  },
+  "feasibility_gate": {
+    "id": "G2H",
+    "check_at_minutes": [
+      5,
+      20,
+      40,
+      75,
+      95,
+      103
+    ],
+    "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/control/timebox-feasibility.json",
+    "required_observations": [
+      "session_start_receipts and current actor roster",
+      "writer leases and measured minutes used per output",
+      "pending output dependencies/remaining-work estimates by owners",
+      "CI selected-files inventory and actual runner concurrency",
+      "queue/setup/test/artifact elapsed for comparable completed selections",
+      "native model execution/18-skill replay duration and observed permitted concurrency",
+      "remaining review/correction/recheck budget"
+    ],
+    "calculation": "Resource-constrained residual schedule uses the same actor reservations, output prerequisites and measured CI/provider occupancy. Earliest_complete=max(last_required_build_and_consumer_finish, last_required_CI_finish, last_required_live_proof_finish, last_independent_review_and_correction_finish)+final_receipt_reserve. Receipt reserve is the two planned minutes 118-120, not a measured claim. Unknown required input yields UNKNOWN, never zero.",
+    "states": [
+      "CONDITIONAL",
+      "SUPPORTED_BY_CURRENT_OBSERVATIONS",
+      "AT_RISK",
+      "MISSED"
+    ],
+    "continue_rule": "If unsupported/late: retain every capability/check, publish owners and revised resource-constrained ETA, use newly free actors only on disjoint paths/proofs via lease, preserve independence and continue. T120 may report MISSED but must not call partial product DONE or silently stop.",
+    "cannot_claim": "No claim that 120 is feasible merely because sum of nominal windows is<=120; no invented duration for full suite, generated Atlas, model latency or runner supply."
+  },
+  "slot_lifecycle": [
+    {
+      "session": "S0",
+      "slot": "S0",
+      "occupants": [
+        {
+          "actor": "S0",
+          "window": [
+            0,
+            120
+          ]
+        }
+      ]
+    },
+    {
+      "session": "S0",
+      "slot": "S0-A",
+      "occupants": [
+        {
+          "actor": "S0-A",
+          "window": [
+            0,
+            120
+          ]
+        }
+      ]
+    },
+    {
+      "session": "S0",
+      "slot": "S0-B",
+      "occupants": [
+        {
+          "actor": "S0-B",
+          "window": [
+            0,
+            120
+          ]
+        }
+      ]
+    },
+    {
+      "session": "S0",
+      "slot": "S0-C",
+      "occupants": [
+        {
+          "actor": "S0-C",
+          "window": [
+            0,
+            120
+          ]
+        }
+      ]
+    },
+    {
+      "session": "S1",
+      "slot": "S1",
+      "occupants": [
+        {
+          "actor": "S1",
+          "window": [
+            0,
+            120
+          ]
+        }
+      ]
+    },
+    {
+      "session": "S1",
+      "slot": "S1-A",
+      "occupants": [
+        {
+          "actor": "S1-A",
+          "window": [
+            0,
+            120
+          ]
+        }
+      ]
+    },
+    {
+      "session": "S1",
+      "slot": "S1-B",
+      "occupants": [
+        {
+          "actor": "S1-B",
+          "window": [
+            0,
+            72
+          ]
+        },
+        {
+          "actor": "S1-R1",
+          "window": [
+            72,
+            120
+          ],
+          "precondition": "previous agent finished, lease transferred and slot confirmed free before spawn"
+        }
+      ]
+    },
+    {
+      "session": "S1",
+      "slot": "S1-C",
+      "occupants": [
+        {
+          "actor": "S1-C",
+          "window": [
+            0,
+            120
+          ]
+        }
+      ]
+    },
+    {
+      "session": "S2",
+      "slot": "S2",
+      "occupants": [
+        {
+          "actor": "S2",
+          "window": [
+            0,
+            120
+          ]
+        }
+      ]
+    },
+    {
+      "session": "S2",
+      "slot": "S2-A",
+      "occupants": [
+        {
+          "actor": "S2-A",
+          "window": [
+            0,
+            120
+          ]
+        }
+      ]
+    },
+    {
+      "session": "S2",
+      "slot": "S2-B",
+      "occupants": [
+        {
+          "actor": "S2-B",
+          "window": [
+            0,
+            72
+          ]
+        },
+        {
+          "actor": "S2-R2",
+          "window": [
+            72,
+            120
+          ],
+          "precondition": "previous agent finished, lease transferred and slot confirmed free before spawn"
+        }
+      ]
+    },
+    {
+      "session": "S2",
+      "slot": "S2-C",
+      "occupants": [
+        {
+          "actor": "S2-C",
+          "window": [
+            0,
+            120
+          ]
+        }
+      ]
+    },
+    {
+      "session": "S3",
+      "slot": "S3",
+      "occupants": [
+        {
+          "actor": "S3",
+          "window": [
+            0,
+            120
+          ]
+        }
+      ]
+    },
+    {
+      "session": "S3",
+      "slot": "S3-A",
+      "occupants": [
+        {
+          "actor": "S3-A",
+          "window": [
+            0,
+            75
+          ]
+        },
+        {
+          "actor": "S3-R3",
+          "window": [
+            75,
+            120
+          ],
+          "precondition": "previous agent finished, lease transferred and slot confirmed free before spawn"
+        }
+      ]
+    },
+    {
+      "session": "S3",
+      "slot": "S3-B",
+      "occupants": [
+        {
+          "actor": "S3-B",
+          "window": [
+            0,
+            120
+          ]
+        }
+      ]
+    },
+    {
+      "session": "S3",
+      "slot": "S3-C",
+      "occupants": [
+        {
+          "actor": "S3-C",
+          "window": [
+            0,
+            120
+          ]
+        }
+      ]
+    },
+    {
+      "session": "S4",
+      "slot": "S4",
+      "occupants": [
+        {
+          "actor": "S4",
+          "window": [
+            0,
+            120
+          ]
+        }
+      ]
+    },
+    {
+      "session": "S4",
+      "slot": "S4-A",
+      "occupants": [
+        {
+          "actor": "S4-A",
+          "window": [
+            0,
+            120
+          ]
+        }
+      ]
+    },
+    {
+      "session": "S4",
+      "slot": "S4-B",
+      "occupants": [
+        {
+          "actor": "S4-B",
+          "window": [
+            0,
+            120
+          ]
+        }
+      ]
+    },
+    {
+      "session": "S4",
+      "slot": "S4-C",
+      "occupants": [
+        {
+          "actor": "S4-C",
+          "window": [
+            0,
+            120
+          ]
+        }
+      ]
     }
   ]
 }

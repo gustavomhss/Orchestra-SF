@@ -42,6 +42,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "CAMP.DOD.20",
+    "entity": "sf2h-integral-20261112",
+    "family": "dod",
+    "text": "C06 resolve confirmação por escopo e C10 resolve cobertura de custos; produtores e consumidores reais demonstram as contraprovas CONFIRM-SCOPE e AI-RENEWAL-OMITTED-CATEGORY.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CAMP.DOD.90",
+    "entity": "sf2h-integral-20261112",
+    "family": "dod",
+    "text": "RA01–RA06, C15–C17 e as provas AM01–AM06 estão satisfeitos no candidato implementado: perfis/skills realmente carregados, 39 operações com produtores e consumidores reais, MCP com autoridade por chamada e memória Atlas persistida. O planejamento não registra este critério como aprovado.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "CAMP.INV.01",
     "entity": "sf2h-integral-20261112",
     "family": "invariants",
@@ -101,7 +115,7 @@
     "id": "sf2h-integral-20261112.INV.09",
     "entity": "sf2h-integral-20261112",
     "family": "invariants",
-    "text": "Contrato, orçamento, forecast e actual não são intercambiáveis. Valor desconhecido não é zero; simulação e premissa aceita não atualizam o domínio oficial silenciosamente.",
+    "text": "Contrato, orçamento, forecast e actual não são intercambiáveis. Desconhecido, categoria omitida e pending não são zero. Comparação completa depende de cobertura C10; simulação e premissa aceita não atualizam o domínio oficial.",
     "status": "NOT_RUN"
   },
   {
@@ -116,6 +130,20 @@
     "entity": "sf2h-integral-20261112",
     "family": "invariants",
     "text": "Leituras entre superfícies não ocorrem dentro de uma transaction já aberta. A coleta mantém autorização e versões por seção; a escrita em várias áreas produz recibos separados e estado parcial verdadeiro.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CAMP.INV.20",
+    "entity": "sf2h-integral-20261112",
+    "family": "invariants",
+    "text": "Versão observada não equivale a validade global; soma correta não equivale a custo completo. Nova categoria relevante, revogação e substituição preservam auditoria e exigem estado correto.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CAMP.INV.90",
+    "entity": "sf2h-integral-20261112",
+    "family": "invariants",
+    "text": "Perfis empresariais não renomeiam o Maestro nem mudam os engines. Nenhum argumento do modelo cria autoridade; o host revalida identidade e acesso. Leases de arquivo mantêm um único writer por intervalo. Resultado sem scanner, skill carregada ou persistência exigida não pode ser declarado sucesso.",
     "status": "NOT_RUN"
   },
   {
@@ -175,10 +203,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "CAMP.QLT.20",
+    "entity": "sf2h-integral-20261112",
+    "family": "quality_standards",
+    "text": "Estado de confirmação e condição financeira são explícitos em UI, rotina, BI, crítica e portfólio, sem inventar permissão, regra fiscal ou valor para preencher ausência.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CAMP.QLT.90",
+    "entity": "sf2h-integral-20261112",
+    "family": "quality_standards",
+    "text": "Cada contribuição residente informa perfil, skill/versão/digests, execução, fontes, permissões e estado. Sua saída tipada chega a um consumidor real da UI e pode ser retomada após reload; falha, indisponibilidade e resultado desatualizado têm próximo passo explícito.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "CAMP.CMP.01",
     "entity": "sf2h-integral-20261112",
     "family": "completeness_criteria",
-    "text": "Cobrir os contratos C01–C14, as 28 capacidades originais, R01–R41, IA01–IA18 e todas as jornadas da matriz, sem descartar comportamento de negócio aceito.",
+    "text": "Cobrir os contratos C01–C17, as 28 capacidades originais, R01–R41, IA01–IA18 e todas as jornadas da matriz, sem descartar comportamento de negócio aceito.",
     "status": "NOT_RUN"
   },
   {
@@ -214,6 +256,20 @@
     "entity": "sf2h-integral-20261112",
     "family": "completeness_criteria",
     "text": "Cobrir ciclos de uso antes/durante/depois: primeiro uso com responsáveis, manutenção, importação, planejamento, compra, análise IA, portfólio, reunião/exportação, recorrência e reavaliação.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CAMP.CMP.20",
+    "entity": "sf2h-integral-20261112",
+    "family": "completeness_criteria",
+    "text": "Cobrir material/irrelevante/revogado/substituído, categoria incluída/inaplicável/pendente/omitida/zero e consumo WP06→WP09 da extração obrigatória.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CAMP.CMP.90",
+    "entity": "sf2h-integral-20261112",
+    "family": "completeness_criteria",
+    "text": "Cobrir cinco perfis, dezoito skills, oito packs, 39 operações, seis provas AM01–AM06 e RA01–RA06. Para cada skill registrar entradas, grants, saída persistida, consumidores, casos positivos/negativos e participação nas provas; incluir empacotamento, revogação, isolamento e reinício.",
     "status": "NOT_RUN"
   },
   {
@@ -269,7 +325,7 @@
     "id": "sf2h-integral-20261112.SUC.08",
     "entity": "sf2h-integral-20261112",
     "family": "success_criteria",
-    "text": "Uma pergunta é respondida uma vez e reutilizada no escopo válido; uma mudança comercial repercute nas comparações sem duplicar contribuição financeira; a escolha original continua explicável após alteração.",
+    "text": "Pergunta e confirmação são reutilizadas no escopo ainda válido C06; versão global irrelevante não gera recobrança. Mudança comercial ou resolução de custo repercute nas comparações sem duplicar contribuição; a escolha e ressalvas originais continuam explicáveis.",
     "status": "NOT_RUN"
   },
   {
@@ -277,6 +333,20 @@
     "entity": "sf2h-integral-20261112",
     "family": "success_criteria",
     "text": "A avaliação controlada registra compreensão e retomada da decisão; metas de tempo são metas a medir, nunca promessa de pesquisa ou economia financeira já realizada.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CAMP.SUC.20",
+    "entity": "sf2h-integral-20261112",
+    "family": "success_criteria",
+    "text": "A pessoa evita cobrança irrelevante, identifica a informação que condiciona a comparação e reavalia custo posterior sem perder a escolha original.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CAMP.SUC.90",
+    "entity": "sf2h-integral-20261112",
+    "family": "success_criteria",
+    "text": "André e seu time recebem contribuições de especialistas no contexto de trabalho: podem abrir fontes, comparar impactos determinísticos, responder pendências uma vez, contestar a proposta em execução independente e recuperar a decisão e seus resultados sem refazer a análise.",
     "status": "NOT_RUN"
   },
   {
@@ -294,6 +364,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP00.DOD.10",
+    "entity": "WP00",
+    "family": "dod",
+    "text": "As entregas residentes atribuídas a WP00 têm produção, consumo e provas reais completos.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP00.DOD.40",
+    "entity": "WP00",
+    "family": "dod",
+    "text": "C01–C17, writers e checkpoints permitem construir por T02 e qualificar a cadeia real até T20.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP00.INV.01",
     "entity": "WP00",
     "family": "invariants",
@@ -305,6 +389,20 @@
     "entity": "WP00",
     "family": "invariants",
     "text": "Cada arquivo tem um único escritor e toda saída planejada tem um consumidor.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP00.INV.10",
+    "entity": "WP00",
+    "family": "invariants",
+    "text": "WP00 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP00.INV.40",
+    "entity": "WP00",
+    "family": "invariants",
+    "text": "Contrato, qualificação e confirmação de capacidade são gates distintos; slot não observado não existe.",
     "status": "NOT_RUN"
   },
   {
@@ -322,6 +420,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP00.QLT.10",
+    "entity": "WP00",
+    "family": "quality_standards",
+    "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP00.QLT.40",
+    "entity": "WP00",
+    "family": "quality_standards",
+    "text": "Toda dependência antecipada identifica artefato, SHA, produtor, consumidor e horário; task inteira não é declarada pronta pelo incremento.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP00.CMP.01",
     "entity": "WP00",
     "family": "completeness_criteria",
@@ -336,6 +448,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP00.CMP.10",
+    "entity": "WP00",
+    "family": "completeness_criteria",
+    "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP00.CMP.40",
+    "entity": "WP00",
+    "family": "completeness_criteria",
+    "text": "Cobrir cinco sessões/quatro slots, 74 tasks, 5 perfis/18 skills/8 packs e três tasks novas com provas e orçamento.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP00.SUC.01",
     "entity": "WP00",
     "family": "success_criteria",
@@ -347,6 +473,20 @@
     "entity": "WP00",
     "family": "success_criteria",
     "text": "Os exemplos financeiros e de procurement reconciliam e as limitações atuais do Relay estão explícitas no plano de produto.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP00.SUC.10",
+    "entity": "WP00",
+    "family": "success_criteria",
+    "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP00.SUC.40",
+    "entity": "WP00",
+    "family": "success_criteria",
+    "text": "Cada executor começa no contrato correto e sabe quem entrega a próxima saída sem negociar fronteiras durante a implementação.",
     "status": "NOT_RUN"
   },
   {
@@ -371,6 +511,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP01.DOD.20",
+    "entity": "WP01",
+    "family": "dod",
+    "text": "UI usa os resultados e a cobertura reais C10 em alternativa, escolha e reavaliação.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP01.DOD.30",
+    "entity": "WP01",
+    "family": "dod",
+    "text": "Entradas de trabalho da mesa consomem as 18 saídas da matriz C15 em cenários pertinentes; cinco perfis deixam contribuições verificáveis e o Revisor tem run próprio.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP01.INV.01",
     "entity": "WP01",
     "family": "invariants",
@@ -382,6 +536,20 @@
     "entity": "WP01",
     "family": "invariants",
     "text": "Trocar visualização não altera registros financeiros, estado de compra ou período silenciosamente.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP01.INV.20",
+    "entity": "WP01",
+    "family": "invariants",
+    "text": "UI não transforma pending em zero nem esconde condição financeira por haver um número válido.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP01.INV.30",
+    "entity": "WP01",
+    "family": "invariants",
+    "text": "Catálogo, nome de perfil ou chat sem outputRef consumido não satisfaz entrega; perfil não concede autoridade nova e fonte oficial continua no domínio.",
     "status": "NOT_RUN"
   },
   {
@@ -399,6 +567,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP01.QLT.20",
+    "entity": "WP01",
+    "family": "quality_standards",
+    "text": "Estado e categoria pendente acompanham o subtotal, fonte e próximo passo, inclusive por teclado/tabela.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP01.QLT.30",
+    "entity": "WP01",
+    "family": "quality_standards",
+    "text": "Mostrar contribuição, fontes e progresso útil; detalhes de perfil/modelo/skill/versão/run ficam sob demanda e seleção manual de agente não é obrigatória.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP01.CMP.01",
     "entity": "WP01",
     "family": "completeness_criteria",
@@ -410,6 +592,20 @@
     "entity": "WP01",
     "family": "completeness_criteria",
     "text": "Hoje e mesa de decisão consomem casos, IA, cenários, perguntas e recibos reais; entrada contextual e operação direta funcionam sem exigir um caso para tarefas simples.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP01.CMP.20",
+    "entity": "WP01",
+    "family": "completeness_criteria",
+    "text": "Cobrir categoria ausente, zero confirmado, comparação condicionada, fonte revogada e inversão posterior.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP01.CMP.30",
+    "entity": "WP01",
+    "family": "completeness_criteria",
+    "text": "Cobrir18 skills com witnesses de carga/digest/saída persistida/consumo real, cinco perfis distintos e falta/falha/stale/cancelamento, usando as seis provas integradas.",
     "status": "NOT_RUN"
   },
   {
@@ -427,6 +623,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP01.SUC.20",
+    "entity": "WP01",
+    "family": "success_criteria",
+    "text": "A pessoa reconhece por que a comparação está condicionada e vê a consequência da resposta sem reconstruir o caso.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP01.SUC.30",
+    "entity": "WP01",
+    "family": "success_criteria",
+    "text": "Usuários concluem enquadramento, comparação, pergunta, revisão, preparo ou reavaliação sem coordenar cinco conversas nem reconstruir resultado no chat.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP02.DOD.01",
     "entity": "WP02",
     "family": "dod",
@@ -438,6 +648,13 @@
     "entity": "WP02",
     "family": "dod",
     "text": "As portas C02/C03/C04/C06 executam comportamento de domínio verificável; a composição no app é entregue para prova real do WP10, sem ser declarada concluída por mocks.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP02.DOD.10",
+    "entity": "WP02",
+    "family": "dod",
+    "text": "As entregas residentes atribuídas a WP02 têm produção, consumo e provas reais completos.",
     "status": "NOT_RUN"
   },
   {
@@ -455,6 +672,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP02.INV.10",
+    "entity": "WP02",
+    "family": "invariants",
+    "text": "WP02 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP02.QLT.01",
     "entity": "WP02",
     "family": "quality_standards",
@@ -466,6 +690,13 @@
     "entity": "WP02",
     "family": "quality_standards",
     "text": "A manutenção distingue leitura e edição, conserva a posição/contexto do usuário e explica validação ou conflito sem apagar o rascunho.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP02.QLT.10",
+    "entity": "WP02",
+    "family": "quality_standards",
+    "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
     "status": "NOT_RUN"
   },
   {
@@ -483,6 +714,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP02.CMP.10",
+    "entity": "WP02",
+    "family": "completeness_criteria",
+    "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP02.SUC.01",
     "entity": "WP02",
     "family": "success_criteria",
@@ -494,6 +732,13 @@
     "entity": "WP02",
     "family": "success_criteria",
     "text": "André parte de um sinal para sua evidência ou registro e distingue o período observado de um retrato histórico que não existe.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP02.SUC.10",
+    "entity": "WP02",
+    "family": "success_criteria",
+    "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
     "status": "NOT_RUN"
   },
   {
@@ -518,6 +763,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP03.DOD.10",
+    "entity": "WP03",
+    "family": "dod",
+    "text": "As entregas residentes atribuídas a WP03 têm produção, consumo e provas reais completos.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP03.INV.01",
     "entity": "WP03",
     "family": "invariants",
@@ -536,6 +788,13 @@
     "entity": "WP03",
     "family": "invariants",
     "text": "Nenhuma hipótese altera a versão oficial por efeito colateral, nenhum pedido/contrato alimenta valores automaticamente e o adapter puro não grava estado nem executa I/O.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP03.INV.10",
+    "entity": "WP03",
+    "family": "invariants",
+    "text": "WP03 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
     "status": "NOT_RUN"
   },
   {
@@ -560,6 +819,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP03.QLT.10",
+    "entity": "WP03",
+    "family": "quality_standards",
+    "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP03.CMP.01",
     "entity": "WP03",
     "family": "completeness_criteria",
@@ -578,6 +844,13 @@
     "entity": "WP03",
     "family": "completeness_criteria",
     "text": "A cobertura inclui criação/cópia/ano/lock/unlock/official/delete de versões, formas legadas de dados, Overview, composição e comparação detalhada A/B.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP03.CMP.10",
+    "entity": "WP03",
+    "family": "completeness_criteria",
+    "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
     "status": "NOT_RUN"
   },
   {
@@ -602,6 +875,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP03.SUC.10",
+    "entity": "WP03",
+    "family": "success_criteria",
+    "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP04.DOD.01",
     "entity": "WP04",
     "family": "dod",
@@ -620,6 +900,13 @@
     "entity": "WP04",
     "family": "dod",
     "text": "O handoff lista consumidores, casos adversos, artefatos de evidência e verificações de composição reservadas a WP10; não declara entrega integrada com base apenas em fixtures.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP04.DOD.10",
+    "entity": "WP04",
+    "family": "dod",
+    "text": "As entregas residentes atribuídas a WP04 têm produção, consumo e provas reais completos.",
     "status": "NOT_RUN"
   },
   {
@@ -644,6 +931,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP04.INV.10",
+    "entity": "WP04",
+    "family": "invariants",
+    "text": "WP04 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP04.QLT.01",
     "entity": "WP04",
     "family": "quality_standards",
@@ -662,6 +956,13 @@
     "entity": "WP04",
     "family": "quality_standards",
     "text": "Formulários e ações críticas são operáveis por teclado, mantêm foco após erro/conflito e apresentam a correção junto ao campo correspondente.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP04.QLT.10",
+    "entity": "WP04",
+    "family": "quality_standards",
+    "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
     "status": "NOT_RUN"
   },
   {
@@ -686,6 +987,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP04.CMP.10",
+    "entity": "WP04",
+    "family": "completeness_criteria",
+    "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP04.SUC.01",
     "entity": "WP04",
     "family": "success_criteria",
@@ -704,6 +1012,13 @@
     "entity": "WP04",
     "family": "success_criteria",
     "text": "Os casos adversos distinguem aprovado de emitido, desconhecido de zero e versão atual de versão desatualizada; nenhuma dessas diferenças é ocultada por um resultado visual aparentemente correto.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP04.SUC.10",
+    "entity": "WP04",
+    "family": "success_criteria",
+    "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
     "status": "NOT_RUN"
   },
   {
@@ -735,6 +1050,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP05.DOD.20",
+    "entity": "WP05",
+    "family": "dod",
+    "text": "BI e tabela consomem coverage/result refs reais junto às marcas.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP05.DOD.10",
+    "entity": "WP05",
+    "family": "dod",
+    "text": "As entregas residentes atribuídas a WP05 têm produção, consumo e provas reais completos.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP05.INV.01",
     "entity": "WP05",
     "family": "invariants",
@@ -756,6 +1085,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP05.INV.20",
+    "entity": "WP05",
+    "family": "invariants",
+    "text": "Gráfico não calcula completude nem converte lacuna em zero, ganho confirmado ou ajuste residual.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP05.INV.10",
+    "entity": "WP05",
+    "family": "invariants",
+    "text": "WP05 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP05.QLT.01",
     "entity": "WP05",
     "family": "quality_standards",
@@ -774,6 +1117,20 @@
     "entity": "WP05",
     "family": "quality_standards",
     "text": "Estados vazio, parcial, indisponível e restrito são distintos e não inventam números para preencher espaço.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP05.QLT.20",
+    "entity": "WP05",
+    "family": "quality_standards",
+    "text": "Rótulo de condicionado acompanha valor/limiar e a lista acessível explica categorias sem quantificação.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP05.QLT.10",
+    "entity": "WP05",
+    "family": "quality_standards",
+    "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
     "status": "NOT_RUN"
   },
   {
@@ -805,6 +1162,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP05.CMP.20",
+    "entity": "WP05",
+    "family": "completeness_criteria",
+    "text": "Cobrir omissão inteira, pending, zero confirmado, fonte restrita e atualização que inverte a diferença.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP05.CMP.10",
+    "entity": "WP05",
+    "family": "completeness_criteria",
+    "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP05.SUC.01",
     "entity": "WP05",
     "family": "success_criteria",
@@ -823,6 +1194,20 @@
     "entity": "WP05",
     "family": "success_criteria",
     "text": "Oito visualizações funcionam com dados disponíveis e degradam honestamente quando o C02 não suporta uma série, componente ou data.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP05.SUC.20",
+    "entity": "WP05",
+    "family": "success_criteria",
+    "text": "Usuário encontra a categoria que muda a comparação e abre sua origem com o mesmo contexto.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP05.SUC.10",
+    "entity": "WP05",
+    "family": "success_criteria",
+    "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
     "status": "NOT_RUN"
   },
   {
@@ -854,6 +1239,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP06.DOD.10",
+    "entity": "WP06",
+    "family": "dod",
+    "text": "As entregas residentes atribuídas a WP06 têm produção, consumo e provas reais completos.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.DOD.40",
+    "entity": "WP06",
+    "family": "dod",
+    "text": "Imports e documentos saem de writers disjuntos e são consumidos reais; resolver 20 e extração 35 não esperam a task de roundtrip.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP06.INV.01",
     "entity": "WP06",
     "family": "invariants",
@@ -875,6 +1274,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP06.INV.10",
+    "entity": "WP06",
+    "family": "invariants",
+    "text": "WP06 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.INV.40",
+    "entity": "WP06",
+    "family": "invariants",
+    "text": "Arquivo/documento só tem um escritor; transferência 53 não modifica origem/ACL nem permite inventar evidência.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP06.QLT.01",
     "entity": "WP06",
     "family": "quality_standards",
@@ -893,6 +1306,20 @@
     "entity": "WP06",
     "family": "quality_standards",
     "text": "Falhas de formato, autoridade e revisão têm tratamento distinto, mantêm arquivo/opções/entrada local quando apropriado e não expõem dados restritos.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.QLT.10",
+    "entity": "WP06",
+    "family": "quality_standards",
+    "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.QLT.40",
+    "entity": "WP06",
+    "family": "quality_standards",
+    "text": "Handoff inclui revisão/trecho/hash e consumer real; recepção não equivale a prova final.",
     "status": "NOT_RUN"
   },
   {
@@ -924,6 +1351,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP06.CMP.10",
+    "entity": "WP06",
+    "family": "completeness_criteria",
+    "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.CMP.40",
+    "entity": "WP06",
+    "family": "completeness_criteria",
+    "text": "Preservar todos os formatos de importação e PDFdigital/DOCX/texto, com casos negativos e consumidoresIA/Atlas/rotina.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP06.SUC.01",
     "entity": "WP06",
     "family": "success_criteria",
@@ -945,6 +1386,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP06.SUC.10",
+    "entity": "WP06",
+    "family": "success_criteria",
+    "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.SUC.40",
+    "entity": "WP06",
+    "family": "success_criteria",
+    "text": "IA e Atlas recebem fonte documental verificável cedo enquanto imports continuam em paralelo.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP07.DOD.01",
     "entity": "WP07",
     "family": "dod",
@@ -956,6 +1411,13 @@
     "entity": "WP07",
     "family": "dod",
     "text": "PPTX e DOCX incluem todo o conteúdo autorizado escolhido, com paginação e contagens verificáveis; nenhum limite silencioso de linhas fecha a entrega.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP07.DOD.10",
+    "entity": "WP07",
+    "family": "dod",
+    "text": "As entregas residentes atribuídas a WP07 têm produção, consumo e provas reais completos.",
     "status": "NOT_RUN"
   },
   {
@@ -973,6 +1435,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP07.INV.10",
+    "entity": "WP07",
+    "family": "invariants",
+    "text": "WP07 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP07.QLT.01",
     "entity": "WP07",
     "family": "quality_standards",
@@ -984,6 +1453,13 @@
     "entity": "WP07",
     "family": "quality_standards",
     "text": "A apresentação não corta texto ou registros sem declaração; comentários humanos são distinguíveis de números e fatos calculados.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP07.QLT.10",
+    "entity": "WP07",
+    "family": "quality_standards",
+    "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
     "status": "NOT_RUN"
   },
   {
@@ -1008,6 +1484,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP07.CMP.10",
+    "entity": "WP07",
+    "family": "completeness_criteria",
+    "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP07.SUC.01",
     "entity": "WP07",
     "family": "success_criteria",
@@ -1019,6 +1502,13 @@
     "entity": "WP07",
     "family": "success_criteria",
     "text": "A revisão seguinte mostra diferenças objetivas e encaminhamentos canônicos, sem inventar causas ou passado não preservado.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP07.SUC.10",
+    "entity": "WP07",
+    "family": "success_criteria",
+    "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
     "status": "NOT_RUN"
   },
   {
@@ -1043,6 +1533,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP08.DOD.20",
+    "entity": "WP08",
+    "family": "dod",
+    "text": "Confirmação e recobrança são demonstradas em produtores/consumidores reais com o mesmo fingerprint C06.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP08.DOD.10",
+    "entity": "WP08",
+    "family": "dod",
+    "text": "As entregas residentes atribuídas a WP08 têm produção, consumo e provas reais completos.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP08.INV.01",
     "entity": "WP08",
     "family": "invariants",
@@ -1054,6 +1558,20 @@
     "entity": "WP08",
     "family": "invariants",
     "text": "Leitura dos dois lados de um vínculo e do alvo de um comentário é rechecável; igualdade de nome não cria relação ou atribuição.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP08.INV.20",
+    "entity": "WP08",
+    "family": "invariants",
+    "text": "Versão global observada é auditoria; validade depende do escopo material e autorização atuais. Mudança irrelevante não fabrica nova revisão humana.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP08.INV.10",
+    "entity": "WP08",
+    "family": "invariants",
+    "text": "WP08 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
     "status": "NOT_RUN"
   },
   {
@@ -1071,10 +1589,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP08.QLT.20",
+    "entity": "WP08",
+    "family": "quality_standards",
+    "text": "A pessoa distingue versão revisada, condição atual de validade, idade da fonte e dado ausente.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP08.QLT.10",
+    "entity": "WP08",
+    "family": "quality_standards",
+    "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP08.CMP.01",
     "entity": "WP08",
     "family": "completeness_criteria",
-    "text": "Relações, comentários, pedidos, confirmação por versão, Meu trabalho e handoff cobrem acesso revogado, origem removida e reenvio.",
+    "text": "Relações, comentários, pedidos, confirmação por escopo, Meu trabalho e handoff cobrem mudança material/irrelevante, acesso revogado, origem removida/substituída e reenvio.",
     "status": "NOT_RUN"
   },
   {
@@ -1099,6 +1631,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP08.CMP.20",
+    "entity": "WP08",
+    "family": "completeness_criteria",
+    "text": "Cobrir janeiro/fevereiro sem dependência, dependência relevante, concorrência, fonte removida/substituída e revogação.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP08.CMP.10",
+    "entity": "WP08",
+    "family": "completeness_criteria",
+    "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP08.SUC.01",
     "entity": "WP08",
     "family": "success_criteria",
@@ -1110,6 +1656,20 @@
     "entity": "WP08",
     "family": "success_criteria",
     "text": "Atualizar ou concluir uma ação na origem é refletido na fila sem criar divergência de status ou tarefa duplicada.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP08.SUC.20",
+    "entity": "WP08",
+    "family": "success_criteria",
+    "text": "A contribuição de janeiro é reutilizada sem recobrança quando só fevereiro mudou; mudança relevante reabre uma única pendência compreensível.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP08.SUC.10",
+    "entity": "WP08",
+    "family": "success_criteria",
+    "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
     "status": "NOT_RUN"
   },
   {
@@ -1134,6 +1694,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP09.DOD.20",
+    "entity": "WP09",
+    "family": "dod",
+    "text": "Preparação de revisão reutiliza confirmação material C06 e dossiê consome evidência C14 produzida por WP06, ambos nos consumidores reais.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP09.DOD.10",
+    "entity": "WP09",
+    "family": "dod",
+    "text": "As entregas residentes atribuídas a WP09 têm produção, consumo e provas reais completos.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP09.INV.01",
     "entity": "WP09",
     "family": "invariants",
@@ -1155,6 +1729,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP09.INV.20",
+    "entity": "WP09",
+    "family": "invariants",
+    "text": "Versão global irrelevante não causa recobrança; extração é da campanha e só WP06 a implementa. A rotina não promove candidato a fato confirmado.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP09.INV.10",
+    "entity": "WP09",
+    "family": "invariants",
+    "text": "WP09 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP09.QLT.01",
     "entity": "WP09",
     "family": "quality_standards",
@@ -1166,6 +1754,20 @@
     "entity": "WP09",
     "family": "quality_standards",
     "text": "Reexecução do mesmo trabalho não multiplica ações, arquivos ou avisos; verificar a saída deve ser mais simples que refazer a preparação.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP09.QLT.20",
+    "entity": "WP09",
+    "family": "quality_standards",
+    "text": "Pendência de revisão material, dado extraído sem confirmação e fonte indisponível são estados diferentes com próximo passo adequado.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP09.QLT.10",
+    "entity": "WP09",
+    "family": "quality_standards",
+    "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
     "status": "NOT_RUN"
   },
   {
@@ -1183,6 +1785,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP09.CMP.20",
+    "entity": "WP09",
+    "family": "completeness_criteria",
+    "text": "Cobrir janeiro/fevereiro, dependência material, revogação e documento extraído/confirmado/stale no dossiê.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP09.CMP.10",
+    "entity": "WP09",
+    "family": "completeness_criteria",
+    "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP09.SUC.01",
     "entity": "WP09",
     "family": "success_criteria",
@@ -1194,6 +1810,20 @@
     "entity": "WP09",
     "family": "success_criteria",
     "text": "Nenhuma rotina cria outra aprovação obrigatória ou altera a autoridade dos processos existentes.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP09.SUC.20",
+    "entity": "WP09",
+    "family": "success_criteria",
+    "text": "A pessoa reaproveita sua revisão e a mesma evidência documental sem redigitação nem cobranças irrelevantes.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP09.SUC.10",
+    "entity": "WP09",
+    "family": "success_criteria",
+    "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
     "status": "NOT_RUN"
   },
   {
@@ -1211,6 +1841,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.DOD.10",
+    "entity": "WP10",
+    "family": "dod",
+    "text": "As entregas residentes atribuídas a WP10 têm produção, consumo e provas reais completos.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.DOD.40",
+    "entity": "WP10",
+    "family": "dod",
+    "text": "Runtime, Atlas, composição, CI e julgamentos têm atores/paths/recibos explícitos; cinco perfis/18 skills/oito packs e Atlas são integrados em G4.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.INV.01",
     "entity": "WP10",
     "family": "invariants",
@@ -1222,6 +1866,20 @@
     "entity": "WP10",
     "family": "invariants",
     "text": "Nenhum gate é removido, teste enfraquecido, dado real exposto ou frente de deploy alterada para fechar a campanha.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.INV.10",
+    "entity": "WP10",
+    "family": "invariants",
+    "text": "WP10 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.INV.40",
+    "entity": "WP10",
+    "family": "invariants",
+    "text": "S0 não escreve arquivos delegados; nenhum autor assina aceitação independente de sua própria seção.",
     "status": "NOT_RUN"
   },
   {
@@ -1239,6 +1897,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.QLT.10",
+    "entity": "WP10",
+    "family": "quality_standards",
+    "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.QLT.40",
+    "entity": "WP10",
+    "family": "quality_standards",
+    "text": "Gates distinguem source shipping, runtime loading, domínio real, CI selection e consumo final no mesmo candidato.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.CMP.01",
     "entity": "WP10",
     "family": "completeness_criteria",
@@ -1250,6 +1922,20 @@
     "entity": "WP10",
     "family": "completeness_criteria",
     "text": "Inclui regressão, concorrência, permissões, migração de estado anterior, export completo, falha e ausência de dados.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.CMP.10",
+    "entity": "WP10",
+    "family": "completeness_criteria",
+    "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.CMP.40",
+    "entity": "WP10",
+    "family": "completeness_criteria",
+    "text": "Incluir empacotamento Atlas, APP src/APP browser separados, provas AM01-AM06, transferências e rechecagem do candidato.",
     "status": "NOT_RUN"
   },
   {
@@ -1267,6 +1953,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.SUC.10",
+    "entity": "WP10",
+    "family": "success_criteria",
+    "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.SUC.40",
+    "entity": "WP10",
+    "family": "success_criteria",
+    "text": "O produto inteiro é revisável sem depender de trabalho oculto de coordenadores ou de checks atribuídos a seleção que não rodou.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP11.DOD.01",
     "entity": "WP11",
     "family": "dod",
@@ -1278,6 +1978,20 @@
     "entity": "WP11",
     "family": "dod",
     "text": "Mudanças propostas chegam aos domínios reais e execução parcial é retomável no candidato integrado.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP11.DOD.20",
+    "entity": "WP11",
+    "family": "dod",
+    "text": "Alternativas persistem inventário, avaliação de categorias e comparação C10 consumidos por UI, BI, crítica e portfólio.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP11.DOD.10",
+    "entity": "WP11",
+    "family": "dod",
+    "text": "As entregas residentes atribuídas a WP11 têm produção, consumo e provas reais completos.",
     "status": "NOT_RUN"
   },
   {
@@ -1295,6 +2009,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP11.INV.20",
+    "entity": "WP11",
+    "family": "invariants",
+    "text": "Soma reconciliada não prova cobertura. Categoria ausente/pending não vira zero; escolha preserva a condição conhecida na época.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP11.INV.10",
+    "entity": "WP11",
+    "family": "invariants",
+    "text": "WP11 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP11.QLT.01",
     "entity": "WP11",
     "family": "quality_standards",
@@ -1309,6 +2037,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP11.QLT.20",
+    "entity": "WP11",
+    "family": "quality_standards",
+    "text": "Subtotal, total coberto, diferença condicionada e benefício calculado confirmado têm rótulos e fontes distinguíveis.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP11.QLT.10",
+    "entity": "WP11",
+    "family": "quality_standards",
+    "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP11.CMP.01",
     "entity": "WP11",
     "family": "completeness_criteria",
@@ -1316,10 +2058,38 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP11.CMP.20",
+    "entity": "WP11",
+    "family": "completeness_criteria",
+    "text": "Cobrir categoria incluída, inaplicável suportada, pendente, inteiramente omitida, zero confirmado e custo posterior que inverte a comparação.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP11.CMP.10",
+    "entity": "WP11",
+    "family": "completeness_criteria",
+    "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP11.SUC.01",
     "entity": "WP11",
     "family": "success_criteria",
     "text": "Uma decisão passa de pergunta a trabalho executável e pode ser retomada sem reconstruir sua razão.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP11.SUC.20",
+    "entity": "WP11",
+    "family": "success_criteria",
+    "text": "Usuário vê o que falta, confirma uma categoria e obtém reavaliação reproduzível sem perder a base da escolha original.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP11.SUC.10",
+    "entity": "WP11",
+    "family": "success_criteria",
+    "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
     "status": "NOT_RUN"
   },
   {
@@ -1337,6 +2107,27 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP12.DOD.20",
+    "entity": "WP12",
+    "family": "dod",
+    "text": "Crítica real consome a avaliação C10 e entrega objeção/questão tipadas usadas na mesa.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.DOD.10",
+    "entity": "WP12",
+    "family": "dod",
+    "text": "As entregas residentes atribuídas a WP12 têm produção, consumo e provas reais completos.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.DOD.40",
+    "entity": "WP12",
+    "family": "dod",
+    "text": "5 definições/18 fontes hash a das são carregadas e exercidas com contribuição tipada; T01 nativeprobe 13 e T02 manifest 42 são entregas distintas.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP12.INV.01",
     "entity": "WP12",
     "family": "invariants",
@@ -1348,6 +2139,27 @@
     "entity": "WP12",
     "family": "invariants",
     "text": "Cálculo e regras pertencem aos motores; saída velha não substitui atual.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.INV.20",
+    "entity": "WP12",
+    "family": "invariants",
+    "text": "Ausência não vira custo presumido, alíquota ou benefício confirmado; o modelo não apaga pending do produtor.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.INV.10",
+    "entity": "WP12",
+    "family": "invariants",
+    "text": "WP12 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.INV.40",
+    "entity": "WP12",
+    "family": "invariants",
+    "text": "Leases por arquivo impedem que S4-B reescreva simultaneamente fontes de S1/S3; registrar perfil não concede permissão.",
     "status": "NOT_RUN"
   },
   {
@@ -1365,10 +2177,52 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP12.QLT.20",
+    "entity": "WP12",
+    "family": "quality_standards",
+    "text": "Distinguir omissão detectada pelo inventário, evidência documental e hipótese de outro custo.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.QLT.10",
+    "entity": "WP12",
+    "family": "quality_standards",
+    "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.QLT.40",
+    "entity": "WP12",
+    "family": "quality_standards",
+    "text": "Manifest aponta source_path/digest, versão/saída e execução distinta de revisão; fontes ausentes nunca entram como sucesso.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP12.CMP.01",
     "entity": "WP12",
     "family": "completeness_criteria",
     "text": "Cobrir intenção corrigida, contradição/ausência, crítica, resposta humana, falha, limite, cancelamento, stale e revogação.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.CMP.20",
+    "entity": "WP12",
+    "family": "completeness_criteria",
+    "text": "Cobrir categoria inteiramente ausente, inaplicabilidade sem evidência, custo zero e revisão após resolução.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.CMP.10",
+    "entity": "WP12",
+    "family": "completeness_criteria",
+    "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.CMP.40",
+    "entity": "WP12",
+    "family": "completeness_criteria",
+    "text": "Cada uma das 18 skills e 5 perfis possui owner_task, execution_task, writer e execução positiva/negativa mapeada; shared skills também contam.",
     "status": "NOT_RUN"
   },
   {
@@ -1379,10 +2233,45 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP12.SUC.20",
+    "entity": "WP12",
+    "family": "success_criteria",
+    "text": "Usuário resolve uma objeção específica e vê o efeito no resultado do caso, sem confiar os números ao parecer.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.SUC.10",
+    "entity": "WP12",
+    "family": "success_criteria",
+    "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.SUC.40",
+    "entity": "WP12",
+    "family": "success_criteria",
+    "text": "O usuário recebe resultados persistentes dos perfis necessários sem coordenar cinco conversas manualmente.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP13.DOD.01",
     "entity": "WP13",
     "family": "dod",
     "text": "Campanha multi-registro pode ser comparada, escolhida e encaminhada aos domínios reais com a mesma semântica de casos individuais.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP13.DOD.20",
+    "entity": "WP13",
+    "family": "dod",
+    "text": "Portfólio integrado consome e conserva a cobertura dos candidatos/interações C10.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP13.DOD.10",
+    "entity": "WP13",
+    "family": "dod",
+    "text": "As entregas residentes atribuídas a WP13 têm produção, consumo e provas reais completos.",
     "status": "NOT_RUN"
   },
   {
@@ -1400,6 +2289,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP13.INV.20",
+    "entity": "WP13",
+    "family": "invariants",
+    "text": "Elegibilidade completa exige cobertura resolvida; falta de categoria não relaxa restrição nem cria economia.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP13.INV.10",
+    "entity": "WP13",
+    "family": "invariants",
+    "text": "WP13 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP13.QLT.01",
     "entity": "WP13",
     "family": "quality_standards",
@@ -1414,10 +2317,38 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP13.QLT.20",
+    "entity": "WP13",
+    "family": "quality_standards",
+    "text": "Motivo de incomplete referencia categoria/candidato e a condição que precisa ser resolvida.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP13.QLT.10",
+    "entity": "WP13",
+    "family": "quality_standards",
+    "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP13.CMP.01",
     "entity": "WP13",
     "family": "completeness_criteria",
     "text": "Cobrir candidatos, combinações, restrições, sensibilidade e aplicação preparada em contrato/projeto/contratação, com casos sem solução e incompletos.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP13.CMP.20",
+    "entity": "WP13",
+    "family": "completeness_criteria",
+    "text": "Cobrir categoria omitida em um candidato, custo de interação pendente, zero, soma compartilhada e inversão após confirmação.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP13.CMP.10",
+    "entity": "WP13",
+    "family": "completeness_criteria",
+    "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
     "status": "NOT_RUN"
   },
   {
@@ -1428,10 +2359,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP13.SUC.20",
+    "entity": "WP13",
+    "family": "success_criteria",
+    "text": "Usuário distingue combinação que atende comprovadamente de combinação ainda condicionada à informação faltante.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP13.SUC.10",
+    "entity": "WP13",
+    "family": "success_criteria",
+    "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP14.DOD.01",
     "entity": "WP14",
     "family": "dod",
-    "text": "Funções/projeções prontas atéT+65 e consumidas de forma comprovada na composição atéT+80.",
+    "text": "Funções, tradução pura e projeções prontas até T+68, com consumo real e provas integradas até T+75; transferência de escritor às 43 é registrada sem concorrência.",
     "status": "NOT_RUN"
   },
   {
@@ -1439,6 +2384,27 @@
     "entity": "WP14",
     "family": "dod",
     "text": "Mudança material afeta a análise correspondente, preservando decisão histórica e autorização atual.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.DOD.20",
+    "entity": "WP14",
+    "family": "dod",
+    "text": "Mudança de cobertura é consumida no classificador real e retorna sinal com antes/depois.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.DOD.10",
+    "entity": "WP14",
+    "family": "dod",
+    "text": "As entregas residentes atribuídas a WP14 têm produção, consumo e provas reais completos.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.DOD.40",
+    "entity": "WP14",
+    "family": "dod",
+    "text": "mapSfAtlasEntry sai 20; demais funções prontas 68 e consumidores completos 75, com transferência S4->S0-C em 43.",
     "status": "NOT_RUN"
   },
   {
@@ -1456,6 +2422,27 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP14.INV.20",
+    "entity": "WP14",
+    "family": "invariants",
+    "text": "Sinal usa resultados canônicos e preserva escolha; conclusão de pending não autoriza alteração automática.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.INV.10",
+    "entity": "WP14",
+    "family": "invariants",
+    "text": "WP14 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.INV.40",
+    "entity": "WP14",
+    "family": "invariants",
+    "text": "WP14 continua sem persistência, UI ou scheduler; autoria exclusiva continua durante transferência e correções.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP14.QLT.01",
     "entity": "WP14",
     "family": "quality_standards",
@@ -1470,6 +2457,27 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP14.QLT.20",
+    "entity": "WP14",
+    "family": "quality_standards",
+    "text": "Razão indica categoria resolvida, fonte e condição afetada, sem ocultar a ressalva histórica.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.QLT.10",
+    "entity": "WP14",
+    "family": "quality_standards",
+    "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.QLT.40",
+    "entity": "WP14",
+    "family": "quality_standards",
+    "text": "Receipt liga SHA/lease, outputs e consumidores; não usar prazo 80 residual ou resgate S0-A já ocupado com Atlas.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP14.CMP.01",
     "entity": "WP14",
     "family": "completeness_criteria",
@@ -1477,10 +2485,52 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP14.CMP.20",
+    "entity": "WP14",
+    "family": "completeness_criteria",
+    "text": "Cobrir pending→included, pending→inaplicável suportado, fonte revogada e escolha mantida por nova justificativa.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.CMP.10",
+    "entity": "WP14",
+    "family": "completeness_criteria",
+    "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.CMP.40",
+    "entity": "WP14",
+    "family": "completeness_criteria",
+    "text": "Cobrir tradução/owner, materialidade, semelhança, observado, dedupe, revogação e consumo após reinício via T07.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP14.SUC.01",
     "entity": "WP14",
     "family": "success_criteria",
     "text": "A equipe retoma o motivo de uma escolha e reconhece precisamente quando ele precisa ser reconsiderado, com baixo ruído.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.SUC.20",
+    "entity": "WP14",
+    "family": "success_criteria",
+    "text": "A equipe vê por que o custo confirmado exige reconsideração e continua a partir da razão original.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.SUC.10",
+    "entity": "WP14",
+    "family": "success_criteria",
+    "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.SUC.40",
+    "entity": "WP14",
+    "family": "success_criteria",
+    "text": "Memória e reavaliação aparecem no fluxo real até 75 sem sobre carregar implicitamente S4 ou duplicar store.",
     "status": "NOT_RUN"
   },
   {
@@ -1526,6 +2576,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP00.T02.DOD.10",
+    "entity": "WP00.T02",
+    "family": "dod",
+    "text": "C15–C17 e manifestos completos são aceitos por WP10/WP12/WP06/WP14 antes de construir dependência.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP00.T02.INV.01",
     "entity": "WP00.T02",
     "family": "invariants",
@@ -1533,10 +2590,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP00.T02.INV.10",
+    "entity": "WP00.T02",
+    "family": "invariants",
+    "text": "Não retirar produto/autoridade/critério; nenhum ID de perfil vira principal ou seat técnico.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP00.T02.QLT.01",
     "entity": "WP00.T02",
     "family": "quality_standards",
     "text": "Interfaces pequenas correspondem a necessidades presentes e não antecipam um framework empresarial.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP00.T02.QLT.10",
+    "entity": "WP00.T02",
+    "family": "quality_standards",
+    "text": "Contrato nomeia producer/export/path/consumidor e falhas observáveis, sem 'binding futuro' indefinido.",
     "status": "NOT_RUN"
   },
   {
@@ -1550,7 +2621,14 @@
     "id": "WP00.T02.CMP.02",
     "entity": "WP00.T02",
     "family": "completeness_criteria",
-    "text": "Congelar C01–C14, assinaturas mínimas, enumerações de estado, identidade/escopo, exemplos válidos e negativos, export names e mapa produtor/consumidor. A qualificação nativa é paralela.",
+    "text": "Congelar C01–C17, assinaturas mínimas, enumerações de estado, identidade/escopo, exemplos válidos e negativos, export names e mapa produtor/consumidor. A qualificação nativa é paralela.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP00.T02.CMP.10",
+    "entity": "WP00.T02",
+    "family": "completeness_criteria",
+    "text": "5 perfis,18 skills,8 packs,39 operações,6 provas e empacotamento Atlas têm fechamento rastreável.",
     "status": "NOT_RUN"
   },
   {
@@ -1558,6 +2636,13 @@
     "entity": "WP00.T02",
     "family": "success_criteria",
     "text": "Duas frentes conseguem trocar uma saída pelos contratos sem coordenar edição no mesmo arquivo.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP00.T02.SUC.10",
+    "entity": "WP00.T02",
+    "family": "success_criteria",
+    "text": "Builder consegue produzir código compatível e consumidor consegue rejeitar substitutos sem uso real.",
     "status": "NOT_RUN"
   },
   {
@@ -1617,10 +2702,38 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP00.T04.DOD.10",
+    "entity": "WP00.T04",
+    "family": "dod",
+    "text": "GNATIVE prova pelo menos1perfil/1skill/1pack reais com cadeia inteira e recibo verificável.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP00.T04.DOD.40",
+    "entity": "WP00.T04",
+    "family": "dod",
+    "text": "GNATIVE é exercício real da cadeia, separado de G0 e CI.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP00.T04.INV.01",
     "entity": "WP00.T04",
     "family": "invariants",
     "text": "Não contornar o início governado nem simular execução nativa usando um botão local ou resultado pré-fabricado.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP00.T04.INV.10",
+    "entity": "WP00.T04",
+    "family": "invariants",
+    "text": "Tranche mínima não reduz as obrigações5/18/8 nem usa identidade de engineering para passar.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP00.T04.INV.40",
+    "entity": "WP00.T04",
+    "family": "invariants",
+    "text": "Qualifier S3 não escreve runtime oucase que qualifica.",
     "status": "NOT_RUN"
   },
   {
@@ -1631,6 +2744,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP00.T04.QLT.10",
+    "entity": "WP00.T04",
+    "family": "quality_standards",
+    "text": "Preflight distingue SDK/binding/model/driver/scanner indisponíveis e conserva causalidade de falha.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP00.T04.QLT.40",
+    "entity": "WP00.T04",
+    "family": "quality_standards",
+    "text": "Recibo incluiSHA e valores/proveniência observados; não usar conclusão de mock.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP00.T04.CMP.01",
     "entity": "WP00.T04",
     "family": "completeness_criteria",
@@ -1638,10 +2765,38 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP00.T04.CMP.10",
+    "entity": "WP00.T04",
+    "family": "completeness_criteria",
+    "text": "Gates incluem perfil, skill carregada, MCP autorizado, domínio real, caso e consumidor, com negativos de identidade.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP00.T04.CMP.40",
+    "entity": "WP00.T04",
+    "family": "completeness_criteria",
+    "text": "Cobrir carga, chamadaautorizada/diretanegada, conflito de provider e indisponibilidade, com caso real.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP00.T04.SUC.01",
     "entity": "WP00.T04",
     "family": "success_criteria",
     "text": "As frentes de produto desta campanha podem construir em paralelo com fontes de verdade e pontos de integração conhecidos.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP00.T04.SUC.10",
+    "entity": "WP00.T04",
+    "family": "success_criteria",
+    "text": "AtéT20 se sabe se a cadeia nativa é realizável no ambiente; prazo falho é relatado, nunca reinterpretado.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP00.T04.SUC.40",
+    "entity": "WP00.T04",
+    "family": "success_criteria",
+    "text": "O gate descobre cedo falha de integração sem reter construção determinística.",
     "status": "NOT_RUN"
   },
   {
@@ -1799,10 +2954,38 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP01.T05.DOD.20",
+    "entity": "WP01.T05",
+    "family": "dod",
+    "text": "UI usa os resultados e a cobertura reais C10 em alternativa, escolha e reavaliação.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP01.T05.DOD.30",
+    "entity": "WP01.T05",
+    "family": "dod",
+    "text": "Entradas de trabalho da mesa consomem as 18 saídas da matriz C15 em cenários pertinentes; cinco perfis deixam contribuições verificáveis e o Revisor tem run próprio.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP01.T05.INV.01",
     "entity": "WP01.T05",
     "family": "invariants",
     "text": "UI nunca inventa permissão, confirmação, resultado de IA ou sucesso de comando; chat não é fonte única dos dados da decisão.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP01.T05.INV.20",
+    "entity": "WP01.T05",
+    "family": "invariants",
+    "text": "UI não transforma pending em zero nem esconde condição financeira por haver um número válido.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP01.T05.INV.30",
+    "entity": "WP01.T05",
+    "family": "invariants",
+    "text": "Catálogo, nome de perfil ou chat sem outputRef consumido não satisfaz entrega; perfil não concede autoridade nova e fonte oficial continua no domínio.",
     "status": "NOT_RUN"
   },
   {
@@ -1813,6 +2996,20 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP01.T05.QLT.20",
+    "entity": "WP01.T05",
+    "family": "quality_standards",
+    "text": "Estado e categoria pendente acompanham o subtotal, fonte e próximo passo, inclusive por teclado/tabela.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP01.T05.QLT.30",
+    "entity": "WP01.T05",
+    "family": "quality_standards",
+    "text": "Mostrar contribuição, fontes e progresso útil; detalhes de perfil/modelo/skill/versão/run ficam sob demanda e seleção manual de agente não é obrigatória.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP01.T05.CMP.01",
     "entity": "WP01.T05",
     "family": "completeness_criteria",
@@ -1820,10 +3017,38 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP01.T05.CMP.20",
+    "entity": "WP01.T05",
+    "family": "completeness_criteria",
+    "text": "Cobrir categoria ausente, zero confirmado, comparação condicionada, fonte revogada e inversão posterior.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP01.T05.CMP.30",
+    "entity": "WP01.T05",
+    "family": "completeness_criteria",
+    "text": "Cobrir18 skills com witnesses de carga/digest/saída persistida/consumo real, cinco perfis distintos e falta/falha/stale/cancelamento, usando as seis provas integradas.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP01.T05.SUC.01",
     "entity": "WP01.T05",
     "family": "success_criteria",
     "text": "O participante identifica a pergunta, a alternativa, a pendência e o próximo passo sem reconstruir contexto em outra ferramenta.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP01.T05.SUC.20",
+    "entity": "WP01.T05",
+    "family": "success_criteria",
+    "text": "A pessoa reconhece por que a comparação está condicionada e vê a consequência da resposta sem reconstruir o caso.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP01.T05.SUC.30",
+    "entity": "WP01.T05",
+    "family": "success_criteria",
+    "text": "Usuários concluem enquadramento, comparação, pergunta, revisão, preparo ou reavaliação sem coordenar cinco conversas nem reconstruir resultado no chat.",
     "status": "NOT_RUN"
   },
   {
@@ -1841,6 +3066,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP02.T01.DOD.18",
+    "entity": "WP02.T01",
+    "family": "dod",
+    "text": "Descritores C16 de sf_dashboard_read, sf_kpi_explain são implementados e consumidos por T06 com referências reais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP02.T01.INV.01",
     "entity": "WP02.T01",
     "family": "invariants",
@@ -1852,6 +3084,13 @@
     "entity": "WP02.T01",
     "family": "invariants",
     "text": "Nenhum campo restrito ou decisão inferida é acrescentado à projeção autorizada.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP02.T01.INV.18",
+    "entity": "WP02.T01",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
     "status": "NOT_RUN"
   },
   {
@@ -1869,6 +3108,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP02.T01.QLT.18",
+    "entity": "WP02.T01",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP02.T01.CMP.01",
     "entity": "WP02.T01",
     "family": "completeness_criteria",
@@ -1883,6 +3129,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP02.T01.CMP.18",
+    "entity": "WP02.T01",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP02.T01.SUC.01",
     "entity": "WP02.T01",
     "family": "success_criteria",
@@ -1894,6 +3147,13 @@
     "entity": "WP02.T01",
     "family": "success_criteria",
     "text": "O consumidor identifica por que um risco, ação vencida ou renovação foi sinalizado sem consultar texto inventado.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP02.T01.SUC.18",
+    "entity": "WP02.T01",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
     "status": "NOT_RUN"
   },
   {
@@ -2135,6 +3395,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP03.T01.DOD.18",
+    "entity": "WP03.T01",
+    "family": "dod",
+    "text": "Descritores C16 de sf_forecast_compare, sf_scenario_simulate são implementados e consumidos por T06 com referências reais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP03.T01.INV.01",
     "entity": "WP03.T01",
     "family": "invariants",
@@ -2156,6 +3423,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP03.T01.INV.18",
+    "entity": "WP03.T01",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP03.T01.QLT.01",
     "entity": "WP03.T01",
     "family": "quality_standards",
@@ -2167,6 +3441,13 @@
     "entity": "WP03.T01",
     "family": "quality_standards",
     "text": "Falhas e avisos identificam o registro/campo autorizado e distinguem validação, conflito e falta de permissão.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP03.T01.QLT.18",
+    "entity": "WP03.T01",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
     "status": "NOT_RUN"
   },
   {
@@ -2184,6 +3465,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP03.T01.CMP.18",
+    "entity": "WP03.T01",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP03.T01.SUC.01",
     "entity": "WP03.T01",
     "family": "success_criteria",
@@ -2195,6 +3483,13 @@
     "entity": "WP03.T01",
     "family": "success_criteria",
     "text": "Um mesmo comando inválido é rejeitado pela simulação e pela execução isolada sem qualquer mudança no snapshot de origem.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP03.T01.SUC.18",
+    "entity": "WP03.T01",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
     "status": "NOT_RUN"
   },
   {
@@ -2450,6 +3745,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP03.T05.DOD.18",
+    "entity": "WP03.T05",
+    "family": "dod",
+    "text": "Descritores C16 de sf_scenario_compare são implementados e consumidos por T06 com referências reais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP03.T05.INV.01",
     "entity": "WP03.T05",
     "family": "invariants",
@@ -2471,6 +3773,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP03.T05.INV.18",
+    "entity": "WP03.T05",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP03.T05.QLT.01",
     "entity": "WP03.T05",
     "family": "quality_standards",
@@ -2482,6 +3791,13 @@
     "entity": "WP03.T05",
     "family": "quality_standards",
     "text": "Orçamento oficial, versão base, hipótese e outlook têm rótulos distintos; seleção e estado permanecem visíveis ao navegar.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP03.T05.QLT.18",
+    "entity": "WP03.T05",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
     "status": "NOT_RUN"
   },
   {
@@ -2499,6 +3815,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP03.T05.CMP.18",
+    "entity": "WP03.T05",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP03.T05.SUC.01",
     "entity": "WP03.T05",
     "family": "success_criteria",
@@ -2510,6 +3833,13 @@
     "entity": "WP03.T05",
     "family": "success_criteria",
     "text": "WP10 consegue montar as contribuições reais sem alterar a lógica financeira nem copiar fórmulas para BI ou imports.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP03.T05.SUC.18",
+    "entity": "WP03.T05",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
     "status": "NOT_RUN"
   },
   {
@@ -2527,6 +3857,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP04.T01.DOD.18",
+    "entity": "WP04.T01",
+    "family": "dod",
+    "text": "Descritores C16 de sf_request_read são implementados e consumidos por T06 com referências reais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP04.T01.INV.01",
     "entity": "WP04.T01",
     "family": "invariants",
@@ -2538,6 +3875,13 @@
     "entity": "WP04.T01",
     "family": "invariants",
     "text": "Salvar um campo não reinicia a idade da etapa; histórico insuficiente não produz data presumida.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP04.T01.INV.18",
+    "entity": "WP04.T01",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
     "status": "NOT_RUN"
   },
   {
@@ -2555,6 +3899,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP04.T01.QLT.18",
+    "entity": "WP04.T01",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP04.T01.CMP.01",
     "entity": "WP04.T01",
     "family": "completeness_criteria",
@@ -2569,6 +3920,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP04.T01.CMP.18",
+    "entity": "WP04.T01",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP04.T01.SUC.01",
     "entity": "WP04.T01",
     "family": "success_criteria",
@@ -2580,6 +3938,13 @@
     "entity": "WP04.T01",
     "family": "success_criteria",
     "text": "Aging e contagens fornecidos a WP05 reproduzem a seleção autorizada e não divergem da fila.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP04.T01.SUC.18",
+    "entity": "WP04.T01",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
     "status": "NOT_RUN"
   },
   {
@@ -2667,6 +4032,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP04.T03.DOD.18",
+    "entity": "WP04.T03",
+    "family": "dod",
+    "text": "Descritores C16 de sf_sourcing_compare são implementados e consumidos por T06 com referências reais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP04.T03.INV.01",
     "entity": "WP04.T03",
     "family": "invariants",
@@ -2678,6 +4050,13 @@
     "entity": "WP04.T03",
     "family": "invariants",
     "text": "Ausência de taxa/nota/valor não vira zero, precisão inventada ou confirmação de gasto realizado.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP04.T03.INV.18",
+    "entity": "WP04.T03",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
     "status": "NOT_RUN"
   },
   {
@@ -2695,6 +4074,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP04.T03.QLT.18",
+    "entity": "WP04.T03",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP04.T03.CMP.01",
     "entity": "WP04.T03",
     "family": "completeness_criteria",
@@ -2709,6 +4095,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP04.T03.CMP.18",
+    "entity": "WP04.T03",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP04.T03.SUC.01",
     "entity": "WP04.T03",
     "family": "success_criteria",
@@ -2720,6 +4113,13 @@
     "entity": "WP04.T03",
     "family": "success_criteria",
     "text": "O mesmo valor de domínio aparece coerentemente no detalhe, resumo e C02 entregue a consumidores.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP04.T03.SUC.18",
+    "entity": "WP04.T03",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
     "status": "NOT_RUN"
   },
   {
@@ -2807,6 +4207,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP04.T05.DOD.18",
+    "entity": "WP04.T05",
+    "family": "dod",
+    "text": "Descritores C16 de sf_supplier_read, sf_contract_read são implementados e consumidos por T06 com referências reais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP04.T05.INV.01",
     "entity": "WP04.T05",
     "family": "invariants",
@@ -2818,6 +4225,13 @@
     "entity": "WP04.T05",
     "family": "invariants",
     "text": "Reset, exclusão e retomada não apagam histórico nem reutilizam identificadores PR/PO/SUP já emitidos.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP04.T05.INV.18",
+    "entity": "WP04.T05",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
     "status": "NOT_RUN"
   },
   {
@@ -2835,6 +4249,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP04.T05.QLT.18",
+    "entity": "WP04.T05",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP04.T05.CMP.01",
     "entity": "WP04.T05",
     "family": "completeness_criteria",
@@ -2849,6 +4270,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP04.T05.CMP.18",
+    "entity": "WP04.T05",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP04.T05.SUC.01",
     "entity": "WP04.T05",
     "family": "success_criteria",
@@ -2860,6 +4288,13 @@
     "entity": "WP04.T05",
     "family": "success_criteria",
     "text": "O integrador consegue executar a jornada real completa com os exports entregues, sem solicitar um substituto de demonstração ou escrever dentro do domínio.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP04.T05.SUC.18",
+    "entity": "WP04.T05",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
     "status": "NOT_RUN"
   },
   {
@@ -3087,6 +4522,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP05.T04.DOD.18",
+    "entity": "WP05.T04",
+    "family": "dod",
+    "text": "Descritores C16 de sf_bi_view são implementados e consumidos por T06 com referências reais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP05.T04.INV.01",
     "entity": "WP05.T04",
     "family": "invariants",
@@ -3098,6 +4540,13 @@
     "entity": "WP05.T04",
     "family": "invariants",
     "text": "Nenhum marco sem data recebe data artificial e nenhuma fonte restrita é recuperada fora do C02.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP05.T04.INV.18",
+    "entity": "WP05.T04",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
     "status": "NOT_RUN"
   },
   {
@@ -3115,6 +4564,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP05.T04.QLT.18",
+    "entity": "WP05.T04",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP05.T04.CMP.01",
     "entity": "WP05.T04",
     "family": "completeness_criteria",
@@ -3126,6 +4582,13 @@
     "entity": "WP05.T04",
     "family": "completeness_criteria",
     "text": "Fechar o catálogo de oito gráficos com estados vazio/parcial/restrito, filtros e drilldowns verificáveis.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP05.T04.CMP.18",
+    "entity": "WP05.T04",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
     "status": "NOT_RUN"
   },
   {
@@ -3143,10 +4606,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP05.T04.SUC.18",
+    "entity": "WP05.T04",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP05.T05.DOD.01",
     "entity": "WP05.T05",
     "family": "dod",
     "text": "As três perguntas analíticas novas e as oito antigas são respondidas com produtores reais e valores reconciliados.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP05.T05.DOD.20",
+    "entity": "WP05.T05",
+    "family": "dod",
+    "text": "BI e tabela consomem coverage/result refs reais junto às marcas.",
     "status": "NOT_RUN"
   },
   {
@@ -3157,10 +4634,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP05.T05.INV.20",
+    "entity": "WP05.T05",
+    "family": "invariants",
+    "text": "Gráfico não calcula completude nem converte lacuna em zero, ganho confirmado ou ajuste residual.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP05.T05.QLT.01",
     "entity": "WP05.T05",
     "family": "quality_standards",
     "text": "Rótulos legíveis, sinais/unidades claros, comparação no mesmo horizonte e dados acessíveis por tabela e teclado.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP05.T05.QLT.20",
+    "entity": "WP05.T05",
+    "family": "quality_standards",
+    "text": "Rótulo de condicionado acompanha valor/limiar e a lista acessível explica categorias sem quantificação.",
     "status": "NOT_RUN"
   },
   {
@@ -3171,10 +4662,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP05.T05.CMP.20",
+    "entity": "WP05.T05",
+    "family": "completeness_criteria",
+    "text": "Cobrir omissão inteira, pending, zero confirmado, fonte restrita e atualização que inverte a diferença.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP05.T05.SUC.01",
     "entity": "WP05.T05",
     "family": "success_criteria",
     "text": "Usuário identifica qual componente ou premissa inverte a escolha e abre sua origem sem perder o caso.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP05.T05.SUC.20",
+    "entity": "WP05.T05",
+    "family": "success_criteria",
+    "text": "Usuário encontra a categoria que muda a comparação e abre sua origem com o mesmo contexto.",
     "status": "NOT_RUN"
   },
   {
@@ -3269,6 +4774,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP06.T02.DOD.18",
+    "entity": "WP06.T02",
+    "family": "dod",
+    "text": "Descritores C16 de sf_import_preview são implementados e consumidos por T06 com referências reais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP06.T02.INV.01",
     "entity": "WP06.T02",
     "family": "invariants",
@@ -3290,6 +4802,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP06.T02.INV.18",
+    "entity": "WP06.T02",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP06.T02.QLT.01",
     "entity": "WP06.T02",
     "family": "quality_standards",
@@ -3301,6 +4820,13 @@
     "entity": "WP06.T02",
     "family": "quality_standards",
     "text": "Impacto previsto é rotulado como previsão da aplicação e reconcilia com componentes autorizados de C02.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.T02.QLT.18",
+    "entity": "WP06.T02",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
     "status": "NOT_RUN"
   },
   {
@@ -3318,6 +4844,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP06.T02.CMP.18",
+    "entity": "WP06.T02",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP06.T02.SUC.01",
     "entity": "WP06.T02",
     "family": "success_criteria",
@@ -3329,6 +4862,13 @@
     "entity": "WP06.T02",
     "family": "success_criteria",
     "text": "O consumidor não calcula dinheiro por conta própria e o manifesto expõe diferença relevante sem vazamento de campos privados.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.T02.SUC.18",
+    "entity": "WP06.T02",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
     "status": "NOT_RUN"
   },
   {
@@ -3507,10 +5047,52 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP06.T05.DOD.18",
+    "entity": "WP06.T05",
+    "family": "dod",
+    "text": "Descritores C16 de sf_document_extract, sf_knowledge_search são implementados e consumidos por T06 com referências reais.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.T05.DOD.19",
+    "entity": "WP06.T05",
+    "family": "dod",
+    "text": "Resolver e adapter RAG reais produzem candidatos e trechos consumidos pela UI e BCS.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.T05.DOD.40",
+    "entity": "WP06.T05",
+    "family": "dod",
+    "text": "Resolver e extração real têm entregas 20/35 e consumidores identificados.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP06.T05.INV.01",
     "entity": "WP06.T05",
     "family": "invariants",
     "text": "Documento externo é evidência não confiável; instrução embutida não muda ferramentas, acesso ou autoridade, e extração não vira fato confirmado automaticamente.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.T05.INV.18",
+    "entity": "WP06.T05",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.T05.INV.19",
+    "entity": "WP06.T05",
+    "family": "invariants",
+    "text": "Conteúdo externo não vira instrução, Store da request não amplia ACL e algoritmo de digest não é substituído.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.T05.INV.40",
+    "entity": "WP06.T05",
+    "family": "invariants",
+    "text": "S2 e S2-C jamais escrevem os mesmos arquivos documentais antes lease 53.",
     "status": "NOT_RUN"
   },
   {
@@ -3521,6 +5103,27 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP06.T05.QLT.18",
+    "entity": "WP06.T05",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.T05.QLT.19",
+    "entity": "WP06.T05",
+    "family": "quality_standards",
+    "text": "Revisão, source hash, unidade de offset e estado candidato/confirmado tornam a evidência recuperável.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.T05.QLT.40",
+    "entity": "WP06.T05",
+    "family": "quality_standards",
+    "text": "Handoff mantém referência/hash/revisão/ACL e status de confirmação.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP06.T05.CMP.01",
     "entity": "WP06.T05",
     "family": "completeness_criteria",
@@ -3528,10 +5131,52 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP06.T05.CMP.18",
+    "entity": "WP06.T05",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.T05.CMP.19",
+    "entity": "WP06.T05",
+    "family": "completeness_criteria",
+    "text": "Cobrir PDF digital, DOCX, texto, sem camada textual, fonte revogada, revisão trocada, busca lexical e digests diferentes.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.T05.CMP.40",
+    "entity": "WP06.T05",
+    "family": "completeness_criteria",
+    "text": "Três formatos, falhas, versão/revogação e imports paralelos permanecem cobertos.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP06.T05.SUC.01",
     "entity": "WP06.T05",
     "family": "success_criteria",
     "text": "Comprador confirma um valor extraído e o usa no cenário sem copiar novamente, preservando a origem.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.T05.SUC.18",
+    "entity": "WP06.T05",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.T05.SUC.19",
+    "entity": "WP06.T05",
+    "family": "success_criteria",
+    "text": "Usuário abre o trecho que sustentou a extração e fonte alterada não se passa pela versão confirmada.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.T05.SUC.40",
+    "entity": "WP06.T05",
+    "family": "success_criteria",
+    "text": "Fontes alimentam IA/Atlas antes da integração final sem bloquear importação.",
     "status": "NOT_RUN"
   },
   {
@@ -3619,6 +5264,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP07.T02.DOD.18",
+    "entity": "WP07.T02",
+    "family": "dod",
+    "text": "Descritores C16 de sf_review_prepare são implementados e consumidos por T06 com referências reais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP07.T02.INV.01",
     "entity": "WP07.T02",
     "family": "invariants",
@@ -3647,6 +5299,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP07.T02.INV.18",
+    "entity": "WP07.T02",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP07.T02.QLT.01",
     "entity": "WP07.T02",
     "family": "quality_standards",
@@ -3658,6 +5317,13 @@
     "entity": "WP07.T02",
     "family": "quality_standards",
     "text": "Uma falha ao preservar não apresenta a revisão como salva nem devolve referência inutilizável.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP07.T02.QLT.18",
+    "entity": "WP07.T02",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
     "status": "NOT_RUN"
   },
   {
@@ -3675,6 +5341,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP07.T02.CMP.18",
+    "entity": "WP07.T02",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP07.T02.SUC.01",
     "entity": "WP07.T02",
     "family": "success_criteria",
@@ -3686,6 +5359,13 @@
     "entity": "WP07.T02",
     "family": "success_criteria",
     "text": "Uma revisão apenas simulada ou mantida transitoriamente não é apresentada como preservada no produto.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP07.T02.SUC.18",
+    "entity": "WP07.T02",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
     "status": "NOT_RUN"
   },
   {
@@ -3780,6 +5460,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP07.T04.DOD.18",
+    "entity": "WP07.T04",
+    "family": "dod",
+    "text": "Descritores C16 de sf_report_prepare, sf_artifact_get são implementados e consumidos por T06 com referências reais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP07.T04.INV.01",
     "entity": "WP07.T04",
     "family": "invariants",
@@ -3794,6 +5481,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP07.T04.INV.18",
+    "entity": "WP07.T04",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP07.T04.QLT.01",
     "entity": "WP07.T04",
     "family": "quality_standards",
@@ -3805,6 +5499,13 @@
     "entity": "WP07.T04",
     "family": "quality_standards",
     "text": "Resumo executivo representa os tópicos escolhidos, distinguindo números, comentários e seções sem dados.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP07.T04.QLT.18",
+    "entity": "WP07.T04",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
     "status": "NOT_RUN"
   },
   {
@@ -3829,6 +5530,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP07.T04.CMP.18",
+    "entity": "WP07.T04",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP07.T04.SUC.01",
     "entity": "WP07.T04",
     "family": "success_criteria",
@@ -3840,6 +5548,13 @@
     "entity": "WP07.T04",
     "family": "success_criteria",
     "text": "A contagem de registros selecionados, apresentados e exportados pode ser reconciliada para a mesma revisão.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP07.T04.SUC.18",
+    "entity": "WP07.T04",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
     "status": "NOT_RUN"
   },
   {
@@ -3857,6 +5572,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP08.T01.DOD.18",
+    "entity": "WP08.T01",
+    "family": "dod",
+    "text": "Descritores C16 de sf_relation_read são implementados e consumidos por T06 com referências reais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP08.T01.INV.01",
     "entity": "WP08.T01",
     "family": "invariants",
@@ -3868,6 +5590,13 @@
     "entity": "WP08.T01",
     "family": "invariants",
     "text": "Vincular não funde entidades nem altera totais, compromissos financeiros ou aprovações.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP08.T01.INV.18",
+    "entity": "WP08.T01",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
     "status": "NOT_RUN"
   },
   {
@@ -3885,6 +5614,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP08.T01.QLT.18",
+    "entity": "WP08.T01",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP08.T01.CMP.01",
     "entity": "WP08.T01",
     "family": "completeness_criteria",
@@ -3896,6 +5632,13 @@
     "entity": "WP08.T01",
     "family": "completeness_criteria",
     "text": "Há tratamento para relação repetida, tipo inválido, remoção e ponta não autorizada.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP08.T01.CMP.18",
+    "entity": "WP08.T01",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
     "status": "NOT_RUN"
   },
   {
@@ -3913,6 +5656,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP08.T01.SUC.18",
+    "entity": "WP08.T01",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP08.T02.DOD.01",
     "entity": "WP08.T02",
     "family": "dod",
@@ -3924,6 +5674,13 @@
     "entity": "WP08.T02",
     "family": "dod",
     "text": "Os comentários são recuperáveis pelas portas C06 e mantêm autoria e competência explícitas.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP08.T02.DOD.18",
+    "entity": "WP08.T02",
+    "family": "dod",
+    "text": "Descritores C16 de sf_answer_read são implementados e consumidos por T06 com referências reais.",
     "status": "NOT_RUN"
   },
   {
@@ -3941,6 +5698,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP08.T02.INV.18",
+    "entity": "WP08.T02",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP08.T02.QLT.01",
     "entity": "WP08.T02",
     "family": "quality_standards",
@@ -3952,6 +5716,13 @@
     "entity": "WP08.T02",
     "family": "quality_standards",
     "text": "Destinatário e estado comunicacional usam identidades explícitas e rótulos distintos de execução operacional.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP08.T02.QLT.18",
+    "entity": "WP08.T02",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
     "status": "NOT_RUN"
   },
   {
@@ -3969,6 +5740,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP08.T02.CMP.18",
+    "entity": "WP08.T02",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP08.T02.SUC.01",
     "entity": "WP08.T02",
     "family": "success_criteria",
@@ -3983,24 +5761,31 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP08.T02.SUC.18",
+    "entity": "WP08.T02",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP08.T03.DOD.01",
     "entity": "WP08.T03",
     "family": "dod",
-    "text": "A confirmação registra quem revisou qual referência, período e versão, sem exigir a regravação do dado.",
+    "text": "A confirmação registra autor, referência/encarnação, campos/período, dependências, versão observada e fingerprint, sem regravar dado.",
     "status": "NOT_RUN"
   },
   {
     "id": "WP08.T03.DOD.02",
     "entity": "WP08.T03",
     "family": "dod",
-    "text": "A projeção perde validade quando a versão correspondente muda.",
+    "text": "A projeção conserva valid após versão global irrelevante e perde validade quando o escopo material muda; unavailable não é valid nem prova de nova revisão necessária.",
     "status": "NOT_RUN"
   },
   {
     "id": "WP08.T03.INV.01",
     "entity": "WP08.T03",
     "family": "invariants",
-    "text": "Sem alteração significa revisão humana daquela versão; não significa coleta recente, qualidade comprovada ou aprovação de negócio.",
+    "text": "Sem alteração significa revisão humana do escopo mostrado na versão observada; não significa coleta recente, qualidade comprovada, revisão de todos os campos da versão atual ou aprovação.",
     "status": "NOT_RUN"
   },
   {
@@ -4014,35 +5799,35 @@
     "id": "WP08.T03.INV.03",
     "entity": "WP08.T03",
     "family": "invariants",
-    "text": "A confirmação pertence a referência, campos relevantes, período e versão. Uma edição de fevereiro não invalida automaticamente uma confirmação de janeiro sem dependência material.",
+    "text": "Confirmação pertence a referência/encarnação, campos, período e dependências materiais. A comparação usa fingerprint C06; fevereiro isolado não invalida janeiro.",
     "status": "NOT_RUN"
   },
   {
     "id": "WP08.T03.QLT.01",
     "entity": "WP08.T03",
     "family": "quality_standards",
-    "text": "O estado mostra versão revisada e condição atual de validade com linguagem que não confunda confirmação com dado novo.",
+    "text": "O estado mostra versão observada e condição atual de validade separadamente, com razão autorizada, sem confundir confirmação com dado novo.",
     "status": "NOT_RUN"
   },
   {
     "id": "WP08.T03.QLT.02",
     "entity": "WP08.T03",
     "family": "quality_standards",
-    "text": "Conflito de versão informa que a base mudou e não induz o usuário a acreditar que revisou o estado atual.",
+    "text": "Conflito material aponta o escopo afetado e preserva entrada; versão global diferente sem efeito no escopo não gera aviso de revisão vencida.",
     "status": "NOT_RUN"
   },
   {
     "id": "WP08.T03.CMP.01",
     "entity": "WP08.T03",
     "family": "completeness_criteria",
-    "text": "São cobertos confirmação válida, reenvio, concorrência, origem atualizada, origem removida e acesso revogado.",
+    "text": "Cobrir valid/stale/unavailable, reenvio, concorrência material/irrelevante, dependência pertinente, fonte removida/substituída, revogação e recuperação de acesso.",
     "status": "NOT_RUN"
   },
   {
     "id": "WP08.T03.CMP.02",
     "entity": "WP08.T03",
     "family": "completeness_criteria",
-    "text": "Confirmações em períodos diferentes permanecem independentes mesmo quando apontam à mesma entidade.",
+    "text": "Períodos sem dependência ficam independentes na mesma entidade; dependência entre períodos é declarada e muda essa conclusão quando pertinente.",
     "status": "NOT_RUN"
   },
   {
@@ -4056,7 +5841,7 @@
     "id": "WP08.T03.SUC.02",
     "entity": "WP08.T03",
     "family": "success_criteria",
-    "text": "Uma atualização posterior reaparece como pendência de revisão, sem sinal verde herdado indevidamente.",
+    "text": "Atualização material posterior reaparece uma única vez como revisão pendente; atualização irrelevante não reabre cobrança e a pessoa pode inspecionar sua base original.",
     "status": "NOT_RUN"
   },
   {
@@ -4074,6 +5859,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP08.T04.DOD.18",
+    "entity": "WP08.T04",
+    "family": "dod",
+    "text": "Descritores C16 de sf_work_list são implementados e consumidos por T06 com referências reais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP08.T04.INV.01",
     "entity": "WP08.T04",
     "family": "invariants",
@@ -4088,6 +5880,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP08.T04.INV.18",
+    "entity": "WP08.T04",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP08.T04.QLT.01",
     "entity": "WP08.T04",
     "family": "quality_standards",
@@ -4099,6 +5898,13 @@
     "entity": "WP08.T04",
     "family": "quality_standards",
     "text": "Múltiplos contextos do mesmo item são agrupados sem ocultar a identidade da ação ou a referência de período.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP08.T04.QLT.18",
+    "entity": "WP08.T04",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
     "status": "NOT_RUN"
   },
   {
@@ -4123,6 +5929,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP08.T04.CMP.18",
+    "entity": "WP08.T04",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP08.T04.SUC.01",
     "entity": "WP08.T04",
     "family": "success_criteria",
@@ -4134,6 +5947,13 @@
     "entity": "WP08.T04",
     "family": "success_criteria",
     "text": "Uma mudança na fonte canônica é refletida na próxima leitura e não exige sincronização manual de status.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP08.T04.SUC.18",
+    "entity": "WP08.T04",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
     "status": "NOT_RUN"
   },
   {
@@ -4151,6 +5971,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP08.T05.DOD.18",
+    "entity": "WP08.T05",
+    "family": "dod",
+    "text": "Descritores C16 de sf_handoff_prepare são implementados e consumidos por T06 com referências reais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP08.T05.INV.01",
     "entity": "WP08.T05",
     "family": "invariants",
@@ -4162,6 +5989,13 @@
     "entity": "WP08.T05",
     "family": "invariants",
     "text": "O handoff preserva alçadas e valores dos domínios e não converte um encaminhamento em aprovação.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP08.T05.INV.18",
+    "entity": "WP08.T05",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
     "status": "NOT_RUN"
   },
   {
@@ -4179,6 +6013,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP08.T05.QLT.18",
+    "entity": "WP08.T05",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP08.T05.CMP.01",
     "entity": "WP08.T05",
     "family": "completeness_criteria",
@@ -4190,6 +6031,13 @@
     "entity": "WP08.T05",
     "family": "completeness_criteria",
     "text": "Contextos de Dashboard, Planner, Procurement e revisão são transportáveis sem escrever nos arquivos de nenhum desses domínios.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP08.T05.CMP.18",
+    "entity": "WP08.T05",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
     "status": "NOT_RUN"
   },
   {
@@ -4207,10 +6055,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP08.T05.SUC.18",
+    "entity": "WP08.T05",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP08.T06.DOD.01",
     "entity": "WP08.T06",
     "family": "dod",
     "text": "Primeiro usuário configura um ciclo e destinatário real; a resposta aparece no caso e em Meu trabalho pela mesma identidade.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP08.T06.DOD.18",
+    "entity": "WP08.T06",
+    "family": "dod",
+    "text": "Descritores C16 de sf_question_prepare são implementados e consumidos por T06 com referências reais.",
     "status": "NOT_RUN"
   },
   {
@@ -4221,10 +6083,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP08.T06.INV.18",
+    "entity": "WP08.T06",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP08.T06.QLT.01",
     "entity": "WP08.T06",
     "family": "quality_standards",
     "text": "A pergunta explica por que importa e o que sua resposta altera; prioridade reflete condição decisiva, não quantidade de campos vazios.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP08.T06.QLT.18",
+    "entity": "WP08.T06",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
     "status": "NOT_RUN"
   },
   {
@@ -4235,6 +6111,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP08.T06.CMP.18",
+    "entity": "WP08.T06",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP08.T06.SUC.01",
     "entity": "WP08.T06",
     "family": "success_criteria",
@@ -4242,10 +6125,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP08.T06.SUC.18",
+    "entity": "WP08.T06",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP09.T01.DOD.01",
     "entity": "WP09.T01",
     "family": "dod",
     "text": "A conexão nativa e o ciclo visível da rotina funcionam com uma receita mínima e resultado real rastreável.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP09.T01.DOD.18",
+    "entity": "WP09.T01",
+    "family": "dod",
+    "text": "Descritores C16 de sf_routine_catalog, sf_routine_prepare, sf_routine_run, sf_routine_status, sf_routine_result são implementados e consumidos por T06 com referências reais.",
     "status": "NOT_RUN"
   },
   {
@@ -4263,10 +6160,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP09.T01.INV.18",
+    "entity": "WP09.T01",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP09.T01.QLT.01",
     "entity": "WP09.T01",
     "family": "quality_standards",
     "text": "Os estados dizem o que está acontecendo, qual resultado existe e o que o usuário pode fazer a seguir.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP09.T01.QLT.18",
+    "entity": "WP09.T01",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
     "status": "NOT_RUN"
   },
   {
@@ -4277,10 +6188,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP09.T01.CMP.18",
+    "entity": "WP09.T01",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (5), caso autorizado, direto proibido, stale e indisponível.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP09.T01.SUC.01",
     "entity": "WP09.T01",
     "family": "success_criteria",
     "text": "O usuário distingue solicitação agendada, execução iniciada e entrega pronta sem recorrer ao console.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP09.T01.SUC.18",
+    "entity": "WP09.T01",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
     "status": "NOT_RUN"
   },
   {
@@ -4336,7 +6261,7 @@
     "id": "WP09.T02.INV.02",
     "entity": "WP09.T02",
     "family": "invariants",
-    "text": "Confirmar sem alteração não inventa dado nem atualiza a idade da fonte; a rotina reconhece a revisão válida e não reabre cobrança apenas por não haver edição.",
+    "text": "Confirmar sem alteração não inventa dado nem atualiza idade. A rotina usa fingerprint e validade C06: sem mudança material, nova versão global ou falta de edição não reabre cobrança.",
     "status": "NOT_RUN"
   },
   {
@@ -4357,7 +6282,7 @@
     "id": "WP09.T02.CMP.01",
     "entity": "WP09.T02",
     "family": "completeness_criteria",
-    "text": "Cobrir primeira revisão, revisão anterior, seção vazia, dado ausente, múltiplos períodos, permissão e resumo com omitidos declarados.",
+    "text": "Cobrir primeira revisão, anterior, vazio/ausente, períodos independentes ou com dependência, confirmação valid/stale/unavailable, revogação, concorrência e resumos com omitidos declarados.",
     "status": "NOT_RUN"
   },
   {
@@ -4424,6 +6349,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP09.T04.INV.20",
+    "entity": "WP09.T04",
+    "family": "invariants",
+    "text": "WP06 é o único produtor da extração; WP09 consome C14 e não confirma extração, inventa condição comercial ou cria parser paralelo.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP09.T04.QLT.01",
     "entity": "WP09.T04",
     "family": "quality_standards",
@@ -4442,6 +6374,13 @@
     "entity": "WP09.T04",
     "family": "completeness_criteria",
     "text": "Cobrir três propostas, uma proposta, falta de notas, não conformidade, FX faltante, escolha fora do topo e retorno após rejeição.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP09.T04.CMP.20",
+    "entity": "WP09.T04",
+    "family": "completeness_criteria",
+    "text": "Cobrir extraído, confirmado, rejeitado, stale, sem texto e acesso revogado no handoff documental WP06→WP09.",
     "status": "NOT_RUN"
   },
   {
@@ -4501,6 +6440,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP09.T06.DOD.18",
+    "entity": "WP09.T06",
+    "family": "dod",
+    "text": "Descritores C16 de sf_watch_prepare são implementados e consumidos por T06 com referências reais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP09.T06.INV.01",
     "entity": "WP09.T06",
     "family": "invariants",
@@ -4508,10 +6454,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP09.T06.INV.18",
+    "entity": "WP09.T06",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP09.T06.QLT.01",
     "entity": "WP09.T06",
     "family": "quality_standards",
     "text": "Sem novidade, terminar de forma discreta; falha explica a ocorrência e o próximo passo, preservando o último resultado válido.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP09.T06.QLT.18",
+    "entity": "WP09.T06",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
     "status": "NOT_RUN"
   },
   {
@@ -4529,6 +6489,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP09.T06.CMP.18",
+    "entity": "WP09.T06",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP09.T06.SUC.01",
     "entity": "WP09.T06",
     "family": "success_criteria",
@@ -4536,10 +6503,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP09.T06.SUC.18",
+    "entity": "WP09.T06",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.T01.DOD.01",
     "entity": "WP10.T01",
     "family": "dod",
     "text": "As superfícies reais consomem todas as portas e funções da campanha, sem caminhos de produção vazios ou simulados.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T01.DOD.10",
+    "entity": "WP10.T01",
+    "family": "dod",
+    "text": "Provider protegido C09–C17 é consumido pelas portas reais e persiste após restart.",
     "status": "NOT_RUN"
   },
   {
@@ -4564,10 +6545,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.T01.INV.10",
+    "entity": "WP10.T01",
+    "family": "invariants",
+    "text": "Storage central não concede acesso cross-domain nem inventa quarto Surface; commitar domínio e memória não promete transação global.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.T01.QLT.01",
     "entity": "WP10.T01",
     "family": "quality_standards",
     "text": "Mudanças de compatibilidade são aditivas, pequenas e documentadas junto ao consumidor afetado.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T01.QLT.10",
+    "entity": "WP10.T01",
+    "family": "quality_standards",
+    "text": "Migration/idempotency preservam estado prévio; audit genérico não contém texto sensível.",
     "status": "NOT_RUN"
   },
   {
@@ -4585,10 +6580,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.T01.CMP.10",
+    "entity": "WP10.T01",
+    "family": "completeness_criteria",
+    "text": "Leitura, escrita, import, export, audit, retry, cancelamento e restart cobrem namespace protegido.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.T01.SUC.01",
     "entity": "WP10.T01",
     "family": "success_criteria",
     "text": "A funcionalidade deixa de depender de abrir páginas isoladas ou scripts de demonstração para existir.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T01.SUC.10",
+    "entity": "WP10.T01",
+    "family": "success_criteria",
+    "text": "Usuário autorizado retoma contribuição/memória e usuário sem acesso não obtém conteúdo por nenhuma superfície.",
     "status": "NOT_RUN"
   },
   {
@@ -4599,10 +6608,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.T02.DOD.10",
+    "entity": "WP10.T02",
+    "family": "dod",
+    "text": "As 6 provas integradas possuem evidência positiva e negativa no mesmo candidato.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.T02.INV.01",
     "entity": "WP10.T02",
     "family": "invariants",
     "text": "Captura bonita ou teste de markup não substitui comportamento; identidade de teste não pode ter privilégios extras ocultos.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T02.INV.10",
+    "entity": "WP10.T02",
+    "family": "invariants",
+    "text": "Não reciclar review histórico/fixture/catalogo como prova de runtime.",
     "status": "NOT_RUN"
   },
   {
@@ -4613,10 +6636,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.T02.QLT.10",
+    "entity": "WP10.T02",
+    "family": "quality_standards",
+    "text": "Recibos identificam handler/modulo, run, versões, digests e ação do consumidor.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.T02.CMP.01",
     "entity": "WP10.T02",
     "family": "completeness_criteria",
     "text": "Cobrir usuários, formatos, moedas, períodos, comparações, approvals, revisão, rotinas, busca, filtros e acessibilidade previstos.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T02.CMP.10",
+    "entity": "WP10.T02",
+    "family": "completeness_criteria",
+    "text": "Os 5 perfis/18 skills/8 packs e C17 estão cobertos, incluindo failure/retry/revogação.",
     "status": "NOT_RUN"
   },
   {
@@ -4627,10 +6664,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.T02.SUC.10",
+    "entity": "WP10.T02",
+    "family": "success_criteria",
+    "text": "Pessoa que não construiu reproduz caminhos felizes e contraprovas sem reconstruir o produto no chat.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.T03.DOD.01",
     "entity": "WP10.T03",
     "family": "dod",
     "text": "Três juízes independentes emitem aceite fundamentado no candidato final, após correções necessárias.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T03.DOD.40",
+    "entity": "WP10.T03",
+    "family": "dod",
+    "text": "Três pareceres consolidados sem autojulgamento no candidato final.",
     "status": "NOT_RUN"
   },
   {
@@ -4641,10 +6692,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.T03.INV.40",
+    "entity": "WP10.T03",
+    "family": "invariants",
+    "text": "Escrever uma correção remove o direito de aceitar aquela seção independentemente.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.T03.QLT.01",
     "entity": "WP10.T03",
     "family": "quality_standards",
     "text": "Pareceres citam cenário, comportamento e consequência; evitar notas genéricas ou placares sem evidência.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T03.QLT.40",
+    "entity": "WP10.T03",
+    "family": "quality_standards",
+    "text": "Achado registra critério/evidência/impacto/correção/recheck e SHA.",
     "status": "NOT_RUN"
   },
   {
@@ -4662,10 +6727,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.T03.CMP.40",
+    "entity": "WP10.T03",
+    "family": "completeness_criteria",
+    "text": "CobrirUX, semântica, IA/MCP/Atlas/Relay/documentos/WP14 e todas as fontes de skills.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.T03.SUC.01",
     "entity": "WP10.T03",
     "family": "success_criteria",
     "text": "Um revisor sem autoria da implementação consegue sustentar o aceite e explicar seus limites concretos.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T03.SUC.40",
+    "entity": "WP10.T03",
+    "family": "success_criteria",
+    "text": "Revisão encontra lacunas sem contar S0-A/B builders como revisores livres.",
     "status": "NOT_RUN"
   },
   {
@@ -4676,10 +6755,38 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.T04.DOD.10",
+    "entity": "WP10.T04",
+    "family": "dod",
+    "text": "CI pertinente à boundary e aos novos consumers fecha com evidencia do candidato final.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T04.DOD.40",
+    "entity": "WP10.T04",
+    "family": "dod",
+    "text": "Seleções CI exigidas e gates estáticos têm recibos do candidato aceito.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.T04.INV.01",
     "entity": "WP10.T04",
     "family": "invariants",
     "text": "CI verde não prova automaticamente UX; pareceres e jornadas continuam obrigatórios e separados.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T04.INV.10",
+    "entity": "WP10.T04",
+    "family": "invariants",
+    "text": "Não mudar CI/validator/engine para ocultar falha; exceção de packaging fica restrita.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T04.INV.40",
+    "entity": "WP10.T04",
+    "family": "invariants",
+    "text": "Playwright SF não substitui Bun browser; checks em outro SHA não viram verde atual.",
     "status": "NOT_RUN"
   },
   {
@@ -4690,10 +6797,38 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.T04.QLT.10",
+    "entity": "WP10.T04",
+    "family": "quality_standards",
+    "text": "Dependency/runtime import e generated declarations são verificados de forma reproduzível.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T04.QLT.40",
+    "entity": "WP10.T04",
+    "family": "quality_standards",
+    "text": "Medirfila/setup/run/coleta e capacidade disponível, sem afirmar que timeout 45 é duração prevista.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.T04.CMP.01",
     "entity": "WP10.T04",
     "family": "completeness_criteria",
     "text": "Cobrir seletores de domínio, integração, browsers, relatórios, imports, concorrência, rotinas e guards afetados.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T04.CMP.10",
+    "entity": "WP10.T04",
+    "family": "completeness_criteria",
+    "text": "Gate cobre gerador, types, bundle, consumer e drivers de persistência/scanner reais.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T04.CMP.40",
+    "entity": "WP10.T04",
+    "family": "completeness_criteria",
+    "text": "CobrirSF/CLI/app/src/app/test-browser/atlas-boundary/trêsPW e suites adicionais exigidas pelo footprint/epic.",
     "status": "NOT_RUN"
   },
   {
@@ -4704,10 +6839,31 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.T04.SUC.10",
+    "entity": "WP10.T04",
+    "family": "success_criteria",
+    "text": "Uma instalação limpa recebe o mesmo API/runtime bundle sem depender do checkout interno Atlas.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T04.SUC.40",
+    "entity": "WP10.T04",
+    "family": "success_criteria",
+    "text": "Aceite CI é verificável porselection/request/run, e prazo 120 permanece condicional à medição.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.T05.DOD.01",
     "entity": "WP10.T05",
     "family": "dod",
     "text": "Campanha fechada somente com cobertura completa, critérios satisfeitos e pacote final coerente com o código entregue.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T05.DOD.10",
+    "entity": "WP10.T05",
+    "family": "dod",
+    "text": "Recibo de entrega inclui todas novas capacidades e seus consumidores/provas.",
     "status": "NOT_RUN"
   },
   {
@@ -4718,10 +6874,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.T05.INV.10",
+    "entity": "WP10.T05",
+    "family": "invariants",
+    "text": "Prazo não transforma NOT_RUN/HOLD em PASS.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.T05.QLT.01",
     "entity": "WP10.T05",
     "family": "quality_standards",
     "text": "Guia explica o trabalho do usuário e o significado dos dados; detalhes internos ficam nas referências técnicas pertinentes.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T05.QLT.10",
+    "entity": "WP10.T05",
+    "family": "quality_standards",
+    "text": "Limitações e falhas são específicas e rastreáveis ao produtor.",
     "status": "NOT_RUN"
   },
   {
@@ -4732,10 +6902,164 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.T05.CMP.10",
+    "entity": "WP10.T05",
+    "family": "completeness_criteria",
+    "text": "Nenhum perfil, skill, pack, caso de identidade ou roundtrip Atlas obrigatório está órfão.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.T05.SUC.01",
     "entity": "WP10.T05",
     "family": "success_criteria",
     "text": "André e time conseguem usar e retomar o trabalho; o usuário recebe uma entrega comprovada e fácil de revisar.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T05.SUC.10",
+    "entity": "WP10.T05",
+    "family": "success_criteria",
+    "text": "Escopo total pode ser revisado e reproduzido sem confiar em afirmações de implementação.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T06.DOD.01",
+    "entity": "WP10.T06",
+    "family": "dod",
+    "text": "Os 5 perfis/18 skills estão registrados e carregados; MCP de 8 packs usa contexto confiável e produz recibos consumidos.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T06.DOD.40",
+    "entity": "WP10.T06",
+    "family": "dod",
+    "text": "Early runtime e runtime completo têm recibos distintos e fonte distribuída real.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T06.INV.01",
+    "entity": "WP10.T06",
+    "family": "invariants",
+    "text": "Identidade vem de request/host, o destino revalida; nomes e dados do modelo não concedem autoridade.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T06.INV.40",
+    "entity": "WP10.T06",
+    "family": "invariants",
+    "text": "Bridge privada/grant não dependem de McpProvided global nem de identidade gerada.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T06.QLT.01",
+    "entity": "WP10.T06",
+    "family": "quality_standards",
+    "text": "API usa seams públicos, schema fechado, falha explícita, budgets/cancelamento e provider object identity.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T06.QLT.40",
+    "entity": "WP10.T06",
+    "family": "quality_standards",
+    "text": "Todos os handlers publicados declaram producer e readiness; sem sucesso quando indisponível.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T06.CMP.01",
+    "entity": "WP10.T06",
+    "family": "completeness_criteria",
+    "text": "Provar duas sessões/atores, forged args, revogação, homônimo, generation, carga de 18 skills, Revisor e paridade de 8 packs.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T06.CMP.40",
+    "entity": "WP10.T06",
+    "family": "completeness_criteria",
+    "text": "Contar cinco perfis/dezoito skills/oito packs, incluindo chamada forçada, revogação e provider homônimo.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T06.SUC.01",
+    "entity": "WP10.T06",
+    "family": "success_criteria",
+    "text": "Usuário obtém contribuições especializadas rastreáveis e chamadas indevidas falham por caminho real.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T06.SUC.40",
+    "entity": "WP10.T06",
+    "family": "success_criteria",
+    "text": "Cadeia T20 e equipe completa T75 usam as mesmas portas/contratos, não dois runtimes.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T07.DOD.01",
+    "entity": "WP10.T07",
+    "family": "dod",
+    "text": "BCS e Atlas real entregam refs, resolução, emit/read persistentes, scanner e recuperação autorizada após restart.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T07.DOD.40",
+    "entity": "WP10.T07",
+    "family": "dod",
+    "text": "Boundary publicável, BCS, Atlas ports e provider durável têm owner/path/minutos/provas reais.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T07.INV.01",
+    "entity": "WP10.T07",
+    "family": "invariants",
+    "text": "Ledger SF é oficial; scope Atlas não é ACL; sem novos acessos, store git, identidade técnica ou engine paralelo.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T07.INV.40",
+    "entity": "WP10.T07",
+    "family": "invariants",
+    "text": "Nenhuma escrita fora dos seis paths Atlas exatos; gerados são produzidos pelo gerador e engine permanece fonte.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T07.QLT.01",
+    "entity": "WP10.T07",
+    "family": "quality_standards",
+    "text": "Forms/types reais, atomicidade explícita, causas de scanner preservadas e build do pacote reproduzível.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T07.QLT.40",
+    "entity": "WP10.T07",
+    "family": "quality_standards",
+    "text": "Falha descan/commit/ACL é observável e não produz sucesso persistido.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T07.CMP.01",
+    "entity": "WP10.T07",
+    "family": "completeness_criteria",
+    "text": "Recobrir owner/kind/templates, ACL por campo/registro, incarnation, concurrency, cancel, retry, scanner e consumidor instrumentado.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T07.CMP.40",
+    "entity": "WP10.T07",
+    "family": "completeness_criteria",
+    "text": "Empacotamento e 8 casos AM05 integram o orçamento/proof-map, não só o teste doledgerSF.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T07.SUC.01",
+    "entity": "WP10.T07",
+    "family": "success_criteria",
+    "text": "Precedente útil sobrevive ao processo e nunca retorna conteúdo revogado ou referência substituída como válida.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T07.SUC.40",
+    "entity": "WP10.T07",
+    "family": "success_criteria",
+    "text": "Memória recupera precedente real após reinício comfonte/versão/acesso atual.",
     "status": "NOT_RUN"
   },
   {
@@ -4746,10 +7070,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP11.T01.DOD.18",
+    "entity": "WP11.T01",
+    "family": "dod",
+    "text": "Descritores C16 de sf_case_read, sf_case_draft são implementados e consumidos por T06 com referências reais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP11.T01.INV.01",
     "entity": "WP11.T01",
     "family": "invariants",
     "text": "Ator e autorização vêm do host; versão e histórico não são escolhidos pelo modelo nem importados como confiança.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP11.T01.INV.18",
+    "entity": "WP11.T01",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
     "status": "NOT_RUN"
   },
   {
@@ -4760,10 +7098,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP11.T01.QLT.18",
+    "entity": "WP11.T01",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP11.T01.CMP.01",
     "entity": "WP11.T01",
     "family": "completeness_criteria",
     "text": "Cobrir rascunho, objetivo corrigido, referência revogada/substituída, concorrência e reinício.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP11.T01.CMP.18",
+    "entity": "WP11.T01",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
     "status": "NOT_RUN"
   },
   {
@@ -4774,10 +7126,31 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP11.T01.SUC.18",
+    "entity": "WP11.T01",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP11.T02.DOD.01",
     "entity": "WP11.T02",
     "family": "dod",
     "text": "Alternativas persistidas consomem cálculo real WP03 e são editáveis no consumidor WP01.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP11.T02.DOD.20",
+    "entity": "WP11.T02",
+    "family": "dod",
+    "text": "Alternativa persistida entrega cálculo WP03 e cobertura C10 reais a todos os consumidores nomeados.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP11.T02.DOD.18",
+    "entity": "WP11.T02",
+    "family": "dod",
+    "text": "Descritores C16 de sf_alternative_draft são implementados e consumidos por T06 com referências reais.",
     "status": "NOT_RUN"
   },
   {
@@ -4788,10 +7161,38 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP11.T02.INV.20",
+    "entity": "WP11.T02",
+    "family": "invariants",
+    "text": "Nenhuma categoria some por não ter linha; cobertura não soma parcelas nem inventa valor, imposto ou fato confirmado.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP11.T02.INV.18",
+    "entity": "WP11.T02",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP11.T02.QLT.01",
     "entity": "WP11.T02",
     "family": "quality_standards",
     "text": "Todo total pode ser reconciliado aos componentes com moeda, período e origem; campos inválidos têm erro específico.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP11.T02.QLT.20",
+    "entity": "WP11.T02",
+    "family": "quality_standards",
+    "text": "Cada categoria mostra referência de parcela, motivo suportado de inaplicabilidade ou pergunta pendente; subtotal e total ficam distintos.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP11.T02.QLT.18",
+    "entity": "WP11.T02",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
     "status": "NOT_RUN"
   },
   {
@@ -4802,10 +7203,38 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP11.T02.CMP.20",
+    "entity": "WP11.T02",
+    "family": "completeness_criteria",
+    "text": "Cobrir inventário ausente, categoria omitida, not-applicable sem suporte, zero confirmado, fonte revogada, inclusão compartilhada e custo posterior inversor.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP11.T02.CMP.18",
+    "entity": "WP11.T02",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP11.T02.SUC.01",
     "entity": "WP11.T02",
     "family": "success_criteria",
     "text": "O usuário altera uma premissa e obtém uma comparação que pode explicar e reproduzir.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP11.T02.SUC.20",
+    "entity": "WP11.T02",
+    "family": "success_criteria",
+    "text": "O usuário compreende a ressalva e resolve a informação que altera a comparação, sem refazer manualmente os números.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP11.T02.SUC.18",
+    "entity": "WP11.T02",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
     "status": "NOT_RUN"
   },
   {
@@ -4816,10 +7245,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP11.T03.DOD.18",
+    "entity": "WP11.T03",
+    "family": "dod",
+    "text": "Descritores C16 de sf_change_prepare são implementados e consumidos por T06 com referências reais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP11.T03.INV.01",
     "entity": "WP11.T03",
     "family": "invariants",
     "text": "Escolha gerencial não equivale a aprovação formal; UI ou IA não delegam autoridade inexistente.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP11.T03.INV.18",
+    "entity": "WP11.T03",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
     "status": "NOT_RUN"
   },
   {
@@ -4830,6 +7273,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP11.T03.QLT.18",
+    "entity": "WP11.T03",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP11.T03.CMP.01",
     "entity": "WP11.T03",
     "family": "completeness_criteria",
@@ -4837,10 +7287,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP11.T03.CMP.18",
+    "entity": "WP11.T03",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP11.T03.SUC.01",
     "entity": "WP11.T03",
     "family": "success_criteria",
     "text": "A equipe consegue continuar o trabalho a partir da escolha sem transcrever sua justificativa e seus valores.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP11.T03.SUC.18",
+    "entity": "WP11.T03",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
     "status": "NOT_RUN"
   },
   {
@@ -4858,10 +7322,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP11.T04.DOD.18",
+    "entity": "WP11.T04",
+    "family": "dod",
+    "text": "Descritores C16 de sf_receipt_get são implementados e consumidos por T06 com referências reais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP11.T04.INV.01",
     "entity": "WP11.T04",
     "family": "invariants",
     "text": "Não existe promessa de transação global; um erro posterior não desfaz ou oculta commits anteriores.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP11.T04.INV.18",
+    "entity": "WP11.T04",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
     "status": "NOT_RUN"
   },
   {
@@ -4872,10 +7350,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP11.T04.QLT.18",
+    "entity": "WP11.T04",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP11.T04.CMP.01",
     "entity": "WP11.T04",
     "family": "completeness_criteria",
     "text": "Cobrir sucesso total, sucesso parcial, conflito, pendência de aprovação, permissão revogada e resultado desconhecido.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP11.T04.CMP.18",
+    "entity": "WP11.T04",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
     "status": "NOT_RUN"
   },
   {
@@ -4886,10 +7378,31 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP11.T04.SUC.18",
+    "entity": "WP11.T04",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP12.T01.DOD.01",
     "entity": "WP12.T01",
     "family": "dod",
     "text": "Uma execução real do provider acessa as ferramentas restritas no módulo integrado com proveniência verificável.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T01.DOD.10",
+    "entity": "WP12.T01",
+    "family": "dod",
+    "text": "Cinco perfis são definidos e probe Finance real fica pronto para registro/carga.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T01.DOD.40",
+    "entity": "WP12.T01",
+    "family": "dod",
+    "text": "Catálogo/builder de manifest e bundle de probe reais saem no prazo declarado.",
     "status": "NOT_RUN"
   },
   {
@@ -4900,10 +7413,38 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP12.T01.INV.10",
+    "entity": "WP12.T01",
+    "family": "invariants",
+    "text": "Perfis não recebem alçada e não usam IDs técnicos; generate tool-less não prova ferramentas.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T01.INV.40",
+    "entity": "WP12.T01",
+    "family": "invariants",
+    "text": "Não registrar fontessimplesmenteplanejadas como carregadas.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP12.T01.QLT.01",
     "entity": "WP12.T01",
     "family": "quality_standards",
     "text": "Erros de limite, indisponibilidade e permissão são distintos; conteúdo não confiável não vira instrução do sistema.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T01.QLT.10",
+    "entity": "WP12.T01",
+    "family": "quality_standards",
+    "text": "Modelo é resolvido entre existentes e ausência explícita; digests conferem com bytes.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T01.QLT.40",
+    "entity": "WP12.T01",
+    "family": "quality_standards",
+    "text": "Separar owner_task de source e execution_taskde missão.",
     "status": "NOT_RUN"
   },
   {
@@ -4914,10 +7455,38 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP12.T01.CMP.10",
+    "entity": "WP12.T01",
+    "family": "completeness_criteria",
+    "text": "Registro/carga/roteamento/schema e perfil incompleto/unknown/digest mismatch têm cases.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T01.CMP.40",
+    "entity": "WP12.T01",
+    "family": "completeness_criteria",
+    "text": "Provar o carregamento real da primeira skill e preparação do catálogo completo.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP12.T01.SUC.01",
     "entity": "WP12.T01",
     "family": "success_criteria",
     "text": "O produto usa inferência real no contexto autorizado sem pedir novos acessos nem conceder autoridade extra.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T01.SUC.10",
+    "entity": "WP12.T01",
+    "family": "success_criteria",
+    "text": "GNATIVE executa Finance com sua skill e output consumido pela porta real.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T01.SUC.40",
+    "entity": "WP12.T01",
+    "family": "success_criteria",
+    "text": "GNATIVE consome a fonte distribuída sem dependência falsa da task termina da 25.",
     "status": "NOT_RUN"
   },
   {
@@ -4928,10 +7497,38 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP12.T02.DOD.10",
+    "entity": "WP12.T02",
+    "family": "dod",
+    "text": "18 skills completas e manifest final são carregáveis e usadas por missões pertinentes.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T02.DOD.40",
+    "entity": "WP12.T02",
+    "family": "dod",
+    "text": "Conteúdo 17 skills restantes/manifestfull e interpretação reais comshasfornecidos.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP12.T02.INV.01",
     "entity": "WP12.T02",
     "family": "invariants",
     "text": "Inferência é proposta revisável; referência inexistente, relação presumida e certeza sem dado são rejeitadas ou sinalizadas.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T02.INV.10",
+    "entity": "WP12.T02",
+    "family": "invariants",
+    "text": "Mesmo agente genérico ou 18 nomes sem conteúdo/carga/consumo não equivale à equipe.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T02.INV.40",
+    "entity": "WP12.T02",
+    "family": "invariants",
+    "text": "Nenhum writer edita fonte sob lease de outro; retorno de inferência não substitui autorização determinística.",
     "status": "NOT_RUN"
   },
   {
@@ -4942,10 +7539,38 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP12.T02.QLT.10",
+    "entity": "WP12.T02",
+    "family": "quality_standards",
+    "text": "Workflow de cada skill separa interpretação de cálculo/ACL/schema/dedup determinísticos.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T02.QLT.40",
+    "entity": "WP12.T02",
+    "family": "quality_standards",
+    "text": "Manifest referencia fonte transportada/hashada e saída consumível, não apenas nomes.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP12.T02.CMP.01",
     "entity": "WP12.T02",
     "family": "completeness_criteria",
     "text": "Cobrir objetivo ambíguo/editado, fonte contraditória, fonte ausente, relação inválida e nenhuma contradição.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T02.CMP.10",
+    "entity": "WP12.T02",
+    "family": "completeness_criteria",
+    "text": "Todas as entradas/outputs/consumers e falta/falha/stale/cancelled são rastreáveis.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T02.CMP.40",
+    "entity": "WP12.T02",
+    "family": "completeness_criteria",
+    "text": "Todas 18 skills possuem execução AM01 positiva e recusa/limitepertinentes; perfis completos, parciais e ausentes cobertos.",
     "status": "NOT_RUN"
   },
   {
@@ -4956,10 +7581,38 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP12.T02.SUC.10",
+    "entity": "WP12.T02",
+    "family": "success_criteria",
+    "text": "Usuário usa contribuição persistida de especialista para continuar trabalho sem reconstruir conversa.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T02.SUC.40",
+    "entity": "WP12.T02",
+    "family": "success_criteria",
+    "text": "Análises de especialistas alteram objetos persistentes e o Revisor é uma execução separada.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP12.T03.DOD.01",
     "entity": "WP12.T03",
     "family": "dod",
     "text": "Análise e crítica reais produzem objetos aceitos pelo schema e calculados/verificados pelos domínios.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T03.DOD.20",
+    "entity": "WP12.T03",
+    "family": "dod",
+    "text": "Crítica real consome a avaliação C10 e entrega objeção/questão tipadas usadas na mesa.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T03.DOD.10",
+    "entity": "WP12.T03",
+    "family": "dod",
+    "text": "Crítica é produto de execução própria e consumida pela alternativa/UI.",
     "status": "NOT_RUN"
   },
   {
@@ -4970,10 +7623,38 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP12.T03.INV.20",
+    "entity": "WP12.T03",
+    "family": "invariants",
+    "text": "Ausência não vira custo presumido, alíquota ou benefício confirmado; o modelo não apaga pending do produtor.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T03.INV.10",
+    "entity": "WP12.T03",
+    "family": "invariants",
+    "text": "Revisor não ganha autoridade, não modifica domínio e não se faz passar por Lucy/seat.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP12.T03.QLT.01",
     "entity": "WP12.T03",
     "family": "quality_standards",
     "text": "Achados priorizam consequência e ação; ausência de evidência é explícita, sem score de confiança inventado.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T03.QLT.20",
+    "entity": "WP12.T03",
+    "family": "quality_standards",
+    "text": "Distinguir omissão detectada pelo inventário, evidência documental e hipótese de outro custo.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T03.QLT.10",
+    "entity": "WP12.T03",
+    "family": "quality_standards",
+    "text": "Alvo/digests/fontes mostram exatamente o que foi contestado e por quê.",
     "status": "NOT_RUN"
   },
   {
@@ -4984,10 +7665,38 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP12.T03.CMP.20",
+    "entity": "WP12.T03",
+    "family": "completeness_criteria",
+    "text": "Cobrir categoria inteiramente ausente, inaplicabilidade sem evidência, custo zero e revisão após resolução.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T03.CMP.10",
+    "entity": "WP12.T03",
+    "family": "completeness_criteria",
+    "text": "Cobrir fonte restrita/stale, run reusado, instrução adulterada e crítica inconclusiva.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP12.T03.SUC.01",
     "entity": "WP12.T03",
     "family": "success_criteria",
     "text": "O usuário consegue corrigir a alternativa ou pedir confirmação a partir de uma crítica específica, e vê a análise evoluir.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T03.SUC.20",
+    "entity": "WP12.T03",
+    "family": "success_criteria",
+    "text": "Usuário resolve uma objeção específica e vê o efeito no resultado do caso, sem confiar os números ao parecer.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T03.SUC.10",
+    "entity": "WP12.T03",
+    "family": "success_criteria",
+    "text": "Usuário localiza objeção e decide se altera premissa/escolha com evidência.",
     "status": "NOT_RUN"
   },
   {
@@ -4998,10 +7707,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP12.T04.DOD.10",
+    "entity": "WP12.T04",
+    "family": "dod",
+    "text": "Queued/running/needs-input/ready/stale/cancelled/failed/unavailable são verdadeiros em cada fronteira.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP12.T04.INV.01",
     "entity": "WP12.T04",
     "family": "invariants",
     "text": "Run não espera humano nem autoaprova; resultado antigo ou revogado não é promovido silenciosamente.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T04.INV.10",
+    "entity": "WP12.T04",
+    "family": "invariants",
+    "text": "Persistência de estado não persiste credenciais nem concede autoridade a run antigo.",
     "status": "NOT_RUN"
   },
   {
@@ -5012,6 +7735,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP12.T04.QLT.10",
+    "entity": "WP12.T04",
+    "family": "quality_standards",
+    "text": "Falha conserva IDs/outputRefs seguros para retomar e diagnosticar.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP12.T04.CMP.01",
     "entity": "WP12.T04",
     "family": "completeness_criteria",
@@ -5019,10 +7749,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP12.T04.CMP.10",
+    "entity": "WP12.T04",
+    "family": "completeness_criteria",
+    "text": "Cobrir expiração, revogação, alteração skill/case, erro provider e retorno Relay.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP12.T04.SUC.01",
     "entity": "WP12.T04",
     "family": "success_criteria",
     "text": "A equipe continua trabalhando enquanto a análise ocorre e consegue distinguir resultado atual de resultado superado.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T04.SUC.10",
+    "entity": "WP12.T04",
+    "family": "success_criteria",
+    "text": "Resposta humana muda a análise pertinente sem duplicar efeito ou perder histórico.",
     "status": "NOT_RUN"
   },
   {
@@ -5068,10 +7812,38 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP13.T02.DOD.20",
+    "entity": "WP13.T02",
+    "family": "dod",
+    "text": "Portfólio integrado consome e conserva a cobertura dos candidatos/interações C10.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP13.T02.DOD.18",
+    "entity": "WP13.T02",
+    "family": "dod",
+    "text": "Descritores C16 de sf_portfolio_evaluate são implementados e consumidos por T06 com referências reais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP13.T02.INV.01",
     "entity": "WP13.T02",
     "family": "invariants",
     "text": "Não duplicar compromisso, relaxar restrição ou chamar amostra limitada de solução ótima comprovada.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP13.T02.INV.20",
+    "entity": "WP13.T02",
+    "family": "invariants",
+    "text": "Elegibilidade completa exige cobertura resolvida; falta de categoria não relaxa restrição nem cria economia.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP13.T02.INV.18",
+    "entity": "WP13.T02",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
     "status": "NOT_RUN"
   },
   {
@@ -5082,10 +7854,38 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP13.T02.QLT.20",
+    "entity": "WP13.T02",
+    "family": "quality_standards",
+    "text": "Motivo de incomplete referencia categoria/candidato e a condição que precisa ser resolvida.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP13.T02.QLT.18",
+    "entity": "WP13.T02",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP13.T02.CMP.01",
     "entity": "WP13.T02",
     "family": "completeness_criteria",
     "text": "Cobrir combinação válida, incompatível, incompleta, sem solução e limite de exploração atingido.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP13.T02.CMP.20",
+    "entity": "WP13.T02",
+    "family": "completeness_criteria",
+    "text": "Cobrir categoria omitida em um candidato, custo de interação pendente, zero, soma compartilhada e inversão após confirmação.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP13.T02.CMP.18",
+    "entity": "WP13.T02",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
     "status": "NOT_RUN"
   },
   {
@@ -5096,10 +7896,31 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP13.T02.SUC.20",
+    "entity": "WP13.T02",
+    "family": "success_criteria",
+    "text": "Usuário distingue combinação que atende comprovadamente de combinação ainda condicionada à informação faltante.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP13.T02.SUC.18",
+    "entity": "WP13.T02",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP13.T03.DOD.01",
     "entity": "WP13.T03",
     "family": "dod",
     "text": "Sensibilidade e limites são calculados e consumidos pela UI/BI reais com a mesma base da alternativa.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP13.T03.DOD.18",
+    "entity": "WP13.T03",
+    "family": "dod",
+    "text": "Descritores C16 de sf_sensitivity_evaluate são implementados e consumidos por T06 com referências reais.",
     "status": "NOT_RUN"
   },
   {
@@ -5110,10 +7931,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP13.T03.INV.18",
+    "entity": "WP13.T03",
+    "family": "invariants",
+    "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP13.T03.QLT.01",
     "entity": "WP13.T03",
     "family": "quality_standards",
     "text": "Unidades, precisão, intervalo e fonte são explícitos; interação determinística não depende de latência de IA.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP13.T03.QLT.18",
+    "entity": "WP13.T03",
+    "family": "quality_standards",
+    "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
     "status": "NOT_RUN"
   },
   {
@@ -5124,10 +7959,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP13.T03.CMP.18",
+    "entity": "WP13.T03",
+    "family": "completeness_criteria",
+    "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP13.T03.SUC.01",
     "entity": "WP13.T03",
     "family": "success_criteria",
     "text": "André identifica qual preço ou prazo precisa negociar e confere a condição que preserva sua escolha.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP13.T03.SUC.18",
+    "entity": "WP13.T03",
+    "family": "success_criteria",
+    "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
     "status": "NOT_RUN"
   },
   {
@@ -5173,10 +8022,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP14.T01.DOD.20",
+    "entity": "WP14.T01",
+    "family": "dod",
+    "text": "Mudança de cobertura é consumida no classificador real e retorna sinal com antes/depois.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP14.T01.INV.01",
     "entity": "WP14.T01",
     "family": "invariants",
     "text": "Sinal não altera escolha vigente, aprovações, contratos ou ações; período/campo irrelevante não invalida tudo.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.T01.INV.20",
+    "entity": "WP14.T01",
+    "family": "invariants",
+    "text": "Sinal usa resultados canônicos e preserva escolha; conclusão de pending não autoriza alteração automática.",
     "status": "NOT_RUN"
   },
   {
@@ -5187,10 +8050,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP14.T01.QLT.20",
+    "entity": "WP14.T01",
+    "family": "quality_standards",
+    "text": "Razão indica categoria resolvida, fonte e condição afetada, sem ocultar a ressalva histórica.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP14.T01.CMP.01",
     "entity": "WP14.T01",
     "family": "completeness_criteria",
     "text": "Cobrir limiar rompido, limiar mantido, campo/período irrelevante, referência substituída e evidência insuficiente.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.T01.CMP.20",
+    "entity": "WP14.T01",
+    "family": "completeness_criteria",
+    "text": "Cobrir pending→included, pending→inaplicável suportado, fonte revogada e escolha mantida por nova justificativa.",
     "status": "NOT_RUN"
   },
   {
@@ -5201,10 +8078,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP14.T01.SUC.20",
+    "entity": "WP14.T01",
+    "family": "success_criteria",
+    "text": "A equipe vê por que o custo confirmado exige reconsideração e continua a partir da razão original.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP14.T02.DOD.01",
     "entity": "WP14.T02",
     "family": "dod",
     "text": "Busca de semelhantes consome projeções reais autorizadas e retorna referências com explicação inspecionável.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.T02.DOD.10",
+    "entity": "WP14.T02",
+    "family": "dod",
+    "text": "Recuperação consumida deriva da projeção Atlas autorizada, com explicação.",
     "status": "NOT_RUN"
   },
   {
@@ -5215,10 +8106,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP14.T02.INV.10",
+    "entity": "WP14.T02",
+    "family": "invariants",
+    "text": "WP14 permanece puro; não lê arquivos/store, persiste ou assume owner como ACL.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP14.T02.QLT.01",
     "entity": "WP14.T02",
     "family": "quality_standards",
     "text": "Correspondência distingue semelhança de validade atual; toda conclusão anterior mantém suas condições e período.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.T02.QLT.10",
+    "entity": "WP14.T02",
+    "family": "quality_standards",
+    "text": "Critérios de semelhança e diferenças atuais são explicitados e revisáveis.",
     "status": "NOT_RUN"
   },
   {
@@ -5229,10 +8134,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP14.T02.CMP.10",
+    "entity": "WP14.T02",
+    "family": "completeness_criteria",
+    "text": "Casos sem fonte, revogados, históricos, incompatíveis e vazios são diferenciados.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP14.T02.SUC.01",
     "entity": "WP14.T02",
     "family": "success_criteria",
     "text": "Uma nova análise encontra precedente útil sem copiar sua conclusão como verdade atual.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.T02.SUC.10",
+    "entity": "WP14.T02",
+    "family": "success_criteria",
+    "text": "Precedente útil abre no caso autorizado com suas limitações atuais.",
     "status": "NOT_RUN"
   },
   {
@@ -5274,7 +8193,14 @@
     "id": "WP14.T04.DOD.01",
     "entity": "WP14.T04",
     "family": "dod",
-    "text": "Consumidores reais aplicam deduplicação e invalidação com prova atéT+80, além das funções puras prontas atéT+65.",
+    "text": "Consumidores reais aplicam deduplicação e invalidação com prova até T+75, além das funções puras prontas até T+68; o mesmo receipt identifica o writer ativo e o SHA da transferência.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.T04.DOD.10",
+    "entity": "WP14.T04",
+    "family": "dod",
+    "text": "Política de invalidação chega ao BCS com consumidores e dependências verificáveis.",
     "status": "NOT_RUN"
   },
   {
@@ -5285,10 +8211,24 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP14.T04.INV.10",
+    "entity": "WP14.T04",
+    "family": "invariants",
+    "text": "Plano puro não faz persistência/scheduler e não confunde stale com autorizado.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP14.T04.QLT.01",
     "entity": "WP14.T04",
     "family": "quality_standards",
     "text": "Sinais têm motivo explícito e relação com escolha; deduplicação não oculta mudança material nova.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.T04.QLT.10",
+    "entity": "WP14.T04",
+    "family": "quality_standards",
+    "text": "Motivo de invalidação é específico e minimiza reanálise sem ampliar acesso.",
     "status": "NOT_RUN"
   },
   {
@@ -5299,10 +8239,94 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP14.T04.CMP.10",
+    "entity": "WP14.T04",
+    "family": "completeness_criteria",
+    "text": "Cobrir source version, incarnation, ACL, manifest, skill, boundary e import substitutivo.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP14.T04.SUC.01",
     "entity": "WP14.T04",
     "family": "success_criteria",
     "text": "O time vê uma pendência por causa relevante e não recebe ruído repetido ou informação que deixou de poder acessar.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.T04.SUC.10",
+    "entity": "WP14.T04",
+    "family": "success_criteria",
+    "text": "Usuário não recebe conteúdo antigo como atual ou revogado como acessível.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.T05.DOD.01",
+    "entity": "WP14.T05",
+    "family": "dod",
+    "text": "Transformação pura e owners business compatíveis com templates reais são publicados para T07.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.T05.DOD.40",
+    "entity": "WP14.T05",
+    "family": "dod",
+    "text": "Tradução pura é exportada 20 e validada pelo consumidor Atlas.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.T05.INV.01",
+    "entity": "WP14.T05",
+    "family": "invariants",
+    "text": "WP14 não persiste, renderiza, agenda, nem forja PR/StructRef/seat.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.T05.INV.40",
+    "entity": "WP14.T05",
+    "family": "invariants",
+    "text": "SemPR/owner/seat fictício e sem store em WP14.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.T05.QLT.01",
+    "entity": "WP14.T05",
+    "family": "quality_standards",
+    "text": "Campos têm semântica real, digests determinísticos e ausência explícita.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.T05.QLT.40",
+    "entity": "WP14.T05",
+    "family": "quality_standards",
+    "text": "Tipos/owners/razõesderecusa ficam nos contratos e evidência.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.T05.CMP.01",
+    "entity": "WP14.T05",
+    "family": "completeness_criteria",
+    "text": "Cobrir task e project, entradas válidas e inválidas, referências, owners empresariais, política revisada e mudança de encarnação.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.T05.CMP.40",
+    "entity": "WP14.T05",
+    "family": "completeness_criteria",
+    "text": "Cobrir ator o mesmo perfil, owner omitido/forjado, encarnação e revogação nos consumidores.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.T05.SUC.01",
+    "entity": "WP14.T05",
+    "family": "success_criteria",
+    "text": "O consumidor Atlas admite as projeções reais sem casts que escondam incompatibilidade de forma ou de semântica.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP14.T05.SUC.40",
+    "entity": "WP14.T05",
+    "family": "success_criteria",
+    "text": "Memória Atlas entendeentidadesSF sem confundir identidade empresarial e técnica.",
     "status": "NOT_RUN"
   }
 ]

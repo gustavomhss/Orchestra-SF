@@ -10,6 +10,8 @@ import json
 from pathlib import Path, PurePosixPath
 import re
 import sys
+from validate_resident_plan import validate_resident, validate_product_oracles
+from validate_execution_plan import validate_execution
 
 
 FAMILIES = ("dod", "invariants", "quality_standards", "completeness_criteria", "success_criteria")
@@ -98,10 +100,13 @@ def validate(plan: dict) -> tuple[list[dict], list[dict], dict]:
             for check in task.get("checks", []):
                 define(check, f"{tid}.checks")
                 require(isinstance(check.get("text"), str) and bool(check["text"].strip()), "EMPTY_CHECK", tid, "Check needs text")
-    require(len(tasks) == 71, "COUNT_MISMATCH", "tasks", f"Expected71; observed{len(tasks)}")
+    require(len(tasks) == 74, "COUNT_MISMATCH", "tasks", f"Expected 74; observed {len(tasks)}")
+    original_task_counts = [4, 5, 4, 5, 5, 5, 5, 4, 6, 7, 5, 4, 4, 4, 4]
+    original_tasks = {f"WP{wp:02}.T{task:02}" for wp, count in enumerate(original_task_counts) for task in range(1, count + 1)}
+    require(original_tasks <= set(tasks), "ORIGINAL_TASK_REMOVED", "tasks", "All 71 original task IDs must remain")
     task_ids = set(tasks)
 
-    contracts = sequence(plan.get("contracts"), "C", 14, "contracts")
+    contracts = sequence(plan.get("contracts"), "C", 17, "contracts")
     evidence = sequence(plan.get("evidence", {}).get("packages"), "E", 18, "evidence.packages")
     journeys = sequence(plan.get("journeys"), "J", 13, "journeys")
     contract_ids = {x["id"] for x in contracts}
@@ -128,7 +133,11 @@ def validate(plan: dict) -> tuple[list[dict], list[dict], dict]:
                 refs(row["journeys"], journey_ids, row["id"] + ".journeys")
             if "journey" in row:
                 require(row["journey"] in journey_ids, "DANGLING_REF", row["id"], "Unknown journey")
-    req_ids = {x["id"] for rows in rows_by_kind.values() for x in rows}
+    resident_requirements = sequence(coverage.get('resident_requirements'), 'RA', 6, 'coverage.resident_requirements')
+    for requirement in resident_requirements:
+        refs(requirement.get('tasks'), task_ids, requirement['id'] + '.tasks', True)
+    require(resident_requirements == plan.get('resident_ai', {}).get('requirements'), 'RESIDENT_REQUIREMENT_DRIFT', 'coverage.resident_requirements', 'Resident requirement mirror must match the canonical manifest')
+    req_ids = {x["id"] for rows in rows_by_kind.values() for x in rows} | {x['id'] for x in resident_requirements}
     for chart in coverage.get("charts", []):
         define(chart, "coverage.charts")
         require(chart.get("task") in task_ids, "DANGLING_REF", chart.get("id", "chart"), "Unknown chart task")
@@ -185,7 +194,7 @@ def validate(plan: dict) -> tuple[list[dict], list[dict], dict]:
     for entry in assignments:
         wid = entry.get("id")
         require(bool(re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+){0,2}", entry.get("branch", ""))), "BRANCH_FORMAT", str(wid), "Feature branch uses at most three lowercase words")
-        for path in entry.get("existing_files", []):
+        for path in entry.get("existing_files", []) + entry.get("new_files", []):
             require(valid_path(path), "INVALID_PATH", str(wid), str(path))
             exact_owners[path].add(wid)
             if any(path.startswith(prefix) for prefix in excluded):
@@ -225,7 +234,11 @@ def validate(plan: dict) -> tuple[list[dict], list[dict], dict]:
     require(bool(re.fullmatch(r"[0-9a-f]{40}", str(baseline.get("commit", "")))), "INVALID_COMMIT", "baseline.commit", "Expected40hexSHA")
     if "verified_head" in baseline:
         require(baseline["verified_head"] == baseline.get("commit"), "BASELINE_MISMATCH", "baseline", "verified_head differs from pinned commit")
-    counts = {"work_packages": len(wps), "tasks": len(tasks), "contracts": len(contracts), "evidence_packages": len(evidence), "journeys": len(journeys), "requirements": len(rows_by_kind["requirements"]), "capabilities": len(rows_by_kind["capabilities"]), "ai_capabilities": len(rows_by_kind["ai_capabilities"]), "unique_defined_ids": len(definitions)}
+    resident_counts = validate_resident(plan, require, tasks, contract_ids, evidence_ids)
+    validate_product_oracles(plan, require)
+    execution_counts = validate_execution(plan, require, tasks, definitions, evidence_ids)
+    require(plan['gates'] == plan['timebox']['milestones'], 'GATE_MIRROR_DRIFT', 'gates', 'Gate conditions must equal the canonical timebox milestones')
+    counts = {"work_packages": len(wps), "tasks": len(tasks), "contracts": len(contracts), "evidence_packages": len(evidence), "journeys": len(journeys), "requirements": len(rows_by_kind["requirements"]), "capabilities": len(rows_by_kind["capabilities"]), "ai_capabilities": len(rows_by_kind["ai_capabilities"]), "unique_defined_ids": len(definitions), **resident_counts, **execution_counts}
     return failures, warnings, counts
 
 
@@ -239,6 +252,11 @@ def main():
     try:
         plan = json.loads(raw)
         failures, warnings, counts = validate(plan)
+        from render_plan import artifacts
+        for name, expected in artifacts(plan).items():
+            target = args.plan.parent / name
+            if not target.exists() or target.read_text() != expected:
+                failures.append({"code": "DERIVED_DRIFT", "location": name, "detail": "Regenerate the mirrors from campaign.json using tools/render_plan.py"})
     except (ValueError, KeyError, TypeError, AttributeError) as error:
         failures, warnings, counts = [{"code": "INVALID_PLAN_SHAPE", "location": "campaign", "detail": str(error)}], [], {}
     result = {"status": "PLAN_STRUCTURE_PASS" if not failures else "PLAN_STRUCTURE_FAIL", "plan_path": str(args.plan.resolve()), "plan_sha256": hashlib.sha256(raw).hexdigest(), "checked_at": datetime.now(timezone.utc).isoformat(), "counts": counts, "failures": failures, "warnings": warnings, "limitations": ["Structural validation of planning data only; no product code, tests, inference, Relay run, CI, browser, deploy or business action was executed.", "Axiom presence and nonempty text do not prove quality, semantic completeness or satisfaction.", "References and ownership are checked against this plan, not against a live Git tree or actual permissions.", "Contract references are validated by canonical ID where a Cxx token is present; TypeScript signatures, exports, runtime compatibility and prose semantics are not compiled or proven.", "The120minute windows are internally checked, not empirically demonstrated estimates; resource effort and CI duration are not benchmarked.", "Consumer integration edges are checked for valid targets; only depends_on is required to form an acyclic build DAG."]}

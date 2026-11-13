@@ -1,0 +1,999 @@
+{
+  "purpose": "Complemento normativo de produto para C15/coverage; unir por id literal às definições técnicas de perfil, digest, operações e schemas. Não é evidência de execução.",
+  "common": {
+    "routing": "Entradas principais são ações de trabalho; cada execução convoca apenas os perfis necessários. Catálogo Equipe SF é descoberta/configuração opcional, nunca etapa obrigatória de escolher manualmente cinco agentes.",
+    "persistence": "Toda saída relevante tem outputRef, outputVersion, caseId/caseVersion ou review/resultRef, sourceRefs, scope e provenance. Persiste no namespace canônico C09/C08 composto por WP10; não nasce ledger por persona e a conversa não é o único local do resultado.",
+    "receipt": "Para cada uma das 18 skills, provar profileId/profileVersion, skillId/skillVersion/skillDigest carregados, run nativo/modelo efetivo, entrada autorizada, operações exercidas, outputRef/schemaVersion e consumidor real com ação observada após reload. Campo de catálogo ou consumerRef nunca aberto não satisfaz consumo.",
+    "states": "C11 fornece queued/running/needs-input/ready/stale/cancelled/failed; erro de feature/acesso/scanner mantém motivo autorizado. Nenhum estado ausente/falha é objeto de sucesso fabricado. Cancelar conserva trabalho confirmado; retry respeita correlação/versionamento.",
+    "presentation": "Visão principal mostra contribuição, condição, fonte e próximo passo. Perfil/modelo/skill/digest/run aparecem no detalhe de proveniência. Progresso descreve resultado concluído ou pendência, sem percentual inventado.",
+    "specialists": "No mesmo caso pertinente, Finance produz composição/limiar, Compras confronta condição comercial/fonte e Portfólio explica compromisso/dependência. Revisor usa execução/instruções próprias, mesmo escopo autorizado e vínculo à análise que revisa. Não executar todos os perfis em toda interação.",
+    "shared_skills": "Grants são explícitos por perfil nesta matriz; compartilhada não significa acesso universal. Qualquer ajuste técnico mantém as mesmas saídas e a matriz efetiva C15 congelada por WP00.",
+    "verification": "As seis provas integradas podem cobrir várias skills na mesma execução; manter18 witnesses de carga+saída+consumo e contribuição dos 5 perfis. Fixtures e nomes no manifest não fecham os witnesses. implementation_test_status permanece NOT_RUN.",
+    "allowlist_source": "resident_ai.skills[].allowed_operations é a allowlist normativa; o consumidor declara as operações mínimas da contribuição sem conceder autoridade adicional."
+  },
+  "profiles": [
+    {
+      "id": "sf_maestro",
+      "primary_skills": [
+        "sf-enquadrar-decisao",
+        "sf-preparar-revisao-executiva",
+        "sf-coordenar-perguntas"
+      ],
+      "shared_skills": [
+        "sf-extrair-evidencias",
+        "sf-produzir-bi-contextual",
+        "sf-produzir-material-reuniao",
+        "sf-consultar-memoria-decisoria"
+      ]
+    },
+    {
+      "id": "sf_finance",
+      "primary_skills": [
+        "sf-explicar-forecast",
+        "sf-comparar-cenarios",
+        "sf-avaliar-sensibilidade"
+      ],
+      "shared_skills": [
+        "sf-produzir-bi-contextual",
+        "sf-consultar-memoria-decisoria"
+      ]
+    },
+    {
+      "id": "sf_procurement",
+      "primary_skills": [
+        "sf-comparar-sourcing",
+        "sf-revisar-condicoes-contratuais",
+        "sf-preparar-compra"
+      ],
+      "shared_skills": [
+        "sf-extrair-evidencias",
+        "sf-consultar-memoria-decisoria"
+      ]
+    },
+    {
+      "id": "sf_portfolio",
+      "primary_skills": [
+        "sf-revisar-dependencias",
+        "sf-compor-portfolio",
+        "sf-reavaliar-compromissos"
+      ],
+      "shared_skills": [
+        "sf-produzir-bi-contextual",
+        "sf-consultar-memoria-decisoria"
+      ]
+    },
+    {
+      "id": "sf_reviewer",
+      "primary_skills": [
+        "sf-contestar-decisao",
+        "sf-revisar-evidencias"
+      ],
+      "shared_skills": [
+        "sf-consultar-memoria-decisoria"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "sf-enquadrar-decisao",
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "work_entry": "Analisar alternativas em contrato/pedido/projeto ou Novo caso na mesa.",
+      "typed_inputs": [
+        "IntentText",
+        "C01 AuthorizedContext",
+        "C09 CaseVersion",
+        "SelectedSourceRefs"
+      ],
+      "authorized_operations": [
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_freshness_check",
+        "sf_question_prepare"
+      ],
+      "output_types": [
+        "IntentFrame",
+        "AnalysisPlan"
+      ],
+      "producer_tasks": [
+        "WP12.T01",
+        "WP12.T02"
+      ],
+      "consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05"
+      ],
+      "visible_consumption": "Objetivo, horizonte, critérios e fontes tornam-se campos editáveis do mesmo caso; plano mostra por que cada especialista necessário participa. Reabrir a mesa recupera o enquadramento e autoriza corrigir a intenção.",
+      "missing_or_failure": "Sem horizonte/critério suficiente: needs-input com lacunas, sem preencher prioridade ou prazo. Falha de modelo mantém rascunho humano e caso utilizáveis.",
+      "stale_or_access_change": "Versão/contexto alterado identifica enquadramento stale e pede revalidar só a base afetada; perda de acesso remove referências restritas.",
+      "adendum_proof_numbers": [
+        1,
+        2,
+        3
+      ],
+      "negative_discriminator": "Prompt idêntico com outra referência material muda a saída; resposta genérica sem campos consumidos não passa.",
+      "status": "NOT_RUN",
+      "existing_schema_mapping": {
+        "IntentFrame": "IntentDraft existente, ampliado com sourceRefs/lacunas; sem segundo caso."
+      },
+      "required_operations": [
+        "sf_context_get",
+        "sf_case_read",
+        "sf_case_draft"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
+    },
+    {
+      "id": "sf-preparar-revisao-executiva",
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "work_entry": "Preparar revisão na mesa ou síntese opcional da rotina de revisão concluída.",
+      "typed_inputs": [
+        "C05 ReviewSelection",
+        "C07 FactualRoutineResult",
+        "C09 DecisionRefs",
+        "C06 ConfirmationValidityProjection"
+      ],
+      "authorized_operations": [
+        "sf_artifact_get",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_report_prepare",
+        "sf_review_prepare",
+        "sf_source_get",
+        "sf_work_list"
+      ],
+      "output_types": [
+        "DecisionBrief"
+      ],
+      "producer_tasks": [
+        "WP12.T02",
+        "WP09.T02"
+      ],
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05"
+      ],
+      "visible_consumption": "Pauta apresenta mudanças, decisões e pendências com links; usuário ajusta ordem e preserva revisão C05 sem reconstruir o conteúdo em chat.",
+      "missing_or_failure": "Sem revisão anterior: mostra primeira revisão. Se síntese falha, fatos/deltas/pendências determinísticos continuam disponíveis e a síntese falha fica explícita.",
+      "stale_or_access_change": "Origem atualizada não reescreve revisão preservada; síntese nova identifica sua base. Revogação remove trechos e links no consumo/export.",
+      "adendum_proof_numbers": [
+        1,
+        2,
+        3,
+        6
+      ],
+      "negative_discriminator": "Texto de resumo sem pauta/referências consumidas por WP07 não satisfaz a skill; confirmar fevereiro não recobra janeiro.",
+      "status": "NOT_RUN",
+      "required_operations": [
+        "sf_review_prepare",
+        "sf_case_read",
+        "sf_source_get"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
+    },
+    {
+      "id": "sf-coordenar-perguntas",
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "work_entry": "Resolver pendência/Preparar perguntas na mesa ou em Meu trabalho.",
+      "typed_inputs": [
+        "C09 CaseVersion",
+        "UnresolvedConditions",
+        "C06 Relations",
+        "AuthorizedDirectoryRefs"
+      ],
+      "authorized_operations": [
+        "sf_answer_read",
+        "sf_case_read",
+        "sf_handoff_prepare",
+        "sf_question_prepare",
+        "sf_relation_read",
+        "sf_work_list"
+      ],
+      "output_types": [
+        "QuestionProposal"
+      ],
+      "producer_tasks": [
+        "WP12.T02",
+        "WP08.T06"
+      ],
+      "consumer_tasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ],
+      "visible_consumption": "Pergunta mostra contexto, condição que pode mudar e destinatário explicitamente conhecido. A ação autorizada cria contribuição canônica; resposta única aparece no caso e em Meu trabalho.",
+      "missing_or_failure": "Sem destinatário verificável: proposta não atribuída com ação de seleção; sem fonte suficiente: explicita por que precisa do dado. Falha não envia nem atribui nada.",
+      "stale_or_access_change": "Resposta C06 ainda válida é reutilizada; material change reabre contexto uma vez. Revogação não amplia acesso do destinatário nem cria cobrança inacessível.",
+      "adendum_proof_numbers": [
+        1,
+        2,
+        3,
+        6
+      ],
+      "negative_discriminator": "Homônimo não recebe atribuição; repetir skill com resposta válida não duplica pergunta; preparação não é envio externo.",
+      "status": "NOT_RUN",
+      "required_operations": [
+        "sf_question_prepare",
+        "sf_answer_read",
+        "sf_relation_read",
+        "sf_work_list"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
+    },
+    {
+      "id": "sf-explicar-forecast",
+      "allowed_profiles": [
+        "sf_finance"
+      ],
+      "work_entry": "Explicar diferença no Planner/BI ou preparação de revisão de forecast.",
+      "typed_inputs": [
+        "C02 ForecastComparison",
+        "SelectedPeriod",
+        "Currency",
+        "SourceRefs",
+        "RegisteredReasons"
+      ],
+      "authorized_operations": [
+        "sf_context_get",
+        "sf_forecast_compare",
+        "sf_freshness_check",
+        "sf_kpi_explain",
+        "sf_source_get"
+      ],
+      "output_types": [
+        "FinancialAnalysis"
+      ],
+      "producer_tasks": [
+        "WP12.T02",
+        "WP09.T03"
+      ],
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03"
+      ],
+      "visible_consumption": "Diferença de forecast abre sua composição e motivos registrados; resultado persistido referencia os valores canônicos. Finance distingue margem do orçamento e mudança contra a base.",
+      "missing_or_failure": "FX/actual/justificativa ausentes ficam explícitos; erro de análise conserva a tabela determinística e não inventa causalidade.",
+      "stale_or_access_change": "Nova base invalida interpretação antiga no escopo afetado; leitura de HR depende do mesmo acesso C02 em gráficos, texto e agregados.",
+      "adendum_proof_numbers": [
+        1,
+        2,
+        3,
+        6
+      ],
+      "negative_discriminator": "590000→602000/596000 deve apontar12000/6000; não trocar por margem-2000/+4000 nem calcular salário restrito no texto.",
+      "status": "NOT_RUN",
+      "required_operations": [
+        "sf_forecast_compare",
+        "sf_kpi_explain",
+        "sf_source_get"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
+    },
+    {
+      "id": "sf-comparar-cenarios",
+      "allowed_profiles": [
+        "sf_finance"
+      ],
+      "work_entry": "Comparar cenários/Analisar alternativas na mesa ou Planner.",
+      "typed_inputs": [
+        "C09 AlternativeDrafts",
+        "C10 CostCoverageBasis",
+        "ScenarioOps",
+        "CurrencyAndHorizon"
+      ],
+      "authorized_operations": [
+        "sf_alternative_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_scenario_compare",
+        "sf_scenario_simulate"
+      ],
+      "output_types": [
+        "ScenarioComparison"
+      ],
+      "producer_tasks": [
+        "WP12.T02",
+        "WP11.T02",
+        "WP03.T01"
+      ],
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "visible_consumption": "Tabela de alternativas usa ScenarioResult refs do motor; custo, diferença, condição financeira e categorias pendentes C10 são iguais na mesa e no detalhe.",
+      "missing_or_failure": "Categoria não cadastrada gera pending derivado; comparação condicionada oferece pergunta em vez de benefício confirmado. Falha de modelo conserva simulações já autorizadas.",
+      "stale_or_access_change": "Alteração de parcela/cobertura gera nova versão e conserva escolha original; fonte restrita não sobrevive por delta agregado.",
+      "adendum_proof_numbers": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "negative_discriminator": "Training omitido mantém subtotal 210000 condicionado; treinamento 40000 muda resultado250000/-10000. Resumo sem cenário persistido não passa.",
+      "status": "NOT_RUN",
+      "required_operations": [
+        "sf_scenario_simulate",
+        "sf_scenario_compare",
+        "sf_alternative_draft"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
+    },
+    {
+      "id": "sf-avaliar-sensibilidade",
+      "allowed_profiles": [
+        "sf_finance"
+      ],
+      "work_entry": "Explorar limites na comparação da mesa/BI.",
+      "typed_inputs": [
+        "C10 ScenarioComparison",
+        "CriterionSet",
+        "SupportedParameterRanges",
+        "CostCoverageRefs"
+      ],
+      "authorized_operations": [
+        "sf_case_read",
+        "sf_scenario_simulate",
+        "sf_sensitivity_evaluate",
+        "sf_source_get"
+      ],
+      "output_types": [
+        "SensitivityResult"
+      ],
+      "producer_tasks": [
+        "WP12.T02",
+        "WP13.T03"
+      ],
+      "consumer_tasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ],
+      "visible_consumption": "Série/limiar calculados são exibidos com intervalo, unidade, fonte e condição. Usuário altera parâmetro e a tabela equivalente mostra a mesma transição.",
+      "missing_or_failure": "Parâmetro não suportado ou custo desconhecido produz limite declarado/condicionado, sem curva ou probabilidade fictícia. LLM indisponível não bloqueia o motor.",
+      "stale_or_access_change": "Mudança de cobertura/critério marca série antiga stale e mantém contexto de origem; acesso revogado retira valores e curvas restritos.",
+      "adendum_proof_numbers": [
+        1,
+        2,
+        3
+      ],
+      "negative_discriminator": "Base completa gera teto 55000; treinamento 40000 gera15000. Cenário não linear amostrado não recebe limiar exato inventado.",
+      "status": "NOT_RUN",
+      "required_operations": [
+        "sf_sensitivity_evaluate",
+        "sf_scenario_simulate"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
+    },
+    {
+      "id": "sf-comparar-sourcing",
+      "allowed_profiles": [
+        "sf_procurement"
+      ],
+      "work_entry": "Comparar propostas no pedido ou Preparar dossiê.",
+      "typed_inputs": [
+        "C02 RequestVersionAndStage",
+        "AuthorizedOffers",
+        "SubmittedFX",
+        "WeightsAndEligibility",
+        "SourceRefs"
+      ],
+      "authorized_operations": [
+        "sf_alternative_draft",
+        "sf_contract_read",
+        "sf_evidence_get",
+        "sf_request_read",
+        "sf_source_get",
+        "sf_sourcing_compare",
+        "sf_supplier_read"
+      ],
+      "output_types": [
+        "CommercialComparison"
+      ],
+      "producer_tasks": [
+        "WP12.T02",
+        "WP09.T04"
+      ],
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "visible_consumption": "Comparação comercial abre escopo, moeda, prazo, critérios e lacunas do pedido real; reutiliza ranking/valores do WP04 e fica ligada à versão da submissão.",
+      "missing_or_failure": "Proposta ausente/única, FX faltante ou critérios ausentes impedem falsa comparação completa. Fatos do dossiê continuam disponíveis se síntese falhar.",
+      "stale_or_access_change": "Mudança do pedido/cotação mostra resultado stale; taxa histórica submetida não é trocada pela taxa corrente.",
+      "adendum_proof_numbers": [
+        1,
+        2,
+        3,
+        6
+      ],
+      "negative_discriminator": "Menor preço não é escolhido automaticamente; fonte sem acesso não aparece em exclusão, total ou comparação.",
+      "status": "NOT_RUN",
+      "required_operations": [
+        "sf_request_read",
+        "sf_supplier_read",
+        "sf_sourcing_compare",
+        "sf_source_get"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
+    },
+    {
+      "id": "sf-revisar-condicoes-contratuais",
+      "allowed_profiles": [
+        "sf_procurement"
+      ],
+      "work_entry": "Revisar condições no contrato, proposta ou dossiê de sourcing.",
+      "typed_inputs": [
+        "C14 DocumentEvidence",
+        "C02 ContractProjection",
+        "C09 DecisionScope",
+        "C10 CostCoverageAssessment"
+      ],
+      "authorized_operations": [
+        "sf_contract_read",
+        "sf_document_extract",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_knowledge_search",
+        "sf_source_get"
+      ],
+      "output_types": [
+        "CommercialGap",
+        "EvidenceCandidate"
+      ],
+      "producer_tasks": [
+        "WP12.T02",
+        "WP06.T05"
+      ],
+      "consumer_tasks": [
+        "WP09.T04",
+        "WP11.T02",
+        "WP01.T05"
+      ],
+      "visible_consumption": "Cláusula relevante aparece com trecho/documento/versão e lacuna de prazo/custo; usuário pode abrir a fonte, confirmar candidato ou criar pergunta. Custos não são inseridos sem fonte/ação previstas.",
+      "missing_or_failure": "Sem trecho verificável: condição inconclusiva e pergunta. Documento sem texto é erro do extrator, não interpretação preenchida. Falha preserva evidência disponível.",
+      "stale_or_access_change": "Atualização/revogação do documento torna avaliação stale/unavailable e impede usar o candidato como confirmação atual.",
+      "adendum_proof_numbers": [
+        1,
+        2,
+        3,
+        5
+      ],
+      "negative_discriminator": "Não produzir parecer jurídico conclusivo, inventar taxa/penalidade nem aprovar fornecedor; evidência candidata não vira confirmed automaticamente.",
+      "status": "NOT_RUN",
+      "existing_schema_mapping": {
+        "EvidenceCandidate": "DocumentEvidence C14 com status extracted e hipótese interpretativa separada."
+      },
+      "required_operations": [
+        "sf_contract_read",
+        "sf_evidence_get",
+        "sf_source_get"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
+    },
+    {
+      "id": "sf-preparar-compra",
+      "allowed_profiles": [
+        "sf_procurement"
+      ],
+      "work_entry": "Preparar próximos passos de compra a partir da escolha/dossiê.",
+      "typed_inputs": [
+        "C09 ChoiceRecord",
+        "C02 RequestVersionAndStage",
+        "C12 AllowedChangeTargets",
+        "CommercialComparisonRefs"
+      ],
+      "authorized_operations": [
+        "sf_case_read",
+        "sf_change_prepare",
+        "sf_receipt_get",
+        "sf_request_read",
+        "sf_sourcing_compare"
+      ],
+      "output_types": [
+        "DossierDraft",
+        "PreparedChangeSet"
+      ],
+      "producer_tasks": [
+        "WP12.T02",
+        "WP11.T03",
+        "WP09.T04"
+      ],
+      "consumer_tasks": [
+        "WP11.T03",
+        "WP09.T04",
+        "WP01.T05"
+      ],
+      "visible_consumption": "Dossiê referencia a escolha e mostra diff/destino/versão/autoridade requerida. Ação humana segue o comando de domínio; receipt aparece no caso por C12.",
+      "missing_or_failure": "Campo/holder/permissão não confirmados deixam proposta pendente ou recusada, sem fabricar o destinatário. Erro conserva a preparação, não cria compra.",
+      "stale_or_access_change": "Fonte muda entre preparação e aplicação: stale/conflito e revalidação no destino; autorização perdida recusa execução.",
+      "adendum_proof_numbers": [
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "negative_discriminator": "Preparação não aprova PR/PO, não envia ao fornecedor e retry não cria segundo efeito; dossiê apenas em chat não passa.",
+      "status": "NOT_RUN",
+      "existing_schema_mapping": {
+        "DossierDraft": "Projeção existente de WP09.T04, não uma segunda entidade de compra."
+      },
+      "required_operations": [
+        "sf_request_read",
+        "sf_change_prepare",
+        "sf_receipt_get"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
+    },
+    {
+      "id": "sf-revisar-dependencias",
+      "allowed_profiles": [
+        "sf_portfolio"
+      ],
+      "work_entry": "Revisar dependências em caso/projeto ou campanha de portfólio.",
+      "typed_inputs": [
+        "C06 ConfirmedRelations",
+        "C09 Commitments",
+        "C02 ProjectMilestones",
+        "DeclaredConstraints"
+      ],
+      "authorized_operations": [
+        "sf_case_read",
+        "sf_context_get",
+        "sf_freshness_check",
+        "sf_relation_read",
+        "sf_source_get"
+      ],
+      "output_types": [
+        "DeliveryAssessment",
+        "DependencyConflict"
+      ],
+      "producer_tasks": [
+        "WP12.T02",
+        "WP13.T01"
+      ],
+      "consumer_tasks": [
+        "WP13.T01",
+        "WP01.T05",
+        "WP08.T06"
+      ],
+      "visible_consumption": "Mesa mostra compromisso, dependência confirmada e conflito; março presumido versus marco maio vira questão vinculada, consumida pelo responsável correto.",
+      "missing_or_failure": "Relação/capacidade não informada permanece desconhecida; sugerir vínculo exige confirmação e não cria restrição oficial. Falha conserva vínculos confirmados.",
+      "stale_or_access_change": "Mudança de marco material reavalia só dependências pertinentes; edição textual irrelevante não cria novo conflito.",
+      "adendum_proof_numbers": [
+        1,
+        2,
+        3
+      ],
+      "negative_discriminator": "FTE não prova capacidade livre; coincidência de nome não cria dependência; Finance e Portfólio devem entregar efeitos diferentes no mesmo caso.",
+      "status": "NOT_RUN",
+      "required_operations": [
+        "sf_relation_read",
+        "sf_context_get",
+        "sf_source_get"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
+    },
+    {
+      "id": "sf-compor-portfolio",
+      "allowed_profiles": [
+        "sf_portfolio"
+      ],
+      "work_entry": "Comparar portfólio preservando compromissos selecionados.",
+      "typed_inputs": [
+        "C14 PortfolioRequest",
+        "CandidateSet",
+        "ConstraintSet",
+        "C10 CostCoverageRefs"
+      ],
+      "authorized_operations": [
+        "sf_alternative_draft",
+        "sf_context_get",
+        "sf_portfolio_evaluate",
+        "sf_scenario_compare",
+        "sf_scenario_simulate"
+      ],
+      "output_types": [
+        "PortfolioComparison"
+      ],
+      "producer_tasks": [
+        "WP12.T02",
+        "WP13.T01",
+        "WP13.T02"
+      ],
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP13.T04"
+      ],
+      "visible_consumption": "Comparador persistente mostra combinações avaliadas, compromissos preservados, motivos de inviável/incompleto e limite de exploração; usuário seleciona opção para preparar via WP11.",
+      "missing_or_failure": "Nenhuma solução preserva restrições: informar ausência de solução. Categoria pendente mantém incomplete/conditioned. Erro conserva os candidatos.",
+      "stale_or_access_change": "Mudança de candidato/cobertura/critério marca comparação stale; reexecução mantém a composição histórica.",
+      "adendum_proof_numbers": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "negative_discriminator": "Não relaxar restrição, duplicar contribuição, declarar ótimo global de amostra limitada ou promover subtotal a elegibilidade completa.",
+      "status": "NOT_RUN",
+      "required_operations": [
+        "sf_portfolio_evaluate",
+        "sf_scenario_simulate",
+        "sf_alternative_draft"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
+    },
+    {
+      "id": "sf-reavaliar-compromissos",
+      "allowed_profiles": [
+        "sf_portfolio"
+      ],
+      "work_entry": "Reavaliar mudança material em Hoje/mesa ou resultado de rotina autorizada.",
+      "typed_inputs": [
+        "C13 ChangeImpact",
+        "C09 OriginalChoice",
+        "C10 CurrentComparison",
+        "ConfirmedDependencyRefs"
+      ],
+      "authorized_operations": [
+        "sf_case_read",
+        "sf_context_get",
+        "sf_freshness_check",
+        "sf_relation_read",
+        "sf_scenario_compare",
+        "sf_scenario_simulate",
+        "sf_watch_prepare"
+      ],
+      "output_types": [
+        "ReconsiderationProposal"
+      ],
+      "producer_tasks": [
+        "WP12.T02",
+        "WP14.T01"
+      ],
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP08.T04",
+        "WP09.T07"
+      ],
+      "visible_consumption": "Sinal mostra razão original e consequência atual por compromisso; usuário pode comparar, perguntar ou manter escolha com nova justificativa. A proposta é persistida por referência.",
+      "missing_or_failure": "Mudança sem dado para medir efeito fica unknown; não concluir quebra por ausência de observação. Falha mantém condição original e sinal não resolvido.",
+      "stale_or_access_change": "Fonte revogada impede reuso; mudança irrelevante não gera interrupção. Condições/sinais usam a deduplicação existente.",
+      "adendum_proof_numbers": [
+        1,
+        2,
+        3,
+        6
+      ],
+      "negative_discriminator": "Training40000/cotação alterada devem afetar a condição pertinente; simples descrição alterada não gera alerta e skill não muda data oficial.",
+      "status": "NOT_RUN",
+      "required_operations": [
+        "sf_freshness_check",
+        "sf_context_get",
+        "sf_scenario_compare",
+        "sf_watch_prepare"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
+    },
+    {
+      "id": "sf-contestar-decisao",
+      "allowed_profiles": [
+        "sf_reviewer"
+      ],
+      "work_entry": "Contestar decisão, revisão material ou convocação de revisão pela política explícita do trabalho.",
+      "typed_inputs": [
+        "C09 AlternativeAndChoiceRefs",
+        "C10 ScenarioComparison",
+        "C11 AuthorAnalysisRef",
+        "AuthorizedEvidenceRefs"
+      ],
+      "authorized_operations": [
+        "sf_case_read",
+        "sf_context_get",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_scenario_compare",
+        "sf_scenario_simulate",
+        "sf_sensitivity_evaluate"
+      ],
+      "output_types": [
+        "CritiqueReport",
+        "UnresolvedCondition"
+      ],
+      "producer_tasks": [
+        "WP12.T03"
+      ],
+      "consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP08.T06"
+      ],
+      "visible_consumption": "Execução própria do Revisor entrega objeções com fontes/condições; mesa lista o que pode invalidar a escolha e permite responder/corrigir sem copiar conversa. Registro liga critiqueRun ao authorRun sem reutilizar suas instruções.",
+      "missing_or_failure": "Fonte insuficiente: inconclusivo com pergunta específica, sem parecer positivo por falta de evidência. Falha mostra revisão não concluída e preserva análise autoral.",
+      "stale_or_access_change": "Base muda durante crítica: saída stale vinculada à versão original, sem sobrescrever crítica atual; revogação se aplica igualmente ao Revisor.",
+      "adendum_proof_numbers": [
+        1,
+        2,
+        3
+      ],
+      "negative_discriminator": "Mesmo run/perfil do autor renomeado como Revisor falha. Parecer não aprova compra e não substitui o engine numérico.",
+      "status": "NOT_RUN",
+      "required_operations": [
+        "sf_case_read",
+        "sf_evidence_get",
+        "sf_scenario_simulate",
+        "sf_scenario_compare"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
+    },
+    {
+      "id": "sf-revisar-evidencias",
+      "allowed_profiles": [
+        "sf_reviewer"
+      ],
+      "work_entry": "Revisar evidências/Verificar afirmação na crítica ou detalhe de fonte.",
+      "typed_inputs": [
+        "EvidenceClaimSet",
+        "C14 DocumentEvidence",
+        "C13 BusinessEvidenceRefs",
+        "CurrentSourceRevisions"
+      ],
+      "authorized_operations": [
+        "sf_case_read",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_knowledge_search",
+        "sf_source_get"
+      ],
+      "output_types": [
+        "ClaimIssue"
+      ],
+      "producer_tasks": [
+        "WP12.T03"
+      ],
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP11.T02"
+      ],
+      "visible_consumption": "Cada claim fica sustentado/contradito/inconclusivo com motivo e trecho/recibo. Usuário abre evidência, corrige interpretação ou resolve candidato no fluxo existente; leitura do Revisor não confirma documento.",
+      "missing_or_failure": "Fonte ausente/ambígua ou scanner recusado: inconclusivo/unavailable, sem reputar a alegação falsa ou verdadeira automaticamente. Falha não remove questões pendentes.",
+      "stale_or_access_change": "Revisão/encarnação alterada invalida suporte antigo; perder acesso retira trecho, memória e agregados restritos.",
+      "adendum_proof_numbers": [
+        1,
+        2,
+        3,
+        5
+      ],
+      "negative_discriminator": "Citação com ID plausível mas inexistente não sustenta claim; mesma conclusão após contradição removida falha; revisão própria não ganha permissões.",
+      "status": "NOT_RUN",
+      "required_operations": [
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_source_get",
+        "sf_knowledge_search"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
+    },
+    {
+      "id": "sf-extrair-evidencias",
+      "allowed_profiles": [
+        "sf_procurement",
+        "sf_maestro"
+      ],
+      "work_entry": "Extrair evidências do anexo autorizado na mesa/pedido.",
+      "typed_inputs": [
+        "AuthorizedFileRef",
+        "C14 FormatAndSizeLimits",
+        "DocumentRevision",
+        "TargetFieldSchema"
+      ],
+      "authorized_operations": [
+        "sf_document_extract",
+        "sf_evidence_get",
+        "sf_freshness_check"
+      ],
+      "output_types": [
+        "DocumentEvidence"
+      ],
+      "producer_tasks": [
+        "WP06.T05",
+        "WP12.T02"
+      ],
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP11.T02",
+        "WP09.T04"
+      ],
+      "visible_consumption": "Campos candidatos aparecem com valor/unidade e página/trecho/parágrafo; confirmar no produto promove a premissa e reutiliza a mesma referência no cenário/dossiê.",
+      "missing_or_failure": "PDF escaneado/protegido sem texto, DOCX inválido, excesso de limite ou ambiguidade retornam estado/motivo sem valor fabricado. Não confirmar automaticamente.",
+      "stale_or_access_change": "Documento atualizado conserva revisão antiga identificada como stale; referência revogada impede exibição e consumo.",
+      "adendum_proof_numbers": [
+        1,
+        2,
+        3,
+        5
+      ],
+      "negative_discriminator": "Instruções do fornecedor são dados; extracted não vira confirmed por ser citado no dossiê; nenhum parser duplicado em WP09.",
+      "status": "NOT_RUN",
+      "required_operations": [
+        "sf_document_extract",
+        "sf_evidence_get"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
+    },
+    {
+      "id": "sf-produzir-bi-contextual",
+      "allowed_profiles": [
+        "sf_finance",
+        "sf_portfolio",
+        "sf_maestro"
+      ],
+      "work_entry": "Ver composição, linha do tempo ou sensibilidade a partir da pergunta do caso.",
+      "typed_inputs": [
+        "BusinessQuestion",
+        "ApprovedViewCatalog",
+        "C02AndC10ProjectionRefs",
+        "AuthorizedFilters"
+      ],
+      "authorized_operations": [
+        "sf_bi_view",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_kpi_explain",
+        "sf_source_get"
+      ],
+      "output_types": [
+        "ContextualBIProposal"
+      ],
+      "producer_tasks": [
+        "WP12.T02",
+        "WP05.T05"
+      ],
+      "consumer_tasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ],
+      "visible_consumption": "Proposta escolhe uma visualização do catálogo suportado, tabela equivalente e recorte autorizado; o componente real WP05 a renderiza com drilldown e cobertura C10.",
+      "missing_or_failure": "Sem série/período/granularidade necessária: mostrar tabela ou lacuna suportada, sem interpolar valores. Erro de interpretação mantém BI determinístico acessível.",
+      "stale_or_access_change": "Novo filtro/base/ACL revalida projection refs e marca proposta antiga stale quando necessário; nenhuma soma restrita fica no gráfico.",
+      "adendum_proof_numbers": [
+        1,
+        2,
+        3
+      ],
+      "negative_discriminator": "Gráfico bonito sem tabela/produtor/referência falha; não criar regra de cálculo ou barra zero para categoria omitida.",
+      "status": "NOT_RUN",
+      "existing_schema_mapping": {
+        "ContextualBIProposal": "{approvedViewId, canonicalProjectionRefs, filters, tableRef, sourceRefs}; escolha de visão, não outro motor."
+      },
+      "required_operations": [
+        "sf_bi_view",
+        "sf_kpi_explain",
+        "sf_source_get"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
+    },
+    {
+      "id": "sf-produzir-material-reuniao",
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "work_entry": "Preparar material/relatório da revisão selecionada.",
+      "typed_inputs": [
+        "C05 PreservedReviewRef",
+        "C09 DecisionRefs",
+        "C07 FactualResult",
+        "AuthorizedSections"
+      ],
+      "authorized_operations": [
+        "sf_artifact_get",
+        "sf_report_prepare",
+        "sf_review_prepare",
+        "sf_work_list"
+      ],
+      "output_types": [
+        "MeetingMaterialProposal"
+      ],
+      "producer_tasks": [
+        "WP12.T02",
+        "WP09.T02",
+        "WP07.T02"
+      ],
+      "consumer_tasks": [
+        "WP07.T02",
+        "WP07.T04",
+        "WP01.T05"
+      ],
+      "visible_consumption": "Seleção/seções/pauta propostas tornam-se revisão e DOCX/PPTX gerados pelo WP07, com cobertura integral e links. Resultado persistido abre o arquivo real e a revisão correspondente.",
+      "missing_or_failure": "Seção vazia/omitida ou export falho informa cobertura/erro; fatos preservados continuam recuperáveis sem síntese de modelo. Não declarar arquivo criado sem artifactRef.",
+      "stale_or_access_change": "Revisão preservada não recebe valores correntes silenciosamente; acesso é revalidado no download/export e nas referências.",
+      "adendum_proof_numbers": [
+        1,
+        2,
+        3,
+        6
+      ],
+      "negative_discriminator": "Texto no chat não substitui material real; arquivo truncado em12 linhas não passa; narrativa não inventa decisão nem reescreve a reunião.",
+      "status": "NOT_RUN",
+      "existing_schema_mapping": {
+        "MeetingMaterialProposal": "{reviewSelectionRef, orderedResultRefs, coverage, gaps}; WP07 gera revisão e arquivos completos."
+      },
+      "required_operations": [
+        "sf_review_prepare",
+        "sf_report_prepare",
+        "sf_artifact_get"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
+    },
+    {
+      "id": "sf-consultar-memoria-decisoria",
+      "allowed_profiles": [
+        "sf_maestro",
+        "sf_finance",
+        "sf_procurement",
+        "sf_portfolio",
+        "sf_reviewer"
+      ],
+      "work_entry": "Consultar precedentes na mesa, detalhe de condição ou preparação de nova decisão.",
+      "typed_inputs": [
+        "C09 CurrentCaseScope",
+        "ExplicitRecallScope",
+        "C13 RecallQuery",
+        "CurrentAuthorization"
+      ],
+      "authorized_operations": [
+        "sf_context_get",
+        "sf_decision_recall",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_knowledge_search"
+      ],
+      "output_types": [
+        "CaseRecall",
+        "MatchExplanation"
+      ],
+      "producer_tasks": [
+        "WP12.T02",
+        "WP14.T02",
+        "WP14.T05"
+      ],
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP11.T01",
+        "WP09.T07"
+      ],
+      "visible_consumption": "Mesa mostra precedente, razão de pertinência, fontes originais e diferenças atuais; ação abre caso anterior autorizado e pode referenciar premissa nova sem copiá-la como fato atual.",
+      "missing_or_failure": "Sem correspondência: vazio explícito. Atlas/scanner/store indisponível: unavailable com trabalho atual preservado, sem substituir por resposta genérica que finja memória integrada.",
+      "stale_or_access_change": "Autorização, encarnação e atualidade são rechecadas em consulta/prompt/link. Memória persistida não torna fonte antiga atual nem reabre acesso revogado.",
+      "adendum_proof_numbers": [
+        1,
+        2,
+        3,
+        5
+      ],
+      "negative_discriminator": "Somente ler ledger SF sem consumo instrumentado createMemoryRead/createMemoryEmit/DurableMemory não prova Atlas; mesmo perfil de dois atores não permite compartilhamento implícito.",
+      "status": "NOT_RUN",
+      "existing_schema_mapping": {
+        "CaseRecall": "Contrato C13 com BusinessEvidenceRef/mapping C17; SimilarCaseProjection e MatchExplanation existentes."
+      },
+      "required_operations": [
+        "sf_decision_recall",
+        "sf_knowledge_search",
+        "sf_context_get",
+        "sf_freshness_check"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
+    }
+  ]
+}

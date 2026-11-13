@@ -5,7 +5,8 @@
   "scope_in": [
     "Ownership exclusivo de modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts, dashboard-people.ts, dashboard-operations.ts e dashboard-portfolio.ts.",
     "Ownership exclusivo de modules/sucafina/Sucafinav1/src/dashboard-*.ts e de novos arquivos em modules/sucafina/Sucafinav1/product/dashboard/**, incluindo suas provas de domínio.",
-    "Projeções autorizadas, sinais derivados, manutenção contextual, distinção entre revisão executiva e cadastro de projetos e porta de escrita da ação Hot Topic existente."
+    "Projeções autorizadas, sinais derivados, manutenção contextual, distinção entre revisão executiva e cadastro de projetos e porta de escrita da ação Hot Topic existente.",
+    "Descritores C16 das capacidades reais de WP02, consumidos pela ponte nativa sem copiar domínio."
   ],
   "scope_out": [
     "Shell, navegação global, src/nav.ts, src/screen-shell.ts, src/surfaces.ts e composição dos entrypoints pertencem aos respectivos owners e ao WP10.",
@@ -17,13 +18,17 @@
     "C03",
     "C06",
     "C08",
-    "C04"
+    "C04",
+    "C15",
+    "C16",
+    "C17"
   ],
   "contract_provides": [
     "C02",
     "C03",
     "C06",
-    "C04"
+    "C04",
+    "C16"
   ],
   "axioms": {
     "dod": [
@@ -35,6 +40,11 @@
       {
         "id": "WP02.DOD.02",
         "text": "As portas C02/C03/C04/C06 executam comportamento de domínio verificável; a composição no app é entregue para prova real do WP10, sem ser declarada concluída por mocks.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP02.DOD.10",
+        "text": "As entregas residentes atribuídas a WP02 têm produção, consumo e provas reais completos.",
         "status": "NOT_RUN"
       }
     ],
@@ -48,6 +58,11 @@
         "id": "WP02.INV.02",
         "text": "A leitura mantém restrições de talento e de função; PMO, CAPEX e contratos continuam entidades distintas, e Hot Topics continua a ação operacional canônica.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP02.INV.10",
+        "text": "WP02 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+        "status": "NOT_RUN"
       }
     ],
     "quality_standards": [
@@ -59,6 +74,11 @@
       {
         "id": "WP02.QLT.02",
         "text": "A manutenção distingue leitura e edição, conserva a posição/contexto do usuário e explica validação ou conflito sem apagar o rascunho.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP02.QLT.10",
+        "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
         "status": "NOT_RUN"
       }
     ],
@@ -72,6 +92,11 @@
         "id": "WP02.CMP.02",
         "text": "As provas contemplam leitor autorizado e recusado, registro existente e ausente, período independente, dados incompletos e edição concorrente.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP02.CMP.10",
+        "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+        "status": "NOT_RUN"
       }
     ],
     "success_criteria": [
@@ -84,6 +109,11 @@
         "id": "WP02.SUC.02",
         "text": "André parte de um sinal para sua evidência ou registro e distingue o período observado de um retrato histórico que não existe.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP02.SUC.10",
+        "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+        "status": "NOT_RUN"
       }
     ]
   },
@@ -94,15 +124,21 @@
       "intent": "Fornecer a UI, o BI e as revisões com uma leitura de domínio reconciliável e segura, sem duplicar fórmulas nos consumidores.",
       "work": [
         "Implementar a porta C02 dos quatro domínios usando os motores existentes e as chaves das 16 capacidades, retornando contexto, referências, componentes do cálculo, cobertura e sinais derivados com regra e evidência identificáveis.",
-        "Aplicar as decisões semânticas SD01–SD03 após confirmar a discrepância no baseline: razão de utilização sem clamp lógico, curva efetiva distinta da referência anual/12 e backlog distinto de variação líquida. A decisão altera apresentação/projeção comprovada, sem redefinir política financeira."
+        "Aplicar as decisões semânticas SD01–SD03 após confirmar a discrepância no baseline: razão de utilização sem clamp lógico, curva efetiva distinta da referência anual/12 e backlog distinto de variação líquida. A decisão altera apresentação/projeção comprovada, sem redefinir política financeira.",
+        "Publicar descritores e handlers de sf_dashboard_read, sf_kpi_explain, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+        "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
       ],
       "inputs": [
-        "Contratos C01/C02 aprovados em WP00.T04 e inventário funcional da baseline fixada.",
-        "Modelos, cálculos e filtros de leitura em src/dashboard-*.ts e runtime/dashboard-*.ts."
+        "Contratos C01/C02 aprovados em WP00.T02 e inventário funcional da baseline fixada.",
+        "Modelos, cálculos e filtros de leitura em src/dashboard-*.ts e runtime/dashboard-*.ts.",
+        "C16",
+        "C15"
       ],
       "outputs": [
         "Porta C02 implementada em product/dashboard/** e adaptada aos quatro domínios existentes.",
-        "Catálogo executável de capacidades e sinais, com referência de origem, competência e indicador de cobertura/ausência."
+        "Catálogo executável de capacidades e sinais, com referência de origem, competência e indicador de cobertura/ausência.",
+        "modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts#readDashboard (sf_dashboard_read; DashboardReadRequest -> AuthorizedDashboard)",
+        "modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts#explainKpi (sf_kpi_explain; KpiExplainRequest -> KpiBreakdown)"
       ],
       "depends_on": [
         "WP00.T02"
@@ -132,6 +168,11 @@
           "id": "WP02.T01.CHK.05",
           "text": "Tickets com saldo inicial20, abertos10 e fechados15 mostram backlog15 e variação−5; sem saldo inicial a projeção não fabrica backlogzero.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP02.T01.CHK.18",
+          "text": "Executar sf_dashboard_read, sf_kpi_explain pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -145,6 +186,11 @@
             "id": "WP02.T01.DOD.02",
             "text": "Cada sinal devolvido contém a regra que o tornou elegível e os registros que o sustentam.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP02.T01.DOD.18",
+            "text": "Descritores C16 de sf_dashboard_read, sf_kpi_explain são implementados e consumidos por T06 com referências reais.",
+            "status": "NOT_RUN"
           }
         ],
         "invariants": [
@@ -156,6 +202,11 @@
           {
             "id": "WP02.T01.INV.02",
             "text": "Nenhum campo restrito ou decisão inferida é acrescentado à projeção autorizada.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP02.T01.INV.18",
+            "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
             "status": "NOT_RUN"
           }
         ],
@@ -169,6 +220,11 @@
             "id": "WP02.T01.QLT.02",
             "text": "Moeda não especificada na origem é declarada como tal, sem converter o prefixo legado de dólar em uma taxa ou moeda presumida.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP02.T01.QLT.18",
+            "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+            "status": "NOT_RUN"
           }
         ],
         "completeness_criteria": [
@@ -180,6 +236,11 @@
           {
             "id": "WP02.T01.CMP.02",
             "text": "Há resultados definidos para coleção vazia, referência inexistente, ator sem leitura e contexto de período incompatível.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP02.T01.CMP.18",
+            "text": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
             "status": "NOT_RUN"
           }
         ],
@@ -193,6 +254,11 @@
             "id": "WP02.T01.SUC.02",
             "text": "O consumidor identifica por que um risco, ação vencida ou renovação foi sinalizado sem consultar texto inventado.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP02.T01.SUC.18",
+            "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+            "status": "NOT_RUN"
           }
         ]
       },
@@ -202,7 +268,9 @@
       "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
       "final_evidence_owner": "WP10",
       "requirements": [
-        "R06"
+        "R06",
+        "RA03",
+        "RA04"
       ],
       "journeys": [],
       "session": "S1",
@@ -218,9 +286,12 @@
         "E03"
       ],
       "integrates_with": [
-        "WP01.T02"
+        "WP01.T02",
+        "WP10.T06"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S1-B",
+      "correction_actor": "S1"
     },
     {
       "id": "WP02.T02",
@@ -363,7 +434,9 @@
       "integrates_with": [
         "WP01.T02"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S1-B",
+      "correction_actor": "S1"
     },
     {
       "id": "WP02.T03",
@@ -495,7 +568,9 @@
       "integrates_with": [
         "WP01.T02"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S1-B",
+      "correction_actor": "S1"
     },
     {
       "id": "WP02.T04",
@@ -621,14 +696,19 @@
       "integrates_with": [
         "WP01.T02"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S1-B",
+      "correction_actor": "S1"
     }
   ],
   "handoff": [
     "Entregar ao WP01/WP10 chaves, fragmentos e destinos das 16 capacidades; não alterar diretamente a navegação comum.",
     "Entregar C02 a WP05/WP07/WP08/WP09 e a porta Hot Topics a WP08/WP09, com casos discriminantes e limites de permissão.",
     "Informar ao WP10 pontos que exigem composição com importação, relatórios, colaboração e host; a prova entre superfícies usa os handlers reais de cada owner.",
-    "Entregar a WP06 os adapters C04 dos quatro formatos Dashboard; fornecer casos de simulação/aplicação e conservar parse/normalização no WP06."
+    "Entregar a WP06 os adapters C04 dos quatro formatos Dashboard; fornecer casos de simulação/aplicação e conservar parse/normalização no WP06.",
+    "Descritores C16 das capacidades reais de WP02, consumidos pela ponte nativa sem copiar domínio.",
+    "O manifest canônico identifica os paths/exports/tasks e AM01–AM06; evidência de catálogo isolado não é aceite integrado.",
+    "S1-B entrega head e lease a S1 em T+72 e encerra, liberando slot para reviewer novo; S1 é escritor exclusivo das correções até 118. Nenhum reviewer corrige produto."
   ],
   "risks": [
     "As regras legadas incluem distribuição plana/12, fallback de orçamento e períodos independentes; qualquer apresentação que esconda essas diferenças produz confiança falsa. Resolver com contexto C02 e decisões explícitas do WP00.",

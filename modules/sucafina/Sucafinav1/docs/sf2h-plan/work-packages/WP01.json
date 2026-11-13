@@ -46,6 +46,16 @@
         "id": "WP01.DOD.03",
         "text": "Hoje e mesa de decisão consomem casos, IA, cenários, perguntas e recibos reais; entrada contextual e operação direta funcionam sem exigir um caso para tarefas simples.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP01.DOD.20",
+        "text": "UI usa os resultados e a cobertura reais C10 em alternativa, escolha e reavaliação.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP01.DOD.30",
+        "text": "Entradas de trabalho da mesa consomem as 18 saídas da matriz C15 em cenários pertinentes; cinco perfis deixam contribuições verificáveis e o Revisor tem run próprio.",
+        "status": "NOT_RUN"
       }
     ],
     "invariants": [
@@ -57,6 +67,16 @@
       {
         "id": "WP01.INV.02",
         "text": "Trocar visualização não altera registros financeiros, estado de compra ou período silenciosamente.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP01.INV.20",
+        "text": "UI não transforma pending em zero nem esconde condição financeira por haver um número válido.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP01.INV.30",
+        "text": "Catálogo, nome de perfil ou chat sem outputRef consumido não satisfaz entrega; perfil não concede autoridade nova e fonte oficial continua no domínio.",
         "status": "NOT_RUN"
       }
     ],
@@ -70,6 +90,16 @@
         "id": "WP01.QLT.02",
         "text": "Manter foco visível, status além de cor, texto legível e controles operáveis por teclado e toque.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP01.QLT.20",
+        "text": "Estado e categoria pendente acompanham o subtotal, fonte e próximo passo, inclusive por teclado/tabela.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP01.QLT.30",
+        "text": "Mostrar contribuição, fontes e progresso útil; detalhes de perfil/modelo/skill/versão/run ficam sob demanda e seleção manual de agente não é obrigatória.",
+        "status": "NOT_RUN"
       }
     ],
     "completeness_criteria": [
@@ -82,6 +112,16 @@
         "id": "WP01.CMP.02",
         "text": "Hoje e mesa de decisão consomem casos, IA, cenários, perguntas e recibos reais; entrada contextual e operação direta funcionam sem exigir um caso para tarefas simples.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP01.CMP.20",
+        "text": "Cobrir categoria ausente, zero confirmado, comparação condicionada, fonte revogada e inversão posterior.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP01.CMP.30",
+        "text": "Cobrir18 skills com witnesses de carga/digest/saída persistida/consumo real, cinco perfis distintos e falta/falha/stale/cancelamento, usando as seis provas integradas.",
+        "status": "NOT_RUN"
       }
     ],
     "success_criteria": [
@@ -93,6 +133,16 @@
       {
         "id": "WP01.SUC.02",
         "text": "Cada pessoa chega à sua tarefa a partir da entrada escolhida, sem atravessar a experiência executiva inteira.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP01.SUC.20",
+        "text": "A pessoa reconhece por que a comparação está condicionada e vê a consequência da resposta sem reconstruir o caso.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP01.SUC.30",
+        "text": "Usuários concluem enquadramento, comparação, pergunta, revisão, preparo ou reavaliação sem coordenar cinco conversas nem reconstruir resultado no chat.",
         "status": "NOT_RUN"
       }
     ]
@@ -206,7 +256,8 @@
         "WP11.T01",
         "WP12.T01"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S1-A"
     },
     {
       "id": "WP01.T02",
@@ -317,7 +368,8 @@
         "WP11.T01",
         "WP12.T01"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S1-A"
     },
     {
       "id": "WP01.T03",
@@ -428,7 +480,8 @@
         "WP11.T01",
         "WP12.T01"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S1-A"
     },
     {
       "id": "WP01.T04",
@@ -544,17 +597,21 @@
         "WP11.T01",
         "WP12.T01"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S1-A"
     },
     {
       "id": "WP01.T05",
       "title": "Entregar Hoje e mesa de decisão com IA",
-      "intent": "Transformar intenção em trabalho contínuo dentro do contexto de contrato, pedido ou projeto.",
+      "intent": "Transformar intenção em trabalho contínuo dentro do contexto de contrato, pedido ou projeto.  As contribuições especializadas tornam-se objetos de trabalho consumíveis, com proveniência acessível.",
       "work": [
         "Adicionar Analisar alternativas nos pontos de entrada fornecidos pelos domínios; preservar operação simples sem criar caso obrigatório.",
         "Montar pergunta/critério no topo, alternativas no centro, pergunta decisiva/ação no contexto e fontes/histórico sob demanda.",
         "Consumir análise assíncrona, revisão de campos, cancelamento, stale e propostas reais; separar simulado, confirmado no caso e aplicado no domínio.",
-        "Expor seleção e comparação de portfólio e memória sem uma segunda navegação nem chat obrigatório."
+        "Expor seleção e comparação de portfólio e memória sem uma segunda navegação nem chat obrigatório.",
+        "Renderizar costCoverageRefs/comparisonStatus C10 junto aos valores, com categoria omitida derivada e próxima ação; nunca inferir comparação completa pelo número de componentes.",
+        "Implementar entradas Analisar alternativas, Explicar diferença, Comparar propostas, Preparar revisão e Contestar decisão como trabalhos sobre o caso/contexto; subações de documento, BI, material e memória consomem os outputs tipados da matriz de18 skills C15.",
+        "Exibir contribuição e fonte de cada especialista, resultado útil do progresso e lacuna material; disponibilizar profile/model/skill/version/digest/run no detalhe. Não exigir que a pessoa escolha manualmente o agente nem reconstrua dados de chat."
       ],
       "inputs": [
         "Contratos publicados por WP00",
@@ -584,6 +641,21 @@
           "id": "WP01.T05.CHK.03",
           "text": "Confirmar premissa, escolher, aplicar por domínio e reavaliar a cotação pela UI integrada.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP01.T05.CHK.20",
+          "text": "No caso de treinamento omitido, a mesa mostra subtotal 210000 e diferença conhecida30000 condicionados; após confirmação40000 mostra total 250000/diferença -10000 e a escolha histórica com sua ressalva.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP01.T05.CHK.30",
+          "text": "Executar os cenários compartilhados da matriz de18 skills e registrar, por skill, perfil/versão/digest efetivamente carregados, run, outputRef persistido e ação no consumidor após reload. Cada perfil deve contribuir de forma distinta em caso pertinente; Revisor possui execução própria. Apenas catalogar arquivos, renomear um perfil genérico ou mostrar texto de chat falha.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP01.T05.CHK.31",
+          "text": "Para cada classe de saída da matriz, provocar falta de entrada, falha, cancelamento e mudança material durante execução: consumidor mostra needs-input/failed/cancelled/stale e preserva trabalho confirmado; não cria saída pronta nem amplia acesso por perfil. Variantes podem compartilhar uma execução de prova.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -592,12 +664,32 @@
             "id": "WP01.T05.DOD.01",
             "text": "Hoje e mesa funcionam com casos persistentes, atores reais e resultados de IA/engine recebidos pelo host.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP01.T05.DOD.20",
+            "text": "UI usa os resultados e a cobertura reais C10 em alternativa, escolha e reavaliação.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP01.T05.DOD.30",
+            "text": "Entradas de trabalho da mesa consomem as 18 saídas da matriz C15 em cenários pertinentes; cinco perfis deixam contribuições verificáveis e o Revisor tem run próprio.",
+            "status": "NOT_RUN"
           }
         ],
         "invariants": [
           {
             "id": "WP01.T05.INV.01",
             "text": "UI nunca inventa permissão, confirmação, resultado de IA ou sucesso de comando; chat não é fonte única dos dados da decisão.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP01.T05.INV.20",
+            "text": "UI não transforma pending em zero nem esconde condição financeira por haver um número válido.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP01.T05.INV.30",
+            "text": "Catálogo, nome de perfil ou chat sem outputRef consumido não satisfaz entrega; perfil não concede autoridade nova e fonte oficial continua no domínio.",
             "status": "NOT_RUN"
           }
         ],
@@ -606,6 +698,16 @@
             "id": "WP01.T05.QLT.01",
             "text": "Uma ação principal por estado, fonte consultável, foco preservado, teclado/toque e layout legível em 320/768/1440 px.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP01.T05.QLT.20",
+            "text": "Estado e categoria pendente acompanham o subtotal, fonte e próximo passo, inclusive por teclado/tabela.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP01.T05.QLT.30",
+            "text": "Mostrar contribuição, fontes e progresso útil; detalhes de perfil/modelo/skill/versão/run ficam sob demanda e seleção manual de agente não é obrigatória.",
+            "status": "NOT_RUN"
           }
         ],
         "completeness_criteria": [
@@ -613,12 +715,32 @@
             "id": "WP01.T05.CMP.01",
             "text": "Cobrir novo caso, caso existente, lacuna, análise em curso, cancelamento, falha, stale, escolha, aplicação parcial, reavaliação e acesso revogado.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP01.T05.CMP.20",
+            "text": "Cobrir categoria ausente, zero confirmado, comparação condicionada, fonte revogada e inversão posterior.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP01.T05.CMP.30",
+            "text": "Cobrir18 skills com witnesses de carga/digest/saída persistida/consumo real, cinco perfis distintos e falta/falha/stale/cancelamento, usando as seis provas integradas.",
+            "status": "NOT_RUN"
           }
         ],
         "success_criteria": [
           {
             "id": "WP01.T05.SUC.01",
             "text": "O participante identifica a pergunta, a alternativa, a pendência e o próximo passo sem reconstruir contexto em outra ferramenta.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP01.T05.SUC.20",
+            "text": "A pessoa reconhece por que a comparação está condicionada e vê a consequência da resposta sem reconstruir o caso.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP01.T05.SUC.30",
+            "text": "Usuários concluem enquadramento, comparação, pergunta, revisão, preparo ou reavaliação sem coordenar cinco conversas nem reconstruir resultado no chat.",
             "status": "NOT_RUN"
           }
         ]
@@ -661,7 +783,8 @@
         "WP12.T01"
       ],
       "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S1-A"
     }
   ],
   "handoff": [

@@ -213,10 +213,6 @@
       "to": "WP06.T05"
     },
     {
-      "from": "WP06.T04",
-      "to": "WP06.T05"
-    },
-    {
       "from": "WP00.T02",
       "to": "WP07.T01"
     },
@@ -342,6 +338,14 @@
     },
     {
       "from": "WP00.T02",
+      "to": "WP10.T06"
+    },
+    {
+      "from": "WP00.T02",
+      "to": "WP10.T07"
+    },
+    {
+      "from": "WP00.T02",
       "to": "WP11.T01"
     },
     {
@@ -374,10 +378,6 @@
     },
     {
       "from": "WP00.T02",
-      "to": "WP12.T02"
-    },
-    {
-      "from": "WP12.T01",
       "to": "WP12.T02"
     },
     {
@@ -451,9 +451,33 @@
     {
       "from": "WP14.T03",
       "to": "WP14.T04"
+    },
+    {
+      "from": "WP00.T02",
+      "to": "WP14.T05"
     }
   ],
   "consumer_edges": [
+    {
+      "producer": "WP12.T01",
+      "consumer": "WP00.T04"
+    },
+    {
+      "producer": "WP10.T06",
+      "consumer": "WP00.T04"
+    },
+    {
+      "producer": "WP03.T01",
+      "consumer": "WP00.T04"
+    },
+    {
+      "producer": "WP11.T01",
+      "consumer": "WP00.T04"
+    },
+    {
+      "producer": "WP10.T01",
+      "consumer": "WP00.T04"
+    },
     {
       "producer": "WP02.T01",
       "consumer": "WP01.T01"
@@ -579,6 +603,10 @@
       "consumer": "WP02.T01"
     },
     {
+      "producer": "WP10.T06",
+      "consumer": "WP02.T01"
+    },
+    {
       "producer": "WP01.T02",
       "consumer": "WP02.T02"
     },
@@ -592,6 +620,10 @@
     },
     {
       "producer": "WP01.T02",
+      "consumer": "WP03.T01"
+    },
+    {
+      "producer": "WP10.T06",
       "consumer": "WP03.T01"
     },
     {
@@ -611,7 +643,15 @@
       "consumer": "WP03.T05"
     },
     {
+      "producer": "WP10.T06",
+      "consumer": "WP03.T05"
+    },
+    {
       "producer": "WP01.T02",
+      "consumer": "WP04.T01"
+    },
+    {
+      "producer": "WP10.T06",
       "consumer": "WP04.T01"
     },
     {
@@ -623,11 +663,19 @@
       "consumer": "WP04.T03"
     },
     {
+      "producer": "WP10.T06",
+      "consumer": "WP04.T03"
+    },
+    {
       "producer": "WP01.T02",
       "consumer": "WP04.T04"
     },
     {
       "producer": "WP01.T02",
+      "consumer": "WP04.T05"
+    },
+    {
+      "producer": "WP10.T06",
       "consumer": "WP04.T05"
     },
     {
@@ -711,6 +759,10 @@
       "consumer": "WP05.T04"
     },
     {
+      "producer": "WP10.T06",
+      "consumer": "WP05.T04"
+    },
+    {
       "producer": "WP02.T01",
       "consumer": "WP05.T05"
     },
@@ -763,6 +815,10 @@
       "consumer": "WP06.T02"
     },
     {
+      "producer": "WP10.T06",
+      "consumer": "WP06.T02"
+    },
+    {
       "producer": "WP02.T01",
       "consumer": "WP06.T03"
     },
@@ -811,6 +867,18 @@
       "consumer": "WP06.T05"
     },
     {
+      "producer": "WP09.T04",
+      "consumer": "WP06.T05"
+    },
+    {
+      "producer": "WP10.T06",
+      "consumer": "WP06.T05"
+    },
+    {
+      "producer": "WP10.T07",
+      "consumer": "WP06.T05"
+    },
+    {
       "producer": "WP02.T01",
       "consumer": "WP07.T01"
     },
@@ -859,6 +927,10 @@
       "consumer": "WP07.T02"
     },
     {
+      "producer": "WP10.T06",
+      "consumer": "WP07.T02"
+    },
+    {
       "producer": "WP02.T01",
       "consumer": "WP07.T03"
     },
@@ -904,6 +976,10 @@
     },
     {
       "producer": "WP14.T03",
+      "consumer": "WP07.T04"
+    },
+    {
+      "producer": "WP10.T06",
       "consumer": "WP07.T04"
     },
     {
@@ -919,6 +995,10 @@
       "consumer": "WP08.T01"
     },
     {
+      "producer": "WP10.T06",
+      "consumer": "WP08.T01"
+    },
+    {
       "producer": "WP02.T04",
       "consumer": "WP08.T02"
     },
@@ -928,6 +1008,10 @@
     },
     {
       "producer": "WP12.T03",
+      "consumer": "WP08.T02"
+    },
+    {
+      "producer": "WP10.T06",
       "consumer": "WP08.T02"
     },
     {
@@ -943,6 +1027,18 @@
       "consumer": "WP08.T03"
     },
     {
+      "producer": "WP09.T02",
+      "consumer": "WP08.T03"
+    },
+    {
+      "producer": "WP09.T03",
+      "consumer": "WP08.T03"
+    },
+    {
+      "producer": "WP08.T04",
+      "consumer": "WP08.T03"
+    },
+    {
       "producer": "WP02.T04",
       "consumer": "WP08.T04"
     },
@@ -952,6 +1048,10 @@
     },
     {
       "producer": "WP12.T03",
+      "consumer": "WP08.T04"
+    },
+    {
+      "producer": "WP10.T06",
       "consumer": "WP08.T04"
     },
     {
@@ -967,6 +1067,10 @@
       "consumer": "WP08.T05"
     },
     {
+      "producer": "WP10.T06",
+      "consumer": "WP08.T05"
+    },
+    {
       "producer": "WP02.T04",
       "consumer": "WP08.T06"
     },
@@ -979,6 +1083,10 @@
       "consumer": "WP08.T06"
     },
     {
+      "producer": "WP10.T06",
+      "consumer": "WP08.T06"
+    },
+    {
       "producer": "WP00.T04",
       "consumer": "WP09.T01"
     },
@@ -996,6 +1104,10 @@
     },
     {
       "producer": "WP14.T01",
+      "consumer": "WP09.T01"
+    },
+    {
+      "producer": "WP10.T06",
       "consumer": "WP09.T01"
     },
     {
@@ -1079,6 +1191,10 @@
       "consumer": "WP09.T04"
     },
     {
+      "producer": "WP06.T05",
+      "consumer": "WP09.T04"
+    },
+    {
       "producer": "WP00.T04",
       "consumer": "WP09.T05"
     },
@@ -1117,6 +1233,94 @@
     {
       "producer": "WP14.T01",
       "consumer": "WP09.T06"
+    },
+    {
+      "producer": "WP10.T06",
+      "consumer": "WP09.T06"
+    },
+    {
+      "producer": "WP10.T06",
+      "consumer": "WP10.T01"
+    },
+    {
+      "producer": "WP10.T07",
+      "consumer": "WP10.T01"
+    },
+    {
+      "producer": "WP10.T06",
+      "consumer": "WP10.T02"
+    },
+    {
+      "producer": "WP10.T07",
+      "consumer": "WP10.T02"
+    },
+    {
+      "producer": "WP14.T05",
+      "consumer": "WP10.T02"
+    },
+    {
+      "producer": "WP12.T02",
+      "consumer": "WP10.T02"
+    },
+    {
+      "producer": "WP12.T03",
+      "consumer": "WP10.T02"
+    },
+    {
+      "producer": "WP10.T07",
+      "consumer": "WP10.T04"
+    },
+    {
+      "producer": "WP12.T01",
+      "consumer": "WP10.T06"
+    },
+    {
+      "producer": "WP12.T02",
+      "consumer": "WP10.T06"
+    },
+    {
+      "producer": "WP12.T03",
+      "consumer": "WP10.T06"
+    },
+    {
+      "producer": "WP12.T04",
+      "consumer": "WP10.T06"
+    },
+    {
+      "producer": "WP03.T01",
+      "consumer": "WP10.T06"
+    },
+    {
+      "producer": "WP11.T01",
+      "consumer": "WP10.T06"
+    },
+    {
+      "producer": "WP10.T01",
+      "consumer": "WP10.T06"
+    },
+    {
+      "producer": "WP10.T01",
+      "consumer": "WP10.T07"
+    },
+    {
+      "producer": "WP06.T05",
+      "consumer": "WP10.T07"
+    },
+    {
+      "producer": "WP14.T05",
+      "consumer": "WP10.T07"
+    },
+    {
+      "producer": "WP14.T02",
+      "consumer": "WP10.T07"
+    },
+    {
+      "producer": "WP14.T04",
+      "consumer": "WP10.T07"
+    },
+    {
+      "producer": "WP10.T06",
+      "consumer": "WP10.T07"
     },
     {
       "producer": "WP03.T01",
@@ -1128,6 +1332,10 @@
     },
     {
       "producer": "WP10.T01",
+      "consumer": "WP11.T01"
+    },
+    {
+      "producer": "WP10.T06",
       "consumer": "WP11.T01"
     },
     {
@@ -1143,6 +1351,10 @@
       "consumer": "WP11.T02"
     },
     {
+      "producer": "WP10.T06",
+      "consumer": "WP11.T02"
+    },
+    {
       "producer": "WP03.T01",
       "consumer": "WP11.T03"
     },
@@ -1155,6 +1367,10 @@
       "consumer": "WP11.T03"
     },
     {
+      "producer": "WP10.T06",
+      "consumer": "WP11.T03"
+    },
+    {
       "producer": "WP03.T01",
       "consumer": "WP11.T04"
     },
@@ -1167,6 +1383,10 @@
       "consumer": "WP11.T04"
     },
     {
+      "producer": "WP10.T06",
+      "consumer": "WP11.T04"
+    },
+    {
       "producer": "WP00.T04",
       "consumer": "WP12.T01"
     },
@@ -1187,6 +1407,10 @@
       "consumer": "WP12.T01"
     },
     {
+      "producer": "WP10.T06",
+      "consumer": "WP12.T01"
+    },
+    {
       "producer": "WP00.T04",
       "consumer": "WP12.T02"
     },
@@ -1207,6 +1431,14 @@
       "consumer": "WP12.T02"
     },
     {
+      "producer": "WP10.T06",
+      "consumer": "WP12.T02"
+    },
+    {
+      "producer": "WP10.T07",
+      "consumer": "WP12.T02"
+    },
+    {
       "producer": "WP00.T04",
       "consumer": "WP12.T03"
     },
@@ -1227,6 +1459,14 @@
       "consumer": "WP12.T03"
     },
     {
+      "producer": "WP10.T06",
+      "consumer": "WP12.T03"
+    },
+    {
+      "producer": "WP10.T07",
+      "consumer": "WP12.T03"
+    },
+    {
       "producer": "WP00.T04",
       "consumer": "WP12.T04"
     },
@@ -1244,6 +1484,18 @@
     },
     {
       "producer": "WP06.T05",
+      "consumer": "WP12.T04"
+    },
+    {
+      "producer": "WP10.T06",
+      "consumer": "WP12.T04"
+    },
+    {
+      "producer": "WP10.T07",
+      "consumer": "WP12.T04"
+    },
+    {
+      "producer": "WP09.T07",
       "consumer": "WP12.T04"
     },
     {
@@ -1260,6 +1512,10 @@
     },
     {
       "producer": "WP11.T02",
+      "consumer": "WP13.T02"
+    },
+    {
+      "producer": "WP10.T06",
       "consumer": "WP13.T02"
     },
     {
@@ -1268,6 +1524,10 @@
     },
     {
       "producer": "WP11.T02",
+      "consumer": "WP13.T03"
+    },
+    {
+      "producer": "WP10.T06",
       "consumer": "WP13.T03"
     },
     {
@@ -1303,6 +1563,14 @@
       "consumer": "WP14.T02"
     },
     {
+      "producer": "WP10.T07",
+      "consumer": "WP14.T02"
+    },
+    {
+      "producer": "WP14.T05",
+      "consumer": "WP14.T02"
+    },
+    {
       "producer": "WP11.T01",
       "consumer": "WP14.T03"
     },
@@ -1325,6 +1593,26 @@
     {
       "producer": "WP10.T01",
       "consumer": "WP14.T04"
+    },
+    {
+      "producer": "WP10.T07",
+      "consumer": "WP14.T04"
+    },
+    {
+      "producer": "WP10.T07",
+      "consumer": "WP14.T05"
+    },
+    {
+      "producer": "WP06.T05",
+      "consumer": "WP14.T05"
+    },
+    {
+      "producer": "WP14.T02",
+      "consumer": "WP14.T05"
+    },
+    {
+      "producer": "WP14.T04",
+      "consumer": "WP14.T05"
     }
   ],
   "note": "Arestas de consumidor são prova de integração; não são bloqueio artificial ao início da construção."

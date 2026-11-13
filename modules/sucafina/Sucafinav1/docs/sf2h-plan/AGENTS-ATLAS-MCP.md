@@ -1,252 +1,104 @@
-# Orchestra SF — equipe de agentes, skills, MCP e Atlas SF
+# Equipe residente, MCP Sucafina e Atlas SF
 
-Fonte original: https://chatgpt.com/space/page_72076eb5866c819184dacccc76662620
+**Especificação integrada à campanha; implementação e provas de produto: NOT_RUN.** O antigo adendo foi reconciliado em `campaign.json`, C15–C17, WPs, tarefas, ownership, cronograma, axiomas e provas. A proposta original está preservada em [sources/AGENTS-ATLAS-MCP-ORIGINAL.md](sources/AGENTS-ATLAS-MCP-ORIGINAL.md).
 
-# Decisão de produto recomendada
+## O que chega ao trabalho de André e do time
 
-**Especificação complementar — ainda não implementada.** A campanha precisa entregar uma equipe residente de IA, separada dos agentes que construirão o software.
+O produto entrega cinco perfis com missões claras, dezoito skills e resultados usados na interface. A equipe aparece no contexto do caso, forecast, compra, portfólio, reunião ou memória. Cada contribuição indica o que examinou, o que falta, o que propõe e qual ação humana permite continuar. O usuário pode abrir as fontes, revisar condições, contestar a proposta e retomar a análise depois.
 
-A composição recomendada é **cinco perfis de agentes de negócio, dezoito skills, um novo servidor MCP específico da instalação e oito capability packs**. O conhecimento aparece como **Atlas SF Business Profile v1**, um perfil e uma boundary de negócio a implementar sobre componentes compatíveis do Orchestra.
+Os nomes e paths abaixo são contratos para implementação. A presença desta especificação não significa que os agentes estejam instalados ou executando.
 
-Os nomes de agentes, skills, ferramentas e perfis desta página são contratos propostos. A baseline examinada continua sendo 9e4f3d35833f9b2cea6abdf58f42331f3973d9bf. Nenhum servidor, agente ou integração foi ativado nesta etapa.
+## Cinco perfis
 
-# Os cinco agentes residentes
+| Perfil | Missão | Skills permitidas |
+| --- | --- | ---: |
+| `sf_maestro` | Enquadrar intenção, coordenar especialistas pertinentes e preparar revisão/perguntas. | 7 |
+| `sf_finance` | Reconciliar forecast, comparar cenários e calcular sensibilidade pelo motor canônico. | 5 |
+| `sf_procurement` | Comparar propostas e condições e preparar dossiê sem aprovar compra. | 5 |
+| `sf_portfolio` | Examinar dependências, restrições e combinações com fontes confirmadas. | 5 |
+| `sf_reviewer` | Contestar a proposta e testar a sustentação em execução própria. | 3 |
 
-| Perfil / ID proposto | Trabalho próprio | Resultado utilizável | Limite de autoridade |
+O coordenador SF é um perfil empresarial chamado `sf_maestro`; ele não renomeia o Maestro nem substitui seus seats técnicos. Os especialistas só recebem contexto e operações pertinentes. O Revisor usa uma sessão nova e uma execução própria, ligadas ao digest da proposta contestada. Sua avaliação não concede aprovação de compra.
+
+## Dezoito skills com resultados consumidos
+
+| Skill | Perfis | Saída tipada | Tasks consumidoras |
 | --- | --- | --- | --- |
-| **Maestro SF / sf_maestro** | Enquadrar a intenção, selecionar o trabalho necessário, reunir análises compatíveis, preparar perguntas e revisão executiva. | IntentFrame, AnalysisPlan, DecisionBrief, QuestionProposal. | Coordena e prepara; escolha, aprovação e aplicação seguem as ações e permissões do produto. |
-| **Finance / sf_finance** | Explicar desvios, reconciliar forecast, comparar cenários e testar sensibilidade. | FinancialAnalysis, ScenarioComparison, SensitivityResult. | Consome o motor financeiro; acesso a HR e valores restritos depende do usuário. |
-| **Compras e Contratos / sf_procurement** | Comparar propostas, revisar condições comerciais, identificar lacunas e preparar o dossiê de compra. | CommercialComparison, CommercialGap, EvidenceCandidate, PreparedChange. | Não aprova compra, altera alçada ou confirma automaticamente o conteúdo extraído. |
-| **Portfólio e Entrega / sf_portfolio** | Examinar compromissos, dependências confirmadas, restrições e combinações de portfólio. | DeliveryAssessment, DependencyConflict, PortfolioComparison, ReconsiderationProposal. | Dependências e capacidade precisam de fonte; simular não altera o plano oficial. |
-| **Revisor de Decisões / sf_reviewer** | Contestar evidências e alternativas em uma execução separada, procurar omissões e condições que mudariam a escolha. | CritiqueReport, ClaimIssue, UnresolvedCondition. | Leitura e simulação no mesmo escopo autorizado; seu parecer não é aprovação financeira. |
+| `sf-enquadrar-decisao` | sf_maestro | IntentFrame, AnalysisPlan | WP11.T01, WP01.T05 |
+| `sf-preparar-revisao-executiva` | sf_maestro | DecisionBrief | WP07.T01, WP07.T02, WP01.T05 |
+| `sf-coordenar-perguntas` | sf_maestro | QuestionProposal | WP08.T02, WP08.T06, WP01.T04, WP01.T05 |
+| `sf-explicar-forecast` | sf_finance | FinancialAnalysis | WP01.T05, WP05.T01, WP09.T03 |
+| `sf-comparar-cenarios` | sf_finance | ScenarioComparison | WP01.T05, WP05.T05, WP11.T02 |
+| `sf-avaliar-sensibilidade` | sf_finance | SensitivityResult | WP05.T05, WP01.T05 |
+| `sf-comparar-sourcing` | sf_procurement | CommercialComparison | WP01.T05, WP09.T04 |
+| `sf-revisar-condicoes-contratuais` | sf_procurement | CommercialGap, EvidenceCandidate | WP09.T04, WP11.T02, WP01.T05 |
+| `sf-preparar-compra` | sf_procurement | PreparedChangeSet, DossierDraft | WP11.T03, WP09.T04, WP01.T05 |
+| `sf-revisar-dependencias` | sf_portfolio | DeliveryAssessment, DependencyConflict | WP13.T01, WP01.T05, WP08.T06 |
+| `sf-compor-portfolio` | sf_portfolio | PortfolioComparison | WP01.T05, WP05.T05, WP13.T04 |
+| `sf-reavaliar-compromissos` | sf_portfolio | ReconsiderationProposal | WP01.T05, WP08.T04, WP09.T07 |
+| `sf-contestar-decisao` | sf_reviewer | CritiqueReport, UnresolvedCondition | WP11.T02, WP01.T05, WP08.T06 |
+| `sf-revisar-evidencias` | sf_reviewer | ClaimIssue | WP01.T05, WP06.T05, WP11.T02 |
+| `sf-extrair-evidencias` | sf_procurement, sf_maestro | DocumentEvidence | WP01.T05, WP11.T02, WP09.T04 |
+| `sf-produzir-bi-contextual` | sf_finance, sf_portfolio, sf_maestro | ContextualBIProposal | WP05.T05, WP01.T05 |
+| `sf-produzir-material-reuniao` | sf_maestro | MeetingMaterialProposal | WP07.T02, WP07.T04, WP01.T05 |
+| `sf-consultar-memoria-decisoria` | sf_maestro, sf_finance, sf_procurement, sf_portfolio, sf_reviewer | CaseRecall, MatchExplanation | WP01.T05, WP11.T01, WP09.T07 |
 
-O catálogo contém cinco perfis, mas a composição de cada trabalho varia. Explicar uma diferença pode exigir apenas Finance. Renovar ou substituir um fornecedor pode envolver Compras e Finance, com Portfólio quando houver dependência de implantação. O Revisor entra em decisões materiais, mudanças relevantes ou por solicitação explícita.
+A [matriz de consumo](resident-ui-consumption.json) detalha entrada na interface, dados exigidos, grants, saídas, persistência, falta/falha/stale e contraprovas de cada contribuição. A allowlist normativa fica em [agents-atlas-mcp.json](agents-atlas-mcp.json). `required_operations` é o subconjunto necessário para um uso; `authorized_operations` é o teto do manifesto, sempre limitado também pela autoridade atual do usuário e do domínio.
 
-O Maestro SF reutiliza a coordenação do Orchestra quando o binding for compatível. Os perfis de negócio são registrados via AgentV2 e host binding; não reutilizam identidades técnicas para atravessar guards do roster de engenharia.
+C15 exige arquivos reais de perfil e `SKILL.md` distribuídos com o produto, fonte reservada, versão, SHA-256 dos bytes e do conteúdo efetivamente injetado por `SessionV2.skill`. O recibo conserva sessão, run, modelo efetivo, mensagem de carga, contexto, output persistido e consumidor. Um nome de skill no catálogo não satisfaz essa condição.
 
-# Skills a entregar
+## Um MCP específico para SF
 
-| Dono | Skill proposta | Saída e condição de conclusão |
+O servidor lógico é **`sucafina-workbench`**. São oito packs e 39 operações, com schemas, handlers, producers, consumers, grants e evidências no manifesto.
+
+| Pack | Operações | Catálogo |
+| --- | ---: | --- |
+| Performance | 4 | `sf_dashboard_read`, `sf_kpi_explain`, `sf_bi_view`, `sf_source_get` |
+| Planning | 5 | `sf_forecast_compare`, `sf_scenario_simulate`, `sf_scenario_compare`, `sf_sensitivity_evaluate`, `sf_portfolio_evaluate` |
+| Procurement | 4 | `sf_request_read`, `sf_supplier_read`, `sf_contract_read`, `sf_sourcing_compare` |
+| Decisions | 5 | `sf_case_read`, `sf_case_draft`, `sf_alternative_draft`, `sf_change_prepare`, `sf_receipt_get` |
+| Collaboration | 5 | `sf_work_list`, `sf_question_prepare`, `sf_answer_read`, `sf_relation_read`, `sf_handoff_prepare` |
+| Documents & Reports | 5 | `sf_document_extract`, `sf_import_preview`, `sf_review_prepare`, `sf_report_prepare`, `sf_artifact_get` |
+| Knowledge / Atlas SF | 5 | `sf_context_get`, `sf_knowledge_search`, `sf_evidence_get`, `sf_decision_recall`, `sf_freshness_check` |
+| Routines | 6 | `sf_routine_catalog`, `sf_routine_prepare`, `sf_routine_run`, `sf_routine_status`, `sf_routine_result`, `sf_watch_prepare` |
+
+C16 usa wrappers nativos `sf_*`, contexto confiável `Tool.Context` e uma conexão MCP privada em processo por chamada. O host vincula instalação, projeto, location, sessão, run, caso, principal, perfil e skill. A lease privada contém operação e digest; nenhum argumento do modelo cria identidade. O destino revalida a autorização e usa as mesmas portas da UI, com os cálculos, locks, versões e transições do domínio.
+
+Configuração externa homônima gera `provider-conflict`. A ponte utiliza a factory pinada e não resolve autoridade pelo nome do servidor. Revogação, expiração, cancelamento, reinício e mudança de geração invalidam o contexto. A solução não exige endpoint corporativo novo, OAuth ou credenciais adicionais. Relay continua sujeito à admissão nativa C07.
+
+## Atlas SF Business Profile v1
+
+C17 adapta o Atlas existente à memória empresarial. `BusinessEvidenceRef` referencia dados/documentos com versão, encarnação e autorização. Sua referência externa não é fingida como um arquivo de código. A tradução usa os templates reais `task` e `project`; metadados empresariais adicionais ficam em envelope próprio.
+
+O `BusinessContextService` seleciona apenas registros atualmente autorizados e verificáveis antes de `createMemoryRead`. Owner e kind não são filtros de autorização aceitos do modelo. Revogação de uma dependência retira a projeção inteira. O ledger da decisão é a origem canônica; falha de scanner ou escrita mantém o outbox pendente ou recusado, sem declarar memória persistida.
+
+A fachada síncrona `DurableMemory` opera sobre um snapshot preparado dentro da transação assíncrona C08. Evento, índice de referências, idempotência e confirmação do outbox são gravados juntos. O estado protegido `__sfProductV1.atlas` não entra em exportações de dados empresariais. A prova exige leitura após reinício, acesso revogado, referência substituída e scanner real com casos clean/canary/indisponível.
+
+O empacotamento público usa `@orchestra/atlas-boundary/business-memory-ports`. WP10.T07 possui exceções exatas para export, entry, gerador, artefatos gerados e teste; não recebe liberdade para alterar os algoritmos do Atlas. Os detalhes e fontes primárias estão em [specs/resident-runtime.md](specs/resident-runtime.md).
+
+## Quem constrói e quando integra
+
+| Unidade | Responsabilidade | Reserva alvo |
 | --- | --- | --- |
-| Maestro SF | sf-enquadrar-decisao | Objetivo, horizonte, restrições, critérios, referências e lacunas explícitos. |
-| Maestro SF | sf-preparar-revisao-executiva | Pauta factual com mudanças, decisões, pendências e links recuperáveis. |
-| Maestro SF | sf-coordenar-perguntas | Perguntas relevantes atribuídas a identidades conhecidas, sem duplicação. |
-| Finance | sf-explicar-forecast | Diferença reconciliada até seus componentes e fontes. |
-| Finance | sf-comparar-cenarios | Alternativas avaliadas pelo motor canônico, com premissas explícitas. |
-| Finance | sf-avaliar-sensibilidade | Condições e limites em que a preferência entre alternativas muda. |
-| Compras | sf-comparar-sourcing | Comparação coerente de escopo, prazo, moeda, custo e critérios disponíveis. |
-| Compras | sf-revisar-condicoes-contratuais | Condições comerciais e lacunas com trechos de origem; sem inventar interpretação jurídica conclusiva. |
-| Compras | sf-preparar-compra | Dossiê e mudanças propostas associados à versão correta do pedido. |
-| Portfólio | sf-revisar-dependencias | Relações confirmadas, conflitos e informações ausentes separados. |
-| Portfólio | sf-compor-portfolio | Combinações comparáveis que respeitam as restrições informadas. |
-| Portfólio | sf-reavaliar-compromissos | Efeito de mudança material sobre compromissos e condições existentes. |
-| Revisor | sf-contestar-decisao | Objeções verificáveis, contraexemplos e condições não resolvidas. |
-| Revisor | sf-revisar-evidencias | Claims sustentados, contraditos ou inconclusivos, com motivo. |
-| Compartilhada | sf-extrair-evidencias | Campos candidatos e trechos de PDF digital, DOCX ou texto, sujeitos a confirmação. |
-| Compartilhada | sf-produzir-bi-contextual | Visualização aprovada, tabela equivalente, unidade, período e drilldown. |
-| Compartilhada | sf-produzir-material-reuniao | Revisão e relatório completos usando os resultados canônicos. |
-| Compartilhada | sf-consultar-memoria-decisoria | Precedentes autorizados, razão de correspondência, contexto original e diferenças atuais. |
+| WP10.T06 | Registro de perfis, loader e MCP com identidade por chamada | T+10–45; incremento nativo até T+16 |
+| WP10.T07 | Packaging Atlas, contexto autorizado e persistência | T+10–55; roundtrip até T+45 |
+| WP14.T05 | Tradução empresarial pura para os tipos reais Atlas | T+10–20 |
+| WP12.T01/T02 | Perfis, fontes das 18 skills, manifests e interpretação | Probe até T+13; bundle completo até T+42 |
+| WP06.T05 | Documento e evidência autorizados, extração e adapter RAG | Referências até T+20; extração até T+35 |
 
-Cada skill precisa de versão e digest, entradas tipadas, sequência de trabalho, ferramentas permitidas, formato de saída, limites, tratamento de ausência/conflito e exemplos de aceite e recusa. O runtime deve provar que a skill foi carregada e usada; um arquivo no catálogo não satisfaz isso.
+Os [19 handoffs](output-handoffs.json), os dezoito leases de fonte e as alocações de [schedule.json](schedule.json) são normativos. Interfaces antecipadas permitem construção paralela; consumo final exige o produtor implementado. Os intervalos são reservas, não medições de produtividade.
 
-Cálculo, autorização, validação de schema, controle de versão, classificação de limiar e deduplicação permanecem funções determinísticas. O modelo recebe o que exige interpretação e julgamento.
+## Seis provas integradas
 
-# Configuração dos perfis
-
-Cada perfil deve declarar ID, versão, missão, skills permitidas, operações autorizadas, schemas de saída, orçamento de contexto, limite de delegação, política de retomada e classe de modelo.
-
-A classe de modelo é resolvida pelo host entre os modelos já configurados. Análise e crítica podem usar maior capacidade de raciocínio; extração estruturada pode usar um perfil mais econômico quando ele passar nas provas. O manifest registra o modelo efetivo de cada execução, sem depender de uma nova conta ou fixar um fornecedor inexistente.
-
-O Revisor usa uma execução e instruções próprias. Ele não ganha permissões adicionais para revisar. Sua revisão complementa as verificações determinísticas.
-
-# Experiência de uso
-
-As entradas principais são ações de trabalho: **Analisar alternativas**, **Explicar diferença**, **Comparar propostas**, **Preparar revisão** e **Contestar decisão**.
-
-A mesa mostra progresso útil, como “comparação financeira concluída; falta confirmar condição de saída”. Cada agente entrega um objeto persistente: alternativa, pergunta, evidência, crítica ou mudança preparada. O usuário pode abrir a fonte, corrigir a intenção, responder, cancelar ou pedir uma revisão específica.
-
-Na visão principal, mostrar a contribuição e as fontes. Perfil, modelo, skill, versão e run ficam disponíveis no detalhe de proveniência. Um catálogo “Equipe SF” pode permitir descoberta e configuração; escolher manualmente um agente não é uma etapa obrigatória para executar o trabalho.
-
-# MCP específico para a Sucafina
-
-**Novo servidor proposto: sucafina-workbench.**
-
-Ele expõe as capabilities do produto por um contrato único, dividido em oito packs. Não é um servidor por persona nem um novo motor por domínio. Agentes internos e interface usam as mesmas portas autorizadas; o MCP é outra superfície sobre essas portas.
-
-| Pack | Ferramentas propostas — exemplos de contrato | Uso |
+| Prova | Resultado exigido | Pacotes |
 | --- | --- | --- |
-| **Performance** | sf_dashboard_read; sf_kpi_explain; sf_bi_view; sf_source_get | Indicadores, desvios, gráficos, tabelas e origem dos números. |
-| **Planning** | sf_forecast_compare; sf_scenario_simulate; sf_scenario_compare; sf_sensitivity_evaluate; sf_portfolio_evaluate | Cálculos e alternativas financeiras/portfólio. |
-| **Procurement** | sf_request_read; sf_supplier_read; sf_contract_read; sf_sourcing_compare | Pedidos, fornecedores, contratos e comparação comercial. |
-| **Decisions** | sf_case_read; sf_case_draft; sf_alternative_draft; sf_change_prepare; sf_receipt_get | Casos, alternativas e preparação de mudanças. |
-| **Collaboration** | sf_work_list; sf_question_prepare; sf_answer_read; sf_relation_read; sf_handoff_prepare | Pessoas, perguntas, respostas, vínculos e encaminhamentos. |
-| **Documents & Reports** | sf_document_extract; sf_import_preview; sf_review_prepare; sf_report_prepare; sf_artifact_get | Documentos admitidos, importações, reuniões e material exportável. |
-| **Knowledge / Atlas SF** | sf_context_get; sf_knowledge_search; sf_evidence_get; sf_decision_recall; sf_freshness_check | Contexto, evidência, memória pertinente e atualidade. |
-| **Routines** | sf_routine_catalog; sf_routine_prepare; sf_routine_run; sf_routine_status; sf_routine_result; sf_watch_prepare | Rotinas admitidas em Relay e recorrência em Schedule. |
-
-Os nomes e assinaturas finais precisam ser congelados em WP00. As listas acima definem a superfície pretendida, não ferramentas já registradas.
-
-## Política de concessão
-
-| Perfil | Leitura | Simulação | Preparação | Execução |
-| --- | --- | --- | --- | --- |
-| Maestro SF | Caso e contexto transversal autorizado | Solicita ao especialista quando necessário | Caso, perguntas, pauta e rotina | Apenas rotina já admitida, nos limites da autorização vigente. |
-| Finance | Planning, Performance e fontes permitidas | Cenários, reconciliação e sensibilidade | Alternativas financeiras e perguntas | Sem aprovação ou alteração financeira automática. |
-| Compras | Procurement, documentos e fontes permitidas | Comparação comercial pelas regras existentes | Alternativas e mudanças preparadas | Sem aprovação de PR/PO ou envio a fornecedor. |
-| Portfólio | Projetos, relações e contexto permitido | Combinações e restrições | Opções e perguntas | Sem alterar datas/compromissos oficiais por inferência. |
-| Revisor | Escopo da decisão e suas evidências | Validações e simulações permitidas | Parecer e questões não resolvidas | Sem mutação de domínio ou agenda. |
-
-Aplicar mudanças financeiras e registrar aprovações continua pelo comando do domínio e pela ação/autorização previstas na interface. Preparar uma proposta não concede o direito de aplicá-la.
-
-A permissão efetiva resulta da identidade confiável do usuário, escopo da sessão/caso, operações concedidas ao perfil e regras atuais do domínio. Actor/role/project não são estabelecidos por argumentos gerados pelo modelo. Toda leitura, recuperação, exportação e execução revalida o acesso pertinente.
-
-McpProvided não entrega automaticamente identidade SF. O servidor precisa de binding confiável de execução, usando um padrão equivalente à closure de turno existente no host. Também precisa impedir que outro provider configurado com o mesmo nome substitua silenciosamente o servidor nativo.
-
-## O que reaproveitar
-
-- Registry e execução de ferramentas do Orchestra.
-
-- AgentV2 e permissões.
-
-- Bridge/transportes MCP compatíveis com o host.
-
-- Portas e motores de Dashboard, Planner e Procurement.
-
-- Relay/Maestro para admissão e execução de rotinas.
-
-- Schedule para recorrência.
-
-- Componentes de RAG Studio para fontes, revisões, trechos e documentos.
-
-- Componentes compatíveis de memória Atlas por uma boundary empresarial explícita.
-
-O cliente MCP atual e a bridge do adaptador Claude não equivalem a um endpoint HTTP MCP genérico já instalado. O novo servidor, seu registro, binding e superfície de descoberta são trabalho de implementação.
-
-# Integrações do produto
-
-| Integração | Situação na entrega proposta |
-| --- | --- |
-| Dashboard / Planner / Procurement | Nativa, usando as mesmas projeções, versões, comandos e recibos da UI. |
-| Arquivos e documentos | Upload/importação autorizados, formatos já previstos e extração com referência. |
-| Relay e Schedule | Serviços nativos, com rotinas SF, admissão, versão, execução e retorno ao produto. |
-| Modelos de IA | Provider existente do host; registrar modelo efetivo e indisponibilidade. |
-| Diretório e identidade | Perfil real disponível da instalação; sem inventar identidades corporativas ou vínculos por nome. |
-| Atlas SF / RAG Studio | Adapters de negócio a implementar e qualificar sobre componentes reais. |
-| Fabric, SAP/ACM, CTRM e Microsoft Graph | Portas de integração futuras. Não declarar conectores ativos, acesso a dados ou envio externo sem conexão e autorização reais. |
-
-Não há necessidade de pedir novos acessos para construir e provar as jornadas com os dados já presentes e os cenários sintéticos. Os conectores corporativos futuros alimentam as mesmas portas, preservando a experiência do produto.
-
-# Atlas que vai para o time
-
-**Nome de configuração proposto: Atlas SF Business Profile v1.** Esse é um identificador novo de produto, não uma release existente do Atlas.
-
-O perfil registra separadamente a baseline do engine, versão da boundary, versão do schema empresarial, versão das skills e revisão das fontes. A versão do pacote de conhecimento não torna dados operacionais antigos atuais.
-
-## Conteúdo do Atlas SF
-
-| Camada | Conteúdo | Fonte de verdade |
-| --- | --- | --- |
-| Vocabulário e procedimentos | Significado de budget/actual/forecast, critérios, moedas, papéis e skills revisadas. | Pacote de negócio versionado e políticas explicitamente fornecidas. |
-| Contexto operacional | Registros, componentes financeiros, projetos, compras e vínculos confirmados. | Projeções autorizadas C01/C02 e comandos dos domínios. |
-| Evidência documental | Documento admitido, revisão, trecho, hash e campo candidato/confirmado. | Arquivo privado e componentes documentais de WP06/RAG Studio. |
-| Memória decisória | Alternativas, condições, razão da escolha, perguntas, respostas e resultado observado. | Caso/ledger SF e projeções autorizadas C09/C13. |
-| Contexto do papel | Subconjunto necessário ao especialista e à tarefa atual. | Binding do host, sujeito às permissões atuais. |
-
-A recuperação deve explicar **por que o precedente é pertinente e o que mudou desde então**. Ela distingue fato observado, alegação, premissa, proposta e decisão. Preferências reutilizáveis precisam ser explícitas e editáveis; não inferir preferências pessoais ocultas.
-
-## Adaptação necessária
-
-O Atlas atual é voltado ao repositório, com referências estruturais a código e memória por seat. Seu código diz expressamente que scoping de memória não é controle de acesso. Portanto a instalação SF precisa de uma nova boundary de negócio.
-
-A implementação deve:
-
-1. Definir **BusinessEvidenceRef** para registro/versão, documento/trecho/hash e cálculo/recibo, separadamente dos StructRef de código.
-
-2. Criar um **BusinessContextService** que resolva fontes atuais e autorizadas, cobertura e condições de desatualização.
-
-3. Usar uma boundary empresarial para reaproveitar os módulos compatíveis de Atlas, como createMemoryRead/createMemoryEmit e o port DurableMemory.
-
-4. Fornecer ao port memória persistida e serializada no armazenamento protegido da instalação SF. Nenhum dado de negócio precisa entrar no store git compartilhado.
-
-5. Resolver owners, tipos e escopos de negócio de modo explícito. Não representar compras como PRs fictícios nem dar a Finance a identidade de um agente técnico.
-
-6. Revalidar acesso e atualidade em recuperação, prompt, memória, relatório e link.
-
-7. Manter a busca documental no componente apropriado e provar seu comportamento. Código de embeddings existente não demonstra busca semântica pronta.
-
-Para chamar o Atlas de substrato integrado, a prova deve mostrar consumidores reais chamando seus módulos/ports, persistência após reinício, isolamento de acesso e retomada. Uma camada nova com o mesmo nome, sem esse consumo, não satisfaz esse critério.
-
-# Encaixe na campanha existente
-
-| Dono | Entrega adicional explicitada |
-| --- | --- |
-| WP00 | Manifest de perfis/skills/packs, contratos tipados, matriz de operações e identidade de execução. |
-| WP10 | Registro AgentV2, carregamento efetivo das skills, servidor MCP e binding confiável; mesma porta final para UI/agente/MCP. |
-| WP12 | Cinco perfis, roteamento, dezoito skills, saídas tipadas e execuções independentes de revisão. |
-| WP06 + WP14 | Fontes documentais, boundary Atlas SF, memória autorizada, recuperação e invalidação. |
-| WP09 | Rotinas que convocam as análises necessárias e retornam resultados reais. |
-| WP01 + WP08 | Entradas por trabalho, progresso útil, perguntas e contribuições consumíveis na mesa. |
-| WPs de domínio | Descritores de capabilities sobre as portas existentes, sem servidores ou cálculos paralelos. |
-
-Esse detalhamento fecha lacunas de especificação; sua infraestrutura não deve ser contada como já implementada. Os limites de ownership para qualquer nova boundary/export precisam ser declarados por S0 antes da edição.
-
-A meta de duas horas continua condicionada. A qualificação em T+20 deve incluir um perfil real, skill carregada, chamada autorizada pela ponte e retorno da porta de domínio. A recuperação de memória Atlas e a paridade de acesso precisam aparecer antes da aceitação integral. Se a adaptação exigir mais trabalho que o orçamento disponível, registrar o efeito no prazo preservando escopo e critérios.
-
-# Axiomas desta camada
-
-## Definition of Done
-
-Os cinco perfis executam missões reais; as dezoito skills são carregadas e produzem saídas consumidas; o MCP lista e executa as operações concedidas; Atlas SF recupera contexto e memória persistidos pelos componentes reais; Relay devolve run e resultado verificáveis.
-
-## Invariants
-
-Identidade vem do host. Permissão é aplicada no destino. Fontes oficiais permanecem nos domínios. Modelo não concede alçada, não calcula valores oficiais por geração de texto nem transforma uma proposta em aprovação. Cada contribuição conserva versão, origem e escopo.
-
-## Quality standards
-
-Convocar apenas especialistas necessários. Mostrar progresso por resultado de trabalho. Erro, cancelamento, dados ausentes e desatualização mantêm contexto recuperável. Respostas explicam incerteza e mostram fontes acessíveis. Ferramentas e skills têm contratos estáveis e resultados tipados.
-
-## Completeness criteria
-
-Cobrir os cinco perfis, oito packs, dezoito skills, memória/documentos, ciclo de decisão, edição concorrente, revogação, chamada forçada, provider conflitante, falha/retry e uso real pela UI e MCP. Cobrir comportamento com dados completos, parciais e ausentes.
-
-## Success criteria
-
-Uma decisão recebe contribuição distinta dos especialistas necessários; uma resposta humana altera a análise; a escolha produz trabalho preparado e rastreável; um precedente é recuperado com diferenças atuais; o usuário conclui sem coordenar manualmente cinco conversas.
-
-# Seis provas integradas
-
-1. **Perfil e skill reais:** descoberta e execução permitidas; chamada direta a operação proibida também falha.
-
-2. **Paridade:** UI, agente e MCP usam o mesmo domínio, versão e resultados.
-
-3. **Isolamento:** sessão, ator ou caso incorretos não ampliam acesso; revogação alcança memória e relatórios.
-
-4. **Mudança preparada:** escolha e aplicação mantêm os limites do domínio; resposta perdida não duplica efeito.
-
-5. **Evidência e memória:** fontes/revisões recuperáveis, referência invalidada reconhecida e roundtrip persistente pelo adapter Atlas.
-
-6. **Rotina:** admissão → Relay → operação SF → resultado → interface, com falha e intervenção visíveis.
-
-# Fontes verificadas
-
-- [Módulo Sucafina e seus serviços](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/README.md).
-
-- [Atlas: finalidade, superfícies e limites](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/README.md).
-
-- [Memória Atlas: escopo versus confidencialidade](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/memory/src/inject.ts).
-
-- [Port DurableMemory](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/memory-store.ts).
-
-- [Leitura de memória](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/memory-read.ts) e [escrita governada](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/memory-emit.ts).
-
-- [Restrições do framework de seats](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/maestro/coordination/src/seats/seat.ts).
-
-- [Registry e ferramentas](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/core/src/tool/registry.ts).
-
-- [Bridge MCP por turno](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/engine-adapters/claude-code/src/v2/host.ts).
-
-- [Store e fontes de RAG Studio](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/rag-studio/src/context.ts).
-
-- [Catálogo de assets não equivale a carregamento](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/capability-assets/README.md).
-
+| AM01 | Perfis e skills reais | E11, E16 |
+| AM02 | Paridade dos oito packs | E01, E16 |
+| AM03 | Identidade, isolamento, revogação e provider | E11, E12, E15, E16 |
+| AM04 | Escolha, mudanças preparadas e resposta perdida | E10, E16 |
+| AM05 | Evidências e memória Atlas após reinício | E12, E15, E16 |
+| AM06 | Rotina nativa com contribuições e retorno | E11, E13, E14, E16 |
+
+[resident-proof-plan.json](resident-proof-plan.json) especifica atores, casos, checks, candidato, janela, rechecagem e recibos. Cada uma das dezoito skills precisa de carga real, saída persistida e uso observável. AM02 também testa chamadas diretas ao MCP; não exige uma skill artificial para esconder a ausência de paridade do handler.
+
+Todos os níveis têm DoD, invariants, quality standards, completeness criteria e success criteria. Uma aprovação estrutural ou um parecer favorável do plano não aprova os critérios de implementação.

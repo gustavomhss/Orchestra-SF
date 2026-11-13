@@ -6,7 +6,8 @@
     "Entry points, handlers, contratos legados e composição compartilhada do módulo Sucafina",
     "Compatibilidade e migração aditiva dos metadados de produto",
     "Jornadas E2E, evidências visuais, revisão independente e CI cumulativa",
-    "Documentação operacional de produto e pacote final de aceite"
+    "Documentação operacional de produto e pacote final de aceite",
+    "Registro/carga C15, ponte privada C16 e BCS/Atlas C17 com persistência protegida e packaging canônico."
   ],
   "scope_out": [
     "Reimplementar funcionalidades cujo owner é outro WP",
@@ -27,10 +28,16 @@
     "C11",
     "C12",
     "C13",
-    "C14"
+    "C14",
+    "C15",
+    "C16",
+    "C17"
   ],
   "contract_provides": [
-    "C08"
+    "C08",
+    "C15",
+    "C16",
+    "C17"
   ],
   "axioms": {
     "dod": [
@@ -42,6 +49,16 @@
       {
         "id": "WP10.DOD.02",
         "text": "O commit final possui evidência de CI, comportamento, autorização, visualização e preservação correspondente ao seu conteúdo.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP10.DOD.10",
+        "text": "As entregas residentes atribuídas a WP10 têm produção, consumo e provas reais completos.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP10.DOD.40",
+        "text": "Runtime, Atlas, composição, CI e julgamentos têm atores/paths/recibos explícitos; cinco perfis/18 skills/oito packs e Atlas são integrados em G4.",
         "status": "NOT_RUN"
       }
     ],
@@ -55,6 +72,16 @@
         "id": "WP10.INV.02",
         "text": "Nenhum gate é removido, teste enfraquecido, dado real exposto ou frente de deploy alterada para fechar a campanha.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP10.INV.10",
+        "text": "WP10 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP10.INV.40",
+        "text": "S0 não escreve arquivos delegados; nenhum autor assina aceitação independente de sua própria seção.",
+        "status": "NOT_RUN"
       }
     ],
     "quality_standards": [
@@ -66,6 +93,16 @@
       {
         "id": "WP10.QLT.02",
         "text": "A entrega usa linguagem de produto e inclui limites materiais e semântica dos números.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP10.QLT.10",
+        "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP10.QLT.40",
+        "text": "Gates distinguem source shipping, runtime loading, domínio real, CI selection e consumo final no mesmo candidato.",
         "status": "NOT_RUN"
       }
     ],
@@ -79,6 +116,16 @@
         "id": "WP10.CMP.02",
         "text": "Inclui regressão, concorrência, permissões, migração de estado anterior, export completo, falha e ausência de dados.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP10.CMP.10",
+        "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP10.CMP.40",
+        "text": "Incluir empacotamento Atlas, APP src/APP browser separados, provas AM01-AM06, transferências e rechecagem do candidato.",
+        "status": "NOT_RUN"
       }
     ],
     "success_criteria": [
@@ -90,6 +137,16 @@
       {
         "id": "WP10.SUC.02",
         "text": "André e o time podem completar suas tarefas sem reconstruir contexto em ferramentas auxiliares para os cenários cobertos.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP10.SUC.10",
+        "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP10.SUC.40",
+        "text": "O produto inteiro é revisável sem depender de trabalho oculto de coordenadores ou de checks atribuídos a seleção que não rodou.",
         "status": "NOT_RUN"
       }
     ]
@@ -109,18 +166,28 @@
         "Fazer agregação de projeções fora das transações de domínio, mantendo versões por seção. Encaminhar cada mudança pelo comando do seu domínio e confirmar recibos individualmente.",
         "Integrar incrementos em T+25, T+40, T+55 e T+75. Nenhuma dependência desta task espera todos os WPs completos para começar.",
         "Fornecer persistência protegida de metadados, revisão de acesso em reload/cache/export e política de importação acordada com WP06/WP11/WP14.",
-        "Cada comando preparado leva idempotencyKey e digest de conteúdo/ator/target/encarnação. O adapter WP10 consulta e grava o recibo no MESMO snapshot/commit da mutação daquele domínio. Retry idêntico revalida acesso e retorna o recibo; mesma chave com digest diferente é conflito. O caso central reconcilia recibos depois e pode estar parcialmente atualizado; nunca repetir uma mutação porque a resposta se perdeu."
+        "Cada comando preparado leva idempotencyKey e digest de conteúdo/ator/target/encarnação. O adapter WP10 consulta e grava o recibo no MESMO snapshot/commit da mutação daquele domínio. Retry idêntico revalida acesso e retorna o recibo; mesma chave com digest diferente é conflito. O caso central reconcilia recibos depois e pode estar parcialmente atualizado; nunca repetir uma mutação porque a resposta se perdeu.",
+        "Prover createSfProductState no namespace protegido __sfProductV1 do snapshot dashboard existente; registrar acesso separado de papéis Dashboard.",
+        "Integrar contribuições, provider C17 e UI nos roots já possuídos; T06/T07 fornecem arquivos próprios, sem dois escritores.",
+        "Remover namespace privado de business export/JSON import/audit genérico e preservar encarnação/outbox/receipts em migração aditiva.",
+        "Não abrir transação de outro surface dentro da transação de metadados; leituras seccionadas conservam tokens de versão/acesso.",
+        "Conectar NATIVE-CASE T+14, NATIVE-PLANNER T+15, AI-NATIVE T+13 e NATIVE-RUNTIME T+16 nos roots existentes até 18; S3 executa GNATIVE18-20. Nenhuma execução espera task inteira T06 terminar 45.",
+        "Entregar protected-store C08 em 25 a T07; permanecer único writer de entrypoints/runtime/application.ts/manifests compartilhados. Delegados produzem seus arquivos/branches, não editam esses roots."
       ],
       "inputs": [
         "WPs01–09 e WP11–WP14 prontos para integrar",
-        "C01–C14 congelados",
+        "C01–C17 congelados",
         "Baseline e matriz funcional"
       ],
       "outputs": [
         "Composição real do módulo",
         "Compatibilidade dos estados antigos e novos",
         "Mapa de comandos/projeções/consumidores integrados",
-        "Provider C08 durável e versionado, composição atômica dos comandos C04 e recuperação idempotente de recibos/correlações depois de falha ou resposta perdida."
+        "Provider C08 durável e versionado, composição atômica dos comandos C04 e recuperação idempotente de recibos/correlações depois de falha ou resposta perdida.",
+        "product/host-binding/state-provider.ts#createSfProductState",
+        "C09–C17 persistidos/protegidos e import/export compatíveis",
+        "NATIVE-COMPOSE T+18: caso/principal reais + AgentV2/skill/ponte/porta Planner/retorno na entrada real do produto.",
+        "PROTECTED-STORE T+25: provider de armazenamento C08 e transação de instalação, entregue a T07 para DurableMemory protegido."
       ],
       "depends_on": [],
       "checks": [
@@ -148,6 +215,21 @@
           "id": "WP10.T01.CHK.05",
           "text": "Injetar falha antes do commit de Apply: nenhum efeito. Perder resposta depois do commit e repetir correlação: recuperar o mesmo resultado sem aplicar outra vez; edição independente não é perdida. Se o store existente não suportar a atomicidade exigida, registrar incompatibilidade em C08 e resolver dentro da fronteira de produto antes de declarar pronto.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T01.CHK.10",
+          "text": "Export JSON/audit/preview do usuário Dashboard não revela memória/documento/HR de outro domínio mesmo com admin local desse surface.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T01.CHK.11",
+          "text": "Import com __sfProductV1 ou refs/owners/scannerReceipt fornecidos rejeita metadados e conserva estado confiável; nova encarnação invalida referências.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T01.CHK.12",
+          "text": "T06/T07 usam a mesma instância Persistence de HTTP/jobs; restart não cria store git ou runtime paralelo.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -155,6 +237,11 @@
           {
             "id": "WP10.T01.DOD.01",
             "text": "As superfícies reais consomem todas as portas e funções da campanha, sem caminhos de produção vazios ou simulados.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T01.DOD.10",
+            "text": "Provider protegido C09–C17 é consumido pelas portas reais e persiste após restart.",
             "status": "NOT_RUN"
           }
         ],
@@ -173,12 +260,22 @@
             "id": "WP10.T01.INV.03",
             "text": "Cada comando preparado leva idempotencyKey e digest de conteúdo/ator/target/encarnação. O adapter WP10 consulta e grava o recibo no MESMO snapshot/commit da mutação daquele domínio. Retry idêntico revalida acesso e retorna o recibo; mesma chave com digest diferente é conflito. O caso central reconcilia recibos depois e pode estar parcialmente atualizado; nunca repetir uma mutação porque a resposta se perdeu.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T01.INV.10",
+            "text": "Storage central não concede acesso cross-domain nem inventa quarto Surface; commitar domínio e memória não promete transação global.",
+            "status": "NOT_RUN"
           }
         ],
         "quality_standards": [
           {
             "id": "WP10.T01.QLT.01",
             "text": "Mudanças de compatibilidade são aditivas, pequenas e documentadas junto ao consumidor afetado.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T01.QLT.10",
+            "text": "Migration/idempotency preservam estado prévio; audit genérico não contém texto sensível.",
             "status": "NOT_RUN"
           }
         ],
@@ -192,12 +289,22 @@
             "id": "WP10.T01.CMP.02",
             "text": "Preferências, C05/C06, recibos/referências C04/C07 e correlação têm formato, migração, save/load, ACL e falha antes/depois do commit verificados.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T01.CMP.10",
+            "text": "Leitura, escrita, import, export, audit, retry, cancelamento e restart cobrem namespace protegido.",
+            "status": "NOT_RUN"
           }
         ],
         "success_criteria": [
           {
             "id": "WP10.T01.SUC.01",
             "text": "A funcionalidade deixa de depender de abrir páginas isoladas ou scripts de demonstração para existir.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T01.SUC.10",
+            "text": "Usuário autorizado retoma contribuição/memória e usuário sem acesso não obtém conteúdo por nenhuma superfície.",
             "status": "NOT_RUN"
           }
         ]
@@ -211,7 +318,9 @@
         "R40",
         "IA07",
         "IA17",
-        "IA18"
+        "IA18",
+        "RA04",
+        "RA05"
       ],
       "journeys": [
         "J08",
@@ -232,8 +341,12 @@
         "E17",
         "E18"
       ],
-      "integrates_with": [],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "integrates_with": [
+        "WP10.T06",
+        "WP10.T07"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S0"
     },
     {
       "id": "WP10.T02",
@@ -242,7 +355,8 @@
       "work": [
         "Executar J01–J13 com corpus sintético no módulo montado e identidades distintas.",
         "Verificar tarefas com teclado e em 320/768/1440 px, incluindo textos longos, listas densas, dados ausentes e retorno ao contexto.",
-        "Registrar medidas de esforço e telas decisivas; corrigir causas nos WPs responsáveis."
+        "Registrar medidas de esforço e telas decisivas; corrigir causas nos WPs responsáveis.",
+        "Executar AM01–AM06 no candidato integrado e registrar matriz exata de todos perfis/skills/packs, com saídas consumidas após reload."
       ],
       "inputs": [
         "Composição WP10.T01",
@@ -252,7 +366,8 @@
       "outputs": [
         "Recibos E2E com entrada, ação e resultado",
         "Evidência visual de telas e estados essenciais",
-        "Resultados de usabilidade por tarefa e achados"
+        "Resultados de usabilidade por tarefa e achados",
+        "Recibos AM01–AM06 ligados ao SHA testado e todos outputs/consumers"
       ],
       "depends_on": [],
       "checks": [
@@ -280,6 +395,16 @@
           "id": "WP10.T02.CHK.05",
           "text": "No ambiente/corpus fixados em G0, medir resposta visual e conclusão com30repetições comparáveis. Verificar feedback em até200ms e investigar p95 que regrida mais de20%; registrar resultado observado, sem inventar benchmark.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T02.CHK.10",
+          "text": "Remover uma skill ou deixar saída sem consumidor faz a matriz falhar mesmo quando as jornadas genéricas passam.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T02.CHK.11",
+          "text": "Sem trace do Atlas real+restart ou sem paridade dos 8 packs, aceite integral permanece aberto.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -288,12 +413,22 @@
             "id": "WP10.T02.DOD.01",
             "text": "Jornadas e estados de interface foram observados na composição real, com evidência suficiente para reproduzir cada conclusão.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T02.DOD.10",
+            "text": "As 6 provas integradas possuem evidência positiva e negativa no mesmo candidato.",
+            "status": "NOT_RUN"
           }
         ],
         "invariants": [
           {
             "id": "WP10.T02.INV.01",
             "text": "Captura bonita ou teste de markup não substitui comportamento; identidade de teste não pode ter privilégios extras ocultos.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T02.INV.10",
+            "text": "Não reciclar review histórico/fixture/catalogo como prova de runtime.",
             "status": "NOT_RUN"
           }
         ],
@@ -302,6 +437,11 @@
             "id": "WP10.T02.QLT.01",
             "text": "Toda falha visual com perda de conteúdo/ação e toda perda de contexto relevante recebe correção antes do aceite.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T02.QLT.10",
+            "text": "Recibos identificam handler/modulo, run, versões, digests e ação do consumidor.",
+            "status": "NOT_RUN"
           }
         ],
         "completeness_criteria": [
@@ -309,12 +449,22 @@
             "id": "WP10.T02.CMP.01",
             "text": "Cobrir usuários, formatos, moedas, períodos, comparações, approvals, revisão, rotinas, busca, filtros e acessibilidade previstos.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T02.CMP.10",
+            "text": "Os 5 perfis/18 skills/8 packs e C17 estão cobertos, incluindo failure/retry/revogação.",
+            "status": "NOT_RUN"
           }
         ],
         "success_criteria": [
           {
             "id": "WP10.T02.SUC.01",
             "text": "Cada persona conclui sua tarefa e entende o resultado; entender uma aprovação em cerca de30 segundos é objetivo observado no roteiro, não promessa universal.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T02.SUC.10",
+            "text": "Pessoa que não construiu reproduz caminhos felizes e contraprovas sem reconstruir o produto no chat.",
             "status": "NOT_RUN"
           }
         ]
@@ -325,7 +475,13 @@
       "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
       "final_evidence_owner": "WP10",
       "requirements": [
-        "R41"
+        "R41",
+        "RA01",
+        "RA02",
+        "RA03",
+        "RA04",
+        "RA05",
+        "RA06"
       ],
       "journeys": [
         "J08"
@@ -345,8 +501,49 @@
         "E17",
         "E18"
       ],
-      "integrates_with": [],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "integrates_with": [
+        "WP10.T06",
+        "WP10.T07",
+        "WP14.T05",
+        "WP12.T02",
+        "WP12.T03"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S0-C",
+      "implementation_segments": [
+        {
+          "actor": "S0-C",
+          "window": [
+            20,
+            40
+          ],
+          "work": "Harness e primeiros journeys em paths de teste exclusivos."
+        },
+        {
+          "actor": "S0-B",
+          "window": [
+            45,
+            75
+          ],
+          "work": "Execuções perfis/skills/MCP reais e recibos; S3/S4 julgam."
+        },
+        {
+          "actor": "S0-A",
+          "window": [
+            55,
+            75
+          ],
+          "work": "Execuções Atlas/BCS e recibos; S3 julga."
+        },
+        {
+          "actor": "S4",
+          "window": [
+            75,
+            95
+          ],
+          "work": "Aceitação live 5 perfis/18 skills e Relay; S0-C coleta harness/CI/journeys no mesmo candidato."
+        }
+      ]
     },
     {
       "id": "WP10.T03",
@@ -355,7 +552,9 @@
       "work": [
         "Designar três revisores independentes: produto/UX; finanças, semântica, permissões e persistência; IA, Relay e integração. Cada um examina o candidato e produz achados reproduzíveis fora da própria autoria.",
         "Fornecer intenção, matriz de critérios, commit e evidências; permitir que os juízes tentem refutar os resultados.",
-        "Devolver achados aos owners, revisar deltas e repetir apenas provas afetadas até não haver achados obrigatórios abertos."
+        "Devolver achados aos owners, revisar deltas e repetir apenas provas afetadas até não haver achados obrigatórios abertos.",
+        "Revisores novos iniciam só depois de builder encerrado e lease aceito. R1/R2 leem/revisam 72-95; R3 le/revisa 75-95. As inspeções de autores 55-75 são insumos, não pareceres independentes.",
+        "Nenhum reviewer edita produto: correção WP02 é S1, WP05 é S2, WP07 é S3; demais WPs mantêm writers ativos. Revisores julgarão correções 95-103 e revalidarão o candidato 103-118. Se duração observada ultrapassar a reserva, G2H registra efeito sem reduzir critérios."
       ],
       "inputs": [
         "Resultados WP10.T02",
@@ -384,6 +583,11 @@
           "id": "WP10.T03.CHK.03",
           "text": "Recibo de autor não conta como parecer independente; correção relevante invalida evidência afetada.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T03.CHK.40",
+          "text": "Cada seção dos três pareceres identifica reviewer e authors; seção com interseção não fecha aceite até ser reatribuída.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -392,6 +596,11 @@
             "id": "WP10.T03.DOD.01",
             "text": "Três juízes independentes emitem aceite fundamentado no candidato final, após correções necessárias.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T03.DOD.40",
+            "text": "Três pareceres consolidados sem autojulgamento no candidato final.",
+            "status": "NOT_RUN"
           }
         ],
         "invariants": [
@@ -399,12 +608,22 @@
             "id": "WP10.T03.INV.01",
             "text": "Nenhum achado que viole axioma obrigatório pode ser reclassificado como opcional só para encerrar.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T03.INV.40",
+            "text": "Escrever uma correção remove o direito de aceitar aquela seção independentemente.",
+            "status": "NOT_RUN"
           }
         ],
         "quality_standards": [
           {
             "id": "WP10.T03.QLT.01",
             "text": "Pareceres citam cenário, comportamento e consequência; evitar notas genéricas ou placares sem evidência.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T03.QLT.40",
+            "text": "Achado registra critério/evidência/impacto/correção/recheck e SHA.",
             "status": "NOT_RUN"
           }
         ],
@@ -418,12 +637,22 @@
             "id": "WP10.T03.CMP.02",
             "text": "Cobrir produto/UX, finanças/permissões/persistência e IA/Relay/integração com três revisores sem autoria nos arquivos julgados; cobrir substituição de revisor caso um assuma WP14.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T03.CMP.40",
+            "text": "CobrirUX, semântica, IA/MCP/Atlas/Relay/documentos/WP14 e todas as fontes de skills.",
+            "status": "NOT_RUN"
           }
         ],
         "success_criteria": [
           {
             "id": "WP10.T03.SUC.01",
             "text": "Um revisor sem autoria da implementação consegue sustentar o aceite e explicar seus limites concretos.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T03.SUC.40",
+            "text": "Revisão encontra lacunas sem contar S0-A/B builders como revisores livres.",
             "status": "NOT_RUN"
           }
         ]
@@ -441,12 +670,12 @@
       ],
       "session": "S0",
       "build_window": [
-        55,
-        103
+        72,
+        118
       ],
       "proof_window": [
-        55,
-        103
+        72,
+        118
       ],
       "evidence_packages": [
         "E01",
@@ -455,7 +684,8 @@
         "E18"
       ],
       "integrates_with": [],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S1-R1/S2-R2/S3-R3"
     },
     {
       "id": "WP10.T04",
@@ -465,7 +695,12 @@
         "Executar verificações escopadas durante desenvolvimento e uma rodada cumulativa após composição/correções, respeitando AGENTS.md.",
         "Rodar testes do repositório pelo caminho GitHub Actions test:ci; typecheck conforme pacote e guardrails vigentes.",
         "Registrar SHA, URLs/IDs dos runs reais, seletores, resultados e validade da evidência; não disparar deploy.",
-        "Executar todas as recipes obrigatórias de ci-recipes.json e a receita completa exigida pelo epic/AGENTS, ampliando por footprint real. Associar prova live de IA/Relay ao mesmo candidato sem transmitir segredo no request CI."
+        "Executar todas as recipes obrigatórias de ci-recipes.json e a receita completa exigida pelo epic/AGENTS, ampliando por footprint real. Associar prova live de IA/Relay ao mesmo candidato sem transmitir segredo no request CI.",
+        "Executar o build e check:generated/typecheck/test da boundary Atlas alterada, mais suites SF/CLI/UI pertinentes e validação de manifests/receipts no SHA final.",
+        "CI-APP-SRC executa args[] e cobre src; CI-APP-BROWSER executa args[test-browser] e cobre a árvore Bun browser. Ambas são obrigatórias no mesmo candidato; Playwright SF não as substitui.",
+        "Acrescentar suíte completa atlas-boundary e check:generated/typecheck de boundary pelo mecanismo permitido. Nunca criar runner/config/env ad hoc para inventar seleção.",
+        "E16/E18 enumeram seleção observada e planejada, request hash, product tree, run/attempt/job/control/artifact e conclusão; zero testes, seleção divergente e ausência de controle falham.",
+        "Handoff de CI 40 S0-C->S2 e 75 S2->S0-C registra fila/run IDs/request hashes/ETAs; não criar um segundo controlador escrevendo o mesmo receipt."
       ],
       "inputs": [
         "Candidato após WP10.T03",
@@ -475,7 +710,8 @@
       "outputs": [
         "Recibos de CI e typecheck",
         "Resultado de guardrails",
-        "Matriz critério→evidência no mesmo candidato"
+        "Matriz critério→evidência no mesmo candidato",
+        "Evidência de packaging real @orchestra/atlas-boundary/business-memory-ports e import SF"
       ],
       "depends_on": [],
       "checks": [
@@ -493,6 +729,26 @@
           "id": "WP10.T04.CHK.03",
           "text": "Não rodar bun test local nem alterar guards para fugir do caminho exigido pelo repositório.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T04.CHK.10",
+          "text": "Regenerar a boundary no mesmo baseline dá bytes idênticos; geração faltante/obsoleta ou import @atlas/* não resolvido falha.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T04.CHK.11",
+          "text": "Scanner/provedor/driver indisponível, suite pulada ou pacote sem execução real não satisfaz AM05.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T04.CHK.40",
+          "text": "CI-APP-SRC seleciona src e CI-APP-BROWSER seleciona test-browser, com requests/results diferentes e mesmo productcandidate SHA.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T04.CHK.41",
+          "text": "Oito requests mínimas, generated/typecheck e inventário do epic aparecem no recibo final; missing/empty/mismatched selection falha.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -501,12 +757,32 @@
             "id": "WP10.T04.DOD.01",
             "text": "O candidato final tem resultados válidos das verificações exigidas, sem falha obrigatória ou prova desatualizada.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T04.DOD.10",
+            "text": "CI pertinente à boundary e aos novos consumers fecha com evidencia do candidato final.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T04.DOD.40",
+            "text": "Seleções CI exigidas e gates estáticos têm recibos do candidato aceito.",
+            "status": "NOT_RUN"
           }
         ],
         "invariants": [
           {
             "id": "WP10.T04.INV.01",
             "text": "CI verde não prova automaticamente UX; pareceres e jornadas continuam obrigatórios e separados.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T04.INV.10",
+            "text": "Não mudar CI/validator/engine para ocultar falha; exceção de packaging fica restrita.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T04.INV.40",
+            "text": "Playwright SF não substitui Bun browser; checks em outro SHA não viram verde atual.",
             "status": "NOT_RUN"
           }
         ],
@@ -515,6 +791,16 @@
             "id": "WP10.T04.QLT.01",
             "text": "Reusar evidência ainda válida e repetir somente o necessário para resolver risco concreto ou gate exigido.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T04.QLT.10",
+            "text": "Dependency/runtime import e generated declarations são verificados de forma reproduzível.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T04.QLT.40",
+            "text": "Medirfila/setup/run/coleta e capacidade disponível, sem afirmar que timeout 45 é duração prevista.",
+            "status": "NOT_RUN"
           }
         ],
         "completeness_criteria": [
@@ -522,12 +808,32 @@
             "id": "WP10.T04.CMP.01",
             "text": "Cobrir seletores de domínio, integração, browsers, relatórios, imports, concorrência, rotinas e guards afetados.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T04.CMP.10",
+            "text": "Gate cobre gerador, types, bundle, consumer e drivers de persistência/scanner reais.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T04.CMP.40",
+            "text": "CobrirSF/CLI/app/src/app/test-browser/atlas-boundary/trêsPW e suites adicionais exigidas pelo footprint/epic.",
+            "status": "NOT_RUN"
           }
         ],
         "success_criteria": [
           {
             "id": "WP10.T04.SUC.01",
             "text": "Qualquer pessoa consegue ligar cada resultado declarado ao commit e à execução que o demonstraram.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T04.SUC.10",
+            "text": "Uma instalação limpa recebe o mesmo API/runtime bundle sem depender do checkout interno Atlas.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T04.SUC.40",
+            "text": "Aceite CI é verificável porselection/request/run, e prazo 120 permanece condicional à medição.",
             "status": "NOT_RUN"
           }
         ]
@@ -538,18 +844,19 @@
       "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
       "final_evidence_owner": "WP10",
       "requirements": [
-        "R41"
+        "R41",
+        "RA05"
       ],
       "journeys": [
         "J08"
       ],
       "session": "S0",
       "build_window": [
-        75,
+        0,
         118
       ],
       "proof_window": [
-        75,
+        25,
         118
       ],
       "evidence_packages": [
@@ -558,8 +865,37 @@
         "E17",
         "E18"
       ],
-      "integrates_with": [],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "integrates_with": [
+        "WP10.T07"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S0-C",
+      "implementation_segments": [
+        {
+          "actor": "S0-C",
+          "window": [
+            0,
+            40
+          ],
+          "work": "Inventário/probes/harness e controle de CI."
+        },
+        {
+          "actor": "S2",
+          "window": [
+            40,
+            75
+          ],
+          "work": "Controle de CI nas janelas planejadas, passandoa S0-C em 75."
+        },
+        {
+          "actor": "S0-C",
+          "window": [
+            75,
+            118
+          ],
+          "work": "Controle de CI final;95-103S0 captura eventos durante correções WP14, sem presumir agente livre."
+        }
+      ]
     },
     {
       "id": "WP10.T05",
@@ -569,7 +905,8 @@
         "Consolidar a matriz de capacidades/axiomas e conferir nenhum item órfão ou estado intermediário vendido como concluído.",
         "Entregar guia de tarefas por papel, sem detalhes de deploy, e roteiro de demonstração com dados sintéticos.",
         "Publicar changelog de produto, semânticas corrigidas, evidências e limites; submissão/merge segue a autorização e políticas do repositório.",
-        "Preparar recibo e documentação entre T+110 e T+118; só publicar aceitação após G7 e WP10.T04, entre T+118 e T+120. Preparação não declara conclusão."
+        "Preparar recibo e documentação entre T+110 e T+118; só publicar aceitação após G7 e WP10.T04, entre T+118 e T+120. Preparação não declara conclusão.",
+        "Aceitar somente manifesto integral 5/18/8/39 e AM01–AM06 completos; listar atraso ou indisponibilidade material sem reduzir escopo."
       ],
       "inputs": [
         "WP10.T04 aprovado",
@@ -579,7 +916,8 @@
       "outputs": [
         "Pacote final de aceite e guia de uso",
         "Roteiro de demonstração",
-        "Matriz completa e registro de versão"
+        "Matriz completa e registro de versão",
+        "Recibo de aceite com matriz residente e prova Atlas/identidade"
       ],
       "depends_on": [],
       "checks": [
@@ -597,6 +935,11 @@
           "id": "WP10.T05.CHK.03",
           "text": "Itens explicitamente fora de escopo não são apresentados como entregues e capacidades aceitas não são movidas para depois sem mudança de escopo.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T05.CHK.10",
+          "text": "Catálogo completo com skill nunca carregada, pack parcial ou memória sem Atlas bloqueia aceite.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -605,12 +948,22 @@
             "id": "WP10.T05.DOD.01",
             "text": "Campanha fechada somente com cobertura completa, critérios satisfeitos e pacote final coerente com o código entregue.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T05.DOD.10",
+            "text": "Recibo de entrega inclui todas novas capacidades e seus consumidores/provas.",
+            "status": "NOT_RUN"
           }
         ],
         "invariants": [
           {
             "id": "WP10.T05.INV.01",
             "text": "Planejamento, implementação, revisão, publicação e deploy são estados distintos; não confundir um com outro.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T05.INV.10",
+            "text": "Prazo não transforma NOT_RUN/HOLD em PASS.",
             "status": "NOT_RUN"
           }
         ],
@@ -619,6 +972,11 @@
             "id": "WP10.T05.QLT.01",
             "text": "Guia explica o trabalho do usuário e o significado dos dados; detalhes internos ficam nas referências técnicas pertinentes.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T05.QLT.10",
+            "text": "Limitações e falhas são específicas e rastreáveis ao produtor.",
+            "status": "NOT_RUN"
           }
         ],
         "completeness_criteria": [
@@ -626,12 +984,22 @@
             "id": "WP10.T05.CMP.01",
             "text": "Incluir todas as personas, principais jornadas, gráficos/rotinas, import/export, estados de erro e semânticas alteradas.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T05.CMP.10",
+            "text": "Nenhum perfil, skill, pack, caso de identidade ou roundtrip Atlas obrigatório está órfão.",
+            "status": "NOT_RUN"
           }
         ],
         "success_criteria": [
           {
             "id": "WP10.T05.SUC.01",
             "text": "André e time conseguem usar e retomar o trabalho; o usuário recebe uma entrega comprovada e fácil de revisar.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T05.SUC.10",
+            "text": "Escopo total pode ser revisado e reproduzido sem confiar em afirmações de implementação.",
             "status": "NOT_RUN"
           }
         ]
@@ -642,7 +1010,13 @@
       "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
       "final_evidence_owner": "WP10",
       "requirements": [
-        "R41"
+        "R41",
+        "RA01",
+        "RA02",
+        "RA03",
+        "RA04",
+        "RA05",
+        "RA06"
       ],
       "journeys": [
         "J08"
@@ -668,11 +1042,451 @@
         "WP10.T04",
         "G7"
       ]
+    },
+    {
+      "id": "WP10.T06",
+      "title": "Registrar equipe residente e executar MCP com contexto confiável",
+      "intent": "Implementar C15/C16 usando seams reais já existentes, com carga observada de skill, isolamento de execução e destino de domínio único.",
+      "work": [
+        "Implementar registerSfResidentAgents com AgentV2.transform após configuração; allowlists finais/padrão deny e IDs próprios. Registrar SkillV2.DirectorySource reservado, verificar source/instructions digests e chamar SessionV2.skill antes do prompt.",
+        "Implementar BindingRegistry/CallLease host-only, lookup por Tool.Context e reautenticação da request lease corrente; nunca aceitar papel/principal do modelo.",
+        "Implementar createSfBusinessMcpBridge com SDK Server/Client/InMemoryTransport privados por chamada, initialize/listTools/callTool reais, objeto/generation pinados, name/inputDigest/expiry/callId validados e fechamento determinístico.",
+        "Recusar config homônima via Mcp.config sem conectar; não usar McpProvided/global actor/name resolution. Operações externas mcp_* seguem deny.",
+        "Compor dispatchSfCapability com descritores fornecidos pelos WPs; UI/native/MCP usam mesma função/porta; discovery parcial declara indisponíveis sem placeholder.",
+        "Produzir tranche Finance+skill+forecast até T+16 e configuração/caso real para GNATIVE; completar registro 5/18/8 até T+45 após resident.json em T+42.",
+        "Escrever só arquivos T06 e contribuição CLI isolada; S0/T01 integra roots compartilhados. Não editar core/engine/identidade/Azure/deploy.",
+        "Persistir receipts de perfil/skill/execução e devolver outputs autorizados ao C11; nova geração/cancelamento/revogação invalida grants e mensagens tardias.",
+        "Reservar 10-16 para registro/loader/bridge mínimos e publicar NATIVE-RUNTIME;16-20 é apoio à qualificação S3, sem autoaceite. Completar as oito famílias de handlers, lifecycle, colisões, revogação e testes 20-45; ligar AI-FULL T+42 até 45.",
+        "S0-B escreve somente seus paths e branch sf 2-runtime. S0 conecta os composition roots; runtime mínimo não espera a conclusão de todas as funcionalidades de domínio."
+      ],
+      "inputs": [
+        "C08/C15/C16",
+        "WP12.T01 perfis/native-probe",
+        "WP12.T02 resident.json completo",
+        "WP03.T01 createPlannerPort.compareForecast",
+        "WP11.T01 createDecisionCasePort",
+        "WP10.T01 C08 authority/store"
+      ],
+      "outputs": [
+        "product/host-binding/{resident-agents,skill-loader,execution-context,sf-mcp-bridge,capability-dispatch}.ts",
+        "apps/cli/src/sucafina-product/contribution.ts#createSfProductContribution",
+        "Registro de 5 perfis + fontes reservadas de 18 skills + servidor lógico com 8 packs e logs de carga/requisição",
+        "Tranche nativa em T+16, consumo no GNATIVE T+20, catálogo final em T+45",
+        "NATIVE-RUNTIME T+16: registerSfResidentAgents, loadSfSkill, createSfBusinessMcpBridge, trusted execution context e contribution em commit próprio; consome AI-NATIVE T+13 e C15/C16.",
+        "MCP-FULL T+45: registration/loader de AI-FULL T+42 e adapters tipados dos oito packs. Cada handler requer seu produtor real e indisponibilidade explícita até esse handoff; funcionalidade integral dos oito packs é G4/T+75."
+      ],
+      "depends_on": [
+        "WP00.T02"
+      ],
+      "checks": [
+        {
+          "id": "WP10.T06.CHK.01",
+          "text": "Perfil sf_finance real carrega sf-explicar-forecast por SessionV2.skill; mensagem/instructionsDigest corresponde aos bytes pinados e compareForecast real produz resultado consumido.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T06.CHK.02",
+          "text": "Duas sessões com mesmo perfil e usuários/casos diferentes em concorrência mantêm principal/input/output isolados.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T06.CHK.03",
+          "text": "Actor/role/project/session/profile/provider/endpoint em args não altera autoridade; chamada sem binding ou direto a operação não concedida falha.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T06.CHK.04",
+          "text": "Revogação entre listTools e callTool e entre resultado do modelo e egress bloqueia dados/efeitos, inclusive links.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T06.CHK.05",
+          "text": "Provider configurado sucafina-workbench ou nome normalizado colidente produz provider-conflict; nenhum client externo é escolhido.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T06.CHK.06",
+          "text": "Trocar generation, expirar lease, usar lease duas vezes ou alterar inputDigest recusa sem chamar domínio.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T06.CHK.07",
+          "text": "Os 8 packs listam só operações implementadas; prova final invoca 39 rotas e confirma mesmos handlers/resultados UI/native/MCP.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T06.CHK.08",
+          "text": "Skill ausente, digest alterado, fonte homônima ou perfil desconhecido falha antes do prompt; nenhum catalog-only passa.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T06.CHK.09",
+          "text": "Revisor executa em sessão/run novos e não acessa ferramentas de Maestro/Atlas seats ou aprovação.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T06.CHK.10",
+          "text": "Restart não reidrata credential/grant; nova ligação autenticada retoma histórico autorizado com novo run.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T06.CHK.40",
+          "text": "NATIVE-RUNTIME T+16 é consumido 18 sem alegar T06 inteiro concluído; bundle full 42 entra 45 e todos os 8 packs são exercidos até 75.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP10.T06.DOD.01",
+            "text": "Os 5 perfis/18 skills estão registrados e carregados; MCP de 8 packs usa contexto confiável e produz recibos consumidos.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T06.DOD.40",
+            "text": "Early runtime e runtime completo têm recibos distintos e fonte distribuída real.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP10.T06.INV.01",
+            "text": "Identidade vem de request/host, o destino revalida; nomes e dados do modelo não concedem autoridade.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T06.INV.40",
+            "text": "Bridge privada/grant não dependem de McpProvided global nem de identidade gerada.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP10.T06.QLT.01",
+            "text": "API usa seams públicos, schema fechado, falha explícita, budgets/cancelamento e provider object identity.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T06.QLT.40",
+            "text": "Todos os handlers publicados declaram producer e readiness; sem sucesso quando indisponível.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP10.T06.CMP.01",
+            "text": "Provar duas sessões/atores, forged args, revogação, homônimo, generation, carga de 18 skills, Revisor e paridade de 8 packs.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T06.CMP.40",
+            "text": "Contar cinco perfis/dezoito skills/oito packs, incluindo chamada forçada, revogação e provider homônimo.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP10.T06.SUC.01",
+            "text": "Usuário obtém contribuições especializadas rastreáveis e chamadas indevidas falham por caminho real.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T06.SUC.40",
+            "text": "Cadeia T20 e equipe completa T75 usam as mesmas portas/contratos, não dois runtimes.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP10",
+      "ownership_ref": "WP10",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "RA01",
+        "RA02",
+        "RA03",
+        "RA04",
+        "RA06"
+      ],
+      "journeys": [
+        "J09",
+        "J10",
+        "J11",
+        "J12",
+        "J13"
+      ],
+      "session": "S0",
+      "build_window": [
+        10,
+        45
+      ],
+      "proof_window": [
+        16,
+        75
+      ],
+      "evidence_packages": [
+        "E01",
+        "E11",
+        "E15",
+        "E16"
+      ],
+      "integrates_with": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP12.T04",
+        "WP03.T01",
+        "WP11.T01",
+        "WP10.T01"
+      ],
+      "done_requires": "Cinco famílias de axiomas satisfeitas com evidência no candidato real; local build não é aceite integrado.",
+      "implementation_test_status": "NOT_RUN",
+      "execution_actor": "S0-B"
+    },
+    {
+      "id": "WP10.T07",
+      "title": "Compor BusinessContextService e memória Atlas transacional",
+      "intent": "Implementar C17 como boundary protegida, consumindo módulos Atlas reais via package boundary existente.",
+      "work": [
+        "Adicionar export-only src/business-memory-entry.ts à boundary; ampliar build.ts/package exports para business-memory-ports e gerar JS/d.ts canônicos. Nenhum algoritmo/template/owner guard Atlas é editado.",
+        "Implementar createSfBusinessContext com refs discriminadas, resolver documental WP06 e projeções autorizadas de domínios/casos; tagged freshness/denial sem existência alheia.",
+        "Implementar createSfAtlasMemory usando createMemoryRead/createMemoryEmit reais, mapSfAtlasEntry WP14 e owner de negócio derivado; pr/logbook/StructRef de negócio são recusados.",
+        "Implementar createSfAtlasDurableMemory síncrono dentro do callback de Persistence.transaction async, com read/fold/append de staging, event ids Atlas, seq serializado, envelope/index/outbox/idempotency atomizados e sucesso só após await commit.",
+        "Implementar scanner nomeado sobre runScanner: clean=false, hit=true, could-not-run=throw. Fixar binary/path/version confiáveis e não aceitar spec do modelo.",
+        "Isolar namespace protegido e recorte de ACL antes de Atlas; owner/kind raw externos são proibidos. Rever field dependencies, source versions/incarnations, cache/egress/export e revogações.",
+        "Manter case ledger oficial e estado pending/refused de memória; retry idêntico recupera receipt, divergente conflita. Reads multi-domain ocorrem fora da transação central.",
+        "Expor capabilities C16 de contexto/source/evidence/freshness/recall; memória pura de WP14 não recebe persistência. Coordenar packaging/driver com T01 e preflight do scanner com WP00.T04.",
+        "Empacotamento Atlas é parte do orçamento 10-20. Alterar somente os caminhos exatos autorizados em boundary; gerar os dois artefatos pelo build canônico, jamais editar bytes gerados manualmente.",
+        "O provider C08 protegido é produzido por S0/T01 em 25; T07 produz facade síncrona por snapshot dentro da transação assíncrona e só confirma append após commit. WP14 não passa a persistir."
+      ],
+      "inputs": [
+        "C08/C09/C13/C14/C17",
+        "WP10.T01 createSfProductState/Persistence real",
+        "WP06.T05 resolveSfDocumentEvidence",
+        "WP14.T05 mapSfAtlasEntry/deriveSfMemoryOwner",
+        "WP14.T02 rankSfRecalledCases",
+        "C16 trusted call"
+      ],
+      "outputs": [
+        "product/host-binding/{business-context,atlas-memory,atlas-store,atlas-scanner,capabilities}.ts",
+        "modules/atlas/boundary/src/business-memory-entry.ts",
+        "modules/atlas/boundary/src/generated/business-memory-ports.js e .d.ts por gerador",
+        "@orchestra/atlas-boundary/business-memory-ports importável pelo produto",
+        "MemoryWriteReceipt/BusinessEvidenceResolution/AuthorizedMemoryProjection/CaseRecall com proveniência real",
+        "ATLAS-PACKAGE T+20: export @orchestra/atlas-boundary/business-memory-ports resolvível do consumidor SF, com tipos e JS gerados, sem imports para pacote não publicado.",
+        "ATLAS-ROUNDTRIP T+45: append/read pelo módulo Atlas real, ledger autoritativo e store protegido.",
+        "ATLAS-FULL T+55: createSfBusinessContext/createSfAtlasMemory/createSfAtlasDurableMemory conectados aos produtores reais, prontos para consumidores e provas finais AM05."
+      ],
+      "depends_on": [
+        "WP00.T02"
+      ],
+      "checks": [
+        {
+          "id": "WP10.T07.CHK.01",
+          "text": "Bundle/package import de produção chama createMemoryEmit/read; neutralizar um factory real faz a prova integrada falhar.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T07.CHK.02",
+          "text": "Append admitido -> commit driver SF real -> reinício de processo -> recall real -> consumidor de UI recupera razão/diferenças.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T07.CHK.03",
+          "text": "Dois atores usando mesmo perfil só veem casos/fontes atuais permitidas; owner omitido/forjado não amplia; um campo revogado suprime registro completo.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T07.CHK.04",
+          "text": "Scanner real admite clean, bloqueia canary e distingue ausente/timeout/erro como unavailable; zero append nos refusals.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T07.CHK.05",
+          "text": "Falha/cancelamento antes commit deixa zero evento após restart; resposta perdida após commit retorna mesmo event/receipt sem duplicar.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T07.CHK.06",
+          "text": "Dois writers concorrentes/mesmo owner não perdem eventos; cap/project gate é calculado no snapshot serializado e não por cópia antiga.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T07.CHK.07",
+          "text": "Import substitui encarnação mesmo ID e invalida ref/caches; namespace/audit/JSON export não revela memória privada.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T07.CHK.08",
+          "text": "Template empresarial errado, key extra, kind pr/logbook ou raw BusinessEvidenceRef objeto são recusados por map/validator antes da escrita.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T07.CHK.09",
+          "text": "Map snapshot read/append permanece síncrono; não retornar Promise de DurableMemory nem admitir antes await Persistence.transaction.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T07.CHK.10",
+          "text": "check:generated/typecheck/test boundary e import real SF passam no commit candidato; arquivos gerados são derivados, sem edição manual.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T07.CHK.40",
+          "text": "ATLAS-PACKAGE20 resolveimportSF; check:generated/typecheck e CI-ATLAS-BUSINESS ficam vinculados ao candidato.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T07.CHK.41",
+          "text": "ATLAS-FULL T+55 consome resolver 20, map 20 e protected-store 25; append/read/restart são pelo Atlas real.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP10.T07.DOD.01",
+            "text": "BCS e Atlas real entregam refs, resolução, emit/read persistentes, scanner e recuperação autorizada após restart.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T07.DOD.40",
+            "text": "Boundary publicável, BCS, Atlas ports e provider durável têm owner/path/minutos/provas reais.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP10.T07.INV.01",
+            "text": "Ledger SF é oficial; scope Atlas não é ACL; sem novos acessos, store git, identidade técnica ou engine paralelo.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T07.INV.40",
+            "text": "Nenhuma escrita fora dos seis paths Atlas exatos; gerados são produzidos pelo gerador e engine permanece fonte.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP10.T07.QLT.01",
+            "text": "Forms/types reais, atomicidade explícita, causas de scanner preservadas e build do pacote reproduzível.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T07.QLT.40",
+            "text": "Falha descan/commit/ACL é observável e não produz sucesso persistido.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP10.T07.CMP.01",
+            "text": "Recobrir owner/kind/templates, ACL por campo/registro, incarnation, concurrency, cancel, retry, scanner e consumidor instrumentado.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T07.CMP.40",
+            "text": "Empacotamento e 8 casos AM05 integram o orçamento/proof-map, não só o teste doledgerSF.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP10.T07.SUC.01",
+            "text": "Precedente útil sobrevive ao processo e nunca retorna conteúdo revogado ou referência substituída como válida.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T07.SUC.40",
+            "text": "Memória recupera precedente real após reinício comfonte/versão/acesso atual.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP10",
+      "ownership_ref": "WP10",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "RA05",
+        "RA04"
+      ],
+      "journeys": [
+        "J09",
+        "J10",
+        "J11",
+        "J12",
+        "J13"
+      ],
+      "session": "S0",
+      "build_window": [
+        10,
+        55
+      ],
+      "proof_window": [
+        35,
+        75
+      ],
+      "evidence_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrates_with": [
+        "WP10.T01",
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP14.T04",
+        "WP10.T06"
+      ],
+      "done_requires": "Cinco famílias de axiomas satisfeitas com evidência no candidato real; local build não é aceite integrado.",
+      "implementation_test_status": "NOT_RUN",
+      "execution_actor": "S0-A",
+      "implementation_segments": [
+        {
+          "actor": "S0-A",
+          "window": [
+            10,
+            20
+          ],
+          "work": "Entry exportada de Atlas boundary pelo gerador canônico e contrato/scanner; nenhuma alteração de engine."
+        },
+        {
+          "actor": "S0-A",
+          "window": [
+            20,
+            35
+          ],
+          "work": "BCS e resolução autorizada; incorporar DOC-REF/ATLAS-MAP20 e protected-store 25."
+        },
+        {
+          "actor": "S0-A",
+          "window": [
+            35,
+            45
+          ],
+          "work": "createMemoryEmit/createMemoryRead reais + DurableMemory snapshot-local, commit assíncrono e roundtrip inicial."
+        },
+        {
+          "actor": "S0-A",
+          "window": [
+            45,
+            55
+          ],
+          "work": "Isolamento, reinício, scanner, revogação e consumo real; completar handing-off do serviço para perfis/pack Knowledge."
+        }
+      ]
     }
   ],
   "handoff": [
     "Aceite da campanha, guia, demonstração e evidência do candidato final",
-    "Integração/merge somente pelo fluxo autorizado; deploy fica com a frente já existente"
+    "Integração/merge somente pelo fluxo autorizado; deploy fica com a frente já existente",
+    "Registro/carga C15, ponte privada C16 e BCS/Atlas C17 com persistência protegida e packaging canônico.",
+    "O manifest canônico identifica os paths/exports/tasks e AM01–AM06; evidência de catálogo isolado não é aceite integrado."
   ],
   "risks": [
     "Correções cruzadas podem reabrir critérios; rastrear impacto e repetir só as provas afetadas.",
@@ -710,7 +1524,9 @@
       "apps/cli/src/host.ts",
       "apps/cli/src/commands/handlers/serve.ts",
       "modules/sucafina/Sucafinav1/local/entry.ts",
-      "modules/sucafina/Sucafinav1/runtime/host.ts"
+      "modules/sucafina/Sucafinav1/runtime/host.ts",
+      "modules/atlas/boundary/package.json",
+      "modules/atlas/boundary/script/build.ts"
     ],
     "new_prefixes": [
       "modules/sucafina/Sucafinav1/product/integration/",
@@ -721,7 +1537,13 @@
       "packages/app-shell/e2e/sucafina/",
       "apps/cli/src/sucafina-product/"
     ],
-    "allowed_purpose": "Compor o produto e as portas reais nos entrypoints enumerados, fornecer persistência protegida e autorização contextual, integrar e verificar. As exceções exatas autorizam manifests/lock da raiz e os dois arquivos de factory/host para essa integração. Não alterar Azure, deploy, identidade, engines ou política de aprovação; não sobrescrever arquivo de outro escritor."
+    "allowed_purpose": "Compor o produto e as portas reais nos entrypoints enumerados, fornecer persistência protegida e autorização contextual, integrar e verificar. As exceções exatas autorizam manifests/lock da raiz e os dois arquivos de factory/host para essa integração. Não alterar Azure, deploy, identidade, engines ou política de aprovação; não sobrescrever arquivo de outro escritor.",
+    "new_files": [
+      "modules/atlas/boundary/src/business-memory-entry.ts",
+      "modules/atlas/boundary/src/generated/business-memory-ports.js",
+      "modules/atlas/boundary/src/generated/business-memory-ports.d.ts",
+      "modules/atlas/boundary/test/business-memory-ports.test.ts"
+    ]
   },
   "source_ids": [
     "S01",

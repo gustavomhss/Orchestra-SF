@@ -1,7 +1,7 @@
 {
   "status": "PLANNED_NOT_RUN",
   "mechanism": "GitData MCP cria snapshot S descendente do candidato C com .ci-run.json; criar branch ci-run-linux-<id> em S dispara test-ci.yml. Não criar workflow novo nem alterar validator.",
-  "request_validation": "Antes do push, validar com script/test-ci-request.ts e script/test-ci-location.ts contra o tree S. Paths novos só são válidos depois de implementados e commitados. Não enviar placeholders ao CI.",
+  "request_validation": "Usar script/test-ci-location.ts/resolveTestPackage e script/test-ci-request.ts/validateRequest na árvore S, com o resolvedor do repositório. atlas-boundary é um alias verificado. args=[test-browser] é seleção aceita para Bun. Enviar os três specs Playwright somente depois de commitados e verificar os arquivos e a configuração exatos. Esta reconciliação do plano não executou testes do produto.",
   "recipes": [
     {
       "id": "CI-SF",
@@ -26,15 +26,57 @@
       "required": true
     },
     {
-      "id": "CI-APP",
-      "scope": "Suite completa Bun do pacote app consumidor do harness e UI, conforme seleção nativa",
+      "id": "CI-APP-SRC",
+      "scope": "Suíte Bun do app na árvore src, com condição solid; args vazios respeitam bunfig test.root=./src.",
       "request": {
         "package": "app",
         "runner": "bun",
         "args": []
       },
       "directory": "packages/app-shell",
+      "required": true,
+      "renamed_from": "CI-APP",
+      "selected_roots": [
+        "packages/app-shell/src"
+      ],
+      "not_covered": [
+        "packages/app-shell/test-browser"
+      ]
+    },
+    {
+      "id": "CI-APP-BROWSER",
+      "scope": "Suíte Bun da árvore test-browser do app; workflow usa condição browser, happydom e controleomni.",
+      "request": {
+        "package": "app",
+        "runner": "bun",
+        "args": [
+          "test-browser"
+        ]
+      },
+      "directory": "packages/app-shell",
+      "selected_roots": [
+        "packages/app-shell/test-browser"
+      ],
       "required": true
+    },
+    {
+      "id": "CI-ATLAS-BUSINESS",
+      "scope": "Suíte completa Bun da boundary Atlas alterada, incluindo business-memory-ports e suas exports reais; geração/tipo são gates estáticos adicionais explícitos.",
+      "request": {
+        "package": "atlas-boundary",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000"
+        ]
+      },
+      "directory": "modules/atlas/boundary",
+      "planned_files": [
+        "modules/atlas/boundary/test/business-memory-ports.test.ts"
+      ],
+      "required": true,
+      "selection_source": "script/module-registry.json alias atlas-boundary -> modules/atlas/boundary e package name @orchestra/atlas-boundary, resolvidos por script/test-ci-package.ts.",
+      "timeout_semantics": "Timeout por teste reproduz script test existente. Não é estimativa de duração do job; args sem filtro mantêm suíte completa e omni scope=suite."
     },
     {
       "id": "CI-UI-OPERATIONS",
@@ -55,7 +97,7 @@
     },
     {
       "id": "CI-UI-DECISIONS",
-      "scope": "Caso, portfólio, memória e estados assíncronos pela UI real",
+      "scope": "Caso, portfólio, memória e estados as síncronos pela UI real",
       "request": {
         "package": "app",
         "runner": "playwright",
@@ -88,25 +130,36 @@
       "required": true
     }
   ],
-  "full_suite_rule": "As suites completas acima são o conjunto mínimo da campanha neste footprint. S0 inventaria em T+10 a receita de full suite exigida pelo epic/AGENTS e todos os pacotes efetivamente alterados. Toda suite adicional exigida permanece obrigatória; não renomear este mínimo como suite global de Orchestra. Escopo/seleção são congelados antes de T+25 e só se ampliam por impacto observado.",
-  "native_ai_proof": "Além dos testes determinísticos, E11/E13 exigem execução real no host já configurado, com proveniência e casos variados. Não injetar chave de IA em .ci-run.json; o validator não autoriza esse segredo. Prova live é registrada separadamente no mesmo candidato.",
-  "parallelism": "Recipes independentes podem usar snapshots diferentes da mesma árvore de produto. Cada Playwright job usa um worker; paralelismo ocorre entre requests disjuntas, sujeito aos runners realmente disponíveis.",
+  "full_suite_rule": "Mínimo desta footprint: CI-SF, CI-CLI, CI-APP-SRC, CI-APP-BROWSER, CI-ATLAS-BUSINESS e três recipes Playwright SF. Em G0, S0-C inventaria as suites exigidas pelo epic/AGENTS e os pacotes afetados; cada uma recebe recipe executável com alias existente. Qualquer suite adicional obrigatória continua sendo gate. Não chamar este mínimo de suíte global de Orchestra nem presumir workflows ausentes.",
+  "native_ai_proof": "AM01/AM06 e a execução de scanner/Atlas em AM05 usam o host e o modelo realmente configurados, no mesmo candidato. Não colocar segredos em .ci-run.json. CI e provas determinísticas não substituem execução real. Reexecuções exigidas, latência e concorrência observadas entram em G2H.",
+  "parallelism": "As oito requests mínimas podem usar snapshots S distintos da mesma árvore de produto. O paralelismo depende dos runners realmente disponíveis; não se presumem oito runners. Cada job Playwright mantém um worker, conforme o workflow. Não alterar configuração ou validator para acelerar.",
   "typecheck": [
     "bun typecheck em modules/sucafina",
     "bun typecheck em apps/cli",
     "bun typecheck em packages/app-shell",
+    "bun typecheck em modules/atlas/boundary",
     "bun run check:guards --base origin/dev na raiz"
   ],
-  "early_probe": "Uma rodada inicial mede fila, setup, seleção e tempo observado; evidência antiga não é benchmark da suite nova. Recalcular ETA se o orçamento de 15 minutos não for sustentado.",
+  "early_probe": "S0-C inventaria em T+10 e inicia probes válidos até T+25, registrando fila, setup, seleção, execução e coleta. S2 reavalia em T+40 e S0-C em T+75. A seleção parcial e a baseline antiga não medem a suíte final. Duração desconhecida mantém a viabilidade como CONDITIONAL.",
   "evidence": [
     "product_candidate_sha",
+    "product_tree_hash",
     "ci_snapshot_sha",
+    "ci_snapshot_parent",
     "request_hash",
+    "normalized_request",
+    "expected_selection",
     "selected_files",
+    "selected_test_count",
     "run_id",
     "run_url",
     "attempt",
     "job_ids",
+    "job_head_sha",
+    "queue_seconds",
+    "setup_seconds",
+    "test_seconds",
+    "artifact_seconds",
     "conclusion",
     "omni_control",
     "artifacts"
@@ -122,6 +175,66 @@
     "script/test-ci-location.ts",
     "script/module-registry.json",
     "packages/app-shell/e2e/playwright.production.config.ts",
-    "AGENTS.md"
+    "AGENTS.md",
+    "script/test-ci-package.ts",
+    "packages/app-shell/bunfig.toml",
+    "packages/app-shell/package.json",
+    "modules/atlas/boundary/package.json",
+    "modules/atlas/boundary/script/build.ts"
+  ],
+  "static_gates": [
+    {
+      "id": "BUILD-ATLAS",
+      "cwd": "modules/atlas/boundary",
+      "command": "bun run generate",
+      "owner_task": "WP10.T07",
+      "gate": "ATLAS-PACKAGE/T20",
+      "purpose": "Produzir JS/types pela entrada e gerador canônicos; geração de produto, não execução de teste local.",
+      "receipt_required": [
+        "candidate_sha",
+        "command",
+        "exit_status",
+        "generated_files",
+        "generated_digests"
+      ]
+    },
+    {
+      "id": "CHECK-ATLAS-GENERATED",
+      "cwd": "modules/atlas/boundary",
+      "command": "bun run check:generated",
+      "owner_task": "WP10.T07",
+      "gate": "G4/G7",
+      "purpose": "Verifica reproducibilidade/frescor dos artefatos gerados da árvore candidata; não presumir que bun test executa esse script.",
+      "receipt_required": [
+        "candidate_sha",
+        "command",
+        "exit_status",
+        "stdout_digest"
+      ]
+    },
+    {
+      "id": "TYPECHECK-ATLAS",
+      "cwd": "modules/atlas/boundary",
+      "command": "bun typecheck",
+      "owner_task": "WP10.T07",
+      "gate": "G4/G7",
+      "purpose": "Script existente tsgo --noEmit do pacote; não usar tsc diretamente."
+    },
+    {
+      "id": "GUARDS",
+      "cwd": ".",
+      "command": "bun run check:guards --base origin/dev",
+      "owner_task": "WP10.T04",
+      "gate": "G7",
+      "purpose": "Gate exigido por AGENTS no checkout real do candidato; workflow atual não fornece dispatch de guards. Disponibilidade/readiness do executor é registrada em G0, sem inventar verde ou alterar workflow."
+    }
+  ],
+  "receipt_rules": [
+    "Cada snapshot Sj descende do candidato C e muda somente .ci-run.json. Conferir a correspondência da árvore de produto com C.",
+    "CI-APP-SRC e CI-APP-BROWSER têm recibos separados no mesmo C. Nenhum resultado Playwright substitui essas seleções.",
+    "Confirmar head_sha=Sj, evento push e branch ci-run-linux-*. Ler run, jobs e artifacts pelo ID real; não usar o wrapper limitado a eventos de PR.",
+    "Conferir o controle omni pela regra nativa do job. Guardar verdict e identificadores, sem incluir credenciais ou dados desnecessários.",
+    "Zero testes, seleção incompleta ou artefato ausente não produzem PASS.",
+    "Alterar o candidato exige novos snapshots, gates afetados e o conjunto cumulativo obrigatório. Preservar provas antigas com o SHA original; não trocar seu rótulo para o novo candidato."
   ]
 }

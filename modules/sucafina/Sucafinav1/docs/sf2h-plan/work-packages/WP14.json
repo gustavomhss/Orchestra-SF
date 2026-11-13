@@ -6,7 +6,8 @@
     "Classificação pura de materialidade por referência/versão/período/campo",
     "Projeções de semelhantes autorizados",
     "Previsto versus observado",
-    "Políticas puras de deduplicação e invalidação"
+    "Políticas puras de deduplicação e invalidação",
+    "Tradução pura task/project, ranking/explicação e invalidação; persistência e autorização concreta pertencem WP10.T07."
   ],
   "scope_out": [
     "UI",
@@ -22,21 +23,40 @@
     "C06",
     "C07",
     "C09",
-    "C10"
+    "C10",
+    "C15",
+    "C16",
+    "C17"
   ],
   "contract_provides": [
-    "C13"
+    "C13",
+    "C17"
   ],
   "axioms": {
     "dod": [
       {
         "id": "WP14.DOD.01",
-        "text": "Funções/projeções prontas atéT+65 e consumidas de forma comprovada na composição atéT+80.",
+        "text": "Funções, tradução pura e projeções prontas até T+68, com consumo real e provas integradas até T+75; transferência de escritor às 43 é registrada sem concorrência.",
         "status": "NOT_RUN"
       },
       {
         "id": "WP14.DOD.02",
         "text": "Mudança material afeta a análise correspondente, preservando decisão histórica e autorização atual.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP14.DOD.20",
+        "text": "Mudança de cobertura é consumida no classificador real e retorna sinal com antes/depois.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP14.DOD.10",
+        "text": "As entregas residentes atribuídas a WP14 têm produção, consumo e provas reais completos.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP14.DOD.40",
+        "text": "mapSfAtlasEntry sai 20; demais funções prontas 68 e consumidores completos 75, com transferência S4->S0-C em 43.",
         "status": "NOT_RUN"
       }
     ],
@@ -50,6 +70,21 @@
         "id": "WP14.INV.02",
         "text": "Histórico e cache não ampliam acesso; comparação observada não prova causalidade.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP14.INV.20",
+        "text": "Sinal usa resultados canônicos e preserva escolha; conclusão de pending não autoriza alteração automática.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP14.INV.10",
+        "text": "WP14 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP14.INV.40",
+        "text": "WP14 continua sem persistência, UI ou scheduler; autoria exclusiva continua durante transferência e correções.",
+        "status": "NOT_RUN"
       }
     ],
     "quality_standards": [
@@ -62,6 +97,21 @@
         "id": "WP14.QLT.02",
         "text": "Semelhança explica correspondência e limites de aplicação.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP14.QLT.20",
+        "text": "Razão indica categoria resolvida, fonte e condição afetada, sem ocultar a ressalva histórica.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP14.QLT.10",
+        "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP14.QLT.40",
+        "text": "Receipt liga SHA/lease, outputs e consumidores; não usar prazo 80 residual ou resgate S0-A já ocupado com Atlas.",
+        "status": "NOT_RUN"
       }
     ],
     "completeness_criteria": [
@@ -69,12 +119,42 @@
         "id": "WP14.CMP.01",
         "text": "Cobrir material/irrelevante, campo/período/incarnação, repetição/resolução/reabertura, memória vazia, observação parcial/incompatível e revogação.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP14.CMP.20",
+        "text": "Cobrir pending→included, pending→inaplicável suportado, fonte revogada e escolha mantida por nova justificativa.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP14.CMP.10",
+        "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP14.CMP.40",
+        "text": "Cobrir tradução/owner, materialidade, semelhança, observado, dedupe, revogação e consumo após reinício via T07.",
+        "status": "NOT_RUN"
       }
     ],
     "success_criteria": [
       {
         "id": "WP14.SUC.01",
         "text": "A equipe retoma o motivo de uma escolha e reconhece precisamente quando ele precisa ser reconsiderado, com baixo ruído.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP14.SUC.20",
+        "text": "A equipe vê por que o custo confirmado exige reconsideração e continua a partir da razão original.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP14.SUC.10",
+        "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP14.SUC.40",
+        "text": "Memória e reavaliação aparecem no fluxo real até 75 sem sobre carregar implicitamente S4 ou duplicar store.",
         "status": "NOT_RUN"
       }
     ]
@@ -87,7 +167,8 @@
       "work": [
         "Implementar função pura que compara condição registrada e mudança com referência/incarnação, versão, período e campos relevantes.",
         "Produzir ReconsiderationSignal com antes/depois, fonte, condição afetada, gravidade textual e razão; não escrever caso, notificar ou agendar.",
-        "Consumir resultados financeiros/criteriais existentes; preservar distinção entre escolha vigente e pedido de reavaliação."
+        "Consumir resultados financeiros/criteriais existentes; preservar distinção entre escolha vigente e pedido de reavaliação.",
+        "Classificar resolução/alteração de cobertura C10 como evento material quando afeta total ou condição da escolha. Consumir comparação antes/depois do produtor e emitir sinal puro; não recalcular, persistir nem alterar escolha."
       ],
       "inputs": [
         "C01",
@@ -119,6 +200,11 @@
           "id": "WP14.T01.CHK.03",
           "text": "Reuso de ID com nova encarnação invalida referência de modo explícito; ausência de dado não é tratada como condição satisfeita.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP14.T01.CHK.20",
+          "text": "Escolha condicionada da variante missing training mantém sua base210000; confirmação40000 fornece comparação250000/diferença -10000 e sinal da condição mínima rompida. O histórico não é reescrito e repetição do mesmo evento não produz novo sinal.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -127,12 +213,22 @@
             "id": "WP14.T01.DOD.01",
             "text": "Classificador puro é consumido pela composição e produz sinal material a partir de mudança real de fonte.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP14.T01.DOD.20",
+            "text": "Mudança de cobertura é consumida no classificador real e retorna sinal com antes/depois.",
+            "status": "NOT_RUN"
           }
         ],
         "invariants": [
           {
             "id": "WP14.T01.INV.01",
             "text": "Sinal não altera escolha vigente, aprovações, contratos ou ações; período/campo irrelevante não invalida tudo.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP14.T01.INV.20",
+            "text": "Sinal usa resultados canônicos e preserva escolha; conclusão de pending não autoriza alteração automática.",
             "status": "NOT_RUN"
           }
         ],
@@ -141,6 +237,11 @@
             "id": "WP14.T01.QLT.01",
             "text": "Toda reavaliação mostra a condição, o delta e a referência causadora; nenhum score opaco.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP14.T01.QLT.20",
+            "text": "Razão indica categoria resolvida, fonte e condição afetada, sem ocultar a ressalva histórica.",
+            "status": "NOT_RUN"
           }
         ],
         "completeness_criteria": [
@@ -148,12 +249,22 @@
             "id": "WP14.T01.CMP.01",
             "text": "Cobrir limiar rompido, limiar mantido, campo/período irrelevante, referência substituída e evidência insuficiente.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP14.T01.CMP.20",
+            "text": "Cobrir pending→included, pending→inaplicável suportado, fonte revogada e escolha mantida por nova justificativa.",
+            "status": "NOT_RUN"
           }
         ],
         "success_criteria": [
           {
             "id": "WP14.T01.SUC.01",
             "text": "A equipe recebe uma explicação precisa do que merece reconsideração sem refazer a decisão inteira.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP14.T01.SUC.20",
+            "text": "A equipe vê por que o custo confirmado exige reconsideração e continua a partir da razão original.",
             "status": "NOT_RUN"
           }
         ]
@@ -174,11 +285,11 @@
       ],
       "session": "S4",
       "build_window": [
-        10,
-        22
+        22,
+        34
       ],
       "proof_window": [
-        25,
+        34,
         75
       ],
       "evidence_packages": [
@@ -189,7 +300,8 @@
         "WP08.T01",
         "WP10.T01"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S4"
     },
     {
       "id": "WP14.T02",
@@ -198,19 +310,23 @@
       "work": [
         "Implementar seleção/ranking explicável sobre projeções previamente autorizadas e revalidar acesso ao recuperar detalhes.",
         "Expor características de correspondência explícitas: tipo de decisão, horizonte, componente, restrição e resultado disponível.",
-        "Definir interface de invalidação e chave de cache incluindo escopo de autorização/versões; cache concreto e persistência ficam no host."
+        "Definir interface de invalidação e chave de cache incluindo escopo de autorização/versões; cache concreto e persistência ficam no host.",
+        "Receber AuthorizedMemoryProjection produzida por BCS/Atlas C17 e aplicar ranking/explicação puros; não fazer acesso a store nem implementar recall concorrente.",
+        "CaseRecall exige provenance do módulo Atlas e ref resolvida; explicar match e diferenças atuais, sem expor registro suprimido."
       ],
       "inputs": [
         "C01",
         "DecisionCasePort",
         "DecisionMemoryPort",
         "AuthorizedCaseProjection",
-        "AccessRevision"
+        "AccessRevision",
+        "C17"
       ],
       "outputs": [
         "SimilarCaseProjection",
         "MatchExplanation",
-        "CacheScope e invalidation requirements"
+        "CacheScope e invalidation requirements",
+        "rankSfRecalledCases(AuthorizedMemoryProjection) e MatchExplanation puros"
       ],
       "depends_on": [
         "WP00.T02",
@@ -231,6 +347,16 @@
           "id": "WP14.T02.CHK.03",
           "text": "Revogação entre busca e detalhe invalida recuperação/cache e exige rechecagem, inclusive quando o ID já foi mostrado.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP14.T02.CHK.10",
+          "text": "Projeção vinda só do ledger sem Atlas trace não fecha AM05; mesma entrada autorizada mantém ranking determinístico.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP14.T02.CHK.11",
+          "text": "Campo fonte revogado/encarnação substituída sai do input e não influencia título/contagem do resultado.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -239,12 +365,22 @@
             "id": "WP14.T02.DOD.01",
             "text": "Busca de semelhantes consome projeções reais autorizadas e retorna referências com explicação inspecionável.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP14.T02.DOD.10",
+            "text": "Recuperação consumida deriva da projeção Atlas autorizada, com explicação.",
+            "status": "NOT_RUN"
           }
         ],
         "invariants": [
           {
             "id": "WP14.T02.INV.01",
             "text": "Sem perfil oculto de André, inferência de preferência ou recuperação de texto excluído do acesso atual.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP14.T02.INV.10",
+            "text": "WP14 permanece puro; não lê arquivos/store, persiste ou assume owner como ACL.",
             "status": "NOT_RUN"
           }
         ],
@@ -253,6 +389,11 @@
             "id": "WP14.T02.QLT.01",
             "text": "Correspondência distingue semelhança de validade atual; toda conclusão anterior mantém suas condições e período.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP14.T02.QLT.10",
+            "text": "Critérios de semelhança e diferenças atuais são explicitados e revisáveis.",
+            "status": "NOT_RUN"
           }
         ],
         "completeness_criteria": [
@@ -260,12 +401,22 @@
             "id": "WP14.T02.CMP.01",
             "text": "Cobrir nenhum caso, caso compatível, caso incompatível, conteúdo parcialmente visível e acesso revogado.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP14.T02.CMP.10",
+            "text": "Casos sem fonte, revogados, históricos, incompatíveis e vazios são diferenciados.",
+            "status": "NOT_RUN"
           }
         ],
         "success_criteria": [
           {
             "id": "WP14.T02.SUC.01",
             "text": "Uma nova análise encontra precedente útil sem copiar sua conclusão como verdade atual.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP14.T02.SUC.10",
+            "text": "Precedente útil abre no caso autorizado com suas limitações atuais.",
             "status": "NOT_RUN"
           }
         ]
@@ -276,7 +427,8 @@
       "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
       "final_evidence_owner": "WP10",
       "requirements": [
-        "IA12"
+        "IA12",
+        "RA05"
       ],
       "journeys": [
         "J06",
@@ -285,11 +437,11 @@
       ],
       "session": "S4",
       "build_window": [
-        22,
-        30
+        35,
+        43
       ],
       "proof_window": [
-        25,
+        43,
         75
       ],
       "evidence_packages": [
@@ -298,18 +450,22 @@
       "integrates_with": [
         "WP11.T01",
         "WP08.T01",
-        "WP10.T01"
+        "WP10.T01",
+        "WP10.T07",
+        "WP14.T05"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S4"
     },
     {
       "id": "WP14.T03",
       "title": "Comparar previsto e observado sem atribuição falsa",
       "intent": "Mostrar o que aconteceu em relação à base da escolha.",
       "work": [
-        "Depois da coordenação30–40, integrar ChoiceRecord e ObservedResultProjection via contratos reais sem alterar produtores.",
+        "Após transferência exclusiva em43, S0-C integra ChoiceRecord e ObservedResultProjection via contratos reais sem alterar produtores.",
         "Implementar comparação pura por métrica/unidade/período/moeda e cobertura; manter baseline original preservado.",
-        "Produzir lições factuais e pendências para WP07/WP12; observação não vira causalidade nem ROI atribuível à IA."
+        "Produzir lições factuais e pendências para WP07/WP12; observação não vira causalidade nem ROI atribuível à IA.",
+        "S0-C aceita a transferência exclusiva em 43 antes de editar; o intervalo antigo 30-40 de coordenação é substituído pelas janelas explícitas do novo cronograma."
       ],
       "inputs": [
         "C01",
@@ -394,13 +550,13 @@
         "J08",
         "J12"
       ],
-      "session": "S4",
+      "session": "S0",
       "build_window": [
-        40,
-        53
+        43,
+        56
       ],
       "proof_window": [
-        40,
+        56,
         75
       ],
       "evidence_packages": [
@@ -411,7 +567,8 @@
         "WP08.T01",
         "WP10.T01"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S0-C"
     },
     {
       "id": "WP14.T04",
@@ -420,19 +577,22 @@
       "work": [
         "Implementar chave e política puras de deduplicação por condição/versão/causa, com estados sinalizado/resolvido/alterado novamente.",
         "Expor envelopes de sinal e contratos de invalidação para Meu trabalho/WP08, UI/WP01, cache/host e Schedule/WP09.",
-        "Provar consumo real por eventos/leitura autorizada ou rotina admitida; WP14 não envia notificação, não persiste, não agenda nem escreve domínios."
+        "Provar consumo real por eventos/leitura autorizada ou rotina admitida; WP14 não envia notificação, não persiste, não agenda nem escreve domínios.",
+        "Publicar tokens/política pura de invalidação por principal/accessRevision/policyVersion/source version/incarnation/boundary/skill; WP10 executa invalidação física."
       ],
       "inputs": [
         "ReconsiderationSignal",
         "SimilarCaseProjection",
         "AccessRevision",
         "C06",
-        "C07"
+        "C07",
+        "C17"
       ],
       "outputs": [
         "SignalDedupePolicy",
         "InvalidationEnvelope",
-        "ProjectionContract e evidência de consumo"
+        "ProjectionContract e evidência de consumo",
+        "MemoryInvalidationPlan puro para caches/leases/index"
       ],
       "depends_on": [
         "WP00.T02",
@@ -453,13 +613,23 @@
           "id": "WP14.T04.CHK.03",
           "text": "Revogar acesso remove informação dos sinais, detalhes e cache no consumidor real; evidência não é apenas teste da função pura.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP14.T04.CHK.10",
+          "text": "Revogação de um campo/registro invalida todos envelopes dependentes; atualização irrelevante segue fingerprint material sem apagar escolha.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
         "dod": [
           {
             "id": "WP14.T04.DOD.01",
-            "text": "Consumidores reais aplicam deduplicação e invalidação com prova atéT+80, além das funções puras prontas atéT+65.",
+            "text": "Consumidores reais aplicam deduplicação e invalidação com prova até T+75, além das funções puras prontas até T+68; o mesmo receipt identifica o writer ativo e o SHA da transferência.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP14.T04.DOD.10",
+            "text": "Política de invalidação chega ao BCS com consumidores e dependências verificáveis.",
             "status": "NOT_RUN"
           }
         ],
@@ -468,12 +638,22 @@
             "id": "WP14.T04.INV.01",
             "text": "WP14 não assume escrita, UI, scheduler ou entrega de mensagens; permissões atuais prevalecem sobre cache/histórico.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP14.T04.INV.10",
+            "text": "Plano puro não faz persistência/scheduler e não confunde stale com autorizado.",
+            "status": "NOT_RUN"
           }
         ],
         "quality_standards": [
           {
             "id": "WP14.T04.QLT.01",
             "text": "Sinais têm motivo explícito e relação com escolha; deduplicação não oculta mudança material nova.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP14.T04.QLT.10",
+            "text": "Motivo de invalidação é específico e minimiza reanálise sem ampliar acesso.",
             "status": "NOT_RUN"
           }
         ],
@@ -482,12 +662,22 @@
             "id": "WP14.T04.CMP.01",
             "text": "Cobrir evento repetido, nova mudança, resolução, reabertura, permissão revogada e consumidor temporariamente indisponível.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP14.T04.CMP.10",
+            "text": "Cobrir source version, incarnation, ACL, manifest, skill, boundary e import substitutivo.",
+            "status": "NOT_RUN"
           }
         ],
         "success_criteria": [
           {
             "id": "WP14.T04.SUC.01",
             "text": "O time vê uma pendência por causa relevante e não recebe ruído repetido ou informação que deixou de poder acessar.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP14.T04.SUC.10",
+            "text": "Usuário não recebe conteúdo antigo como atual ou revogado como acessível.",
             "status": "NOT_RUN"
           }
         ]
@@ -499,7 +689,8 @@
       "final_evidence_owner": "WP10",
       "requirements": [
         "IA08",
-        "IA18"
+        "IA18",
+        "RA05"
       ],
       "journeys": [
         "J01",
@@ -507,13 +698,13 @@
         "J07",
         "J12"
       ],
-      "session": "S4",
+      "session": "S0",
       "build_window": [
-        53,
-        65
+        56,
+        68
       ],
       "proof_window": [
-        53,
+        68,
         75
       ],
       "evidence_packages": [
@@ -522,15 +713,186 @@
       "integrates_with": [
         "WP11.T01",
         "WP08.T01",
-        "WP10.T01"
+        "WP10.T01",
+        "WP10.T07"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S0-C"
+    },
+    {
+      "id": "WP14.T05",
+      "title": "Traduzir projeções de negócio para templates Atlas admitidos",
+      "intent": "Entregar transformação pura compatível com types/templates reais Atlas sem assumir persistência ou autoridade.",
+      "work": [
+        "Implementar mapSfAtlasEntry para source events C09: task fechado com taskId real/attempted/failedWith/stoppedAt/lesson/ref string; project fechado para política explicitamente revisada.",
+        "Derivar namespace do owner de installation/project/case incarnation ou profile/policy version recebidos do contexto confiável; não aceitar owner modelo nem engenharia.",
+        "Conservar BusinessMemoryEnvelope metadados fora de MemoryEntry; gerar BusinessEvidenceRef bundle legível pelo resolver WP10.",
+        "Chamar memoryKindOf/validate exportados pelo package boundary para comprobar forma/type; não adicionar kind/metadata ao template.",
+        "Entregar ranking/match explanation e plano puro de invalidação para C17/WP14.T02; não ler/escrever store, agendar ou renderizar.",
+        "Produzir tranche pura até T+20 para T07 e transferir ownership conforme execução depois da entrega inicial."
+      ],
+      "inputs": [
+        "C09/C13/C17",
+        "SRC11/SRC12 tipos/templates reais",
+        "AuthorizedCaseProjection/confirmed policy",
+        "Generated boundary types/validators (ou contract types enquanto produtor compila)"
+      ],
+      "outputs": [
+        "product/decision-memory/atlas-projection.ts#mapSfAtlasEntry",
+        "deriveSfMemoryOwner e explainSfMemoryMatch",
+        "Fixtures task/project válidas e contraprovas de keys/kinds/owners",
+        "BusinessMemoryEnvelope/AuthorizedMemoryProjection puros para T07",
+        "ATLAS-MAP T+20: product/decision-memory/atlas-projection.ts::mapSfAtlasEntry; tradução pura de owner/kind/entry e razões de recusa, consumida por T07 sem persistência em WP14."
+      ],
+      "depends_on": [
+        "WP00.T02"
+      ],
+      "checks": [
+        {
+          "id": "WP14.T05.CHK.01",
+          "text": "Task e project gerados satisfazem memoryKindOf e validate reais; BusinessEvidenceRef bruto e key extra são recusados.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP14.T05.CHK.02",
+          "text": "Não há mapping para pr/logbook, prId falso ou owner maestro/lucy/backend; principal autenticação permanece fora do MemberId.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP14.T05.CHK.03",
+          "text": "Mesmo input autorizado produz mesmo projectionDigest; caso com nova encarnação altera owner/ref.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP14.T05.CHK.04",
+          "text": "Fonte ausente/inacessível não é preenchida; preferência pessoal não vira project rule.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP14.T05.CHK.05",
+          "text": "A projeção conserva todas as referências de dependência necessárias à revogação por campo; dependência não identificada impede admissão.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP14.T05.CHK.06",
+          "text": "O módulo permanece sem I/O: não lê ou grava store, HTTP ou arquivos. A prova de persistência pertence a WP10.T07; seu consumidor chama a transformação real de WP14.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP14.T05.CHK.40",
+          "text": "ATLAS-MAP20 é consumido por T07 real; translator não escreve persistência ou engines.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP14.T05.DOD.01",
+            "text": "Transformação pura e owners business compatíveis com templates reais são publicados para T07.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP14.T05.DOD.40",
+            "text": "Tradução pura é exportada 20 e validada pelo consumidor Atlas.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP14.T05.INV.01",
+            "text": "WP14 não persiste, renderiza, agenda, nem forja PR/StructRef/seat.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP14.T05.INV.40",
+            "text": "SemPR/owner/seat fictício e sem store em WP14.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP14.T05.QLT.01",
+            "text": "Campos têm semântica real, digests determinísticos e ausência explícita.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP14.T05.QLT.40",
+            "text": "Tipos/owners/razõesderecusa ficam nos contratos e evidência.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP14.T05.CMP.01",
+            "text": "Cobrir task e project, entradas válidas e inválidas, referências, owners empresariais, política revisada e mudança de encarnação.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP14.T05.CMP.40",
+            "text": "Cobrir ator o mesmo perfil, owner omitido/forjado, encarnação e revogação nos consumidores.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP14.T05.SUC.01",
+            "text": "O consumidor Atlas admite as projeções reais sem casts que escondam incompatibilidade de forma ou de semântica.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP14.T05.SUC.40",
+            "text": "Memória Atlas entendeentidadesSF sem confundir identidade empresarial e técnica.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP14",
+      "ownership_ref": "WP14",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "RA05"
+      ],
+      "journeys": [
+        "J09",
+        "J10",
+        "J11",
+        "J12",
+        "J13"
+      ],
+      "session": "S4",
+      "build_window": [
+        10,
+        20
+      ],
+      "proof_window": [
+        20,
+        75
+      ],
+      "evidence_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrates_with": [
+        "WP10.T07",
+        "WP06.T05",
+        "WP14.T02",
+        "WP14.T04"
+      ],
+      "done_requires": "Cinco famílias de axiomas satisfeitas com evidência no candidato real; local build não é aceite integrado.",
+      "implementation_test_status": "NOT_RUN",
+      "execution_actor": "S4"
     }
   ],
   "handoff": [
     "Sinais para WP08 e modelos de UI para WP01",
     "Memória/resultados para WP07/WP12",
-    "Envelope de invalidação para WP10 e consumidor de Schedule WP09"
+    "Envelope de invalidação para WP10 e consumidor de Schedule WP09",
+    "Tradução pura task/project, ranking/explicação e invalidação; persistência e autorização concreta pertencem WP10.T07.",
+    "O manifest canônico identifica os paths/exports/tasks e AM01–AM06; evidência de catálogo isolado não é aceite integrado.",
+    "S4 publica mapSfAtlasEntry em T+20; mantém escrita exclusiva de WP14 até 43. S0-C aceita head/lease e assume toda escrita do namespace após 43, concluindo T03/T04 e correções até 68; todos os consumidores devem provar uso real até 75."
   ],
   "risks": [
     "Dedupe correta na função não prova consumidor correto; exigir integração.",
@@ -558,7 +920,7 @@
   "session": "S4",
   "build_window": [
     10,
-    65
+    68
   ],
   "integration_deadline": 75,
   "evidence_packages": [

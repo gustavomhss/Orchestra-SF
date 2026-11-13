@@ -1,0 +1,141 @@
+<div id="sf-decision-brief" aria-label="Conceito de decisão integrada Sucafina, com dados fictícios">
+  <style>
+    #sf-decision-brief { --sf-bg:light-dark(#f4f6f2,#14211b); --sf-paper:light-dark(#ffffff,#1b2b22); --sf-ink:light-dark(#173a2b,#e6f1e8); --sf-muted:light-dark(#536a5d,#b4c9ba); --sf-line:light-dark(#dbe4d9,#3b5144); --sf-green:light-dark(#245c3f,#9fcea9); --sf-green-ink:light-dark(#ffffff,#14291d); --sf-soft:light-dark(#e9f0e6,#2b4433); --sf-amber:light-dark(#f5ead3,#483c25); --sf-amber-ink:light-dark(#765014,#f1cf8b); --sf-red:light-dark(#983c32,#f0b0a8); font-family:Inter,ui-sans-serif,system-ui,sans-serif; font-size:14px; line-height:1.5; color:var(--sf-ink); background:var(--sf-bg); border-radius:12px; overflow:hidden; width:100%; box-sizing:border-box; }
+    #sf-decision-brief * { box-sizing:border-box; }
+    #sf-decision-brief button { font:inherit; color:inherit; }
+    #sf-decision-brief .sf-top { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; padding:19px 112px 19px 24px; background:var(--sf-paper); border-bottom:1px solid var(--sf-line); }
+    #sf-decision-brief .sf-brand { font-size:20px; font-weight:600; letter-spacing:-.6px; }
+    #sf-decision-brief .sf-brand span { font-size:12px; font-weight:400; letter-spacing:0; color:var(--sf-muted); margin-left:12px; }
+    #sf-decision-brief .sf-demo { font-size:11px; letter-spacing:.06em; color:var(--sf-muted); white-space:nowrap; }
+    #sf-decision-brief .sf-layout { display:grid; grid-template-columns:164px minmax(0,1fr); }
+    #sf-decision-brief .sf-rail { padding:24px 14px; border-right:1px solid var(--sf-line); background:var(--sf-paper); }
+    #sf-decision-brief .sf-rail span { display:block; padding:10px 12px; color:var(--sf-muted); border-radius:6px; margin-bottom:4px; font-size:13px; }
+    #sf-decision-brief .sf-rail .sf-current { background:var(--sf-soft); color:var(--sf-ink); font-weight:600; }
+    #sf-decision-brief .sf-rail .sf-separator { margin-top:24px; font-size:11px; text-transform:uppercase; letter-spacing:.06em; }
+    #sf-decision-brief .sf-main { padding:25px; min-width:0; }
+    #sf-decision-brief .sf-eyebrow { display:flex; align-items:center; flex-wrap:wrap; gap:8px; font-size:12px; color:var(--sf-muted); margin-bottom:10px; }
+    #sf-decision-brief .sf-due { display:inline-block; padding:3px 8px; border-radius:4px; color:var(--sf-amber-ink); background:var(--sf-amber); }
+    #sf-decision-brief h2 { font-size:24px; line-height:1.25; letter-spacing:-.6px; margin:0 0 7px; font-weight:600; }
+    #sf-decision-brief .sf-subtitle { margin:0 0 20px; color:var(--sf-muted); font-size:13px; }
+    #sf-decision-brief .sf-context { display:flex; flex-wrap:wrap; gap:8px 16px; font-size:12px; margin-bottom:22px; }
+    #sf-decision-brief .sf-context strong { font-weight:600; }
+    #sf-decision-brief .sf-metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; padding:18px 0; border-top:1px solid var(--sf-line); border-bottom:1px solid var(--sf-line); }
+    #sf-decision-brief .sf-label { display:block; font-size:12px; color:var(--sf-muted); }
+    #sf-decision-brief .sf-number { display:block; margin-top:5px; font-size:21px; font-weight:600; font-variant-numeric:tabular-nums; letter-spacing:-.5px; }
+    #sf-decision-brief .sf-over { color:var(--sf-red); }
+    #sf-decision-brief .sf-under { color:var(--sf-green); }
+    #sf-decision-brief .sf-choice-heading { font-size:14px; font-weight:600; margin:23px 0 10px; }
+    #sf-decision-brief .sf-options { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; }
+    #sf-decision-brief .sf-option { background:var(--sf-paper); border:1px solid var(--sf-line); padding:12px; border-radius:7px; text-align:left; min-height:100px; }
+    #sf-decision-brief .sf-option[aria-pressed=true] { background:var(--sf-soft); border-color:var(--sf-green); }
+    #sf-decision-brief .sf-option strong { display:block; font-weight:600; font-size:13px; margin-bottom:5px; }
+    #sf-decision-brief .sf-option span { display:block; font-size:12px; color:var(--sf-muted); }
+    #sf-decision-brief .sf-analysis { margin-top:15px; padding:16px; background:var(--sf-paper); border-radius:7px; }
+    #sf-decision-brief .sf-bridge { display:flex; align-items:baseline; flex-wrap:wrap; gap:7px; font-variant-numeric:tabular-nums; font-size:13px; }
+    #sf-decision-brief .sf-bridge strong { font-weight:600; }
+    #sf-decision-brief .sf-bridge small { color:var(--sf-muted); font-size:12px; }
+    #sf-decision-brief .sf-tradeoff { margin:10px 0 0; font-size:13px; color:var(--sf-muted); }
+    #sf-decision-brief .sf-evidence { margin-top:18px; border-top:1px solid var(--sf-line); padding-top:13px; }
+    #sf-decision-brief summary { font-size:13px; font-weight:500; padding:4px 0; }
+    #sf-decision-brief .sf-evidence-row { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px 15px; padding:10px 0; border-bottom:1px solid var(--sf-line); font-size:12px; }
+    #sf-decision-brief .sf-evidence-row span:last-child { color:var(--sf-muted); }
+    #sf-decision-brief .sf-footer { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-top:22px; }
+    #sf-decision-brief .sf-owner { color:var(--sf-muted); font-size:12px; }
+    #sf-decision-brief .sf-action { border:0; border-radius:6px; background:var(--sf-green); color:var(--sf-green-ink); padding:11px 16px; font-size:13px; font-weight:500; }
+    #sf-decision-brief .sf-draft { margin-top:16px; background:var(--sf-soft); padding:15px; border-radius:7px; font-size:13px; }
+    #sf-decision-brief .sf-draft[hidden] { display:none; }
+    #sf-decision-brief .sf-draft strong { font-weight:600; }
+    #sf-decision-brief .sf-draft p { margin:6px 0 0; }
+    @media(max-width:760px) { #sf-decision-brief .sf-layout { grid-template-columns:minmax(0,1fr); } #sf-decision-brief .sf-rail { display:none; } #sf-decision-brief .sf-main { padding:20px; } #sf-decision-brief .sf-top { padding-left:20px; } }
+    @media(max-width:480px) { #sf-decision-brief .sf-main { padding:16px; } #sf-decision-brief .sf-brand span { display:block; margin:3px 0 0; } #sf-decision-brief .sf-options { grid-template-columns:minmax(0,1fr); } #sf-decision-brief .sf-option { min-height:0; padding:12px; } #sf-decision-brief .sf-metrics { grid-template-columns:minmax(0,1fr); gap:12px; } #sf-decision-brief .sf-metrics>div { display:flex; align-items:center; justify-content:space-between; gap:12px; } #sf-decision-brief .sf-number { font-size:19px; margin-top:0; white-space:nowrap; } #sf-decision-brief .sf-evidence-row { grid-template-columns:minmax(0,1fr); gap:2px; } #sf-decision-brief h2 { font-size:22px; } #sf-decision-brief .sf-top { padding-left:16px; } }
+  </style>
+  <header class="sf-top">
+    <div class="sf-brand">Sucafina <span>IT workspace</span></div>
+    <div class="sf-demo">CONCEITO · DADOS FICTÍCIOS</div>
+  </header>
+  <div class="sf-layout">
+    <aside class="sf-rail" aria-label="Estrutura proposta do produto">
+      <span class="sf-current">CIO Brief</span>
+      <span>Minhas ações</span>
+      <span class="sf-separator">Áreas de trabalho</span>
+      <span>Budget Planner</span>
+      <span>Procurement</span>
+      <span>Portfolio</span>
+      <span>Services & risks</span>
+    </aside>
+    <main class="sf-main">
+      <div class="sf-eyebrow"><span>Renovação · SF-042</span><span class="sf-due">Decidir em 12 dias</span></div>
+      <h2>Suporte do serviço crítico</h2>
+      <p class="sf-subtitle">A nova cotação supera a previsão. Qual caminho levar à aprovação?</p>
+      <div class="sf-context"><span><strong>Plano</strong> FY2027 · v3 oficial</span><span><strong>Fornecedor</strong> Parceiro A</span><span><strong>Responsável</strong> Líder de infraestrutura</span></div>
+      <section class="sf-metrics" aria-label="Impacto do cenário em dólares americanos">
+        <div><span class="sf-label">Orçamento FY2027</span><span class="sf-number">US$ 1.000.000</span></div>
+        <div><span class="sf-label">Previsão do cenário</span><span id="sf-forecast" class="sf-number">US$ 1.010.000</span></div>
+        <div><span id="sf-gap-label" class="sf-label">Acima do orçamento</span><span id="sf-gap" class="sf-number sf-over">US$ 10.000</span></div>
+      </section>
+      <div class="sf-choice-heading">Comparar alternativas</div>
+      <div class="sf-options" role="group" aria-label="Alternativa de decisão">
+        <button type="button" class="sf-option cursor-interaction" aria-pressed="true" data-sf-scenario="quote"><strong>Aceitar cotação atual</strong><span>Renovação de US$ 150 mil</span></button>
+        <button type="button" class="sf-option cursor-interaction" aria-pressed="false" data-sf-scenario="negotiate"><strong>Negociar US$ 135 mil</strong><span>Meta ainda não confirmada</span></button>
+        <button type="button" class="sf-option cursor-interaction" aria-pressed="false" data-sf-scenario="defer"><strong>Reprogramar outro serviço</strong><span>US$ 20 mil passam a FY2028</span></button>
+      </div>
+      <section class="sf-analysis" aria-live="polite" aria-label="Explicação do impacto">
+        <div id="sf-bridge" class="sf-bridge"><small>Previsão base US$ 980 mil</small><span>−</span><strong>US$ 120 mil previstos</strong><span>+</span><strong>US$ 150 mil cotados</strong></div>
+        <p id="sf-tradeoff" class="sf-tradeoff">Preserva o escopo. Exige tratar o excesso de US$ 10 mil na rodada de aprovação.</p>
+      </section>
+      <details class="sf-evidence">
+        <summary class="cursor-interaction">Ver composição e evidências · 3 referências</summary>
+        <div class="sf-evidence-row"><span>Planner · FY2027 v3 · orçamento de US$ 1 milhão</span><span>Fonte do limite aprovado</span></div>
+        <div class="sf-evidence-row"><span>Forecast · US$ 980 mil, incluindo US$ 120 mil para esta renovação</span><span>Base anterior à nova cotação</span></div>
+        <div class="sf-evidence-row"><span>Procurement · cotação A rev.2 · US$ 150 mil</span><span>+US$ 30 mil sobre a previsão</span></div>
+      </details>
+      <div class="sf-footer">
+        <div class="sf-owner">Próxima etapa: responsável confirma a proposta e o impacto.</div>
+        <button id="sf-draft-button" type="button" class="sf-action cursor-interaction">Preparar decisão</button>
+      </div>
+      <section id="sf-draft" class="sf-draft" hidden aria-live="polite">
+        <strong>Rascunho da decisão · não enviado</strong>
+        <p id="sf-draft-text"></p>
+      </section>
+    </main>
+  </div>
+  <script>
+  (function () {
+    const root = document.getElementById('sf-decision-brief');
+    const scenarios = {
+      quote: { forecast:1010000, bridge:'<small>Previsão base US$ 980 mil</small><span>−</span><strong>US$ 120 mil previstos</strong><span>+</span><strong>US$ 150 mil cotados</strong>', tradeoff:'Preserva o escopo. Exige tratar o excesso de US$ 10 mil na rodada de aprovação.', draft:'Opção: aceitar a cotação atual. Previsão FY2027: US$ 1.010.000. Líder de infraestrutura e Finance precisam validar o excesso de US$ 10.000 antes da aprovação.' },
+      negotiate: { forecast:995000, bridge:'<small>Previsão base US$ 980 mil</small><span>−</span><strong>US$ 120 mil previstos</strong><span>+</span><strong>US$ 135 mil em negociação</strong>', tradeoff:'Mantém US$ 5 mil de margem. Resultado condicionado ao aceite do fornecedor; ainda não é uma economia confirmada.', draft:'Opção: negociar a renovação por US$ 135.000. Previsão FY2027: US$ 995.000, condicionada ao aceite. Próxima ação: buyer obter proposta escrita e confirmar que escopo e SLA foram preservados.' },
+      defer: { forecast:990000, bridge:'<small>Previsão base US$ 980 mil</small><span>−</span><strong>US$ 120 mil previstos</strong><span>+</span><strong>US$ 150 mil cotados</strong><span>−</span><strong>US$ 20 mil reprogramados</strong>', tradeoff:'O início de outro serviço passa para FY2028. Reduz custo neste exercício, mas posterga a entrega e mantém o custo futuro.', draft:'Opção: aceitar a cotação e reprogramar US$ 20.000 de outro serviço para FY2028. Previsão FY2027: US$ 990.000. Próxima ação: owner validar a nova data e registrar o impacto na entrega; o custo futuro permanece.' }
+    };
+    const money = function (value) { return 'US$ ' + Math.abs(value).toLocaleString('pt-BR'); };
+    let selected = 'quote';
+    const forecast = root.querySelector('#sf-forecast');
+    const gap = root.querySelector('#sf-gap');
+    const gapLabel = root.querySelector('#sf-gap-label');
+    const bridge = root.querySelector('#sf-bridge');
+    const tradeoff = root.querySelector('#sf-tradeoff');
+    const draft = root.querySelector('#sf-draft');
+    const draftText = root.querySelector('#sf-draft-text');
+    root.querySelectorAll('[data-sf-scenario]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        selected = button.dataset.sfScenario;
+        const scenario = scenarios[selected];
+        root.querySelectorAll('[data-sf-scenario]').forEach(function (option) { option.setAttribute('aria-pressed', String(option === button)); });
+        forecast.textContent = money(scenario.forecast);
+        const delta = scenario.forecast - 1000000;
+        gap.textContent = money(delta);
+        gap.className = 'sf-number ' + (delta > 0 ? 'sf-over' : 'sf-under');
+        gapLabel.textContent = delta > 0 ? 'Acima do orçamento' : 'Margem no orçamento';
+        bridge.innerHTML = scenario.bridge;
+        tradeoff.textContent = scenario.tradeoff;
+        draft.hidden = true;
+        draftText.textContent = '';
+      });
+    });
+    root.querySelector('#sf-draft-button').addEventListener('click', function () {
+      draftText.textContent = scenarios[selected].draft;
+      draft.hidden = false;
+    });
+  })();
+  </script>
+</div>

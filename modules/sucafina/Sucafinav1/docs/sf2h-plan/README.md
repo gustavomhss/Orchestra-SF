@@ -1,29 +1,28 @@
 # Orchestra SF — plano integral de produto e IA
 
-**Estado: REQUIRES_CHANGES após a revisão formal da rodada 1.** [Parecer consolidado](formal-review/round-1/SUMMARY.md): 6 frentes P1 e 2 ajustes P2, sem P0. O snapshot avaliado foi `ec9d36da2385007b64a0aa627582ce7e60629a44`; as correções ainda não foram aplicadas. Este diretório conserva todo o planejamento, sua origem e os três pareceres independentes. Não contém implementação nova do produto.
+**Estado: RECONCILED_PENDING_REVIEW.** As correções das seis frentes P1 e dos dois ajustes P2 da rodada 1 estão integradas. A rodada 2 examina um commit congelado com três revisores novos. [Estado e pareceres](formal-review/README.md).
+
+O plano preserva todo o escopo e incorpora a equipe residente: **15 WPs, 74 tasks, 17 contratos, cinco perfis, dezoito skills, um MCP com oito packs e 39 operações, Atlas SF e seis provas integradas**. A implementação permanece PLANNED/NOT_RUN.
 
 ## Ordem de leitura
 
-1. [Campanha integral](CAMPAIGN.md): objetivo, 15 WPs, 71 tasks, prazo alvo e cinco famílias de axiomas.
-2. [Agentes, skills, MCP e Atlas SF](AGENTS-ATLAS-MCP.md): cinco perfis, dezoito skills, um servidor específico, oito packs e a adaptação de conhecimento/memória.
-3. [Fontes e status](SCOPE-STATUS.md): o que está decomposto, o que foi acrescentado e quais validações realmente ocorreram.
-4. [Revisão formal](formal-review/README.md) e [protocolo](formal-review/PROTOCOL.md).
-5. [Prompts das cinco sessões](START.md), sempre no mesmo commit do plano.
+1. [Campanha integral](CAMPAIGN.md): resultado, escopo, gates e axiomas.
+2. [Equipe, skills, MCP e Atlas](AGENTS-ATLAS-MCP.md): o que será distribuído e usado.
+3. [Produto e critérios de aceite](specs/product-acceptance.md): confirmação material, custos omitidos, documentos e consumo das skills.
+4. [Contratos de runtime](specs/resident-runtime.md) e [execução reconciliada](specs/execution-reconciliation.md).
+5. [Prompts das cinco sessões](START.md), sempre no mesmo commit aprovado.
 
-## Especificações canônicas
+## Fonte canônica e artefatos verificáveis
 
-- [Campanha estruturada](campaign.json) e [WPs](work-packages).
-- [Contratos](contracts.json), [ownership](ownership.json) e [dependências](task-dag.json).
-- [Cronograma e recursos](schedule.json), [cobertura](coverage.json) e [CI](ci-recipes.json).
-- [Plano de evidências](evidence-plan.json), [axiomas](axiom-index.json) e [correspondência de provas](proof-map.json).
-- [Validação estrutural](validation.json) e [ferramenta de validação](tools/validate_plan.py).
+- [campaign.json](campaign.json) é a fonte normativa. Os [WPs](work-packages), [contratos](contracts.json), [ownership](ownership.json), [cronograma](schedule.json) e [DAG](task-dag.json) são derivados.
+- [Manifesto residente](agents-atlas-mcp.json), [consumo na UI](resident-ui-consumption.json), [outputs intermediários](output-handoffs.json) e [provas residentes](resident-proof-plan.json).
+- [Cobertura](coverage.json), [evidências](evidence-plan.json), [axiomas](axiom-index.json), [mapa de provas](proof-map.json) e [seleção de CI](ci-recipes.json).
+- [Resultado estrutural](validation.json), [limites da validação](VALIDATION.md), [gerador](tools/render_plan.py) e [validador](tools/validate_plan.py).
+
+Use `python tools/render_plan.py` depois de alterar a campanha; `python tools/render_plan.py --check` detecta cópias divergentes. `python tools/validate_plan.py` verifica vínculos, axiomas, recursos e outputs declarados.
 
 ## Materiais preservados
 
-- [Visão de produto com IA](sources/AI-PRODUCT-VISION.md).
-- [Campanha original](sources/original-campaign.json).
-- [Protótipo sintético](prototypes/decision-workbench.html), somente referência de conceito.
-- [Revisões anteriores](reviews/README.md), inclusive a investigação do Atlas.
-- [Páginas de origem](pages.json), opcionais para consulta histórica.
+As [fontes históricas](sources), [protótipos sintéticos](prototypes/README.md), [pareceres anteriores](reviews/README.md) e [primeira rodada formal](formal-review/round-1/SUMMARY.md) continuam preservados. [SCOPE-STATUS.md](SCOPE-STATUS.md) explica a precedência.
 
-O escopo de produto permanece integral. Azure/deploy e novos acessos corporativos não fazem parte desta campanha. Todos os resultados de implementação e de provas de produto permanecem PLANNED/NOT_RUN. O prazo de 120 minutos é uma meta condicionada, não um resultado medido.
+A meta de implementação é 120 minutos, condicionada à capacidade e às durações observadas. A campanha continua com o escopo inteiro se o prazo não for atingido. Azure/deploy e novos acessos corporativos ficam fora desta frente.

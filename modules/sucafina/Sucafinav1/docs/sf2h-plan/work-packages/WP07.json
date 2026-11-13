@@ -5,7 +5,8 @@
   "scope_in": [
     "Ownership exclusivo de modules/sucafina/Sucafinav1/runtime/reports.ts e de novos arquivos em modules/sucafina/Sucafinav1/product/reviews/**, incluindo suas provas de produto.",
     "Seleção de pauta, meeting view, revisão preservada, comparação entre revisões e exportação PPTX/DOCX completa e paginada.",
-    "Contexto, contagens, comentários da revisão e referências de encaminhamento segundo C05/C06."
+    "Contexto, contagens, comentários da revisão e referências de encaminhamento segundo C05/C06.",
+    "Descritores C16 das capacidades reais de WP07, consumidos pela ponte nativa sem copiar domínio."
   ],
   "scope_out": [
     "Não alterar src/surfaces.ts: qualquer adaptação compartilhada é entregue ao WP10 por porta e necessidade explícita.",
@@ -19,12 +20,16 @@
     "C08",
     "C09",
     "C12",
-    "C13"
+    "C13",
+    "C15",
+    "C16",
+    "C17"
   ],
   "contract_provides": [
     "C05",
     "C06",
-    "C08"
+    "C08",
+    "C16"
   ],
   "axioms": {
     "dod": [
@@ -36,6 +41,11 @@
       {
         "id": "WP07.DOD.02",
         "text": "PPTX e DOCX incluem todo o conteúdo autorizado escolhido, com paginação e contagens verificáveis; nenhum limite silencioso de linhas fecha a entrega.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.DOD.10",
+        "text": "As entregas residentes atribuídas a WP07 têm produção, consumo e provas reais completos.",
         "status": "NOT_RUN"
       }
     ],
@@ -49,6 +59,11 @@
         "id": "WP07.INV.02",
         "text": "Revisão e reunião não aprovam compras, não alteram fórmulas e não mantêm uma segunda ação operacional.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.INV.10",
+        "text": "WP07 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+        "status": "NOT_RUN"
       }
     ],
     "quality_standards": [
@@ -60,6 +75,11 @@
       {
         "id": "WP07.QLT.02",
         "text": "A apresentação não corta texto ou registros sem declaração; comentários humanos são distinguíveis de números e fatos calculados.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.QLT.10",
+        "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
         "status": "NOT_RUN"
       }
     ],
@@ -78,6 +98,11 @@
         "id": "WP07.CMP.03",
         "text": "Reunião e exportação apresentam a decisão, suas condições e previsto versus observado com fontes/períodos; o fechamento mantém a base financeira debatida e incorpora as ações decididas.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.CMP.10",
+        "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+        "status": "NOT_RUN"
       }
     ],
     "success_criteria": [
@@ -89,6 +114,11 @@
       {
         "id": "WP07.SUC.02",
         "text": "A revisão seguinte mostra diferenças objetivas e encaminhamentos canônicos, sem inventar causas ou passado não preservado.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.SUC.10",
+        "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
         "status": "NOT_RUN"
       }
     ]
@@ -102,7 +132,7 @@
         "Implementar a seleção C05 de tópicos e registros a partir das projeções C02, produzindo prévia ordenada com períodos, contagens, comentários de pauta e restrições visíveis, sem duplicar cálculos ou criar ações operacionais."
       ],
       "inputs": [
-        "Contratos C01/C02/C05/C06 de WP00.T04.",
+        "Contratos C01/C02/C05/C06 de WP00.T02.",
         "Inventário de tópicos de Generate Report e critérios de seleção/ACL da baseline."
       ],
       "outputs": [
@@ -222,7 +252,9 @@
         "WP11.T03",
         "WP14.T03"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S3-A",
+      "correction_actor": "S3"
     },
     {
       "id": "WP07.T02",
@@ -230,15 +262,20 @@
       "intent": "Permitir apresentar e reabrir o conteúdo efetivamente revisado mesmo após alterações nos dados atuais.",
       "work": [
         "Implementar a ação explícita de preservar revisão C05 e sua meeting view, guardando o conteúdo selecionado e suas referências de cálculo/versão; atualizações correntes são oferecidas como atualização explícita de revisão, sem modificar a base já preservada.",
-        "Notas/comentários são escritos pela porta C06 de WP08; preservar na revisão uma representação autorizada imutável com referência, autor e versão. Mostrar conversa corrente em área identificada separadamente, se acessada; edição posterior da thread não altera o conteúdo da revisão."
+        "Notas/comentários são escritos pela porta C06 de WP08; preservar na revisão uma representação autorizada imutável com referência, autor e versão. Mostrar conversa corrente em área identificada separadamente, se acessada; edição posterior da thread não altera o conteúdo da revisão.",
+        "Publicar descritores e handlers de sf_review_prepare, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+        "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
       ],
       "inputs": [
         "Pauta e representação autorizada de WP07.T01.",
-        "Contratos C05/C08 de preservação/recuperação e C06 para referências de comentários e encaminhamentos."
+        "Contratos C05/C08 de preservação/recuperação e C06 para referências de comentários e encaminhamentos.",
+        "C16",
+        "C15"
       ],
       "outputs": [
         "Revisão preservada recuperável por referência, com seleção, conteúdo apresentado e competência de cada seção.",
-        "Meeting view estável e sinalização de atualização disponível, sem aceitar a edição corrente como alteração retroativa."
+        "Meeting view estável e sinalização de atualização disponível, sem aceitar a edição corrente como alteração retroativa.",
+        "modules/sucafina/Sucafinav1/product/reviews/capabilities.ts#prepareReview (sf_review_prepare; ReviewPrepareRequest -> ReviewDraft)"
       ],
       "depends_on": [
         "WP00.T02",
@@ -264,6 +301,11 @@
           "id": "WP07.T02.CHK.04",
           "text": "Preservar revisão com comentário C06 versão3, editar a thread para versão4 e recuperar/exportar a revisão: o texto preservado continua o da versão3; a conversa corrente, se aberta e autorizada, aparece explicitamente como corrente.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP07.T02.CHK.18",
+          "text": "Executar sf_review_prepare pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -276,6 +318,11 @@
           {
             "id": "WP07.T02.DOD.02",
             "text": "A meeting view usa a revisão preservada e oferece atualização explícita sem reescrever o passado.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T02.DOD.18",
+            "text": "Descritores C16 de sf_review_prepare são implementados e consumidos por T06 com referências reais.",
             "status": "NOT_RUN"
           }
         ],
@@ -299,6 +346,11 @@
             "id": "WP07.T02.INV.04",
             "text": "Ao encerrar a reunião, conservar a base financeira usada e anexar escolhas, notas e ações do fechamento. Não substituir silenciosamente os valores debatidos por uma leitura posterior.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T02.INV.18",
+            "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+            "status": "NOT_RUN"
           }
         ],
         "quality_standards": [
@@ -310,6 +362,11 @@
           {
             "id": "WP07.T02.QLT.02",
             "text": "Uma falha ao preservar não apresenta a revisão como salva nem devolve referência inutilizável.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T02.QLT.18",
+            "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
             "status": "NOT_RUN"
           }
         ],
@@ -323,6 +380,11 @@
             "id": "WP07.T02.CMP.02",
             "text": "As referências necessárias para comentário e encaminhamento permanecem utilizáveis sem incluir tarefas operacionais na revisão.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T02.CMP.18",
+            "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+            "status": "NOT_RUN"
           }
         ],
         "success_criteria": [
@@ -335,6 +397,11 @@
             "id": "WP07.T02.SUC.02",
             "text": "Uma revisão apenas simulada ou mantida transitoriamente não é apresentada como preservada no produto.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T02.SUC.18",
+            "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+            "status": "NOT_RUN"
           }
         ]
       },
@@ -345,7 +412,9 @@
       "final_evidence_owner": "WP10",
       "requirements": [
         "R26",
-        "IA16"
+        "IA16",
+        "RA03",
+        "RA04"
       ],
       "journeys": [
         "J05"
@@ -368,9 +437,12 @@
         "WP04.T01",
         "WP05.T04",
         "WP11.T03",
-        "WP14.T03"
+        "WP14.T03",
+        "WP10.T06"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S3-A",
+      "correction_actor": "S3"
     },
     {
       "id": "WP07.T03",
@@ -508,7 +580,9 @@
         "WP11.T03",
         "WP14.T03"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S3-A",
+      "correction_actor": "S3"
     },
     {
       "id": "WP07.T04",
@@ -516,15 +590,21 @@
       "intent": "Produzir PPTX e DOCX que correspondam à revisão escolhida e possam ser usados sem corrigir cortes silenciosos de conteúdo.",
       "work": [
         "Adaptar runtime/reports.ts e os renderizadores exclusivos de product/reviews/** para exportar a representação C05 autorizada com paginação de tabelas/textos, contagens e períodos explícitos, preservando a entrada existente de Generate Report sem editar src/surfaces.ts.",
-        "Incluir nos materiais os gráficos selecionados da revisão quando a sua projeção estiver disponível: WP05 fornece modelo de apresentação/série e alternativa tabular; WP07 faz a renderização própria de PPTX/DOCX com os mesmos dados, unidades e referências. Não capturar uma UI viva que possa mudar durante a exportação."
+        "Incluir nos materiais os gráficos selecionados da revisão quando a sua projeção estiver disponível: WP05 fornece modelo de apresentação/série e alternativa tabular; WP07 faz a renderização própria de PPTX/DOCX com os mesmos dados, unidades e referências. Não capturar uma UI viva que possa mudar durante a exportação.",
+        "Publicar descritores e handlers de sf_report_prepare, sf_artifact_get, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+        "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
       ],
       "inputs": [
         "Representações de pauta/revisão/comparação de WP07.T01–T03.",
-        "Exportadores PPTX/DOCX existentes, contexto C01 e regra de rechecagem de acesso do C05."
+        "Exportadores PPTX/DOCX existentes, contexto C01 e regra de rechecagem de acesso do C05.",
+        "C16",
+        "C15"
       ],
       "outputs": [
         "PPTX e DOCX completos com seções ordenadas, paginação e indicação de cobertura/seleção.",
-        "Porta de exportação compatível com Generate Report e necessidades de adaptação compartilhada entregues ao WP10."
+        "Porta de exportação compatível com Generate Report e necessidades de adaptação compartilhada entregues ao WP10.",
+        "modules/sucafina/Sucafinav1/product/reviews/capabilities.ts#prepareReport (sf_report_prepare; ReportPrepareRequest -> MeetingMaterialProposal)",
+        "modules/sucafina/Sucafinav1/product/reviews/capabilities.ts#readArtifact (sf_artifact_get; ArtifactGetRequest -> AuthorizedArtifact)"
       ],
       "depends_on": [
         "WP00.T02",
@@ -550,6 +630,11 @@
           "id": "WP07.T04.CHK.04",
           "text": "Exportar uma revisão com trajetória financeira e gráfico sem série disponível: valores/rótulos da figura e tabela coincidem com o snapshot; o estado indisponível continua explícito no arquivo, sem gerar uma série falsa.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP07.T04.CHK.18",
+          "text": "Executar sf_report_prepare, sf_artifact_get pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -563,6 +648,11 @@
             "id": "WP07.T04.DOD.02",
             "text": "A verificação inclui conteúdo extraído e inspeção de renderização dos casos extensos, não apenas a existência do arquivo.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T04.DOD.18",
+            "text": "Descritores C16 de sf_report_prepare, sf_artifact_get são implementados e consumidos por T06 com referências reais.",
+            "status": "NOT_RUN"
           }
         ],
         "invariants": [
@@ -575,6 +665,11 @@
             "id": "WP07.T04.INV.02",
             "text": "Nenhum limite fixo elimina registros silenciosamente e a permissão é rechecada na geração.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T04.INV.18",
+            "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+            "status": "NOT_RUN"
           }
         ],
         "quality_standards": [
@@ -586,6 +681,11 @@
           {
             "id": "WP07.T04.QLT.02",
             "text": "Resumo executivo representa os tópicos escolhidos, distinguindo números, comentários e seções sem dados.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T04.QLT.18",
+            "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
             "status": "NOT_RUN"
           }
         ],
@@ -604,6 +704,11 @@
             "id": "WP07.T04.CMP.03",
             "text": "Figuras selecionadas e sua tabela equivalente conservam unidade, período, moeda e seleção do snapshot; ausência ou parcialidade não desaparece ao exportar.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T04.CMP.18",
+            "text": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
+            "status": "NOT_RUN"
           }
         ],
         "success_criteria": [
@@ -616,6 +721,11 @@
             "id": "WP07.T04.SUC.02",
             "text": "A contagem de registros selecionados, apresentados e exportados pode ser reconciliada para a mesma revisão.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T04.SUC.18",
+            "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+            "status": "NOT_RUN"
           }
         ]
       },
@@ -626,7 +736,9 @@
       "final_evidence_owner": "WP10",
       "requirements": [
         "R28",
-        "IA16"
+        "IA16",
+        "RA03",
+        "RA04"
       ],
       "journeys": [
         "J05"
@@ -649,15 +761,21 @@
         "WP04.T01",
         "WP05.T04",
         "WP11.T03",
-        "WP14.T03"
+        "WP14.T03",
+        "WP10.T06"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S3-A",
+      "correction_actor": "S3"
     }
   ],
   "handoff": [
     "Entregar C05 ao WP08/WP09 e ao WP10, incluindo referências, recuperação, incompatibilidades de comparação e recusas de acesso.",
     "Entregar ao WP10 as entradas de meeting view e exportação e qualquer adaptação necessária em src/surfaces.ts; esse arquivo permanece fora do ownership do WP07.",
-    "Fornecer a jornada de prova real: selecionar conteúdo de três produtos, preservar, alterar origem, comparar e exportar; vincular encaminhamento via WP08 à ação real de WP02."
+    "Fornecer a jornada de prova real: selecionar conteúdo de três produtos, preservar, alterar origem, comparar e exportar; vincular encaminhamento via WP08 à ação real de WP02.",
+    "Descritores C16 das capacidades reais de WP07, consumidos pela ponte nativa sem copiar domínio.",
+    "O manifest canônico identifica os paths/exports/tasks e AM01–AM06; evidência de catálogo isolado não é aceite integrado.",
+    "S3-A entrega head e lease a S3 em T+75 e encerra, liberando slot para reviewer novo; S3 é escritor exclusivo das correções até 118. Nenhum reviewer corrige produto."
   ],
   "risks": [
     "O tipo Snapshot existente pode ser confundido com uma revisão histórica; resolver provando preservação e recuperação do conteúdo, não apenas salvando IDs mutáveis.",

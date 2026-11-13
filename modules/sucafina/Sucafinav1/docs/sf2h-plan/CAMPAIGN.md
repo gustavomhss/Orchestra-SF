@@ -1,94 +1,112 @@
-# Campanha integral de produto Orchestra SF em duas horas
+# Orchestra SF — campanha integral de produto, IA e equipe residente
 
-**Status: PLANNED.** Plano completo de execução, sem alegação de implementação ou teste do produto já concluído. Repositório: `gustavomhss/Orchestra-SF`. Baseline verificada: `9e4f3d35833f9b2cea6abdf58f42331f3973d9bf` em `dev`.
+**Implementação: PLANNED / NOT_RUN.** O estado da revisão do planejamento é publicado em [formal-review/README.md](formal-review/README.md).
 
 ## Resultado contratado
 
-Entregar toda a campanha anterior de produto e toda a proposta aceita de decisões com IA. A renovação é uma jornada de aceitação; o produto entregue também precisa atender planejamento, compras, manutenção, documentos, portfólio, reuniões, exportação, colaboração e acompanhamento.
+Entregar integralmente o produto Orchestra SF: 28 capacidades existentes, 41 requisitos originais, 18 capacidades de IA, BI, imports, reuniões, exportações, colaboração, rotinas, casos de decisão, portfólio, documentos e memória. Inclui cinco perfis residentes, dezoito skills, um MCP Sucafina com oito packs e 39 operações, além do Atlas SF Business Profile v1. Janela alvo de 120 minutos, com paralelização explícita e sem retirar escopo ou substituir capacidades por demonstrações.
 
-O prazo alvo é de 120 minutos. O desenho usa cinco conversas reais, 12 builders dedicados, uma frente parcial da coordenadora S4 e três auxiliares da integradora que depois assumem revisão. O pico é de 20 agentes contando as coordenadoras. Uma conversa com quatro slots não oferece essa capacidade.
+André e o time expressam intenção, investigam evidências, comparam consequências, esclarecem o que falta, registram escolhas, executam pelos fluxos existentes e reavaliam mudanças relevantes sem reconstruir contexto.
 
-Tokens abundantes permitem construção e revisão paralelas; não eliminam dependências, serviços indisponíveis ou fila de CI. Não há medição que garanta a campanha inteira em 120 minutos. O escopo permanece integral se o prazo for excedido; a conclusão depende de provas, não do relógio.
+Repositório: `gustavomhss/Orchestra-SF`. Baseline de código: `9e4f3d35833f9b2cea6abdf58f42331f3973d9bf`. A campanha tem **15 WPs, 74 tasks e 17 contratos**. O conjunto mantém as 28 capacidades originais, os 41 requisitos e as 18 capacidades de IA.
 
 ## Escopo integral
 
-- 28 capacidades preservadas: Dashboard 16, Planner 7 e Procurement 5, com navegação, manutenção e estados completos.
-- 41 requisitos anteriores preservados, incluindo edição em lote, versões, imports XLSX/XLS/JSON, prévia e recibos.
-- Oito perguntas de BI originais e três de decisão: composição de custo, tempo e sensibilidade.
-- Primeiro ciclo com responsáveis, Meu trabalho, perguntas, respostas, confirmações e Hot Topics canônicos.
-- Revisões e reuniões com base financeira preservada, fechamento, ações e exportações PPTX/DOCX completas.
-- Quatro rotinas de preparação, análise de decisão e recorrência pelo Relay/Schedule nativos.
-- Casos persistentes, intenção, critérios, alternativas, premissas, escolha humana e mudanças por domínio.
-- IA real para investigar, descobrir contradições, propor, criticar, perguntar e reformular a análise.
-- Cenários de portfólio com combinações e restrições explícitas, conectados ao mesmo motor financeiro.
-- PDF digital, DOCX e texto com extração, referência ao trecho e confirmação humana.
-- Reavaliação material, recuperação autorizada de decisões semelhantes e previsto versus observado.
-- Integração real entre módulo e host, com sessão, projeto, ator e serviços existentes.
+- Dashboard e as suas 16 capacidades; Budget Planner e as suas 7 capacidades; Procurement e as suas 5 capacidades.
+- Navegação, busca, visões salvas, entrada por responsabilidade, Meu trabalho, leitura/edição/decisão e recuperação de contexto.
+- Manutenção contextual, dados e premissas explicáveis, cenários, prévia de importação com impacto, colaboração e relações explícitas.
+- Oito gráficos contextuais, revisões preservadas, material de reunião e exportações completas.
+- Quatro rotinas de preparação com Relay, assistência contextual sobre diferenças e recorrência interna pelo caminho nativo permitido.
+- Composição no módulo real, compatibilidade com estado anterior, concorrência, permissões e revisão independente.
+- Casos persistentes, alternativas estruturadas, critérios, premissas, escolhas humanas e propostas aplicáveis por domínio com recibos e recuperação parcial.
+- IA real pelo host autorizado: intenção, descoberta de contradição com fontes, alternativas, crítica, perguntas relevantes e reformulação após resposta; cancelamento e resultado desatualizado explícitos.
+- Cenários de portfólio com operações suportadas e restrições explícitas; comparação e sensibilidade reproduzíveis.
+- Extração de PDF digital, DOCX e texto com referência a página/trecho/campo e confirmação; documentos escaneados sem texto são recusados como não suportados, sem alegar OCR.
+- Reavaliação por referência/campo/período, recuperação autorizada de decisões semelhantes e previsto versus observado sem atribuição causal inventada.
+- Hoje e mesa de decisão acessíveis a partir de contrato/pedido/projeto; edição operacional direta continua disponível.
+- Integração de produto no composition root do host para fornecer identidade, projeto, sessão e serviços de IA/Relay já autorizados; não envolve Azure ou credenciais novas.
+- Equipe residente com cinco perfis, dezoito skills distribuídas e carregadas pelo runtime nativo, MCP sucafina-workbench com oito packs/39 operações, memória Atlas empresarial durável e seis provas integradas AM01–AM06.
 
-Azure, deploy e novos acessos corporativos permanecem fora do trabalho. Reutilizar credenciais e permissões já configuradas. Não mudar alçadas, autoridade de aprovação ou política financeira para viabilizar a demonstração.
+### Fronteiras do trabalho
 
-## Organização das cinco sessões
+- Azure, hospedagem, deploy, identidade corporativa e infraestrutura já conduzidos por outra frente.
+- Novos acessos SAP, Fabric, diretórios externos ou integrações como condição para produzir valor.
+- Mudanças de alçada, política de compras, autoridade de aprovação ou política financeira sem uma decisão explícita sobre uma divergência concreta.
+- Mensagens para terceiros, envio de relatórios, e-mails, Slack ou Teams. Preparar conteúdo dentro do produto não autoriza enviá-lo.
+- Novo ERP, editor genérico de BI, novo sistema de tarefas ou chat obrigatório para executar o trabalho normal.
+- Mudanças nos engines do Maestro, Relay e Schedule; o produto deve consumir capacidades atuais e mostrar seus limites.
 
-| Sessão | WPs | Missão | Slots |
-| --- | --- | --- | --- |
-| S0 | WP00 e WP10 | Contratos, host, integração contínua, CI e aceite | Integradora e 3 auxiliares que viram revisores |
-| S1 | WP01, WP02, WP03 | Interface, Dashboard e Planner | Coordenadora e 3 builders |
-| S2 | WP04, WP05, WP06 | Procurement, BI, imports e documentos | Coordenadora e 3 builders |
-| S3 | WP07, WP08, WP09 | Reuniões/exportações, colaboração e rotinas | Coordenadora e 3 builders |
-| S4 | WP11, WP12, WP13, WP14 | Decisões, IA, portfólio e memória | 3 builders; a coordenadora implementa WP14 |
+## Paralelização e recursos
 
-Cada WP tem branch e caminhos exclusivos em ownership.json. S0 é a única escritora da branch integradora e dos arquivos compartilhados de composição. Um arquivo nunca tem dois escritores. Se outro trabalho de cloud tiver ownership do mesmo arquivo, trocar patch sobre um SHA combinado e manter um escritor único.
+Cinco conversas efetivamente abertas; no máximo quatro agentes vivos por conversa, incluindo a coordenadora. São quinze auxiliares e cinco coordenadoras, pico de vinte atores; uso da coordenadora para código consome seus próprios minutos. Runners de CI e concorrência de modelos são recursos externos observados, não slots presumidos.
 
-S4 reserva 45 minutos de implementação e 20 de coordenação. Se WP14 não publicar seu produtor até T+30, um slot central assume mediante transferência exclusiva. O novo autor não julga o próprio trabalho; outro coordenador cobre essa revisão.
+| Sessão | Frente | WPs |
+| --- | --- | --- |
+| S0 | Integração e controle | WP00, WP10 |
+| S1 | Experiência e domínios financeiros | WP01, WP02, WP03 |
+| S2 | Compras dados e BI | WP04, WP05, WP06 |
+| S3 | Trabalho de equipe e rotinas | WP07, WP08, WP09 |
+| S4 | Decisões IA e portfólio | WP11, WP12, WP13, WP14 |
 
-## Relógio e caminho crítico
+O escritor e os caminhos de cada frente estão em [ownership.json](ownership.json). Alocações, checkpoints e condições de capacidade estão em [schedule.json](schedule.json). A coordenadora não conta como dois agentes quando implementa e integra.
 
-T0 é o começo da integradora e inclui abertura das outras sessões, preflight e qualificação. Não reiniciar o relógio quando o ambiente estiver pronto.
+WP14.T05 S4 10-20; coordenação 20-22; T01 S4 22-34; coordenação 34-35; T02 S4 35-43; transferência exclusiva em 43 para S0-C; T03 S0-C 43-56; T04 S0-C 56-68; consumo/provas 68-75. Não há resgate automático por S0-A, que está no Atlas. Se transferência falhar, S4 continua como escritor único e S1/S3 absorvem sua coordenação em janelas explicitamente revistas; recalcular ETA sem remover escopo.
 
-| Marco | Saída exigida |
-| --- | --- |
-| T+0 | Integradora registra T0 e baseline e publica os cinco prompts. A abertura e confirmação das demais sessões entram no relógio. |
-| T+5 | Cinco sessões confirmadas e ownership aceito. Se faltar capacidade, registrar efeito no prazo e iniciar as frentes já disponíveis, sem fingir paralelismo nem reduzir escopo. |
-| T+10 | C01–C14, writers, exports e fixtures congelados; execução nativa continua em qualificação separada. |
-| T+20 | Entrada real do produto chega ao modelo configurado e ao contexto correto de Maestro; acesso, proveniência e indisponibilidade explícitos. Não é gate de início de UI/BI/domínios. |
-| T+25 | Primeiros providers no módulo real; contexto autorizado, persistência e uma rota composta. Primeira rodada de CI iniciada cedo. |
-| T+40 | Projeções/ações dos três módulos e consumidores novos conectados; imports/BI/reunião já em integração. |
-| T+55 | Inferência real, contradição com fontes, simulação canônica e execução/admissão Relay demonstráveis. Execução C12 completa por domínio é exigida em T+75. |
-| T+75 | Escopo funcional integral conectado, com persistência real e consumidores presentes; candidato disponível para suites e revisões. |
-| T+95 | Primeiro conjunto completo de provas e revisões; defeitos atribuídos e correções em andamento. |
-| T+103 | Candidato corrigido congelado; verificação dos componentes afetados e cumulativa disparada. |
-| T+118 | Checks exigidos concluídos, três revisões reconciliadas e nenhum achado obrigatório aberto. |
-| T+120 | Recibo de entrega integral ou relatório de atraso com pendências concretas; o prazo não relaxa os critérios de conclusão. |
+## Relógio e condições de conclusão
 
-O caminho crítico é: contratos e binding do host → projeções e cálculo canônico → análise real e caso → consumidores integrados → provas e correções no candidato final. UI, BI, extração, relatórios e domínios constroem em paralelo por contratos; dependências reais continuam obrigatórias no aceite.
+T0 é a primeira execução da integradora; inclui preflight e início das outras quatro sessões. Não reiniciar o relógio depois da qualificação.
 
-T+75 é o marco de produto completo. T+75–120 ficam reservados para verificação, correções e entrega. Revisores já começam a examinar incrementos estáveis em T+55. Duas janelas finais de aproximadamente 15 minutos para CI são orçamento a medir cedo; o timeout de 45 minutos do workflow não é estimativa de duração.
+Alvo condicional de 120 minutos, não duração medida nem garantia. O replanejamento usa exclusivamente cinco sessões com quatro slots incluindo coordenadora. As reservas abaixo são orçamento de trabalho a validar em GREADY/GNATIVE/G2H/G4; fila de CI, latência do provider, geração Atlas e correções não têm duração inventada.
 
-## Contratos e integração durante a execução
+| Minuto | Gate | Condição |
+| ---: | --- | --- |
+| 0 | T0 | S0 registra relógio e baseline, publica os cinco prompts e o mapa de escritores. Setup e abertura das outras quatro sessões entram no relógio; não reiniciar T0. |
+| 5 | GREADY | Cinco sessões e seus vinte slots máximos, contando cinco coordenadoras, têm presença observada. Confirmar atores, leases e minutos. Slot ausente causa realocação explícita e revisão do ETA; não reduzir escopo. |
+| 10 | G0 | C01–C17, schemas, operações dos oito packs, versões, paths, escritores e exemplos normativos congelados por WP00.T02. Manifest de execução ainda distingue fontes planejadas de bundles produzidos. Toda construção determinística é libera da por T02, mesmo com GNATIVE pendente. |
+| 20 | GNATIVE | No mesmo candidato de qualificação: caso C09 real com principal/versão/encarnação, sf_finance registrado por AgentV2, sf-explicar-forecast carregada de fonte distribuída com digest, SessionV2.prompt e ponte MCP privada C16 chamam sf_forecast_compare sobre createPlannerPort.compareForecast real; resultado financeiro retorna ao produto com proveniência. UI e MCP usam o mesmo port, principal e base. Teste de chamada direta não concedida e provider homônimo falha. Oito packs têm contratos/concessões listados; operações ainda não implementadas retornam unavailable, não sucesso. AM02 completo dos oito packs é obrigatório em G4. Falha não retém construção determinística. |
+| 25 | G1 | C08 protected-store provider publicado, runtime mínimo integrado, primeiros providers dos três domínios e corpus/caso reais. S0-C inicia probes de CI com seleção real e capta fila/setup, sem extrapolar duração do conjunto final. |
+| 40 | G2 | Domínios e consumidores iniciais conectados; resolver documental real publicado em T+20 e extração em T+35; fontes de skills dos colaboradores recebidas até T+38. Integração incremental e primeira medição de CI identificadas por SHA. |
+| 40 | G2H | Recalcular caminho residual de construção, provas live, revisão e CI a partir de capacidade e durações observadas. Alvo 120 fica CONDITIONAL se qualquer duração/concurrency obrigatória for desconhecida. Se projeção ultrapassar 120, marcar AT_RISK e publicar sequência full-scope continuada com os mesmos owners, sem reclassificar entrega parcial. |
+| 55 | G3 | Cinco perfis e dezoito fontes/skills finais empacotados e carregáveis, execução própria do Revisor disponível, inferência real/contradição/simulação e Relay demonstrados. Atlas real importado pela boundary de distribuição, com BCS, resolver e append/read protegido; prova de reinício/ACL continua até G4. Todos os consumidores tardios ainda têm entregas e ETAs explícitos. |
+| 75 | G4 | Escopo funcional integral conectado: cinco perfis, dezoito skills executáveis, oito packs operacionais, Atlas/ledger e documentos reais, aplicações C12 por domínio e UI/Relay consumidores. AM01-AM06 têm integração exercida e candidato cumulativo congelado. Nenhuma fixture satisfaz produção/consumo. Reavaliar G2H com seleção final de CI e provas live. |
+| 95 | G5 | Primeiro conjunto de aceitação cumulativa do candidato concluído e três pareceres independentes por seção. Falhas vão ao único escritor; o prazo só permanece viável se CI, provas live e correções residuais observadas couberem. |
+| 103 | G6 | Último candidato corrigido congelado, se houve alteração; disparar gates cumulativos exigidos e repetições live afetadas com recibo do candidato. Se candidato G4 não mudou, não criar commit artificial para reiniciar provas. |
+| 118 | G7 | Receipts completos para o candidato aceito: seleções distintas app/src e app/test-browser, Atlas boundary, demais suites obrigatórias, AM01-AM06, três revisões sem autojulgamento e nenhum achado obrigatório aberto. |
+| 120 | G8 | Emitir aceite somente se G7 passar; caso contrário publicar atraso, pendências, próximo ETA, donos e continuação de todo o escopo. Não declarar meta de duas horas cumprida nem encerrar a execução por tempo esgotado. |
 
-Os contratos C01–C14 estão detalhados em contracts.json. Congelar assinaturas, estados, export names, exemplos e consumidores até T+10. Fixtures servem para construir em paralelo; somente produtores reais fecham tasks.
+G4->G5 reserva 20 minutos e G6->G7 reserva 15 minutos como hipóteses condicionais para o conjunto observado de CI, provas live e rechecks. Timeout 45 minutos é limite de cada job, não previsão. O plano não presume oito runners livres nem extrapola seleção parcial para suíte final. Medir fila, setup, execução e coleta separadamente; desconhecido não conta como zero.
 
-WP03 concentra as regras financeiras. WP11 e WP13 usam esse motor. WP08 concentra contribuições humanas e vínculos. WP11 guarda escolhas e propostas; WP14 avalia condições e produz memória; WP09 conduz rotinas; WP10 injeta os serviços e encaminha os comandos aos domínios.
+O prazo de 120 minutos continua sendo meta condicionada. Caso alguma capacidade, integração ou prova obrigatória permaneça aberta, o escopo completo continua em execução. O relógio não concede aceite.
 
-Integração ocorre em T+25, T+40, T+55 e T+75, além de incrementos menores já prontos. Não esperar todos os WPs acabarem. O estado READY_FOR_INTEGRATION significa que existe saída consumível, não que o produto passou na aceitação.
+## Contratos, tarefas e consumo real
 
-### Decisões técnicas já fechadas no plano
+A lista normativa é [campaign.json](campaign.json). Os demais artefatos são derivados por `python tools/render_plan.py`; `--check` detecta divergências. Alterar a fonte canônica e regenerar as cópias no mesmo commit.
 
-- Leituras de várias superfícies ocorrem fora da transaction externa; cada seção conserva sua versão e autorização.
-- O caso pode preparar várias mudanças, mas os domínios confirmam resultados separadamente. O produto mostra estado parcial.
-- Idempotência fica no commit do domínio: mutação e recibo local são atômicos. O caso reconcilia depois. Resposta perdida não pode repetir efeito financeiro.
-- Importações não podem fabricar confirmações ou apagar silenciosamente a memória confiável. Substituições invalidam referências por encarnação.
-- A IA recebe contexto e ferramentas autorizados pelo host. Ela não escolhe papel, não soma valores por conta própria e não recebe uma ferramenta genérica de mutação.
-- Relay conserva admissão, publicação, versão e checks. Uma pergunta encerra a análise; a resposta humana permite nova execução admitida.
-- Confirmar uma premissa de cenário é diferente de atualizar o registro oficial. A divergência permanece visível até a mudança autorizada.
+depends_on exige contrato ou saída local pronta. integrates_with define produtores reais necessários para concluir, sem bloquear a construção inicial quando fixtures de contrato permitem avançar. Fixture nunca fecha aceite.
 
-### Binding nativo como trabalho explícito
+S0 publica qualquer mudança de contrato com versão, compatibilidade, consumidores afetados e provas invalida das. Stub é somente scaffolding temporário.
 
-A factory inspecionada recebe origem e compõe persistência, autenticação, ambiente e anexos, mas não recebe serviços de IA/Relay. A adaptação de produto está atribuída a WP10, incluindo os entrypoints exatos do host e da factory. Isso não pressupõe falha do deploy paralelo.
+| Contrato | Responsável pela definição | Nome |
+| --- | --- | --- |
+| C01 | WP00 | Contexto, capacidades e referências |
+| C02 | WP00 | Projeções autorizadas dos domínios |
+| C03 | WP00 | Comandos e edição |
+| C04 | WP00 | Importação com impacto |
+| C05 | WP00 | Revisão preservada |
+| C06 | WP00 | Colaboração e ação canônica |
+| C07 | WP00 | Rotina e resultado |
+| C08 | WP00 | BusinessPorts e composição nativa |
+| C09 | WP00 | Caso de decisão e referências |
+| C10 | WP00 | Simulação e operações de cenário |
+| C11 | WP00 | Análise de IA pelo host |
+| C12 | WP00 | Mudanças preparadas e recibos |
+| C13 | WP00 | Condições e memória autorizada |
+| C14 | WP00 | Documentos e portfólio |
+| C15 | WP00 | Perfis residentes, skills executadas e contribuições consumidas |
+| C16 | WP00 | Chamada SF confiável e servidor MCP privado com paridade |
+| C17 | WP00 | BusinessEvidenceRef, BusinessContextService e memória Atlas protegida |
 
-BusinessPorts entrega identidade do binding, análise escopada, catálogo/admissão/run, Schedule e retorno autenticado ao caso. Usar serviços públicos de SessionV2 e Maestro. Uma chamada direta a LLM.generateObject pode gerar conteúdo tipado, mas não substitui um workflow admitido. O endpoint de leitura de relay-run não é um endpoint de start.
-
-Em T+20 deve haver uma inferência real na entrada do produto, proveniência e preparação de admissão no projeto correto. Se faltar serviço configurado, registrar o impedimento e dedicar correção; continuar as demais frentes sem apresentar saída roteirizada como IA real.
+As assinaturas, semânticas, produtores e consumidores ficam em [contracts.json](contracts.json). A equipe residente possui [manifesto canônico](agents-atlas-mcp.json), [guia técnico](AGENTS-ATLAS-MCP.md) e [contratos detalhados](specs/resident-runtime.md). Cada entrega adicional precisa de resultado consumido e prova identificada.
 
 ## Axiomas da campanha
 
@@ -100,6 +118,8 @@ Em T+20 deve haver uma inferência real na entrada do produto, proveniência e p
 - **CAMP.DOD.04** — As verificações exigidas pelo repositório e a cobertura de paridade estão válidas para o candidato final; o guia por papel, a demonstração e os limites materiais estão entregues.
 - **sf2h-integral-20261112.DOD.05** — As 28 capacidades, R01–R41 e todas as capacidades IA01–IA18 estão implementadas, conectadas a produtores reais e verificadas no candidato de produto. A renovação é uma jornada de aceite, não a fronteira do produto.
 - **sf2h-integral-20261112.DOD.06** — T+120 é prazo alvo. Caso reste capacidade ou prova obrigatória, a campanha continua aberta com estado e causa concretos; não declarar MVP, DONE parcial ou feature pronta por estar atrás de flag desativada.
+- **CAMP.DOD.20** — C06 resolve confirmação por escopo e C10 resolve cobertura de custos; produtores e consumidores reais demonstram as contraprovas CONFIRM-SCOPE e AI-RENEWAL-OMITTED-CATEGORY.
+- **CAMP.DOD.90** — RA01–RA06, C15–C17 e as provas AM01–AM06 estão satisfeitos no candidato implementado: perfis/skills realmente carregados, 39 operações com produtores e consumidores reais, MCP com autoridade por chamada e memória Atlas persistida. O planejamento não registra este critério como aprovado.
 
 ### Invariants
 
@@ -111,9 +131,11 @@ Em T+20 deve haver uma inferência real na entrada do produto, proveniência e p
 - **CAMP.INV.06** — Revisão preservada permanece estável. Atualizar a origem não reescreve a reunião passada; acesso revogado não permite recuperar conteúdo privado por histórico.
 - **CAMP.INV.07** — Um único WP pode escrever cada arquivo. Nenhuma execução usa a frente de cloud/deploy, acessos novos ou alterações no engine de Relay como atalho para cumprir este escopo.
 - **sf2h-integral-20261112.INV.08** — A IA não escolhe ator/papel, não ganha acesso por relacionamento entre registros, não aprova compras nem altera arbitrariamente snapshots; totais e condições são calculados por motores determinísticos.
-- **sf2h-integral-20261112.INV.09** — Contrato, orçamento, forecast e actual não são intercambiáveis. Valor desconhecido não é zero; simulação e premissa aceita não atualizam o domínio oficial silenciosamente.
+- **sf2h-integral-20261112.INV.09** — Contrato, orçamento, forecast e actual não são intercambiáveis. Desconhecido, categoria omitida e pending não são zero. Comparação completa depende de cobertura C10; simulação e premissa aceita não atualizam o domínio oficial.
 - **sf2h-integral-20261112.INV.10** — Artefatos confiáveis de decisão e colaboração têm política explícita de importação: entrada não pode forjar autor/confirmação; substituição de registros invalida referências por encarnação, sem ressuscitá-las por ID textual reutilizado.
 - **sf2h-integral-20261112.INV.11** — Leituras entre superfícies não ocorrem dentro de uma transaction já aberta. A coleta mantém autorização e versões por seção; a escrita em várias áreas produz recibos separados e estado parcial verdadeiro.
+- **CAMP.INV.20** — Versão observada não equivale a validade global; soma correta não equivale a custo completo. Nova categoria relevante, revogação e substituição preservam auditoria e exigem estado correto.
+- **CAMP.INV.90** — Perfis empresariais não renomeiam o Maestro nem mudam os engines. Nenhum argumento do modelo cria autoridade; o host revalida identidade e acesso. Leases de arquivo mantêm um único writer por intervalo. Resultado sem scanner, skill carregada ou persistência exigida não pode ser declarado sucesso.
 
 ### Quality standards
 
@@ -125,15 +147,19 @@ Em T+20 deve haver uma inferência real na entrada do produto, proveniência e p
 - **CAMP.QLT.06** — Critérios e evidências são discriminantes: descrevem qual erro real seria detectado. Testar novamente apenas o que mudou ou o que um gate obrigatório exige.
 - **sf2h-integral-20261112.QLT.07** — O produto continua utilizável se a análise de IA demorar, falhar ou for cancelada. Resposta rápida de cálculos, erro junto ao campo, foco preservado e confirmação de gravação efetiva.
 - **sf2h-integral-20261112.QLT.08** — A contribuição real da IA é demonstrada em variante de caso não preenchida previamente; modelo deve encontrar fonte/condição relevante, produzir proposta tipada e reformulá-la após contribuição humana.
+- **CAMP.QLT.20** — Estado de confirmação e condição financeira são explícitos em UI, rotina, BI, crítica e portfólio, sem inventar permissão, regra fiscal ou valor para preencher ausência.
+- **CAMP.QLT.90** — Cada contribuição residente informa perfil, skill/versão/digests, execução, fontes, permissões e estado. Sua saída tipada chega a um consumidor real da UI e pode ser retomada após reload; falha, indisponibilidade e resultado desatualizado têm próximo passo explícito.
 
 ### Completeness criteria
 
-- **CAMP.CMP.01** — Cobrir os contratos C01–C14, as 28 capacidades originais, R01–R41, IA01–IA18 e todas as jornadas da matriz, sem descartar comportamento de negócio aceito.
+- **CAMP.CMP.01** — Cobrir os contratos C01–C17, as 28 capacidades originais, R01–R41, IA01–IA18 e todas as jornadas da matriz, sem descartar comportamento de negócio aceito.
 - **CAMP.CMP.02** — Cobrir leituras e escritas autorizadas/recusadas, dados completos/parciais/ausentes, concorrência, reenvio, referência removida, perda de acesso e retomada depois de falha.
 - **CAMP.CMP.03** — O ciclo antes/durante/depois é coberto para executivo, contribuidor, Finance/HR e requester/buyer/approver, usando as permissões reais em vez de um usuário administrador único.
 - **CAMP.CMP.04** — As contribuições novas são acessíveis pelos entrypoints reais, com estado compatível e assets/receitas incluídos na entrega do módulo; documentos ou receitas que só existem no repositório não contam como funcionalidade.
 - **CAMP.CMP.05** — Cada requisito tem tasks responsáveis, jornadas e evidência esperada. Cada task tem owner, fronteira, entradas, saídas, dependências, checks e os cinco grupos de axiomas locais.
 - **sf2h-integral-20261112.CMP.06** — Cobrir ciclos de uso antes/durante/depois: primeiro uso com responsáveis, manutenção, importação, planejamento, compra, análise IA, portfólio, reunião/exportação, recorrência e reavaliação.
+- **CAMP.CMP.20** — Cobrir material/irrelevante/revogado/substituído, categoria incluída/inaplicável/pendente/omitida/zero e consumo WP06→WP09 da extração obrigatória.
+- **CAMP.CMP.90** — Cobrir cinco perfis, dezoito skills, oito packs, 39 operações, seis provas AM01–AM06 e RA01–RA06. Para cada skill registrar entradas, grants, saída persistida, consumidores, casos positivos/negativos e participação nas provas; incluir empacotamento, revogação, isolamento e reinício.
 
 ### Success criteria
 
@@ -144,64 +170,72 @@ Em T+20 deve haver uma inferência real na entrada do produto, proveniência e p
 - **CAMP.SUC.05** — Importar, exportar e preparar material não exige redigitação de valores já disponíveis. Prévia e resultado confirmado concordam; toda omissão, restrição ou pendência é explícita.
 - **CAMP.SUC.06** — Rotinas reduzem preparação repetitiva e devolvem saídas verificáveis e ações propostas. Repetir uma execução não duplica ações e não concede aprovação de negócio.
 - **CAMP.SUC.07** — O aceite interno observa os resultados acima. Adoção e satisfação reais de André/time permanecem hipóteses a medir quando o uso real estiver disponível, sem alegar pesquisa com pessoas que não participaram.
-- **sf2h-integral-20261112.SUC.08** — Uma pergunta é respondida uma vez e reutilizada no escopo válido; uma mudança comercial repercute nas comparações sem duplicar contribuição financeira; a escolha original continua explicável após alteração.
+- **sf2h-integral-20261112.SUC.08** — Pergunta e confirmação são reutilizadas no escopo ainda válido C06; versão global irrelevante não gera recobrança. Mudança comercial ou resolução de custo repercute nas comparações sem duplicar contribuição; a escolha e ressalvas originais continuam explicáveis.
 - **sf2h-integral-20261112.SUC.09** — A avaliação controlada registra compreensão e retomada da decisão; metas de tempo são metas a medir, nunca promessa de pesquisa ou economia financeira já realizada.
+- **CAMP.SUC.20** — A pessoa evita cobrança irrelevante, identifica a informação que condiciona a comparação e reavalia custo posterior sem perder a escolha original.
+- **CAMP.SUC.90** — André e seu time recebem contribuições de especialistas no contexto de trabalho: podem abrir fontes, comparar impactos determinísticos, responder pendências uma vez, contestar a proposta em execução independente e recuperar a decisão e seus resultados sem refazer a análise.
 
-## Axiomas de cada WP e task
+## WPs e tasks
 
-Cada arquivo work-packages/WPxx.md contém objetivo, fronteira, janela, entradas, trabalho, saídas, consumos reais, verificações e os cinco grupos de axiomas em dois níveis: WP e cada task. Task e step são a mesma unidade. Subdividir uma task exige criar os cinco grupos para a nova unidade.
+| WP | Objetivo | Sessão | Tasks |
+| --- | --- | --- | ---: |
+| [WP00](work-packages/WP00.md) | Contratos, baseline e critérios de aceitação | S0 | 4 |
+| [WP01](work-packages/WP01.md) | Interface comum e navegação | S1 | 5 |
+| [WP02](work-packages/WP02.md) | Dashboard e manutenção dos domínios | S1 | 4 |
+| [WP03](work-packages/WP03.md) | Budget Planner e cenários | S1 | 5 |
+| [WP04](work-packages/WP04.md) | Procurement orientado à decisão | S2 | 5 |
+| [WP05](work-packages/WP05.md) | BI contextual e gráficos | S2 | 5 |
+| [WP06](work-packages/WP06.md) | Importação com impacto e recibo | S2 | 5 |
+| [WP07](work-packages/WP07.md) | Revisões, reuniões e relatórios | S3 | 4 |
+| [WP08](work-packages/WP08.md) | Colaboração, vínculos e Meu trabalho | S3 | 6 |
+| [WP09](work-packages/WP09.md) | Rotinas de produto com Relay | S3 | 7 |
+| [WP10](work-packages/WP10.md) | Composição, revisão independente e aceitação | S0 | 7 |
+| [WP11](work-packages/WP11.md) | Casos de decisão e execução preparada | S4 | 4 |
+| [WP12](work-packages/WP12.md) | IA contextual e análise verificável | S4 | 4 |
+| [WP13](work-packages/WP13.md) | Cenários de portfólio e sensibilidade | S4 | 4 |
+| [WP14](work-packages/WP14.md) | Reavaliação e memória das decisões | S4 | 5 |
 
-Os axiomas são critérios de comportamento. Não são uma ordem para executar um teste por frase. O índice axiom-index.json permite rastrear todos; 18 conjuntos de provas reutilizam evidência sem esconder lacunas.
+Cada task/step é uma unidade com trabalho, entradas, saídas, writer, consumidores, checks e cinco famílias de axiomas próprios. Subdivisão executável com responsabilidade distinta deve ganhar os mesmos cinco grupos. Os índices não substituem a observação do comportamento.
 
-## Verificação e revisão
+## Evidência e revisão
 
-| Conjunto | Escopo |
+| Pacote | Escopo |
 | --- | --- |
-| E01 — Contratos montagem e integridade | Contratos compilados, exports registrados, ownership disjunto, entrypoint real e persistência após reload. |
+| E01 — Contratos montagem e integridade | Contratos compilados, exports registrados, ownership disjunto, entrypoint real e persistência após reload. C15–C17, AM02, checkpoints, distribuição de skills e Atlas boundary real. |
 | E02 — Navegação e estados | 28 entradas, navegação contextual, retorno, primeiro uso, teclado, 320/768/1440 px, rascunho, falha e conflito. |
 | E03 — Dashboard completo | 16 capacidades do Dashboard, manutenção, projeções, sinais com fontes e Hot Topics sem duplicação. |
 | E04 — Planner financeiro | 7 capacidades do Planner; edição mensal e em lote; FX, HR, locks, versões e separação budget/actual/forecast. |
 | E05 — Procurement completo | 5 capacidades de Procurement; PR, sourcing e PO; ranking, alçadas, moedas, fornecedores e estados completos. |
-| E06 — BI e tabelas | 8 perguntas analíticas originais e 3 novas; fontes, drilldown e tabela reconciliada com os valores dos gráficos. |
+| E06 — BI e tabelas | 8 perguntas analíticas originais e 3 novas; fontes, drilldown e tabela reconciliada com os valores dos gráficos.  BI/tabela consumem C10: categoria omitida não desenha zero; subtotal e limiar condicionados mantêm a mesma condição da UI, crítica e portfólio. |
 | E07 — Imports e confiança | XLSX, XLS e JSON; prévia, cancelamento, aplicação, recibo, roundtrip e proteção contra metadados forjados. |
 | E08 — Reuniões e exportações | Pauta, revisão congelada, fechamento e ações; 25 registros e notas longas; PPTX e DOCX renderizados e conferidos. |
-| E09 — Colaboração e primeiro ciclo | Primeiro ciclo, diretório autorizado, perguntas e respostas, confirmar sem alteração, escopo por período e Meu trabalho. |
-| E10 — Decisão e execução | Caso persistente, alternativas, critérios, escolha, mudanças preparadas e recibos por domínio. |
-| E11 — IA real e portfólio | IA real em variante não roteirizada; fontes, contradição, crítica, propostas tipadas e portfólio sob restrições. |
-| E12 — Memória e reavaliação | Mudança material e irrelevante; escolha preservada; recuperação após commit e resposta perdida; memória e revogação. |
-| E13 — Relay real | Quatro preparações originais e decisão por Relay; admissão, versão, run e checks reais; nenhuma espera humana inventada. |
-| E14 — Schedule e retomada | Schedule nativo; timezone, recorrência, pausa, falha, revogação e deduplicação de execução/sinal. |
-| E15 — Documentos e injeção | PDF digital, DOCX e texto; trecho de origem e confirmação; documento malicioso, inválido ou sem texto tratado corretamente. |
-| E16 — Integração e regressão | Suites exigidas do epic e pacotes afetados, consumidores reais, compatibilidade, host binding e UI integrada. |
-| E17 — Reviews independentes | Três pareceres independentes com achado, impacto, evidência, correção e reteste. |
-| E18 — Entrega e proveniência | Candidato de produto, snapshot de CI, request, run, jobs e resultado; guias, demo e matriz completa. |
+| E09 — Colaboração e primeiro ciclo | Primeiro ciclo, diretório autorizado, perguntas e respostas, confirmar sem alteração, escopo por período e Meu trabalho.  CONFIRM-SCOPE é obrigatório: alteração só de fevereiro mantém janeiro válido e não recobra; janeiro/dependência material gera uma pendência; concorrência, revogação, substituição e auditoria original são conferidas no produtor e na rotina/fila reais. |
+| E10 — Decisão e execução | Caso persistente, alternativas, critérios, escolha, mudanças preparadas e recibos por domínio.  Cobertura C10 é comprovada com inventário completo e categoria inteiramente omitida, zero informado e escolha condicionada preservada; confirmar training = 40000 inverte a comparação210000→250000. |
+| E11 — IA real e portfólio | IA real em variante não roteirizada; fontes, contradição, crítica, propostas tipadas e portfólio sob restrições.  Crítica e portfólio consomem a mesma cobertura C10 e não aprovam completude por soma. A variante omitida não deve trazer uma linha pending pré-cadastrada.  C15 exige18 witnesses de skill carregada+outputRef persistido+consumidor real, contribuição distinta dos 5 perfis e Revisor em run próprio; os witnesses podem compartilhar as seis provas integradas. WP01.T05.CHK.30/31 verificam uso pela interface e estados de falha. AM01: 5 perfis/18 skills com trace de carga/uso, modelos efetivos eRevisorindependente. |
+| E12 — Memória e reavaliação | Mudança material e irrelevante; escolha preservada; recuperação após commit e resposta perdida; memória e revogação.  Reavaliação após categoria resolvida/custo inversor preserva a escolha original e o estado condicionado de sua base; comparação posterior vem do domínio. AM05: ports reais de Atlas, owner/ACL/restart/ledger/cases e 5 perfis sem seat engenharia. |
+| E13 — Relay real | Quatro preparações originais e decisão por Relay; admissão, versão, run e checks reais; nenhuma espera humana inventada.  Revisão usa validade material C06 sem recobrança irrelevante. Dossiê consome DocumentEvidence C14 do WP06 com evidência de candidato, confirmação e atualização/revogação. AM06: admissão Relay eproduto/perfil/skill retornam resultado verificável. |
+| E14 — Schedule e retomada | Schedule nativo; timezone, recorrência, pausa, falha, revogação e deduplicação de execução/sinal. AM06: retomada/recorrência/Schedule mantém limites atuais e correlação. |
+| E15 — Documentos e injeção | PDF digital, DOCX e texto; trecho de origem e confirmação; documento malicioso, inválido ou sem texto tratado corretamente.  Handoff WP06.T05→WP09.T04 compartilha evidenceRef/versão/trecho; parser só no WP06 e candidato não é fato confirmado. AM03/AM05: referênciasdocumentais/injeção/scanner/isolation/revocation reais. |
+| E16 — Integração e regressão | Suites exigidas do epic e pacotes afetados, consumidores reais, compatibilidade, host binding e UI integrada. Oito recipes mínimas, AM01-AM06, oito packs com paridade e Atlas check:generated/typecheck. |
+| E17 — Reviews independentes | Três pareceres independentes com achado, impacto, evidência, correção e reteste. Três reviewers novos após encerrar builders: autores ativos corrigem e reviewers não editam produto. |
+| E18 — Entrega e proveniência | Candidato de produto, snapshot de CI, request, run, jobs e resultado; guias, demo e matriz completa. Candidato→snapshot→request→selection→run/artifacts, manifests/skillhashes/leases e G2 Htemporal. |
 
-Três revisores independentes cobrem produto/UX, finanças/permissões/persistência e IA/Relay/integração. Cada achado tem impacto, entrada reproduzível, evidência, owner, correção e reteste. Participar da construção não autoriza aprovar a própria mudança.
+CI aponta SHA e run real; interação aponta entrypoint e ator; export contém arquivo e inspeção; rotina contém run/receita/entrada reais. Screenshot sozinho não prova cálculo, permissão ou persistência. Mudança posterior invalida o conjunto de critérios afetado.
 
-Todos os registros de implementação começam NOT_RUN. Evidência precisa indicar candidato, ator, entrada, ação, esperado, observado e origem. Screenshot isolado não prova cálculo, acesso ou durabilidade. Compilar não prova integração.
+Roteiros de 30 segundos e manutenção rápida são metas de aceite em avaliação controlada, não alegação de pesquisa com André. Registrar participante/avaliador, contexto e tempo; separar inferência de observação.
 
-## CI e pacote de entrega
+A matriz [proof-map.json](proof-map.json) vincula cada critério a conjuntos de provas. Um pacote aprovado não aprova automaticamente todos os seus critérios. Perfis, skills e packs têm vínculos próprios no manifesto residente.
 
-ci-recipes.json contém requests concretas para suites Sucafina/CLI/app e três seleções Playwright disjuntas. O runner Playwright permite a configuração e2e/playwright.production.config.ts; specs novas ficam no namespace e2e/sucafina. Não alterar o validator para fazê-las passar.
+## CI e entrega
 
-O workflow existente test-ci.yml dispara por push em ci-run-*. Usar GitData MCP: candidato C → snapshot S com request validada → branch temporária → run selecionado pelo SHA. Registrar request, seleção, jobs, resultado e controle Omni. Rerun de job antigo não testa código novo. O inventário completo exigido pelo epic e por AGENTS é fechado em T+10, antes do primeiro disparo; suites adicionais exigidas continuam obrigatórias.
+GitData MCP cria snapshot S descendente do candidato C com .ci-run.json; criar branch ci-run-linux-<id> em S dispara test-ci.yml. Não criar workflow novo nem alterar validator.
 
-Provas de IA/Relay reais usam o host já configurado e ficam ligadas ao mesmo candidato, sem introduzir segredos em .ci-run.json. Testes do repositório rodam no GitHub Actions; typecheck usa o script do pacote e guards seguem AGENTS.
+Usar script/test-ci-location.ts/resolveTestPackage e script/test-ci-request.ts/validateRequest na árvore S, com o resolvedor do repositório. atlas-boundary é um alias verificado. args=[test-browser] é seleção aceita para Bun. Enviar os três specs Playwright somente depois de commitados e verificar os arquivos e a configuração exatos. Esta reconciliação do plano não executou testes do produto.
 
-A entrega é o commit integrado, checks válidos, três reviews reconciliados, matriz de escopo completa e guias de uso/demonstração. Merge em dev e deploy seguem o processo de release existente; não são uma dependência escondida deste planejamento.
+As seleções Bun de `src` e `test-browser` têm recibos separados. Provas reais de IA, MCP, Atlas e Relay mantêm a identidade do candidato e não são substituídas por mocks. Aplicam-se o inventário cumulativo, os typechecks e os guards exigidos em AGENTS.
+
+A entrega é um candidato integrado e commitado, com os gates exigidos, revisões reconciliadas e guias de uso. A aprovação deste planejamento não certifica a implementação futura.
 
 ## Como iniciar
 
-Abrir cinco conversas e enviar o prompt correspondente em prompts/S0.md a prompts/S4.md. A integradora registra T0; as outras quatro confirmam a identidade atribuída e iniciam os três subagentes. Cada prompt aponta os documentos e WPs versionados neste diretório. START.md contém os cinco pontos de entrada; AGENTS-ATLAS-MCP.md complementa a especificação e deve ser reconciliado pela revisão formal.
-
-Os dados de exemplo são sintéticos. A implementação e a IA da entrega precisam ser reais. A demonstração de renovação não substitui as jornadas de portfólio, documentos, operação, reunião e memória.
-
-## Fontes
-
-- [Baseline](https://github.com/gustavomhss/Orchestra-SF/commit/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf)
-- [AGENTS](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/AGENTS.md)
-- [Workflow de CI](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/.github/workflows/test-ci.yml)
-- [Validação de requests](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/script/test-ci-request.ts)
-- [Factory do módulo](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/local/entry.ts)
-- [Relay](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/docs/guides/relay.md)
-- [Proposta de produto aceita](https://chatgpt.com/space/page_4d04c7a77bc88191ab676452be388958)
+Use [START.md](START.md) e os cinco prompts no mesmo commit do plano. Cada sessão lê suas WPs completas, os contratos e as restrições comuns antes de escrever. GitHub é acessado pelo MCP existente; não criar novas credenciais.

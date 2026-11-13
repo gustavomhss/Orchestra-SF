@@ -6,7 +6,8 @@
     "Ownership exclusivo: modules/sucafina/Sucafinav1/runtime/procurement.ts; src/procurement.ts; src/procurement-screen.ts; src/form.ts; src/initial-settings.ts; src/requests.ts; src/supplier.ts; modules/sucafina/porta/act.ts; novos modules/sucafina/Sucafinav1/product/procurement/**, incluindo verificações locais.",
     "Cinco páginas e todos os fluxos originais: Dashboard, Requests, My approvals, Suppliers e Settings; criação, rascunho, submissões, seleção, aprovações, rejeições, cancelamento, exclusão permitida, emissão interna, cadastros, consultas, exportações e políticas configuráveis.",
     "Filas por próxima ação, apresentação por etapa/papel, pré-preenchimento com origem, comparação das propostas, resumo por tipo de aprovação, apresentação de conflitos e valores monetários com proveniência.",
-    "Projeções C02 e comandos C03 reais do domínio Procurement, além de saída de preparação somente leitura para consumidores de C07; construção paralela contra os contratos congelados em WP00.T04."
+    "Projeções C02 e comandos C03 reais do domínio Procurement, além de saída de preparação somente leitura para consumidores de C07; construção paralela contra os contratos congelados em WP00.T02.",
+    "Descritores C16 das capacidades reais de WP04, consumidos pela ponte nativa sem copiar domínio."
   ],
   "scope_out": [
     "Não escrever shell, application, navegação comum, workbooks, domínios Dashboard/Planner, product/analytics/**, repositório de relações/comentários ou implementação de Relay/Schedule; a composição nos entrypoints comuns pertence a WP10.",
@@ -20,12 +21,16 @@
     "C03",
     "C06",
     "C07",
-    "C08"
+    "C08",
+    "C15",
+    "C16",
+    "C17"
   ],
   "contract_provides": [
     "C02",
     "C03",
-    "C08"
+    "C08",
+    "C16"
   ],
   "axioms": {
     "dod": [
@@ -42,6 +47,11 @@
       {
         "id": "WP04.DOD.03",
         "text": "O handoff lista consumidores, casos adversos, artefatos de evidência e verificações de composição reservadas a WP10; não declara entrega integrada com base apenas em fixtures.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP04.DOD.10",
+        "text": "As entregas residentes atribuídas a WP04 têm produção, consumo e provas reais completos.",
         "status": "NOT_RUN"
       }
     ],
@@ -60,6 +70,11 @@
         "id": "WP04.INV.03",
         "text": "Recortes autorizados e restrições bancárias valem para tela, exportação, resumo e C02; referência textual ou ausência nunca vira relação, autorização ou valor zero.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP04.INV.10",
+        "text": "WP04 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+        "status": "NOT_RUN"
       }
     ],
     "quality_standards": [
@@ -76,6 +91,11 @@
       {
         "id": "WP04.QLT.03",
         "text": "Formulários e ações críticas são operáveis por teclado, mantêm foco após erro/conflito e apresentam a correção junto ao campo correspondente.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP04.QLT.10",
+        "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
         "status": "NOT_RUN"
       }
     ],
@@ -94,6 +114,11 @@
         "id": "WP04.CMP.03",
         "text": "Cadastro/ativação/bloqueio/inativação/banco de fornecedor, configurações/reset, histórico, registros/exportações e referências existentes permanecem acessíveis.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP04.CMP.10",
+        "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+        "status": "NOT_RUN"
       }
     ],
     "success_criteria": [
@@ -111,6 +136,11 @@
         "id": "WP04.SUC.03",
         "text": "Os casos adversos distinguem aprovado de emitido, desconhecido de zero e versão atual de versão desatualizada; nenhuma dessas diferenças é ocultada por um resultado visual aparentemente correto.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP04.SUC.10",
+        "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+        "status": "NOT_RUN"
       }
     ]
   },
@@ -124,17 +154,22 @@
         "Apresentar filas por próxima ação, com busca/filtros de requester, buyer, etapa e responsável quando os campos existem; separar esperando por você, por outros e sem holder atribuído.",
         "Produzir entrada comprovada na etapa a partir do evento correto de submissão/transição, considerando rejeição e ressubmissão; não usar createdAt, último save ou importação como substituto silencioso.",
         "Expor referências C01 de drilldown e motivos de pendência consumíveis por WP05/WP08/WP09; callbacks ficam exportados, e a navegação comum será composta por WP10.",
-        "Manter a organização das filas baseada em datas e critérios visíveis, sem inventar SLA, prioridade numérica ou inferir responsáveis ausentes."
+        "Manter a organização das filas baseada em datas e critérios visíveis, sem inventar SLA, prioridade numérica ou inferir responsáveis ausentes.",
+        "Publicar descritores e handlers de sf_request_read, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+        "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
       ],
       "inputs": [
-        "WP00.T04: C01, C02, C03 e C08 congelados, inventário do baseline e fixtures provenientes dos motores reais.",
+        "WP00.T02: C01, C02, C03 e C08 congelados, inventário do baseline e fixtures provenientes dos motores reais.",
         "Baseline 9e4f3d35833f9b2cea6abdf58f42331f3973d9bf: src/requests.ts, runtime/procurement.ts, src/procurement-screen.ts e porta/act.ts.",
-        "Registros representativos com história íntegra, histórico importado incompleto, rejeição/ressubmissão e holder ausente."
+        "Registros representativos com história íntegra, histórico importado incompleto, rejeição/ressubmissão e holder ausente.",
+        "C16",
+        "C15"
       ],
       "outputs": [
         "Projeção C02 real de filas/pedidos, com evidência de entrada na etapa ou ausência explícita.",
         "Views locais de Requests/My approvals e referências de drilldown exportadas em product/procurement/**.",
-        "Mapa de cobertura de estados/papéis e casos discriminantes para consumidores."
+        "Mapa de cobertura de estados/papéis e casos discriminantes para consumidores.",
+        "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts#readRequest (sf_request_read; RequestReadRequest -> AuthorizedRequest)"
       ],
       "depends_on": [
         "WP00.T02"
@@ -159,6 +194,11 @@
           "id": "WP04.T01.CHK.04",
           "text": "Um pedido com holder diferente do ator não oferece aprovação como próxima ação; holder ausente aparece explicitamente sem responsável, sem criar autorização nova.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP04.T01.CHK.18",
+          "text": "Executar sf_request_read pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -172,6 +212,11 @@
             "id": "WP04.T01.DOD.02",
             "text": "O mapa estado/papel/próxima ação e a proveniência da idade estão anexados ao handoff local.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T01.DOD.18",
+            "text": "Descritores C16 de sf_request_read são implementados e consumidos por T06 com referências reais.",
+            "status": "NOT_RUN"
           }
         ],
         "invariants": [
@@ -183,6 +228,11 @@
           {
             "id": "WP04.T01.INV.02",
             "text": "Salvar um campo não reinicia a idade da etapa; histórico insuficiente não produz data presumida.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T01.INV.18",
+            "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
             "status": "NOT_RUN"
           }
         ],
@@ -196,6 +246,11 @@
             "id": "WP04.T01.QLT.02",
             "text": "Ordenação e filtros são visíveis, reversíveis e operáveis por teclado.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T01.QLT.18",
+            "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+            "status": "NOT_RUN"
           }
         ],
         "completeness_criteria": [
@@ -207,6 +262,11 @@
           {
             "id": "WP04.T01.CMP.02",
             "text": "Entregar referência estável de drilldown e contexto de versão para cada pedido visível.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T01.CMP.18",
+            "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
             "status": "NOT_RUN"
           }
         ],
@@ -220,6 +280,11 @@
             "id": "WP04.T01.SUC.02",
             "text": "Aging e contagens fornecidos a WP05 reproduzem a seleção autorizada e não divergem da fila.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T01.SUC.18",
+            "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+            "status": "NOT_RUN"
           }
         ]
       },
@@ -229,7 +294,9 @@
       "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
       "final_evidence_owner": "WP10",
       "requirements": [
-        "R15"
+        "R15",
+        "RA03",
+        "RA04"
       ],
       "journeys": [
         "J04"
@@ -247,9 +314,11 @@
         "E05"
       ],
       "integrates_with": [
-        "WP01.T02"
+        "WP01.T02",
+        "WP10.T06"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S2-A"
     },
     {
       "id": "WP04.T02",
@@ -387,7 +456,8 @@
       "integrates_with": [
         "WP01.T02"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S2-A"
     },
     {
       "id": "WP04.T03",
@@ -398,18 +468,23 @@
         "Tratar uma única proposta, notas incompletas e dados desconhecidos como limitações explícitas; uma pontuação provisória não deve parecer recomendação definitiva.",
         "Produzir valores C02 com moeda original, base, fonte da taxa e snapshot pertinente à etapa; corrigir a apresentação monetária da PO conforme a definição C02 congelada, sem buscar câmbio externo ou reinterpretar alçadas.",
         "Separar aprovados, emitidos internamente e estimativas nas métricas; não oferecer realizado ou saldo orçamentário sem projeção real correspondente.",
-        "Mostrar discrepância entre total da proposta e quantidade vezes preço antes de reaproveitar a PO, sem inventar desconto, imposto ou frete para fechar os números; manter as decisões na revisão humana dos campos existentes."
+        "Mostrar discrepância entre total da proposta e quantidade vezes preço antes de reaproveitar a PO, sem inventar desconto, imposto ou frete para fechar os números; manter as decisões na revisão humana dos campos existentes.",
+        "Publicar descritores e handlers de sf_sourcing_compare, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+        "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
       ],
       "inputs": [
         "WP04.T02: detalhe guiado e dados de propostas/PO preservados.",
         "C02: definição congelada de valores de apresentação, moeda, snapshots, estados e ausência.",
         "src/form.ts, src/procurement-screen.ts, src/initial-settings.ts e porta/act.ts no baseline.",
-        "Fixture sintética com as configurações existentes: pesos técnico/comercial 60/40, critérios técnicos 35/20/15/15/15 e comerciais 70 automático/15/15."
+        "Fixture sintética com as configurações existentes: pesos técnico/comercial 60/40, critérios técnicos 35/20/15/15/15 e comerciais 70 automático/15/15.",
+        "C16",
+        "C15"
       ],
       "outputs": [
         "Comparação de propostas com decomposição explicável do ranking e limitações visíveis.",
         "Projeção monetária C02 reconciliada com o domínio, com estados e taxas identificados.",
-        "Casos de referência para WP05/WP07/WP09, inclusive comparação incompleta e FX ausente."
+        "Casos de referência para WP05/WP07/WP09, inclusive comparação incompleta e FX ausente.",
+        "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts#compareSourcing (sf_sourcing_compare; SourcingCompareRequest -> CommercialComparison)"
       ],
       "depends_on": [
         "WP00.T02",
@@ -440,6 +515,11 @@
           "id": "WP04.T03.CHK.05",
           "text": "Introduzir total informado diferente de qty vezes unitPrice: ambas as bases e a discrepância aparecem; nenhum cálculo silencioso altera preço, política de aprovação ou documento.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP04.T03.CHK.18",
+          "text": "Executar sf_sourcing_compare pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -453,6 +533,11 @@
             "id": "WP04.T03.DOD.02",
             "text": "Moeda, taxa/snapshot e estado monetário ficam definidos para cada valor exibido.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T03.DOD.18",
+            "text": "Descritores C16 de sf_sourcing_compare são implementados e consumidos por T06 com referências reais.",
+            "status": "NOT_RUN"
           }
         ],
         "invariants": [
@@ -464,6 +549,11 @@
           {
             "id": "WP04.T03.INV.02",
             "text": "Ausência de taxa/nota/valor não vira zero, precisão inventada ou confirmação de gasto realizado.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T03.INV.18",
+            "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
             "status": "NOT_RUN"
           }
         ],
@@ -477,6 +567,11 @@
             "id": "WP04.T03.QLT.02",
             "text": "Arredondamento é de apresentação e não altera ranking, valor aprovado ou reconciliação.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T03.QLT.18",
+            "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+            "status": "NOT_RUN"
           }
         ],
         "completeness_criteria": [
@@ -488,6 +583,11 @@
           {
             "id": "WP04.T03.CMP.02",
             "text": "Cobrir PR estimada, sourcing, PO aprovada e PO emitida internamente sem agregar estados como se fossem equivalentes.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T03.CMP.18",
+            "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
             "status": "NOT_RUN"
           }
         ],
@@ -501,6 +601,11 @@
             "id": "WP04.T03.SUC.02",
             "text": "O mesmo valor de domínio aparece coerentemente no detalhe, resumo e C02 entregue a consumidores.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T03.SUC.18",
+            "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+            "status": "NOT_RUN"
           }
         ]
       },
@@ -510,7 +615,9 @@
       "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
       "final_evidence_owner": "WP10",
       "requirements": [
-        "R17"
+        "R17",
+        "RA03",
+        "RA04"
       ],
       "journeys": [
         "J04"
@@ -528,9 +635,11 @@
         "E05"
       ],
       "integrates_with": [
-        "WP01.T02"
+        "WP01.T02",
+        "WP10.T06"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S2-A"
     },
     {
       "id": "WP04.T04",
@@ -673,7 +782,8 @@
       "integrates_with": [
         "WP01.T02"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S2-A"
     },
     {
       "id": "WP04.T05",
@@ -684,17 +794,23 @@
         "Manter criação pelo buyer, ativação/bloqueio/inativação e edição bancária pelos papéis permitidos; apresentar a revalidação após mudança bancária sem expor dados sensíveis no resumo/histórico/C02.",
         "Preservar Settings completo: matriz, moedas, critérios, minQuotes, endereços, condições, anexos, lembretes e reset; essa task melhora sua compreensão e não define novos defaults ou políticas.",
         "Conferir consultas, registro/exportações, download da PO, identidade PR/PO/SUP, histórico, rascunhos rejeitados, cancelamento e exclusão; adaptar apenas dentro dos arquivos de ownership.",
-        "Entregar recibo de cobertura e portas reais a WP05/WP06/WP07/WP08/WP09/WP10; importação, colaboração, rotinas e composição seguem com seus proprietários e não são implementadas aqui."
+        "Entregar recibo de cobertura e portas reais a WP05/WP06/WP07/WP08/WP09/WP10; importação, colaboração, rotinas e composição seguem com seus proprietários e não são implementadas aqui.",
+        "Publicar descritores e handlers de sf_supplier_read, sf_contract_read, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+        "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
       ],
       "inputs": [
         "WP04.T04: jornada completa até decisão e preparação de PO.",
         "src/supplier.ts, src/procurement.ts, src/initial-settings.ts e runtime/procurement.ts; inventário funcional congelado por WP00.",
-        "C01/C02/C03/C08 e fixtures de fornecedor ativo/pendente/bloqueado/inativo, dados bancários e identificadores importados."
+        "C01/C02/C03/C08 e fixtures de fornecedor ativo/pendente/bloqueado/inativo, dados bancários e identificadores importados.",
+        "C16",
+        "C15"
       ],
       "outputs": [
         "Experiência de Suppliers/Settings preservando campos, restrições e feedback específico.",
         "Recibo de cobertura dos fluxos originais, cenários adversos e portas exportadas.",
-        "Handoff verificável de Procurement para composição final e consumidores reais, sem alterações fora do ownership."
+        "Handoff verificável de Procurement para composição final e consumidores reais, sem alterações fora do ownership.",
+        "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts#readSupplier (sf_supplier_read; SupplierReadRequest -> AuthorizedSupplier)",
+        "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts#readContract (sf_contract_read; ContractReadRequest -> AuthorizedContract)"
       ],
       "depends_on": [
         "WP00.T02",
@@ -725,6 +841,11 @@
           "id": "WP04.T05.CHK.05",
           "text": "Percorrer create → submit_pr → approve → sourcing/select/submit → approve → PO/submit → approve → issue e caminhos de rejeição/cancelamento: estados e recusas coincidem com o inventário; po_issued permanece interno e terminal para cancel/delete.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP04.T05.CHK.18",
+          "text": "Executar sf_supplier_read, sf_contract_read pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -738,6 +859,11 @@
             "id": "WP04.T05.DOD.02",
             "text": "O pacote fecha o recibo de preservação dos fluxos e entrega as portas ao integrador com limitações explícitas.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T05.DOD.18",
+            "text": "Descritores C16 de sf_supplier_read, sf_contract_read são implementados e consumidos por T06 com referências reais.",
+            "status": "NOT_RUN"
           }
         ],
         "invariants": [
@@ -749,6 +875,11 @@
           {
             "id": "WP04.T05.INV.02",
             "text": "Reset, exclusão e retomada não apagam histórico nem reutilizam identificadores PR/PO/SUP já emitidos.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T05.INV.18",
+            "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
             "status": "NOT_RUN"
           }
         ],
@@ -762,6 +893,11 @@
             "id": "WP04.T05.QLT.02",
             "text": "Operações raras e Settings ficam em acesso secundário claro, preservando descoberta por teclado e todos os controles.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T05.QLT.18",
+            "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+            "status": "NOT_RUN"
           }
         ],
         "completeness_criteria": [
@@ -773,6 +909,11 @@
           {
             "id": "WP04.T05.CMP.02",
             "text": "Cobrir configurações/reset, todos os comandos originais e preservação de identificadores/campos após dados migrados representativos.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T05.CMP.18",
+            "text": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
             "status": "NOT_RUN"
           }
         ],
@@ -786,6 +927,11 @@
             "id": "WP04.T05.SUC.02",
             "text": "O integrador consegue executar a jornada real completa com os exports entregues, sem solicitar um substituto de demonstração ou escrever dentro do domínio.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T05.SUC.18",
+            "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+            "status": "NOT_RUN"
           }
         ]
       },
@@ -795,7 +941,9 @@
       "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
       "final_evidence_owner": "WP10",
       "requirements": [
-        "R19"
+        "R19",
+        "RA03",
+        "RA04"
       ],
       "journeys": [
         "J04"
@@ -813,16 +961,20 @@
         "E05"
       ],
       "integrates_with": [
-        "WP01.T02"
+        "WP01.T02",
+        "WP10.T06"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S2-A"
     }
   ],
   "handoff": [
     "Para WP10: exports de views/capacidades/comandos de Procurement, mapa página/estado/papel, referências de drilldown e receita de composição; WP10 conecta entrada comum e verifica usuários/consumidores reais.",
     "Para WP05: C02 real de estoque por etapa, idade comprovada, valores/FX/snapshots e estados monetários; histórico insuficiente e recorte autorizado explícitos.",
     "Para WP07: projeções autorizadas que possam compor a pauta; para WP08: fila de decisões por holder/etapa e referências canônicas; para WP09: comparação e pendências de sourcing em C02, consumidas na receita C07. Nenhum consumidor lê o store interno para reconstruir regras; não há import de Procurement no WP06.",
-    "Evidências locais incluem fixtures identificadas, origem dos dados, resultado esperado versus observado, limitações e checks integrados ainda reservados a WP10."
+    "Evidências locais incluem fixtures identificadas, origem dos dados, resultado esperado versus observado, limitações e checks integrados ainda reservados a WP10.",
+    "Descritores C16 das capacidades reais de WP04, consumidos pela ponte nativa sem copiar domínio.",
+    "O manifest canônico identifica os paths/exports/tasks e AM01–AM06; evidência de catálogo isolado não é aceite integrado."
   ],
   "risks": [
     "A mudança visual pode encobrir campos/ações do protótipo. Resolver com inventário fechado por WP00 e roundtrip completo em WP04.T02/T05, sem remover capacidade por conveniência de layout.",

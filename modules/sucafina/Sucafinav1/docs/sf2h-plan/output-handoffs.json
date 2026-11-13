@@ -1,0 +1,459 @@
+{
+  "outputs": [
+    {
+      "id": "AI-NATIVE",
+      "producer_task": "WP12.T01",
+      "ready_minute": 13,
+      "consumer_tasks": [
+        "WP10.T06"
+      ],
+      "consume_not_before": 13,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/ai/profiles/sf_finance.json",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-explicar-forecast/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/manifests/native-probe.json"
+      ],
+      "acceptance": "Profile+skill com conteúdo/digest reais; manifest não referencia fonte ausente.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/handoffs/ai-native.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "declared_checkpoint_or_task_phase"
+    },
+    {
+      "id": "NATIVE-CASE",
+      "producer_task": "WP11.T01",
+      "ready_minute": 14,
+      "consumer_tasks": [
+        "WP10.T01",
+        "WP10.T06"
+      ],
+      "consume_not_before": 14,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/decisions/case-port.ts::createDecisionCasePort"
+      ],
+      "acceptance": "CasoC09 mínimo real, actor/version/incarnation; providerC08 persiste até 18.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/handoffs/native-case.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "declared_checkpoint_or_task_phase"
+    },
+    {
+      "id": "NATIVE-PLANNER",
+      "producer_task": "WP03.T01",
+      "ready_minute": 15,
+      "consumer_tasks": [
+        "WP10.T01",
+        "WP10.T06"
+      ],
+      "consume_not_before": 15,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/planner/port.ts::createPlannerPort.compareForecast"
+      ],
+      "acceptance": "C02/C10 real; cálculo do motor, sem I/Oparaleloouvaloresroteirizados.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/handoffs/native-planner.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "declared_checkpoint_or_task_phase"
+    },
+    {
+      "id": "NATIVE-RUNTIME",
+      "producer_task": "WP10.T06",
+      "ready_minute": 16,
+      "consumer_tasks": [
+        "WP10.T01",
+        "WP00.T04"
+      ],
+      "consume_not_before": 16,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts::registerSfResidentAgents",
+        "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts::loadSfSkill",
+        "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts::createSfBusinessMcpBridge",
+        "apps/cli/src/sucafina-product/contribution.ts"
+      ],
+      "acceptance": "AgentV2/loader/Tools.Service/bridgeprivada; scopedgrantporchamada e prova direta negativa.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/handoffs/native-runtime.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "declared_checkpoint_or_task_phase"
+    },
+    {
+      "id": "NATIVE-COMPOSE",
+      "producer_task": "WP10.T01",
+      "ready_minute": 18,
+      "consumer_tasks": [
+        "WP00.T04"
+      ],
+      "consume_not_before": 18,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/local/entry.ts",
+        "modules/sucafina/Sucafinav1/runtime/host.ts",
+        "apps/cli/src/host.ts",
+        "apps/cli/src/commands/handlers/serve.ts"
+      ],
+      "acceptance": "Roots reais compõem caso, ator, modelo, perfil, skill, ponte MCP e porta Planner; recibo GNATIVE18-20.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/handoffs/native-compose.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "declared_checkpoint_or_task_phase"
+    },
+    {
+      "id": "DOC-REF",
+      "producer_task": "WP06.T05",
+      "ready_minute": 20,
+      "consumer_tasks": [
+        "WP10.T07"
+      ],
+      "consume_not_before": 20,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts::resolveSfDocumentEvidence",
+        "modules/sucafina/Sucafinav1/product/documents/rag-adapter.ts::createSfDocumentEvidenceAdapter"
+      ],
+      "acceptance": "Resolver documental real com revisão/trecho/hash/incarnação/ACL.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/handoffs/doc-ref.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "integration_or_proof"
+    },
+    {
+      "id": "ATLAS-MAP",
+      "producer_task": "WP14.T05",
+      "ready_minute": 20,
+      "consumer_tasks": [
+        "WP10.T07"
+      ],
+      "consume_not_before": 20,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts::mapSfAtlasEntry"
+      ],
+      "acceptance": "Tradução pura owner/kind/entry; sem PR/seat fictício e sem persistência.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/handoffs/atlas-map.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "integration_or_proof"
+    },
+    {
+      "id": "ATLAS-PACKAGE",
+      "producer_task": "WP10.T07",
+      "ready_minute": 20,
+      "consumer_tasks": [
+        "WP10.T07",
+        "WP12.T02"
+      ],
+      "consume_not_before": 20,
+      "artifacts": [
+        "@orchestra/atlas-boundary/business-memory-ports"
+      ],
+      "acceptance": "Portsfactories/scannerreais distribuidos por boundary gerada e import resolvido; não importar work space inexistente.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/handoffs/atlas-package.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "integration_or_proof"
+    },
+    {
+      "id": "PROTECTED-STORE",
+      "producer_task": "WP10.T01",
+      "ready_minute": 25,
+      "consumer_tasks": [
+        "WP10.T07"
+      ],
+      "consume_not_before": 25,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/integration/",
+        "Persistence.transaction(dashboard, callback)"
+      ],
+      "acceptance": "Store da instalação C08 real; facade DurableMemory síncrona no snapshot local e commit assíncrono após callback.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/handoffs/protected-store.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "integration_or_proof"
+    },
+    {
+      "id": "AI-CATALOG-PORT",
+      "producer_task": "WP12.T01",
+      "ready_minute": 25,
+      "consumer_tasks": [
+        "WP12.T02"
+      ],
+      "consume_not_before": 25,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/ai/profiles/",
+        "modules/sucafina/Sucafinav1/product/ai/manifests/"
+      ],
+      "acceptance": "Registry/schema/builder de manifest; pré-requisito da fase runtime T02, não da autoria fontes 10-25.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/handoffs/ai-catalog.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "declared_checkpoint_or_task_phase"
+    },
+    {
+      "id": "SKILLS-FINANCE-PORTFOLIO",
+      "producer_task": "WP12.T02",
+      "ready_minute": 29,
+      "consumer_tasks": [
+        "WP12.T02"
+      ],
+      "consume_not_before": 29,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-explicar-forecast/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-cenarios/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-avaliar-sensibilidade/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-dependencias/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-compor-portfolio/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-reavaliar-compromissos/SKILL.md"
+      ],
+      "acceptance": "Seis fontes no SHA recebido; lease S1 fecha 29, a fonte de forecast já era antecipada em 13.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/handoffs/skills-finance-portfolio.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "integration_or_proof"
+    },
+    {
+      "id": "DOC-EXTRACT",
+      "producer_task": "WP06.T05",
+      "ready_minute": 35,
+      "consumer_tasks": [
+        "WP12.T02",
+        "WP10.T07",
+        "WP09.T04"
+      ],
+      "consume_not_before": 35,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/documents/"
+      ],
+      "acceptance": "Três formatos admitidos, confirmação, refusalrevogação e fonte privada.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/handoffs/doc-extract.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "integration_or_proof"
+    },
+    {
+      "id": "SKILLS-MAESTRO-REVIEWER",
+      "producer_task": "WP12.T02",
+      "ready_minute": 38,
+      "consumer_tasks": [
+        "WP12.T02",
+        "WP12.T03"
+      ],
+      "consume_not_before": 38,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-enquadrar-decisao/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-coordenar-perguntas/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-contestar-decisao/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-evidencias/SKILL.md"
+      ],
+      "acceptance": "Cinco fontes no SHA recebido; lease S3 fecha 38, Revisor tem execução/instruções próprias.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/handoffs/skills-maestro-reviewer.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "integration_or_proof"
+    },
+    {
+      "id": "AI-FULL",
+      "producer_task": "WP12.T02",
+      "ready_minute": 42,
+      "consumer_tasks": [
+        "WP10.T06",
+        "WP12.T03",
+        "WP09.T07"
+      ],
+      "consume_not_before": 42,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json"
+      ],
+      "acceptance": "Cinco perfis e 18 sources com hashes reais; compra/sharedsete completa dos por S4-B.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/handoffs/ai-full.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "integration_or_proof",
+      "contract_alias": "AI-CATALOG"
+    },
+    {
+      "id": "WP14-LEASE",
+      "producer_task": "WP14.T02",
+      "ready_minute": 43,
+      "consumer_tasks": [
+        "WP14.T03",
+        "WP14.T04"
+      ],
+      "consume_not_before": 43,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/decision-memory/",
+        "modules/sucafina/Sucafinav1/test/product/wp14/"
+      ],
+      "acceptance": "S4 fecha escrita; S0-C aceita head/lease antes de T03; sem persistência concreta WP14.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/handoffs/wp14-lease.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "declared_checkpoint_or_task_phase"
+    },
+    {
+      "id": "ATLAS-ROUNDTRIP",
+      "producer_task": "WP10.T07",
+      "ready_minute": 45,
+      "consumer_tasks": [
+        "WP12.T02",
+        "WP14.T02",
+        "WP10.T02"
+      ],
+      "consume_not_before": 45,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts::createSfAtlasMemory"
+      ],
+      "acceptance": "Append/readreaiscominstalação/actor/owner, ledger/hash/commit e scanner; nãofecharrestartantesdeexecutá-lo.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/handoffs/atlas-roundtrip.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "integration_or_proof"
+    },
+    {
+      "id": "MCP-FULL",
+      "producer_task": "WP10.T06",
+      "ready_minute": 45,
+      "consumer_tasks": [
+        "WP10.T02",
+        "WP01.T05",
+        "WP09.T07"
+      ],
+      "consume_not_before": 45,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts"
+      ],
+      "acceptance": "Runtime/registry dos 8 packs com AI-FULL; cada operação aguarda o produtor real no tempo identificado, sem sucesso stub.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/handoffs/mcp-full.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "integration_or_proof"
+    },
+    {
+      "id": "ATLAS-FULL",
+      "producer_task": "WP10.T07",
+      "ready_minute": 55,
+      "consumer_tasks": [
+        "WP12.T04",
+        "WP14.T02",
+        "WP14.T03",
+        "WP14.T04",
+        "WP09.T07",
+        "WP07.T04",
+        "WP10.T02"
+      ],
+      "consume_not_before": 55,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts::createSfBusinessContext",
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts::createSfAtlasMemory",
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts::createSfAtlasDurableMemory"
+      ],
+      "acceptance": "BCS/persistência/Atlas/documentos/refsatuaisligados; AM05 prova independente/restart/ACLfinalaté 75.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/handoffs/atlas-full.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "integration_or_proof"
+    },
+    {
+      "id": "MEMORY-CONSUMPTION",
+      "producer_task": "WP14.T04",
+      "ready_minute": 68,
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP07.T04",
+        "WP08.T04",
+        "WP09.T06",
+        "WP12.T04",
+        "WP10.T02"
+      ],
+      "consume_not_before": 68,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/decision-memory/"
+      ],
+      "acceptance": "Deduplicação/invalidação/observado consumidos reais até 75; entrega 68 preserva 7 minfinaisdeconsumo.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/handoffs/memory-consumption.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "integration_or_proof"
+    }
+  ],
+  "task_output_dependencies": [
+    {
+      "consumer_task": "WP00.T04",
+      "phase": "GNATIVE18-20",
+      "requires": [
+        "AI-NATIVE",
+        "NATIVE-CASE",
+        "NATIVE-PLANNER",
+        "NATIVE-RUNTIME",
+        "NATIVE-COMPOSE"
+      ],
+      "window": [
+        18,
+        20
+      ]
+    },
+    {
+      "consumer_task": "WP12.T02",
+      "phase": "implementation against typed catalog port 25-42; full runtime consumption 42-75",
+      "requires": [
+        "AI-CATALOG-PORT"
+      ],
+      "window": [
+        25,
+        42
+      ],
+      "not_a_gate_for": "source authoring 10-25",
+      "full_runtime_requires": [
+        "AI-FULL"
+      ],
+      "full_runtime_window": [
+        42,
+        75
+      ],
+      "full_runtime_note": "AI-CATALOG é o alias técnico do catálogo completo entregue por AI-FULL em T+42; AI-CATALOG-PORT é a interface anterior de construção."
+    },
+    {
+      "consumer_task": "WP10.T07",
+      "phase": "domain/document adaptation 20-35",
+      "requires": [
+        "DOC-REF",
+        "ATLAS-MAP",
+        "ATLAS-PACKAGE"
+      ],
+      "window": [
+        20,
+        35
+      ]
+    },
+    {
+      "consumer_task": "WP10.T07",
+      "phase": "durable Atlas 35-55",
+      "requires": [
+        "PROTECTED-STORE"
+      ],
+      "window": [
+        35,
+        55
+      ]
+    },
+    {
+      "consumer_task": "WP10.T06",
+      "phase": "load fullresident 42-45",
+      "requires": [
+        "AI-FULL"
+      ],
+      "window": [
+        42,
+        45
+      ]
+    },
+    {
+      "consumer_task": "WP14.T03",
+      "phase": "exclusive writer 43-56",
+      "requires": [
+        "WP14-LEASE"
+      ],
+      "window": [
+        43,
+        56
+      ]
+    }
+  ]
+}

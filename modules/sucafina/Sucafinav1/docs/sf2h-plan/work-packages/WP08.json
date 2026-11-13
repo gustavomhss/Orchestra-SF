@@ -4,9 +4,10 @@
   "objective": "Permitir que André e o time esclareçam dados, vinculem registros explicitamente e acompanhem o próprio trabalho com contexto, mantendo as ações operacionais em Hot Topics.",
   "scope_in": [
     "Ownership exclusivo de novos arquivos em modules/sucafina/Sucafinav1/product/collaboration/**, incluindo suas provas de contrato e comportamento.",
-    "Relações explícitas entre referências, comentários, pedidos de esclarecimento/revisão, confirmação sem alteração vinculada à versão e projeção Meu trabalho.",
+    "Relações explícitas, comentários, pedidos, confirmação sem alteração com versão observada e validade por escopo material C06, e projeção Meu trabalho.",
     "Handoff contextualizado e ligação à ação Hot Topic canônica por portas publicadas, sem escrever nos arquivos dos domínios.",
-    "Inicializar ciclos e direcionar perguntas decisivas"
+    "Inicializar ciclos e direcionar perguntas decisivas",
+    "Descritores C16 das capacidades reais de WP08, consumidos pela ponte nativa sem copiar domínio."
   ],
   "scope_out": [
     "Não editar runtime/dashboard-*.ts, planner.ts, procurement.ts, reports.ts, importadores, shell, src/surfaces.ts ou entrypoints do host.",
@@ -23,11 +24,15 @@
     "C08",
     "C09",
     "C11",
-    "C12"
+    "C12",
+    "C15",
+    "C16",
+    "C17"
   ],
   "contract_provides": [
     "C06",
-    "C07"
+    "C07",
+    "C16"
   ],
   "axioms": {
     "dod": [
@@ -45,6 +50,16 @@
         "id": "WP08.DOD.03",
         "text": "Primeiro ciclo, responsáveis identificados, perguntas decisivas e respostas com escopo funcionam em Meu trabalho e na decisão; relações não concedem permissões.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP08.DOD.20",
+        "text": "Confirmação e recobrança são demonstradas em produtores/consumidores reais com o mesmo fingerprint C06.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP08.DOD.10",
+        "text": "As entregas residentes atribuídas a WP08 têm produção, consumo e provas reais completos.",
+        "status": "NOT_RUN"
       }
     ],
     "invariants": [
@@ -56,6 +71,16 @@
       {
         "id": "WP08.INV.02",
         "text": "Leitura dos dois lados de um vínculo e do alvo de um comentário é rechecável; igualdade de nome não cria relação ou atribuição.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP08.INV.20",
+        "text": "Versão global observada é auditoria; validade depende do escopo material e autorização atuais. Mudança irrelevante não fabrica nova revisão humana.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP08.INV.10",
+        "text": "WP08 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
         "status": "NOT_RUN"
       }
     ],
@@ -69,12 +94,22 @@
         "id": "WP08.QLT.02",
         "text": "A interface distingue esclarecimento, revisão humana e ação operacional, com rótulos e estados que não simulam aprovação.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP08.QLT.20",
+        "text": "A pessoa distingue versão revisada, condição atual de validade, idade da fonte e dado ausente.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP08.QLT.10",
+        "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+        "status": "NOT_RUN"
       }
     ],
     "completeness_criteria": [
       {
         "id": "WP08.CMP.01",
-        "text": "Relações, comentários, pedidos, confirmação por versão, Meu trabalho e handoff cobrem acesso revogado, origem removida e reenvio.",
+        "text": "Relações, comentários, pedidos, confirmação por escopo, Meu trabalho e handoff cobrem mudança material/irrelevante, acesso revogado, origem removida/substituída e reenvio.",
         "status": "NOT_RUN"
       },
       {
@@ -91,6 +126,16 @@
         "id": "WP08.CMP.04",
         "text": "Primeiro ciclo, responsáveis identificados, perguntas decisivas e respostas com escopo funcionam em Meu trabalho e na decisão; relações não concedem permissões.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP08.CMP.20",
+        "text": "Cobrir janeiro/fevereiro sem dependência, dependência relevante, concorrência, fonte removida/substituída e revogação.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP08.CMP.10",
+        "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+        "status": "NOT_RUN"
       }
     ],
     "success_criteria": [
@@ -103,6 +148,16 @@
         "id": "WP08.SUC.02",
         "text": "Atualizar ou concluir uma ação na origem é refletido na fila sem criar divergência de status ou tarefa duplicada.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP08.SUC.20",
+        "text": "A contribuição de janeiro é reutilizada sem recobrança quando só fevereiro mudou; mudança relevante reabre uma única pendência compreensível.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP08.SUC.10",
+        "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+        "status": "NOT_RUN"
       }
     ]
   },
@@ -112,15 +167,20 @@
       "title": "Implementar relações explícitas entre referências",
       "intent": "Permitir navegar entre registros relacionados sem confundi-los ou deduzir equivalência por nomes.",
       "work": [
-        "Implementar a relação C06 criada/removida por seleção explícita de referências autorizadas, com tipo e contexto legíveis e validação das regras de relação congeladas no WP00, sem copiar nem escrever os registros de domínio."
+        "Implementar a relação C06 criada/removida por seleção explícita de referências autorizadas, com tipo e contexto legíveis e validação das regras de relação congeladas no WP00, sem copiar nem escrever os registros de domínio.",
+        "Publicar descritores e handlers de sf_relation_read, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+        "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
       ],
       "inputs": [
-        "Contratos C01/C02/C06 de WP00.T04 e catálogo de tipos de relação permitidos.",
-        "Portas de referência autorizada dos domínios, disponíveis por contrato para construção paralela."
+        "Contratos C01/C02/C06 de WP00.T02 e catálogo de tipos de relação permitidos.",
+        "Portas de referência autorizada dos domínios, disponíveis por contrato para construção paralela.",
+        "C16",
+        "C15"
       ],
       "outputs": [
         "Modelo e porta de relações em product/collaboration/** com origem, destino, tipo e autoria/contexto.",
-        "Projeção de vínculos navegáveis e estados de referência removida ou indisponível por acesso."
+        "Projeção de vínculos navegáveis e estados de referência removida ou indisponível por acesso.",
+        "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts#readRelations (sf_relation_read; RelationReadRequest -> ConfirmedRelations)"
       ],
       "depends_on": [
         "WP00.T02"
@@ -140,6 +200,11 @@
           "id": "WP08.T01.CHK.03",
           "text": "Revogar leitura de um destino ou remover sua origem: a projeção não revela dados do alvo restrito nem recria o registro ausente.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP08.T01.CHK.18",
+          "text": "Executar sf_relation_read pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -153,6 +218,11 @@
             "id": "WP08.T01.DOD.02",
             "text": "O vínculo apresenta seu tipo e permite um destino autorizado ou um estado de indisponibilidade claro.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T01.DOD.18",
+            "text": "Descritores C16 de sf_relation_read são implementados e consumidos por T06 com referências reais.",
+            "status": "NOT_RUN"
           }
         ],
         "invariants": [
@@ -164,6 +234,11 @@
           {
             "id": "WP08.T01.INV.02",
             "text": "Vincular não funde entidades nem altera totais, compromissos financeiros ou aprovações.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T01.INV.18",
+            "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
             "status": "NOT_RUN"
           }
         ],
@@ -177,6 +252,11 @@
             "id": "WP08.T01.QLT.02",
             "text": "A ausência ou revogação de uma ponta não produz link aparentemente funcional com dados privados em cache.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T01.QLT.18",
+            "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+            "status": "NOT_RUN"
           }
         ],
         "completeness_criteria": [
@@ -188,6 +268,11 @@
           {
             "id": "WP08.T01.CMP.02",
             "text": "Há tratamento para relação repetida, tipo inválido, remoção e ponta não autorizada.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T01.CMP.18",
+            "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
             "status": "NOT_RUN"
           }
         ],
@@ -201,6 +286,11 @@
             "id": "WP08.T01.SUC.02",
             "text": "Criar e desfazer a relação não muda nenhum valor financeiro ou estado operacional dos domínios.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T01.SUC.18",
+            "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+            "status": "NOT_RUN"
           }
         ]
       },
@@ -210,7 +300,9 @@
       "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
       "final_evidence_owner": "WP10",
       "requirements": [
-        "R29"
+        "R29",
+        "RA03",
+        "RA04"
       ],
       "journeys": [
         "J06"
@@ -230,24 +322,31 @@
       "integrates_with": [
         "WP02.T04",
         "WP11.T01",
-        "WP12.T03"
+        "WP12.T03",
+        "WP10.T06"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S3-B"
     },
     {
       "id": "WP08.T02",
       "title": "Entregar comentários e pedidos contextuais de esclarecimento",
       "intent": "Permitir que uma dúvida seja respondida no contexto do registro e do período, sem transformar comunicação em aprovação ou tarefa paralela.",
       "work": [
-        "Implementar comentários e pedidos de esclarecimento/revisão C06 vinculados a referência, versão/período e destinatário interno selecionado explicitamente, com resposta/resolução comunicacional e rechecagem de acesso ao conteúdo."
+        "Implementar comentários e pedidos de esclarecimento/revisão C06 vinculados a referência, versão/período e destinatário interno selecionado explicitamente, com resposta/resolução comunicacional e rechecagem de acesso ao conteúdo.",
+        "Publicar descritores e handlers de sf_answer_read, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+        "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
       ],
       "inputs": [
         "Referências e validação de acesso de WP08.T01.",
-        "Capacidades C01/C06 para comentar, pedir esclarecimento e responder, sem novo diretório externo."
+        "Capacidades C01/C06 para comentar, pedir esclarecimento e responder, sem novo diretório externo.",
+        "C16",
+        "C15"
       ],
       "outputs": [
         "Portas de comentário, resposta e pedido de esclarecimento/revisão em product/collaboration/**.",
-        "Thread contextualizada com identidade, período/versão e estado comunicacional, pronta para painel do host."
+        "Thread contextualizada com identidade, período/versão e estado comunicacional, pronta para painel do host.",
+        "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts#readAnswer (sf_answer_read; AnswerReadRequest -> AnswerProjection)"
       ],
       "depends_on": [
         "WP00.T02",
@@ -268,6 +367,11 @@
           "id": "WP08.T02.CHK.03",
           "text": "Revogar leitura do registro após criar a thread: consulta posterior não entrega corpo, anexos de contexto ou contagens privadas da conversa restrita.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP08.T02.CHK.18",
+          "text": "Executar sf_answer_read pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -281,6 +385,11 @@
             "id": "WP08.T02.DOD.02",
             "text": "Os comentários são recuperáveis pelas portas C06 e mantêm autoria e competência explícitas.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T02.DOD.18",
+            "text": "Descritores C16 de sf_answer_read são implementados e consumidos por T06 com referências reais.",
+            "status": "NOT_RUN"
           }
         ],
         "invariants": [
@@ -292,6 +401,11 @@
           {
             "id": "WP08.T02.INV.02",
             "text": "Permissão de comentar não confere permissão de editar o registro ou ler campos restritos.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T02.INV.18",
+            "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
             "status": "NOT_RUN"
           }
         ],
@@ -305,6 +419,11 @@
             "id": "WP08.T02.QLT.02",
             "text": "Destinatário e estado comunicacional usam identidades explícitas e rótulos distintos de execução operacional.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T02.QLT.18",
+            "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+            "status": "NOT_RUN"
           }
         ],
         "completeness_criteria": [
@@ -316,6 +435,11 @@
           {
             "id": "WP08.T02.CMP.02",
             "text": "Perguntas sobre revisão preservada mantêm a referência C05 e não são deslocadas silenciosamente para os dados atuais.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T02.CMP.18",
+            "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
             "status": "NOT_RUN"
           }
         ],
@@ -329,6 +453,11 @@
             "id": "WP08.T02.SUC.02",
             "text": "Um pedido esclarecido continua auditável como comunicação, sem aparecer como tarefa operacional duplicada.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T02.SUC.18",
+            "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+            "status": "NOT_RUN"
           }
         ]
       },
@@ -338,7 +467,9 @@
       "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
       "final_evidence_owner": "WP10",
       "requirements": [
-        "R30"
+        "R30",
+        "RA03",
+        "RA04"
       ],
       "journeys": [
         "J01",
@@ -359,24 +490,30 @@
       "integrates_with": [
         "WP02.T04",
         "WP11.T01",
-        "WP12.T03"
+        "WP12.T03",
+        "WP10.T06"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S3-B"
     },
     {
       "id": "WP08.T03",
-      "title": "Confirmar sem alteração somente para a versão revisada",
-      "intent": "Permitir ao time confirmar uma revisão humana sem reescrever valores e sem manter um sinal de revisão válido após a base mudar.",
+      "title": "Confirmar sem alteração no escopo material revisado",
+      "intent": "Registrar uma revisão humana com base auditável e reutilizá-la enquanto referência, campos, período e dependências pertinentes continuarem válidos.",
       "work": [
-        "Implementar a confirmação C06 de sem alteração associada a referência, período, versão observada e autoria, recusando confirmação concorrente desatualizada e mostrando como vencida a confirmação cuja origem recebeu versão nova."
+        "Implementar ConfirmationRecord e ConfirmationValidityProjection C06 com sourceRef/incarnation, observedSourceVersion, fields/period/materialDependencies, observedScopeFingerprint, autoria e auditoria preservadas.",
+        "Reavaliar validade pelo fingerprint autorizado do escopo; versão global nova sem mudança material conserva valid. Mudança material torna stale; fonte não acessível ou dependência não verificável torna unavailable. Remoção/substituição nunca herda confirmação por ID textual.",
+        "No commit, revalidar acesso e expectedScopeFingerprint. Concorrência material recusa; concorrência fora do escopo pode conservar a confirmação após igualdade comprovada, sem mudar a versão que a pessoa efetivamente viu.",
+        "Publicar a mesma projeção para revisões, Meu trabalho, perguntas e rotinas, incluindo razão de revisão ou bloqueio e correlação de uma única pendência por escopo."
       ],
       "inputs": [
         "Contexto e referências de WP08.T01–T02.",
         "Versões e capacidades C01/C02/C06 publicadas pelos domínios."
       ],
       "outputs": [
-        "Registro de confirmação humana por versão e projeção de válida, vencida ou indisponível.",
-        "Porta para consulta pelas revisões, Meu trabalho e rotinas, sem escrita no valor de domínio."
+        "ConfirmationRecord imutável com versão observada e fingerprint do escopo confirmado.",
+        "ConfirmationValidityProjection valid/stale/unavailable com evaluatedSourceVersion e reason autorizados.",
+        "Porta C06 consumida por revisão, Meu trabalho e rotinas sem escrita no valor de domínio."
       ],
       "depends_on": [
         "WP00.T02",
@@ -385,17 +522,27 @@
       "checks": [
         {
           "id": "WP08.T03.CHK.01",
-          "text": "Confirmar versão 7 e atualizar a origem para versão 8: a confirmação deve ficar vencida e nunca validar a versão 8 automaticamente.",
+          "text": "CONFIRM-SCOPE: confirmar janeiro em v7. Branch A muda somente fevereiro em v8, sem dependência: mantém valid, auditRef/observedSourceVersion=v7 e zero nova cobrança em WP09.T02 e Meu trabalho. Branch B muda janeiro em v8: stale, conserva v7 e reabre uma única pendência; repetir leitura/rotina não duplica.",
           "status": "NOT_RUN"
         },
         {
           "id": "WP08.T03.CHK.02",
-          "text": "Entre leitura e confirmação, outro usuário altera o registro: a tentativa sobre versão antiga é recusada sem registrar uma confirmação atual.",
+          "text": "Entre leitura v7 e confirmação, concorrente muda janeiro ou uma dependência pertinente: recusar por fingerprint diferente, preservando rascunho. Na variante que muda só fevereiro, aceitar apenas após igualdade de escopo comprovada; registrar v7 observado e v8 avaliado sem declarar revisão de fevereiro.",
           "status": "NOT_RUN"
         },
         {
           "id": "WP08.T03.CHK.03",
-          "text": "Confirmar registro com campos ausentes: os faltantes continuam faltantes, e nem a data da fonte nem o valor são atualizados pela confirmação humana.",
+          "text": "Confirmar escopo com campo ausente conserva ausência e idade da fonte; zero observado permanece distinguível. A confirmação não altera fonte, competência nem versão de domínio.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP08.T03.CHK.04",
+          "text": "Revogar acesso antes de consultar/reusar: projection unavailable sem valores/fingerprint/link restritos; rotina não cobra o ator sem acesso. Substituir origem por nova incarnation usando o mesmo ID: confirmação antiga não volta a valid. Restaurar acesso reavalia escopo e não ressuscita encarnação substituída.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP08.T03.CHK.05",
+          "text": "Alterar FX/regra/campo de dependência declarado que sustenta janeiro invalida janeiro mesmo sem edição de sua célula; alteração de fevereiro comprovadamente sem dependência mantém validade. Coincidência compensatória de total não oculta mudança nos inputs pertinentes.",
           "status": "NOT_RUN"
         }
       ],
@@ -403,19 +550,19 @@
         "dod": [
           {
             "id": "WP08.T03.DOD.01",
-            "text": "A confirmação registra quem revisou qual referência, período e versão, sem exigir a regravação do dado.",
+            "text": "A confirmação registra autor, referência/encarnação, campos/período, dependências, versão observada e fingerprint, sem regravar dado.",
             "status": "NOT_RUN"
           },
           {
             "id": "WP08.T03.DOD.02",
-            "text": "A projeção perde validade quando a versão correspondente muda.",
+            "text": "A projeção conserva valid após versão global irrelevante e perde validade quando o escopo material muda; unavailable não é valid nem prova de nova revisão necessária.",
             "status": "NOT_RUN"
           }
         ],
         "invariants": [
           {
             "id": "WP08.T03.INV.01",
-            "text": "Sem alteração significa revisão humana daquela versão; não significa coleta recente, qualidade comprovada ou aprovação de negócio.",
+            "text": "Sem alteração significa revisão humana do escopo mostrado na versão observada; não significa coleta recente, qualidade comprovada, revisão de todos os campos da versão atual ou aprovação.",
             "status": "NOT_RUN"
           },
           {
@@ -425,31 +572,31 @@
           },
           {
             "id": "WP08.T03.INV.03",
-            "text": "A confirmação pertence a referência, campos relevantes, período e versão. Uma edição de fevereiro não invalida automaticamente uma confirmação de janeiro sem dependência material.",
+            "text": "Confirmação pertence a referência/encarnação, campos, período e dependências materiais. A comparação usa fingerprint C06; fevereiro isolado não invalida janeiro.",
             "status": "NOT_RUN"
           }
         ],
         "quality_standards": [
           {
             "id": "WP08.T03.QLT.01",
-            "text": "O estado mostra versão revisada e condição atual de validade com linguagem que não confunda confirmação com dado novo.",
+            "text": "O estado mostra versão observada e condição atual de validade separadamente, com razão autorizada, sem confundir confirmação com dado novo.",
             "status": "NOT_RUN"
           },
           {
             "id": "WP08.T03.QLT.02",
-            "text": "Conflito de versão informa que a base mudou e não induz o usuário a acreditar que revisou o estado atual.",
+            "text": "Conflito material aponta o escopo afetado e preserva entrada; versão global diferente sem efeito no escopo não gera aviso de revisão vencida.",
             "status": "NOT_RUN"
           }
         ],
         "completeness_criteria": [
           {
             "id": "WP08.T03.CMP.01",
-            "text": "São cobertos confirmação válida, reenvio, concorrência, origem atualizada, origem removida e acesso revogado.",
+            "text": "Cobrir valid/stale/unavailable, reenvio, concorrência material/irrelevante, dependência pertinente, fonte removida/substituída, revogação e recuperação de acesso.",
             "status": "NOT_RUN"
           },
           {
             "id": "WP08.T03.CMP.02",
-            "text": "Confirmações em períodos diferentes permanecem independentes mesmo quando apontam à mesma entidade.",
+            "text": "Períodos sem dependência ficam independentes na mesma entidade; dependência entre períodos é declarada e muda essa conclusão quando pertinente.",
             "status": "NOT_RUN"
           }
         ],
@@ -461,7 +608,7 @@
           },
           {
             "id": "WP08.T03.SUC.02",
-            "text": "Uma atualização posterior reaparece como pendência de revisão, sem sinal verde herdado indevidamente.",
+            "text": "Atualização material posterior reaparece uma única vez como revisão pendente; atualização irrelevante não reabre cobrança e a pessoa pode inspecionar sua base original.",
             "status": "NOT_RUN"
           }
         ]
@@ -492,9 +639,13 @@
       "integrates_with": [
         "WP02.T04",
         "WP11.T01",
-        "WP12.T03"
+        "WP12.T03",
+        "WP09.T02",
+        "WP09.T03",
+        "WP08.T04"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S3-B"
     },
     {
       "id": "WP08.T04",
@@ -502,16 +653,22 @@
       "intent": "Mostrar a cada usuário suas ações, perguntas e revisões relevantes sem exigir alimentação de outra lista.",
       "work": [
         "Implementar a projeção Meu trabalho C06 combinando referências de Hot Topics, pedidos contextuais e confirmações vencidas, com atribuição interna explícita, distinção entre tipos de pendência e acesso direto à origem.",
-        "Agregar também decisões de Procurement pela projeção C02 do WP04.T01: holder atual, etapa, versão e destino de decisão. A fila não cria status de aprovação próprio; pedidos não atribuídos de forma verificável não são imputados por homônimo."
+        "Agregar também decisões de Procurement pela projeção C02 do WP04.T01: holder atual, etapa, versão e destino de decisão. A fila não cria status de aprovação próprio; pedidos não atribuídos de forma verificável não são imputados por homônimo.",
+        "Consumir ConfirmationValidityProjection C06 sem comparar somente versões globais; valid não entra como revisão vencida, stale atualiza a pendência canônica e unavailable não gera atribuição a pessoa sem acesso.",
+        "Publicar descritores e handlers de sf_work_list, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+        "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
       ],
       "inputs": [
         "Relações, pedidos e confirmações de WP08.T01–T03.",
         "Portas autorizadas C01/C02/C06 de Hot Topics e identidade interna explícita; owner textual sem vínculo permanece não atribuído.",
-        "C02 de Procurement: decisões pendentes por holder/etapa/versão e referência de aprovação, com recorte autorizado aplicado no produtor WP04.T01."
+        "C02 de Procurement: decisões pendentes por holder/etapa/versão e referência de aprovação, com recorte autorizado aplicado no produtor WP04.T01.",
+        "C16",
+        "C15"
       ],
       "outputs": [
         "Projeção Meu trabalho de Hot Topics, esclarecimentos, confirmações vencidas e decisões de Procurement, com tipo/origem, responsável explícito, prazo quando existente e destino canônico.",
-        "Estados de vazio, não atribuído, não legível e pendência concluída/atualizada sem status operacional local."
+        "Estados de vazio, não atribuído, não legível e pendência concluída/atualizada sem status operacional local.",
+        "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts#listWork (sf_work_list; WorkListRequest -> AuthorizedWorkList)"
       ],
       "depends_on": [
         "WP00.T02",
@@ -537,6 +694,16 @@
           "id": "WP08.T04.CHK.04",
           "text": "Uma aprovação atribuída ao holder aparece uma vez com sua etapa; aprová-la na origem ou transferir legalmente o holder atualiza/remove a pendência. Usuário sem leitura ou sem a atribuição correspondente não recebe a decisão na fila pessoal.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP08.T04.CHK.20",
+          "text": "Após confirmação de janeiro em v7, mudança isolada de fevereiro em v8 não adiciona item; alteração de janeiro adiciona uma única revisão. Repetir projeção mantém a mesma identidade; revogação retira dados/links e não cria nova cobrança.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP08.T04.CHK.18",
+          "text": "Executar sf_work_list pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -550,6 +717,11 @@
             "id": "WP08.T04.DOD.02",
             "text": "Ações, perguntas e revisão humana aparecem como tipos diferentes de trabalho.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T04.DOD.18",
+            "text": "Descritores C16 de sf_work_list são implementados e consumidos por T06 com referências reais.",
+            "status": "NOT_RUN"
           }
         ],
         "invariants": [
@@ -562,6 +734,11 @@
             "id": "WP08.T04.INV.02",
             "text": "Atribuição pessoal e visibilidade dependem de identidade/capacidade explícitas, não de coincidência de nomes.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T04.INV.18",
+            "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+            "status": "NOT_RUN"
           }
         ],
         "quality_standards": [
@@ -573,6 +750,11 @@
           {
             "id": "WP08.T04.QLT.02",
             "text": "Múltiplos contextos do mesmo item são agrupados sem ocultar a identidade da ação ou a referência de período.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T04.QLT.18",
+            "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
             "status": "NOT_RUN"
           }
         ],
@@ -591,6 +773,11 @@
             "id": "WP08.T04.CMP.03",
             "text": "Cobrir contribuição, esclarecimento, ação operacional, confirmação vencida e aprovação por etapa; ausência de prazo/holder comprovado permanece explícita.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T04.CMP.18",
+            "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+            "status": "NOT_RUN"
           }
         ],
         "success_criteria": [
@@ -603,6 +790,11 @@
             "id": "WP08.T04.SUC.02",
             "text": "Uma mudança na fonte canônica é refletida na próxima leitura e não exige sincronização manual de status.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T04.SUC.18",
+            "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+            "status": "NOT_RUN"
           }
         ]
       },
@@ -613,7 +805,9 @@
       "final_evidence_owner": "WP10",
       "requirements": [
         "R32",
-        "IA14"
+        "IA14",
+        "RA03",
+        "RA04"
       ],
       "journeys": [
         "J01",
@@ -634,24 +828,31 @@
       "integrates_with": [
         "WP02.T04",
         "WP11.T01",
-        "WP12.T03"
+        "WP12.T03",
+        "WP10.T06"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S3-B"
     },
     {
       "id": "WP08.T05",
       "title": "Encaminhar contexto para a ação Hot Topic existente",
       "intent": "Permitir passar de uma revisão, dúvida ou registro a uma ação operacional única, conservando o contexto e a capacidade de retomada.",
       "work": [
-        "Implementar o handoff C06 com intenção explícita, referência de origem e chave de correlação, usando a porta Hot Topics publicada pelo WP02 para criar ou vincular a ação e retornando somente resultado verificável e referência utilizável."
+        "Implementar o handoff C06 com intenção explícita, referência de origem e chave de correlação, usando a porta Hot Topics publicada pelo WP02 para criar ou vincular a ação e retornando somente resultado verificável e referência utilizável.",
+        "Publicar descritores e handlers de sf_handoff_prepare, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+        "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
       ],
       "inputs": [
         "Referências e projeções de WP08.T01–T04.",
-        "Contrato C03/C06 da porta Hot Topics e C05/C07 para contexto de revisão ou rotina; integração real dos providers fica no WP10."
+        "Contrato C03/C06 da porta Hot Topics e C05/C07 para contexto de revisão ou rotina; integração real dos providers fica no WP10.",
+        "C16",
+        "C15"
       ],
       "outputs": [
         "Porta de handoff e vínculo contextual à referência canônica de Hot Topic.",
-        "Resultados criada, vinculada, recusada, em conflito ou pendente de conclusão verificável, sem êxito presumido."
+        "Resultados criada, vinculada, recusada, em conflito ou pendente de conclusão verificável, sem êxito presumido.",
+        "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts#prepareHandoff (sf_handoff_prepare; HandoffPrepareRequest -> HandoffProposal)"
       ],
       "depends_on": [
         "WP00.T02",
@@ -672,6 +873,11 @@
           "id": "WP08.T05.CHK.03",
           "text": "Encaminhar a partir de uma revisão preservada: a ação abre com sua origem identificável e o handoff não altera os números da revisão, aprova compra ou escreve no Planner.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP08.T05.CHK.18",
+          "text": "Executar sf_handoff_prepare pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -685,6 +891,11 @@
             "id": "WP08.T05.DOD.02",
             "text": "A prova de contrato entrega ao WP10 os cenários de reenvio e recusa para execução conjunta com o provider real.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T05.DOD.18",
+            "text": "Descritores C16 de sf_handoff_prepare são implementados e consumidos por T06 com referências reais.",
+            "status": "NOT_RUN"
           }
         ],
         "invariants": [
@@ -696,6 +907,11 @@
           {
             "id": "WP08.T05.INV.02",
             "text": "O handoff preserva alçadas e valores dos domínios e não converte um encaminhamento em aprovação.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T05.INV.18",
+            "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
             "status": "NOT_RUN"
           }
         ],
@@ -709,6 +925,11 @@
             "id": "WP08.T05.QLT.02",
             "text": "Contexto anexado usa somente os campos autorizados e não copia conteúdo privado para uma ação de acesso mais amplo.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T05.QLT.18",
+            "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+            "status": "NOT_RUN"
           }
         ],
         "completeness_criteria": [
@@ -720,6 +941,11 @@
           {
             "id": "WP08.T05.CMP.02",
             "text": "Contextos de Dashboard, Planner, Procurement e revisão são transportáveis sem escrever nos arquivos de nenhum desses domínios.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T05.CMP.18",
+            "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
             "status": "NOT_RUN"
           }
         ],
@@ -733,6 +959,11 @@
             "id": "WP08.T05.SUC.02",
             "text": "O usuário diferencia sucesso confirmado, recusa e resultado ainda incerto sem precisar deduzir o estado por mensagens vagas.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T05.SUC.18",
+            "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+            "status": "NOT_RUN"
           }
         ]
       },
@@ -742,7 +973,9 @@
       "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
       "final_evidence_owner": "WP10",
       "requirements": [
-        "R33"
+        "R33",
+        "RA03",
+        "RA04"
       ],
       "journeys": [
         "J06"
@@ -762,9 +995,11 @@
       "integrates_with": [
         "WP02.T04",
         "WP11.T01",
-        "WP12.T03"
+        "WP12.T03",
+        "WP10.T06"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S3-B"
     },
     {
       "id": "WP08.T06",
@@ -774,16 +1009,22 @@
         "Permitir selecionar escopo/período, registros e responsáveis a partir das identidades autorizadas; relações sugeridas exigem confirmação.",
         "Receber perguntas da IA com contexto, efeito e destinatário explícito; criar contribuição canônica dentro do produto somente após ação autorizada.",
         "Vincular resposta a autor/escopo/evidência; distinguir premissa do caso de alteração no registro oficial e preparar correção quando necessário.",
-        "Reutilizar resposta ainda válida; invalidar por mudança material e encaminhar HotTopic canônico sem duplicar tarefa."
+        "Reutilizar resposta ainda válida; invalidar por mudança material e encaminhar HotTopic canônico sem duplicar tarefa.",
+        "Reutilizar resposta com o mesmo escopo/fingerprint C06 e conservar autoria/versão observada. Edição global irrelevante não invalida a resposta; perda de acesso bloqueia reuso sem revelar conteúdo.",
+        "Publicar descritores e handlers de sf_question_prepare, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+        "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
       ],
       "inputs": [
         "Contratos publicados por WP00",
-        "Projeções autorizadas e serviços reais dos produtores declarados"
+        "Projeções autorizadas e serviços reais dos produtores declarados",
+        "C16",
+        "C15"
       ],
       "outputs": [
         "Primeiro ciclo configurável",
         "Pergunta contextual atribuída",
-        "Resposta reutilizável com escopo"
+        "Resposta reutilizável com escopo",
+        "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts#prepareQuestion (sf_question_prepare; QuestionPrepareRequest -> QuestionProposal)"
       ],
       "depends_on": [
         "WP00.T02",
@@ -804,6 +1045,11 @@
           "id": "WP08.T06.CHK.03",
           "text": "Resposta válida é reutilizada; edição irrelevante não gera outra cobrança.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP08.T06.CHK.18",
+          "text": "Executar sf_question_prepare pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -812,12 +1058,22 @@
             "id": "WP08.T06.DOD.01",
             "text": "Primeiro usuário configura um ciclo e destinatário real; a resposta aparece no caso e em Meu trabalho pela mesma identidade.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T06.DOD.18",
+            "text": "Descritores C16 de sf_question_prepare são implementados e consumidos por T06 com referências reais.",
+            "status": "NOT_RUN"
           }
         ],
         "invariants": [
           {
             "id": "WP08.T06.INV.01",
             "text": "Nome semelhante não prova identidade; resposta no caso não aprova compra nem reescreve cronograma oficial.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T06.INV.18",
+            "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
             "status": "NOT_RUN"
           }
         ],
@@ -826,12 +1082,22 @@
             "id": "WP08.T06.QLT.01",
             "text": "A pergunta explica por que importa e o que sua resposta altera; prioridade reflete condição decisiva, não quantidade de campos vazios.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T06.QLT.18",
+            "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+            "status": "NOT_RUN"
           }
         ],
         "completeness_criteria": [
           {
             "id": "WP08.T06.CMP.01",
             "text": "Cobrir sem responsável, pessoa sem acesso, pergunta já respondida, resposta contraditória, alteração posterior e conflito simultâneo.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T06.CMP.18",
+            "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
             "status": "NOT_RUN"
           }
         ],
@@ -840,6 +1106,11 @@
             "id": "WP08.T06.SUC.01",
             "text": "Uma contribuição resolve a pendência em todos os consumidores de seu escopo sem cobrança duplicada ou redigitação.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP08.T06.SUC.18",
+            "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+            "status": "NOT_RUN"
           }
         ]
       },
@@ -847,7 +1118,9 @@
       "owner": "WP08",
       "ownership_ref": "WP08",
       "requirements": [
-        "IA05"
+        "IA05",
+        "RA03",
+        "RA04"
       ],
       "journeys": [
         "J09"
@@ -868,21 +1141,25 @@
       "integrates_with": [
         "WP02.T04",
         "WP11.T01",
-        "WP12.T03"
+        "WP12.T03",
+        "WP10.T06"
       ],
       "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S3-B"
     }
   ],
   "handoff": [
     "Entregar ao WP10 os painéis/destinos de colaboração, Meu trabalho e handoff por C06/C08; os entrypoints e arquivos de domínio permanecem intactos neste WP.",
     "Entregar ao WP07/WP09 referências e resultados utilizáveis para revisão e rotinas, incluindo estados de acesso revogado, confirmação vencida e escrita recusada.",
-    "Fornecer cenário de integração real para WP10: revisão → pedido contextual → confirmação por versão → Hot Topic único → conclusão refletida em Meu trabalho, usando providers reais e não só doubles de contrato."
+    "Fornecer cenário de integração real para WP10: revisão → pedido contextual → confirmação por versão → Hot Topic único → conclusão refletida em Meu trabalho, usando providers reais e não só doubles de contrato.",
+    "Descritores C16 das capacidades reais de WP08, consumidos pela ponte nativa sem copiar domínio.",
+    "O manifest canônico identifica os paths/exports/tasks e AM01–AM06; evidência de catálogo isolado não é aceite integrado."
   ],
   "risks": [
     "Owner/vendor textual pode ser confundido com identidade de pessoa/fornecedor; exigir seleção explícita e mostrar referências não atribuídas sem adivinhação.",
     "Pedidos de esclarecimento podem virar uma segunda ferramenta de tarefas; manter seu estado comunicacional e encaminhar execução operacional somente a Hot Topics.",
-    "Sem alteração pode parecer dado atualizado ou aprovado; vincular à versão revisada, invalidar após mudança e não tocar em origem/competência dos números.",
+    "Sem alteração pode parecer dado novo ou aprovado; preservar a versão observada e vencer somente quando o escopo/dependência material mudar. Acesso não verificável é indisponível. Não tocar na origem/competência dos números.",
     "O handoff atravessa owners e pode perder resposta entre escrita e retorno; correlação e resultado incerto explícito evitam duplicação, com composição real verificada no WP10."
   ],
   "status": "PLANNED",
@@ -923,7 +1200,7 @@
     ],
     "contract_provides": [
       "C06 — relações explícitas autorizadas, comentário e pedido de revisão/esclarecimento vinculados a referência e período.",
-      "C06 — confirmação sem alteração válida somente para a versão revisada e projeção Meu trabalho derivada das fontes canônicas.",
+      "C06 — confirmação com versão observada imutável e validade pelo fingerprint de referência/encarnação/campos/período/dependências pertinentes; Meu trabalho deriva a mesma projeção canônica.",
       "C06/C07 — handoff contextualizado e resultado referenciado de encaminhamento, sem aprovação de negócio implícita."
     ]
   }

@@ -1,0 +1,32 @@
+{
+  "scope": "Structural validator rejection controls only; not product tests",
+  "status": "PASS",
+  "cases": [
+    {
+      "case": "Two actors overlap the same physical slot",
+      "detected": "SLOT_OVERLAP",
+      "status": "PASS"
+    },
+    {
+      "case": "Native input arrives after its qualification phase",
+      "detected": "PHASE_INPUT_LATE",
+      "status": "PASS"
+    },
+    {
+      "case": "Skill lease points to an unshipped source",
+      "detected": "SKILL_LEASE_PATH",
+      "status": "PASS"
+    },
+    {
+      "case": "A proof references a nonexistent criterion",
+      "detected": "PROOF_CRITERION_REF",
+      "status": "PASS"
+    },
+    {
+      "case": "An original task is missing",
+      "detected": "ORIGINAL_TASK_REMOVED",
+      "status": "PASS"
+    }
+  ],
+  "implementation_test_status": "NOT_RUN"
+}

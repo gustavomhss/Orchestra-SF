@@ -1,0 +1,843 @@
+{
+  "proofs": [
+    {
+      "id": "AM01",
+      "title": "Perfil e skill reais",
+      "proof_packages": [
+        "E11",
+        "E16"
+      ],
+      "owner_tasks": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP10.T06"
+      ],
+      "execution_actor": "S4",
+      "reviewer": "S3-R3",
+      "cases": [
+        {
+          "id": "AM01-FINANCE",
+          "profile_id": "sf_finance",
+          "skills": [
+            "sf-explicar-forecast",
+            "sf-comparar-cenarios",
+            "sf-avaliar-sensibilidade",
+            "sf-produzir-bi-contextual"
+          ],
+          "expected_consumed_outputs": "FinancialAnalysis/ScenarioComparison/SensitivityResult e BI consumidos WP01/WP05/WP11; totais iguais a C02/C10.",
+          "actors": [
+            "S4"
+          ],
+          "first_integration_window": [
+            55,
+            75
+          ],
+          "final_candidate_window": [
+            75,
+            95
+          ],
+          "status": "NOT_RUN",
+          "positive": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+          "negative": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/am01/am01-finance.json"
+        },
+        {
+          "id": "AM01-PROCUREMENT",
+          "profile_id": "sf_procurement",
+          "skills": [
+            "sf-comparar-sourcing",
+            "sf-revisar-condicoes-contratuais",
+            "sf-preparar-compra",
+            "sf-extrair-evidencias"
+          ],
+          "expected_consumed_outputs": "CommercialComparison/CommercialGap/EvidenceCandidate/PreparedChange visíveis no caso e UI; extração confirmada preserva fonte.",
+          "actors": [
+            "S4"
+          ],
+          "first_integration_window": [
+            55,
+            75
+          ],
+          "final_candidate_window": [
+            75,
+            95
+          ],
+          "status": "NOT_RUN",
+          "positive": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+          "negative": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/am01/am01-procurement.json"
+        },
+        {
+          "id": "AM01-PORTFOLIO",
+          "profile_id": "sf_portfolio",
+          "skills": [
+            "sf-revisar-dependencias",
+            "sf-compor-portfolio",
+            "sf-reavaliar-compromissos",
+            "sf-consultar-memoria-decisoria"
+          ],
+          "expected_consumed_outputs": "DeliveryAssessment/DependencyConflict/PortfolioComparison/ReconsiderationProposal e precedente com diferenças atuais.",
+          "actors": [
+            "S4"
+          ],
+          "first_integration_window": [
+            55,
+            75
+          ],
+          "final_candidate_window": [
+            75,
+            95
+          ],
+          "status": "NOT_RUN",
+          "positive": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+          "negative": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/am01/am01-portfolio.json"
+        },
+        {
+          "id": "AM01-MAESTRO",
+          "profile_id": "sf_maestro",
+          "skills": [
+            "sf-enquadrar-decisao",
+            "sf-preparar-revisao-executiva",
+            "sf-coordenar-perguntas",
+            "sf-produzir-material-reuniao"
+          ],
+          "expected_consumed_outputs": "IntentFrame/AnalysisPlan/DecisionBrief/QuestionProposal e relatório real, fontes recuperáveis e perguntas à identidade conhecida.",
+          "actors": [
+            "S4"
+          ],
+          "first_integration_window": [
+            55,
+            75
+          ],
+          "final_candidate_window": [
+            75,
+            95
+          ],
+          "status": "NOT_RUN",
+          "positive": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+          "negative": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/am01/am01-maestro.json"
+        },
+        {
+          "id": "AM01-REVIEWER",
+          "profile_id": "sf_reviewer",
+          "skills": [
+            "sf-contestar-decisao",
+            "sf-revisar-evidencias"
+          ],
+          "expected_consumed_outputs": "CritiqueReport/ClaimIssue/UnresolvedCondition em execução distinta; resposta humana altera objeto/viabilidade em vez de só reescrever texto.",
+          "actors": [
+            "S4"
+          ],
+          "first_integration_window": [
+            55,
+            75
+          ],
+          "final_candidate_window": [
+            75,
+            95
+          ],
+          "status": "NOT_RUN",
+          "positive": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+          "negative": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/am01/am01-reviewer.json"
+        }
+      ],
+      "required_coverage": {
+        "profiles": 5,
+        "skills": 18,
+        "every_source_loaded": true,
+        "every_skill_contributed_output": true,
+        "independent_reviewer_run": true
+      },
+      "early_gate": "GNATIVE18-20 cobre umperfil/umaskill; nunca é equivalente à cobertura completa.",
+      "status": "NOT_RUN",
+      "integration_deadline": 75,
+      "final_candidate_window": [
+        75,
+        95
+      ],
+      "recheck_window": [
+        103,
+        118
+      ],
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am01.json"
+    },
+    {
+      "id": "AM02",
+      "title": "Paridade UI/agente/MCP nos oito packs",
+      "proof_packages": [
+        "E01",
+        "E16"
+      ],
+      "owner_tasks": [
+        "WP10.T06",
+        "WP10.T01"
+      ],
+      "execution_actor": "S0-B",
+      "reviewer": "S3-R3",
+      "pack_matrix": [
+        {
+          "pack": "Performance",
+          "operations": [
+            "sf_dashboard_read",
+            "sf_kpi_explain",
+            "sf_bi_view",
+            "sf_source_get"
+          ],
+          "producer_tasks": [
+            "WP02.T01",
+            "WP05.T04",
+            "WP10.T07"
+          ],
+          "latest_functional_output_minute": 55,
+          "proof_by_minute": 75,
+          "owner_task": "WP10.T06",
+          "proof_executor": "S0-B",
+          "independent_reviewer": "S3-R3",
+          "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+          "status": "NOT_RUN"
+        },
+        {
+          "pack": "Planning",
+          "operations": [
+            "sf_forecast_compare",
+            "sf_scenario_simulate",
+            "sf_scenario_compare",
+            "sf_sensitivity_evaluate",
+            "sf_portfolio_evaluate"
+          ],
+          "producer_tasks": [
+            "WP03.T01",
+            "WP03.T05",
+            "WP13.T02",
+            "WP13.T03"
+          ],
+          "latest_functional_output_minute": 72,
+          "proof_by_minute": 75,
+          "owner_task": "WP10.T06",
+          "proof_executor": "S0-B",
+          "independent_reviewer": "S3-R3",
+          "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+          "status": "NOT_RUN"
+        },
+        {
+          "pack": "Procurement",
+          "operations": [
+            "sf_request_read",
+            "sf_supplier_read",
+            "sf_contract_read",
+            "sf_sourcing_compare"
+          ],
+          "producer_tasks": [
+            "WP04.T01",
+            "WP04.T03",
+            "WP04.T05"
+          ],
+          "latest_functional_output_minute": 72,
+          "proof_by_minute": 75,
+          "owner_task": "WP10.T06",
+          "proof_executor": "S0-B",
+          "independent_reviewer": "S3-R3",
+          "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+          "status": "NOT_RUN"
+        },
+        {
+          "pack": "Decisions",
+          "operations": [
+            "sf_case_read",
+            "sf_case_draft",
+            "sf_alternative_draft",
+            "sf_change_prepare",
+            "sf_receipt_get"
+          ],
+          "producer_tasks": [
+            "WP11.T01",
+            "WP11.T02",
+            "WP11.T03",
+            "WP11.T04"
+          ],
+          "latest_functional_output_minute": 72,
+          "proof_by_minute": 75,
+          "owner_task": "WP10.T06",
+          "proof_executor": "S0-B",
+          "independent_reviewer": "S3-R3",
+          "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+          "status": "NOT_RUN"
+        },
+        {
+          "pack": "Collaboration",
+          "operations": [
+            "sf_work_list",
+            "sf_question_prepare",
+            "sf_answer_read",
+            "sf_relation_read",
+            "sf_handoff_prepare"
+          ],
+          "producer_tasks": [
+            "WP08.T01",
+            "WP08.T02",
+            "WP08.T04",
+            "WP08.T05",
+            "WP08.T06"
+          ],
+          "latest_functional_output_minute": 72,
+          "proof_by_minute": 75,
+          "owner_task": "WP10.T06",
+          "proof_executor": "S0-B",
+          "independent_reviewer": "S3-R3",
+          "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+          "status": "NOT_RUN"
+        },
+        {
+          "pack": "Documents & Reports",
+          "operations": [
+            "sf_document_extract",
+            "sf_import_preview",
+            "sf_review_prepare",
+            "sf_report_prepare",
+            "sf_artifact_get"
+          ],
+          "producer_tasks": [
+            "WP06.T02",
+            "WP06.T05",
+            "WP07.T04"
+          ],
+          "latest_functional_output_minute": 72,
+          "proof_by_minute": 75,
+          "owner_task": "WP10.T06",
+          "proof_executor": "S0-B",
+          "independent_reviewer": "S3-R3",
+          "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+          "status": "NOT_RUN"
+        },
+        {
+          "pack": "Knowledge / Atlas SF",
+          "operations": [
+            "sf_context_get",
+            "sf_knowledge_search",
+            "sf_evidence_get",
+            "sf_decision_recall",
+            "sf_freshness_check"
+          ],
+          "producer_tasks": [
+            "WP10.T07",
+            "WP14.T02",
+            "WP14.T03",
+            "WP14.T04"
+          ],
+          "latest_functional_output_minute": 68,
+          "proof_by_minute": 75,
+          "owner_task": "WP10.T06",
+          "proof_executor": "S0-B",
+          "independent_reviewer": "S3-R3",
+          "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+          "status": "NOT_RUN"
+        },
+        {
+          "pack": "Routines",
+          "operations": [
+            "sf_routine_catalog",
+            "sf_routine_prepare",
+            "sf_routine_run",
+            "sf_routine_status",
+            "sf_routine_result",
+            "sf_watch_prepare"
+          ],
+          "producer_tasks": [
+            "WP09.T01",
+            "WP09.T07",
+            "WP09.T06"
+          ],
+          "latest_functional_output_minute": 72,
+          "proof_by_minute": 75,
+          "owner_task": "WP10.T06",
+          "proof_executor": "S0-B",
+          "independent_reviewer": "S3-R3",
+          "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "checks": [
+        "Usar o mesmo principal, caso, versão, porta e autorização nos caminhos UI, agente e MCP. actor/role/project forjados não alteram a concessão.",
+        "Ligar o callID da bridge à chamada do domínio, à versão e ao resultado ou recibo. Stub ou engine paralelo falham.",
+        "Listar contratos e concessões dos oito packs em T+20; exercer sua funcionalidade real até T+75. Discovery não equivale a execução."
+      ],
+      "status": "NOT_RUN",
+      "integration_deadline": 75,
+      "final_candidate_window": [
+        75,
+        95
+      ],
+      "recheck_window": [
+        103,
+        118
+      ],
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am02.json"
+    },
+    {
+      "id": "AM03",
+      "title": "Isolamento, revogação e conflito de provider",
+      "proof_packages": [
+        "E11",
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "owner_tasks": [
+        "WP10.T06",
+        "WP10.T07"
+      ],
+      "execution_actor": "S0-B/S0-A",
+      "reviewer": "S3-R3",
+      "checks": [
+        "Duas sessões e dois atores com o mesmo perfil e contextos distintos não cruzam dados, contagens ou cache.",
+        "case/session/installation/project/location incorretos e grant/actor/role forjados são recusados na chamada direta.",
+        "Revogação entre discovery e execution ou entre search e detail alcança memória, fonte, prompt, BI, relatório e link.",
+        "Provider sucafina-workbench homônimo, objeto ou generation substituídos e sessão reaberta após reinício não ampliam acesso. Exigir novo binding autenticado.",
+        "Operação fora das concessões do perfil é recusada mesmo sem passar por discovery."
+      ],
+      "status": "NOT_RUN",
+      "integration_deadline": 75,
+      "final_candidate_window": [
+        75,
+        95
+      ],
+      "recheck_window": [
+        103,
+        118
+      ],
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am03.json"
+    },
+    {
+      "id": "AM04",
+      "title": "Escolha, aplicação e resposta perdida",
+      "proof_packages": [
+        "E10",
+        "E16"
+      ],
+      "owner_tasks": [
+        "WP11.T03",
+        "WP11.T04",
+        "WP10.T01"
+      ],
+      "execution_actor": "S4-A/S0",
+      "reviewer": "S2-R2",
+      "checks": [
+        "O modelo prepara. Escolha, aplicação e aprovação usam as ações autorizadas e os comandos do domínio.",
+        "Interromper após o commit no domínio e antes do retorno ou da reconciliação no caso. O retry produz um efeito e recupera o recibo persistido atomicamente.",
+        "O mesmo idempotencyKey e digest retornam o resultado autorizado. Chave repetida com conteúdo diferente falha.",
+        "Revalidar base e autoridade em cada domínio e explicar o estado parcial. Não declarar transação global."
+      ],
+      "status": "NOT_RUN",
+      "integration_deadline": 75,
+      "final_candidate_window": [
+        75,
+        95
+      ],
+      "recheck_window": [
+        103,
+        118
+      ],
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am04.json"
+    },
+    {
+      "id": "AM05",
+      "title": "Evidência e Atlas persistente real",
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "owner_tasks": [
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07"
+      ],
+      "execution_actor": "S0-A/S0-C",
+      "reviewer": "S3-R3",
+      "checks": [
+        "Resolver o import @orchestra/atlas-boundary/business-memory-ports e instrumentar createMemoryEmit, createMemoryRead e DurableMemory com o digest de engine/boundary. Ler apenas o ledger SF não passa.",
+        "Resolver BusinessEvidenceRef para documento/trecho/hash, registro/encarnação/versão e cálculo/recibo. Fonte ausente ou referência invalidada devem ser reconhecidas.",
+        "Exercer append, commit, read, reinício e nova leitura. A entrada autorizada e o contexto original devem persistir. Append ainda sem commit não aparece como sucesso.",
+        "Dois atores com o mesmo perfil, owner omitido ou forjado, sessão/caso incorretos e um canary privado não ampliam o acesso.",
+        "Revalidar e invalidar após revogação ou mudança de encarnação. O precedente recuperado explica pertinência e diferenças atuais.",
+        "Registrar binary path e versão do scanner real. Exercitar clean, secret-canary, timeout e ausência. Hit ou indisponibilidade não fazem append; indisponibilidade retorna scanner-unavailable. Não aceitar scanner simulado como prova real.",
+        "Falha de commit ou resposta perdida preserva consistência do log/ledger e retomada idempotente. A função síncrona append não significa que o commit assíncrono terminou."
+      ],
+      "status": "NOT_RUN",
+      "integration_deadline": 75,
+      "final_candidate_window": [
+        75,
+        95
+      ],
+      "recheck_window": [
+        103,
+        118
+      ],
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am05.json"
+    },
+    {
+      "id": "AM06",
+      "title": "Rotina real e retorno ao produto",
+      "proof_packages": [
+        "E11",
+        "E13",
+        "E14",
+        "E16"
+      ],
+      "owner_tasks": [
+        "WP09.T01",
+        "WP09.T07",
+        "WP09.T06",
+        "WP12.T04"
+      ],
+      "execution_actor": "S3-C/S4",
+      "reviewer": "S3-R3",
+      "checks": [
+        "Exercer admissão/publicação pinada, Relay, perfil/skill, operação SF, run/result e UI, com IDs e versões reais.",
+        "Falha, retry e intervenção ficam visíveis. O run pode terminar com pergunta; a resposta ocorre no produto. Não inventar espera humana interna ao run.",
+        "Retomar na nova versão sem duplicar proposta ou efeito. Schedule usa recorrência, dono e timezone atuais e não aprova negócio por conta própria.",
+        "Revogação e cancelamento afetam resultado e agenda. O progresso e a proveniência de C11 chegam à mesa."
+      ],
+      "status": "NOT_RUN",
+      "integration_deadline": 75,
+      "final_candidate_window": [
+        75,
+        95
+      ],
+      "recheck_window": [
+        103,
+        118
+      ],
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am06.json"
+    }
+  ],
+  "criterion_assignments": [
+    {
+      "entity_id": "WP06",
+      "criterion_ids": [
+        "WP06.DOD.40",
+        "WP06.INV.40",
+        "WP06.QLT.40",
+        "WP06.CMP.40",
+        "WP06.SUC.40"
+      ],
+      "proof_packages": [
+        "E07",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05",
+        "AM03"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP06.T05",
+      "criterion_ids": [
+        "WP06.T05.DOD.40",
+        "WP06.T05.INV.40",
+        "WP06.T05.QLT.40",
+        "WP06.T05.CMP.40",
+        "WP06.T05.SUC.40",
+        "WP06.T05.CHK.40"
+      ],
+      "proof_packages": [
+        "E07",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05",
+        "AM03"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP14",
+      "criterion_ids": [
+        "WP14.DOD.40",
+        "WP14.INV.40",
+        "WP14.QLT.40",
+        "WP14.CMP.40",
+        "WP14.SUC.40"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP14.T05",
+      "criterion_ids": [
+        "WP14.T05.DOD.40",
+        "WP14.T05.INV.40",
+        "WP14.T05.QLT.40",
+        "WP14.T05.CMP.40",
+        "WP14.T05.SUC.40",
+        "WP14.T05.CHK.40"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP00",
+      "criterion_ids": [
+        "WP00.DOD.40",
+        "WP00.INV.40",
+        "WP00.QLT.40",
+        "WP00.CMP.40",
+        "WP00.SUC.40"
+      ],
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP00.T04",
+      "criterion_ids": [
+        "WP00.T04.DOD.40",
+        "WP00.T04.INV.40",
+        "WP00.T04.QLT.40",
+        "WP00.T04.CMP.40",
+        "WP00.T04.SUC.40",
+        "WP00.T04.CHK.40",
+        "WP00.T04.CHK.41",
+        "WP00.T04.CHK.42"
+      ],
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP12",
+      "criterion_ids": [
+        "WP12.DOD.40",
+        "WP12.INV.40",
+        "WP12.QLT.40",
+        "WP12.CMP.40",
+        "WP12.SUC.40"
+      ],
+      "proof_packages": [
+        "E11",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP12.T01",
+      "criterion_ids": [
+        "WP12.T01.DOD.40",
+        "WP12.T01.INV.40",
+        "WP12.T01.QLT.40",
+        "WP12.T01.CMP.40",
+        "WP12.T01.SUC.40",
+        "WP12.T01.CHK.40"
+      ],
+      "proof_packages": [
+        "E11",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP12.T02",
+      "criterion_ids": [
+        "WP12.T02.DOD.40",
+        "WP12.T02.INV.40",
+        "WP12.T02.QLT.40",
+        "WP12.T02.CMP.40",
+        "WP12.T02.SUC.40",
+        "WP12.T02.CHK.40",
+        "WP12.T02.CHK.41"
+      ],
+      "proof_packages": [
+        "E11",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP10",
+      "criterion_ids": [
+        "WP10.DOD.40",
+        "WP10.INV.40",
+        "WP10.QLT.40",
+        "WP10.CMP.40",
+        "WP10.SUC.40"
+      ],
+      "proof_packages": [
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP10.T06",
+      "criterion_ids": [
+        "WP10.T06.DOD.40",
+        "WP10.T06.INV.40",
+        "WP10.T06.QLT.40",
+        "WP10.T06.CMP.40",
+        "WP10.T06.SUC.40",
+        "WP10.T06.CHK.40"
+      ],
+      "proof_packages": [
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP10.T07",
+      "criterion_ids": [
+        "WP10.T07.DOD.40",
+        "WP10.T07.INV.40",
+        "WP10.T07.QLT.40",
+        "WP10.T07.CMP.40",
+        "WP10.T07.SUC.40",
+        "WP10.T07.CHK.40",
+        "WP10.T07.CHK.41"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP10.T03",
+      "criterion_ids": [
+        "WP10.T03.DOD.40",
+        "WP10.T03.INV.40",
+        "WP10.T03.QLT.40",
+        "WP10.T03.CMP.40",
+        "WP10.T03.SUC.40",
+        "WP10.T03.CHK.40"
+      ],
+      "proof_packages": [
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP10.T04",
+      "criterion_ids": [
+        "WP10.T04.DOD.40",
+        "WP10.T04.INV.40",
+        "WP10.T04.QLT.40",
+        "WP10.T04.CMP.40",
+        "WP10.T04.SUC.40",
+        "WP10.T04.CHK.40",
+        "WP10.T04.CHK.41"
+      ],
+      "proof_packages": [
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    }
+  ],
+  "review_assignments": [
+    {
+      "id": "RUN-REVIEW-UX",
+      "actor": "S1-R1",
+      "physical_slot": "S1-B",
+      "start_minute": 72,
+      "scope": "Produto/UX,28 capacidades, jornadas/estados, contribuições 5 perfis/18 skills econsumidoresUI.",
+      "authoring": "none",
+      "correction_writer": "Owner ativo do WP; WP02=S1 após 72."
+    },
+    {
+      "id": "RUN-REVIEW-INTEGRITY",
+      "actor": "S2-R2",
+      "physical_slot": "S2-B",
+      "start_minute": 72,
+      "scope": "Semântica financeira, cobertura econômica, identidade, C03/C06/C12, atomicidade/persistência/Atlas e regressões.",
+      "authoring": "none",
+      "correction_writer": "Owner ativo do WP; WP05=S2 após 72."
+    },
+    {
+      "id": "RUN-REVIEW-NATIVE",
+      "actor": "S3-R3",
+      "physical_slot": "S3-A",
+      "start_minute": 75,
+      "scope": "IAreal, profile/skill, shipping,8 packsMCP, Atlas/scanner, Relay/Schedule/documentos/isolamento/retomada.",
+      "authoring": "none",
+      "correction_writer": "Owner ativo do WP; WP07=S3 após 75."
+    }
+  ]
+}

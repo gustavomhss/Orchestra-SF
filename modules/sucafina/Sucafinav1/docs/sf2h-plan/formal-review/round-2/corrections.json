@@ -1,0 +1,124 @@
+{
+  "status": "APPLIED_PENDING_REVIEW",
+  "implementation_test_status": "NOT_RUN",
+  "groups": [
+    {
+      "id": "FR1-A",
+      "original_findings": [
+        "P-F01",
+        "T-F01",
+        "E-F01"
+      ],
+      "severity": "P1",
+      "status": "APPLIED_PENDING_REVIEW",
+      "change": "Equipe residente na fonte canônica, C15, RA01–RA06, 74 tasks, leases, consumidores e AM01–AM06.",
+      "paths": [
+        "campaign.json",
+        "agents-atlas-mcp.json",
+        "resident-ui-consumption.json",
+        "ownership.json",
+        "schedule.json"
+      ]
+    },
+    {
+      "id": "FR1-B",
+      "original_findings": [
+        "T-F02"
+      ],
+      "severity": "P1",
+      "status": "APPLIED_PENDING_REVIEW",
+      "change": "C16: bridge MCP privada por chamada, contexto host, revalidação, lease e provider-conflict.",
+      "paths": [
+        "contracts.json",
+        "work-packages/WP10.json",
+        "specs/resident-runtime.md"
+      ]
+    },
+    {
+      "id": "FR1-C",
+      "original_findings": [
+        "T-F03"
+      ],
+      "severity": "P1",
+      "status": "APPLIED_PENDING_REVIEW",
+      "change": "C17: tipos Atlas reais, packaging, ACL antes de leitura, outbox transacional, scanner e reinício.",
+      "paths": [
+        "contracts.json",
+        "work-packages/WP10.json",
+        "work-packages/WP14.json"
+      ]
+    },
+    {
+      "id": "FR1-D",
+      "original_findings": [
+        "P-F02"
+      ],
+      "severity": "P1",
+      "status": "APPLIED_PENDING_REVIEW",
+      "change": "C06 separa versão observada, fingerprint material e CAS de armazenamento; variantes janeiro/fevereiro.",
+      "paths": [
+        "contracts.json",
+        "specs/product-acceptance.md",
+        "work-packages/WP08.json"
+      ]
+    },
+    {
+      "id": "FR1-E",
+      "original_findings": [
+        "P-F03"
+      ],
+      "severity": "P1",
+      "status": "APPLIED_PENDING_REVIEW",
+      "change": "C10 inventário de custos versionado, categoria totalmente ausente derivada como pendência e oráculos sem dupla contagem.",
+      "paths": [
+        "contracts.json",
+        "specs/product-acceptance.md",
+        "work-packages/WP11.json"
+      ]
+    },
+    {
+      "id": "FR1-F",
+      "original_findings": [
+        "E-F02"
+      ],
+      "severity": "P1",
+      "status": "APPLIED_PENDING_REVIEW",
+      "change": "Handoffs T02, branches e consumo WP14 até T75; outputs antecipados com tempo e writer.",
+      "paths": [
+        "output-handoffs.json",
+        "schedule.json",
+        "work-packages/WP03.json",
+        "work-packages/WP06.json",
+        "work-packages/WP14.json"
+      ]
+    },
+    {
+      "id": "FR1-G",
+      "original_findings": [
+        "P-F04"
+      ],
+      "severity": "P2",
+      "status": "APPLIED_PENDING_REVIEW",
+      "change": "WP06 extrai documentos; WP09 consome evidências no dossiê; sem exclusão global de extração.",
+      "paths": [
+        "campaign.json",
+        "work-packages/WP06.json",
+        "work-packages/WP09.json"
+      ]
+    },
+    {
+      "id": "FR1-H",
+      "original_findings": [
+        "E-F03"
+      ],
+      "severity": "P2",
+      "status": "APPLIED_PENDING_REVIEW",
+      "change": "APP-SRC e APP-BROWSER separados; seleção explícita e receipts por candidato. Atlas e três suites UI incluídos.",
+      "paths": [
+        "ci-recipes.json",
+        "work-packages/WP10.json",
+        "specs/execution-reconciliation.md"
+      ]
+    }
+  ]
+}

@@ -1,16 +1,17 @@
-# Revisão adversarial formal — rodada 1
+# Revisões adversariais formais
 
-**Estado: CONCLUÍDA. Veredicto: REQUIRES_CHANGES.** Três agentes independentes avaliaram o mesmo snapshot: [`ec9d36da2385007b64a0aa627582ce7e60629a44`](https://github.com/gustavomhss/Orchestra-SF/commit/ec9d36da2385007b64a0aa627582ce7e60629a44).
+**Estado atual: RECONCILED_PENDING_REVIEW.** As correções da rodada 1 foram integradas ao plano. A rodada 2 usa três revisores novos e um commit fixado, conforme [protocolo](round-2/PROTOCOL.md). O julgamento independente ainda não foi emitido neste candidato.
 
-- [Consolidação, responsáveis e critérios de fechamento](round-1/SUMMARY.md).
-- [R1 — produto, UX e completude](round-1/product.md).
-- [R2 — contratos, identidade, MCP e Atlas](round-1/contracts.md).
-- [R3 — prazo, recursos, integração e CI](round-1/execution.md).
-- [Recibo do checkpoint](round-1/checkpoint.json) e [resumo estruturado](round-1/summary.json).
-- [Protocolo](PROTOCOL.md).
+## Rodada 1 — preservada
 
-Contagem original: **0 P0, 8 P1 e 2 P2**. Após agrupar a sobreposição relativa à incorporação do adendo: **6 frentes P1 e 2 ajustes P2**. Os pareceres individuais foram preservados integralmente.
+- [Consolidação e critérios de fechamento](round-1/SUMMARY.md).
+- [Produto](round-1/product.md), [contratos](round-1/contracts.md) e [execução](round-1/execution.md).
+- [Checkpoint](round-1/checkpoint.json) e [resumo estruturado](round-1/summary.json).
 
-As correções ainda não foram aplicadas. Todos os achados permanecem abertos. Os reviews em `../reviews/` são históricos e não substituem esta rodada.
+Veredicto histórico: REQUIRES_CHANGES sobre `ec9d36da2385007b64a0aa627582ce7e60629a44`. Foram 0 P0, 8 P1 e 2 P2 brutos; o agrupamento da integração do adendo produz seis frentes P1 e dois ajustes P2. Esses documentos não são reescritos depois da correção.
 
-Testes de implementação: **NOT_RUN**. Aprovação do plano não é aceite da implementação e não demonstra duração de duas horas.
+## Rodada 2 — candidato reconciliado
+
+O [mapa de correções](round-2/corrections.json) aponta os contratos e tasks de cada grupo. O status APPLIED_PENDING_REVIEW é uma declaração da integração; somente o revisor pode concluir CLOSED. Os pareceres devem identificar o mesmo SHA, os achados anteriores reexaminados, eventuais novos achados e as incertezas residuais.
+
+Aprovação do planejamento não é aceite do produto. Implementação e provas de produto: NOT_RUN.

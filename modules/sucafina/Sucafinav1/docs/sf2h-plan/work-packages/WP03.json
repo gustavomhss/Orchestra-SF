@@ -6,7 +6,8 @@
     "Ownership exclusivo em modules/sucafina/Sucafinav1/runtime/planner.ts, src/planner-* e novos product/planner/**, incluindo provas locais dentro desse namespace.",
     "Preservação das sete páginas funcionais: Overview, OPEX, CAPEX, Headcount, Entities & allocations, FX rates e Versions; a apresentação usa o contexto e os componentes publicados nos contratos comuns.",
     "Projeções financeiras reconciliáveis, adapter puro de comando/simulação, edição mensal, composição de valores, posições e premissas, gestão de versões e comparação entre cenários.",
-    "Publicação de séries, componentes e deltas para UI/BI e de simulação financeira para imports; esses consumidores não recalculam dinheiro."
+    "Publicação de séries, componentes e deltas para UI/BI e de simulação financeira para imports; esses consumidores não recalculam dinheiro.",
+    "Descritores C16 das capacidades reais de WP03, consumidos pela ponte nativa sem copiar domínio."
   ],
   "scope_out": [
     "runtime/application.ts, runtime/workbooks.ts, runtime/dashboard-import.ts, persistência, identidade, instalação e entrypoints comuns; WP10 compõe as portas reais.",
@@ -19,12 +20,16 @@
     "C02",
     "C03",
     "C04",
-    "C08"
+    "C08",
+    "C15",
+    "C16",
+    "C17"
   ],
   "contract_provides": [
     "C02",
     "C03",
-    "C04"
+    "C04",
+    "C16"
   ],
   "axioms": {
     "dod": [
@@ -41,6 +46,11 @@
       {
         "id": "WP03.DOD.03",
         "text": "O pacote de evidências locais e o roteiro de montagem real são entregues ao WP10; aceitação integrada só pode ser declarada após consumo nos entrypoints reais.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP03.DOD.10",
+        "text": "As entregas residentes atribuídas a WP03 têm produção, consumo e provas reais completos.",
         "status": "NOT_RUN"
       }
     ],
@@ -59,6 +69,11 @@
         "id": "WP03.INV.03",
         "text": "Nenhuma hipótese altera a versão oficial por efeito colateral, nenhum pedido/contrato alimenta valores automaticamente e o adapter puro não grava estado nem executa I/O.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP03.INV.10",
+        "text": "WP03 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+        "status": "NOT_RUN"
       }
     ],
     "quality_standards": [
@@ -75,6 +90,11 @@
       {
         "id": "WP03.QLT.03",
         "text": "A pessoa distingue valor salvo, edição local, conflito, herança de budget e bloqueio pelo papel/estado, sem depender de códigos internos ou mensagens HTTP.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP03.QLT.10",
+        "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
         "status": "NOT_RUN"
       }
     ],
@@ -93,6 +113,11 @@
         "id": "WP03.CMP.03",
         "text": "A cobertura inclui criação/cópia/ano/lock/unlock/official/delete de versões, formas legadas de dados, Overview, composição e comparação detalhada A/B.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP03.CMP.10",
+        "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+        "status": "NOT_RUN"
       }
     ],
     "success_criteria": [
@@ -110,6 +135,11 @@
         "id": "WP03.SUC.03",
         "text": "Os consumidores recebem projeção/simulação pelo contrato e conseguem reconciliar os resultados sem reproduzir regras financeiras.",
         "status": "NOT_RUN"
+      },
+      {
+        "id": "WP03.SUC.10",
+        "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+        "status": "NOT_RUN"
       }
     ]
   },
@@ -123,17 +153,24 @@
         "Publicar em product/planner/** as portas C02/C03/C04 que calculam projeções e executam o mesmo comando sobre cópia, com contexto de ator, revisão, tempo e identificadores conforme os contratos congelados.",
         "Representar componentes, presença/ausência, budget herdado, conversão FX e HR sintético sem reclassificar ausência como zero observado; preservar o resultado numérico legado quando sua regra calcula zero.",
         "Retornar mudanças, avisos, conflito e dados autorizados da simulação sem persistência, efeitos externos ou segunda implementação financeira; documentar a correspondência de IDs previstos para inclusões conforme C04.",
-        "Publicar exemplos contratuais e provas locais do adapter para consumo paralelo por WP05/WP06, com interface de montagem real reservada ao WP10."
+        "Publicar exemplos contratuais e provas locais do adapter para consumo paralelo por WP05/WP06, com interface de montagem real reservada ao WP10.",
+        "Publicar descritores e handlers de sf_forecast_compare, sf_scenario_simulate, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+        "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
       ],
       "inputs": [
-        "WP00.T04: C01, C02, C03, C04 e C08 congelados, inventário de paridade e fixtures do baseline.",
+        "WP00.T02: C01, C02, C03, C04 e C08 congelados, inventário de paridade e fixtures do baseline.",
         "runtime/planner.ts, src/planner-accounts.ts, src/planner-role.ts e testes existentes de planner/paridade, lidos como referência.",
-        "Exemplos de versões em array e dicionário, HR/FX ausentes, IDs numéricos legados e atores com diferentes papéis."
+        "Exemplos de versões em array e dicionário, HR/FX ausentes, IDs numéricos legados e atores com diferentes papéis.",
+        "C16",
+        "C15"
       ],
       "outputs": [
         "Adapter e projeções públicos em product/planner/**, com exports de domínio para leitura e simulação sem I/O.",
         "Catálogo local de componentes/avisos e fixtures C02/C03/C04, incluindo dados restritos e formas legadas.",
-        "Registro de paridade e eventual discrepância comprovada, sem corrigir silenciosamente a regra de negócio."
+        "Registro de paridade e eventual discrepância comprovada, sem corrigir silenciosamente a regra de negócio.",
+        "modules/sucafina/Sucafinav1/product/planner/capabilities.ts#compareForecast (sf_forecast_compare; ForecastCompareRequest -> FinancialAnalysis)",
+        "modules/sucafina/Sucafinav1/product/planner/capabilities.ts#simulateScenario (sf_scenario_simulate; ScenarioRequest -> ScenarioResult)",
+        "Incremento NATIVE-PLANNER em T+15: product/planner/port.ts exporta createPlannerPort, incluindo compareForecast sobre o motor financeiro real e projeção C02/C10 autorizada. O restante do adapter/projeções continua até 24."
       ],
       "depends_on": [
         "WP00.T02"
@@ -158,6 +195,11 @@
           "id": "WP03.T01.CHK.04",
           "text": "Usuário viewer/budget owner não recebe rates, overrides ou custos individuais em projeções, diffs ou payload de conflito; agregado permitido continua reconciliável.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP03.T01.CHK.18",
+          "text": "Executar sf_forecast_compare, sf_scenario_simulate pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -170,6 +212,11 @@
           {
             "id": "WP03.T01.DOD.02",
             "text": "Há prova local de paridade numérica, ausência de mutação e remoção de campos restritos, além do pacote de conformidade para WP10.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP03.T01.DOD.18",
+            "text": "Descritores C16 de sf_forecast_compare, sf_scenario_simulate são implementados e consumidos por T06 com referências reais.",
             "status": "NOT_RUN"
           }
         ],
@@ -188,6 +235,11 @@
             "id": "WP03.T01.INV.03",
             "text": "Ausência permanece identificável mesmo quando a conta legada contribui zero; não se transforma informação ausente em actual confirmado.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP03.T01.INV.18",
+            "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+            "status": "NOT_RUN"
           }
         ],
         "quality_standards": [
@@ -199,6 +251,11 @@
           {
             "id": "WP03.T01.QLT.02",
             "text": "Falhas e avisos identificam o registro/campo autorizado e distinguem validação, conflito e falta de permissão.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP03.T01.QLT.18",
+            "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
             "status": "NOT_RUN"
           }
         ],
@@ -212,6 +269,11 @@
             "id": "WP03.T01.CMP.02",
             "text": "O adapter cobre comandos existentes de edição e importação sem assumir que todo ator pode consultar os mesmos campos.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP03.T01.CMP.18",
+            "text": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
+            "status": "NOT_RUN"
           }
         ],
         "success_criteria": [
@@ -224,6 +286,11 @@
             "id": "WP03.T01.SUC.02",
             "text": "Um mesmo comando inválido é rejeitado pela simulação e pela execução isolada sem qualquer mudança no snapshot de origem.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP03.T01.SUC.18",
+            "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+            "status": "NOT_RUN"
           }
         ]
       },
@@ -235,7 +302,9 @@
       "requirements": [
         "R10",
         "R22",
-        "IA03"
+        "IA03",
+        "RA03",
+        "RA04"
       ],
       "journeys": [
         "J02",
@@ -255,9 +324,11 @@
         "E11"
       ],
       "integrates_with": [
-        "WP01.T02"
+        "WP01.T02",
+        "WP10.T06"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S1-C"
     },
     {
       "id": "WP03.T02",
@@ -412,7 +483,8 @@
       "integrates_with": [
         "WP01.T02"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S1-C"
     },
     {
       "id": "WP03.T03",
@@ -560,7 +632,8 @@
       "integrates_with": [
         "WP01.T02"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S1-C"
     },
     {
       "id": "WP03.T04",
@@ -708,7 +781,8 @@
       "integrates_with": [
         "WP01.T02"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S1-C"
     },
     {
       "id": "WP03.T05",
@@ -719,17 +793,22 @@
         "Entregar comparação A/B de budget, actual fechado, outlook, FTE e diferenças por registro/mês; correspondência usa identidade existente e itens não correspondentes aparecem como incluídos/removidos.",
         "Separar delta para a versão base de desvio contra o orçamento oficial; expor mudanças de premissas sem atribuição causal inventada quando múltiplos fatores variam.",
         "Publicar para WP05 trajetória mensal/acumulável e contribuições reconciliáveis do waterfall via C02; o renderizador de gráfico permanece no WP05.",
-        "Consolidar a matriz de paridade das sete páginas e o roteiro sintético de comparação/edição/privacidade, entregando ao WP10 exports de domínio e evidências locais sem editar composição comum."
+        "Consolidar a matriz de paridade das sete páginas e o roteiro sintético de comparação/edição/privacidade, entregando ao WP10 exports de domínio e evidências locais sem editar composição comum.",
+        "Publicar descritores e handlers de sf_scenario_compare, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+        "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
       ],
       "inputs": [
         "WP03.T04: todas as premissas, cadastros e contextos do Planner.",
         "C01/C02/C03/C08 e fixtures de versões/official/locks legados.",
-        "Cenário sintético: budget 600000, actual janeiro-setembro 400000 e forecast outubro-dezembro 190000 contendo item de 72000."
+        "Cenário sintético: budget 600000, actual janeiro-setembro 400000 e forecast outubro-dezembro 190000 contendo item de 72000.",
+        "C16",
+        "C15"
       ],
       "outputs": [
         "Contribuições Overview/Versions e comparador A/B em product/planner/**.",
         "Séries e deltas de domínio para gráficos do WP05, com versão/período/moeda e agregados autorizados.",
-        "Exports públicos do WP03, matriz de cobertura, provas locais e roteiro de aceitação real para WP10."
+        "Exports públicos do WP03, matriz de cobertura, provas locais e roteiro de aceitação real para WP10.",
+        "modules/sucafina/Sucafinav1/product/planner/capabilities.ts#compareScenarios (sf_scenario_compare; ScenarioCompareRequest -> ScenarioComparison)"
       ],
       "depends_on": [
         "WP00.T02",
@@ -760,6 +839,11 @@
           "id": "WP03.T05.CHK.05",
           "text": "A matriz cobre sete páginas e operações originais; provas de montagem real são encaminhadas ao WP10, e gráficos/imports ainda não compostos não são declarados integrados.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP03.T05.CHK.18",
+          "text": "Executar sf_scenario_compare pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -772,6 +856,11 @@
           {
             "id": "WP03.T05.DOD.02",
             "text": "O handoff contém todas as portas de domínio, matriz de paridade e roteiro exato de consumo por WP05/WP06/WP10.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP03.T05.DOD.18",
+            "text": "Descritores C16 de sf_scenario_compare são implementados e consumidos por T06 com referências reais.",
             "status": "NOT_RUN"
           }
         ],
@@ -790,6 +879,11 @@
             "id": "WP03.T05.INV.03",
             "text": "Deltas são resultados do mesmo motor e respeitam redação salarial; não há integração automática de Procurement nem causalidade inferida.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP03.T05.INV.18",
+            "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+            "status": "NOT_RUN"
           }
         ],
         "quality_standards": [
@@ -801,6 +895,11 @@
           {
             "id": "WP03.T05.QLT.02",
             "text": "Orçamento oficial, versão base, hipótese e outlook têm rótulos distintos; seleção e estado permanecem visíveis ao navegar.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP03.T05.QLT.18",
+            "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
             "status": "NOT_RUN"
           }
         ],
@@ -814,6 +913,11 @@
             "id": "WP03.T05.CMP.02",
             "text": "Overview mantém suas medidas e comparações originais e acrescenta detalhamento A/B; as sete páginas possuem cobertura e exports de composição.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP03.T05.CMP.18",
+            "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+            "status": "NOT_RUN"
           }
         ],
         "success_criteria": [
@@ -826,6 +930,11 @@
             "id": "WP03.T05.SUC.02",
             "text": "WP10 consegue montar as contribuições reais sem alterar a lógica financeira nem copiar fórmulas para BI ou imports.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP03.T05.SUC.18",
+            "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+            "status": "NOT_RUN"
           }
         ]
       },
@@ -835,7 +944,9 @@
       "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
       "final_evidence_owner": "WP10",
       "requirements": [
-        "R14"
+        "R14",
+        "RA03",
+        "RA04"
       ],
       "journeys": [
         "J02"
@@ -854,17 +965,22 @@
         "E11"
       ],
       "integrates_with": [
-        "WP01.T02"
+        "WP01.T02",
+        "WP10.T06"
       ],
-      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "execution_actor": "S1-C"
     }
   ],
   "handoff": [
-    "Branch de execução prevista: sf-planner; este arquivo descreve trabalho futuro e não implementa produto nesta conversa.",
+    "Branch de execução prevista: sf2-planner; este arquivo descreve trabalho futuro e não implementa produto nesta conversa.",
     "Exports e exemplos C02/C03/C04 limitados ao domínio Planner, com contexto C01 e instruções de montagem C08 para WP10.",
     "WP05 recebe séries, componentes e deltas autorizados; WP06 recebe o adapter puro de simulação/import-command, incluindo convenção de IDs, revisões e avisos.",
-    "Tasks começam após WP00.T04 e encadeiam apenas dentro do WP03; contratos permitem implementação paralela dos consumidores. Fechamento integrado depende WP10.",
-    "Cobertura local, discrepâncias explicitadas, demonstração sintética e pendências reais de composição são entregues sem tratar fixtures contratuais como evidência de integração."
+    "Tasks começam após WP00.T02 e encadeiam apenas dentro do WP03; contratos permitem implementação paralela dos consumidores. Fechamento integrado depende WP10.",
+    "Cobertura local, discrepâncias explicitadas, demonstração sintética e pendências reais de composição são entregues sem tratar fixtures contratuais como evidência de integração.",
+    "Descritores C16 das capacidades reais de WP03, consumidos pela ponte nativa sem copiar domínio.",
+    "O manifest canônico identifica os paths/exports/tasks e AM01–AM06; evidência de catálogo isolado não é aceite integrado.",
+    "Construção determinística inicia por WP00.T02 em T+10, incluindo quando GNATIVE/T04 estiver BLOCKED. A prova nativa posterior não é dependência de início nem autoriza atrasar a fila de tasks."
   ],
   "risks": [
     "A separação de runtime/planner.ts pode duplicar fórmulas: manter uma função de domínio como autoridade e provar paridade entre leitura, simulação e execução isolada.",
