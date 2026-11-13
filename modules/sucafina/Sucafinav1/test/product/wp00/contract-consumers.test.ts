@@ -92,6 +92,27 @@ test("C08 checkNamespaces requires current read authority and does not increment
   expect(await consumer.port.read(request, "cases", (state) => state.versions.cases)).toMatchObject({ status: "ok", value: 0 })
 })
 
+test("C08 refuses an unreadable check namespace before invoking any write callback", async () => {
+  const consumer = stateConsumer(undefined, "cases")
+  expect(await consumer.port.transaction(request, command, async () => ({ commit: true, value: "initialized" }))).toMatchObject({ status: "ok" })
+  const before = structuredClone(consumer.storage.state.dashboard)
+  const callbacks: string[] = []
+  const result = await consumer.port.transaction(request, {
+    ...command,
+    expectedStorageVersion: 1,
+    idempotencyKey: "denied-read-fence",
+    checkNamespaces: [{ namespace: "cases", expectedStorageVersion: 0 }],
+  }, async (state) => {
+    callbacks.push("unauthorized-callback")
+    state.preferences.recalledCase = "unreadable-case"
+    return { commit: true, value: "unauthorized-write" }
+  })
+  expect(result).toMatchObject({ status: "denied" })
+  expect(consumer.authorizations).toContainEqual({ namespace: "cases", mode: "read" })
+  expect(callbacks).toEqual([])
+  expect(consumer.storage.state.dashboard).toEqual(before)
+})
+
 test("C08 namespace fences cover every additive field before a durable commit", async () => {
   for (const field of sfProductStateAdditiveFields) {
     const consumer = stateConsumer()
@@ -121,13 +142,14 @@ test("C08 retains existing preference CAS and idempotency semantics", async () =
   expect(callbacks).toEqual(["write"])
 })
 
-function stateConsumer(initial?: Snapshot) {
+function stateConsumer(initial?: Snapshot, deniedRead?: SfStateNamespace) {
   const storage = testPersistence(initial ? { dashboard: initial } : {})
   const authorizations: { namespace: SfStateNamespace; mode: "read" | "write" }[] = []
   const port = createSfProductState({
     persistence: storage.persistence,
     authorize: async (_request, _snapshot, namespace, mode) => {
       authorizations.push({ namespace, mode })
+      if (namespace === deniedRead && mode === "read") return undefined
       return authority
     },
     createId: () => "synthetic-state-incarnation",

@@ -23,7 +23,8 @@ test("the synthetic EUR procurement request is converted by the product domain v
     },
   }, { currency: corpus.datasets.procurement.base_currency })
 
-  expect(value).toBe(request.expected_base_amount)
+  // The existing FX domain uses IEEE-754 multiplication; this tolerance is far below one cent.
+  expect(value).toBeCloseTo(request.expected_base_amount, 8)
 })
 
 test("a missing FX snapshot and rate stays unpriced instead of becoming zero", () => {
@@ -52,7 +53,7 @@ test("synthetic people, operations, risks, and contracts exercise domain behavio
   expect(effectiveMonthlyBudget(operation.monthly_budget.months[1]?.budget, operation.monthly_budget.annual)).toBe(operation.expected.month_2_effective_budget)
 
   const risk = corpus.datasets.risks.items[0]
-  expect(riskTier(riskScore(risk.impact, risk.probability))).toBe(corpus.datasets.risks.expected.high_tier)
+  expect<string>(riskTier(riskScore(risk.impact, risk.probability))).toBe(corpus.datasets.risks.expected.high_tier)
 
   const contract = corpus.datasets.contracts
   expect(contractVendor(contract.contract.vendor)).toEqual({ vendor: contract.contract.vendor, supplierId: null })
