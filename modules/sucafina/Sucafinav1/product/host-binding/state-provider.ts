@@ -13,7 +13,6 @@ export function createSfProductState(input: {
   createId: () => string
   /** Root-private callback identities; never exposed through a product capability or serialized input. */
   nativeEvidenceWrites?: WeakSet<object>
-  proposalCoverageWrites?: WeakSet<object>
   resolveTarget: (request: Request, snapshot: Snapshot, namespace: SfStateNamespace, targetRef: string) => Promise<{ incarnation: string } | undefined>
 }): SfProductStatePort {
   return {
@@ -81,9 +80,6 @@ export function createSfProductState(input: {
         const nativeMetadata = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:native-session:")))
         if (!input.nativeEvidenceWrites?.has(work) && digestSfValue(nativeMetadata(staged.preferences)) !== digestSfValue(nativeMetadata(state.preferences)))
           return { commit: false, value: { status: "denied", reason: "native-evidence-write-outside-authority" } }
-        const proposalMetadata = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:proposal-coverage:") || key.startsWith("sf:criterion-rule:")))
-        if (!input.proposalCoverageWrites?.has(work) && digestSfValue(proposalMetadata(staged.preferences)) !== digestSfValue(proposalMetadata(state.preferences)))
-          return { commit: false, value: { status: "denied", reason: "proposal-coverage-write-outside-authority" } }
         if (digestSfValue(staged.versions) !== digestSfValue(state.versions) || storedNamespaces.some((key) => !scope.some((entry) => entry.namespace === key) && digestSfValue(staged[key]) !== digestSfValue(state[key])) ||
           (!scope.some((entry) => entry.namespace === "contributions") && digestSfValue(staged.nativeRuns) !== digestSfValue(state.nativeRuns)) ||
           (!scope.some((entry) => entry.namespace === "cases") && digestSfValue(staged.decisionResults) !== digestSfValue(state.decisionResults)))
@@ -94,9 +90,9 @@ export function createSfProductState(input: {
         snapshot.data.__sfProductV1 = staged
         return { commit: true, value: { status: "ok", storageVersion: staged.versions[command.namespace], aggregateRevision: staged.revision, incarnation: staged.incarnation, value: result.value } }
       }
-      if (command.namespace === "documents" || command.additionalNamespaces?.some((entry) => entry.namespace === "documents") || (command.domainSurface && command.domainSurface !== "dashboard")) {
+      if (command.domainSurface && command.domainSurface !== "dashboard") {
         if (!input.persistence.transactionAll) return Promise.resolve({ status: "unavailable", reason: "cross-surface-transaction-unavailable" })
-        const surface = command.domainSurface ?? "dashboard"
+        const surface = command.domainSurface
         return input.persistence.transactionAll((snapshots) => run(snapshots.dashboard, snapshots[surface]), { signal: request.signal })
       }
       return input.persistence.transaction("dashboard", (snapshot) => run(snapshot, snapshot), { signal: request.signal })

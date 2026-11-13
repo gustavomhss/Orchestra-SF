@@ -176,7 +176,7 @@ test("executive measurements preserve month, year-to-date and annual periods", a
 
 test("milestone dates can be selected historically without claiming historical status", async () => {
   const state = initial()
-  state.data.projects = [{ id: "p", notes: "restricted-project-note", milestones: [{ id: "m", name: "Launch", date: "2026-03-05", status: "done", notes: "restricted-milestone-note" }, { id: "outside", name: "Outside", date: "2026-09-01", status: "late" }] }]
+  state.data.projects = [{ id: "p", notes: "restricted-project-note", milestones: [{ id: "m", name: "Launch", date: "2026-03-05", status: "done", notes: "restricted-milestone-note" }, { id: "undated", name: "No date" }, { id: "outside", name: "Outside", date: "2026-09-01", status: "late" }] }]
   const storage = testPersistence({ dashboard: state })
   const selectedPeriod = { start: "2026-02-01", end: "2026-05-31" }
   const page = "Portfolio Dashboard"
@@ -189,11 +189,24 @@ test("milestone dates can be selected historically without claiming historical s
   if (result.status !== "ok") return
   expect(result.value.values).toContainEqual(expect.objectContaining({ id: "milestone:p:m:date", value: "2026-03-05", period: { start: "2026-03-05", end: "2026-03-05" } }))
   expect(result.value.values).toContainEqual(expect.objectContaining({ id: "milestone:p:m:name", value: "Launch" }))
+  expect(result.value.values).toContainEqual(expect.objectContaining({ id: "milestone:p:undated:date", value: null, evidenceState: "absent", period: selectedPeriod }))
+  expect(result.value.values).toContainEqual(expect.objectContaining({ id: "milestone:p:undated:name", value: "No date" }))
+  expect(result.value.missing).toContainEqual({ field: "milestone:p:undated:date", reason: "missing" })
   expect(JSON.stringify(result)).not.toContain("restricted-project-note")
   expect(JSON.stringify(result)).not.toContain("restricted-milestone-note")
   expect(JSON.stringify(result)).not.toContain("milestone:p:outside")
   expect(result.value.values.some((value) => value.id.endsWith(":status"))).toBe(false)
-  expect(dashboardBiPresentation("BI08", result.value).timeline?.items).toEqual([{ label: "Launch", dateValueId: "milestone:p:m:date", state: "unknown" }])
+  expect(dashboardBiPresentation("BI08", result.value).timeline?.items).toEqual([{ label: "Launch", dateValueId: "milestone:p:m:date", state: "unknown" }, { label: "No date", dateValueId: "milestone:p:undated:date", state: "unknown" }])
+  evidence.target.period = period
+  evidence.target.projectionDigest = digestSfValue(projectDashboardScope(storage.state.dashboard, actor, { page, fields: ["milestoneDates"], period }, environment.at))
+  evidence.refDigest = digestSfEvidenceRef(evidence)
+  const current = await port.read({ selectionRef: "milestones", period, fields: ["milestoneDates"] }, binding)
+  expect(current.status).toBe("ok")
+  if (current.status === "ok") {
+    expect(current.value.values).toContainEqual(expect.objectContaining({ id: "milestone:p:m:status", value: "done", period: { start: "2026-11-13", end: "2026-11-13" } }))
+    expect(dashboardBiPresentation("BI08", current.value).timeline?.items.find((item) => item.dateValueId === "milestone:p:m:date")?.state).toBe("unknown")
+  }
+  evidence.target.period = selectedPeriod
   ;(storage.state.dashboard.data.projects as unknown[]).push({ id: "duplicate", milestones: [{ id: "x", name: "Hidden", date: "2026-03-10" }] }, { id: "duplicate", milestones: [{ id: "x", name: "Hidden too", date: "2026-03-11" }] }, { id: "valid", milestones: [{ id: "", name: "No identifier", date: "2026-03-12" }] })
   evidence.target.projectionDigest = digestSfValue(projectDashboardScope(storage.state.dashboard, actor, { page, fields: ["milestoneDates"], period: selectedPeriod }, environment.at))
   evidence.refDigest = digestSfEvidenceRef(evidence)

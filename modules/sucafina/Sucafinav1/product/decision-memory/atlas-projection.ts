@@ -27,7 +27,6 @@ export function mapSfAtlasEntry(source: SfAtlasSource): { status: "mapped"; proj
     const events = projection.events.filter((event) => event.id === source.eventId)
     if (events.length !== 1 || ref.kind !== "case-event") return { status: "refused", reason: "event-or-bundle-missing" }
     const event = events[0]
-    if (event.evidenceRefs.some((evidence) => containsCaseEvent(evidence))) return { status: "refused", reason: "nested-case-event" }
     const ledger = projection.case.ledger.filter((item) => item.id === event.id)
     if (ledger.length !== 1 || digestSfValue(ledger[0]) !== digestSfValue(event)) return { status: "refused", reason: "ledger-event-mismatch" }
     const target = ref.target
@@ -46,11 +45,6 @@ export function mapSfAtlasEntry(source: SfAtlasSource): { status: "mapped"; proj
   if (!validate("project", entry).valid || memoryKindOf(entry) !== "project") return { status: "refused", reason: "invalid-template" }
   const value = { kind: "project" as const, owner, entry, sourceEventId: policy.sourceEventId, evidenceRefs: [ref, ...policy.dependencies] }
   return { status: "mapped", projection: { ...value, projectionDigest: digestSfValue(value) } }
-}
-
-function containsCaseEvent(ref: BusinessEvidenceRef, depth = 0): boolean {
-  if (depth > 16 || ref.kind === "case-event") return true
-  return ref.kind === "calculation" && ref.target.sourceRefs.some((source) => containsCaseEvent(source, depth + 1))
 }
 
 export function explainSfMemoryMatch(input: { candidateCaseRef: { id: string; incarnation: string; version: number }; matchedCriteria: readonly string[]; currentDifferences: readonly string[]; sourceStates: readonly string[]; limitations: readonly string[] }) {

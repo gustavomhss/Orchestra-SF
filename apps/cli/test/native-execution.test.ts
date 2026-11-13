@@ -41,7 +41,6 @@ test("native execution denies forged tickets and rejected preflight without crea
         preflight: async () => ({ status: "denied", reason: "case-not-authorized" }),
         verifyOutput: async () => ({ status: "denied", reason: "unverified" }),
       })
-      expect(yield* Effect.promise(() => Reflect.apply(execution.cancelRun, execution, ["missing", {}]))).toEqual({ status: "unavailable", reason: "native-run-not-active" })
       expect(yield* Effect.promise(() => Reflect.apply(execution.execute, execution, [Object.freeze({})]))).toEqual({ status: "denied", reason: "native-ticket-unavailable" })
       expect(yield* Effect.promise(() => execution.admit({ caseRef: { id: "case", incarnation: "inc", version: 1 }, profileId: "sf_finance", profileVersion: "1",
         skillId: "sf-explicar-forecast", skillVersion: "1", manifestDigest: "a".repeat(64), outputSchemaVersion: "1",
@@ -55,13 +54,13 @@ test("native execution denies forged tickets and rejected preflight without crea
         skillId: "sf-explicar-forecast", skillVersion: "1", manifestDigest: selected.manifestDigest, outputSchemaVersion: "1",
         requestedOperationScope: ["sf_forecast_compare"], objective: "Explain", contextFingerprint: "context" }
       const model = ModelV2.Ref.make({ providerID: ProviderV2.ID.make("openai"), id: ModelV2.ID.make("fixture-model") })
-      const record: SfNativeRunRecord = { schema: "sf-native-run-v1", runRef: "run-concurrent", version: 1, intentDigest: "f".repeat(64),
+      const record: SfNativeRunRecord = { schema: "sf-native-run-v1", runRef: "run-concurrent", version: 1,
         requestDigest: digestSfValue(request), skillInputDigest: digestSfValue({}), principalRef: "user", accessRevision: "access", policyVersion: "policy",
         caseRef: request.caseRef, selection: selected, model, skillId: request.skillId, objective: request.objective,
         contextFingerprint: request.contextFingerprint, createdAt: "2026-11-13T00:00:00Z", updatedAt: "2026-11-13T00:00:00Z", state: "preparing" }
       const started = Promise.withResolvers<void>()
       const release = Promise.withResolvers<void>()
-      const concurrent = createSfNativeExecution({ host, store, intentDigest: record.intentDigest,
+      const concurrent = createSfNativeExecution({ host, store,
         withRunContext: async () => { started.resolve(); await release.promise; return { status: "unavailable", reason: "fixture-stopped" } },
         preflight: async () => ({ status: "ok", value: { record, native: { request: new Request("https://example.test/"), selected,
           location: Location.Ref.make({ directory: AbsolutePath.make(directory) }), model, skillId: request.skillId, prompt: "Explain",

@@ -7,6 +7,7 @@ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { DomainPortHost, PortResult, ProcurementPort } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { digestSfEvidenceRef } from "../contracts/canonical.ts"
+import { sfSourceIdentity } from "../integration/source-lifecycle.ts"
 import { digestProcurementSource } from "./sources.ts"
 import { procurementKeys } from "../../src/nav.ts"
 import { quoteAssessment } from "../../src/form.ts"
@@ -26,8 +27,15 @@ export type ProcurementSourceHost = DomainPortHost & {
   readContractSource: (input: ContractReadRequest, binding: TrustedDomainContext) => Promise<PortResult<DomainProjection>>
 }
 
+/** Lifecycle revision is independent of the domain command CAS version. */
+export function isCurrentProcurementSource(snapshot: Snapshot, evidence: Extract<BusinessEvidenceRef, { kind: "record" }>) {
+  if (!snapshot.sfSources || evidence.target.surface !== "procurement" || !["procurement-request", "procurement-supplier"].includes(evidence.target.recordType)) return false
+  const identity = sfSourceIdentity(snapshot, evidence.target.recordType, evidence.target.recordId)
+  return !!identity && identity.incarnation === evidence.target.incarnation && identity.version === evidence.target.version
+}
+
 /** The host resolves incarnations and retains credentials; the domain still enforces the current role and row scope. */
-export function createProcurementPort(host: ProcurementSourceHost): ProcurementPort & { list: (selectionRef: string, binding: TrustedDomainContext) => Promise<PortResult<{ stock: DomainProjection; aging: readonly DomainProjection[]; queue: readonly DomainProjection[] }>>; compareSourcing: (input: SourcingCompareRequest, binding: TrustedDomainContext) => Promise<PortResult<CommercialComparison>>; readSupplier: (input: SupplierReadRequest, binding: TrustedDomainContext) => Promise<PortResult<DomainProjection>>; readContract: (input: ContractReadRequest, binding: TrustedDomainContext) => Promise<PortResult<DomainProjection>> } {
+export function createProcurementPort(host: ProcurementSourceHost): ProcurementPort & { list: (selectionRef: string, binding: TrustedDomainContext) => Promise<PortResult<{ stock: DomainProjection; aging: readonly DomainProjection[] }>>; compareSourcing: (input: SourcingCompareRequest, binding: TrustedDomainContext) => Promise<PortResult<CommercialComparison>>; readSupplier: (input: SupplierReadRequest, binding: TrustedDomainContext) => Promise<PortResult<DomainProjection>>; readContract: (input: ContractReadRequest, binding: TrustedDomainContext) => Promise<PortResult<DomainProjection>> } {
   return {
     async readContract(input, binding) {
       if (!(await host.revalidate(binding)) || !host.requestFor(binding)) return { status: "denied", reason: "Current authority unavailable" }
@@ -140,7 +148,7 @@ export function createProcurementPort(host: ProcurementSourceHost): ProcurementP
           Object.values(statusSelections).some((ref) => ref.evidenceLevel !== "observed" || ref.target.surface !== "procurement" || ref.target.recordType !== "procurement-request-selection" || ref.installationId !== context.installationId || ref.projectId !== context.projectId || digestSfEvidenceRef(ref) !== ref.refDigest) ||
           new Set(requests.map((ref) => ref.target.recordId)).size !== requests.length || new Set(requests.map((ref) => ref.refId)).size !== requests.length) return { status: "denied", reason: "Source authority mismatch" }
       const environment = await host.environment(request)
-      const result = await host.persistence.transaction<PortResult<{ stock: DomainProjection; aging: readonly DomainProjection[]; queue: readonly DomainProjection[] }>>("procurement", async (snapshot) => {
+      const result = await host.persistence.transaction<PortResult<{ stock: DomainProjection; aging: readonly DomainProjection[] }>>("procurement", async (snapshot) => {
         const principal = await host.authenticate(request, { surface: "procurement", roleMap: roleMap(snapshot, "procurement") })
         if (!principal || principal.id !== binding.binding.principalRef || principal.id.startsWith("local:")) return { commit: false, value: { status: "denied", reason: "Current authority unavailable" } }
         const roles = principal.roles.filter((entry) => entry.surface === "procurement").map((entry) => entry.role)
@@ -155,7 +163,7 @@ export function createProcurementPort(host: ProcurementSourceHost): ProcurementP
         const statuses = [...new Set(open.map((projection) => String(projection.values.find((value) => value.id === "status")?.value ?? "unknown")))].sort()
         if (statuses.some((status) => !statusSelections[status])) return { commit: false, value: { status: "unavailable", reason: "Stage selection unavailable" } }
         const stock: DomainProjection = { context, version: selection.target.version, engineVersion: "procurement-v1", components: [], missing: [], values: statuses.map((status) => ({ id: `stock:${status}`, value: open.filter((projection) => projection.values.some((value) => value.id === "status" && (value.value ?? "unknown") === status)).length, unit: "requests", period: context.period, granularity: "aggregate", sourceRefs: requests.filter((ref) => open.some((projection) => projection.values.some((value) => value.id === "status" && (value.value ?? "unknown") === status && value.sourceRefs.some((source) => source.refId === ref.refId)))), drilldown: statusSelections[status]!, evidenceState: "confirmed" })) }
-        return { commit: false, value: { status: "ok", value: { stock, aging: projections.filter((projection) => projection.values.some((value) => value.id === "status" && typeof value.value === "string" && value.value.endsWith("_pending"))), queue: projections } } }
+        return { commit: false, value: { status: "ok", value: { stock, aging: projections.filter((projection) => projection.values.some((value) => value.id === "status" && typeof value.value === "string" && value.value.endsWith("_pending"))) } } }
       }, { signal: request.signal })
       if (!(await host.revalidate(binding))) return { status: "denied", reason: "Current authority unavailable" }
       return result
@@ -208,7 +216,7 @@ export function projectProcurementSource(record: Record<string, unknown>, contex
   const now = observedAt ? Date.parse(observedAt) : NaN
   const age = Number.isFinite(enteredAt) && Number.isFinite(now) && now >= enteredAt ? (now - enteredAt) / 86400000 : null
   const subject = text(object(record.pr).title)
-  const reason = ["draft", "pr_rejected", "pr_pending"].includes(status) ? text(object(record.pr).justification) : status === "src_pending" ? text(object(record.sourcing).selectionJustification) : status === "po_pending" ? text(object(record.po).description) : ""
+  const reason = status === "pr_pending" ? text(object(record.pr).justification) : status === "src_pending" ? text(object(record.sourcing).selectionJustification) : status === "po_pending" ? text(object(record.po).description) : ""
   const next = status === "draft" ? "Complete and submit requisition" : status === "pr_rejected" ? "Revise and resubmit requisition" : status === "pr_pending" ? "Sourcing after all approvals" : status === "sourcing" ? "Compare and select proposals" : status === "src_rejected" ? "Revise and resubmit sourcing" : status === "src_pending" ? "PO draft after all approvals" : status === "po_draft" ? "Complete and submit purchase order" : status === "po_rejected" ? "Revise and resubmit purchase order" : status === "po_pending" ? "Internal issuance after all approvals" : status === "po_approved" ? "Issue purchase order internally" : status === "po_issued" ? "Issued internally" : status === "cancelled" ? "Cancelled" : ""
   const sourcing = object(record.sourcing)
   const po = object(record.po)
@@ -239,7 +247,6 @@ export function projectProcurementSource(record: Record<string, unknown>, contex
   const values = ([
     { id: "status", value: knownStatus ? status : null, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: knownStatus ? "confirmed" : "absent" },
     { id: "holder", value: typeof holder?.holderId === "string" && holder.holderId ? holder.holderId : null, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: holder?.holderId ? "confirmed" : "absent" },
-    { id: "approvalStage", value: typeof holder?.levelName === "string" && holder.levelName ? holder.levelName : null, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: typeof holder?.levelName === "string" && holder.levelName ? "confirmed" : "absent" },
     { id: "stageEnteredAt", value: entry, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: entry ? "confirmed" : "absent" },
     { id: "ageDays", value: age, unit: "days", period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: age == null ? "absent" : "confirmed" },
     { id: "baseAmount", value: baseAmount, currency: context.currency, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: baseAmount == null ? "absent" : moneyEvidence },
@@ -263,6 +270,5 @@ export function projectProcurementSource(record: Record<string, unknown>, contex
     ...(evidence.target.fields.includes("originalCurrency") && !explicitCurrency ? [{ field: "originalCurrency", reason: "missing" as const }] : []),
     ...(evidence.target.fields.includes("fxRate") && validRate == null ? [{ field: "fxRate", reason: "missing-fx" as const }] : []),
     ...(evidence.target.fields.includes("holder") && action && !holder?.holderId ? [{ field: "holder", reason: "missing" as const }] : []),
-    ...(evidence.target.fields.includes("approvalStage") && action && !holder?.levelName ? [{ field: "approvalStage", reason: "missing" as const }] : []),
   ] }
 }

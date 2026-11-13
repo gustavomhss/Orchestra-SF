@@ -2071,9 +2071,6 @@ const definitions = {
         "$ref": "#/definitions/Shape_72"
       },
       {
-        "$ref": "#/definitions/Shape_73"
-      },
-      {
         "$ref": "#/definitions/Shape_74"
       }
     ]
@@ -2201,65 +2198,7 @@ const definitions = {
         }
       },
       "eligibility": {
-        "const": "conditioned"
-      },
-      "comparisonStatus": {
-        "$ref": "#/definitions/Shape_66"
-      }
-    },
-    "required": [
-      "id",
-      "caseRefs",
-      "components",
-      "costCoverageRefs",
-      "conflicts",
-      "restrictions",
-      "eligibility",
-      "comparisonStatus"
-    ]
-  },
-  "Shape_73": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "analysis": {
-        "$ref": "#/definitions/__type_71"
-      },
-      "id": {
-        "type": "string"
-      },
-      "caseRefs": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "components": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/ProjectionComponent_39"
-        }
-      },
-      "costCoverageRefs": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "conflicts": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "restrictions": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "eligibility": {
-        "const": "unavailable"
+        "$ref": "#/definitions/Shape_73"
       },
       "comparisonStatus": {
         "$ref": "#/definitions/Shape_47"
@@ -2274,6 +2213,16 @@ const definitions = {
       "restrictions",
       "eligibility",
       "comparisonStatus"
+    ]
+  },
+  "Shape_73": {
+    "anyOf": [
+      {
+        "const": "unavailable"
+      },
+      {
+        "const": "conditioned"
+      }
     ]
   },
   "Shape_74": {

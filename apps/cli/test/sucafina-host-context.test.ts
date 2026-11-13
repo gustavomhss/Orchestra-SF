@@ -31,7 +31,7 @@ test("installation registers its five real resident profiles and eighteen shippe
       "../../../modules/sucafina/Sucafinav1/product/ai"), origin: "http://127.0.0.1:43121", mount: "/sucafina", persistence,
       authenticate: async () => null, environment: async () => ({ at: new Date().toISOString(), id: () => crypto.randomUUID(), directory: [] }) })
     const merged = Host.merge([...ProductHost.contributions(), ...runtime.contributions])
-    const layer = AppNodeBuilder.build(LayerNode.group([...merged.nodes, SessionV2.node, LocationServiceMap.node]), [
+    const layer = AppNodeBuilder.build(LayerNode.group([...merged.nodes, SessionV2.node, SessionExecution.node, LocationServiceMap.node]), [
       [SessionExecution.node, SessionExecutionLocal.node], ...merged.replacements,
       [Global.node, Global.layerWith({ home: directory, config: path.join(directory, "config"), data: path.join(directory, "data") })],
       [Snapshot.node, Snapshot.noopLayer],

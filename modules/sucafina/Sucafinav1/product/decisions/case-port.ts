@@ -20,7 +20,7 @@ export function createDecisionCasePort(input: {
   evidence: BusinessContextService
   createId: () => string
   now: () => string
-}) {
+}): DecisionCasePort {
   const port: DecisionCasePort = {
     draft: async (request, context) => {
       if (context.kind !== "ui") return { status: "denied", reason: "human-case-creation-required" }
@@ -59,7 +59,17 @@ export function createDecisionCasePort(input: {
     },
     prepareIntent: async (request, context) => {
       if (context.kind !== "native") return { status: "denied", reason: "native-binding-required" }
-      return prepareIntentForCase(request, { id: context.binding.caseId, incarnation: context.binding.caseIncarnation, version: context.binding.caseVersion }, context)
+      const parsed = decodeSfOperationInput("sf_case_draft", request)
+      if (!parsed.ok || !parsed.value.objective.trim() || !parsed.value.criteria.length || !parsed.value.criteria.every((criterion) => criterion.trim()) || new Set(parsed.value.criteria.map((criterion) => criterion.trim())).size !== parsed.value.criteria.length) return { status: "needs-input", reason: "invalid-case-draft" }
+      const caseRef = encodeCaseRef({ id: context.binding.caseId, incarnation: context.binding.caseIncarnation })
+      const current = await port.read({ caseRef }, context)
+      if (current.status !== "ok") return current
+      if (parsed.value.sourceRefs.some((ref) => !current.value.evidenceRefs.some((allowed) => digestSfValue(allowed) === digestSfValue(ref)))) return { status: "denied", reason: "source-outside-case-scope" }
+      if (!await accessible(input.evidence, parsed.value.sourceRefs, context)) return { status: "unavailable", reason: "case-evidence-unavailable" }
+      const again = await port.read({ caseRef }, context)
+      if (again.status !== "ok") return again
+      if (again.value.case.version !== current.value.case.version || !await input.host.revalidate(context)) return { status: "stale", reason: "case-changed" }
+      return { status: "ok", value: { objective: parsed.value.objective, horizon: parsed.value.horizon, currency: parsed.value.currency, criteria: parsed.value.criteria.map((description, index) => current.value.case.criteria.find((criterion) => criterion.description === description) ?? { id: `intent:${digestSfValue({ caseRef, index, description })}`, description, required: true }), sourceRefs: parsed.value.sourceRefs, gaps: [], domainApplied: false, analysisBasis: "domain" } }
     },
     read: async (request, context) => {
       try {
@@ -93,21 +103,7 @@ export function createDecisionCasePort(input: {
       }
     },
   }
-  const prepareIntentForCase = async (request: Parameters<DecisionCasePort["prepareIntent"]>[0], ref: { id: string; incarnation: string; version: number }, context: TrustedDomainContext): ReturnType<DecisionCasePort["prepareIntent"]> => {
-    const parsed = decodeSfOperationInput("sf_case_draft", request)
-    if (!parsed.ok || !parsed.value.objective.trim() || !parsed.value.criteria.length || !parsed.value.criteria.every((criterion) => criterion.trim()) || new Set(parsed.value.criteria.map((criterion) => criterion.trim())).size !== parsed.value.criteria.length) return { status: "needs-input", reason: "invalid-case-draft" }
-    const caseRef = encodeCaseRef(ref)
-    const current = await port.read({ caseRef }, context)
-    if (current.status !== "ok") return current
-    if (current.value.case.version !== ref.version) return { status: "stale", reason: "case-changed" }
-    if (parsed.value.sourceRefs.some((item) => !current.value.evidenceRefs.some((allowed) => digestSfValue(allowed) === digestSfValue(item)))) return { status: "denied", reason: "source-outside-case-scope" }
-    if (!await accessible(input.evidence, parsed.value.sourceRefs, context)) return { status: "unavailable", reason: "case-evidence-unavailable" }
-    const again = await port.read({ caseRef }, context)
-    if (again.status !== "ok") return again
-    if (again.value.case.version !== ref.version || !await input.host.revalidate(context)) return { status: "stale", reason: "case-changed" }
-    return { status: "ok", value: { objective: parsed.value.objective, horizon: parsed.value.horizon, currency: parsed.value.currency, criteria: parsed.value.criteria.map((description, index) => current.value.case.criteria.find((criterion) => criterion.description === description) ?? { id: `intent:${digestSfValue({ caseRef, index, description })}`, description, required: true }), sourceRefs: parsed.value.sourceRefs, gaps: [], domainApplied: false, analysisBasis: "domain" } }
-  }
-  return { ...port, prepareIntentForCase }
+  return port
 }
 
 export function parseCaseRef(ref: string): { id: string; incarnation: string } | undefined {

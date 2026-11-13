@@ -904,30 +904,12 @@ export async function parseWorkbook(
   bytes: Uint8Array,
   limits: Partial<WorkbookLimits> = {},
 ): Promise<{ ok: true; sheets: Record<string, Record<string, unknown>[]> } | { ok: false; errors: string[] }> {
-  const result = await parseWorkbookInternal(bytes, limits, false)
-  if (!result.ok) return result
-  return { ok: true, sheets: result.sheets }
-}
-
-export type WorkbookCellOrigin = { sheet: string; recordIndex: number; row: number; column: number; address: string; field: string }
-
-/** Cell origins are captured while interpreting the same bounded workbook as the legacy parser. */
-export async function parseWorkbookDetailed(
-  bytes: Uint8Array,
-  limits: Partial<WorkbookLimits> = {},
-): Promise<{ ok: true; sheets: Record<string, Record<string, unknown>[]>; origins: WorkbookCellOrigin[] } | { ok: false; errors: string[] }> {
-  return parseWorkbookInternal(bytes, limits, true)
-}
-
-async function parseWorkbookInternal(bytes: Uint8Array, limits: Partial<WorkbookLimits>, capture: boolean): Promise<{ ok: true; sheets: Record<string, Record<string, unknown>[]>; origins: WorkbookCellOrigin[] } | { ok: false; errors: string[] }> {
   const loaded = await loadWorkbook(bytes, limits)
   if (!loaded.ok) return loaded
   const sheets: Record<string, Record<string, unknown>[]> = {}
-  const origins: WorkbookCellOrigin[] = []
   for (const sheet of loaded.workbook.worksheets) {
     if (sheet.name === "Ticket Register") {
-      const cells: { month: string; row: number; column: number; field: string }[] = []
-      const operations = operationsSheet(sheet, capture ? cells : undefined)
+      const operations = operationsSheet(sheet)
       if (!operations.ok) return operations
       // This source sheet has title rows and paired month columns, not a single table header.
       sheets[sheet.name] = Object.entries(operations.months).map(([month, tickets]) => ({
@@ -935,21 +917,13 @@ async function parseWorkbookInternal(bytes: Uint8Array, limits: Partial<Workbook
         month: Number(month),
         tickets,
       }))
-      const months = Object.keys(operations.months)
-      const last = new Map(cells.map((cell) => [JSON.stringify([cell.month, cell.field]), cell]))
-      last.forEach((cell) => {
-        origins.push({ sheet: sheet.name, recordIndex: months.indexOf(cell.month), row: cell.row, column: cell.column, address: sheet.getRow(cell.row).getCell(cell.column).address, field: `tickets.${cell.field}` })
-      })
       continue
     }
     if (sheet.name === "Info") {
       const values: Record<string, unknown>[] = []
-      sheet.eachRow((row, number) => {
+      sheet.eachRow((row) => {
         const field = cellValue(row.getCell(1))
-        if (typeof field !== "string") return
-        const recordIndex = values.length
-        values.push({ Field: field, Value: cellValue(row.getCell(2)) })
-        if (capture) ["Field", "Value"].forEach((name, index) => { const cell = row.getCell(index + 1); if (cell.type !== 0) origins.push({ sheet: sheet.name, recordIndex, row: number, column: index + 1, address: cell.address, field: name }) })
+        if (typeof field === "string") values.push({ Field: field, Value: cellValue(row.getCell(2)) })
       })
       sheets.Info = values
       continue
@@ -978,14 +952,12 @@ async function parseWorkbookInternal(bytes: Uint8Array, limits: Partial<Workbook
     const output: Record<string, unknown>[] = []
     sheet.eachRow((row, index) => {
       if (index === 1) return
-      const recordIndex = output.length
       output.push(Object.fromEntries(headers.map((header, column) => [header, cellValue(row.getCell(column + 1))])))
-      if (capture) headers.forEach((header, column) => { const cell = row.getCell(column + 1); if (cell.type !== 0) origins.push({ sheet: sheet.name, recordIndex, row: index, column: column + 1, address: cell.address, field: header }) })
     })
     sheets[sheet.name] = output
   }
   if (!Object.keys(sheets).length) return { ok: false, errors: ["No supported workbook sheets"] }
-  return { ok: true, sheets, origins }
+  return { ok: true, sheets }
 }
 
 export async function parseOperationsWorkbook(
@@ -1007,7 +979,7 @@ export async function parseOperationsWorkbook(
   return operationsSheet(sheet)
 }
 
-function operationsSheet(sheet: Worksheet, origins?: { month: string; row: number; column: number; field: string }[]):
+function operationsSheet(sheet: Worksheet):
   | {
       ok: true
       year: number
@@ -1089,7 +1061,6 @@ function operationsSheet(sheet: Worksheet, origins?: { month: string; row: numbe
         const key = String(index + 1)
         monthly[key] ??= {}
         monthly[key]![`${category.current}|${type}|${metrics[label]}`] = Number(raw)
-        origins?.push({ month: key, row: row.number, column: column + offset + 1, field: `${category.current}|${type}|${metrics[label]}` })
       })
     }
   }

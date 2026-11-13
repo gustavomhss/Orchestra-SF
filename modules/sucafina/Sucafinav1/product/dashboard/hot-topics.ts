@@ -62,6 +62,7 @@ export function createHotTopicPort(host: HotTopicHost) {
           if (!read(snapshot, actor, existing.id) || !existing.result) return { commit: false, value: { status: "unavailable", reason: "action-unavailable" } }
           return { commit: false, value: { status: "ok", value: existing.result } }
         }
+        if (hotTopicView(snapshot, actor).some((row) => String(row.id) === input.id) && !read(snapshot, actor, input.id)) return { commit: false, value: { status: "unavailable", reason: "action-ambiguous" } }
         const result = DashboardPeople.domain.execute(snapshot, actor, { page: "Hot Topics & Actions", action: "save", id: input.id, version: input.version, values: input.values }, environment)
         if (!result.ok) return { commit: false, value: { status: result.status === 403 ? "denied" : result.status === 409 ? "conflict" : result.status === 404 ? "unavailable" : "needs-input", reason: result.errors?.join("; ") || "action-rejected" } }
         const topic = read(snapshot, actor, input.id)
@@ -74,7 +75,8 @@ export function createHotTopicPort(host: HotTopicHost) {
 }
 
 function read(snapshot: Snapshot, actor: Actor, id: string): HotTopic | undefined {
-  const row = hotTopicView(snapshot, actor).find((entry) => String(entry.id) === id)
-  if (!row) return undefined
+  const matches = hotTopicView(snapshot, actor).filter((entry) => String(entry.id) === id)
+  if (matches.length !== 1) return undefined
+  const row = matches[0]!
   return { id, version: snapshot.versions[`hotTopics:${id}`]?.version ?? 0, action: String(row.action ?? ""), owner: String(row.owner ?? ""), due: String(row.due ?? ""), status: String(row.status ?? ""), priority: String(row.priority ?? ""), notes: String(row.notes ?? "") }
 }
