@@ -747,6 +747,12 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     return reject
   const marker = collection === "lines" && !synthetic ? budgetMarks(values) : undefined
   if (marker && !marker.ok) return invalid("Invalid budget edit marker")
+  if (
+    stored &&
+    command.action === "save" &&
+    Object.keys(values).every((field) => ["versionId", "collection", "budgetEdited"].includes(field))
+  )
+    return reject
   if (collection === "lines" && values.domain !== undefined) return invalid("Domain belongs to synthetic HR lines")
   if (collection === "lines" && !synthetic && !stored && command.page === "OPEX") {
     const element = text(values.el) || "licenses"
@@ -857,9 +863,12 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
         typeMonth(line, Number(field.slice(1)), value === "" || value === null ? 0 : Number(value)),
       plan,
     )
-    Object.assign(next, edited)
-    next.a = months(next.a, true)
-    next.f = months(next.f, true)
+    if (!stored || command.action !== "save" || values.month !== undefined || values.b !== undefined || values.annual !== undefined || chosen.length)
+      Object.assign(next, edited)
+    if (!stored || values.a !== undefined || Object.keys(values).some((field) => /^a(?:[0-9]|1[01])$/.test(field)))
+      next.a = months(next.a, true)
+    if (!stored || values.f !== undefined || Object.keys(values).some((field) => /^f(?:[0-9]|1[01])$/.test(field)))
+      next.f = months(next.f, true)
   }
   if (collection === "lines" || synthetic)
     for (const field of ["a", "f"])
@@ -874,7 +883,7 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     next.name = text(next.name).trim()
     if (!next.name) return invalid("Project name is required")
     next.code = text(values.code).trim() || text(stored?.code)
-    if (!next.code) {
+    if (!next.code && (!stored || values.code !== undefined)) {
       const sequence = nextCpx(
         version.year,
         finite(snapshot.sequences.cpx),
@@ -886,7 +895,7 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     if (records.some((row) => row.id !== id && normName(text(row.code)) === normName(text(next.code))))
       return invalid("Duplicate project code")
     const match = text(next.code).match(/^CPX-\d{4}-(\d+)$/i)
-    if (match) snapshot.sequences.cpx = Math.max(finite(snapshot.sequences.cpx), Number(match[1]))
+    if (match && (!stored || values.code !== undefined)) snapshot.sequences.cpx = Math.max(finite(snapshot.sequences.cpx), Number(match[1]))
   }
   if (collection === "positions") {
     next.name = text(next.name).trim()
@@ -931,6 +940,24 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     !version.fx.some((rate) => rate.cur === next.cur)
   )
     return invalid("Unknown currency")
+  if (stored && command.action === "save") {
+    const normalized =
+      collection === "lines" && !synthetic
+        ? ["sec", "el", "cur", "cls"]
+        : collection === "projects"
+          ? ["name", "code"]
+          : collection === "positions"
+            ? ["name", "fte", "start", "end", "include", "type", "src"]
+            : collection === "rates"
+              ? ["annual", "cur"]
+              : collection === "fx"
+                ? ["cur", "rate"]
+                : []
+    for (const field of normalized.filter((field) => !Object.hasOwn(values, field))) {
+      if (Object.hasOwn(stored, field)) next[field] = stored[field]
+      else delete next[field]
+    }
+  }
   if (synthetic) version.hc.hrAF[id.slice(3)] = next
   else if (stored) records.splice(records.indexOf(stored), 1, next)
   else records.push(next)
@@ -2322,7 +2349,19 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
         else version.lines.push(line)
       }
     }
-  const headcountImport = readWorkbookHeadcount(sheets.Headcount, version, actor, can, issue, allocate, seen.positions)
+  if (membersWorkbook && !actor.roles.some((role) => ["admin", "hr"].includes(role)))
+    return { ok: false, status: 403 }
+  const lockedMembers = membersWorkbook && (version.locked || (!asNew && official === version.id))
+  if (lockedMembers) issue.warnings.push("Roster unchanged: version is locked")
+  const headcountImport = readWorkbookHeadcount(
+    lockedMembers ? undefined : sheets.Headcount,
+    version,
+    actor,
+    can,
+    issue,
+    allocate,
+    seen.positions,
+  )
   if (issue.result) return issue.result
   const importedRoster = headcountImport.roster
   const syncMembersPositions = membersWorkbook && importedRoster !== undefined && can("headcount") && !version.locked
@@ -2369,7 +2408,7 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
           !sheets[line.sec === "opex" ? "OPEX" : "CAPEX"] ||
           seen[line.sec === "opex" ? "opex" : "capex"].has(idOf(line.id)),
       )
-    if (sheets.Headcount && !headcountImport.rosterRows && can("headcount"))
+    if (sheets.Headcount && !lockedMembers && !headcountImport.rosterRows && can("headcount"))
       version.hc.positions = version.hc.positions.filter((position) => seen.positions.has(idOf(position.id)))
   }
   if (budgetOK)

@@ -15,3 +15,6 @@ The current local operator mode uses the explicitly enrolled Mac owner. Microsof
 Budgets, attachments, roles, approval authority and audit history remain private. A public source repository does not include installation keys or business databases. Local backups do not protect against loss of the Mac; no external backup destination has been configured.
 
 Creating an HR domain in Planner requires an administrator editing an unlocked version that is not official. Updating an existing domain still follows the field permissions for that version and the user's scope. These checks also apply to workbook imports; a forbidden new domain rejects the entire import.
+
+
+Planner saves update the fields you edit. An empty save cannot advance a record revision, and editing actuals or forecasts leaves untouched budget fields as stored. On locked versions, an authorized roster import leaves the roster unchanged and reports a warning while applying other permitted rows.
