@@ -439,6 +439,16 @@ export function createApplication(mount: string, application: Application) {
           : sidebar
       const auditBefore = snapshot.audit.length
       const view = contribution.domain.view(snapshot, actor, environment)
+      const month = monthParam
+        ? Number(monthParam)
+        : surface === "dashboard" && page === "Executive Dashboard" && selected !== now.getFullYear()
+          ? 12
+          : surface === "dashboard" && page === "IT Security KPIs"
+            ? Math.max(0, ...rows(view.data.secKpi)
+                .filter((row) => row.year === selected && typeof row.month === "number" &&
+                  Number.isInteger(row.month) && row.month >= 1 && row.month <= 12)
+                .map((row) => Number(row.month))) || 12
+            : now.getMonth() + 1
       if (application.presentation === "native") {
         const name = environment.directory.find((person) => person.id === actor.id && person.name.trim())?.name
         if (!name)
@@ -456,7 +466,7 @@ export function createApplication(mount: string, application: Application) {
               pages: allowed,
               actor: { ...actor, name },
               year: selected,
-              month: monthParam ? Number(monthParam) : now.getMonth() + 1,
+              month,
               data: view.data,
               versions: view.versions,
               directory: environment.directory,
@@ -495,7 +505,7 @@ export function createApplication(mount: string, application: Application) {
         {
           actor,
           year: selected,
-          month: monthParam ? Number(monthParam) : now.getMonth() + 1,
+          month,
           at: environment.at,
           versions: view.versions,
         },

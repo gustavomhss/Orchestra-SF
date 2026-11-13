@@ -121,18 +121,13 @@ export const domain: Domain = {
       ),
     }
     data.opsDefaultMonth = Object.fromEntries(
-      [2024, 2025, 2026, 2027].map((year) => [
-        year,
-        Math.max(
-          0,
-          ...rows(snapshot.data.opsTickets)
-            .filter((row) => row.year === year)
-            .map((row) => finite(row.month)),
-          ...rows(snapshot.data.opsSLA)
-            .filter((row) => row.year === year)
-            .map((row) => finite(row.month)),
-        ) || Number(environment.at.slice(5, 7)),
-      ]),
+      [2024, 2025, 2026, 2027].flatMap((year) => {
+        const months = [...rows(snapshot.data.opsTickets), ...rows(snapshot.data.opsSLA)]
+          .filter((row) => row.year === year && typeof row.month === "number" &&
+            Number.isInteger(row.month) && row.month >= 1 && row.month <= 12)
+          .map((row) => Number(row.month))
+        return months.length ? [[year, Math.max(...months)]] : []
+      }),
     )
     data.executiveMonths = Object.fromEntries(
       [2024, 2025, 2026, 2027].flatMap((year) =>
@@ -532,10 +527,11 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
 }
 
 function currentBudgetMonth(data: Record<string, unknown>, year: number, at: string): number {
-  return Number(
-    object(data.budgetCurrentMonth)[year] ??
-      (year === Number(at.slice(0, 4)) ? Number(at.slice(5, 7)) : year < Number(at.slice(0, 4)) ? 12 : 1),
-  )
+  const stored = object(data.budgetCurrentMonth)[year]
+  const month = typeof stored === "number" || typeof stored === "string" ? Number(stored) : NaN
+  if (Number.isInteger(month) && month >= 1 && month <= 12) return month
+  const now = new Date(at)
+  return year === now.getFullYear() ? now.getMonth() + 1 : year < now.getFullYear() ? 12 : 1
 }
 function parseObject(value: string): Record<string, unknown> {
   try {

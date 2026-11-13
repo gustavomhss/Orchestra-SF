@@ -1532,7 +1532,7 @@ function executeVersions(
     const key = "versions:first"
     const stale = conflict(snapshot, key, command, undefined)
     if (stale) return stale
-    const year = Number(environment.at.slice(0, 4)) + 1
+    const year = new Date(environment.at).getFullYear() + 1
     const first = versionOf({
       id: environment.id(),
       name: `FY${year} — Draft 1`,
