@@ -11,6 +11,7 @@ import { createSfUiAuthority } from "../../../product/integration/ui-authority.t
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { createRecipientAwareThreadReads } from "../../../product/collaboration/thread-reads.ts"
 import { createThreadAnswerEvidence } from "../../../product/collaboration/evidence.ts"
+import { createRelationPort } from "../../../product/collaboration/relations.ts"
 import { createRecipientThreadActions } from "../../../product/collaboration/recipient-actions.ts"
 import { createCollaborationMutationFence } from "../../../product/collaboration/mutation-fence.ts"
 import { createRecipientThreadReader } from "../../../product/collaboration/recipient-thread.ts"
@@ -25,35 +26,46 @@ test("reissue checks actor access and the live physical incarnation", async () =
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
   try {
-    const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: (_surface, snapshot) => snapshot.data.exists ? [{ recordType: "line", recordId: "A", inputDigest: digestSfValue(snapshot.data.value) }] : [], projectScope: (_surface, snapshot, scope) => snapshot.data.exists && !(scope.principalRef === "A" && snapshot.data.revokeA) ? { amount: snapshot.data.value } : undefined })
+    const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: (_surface, snapshot) => snapshot.data.exists ? ["A", "C"].map((recordId) => ({ recordType: "line", recordId, inputDigest: digestSfValue(snapshot.data.value) })) : [], projectScope: (_surface, snapshot, scope) => snapshot.data.exists && !(scope.principalRef === "A" && snapshot.data.revokeA) ? { amount: snapshot.data.value } : undefined })
     for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
     await persistence.transaction("planner", async (snapshot) => { snapshot.data.exists = true; snapshot.data.value = 10; return { commit: true, value: undefined } })
     const period = { start: "2027-01-01", end: "2027-01-31" }
     const current = { allowed: true }
     const context = { kind: "ui", binding: { installationId: "install", projectId: "project", principalRef: "B", requestId: "request", policyVersion: "policy", accessRevision: "access", expiresAt: "2100-01-01T00:00:00Z" }, lease: {} } as unknown as TrustedUiContext
-    const issue = async (principalRef: string): Promise<Extract<BusinessEvidenceRef, { kind: "record" }>> => {
-      const scope = { principalRef, accessRevision: "access", policyVersion: "policy", recordType: "line", recordId: "A", selector: { fields: ["amount"], period } }
+    const issue = async (principalRef: string, recordId = "A"): Promise<Extract<BusinessEvidenceRef, { kind: "record" }>> => {
+      const scope = { principalRef, accessRevision: "access", policyVersion: "policy", recordType: "line", recordId, selector: { fields: ["amount"], period } }
       const result = await persistence.readScopedSource("planner", scope, async () => current.allowed)
       if (!result) throw new Error("source unavailable")
-      const ref: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", kind: "record", refId: randomUUID(), installationId: "install", projectId: "project", refDigest: "", evidenceLevel: "observed", target: { surface: "planner", recordType: "line", recordId: "A", incarnation: result.incarnation, version: result.version, fields: ["amount"], period, projectionDigest: result.inputDigest } }
+      const ref: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", kind: "record", refId: randomUUID(), installationId: "install", projectId: "project", refDigest: "", evidenceLevel: "observed", target: { surface: "planner", recordType: "line", recordId, incarnation: result.incarnation, version: result.version, fields: ["amount"], period, projectionDigest: result.inputDigest } }
       return { ...ref, refDigest: digestSfEvidenceRef(ref) }
     }
     const original = await issue("A")
-    const host = { persistence, requestFor: () => new Request("https://example.test/"), revalidate: async () => current.allowed } as unknown as DomainPortHost
+    const host = { persistence, requestFor: (binding: TrustedUiContext) => new Request("https://example.test/", { headers: { actor: binding.binding.principalRef } }), revalidate: async () => current.allowed } as unknown as DomainPortHost
     const evidence = createSfBusinessContext({ revalidate: async () => current.allowed, resolveSource: async (ref, binding) => {
       const source = ref.kind === "record" ? await persistence.resolveScopedSource(ref.target.surface, ref.target.incarnation, async (_snapshot, scope) => current.allowed && scope.principalRef === binding.binding.principalRef) : undefined
       return { state: source && ref.kind === "record" && source.version === ref.target.version && source.inputDigest === ref.target.projectionDigest ? "fresh" : "unavailable", ref, accessRevision: binding.binding.accessRevision, checkedAt: "2026-11-13T00:00:00Z" }
     }, proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "not used" }) })
-    const reissue = createCollaborationReissuer({ host, issueForActor: async () => ({ status: "ok", value: await issue("B") }), authorize: async (ref, binding) => (await evidence.resolve(ref, binding)).state === "fresh" })
+    const reissue = createCollaborationReissuer({ host, issueForActor: async (target) => ({ status: "ok", value: await issue("B", target.recordId) }), authorize: async (ref, binding) => (await evidence.resolve(ref, binding)).state === "fresh" })
     const result = await reissue(original, context)
     expect(result).toMatchObject({ status: "ok", value: { target: { recordId: "A", fields: ["amount"], period } } })
     if (result.status === "ok") expect(result.value.target.incarnation).not.toBe(original.target.incarnation)
-    const state = createSfProductState({ persistence: store, createId: () => "state-inc", resolveTarget: async () => ({ incarnation: "workspace-inc" }), authorize: async () => ({ principalRef: "B", accessRevision: "access", policyVersion: "policy" }) })
+    const state = createSfProductState({ persistence: store, createId: () => "state-inc", resolveTarget: async () => ({ incarnation: "workspace-inc" }), authorize: async (request) => ({ principalRef: request.headers.get("actor") ?? "B", accessRevision: "access", policyVersion: "policy" }) })
     const saved = await state.transaction(new Request("https://example.test/"), { namespace: "threads", expectedStorageVersion: 0, targetRef: "workspace", targetIncarnation: "workspace-inc", idempotencyKey: "seed", commandDigest: "a".repeat(64) }, async (snapshot) => {
       snapshot.threads.thread = { id: "thread", kind: "clarification", sourceRef: original.refId, sourceIncarnation: original.target.incarnation, observedVersion: original.target.version, period, recipientRef: "B", state: "open", messages: [{ id: "message", incarnation: "message-inc", version: 1, authorRef: "A", body: "Why?", createdAt: "2026-11-13T00:00:00Z" }], evidenceRefs: [original] }
       return { commit: true, value: true }
     })
     if (saved.status !== "ok") throw new Error("thread fixture failed")
+    const other = await issue("A", "C")
+    const author = { ...context, binding: { ...context.binding, principalRef: "A" } } as unknown as TrustedUiContext
+    const relations = createRelationPort({ state, host, human: { authorize: async () => true }, mutationFence: createCollaborationMutationFence({ persistence: store }), reissue, handoffPermit: Symbol("test"), authorizePair: async (pair, binding) => (await evidence.context({ refs: pair.evidenceRefs }, binding)).every((entry) => entry.state === "fresh"), creationTarget: { ref: "workspace", incarnation: "workspace-inc" }, createId: () => "relation", now: () => "2026-11-13T00:00:00Z" })
+    expect((await relations.create({ fromRef: original.refId, toRef: other.refId, kind: "line-request", evidenceRefs: [original, other] }, { expectedStorageVersion: 0, idempotencyKey: "relation-create" }, author)).status).toBe("ok")
+    const reboundOther = await reissue(other, context)
+    if (result.status !== "ok" || reboundOther.status !== "ok") throw new Error("recipient reissue failed")
+    const recipientPair = { fromRef: result.value.refId, toRef: reboundOther.value.refId, kind: "line-request", evidenceRefs: [result.value, reboundOther.value] }
+    const removed = await relations.remove("relation", recipientPair, { expectedStorageVersion: 1, idempotencyKey: "relation-remove" }, context)
+    expect(removed).toMatchObject({ status: "ok", value: { fromRef: result.value.refId, toRef: reboundOther.value.refId } })
+    if (removed.status === "ok") expect(JSON.stringify(removed.value)).not.toContain(original.refId)
+    expect(await relations.remove("relation", recipientPair, { expectedStorageVersion: 1, idempotencyKey: "relation-remove" }, context)).toEqual(removed)
     const reader = createRecipientThreadReader({ state, host, reissue, authorize: async (refs, binding) => (await evidence.context({ refs }, binding)).every((entry) => entry.state === "fresh") })
     const projected = await reader("thread", context)
     expect(projected).toMatchObject({ status: "ok", value: { observed: { version: 1, period }, current: { sourceRef: { target: { recordId: "A" } } }, messages: [{ body: "Why?" }] } })

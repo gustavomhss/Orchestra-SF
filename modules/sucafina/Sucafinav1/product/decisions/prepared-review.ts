@@ -14,7 +14,7 @@ export function createDecisionPreparedReview(input: {
   state: SfProductStatePort
   cases: DecisionCasePort
   host: Pick<DomainPortHost, "requestFor" | "revalidate">
-  reviewDomain: (command: PreparedCommand, context: TrustedDomainContext) => Promise<PortResult<{ fields: ReviewFields; source: Extract<BusinessEvidenceRef, { kind: "record" }>; originalTargetDigest: string }>>
+  reviewDomain: (command: PreparedCommand, context: TrustedDomainContext) => Promise<PortResult<{ fields: ReviewFields; source: Extract<BusinessEvidenceRef, { kind: "record" }>; originalTargetDigest: string; targetLabel?: string }>>
 }) {
   return async (request: { caseRef: CaseRef; choiceId: string; changeId: string }, context: TrustedDomainContext) => {
     try {
@@ -39,7 +39,7 @@ export function createDecisionPreparedReview(input: {
       const second = await input.reviewDomain(change.operation, context)
       if (again.status !== "ok" || digestSfValue(again.value.case) !== digestSfValue(current.value.case) || changesAgain.status !== "ok" || changesAgain.value?.length !== 1 || digestSfValue(changesAgain.value[0]) !== digestSfValue(change) || second.status !== "ok" || digestSfValue(second.value) !== digestSfValue(first.value) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "review-changed" } as const
       const receipt = view[0]!.receiptRef ? current.value.case.receipts.find((item) => item.id === view[0]!.receiptRef) : undefined
-      return { status: "ok", value: { changeId: change.id, choiceId: change.choiceId, surface: change.target.surface, target: { type: change.target.type, id: change.target.id }, expectedVersion: change.expectedVersion, state: change.state, fields: first.value.fields, ...(receipt ? { receipt } : {}) } } as const
+      return { status: "ok", value: { changeId: change.id, choiceId: change.choiceId, surface: change.target.surface, target: { type: change.target.type, id: change.target.id, ...(first.value.targetLabel?.trim() ? { label: first.value.targetLabel } : {}) }, expectedVersion: change.expectedVersion, state: change.state, fields: first.value.fields, ...(receipt ? { receipt } : {}) } } as const
     } catch { return { status: "unavailable", reason: "review-unavailable" } as const }
   }
 }

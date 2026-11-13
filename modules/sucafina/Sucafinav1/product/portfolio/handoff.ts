@@ -38,7 +38,7 @@ export async function preparePortfolioChoice(input: {
   if (selected.eligibility === "ineligible" || selected.eligibility === "unavailable") return { status: "conflict", reason: "combination-not-available" }
   const resolved = await Promise.all(input.selectedCandidateRefs.map((ref) => input.host.resolveCandidate(ref, context)))
   const failure = resolved.find((item) => item.status !== "ok")
-  if (failure) return failure
+  if (failure && failure.status !== "ok") return failure
   const candidates = resolved.flatMap((item) => item.status === "ok" ? [item.value] : [])
   const operations = [...input.request.operations, ...candidates.flatMap((candidate) => candidate.operations)]
   if (digestSfValue({ candidates: candidates.map((candidate) => candidate.ref), operations }) !== input.combinationId) return { status: "stale", reason: "combination-changed" }
@@ -75,7 +75,7 @@ export async function promotePortfolioAlternative(input: {
   if (selected.eligibility === "ineligible" || selected.eligibility === "unavailable") return { status: "conflict", reason: "combination-not-available" }
   const resolved = await Promise.all(input.selectedCandidateRefs.map((ref) => input.host.resolveCandidate(ref, context)))
   const failure = resolved.find((item) => item.status !== "ok")
-  if (failure) return failure
+  if (failure && failure.status !== "ok") return failure
   const candidates = resolved.flatMap((item) => item.status === "ok" ? [item.value] : [])
   const operations = [...input.request.operations, ...candidates.flatMap((candidate) => candidate.operations)]
   if (digestSfValue({ candidates: candidates.map((candidate) => candidate.ref), operations }) !== input.combinationId) return { status: "stale", reason: "combination-changed" }

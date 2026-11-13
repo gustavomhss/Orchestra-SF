@@ -48,7 +48,7 @@ export function createPlannerPreparedReview(input: { host: DomainPortHost; issue
         return { field: `${operation.command.id}:${index + 1}:forecast`, before: beforeValue, after: afterValue, beforeCurrency: beforeLine.cur as string, afterCurrency: beforeLine.cur as string }
       })
       if (!fields.length || fields.some((field) => !field)) return { commit: false, value: undefined }
-      return { commit: false, value: { fields: fields.filter((field): field is NonNullable<typeof field> => !!field), source: source.value.evidence, originalTargetDigest: digestSfValue(operation.target) } }
+      return { commit: false, value: { fields: fields.filter((field): field is NonNullable<typeof field> => !!field), source: source.value.evidence, originalTargetDigest: digestSfValue(operation.target), ...(typeof beforeLine.name === "string" && beforeLine.name.trim() ? { targetLabel: beforeLine.name.trim() } : {}) } }
     }, { signal: request.signal })
     const first = await read().catch(() => undefined)
     if (!first) return { status: "stale", reason: "review-source-or-command-changed" } as const

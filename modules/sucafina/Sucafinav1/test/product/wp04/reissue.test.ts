@@ -76,7 +76,7 @@ test("reissue requires the recipient's current scope and the same physical reque
     const unavailable = async () => ({ status: "unavailable" as const, reason: "unused" })
     const port = createProcurementPort({ ...host, resolveRequestSource: resolver.resolve, resolveSupplierSource: resolver.resolve, isCurrentRequestSource: resolver.isCurrent, isCurrentSupplierSource: resolver.isCurrent, resolveRequestCollection: unavailable, isCurrentRequestCollection: () => false, readContractSource: unavailable })
     const reviewed = await createProcurementPreparedReview({ port, individual: resolver })(prepared.command, b)
-    expect(reviewed).toMatchObject({ status: "ok", value: { fields: [{ field: "subject", before: "Owned", after: "Updated" }], source: { refId: admitted.value.refId }, originalTargetDigest: digestSfValue(target) } })
+    expect(reviewed).toMatchObject({ status: "ok", value: { fields: [{ field: "subject", before: "Owned", after: "Updated" }], source: { refId: admitted.value.refId }, originalTargetDigest: digestSfValue(target), targetLabel: "Owned" } })
     expect(JSON.stringify(reviewed)).not.toContain(original.value.evidence.refId)
     expect((await reissue({ ...original.value.evidence.target, fields: ["status"] }, b)).status).toBe("unavailable")
     expect((await reissue({ ...original.value.evidence.target, incarnation: "forged" }, b)).status).toBe("unavailable")

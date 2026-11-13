@@ -52,6 +52,8 @@ test("promotes the reviewed combination through the case domain only for a human
   const evaluated = await portfolio.evaluate(combinedRequest, context)
   if (evaluated.status !== "ok") throw new Error(evaluated.reason)
   const selected = evaluated.value.combinations.find((item) => item.caseRefs.length === 2)!
+  const preview = await portfolio.evaluateWithSelections(combinedRequest, context)
+  expect(preview.status === "ok" && preview.value.selections.find((item) => item.combinationId === selected.id)?.selectedCandidateRefs).toEqual(["a", "b"])
   const calls: unknown[] = []
   const ref = { id: "case", incarnation: "one", version: 2 }
   const input = { portfolio, host: combinedHost, decisions: { addAlternative: async (value: unknown) => { calls.push(value); return { status: "ok" as const, value: { caseRef: { ...ref, version: 3 } } } } }, request: combinedRequest, selectedCandidateRefs: ["a", "b"], combinationId: selected.id, expectedEvaluationDigest: portfolioEvaluationDigest(combinedRequest, evaluated.value), caseRef: ref, title: "Combined", coverageRef: "case-coverage" }

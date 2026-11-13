@@ -29,9 +29,9 @@ export function createPortfolioContribution(input: {
     persistent,
     persistentSensitivity,
     preview: async (request: Parameters<typeof port.evaluate>[0], context: Parameters<typeof port.evaluate>[1]) => {
-      const result = await port.evaluate(request, context)
+      const result = await port.evaluateWithSelections(request, context)
       if (result.status !== "ok") return result
-      return { status: "ok" as const, value: { portfolio: result.value, evaluationDigest: portfolioEvaluationDigest(request, result.value) } }
+      return { status: "ok" as const, value: { ...result.value, evaluationDigest: portfolioEvaluationDigest(request, result.value.portfolio) } }
     },
     capabilities: capabilities.filter((descriptor) => input.enabledOperations.some((operation) => operation === descriptor.id)),
     promoteAlternative: (request: Omit<Parameters<typeof promotePortfolioAlternative>[0], "portfolio" | "host" | "decisions">, context: Parameters<typeof promotePortfolioAlternative>[1]) => input.decisions.addAlternative ? promotePortfolioAlternative({ ...request, portfolio: port, host, decisions: { addAlternative: input.decisions.addAlternative } }, context) : Promise.resolve({ status: "unavailable" as const, reason: "alternative-promotion-unavailable" }),

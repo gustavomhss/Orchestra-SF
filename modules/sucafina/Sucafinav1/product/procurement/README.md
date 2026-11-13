@@ -16,4 +16,6 @@ Use `createProcurementCollectionMemberIssuer` to convert a current collection me
 
 `createProcurementPreparedReview` accepts a command loaded privately from an authorized decision case and returns only C02 before/after fields and evidence for the current reviewer. It reissues that source for the reviewer, proves the original scoped source remains current and maps to the same physical incarnation, and returns an `originalTargetDigest` for WP11 to check. It never exposes the executable command.
 
+`createProcurementC12Bridge` bundles the host-private scenario preparation, review, mutation reconstruction, and receipt revision callbacks for WP11. The host must still load the recorded choice, enforce its human confirmation and current grant, and commit the domain and receipt atomically.
+
 These ports do not themselves mount UI routes, issue human confirmation, or provide a finished C07 dossier. Their host consumers and the repository's scoped CI gate must be verified on the integrated candidate.

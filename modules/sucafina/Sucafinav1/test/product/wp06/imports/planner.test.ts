@@ -47,6 +47,8 @@ test("forecast workbook replaces the included amount without changing budget or 
   const before = projectPlannerSource(snapshot, actor, "v1")!
   const preview = preparePlannerWorkbook({ snapshot, actor, environment, versionId: "v1", sheets: { OPEX: [{ "Line ID": "line", "Cost element": "Licenses", "Vendor / item": "Licences", Currency: "USD", Measure: "Forecast", Oct: 38000, Nov: 124000, Dec: 40000 }] }, newVersion: false, removeMissing: false, operationId: "forecast", idempotencyKey: "forecast-key", targetIncarnation: "inc-1" })
   expect(preview.result.ok).toBe(true)
+  expect((preview.before.data.versions as { summary: { fullYear: number } }[])[0].summary.fullYear).toBe(590000)
+  expect((preview.after.data.versions as { summary: { fullYear: number } }[])[0].summary.fullYear).toBe(602000)
   const applied = structuredClone(snapshot)
   const mutation = createPlannerImportMutation({ command: preview.command, commandDigest: preview.commandDigest, previewDigest: preview.previewDigest, actorId: actor.id, operationId: "forecast", idempotencyKey: "forecast-key", targetIncarnation: "inc-1", previewAt: environment.at, verifyTarget: () => true })!
   expect(mutation.execute(applied, actor, environment).commit).toBe(true)

@@ -1,5 +1,5 @@
 import type { Actor, Snapshot } from "../../runtime/contract.ts"
-import { digestSfValue } from "../contracts/canonical.ts"
+import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import type { PreparedChange } from "../contracts/decisions.ts"
 import type { ProcurementPort } from "../contracts/ports.ts"
 import type { ProcurementSourceHost } from "./port.ts"
@@ -19,7 +19,7 @@ export function createProcurementC12Bridge(input: { host: ProcurementSourceHost;
       if (change.target.surface !== "procurement" || digestSfValue(command.target) !== digestSfValue(change.target) || command.expectedVersion !== change.expectedVersion || command.idempotencyKey !== change.idempotencyKey) return undefined
       const references = command.preview.values.flatMap((value) => value.sourceRefs)
       const evidence = references[0]
-      if (!evidence || evidence.kind !== "record" || references.some((ref) => digestSfValue(ref) !== digestSfValue(evidence))) return undefined
+      if (!evidence || evidence.kind !== "record" || evidence.refDigest !== digestSfEvidenceRef(evidence) || evidence.installationId !== binding.binding.installationId || evidence.projectId !== binding.binding.projectId || evidence.target.surface !== change.target.surface || evidence.target.recordType !== change.target.type || evidence.target.recordId !== change.target.id || evidence.target.incarnation !== change.target.incarnation || evidence.target.version !== change.target.version || digestSfValue(evidence.target.fields) !== digestSfValue(change.target.fields) || digestSfValue(evidence.target.period) !== digestSfValue(change.target.period) || command.preview.values.some((value) => value.sourceRefs.length !== 1) || references.some((ref) => digestSfValue(ref) !== digestSfValue(evidence))) return undefined
       const scope = procurementPreparedScope(snapshot, change.target, binding)
       if (!scope) return staleProcurementPreparedMutation(snapshot, actor, binding, command)
       const rebuilt = prepareProcurementMutation({ snapshot, actor, context: binding, target: change.target, scope, evidence, command: command.command, operationId: command.id, idempotencyKey: change.idempotencyKey, environment: { at: change.target.observedAt, id: () => "", directory: [] } })

@@ -26,7 +26,7 @@ test("planner issuer resolves authenticated current identities and rejects stale
     await persistence.initializeSources("planner")
     await persistence.transaction("planner", async (snapshot) => {
       snapshot.data.roleMap = [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }]
-      snapshot.data.versions = [{ id: "v0", year: 2027, closed: 0, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD", b: [100] }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
+      snapshot.data.versions = [{ id: "v0", year: 2027, closed: 0, lines: [{ id: "line", name: "Licenses", sec: "opex", el: "licenses", cur: "USD", b: [100] }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
       return { commit: true, value: undefined }
     })
     const session = { request: new Request("https://example.test", { headers: { authorization: "finance" } }), active: true }
@@ -50,7 +50,7 @@ test("planner issuer resolves authenticated current identities and rejects stale
     if (!prepared) return
     const review = createPlannerPreparedReview({ host, issueSource: product.issueSource })
     const operation = { id: "operation", target, command: prepared.command, idempotencyKey: "edit", commandDigest: prepared.mutation.commandDigest, expectedVersion: 0, requiredAuthority: [], preview: { values: [{ id: "line:1:forecast", currency: "USD", value: 42 }] } } as unknown as PreparedCommand
-    expect(await review(operation, binding)).toMatchObject({ status: "ok", value: { originalTargetDigest: digestSfValue(target), fields: [{ field: "line:1:forecast", before: null, after: 42, beforeCurrency: "USD", afterCurrency: "USD" }], source: first.value.evidence } })
+    expect(await review(operation, binding)).toMatchObject({ status: "ok", value: { originalTargetDigest: digestSfValue(target), targetLabel: "Licenses", fields: [{ field: "line:1:forecast", before: null, after: 42, beforeCurrency: "USD", afterCurrency: "USD" }], source: first.value.evidence } })
     expect(await review({ ...operation, preview: { ...operation.preview, values: [{ ...operation.preview.values[0]!, value: 43 }] } }, binding)).toMatchObject({ status: "stale" })
     const staged = structuredClone(captured)
     expect(prepared.mutation.execute(staged, actor, environment)).toMatchObject({ commit: true, value: { status: "applied" } })
