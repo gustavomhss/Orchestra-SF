@@ -9,10 +9,12 @@ import { handleSfAnalysis } from "./analysis-http.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
 import { decisionCreateForm, decisionCreateScript } from "../ui/decision-create.ts"
 import { handleSfPlannerMonthly } from "./planner-http.ts"
+import { handleSfForecastInput } from "./forecast-http.ts"
+import { forecastAnalysisForm, forecastAnalysisScript } from "../ui/forecast-analysis.ts"
 
 /** Mount in the existing authenticated application; authority remains private to the host. */
 export function createSfWorkbenchHttp(input: { origin: string; mount: string; runtime: () => SfHostServices | undefined }) {
-  const modes = ["workbench", "workbench-case", "workbench-work", "workbench-work-select", "workbench-search", "workbench-routine", "workbench-command", "workbench-analysis", "workbench-planner"] as const
+  const modes = ["workbench", "workbench-case", "workbench-work", "workbench-work-select", "workbench-search", "workbench-routine", "workbench-command", "workbench-analysis", "workbench-planner", "workbench-forecast"] as const
   return async (request: Request, surface: string): Promise<Response | undefined> => {
     const url = new URL(request.url)
     const mode = url.searchParams.get("sf")
@@ -28,6 +30,10 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
     if (mode === "workbench-planner") {
       if (surface !== "planner" || [...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1) return reply({ status: "invalid" }, 400)
       return handleSfPlannerMonthly(request, input.origin, runtime)
+    }
+    if (mode === "workbench-forecast") {
+      if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1) return reply({ status: "invalid" }, 400)
+      return handleSfForecastInput(request, input.origin, runtime)
     }
     if (mode === "workbench-work-select") {
       if (request.method !== "GET" && request.method !== "HEAD") return reply({ status: "denied" }, 405)
@@ -116,8 +122,9 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
       const workOutput = operation === "sf_work_list" && result?.status === "ok" ? decodeSfOperationOutput("sf_work_list", result.result) : undefined
       const routineOutput = operation === "sf_routine_status" && result?.status === "ok" ? decodeSfOperationOutput("sf_routine_status", result.result) : undefined
       const searchOutput = operation === "sf_knowledge_search" && result?.status === "ok" ? decodeSfOperationOutput("sf_knowledge_search", result.result) : undefined
-      const body = caseOutput?.ok ? decisionDesk(caseOutput.value) : workOutput?.ok ? workList(workOutput.value) : routineOutput?.ok ? routineStatus(routineOutput.value) : searchOutput?.ok ? `<h2>Search results</h2>${searchOutput.value.matches.length ? `<ul>${searchOutput.value.matches.map((item) => `<li><strong>${esc(item.documentRef.refId)}</strong><p>${esc(item.text)}</p></li>`).join("")}</ul>` : "<p>No accessible results.</p>"}${searchOutput.value.limitations.map((item) => `<p>${esc(item)}</p>`).join("")}` : forms
-      const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, `<p><a href="?sf=workbench">Workbench</a></p>${body}`), "").replace("</script>", `${decisionCreateScript}</script>`)
+      const body = caseOutput?.ok ? decisionDesk(caseOutput.value) + await forecastAnalysisForm(caseOutput.value, runtime) : workOutput?.ok ? workList(workOutput.value) : routineOutput?.ok ? routineStatus(routineOutput.value) : searchOutput?.ok ? `<h2>Search results</h2>${searchOutput.value.matches.length ? `<ul>${searchOutput.value.matches.map((item) => `<li><strong>${esc(item.documentRef.refId)}</strong><p>${esc(item.text)}</p></li>`).join("")}</ul>` : "<p>No accessible results.</p>"}${searchOutput.value.limitations.map((item) => `<p>${esc(item)}</p>`).join("")}` : forms
+      if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
+      const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, `<p><a href="?sf=workbench">Workbench</a></p>${body}`), "").replace("</script>", `${decisionCreateScript}${forecastAnalysisScript}</script>`)
       return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
     } finally { runtime.ui.finish(admitted.value) }
   }

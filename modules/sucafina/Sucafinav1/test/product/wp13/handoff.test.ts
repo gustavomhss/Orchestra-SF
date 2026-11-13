@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
 import { createPortfolioPort } from "../../../product/portfolio/port.ts"
-import { preparePortfolioChoice, portfolioEvaluationDigest } from "../../../product/portfolio/handoff.ts"
+import { preparePortfolioChoice, promotePortfolioAlternative, portfolioEvaluationDigest } from "../../../product/portfolio/handoff.ts"
 import type { PortfolioHost } from "../../../product/portfolio/port.ts"
 import type { DecisionCasePort } from "../../../product/contracts/ports.ts"
 import type { AuthorizedCaseProjection } from "../../../product/contracts/business-context.ts"
@@ -39,4 +39,25 @@ test("prepares through the WP11 port only when the persisted human choice matche
   expect(prepared).toBe(1)
   expect(await preparePortfolioChoice({ ...input, request: { ...request, priorities: ["changed-priority"] } }, context)).toEqual({ status: "stale", reason: "combination-changed" })
   expect(prepared).toBe(1)
+})
+
+
+test("promotes the reviewed combination through the case domain only for a human", async () => {
+  const combinedRequest = { ...request, candidateRefs: ["a", "b"], explorationLimit: 3 }
+  const combinedHost: PortfolioHost = { ...host, resolveCandidate: async (ref) => {
+    const changes = [{ kind: "replace" as const, targetRef: `line:${ref}`, amount: 40 }]
+    return { status: "ok", value: { ref, caseRef: "case", operations: changes, scenario: { baseRef: "base", operations: changes, assumptions: [] } } }
+  } }
+  const portfolio = createPortfolioPort(combinedHost)
+  const evaluated = await portfolio.evaluate(combinedRequest, context)
+  if (evaluated.status !== "ok") throw new Error(evaluated.reason)
+  const selected = evaluated.value.combinations.find((item) => item.caseRefs.length === 2)!
+  const calls: unknown[] = []
+  const ref = { id: "case", incarnation: "one", version: 2 }
+  const input = { portfolio, host: combinedHost, decisions: { addAlternative: async (value: unknown) => { calls.push(value); return { status: "ok" as const, value: { caseRef: { ...ref, version: 3 } } } } }, request: combinedRequest, selectedCandidateRefs: ["a", "b"], combinationId: selected.id, expectedEvaluationDigest: portfolioEvaluationDigest(combinedRequest, evaluated.value), caseRef: ref, title: "Combined", coverageRef: "case-coverage" }
+  expect((await promotePortfolioAlternative(input, context)).status).toBe("ok")
+  expect(calls).toEqual([{ caseRef: ref, title: "Combined", coverageRef: "case-coverage", scenario: { baseRef: "base", operations: [{ kind: "replace", targetRef: "line:a", amount: 40 }, { kind: "replace", targetRef: "line:b", amount: 40 }], assumptions: [] } }])
+  expect(await promotePortfolioAlternative({ ...input, expectedEvaluationDigest: "stale" }, context)).toEqual({ status: "stale", reason: "combination-changed" })
+  expect(await promotePortfolioAlternative(input, { kind: "native" } as TrustedDomainContext)).toEqual({ status: "denied", reason: "human-promotion-required" })
+  expect(calls).toHaveLength(1)
 })

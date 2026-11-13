@@ -5,7 +5,7 @@ import { createPortfolioPort } from "./port.ts"
 import { createPersistentPortfolioPort } from "./result-store.ts"
 import { createPersistentSensitivityPort } from "./sensitivity-store.ts"
 import { createPersistentPortfolioCapabilities } from "./persistent-capabilities.ts"
-import { preparePortfolioChoice } from "./handoff.ts"
+import { preparePortfolioChoice, promotePortfolioAlternative } from "./handoff.ts"
 import type { DecisionCasePort } from "../contracts/ports.ts"
 
 /** One port is shared by UI and capability dispatch; all authority remains host-provided. */
@@ -14,7 +14,7 @@ export function createPortfolioContribution(input: {
   enabledOperations: readonly ("sf_portfolio_evaluate" | "sf_sensitivity_evaluate")[]
   plannerHost: Omit<Parameters<typeof createPortfolioPlannerHost>[0], "resolveCandidate">
   createReceipt: Parameters<typeof createPortfolioCapabilities>[1]
-  decisions: Parameters<typeof preparePortfolioChoice>[0]["decisions"]
+  decisions: Parameters<typeof preparePortfolioChoice>[0]["decisions"] & Partial<Parameters<typeof promotePortfolioAlternative>[0]["decisions"]>
   persistence?: Omit<Parameters<typeof createPersistentPortfolioPort>[0], "portfolio"> & Pick<Parameters<typeof createPersistentPortfolioCapabilities>[0], "caseFor">
 }) {
   const host = createPortfolioPlannerHost({ ...input.plannerHost, resolveCandidate: createDecisionCandidateResolver(input.cases) })
@@ -27,6 +27,7 @@ export function createPortfolioContribution(input: {
     persistent,
     persistentSensitivity,
     capabilities: capabilities.filter((descriptor) => input.enabledOperations.some((operation) => operation === descriptor.id)),
+    promoteAlternative: (request: Omit<Parameters<typeof promotePortfolioAlternative>[0], "portfolio" | "host" | "decisions">, context: Parameters<typeof promotePortfolioAlternative>[1]) => input.decisions.addAlternative ? promotePortfolioAlternative({ ...request, portfolio: port, host, decisions: { addAlternative: input.decisions.addAlternative } }, context) : Promise.resolve({ status: "unavailable" as const, reason: "alternative-promotion-unavailable" }),
     prepareChoice: (request: Omit<Parameters<typeof preparePortfolioChoice>[0], "portfolio" | "host" | "cases" | "decisions">, context: Parameters<typeof preparePortfolioChoice>[1]) => preparePortfolioChoice({ ...request, portfolio: port, host, cases: input.cases, decisions: input.decisions }, context),
   }
 }

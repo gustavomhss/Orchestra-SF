@@ -7,7 +7,8 @@ import type { BusinessEvidenceRef } from "../../../product/contracts/business-co
 import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
 import type { CostCoverageAssessment, CostCoverageBasis, ScenarioResult } from "../../../product/contracts/decisions.ts"
 import type { SensitivityRequest } from "../../../product/contracts/operations.ts"
-import type { DomainPortHost, PlannerSourceHost, PortfolioPort } from "../../../product/contracts/ports.ts"
+import type { DomainPortHost, PlannerSourceHost } from "../../../product/contracts/ports.ts"
+import type { PortfolioPort } from "../../../product/portfolio/port.ts"
 import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
 import { comparePlannerPreview } from "../../../product/planner/preview-comparison.ts"
 import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
@@ -49,7 +50,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     const evidenceIdentity: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", refId: "v0", installationId: "install", projectId: "project", refDigest: "", evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "planner-version", recordId: "v0", incarnation: "planner-v0", version: 1, fields: Object.keys(projection), period: horizon, projectionDigest: digestSfValue({ versionId: "v0", projection }) } }
     const evidence = { ...evidenceIdentity, refDigest: digestSfEvidenceRef(evidenceIdentity) }
     const basis: CostCoverageBasis = { id: "renewal-transition", version: 1, decisionType: "renewal-transition-v1", categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs: [evidence] }
-    const sourceCoverage: CostCoverageAssessment = { basisId: basis.id, basisVersion: basis.version, alternativeId: "v0", alternativeVersion: 1, currency: "USD", horizon, issues: [], evaluatedSourceRefs: [evidence], coverageState: "pending", entries: RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => categoryId === "training" ? { status: "pending", categoryId, reason: "missing-category" } : { status: "not-applicable", categoryId, justification: "No category disposition is present in this Planner source.", evidenceRefs: [evidence] }), derivedMissingCategoryIds: ["training"] }
+    const sourceCoverage: CostCoverageAssessment = { basisId: basis.id, basisVersion: basis.version, alternativeId: "v0", alternativeVersion: 1, currency: "USD", horizon, issues: [], evaluatedSourceRefs: [evidence], coverageState: "pending", entries: RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => ({ status: "pending" as const, categoryId, reason: "missing-category" })), derivedMissingCategoryIds: [...RENEWAL_TRANSITION_CATEGORIES] }
     const baseline = { result: undefined as ScenarioResult | undefined }
     const host: DomainPortHost = {
       persistence: store,
@@ -113,11 +114,11 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     expect(saved.value.sensitivity.evaluated.map((point) => point.parameterValue)).toEqual([100000, 110000, 120000])
     expect(saved.value.sensitivity.evaluated.every((point) => point.value === null)).toBe(true)
     expect(saved.value.sensitivity.threshold).toBeNull()
-    expect(saved.value.sensitivity.thresholdEvidence).toEqual({ state: "unavailable", reason: "exact-threshold-not-proven" })
+    expect(saved.value.sensitivity.thresholdEvidence).toEqual({ state: "unavailable", reason: "sample-value-unavailable" })
     expect(saved.value.sensitivity.costCoverageRefs).toEqual(["coverage-v0"])
     expect(saved.value.sensitivity.comparisonStatus).toBe("conditioned")
     expect(saved.value.sensitivity.unresolvedConditions.some((condition) => condition.reason === "missing-category:training")).toBe(true)
-    expect(saved.value.sensitivity.unresolvedConditions.some((condition) => condition.reason.includes("known subtotal differences do not establish a complete threshold"))).toBe(true)
+    expect(saved.value.sensitivity.unresolvedConditions.some((condition) => condition.reason.includes("unresolved coverage can change the decision"))).toBe(true)
     expect((await persistent.read(saved.value.sensitivityResultRef, context)).status).toBe("ok")
   } finally {
     await store.dispose()

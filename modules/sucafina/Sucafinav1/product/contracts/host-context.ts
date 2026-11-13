@@ -9,6 +9,7 @@ import type { SfNativeAdmission, SfSelectedRuntime } from "./runtime.ts"
 import type { BusinessPorts, PortResult } from "./ports.ts"
 import type { TrustedDomainContext, TrustedExecutionBinding } from "./sf-execution.ts"
 import type { Period } from "./context.ts"
+import type { ContributionEnvelope } from "./resident-ai.ts"
 import type { SfNativeRunRecord } from "./state.ts"
 import type { TrustedUiContext } from "./sf-execution.ts"
 import type { ForecastExplainInput } from "./skill-inputs.ts"
@@ -46,7 +47,9 @@ export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
   /** Human-authorized product operations; native tickets and bindings never cross this boundary. */
   analyses?: {
     start: (context: TrustedUiContext, input: Omit<Parameters<typeof runSfAnalysis>[0], "host" | "request"> & { request: Omit<Parameters<typeof runSfAnalysis>[0]["request"], "contextFingerprint">; model: ModelV2.Ref }) => Promise<PortResult<{ runRef: string }>>
+    list: (context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number }) => Promise<PortResult<readonly { runRef: string; state: SfNativeRunRecord["state"]; version: number; outputRef?: string }[]>>
     read: (context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>
+    output: (context: TrustedUiContext, runRef: string) => Promise<PortResult<ContributionEnvelope>>
     cancel: (context: TrustedUiContext, runRef: string) => Promise<PortResult<{ cancelled: boolean }>>
   }
   sessions: SfHostSessionPort

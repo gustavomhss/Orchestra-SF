@@ -13,7 +13,7 @@ export function createPortfolioPlannerHost(input: {
   revalidateEvaluation: PortfolioHost["revalidateEvaluation"]
   sensitivity?: PortfolioHost["sensitivity"]
   scenarioRequest: (request: PortfolioRequest, candidates: readonly PortfolioCandidate[], operations: readonly ScenarioOperation[], context: TrustedDomainContext) => Promise<PortResult<ScenarioRequest>>
-  assess: (request: PortfolioRequest, candidates: readonly PortfolioCandidate[], result: ScenarioResult, context: TrustedDomainContext) => Promise<PortResult<{ costCoverageRefs: readonly string[]; analysis?: PortfolioCombination["analysis"]; constraints: readonly { ref: string; state: "satisfied" | "failed" | "unknown"; reason: string }[] }>>
+  assess: (request: PortfolioRequest, candidates: readonly PortfolioCandidate[], result: ScenarioResult, context: TrustedDomainContext, scenario: ScenarioRequest) => Promise<PortResult<{ costCoverageRefs: readonly string[]; analysis?: PortfolioCombination["analysis"]; constraints: readonly { ref: string; state: "satisfied" | "failed" | "unknown"; reason: string }[] }>>
 }): PortfolioHost {
   return {
     resolveCandidate: input.resolveCandidate,
@@ -27,7 +27,7 @@ export function createPortfolioPlannerHost(input: {
       if (digestSfValue(scenario.value.operations) !== digestSfValue(operations)) return { status: "conflict", reason: "scenario-operations-mismatch" }
       const result = await input.planner.simulateScenario(scenario.value, context)
       if (result.status !== "ok") return result
-      const assessment = await input.assess(request, candidates, result.value, context)
+      const assessment = await input.assess(request, candidates, result.value, context, scenario.value)
       if (assessment.status !== "ok") return assessment
       if (!await input.revalidate(context)) return { status: "stale", reason: "authority-changed" }
       return { status: "ok", value: { scenario: result.value, ...assessment.value } }

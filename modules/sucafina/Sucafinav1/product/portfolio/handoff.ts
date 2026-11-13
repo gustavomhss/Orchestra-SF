@@ -50,3 +50,37 @@ export async function preparePortfolioChoice(input: {
   if (!(await input.host.revalidate(context))) return { status: "stale", reason: "authority-changed" }
   return input.decisions.prepareChanges({ caseRef: input.caseRef, choiceId: input.choiceId, operations }, context)
 }
+
+/** Promote a reviewed combination to a case alternative through WP11's authorized human action. */
+export async function promotePortfolioAlternative(input: {
+  portfolio: PortfolioPort
+  host: PortfolioHost
+  decisions: { addAlternative: (request: { caseRef: CaseRef; title: string; scenario: import("../contracts/operations.ts").ScenarioRequest; coverageRef: string }, context: TrustedDomainContext) => Promise<PortResult<{ caseRef: CaseRef; resultRef?: string }>> }
+  request: PortfolioRequest
+  selectedCandidateRefs: readonly string[]
+  combinationId: string
+  expectedEvaluationDigest: string
+  caseRef: CaseRef
+  title: string
+  coverageRef: string
+}, context: TrustedDomainContext): Promise<PortResult<{ caseRef: CaseRef; resultRef?: string }>> {
+  if (context.kind !== "ui") return { status: "denied", reason: "human-promotion-required" }
+  if (!input.title.trim() || !input.coverageRef.trim() || !input.selectedCandidateRefs.length || new Set(input.selectedCandidateRefs).size !== input.selectedCandidateRefs.length || input.selectedCandidateRefs.some((ref) => !input.request.candidateRefs.includes(ref))) return { status: "needs-input", reason: "invalid-selection" }
+  const comparison = await input.portfolio.evaluate(input.request, context)
+  if (comparison.status !== "ok") return comparison
+  const selected = comparison.value.combinations.find((item) => item.id === input.combinationId)
+  if (!selected || portfolioEvaluationDigest(input.request, comparison.value) !== input.expectedEvaluationDigest) return { status: "stale", reason: "combination-changed" }
+  if (selected.eligibility === "ineligible" || selected.eligibility === "unavailable") return { status: "conflict", reason: "combination-not-available" }
+  const resolved = await Promise.all(input.selectedCandidateRefs.map((ref) => input.host.resolveCandidate(ref, context)))
+  const failure = resolved.find((item) => item.status !== "ok")
+  if (failure) return failure
+  const candidates = resolved.flatMap((item) => item.status === "ok" ? [item.value] : [])
+  const operations = [...input.request.operations, ...candidates.flatMap((candidate) => candidate.operations)]
+  if (digestSfValue({ candidates: candidates.map((candidate) => candidate.ref), operations }) !== input.combinationId) return { status: "stale", reason: "combination-changed" }
+  const first = candidates[0]
+  if (!first || candidates.some((candidate) => candidate.scenario.baseRef !== first.scenario.baseRef)) return { status: "conflict", reason: "portfolio-base-mismatch" }
+  const assumptions = candidates.flatMap((candidate) => candidate.scenario.assumptions)
+  if (assumptions.some((item) => assumptions.some((other) => other.id === item.id && digestSfValue(other) !== digestSfValue(item)))) return { status: "conflict", reason: "portfolio-assumption-conflict" }
+  if (!await input.host.revalidate(context)) return { status: "stale", reason: "authority-changed" }
+  return input.decisions.addAlternative({ caseRef: input.caseRef, title: input.title, coverageRef: input.coverageRef, scenario: { baseRef: first.scenario.baseRef, operations, assumptions: assumptions.filter((item, index) => assumptions.findIndex((other) => digestSfValue(other) === digestSfValue(item)) === index) } }, context)
+}

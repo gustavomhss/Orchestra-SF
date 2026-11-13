@@ -1,4 +1,5 @@
-import type { Command } from "../../runtime/contract.ts"
+import type { Actor, Command, Environment, Snapshot } from "../../runtime/contract.ts"
+import { simulatePlannerCommands } from "./adapter.ts"
 
 export type MonthlyDraft = {
   rowId: string
@@ -27,4 +28,12 @@ export function prepareMonthlyDrafts(page: "OPEX" | "CAPEX", versionId: string, 
     const command: Command = { page, action: "save", id: draft.rowId, version: draft.revision, values }
     return { draft, errors, command: errors.length ? undefined : command }
   })
+}
+
+/** Preview each valid row through the domain, retaining rejected and unparsed drafts. */
+export function previewMonthlyDrafts(snapshot: Snapshot, actor: Actor, environment: Environment, page: "OPEX" | "CAPEX", versionId: string, drafts: readonly MonthlyDraft[]) {
+  const prepared = prepareMonthlyDrafts(page, versionId, drafts)
+  const valid = prepared.filter((item) => item.command !== undefined)
+  const preview = simulatePlannerCommands(snapshot, actor, valid.flatMap((item) => item.command ? [item.command] : []), environment)
+  return { view: preview.view, rows: prepared.map((item) => ({ ...item, result: item.command ? preview.results[valid.indexOf(item)] : undefined })) }
 }

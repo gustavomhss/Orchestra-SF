@@ -29,3 +29,17 @@ test("comparison does not promote a conditioned or incompatible result", () => {
   expect(comparePlannerScenarios(args)).toMatchObject({ comparisonStatus: "conditioned", knownDifference: 10, completeDifference: null })
   expect(comparePlannerScenarios({ ...args, alternative: { ...conditioned, currency: "EUR" } })).toMatchObject({ comparisonStatus: "incompatible", knownDifference: null })
 })
+
+test("unknown non-financial criteria do not erase financially complete differences", async () => {
+  const { compareScenarios } = await import("../../../product/planner/scenario-comparison-port.ts")
+  const source = evidence as Extract<BusinessEvidenceRef, { kind: "record" }>
+  const component = { ...projection.components[0]!, sourceRefs: [{ surface: "planner" as const, type: "planner-version", id: "v", incarnation: "inc", version: 1, fields: ["amount"], period, observedAt: "2026-11-13T00:00:00Z" }] }
+  const proofProjection = { ...projection, components: [component] }
+  const result = { id: "result", version: 1, components: [component], currency: "USD", horizon: period, sourceRefs: [source], costCoverage: complete as Extract<CostCoverageAssessment, { coverageState: "complete" }>, unresolvedConditions: [], restrictions: [], comparisonStatus: "complete" as const, knownSubtotal: 0, total: 0 }
+  const host = { revalidate: async () => true } as unknown as import("../../../product/contracts/ports.ts").DomainPortHost
+  const sources: import("../../../product/contracts/ports.ts").PlannerSourceHost = { resolveForecastSource: async () => ({ status: "ok", value: { versionId: "v", evidence: source } }), resolveForecastCoverage: async (reference) => ({ status: "ok", value: { coverageRef: reference, basis, assessment: complete } }) }
+  const clock = { ticks: 0 }
+  const scenarios = { resolve: async (reference: string) => ({ status: "ok" as const, value: { result, coverageRef: `coverage-${reference}`, basis, projection: { ...proofProjection, components: proofProjection.components.map((item) => ({ ...item, sourceRefs: item.sourceRefs.map((ref) => ({ ...ref, observedAt: `tick-${++clock.ticks}` })) })) }, source } }) }
+  const context = {} as import("../../../product/contracts/sf-execution.ts").TrustedDomainContext
+  expect(await compareScenarios({ host, sources, scenarios }, { scenarioRefs: ["base", "candidate"], criteria: ["delivery"] }, context)).toMatchObject({ status: "ok", value: { comparisonStatus: "complete", completeDifference: 0, criterionResults: [{ criterionId: "delivery", state: "unknown" }] } })
+})

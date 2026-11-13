@@ -5,7 +5,7 @@ import type { CostCoverageBasis, ScenarioResult } from "../contracts/decisions.t
 import type { ScenarioCompareRequest } from "../contracts/operations.ts"
 import type { DomainPortHost, PlannerPort, PlannerSourceHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
-import { comparePlannerScenarios } from "./comparison.ts"
+import { comparePlannerScenarios, plannerComponentDigest } from "./comparison.ts"
 
 type ResolvedScenario = { result: ScenarioResult; coverageRef: string; basis: CostCoverageBasis; projection: DomainProjection; source: Extract<BusinessEvidenceRef, { kind: "record" }> }
 export type PlannerScenarioHost = { resolve: (reference: string, context: TrustedDomainContext) => Promise<PortResult<ResolvedScenario>> }
@@ -28,7 +28,11 @@ export async function compareScenarios(input: { host: DomainPortHost; sources: P
   if ((await validateSources()).some((item) => !item)) return { status: "stale", reason: "scenario-source-or-coverage-changed" }
   const comparison = comparePlannerScenarios({ baselineRef: request.scenarioRefs[0], alternativeRef: request.scenarioRefs[1], baselineCoverageRef: values[0].coverageRef, alternativeCoverageRef: values[1].coverageRef, baseline: values[0].result, alternative: values[1].result, baselineProof: values[0], alternativeProof: values[1] })
   const again = await Promise.all(request.scenarioRefs.map((reference) => input.scenarios.resolve(reference, binding)))
-  if (!(await input.host.revalidate(binding)) || again.some((entry, index) => digestSfValue(entry) !== digestSfValue(resolved[index])) || (await validateSources()).some((item) => !item) || !(await input.host.revalidate(binding))) return { status: "stale", reason: "scenario-or-authority-changed" }
-  if (request.criteria.length && (comparison.comparisonStatus === "complete" || comparison.comparisonStatus === "conditioned")) return { status: "ok", value: { ...comparison, comparisonStatus: "conditioned", completeDifference: null, criterionResults: request.criteria.map((criterionId) => ({ criterionId, state: "unknown", reason: "criterion-rule-unavailable" })), unresolvedConditions: [...comparison.unresolvedConditions, "criterion-rules-unavailable"] } }
+  if (!(await input.host.revalidate(binding)) || again.some((entry, index) => entry.status !== "ok" || !values[index] || digestSfValue({ ...entry.value, projection: undefined }) !== digestSfValue({ ...values[index], projection: undefined }) || projectionDigest(entry.value.projection) !== projectionDigest(values[index].projection)) || (await validateSources()).some((item) => !item) || !(await input.host.revalidate(binding))) return { status: "stale", reason: "scenario-or-authority-changed" }
+  if (request.criteria.length && (comparison.comparisonStatus === "complete" || comparison.comparisonStatus === "conditioned")) return { status: "ok", value: { ...comparison, criterionResults: request.criteria.map((criterionId) => ({ criterionId, state: "unknown", reason: "criterion-rule-unavailable" })), unresolvedConditions: [...comparison.unresolvedConditions, "criterion-rules-unavailable"] } }
   return { status: "ok", value: comparison }
+}
+
+export function projectionDigest(projection: DomainProjection) {
+  return digestSfValue({ ...projection, context: { ...projection.context, sourceRefs: projection.context.sourceRefs.map((ref) => ({ ...ref, observedAt: "" })) }, components: plannerComponentDigest(projection.components) })
 }

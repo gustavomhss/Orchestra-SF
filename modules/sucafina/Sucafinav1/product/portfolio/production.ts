@@ -3,7 +3,8 @@ import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/b
 import type { DecisionCasePort, PlannerPort, PlannerSourceHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { createPortfolioContribution } from "./contribution.ts"
-import type { ScenarioResult } from "../contracts/decisions.ts"
+import type { PortfolioCombination, ScenarioResult } from "../contracts/decisions.ts"
+import type { PortfolioRequest, ScenarioRequest } from "../contracts/operations.ts"
 import type { PortfolioCandidate, PortfolioHost } from "./port.ts"
 
 /** Compose actual Planner, case and C08 ports without inventing a coverage assessment or comparison. */
@@ -20,6 +21,10 @@ export function createProductionPortfolio(input: {
   sensitivity?: PortfolioHost["sensitivity"]
   coverageRefFor?: (source: BusinessEvidenceRef, context: TrustedDomainContext) => Promise<PortResult<string>>
   candidateCoverageRefFor?: (candidate: PortfolioCandidate, context: TrustedDomainContext) => Promise<PortResult<string>>
+  analysis?: {
+    evaluate: (request: { portfolio: PortfolioRequest; candidates: readonly PortfolioCandidate[]; scenario: ScenarioRequest; result: ScenarioResult; costCoverageRefs: readonly string[] }, context: TrustedDomainContext) => Promise<PortResult<{ analysis: NonNullable<PortfolioCombination["analysis"]>; constraints: readonly { ref: string; state: "satisfied" | "failed" | "unknown"; reason: string }[] }>>
+    revalidate: (analysis: NonNullable<PortfolioCombination["analysis"]>, context: TrustedDomainContext) => Promise<boolean>
+  }
 }) {
   const fresh = async (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => {
     if (!refs.length || refs.some((ref) => ref.installationId !== context.binding.installationId || ref.projectId !== context.binding.projectId || ref.refDigest !== digestSfEvidenceRef(ref)) || !await input.revalidate(context)) return false
@@ -71,19 +76,27 @@ export function createProductionPortfolio(input: {
         if (assumptions.some((item, index) => assumptions.findIndex((other) => other.id === item.id && digestSfValue(other) !== digestSfValue(item)) !== -1)) return { status: "conflict", reason: "portfolio-assumption-conflict" }
         return { status: "ok", value: { baseRef: first.scenario.baseRef, operations, assumptions: assumptions.filter((item, index) => assumptions.findIndex((other) => digestSfValue(other) === digestSfValue(item)) === index) } }
       },
-      assess: async (request, candidates, scenario, context) => {
+      assess: async (request, candidates, scenario, context, scenarioRequest) => {
         if (!await fresh(evidenceRefs(scenario), context)) return { status: "stale", reason: "portfolio-sources-unavailable" }
         const result = await coverage(scenario.sourceRefs, scenario.costCoverage, context)
         if (result.status !== "ok") return result
         const candidatesResult = await candidateCoverage(candidates, context)
         if (candidatesResult.status !== "ok") return candidatesResult
-        return { status: "ok", value: { costCoverageRefs: [...new Set([...result.value, ...candidatesResult.value])], constraints: request.constraints.map((ref) => ({ ref, state: "unknown" as const, reason: "criterion-rule-unavailable" })) } }
+        const costCoverageRefs = [...new Set([...result.value, ...candidatesResult.value])]
+        if (!input.analysis) return { status: "ok", value: { costCoverageRefs, constraints: request.constraints.map((ref) => ({ ref, state: "unknown" as const, reason: "criterion-rule-unavailable" })) } }
+        const analysis = await input.analysis.evaluate({ portfolio: request, candidates, scenario: scenarioRequest, result: scenario, costCoverageRefs }, context)
+        if (analysis.status !== "ok") return analysis
+        if (costCoverageRefs.some((ref) => !analysis.value.analysis.comparison.costCoverageRefs.includes(ref))) return { status: "stale", reason: "candidate-coverage-not-in-analysis" }
+        return { status: "ok", value: { costCoverageRefs: analysis.value.analysis.comparison.costCoverageRefs, ...analysis.value } }
       },
       revalidateEvaluation: async (scenario, refs, analysis, context, candidates) => {
-        if (analysis || !await fresh(evidenceRefs(scenario), context)) return false
+        if (!await fresh(evidenceRefs(scenario), context)) return false
         const current = await coverage(scenario.sourceRefs, scenario.costCoverage, context)
         const candidatesResult = await candidateCoverage(candidates, context)
-        return current.status === "ok" && candidatesResult.status === "ok" && digestSfValue([...new Set([...current.value, ...candidatesResult.value])]) === digestSfValue(refs)
+        if (current.status !== "ok" || candidatesResult.status !== "ok") return false
+        const known = [...new Set([...current.value, ...candidatesResult.value])]
+        if (analysis) return !!input.analysis && known.every((ref) => refs.includes(ref)) && await input.analysis.revalidate(analysis, context)
+        return digestSfValue(known) === digestSfValue(refs)
       },
     },
   })
