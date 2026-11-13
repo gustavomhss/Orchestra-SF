@@ -3,6 +3,7 @@ import { projectProcurementSource } from "../../../product/procurement/port.ts"
 import { digestProcurementSource } from "../../../product/procurement/sources.ts"
 import { digestSfEvidenceRef } from "../../../product/contracts/canonical.ts"
 import { domain } from "../../../runtime/procurement.ts"
+import { object } from "../../../runtime/contract.ts"
 import type { Snapshot } from "../../../runtime/contract.ts"
 import type { ProductContext } from "../../../product/contracts/context.ts"
 import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
@@ -105,19 +106,33 @@ test("sourcing comparison reads the authorized request and uses frozen FX", asyn
   expect(result.status).toBe("ok")
   if (result.status !== "ok") return
   expect(result.value.ranking).toEqual(["A", "B"])
-  expect(result.value.proposals.find((quote) => quote.proposalRef === "B")?.convertedAmount).toBeCloseTo(30240, 6)
-  expect(result.value).toMatchObject({ weights: { technical: 60, commercial: 40 }, selection: { proposalRef: null, reason: null }, proposals: expect.arrayContaining([expect.objectContaining({ proposalRef: "B", money: { originalAmount: 28000, originalCurrency: "EUR", baseCurrency: "USD", fxRate: 1.08, fxSource: "submitted" }, components: expect.objectContaining({ overall: expect.any(Number) }) })]) })
+  const proposalB = result.value.proposals.find((quote) => quote.proposalRef === "B")
+  expect(proposalB?.convertedAmount).toBeCloseTo(30240, 6)
+  expect(object(object(result.value).weights).technical).toBe(60)
+  expect(object(object(result.value).weights).commercial).toBe(40)
+  expect(object(result.value).selection).toEqual({ proposalRef: null, reason: null })
+  expect(object(proposalB).money).toEqual({ originalAmount: 28000, originalCurrency: "EUR", baseCurrency: "USD", fxRate: 1.08, fxSource: "submitted" })
+  expect(object(object(proposalB).components).overall).toBe(85)
   expect(result.value.proposals.find((quote) => quote.proposalRef === "A")?.score).toBeCloseTo(87.933333, 4)
   const { createProcurementSourcingEvidence } = await import("../../../product/procurement/sourcing-evidence.ts")
   const facts = await createProcurementSourcingEvidence(host)("r", binding)
-  expect(facts).toMatchObject({ status: "ok", value: { stage: "src_pending", submittedBaseCurrency: "USD", submittedFx: expect.arrayContaining([{ from: "EUR", rate: 1.08 }]), offers: expect.arrayContaining([expect.objectContaining({ offerRef: "B", amount: 28000, currency: "EUR", version: 4 })]), weights: { technical: 60, commercial: 40 }, comparison: { ranking: ["A", "B"] } } })
+  expect(facts.status).toBe("ok")
+  if (facts.status !== "ok") throw new Error("sourcing evidence unavailable")
+  expect(facts.value.stage).toBe("src_pending")
+  expect(facts.value.submittedBaseCurrency).toBe("USD")
+  expect(facts.value.submittedFx).toContainEqual({ from: "EUR", rate: 1.08 })
+  expect(facts.value.offers.find((offer) => offer.offerRef === "B")).toEqual({ offerRef: "B", amount: 28000, currency: "EUR", version: 4, technicalPass: true })
+  expect(facts.value.weights.technical).toBe(60)
+  expect(facts.value.weights.commercial).toBe(40)
+  expect(facts.value.comparison?.ranking).toEqual(["A", "B"])
   expect((await createProcurementSourcingEvidence(host)("forged", binding)).status).toBe("denied")
   const missingCurrency = structuredClone(snapshot)
   missingCurrency.data.store.requests["PR-1"].request.sourcing.quotes[1]!.currency = ""
   const incompleteHost = { ...host, persistence: { transaction: async (_surface, work) => (await work(structuredClone(missingCurrency))).value }, resolveRequestSource: async () => ({ status: "ok" as const, value: { evidence: currentRef(missingCurrency, reference, "buyer"), context } }) } satisfies import("../../../product/procurement/port.ts").ProcurementSourceHost
   const missingFacts = await createProcurementSourcingEvidence(incompleteHost)("r", binding)
-  expect(missingFacts).toMatchObject({ status: "ok", value: { offers: expect.arrayContaining([expect.objectContaining({ offerRef: "B", currency: null })]) } })
+  expect(missingFacts.status).toBe("ok")
   if (missingFacts.status !== "ok" || !missingFacts.value.comparison) throw new Error("comparison unavailable")
+  expect(missingFacts.value.offers.find((offer) => offer.offerRef === "B")?.currency).toBeNull()
   expect(missingFacts.value.comparison.ranking).toEqual([])
   expect(missingFacts.value.comparison.proposals.every((proposal) => proposal.score === null)).toBe(true)
   expect(missingFacts.value.comparison.proposals.find((proposal) => proposal.proposalRef === "B")?.convertedAmount).toBeNull()
@@ -229,7 +244,8 @@ test("revocation during the domain read prevents returning the projection", asyn
 test("projection reports PO original amount and submitted FX without replacing the base value", () => {
   const ref = { ...evidence, target: { ...evidence.target, fields: ["originalAmount", "originalCurrency", "fxRate", "fxSource", "baseAmount", "monetaryState"] } }
   const projection = projectProcurementSource({ status: "po_approved", value: 30240, po: { currency: "EUR", fxRate: 1.08, approvalBaseCurrency: "USD", lines: [{ qty: 1, unitPrice: 28000 }] } }, context, ref, "2026-01-01T00:00:00Z", { fxRates: [{ code: "EUR", rate: 2 }] })
-  expect(Object.fromEntries(projection.values.map((value) => [value.id, value.value]))).toEqual({ baseAmount: 30240, originalAmount: 28000, originalCurrency: "EUR", fxRate: 1.08, fxSource: "submitted", monetaryState: "approved" })
+  expect(Object.fromEntries(projection.values.map((value) => [value.id, value.value]))).toEqual({ baseAmount: 28000 * 1.08, originalAmount: 28000, originalCurrency: "EUR", fxRate: 1.08, fxSource: "submitted", monetaryState: "approved" })
+  expect(projection.values.find((value) => value.id === "baseAmount")?.value).toBeCloseTo(30240, 6)
   const historical = projectProcurementSource({ status: "po_approved", value: null, po: { currency: "EUR", fxRate: 1.08, approvalBaseCurrency: "USD", approval: { amount: 30240 }, lines: [{ qty: 1, unitPrice: 28000 }] } }, { ...context, currency: "EUR" }, { ...ref, target: { ...ref.target, fields: ["baseAmount", "submittedAmount", "submittedCurrency", "submittedFxRate"] } })
   expect(Object.fromEntries(historical.values.map((value) => [value.id, value.value]))).toEqual({ baseAmount: null, submittedAmount: 30240, submittedCurrency: "USD", submittedFxRate: 1.08 })
 })

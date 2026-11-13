@@ -49,7 +49,7 @@ test("confirmation reauthorizes material across buyers and fences physical repla
       authenticate: async (request: Request) => {
         const principalRef = request.headers.get("x-principal")
         const role = principalRef ? principals.get(principalRef) : undefined
-        return principalRef && role ? { id: principalRef, canWrite: true, roles: [{ surface: "procurement" as const, role }] } : undefined
+        return principalRef && role ? { id: principalRef, canWrite: true, roles: [{ surface: "procurement" as const, role }] } : null
       },
     }
     const period = { start: "2026-01-01", end: "2026-12-31" }

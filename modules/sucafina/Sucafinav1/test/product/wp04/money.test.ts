@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { initialProcurementSettings } from "../../../src/initial-settings.ts"
 import { procurementDashboard, requestValue } from "../../../src/procurement-screen.ts"
 import type { RequestView } from "../../../src/procurement-screen.ts"
 
@@ -74,7 +75,9 @@ test("approval queue retains missing steps and does not invent holder names or a
     { number: "PR-self", status: "pr_pending", createdBy: "buyer", prApproval: { amount: 20, steps: [{ status: "pending", holderId: "buyer" }] } },
   ]
   const queue = myApprovals(requests, "buyer")
-  expect(queue.unassigned).toEqual([{ number: "PR-no-step", amount: 10 }, { number: "PR-no-approval", amount: null }, { number: "PR-unknown-stage", amount: null }])
+  expect(queue.unassigned).toEqual([{ number: "PR-no-approval", amount: null }, { number: "PR-no-step", amount: 10 }, { number: "PR-unknown-stage", amount: null }])
+  expect(queue.waitingForYou).toEqual([{ number: "PR-self", amount: 20 }])
+  expect(queue.waitingForOthers).toEqual([{ number: "PR-unknown-holder", amount: 30 }])
   const html = render("My approvals", { requests, directory: [], formSettings: { currency: "USD", blockSelfApproval: true } }, { actor: { id: "buyer", roles: ["buyer"], canWrite: true }, year: 2026, month: 1, at: "2026-01-01T00:00:00Z", versions: {} })!
   expect(html).toContain("PR-no-step")
   expect(html).toContain("PR-no-approval")
@@ -187,13 +190,15 @@ test("request detail displays current stage validation without mutating the draf
 
 test("requisition rejection returns field errors from the actual validator", async () => {
   const { domain } = await import("../../../runtime/procurement.ts")
-  const snapshot = { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
+  const snapshot = { data: { store: { settings: initialProcurementSettings() } }, versions: {}, sequences: {}, audit: [], notices: [] }
   const actor = { id: "a", roles: ["requester"], canWrite: true }
   const environment = { at: "2026-01-01T00:00:00Z", directory: [], id: () => "unused" }
   expect(domain.execute(snapshot, actor, { page: "Requests", action: "create", version: 0, values: { pr: { title: "Draft" } } }, environment).ok).toBe(true)
   const requests = domain.view(snapshot, actor, environment).data.requests as Record<string, unknown>[]
   const result = domain.execute(snapshot, actor, { page: "Requests", action: "submit_pr", id: String(requests[0]!.number), version: 1, values: {} }, environment)
-  expect(result).toMatchObject({ ok: false, status: 422, fieldErrors: expect.arrayContaining([{ field: "pr.justification", message: "Business justification is required" }]) })
+  expect(result).toMatchObject({ ok: false, status: 422 })
+  if (result.ok || !("fieldErrors" in result)) throw new Error("incomplete requisition did not return field errors")
+  expect(result.fieldErrors).toContainEqual({ field: "pr.justification", message: "Business justification is required" })
 })
 
 test("supplier controls reflect existing buyer and supplier admin roles", async () => {

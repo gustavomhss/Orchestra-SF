@@ -42,6 +42,22 @@ test("supplier activation reports recorded prerequisites and duplicate tax IDs r
   expect(domain.execute(state, admin, { page: "Suppliers", action: "activate", id: "supplier-1", version: 1, values: {} }, environment)).toMatchObject({ ok: false, status: 422, errors: expect.arrayContaining(["Recorded activation prerequisite missing: contactEmail", "Recorded activation prerequisite missing: dueDiligence"]) })
 })
 
+test("duplicate legal names warn on success while distinct tax IDs remain separate", () => {
+  const state: Snapshot = { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
+  expect(domain.execute(state, buyer, { page: "Suppliers", action: "create", version: 0, values: { legalName: "Same legal name", taxId: "SYNTHETIC-TAX-1" } }, environment)).toMatchObject({ ok: true, warnings: [] })
+  const duplicateName = domain.execute(state, buyer, { page: "Suppliers", action: "create", version: 0, values: { legalName: "Same legal name", taxId: "SYNTHETIC-TAX-2" } }, { ...environment, id: () => "supplier-2" })
+  expect(duplicateName).toMatchObject({ ok: true, warnings: ["Duplicate legalName recognized"] })
+  const suppliers = domain.view(state, buyer, environment).data.suppliers as Record<string, unknown>[]
+  expect(suppliers.map((supplier) => ({ id: supplier.id, legalName: supplier.legalName, taxId: supplier.taxId }))).toEqual([
+    { id: "supplier-1", legalName: "Same legal name", taxId: "SYNTHETIC-TAX-1" },
+    { id: "supplier-2", legalName: "Same legal name", taxId: "SYNTHETIC-TAX-2" },
+  ])
+  const before = structuredClone(state)
+  const duplicateTax = domain.execute(state, buyer, { page: "Suppliers", action: "create", version: 0, values: { legalName: "Same legal name", taxId: "SYNTHETIC-TAX-2" } }, { ...environment, id: () => "supplier-3" })
+  expect(duplicateTax).toMatchObject({ ok: false, status: 422, errors: ["taxId must be unique"] })
+  expect(state).toEqual(before)
+})
+
 test("Settings exposes complete baseline policy controls and secondary reset without inventing defaults", () => {
   const settings = initialProcurementSettings()
   const html = render("Settings", { settings }, { actor: { id: "settings-admin", roles: ["admin"], canWrite: true }, year: 2026, month: 11, at, versions: {} })!

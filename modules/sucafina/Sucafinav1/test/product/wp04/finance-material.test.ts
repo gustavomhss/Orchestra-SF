@@ -27,6 +27,23 @@ test("the canonical three-offer fixture preserves scoring, eligibility and exact
   expect((a - b) / b * 100).toBeCloseTo(7.142857142857142, 10)
 })
 
+test("equal complete proposals retain recorded order without adding a tie-break policy", () => {
+  const settings = initialProcurementSettings()
+  const quote = { total: 100, currency: "USD", techPass: true, scores: [5, 5, 5, 5, 5], cscores: [null, 5, 5] }
+  const sourcing = { selectedId: "", quotes: [{ ...quote, id: "B" }, { ...quote, id: "A" }] }
+  const ranked = quoteAssessment({ sourcing }, settings)
+  expect(ranked.map((item) => ({ id: item.id, rank: item.rank, overall: item.overall, complete: item.complete, eligible: item.eligible }))).toEqual([
+    { id: "B", rank: 1, overall: 100, complete: true, eligible: true },
+    { id: "A", rank: 2, overall: 100, complete: true, eligible: true },
+  ])
+  const reversed = quoteAssessment({ sourcing: { ...sourcing, quotes: [...sourcing.quotes].reverse() } }, settings)
+  expect(reversed.map((item) => ({ id: item.id, rank: item.rank, overall: item.overall }))).toEqual([
+    { id: "A", rank: 1, overall: 100 },
+    { id: "B", rank: 2, overall: 100 },
+  ])
+  expect(sourcing.selectedId).toBe("")
+})
+
 test("missing currency and incomplete purchase orders cannot inherit a base-currency estimate", () => {
   const settings = initialProcurementSettings()
   const missingCurrency = { status: "po_draft", value: 100, po: { lines: [{ qty: 1, unitPrice: 100 }] } }

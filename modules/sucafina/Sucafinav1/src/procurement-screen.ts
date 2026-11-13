@@ -111,7 +111,7 @@ export function requestValue(request: RequestView, rates: Rates): number | null 
     const currency = request.po?.currency
     if (typeof currency !== "string" || !/^[A-Z]{3}$/.test(currency)) return null
     if (currency === rates.currency) return total
-    if (request.po?.fxRate != null) return request.po.fxRate > 0 && Number.isFinite(total * request.po.fxRate) ? total * request.po.fxRate : null
+    if (request.po?.fxRate != null) return typeof request.po.fxRate === "number" && Number.isFinite(request.po.fxRate) && request.po.fxRate > 0 && Number.isFinite(total * request.po.fxRate) ? total * request.po.fxRate : null
     if (frozen) return null
     return toBase(total, currency, rates, null)
   }
@@ -447,10 +447,10 @@ function toBase(
 ): number | null {
   if (!currency || currency === rates.currency) return total
   const snap = snapshot?.[currency]
-  if (snap != null && snap > 0 && Number.isFinite(total * snap)) return total * snap
+  if (typeof snap === "number" && Number.isFinite(snap) && snap > 0 && Number.isFinite(total * snap)) return total * snap
   if (snapshot != null) return null
   const found = rates.fxRates?.find((rate) => rate.code === currency)
-  if (found && found.rate > 0 && Number.isFinite(total * found.rate)) return total * found.rate
+  if (found && typeof found.rate === "number" && Number.isFinite(found.rate) && found.rate > 0 && Number.isFinite(total * found.rate)) return total * found.rate
   return null
 }
 

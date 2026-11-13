@@ -2,7 +2,7 @@
   "wp": "WP04",
   "state": "STOPPED_INCOMPLETE",
   "branch": "sf2-procurement-ready",
-  "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/procurement-ready",
+  "worktree": "work/procurement-ready",
   "product_head_before_handoff": "f1ce05697902e88e791a2c35920a1a592a1e6e84",
   "product_tree_before_handoff": "bde18d557022404590cb9632b17ed8eaed6b215f",
   "local_base": "c873998a4bf597cb8fe3d94b48b58a7441d533e8",
@@ -64,5 +64,6 @@
     "Run change-scoped hosted CI under serial lease and package typecheck/guard only when user authorizes resumption.",
     "Grok usage exhausted (HTTP 402); do not retry before user direction."
   ],
-  "resume": "Only after explicit user resumption: inspect this handoff and exact branch HEAD, coordinate WP00/WP01/WP08/WP09/WP10/WP11 dependencies, review untested diffs, finish all five tasks, then obtain serialized hosted CI lease and one complete WP PR. Do not restart local runtime or assume external approvals."
+  "resume": "Only after explicit user resumption: inspect this handoff and exact branch HEAD, coordinate WP00/WP01/WP08/WP09/WP10/WP11 dependencies, review untested diffs, finish all five tasks, then obtain serialized hosted CI lease and one complete WP PR. Do not restart local runtime or assume external approvals.",
+  "worktree_note": "Historical checkout location normalized to a relative path; the original receipt remains at seed d183840f71eaa07244d984f314facfb76ef25799."
 }

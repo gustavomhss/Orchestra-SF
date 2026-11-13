@@ -16,6 +16,7 @@ import { isProcurementConfirmationFields } from "./confirmation-fields.ts"
 type Evidence = Extract<BusinessEvidenceRef, { kind: "record" }>
 type Available = { state: "available"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; evidence: Evidence; projection: DomainProjection }
 type Observation = Available | { state: "access-unavailable" | "dependency-unavailable" | "replaced"; sourceVersion: number }
+type ObservationProof = { state: "unavailable" | "replaced" } | { state: "same"; physical: string; material: ReturnType<typeof projectProcurementScope> }
 
 /** Host-only material observation. Unsupported fields and external dependencies fail closed. */
 export function createProcurementConfirmationObserver(input: { host: DomainPortHost; scopedSources: SfScopedSourcePort; contextFor: (context: TrustedDomainContext) => Promise<PortResult<ProductContext>> }) {
@@ -75,7 +76,7 @@ export function createProcurementConfirmationObserver(input: { host: DomainPortH
     if (issued.status !== "ok") return { state: "access-unavailable", sourceVersion: 0 }
     const request = input.host.requestFor(binding)
     if (!request || !input.host.persistence.transactionAll || !input.scopedSources.checkScopedSource) return { state: "access-unavailable", sourceVersion: 0 }
-    const proof = await input.host.persistence.transactionAll(async (snapshots) => {
+    const proof = await input.host.persistence.transactionAll<ObservationProof>(async (snapshots) => {
       const snapshot = snapshots.procurement
       const entries = Object.values(snapshot.sfSources?.scopes ?? {})
       const original = entries.filter((entry) => entry.incarnation === scope.sourceRef.incarnation && entry.scope.recordType === scope.sourceRef.type && entry.scope.recordId === scope.sourceRef.id)

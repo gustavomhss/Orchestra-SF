@@ -130,7 +130,7 @@ test("a stated total mismatch in one proposal suppresses the whole producer rank
   if (result.status !== "ok") return
   expect(result.value.ranking).toEqual([])
   expect(result.value.proposals.every((proposal) => proposal.score === null)).toBe(true)
-  expect(result.value.proposals.find((proposal) => proposal.proposalRef === "B")?.convertedAmount).toBe(30240)
+  expect(result.value.proposals.find((proposal) => proposal.proposalRef === "B")?.convertedAmount).toBeCloseTo(30240, 6)
   expect(result.value.proposals.find((proposal) => proposal.proposalRef === "B")?.issues).toContain("Stated total differs from quantity times unit price")
   expect(html).toContain("Comparison ranking unavailable")
   expect(html).toContain("56000 EUR (differs)")
@@ -151,6 +151,9 @@ test("runtime and producer present the same submitted quote amount and FX source
   const proposal = comparison.value.proposals.find((item) => item.proposalRef === "B")!
   if (row.total == null || row.fxRate == null || proposal.convertedAmount == null) throw new Error("comparison amount unavailable")
   expect(proposal.convertedAmount).toBe(row.total * row.fxRate)
-  expect(html).toContain(`${proposal.convertedAmount} USD (submitted FX: ${row.fxRate})`)
+  expect(row.fxRate).toBe(1.08)
+  expect(proposal.convertedAmount).toBeCloseTo(30240, 6)
+  expect(html).toContain("30240 USD (submitted FX: 1.08)")
+  expect(html).not.toContain("56000 USD (current FX: 2)")
   expect(html).toContain("Best technical fit")
 })

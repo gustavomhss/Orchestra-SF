@@ -66,7 +66,7 @@ export function prepareProcurementMutation(input: { snapshot: Snapshot; actor: A
   const commandDigest = digestSfValue({ ...prepared, baseDigest, previewDigest })
   const mutation: PreparedDomainMutation = {
     surface: "procurement", idempotencyKey: prepared.idempotencyKey, commandDigest, targetIncarnation: prepared.target.incarnation, expectedVersion: prepared.command.version,
-    execute(snapshot, actor, environment) {
+    execute(snapshot, actor, environment): ReturnType<PreparedDomainMutation["execute"]> {
       if (digestSfValue(actor) !== digestSfValue(prepared.actor)) return { commit: false, value: { status: "denied", reason: "actor-changed" } }
       if (!valid(snapshot, actor) || digestSfValue(projectProcurementScope("procurement", snapshot, prepared.scope)) !== baseDigest) return { commit: false, value: { status: "conflict", reason: "source-replaced-or-changed" } }
       if (!Number.isFinite(Date.parse(environment.at))) return { commit: false, value: { status: "failed", reason: "observation-time-unavailable" } }

@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test"
 import { initialProcurementSettings } from "../../../src/initial-settings.ts"
+import { validatePO } from "../../../src/form.ts"
 import { requestValue } from "../../../src/procurement-screen.ts"
 import type { RequestView } from "../../../src/procurement-screen.ts"
 import { presentProcurementFieldErrors, purchaseOrderFieldSources, sourcingFieldErrors } from "../../../product/procurement/guided-request.ts"
@@ -77,6 +78,47 @@ test("recurring draft values survive collapsing and saving the nonrecurring sect
   expect(rejected).toMatchObject({ ok: false, status: 422, fieldErrors: expect.arrayContaining([{ field: "pr.frequency", message: "Recurrence frequency is required" }]) })
 })
 
+test("contract strategy changes preserve saved references and existing-contract submission uses the real validator", () => {
+  const settings = initialProcurementSettings()
+  const environment = { at, directory: [], id: () => "unused" }
+  const request = {
+    number: "PR-2026-00001", status: "sourcing", createdBy: "owner", createdAt: at,
+    pr: { recurring: true, frequency: "Monthly", estAnnual: 1200 },
+    sourcing: { contractStrategy: "existing", selectedId: null, quotes: [] },
+    po: { supplier: "Saved vendor", supplierId: null, currency: "USD", description: "Saved service", lines: [{ desc: "Service", qty: 1, unitPrice: 100 }], paymentTerms: "Net 30", expenseType: "OPEX", deliveryDate: "2026-12-01", deliveryConditions: "Remote", contractRef: "SAVED-CONTRACT", assetRef: "SAVED-ASSET" },
+  }
+  const state: Snapshot = {
+    data: { store: { settings, suppliers: [], requests: { [request.number]: { request, version: 1, by: actor.id } } } },
+    versions: { [`requests:${request.number}`]: { version: 1, by: actor.id } }, sequences: {}, audit: [], notices: [],
+  }
+  for (const contractStrategy of ["new", "existing"]) {
+    const saved = domain.execute(state, actor, { page: "Requests", action: "save", id: request.number, version: state.versions[`requests:${request.number}`]!.version, values: { sourcing: { contractStrategy } } }, environment)
+    expect(saved.ok).toBe(true)
+    const view = domain.view(state, actor, environment)
+    const current = (view.data.requests as typeof request[])[0]!
+    expect(current.sourcing.contractStrategy).toBe(contractStrategy)
+    expect(current.po).toMatchObject({ contractRef: "SAVED-CONTRACT", assetRef: "SAVED-ASSET", paymentTerms: "Net 30" })
+    expect(current.pr).toMatchObject({ recurring: true, frequency: "Monthly", estAnnual: 1200 })
+    const html = render("Requests", view.data, { ...context, versions: view.versions })!
+    expect(html).toContain('name="po.contractRef" type="text" value="SAVED-CONTRACT"')
+    expect(html).toContain(contractStrategy === "existing" ? "An existing-contract purchase requires its contract reference." : "Contract and asset references are recorded text")
+  }
+  const po = { ...request.po, contractRef: "" }
+  const error = "Contract reference is required (call-off under existing contract)"
+  expect(validatePO({ sourcing: { contractStrategy: "new" }, po }, settings, [])).toEqual([])
+  expect(validatePO({ sourcing: { contractStrategy: "existing" }, po }, settings, [])).toEqual([error])
+  const poState: Snapshot = {
+    data: { store: { settings, suppliers: [], requests: { [request.number]: { request: { ...request, status: "po_draft", po }, version: 1, by: actor.id } } } },
+    versions: { [`requests:${request.number}`]: { version: 1, by: actor.id } }, sequences: {}, audit: [], notices: [],
+  }
+  const before = structuredClone(poState)
+  const rejected = domain.execute(poState, actor, { page: "Requests", action: "submit_po", id: request.number, version: 1, values: {} }, environment)
+  expect(rejected).toMatchObject({ ok: false, status: 422, errors: [error] })
+  if (rejected.ok || !("fieldErrors" in rejected)) throw new Error("existing-contract order without a reference did not return field errors")
+  expect(rejected.fieldErrors).toContainEqual({ field: "po.contractRef", message: error })
+  expect(poState).toEqual(before)
+})
+
 test("money never labels a missing order or ambiguous quotation as an approved amount", () => {
   const rates = { currency: "USD", fxRates: [{ code: "EUR", rate: 2 }] }
   const sourcing = { selectedId: "q1", approvalBaseCurrency: "USD", fxSnapshot: { EUR: 1.1 }, quotes: [{ id: "q1", currency: "EUR", total: 100 }] }
@@ -87,4 +129,7 @@ test("money never labels a missing order or ambiguous quotation as an approved a
   expect(requestValue({ status: "src_rejected", createdBy: "owner", sourcing }, rates)).toBeCloseTo(110)
   expect(requestValue({ status: "po_draft", createdBy: "owner", po: { currency: "USD", lines: [null] } } as unknown as RequestView, rates)).toBeNull()
   expect(requestValue({ status: "src_pending", createdBy: "owner", sourcing: { selectedId: "q1", quotes: {} } } as unknown as RequestView, rates)).toBeNull()
+  expect(requestValue({ status: "po_approved", createdBy: "owner", po: { currency: "EUR", approvalBaseCurrency: "USD", fxRate: "1.08", lines: [{ qty: 1, unitPrice: 100 }] } } as unknown as RequestView, rates)).toBeNull()
+  expect(requestValue({ status: "src_pending", createdBy: "owner", sourcing: { ...sourcing, fxSnapshot: { EUR: "1.08" } } } as unknown as RequestView, rates)).toBeNull()
+  expect(requestValue({ status: "sourcing", createdBy: "owner", sourcing: { ...sourcing, fxSnapshot: null, approvalBaseCurrency: undefined } }, { currency: "USD", fxRates: [{ code: "EUR", rate: "1.08" }] } as unknown as Parameters<typeof requestValue>[1])).toBeNull()
 })
