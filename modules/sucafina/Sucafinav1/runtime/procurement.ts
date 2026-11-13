@@ -414,8 +414,9 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
   if (command.action !== "create" && !row) return { ok: false, status: 404 }
   const key = `requests:${id}`
   const visible = !row || visibleRequests([{ createdBy: text(row.request.createdBy) }], actor).length > 0
+  if (!visible && ["approve", "reject"].includes(command.action)) return { ok: false, status: 403 }
   const stale = conflict(snapshot, key, command, visible ? row?.request : undefined)
-  if (stale) return stale
+  if (stale) return visible ? stale : { ok: false, status: 409 }
   const was = row ? structuredClone(row.request) : null
   const request = row?.request ?? {}
   const status = text(request.status)
