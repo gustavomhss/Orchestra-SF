@@ -53,6 +53,7 @@ test("forecast port compares the real engine, and detects source changes", async
   const breakdown = comparePlannerVersions(result.value.baseline, result.value.candidate)
   expect(breakdown.status).toBe("ok")
   expect(breakdown.rows.find((row) => row.id === "line:11")).toMatchObject({ state: "matched", difference: 12000 })
+  expect(breakdown.rows.find((row) => row.id === "line:11")).toMatchObject({ evidenceStates: ["confirmed"], explanation: "The projected amount changed; this comparison does not identify a cause." })
   const changes = comparePlannerVersions({ ...result.value.baseline, components: result.value.baseline.components.slice(0, 1) }, { ...result.value.candidate, components: result.value.candidate.components.slice(1, 2) })
   expect(changes.rows.map((row) => row.state)).toEqual(["removed", "added"])
   expect(changes.rows.every((row) => row.difference === null)).toBe(true)

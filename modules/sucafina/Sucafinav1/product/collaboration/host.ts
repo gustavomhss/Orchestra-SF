@@ -9,6 +9,8 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductStatePort } from "../contracts/state.ts"
 import type { createProcurementPort } from "../procurement/port.ts"
 import type { createProcurementCollectionRegistry } from "../procurement/sources.ts"
+import { createWorkDestinationResolver } from "./destination.ts"
+import type { WorkPresentationItem } from "./work-port.ts"
 import type { ConfirmationWork } from "./work-port.ts"
 import { createCollaborationCapabilities } from "./capabilities.ts"
 import type { CollaborationCapabilityHost } from "./capabilities.ts"
@@ -43,12 +45,13 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   procurement: Pick<ReturnType<typeof createProcurementPort>, "list">
   collections: Pick<ReturnType<typeof createProcurementCollectionRegistry>, "resolveRequestCollection">
   workSelections?: WorkSelectionPort
+  workDestination?: { origin: string; mount: string; resolveDestination: (destination: NonNullable<WorkPresentationItem["destination"]>, context: TrustedDomainContext) => Promise<PortResult<{ href: string }>> }
   cases: Pick<DecisionCasePort, "read">
   authority: SfDomainValidation
   human: CollaborationHumanAuthority
   issueForActor?: (target: Extract<BusinessEvidenceRef, { kind: "record" }>["target"], context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>>
   captureWorkSource?: (memberRef: string, context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>>
-  proveReissueScope?: (original: Extract<BusinessEvidenceRef, { kind: "record" }>, current: Extract<BusinessEvidenceRef, { kind: "record" }>, context: TrustedDomainContext) => Promise<boolean>
+  prepareReissueScope?: (original: Extract<BusinessEvidenceRef, { kind: "record" }>, current: Extract<BusinessEvidenceRef, { kind: "record" }>, context: TrustedDomainContext) => Promise<PortResult<{ fence: () => Promise<boolean> }>>
   confirmationSource?: ConfirmationObserver<T> & {
     verifyManifest: (scope: ConfirmationScope, context: TrustedDomainContext) => Promise<boolean>
     /** Read-only check of the same manifest in the protected transaction snapshot. */
@@ -62,7 +65,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   const recordEvidence = createDashboardRecordEvidenceHost({ host: input.host, scopedSources: input.scopedSources, issueRecord })
   const authority = createCollaborationAuthority({ host: input.host, evidence: input.evidence })
   const selections = input.workSelections ?? createWorkSelectionPort({ collections: input.collections, authority, captureMember: input.captureWorkSource })
-  const reissue = input.issueForActor ? createCollaborationReissuer({ host: input.host, issueForActor: input.issueForActor, authorize: (ref, context) => authority.sources([ref], context), proveMaterialScope: input.proveReissueScope }) : undefined
+  const reissue = input.issueForActor ? createCollaborationReissuer({ host: input.host, issueForActor: input.issueForActor, authorize: (ref, context) => authority.sources([ref], context), prepareMaterialScope: input.prepareReissueScope }) : undefined
   const recipientThread = reissue ? createRecipientThreadReader({ host: input.host, state: input.state, reissue, authorize: authority.sources }) : undefined
   const confirmation = (() => {
     if (!input.confirmationSource || typeof input.confirmationSource.verifyManifest !== "function" || typeof input.confirmationSource.fenceManifest !== "function") return undefined
@@ -105,6 +108,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   })()
   const collaboration = createCollaborationComposition({ host: input.host, state: input.state, creationTarget: input.creationTarget, evidence: input.evidence, procurement: input.procurement, selections, recordEvidence, human: input.human, recipientThread, reissue, captureWorkSource: input.captureWorkSource, confirmationWork: confirmation?.work, createId: input.createId, now: input.now })
   const threadReads = createRecipientAwareThreadReads(collaboration.threads, recipientThread)
+  const resolveWorkDestination = input.workDestination ? createWorkDestinationResolver({ ...input.workDestination, host: input.host, work: collaboration.work }) : undefined
   const dispatch = createCollaborationDispatch({ collaboration, threadReads, cases: input.cases, requiredAuthority: input.requiredAuthority, createReceipt: async (context, operation, digest, resultDigest) => {
     if (!await input.authority.revalidateDomainContext(context)) return undefined
     return input.authority.receiptFor(context, operation, digest, resultDigest)
@@ -119,5 +123,5 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   const recipientActions = recipientThread ? createRecipientThreadActions({ state: input.state, host: input.host, human: input.human, mutationFence: createCollaborationMutationFence(input.host), read: recipientThread, creationTarget: input.creationTarget, createId: input.createId, now: input.now }) : undefined
   const answerEvidence = createThreadAnswerEvidence(threadReads)
 
-  return { ...collaboration, confirmation, recipientThread, recipientActions, captureWorkSource, recordEvidence, selections, sourceFence: createCollaborationSourceFence({ host: input.host, scopedSources: input.scopedSources }), resolveQuestion: createQuestionSource(threadReads), answerEvidence, resolveAnswer: answerEvidence.resolve, projectAnswer: answerEvidence.project, capabilities: createCollaborationCapabilities(dispatch) }
+  return { ...collaboration, confirmation, recipientThread, recipientActions, captureWorkSource, resolveWorkDestination, recordEvidence, selections, sourceFence: createCollaborationSourceFence({ host: input.host, scopedSources: input.scopedSources }), resolveQuestion: createQuestionSource(threadReads), answerEvidence, resolveAnswer: answerEvidence.resolve, projectAnswer: answerEvidence.project, capabilities: createCollaborationCapabilities(dispatch) }
 }

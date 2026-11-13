@@ -19,7 +19,7 @@ export function createDecisionEvidenceChecks(input: {
   }
   return {
     refs,
-    rule: async (rule: CriterionRule, context: TrustedDomainContext) => refs([...rule.evidenceRefs, ...rule.sensitivity?.sourceRefs ?? []], context),
+    rule: async (rule: CriterionRule, context: TrustedDomainContext) => refs([...rule.evidenceRefs, ...(rule.sensitivity?.sourceRefs ?? [])], context),
     metric: async (metric: CriterionMetric, context: TrustedDomainContext) => {
       if (!await refs(metric.evidenceRefs, context)) return false
       const current = await input.recomputeMetric(metric, context)

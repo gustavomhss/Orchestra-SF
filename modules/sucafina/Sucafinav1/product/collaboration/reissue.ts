@@ -5,6 +5,7 @@ import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+import { createCollaborationMutationFence } from "./mutation-fence.ts"
 import { sfSourceIdentity } from "../integration/source-lifecycle.ts"
 
 type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
@@ -14,9 +15,10 @@ export function createCollaborationReissuer(input: {
   host: DomainPortHost
   issueForActor: (target: RecordEvidence["target"], context: TrustedDomainContext) => Promise<PortResult<RecordEvidence>>
   authorize: (ref: RecordEvidence, context: TrustedDomainContext) => Promise<boolean>
-  proveMaterialScope?: (original: RecordEvidence, current: RecordEvidence, context: TrustedDomainContext) => Promise<boolean>
+  prepareMaterialScope?: (original: RecordEvidence, current: RecordEvidence, context: TrustedDomainContext) => Promise<PortResult<{ fence: () => Promise<boolean> }>>
 }) {
   const transactionAll = input.host.persistence.transactionAll
+  const mutationFence = createCollaborationMutationFence(input.host)
   const issuedRefs = new Map<string, RecordEvidence>()
   const inspect = (snapshot: Snapshot, ref: RecordEvidence, binding?: TrustedDomainContext["binding"]) => {
     const entries = Object.values(snapshot.sfSources?.scopes ?? {}).filter((entry) => (!binding || entry.alive) && entry.incarnation === ref.target.incarnation && (binding ? entry.version === ref.target.version : entry.version >= ref.target.version) && entry.scope.recordType === ref.target.recordType && entry.scope.recordId === ref.target.recordId && (!binding || entry.scope.principalRef === binding.principalRef && entry.scope.accessRevision === binding.accessRevision && entry.scope.policyVersion === binding.policyVersion))
@@ -43,8 +45,12 @@ export function createCollaborationReissuer(input: {
     if (issued.status !== "ok") return issued
     const current = issued.value
     if (current.installationId !== selected.installationId || current.projectId !== selected.projectId || current.refDigest !== digestSfEvidenceRef(current) || current.evidenceLevel !== selected.evidenceLevel || current.target.surface !== selected.target.surface || current.target.recordType !== selected.target.recordType || current.target.recordId !== selected.target.recordId || digestSfValue([...current.target.fields].sort()) !== digestSfValue([...selected.target.fields].sort()) || digestSfValue(current.target.period) !== digestSfValue(selected.target.period) || !await input.authorize(current, context)) return { status: "unavailable", reason: "source-reissue-unavailable" }
-    if (!input.proveMaterialScope || !await input.proveMaterialScope(selected, current, context)) return { status: "unavailable", reason: "source-material-scope-unavailable" }
-    const samePhysical = await transactionAll(async (snapshots: Record<Surface, Snapshot>) => ({ commit: false, value: inspect(snapshots[selected.target.surface], selected) === physical && inspect(snapshots[current.target.surface], current, context.binding) === physical })).catch(() => false)
+    if (!input.prepareMaterialScope) return { status: "unavailable", reason: "source-material-scope-unavailable" }
+    const proof = await input.prepareMaterialScope(selected, current, context)
+    if (proof.status !== "ok") return { status: "unavailable", reason: "source-material-scope-unavailable" }
+    const sourceFence = await mutationFence.prepare(() => input.authorize(current, context))
+    if (!sourceFence) return { status: "unavailable", reason: "source-material-scope-unavailable" }
+    const samePhysical = await transactionAll(async (snapshots: Record<Surface, Snapshot>) => ({ commit: false, value: mutationFence.check(sourceFence) && await proof.value.fence() && inspect(snapshots[selected.target.surface], selected) === physical && inspect(snapshots[current.target.surface], current, context.binding) === physical })).catch(() => false)
     if (!samePhysical || !await input.host.revalidate(context)) { issuedRefs.delete(cacheKey); return { status: "stale", reason: "source-replaced-or-inaccessible" } }
     issuedRefs.set(cacheKey, structuredClone(current))
     if (issuedRefs.size > 512) issuedRefs.delete(issuedRefs.keys().next().value!)

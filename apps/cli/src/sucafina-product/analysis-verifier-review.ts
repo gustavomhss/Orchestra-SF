@@ -22,21 +22,22 @@ export function createSfDecisionCritiqueVerifier(dependencies: SfAnalysisDepende
         if (request.profileId !== "sf_reviewer") return undefined
         const current = await dependencies.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, currentCall)
         if (current.status !== "ok" || current.value.case.version !== request.caseRef.version ||
-          !current.value.case.choices.some((choice) => value.choiceRefs.includes(choice.id) && digestSfValue(choice.comparison) === digestSfValue(value.comparison)) ||
-          (!value.choiceRefs.length || !value.alternativeRefs.length) ||
+          !value.alternativeRefs.length ||
           value.choiceRefs.some((id) => !current.value.case.choices.some((choice) => choice.id === id && value.alternativeRefs.includes(choice.alternativeId))) ||
           value.alternativeRefs.some((id) => !current.value.case.alternatives.some((alternative) => alternative.id === id)) ||
           value.authorizedEvidenceRefs.some((ref) => !current.value.evidenceRefs.some((item) => digestSfValue(item) === digestSfValue(ref)))) return undefined
-        const selected = current.value.case.choices.find((choice) => value.choiceRefs.includes(choice.id) && digestSfValue(choice.comparison) === digestSfValue(value.comparison))
-        if (!selected) return undefined
-        const replay = await dependencies.planner.compareScenarios({ scenarioRefs: [value.comparison.baselineResultRef, value.comparison.alternativeResultRef], criteria: selected.criteria }, currentCall)
-        if (replay.status !== "ok" || digestSfValue(replay.value) !== digestSfValue(value.comparison)) return undefined
         const author = await dependencies.readAuthorAnalysis(value.authorAnalysis.runRef, value.authorAnalysis.outputDigest, currentCall)
         if (author.status !== "ok" || author.value.run.state !== "ready" || !author.value.run.native || author.value.run.runRef !== value.authorAnalysis.runRef ||
           author.value.run.outputRef !== author.value.output.id || author.value.output.state !== "ready" ||
           author.value.output.runProvenance.runId !== author.value.run.runRef || author.value.output.runProvenance.nativeSessionId !== author.value.run.native.sessionID ||
           digestSfValue(author.value.run.caseRef) !== digestSfValue(request.caseRef) || digestSfValue(author.value.output.caseRef) !== digestSfValue(request.caseRef) ||
           author.value.output.outputDigest !== value.authorAnalysis.outputDigest || digestSfContribution(author.value.output) !== value.authorAnalysis.outputDigest) return undefined
+        const targetComparison = author.value.output.kind === "ScenarioComparison" ? author.value.output.payload : author.value.output.kind === "FinancialAnalysis" ? author.value.output.payload.comparison : undefined
+        if (!targetComparison || digestSfValue(targetComparison) !== digestSfValue(value.comparison)) return undefined
+        const selected = current.value.case.choices.find((choice) => value.choiceRefs.includes(choice.id) && digestSfValue(choice.comparison) === digestSfValue(value.comparison))
+        if (value.choiceRefs.length && !selected) return undefined
+        const replay = await dependencies.planner.compareScenarios({ scenarioRefs: [value.comparison.baselineResultRef, value.comparison.alternativeResultRef], criteria: selected?.criteria ?? value.comparison.criterionResults.map((criterion) => criterion.criterionId) }, currentCall)
+        if (replay.status !== "ok" || digestSfValue(replay.value) !== digestSfValue(value.comparison)) return undefined
         const sources = await dependencies.context.context({ refs: value.authorizedEvidenceRefs }, currentCall)
         if (sources.length !== value.authorizedEvidenceRefs.length || sources.some((item, index) => item.state !== "fresh" || !item.authorizedProjection || !item.currentRef || digestSfValue(item.ref) !== digestSfValue(value.authorizedEvidenceRefs[index]) || digestSfValue(item.currentRef) !== digestSfValue(item.ref)) || !await dependencies.host.revalidate(currentCall)) return undefined
         const missing = [

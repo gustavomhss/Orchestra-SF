@@ -30,7 +30,7 @@ test("planner issuer resolves authenticated current identities and rejects stale
       return { commit: true, value: undefined }
     })
     const session = { request: new Request("https://example.test", { headers: { authorization: "finance" } }), active: true }
-    const host: DomainPortHost = { persistence, authenticate: async (request, context) => { const id = request.headers.get("authorization"); return id ? resolve(id, [...context!.roleMap], (group) => id === "finance" && group === "finance-group") : null }, environment: async () => ({ at: "2026-11-13T00:00:00Z", id: randomUUID, directory: [] }), requestFor: () => session.request, revalidate: async () => session.active }
+    const host: DomainPortHost = { persistence, authenticate: async (request, context) => { const id = request.headers.get("authorization"); return id ? resolve(id, [...context!.roleMap], (group) => ["finance", "reviewer"].includes(id) && group === "finance-group") : null }, environment: async () => ({ at: "2026-11-13T00:00:00Z", id: randomUUID, directory: [] }), requestFor: () => session.request, revalidate: async () => session.active }
     const product = createPlannerProduct({ host, scopedSources: persistence, coverageFor: async () => ({ status: "unavailable", reason: "missing" }) })
     const first = await product.issueSource("v0", binding)
     expect(first.status).toBe("ok")
@@ -52,6 +52,15 @@ test("planner issuer resolves authenticated current identities and rejects stale
     const operation = { id: "operation", target, command: prepared.command, idempotencyKey: "edit", commandDigest: prepared.mutation.commandDigest, expectedVersion: 0, requiredAuthority: [], preview: { values: [{ id: "line:1:forecast", currency: "USD", value: 42 }] } } as unknown as PreparedCommand
     expect(await review(operation, binding)).toMatchObject({ status: "ok", value: { originalTargetDigest: digestSfValue(target), targetLabel: "Licenses", fields: [{ field: "line:1:forecast", before: null, after: 42, beforeCurrency: "USD", afterCurrency: "USD" }], source: first.value.evidence } })
     expect(await review({ ...operation, preview: { ...operation.preview, values: [{ ...operation.preview.values[0]!, value: 43 }] } }, binding)).toMatchObject({ status: "stale" })
+    session.request = new Request("https://example.test", { headers: { authorization: "reviewer" } })
+    const reviewerBinding = { ...binding, binding: { ...binding.binding, principalRef: "reviewer" } } as TrustedDomainContext
+    const reviewerSource = await product.issueSource("v0", reviewerBinding)
+    expect(reviewerSource.status).toBe("ok")
+    if (reviewerSource.status === "ok") {
+      expect(reviewerSource.value.evidence.target.incarnation).not.toBe(first.value.evidence.target.incarnation)
+      expect(await review(operation, reviewerBinding)).toMatchObject({ status: "ok", value: { originalTargetDigest: digestSfValue(target), targetLabel: "Licenses", source: reviewerSource.value.evidence, fields: [{ field: "line:1:forecast", before: null, after: 42 }] } })
+    }
+    session.request = new Request("https://example.test", { headers: { authorization: "finance" } })
     const staged = structuredClone(captured)
     expect(prepared.mutation.execute(staged, actor, environment)).toMatchObject({ commit: true, value: { status: "applied" } })
     expect((staged.data.versions as { lines: { f: (number | null)[] }[] }[])[0].lines[0].f[0]).toBe(42)
