@@ -162,7 +162,7 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
       slide.addText(`Figure ${page + 1}/${section.images.length} · ${section.figureCaption}`, { x: 0.6, y: 1.2, w: 12.1, h: 0.3, fontSize: 12, color: "607469", margin: 0 })
       slide.addImage({ data: `data:image/png;base64,${Buffer.from(image).toString("base64")}`, x: 0.8, y: 1.65, w: 11.6, h: 5.03, altText: "Captured chart with labeled axes. All source values, periods, units and chart captions follow." })
       slide.addText("Preserved review · chart rows retain producer order", { x: 0.6, y: 7.0, w: 11.6, h: 0.2, fontSize: 9, color: "607469", margin: 0 })
-      slide.addSlideNumber({ x: 12.2, y: 7.0, w: 0.5, h: 0.2, fontSize: 9, color: "607469", margin: 0 })
+      slide.slideNumber = { x: 12.2, y: 7.0, w: 0.5, h: 0.2, fontSize: 9, color: "607469", margin: 0 }
     })
     addReportTextSlides(presentation, section.title, section.lines, "Preserved review")
     addReportValueSlides(presentation, section.title, section.table)

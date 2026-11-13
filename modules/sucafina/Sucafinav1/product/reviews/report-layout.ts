@@ -44,7 +44,7 @@ export function addReportTextSlides(presentation: PptxGenJS, title: string, line
       if (line) slide.addText(line, { x: 0.6, y: 1.4 + row * 0.32, w: 12.1, h: 0.3, fontSize: 14, fontFace: "Aptos", color: "243C30", margin: 0, valign: "top", breakLine: false })
     })
     slide.addText(`${footer ? `${footer} · ` : ""}Page ${index + 1}/${pages.length}`, { x: 0.6, y: 7.0, w: 11.6, h: 0.2, fontSize: 9, color: "607469", margin: 0 })
-    slide.addSlideNumber({ x: 12.2, y: 7.0, w: 0.5, h: 0.2, fontSize: 9, color: "607469", margin: 0 })
+    slide.slideNumber = { x: 12.2, y: 7.0, w: 0.5, h: 0.2, fontSize: 9, color: "607469", margin: 0 }
   })
 }
 
@@ -81,7 +81,7 @@ export function addReportValueSlides(presentation: PptxGenJS, title: string, row
       position.y += row.height
     })
     slide.addText(`Preserved review · Complete data ${index + 1}/${pages.length} · Long values continue in the next row`, { x: 0.6, y: 7.0, w: 11.6, h: 0.2, fontSize: 9, color: "607469", margin: 0 })
-    slide.addSlideNumber({ x: 12.2, y: 7.0, w: 0.5, h: 0.2, fontSize: 9, color: "607469", margin: 0 })
+    slide.slideNumber = { x: 12.2, y: 7.0, w: 0.5, h: 0.2, fontSize: 9, color: "607469", margin: 0 }
   })
 }
 
