@@ -140,7 +140,9 @@ test("real host persists procurement document evidence and Planner import under 
       forged.target.period = { start: "2028-01-01", end: "2028-12-31" }
       forged.refDigest = digestSfEvidenceRef(forged)
       const valid = await store.transaction("planner", async (snapshot) => {
-        const actor = { id: principal.id, roles: principal.roles.filter((row) => row.surface === "planner").map((row) => row.role), canWrite: principal.canWrite, assigned: [], domains: [] }
+        const plannerPrincipal = await identity.authenticate(request("planner"), { surface: "planner", roleMap: roleMap(snapshot, "planner") })
+        if (!plannerPrincipal) throw new Error("missing Planner operator")
+        const actor = { id: plannerPrincipal.id, roles: plannerPrincipal.roles.filter((row) => row.surface === "planner").map((row) => row.role), canWrite: plannerPrincipal.canWrite, assigned: [], domains: [] }
         return { commit: false, value: { original: roster.verifyRoster(snapshot, issued.value, actor, context), forged: roster.verifyRoster(snapshot, forged, actor, context) } }
       })
       expect(valid).toEqual({ original: true, forged: false })

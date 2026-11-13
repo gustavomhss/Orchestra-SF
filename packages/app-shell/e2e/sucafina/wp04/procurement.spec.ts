@@ -101,6 +101,7 @@ test("keyboard submission uses current entries and focuses the real 422 field wi
   expect((await rejected.json()).fieldErrors).toContainEqual({ field: "pr.justification", message: "Business justification is required" })
   await expect(justification).toBeFocused()
   await expect(justification).toHaveAttribute("aria-invalid", "true")
+  await expect(justification).toHaveAccessibleName("Justification")
   await expect(justification).toHaveAccessibleDescription("Business justification is required")
   await expect(section.locator('[data-field-error="pr.justification"]')).toHaveText("Business justification is required")
   await expect(title).toHaveValue("Unsent title retained through validation")
@@ -178,6 +179,7 @@ test("two authenticated actors review an actual CAS conflict and submit only aft
     await secondSection.getByRole("button", { name: "Save requisition", exact: true }).click()
     expect((await reviewedSave).status()).toBe(200)
     await expect(secondPage.locator('[data-request-summary="' + id + '"]')).toContainText("Version 3")
+    await expect(secondSection.getByRole("button", { name: "Save requisition", exact: true })).toBeFocused()
     expect(posts).toHaveLength(2)
     await openRecord(page, first, id)
     await expect(firstSection.getByRole("textbox", { name: "Title", exact: true })).toHaveValue("First actor's saved title")
@@ -269,7 +271,6 @@ test("a real committed save cannot clear edits typed before its response arrives
 })
 
 test("a recurring request reaches an internally issued PO with source values and negotiated entries preserved", async ({ page }, info) => {
-  test.setTimeout(90_000)
   const account = await login(page, "first", "journey")
   const manifest = await readManifest()
   const id = await createDraft(page, account, "Recurring source-to-order browser journey")
@@ -339,6 +340,7 @@ test("a recurring request reaches an internally issued PO with source values and
   await po.getByRole("button", { name: "Submit purchase order", exact: true }).click()
   expect((await missingReference).status()).toBe(422)
   await expect(poForm.locator('[name="po.contractRef"]')).toBeFocused()
+  await expect(poForm.locator('[name="po.contractRef"]')).toHaveAccessibleName("Contract reference")
   await expect(poForm.locator('[name="po.contractRef"]')).toHaveAccessibleDescription("Contract reference is required (call-off under existing contract)")
   await expect(poForm.locator('[name="po.paymentTerms"]')).toHaveValue("Net 60 negotiated")
   await expect(poForm.locator('[name="po.lines.0.unitPrice"]')).toHaveValue("48")
@@ -444,6 +446,18 @@ test("an authorized bank change requires supplier revalidation and a real viewer
     await proof(observer, info, "supplier-viewer-redaction", { supplier: id, bankControls: 0, unauthorizedWrite: 403, syntheticPolicy: "viewer-only" })
     await page.reload()
     await expect(bank.getByRole("textbox", { name: "IBAN", exact: true })).toHaveValue("TEST-REVISED-IBAN")
+    const reactivated = responseFor(page, "activate", id)
+    await supplier.locator('form[data-command="activate"]').getByRole("button", { name: "Activate", exact: true }).click()
+    const confirmed = await reactivated
+    expect(confirmed.status()).toBe(200)
+    expect((await confirmed.json()).value).toMatchObject({ status: "active", validatedBy: first.principal, validatedAt: "2026-11-13T12:00:00Z" })
+    await expect(bank).toHaveAttribute("data-version", String(before + 2))
+    await expect(supplier).not.toContainText("Bank details changed after activation. Supplier validation was cleared")
+    await expect(page.getByRole("row").filter({ has: page.getByRole("link", { name: "Journey registered supplier", exact: true }) })).toContainText("active")
+    await observer.reload()
+    await expect(visible).toContainText("Bank details masked.")
+    await expect(visible.locator('[name="iban"], [name="account"]')).toHaveCount(0)
+    await proof(observer, info, "supplier-reactivated-masked", { supplier: id, result: "active", revalidatedBy: first.principal, bankControls: 0 })
   } finally { await viewerContext.close() }
 })
 

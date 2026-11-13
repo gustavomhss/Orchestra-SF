@@ -18,7 +18,7 @@ type PressResult = { ok: true; value?: unknown } | { ok: false; status?: 409; st
 
 const SCRIPT = `
 const unsaved = ${JSON.stringify(UNSAVED)}
-const pending = { html: null, loading: false, focus: null, closed: false, controller: null, generation: 0, writing: 0, again: false }
+const pending = { html: null, loading: false, focus: null, commandFocus: null, closed: false, controller: null, generation: 0, writing: 0, again: false }
 function notice(message) { (document.querySelector("dialog[open] [data-editor-status]") || document.getElementById("notice")).textContent = message }
 function assignValue(target, name, value) {
   const path = name.replace(/\\[(\\d+)\\]/g, ".$1").split(".")
@@ -79,6 +79,18 @@ function presentFieldErrors(form, errors) {
     const exact = controls.filter((input) => input.name === name)
     const inputs = exact.length ? exact : controls.filter((input) => input.name.startsWith(name + "."))
     for (const input of inputs) {
+      if (!input.getAttribute("aria-labelledby") && !input.getAttribute("aria-label")) {
+        const label = input.closest("label")
+        const nodes = label ? [...label.childNodes] : []
+        const boundary = nodes.findIndex((node) => node === input || node.nodeType === 1 && node.contains(input))
+        if (label && boundary > 0) {
+          const title = document.createElement("span")
+          title.id = "field-label-" + crypto.randomUUID()
+          nodes.slice(0, boundary).forEach((node) => title.append(node))
+          label.prepend(title)
+          input.setAttribute("aria-labelledby", title.id)
+        }
+      }
       const message = document.createElement("span")
       message.id = "field-error-" + crypto.randomUUID() + "-" + index
       message.dataset.fieldError = error.field
@@ -202,6 +214,7 @@ function beginWrite() {
   pending.writing++
   pending.generation++
   pending.html = null
+  pending.commandFocus = null
   return () => { pending.writing--; pending.generation++; pending.html = null }
 }
 async function send(command, form) {
@@ -512,7 +525,14 @@ function attach() {
             dialog.close()
             notice(message)
           }
-          if (!dialog) document.activeElement.blur()
+          if (!dialog) {
+            const active = document.activeElement
+            if (!active || active === document.body || form.contains(active) || editors.some((editor) => editor.contains(active))) {
+              pending.commandFocus = { page: form.dataset.page, action: form.dataset.command, record: form.dataset.record,
+                section: form.closest("section[id]")?.id, container: form.closest("details[id]")?.id }
+              active?.blur()
+            }
+          }
           await refresh()
         }
       } catch { notice(unsaved) }
@@ -542,6 +562,16 @@ function applyRefresh() {
     if (target) { if (!target.matches("button")) target.tabIndex = -1; target.focus() }
     pending.focus = null
   }
+  if (pending.commandFocus !== null) {
+    const saved = pending.commandFocus
+    const container = saved.container ? document.getElementById(saved.container) : null
+    const scope = saved.section ? document.getElementById(saved.section) : container || main
+    const candidates = [...(scope?.querySelectorAll("form[data-command]") || [])].filter((form) => form.dataset.page === saved.page && form.dataset.command === saved.action && form.dataset.record === saved.record)
+    const target = (candidates.length === 1 ? candidates[0].querySelector('button[type="submit"]:not(:disabled)') : null)
+      || container?.querySelector("[data-request-summary]") || container?.querySelector("summary") || scope?.querySelector("h3,h2,h1") || main.querySelector("h1")
+    if (target) { if (!target.matches("button,summary")) target.tabIndex = -1; revealField(target) }
+    pending.commandFocus = null
+  }
 }
 async function refresh(silent = false) {
   if (pending.closed || pending.writing) return
@@ -560,7 +590,7 @@ async function refresh(silent = false) {
   } catch { if (!silent && !pending.closed) notice(unsaved) }
   finally { clearTimeout(deadline); pending.loading = false; pending.controller = null; if (pending.again) { pending.again = false; void refresh() } }
 }
-const markDirty = (event) => { const form = event.target.closest("form[data-command], form[data-private-upload]"); if (form) { form.dataset.dirty = "true"; form.dataset.previewRevision = String(Number(form.dataset.previewRevision || "0") + 1); form.querySelector("[data-preview]")?.remove() } }
+const markDirty = (event) => { const form = event.target.closest("form[data-command], form[data-private-upload]"); if (form) { pending.commandFocus = null; form.dataset.dirty = "true"; form.dataset.previewRevision = String(Number(form.dataset.previewRevision || "0") + 1); form.querySelector("[data-preview]")?.remove() } }
 document.addEventListener("input", markDirty)
 document.addEventListener("change", markDirty)
 const businessTimer = setInterval(() => { if (!document.hidden) void refresh(true) }, 30000)

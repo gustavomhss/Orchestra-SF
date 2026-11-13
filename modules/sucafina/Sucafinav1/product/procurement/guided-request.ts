@@ -89,7 +89,10 @@ export function presentProcurementFieldErrors(html: string, errors: readonly Fie
     const messages = [...new Set(errors.filter((error) => name === esc(error.field) || name.startsWith(`${esc(error.field)}.`)).map((error) => error.message))]
     if (!messages.length) return label
     const id = esc(`${scope}-error-${name}`)
-    return label.replace(/<(input|textarea|select)\b/, (_, tag: string) => `<${tag} aria-invalid="true" aria-describedby="${id}"`)
+    const labelId = esc(`${scope}-label-${name}`)
+    // The message describes the control; it must not become part of its label text.
+    return label.replace(/^(<label\b[^>]*>)([\s\S]*?)(?=<(?:input|textarea|select)\b)/, (_, open: string, title: string) => `${open}<span id="${labelId}">${title}</span>`)
+      .replace(/<(input|textarea|select)\b/, (_, tag: string) => `<${tag} aria-labelledby="${labelId}" aria-invalid="true" aria-describedby="${id}"`)
       .replace("</label>", () => `<span id="${id}" class="field-error" data-error-for="${name}" role="status">${messages.map(esc).join("; ")}</span></label>`)
   })
 }

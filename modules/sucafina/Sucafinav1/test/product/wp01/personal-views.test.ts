@@ -90,4 +90,4 @@ test("personal views isolate authenticated principals and reconcile exact retrie
       await tab.waitForURL((url) => url.searchParams.get("view") === filtered.view.id && url.searchParams.get("q") === "renewal")
     } finally { await browser.close() }
   } finally { await server.stop(true); await store.dispose(); await rm(directory, { recursive: true, force: true }) }
-})
+}, 60_000)

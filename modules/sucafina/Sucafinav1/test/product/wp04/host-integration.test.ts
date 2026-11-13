@@ -61,6 +61,7 @@ test("real host composes C06 confirmation, current evidence routing and the WP09
     const bob = await fixture.ui("sf_request_read", { requestRef: fixture.evidence.refId }, "bob")
     expect((await fixture.business.procurementConfirmation.resolve(issued.value.evidence.refId, bob)).status).toBe("unavailable")
     expect(await confirmation.project(confirmed.value.id, bob)).toMatchObject({ status: "ok", value: { state: "valid" } })
+    const dossierBefore = await fixture.persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
     const dossier = await fixture.business.procurementDossier.prepare(fixture.evidence.refId, call)
     expect(dossier.status).toBe("ok")
     if (dossier.status !== "ok") throw new Error(`real WP09 dossier unavailable: ${dossier.reason}`)
@@ -68,6 +69,9 @@ test("real host composes C06 confirmation, current evidence routing and the WP09
     expect(dossier.value.comparison).toBeNull()
     expect(dossier.value.limitations.length).toBeGreaterThan(0)
     expect(dossier.value.documents).toEqual([])
+    expect(await fixture.business.procurementDossier.prepare(fixture.evidence.refId, call)).toEqual(dossier)
+    const dossierAfter = await fixture.persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
+    expect(dossierAfter).toEqual(dossierBefore)
 
     await fixture.edit({ description: "Unrelated description" })
     expect(await confirmation.project(confirmed.value.id, call)).toMatchObject({ status: "ok", value: { state: "valid" } })
@@ -273,6 +277,20 @@ test("a durable application recovers after a lost commit response and cleared re
     expect((await fixture.storedCase()).value.receipts).toHaveLength(1)
     expect(await fixture.material()).toEqual(afterCommit)
     expect(fixture.receiptCommits).toHaveLength(1)
+    let replacedAfterCapture = false
+    fixture.afterApplyTargetCaptured(async () => {
+      replacedAfterCapture = true
+      await fixture.persistence.transaction("procurement", async (snapshot) => { delete object(object(snapshot.data.store).requests)["PR-1"]; return { commit: true, value: undefined } })
+      await fixture.persistence.transaction("procurement", async (snapshot) => { object(object(snapshot.data.store).requests)["PR-1"] = { request: afterCommit.request, version: 1, by: "alice" }; return { commit: true, value: undefined } })
+    })
+    // The actor and grants remain unchanged: physical continuity must be checked
+    // again after the host captures its target and before returning the receipt.
+    const replaced = await fixture.http("decision-apply", prepared.request, "alice", "recover-application")
+    expect(replacedAfterCapture).toBe(true)
+    expect(replaced.response.status).toBe(403)
+    expect(object((await fixture.material()).request.pr).estAmount).toBe(150)
+    expect((await fixture.material()).request.history).toHaveLength(1)
+    expect(fixture.receiptCommits).toHaveLength(1)
   } finally { await fixture.dispose() }
 })
 
@@ -284,11 +302,20 @@ async function hostFixture() {
   const permitted = new Set(["alice", "bob"])
   const origin = "https://local.invalid"
   const sources = createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => clock.at), createId: randomUUID })
-  const scheduling: { afterReceipt?: () => Promise<void> } = {}
+  const scheduling: { afterReceipt?: () => Promise<void>; afterCaptured?: () => Promise<void> } = {}
   const receiptCommits: { beforeCases: number; afterCases: number }[] = []
   // This adapter changes only scheduling: both competing transactions commit through
   // the same real lifecycle and SQLite store. It supplies no data or consumer result.
-  const persistence: ReturnType<typeof createSfSourcePersistence> = { ...sources, transactionAll: async (work, options) => {
+  const persistence: ReturnType<typeof createSfSourcePersistence> = { ...sources, transaction: async (surface, work, options) => {
+    const result = await sources.transaction(surface, work, options)
+    const captured = object(result)
+    if (surface === "procurement" && typeof captured.physicalIncarnation === "string" && typeof captured.bindingDigest === "string" && object(captured.change).operation && object(captured.request).caseRef) {
+      const interleave = scheduling.afterCaptured
+      scheduling.afterCaptured = undefined
+      await interleave?.()
+    }
+    return result
+  }, transactionAll: async (work, options) => {
     if (!sources.transactionAll) throw new Error("real transactionAll unavailable")
     let committed: { beforeCases: number; afterCases: number } | undefined
     const result = await sources.transactionAll(async (snapshots) => {
@@ -333,7 +360,7 @@ async function hostFixture() {
   })
   const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites, procurementEvidenceWrites })
   mounted.business = business
-  const root = path.resolve(import.meta.dir, "../../..")
+  const root = path.resolve(import.meta.dir, "../../../product/ai")
   const bundle = await createResidentAiBundle({ root, manifestPath: path.join(root, "manifests/resident.json") })
   business.initializeAtlas(undefined, { boundaryVersion: atlasPackage.version, schemaVersion: contractFreeze.canonicalSha256, manifestVersion: bundle.manifestDigest, skillVersion: digestSfValue(bundle.skills.map((skill) => ({ id: skill.id, version: skill.version, sourceDigest: skill.sourceDigest }))) })
   const product = createProcurementDecisionHttp({ origin, mount: "/sf", runtime: () => ({ human: authority.human, decisions: business.procurementDecisions, withCase: business.withCase }) })
@@ -368,6 +395,7 @@ async function hostFixture() {
   }
   return { authority, business, persistence, application, request, ui, select, storedCase, evidence: source.value.evidence, receiptCommits,
     afterReceiptCommit: (work: () => Promise<void>) => { scheduling.afterReceipt = work },
+    afterApplyTargetCaptured: (work: () => Promise<void>) => { scheduling.afterCaptured = work },
     advance: (milliseconds: number) => { clock.at = new Date(Date.parse(clock.at) + milliseconds).toISOString() }, revoke: (actor: string) => { permitted.delete(actor) },
     material: () => persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: { request: structuredClone(object(object(object(object(snapshot.data.store).requests)["PR-1"]).request)), version: structuredClone(snapshot.versions["requests:PR-1"]) } })),
     edit: async (pr: Record<string, unknown>) => {

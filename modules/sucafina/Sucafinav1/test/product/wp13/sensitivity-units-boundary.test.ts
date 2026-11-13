@@ -46,7 +46,7 @@ const caseRef = { id: "case", incarnation: "case-incarnation", version: 1 }
 const initial = (): Snapshot => ({
   data: {
     roleMap: [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }],
-    versions: [{ id: "v0", year: 2027, closed: 9, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "EUR", b: Array(12).fill(100000), a: Array(12).fill(null), f: [null, null, null, null, null, null, null, null, null, 100000, 112000, 100000] }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }],
+    versions: [{ id: "v0", year: 2027, closed: 9, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "EUR", b: Array(12).fill(100000), a: Array(12).fill(null), f: [null, null, null, null, null, null, null, null, null, 100000, 112000, 100000] }], fx: [{ id: "EUR", cur: "EUR", rate: null }], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }],
   },
   versions: {}, sequences: {}, audit: [], notices: [],
 })
@@ -91,6 +91,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     expect(comparison.status).toBe("ok")
     if (comparison.status !== "ok") return
     expect(comparison.value.baseline.missing.some((item) => item.reason === "missing-fx")).toBe(true)
+    expect(comparison.value.baseline.values.find((value) => value.id === "fx:EUR")).toMatchObject({ value: null, evidenceState: "absent" })
     const proposalCoverageWrites = new WeakSet<object>()
     const state = createSfProductState({ persistence: store, proposalCoverageWrites, createId: () => "state-incarnation", resolveTarget: async () => ({ incarnation: caseRef.incarnation }), authorize: async () => access.allowed ? { principalRef: "finance", policyVersion: "policy", accessRevision: "access" } : undefined })
     const evidenceService: BusinessContextService = { resolve: async (ref) => ({ state: access.allowed ? "fresh" : "revoked", ref, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" }), context: async ({ refs }) => refs.map((ref) => ({ state: access.allowed ? "fresh" : "revoked", ref, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" })), recall: async () => [], emitFromLedger: async () => { throw new Error("unexpected memory") } }
@@ -98,8 +99,8 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     const baselineScenario = { ...scenario, operations: [{ ...scenario.operations[0], amount: 100000 }] }
     const selectedPreview = await planner.simulateScenario(scenario, context)
     const baselinePreview = await planner.simulateScenario(baselineScenario, context)
-    expect(selectedPreview.status).toBe("ok")
-    expect(baselinePreview.status).toBe("ok")
+    expect(selectedPreview).toMatchObject({ status: "ok" })
+    expect(baselinePreview).toMatchObject({ status: "ok" })
     if (selectedPreview.status !== "ok" || baselinePreview.status !== "ok") return
     if (selectedPreview.value.comparisonStatus !== "conditioned" || baselinePreview.value.comparisonStatus !== "conditioned") throw new Error("expected conditioned Planner previews")
     const selectedResult: ScenarioResult = { ...selectedPreview.value, costCoverage: { ...selectedPreview.value.costCoverage, alternativeId: "selected", alternativeVersion: 1 } }
