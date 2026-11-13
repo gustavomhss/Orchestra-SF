@@ -5,6 +5,8 @@ import freeze from "../contracts/freeze-v1.json"
 import type { BindSfExecution, CreateSfExecutionBindingRegistry, SfNativeAdmission } from "../contracts/runtime.ts"
 import type { TrustedCallContext, TrustedCallLease, TrustedExecutionBinding } from "../contracts/sf-execution.ts"
 
+const nativeBindingMark = Symbol("sf-native-binding")
+
 /** The Request and admission are held only in the registry, never in a binding or model argument. */
 export const createSfExecutionBindingRegistry: CreateSfExecutionBindingRegistry = (input) => {
   const sessions = new Map<string, TrustedExecutionBinding>()
@@ -43,14 +45,17 @@ export const createSfExecutionBindingRegistry: CreateSfExecutionBindingRegistry 
       if (!checked || !Number.isFinite(Date.parse(checked.expiresAt)) || Date.parse(checked.expiresAt) <= Date.now() ||
         invalidGenerations.has(checked.providerGeneration) || sessions.has(saved.sessionID) || saved.request.signal.aborted)
         return { status: "denied", reason: "native-authority-unavailable" }
-      const binding = Object.freeze({
+      const binding = {
+        [nativeBindingMark]: true as const,
         installationId: checked.installationId, hostId: checked.hostId, projectId: checked.projectId, locationId: checked.locationId,
         principalRef: checked.principalRef, policyVersion: checked.policyVersion, accessRevision: checked.accessRevision,
         providerGeneration: checked.providerGeneration, expiresAt: checked.expiresAt, nativeSessionId: saved.sessionID,
         runId: saved.runId, caseId: saved.caseRef.id, caseVersion: saved.caseRef.version,
         caseIncarnation: saved.caseRef.incarnation, profileId: saved.profile.id, profileVersion: saved.profile.version,
         manifestDigest: saved.manifestDigest, skillReceipts: saved.skillReceipts, entryMode: saved.entryMode,
-      }) as unknown as TrustedExecutionBinding
+      }
+      assertNativeBinding(binding)
+      Object.freeze(binding)
       if (!(await Promise.resolve().then(() => input.revalidateAdmission(saved, binding)).catch(() => false)) ||
         invalidGenerations.has(checked.providerGeneration) || sessions.has(saved.sessionID) || saved.request.signal.aborted || Date.now() >= Date.parse(checked.expiresAt))
         return { status: "denied", reason: "native-authority-changed" }
@@ -122,4 +127,8 @@ function freezeAdmission<T>(value: T): T {
   if (!value || typeof value !== "object") return value
   Object.values(value).forEach(freezeAdmission)
   return Object.freeze(value)
+}
+
+function assertNativeBinding<T extends { readonly [nativeBindingMark]: true }>(binding: T): asserts binding is T & TrustedExecutionBinding {
+  if (binding[nativeBindingMark] !== true) throw new Error("invalid-native-binding")
 }
