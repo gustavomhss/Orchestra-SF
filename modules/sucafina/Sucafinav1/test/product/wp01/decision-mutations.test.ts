@@ -26,8 +26,8 @@ const review = { changeId: "change", choiceId: "choice", surface: "planner", tar
 const ok = (value: unknown = {}) => Response.json({ status: "ok", value })
 const frames = (page: Page) => page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))))
 async function fixture(body: string, respond: (request: Request) => Response | undefined | Promise<Response | undefined>, check: (page: Page) => Promise<void>, release?: () => void) {
-  const html = `<!doctype html><html><body>${body}</body></html>`
-  const server = Bun.serve({ hostname: "localhost", port: 0, idleTimeout: 30, fetch: async (request) => await respond(request) ?? new Response(html, { headers: { "Content-Type": "text/html" } }) })
+  const html = `<!doctype html><html><head><meta charset="utf-8"></head><body>${body}</body></html>`
+  const server = Bun.serve({ hostname: "localhost", port: 0, idleTimeout: 30, fetch: async (request) => await respond(request) ?? new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8" } }) })
   let context: BrowserContext | undefined
   let page: Page | undefined
   let failure: unknown
@@ -35,7 +35,9 @@ async function fixture(body: string, respond: (request: Request) => Response | u
     context = await within(browser.newContext(), "open context")
     page = await within(context.newPage(), "open page")
     page.setDefaultTimeout(5000); page.setDefaultNavigationTimeout(8000)
-    await page.goto(server.url.href); await check(page)
+    await page.goto(server.url.href)
+    expect(await within(page.evaluate(() => document.characterSet), "document encoding")).toBe("UTF-8")
+    await check(page)
   }
   catch (error) { failure = error; throw error }
   finally {

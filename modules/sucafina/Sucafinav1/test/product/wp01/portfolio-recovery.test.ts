@@ -5,6 +5,7 @@ import { portfolioScript, portfolioWidget } from "../../../product/ui/portfolio.
 // These transport fixtures exercise the shipped portfolio consumer. Their catalog,
 // results and receipts are declared fixtures, not domain/native execution evidence.
 let browser: Browser | undefined
+let browserFailure: string | undefined
 async function within<T>(operation: Promise<T>, step: string, timeout = 5_000): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | undefined
   try {
@@ -14,6 +15,7 @@ async function within<T>(operation: Promise<T>, step: string, timeout = 5_000): 
 beforeAll(async () => {
   const { chromium } = await import("@playwright/test")
   browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 8_000 })
+  browser.on("disconnected", () => { browserFailure ??= "Chromium disconnected" })
 }, 10_000)
 afterAll(async () => { if (browser) await within(browser.close(), "close browser") }, 8_000)
 
@@ -45,10 +47,12 @@ async function fixture(options: {
   release?: () => void
 }, check: (page: Page, calls: Call[]) => Promise<void>) {
   const calls: Call[] = []
+  const reads: string[] = []
   const history = options.history ? `<section data-portfolio-history data-case='${JSON.stringify(caseRef)}'><p role="status"></p><div data-results></div></section>` : ""
   const server = Bun.serve({ hostname: "localhost", port: 0, idleTimeout: 30, fetch: async (request) => {
     const mode = new URL(request.url).searchParams.get("sf")
-    if (!mode) return new Response(`<!doctype html><html><body>${portfolioWidget}${history}<script>${portfolioScript}</script></body></html>`, { headers: { "Content-Type": "text/html" } })
+    if (!mode) return new Response(`<!doctype html><html><head><meta charset="utf-8"></head><body>${portfolioWidget}${history}<script>${portfolioScript}</script></body></html>`, { headers: { "Content-Type": "text/html; charset=utf-8" } })
+    reads.push(mode)
     if (mode === "decision-portfolio-results" && options.history) return options.history()
     if (Object.values(actions).some((action) => action.mode === mode)) {
       const call = { mode, key: request.headers.get("idempotency-key"), body: await request.text() }
@@ -60,15 +64,40 @@ async function fixture(options: {
   let context: BrowserContext | undefined
   let page: Page | undefined
   let failure: unknown
+  let phase = "create isolated context"
+  const pageErrors: string[] = []
   try {
+    if (browserFailure) throw new Error(`Portfolio browser unavailable after an earlier lifecycle failure: ${browserFailure}`)
     if (!browser?.isConnected()) throw new Error("Portfolio fixture browser is unavailable")
-    context = await within(browser.newContext(), "create isolated context")
-    page = await within(context.newPage(), "open page")
+    try {
+      if (browser.contexts().length) throw new Error("A previous portfolio browser context was not closed")
+      context = await within(browser.newContext(), phase)
+      phase = "open page"
+      page = await within(context.newPage(), phase)
+    } catch (error) { browserFailure = String(error); throw error }
     page.setDefaultTimeout(5_000)
     page.setDefaultNavigationTimeout(8_000)
-    await page.goto(server.url.href)
+    page.on("pageerror", (error) => { pageErrors.push(error.message) })
+    phase = "load UTF-8 portfolio fixture"
+    expect((await page.goto(server.url.href))?.status()).toBe(200)
+    expect(await within(page.evaluate(() => document.characterSet), "read document encoding")).toBe("UTF-8")
+    phase = "exercise portfolio consumer"
     await check(page, calls)
-  } catch (error) { failure = error; throw error }
+    expect(pageErrors).toEqual([])
+  } catch (error) {
+    failure = error
+    console.error("Portfolio fixture failure", { phase, error, pageErrors, reads, writes: calls.length, browserConnected: browser?.isConnected(), contexts: browser?.contexts().length })
+    if (page && !page.isClosed()) console.error("Portfolio document at failure", await within(page.evaluate(() => ({
+      charset: document.characterSet, ready: document.readyState,
+      statuses: [...document.querySelectorAll('[role="status"]')].map((node) => node.textContent),
+      selects: [...document.querySelectorAll("select")].map((select) => ({
+        name: select.name, label: select.getAttribute("aria-label"), disabled: select.disabled,
+        labels: [...select.labels].map((label) => label.textContent),
+        options: [...select.options].map((option) => ({ value: option.value, text: option.textContent })),
+      })),
+    })), "capture bounded failure context", 1000).catch((diagnosticError) => String(diagnosticError)))
+    throw error
+  }
   finally {
     options.release?.()
     const cleanup: unknown[] = []
@@ -77,7 +106,8 @@ async function fixture(options: {
       ["close context", () => context?.close()],
       ["stop server", () => server.stop(true)],
     ] as const) {
-      try { await within(Promise.resolve(close()), step) } catch (error) { cleanup.push(error) }
+      try { await within(Promise.resolve(close()), step) }
+      catch (error) { cleanup.push(error); if (step !== "stop server") browserFailure = String(error) }
     }
     if (cleanup.length) throw new AggregateError(failure ? [failure, ...cleanup] : cleanup, "Portfolio assertion/lifecycle failures")
   }
@@ -91,7 +121,11 @@ async function ready(page: Page, kind: Kind) {
   await page.getByRole("button", { name: "Find alternatives", exact: true }).click()
   await page.getByText("Choose alternatives and enter the portfolio scope.", { exact: true }).waitFor()
   await page.locator('[data-portfolio-candidates] input').check()
-  await page.getByLabel("Decision that will own this evaluation", { exact: true }).selectOption("0")
+  const owner = page.getByLabel("Decision that will own this evaluation", { exact: true })
+  expect(await owner.count()).toBe(1)
+  expect(await owner.locator('option[value="0"]').textContent()).toBe("Restricted decision")
+  await owner.selectOption("0")
+  expect(await owner.inputValue()).toBe("0")
   await page.getByLabel("Portfolio start", { exact: true }).fill("2027-01-01")
   await page.getByLabel("Portfolio end", { exact: true }).fill("2027-12-31")
   await page.getByLabel("Currency", { exact: true }).fill("USD")
@@ -271,7 +305,10 @@ test("portfolio evaluation times out while reading a body and replays the exact 
   let pendingBody: ReadableStreamDefaultController<Uint8Array> | undefined
   await fixture({
     write: (_call, index) => index === 1 ? new Response(new ReadableStream<Uint8Array>({ start(controller) { pendingBody = controller; controller.enqueue(new TextEncoder().encode('{"status":"ok",')) } }), { headers: { "Content-Type": "application/json" } }) : success("evaluation"),
-    release: () => { try { pendingBody?.close() } catch {} },
+    release: () => {
+      try { pendingBody?.close() }
+      catch { /* The client abort may already have closed or cancelled this fixture response stream. */ }
+    },
   }, async (page, calls) => {
     await ready(page, "evaluation")
     const failed = page.waitForEvent("requestfailed", { predicate: (request) => new URL(request.url()).searchParams.get("sf") === actions.evaluation.mode, timeout: 15_000 })

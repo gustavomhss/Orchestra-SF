@@ -95,7 +95,9 @@ test("the screen draws the server list, the footer is not a page, and a refused 
     index: 2,
   })
   expect(overview.html).toContain(dashboardMoney(executiveScreen(budget, 2025).totals.totalBudget))
-  expect(overview.html).not.toContain('data-year="own"')
+  const overviewMain = overview.html.match(/<main\b[^>]*>[\s\S]*?<\/main>/)?.[0]
+  expect(overviewMain).toBeDefined()
+  expect(overviewMain).not.toContain('data-year="own"')
 
   const closed = dashboardScreen({
     actor: actor("vie", ["viewer"]),

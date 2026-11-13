@@ -10,7 +10,7 @@ export type SfAnalysisInputPort = {
 }
 
 // WP00 owns SfHostServices. Keep this adapter local until the host publishes that extension.
-export function getSfAnalysisInputs(runtime: SfHostServices): SfAnalysisInputPort | undefined {
+export function getSfAnalysisInputs(runtime: object): SfAnalysisInputPort | undefined {
   if (!("analysisInputs" in runtime) || !runtime.analysisInputs || typeof runtime.analysisInputs !== "object" ||
     !("prepare" in runtime.analysisInputs) || typeof runtime.analysisInputs.prepare !== "function") return undefined
   return runtime.analysisInputs as SfAnalysisInputPort

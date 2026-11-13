@@ -75,24 +75,34 @@ test("contract context uses mounted evidence, survives a lost response, and reje
     phase = "enroll actual operator"
     const authenticated = await within(identity.handle(new Request(`${origin}/sucafina/auth/local?code=${await within(identity.enroll(), phase)}`)), phase)
     const cookie = authenticated!.headers.get("set-cookie")!.split(";")[0]!
-    const returnTo = "/sucafina/dashboard?page=Vendor+Contracts&year=2027&q=Context&filter=#record-contract-a"
-    const contextUrl = (back = returnTo) => `${origin}/sucafina/dashboard?${new URLSearchParams({ sf: "workbench-context", recordId: "contract-a", start: "2027-01-01", end: "2027-12-31", returnTo: back })}`
+    const returnTo = "/sucafina/dashboard?page=Vendor+Contracts&year=2026&q=Context&filter=#record-contract-a"
+    const contextUrl = (back = returnTo) => `${origin}/sucafina/dashboard?${new URLSearchParams({ sf: "workbench-context", recordId: "contract-a", start: "2026-01-01", end: "2026-12-31", returnTo: back })}`
     const get = (url: string) => within(app(new Request(url, { headers: { cookie } })), `GET ${new URL(url).searchParams.get("sf")}`)
     phase = "validate work and contextual boundaries"
-    const unavailableWork = await get(`${origin}/sucafina/dashboard?sf=workbench-work-select&start=2027-01-01&end=2027-12-31`)
+    const unavailableWork = await get(`${origin}/sucafina/dashboard?sf=workbench-work-select&start=2026-01-01&end=2026-12-31`)
     expect(unavailableWork?.status).toBe(503)
     expect(unavailableWork?.headers.get("content-type")).toContain("text/html")
     expect(await unavailableWork!.text()).toContain("Retry this selection")
-    const invalidWork = await get(`${origin}/sucafina/dashboard?sf=workbench-work-select&start=invalid&end=2027-12-31`)
+    const invalidWork = await get(`${origin}/sucafina/dashboard?sf=workbench-work-select&start=invalid&end=2026-12-31`)
     expect(invalidWork?.status).toBe(400)
-    expect(await invalidWork!.text()).toContain('name="end" type="date" required value="2027-12-31"')
-    for (const back of [`https://other.example${returnTo}`, returnTo.replace("/sucafina/", "/foreign/"), returnTo.replace("Vendor+Contracts", "All+Projects"), returnTo.replace("record-contract-a", "record-contract-b"), returnTo.replace("year=2027", "year=2026"), returnTo.replace("&filter=", "&sf=workbench")]) {
+    expect(await invalidWork!.text()).toContain('name="end" type="date" required value="2026-12-31"')
+    for (const back of [`https://other.example${returnTo}`, returnTo.replace("/sucafina/", "/foreign/"), returnTo.replace("Vendor+Contracts", "All+Projects"), returnTo.replace("record-contract-a", "record-contract-b"), returnTo.replace("year=2026", "year=2025"), returnTo.replace("&filter=", "&sf=workbench")]) {
       const response = await get(contextUrl(back))
       expect(response?.status).toBe(400)
       expect(await response!.text()).not.toContain("data-source-refs=")
     }
     const absentSource = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => ({ ...services, host: { ...authority.host, persistence: driver } }) })
     expect((await within(absentSource(new Request(contextUrl(), { headers: { cookie } }), "dashboard"), "missing source port"))?.status).toBe(503)
+    // The source projection can issue evidence only for its actual as-of period.
+    const futureContext = new URL(contextUrl())
+    futureContext.searchParams.set("start", "2027-01-01")
+    futureContext.searchParams.set("end", "2027-12-31")
+    futureContext.searchParams.set("returnTo", returnTo.replace("year=2026", "year=2027"))
+    const unavailablePeriod = await get(futureContext.href)
+    expect(unavailablePeriod?.status).toBe(503)
+    const unavailablePeriodHtml = await unavailablePeriod!.text()
+    expect(unavailablePeriodHtml).toContain("The selected contract could not be revalidated")
+    expect(unavailablePeriodHtml).not.toContain("data-source-refs=")
     const issuedContext = await get(contextUrl())
     expect(issuedContext?.status).toBe(200)
     expect(await issuedContext!.text()).toContain("Create a decision from Context contract Alpha")
@@ -131,7 +141,7 @@ test("contract context uses mounted evidence, survives a lost response, and reje
       if (original.kind !== "record") throw new Error("Expected real record evidence")
       expect(original.target.recordId).toBe("contract-a")
       expect(original.target.fields).toEqual(["amount", "vendor"])
-      expect(original.target.period).toEqual({ start: "2027-01-01", end: "2027-12-31" })
+      expect(original.target.period).toEqual({ start: "2026-01-01", end: "2026-12-31" })
       expect(original.refDigest).toBe(digestSfEvidenceRef(original))
       const draft = (refs: readonly BusinessEvidenceRef[]) => ({ objective: "Review contextual renewal", horizon: original.target.period!, currency: "USD", criteria: ["Cost", "Continuity"], sourceRefs: refs })
       const post = (refs: readonly BusinessEvidenceRef[], key: string) => within(app(new Request(`${origin}/sucafina/dashboard?sf=workbench-command`, { method: "POST", headers: { cookie, origin, "content-type": "application/json", "idempotency-key": key }, body: JSON.stringify({ operation: "sf_case_draft", input: draft(refs) }) })), "create case command")
@@ -188,7 +198,7 @@ test("contract context uses mounted evidence, survives a lost response, and reje
       await back.click()
       await tab.locator("#record-contract-a").waitFor()
       expect(new URL(tab.url()).searchParams.get("q")).toBe("Context")
-      expect(new URL(tab.url()).searchParams.get("year")).toBe("2027")
+      expect(new URL(tab.url()).searchParams.get("year")).toBe("2026")
       phase = "reject stale source and revoked session"
       await within(persistence.transaction("dashboard", async (snapshot) => { snapshot.data.contracts = [{ id: "contract-a", vendor: "Context contract Alpha", amount: 180, currency: "USD" }]; return { commit: true, value: undefined } }), "change source contract")
       expect((await post(sourceRefs, "changed-source"))?.status).toBe(503)

@@ -7,8 +7,10 @@ import type { SfSkillInputMap } from "../contracts/skill-inputs.ts"
 import { hasCaseAnalysisInput, prepareCaseAnalysisInput } from "./case-analysis-input.ts"
 import { prepareReviewAnalysisInput, reviewAnalysisOffer } from "./review-analysis-input.ts"
 
+type AnalysisHttpServices = Pick<SfHostServices, "ui" | "human" | "analyses" | "dispatch" | "selected" | "models">
+
 /** The host owns authorization and execution; this boundary exposes no native binding. */
-export async function handleSfAnalysis(request: Request, origin: string, runtime: SfHostServices) {
+export async function handleSfAnalysis(request: Request, origin: string, runtime: AnalysisHttpServices) {
   const reply = (value: unknown, status: number) => Response.json(value, { status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
   if (request.method !== "POST") return reply({ status: "denied" }, 405)
   if (request.headers.get("origin") !== origin || request.headers.get("sec-fetch-site") === "cross-site") return reply({ status: "denied" }, 403)
@@ -74,7 +76,7 @@ function caseInput(value: unknown) {
   return { caseRef: { id: value.id, incarnation: value.incarnation, version: value.version } }
 }
 
-async function analysisInput(value: unknown, runtime: SfHostServices) {
+async function analysisInput(value: unknown, runtime: Pick<SfHostServices, "models">) {
   if (!record(value) || Object.keys(value).some((key) => !["request", "skillInput", "model"].includes(key)) || !("skillInput" in value) || !record(value.request)) return undefined
   const request = analysisRequest(value.request)
   if (!request) return undefined

@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, expect, test } from "bun:test"
 import type { Browser } from "@playwright/test"
 import { documentHtml, links, pageMain } from "../../../src/screen-shell.ts"
+import { dashboardScreen } from "../../../src/dashboard-screen.ts"
 import { DASHBOARD_PAGES, PLANNER_TABS, PROCUREMENT_NAV, dashboardPages, setYear, sidebarYear } from "../../../src/nav.ts"
 import { fields, form, table } from "../../../runtime/ui.ts"
 
@@ -134,13 +135,15 @@ test("HTTP conflict preserves the attempt and shows the server value without a d
 test("navigation keeps scoped Dashboard periods and Planner version without sharing filters", async () => {
   const server = Bun.serve({ port: 0, fetch: (request) => {
     const planner = new URL(request.url).pathname === "/planner"
-    const pages = planner ? PLANNER_TABS : DASHBOARD_PAGES
-    const content = documentHtml(planner ? "Budget Planner" : "Dashboard", planner ? "planner" : "dashboard", links(pages.map((key, index) => ({ key, index }))), pageMain({ drawn: true, key: planner ? "OPEX" : "IT Operations", index: planner ? 1 : 10 }), "")
+    const content = planner
+      ? documentHtml("Budget Planner", "planner", links(PLANNER_TABS.map((key, index) => ({ key, index }))), pageMain({ drawn: true, key: "OPEX", index: 1 }), "")
+      : dashboardScreen({ actor: { id: "operator", roles: ["admin"], canWrite: true }, key: "IT Operations", year: 2027, ownYear: 2025 }).html
     return new Response(content, { headers: { "Content-Type": "text/html" } })
   } })
   const page = await runtime.browser!.newPage()
   try {
     await page.goto(new URL("?page=IT+Operations&year=2027&own=2025&month=5&execYear=2024&secYear=2026&securityMonth=9", server.url).href)
+    expect(await page.locator('main select[data-year="own"][data-query="opsYear"]').inputValue()).toBe("2025")
     const security = new URL((await page.locator("nav a").filter({ hasText: "IT Security KPIs" }).getAttribute("href"))!)
     expect(security.searchParams.get("opsYear")).toBe("2025")
     expect(security.searchParams.get("operationsMonth")).toBe("5")

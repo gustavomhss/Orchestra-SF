@@ -37,7 +37,7 @@ export async function readCaseAnalysisProjection(request: Request, runtime: Pick
 
 /** Project an authorized saved case. The existing analysis-start verifier still
  * replays the domain calculation and validates all sources before native work. */
-export async function prepareCaseAnalysisInput(request: Request, runtime: SfHostServices, input: {
+export async function prepareCaseAnalysisInput(request: Request, runtime: Pick<SfHostServices, "ui" | "dispatch">, input: {
   request: SfAnalysisRequest; selection: Record<string, unknown>
 }): Promise<PortResult<ScenarioComparisonInput | DecisionIntentInput>> {
   const wanted = structuredClone(input)

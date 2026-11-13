@@ -29,7 +29,7 @@ afterAll(async () => {
 
 async function browserCase(body: string, post: (request: Request) => Response | Promise<Response>, check: (page: Page) => Promise<void>, release?: () => void) {
   const server = Bun.serve({ hostname: "localhost", port: 0, idleTimeout: 30, fetch: (request) => request.method === "GET"
-    ? new Response(`<!doctype html><html><body>${body}</body></html>`, { headers: { "Content-Type": "text/html" } })
+    ? new Response(`<!doctype html><html><head><meta charset="utf-8"></head><body>${body}</body></html>`, { headers: { "Content-Type": "text/html; charset=utf-8" } })
     : post(request) })
   let context: BrowserContext | undefined
   let page: Page | undefined
@@ -41,6 +41,7 @@ async function browserCase(body: string, post: (request: Request) => Response | 
     page.setDefaultTimeout(5_000)
     page.setDefaultNavigationTimeout(8_000)
     await page.goto(server.url.href)
+    expect(await within(page.evaluate(() => document.characterSet), "read fixture character set")).toBe("UTF-8")
     await check(page)
   } catch (error) { failure = error; throw error }
   finally {

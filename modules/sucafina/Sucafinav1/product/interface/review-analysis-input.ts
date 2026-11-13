@@ -99,7 +99,7 @@ export async function prepareReviewAnalysisInput(request: Request, runtime: Revi
 
 /** Optional action on an opened result. An absent offer is not a claim that a
  * reviewer or model exists. Preparation always repeats these reads on submit. */
-export async function reviewAnalysisOffer(request: Request, runtime: SfHostServices, runRef: string, output: ContributionEnvelope) {
+export async function reviewAnalysisOffer(request: Request, runtime: ReviewReadServices & Pick<SfHostServices, "selected" | "models">, runRef: string, output: ContributionEnvelope) {
   if (output.state !== "ready" || output.runProvenance.runId !== runRef || !["ScenarioComparison", "FinancialAnalysis"].includes(output.kind)) return undefined
   const parent = runtime.selected.find((item) => item.profile.id === "sf_reviewer" && item.skills.some((skill) => skill.id === "sf-contestar-decisao"))
   const skill = parent?.skills.find((item) => item.id === "sf-contestar-decisao")
