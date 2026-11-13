@@ -86,8 +86,9 @@ export async function createLocalInstallation(context: { origin: string; createH
   services.jobs = jobs
   const requestEnvironment = async (request: Request) => ({ at: now(), id: randomUUID, directory: await identity.directory(request), bankKey: loaded.keys.bank })
   const installationId = operator?.installationId ?? digestSfValue({ origin: config.origin, mount: config.mount, directory: loaded.directory })
+  const assets = { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes: Uint8Array) => scanLocalFile(bytes, config.scanner) } }
   const runtime = await context.createHostRuntime?.({ installationId, directory: loaded.directory, sourceRoot: path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
-    mount: config.mount, persistence: store, authenticate: identity.authenticate, environment: requestEnvironment,
+    mount: config.mount, persistence: store, authenticate: identity.authenticate, environment: requestEnvironment, assets,
     grants: operator ? [{ principalRef: `macos:${operator.installationId}:${operator.uid}`,
       namespaces: ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox"],
       operations: freeze.operations.map((operation) => operation.operation), humanActions: sfHumanActions }] : [] })
@@ -100,7 +101,7 @@ export async function createLocalInstallation(context: { origin: string; createH
     environment: requestEnvironment,
     product: async (request, surface) => await workbench(request, surface) ?? await bi(request, surface),
     maxJsonBytes: 2 * 1024 * 1024,
-    assets: { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes) => scanLocalFile(bytes, config.scanner) } },
+    assets,
   })
   return {
     mount: config.mount,

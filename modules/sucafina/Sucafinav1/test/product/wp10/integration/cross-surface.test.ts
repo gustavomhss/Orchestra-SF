@@ -73,3 +73,24 @@ test("cross-surface preview, failure, cancellation and missing transactionAll ne
     } finally { await reopened.dispose() }
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })
+
+test("proposal coverage records require their own private write capability", async () => {
+  const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-proposal-write-"))
+  await chmod(directory, 0o700)
+  const store = await openLocalStore(directory)
+  try {
+    const writes = new WeakSet<object>()
+    const product = createSfProductState({ persistence: store, proposalCoverageWrites: writes, createId: () => "inc",
+      authorize: async () => ({ principalRef: "person", policyVersion: "policy", accessRevision: "access" }), resolveTarget: async () => ({ incarnation: "target-inc" }) })
+    const request = new Request("https://example.test/")
+    const command = { namespace: "preferences" as const, expectedStorageVersion: 0, idempotencyKey: "one", commandDigest: "a".repeat(64), targetRef: "target", targetIncarnation: "target-inc" }
+    const write = async (state: SfProductState) => { state.preferences["sf:proposal-coverage:forged"] = { value: true }; return { commit: true, value: true } }
+    expect(await product.transaction(request, command, write)).toMatchObject({ status: "denied", reason: "proposal-coverage-write-outside-authority" })
+    writes.add(write)
+    expect((await product.transaction(request, command, write)).status).toBe("ok")
+    const nativeWrite = async (state: SfProductState) => { state.preferences["sf:native-session:forged"] = { value: true }; return { commit: true, value: true } }
+    writes.add(nativeWrite)
+    expect(await product.transaction(request, { ...command, expectedStorageVersion: 1, idempotencyKey: "two" }, nativeWrite))
+      .toMatchObject({ status: "denied", reason: "native-evidence-write-outside-authority" })
+  } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
+})

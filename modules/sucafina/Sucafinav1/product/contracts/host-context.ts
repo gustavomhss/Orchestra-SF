@@ -9,6 +9,9 @@ import type { SfNativeAdmission, SfSelectedRuntime } from "./runtime.ts"
 import type { BusinessPorts, PortResult } from "./ports.ts"
 import type { TrustedDomainContext, TrustedExecutionBinding } from "./sf-execution.ts"
 import type { Period } from "./context.ts"
+import type { SfNativeRunRecord } from "./state.ts"
+import type { TrustedUiContext } from "./sf-execution.ts"
+import type { runSfAnalysis } from "../ai/analysis-port.ts"
 
 /** In-process host API. Neither this object nor its bindings are serialized into a model request. */
 export type SfHostSessionPort = {
@@ -25,6 +28,12 @@ export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
   /** Private UI discovery; absent until its real collection registry is mounted. */
   procurementSelections?: {
     create: (context: TrustedDomainContext, period: Period) => Promise<PortResult<{ selectionRef: string; label: string; period: Period }>>
+  }
+  /** Human-authorized product operations; native tickets and bindings never cross this boundary. */
+  analyses?: {
+    start: (context: TrustedUiContext, input: Omit<Parameters<typeof runSfAnalysis>[0], "host">) => ReturnType<typeof runSfAnalysis>
+    read: (context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>
+    cancel: (context: TrustedUiContext, runRef: string) => Promise<PortResult<{ cancelled: boolean }>>
   }
   sessions: SfHostSessionPort
   selected: readonly SfSelectedRuntime[]
