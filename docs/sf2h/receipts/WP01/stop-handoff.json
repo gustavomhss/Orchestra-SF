@@ -1,0 +1,128 @@
+{
+  "wp": "WP01",
+  "status": "STOPPED_INCOMPLETE",
+  "branch": "sf2-ui-ready",
+  "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/interface",
+  "code_checkpoint_head": "5a61faed7fcb6e76d9f49a251bdd1e7221286a3d",
+  "code_checkpoint_tree": "ad3ab2e8b4cd0fca00cc0f294e9c0ecaa050ff82",
+  "head_note": "Commit containing this receipt necessarily follows code_checkpoint_head; exact final head/tree recorded in external handoff after commit.",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "shared_input_manifest_revision": 15,
+  "foreign_inputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "source_sha": "9d1a1b3f0d4a20f6ddb7213933998697eff00a42",
+      "blob": "584aacfd94c18459222d903b6439298916039a43",
+      "owner": "S0-B",
+      "consumer_permission": "git show exact blob into own worktree read-only; no stage/commit/edits on foreign source",
+      "lease_epoch": 10
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "source_sha": "a43ddbfde798bb9547da7af96076d927251a904d",
+      "blob": "d1e3ed1cdb64e38f6770ea5e864f80b41b05b688",
+      "owner": "S0",
+      "consumer_permission": "git show exact blob into own worktree read-only; no stage/commit/edits on foreign source"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "source_sha": "a43ddbfde798bb9547da7af96076d927251a904d",
+      "blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "owner": "S0",
+      "consumer_permission": "git show exact blob into own worktree read-only; no stage/commit/edits on foreign source"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts",
+      "source_sha": "a43ddbfde798bb9547da7af96076d927251a904d",
+      "blob": "dae3f65d645a80ab319498f9c50743a0141706fa",
+      "owner": "S0",
+      "consumer_permission": "git show exact blob into own worktree read-only; no stage/commit/edits on foreign source"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "source_sha": "40455e32b4ba76b8aae26dacbb65b331f03dabbf",
+      "blob": "6b5938e2b7ad1d0fa97abdb74c44ac4d4a31d691",
+      "owner": "S0-B",
+      "consumer_permission": "git show exact blob into own worktree read-only; no stage/commit/edits on foreign source",
+      "lease_epoch": 10
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "source_sha": "6947ec56928bb395b0ed55e065938d45782cf734",
+      "blob": "85ecd5923a8f57250bac976ee4668ec005bd2d2a",
+      "owner": "S0-B",
+      "consumer_permission": "git show exact blob into own worktree read-only; no stage/commit/edits on foreign source",
+      "lease_epoch": 10
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "source_sha": "55f7e707c8c9a01aa880fce542b851ad7840508f",
+      "blob": "5e163e5983701ea48ea7aa62fb871903607b6672",
+      "owner": "S0-B",
+      "consumer_permission": "git show exact blob into own worktree read-only; no stage/commit/edits on foreign source",
+      "lease_epoch": 11
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "source_sha": "55f7e707c8c9a01aa880fce542b851ad7840508f",
+      "blob": "96489f309b5b91e9f981cc4741f0e7303de66c7a",
+      "owner": "S0-B",
+      "consumer_permission": "git show exact blob into own worktree read-only; no stage/commit/edits on foreign source",
+      "lease_epoch": 11
+    }
+  ],
+  "foreign_copies": "No foreign files staged or committed by this stop checkpoint; current branch is not combined with shared manifest.",
+  "workers": [
+    {
+      "seat": "Terra",
+      "model": "gpt-6.1-terra",
+      "state": "STOPPING checkpoint only",
+      "leases": "revoked after checkpoint"
+    },
+    {
+      "seat": "G1",
+      "model": "grok-4.7-build",
+      "session": "266e5402-aecc-4446-94da-def65663c683",
+      "state": "terminated; HTTP 402 balance exhausted",
+      "leases": "revoked"
+    },
+    {
+      "seat": "G2",
+      "model": "grok-4.7-build",
+      "session": "47c61bf3-1cbd-4a6c-85fb-5f6eb0bd89c6",
+      "state": "terminated; HTTP 402 balance exhausted",
+      "leases": "revoked"
+    },
+    {
+      "seat": "Luna",
+      "model": "exact model id not exposed",
+      "session": "01a1d64b-6598-7d21-a5c9-a9c49414b1f9",
+      "state": "STOP ACK; no changes",
+      "leases": "revoked"
+    }
+  ],
+  "task_states": {
+    "WP01.T01": "PARTIAL_NOT_COMPLETE",
+    "WP01.T02": "PARTIAL_NOT_COMPLETE",
+    "WP01.T03": "PARTIAL_NOT_COMPLETE",
+    "WP01.T04": "PARTIAL_NOT_COMPLETE",
+    "WP01.T05": "PARTIAL_NOT_COMPLETE"
+  },
+  "behavior": "Checkpoint includes workbench, navigation, personal views, document/import interfaces, analysis, decision/portfolio flows, planner previews, and partial collaboration. Conversation reply/answer code was interrupted and is unverified.",
+  "validation": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "hosted_ci": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "local_tests": "not run by instruction"
+  },
+  "findings": [
+    "No task is complete; do not mark PR ready.",
+    "Current branch depends on WP00/WP10 shared contracts and producer integrations; standalone typecheck may fail.",
+    "Review interrupted conversation reply/answer flow, retries and authorization before use.",
+    "Verify monthly operation idempotency/recovery, receipt/digest contracts and all browser flows.",
+    "Remaining 18-skill consumers and proof, planner entity/HR/catalog, collaboration selection, BI drilldown and portfolio workflows incomplete.",
+    "GitHub MCP checkpoint may have a different commit SHA from local due to Git object creation; compare tree and document exact relationship."
+  ],
+  "resume": "Only on explicit user request: re-establish leases, inspect checkpoint and provider status; integrate authorized producer branches/contracts without copying foreign files into WP commit; finish all WP01 task criteria; run final scoped hosted tests and package typecheck and guard checks under campaign lease; resolve findings and prepare one WP PR."
+}
