@@ -1,7 +1,7 @@
 import { object, rows, text } from "../../runtime/contract.ts"
 import { approvalStageEntry } from "../../src/procurement-screen.ts"
 import type { RequestView } from "../../src/procurement-screen.ts"
-import { procurementMonetaryFacts } from "./monetary.ts"
+import { PROCUREMENT_MONETARY_RULE_VERSION, procurementMonetaryFacts } from "./monetary.ts"
 
 const FIELDS = ["status", "subject", "reason", "holder", "approvalStage", "nextStep", "stageEnteredAt", "baseAmount", "originalAmount", "originalCurrency", "fxRate", "fxSource", "monetaryState", "submittedAmount", "submittedCurrency", "submittedFxRate"] as const
 const FINANCIAL = ["baseAmount", "originalAmount", "originalCurrency", "fxRate", "fxSource", "monetaryState", "submittedAmount", "submittedCurrency", "submittedFxRate"]
@@ -24,16 +24,19 @@ export function projectProcurementConfirmationFields(record: Record<string, unkn
   const next = raw === "draft" ? "Complete and submit requisition" : raw === "pr_rejected" ? "Revise and resubmit requisition" : raw === "pr_pending" ? "Sourcing after all approvals" : raw === "sourcing" ? "Compare and select proposals" : raw === "src_rejected" ? "Revise and resubmit sourcing" : raw === "src_pending" ? "PO draft after all approvals" : raw === "po_draft" ? "Complete and submit purchase order" : raw === "po_rejected" ? "Revise and resubmit purchase order" : raw === "po_pending" ? "Internal issuance after all approvals" : raw === "po_approved" ? "Issue purchase order internally" : raw === "po_issued" ? "Issued internally" : raw === "cancelled" ? "Cancelled" : ""
   const money = options ? procurementMonetaryFacts(record, options.currency, options.formSettings) : undefined
   const values = { status, subject: text(object(record.pr).title) || null, reason: reason || null, holder: text(holder?.holderId) || null, approvalStage: text(holder?.levelName) || null, nextStep: next || null, stageEnteredAt: approvalStageEntry(record as RequestView), baseAmount: money?.baseAmount ?? null, originalAmount: money?.original != null && Number.isFinite(money.original) ? money.original : null, originalCurrency: money?.currency || null, fxRate: money?.validRate ?? null, fxSource: money?.fxSource ?? null, monetaryState: money?.monetaryState ?? null, submittedAmount: money?.submittedAmount ?? null, submittedCurrency: money?.submittedCurrency || null, submittedFxRate: money?.submittedFxRate ?? null }
-  const dependencies = Object.fromEntries(fields.flatMap((field): [string, unknown][] => {
-    if (field === "stageEnteredAt") return [[field, { entry: values.stageEnteredAt, pendingLevel: text(holder?.levelName) || null, previousLevel: pendingIndex > 0 ? text(steps[pendingIndex - 1]?.levelName) || null : null, previousStatus: pendingIndex > 0 ? text(steps[pendingIndex - 1]?.status) || null : null }]]
-    if (!money) return []
-    if (field === "baseAmount") return [[field, { amount: money.amountInput, fx: money.fxDependency }]]
-    if (field === "originalAmount") return [[field, money.amountInput]]
-    if (field === "originalCurrency") return [[field, money.currencyDependency]]
-    if (field === "fxRate" || field === "fxSource") return [[field, money.fxDependency]]
-    if (["submittedAmount", "submittedCurrency", "submittedFxRate"].includes(field)) return [[field, money.submittedDependency]]
-    return []
-  }))
+  const dependencies: Record<string, unknown> = {
+    ...(fields.some((field) => FINANCIAL.includes(field)) ? { rules: { monetary: PROCUREMENT_MONETARY_RULE_VERSION } } : {}),
+    ...Object.fromEntries(fields.flatMap((field): [string, unknown][] => {
+      if (field === "stageEnteredAt") return [[field, { entry: values.stageEnteredAt, pendingLevel: text(holder?.levelName) || null, previousLevel: pendingIndex > 0 ? text(steps[pendingIndex - 1]?.levelName) || null : null, previousStatus: pendingIndex > 0 ? text(steps[pendingIndex - 1]?.status) || null : null }]]
+      if (!money) return []
+      if (field === "baseAmount") return [[field, { amount: money.amountInput, fx: money.fxDependency }]]
+      if (field === "originalAmount") return [[field, money.amountInput]]
+      if (field === "originalCurrency") return [[field, money.currencyDependency]]
+      if (field === "fxRate" || field === "fxSource") return [[field, money.fxDependency]]
+      if (["submittedAmount", "submittedCurrency", "submittedFxRate"].includes(field)) return [[field, money.submittedDependency]]
+      return []
+    })),
+  }
   const states = Object.fromEntries(fields.map((field) => {
     const value = values[field as typeof FIELDS[number]]
     if (value == null) return [field, "absent"]

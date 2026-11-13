@@ -6,7 +6,7 @@ import { randomUUID } from "node:crypto"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
-import { projectSfProcurementScope } from "../../../product/integration/procurement-projections.ts"
+import { projectProcurementScope } from "../../../product/procurement/source-projection.ts"
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
 import { createProcurementCollectionRegistry, createProcurementSourceResolver } from "../../../product/procurement/sources.ts"
 import { createProcurementCollectionMemberIssuer } from "../../../product/procurement/collection-member.ts"
@@ -20,7 +20,7 @@ test("reissue requires the recipient's current scope and the same physical reque
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-procurement-reissue-"))
   const store = await openLocalStore(directory)
   try {
-    const persistence = createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources, projectScope: projectSfProcurementScope, createId: randomUUID })
+    const persistence = createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources, projectScope: projectProcurementScope, createId: randomUUID })
     await persistence.initializeSources("procurement")
     await persistence.transaction("procurement", async (snapshot) => {
       snapshot.data.store = { requests: { "PR-1": { request: { number: "PR-1", createdBy: "a", status: "draft", pr: { title: "Owned" } }, version: 1, by: "a" } }, suppliers: [], settings: { currency: "USD" }, issued: { pr: ["PR-1"], po: [] } }

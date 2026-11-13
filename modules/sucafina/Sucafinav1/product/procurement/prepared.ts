@@ -8,7 +8,7 @@ import type { PreparedCommand, SourceRef } from "../contracts/context.ts"
 import type { PreparedDomainMutation } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
-import { projectSfProcurementScope } from "../integration/procurement-projections.ts"
+import { projectProcurementScope } from "./source-projection.ts"
 import { sfScopedSourceIdentity } from "../integration/source-lifecycle.ts"
 import type { SfSourceScope } from "../integration/source-lifecycle.ts"
 import { projectProcurementSource } from "./port.ts"
@@ -31,11 +31,11 @@ export function prepareProcurementMutation(input: { snapshot: Snapshot; actor: A
   const valid = (snapshot: Snapshot, actor: Actor) => {
     if (actor.id !== prepared.actor.id || digestSfValue(actor) !== digestSfValue(prepared.actor) || selector.kind !== "procurement-record-v1" || digestSfValue(selector.roles) !== digestSfValue(actor.roles) || selector.canWrite !== actor.canWrite || selector.roleMapDigest !== digestSfValue(roleMap(snapshot, "procurement"))) return false
     const identity = sfScopedSourceIdentity(snapshot, prepared.scope)
-    const projection = projectSfProcurementScope("procurement", snapshot, prepared.scope)
+    const projection = projectProcurementScope("procurement", snapshot, prepared.scope)
     return !!identity && !!projection && identity.incarnation === prepared.target.incarnation && identity.version === prepared.target.version && identity.inputDigest === digestSfValue(projection) && object(projection).privateDependencyDigest === prepared.evidence.target.projectionDigest
   }
   if (!valid(input.snapshot, prepared.actor)) return undefined
-  const baseDigest = digestSfValue(projectSfProcurementScope("procurement", input.snapshot, prepared.scope))
+  const baseDigest = digestSfValue(projectProcurementScope("procurement", input.snapshot, prepared.scope))
   const run = (snapshot: Snapshot, actor: Actor, environment: Environment, at: string) => {
     const staged = structuredClone(snapshot)
     const result = domain.execute(staged, actor, prepared.command, { ...environment, at, id: () => "" })
@@ -68,7 +68,7 @@ export function prepareProcurementMutation(input: { snapshot: Snapshot; actor: A
     surface: "procurement", idempotencyKey: prepared.idempotencyKey, commandDigest, targetIncarnation: prepared.target.incarnation, expectedVersion: prepared.command.version,
     execute(snapshot, actor, environment) {
       if (digestSfValue(actor) !== digestSfValue(prepared.actor)) return { commit: false, value: { status: "denied", reason: "actor-changed" } }
-      if (!valid(snapshot, actor) || digestSfValue(projectSfProcurementScope("procurement", snapshot, prepared.scope)) !== baseDigest) return { commit: false, value: { status: "conflict", reason: "source-replaced-or-changed" } }
+      if (!valid(snapshot, actor) || digestSfValue(projectProcurementScope("procurement", snapshot, prepared.scope)) !== baseDigest) return { commit: false, value: { status: "conflict", reason: "source-replaced-or-changed" } }
       if (!Number.isFinite(Date.parse(environment.at))) return { commit: false, value: { status: "failed", reason: "observation-time-unavailable" } }
       const applied = run(snapshot, actor, environment, environment.at)
       if (!applied.result.ok) return { commit: false, value: { status: applied.result.status === 403 ? "denied" : applied.result.status === 409 ? "conflict" : "failed", reason: "command-rejected" } }
@@ -77,8 +77,9 @@ export function prepareProcurementMutation(input: { snapshot: Snapshot; actor: A
       return { commit: true, value: { status: "applied" } }
     },
   }
-  const command: PreparedCommand = { id: prepared.operationId, target: prepared.target, command: prepared.command, expectedVersion: prepared.command.version, idempotencyKey: prepared.idempotencyKey, commandDigest, requiredAuthority: ["procurement:write"], preview: preview.preview }
-  return { mutation, command, target: prepared.target, targetEvidence: prepared.evidence, baseDigest, previewDigest, preview: preview.preview }
+  // The review payload is caller-owned; it must not alias the executable preparation.
+  const command: PreparedCommand = structuredClone({ id: prepared.operationId, target: prepared.target, command: prepared.command, expectedVersion: prepared.command.version, idempotencyKey: prepared.idempotencyKey, commandDigest, requiredAuthority: ["procurement:write"], preview: preview.preview })
+  return { mutation, command, target: structuredClone(prepared.target), targetEvidence: structuredClone(prepared.evidence), baseDigest, previewDigest, preview: structuredClone(preview.preview) }
 }
 
 /** Read the command CAS revision, which is independent from scoped evidence versions. */
@@ -94,7 +95,7 @@ export function procurementPreparedScope(snapshot: Snapshot, target: SourceRef, 
   if (target.surface !== "procurement" || target.type !== "procurement-request" || matches.length !== 1) return undefined
   const entry = matches[0]!
   const current = sfScopedSourceIdentity(snapshot, entry.scope)
-  if (!current || current.incarnation !== target.incarnation || current.version !== target.version || digestSfValue(projectSfProcurementScope("procurement", snapshot, entry.scope)) !== current.inputDigest) return undefined
+  if (!current || current.incarnation !== target.incarnation || current.version !== target.version || digestSfValue(projectProcurementScope("procurement", snapshot, entry.scope)) !== current.inputDigest) return undefined
   return structuredClone(entry.scope)
 }
 
@@ -108,7 +109,7 @@ export function staleProcurementPreparedMutation(snapshot: Snapshot, actor: Acto
     if (entries.length !== 1) return false
     const scope = entries[0]!.scope
     const selector = object(scope.selector)
-    const projection = projectSfProcurementScope("procurement", state, scope)
+    const projection = projectProcurementScope("procurement", state, scope)
     const identity = sfScopedSourceIdentity(state, scope)
     if (!identity || !projection || identity.incarnation !== prepared.target.incarnation || identity.inputDigest !== digestSfValue(projection) || digestSfValue(selector.roles) !== digestSfValue(currentActor.roles) || digestSfValue(selector.fields) !== digestSfValue(prepared.target.fields) || digestSfValue(selector.period) !== digestSfValue(prepared.target.period) || selector.canWrite !== currentActor.canWrite || selector.roleMapDigest !== digestSfValue(roleMap(state, "procurement"))) return false
     const revision = procurementPreparedRevision(state, prepared.command)

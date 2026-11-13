@@ -98,7 +98,7 @@ export function createProcurementPort(host: ProcurementSourceHost): ProcurementP
         const sourcing = object(record.sourcing)
         const quotes = rows(sourcing.quotes)
         const quoteIds = quotes.map((quote) => text(quote.id))
-        const snapshotRequired = ["src_pending", "po_draft", "po_pending", "po_approved", "po_issued", "po_rejected"].includes(text(record.status))
+        const snapshotRequired = sourcing.fxSnapshot != null || sourcing.approval != null || sourcing.approvalBaseCurrency != null || ["src_pending", "po_draft", "po_pending", "po_approved", "po_issued", "po_rejected"].includes(text(record.status))
         const sameBase = !snapshotRequired || sourcing.approvalBaseCurrency === context.currency
         if (!quotes.length || input.proposalRefs.some((id) => !quotes.some((quote) => quote.id === id))) return { commit: false, value: { status: "needs-input", reason: "Proposals unavailable" } }
         if (quoteIds.some((id) => !id) || new Set(quoteIds).size !== quoteIds.length) return { commit: false, value: { status: "unavailable", reason: "Proposal identities are missing or duplicated" } }

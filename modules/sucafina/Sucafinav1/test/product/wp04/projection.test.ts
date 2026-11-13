@@ -234,11 +234,13 @@ test("projection reports PO original amount and submitted FX without replacing t
   expect(Object.fromEntries(historical.values.map((value) => [value.id, value.value]))).toEqual({ baseAmount: null, submittedAmount: 30240, submittedCurrency: "USD", submittedFxRate: 1.08 })
 })
 
-test("a legacy PO with no currency identifies the base default as an estimate", () => {
+test("a legacy PO with no currency leaves its monetary basis unavailable", () => {
   const ref = { ...evidence, target: { ...evidence.target, fields: ["baseAmount", "originalCurrency", "fxSource"] } }
   const projection = projectProcurementSource({ status: "po_draft", value: 100, po: { lines: [{ qty: 1, unitPrice: 100 }] } }, context, ref)
-  expect(projection.values.find((value) => value.id === "fxSource")?.value).toBe("base-default")
-  expect(projection.values.find((value) => value.id === "baseAmount")?.evidenceState).toBe("estimated")
+  expect(projection.values.find((value) => value.id === "fxSource")?.value).toBeNull()
+  expect(projection.values.find((value) => value.id === "originalCurrency")?.value).toBeNull()
+  expect(projection.values.find((value) => value.id === "baseAmount")?.value).toBeNull()
+  expect(projection.values.find((value) => value.id === "baseAmount")?.evidenceState).toBe("absent")
   expect(projection.missing).toContainEqual({ field: "originalCurrency", reason: "missing" })
 })
 

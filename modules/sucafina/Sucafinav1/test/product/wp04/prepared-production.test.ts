@@ -17,7 +17,7 @@ import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { TrustedDomainContext, TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
 import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
-import { projectSfProcurementScope } from "../../../product/integration/procurement-projections.ts"
+import { projectProcurementScope } from "../../../product/procurement/source-projection.ts"
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
 import { createProcurementSourceResolver } from "../../../product/procurement/sources.ts"
 import { createProcurementPort } from "../../../product/procurement/port.ts"
@@ -127,7 +127,7 @@ async function createFixture() {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-prepared-procurement-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
-  const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, projectScope: projectSfProcurementScope, enumerate: enumerateSfSources })
+  const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, projectScope: projectProcurementScope, enumerate: enumerateSfSources })
   await persistence.initializeSources("dashboard")
   await persistence.initializeSources("planner")
   await persistence.initializeSources("procurement")

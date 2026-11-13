@@ -7,7 +7,7 @@ import { openLocalStore } from "../../../runtime/local-store.ts"
 import { initialProcurementSettings } from "../../../src/initial-settings.ts"
 import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
-import { projectSfProcurementScope } from "../../../product/integration/procurement-projections.ts"
+import { projectProcurementScope } from "../../../product/procurement/source-projection.ts"
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
 import { createProcurementConfirmationObserver } from "../../../product/procurement/confirmation.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
@@ -20,7 +20,7 @@ test("confirmation reauthorizes material across buyers and fences physical repla
     const persistence = createSfSourcePersistence({
       persistence: store,
       enumerate: enumerateSfSources,
-      projectScope: projectSfProcurementScope,
+      projectScope: projectProcurementScope,
       createId: randomUUID,
     })
     await persistence.initializeSources("procurement")

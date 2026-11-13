@@ -10,7 +10,7 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
 import { sfScopedSourceIdentity } from "../integration/source-lifecycle.ts"
 import type { SfScopedSourcePort, SfSourceScope } from "../integration/source-lifecycle.ts"
-import { projectSfProcurementScope } from "../integration/procurement-projections.ts"
+import { projectProcurementScope } from "./source-projection.ts"
 import { isProcurementConfirmationFields } from "./confirmation-fields.ts"
 
 type Evidence = Extract<BusinessEvidenceRef, { kind: "record" }>
@@ -67,7 +67,7 @@ export function createProcurementConfirmationObserver(input: { host: DomainPortH
   const key = (scope: ConfirmationScope, binding: TrustedDomainContext, fingerprint: string) => digestSfValue({ scope, principal: binding.binding.principalRef, access: binding.binding.accessRevision, policy: binding.binding.policyVersion, fingerprint })
   const manifestFor = (scope: ConfirmationScope) => valid(scope) ? { version: "procurement-c06-v1", internal: ["authorized-request-fields-v1", "request-status", "selected-financial-inputs-v1"], requiredExternal: [] as readonly never[] } : undefined
   const verifyManifest = async (scope: ConfirmationScope, binding: TrustedDomainContext) => !!manifestFor(scope) && !!input.host.requestFor(binding) && await input.host.revalidate(binding)
-  const fenceManifest = async (scope: ConfirmationScope, binding: TrustedDomainContext) => valid(scope) && !!input.host.requestFor(binding) && !!input.host.persistence.currentSnapshots?.()?.procurement
+  const fenceManifest = async (scope: ConfirmationScope, binding: TrustedDomainContext) => await verifyManifest(scope, binding) && input.host.requestFor(binding)?.signal.aborted === false && !!input.host.persistence.currentSnapshots?.()?.procurement
   const observe = async (scope: ConfirmationScope, binding: TrustedDomainContext): Promise<Observation> => {
     if (!valid(scope)) return { state: "dependency-unavailable", sourceVersion: 0 }
     if (!await verifyManifest(scope, binding)) return { state: "access-unavailable", sourceVersion: 0 }
@@ -87,11 +87,11 @@ export function createProcurementConfirmationObserver(input: { host: DomainPortH
       if (old.sourceIncarnation !== physical.incarnation) return { commit: false, value: { state: "replaced" as const } }
       const oldSelector = object(old.scope.selector)
       const oldScope = { ...old.scope, selector: { ...oldSelector, roleMapDigest: digestSfValue(roleMap(snapshot, "procurement")), currency: issued.value.context.currency } }
-      const oldMaterial = oldSelector.kind === "procurement-confirmation-v1" ? projectSfProcurementScope("procurement", snapshot, oldScope) : undefined
-      const currentMaterial = projectSfProcurementScope("procurement", snapshot, issued.value.scope)
+      const oldMaterial = oldSelector.kind === "procurement-confirmation-v1" ? projectProcurementScope("procurement", snapshot, oldScope) : undefined
+      const currentMaterial = projectProcurementScope("procurement", snapshot, issued.value.scope)
       if (!oldMaterial || !currentMaterial || digestSfValue(oldMaterial) !== digestSfValue(currentMaterial)) return { commit: false, value: { state: "unavailable" as const } }
       if (active.sourceIncarnation !== physical.incarnation || !await input.scopedSources.checkScopedSource!("procurement", issued.value.scope, (currentSnapshot) => authorize(request, binding, currentSnapshot, issued.value.scope, issued.value.context), { incarnation: issued.value.evidence.target.incarnation, version: issued.value.evidence.target.version, inputDigest: issued.value.inputDigest })) return { commit: false, value: { state: "unavailable" as const } }
-      return { commit: false, value: { state: "same" as const, physical: physical.incarnation, material: projectSfProcurementScope("procurement", snapshot, issued.value.scope) } }
+      return { commit: false, value: { state: "same" as const, physical: physical.incarnation, material: projectProcurementScope("procurement", snapshot, issued.value.scope) } }
     }, { signal: request.signal })
     if (!await input.host.revalidate(binding)) return { state: "access-unavailable", sourceVersion: 0 }
     if (proof.state === "replaced") return { state: "replaced", sourceVersion: issued.value.evidence.target.version }
@@ -126,8 +126,8 @@ export function createProcurementConfirmationObserver(input: { host: DomainPortH
     const old = original.length === 1 ? original[0] : undefined
     const oldSelector = object(old?.scope.selector)
     const oldScope = old ? { ...old.scope, selector: { ...oldSelector, roleMapDigest: digestSfValue(roleMap(snapshot, "procurement")), currency: object(expected.scope.selector).currency } } : undefined
-    const oldMaterial = oldScope && oldSelector.kind === "procurement-confirmation-v1" ? projectSfProcurementScope("procurement", snapshot, oldScope) : undefined
-    return !!old && old.sourceIncarnation === expected.physical && digestSfValue(oldSelector.fields) === digestSfValue([...scope.fields].sort()) && digestSfValue(oldSelector.period) === digestSfValue(scope.period) && !!oldMaterial && digestSfValue(oldMaterial) === expected.inputDigest && !!identity && identity.incarnation === expected.incarnation && identity.version === expected.version && identity.inputDigest === expected.inputDigest && digestSfValue(projectSfProcurementScope("procurement", snapshot, expected.scope)) === expected.inputDigest && entry?.sourceIncarnation === expected.physical && physical?.alive === true && physical.incarnation === expected.physical && await input.host.revalidate(binding)
+    const oldMaterial = oldScope && oldSelector.kind === "procurement-confirmation-v1" ? projectProcurementScope("procurement", snapshot, oldScope) : undefined
+    return !!old && old.sourceIncarnation === expected.physical && digestSfValue(oldSelector.fields) === digestSfValue([...scope.fields].sort()) && digestSfValue(oldSelector.period) === digestSfValue(scope.period) && !!oldMaterial && digestSfValue(oldMaterial) === expected.inputDigest && !!identity && identity.incarnation === expected.incarnation && identity.version === expected.version && identity.inputDigest === expected.inputDigest && digestSfValue(projectProcurementScope("procurement", snapshot, expected.scope)) === expected.inputDigest && entry?.sourceIncarnation === expected.physical && physical?.alive === true && physical.incarnation === expected.physical && await input.host.revalidate(binding)
   }
   return { issue, resolve, manifestFor, verifyManifest, fenceManifest, observe, fence }
 }

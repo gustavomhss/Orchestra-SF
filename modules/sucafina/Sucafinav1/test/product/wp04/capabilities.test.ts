@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
 import path from "node:path"
-import { readRequest } from "../../../product/procurement/capabilities.ts"
+import { createProcurementCapabilities, readRequest } from "../../../product/procurement/capabilities.ts"
 import type { ProcurementPort } from "../../../product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 
@@ -21,15 +21,17 @@ test("authorized capability reads through an issued scoped source and consumes o
   const { openLocalStore } = await import("../../../runtime/local-store.ts")
   const { createSfSourcePersistence } = await import("../../../product/integration/source-lifecycle.ts")
   const { enumerateSfSources } = await import("../../../product/integration/source-inventory.ts")
-  const { projectSfProcurementScope } = await import("../../../product/integration/procurement-projections.ts")
+  const { projectProcurementScope } = await import("../../../product/procurement/source-projection.ts")
   const { createProcurementPort } = await import("../../../product/procurement/port.ts")
   const { createProcurementSourceResolver } = await import("../../../product/procurement/sources.ts")
   const { createSfUiAuthority } = await import("../../../product/integration/ui-authority.ts")
   const { digestSfValue } = await import("../../../product/contracts/canonical.ts")
   const { createProcurementUiBindings } = await import("../../../product/procurement/ui-bindings.ts")
+  const { dispatchSfCapability } = await import("../../../product/host-binding/capability-dispatch.ts")
+  const { decodeSfOperationInput, decodeSfOperationOutput } = await import("../../../product/contracts/schema-admission.ts")
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-capability-scope-"))
   const store = await openLocalStore(directory)
-  const persistence = createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources, projectScope: projectSfProcurementScope, createId: randomUUID })
+  const persistence = createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources, projectScope: projectProcurementScope, createId: randomUUID })
   try {
     await persistence.initializeSources("procurement")
     await persistence.transaction("procurement", async (snapshot) => {
@@ -94,13 +96,15 @@ test("authorized capability reads through an issued scoped source and consumes o
     expect(await ui.validate(call.value, "sf_request_read", digestSfValue(input))).toBe(true)
     const result = await readRequest(input, call.value, { port, authority })
     expect(result.status === "ok" && result.result).toMatchObject({ values: expect.arrayContaining([expect.objectContaining({ id: "subject", value: "Owned" })]) })
-    const bindings = createProcurementUiBindings({ authority: ui, dispatch: async (operation, payload, context) => {
-      if (operation !== "sf_request_read" || context.kind !== "ui" || !await ui.validate(context, operation, digestSfValue(payload))) throw new Error("invalid dispatch")
-      expect(ui.requestFor(context)).toBe(request)
-      return readRequest(payload, context, { port, authority })
-    } })
+    const descriptors = createProcurementCapabilities({ port, authority })
+    const bindings = createProcurementUiBindings({ authority: ui, dispatch: (operation, payload, context) => dispatchSfCapability({
+      operation, payload, context, descriptors, authority,
+      validateInput: (descriptor, value) => decodeSfOperationInput(descriptor.id as "sf_request_read", value).ok,
+      validateOutput: (descriptor, value) => value.status !== "ok" || decodeSfOperationOutput(descriptor.id as "sf_request_read", value.result).ok,
+    }) })
     const fromUi = await bindings.readRequest(request, input)
     expect(fromUi.status === "ok" && fromUi.result).toMatchObject({ values: expect.arrayContaining([expect.objectContaining({ id: "subject", value: "Owned" })]) })
+    expect(fromUi.receipt).toMatchObject({ kind: "ui", operation: "sf_request_read", handlerExport: "readRequest", principalRef: "a" })
     if (proposed.status !== "ok") throw new Error("scenario preparation failed")
     const { createProcurementPreparedReview } = await import("../../../product/procurement/prepared-review.ts")
     const review = createProcurementPreparedReview({ port, individual: resolver })
