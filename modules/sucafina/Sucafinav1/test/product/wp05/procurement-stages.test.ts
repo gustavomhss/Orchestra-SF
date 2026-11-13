@@ -4,7 +4,6 @@ import { tmpdir } from "node:os"
 import path from "node:path"
 import { randomUUID } from "node:crypto"
 import { createSfBiFactory } from "../../../product/analytics/factory.ts"
-import { readBiPresentation } from "../../../product/analytics/capabilities.ts"
 import { createProcurementCollectionRegistry } from "../../../product/procurement/sources.ts"
 import { createProcurementPort } from "../../../product/procurement/port.ts"
 import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
@@ -102,10 +101,10 @@ async function procurementFixture() {
       const admitted = await ui.admit(http(), "sf_bi_view", digestSfValue(request))
       expect(admitted.status).toBe("ok")
       if (admitted.status !== "ok") throw new Error("BI admission refused")
-      const result = await readBiPresentation(request, admitted.value, factory.source, authority)
+      const result = await factory.dispatchPresentation(request, admitted.value)
       expect(result.status).toBe("ok")
       if (result.status !== "ok") throw new Error("Real BI source refused: " + JSON.stringify(result))
-      return { request, ...result.value }
+      return result.value
     },
     async readRequest(requestRef: string) {
       const request = { requestRef }
