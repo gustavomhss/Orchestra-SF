@@ -28,8 +28,25 @@ import { plannerAt, plannerFixture, plannerPeriod } from "./planner-fixture.ts"
 
 // Admission is a deterministic fixture, not a loaded resident skill. Everything from the
 // private lease through MCP/dispatch to Planner, case access, C10 and C08 executes here.
+// Diagnostic run: repeated case evidence plus comparison replay performs hundreds of
+// full self-comparisons. Stage/counter logs distinguish finite progress from a stalled
+// transaction. The 60s bound does not extend the fixture's real 60s native admission.
 test("C16 scenario simulation and comparison share UI/MCP handlers and persist their real results in C08", async () => {
-  const fixture = await plannerFixture()
+  const startedAt = performance.now()
+  const progress = { evidenceStarted: 0, evidenceCompleted: 0 }
+  const trace = (stage: string) => console.info("[wp03-scenario-parity]", JSON.stringify({ stage, elapsedMs: Math.round(performance.now() - startedAt), ...progress }))
+  const step = async <T>(stage: string, work: () => Promise<T>): Promise<T> => {
+    trace(`${stage}:start`)
+    try {
+      const value = await work()
+      trace(`${stage}:done`)
+      return value
+    } catch (error) {
+      trace(`${stage}:failed`)
+      throw error
+    }
+  }
+  const fixture = await step("fixture", plannerFixture)
   try {
     const read = await fixture.admit("sf-human:planner.read", {}, "finance", true)
     const request = fixture.authority.requestFor(read)!
@@ -50,13 +67,19 @@ test("C16 scenario simulation and comparison share UI/MCP handlers and persist t
     const evidence = createSfBusinessContext({
       revalidate: fixture.host.revalidate,
       resolveSource: async (ref, context): Promise<BusinessEvidenceResolution> => {
-        const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: plannerAt })
-        if (ref.kind !== "record" || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" || !ref.target.period) return unavailable()
-        const current = await fixture.sources.resolveForecastSource(ref.refId, context)
-        if (current.status !== "ok" || digestSfValue(current.value.evidence) !== digestSfValue(ref)) return unavailable()
-        const projection = await fixture.planner.compareForecast({ baseRef: ref.refId, candidateRef: ref.refId, period: ref.target.period, currency: "USD" }, context)
-        if (projection.status !== "ok") return unavailable()
-        return { state: "fresh", ref, currentRef: current.value.evidence, authorizedProjection: projection.value.baseline, accessRevision: context.binding.accessRevision, checkedAt: plannerAt }
+        progress.evidenceStarted += 1
+        try {
+          const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: plannerAt })
+          if (ref.kind !== "record" || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" || !ref.target.period) return unavailable()
+          const current = await fixture.sources.resolveForecastSource(ref.refId, context)
+          if (current.status !== "ok" || digestSfValue(current.value.evidence) !== digestSfValue(ref)) return unavailable()
+          const projection = await fixture.planner.compareForecast({ baseRef: ref.refId, candidateRef: ref.refId, period: ref.target.period, currency: "USD" }, context)
+          if (projection.status !== "ok") return unavailable()
+          return { state: "fresh", ref, currentRef: current.value.evidence, authorizedProjection: projection.value.baseline, accessRevision: context.binding.accessRevision, checkedAt: plannerAt }
+        } finally {
+          progress.evidenceCompleted += 1
+          if (progress.evidenceCompleted % 16 === 0) trace("evidence:progress")
+        }
       },
       proveContinuity: async () => false,
       recall: async () => [],
@@ -76,7 +99,7 @@ test("C16 scenario simulation and comparison share UI/MCP handlers and persist t
     } }
     const base = createPlannerPort({ host: fixture.host, sources })
     const inputs = refs.map((ref) => ({ baseRef: ref.refId, operations: [], assumptions: [] }))
-    const previews = await Promise.all(inputs.map((input) => base.simulateScenario(input, read)))
+    const previews = await step("seed-scenarios", () => Promise.all(inputs.map((input) => base.simulateScenario(input, read))))
     if (previews.some((preview) => preview.status !== "ok")) throw new Error("scenario setup failed")
     const results = previews.flatMap((preview) => preview.status === "ok" ? [preview.value] : [])
     const decision: DecisionCase = { id: "case", incarnation: "case-inc", version: 1, state: "comparing", objective: "Compare the current Planner alternatives", currency: "USD", horizon: plannerPeriod, criteria: [], participants: ["finance"], sourceRefs: refs, alternatives: results.map((result, index) => ({ id: `alternative-${index}`, version: 1, title: `Alternative ${index}`, scenario: inputs[index]!, result })), costCoverageBases: [basis], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
@@ -84,10 +107,10 @@ test("C16 scenario simulation and comparison share UI/MCP handlers and persist t
     expect(seeded.status).toBe("ok")
     const store = createSfDecisionResultStore({ state, host: fixture.host, authorizeCase, verifySources: async (_value, sourceRefs, context) => verifyRefs(sourceRefs, context), createId: randomUUID, now: () => plannerAt })
     const cases = createDecisionCasePort({ state, host: fixture.host, creationTarget: { ref: "case", incarnation: "case-inc" }, operationIdentity: () => undefined, authorizeCase, evidence, createId: randomUUID, now: () => plannerAt })
-    const caseEvidence = await evidence.context({ refs }, read)
+    const caseEvidence = await step("case-evidence", () => evidence.context({ refs }, read))
     expect(caseEvidence).toHaveLength(refs.length)
     expect(caseEvidence.every((resolved) => resolved.state === "fresh" && resolved.authorizedProjection)).toBe(true)
-    expect(await cases.read({ caseRef: encodeCaseRef(decision) }, read)).toMatchObject({ status: "ok", value: { evidenceRefs: refs } })
+    expect(await step("case-read", () => cases.read({ caseRef: encodeCaseRef(decision) }, read))).toMatchObject({ status: "ok", value: { evidenceRefs: refs } })
     const scenarios = createStoredPlannerScenarioHost({ store, cases, planner: base, coverageRefFor: (caseRef, alternative) => decisionCoverageRef(caseRef, alternative.id, alternative.version) })
     const planner = createPlannerPort({ host: fixture.host, sources, scenarios })
     const persist = createPlannerResultPersistence({ store, scenarios, resolveCase: async (context) => {
@@ -100,8 +123,8 @@ test("C16 scenario simulation and comparison share UI/MCP handlers and persist t
       validateInput: (descriptor, value) => { const id = operations.find((entry) => entry === descriptor.id); return !!id && decodeSfOperationInput(id, value).ok },
       validateOutput: (descriptor, value) => { const id = operations.find((entry) => entry === descriptor.id); return value.status !== "ok" || !!id && decodeSfOperationOutput(id, value.result).ok },
     })
-    const humanBase = await dispatch("sf_scenario_simulate", inputs[0], await fixture.admit("sf_scenario_simulate", inputs[0]))
-    const humanAlternative = await dispatch("sf_scenario_simulate", inputs[1], await fixture.admit("sf_scenario_simulate", inputs[1]))
+    const humanBase = await step("ui-simulate-base", async () => dispatch("sf_scenario_simulate", inputs[0], await fixture.admit("sf_scenario_simulate", inputs[0])))
+    const humanAlternative = await step("ui-simulate-alternative", async () => dispatch("sf_scenario_simulate", inputs[1], await fixture.admit("sf_scenario_simulate", inputs[1])))
     expect(humanBase.status).toBe("ok")
     expect(humanAlternative.status).toBe("ok")
     if (humanBase.status !== "ok" || humanAlternative.status !== "ok") throw new Error("UI persistence failed")
@@ -126,7 +149,7 @@ test("C16 scenario simulation and comparison share UI/MCP handlers and persist t
     expect(bound.status).toBe("ok")
     const nativeContext = { sessionID, agent: AgentV2.ID.make(profile.id), assistantMessageID: SessionMessage.ID.make("msg_wp03_scenario"), toolCallID: "simulate" }
     const bridge = createSfBusinessMcpBridge({ registry: fixture.registry, mcp: { config: () => Effect.succeed({}) } as unknown as Mcp.Interface, descriptors, dispatch })
-    const nativeBase = await bridge.call(nativeContext, "sf_scenario_simulate", inputs[0])
+    const nativeBase = await step("mcp-simulate-base", () => bridge.call(nativeContext, "sf_scenario_simulate", inputs[0]))
     expect(nativeBase.status).toBe("ok")
     if (nativeBase.status !== "ok") throw new Error("MCP scenario persistence failed")
     // Check and retain primitive references before matching result objects that are
@@ -139,8 +162,8 @@ test("C16 scenario simulation and comparison share UI/MCP handlers and persist t
     expect(nativeBase.receipt).toMatchObject({ kind: "native", handlerExport: "simulateScenario", resultDigest: digestSfValue(humanBase.result) })
     expect(await store.read({ resultRef: nativeBaseRef, kind: "scenario" }, read)).toMatchObject({ status: "ok", value: { resultDigest: digestSfValue(humanBase.result) } })
     const comparisonInput = { scenarioRefs: [humanBaseRef, humanAlternativeRef], criteria: [] }
-    const humanComparison = await dispatch("sf_scenario_compare", comparisonInput, await fixture.admit("sf_scenario_compare", comparisonInput))
-    const nativeComparison = await bridge.call({ ...nativeContext, toolCallID: "compare" }, "sf_scenario_compare", comparisonInput)
+    const humanComparison = await step("ui-compare", async () => dispatch("sf_scenario_compare", comparisonInput, await fixture.admit("sf_scenario_compare", comparisonInput)))
+    const nativeComparison = await step("mcp-compare", () => bridge.call({ ...nativeContext, toolCallID: "compare" }, "sf_scenario_compare", comparisonInput))
     expect(humanComparison.status).toBe("ok")
     expect(nativeComparison.status).toBe("ok")
     if (humanComparison.status !== "ok" || nativeComparison.status !== "ok") throw new Error("comparison persistence failed")
@@ -161,5 +184,6 @@ test("C16 scenario simulation and comparison share UI/MCP handlers and persist t
     expect(await dispatch("sf_scenario_compare", comparisonInput, beforeRevocation)).toMatchObject({ status: "denied" })
     expect(await bridge.call({ ...nativeContext, toolCallID: "revoked-simulation" }, "sf_scenario_simulate", inputs[0])).toMatchObject({ status: "denied" })
     expect((await fixture.readSnapshot()).data).toEqual(domainBefore)
-  } finally { await fixture.close() }
-}, 20_000)
+    trace("assertions:done")
+  } finally { await step("close", fixture.close) }
+}, 60_000)
