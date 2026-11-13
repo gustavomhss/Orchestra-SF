@@ -1,4 +1,5 @@
 import type { Actor, Command, Domain, Environment, Result, Snapshot } from "./contract.ts"
+import { WorkbookAmount } from "./workbook-amount.ts"
 import { changed, conflict, finite, object, rows, text } from "./contract.ts"
 import type { RenderContext } from "./ui.ts"
 import { fields, form, metric, metricGrid, table } from "./ui.ts"
@@ -2349,7 +2350,7 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
         line.alloc = workbookReference(row.Allocation, line.alloc, rows(snapshot.data.allocations), "allocation", issue)
       const field = measure === "b" ? "budget" : measure === "a" ? "actual" : "forecast"
       if (!(synthetic && measure === "b") && (can(field, original ?? line) || (measure === "b" && ownerBudget))) {
-        const amounts = workbookMonths.map((month) => workbookNumber(row[month], measure === "b" ? 0 : null))
+        const amounts = workbookMonths.map((month) => WorkbookAmount.parse(row[month], measure === "b" ? 0 : null))
         if (amounts.some((amount) => amount === undefined)) {
           fail(`${section}: Invalid monthly amount`)
           break
@@ -2625,7 +2626,7 @@ function readWorkbookHeadcount(
         const found =
           version.hc.positions.find((position) => !!id && position.id === id) ||
           version.hc.positions.find((position) => normName(text(position.name)) === normName(name))
-        const fte = workbookNumber(row.FTE, row.FTE === undefined && found ? finite(found.fte, 1) : 1)
+        const fte = WorkbookAmount.parse(row.FTE, row.FTE === undefined && found ? finite(found.fte, 1) : 1)
         const start = workbookSpan(row["Start month"], finite(found?.start, 1)),
           end = workbookSpan(row["End month"], finite(found?.end, 12))
         const positionName = name || text(found?.name)
@@ -2663,7 +2664,7 @@ function readWorkbookHeadcount(
         if (row["Rate card"] !== undefined)
           next.rateId = workbookReference(row["Rate card"], next.rateId, version.hc.rates, "rate card", issue)
         if (row["Rate override"] !== undefined) {
-          const override = workbookNumber(row["Rate override"], null)
+          const override = WorkbookAmount.parse(row["Rate override"], null)
           if (override === undefined || (override !== null && override < 0)) {
             fail("Invalid rate override")
             break
@@ -2730,7 +2731,7 @@ function readWorkbookRates(
           version.hc.rates.find((rate) => idOf(row["Rate ID"]) && rate.id === idOf(row["Rate ID"])) ||
           version.hc.rates.find((rate) => normName(text(rate.name)) === normName(name))
         const cardName = name || text(found?.name)
-        const annual = workbookNumber(row["Annual cost per FTE"], found ? finite(found.annual) : 0)
+        const annual = WorkbookAmount.parse(row["Annual cost per FTE"], found ? finite(found.annual) : 0)
         if (!cardName || annual == null || annual < 0) {
           fail("Invalid rate card name or annual cost")
           break
