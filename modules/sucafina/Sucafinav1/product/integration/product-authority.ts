@@ -56,6 +56,8 @@ export function createSfProductAuthority(input: {
     return Object.freeze(copy)
   }
   const principal = async (request: Request, dashboard: Snapshot) => {
+    const snapshots = input.persistence.currentSnapshots?.()
+    if (!snapshots) return undefined
     const current = identity()
     if (!current || request.signal.aborted || new URL(request.url).origin !== input.origin ||
       (request.headers.has("origin") && request.headers.get("origin") !== input.origin)) return undefined
@@ -70,10 +72,7 @@ export function createSfProductAuthority(input: {
       return { actor, surface, assigned: Array.isArray(access.assigned) ? [...access.assigned].toSorted() : [],
         domains: Array.isArray(access.domains) ? [...access.domains].toSorted() : [] }
     }
-    const observed = await Promise.all(surfaces.map(async (surface) => {
-      if (surface === "dashboard") return observe(surface, dashboard)
-      return input.persistence.transaction(surface, async (snapshot) => ({ commit: false, value: await observe(surface, snapshot) }), { signal: request.signal })
-    }))
+    const observed = await Promise.all(surfaces.map((surface) => observe(surface, surface === "dashboard" ? dashboard : snapshots[surface])))
     const present = observed.filter((entry) => entry !== undefined)
     const first = present[0]?.actor
     if (!first?.id || first.id.startsWith("local:") || present.some((entry) => entry.actor.id !== first.id) || request.signal.aborted) return undefined
@@ -89,7 +88,12 @@ export function createSfProductAuthority(input: {
     if (digestSfValue(identity()) !== identityDigest) return undefined
     return { principalRef: first.id, policyVersion: input.policyVersion, accessRevision, canWrite, grant, identity: current }
   }
-  const resolve = (request: Request) => input.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await principal(request, snapshot) }), { signal: request.signal })
+  const resolve = async (request: Request) => {
+    if (!input.persistence.currentSnapshots) return undefined
+    const snapshots = input.persistence.currentSnapshots()
+    if (snapshots) return principal(request, snapshots.dashboard)
+    return input.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await principal(request, snapshot) }), { signal: request.signal })
+  }
   const state = createSfProductState({
     persistence: input.persistence, createId: input.createId, nativeEvidenceWrites,
     authorize: async (request, snapshot, namespace, mode) => {
