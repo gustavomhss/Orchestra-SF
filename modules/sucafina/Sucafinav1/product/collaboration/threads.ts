@@ -7,6 +7,8 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductStatePort } from "../contracts/state.ts"
 import type { CollaborationMutationFence } from "./mutation-fence.ts"
 import type { CollaborationHumanAuthority } from "./human.ts"
+import { createRecipientCommitCheck } from "./recipient-authority.ts"
+import type { CollaborationRecipientCommitCheck } from "./recipient-authority.ts"
 
 export type CollaborationThread = {
   id: string
@@ -31,9 +33,11 @@ export function createThreadPort(input: {
   human: CollaborationHumanAuthority
   mutationFence: CollaborationMutationFence
   authorize: (thread: Draft | CollaborationThread, context: TrustedDomainContext, mode: "read" | "write") => Promise<boolean>
+  checkRecipientAtCommit?: CollaborationRecipientCommitCheck
   createId: () => string
   now: () => string
 }) {
+  const checkRecipient = input.checkRecipientAtCommit ?? createRecipientCommitCheck()
   return {
     create: async (draft: Draft, mutation: Mutation, context: TrustedDomainContext): Promise<PortResult<CollaborationThread>> => {
       if (context.kind !== "ui") return { status: "denied", reason: "human-action-required" }
@@ -49,7 +53,7 @@ export function createThreadPort(input: {
       const thread: CollaborationThread = { id: input.createId(), kind: selected.draft.kind, sourceRef: selected.draft.sourceRef, sourceIncarnation: selected.draft.sourceIncarnation, observedVersion: selected.draft.observedVersion, period: selected.draft.period, ...(selected.draft.recipientRef ? { recipientRef: selected.draft.recipientRef } : {}), state: "open", messages: [{ id: input.createId(), incarnation: input.createId(), version: 1, authorRef: context.binding.principalRef, body: selected.draft.body, createdAt: input.now() }], evidenceRefs: selected.draft.evidenceRefs }
       if (!thread.id.trim() || !thread.messages[0]?.id.trim() || !thread.messages[0]?.incarnation.trim()) return { status: "unavailable", reason: "identity-unavailable" }
       const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, commandDigest: digestSfValue(selected.draft), targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation }, async (state, authority) => {
-        if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, "collaboration.thread.create", selected) || !input.mutationFence.check(fence) || !await input.authorize(structuredClone(selected.draft), context, "write") || state.threads[thread.id]) return { commit: false, value: null }
+        if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, "collaboration.thread.create", selected) || !input.mutationFence.check(fence) || selected.draft.recipientRef && !checkRecipient(selected.draft.recipientRef, selected.draft.evidenceRefs, context) || state.threads[thread.id]) return { commit: false, value: null }
         state.threads[thread.id] = thread
         return { commit: true, value: thread }
       })
@@ -93,7 +97,7 @@ export function createThreadPort(input: {
     const incarnation = selected.action.kind === "reply" ? input.createId() : undefined
     if (selected.action.kind === "reply" && (!messageId?.trim() || !incarnation?.trim() || prior.messages.some((message) => message.id === messageId || message.incarnation === incarnation))) return { status: "unavailable", reason: "identity-unavailable" }
     const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, commandDigest: digestSfValue({ id, action: selected.action }), targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation }, async (state, authority) => {
-      if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, humanAction, payload) || !input.mutationFence.check(fence) || !await input.authorize(structuredClone(prior), context, "write") || digestSfValue(state.threads[id]) !== digestSfValue(prior) || prior.state !== "open") return { commit: false, value: null }
+      if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, humanAction, payload) || !input.mutationFence.check(fence) || prior.recipientRef && !checkRecipient(prior.recipientRef, prior.evidenceRefs, context) || digestSfValue(state.threads[id]) !== digestSfValue(prior) || prior.state !== "open") return { commit: false, value: null }
       const next: CollaborationThread = selected.action.kind === "reply" ? { ...prior, messages: [...prior.messages, { id: messageId!, incarnation: incarnation!, version: 1, authorRef: context.binding.principalRef, body: selected.action.body, createdAt: input.now() }] } : { ...prior, state: "resolved" }
       state.threads[id] = next
       return { commit: true, value: next }

@@ -42,11 +42,13 @@ export function createCollaborationComposition(input: {
 }) {
   const mutationFence = createCollaborationMutationFence(input.host)
   const authority = createCollaborationAuthority({ host: input.host, evidence: input.evidence, recipientAuthority: input.recipientAuthority })
-  const activeHandoffs = new WeakMap<TrustedDomainContext, unknown>()
+  const activeHandoffs = new WeakMap<TrustedDomainContext, Parameters<Parameters<typeof createHandoffPort>[0]["run"]>[1]>()
   const handoffPermit = Symbol("handoff")
   const hotTopicWriter = createHotTopicPort(createCollaborationHotTopicHost({ host: input.host, state: input.state, evidence: input.evidence, creationTarget: input.creationTarget, mutationFence, authorizeMutation: async (context) => {
     const request = activeHandoffs.get(context)
-    return request !== undefined && input.human.authorize(context, "collaboration.handoff.confirm", request)
+    if (!request || !await input.human.authorize(context, "collaboration.handoff.confirm", request)) return false
+    const refs = "intent" in request ? request.intent.sourceRefs : request.sourceRefs
+    return !request.recipientRef || authority.checkRecipientAtCommit(request.recipientRef, refs, context)
   } }))
   const hotTopicReader = createHotTopicPort(createCollaborationHotTopicReadHost({ host: input.host, state: input.state, evidence: input.evidence, mutationFence }))
   const hotTopics = { create: hotTopicWriter.create, update: hotTopicWriter.update, read: hotTopicReader.read }
@@ -58,8 +60,8 @@ export function createCollaborationComposition(input: {
     const day = new Date(environment.at).toISOString().slice(0, 10)
     return input.recordEvidence.issue({ page: "Hot Topics & Actions", recordType: "hotTopics", recordId: topic.id, fields: ["status"], period: { start: day, end: day } }, context)
   } }
-  const relations = createRelationPort({ state: input.state, host: input.host, createId: input.createId, now: input.now, authorizePair: authority.authorizePair, creationTarget: input.creationTarget, human: input.human, mutationFence, reissue: input.reissue, handoffPermit })
-  const threads = createThreadPort({ state: input.state, host: input.host, createId: input.createId, now: input.now, authorize: authority.authorizeThread, creationTarget: input.creationTarget, human: input.human, mutationFence })
+  const relations = createRelationPort({ state: input.state, host: input.host, createId: input.createId, now: input.now, authorizePair: authority.authorizePair, checkRecipientAtCommit: authority.checkRecipientAtCommit, creationTarget: input.creationTarget, human: input.human, mutationFence, reissue: input.reissue, handoffPermit })
+  const threads = createThreadPort({ state: input.state, host: input.host, createId: input.createId, now: input.now, authorize: authority.authorizeThread, checkRecipientAtCommit: authority.checkRecipientAtCommit, creationTarget: input.creationTarget, human: input.human, mutationFence })
   const handoff = createHandoffPort({ hotTopics, relations, human: input.human, permit: handoffPermit, run: async (context, request, work) => {
     if (activeHandoffs.has(context)) return { status: "conflict", reason: "handoff-in-progress" }
     activeHandoffs.set(context, request)

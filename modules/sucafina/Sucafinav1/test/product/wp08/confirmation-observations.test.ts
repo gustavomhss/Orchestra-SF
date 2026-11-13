@@ -26,10 +26,16 @@ test("observation receipts bind actor, scope, version and fingerprint and expire
   expect(await receipts.verifyObserved({ ...command, expectedScopeFingerprint: "scope-v2" }, a.value)).toBeUndefined()
   clock.now = Number.NaN
   expect(await receipts.verifyObserved(command, a.value)).toBeUndefined()
-  clock.now = Date.parse("2026-11-12T23:59:59Z")
-  expect(await receipts.verifyObserved(command, a.value)).toBeUndefined()
   clock.now = Date.parse("2026-11-13T00:00:00Z")
-  expect(await receipts.verifyObserved(command, a.value)).toBeDefined()
+  // The real UI authority discards an admission checked with an invalid clock.
+  expect(await receipts.verifyObserved(command, a.value)).toBeUndefined()
+  expect((await receipts.prepare(scope, read.value)).status).toBe("ok")
+  const fresh = await human.admit(request("A"), "collaboration.confirmation.confirm", command)
+  if (fresh.status !== "ok") throw new Error("fresh admission failed")
+  clock.now = Date.parse("2026-11-12T23:59:59Z")
+  expect(await receipts.verifyObserved(command, fresh.value)).toBeUndefined()
+  clock.now = Date.parse("2026-11-13T00:00:00Z")
+  expect(await receipts.verifyObserved(command, fresh.value)).toEqual({ physicalIncarnation: "physical-A", sourceFingerprint: "source-v1", dependencyFingerprint: "dependencies-v1" })
   clock.now += 5 * 60 * 1000
   const renewed = await human.admit(request("A"), "collaboration.confirmation.confirm", command)
   if (renewed.status !== "ok") throw new Error("renewed admission failed")

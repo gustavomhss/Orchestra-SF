@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { createRecipientSourceAuthorizer } from "../../../product/collaboration/recipient-authority.ts"
+import { createRecipientCommitCheck, createRecipientSourceAuthorizer } from "../../../product/collaboration/recipient-authority.ts"
 import type { CollaborationRecipientAuthority } from "../../../product/collaboration/recipient-authority.ts"
 import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
 import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
@@ -62,4 +62,23 @@ test("the proof gets detached exact refs and cannot rewrite the assignment or om
   expect(digestSfValue(refs)).toBe(expected)
   const revoked = createRecipientSourceAuthorizer({ sources: async () => true, revalidate: async () => false, recipientAuthority: { authorize: async () => true } })
   expect(await revoked("person-B", refs, context)).toBe(false)
+})
+
+test("commit checks require a current synchronous recipient lease without repeating source I/O", async () => {
+  const refs = [reference("contract"), reference("dependency")]
+  const lease = { valid: true, preparations: 0 }
+  const authority: CollaborationRecipientAuthority = {
+    authorize: async () => { lease.preparations++; return true },
+    checkAtCommit: (id, selected, caller) => lease.valid && id === "person-B" && caller === context && digestSfValue(selected) === digestSfValue(refs),
+  }
+  expect(await authority.authorize("person-B", refs, context)).toBe(true)
+  const check = createRecipientCommitCheck(authority)
+  expect(check("person-B", refs, context)).toBe(true)
+  lease.valid = false
+  expect(check("person-B", refs, context)).toBe(false)
+  expect(lease.preparations).toBe(1)
+  expect(createRecipientCommitCheck()("person-B", refs, context)).toBe(false)
+  expect(createRecipientCommitCheck()("person-A", refs, context)).toBe(true)
+  expect(createRecipientCommitCheck({ authorize: authority.authorize, checkAtCommit: () => { throw new Error("lease unavailable") } })("person-B", refs, context)).toBe(false)
+  expect(createRecipientCommitCheck({ authorize: authority.authorize, checkAtCommit: () => Promise.resolve(true) as unknown as boolean })("person-B", refs, context)).toBe(false)
 })

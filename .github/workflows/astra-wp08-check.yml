@@ -29,36 +29,34 @@ jobs:
           test "$(git rev-parse HEAD)" = "$PRODUCT_SHA"
           git rev-parse --verify origin/dev
           git merge-base HEAD origin/dev
-          mkdir -p wp08-check-evidence
-          git rev-parse HEAD > wp08-check-evidence/product-sha.txt
-          git rev-parse HEAD^{tree} > wp08-check-evidence/product-tree.txt
-          git rev-parse origin/dev > wp08-check-evidence/guard-base.txt
+          mkdir -p "$RUNNER_TEMP/wp08-check-evidence"
+          git rev-parse HEAD > "$RUNNER_TEMP/wp08-check-evidence/product-sha.txt"
+          git rev-parse HEAD^{tree} > "$RUNNER_TEMP/wp08-check-evidence/product-tree.txt"
+          git rev-parse origin/dev > "$RUNNER_TEMP/wp08-check-evidence/guard-base.txt"
 
       - name: Setup Bun
         uses: ./.github/actions/setup-bun
 
       - name: Package typecheck
         id: typecheck
-        continue-on-error: true
         working-directory: modules/sucafina
         run: |
           set -o pipefail
-          bun typecheck 2>&1 | tee "$GITHUB_WORKSPACE/wp08-check-evidence/typecheck.log"
+          bun typecheck 2>&1 | tee "$RUNNER_TEMP/wp08-check-evidence/typecheck.log"
 
       - name: Repository guards
         id: guards
         if: always() && steps.typecheck.outcome != 'skipped'
-        continue-on-error: true
         run: |
           set -o pipefail
-          bun run check:guards --base origin/dev 2>&1 | tee wp08-check-evidence/guards.log
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/wp08-check-evidence/guards.log"
 
       - name: Upload check evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: astra-wp08-check-${{ github.sha }}-${{ github.run_attempt }}
-          path: wp08-check-evidence
+          path: ${{ runner.temp }}/wp08-check-evidence
           if-no-files-found: error
           retention-days: 14
 

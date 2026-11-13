@@ -7,7 +7,7 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { HotTopicIntent } from "../dashboard/hot-topics.ts"
 import type { CollaborationThread } from "./threads.ts"
 import { isAllowedRelationPair } from "./relation-catalog.ts"
-import { createRecipientSourceAuthorizer } from "./recipient-authority.ts"
+import { createRecipientCommitCheck, createRecipientSourceAuthorizer } from "./recipient-authority.ts"
 import type { CollaborationRecipientAuthority } from "./recipient-authority.ts"
 
 /** Current source access and explicitly selected directory IDs are checked separately. */
@@ -36,6 +36,7 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     sources,
     recipient,
     recipientSources,
+    checkRecipientAtCommit: createRecipientCommitCheck(input.recipientAuthority),
     authorizePair: async (pair: { fromRef: string; toRef: string; kind: string; evidenceRefs: readonly BusinessEvidenceRef[]; recipientRef?: string }, context: TrustedDomainContext) => {
       if (!Array.isArray(pair.evidenceRefs) || pair.evidenceRefs.some((ref) => !ref || typeof ref !== "object")) return false
       const from = pair.evidenceRefs.filter((ref) => ref.refId === pair.fromRef)

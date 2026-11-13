@@ -32,7 +32,7 @@ function fixture() {
         return { status: "ok" as const, storageVersion: reads, aggregateRevision: reads, incarnation: "store", value: result.value }
       },
     } as never,
-    cases: { read: async () => ({ status: "ok" as const, value: { case: state.cases.c1 } as never) },
+    cases: { read: async () => ({ status: "ok" as const, value: { case: state.cases.c1 } as never }) },
     authority: { sources: async () => allowed } as never,
     human: { authorize: async () => allowed } as never,
     fence: { prepare: async () => allowed ? "fence" : undefined, check: () => allowed },

@@ -7,6 +7,22 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
  */
 export type CollaborationRecipientAuthority = {
   authorize: (recipientRef: string, refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<boolean>
+  /** Checks a current host-private authority lease without I/O or a nested source transaction.
+   * The host must bind the lease to this recipient, caller, every selected ref and current ACL.
+   * Directory membership and a previously successful authorize() are not a current lease.
+   */
+  checkAtCommit?: CollaborationRecipientCommitCheck
+}
+
+export type CollaborationRecipientCommitCheck = (recipientRef: string, refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => boolean
+
+/** The source snapshot fence and current caller authority are checked by the transaction owner. */
+export function createRecipientCommitCheck(authority?: CollaborationRecipientAuthority): CollaborationRecipientCommitCheck {
+  return (recipientRef, refs, context) => {
+    if (!recipientRef.trim() || !refs.length) return false
+    if (recipientRef === context.binding.principalRef) return true
+    try { return authority?.checkAtCommit?.(recipientRef, structuredClone(refs), context) === true } catch { return false }
+  }
 }
 
 export function createRecipientSourceAuthorizer(input: {

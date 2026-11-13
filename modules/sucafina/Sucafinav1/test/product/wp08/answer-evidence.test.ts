@@ -24,7 +24,7 @@ test("human answer evidence is a stable claim and disappears when access is revo
       const principalRef = request.headers.get("x-test-principal")
       return access.allowed && (principalRef === "A" || principalRef === "B") ? { principalRef, policyVersion: "policy", accessRevision: "access" } : undefined
     } })
-    const threads = createThreadPort({ mutationFence: createCollaborationMutationFence({ persistence: store }), human: { authorize: async () => true }, state, creationTarget: { ref: "workspace", incarnation: "workspace-inc" }, host: { requestFor: (context) => new Request("https://example.test/", { headers: { "x-test-principal": context.binding.principalRef } }), revalidate: async () => access.allowed }, authorize: async (thread, context) => access.allowed && (thread.recipientRef === context.binding.principalRef || !("messages" in thread) || thread.messages.some((message) => message.authorRef === context.binding.principalRef)), createId: () => `id-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" })
+    const threads = createThreadPort({ mutationFence: createCollaborationMutationFence({ persistence: store }), human: { authorize: async () => true }, checkRecipientAtCommit: (id) => access.allowed && id === "B", state, creationTarget: { ref: "workspace", incarnation: "workspace-inc" }, host: { requestFor: (context) => new Request("https://example.test/", { headers: { "x-test-principal": context.binding.principalRef } }), revalidate: async () => access.allowed }, authorize: async (thread, context) => access.allowed && (thread.recipientRef === context.binding.principalRef || !("messages" in thread) || thread.messages.some((message) => message.authorRef === context.binding.principalRef)), createId: () => `id-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" })
     const opened = await threads.create({ kind: "clarification", sourceRef: "source", sourceIncarnation: "inc-A", observedVersion: 1, period: { start: "2027-01-01", end: "2027-01-31" }, recipientRef: "B", body: "Why?", evidenceRefs: [source] }, { expectedStorageVersion: 0, idempotencyKey: "open" }, binding("A"))
     if (opened.status !== "ok") throw new Error("thread creation failed")
     const replied = await threads.reply(opened.value.id, "Because", { expectedStorageVersion: 1, idempotencyKey: "answer" }, binding("B"))
@@ -63,3 +63,4 @@ test("human answer evidence is a stable claim and disappears when access is revo
     await rm(directory, { recursive: true, force: true })
   }
 })
+
