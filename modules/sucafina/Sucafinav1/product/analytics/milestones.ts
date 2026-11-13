@@ -8,6 +8,7 @@ export type TimelinePlan = { items: readonly { label: string; dateValueId: strin
 export function resolveTimeline(projection: DomainProjection, plan: TimelinePlan) {
   const values = new Map(projection.values.map((value) => [value.id, value]))
   if (values.size !== projection.values.length) return { status: "unavailable", reason: "duplicate-value-id" } as const
+  if (new Set(plan.items.map((item) => item.dateValueId)).size !== plan.items.length) return { status: "unavailable", reason: "duplicate-timeline-item" } as const
   if (plan.items.some((item) => !values.has(item.dateValueId))) return { status: "unavailable", reason: "missing-timeline-value" } as const
   return { status: "ok", items: plan.items.map((item) => {
     const source = values.get(item.dateValueId)!

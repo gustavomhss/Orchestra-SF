@@ -16,9 +16,12 @@ export function sameBiProjection(left: DomainProjection, right: DomainProjection
 }
 
 /** The producer and host must still verify the persisted references and every dependency. */
-export function hasBiDecision(projection: DomainProjection) {
+export function hasBiDecision(projection: DomainProjection, viewId?: string) {
   const decision = projection.decision
   if (!decision) return false
-  if (decision.kind === "portfolio") return !!decision.portfolioResultRef.trim()
+  if (decision.kind === "portfolio") return viewId !== "BI11" && !!decision.portfolioResultRef.trim()
+  const hasSensitivityRef = "sensitivityResultRef" in decision
+  if (hasSensitivityRef && (typeof decision.sensitivityResultRef !== "string" || !decision.sensitivityResultRef.trim())) return false
+  if (!!decision.sensitivity !== hasSensitivityRef || (viewId === "BI11" && !decision.sensitivity)) return false
   return !!decision.scenarioResultRef.trim() && !!decision.comparisonRef.trim()
 }
