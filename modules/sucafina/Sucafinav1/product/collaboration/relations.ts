@@ -40,7 +40,7 @@ export function createRelationPort(input: {
       const target = input.creationTarget
       const result = await input.state.transaction(request, { namespace: "relations", ...selected.mutation, commandDigest: digestSfValue(selected.pair), targetRef: target.ref, targetIncarnation: target.incarnation }, async (state, authority) => {
         if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, admission.action, admittedPayload) || !input.mutationFence.check(fence)) return { commit: false, value: null }
-        const relations = Object.entries(state.relations).filter(([key]) => !isInternalRelationKey(key)).map(([, value]) => value)
+        const relations = Object.entries(state.relations).filter(([key]) => !isInternalRelationKey(key)).map(([key, value]) => isRelation(value) && value.id === key ? value : undefined)
         if (!relations.every(isRelation)) return { commit: false, value: null }
         const existing = relations.find((item) => item.fromRef === selected.pair.fromRef && item.toRef === selected.pair.toRef && item.kind === selected.pair.kind)
         if (existing) {
@@ -97,7 +97,7 @@ export function createRelationPort(input: {
       const refs = [...recordRefs]
       const request = input.host.requestFor(context)
       if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "relation-access-unavailable" }
-      const result = await input.state.read(request, "relations", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? Object.entries(state.relations).filter(([key]) => !isInternalRelationKey(key)).map(([, value]) => value) : undefined)
+      const result = await input.state.read(request, "relations", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? Object.entries(state.relations).filter(([key]) => !isInternalRelationKey(key)).map(([key, value]) => isRelation(value) && value.id === key ? value : undefined) : undefined)
       if (result.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
       if (result.status !== "ok") return result
       if (!result.value || !result.value.every(isRelation)) return { status: "unavailable", reason: "invalid-relations" }
@@ -116,7 +116,7 @@ export function createRelationPort(input: {
       }))
       const candidates = projected.filter((relation): relation is Relation => !!relation && (refs.includes(relation.fromRef) || refs.includes(relation.toRef)))
       const access = await Promise.all(candidates.map((relation) => input.authorizePair(relation, context)))
-      const again = await input.state.read(request, "relations", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? Object.entries(state.relations).filter(([key]) => !isInternalRelationKey(key)).map(([, value]) => value) : undefined)
+      const again = await input.state.read(request, "relations", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? Object.entries(state.relations).filter(([key]) => !isInternalRelationKey(key)).map(([key, value]) => isRelation(value) && value.id === key ? value : undefined) : undefined)
       if (again.status !== "ok" || !again.value || digestSfValue(again.value) !== digestSfValue(result.value) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "relation-access-unavailable" }
       const finalAccess = await Promise.all(candidates.map((relation) => input.authorizePair(relation, context)))
       if (!await input.host.revalidate(context)) return { status: "denied", reason: "relation-access-unavailable" }

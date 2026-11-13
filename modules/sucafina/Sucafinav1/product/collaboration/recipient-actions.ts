@@ -30,7 +30,7 @@ export function createRecipientThreadActions(input: {
     const projected = await input.read(id, context)
     if (projected.status !== "ok" || projected.value.recipientRef !== context.binding.principalRef) return { status: "unavailable", reason: "thread-access-unavailable" }
     const stored = await input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[id] : undefined)
-    if (stored.status !== "ok" || !isThread(stored.value)) return { status: "unavailable", reason: "thread-access-unavailable" }
+    if (stored.status !== "ok" || !isThread(stored.value) || stored.value.id !== id) return { status: "unavailable", reason: "thread-access-unavailable" }
     const prior = stored.value
     if (prior.recipientRef !== context.binding.principalRef || digestSfValue({ id: prior.id, kind: prior.kind, recipientRef: prior.recipientRef, state: prior.state, messages: prior.messages, version: prior.observedVersion, period: prior.period }) !== digestSfValue({ id: projected.value.id, kind: projected.value.kind, recipientRef: projected.value.recipientRef, state: projected.value.state, messages: projected.value.messages, version: projected.value.observed.version, period: projected.value.observed.period })) return { status: "stale", reason: "thread-changed" }
     const fence = await input.mutationFence.prepare(async () => {

@@ -25,7 +25,7 @@ export function createRecipientThreadReader(input: {
     if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "thread-access-unavailable" }
     const read = () => input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[id] : undefined)
     const first = await read()
-    if (first.status !== "ok" || !isThread(first.value)) return { status: "unavailable", reason: "thread-access-unavailable" }
+    if (first.status !== "ok" || !isThread(first.value) || first.value.id !== id) return { status: "unavailable", reason: "thread-access-unavailable" }
     const thread = first.value
     if (thread.recipientRef !== context.binding.principalRef && !thread.messages.some((message) => message.authorRef === context.binding.principalRef)) return { status: "denied", reason: "thread-access-unavailable" }
     if (thread.evidenceRefs.some((ref) => !ref || typeof ref !== "object" || ref.kind !== "record")) return { status: "unavailable", reason: "thread-source-unavailable" }
@@ -38,7 +38,7 @@ export function createRecipientThreadReader(input: {
     const sourceRef = current[sourceIndex]
     if (!sourceRef || !await input.authorize(current, context)) return { status: "unavailable", reason: "thread-source-unavailable" }
     const again = await read()
-    if (again.status !== "ok" || !isThread(again.value) || digestSfValue(again.value) !== digestSfValue(thread) || !await input.authorize(current, context) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-access-unavailable" }
+    if (again.status !== "ok" || !isThread(again.value) || again.value.id !== id || digestSfValue(again.value) !== digestSfValue(thread) || !await input.authorize(current, context) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-access-unavailable" }
     return { status: "ok", value: { id: thread.id, kind: thread.kind, ...(thread.recipientRef ? { recipientRef: thread.recipientRef } : {}), state: thread.state, messages: thread.messages, observed: { version: thread.observedVersion, period: thread.period }, current: { sourceRef, evidenceRefs: current } } }
   }
 }

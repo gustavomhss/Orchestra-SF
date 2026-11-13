@@ -1,4 +1,4 @@
-import { digestSfValue } from "../contracts/canonical.ts"
+import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { PreparedCommand } from "../contracts/context.ts"
 import type { DecisionCasePort, DomainPortHost, PortResult } from "../contracts/ports.ts"
@@ -14,7 +14,7 @@ export function createDecisionPreparedReview(input: {
   state: SfProductStatePort
   cases: DecisionCasePort
   host: Pick<DomainPortHost, "requestFor" | "revalidate">
-  reviewDomain: (command: PreparedCommand, context: TrustedDomainContext) => Promise<PortResult<{ fields: ReviewFields; source: Extract<BusinessEvidenceRef, { kind: "record" }> }>>
+  reviewDomain: (command: PreparedCommand, context: TrustedDomainContext) => Promise<PortResult<{ fields: ReviewFields; source: Extract<BusinessEvidenceRef, { kind: "record" }>; originalTargetDigest: string }>>
 }) {
   return async (request: { caseRef: CaseRef; choiceId: string; changeId: string }, context: TrustedDomainContext) => {
     try {
@@ -33,7 +33,7 @@ export function createDecisionPreparedReview(input: {
       const first = await input.reviewDomain(change.operation, context)
       if (first.status !== "ok") return first
       const evidence = first.value.source.target
-      if (evidence.surface !== change.target.surface || evidence.recordType !== change.target.type || evidence.recordId !== change.target.id || evidence.incarnation !== change.target.incarnation || evidence.version !== change.target.version) return { status: "stale", reason: "review-source-changed" } as const
+      if (first.value.originalTargetDigest !== digestSfValue(change.target) || first.value.source.refDigest !== digestSfEvidenceRef(first.value.source) || first.value.source.installationId !== context.binding.installationId || first.value.source.projectId !== context.binding.projectId || evidence.surface !== change.target.surface || evidence.recordType !== change.target.type || evidence.recordId !== change.target.id || digestSfValue(evidence.fields) !== digestSfValue(change.target.fields) || digestSfValue(evidence.period) !== digestSfValue(change.target.period)) return { status: "stale", reason: "review-source-changed" } as const
       const again = await readCase()
       const changesAgain = await readChange()
       const second = await input.reviewDomain(change.operation, context)

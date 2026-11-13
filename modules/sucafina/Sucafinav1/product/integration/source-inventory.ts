@@ -13,7 +13,7 @@ import { normalizeDashboardRecords } from "../dashboard/records.ts"
 /** Private lifecycle inventory, not an authorized business projection or a calculation engine. */
 export function enumerateSfSources(surface: Surface, snapshot: Snapshot): readonly SfSourceIdentityInput[] {
   const assets = rows(snapshot.data.assets).filter((asset) => typeof asset.id === "string" && asset.id.trim())
-    .map((asset) => ({ recordType: "document-asset", recordId: String(asset.id), inputDigest: digestSfValue(asset) }))
+    .map((asset) => ({ recordType: "document-asset", recordId: String(asset.id), inputDigest: digestSfValue({ asset, blobGeneration: typeof asset.key === "string" && Object.hasOwn(snapshot.sfBlobGenerations ?? {}, asset.key) ? snapshot.sfBlobGenerations![asset.key] : 0 }) }))
   if (surface === "planner") {
     const versions = Array.isArray(snapshot.data.versions)
       ? rows(snapshot.data.versions).map((value) => ({ key: String(value.id ?? ""), value }))

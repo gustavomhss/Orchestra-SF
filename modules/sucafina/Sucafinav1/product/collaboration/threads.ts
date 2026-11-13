@@ -66,9 +66,9 @@ export function createThreadPort(input: {
       const read = await input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[id] : undefined)
       if (read.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
       if (read.status !== "ok") return read
-      if (!isThread(read.value) || !await input.authorize(read.value, context, "read") || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-access-unavailable" }
+      if (!isThread(read.value) || read.value.id !== id || !await input.authorize(read.value, context, "read") || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-access-unavailable" }
       const again = await input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[id] : undefined)
-      if (again.status !== "ok" || !isThread(again.value) || digestSfValue(again.value) !== digestSfValue(read.value) || !await input.authorize(again.value, context, "read") || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-access-unavailable" }
+      if (again.status !== "ok" || !isThread(again.value) || again.value.id !== id || digestSfValue(again.value) !== digestSfValue(read.value) || !await input.authorize(again.value, context, "read") || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-access-unavailable" }
       return { status: "ok", value: read.value }
     },
   }
@@ -84,7 +84,7 @@ export function createThreadPort(input: {
     const read = await input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[id] : undefined)
     if (read.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
     if (read.status !== "ok") return read
-    if (!isThread(read.value)) return { status: "unavailable", reason: "thread-access-unavailable" }
+    if (!isThread(read.value) || read.value.id !== id) return { status: "unavailable", reason: "thread-access-unavailable" }
     const prior = read.value
     const fence = await input.mutationFence.prepare(() => input.authorize(structuredClone(prior), context, "write"))
     if (!fence) return { status: "unavailable", reason: "thread-source-fence-unavailable" }

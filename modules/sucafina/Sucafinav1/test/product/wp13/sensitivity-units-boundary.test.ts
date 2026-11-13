@@ -190,7 +190,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     expect(saved.value.sensitivity.evaluated.every((point) => point.value === null)).toBe(true)
     expect(saved.value.sensitivity.threshold).toBeNull()
     expect(saved.value.sensitivity.thresholdEvidence).toEqual({ state: "unavailable", reason: "sample-value-unavailable" })
-    expect(saved.value.sensitivity.costCoverageRefs).toEqual([decisionCoverageRef(caseRef, "baseline", 1)])
+    expect(saved.value.sensitivity.costCoverageRefs).toEqual([decisionCoverageRef(caseRef, "baseline", 1), decisionCoverageRef(caseRef, "selected", 1)])
     expect(saved.value.sensitivity.comparisonStatus).toBe("conditioned")
     expect(saved.value.sensitivity.unresolvedConditions.some((condition) => condition.reason === "missing-category:training")).toBe(true)
     expect(saved.value.sensitivity.unresolvedConditions.some((condition) => condition.reason.includes("unresolved coverage can change the decision"))).toBe(true)
