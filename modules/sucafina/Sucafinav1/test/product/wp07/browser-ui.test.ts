@@ -19,19 +19,34 @@ import type { ReviewAgendaItem } from "../../../product/reviews/selection.ts"
 import { object, rows } from "../../../runtime/contract.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
+import { captureChromiumCleanup } from "./chromium-cleanup.ts"
 
 test("Chromium preserves the chosen agenda, recovers a lost response and removes revoked content", async () => {
-  const { chromium, expect } = await import("@playwright/test")
-  const built = await Bun.build({ entrypoints: [fileURLToPath(new URL("./browser-ui-entry.ts", import.meta.url))], target: "browser", format: "esm", sourcemap: "none" })
+  const started = Date.now()
+  const checkpoint = (phase: string) => console.info(`WP07 browser: ${phase} +${Date.now() - started}ms`)
+  const timed = async <T>(phase: string, work: () => Promise<T>, milliseconds = 10000): Promise<T> => {
+    checkpoint(`${phase}:start`)
+    const deadline = { timer: undefined as ReturnType<typeof setTimeout> | undefined }
+    try {
+      const value = await Promise.race([work(), new Promise<never>((_, reject) => { deadline.timer = setTimeout(() => reject(new Error(`WP07_BROWSER_PHASE_TIMEOUT:${phase}`)), milliseconds) })])
+      checkpoint(`${phase}:done`)
+      return value
+    } finally { if (deadline.timer) clearTimeout(deadline.timer) }
+  }
+  const diagnostic = (error: unknown) => new Error((error instanceof Error ? error.stack ?? error.message : String(error)).replace(/([?&]code=)[a-f0-9]{64}/g, "$1[redacted]"))
+  const failures: unknown[] = []
+  const { chromium, expect } = await timed("playwright-import", () => import("@playwright/test"))
+  const built = await timed("browser-build", () => Bun.build({ entrypoints: [fileURLToPath(new URL("./browser-ui-entry.ts", import.meta.url))], target: "browser", format: "esm", sourcemap: "none" }))
   expect(built.success).toBe(true)
   const bundle = built.outputs.find((output) => output.kind === "entry-point")
   if (!bundle) throw new Error("WP07_BROWSER_TEST_BUNDLE_UNAVAILABLE")
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-wp07-browser-"))
   await chmod(directory, 0o700)
-  const store = await openLocalStore(directory)
+  const store = await timed("sqlite-open", () => openLocalStore(directory))
   const serverState: { handle?: (request: Request) => Promise<Response> } = {}
   const server = Bun.serve({ hostname: "localhost", port: 0, fetch: async (request) => await serverState.handle?.(request) ?? new Response(null, { status: 503 }) })
-  const runtime: { browser?: Browser } = {}
+  checkpoint("server-created")
+  const runtime: { browser?: Browser; closeBrowser?: () => Promise<void> } = {}
   try {
     const control = { allowed: true, available: true, dropPreserveResponse: false, preserveCalls: [] as { key: string; reviewRef?: string }[] }
     const period = { start: "2027-01-01", end: "2027-12-31" }
@@ -40,6 +55,7 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
     const operator = { installationId: randomUUID(), uid: process.getuid!(), name: "WP07 isolated test operator" }
     const principalRef = `macos:${operator.installationId}:${operator.uid}`
     const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator, secrets: store.secrets, key: randomBytes(32) })
+    checkpoint("authority-create")
     const authority = createSfProductAuthority({
       identity: () => ({ installationId: operator.installationId, projectId: "wp07-browser", hostId: "isolated-browser-test", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }),
       installationId: operator.installationId, origin, policyVersion: "test-policy", persistence: store,
@@ -50,10 +66,10 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
       commandIdentity: async (request, operation) => request.method === "GET" ? randomUUID() : /^[a-f0-9-]{36}$/.test(request.headers.get("idempotency-key") ?? "") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
       inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined,
     })
-    await store.transaction("planner", async (snapshot) => {
+    await timed("planner-seed", () => store.transaction("planner", async (snapshot) => {
       snapshot.data.versions = [100, 110].map((amount, index) => ({ id: `v${index}`, year: 2027, closed: 0, lines: [{ id: "license", name: "Review license", sec: "opex", el: "licenses", cur: "USD", b: Array(12).fill(100), a: Array(12).fill(null), f: Array(12).fill(amount) }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }))
       return { commit: true, value: undefined }
-    })
+    }))
     const catalog = new Map<string, Extract<BusinessEvidenceRef, { kind: "record" }>>()
     const planner = createPlannerPort({ host: authority.host, sources: {
       resolveForecastSource: async (versionId, context) => {
@@ -73,6 +89,7 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
     // Synthetic authorized reference history only; this is not C17 tombstone or native execution evidence.
     const revalidateSources: ReviewCompositionInput["access"]["revalidate"] = async (context, sources) => await authority.host.revalidate(context) && sources.every((source) => [...catalog.values()].some((ref) => source.surface === ref.target.surface && source.type === ref.target.recordType && source.id === ref.target.recordId && source.incarnation === ref.target.incarnation && source.version === ref.target.version && digestSfValue(source.period) === digestSfValue(ref.target.period) && digestSfValue([...source.fields].sort()) === digestSfValue([...ref.target.fields].sort())))
     const unavailable = async () => ({ status: "unavailable", reason: "producer-not-selected" } as const)
+    checkpoint("review-application-create")
     const app = createReviewApplication({
       state: authority.state, host: authority.host, authority: authority.authority, ui: authority.ui, humanAuthority: authority.human,
       origin, maxBodyBytes: 100_000, creationTarget: authority.creationTarget,
@@ -94,7 +111,10 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
       const url = new URL(request.url)
       if (url.pathname === "/sucafina/browser-ui.js") return new Response(bundle, { headers: { "Content-Type": "application/javascript" } })
       if (url.pathname !== "/sucafina/dashboard") return new Response(null, { status: 404 })
+      const mode = url.searchParams.get("sf")
+      if (mode) checkpoint(`http:${mode}:start`)
       const response = await app.http(request, "dashboard")
+      if (mode) checkpoint(`http:${mode}:${response?.status ?? "not-handled"}`)
       if (response) {
         if (url.searchParams.get("sf") !== "review-preserve") return response
         const result = await response.clone().json() as PortResult<PreservedReview>
@@ -119,15 +139,22 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
       return { commit: true, value: undefined }
     })
     const storedReviews = () => store.transaction("dashboard", async (snapshot) => ({ commit: false, value: Object.keys(object(object(snapshot.data.__sfProductV1).reviews)) }))
-    runtime.browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
-    const page = await runtime.browser.newPage({ viewport: { width: 1440, height: 1000 } })
+    runtime.browser = await timed("chrome-launch", () => chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15000 }), 20000)
+    runtime.closeBrowser = await timed("chrome-ownership", () => captureChromiumCleanup(runtime.browser!))
+    const context = await timed("browser-context", () => runtime.browser!.newContext({ viewport: { width: 1440, height: 1000 } }))
+    const page = await timed("browser-page", () => context.newPage())
+    page.setDefaultTimeout(10000)
+    page.setDefaultNavigationTimeout(10000)
     const errors: string[] = []
     page.on("pageerror", (error) => { errors.push(error.message) })
-    await page.goto(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`)
+    const code = await timed("operator-enrollment", () => identity.enroll())
+    await timed("authenticated-navigation", () => page.goto(`${origin}/sucafina/auth/local?code=${code}`, { waitUntil: "domcontentloaded", timeout: 10000 }))
     const view = page.getByRole("region", { name: "Prepare review", exact: true })
     await expect(view.getByRole("button", { name: "Load selection", exact: true })).toBeEnabled()
+    checkpoint("selection-load")
     await view.getByRole("button", { name: "Load selection", exact: true }).click()
     await expect(view.getByRole("heading", { level: 3 })).toHaveText(["First forecast · baseline", "First forecast · candidate", "Second forecast · candidate", "Third forecast · candidate"])
+    checkpoint("selection-reorder-remove")
     await view.getByRole("button", { name: "Move Second forecast · candidate up", exact: true }).click()
     await view.getByRole("button", { name: "Move Second forecast · candidate up", exact: true }).click()
     await view.getByRole("button", { name: "Remove record first:baseline", exact: true }).click()
@@ -137,18 +164,22 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
     await expect(view.getByText("Agenda note: Retain this agenda note", { exact: true })).toBeVisible()
     const forecast = view.getByRole("table", { name: "Second forecast · candidate · selected source values", exact: true }).getByRole("row").filter({ has: page.getByRole("cell", { name: "license:1:forecast", exact: true }) })
     await expect(forecast.getByRole("cell", { name: "110 USD", exact: true })).toBeVisible()
+    checkpoint("selection-stale-preserve")
     await changeForecast(120)
     await view.getByRole("button", { name: "Preserve this review", exact: true }).click()
     await expect(view.getByRole("status")).toContainText("agenda-preview-changed")
     await expect(forecast.getByRole("cell", { name: "110 USD", exact: true })).toBeVisible()
     expect(await storedReviews()).toHaveLength(0)
+    checkpoint("selection-refresh")
     await view.getByRole("button", { name: "Refresh selection from current data", exact: true }).click()
     await expect(forecast.getByRole("cell", { name: "120 USD", exact: true })).toBeVisible()
     await expect(view.getByRole("heading", { level: 3 })).toHaveText(["Second forecast · candidate", "First forecast · candidate"])
+    checkpoint("preserve-lost-response")
     control.dropPreserveResponse = true
     await view.getByRole("button", { name: "Preserve this review", exact: true }).click()
     await expect(view.getByRole("status")).toContainText("review-preserve-unavailable")
     expect(await storedReviews()).toHaveLength(1)
+    checkpoint("preserve-explicit-recovery")
     // This second action is the explicit lost-response recovery, never an automatic flaky-test retry.
     await view.getByRole("button", { name: "Preserve this review", exact: true }).click()
     await expect(view.getByRole("heading", { name: "Preserved review", exact: true })).toBeVisible()
@@ -158,11 +189,13 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
     expect(successful[0]!.key).not.toBe("")
     expect(successful[0]!.reviewRef).toBe(successful[1]!.reviewRef)
     expect(await storedReviews()).toEqual([successful[0]!.reviewRef])
+    checkpoint("revision-source-unavailable")
     control.available = false
     await view.getByRole("button", { name: "Prepare current data as a new revision", exact: true }).click()
     await expect(view.getByRole("status")).toContainText("forecast-source-unavailable")
     await expect(view.getByRole("heading", { name: "Preserved review", exact: true })).toBeVisible()
     await expect(forecast.getByRole("cell", { name: "120 USD", exact: true })).toBeVisible()
+    checkpoint("revision-new-snapshot")
     control.available = true
     await changeForecast(130)
     await view.getByRole("button", { name: "Prepare current data as a new revision", exact: true }).click()
@@ -171,7 +204,8 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
     await view.getByRole("button", { name: "Preserve this review", exact: true }).click()
     await expect(view.getByRole("heading", { name: "Preserved review", exact: true })).toBeVisible()
     expect(await storedReviews()).toHaveLength(2)
-    const original = await page.request.get(`${origin}/sucafina/dashboard?sf=review-read&reviewRef=${encodeURIComponent(successful[0]!.reviewRef!)}`)
+    checkpoint("original-snapshot-read")
+    const original = await page.request.get(`${origin}/sucafina/dashboard?sf=review-read&reviewRef=${encodeURIComponent(successful[0]!.reviewRef!)}`, { timeout: 10000 })
     expect(original.status()).toBe(200)
     const recovered = await original.json() as PortResult<PreservedReview>
     if (recovered.status !== "ok") throw new Error(recovered.reason)
@@ -179,7 +213,8 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
     expect((recovered.value.sections[0]!.content as DomainProjection).values.find((value) => value.id === "license:1:forecast")?.value).toBe(120)
     const screenshot = fileURLToPath(new URL("../../../../../../test-ci-evidence/wp07-browser-ui.png", import.meta.url))
     await mkdir(path.dirname(screenshot), { recursive: true })
-    await page.screenshot({ path: screenshot })
+    await timed("screenshot", () => page.screenshot({ path: screenshot, timeout: 10000 }))
+    checkpoint("selection-revoke")
     control.allowed = false
     await view.getByRole("button", { name: "Prepare current data as a new revision", exact: true }).click()
     await expect(view.getByRole("status")).toContainText("Selection unavailable")
@@ -189,10 +224,32 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
     await expect(view.getByRole("button", { name: "Load selection", exact: true })).toBeEnabled()
     expect(await storedReviews()).toHaveLength(2)
     expect(errors).toEqual([])
+    checkpoint("body-done")
+  } catch (error) {
+    const failure = diagnostic(error)
+    console.error("WP07 browser: original failure before cleanup", failure.message)
+    failures.push(failure)
   } finally {
-    await runtime.browser?.close()
-    await server.stop(true)
-    await store.dispose()
-    await rm(directory, { recursive: true, force: true })
+    const cleanup: { phase: string; close: () => Promise<unknown> }[] = [
+      { phase: "server-stop", close: async () => { await server.stop(true) } },
+      { phase: "chrome-close", close: async () => {
+        if (runtime.closeBrowser) return runtime.closeBrowser()
+        if (runtime.browser) {
+          await runtime.browser.close()
+          throw new Error("WP07_CHROME_OWNERSHIP_WAS_NOT_CAPTURED")
+        }
+      } },
+      { phase: "sqlite-dispose", close: () => store.dispose() },
+      { phase: "temporary-files-remove", close: () => rm(directory, { recursive: true, force: true }) },
+    ]
+    for (const task of cleanup) {
+      try { await timed(`cleanup:${task.phase}`, task.close, task.phase === "chrome-close" ? 20000 : 10000) }
+      catch (error) {
+        const failure = diagnostic(error)
+        console.error(`WP07 browser: cleanup failure ${task.phase}`, failure.message)
+        failures.push(failure)
+      }
+    }
   }
+  if (failures.length) throw new AggregateError(failures, "WP07 browser regression or cleanup failed")
 }, 120000)
