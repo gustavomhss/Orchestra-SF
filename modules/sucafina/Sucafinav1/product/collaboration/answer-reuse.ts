@@ -9,7 +9,8 @@ import type { Surface } from "../../src/identity.ts"
 
 type Answer = { id: string; ref: string; authorRef: string; questionId: string; body: string; digest: string; threadDigest: string }
 export type AnswerConfirmationMutation = { expectedStorageVersion: number; idempotencyKey: string; observationRef: string; observedSourceVersion: number; expectedScopeFingerprint: string }
-type Baseline = { answerId: string; answerRef: string; answerDigest: string; questionId: string; confirmerRef: string; installationId: string; projectId: string; scope: ConfirmationScope; physicalIncarnation: string; sourceFingerprint: string; dependencyFingerprint: string; scopeFingerprint: string; observedVersion: number }
+export type AnswerReuseBaseline = { answerId: string; answerRef: string; answerDigest: string; questionId: string; confirmerRef: string; installationId: string; projectId: string; scope: ConfirmationScope; physicalIncarnation: string; sourceFingerprint: string; dependencyFingerprint: string; scopeFingerprint: string; observedVersion: number }
+type Baseline = AnswerReuseBaseline
 type PersistenceWithSnapshots = DomainPortHost["persistence"] & {
   transactionAll?: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>) => Promise<T>
   currentSnapshots?: () => Readonly<Record<Surface, Snapshot>> | undefined
@@ -28,7 +29,7 @@ export function createAnswerReusePort<T extends AvailableConfirmationScopeObserv
   authorizeConfirmation: (context: TrustedDomainContext, questionId: string, answerRef: string, mutation: AnswerConfirmationMutation) => Promise<boolean>
   now?: () => number
 }) {
-  const key = (questionId: string, answerId: string, context: TrustedDomainContext) => `sf:answer-baseline:${digestSfValue({ questionId, answerId, installationId: context.binding.installationId, projectId: context.binding.projectId })}`
+  const key = answerReuseBaselineKey
   const snapshots = input.host.persistence as PersistenceWithSnapshots
   const capture = async (scope: ConfirmationScope, observation: T, context: TrustedDomainContext) => snapshots.transactionAll ? snapshots.transactionAll(async () => ({ commit: false, value: await input.fence(scope, observation, context) })) : false
   const now = input.now ?? Date.now
@@ -125,6 +126,10 @@ export function createAnswerReusePort<T extends AvailableConfirmationScopeObserv
       return { status: "ok", value: { answerRef: again.value.ref, answer: again.value.body, authorRef: again.value.authorRef, observedVersion: baseline.observedVersion } }
     },
   }
+}
+
+export function answerReuseBaselineKey(questionId: string, answerId: string, context: TrustedDomainContext) {
+  return `sf:answer-baseline:${digestSfValue({ questionId, answerId, installationId: context.binding.installationId, projectId: context.binding.projectId })}`
 }
 
 function answerIdentity(answer: Answer) {

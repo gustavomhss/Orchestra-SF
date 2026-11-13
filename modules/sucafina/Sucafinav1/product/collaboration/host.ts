@@ -5,6 +5,7 @@ import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/b
 import type { DecisionCasePort, DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { SfDomainValidation } from "../contracts/runtime.ts"
 import type { ConfirmationCommand, ConfirmationScope, DomainProjection } from "../contracts/context.ts"
+import type { DecisionCase } from "../contracts/decisions.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductStatePort } from "../contracts/state.ts"
 import type { createProcurementPort } from "../procurement/port.ts"
@@ -33,9 +34,11 @@ import { createRecipientThreadActions } from "./recipient-actions.ts"
 import { createCollaborationMutationFence } from "./mutation-fence.ts"
 import { createRecipientThreadReader } from "./recipient-thread.ts"
 import { createCollaborationReissuer } from "./reissue.ts"
+import { createWorkSourceRefresh } from "./work-source-refresh.ts"
 import { createThreadAnswerEvidence } from "./evidence.ts"
 import { createThreadHistory } from "./thread-history.ts"
 import { createAnswerReusePort } from "./answer-reuse.ts"
+import { createAnswerWorkPort } from "./answer-work.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { isThread } from "./threads.ts"
 export type { WorkSelection, WorkSelectionPort } from "./selection.ts"
@@ -57,6 +60,8 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   workSignals?: WorkSignals
   workDestination?: { origin: string; mount: string; resolveDestination: (destination: NonNullable<WorkPresentationItem["destination"]>, context: TrustedDomainContext) => Promise<PortResult<{ href: string }>> }
   cases: Pick<DecisionCasePort, "read">
+  /** Identical private case authority supplied to the canonical case producer; required for work after source changes. */
+  workCaseAuthority?: (value: DecisionCase, context: TrustedDomainContext) => Promise<boolean>
   authority: SfDomainValidation
   human: CollaborationHumanAuthority
   recipientAuthority?: CollaborationRecipientAuthority
@@ -77,8 +82,9 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   const recordEvidence = createDashboardRecordEvidenceHost({ host: input.host, scopedSources: input.scopedSources, issueRecord })
   const authority = createCollaborationAuthority({ host: input.host, evidence: input.evidence, recipientAuthority: input.recipientAuthority })
   const reissue = input.issueForActor ? createCollaborationReissuer({ host: input.host, issueForActor: input.issueForActor, authorize: (ref, context) => authority.sources([ref], context), prepareMaterialScope: input.prepareReissueScope }) : undefined
+  const refreshWorkSource = input.issueForActor ? createWorkSourceRefresh({ host: input.host, issueForActor: input.issueForActor, authorize: (ref, context) => authority.sources([ref], context) }) : undefined
   const baseSelections = input.workSelections ?? createWorkSelectionPort({ collections: input.collections, authority, captureMember: input.captureWorkSource })
-  const caseSelection = input.caseSelectionWrites ? createCaseWorkSelection({ host: input.host, state: input.state, cases: input.cases, authority, human: input.human, fence: createCollaborationMutationFence(input.host), fallback: baseSelections, reissue, target: input.creationTarget, createId: input.createId, caseSelectionWrites: input.caseSelectionWrites }) : undefined
+  const caseSelection = input.caseSelectionWrites ? createCaseWorkSelection({ host: input.host, state: input.state, cases: input.cases, authority, human: input.human, fence: createCollaborationMutationFence(input.host), fallback: baseSelections, reissue, refreshWorkSource, workCaseAuthority: input.workCaseAuthority, target: input.creationTarget, createId: input.createId, caseSelectionWrites: input.caseSelectionWrites }) : undefined
   const selections = caseSelection?.port ?? baseSelections
   const recipientThread = reissue ? createRecipientThreadReader({ host: input.host, state: input.state, reissue, authorize: authority.sources }) : undefined
   const confirmation = (() => {
@@ -120,7 +126,8 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
     }
     return { prepare, confirm, project: port.project, find: port.find, inspect: port.inspect, work }
   })()
-  const collaboration = createCollaborationComposition({ host: input.host, state: input.state, creationTarget: input.creationTarget, evidence: input.evidence, procurement: input.procurement, selections, signals: input.workSignals, recordEvidence, human: input.human, recipientAuthority: input.recipientAuthority, recipientThread, reissue, captureWorkSource: input.captureWorkSource, confirmationWork: confirmation?.work, createId: input.createId, now: input.now })
+  const answerWork = input.confirmationSource ? createAnswerWorkPort({ host: input.host, state: input.state, source: input.confirmationSource, authorizeSources: authority.sources }) : undefined
+  const collaboration = createCollaborationComposition({ host: input.host, state: input.state, creationTarget: input.creationTarget, evidence: input.evidence, procurement: input.procurement, selections, signals: input.workSignals, recordEvidence, human: input.human, recipientAuthority: input.recipientAuthority, recipientThread, reissue, refreshWorkSource, captureWorkSource: input.captureWorkSource, confirmationWork: confirmation?.work, answerWork: answerWork?.project, createId: input.createId, now: input.now })
   const threadReads = createRecipientAwareThreadReads(collaboration.threads, recipientThread)
   const resolveWorkDestination = input.workDestination ? createWorkDestinationResolver({ ...input.workDestination, host: input.host, work: collaboration.work }) : undefined
   const captureWorkSource = async (memberRef: string, context: TrustedDomainContext): Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>> => {

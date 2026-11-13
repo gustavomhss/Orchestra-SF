@@ -20,6 +20,8 @@ import type { createCollaborationReissuer } from "./reissue.ts"
 import type { createRecipientThreadReader } from "./recipient-thread.ts"
 import type { CollaborationHumanAuthority } from "./human.ts"
 import type { WorkSelectionPort } from "./selection.ts"
+import type { AnswerWork } from "./answer-work.ts"
+import type { CollaborationWorkSourceRefresh } from "./work-source-refresh.ts"
 
 /** The source producer must issue a current authorized C17 record for the exact action. */
 export function createCollaborationComposition(input: {
@@ -37,6 +39,8 @@ export function createCollaborationComposition(input: {
   reissue?: ReturnType<typeof createCollaborationReissuer>
   captureWorkSource?: (memberRef: string, context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>>
   confirmationWork?: (id: string, context: TrustedDomainContext) => Promise<PortResult<ConfirmationWork>>
+  answerWork?: (id: string, context: TrustedDomainContext) => Promise<PortResult<AnswerWork>>
+  refreshWorkSource?: CollaborationWorkSourceRefresh
   createId: () => string
   now: () => string
 }) {
@@ -81,7 +85,7 @@ export function createCollaborationComposition(input: {
     if (ref.target.surface !== "dashboard" || ref.target.recordType !== "hotTopics" || ref.target.recordId !== topic.id || !await authority.sources([ref], context)) return { status: "unavailable", reason: "topic-source-unavailable" }
     return { status: "ok", value: { ref: ref.refId, evidence: ref } }
   } })
-  const work = createCollaborationWorkPort({ host: input.host, state: input.state, collaboration: { authority, hotTopics, threads, recipientThread: input.recipientThread, reissue: input.reissue, captureWorkSource: input.captureWorkSource, confirmationWork: input.confirmationWork }, procurement: input.procurement, topicSource, selections: input.selections, signals: input.signals })
+  const work = createCollaborationWorkPort({ host: input.host, state: input.state, collaboration: { authority, hotTopics, threads, recipientThread: input.recipientThread, reissue: input.reissue, captureWorkSource: input.captureWorkSource, confirmationWork: input.confirmationWork, answerWork: input.answerWork, refreshWorkSource: input.refreshWorkSource }, procurement: input.procurement, topicSource, selections: input.selections, signals: input.signals })
   return { authority, hotTopics: { read: hotTopics.read }, relations: { read: relations.read, create: relations.create, remove: relations.remove, storageVersion: relations.storageVersion, readVersioned: relations.readVersioned }, threads, handoff, work }
 }
 

@@ -18,6 +18,8 @@ import type { WorkSelectionPort } from "./selection.ts"
 import { projectMyWork } from "./work.ts"
 import { latestConfirmationWork } from "./confirmation-work.ts"
 import { sameHandoffWorkSource } from "./work-handoff-source.ts"
+import type { AnswerWork } from "./answer-work.ts"
+import type { CollaborationWorkSourceRefresh } from "./work-source-refresh.ts"
 
 export type WorkPresentationItem = {
   kind: "clarification" | "handoff" | "procurement" | "confirmation" | "signal"
@@ -43,7 +45,7 @@ export type WorkSignals = (selectionRef: string, period: Period, context: Truste
 export function createCollaborationWorkPort(input: {
   host: DomainPortHost
   state: SfProductStatePort
-  collaboration: { authority: ReturnType<typeof createCollaborationAuthority>; hotTopics: ReturnType<typeof createHotTopicPort>; threads: ReturnType<typeof createThreadPort>; recipientThread?: ReturnType<typeof createRecipientThreadReader>; reissue?: ReturnType<typeof createCollaborationReissuer>; captureWorkSource?: (memberRef: string, context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>>; confirmationWork?: (id: string, context: TrustedDomainContext) => Promise<PortResult<ConfirmationWork>> }
+  collaboration: { authority: ReturnType<typeof createCollaborationAuthority>; hotTopics: ReturnType<typeof createHotTopicPort>; threads: ReturnType<typeof createThreadPort>; recipientThread?: ReturnType<typeof createRecipientThreadReader>; reissue?: ReturnType<typeof createCollaborationReissuer>; refreshWorkSource?: CollaborationWorkSourceRefresh; captureWorkSource?: (memberRef: string, context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>>; confirmationWork?: (id: string, context: TrustedDomainContext) => Promise<PortResult<ConfirmationWork>>; answerWork?: (id: string, context: TrustedDomainContext) => Promise<PortResult<AnswerWork>> }
   procurement: Pick<ReturnType<typeof createProcurementPort>, "list">
   selections: WorkSelectionPort
   signals?: WorkSignals
@@ -72,6 +74,7 @@ export function createCollaborationWorkPort(input: {
       const items: AuthorizedWorkList["items"][number][] = []
       const presentation: WorkPresentationItem[] = []
       const presentationProofs: BusinessEvidenceRef[] = []
+      const answerProofs: { id: string; value: AnswerWork }[] = []
       if (selected.selectionRef.startsWith("sf:case-work-selection:") && !input.signals) return { status: "unavailable", reason: "work-signals-unavailable" }
       const signals = input.signals && selected.selectionRef.startsWith("sf:case-work-selection:") ? await input.signals(selected.selectionRef, selected.period, context) : undefined
       if (signals && signals.status !== "ok") return { status: "unavailable", reason: "work-signals-unavailable" }
@@ -94,9 +97,24 @@ export function createCollaborationWorkPort(input: {
         presentation.push({ kind: "confirmation", actionRef, title: null, ownerRef: own, period: confirmation.value.period, observedVersion: confirmation.value.observedVersion, ...(confirmation.value.reason ? { reason: confirmation.value.reason } : {}), ...(confirmation.value.sourceVersion === undefined ? {} : { sourceVersion: confirmation.value.sourceVersion }), state: "confirmation-stale", destination: { kind: "confirmation", confirmationId: record.id }, sourceRefs: confirmation.value.sourceRefs })
       }
       for (const entry of threadIds) {
-        if (entry.recipientRef !== own || entry.state === "resolved") continue
-        if (entry.state !== "open") return { status: "unavailable", reason: "thread-work-source-unavailable" }
+        if (entry.recipientRef !== own) continue
+        if (entry.state !== "open" && entry.state !== "resolved") return { status: "unavailable", reason: "thread-work-source-unavailable" }
         const id = entry.id
+        const answer = input.collaboration.answerWork ? await input.collaboration.answerWork(id, context) : undefined
+        if (answer && answer.status !== "ok") return { status: "unavailable", reason: "answer-work-source-unavailable" }
+        if (answer?.status === "ok") answerProofs.push({ id, value: answer.value })
+        if (answer?.status === "ok" && answer.value.state === "valid") continue
+        if (answer?.status === "ok" && answer.value.state === "stale") {
+          const current = answer.value
+          if (current.period.end < selected.period.start || current.period.start > selected.period.end) continue
+          const membership = await input.selections.contains(scope.value, current.sourceRefs, context)
+          if (membership.status !== "ok") return membership
+          if (!membership.value) continue
+          items.push({ actionRef: id, ownerRef: own, state: "answer-stale", sourceRefs: current.sourceRefs })
+          presentation.push({ kind: "clarification", actionRef: id, title: null, ownerRef: own, period: current.period, observedVersion: current.observedVersion, sourceVersion: current.sourceVersion, ...(current.reason ? { reason: current.reason } : {}), state: "answer-stale", destination: { kind: "thread", threadId: id }, sourceRefs: current.sourceRefs })
+          continue
+        }
+        if (entry.state === "resolved") continue
         const thread = await input.collaboration.threads.read(id, context)
         const recipient = thread.status !== "ok" && input.collaboration.recipientThread ? await input.collaboration.recipientThread(id, context) : undefined
         const value = thread.status === "ok" ? thread.value : recipient?.status === "ok" ? { ...recipient.value, period: recipient.value.observed.period, observedVersion: recipient.value.observed.version, evidenceRefs: recipient.value.current.evidenceRefs } : undefined
@@ -121,7 +139,8 @@ export function createCollaborationWorkPort(input: {
         if (!target || target.kind !== "record") return { status: "unavailable", reason: "invalid-work-source" }
         const origins = original.filter((_, index) => index !== targetIndex)
         const available = await input.collaboration.authority.sources(origins, context)
-        const reissued = !available && input.collaboration.reissue && origins.every((ref) => ref.kind === "record") ? await Promise.all(origins.map((ref) => input.collaboration.reissue!(ref as Extract<BusinessEvidenceRef, { kind: "record" }>, context))) : undefined
+        const refresh = input.collaboration.refreshWorkSource ?? input.collaboration.reissue
+        const reissued = !available && refresh && origins.every((ref) => ref.kind === "record") ? await Promise.all(origins.map((ref) => refresh(ref as Extract<BusinessEvidenceRef, { kind: "record" }>, context))) : undefined
         if (!available && (!reissued || reissued.some((entry) => entry.status !== "ok"))) return { status: "unavailable", reason: "handoff-work-source-unavailable" }
         const sourceRefs = available ? origins : reissued!.flatMap((entry) => entry.status === "ok" ? [entry.value] : [])
         const membership = await input.selections.contains(scope.value, sourceRefs, context)
@@ -192,6 +211,9 @@ export function createCollaborationWorkPort(input: {
       const finalSelection = await input.selections.resolve(selected.selectionRef, selected.period, context)
       if (finalSelection.status !== "ok" || digestSfValue(finalSelection.value) !== digestSfValue(scope.value)) return { status: "stale", reason: "work-selection-changed" }
       if (sourceChecks.some((allowed) => !allowed) || (presentationProofs.length > 0 && !await input.collaboration.authority.sources(presentationProofs, context)) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "work-source-or-selection-changed" }
+      const answersAgain = await Promise.all(answerProofs.map((proof) => input.collaboration.answerWork!(proof.id, context)))
+      if (answersAgain.some((answer) => answer.status !== "ok")) return { status: "unavailable", reason: "answer-work-source-unavailable" }
+      if (answersAgain.some((answer, index) => answer.status === "ok" && digestSfValue(answer.value) !== digestSfValue(answerProofs[index]!.value))) return { status: "stale", reason: "answer-work-changed" }
       const finalState = await Promise.all((["threads", "relations", "confirmations"] as const).map((namespace) => input.state.read(request, namespace, (_state, authority) => authority.principalRef === own && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion)))
       if (finalState.some((entry, index) => {
         const prior = before[index]
