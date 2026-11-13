@@ -1,0 +1,1260 @@
+{
+  "schema": "wp06-outgoing-handoff-observation-v1",
+  "status": "PARTIAL",
+  "observed_at": "2026-11-13T23:19:21Z",
+  "observation_time_source": "clock.curr_time after final U5 completion; current continuation observation, not original campaign T0",
+  "producer_task": "WP06.T05",
+  "branch": "astra-wp06",
+  "writer": {
+    "agent": "/root/documents",
+    "capacity": "Delegated WP06 document implementation/evidence writer for the current continuation",
+    "publication_owner": "/root",
+    "planned_execution_actor": "S2",
+    "historical_actor_or_lease_assignment_status": "NOT_PROVEN",
+    "recovered_pack_source_actor": "S2-C",
+    "current_operational_adaptation": "One external Astra browser chat owns the whole WP, implementation and scoped hosted CI, per user. No scope reduction; old workers remain paused."
+  },
+  "source_provenance": {
+    "handoff": "6074055e46116d770c6673449ec8c5da6dc74933",
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "recovered_seed": "95faa3e66a5640ca37407b072c65eaf731d0ca1f",
+    "work_sha": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+    "work_tree": "be543a7c5b48d697573bf905b9d9793bdb53f45a",
+    "original_t0_from_pinned_pack": "2026-11-13T04:01:10Z",
+    "campaign": "sf2h-integral-20261112",
+    "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "previous_work_sha": "a33fa24809bf8c52f92b910bcde45c708e2107de"
+  },
+  "contracts": [
+    {
+      "id": "C14",
+      "name": "Documentos e portfólio",
+      "definition_owner": "WP00",
+      "source_pack": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP06.pack.json",
+      "source_commit": "6074055e46116d770c6673449ec8c5da6dc74933",
+      "entry_digest": {
+        "algorithm": "sha256",
+        "serialization": "UTF-8 JSON with sorted object keys, compact separators and unescaped Unicode",
+        "value": "939e3f8705b49f19e86da2340d05aa0f52339a0a5bb8317fade9d7da1d9e0f70"
+      }
+    },
+    {
+      "id": "C15",
+      "name": "Perfis residentes, skills executadas e contribuições consumidas",
+      "definition_owner": "WP00",
+      "source_pack": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP06.pack.json",
+      "source_commit": "6074055e46116d770c6673449ec8c5da6dc74933",
+      "entry_digest": {
+        "algorithm": "sha256",
+        "serialization": "UTF-8 JSON with sorted object keys, compact separators and unescaped Unicode",
+        "value": "38d8a59ed3235ac78eb53235b07ff67d4f42c2375c1df96c5592d1a74ecd16bc"
+      }
+    },
+    {
+      "id": "C16",
+      "name": "Chamada SF confiável e servidor MCP privado com paridade",
+      "definition_owner": "WP00",
+      "source_pack": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP06.pack.json",
+      "source_commit": "6074055e46116d770c6673449ec8c5da6dc74933",
+      "entry_digest": {
+        "algorithm": "sha256",
+        "serialization": "UTF-8 JSON with sorted object keys, compact separators and unescaped Unicode",
+        "value": "883074c2a88b37b7a75b2efb19546ddf1811248c66a2b861042c07c3821048f0"
+      }
+    }
+  ],
+  "reference_identity_scope": {
+    "contract": "BusinessEvidenceRef document variant; C14 DocumentEvidence; sf-evidence-v1",
+    "scope_keys": [
+      "installationId",
+      "projectId",
+      "documentId",
+      "incarnation",
+      "revision",
+      "accessRevision"
+    ],
+    "file_and_span_digest_algorithm": "sha256",
+    "rag_source_digest_algorithm": "blake3",
+    "offset_unit": "utf16",
+    "confirmation_observed": [
+      "Extracted ref resolves as extracted but is not a fresh BCS premise.",
+      "Explicit human confirmation preserves refId and segment.",
+      "The original ref then resolves with confirmed status; the confirmation-version ref resolves fresh through the real BCS/source bridge.",
+      "Removing the attachment makes presentation and BCS unavailable and removes search results."
+    ],
+    "hash_swap_observed": "A real lexical-search ref resolves fresh first. Inverted algorithm labels are invalid; SHA256/BLAKE3 digest values swapped into the wrong identity slot are stale. Each mutated ref has digestSfEvidenceRef recomputed, so rejection is not only an invalid outer checksum.",
+    "literal_runtime_ref_or_candidate_receipt": "NOT_RETAINED; runtime IDs were generated in the tests. Identity equality is asserted within each observed case, not represented here by invented durable IDs.",
+    "native_session_id": null,
+    "native_run_id": null,
+    "native_call_id": null,
+    "loaded_skill_receipt_id": null,
+    "backend_observation_work_sha": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+    "current_work_backend_revalidation": "OBSERVED_PASS_FOR_THE_NAMED_DOCUMENT_CASES; aggregate run failure preserved"
+  },
+  "hosted_validation": {
+    "unit": {
+      "work_sha": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "snapshot_sha": "d87f2c19f9d97edb90591ac1f5fd58a1fffd1e4b",
+      "snapshot_tree": "ddec64eeb282ecabfc59f5472c79bc8a2bdbd8e8",
+      "run_id": 43525466970,
+      "job_id": 132230001270,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43525466970",
+      "conclusion": "failure",
+      "passed": 175,
+      "failed": 1,
+      "errors": 1,
+      "assertion_failures_observed": 0,
+      "expect_calls": 2004,
+      "test_files": 46,
+      "tests_reported": 176,
+      "remaining_error": "Cannot find module product/routines/dossier.ts from documents/runtime-e2e.test.ts; that file did not execute its assertions.",
+      "normalized_request_sha256": "b6188b844f6e699806b2faf21af98280eb80fa383e8318e60e9f5688901889ed",
+      "product_snapshot_equality": {
+        "method": "GitHub MCP compare_commits plus fetch_file observed by /root/documents",
+        "base": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+        "head": "d87f2c19f9d97edb90591ac1f5fd58a1fffd1e4b",
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0,
+        "merge_base": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+        "only_added_file": ".ci-run.json",
+        "envelope_blob": "4d9dd4f4c3c74c579a6d7bced5f541ef4477a156",
+        "product_test_config_fixture_blobs_identical": true
+      },
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43525466970/job/132230001270",
+      "duration_seconds": 173.22,
+      "downloaded_job_log_sha256": "c6e80f6c87cbe5233d6d15848247806c8540c24127e5f022bc776a330b5e3422",
+      "case_observation_json_sha256": "a1b04d21976de3eb555440fce3bbe4abf12c10f3c194168d5a14dae12c30c9c3"
+    },
+    "checks": {
+      "work_sha": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "snapshot_sha": "d57e2a7cc9881bee7bfd3dbbc7e140a343f9050c",
+      "snapshot_tree": "b353483149e9c16037a8144dc871563915c8592e",
+      "run_id": 43524992830,
+      "job_id": 132228417938,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43524992830",
+      "conclusion": "failure",
+      "sucafina_typecheck": "failure",
+      "cli_typecheck": "failure",
+      "guards": "success",
+      "unique_diagnostics": 117,
+      "unowned_unique_diagnostics": 116,
+      "wp06_production_diagnostics": 0,
+      "owned_diagnostic": "TS2307 in documents/runtime-e2e.test.ts: external WP09 dossier module absent.",
+      "artifact_id": 14083594380,
+      "artifact_digest": "sha256:a95600c3028fe849406ae18cbb9f888f3f489bd8e365204d0219e342e35002e2",
+      "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43524992830/artifacts/14083594380",
+      "product_snapshot_equality": {
+        "method": "GitHub MCP compare",
+        "base": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+        "head": "d57e2a7cc9881bee7bfd3dbbc7e140a343f9050c",
+        "only_added_file": ".astra-wp06-check.json",
+        "blob": "e349e2863693645e56a900d73bb9e5d2cd51dea3",
+        "all_product_test_config_fixture_blobs_identical": true
+      }
+    },
+    "omni": {
+      "unit_status": "NOT_APPLICABLE",
+      "unit_nonce": "a24834b574ee72ef15bd904384b02631",
+      "unit_observation": "Focused: no declaring test ran; no omni spawn and none delegated. This run proved nothing about omni.",
+      "browser_status": "NOT_APPLICABLE_BY_RUNNER",
+      "browser_basis": "The admitted request uses Playwright, whose runner does not require the Bun preload control verdict; this is not native qualification.",
+      "historical_unit_control": "See W4 historical observation."
+    },
+    "browser": {
+      "status": "PASS",
+      "work_sha": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "snapshot_sha": "417b7f11e6a8c3f3e02093868ce733f65fb60674",
+      "snapshot_tree": "d1a42613463474bd53451f4d1d446d81372087a7",
+      "run_id": 43524990304,
+      "job_id": 132228409185,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43524990304",
+      "conclusion": "success",
+      "specs": [
+        "packages/app-shell/e2e/sucafina/wp06/imports.spec.ts",
+        "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts"
+      ],
+      "spec_files": 2,
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "retries": 0,
+      "duration_ms": 48520.907,
+      "document_cases": 2,
+      "import_cases": 8,
+      "artifact_id": 14085011660,
+      "artifact_digest": "sha256:1288b4bdd7c9ca5e127378fe91987942408388a536fd66017532fb1630fc32df",
+      "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43524990304/artifacts/14085011660",
+      "runtime_report_sha256": "1a5816a48568acf6e60206efe7e33c0e28b44232a3c4ed59ca2c8eec3d663414",
+      "observed_selection_sha256": "cb9850369e949606233a3e6d7dac496c1242e74abf290454b3ab3e7088459d5d",
+      "normalized_request_sha256": "47a5201cc8efa3dd2145cd115d4214b6731979367804a98cb936450361df9df5",
+      "product_snapshot_equality": {
+        "method": "GitHub MCP compare",
+        "base": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+        "head": "417b7f11e6a8c3f3e02093868ce733f65fb60674",
+        "only_added_file": ".ci-run.json",
+        "blob": "aa2607a1dc9c3f95ce15632a4f3593ff69cfa0b2",
+        "all_product_test_config_fixture_blobs_identical": true
+      },
+      "cases": [
+        {
+          "title": "WP06 real document renderer shows a candidate and source as data until explicit confirmation",
+          "file": "sucafina/wp06/documents.spec.ts",
+          "ok": true,
+          "expectedStatus": "passed",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 968,
+              "retry": 0
+            }
+          ]
+        },
+        {
+          "title": "WP06 real document renderer preserves an explicit stale refusal and removes unusable source content",
+          "file": "sucafina/wp06/documents.spec.ts",
+          "ok": true,
+          "expectedStatus": "passed",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 1117,
+              "retry": 0
+            }
+          ]
+        },
+        {
+          "title": "WP06 real renderer: simulation, literal source content and cancel preserve inputs without Apply",
+          "file": "sucafina/wp06/imports.spec.ts",
+          "ok": true,
+          "expectedStatus": "passed",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 923,
+              "retry": 0
+            }
+          ]
+        },
+        {
+          "title": "WP06 real renderer: stale Apply requires a new destination and explicit preview",
+          "file": "sucafina/wp06/imports.spec.ts",
+          "ok": true,
+          "expectedStatus": "passed",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 1207,
+              "retry": 0
+            }
+          ]
+        },
+        {
+          "title": "WP06 real renderer: failed preview detail cannot enable Apply before review",
+          "file": "sucafina/wp06/imports.spec.ts",
+          "ok": true,
+          "expectedStatus": "passed",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 827,
+              "retry": 0
+            }
+          ]
+        },
+        {
+          "title": "WP06 real renderer: a receipt read failure retries without another Apply",
+          "file": "sucafina/wp06/imports.spec.ts",
+          "ok": true,
+          "expectedStatus": "passed",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 940,
+              "retry": 0
+            }
+          ]
+        },
+        {
+          "title": "WP06 real renderer: rejected Apply displays a rejected receipt and disables replay",
+          "file": "sucafina/wp06/imports.spec.ts",
+          "ok": true,
+          "expectedStatus": "passed",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 814,
+              "retry": 0
+            }
+          ]
+        },
+        {
+          "title": "WP06 real renderer: a stale analysis reference never claims an applied import",
+          "file": "sucafina/wp06/imports.spec.ts",
+          "ok": true,
+          "expectedStatus": "passed",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 1062,
+              "retry": 0
+            }
+          ]
+        },
+        {
+          "title": "WP06 real renderer: explicit Apply displays confirmed applied receipt",
+          "file": "sucafina/wp06/imports.spec.ts",
+          "ok": true,
+          "expectedStatus": "passed",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 804,
+              "retry": 0
+            }
+          ]
+        },
+        {
+          "title": "WP06 real renderer: explicit Apply displays confirmed unchanged receipt",
+          "file": "sucafina/wp06/imports.spec.ts",
+          "ok": true,
+          "expectedStatus": "passed",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 809,
+              "retry": 0
+            }
+          ]
+        }
+      ],
+      "scope": "Actual Chromium execution of production HTML/JavaScript/CSP with synthetic HTTP. Document candidate/source rendering, explicit confirmation and immediate stale clearing passed; backend parsing, authority, BCS, native/dossier and arithmetic proofs are separate."
+    },
+    "local_product_tests": "NOT_RUN_AS_REQUIRED",
+    "epic": "NOT_RUN_AS_REQUIRED"
+  },
+  "consumer_acknowledgement": {
+    "status": "NOT_PROVEN",
+    "acknowledgements": [],
+    "reason": "No consumer-owner acknowledgement or native/dossier acceptance receipt is asserted by this current producer observation."
+  },
+  "proof_limitations": [
+    "The real HTTP service fixture uses persisted local credentials, real authority and SQLite; native Session inspection is unavailable and selection/skill verifiers reject. It is not a successful native/MCP/skill witness.",
+    "The fixture scanner callback is synthetic. No installed-scanner or Atlas publication/index persistence qualification is claimed.",
+    "The test constructs the real BusinessContext and document source bridge directly; it does not execute the complete Atlas initialization/publication path.",
+    "The Request-document adapter has a genuine WP04 resolver witness, but the WP09 dossier module is absent from this candidate and its consumer test could not load.",
+    "The final W5 unit run failed only on the missing dossier import, with 175 passing cases and zero observed assertion failures; that test file executed no assertions. W5 full typechecks failed, although guards passed and no WP06 production diagnostic was found. Per-case backend/browser PASS does not promote the complete handoff, task, compound criterion or global gate to PASS.",
+    "No current receipt establishes original T+20/T+35 readiness, receipt delivery, consumer acknowledgement or the S2/S2-C T+53 lease transfer."
+  ],
+  "review_and_integration": {
+    "independent_final_review": "NOT_PROVEN",
+    "s0_final_qualification": "REQUIRED",
+    "final_delivery_receipt_owner": "WP10.T05/S0",
+    "merge_performed": false,
+    "deploy_performed": false,
+    "eta": "UNKNOWN; depends on owner composition, hosted qualification and S0 review."
+  },
+  "id": "DOC-EXTRACT",
+  "intended_repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/handoffs/doc-extract.json",
+  "planned_handoff": {
+    "id": "DOC-EXTRACT",
+    "producer_task": "WP06.T05",
+    "ready_minute": 35,
+    "consumer_tasks": [
+      "WP12.T02",
+      "WP10.T07",
+      "WP09.T04"
+    ],
+    "consume_not_before": 35,
+    "artifacts": [
+      "modules/sucafina/Sucafinav1/product/documents/"
+    ],
+    "acceptance": "Três formatos admitidos, confirmação, refusalrevogação e fonte privada.",
+    "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/handoffs/doc-extract.json",
+    "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+    "status": "PLANNED_NOT_PRODUCED",
+    "consumer_phase": "integration_or_proof",
+    "interpretation": "Normative original plan only. Its minute and status fields are not current observations."
+  },
+  "historical_delivery": {
+    "status": "NOT_PROVEN",
+    "target_ready_minute_after_original_t0": 35,
+    "consume_not_before_minute": 35,
+    "original_t0": "2026-11-13T04:01:10Z",
+    "observed_original_delivery_minute": null,
+    "current_observation_only": true,
+    "reason": "The recovered continuation has no timestamped original producer delivery and consumer acknowledgement establishing this deadline. Current code/CI observations are not backdated.",
+    "historical_schedule_and_lease_criteria_not_closed": [
+      "WP06.T05.CHK.40",
+      "WP06.T05.DOD.40",
+      "WP06.T05.INV.40",
+      "WP06.T05.SUC.40"
+    ],
+    "original_t0_source": "Pinned handoff and linked pack; no deadline or acknowledgement witness follows from the declared T0."
+  },
+  "producer_artifacts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/byte-port.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "2a0ad10bd7748c0c2c2bf22fe66085e1ac627dd7",
+      "sha256": "f1a25afdc2bf8e3e9f8ea14a9df0c49f1ad4fdbb7b8aedbcdedd309cb45a2d52",
+      "bytes": 15159,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/product/documents/byte-port.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "7e09d0981b08f8edc62121eb4fa26bf04b9fbc07",
+      "sha256": "7fb06550fa8ddca7724d4c817a499f53901768b557b423c4d48998443558e467",
+      "bytes": 21340,
+      "exports": [
+        "extractDocumentEvidence",
+        "searchDocumentEvidence"
+      ],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/product/documents/capabilities.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/docx.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "c3f0f4cfb8b9833b5b1ddef2405fa59d75db29ac",
+      "sha256": "dd65d2b073c3ae3b9bfedaa5a0ed08dc46b04fa5d039ff3638f5c0d6de9779c7",
+      "bytes": 3004,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/product/documents/docx.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "ae8b296b6565aeaf6748dfd86cd1b4593a0463d7",
+      "sha256": "b1e65930f0ba7082b0494f0298c0133260c56d0ce93e98ab11749d5f9c13f1de",
+      "bytes": 6597,
+      "exports": [
+        "resolveSfDocumentEvidence"
+      ],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/extract.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "883ffb39b09d5073407a37ef7814884b57be2285",
+      "sha256": "443550f7a1bc97aaced3afce8f23fdc23d01d8728eb447b898f8424e31beb6c9",
+      "bytes": 3173,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/product/documents/extract.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/host.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "fede075378ee964fccdb73f0d95958a5f56c7159",
+      "sha256": "dff4ed51b47da6a5fd011f962517e82961074f0f79f802bebebb08db5c1ed39e",
+      "bytes": 6362,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/product/documents/host.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/index.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "33a2cc39a1f614b8df120395615cb12c6de0efde",
+      "sha256": "c9e186818f34f3a9f128cc73c275c374941e5d79d386ee098ed7cf2e714bfe82",
+      "bytes": 5501,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/product/documents/index.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/limits.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "66ff2dd84410c94a83b9ac0325983c1a578327dd",
+      "sha256": "730990bd7a00b2c2ea477276d56e646ee10f6b3abfdd5724888d84a6669e5c77",
+      "bytes": 305,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/product/documents/limits.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/parser-worker.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "72fec6093aa9c968bf7d36d4c1c2b931140b63d8",
+      "sha256": "10ef7f6d4fecc8ccd0af60ed7c8a0bddddc5868f55377b4d834db1557af319df",
+      "bytes": 1429,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/product/documents/parser-worker.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/parser.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "39c3dec8018b58d673c2a169d21bee23a49c92ad",
+      "sha256": "b24311c1c7527f84dbb65e4beb6a29c2fa7ad4bbdb4e83fe3df977feb2fddf3e",
+      "bytes": 5412,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/product/documents/parser.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/presentation.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "2ab4736c3bdea1ae77bdc307228346bd524e8c98",
+      "sha256": "115452b919f8b4bdf1237eeaa7e7a4997cc7a97e30c3a24c7fc6b3b9f22a609b",
+      "bytes": 7240,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/product/documents/presentation.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/rag-adapter.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "b968936724192eaab050cf48e69dc5a634dc54d9",
+      "sha256": "a1f6fb390f7a535ad7bd516c3b03501996b2901e4562348dee187c7745487203",
+      "bytes": 3757,
+      "exports": [
+        "createSfDocumentEvidenceAdapter"
+      ],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/product/documents/rag-adapter.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/request-evidence.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "0ae1c5a3c612b8b23e9432e3fd1ff3fbd7b12613",
+      "sha256": "0a850522e825dd36885fe3ebb2ee41c55d315244cafd868dd9a06572d3ab4f3b",
+      "bytes": 6834,
+      "exports": [
+        "createSfRequestDocumentEvidence"
+      ],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/product/documents/request-evidence.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "50e20b20e927f30b5b24e0e3c622c2c8a6b19a76",
+      "sha256": "125253f45975241f2a61cc6b41919f28b21e283454ccb71f9784e10573adbfce",
+      "bytes": 11570,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/product/documents/schemas.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/selections.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "0d1a8d58a9e9e4eab376eb4b10861e7b30d96448",
+      "sha256": "6f009d2161eaef44bcabf65f96e702eb2ba2f00bf1251a32201b6d2e08073069",
+      "bytes": 10645,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/product/documents/selections.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/source-fence.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "c6c08b32c206fb2b77be7d9d66e7f145c75483f9",
+      "sha256": "bfb3e78897260c26b0ed5da0c40759944b77103c32a164675dac0d0e78adadf0",
+      "bytes": 1629,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/product/documents/source-fence.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/store.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "330b2a2ece099a2e1868d1db7b405f4373533350",
+      "sha256": "43ea98054262efbf107927ef4e720964182a172822b15cc72528cb78c78433df",
+      "bytes": 3280,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/product/documents/store.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/workbench.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "a59ad3e3e48f2458dd7698ac2c760694535e2d03",
+      "sha256": "17fc8f68b69ccefe044be887f4e1ada9ce4643390e62650d95e416b4dcb017a1",
+      "bytes": 9795,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/product/documents/workbench.ts"
+    }
+  ],
+  "producer_artifact_manifest_digest": {
+    "algorithm": "sha256",
+    "serialization": "UTF-8 JSON with sorted object keys, compact separators and unescaped Unicode",
+    "value": "cf072f6a5a5f158cb7638598da9ba97d243f11238aa4753b2a0aaf717f9f92f2"
+  },
+  "supporting_artifacts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "c9701d36149302447988bf629acc198a549e8244",
+      "sha256": "c902ee98944df9b4aea82bbd288fc60f0073247a4d51ecf5f4096f3ee8a642bd",
+      "bytes": 13210,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/test/product/wp06/documents/request-selection.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "92af635bb6d50fd025e53e5eab6cba2835a637dc",
+      "sha256": "fc1da1083d20ce70af5ed0b02073900b4eac5d313f902099ac4399aaeda132a0",
+      "bytes": 9170,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/test/product/wp06/documents/egress-fences.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/format-fixtures.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "dedbc65b2fa1ca375740e3b1395326c56b773bca",
+      "sha256": "be0b3da77c4370e66862d2fa39a7cc3f4b221ba6b25c1a93024c28c823a25743",
+      "bytes": 3525,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/test/product/wp06/documents/format-fixtures.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/runtime-fixture.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "f667d688b72821647ed9e8d2288529989930e929",
+      "sha256": "914a1ca0762f6ede5f06ac340770010dfc208d437cc3418a2efd07a2d6427289",
+      "bytes": 6959,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/test/product/wp06/runtime-fixture.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/document-http.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "8f679deec37dc99ae335c4bacae2162c9a7a076a",
+      "sha256": "e24fe0ddd594279cdfa20c19cc67031d65adad64700b4c094185e76083fa706c",
+      "bytes": 17550,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/modules/sucafina/Sucafinav1/product/interface/document-http.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/document-services.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "9e63a31a088d1e17e69a4721aec0fdcd4a7146e4",
+      "sha256": "665e0144fd8464f182042e06ad00844a6938c2d2b1ebbad2b3bb48c49c23d8ec",
+      "bytes": 6732,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/apps/cli/src/sucafina-product/document-services.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp06/imports.spec.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "d17f1489d9329b5c2ce5b72d6ce9f933d0792905",
+      "sha256": "2b3d0811c374e21c0ff89ce127f280ff46c2dcf5c89943a368f8f6b113611363",
+      "bytes": 15646,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/packages/app-shell/e2e/sucafina/wp06/imports.spec.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+      "source_commit": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "git_blob_sha": "d6d5f049041cb609a4a2bb0d2d803e6610344970",
+      "sha256": "7eebb2e7c245c3f2cdeab5c96b6cfe43666c16a381c34d61fdef4cb5f3ca524d",
+      "bytes": 8706,
+      "exports": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1b9e2ee13b5b297ef48bcde509d615c24c14acee/packages/app-shell/e2e/sucafina/wp06/documents.spec.ts"
+    }
+  ],
+  "observed_proof_cases": [
+    {
+      "proof_id": "W5-DOCUMENT-TXT-REQUEST-BCS",
+      "test_path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+      "test_name": "txt Request attachments reach the document UI through scoped selection, shared dispatch, confirmation and BCS",
+      "format": "text/plain",
+      "expected": "PASS for the actual authorized HTTP/shared-dispatch/confirmation/BCS assertions in this case",
+      "observed": "PASS",
+      "duration_ms": 1550.9,
+      "run_id": 43525466970,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43525466970",
+      "assertion_scope": [
+        "Real format bytes and private parser; selected Request/file and principal scope.",
+        "C14 output schema, extracted vs confirmed distinction, same refId/segment and original-ref resolution after explicit confirmation.",
+        "Actual createSfBusinessContext/createSfDocumentSourceAccess consumption before/after confirmation and after attachment revocation.",
+        "Exact source excerpt and location; real lexical search.",
+        "Ambiguous date, localized number and competing currencies fail without additional candidates.",
+        "Recomputed-checksum algorithm/hash swaps fail; forged direct authority fails.",
+        "External instructions remain data; Request stays sourcing."
+      ],
+      "work_sha": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "log_line": 1053
+    },
+    {
+      "proof_id": "W5-DOCUMENT-DOCX-REQUEST-BCS",
+      "test_path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+      "test_name": "docx Request attachments reach the document UI through scoped selection, shared dispatch, confirmation and BCS",
+      "format": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "expected": "PASS for the actual authorized HTTP/shared-dispatch/confirmation/BCS assertions in this case",
+      "observed": "PASS",
+      "duration_ms": 3077.4,
+      "run_id": 43525466970,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43525466970",
+      "assertion_scope": [
+        "Real format bytes and private parser; selected Request/file and principal scope.",
+        "C14 output schema, extracted vs confirmed distinction, same refId/segment and original-ref resolution after explicit confirmation.",
+        "Actual createSfBusinessContext/createSfDocumentSourceAccess consumption before/after confirmation and after attachment revocation.",
+        "Exact source excerpt and location; real lexical search.",
+        "Ambiguous date, localized number and competing currencies fail without additional candidates.",
+        "Recomputed-checksum algorithm/hash swaps fail; forged direct authority fails.",
+        "External instructions remain data; Request stays sourcing."
+      ],
+      "work_sha": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "log_line": 1054
+    },
+    {
+      "proof_id": "W5-DOCUMENT-PDF-REQUEST-BCS",
+      "test_path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+      "test_name": "pdf Request attachments reach the document UI through scoped selection, shared dispatch, confirmation and BCS",
+      "format": "application/pdf",
+      "expected": "PASS for the actual authorized HTTP/shared-dispatch/confirmation/BCS assertions in this case",
+      "observed": "PASS",
+      "duration_ms": 3375.26,
+      "run_id": 43525466970,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43525466970",
+      "assertion_scope": [
+        "Real format bytes and private parser; selected Request/file and principal scope.",
+        "C14 output schema, extracted vs confirmed distinction, same refId/segment and original-ref resolution after explicit confirmation.",
+        "Actual createSfBusinessContext/createSfDocumentSourceAccess consumption before/after confirmation and after attachment revocation.",
+        "Exact source excerpt and location; real lexical search.",
+        "Ambiguous date, localized number and competing currencies fail without additional candidates.",
+        "Recomputed-checksum algorithm/hash swaps fail; forged direct authority fails.",
+        "External instructions remain data; Request stays sourcing."
+      ],
+      "work_sha": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "log_line": 1055
+    },
+    {
+      "test_path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "test_name": "discovery fences source revisions again after both surface reads finish",
+      "expected": "PASS",
+      "observed": "PASS",
+      "duration_ms": 23.24,
+      "run_id": 43525466970,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43525466970",
+      "assertion_scope": "No source labels or selection tokens escape after an intervening asset revision change.",
+      "work_sha": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "log_line": 1084
+    },
+    {
+      "test_path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "test_name": "Request document evidence uses the actual Request resolver and fences an asset changed after list",
+      "expected": "PASS",
+      "observed": "PASS",
+      "duration_ms": 286.29,
+      "run_id": 43525466970,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43525466970",
+      "assertion_scope": "Actual WP04 Request resolver returns the candidate ref, then a file-only change after listing produces stale while Request identity stays unchanged.",
+      "work_sha": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "log_line": 1085
+    },
+    {
+      "test_path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "test_name": "search suppresses an earlier match when a later document read changes its source",
+      "expected": "PASS",
+      "observed": "PASS",
+      "duration_ms": 306.65,
+      "run_id": 43525466970,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43525466970",
+      "assertion_scope": "An earlier search match is suppressed when processing another document changes its source.",
+      "work_sha": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "log_line": 1086
+    },
+    {
+      "proof_id": "W5-DOCUMENT-BROWSER-1",
+      "work_sha": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "test_path": "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+      "test_name": "WP06 real document renderer shows a candidate and source as data until explicit confirmation",
+      "expected": "PASS",
+      "observed": "PASS",
+      "duration_ms": 968,
+      "retry": 0,
+      "run_id": 43524990304,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43524990304",
+      "assertion_scope": "Actual Chromium execution of production HTML/JavaScript/CSP with synthetic HTTP. Document candidate/source rendering, explicit confirmation and immediate stale clearing passed; backend parsing, authority, BCS, native/dossier and arithmetic proofs are separate."
+    },
+    {
+      "proof_id": "W5-DOCUMENT-BROWSER-2",
+      "work_sha": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+      "test_path": "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+      "test_name": "WP06 real document renderer preserves an explicit stale refusal and removes unusable source content",
+      "expected": "PASS",
+      "observed": "PASS",
+      "duration_ms": 1117,
+      "retry": 0,
+      "run_id": 43524990304,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43524990304",
+      "assertion_scope": "Actual Chromium execution of production HTML/JavaScript/CSP with synthetic HTTP. Document candidate/source rendering, explicit confirmation and immediate stale clearing passed; backend parsing, authority, BCS, native/dossier and arithmetic proofs are separate."
+    }
+  ],
+  "implementation_observation": "OBSERVED_IN_W5: all three real-format HTTP/shared-dispatch/confirmation/BCS cases and all three egress cases PASS; both document browser cases PASS. Complete handoff remains PARTIAL because native/dossier/full Atlas qualification, consumer acknowledgement and historical delivery are not proven, and complete unit/typecheck jobs remain failed.",
+  "consumer_tasks": [
+    "WP12.T02",
+    "WP10.T07",
+    "WP09.T04"
+  ],
+  "consumer_status": [
+    {
+      "task": "WP10.T07",
+      "status": "PARTIAL",
+      "observed": "On W5, actual createSfBusinessContext plus createSfDocumentSourceAccess consumed the real authorized reader in all three format tests, including explicit confirmation and revocation. The existing host composition passes the reader through initializeAtlas/createSfAtlasBusiness; the full Atlas initialization/publication path was not exercised by these tests.",
+      "not_proven": [
+        "Complete Atlas runtime initialization and publication/index persistence",
+        "Installed scanner qualification",
+        "Original timed delivery and explicit consumer-owner acknowledgement"
+      ],
+      "consumer_paths": [
+        "apps/cli/src/sucafina-product/business-services.ts::initializeAtlas",
+        "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts::createSfBusinessContext",
+        "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts::createSfDocumentSourceAccess"
+      ]
+    },
+    {
+      "task": "WP12.T02",
+      "status": "NOT_PROVEN",
+      "producer_port": "documents.documents.evidenceHost; same private parser, schemas, authorized reader and human confirmation authority as the UI",
+      "required_owner_delta": [
+        "Register createSfDocumentExtractionVerifier in host-context.ts with the existing real authority.",
+        "Pass schema:<id>:<version>, currentCall and authorizedFileRef to resolveFieldSchema.",
+        "Resolve extracted output with resolveSfDocumentEvidence rather than requiring BCS to accept an unconfirmed premise; retain output/candidate/schema/document checks.",
+        "Exercise real admitted Session/MCP, selection and skill receipts with the same private descriptor."
+      ],
+      "owner_paths": [
+        "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+        "apps/cli/src/sucafina-product/host-context.ts"
+      ],
+      "consulted_producers": {
+        "sf2-host-ready": "dc6bf9e4e8f3d2fa01d01c76d5575892a8ced82f",
+        "sf2-ai-ready": "574841e2409a9523000c4c1976c81804c9a86fde"
+      }
+    },
+    {
+      "task": "WP09.T04",
+      "status": "NOT_PROVEN",
+      "producer_port": "modules/sucafina/Sucafinav1/product/documents/request-evidence.ts::createSfRequestDocumentEvidence",
+      "consulted_real_dossier_producer": {
+        "branch": "sf2-relay-ready",
+        "sha": "b58601f92f3bc8742e5a7c72a34d5ddf1fd87fe8",
+        "path": "modules/sucafina/Sucafinav1/product/routines/dossier.ts::prepareSourcingDossier"
+      },
+      "required_owner_delta": [
+        "Incorporate and mount the real WP09 producer; the module is absent from W4.",
+        "Expose the existing authorized resolveProcurement closure from business-services and wire it to createSfRequestDocumentEvidence together with documents.documents.list.",
+        "Pass the same documents.documents.reader, real prepareProcurement and final Request/file revalidation to prepareSourcingDossier.",
+        "Observe pending candidate, same-ref human confirmation, confirmed dossier state and revocation without duplicate parser or copied evidence."
+      ],
+      "blocking_criterion": "WP06.T05.CHK.20"
+    }
+  ],
+  "required_follow_up": [
+    "S0 must review the published W5 producer and final U5/B5/C5 run evidence, reconcile external owner deltas, and qualify the composed final candidate. The full unit run and typechecks remain failed despite the named passing document cases.",
+    "Consumer owners must provide actual consumption/acknowledgement receipts; this producer receipt cannot manufacture their acceptance.",
+    "Historical deadlines and original lease transfer remain NOT_PROVEN even if current functional integration later passes.",
+    "B5 browser passed both specs with ten cases; preserve its synthetic HTTP boundary and the prior B4 failure. It does not substitute native/dossier witnesses."
+  ],
+  "historical_observations": [
+    {
+      "work_sha": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+      "work_tree": "d0aead7ff949e1244f72f0e0b69ebe2872132044",
+      "observed_at": "2026-11-13T23:19:21Z",
+      "producer_artifacts": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/byte-port.ts",
+          "source_commit": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+          "git_blob_sha": "2a0ad10bd7748c0c2c2bf22fe66085e1ac627dd7",
+          "sha256": "f1a25afdc2bf8e3e9f8ea14a9df0c49f1ad4fdbb7b8aedbcdedd309cb45a2d52",
+          "bytes": 15159,
+          "exports": [],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a33fa24809bf8c52f92b910bcde45c708e2107de/modules/sucafina/Sucafinav1/product/documents/byte-port.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+          "source_commit": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+          "git_blob_sha": "7e09d0981b08f8edc62121eb4fa26bf04b9fbc07",
+          "sha256": "7fb06550fa8ddca7724d4c817a499f53901768b557b423c4d48998443558e467",
+          "bytes": 21340,
+          "exports": [
+            "extractDocumentEvidence",
+            "searchDocumentEvidence"
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a33fa24809bf8c52f92b910bcde45c708e2107de/modules/sucafina/Sucafinav1/product/documents/capabilities.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/docx.ts",
+          "source_commit": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+          "git_blob_sha": "c3f0f4cfb8b9833b5b1ddef2405fa59d75db29ac",
+          "sha256": "dd65d2b073c3ae3b9bfedaa5a0ed08dc46b04fa5d039ff3638f5c0d6de9779c7",
+          "bytes": 3004,
+          "exports": [],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a33fa24809bf8c52f92b910bcde45c708e2107de/modules/sucafina/Sucafinav1/product/documents/docx.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+          "source_commit": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+          "git_blob_sha": "ae8b296b6565aeaf6748dfd86cd1b4593a0463d7",
+          "sha256": "b1e65930f0ba7082b0494f0298c0133260c56d0ce93e98ab11749d5f9c13f1de",
+          "bytes": 6597,
+          "exports": [
+            "resolveSfDocumentEvidence"
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a33fa24809bf8c52f92b910bcde45c708e2107de/modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/extract.ts",
+          "source_commit": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+          "git_blob_sha": "883ffb39b09d5073407a37ef7814884b57be2285",
+          "sha256": "443550f7a1bc97aaced3afce8f23fdc23d01d8728eb447b898f8424e31beb6c9",
+          "bytes": 3173,
+          "exports": [],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a33fa24809bf8c52f92b910bcde45c708e2107de/modules/sucafina/Sucafinav1/product/documents/extract.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/host.ts",
+          "source_commit": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+          "git_blob_sha": "fede075378ee964fccdb73f0d95958a5f56c7159",
+          "sha256": "dff4ed51b47da6a5fd011f962517e82961074f0f79f802bebebb08db5c1ed39e",
+          "bytes": 6362,
+          "exports": [],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a33fa24809bf8c52f92b910bcde45c708e2107de/modules/sucafina/Sucafinav1/product/documents/host.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/index.ts",
+          "source_commit": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+          "git_blob_sha": "33a2cc39a1f614b8df120395615cb12c6de0efde",
+          "sha256": "c9e186818f34f3a9f128cc73c275c374941e5d79d386ee098ed7cf2e714bfe82",
+          "bytes": 5501,
+          "exports": [],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a33fa24809bf8c52f92b910bcde45c708e2107de/modules/sucafina/Sucafinav1/product/documents/index.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/limits.ts",
+          "source_commit": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+          "git_blob_sha": "66ff2dd84410c94a83b9ac0325983c1a578327dd",
+          "sha256": "730990bd7a00b2c2ea477276d56e646ee10f6b3abfdd5724888d84a6669e5c77",
+          "bytes": 305,
+          "exports": [],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a33fa24809bf8c52f92b910bcde45c708e2107de/modules/sucafina/Sucafinav1/product/documents/limits.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/parser-worker.ts",
+          "source_commit": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+          "git_blob_sha": "72fec6093aa9c968bf7d36d4c1c2b931140b63d8",
+          "sha256": "10ef7f6d4fecc8ccd0af60ed7c8a0bddddc5868f55377b4d834db1557af319df",
+          "bytes": 1429,
+          "exports": [],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a33fa24809bf8c52f92b910bcde45c708e2107de/modules/sucafina/Sucafinav1/product/documents/parser-worker.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/parser.ts",
+          "source_commit": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+          "git_blob_sha": "39c3dec8018b58d673c2a169d21bee23a49c92ad",
+          "sha256": "b24311c1c7527f84dbb65e4beb6a29c2fa7ad4bbdb4e83fe3df977feb2fddf3e",
+          "bytes": 5412,
+          "exports": [],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a33fa24809bf8c52f92b910bcde45c708e2107de/modules/sucafina/Sucafinav1/product/documents/parser.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/presentation.ts",
+          "source_commit": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+          "git_blob_sha": "2ab4736c3bdea1ae77bdc307228346bd524e8c98",
+          "sha256": "115452b919f8b4bdf1237eeaa7e7a4997cc7a97e30c3a24c7fc6b3b9f22a609b",
+          "bytes": 7240,
+          "exports": [],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a33fa24809bf8c52f92b910bcde45c708e2107de/modules/sucafina/Sucafinav1/product/documents/presentation.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/rag-adapter.ts",
+          "source_commit": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+          "git_blob_sha": "b968936724192eaab050cf48e69dc5a634dc54d9",
+          "sha256": "a1f6fb390f7a535ad7bd516c3b03501996b2901e4562348dee187c7745487203",
+          "bytes": 3757,
+          "exports": [
+            "createSfDocumentEvidenceAdapter"
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a33fa24809bf8c52f92b910bcde45c708e2107de/modules/sucafina/Sucafinav1/product/documents/rag-adapter.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/request-evidence.ts",
+          "source_commit": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+          "git_blob_sha": "0ae1c5a3c612b8b23e9432e3fd1ff3fbd7b12613",
+          "sha256": "0a850522e825dd36885fe3ebb2ee41c55d315244cafd868dd9a06572d3ab4f3b",
+          "bytes": 6834,
+          "exports": [
+            "createSfRequestDocumentEvidence"
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a33fa24809bf8c52f92b910bcde45c708e2107de/modules/sucafina/Sucafinav1/product/documents/request-evidence.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+          "source_commit": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+          "git_blob_sha": "50e20b20e927f30b5b24e0e3c622c2c8a6b19a76",
+          "sha256": "125253f45975241f2a61cc6b41919f28b21e283454ccb71f9784e10573adbfce",
+          "bytes": 11570,
+          "exports": [],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a33fa24809bf8c52f92b910bcde45c708e2107de/modules/sucafina/Sucafinav1/product/documents/schemas.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/selections.ts",
+          "source_commit": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+          "git_blob_sha": "0d1a8d58a9e9e4eab376eb4b10861e7b30d96448",
+          "sha256": "6f009d2161eaef44bcabf65f96e702eb2ba2f00bf1251a32201b6d2e08073069",
+          "bytes": 10645,
+          "exports": [],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a33fa24809bf8c52f92b910bcde45c708e2107de/modules/sucafina/Sucafinav1/product/documents/selections.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/source-fence.ts",
+          "source_commit": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+          "git_blob_sha": "c6c08b32c206fb2b77be7d9d66e7f145c75483f9",
+          "sha256": "bfb3e78897260c26b0ed5da0c40759944b77103c32a164675dac0d0e78adadf0",
+          "bytes": 1629,
+          "exports": [],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a33fa24809bf8c52f92b910bcde45c708e2107de/modules/sucafina/Sucafinav1/product/documents/source-fence.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/store.ts",
+          "source_commit": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+          "git_blob_sha": "330b2a2ece099a2e1868d1db7b405f4373533350",
+          "sha256": "43ea98054262efbf107927ef4e720964182a172822b15cc72528cb78c78433df",
+          "bytes": 3280,
+          "exports": [],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a33fa24809bf8c52f92b910bcde45c708e2107de/modules/sucafina/Sucafinav1/product/documents/store.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/workbench.ts",
+          "source_commit": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+          "git_blob_sha": "dd31ca83212bf4c1c9e2ecd9e0c644af0b8735ac",
+          "sha256": "9f3024808b8aa397f3ca640aac6956a468439204c304128a92a89e66678d5393",
+          "bytes": 9638,
+          "exports": [],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a33fa24809bf8c52f92b910bcde45c708e2107de/modules/sucafina/Sucafinav1/product/documents/workbench.ts"
+        }
+      ],
+      "producer_artifact_manifest_digest": {
+        "algorithm": "sha256",
+        "serialization": "UTF-8 JSON with sorted object keys, compact separators and unescaped Unicode",
+        "value": "f16a820603230ab87eec0c719bc42b6b9c1b13452b4bf1c6459a7f6d52dad849"
+      },
+      "hosted_validation": {
+        "unit": {
+          "work_sha": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+          "snapshot_sha": "5b6ebf3765bff51dd0d5ddd06cc2058ced5f33b8",
+          "snapshot_tree": "173dd2ac47e5a8e6a3d61107ce74780bafdc0aac",
+          "run_id": 43523089034,
+          "job_id": 132221958726,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43523089034",
+          "conclusion": "failure",
+          "passed": 175,
+          "failed": 1,
+          "errors": 1,
+          "assertion_failures_observed": 0,
+          "expect_calls": 2004,
+          "test_files": 46,
+          "tests_reported": 176,
+          "remaining_error": "Cannot find module product/routines/dossier.ts from documents/runtime-e2e.test.ts; that file did not execute its assertions.",
+          "normalized_request_sha256": "b6188b844f6e699806b2faf21af98280eb80fa383e8318e60e9f5688901889ed",
+          "product_snapshot_equality": {
+            "method": "GitHub MCP compare recorded by the parent executor",
+            "only_added_file": ".ci-run.json",
+            "envelope_blob": "4d9dd4f4c3c74c579a6d7bced5f541ef4477a156",
+            "product_test_config_fixture_blobs_identical": true
+          }
+        },
+        "checks": {
+          "work_sha": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+          "snapshot_sha": "42963a3a1b1c42e19265cecd60f548bb3e4008d3",
+          "run_id": 43523094310,
+          "job_id": 132221978089,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43523094310",
+          "conclusion": "failure",
+          "sucafina_typecheck": "failure",
+          "cli_typecheck": "failure",
+          "guards": "success",
+          "unique_diagnostics": 117,
+          "unowned_unique_diagnostics": 116,
+          "wp06_production_diagnostics": 0,
+          "owned_diagnostic": "TS2307 in documents/runtime-e2e.test.ts: external WP09 dossier module absent.",
+          "artifact_id": 14083867624,
+          "artifact_digest": "sha256:ff8b2645b58694a34657a09324d358aaa4ac8bdd13ddcc31bbc7b52cd1288a1f",
+          "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43523094310/artifacts/14083867624",
+          "product_snapshot_equality": {
+            "method": "GitHub MCP compare recorded by the parent executor",
+            "only_added_file": ".astra-wp06-check.json",
+            "envelope_blob": "f145ce48cf30c99a6459aad4d25789616408103f",
+            "product_test_config_fixture_blobs_identical": true
+          }
+        },
+        "omni": {
+          "status": "NOT_APPLICABLE",
+          "nonce": "8dab9ba839cae6d9f5bdfb2e416e29fd",
+          "observation": "Focused selection had no declaring test, made no omni spawn and delegated none; no omni qualification."
+        },
+        "browser": {
+          "snapshot": "e7ec13ba4dd9d6815d799c92e354736d617f8cd4",
+          "tree": "3bc816d61b2a5648a5c82bc871b02f68064645c9",
+          "run_id": 43523765526,
+          "job_id": 132224324028,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43523765526",
+          "request": {
+            "package": "app",
+            "directory": "packages/app-shell",
+            "runner": "playwright",
+            "config": "e2e/playwright.production.config.ts",
+            "args": [
+              "e2e/sucafina/wp06/imports.spec.ts",
+              "e2e/sucafina/wp06/documents.spec.ts"
+            ],
+            "env": {
+              "ORCHESTRA_CHANNEL": "prod"
+            }
+          },
+          "request_sha256": "47a5201cc8efa3dd2145cd115d4214b6731979367804a98cb936450361df9df5",
+          "conclusion": "failure",
+          "spec_files": 2,
+          "declared_cases": 10,
+          "blob_equality": {
+            "method": "GitHub MCP compare",
+            "base": "a33fa24809bf8c52f92b910bcde45c708e2107de",
+            "head": "e7ec13ba4dd9d6815d799c92e354736d617f8cd4",
+            "only_added_file": ".ci-run.json",
+            "blob": "aa2607a1dc9c3f95ce15632a4f3593ff69cfa0b2",
+            "all_product_test_config_fixture_blobs_identical": true
+          },
+          "omni": {
+            "status": "NOT_APPLICABLE_BY_RUNNER",
+            "basis": "script/test-ci.ts::report checks control verdict only for runner bun with the registered preload; this request uses playwright.",
+            "native_qualification": false,
+            "nonce": "bc345190a2c04051f63fd271c0ffa60e"
+          },
+          "scope": "Real production renderers, scripts and CSP in Chromium; synthetic HTTP responses. Workbook parsing, domain commits and authority are qualified by the separate backend tests.",
+          "passed": 0,
+          "failed": 10,
+          "timed_out": 2,
+          "tests": 10,
+          "artifact_id": 14084686955,
+          "artifact_digest": "sha256:e09c415be376494571f46b5dc18a7669eef645c02c540eda3ca85dde466caa25",
+          "artifact_bytes": 16155257,
+          "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43523765526/artifacts/14084686955",
+          "failure": "Exact label matching failed for nested label/select option content before the main review/extraction assertions.",
+          "status": "FAIL"
+        },
+        "local_product_tests": "NOT_RUN_AS_REQUIRED",
+        "epic": "NOT_RUN_AS_REQUIRED"
+      },
+      "original_backend_observed_at": "2026-11-13T23:03:44Z",
+      "observation_scope": "Retrospective preservation of W4 backend and B4 browser results after both finished; the original backend-only observation time is recorded separately."
+    }
+  ],
+  "historical_proof_cases": [
+    {
+      "proof_id": "W4-DOCUMENT-TXT-REQUEST-BCS",
+      "test_path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+      "test_name": "txt Request attachments reach the document UI through scoped selection, shared dispatch, confirmation and BCS",
+      "format": "text/plain",
+      "expected": "PASS for the actual authorized HTTP/shared-dispatch/confirmation/BCS assertions in this case",
+      "observed": "PASS",
+      "duration_ms": 1641.63,
+      "run_id": 43523089034,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43523089034",
+      "assertion_scope": [
+        "Real format bytes and private parser; selected Request/file and principal scope.",
+        "C14 output schema, extracted vs confirmed distinction, same refId/segment and original-ref resolution after explicit confirmation.",
+        "Actual createSfBusinessContext/createSfDocumentSourceAccess consumption before/after confirmation and after attachment revocation.",
+        "Exact source excerpt and location; real lexical search.",
+        "Ambiguous date, localized number and competing currencies fail without additional candidates.",
+        "Recomputed-checksum algorithm/hash swaps fail; forged direct authority fails.",
+        "External instructions remain data; Request stays sourcing."
+      ],
+      "work_sha": "a33fa24809bf8c52f92b910bcde45c708e2107de"
+    },
+    {
+      "proof_id": "W4-DOCUMENT-DOCX-REQUEST-BCS",
+      "test_path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+      "test_name": "docx Request attachments reach the document UI through scoped selection, shared dispatch, confirmation and BCS",
+      "format": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "expected": "PASS for the actual authorized HTTP/shared-dispatch/confirmation/BCS assertions in this case",
+      "observed": "PASS",
+      "duration_ms": 3211.44,
+      "run_id": 43523089034,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43523089034",
+      "assertion_scope": [
+        "Real format bytes and private parser; selected Request/file and principal scope.",
+        "C14 output schema, extracted vs confirmed distinction, same refId/segment and original-ref resolution after explicit confirmation.",
+        "Actual createSfBusinessContext/createSfDocumentSourceAccess consumption before/after confirmation and after attachment revocation.",
+        "Exact source excerpt and location; real lexical search.",
+        "Ambiguous date, localized number and competing currencies fail without additional candidates.",
+        "Recomputed-checksum algorithm/hash swaps fail; forged direct authority fails.",
+        "External instructions remain data; Request stays sourcing."
+      ],
+      "work_sha": "a33fa24809bf8c52f92b910bcde45c708e2107de"
+    },
+    {
+      "proof_id": "W4-DOCUMENT-PDF-REQUEST-BCS",
+      "test_path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+      "test_name": "pdf Request attachments reach the document UI through scoped selection, shared dispatch, confirmation and BCS",
+      "format": "application/pdf",
+      "expected": "PASS for the actual authorized HTTP/shared-dispatch/confirmation/BCS assertions in this case",
+      "observed": "PASS",
+      "duration_ms": 3522.03,
+      "run_id": 43523089034,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43523089034",
+      "assertion_scope": [
+        "Real format bytes and private parser; selected Request/file and principal scope.",
+        "C14 output schema, extracted vs confirmed distinction, same refId/segment and original-ref resolution after explicit confirmation.",
+        "Actual createSfBusinessContext/createSfDocumentSourceAccess consumption before/after confirmation and after attachment revocation.",
+        "Exact source excerpt and location; real lexical search.",
+        "Ambiguous date, localized number and competing currencies fail without additional candidates.",
+        "Recomputed-checksum algorithm/hash swaps fail; forged direct authority fails.",
+        "External instructions remain data; Request stays sourcing."
+      ],
+      "work_sha": "a33fa24809bf8c52f92b910bcde45c708e2107de"
+    },
+    {
+      "test_path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "test_name": "discovery fences source revisions again after both surface reads finish",
+      "expected": "PASS",
+      "observed": "PASS",
+      "duration_ms": 26.16,
+      "run_id": 43523089034,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43523089034",
+      "assertion_scope": "No source labels or selection tokens escape after an intervening asset revision change.",
+      "work_sha": "a33fa24809bf8c52f92b910bcde45c708e2107de"
+    },
+    {
+      "test_path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "test_name": "Request document evidence uses the actual Request resolver and fences an asset changed after list",
+      "expected": "PASS",
+      "observed": "PASS",
+      "duration_ms": 300.93,
+      "run_id": 43523089034,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43523089034",
+      "assertion_scope": "Actual WP04 Request resolver returns the candidate ref, then a file-only change after listing produces stale while Request identity stays unchanged.",
+      "work_sha": "a33fa24809bf8c52f92b910bcde45c708e2107de"
+    },
+    {
+      "test_path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "test_name": "search suppresses an earlier match when a later document read changes its source",
+      "expected": "PASS",
+      "observed": "PASS",
+      "duration_ms": 312.25,
+      "run_id": 43523089034,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43523089034",
+      "assertion_scope": "An earlier search match is suppressed when processing another document changes its source.",
+      "work_sha": "a33fa24809bf8c52f92b910bcde45c708e2107de"
+    }
+  ],
+  "change_from_previous_work": {
+    "reason": "Explicit label-for/id associations after hosted B4 failures; browser specs and assertions unchanged.",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/documents/workbench.ts",
+        "blob": "a59ad3e3e48f2458dd7698ac2c760694535e2d03"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/workbench.ts",
+        "blob": "73be922368d5df9cc5cec8a16b5eec7c67d73adf"
+      }
+    ],
+    "browser_specs_and_assertions_unchanged": true,
+    "scope": "External label-for/id associations in the two production workbenches, including document Type; no test assertions altered."
+  },
+  "historical_observation_notice": "Historical work/results are preserved as history; these are current receipts, not backdated original T+20/T+35 delivery or acknowledgement records."
+}
