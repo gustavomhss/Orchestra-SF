@@ -192,6 +192,25 @@ test("a real C08 run and case still cannot bind a missing native Session", async
       actor.active = false
       expect(await product.authorizeNative(admission, baseline.value)).toBe(false)
       actor.active = true
+      expect(await product.authorizeInterrupt(admission, baseline.value)).toBe(false)
+      const current = await product.state.read(request, "contributions", () => null)
+      expect(current.status).toBe("ok")
+      if (current.status !== "ok") throw new Error("current contributions unavailable")
+      const cancelled = await product.state.transaction(request, { namespace: "contributions", expectedStorageVersion: current.storageVersion,
+        targetRef: "case", targetIncarnation: "inc", idempotencyKey: "cancel-real-run", commandDigest: "f".repeat(64) }, async (stored) => {
+        const run = stored.nativeRuns?.run
+        if (!run) throw new Error("admitted run missing")
+        stored.nativeRuns!.run = { ...run, version: run.version + 1, state: "cancelled", native: { sessionID, skillReceipt: receipt } }
+        return { commit: true, value: true }
+      })
+      expect(cancelled.status).toBe("ok")
+      expect(await product.authorizeNative(admission, baseline.value)).toBe(false)
+      expect(await product.authorizeInterrupt(admission, baseline.value)).toBe(true)
+      expect(await product.authorizeInterrupt(admission, { ...baseline.value, runId: "another-run" })).toBe(false)
+      expect(await product.authorizeInterrupt(admission, { ...baseline.value, nativeSessionId: SessionSchema.ID.make("ses_another") })).toBe(false)
+      actor.active = false
+      expect(await product.authorizeInterrupt(admission, baseline.value)).toBe(false)
+      actor.active = true
       product.native.revoke(baseline.value)
     }
     changes.mutateInspect = true

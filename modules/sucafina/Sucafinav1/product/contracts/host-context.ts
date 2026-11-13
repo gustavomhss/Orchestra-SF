@@ -31,7 +31,7 @@ export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
   }
   /** Human-authorized product operations; native tickets and bindings never cross this boundary. */
   analyses?: {
-    start: (context: TrustedUiContext, input: Omit<Parameters<typeof runSfAnalysis>[0], "host">) => ReturnType<typeof runSfAnalysis>
+    start: (context: TrustedUiContext, input: Omit<Parameters<typeof runSfAnalysis>[0], "host" | "request"> & { request: Omit<Parameters<typeof runSfAnalysis>[0]["request"], "contextFingerprint">; model: ModelV2.Ref }) => Promise<PortResult<{ runRef: string }>>
     read: (context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>
     cancel: (context: TrustedUiContext, runRef: string) => Promise<PortResult<{ cancelled: boolean }>>
   }
