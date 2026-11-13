@@ -1,5 +1,7 @@
 # WP00.T04 — independent source preflight
 
+> Historical independent source preflight at the seed. The current 85-criterion status is in [criterion-map.json](../../../product-campaign/wp00/criterion-map.json); later hosted observations are in [ci-execution-evidence.json](ci-execution-evidence.json), [scanner-host-observation.json](scanner-host-observation.json) and [ui-bootstrap-observations.json](ui-bootstrap-observations.json). Those runs establish scanner absence/fail-closed and the C15 bootstrap failure; they do not qualify GNATIVE. The original independent assessment below is preserved.
+
 ## Disposition
 
 **DRAFT/BLOCKED for native qualification. GNATIVE, C07, AM01–AM06, model inference and scanner execution: NOT_RUN.** This is an independent static review by `/root/native_qualification`; it is not a native S3 receipt. No product/runtime/case source was edited and no test, provider request, hosted CI, remote mutation, token lookup or login was performed by this reviewer.

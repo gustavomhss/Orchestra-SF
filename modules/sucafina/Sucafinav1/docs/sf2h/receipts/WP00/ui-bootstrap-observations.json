@@ -1,0 +1,176 @@
+{
+  "schema": "sf-wp00-published-ui-bootstrap-v1",
+  "status": "BLOCKED_C15",
+  "latest_execution_ref": "ui5",
+  "attempts": [
+    {
+      "execution_ref": "ui3",
+      "product_sha": "0d85bfd9eeac76d24a9cffc9577c646eef7cc95a",
+      "snapshot_sha": "f50d9f2d8ae4173210bc6b8ef5a6a7ec24249324",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43522178175",
+      "run_conclusion": "failure",
+      "artifact": {
+        "id": 14083576257,
+        "name": "playwright-ubuntu-24.04-1",
+        "size_in_bytes": 688998,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14083576257",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14083576257/zip",
+        "expired": false,
+        "created_at": "2026-11-13T22:50:31Z",
+        "expires_at": "2026-11-20T22:50:30Z",
+        "updated_at": "2026-11-13T22:50:31Z",
+        "digest": "sha256:f1196b53354a91881ec998213c426c02d570b1be9d411c1d31fe18b9e18940b7",
+        "workflow_run": {
+          "id": 43522178175,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "ci-run-linux-astra-wp00-0d85bfd9-f366bf66-1",
+          "head_sha": "f50d9f2d8ae4173210bc6b8ef5a6a7ec24249324"
+        }
+      },
+      "raw_receipt_sha256": "b8f011e46cd740ae7b398157336bbd8749f587f1b93a30dfb02476adf137d48d",
+      "raw_receipt": {
+        "schema": "wp00-real-ui-measurements-v1",
+        "executedCommit": "f50d9f2d8ae4173210bc6b8ef5a6a7ec24249324",
+        "baselineReferenceCommit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+        "comparisonState": "candidate-only; baseline reference was not measured in this run",
+        "startedAt": "2026-11-13T22:50:26.852Z",
+        "operatingSystem": "linux 7.0.0-1014-aws",
+        "device": "GitHub Actions runner",
+        "browserVersion": "147.0.7727.15",
+        "cacheState": "same authenticated browser context; server responses no-store; repeated navigation",
+        "method": "Automation-observed elapsed time: a current usable business result, then the complete asserted business outcome; neither timestamp claims compositor paint time",
+        "state": {
+          "stage": "start-existing-cli",
+          "exitCode": 1,
+          "failure": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+          "corpus": {
+            "schema": "wp00-ui-corpus-v1",
+            "synthetic": true,
+            "datasetDigest": "7b37f785864261ec218f53368b42c2f5a3a181ae3bb95197676e96b00ca7ccea",
+            "counts": {
+              "financialLines": 1000,
+              "purchaseOrders": 200,
+              "projects": 100
+            },
+            "expected": {
+              "actual2027": "$1000",
+              "forecast2027": "$2000",
+              "openRequests": 200,
+              "firstRequest": "synthetic-po-1",
+              "firstAmount": "1 USD",
+              "lastRequest": "synthetic-po-200",
+              "lastAmount": "200 USD"
+            },
+            "runtimeVersion": "1.3.14",
+            "authentication": "local-operator",
+            "provider": "runtime/local-store.ts#openLocalStore"
+          }
+        },
+        "observations": [],
+        "limits": [
+          "Local operator only; no Microsoft identity or native AI qualification",
+          "Planner comparison, sourcing ranking, report preparation and exact reimport are not measured by this spec",
+          "Zoom 200% is not measured; CSS zoom and page-scale emulation are not substituted",
+          "The original baseline commit has not been timed"
+        ]
+      },
+      "server_log_sha256": "f0dd20b9fc26d183dfcb1435d2ddf4a58debb3782afae5e0dfc607e57db5d842",
+      "server_log": "[22:50:29.851] ERROR (#2): Error: Profile policy mismatch: sf_portfolio\n    at createResidentAiBundle (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/ai/resident.ts:50:108)\n    at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/apps/cli/src/sucafina-product/host-context.ts:62:24)\n    at async createLocalInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/local/entry.ts:91:33)\n    at processTicksAndRejections (native:7:39)\n    at cli.serve (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:444:98)\n    at cli.serve (definition) (/home/runner/work/Orchestra-SF/Orchestra-SF/apps/cli/src/commands/handlers/serve.ts:52:36)\n",
+      "measurement_count": 0,
+      "median_ms": null,
+      "p95_ms": null,
+      "unavailable_reason": "The real CLI failed before authentication/readiness; no business UI observation occurred.",
+      "historical_metadata_correction": "UI3 cacheState described the intended measurement context; it was not observed. UI5 explicitly reports authenticated:false and cacheState:null."
+    },
+    {
+      "execution_ref": "ui5",
+      "product_sha": "70476b99e0a34c4432d48f5d2f3710c26562aa1b",
+      "snapshot_sha": "2160a52ea84ab1315ec2ae8fd1c5c5f82b2ce6b9",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43522985791",
+      "run_conclusion": "failure",
+      "artifact": {
+        "id": 14083059625,
+        "name": "playwright-ubuntu-24.04-1",
+        "size_in_bytes": 692045,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14083059625",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14083059625/zip",
+        "expired": false,
+        "created_at": "2026-11-13T22:56:36Z",
+        "expires_at": "2026-11-20T22:56:34Z",
+        "updated_at": "2026-11-13T22:56:36Z",
+        "digest": "sha256:70e23230cf58b2cfa7364b4d70b781020812f51e80d5094c5acceed6e11f5752",
+        "workflow_run": {
+          "id": 43522985791,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "ci-run-linux-astra-wp00-70476b99-f366bf66-1",
+          "head_sha": "2160a52ea84ab1315ec2ae8fd1c5c5f82b2ce6b9"
+        }
+      },
+      "raw_receipt_sha256": "40b639b2b1fcc9fd1d8254b60eff0a3a96b562806068725937a7d04cb8c041a5",
+      "raw_receipt": {
+        "schema": "wp00-real-ui-measurements-v1",
+        "executedCommit": "2160a52ea84ab1315ec2ae8fd1c5c5f82b2ce6b9",
+        "baselineReferenceCommit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+        "comparisonState": "candidate-only; baseline reference was not measured in this run",
+        "startedAt": "2026-11-13T22:56:29.404Z",
+        "operatingSystem": "linux 7.0.0-1017-azure",
+        "device": "GitHub Actions runner",
+        "browserVersion": "147.0.7727.15",
+        "authenticated": false,
+        "cacheState": null,
+        "cacheStateUnavailableReason": "Authentication and repeated business navigation were not reached",
+        "method": "Automation-observed elapsed time: a current usable business result, then the complete asserted business outcome; neither timestamp claims compositor paint time",
+        "state": {
+          "stage": "start-existing-cli",
+          "exitCode": 1,
+          "failure": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+          "corpus": {
+            "schema": "wp00-ui-corpus-v1",
+            "synthetic": true,
+            "datasetDigest": "7b37f785864261ec218f53368b42c2f5a3a181ae3bb95197676e96b00ca7ccea",
+            "counts": {
+              "financialLines": 1000,
+              "purchaseOrders": 200,
+              "projects": 100
+            },
+            "expected": {
+              "actual2027": "$1000",
+              "forecast2027": "$2000",
+              "openRequests": 200,
+              "firstRequest": "synthetic-po-1",
+              "firstAmount": "1 USD",
+              "lastRequest": "synthetic-po-200",
+              "lastAmount": "200 USD"
+            },
+            "runtimeVersion": "1.3.14",
+            "authentication": "local-operator",
+            "provider": "runtime/local-store.ts#openLocalStore"
+          }
+        },
+        "observations": [],
+        "limits": [
+          "Local operator only; no Microsoft identity or native AI qualification",
+          "Planner comparison, sourcing ranking, report preparation and exact reimport are not measured by this spec",
+          "Zoom 200% is not measured; CSS zoom and page-scale emulation are not substituted",
+          "The original baseline commit has not been timed"
+        ]
+      },
+      "server_log_sha256": "dfaec5fb226ff6fd3103620b7b3251447b6b4c83ecd0d0bc5699cbc3eab0241c",
+      "server_log": "[22:56:33.522] ERROR (#2): Error: Profile policy mismatch: sf_portfolio\n    at createResidentAiBundle (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/ai/resident.ts:50:108)\n    at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/apps/cli/src/sucafina-product/host-context.ts:62:24)\n    at async createLocalInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/local/entry.ts:91:33)\n    at processTicksAndRejections (native:7:39)\n    at cli.serve (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:444:98)\n    at cli.serve (definition) (/home/runner/work/Orchestra-SF/Orchestra-SF/apps/cli/src/commands/handlers/serve.ts:52:36)\n",
+      "measurement_count": 0,
+      "median_ms": null,
+      "p95_ms": null,
+      "unavailable_reason": "The real CLI failed before authentication/readiness; no business UI observation occurred.",
+      "historical_metadata_correction": null
+    }
+  ],
+  "next_owners": [
+    "WP12",
+    "WP10",
+    "S0",
+    "WP00 qualifier"
+  ],
+  "next_action": "Integrate the pinned C15 profile/skill/manifest together through their owner, then rerun the unchanged real installation spec on the composed SHA. Complete the remaining required flows, historical baseline timing, restricted actors and real 200% zoom before claiming T03 or journey acceptance."
+}

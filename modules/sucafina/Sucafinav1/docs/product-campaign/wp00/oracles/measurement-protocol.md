@@ -1,6 +1,6 @@
 # WP00.T03 — protocolo proposto de medição
 
-Estado: fixtures propostas; nenhuma medição executada. Todos os datasets são sintéticos e não representam volume conhecido da Sucafina.
+Estado: corpus preparado no SQLite real e tentativa hospedada executada; bootstrap bloqueado em C15 antes de autenticação, com zero medições de UI. Todos os datasets são sintéticos e não representam volume conhecido da Sucafina.
 
 ## Carga e repetição
 
@@ -34,3 +34,7 @@ As medições de 30 repetições, os três viewports e zoom 200% permanecem **NO
 O escopo implementado desse primeiro harness é 30 repetições de filtro anual do Dashboard e abertura da tabela Procurement por viewport de 320, 768 e 1440 px. Resposta visual exige resultado de negócio atual visível; conclusão exige os demais valores e identidades esperados. Os anexos `wp00-raw-measurements` e `wp00-server.log` preservam a etapa e a causa quando o bootstrap falha, sem preencher tempos ausentes. O SHA do snapshot é registrado pelo runner e o recibo da entrega liga esse snapshot ao produto W.
 
 Esse harness é parcial: comparação Planner, ranking sourcing, preparação de relatório, reimportação exata, atores restritos, zoom real de 200% e tempo do baseline histórico continuam requisitos separados. A configuração de typecheck no prefixo próprio inclui explicitamente spec e helper; o job confere a configuração resolvida pelo script oficial do app antes de compilá-los. O resultado observado, inclusive zero medições em caso de falha, deve ser lido no recibo CI mais recente; a existência do harness não demonstra execução.
+
+## Resultado hospedado atual
+
+O run [43522985791](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43522985791), produto `70476b99e0a34c4432d48f5d2f3710c26562aa1b`, preparou o corpus 1000/200/100 com digest `7b37f785864261ec218f53368b42c2f5a3a181ae3bb95197676e96b00ca7ccea`. O CLI real encerrou com `Profile policy mismatch: sf_portfolio` antes de readiness/autenticação. O recibo registra `authenticated: false`, `cacheState: null` e `observations: []`. Não há mediana/p95, comparabilidade temporal, viewport aprovado ou zoom observado. A configuração e o typecheck do harness passaram separadamente no run [43522928224](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43522928224). O [recibo completo](../../../sf2h/receipts/WP00/ui-bootstrap-observations.json) preserva as duas tentativas e a correção dos metadados históricos.

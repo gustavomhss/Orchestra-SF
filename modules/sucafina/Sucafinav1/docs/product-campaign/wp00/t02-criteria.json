@@ -3,7 +3,7 @@
   "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
   "observed_seed": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
   "count": 23,
-  "qualification": "No CI or native run is attributed by this authoring map; root delivery receipts supply exact runs.",
+  "qualification": "Current status follows criterion-map.json and the exact hosted run catalog; contract definition and runtime consumer acceptance remain separate.",
   "criteria": [
     {
       "criterion_id": "WP00.T02.CHK.01",
@@ -24,13 +24,18 @@
         "bun typecheck (modules/sucafina)",
         "test/product/wp00/contract-consumers.test.ts"
       ],
-      "run": null,
-      "evidence_scope": "Package typecheck and real consumer composition required; seed provider and runtime manifest drift are explicit."
+      "evidence_scope": "O contrato é importável como source, mas a compilação de consumidores não passou. Ausência de erro nos arquivos próprios não satisfaz typecheck global.",
+      "run_refs": [
+        "43514166596",
+        "43522589708",
+        "43522928224"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.CHK.02",
       "text": "Exemplos rejeitam período ausente, soma de moedas incompatíveis, referência inventada e campo restrito em projeção pública.",
-      "status": "PARTIAL",
+      "status": "PASS",
       "implementation": [
         "product/contracts/freeze-v1.json",
         "product/contracts/state-layout.ts",
@@ -47,13 +52,16 @@
         "test/product/wp00/envelope.test.ts",
         "AM03 (required native authorization proof, NOT_RUN)"
       ],
-      "run": null,
-      "evidence_scope": "Decoder examples reject impossible/missing periods, malformed references and undeclared fields; structural checks do not prove source existence or current ACL."
+      "evidence_scope": "Os exemplos executados recusam período ausente, total de moedas USD/EUR válidas sem conversão, referência sintaticamente válida porém inexistente e campo IBAN existente/restrito na projeção pública. Controles positivos mantêm origem, moeda/FX e campo público utilizáveis.",
+      "run_refs": [
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.CHK.03",
       "text": "Para cada formato importável e cada estado novo persistido, apontar exatamente um produtor e o consumidor real; nenhum aparece como responsabilidade genérica da integração.",
-      "status": "IMPLEMENTED_UNVERIFIED",
+      "status": "PARTIAL",
       "implementation": [
         "product/contracts/freeze-v1.json",
         "product/contracts/state-layout.ts",
@@ -69,13 +77,17 @@
         "test/product/wp00/contract-freeze.test.ts",
         "test/product/wp00/contract-consumers.test.ts"
       ],
-      "run": null,
-      "evidence_scope": "Formats map names parser WP06, original domain command and persistent host; C08 layout assigns every field. Await composed consumer proof."
+      "evidence_scope": "A tabela de formatos fixa parser WP06, comando original e Persistence WP10; o layout atribui todos os campos. O provider real não aceita integralmente o layout e falta recibo de consumo de todos os estados novos.",
+      "run_refs": [
+        "43514166596",
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.CHK.10",
       "text": "Os 5/18/8 têm IDs únicos, profile↔skill↔operation↔schema↔consumer↔proof sem órfão; cada produtor tem path no ownership.",
-      "status": "IMPLEMENTED_UNVERIFIED",
+      "status": "PASS",
       "implementation": [
         "product/contracts/freeze-v1.json",
         "product/contracts/state-layout.ts",
@@ -91,8 +103,11 @@
         "test/product/wp00/contract-freeze.test.ts",
         "test/product/wp00/contract-consumers.test.ts"
       ],
-      "run": null,
-      "evidence_scope": "Freeze revision7 includes complete 5/18/8/39/6 matrix, closed schema references and declared producer/consumer paths. Await contract-freeze CI."
+      "evidence_scope": "IDs e ligações 5/18/8/39/6 têm fechamento declarativo; paths de produtores pertencem ao ownership correspondente. Este PASS é da matriz congelada.",
+      "run_refs": [
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.CHK.11",
@@ -113,13 +128,16 @@
         "test/product/wp00/contract-consumers.test.ts",
         "GNATIVE/AM01 (required native load and output consumption, NOT_RUN)"
       ],
-      "run": null,
-      "evidence_scope": "Current loader checks distributed bytes and parsed instructions. Seed bundle mismatches AlternativeDraft; WP12 current candidate must be integrated and real skill load observed."
+      "evidence_scope": "C15 e loader exigem bytes e digests e distinguem plano de carga. O positivo de consumo está bloqueado pelo asset distribuído divergente.",
+      "run_refs": [
+        "43514166596"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.CHK.12",
       "text": "Business template mappings passam validators reais no build; owners não são seats/PRs fictícios.",
-      "status": "NOT_RUN",
+      "status": "PARTIAL",
       "implementation": [
         "product/contracts/freeze-v1.json",
         "product/contracts/state-layout.ts",
@@ -135,8 +153,11 @@
         "test/product/wp14/atlas-projection.test.ts (required, NOT_RUN)",
         "ATLAS-PACKAGE (required, NOT_RUN)"
       ],
-      "run": null,
-      "evidence_scope": "Atlas real template validators and package build qualification are required; no fake engineering owner introduced. WP14 atlas-projection test exists but has not run in this WP receipt."
+      "evidence_scope": "Os três testes Atlas passaram no W, comprovando mappings task/project com validators reais e derivação de owners de negócio. O build/empacotamento completo não foi qualificado.",
+      "run_refs": [
+        "43514166596"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.CHK.60",
@@ -158,13 +179,17 @@
         "AM02 (required native parity, NOT_RUN)",
         "AM06 (required native routine, NOT_RUN)"
       ],
-      "run": null,
-      "evidence_scope": "All39 loaded-skill routes are frozen, import is preview-only and routine_run requires current C07; native operation parity and revocation remain unproven."
+      "evidence_scope": "Rotas 39/39, receipt em chamada direta, preview-only, HostBoundEntryMode e efeito/consumer estão congelados no mesmo source. A concordância efetiva entre rotas e consumidores do candidato ainda falha.",
+      "run_refs": [
+        "43514166596",
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.DOD.01",
       "text": "Os quatorze contratos possuem produtores, consumidores, erros, versionamento e exemplos de compatibilidade definidos.",
-      "status": "IMPLEMENTED_UNVERIFIED",
+      "status": "PASS",
       "implementation": [
         "product/contracts/freeze-v1.json",
         "product/contracts/state-layout.ts",
@@ -180,8 +205,11 @@
         "test/product/wp00/contract-freeze.test.ts",
         "test/product/wp00/contract-consumers.test.ts"
       ],
-      "run": null,
-      "evidence_scope": "C01-C17 public shapes, producers, consumers, versioning, error policy and admitted/refused examples are documented and frozen. Await CI and consumer acceptance."
+      "evidence_scope": "Os C01–C17 possuem produtores/consumidores, versão/compatibilidade, política de erros e exemplos admitidos/recusados documentados e congelados; o texto legado quatorze não foi usado para retirar C15–C17.",
+      "run_refs": [
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.DOD.10",
@@ -202,8 +230,11 @@
         "test/product/wp00/contract-consumers.test.ts",
         "GNATIVE/AM01 (required native load and output consumption, NOT_RUN)"
       ],
-      "run": null,
-      "evidence_scope": "No consumer acceptance is manufactured. WP10/WP12 candidate deltas are published remotely and await integration; WP06/WP14 integrated proof remains open."
+      "evidence_scope": "Não existe aceite integral dos consumidores WP10/WP12/WP06/WP14; preservar essa dependência aberta.",
+      "run_refs": [
+        "43514166596"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.DOD.60",
@@ -225,13 +256,17 @@
         "AM02 (required native parity, NOT_RUN)",
         "AM06 (required native routine, NOT_RUN)"
       ],
-      "run": null,
-      "evidence_scope": "AM02/AM06 real producer-consumer chains are not executed in this handoff."
+      "evidence_scope": "AM02/AM06 não foram executadas; freeze verde e testes de seams sintéticos não satisfazem este DoD.",
+      "run_refs": [
+        "43514166596",
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.INV.01",
       "text": "C02 não se torna um segundo motor financeiro; C06 não cria outra fonte de tarefas; C07 não concede aprovação de negócio.",
-      "status": "IMPLEMENTED_UNVERIFIED",
+      "status": "PASS",
       "implementation": [
         "product/contracts/freeze-v1.json",
         "product/contracts/state-layout.ts",
@@ -247,13 +282,16 @@
         "test/product/wp00/contract-freeze.test.ts",
         "test/product/wp00/contract-consumers.test.ts"
       ],
-      "run": null,
-      "evidence_scope": "No new financial calculation, task source or approval path is introduced; state-layout is declarative only. Scope review and scoped CI are required."
+      "evidence_scope": "O delta de contrato é declarativo; não introduz motor financeiro, fonte alternativa de tarefas ou aprovação de negócio. Testes usam os domínios originais.",
+      "run_refs": [
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.INV.10",
       "text": "Não retirar produto/autoridade/critério; nenhum ID de perfil vira principal ou seat técnico.",
-      "status": "IMPLEMENTED_UNVERIFIED",
+      "status": "PASS",
       "implementation": [
         "product/contracts/freeze-v1.json",
         "product/contracts/state-layout.ts",
@@ -269,8 +307,11 @@
         "test/product/wp00/contract-freeze.test.ts",
         "test/product/wp00/contract-consumers.test.ts"
       ],
-      "run": null,
-      "evidence_scope": "Existing grants, profile identities, authority and criteria preserved. New layout grants no principal or technical seat identity."
+      "evidence_scope": "Nenhum contrato/operação/requisito foi removido para esconder drift. Todos os 39 permanecem; profile/skill não passam a principal ou seat técnico. Baseline/requisitos são preservados.",
+      "run_refs": [
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.INV.60",
@@ -292,13 +333,17 @@
         "AM02 (required native parity, NOT_RUN)",
         "AM06 (required native routine, NOT_RUN)"
       ],
-      "run": null,
-      "evidence_scope": "Contracts require identity+profile+loaded skill+grant+current authorization. No native execution or live revocation proof exists yet."
+      "evidence_scope": "O requisito de interseção C16 e as recusas existem; registry real tem positivos/negativos. A ausência de receipt, ACL real revogada e rotina admitida não estão integralmente cobertas.",
+      "run_refs": [
+        "43514166596",
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.QLT.01",
       "text": "Interfaces pequenas correspondem a necessidades presentes e não antecipam um framework empresarial.",
-      "status": "IMPLEMENTED_UNVERIFIED",
+      "status": "PASS",
       "implementation": [
         "product/contracts/freeze-v1.json",
         "product/contracts/state-layout.ts",
@@ -314,13 +359,16 @@
         "test/product/wp00/contract-freeze.test.ts",
         "test/product/wp00/contract-consumers.test.ts"
       ],
-      "run": null,
-      "evidence_scope": "Single small C08 layout map makes current fields explicit without provider infrastructure. Frozen contracts reference existing domain ports."
+      "evidence_scope": "A única estrutura nova de produção é um mapa declarativo pequeno dos campos existentes; não cria framework, store ou runtime paralelo.",
+      "run_refs": [
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.QLT.10",
       "text": "Contrato nomeia producer/export/path/consumidor e falhas observáveis, sem 'binding futuro' indefinido.",
-      "status": "IMPLEMENTED_UNVERIFIED",
+      "status": "PASS",
       "implementation": [
         "product/contracts/freeze-v1.json",
         "product/contracts/state-layout.ts",
@@ -336,13 +384,16 @@
         "test/product/wp00/contract-freeze.test.ts",
         "test/product/wp00/contract-consumers.test.ts"
       ],
-      "run": null,
-      "evidence_scope": "Every operation identifies producerTask/handlerPath/handlerExport/consumerTasks/proofIds, with failure states; absent routines are explicitly blocked."
+      "evidence_scope": "O freeze nomeia producerTask/handlerPath/handlerExport/consumerTasks, schemas, efeitos e falhas. Deltas dos owners têm pins/exports concretos; a indisponibilidade não foi escondida como binding futuro indefinido.",
+      "run_refs": [
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.QLT.60",
       "text": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
-      "status": "PARTIAL",
+      "status": "BLOCKED",
       "implementation": [
         "product/contracts/freeze-v1.json",
         "product/contracts/state-layout.ts",
@@ -359,8 +410,13 @@
         "AM02 (required native parity, NOT_RUN)",
         "AM06 (required native routine, NOT_RUN)"
       ],
-      "run": null,
-      "evidence_scope": "Frozen route/entry/output mapping is complete; agreement with actual wrapper and UI awaits composed AM02/AM06."
+      "evidence_scope": "Há divergência concreta no candidato entre normativa e assets C15, além de C08 incompatível e handlers de rotina ausentes. Não há prova de estado visível na UI.",
+      "run_refs": [
+        "43514166596",
+        "43522589708",
+        "43522985791"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.CMP.01",
@@ -381,13 +437,17 @@
         "test/product/wp00/contract-freeze.test.ts",
         "test/product/wp00/contract-consumers.test.ts"
       ],
-      "run": null,
-      "evidence_scope": "Contracts cover read/write/conflict/import/review/relations/routines/composition. Positive consumer tests remain required for implemented behavior."
+      "evidence_scope": "O catálogo inclui todos os temas e há testes reais de leitura, escrita, CAS, previews e relatório. Composição real incluindo rotinas permanece indisponível.",
+      "run_refs": [
+        "43514166596",
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.CMP.02",
       "text": "Congelar C01–C17, assinaturas mínimas, enumerações de estado, identidade/escopo, exemplos válidos e negativos, export names e mapa produtor/consumidor. A qualificação nativa é paralela.",
-      "status": "IMPLEMENTED_UNVERIFIED",
+      "status": "PASS",
       "implementation": [
         "product/contracts/freeze-v1.json",
         "product/contracts/state-layout.ts",
@@ -403,8 +463,11 @@
         "test/product/wp00/contract-freeze.test.ts",
         "test/product/wp00/contract-consumers.test.ts"
       ],
-      "run": null,
-      "evidence_scope": "Public C01-C17 types, enumerations, identities, examples and maps frozen. Native qualification remains separate and open."
+      "evidence_scope": "C01–C17 e suas assinaturas/tipos, identidade/escopo, estados, exemplos e exports/mapa estão congelados. O próprio critério deixa qualificação nativa paralela; ela permanece aberta sem rebaixar o contrato.",
+      "run_refs": [
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.CMP.10",
@@ -425,8 +488,12 @@
         "test/product/wp00/contract-freeze.test.ts",
         "test/product/wp00/contract-consumers.test.ts"
       ],
-      "run": null,
-      "evidence_scope": "Complete 5/18/8/39/6 definition and exact Atlas packaging exceptions recorded; runtime/build closure remains open."
+      "evidence_scope": "A matriz completa e os nove paths Atlas têm rastreabilidade declarativa, mas fechamento exige também o pacote e provas reais.",
+      "run_refs": [
+        "43514166596",
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.CMP.60",
@@ -448,8 +515,12 @@
         "AM02 (required native parity, NOT_RUN)",
         "AM06 (required native routine, NOT_RUN)"
       ],
-      "run": null,
-      "evidence_scope": "Positive and denial expectations are retained in routes/contracts; loaded receipt, revocation, preview and admission native proofs remain open."
+      "evidence_scope": "Receipt totalmente ausente agora é recusado no registry real com controle positivo. A revogação empresarial real, preview e admissão nativa pertinentes permanecem sem prova.",
+      "run_refs": [
+        "43514166596",
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.SUC.01",
@@ -470,13 +541,17 @@
         "test/product/wp00/contract-consumers.test.ts",
         "GNATIVE/AM01 (required native load and output consumption, NOT_RUN)"
       ],
-      "run": null,
-      "evidence_scope": "The inter-WP contracts exist; successful real exchange is not claimed before current producer integration and consumers CI."
+      "evidence_scope": "A separação de ownership e os contratos permitem construção paralela, porém a troca de contribuição entre duas frentes reais no candidato não foi demonstrada.",
+      "run_refs": [
+        "43514166596",
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.SUC.10",
       "text": "Builder consegue produzir código compatível e consumidor consegue rejeitar substitutos sem uso real.",
-      "status": "PARTIAL",
+      "status": "BLOCKED",
       "implementation": [
         "product/contracts/freeze-v1.json",
         "product/contracts/state-layout.ts",
@@ -492,8 +567,13 @@
         "test/product/wp00/contract-consumers.test.ts",
         "GNATIVE/AM01 (required native load and output consumption, NOT_RUN)"
       ],
-      "run": null,
-      "evidence_scope": "Decoders and real loader reject structural substitutes; actual compatible full bundle and native use are not yet qualified."
+      "evidence_scope": "Schema e loader recusam substitutos e o gate detecta incompatibilidades, mas o builder não tem compilação/consumo integrado positivos no W.",
+      "run_refs": [
+        "43514166596",
+        "43522589708",
+        "43522928224"
+      ],
+      "current_criterion_map": "criterion-map.json"
     },
     {
       "criterion_id": "WP00.T02.SUC.60",
@@ -515,8 +595,13 @@
         "AM02 (required native parity, NOT_RUN)",
         "AM06 (required native routine, NOT_RUN)"
       ],
-      "run": null,
-      "evidence_scope": "A person opening the real output through the required route is not demonstrated by structural tests or source inspection."
+      "evidence_scope": "Nenhuma prova mostra a pessoa usando a contribuição e abrindo seu resultado real. Os gates mantêm a ausência visível.",
+      "run_refs": [
+        "43514166596",
+        "43522985791"
+      ],
+      "current_criterion_map": "criterion-map.json"
     }
-  ]
+  ],
+  "assessment_candidate": "70476b99e0a34c4432d48f5d2f3710c26562aa1b"
 }
