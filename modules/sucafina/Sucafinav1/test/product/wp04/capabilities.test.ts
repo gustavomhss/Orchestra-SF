@@ -95,6 +95,14 @@ test("authorized capability reads through an issued scoped source and consumes o
     } })
     const fromUi = await bindings.readRequest(request, input)
     expect(fromUi.status === "ok" && fromUi.result).toMatchObject({ values: expect.arrayContaining([expect.objectContaining({ id: "subject", value: "Owned" })]) })
+    if (proposed.status !== "ok") throw new Error("scenario preparation failed")
+    const { createProcurementPreparedReview } = await import("../../../product/procurement/prepared-review.ts")
+    const review = createProcurementPreparedReview({ port, individual: resolver })
+    const beforeApply = await review(proposed.value.command, admission.value)
+    expect(beforeApply).toMatchObject({ status: "ok", value: { fields: expect.arrayContaining([expect.objectContaining({ field: "originalAmount", before: 100, after: 125, beforeCurrency: "USD", afterCurrency: "USD" })]) } })
+    expect(JSON.stringify(beforeApply)).not.toContain("idempotencyKey")
+    const altered = { ...proposed.value.command, preview: { ...proposed.value.command.preview, values: proposed.value.command.preview.values.map((value) => value.id === "status" ? { ...value, value: "po_issued" } : value) } }
+    expect((await review(altered, admission.value)).status).toBe("unavailable")
     const { createProcurementDecisionPreparation } = await import("../../../product/procurement/decision-preparation.ts")
     const prepare = createProcurementDecisionPreparation(port)
     const first = await prepare(input.requestRef, admission.value)
@@ -102,5 +110,11 @@ test("authorized capability reads through an issued scoped source and consumes o
     expect(first).toEqual(again)
     expect(first).toMatchObject({ status: "ok", value: { comparison: null, limitations: ["Proposals unavailable"] } })
     expect((await port.read(input, admission.value)).status).toBe("ok")
+    const { domain } = await import("../../../runtime/procurement.ts")
+    await persistence.transaction("procurement", async (snapshot) => {
+      const result = domain.execute(snapshot, { id: "a", roles: ["requester"], canWrite: true, assigned: [], domains: [] }, { page: "Requests", action: "save", id: "PR-1", version: 0, values: { pr: { estAmount: 100 } } }, { at: "2026-01-01T01:00:00Z", directory: [], id: randomUUID })
+      return { commit: result.ok, value: result }
+    })
+    expect((await review(proposed.value.command, admission.value)).status).not.toBe("ok")
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })

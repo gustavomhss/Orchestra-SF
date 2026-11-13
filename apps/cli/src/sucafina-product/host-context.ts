@@ -303,6 +303,13 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
             ? { status: "ok", value: true } : { status: "denied", reason: "analysis-cancellation-unavailable" }
           const current = input.persistence.currentSnapshots?.()
           if (!current || !fences.current || !await authority.host.revalidate(call)) return { status: "unavailable", reason: "analysis-source-fence-unavailable" }
+          if (reviewTarget && author?.status === "ok") {
+            const stored = object(snapshot.data.__sfProductV1)
+            const authorRun = object(stored.nativeRuns)[reviewTarget.targetRunId]
+            const authorOutput = object(stored.contributions)[author.value.output.id]
+            if (digestSfValue({ run: authorRun, output: authorOutput }) !== digestSfValue(author.value))
+              return { status: "stale", reason: "author-analysis-changed" }
+          }
           const actual = { dashboard: sfRunSourceFence(snapshot), planner: sfRunSourceFence(current.planner), procurement: sfRunSourceFence(current.procurement) }
           if (digestSfValue(actual) !== digestSfValue(fences.current) || record.contextFingerprint !== fingerprint) return { status: "stale", reason: "analysis-source-changed" }
           return { status: "ok", value: true }

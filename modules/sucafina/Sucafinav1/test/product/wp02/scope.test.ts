@@ -74,6 +74,18 @@ test("monthly budget series ignores other months while binding annual fallback",
   expect(projectDashboardScope(changed, admin, selector, asOf)).not.toEqual(original)
 })
 
+test("monthly budget overrides exclude unused annual budgets from the scope", () => {
+  const state: Snapshot = { data: { opexOwners: [{ id: "o", budget: 1200 }], opexEntries: [{ id: "jan", ownerId: "o", year: 2026, month: 1, budget: 200, actual: 0 }], capexProjects: [{ id: "p", budget: 2400 }], capexEntries: [{ id: "capex-jan", projId: "p", year: 2026, month: 1, budget: 300, actual: 0 }] }, versions: {}, sequences: {}, audit: [], notices: [] }
+  const selector = { page: "Budget Overview", fields: ["budgetSeries"], period: { start: "2026-01-01", end: "2026-01-31" } }
+  const original = projectDashboardScope(state, admin, selector, asOf)
+  const changed = structuredClone(state)
+  ;(changed.data.opexOwners as { budget: number }[])[0]!.budget = 3600
+  ;(changed.data.capexProjects as { budget: number }[])[0]!.budget = 4800
+  expect(projectDashboardScope(changed, admin, selector, asOf)).toEqual(original)
+  ;(changed.data.capexEntries as { budget: number }[])[0]!.budget = 0
+  expect(projectDashboardScope(changed, admin, selector, asOf)).not.toEqual(original)
+})
+
 test("milestone date scope isolates the selected dates and omits current private fields", () => {
   const state: Snapshot = { data: { projects: [{ id: "p", notes: "confidential-project-notes", milestones: [{ id: "m1", name: "Earlier", date: "2026-03-05", status: "done", notes: "secret-milestone" }, { id: "m2", name: "Later", date: "2026-08-10", status: "late" }] }] }, versions: {}, sequences: {}, audit: [], notices: [] }
   const selector = { page: "Portfolio Dashboard", fields: ["milestoneDates"], period: { start: "2026-02-01", end: "2026-05-31" } }

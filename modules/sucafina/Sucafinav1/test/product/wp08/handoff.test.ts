@@ -35,7 +35,9 @@ test("handoff retries the canonical action and keeps the same contextual link", 
     const human = { authorize: async () => true }
     const relations = createRelationPort({ mutationFence: createCollaborationMutationFence({ persistence: store }), human, handoffPermit: permit, state: product, host: { requestFor: () => new Request("https://example.test/"), revalidate: async () => true }, authorizePair: async () => true, creationTarget: { ref: "project-A", incarnation: "inc-A" }, createId: () => "relation-1", now: () => "2026-11-13T00:00:00Z" })
     const handoff = createHandoffPort({ human, permit, run: async (_context, _request, work) => work(), hotTopics: createHotTopicPort(host), relations, authorizeIntent: async () => true, resolveTopic: async (topic) => ({ status: "ok", value: { ref: `hotTopics:${topic.id}`, evidence: source } }) })
-    const request = { intent: { correlationKey: "handoff-1", sourceRefs: [source], action: "Review project", owner: "selected owner", due: "2026-12-01", priority: "high" as const, notes: "" }, sourceRef: "project-A", relationStorageVersion: 0, relationKey: "link-1" }
+    const request = { intent: { correlationKey: "handoff-1", sourceRefs: [source], action: "Review project", owner: "selected owner", due: "2026-12-01", priority: "high" as const, notes: "" }, sourceRef: "source", relationStorageVersion: 0, relationKey: "link-1" }
+    expect((await handoff.create({ ...request, sourceRef: "unselected" }, context)).status).toBe("denied")
+    expect(state.data.hotTopics).toBeUndefined()
     const pending = handoff.create(request, context)
     request.intent.action = "Changed after authorization started"
     const first = await pending
@@ -72,7 +74,7 @@ test("handoff and its relation require the exact real human admission", async ()
     const permit = Symbol("test")
     const relations = createRelationPort({ mutationFence: createCollaborationMutationFence({ persistence: store }), state, human, handoffPermit: permit, host: { requestFor: (context) => context.kind === "ui" ? ui.requestFor(context) : undefined, revalidate: async (context) => context.kind === "ui" && await ui.revalidate(context) }, authorizePair: async () => true, creationTarget: { ref: "project-A", incarnation: "inc-A" }, createId: () => "relation-1", now: () => "2026-11-13T00:00:00Z" })
     const handoff = createHandoffPort({ human, permit, run: async (_context, _request, work) => work(), hotTopics: createHotTopicPort(hotTopicHost), relations, authorizeIntent: async () => true, resolveTopic: async (topic) => ({ status: "ok", value: { ref: `hotTopics:${topic.id}`, evidence: source } }) })
-    const payload = { intent: { correlationKey: "handoff", sourceRefs: [source], action: "Review", owner: "owner", due: "2026-12-01", priority: "high" as const, notes: "" }, sourceRef: "project-A", relationKey: "link" }
+    const payload = { intent: { correlationKey: "handoff", sourceRefs: [source], action: "Review", owner: "owner", due: "2026-12-01", priority: "high" as const, notes: "" }, sourceRef: "source", relationKey: "link" }
     const request = new Request("https://example.test/action", { method: "POST", headers: { origin: "https://example.test" } })
     const admitted = await human.admit(request, "collaboration.handoff.confirm", payload)
     if (admitted.status !== "ok") throw new Error("human admission failed")

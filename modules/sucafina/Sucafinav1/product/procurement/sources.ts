@@ -84,7 +84,7 @@ export function createProcurementSourceResolver(input: { host: DomainPortHost; s
     },
     resolveForPreparation: resolveCurrent,
     /** Reissue under the current actor, using the prior scope only to identify the same physical record. */
-    async issueForActor(target: Evidence["target"], binding: TrustedDomainContext): Promise<PortResult<Evidence>> {
+    async issueForActor(target: Evidence["target"], binding: TrustedDomainContext, options?: { requireCurrent?: boolean }): Promise<PortResult<Evidence>> {
       if (!target || target.surface !== "procurement" || !["procurement-request", "procurement-supplier"].includes(target.recordType) || !target.recordId || !target.incarnation || !Number.isSafeInteger(target.version) || target.version < 1 || !target.period || !Array.isArray(target.fields)) return { status: "unavailable", reason: "Source unavailable" }
       const kind = target.recordType === "procurement-request" ? "procurement-request" : "procurement-supplier"
       const issued = await issue(kind, target.recordId, binding)
@@ -97,7 +97,7 @@ export function createProcurementSourceResolver(input: { host: DomainPortHost; s
       const same = await input.host.persistence.transaction("procurement", async (snapshot) => {
         if (!await authorize(request, binding, snapshot, current.value.scope, current.value.context)) return { commit: false, value: false }
         const records = Object.values(snapshot.sfSources?.scopes ?? {})
-        const prior = records.filter((entry) => entry.incarnation === target.incarnation && entry.scope.recordType === kind && entry.scope.recordId === target.recordId && entry.version >= target.version && digestSfValue(object(entry.scope.selector).fields) === digestSfValue(target.fields) && digestSfValue(object(entry.scope.selector).period) === digestSfValue(target.period))
+        const prior = records.filter((entry) => entry.incarnation === target.incarnation && entry.scope.recordType === kind && entry.scope.recordId === target.recordId && (options?.requireCurrent ? entry.alive && entry.version === target.version : entry.version >= target.version) && digestSfValue(object(entry.scope.selector).fields) === digestSfValue(target.fields) && digestSfValue(object(entry.scope.selector).period) === digestSfValue(target.period))
         const selected = records.filter((entry) => entry.alive && entry.incarnation === current.value.evidence.target.incarnation && digestSfValue(entry.scope) === digestSfValue(current.value.scope))
         const identity = sfScopedSourceIdentity(snapshot, current.value.scope)
         return { commit: false, value: prior.length === 1 && selected.length === 1 && prior[0]!.sourceIncarnation === selected[0]!.sourceIncarnation && identity?.incarnation === current.value.evidence.target.incarnation && identity.version === current.value.evidence.target.version && identity.inputDigest === digestSfValue(projectSfProcurementScope("procurement", snapshot, current.value.scope)) }

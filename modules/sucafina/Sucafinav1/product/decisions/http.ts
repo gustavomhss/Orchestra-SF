@@ -8,6 +8,7 @@ import type { createDecisionCaseManagement } from "./case-management.ts"
 import type { createDecisionMutations } from "./mutations.ts"
 import type { createAnalysisAcceptance } from "./analysis-acceptance.ts"
 import type { createPreparedExecution } from "./apply.ts"
+import type { createDecisionCoverageCatalog } from "./coverage-catalog.ts"
 import type { createDecisionComparisonService } from "./comparison.ts"
 import type { BaselineCoverageRequest, createDecisionBaselineCoverage } from "./baseline-coverage.ts"
 import type { PortfolioSelectionRequest, createDecisionPortfolioSelection } from "./portfolio-selection.ts"
@@ -45,6 +46,7 @@ export function createDecisionHttp(input: {
     promote: (request: PortfolioAction & { title: string; coverageRef: string }, context: TrustedUiContext) => Promise<PortResult<unknown>>
     prepare: (request: PortfolioAction & { choiceId: string }, context: TrustedUiContext) => Promise<PortResult<unknown>>
   }
+  coverageCatalog: ReturnType<typeof createDecisionCoverageCatalog>
   reviewChange: (request: { caseRef: CaseRef; choiceId: string; changeId: string }, context: TrustedUiContext) => Promise<PortResult<unknown>>
   selection: ReturnType<typeof createDecisionPortfolioSelection>
   baseline: ReturnType<typeof createDecisionBaselineCoverage>
@@ -65,7 +67,7 @@ export function createDecisionHttp(input: {
       if (admitted.status !== "ok") return response(admitted)
       try { return response(await input.management.list(admitted.value)) } finally { input.human.finish(admitted.value) }
     }
-    const operations = { "decision-edit": "decisions.edit", "decision-promote": "decisions.promote-alternative", "decision-prepare-changes": "decisions.prepare-changes", "decision-choose": "decisions.choose", "decision-accept-analysis": "decisions.accept-analysis", "decision-apply": "decisions.apply", "decision-criteria": "decisions.criteria", "decision-coverage": "decisions.coverage", "decision-select-portfolio": "decisions.select-portfolio", "decision-promote-portfolio": "decisions.promote-portfolio", "decision-prepare-portfolio": "decisions.prepare-portfolio", "decision-review": "decisions.portfolio.read", "decision-sensitivity-units": "decisions.portfolio.read", "decision-portfolio-results": "decisions.portfolio.read", "decision-criterion-read": "decisions.portfolio.read", "decision-portfolio-catalog": "decisions.portfolio.read", "decision-portfolio-preview": "decisions.portfolio.read", "decision-portfolio-evaluate": "decisions.portfolio.evaluate", "decision-portfolio-read": "decisions.portfolio.read", "decision-sensitivity-evaluate": "decisions.sensitivity.evaluate", "decision-sensitivity-read": "decisions.portfolio.read" } as const
+    const operations = { "decision-edit": "decisions.edit", "decision-promote": "decisions.promote-alternative", "decision-prepare-changes": "decisions.prepare-changes", "decision-choose": "decisions.choose", "decision-accept-analysis": "decisions.accept-analysis", "decision-apply": "decisions.apply", "decision-criteria": "decisions.criteria", "decision-coverage": "decisions.coverage", "decision-select-portfolio": "decisions.select-portfolio", "decision-promote-portfolio": "decisions.promote-portfolio", "decision-prepare-portfolio": "decisions.prepare-portfolio", "decision-coverage-catalog": "decisions.portfolio.read", "decision-review": "decisions.portfolio.read", "decision-sensitivity-units": "decisions.portfolio.read", "decision-portfolio-results": "decisions.portfolio.read", "decision-criterion-read": "decisions.portfolio.read", "decision-portfolio-catalog": "decisions.portfolio.read", "decision-portfolio-preview": "decisions.portfolio.read", "decision-portfolio-evaluate": "decisions.portfolio.evaluate", "decision-portfolio-read": "decisions.portfolio.read", "decision-sensitivity-evaluate": "decisions.sensitivity.evaluate", "decision-sensitivity-read": "decisions.portfolio.read" } as const
     if (!action || action !== "decision-compare" && action !== "decision-portfolio-selection" && !Object.hasOwn(operations, action)) return undefined
     if (request.method !== "POST") return response({ status: "needs-input", reason: "method-not-allowed" }, 405)
     if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return response({ status: "needs-input", reason: "invalid-content-type" }, 415)
@@ -80,6 +82,7 @@ export function createDecisionHttp(input: {
       try {
         const context = admitted.value
         const dispatch = async (): Promise<Response> => {
+        if (action === "decision-coverage-catalog") return response(await input.coverageCatalog(payload as { caseRef: CaseRef }, context))
         if (action === "decision-review") { const body = payload as { caseRef: CaseRef; choiceId: string; changeId: string }; return response(await input.reviewChange({ caseRef: body.caseRef, choiceId: body.choiceId, changeId: body.changeId }, context)) }
         if (action === "decision-sensitivity-units") { const body = payload as { caseRef: CaseRef; scenarioRef: string; baselineRef: string; parameterRef: string }; return response(await input.portfolio.sensitivityUnits({ caseRef: body.caseRef, scenarioRef: body.scenarioRef, baselineRef: body.baselineRef, parameterRef: body.parameterRef }, context)) }
         if (action === "decision-portfolio-results") return response(await input.portfolio.list((payload as { caseRef: CaseRef }).caseRef, context))
@@ -135,6 +138,7 @@ function valid(action: string, value: unknown) {
   if (!object(value)) return false
   if (action === "decision-portfolio-catalog") return closed(value, ["purpose", "caseRefs"], ["purpose", "caseRefs"]) && value.purpose === "catalog" && Array.isArray(value.caseRefs) && value.caseRefs.length > 0 && value.caseRefs.length <= 64 && value.caseRefs.every(caseRef) && new Set(value.caseRefs.map((ref) => JSON.stringify([ref.id, ref.incarnation, ref.version]))).size === value.caseRefs.length
   if (!caseRef(value.caseRef)) return false
+  if (action === "decision-coverage-catalog") return closed(value, ["purpose", "caseRef"], ["purpose", "caseRef"]) && value.purpose === "coverage-catalog"
   if (action === "decision-review") return closed(value, ["purpose", "caseRef", "choiceId", "changeId"], ["purpose", "caseRef", "choiceId", "changeId"]) && value.purpose === "review" && text(value.choiceId) && text(value.changeId)
   if (action === "decision-sensitivity-units") return closed(value, ["purpose", "caseRef", "scenarioRef", "baselineRef", "parameterRef"], ["purpose", "caseRef", "scenarioRef", "baselineRef", "parameterRef"]) && value.purpose === "sensitivity-units" && text(value.scenarioRef) && text(value.baselineRef) && text(value.parameterRef)
   if (action === "decision-portfolio-results") return closed(value, ["purpose", "caseRef"], ["purpose", "caseRef"]) && value.purpose === "results"

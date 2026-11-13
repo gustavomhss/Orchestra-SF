@@ -2,10 +2,12 @@ import { createAnalysisAcceptance } from "./analysis-acceptance.ts"
 import { createPreparedExecution } from "./apply.ts"
 import { createDecisionBaselineCoverage } from "./baseline-coverage.ts"
 import { createDecisionCaseManagement } from "./case-management.ts"
+import { createDecisionCoverageCatalog } from "./coverage-catalog.ts"
 import { createDecisionComparisonService } from "./comparison.ts"
 import { createCriterionComparisonBindings } from "./criterion-comparison.ts"
 import { createCriterionResultBindings, createCriterionRuleRegistry } from "./criterion-rules.ts"
 import { createDecisionMutations } from "./mutations.ts"
+import { createDecisionPreparedReview } from "./prepared-review.ts"
 import { createPortfolioResultBindings } from "./portfolio-bindings.ts"
 import { createDecisionPortfolioSelection } from "./portfolio-selection.ts"
 import type { createSfDecisionResultStore } from "./result-store.ts"
@@ -17,6 +19,7 @@ type Evidence = { proposalCoverageWrites: WeakSet<object>; now: () => string }
 
 /** Compose the existing Decisions services with explicit host authority and evidence producers. */
 export function createDecisionProduct(input: Common & Evidence & {
+  reviewDomain: Parameters<typeof createDecisionPreparedReview>[0]["reviewDomain"]
   cases: DecisionCasePort
   results: ReturnType<typeof createSfDecisionResultStore>
   planner: PlannerPort
@@ -42,8 +45,10 @@ export function createDecisionProduct(input: Common & Evidence & {
   const criteria = createCriterionRuleRegistry({ ...input.criteria, ...common, ...evidence })
   const sensitivityBindings = createCriterionResultBindings({ ...input.sensitivityBindings, ...common, ...evidence, rules: criteria, results: input.results })
   const comparisonBindings = createCriterionComparisonBindings({ ...input.comparisonBindings, ...common, ...evidence, rules: criteria, results: input.results })
+  const reviewChange = createDecisionPreparedReview({ state: input.state, cases: input.cases, host: input.host, reviewDomain: input.reviewDomain })
+  const coverageCatalog = createDecisionCoverageCatalog({ cases: input.cases, host: input.host, sources: input.sources })
   const compare = createDecisionComparisonService({ cases: input.cases, state: input.state, host: input.host, results: input.results, planner: input.planner })
   const selection = createDecisionPortfolioSelection({ ...input.selection, ...common, ...evidence, compare })
   const portfolioBindings = createPortfolioResultBindings({ ...input.portfolioBindings, ...common, ...evidence, selection, results: input.results })
-  return { baseline, management, mutations, accept, apply, criteria, sensitivityBindings, comparisonBindings, compare, selection, portfolioBindings }
+  return { baseline, management, mutations, accept, apply, criteria, sensitivityBindings, comparisonBindings, compare, selection, portfolioBindings, coverageCatalog, reviewChange }
 }

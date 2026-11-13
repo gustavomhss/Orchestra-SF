@@ -20,8 +20,9 @@ export function createHandoffPort(input: {
   return {
     create: async (request: HandoffRequest, context: TrustedDomainContext): Promise<PortResult<{ topic: HotTopic; state: "created" | "existing"; relationId: string }>> => {
       if (context.kind !== "ui") return { status: "denied", reason: "human-handoff-required" }
+      if (!request || typeof request !== "object" || typeof request.sourceRef !== "string" || typeof request.relationKey !== "string" || !request.intent || typeof request.intent !== "object") return { status: "needs-input", reason: "invalid-handoff" }
       const intent = structuredClone(request)
-      if (!await input.human.authorize(context, "collaboration.handoff.confirm", intent) || !intent.sourceRef.trim() || !intent.relationKey.trim() || !await input.authorizeIntent(structuredClone(intent.intent), intent.recipientRef, context)) return { status: "denied", reason: "handoff-access-unavailable" }
+      if (!await input.human.authorize(context, "collaboration.handoff.confirm", intent) || !intent.sourceRef.trim() || !intent.relationKey.trim() || !Array.isArray(intent.intent?.sourceRefs) || intent.intent.sourceRefs.filter((ref) => ref && typeof ref === "object" && ref.refId === intent.sourceRef).length !== 1 || !await input.authorizeIntent(structuredClone(intent.intent), intent.recipientRef, context)) return { status: "denied", reason: "handoff-access-unavailable" }
       return input.run(context, intent, async () => {
       const action = await input.hotTopics.create(intent.intent, context).catch(() => ({ status: "unavailable" as const, reason: "action-outcome-unknown-retry-same-correlation" }))
       if (action.status !== "ok") return action

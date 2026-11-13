@@ -45,7 +45,17 @@ export function projectDashboardScope(snapshot: Snapshot, actor: Actor, selector
   }))
   // Derived annual totals alone cannot detect compensating line edits; include the authorized components.
   const budgetDependencies = selector.fields.includes("budgetMetrics") ? Object.fromEntries(["opexOwners", "opexEntries", "capexProjects", "capexEntries"].map((field) => [field, field.endsWith("Entries") ? rows(projection[field]).filter((row) => row.year === year) : projection[field]])) : {}
-  const seriesDependencies = selector.fields.includes("budgetSeries") && !selector.fields.includes("budgetMetrics") ? Object.fromEntries(["opexOwners", "opexEntries", "capexProjects", "capexEntries"].map((field) => [field, rows(projection[field]).filter((row) => !field.endsWith("Entries") || (row.year === year && typeof row.month === "number" && row.month >= Number(selector.period.start.slice(5, 7)) && row.month <= Number(selector.period.end.slice(5, 7)) && rows(projection[field === "opexEntries" ? "opexOwners" : "capexProjects"]).some((owner) => field === "opexEntries" ? row.ownerId == owner.id : row.projId == owner.id || row.projectId == owner.id))).map((row) => Object.fromEntries(Object.entries(row).filter(([key]) => (field.endsWith("Entries") ? ["id", "ownerId", "projId", "projectId", "year", "month", "budget", "actual", "forecast"] : ["id", "budget"]).includes(key))))])) : {}
+  const seriesDependencies = selector.fields.includes("budgetSeries") && !selector.fields.includes("budgetMetrics") ? Object.fromEntries(["opexOwners", "opexEntries", "capexProjects", "capexEntries"].map((field) => [field, rows(projection[field]).filter((row) => !field.endsWith("Entries") || (row.year === year && typeof row.month === "number" && row.month >= Number(selector.period.start.slice(5, 7)) && row.month <= Number(selector.period.end.slice(5, 7)) && rows(projection[field === "opexEntries" ? "opexOwners" : "capexProjects"]).some((owner) => field === "opexEntries" ? row.ownerId == owner.id : row.projId == owner.id || row.projectId == owner.id))).map((row) => {
+    if (field.endsWith("Entries")) return Object.fromEntries(Object.entries(row).filter(([key]) => ["id", "ownerId", "projId", "projectId", "year", "month", "budget", "actual", "forecast"].includes(key)))
+    const entries = rows(projection[field === "opexOwners" ? "opexEntries" : "capexEntries"])
+    const fallback = Array.from({ length: Number(selector.period.end.slice(5, 7)) - Number(selector.period.start.slice(5, 7)) + 1 }, (_, index) => Number(selector.period.start.slice(5, 7)) + index).some((month) => {
+      const periodEntries = entries.filter((entry) => entry.year === year && entry.month === month)
+      const direct = periodEntries.find((entry) => field === "opexOwners" ? entry.ownerId == row.id : (entry.projId ?? entry.projectId) == row.id)
+      const effective = periodEntries.find((entry) => field === "opexOwners" ? String(entry.ownerId ?? "") === String(row.id ?? "") : String(entry.projId ?? entry.projectId ?? "") === String(row.id ?? "") || entry.projectId == String(row.id ?? ""))
+      return [direct, effective].some((entry) => !(typeof entry?.budget === "number" && Number.isFinite(entry.budget) && entry.budget > 0))
+    })
+    return Object.fromEntries(Object.entries(row).filter(([key]) => key === "id" || (key === "budget" && fallback)))
+  })])) : {}
   const operationView = selector.fields.includes("executiveMonths") ? DashboardOperations.domain.view(observed, actor, { at: `${day}T00:00:00Z`, id: () => "", directory: [] }).data : projection
   const summaries = Array.isArray(snapshot.data.summaries) ? snapshot.data.summaries.filter((value): value is string => typeof value === "string") : []
   const allowed = dashboardPages(actor, summaries)
