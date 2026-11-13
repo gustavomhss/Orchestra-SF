@@ -251,20 +251,34 @@ export function createApplication(mount: string, application: Application) {
               Notes: "notes",
             }
             const projects = input.map((row) => {
-              const mapped = Object.fromEntries(
+              const mapped: Record<string, unknown> = Object.fromEntries(
                 Object.entries(columns)
                   .filter(([key]) => row[key] !== undefined)
                   .map(([key, field]) => [field, row[key]]),
               )
-              const leader = rows(snapshot.data.leaders).find(
-                (item) => text(item.name).trim().toLowerCase() === text(row["IT Leader"]).trim().toLowerCase(),
-              )
-              if (leader) mapped.leaderId = leader.id
+              const leaderHeader = Object.hasOwn(row, "IT Leader / Sponsor")
+                ? "IT Leader / Sponsor"
+                : Object.hasOwn(row, "IT Leader")
+                  ? "IT Leader"
+                  : undefined
+              if (leaderHeader) {
+                const leaderName = text(row[leaderHeader]).trim()
+                const leader = leaderName
+                  ? rows(snapshot.data.leaders).find(
+                      (item) => text(item.name).trim().toLowerCase() === leaderName.toLowerCase(),
+                    )
+                  : undefined
+                mapped.leaderId = leader?.id ?? ""
+              }
               return {
                 ...mapped,
                 _status: text(mapped.name).trim() ? "valid" : "error",
               }
-            })
+            }).filter(
+              (project) =>
+                text(object(project).name).trim() !== "" &&
+                !text(object(project).name).trim().startsWith("—"),
+            )
             return {
               commit: false,
               value: json({ ok: true, sheets: { "Projects Import": projects } }, 200),

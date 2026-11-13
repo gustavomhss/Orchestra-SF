@@ -446,9 +446,11 @@ function importProjectRows(
 ): Result {
   if (collection !== "projects" || !actor.roles.includes("admin")) return { ok: false, status: 403 }
   if (!["update", "replace"].includes(text(command.values.mode))) return { ok: false, status: 422 }
-  const imported = rows(command.values.rows)
-  if (imported.some((row) => row._status !== "error" && !text(row.name).trim()))
-    return { ok: false, status: 422, errors: ["Project name is required."] }
+  const imported = rows(command.values.rows).filter(
+    (row) =>
+      text(row.name).trim() !== "" &&
+      !text(row.name).trim().startsWith("—"),
+  )
   const projects = rows(snapshot.data.projects).map((row) => ({
     ...row,
     id: recordId(row.id),
@@ -481,7 +483,23 @@ function importProjectRows(
   const result = importProjects(
     projects,
     [],
-    imported.map((row) => ({ ...row, name: text(row.name) })),
+    imported.map((row) => {
+      const pct = typeof row.pct === "string" ? row.pct.trim() : row.pct
+      return {
+        ...row,
+        name: text(row.name),
+        status: typeof row.status === "string" ? row.status.trim() || "Planning" : (row.status ?? "Planning"),
+        risk: typeof row.risk === "string" ? row.risk.trim() || "Low" : (row.risk ?? "Low"),
+        priority:
+          typeof row.priority === "string" ? row.priority.trim() || "Medium" : (row.priority ?? "Medium"),
+        pct:
+          pct === "" || pct == null
+            ? 0
+            : typeof pct === "string" && pct.endsWith("%") && pct.slice(0, -1).trim() !== ""
+              ? Number(pct.slice(0, -1).trim())
+              : pct,
+      }
+    }),
     text(command.values.mode) === "replace" ? "replace" : "update",
     command.confirmed === true,
     environment.at,
