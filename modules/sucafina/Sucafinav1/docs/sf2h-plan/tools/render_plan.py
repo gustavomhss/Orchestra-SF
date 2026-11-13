@@ -129,65 +129,42 @@ def campaign_markdown(campaign):
 
 
 def prompt_markdown(c, session_id, session):
-    own = session['wps']
-    builders = [wid for wid in own if not (session_id == 'S4' and wid == 'WP14')]
-    if session_id == 'S0':
-        local = ('Comece WP00 e WP10 em T0. Use três auxiliares reais conforme as alocações de schedule.json. '
-                 'Atribua os arquivos de cada task de host, MCP, Atlas e harness a um único writer; só você integra a branch final. '
-                 'Revisores novos usam slots liberados por builders das sessões S1/S2/S3, com encerramento e transferência explícitos. Quem escreveu uma parte não aprova essa parte; '
-                 'use a rotação independente prevista, com recibo de não autoria. Preserve checkpoints e handoffs do adendo. '
-                 'Em T+10, congele contratos, ownership e seleção cumulativa. Em T+20, verifique o caminho nativo exigido no gate, incluindo perfil, skill carregada e MCP.')
-    else:
-        local = ('Spawne três subagentes reais, um por WP: **' + ', '.join(builders) + '**. '
-                 'Você coordena a sessão, contratos e handoffs; os builders escrevem suas fronteiras disjuntas. '
-                 'Siga as alocações e rotação de revisão em schedule.json. Não conte sua coordenação como capacidade extra simultânea.')
-        if session_id == 'S4':
-            local += ' Você implementa a frente parcial WP14 nos intervalos reservados. ' + c['timebox'].get('wp14_budget', '')
-    sections = c.get('prompt_sections', {})
-    for group in [sections.get(session_id, {}), sections.get('shared', {})]:
-        if isinstance(group, dict):
-            local += ''.join('\n\n### ' + title + '\n\n' + str(content) for title, content in group.items())
-    return f'''# Orchestra SF — {session_id}: {session['role']}
+    local = c['prompt_sections'][session_id]['body']
+    shared = '\n\n'.join('### ' + title + '\n\n' + body for title, body in c['prompt_sections']['shared'].items())
+    launch = ('Você é a sessão supervisora. Execute o workflow para iniciar, atribuir, acompanhar e integrar as sessões S1–S4. Primeiro confira as capacidades de criação/retomada e o limite global; depois lance/reconheça instâncias, receba ACKs e admita o preset observado.' if session_id=='S0' else 'Sua identidade e frente já estão atribuídas. Responda à supervisora S0 com seu ACK real; não escolha outra fatia. Inicie seus três builders somente nos slots efetivamente admitidos.')
+    return f"""# Orchestra SF — {session_id}: {session['role']}
 
-Você executa a sessão **{session_id}** da campanha **{c['id']}**, no repositório **{c['repository']}**. Sua frente é **{', '.join(own)}**. Baseline de código: `{c['baseline']['commit']}`. Use o mesmo SHA de planejamento fornecido pela integradora para todas as leituras.
+Você executa **{session_id}** na campanha **{c['id']}**, repositório **{c['repository']}**. WPs: **{', '.join(session['wps'])}**. Baseline de código: `{c['baseline']['commit']}`. Use o mesmo SHA de planejamento informado no lançamento para todos os documentos.
+
+{launch}
+
+## Leitura suficiente e obrigatória
+
+1. Leia [COMMON](../execution/COMMON.md) e [o pack completo de {session_id}](../execution/actors/{session_id}.json). Eles preservam axiomas, critérios e contratos da sua atribuição; não releia quinze representações integrais da mesma fonte.
+2. Leia [WORKFLOW](../WORKFLOW.md) e as seções pertinentes de [execution-workflow.json](../execution-workflow.json). Confirme a revisão do plano em [formal-review/README.md](../formal-review/README.md).
+3. Leia AGENTS e o código real da baseline nos paths que vai alterar, com instruções locais e dependências. Os anexos obrigatórios do pack continuam aplicáveis. Amplie a leitura diante de uma dependência/risco concreto.
+4. Envie a cada auxiliar seu [pack atribuído](../execution/manifest.json), identidade, branch, lease/epoch, inputs, outputs, provas e checkpoint. Nenhum ator recebe um menu de fatias.
 
 ## Missão e autoridade
 
-Entregue integralmente os resultados da sua frente, incluindo consumo real e provas. A campanha reúne 28 capacidades, 41 requisitos originais, decisões com IA, agentes residentes, skills, MCP Sucafina e Atlas empresarial, além de BI, imports, reuniões, exportações e rotinas. Preserve todos os axiomas da campanha, de cada WP e de cada task.
-
-Use exclusivamente GitHub MCP para operações remotas. A execução permite branches de trabalho, commits, draft PRs, integração e os checks previstos. Preserve as fronteiras de Azure/deploy, acessos corporativos, comunicação a terceiros e alçadas definidas na campanha. Este prompt não autoriza novos acessos nem envios a pessoas.
-
-## Leitura obrigatória
-
-Leia integralmente `CAMPAIGN.md`, `campaign.json`, `contracts.json`, `agents-atlas-mcp.json`, `AGENTS-ATLAS-MCP.md`, `specs/resident-runtime.md`, `ownership.json`, `schedule.json`, `output-handoffs.json`, `resident-proof-plan.json`, `resident-ui-consumption.json`, `evidence-plan.json`, `proof-map.json`, `coverage.json` e `ci-recipes.json`, todos nesta pasta e no mesmo commit. Leia também AGENTS.md da baseline e os WPs atribuídos:
-
-{bullet(f'[{wid}](../work-packages/{wid}.md)' for wid in own)}
-
-Cada arquivo de WP inclui suas tasks completas. Nenhuma página privada ou histórico de conversa é dependência de execução. Se o SHA de código mudou, S0 deve reconciliar o impacto antes de liberar a baseline.
+Entregue toda a frente, seus consumidores, provas e correções. Use somente GitHub MCP para operações remotas, sem gh/login/token novo. Preserve limites de Azure/deploy, acessos corporativos, comunicação a terceiros e alçadas da campanha. O workflow não cria novas permissões.
 
 ## Sua orquestração
 
 {local}
 
-## Construção e integração
+{shared}
 
-T0 é o horário publicado por S0 e inclui setup. WP00.T02 libera construção por contratos em T+10. WP00.T04 qualifica os serviços nativos; não bloqueia o início de frentes determinísticas que já têm contratos. Verifique checkpoints intermediários das tasks longas, não apenas seus prazos finais.
+## Loop de trabalho
 
-Use isolamento de checkout/worktree e branches declaradas em ownership.json. Um arquivo tem um writer. Para arquivo compartilhado entregue patch à sua dona; não tome ownership. Registre transferências antes de editar. Publique incrementos consumíveis e acompanhe a integração; fixtures de contrato permitem construir, mas não fecham aceite.
+Mantenha o mesmo writer para seus jobs e tarefas contínuas. Publique incremento consumível por SHA, faça o consumidor confirmar o recebimento e encaminhe solicitações de validação ao dispatcher vigente. Receba achados e corrija sua fronteira enquanto outras seguem. Use contratos e produtores existentes; não duplique cálculo, parser, UI compartilhada ou bridge.
 
-Domínios continuam fontes de verdade. Planner calcula valores. IA interpreta e propõe; pessoas escolhem e aprovam. Atores e permissões vêm do host confiável. Mutação e recibo são atômicos em cada domínio. O caso reconcilia aplicação parcial. Custos omitidos continuam pendentes, confirmações seguem o escopo material, e memória revalida acesso atual.
+Atualize o checkpoint em mudança material: head, outputs prontos/consumidos, critérios/provas pendentes, lease, blocker e próxima ação. Retome pelo delta e pelo restante, sem recomeçar trabalho aceito. Silêncio não prova morte e não autoriza dois writers.
 
-## Provas e recibos
+## Término
 
-Use os pacotes e critérios mapeados; não rode um teste por frase. Testes do repositório rodam no GitHub Actions. Typechecks e guards seguem AGENTS. Registre candidato, snapshot, request, run e seleção; uma execução antiga não prova uma mudança nova. Perfis/skills precisam de carga e resultado consumido, MCP de identidade por chamada, Atlas de módulos reais e persistência verificável.
-
-Publique recibos no namespace `docs/sf2h/receipts/WPxx/` da branch do WP: tasks, head observado, arquivos, exports, contratos, consumidores, provas, observado versus esperado, achados, pendências e efeito no prazo. Subagentes usam colaboração local; entre conversas o Git é a fonte comum.
-
-## Quando pode terminar
-
-Conclua apenas com a frente commitada, integrada, verificada e sem achados obrigatórios, com DoD, invariants, quality standards, completeness criteria e success criteria satisfeitos. READY_FOR_INTEGRATION não é DONE. Registre bloqueio concreto e continue o restante autorizado. O prazo T+120 não relaxa o escopo ou o aceite.
-'''
-
+READY_FOR_INTEGRATION não é DONE. A coordenadora conserva obrigação de retomada até GLOBAL_RELEASE; builders só liberam slots com handoff aceito ao writer de correções. Aprovação exige critérios completos, consumo real, evidência atual e revisão independente. C é o produto testado; D contém somente o envelope evidencial validado. T120 incompleto exige ETA observado e continuação integral, sem encerrar por prazo ou reduzir escopo.
+"""
 
 def artifacts(campaign):
     c = campaign
@@ -238,25 +215,26 @@ def artifacts(campaign):
     out['CAMPAIGN.md'] = campaign_markdown(c)
     for key, session in c['timebox']['sessions'].items():
         out[f'prompts/{key}.md'] = prompt_markdown(c, key, session)
-    out['START.md'] = '''# Iniciar a campanha integral
+    out['START.md'] = """# Iniciar pela supervisora
 
-O plano e os cinco prompts estão versionados no mesmo diretório. Use o SHA do candidato de planejamento aprovado indicado em formal-review/README.md; não misture documentos de commits diferentes.
+Entregue à sessão **S0** o [prompt da supervisora](prompts/S0.md), fixado no mesmo commit aprovado de todos os artefatos. Ela controla o [workflow S0+N](WORKFLOW.md), distribui os jobs, acompanha outputs, integra e fecha a campanha.
 
-1. Leia [CAMPAIGN.md](CAMPAIGN.md) e o [estado da revisão](formal-review/README.md).
-2. Abra cinco conversas e entregue o link fixado no SHA do prompt de cada sessão.
-3. S0 registra T0, confirma a capacidade real e integra; S1–S4 confirmam sua identidade e iniciam seus três builders.
-4. Siga os gates e alocações de schedule.json. As cinco famílias de axiomas valem na campanha, em cada WP e em cada task.
+O preset de duas horas usa **S0 + N=4 sessões S1–S4**, até vinte slots contando cinco coordenadoras. Sua admissão exige capacidade real: a árvore collaboration de quatro slots globais não se multiplica por nesting. Criação/retomada automática usa somente capacidades efetivamente expostas. Sem launcher, o modo assistido exige iniciar as conversas atribuídas; Git mantém o ledger e não as desperta.
 
-| Sessão | Prompt |
+| Sessão | Entrada atribuída |
 | --- | --- |
-| S0 — integração | [S0.md](prompts/S0.md) |
-| S1 — interface, Dashboard, Planner | [S1.md](prompts/S1.md) |
-| S2 — Procurement, BI, documentos | [S2.md](prompts/S2.md) |
-| S3 — reuniões, colaboração, rotinas | [S3.md](prompts/S3.md) |
-| S4 — decisões, IA, portfólio, memória | [S4.md](prompts/S4.md) |
+| S0 — supervisão, integração, runtime e Atlas | [S0.md](prompts/S0.md) |
+| S1 — interface, Dashboard e Planner | [S1.md](prompts/S1.md) |
+| S2 — Procurement, BI e documentos | [S2.md](prompts/S2.md) |
+| S3 — reuniões, colaboração e rotinas | [S3.md](prompts/S3.md) |
+| S4 — decisões, IA, portfólio e memória | [S4.md](prompts/S4.md) |
 
-As páginas de origem em pages.json são histórico opcional. O conjunto executável está neste repositório. A publicação do plano não inicia a implementação automaticamente.
-'''
+Cada ator lê [COMMON](execution/COMMON.md) e seu [pack completo com hash](execution/manifest.json). A fonte continua canônica; os packs preservam as tarefas, axiomas e contratos pertinentes e dispensam a releitura integral de seus espelhos. Fontes e dependências reais continuam obrigatórias antes da alteração de código.
+
+S0 registra T0 antes do setup e do lançamento. Os checkpoints são cumulativos, não barreiras: outputs, provas e achados fluem assim que prontos. Não reinicie o relógio nem reduza o escopo se120 minutos não bastarem. A implementação só começa quando este workflow for executado; a publicação do plano não a inicia.
+"""
+    from render_fast_context import artifacts as fast_context_artifacts
+    out.update(fast_context_artifacts(c))
     return out
 
 

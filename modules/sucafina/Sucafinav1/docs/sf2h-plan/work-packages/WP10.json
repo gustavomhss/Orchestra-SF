@@ -48,7 +48,7 @@
       },
       {
         "id": "WP10.DOD.02",
-        "text": "O commit final possui evidência de CI, comportamento, autorização, visualização e preservação correspondente ao seu conteúdo.",
+        "text": "O candidato de produto C possui evidência de CI, comportamento, autorização, visualização e preservação correspondente ao seu conteúdo. O commit de entrega D arquiva essa evidência e passa a verificação do envelope e seu próprio guard, sem alegar que CI de C executou em D.",
         "status": "NOT_RUN"
       },
       {
@@ -112,7 +112,7 @@
       },
       {
         "id": "WP10.QLT.40",
-        "text": "Gates distinguem source shipping, runtime loading, domínio real, CI selection e consumo final no mesmo candidato.",
+        "text": "Gates distinguem source shipping, runtime loading, domínio real, CI selection e consumo final no mesmo candidato. Mesmo candidato significa C; D apenas arquiva provas admitidas e conserva a identidade de cada execução.",
         "status": "NOT_RUN"
       },
       {
@@ -189,7 +189,7 @@
         "Criar a ponte autorizada de serviços do host com escopo explícito de projeto/sessão/ator, na composição; não obter credenciais globais dentro do módulo.",
         "Montar as rotas de Hoje/Decisões sem inventar um quarto Surface no contrato existente; resolver acesso antes da leitura e manter as três superfícies canônicas.",
         "Fazer agregação de projeções fora das transações de domínio, mantendo versões por seção. Encaminhar cada mudança pelo comando do seu domínio e confirmar recibos individualmente.",
-        "Integrar incrementos em T+25, T+40, T+55 e T+75. Nenhuma dependência desta task espera todos os WPs completos para começar.",
+        "Integração por output pronto dentro da alocação de S0. AI-NATIVE13, NATIVE-CASE14, NATIVE-PLANNER15 e NATIVE-RUNTIME16 são recebidos e compostos entre16 e18, antes de GNATIVE. T25/40/55/75 são checkpoints cumulativos, nunca barreiras para integrar incrementos consumíveis. Uma fila e um escritor da branch integradora; recibos por SHA.",
         "Fornecer persistência protegida de metadados, revisão de acesso em reload/cache/export e política de importação acordada com WP06/WP11/WP14.",
         "Cada comando preparado leva idempotencyKey e digest de conteúdo/ator/target/encarnação. O adapter WP10 consulta e grava o recibo no MESMO snapshot/commit da mutação daquele domínio. Retry idêntico revalida acesso e retorna o recibo; mesma chave com digest diferente é conflito. O caso central reconcilia recibos depois e pode estar parcialmente atualizado; nunca repetir uma mutação porque a resposta se perdeu.",
         "Prover createSfProductState no namespace protegido __sfProductV1 do snapshot dashboard existente; registrar acesso separado de papéis Dashboard.",
@@ -197,7 +197,8 @@
         "Remover namespace privado de business export/JSON import/audit genérico e preservar encarnação/outbox/receipts em migração aditiva.",
         "Não abrir transação de outro surface dentro da transação de metadados; leituras seccionadas conservam tokens de versão/acesso.",
         "Conectar NATIVE-CASE T+14, NATIVE-PLANNER T+15, AI-NATIVE T+13 e NATIVE-RUNTIME T+16 nos roots existentes até 18; S3 executa GNATIVE18-20. Nenhuma execução espera task inteira T06 terminar 45.",
-        "Entregar protected-store C08 em 25 a T07; permanecer único writer de entrypoints/runtime/application.ts/manifests compartilhados. Delegados produzem seus arquivos/branches, não editam esses roots."
+        "Entregar protected-store C08 em 25 a T07; permanecer único writer de entrypoints/runtime/application.ts/manifests compartilhados. Delegados produzem seus arquivos/branches, não editam esses roots.",
+        "S0 consolida guia de tarefas por papel, roteiro de demonstração e changelog de produto no README.md já possuído entre T55 e T60, usando incrementos e evidências dos produtores; entre T60 e T75 integra consumidores tardios e ajusta as instruções afetadas antes do freeze de C. Nenhum guia normativo novo é postergado para o envelope D. Reserva não medida; atraso modifica G2H sem cortar conteúdo."
       ],
       "inputs": [
         "WPs01–09 e WP11–WP14 prontos para integrar",
@@ -212,7 +213,8 @@
         "product/host-binding/state-provider.ts#createSfProductState",
         "C09–C17 persistidos/protegidos e import/export compatíveis",
         "NATIVE-COMPOSE T+18: caso/principal reais + AgentV2/skill/ponte/porta Planner/retorno na entrada real do produto.",
-        "PROTECTED-STORE T+25: provider de armazenamento C08 e transação de instalação, entregue a T07 para DurableMemory protegido."
+        "PROTECTED-STORE T+25: provider de armazenamento C08 e transação de instalação, entregue a T07 para DurableMemory protegido.",
+        "modules/sucafina/Sucafinav1/README.md: guia por papel, roteiro sintético e changelog de produto integrados até T75 e incluídos no candidato C; consumidos por WP10.T05 sem reescrita normativa em D."
       ],
       "depends_on": [],
       "checks": [
@@ -261,7 +263,7 @@
         "dod": [
           {
             "id": "WP10.T01.DOD.01",
-            "text": "As superfícies reais consomem todas as portas e funções da campanha, sem caminhos de produção vazios ou simulados.",
+            "text": "As superfícies reais consomem todas as portas e funções da campanha, sem caminhos de produção vazios ou simulados. O README de uso, roteiro e changelog correspondente estão incluídos em C e disponíveis para T05.",
             "status": "NOT_RUN"
           },
           {
@@ -273,7 +275,7 @@
         "invariants": [
           {
             "id": "WP10.T01.INV.01",
-            "text": "Composição não altera fórmulas/políticas por conveniência e não escreve arquivos de feature de outro WP.",
+            "text": "Composição não altera fórmulas/políticas por conveniência e não escreve arquivos de feature de outro WP. Guias normativos usam o README já possuído por S0 e não entram como evidência nova em D.",
             "status": "NOT_RUN"
           },
           {
@@ -295,7 +297,7 @@
         "quality_standards": [
           {
             "id": "WP10.T01.QLT.01",
-            "text": "Mudanças de compatibilidade são aditivas, pequenas e documentadas junto ao consumidor afetado.",
+            "text": "Mudanças de compatibilidade são aditivas, pequenas e documentadas junto ao consumidor afetado. O guia por papel descreve as tarefas e os números do produto, reconciliado com o comportamento integrado antes de congelar C.",
             "status": "NOT_RUN"
           },
           {
@@ -307,7 +309,7 @@
         "completeness_criteria": [
           {
             "id": "WP10.T01.CMP.01",
-            "text": "Cobrir entrypoint, rotas, handlers, contratos legados, preferências, revisões, relações, imports e rotinas.",
+            "text": "Cobrir entrypoint, rotas, handlers, contratos legados, preferências, revisões, relações, imports e rotinas. Incluir guia por papel, roteiro sintético e changelog de produto em C, cobrindo os incrementos tardios até T75.",
             "status": "NOT_RUN"
           },
           {
@@ -324,7 +326,7 @@
         "success_criteria": [
           {
             "id": "WP10.T01.SUC.01",
-            "text": "A funcionalidade deixa de depender de abrir páginas isoladas ou scripts de demonstração para existir.",
+            "text": "A funcionalidade deixa de depender de abrir páginas isoladas ou scripts de demonstração para existir. T05 entrega instruções já presentes no candidato testado, sem iniciar outro ciclo de produto apenas para escrever o guia.",
             "status": "NOT_RUN"
           },
           {
@@ -381,7 +383,8 @@
         "Executar J01–J13 com corpus sintético no módulo montado e identidades distintas.",
         "Verificar tarefas com teclado e em 320/768/1440 px, incluindo textos longos, listas densas, dados ausentes e retorno ao contexto.",
         "Registrar medidas de esforço e telas decisivas; corrigir causas nos WPs responsáveis.",
-        "Executar AM01–AM06 no candidato integrado e registrar matriz exata de todos perfis/skills/packs, com saídas consumidas após reload."
+        "Executar AM01–AM06 no candidato integrado e registrar matriz exata de todos perfis/skills/packs, com saídas consumidas após reload.",
+        "AM02 começa por rota quando produtor, bridge, perfil/skill carregada, autorização e consumidor reais estão integrados. Acumular observações específicas; não esperar o último output de cada pack, nem converter esse streaming em aceite fora do mesmo candidato C final."
       ],
       "inputs": [
         "Composição WP10.T01",
@@ -579,7 +582,8 @@
         "Fornecer intenção, matriz de critérios, commit e evidências; permitir que os juízes tentem refutar os resultados.",
         "Devolver achados aos owners, revisar deltas e repetir apenas provas afetadas até não haver achados obrigatórios abertos.",
         "Revisores novos iniciam só depois de builder encerrado e lease aceito. R1/R2 leem/revisam 72-95; R3 le/revisa 75-95. As inspeções de autores 55-75 são insumos, não pareceres independentes.",
-        "Nenhum reviewer edita produto: correção WP02 é S1, WP05 é S2, WP07 é S3; demais WPs mantêm writers ativos. Revisores julgarão correções 95-103 e revalidarão o candidato 103-118. Se duração observada ultrapassar a reserva, G2H registra efeito sem reduzir critérios."
+        "Nenhum reviewer edita produto: correção WP02 é S1, WP05 é S2, WP07 é S3; demais WPs mantêm writers ativos. Revisores julgarão correções 95-103 e revalidarão o candidato 103-118. Se duração observada ultrapassar a reserva, G2H registra efeito sem reduzir critérios.",
+        "Publicar cada achado reproduzido à fila de S0 imediatamente. Autor ativo corrige enquanto o reviewer continua examinando; rechecagem permanece independente e as reservas95–103 não são barreira para começar."
       ],
       "inputs": [
         "Resultados WP10.T02",
@@ -714,18 +718,19 @@
     },
     {
       "id": "WP10.T04",
-      "title": "Concluir verificação cumulativa no commit final",
+      "title": "Concluir verificação cumulativa no candidato de produto C",
       "intent": "Ligar o aceite ao código que será efetivamente entregue.",
       "work": [
         "Executar verificações escopadas durante desenvolvimento e uma rodada cumulativa após composição/correções, respeitando AGENTS.md.",
         "Rodar testes do repositório pelo caminho GitHub Actions test:ci; typecheck conforme pacote e guardrails vigentes.",
         "Registrar SHA, URLs/IDs dos runs reais, seletores, resultados e validade da evidência; não disparar deploy.",
         "Executar todas as recipes obrigatórias de ci-recipes.json e a receita completa exigida pelo epic/AGENTS, ampliando por footprint real. Associar prova live de IA/Relay ao mesmo candidato sem transmitir segredo no request CI.",
-        "Executar o build e check:generated/typecheck/test da boundary Atlas alterada, mais suites SF/CLI/UI pertinentes e validação de manifests/receipts no SHA final.",
+        "Executar o build e check:generated/typecheck/test da boundary Atlas alterada, mais suites SF/CLI/UI pertinentes e validação de manifests/receipts no candidato final de produto C. Guard de C pertence a G7; o guard separado da entrega evidencial D é responsabilidade de WP10.T05/G8.",
         "CI-APP-SRC executa args[] e cobre src; CI-APP-BROWSER executa args[test-browser] e cobre a árvore Bun browser. Ambas são obrigatórias no mesmo candidato; Playwright SF não as substitui.",
         "Acrescentar suíte completa atlas-boundary e check:generated/typecheck de boundary pelo mecanismo permitido. Nunca criar runner/config/env ad hoc para inventar seleção.",
         "E16/E18 enumeram seleção observada e planejada, request hash, product tree, run/attempt/job/control/artifact e conclusão; zero testes, seleção divergente e ausência de controle falham.",
-        "Handoff de CI 40 S0-C->S2 e 75 S2->S0-C registra fila/run IDs/request hashes/ETAs; não criar um segundo controlador escrevendo o mesmo receipt."
+        "Handoff de CI 40 S0-C->S2 e 75 S2->S0-C registra fila/run IDs/request hashes/ETAs; não criar um segundo controlador escrevendo o mesmo receipt.",
+        "Um dispatcher com lease deduplica requests idênticas em voo/concluídas, transfere a fila nos handoffs40/75 e executa seleção afetada com consumidores transitivos. Oito seleções finais, suites adicionais exigidas e AM01–AM06 continuam no mesmo C; desconhecido não é cache válido."
       ],
       "inputs": [
         "Candidato após WP10.T03",
@@ -742,7 +747,7 @@
       "checks": [
         {
           "id": "WP10.T04.CHK.01",
-          "text": "Uma mudança depois de um run invalida os critérios afetados até nova verificação; não chamar green antigo de green atual.",
+          "text": "Mudança de produto depois de um run cria novo C e invalida os critérios afetados até nova verificação; não chamar green antigo de green atual. Apenas adições evidenciais que satisfazem integralmente execution.candidate_delivery podem formar D sem reexecutar o produto C, mantendo seus SHAs e guard próprio de D.",
           "status": "NOT_RUN"
         },
         {
@@ -780,17 +785,17 @@
         "dod": [
           {
             "id": "WP10.T04.DOD.01",
-            "text": "O candidato final tem resultados válidos das verificações exigidas, sem falha obrigatória ou prova desatualizada.",
+            "text": "O candidato final de produto C tem resultados válidos das verificações exigidas, sem falha obrigatória ou prova desatualizada. O guard do envelope D é verificado separadamente por T05 antes de G8.",
             "status": "NOT_RUN"
           },
           {
             "id": "WP10.T04.DOD.10",
-            "text": "CI pertinente à boundary e aos novos consumers fecha com evidencia do candidato final.",
+            "text": "CI pertinente à boundary e aos novos consumers fecha com evidência do candidato final de produto C.",
             "status": "NOT_RUN"
           },
           {
             "id": "WP10.T04.DOD.40",
-            "text": "Seleções CI exigidas e gates estáticos têm recibos do candidato aceito.",
+            "text": "Seleções CI exigidas e gates estáticos de produto têm recibos do candidato aceito C; D mantém essas identidades e requer seu próprio guard em G8.",
             "status": "NOT_RUN"
           }
         ],
@@ -807,14 +812,14 @@
           },
           {
             "id": "WP10.T04.INV.40",
-            "text": "Playwright SF não substitui Bun browser; checks em outro SHA não viram verde atual.",
+            "text": "Playwright SF não substitui Bun browser; checks em outro SHA não viram verde atual. D não recebe o SHA de execução de C; seu receipt aponta C e o envelope mantém o produto intacto.",
             "status": "NOT_RUN"
           }
         ],
         "quality_standards": [
           {
             "id": "WP10.T04.QLT.01",
-            "text": "Reusar evidência ainda válida e repetir somente o necessário para resolver risco concreto ou gate exigido.",
+            "text": "Reusar evidência ainda válida e repetir somente o necessário para resolver risco concreto ou gate exigido. Arquivar prova em D não exige novo teste de produto quando o envelope passa, mas exige verificação própria e guard de D.",
             "status": "NOT_RUN"
           },
           {
@@ -841,14 +846,14 @@
           },
           {
             "id": "WP10.T04.CMP.40",
-            "text": "CobrirSF/CLI/app/src/app/test-browser/atlas-boundary/trêsPW e suites adicionais exigidas pelo footprint/epic.",
+            "text": "CobrirSF/CLI/app/src/app/test-browser/atlas-boundary/trêsPW e suites adicionais exigidas pelo footprint/epic. As seleções e seis provas AM finais identificam o mesmo C; distinguir seu aceite do envelope D.",
             "status": "NOT_RUN"
           }
         ],
         "success_criteria": [
           {
             "id": "WP10.T04.SUC.01",
-            "text": "Qualquer pessoa consegue ligar cada resultado declarado ao commit e à execução que o demonstraram.",
+            "text": "Qualquer pessoa consegue ligar cada resultado declarado ao commit e à execução que o demonstraram. O índice de D aponta C e preserva cada run, attempt, seleção e hash original, sem alegar execução inexistente em D.",
             "status": "NOT_RUN"
           },
           {
@@ -928,27 +933,30 @@
       "intent": "Concluir com capacidade demonstrada, orientação de uso e rastreabilidade.",
       "work": [
         "Consolidar a matriz de capacidades/axiomas e conferir nenhum item órfão ou estado intermediário vendido como concluído.",
-        "Entregar guia de tarefas por papel, sem detalhes de deploy, e roteiro de demonstração com dados sintéticos.",
-        "Publicar changelog de produto, semânticas corrigidas, evidências e limites; submissão/merge segue a autorização e políticas do repositório.",
-        "Preparar recibo e documentação entre T+110 e T+118; só publicar aceitação após G7 e WP10.T04, entre T+118 e T+120. Preparação não declara conclusão.",
+        "Entregar o guia de tarefas por papel, roteiro sintético e changelog de produto já produzidos por WP10.T01 no README.md incluído em C. T05 não acrescenta nem corrige conteúdo normativo em D; necessidade de correção cria novo C e reabre os gates pertinentes.",
+        "Publicar o produto C e sua entrega evidencial D, com changelog e semânticas de C, índice de evidências e limites materiais. Submissão/merge segue autorização e políticas; D só contém adições admitidas pelo envelope, sem editar/apagar recibo antigo.",
+        "Preparar somente índices, recibos e pareceres evidenciais entre T110 e T118; guias normativos/roteiro/changelog já pertencem a C via T01. Depois de G7/T04, criar D, conferir ancestralidade, diff completo, inputs inalterados e hashes, executar o guard real de D e só então publicar aceite em G8/T120. Preparação não declara conclusão; atraso mantém campanha aberta.",
         "Aceitar somente manifesto integral 5/18/8/39 e AM01–AM06 completos; listar atraso ou indisponibilidade material sem reduzir escopo."
       ],
       "inputs": [
         "WP10.T04 aprovado",
         "Pareceres independentes válidos",
-        "Artefatos e handoffs de todos os WPs"
+        "Artefatos e handoffs de todos os WPs",
+        "Guia por papel, roteiro e changelog produzidos por WP10.T01 no README.md já incluído em C, com versões e comportamento reconciliados."
       ],
       "outputs": [
         "Pacote final de aceite e guia de uso",
         "Roteiro de demonstração",
         "Matriz completa e registro de versão",
-        "Recibo de aceite com matriz residente e prova Atlas/identidade"
+        "Recibo de aceite com C, índice imutável de matriz residente/provas Atlas/identidade/CI/reviews e limites; D é o commit que o contém. Guard de D é publicado pela supervisora no fechamento, sem inserir o próprio SHA/guard no arquivo que o geraria."
       ],
-      "depends_on": [],
+      "depends_on": [
+        "WP10.T01"
+      ],
       "checks": [
         {
           "id": "WP10.T05.CHK.01",
-          "text": "Todas as tasks, WPs e capacidades obrigatórias da matriz canônica têm aceite e evidência válidos; o encerramento consulta a lista, sem contagem antiga fixa.",
+          "text": "Todas as tasks, WPs e capacidades obrigatórias da matriz canônica têm aceite e evidência válidos; o encerramento consulta a lista, sem contagem antiga fixa. A aceitação distingue C de D: todas as provas de produto obrigatórias pertencem a C; o envelope de D admite apenas adições novas, com hashes e guard próprios. Alteração, remoção, rename, modo indevido, fonte normativa ou input runtime/teste/build no diff rejeita D como entrega evidencial.",
           "status": "NOT_RUN"
         },
         {
@@ -971,7 +979,7 @@
         "dod": [
           {
             "id": "WP10.T05.DOD.01",
-            "text": "Campanha fechada somente com cobertura completa, critérios satisfeitos e pacote final coerente com o código entregue.",
+            "text": "Campanha fechada somente com cobertura completa, critérios satisfeitos no produto C e pacote D coerente: ancestralidade, envelope append-only, inputs preservados, hashes e guard de D verificados após G7.",
             "status": "NOT_RUN"
           },
           {
@@ -983,7 +991,7 @@
         "invariants": [
           {
             "id": "WP10.T05.INV.01",
-            "text": "Planejamento, implementação, revisão, publicação e deploy são estados distintos; não confundir um com outro.",
+            "text": "Planejamento, implementação, revisão, publicação e deploy são estados distintos; não confundir um com outro. D não altera produto, guias normativos, testes, skills, configurações ou recibos antigos; a evidência conserva os SHAs e runs originais. Não gravar o próprio SHA/hash/guard posterior dentro de D.",
             "status": "NOT_RUN"
           },
           {
@@ -995,7 +1003,7 @@
         "quality_standards": [
           {
             "id": "WP10.T05.QLT.01",
-            "text": "Guia explica o trabalho do usuário e o significado dos dados; detalhes internos ficam nas referências técnicas pertinentes.",
+            "text": "Guia explica o trabalho do usuário e o significado dos dados; detalhes internos ficam nas referências técnicas pertinentes. Consumir o guia já incluído em C; o índice de entrega liga evidências sem copiar afirmações de um candidato para outro.",
             "status": "NOT_RUN"
           },
           {
@@ -1007,7 +1015,7 @@
         "completeness_criteria": [
           {
             "id": "WP10.T05.CMP.01",
-            "text": "Incluir todas as personas, principais jornadas, gráficos/rotinas, import/export, estados de erro e semânticas alteradas.",
+            "text": "Incluir todas as personas, principais jornadas, gráficos/rotinas, import/export, estados de erro e semânticas alteradas. Conferir todos os paths/status/modos/blobs do diff C→D, índice de evidências, ancestralidade e guard próprio de D; diff truncado ou dependência desconhecida falha.",
             "status": "NOT_RUN"
           },
           {
@@ -1019,7 +1027,7 @@
         "success_criteria": [
           {
             "id": "WP10.T05.SUC.01",
-            "text": "André e time conseguem usar e retomar o trabalho; o usuário recebe uma entrega comprovada e fácil de revisar.",
+            "text": "André e time conseguem usar e retomar o trabalho; o usuário recebe uma entrega comprovada e fácil de revisar. O usuário recebe C testado e D verificável, sem reexecução causada somente pela gravação da própria evidência.",
             "status": "NOT_RUN"
           },
           {

@@ -322,7 +322,7 @@
     "Novos testes de UI pertencem a packages/app-shell/e2e/sucafina/, usando a configuração Playwright já permitida; não editar o validator ou desligar guard para criar um caminho de CI.",
     "Subagentes centrais de contrato, fixture e qualificação têm artefatos auxiliares disjuntos; somente S0 publica os contratos e alterações de código compartilhadas."
   ],
-  "coordination": "Um escritor por arquivo, inclusive manifests/lock, contratos, host, rotas e receipts. Subagente trabalha em worktree/checkout isolado e branch do WP. Integradora é a única escritora da branch sf2-integrate. Transferência de ownership é atômica e registrada antes da primeira edição pelo novo autor.",
+  "coordination": "Um escritor por arquivo, inclusive manifests/lock, contratos, host, rotas e receipts. Subagente trabalha em worktree/checkout isolado e branch do WP. Integradora é a única escritora da branch sf2-integrate. Transferência de ownership é atômica e registrada antes da primeira edição pelo novo autor. S0 mantém sf2-control para roster/leases/fila e sf2-integrate para produto. Control nunca é mergeado nem usado como base CI. S0 incorpora em D somente blobs evidenciais admitidos com source commit/path/blob hash, não branches inteiras.",
   "exact_exceptions": [
     {
       "path": "bun.lock",
@@ -875,7 +875,7 @@
       "actor": "S0",
       "logical_owner": "WP10",
       "branch": "sf2-integrate",
-      "paths_rule": "Arquivos existentes da WP10 e product/integration/ e compositionroots; exclui todos os paths delegados abaixo. Único writer da ref integradora. Integra blobs/commits recebidos dos autores, sem substituição de arquivo antigo."
+      "paths_rule": "Arquivos existentes da WP10 e product/integration/ e compositionroots; exclui todos os paths delegados abaixo. Único writer da ref integradora. Integra blobs/commits recebidos dos autores, sem substituição de arquivo antigo. Controle transitório pertence apenas a sf2-control. Em D, somente os paths completos de delivery receipts previamente alocados são admitidos dentro de control; nunca o prefixo inteiro."
     },
     {
       "actor": "S0-B",
@@ -1198,6 +1198,21 @@
         120
       ],
       "notes": "Escreve somente parecer e recibos. Todo código, conteúdo de skills, manifest e teste de produto permanece somente leitura para o reviewer."
+    },
+    {
+      "actor": "S0",
+      "logical_owner": "WP10",
+      "task": "WP10.T01/WP10.T04/WP10.T05",
+      "branch": "sf2-control",
+      "new_prefixes": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/control/"
+      ],
+      "paths_rule": "Somente roster, leases, fila, índices operacionais e alocações exatas de delivery. Nenhum produto, harness ou workflow executável. Branch nunca mergeada nem usada como base de snapshot CI.",
+      "window": [
+        0,
+        120
+      ],
+      "notes": "Mesmo S0 e mesmas reservas; não cria slot. Produto C e entrega D ficam em sf2-integrate; control transitório não altera C."
     }
   ],
   "new_files_semantics": "Novos paths exatos podem ser cria dos somente pelo owner indica do, inclusive sob exclusão geral. Nenhum pai do path torna-se prefixo de escrita. A validação confere exato/exceção, autor e propósito.",
@@ -1214,5 +1229,5 @@
     "remaining_tasks",
     "proof_owner"
   ],
-  "shared_branch_policy": "sf2-integrate é a única ref de composição. Branches de workers são distintas; a transferência WP14 mantém sf2-memory após o lease, nunca dois commits concorrentes sem compare-and-set. Mudanças de cloud usam SHA/patch combinado, como já prescrito."
+  "shared_branch_policy": "sf2-integrate é a única ref de composição. Branches de workers são distintas; a transferência WP14 mantém sf2-memory após o lease, nunca dois commits concorrentes sem compare-and-set. Mudanças de cloud usam SHA/patch combinado, como já prescrito. S0 mantém sf2-control para roster/leases/fila e sf2-integrate para produto. Control nunca é mergeado nem usado como base CI. S0 incorpora em D somente blobs evidenciais admitidos com source commit/path/blob hash, não branches inteiras."
 }

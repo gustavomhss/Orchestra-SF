@@ -164,7 +164,7 @@
     "omni_control",
     "artifacts"
   ],
-  "failure_policy": "Falha de teste vai ao dono da mudança. Falha de setup/runner conserva BLOCKED. Seleção vazia ou divergente falha, sem aceitar zero testes. Regressão preexistente exige comparação reproduzível com a baseline e atribuição; não cria dispensa automática de gate obrigatório. Candidato alterado exige novo snapshot e checks afetados; verde antigo não cobre mudança nova. Ausência de prova obrigatória impede DONE mesmo ao atingir 120 minutos.",
+  "failure_policy": "Falha de teste vai ao dono da mudança. Falha de setup/runner conserva BLOCKED. Seleção vazia ou divergente falha, sem aceitar zero testes. Regressão preexistente exige comparação reproduzível com a baseline e atribuição; não cria dispensa automática de gate obrigatório. Candidato alterado exige novo snapshot e checks afetados; verde antigo não cobre mudança nova. Ausência de prova obrigatória impede DONE mesmo ao atingir 120 minutos. D só pode arquivar novas evidências pelo envelope execution.candidate_delivery; falha do envelope ou do guard de D impede o fechamento. Alteração de produto não pode ser classificada como recibo para conservar C antigo.",
   "queries": [
     "GET https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs; selecionar head_sha=S, evento push e ref esperada",
     "GET run/jobs/artifacts pelo ID real; não usar wrapper limitado a PR-triggered runs"
@@ -225,8 +225,8 @@
       "cwd": ".",
       "command": "bun run check:guards --base origin/dev",
       "owner_task": "WP10.T04",
-      "gate": "G7",
-      "purpose": "Gate exigido por AGENTS no checkout real do candidato; workflow atual não fornece dispatch de guards. Disponibilidade/readiness do executor é registrada em G0, sem inventar verde ou alterar workflow."
+      "gate": "G7 em C; G8 em D",
+      "purpose": "Gate exigido por AGENTS no checkout real do candidato; workflow atual não fornece dispatch de guards. Disponibilidade/readiness do executor é registrada em G0, sem inventar verde ou alterar workflow. WP10.T04 verifica C para G7. WP10.T05/S0 repete este mesmo comando em D para G8 após verificar o envelope; identifica o SHA efetivamente examinado e não edita D para incluir resultado autorreferente."
     },
     {
       "id": "CHECK-SPAWNS",
@@ -254,6 +254,125 @@
     "Confirmar head_sha=Sj, evento push e branch ci-run-linux-*. Ler run, jobs e artifacts pelo ID real; não usar o wrapper limitado a eventos de PR.",
     "Conferir o controle omni pela regra nativa do job. Guardar verdict e identificadores, sem incluir credenciais ou dados desnecessários.",
     "Zero testes, seleção incompleta ou artefato ausente não produzem PASS.",
-    "Alterar o candidato exige novos snapshots, gates afetados e o conjunto cumulativo obrigatório. Preservar provas antigas com o SHA original; não trocar seu rótulo para o novo candidato."
-  ]
+    "Alterar o produto, seus testes, configurações, skills, fixtures, contratos ou guias normativos cria novo candidato C e exige novos snapshots, gates afetados e cobertura cumulativa obrigatória do C aceito. Preservar provas antigas com o SHA original; não trocar seu rótulo para o novo candidato. Adições estritamente evidenciais podem formar D somente pelo envelope execution.candidate_delivery; não são reteste nem mudança do produto C.",
+    "Oito seleções mínimas e adicionais obrigatórias do epic, AM01–AM06 e pareceres finais referem-se ao mesmo C. Um resultado já válido em C pode ser indexado em D sem novo run; resultado de outro candidato não recebe o SHA de C.",
+    "Guardrails são verificados em C/G7 e novamente em D/G8. D exige ancestralidade, diff completo append-only admitido, ausência de novos inputs de build/test/runtime e hashes preservados; publicar o resultado do guard de D fora do próprio D evita autorreferência."
+  ],
+  "dispatch_policy": {
+    "supervision": {
+      "logical_owner": "S0",
+      "worker_sessions": "N, observadas e limitadas pela capacidade real; padrão S1–S4",
+      "exclusive_dispatcher": "Um lease por vez; padrão S0-C[0,40], S2[40,75], S0-C[75,118]",
+      "handoff": "Transferir candidato, fila, request keys, run IDs, attempts, conclusões e ETAs; não disparar duplicata ao assumir.",
+      "storage": "Usar docs/sf2h/control e docs/sf2h/receipts/WP10 já no ownership WP10; sem serviço novo.",
+      "worker_rule": "Worker solicita validação e entrega eventos; não cria CI duplicado nem escreve o registro central sem lease.",
+      "session_completion": "Coordenadoras continuam retomáveis até GLOBAL_RELEASE; builder só libera slot com handoff aceito."
+    },
+    "deduplication": {
+      "key_fields": [
+        "product_candidate_sha",
+        "product_tree_hash",
+        "normalized_request_hash",
+        "workflow_and_validator_source_identity",
+        "effective_runtime_and_config_identity",
+        "fixture_and_test_selection_identity"
+      ],
+      "adopt_inflight": "Somente chave idêntica; registrar solicitantes/critério e preservar run/snapshot originais.",
+      "adopt_complete": "Somente resultado completo para a mesma chave, seleção observada correta, controle omni válido, artefatos íntegros e sem invalidadores posteriores.",
+      "not_reusable_as_pass": [
+        "missing evidence",
+        "BLOCKED",
+        "cancelled",
+        "empty selection",
+        "selection mismatch",
+        "artifact missing",
+        "old candidate with changed source",
+        "unknown dependency impact"
+      ],
+      "no_new_infrastructure": true
+    },
+    "incremental_validation": {
+      "preflight": "WP10.T04 inicia em T0; verificar requests/aliases/executor e iniciar um probe existente válido antes de T25 quando possível, dentro do mesmo dispatcher. Mede somente a seleção observada; não fecha prova de produto futuro.",
+      "trigger": "READY_FOR_INTEGRATION seguido de integração real e confirmação dos produtores/consumidores necessários; não esperar uma hora ou o fim do WP.",
+      "selection": "Testes da mudança + consumidores transitivos dos contratos/ports alterados; unknown amplia seleção ou marca BLOCKED.",
+      "am02_route_ready": [
+        "producer actual output integrated",
+        "bridge/context actual",
+        "profile and skill loaded receipt",
+        "current authorization",
+        "required consumer integrated",
+        "fixture and oracle version identified"
+      ],
+      "am02_inference": "Harness direto autorizado já previsto pode provar chamadas determinísticas com binding e SkillLoadReceipt; não requer uma inferência nova por operação. AM01 continua provando modelo real e todas as contribuições de skills.",
+      "criterion_mapping": "Uma execução pode fornecer múltiplas observações específicas; cada criterion_id mantém expected/observed e evidência concreta. Nenhum pacote verde aprova todas as linhas automaticamente."
+    },
+    "invalidation_matrix": [
+      {
+        "change": "Contratos C01–C17, schema, enum, export ou semântica de port",
+        "incremental": "Produtor, todos consumidores transitivos e provas que dependem desses contratos",
+        "final": "Novo candidato C; seleções obrigatórias e AM afetadas com identidade atual"
+      },
+      {
+        "change": "Motor financeiro, inventário de custo, confirmação material, FX ou versionamento",
+        "incremental": "Oráculos financeiros/CONFIRM-SCOPE, Planner, BI, Procurement/decisão/portfólio e rotinas consumidoras",
+        "final": "CI-SF e consumidores obrigatórios; AM01/AM02/AM04/AM06 conforme dependência; matriz final integral preservada"
+      },
+      {
+        "change": "Identity/access, binding, MCP bridge, capabilities, source revocation ou incarnation",
+        "incremental": "Todos caminhos de entrada e egress atingidos; positivos e negativos; UI, export, fonte, Atlas e MCP",
+        "final": "Requalificar AM02/AM03 e demais AM que atravessam a fronteira alterada; desconhecido invalida todas"
+      },
+      {
+        "change": "Profile/skill source, workflow, template ou carregamento",
+        "incremental": "Witnesses das skills e perfis alterados, grants, outputs e consumidores; reviewer se sua independência/inputs mudaram",
+        "final": "AM01 e rotas AM02/AM06 atingidas; provar digests atuais no mesmo C"
+      },
+      {
+        "change": "Atlas generator, entry, artifacts, scanner linkage, schema, store, resolver ou outbox",
+        "incremental": "Generate/check:generated/typecheck/spawn, boundary suite e consumidores; scanner/restart/idempotency/ACL quando afetados",
+        "final": "CI-ATLAS-BUSINESS e AM05; AM03 e demais consumidores conforme dependência"
+      },
+      {
+        "change": "UI shell, shared component, route, styling, keyboard ou viewport behavior",
+        "incremental": "APP-SRC/APP-BROWSER pertinentes e Playwright de todos consumidores; estados, acessibilidade e regressões visuais afetados",
+        "final": "As seleções finais completas continuam obrigatórias; alteração puramente visual não invalida aritmética imutável como nova observação, mas não dispensa o candidato final"
+      },
+      {
+        "change": "Fixture, oracle, test source, request args ou selection config",
+        "incremental": "Reexecutar seleção correspondente; resultado anterior não testa a nova asserção ou fixture",
+        "final": "Proibir união de seleções parciais como se uma seleção completa tivesse executado"
+      },
+      {
+        "change": "Root lock/package, module resolver, compiler, runtime, workflow ou test validator",
+        "incremental": "Expandir por dependências e ambiente efetivo; unknown => expansão conservadora",
+        "final": "Reestabelecer requests, geração/typecheck e seleções obrigatórias sob configuração observada"
+      },
+      {
+        "change": "Modelo, scanner binário, política de acesso ou estado externo usado na prova",
+        "incremental": "Requalificar provas live afetadas e registrar identidade/versão atual; cache de código não prova estado externo",
+        "final": "AMs e gate ambiental pertinentes em C; nenhum segredo no request"
+      },
+      {
+        "change": "Recibo/parecer puramente evidencial dentro de paths previamente admitidos",
+        "incremental": "Conferir integridade e diff; não reexecutar produto pela gravação da própria evidência",
+        "final": "Somente pela regra explícita C→D: C permanece candidato testado, D arquiva evidência; guards em D. Qualquer mudança fora do envelope cria C novo"
+      }
+    ],
+    "review_flow": {
+      "event_fields": [
+        "finding_id",
+        "candidate_sha",
+        "criterion_ids",
+        "reproduction",
+        "affected_paths",
+        "owner",
+        "severity"
+      ],
+      "dispatch": "Ao demonstrar o achado, sem esperar parecer consolidado ou T95; S0 encaminha ao escritor ativo com lease.",
+      "correction": "Writer devolve commit, classificação do delta, testes afetados e evidência; revisor independente reavalia delta e bordas.",
+      "window_rule": "95–103 continua reserva para correções tardias, não barreira para começar; 103–118 mantém rechecagem final.",
+      "independence": "Reviewer não escreve produto; nova autoria requer substituição em slot realmente livre.",
+      "stop": "Sessões coordenadoras só encerram após handoff aceito e liberação global de S0. Nenhum bloqueio isolado encerra trabalho autorizado restante."
+    }
+  }
 }

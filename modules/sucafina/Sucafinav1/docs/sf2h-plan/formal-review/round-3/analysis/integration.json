@@ -1,0 +1,108 @@
+{
+  "proposal_id": "SF-SPEED-INTEGRATION",
+  "status": "PROPOSED",
+  "source_commit": "0aa2405bb3668314f60d6a674d2bd53fd5003091",
+  "source_sha256": "aaba00217ac1978860853fb0c72748b1b275fe4ee4d3b998c42a9f730dfe98a2",
+  "implementation_test_status": "NOT_RUN",
+  "measurements": {
+    "unit": "UTF-8 bytes; not tokens or measured latency",
+    "mandatory_documents_per_session": 15,
+    "mandatory_bytes_per_session_before_wps": 2598019,
+    "mandatory_bytes_five_sessions_before_wps": 12990095,
+    "campaign_bytes": 1416545,
+    "proof_map_bytes": 596228,
+    "illustrative_base_wp_slice_min_bytes": 92415,
+    "illustrative_base_wp_slice_max_bytes": 186628,
+    "slice_limit": "Illustrative slices omit actor-specific runtime/proof/source appendices; not complete execution packs or a speed claim.",
+    "receipt": "context-volume-measurement.json"
+  },
+  "findings": [
+    {
+      "id": "SPD-I01",
+      "paths": ["prompts/S0.md:Leitura obrigatória", "prompts/S1.md:Leitura obrigatória", "tools/render_plan.py:prompt_markdown"],
+      "observation": "All five prompts require fifteen full documents including the canonical source and repeated projections, then their WPs.",
+      "change": "Generate COMMON plus exact actor/session packs from canonical selectors. Preserve full criteria and cross-cutting invariants without requiring duplicate representations."
+    },
+    {
+      "id": "SPD-I02",
+      "paths": ["campaign.json:prompt_sections", "tools/render_plan.py:prompt_markdown", "prompts/S0.md:Sua orquestração"],
+      "observation": "replace_section and body appear as literal headings, and generic orchestration is duplicated with specific orchestration.",
+      "change": "Use replacement semantics in the generator and emit one operational section per session."
+    },
+    {
+      "id": "SPD-I03",
+      "paths": ["campaign.json:source_receipts", "campaign.json:resident_source_evidence", "campaign.json:baseline"],
+      "observation": "Primary API/source receipts exist but the initial reading path does not offer a small reusable discovery index.",
+      "change": "Generate source index keyed by repo/commit/path/blob/question. Writers still inspect changed source and dependencies; runtime authorization/capacity cannot be cached as static facts."
+    },
+    {
+      "id": "SPD-I04",
+      "paths": ["campaign.json:consumption_map", "ownership.json", "output-handoffs.json", "campaign.json:execution.integration_cadence"],
+      "observation": "Producer ownership and incremental handoffs already exist; a second conceptual framework would duplicate planning. Checkpoint wording can be operationalized without waiting for entire WPs.",
+      "change": "Generate producer reuse index and deduplicated integration queue. Consume identified increments, preserving S0 windows, owner boundaries and real-producer acceptance."
+    },
+    {
+      "id": "SPD-I05",
+      "paths": ["campaign.json:timebox.sessions", "campaign.json:execution.communication", "campaign.json:execution.concurrency"],
+      "observation": "The five-session roster is not evidence of five independent sessions actually created by one supervisor. A four-slot collaboration tree cannot be multiplied by nesting.",
+      "change": "Compile an attributed supervisor/session/job launch protocol, require observed capacity scope and transport, and distinguish Git ledger from a session creation mechanism."
+    }
+  ],
+  "context_compiler": {
+    "implementation": "Extend the existing render_plan.py; no new orchestration runtime",
+    "artifacts": ["execution/COMMON.md", "execution/manifest.json", "execution/sessions/S0.md..S4.md", "execution/jobs/<job-id>.json", "execution/jobs/<job-id>.md", "execution/sources.json"],
+    "common_full_fields": ["mission", "product_promise", "scope", "axiom_semantics", "axioms", "semantic_decisions", "execution ownership/authorization/stop/review rules"],
+    "actor_pack_fields": [
+      "source_commit", "campaign_sha256", "compiler_version", "selector_pointers", "pack_digest",
+      "job_id", "session_id", "actor_id", "branch", "lease_generation", "write_paths", "read_only_paths", "excluded_paths",
+      "all assigned tasks with complete local axioms/checks", "complete five-family axioms of assigned WPs",
+      "full contracts read/provided and relevant dependency exports", "incoming/outgoing handoffs and exact consumer targets",
+      "relevant coverage rows, numeric oracles and proof-map rows", "proof owners and current candidate requirements",
+      "relevant resident profiles/skills/grants/runtime invariants", "actor allocation and slot lifecycle",
+      "required AGENTS/source paths", "checkpoint/recovery/finish rules"
+    ],
+    "reviewer_pack_rule": "Scope includes assigned complete review surface and cross-boundary sources; do not limit reviewers to writer-owned files or inherit other reviewers' conclusions.",
+    "validation": ["Exact deterministic mirror check", "All 74 tasks assigned to valid writer leases", "All five axiom families preserved at campaign/WP/task", "All relevant criteria and dependency sources reachable", "Hash and selector integrity", "No truncation to meet byte budgets"],
+    "size_rule": "Report measured generated bytes; split large packs by declared phase/job with a complete index, never truncate criteria."
+  },
+  "supervisor_protocol": {
+    "default": "S0 plus S1-S4; S0 keeps its existing integration allocation; no sixth coordinator",
+    "parameter_n": "N requires a validated roster/task/lease/slot schedule against observed backend capacity; not an automatic speed multiplier",
+    "admission": ["planning/code SHA pinned", "actual session creation capability", "global vs per-session slot scope", "observed instance IDs and launch acknowledgements", "tool/access availability without new corporate access", "all writers/tasks attributed"],
+    "launch_payload": ["campaign", "planning_sha", "code_sha", "job_id", "attempt_id", "session_id", "actor_id", "assigned WPs/tasks", "branch", "lease generation/path set", "context pack digests", "inputs/outputs/checkpoints", "proof responsibilities", "finish/recovery rules"],
+    "transport": "Use native thread lifecycle/events only when exposed and observed. GitHub remains durable receipts/commits; it is not a mechanism for creating sessions.",
+    "capacity_warning": "Current collaboration tree advertises four total slots including root; child nesting does not establish twenty independent slots.",
+    "no_choice": "Executors receive fixed identity and assignments; do not choose a slice or compete for common files."
+  },
+  "deduplication": {
+    "immutable_discovery_key": ["repository", "commit", "path", "blob_sha", "question"],
+    "handoff_consumption_key": ["campaign", "job_id", "lease_generation", "output_id", "producer_sha", "contract_digest"],
+    "single_producers": [
+      {"kind": "Shared UI/states", "owner": "WP01.T02/T03"},
+      {"kind": "Financial calculations/projections", "owner": "WP03"},
+      {"kind": "Eight-chart presentation/catalog", "owner": "WP05"},
+      {"kind": "Parse/normalization", "owner": "WP06.T01"},
+      {"kind": "Document extraction/evidence", "owner": "WP06.T05"},
+      {"kind": "Runtime/skill/MCP bridge", "owner": "WP10.T06 with WP12 manifests"},
+      {"kind": "Host/storage/Atlas composition", "owner": "WP10.T01/T07"}
+    ],
+    "reuse_limit": "Shared structure and existing modules only; preserve operation-specific handlers/semantics, distinct skill content and all positive/negative proof routes. No new business DSL or fake generic adapter.",
+    "integration": "S0 one queue, within existing time allocation; critical native handoffs first; batch by consumable increment, not checklist row; do not delay 13/14/15/16 native handoffs for larger batches.",
+    "acceptance": "Fixtures permit isolated construction only; no final acceptance until real producers and consumers are integrated."
+  },
+  "recovery": {
+    "checkpoint_fields": ["head", "tasks complete/pending", "inputs received", "outputs produced", "contract digests", "lease and generation", "proof candidate and observations", "blocker", "next action"],
+    "event_policy": "Update on material state change and required checkpoint; avoid repeated narrative and full-plan copies.",
+    "transfer": "Silence is not proof of death. Close/fence the previous writer through supported mechanisms before granting a new lease. Continue disjoint work when liveness is uncertain.",
+    "resume": "Read checkpoint and delta from received head; preserve accepted work, revalidate affected facts, continue remaining tasks without broad restart."
+  },
+  "axioms": {
+    "dod": ["Generated prompts/packs are attributed, hashed and checked; every task has executable writer, outputs, consumer and receipt; all original criteria remain complete."],
+    "invariants": ["Single canonical source; full scope and gates; one writer per path; observed capacity; current authorization; real-runtime acceptance; independent reviewers; no inherited PASS across unproven changes."],
+    "quality_standards": ["Direct prompts with no implementation-key headings; exact producer/consumer/export; immutable reuse is hashed; communicate change/impact/next step; avoid new abstractions unless required."],
+    "completeness_criteria": ["Preserve 74 tasks, five axiom families, all leases, 19 handoffs, 18 skills, 39 routes, six resident proofs and relevant cross-boundary invariants."],
+    "success_criteria": ["Measure actual reading volume, repeated discovery, duplicate receipts, ready-to-consumed latency, writer conflicts and coordination time; target zero duplicated producers/integrations/collisions; claim minute savings only after observation."]
+  },
+  "remaining_uncertainties": ["Actual native independent-session spawning and capacity", "Final pack sizes after all specific appendices", "Measured runtime/CI/model/Atlas latency", "Actual implementation effort; no two-hour guarantee is established by this proposal"],
+  "source_modified": false
+}

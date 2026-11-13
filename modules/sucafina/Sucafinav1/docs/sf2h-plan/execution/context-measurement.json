@@ -1,0 +1,109 @@
+{
+  "scope": "UTF-8 document bytes, not tokens, latency or implementation savings. Original fifteen shared docs exclude additional WP and code reads; new bound includes prompts, common, packs, full operational references/appendices and source index, but also excludes actual code reads and additional evidence-dependent expansion.",
+  "baseline_commit": "0aa2405bb3668314f60d6a674d2bd53fd5003091",
+  "plan_sha256": "044c729f37c055bf81c1cf4832ad37ffcd96b77834e0c725b6a0da51c1a4421d",
+  "original_five_session_shared_reading_bytes": 12990095,
+  "new_five_session_conservative_startup_bytes": 3392562,
+  "new_core_common_and_packs_bytes": 2334578,
+  "reduction_bytes": 9597533,
+  "reduction_pct": 73.88,
+  "per_session": [
+    {
+      "actor": "S0",
+      "files": [
+        "WORKFLOW.md",
+        "execution-workflow.json",
+        "execution/COMMON.md",
+        "execution/actors/S0.json",
+        "execution/manifest.json",
+        "execution/sources.json",
+        "formal-review/README.md",
+        "prompts/S0.md",
+        "specs/atlas-packaging.md",
+        "specs/execution-reconciliation.md",
+        "specs/product-acceptance.md",
+        "specs/resident-runtime.md"
+      ],
+      "bytes": 787428,
+      "core_common_and_pack_bytes": 570066
+    },
+    {
+      "actor": "S1",
+      "files": [
+        "WORKFLOW.md",
+        "execution-workflow.json",
+        "execution/COMMON.md",
+        "execution/actors/S1.json",
+        "execution/manifest.json",
+        "execution/sources.json",
+        "formal-review/README.md",
+        "prompts/S1.md",
+        "specs/execution-reconciliation.md",
+        "specs/product-acceptance.md",
+        "specs/resident-runtime.md"
+      ],
+      "bytes": 641219,
+      "core_common_and_pack_bytes": 437152
+    },
+    {
+      "actor": "S2",
+      "files": [
+        "WORKFLOW.md",
+        "execution-workflow.json",
+        "execution/COMMON.md",
+        "execution/actors/S2.json",
+        "execution/manifest.json",
+        "execution/sources.json",
+        "formal-review/README.md",
+        "prompts/S2.md",
+        "specs/atlas-packaging.md",
+        "specs/execution-reconciliation.md",
+        "specs/product-acceptance.md",
+        "specs/resident-runtime.md"
+      ],
+      "bytes": 753896,
+      "core_common_and_pack_bytes": 537723
+    },
+    {
+      "actor": "S3",
+      "files": [
+        "WORKFLOW.md",
+        "execution-workflow.json",
+        "execution/COMMON.md",
+        "execution/actors/S3.json",
+        "execution/manifest.json",
+        "execution/sources.json",
+        "formal-review/README.md",
+        "prompts/S3.md",
+        "specs/execution-reconciliation.md",
+        "specs/product-acceptance.md",
+        "specs/resident-runtime.md"
+      ],
+      "bytes": 689359,
+      "core_common_and_pack_bytes": 485380
+    },
+    {
+      "actor": "S4",
+      "files": [
+        "WORKFLOW.md",
+        "execution-workflow.json",
+        "execution/COMMON.md",
+        "execution/actors/S4.json",
+        "execution/manifest.json",
+        "execution/sources.json",
+        "formal-review/README.md",
+        "prompts/S4.md",
+        "specs/atlas-packaging.md",
+        "specs/execution-reconciliation.md",
+        "specs/product-acceptance.md",
+        "specs/resident-runtime.md"
+      ],
+      "bytes": 520660,
+      "core_common_and_pack_bytes": 304257
+    }
+  ],
+  "all_23_actor_packs_bytes": 8097518,
+  "pack_min_bytes": 204802,
+  "pack_max_bytes": 524987,
+  "implementation_test_status": "NOT_RUN"
+}

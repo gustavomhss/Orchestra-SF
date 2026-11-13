@@ -1,18 +1,17 @@
-# Iniciar a campanha integral
+# Iniciar pela supervisora
 
-O plano e os cinco prompts estão versionados no mesmo diretório. Use o SHA do candidato de planejamento aprovado indicado em formal-review/README.md; não misture documentos de commits diferentes.
+Entregue à sessão **S0** o [prompt da supervisora](prompts/S0.md), fixado no mesmo commit aprovado de todos os artefatos. Ela controla o [workflow S0+N](WORKFLOW.md), distribui os jobs, acompanha outputs, integra e fecha a campanha.
 
-1. Leia [CAMPAIGN.md](CAMPAIGN.md) e o [estado da revisão](formal-review/README.md).
-2. Abra cinco conversas e entregue o link fixado no SHA do prompt de cada sessão.
-3. S0 registra T0, confirma a capacidade real e integra; S1–S4 confirmam sua identidade e iniciam seus três builders.
-4. Siga os gates e alocações de schedule.json. As cinco famílias de axiomas valem na campanha, em cada WP e em cada task.
+O preset de duas horas usa **S0 + N=4 sessões S1–S4**, até vinte slots contando cinco coordenadoras. Sua admissão exige capacidade real: a árvore collaboration de quatro slots globais não se multiplica por nesting. Criação/retomada automática usa somente capacidades efetivamente expostas. Sem launcher, o modo assistido exige iniciar as conversas atribuídas; Git mantém o ledger e não as desperta.
 
-| Sessão | Prompt |
+| Sessão | Entrada atribuída |
 | --- | --- |
-| S0 — integração | [S0.md](prompts/S0.md) |
-| S1 — interface, Dashboard, Planner | [S1.md](prompts/S1.md) |
-| S2 — Procurement, BI, documentos | [S2.md](prompts/S2.md) |
-| S3 — reuniões, colaboração, rotinas | [S3.md](prompts/S3.md) |
-| S4 — decisões, IA, portfólio, memória | [S4.md](prompts/S4.md) |
+| S0 — supervisão, integração, runtime e Atlas | [S0.md](prompts/S0.md) |
+| S1 — interface, Dashboard e Planner | [S1.md](prompts/S1.md) |
+| S2 — Procurement, BI e documentos | [S2.md](prompts/S2.md) |
+| S3 — reuniões, colaboração e rotinas | [S3.md](prompts/S3.md) |
+| S4 — decisões, IA, portfólio e memória | [S4.md](prompts/S4.md) |
 
-As páginas de origem em pages.json são histórico opcional. O conjunto executável está neste repositório. A publicação do plano não inicia a implementação automaticamente.
+Cada ator lê [COMMON](execution/COMMON.md) e seu [pack completo com hash](execution/manifest.json). A fonte continua canônica; os packs preservam as tarefas, axiomas e contratos pertinentes e dispensam a releitura integral de seus espelhos. Fontes e dependências reais continuam obrigatórias antes da alteração de código.
+
+S0 registra T0 antes do setup e do lançamento. Os checkpoints são cumulativos, não barreiras: outputs, provas e achados fluem assim que prontos. Não reinicie o relógio nem reduza o escopo se120 minutos não bastarem. A implementação só começa quando este workflow for executado; a publicação do plano não a inicia.

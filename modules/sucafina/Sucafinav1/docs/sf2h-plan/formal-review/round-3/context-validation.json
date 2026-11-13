@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "plan_sha256": "044c729f37c055bf81c1cf4832ad37ffcd96b77834e0c725b6a0da51c1a4421d",
+  "derived_artifacts": 100,
+  "coverage": {
+    "work_packages": 15,
+    "tasks": 74,
+    "actors": 23,
+    "criteria": 1610,
+    "handoffs": 19,
+    "skills": 18,
+    "operations": 39
+  },
+  "controls": [
+    {
+      "case": "A task writer changes without updating its explicit job map",
+      "result": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "case": "An actor is added without a complete assignment",
+      "result": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "case": "The control branch changes outside the explicit mapping",
+      "result": "REJECTED_AS_EXPECTED"
+    }
+  ],
+  "same_criterion_ids_as_v31": true,
+  "scope_contracts_resident_manifests_preserved": true,
+  "implementation_test_status": "NOT_RUN"
+}

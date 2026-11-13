@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "sf2h-integral-20261112",
   "title": "Campanha integral de produto Orchestra SF em duas horas",
-  "version": "3.1",
+  "version": "3.2",
   "authored_at": "2026-11-12",
   "status": "PLANNED",
   "repository": "gustavomhss/Orchestra-SF",
@@ -21,7 +21,7 @@
   },
   "mission": "Entregar integralmente o produto Orchestra SF: 28 capacidades existentes, 41 requisitos originais, 18 capacidades de IA, BI, imports, reuniões, exportações, colaboração, rotinas, casos de decisão, portfólio, documentos e memória. Inclui cinco perfis residentes, dezoito skills, um MCP Sucafina com oito packs e 39 operações, além do Atlas SF Business Profile v1. Janela alvo de 120 minutos, com paralelização explícita e sem retirar escopo ou substituir capacidades por demonstrações.",
   "product_promise": "André e o time expressam intenção, investigam evidências, comparam consequências, esclarecem o que falta, registram escolhas, executam pelos fluxos existentes e reavaliam mudanças relevantes sem reconstruir contexto.",
-  "planning_status": "Plano integral reconciliado. O estado da revisão independente está em formal-review/README.md. Implementação e provas de produto permanecem PLANNED/NOT_RUN.",
+  "planning_status": "Plano integral com workflow S0+N e execução acelerada. O estado da revisão deste delta está em formal-review/README.md. Implementação e provas de produto permanecem PLANNED/NOT_RUN.",
   "unit_definition": "Task/step é a mesma unidade atômica. Os itens de work são instruções de execução dentro dessa unidade, não subtarefas autônomas. Ao desmembrar uma task, criar novos IDs e os cinco grupos locais de axiomas antes de distribuir o trabalho.",
   "scope": {
     "included": [
@@ -73,12 +73,12 @@
       },
       {
         "id": "CAMP.DOD.03",
-        "text": "Três revisões independentes reconciliadas; nenhum achado obrigatório aberto; checks requeridos válidos para o candidato final e evidência recuperável.",
+        "text": "Três revisões independentes reconciliadas; nenhum achado obrigatório aberto; checks requeridos válidos para o candidato final de produto C e evidência recuperável. A entrega D satisfaz integralmente o envelope evidencial e seu guard, sem reatribuir a D execuções realizadas em C.",
         "status": "NOT_RUN"
       },
       {
         "id": "CAMP.DOD.04",
-        "text": "As verificações exigidas pelo repositório e a cobertura de paridade estão válidas para o candidato final; o guia por papel, a demonstração e os limites materiais estão entregues.",
+        "text": "As verificações exigidas pelo repositório e a cobertura de paridade estão válidas para o candidato de produto C; o guia por papel, a demonstração e os limites materiais estão incluídos nele. D somente arquiva a evidência admitida, com verificação e guard próprios.",
         "status": "NOT_RUN"
       },
       {
@@ -1475,17 +1475,17 @@
     {
       "minute": 103,
       "gate": "G6",
-      "condition": "Último candidato corrigido congelado, se houve alteração; disparar gates cumulativos exigidos e repetições live afetadas com recibo do candidato. Se candidato G4 não mudou, não criar commit artificial para reiniciar provas."
+      "condition": "Último candidato corrigido de produto C congelado, com guia/roteiro/changelog normativos já incluídos; se houve mudança de produto, disparar gates cumulativos exigidos e provas pertinentes do C aceito. Se C de G4 não mudou, não criar commit artificial para reiniciar provas. Adições posteriores somente evidenciais são tratadas como D pelo envelope, nunca como reatribuição de resultados."
     },
     {
       "minute": 118,
       "gate": "G7",
-      "condition": "Receipts completos para o candidato aceito: seleções distintas app/src e app/test-browser, Atlas boundary, demais suites obrigatórias, AM01-AM06, três revisões sem autojulgamento e nenhum achado obrigatório aberto."
+      "condition": "Receipts completos para o mesmo candidato de produto C: seleções distintas app/src e app/test-browser, Atlas boundary, oito seleções mínimas e adicionais obrigatórias, AM01–AM06, guard de C, três revisões sem autojulgamento e nenhum achado obrigatório aberto. Guia/roteiro/changelog normativos já integram C. G7 habilita T05 a formar D; seu envelope e guard são exigidos em G8."
     },
     {
       "minute": 120,
       "gate": "G8",
-      "condition": "Emitir aceite somente se G7 passar; caso contrário publicar atraso, pendências, próximo ETA, donos e continuação de todo o escopo. Não declarar meta de duas horas cumprida nem encerrar a execução por tempo esgotado."
+      "condition": "Emitir aceite somente após G7 de C e verificação completa de D: C ancestral, diff append-only exclusivamente evidencial nos paths admitidos, inputs de build/test/runtime inalterados, hashes preservados e guard de D aprovado. O receipt interno aponta C; o SHA e o guard de D são publicados no fechamento sem autorreferência. Se qualquer condição faltar, publicar atraso, pendências, ETA, donos e continuar o escopo inteiro; não declarar 120 minutos cumpridos ou encerrar por tempo esgotado."
     }
   ],
   "execution": {
@@ -1499,11 +1499,11 @@
       "VERIFIED",
       "DONE"
     ],
-    "concurrency": "Cinco sessões, quatro slots por sessão incluindo a coordenadora. Até vinte atores totais; coordenadora que escreve não coordena/revisa simultaneamente. actor_allocations e leases são normativos.",
-    "integration_cadence": "Receber incrementos por interface em T+25, T+40, T+55 e T+75. Uma fila de integração e um escritor na branch final; recibo e prova vinculados ao SHA.",
+    "concurrency": "Preset S0 supervisora + N=4 sessões S1–S4, até quatro slots por sessão incluindo coordenadora, somente após confirmação de pools independentes e limite global real. São até vinte atores, nunca vinte builders. A árvore collaboration atual tem quatro slots globais e não satisfaz esse preset por aninhamento. N diferente exige nova alocação completa e validação antes da admissão.",
+    "integration_cadence": "Integração por output pronto dentro da alocação de S0. AI-NATIVE13, NATIVE-CASE14, NATIVE-PLANNER15 e NATIVE-RUNTIME16 são recebidos e compostos entre16 e18, antes de GNATIVE. T25/40/55/75 são checkpoints cumulativos, nunca barreiras para integrar incrementos consumíveis. Uma fila e um escritor da branch integradora; recibos por SHA.",
     "ownership_rule": "Um escritor por arquivo em cada instante. WP é owner lógico; lease de ator/path/intervalo define o escritor efetivo. S0 é única escritora da branch integradora e integra commits dos outros writers, sem reescrever seus arquivos. Transferência exige SHA recebido, janela fechada pelo anterior e aceite do próximo.",
     "contract_change": "S0 publica qualquer mudança de contrato com versão, compatibilidade, consumidores afetados e provas invalida das. Stub é somente scaffolding temporário.",
-    "finding_policy": "Capacidade aceita ausente, violação de invariante ou achado obrigatório aberto impede conclusão. O autor corrige sua fronteira; revisor independente confirma a correção.",
+    "finding_policy": "Publicar achado reproduzido imediatamente e encaminhar ao writer com lease vigente; não esperar o parecer completo ou T95. Autor corrige sua fronteira e revisor independente confirma. Janelas95–103 são reserva de correções tardias. Ausência de capacidade ou achado obrigatório aberto impede conclusão, mas não encerra trabalho autorizado independente.",
     "repo_policy": "GitHub MCP para operações remotas; sem gh, login ou token novo. Testes do repositório somente em GitHub Actions. Typecheck usa o script do pacote e guards seguem AGENTS. Não atribuir sucesso a prova não executada.",
     "source_change": "Baseline de código permanece 9e4f3d35833f9b2cea6abdf58f42331f3973d9bf. Em T0, ler dev e comparar a footprint; o avanço observado para f08941a346ef0d072dff8e67e49823505ad7a12e (registro do integrador) envolve Azure/workflows e não autoriza alterar cloud. Se for adotada uma árvore mais nova, reconciliar .github/workflows/test-ci.yml, validators/registry e recipes com SHA fixado antes de enviar requests. Código core/Atlas/SF/CLI não é declarado mudado por associação. Comparar contra a baseline explícita e proteger o writer cloud.",
     "executor_receipt": [
@@ -1516,11 +1516,97 @@
       "achados, risco, minutos usados e ETA",
       "ownership e reviewer sem autoria"
     ],
-    "communication": "Subagentes da mesma conversa usam colaboração local. Entre conversas, usar recibos versionados no Git e manifesto da integradora; não presumir um bus entre sessões.",
+    "communication": "Eventos locais de colaboração e adapter real de lifecycle/mensagens entre sessões quando exposto. GitHub mantém heads e recibos duráveis. Sem adapter, lançamento assistido e leitura agrupada dos heads enquanto as conversas estão ativas; Git não cria nem desperta sessões. S0 segue execution_workflow e não confunde ausência de atualização com sessão encerrada. S0 escreve o ledger transitório em sf2-control. Essa branch nunca se torna base CI nem é mergeada em C/D; os snapshots descendem do C explícito. Para D, incorporar somente blobs evidenciais admitidos com proveniência, nunca merge completo de branch de controle/harness.",
     "stop_rule": "Não encerrar no primeiro bloqueio: registrar causa, dono, impacto e evidência, continuar todo o trabalho autorizado restante. READY_FOR_INTEGRATION não é DONE.",
     "review_independence": "Três agentes novos sem autoria: S1-R1 produto/UX, S2-R2 semântica/integridade, S3-R3 IA/MCP/Atlas/Relay/documentos. Iniciam em slots libera dos após encerrar S1-B/S2-B em 72 e S3-A em 75. Não escrevemproduto; writers ativos corrigem. S1/S2/S3 recebem leases de WP02/WP05/WP07, portanto não são reviewers. Pareceres registramauthorship exclusions: se um reviewer passar a autor, encerrar julgamento e substituí-lo emslot livre real antes de aceite.",
     "timebox_replan": "G2H é obrigação de recalcular, não licença de terminar parcialmente. Medir trabalho remanescente e cadeia de recursos; realocar somente por lease e capacidade liberada. Frentes prontas ajudam provas/correções de arquivos disjuntos. Se 120 não couber, continuar o mesmo escopo e gates com ETA observado.",
-    "reviewer_start": "Revisãofresh inclui leitura no orçamento 72/75-95. Inspeções 55-75 porautores/coordenadores são preparação e detecção precoce, nunca substituem os 3 pareceres."
+    "reviewer_start": "Revisãofresh inclui leitura no orçamento 72/75-95. Inspeções 55-75 porautores/coordenadores são preparação e detecção precoce, nunca substituem os 3 pareceres.",
+    "candidate_delivery": {
+      "product_candidate_symbol": "C",
+      "delivery_symbol": "D",
+      "normative_meaning": "Candidato final, candidato aceito, mesmo candidato e SHA final de produto significam C nesta campanha. D é o commit que arquiva a evidência de C sob este envelope, sem alegação de que os testes de C executaram em D. Gates de guard identificam explicitamente C ou D.",
+      "C_definition": "Commit congelado com todo código, testes, fixtures, configuração, manifests, skills/prompts, contratos, assets e guias normativos/roteiro/changelog de produto a aceitar. As oito seleções CI mínimas, adicionais obrigatórias do epic, AM01–AM06 e três pareceres de produto referem-se ao mesmo C. Qualquer correção material cria C novo e reabre as obrigações pertinentes; recibos antigos conservam sua identidade.",
+      "D_definition": "Descendente de C que apenas acrescenta novos arquivos evidenciais admitidos. O produto e seus inputs de build, geração, teste e runtime permanecem exatamente os de C. Nenhum arquivo anterior é editado, removido, renomeado, copiado para substituir outro ou tem seu modo alterado.",
+      "allowed_addition_prefixes": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP00/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP09/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/"
+      ],
+      "reviews_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/",
+      "delivery_receipt_owner": "WP10.T05/S0",
+      "allowed_extensions": [
+        ".json",
+        ".md",
+        ".txt"
+      ],
+      "allowed_file_mode": "100644",
+      "allowed_content": "Somente dados UTF-8 de recibo, parecer e estado de execução, com hashes/IDs/observações autorizadas. Não executar conteúdo desses arquivos. Nenhum segredo ou dado empresarial sem autorização é arquivado.",
+      "path_policy": "Normalizar e comparar paths completos da árvore Git; exigir prefixo receipts exato com slash final ou um path control da lista FINITA previamente alocada para esse C/instância. Proibir symlink, submodule, executável, traversal, ambiguidade e extensão diferente. O template delivery não concede o prefixo control inteiro. Pareceres permanecem em receipts/WP10/reviews/.",
+      "writer_policy": "Cada prefixo receipts/WPxx conserva writer/lease e WP. S0 incorpora somente blobs evidenciais recebidos, com source commit/path/blob hash, sem reescrita e sem merge completo de branches. S0/T05 aloca e escreve os receipts control exatos; sf2-control nunca é mergeada ou usada como base CI.",
+      "append_only_receipts": "Escrever observações intermediárias em paths únicos por execução/candidato dentro do prefixo já possuído. Reservar os destinos canônicos de fechamento para sua primeira publicação; se já existirem, preservá-los e acrescentar novo arquivo versionado, apontado pelo índice de entrega. Nunca atualizar um recibo antigo para aparentar resultado de C. Em retries de entrega, alocar um novo path exato; preservar tentativas anteriores admitidas. Nenhuma atualização do receipt antigo.",
+      "verification": [
+        "Confirmar C ancestral de D e obter diff Git completo C→D sem truncamento, incluindo status, path, tipo, modo e blob SHA. Um simples filtro dos arquivos exibidos não basta.",
+        "Exigir somente adições de arquivos novos nos prefixos receipts enumerados ou na lista finita de paths control previamente alocados para o mesmo C/instância. Conferir registro de alocação por SHA, parent esperado e ausência do novo path antes da tentativa; conferir conteúdo, extensão e modo. Rejeitar qualquer mudança fora do envelope.",
+        "Confirmar todos os blobs existentes de C inalterados em D e registrar seus hashes/árvore. Conferir que nenhum novo arquivo é input de import, glob, bundle, registry, geração, seleção de teste ou runtime; dependência desconhecida ou uso detectado rejeita o envelope.",
+        "Conferir hashes dos novos recibos, referências aos runs/snapshots reais, seleção observada e candidato C. O delivery receipt indexa os artefatos; não altera seus SHAs de origem.",
+        "Executar bun run check:guards --base origin/dev no checkout real de C para G7 e no checkout real de D para G8, preservando configuração e regras. Guard de C não é registrado como se fosse guard de D.",
+        "Somente aceitar D após envelope, proveniência e guard de D passarem. Se qualquer condição falhar, rejeitar D como entrega evidencial, classificar a alteração e produzir/requalificar novo C quando houver mudança de produto."
+      ],
+      "delivery_receipt_fields": [
+        "campaign_id",
+        "product_candidate_sha",
+        "product_tree_hash",
+        "evidence_index_with_paths_and_hashes",
+        "ci_run_and_request_refs",
+        "integrated_proof_refs",
+        "independent_review_refs",
+        "envelope_policy_version",
+        "observed_limits",
+        "execution_instance",
+        "delivery_attempt",
+        "allocation_record_commit",
+        "previous_attempt_refs"
+      ],
+      "self_reference_rule": "O receipt dentro de D não grava seu próprio SHA de D nem seu próprio hash ou o resultado de um guard posterior. D é identificado pelo commit que contém o receipt; seu blob hash vem da árvore Git. Depois de verificar D, S0 publica SHA/resultado/recibo externo do guard no fechamento, sem editar D apenas para anotar o próprio resultado. O índice interno não se inclui em sua própria lista de hashes.",
+      "normative_docs": "WP10.T01/S0 integra guia por papel, roteiro e changelog de produto em modules/sucafina/Sucafinav1/README.md antes do freeze de C. Reserva S0 55–60 para essa consolidação; 60–75 para consumidores tardios e ajustes documentais afetados. São reservas não medidas; atraso é registrado em G2H. WP10.T05 consome esses documentos e arquiva evidência, sem criar guia normativo em D.",
+      "scope_rule": "O envelope não dispensa gate, capacidade, revisão ou prova. Oito seleções mínimas + adicionais, seis AM e critérios continuam obrigatórios no mesmo C; D não é um atalho de aceitação de outro produto.",
+      "delivery_receipt_template": "modules/sucafina/Sucafinav1/docs/sf2h/control/delivery/<execution_instance>/attempt-<positive_integer>.json",
+      "exact_delivery_receipt_allocation": {
+        "policy": "S0 resolves a finite list of full exact paths for this C/execution instance. One fresh path per delivery attempt, registered on sf2-control before D creation and fixed by allocation-record commit SHA. The template grants no prefix permission.",
+        "identity_validation": "execution_instance is a nonempty ASCII [a-z0-9-] identifier; attempt is a positive integer. Normalize and compare full Git paths, reject traversal/symlink/ambiguity.",
+        "fields": [
+          "execution_instance",
+          "product_candidate_sha",
+          "delivery_attempt",
+          "expected_parent_sha",
+          "exact_path",
+          "previous_attempt_refs",
+          "allocated_exact_paths_for_same_C"
+        ],
+        "checks": [
+          "Current exact path absent in expected parent.",
+          "Allocation record commit predates creation of this D; compare ref with expected parent.",
+          "All admitted control additions in complete C→D diff belong to the finite already-allocated list for the same C/instance.",
+          "D2 may preserve D1 evidence only when those prior additions also satisfy the envelope; previous receipts remain byte-identical.",
+          "Product changes, modified old files or forbidden additions cannot be cured by another receipt; explicit correction/requalification is required."
+        ],
+        "no_auto_reference": "Allocation record identifies C/expected parent/path; not the future D SHA. D is identified by the containing commit after creation."
+      }
+    },
+    "context_policy": "Cada ator lê execution/COMMON.md e seu JSON completo em execution/actors, no mesmo commit. São projeções determinísticas da fonte com axiomas completos, contratos pertinentes, leases e provas. Não reler todos os quinze espelhos. Consultar código real e dependências antes de editar; ampliar contexto quando necessário, sem cortar critérios. Os índices são gerados e têm hashes.",
+    "workflow_entry": "START.md → prompts/S0.md → WORKFLOW.md/execution-workflow.json. S0 lança ou reconhece S1–S4 com missões fixas e os builders atribuídos; confirma ACK/roster antes de admitir o preset."
   },
   "evidence": {
     "scope": "18 conjuntos de provas cobrem os axiomas e checks por correspondência explícita. Todos começam NOT_RUN. Não criar uma execução por frase.",
@@ -1595,7 +1681,7 @@
       "reviewer": null,
       "verified_at": null
     },
-    "validity": "CI aponta SHA e run real; interação aponta entrypoint e ator; export contém arquivo e inspeção; rotina contém run/receita/entrada reais. Screenshot sozinho não prova cálculo, permissão ou persistência. Mudança posterior invalida o conjunto de critérios afetado.",
+    "validity": "CI aponta SHA e run real; interação aponta entrypoint e ator; export contém arquivo e inspeção; rotina contém run/receita/entrada reais. Screenshot sozinho não prova cálculo, permissão ou persistência. Mudança posterior invalida o conjunto de critérios afetado. O candidato de produto aceito é C. D somente arquiva novos recibos/pareceres pelo envelope execution.candidate_delivery, com hashes e SHAs originais preservados; nenhum teste de C é declarado executado em D. Mudança fora do envelope cria novo candidato a qualificar. Guard de D é evidência própria de G8.",
     "usability": "Roteiros de 30 segundos e manutenção rápida são metas de aceite em avaliação controlada, não alegação de pesquisa com André. Registrar participante/avaliador, contexto e tempo; separar inferência de observação.",
     "non_engineering_outcomes": "Após uso real autorizado, medir tempo de preparação de revisão, sucesso de tarefas, redigitação, retorno sem refazer contexto e repetição de uso. Não pedir novos acessos nem fazer analytics externo para concluir esta campanha.",
     "packages": [
@@ -1763,7 +1849,7 @@
         "owners": [
           "WP10"
         ],
-        "coverage": "Candidato de produto, snapshot de CI, request, run, jobs e resultado; guias, demo e matriz completa. Candidato→snapshot→request→selection→run/artifacts, manifests/skillhashes/leases e G2 Htemporal.",
+        "coverage": "Candidato de produto, snapshot de CI, request, run, jobs e resultado; guias, demo e matriz completa. Candidato→snapshot→request→selection→run/artifacts, manifests/skillhashes/leases e G2 Htemporal. O fechamento distingue C, candidato de produto testado, de D, descendente somente evidencial: conferir ancestralidade, diff completo, hashes, inputs inalterados e guard de D, sem autorreferência.",
         "status": "NOT_RUN"
       }
     ],
@@ -13002,7 +13088,7 @@
           },
           {
             "id": "WP10.DOD.02",
-            "text": "O commit final possui evidência de CI, comportamento, autorização, visualização e preservação correspondente ao seu conteúdo.",
+            "text": "O candidato de produto C possui evidência de CI, comportamento, autorização, visualização e preservação correspondente ao seu conteúdo. O commit de entrega D arquiva essa evidência e passa a verificação do envelope e seu próprio guard, sem alegar que CI de C executou em D.",
             "status": "NOT_RUN"
           },
           {
@@ -13066,7 +13152,7 @@
           },
           {
             "id": "WP10.QLT.40",
-            "text": "Gates distinguem source shipping, runtime loading, domínio real, CI selection e consumo final no mesmo candidato.",
+            "text": "Gates distinguem source shipping, runtime loading, domínio real, CI selection e consumo final no mesmo candidato. Mesmo candidato significa C; D apenas arquiva provas admitidas e conserva a identidade de cada execução.",
             "status": "NOT_RUN"
           },
           {
@@ -13143,7 +13229,7 @@
             "Criar a ponte autorizada de serviços do host com escopo explícito de projeto/sessão/ator, na composição; não obter credenciais globais dentro do módulo.",
             "Montar as rotas de Hoje/Decisões sem inventar um quarto Surface no contrato existente; resolver acesso antes da leitura e manter as três superfícies canônicas.",
             "Fazer agregação de projeções fora das transações de domínio, mantendo versões por seção. Encaminhar cada mudança pelo comando do seu domínio e confirmar recibos individualmente.",
-            "Integrar incrementos em T+25, T+40, T+55 e T+75. Nenhuma dependência desta task espera todos os WPs completos para começar.",
+            "Integração por output pronto dentro da alocação de S0. AI-NATIVE13, NATIVE-CASE14, NATIVE-PLANNER15 e NATIVE-RUNTIME16 são recebidos e compostos entre16 e18, antes de GNATIVE. T25/40/55/75 são checkpoints cumulativos, nunca barreiras para integrar incrementos consumíveis. Uma fila e um escritor da branch integradora; recibos por SHA.",
             "Fornecer persistência protegida de metadados, revisão de acesso em reload/cache/export e política de importação acordada com WP06/WP11/WP14.",
             "Cada comando preparado leva idempotencyKey e digest de conteúdo/ator/target/encarnação. O adapter WP10 consulta e grava o recibo no MESMO snapshot/commit da mutação daquele domínio. Retry idêntico revalida acesso e retorna o recibo; mesma chave com digest diferente é conflito. O caso central reconcilia recibos depois e pode estar parcialmente atualizado; nunca repetir uma mutação porque a resposta se perdeu.",
             "Prover createSfProductState no namespace protegido __sfProductV1 do snapshot dashboard existente; registrar acesso separado de papéis Dashboard.",
@@ -13151,7 +13237,8 @@
             "Remover namespace privado de business export/JSON import/audit genérico e preservar encarnação/outbox/receipts em migração aditiva.",
             "Não abrir transação de outro surface dentro da transação de metadados; leituras seccionadas conservam tokens de versão/acesso.",
             "Conectar NATIVE-CASE T+14, NATIVE-PLANNER T+15, AI-NATIVE T+13 e NATIVE-RUNTIME T+16 nos roots existentes até 18; S3 executa GNATIVE18-20. Nenhuma execução espera task inteira T06 terminar 45.",
-            "Entregar protected-store C08 em 25 a T07; permanecer único writer de entrypoints/runtime/application.ts/manifests compartilhados. Delegados produzem seus arquivos/branches, não editam esses roots."
+            "Entregar protected-store C08 em 25 a T07; permanecer único writer de entrypoints/runtime/application.ts/manifests compartilhados. Delegados produzem seus arquivos/branches, não editam esses roots.",
+            "S0 consolida guia de tarefas por papel, roteiro de demonstração e changelog de produto no README.md já possuído entre T55 e T60, usando incrementos e evidências dos produtores; entre T60 e T75 integra consumidores tardios e ajusta as instruções afetadas antes do freeze de C. Nenhum guia normativo novo é postergado para o envelope D. Reserva não medida; atraso modifica G2H sem cortar conteúdo."
           ],
           "inputs": [
             "WPs01–09 e WP11–WP14 prontos para integrar",
@@ -13166,7 +13253,8 @@
             "product/host-binding/state-provider.ts#createSfProductState",
             "C09–C17 persistidos/protegidos e import/export compatíveis",
             "NATIVE-COMPOSE T+18: caso/principal reais + AgentV2/skill/ponte/porta Planner/retorno na entrada real do produto.",
-            "PROTECTED-STORE T+25: provider de armazenamento C08 e transação de instalação, entregue a T07 para DurableMemory protegido."
+            "PROTECTED-STORE T+25: provider de armazenamento C08 e transação de instalação, entregue a T07 para DurableMemory protegido.",
+            "modules/sucafina/Sucafinav1/README.md: guia por papel, roteiro sintético e changelog de produto integrados até T75 e incluídos no candidato C; consumidos por WP10.T05 sem reescrita normativa em D."
           ],
           "depends_on": [],
           "checks": [
@@ -13215,7 +13303,7 @@
             "dod": [
               {
                 "id": "WP10.T01.DOD.01",
-                "text": "As superfícies reais consomem todas as portas e funções da campanha, sem caminhos de produção vazios ou simulados.",
+                "text": "As superfícies reais consomem todas as portas e funções da campanha, sem caminhos de produção vazios ou simulados. O README de uso, roteiro e changelog correspondente estão incluídos em C e disponíveis para T05.",
                 "status": "NOT_RUN"
               },
               {
@@ -13227,7 +13315,7 @@
             "invariants": [
               {
                 "id": "WP10.T01.INV.01",
-                "text": "Composição não altera fórmulas/políticas por conveniência e não escreve arquivos de feature de outro WP.",
+                "text": "Composição não altera fórmulas/políticas por conveniência e não escreve arquivos de feature de outro WP. Guias normativos usam o README já possuído por S0 e não entram como evidência nova em D.",
                 "status": "NOT_RUN"
               },
               {
@@ -13249,7 +13337,7 @@
             "quality_standards": [
               {
                 "id": "WP10.T01.QLT.01",
-                "text": "Mudanças de compatibilidade são aditivas, pequenas e documentadas junto ao consumidor afetado.",
+                "text": "Mudanças de compatibilidade são aditivas, pequenas e documentadas junto ao consumidor afetado. O guia por papel descreve as tarefas e os números do produto, reconciliado com o comportamento integrado antes de congelar C.",
                 "status": "NOT_RUN"
               },
               {
@@ -13261,7 +13349,7 @@
             "completeness_criteria": [
               {
                 "id": "WP10.T01.CMP.01",
-                "text": "Cobrir entrypoint, rotas, handlers, contratos legados, preferências, revisões, relações, imports e rotinas.",
+                "text": "Cobrir entrypoint, rotas, handlers, contratos legados, preferências, revisões, relações, imports e rotinas. Incluir guia por papel, roteiro sintético e changelog de produto em C, cobrindo os incrementos tardios até T75.",
                 "status": "NOT_RUN"
               },
               {
@@ -13278,7 +13366,7 @@
             "success_criteria": [
               {
                 "id": "WP10.T01.SUC.01",
-                "text": "A funcionalidade deixa de depender de abrir páginas isoladas ou scripts de demonstração para existir.",
+                "text": "A funcionalidade deixa de depender de abrir páginas isoladas ou scripts de demonstração para existir. T05 entrega instruções já presentes no candidato testado, sem iniciar outro ciclo de produto apenas para escrever o guia.",
                 "status": "NOT_RUN"
               },
               {
@@ -13335,7 +13423,8 @@
             "Executar J01–J13 com corpus sintético no módulo montado e identidades distintas.",
             "Verificar tarefas com teclado e em 320/768/1440 px, incluindo textos longos, listas densas, dados ausentes e retorno ao contexto.",
             "Registrar medidas de esforço e telas decisivas; corrigir causas nos WPs responsáveis.",
-            "Executar AM01–AM06 no candidato integrado e registrar matriz exata de todos perfis/skills/packs, com saídas consumidas após reload."
+            "Executar AM01–AM06 no candidato integrado e registrar matriz exata de todos perfis/skills/packs, com saídas consumidas após reload.",
+            "AM02 começa por rota quando produtor, bridge, perfil/skill carregada, autorização e consumidor reais estão integrados. Acumular observações específicas; não esperar o último output de cada pack, nem converter esse streaming em aceite fora do mesmo candidato C final."
           ],
           "inputs": [
             "Composição WP10.T01",
@@ -13533,7 +13622,8 @@
             "Fornecer intenção, matriz de critérios, commit e evidências; permitir que os juízes tentem refutar os resultados.",
             "Devolver achados aos owners, revisar deltas e repetir apenas provas afetadas até não haver achados obrigatórios abertos.",
             "Revisores novos iniciam só depois de builder encerrado e lease aceito. R1/R2 leem/revisam 72-95; R3 le/revisa 75-95. As inspeções de autores 55-75 são insumos, não pareceres independentes.",
-            "Nenhum reviewer edita produto: correção WP02 é S1, WP05 é S2, WP07 é S3; demais WPs mantêm writers ativos. Revisores julgarão correções 95-103 e revalidarão o candidato 103-118. Se duração observada ultrapassar a reserva, G2H registra efeito sem reduzir critérios."
+            "Nenhum reviewer edita produto: correção WP02 é S1, WP05 é S2, WP07 é S3; demais WPs mantêm writers ativos. Revisores julgarão correções 95-103 e revalidarão o candidato 103-118. Se duração observada ultrapassar a reserva, G2H registra efeito sem reduzir critérios.",
+            "Publicar cada achado reproduzido à fila de S0 imediatamente. Autor ativo corrige enquanto o reviewer continua examinando; rechecagem permanece independente e as reservas95–103 não são barreira para começar."
           ],
           "inputs": [
             "Resultados WP10.T02",
@@ -13668,18 +13758,19 @@
         },
         {
           "id": "WP10.T04",
-          "title": "Concluir verificação cumulativa no commit final",
+          "title": "Concluir verificação cumulativa no candidato de produto C",
           "intent": "Ligar o aceite ao código que será efetivamente entregue.",
           "work": [
             "Executar verificações escopadas durante desenvolvimento e uma rodada cumulativa após composição/correções, respeitando AGENTS.md.",
             "Rodar testes do repositório pelo caminho GitHub Actions test:ci; typecheck conforme pacote e guardrails vigentes.",
             "Registrar SHA, URLs/IDs dos runs reais, seletores, resultados e validade da evidência; não disparar deploy.",
             "Executar todas as recipes obrigatórias de ci-recipes.json e a receita completa exigida pelo epic/AGENTS, ampliando por footprint real. Associar prova live de IA/Relay ao mesmo candidato sem transmitir segredo no request CI.",
-            "Executar o build e check:generated/typecheck/test da boundary Atlas alterada, mais suites SF/CLI/UI pertinentes e validação de manifests/receipts no SHA final.",
+            "Executar o build e check:generated/typecheck/test da boundary Atlas alterada, mais suites SF/CLI/UI pertinentes e validação de manifests/receipts no candidato final de produto C. Guard de C pertence a G7; o guard separado da entrega evidencial D é responsabilidade de WP10.T05/G8.",
             "CI-APP-SRC executa args[] e cobre src; CI-APP-BROWSER executa args[test-browser] e cobre a árvore Bun browser. Ambas são obrigatórias no mesmo candidato; Playwright SF não as substitui.",
             "Acrescentar suíte completa atlas-boundary e check:generated/typecheck de boundary pelo mecanismo permitido. Nunca criar runner/config/env ad hoc para inventar seleção.",
             "E16/E18 enumeram seleção observada e planejada, request hash, product tree, run/attempt/job/control/artifact e conclusão; zero testes, seleção divergente e ausência de controle falham.",
-            "Handoff de CI 40 S0-C->S2 e 75 S2->S0-C registra fila/run IDs/request hashes/ETAs; não criar um segundo controlador escrevendo o mesmo receipt."
+            "Handoff de CI 40 S0-C->S2 e 75 S2->S0-C registra fila/run IDs/request hashes/ETAs; não criar um segundo controlador escrevendo o mesmo receipt.",
+            "Um dispatcher com lease deduplica requests idênticas em voo/concluídas, transfere a fila nos handoffs40/75 e executa seleção afetada com consumidores transitivos. Oito seleções finais, suites adicionais exigidas e AM01–AM06 continuam no mesmo C; desconhecido não é cache válido."
           ],
           "inputs": [
             "Candidato após WP10.T03",
@@ -13696,7 +13787,7 @@
           "checks": [
             {
               "id": "WP10.T04.CHK.01",
-              "text": "Uma mudança depois de um run invalida os critérios afetados até nova verificação; não chamar green antigo de green atual.",
+              "text": "Mudança de produto depois de um run cria novo C e invalida os critérios afetados até nova verificação; não chamar green antigo de green atual. Apenas adições evidenciais que satisfazem integralmente execution.candidate_delivery podem formar D sem reexecutar o produto C, mantendo seus SHAs e guard próprio de D.",
               "status": "NOT_RUN"
             },
             {
@@ -13734,17 +13825,17 @@
             "dod": [
               {
                 "id": "WP10.T04.DOD.01",
-                "text": "O candidato final tem resultados válidos das verificações exigidas, sem falha obrigatória ou prova desatualizada.",
+                "text": "O candidato final de produto C tem resultados válidos das verificações exigidas, sem falha obrigatória ou prova desatualizada. O guard do envelope D é verificado separadamente por T05 antes de G8.",
                 "status": "NOT_RUN"
               },
               {
                 "id": "WP10.T04.DOD.10",
-                "text": "CI pertinente à boundary e aos novos consumers fecha com evidencia do candidato final.",
+                "text": "CI pertinente à boundary e aos novos consumers fecha com evidência do candidato final de produto C.",
                 "status": "NOT_RUN"
               },
               {
                 "id": "WP10.T04.DOD.40",
-                "text": "Seleções CI exigidas e gates estáticos têm recibos do candidato aceito.",
+                "text": "Seleções CI exigidas e gates estáticos de produto têm recibos do candidato aceito C; D mantém essas identidades e requer seu próprio guard em G8.",
                 "status": "NOT_RUN"
               }
             ],
@@ -13761,14 +13852,14 @@
               },
               {
                 "id": "WP10.T04.INV.40",
-                "text": "Playwright SF não substitui Bun browser; checks em outro SHA não viram verde atual.",
+                "text": "Playwright SF não substitui Bun browser; checks em outro SHA não viram verde atual. D não recebe o SHA de execução de C; seu receipt aponta C e o envelope mantém o produto intacto.",
                 "status": "NOT_RUN"
               }
             ],
             "quality_standards": [
               {
                 "id": "WP10.T04.QLT.01",
-                "text": "Reusar evidência ainda válida e repetir somente o necessário para resolver risco concreto ou gate exigido.",
+                "text": "Reusar evidência ainda válida e repetir somente o necessário para resolver risco concreto ou gate exigido. Arquivar prova em D não exige novo teste de produto quando o envelope passa, mas exige verificação própria e guard de D.",
                 "status": "NOT_RUN"
               },
               {
@@ -13795,14 +13886,14 @@
               },
               {
                 "id": "WP10.T04.CMP.40",
-                "text": "CobrirSF/CLI/app/src/app/test-browser/atlas-boundary/trêsPW e suites adicionais exigidas pelo footprint/epic.",
+                "text": "CobrirSF/CLI/app/src/app/test-browser/atlas-boundary/trêsPW e suites adicionais exigidas pelo footprint/epic. As seleções e seis provas AM finais identificam o mesmo C; distinguir seu aceite do envelope D.",
                 "status": "NOT_RUN"
               }
             ],
             "success_criteria": [
               {
                 "id": "WP10.T04.SUC.01",
-                "text": "Qualquer pessoa consegue ligar cada resultado declarado ao commit e à execução que o demonstraram.",
+                "text": "Qualquer pessoa consegue ligar cada resultado declarado ao commit e à execução que o demonstraram. O índice de D aponta C e preserva cada run, attempt, seleção e hash original, sem alegar execução inexistente em D.",
                 "status": "NOT_RUN"
               },
               {
@@ -13882,27 +13973,30 @@
           "intent": "Concluir com capacidade demonstrada, orientação de uso e rastreabilidade.",
           "work": [
             "Consolidar a matriz de capacidades/axiomas e conferir nenhum item órfão ou estado intermediário vendido como concluído.",
-            "Entregar guia de tarefas por papel, sem detalhes de deploy, e roteiro de demonstração com dados sintéticos.",
-            "Publicar changelog de produto, semânticas corrigidas, evidências e limites; submissão/merge segue a autorização e políticas do repositório.",
-            "Preparar recibo e documentação entre T+110 e T+118; só publicar aceitação após G7 e WP10.T04, entre T+118 e T+120. Preparação não declara conclusão.",
+            "Entregar o guia de tarefas por papel, roteiro sintético e changelog de produto já produzidos por WP10.T01 no README.md incluído em C. T05 não acrescenta nem corrige conteúdo normativo em D; necessidade de correção cria novo C e reabre os gates pertinentes.",
+            "Publicar o produto C e sua entrega evidencial D, com changelog e semânticas de C, índice de evidências e limites materiais. Submissão/merge segue autorização e políticas; D só contém adições admitidas pelo envelope, sem editar/apagar recibo antigo.",
+            "Preparar somente índices, recibos e pareceres evidenciais entre T110 e T118; guias normativos/roteiro/changelog já pertencem a C via T01. Depois de G7/T04, criar D, conferir ancestralidade, diff completo, inputs inalterados e hashes, executar o guard real de D e só então publicar aceite em G8/T120. Preparação não declara conclusão; atraso mantém campanha aberta.",
             "Aceitar somente manifesto integral 5/18/8/39 e AM01–AM06 completos; listar atraso ou indisponibilidade material sem reduzir escopo."
           ],
           "inputs": [
             "WP10.T04 aprovado",
             "Pareceres independentes válidos",
-            "Artefatos e handoffs de todos os WPs"
+            "Artefatos e handoffs de todos os WPs",
+            "Guia por papel, roteiro e changelog produzidos por WP10.T01 no README.md já incluído em C, com versões e comportamento reconciliados."
           ],
           "outputs": [
             "Pacote final de aceite e guia de uso",
             "Roteiro de demonstração",
             "Matriz completa e registro de versão",
-            "Recibo de aceite com matriz residente e prova Atlas/identidade"
+            "Recibo de aceite com C, índice imutável de matriz residente/provas Atlas/identidade/CI/reviews e limites; D é o commit que o contém. Guard de D é publicado pela supervisora no fechamento, sem inserir o próprio SHA/guard no arquivo que o geraria."
           ],
-          "depends_on": [],
+          "depends_on": [
+            "WP10.T01"
+          ],
           "checks": [
             {
               "id": "WP10.T05.CHK.01",
-              "text": "Todas as tasks, WPs e capacidades obrigatórias da matriz canônica têm aceite e evidência válidos; o encerramento consulta a lista, sem contagem antiga fixa.",
+              "text": "Todas as tasks, WPs e capacidades obrigatórias da matriz canônica têm aceite e evidência válidos; o encerramento consulta a lista, sem contagem antiga fixa. A aceitação distingue C de D: todas as provas de produto obrigatórias pertencem a C; o envelope de D admite apenas adições novas, com hashes e guard próprios. Alteração, remoção, rename, modo indevido, fonte normativa ou input runtime/teste/build no diff rejeita D como entrega evidencial.",
               "status": "NOT_RUN"
             },
             {
@@ -13925,7 +14019,7 @@
             "dod": [
               {
                 "id": "WP10.T05.DOD.01",
-                "text": "Campanha fechada somente com cobertura completa, critérios satisfeitos e pacote final coerente com o código entregue.",
+                "text": "Campanha fechada somente com cobertura completa, critérios satisfeitos no produto C e pacote D coerente: ancestralidade, envelope append-only, inputs preservados, hashes e guard de D verificados após G7.",
                 "status": "NOT_RUN"
               },
               {
@@ -13937,7 +14031,7 @@
             "invariants": [
               {
                 "id": "WP10.T05.INV.01",
-                "text": "Planejamento, implementação, revisão, publicação e deploy são estados distintos; não confundir um com outro.",
+                "text": "Planejamento, implementação, revisão, publicação e deploy são estados distintos; não confundir um com outro. D não altera produto, guias normativos, testes, skills, configurações ou recibos antigos; a evidência conserva os SHAs e runs originais. Não gravar o próprio SHA/hash/guard posterior dentro de D.",
                 "status": "NOT_RUN"
               },
               {
@@ -13949,7 +14043,7 @@
             "quality_standards": [
               {
                 "id": "WP10.T05.QLT.01",
-                "text": "Guia explica o trabalho do usuário e o significado dos dados; detalhes internos ficam nas referências técnicas pertinentes.",
+                "text": "Guia explica o trabalho do usuário e o significado dos dados; detalhes internos ficam nas referências técnicas pertinentes. Consumir o guia já incluído em C; o índice de entrega liga evidências sem copiar afirmações de um candidato para outro.",
                 "status": "NOT_RUN"
               },
               {
@@ -13961,7 +14055,7 @@
             "completeness_criteria": [
               {
                 "id": "WP10.T05.CMP.01",
-                "text": "Incluir todas as personas, principais jornadas, gráficos/rotinas, import/export, estados de erro e semânticas alteradas.",
+                "text": "Incluir todas as personas, principais jornadas, gráficos/rotinas, import/export, estados de erro e semânticas alteradas. Conferir todos os paths/status/modos/blobs do diff C→D, índice de evidências, ancestralidade e guard próprio de D; diff truncado ou dependência desconhecida falha.",
                 "status": "NOT_RUN"
               },
               {
@@ -13973,7 +14067,7 @@
             "success_criteria": [
               {
                 "id": "WP10.T05.SUC.01",
-                "text": "André e time conseguem usar e retomar o trabalho; o usuário recebe uma entrega comprovada e fácil de revisar.",
+                "text": "André e time conseguem usar e retomar o trabalho; o usuário recebe uma entrega comprovada e fácil de revisar. O usuário recebe C testado e D verificável, sem reexecução causada somente pela gravação da própria evidência.",
                 "status": "NOT_RUN"
               },
               {
@@ -19918,7 +20012,7 @@
       "Novos testes de UI pertencem a packages/app-shell/e2e/sucafina/, usando a configuração Playwright já permitida; não editar o validator ou desligar guard para criar um caminho de CI.",
       "Subagentes centrais de contrato, fixture e qualificação têm artefatos auxiliares disjuntos; somente S0 publica os contratos e alterações de código compartilhadas."
     ],
-    "coordination": "Um escritor por arquivo, inclusive manifests/lock, contratos, host, rotas e receipts. Subagente trabalha em worktree/checkout isolado e branch do WP. Integradora é a única escritora da branch sf2-integrate. Transferência de ownership é atômica e registrada antes da primeira edição pelo novo autor.",
+    "coordination": "Um escritor por arquivo, inclusive manifests/lock, contratos, host, rotas e receipts. Subagente trabalha em worktree/checkout isolado e branch do WP. Integradora é a única escritora da branch sf2-integrate. Transferência de ownership é atômica e registrada antes da primeira edição pelo novo autor. S0 mantém sf2-control para roster/leases/fila e sf2-integrate para produto. Control nunca é mergeado nem usado como base CI. S0 incorpora em D somente blobs evidenciais admitidos com source commit/path/blob hash, não branches inteiras.",
     "exact_exceptions": [
       {
         "path": "bun.lock",
@@ -20471,7 +20565,7 @@
         "actor": "S0",
         "logical_owner": "WP10",
         "branch": "sf2-integrate",
-        "paths_rule": "Arquivos existentes da WP10 e product/integration/ e compositionroots; exclui todos os paths delegados abaixo. Único writer da ref integradora. Integra blobs/commits recebidos dos autores, sem substituição de arquivo antigo."
+        "paths_rule": "Arquivos existentes da WP10 e product/integration/ e compositionroots; exclui todos os paths delegados abaixo. Único writer da ref integradora. Integra blobs/commits recebidos dos autores, sem substituição de arquivo antigo. Controle transitório pertence apenas a sf2-control. Em D, somente os paths completos de delivery receipts previamente alocados são admitidos dentro de control; nunca o prefixo inteiro."
       },
       {
         "actor": "S0-B",
@@ -20794,6 +20888,21 @@
           120
         ],
         "notes": "Escreve somente parecer e recibos. Todo código, conteúdo de skills, manifest e teste de produto permanece somente leitura para o reviewer."
+      },
+      {
+        "actor": "S0",
+        "logical_owner": "WP10",
+        "task": "WP10.T01/WP10.T04/WP10.T05",
+        "branch": "sf2-control",
+        "new_prefixes": [
+          "modules/sucafina/Sucafinav1/docs/sf2h/control/"
+        ],
+        "paths_rule": "Somente roster, leases, fila, índices operacionais e alocações exatas de delivery. Nenhum produto, harness ou workflow executável. Branch nunca mergeada nem usada como base de snapshot CI.",
+        "window": [
+          0,
+          120
+        ],
+        "notes": "Mesmo S0 e mesmas reservas; não cria slot. Produto C e entrega D ficam em sf2-integrate; control transitório não altera C."
       }
     ],
     "new_files_semantics": "Novos paths exatos podem ser cria dos somente pelo owner indica do, inclusive sob exclusão geral. Nenhum pai do path torna-se prefixo de escrita. A validação confere exato/exceção, autor e propósito.",
@@ -20810,7 +20919,7 @@
       "remaining_tasks",
       "proof_owner"
     ],
-    "shared_branch_policy": "sf2-integrate é a única ref de composição. Branches de workers são distintas; a transferência WP14 mantém sf2-memory após o lease, nunca dois commits concorrentes sem compare-and-set. Mudanças de cloud usam SHA/patch combinado, como já prescrito."
+    "shared_branch_policy": "sf2-integrate é a única ref de composição. Branches de workers são distintas; a transferência WP14 mantém sf2-memory após o lease, nunca dois commits concorrentes sem compare-and-set. Mudanças de cloud usam SHA/patch combinado, como já prescrito. S0 mantém sf2-control para roster/leases/fila e sf2-integrate para produto. Control nunca é mergeado nem usado como base CI. S0 incorpora em D somente blobs evidenciais admitidos com source commit/path/blob hash, não branches inteiras."
   },
   "consumption_map": [
     {
@@ -21220,7 +21329,7 @@
   "readiness_note": "O plano é integral. A execução começa somente quando as cinco sessões recebem seus prompts; recursos e serviços são qualificados emT0, sem tratar suposição como disponibilidade. Todas as tasks permanecemPLANNED/NOT_RUN até evidência real.",
   "timebox": {
     "duration_minutes": 120,
-    "clock_start": "T0 é a primeira execução da integradora; inclui preflight e início das outras quatro sessões. Não reiniciar o relógio depois da qualificação.",
+    "clock_start": "T0 é a primeira execução da supervisora; inclui preflight, lançamento/ACK das outras sessões, setup, integração e gates. Planejamento/packs já preparados não autorizam reiniciar o relógio depois da qualificação.",
     "scope_policy": "FULL_SCOPE_ONLY",
     "feasibility": "Alvo condicional de 120 minutos, não duração medida nem garantia. O replanejamento usa exclusivamente cinco sessões com quatro slots incluindo coordenadora. As reservas abaixo são orçamento de trabalho a validar em GREADY/GNATIVE/G2H/G4; fila de CI, latência do provider, geração Atlas e correções não têm duração inventada.",
     "sessions": {
@@ -21277,7 +21386,7 @@
         "coordinator_implementation": "WP14.T05/T01/T02 até 43; entrega a S0-C; coordena e executa provas live 55-118, sem julgamento independente."
       }
     },
-    "capacity": "Cinco conversas efetivamente abertas; no máximo quatro agentes vivos por conversa, incluindo a coordenadora. São quinze auxiliares e cinco coordenadoras, pico de vinte atores; uso da coordenadora para código consome seus próprios minutos. Runners de CI e concorrência de modelos são recursos externos observados, não slots presumidos.",
+    "capacity": "Preset de cinco sessões independentes: supervisora S0 e N=4 coordenadoras S1–S4, cada uma com até quatro slots incluindo a coordenadora. Pico de vinte atores, quinze auxiliares e cinco coordenadoras, condicionado a escopo de capacidade observado. IDs de sessões não provam pools independentes. Runners/modelos são limites externos separados. O backend collaboration desta conversa tem teto global quatro; não multiplicar por nesting.",
     "wp14_budget": "WP14.T05 S4 10-20; coordenação 20-22; T01 S4 22-34; coordenação 34-35; T02 S4 35-43; transferência exclusiva em 43 para S0-C; T03 S0-C 43-56; T04 S0-C 56-68; consumo/provas 68-75. Não há resgate automático por S0-A, que está no Atlas. Se transferência falhar, S4 continua como escritor único e S1/S3 absorvem sua coordenação em janelas explicitamente revistas; recalcular ETA sem remover escopo.",
     "milestones": [
       {
@@ -21333,17 +21442,17 @@
       {
         "minute": 103,
         "gate": "G6",
-        "condition": "Último candidato corrigido congelado, se houve alteração; disparar gates cumulativos exigidos e repetições live afetadas com recibo do candidato. Se candidato G4 não mudou, não criar commit artificial para reiniciar provas."
+        "condition": "Último candidato corrigido de produto C congelado, com guia/roteiro/changelog normativos já incluídos; se houve mudança de produto, disparar gates cumulativos exigidos e provas pertinentes do C aceito. Se C de G4 não mudou, não criar commit artificial para reiniciar provas. Adições posteriores somente evidenciais são tratadas como D pelo envelope, nunca como reatribuição de resultados."
       },
       {
         "minute": 118,
         "gate": "G7",
-        "condition": "Receipts completos para o candidato aceito: seleções distintas app/src e app/test-browser, Atlas boundary, demais suites obrigatórias, AM01-AM06, três revisões sem autojulgamento e nenhum achado obrigatório aberto."
+        "condition": "Receipts completos para o mesmo candidato de produto C: seleções distintas app/src e app/test-browser, Atlas boundary, oito seleções mínimas e adicionais obrigatórias, AM01–AM06, guard de C, três revisões sem autojulgamento e nenhum achado obrigatório aberto. Guia/roteiro/changelog normativos já integram C. G7 habilita T05 a formar D; seu envelope e guard são exigidos em G8."
       },
       {
         "minute": 120,
         "gate": "G8",
-        "condition": "Emitir aceite somente se G7 passar; caso contrário publicar atraso, pendências, próximo ETA, donos e continuação de todo o escopo. Não declarar meta de duas horas cumprida nem encerrar a execução por tempo esgotado."
+        "condition": "Emitir aceite somente após G7 de C e verificação completa de D: C ancestral, diff append-only exclusivamente evidencial nos paths admitidos, inputs de build/test/runtime inalterados, hashes preservados e guard de D aprovado. O receipt interno aponta C; o SHA e o guard de D são publicados no fechamento sem autorreferência. Se qualquer condição faltar, publicar atraso, pendências, ETA, donos e continuar o escopo inteiro; não declarar 120 minutos cumpridos ou encerrar por tempo esgotado."
       }
     ],
     "ci_budget": "G4->G5 reserva 20 minutos e G6->G7 reserva 15 minutos como hipóteses condicionais para o conjunto observado de CI, provas live e rechecks. Timeout 45 minutos é limite de cada job, não previsão. O plano não presume oito runners livres nem extrapola seleção parcial para suíte final. Medir fila, setup, execução e coleta separadamente; desconhecido não conta como zero.",
@@ -21354,7 +21463,7 @@
           0,
           120
         ],
-        "work": "Contrato e composition roots, protected-store C08, única escritora da branch sf 2-integrate, fila de integração e encerramento. Não implementa os arquivos delegados de runtime, Atlas, harness ou WP14."
+        "work": "Contrato e composition roots, protected-store C08, única escritora da branch sf 2-integrate, fila de integração e encerramento. Não implementa os arquivos delegados de runtime, Atlas, harness ou WP14. S0 reserva55–60 para guias normativos no README sob T01 e60–75 para consumidores/ajustes antes do freeze; T05 só arquiva evidência depois."
       },
       {
         "slot": "S0-A",
@@ -21492,9 +21601,16 @@
         {
           "window": [
             55,
+            60
+          ],
+          "work": "WP10.T01: consolidar no README já possuído guia normativo por papel, roteiro sintético e changelog de produto com base nos incrementos/recibos. Reserva única de S0; orçamento não medido."
+        },
+        {
+          "window": [
+            60,
             75
           ],
-          "work": "Integração de todos os consumidores e candidato G4"
+          "work": "WP10.T01: integrar consumidores tardios, reconciliar ajustes de guias afetados e congelar candidato C em G4. Preparação de prova e recepção dos inputs necessários estão dentro desta reserva."
         },
         {
           "window": [
@@ -21515,7 +21631,7 @@
             103,
             110
           ],
-          "work": "Preparar recibo/guias; sem alegar aceite"
+          "work": "Preparar somente índice/recibos evidenciais D; guias normativos já estão em C. Não alegar aceite antes dos gates."
         },
         {
           "window": [
@@ -22701,9 +22817,11 @@
         "CI selected-files inventory and actual runner concurrency",
         "queue/setup/test/artifact elapsed for comparable completed selections",
         "native model execution/18-skill replay duration and observed permitted concurrency",
-        "remaining review/correction/recheck budget"
+        "remaining review/correction/recheck budget",
+        "backend lifecycle capabilities, global/per-pool slot scope and actual launch/ACK receipts",
+        "context bytes read, duplicate requests avoided, output-ready to consumed and finding-to-owner latency"
       ],
-      "calculation": "Resource-constrained residual schedule uses the same actor reservations, output prerequisites and measured CI/provider occupancy. Earliest_complete=max(last_required_build_and_consumer_finish, last_required_CI_finish, last_required_live_proof_finish, last_independent_review_and_correction_finish)+final_receipt_reserve. Receipt reserve is the two planned minutes 118-120, not a measured claim. Unknown required input yields UNKNOWN, never zero.",
+      "calculation": "Resource-constrained residual schedule uses the same actor reservations, output prerequisites and measured CI/provider occupancy. Earliest_complete=max(last_required_build_and_consumer_finish, last_required_CI_finish, last_required_live_proof_finish, last_independent_review_and_correction_finish)+final_receipt_reserve. Receipt reserve is the two planned minutes 118-120, not a measured claim. Unknown required input yields UNKNOWN, never zero. Último freeze viável=T118 menos a cauda crítica observada de gates restantes sob recursos reais. T103 é checkpoint de reserva, não prova de que qualquer CI cabe em quinze minutos.",
       "states": [
         "CONDITIONAL",
         "SUPPORTED_BY_CURRENT_OBSERVATIONS",
@@ -23166,7 +23284,7 @@
       "omni_control",
       "artifacts"
     ],
-    "failure_policy": "Falha de teste vai ao dono da mudança. Falha de setup/runner conserva BLOCKED. Seleção vazia ou divergente falha, sem aceitar zero testes. Regressão preexistente exige comparação reproduzível com a baseline e atribuição; não cria dispensa automática de gate obrigatório. Candidato alterado exige novo snapshot e checks afetados; verde antigo não cobre mudança nova. Ausência de prova obrigatória impede DONE mesmo ao atingir 120 minutos.",
+    "failure_policy": "Falha de teste vai ao dono da mudança. Falha de setup/runner conserva BLOCKED. Seleção vazia ou divergente falha, sem aceitar zero testes. Regressão preexistente exige comparação reproduzível com a baseline e atribuição; não cria dispensa automática de gate obrigatório. Candidato alterado exige novo snapshot e checks afetados; verde antigo não cobre mudança nova. Ausência de prova obrigatória impede DONE mesmo ao atingir 120 minutos. D só pode arquivar novas evidências pelo envelope execution.candidate_delivery; falha do envelope ou do guard de D impede o fechamento. Alteração de produto não pode ser classificada como recibo para conservar C antigo.",
     "queries": [
       "GET https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs; selecionar head_sha=S, evento push e ref esperada",
       "GET run/jobs/artifacts pelo ID real; não usar wrapper limitado a PR-triggered runs"
@@ -23227,8 +23345,8 @@
         "cwd": ".",
         "command": "bun run check:guards --base origin/dev",
         "owner_task": "WP10.T04",
-        "gate": "G7",
-        "purpose": "Gate exigido por AGENTS no checkout real do candidato; workflow atual não fornece dispatch de guards. Disponibilidade/readiness do executor é registrada em G0, sem inventar verde ou alterar workflow."
+        "gate": "G7 em C; G8 em D",
+        "purpose": "Gate exigido por AGENTS no checkout real do candidato; workflow atual não fornece dispatch de guards. Disponibilidade/readiness do executor é registrada em G0, sem inventar verde ou alterar workflow. WP10.T04 verifica C para G7. WP10.T05/S0 repete este mesmo comando em D para G8 após verificar o envelope; identifica o SHA efetivamente examinado e não edita D para incluir resultado autorreferente."
       },
       {
         "id": "CHECK-SPAWNS",
@@ -23256,8 +23374,127 @@
       "Confirmar head_sha=Sj, evento push e branch ci-run-linux-*. Ler run, jobs e artifacts pelo ID real; não usar o wrapper limitado a eventos de PR.",
       "Conferir o controle omni pela regra nativa do job. Guardar verdict e identificadores, sem incluir credenciais ou dados desnecessários.",
       "Zero testes, seleção incompleta ou artefato ausente não produzem PASS.",
-      "Alterar o candidato exige novos snapshots, gates afetados e o conjunto cumulativo obrigatório. Preservar provas antigas com o SHA original; não trocar seu rótulo para o novo candidato."
-    ]
+      "Alterar o produto, seus testes, configurações, skills, fixtures, contratos ou guias normativos cria novo candidato C e exige novos snapshots, gates afetados e cobertura cumulativa obrigatória do C aceito. Preservar provas antigas com o SHA original; não trocar seu rótulo para o novo candidato. Adições estritamente evidenciais podem formar D somente pelo envelope execution.candidate_delivery; não são reteste nem mudança do produto C.",
+      "Oito seleções mínimas e adicionais obrigatórias do epic, AM01–AM06 e pareceres finais referem-se ao mesmo C. Um resultado já válido em C pode ser indexado em D sem novo run; resultado de outro candidato não recebe o SHA de C.",
+      "Guardrails são verificados em C/G7 e novamente em D/G8. D exige ancestralidade, diff completo append-only admitido, ausência de novos inputs de build/test/runtime e hashes preservados; publicar o resultado do guard de D fora do próprio D evita autorreferência."
+    ],
+    "dispatch_policy": {
+      "supervision": {
+        "logical_owner": "S0",
+        "worker_sessions": "N, observadas e limitadas pela capacidade real; padrão S1–S4",
+        "exclusive_dispatcher": "Um lease por vez; padrão S0-C[0,40], S2[40,75], S0-C[75,118]",
+        "handoff": "Transferir candidato, fila, request keys, run IDs, attempts, conclusões e ETAs; não disparar duplicata ao assumir.",
+        "storage": "Usar docs/sf2h/control e docs/sf2h/receipts/WP10 já no ownership WP10; sem serviço novo.",
+        "worker_rule": "Worker solicita validação e entrega eventos; não cria CI duplicado nem escreve o registro central sem lease.",
+        "session_completion": "Coordenadoras continuam retomáveis até GLOBAL_RELEASE; builder só libera slot com handoff aceito."
+      },
+      "deduplication": {
+        "key_fields": [
+          "product_candidate_sha",
+          "product_tree_hash",
+          "normalized_request_hash",
+          "workflow_and_validator_source_identity",
+          "effective_runtime_and_config_identity",
+          "fixture_and_test_selection_identity"
+        ],
+        "adopt_inflight": "Somente chave idêntica; registrar solicitantes/critério e preservar run/snapshot originais.",
+        "adopt_complete": "Somente resultado completo para a mesma chave, seleção observada correta, controle omni válido, artefatos íntegros e sem invalidadores posteriores.",
+        "not_reusable_as_pass": [
+          "missing evidence",
+          "BLOCKED",
+          "cancelled",
+          "empty selection",
+          "selection mismatch",
+          "artifact missing",
+          "old candidate with changed source",
+          "unknown dependency impact"
+        ],
+        "no_new_infrastructure": true
+      },
+      "incremental_validation": {
+        "preflight": "WP10.T04 inicia em T0; verificar requests/aliases/executor e iniciar um probe existente válido antes de T25 quando possível, dentro do mesmo dispatcher. Mede somente a seleção observada; não fecha prova de produto futuro.",
+        "trigger": "READY_FOR_INTEGRATION seguido de integração real e confirmação dos produtores/consumidores necessários; não esperar uma hora ou o fim do WP.",
+        "selection": "Testes da mudança + consumidores transitivos dos contratos/ports alterados; unknown amplia seleção ou marca BLOCKED.",
+        "am02_route_ready": [
+          "producer actual output integrated",
+          "bridge/context actual",
+          "profile and skill loaded receipt",
+          "current authorization",
+          "required consumer integrated",
+          "fixture and oracle version identified"
+        ],
+        "am02_inference": "Harness direto autorizado já previsto pode provar chamadas determinísticas com binding e SkillLoadReceipt; não requer uma inferência nova por operação. AM01 continua provando modelo real e todas as contribuições de skills.",
+        "criterion_mapping": "Uma execução pode fornecer múltiplas observações específicas; cada criterion_id mantém expected/observed e evidência concreta. Nenhum pacote verde aprova todas as linhas automaticamente."
+      },
+      "invalidation_matrix": [
+        {
+          "change": "Contratos C01–C17, schema, enum, export ou semântica de port",
+          "incremental": "Produtor, todos consumidores transitivos e provas que dependem desses contratos",
+          "final": "Novo candidato C; seleções obrigatórias e AM afetadas com identidade atual"
+        },
+        {
+          "change": "Motor financeiro, inventário de custo, confirmação material, FX ou versionamento",
+          "incremental": "Oráculos financeiros/CONFIRM-SCOPE, Planner, BI, Procurement/decisão/portfólio e rotinas consumidoras",
+          "final": "CI-SF e consumidores obrigatórios; AM01/AM02/AM04/AM06 conforme dependência; matriz final integral preservada"
+        },
+        {
+          "change": "Identity/access, binding, MCP bridge, capabilities, source revocation ou incarnation",
+          "incremental": "Todos caminhos de entrada e egress atingidos; positivos e negativos; UI, export, fonte, Atlas e MCP",
+          "final": "Requalificar AM02/AM03 e demais AM que atravessam a fronteira alterada; desconhecido invalida todas"
+        },
+        {
+          "change": "Profile/skill source, workflow, template ou carregamento",
+          "incremental": "Witnesses das skills e perfis alterados, grants, outputs e consumidores; reviewer se sua independência/inputs mudaram",
+          "final": "AM01 e rotas AM02/AM06 atingidas; provar digests atuais no mesmo C"
+        },
+        {
+          "change": "Atlas generator, entry, artifacts, scanner linkage, schema, store, resolver ou outbox",
+          "incremental": "Generate/check:generated/typecheck/spawn, boundary suite e consumidores; scanner/restart/idempotency/ACL quando afetados",
+          "final": "CI-ATLAS-BUSINESS e AM05; AM03 e demais consumidores conforme dependência"
+        },
+        {
+          "change": "UI shell, shared component, route, styling, keyboard ou viewport behavior",
+          "incremental": "APP-SRC/APP-BROWSER pertinentes e Playwright de todos consumidores; estados, acessibilidade e regressões visuais afetados",
+          "final": "As seleções finais completas continuam obrigatórias; alteração puramente visual não invalida aritmética imutável como nova observação, mas não dispensa o candidato final"
+        },
+        {
+          "change": "Fixture, oracle, test source, request args ou selection config",
+          "incremental": "Reexecutar seleção correspondente; resultado anterior não testa a nova asserção ou fixture",
+          "final": "Proibir união de seleções parciais como se uma seleção completa tivesse executado"
+        },
+        {
+          "change": "Root lock/package, module resolver, compiler, runtime, workflow ou test validator",
+          "incremental": "Expandir por dependências e ambiente efetivo; unknown => expansão conservadora",
+          "final": "Reestabelecer requests, geração/typecheck e seleções obrigatórias sob configuração observada"
+        },
+        {
+          "change": "Modelo, scanner binário, política de acesso ou estado externo usado na prova",
+          "incremental": "Requalificar provas live afetadas e registrar identidade/versão atual; cache de código não prova estado externo",
+          "final": "AMs e gate ambiental pertinentes em C; nenhum segredo no request"
+        },
+        {
+          "change": "Recibo/parecer puramente evidencial dentro de paths previamente admitidos",
+          "incremental": "Conferir integridade e diff; não reexecutar produto pela gravação da própria evidência",
+          "final": "Somente pela regra explícita C→D: C permanece candidato testado, D arquiva evidência; guards em D. Qualquer mudança fora do envelope cria C novo"
+        }
+      ],
+      "review_flow": {
+        "event_fields": [
+          "finding_id",
+          "candidate_sha",
+          "criterion_ids",
+          "reproduction",
+          "affected_paths",
+          "owner",
+          "severity"
+        ],
+        "dispatch": "Ao demonstrar o achado, sem esperar parecer consolidado ou T95; S0 encaminha ao escritor ativo com lease.",
+        "correction": "Writer devolve commit, classificação do delta, testes afetados e evidência; revisor independente reavalia delta e bordas.",
+        "window_rule": "95–103 continua reserva para correções tardias, não barreira para começar; 103–118 mantém rechecagem final.",
+        "independence": "Reviewer não escreve produto; nova autoria requer substituição em slot realmente livre.",
+        "stop": "Sessões coordenadoras só encerram após handoff aceito e liberação global de S0. Nenhum bloqueio isolado encerra trabalho autorizado restante."
+      }
+    }
   },
   "resident_ui_consumption": {
     "purpose": "Complemento normativo de produto para C15/coverage; unir por id literal às definições técnicas de perfil, digest, operações e schemas. Não é evidência de execução.",
@@ -30651,7 +30888,8 @@
         118
       ],
       "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am02.json",
-      "operation_routes_ref": "resident_ai.operation_call_routes"
+      "operation_routes_ref": "resident_ai.operation_call_routes",
+      "streaming_policy": "Exercer cada rota pronta com insumos reais, SkillLoadReceipt e consumidor. Fechar todas as39 rotas/packs em G4 e repetir a cobertura exigida no mesmo C final; não esperar um pack completo para descobrir sua primeira falha."
     },
     {
       "id": "AM03",
@@ -31264,30 +31502,31 @@
   ],
   "prompt_sections": {
     "shared": {
-      "Construção e gates": "O plano tem 15 WPs e 74 tasks. G0/WP00.T02 congela C01–C17 em T+10 e libera a construção determinística, inclusive quando GNATIVE estiver pendente. GNATIVE exige, em T+18–20, caso real, perfil AgentV2, skill distribuída e carregada, bridge MCP privada, porta real de Planner e retorno ao produto. Os oito packs têm contratos e concessões definidos em T+20; sua funcionalidade e paridade completas são exigidas por AM02/G4 em T+75. Consulte output_handoffs e task_output_dependencies. Publicar um incremento não significa concluir a task inteira.",
+      "Construção e gates": "O plano tem 15 WPs e 74 tasks. G0/WP00.T02 congela C01–C17 em T+10 e libera a construção determinística, inclusive quando GNATIVE estiver pendente. GNATIVE exige, em T+18–20, caso real, perfil AgentV2, skill distribuída e carregada, bridge MCP privada, porta real de Planner e retorno ao produto. Os oito packs têm contratos e concessões definidos em T+20; sua funcionalidade e paridade completas são exigidas por AM02/G4 em T+75. Consulte output_handoffs e task_output_dependencies. Publicar um incremento não significa concluir a task inteira. Checkpoints são cumulativos: integrar e provar outputs prontos sem esperar25/40/55/75. Uma task pode publicar incremento sem estar DONE; cada consumidor prova o SHA recebido.",
       "Writers e recibos": "WP é o owner lógico. ownership.actor_boundaries e skill_leases identificam o escritor de cada path e seu intervalo. Um arquivo tem um escritor. Consumir ou empacotar um blob recebido não autoriza editar a fonte. Transferência exige o SHA recebido, o encerramento do lease anterior e o aceite do próximo escritor. Registre SHA, ator, task, output, versão contratual, consumidor, prova, resultado esperado e observado e ETA. Use GitHub MCP para operações remotas; sem gh, login ou token novo.",
       "Capacidade e prazo": "São cinco sessões com quatro slots cada, incluindo a coordenadora. As fatias de coordenação são parte do orçamento: uma coordenadora que escreve não executa outra atividade ao mesmo tempo. Três builders encerram para liberar seus slots a reviewers novos. G2H mede capacidade, fila, setup, testes, latência do host e trabalho remanescente. Se 120 minutos não couberem, preserve todos os critérios, publique o próximo ETA e continue o escopo integral. Não declare uma entrega parcial como concluída.",
-      "Provas": "AM01 cobre cinco perfis e dezoito skills; AM02, os oito packs; AM03, isolamento e revogação; AM04, aplicação e idempotência; AM05, Atlas, documentos, scanner e reinício; AM06, Relay e retorno ao produto. E01–E18 permanecem cumulativos. Um perfil listado ou uma skill no catálogo não prova carga ou execução. Testes do repositório rodam somente no GitHub Actions; typecheck, geração e guards seguem AGENTS. CI-APP-SRC e CI-APP-BROWSER têm requests distintas e ambas são obrigatórias no mesmo candidato."
+      "Provas": "AM01 cobre cinco perfis e dezoito skills; AM02, os oito packs; AM03, isolamento e revogação; AM04, aplicação e idempotência; AM05, Atlas, documentos, scanner e reinício; AM06, Relay e retorno ao produto. E01–E18 permanecem cumulativos. Um perfil listado ou uma skill no catálogo não prova carga ou execução. Testes do repositório rodam somente no GitHub Actions; typecheck, geração e guards seguem AGENTS. CI-APP-SRC e CI-APP-BROWSER têm requests distintas e ambas são obrigatórias no mesmo candidato. Dispatcher único deduplica solicitações idênticas; achados seguem ao autor assim que reproduzidos. C é o produto testado; D apenas arquiva evidências nos paths admitidos, mantém os SHAs originais e recebe guard próprio.",
+      "Workflow e contexto": "Use COMMON e seu pack completo em execution/actors; consulte fonte real e dependências quando necessário. S0 supervisiona N sessões conforme execution_workflow; mensagens notificam e commits/recibos comprovam. O preset N4 só é admitido depois do arranque/ACK e da capacidade real observada."
     },
     "S0": {
       "replace_section": "Responsabilidade da integradora",
-      "body": "Abra WP00 e WP10 em T0 e confirme as outras quatro sessões até GREADY. S0-A produz o corpus até T+10 e implementa T07/Atlas entre T+10 e T+55. S0-B faz preflight até T+10 e implementa T06/runtime até T+45. S0-C controla CI e harness até T+40, aceita WP14 em T+43, conclui sua construção em T+68 e prova seu consumo até T+75; depois retoma o controle de CI. Você mantém contratos, composition roots e arquivos compartilhados. Os arquivos delegados continuam com seus escritores.\n\nReceba AI-NATIVE em T+13, NATIVE-CASE em T+14, NATIVE-PLANNER em T+15 e NATIVE-RUNTIME em T+16. Componha a cadeia real até T+18 para S3 qualificar GNATIVE até T+20. Entregue o provider protegido de C08 em T+25. Integre incrementos em T+25/40/55/75 sem sobrescrever outro escritor. T07 fornece a persistência e a integração Atlas; WP14 fornece funções e traduções puras.\n\nConfirme a liberação de S1-B/S2-B em T+72 e S3-A em T+75 antes de iniciar S1-R1/S2-R2/S3-R3. Esses reviewers são novos e não editam produto. S1/S2/S3 recebem os leases de correção de WP02/WP05/WP07. Registre G2H e repita os gates necessários no candidato aceito. Se 120 minutos forem excedidos, preserve o escopo e continue com ETA factual."
+      "body": "Confira primeiro capacidades reais de lifecycle/mensagens e limites globais. Lance ou reconheça S1–S4 com identidade fixa e seus packs; receba ACKs e só então admita o preset N=4 pela capacidade observada. Não invente ferramenta de criação de sessões nem multiplique a árvore global de quatro slots.\n\nAbra WP00 e WP10 em T0 e confirme as outras quatro sessões até GREADY. S0-A produz o corpus até T+10 e implementa T07/Atlas entre T+10 e T+55. S0-B faz preflight até T+10 e implementa T06/runtime até T+45. S0-C controla CI e harness até T+40, aceita WP14 em T+43, conclui sua construção em T+68 e prova seu consumo até T+75; depois retoma o controle de CI. Você mantém contratos, composition roots e arquivos compartilhados. Os arquivos delegados continuam com seus escritores.\n\nReceba AI-NATIVE em T+13, NATIVE-CASE em T+14, NATIVE-PLANNER em T+15 e NATIVE-RUNTIME em T+16. Componha a cadeia real até T+18 para S3 qualificar GNATIVE até T+20. Entregue o provider protegido de C08 em T+25. Integre incrementos em T+25/40/55/75 sem sobrescrever outro escritor. T07 fornece a persistência e a integração Atlas; WP14 fornece funções e traduções puras.\n\nConfirme a liberação de S1-B/S2-B em T+72 e S3-A em T+75 antes de iniciar S1-R1/S2-R2/S3-R3. Esses reviewers são novos e não editam produto. S1/S2/S3 recebem os leases de correção de WP02/WP05/WP07. Registre G2H e repita os gates necessários no candidato aceito. Se 120 minutos forem excedidos, preserve o escopo e continue com ETA factual.\n\nConsuma os inputs nativos dentro da própria reserva10–18, inclusive16–18; nenhuma barreira geral de polling retém essa composição até25. Reserve55–60 para guias normativos no README e60–75 para consumidores/ajustes antes de C. Depois de103 prepare somente evidência; qualquer alteração normativa cria C novo. Use a fila única de outputs, achados e validação. Conclua por GLOBAL_RELEASE após aceite completo e verificação remota.\n\nMantenha roster, leases, fila e alocações de delivery em sf2-control, nunca como base CI nem por merge em C/D. Em D incorpore somente blobs evidenciais admitidos, preservando source commit/path/blob hash. Aloque path completo novo por tentativa de entrega; retries preservam receipts anteriores e a lista finita de paths já admitidos para o mesmo C."
     },
     "S1": {
       "replace_section": "Sua orquestração",
-      "body": "Abra S1-A/WP01, S1-B/WP02 e S1-C/WP03. Coordene sem editar os arquivos dos builders enquanto seus leases estiverem ativos. Reserve T+10–13 para a fonte sf-explicar-forecast de WP12.T01; T+13–16 para coordenação e handoff do Planner; T+16–29 para as outras cinco fontes de Finance/Portfólio em skill_leases. Escreva somente esses source_paths na branch sf2-skills-finance. S4-B controla os manifests. Publique commit e hashes e transfira a escrita dessas fontes a S4-B em T+29.\n\nEm T+72, receba o head e o lease de WP02, encerre S1-B e confirme o slot livre. Só então abra um novo S1-R1 para revisão independente de produto e UX. Você assume as correções de WP02; WP01 e WP03 mantêm seus autores. O reviewer não corrige código e não é o builder renomeado. Leitura e revisão entre T+72 e T+95 fazem parte do orçamento."
+      "body": "Abra S1-A/WP01, S1-B/WP02 e S1-C/WP03. Coordene sem editar os arquivos dos builders enquanto seus leases estiverem ativos. Reserve T+10–13 para a fonte sf-explicar-forecast de WP12.T01; T+13–16 para coordenação e handoff do Planner; T+16–29 para as outras cinco fontes de Finance/Portfólio em skill_leases. Escreva somente esses source_paths na branch sf2-skills-finance. S4-B controla os manifests. Publique commit e hashes e transfira a escrita dessas fontes a S4-B em T+29.\n\nEm T+72, receba o head e o lease de WP02, encerre S1-B e confirme o slot livre. Só então abra um novo S1-R1 para revisão independente de produto e UX. Você assume as correções de WP02; WP01 e WP03 mantêm seus autores. O reviewer não corrige código e não é o builder renomeado. Leitura e revisão entre T+72 e T+95 fazem parte do orçamento.\n\nEnvie à S0 ACK real de instância/pack/lease, OUTPUT_READY por incremento e checkpoint com próximo passo. Não dispare CI duplicado. Preserve obrigação de retomada até GLOBAL_RELEASE; builder que encerra transfere correções antes de liberar slot. Receba alterações de contrato por versão e reexecute somente o que mudou e os gates finais obrigatórios."
     },
     "S2": {
       "replace_section": "Sua orquestração",
-      "body": "Abra S2-A/WP04, S2-B/WP05 e S2-C/WP06, este último para imports. Você executa WP06.T05 somente em product/documents e seus testes e recibos documentais, nos intervalos T+13–22 e T+24–35. Reserve T+22–24 para coordenação. Entregue o resolver real em T+20 e a extração completa em T+35. Parser de planilha não é pré-requisito. S2-C constrói T01–T04 até T+53 e recebe seu lease documental nesse momento para corrigir e provar o consumo.\n\nReceba o controle de CI de S0-C em T+40 e opere nas fatias T+45–50, T+55–65 e T+70–75. Preserve coordenação em T+40–45, T+50–55 e T+65–70. Em T+72, receba o lease de WP05 e encerre S2-B; abra S2-R2 no slot confirmado como livre. Entregue CI a S0-C em T+75 e assuma as correções de WP05. O reviewer novo julga sem escrever código. Preserve workflows, validators e arquivos de outros writers."
+      "body": "Abra S2-A/WP04, S2-B/WP05 e S2-C/WP06, este último para imports. Você executa WP06.T05 somente em product/documents e seus testes e recibos documentais, nos intervalos T+13–22 e T+24–35. Reserve T+22–24 para coordenação. Entregue o resolver real em T+20 e a extração completa em T+35. Parser de planilha não é pré-requisito. S2-C constrói T01–T04 até T+53 e recebe seu lease documental nesse momento para corrigir e provar o consumo.\n\nReceba o controle de CI de S0-C em T+40 e opere nas fatias T+45–50, T+55–65 e T+70–75. Preserve coordenação em T+40–45, T+50–55 e T+65–70. Em T+72, receba o lease de WP05 e encerre S2-B; abra S2-R2 no slot confirmado como livre. Entregue CI a S0-C em T+75 e assuma as correções de WP05. O reviewer novo julga sem escrever código. Preserve workflows, validators e arquivos de outros writers.\n\nEnvie à S0 ACK real de instância/pack/lease, OUTPUT_READY por incremento e checkpoint com próximo passo. Não dispare CI duplicado. Preserve obrigação de retomada até GLOBAL_RELEASE; builder que encerra transfere correções antes de liberar slot. Receba alterações de contrato por versão e reexecute somente o que mudou e os gates finais obrigatórios."
     },
     "S3": {
       "replace_section": "Sua orquestração",
-      "body": "Abra S3-A/WP07, S3-B/WP08 e S3-C/WP09. Receba o preflight de S0-B e prepare GNATIVE em T+10–16; exerça a cadeia real e as recusas em T+18–20. Coordene em T+20–23. Escreva apenas as cinco fontes Maestro/Revisor de WP12.T02 em T+23–38, na branch sf2-skills-maestro. Publique commit e hashes e transfira essas fontes a S4-B em T+38. Essa delegação não concede escrita de manifests, loader ou host.\n\nCoordene até T+75 e receba o lease de WP07. Encerre S3-A e somente depois inicie um novo S3-R3 no slot livre para revisar IA, MCP, Atlas, Relay e documentos. Você passa a escrever as correções de WP07. R3 inclui leitura e revisão em T+75–95 e rechecks em T+95–118. Se a reserva não bastar, registre o efeito em G2H e mantenha os critérios."
+      "body": "Abra S3-A/WP07, S3-B/WP08 e S3-C/WP09. Receba o preflight de S0-B e prepare GNATIVE em T+10–16; exerça a cadeia real e as recusas em T+18–20. Coordene em T+20–23. Escreva apenas as cinco fontes Maestro/Revisor de WP12.T02 em T+23–38, na branch sf2-skills-maestro. Publique commit e hashes e transfira essas fontes a S4-B em T+38. Essa delegação não concede escrita de manifests, loader ou host.\n\nCoordene até T+75 e receba o lease de WP07. Encerre S3-A e somente depois inicie um novo S3-R3 no slot livre para revisar IA, MCP, Atlas, Relay e documentos. Você passa a escrever as correções de WP07. R3 inclui leitura e revisão em T+75–95 e rechecks em T+95–118. Se a reserva não bastar, registre o efeito em G2H e mantenha os critérios.\n\nEnvie à S0 ACK real de instância/pack/lease, OUTPUT_READY por incremento e checkpoint com próximo passo. Não dispare CI duplicado. Preserve obrigação de retomada até GLOBAL_RELEASE; builder que encerra transfere correções antes de liberar slot. Receba alterações de contrato por versão e reexecute somente o que mudou e os gates finais obrigatórios."
     },
     "S4": {
       "replace_section": "Sua orquestração",
-      "body": "Abra S4-A/WP11, S4-B/WP12 e S4-C/WP13. Você escreve WP14.T05 em T+10–20, coordena em T+20–22, escreve T01 em T+22–34, coordena em T+34–35 e escreve T02 em T+35–43. Entregue mapSfAtlasEntry em T+20. Em T+43, feche seu lease de WP14 e entregue o commit para S0-C assumir T03/T04. Depois disso, WP14 fica somente leitura para você. S0-A permanece ocupado com T07.\n\nS4-B mantém perfis, manifests e sete fontes Procurement/shared. Recebe os commits de S1 em T+29 e S3 em T+38, produz o bundle 5/18 em T+42 e implementa interpretação, crítica e lifecycle. AI-CATALOG-PORT em T+25 é interface de construção. A execução real das dezoito skills só consome AI-CATALOG/AI-FULL após T+42. O Revisor tem instruções, run e sessão próprios.\n\nApós coordenação em T+45–55, execute AM01/AM06 e seus consumidores até T+75. Repita as provas necessárias no candidato congelado em T+75–95 e os rechecks em T+103–118. Registre modelo efetivo, digest da skill, tool calls, output persistido e consumidor. Os três reviewers novos emitem os pareceres independentes."
+      "body": "Abra S4-A/WP11, S4-B/WP12 e S4-C/WP13. Você escreve WP14.T05 em T+10–20, coordena em T+20–22, escreve T01 em T+22–34, coordena em T+34–35 e escreve T02 em T+35–43. Entregue mapSfAtlasEntry em T+20. Em T+43, feche seu lease de WP14 e entregue o commit para S0-C assumir T03/T04. Depois disso, WP14 fica somente leitura para você. S0-A permanece ocupado com T07.\n\nS4-B mantém perfis, manifests e sete fontes Procurement/shared. Recebe os commits de S1 em T+29 e S3 em T+38, produz o bundle 5/18 em T+42 e implementa interpretação, crítica e lifecycle. AI-CATALOG-PORT em T+25 é interface de construção. A execução real das dezoito skills só consome AI-CATALOG/AI-FULL após T+42. O Revisor tem instruções, run e sessão próprios.\n\nApós coordenação em T+45–55, execute AM01/AM06 e seus consumidores até T+75. Repita as provas necessárias no candidato congelado em T+75–95 e os rechecks em T+103–118. Registre modelo efetivo, digest da skill, tool calls, output persistido e consumidor. Os três reviewers novos emitem os pareceres independentes.\n\nEnvie à S0 ACK real de instância/pack/lease, OUTPUT_READY por incremento e checkpoint com próximo passo. Não dispare CI duplicado. Preserve obrigação de retomada até GLOBAL_RELEASE; builder que encerra transfere correções antes de liberar slot. Receba alterações de contrato por versão e reexecute somente o que mudou e os gates finais obrigatórios."
     }
   },
   "source_receipts": [
@@ -31417,5 +31656,998 @@
       "authoring": "none",
       "correction_writer": "Owner ativo do WP; WP07=S3 após 75."
     }
-  ]
+  ],
+  "execution_workflow": {
+    "workflow_id": "SF2H-SUPERVISOR-V1",
+    "version": "1.0",
+    "status": "PLANNED_NOT_EXECUTED",
+    "purpose": "Uma sessão S0 orquestra N sessões de trabalho, integra continuamente e entrega todo o produto com evidência e revisão independente.",
+    "source_plan_parent": "0aa2405bb3668314f60d6a674d2bd53fd5003091",
+    "scope": "Execution of the existing complete 15-WP/74-task product plan; no additional product runtime or coordination service to build.",
+    "clock": {
+      "target_minutes": 120,
+      "starts": "First supervisor execution; includes admission, session startup, setup and all required gates.",
+      "restart_allowed": false,
+      "deadline_is_stop_condition": false,
+      "status": "CONDITIONAL_NOT_MEASURED"
+    },
+    "topology": {
+      "default_child_sessions": 4,
+      "supervisor": "S0",
+      "child_sessions": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "supervisor_local_auxiliaries": [
+        "S0-A",
+        "S0-B",
+        "S0-C"
+      ],
+      "per_session_slot_cap_including_coordinator": 4,
+      "peak_slots": 20,
+      "identities_over_time": 23,
+      "other_N_policy": "Compile and validate a complete new allocation against observed capacity before execution. Do not retain the 20-slot schedule with fewer actual sessions or assume extra model/runner capacity.",
+      "adapter_required_capabilities": [
+        "start_or_acknowledge_session",
+        "send_mission",
+        "observe_status_and_result",
+        "resume_from_checkpoint",
+        "confirm_closed_or_revoke_writer"
+      ],
+      "missing_adapter_policy": "Current collaboration tools expose a global four-slot limit, not five independent four-slot pools. Git is a ledger and cannot launch or wake sessions. Full automation requires a proven independent-session backend. An assisted five-conversation start is usable only after actual startup and capacity verification; Git receipts still do not auto-wake an idle chat.",
+      "campaign_states": [
+        "PREPARE",
+        "STARTING",
+        "ACTIVE",
+        "FINAL_VERIFY",
+        "DELIVERED",
+        "CONTINUING_LATE",
+        "CAPACITY_HOLD"
+      ],
+      "parallel_activities_within_ACTIVE": [
+        "build",
+        "native_qualification",
+        "incremental_integration",
+        "proofs",
+        "independent_review",
+        "correction_queue"
+      ],
+      "lane_states": [
+        "PLANNED",
+        "LEASED",
+        "RUNNING",
+        "OUTPUT_READY",
+        "INTEGRATED",
+        "VERIFIED",
+        "DONE",
+        "BLOCKED"
+      ],
+      "session_states": [
+        "REQUESTED",
+        "ACKNOWLEDGED",
+        "ACTIVE",
+        "STATUS_UNKNOWN",
+        "CLOSED"
+      ],
+      "events": [
+        "SESSION_ACK",
+        "OUTPUT_READY",
+        "INTEGRATION_RESULT",
+        "BLOCKED",
+        "FINDING",
+        "PROOF_RESULT",
+        "LEASE_RELEASED",
+        "SESSION_CLOSED"
+      ],
+      "event_idempotency_key": [
+        "campaign_id",
+        "lane_or_output_id",
+        "epoch",
+        "sha"
+      ],
+      "terminal_success": "Full scope on final candidate; all mandatory evidence accepted; three independent reviewers; no mandatory open findings; final commit and receipts verified.",
+      "nonterminal_conditions": [
+        "phase budget exhausted",
+        "T120 exceeded",
+        "one producer blocked",
+        "one session status unknown",
+        "partial READY_FOR_INTEGRATION"
+      ],
+      "no_new_infrastructure_requirement": true,
+      "peak_slots_status": "DESIRED_PRESET_ONLY_UNTIL_ADMITTED",
+      "current_collaboration_backend": {
+        "global_slot_cap_including_root": 4,
+        "independent_session_launcher_observed": false,
+        "N4_preset_admitted": false
+      },
+      "admission_conditions": [
+        "backend actually creates or acknowledges five independent sessions",
+        "independent capacity pools verified, not inferred from five session IDs",
+        "twenty total slots verified including coordinators, without exceeding a global backend cap",
+        "model and CI concurrency measured separately",
+        "all sessions acknowledge pinned plan SHA and unique lane leases"
+      ]
+    },
+    "parameters": {
+      "N": {
+        "default": 4,
+        "meaning": "Number of worker coordinator sessions besides supervisor S0; not number of task agents.",
+        "compiled_presets": [
+          4
+        ],
+        "other_values": "Require a complete validated task/lease/slot allocation using observed capacity; not admitted by this preset."
+      },
+      "plan_commit": "Exact commit containing the generated workflow and all actor packs.",
+      "code_baseline_commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf; reconcile any newer code before admission.",
+      "execution_instance": "New unique ID for this execution, persistent through resumes.",
+      "session_backend": "Observed lifecycle and messaging capabilities; never infer independent pools from multiple IDs.",
+      "observed_capacity": "Global cap, per-pool cap, actual session/actor IDs and separately observed model/runner concurrency."
+    },
+    "transport": {
+      "automatic": {
+        "requires": [
+          "Create independent sessions",
+          "Assign a pinned mission",
+          "Send and receive events",
+          "Observe lifecycle and results",
+          "Resume a checkpoint",
+          "Stop or revoke a writer"
+        ],
+        "use": "Bind each capability to a real exposed tool/API at startup. Record the actual identifiers and results. No fictitious session tool names.",
+        "unknown_capability": "Mark CAPACITY_HOLD for this preset, retain authorized disjoint preparation, report the concrete unavailable capability."
+      },
+      "assisted": {
+        "start": "Start S0 and the four assigned S1–S4 conversations once using the pinned prompts; verify independent capacity before admitting the preset.",
+        "coordination": "GitHub branch heads and immutable receipts are the common ledger while sessions remain active. Native messaging, when present, carries notifications only.",
+        "resume": "A final/idle conversation requires a real supported resume action or user resumption. A Git commit does not wake it.",
+        "limits": "This mode is not advertised as automatic session creation or automatic recovery."
+      },
+      "current_tree": {
+        "global_slots_including_root": 4,
+        "independent_session_launcher_observed": false,
+        "warning": "Nested collaboration agents share the same four-slot tree; do not claim twenty slots from nested spawning."
+      },
+      "ledger": {
+        "supervisor_owned": "modules/sucafina/Sucafinav1/docs/sf2h/control/",
+        "worker_owned": "Use the existing WP receipt namespace on the assigned writer branch.",
+        "authoritative_artifact": "Immutable commit, blob digests and accepted lease; a message is a notification, not evidence of integration.",
+        "supervisor_branch": "sf2-control",
+        "product_branch": "sf2-integrate",
+        "never_merge_control": true,
+        "ci_base": "Explicit product candidate C, never the moving control branch",
+        "copy_rule": "Only approved immutable receipt blobs, preserving source commit/path/blob hash; no full branch merge into D."
+      },
+      "polling": {
+        "mode": "Native events when available; otherwise batch only S1–S4 receipt/head reads at handoffs and a two-minute operational target while S0 is active.",
+        "target_is_guarantee": false,
+        "rules": [
+          "Read changed deltas, not full plans or complete histories.",
+          "General status polling does not consume a simultaneous coding slot. Reading and integrating the exact inputs required by the current task belongs to that task: S0 consumes AI-NATIVE/NATIVE-CASE/NATIVE-PLANNER/NATIVE-RUNTIME inside composition10–18, including its16–18 input rendezvous, never waiting for25.",
+          "Do not turn a missing heartbeat into a dead-session verdict.",
+          "No busy polling or long blocking sleeps; use supported event waits and preserve user progress updates."
+        ]
+      }
+    },
+    "dispatch": {
+      "mode": "OUTPUT_READY_WITH_SINGLE_INTEGRATION_WRITER",
+      "time_semantics": "Existing windows are reservations and diagnostic checkpoints. Earlier actual starts require predecessor outputs, active owner/lease, free capacity and an explicit allocation update; no automatic window compression.",
+      "unit_of_dispatch": "Persistent writer lane containing its continuous assigned tasks; tasks remain separate acceptance units.",
+      "priority": [
+        "outputs on the GNATIVE chain",
+        "producer outputs releasing the Atlas/memory critical tail",
+        "candidate-blocking corrections and CI inputs",
+        "other ready increments"
+      ],
+      "checkpoints_are_not_barriers": true,
+      "critical_output_groups": [
+        {
+          "id": "NATIVE-QUALIFICATION",
+          "outputs": [
+            "AI-NATIVE",
+            "NATIVE-CASE",
+            "NATIVE-PLANNER",
+            "NATIVE-RUNTIME"
+          ],
+          "consumer": "NATIVE-COMPOSE",
+          "nominal_deadline": 18,
+          "rule": "Integrate the ready critical batch before composition/qualification; never wait for T25."
+        },
+        {
+          "id": "ATLAS-BASE",
+          "outputs": [
+            "DOC-REF",
+            "ATLAS-MAP",
+            "ATLAS-PACKAGE"
+          ],
+          "later_input": "PROTECTED-STORE",
+          "nominal_first_deadline": 20,
+          "later_input_deadline": 25,
+          "rule": "Do not pretend protected storage was ready in the T20 batch."
+        },
+        {
+          "id": "RESIDENT-CONSUMPTION",
+          "outputs": [
+            "AI-FULL",
+            "MCP-FULL",
+            "ATLAS-ROUNDTRIP"
+          ],
+          "nominal_deadlines": [
+            42,
+            45,
+            45
+          ],
+          "rule": "Start proofs whose complete inputs are ready; do not block them on unrelated late outputs."
+        },
+        {
+          "id": "MEMORY-TAIL",
+          "outputs": [
+            "WP14-LEASE",
+            "ATLAS-FULL",
+            "MEMORY-CONSUMPTION"
+          ],
+          "nominal_deadlines": [
+            43,
+            55,
+            68
+          ],
+          "consumption_deadline": 75,
+          "rule": "Prioritize the real producer and all six consumers. Earlier delivery requires observed completed work, not a smaller date in the plan."
+        }
+      ],
+      "reviewer_early_start": {
+        "enabled_only_if": [
+          "builder source work closed",
+          "correction writer accepted its lease",
+          "reviewable integrated SHA exists",
+          "previous agent actually terminated",
+          "physical slot observed free"
+        ],
+        "slots": {
+          "S1-R1": "S1-B",
+          "S2-R2": "S2-B",
+          "S3-R3": "S3-A"
+        },
+        "scope": "An early partial review states its actual SHA and scope; final complete coverage and affected-delta rechecks remain mandatory.",
+        "no_21st_actor": true
+      },
+      "freeze_rule": "latest feasible freeze = T118 minus observed resource-constrained critical tail for all remaining mandatory CI/live/review gates. Unknown latency preserves UNKNOWN/CONDITIONAL; T103 is not unconditional.",
+      "communication": "Real local collaboration events inside a session; proven cross-session adapter when available. Git receipt index with bounded coordinator polling is an explicit fallback, not an invented push bus.",
+      "recovery": "Consult actual session state and checkpoint before resume; no duplicate writer after a timeout. Takeover requires closed/revoked prior write authority, lease transfer, new epoch and head CAS.",
+      "metrics": [
+        "ready_to_integrated_minutes",
+        "dependency_wait_minutes",
+        "coordination_wait_minutes",
+        "agent_context_reloads",
+        "duplicate_dispatches",
+        "ownership_conflicts",
+        "last_critical_output_minute",
+        "CI_queue_setup_execution_collection",
+        "final_review_complete_minute",
+        "remaining_critical_path_ETA"
+      ],
+      "unmeasured_operating_target": "Critical output handling immediately when its owner and S0 are available; normal ready-queue age below two minutes when S0 is available. This is a target, not measured performance."
+    },
+    "mission": {
+      "unit": "Persistent actor/writer job spanning its existing task assignments and lease phases.",
+      "identity_fields": [
+        "execution_instance",
+        "plan_commit",
+        "code_baseline_commit",
+        "session_id",
+        "actor_id",
+        "job_id",
+        "attempt_id",
+        "lease_epoch"
+      ],
+      "payload_fields": [
+        "actor_pack_path",
+        "actor_pack_digest",
+        "common_context_digest",
+        "assigned_task_ids",
+        "scope_slices",
+        "branch",
+        "write_paths",
+        "read_only_dependencies",
+        "input_output_refs",
+        "contract_versions",
+        "proof_responsibilities",
+        "checkpoint",
+        "completion_rule"
+      ],
+      "launch_ack": "Child returns its real session/actor ID, loaded pack/source digest, branch, accepted scope and current capacity before writing.",
+      "selection": "All identities, WPs and branches are assigned; workers never choose a slice or claim a common file.",
+      "delegation": "A coordinator dispatches only its three declared local auxiliary slots. Starting a child coordinator does not grant a new capacity pool.",
+      "task_acceptance": "A job can cover multiple tasks and partial delegations. Each task keeps its own axioms/checks; a delegated source contribution cannot mark the entire task DONE."
+    },
+    "event_protocol": {
+      "events": [
+        "SESSION_ACK",
+        "JOB_STARTED",
+        "OUTPUT_READY",
+        "CONSUMED",
+        "INTEGRATION_RESULT",
+        "VALIDATION_REQUEST",
+        "PROOF_RESULT",
+        "FINDING",
+        "BLOCKED",
+        "CHECKPOINT",
+        "LEASE_RELEASED",
+        "SESSION_CLOSED",
+        "GLOBAL_RELEASE"
+      ],
+      "identity": [
+        "execution_instance",
+        "event_id",
+        "actor_id",
+        "attempt_id",
+        "lease_epoch",
+        "sequence"
+      ],
+      "payload": [
+        "task_or_output_ids",
+        "source_commit",
+        "previous_checkpoint",
+        "contract_digests",
+        "changed_paths",
+        "evidence_refs",
+        "observed_state",
+        "next_action",
+        "owner_eta"
+      ],
+      "idempotency": "Deduplicate event_id inside execution_instance. Accept sequence per actor/attempt and reconcile duplicates without reapplying writes.",
+      "readiness": "OUTPUT_READY names a committed consumable output, producer, dependencies, consumer and evidence; it does not mark a WP DONE.",
+      "receipt": "CONSUMED names the exact producer SHA, consumer SHA and observed behavior. A message saying integrated is insufficient.",
+      "reject": [
+        "Wrong execution instance or plan digest",
+        "Stale/revoked lease epoch",
+        "Unexpected writer/path",
+        "Missing commit or source evidence",
+        "Claimed output without its declared dependency"
+      ],
+      "timing": "Emit at material state changes and required checkpoints. Do not narrate every task step or resend unchanged files."
+    },
+    "coordination": {
+      "sole_integrator": "S0 on sf2-integrate; never edit the source files of an active delegated writer.",
+      "queue_key": [
+        "execution_instance",
+        "output_id",
+        "producer_sha",
+        "contract_digest",
+        "lease_epoch"
+      ],
+      "order": [
+        "outputs on the GNATIVE chain",
+        "producer outputs releasing the Atlas/memory critical tail",
+        "candidate-blocking corrections and CI inputs",
+        "other ready increments"
+      ],
+      "integration": "Consume ready increments as soon as the integration slot and prerequisites permit. T25/40/55/75 are cumulative checkpoints, never queue barriers.",
+      "native_exception_explicit": "AI-NATIVE13 + NATIVE-CASE14 + NATIVE-PLANNER15 + NATIVE-RUNTIME16 must compose in S0 before T18; do not wait for T25.",
+      "contract_change": "Single versioned change notice names producer, all affected consumers and invalidated evidence. No parallel private schema variants.",
+      "reuse": {
+        "immutable_discovery_key": [
+          "repository",
+          "commit",
+          "path",
+          "blob_sha",
+          "question"
+        ],
+        "handoff_consumption_key": [
+          "campaign",
+          "job_id",
+          "lease_generation",
+          "output_id",
+          "producer_sha",
+          "contract_digest"
+        ],
+        "single_producers": [
+          {
+            "kind": "Shared UI/states",
+            "owner": "WP01.T02/T03"
+          },
+          {
+            "kind": "Financial calculations/projections",
+            "owner": "WP03"
+          },
+          {
+            "kind": "Eight-chart presentation/catalog",
+            "owner": "WP05"
+          },
+          {
+            "kind": "Parse/normalization",
+            "owner": "WP06.T01"
+          },
+          {
+            "kind": "Document extraction/evidence",
+            "owner": "WP06.T05"
+          },
+          {
+            "kind": "Runtime/skill/MCP bridge",
+            "owner": "WP10.T06 with WP12 manifests"
+          },
+          {
+            "kind": "Host/storage/Atlas composition",
+            "owner": "WP10.T01/T07"
+          }
+        ],
+        "reuse_limit": "Shared structure and existing modules only; preserve operation-specific handlers/semantics, distinct skill content and all positive/negative proof routes. No new business DSL or fake generic adapter.",
+        "integration": "S0 one queue, within existing time allocation; critical native handoffs first; batch by consumable increment, not checklist row; do not delay 13/14/15/16 native handoffs for larger batches.",
+        "acceptance": "Fixtures permit isolated construction only; no final acceptance until real producers and consumers are integrated."
+      },
+      "shared_workspace": "Writers use isolated branches/checkouts or separately materialized workspaces. Shared filesystem visibility does not grant shared write authority.",
+      "control_branch": "sf2-control, same S0 actor and existing time budget; operational state never mutates the product candidate."
+    },
+    "validation": {
+      "supervision": {
+        "logical_owner": "S0",
+        "worker_sessions": "N, observadas e limitadas pela capacidade real; padrão S1–S4",
+        "exclusive_dispatcher": "Um lease por vez; padrão S0-C[0,40], S2[40,75], S0-C[75,118]",
+        "handoff": "Transferir candidato, fila, request keys, run IDs, attempts, conclusões e ETAs; não disparar duplicata ao assumir.",
+        "storage": "Usar docs/sf2h/control e docs/sf2h/receipts/WP10 já no ownership WP10; sem serviço novo.",
+        "worker_rule": "Worker solicita validação e entrega eventos; não cria CI duplicado nem escreve o registro central sem lease.",
+        "session_completion": "Coordenadora trabalhadora conserva obrigação de retomada até GLOBAL_RELEASE; builders podem liberar slots após handoff a escritor de correções ativo."
+      },
+      "deduplication": {
+        "key_fields": [
+          "product_candidate_sha",
+          "product_tree_hash",
+          "normalized_request_hash",
+          "workflow_and_validator_source_identity",
+          "effective_runtime_and_config_identity",
+          "fixture_and_test_selection_identity"
+        ],
+        "adopt_inflight": "Somente chave idêntica; registrar solicitantes/critério e preservar run/snapshot originais.",
+        "adopt_complete": "Somente resultado completo para a mesma chave, seleção observada correta, controle omni válido, artefatos íntegros e sem invalidadores posteriores.",
+        "not_reusable_as_pass": [
+          "missing evidence",
+          "BLOCKED",
+          "cancelled",
+          "empty selection",
+          "selection mismatch",
+          "artifact missing",
+          "old candidate with changed source",
+          "unknown dependency impact"
+        ],
+        "no_new_infrastructure": true
+      },
+      "incremental": {
+        "preflight": "WP10.T04 inicia em T0; verificar requests/aliases/executor e iniciar um probe existente válido antes de T25 quando possível, dentro do mesmo dispatcher. Mede somente a seleção observada; não fecha prova de produto futuro.",
+        "trigger": "READY_FOR_INTEGRATION seguido de integração real e confirmação dos produtores/consumidores necessários; não esperar uma hora ou o fim do WP.",
+        "selection": "Testes da mudança + consumidores transitivos dos contratos/ports alterados; unknown amplia seleção ou marca BLOCKED.",
+        "am02_route_ready": [
+          "producer actual output integrated",
+          "bridge/context actual",
+          "profile and skill loaded receipt",
+          "current authorization",
+          "required consumer integrated",
+          "fixture and oracle version identified"
+        ],
+        "am02_inference": "Harness direto autorizado já previsto pode provar chamadas determinísticas com binding e SkillLoadReceipt; não requer uma inferência nova por operação. AM01 continua provando modelo real e todas as contribuições de skills.",
+        "criterion_mapping": "Uma execução pode fornecer múltiplas observações específicas; cada criterion_id mantém expected/observed e evidência concreta. Nenhum pacote verde aprova todas as linhas automaticamente."
+      },
+      "final_acceptance": {
+        "same_product_candidate_required": true,
+        "required_recipes": [
+          "CI-SF",
+          "CI-CLI",
+          "CI-APP-SRC",
+          "CI-APP-BROWSER",
+          "CI-ATLAS-BUSINESS",
+          "CI-UI-OPERATIONS",
+          "CI-UI-DECISIONS",
+          "CI-UI-REPORTS"
+        ],
+        "additional_epic_suites_required": true,
+        "required_live_proofs": [
+          "AM01",
+          "AM02",
+          "AM03",
+          "AM04",
+          "AM05",
+          "AM06"
+        ],
+        "required_static_gates": [
+          "BUILD-ATLAS",
+          "CHECK-ATLAS-GENERATED",
+          "TYPECHECK-ATLAS",
+          "CHECK-SPAWNS",
+          "GUARDS",
+          "affected package typechecks"
+        ],
+        "runner_parallelism": "Observada, nunca presumir oito runners; cada Playwright conserva seu worker/configuração vigente.",
+        "cache_limit": "Resultados idênticos já executados em C podem satisfazer sua seleção exata. Recibos de outro candidato não são relabelados. Mudança final de produto reabre gates pertinentes e exige completar novamente a cobertura obrigatória no C aceito."
+      },
+      "invalidators": [
+        {
+          "change": "Contratos C01–C17, schema, enum, export ou semântica de port",
+          "incremental": "Produtor, todos consumidores transitivos e provas que dependem desses contratos",
+          "final": "Novo candidato C; seleções obrigatórias e AM afetadas com identidade atual"
+        },
+        {
+          "change": "Motor financeiro, inventário de custo, confirmação material, FX ou versionamento",
+          "incremental": "Oráculos financeiros/CONFIRM-SCOPE, Planner, BI, Procurement/decisão/portfólio e rotinas consumidoras",
+          "final": "CI-SF e consumidores obrigatórios; AM01/AM02/AM04/AM06 conforme dependência; matriz final integral preservada"
+        },
+        {
+          "change": "Identity/access, binding, MCP bridge, capabilities, source revocation ou incarnation",
+          "incremental": "Todos caminhos de entrada e egress atingidos; positivos e negativos; UI, export, fonte, Atlas e MCP",
+          "final": "Requalificar AM02/AM03 e demais AM que atravessam a fronteira alterada; desconhecido invalida todas"
+        },
+        {
+          "change": "Profile/skill source, workflow, template ou carregamento",
+          "incremental": "Witnesses das skills e perfis alterados, grants, outputs e consumidores; reviewer se sua independência/inputs mudaram",
+          "final": "AM01 e rotas AM02/AM06 atingidas; provar digests atuais no mesmo C"
+        },
+        {
+          "change": "Atlas generator, entry, artifacts, scanner linkage, schema, store, resolver ou outbox",
+          "incremental": "Generate/check:generated/typecheck/spawn, boundary suite e consumidores; scanner/restart/idempotency/ACL quando afetados",
+          "final": "CI-ATLAS-BUSINESS e AM05; AM03 e demais consumidores conforme dependência"
+        },
+        {
+          "change": "UI shell, shared component, route, styling, keyboard ou viewport behavior",
+          "incremental": "APP-SRC/APP-BROWSER pertinentes e Playwright de todos consumidores; estados, acessibilidade e regressões visuais afetados",
+          "final": "As seleções finais completas continuam obrigatórias; alteração puramente visual não invalida aritmética imutável como nova observação, mas não dispensa o candidato final"
+        },
+        {
+          "change": "Fixture, oracle, test source, request args ou selection config",
+          "incremental": "Reexecutar seleção correspondente; resultado anterior não testa a nova asserção ou fixture",
+          "final": "Proibir união de seleções parciais como se uma seleção completa tivesse executado"
+        },
+        {
+          "change": "Root lock/package, module resolver, compiler, runtime, workflow ou test validator",
+          "incremental": "Expandir por dependências e ambiente efetivo; unknown => expansão conservadora",
+          "final": "Reestabelecer requests, geração/typecheck e seleções obrigatórias sob configuração observada"
+        },
+        {
+          "change": "Modelo, scanner binário, política de acesso ou estado externo usado na prova",
+          "incremental": "Requalificar provas live afetadas e registrar identidade/versão atual; cache de código não prova estado externo",
+          "final": "AMs e gate ambiental pertinentes em C; nenhum segredo no request"
+        },
+        {
+          "change": "Recibo/parecer puramente evidencial dentro de paths previamente admitidos",
+          "incremental": "Conferir integridade e diff; não reexecutar produto pela gravação da própria evidência",
+          "final": "Somente pela regra explícita C→D: C permanece candidato testado, D arquiva evidência; guards em D. Qualquer mudança fora do envelope cria C novo"
+        }
+      ],
+      "review": {
+        "event_fields": [
+          "finding_id",
+          "candidate_sha",
+          "criterion_ids",
+          "reproduction",
+          "affected_paths",
+          "owner",
+          "severity"
+        ],
+        "dispatch": "Ao demonstrar o achado, sem esperar parecer consolidado ou T95; S0 encaminha ao escritor ativo com lease.",
+        "correction": "Writer devolve commit, classificação do delta, testes afetados e evidência; revisor independente reavalia delta e bordas.",
+        "window_rule": "95–103 continua reserva para correções tardias, não barreira para começar; 103–118 mantém rechecagem final.",
+        "independence": "Reviewer não escreve produto; nova autoria requer substituição em slot realmente livre.",
+        "stop": "Sessões coordenadoras só encerram após handoff aceito e liberação global de S0. Nenhum bloqueio isolado encerra trabalho autorizado restante."
+      },
+      "candidate_rule": "C/D e a lista finita de paths exatos por tentativa seguem execution.candidate_delivery. Control transitório fica na branch separada; nenhum run troca seu SHA de origem.",
+      "delivery_envelope": {
+        "product_candidate_symbol": "C",
+        "delivery_symbol": "D",
+        "normative_meaning": "Candidato final, candidato aceito, mesmo candidato e SHA final de produto significam C nesta campanha. D é o commit que arquiva a evidência de C sob este envelope, sem alegação de que os testes de C executaram em D. Gates de guard identificam explicitamente C ou D.",
+        "C_definition": "Commit congelado com todo código, testes, fixtures, configuração, manifests, skills/prompts, contratos, assets e guias normativos/roteiro/changelog de produto a aceitar. As oito seleções CI mínimas, adicionais obrigatórias do epic, AM01–AM06 e três pareceres de produto referem-se ao mesmo C. Qualquer correção material cria C novo e reabre as obrigações pertinentes; recibos antigos conservam sua identidade.",
+        "D_definition": "Descendente de C que apenas acrescenta novos arquivos evidenciais admitidos. O produto e seus inputs de build, geração, teste e runtime permanecem exatamente os de C. Nenhum arquivo anterior é editado, removido, renomeado, copiado para substituir outro ou tem seu modo alterado.",
+        "allowed_addition_prefixes": [
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP00/",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP09/",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/"
+        ],
+        "reviews_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/",
+        "delivery_receipt_owner": "WP10.T05/S0",
+        "allowed_extensions": [
+          ".json",
+          ".md",
+          ".txt"
+        ],
+        "allowed_file_mode": "100644",
+        "allowed_content": "Somente dados UTF-8 de recibo, parecer e estado de execução, com hashes/IDs/observações autorizadas. Não executar conteúdo desses arquivos. Nenhum segredo ou dado empresarial sem autorização é arquivado.",
+        "path_policy": "Normalizar e comparar paths completos da árvore Git; exigir prefixo receipts exato com slash final ou um path control da lista FINITA previamente alocada para esse C/instância. Proibir symlink, submodule, executável, traversal, ambiguidade e extensão diferente. O template delivery não concede o prefixo control inteiro. Pareceres permanecem em receipts/WP10/reviews/.",
+        "writer_policy": "Cada prefixo receipts/WPxx conserva writer/lease e WP. S0 incorpora somente blobs evidenciais recebidos, com source commit/path/blob hash, sem reescrita e sem merge completo de branches. S0/T05 aloca e escreve os receipts control exatos; sf2-control nunca é mergeada ou usada como base CI.",
+        "append_only_receipts": "Escrever observações intermediárias em paths únicos por execução/candidato dentro do prefixo já possuído. Reservar os destinos canônicos de fechamento para sua primeira publicação; se já existirem, preservá-los e acrescentar novo arquivo versionado, apontado pelo índice de entrega. Nunca atualizar um recibo antigo para aparentar resultado de C. Em retries de entrega, alocar um novo path exato; preservar tentativas anteriores admitidas. Nenhuma atualização do receipt antigo.",
+        "verification": [
+          "Confirmar C ancestral de D e obter diff Git completo C→D sem truncamento, incluindo status, path, tipo, modo e blob SHA. Um simples filtro dos arquivos exibidos não basta.",
+          "Exigir somente adições de arquivos novos nos prefixos receipts enumerados ou na lista finita de paths control previamente alocados para o mesmo C/instância. Conferir registro de alocação por SHA, parent esperado e ausência do novo path antes da tentativa; conferir conteúdo, extensão e modo. Rejeitar qualquer mudança fora do envelope.",
+          "Confirmar todos os blobs existentes de C inalterados em D e registrar seus hashes/árvore. Conferir que nenhum novo arquivo é input de import, glob, bundle, registry, geração, seleção de teste ou runtime; dependência desconhecida ou uso detectado rejeita o envelope.",
+          "Conferir hashes dos novos recibos, referências aos runs/snapshots reais, seleção observada e candidato C. O delivery receipt indexa os artefatos; não altera seus SHAs de origem.",
+          "Executar bun run check:guards --base origin/dev no checkout real de C para G7 e no checkout real de D para G8, preservando configuração e regras. Guard de C não é registrado como se fosse guard de D.",
+          "Somente aceitar D após envelope, proveniência e guard de D passarem. Se qualquer condição falhar, rejeitar D como entrega evidencial, classificar a alteração e produzir/requalificar novo C quando houver mudança de produto."
+        ],
+        "delivery_receipt_fields": [
+          "campaign_id",
+          "product_candidate_sha",
+          "product_tree_hash",
+          "evidence_index_with_paths_and_hashes",
+          "ci_run_and_request_refs",
+          "integrated_proof_refs",
+          "independent_review_refs",
+          "envelope_policy_version",
+          "observed_limits",
+          "execution_instance",
+          "delivery_attempt",
+          "allocation_record_commit",
+          "previous_attempt_refs"
+        ],
+        "self_reference_rule": "O receipt dentro de D não grava seu próprio SHA de D nem seu próprio hash ou o resultado de um guard posterior. D é identificado pelo commit que contém o receipt; seu blob hash vem da árvore Git. Depois de verificar D, S0 publica SHA/resultado/recibo externo do guard no fechamento, sem editar D apenas para anotar o próprio resultado. O índice interno não se inclui em sua própria lista de hashes.",
+        "normative_docs": "WP10.T01/S0 integra guia por papel, roteiro e changelog de produto em modules/sucafina/Sucafinav1/README.md antes do freeze de C. Reserva S0 55–60 para essa consolidação; 60–75 para consumidores tardios e ajustes documentais afetados. São reservas não medidas; atraso é registrado em G2H. WP10.T05 consome esses documentos e arquiva evidência, sem criar guia normativo em D.",
+        "scope_rule": "O envelope não dispensa gate, capacidade, revisão ou prova. Oito seleções mínimas + adicionais, seis AM e critérios continuam obrigatórios no mesmo C; D não é um atalho de aceitação de outro produto.",
+        "delivery_receipt_template": "modules/sucafina/Sucafinav1/docs/sf2h/control/delivery/<execution_instance>/attempt-<positive_integer>.json",
+        "exact_delivery_receipt_allocation": {
+          "policy": "S0 resolves a finite list of full exact paths for this C/execution instance. One fresh path per delivery attempt, registered on sf2-control before D creation and fixed by allocation-record commit SHA. The template grants no prefix permission.",
+          "identity_validation": "execution_instance is a nonempty ASCII [a-z0-9-] identifier; attempt is a positive integer. Normalize and compare full Git paths, reject traversal/symlink/ambiguity.",
+          "fields": [
+            "execution_instance",
+            "product_candidate_sha",
+            "delivery_attempt",
+            "expected_parent_sha",
+            "exact_path",
+            "previous_attempt_refs",
+            "allocated_exact_paths_for_same_C"
+          ],
+          "checks": [
+            "Current exact path absent in expected parent.",
+            "Allocation record commit predates creation of this D; compare ref with expected parent.",
+            "All admitted control additions in complete C→D diff belong to the finite already-allocated list for the same C/instance.",
+            "D2 may preserve D1 evidence only when those prior additions also satisfy the envelope; previous receipts remain byte-identical.",
+            "Product changes, modified old files or forbidden additions cannot be cured by another receipt; explicit correction/requalification is required."
+          ],
+          "no_auto_reference": "Allocation record identifies C/expected parent/path; not the future D SHA. D is identified by the containing commit after creation."
+        }
+      }
+    },
+    "recovery": {
+      "checkpoint_fields": [
+        "head",
+        "tasks complete/pending",
+        "inputs received",
+        "outputs produced",
+        "contract digests",
+        "lease and generation",
+        "proof candidate and observations",
+        "blocker",
+        "next action"
+      ],
+      "signals": "Distinguish explicit BLOCKED, active tool wait, transport failure, no new output and observed CLOSED. Timestamp age alone proves none of the others.",
+      "first_action": "Inspect the real backend state and last immutable checkpoint; ask the current instance for status if supported.",
+      "same_instance_resume": "Resume from accepted head/checkpoint with only changed inputs and outstanding tasks. Do not rerun accepted setup or rediscover unchanged APIs.",
+      "replacement": "Revoke/close the previous write authority, increment lease_epoch, isolate the replacement workspace, assign a fresh attempt and CAS the accepted head. Old-epoch outputs cannot integrate.",
+      "uncertain_writer": "Do not grant a concurrent accepted writer; continue disjoint work until authority can be fenced using an actual supported mechanism.",
+      "reviewer_rotation": "Release S1-B/S2-B/S3-A only after their correction writers accept the handoff; start fresh non-author reviewers in those same observed free slots.",
+      "correction_responsibility": "Coordinator sessions remain addressable for follow-up until GLOBAL_RELEASE. A builder may terminate only with the declared accepted handoff; READY is not global completion."
+    },
+    "finish": {
+      "success": "Full campaign criteria on accepted C, all required CI/live/static evidence, three independent approvals, no mandatory finding, consumers verified, final D/branch/hashes/guard recorded.",
+      "supervisor_final_message": "Only after global acceptance, or a concrete external blocker after every authorized independent action is exhausted; report exact outstanding work and durable checkpoints.",
+      "deadline": "T120 with incomplete gates is CONTINUING_LATE, with observed ETA and unchanged full scope. Never publish partial success to satisfy the clock.",
+      "release": "S0 records GLOBAL_RELEASE only after acceptance and verified remote delivery; resolves outstanding leases and notifies the sessions."
+    },
+    "measurements": {
+      "baseline": {
+        "unit": "UTF-8 bytes; not tokens or measured latency",
+        "mandatory_documents_per_session": 15,
+        "mandatory_bytes_per_session_before_wps": 2598019,
+        "mandatory_bytes_five_sessions_before_wps": 12990095,
+        "campaign_bytes": 1416545,
+        "proof_map_bytes": 596228,
+        "illustrative_base_wp_slice_min_bytes": 92415,
+        "illustrative_base_wp_slice_max_bytes": 186628,
+        "slice_limit": "Illustrative slices omit actor-specific runtime/proof/source appendices; not complete execution packs or a speed claim.",
+        "receipt": "context-volume-measurement.json"
+      },
+      "runtime_metrics": [
+        "ready_to_integrated_minutes",
+        "dependency_wait_minutes",
+        "coordination_wait_minutes",
+        "agent_context_reloads",
+        "duplicate_dispatches",
+        "ownership_conflicts",
+        "last_critical_output_minute",
+        "CI_queue_setup_execution_collection",
+        "final_review_complete_minute",
+        "remaining_critical_path_ETA",
+        "requests_reused_inflight",
+        "duplicate_CI_runs_avoided",
+        "finding_to_owner_minutes",
+        "distinct_source_reads"
+      ],
+      "success_claim": "Compare actual context bytes and recorded work/queue/CI/review timings; byte reduction is not token reduction or proven wall-clock speedup.",
+      "eta": "latest feasible freeze = T118 minus observed resource-constrained critical tail for all remaining mandatory CI/live/review gates. Unknown latency preserves UNKNOWN/CONDITIONAL; T103 is not unconditional."
+    },
+    "operating_axioms": {
+      "dod": [
+        "Observed roster, versioned lane missions, consumed outputs, complete receipts and final full-scope candidate.",
+        "Generated prompts/packs are attributed, hashed and checked; every task has executable writer, outputs, consumer and receipt; all original criteria remain complete.",
+        "Requests idênticas têm um run efetivo e proveniência íntegra.",
+        "Cobertura final obrigatória e três pareceres independentes pertencem ao C aceito; supervisor fecha globalmente."
+      ],
+      "invariants": [
+        "One writer per file; no more than observed capacity; three non-author reviewers; all scope and mandatory gates retained; unknown duration is never zero.",
+        "Single canonical source; full scope and gates; one writer per path; observed capacity; current authorization; real-runtime acceptance; independent reviewers; no inherited PASS across unproven changes.",
+        "Sem corte de escopo ou gate; sem testes fora de Actions; sem workflow/allowlist/permissão nova.",
+        "Sem PASS fictício entre SHAs, sem autor julgar correção e sem resultado parcial vendido como completo."
+      ],
+      "quality_standards": [
+        "Dispatch by critical-path impact with concise SHA-based events; no blind mutable retry or duplicate implementation.",
+        "Direct prompts with no implementation-key headings; exact producer/consumer/export; immutable reuse is hashed; communicate change/impact/next step; avoid new abstractions unless required.",
+        "Seleção por dependência; dedupe antes do dispatch; achados publicados ao serem reproduzidos.",
+        "Cada critério exige observação própria, ainda que compartilhe a execução."
+      ],
+      "completeness_criteria": [
+        "All 74 tasks, 15 WPs, 17 contracts, 19 handoffs and required proofs remain assigned; correction owners survive builder replacement.",
+        "Preserve 74 tasks, five axiom families, all leases, 19 handoffs, 18 skills, 39 routes, six resident proofs and relevant cross-boundary invariants.",
+        "Oito recipes mínimas, suites adicionais do epic, seis AM e gates estáticos preservados.",
+        "Invalidadores incluem código, contratos, consumers, skills, fixtures, ambiente e mudanças externas pertinentes."
+      ],
+      "success_criteria": [
+        "Measured reduction of repeated reads, queue waiting and duplicate work; two-hour completion claimed only from actual full acceptance time.",
+        "Measure actual reading volume, repeated discovery, duplicate receipts, ready-to-consumed latency, writer conflicts and coordination time; target zero duplicated producers/integrations/collisions; claim minute savings only after observation.",
+        "Requests repetidas são adotadas sem execução duplicada e sem perder cobertura.",
+        "Prazo de 120 minutos só é satisfeito com todos os gates reais dentro dele; ETA usa observações, não soma nominal de janelas."
+      ]
+    },
+    "steps": [
+      {
+        "step": "preflight",
+        "title": "Conferir backend e referências antes do arranque",
+        "ordering": "preflight first, then launch/ACK and observed-capacity admission; dispatch/integrate/prove/review coexist; freeze/deliver require real gates.",
+        "axioms": {
+          "dod": [
+            "SHA de plano/código, capacidades de lifecycle e limites anunciados do backend registrados; o roster real será confirmado depois do lançamento."
+          ],
+          "invariants": [
+            "Não multiplicar pools nem reiniciar T0; nenhuma capacidade desconhecida vira disponível."
+          ],
+          "quality_standards": [
+            "Conferir apenas fontes e permissões pertinentes, reaproveitando fatos imutáveis com hash."
+          ],
+          "completeness_criteria": [
+            "Todos os 74 itens têm owner e todos os slots têm capacidade real ou realocação explícita."
+          ],
+          "success_criteria": [
+            "Lançamento pode ser tentado com segurança; nenhum preset é declarado admitido antes dos ACKs reais."
+          ]
+        }
+      },
+      {
+        "step": "launch",
+        "title": "Iniciar supervisor, sessões e jobs atribuídos",
+        "ordering": "preflight first, then launch/ACK and observed-capacity admission; dispatch/integrate/prove/review coexist; freeze/deliver require real gates.",
+        "axioms": {
+          "dod": [
+            "ACK de cada instância com identidade, branch, lease e digest carregado; então admitir o preset por roster/capacidade observados antes da escrita correspondente."
+          ],
+          "invariants": [
+            "Uma missão por writer; nenhuma escolha concorrente de fatia ou agente além do teto."
+          ],
+          "quality_standards": [
+            "COMMON e pack específico em vez de múltiplas cópias integrais do plano."
+          ],
+          "completeness_criteria": [
+            "Delegações e rodízios de autor/reviewer constam dos packs e dos leases."
+          ],
+          "success_criteria": [
+            "Trabalho começa sem rediscovery redundante ou ambiguidade de responsabilidade."
+          ]
+        }
+      },
+      {
+        "step": "dispatch",
+        "title": "Executar por dependência pronta",
+        "ordering": "preflight first, then launch/ACK and observed-capacity admission; dispatch/integrate/prove/review coexist; freeze/deliver require real gates.",
+        "axioms": {
+          "dod": [
+            "Jobs persistentes publicam outputs consumíveis e checkpoints com próxima ação."
+          ],
+          "invariants": [
+            "Dependência real e autorização atual continuam obrigatórias; fixture não fecha aceite."
+          ],
+          "quality_standards": [
+            "Priorizar caminho nativo, Atlas/memória e bloqueios do candidato."
+          ],
+          "completeness_criteria": [
+            "Tasks e cinco famílias de axiomas permanecem completas mesmo quando um job agrupa várias."
+          ],
+          "success_criteria": [
+            "Fila e espera de dependência diminuem de forma observada, sem trabalho duplicado."
+          ]
+        }
+      },
+      {
+        "step": "integrate",
+        "title": "Integrar e consumir continuamente",
+        "ordering": "preflight first, then launch/ACK and observed-capacity admission; dispatch/integrate/prove/review coexist; freeze/deliver require real gates.",
+        "axioms": {
+          "dod": [
+            "S0 integra por SHA e consumidor publica recibo de consumo real."
+          ],
+          "invariants": [
+            "Um escritor por path e um escritor da branch integradora; contratos versionados."
+          ],
+          "quality_standards": [
+            "Consolidar incrementos úteis sem esperar horários fixos ou o WP inteiro."
+          ],
+          "completeness_criteria": [
+            "Os 19 handoffs e consumidores tardios permanecem na fila até aceite."
+          ],
+          "success_criteria": [
+            "A cadeia nativa está disponível antes de T18 e atrasos têm owner/ETA reais."
+          ]
+        }
+      },
+      {
+        "step": "prove",
+        "title": "Validar incrementos sem repetir requests",
+        "ordering": "preflight first, then launch/ACK and observed-capacity admission; dispatch/integrate/prove/review coexist; freeze/deliver require real gates.",
+        "axioms": {
+          "dod": [
+            "Dispatcher único registra seleção, snapshot, run, resultado e identidade efetiva."
+          ],
+          "invariants": [
+            "Mesmo candidato para aceite final; testes de produto só em Actions; nenhuma promoção de cache inválido."
+          ],
+          "quality_standards": [
+            "Adotar requests idênticas em voo e exercitar cada rota assim que seus insumos reais existirem."
+          ],
+          "completeness_criteria": [
+            "Oito seleções mínimas, AM01–AM06 e os gates adicionais continuam obrigatórios."
+          ],
+          "success_criteria": [
+            "Requests duplicadas são evitadas e falhas chegam ao autor sem esperar a bateria inteira."
+          ]
+        }
+      },
+      {
+        "step": "review",
+        "title": "Revisar e corrigir em paralelo",
+        "ordering": "preflight first, then launch/ACK and observed-capacity admission; dispatch/integrate/prove/review coexist; freeze/deliver require real gates.",
+        "axioms": {
+          "dod": [
+            "Achado reproduzível tem owner ativo; correção recebe rechecagem independente."
+          ],
+          "invariants": [
+            "Reviewer novo não é autor e ocupa slot realmente liberado; nenhum autojulgamento."
+          ],
+          "quality_standards": [
+            "Publicar cada achado pronto; não esperar T95 para iniciar correção."
+          ],
+          "completeness_criteria": [
+            "Cobertura integral do candidato e de seus deltas; nenhum achado obrigatório sem disposição."
+          ],
+          "success_criteria": [
+            "Três pareceres aceitos e tempo de achado→correção observado."
+          ]
+        }
+      },
+      {
+        "step": "freeze",
+        "title": "Fechar candidato de produto e completar provas",
+        "ordering": "preflight first, then launch/ACK and observed-capacity admission; dispatch/integrate/prove/review coexist; freeze/deliver require real gates.",
+        "axioms": {
+          "dod": [
+            "C congelado com todas as evidências e seleções exigidas vinculadas ao seu SHA."
+          ],
+          "invariants": [
+            "Mudança de produto cria novo C; latência desconhecida não cabe artificialmente em quinze minutos."
+          ],
+          "quality_standards": [
+            "Escolher último freeze pela cauda crítica observada, usando T103 apenas como referência."
+          ],
+          "completeness_criteria": [
+            "CI, provas live, consumidores e revisões pertencem ao mesmo C aceito."
+          ],
+          "success_criteria": [
+            "G7 é satisfeito por execução real; atraso aciona continuidade integral."
+          ]
+        }
+      },
+      {
+        "step": "deliver",
+        "title": "Arquivar evidência, verificar commit e liberar",
+        "ordering": "preflight first, then launch/ACK and observed-capacity admission; dispatch/integrate/prove/review coexist; freeze/deliver require real gates.",
+        "axioms": {
+          "dod": [
+            "D contém apenas o envelope admitido, é conferido remotamente e passa seu guard."
+          ],
+          "invariants": [
+            "Não reatribuir recibo de C a D nem tratar prompt/skill como documentação dispensável."
+          ],
+          "quality_standards": [
+            "Salvar recibos uma vez, conferir diff e hashes, evitar ciclo de reteste causado pelo próprio recibo."
+          ],
+          "completeness_criteria": [
+            "Todos os critérios e achados encerrados, leases resolvidos e pacote completo disponível."
+          ],
+          "success_criteria": [
+            "GLOBAL_RELEASE só após aceite global; prazo cumprido somente se o relógio real confirmar."
+          ]
+        }
+      }
+    ],
+    "startup_sequence": [
+      "Inspect actual backend capabilities and limits without requiring sessions that do not yet exist.",
+      "Launch or acknowledge the four fixed worker sessions and local jobs through supported mechanisms.",
+      "Collect real IDs, plan/pack digests, slot scope and lease ACKs.",
+      "Admit the observed preset at GREADY; otherwise publish the missing capacity and continue only valid assigned work under actual limits."
+    ],
+    "documentation_reservation": {
+      "owner": "S0",
+      "task": "WP10.T01",
+      "path": "modules/sucafina/Sucafinav1/README.md",
+      "window": [
+        55,
+        60
+      ],
+      "late_consumer_and_document_adjustments": [
+        60,
+        75
+      ],
+      "status": "BUDGET_NOT_MEASURED",
+      "no_new_capacity": true
+    },
+    "state_transitions": [
+      {
+        "from": "PREPARE",
+        "to": "STARTING",
+        "when": "Capabilities and fixed launch payloads checked; session ACKs are not a precondition to launch."
+      },
+      {
+        "from": "STARTING",
+        "to": "ACTIVE",
+        "when": "Real session/actor ACKs, capacity scope and leases admit the chosen preset."
+      },
+      {
+        "from": "STARTING",
+        "to": "CAPACITY_HOLD",
+        "when": "Preset capacity/lifecycle unavailable; continue only independently valid assigned work under actual limits."
+      },
+      {
+        "from": "CAPACITY_HOLD",
+        "to": "STARTING",
+        "when": "Missing capability becomes available or a complete alternative allocation is validated."
+      },
+      {
+        "from": "ACTIVE",
+        "to": "FINAL_VERIFY",
+        "when": "Complete product candidate C is frozen with its required consumers and normative documentation."
+      },
+      {
+        "from": "FINAL_VERIFY",
+        "to": "ACTIVE",
+        "when": "Mandatory failure requires the active writer to correct product; create a new C."
+      },
+      {
+        "from": "ACTIVE/FINAL_VERIFY",
+        "to": "CONTINUING_LATE",
+        "when": "Observed completion passes T120; keep the same complete scope and publish the resource-constrained ETA."
+      },
+      {
+        "from": "CONTINUING_LATE",
+        "to": "FINAL_VERIFY",
+        "when": "Complete corrected C is ready; all mandatory gates still apply."
+      },
+      {
+        "from": "FINAL_VERIFY",
+        "to": "DELIVERED",
+        "when": "C accepted, D envelope/provenance/guard and remote publication verified; emit GLOBAL_RELEASE."
+      }
+    ]
+  }
 }

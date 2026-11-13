@@ -1,0 +1,92 @@
+{
+  "review_id": "WF-SCHEDULE-COLD-01",
+  "reviewed_file": "/workspace/scratch/838a0195183d/sf2h-speed/workflow-fragment.json",
+  "reviewed_sha256": "658bd94526ebc40723536df96e82b6c15ec708f46dd0b5b8115b5740f6d43faa",
+  "workflow_id": "SF2H-SUPERVISOR-V1",
+  "workflow_version": "1.0",
+  "reviewer": "/root/sf_speed_schedule",
+  "scope": "Operational cold review of supervisor protocol; no authored changes to root protocol. Input scheduling proposal was mine, so review focuses on root-added workflow interactions, not self-certification of the proposal.",
+  "verdict": "REQUIRES_CHANGES",
+  "findings": [
+    {
+      "id": "WF-S01",
+      "severity": "P1",
+      "title": "Admissão de roster e criação das sessões formam pré-condição circular",
+      "status": "OPEN",
+      "locations": [
+        "/topology/admission_conditions",
+        "/steps/0/axioms/dod",
+        "/steps/0/ordering",
+        "/steps/1",
+        "/mission/launch_ack"
+      ],
+      "evidence": [
+        "admission_conditions exige cinco sessões reais e ACK de todas sobre plano/leases",
+        "step admit exige roster real; a ordem declara admit/launch first e apresenta admit antes de launch",
+        "launch é a etapa que produz as identidades/ACK exigidos"
+      ],
+      "counterexample": "Backend suporta cinco pools independentes mas nenhuma sessão trabalhadora foi criada. O supervisor tenta concluir admit exigindo roster/ACK antes de executar launch; a evidência necessária só pode ser produzida por launch. O protocolo não define a transição provisória que permite criá-las.",
+      "impact": "Um executor literal pode ficar em CAPACITY_HOLD mesmo com launcher e capacidade suficientes, ou falsificar o roster para progredir.",
+      "required_change": "Separar preflight de capacidades observadas de admissão operacional. Sequência: CAPABILITY_CHECK -> LAUNCH_REQUEST/assisted actual start -> ACK_ROSTER -> RUN_ADMITTED. Capacidade preflight permite solicitar sessões; escrita de produto só sob lease/ACK de ator e capacidade verificada. Não exigir sessões futuras já existentes na primeira transição.",
+      "acceptance": "Caso com zero workers e launcher válido consegue iniciar sessões e depois completar roster; caso com teto global4 não admite preset20. Identidades nunca são inventadas.",
+      "scope_limit": "Clarificação executável do protocolo; não altera o preset nem cria backend."
+    },
+    {
+      "id": "WF-S02",
+      "severity": "P1",
+      "title": "Regra geral de polling pode impedir os inputs obrigatórios da composição nativa",
+      "status": "OPEN",
+      "locations": [
+        "/transport/polling/rules/1",
+        "/coordination/native_exception_explicit",
+        "/coordination/integration",
+        "campaign.json:/timebox/actor_allocations/S0"
+      ],
+      "evidence": [
+        "A regra manda não adicionar polling em janela de coordenadora codificando e atender eventos só na próxima fronteira de coordenação",
+        "S0 escreve composição10–18 e protected-store18–25; integração geral começa25",
+        "Inputs nativos chegam13/14/15/16 e NATIVE-COMPOSE deve ser entregue18"
+      ],
+      "counterexample": "No modo assistido com Git como ledger, S0 começa a compor em10 e, obedecendo polling.rules, adia consultar receipts dos produtores até25. Não pode incorporar runtime/caso/Planner em16–18 e GNATIVE20 é perdido embora produtores entreguem no prazo.",
+      "impact": "Serialização involuntária justamente na cadeia que a aceleração pretende desbloquear.",
+      "required_change": "Especificar que observar e incorporar os inputs necessários ao próprio trabalho é parte da reserva de autoria. Em S0[10,18], conferir/consumir AI-NATIVE, NATIVE-CASE, NATIVE-PLANNER e NATIVE-RUNTIME como precondições da composição, com lote crítico16–18; a restrição vale para supervisão genérica de frentes não relacionadas. Nenhum ator/minuto extra é criado.",
+      "acceptance": "Trace em modo Git-only mostra S0 consultando e incorporando os SHAs críticos até18 dentro de sua alocação10–18, sem esperar25 e sem atividade genérica concorrente.",
+      "scope_limit": "Compatível com a nova alocação de guias55–60 e integração60–75; não pede mover essas reservas."
+    },
+    {
+      "id": "WF-S03",
+      "severity": "P2",
+      "title": "Condição de encerramento usa evento global não declarado",
+      "status": "OPEN",
+      "locations": [
+        "/validation/supervision/session_completion",
+        "/event_protocol/events",
+        "/recovery/correction_responsibility",
+        "/finish/release"
+      ],
+      "evidence": [
+        "validation.supervision.session_completion exige retomada até GLOBAL_DONE",
+        "Eventos, recovery e finish definem GLOBAL_RELEASE"
+      ],
+      "counterexample": "Coordenadora aguarda GLOBAL_DONE, mas S0 emite apenas GLOBAL_RELEASE; o fim autorizado não coincide com o símbolo esperado pela lane.",
+      "impact": "Ambiguidade de terminância ou espera desnecessária ao final.",
+      "required_change": "Usar GLOBAL_RELEASE consistentemente, ou definir GLOBAL_DONE como estado anterior distinto e sua transição explícita. A normalização simples para GLOBAL_RELEASE é suficiente.",
+      "acceptance": "Nenhum consumidor espera evento global inexistente; finalização de S0 e dos filhos usa a mesma condição admitida."
+    }
+  ],
+  "examined_without_new_finding": [
+    "S0 plus N=4 counts supervisor within20 and rejects current global4 backend",
+    "Missing launch/wake APIs are explicit; Git never pretends to wake idle chat",
+    "Recovery requires actual fencing/closed writer, new epoch and CAS before takeover",
+    "Persistent lanes preserve full task acceptance and independent reviewer slots",
+    "T120 incomplete remains CONTINUING_LATE; final outcome requires complete gates",
+    "New S0 guides55–60 allocation supplied by parent creates no extra slot"
+  ],
+  "not_reviewed": [
+    "Final generated actor packs still in construction",
+    "Final C-to-D delivery envelope still being closed",
+    "Product implementation, benchmarks or runtime execution"
+  ],
+  "implementation_test_status": "NOT_RUN",
+  "source_modified": false
+}

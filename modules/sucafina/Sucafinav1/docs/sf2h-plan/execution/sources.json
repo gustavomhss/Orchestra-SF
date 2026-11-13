@@ -1,0 +1,728 @@
+{
+  "provenance": "Static receipts identify the code source that was read; not proof of implementation or live access.",
+  "baseline": {
+    "branch": "dev",
+    "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "module": "modules/sucafina/Sucafinav1/",
+    "verification": "Branch consultada no planejamento; confirmar novamente antes da execução. Se houver deriva material, atualizar matriz e provas afetadas antes de iniciar.",
+    "ref": "dev",
+    "verified_head": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "observed_dev": {
+      "commit": "f08941a346ef0d072dff8e67e49823505ad7a12e",
+      "comparison": "8 commits, 13 caminhos desde a baseline; infraestrutura Azure, testes Node/script e workflows relacionados. Sem alteração nas fronteiras de runtime examinadas.",
+      "action": "Em T0, consultar novamente dev e reconciliar qualquer deriva material. A baseline de código deste plano continua fixada; não fundir cloud automaticamente."
+    }
+  },
+  "receipts": [
+    {
+      "path": "AGENTS.md",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "blob_sha": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/AGENTS.md",
+      "verified_via": "GitHub MCP fetch_file (read-only)",
+      "supports": "Tests only Actions; no local bun test; native shipping knowledge; guards/typecheck; branch/ownership.",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "blob_sha": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/.github/workflows/test-ci.yml",
+      "verified_via": "GitHub MCP fetch_file (read-only)",
+      "supports": "Only push ci-run-*;45 minute por job ceiling; app args splitsrc/solid vs explicit test-browser/browser; no guards/dispatch.",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "blob_sha": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/script/test-ci-request.ts",
+      "verified_via": "GitHub MCP fetch_file (read-only)",
+      "supports": "Request/schema/path config validation; package resolver and omni suite scope for timeout-only args.",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "path": "script/test-ci-location.ts",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "blob_sha": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/script/test-ci-location.ts",
+      "verified_via": "GitHub MCP fetch_file (read-only)",
+      "supports": "Location resolves module-registry manifests inside snapshot.",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "path": "script/test-ci-package.ts",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "blob_sha": "a10c7b04ca6633f688b62069a9a9832aaa4543dd",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/script/test-ci-package.ts",
+      "verified_via": "GitHub MCP fetch_file (read-only)",
+      "supports": "Alias returns normalized entry.alias plus module.path; no ad-hoc path bypass.",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "path": "script/module-registry.json",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "blob_sha": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/script/module-registry.json",
+      "verified_via": "GitHub MCP fetch_file (read-only)",
+      "supports": "app, cli, atlas-boundary aliases; atlas-boundary -> modules/atlas/boundary.",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "path": "packages/app-shell/bunfig.toml",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "blob_sha": "747797ac5c38cf6eeba52985e7df59a05f4ed172",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/app-shell/bunfig.toml",
+      "verified_via": "GitHub MCP fetch_file (read-only)",
+      "supports": "test.root=./src.",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "path": "packages/app-shell/package.json",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "blob_sha": "32567c3e0d67a3cceacab355bb34e291cd419c26",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/app-shell/package.json",
+      "verified_via": "GitHub MCP fetch_file (read-only)",
+      "supports": "test combines test:unit andtest:browser; browser explicitdirectory/conditions/preloads.",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/atlas/boundary/package.json",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "blob_sha": "055b46b9d32d765c3c2dc54468137d031bb3de90",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/boundary/package.json",
+      "verified_via": "GitHub MCP fetch_file (read-only)",
+      "supports": "generate, check:generated, typecheck, test scripts exist; test 30 s timeout por teste.",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/atlas/boundary/script/build.ts",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "blob_sha": "df0a875e47e98e8803e00818d178166d0b1cb8dd",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/boundary/script/build.ts",
+      "verified_via": "GitHub MCP fetch_file (read-only)",
+      "supports": "Canonical generated JS+dts build and --check behavior; no manualgeneratedediting.",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "path": ".github/workflows/",
+      "ref": "5e6510cf5f514d30116d989ef27ee529b02f3184",
+      "verified_via": "GitHub MCP contents GET (read-only)",
+      "result": "Only test-ci.yml, sameblob 9 f 078 f 4 e 37 b 758691 bcd 073 e 5590 f 05 d 5444392 a as baseline; no workflow_dispatch guardpath atthissnapshot.",
+      "implementation_test_status": "NOT_RUN"
+    }
+  ],
+  "resident_api_receipts": [
+    {
+      "id": "SRC01",
+      "path": "packages/core/src/mcp/provided.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/core/src/mcp/provided.ts",
+      "fact": "McpProvided.Server.connect recebe zero contexto; serviço global lista name/key/Transport. Não basta para principal por chamada.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC02",
+      "path": "packages/core/src/mcp.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/core/src/mcp.ts",
+      "fact": "configured prefere homônimo configurado; mcpTool transmite apenas name/arguments; config() lê providers configurados sem abrir conexão.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC03",
+      "path": "packages/core/src/tool/tool.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/core/src/tool/tool.ts",
+      "fact": "Tool.Context fornece sessionID, agent, assistantMessageID, toolCallID e modelo capturado; é a entrada confiável do wrapper.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC04",
+      "path": "packages/core/src/tool/tools.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/core/src/tool/tools.ts",
+      "fact": "Tools.Service.register é capability pública de registro no Location; contribution não precisa usar registro interno.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC05",
+      "path": "packages/core/src/host.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/core/src/host.ts",
+      "fact": "Host.Contribution admite locationNodes aditivos e proíbe ownership de SessionV2/SessionExecution/LocationServiceMap/ScheduledTask.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC06",
+      "path": "packages/core/src/agent.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/core/src/agent.ts",
+      "fact": "AgentV2.transform/draft.update registra perfis e withPermissions usa regras atuais; ID ausente cai em deny.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC07",
+      "path": "packages/core/src/skill.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/core/src/skill.ts",
+      "fact": "SkillV2.DirectorySource reservado, get e content parseado existem; catálogo não demonstra execução da skill.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC08",
+      "path": "packages/core/src/session.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/core/src/session.ts",
+      "fact": "SessionV2.create/skill(resume:false)/prompt/messages/context existem; generate é tool-less e não substitui prova de ferramenta.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC09",
+      "path": "modules/app-dock/src/dock-mcp.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/app-dock/src/dock-mcp.ts",
+      "fact": "Server + InMemoryTransport.createLinkedPair + ListTools/CallTool handlers são composição SDK real já usada pelo repo.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC10",
+      "path": "modules/maestro/coordination/src/v2/seats.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/maestro/coordination/src/v2/seats.ts",
+      "fact": "Roster técnico restringe tools de Maestro/Atlas e skill trees por identidade; perfis SF não devem fingir seats.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC11",
+      "path": "modules/atlas/packages/memory/src/types.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/memory/src/types.ts",
+      "fact": "MemberId=string; kinds task/pr/project/logbook; Ref=StructRef|string; templates task/project explicitamente tipados.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC12",
+      "path": "modules/atlas/packages/memory/src/template.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/memory/src/template.ts",
+      "fact": "memoryKindOf deriva template por keys fechadas; validate exige tipos por campo; extra metadata e BusinessRef objeto não são entrada compatível.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC13",
+      "path": "modules/atlas/packages/adapter-io/src/memory-read.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/memory-read.ts",
+      "fact": "createMemoryRead.recall passa query/store a recallOver sem adicionar actor; exige filtro de autorização prévio.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC14",
+      "path": "modules/atlas/packages/memory/src/inject.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/memory/src/inject.ts",
+      "fact": "Recall(kind sem owner) pode ler múltiplos owners; scope Atlas não é controle de acesso.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC15",
+      "path": "modules/atlas/packages/adapter-io/src/memory-emit.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/memory-emit.ts",
+      "fact": "Gates kind/template/owner/cap/scanner precedem append; scanner ausente/throw é unavailable.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC16",
+      "path": "modules/atlas/packages/adapter-io/src/memory-store.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/memory-store.ts",
+      "fact": "DurableMemory.read/append são síncronos; implementação padrão usa logs no repo e não serve como store confidencial SF.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC17",
+      "path": "modules/atlas/packages/adapter-io/src/scanner.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/scanner.ts",
+      "fact": "runScanner distingue clean/hit/could-not-run; makeScannerAdapter reduz indisponibilidade a bloqueio, logo wrapper preserva causa via throw.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC18",
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "fact": "Persistence.transaction é async, serializable e callback único com snapshot isolado; cancellation/commit failure não persistem.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC19",
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/runtime/application.ts",
+      "fact": "authenticate(Request, roleMap) roda dentro da transação; três surfaces, mesmo persistence de HTTP/jobs e sem listener novo.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC20",
+      "path": "modules/sucafina/Sucafinav1/src/identity.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/src/identity.ts",
+      "fact": "Surface fechado dashboard/planner/procurement; papel/surface resolve do mapa confiável, não do perfil de agente.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC21",
+      "path": "modules/atlas/boundary/package.json",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/boundary/package.json",
+      "fact": "Workspace público oferece generated exports; native-memory não é porta de storage customizável.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC22",
+      "path": "modules/atlas/boundary/script/build.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/boundary/script/build.ts",
+      "fact": "Gerador canônico resolve @atlas aliases, Bun bundle e declarações; novos ports precisam passar por esse entry/gerador.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC23",
+      "path": "modules/atlas/packages/adapter-io/src/native-bound.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/native-bound.ts",
+      "fact": "native-memory exporta composição presa a AtlasBinding repo/owner e tipos; não expõe createMemoryRead/Emit custom storage.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC24",
+      "path": "package.json",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/package.json",
+      "fact": "Raiz inclui modules/atlas/boundary, não todos packages Atlas; import runtime direto @atlas/adapter-io não é seam disponível.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC25",
+      "path": "modules/atlas/packages/adapter-io/src/index.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/index.ts",
+      "fact": "Factories, DurableMemory, scanner e ports realmente existem no barrel Atlas interno.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC26",
+      "path": "modules/atlas/packages/memory/src/index.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/memory/src/index.ts",
+      "fact": "versioned/respawn e template são exports do memory real a reexportar pelo bundle.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC27",
+      "path": "modules/rag-studio/src/context.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/rag-studio/src/context.ts",
+      "fact": "Store/Source/revision/chunk e textAt mostram offsets; memória de trabalho não é persistência/ACL automática.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC28",
+      "path": "modules/rag-studio/src/types.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/rag-studio/src/types.ts",
+      "fact": "Source.contentHash, Chunk.sourceHash, SpanRef(sourceId,start,end) e Revision são tipos reais.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC29",
+      "path": "modules/rag-studio/src/index.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/rag-studio/src/index.ts",
+      "fact": "Exports públicos withStore/parseSource/searchWords/openRevision/readRevision/citationProof estão disponíveis.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC30",
+      "path": "modules/rag-studio/src/extract.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/rag-studio/src/extract.ts",
+      "fact": "extract aceita path e trata PDF digital; outros arquivos viram texto bruto, logo DOCX exige normalização própria.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "SRC31",
+      "path": "modules/rag-studio/package.json",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/rag-studio/package.json",
+      "fact": "Pacote público expõe raiz e ./extract e é workspace existente; unpdf é dependência real.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC01",
+      "path": "script/check-spawn-imports.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/script/check-spawn-imports.ts",
+      "fact": "Guard lê imports/exports-from/import()/require e lista hits não admitidos; sites stale também falham.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC02",
+      "path": "script/spawn-allowlist.json",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/script/spawn-allowlist.json",
+      "fact": "scanner.ts e generated/native-memory.js já permitem child_process; business-memory-ports.js não está listado.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC03",
+      "path": "modules/atlas/packages/adapter-io/src/native-bound.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/native-bound.ts",
+      "fact": "Entry export-only mantém composição immutable AtlasBinding e nenhum mecanismo para escolher outro owner/root.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC04",
+      "path": "modules/atlas/packages/adapter-io/src/native-memory.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/native-memory.ts",
+      "fact": "Composição existente já importa scanner real; não precisa alterar createNativeMemory para publicar reexports.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC05",
+      "path": "modules/atlas/packages/adapter-io/src/memory-emit.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/memory-emit.ts",
+      "fact": "Factory usa scanner injetado mas importa NO_SCANNER_NAME de ./scanner.js em runtime; aresta precisa resolução explícita.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC06",
+      "path": "modules/atlas/packages/adapter-io/src/memory-read.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/memory-read.ts",
+      "fact": "Imports runtime vêm de @atlas/memory; DurableMemory/MemoryRead são type-only.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC07",
+      "path": "modules/atlas/packages/adapter-io/src/scanner.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/scanner.ts",
+      "fact": "runScanner/detection usam node:child_process; NO_SCANNER_NAME é constante canônica no mesmo arquivo.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC08",
+      "path": "modules/atlas/boundary/script/build.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/boundary/script/build.ts",
+      "fact": "Bun build target node e plugin canonical resolver produzem JS/d.ts; native-memory aponta native-bound.ts.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC09",
+      "path": "modules/atlas/boundary/package.json",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/boundary/package.json",
+      "fact": "./native-memory já é subpath público; generate/check:generated/typecheck/test existem.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC10",
+      "path": "package.json",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/package.json",
+      "fact": "Comando existente na raiz é check:spawn-imports, não check:spawns.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC11",
+      "path": "modules/atlas/packages/memory/src/index.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/memory/src/index.ts",
+      "fact": "Barrel memory exporta módulos puros; caminhos inspectados abaixo mantêm dependências de retrieval somente em types.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC12",
+      "path": "modules/atlas/packages/memory/src/portable.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/memory/src/portable.ts",
+      "fact": "NamedScanner é interface; módulo não invoca subprocesso.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC13",
+      "path": "modules/atlas/packages/memory/src/respawn.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/memory/src/respawn.ts",
+      "fact": "versioned/respawnFromRecord dependem de kernel puro.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC14",
+      "path": "modules/atlas/packages/memory/src/template.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/memory/src/template.ts",
+      "fact": "memoryKindOf/validate importam apenas tipos.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC15",
+      "path": "modules/atlas/packages/kernel/src/index.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/kernel/src/index.ts",
+      "fact": "Kernel alcança encoder/canonical/store/log/fold/portable/jsonl.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC16",
+      "path": "script/guards/run.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/script/guards/run.ts",
+      "fact": "Guard runner consulta regras/config da base; não relaxar regras na mudança.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC17",
+      "path": "modules/atlas/packages/memory/src/rules.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/memory/src/rules.ts",
+      "fact": "Imports examinados via MCP: memory/kernel canônicos e referências type-only; nenhum spawning runtime neste módulo.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC18",
+      "path": "modules/atlas/packages/memory/src/kinds.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/memory/src/kinds.ts",
+      "fact": "Imports examinados via MCP: memory/kernel canônicos e referências type-only; nenhum spawning runtime neste módulo.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC19",
+      "path": "modules/atlas/packages/memory/src/inject.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/memory/src/inject.ts",
+      "fact": "Imports examinados via MCP: memory/kernel canônicos e referências type-only; nenhum spawning runtime neste módulo.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC20",
+      "path": "modules/atlas/packages/memory/src/awareness.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/memory/src/awareness.ts",
+      "fact": "Imports examinados via MCP: memory/kernel canônicos e referências type-only; nenhum spawning runtime neste módulo.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC21",
+      "path": "modules/atlas/packages/memory/src/orient.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/memory/src/orient.ts",
+      "fact": "Imports examinados via MCP: memory/kernel canônicos e referências type-only; nenhum spawning runtime neste módulo.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC22",
+      "path": "modules/atlas/packages/memory/src/logbook.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/memory/src/logbook.ts",
+      "fact": "Imports examinados via MCP: memory/kernel canônicos e referências type-only; nenhum spawning runtime neste módulo.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC23",
+      "path": "modules/atlas/packages/kernel/src/encoder.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/kernel/src/encoder.ts",
+      "fact": "Imports examinados via MCP: módulos kernel/tipos; encoder usa @noble/hashes canônico. Nenhum subprocesso no código examinado.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC24",
+      "path": "modules/atlas/packages/kernel/src/canonical.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/kernel/src/canonical.ts",
+      "fact": "Imports examinados via MCP: módulos kernel/tipos; encoder usa @noble/hashes canônico. Nenhum subprocesso no código examinado.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC25",
+      "path": "modules/atlas/packages/kernel/src/store.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/kernel/src/store.ts",
+      "fact": "Imports examinados via MCP: módulos kernel/tipos; encoder usa @noble/hashes canônico. Nenhum subprocesso no código examinado.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC26",
+      "path": "modules/atlas/packages/kernel/src/log.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/kernel/src/log.ts",
+      "fact": "Imports examinados via MCP: módulos kernel/tipos; encoder usa @noble/hashes canônico. Nenhum subprocesso no código examinado.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC27",
+      "path": "modules/atlas/packages/kernel/src/fold.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/kernel/src/fold.ts",
+      "fact": "Imports examinados via MCP: módulos kernel/tipos; encoder usa @noble/hashes canônico. Nenhum subprocesso no código examinado.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC28",
+      "path": "modules/atlas/packages/kernel/src/portable.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/kernel/src/portable.ts",
+      "fact": "Imports examinados via MCP: módulos kernel/tipos; encoder usa @noble/hashes canônico. Nenhum subprocesso no código examinado.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC29",
+      "path": "modules/atlas/packages/kernel/src/jsonl.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/kernel/src/jsonl.ts",
+      "fact": "Imports examinados via MCP: módulos kernel/tipos; encoder usa @noble/hashes canônico. Nenhum subprocesso no código examinado.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    },
+    {
+      "id": "R2PKG-SRC30",
+      "path": "modules/atlas/packages/kernel/src/brand.ts",
+      "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/kernel/src/brand.ts",
+      "fact": "Imports examinados via MCP: módulos kernel/tipos; encoder usa @noble/hashes canônico. Nenhum subprocesso no código examinado.",
+      "verified_via": "GitHub MCP fetch_file",
+      "verification": "STATIC_SOURCE_VERIFIED",
+      "implementation_test_status": "NOT_RUN"
+    }
+  ],
+  "code_policy": "Read AGENTS and actual files/dependencies before editing. Recheck changed hashes. Never reuse authorization/model/scanner/capacity observations as immutable code facts."
+}

@@ -1,0 +1,127 @@
+{
+  "role": "sf_speed_validation",
+  "source_commit": "0aa2405bb3668314f60d6a674d2bd53fd5003091",
+  "status": "PROPOSAL_NOT_IMPLEMENTED",
+  "implementation_test_status": "NOT_RUN",
+  "source_paths": [
+    "AGENTS.md: Testing, CI Cadence, Guardrail",
+    "ci-recipes.json",
+    "evidence-plan.json",
+    "resident-proof-plan.json",
+    "schedule.json",
+    "work-packages/WP10.json",
+    "campaign.json: execution, ownership, resident_ai.operation_call_routes"
+  ],
+  "observations": [
+    {
+      "id": "VAL-SPEED-01",
+      "finding": "A política de uma suite completa por epic e provas afetadas já existe; o elemento ausente é a deduplicação operacional de requests idênticas entre writers e trocas de dispatcher.",
+      "evidence": ["AGENTS.md:CI Cadence", "ci-recipes.json:receipt_rules", "WP10.T04.work handoffs 40/75"],
+      "action": "S0 governa um registro de requests; somente o dispatcher com lease pode criar snapshots e disparar. Reusar run idêntico em voo ou recibo completo válido."
+    },
+    {
+      "id": "VAL-SPEED-02",
+      "finding": "Seis packs AM02 têm último output funcional T72 e prazo T75: Planning, Procurement, Decisions, Collaboration, Documents & Reports, Routines.",
+      "evidence": ["resident-proof-plan.json:proofs[AM02].pack_matrix"],
+      "action": "Iniciar observações por rota pronta, não por pack inteiro, mantendo todos os produtores/consumidores reais e fechamento integral da matriz."
+    },
+    {
+      "id": "VAL-SPEED-03",
+      "finding": "Juízes entram T72/T75, porém a redação destaca correções T95–103; isso pode induzir espera por relatório fechado.",
+      "evidence": ["WP10.T03.work", "schedule.json:milestones G5/G6"],
+      "action": "Publicar e despachar cada achado reproduzido imediatamente; usar 95–103 como reserva máxima, não início obrigatório das correções."
+    },
+    {
+      "id": "VAL-SPEED-04",
+      "finding": "18 pacotes já cobrem 1.610 critérios; um job por frase seria regressão de execução, não requisito do plano.",
+      "evidence": ["evidence-plan.json:scope", "proof-map.json", "resident-proof-plan.json:AM01.required_coverage"],
+      "action": "Gerar observações específicas de um mesmo run para critérios pertinentes; reaproveitar setup e cenários reais, sem PASS coletivo automático."
+    },
+    {
+      "id": "VAL-SPEED-05",
+      "finding": "Oito seleções finais e seis provas integradas são obrigatórias no mesmo candidato; cache entre SHAs não pode servir de aprovação fictícia.",
+      "evidence": ["WP10.T02.DOD.10", "WP10.T04.DOD.01/10/40", "WP10.T04.CHK.40/41", "ci-recipes.json:receipt_rules"],
+      "action": "Deduplicar no mesmo candidato/identidade; manter seleção final completa. Separar candidato de produto C de commit D estritamente evidencial por regra explícita."
+    }
+  ],
+  "supervision": {
+    "logical_owner": "S0",
+    "worker_sessions": "N, observadas e limitadas pela capacidade real; padrão S1–S4",
+    "exclusive_dispatcher": "Um lease por vez; padrão S0-C[0,40], S2[40,75], S0-C[75,118]",
+    "handoff": "Transferir candidato, fila, request keys, run IDs, attempts, conclusões e ETAs; não disparar duplicata ao assumir.",
+    "storage": "Usar docs/sf2h/control e docs/sf2h/receipts/WP10 já no ownership WP10; sem serviço novo.",
+    "worker_rule": "Worker solicita validação e entrega eventos; não cria CI duplicado nem escreve o registro central sem lease.",
+    "session_completion": "Coordenadora trabalhadora conserva obrigação de retomada até GLOBAL_DONE; builders podem liberar slots após handoff a escritor de correções ativo."
+  },
+  "deduplication": {
+    "key_fields": ["product_candidate_sha", "product_tree_hash", "normalized_request_hash", "workflow_and_validator_source_identity", "effective_runtime_and_config_identity", "fixture_and_test_selection_identity"],
+    "adopt_inflight": "Somente chave idêntica; registrar solicitantes/critério e preservar run/snapshot originais.",
+    "adopt_complete": "Somente resultado completo para a mesma chave, seleção observada correta, controle omni válido, artefatos íntegros e sem invalidadores posteriores.",
+    "not_reusable_as_pass": ["missing evidence", "BLOCKED", "cancelled", "empty selection", "selection mismatch", "artifact missing", "old candidate with changed source", "unknown dependency impact"],
+    "no_new_infrastructure": true
+  },
+  "incremental_validation": {
+    "preflight": "WP10.T04 inicia em T0; verificar requests/aliases/executor e iniciar um probe existente válido antes de T25 quando possível, dentro do mesmo dispatcher. Mede somente a seleção observada; não fecha prova de produto futuro.",
+    "trigger": "READY_FOR_INTEGRATION seguido de integração real e confirmação dos produtores/consumidores necessários; não esperar uma hora ou o fim do WP.",
+    "selection": "Testes da mudança + consumidores transitivos dos contratos/ports alterados; unknown amplia seleção ou marca BLOCKED.",
+    "am02_route_ready": ["producer actual output integrated", "bridge/context actual", "profile and skill loaded receipt", "current authorization", "required consumer integrated", "fixture and oracle version identified"],
+    "am02_inference": "Harness direto autorizado já previsto pode provar chamadas determinísticas com binding e SkillLoadReceipt; não requer uma inferência nova por operação. AM01 continua provando modelo real e todas as contribuições de skills.",
+    "criterion_mapping": "Uma execução pode fornecer múltiplas observações específicas; cada criterion_id mantém expected/observed e evidência concreta. Nenhum pacote verde aprova todas as linhas automaticamente."
+  },
+  "final_acceptance": {
+    "same_product_candidate_required": true,
+    "required_recipes": ["CI-SF", "CI-CLI", "CI-APP-SRC", "CI-APP-BROWSER", "CI-ATLAS-BUSINESS", "CI-UI-OPERATIONS", "CI-UI-DECISIONS", "CI-UI-REPORTS"],
+    "additional_epic_suites_required": true,
+    "required_live_proofs": ["AM01", "AM02", "AM03", "AM04", "AM05", "AM06"],
+    "required_static_gates": ["BUILD-ATLAS", "CHECK-ATLAS-GENERATED", "TYPECHECK-ATLAS", "CHECK-SPAWNS", "GUARDS", "affected package typechecks"],
+    "runner_parallelism": "Observada, nunca presumir oito runners; cada Playwright conserva seu worker/configuração vigente.",
+    "cache_limit": "Resultados idênticos já executados em C podem satisfazer sua seleção exata. Recibos de outro candidato não são relabelados. Mudança final de produto reabre gates pertinentes e exige completar novamente a cobertura obrigatória no C aceito."
+  },
+  "invalidation_matrix": [
+    {"change": "Contratos C01–C17, schema, enum, export ou semântica de port", "incremental": "Produtor, todos consumidores transitivos e provas que dependem desses contratos", "final": "Novo candidato C; seleções obrigatórias e AM afetadas com identidade atual"},
+    {"change": "Motor financeiro, inventário de custo, confirmação material, FX ou versionamento", "incremental": "Oráculos financeiros/CONFIRM-SCOPE, Planner, BI, Procurement/decisão/portfólio e rotinas consumidoras", "final": "CI-SF e consumidores obrigatórios; AM01/AM02/AM04/AM06 conforme dependência; matriz final integral preservada"},
+    {"change": "Identity/access, binding, MCP bridge, capabilities, source revocation ou incarnation", "incremental": "Todos caminhos de entrada e egress atingidos; positivos e negativos; UI, export, fonte, Atlas e MCP", "final": "Requalificar AM02/AM03 e demais AM que atravessam a fronteira alterada; desconhecido invalida todas"},
+    {"change": "Profile/skill source, workflow, template ou carregamento", "incremental": "Witnesses das skills e perfis alterados, grants, outputs e consumidores; reviewer se sua independência/inputs mudaram", "final": "AM01 e rotas AM02/AM06 atingidas; provar digests atuais no mesmo C"},
+    {"change": "Atlas generator, entry, artifacts, scanner linkage, schema, store, resolver ou outbox", "incremental": "Generate/check:generated/typecheck/spawn, boundary suite e consumidores; scanner/restart/idempotency/ACL quando afetados", "final": "CI-ATLAS-BUSINESS e AM05; AM03 e demais consumidores conforme dependência"},
+    {"change": "UI shell, shared component, route, styling, keyboard ou viewport behavior", "incremental": "APP-SRC/APP-BROWSER pertinentes e Playwright de todos consumidores; estados, acessibilidade e regressões visuais afetados", "final": "As seleções finais completas continuam obrigatórias; alteração puramente visual não invalida aritmética imutável como nova observação, mas não dispensa o candidato final"},
+    {"change": "Fixture, oracle, test source, request args ou selection config", "incremental": "Reexecutar seleção correspondente; resultado anterior não testa a nova asserção ou fixture", "final": "Proibir união de seleções parciais como se uma seleção completa tivesse executado"},
+    {"change": "Root lock/package, module resolver, compiler, runtime, workflow ou test validator", "incremental": "Expandir por dependências e ambiente efetivo; unknown => expansão conservadora", "final": "Reestabelecer requests, geração/typecheck e seleções obrigatórias sob configuração observada"},
+    {"change": "Modelo, scanner binário, política de acesso ou estado externo usado na prova", "incremental": "Requalificar provas live afetadas e registrar identidade/versão atual; cache de código não prova estado externo", "final": "AMs e gate ambiental pertinentes em C; nenhum segredo no request"},
+    {"change": "Recibo/parecer puramente evidencial dentro de paths previamente admitidos", "incremental": "Conferir integridade e diff; não reexecutar produto pela gravação da própria evidência", "final": "Somente pela regra explícita C→D: C permanece candidato testado, D arquiva evidência; guards em D. Qualquer mudança fora do envelope cria C novo"}
+  ],
+  "review_flow": {
+    "event_fields": ["finding_id", "candidate_sha", "criterion_ids", "reproduction", "affected_paths", "owner", "severity"],
+    "dispatch": "Ao demonstrar o achado, sem esperar parecer consolidado ou T95; S0 encaminha ao escritor ativo com lease.",
+    "correction": "Writer devolve commit, classificação do delta, testes afetados e evidência; revisor independente reavalia delta e bordas.",
+    "window_rule": "95–103 continua reserva para correções tardias, não barreira para começar; 103–118 mantém rechecagem final.",
+    "independence": "Reviewer não escreve produto; nova autoria requer substituição em slot realmente livre.",
+    "stop": "Sessões coordenadoras só encerram após handoff aceito e liberação global de S0. Nenhum bloqueio isolado encerra trabalho autorizado restante."
+  },
+  "delivery_envelope_proposal": {
+    "requires_explicit_normative_update": true,
+    "C": "Último candidato que contém todos os artefatos de produto, testes, fixtures, config, skills e guias normativos a aceitar.",
+    "D": "Descendente que acrescenta somente evidência/parecer/estado em paths evidenciais previamente admitidos.",
+    "required_proof": "Diff C→D completo, paths e tipos admitidos, nenhum import/runtime dependency alterado, pointer para C, hashes dos recibos intactos e guard de D.",
+    "prohibited": "Trocar SHA original de um run; tratar todos .md como metadata; mudar código/teste/skill/config sem criar C novo; arquivar credenciais.",
+    "candidate_acceptance": "As oito seleções e AM01–AM06 se referem ao mesmo C; D é entrega de evidência e não um produto alegadamente retestado."
+  },
+  "required_plan_edits": [
+    {"locations": ["campaign.json:/ci_plan", "ci-recipes.json"], "change": "Adicionar política central de dispatcher/dedupe, preflight desde T0 e invalidadores incrementais, sem retirar recipes ou campos de prova."},
+    {"locations": ["campaign.json:/execution/finding_policy", "WP10.T03.work", "prompts S0/S1–S4"], "change": "Dispatch imediato de achados, worker sessions com obrigação de retomada e correção pelo autor ativo; intervalo 95–103 como reserva."},
+    {"locations": ["campaign.json:/execution_proofs AM02", "WP10.T02", "WP10.T06"], "change": "Exercer rotas prontas continuamente com produtor/consumidor reais, sem esperar pack completo; manter checkpoints e cobertura final."},
+    {"locations": ["campaign.json:/ci_plan/receipt_rules", "evidence.validity", "WP10.T04/T05", "gates G6/G7/G8", "prompts/S0"], "change": "Se adotado, definir C e envelope D coerentemente, sem reatribuição de prova entre SHAs ou exceção informal."},
+    {"locations": ["campaign.json:/timebox/feasibility_gate", "execution receipts"], "change": "Medir request dedupe, fila/setup, latência de achado e produtor→prova; manter UNKNOWN/CONDITIONAL para classes sem observação comparável."}
+  ],
+  "axioms": {
+    "dod": ["Requests idênticas têm um run efetivo e proveniência íntegra.", "Cobertura final obrigatória e três pareceres independentes pertencem ao C aceito; supervisor fecha globalmente."],
+    "invariants": ["Sem corte de escopo ou gate; sem testes fora de Actions; sem workflow/allowlist/permissão nova.", "Sem PASS fictício entre SHAs, sem autor julgar correção e sem resultado parcial vendido como completo."],
+    "quality_standards": ["Seleção por dependência; dedupe antes do dispatch; achados publicados ao serem reproduzidos.", "Cada critério exige observação própria, ainda que compartilhe a execução."],
+    "completeness_criteria": ["Oito recipes mínimas, suites adicionais do epic, seis AM e gates estáticos preservados.", "Invalidadores incluem código, contratos, consumers, skills, fixtures, ambiente e mudanças externas pertinentes."],
+    "success_criteria": ["Requests repetidas são adotadas sem execução duplicada e sem perder cobertura.", "Prazo de 120 minutos só é satisfeito com todos os gates reais dentro dele; ETA usa observações, não soma nominal de janelas."]
+  },
+  "measurement": {
+    "metrics": ["requests requested/dispatched/adopted", "queue/setup/test/artifact seconds by selection", "finding demonstrated-to-owner-dispatched seconds", "producer integrated-to-first-proof seconds", "observed runner concurrency", "observed live proof concurrency and duration", "critical residual finish estimate"],
+    "unmeasured_gains": "Menos requests duplicadas, setup repetido e espera artificial; nenhum número de minutos economizados foi medido nesta análise.",
+    "two_hour_claim": "CONDITIONAL_NOT_MEASURED"
+  }
+}

@@ -17,14 +17,14 @@
     "id": "CAMP.DOD.03",
     "entity": "sf2h-integral-20261112",
     "family": "dod",
-    "text": "Três revisões independentes reconciliadas; nenhum achado obrigatório aberto; checks requeridos válidos para o candidato final e evidência recuperável.",
+    "text": "Três revisões independentes reconciliadas; nenhum achado obrigatório aberto; checks requeridos válidos para o candidato final de produto C e evidência recuperável. A entrega D satisfaz integralmente o envelope evidencial e seu guard, sem reatribuir a D execuções realizadas em C.",
     "status": "NOT_RUN"
   },
   {
     "id": "CAMP.DOD.04",
     "entity": "sf2h-integral-20261112",
     "family": "dod",
-    "text": "As verificações exigidas pelo repositório e a cobertura de paridade estão válidas para o candidato final; o guia por papel, a demonstração e os limites materiais estão entregues.",
+    "text": "As verificações exigidas pelo repositório e a cobertura de paridade estão válidas para o candidato de produto C; o guia por papel, a demonstração e os limites materiais estão incluídos nele. D somente arquiva a evidência admitida, com verificação e guard próprios.",
     "status": "NOT_RUN"
   },
   {
@@ -1837,7 +1837,7 @@
     "id": "WP10.DOD.02",
     "entity": "WP10",
     "family": "dod",
-    "text": "O commit final possui evidência de CI, comportamento, autorização, visualização e preservação correspondente ao seu conteúdo.",
+    "text": "O candidato de produto C possui evidência de CI, comportamento, autorização, visualização e preservação correspondente ao seu conteúdo. O commit de entrega D arquiva essa evidência e passa a verificação do envelope e seu próprio guard, sem alegar que CI de C executou em D.",
     "status": "NOT_RUN"
   },
   {
@@ -1921,7 +1921,7 @@
     "id": "WP10.QLT.40",
     "entity": "WP10",
     "family": "quality_standards",
-    "text": "Gates distinguem source shipping, runtime loading, domínio real, CI selection e consumo final no mesmo candidato.",
+    "text": "Gates distinguem source shipping, runtime loading, domínio real, CI selection e consumo final no mesmo candidato. Mesmo candidato significa C; D apenas arquiva provas admitidas e conserva a identidade de cada execução.",
     "status": "NOT_RUN"
   },
   {
@@ -6688,7 +6688,7 @@
     "id": "WP10.T01.DOD.01",
     "entity": "WP10.T01",
     "family": "dod",
-    "text": "As superfícies reais consomem todas as portas e funções da campanha, sem caminhos de produção vazios ou simulados.",
+    "text": "As superfícies reais consomem todas as portas e funções da campanha, sem caminhos de produção vazios ou simulados. O README de uso, roteiro e changelog correspondente estão incluídos em C e disponíveis para T05.",
     "status": "NOT_RUN"
   },
   {
@@ -6702,7 +6702,7 @@
     "id": "WP10.T01.INV.01",
     "entity": "WP10.T01",
     "family": "invariants",
-    "text": "Composição não altera fórmulas/políticas por conveniência e não escreve arquivos de feature de outro WP.",
+    "text": "Composição não altera fórmulas/políticas por conveniência e não escreve arquivos de feature de outro WP. Guias normativos usam o README já possuído por S0 e não entram como evidência nova em D.",
     "status": "NOT_RUN"
   },
   {
@@ -6730,7 +6730,7 @@
     "id": "WP10.T01.QLT.01",
     "entity": "WP10.T01",
     "family": "quality_standards",
-    "text": "Mudanças de compatibilidade são aditivas, pequenas e documentadas junto ao consumidor afetado.",
+    "text": "Mudanças de compatibilidade são aditivas, pequenas e documentadas junto ao consumidor afetado. O guia por papel descreve as tarefas e os números do produto, reconciliado com o comportamento integrado antes de congelar C.",
     "status": "NOT_RUN"
   },
   {
@@ -6744,7 +6744,7 @@
     "id": "WP10.T01.CMP.01",
     "entity": "WP10.T01",
     "family": "completeness_criteria",
-    "text": "Cobrir entrypoint, rotas, handlers, contratos legados, preferências, revisões, relações, imports e rotinas.",
+    "text": "Cobrir entrypoint, rotas, handlers, contratos legados, preferências, revisões, relações, imports e rotinas. Incluir guia por papel, roteiro sintético e changelog de produto em C, cobrindo os incrementos tardios até T75.",
     "status": "NOT_RUN"
   },
   {
@@ -6765,7 +6765,7 @@
     "id": "WP10.T01.SUC.01",
     "entity": "WP10.T01",
     "family": "success_criteria",
-    "text": "A funcionalidade deixa de depender de abrir páginas isoladas ou scripts de demonstração para existir.",
+    "text": "A funcionalidade deixa de depender de abrir páginas isoladas ou scripts de demonstração para existir. T05 entrega instruções já presentes no candidato testado, sem iniciar outro ciclo de produto apenas para escrever o guia.",
     "status": "NOT_RUN"
   },
   {
@@ -6926,21 +6926,21 @@
     "id": "WP10.T04.DOD.01",
     "entity": "WP10.T04",
     "family": "dod",
-    "text": "O candidato final tem resultados válidos das verificações exigidas, sem falha obrigatória ou prova desatualizada.",
+    "text": "O candidato final de produto C tem resultados válidos das verificações exigidas, sem falha obrigatória ou prova desatualizada. O guard do envelope D é verificado separadamente por T05 antes de G8.",
     "status": "NOT_RUN"
   },
   {
     "id": "WP10.T04.DOD.10",
     "entity": "WP10.T04",
     "family": "dod",
-    "text": "CI pertinente à boundary e aos novos consumers fecha com evidencia do candidato final.",
+    "text": "CI pertinente à boundary e aos novos consumers fecha com evidência do candidato final de produto C.",
     "status": "NOT_RUN"
   },
   {
     "id": "WP10.T04.DOD.40",
     "entity": "WP10.T04",
     "family": "dod",
-    "text": "Seleções CI exigidas e gates estáticos têm recibos do candidato aceito.",
+    "text": "Seleções CI exigidas e gates estáticos de produto têm recibos do candidato aceito C; D mantém essas identidades e requer seu próprio guard em G8.",
     "status": "NOT_RUN"
   },
   {
@@ -6961,14 +6961,14 @@
     "id": "WP10.T04.INV.40",
     "entity": "WP10.T04",
     "family": "invariants",
-    "text": "Playwright SF não substitui Bun browser; checks em outro SHA não viram verde atual.",
+    "text": "Playwright SF não substitui Bun browser; checks em outro SHA não viram verde atual. D não recebe o SHA de execução de C; seu receipt aponta C e o envelope mantém o produto intacto.",
     "status": "NOT_RUN"
   },
   {
     "id": "WP10.T04.QLT.01",
     "entity": "WP10.T04",
     "family": "quality_standards",
-    "text": "Reusar evidência ainda válida e repetir somente o necessário para resolver risco concreto ou gate exigido.",
+    "text": "Reusar evidência ainda válida e repetir somente o necessário para resolver risco concreto ou gate exigido. Arquivar prova em D não exige novo teste de produto quando o envelope passa, mas exige verificação própria e guard de D.",
     "status": "NOT_RUN"
   },
   {
@@ -7003,14 +7003,14 @@
     "id": "WP10.T04.CMP.40",
     "entity": "WP10.T04",
     "family": "completeness_criteria",
-    "text": "CobrirSF/CLI/app/src/app/test-browser/atlas-boundary/trêsPW e suites adicionais exigidas pelo footprint/epic.",
+    "text": "CobrirSF/CLI/app/src/app/test-browser/atlas-boundary/trêsPW e suites adicionais exigidas pelo footprint/epic. As seleções e seis provas AM finais identificam o mesmo C; distinguir seu aceite do envelope D.",
     "status": "NOT_RUN"
   },
   {
     "id": "WP10.T04.SUC.01",
     "entity": "WP10.T04",
     "family": "success_criteria",
-    "text": "Qualquer pessoa consegue ligar cada resultado declarado ao commit e à execução que o demonstraram.",
+    "text": "Qualquer pessoa consegue ligar cada resultado declarado ao commit e à execução que o demonstraram. O índice de D aponta C e preserva cada run, attempt, seleção e hash original, sem alegar execução inexistente em D.",
     "status": "NOT_RUN"
   },
   {
@@ -7031,7 +7031,7 @@
     "id": "WP10.T05.DOD.01",
     "entity": "WP10.T05",
     "family": "dod",
-    "text": "Campanha fechada somente com cobertura completa, critérios satisfeitos e pacote final coerente com o código entregue.",
+    "text": "Campanha fechada somente com cobertura completa, critérios satisfeitos no produto C e pacote D coerente: ancestralidade, envelope append-only, inputs preservados, hashes e guard de D verificados após G7.",
     "status": "NOT_RUN"
   },
   {
@@ -7045,7 +7045,7 @@
     "id": "WP10.T05.INV.01",
     "entity": "WP10.T05",
     "family": "invariants",
-    "text": "Planejamento, implementação, revisão, publicação e deploy são estados distintos; não confundir um com outro.",
+    "text": "Planejamento, implementação, revisão, publicação e deploy são estados distintos; não confundir um com outro. D não altera produto, guias normativos, testes, skills, configurações ou recibos antigos; a evidência conserva os SHAs e runs originais. Não gravar o próprio SHA/hash/guard posterior dentro de D.",
     "status": "NOT_RUN"
   },
   {
@@ -7059,7 +7059,7 @@
     "id": "WP10.T05.QLT.01",
     "entity": "WP10.T05",
     "family": "quality_standards",
-    "text": "Guia explica o trabalho do usuário e o significado dos dados; detalhes internos ficam nas referências técnicas pertinentes.",
+    "text": "Guia explica o trabalho do usuário e o significado dos dados; detalhes internos ficam nas referências técnicas pertinentes. Consumir o guia já incluído em C; o índice de entrega liga evidências sem copiar afirmações de um candidato para outro.",
     "status": "NOT_RUN"
   },
   {
@@ -7073,7 +7073,7 @@
     "id": "WP10.T05.CMP.01",
     "entity": "WP10.T05",
     "family": "completeness_criteria",
-    "text": "Incluir todas as personas, principais jornadas, gráficos/rotinas, import/export, estados de erro e semânticas alteradas.",
+    "text": "Incluir todas as personas, principais jornadas, gráficos/rotinas, import/export, estados de erro e semânticas alteradas. Conferir todos os paths/status/modos/blobs do diff C→D, índice de evidências, ancestralidade e guard próprio de D; diff truncado ou dependência desconhecida falha.",
     "status": "NOT_RUN"
   },
   {
@@ -7087,7 +7087,7 @@
     "id": "WP10.T05.SUC.01",
     "entity": "WP10.T05",
     "family": "success_criteria",
-    "text": "André e time conseguem usar e retomar o trabalho; o usuário recebe uma entrega comprovada e fácil de revisar.",
+    "text": "André e time conseguem usar e retomar o trabalho; o usuário recebe uma entrega comprovada e fácil de revisar. O usuário recebe C testado e D verificável, sem reexecução causada somente pela gravação da própria evidência.",
     "status": "NOT_RUN"
   },
   {

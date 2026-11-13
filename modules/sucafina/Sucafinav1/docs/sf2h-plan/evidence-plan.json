@@ -71,7 +71,7 @@
     "reviewer": null,
     "verified_at": null
   },
-  "validity": "CI aponta SHA e run real; interação aponta entrypoint e ator; export contém arquivo e inspeção; rotina contém run/receita/entrada reais. Screenshot sozinho não prova cálculo, permissão ou persistência. Mudança posterior invalida o conjunto de critérios afetado.",
+  "validity": "CI aponta SHA e run real; interação aponta entrypoint e ator; export contém arquivo e inspeção; rotina contém run/receita/entrada reais. Screenshot sozinho não prova cálculo, permissão ou persistência. Mudança posterior invalida o conjunto de critérios afetado. O candidato de produto aceito é C. D somente arquiva novos recibos/pareceres pelo envelope execution.candidate_delivery, com hashes e SHAs originais preservados; nenhum teste de C é declarado executado em D. Mudança fora do envelope cria novo candidato a qualificar. Guard de D é evidência própria de G8.",
   "usability": "Roteiros de 30 segundos e manutenção rápida são metas de aceite em avaliação controlada, não alegação de pesquisa com André. Registrar participante/avaliador, contexto e tempo; separar inferência de observação.",
   "non_engineering_outcomes": "Após uso real autorizado, medir tempo de preparação de revisão, sucesso de tarefas, redigitação, retorno sem refazer contexto e repetição de uso. Não pedir novos acessos nem fazer analytics externo para concluir esta campanha.",
   "packages": [
@@ -239,7 +239,7 @@
       "owners": [
         "WP10"
       ],
-      "coverage": "Candidato de produto, snapshot de CI, request, run, jobs e resultado; guias, demo e matriz completa. Candidato→snapshot→request→selection→run/artifacts, manifests/skillhashes/leases e G2 Htemporal.",
+      "coverage": "Candidato de produto, snapshot de CI, request, run, jobs e resultado; guias, demo e matriz completa. Candidato→snapshot→request→selection→run/artifacts, manifests/skillhashes/leases e G2 Htemporal. O fechamento distingue C, candidato de produto testado, de D, descendente somente evidencial: conferir ancestralidade, diff completo, hashes, inputs inalterados e guard de D, sem autorreferência.",
       "status": "NOT_RUN"
     }
   ],

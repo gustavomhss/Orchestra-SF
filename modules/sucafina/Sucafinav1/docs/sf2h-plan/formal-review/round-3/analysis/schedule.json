@@ -1,0 +1,270 @@
+{
+  "source_commit": "0aa2405bb3668314f60d6a674d2bd53fd5003091",
+  "source_campaign_sha256": "aaba00217ac1978860853fb0c72748b1b275fe4ee4d3b998c42a9f730dfe98a2",
+  "status": "PROPOSED_NOT_MEASURED",
+  "product_implementation_status": "NOT_RUN",
+  "source_unchanged": true,
+  "observations": {
+    "work_packages": 15,
+    "tasks": 74,
+    "depends_on_edges": 114,
+    "output_handoffs": 19,
+    "physical_slots": 20,
+    "actor_lifetimes": 23,
+    "coordinators": 5,
+    "auxiliaries_before_review": 15
+  },
+  "findings": [
+    {
+      "id": "SPEED-S01",
+      "kind": "OPERATIONAL_AMBIGUITY",
+      "source": "execution.integration_cadence + output_handoffs[NATIVE-COMPOSE]",
+      "fact": "Integration checkpoints begin at T25 while native composition must be ready at T18.",
+      "change": "Make ready critical output integration explicit before nominal consolidation waves."
+    },
+    {
+      "id": "SPEED-S02",
+      "kind": "CRITICAL_TAIL",
+      "source": "output_handoffs[MEMORY-CONSUMPTION] + WP14.T03/T04",
+      "fact": "Memory publishes at T68; six consumers must finish by T75.",
+      "change": "Priority routing and early actual delivery only after validated readiness; no extra ownership transfer."
+    },
+    {
+      "id": "SPEED-S03",
+      "kind": "TIME_RISK",
+      "source": "timebox.milestones[G6/G7] + review_assignments",
+      "fact": "Last corrected freeze at T103 leaves fifteen nominal minutes for remaining gates; reviewers start only at T72/75.",
+      "change": "Dynamic latest freeze and earlier fresh-review dispatch only with actual freed slots."
+    },
+    {
+      "id": "SPEED-S04",
+      "kind": "CAPACITY_BOUND",
+      "source": "timebox.slot_lifecycle + actor_allocations",
+      "fact": "20 slots include five coordinators; three replacement reviewers produce 23 lifetimes, not 23 concurrent actors.",
+      "change": "Supervisor S0 plus N=4 child sessions preserves this same topology; other N requires new allocation."
+    }
+  ],
+  "execution_policy": {
+    "mode": "OUTPUT_READY_WITH_SINGLE_INTEGRATION_WRITER",
+    "time_semantics": "Existing windows are reservations and diagnostic checkpoints. Earlier actual starts require predecessor outputs, active owner/lease, free capacity and an explicit allocation update; no automatic window compression.",
+    "unit_of_dispatch": "Persistent writer lane containing its continuous assigned tasks; tasks remain separate acceptance units.",
+    "priority": [
+      "outputs on the GNATIVE chain",
+      "producer outputs releasing the Atlas/memory critical tail",
+      "candidate-blocking corrections and CI inputs",
+      "other ready increments"
+    ],
+    "checkpoints_are_not_barriers": true,
+    "critical_output_groups": [
+      {
+        "id": "NATIVE-QUALIFICATION",
+        "outputs": [
+          "AI-NATIVE",
+          "NATIVE-CASE",
+          "NATIVE-PLANNER",
+          "NATIVE-RUNTIME"
+        ],
+        "consumer": "NATIVE-COMPOSE",
+        "nominal_deadline": 18,
+        "rule": "Integrate the ready critical batch before composition/qualification; never wait for T25."
+      },
+      {
+        "id": "ATLAS-BASE",
+        "outputs": [
+          "DOC-REF",
+          "ATLAS-MAP",
+          "ATLAS-PACKAGE"
+        ],
+        "later_input": "PROTECTED-STORE",
+        "nominal_first_deadline": 20,
+        "later_input_deadline": 25,
+        "rule": "Do not pretend protected storage was ready in the T20 batch."
+      },
+      {
+        "id": "RESIDENT-CONSUMPTION",
+        "outputs": [
+          "AI-FULL",
+          "MCP-FULL",
+          "ATLAS-ROUNDTRIP"
+        ],
+        "nominal_deadlines": [
+          42,
+          45,
+          45
+        ],
+        "rule": "Start proofs whose complete inputs are ready; do not block them on unrelated late outputs."
+      },
+      {
+        "id": "MEMORY-TAIL",
+        "outputs": [
+          "WP14-LEASE",
+          "ATLAS-FULL",
+          "MEMORY-CONSUMPTION"
+        ],
+        "nominal_deadlines": [
+          43,
+          55,
+          68
+        ],
+        "consumption_deadline": 75,
+        "rule": "Prioritize the real producer and all six consumers. Earlier delivery requires observed completed work, not a smaller date in the plan."
+      }
+    ],
+    "reviewer_early_start": {
+      "enabled_only_if": [
+        "builder source work closed",
+        "correction writer accepted its lease",
+        "reviewable integrated SHA exists",
+        "previous agent actually terminated",
+        "physical slot observed free"
+      ],
+      "slots": {
+        "S1-R1": "S1-B",
+        "S2-R2": "S2-B",
+        "S3-R3": "S3-A"
+      },
+      "scope": "An early partial review states its actual SHA and scope; final complete coverage and affected-delta rechecks remain mandatory.",
+      "no_21st_actor": true
+    },
+    "freeze_rule": "latest feasible freeze = T118 minus observed resource-constrained critical tail for all remaining mandatory CI/live/review gates. Unknown latency preserves UNKNOWN/CONDITIONAL; T103 is not unconditional.",
+    "communication": "Real local collaboration events inside a session; proven cross-session adapter when available. Git receipt index with bounded coordinator polling is an explicit fallback, not an invented push bus.",
+    "recovery": "Consult actual session state and checkpoint before resume; no duplicate writer after a timeout. Takeover requires closed/revoked prior write authority, lease transfer, new epoch and head CAS.",
+    "metrics": [
+      "ready_to_integrated_minutes",
+      "dependency_wait_minutes",
+      "coordination_wait_minutes",
+      "agent_context_reloads",
+      "duplicate_dispatches",
+      "ownership_conflicts",
+      "last_critical_output_minute",
+      "CI_queue_setup_execution_collection",
+      "final_review_complete_minute",
+      "remaining_critical_path_ETA"
+    ],
+    "unmeasured_operating_target": "Critical output handling immediately when its owner and S0 are available; normal ready-queue age below two minutes when S0 is available. This is a target, not measured performance."
+  },
+  "supervisor_workflow": {
+    "default_child_sessions": 4,
+    "supervisor": "S0",
+    "child_sessions": [
+      "S1",
+      "S2",
+      "S3",
+      "S4"
+    ],
+    "supervisor_local_auxiliaries": [
+      "S0-A",
+      "S0-B",
+      "S0-C"
+    ],
+    "per_session_slot_cap_including_coordinator": 4,
+    "peak_slots": 20,
+    "identities_over_time": 23,
+    "other_N_policy": "Compile and validate a complete new allocation against observed capacity before execution. Do not retain the 20-slot schedule with fewer actual sessions or assume extra model/runner capacity.",
+    "adapter_required_capabilities": [
+      "start_or_acknowledge_session",
+      "send_mission",
+      "observe_status_and_result",
+      "resume_from_checkpoint",
+      "confirm_closed_or_revoke_writer"
+    ],
+    "missing_adapter_policy": "Current collaboration tools expose a global four-slot limit, not five independent four-slot pools. Git is a ledger and cannot launch or wake sessions. Full automation requires a proven independent-session backend. An assisted five-conversation start is usable only after actual startup and capacity verification; Git receipts still do not auto-wake an idle chat.",
+    "campaign_states": [
+      "PREPARE",
+      "STARTING",
+      "ACTIVE",
+      "FINAL_VERIFY",
+      "DELIVERED",
+      "CONTINUING_LATE",
+      "CAPACITY_HOLD"
+    ],
+    "parallel_activities_within_ACTIVE": [
+      "build",
+      "native_qualification",
+      "incremental_integration",
+      "proofs",
+      "independent_review",
+      "correction_queue"
+    ],
+    "lane_states": [
+      "PLANNED",
+      "LEASED",
+      "RUNNING",
+      "OUTPUT_READY",
+      "INTEGRATED",
+      "VERIFIED",
+      "DONE",
+      "BLOCKED"
+    ],
+    "session_states": [
+      "REQUESTED",
+      "ACKNOWLEDGED",
+      "ACTIVE",
+      "STATUS_UNKNOWN",
+      "CLOSED"
+    ],
+    "events": [
+      "SESSION_ACK",
+      "OUTPUT_READY",
+      "INTEGRATION_RESULT",
+      "BLOCKED",
+      "FINDING",
+      "PROOF_RESULT",
+      "LEASE_RELEASED",
+      "SESSION_CLOSED"
+    ],
+    "event_idempotency_key": [
+      "campaign_id",
+      "lane_or_output_id",
+      "epoch",
+      "sha"
+    ],
+    "terminal_success": "Full scope on final candidate; all mandatory evidence accepted; three independent reviewers; no mandatory open findings; final commit and receipts verified.",
+    "nonterminal_conditions": [
+      "phase budget exhausted",
+      "T120 exceeded",
+      "one producer blocked",
+      "one session status unknown",
+      "partial READY_FOR_INTEGRATION"
+    ],
+    "no_new_infrastructure_requirement": true,
+    "peak_slots_status": "DESIRED_PRESET_ONLY_UNTIL_ADMITTED",
+    "current_collaboration_backend": {
+      "global_slot_cap_including_root": 4,
+      "independent_session_launcher_observed": false,
+      "N4_preset_admitted": false
+    },
+    "admission_conditions": [
+      "backend actually creates or acknowledges five independent sessions",
+      "independent capacity pools verified, not inferred from five session IDs",
+      "twenty total slots verified including coordinators, without exceeding a global backend cap",
+      "model and CI concurrency measured separately",
+      "all sessions acknowledge pinned plan SHA and unique lane leases"
+    ]
+  },
+  "axioms": {
+    "dod": [
+      "Observed roster, versioned lane missions, consumed outputs, complete receipts and final full-scope candidate."
+    ],
+    "invariants": [
+      "One writer per file; no more than observed capacity; three non-author reviewers; all scope and mandatory gates retained; unknown duration is never zero."
+    ],
+    "quality_standards": [
+      "Dispatch by critical-path impact with concise SHA-based events; no blind mutable retry or duplicate implementation."
+    ],
+    "completeness_criteria": [
+      "All 74 tasks, 15 WPs, 17 contracts, 19 handoffs and required proofs remain assigned; correction owners survive builder replacement."
+    ],
+    "success_criteria": [
+      "Measured reduction of repeated reads, queue waiting and duplicate work; two-hour completion claimed only from actual full acceptance time."
+    ]
+  },
+  "do_not_change": [
+    "functional scope",
+    "C01-C17 authority and semantics",
+    "mandatory proof/CI selection",
+    "owner namespaces without accepted lease",
+    "baseline windows merely to claim faster delivery"
+  ],
+  "recommended_patch_policy": "Only the first replacement is immediately safe as clarification. Additive policies require integration with the other proposals and validation. No numeric schedule compression is proposed."
+}

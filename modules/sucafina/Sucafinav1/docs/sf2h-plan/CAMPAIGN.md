@@ -38,7 +38,7 @@ Repositório: `gustavomhss/Orchestra-SF`. Baseline de código: `9e4f3d35833f9b2c
 
 ## Paralelização e recursos
 
-Cinco conversas efetivamente abertas; no máximo quatro agentes vivos por conversa, incluindo a coordenadora. São quinze auxiliares e cinco coordenadoras, pico de vinte atores; uso da coordenadora para código consome seus próprios minutos. Runners de CI e concorrência de modelos são recursos externos observados, não slots presumidos.
+Preset de cinco sessões independentes: supervisora S0 e N=4 coordenadoras S1–S4, cada uma com até quatro slots incluindo a coordenadora. Pico de vinte atores, quinze auxiliares e cinco coordenadoras, condicionado a escopo de capacidade observado. IDs de sessões não provam pools independentes. Runners/modelos são limites externos separados. O backend collaboration desta conversa tem teto global quatro; não multiplicar por nesting.
 
 | Sessão | Frente | WPs |
 | --- | --- | --- |
@@ -54,7 +54,7 @@ WP14.T05 S4 10-20; coordenação 20-22; T01 S4 22-34; coordenação 34-35; T02 S
 
 ## Relógio e condições de conclusão
 
-T0 é a primeira execução da integradora; inclui preflight e início das outras quatro sessões. Não reiniciar o relógio depois da qualificação.
+T0 é a primeira execução da supervisora; inclui preflight, lançamento/ACK das outras sessões, setup, integração e gates. Planejamento/packs já preparados não autorizam reiniciar o relógio depois da qualificação.
 
 Alvo condicional de 120 minutos, não duração medida nem garantia. O replanejamento usa exclusivamente cinco sessões com quatro slots incluindo coordenadora. As reservas abaixo são orçamento de trabalho a validar em GREADY/GNATIVE/G2H/G4; fila de CI, latência do provider, geração Atlas e correções não têm duração inventada.
 
@@ -70,9 +70,9 @@ Alvo condicional de 120 minutos, não duração medida nem garantia. O replaneja
 | 55 | G3 | Cinco perfis e dezoito fontes/skills finais empacotados e carregáveis, execução própria do Revisor disponível, inferência real/contradição/simulação e Relay demonstrados. Atlas real importado pela boundary de distribuição, com BCS, resolver e append/read protegido; prova de reinício/ACL continua até G4. Todos os consumidores tardios ainda têm entregas e ETAs explícitos. |
 | 75 | G4 | Escopo funcional integral conectado: cinco perfis, dezoito skills executáveis, oito packs operacionais, Atlas/ledger e documentos reais, aplicações C12 por domínio e UI/Relay consumidores. AM01-AM06 têm integração exercida e candidato cumulativo congelado. Nenhuma fixture satisfaz produção/consumo. Reavaliar G2H com seleção final de CI e provas live. |
 | 95 | G5 | Primeiro conjunto de aceitação cumulativa do candidato concluído e três pareceres independentes por seção. Falhas vão ao único escritor; o prazo só permanece viável se CI, provas live e correções residuais observadas couberem. |
-| 103 | G6 | Último candidato corrigido congelado, se houve alteração; disparar gates cumulativos exigidos e repetições live afetadas com recibo do candidato. Se candidato G4 não mudou, não criar commit artificial para reiniciar provas. |
-| 118 | G7 | Receipts completos para o candidato aceito: seleções distintas app/src e app/test-browser, Atlas boundary, demais suites obrigatórias, AM01-AM06, três revisões sem autojulgamento e nenhum achado obrigatório aberto. |
-| 120 | G8 | Emitir aceite somente se G7 passar; caso contrário publicar atraso, pendências, próximo ETA, donos e continuação de todo o escopo. Não declarar meta de duas horas cumprida nem encerrar a execução por tempo esgotado. |
+| 103 | G6 | Último candidato corrigido de produto C congelado, com guia/roteiro/changelog normativos já incluídos; se houve mudança de produto, disparar gates cumulativos exigidos e provas pertinentes do C aceito. Se C de G4 não mudou, não criar commit artificial para reiniciar provas. Adições posteriores somente evidenciais são tratadas como D pelo envelope, nunca como reatribuição de resultados. |
+| 118 | G7 | Receipts completos para o mesmo candidato de produto C: seleções distintas app/src e app/test-browser, Atlas boundary, oito seleções mínimas e adicionais obrigatórias, AM01–AM06, guard de C, três revisões sem autojulgamento e nenhum achado obrigatório aberto. Guia/roteiro/changelog normativos já integram C. G7 habilita T05 a formar D; seu envelope e guard são exigidos em G8. |
+| 120 | G8 | Emitir aceite somente após G7 de C e verificação completa de D: C ancestral, diff append-only exclusivamente evidencial nos paths admitidos, inputs de build/test/runtime inalterados, hashes preservados e guard de D aprovado. O receipt interno aponta C; o SHA e o guard de D são publicados no fechamento sem autorreferência. Se qualquer condição faltar, publicar atraso, pendências, ETA, donos e continuar o escopo inteiro; não declarar 120 minutos cumpridos ou encerrar por tempo esgotado. |
 
 G4->G5 reserva 20 minutos e G6->G7 reserva 15 minutos como hipóteses condicionais para o conjunto observado de CI, provas live e rechecks. Timeout 45 minutos é limite de cada job, não previsão. O plano não presume oito runners livres nem extrapola seleção parcial para suíte final. Medir fila, setup, execução e coleta separadamente; desconhecido não conta como zero.
 
@@ -114,8 +114,8 @@ As assinaturas, semânticas, produtores e consumidores ficam em [contracts.json]
 
 - **CAMP.DOD.01** — Todos os WPs e tasks da lista canônica em campaign.json estão implementados, integrados, verificados e com os cinco grupos de axiomas aplicáveis satisfeitos.
 - **CAMP.DOD.02** — As jornadas J01–J13 funcionam nos entrypoints reais, com persistência, autorização, produtores e consumidores reais, incluindo IA, Relay, documentos, portfólio e memória.
-- **CAMP.DOD.03** — Três revisões independentes reconciliadas; nenhum achado obrigatório aberto; checks requeridos válidos para o candidato final e evidência recuperável.
-- **CAMP.DOD.04** — As verificações exigidas pelo repositório e a cobertura de paridade estão válidas para o candidato final; o guia por papel, a demonstração e os limites materiais estão entregues.
+- **CAMP.DOD.03** — Três revisões independentes reconciliadas; nenhum achado obrigatório aberto; checks requeridos válidos para o candidato final de produto C e evidência recuperável. A entrega D satisfaz integralmente o envelope evidencial e seu guard, sem reatribuir a D execuções realizadas em C.
+- **CAMP.DOD.04** — As verificações exigidas pelo repositório e a cobertura de paridade estão válidas para o candidato de produto C; o guia por papel, a demonstração e os limites materiais estão incluídos nele. D somente arquiva a evidência admitida, com verificação e guard próprios.
 - **sf2h-integral-20261112.DOD.05** — As 28 capacidades, R01–R41 e todas as capacidades IA01–IA18 estão implementadas, conectadas a produtores reais e verificadas no candidato de produto. A renovação é uma jornada de aceite, não a fronteira do produto.
 - **sf2h-integral-20261112.DOD.06** — T+120 é prazo alvo. Caso reste capacidade ou prova obrigatória, a campanha continua aberta com estado e causa concretos; não declarar MVP, DONE parcial ou feature pronta por estar atrás de flag desativada.
 - **CAMP.DOD.20** — C06 resolve confirmação por escopo e C10 resolve cobertura de custos; produtores e consumidores reais demonstram as contraprovas CONFIRM-SCOPE e AI-RENEWAL-OMITTED-CATEGORY.
@@ -218,9 +218,9 @@ Cada task/step é uma unidade com trabalho, entradas, saídas, writer, consumido
 | E15 — Documentos e injeção | PDF digital, DOCX e texto; trecho de origem e confirmação; documento malicioso, inválido ou sem texto tratado corretamente.  Handoff WP06.T05→WP09.T04 compartilha evidenceRef/versão/trecho; parser só no WP06 e candidato não é fato confirmado. AM03/AM05: referênciasdocumentais/injeção/scanner/isolation/revocation reais. |
 | E16 — Integração e regressão | Suites exigidas do epic e pacotes afetados, consumidores reais, compatibilidade, host binding e UI integrada. Oito recipes mínimas, AM01-AM06, oito packs com paridade e Atlas check:generated/typecheck. |
 | E17 — Reviews independentes | Três pareceres independentes com achado, impacto, evidência, correção e reteste. Três reviewers novos após encerrar builders: autores ativos corrigem e reviewers não editam produto. |
-| E18 — Entrega e proveniência | Candidato de produto, snapshot de CI, request, run, jobs e resultado; guias, demo e matriz completa. Candidato→snapshot→request→selection→run/artifacts, manifests/skillhashes/leases e G2 Htemporal. |
+| E18 — Entrega e proveniência | Candidato de produto, snapshot de CI, request, run, jobs e resultado; guias, demo e matriz completa. Candidato→snapshot→request→selection→run/artifacts, manifests/skillhashes/leases e G2 Htemporal. O fechamento distingue C, candidato de produto testado, de D, descendente somente evidencial: conferir ancestralidade, diff completo, hashes, inputs inalterados e guard de D, sem autorreferência. |
 
-CI aponta SHA e run real; interação aponta entrypoint e ator; export contém arquivo e inspeção; rotina contém run/receita/entrada reais. Screenshot sozinho não prova cálculo, permissão ou persistência. Mudança posterior invalida o conjunto de critérios afetado.
+CI aponta SHA e run real; interação aponta entrypoint e ator; export contém arquivo e inspeção; rotina contém run/receita/entrada reais. Screenshot sozinho não prova cálculo, permissão ou persistência. Mudança posterior invalida o conjunto de critérios afetado. O candidato de produto aceito é C. D somente arquiva novos recibos/pareceres pelo envelope execution.candidate_delivery, com hashes e SHAs originais preservados; nenhum teste de C é declarado executado em D. Mudança fora do envelope cria novo candidato a qualificar. Guard de D é evidência própria de G8.
 
 Roteiros de 30 segundos e manutenção rápida são metas de aceite em avaliação controlada, não alegação de pesquisa com André. Registrar participante/avaliador, contexto e tempo; separar inferência de observação.
 

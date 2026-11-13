@@ -79,7 +79,7 @@
         "E17",
         "E18"
       ],
-      "expected": "Três revisões independentes reconciliadas; nenhum achado obrigatório aberto; checks requeridos válidos para o candidato final e evidência recuperável.",
+      "expected": "Três revisões independentes reconciliadas; nenhum achado obrigatório aberto; checks requeridos válidos para o candidato final de produto C e evidência recuperável. A entrega D satisfaz integralmente o envelope evidencial e seu guard, sem reatribuir a D execuções realizadas em C.",
       "status": "NOT_RUN"
     },
     {
@@ -106,7 +106,7 @@
         "E17",
         "E18"
       ],
-      "expected": "As verificações exigidas pelo repositório e a cobertura de paridade estão válidas para o candidato final; o guia por papel, a demonstração e os limites materiais estão entregues.",
+      "expected": "As verificações exigidas pelo repositório e a cobertura de paridade estão válidas para o candidato de produto C; o guia por papel, a demonstração e os limites materiais estão incluídos nele. D somente arquiva a evidência admitida, com verificação e guard próprios.",
       "status": "NOT_RUN"
     },
     {
@@ -3629,7 +3629,7 @@
         "E17",
         "E18"
       ],
-      "expected": "O commit final possui evidência de CI, comportamento, autorização, visualização e preservação correspondente ao seu conteúdo.",
+      "expected": "O candidato de produto C possui evidência de CI, comportamento, autorização, visualização e preservação correspondente ao seu conteúdo. O commit de entrega D arquiva essa evidência e passa a verificação do envelope e seu próprio guard, sem alegar que CI de C executou em D.",
       "status": "NOT_RUN"
     },
     {
@@ -3799,7 +3799,7 @@
         "E16",
         "E18"
       ],
-      "expected": "Gates distinguem source shipping, runtime loading, domínio real, CI selection e consumo final no mesmo candidato.",
+      "expected": "Gates distinguem source shipping, runtime loading, domínio real, CI selection e consumo final no mesmo candidato. Mesmo candidato significa C; D apenas arquiva provas admitidas e conserva a identidade de cada execução.",
       "status": "NOT_RUN",
       "integrated_proofs": [
         "AM01",
@@ -13739,7 +13739,7 @@
         "E17",
         "E18"
       ],
-      "expected": "As superfícies reais consomem todas as portas e funções da campanha, sem caminhos de produção vazios ou simulados.",
+      "expected": "As superfícies reais consomem todas as portas e funções da campanha, sem caminhos de produção vazios ou simulados. O README de uso, roteiro e changelog correspondente estão incluídos em C e disponíveis para T05.",
       "status": "NOT_RUN"
     },
     {
@@ -13765,7 +13765,7 @@
         "E17",
         "E18"
       ],
-      "expected": "Composição não altera fórmulas/políticas por conveniência e não escreve arquivos de feature de outro WP.",
+      "expected": "Composição não altera fórmulas/políticas por conveniência e não escreve arquivos de feature de outro WP. Guias normativos usam o README já possuído por S0 e não entram como evidência nova em D.",
       "status": "NOT_RUN"
     },
     {
@@ -13817,7 +13817,7 @@
         "E17",
         "E18"
       ],
-      "expected": "Mudanças de compatibilidade são aditivas, pequenas e documentadas junto ao consumidor afetado.",
+      "expected": "Mudanças de compatibilidade são aditivas, pequenas e documentadas junto ao consumidor afetado. O guia por papel descreve as tarefas e os números do produto, reconciliado com o comportamento integrado antes de congelar C.",
       "status": "NOT_RUN"
     },
     {
@@ -13843,7 +13843,7 @@
         "E17",
         "E18"
       ],
-      "expected": "Cobrir entrypoint, rotas, handlers, contratos legados, preferências, revisões, relações, imports e rotinas.",
+      "expected": "Cobrir entrypoint, rotas, handlers, contratos legados, preferências, revisões, relações, imports e rotinas. Incluir guia por papel, roteiro sintético e changelog de produto em C, cobrindo os incrementos tardios até T75.",
       "status": "NOT_RUN"
     },
     {
@@ -13882,7 +13882,7 @@
         "E17",
         "E18"
       ],
-      "expected": "A funcionalidade deixa de depender de abrir páginas isoladas ou scripts de demonstração para existir.",
+      "expected": "A funcionalidade deixa de depender de abrir páginas isoladas ou scripts de demonstração para existir. T05 entrega instruções já presentes no candidato testado, sem iniciar outro ciclo de produto apenas para escrever o guia.",
       "status": "NOT_RUN"
     },
     {
@@ -14464,7 +14464,7 @@
         "E17",
         "E18"
       ],
-      "expected": "O candidato final tem resultados válidos das verificações exigidas, sem falha obrigatória ou prova desatualizada.",
+      "expected": "O candidato final de produto C tem resultados válidos das verificações exigidas, sem falha obrigatória ou prova desatualizada. O guard do envelope D é verificado separadamente por T05 antes de G8.",
       "status": "NOT_RUN"
     },
     {
@@ -14477,7 +14477,7 @@
         "E17",
         "E18"
       ],
-      "expected": "CI pertinente à boundary e aos novos consumers fecha com evidencia do candidato final.",
+      "expected": "CI pertinente à boundary e aos novos consumers fecha com evidência do candidato final de produto C.",
       "status": "NOT_RUN"
     },
     {
@@ -14488,7 +14488,7 @@
         "E16",
         "E18"
       ],
-      "expected": "Seleções CI exigidas e gates estáticos têm recibos do candidato aceito.",
+      "expected": "Seleções CI exigidas e gates estáticos de produto têm recibos do candidato aceito C; D mantém essas identidades e requer seu próprio guard em G8.",
       "status": "NOT_RUN",
       "integrated_proofs": []
     },
@@ -14526,7 +14526,7 @@
         "E16",
         "E18"
       ],
-      "expected": "Playwright SF não substitui Bun browser; checks em outro SHA não viram verde atual.",
+      "expected": "Playwright SF não substitui Bun browser; checks em outro SHA não viram verde atual. D não recebe o SHA de execução de C; seu receipt aponta C e o envelope mantém o produto intacto.",
       "status": "NOT_RUN",
       "integrated_proofs": []
     },
@@ -14540,7 +14540,7 @@
         "E17",
         "E18"
       ],
-      "expected": "Reusar evidência ainda válida e repetir somente o necessário para resolver risco concreto ou gate exigido.",
+      "expected": "Reusar evidência ainda válida e repetir somente o necessário para resolver risco concreto ou gate exigido. Arquivar prova em D não exige novo teste de produto quando o envelope passa, mas exige verificação própria e guard de D.",
       "status": "NOT_RUN"
     },
     {
@@ -14602,7 +14602,7 @@
         "E16",
         "E18"
       ],
-      "expected": "CobrirSF/CLI/app/src/app/test-browser/atlas-boundary/trêsPW e suites adicionais exigidas pelo footprint/epic.",
+      "expected": "CobrirSF/CLI/app/src/app/test-browser/atlas-boundary/trêsPW e suites adicionais exigidas pelo footprint/epic. As seleções e seis provas AM finais identificam o mesmo C; distinguir seu aceite do envelope D.",
       "status": "NOT_RUN",
       "integrated_proofs": []
     },
@@ -14616,7 +14616,7 @@
         "E17",
         "E18"
       ],
-      "expected": "Qualquer pessoa consegue ligar cada resultado declarado ao commit e à execução que o demonstraram.",
+      "expected": "Qualquer pessoa consegue ligar cada resultado declarado ao commit e à execução que o demonstraram. O índice de D aponta C e preserva cada run, attempt, seleção e hash original, sem alegar execução inexistente em D.",
       "status": "NOT_RUN"
     },
     {
@@ -14654,7 +14654,7 @@
         "E17",
         "E18"
       ],
-      "expected": "Uma mudança depois de um run invalida os critérios afetados até nova verificação; não chamar green antigo de green atual.",
+      "expected": "Mudança de produto depois de um run cria novo C e invalida os critérios afetados até nova verificação; não chamar green antigo de green atual. Apenas adições evidenciais que satisfazem integralmente execution.candidate_delivery podem formar D sem reexecutar o produto C, mantendo seus SHAs e guard próprio de D.",
       "status": "NOT_RUN"
     },
     {
@@ -14743,7 +14743,7 @@
         "E17",
         "E18"
       ],
-      "expected": "Campanha fechada somente com cobertura completa, critérios satisfeitos e pacote final coerente com o código entregue.",
+      "expected": "Campanha fechada somente com cobertura completa, critérios satisfeitos no produto C e pacote D coerente: ancestralidade, envelope append-only, inputs preservados, hashes e guard de D verificados após G7.",
       "status": "NOT_RUN"
     },
     {
@@ -14769,7 +14769,7 @@
         "E17",
         "E18"
       ],
-      "expected": "Planejamento, implementação, revisão, publicação e deploy são estados distintos; não confundir um com outro.",
+      "expected": "Planejamento, implementação, revisão, publicação e deploy são estados distintos; não confundir um com outro. D não altera produto, guias normativos, testes, skills, configurações ou recibos antigos; a evidência conserva os SHAs e runs originais. Não gravar o próprio SHA/hash/guard posterior dentro de D.",
       "status": "NOT_RUN"
     },
     {
@@ -14795,7 +14795,7 @@
         "E17",
         "E18"
       ],
-      "expected": "Guia explica o trabalho do usuário e o significado dos dados; detalhes internos ficam nas referências técnicas pertinentes.",
+      "expected": "Guia explica o trabalho do usuário e o significado dos dados; detalhes internos ficam nas referências técnicas pertinentes. Consumir o guia já incluído em C; o índice de entrega liga evidências sem copiar afirmações de um candidato para outro.",
       "status": "NOT_RUN"
     },
     {
@@ -14821,7 +14821,7 @@
         "E17",
         "E18"
       ],
-      "expected": "Incluir todas as personas, principais jornadas, gráficos/rotinas, import/export, estados de erro e semânticas alteradas.",
+      "expected": "Incluir todas as personas, principais jornadas, gráficos/rotinas, import/export, estados de erro e semânticas alteradas. Conferir todos os paths/status/modos/blobs do diff C→D, índice de evidências, ancestralidade e guard próprio de D; diff truncado ou dependência desconhecida falha.",
       "status": "NOT_RUN"
     },
     {
@@ -14847,7 +14847,7 @@
         "E17",
         "E18"
       ],
-      "expected": "André e time conseguem usar e retomar o trabalho; o usuário recebe uma entrega comprovada e fácil de revisar.",
+      "expected": "André e time conseguem usar e retomar o trabalho; o usuário recebe uma entrega comprovada e fácil de revisar. O usuário recebe C testado e D verificável, sem reexecução causada somente pela gravação da própria evidência.",
       "status": "NOT_RUN"
     },
     {
@@ -14873,7 +14873,7 @@
         "E17",
         "E18"
       ],
-      "expected": "Todas as tasks, WPs e capacidades obrigatórias da matriz canônica têm aceite e evidência válidos; o encerramento consulta a lista, sem contagem antiga fixa.",
+      "expected": "Todas as tasks, WPs e capacidades obrigatórias da matriz canônica têm aceite e evidência válidos; o encerramento consulta a lista, sem contagem antiga fixa. A aceitação distingue C de D: todas as provas de produto obrigatórias pertencem a C; o envelope de D admite apenas adições novas, com hashes e guard próprios. Alteração, remoção, rename, modo indevido, fonte normativa ou input runtime/teste/build no diff rejeita D como entrega evidencial.",
       "status": "NOT_RUN"
     },
     {

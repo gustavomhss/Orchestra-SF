@@ -1,0 +1,624 @@
+{
+  "provenance": {
+    "canonical_path": "campaign.json",
+    "canonical_sha256": "044c729f37c055bf81c1cf4832ad37ffcd96b77834e0c725b6a0da51c1a4421d",
+    "compiler": "render_fast_context.py",
+    "compiler_version": "1.0.0",
+    "planning_commit": "Use the immutable planning SHA supplied at launch for every artifact; the source cannot embed its own future commit SHA.",
+    "code_baseline": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "implementation_test_status": "NOT_RUN"
+  },
+  "common_sha256": "8e5a92df01791d602b3666533038d1bea6fe70e5ce84f2b8ffec4cd071658e86",
+  "actors": [
+    {
+      "actor": "S0",
+      "job_id": "sf2h-integral-20261112/S0",
+      "path": "execution/actors/S0.json",
+      "sha256": "2d759f9761217cf9c495f88cb8c66754f3c5e1c52d30061b989a3682d801eca8",
+      "bytes": 524987,
+      "primary_tasks": [
+        "WP00.T01",
+        "WP00.T02",
+        "WP10.T01",
+        "WP10.T05"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "criteria": 110
+    },
+    {
+      "actor": "S0-A",
+      "job_id": "sf2h-integral-20261112/S0-A",
+      "path": "execution/actors/S0-A.json",
+      "sha256": "53c96a40171ac82e999bbef9c274e4e941585b97c7ac43058c80a200e490931e",
+      "bytes": 297879,
+      "primary_tasks": [
+        "WP00.T03",
+        "WP10.T07"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "criteria": 84
+    },
+    {
+      "actor": "S0-B",
+      "job_id": "sf2h-integral-20261112/S0-B",
+      "path": "execution/actors/S0-B.json",
+      "sha256": "4441e156b5013d22ace7c5e876eabe6b094a9678fb16ab9612997f1b9fb49c0d",
+      "bytes": 487245,
+      "primary_tasks": [
+        "WP10.T06"
+      ],
+      "support_tasks": [
+        "WP00.T04"
+      ],
+      "correction_wps": [],
+      "criteria": 98
+    },
+    {
+      "actor": "S0-C",
+      "job_id": "sf2h-integral-20261112/S0-C",
+      "path": "execution/actors/S0-C.json",
+      "sha256": "d0d5088fc86d77a155528ecdb5d63bdf13e85228d9d42809ef415cd64975fcdf",
+      "bytes": 394185,
+      "primary_tasks": [
+        "WP10.T02",
+        "WP10.T04",
+        "WP14.T03",
+        "WP14.T04"
+      ],
+      "support_tasks": [],
+      "correction_wps": [
+        "WP14"
+      ],
+      "criteria": 155
+    },
+    {
+      "actor": "S1",
+      "job_id": "sf2h-integral-20261112/S1",
+      "path": "execution/actors/S1.json",
+      "sha256": "2b6791b48b22a0ccf84f61b5c077a7b47564153277002e764be24f193c9516da",
+      "bytes": 392073,
+      "primary_tasks": [],
+      "support_tasks": [
+        "WP12.T01",
+        "WP12.T02"
+      ],
+      "correction_wps": [
+        "WP02"
+      ],
+      "criteria": 150
+    },
+    {
+      "actor": "S2",
+      "job_id": "sf2h-integral-20261112/S2",
+      "path": "execution/actors/S2.json",
+      "sha256": "e3951055ff3e1b7145f7c23d4b19a8b096d804b93f1704e6ed21d51e899283b7",
+      "bytes": 492644,
+      "primary_tasks": [
+        "WP06.T05"
+      ],
+      "support_tasks": [
+        "WP10.T04"
+      ],
+      "correction_wps": [
+        "WP05"
+      ],
+      "criteria": 209
+    },
+    {
+      "actor": "S3",
+      "job_id": "sf2h-integral-20261112/S3",
+      "path": "execution/actors/S3.json",
+      "sha256": "95e93e2170ad99d384ffcd73fbc06dbbd22a270fa6786cbab84c9bc4d3c8998a",
+      "bytes": 440301,
+      "primary_tasks": [
+        "WP00.T04"
+      ],
+      "support_tasks": [
+        "WP12.T02"
+      ],
+      "correction_wps": [
+        "WP07"
+      ],
+      "criteria": 183
+    },
+    {
+      "actor": "S4",
+      "job_id": "sf2h-integral-20261112/S4",
+      "path": "execution/actors/S4.json",
+      "sha256": "43b3f7f5e9e54f3cf9c177f8b9f4abdb642e7fbc33d2ce209a94e22d0bdce64f",
+      "bytes": 259178,
+      "primary_tasks": [
+        "WP14.T01",
+        "WP14.T02",
+        "WP14.T05"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "criteria": 69
+    },
+    {
+      "actor": "S1-A",
+      "job_id": "sf2h-integral-20261112/S1-A",
+      "path": "execution/actors/S1-A.json",
+      "sha256": "aaf90f8b2481869db177c188760c8ba027ecbcf1d2f5e2503c55da12d0afae05",
+      "bytes": 407515,
+      "primary_tasks": [
+        "WP01.T01",
+        "WP01.T02",
+        "WP01.T03",
+        "WP01.T04",
+        "WP01.T05"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "criteria": 75
+    },
+    {
+      "actor": "S1-B",
+      "job_id": "sf2h-integral-20261112/S1-B",
+      "path": "execution/actors/S1-B.json",
+      "sha256": "3f2dc699d545ffed7f642344c796562752082078aa5554e2da07efbbc6e0741f",
+      "bytes": 234873,
+      "primary_tasks": [
+        "WP02.T01",
+        "WP02.T02",
+        "WP02.T03",
+        "WP02.T04"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "criteria": 78
+    },
+    {
+      "actor": "S1-C",
+      "job_id": "sf2h-integral-20261112/S1-C",
+      "path": "execution/actors/S1-C.json",
+      "sha256": "84d7f9cce9f0a663f395d72564a38d0e57a278e687e06086c23596b44b55690f",
+      "bytes": 248055,
+      "primary_tasks": [
+        "WP03.T01",
+        "WP03.T02",
+        "WP03.T03",
+        "WP03.T04",
+        "WP03.T05"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "criteria": 112
+    },
+    {
+      "actor": "S2-A",
+      "job_id": "sf2h-integral-20261112/S2-A",
+      "path": "execution/actors/S2-A.json",
+      "sha256": "2f29384cf68357c24603ff85cf203c1244feeaa7c170e3a170a2c0b6ab0a1cc5",
+      "bytes": 204802,
+      "primary_tasks": [
+        "WP04.T01",
+        "WP04.T02",
+        "WP04.T03",
+        "WP04.T04",
+        "WP04.T05"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "criteria": 111
+    },
+    {
+      "actor": "S2-B",
+      "job_id": "sf2h-integral-20261112/S2-B",
+      "path": "execution/actors/S2-B.json",
+      "sha256": "ce32b3047e5ebc981befc6e8aa7a7262afdf8aa6ff0c260c89b025b21d9eebe2",
+      "bytes": 305272,
+      "primary_tasks": [
+        "WP05.T01",
+        "WP05.T02",
+        "WP05.T03",
+        "WP05.T04",
+        "WP05.T05"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "criteria": 108
+    },
+    {
+      "actor": "S2-C",
+      "job_id": "sf2h-integral-20261112/S2-C",
+      "path": "execution/actors/S2-C.json",
+      "sha256": "7ec77ec5440ac217d57f24857366b582c18b68cf8b21eae74da960a465c1500d",
+      "bytes": 339316,
+      "primary_tasks": [
+        "WP06.T01",
+        "WP06.T02",
+        "WP06.T03",
+        "WP06.T04"
+      ],
+      "support_tasks": [
+        "WP06.T05"
+      ],
+      "correction_wps": [],
+      "criteria": 140
+    },
+    {
+      "actor": "S3-A",
+      "job_id": "sf2h-integral-20261112/S3-A",
+      "path": "execution/actors/S3-A.json",
+      "sha256": "819eebd60e5563a3437cf3db7c972216db970f66287ba06ce348c70d8c166bdb",
+      "bytes": 264448,
+      "primary_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP07.T03",
+        "WP07.T04"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "criteria": 86
+    },
+    {
+      "actor": "S3-B",
+      "job_id": "sf2h-integral-20261112/S3-B",
+      "path": "execution/actors/S3-B.json",
+      "sha256": "6ddf617f6d3fc6ff8e1b5830f594869cf0067c282483708f37c4e2c457d04187",
+      "bytes": 309718,
+      "primary_tasks": [
+        "WP08.T01",
+        "WP08.T02",
+        "WP08.T03",
+        "WP08.T04",
+        "WP08.T05",
+        "WP08.T06"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "criteria": 132
+    },
+    {
+      "actor": "S3-C",
+      "job_id": "sf2h-integral-20261112/S3-C",
+      "path": "execution/actors/S3-C.json",
+      "sha256": "4ab7c1be90c2e9c9b7c16ad11b66ce1c264c98ec3e748821db65aa7321b73327",
+      "bytes": 402759,
+      "primary_tasks": [
+        "WP09.T01",
+        "WP09.T07",
+        "WP09.T02",
+        "WP09.T03",
+        "WP09.T04",
+        "WP09.T05",
+        "WP09.T06"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "criteria": 112
+    },
+    {
+      "actor": "S4-A",
+      "job_id": "sf2h-integral-20261112/S4-A",
+      "path": "execution/actors/S4-A.json",
+      "sha256": "4348c707904f1a7379bc40805631474109f24e8c5311da03bd5b7a6016db4efe",
+      "bytes": 327934,
+      "primary_tasks": [
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP11.T04"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "criteria": 83
+    },
+    {
+      "actor": "S4-B",
+      "job_id": "sf2h-integral-20261112/S4-B",
+      "path": "execution/actors/S4-B.json",
+      "sha256": "e2869a044af5fc5b5c9beead46773f258679820c34911c2fb8a3b406aceaae71",
+      "bytes": 480433,
+      "primary_tasks": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP12.T04"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "criteria": 108
+    },
+    {
+      "actor": "S4-C",
+      "job_id": "sf2h-integral-20261112/S4-C",
+      "path": "execution/actors/S4-C.json",
+      "sha256": "e343808efb21fe4b2edeb716f43842d71d33ceb9c7db6ebdd5b95ae2b387fb35",
+      "bytes": 229599,
+      "primary_tasks": [
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "criteria": 68
+    },
+    {
+      "actor": "S1-R1",
+      "job_id": "sf2h-integral-20261112/S1-R1",
+      "path": "execution/actors/S1-R1.json",
+      "sha256": "303e2c99dddb78bc422e77d80b9d68968fac88bb5eb6377f4f09514da992abf0",
+      "bytes": 279272,
+      "primary_tasks": [
+        "WP10.T03"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "criteria": 40
+    },
+    {
+      "actor": "S2-R2",
+      "job_id": "sf2h-integral-20261112/S2-R2",
+      "path": "execution/actors/S2-R2.json",
+      "sha256": "8d3b42d72ca791da45bd366a415328b43ddf065f82fc16403c7bbac7099dc41b",
+      "bytes": 288222,
+      "primary_tasks": [
+        "WP10.T03"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "criteria": 40
+    },
+    {
+      "actor": "S3-R3",
+      "job_id": "sf2h-integral-20261112/S3-R3",
+      "path": "execution/actors/S3-R3.json",
+      "sha256": "5c5edb170cc243dac99ca16fd798b85e519803404221b8deb4cc47408a9399da",
+      "bytes": 486808,
+      "primary_tasks": [
+        "WP10.T03"
+      ],
+      "support_tasks": [],
+      "correction_wps": [],
+      "criteria": 40
+    }
+  ],
+  "coverage": {
+    "work_packages": 15,
+    "tasks": 74,
+    "actors": 23,
+    "criteria": 1610,
+    "handoffs": 19,
+    "skills": 18,
+    "operations": 39
+  },
+  "task_primary_actors": {
+    "WP00.T01": [
+      "S0"
+    ],
+    "WP00.T02": [
+      "S0"
+    ],
+    "WP10.T01": [
+      "S0"
+    ],
+    "WP10.T05": [
+      "S0"
+    ],
+    "WP00.T03": [
+      "S0-A"
+    ],
+    "WP10.T07": [
+      "S0-A"
+    ],
+    "WP10.T06": [
+      "S0-B"
+    ],
+    "WP10.T02": [
+      "S0-C"
+    ],
+    "WP10.T04": [
+      "S0-C"
+    ],
+    "WP14.T03": [
+      "S0-C"
+    ],
+    "WP14.T04": [
+      "S0-C"
+    ],
+    "WP06.T05": [
+      "S2"
+    ],
+    "WP00.T04": [
+      "S3"
+    ],
+    "WP14.T01": [
+      "S4"
+    ],
+    "WP14.T02": [
+      "S4"
+    ],
+    "WP14.T05": [
+      "S4"
+    ],
+    "WP01.T01": [
+      "S1-A"
+    ],
+    "WP01.T02": [
+      "S1-A"
+    ],
+    "WP01.T03": [
+      "S1-A"
+    ],
+    "WP01.T04": [
+      "S1-A"
+    ],
+    "WP01.T05": [
+      "S1-A"
+    ],
+    "WP02.T01": [
+      "S1-B"
+    ],
+    "WP02.T02": [
+      "S1-B"
+    ],
+    "WP02.T03": [
+      "S1-B"
+    ],
+    "WP02.T04": [
+      "S1-B"
+    ],
+    "WP03.T01": [
+      "S1-C"
+    ],
+    "WP03.T02": [
+      "S1-C"
+    ],
+    "WP03.T03": [
+      "S1-C"
+    ],
+    "WP03.T04": [
+      "S1-C"
+    ],
+    "WP03.T05": [
+      "S1-C"
+    ],
+    "WP04.T01": [
+      "S2-A"
+    ],
+    "WP04.T02": [
+      "S2-A"
+    ],
+    "WP04.T03": [
+      "S2-A"
+    ],
+    "WP04.T04": [
+      "S2-A"
+    ],
+    "WP04.T05": [
+      "S2-A"
+    ],
+    "WP05.T01": [
+      "S2-B"
+    ],
+    "WP05.T02": [
+      "S2-B"
+    ],
+    "WP05.T03": [
+      "S2-B"
+    ],
+    "WP05.T04": [
+      "S2-B"
+    ],
+    "WP05.T05": [
+      "S2-B"
+    ],
+    "WP06.T01": [
+      "S2-C"
+    ],
+    "WP06.T02": [
+      "S2-C"
+    ],
+    "WP06.T03": [
+      "S2-C"
+    ],
+    "WP06.T04": [
+      "S2-C"
+    ],
+    "WP07.T01": [
+      "S3-A"
+    ],
+    "WP07.T02": [
+      "S3-A"
+    ],
+    "WP07.T03": [
+      "S3-A"
+    ],
+    "WP07.T04": [
+      "S3-A"
+    ],
+    "WP08.T01": [
+      "S3-B"
+    ],
+    "WP08.T02": [
+      "S3-B"
+    ],
+    "WP08.T03": [
+      "S3-B"
+    ],
+    "WP08.T04": [
+      "S3-B"
+    ],
+    "WP08.T05": [
+      "S3-B"
+    ],
+    "WP08.T06": [
+      "S3-B"
+    ],
+    "WP09.T01": [
+      "S3-C"
+    ],
+    "WP09.T07": [
+      "S3-C"
+    ],
+    "WP09.T02": [
+      "S3-C"
+    ],
+    "WP09.T03": [
+      "S3-C"
+    ],
+    "WP09.T04": [
+      "S3-C"
+    ],
+    "WP09.T05": [
+      "S3-C"
+    ],
+    "WP09.T06": [
+      "S3-C"
+    ],
+    "WP11.T01": [
+      "S4-A"
+    ],
+    "WP11.T02": [
+      "S4-A"
+    ],
+    "WP11.T03": [
+      "S4-A"
+    ],
+    "WP11.T04": [
+      "S4-A"
+    ],
+    "WP12.T01": [
+      "S4-B"
+    ],
+    "WP12.T02": [
+      "S4-B"
+    ],
+    "WP12.T03": [
+      "S4-B"
+    ],
+    "WP12.T04": [
+      "S4-B"
+    ],
+    "WP13.T01": [
+      "S4-C"
+    ],
+    "WP13.T02": [
+      "S4-C"
+    ],
+    "WP13.T03": [
+      "S4-C"
+    ],
+    "WP13.T04": [
+      "S4-C"
+    ],
+    "WP10.T03": [
+      "S1-R1",
+      "S2-R2",
+      "S3-R3"
+    ]
+  },
+  "delegation_rule": "Primary actors are explicit; WP10.T03 has three disjoint review parts. Support, transferred corrections and skill files are limited by explicit actor/path/time leases.",
+  "counts_are_not_proof": "Coverage validates document selection only; no product code, runtime, authority or 120-minute duration is proven.",
+  "pack_bytes_total": 8097518,
+  "pack_bytes_min": 204802,
+  "pack_bytes_max": 524987
+}

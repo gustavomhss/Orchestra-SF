@@ -1,5 +1,9 @@
 # Execução reconciliada — Orchestra SF
 
+## Workflow v3.2 e precedência operacional
+
+O [workflow atual](../WORKFLOW.md) e `execution_workflow` na fonte tornam explícitos lançamento/ACK/admissão, contexto por ator, integração por prontidão, branch sf2-control e envelope C/D. As janelas25/40/55/75 citadas abaixo são checkpoints cumulativos, não barreiras. A composição nativa recebe seus inputs em10–18. S0 reserva55–60 para guias normativos e60–75 para consumidores/ajustes; depois do freeze só evidencia em D. Estes ajustes estão no cronograma canônico. O estado da revisão atual está em [formal-review/README.md](../formal-review/README.md); o parecer da versão anterior conserva seu SHA histórico.
+
 **Execução integrada à fonte canônica; produto e CI não executados.** A reconciliação em [../campaign.json](../campaign.json) corrige FR1-F/E-F02 e FR1-H/E-F03 e torna a parte operacional de FR1-A/E-F01 explícita. Ela foi aplicada por IDs ao snapshot `5e6510cf5f514d30116d989ef27ee529b02f3184`, depois do delta técnico. A baseline de código permanece `9e4f3d35833f9b2cea6abdf58f42331f3973d9bf`.
 
 A reconciliação preserva os 15 WPs e amplia 71 para 74 tasks. As três unidades novas são WP10.T06, runtime residente e MCP; WP10.T07, integração e empacotamento Atlas; e WP14.T05, tradução empresarial pura. Essa divisão oferece minutos, escritor, arquivos, outputs e provas próprios para o trabalho adicional. O adendo não fica embutido no tempo da integradora.

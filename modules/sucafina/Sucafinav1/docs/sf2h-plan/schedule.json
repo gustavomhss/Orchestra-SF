@@ -1,6 +1,6 @@
 {
   "duration_minutes": 120,
-  "clock_start": "T0 é a primeira execução da integradora; inclui preflight e início das outras quatro sessões. Não reiniciar o relógio depois da qualificação.",
+  "clock_start": "T0 é a primeira execução da supervisora; inclui preflight, lançamento/ACK das outras sessões, setup, integração e gates. Planejamento/packs já preparados não autorizam reiniciar o relógio depois da qualificação.",
   "scope_policy": "FULL_SCOPE_ONLY",
   "feasibility": "Alvo condicional de 120 minutos, não duração medida nem garantia. O replanejamento usa exclusivamente cinco sessões com quatro slots incluindo coordenadora. As reservas abaixo são orçamento de trabalho a validar em GREADY/GNATIVE/G2H/G4; fila de CI, latência do provider, geração Atlas e correções não têm duração inventada.",
   "sessions": {
@@ -57,7 +57,7 @@
       "coordinator_implementation": "WP14.T05/T01/T02 até 43; entrega a S0-C; coordena e executa provas live 55-118, sem julgamento independente."
     }
   },
-  "capacity": "Cinco conversas efetivamente abertas; no máximo quatro agentes vivos por conversa, incluindo a coordenadora. São quinze auxiliares e cinco coordenadoras, pico de vinte atores; uso da coordenadora para código consome seus próprios minutos. Runners de CI e concorrência de modelos são recursos externos observados, não slots presumidos.",
+  "capacity": "Preset de cinco sessões independentes: supervisora S0 e N=4 coordenadoras S1–S4, cada uma com até quatro slots incluindo a coordenadora. Pico de vinte atores, quinze auxiliares e cinco coordenadoras, condicionado a escopo de capacidade observado. IDs de sessões não provam pools independentes. Runners/modelos são limites externos separados. O backend collaboration desta conversa tem teto global quatro; não multiplicar por nesting.",
   "wp14_budget": "WP14.T05 S4 10-20; coordenação 20-22; T01 S4 22-34; coordenação 34-35; T02 S4 35-43; transferência exclusiva em 43 para S0-C; T03 S0-C 43-56; T04 S0-C 56-68; consumo/provas 68-75. Não há resgate automático por S0-A, que está no Atlas. Se transferência falhar, S4 continua como escritor único e S1/S3 absorvem sua coordenação em janelas explicitamente revistas; recalcular ETA sem remover escopo.",
   "milestones": [
     {
@@ -113,17 +113,17 @@
     {
       "minute": 103,
       "gate": "G6",
-      "condition": "Último candidato corrigido congelado, se houve alteração; disparar gates cumulativos exigidos e repetições live afetadas com recibo do candidato. Se candidato G4 não mudou, não criar commit artificial para reiniciar provas."
+      "condition": "Último candidato corrigido de produto C congelado, com guia/roteiro/changelog normativos já incluídos; se houve mudança de produto, disparar gates cumulativos exigidos e provas pertinentes do C aceito. Se C de G4 não mudou, não criar commit artificial para reiniciar provas. Adições posteriores somente evidenciais são tratadas como D pelo envelope, nunca como reatribuição de resultados."
     },
     {
       "minute": 118,
       "gate": "G7",
-      "condition": "Receipts completos para o candidato aceito: seleções distintas app/src e app/test-browser, Atlas boundary, demais suites obrigatórias, AM01-AM06, três revisões sem autojulgamento e nenhum achado obrigatório aberto."
+      "condition": "Receipts completos para o mesmo candidato de produto C: seleções distintas app/src e app/test-browser, Atlas boundary, oito seleções mínimas e adicionais obrigatórias, AM01–AM06, guard de C, três revisões sem autojulgamento e nenhum achado obrigatório aberto. Guia/roteiro/changelog normativos já integram C. G7 habilita T05 a formar D; seu envelope e guard são exigidos em G8."
     },
     {
       "minute": 120,
       "gate": "G8",
-      "condition": "Emitir aceite somente se G7 passar; caso contrário publicar atraso, pendências, próximo ETA, donos e continuação de todo o escopo. Não declarar meta de duas horas cumprida nem encerrar a execução por tempo esgotado."
+      "condition": "Emitir aceite somente após G7 de C e verificação completa de D: C ancestral, diff append-only exclusivamente evidencial nos paths admitidos, inputs de build/test/runtime inalterados, hashes preservados e guard de D aprovado. O receipt interno aponta C; o SHA e o guard de D são publicados no fechamento sem autorreferência. Se qualquer condição faltar, publicar atraso, pendências, ETA, donos e continuar o escopo inteiro; não declarar 120 minutos cumpridos ou encerrar por tempo esgotado."
     }
   ],
   "ci_budget": "G4->G5 reserva 20 minutos e G6->G7 reserva 15 minutos como hipóteses condicionais para o conjunto observado de CI, provas live e rechecks. Timeout 45 minutos é limite de cada job, não previsão. O plano não presume oito runners livres nem extrapola seleção parcial para suíte final. Medir fila, setup, execução e coleta separadamente; desconhecido não conta como zero.",
@@ -134,7 +134,7 @@
         0,
         120
       ],
-      "work": "Contrato e composition roots, protected-store C08, única escritora da branch sf 2-integrate, fila de integração e encerramento. Não implementa os arquivos delegados de runtime, Atlas, harness ou WP14."
+      "work": "Contrato e composition roots, protected-store C08, única escritora da branch sf 2-integrate, fila de integração e encerramento. Não implementa os arquivos delegados de runtime, Atlas, harness ou WP14. S0 reserva55–60 para guias normativos no README sob T01 e60–75 para consumidores/ajustes antes do freeze; T05 só arquiva evidência depois."
     },
     {
       "slot": "S0-A",
@@ -272,9 +272,16 @@
       {
         "window": [
           55,
+          60
+        ],
+        "work": "WP10.T01: consolidar no README já possuído guia normativo por papel, roteiro sintético e changelog de produto com base nos incrementos/recibos. Reserva única de S0; orçamento não medido."
+      },
+      {
+        "window": [
+          60,
           75
         ],
-        "work": "Integração de todos os consumidores e candidato G4"
+        "work": "WP10.T01: integrar consumidores tardios, reconciliar ajustes de guias afetados e congelar candidato C em G4. Preparação de prova e recepção dos inputs necessários estão dentro desta reserva."
       },
       {
         "window": [
@@ -295,7 +302,7 @@
           103,
           110
         ],
-        "work": "Preparar recibo/guias; sem alegar aceite"
+        "work": "Preparar somente índice/recibos evidenciais D; guias normativos já estão em C. Não alegar aceite antes dos gates."
       },
       {
         "window": [
@@ -1481,9 +1488,11 @@
       "CI selected-files inventory and actual runner concurrency",
       "queue/setup/test/artifact elapsed for comparable completed selections",
       "native model execution/18-skill replay duration and observed permitted concurrency",
-      "remaining review/correction/recheck budget"
+      "remaining review/correction/recheck budget",
+      "backend lifecycle capabilities, global/per-pool slot scope and actual launch/ACK receipts",
+      "context bytes read, duplicate requests avoided, output-ready to consumed and finding-to-owner latency"
     ],
-    "calculation": "Resource-constrained residual schedule uses the same actor reservations, output prerequisites and measured CI/provider occupancy. Earliest_complete=max(last_required_build_and_consumer_finish, last_required_CI_finish, last_required_live_proof_finish, last_independent_review_and_correction_finish)+final_receipt_reserve. Receipt reserve is the two planned minutes 118-120, not a measured claim. Unknown required input yields UNKNOWN, never zero.",
+    "calculation": "Resource-constrained residual schedule uses the same actor reservations, output prerequisites and measured CI/provider occupancy. Earliest_complete=max(last_required_build_and_consumer_finish, last_required_CI_finish, last_required_live_proof_finish, last_independent_review_and_correction_finish)+final_receipt_reserve. Receipt reserve is the two planned minutes 118-120, not a measured claim. Unknown required input yields UNKNOWN, never zero. Último freeze viável=T118 menos a cauda crítica observada de gates restantes sob recursos reais. T103 é checkpoint de reserva, não prova de que qualquer CI cabe em quinze minutos.",
     "states": [
       "CONDITIONAL",
       "SUPPORTED_BY_CURRENT_OBSERVATIONS",

@@ -1,38 +1,26 @@
-# Orchestra SF — plano integral de produto e IA
+# Orchestra SF — plano integral e workflow de execução
 
-**Estado: APPROVED_FOR_EXECUTION.** Três agentes independentes aprovaram o planejamento corrigido em `1feb949244357b8ee7ea7a0c27310281accc7592`. Os 13 achados das duas rodadas formais estão encerrados; nenhum P0, P1 ou P2 ficou aberto nos escopos examinados. Este commit de entrega registra os pareceres e o fechamento, preservando a fonte canônica e seus 50 espelhos. [Consolidação e limites](formal-review/round-2/SUMMARY.md).
+**Versão 3.2: delta de execução em revisão.** O produto integral aprovado na versão anterior foi preservado. Esta revisão torna operacional a supervisão S0+N, prepara contexto por ator, integra por output pronto, deduplica CI e separa o produto testado da entrega evidencial. [Estado e pareceres](formal-review/README.md).
 
-O plano preserva todo o escopo e incorpora a equipe residente: **15 WPs, 74 tasks, 17 contratos, cinco perfis, dezoito skills, um MCP com oito packs e 39 operações, Atlas SF e seis provas integradas**. A implementação permanece PLANNED/NOT_RUN.
+## Começar
 
-## Ordem de leitura
+1. [START](START.md): iniciar pela supervisora S0, com o SHA de planejamento fixado.
+2. [WORKFLOW](WORKFLOW.md): topologia, lançamento/ACK, fila, integração, provas, retomada e término.
+3. [Prompt S0](prompts/S0.md): missão da supervisora e distribuição das quatro sessões do preset.
+4. [COMMON](execution/COMMON.md) + [pacotes atribuídos](execution/manifest.json): leitura completa por papel, com hashes e todas as tarefas/axiomas pertinentes.
 
-1. [Campanha integral](CAMPAIGN.md): resultado, escopo, gates e axiomas.
-2. [Equipe, skills, MCP e Atlas](AGENTS-ATLAS-MCP.md): o que será distribuído e usado.
-3. [Produto e critérios de aceite](specs/product-acceptance.md): confirmação material, custos omitidos, documentos e consumo das skills.
-4. [Contratos de runtime](specs/resident-runtime.md) e [execução reconciliada](specs/execution-reconciliation.md).
-5. [Prompts das cinco sessões](START.md), sempre no mesmo commit aprovado.
+O preset de duas horas usa S0+N=4 sessões independentes, até vinte slots incluindo coordenadoras. Admissão exige capacidade real; o backend collaboration de quatro slots globais não ganha vinte por aninhamento. Git mantém o ledger, mas não cria nem desperta conversas. O modo automático usa um backend de sessões realmente disponível; o modo assistido conserva suas limitações explícitas.
 
-## Fonte canônica e artefatos verificáveis
+## Escopo completo
 
-- [campaign.json](campaign.json) é a fonte normativa. Os [WPs](work-packages), [contratos](contracts.json), [ownership](ownership.json), [cronograma](schedule.json) e [DAG](task-dag.json) são derivados.
-- [Manifesto residente](agents-atlas-mcp.json), [consumo na UI](resident-ui-consumption.json), [outputs intermediários](output-handoffs.json) e [provas residentes](resident-proof-plan.json).
-- [Cobertura](coverage.json), [evidências](evidence-plan.json), [axiomas](axiom-index.json), [mapa de provas](proof-map.json) e [seleção de CI](ci-recipes.json).
-- [Resultado estrutural](validation.json), [limites da validação](VALIDATION.md), [gerador](tools/render_plan.py) e [validador](tools/validate_plan.py).
+**15 WPs, 74 tasks, 17 contratos e 1.610 critérios**. Cinco perfis, dezoito skills, um MCP SF com oito packs/39 operações, Atlas SF Business Profile v1 e seis provas integradas. Dashboard, Planner, Procurement, BI, documentos, imports, reuniões, colaboração, exportações, Relay, decisões, portfólio e memória permanecem na campanha.
 
-Use `python tools/render_plan.py` depois de alterar a campanha; `python tools/render_plan.py --check` detecta cópias divergentes. `python tools/validate_plan.py` verifica vínculos, axiomas, recursos e outputs declarados.
+[Campanha](CAMPAIGN.md), [equipe/Atlas/MCP](AGENTS-ATLAS-MCP.md), [contratos](contracts.json), [WPs](work-packages), [ownership](ownership.json), [cronograma](schedule.json), [handoffs](output-handoffs.json), [provas](proof-map.json) e [CI](ci-recipes.json). DoD, invariants, quality standards, completeness criteria e success criteria permanecem em todos os níveis; o workflow adiciona essas famílias às suas oito etapas.
 
-## Materiais preservados
+## Verificação e proveniência
 
-As [fontes históricas](sources), [protótipos sintéticos](prototypes/README.md), [pareceres anteriores](reviews/README.md) e [primeira rodada formal](formal-review/round-1/SUMMARY.md) continuam preservados. [SCOPE-STATUS.md](SCOPE-STATUS.md) explica a precedência.
+`campaign.json` é a fonte normativa; 100 artefatos são gerados pelo renderer e pelo compilador de contexto. Execute `python tools/render_plan.py --check` e `python tools/validate_plan.py`. [Validação](VALIDATION.md), [medição de contexto](execution/context-measurement.json) e [limites/histórico](SCOPE-STATUS.md).
 
-A meta de implementação é 120 minutos, condicionada à capacidade e às durações observadas. A campanha continua com o escopo inteiro se o prazo não for atingido. Azure/deploy e novos acessos corporativos ficam fora desta frente.
+Hash canônico atual: `044c729f37c055bf81c1cf4832ad37ffcd96b77834e0c725b6a0da51c1a4421d`. Se o leitor raw do MCP recusar a fonte grande, obtenha o blob SHA na árvore do commit fixado e use o endpoint Git blob do mesmo conector. Os packs por ator permitem a leitura inicial sem abrir o JSON inteiro; seus hashes e source hash estão no manifesto. Não misture versões.
 
-## Leitura pelo GitHub MCP
-
-O leitor de arquivo raw do conector pode recusar `campaign.json` por tamanho. A leitura integral foi conferida pelo endpoint de Git blob, no mesmo MCP e com as mesmas permissões:
-
-```text
-https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/376ec1b545812f44652d2ae834bdbc86ba888106
-```
-
-Neste conector, `structuredContent.content` retorna o JSON canônico já decodificado. Faça o parse e selecione as seções necessárias, sem despejar o documento inteiro no contexto. Se a fonte mudar, obtenha o novo SHA do blob na árvore Git do commit fixado; não reutilize o SHA antigo como se fosse a versão nova. Os WPs, contratos e demais espelhos menores continuam disponíveis para leitura direta. [Recibo de acesso e igualdade do conteúdo](formal-review/round-2/access-check.json).
+Implementação e provas de produto: **PLANNED/NOT_RUN**. A meta 120 minutos inclui arranque e todos os gates, depende de observação real e não autoriza redução de escopo. Azure/deploy e novos acessos corporativos permanecem fora desta frente.

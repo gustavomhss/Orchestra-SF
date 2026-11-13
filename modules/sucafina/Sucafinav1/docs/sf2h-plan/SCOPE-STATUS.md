@@ -1,23 +1,11 @@
-# Fontes, precedência e estado real
+# Escopo, precedência e estado
 
-## Escopo preservado e adendo integrado
+Versão 3.2 preserva todo o produto da versão 3.1: 15 WPs, 74 tasks, 17 contratos, 1.610 IDs de critérios, 5 perfis, 18 skills, 8 packs/39 operações, Atlas e seis provas. Contratos de produto, scope, coverage, resident_ai, resident_packaging e 19 handoffs permanecem idênticos. Textos de critérios de campanha/WP10 esclarecem C/D e antecipação dos guias; nenhuma prova foi removida.
 
-A campanha reconciliada tem 15 WPs, 74 tasks, 17 contratos e 18 pacotes de evidência. Mantém todas as 71 tasks anteriores, 28 capacidades originais, R01–R41, IA01–IA18 e 13 jornadas. Acrescenta RA01–RA06 e três tasks próprias para runtime residente, Atlas e tradução empresarial.
+O delta acrescenta workflow S0+N, seleção de contexto, controle por eventos/recibos, dedupe CI, integração por output e envelope evidencial. O preset N4 requer cinco sessões independentes observadas. Outras capacidades exigem realocação completa; não existe garantia empírica de 120 minutos.
 
-Cinco perfis, dezoito skills, sucafina-workbench com oito packs/39 operações e Atlas SF Business Profile v1 estão agora na fonte canônica, com writers, tempo, contratos, permissões, consumidores e provas. Não são componentes implementados por esta campanha de planejamento.
+campaign.json continua fonte normativa. Os 100 artefatos derivados são conferidos juntos; WORKFLOW.md explica a política operacional. As análises, páginas, protótipos e pareceres antigos preservam histórico e não substituem o candidato atual.
 
-## Precedência
+Baseline de código 9e4f3d35833f9b2cea6abdf58f42331f3973d9bf. Dev observado f08941a346ef0d072dff8e67e49823505ad7a12e; a execução reconcilia avanço em T0. Não foi feita fusão da frente Azure.
 
-O pedido do usuário preserva escopo integral, foco no produto e ausência de novos acessos/deploy. As regras reais do repositório continuam válidas. `campaign.json` é a fonte normativa; os arquivos derivados são regenerados juntos e conferidos pelo validador. Os guias explicam o contrato, sem criar exceções tácitas. Divergência material exige correção do plano.
-
-Documentos em `sources`, protótipos, páginas de origem e pareceres antigos preservam intenção e histórico. Não governam o candidato reconciliado e não são evidência de implementação. A proposta antiga de agentes está identificada como original.
-
-## Baseline e avanço de dev
-
-A baseline examinada é `9e4f3d35833f9b2cea6abdf58f42331f3973d9bf`. O dev observado em `f08941a346ef0d072dff8e67e49823505ad7a12e` avançou em infraestrutura Azure, scripts de teste Node e workflows associados, sem alterar as fronteiras de runtime examinadas. T0 deve repetir a reconciliação se a execução adotar um código mais novo. Esta correção não funde a frente de cloud.
-
-## Estado de revisão e execução
-
-O checkpoint `ec9d36da2385007b64a0aa627582ce7e60629a44` foi julgado na rodada 1; `5e6510cf5f514d30116d989ef27ee529b02f3184` preservou esses pareceres. A rodada 1 encontrou 8 P1 e 2 P2 brutos, consolidados em seis frentes P1 e dois ajustes P2. Os três revisores da rodada 2 fecharam os dez achados originais no candidato 38986380cd7b5697c0be30c1f55d43eddee63045. Dois P1 e um P2 novos foram corrigidos em `1feb949244357b8ee7ea7a0c27310281accc7592` e encerrados pelos mesmos três revisores em rechecagens independentes. Produto, técnica e execução emitiram APPROVED_FOR_EXECUTION; os dez fechamentos anteriores foram ratificados. A entrega final acrescenta os pareceres, recibos e estados de revisão, sem modificar a fonte canônica, os 50 espelhos ou os requisitos técnicos aprovados. [Consolidação](formal-review/round-2/SUMMARY.md).
-
-O resultado `PLAN_STRUCTURE_PASS` aplica-se ao hash da campanha em `validation.json`, incluindo a reconciliação residente. Verifica estrutura e consistência declaradas; não certifica algoritmos, APIs de runtime, UX real ou duração. Nenhum teste de implementação, inferência, MCP de negócio, Relay, Atlas empresarial ou CI de produto é declarado executado. Esses estados permanecem NOT_RUN.
+Revisão atual em formal-review/README.md. Validação estrutural verifica documentos e seleções; não compila produto nem prova UX, IA, MCP, Relay, Atlas ou prazo. Implementação e provas: PLANNED/NOT_RUN.
