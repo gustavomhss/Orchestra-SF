@@ -848,7 +848,7 @@ test("workbook CAPEX matches normalized project code then name, class prefixes a
   expect(version.projects).toHaveLength(1)
   expect(version.lines[0].cls).toBe("opex")
 })
-test("workbook FX precedes costs, rounds six decimals, and invalid positive-rate validation is atomic", () => {
+test("workbook FX precedes costs, rounds six decimals, and invalid rates warn without mutation", () => {
   const state = seeded()
   expect(
     workbook(state, {
@@ -865,10 +865,9 @@ test("workbook FX precedes costs, rounds six decimals, and invalid positive-rate
   expect(version.fx[0]).toMatchObject({ cur: "EUR", rate: 1.123457 })
   expect(version.summary.total).toBeCloseTo(112.3457)
   const before = structuredClone(state)
-  expect(workbook(state, { "FX rates": [{ Currency: "GBP", "USD per 1 unit": 0 }] })).toMatchObject({
-    ok: false,
-    status: 422,
-  })
+  const skipped = workbook(state, { "FX rates": [{ Currency: "GBP", "USD per 1 unit": 0 }] })
+  expect(skipped).toMatchObject({ ok: true })
+  expect(skipped.ok && skipped.warnings?.some((warning) => warning.includes("GBP") && warning.includes("positive") && warning.includes("Skipped"))).toBe(true)
   expect(state).toEqual(before)
 })
 test("headcount workbook matches numeric IDs, clamps FTE and orders months while ignoring calculated and unrelated columns", () => {
@@ -1063,7 +1062,7 @@ test("dashboard headcount file normalizes Start Date and End Date, stores only r
   expect((state.data.versions as { hc: { positions: unknown[] } }[])[0].hc.positions).toEqual([])
   expect(state.versions["roster:file"].version).toBe(1)
 })
-test("budget owner workbook applies only owned forecasts and rejects a mixed unauthorized forecast atomically", () => {
+test("budget owner workbook updates permitted Budget, ignores unauthorized Actual, and atomically rejects foreign Forecast", () => {
   const state = seeded()
   expect(
     run(state, "OPEX", "save", "a", {
@@ -1113,8 +1112,8 @@ test("budget owner workbook applies only owned forecasts and rejects a mixed una
       }[]
     }[]
   )[0].lines[0]
-  expect(line.name).toBe("A")
-  expect(line.annual).toBe(100)
+  expect(line.name).toBe("Rename")
+  expect(line.annual).toBe(900)
   expect(line.f[0]).toBe(0)
   expect(line.a[0]).toBeNull()
 })

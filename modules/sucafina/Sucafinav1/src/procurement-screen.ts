@@ -53,6 +53,8 @@ export type RequestView = {
   } | null
   po?: {
     number?: string
+    currency?: string
+    fxRate?: number | null
     expenseType?: string
     supplier?: string
     lines?: Line[]
@@ -93,9 +95,17 @@ const FILTERS: Record<string, (status: string) => boolean> = {
   All: () => true,
 }
 
+// Approved and issued orders use the stored PO rate. Earlier stages use the selected quote in base, then the estimate.
 export function requestValue(request: RequestView, rates: Rates): number | null {
-  const lines = request.po?.lines
-  if (lines && lines.length) return lines.reduce((sum, line) => sum + line.qty * line.unitPrice, 0)
+  if (request.status === "po_approved" || request.status === "po_issued") {
+    const issued = request.po?.lines
+    if (issued && issued.length) {
+      const total = issued.reduce((sum, line) => sum + line.qty * line.unitPrice, 0)
+      const rate = request.po?.fxRate
+      if (typeof rate === "number" && Number.isFinite(rate)) return total * rate
+      return total
+    }
+  }
   const selected = request.sourcing?.quotes?.find((quote) => quote.id === request.sourcing?.selectedId)
   if (selected && typeof selected.total === "number") {
     const base = toBase(selected.total, selected.currency || rates.currency, rates, request.sourcing?.fxSnapshot)
@@ -354,7 +364,7 @@ function strip(value: unknown): unknown {
   if (!value || typeof value !== "object") return value
   const out: Record<string, unknown> = {}
   for (const [key, item] of Object.entries(value as Record<string, unknown>)) {
-    if (key === "scores" || key === "cscores" || key === "iban") continue
+    if (key === "scores" || key === "cscores" || key === "iban" || key === "evaluation" || key === "ranking") continue
     out[key] = strip(item)
   }
   return out

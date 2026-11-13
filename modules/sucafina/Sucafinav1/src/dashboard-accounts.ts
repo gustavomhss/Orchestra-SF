@@ -106,14 +106,35 @@ export type YearAmountResult =
   | { cleared: true }
   | { cleared: false; per: number; last: number; actual: number[]; forecast: number[] }
 
+export type YearAmountParse =
+  | { kind: "clear" }
+  | { kind: "invalid" }
+  | { kind: "value"; amount: number }
+
+/**
+ * Null, blank, or a string that strips to empty clears. That empty strip is not zero.
+ * NaN, Infinity, negatives, and a stripped string that is not a finite nonnegative number are invalid.
+ */
+export function parseYearAmount(raw: unknown): YearAmountParse {
+  if (raw === null || raw === undefined) return { kind: "clear" }
+  if (typeof raw === "number") return finiteYearAmount(raw)
+  if (typeof raw !== "string") return { kind: "invalid" }
+  if (raw.trim() === "") return { kind: "clear" }
+  const stripped = raw.replace(/[^0-9.\-]/g, "")
+  if (stripped === "") return { kind: "clear" }
+  return finiteYearAmount(Number(stripped))
+}
+
 /**
  * Year amount. Forecast dos 12 meses é `per`, incluindo o mês M.
  * Limpar não devolve meses: as entries ficam como estão.
+ * Entrada inválida lança RangeError; não limpa.
  */
 export function applyYearAmount(raw: string | number | null | undefined, currentMonth: number): YearAmountResult {
-  if (raw === null || raw === undefined || String(raw).trim() === "") return { cleared: true }
-  const amount = typeof raw === "number" ? raw : Number(String(raw).replace(/[^0-9.\-]/g, ""))
-  if (!Number.isFinite(amount)) return { cleared: true }
+  const parsed = parseYearAmount(raw)
+  if (parsed.kind === "clear") return { cleared: true }
+  if (parsed.kind === "invalid") throw new RangeError("invalid year amount")
+  const amount = parsed.amount
   const per = cents(amount / currentMonth)
   const last = cents(amount - per * (currentMonth - 1))
   const actual = Array.from({ length: 12 }, (_, index) => {
@@ -124,6 +145,11 @@ export function applyYearAmount(raw: string | number | null | undefined, current
   })
   const forecast = Array.from({ length: 12 }, () => per)
   return { cleared: false, per, last, actual, forecast }
+}
+
+function finiteYearAmount(amount: number): YearAmountParse {
+  if (!Number.isFinite(amount) || amount < 0) return { kind: "invalid" }
+  return { kind: "value", amount: amount === 0 ? 0 : amount }
 }
 
 /** Annual Entry ÷12, sem resto no último. Não é o year amount. */

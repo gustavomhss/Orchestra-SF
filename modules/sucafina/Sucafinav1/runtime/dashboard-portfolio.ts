@@ -1,8 +1,9 @@
-import type { Actor, Command, Domain, Environment, Result, Snapshot } from "./contract.ts"
+import type { Actor, Command, Domain, Environment, NativeAction, NativeField, NativeScalar, NativeText, Result, Snapshot } from "./contract.ts"
 import { changed, conflict, finite, object, rows, text } from "./contract.ts"
 import type { Field, RenderContext } from "./ui.ts"
 import { fields, form, metric, metricGrid, table } from "./ui.ts"
 import { dashboardPages } from "../src/nav.ts"
+import { WorkbookDate } from "../src/workbook-date.ts"
 import { esc } from "../src/screen-shell.ts"
 import { budgetVariance, contractVendor } from "../src/dashboard-role.ts"
 import {
@@ -118,6 +119,43 @@ const names: Record<string, string[]> = {
 }
 
 export const domain: Domain = {
+  commands(snapshot, actor, environment, context) {
+    const collection = Object.hasOwn(collections, context.page) ? collections[context.page] : undefined
+    if (!collection || !writable(actor, collection) || !Object.hasOwn(context.view.data, collection)) return []
+    if (collection === "itperf") return nativePerformanceCommands(context.page, context.view)
+    const scoped = collection === "risks" && riskScoped(actor)
+    const createValues = {
+      ...(collection === "projects" ? { status: "Planning", risk: "Low", milestones: [] } : {}),
+      ...(collection === "risks" ? { status: "open", impact: 1, probability: 1 } : {}),
+      ...(collection === "contracts" ? { amtType: "total", renewType: "fixed", eval: "" } : {}),
+      ...(collection === "stakeholders" ? { biz: 1, iti: 1, perc: 1 } : {}),
+      ...(scoped ? { responsible: text(context.view.data.riskActorName) } : {}),
+    }
+    const create: Command = { page: context.page, action: "save", version: 0, values: createValues }
+    const canCreate = !scoped || !deniedRisk(actor, environment, undefined, create)
+    return [
+      ...(canCreate ? [nativePortfolioSave(collection, create, scoped ? text(context.view.data.riskActorName) : undefined)] : []),
+      ...rows(context.view.data[collection]).flatMap((row) => {
+        const id = recordId(row.id)
+        if (!id) return []
+        const command: Command = {
+          page: context.page,
+          action: "save",
+          id,
+          version: context.view.versions[`${collection}:${id}`]?.version ?? 0,
+          values: structuredClone(pick(row, names[collection])),
+        }
+        // The same stored-responsible predicate as execute decides row authority.
+        const stored = scoped ? rows(snapshot.data.risks).find((risk) => recordId(risk.id) === id) : undefined
+        if (scoped && (!stored || deniedRisk(actor, environment, stored, command))) return []
+        return [
+          nativePortfolioSave(collection, command, scoped ? text(context.view.data.riskActorName) : undefined),
+          nativePortfolioDelete(collection, { ...command, action: "delete", values: {} }, nativePortfolioIdentity(row)),
+          ...(collection === "projects" ? nativeMilestoneCommands(command, row) : []),
+        ]
+      }),
+    ]
+  },
   execute(snapshot, actor, command, environment) {
     if (!actor.canWrite) return { ok: false, status: 403 }
     const collection = Object.hasOwn(collections, command.page) ? collections[command.page] : undefined
@@ -148,6 +186,15 @@ export const domain: Domain = {
       return { ok: false, status: 400 }
     const stored = rows(snapshot.data[collection]).find((row) => recordId(row.id) === command.id)
     if (command.id && !stored) return { ok: false, status: 404 }
+    if (
+      collection === "risks" &&
+      riskScoped(actor) &&
+      (command.action === "save" || command.action === "delete") &&
+      (stored || command.action === "save")
+    ) {
+      const denied = deniedRisk(actor, environment, stored, command)
+      if (denied) return denied
+    }
     const id = command.id || environment.id()
     const key = `${collection}:${id}`
     if (
@@ -155,7 +202,7 @@ export const domain: Domain = {
       (rows(snapshot.data[collection]).some((row) => recordId(row.id) === id) || snapshot.versions[key])
     )
       return { ok: false, status: 409 }
-    const stale = conflict(snapshot, key, command, stored)
+    const stale = conflict(snapshot, key, command, stored ? publicRecord(collection, stored) : undefined)
     if (stale) return stale
     if (command.action === "delete") {
       if (!stored) return { ok: false, status: 404 }
@@ -223,7 +270,7 @@ export const domain: Domain = {
           : undefined,
     }
   },
-  view(snapshot, actor) {
+  view(snapshot, actor, environment) {
     const summaries = Array.isArray(snapshot.data.summaries)
       ? snapshot.data.summaries.filter((entry): entry is string => typeof entry === "string")
       : []
@@ -232,7 +279,7 @@ export const domain: Domain = {
         .map((page) => collections[page])
         .filter(Boolean),
     )
-    const data = Object.fromEntries(
+    const data: Record<string, unknown> = Object.fromEntries(
       [...allowed].map((collection) => [
         collection,
         collection === "itperf"
@@ -240,6 +287,16 @@ export const domain: Domain = {
           : rows(snapshot.data[collection]).map((row) => publicRecord(collection, row)),
       ]),
     )
+    // Transient only: directory resolution is not a stored grant.
+    if (allowed.has("risks") && riskScoped(actor)) {
+      const riskActorName = uniqueDirectoryName(actor, environment.directory) ?? ""
+      data.riskActorName = riskActorName
+      data.canCreateRisk = riskActorName !== ""
+      data.editableRisks = rows(snapshot.data.risks).flatMap((row) => {
+        const id = recordId(row.id)
+        return id !== "" && responsibleActorId(row.responsible, environment.directory) === actor.id ? [id] : []
+      })
+    }
     return {
       data,
       versions: Object.fromEntries(
@@ -259,10 +316,70 @@ function recordId(value: unknown) {
 function writable(actor: Actor, collection: string) {
   if (!actor.canWrite) return false
   if (actor.roles.includes("admin")) return true
+  if (actor.roles.includes("domain leader") && (collection === "projects" || collection === "risks")) return true
   return (
     actor.roles.includes("contributor") &&
     ["projects", "risks", "contracts"].includes(collection) &&
     (actor.assigned ?? []).includes(collection)
+  )
+}
+function riskScoped(actor: Actor) {
+  if (!actor.canWrite || !actor.roles.includes("domain leader") || actor.roles.includes("admin")) return false
+  if (actor.roles.includes("contributor") && (actor.assigned ?? []).includes("risks")) return false
+  return true
+}
+function directoryName(value: unknown) {
+  return text(value).trim()
+}
+function responsibleActorId(responsible: unknown, directory: Environment["directory"]) {
+  const name = directoryName(responsible)
+  if (!name) return undefined
+  const matches = directory.filter((person) => directoryName(person.name) === name)
+  const match = matches.length === 1 ? matches[0] : undefined
+  if (!match?.id) return undefined
+  return match.id
+}
+function uniqueDirectoryName(actor: Actor, directory: Environment["directory"]) {
+  const ownNames = directory.flatMap((person) => {
+    const name = person.id === actor.id ? directoryName(person.name) : ""
+    return name ? [name] : []
+  })
+  const name = ownNames.length > 0 && ownNames.every((entry) => entry === ownNames[0]) ? ownNames[0] : undefined
+  if (!name) return undefined
+  const matches = directory.filter((person) => directoryName(person.name) === name)
+  const match = matches.length === 1 ? matches[0] : undefined
+  if (match?.id !== actor.id) return undefined
+  return name
+}
+// Stored responsible decides. A posted ownerId or leaderId never grants the row.
+function deniedRisk(
+  actor: Actor,
+  environment: Environment,
+  stored: Record<string, unknown> | undefined,
+  command: Command,
+): Result | undefined {
+  const allowed = uniqueDirectoryName(actor, environment.directory)
+  if (!stored) {
+    if (!allowed || directoryName(command.values.responsible) !== allowed)
+      return { ok: false, status: 403, errors: ["You do not have permission to edit these records."] }
+    return undefined
+  }
+  if (responsibleActorId(stored.responsible, environment.directory) !== actor.id)
+    return { ok: false, status: 403, errors: ["You do not have permission to edit these records."] }
+  if (command.action === "delete" || !Object.hasOwn(command.values, "responsible")) return undefined
+  const posted = directoryName(command.values.responsible)
+  const storedName = directoryName(stored.responsible)
+  if (posted === allowed || (posted !== "" && posted === storedName)) return undefined
+  return { ok: false, status: 403, errors: ["You do not have permission to edit these records."] }
+}
+function editableRiskIds(value: unknown) {
+  return new Set(
+    Array.isArray(value)
+      ? value.flatMap((id) => {
+          const record = recordId(id)
+          return record ? [record] : []
+        })
+      : [],
   )
 }
 function pick(value: Record<string, unknown>, keys: string[]) {
@@ -367,9 +484,14 @@ function importProjectRows(
 ): Result {
   if (collection !== "projects" || !actor.roles.includes("admin")) return { ok: false, status: 403 }
   if (!["update", "replace"].includes(text(command.values.mode))) return { ok: false, status: 422 }
-  const imported = rows(command.values.rows)
-  if (imported.some((row) => row._status !== "error" && !text(row.name).trim()))
-    return { ok: false, status: 422, errors: ["Project name is required."] }
+  const imported = rows(command.values.rows).filter(
+    (row) =>
+      text(row.name).trim() !== "" &&
+      !text(row.name).trim().startsWith("—"),
+  )
+  if (imported.some((row) => row._status !== "error" &&
+    (WorkbookDate.parse(row.start) === undefined || WorkbookDate.parse(row.end) === undefined)))
+    return { ok: false, status: 422, errors: ["Invalid project date"] }
   const projects = rows(snapshot.data.projects).map((row) => ({
     ...row,
     id: recordId(row.id),
@@ -396,13 +518,31 @@ function importProjectRows(
         status: 422,
         errors: ["Read the latest project versions before importing."],
       }
-    const stale = conflict(snapshot, key, { ...command, version: Number(numericVersion) }, project)
+    const stale = conflict(snapshot, key, { ...command, version: Number(numericVersion) }, publicRecord("projects", project))
     if (stale) return stale
   }
   const result = importProjects(
     projects,
     [],
-    imported.map((row) => ({ ...row, name: text(row.name) })),
+    imported.map((row) => {
+      const pct = typeof row.pct === "string" ? row.pct.trim() : row.pct
+      return {
+        ...row,
+        ...(Object.hasOwn(row, "start") ? { start: WorkbookDate.parse(row.start) } : {}),
+        ...(Object.hasOwn(row, "end") ? { end: WorkbookDate.parse(row.end) } : {}),
+        name: text(row.name),
+        status: typeof row.status === "string" ? row.status.trim() || "Planning" : (row.status ?? "Planning"),
+        risk: typeof row.risk === "string" ? row.risk.trim() || "Low" : (row.risk ?? "Low"),
+        priority:
+          typeof row.priority === "string" ? row.priority.trim() || "Medium" : (row.priority ?? "Medium"),
+        pct:
+          pct === "" || pct == null
+            ? 0
+            : typeof pct === "string" && pct.endsWith("%") && pct.slice(0, -1).trim() !== ""
+              ? Number(pct.slice(0, -1).trim())
+              : pct,
+      }
+    }),
     text(command.values.mode) === "replace" ? "replace" : "update",
     command.confirmed === true,
     environment.at,
@@ -659,9 +799,19 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
   )
   const filters = `<form method="get">${hidden("page", page)}${fields([{ name: "q", label: "Search", value: query }, ...(collection === "projects" || collection === "risks" ? [{ name: "status", label: "Status", type: "select" as const, value: status, options: ["", ...(collection === "projects" ? projectStatus : riskStatus)] }] : []), { name: "filter", label: collection === "risks" ? "Risk tier" : "Show", type: "select", value: filter, options: collection === "projects" ? ["", "watch", "at-risk"] : collection === "risks" ? ["", "Critical", "Very High", "High", "Medium", "Low"] : [""] }])}<button type="submit">Apply filters</button></form>`
   const definitions = recordFields(collection)
+  const scopedRisks = collection === "risks" && riskScoped(context.actor)
+  const editableRisks = editableRiskIds(data.editableRisks)
+  const actorRiskName = text(data.riskActorName).trim()
   const editor = (row: Record<string, unknown>) => {
     const id = recordId(row.id)
     const version = context.versions[`${collection}:${id}`]?.version ?? 0
+    const formDisabled = scopedRisks
+      ? id
+        ? !editableRisks.has(id)
+        : data.canCreateRisk !== true || actorRiskName === ""
+      : disabled
+    const keptName = directoryName(row.responsible)
+    const choiceName = actorRiskName || keptName
     return (
       form(
         page,
@@ -669,20 +819,28 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         id,
         version,
         fields(
-          definitions.map((field) => ({
-            ...field,
-            value:
-              row[field.name] ??
-              (field.name === "status" ? (collection === "projects" ? "Planning" : "open") : undefined),
-            readonly: disabled,
-          })),
+          definitions.map((field) => {
+            const responsibleChoice =
+              scopedRisks && field.name === "responsible" && !formDisabled && choiceName
+                ? { type: "select" as const, options: [choiceName], value: choiceName }
+                : undefined
+            return {
+              ...field,
+              ...(responsibleChoice ?? {}),
+              value:
+                responsibleChoice?.value ??
+                row[field.name] ??
+                (field.name === "status" ? (collection === "projects" ? "Planning" : "open") : undefined),
+              readonly: formDisabled,
+            }
+          }),
         )
           .replace(/(value="action"[^>]*>)action<\/option>/g, "$1Action Plan Required</option>")
           .replace(/(value="monitor"[^>]*>)monitor<\/option>/g, "$1Monitored</option>")
           .replace(/(value="low"[^>]*>)low<\/option>/g, "$1Low</option>"),
         id ? "Save changes" : "Add record",
-        disabled,
-      ) + (id ? form(page, "delete", id, version, "", "Delete record", disabled) : "")
+        formDisabled,
+      ) + (id ? form(page, "delete", id, version, "", "Delete record", formDisabled) : "")
     )
   }
   const header =
@@ -1206,3 +1364,293 @@ function renderPerformance(page: string, data: Record<string, unknown>, context:
 }
 
 export const DashboardPortfolio = { pages, domain, render }
+
+const nativePortfolioLabels: Record<string, NativeText> = {
+  projects: { en: "Projects", br: "Projetos" },
+  risks: { en: "Risks", br: "Riscos" },
+  contracts: { en: "Contracts", br: "Contratos" },
+  stakeholders: { en: "Stakeholders", br: "Partes interessadas" },
+  name: { en: "Name", br: "Nome" },
+  desc: { en: "Description", br: "Descrição" },
+  description: { en: "Description", br: "Descrição" },
+  status: { en: "Status", br: "Situação" },
+  risk: { en: "Risk", br: "Risco" },
+  priority: { en: "Priority", br: "Prioridade" },
+  pm: { en: "Project manager", br: "Gerente do projeto" },
+  leaderId: { en: "Leader ID", br: "ID do líder" },
+  ownerId: { en: "Owner ID", br: "ID do responsável" },
+  start: { en: "Start", br: "Início" },
+  end: { en: "End", br: "Fim" },
+  budget: { en: "Budget", br: "Orçamento" },
+  spent: { en: "Spent", br: "Gasto" },
+  pct: { en: "Progress (%)", br: "Progresso (%)" },
+  notes: { en: "Notes", br: "Observações" },
+  watch: { en: "Watch", br: "Acompanhar" },
+  watchList: { en: "Watch list", br: "Lista de acompanhamento" },
+  milestones: { en: "Milestones", br: "Marcos" },
+  id: { en: "ID", br: "ID" },
+  title: { en: "Title", br: "Título" },
+  action: { en: "Action plan", br: "Plano de ação" },
+  actions: { en: "Actions", br: "Ações" },
+  responsible: { en: "Responsible person", br: "Pessoa responsável" },
+  category: { en: "Category", br: "Categoria" },
+  impact: { en: "Impact", br: "Impacto" },
+  probability: { en: "Probability", br: "Probabilidade" },
+  owner: { en: "Owner", br: "Responsável" },
+  mitigation: { en: "Mitigation", br: "Mitigação" },
+  due: { en: "Due date", br: "Prazo" },
+  vendor: { en: "Vendor", br: "Fornecedor" },
+  num: { en: "Contract number", br: "Número do contrato" },
+  renewal: { en: "Renewal date", br: "Data de renovação" },
+  amount: { en: "Amount", br: "Valor" },
+  amtType: { en: "Amount type", br: "Tipo de valor" },
+  renewType: { en: "Renewal", br: "Renovação" },
+  notice: { en: "Notice period", br: "Prazo de aviso" },
+  eval: { en: "Evaluation", br: "Avaliação" },
+  currency: { en: "Currency", br: "Moeda" },
+  position: { en: "Position", br: "Cargo" },
+  company: { en: "Company", br: "Empresa" },
+  department: { en: "Department", br: "Departamento" },
+  role: { en: "Role", br: "Função" },
+  email: { en: "Email", br: "E-mail" },
+  biz: { en: "Business influence", br: "Influência no negócio" },
+  iti: { en: "IT influence", br: "Influência em TI" },
+  perc: { en: "Perception", br: "Percepção" },
+  date: { en: "Date", br: "Data" },
+  label: { en: "Sub-item name", br: "Nome do subitem" },
+  objective: { en: "Objective", br: "Objetivo" },
+  target: { en: "Target", br: "Meta" },
+  totalWeight: { en: "Total weight (1 = 100%)", br: "Peso total (1 = 100%)" },
+  ownerWeight: { en: "Owner weight", br: "Peso do responsável" },
+  co1Weight: { en: "First co-owner weight", br: "Peso do primeiro corresponsável" },
+  co2Weight: { en: "Second co-owner weight", br: "Peso do segundo corresponsável" },
+  co1: { en: "First co-owner", br: "Primeiro corresponsável" },
+  co2: { en: "Second co-owner", br: "Segundo corresponsável" },
+  score: { en: "Score", br: "Pontuação" },
+  color: { en: "Color", br: "Cor" },
+  expanded: { en: "Expanded", br: "Expandido" },
+  year: { en: "Year", br: "Ano" },
+  items: { en: "Items", br: "Itens" },
+  subs: { en: "Sub-items", br: "Subitens" },
+  q1: { en: "Q1", br: "1º trimestre" },
+  q2: { en: "Q2", br: "2º trimestre" },
+  q3: { en: "Q3", br: "3º trimestre" },
+  q4: { en: "Q4", br: "4º trimestre" },
+  statusQ1: { en: "Q1 status", br: "Situação do 1º trimestre" },
+  statusQ2: { en: "Q2 status", br: "Situação do 2º trimestre" },
+  statusQ3: { en: "Q3 status", br: "Situação do 3º trimestre" },
+  statusQ4: { en: "Q4 status", br: "Situação do 4º trimestre" },
+}
+const nativePortfolioOptions: Record<string, NativeText> = {
+  "": { en: "Not set", br: "Não definido" },
+  Planning: { en: "Planning", br: "Planejamento" },
+  "In Progress": { en: "In progress", br: "Em andamento" },
+  "On Hold": { en: "On hold", br: "Em espera" },
+  Completed: { en: "Completed", br: "Concluído" },
+  Low: { en: "Low", br: "Baixo" },
+  Medium: { en: "Medium", br: "Médio" },
+  High: { en: "High", br: "Alto" },
+  open: { en: "Open", br: "Aberto" },
+  mitigating: { en: "Mitigating", br: "Em mitigação" },
+  monitoring: { en: "Monitoring", br: "Em monitoramento" },
+  closed: { en: "Closed", br: "Fechado" },
+  total: { en: "Total", br: "Total" },
+  monthly: { en: "Monthly", br: "Mensal" },
+  annual: { en: "Annual", br: "Anual" },
+  fixed: { en: "Fixed", br: "Fixa" },
+  na: { en: "Not applicable", br: "Não aplicável" },
+  auto: { en: "Automatic", br: "Automática" },
+  action: { en: "Action Plan Required", br: "Plano de ação necessário" },
+  monitor: { en: "Monitored", br: "Monitorado" },
+  low: { en: "Low", br: "Baixa" },
+  done: { en: "Done", br: "Concluído" },
+  "in-progress": { en: "In progress", br: "Em andamento" },
+  upcoming: { en: "Upcoming", br: "Previsto" },
+  late: { en: "Late", br: "Atrasado" },
+  ahead: { en: "Ahead", br: "Adiantado" },
+  on: { en: "On target", br: "Na meta" },
+  behind: { en: "Behind", br: "Atrasado" },
+  complete: { en: "Complete", br: "Concluído" },
+  rescheduled: { en: "Rescheduled", br: "Reprogramado" },
+}
+
+function nativePortfolioField(field: Field, value?: unknown): NativeScalar {
+  const options = field.options
+    ? [...new Set([...field.options, ...(typeof value === "string" || typeof value === "number" ? [String(value)] : [])])]
+    : undefined
+  return {
+    kind: field.type === "email" ? "text" : field.type ?? "text",
+    path: [field.name],
+    label: nativePortfolioLabels[field.name],
+    required: field.required,
+    blank: "empty",
+    ...(options ? { options: options.map((value) => ({ value, label: nativePortfolioOptions[value] ?? { en: value, br: value } })) } : {}),
+  }
+}
+
+function nativePortfolioSave(collection: string, command: Command, responsible?: string): NativeAction {
+  const definitions = recordFields(collection)
+  const extra = names[collection].filter((name) => name !== "milestones" && !definitions.some((field) => field.name === name))
+  const fields: NativeField[] = [...definitions, ...extra.map((name): Field => ({ name, label: name, ...(name === "watch" ? { type: "checkbox" } : {}) }))]
+    .map((field) => nativePortfolioField(
+      field.name === "responsible" && responsible !== undefined
+        ? { ...field, type: "select", options: [responsible || text(command.values.responsible)] }
+        : field,
+      command.values[field.name],
+    ))
+  if (collection === "projects") fields.push({
+    kind: "list", path: ["milestones"], label: nativePortfolioLabels.milestones,
+    fields: [
+      { ...nativePortfolioField({ name: "id", label: "ID" }), readOnly: true, blank: "omit" },
+      ...nativeMilestoneFields(),
+    ],
+    add: { name: "", status: "upcoming", date: "", notes: "" }, remove: true,
+  })
+  return {
+    key: JSON.stringify([collection, "save", command.id === undefined ? "create" : "edit", command.id ?? null]),
+    label: command.id ? {
+      en: `Save ${nativePortfolioLabels[collection].en}: ${nativePortfolioIdentity({ ...command.values, id: command.id })}`,
+      br: `Salvar ${nativePortfolioLabels[collection].br}: ${nativePortfolioIdentity({ ...command.values, id: command.id })}`,
+    } : { en: `Add ${nativePortfolioLabels[collection].en}`, br: `Adicionar ${nativePortfolioLabels[collection].br}` },
+    group: nativePortfolioLabels[collection],
+    ...(command.id ? { target: { collection, id: command.id } } : {}),
+    command, fields,
+  }
+}
+
+function nativePortfolioDelete(collection: string, command: Command, identity: string): NativeAction {
+  return {
+    key: JSON.stringify([collection, command.action, "edit", command.id, recordId(command.values.milestoneId)]),
+    label: {
+      en: `Delete ${command.action === "delete-milestone" ? "milestone" : nativePortfolioLabels[collection].en}: ${identity}`,
+      br: `Excluir ${command.action === "delete-milestone" ? "marco" : nativePortfolioLabels[collection].br}: ${identity}`,
+    },
+    target: { collection, id: command.id ?? "" }, command, fields: [], danger: true,
+    confirm: { en: "Permanently delete this record?", br: "Excluir este registro permanentemente?" },
+  }
+}
+
+function nativeMilestoneFields(): NativeField[] {
+  return [
+    nativePortfolioField({ name: "name", label: "Name", required: true }),
+    nativePortfolioField({ name: "date", label: "Date", type: "date" }),
+    nativePortfolioField({ name: "status", label: "Status", type: "select", options: milestoneStatus, required: true }),
+    nativePortfolioField({ name: "notes", label: "Notes", type: "textarea" }),
+  ]
+}
+
+function nativeMilestoneCommands(parent: Command, project: Record<string, unknown>): NativeAction[] {
+  // ID-less stored milestones are editable only through the complete parent form.
+  return rows([{}, ...rows(project.milestones).filter((row) => recordId(row.id) !== "")]).flatMap((row) => {
+    const id = recordId(row.id)
+    const command: Command = {
+      ...parent, action: "save-milestone",
+      values: { status: "upcoming", ...structuredClone(pick(row, ["name", "date", "status", "notes"])), ...(id ? { milestoneId: id } : {}) },
+    }
+    return [
+      {
+        key: JSON.stringify(["projects", parent.id, "save-milestone", id ? "edit" : "create", id || null]),
+        label: id ? {
+          en: `Save milestone: ${nativePortfolioIdentity(project)} / ${nativePortfolioIdentity(row)}`,
+          br: `Salvar marco: ${nativePortfolioIdentity(project)} / ${nativePortfolioIdentity(row)}`,
+        } : { en: `Add milestone: ${nativePortfolioIdentity(project)}`, br: `Adicionar marco: ${nativePortfolioIdentity(project)}` },
+        target: { collection: "projects", id: parent.id ?? "" }, command, fields: nativeMilestoneFields(),
+      },
+      ...(id ? [nativePortfolioDelete("projects", { ...command, action: "delete-milestone", values: { milestoneId: id } }, `${nativePortfolioIdentity(project)} / ${nativePortfolioIdentity(row)}`)] : []),
+    ]
+  })
+}
+
+function nativePerformanceFields(keys: readonly string[]): NativeField[] {
+  return keys.map((name): NativeField => {
+    if (name === "subs") return {
+      kind: "list", path: [name], label: nativePortfolioLabels.subs,
+      fields: nativePerformanceFields(subFields),
+      add: { label: "", status: "", totalWeight: 0, ownerWeight: 0, co1Weight: 0, co2Weight: 0 }, remove: true,
+    }
+    return {
+      kind: name === "status" ? "select" : name === "expanded" ? "checkbox"
+        : ["totalWeight", "ownerWeight", "co1Weight", "co2Weight", "score", "year"].includes(name) ? "number"
+        : ["description", "objective", "notes"].includes(name) ? "textarea" : "text",
+      path: [name], label: nativePortfolioLabels[name],
+      required: name === "name" || name === "label",
+      blank: name === "id" ? "omit" : "empty",
+      ...(name === "id" ? { readOnly: true } : {}),
+      ...(name === "status" ? { options: perfStatus.map((value) => ({ value, label: nativePortfolioOptions[value] })) } : {}),
+    }
+  })
+}
+
+function nativePerformanceSave(action: NativeAction): NativeAction[] {
+  // The existing wire confirmation is top-level; do not invent a values.confirmed field.
+  return [action, {
+    ...action, key: JSON.stringify(["confirmed-allocation", action.key]),
+    label: { en: `${action.label.en} (confirm excess allocation)`, br: `${action.label.br} (confirmar alocação excedente)` },
+    command: { ...action.command, confirmed: true },
+    confirm: { en: "Confirm owner and co-owner weights exceeding total allocation?", br: "Confirmar pesos dos responsáveis e corresponsáveis acima da alocação total?" },
+  }]
+}
+
+function nativePerformanceCommands(page: string, view: { data: Record<string, unknown>; versions: Snapshot["versions"] }): NativeAction[] {
+  const data = object(view.data.itperf)
+  const version = view.versions.itperf?.version ?? 0
+  const action = (key: string, label: NativeText, command: Command, fields: readonly NativeField[], id = "itperf"): NativeAction => ({
+    key, label, target: { collection: "itperf", id }, command, fields,
+  })
+  const remove = (key: string, command: Command, id: string, identity: string): NativeAction => ({
+    ...action(key, {
+      en: `Delete ${command.action === "delete-sub" ? "sub-item" : "item"}: ${identity}`,
+      br: `Excluir ${command.action === "delete-sub" ? "subitem" : "item"}: ${identity}`,
+    }, { ...command, confirmed: true }, [], id),
+    danger: true, confirm: { en: "Permanently delete this item?", br: "Excluir este item permanentemente?" },
+  })
+  return [
+    ...nativePerformanceSave(action(JSON.stringify(["itperf", "save"]), { en: `Save performance contract: ${nativePortfolioIdentity(data)}`, br: `Salvar contrato de desempenho: ${nativePortfolioIdentity(data)}` }, {
+      page, action: "save", version, values: structuredClone(pick(data, ["name", "year", "items"])),
+    }, [
+      nativePortfolioField({ name: "name", label: "Name" }),
+      nativePortfolioField({ name: "year", label: "Year", type: "number" }),
+      { kind: "list", path: ["items"], label: nativePortfolioLabels.items, fields: nativePerformanceFields(itemFields), add: { name: "", totalWeight: 0, subs: [] }, remove: true },
+    ])),
+    ...rows([{}, ...rows(data.items)]).flatMap((item) => {
+      const id = recordId(item.id)
+      const command: Command = {
+        page, action: "save-item", version,
+        values: { ...structuredClone(pick(item, ["name", "description", "totalWeight", "ownerWeight", "co1Weight", "co2Weight", "color"])), ...(id ? { itemId: id } : {}) },
+      }
+      return [
+        ...nativePerformanceSave(action(JSON.stringify(["itperf", "save-item", id ? "edit" : "create", id || null]), id ? {
+          en: `Save item: ${nativePortfolioIdentity(data)} / ${nativePortfolioIdentity(item)}`,
+          br: `Salvar item: ${nativePortfolioIdentity(data)} / ${nativePortfolioIdentity(item)}`,
+        } : { en: `Add item: ${nativePortfolioIdentity(data)}`, br: `Adicionar item: ${nativePortfolioIdentity(data)}` }, command,
+          nativePerformanceFields(["name", "description", "totalWeight", "ownerWeight", "co1Weight", "co2Weight", "color"]), id || "itperf")),
+        ...(id ? [
+          remove(JSON.stringify(["itperf", "delete-item", id]), { ...command, action: "delete-item", values: { itemId: id } }, id, `${nativePortfolioIdentity(data)} / ${nativePortfolioIdentity(item)}`),
+          ...rows([{}, ...rows(item.subs)]).flatMap((sub) => {
+            const subId = recordId(sub.id)
+            const save: Command = {
+              page, action: "save-sub", version,
+              values: { ...structuredClone(pick(sub, subFields.filter((name) => name !== "id"))), itemId: id, ...(subId ? { subId } : {}) },
+            }
+            return [
+              ...nativePerformanceSave(action(JSON.stringify(["itperf", "save-sub", id, subId ? "edit" : "create", subId || null]), subId ? {
+                en: `Save sub-item: ${nativePortfolioIdentity(data)} / ${nativePortfolioIdentity(item)} / ${nativePortfolioIdentity(sub)}`,
+                br: `Salvar subitem: ${nativePortfolioIdentity(data)} / ${nativePortfolioIdentity(item)} / ${nativePortfolioIdentity(sub)}`,
+              } : {
+                en: `Add sub-item: ${nativePortfolioIdentity(data)} / ${nativePortfolioIdentity(item)}`,
+                br: `Adicionar subitem: ${nativePortfolioIdentity(data)} / ${nativePortfolioIdentity(item)}`,
+              }, save, nativePerformanceFields(subFields.filter((name) => name !== "id")), id)),
+              ...(subId ? [remove(JSON.stringify(["itperf", "delete-sub", id, subId]), { ...save, action: "delete-sub", values: { itemId: id, subId } }, id, `${nativePortfolioIdentity(data)} / ${nativePortfolioIdentity(item)} / ${nativePortfolioIdentity(sub)}`)] : []),
+            ]
+          }),
+        ] : []),
+      ]
+    }),
+  ]
+}
+
+function nativePortfolioIdentity(row: Record<string, unknown>) {
+  const name = text(row.name) || text(row.title) || text(row.vendor) || text(row.label)
+  const id = recordId(row.id)
+  return name && id ? `${name} [${id}]` : name || id
+}

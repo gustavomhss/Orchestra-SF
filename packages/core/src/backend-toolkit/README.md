@@ -25,7 +25,7 @@
 
 - `bun run test:ci core test/backend-toolkit` from the repository root runs the toolkit tests.
 - `bun typecheck` in `packages/core`.
-- `.github/workflows/toolkit-arm.yml` is a manual workflow that runs the toolkit on Arm hosts.
+- `.github/inherited-workflows/toolkit-arm.yml` preserves the upstream manual Arm workflow; it is inactive in Orchestra-SF.
 
 ## Contracts and verification limits
 

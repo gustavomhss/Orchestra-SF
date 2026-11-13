@@ -3880,6 +3880,105 @@ const adaptGroup53 = (raw: RawClient["server.inbox"]) => ({
   door: Endpoint53_37(raw),
 })
 
+const Endpoint54_0 = (raw: RawClient["server.sucafina"]) => () =>
+  raw["sucafina.status"]({}).pipe(Effect.mapError(mapClientError))
+
+type Endpoint54_1Request = Parameters<RawClient["server.sucafina"]["sucafina.state"]>[0]
+type Endpoint54_1Input = {
+  readonly surface: Endpoint54_1Request["params"]["surface"]
+  readonly page?: Endpoint54_1Request["query"]["page"]
+  readonly year?: Endpoint54_1Request["query"]["year"]
+  readonly own?: Endpoint54_1Request["query"]["own"]
+  readonly month?: Endpoint54_1Request["query"]["month"]
+  readonly version?: Endpoint54_1Request["query"]["version"]
+  readonly owner?: Endpoint54_1Request["query"]["owner"]
+  readonly class?: Endpoint54_1Request["query"]["class"]
+  readonly q?: Endpoint54_1Request["query"]["q"]
+  readonly filter?: Endpoint54_1Request["query"]["filter"]
+  readonly status?: Endpoint54_1Request["query"]["status"]
+  readonly priority?: Endpoint54_1Request["query"]["priority"]
+  readonly request?: Endpoint54_1Request["query"]["request"]
+  readonly supplier?: Endpoint54_1Request["query"]["supplier"]
+  readonly mode?: Endpoint54_1Request["query"]["mode"]
+  readonly risk?: Endpoint54_1Request["query"]["risk"]
+  readonly topicStatus?: Endpoint54_1Request["query"]["topicStatus"]
+  readonly memberStatus?: Endpoint54_1Request["query"]["memberStatus"]
+  readonly projectStatus?: Endpoint54_1Request["query"]["projectStatus"]
+  readonly projectRisk?: Endpoint54_1Request["query"]["projectRisk"]
+  readonly stakeholderPriority?: Endpoint54_1Request["query"]["stakeholderPriority"]
+  readonly opsMonth?: Endpoint54_1Request["query"]["opsMonth"]
+  readonly tab?: Endpoint54_1Request["query"]["tab"]
+  readonly execYear?: Endpoint54_1Request["query"]["execYear"]
+  readonly opsYear?: Endpoint54_1Request["query"]["opsYear"]
+  readonly secYear?: Endpoint54_1Request["query"]["secYear"]
+  readonly executiveMonth?: Endpoint54_1Request["query"]["executiveMonth"]
+  readonly operationsMonth?: Endpoint54_1Request["query"]["operationsMonth"]
+  readonly securityMonth?: Endpoint54_1Request["query"]["securityMonth"]
+}
+const Endpoint54_1 = (raw: RawClient["server.sucafina"]) => (input: Endpoint54_1Input) =>
+  raw["sucafina.state"]({
+    params: { surface: input["surface"] },
+    query: {
+      ...(input["page"] === undefined ? {} : { page: input["page"] }),
+      ...(input["year"] === undefined ? {} : { year: input["year"] }),
+      ...(input["own"] === undefined ? {} : { own: input["own"] }),
+      ...(input["month"] === undefined ? {} : { month: input["month"] }),
+      ...(input["version"] === undefined ? {} : { version: input["version"] }),
+      ...(input["owner"] === undefined ? {} : { owner: input["owner"] }),
+      ...(input["class"] === undefined ? {} : { class: input["class"] }),
+      ...(input["q"] === undefined ? {} : { q: input["q"] }),
+      ...(input["filter"] === undefined ? {} : { filter: input["filter"] }),
+      ...(input["status"] === undefined ? {} : { status: input["status"] }),
+      ...(input["priority"] === undefined ? {} : { priority: input["priority"] }),
+      ...(input["request"] === undefined ? {} : { request: input["request"] }),
+      ...(input["supplier"] === undefined ? {} : { supplier: input["supplier"] }),
+      ...(input["mode"] === undefined ? {} : { mode: input["mode"] }),
+      ...(input["risk"] === undefined ? {} : { risk: input["risk"] }),
+      ...(input["topicStatus"] === undefined ? {} : { topicStatus: input["topicStatus"] }),
+      ...(input["memberStatus"] === undefined ? {} : { memberStatus: input["memberStatus"] }),
+      ...(input["projectStatus"] === undefined ? {} : { projectStatus: input["projectStatus"] }),
+      ...(input["projectRisk"] === undefined ? {} : { projectRisk: input["projectRisk"] }),
+      ...(input["stakeholderPriority"] === undefined ? {} : { stakeholderPriority: input["stakeholderPriority"] }),
+      ...(input["opsMonth"] === undefined ? {} : { opsMonth: input["opsMonth"] }),
+      ...(input["tab"] === undefined ? {} : { tab: input["tab"] }),
+      ...(input["execYear"] === undefined ? {} : { execYear: input["execYear"] }),
+      ...(input["opsYear"] === undefined ? {} : { opsYear: input["opsYear"] }),
+      ...(input["secYear"] === undefined ? {} : { secYear: input["secYear"] }),
+      ...(input["executiveMonth"] === undefined ? {} : { executiveMonth: input["executiveMonth"] }),
+      ...(input["operationsMonth"] === undefined ? {} : { operationsMonth: input["operationsMonth"] }),
+      ...(input["securityMonth"] === undefined ? {} : { securityMonth: input["securityMonth"] }),
+    },
+  }).pipe(Effect.mapError(mapClientError))
+
+type Endpoint54_2Request = Parameters<RawClient["server.sucafina"]["sucafina.command"]>[0]
+type Endpoint54_2Input = {
+  readonly surface: Endpoint54_2Request["params"]["surface"]
+  readonly page: Endpoint54_2Request["payload"]["page"]
+  readonly action: Endpoint54_2Request["payload"]["action"]
+  readonly id?: Endpoint54_2Request["payload"]["id"]
+  readonly version: Endpoint54_2Request["payload"]["version"]
+  readonly values: Endpoint54_2Request["payload"]["values"]
+  readonly confirmed?: Endpoint54_2Request["payload"]["confirmed"]
+}
+const Endpoint54_2 = (raw: RawClient["server.sucafina"]) => (input: Endpoint54_2Input) =>
+  raw["sucafina.command"]({
+    params: { surface: input["surface"] },
+    payload: {
+      page: input["page"],
+      action: input["action"],
+      id: input["id"],
+      version: input["version"],
+      values: input["values"],
+      confirmed: input["confirmed"],
+    },
+  }).pipe(Effect.mapError(mapClientError))
+
+const adaptGroup54 = (raw: RawClient["server.sucafina"]) => ({
+  status: Endpoint54_0(raw),
+  state: Endpoint54_1(raw),
+  command: Endpoint54_2(raw),
+})
+
 const adaptClient = (raw: RawClient) => ({
   health: adaptGroup0(raw["server.health"]),
   location: adaptGroup1(raw["server.location"]),
@@ -3935,6 +4034,7 @@ const adaptClient = (raw: RawClient) => ({
   artifacts: adaptGroup51(raw["server.capability.artifacts"]),
   capabilitySchedules: adaptGroup52(raw["server.capability.schedules"]),
   "server.inbox": adaptGroup53(raw["server.inbox"]),
+  sucafina: adaptGroup54(raw["server.sucafina"]),
 })
 
 export const make = (options?: {

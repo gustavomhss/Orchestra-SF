@@ -258,10 +258,21 @@ export const { use: useServer, provider: ServerProvider } = createSimpleContext(
     defaultServer: ServerConnection.Key
     canonicalLocalServer?: ServerConnection.Key
     servers?: Array<ServerConnection.Any>
+    pinnedServer?: ServerConnection.Http
   }) => {
+    const pinned: ServerConnection.Http | undefined = (() => {
+      if (!props.pinnedServer) return undefined
+      const raw = props.pinnedServer.http.url
+      if (!URL.canParse(raw)) throw new Error("Invalid pinned server origin")
+      const parsed = new URL(raw)
+      if (!["http:", "https:"].includes(parsed.protocol) || parsed.username || parsed.password ||
+        parsed.pathname !== "/" || parsed.search || parsed.hash) throw new Error("Invalid pinned server origin")
+      return Object.freeze({ type: "http" as const, http: Object.freeze({ url: parsed.origin }) })
+    })()
     const [store, setStore, _, ready] = persisted(
       {
         ...Persist.global("server", ["server.v3"]),
+        ...(pinned ? { readOnlyHydration: true } : {}),
         migrate: (value) => migrateCanonicalLocalServerState(value, props.canonicalLocalServer),
       },
       createStore({
@@ -275,18 +286,26 @@ export const { use: useServer, provider: ServerProvider } = createSimpleContext(
     const url = (x: StoredServer) => (typeof x === "string" ? x : "type" in x ? x.http.url : x.url)
 
     const allServers = createMemo((): Array<ServerConnection.Any> => {
+      if (pinned) return [pinned]
       return resolveServerList({ stored: store.list, props: props.servers })
     })
 
     const [state, setState] = createStore({
-      active: props.defaultServer,
+      active: pinned ? ServerConnection.key(pinned) : props.defaultServer,
     })
 
     function setActive(input: ServerConnection.Key) {
+      if (pinned) return
       if (state.active !== input) setState("active", input)
     }
 
     function add(input: ServerConnection.Http) {
+      if (pinned) {
+        if (!URL.canParse(input.http.url)) return
+        const url = new URL(input.http.url)
+        if (url.username || url.password || url.pathname !== "/" || url.search || url.hash || url.origin !== pinned.http.url) return
+        return pinned
+      }
       const url_ = normalizeServerUrl(input.http.url)
       if (!url_) return
       const conn: ServerConnection.Http = { ...input, authToken: undefined, http: { ...input.http, url: url_ } }
@@ -303,6 +322,7 @@ export const { use: useServer, provider: ServerProvider } = createSimpleContext(
     }
 
     function remove(key: ServerConnection.Key) {
+      if (pinned) return
       const next = nextServerAfterRemoval(allServers(), key, props.defaultServer)
       const list = store.list.filter((x) => url(x) !== key)
       batch(() => {
@@ -327,23 +347,26 @@ export const { use: useServer, provider: ServerProvider } = createSimpleContext(
       return next
     }
     const current: Accessor<ServerConnection.Any | undefined> = createMemo(
-      () => allServers().find((s) => ServerConnection.key(s) === state.active) ?? allServers()[0],
+      () => pinned ?? allServers().find((s) => ServerConnection.key(s) === state.active) ?? allServers()[0],
     )
     const isLocal = createMemo(() => ServerConnection.local(current()))
 
     return {
       ready: isReady,
       isLocal,
+      get pinned() {
+        return pinned
+      },
       get key() {
         return state.active
       },
       get name() {
         return serverName(current())
       },
-      get list() {
-        return allServers()
+      get list(): Array<ServerConnection.Any> {
+        return pinned ? [pinned] : allServers()
       },
-      get current() {
+      get current(): ServerConnection.Any | undefined {
         return current()
       },
       setActive,

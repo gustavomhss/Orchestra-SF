@@ -60,6 +60,13 @@ export function createOperatorIdentity(options: OperatorOptions): OperatorIdenti
   const headers = () => new Headers({ "Cache-Control": "no-store", "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff" })
   const error = (status: number) => new Response("Local authentication unavailable", { status, headers: headers() })
   return {
+    async scope(request) {
+      if (!await session(request)) return undefined
+      const id = handle(request)
+      if (!id) return undefined
+      // Hash of the mount, person, and opaque handle. Never the handle itself, and stable until that session ends.
+      return createHash("sha256").update(JSON.stringify([mount, person.id, id])).digest("hex")
+    },
     async enroll() {
       const code = randomBytes(32).toString("hex")
       const storageKey = slot("enroll", code)

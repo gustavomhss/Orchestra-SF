@@ -85,6 +85,7 @@ test("talent stays admin only even with supplied identity joins; reads audit eve
         status: "Active",
       },
     ],
+    leaders: [{ id: "l", name: "Leader" }],
     leaderJoin: [{ directoryId: "d", leaderId: "l" }],
   }
   const leader = { id: "d", canWrite: true, roles: ["domain leader"] }
@@ -104,6 +105,7 @@ test("talent stays admin only even with supplied identity joins; reads audit eve
   expect(
     domain.execute(state, leader, { page: pages[3], action: "exportAllMembers", version: 0, values: {} }, environment),
   ).toMatchObject({ ok: false, status: 403 })
+  expect(state).toEqual(before)
   expect(
     domain.execute(
       state,
@@ -113,12 +115,14 @@ test("talent stays admin only even with supplied identity joins; reads audit eve
         action: "saveMember",
         id: "m",
         version: 0,
-        values: { name: "B" },
+        values: { name: "B", cls: "posted-private", outlook: "posted-private", notes: "posted-private" },
       },
       environment,
     ),
-  ).toMatchObject({ ok: false, status: 403 })
-  expect(state).toEqual(before)
+  ).toMatchObject({ ok: true })
+  expect(state.data.members).toMatchObject([{ id: "m", name: "B", cls: "Talent", outlook: "Promote", notes: "private" }])
+  expect(JSON.stringify(state.data)).not.toContain("posted-private")
+  expect(state.versions["members:m"]?.version).toBe(1)
 })
 test("member import confirmation and name matching preserve nonempty fields, clear talent, audit export", () => {
   const state = snapshot()
@@ -239,7 +243,7 @@ test("viewer summaries expose only public member fields and never salary", () =>
   expect(view.data.members).toEqual([{ id: "m", name: "A" }])
   expect(state.audit).toHaveLength(1)
 })
-test("domain leaders may save hot topics but team ownership remains unresolved", () => {
+test("domain leaders may save hot topics and team structure without an identity join", () => {
   const state = snapshot()
   const leader = { id: "l", canWrite: true, roles: ["domain leader"] }
   expect(
@@ -255,7 +259,6 @@ test("domain leaders may save hot topics but team ownership remains unresolved",
       environment,
     ).ok,
   ).toBe(true)
-  const before = structuredClone(state)
   expect(
     domain.execute(
       state,
@@ -268,8 +271,9 @@ test("domain leaders may save hot topics but team ownership remains unresolved",
       },
       environment,
     ),
-  ).toMatchObject({ ok: false, status: 403 })
-  expect(state).toEqual(before)
+  ).toMatchObject({ ok: true })
+  expect(state.data.leaders).toMatchObject([{ id: "server-id", name: "Leader" }])
+  expect(state.versions["leaders:server-id"]?.version).toBe(1)
 })
 test("cascade delete conflict returns stored member and leaves all records unchanged", () => {
   const state = snapshot()

@@ -59,7 +59,7 @@ export function validateSourcing(rec: { pr?: { recurring?: unknown }; sourcing?:
     if (fx(settings, quote.currency || settings.currency) == null) errors.push(`Quote ${index + 1}: no FX rate defined for ${quote.currency} (Settings ${ARROW} Currencies)`)
   })
   if (!sourcing.evaluator) errors.push("Technical evaluator is required")
-  const scored = evalQuotes(rec, settings)
+  const scored = quoteEvaluation(rec, settings)
   ;(sourcing.quotes ?? []).forEach((quote, index) => {
     if (quote.techPass !== false && !scored[index]?.complete) errors.push(`Quote ${index + 1}: technical / commercial scores incomplete`)
   })
@@ -131,6 +131,11 @@ function emptySourcing(): SourcingForm {
   return { quotes: [] }
 }
 
+function asSourcing(value: unknown): SourcingForm {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return emptySourcing()
+  return value as SourcingForm
+}
+
 function num(value: unknown): number {
   const parsed = Number(value)
   if (!Number.isFinite(parsed)) return 0
@@ -150,11 +155,11 @@ function weights(sourcing: SourcingForm, settings: FormSettings) {
 }
 
 export function quoteRanking(rec: { sourcing?: SourcingForm | null }, settings: FormSettings) {
-  return evalQuotes(rec, settings).map((item) => ({ id: item.id, rank: item.rank, overall: item.overall }))
+  return quoteEvaluation(rec, settings).map((item) => ({ id: item.id, rank: item.rank, overall: item.overall }))
 }
 
-function evalQuotes(rec: { sourcing?: SourcingForm | null }, settings: FormSettings) {
-  const sourcing = rec.sourcing ?? emptySourcing()
+export function quoteEvaluation(rec: { sourcing?: unknown }, settings: FormSettings) {
+  const sourcing = asSourcing(rec.sourcing)
   const weight = weights(sourcing, settings)
   const criteria = weight.criteria ?? []
   const commercial = weight.commCriteria ?? []
@@ -194,7 +199,17 @@ function evalQuotes(rec: { sourcing?: SourcingForm | null }, settings: FormSetti
     const tech = (techSum / techWeight) * 100
     const comm = commSum / commWeight
     const overall = inPool ? (tech * num(weight.tech) + comm * num(weight.comm)) / (num(weight.tech) + num(weight.comm) || 1) : 0
-    return { id: quote.id, complete, eligible: inPool, overall, rank: null as number | null }
+    return {
+      id: quote.id,
+      supplier: quote.supplier,
+      complete,
+      eligible: inPool,
+      technical: tech,
+      price,
+      commercial: comm,
+      overall,
+      rank: null as number | null,
+    }
   })
   scored
     .filter((item) => item.eligible)

@@ -9,7 +9,7 @@ Storybook workbench for the ui, session-ui and app components.
 
 ## Public entry points and consumers
 
-- Application only, no library exports. Developers run it locally; the `storybook build` job in `.github/workflows/storybook.yml` builds it on the `epic` label or by manual dispatch.
+- Application only, no library exports. Developers run it locally; the `storybook build` job in `.github/inherited-workflows/storybook.yml` is preserved as inactive upstream configuration in Orchestra-SF; it does not run on labels or dispatch until explicitly re-enabled.
 - Configuration in `apps/storybook/.storybook` (`main.ts`, `preview.tsx`, `manager.ts`, `theme-tool.ts`, `playground-css-plugin.ts`) and mocks in `apps/storybook/.storybook/mocks`.
 
 ## Dependencies and boundaries

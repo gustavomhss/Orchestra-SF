@@ -1,3 +1,5 @@
+import type { Sucafina } from "@orchestra/schema/sucafina"
+
 import type { SessionEventEncoded } from "../wire"
 
 import type { OrchestraEventEncoded } from "@orchestra/protocol/groups/event"
@@ -14007,6 +14009,917 @@ export type ServerInboxDoorOutput = {
   }
   readonly data: { readonly href: string } | { readonly openApp: true }
 }
+
+export type SucafinaStatusOutput = {
+  readonly configured: boolean
+  readonly authentication: "local-operator" | "microsoft" | "unconfigured"
+  readonly authenticated: boolean
+  readonly enrollmentRequired: boolean
+  readonly surfaces: ReadonlyArray<"dashboard" | "planner" | "procurement">
+  readonly hostAuthenticated?: boolean | undefined
+  readonly principal?: { readonly id: string; readonly name: string } | undefined
+  readonly sessionScope?: string | undefined
+}
+
+export type SucafinaStateInput = {
+  readonly surface: { readonly surface: "dashboard" | "planner" | "procurement" }["surface"]
+  readonly page?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["page"]
+  readonly year?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["year"]
+  readonly own?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["own"]
+  readonly month?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["month"]
+  readonly version?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["version"]
+  readonly owner?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["owner"]
+  readonly class?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["class"]
+  readonly q?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["q"]
+  readonly filter?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["filter"]
+  readonly status?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["status"]
+  readonly priority?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["priority"]
+  readonly request?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["request"]
+  readonly supplier?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["supplier"]
+  readonly mode?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["mode"]
+  readonly risk?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["risk"]
+  readonly topicStatus?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["topicStatus"]
+  readonly memberStatus?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["memberStatus"]
+  readonly projectStatus?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["projectStatus"]
+  readonly projectRisk?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["projectRisk"]
+  readonly stakeholderPriority?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["stakeholderPriority"]
+  readonly opsMonth?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["opsMonth"]
+  readonly tab?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["tab"]
+  readonly execYear?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["execYear"]
+  readonly opsYear?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["opsYear"]
+  readonly secYear?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["secYear"]
+  readonly executiveMonth?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["executiveMonth"]
+  readonly operationsMonth?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["operationsMonth"]
+  readonly securityMonth?: {
+    readonly page?: string | undefined
+    readonly year?: string | undefined
+    readonly own?: string | undefined
+    readonly month?: string | undefined
+    readonly version?: string | undefined
+    readonly owner?: string | undefined
+    readonly class?: string | undefined
+    readonly q?: string | undefined
+    readonly filter?: string | undefined
+    readonly status?: string | undefined
+    readonly priority?: string | undefined
+    readonly request?: string | undefined
+    readonly supplier?: string | undefined
+    readonly mode?: string | undefined
+    readonly risk?: string | undefined
+    readonly topicStatus?: string | undefined
+    readonly memberStatus?: string | undefined
+    readonly projectStatus?: string | undefined
+    readonly projectRisk?: string | undefined
+    readonly stakeholderPriority?: string | undefined
+    readonly opsMonth?: string | undefined
+    readonly tab?: string | undefined
+    readonly execYear?: string | undefined
+    readonly opsYear?: string | undefined
+    readonly secYear?: string | undefined
+    readonly executiveMonth?: string | undefined
+    readonly operationsMonth?: string | undefined
+    readonly securityMonth?: string | undefined
+  }["securityMonth"]
+}
+
+export type SucafinaStateOutput = Sucafina.PageState
+
+export type SucafinaCommandInput = {
+  readonly surface: { readonly surface: "dashboard" | "planner" | "procurement" }["surface"]
+  readonly page: {
+    readonly page: string
+    readonly action: string
+    readonly id?: string | undefined
+    readonly version: number
+    readonly values: { readonly [x: string]: JsonValue }
+    readonly confirmed?: boolean | undefined
+  }["page"]
+  readonly action: {
+    readonly page: string
+    readonly action: string
+    readonly id?: string | undefined
+    readonly version: number
+    readonly values: { readonly [x: string]: JsonValue }
+    readonly confirmed?: boolean | undefined
+  }["action"]
+  readonly id?: {
+    readonly page: string
+    readonly action: string
+    readonly id?: string | undefined
+    readonly version: number
+    readonly values: { readonly [x: string]: JsonValue }
+    readonly confirmed?: boolean | undefined
+  }["id"]
+  readonly version: {
+    readonly page: string
+    readonly action: string
+    readonly id?: string | undefined
+    readonly version: number
+    readonly values: { readonly [x: string]: JsonValue }
+    readonly confirmed?: boolean | undefined
+  }["version"]
+  readonly values: {
+    readonly page: string
+    readonly action: string
+    readonly id?: string | undefined
+    readonly version: number
+    readonly values: { readonly [x: string]: JsonValue }
+    readonly confirmed?: boolean | undefined
+  }["values"]
+  readonly confirmed?: {
+    readonly page: string
+    readonly action: string
+    readonly id?: string | undefined
+    readonly version: number
+    readonly values: { readonly [x: string]: JsonValue }
+    readonly confirmed?: boolean | undefined
+  }["confirmed"]
+}
+
+export type SucafinaCommandOutput = { readonly ok: true; readonly warnings?: ReadonlyArray<string> | undefined }
 export {
   type UnauthorizedError,
   isUnauthorizedError,
@@ -14068,6 +14981,10 @@ export {
   isForbiddenError,
   type InboxError,
   isInboxError,
+  type SucafinaConflictError,
+  isSucafinaConflictError,
+  type SucafinaValidationError,
+  isSucafinaValidationError,
 } from "./errors"
 
 export { type ResearchArtifactInput, type ResearchArtifactOutput } from "./research-types"

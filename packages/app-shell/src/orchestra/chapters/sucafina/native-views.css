@@ -1,0 +1,48 @@
+[data-sf-native-view] {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  color: var(--mx-strong);
+}
+[data-sf-native-view] section,
+[data-sf-native-view] .mx-card {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+[data-sf-native-view] .mx-table {
+  max-inline-size: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+}
+[data-sf-native-view] table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--orchestra-font-size-sm);
+  text-align: start;
+}
+[data-sf-native-view] th,
+[data-sf-native-view] td {
+  padding: 12px 15px;
+  border-block-end: 1px solid var(--mx-line);
+  text-align: start;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+[data-sf-native-view] th {
+  font-family: var(--mx-emphasis);
+  font-weight: 600;
+  color: var(--mx-dim);
+  white-space: nowrap;
+}
+[data-sf-native-view] tbody tr:last-child td {
+  border-block-end: 0;
+}
+[data-sf-native-view] h2,
+[data-sf-native-view] h3 {
+  font-family: var(--mx-emphasis);
+  margin-block: 20px 12px;
+}
+[data-sf-native-view] h2 { font-size: var(--orchestra-font-size-lg); }
+[data-sf-native-view] h3 { font-size: var(--orchestra-font-size-sm); }
+[data-sf-native-view] .mx-fields { flex-wrap: wrap; }
+[data-sf-native-view] input,
+[data-sf-native-view] select { max-inline-size: 100%; }

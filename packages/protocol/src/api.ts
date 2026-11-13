@@ -29,6 +29,7 @@ import { CredentialGroup } from "./groups/credential"
 import { ProjectCopyGroup } from "./groups/project-copy"
 import { ProjectGroup } from "./groups/project"
 import { LeanGroup } from "./groups/lean"
+import { SucafinaGroup } from "./groups/sucafina"
 import { RagStudioGroup } from "./groups/rag-studio"
 import { AtlasGroup } from "./groups/atlas"
 import { ConfigGroup } from "./groups/config"
@@ -129,6 +130,7 @@ const makeApiFromGroup = <
     .add(makeCapabilitySchedulesGroup(locationMiddleware))
     .add(CapabilityContentGroup)
     .add(InboxGroup.middleware(inboxLocationMiddleware))
+    .add(SucafinaGroup)
     .annotateMerge(
       OpenApi.annotations({
         title: "orchestra HttpApi",

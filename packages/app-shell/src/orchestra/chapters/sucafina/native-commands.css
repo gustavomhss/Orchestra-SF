@@ -1,0 +1,14 @@
+.sf-native-commands { min-inline-size: 0; max-inline-size: 100%; }
+.sf-native-commands h2 { font-family: var(--mx-emphasis); font-size: var(--orchestra-font-size-lg); }
+.sf-native-command-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px; }
+.sf-native-command-fields > fieldset { grid-column: 1 / -1; }
+.sf-native-commands fieldset { min-inline-size: 0; margin: 12px 0; padding: 16px; border: 1px solid var(--mx-line); border-radius: 8px; }
+.sf-native-commands legend { padding-inline: 6px; color: var(--mx-strong); font-family: var(--mx-emphasis); }
+.sf-native-commands input, .sf-native-commands textarea, .sf-native-commands select { max-inline-size: 100%; }
+.sf-native-commands textarea { min-block-size: 96px; resize: vertical; }
+.sf-native-command-row { padding-block: 12px; border-block-end: 1px solid var(--mx-line); }
+.sf-native-command-row:last-of-type { margin-block-end: 12px; }
+.sf-native-command-confirm { inline-size: min(480px, calc(100vw - 32px)); max-block-size: calc(100dvh - 32px); overflow: auto; }
+.sf-native-command-confirm p { white-space: pre-wrap; overflow-wrap: anywhere; }
+.sf-native-commands :focus-visible, .sf-native-command-confirm :focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.sf-native-command-danger h2 { color: var(--mx-bad); }

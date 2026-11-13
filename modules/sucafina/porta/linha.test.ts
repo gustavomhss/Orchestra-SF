@@ -8,8 +8,8 @@ function settings() {
   return {
     currency: "USD",
     levels: [
-      { id: "L1", name: "CIO-1 (Level 1)", threshold: 0, holderId: null },
-      { id: "L2", name: "CIO (Level 2)", threshold: 30000, holderId: null },
+      { id: "L1", name: "CIO-1 (Level 1)", threshold: 0, holderId: null as string | null },
+      { id: "L2", name: "CIO (Level 2)", threshold: 30000, holderId: null as string | null },
     ],
     prApprovalMode: "first" as const,
     blockSelfApproval: false,
@@ -66,8 +66,8 @@ function po(over: Record<string, unknown> = {}) {
   }
 }
 
-function call(req: unknown, action: unknown, who = actor("ada", ["requester"])) {
-  const before = req == null ? null : structuredClone(req)
+function call<T>(req: T, action: unknown, who = actor("ada", ["requester"])) {
+  const before = structuredClone(req)
   const result = act(req, action, who, settings(), AT, ISSUED, null)
   return { result, before }
 }

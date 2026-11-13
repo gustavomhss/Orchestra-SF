@@ -44,6 +44,7 @@ const icons = {
   home: '<path d="M2.8 6.6 8 2.6l5.2 4v6a1 1 0 0 1-1 1h-2.7v-3.8H6.5v3.8H3.8a1 1 0 0 1-1-1z"/>',
   chat: '<path d="M2.6 3.6h10.8v6.9H6.9l-3.1 2.3v-2.3H2.6z"/>',
   inbox: '<path d="m2 9 2-6h8l2 6v4H2V9Z"/><path d="M2 9h3l1.2 2h3.6L11 9h3"/>',
+  sucafina: '<rect x="2" y="5" width="12" height="8.5" rx="1.4"/><path d="M5.5 5V3.8c0-.7.5-1.2 1.2-1.2h2.6c.7 0 1.2.5 1.2 1.2V5M2 8.5h12M7 8.5v1h2v-1"/>',
   // Projects board: three columns of cards.
   board: '<rect x="2" y="2.6" width="3.2" height="10.8" rx="1"/><rect x="6.4" y="2.6" width="3.2" height="7.4" rx="1"/><rect x="10.8" y="2.6" width="3.2" height="4.6" rx="1"/>',
   agents:

@@ -97,6 +97,27 @@ export async function verify(
 }
 
 describe("capability contract portability", () => {
+  test("explicit success imports retain custom checks without relaxing standalone or payload guards", () => {
+    const success = Schema.Struct({ value: Schema.String }).check(
+      Schema.makeFilter((value) => value.value !== "blocked"),
+    )
+    const api = HttpApi.make("reference").add(
+      HttpApiGroup.make("reference").add(HttpApiEndpoint.get("read", "/read", { success })),
+    )
+    expect(() => compile(api)).toThrow("Unportable schema")
+    const contract = compile(api, { importedSuccessEndpoints: new Set(["read"]) })
+    expect(contract.groups[0].endpoints[0].successes[0]).toBe(Array.from(api.groups.reference.endpoints.read.success)[0])
+    expect(() => emitEffect(contract)).toThrow("Effect schema requires authoritative import")
+    expect(emitEffectImported(contract, { module: "./reference", api: "Api" }).files
+      .find((file) => file.path === "client.ts")?.content).toContain('import { Api } from "./reference"')
+    expect(() => Schema.decodeUnknownSync(success)({ value: "blocked" })).toThrow()
+    expect(Schema.decodeUnknownSync(success)({ value: "visible" })).toEqual({ value: "visible" })
+    const payload = HttpApi.make("payload").add(
+      HttpApiGroup.make("payload").add(HttpApiEndpoint.post("write", "/write", { payload: success, success: Schema.String })),
+    )
+    expect(() => compile(payload, { importedSuccessEndpoints: new Set(["write"]) })).toThrow("Unportable schema")
+  })
+
   test("compiles JSON wire shapes but requires authoritative Effect imports", () => {
     const contract = compile(Api)
     expect(contract.groups[0].endpoints.map((endpoint) => endpoint.effectPortable)).toEqual([false, false])

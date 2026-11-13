@@ -13,6 +13,7 @@ import {
 } from "../src/procurement.ts"
 import type { Store } from "../src/procurement.ts"
 import { visibleRequests } from "../src/requests.ts"
+import { quoteEvaluation } from "../src/form.ts"
 import { exportRegister, requestValue } from "../src/procurement-screen.ts"
 import type { RequestView } from "../src/procurement-screen.ts"
 import { initialProcurementSettings } from "../src/initial-settings.ts"
@@ -413,8 +414,9 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
   if (command.action !== "create" && !row) return { ok: false, status: 404 }
   const key = `requests:${id}`
   const visible = !row || visibleRequests([{ createdBy: text(row.request.createdBy) }], actor).length > 0
+  if (!visible && ["approve", "reject"].includes(command.action)) return { ok: false, status: 403 }
   const stale = conflict(snapshot, key, command, visible ? row?.request : undefined)
-  if (stale) return stale
+  if (stale) return visible ? stale : { ok: false, status: 409 }
   const was = row ? structuredClone(row.request) : null
   const request = row?.request ?? {}
   const status = text(request.status)
@@ -467,12 +469,18 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     request.buyerId = actor.id
   if (request.sourcing != null) {
     const source = object(request.sourcing)
+    const normalizeQuoteTotals =
+      command.action === "select_quote" || (sourceEdit && ["save", "submit_sourcing"].includes(command.action))
     source.selectedId = source.selectedId == null || source.selectedId === "" ? null : String(source.selectedId)
-    source.quotes = rows(source.quotes).map((quote) => ({
-      ...quote,
-      id: String(quote.id ?? ""),
-      supplierId: quote.supplierId == null || quote.supplierId === "" ? null : String(quote.supplierId),
-    }))
+    source.quotes = rows(source.quotes).map((quote) => {
+      const total = normalizeQuoteTotals ? quoteTotal(quote) : undefined
+      return {
+        ...quote,
+        id: String(quote.id ?? ""),
+        supplierId: quote.supplierId == null || quote.supplierId === "" ? null : String(quote.supplierId),
+        ...(typeof total === "number" ? { total } : {}),
+      }
+    })
   }
   if (request.po != null) {
     const po = object(request.po)
@@ -594,9 +602,11 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
         at: environment.at,
       })
   }
+  const submittedWarning = command.action === "submit_po" && saved ? purchaseOrderWarning(saved.request, fullSettings) : null
   return {
     ok: true,
     value: visible ? (saved?.request ?? { deleted: was }) : undefined,
+    ...(submittedWarning ? { warnings: [submittedWarning] } : {}),
   }
 }
 function settings(snapshot: Snapshot, store: Store, actor: Actor, command: Command, environment: Environment): Result {
@@ -800,22 +810,30 @@ export const domain: Domain = {
     const store = load(snapshot)
     const restricted =
       actor.roles.includes("requester") && !has(actor, "buyer", "approver", "supplier admin", "admin", "viewer")
-    const requests = visibleRequests(
-      Object.values(store.requests).map((row): RequestView & Record<string, unknown> => ({
-        ...structuredClone(row.request),
-        status: text(row.request.status),
-        createdBy: text(row.request.createdBy),
-        value: requestValue(row.request as RequestView, {
-          currency: text(store.settings.currency),
-          fxRates: rows(store.settings.fxRates).map((rate) => ({
-            code: text(rate.code),
-            rate: finite(rate.rate),
-          })),
-        }),
-        ...(row.rank ? { ranking: structuredClone(row.rank) } : {}),
+    const rates = {
+      currency: text(store.settings.currency),
+      fxRates: rows(store.settings.fxRates).map((rate) => ({
+        code: text(rate.code),
+        rate: finite(rate.rate),
       })),
+    }
+    const requests = visibleRequests(
+      Object.values(store.requests).map((row): RequestView & Record<string, unknown> => {
+        const request = structuredClone(row.request)
+        const status = text(request.status)
+        const createdBy = text(request.createdBy)
+        return {
+          ...request,
+          status,
+          createdBy,
+          value: requestValue({ ...request, status, createdBy } as RequestView, rates),
+          evaluation: quoteEvaluation({ sourcing: request.sourcing }, store.form),
+          ...(row.rank ? { ranking: structuredClone(row.rank) } : {}),
+        }
+      }),
       actor,
     )
+    const bankVisible = has(actor, "admin", "supplier admin")
     const suppliers = store.suppliers.map((item) => {
       const supplier = object(item)
       const safe = {
@@ -824,7 +842,10 @@ export const domain: Domain = {
         iban: "masked",
         account: "masked",
       }
-      if (!has(actor, "admin", "supplier admin")) return { ...safe, swift: undefined }
+      if (!bankVisible) return {
+        ...safe,
+        ...Object.fromEntries(bankFields.map((field) => [field, field === "iban" || field === "account" ? "masked" : undefined])),
+      }
       if (!environment.bankKey) return { ...safe, iban: "", account: "" }
       return {
         ...safe,
@@ -832,12 +853,7 @@ export const domain: Domain = {
         account: supplier.account ? open(text(supplier.account), environment.bankKey) : "",
       }
     })
-    const register = exportRegister(
-      requests.map(
-        (request) =>
-          Object.fromEntries(Object.entries(request).filter(([key]) => key !== "ranking")) as unknown as RequestView,
-      ),
-    )
+    const register = exportRegister(requests)
     const versions = Object.fromEntries(
       Object.entries(snapshot.versions).filter(
         ([key]) =>
@@ -850,6 +866,7 @@ export const domain: Domain = {
       data: {
         requests,
         suppliers,
+        bankVisible,
         register,
         directory: environment.directory,
         formSettings: pick(store.settings, [
@@ -872,6 +889,77 @@ export const domain: Domain = {
     }
   },
 }
+// A quote total stays in quote currency. Both qty and unit price must be missing to keep a legacy total.
+function quoteTotal(quote: Record<string, unknown>): number | undefined {
+  const qtyAbsent = !Object.hasOwn(quote, "qty") || quote.qty == null || quote.qty === ""
+  const priceAbsent = !Object.hasOwn(quote, "unitPrice") || quote.unitPrice == null || quote.unitPrice === ""
+  if (qtyAbsent && priceAbsent) return typeof quote.total === "number" && Number.isFinite(quote.total) ? quote.total : undefined
+  const quantity = Number(quote.qty)
+  const unitPrice = Number(quote.unitPrice)
+  return Math.round((Number.isFinite(unitPrice) ? unitPrice : 0) * (Number.isFinite(quantity) ? quantity : 0) * 100) / 100
+}
+
+// Draft and rejected orders use the live rate. A submitted order keeps its frozen rate.
+function purchaseOrderWarning(request: Record<string, unknown>, settings: Record<string, unknown>): string | null {
+  const approved = object(object(request.sourcing).approval).amount
+  if (typeof approved !== "number" || !Number.isFinite(approved)) return null
+  const po = object(request.po)
+  const lines = rows(po.lines)
+  if (!lines.length) return null
+  const total = lines.reduce((sum, line) => sum + finite(line.qty) * finite(line.unitPrice), 0)
+  const rate = purchaseOrderRate(po, text(request.status), settings)
+  if (rate == null) return null
+  const base = total * rate
+  if (!(base > approved + 0.005)) return null
+  return `Purchase order base ${base} is above the approved sourcing amount ${approved}.`
+}
+
+function purchaseOrderRate(po: Record<string, unknown>, status: string, settings: Record<string, unknown>): number | null {
+  if (status !== "po_draft" && status !== "po_rejected" && typeof po.fxRate === "number" && Number.isFinite(po.fxRate))
+    return po.fxRate
+  const code = text(po.currency)
+  if (!code || code === text(settings.currency)) return 1
+  const found = rows(settings.fxRates).find((item) => text(item.code) === code)
+  if (!found || !(finite(found.rate) > 0)) return null
+  return finite(found.rate)
+}
+
+function poWarningBanner(request: Record<string, unknown>, settings: Record<string, unknown>): string {
+  const warning = purchaseOrderWarning(request, settings)
+  if (!warning) return ""
+  return `<p class="banner warn" role="status">${esc(warning)}</p>`
+}
+
+function sourcingEvaluation(request: Record<string, unknown>): string {
+  const evaluation = rows(request.evaluation)
+  const visible = evaluation.filter((item) => text(item.supplier))
+  if (!visible.length) return ""
+  const selectedId = text(object(request.sourcing).selectedId)
+  const selected = evaluation.find((item) => text(item.id) === selectedId)
+  const marker =
+    selectedId && selected && selected.rank !== 1
+      ? `<p class="banner warn" role="status">Selected quote is not the top-ranked quote.</p>`
+      : ""
+  return (
+    marker +
+    table(
+      ["Score", ...visible.map((item) => text(item.supplier))],
+      [
+        ["Technical score", ...visible.map((item) => scoreFigure(item.technical))],
+        ["Price", ...visible.map((item) => scoreFigure(item.price))],
+        ["Commercial score", ...visible.map((item) => scoreFigure(item.commercial))],
+        ["Overall score", ...visible.map((item) => scoreFigure(item.overall))],
+        ["Rank", ...visible.map((item) => (typeof item.rank === "number" ? String(item.rank) : ""))],
+      ],
+    )
+  )
+}
+
+function scoreFigure(value: unknown): string {
+  if (typeof value !== "number" || !Number.isFinite(value)) return ""
+  return value.toFixed(1)
+}
+
 function amount(request: Record<string, unknown>) {
   return typeof request.value === "number"
     ? request.value
@@ -1353,7 +1441,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
             prFields.filter((name) => name !== "requesterName"),
           ),
           "Save requisition",
-        )}${controls(page, "submit_pr", id, "", "Submit requisition")}</section><section id="${esc(id)}-sourcing"><h3>Sourcing</h3><fieldset${request.sourcing == null ? " disabled" : ""}>${controls(page, "save", id, scalarFields("sourcing", source, ["evaluator", "fewQuotesJustification", "selectionJustification", "contractStrategy"]) + scalarFields("sourcing.weights", { tech: settings.techWeight, comm: settings.commWeight, ...object(source.weights) }, ["tech", "comm"]) + "<h4>Technical criteria</h4>" + repeatRows("sourcing.weights.criteria", rows(object(source.weights).criteria ?? settings.criteria), ["name", "weight"]) + "<h4>Commercial criteria</h4>" + repeatRows("sourcing.weights.commCriteria", rows(object(source.weights).commCriteria ?? settings.commCriteria), ["name", "weight", "auto"]) + quoteRows, "Save sourcing")}${controls(
+        )}${controls(page, "submit_pr", id, "", "Submit requisition")}</section><section id="${esc(id)}-sourcing"><h3>Sourcing</h3>${sourcingEvaluation(request)}<fieldset${request.sourcing == null ? " disabled" : ""}>${controls(page, "save", id, scalarFields("sourcing", source, ["evaluator", "fewQuotesJustification", "selectionJustification", "contractStrategy"]) + scalarFields("sourcing.weights", { tech: settings.techWeight, comm: settings.commWeight, ...object(source.weights) }, ["tech", "comm"]) + "<h4>Technical criteria</h4>" + repeatRows("sourcing.weights.criteria", rows(object(source.weights).criteria ?? settings.criteria), ["name", "weight"]) + "<h4>Commercial criteria</h4>" + repeatRows("sourcing.weights.commCriteria", rows(object(source.weights).commCriteria ?? settings.commCriteria), ["name", "weight", "auto"]) + quoteRows, "Save sourcing")}${controls(
           page,
           "select_quote",
           id,
@@ -1367,7 +1455,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
             })),
           ),
           "Select quote",
-        )}${controls(page, "submit_sourcing", id, "", "Submit sourcing")}</fieldset></section><section id="${esc(id)}-po"><h3>Purchase order</h3><fieldset${request.po == null ? " disabled" : ""}>${controls(page, "save", id, poInputs, "Save purchase order")}${controls(page, "submit_po", id, "", "Submit purchase order")}</fieldset><a href="?download=po&amp;request=${encodeURIComponent(id)}">Download purchase order</a></section>${["approve", "reject", "cancel", "issue", "delete"].map((action) => controls(page, action, id, ["reject", "cancel"].includes(action) ? fields([{ name: "reason", label: "Reason", required: true }]) : action === "approve" ? fields([{ name: "comment", label: "Comment" }]) : "", action.charAt(0).toUpperCase() + action.slice(1))).join("")}<article class="po-document"><h3>Purchase order ${esc(text(po.number))}</h3><p>${esc(text(po.supplier))}</p><p>${esc(text(po.description))}</p>${table(
+        )}${controls(page, "submit_sourcing", id, "", "Submit sourcing")}</fieldset></section><section id="${esc(id)}-po"><h3>Purchase order</h3>${poWarningBanner(request, settings)}<fieldset${request.po == null ? " disabled" : ""}>${controls(page, "save", id, poInputs, "Save purchase order")}${controls(page, "submit_po", id, "", "Submit purchase order")}</fieldset><a href="?download=po&amp;request=${encodeURIComponent(id)}">Download purchase order</a></section>${["approve", "reject", "cancel", "issue", "delete"].map((action) => controls(page, action, id, ["reject", "cancel"].includes(action) ? fields([{ name: "reason", label: "Reason", required: true }]) : action === "approve" ? fields([{ name: "comment", label: "Comment" }]) : "", action.charAt(0).toUpperCase() + action.slice(1))).join("")}<article class="po-document"><h3>Purchase order ${esc(text(po.number))}</h3><p>${esc(text(po.supplier))}</p><p>${esc(text(po.description))}</p>${table(
           ["Description", "Quantity", "Unit price"],
           rows(po.lines).map((line) => [
             esc(text(line.desc ?? line.description)),

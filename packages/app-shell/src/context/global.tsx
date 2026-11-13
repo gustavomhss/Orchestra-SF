@@ -40,6 +40,7 @@ export const { use: useGlobal, provider: GlobalProvider } = createSimpleContext(
         const key = ServerConnection.key(conn)
         return createServerCtx(conn, server.scope(key), server.projects.forServer(key))
       },
+      server.pinned,
     )
 
     return {
@@ -69,13 +70,19 @@ export const { use: useGlobal, provider: GlobalProvider } = createSimpleContext(
 export function createServerContextCache<T>(
   servers: Accessor<ServerConnection.Any[]>,
   create: (conn: ServerConnection.Any) => T,
+  pinned?: ServerConnection.Http,
 ) {
   const owner = getOwner()
   const contexts = new Map<ServerConnection.Key, { identity: string; dispose: () => void; value: T }>()
   const ensure = (input: ServerConnection.Any) => {
     const key = ServerConnection.key(input)
+    if (pinned && key !== ServerConnection.key(pinned)) {
+      const error = new Error("PinnedServerMismatch")
+      error.name = "PinnedServerMismatch"
+      throw error
+    }
     // Callers may still hold a previous connection object after editing the same server.
-    const conn = servers().find((item) => ServerConnection.key(item) === key) ?? input
+    const conn = pinned ?? servers().find((item) => ServerConnection.key(item) === key) ?? input
     const identity = JSON.stringify([
       conn.type,
       conn.http.url,
@@ -98,7 +105,7 @@ export function createServerContextCache<T>(
     return root.value
   }
   createEffect(() => {
-    const list = servers()
+    const list = pinned ? [pinned] : servers()
     list.forEach(ensure)
     contexts.forEach((context, key) => {
       if (list.some((conn) => ServerConnection.key(conn) === key)) return

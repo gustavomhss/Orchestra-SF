@@ -10,10 +10,11 @@ export const systems = {
 // only its two omni states: "0" (legacy rollback) turns the omni positive control off, and any other value is invalid,
 // which core's flag parser also reads as legacy, so either would run a request on legacy with the control silenced.
 // Legacy rollback runs only in test.yml's named lanes. The production channel is
-// also allowed so browser checks exercise the configuration shipped to users.
+// also allowed so browser checks exercise the configuration shipped to users. Native browser checks opt in with "1".
 const envValues: Record<string, readonly string[]> = {
   ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: ["1", "strict"],
   ORCHESTRA_CHANNEL: ["prod"],
+  VITE_ORCHESTRA_SF_NATIVE: ["1"],
 }
 const configs = {
   "e2e/playwright.production.config.ts": { prefix: "e2e/", repeat: 1 },

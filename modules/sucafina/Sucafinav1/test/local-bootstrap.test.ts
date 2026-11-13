@@ -83,7 +83,7 @@ test("startup refuses insecure or aliased temporary directories and incompatible
   const root = await directory()
   const file = await prepareLocalConfiguration(root)
   const config = await Bun.file(file).json()
-  config.origin = "http://localhost:4111"
+  config.origin = "http://localhost:4112"
   await Bun.write(file, JSON.stringify(config))
   await expect(loadLocalConfiguration(file)).rejects.toThrow()
   const environment = {

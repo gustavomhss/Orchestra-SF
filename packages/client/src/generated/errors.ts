@@ -1,3 +1,5 @@
+import type { JsonValue } from "./types"
+
 export type UnauthorizedError = { readonly _tag: "UnauthorizedError"; readonly message: string }
 
 export const isUnauthorizedError = (value: unknown): value is UnauthorizedError =>
@@ -267,3 +269,22 @@ export type InboxError = { readonly name: "InboxError"; readonly data: { readonl
 
 export const isInboxError = (value: unknown): value is InboxError =>
   typeof value === "object" && value !== null && "name" in value && value["name"] === "InboxError"
+
+export type SucafinaConflictError = {
+  readonly _tag: "SucafinaConflictError"
+  readonly message: string
+  readonly stored?: JsonValue | undefined
+  readonly by?: string | undefined
+}
+
+export const isSucafinaConflictError = (value: unknown): value is SucafinaConflictError =>
+  typeof value === "object" && value !== null && "_tag" in value && value["_tag"] === "SucafinaConflictError"
+
+export type SucafinaValidationError = {
+  readonly _tag: "SucafinaValidationError"
+  readonly message: string
+  readonly errors: ReadonlyArray<string>
+}
+
+export const isSucafinaValidationError = (value: unknown): value is SucafinaValidationError =>
+  typeof value === "object" && value !== null && "_tag" in value && value["_tag"] === "SucafinaValidationError"

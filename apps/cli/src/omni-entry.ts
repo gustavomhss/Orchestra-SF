@@ -1,7 +1,10 @@
 // Compiled CLI only: load hugr-omni before the command graph, so a binary shipped without its addon and supervisor
 // fails at once, unless the invocation cannot spawn (--version, --help, db path; see omni-preflight.ts). Omni.locate() resolves them (HUGR_OMNI_*, next to the binary, then ../omni for the desktop's CLI).
 // OMNI_ENABLED=false (a target without an omni build) and the flag off stay lazy.
+import { NativeStartup } from "./native-startup"
 import { needsOmni } from "./omni-preflight"
+
+await NativeStartup.admit()
 
 declare const OMNI_ENABLED: boolean | undefined
 

@@ -8,6 +8,7 @@ export const primaryNavigation = [
   { id: "home", label: "home.title" },
   { id: "chat", label: "orchestra.nav.chat" },
   { id: "inbox", label: "orchestra.inbox.title" },
+  { id: "sucafina", label: "sucafina.native.access.brand" },
   // The Projects board Maestro keeps (docs/specs/projects-board), read only for now.
   { id: "board", label: "orchestra.nav.board", wip: true },
   { id: "agents", label: "orchestra.nav.agents", wip: true },

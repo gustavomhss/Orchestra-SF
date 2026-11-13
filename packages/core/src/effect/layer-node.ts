@@ -161,6 +161,9 @@ function isNode(input: Layer.Any | AnyNode): input is AnyNode {
 
 // Tree -----------------------------------------------------------------------
 
+// Dependency rewrites clone nodes but retain their original implementation identity for hoist conflict checks.
+const rewriteOrigins = new WeakMap<AnyNode, AnyNode>()
+
 type Visit<Result> = (node: AnyNode, context: VisitContext<Result>) => Result
 
 type VisitContext<Result> = {
@@ -227,10 +230,10 @@ export function hoist<A, E, T extends Tag, const Items extends Replacements = re
       }
       if (node.tag === tag) {
         const existing = hoisted.get(node.name)
-        if (existing && existing !== node) {
+        if (existing && (rewriteOrigins.get(existing) ?? existing) !== (rewriteOrigins.get(node) ?? node)) {
           throw new Error(`Tag ${tag} has conflicting implementations for ${node.name}`)
         }
-        hoisted.set(node.name, rewriteReplacementDependencies(node, replacementMap))
+        if (!existing) hoisted.set(node.name, rewriteReplacementDependencies(node, replacementMap))
         return group([])
       }
       if (node.kind === "unbound") {
@@ -309,6 +312,7 @@ function rewriteReplacementDependencies(root: AnyNode, replacements: ReadonlyMap
       const result = dependencies.every((dependency, index) => dependency === target.dependencies[index])
         ? target
         : { ...target, dependencies }
+      if (result !== target) rewriteOrigins.set(result, rewriteOrigins.get(target) ?? target)
       cache.set(target, result)
       return result
     } finally {

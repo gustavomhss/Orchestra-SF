@@ -1,4 +1,4 @@
-import { cents, chosenRate, hrMonth, hrLineDomains, syntheticHr, usdAmount } from "../src/planner-accounts.ts"
+import { cents, chosenRate, clampFte, hrMonth, hrLineDomains, syntheticHr, usdAmount } from "../src/planner-accounts.ts"
 import type { Position, RateCard, HrAf } from "../src/planner-accounts.ts"
 import { finite, object, rows, text } from "./contract.ts"
 import type { Actor, Environment, Snapshot } from "./contract.ts"
@@ -28,7 +28,13 @@ export async function exportPlanner(
 ): Promise<ArtifactResult> {
   if (!actor.roles.some((role) => ["admin", "hr", "finance", "budget owner", "viewer"].includes(role)))
     return { ok: false, status: 403 }
-  const app = object(snapshot.data.app)
+  // Current lists win, including []. Legacy app lists apply only when that key is absent.
+  const legacy = object(snapshot.data.app)
+  const app: Record<string, unknown> = {
+    ...legacy,
+    entities: snapshot.data.entities !== undefined ? snapshot.data.entities : legacy.entities,
+    allocations: snapshot.data.allocations !== undefined ? snapshot.data.allocations : legacy.allocations,
+  }
   const versions = Array.isArray(snapshot.data.versions)
     ? rows(snapshot.data.versions)
     : Object.entries(object(snapshot.data.versions)).map<Record<string, unknown>>(([id, value]) => ({
@@ -65,12 +71,13 @@ export async function exportPlanner(
       rate?.cur ?? "USD",
       finite(fx.find((entry) => entry.cur === rate?.cur)?.rate, 0),
     ).usd
+    const fte = clampFte(finite(position.fte, 1))
     return {
       source: position,
       calculated: {
         include: position.include === true,
         domain: text(position.domain) || "Unassigned",
-        fte: finite(position.fte),
+        fte,
         start: finite(position.start, 1) || 1,
         end: finite(position.end, 12) || 12,
         type: text(position.type),
@@ -84,7 +91,7 @@ export async function exportPlanner(
           hrMonth(
             position.include === true,
             rate !== null,
-            finite(position.fte),
+            fte,
             rate?.annual ?? 0,
             multiplier,
             index + 1,
@@ -308,7 +315,7 @@ export async function exportPlanner(
       text(source.location),
       text(source.type),
       salary ? (rates.find((rate) => rate.id === String(source.rateId))?.name ?? "") : null,
-      finite(source.fte),
+      position.calculated.fte,
       months[(finite(source.start, 1) || 1) - 1] ?? "",
       months[(finite(source.end, 12) || 12) - 1] ?? "",
       salary ? scalar(source.rateOverride) : null,

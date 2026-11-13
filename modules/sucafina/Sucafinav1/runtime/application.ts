@@ -2,6 +2,7 @@ import { configure, controls, roleMap } from "./admin.ts"
 import { createHash } from "node:crypto"
 import type { ResolvedActor, RoleRow, Surface } from "../src/identity.ts"
 import { dashboardPages, plannerKeys, procurementKeys } from "../src/nav.ts"
+import { WorkbookDate } from "../src/workbook-date.ts"
 import { documentHtml, links, pageMain } from "../src/screen-shell.ts"
 import type { Actor, Command, Domain, Environment, Persistence, Result, Snapshot } from "./contract.ts"
 import { changed, conflict, object, rows, text } from "./contract.ts"
@@ -30,6 +31,7 @@ export type Application = {
   maxJsonBytes: number
   workbookLimits?: Partial<WorkbookLimits>
   assets?: { persistence: AssetPersistence; services: AssetServices }
+  presentation?: "native"
 }
 
 /** Mount this in the installation's existing fetch composition. It starts no listener and selects no database. */
@@ -52,11 +54,30 @@ export function createApplication(mount: string, application: Application) {
       ((origin && origin !== url.origin) || request.headers.get("sec-fetch-site") === "cross-site")
     )
       return reply("Access denied", 403)
+    // Native PageState and Command have no file or blob transports. Direct callers cannot bypass the gateway.
+    if (
+      application.presentation === "native" &&
+      ["download", "upload", "asset", "asset-link"].some((key) => url.searchParams.has(key))
+    )
+      return reply("Not found", 404)
     const uploading = request.method === "POST" && url.searchParams.has("upload")
     const parsed =
       request.method === "POST" && !uploading ? await readCommand(request, application.maxJsonBytes) : undefined
     if (parsed instanceof Response) return parsed
-    const environment = await application.environment(request)
+    if (application.presentation === "native" && parsed?.action === "preview-workbook")
+      return reply("Not found", 404)
+    const resolvedEnvironment = await application.environment(request)
+    const environment =
+      application.presentation === "native"
+        ? {
+            ...resolvedEnvironment,
+            directory: resolvedEnvironment.directory.flatMap((person) =>
+              typeof person?.id === "string" && typeof person?.name === "string"
+                ? [{ id: person.id, name: person.name }]
+                : [],
+            ),
+          }
+        : resolvedEnvironment
     const transaction: TransactionRunner = (work) =>
       application.assets
         ? application.assets.persistence.transaction(surface, work, { signal: request.signal })
@@ -244,20 +265,38 @@ export function createApplication(mount: string, application: Application) {
               Notes: "notes",
             }
             const projects = input.map((row) => {
-              const mapped = Object.fromEntries(
+              const mapped: Record<string, unknown> = Object.fromEntries(
                 Object.entries(columns)
                   .filter(([key]) => row[key] !== undefined)
                   .map(([key, field]) => [field, row[key]]),
               )
-              const leader = rows(snapshot.data.leaders).find(
-                (item) => text(item.name).trim().toLowerCase() === text(row["IT Leader"]).trim().toLowerCase(),
-              )
-              if (leader) mapped.leaderId = leader.id
+              const leaderHeader = Object.hasOwn(row, "IT Leader / Sponsor")
+                ? "IT Leader / Sponsor"
+                : Object.hasOwn(row, "IT Leader")
+                  ? "IT Leader"
+                  : undefined
+              if (leaderHeader) {
+                const leaderName = text(row[leaderHeader]).trim()
+                const leader = leaderName
+                  ? rows(snapshot.data.leaders).find(
+                      (item) => text(item.name).trim().toLowerCase() === leaderName.toLowerCase(),
+                    )
+                  : undefined
+                mapped.leaderId = leader?.id ?? ""
+              }
+              const start = WorkbookDate.parse(mapped.start)
+              const end = WorkbookDate.parse(mapped.end)
               return {
                 ...mapped,
-                _status: text(mapped.name).trim() ? "valid" : "error",
+                ...(start !== undefined && Object.hasOwn(mapped, "start") ? { start } : {}),
+                ...(end !== undefined && Object.hasOwn(mapped, "end") ? { end } : {}),
+                _status: text(mapped.name).trim() && start !== undefined && end !== undefined ? "valid" : "error",
               }
-            })
+            }).filter(
+              (project) =>
+                text(object(project).name).trim() !== "" &&
+                !text(object(project).name).trim().startsWith("—"),
+            )
             return {
               commit: false,
               value: json({ ok: true, sheets: { "Projects Import": projects } }, 200),
@@ -413,6 +452,49 @@ export function createApplication(mount: string, application: Application) {
           : sidebar
       const auditBefore = snapshot.audit.length
       const view = contribution.domain.view(snapshot, actor, environment)
+      const month = monthParam
+        ? Number(monthParam)
+        : surface === "dashboard" && page === "Executive Dashboard" && selected !== now.getFullYear()
+          ? 12
+          : surface === "dashboard" && page === "IT Security KPIs"
+            ? Math.max(0, ...rows(view.data.secKpi)
+                .filter((row) => row.year === selected && typeof row.month === "number" &&
+                  Number.isInteger(row.month) && row.month >= 1 && row.month <= 12)
+                .map((row) => Number(row.month))) || 12
+            : now.getMonth() + 1
+      if (application.presentation === "native") {
+        const name = environment.directory.find((person) => person.id === actor.id && person.name.trim())?.name
+        if (!name)
+          return {
+            commit: false,
+            value: reply("Directory display name is unavailable", 503),
+          }
+        // view may append member-read audit. Commit those exact rows with the JSON page.
+        return {
+          commit: snapshot.audit.length !== auditBefore,
+          value: json(
+            {
+              surface,
+              page,
+              pages: allowed,
+              actor: { ...actor, name },
+              year: selected,
+              month,
+              data: view.data,
+              versions: view.versions,
+              directory: environment.directory,
+              actions: contribution.domain.commands?.(snapshot, actor, environment, {
+                page,
+                year: selected,
+                month,
+                query: Object.fromEntries(url.searchParams),
+                view,
+              }) ?? [],
+            },
+            200,
+          ),
+        }
+      }
       const filters = Object.fromEntries(
         [
           "version",
@@ -443,7 +525,7 @@ export function createApplication(mount: string, application: Application) {
         {
           actor,
           year: selected,
-          month: monthParam ? Number(monthParam) : now.getMonth() + 1,
+          month,
           at: environment.at,
           versions: view.versions,
         },

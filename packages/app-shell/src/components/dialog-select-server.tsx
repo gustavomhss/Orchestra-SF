@@ -49,6 +49,7 @@ function showRequestError(language: Pick<ReturnType<typeof useLanguage>, "t">, e
 function useDefaultServer(
   platform: ReturnType<typeof usePlatform>,
   language: Pick<ReturnType<typeof useLanguage>, "t">,
+  pinned: () => boolean,
 ) {
   const [defaultKey, defaultUrlActions] = createResource(
     async () => {
@@ -64,8 +65,9 @@ function useDefaultServer(
     { initialValue: null },
   )
 
-  const canDefault = createMemo(() => !!platform.getDefaultServer && !!platform.setDefaultServer)
+  const canDefault = createMemo(() => !pinned() && !!platform.getDefaultServer && !!platform.setDefaultServer)
   const setDefault = async (key: ServerConnection.Key | null) => {
+    if (pinned()) return
     try {
       await platform.setDefaultServer?.(key)
       defaultUrlActions.mutate(key)
@@ -77,7 +79,7 @@ function useDefaultServer(
   return { defaultKey: () => defaultKey.latest, canDefault, setDefault }
 }
 
-function useServerPreview(checkServerHealth: ReturnType<typeof useCheckServerHealth>) {
+function useServerPreview(checkServerHealth: ReturnType<typeof useCheckServerHealth>, pinned: () => boolean) {
   const lifetime = { generation: 0 }
   onCleanup(() => lifetime.generation++)
 
@@ -97,6 +99,7 @@ function useServerPreview(checkServerHealth: ReturnType<typeof useCheckServerHea
     setStatus: (value: boolean | undefined) => void,
   ) => {
     const generation = ++lifetime.generation
+    if (pinned()) return
     setStatus(undefined)
     if (!looksComplete(value)) return
     const normalized = normalizeServerUrl(value)
@@ -105,7 +108,7 @@ function useServerPreview(checkServerHealth: ReturnType<typeof useCheckServerHea
     if (username) http.username = username
     if (password) http.password = password
     const result = await checkServerHealth(http)
-    if (generation === lifetime.generation) setStatus(result.healthy)
+    if (!pinned() && generation === lifetime.generation) setStatus(result.healthy)
   }
 
   return { previewStatus }
@@ -209,7 +212,9 @@ export function useServerManagementController(options: { onSelect?: () => void; 
 export function createServerManagementController(
   input: {
     navigate: ReturnType<typeof useNavigate>
-    server: Pick<ReturnType<typeof useServer>, "key" | "current" | "list" | "add" | "remove" | "setActive">
+    server: Pick<ReturnType<typeof useServer>, "key" | "current" | "list" | "add" | "remove" | "setActive"> & {
+      readonly pinned?: ServerConnection.Http
+    }
     tabs: Pick<ReturnType<typeof useTabs>, "removeServer">
     global: Pick<ReturnType<typeof useGlobal>, "servers">
     platform: ReturnType<typeof usePlatform>
@@ -225,8 +230,9 @@ export function createServerManagementController(
   const platform = input.platform
   const language = input.language
   const checkServerHealth = input.checkServerHealth
-  const { defaultKey, canDefault, setDefault } = useDefaultServer(platform, language)
-  const { previewStatus } = useServerPreview(checkServerHealth)
+  const pinned = () => !!server.pinned
+  const { defaultKey, canDefault, setDefault } = useDefaultServer(platform, language, pinned)
+  const { previewStatus } = useServerPreview(checkServerHealth, pinned)
   const lifetime = { generation: 0, disposed: false }
   onCleanup(() => {
     lifetime.disposed = true
@@ -278,8 +284,9 @@ export function createServerManagementController(
 
   const addMutation = useMutation(() => ({
     mutationFn: async (value: string) => {
+      if (pinned()) return
       const generation = lifetime.generation
-      const current = () => !lifetime.disposed && generation === lifetime.generation
+      const current = () => !pinned() && !lifetime.disposed && generation === lifetime.generation
       const normalized = normalizeServerUrl(value)
       if (!normalized) {
         resetAdd()
@@ -319,8 +326,9 @@ export function createServerManagementController(
 
   const editMutation = useMutation(() => ({
     mutationFn: async (input: { original: ServerConnection.Any; value: string }) => {
+      if (pinned()) return
       const generation = lifetime.generation
-      const current = () => !lifetime.disposed && generation === lifetime.generation
+      const current = () => !pinned() && !lifetime.disposed && generation === lifetime.generation
       if (input.original.type !== "http") return
       const normalized = normalizeServerUrl(input.value)
       if (!normalized) {
@@ -371,6 +379,7 @@ export function createServerManagementController(
   }))
 
   const replaceServer = (original: ServerConnection.Http, next: ServerConnection.Http) => {
+    if (pinned()) return
     const originalKey = ServerConnection.key(original)
     const active = server.key
     tabs.removeServer(originalKey)
@@ -407,6 +416,7 @@ export function createServerManagementController(
   })
 
   async function select(conn: ServerConnection.Any, persist?: boolean) {
+    if (pinned()) return
     if (!persist && global.servers.health[ServerConnection.key(conn)]?.healthy === false) return
     options.onSelect?.()
     if (persist && conn.type === "http") {
@@ -415,11 +425,13 @@ export function createServerManagementController(
       return
     }
     navigate("/")
-    queueMicrotask(() => server.setActive(ServerConnection.key(conn)))
+    queueMicrotask(() => {
+      if (!pinned()) server.setActive(ServerConnection.key(conn))
+    })
   }
 
   const handleAddChange = (value: string) => {
-    if (addMutation.isPending) return
+    if (pinned() || addMutation.isPending) return
     setStore("addServer", { url: value, error: "" })
     void previewStatus(value, store.addServer.username, store.addServer.password, (next) =>
       setStore("addServer", { status: next }),
@@ -427,12 +439,12 @@ export function createServerManagementController(
   }
 
   const handleAddNameChange = (value: string) => {
-    if (addMutation.isPending) return
+    if (pinned() || addMutation.isPending) return
     setStore("addServer", { name: value, error: "" })
   }
 
   const handleAddUsernameChange = (value: string) => {
-    if (addMutation.isPending) return
+    if (pinned() || addMutation.isPending) return
     setStore("addServer", { username: value, error: "" })
     void previewStatus(store.addServer.url, value, store.addServer.password, (next) =>
       setStore("addServer", { status: next }),
@@ -440,7 +452,7 @@ export function createServerManagementController(
   }
 
   const handleAddPasswordChange = (value: string) => {
-    if (addMutation.isPending) return
+    if (pinned() || addMutation.isPending) return
     setStore("addServer", { password: value, error: "" })
     void previewStatus(store.addServer.url, store.addServer.username, value, (next) =>
       setStore("addServer", { status: next }),
@@ -448,7 +460,7 @@ export function createServerManagementController(
   }
 
   const handleEditChange = (value: string) => {
-    if (editMutation.isPending) return
+    if (pinned() || editMutation.isPending) return
     setStore("editServer", { value, error: "" })
     void previewStatus(value, store.editServer.username, store.editServer.password, (next) =>
       setStore("editServer", { status: next }),
@@ -456,12 +468,12 @@ export function createServerManagementController(
   }
 
   const handleEditNameChange = (value: string) => {
-    if (editMutation.isPending) return
+    if (pinned() || editMutation.isPending) return
     setStore("editServer", { name: value, error: "" })
   }
 
   const handleEditUsernameChange = (value: string) => {
-    if (editMutation.isPending) return
+    if (pinned() || editMutation.isPending) return
     setStore("editServer", { username: value, error: "" })
     void previewStatus(store.editServer.value, value, store.editServer.password, (next) =>
       setStore("editServer", { status: next }),
@@ -469,7 +481,7 @@ export function createServerManagementController(
   }
 
   const handleEditPasswordChange = (value: string) => {
-    if (editMutation.isPending) return
+    if (pinned() || editMutation.isPending) return
     setStore("editServer", { password: value, error: "" })
     void previewStatus(store.editServer.value, store.editServer.username, value, (next) =>
       setStore("editServer", { status: next }),
@@ -494,6 +506,7 @@ export function createServerManagementController(
   }
 
   const startAdd = () => {
+    if (pinned()) return
     lifetime.generation++
     resetEdit()
     setStore("addServer", {
@@ -508,6 +521,7 @@ export function createServerManagementController(
   }
 
   const startEdit = (conn: ServerConnection.Http) => {
+    if (pinned()) return
     lifetime.generation++
     resetAdd()
     setStore("editServer", {
@@ -522,6 +536,7 @@ export function createServerManagementController(
   }
 
   const submitForm = () => {
+    if (pinned()) return
     if (mode() === "add") {
       if (addMutation.isPending) return
       setStore("addServer", { error: "" })
@@ -556,6 +571,7 @@ export function createServerManagementController(
   })
 
   async function handleRemove(key: ServerConnection.Key) {
+    if (pinned()) return
     try {
       if (key.startsWith("wsl:")) await platform.wslServers?.removeServer(key)
       tabs.removeServer(key)
@@ -569,6 +585,7 @@ export function createServerManagementController(
   }
 
   return {
+    pinned,
     defaultKey,
     canDefault,
     sortedItems,
@@ -637,7 +654,7 @@ export function ServerConnectionList(props: { controller: ReturnType<typeof useS
                 showCredentials
               />
               <div class="flex items-center justify-center gap-4 pl-4">
-                <Show when={i.type === "http"}>
+                <Show when={i.type === "http" && !props.controller.pinned()}>
                   <DropdownMenu>
                     <DropdownMenu.Trigger
                       as={IconButton}
@@ -690,17 +707,19 @@ export function ServerConnectionList(props: { controller: ReturnType<typeof useS
         }}
       </List>
 
-      <div class="shrink-0 pb-5">
-        <Button
-          variant="secondary"
-          icon="plus-small"
-          size="large"
-          onClick={props.controller.startAdd}
-          class="py-1.5 pl-1.5 pr-3 flex items-center gap-1.5"
-        >
-          {language.t("dialog.server.add.button")}
-        </Button>
-      </div>
+      <Show when={!props.controller.pinned()}>
+        <div class="shrink-0 pb-5">
+          <Button
+            variant="secondary"
+            icon="plus-small"
+            size="large"
+            onClick={props.controller.startAdd}
+            class="py-1.5 pl-1.5 pr-3 flex items-center gap-1.5"
+          >
+            {language.t("dialog.server.add.button")}
+          </Button>
+        </div>
+      </Show>
     </div>
   )
 }
