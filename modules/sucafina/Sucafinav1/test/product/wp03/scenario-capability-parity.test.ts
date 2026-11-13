@@ -7,13 +7,14 @@ import { SessionSchema } from "@orchestra/core/session/schema"
 import { Effect } from "effect"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../product/contracts/schema-admission.ts"
-import type { BusinessContextService, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
+import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../product/contracts/business-context.ts"
 import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
 import type { CostCoverageAssessment, CostCoverageBasis, DecisionCase } from "../../../product/contracts/decisions.ts"
 import type { PlannerSourceHost } from "../../../product/contracts/ports.ts"
 import type { ResidentProfile, SkillLoadReceipt, SkillManifest } from "../../../product/contracts/resident-ai.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
+import { createSfBusinessContext } from "../../../product/host-binding/business-context.ts"
 import { dispatchSfCapability } from "../../../product/host-binding/capability-dispatch.ts"
 import { createSfBusinessMcpBridge } from "../../../product/host-binding/sf-mcp-bridge.ts"
 import { createDecisionCasePort, encodeCaseRef } from "../../../product/decisions/case-port.ts"
@@ -46,7 +47,21 @@ test("C16 scenario simulation and comparison share UI/MCP handlers and persist t
       }))
       return checked.every(Boolean)
     }
-    const evidence: BusinessContextService = { resolve: async (ref, context) => ({ state: await verifyRefs([ref], context) ? "fresh" : "stale", ref, accessRevision: context.binding.accessRevision, checkedAt: plannerAt }), context: async () => [], recall: async () => [], emitFromLedger: async () => { throw new Error("No ledger emission in this fixture") } }
+    const evidence = createSfBusinessContext({
+      revalidate: fixture.host.revalidate,
+      resolveSource: async (ref, context): Promise<BusinessEvidenceResolution> => {
+        const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: plannerAt })
+        if (ref.kind !== "record" || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" || !ref.target.period) return unavailable()
+        const current = await fixture.sources.resolveForecastSource(ref.refId, context)
+        if (current.status !== "ok" || digestSfValue(current.value.evidence) !== digestSfValue(ref)) return unavailable()
+        const projection = await fixture.planner.compareForecast({ baseRef: ref.refId, candidateRef: ref.refId, period: ref.target.period, currency: "USD" }, context)
+        if (projection.status !== "ok") return unavailable()
+        return { state: "fresh", ref, currentRef: current.value.evidence, authorizedProjection: projection.value.baseline, accessRevision: context.binding.accessRevision, checkedAt: plannerAt }
+      },
+      proveContinuity: async () => false,
+      recall: async () => [],
+      emitFromLedger: async () => { throw new Error("No ledger emission in this fixture") },
+    })
     const caseCoverage = createDecisionCoverageAccess({ state, host: fixture.host, authorizeCase, verifyEvidence: async (basis, assessment, context) => verifyRefs([...basis.sourceRefs, ...assessment.evaluatedSourceRefs], context) })
     const basis: CostCoverageBasis = { id: "basis", version: 1, decisionType: "renewal-transition-v1", categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs: refs }
     const baselineCoverage = refs.map((ref, index): CostCoverageAssessment => ({ basisId: basis.id, basisVersion: 1, alternativeId: `alternative-${index}`, alternativeVersion: 1, currency: "USD", horizon: plannerPeriod, evaluatedSourceRefs: [ref], coverageState: "pending", entries: RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => ({ status: "pending", categoryId, reason: "This fixture has no human cost classification" })), derivedMissingCategoryIds: [...RENEWAL_TRANSITION_CATEGORIES], issues: ["human-cost-classification-required"] }))
@@ -69,6 +84,10 @@ test("C16 scenario simulation and comparison share UI/MCP handlers and persist t
     expect(seeded.status).toBe("ok")
     const store = createSfDecisionResultStore({ state, host: fixture.host, authorizeCase, verifySources: async (_value, sourceRefs, context) => verifyRefs(sourceRefs, context), createId: randomUUID, now: () => plannerAt })
     const cases = createDecisionCasePort({ state, host: fixture.host, creationTarget: { ref: "case", incarnation: "case-inc" }, operationIdentity: () => undefined, authorizeCase, evidence, createId: randomUUID, now: () => plannerAt })
+    const caseEvidence = await evidence.context({ refs }, read)
+    expect(caseEvidence).toHaveLength(refs.length)
+    expect(caseEvidence.every((resolved) => resolved.state === "fresh" && resolved.authorizedProjection)).toBe(true)
+    expect(await cases.read({ caseRef: encodeCaseRef(decision) }, read)).toMatchObject({ status: "ok", value: { evidenceRefs: refs } })
     const scenarios = createStoredPlannerScenarioHost({ store, cases, planner: base, coverageRefFor: (caseRef, alternative) => decisionCoverageRef(caseRef, alternative.id, alternative.version) })
     const planner = createPlannerPort({ host: fixture.host, sources, scenarios })
     const persist = createPlannerResultPersistence({ store, scenarios, resolveCase: async (context) => {

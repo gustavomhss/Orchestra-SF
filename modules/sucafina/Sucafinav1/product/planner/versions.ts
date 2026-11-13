@@ -45,6 +45,7 @@ export function plannerVersionCommand(request: PlannerVersionRequest): Command {
 export function validPlannerVersionRequest(value: unknown): value is PlannerVersionRequest {
   const request = object(value)
   if (Object.getPrototypeOf(request) !== Object.prototype && Object.getPrototypeOf(request) !== null) return false
+  if (typeof request.action !== "string") return false
   if (!Number.isSafeInteger(request.revision) || Number(request.revision) < 0) return false
   const keys = Reflect.ownKeys(request)
   if (request.action === "create") return keys.length === 2 && keys.every((key) => key === "action" || key === "revision")

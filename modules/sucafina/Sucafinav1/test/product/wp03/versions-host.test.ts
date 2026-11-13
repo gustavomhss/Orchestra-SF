@@ -59,6 +59,7 @@ test("Versions grants follow current role, exact human intent, private lease and
     const context = await fixture.admit("sf-human:planner.apply", request, "admin", true)
     expect(await fixture.versions.apply({ ...request, name: "Unbound intent" }, context)).toMatchObject({ status: "denied" })
     expect(await fixture.versions.apply({ ...request, actor: "admin" } as unknown as PlannerVersionRequest, context)).toMatchObject({ status: "needs-input" })
+    expect(await fixture.versions.apply({ ...request, action: { toString: "lock" } } as unknown as PlannerVersionRequest, context)).toMatchObject({ status: "needs-input" })
     expect(await fixture.versions.apply({ ...request, revision: NaN }, context)).toMatchObject({ status: "needs-input" })
     expect(await fixture.versions.read("v1", structuredClone(context))).toMatchObject({ status: "denied" })
     fixture.access.revision = "2"
@@ -85,5 +86,24 @@ test("the first version uses the injected environment and creation is one-time",
     expect(await invoke()).toMatchObject({ status: "ok", value: { outcome: { ok: true }, versions: { create: { allowed: false }, versions: [expect.objectContaining({ year: 2027, state: "draft" })] } } })
     expect(await invoke()).toMatchObject({ status: "ok", value: { outcome: { ok: false } } })
     expect(rows((await fixture.readSnapshot()).data.versions)).toHaveLength(1)
+  } finally { await fixture.close() }
+})
+
+test("an editable version can change fiscal year without moving the year's official or redistributing its months", async () => {
+  const fixture = await plannerFixture()
+  try {
+    const before = await fixture.readSnapshot()
+    const source = rows(before.data.versions).find((version) => version.id === "v1")!
+    const request = { action: "save" as const, id: "v1", revision: 0, name: "Next fiscal year", year: 2028 }
+    const context = await fixture.admit("sf-human:planner.apply", request, "admin", true)
+    expect(await fixture.versions.apply(request, context)).toMatchObject({ status: "ok", value: { outcome: { ok: true }, versions: { selectedId: "v1", versions: expect.arrayContaining([expect.objectContaining({ id: "v1", name: "Next fiscal year", year: 2028, revision: 1, state: "draft" })]) } } })
+    const after = await fixture.readSnapshot()
+    const moved = rows(after.data.versions).find((version) => version.id === "v1")!
+    expect(moved.lines).toEqual(source.lines)
+    expect(after.data.officials).toEqual(before.data.officials)
+    expect(rows(after.data.versions).find((version) => version.id === "v0")?.year).toBe(2027)
+    const invalid = { ...request, revision: 1, year: 2000 }
+    expect(await fixture.versions.apply(invalid, await fixture.admit("sf-human:planner.apply", invalid, "admin", true))).toMatchObject({ status: "ok", value: { request: invalid, outcome: { ok: false, status: 422 } } })
+    expect(await fixture.readSnapshot()).toEqual(after)
   } finally { await fixture.close() }
 })

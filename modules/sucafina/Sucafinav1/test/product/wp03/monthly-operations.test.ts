@@ -55,8 +55,8 @@ test("monthly entity operations use closed actions and per-record CAS", async ()
   } finally { await fixture.dispose() }
 })
 
-test("monthly viewer response retains permitted HR aggregates and excludes private rates and individual costs", async () => {
-  const fixture = await monthlyFixture("viewer")
+for (const role of ["viewer", "owner"] as const) test(`monthly ${role} response retains permitted HR aggregates and excludes private rates, individual costs and migrated Talent fields`, async () => {
+  const fixture = await monthlyFixture(role)
   try {
     const request = { page: "OPEX" as const, versionId: "v1", drafts: [{ rowId: "line", revision: 0, cells: [{ measure: "forecast" as const, month: 1, text: "42" }] }] }
     const preview = await fixture.monthly.preview(request, await fixture.admit("planner.preview", request))
@@ -68,6 +68,11 @@ test("monthly viewer response retains permitted HR aggregates and excludes priva
     expect(JSON.stringify(preview.value.view)).not.toContain("salary-secret")
     expect(JSON.stringify(preview.value.view)).not.toContain('"rateId"')
     expect(JSON.stringify(preview.value.view)).not.toContain('"rateOverride"')
+    for (const marker of ["private-talent-review", "private-personnel-outlook", "private-migrated-position", "private-nested-talent"]) expect(JSON.stringify(preview.value)).not.toContain(marker)
+    for (const position of [...rows(object(version.hc).positions), ...rows(object(version.summary).positions)]) {
+      expect(position).toMatchObject({ id: "person", name: "Person", domain: "IT", include: true, fte: 1 })
+      for (const field of ["talentReview", "outlook", "privateMigration", "annual", "months", "total", "budget"]) expect(position).not.toHaveProperty(field)
+    }
     expect(rows(object(version.hc).rates)).toEqual([])
     expect(preview.value.view.data.roster).toEqual([])
   } finally { await fixture.dispose() }
@@ -124,12 +129,12 @@ test("parallel independent rows survive and one stale row does not discard valid
   } finally { await fixture.dispose() }
 })
 
-async function monthlyFixture(role: "admin" | "viewer" | "finance" = "admin") {
+async function monthlyFixture(role: "admin" | "viewer" | "owner" | "finance" = "admin") {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-planner-operations-"))
   const persistence = await openLocalStore(directory)
   await persistence.transaction("planner", async (snapshot) => {
     snapshot.data.roleMap = [{ surface: "planner", role, entra: "planner-group", version: 1, by: "admin" }]
-    snapshot.data.versions = [{ id: "v1", year: 2027, closed: 0, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD", annual: 1300, b: [200, ...Array(11).fill(100)], bm: [true, ...Array(11).fill(false)], f: [] }], fx: [], hc: { positions: [{ id: "person", name: "Person", type: "Employee", location: "Brazil", domain: "IT", include: true, fte: 1, start: 1, end: 12, rateId: "private-rate", rateOverride: 987654 }], rates: [{ id: "private-rate", name: "salary-secret", locs: "Brazil", annual: 120000, cur: "USD" }], hrAF: {} }, projects: [], lists: {} }]
+    snapshot.data.versions = [{ id: "v1", year: 2027, closed: 0, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD", annual: 1300, b: [200, ...Array(11).fill(100)], bm: [true, ...Array(11).fill(false)], f: [] }], fx: [], hc: { positions: [{ id: "person", name: "Person", type: "Employee", location: "Brazil", domain: "IT", include: true, fte: 1, start: 1, end: 12, rateId: "private-rate", rateOverride: 987654, talentReview: "private-talent-review", outlook: "private-personnel-outlook", privateMigration: "private-migrated-position" }], rates: [{ id: "private-rate", name: "salary-secret", locs: "Brazil", annual: 120000, cur: "USD" }], hrAF: {}, migrated: { talentReview: "private-nested-talent" } }, projects: [], lists: {} }]
     return { commit: true, value: undefined }
   })
   const ui = createSfUiAuthority({ authorize: async () => ({ installationId: "i", projectId: "p", principalRef: "planner-user", policyVersion: "1", accessRevision: "1" }), commandIdentity: async () => "monthly-op", createId: randomUUID, now: () => Date.parse("2026-11-13T00:00:00Z"), privateCommands: ["sf-human:planner.preview", "sf-human:planner.apply"] })

@@ -168,6 +168,7 @@ function flags(value: unknown): boolean[] {
 function privateAccess(actor: Actor) {
   return actor.roles.some((role) => ["admin", "hr", "finance"].includes(role))
 }
+const publicPositionFields = new Set(["id", "name", "title", "type", "location", "include", "fte", "start", "end", "domain", "left", "src", "hasRate", "state", "states", "revision"])
 // Redact recursively: migrated data can contain salary fields outside their original container.
 function redact(value: unknown, position = false, fx = false): unknown {
   if (Array.isArray(value)) return value.map((item) => redact(item, position, fx))
@@ -176,7 +177,8 @@ function redact(value: unknown, position = false, fx = false): unknown {
     Object.entries(object(value))
       .filter(
         ([key]) =>
-          !/(salary|cost|override)|^(rates|rateId|inc|incMonth)$/i.test(key) &&
+          (!position || publicPositionFields.has(key)) &&
+          !/(salary|cost|override|talent)|^(rates|rateId|inc|incMonth)$/i.test(key) &&
           (key !== "rate" || fx) &&
           !(position && /^(annual|months|total|budget|annualCost)$/i.test(key)),
       )
