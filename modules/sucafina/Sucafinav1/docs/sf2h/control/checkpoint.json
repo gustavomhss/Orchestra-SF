@@ -259,26 +259,26 @@
       "scope": "contract delta; not finalreview"
     }
   },
-  "revision": 20,
+  "revision": 21,
   "state": "CONTINUING_LATE",
-  "checkpoint_at": "2026-11-13T13:10:57.784319+00:00",
+  "checkpoint_at": "2026-11-13T13:36:00.654927+00:00",
   "previous_checkpoint": {
-    "path": "checkpoints/rev19.json",
-    "sha256": "0429b97e11799efeb8ce539dc86592775b48d0682c788e5ec7469e9d89a89f65",
-    "remote_control": "c5a9b8a316af89e3a96a7579c8156d2847dfe7ec"
+    "path": "checkpoints/rev20.json",
+    "sha256": "51f0f88161f623ef75d2db173be0fa89a49d0d9241fc539bc78e6c4b0056fe61",
+    "remote_control": "a7ae10036ec592f6ed76180b47e9ef433082f492"
   },
   "current_local_product": {
-    "head": "b7ea2cefa051c15d3d0565cd0fc456b81eb2005b",
-    "tree": "34811ac192874b32ab0c6897cefc77a1b860c93c",
+    "head": "83cd002e1b44b520f20ce990884ced442f556036",
+    "tree": "f321969eded803d7c272886dc4591ff3bc62a02a",
     "branch": "sf2-compose",
     "state": "DEVELOPMENT_NOT_FINAL_C"
   },
   "remote_product": {
-    "head": "308de1eac39bcc38ed664a037bb749a23887142b",
-    "tree": "e5de6a96e64eb712e477d47935d0cf10e051dfe5",
+    "head": "370c084870c90c4fccba2991dd8700d1b89897bd",
+    "tree": "438aacccae5f4e33a49a3d6ef83730c16a7c0227",
     "branch": "sf2-integrate",
-    "verified": "GitHub MCP git/ref + git/commit",
-    "local_equivalent": "03a35cc19c883da409c1e1e55260a7a90c535d5d"
+    "local_equivalent": "aa88b9347737b54dfded301cc30ec2e219ed63b3",
+    "verified": "GitHub MCP ref+commit; canonical Git objects imported/hash checked"
   },
   "active_session_authority": [
     {
@@ -402,10 +402,10 @@
     "dispatcher": "S0",
     "inflight": [],
     "latest": {
-      "id": "sf2h-development-8",
-      "candidate": "308de1eac39bcc38ed664a037bb749a23887142b",
-      "local_original": "03a35cc19c883da409c1e1e55260a7a90c535d5d",
-      "base_tree": "e5de6a96e64eb712e477d47935d0cf10e051dfe5",
+      "id": "sf2h-development-9",
+      "candidate": "370c084870c90c4fccba2991dd8700d1b89897bd",
+      "local_original": "aa88b9347737b54dfded301cc30ec2e219ed63b3",
+      "base_tree": "438aacccae5f4e33a49a3d6ef83730c16a7c0227",
       "request": {
         "package": "sucafina",
         "directory": "modules/sucafina",
@@ -473,31 +473,51 @@
           "./Sucafinav1/test/product/wp10/integration/procurement-sources.test.ts",
           "./Sucafinav1/test/product/wp10/integration/store-read-scope.test.ts",
           "./Sucafinav1/test/product/wp12/run-store.test.ts",
+          "./Sucafinav1/test/product/wp00/envelope.test.ts",
+          "./Sucafinav1/test/product/wp02/record-evidence.test.ts",
+          "./Sucafinav1/test/product/wp05/dashboard-integration.test.ts",
+          "./Sucafinav1/test/product/wp06/documents/docx.test.ts",
+          "./Sucafinav1/test/product/wp06/documents/resolver.test.ts",
+          "./Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts",
+          "./Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+          "./Sucafinav1/test/product/wp11/result-store.test.ts",
+          "./Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+          "./Sucafinav1/test/product/wp14/materiality.test.ts",
+          "./Sucafinav1/test/product/wp14/recall.test.ts",
+          "./Sucafinav1/test/product/wp14/source-access.test.ts",
           "--timeout",
           "120000"
         ],
         "env": {}
       },
-      "request_blob": "12bc018016853aad2469840ecf9597e33c3cad73",
-      "request_digest": "b9f17d01917b8d9b56bbbdebf3706e2fbef06fc2c3a2e0fa235cc9f39f010fcc",
-      "snapshot_tree": "f4b353dec7fd4aedc766ba64164caae2dd83622e",
-      "branch": "ci-run-linux-sf2h-dev8",
-      "status": "FAILED",
+      "request_blob": "49e40a0176468b62b186c681ec96337ce910e5d0",
+      "request_digest": "5b0d5f6fdcab7907b9521b812ec8b3f9261019538e2d0e7fee01ac6788e21d16",
+      "snapshot_tree": "f2105baa6954f3f3b714076a210599affa4d2ed6",
+      "branch": "ci-run-linux-sf2h-dev9",
+      "status": "TESTS_PASSED_RECEIPT_REVIEW",
       "final_selection": false,
-      "files": 62,
+      "files": 74,
+      "not_selected": {
+        "wp14/source-access-atlas.test.ts": "real scanner prereq not yet qualified in hosted environment; AM05 NOT_RUN"
+      },
       "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
-      "event_id": "dispatch-development-8",
+      "event_id": "dispatch-development-9",
       "dispatcher": "S0",
-      "snapshot": "5e43681dfe0bc828f5a996e00dbf900cc1d0e77b",
-      "run_id": 43429304143,
-      "head_sha": "5e43681dfe0bc828f5a996e00dbf900cc1d0e77b",
-      "job_id": 131898475166,
-      "passed": 325,
-      "failed": 2,
-      "errors": 1,
-      "expects": 2135,
+      "snapshot": "ef5c81e70abc80e4201e8f1273eb1e7af5e5df47",
+      "run_id": 43433156466,
+      "head_sha": "ef5c81e70abc80e4201e8f1273eb1e7af5e5df47",
+      "job_id": 131911453891,
+      "tests": {
+        "pass": 357,
+        "fail": 0,
+        "files": 74,
+        "expects": 2340
+      },
+      "log": "validation/development-9-job.log",
+      "log_sha256": "111f849a383f2cbbb18f50bbf65526109cc1b8f90608544d1d5ed6bd9dbc00f0",
       "omni": "pass;16spawns; focused no declaring test ran",
-      "log": "validation/development-8-job.log"
+      "artifacts": [],
+      "receipt_status": "TESTS_PASSED_RECEIPT_REVIEW"
     },
     "final_selections": "ALL_NOT_RUN"
   },
@@ -511,30 +531,26 @@
     "CLI03": "exit0 started9722 product changed during check; DEVELOPMENT_ONLY",
     "SF14": "FAILED owner fixes integrated",
     "SF15": "FAILED2 Atlas preview reason+Planner present callback, fixes integrated",
-    "SF16": {
-      "handle": 94763,
-      "head": "b7ea2cefa051c15d3d0565cd0fc456b81eb2005b",
-      "state": "RUNNING",
-      "log": "validation/root-typecheck-16.log"
-    },
-    "policy": "one heavy compiler; package cwd only"
+    "SF16": "PASS exactb7ea2cefa051c15d3d0565cd0fc456b81eb2005b",
+    "policy": "one heavy compiler; package cwd only",
+    "SF17": "PASS exacte70a2c48e85b1c4799e146eae902613ef5ac1b28",
+    "SF18": "PASS exact38795812dba9e511b87127ae0594125f6fefb1b1",
+    "CLI04": "FAIL only2 invalid await in Effect generator test; bd440 fix integratedaa88; rerun pending"
   },
   "required_findings": [
-    "R1-M01: memory source revalidation nested fix integrated; hosted proof pending",
-    "R1-M02: complete typed memory fixtures integrated; hosted proof pending",
-    "R1-BI08: ambiguous milestones missing disclosure fixed static recheck; hosted proof pending",
-    "R2 store owner P1: 11 hosted store tests PASS at308de1; not finalC approval",
-    "R2-01 source lookup race: test now uses external ALS writer; CI recheck pending",
-    "BI08 current vs historical: milestoneDates producer integrated; browser proof pending",
-    "Actual native host/token-gate/provider/39 operations composition not completed",
-    "Atlas protected historical authorization not completed; current unsupported kinds fail closed",
-    "C12 non-Dashboard atomic cross-surface Apply still missing"
+    "C/G7 D/G8 and all8 final selections, mandatory gates/reviews/AMs remain NOT_RUN",
+    "Actual native host/C08/provider composition incomplete, not real AM yet",
+    "Native authority mutable-identity conditional finding fixed118\u21928b86; root currentidentity alreadyfrozen; hosted test pending",
+    "NativeHost observer72c7+token-gate orphan cleanup46749 NOT_CONSUMED",
+    "Atlas historical authorization and unsupported reference kinds incomplete; no silentupgrade",
+    "C12 cross-surface atomic Apply and Planner import+receipt require actualhost support",
+    "Remaining WP07/08/09/13/06imports tranches not fully consumed; see pendinghandoffs"
   ],
   "next_executable_actions": [
-    "SF16 result, owner fixes if required",
-    "Complete actual product authority and native composition in host-context/localentry; use private C08 and actual ProjectV2 id",
-    "Publish candidate9 exacttree via MCP CAS and central CI scoped with new memory/Atlas/docs/resultstore/browser tests",
-    "Integrate remaining reports/collaboration/routines/portfolio/import consumers with typecheck and hosted proof"
+    "Consume native observer72c7/gate46749 and mount realHost contributions in host-context using product-authority+C08+actualSessionStore/Location/Catalog/bundle; callbacks must be real",
+    "Integrate remaining bounded output tranches; root solewriter/dispatcher; package typechecks one heavy at a time",
+    "Qualify real scanner for hosted Atlas proof; no SF envallowlist weakening/no mock",
+    "Run next scoped CI at newly published exacttree; preserve current357pass74file evidence but no finalcriterion shortcuts"
   ],
   "resource_governor": {
     "native_threads_admitted": 20,
@@ -542,7 +558,8 @@
     "not_N4_five_pools": true,
     "compiler_concurrency": 1,
     "dispatcher_concurrency": 1,
-    "new_supervisor": false
+    "new_supervisor": false,
+    "disk_last_observed": "3.1GiB free; preserve necessary cache/evidence; no global services or runtime restarts"
   },
   "support_leases_20": {
     "S0-B": [
@@ -564,5 +581,16 @@
       "product/reports/storage.ts; same source lane"
     ]
   },
-  "scope_lock": "15WPs/74tasks/17contracts/1610criteria unchanged; no criterion PASS inferred from these development receipts"
+  "scope_lock": "15WPs/74tasks/17contracts/1610criteria intact; full GLOBAL_RELEASE still unproven",
+  "pending_handoffs": {
+    "S0-B": "72c7f8a4cf observer +46749d2b1e gate cleanup",
+    "S0-A": "c6bf263796 router; depends S4latest; sourcehistoryNOTDONE",
+    "S4": "b6e35b46dc current record reader; 9129b6664e scanner realprobe; 4a15 doc reader and272207procurement tests",
+    "S2": "773a72b88b3 worker parser; bfdadc9687 versionedconfirmation; hardtimeout/workerpackaging NEEDS_GATES",
+    "S3-A": "457ccc904d reports integrated83cd; TC/CI pending",
+    "S3-B": "081e9d7f30 C08+catalog2dee/cd2a; integration pending",
+    "S3-C": "306eccee65 Relay catalog; governeddispatch public seam unresolved",
+    "S4-C": "cd2e5a665c canonical persistentportfolio; integrationpending",
+    "S2-C": "17cd1f7386 Plannerimportmutation; atomichostrequired"
+  }
 }
