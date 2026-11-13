@@ -58,6 +58,13 @@ test("C06 observes exact dashboard data, distinguishes dependency changes, and f
     expect(independent.incarnation).not.toBe(initial.incarnation)
     expect(independent.physicalIncarnation).toBe(initial.physicalIncarnation)
     expect(independent.physicalIncarnation).toBe(physical!.incarnation)
+    const reissueProof = await observer.prepareReissueScope(page.value.evidence, independent.evidence, reviewer)
+    expect(reissueProof.status).toBe("ok")
+    if (reissueProof.status === "ok") {
+      expect(await reissueProof.value.fence()).toBe(false)
+      expect(await persistence.transactionAll!(async () => ({ commit: false, value: await reissueProof.value.fence() }))).toBe(true)
+    }
+    expect((await observer.prepareReissueScope(page.value.evidence, { ...independent.evidence, refDigest: "forged" }, reviewer)).status).toBe("unavailable")
     expect(JSON.stringify(independent.evidence)).not.toContain(physical!.incarnation)
     expect(JSON.stringify(independent.projection)).not.toContain(physical!.incarnation)
     expect(await persistence.transactionAll!(async () => ({ commit: false, value: await observer.fence(scope, independent, reviewer) }))).toBe(true)
@@ -95,6 +102,11 @@ test("C06 observes exact dashboard data, distinguishes dependency changes, and f
     expect(classifyDashboardConfirmationChange(changedDependency, initial)).toBe("dependency-change")
     expect(await persistence.transactionAll!(async () => ({ commit: false, value: await observer.fence(scope, initial, binding) }))).toBe(false)
     await persistence.transaction("dashboard", async (snapshot) => { (snapshot.data.opexEntries as { actual: number }[])[0]!.actual = 1; return { commit: true, value: undefined } })
+    if (reissueProof.status === "ok") {
+      session.request = new Request("https://example.test", { headers: { authorization: "reviewer" } })
+      expect(await persistence.transactionAll!(async () => ({ commit: false, value: await reissueProof.value.fence() }))).toBe(false)
+      session.request = new Request("https://example.test", { headers: { authorization: "admin" } })
+    }
     const changedSource = await observer.observe(scope, binding)
     expect(changedSource.state).toBe("available")
     if (changedSource.state === "available") {

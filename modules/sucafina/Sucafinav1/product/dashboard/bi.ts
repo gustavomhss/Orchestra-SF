@@ -13,7 +13,10 @@ export function dashboardBiPresentation(viewId: "BI01" | "BI07" | "BI08", projec
       return match ? [`${match[1]}|${match[2]}|${match[3]}`] : []
     }))]
     const series = groups.map((group) => {
-      const [category, type, measure] = group.split("|")
+      const match = /^(.*)\|(Incidents|Service Requests)\|(Open|Closed)$/.exec(group)!
+      const category = match[1]
+      const type = match[2]
+      const measure = match[3]
       return { id: group, label: `${category} — ${type} — ${measure === "Open" ? "Opened" : "Closed"}`, unit: "tickets", role: measure === "Open" ? "opened" as const : "closed" as const, valueIds: projection.values.filter((value) => value.id.startsWith("tickets:") && value.id.endsWith(`:${group}`)).sort((a, b) => a.period.start.localeCompare(b.period.start)).map((value) => value.id) }
     })
     return { viewId, series, limitations: ["Monthly register counts, grouped by category and request type; they are not an event log or a backlog.", "Missing cells remain unknown."] }

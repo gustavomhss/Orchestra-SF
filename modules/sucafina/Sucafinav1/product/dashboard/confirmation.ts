@@ -141,7 +141,16 @@ export function createDashboardConfirmationObserver(input: {
     }
     return true
   }
-  return { issueForActor, manifestFor, verifyManifest, fenceManifest, observe, fence }
+  const prepareReissueScope = async (original: RecordEvidence, current: RecordEvidence, context: TrustedDomainContext): Promise<PortResult<{ fence: () => Promise<boolean> }>> => {
+    if (!original || !current || original.kind !== "record" || current.kind !== "record" || original.refDigest !== digestSfEvidenceRef(original) || current.refDigest !== digestSfEvidenceRef(current) || original.installationId !== context.binding.installationId || original.projectId !== context.binding.projectId || current.installationId !== context.binding.installationId || current.projectId !== context.binding.projectId || original.target.surface !== "dashboard" || current.target.surface !== "dashboard" || original.target.recordType !== current.target.recordType || original.target.recordId !== current.target.recordId || !isSfPeriod(original.target.period) || digestSfValue(original.target.period) !== digestSfValue(current.target.period) || digestSfValue([...original.target.fields].sort()) !== digestSfValue([...current.target.fields].sort())) return { status: "unavailable", reason: "material-scope-unavailable" }
+    const scope: ConfirmationScope = { sourceRef: { surface: "dashboard", type: original.target.recordType, id: original.target.recordId, incarnation: original.target.incarnation }, fields: [...original.target.fields], period: { ...original.target.period }, materialDependencies: [], scopeDefinitionVersion: "dashboard-c06-v1" }
+    const manifest = manifestFor(scope)
+    if (!manifest || manifest.requiredExternal.length) return { status: "unavailable", reason: "material-scope-unavailable" }
+    const observation = await observe(scope, context)
+    if (observation.state !== "available" || observation.evidence.refDigest !== current.refDigest || digestSfValue(observation.evidence.target) !== digestSfValue(current.target)) return { status: "unavailable", reason: "material-scope-unavailable" }
+    return { status: "ok", value: { fence: () => fence(scope, observation, context) } }
+  }
+  return { issueForActor, manifestFor, verifyManifest, fenceManifest, observe, fence, prepareReissueScope }
 }
 
 /** Baselines come from a protected displayed-observation receipt, never from a model. */

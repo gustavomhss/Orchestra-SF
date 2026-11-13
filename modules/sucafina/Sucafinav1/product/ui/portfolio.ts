@@ -73,11 +73,19 @@ document.querySelectorAll('[data-portfolio]').forEach((section) => {
       const criteria = document.createElement('p'); criteria.textContent = selected.selection.criteria.length ? 'Selected criteria: ' + selected.selection.criteria.map((id) => anchorCatalog.criteria.find((criterion) => criterion.id === id).description).join(', ') : 'No criteria selected.'; output.append(criteria)
       value.portfolio.combinations.forEach((combination, index) => {
         const entry = document.createElement('article'); const heading = document.createElement('h3'); heading.textContent = 'Combination ' + (index + 1) + ' · ' + combination.eligibility + ' · ' + combination.comparisonStatus; entry.append(heading)
+        const bindings = Array.isArray(value.selections) ? value.selections.filter((item) => item.combinationId === combination.id) : []
+        if (bindings.length === 1 && Array.isArray(bindings[0].selectedCandidateRefs) && bindings[0].selectedCandidateRefs.length && new Set(bindings[0].selectedCandidateRefs).size === bindings[0].selectedCandidateRefs.length && bindings[0].selectedCandidateRefs.every((ref) => candidateRefs.includes(ref))) {
+          const labels = bindings[0].selectedCandidateRefs.map((ref) => catalog.cases.flatMap((item) => item.alternatives.filter((alternative) => alternative.candidateRef === ref).map((alternative) => item.objective + ' · ' + alternative.title)))
+          if (labels.every((matches) => matches.length === 1)) { const line = document.createElement('p'); line.textContent = 'Alternatives: ' + labels.map((matches) => matches[0]).join(' + '); entry.append(line) }
+        }
         if (combination.analysis) {
           const scenario = combination.analysis.scenario; const comparison = combination.analysis.comparison; const line = document.createElement('p')
           line.textContent = (scenario.comparisonStatus === 'complete' ? 'Total: ' + scenario.total : 'Known subtotal: ' + (scenario.knownSubtotal ?? 'unavailable')) + ' ' + scenario.currency + ' · ' + scenario.horizon.start + ' – ' + scenario.horizon.end + ' · ' + (comparison.comparisonStatus === 'complete' ? 'Difference: ' + comparison.completeDifference : 'Known difference: ' + (comparison.knownDifference ?? 'unavailable')); entry.append(line)
-          scenario.costCoverage.entries.filter((item) => item.status === 'pending').forEach((item) => { const condition = document.createElement('p'); condition.textContent = item.categoryId + ': ' + item.reason; entry.append(condition) })
+          const coverage = document.createElement('p'); coverage.textContent = 'Coverage: ' + scenario.costCoverage.coverageState; entry.append(coverage)
+          scenario.costCoverage.entries.forEach((item) => { const condition = document.createElement('p'); condition.textContent = item.categoryId + ': ' + (item.status === 'pending' ? 'pending · ' + item.reason : item.status === 'not-applicable' ? 'not applicable · ' + item.justification : 'included · ' + item.scopeNote); entry.append(condition) })
+          scenario.costCoverage.derivedMissingCategoryIds.forEach((id) => { const condition = document.createElement('p'); condition.textContent = 'Missing category: ' + id; entry.append(condition) })
         }
+        if (!combination.analysis) { const line = document.createElement('p'); line.textContent = 'Analysis unavailable for this combination.'; entry.append(line) }
         ;[...combination.conflicts, ...combination.restrictions].forEach((condition) => { const line = document.createElement('p'); line.textContent = condition; entry.append(line) }); output.append(entry)
       })
       value.portfolio.limitations.forEach((limitation) => { const line = document.createElement('p'); line.textContent = limitation; output.append(line) })

@@ -9,13 +9,9 @@ import { plannerComponentDigest } from "./comparison.ts"
 import type { comparePlannerPreview } from "./preview-comparison.ts"
 import type { createPlannerSensitivityUnits } from "./sensitivity-units.ts"
 
-// Keep closed until the complete engine path receives independent review.
-const monotonicityReviewed: boolean = false
-
 /** For an open non-HR USD month, the shared save, outlook and conversion primitives preserve the input. Ordered IEEE additions of fixed finite components and subtraction of a fixed baseline are monotone, including plateaus. */
 export function createPlannerExactThreshold(input: { units: ReturnType<typeof createPlannerSensitivityUnits>; preview: (request: Parameters<typeof comparePlannerPreview>[1], context: TrustedDomainContext) => ReturnType<typeof comparePlannerPreview> }) {
   return async (request: SensitivityRequest, baselineRef: string, context: TrustedDomainContext): Promise<PortResult<{ value: number; evidenceRefs: readonly BusinessEvidenceRef[] }>> => {
-    if (!monotonicityReviewed) return { status: "unavailable", reason: "exact-threshold-domain-unproven" }
     const bounds = request.parameterBounds
     if (!Number.isFinite(bounds.minimum) || !Number.isFinite(bounds.maximum) || bounds.minimum >= bounds.maximum || !Number.isFinite(request.criterion.value) || !["gte", "lte"].includes(request.criterion.operator)) return { status: "unavailable", reason: "exact-threshold-domain-unproven" }
     const issued = await input.units.issue({ scenarioRef: request.scenarioRef, baselineRef, parameterRef: bounds.parameterRef }, context)

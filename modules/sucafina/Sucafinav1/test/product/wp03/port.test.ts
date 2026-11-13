@@ -93,9 +93,28 @@ test("forecast port compares the real engine, and detects source changes", async
       const units = { issue: async () => ({ status: "ok", value: { scenario, metadataDigest: "stable", units: { sourceRefs: [refs[0]], engineVersion: "planner-runtime-v1", parameterUnit: "USD", resultUnit: "USD" } } }) } as unknown as ReturnType<typeof createPlannerSensitivityUnits>
       const compare = (request: Parameters<typeof comparePlannerPreview>[1], context: TrustedDomainContext) => comparePlannerPreview({ host, sources, scenarios, planner: port }, request, context)
       const threshold = createPlannerExactThreshold({ units, preview: compare })
-      for (const criterion of [{ id: "cost", operator: "gte" as const, value: -57000 }, { id: "cost", operator: "lte" as const, value: -97000 }]) {
-        expect(await threshold({ scenarioRef: "candidate", parameterBounds: { parameterRef: "line:11", minimum: 0, maximum: 150000, steps: 3 }, criterion }, "base", binding)).toMatchObject({ status: "unavailable", reason: "exact-threshold-domain-unproven" })
+      for (const criterion of [{ id: "cost", operator: "gte" as const, value: -57000, expected: 55000 }, { id: "cost", operator: "lte" as const, value: -97000, expected: 15000 }]) {
+        const solved = await threshold({ scenarioRef: "candidate", parameterBounds: { parameterRef: "line:11", minimum: 0, maximum: 150000, steps: 3 }, criterion }, "base", binding)
+        expect(solved.status).toBe("ok")
+        if (solved.status !== "ok") continue
+        expect(solved.value.value).toBeCloseTo(criterion.expected, 6)
+        expect(solved.value.evidenceRefs).toContainEqual(refs[0])
+        const bytes = new DataView(new ArrayBuffer(8))
+        bytes.setFloat64(0, solved.value.value)
+        bytes.setBigUint64(0, bytes.getBigUint64(0) + (criterion.operator === "gte" ? -1n : 1n))
+        const adjacent = bytes.getFloat64(0)
+        const at = await compare({ baselineRef: "base", scenario: { ...scenario, operations: [{ ...scenario.operations[0], amount: solved.value.value }] } }, binding)
+        const beyond = await compare({ baselineRef: "base", scenario: { ...scenario, operations: [{ ...scenario.operations[0], amount: adjacent }] } }, binding)
+        expect(at.status).toBe("ok")
+        expect(beyond.status).toBe("ok")
+        if (at.status === "ok" && beyond.status === "ok") {
+          expect(at.value.metric.value).not.toBeNull()
+          expect(beyond.value.metric.value).not.toBeNull()
+          expect(criterion.operator === "gte" ? at.value.metric.value! >= criterion.value : at.value.metric.value! <= criterion.value).toBe(true)
+          expect(criterion.operator === "gte" ? beyond.value.metric.value! >= criterion.value : beyond.value.metric.value! <= criterion.value).toBe(false)
+        }
       }
+      expect(await threshold({ scenarioRef: "candidate", parameterBounds: { parameterRef: "line:11", minimum: 0, maximum: 150000, steps: 3 }, criterion: { id: "cost", operator: "eq", value: 0 } }, "base", binding)).toMatchObject({ status: "unavailable", reason: "exact-threshold-domain-unproven" })
       expect(await comparePlannerPreview({ host, sources, scenarios, planner: port }, { baselineRef: "base", scenario: { baseRef: "missing", operations: [], assumptions: [] } }, binding)).toMatchObject({ status: "unavailable" })
       scenarioRecords.candidate = { result: simulated.value, coverageRef: "coverage-v0", basis, projection: covered.value.baseline, source: refs[0] }
       expect(await port.compareScenarios({ scenarioRefs: ["base", "candidate"], criteria: [] }, binding)).toMatchObject({ status: "stale", reason: "scenario-source-or-coverage-changed" })
