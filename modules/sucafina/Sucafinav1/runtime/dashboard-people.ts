@@ -507,7 +507,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
     const departures = terminated.filter((member) => text(member.end).startsWith(String(context.year))).length
     const denominator = active.length + departures / 2
     const now = new Date(context.at)
-    const tenure = members
+    const tenure = active
       .filter((member) => text(member.start) && Number.isFinite(new Date(text(member.start)).getTime()))
       .map(
         (member) =>
@@ -527,8 +527,8 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
           tenure.length ? (tenure.reduce((total, value) => total + value, 0) / tenure.length).toFixed(1) : "—",
         ),
         metric("Staff ratio", users && active.length ? String(Math.round(users / active.length)) : "—"),
-        metric("Contractors", String(members.filter((member) => member.type === "Contractor").length)),
-        metric("Employees", String(members.filter((member) => member.type !== "Contractor").length)),
+        metric("Contractors", String(active.filter((member) => member.type === "Contractor").length)),
+        metric("Employees", String(active.filter((member) => member.type !== "Contractor").length)),
         (admin ? metric("Talent", String(members.filter((member) => member.cls === "Talent").length)) : ""),
       ], 4) +
       table(
