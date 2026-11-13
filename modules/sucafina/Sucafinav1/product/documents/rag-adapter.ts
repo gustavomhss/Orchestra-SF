@@ -1,7 +1,5 @@
 import { memoryStore } from "@orchestra/rag-studio"
 import type { Store } from "@orchestra/rag-studio"
-import { digestSfValue } from "../contracts/canonical.ts"
-import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { DocumentEvidence } from "../contracts/decisions.ts"
 import type { SfDocumentReadPort } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
@@ -12,7 +10,6 @@ import type { SfDocumentReader } from "./evidence-resolver.ts"
 // The persistence owner supplies this authorized snapshot; no filesystem path is accepted from a caller.
 export type SfDocumentSnapshot = {
   evidence?: DocumentEvidence
-  confirmationVersion?: number
   documentRef: string
   accessRevision: string
   locationId: string
@@ -24,12 +21,12 @@ export type SfDocumentSnapshot = {
   ragRevision: NonNullable<ReturnType<Store["revision"]>>
 }
 
-export function createSfDocumentEvidenceAdapter(read: (documentId: string, context: TrustedDomainContext, candidateId?: string, ref?: BusinessEvidenceRef) => Promise<
+export function createSfDocumentEvidenceAdapter(read: (documentId: string, context: TrustedDomainContext) => Promise<
   | { status: "denied" | "missing" | "unavailable"; accessRevision: string }
   | { status: "ok"; snapshot: SfDocumentSnapshot }
 >, documents: SfDocumentReadPort, parser: PrivateDocumentParser): SfDocumentReader {
-  return async (documentId, context, candidateId, ref) => {
-    const found = await read(documentId, context, candidateId, ref)
+  return async (documentId, context) => {
+    const found = await read(documentId, context)
     if (found.status !== "ok") return found
     const snapshot = found.snapshot
     const current = await documents.read(snapshot.documentRef, context)
@@ -41,10 +38,6 @@ export function createSfDocumentEvidenceAdapter(read: (documentId: string, conte
     store.putSource(snapshot.source)
     snapshot.chunks.filter((chunk) => chunk.sourceId === snapshot.source.id).forEach((chunk) => store.putChunk(chunk))
     store.putRevision(snapshot.ragRevision)
-    return { status: "ok", accessRevision: snapshot.accessRevision, incarnation: snapshot.incarnation, revision: snapshot.revision, blobDigest: snapshot.blobDigest, locationId: snapshot.locationId, store, evidence: snapshot.evidence, confirmationVersion: snapshot.confirmationVersion, revalidate: async () => {
-      if (!(await documents.revalidate(snapshot.documentRef, { incarnation: snapshot.incarnation, revision: snapshot.revision, blobDigest: snapshot.blobDigest }, context))) return false
-      const current = await read(documentId, context, candidateId, ref)
-      return current.status === "ok" && digestSfValue(current.snapshot) === digestSfValue(snapshot)
-    } }
+    return { status: "ok", accessRevision: snapshot.accessRevision, incarnation: snapshot.incarnation, revision: snapshot.revision, blobDigest: snapshot.blobDigest, locationId: snapshot.locationId, store, evidence: snapshot.evidence, revalidate: () => documents.revalidate(snapshot.documentRef, { incarnation: snapshot.incarnation, revision: snapshot.revision, blobDigest: snapshot.blobDigest }, context) }
   }
 }

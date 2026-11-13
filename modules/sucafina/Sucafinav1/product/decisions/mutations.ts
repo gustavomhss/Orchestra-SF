@@ -1,5 +1,5 @@
 import { digestSfValue } from "../contracts/canonical.ts"
-import { reassessScenarioCoverage, validateScenarioCoverage } from "./cost-coverage.ts"
+import { validateScenarioCoverage } from "./cost-coverage.ts"
 import { enqueueSfLedgerEvent } from "../integration/ledger-outbox.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { PreparedCommand } from "../contracts/context.ts"
@@ -11,25 +11,20 @@ import type { SfProductStatePort, SfStateResult } from "../contracts/state.ts"
 import { createChoiceSnapshot } from "./choice.ts"
 import { prepareDomainChange } from "./prepared-change.ts"
 
-export type DecisionMutationOperation = "add-alternative" | "prepare-changes" | "add-question" | "answer-question" | "record-choice"
 type CaseRef = { id: string; incarnation: string; version: number }
-type MutationReceipt = { caseRef: CaseRef; resultRef?: string }
+type MutationReceipt = { caseRef: CaseRef }
 type MutationHost = {
   state: SfProductStatePort
   host: Pick<DomainPortHost, "requestFor" | "revalidate">
   planner: PlannerPort
   sources: PlannerSourceHost
-  coverageEvidence?: { entries: (scenario: ScenarioResult, baseline: import("../contracts/decisions.ts").CostCoverageAssessment, context: TrustedDomainContext) => Promise<PortResult<readonly import("../contracts/decisions.ts").CostCoverageEntry[]>>; resolve: (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<readonly import("../contracts/business-context.ts").BusinessEvidenceResolution[]>; supports: Parameters<typeof reassessScenarioCoverage>[0]["supports"]; verifySnapshot: (snapshot: import("../../runtime/contract.ts").Snapshot, result: ScenarioResult, basis: import("../contracts/decisions.ts").CostCoverageBasis, context: TrustedDomainContext) => boolean }
   authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<boolean>
-  authorizeMutation: (operation: DecisionMutationOperation, request: unknown, context: TrustedDomainContext) => Promise<boolean>
-  verifyMutation: (snapshot: import("../../runtime/contract.ts").Snapshot, operation: DecisionMutationOperation, request: unknown, context: TrustedDomainContext) => boolean
   operationIdentity: (context: TrustedDomainContext) => string | undefined
   confirmChoice: (caseRef: CaseRef, alternativeId: string, context: TrustedDomainContext) => Promise<boolean>
   resolveQuestion: (questionRef: string, context: TrustedDomainContext) => Promise<PortResult<{ id: string; text: string; evidenceRefs: readonly BusinessEvidenceRef[] }>>
   resolveAnswer: (answerRef: string, context: TrustedDomainContext) => Promise<PortResult<BusinessEvidenceRef>>
   confirmAnswer: (caseRef: CaseRef, questionId: string, answerRef: string, context: TrustedDomainContext) => Promise<boolean>
   resolveChoiceValues: (caseRef: CaseRef, comparison: ScenarioCompareRequest, context: TrustedDomainContext) => Promise<PortResult<ChoiceRecord["values"]>>
-  readScenarioResult?: (resultRef: string, context: TrustedDomainContext) => Promise<PortResult<import("./result-store.ts").StoredDecisionResult>>
   prepareDomainCommands: (caseRef: CaseRef, choiceId: string, operations: readonly ScenarioOperation[], context: TrustedDomainContext) => Promise<PortResult<readonly { command: PreparedCommand; preview: ScenarioResult; targetEvidence: Extract<BusinessEvidenceRef, { kind: "record" }> }[]>>
   createId: () => string
   now: () => string
@@ -37,43 +32,30 @@ type MutationHost = {
 
 export function createDecisionMutations(input: MutationHost) {
   return {
-    addAlternative: async (incoming: { caseRef: CaseRef; title: string; scenario: ScenarioRequest; coverageRef: string; alternativeRef?: { id: string; version: number } }, context: TrustedDomainContext): Promise<PortResult<MutationReceipt>> => {
-      const request = structuredClone(incoming)
-      if (context.kind !== "ui" || !await input.authorizeMutation("add-alternative", request, context).catch(() => false)) return { status: "denied", reason: "human-promotion-required" }
+    addAlternative: async (request: { caseRef: CaseRef; title: string; scenario: ScenarioRequest; coverageRef: string }, context: TrustedDomainContext): Promise<PortResult<MutationReceipt>> => {
+      if (context.kind !== "ui") return { status: "denied", reason: "human-promotion-required" }
       const replay = await replayMutation(input, request.caseRef, context, "add-alternative", request)
       if (replay) return replay
       if (!request.title.trim() || !request.coverageRef.trim()) return { status: "needs-input", reason: "alternative-input-required" }
       const loaded = await loadCase(input, request.caseRef, context)
       if (loaded.status !== "ok") return loaded
-      const previous = request.alternativeRef ? loaded.value.case.alternatives.find((item) => item.id === request.alternativeRef!.id) : undefined
-      if (request.alternativeRef && (!previous || previous.version !== request.alternativeRef.version)) return { status: "stale", reason: "alternative-changed" }
-      const identity = { id: previous?.id ?? input.createId(), version: previous ? previous.version + 1 : 1 }
-      if (!identity.id.trim() || (!previous && loaded.value.case.alternatives.some((item) => item.id === identity.id))) return { status: "conflict", reason: "alternative-identity-conflict" }
       const scenario = await callMutationPort(() => input.planner.simulateScenario(request.scenario, context))
       if (scenario.status !== "ok") return scenario
       const coverage = await callMutationPort(() => input.sources.resolveForecastCoverage(request.coverageRef, context))
       if (coverage.status !== "ok") return coverage
       if (coverage.value.coverageRef !== request.coverageRef) return { status: "conflict", reason: "coverage-reference-mismatch" }
       if (scenario.value.currency !== loaded.value.case.currency || scenario.value.horizon.start !== loaded.value.case.horizon.start || scenario.value.horizon.end !== loaded.value.case.horizon.end) return { status: "conflict", reason: "alternative-basis-mismatch" }
-      if (scenario.value.costCoverage.basisId !== coverage.value.basis.id || scenario.value.costCoverage.basisVersion !== coverage.value.basis.version) return { status: "conflict", reason: "alternative-basis-mismatch" }
-      const attributed: ScenarioResult = scenario.value.comparisonStatus === "complete" ? { ...scenario.value, costCoverage: { ...scenario.value.costCoverage, alternativeId: identity.id, alternativeVersion: identity.version } } : { ...scenario.value, costCoverage: { ...scenario.value.costCoverage, alternativeId: identity.id, alternativeVersion: identity.version } }
-      const basis = coverage.value.basis
-      const reassessed = digestSfValue(scenario.value.costCoverage) !== digestSfValue(coverage.value.assessment)
-      const entries = reassessed && input.coverageEvidence ? await callMutationPort(() => input.coverageEvidence!.entries(attributed, coverage.value.assessment, context)) : undefined
-      if (entries && entries.status !== "ok") return entries
-      const result = !reassessed ? attributed : input.coverageEvidence && entries?.status === "ok" ? await reassessScenarioCoverage({ scenario: attributed, basis: coverage.value.basis, baseline: coverage.value.assessment, entries: entries.value, resolveEvidence: (refs) => input.coverageEvidence!.resolve(refs, context), supports: input.coverageEvidence.supports }) : undefined
-      if (!result) return { status: "unavailable", reason: "scenario-coverage-reassessment-unavailable" }
-      const coverageError = validateScenarioCoverage(result, coverage.value.basis, result.costCoverage)
+      const coverageError = validateScenarioCoverage(scenario.value, coverage.value.basis, coverage.value.assessment)
       if (coverageError) return { status: "conflict", reason: coverageError }
       const existingBasis = loaded.value.case.costCoverageBases.find((basis) => basis.id === coverage.value.basis.id && basis.version === coverage.value.basis.version)
       if (existingBasis && digestSfValue(existingBasis) !== digestSfValue(coverage.value.basis)) return { status: "conflict", reason: "coverage-inventory-version-conflict" }
-      const alternative = { id: result.costCoverage.alternativeId, version: result.costCoverage.alternativeVersion, title: request.title, scenario: request.scenario, result }
-      if (!alternative.id.trim() || !Number.isSafeInteger(alternative.version)) return { status: "conflict", reason: "alternative-identity-conflict" }
-      return saveCase(input, loaded.value, context, "add-alternative", request, (value) => ({ ...value, state: value.choices.length ? "reconsidering" : "comparing", alternatives: [...value.alternatives.filter((item) => item.id !== alternative.id), alternative], costCoverageBases: value.costCoverageBases.some((basis) => basis.id === coverage.value.basis.id && basis.version === coverage.value.basis.version) ? value.costCoverageBases : [...value.costCoverageBases, coverage.value.basis] }), { request: request.scenario, result, ...(reassessed && input.coverageEvidence ? { sourceFence: (snapshot: import("../../runtime/contract.ts").Snapshot) => input.coverageEvidence!.verifySnapshot(snapshot, result, basis, context) } : {}) })
+      const alternative = { id: scenario.value.costCoverage.alternativeId, version: scenario.value.costCoverage.alternativeVersion, title: request.title, scenario: request.scenario, result: scenario.value }
+      const previous = loaded.value.case.alternatives.find((item) => item.id === alternative.id)
+      if (!alternative.id.trim() || !Number.isSafeInteger(alternative.version) || alternative.version !== (previous?.version ?? 0) + 1 || loaded.value.case.alternatives.some((item) => item.result.id === alternative.result.id)) return { status: "conflict", reason: "alternative-identity-conflict" }
+      return saveCase(input, loaded.value, context, "add-alternative", request, (value) => ({ ...value, state: value.choices.length ? "reconsidering" : "comparing", alternatives: [...value.alternatives.filter((item) => item.id !== alternative.id), alternative], costCoverageBases: value.costCoverageBases.some((basis) => basis.id === coverage.value.basis.id && basis.version === coverage.value.basis.version) ? value.costCoverageBases : [...value.costCoverageBases, coverage.value.basis] }))
     },
-    prepareChanges: async (incoming: { caseRef: CaseRef; choiceId: string; operations: readonly ScenarioOperation[] }, context: TrustedDomainContext): Promise<PortResult<MutationReceipt>> => {
-      const request = structuredClone(incoming)
-      if (context.kind !== "ui" || !await input.authorizeMutation("prepare-changes", request, context).catch(() => false)) return { status: "denied", reason: "human-promotion-required" }
+    prepareChanges: async (request: { caseRef: CaseRef; choiceId: string; operations: readonly ScenarioOperation[] }, context: TrustedDomainContext): Promise<PortResult<MutationReceipt>> => {
+      if (context.kind !== "ui") return { status: "denied", reason: "human-promotion-required" }
       const replay = await replayMutation(input, request.caseRef, context, "prepare-changes", request)
       if (replay) return replay
       if (!request.operations.length) return { status: "needs-input", reason: "change-operations-required" }
@@ -91,9 +73,8 @@ export function createDecisionMutations(input: MutationHost) {
       if (new Set(admitted.map((change) => change.id)).size !== admitted.length || new Set(admitted.map((change) => change.idempotencyKey)).size !== admitted.length || admitted.some((change) => loaded.value.case.preparedChanges.some((existing) => existing.id === change.id || existing.idempotencyKey === change.idempotencyKey))) return { status: "conflict", reason: "change-identity-conflict" }
       return saveCase(input, loaded.value, context, "prepare-changes", request, (value) => ({ ...value, preparedChanges: [...value.preparedChanges, ...admitted], sourceRefs: [...value.sourceRefs, ...prepared.value.flatMap((item) => [item.targetEvidence, ...item.preview.sourceRefs, ...item.preview.costCoverage.evaluatedSourceRefs, ...item.preview.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)])].filter((ref, index, refs) => refs.findIndex((other) => other.refDigest === ref.refDigest) === index) }))
     },
-    addQuestion: async (incoming: { caseRef: CaseRef; questionRef: string }, context: TrustedDomainContext): Promise<PortResult<MutationReceipt>> => {
-      const request = structuredClone(incoming)
-      if (context.kind !== "ui" || !await input.authorizeMutation("add-question", request, context).catch(() => false)) return { status: "denied", reason: "human-promotion-required" }
+    addQuestion: async (request: { caseRef: CaseRef; questionRef: string }, context: TrustedDomainContext): Promise<PortResult<MutationReceipt>> => {
+      if (context.kind !== "ui") return { status: "denied", reason: "human-promotion-required" }
       const replay = await replayMutation(input, request.caseRef, context, "add-question", request)
       if (replay) return replay
       if (!request.questionRef.trim()) return { status: "needs-input", reason: "question-required" }
@@ -104,9 +85,7 @@ export function createDecisionMutations(input: MutationHost) {
       if (question.value.id !== request.questionRef || !question.value.id.trim() || !question.value.text.trim() || !question.value.evidenceRefs.length || loaded.value.case.questions.some((item) => item.id === question.value.id)) return { status: "conflict", reason: "question-identity-conflict" }
       return saveCase(input, loaded.value, context, "add-question", request, (value) => ({ ...value, questions: [...value.questions, { id: question.value.id, text: question.value.text, state: "open" }], sourceRefs: [...value.sourceRefs, ...question.value.evidenceRefs].filter((ref, index, refs) => refs.findIndex((other) => other.refDigest === ref.refDigest) === index) }))
     },
-    answerQuestion: async (incoming: { caseRef: CaseRef; questionId: string; answerRef: string }, context: TrustedDomainContext): Promise<PortResult<MutationReceipt>> => {
-      const request = structuredClone(incoming)
-      if (context.kind !== "ui" || !await input.authorizeMutation("answer-question", request, context).catch(() => false)) return { status: "denied", reason: "human-authority-required" }
+    answerQuestion: async (request: { caseRef: CaseRef; questionId: string; answerRef: string }, context: TrustedDomainContext): Promise<PortResult<MutationReceipt>> => {
       const replay = await replayMutation(input, request.caseRef, context, "answer-question", request)
       if (replay) return replay
       if (context.kind !== "ui" || !await input.confirmAnswer(request.caseRef, request.questionId, request.answerRef, context).catch(() => false)) return { status: "denied", reason: "human-answer-required" }
@@ -117,9 +96,7 @@ export function createDecisionMutations(input: MutationHost) {
       if (evidence.status !== "ok") return evidence
       return saveCase(input, loaded.value, context, "answer-question", request, (value) => ({ ...value, questions: value.questions.map((question) => question.id === request.questionId ? { ...question, state: "answered" as const, answerRef: request.answerRef } : question), sourceRefs: [...value.sourceRefs, evidence.value].filter((ref, index, refs) => refs.findIndex((other) => other.refDigest === ref.refDigest) === index) }))
     },
-    recordChoice: async (incoming: { caseRef: CaseRef; alternativeId: string; alternativeVersion: number; comparison: ScenarioCompareRequest; criteria: readonly string[]; reason: string }, context: TrustedDomainContext): Promise<PortResult<MutationReceipt>> => {
-      const request = structuredClone(incoming)
-      if (context.kind !== "ui" || !await input.authorizeMutation("record-choice", request, context).catch(() => false)) return { status: "denied", reason: "human-authority-required" }
+    recordChoice: async (request: { caseRef: CaseRef; alternativeId: string; alternativeVersion: number; comparison: ScenarioCompareRequest; criteria: readonly string[]; reason: string }, context: TrustedDomainContext): Promise<PortResult<MutationReceipt>> => {
       const replay = await replayMutation(input, request.caseRef, context, "record-choice", request)
       if (replay) return replay
       if (context.kind !== "ui" || !await input.confirmChoice(request.caseRef, request.alternativeId, context).catch(() => false)) return { status: "denied", reason: "human-choice-required" }
@@ -128,22 +105,9 @@ export function createDecisionMutations(input: MutationHost) {
       if (new Set(request.comparison.criteria).size !== request.criteria.length || request.criteria.some((criterion) => !request.comparison.criteria.includes(criterion))) return { status: "conflict", reason: "comparison-criteria-mismatch" }
       const comparison = await callMutationPort(() => input.planner.compareScenarios(request.comparison, context))
       if (comparison.status !== "ok") return comparison
-      if (request.comparison.scenarioRefs.length !== 2 || comparison.value.baselineResultRef !== request.comparison.scenarioRefs[0] || comparison.value.alternativeResultRef !== request.comparison.scenarioRefs[1]) return { status: "conflict", reason: "comparison-reference-mismatch" }
-      const alternative = loaded.value.case.alternatives.find((item) => item.id === request.alternativeId && item.version === request.alternativeVersion)
-      if (!alternative) return { status: "conflict", reason: "alternative-unavailable" }
-      if (comparison.value.alternativeResultRef !== alternative.result.id) {
-        if (!input.readScenarioResult) return { status: "unavailable", reason: "scenario-result-unavailable" }
-        const stored = await callMutationPort(() => input.readScenarioResult!(comparison.value.alternativeResultRef, context))
-        if (stored.status !== "ok") return stored
-        if (stored.value.kind !== "scenario" || stored.value.caseRef.id !== loaded.value.case.id || stored.value.caseRef.incarnation !== loaded.value.case.incarnation || stored.value.caseRef.version > loaded.value.case.version || stored.value.requestDigest !== digestSfValue(alternative.scenario) || stored.value.resultDigest !== digestSfValue(alternative.result)) return { status: "conflict", reason: "comparison-alternative-mismatch" }
-        const baseline = await callMutationPort(() => input.readScenarioResult!(comparison.value.baselineResultRef, context))
-        if (baseline.status !== "ok") return baseline
-        const baselineValue = baseline.value
-        if (baselineValue.kind !== "scenario" || baselineValue.caseRef.id !== loaded.value.case.id || baselineValue.caseRef.incarnation !== loaded.value.case.incarnation || baselineValue.caseRef.version > loaded.value.case.version || baselineValue.result.costCoverage.basisId !== alternative.result.costCoverage.basisId || baselineValue.result.costCoverage.basisVersion !== alternative.result.costCoverage.basisVersion || loaded.value.case.alternatives.filter((item) => item.id !== alternative.id && digestSfValue(item.scenario) === baselineValue.requestDigest && digestSfValue(item.result) === baselineValue.resultDigest).length !== 1) return { status: "conflict", reason: "comparison-baseline-mismatch" }
-      }
       const values = await callMutationPort(() => input.resolveChoiceValues(request.caseRef, request.comparison, context))
       if (values.status !== "ok") return values
-      const choice = createChoiceSnapshot({ case: loaded.value.case, alternativeId: request.alternativeId, alternativeVersion: request.alternativeVersion, comparison: comparison.value, alternativeResultRef: comparison.value.alternativeResultRef, criteria: request.criteria, values: values.value, evidenceRefs: [...loaded.value.case.sourceRefs, ...loaded.value.case.costCoverageBases.flatMap((basis) => basis.sourceRefs), ...loaded.value.case.alternatives.flatMap((item) => [...item.scenario.assumptions.flatMap((assumption) => assumption.evidenceRefs), ...item.result.sourceRefs, ...item.result.costCoverage.evaluatedSourceRefs, ...item.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)])], id: input.createId(), principalRef: context.binding.principalRef, reason: request.reason, at: input.now() })
+      const choice = createChoiceSnapshot({ case: loaded.value.case, alternativeId: request.alternativeId, alternativeVersion: request.alternativeVersion, comparison: comparison.value, criteria: request.criteria, values: values.value, evidenceRefs: loaded.value.case.sourceRefs, id: input.createId(), principalRef: context.binding.principalRef, reason: request.reason, at: input.now() })
       if (choice.status !== "ok") return choice
       return saveCase(input, loaded.value, context, "record-choice", request, (value) => {
         const version = value.version + 1
@@ -172,7 +136,7 @@ async function replayMutation(input: MutationHost, ref: CaseRef, context: Truste
   if (!source || !identity || !await input.host.revalidate(context)) return { status: "denied", reason: "invalid-authority" }
   const result = await input.state.read(source, "cases", (state, authority) => {
     if (authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return undefined
-    return { current: state.cases[ref.id], prior: state.transactions[JSON.stringify([authority.principalRef, "cases", ref.id, `${identity}:${operation}`])], results: state.decisionResults }
+    return { current: state.cases[ref.id], prior: state.transactions[JSON.stringify([authority.principalRef, "cases", ref.id, `${identity}:${operation}`])] }
   }).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
   if (result.status !== "ok") return failure(result)
   if (!result.value?.prior) return undefined
@@ -182,35 +146,19 @@ async function replayMutation(input: MutationHost, ref: CaseRef, context: Truste
   if (prior.commandDigest !== digestSfValue(request) || prior.targetIncarnation !== ref.incarnation) return { status: "conflict", reason: "idempotency-content-changed" }
   const saved = prior.value
   if (!saved || typeof saved !== "object" || !("id" in saved) || !("incarnation" in saved) || !("version" in saved) || saved.id !== ref.id || saved.incarnation !== ref.incarnation || !Number.isSafeInteger(saved.version)) return { status: "unavailable", reason: "invalid-mutation-receipt" }
-  const caseRef = { id: ref.id, incarnation: ref.incarnation, version: Number(saved.version) }
-  if (operation === "add-alternative" && request && typeof request === "object" && "scenario" in request) {
-    const resultRef = decisionScenarioResultRef(caseRef, digestSfValue(request.scenario))
-    const stored = result.value.results?.[resultRef]
-    if (stored?.kind === "scenario" && stored.requestDigest === digestSfValue(request.scenario) && digestSfValue(stored.caseRef) === digestSfValue(caseRef)) return { status: "ok", value: { caseRef, resultRef } }
-  }
-  return { status: "ok", value: { caseRef } }
+  return { status: "ok", value: { caseRef: { id: ref.id, incarnation: ref.incarnation, version: Number(saved.version) } } }
 }
 
-async function saveCase(input: MutationHost, loaded: LoadedCase, context: TrustedDomainContext, operation: DecisionMutationOperation, request: unknown, update: (value: DecisionCase) => DecisionCase, scenario?: { request: ScenarioRequest; result: ScenarioResult; sourceFence?: (snapshot: import("../../runtime/contract.ts").Snapshot) => boolean }): Promise<PortResult<MutationReceipt>> {
+async function saveCase(input: MutationHost, loaded: LoadedCase, context: TrustedDomainContext, operation: string, request: unknown, update: (value: DecisionCase) => DecisionCase): Promise<PortResult<MutationReceipt>> {
   const nextValue = { ...update(loaded.case), version: loaded.case.version + 1 }
-  const caseRef = { id: nextValue.id, incarnation: nextValue.incarnation, version: nextValue.version }
-  const resultRef = scenario ? decisionScenarioResultRef(caseRef, digestSfValue(scenario.request)) : undefined
   if (!await input.authorizeCase(loaded.case, context) || !await input.authorizeCase(nextValue, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "case-access-unavailable" }
   const outbox = operation === "record-choice" ? await input.state.read(loaded.source, "outbox", (_state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" })) : undefined
   if (outbox && outbox.status !== "ok") return failure(outbox)
   if (outbox && !outbox.value) return { status: "denied", reason: "outbox-access-unavailable" }
-  const saved = await input.state.transaction(loaded.source, { namespace: "cases", domainSurface: "planner", expectedStorageVersion: loaded.storageVersion, ...(outbox ? { additionalNamespaces: [{ namespace: "outbox" as const, expectedStorageVersion: outbox.storageVersion }] } : {}), targetRef: loaded.case.id, targetIncarnation: loaded.case.incarnation, idempotencyKey: `${loaded.identity}:${operation}`, commandDigest: digestSfValue(request) }, async (state, authority, snapshot) => {
-    if (!input.verifyMutation(snapshot, operation, request, context)) return { commit: false, value: null }
-    if (scenario?.sourceFence && !scenario.sourceFence(snapshot)) return { commit: false, value: null }
+  const saved = await input.state.transaction(loaded.source, { namespace: "cases", expectedStorageVersion: loaded.storageVersion, ...(outbox ? { additionalNamespaces: [{ namespace: "outbox" as const, expectedStorageVersion: outbox.storageVersion }] } : {}), targetRef: loaded.case.id, targetIncarnation: loaded.case.incarnation, idempotencyKey: `${loaded.identity}:${operation}`, commandDigest: digestSfValue(request) }, async (state, authority) => {
     const actual = state.cases[loaded.case.id]
     if (!actual || actual.version !== loaded.case.version || actual.incarnation !== loaded.case.incarnation || authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return { commit: false, value: null }
     state.cases[actual.id] = nextValue
-    if (scenario && resultRef) {
-      const records = state.decisionResults ??= {}
-      if (records[resultRef]) return { commit: false, value: null }
-      const refs = [...scenario.result.sourceRefs, ...scenario.result.costCoverage.evaluatedSourceRefs].filter((ref, index, all) => all.findIndex((other) => digestSfValue(other) === digestSfValue(ref)) === index)
-      records[resultRef] = { schema: "sf-decision-result-v1", kind: "scenario", resultRef, caseRef, principalRef: authority.principalRef, accessRevision: authority.accessRevision, policyVersion: authority.policyVersion, requestDigest: digestSfValue(scenario.request), resultDigest: digestSfValue(scenario.result), sourceRefs: refs, createdAt: input.now(), result: scenario.result }
-    }
     if (outbox) {
       const event = nextValue.ledger.at(-1)
       if (!event || event.kind !== "choice-recorded" || enqueueSfLedgerEvent(state, event, { installationId: context.binding.installationId, projectId: context.binding.projectId, authority }).status !== "ok") return { commit: false, value: null }
@@ -219,7 +167,7 @@ async function saveCase(input: MutationHost, loaded: LoadedCase, context: Truste
   }).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
   if (saved.status !== "ok") return failure(saved)
   if (!saved.value || !await input.authorizeCase(saved.value, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "case-access-unavailable" }
-  return { status: "ok", value: { caseRef: { id: saved.value.id, incarnation: saved.value.incarnation, version: saved.value.version }, ...(resultRef ? { resultRef } : {}) } }
+  return { status: "ok", value: { caseRef: { id: saved.value.id, incarnation: saved.value.incarnation, version: saved.value.version } } }
 }
 
 async function callMutationPort<T>(work: () => Promise<PortResult<T>>): Promise<PortResult<T>> {
@@ -233,8 +181,4 @@ async function callMutationPort<T>(work: () => Promise<PortResult<T>>): Promise<
 function failure(value: SfStateResult<unknown>): PortResult<never> {
   if ("reason" in value) return { status: value.status, reason: value.reason }
   return { status: "conflict", reason: "case-changed" }
-}
-
-export function decisionScenarioResultRef(caseRef: CaseRef, requestDigest: string) {
-  return `decision-result:${digestSfValue({ caseRef, requestDigest })}`
 }

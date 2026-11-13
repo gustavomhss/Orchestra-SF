@@ -1,7 +1,12 @@
 import { createHash } from "node:crypto"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
+import { isReviewSensitivityBound } from "./sensitivity.ts"
 import { validateReviewWaterfall } from "./waterfall.ts"
+import { validReviewOutcome, validOutcomeComparison } from "./outcome.ts"
+import type { ReviewOutcomeComparison } from "./outcome.ts"
+import type { ObservedResultProjection } from "../contracts/decisions.ts"
+import { validReviewDecision, reviewDecisionEvidence, reviewDecisionSources } from "./decision.ts"
 import { decodeSfOperationOutput } from "../contracts/schema-admission.ts"
 import type { SensitivityResult } from "../contracts/outputs.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
@@ -16,13 +21,17 @@ export type ReviewWaterfall =
 export type ReviewChart =
   | { status: "ok"; viewId: string; series: readonly { id: string; label: string; unit: string; role: string; valueIds: readonly string[]; alignmentKeys?: readonly string[]; values: DomainProjection["values"] }[]; limitations: readonly string[]; unassigned: DomainProjection["values"]; sensitivity?: { result: SensitivityResult; parameterUnit: string; resultUnit: string }; waterfall?: ReviewWaterfall; timeline?: { status: "ok"; items: readonly { label: string; dateValueId: string; state: "planned" | "completed" | "unknown"; date: string | null; source: DomainProjection["values"][number] }[] } | { status: "unavailable"; reason: string } }
   | { status: "unavailable"; reason: string }
-export type ReviewSection = { id: string; title: string; period: Period; recordCount: number; projection: DomainProjection; chart?: ReviewChart; comments?: readonly { id: string; version: number; content: string; authorRef: string; createdAt: string; sourceRefs: readonly SourceRef[] }[] }
+export type ReviewSection = { id: string; title: string; period: Period; recordCount: number; projection: DomainProjection; agendaNote?: string; outcome?: ObservedResultProjection; outcomeComparison?: ReviewOutcomeComparison; chart?: ReviewChart; comments?: readonly { id: string; version: number; content: string; authorRef: string; createdAt: string; sourceRefs: readonly SourceRef[] }[] }
 export type ReviewHost = {
   state: SfProductStatePort
+  creationTarget: { ref: string; incarnation: string }
   now: () => string
   requestFor: (binding: TrustedDomainContext) => Request | undefined
   authorizeSections: (binding: TrustedDomainContext, sections: readonly { id: string; sourceRefs: readonly SourceRef[] }[]) => Promise<boolean>
   authorizeComments: (binding: TrustedDomainContext, comments: readonly { id: string; version: number; sourceRefs: readonly SourceRef[] }[]) => Promise<boolean>
+  authorizeOutcomeComparison: (binding: TrustedDomainContext, outcomes: readonly ReviewOutcomeComparison[]) => Promise<boolean>
+  authorizeOutcome: (binding: TrustedDomainContext, outcomes: readonly ObservedResultProjection[]) => Promise<boolean>
+  authorizeDecision: (binding: TrustedDomainContext, decisions: readonly NonNullable<DomainProjection["decision"]>[]) => Promise<boolean>
   authorizeSensitivity: (binding: TrustedDomainContext, results: readonly SensitivityResult[]) => Promise<boolean>
   revalidate: (binding: TrustedDomainContext, refs: readonly SourceRef[]) => Promise<boolean>
   revalidateEvidence: (binding: TrustedDomainContext, refs: readonly BusinessEvidenceRef[]) => Promise<boolean>
@@ -35,9 +44,16 @@ export function createReviewPort(host: ReviewHost) {
       if (!selectionRef || new Set(sectionRefs).size !== sectionRefs.length) return { status: "needs-input", reason: "invalid-selection" } as const
       const selected = await host.select(selectionRef, sectionRefs, binding, period)
       if (selected.status !== "ok") return selected
+      if (selected.value.some((section) => !validOutcomeComparison(section.outcomeComparison) || (section.outcomeComparison && (!section.outcome || digestSfValue(section.outcomeComparison.observation) !== digestSfValue(section.outcome))))) return { status: "unavailable", reason: "invalid-outcome-comparison" } as const
+      if (!(await host.authorizeOutcomeComparison(binding, selected.value.flatMap((section) => section.outcomeComparison ? [section.outcomeComparison] : [])))) return { status: "denied", reason: "access-unavailable" } as const
+      if (selected.value.some((section) => !validReviewOutcome(section.outcome))) return { status: "unavailable", reason: "invalid-outcome-snapshot" } as const
+      if (!(await host.authorizeOutcome(binding, selected.value.flatMap((section) => section.outcome ? [section.outcome] : [])))) return { status: "denied", reason: "access-unavailable" } as const
+      if (selected.value.some((section) => !validReviewDecision(section.projection.decision))) return { status: "unavailable", reason: "invalid-decision-snapshot" } as const
+      if (!(await host.authorizeDecision(binding, selected.value.flatMap((section) => section.projection.decision ? [section.projection.decision] : [])))) return { status: "denied", reason: "access-unavailable" } as const
       if (!(await host.authorizeSections(binding, selected.value.map((section) => ({ id: section.id, sourceRefs: section.projection.context.sourceRefs })))) || !(await host.authorizeComments(binding, selected.value.flatMap((section) => section.comments ?? []))) || !(await host.authorizeSensitivity(binding, selected.value.flatMap((section) => section.chart?.status === "ok" && section.chart.sensitivity ? [section.chart.sensitivity.result] : [])))) return { status: "denied", reason: "access-unavailable" } as const
       if (selected.value.length !== sectionRefs.length || selected.value.some((section, index) => section.id !== sectionRefs[index]))
         return { status: "unavailable", reason: "selection-incomplete" } as const
+      if (selected.value.some((section) => section.agendaNote !== undefined && (typeof section.agendaNote !== "string" || section.agendaNote.length > 2000))) return { status: "needs-input", reason: "invalid-agenda-note" } as const
       if (selected.value.some((section) => !Number.isSafeInteger(section.recordCount) || section.recordCount < 0)) return { status: "unavailable", reason: "invalid-record-count" } as const
       if (selected.value.some((section) => (section.comments ?? []).some((comment) => !comment.id || !comment.authorRef || !comment.createdAt || !Number.isSafeInteger(comment.version) || comment.version < 1 || typeof comment.content !== "string" || !Array.isArray(comment.sourceRefs) || !comment.sourceRefs.length))) return { status: "unavailable", reason: "invalid-comment-snapshot" } as const
       const comments = selected.value.flatMap((section) => section.comments ?? [])
@@ -53,8 +69,8 @@ export function createReviewPort(host: ReviewHost) {
       if (selected.value.some((section) => section.projection.context.principalRef !== binding.binding.principalRef || section.projection.context.installationId !== binding.binding.installationId || section.projection.context.projectId !== binding.binding.projectId || section.projection.context.accessRevision !== binding.binding.accessRevision || section.projection.context.policyVersion !== binding.binding.policyVersion))
         return { status: "denied", reason: "context-mismatch" } as const
       if (selected.value.some((section) => section.projection.values.some((value) => (value.value !== null && typeof value.value !== "string" && typeof value.value !== "boolean" && (typeof value.value !== "number" || !Number.isFinite(value.value))) || (value.value !== null && value.sourceRefs.length === 0)))) return { status: "unavailable", reason: "evidence-unavailable" } as const
-      if (!(await host.revalidateEvidence(binding, selected.value.flatMap((section) => [...section.projection.values.flatMap((value) => value.sourceRefs), ...reviewChartEvidence(section.chart)])))) return { status: "denied", reason: "access-unavailable" } as const
-      if (!(await host.revalidate(binding, selected.value.flatMap((section) => [...section.projection.context.sourceRefs, ...(section.comments ?? []).flatMap((comment) => comment.sourceRefs)]))))
+      if (!(await host.revalidateEvidence(binding, selected.value.flatMap((section) => [...section.projection.values.flatMap((value) => value.sourceRefs), ...reviewChartEvidence(section.chart), ...reviewDecisionEvidence(section.projection.decision), ...(section.outcome?.sourceRefs ?? []), ...(section.outcomeComparison?.baselineRefs ?? []), ...(section.outcomeComparison?.sourceRefs ?? [])])))) return { status: "denied", reason: "access-unavailable" } as const
+      if (!(await host.revalidate(binding, selected.value.flatMap((section) => [...section.projection.context.sourceRefs, ...reviewDecisionSources(section.projection.decision), ...(section.comments ?? []).flatMap((comment) => comment.sourceRefs)]))))
         return { status: "denied", reason: "access-unavailable" } as const
       return { status: "ok", value: structuredClone(selected.value) } as const
     },
@@ -62,9 +78,10 @@ export function createReviewPort(host: ReviewHost) {
       const request = host.requestFor(binding)
       if (!request) return { status: "denied", reason: "binding-unavailable" } as const
       if (typeof input.id !== "string" || !input.id.trim()) return { status: "needs-input", reason: "invalid-review-identity" } as const
+      if (!host.creationTarget.ref || !host.creationTarget.incarnation || input.targetIncarnation !== host.creationTarget.incarnation) return { status: "denied", reason: "creation-target-unavailable" } as const
       const command = {
         namespace: "reviews" as const, expectedStorageVersion: input.expectedStorageVersion, idempotencyKey: input.idempotencyKey,
-        commandDigest: createHash("sha256").update(JSON.stringify({ id: input.id, selectionRef: input.selectionRef, sectionRefs: input.sectionRefs, previousReviewRef: input.previousReviewRef, targetIncarnation: input.targetIncarnation, principalRef: binding.binding.principalRef })).digest("hex"), targetRef: input.id, targetIncarnation: input.targetIncarnation,
+        commandDigest: createHash("sha256").update(JSON.stringify({ id: input.id, selectionRef: input.selectionRef, sectionRefs: input.sectionRefs, previousReviewRef: input.previousReviewRef, targetIncarnation: input.targetIncarnation, principalRef: binding.binding.principalRef })).digest("hex"), targetRef: host.creationTarget.ref, targetIncarnation: input.targetIncarnation,
       }
       // Probe the durable idempotency record before consulting mutable source data.
       const prior = await host.state.transaction(request, command, async () => ({ commit: false, value: null as PreservedReview | null }))
@@ -82,13 +99,13 @@ export function createReviewPort(host: ReviewHost) {
       }
       const selected = await this.preview(input.selectionRef, input.sectionRefs, binding)
       if (selected.status !== "ok") return selected
-      const refs = selected.value.flatMap((section) => [...section.projection.context.sourceRefs, ...(section.comments ?? []).flatMap((comment) => comment.sourceRefs)])
-      if (!(await host.authorizeSections(binding, selected.value.map((section) => ({ id: section.id, sourceRefs: section.projection.context.sourceRefs })))) || !(await host.authorizeComments(binding, selected.value.flatMap((section) => section.comments ?? []))) || !(await host.authorizeSensitivity(binding, selected.value.flatMap((section) => section.chart?.status === "ok" && section.chart.sensitivity ? [section.chart.sensitivity.result] : []))) || !(await host.revalidate(binding, refs)) || !(await host.revalidateEvidence(binding, selected.value.flatMap((section) => [...section.projection.values.flatMap((value) => value.sourceRefs), ...reviewChartEvidence(section.chart)])))) return { status: "denied", reason: "access-unavailable" } as const
+      const refs = selected.value.flatMap((section) => [...section.projection.context.sourceRefs, ...reviewDecisionSources(section.projection.decision), ...(section.comments ?? []).flatMap((comment) => comment.sourceRefs)])
+      if (!(await host.authorizeOutcomeComparison(binding, selected.value.flatMap((section) => section.outcomeComparison ? [section.outcomeComparison] : []))) || !(await host.authorizeOutcome(binding, selected.value.flatMap((section) => section.outcome ? [section.outcome] : []))) || !(await host.authorizeDecision(binding, selected.value.flatMap((section) => section.projection.decision ? [section.projection.decision] : []))) || !(await host.authorizeSections(binding, selected.value.map((section) => ({ id: section.id, sourceRefs: section.projection.context.sourceRefs })))) || !(await host.authorizeComments(binding, selected.value.flatMap((section) => section.comments ?? []))) || !(await host.authorizeSensitivity(binding, selected.value.flatMap((section) => section.chart?.status === "ok" && section.chart.sensitivity ? [section.chart.sensitivity.result] : []))) || !(await host.revalidate(binding, refs)) || !(await host.revalidateEvidence(binding, selected.value.flatMap((section) => [...section.projection.values.flatMap((value) => value.sourceRefs), ...reviewChartEvidence(section.chart), ...reviewDecisionEvidence(section.projection.decision), ...(section.outcome?.sourceRefs ?? []), ...(section.outcomeComparison?.baselineRefs ?? []), ...(section.outcomeComparison?.sourceRefs ?? [])])))) return { status: "denied", reason: "access-unavailable" } as const
       const createdAt = host.now()
       if (!Number.isFinite(Date.parse(createdAt))) return { status: "unavailable", reason: "invalid-host-time" } as const
       const review: PreservedReview = {
         id: input.id, version: 1, createdAt, sourceRefs: refs,
-        sections: selected.value.map((section) => ({ id: section.id, title: section.title, period: section.period, content: section.chart ? { ...section.projection, reviewChart: section.chart } : section.projection, count: section.recordCount, sourceRefs: section.projection.context.sourceRefs })),
+        sections: selected.value.map((section) => ({ id: section.id, title: section.title, period: section.period, content: { ...section.projection, ...(section.chart ? { reviewChart: section.chart } : {}), ...(section.agendaNote !== undefined ? { reviewAgendaNote: section.agendaNote } : {}), ...(section.outcome ? { reviewOutcome: section.outcome } : {}), ...(section.outcomeComparison ? { reviewOutcomeComparison: section.outcomeComparison } : {}) }, count: section.recordCount, sourceRefs: section.projection.context.sourceRefs })),
         comments: [...new Map(selected.value.flatMap((section) => section.comments ?? []).map((comment) => [JSON.stringify([comment.id, comment.version]), comment] as const)).values()], ...(input.previousReviewRef ? { previousReviewRef: input.previousReviewRef } : {}),
       }
       const result = await host.state.transaction(request, command, async (state) => {
@@ -101,12 +118,24 @@ export function createReviewPort(host: ReviewHost) {
       if (!Array.isArray(result.value.sections) || !Array.isArray(result.value.comments)) return { status: "unavailable", reason: "invalid-review-sources" } as const
       if (!(await host.authorizeSections(binding, result.value.sections)) || !(await host.authorizeComments(binding, result.value.comments))) return { status: "denied", reason: "access-unavailable" } as const
       if (!validReviewSources(result.value)) return { status: "unavailable", reason: "invalid-review-sources" } as const
+      const comparisons = result.value.sections.flatMap((section) => {
+        const comparison = (section.content as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison
+        return comparison ? [comparison] : []
+      })
+      if (!(await host.authorizeOutcomeComparison(binding, comparisons))) return { status: "denied", reason: "access-unavailable" } as const
+      const outcomes = result.value.sections.flatMap((section) => {
+        const outcome = (section.content as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome
+        return outcome ? [outcome] : []
+      })
+      if (!(await host.authorizeOutcome(binding, outcomes))) return { status: "denied", reason: "access-unavailable" } as const
+      const decisions = result.value.sections.flatMap((section) => (section.content as DomainProjection).decision ? [(section.content as DomainProjection).decision!] : [])
+      if (!(await host.authorizeDecision(binding, decisions)) || !(await host.revalidate(binding, decisions.flatMap(reviewDecisionSources)))) return { status: "denied", reason: "access-unavailable" } as const
       const charts = result.value.sections.map((section) => (section.content as DomainProjection & { reviewChart?: ReviewChart }).reviewChart)
       if (!(await host.authorizeSensitivity(binding, charts.flatMap((chart) => chart?.status === "ok" && chart.sensitivity ? [chart.sensitivity.result] : [])))) return { status: "denied", reason: "access-unavailable" } as const
       if (!(await host.revalidate(binding, result.value.sourceRefs))) return { status: "denied", reason: "access-unavailable" } as const
       const projections = result.value.sections.map((section) => section.content as DomainProjection)
       if (projections.some((projection) => !projection || !Array.isArray(projection.values) || projection.values.some((value: DomainProjection["values"][number]) => !Array.isArray(value.sourceRefs) || (value.value !== null && typeof value.value !== "string" && typeof value.value !== "boolean" && (typeof value.value !== "number" || !Number.isFinite(value.value))) || (value.value !== null && value.sourceRefs.length === 0)))) return { status: "unavailable", reason: "evidence-unavailable" } as const
-      if (!(await host.revalidateEvidence(binding, projections.flatMap((projection) => [...projection.values.flatMap((value) => value.sourceRefs), ...reviewChartEvidence((projection as DomainProjection & { reviewChart?: ReviewChart }).reviewChart)])))) return { status: "denied", reason: "access-unavailable" } as const
+      if (!(await host.revalidateEvidence(binding, projections.flatMap((projection) => [...projection.values.flatMap((value) => value.sourceRefs), ...reviewChartEvidence((projection as DomainProjection & { reviewChart?: ReviewChart }).reviewChart), ...reviewDecisionEvidence(projection.decision), ...((projection as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome?.sourceRefs ?? []), ...((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison?.baselineRefs ?? []), ...((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison?.sourceRefs ?? [])])))) return { status: "denied", reason: "access-unavailable" } as const
       return { status: "ok", value: result.value } as const
     },
     async read(id: string, binding: TrustedDomainContext): Promise<PortResult<PreservedReview>> {
@@ -116,15 +145,28 @@ export function createReviewPort(host: ReviewHost) {
       if ("reason" in result) return result
       if (result.status !== "ok") return { status: "unavailable", reason: "not-committed" }
       if (!result.value) return { status: "unavailable", reason: "review-unavailable" } as const
+      if (result.value.id !== id) return { status: "unavailable", reason: "review-identity-mismatch" } as const
       if (!Array.isArray(result.value.sections) || !Array.isArray(result.value.comments)) return { status: "unavailable", reason: "invalid-review-sources" } as const
       if (!(await host.authorizeSections(binding, result.value.sections)) || !(await host.authorizeComments(binding, result.value.comments))) return { status: "denied", reason: "access-unavailable" } as const
       if (!validReviewSources(result.value)) return { status: "unavailable", reason: "invalid-review-sources" } as const
+      const comparisons = result.value.sections.flatMap((section) => {
+        const comparison = (section.content as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison
+        return comparison ? [comparison] : []
+      })
+      if (!(await host.authorizeOutcomeComparison(binding, comparisons))) return { status: "denied", reason: "access-unavailable" } as const
+      const outcomes = result.value.sections.flatMap((section) => {
+        const outcome = (section.content as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome
+        return outcome ? [outcome] : []
+      })
+      if (!(await host.authorizeOutcome(binding, outcomes))) return { status: "denied", reason: "access-unavailable" } as const
+      const decisions = result.value.sections.flatMap((section) => (section.content as DomainProjection).decision ? [(section.content as DomainProjection).decision!] : [])
+      if (!(await host.authorizeDecision(binding, decisions)) || !(await host.revalidate(binding, decisions.flatMap(reviewDecisionSources)))) return { status: "denied", reason: "access-unavailable" } as const
       const charts = result.value.sections.map((section) => (section.content as DomainProjection & { reviewChart?: ReviewChart }).reviewChart)
       if (!(await host.authorizeSensitivity(binding, charts.flatMap((chart) => chart?.status === "ok" && chart.sensitivity ? [chart.sensitivity.result] : [])))) return { status: "denied", reason: "access-unavailable" } as const
       if (!(await host.revalidate(binding, result.value.sourceRefs))) return { status: "denied", reason: "access-unavailable" } as const
       const projections = result.value.sections.map((section) => section.content as DomainProjection)
       if (projections.some((projection) => !projection || !Array.isArray(projection.values) || projection.values.some((value: DomainProjection["values"][number]) => !Array.isArray(value.sourceRefs) || (value.value !== null && typeof value.value !== "string" && typeof value.value !== "boolean" && (typeof value.value !== "number" || !Number.isFinite(value.value))) || (value.value !== null && value.sourceRefs.length === 0)))) return { status: "unavailable", reason: "evidence-unavailable" } as const
-      if (!(await host.revalidateEvidence(binding, projections.flatMap((projection) => [...projection.values.flatMap((value) => value.sourceRefs), ...reviewChartEvidence((projection as DomainProjection & { reviewChart?: ReviewChart }).reviewChart)])))) return { status: "denied", reason: "access-unavailable" } as const
+      if (!(await host.revalidateEvidence(binding, projections.flatMap((projection) => [...projection.values.flatMap((value) => value.sourceRefs), ...reviewChartEvidence((projection as DomainProjection & { reviewChart?: ReviewChart }).reviewChart), ...reviewDecisionEvidence(projection.decision), ...((projection as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome?.sourceRefs ?? []), ...((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison?.baselineRefs ?? []), ...((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison?.sourceRefs ?? [])])))) return { status: "denied", reason: "access-unavailable" } as const
       return { status: "ok", value: result.value } as const
     },
   }
@@ -139,7 +181,7 @@ function validReviewSources(review: PreservedReview) {
     if (!section || typeof section !== "object") return false
     const projection = section.content as DomainProjection
     return typeof section.id === "string" && !!section.id && typeof section.title === "string" && Number.isSafeInteger(section.count) && section.count >= 0 && !!section.period && isSfPeriod(section.period) && Array.isArray(section.sourceRefs) && !!projection?.context && Array.isArray(projection.context.sourceRefs) &&
-      digestSfValue(section.sourceRefs) === digestSfValue(projection.context.sourceRefs) && validChart(projection, (projection as DomainProjection & { reviewChart?: ReviewChart }).reviewChart) && section.sourceRefs.every((ref: SourceRef) => allowed.has(digestSfValue(ref)))
+      digestSfValue(section.sourceRefs) === digestSfValue(projection.context.sourceRefs) && ((projection as DomainProjection & { reviewAgendaNote?: unknown }).reviewAgendaNote === undefined || (typeof (projection as DomainProjection & { reviewAgendaNote?: unknown }).reviewAgendaNote === "string" && ((projection as DomainProjection & { reviewAgendaNote: string }).reviewAgendaNote.length <= 2000))) && validChart(projection, (projection as DomainProjection & { reviewChart?: ReviewChart }).reviewChart) && validReviewDecision(projection.decision) && validReviewOutcome((projection as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome) && validOutcomeComparison((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison) && (!(projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison || digestSfValue((projection as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome) === digestSfValue((projection as DomainProjection & { reviewOutcomeComparison: ReviewOutcomeComparison }).reviewOutcomeComparison.observation)) && section.sourceRefs.every((ref: SourceRef) => allowed.has(digestSfValue(ref)))
   }) && review.comments.every((comment: PreservedReview["comments"][number]) => !!comment && typeof comment === "object" && typeof comment.id === "string" && !!comment.id && Number.isSafeInteger(comment.version) && comment.version > 0 && typeof comment.content === "string" && typeof comment.authorRef === "string" && !!comment.authorRef && typeof comment.createdAt === "string" && !!comment.createdAt && Array.isArray(comment.sourceRefs) && comment.sourceRefs.length > 0 && comment.sourceRefs.every((ref: SourceRef) => allowed.has(digestSfValue(ref))))
 }
 
@@ -151,7 +193,7 @@ function validChart(projection: DomainProjection, chart: ReviewChart | undefined
   type Value = DomainProjection["values"][number]
   type TimelineItem = Extract<NonNullable<Extract<ReviewChart, { status: "ok" }>["timeline"]>, { status: "ok" }>["items"][number]
   if (chart.limitations.some((limitation: string) => typeof limitation !== "string") || chart.series.some((series: Series) => !series || typeof series.id !== "string" || !series.id || typeof series.label !== "string" || !series.label || typeof series.unit !== "string" || !series.unit || typeof series.role !== "string" || !series.role || !Array.isArray(series.values) || !Array.isArray(series.valueIds) || (series.alignmentKeys !== undefined && (!Array.isArray(series.alignmentKeys) || series.alignmentKeys.length !== series.valueIds.length || series.alignmentKeys.some((key: string) => typeof key !== "string" || !key) || new Set(series.alignmentKeys).size !== series.alignmentKeys.length))) || chart.unassigned.some((value: Value) => !value || typeof value.id !== "string")) return false
-  if (chart.sensitivity && (typeof chart.sensitivity.parameterUnit !== "string" || typeof chart.sensitivity.resultUnit !== "string" || !decodeSfOperationOutput("sf_sensitivity_evaluate", chart.sensitivity.result).ok)) return false
+  if (chart.sensitivity && (!isReviewSensitivityBound(projection, chart) || typeof chart.sensitivity.parameterUnit !== "string" || typeof chart.sensitivity.resultUnit !== "string" || !decodeSfOperationOutput("sf_sensitivity_evaluate", chart.sensitivity.result).ok)) return false
   if (!validateReviewWaterfall(projection, chart.waterfall)) return false
   if (chart.timeline && chart.timeline.status !== "ok" && chart.timeline.status !== "unavailable") return false
   if (chart.timeline?.status === "unavailable" && !chart.timeline.reason) return false

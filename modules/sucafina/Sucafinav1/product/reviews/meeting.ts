@@ -1,9 +1,14 @@
-import { digestSfValue } from "../contracts/canonical.ts"
-import type { DomainProjection } from "../contracts/context.ts"
+import type { ReviewOutcomeComparison } from "./outcome.ts"
+import { reviewOutcomeComparisonLines, validOutcomeComparison, reviewOutcomeLines, validReviewOutcome } from "./outcome.ts"
+import type { ObservedResultProjection } from "../contracts/decisions.ts"
+import type { DomainProjection, PreservedReview } from "../contracts/context.ts"
 import type { PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { createReviewPort } from "./port.ts"
 import { compareReviews } from "./compare.ts"
+import { reviewDecisionLines, validReviewDecision } from "./decision.ts"
+import { renderCapturedMeetingChart } from "./meeting-chart.ts"
+import type { ReviewChart } from "./port.ts"
 import { matchesSelectedSources } from "./references.ts"
 
 export function createMeetingView(input: {
@@ -11,6 +16,16 @@ export function createMeetingView(input: {
   reviewRef: string
   context: TrustedDomainContext
   checkUpdate: (reviewRef: string, context: TrustedDomainContext) => Promise<PortResult<{ available: boolean }>>
+  requestUpdate: (reviewRef: string) => void
+}) {
+  return createMeetingViewFromReads({ reviewRef: input.reviewRef, read: (ref) => input.reviews.read(ref, input.context), checkUpdate: (ref) => input.checkUpdate(ref, input.context), requestUpdate: input.requestUpdate })
+}
+
+/** Browser clients obtain a fresh authenticated read for every navigation. */
+export function createMeetingViewFromReads(input: {
+  reviewRef: string
+  read: (reviewRef: string) => Promise<PortResult<PreservedReview>>
+  checkUpdate: (reviewRef: string) => Promise<PortResult<{ available: boolean }>>
   requestUpdate: (reviewRef: string) => void
 }) {
   const root = document.createElement("section")
@@ -33,7 +48,7 @@ export function createMeetingView(input: {
   let generation = 0
   const show = async (target: number) => {
     const turn = ++generation
-    const result = await input.reviews.read(input.reviewRef, input.context)
+    const result = await input.read(input.reviewRef)
     if (turn !== generation) return false
     content.replaceChildren()
     if (result.status !== "ok" || !result.value) {
@@ -60,6 +75,44 @@ export function createMeetingView(input: {
     if (!projection || !Array.isArray(projection.values)) {
       content.append("Section content unavailable.")
       return false
+    }
+    const capturedChart = (projection as DomainProjection & { reviewChart?: ReviewChart }).reviewChart
+    const chart = renderCapturedMeetingChart(projection, capturedChart, review.id)
+    if (chart) content.append(chart)
+    const note = (projection as DomainProjection & { reviewAgendaNote?: unknown }).reviewAgendaNote
+    if (typeof note === "string") {
+      const paragraph = document.createElement("p")
+      paragraph.textContent = `Agenda note: ${note}`
+      content.append(paragraph)
+    }
+    const comparison = (projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison
+    if (comparison && validOutcomeComparison(comparison)) {
+      const list = document.createElement("ul")
+      reviewOutcomeComparisonLines(comparison).forEach((line) => {
+        const item = document.createElement("li")
+        item.textContent = line
+        list.append(item)
+      })
+      content.append(list)
+    }
+    const outcome = (projection as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome
+    if (outcome && validReviewOutcome(outcome)) {
+      const list = document.createElement("ul")
+      reviewOutcomeLines(outcome).forEach((line) => {
+        const item = document.createElement("li")
+        item.textContent = line
+        list.append(item)
+      })
+      content.append(list)
+    }
+    if (projection.decision && validReviewDecision(projection.decision)) {
+      const decision = document.createElement("ul")
+      reviewDecisionLines(projection.decision).forEach((line) => {
+        const item = document.createElement("li")
+        item.textContent = line
+        decision.append(item)
+      })
+      content.append(decision)
     }
     const list = document.createElement("ul")
     projection.values.forEach((value: DomainProjection["values"][number]) => {
@@ -92,24 +145,24 @@ export function createMeetingView(input: {
   compare.addEventListener("click", () => {
     const turn = ++generation
     void (async () => {
-      const current = await input.reviews.read(input.reviewRef, input.context)
+      const current = await input.read(input.reviewRef)
       if (turn !== generation) return
       if (current.status !== "ok" || !current.value) {
         content.replaceChildren()
         status.textContent = "Review is unavailable or access has changed."
         return
       }
-      const prior = current.value.previousReviewRef ? await input.reviews.read(current.value.previousReviewRef, input.context) : undefined
+      const prior = current.value.previousReviewRef ? await input.read(current.value.previousReviewRef) : undefined
       if (turn !== generation) return
       if (prior && (prior.status !== "ok" || !prior.value)) {
         content.replaceChildren()
         status.textContent = "Previous review is unavailable or access has changed."
         return
       }
-      const latest = await input.reviews.read(input.reviewRef, input.context)
-      const priorAgain = current.value.previousReviewRef ? await input.reviews.read(current.value.previousReviewRef, input.context) : undefined
+      const latest = await input.read(input.reviewRef)
+      const priorAgain = current.value.previousReviewRef ? await input.read(current.value.previousReviewRef) : undefined
       if (turn !== generation) return
-      if (latest.status !== "ok" || !latest.value || digestSfValue(latest.value) !== digestSfValue(current.value) || (prior && (!priorAgain || priorAgain.status !== "ok" || !priorAgain.value || prior.status !== "ok" || digestSfValue(priorAgain.value) !== digestSfValue(prior.value)))) {
+      if (latest.status !== "ok" || !latest.value || JSON.stringify(latest.value) !== JSON.stringify(current.value) || (prior && (!priorAgain || priorAgain.status !== "ok" || !priorAgain.value || prior.status !== "ok" || JSON.stringify(priorAgain.value) !== JSON.stringify(prior.value)))) {
         content.replaceChildren()
         status.textContent = "Comparison is unavailable or access has changed."
         return
@@ -123,13 +176,48 @@ export function createMeetingView(input: {
         const before = "before" in change ? String(change.before.value ?? "unavailable") : "not present"
         const after = "after" in change ? String(change.after.value ?? "unavailable") : "not present"
         const source = "after" in change ? change.after : change.before
-        const basis = ("before" in change && "after" in change && change.kind === "incompatible")
-          ? `${change.before.period.start}–${change.before.period.end} ${change.before.currency ?? change.before.unit ?? ""} → ${change.after.period.start}–${change.after.period.end} ${change.after.currency ?? change.after.unit ?? ""}`
-          : `${source.period.start}–${source.period.end} ${source.currency ?? source.unit ?? ""}`
-        item.textContent = `${source.id} · ${change.kind}: ${before} → ${after}${"delta" in change && change.delta !== undefined ? ` (Δ ${change.delta})` : ""} · ${basis}`
+        const reviewRef = "previousReviewId" in change ? `${change.previousReviewId} → ${change.reviewId}` : change.reviewId
+        const delta = "delta" in change && change.delta !== undefined ? ` (Δ ${change.delta})` : ""
+        item.textContent = `section ${change.sectionId} · ${reviewRef} · ${source.id} · ${change.kind}: ${before} → ${after}${delta} · ${change.basis}`
+        list.append(item)
+      })
+      if (differences.state !== "unavailable") differences.omissions.forEach((omission) => {
+        const item = document.createElement("li")
+        item.textContent = `Omitted: section ${omission.sectionId} · ${omission.valueId} · ${omission.reason}`
         list.append(item)
       })
       content.append(list)
+      if (differences.state !== "unavailable") {
+        differences.outcomeComparisons.forEach((entry) => {
+          const block = document.createElement("ul")
+          reviewOutcomeComparisonLines(entry.comparison).forEach((line) => {
+            const item = document.createElement("li")
+            item.textContent = `${entry.reviewId} · section ${entry.sectionId} · ${line}`
+            block.append(item)
+          })
+          content.append(block)
+        })
+        differences.outcomes.forEach((entry) => {
+          const block = document.createElement("ul")
+          reviewOutcomeLines(entry.projection).forEach((line) => {
+            const item = document.createElement("li")
+            item.textContent = `${entry.reviewId} · section ${entry.sectionId} · ${line}`
+            block.append(item)
+          })
+          content.append(block)
+        })
+        if (differences.comments.length) {
+          const heading = document.createElement("h3")
+          heading.textContent = "Preserved comments"
+          const comments = document.createElement("ul")
+          differences.comments.forEach((comment) => {
+            const item = document.createElement("li")
+            item.textContent = `${comment.reviewId} · ${comment.authorRef} · ${comment.createdAt} · v${comment.version}: ${comment.content}`
+            comments.append(item)
+          })
+          content.append(heading, comments)
+        }
+      }
       if ("limitations" in differences) differences.limitations.forEach((limitation) => {
         const paragraph = document.createElement("p")
         paragraph.textContent = limitation
@@ -139,7 +227,7 @@ export function createMeetingView(input: {
   })
   const checkUpdates = async () => {
     const turn = ++generation
-    const result = await input.checkUpdate(input.reviewRef, input.context)
+    const result = await input.checkUpdate(input.reviewRef)
     if (turn !== generation) return
     if (result.status === "denied") {
       content.replaceChildren()

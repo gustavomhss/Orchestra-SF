@@ -13,13 +13,12 @@ import { normalizeDashboardRecords } from "../dashboard/records.ts"
 /** Private lifecycle inventory, not an authorized business projection or a calculation engine. */
 export function enumerateSfSources(surface: Surface, snapshot: Snapshot): readonly SfSourceIdentityInput[] {
   const assets = rows(snapshot.data.assets).filter((asset) => typeof asset.id === "string" && asset.id.trim())
-    .map((asset) => ({ recordType: "document-asset", recordId: String(asset.id), inputDigest: digestSfValue({ asset, blobGeneration: typeof asset.key === "string" && Object.hasOwn(snapshot.sfBlobGenerations ?? {}, asset.key) ? snapshot.sfBlobGenerations![asset.key] : 0 }) }))
+    .map((asset) => ({ recordType: "document-asset", recordId: String(asset.id), inputDigest: digestSfValue(asset) }))
   if (surface === "planner") {
     const versions = Array.isArray(snapshot.data.versions)
       ? rows(snapshot.data.versions).map((value) => ({ key: String(value.id ?? ""), value }))
       : Object.entries(object(snapshot.data.versions)).map(([key, value]) => ({ key: String(object(value).id ?? key), value }))
-    const roster = Array.isArray(snapshot.data.roster) ? [{ recordType: "planner-roster", recordId: "file", inputDigest: digestSfValue({ roster: snapshot.data.roster, revision: snapshot.versions["roster:file"] }) }] : []
-    return [...assets, ...roster, ...versions.map(({ key, value }) => ({ recordType: "planner-version", recordId: key, inputDigest: digestSfValue({ value,
+    return [...assets, ...versions.map(({ key, value }) => ({ recordType: "planner-version", recordId: key, inputDigest: digestSfValue({ value,
       entities: snapshot.data.entities === undefined ? object(snapshot.data.app).entities : snapshot.data.entities,
       allocations: snapshot.data.allocations === undefined ? object(snapshot.data.app).allocations : snapshot.data.allocations,
       officials: snapshot.data.officials, officialId: snapshot.data.officialId, appOfficialId: object(snapshot.data.app).officialId,
@@ -45,6 +44,6 @@ export function enumerateSfSources(surface: Surface, snapshot: Snapshot): readon
     if (!logical) return []
     return logical.map((record) => ({ recordType: collection, recordId: String(record.id), inputDigest: digestSfValue(record) }))
   })
-  return [...assets, { recordType: "dashboard-dataset", recordId: "all", inputDigest: digestSfValue(publicSfData(snapshot.data)) }, ...records, ...keyed, ...[...DashboardBudget.pages, ...DashboardPeople.pages, ...DashboardOperations.pages, ...DashboardPortfolio.pages]
+  return [...assets, ...records, ...keyed, ...[...DashboardBudget.pages, ...DashboardPeople.pages, ...DashboardOperations.pages, ...DashboardPortfolio.pages]
     .map((page) => ({ recordType: "dashboard-page", recordId: page, inputDigest: digestSfValue({ page, data: publicSfData(snapshot.data) }) }))]
 }

@@ -1,3 +1,4 @@
+import { fitSlideText, SLIDE_BODY, SLIDE_HEADING } from "../product/reviews/report-layout.ts"
 import { computeBudgetTotals, dashboardMoney, socClosureValue } from "../src/dashboard-accounts.ts"
 import type { BudgetData } from "../src/dashboard-accounts.ts"
 import { dashboardPages } from "../src/nav.ts"
@@ -95,9 +96,17 @@ export async function createReport(
   presentation.title = title
   presentation.subject = `IT Dashboard · FY ${options.year}`
   for (const selected of topics) {
+    const titles = fitSlideText(selected.title, SLIDE_HEADING)
+    if (titles.length > 1) titles.forEach((title, index) => {
+      const page = presentation.addSlide()
+      page.background = { color: "F3F6F2" }
+      page.addText(`Topic title · ${index + 1}/${titles.length}`, { x: 0.6, y: 0.35, w: 12.1, h: 0.6, fontSize: 20, bold: true })
+      page.addText(title, { x: 0.6, y: 1.3, w: 12.1, h: 5.4, fontSize: 20, margin: 0.08 })
+    })
+    const heading = titles.length > 1 ? "Topic" : selected.title
     const slide = presentation.addSlide()
     slide.background = { color: "F3F6F2" }
-    slide.addText(selected.title, { x: 0.6, y: 0.35, w: 12.1, h: 0.6, color: "173D2C", fontSize: 27, bold: true })
+    slide.addText(heading, { x: 0.6, y: 0.35, w: 12.1, h: 0.6, color: "173D2C", fontSize: 27, bold: true })
     slide.addText(`FY ${options.year} · ${environment.at.slice(0, 10)}`, {
       x: 0.6, y: 1.0, w: 12, h: 0.25, fontSize: 10, color: "607469",
     })
@@ -114,11 +123,11 @@ export async function createReport(
     if (!records.length) slide.addText("No records.", { x: 0.6, y: 3.2, w: 12, h: 0.5, fontSize: 17 })
     records.forEach((record, recordIndex) => {
       // Bounded text fragments prevent a long note from silently clipping in a fixed-height shape.
-      const fragments = record.replace(/\r\n|\r|\n/g, " ↵ ").match(/.{1,60}(?:\s|$)|\S{1,60}/gu)?.map((fragment) => fragment.trim()) ?? [""]
+      const fragments = fitSlideText(record, SLIDE_BODY)
       fragments.forEach((fragment, fragmentIndex) => {
         const page = presentation.addSlide()
         page.background = { color: "F3F6F2" }
-        page.addText(`${selected.title} · FY ${options.year} · ${recordIndex + 1}/${records.length}${fragments.length > 1 ? ` · ${fragmentIndex + 1}/${fragments.length}` : ""}`, {
+        page.addText(`${heading} · FY ${options.year} · ${recordIndex + 1}/${records.length}${fragments.length > 1 ? ` · ${fragmentIndex + 1}/${fragments.length}` : ""}`, {
           x: 0.6, y: 0.35, w: 12.1, h: 0.6, color: "173D2C", fontSize: 20, bold: true,
         })
         page.addText(fragment, { x: 0.6, y: 1.3, w: 12.1, h: 5.4, fontSize: 14, color: "243C30", margin: 0.08, breakLine: true })

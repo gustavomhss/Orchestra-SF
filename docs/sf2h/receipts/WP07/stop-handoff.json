@@ -1,0 +1,77 @@
+{
+  "schema": "sf2-stop-handoff-v1",
+  "wp": "WP07",
+  "state": "STOPPED_INCOMPLETE",
+  "branch": "sf2-reports-ready",
+  "base": "c873998a4bf597cb8fe3d94b48b58a7441d533e8",
+  "pre_handoff_head": "06bf9ac7fafc047160d4317ab8540e5026e355d9",
+  "pre_handoff_tree": "85260b4cc30f6a1d9b6d8a6a0e85ffd92629fcdb",
+  "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/reviews-ready",
+  "task_states": {
+    "T01": "incomplete; selection and test authored; producer topics and integration remain",
+    "T02": "incomplete; preservation, C06 history, human handoff, browser and host adapters authored; current-access/physical-continuity integration remains",
+    "T03": "incomplete; comparison and meeting authored, full criteria review pending",
+    "T04": "incomplete; report pagination, charts, cover and tests authored; visual inspection and full integration pending"
+  },
+  "inputs": {
+    "WP00_schema": "a71b1a4cf2",
+    "WP02_agenda": "2a53dfb1e6",
+    "WP05_capture": "9c539e6800",
+    "WP08_history": "1e4f28266e",
+    "WP11_portfolio_history": "e8a5e786df",
+    "WP13_sensitivity": "11e475056d",
+    "WP14_outcomes": "d6c97669d6",
+    "foreign_copies": "no foreign producer files included in WP07 diff; adapters use referenced contracts and require integration"
+  },
+  "workers": [
+    {
+      "id": "S3-A",
+      "role": "Terra",
+      "state": "stopped after checkpoint",
+      "lease": "released"
+    },
+    {
+      "id": "01a1d64d-db40-7961-9b40-bcc0dee34c83",
+      "requested_model": "gpt-6-luna",
+      "effective_model": "not independently exposed",
+      "state": "idle; stop ACK; no tests or git",
+      "lease": "released"
+    },
+    {
+      "id": "4ea7089d-03f0-4be1-b78d-74b6ca783107",
+      "model": "grok-4.7-build",
+      "state": "terminal HTTP 402; no edits in final run",
+      "lease": "released"
+    },
+    {
+      "id": "c21ed25f-81db-4c47-b94e-a5b6bd783107",
+      "model": "grok-4.7-build",
+      "state": "terminal HTTP 402; no edits in final run",
+      "lease": "released"
+    }
+  ],
+  "validation": {
+    "tests": "NOT_RUN",
+    "hosted_ci": "NOT_RUN",
+    "typecheck": "NOT_RUN; earlier Luna attempt failed because tsgo missing",
+    "guardrail": "NOT_RUN",
+    "visual_render": "NOT_RUN",
+    "diff_check": "PASS before checkpoint"
+  },
+  "findings": [
+    "C07 governed routine result has no authenticated immutable body reader",
+    "WP10 host composition/browser mount and narrow viewer C08 report write policy pending",
+    "dashboard page-to-record historical continuity receipt pending WP02/WP08",
+    "historical comparison and sensitivity decision readers pending producer",
+    "executive and it-performance topics and nonempty IT operations subset unavailable",
+    "C06 historical message reader seam authored but not integrated with real host",
+    "export visual inspection and authenticated end-to-end proof pending"
+  ],
+  "resume": [
+    "Resume only on explicit user instruction.",
+    "Read this handoff and inspect branch/remote mapping and worker leases.",
+    "Integrate producer-owned C06 continuity, historical decision reads, real host wiring and remaining dashboard topics.",
+    "Review T01/T03/T04 and run only final scoped hosted tests under campaign dispatcher policy, then open one WP PR."
+  ],
+  "remote": "pending publication; base c873998a4bf597cb8fe3d94b48b58a7441d533e8 not found in origin through GitHub MCP"
+}

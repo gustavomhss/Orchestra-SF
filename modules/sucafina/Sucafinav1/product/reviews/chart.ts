@@ -1,3 +1,4 @@
+import { isReviewSensitivityBound } from "./sensitivity.ts"
 import { deflateSync } from "node:zlib"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
@@ -193,8 +194,8 @@ export function renderReviewWaterfall(projection: DomainProjection, chart: Revie
 }
 
 /** BI11 is a scatter of producer-evaluated points; it never interpolates a threshold. */
-export function renderReviewSensitivity(chart: ReviewChart | undefined): Uint8Array | undefined {
-  if (!chart || chart.status !== "ok" || chart.viewId !== "BI11" || !chart.sensitivity || typeof chart.sensitivity.parameterUnit !== "string" || !chart.sensitivity.parameterUnit.trim() || typeof chart.sensitivity.resultUnit !== "string" || !chart.sensitivity.resultUnit.trim() || !decodeSfOperationOutput("sf_sensitivity_evaluate", chart.sensitivity.result).ok) return
+export function renderReviewSensitivity(projection: DomainProjection, chart: ReviewChart | undefined): Uint8Array | undefined {
+  if (!isReviewSensitivityBound(projection, chart) || !chart || chart.status !== "ok" || chart.viewId !== "BI11" || !chart.sensitivity || typeof chart.sensitivity.parameterUnit !== "string" || !chart.sensitivity.parameterUnit.trim() || typeof chart.sensitivity.resultUnit !== "string" || !chart.sensitivity.resultUnit.trim() || !decodeSfOperationOutput("sf_sensitivity_evaluate", chart.sensitivity.result).ok) return
   const points = chart.sensitivity.result.evaluated.filter((point) => Number.isFinite(point.parameterValue) && point.value !== null && Number.isFinite(point.value))
   if (!points.length) return
   const minX = points.reduce((value, point) => Math.min(value, point.parameterValue), Infinity)

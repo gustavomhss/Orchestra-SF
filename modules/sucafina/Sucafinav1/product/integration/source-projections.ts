@@ -1,10 +1,7 @@
-import { domain } from "../../runtime/planner.ts"
-import { plannerKeys } from "../../src/nav.ts"
 import { roleMap } from "../../runtime/admin.ts"
 import { object } from "../../runtime/contract.ts"
 import type { Actor, Snapshot } from "../../runtime/contract.ts"
 import type { Surface } from "../../src/identity.ts"
-import { isSfPeriod } from "../contracts/validation.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { projectPlannerSource } from "../planner/port.ts"
 import { projectDashboardScope } from "../dashboard/scope.ts"
@@ -13,15 +10,10 @@ import type { SfSourceScope } from "./source-lifecycle.ts"
 import { projectSfProcurementScope } from "./procurement-projections.ts"
 import { normalizeDashboardRecords } from "../dashboard/records.ts"
 import { projectDashboardSource } from "../dashboard/port.ts"
-import { publicSfData } from "./public-state.ts"
 
 /** Saved roles define the projection, never authenticate a later caller. Reads authenticate again. */
 export function sfPlannerProjectionSelector(snapshot: Snapshot, actor: Actor) {
   return { kind: "planner-source-v1", roles: [...actor.roles].sort(), canWrite: actor.canWrite, roleMapDigest: digestSfValue(roleMap(snapshot, "planner")) }
-}
-
-export function sfPlannerRosterProjectionSelector(snapshot: Snapshot, actor: Actor, fields: readonly string[], period: Period) {
-  return { ...sfPlannerProjectionSelector(snapshot, actor), kind: "planner-roster-v1", fields: [...fields].sort(), period: structuredClone(period) }
 }
 
 // The host shares this clock with its request environment; a client cannot supply it.
@@ -37,12 +29,7 @@ export function projectSfSourceScope(surface: Surface, snapshot: Snapshot, scope
     const access = object(object(snapshot.data.access)[scope.principalRef])
     if (stored.id !== scope.principalRef || selector.roleMapDigest !== digestSfValue(roleMap(snapshot, "dashboard")) || typeof stored.canWrite !== "boolean" || !Array.isArray(stored.roles) || !stored.roles.every((role) => typeof role === "string")) return undefined
     const actor: Actor = { id: scope.principalRef, roles: stored.roles, canWrite: stored.canWrite, assigned: Array.isArray(access.assigned) ? access.assigned.filter((value): value is string => typeof value === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((value): value is string => typeof value === "string") : [] }
-    if (digestSfValue(actor) !== digestSfValue(stored)) return undefined
-    // Whole-backup authority is explicit and retains the legacy dashboard administrator boundary.
-    if (scope.recordType === "dashboard-dataset") return scope.recordId === "all" && selector.kind === "dashboard-dataset-v1" && actor.canWrite && actor.roles.includes("admin") &&
-      Array.isArray(selector.fields) && selector.fields.length === 1 && selector.fields[0] === "data" && selector.period === undefined
-      ? { data: publicSfData(snapshot.data) } : undefined
-    if (typeof selector.page !== "string" || !Array.isArray(selector.fields) || !selector.fields.every((field) => typeof field === "string") || !selector.period || typeof selector.period !== "object") return undefined
+    if (digestSfValue(actor) !== digestSfValue(stored) || typeof selector.page !== "string" || !Array.isArray(selector.fields) || !selector.fields.every((field) => typeof field === "string") || !selector.period || typeof selector.period !== "object") return undefined
     if (typeof observedAt !== "string" || !Number.isFinite(Date.parse(observedAt))) return undefined
     const asOf = `${new Date(observedAt).toISOString().slice(0, 10)}T00:00:00Z`
     if (scope.recordType === "dashboard-page" && scope.recordId === selector.page) return projectDashboardScope(snapshot, actor, { page: selector.page, fields: selector.fields, period: selector.period as Period }, asOf)
@@ -84,24 +71,12 @@ export function projectSfSourceScope(surface: Surface, snapshot: Snapshot, scope
     if (period.start > start || period.end < end) return undefined
     return Object.fromEntries([...selector.fields].sort().map((field) => [field, record[field]]))
   }
-  if (surface !== "planner" || !["planner-source-v1", "planner-roster-v1"].includes(String(selector.kind)) ||
+  if (surface !== "planner" || scope.recordType !== "planner-version" || selector.kind !== "planner-source-v1" ||
     selector.roleMapDigest !== digestSfValue(roleMap(snapshot, "planner")) || typeof selector.canWrite !== "boolean" ||
     !Array.isArray(selector.roles) || !selector.roles.every((role): role is string => typeof role === "string")) return undefined
   const access = object(object(snapshot.data.access)[scope.principalRef])
   const actor: Actor = { id: scope.principalRef, roles: selector.roles, canWrite: selector.canWrite,
     assigned: Array.isArray(access.assigned) ? access.assigned.filter((value): value is string => typeof value === "string") : [],
     domains: Array.isArray(access.domains) ? access.domains.filter((value): value is string => typeof value === "string") : [] }
-  if (scope.recordType === "planner-version" && selector.kind === "planner-source-v1") return projectPlannerSource(snapshot, actor, scope.recordId)
-  const fields = selector.fields
-  if (scope.recordType !== "planner-roster" || scope.recordId !== "file" || selector.kind !== "planner-roster-v1" || !actor.canWrite ||
-    !actor.roles.some((role) => role === "admin" || role === "hr") || !plannerKeys(actor).includes("Headcount") || !Array.isArray(snapshot.data.roster) ||
-    !isSfPeriod(selector.period) || !Array.isArray(fields) || !fields.length || fields.some((field) => typeof field !== "string" || !["name", "title", "type", "leader", "location", "start", "end", "status"].includes(field)) ||
-    new Set(fields).size !== fields.length || digestSfValue(fields) !== digestSfValue([...fields].sort())) return undefined
-  const roster = domain.view(snapshot, actor, { at: observedAt ?? "1970-01-01T00:00:00.000Z", id: () => "", directory: [] }).data.roster
-  if (!Array.isArray(roster) || roster.some((row) => !row || typeof row !== "object" || Array.isArray(row))) return undefined
-  const source = snapshot.sfSources?.records[JSON.stringify(["planner-roster", "file"])]
-  if (!source?.alive || !Number.isSafeInteger(source.version) || source.version < 1) return undefined
-  // The full physical revision also fences changes in fields used by roster synchronization.
-  return { roster: roster.map((row) => Object.fromEntries(fields.map((field) => [field, object(row)[field]]))), sourceVersion: source.version }
-
+  return projectPlannerSource(snapshot, actor, scope.recordId)
 }

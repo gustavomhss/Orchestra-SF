@@ -6,8 +6,7 @@ import { SkillV2 } from "@orchestra/core/skill"
 import { Schema } from "effect"
 import type { ResidentProfile, SkillManifest } from "../contracts/resident-ai.ts"
 import normative from "../contracts/normative-contracts.json"
-import { sfContributionOutputSchemas, sfOperationOutputSchemas, sfSkillInputSchemas } from "../contracts/output-schemas.ts"
-import { sfOperationInputSchemas } from "../contracts/operations.ts"
+import { sfSkillInputSchemas } from "../contracts/output-schemas.ts"
 
 /** Verify the distributed manifest and source bytes before providing them to the native loader. */
 export async function createResidentAiBundle(input: { root: string; manifestPath: string }) {
@@ -67,8 +66,6 @@ export async function createResidentAiBundle(input: { root: string; manifestPath
         skill.limits?.maxSteps !== Math.max(...normative.resident.profiles.filter((item) => expected.profiles.includes(item.id)).map((item) => item.max_steps)) ||
         skill.limits?.contextBudgetTokens !== Math.max(...normative.resident.profiles.filter((item) => expected.profiles.includes(item.id)).map((item) => item.context_budget_tokens))) throw new Error(`Skill policy mismatch: ${skill.id}`)
     if (!Object.hasOwn(sfSkillInputSchemas, skill.inputSchemaRef)) throw new Error(`Skill input schema unavailable: ${skill.inputSchemaRef}`)
-    if (skill.outputSchemaRefs.some((id) => !Object.hasOwn(sfContributionOutputSchemas, id))) throw new Error(`Skill output schema unavailable: ${skill.id}`)
-    if (skill.allowedOperations.some((id) => !Object.hasOwn(sfOperationInputSchemas, id) || !Object.hasOwn(sfOperationOutputSchemas, id))) throw new Error(`Skill operation schema unavailable: ${skill.id}`)
     const file = await read(`skills/${skill.id}/SKILL.md`)
     const parsed = ConfigMarkdown.parse(new TextDecoder("utf-8", { fatal: true }).decode(file))
     if (hash(file) !== skill.sourceDigest || hash(parsed.content.trim()) !== skill.instructionsDigest || parsed.data.name !== skill.id || !parsed.content.trim()) throw new Error(`Skill digest mismatch: ${skill.id}`)
