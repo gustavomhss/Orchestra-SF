@@ -1,0 +1,42 @@
+{
+  "status": "APPROVED_FOR_EXECUTION",
+  "round": 3,
+  "baseline_planning_commit": "0aa2405bb3668314f60d6a674d2bd53fd5003091",
+  "initial_candidate": "10a99bf06c5578ec02dab590a680ab18766c7ff4",
+  "reviewed_content_commit": "9a1812f360fa245fa2fac9aacf4938ddf8f21381",
+  "canonical_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "independent_reviews": [
+    {
+      "role": "supervisor",
+      "verdict": "APPROVED_FOR_EXECUTION",
+      "path": "rechecks/supervisor.json",
+      "candidate_sha": "9a1812f360fa245fa2fac9aacf4938ddf8f21381"
+    },
+    {
+      "role": "context",
+      "verdict": "APPROVED_FOR_EXECUTION",
+      "path": "rechecks/context.json",
+      "candidate_sha": "9a1812f360fa245fa2fac9aacf4938ddf8f21381"
+    },
+    {
+      "role": "evidence",
+      "verdict": "APPROVED_FOR_EXECUTION",
+      "path": "rechecks/evidence.json",
+      "candidate_sha": "9a1812f360fa245fa2fac9aacf4938ddf8f21381"
+    }
+  ],
+  "initial_findings": {
+    "P0": 0,
+    "P1": 2,
+    "P2": 3
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0
+  },
+  "corrections": "corrections.json",
+  "negative_controls": "correction-controls.json",
+  "guard_of_reviewed_candidate": "guard/receipt.json",
+  "scope": "Approval of the complete planning/workflow delta. Product implementation and product proofs remain NOT_RUN; runtime capacity and 120-minute completion are not demonstrated."
+}

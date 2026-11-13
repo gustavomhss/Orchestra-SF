@@ -1,0 +1,146 @@
+{
+  "review_id": "ROUND3-CONTEXT-RECHECK",
+  "candidate_sha": "9a1812f360fa245fa2fac9aacf4938ddf8f21381",
+  "initial_candidate_sha": "10a99bf06c5578ec02dab590a680ab18766c7ff4",
+  "planning_baseline_sha": "0aa2405bb3668314f60d6a674d2bd53fd5003091",
+  "code_baseline_sha": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "snapshot": "/workspace/scratch/b5296ae7597d/sf2h-corrected",
+  "scope": [
+    "Rechecagem proporcional dos achados R3-CTX-01, R3-CTX-02, R3-CTX-03 e R3-CTX-04 do parecer inicial preservado.",
+    "Compilador de contexto 1.0.1, dependências de contratos, fases/handoffs/produtores, rotas/skills/perfis/provas/evidência e efeitos sobre leitura versus autoridade.",
+    "Consistência dos 23 packs, render/validate, controles negativos, proveniência e medição de bytes no candidato exato.",
+    "Leitura do delta de validate_execution_plan.py e reprodução documental dos dois controles novos de identidade/eventos, sem reavaliar o protocolo operacional completo de outro escopo."
+  ],
+  "verdict": "APPROVED_FOR_EXECUTION",
+  "verdict_reason": "Os dois P1 e os dois P2 do parecer inicial foram corrigidos e encerrados no candidato exato. Os 23 packs resolvem as dependências verificadas, a ampliação é explicitamente de leitura, os 12 controles negativos são recusados e a medição corresponde aos bytes publicados. Nenhuma regressão concreta foi encontrada nas bordas alteradas deste escopo.",
+  "open_finding_counts": {"P0": 0, "P1": 0, "P2": 0},
+  "new_findings": [],
+  "finding_dispositions": [
+    {
+      "id": "R3-CTX-01",
+      "initial_severity": "P1",
+      "status": "CLOSED_CORRECTED",
+      "closed_on_candidate": "9a1812f360fa245fa2fac9aacf4938ddf8f21381",
+      "correction": "O compilador coleta referências de contratos do conteúdo selecionado, incluindo IDs em strings e intervalos, fecha transitivamente as definições e rejeita IDs desconhecidos. validate_contract_selection verifica resolução, conteúdo canônico e o anexo residente obrigatório.",
+      "observations": [
+        "Nenhuma consumer_edge ou operação selecionada dos 23 packs aponta a contrato ausente.",
+        "As oito arestas e as sete operações de produtores diretos registradas no inicial agora resolvem suas definições.",
+        "S1-A recebe C15 e specs/resident-runtime.md; S1-C e S4-B recebem C10; os demais contraexemplos foram encerrados.",
+        "Todos os contratos incluídos são iguais ao catálogo canônico."
+      ],
+      "negative_controls": [
+        "Remover C15 de S1-A: recusado.",
+        "Remover C10 de S1-C: recusado.",
+        "Remover C10 de S4-B: recusado.",
+        "Remover o anexo resident-runtime de S1-A: recusado.",
+        "Inserir referência C99 em trabalho de WP01.T05 e compilar: recusado como contrato desconhecido."
+      ],
+      "authority_boundary": "Assignment, write_authority, branches/proveniência, allocations e leases de todos os atores permanecem idênticos ao candidato inicial. reference_context_rule declara que a definição adicional não transfere autoria ou execução."
+    },
+    {
+      "id": "R3-CTX-02",
+      "initial_severity": "P1",
+      "status": "CLOSED_CORRECTED",
+      "closed_on_candidate": "9a1812f360fa245fa2fac9aacf4938ddf8f21381",
+      "correction": "O compilador seleciona as fases pertinentes antes dos handoffs e incorpora requires/full_runtime_requires, incluindo contexto dos produtores. validate_dependency_selection recusa uma referência de fase sem handoff.",
+      "observations": [
+        "S3 recebe AI-NATIVE, NATIVE-CASE, NATIVE-PLANNER, NATIVE-RUNTIME e NATIVE-COMPOSE completos.",
+        "Cada handoff de fase em todos os 23 packs coincide integralmente com o canônico, inclusive receipt, status, ready_minute e aceitação.",
+        "Cada produtor externo desses handoffs possui dependency_context correspondente; não foi concedida escrita sobre suas tarefas."
+      ],
+      "negative_controls": [
+        "Remover AI-NATIVE de S3: recusado.",
+        "Remover NATIVE-CASE de S3: recusado.",
+        "Remover NATIVE-PLANNER de S3: recusado."
+      ]
+    },
+    {
+      "id": "R3-CTX-03",
+      "initial_severity": "P2",
+      "status": "CLOSED_CORRECTED",
+      "closed_on_candidate": "9a1812f360fa245fa2fac9aacf4938ddf8f21381",
+      "correction": "A seleção fecha rotas em suas skills e perfis, reavalia as operações necessárias e incorpora as provas citadas pelas rotas/packs e seus pacotes evidenciais. Os cenários UI das skills selecionadas acompanham o contexto.",
+      "observations": [
+        "Todas as rotas selecionadas nos 23 packs resolvem skill, profile, execution_proof, resident integrated_proof e cenário UI.",
+        "S2-A recebe sf-comparar-sourcing e AM02. Seu fechamento atual contém cinco skills e AM01-AM06 como definições de leitura.",
+        "As definições de skill e de prova são cópias canônicas; seus execution_actor não foram alterados.",
+        "Todos os proof_packages/evidence_packages das provas incluídas estão no bloco evidence do respectivo ator.",
+        "reference_context_rule impede interpretar leitura de prova ou skill como responsabilidade de executá-la ou permissão para editá-la."
+      ],
+      "negative_controls": [
+        "Remover sf-comparar-sourcing do pack S2-A: recusado.",
+        "Remover AM02 de execution_proofs de S2-A: recusado."
+      ],
+      "p2_disposition": "Encerrado por correção verificada; não foi adiado nem reclassificado como obrigação opcional."
+    },
+    {
+      "id": "R3-CTX-04",
+      "initial_severity": "P2",
+      "status": "CLOSED_CORRECTED",
+      "closed_on_candidate": "9a1812f360fa245fa2fac9aacf4938ddf8f21381",
+      "correction": "O receipt de baseline aponta para formal-review/round-3/analysis/context-baseline.json, existente no snapshot. A medição foi refeita com os packs e documentos corrigidos.",
+      "observations": [
+        "As listas de arquivos por coordenadora coincidem exatamente com prompts, common, pack, workflow, manifesto, índice de fontes, README formal e todos os seus anexos obrigatórios; não há duplicatas.",
+        "Todos os cinco totais por sessão são exatos: S0=788588, S1=711403, S2=806833, S3=743698, S4=637761 bytes.",
+        "Total novo=3688283; baseline de cinco sessões=12990095; diferença=9301812; redução arredondada=71.61%.",
+        "O plan_sha256 do receipt coincide com campaign.json do candidato. O custo adicional do fechamento de contexto está incluído.",
+        "O escopo continua declarando bytes UTF-8, sem alegar tokens, latência, economia total de execução ou duração de 120 minutos."
+      ],
+      "p2_disposition": "Encerrado por correção verificada no SHA examinado. Mudanças posteriores em documentos enumerados exigem recalcular a medição correspondente."
+    }
+  ],
+  "checks": [
+    {"id": "CHANGED-SCRIPTS", "result": "PASS", "detail": "Os únicos scripts alterados desde o inicial são render_fast_context.py e validate_execution_plan.py; seus deltas foram lidos antes da execução."},
+    {"id": "FAST-RENDER", "result": "PASS", "command": "python -B tools/render_fast_context.py --plan campaign.json --check", "detail": "50 artefatos; drift vazio. Compilador 1.0.1."},
+    {"id": "FULL-RENDER", "result": "PASS", "command": "python -B tools/render_plan.py --plan campaign.json --check", "detail": "100 artefatos; drift vazio."},
+    {"id": "STRUCTURE", "result": "PASS", "command": "python -B tools/validate_plan.py --plan campaign.json --output /workspace/scratch/b5296ae7597d/reviews/context-recheck-structure.json", "detail": "PLAN_STRUCTURE_PASS; 15 WPs, 74 tasks, 17 contratos, 1610 critérios, 18 skills, 39 operações, 23 identidades e 19 handoffs preservados."},
+    {"id": "INDEPENDENT-PACK-AUDIT", "result": "PASS", "detail": "Inspeção independente dos 23 JSONs: zero omissões em contratos de arestas/operações, handoffs de fases e contexto produtor, skills/perfis/cenários UI/provas de rotas e pacotes evidenciais das provas. Conteúdos comparados ao canônico."},
+    {"id": "NEGATIVE-CONTROLS", "result": "PASS", "detail": "12 controles documentais reproduzidos em cópias em memória e recusados: 5 de contrato/anexo, 3 de handoff, 2 de skill/prova e 2 de eventos. Não houve execução de testes de produto ou Actions."},
+    {"id": "AUTHORITY-PRESERVATION", "result": "PASS", "detail": "Comparação de todos os atores contra o inicial: assignment, write_authority, allocation, physical_slot, criterion_ids, proof_bindings, work_packages, branch_provenance, review_assignment e review_sources_read_only idênticos."},
+    {"id": "CANONICAL-PRESERVATION", "result": "PASS", "detail": "Contratos, work_packages, resident_ai, output_handoffs, task_output_dependencies, proof_assignments, ownership e timebox iguais ao inicial. O gerador não muta a fonte recebida."},
+    {"id": "MEASUREMENT", "result": "PASS", "detail": "3688283 bytes e 71.61% reproduzidos exatamente; listas obrigatórias e referência baseline válidas."},
+    {"id": "PROVENANCE", "result": "PASS", "detail": "204 entradas de sha256.json conferem; hashes/tamanhos e Markdown dos 23 packs conferem; canonical/common digests e cópias de source receipts conferem."},
+    {"id": "IMMUTABILITY", "result": "PASS", "detail": "Inventário e SHA-256 dos 205 arquivos antes/depois são idênticos. Todos os outputs da revisão ficaram fora do snapshot."}
+  ],
+  "measurements": {
+    "original_five_session_shared_reading_bytes": 12990095,
+    "new_five_session_conservative_startup_bytes": 3688283,
+    "reduction_bytes": 9301812,
+    "reduction_pct": 71.61,
+    "all_23_actor_packs_bytes": 9516800,
+    "pack_min_bytes": 281827,
+    "pack_max_bytes": 545587,
+    "interpretation": "Comparação de bytes de documentos no arranque de cinco coordenadoras. O tamanho total dos 23 packs é informado separadamente; não representa economia total de execução nem prova de velocidade."
+  },
+  "hashes": {
+    "campaign.json": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "tools/render_fast_context.py": "ac9650762b0296a78198d6106b099bd4bf2cf23a9273f783077c9c2a8d4278e9",
+    "tools/render_plan.py": "7df6394361619b374a2dcc3a91dd63585d6d4314cb3289e2e66d5d2606e37a42",
+    "tools/validate_plan.py": "0625420f9102cdd8d81f474d6ff224ff50c44a1f7e91ccecdf52ea0111e1fa7e",
+    "tools/validate_execution_plan.py": "a1084f6971001285e9063099947484ee85646247a4da99dd10efede9b9c3cb2b",
+    "execution/COMMON.md": "a518cf4b3136d5c1126d59304afedf71b5f93168314f1f2f56743dcae719c94e",
+    "execution/manifest.json": "fb6a94a2dc868bb24b95f2924921584888a088ef4af25401daf82e154d6d8471",
+    "execution/sources.json": "fc75918615d53f0f5b226cd2f3272af362ba725f41c93b16098f0965780d9641",
+    "execution/context-measurement.json": "a9a3f3d889a5ccf7cad5f39e7ae13a804fae96efb801207046e689cfe7d8a9ed",
+    "formal-review/round-3/correction-controls.json": "d10d5383bf02ba01ae4526f0dc686a82c535a88b57b6b12ca1be3745136926b9",
+    "formal-review/round-3/analysis/context-baseline.json": "4b8caaf175bb9a4e3c2675a96ec2e183849bc3bea994b4c172c00c2fead84b00",
+    "reviews/context-recheck-evidence.json": "4ccded02f35a5846cdd36e9f834d4093de05626d9f3cab28363f7753241a43a7",
+    "reviews/context-recheck-structure.json": "b5fc6c9b66be7f59ecf62ff0761d99eb0e9135bffd7e9b046e0e3283336196e3",
+    "reviews/context-recheck-snapshot-before.json": "429aa2600440ee383b93be1a158476f7785ad069e9ab8dd1cefa7bbe727d2c1b"
+  },
+  "evidence_files": [
+    "/workspace/scratch/b5296ae7597d/reviews/context-recheck-evidence.json",
+    "/workspace/scratch/b5296ae7597d/reviews/context-recheck-structure.json",
+    "/workspace/scratch/b5296ae7597d/reviews/context-recheck-integrity.json",
+    "/workspace/scratch/b5296ae7597d/reviews/context-recheck-snapshot-before.json"
+  ],
+  "limits": [
+    "Parecer independente restrito ao contexto/seleção e às bordas corrigidas. Não foram lidos rechecks de outros agentes.",
+    "A identidade remota do candidato foi fornecida pela supervisora com sua conferência MCP. Esta rechecagem confirmou os bytes e hashes do snapshot local; não repetiu a materialização remota nem o guard de 78 regras.",
+    "Não houve produto, testes do repositório, CI, Actions, modelo, MCP de negócio, Atlas, Relay, deploy, publicação ou mensagens externas.",
+    "As funções documentais foram executadas com python -B; controles negativos usaram cópias em memória e nenhum arquivo do candidato foi alterado.",
+    "A aprovação é do planejamento neste escopo e SHA. Não certifica cumprimento dos critérios de implementação, capacidade operacional real ou duração de 120 minutos.",
+    "Mudança posterior em código do compilador, atribuições, fonte canônica ou dependências exige rechecagem proporcional. Alteração em documento contado exige nova medição no respectivo SHA."
+  ],
+  "implementation_test_status": "NOT_RUN"
+}

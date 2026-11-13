@@ -1,0 +1,37 @@
+{
+  "status": "PLAN_STRUCTURE_PASS",
+  "plan_path": "/workspace/scratch/b5296ae7597d/sf2h-corrected/campaign.json",
+  "plan_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "checked_at": "2026-11-13T03:16:18.792374+00:00",
+  "counts": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "evidence_packages": 18,
+    "journeys": 13,
+    "requirements": 41,
+    "capabilities": 28,
+    "ai_capabilities": 18,
+    "unique_defined_ids": 1852,
+    "profiles": 5,
+    "skills": 18,
+    "mcp_packs": 8,
+    "mcp_operations": 39,
+    "integrated_proofs": 6,
+    "physical_slots": 20,
+    "actor_lifetimes": 23,
+    "output_handoffs": 19,
+    "skill_leases": 18,
+    "fresh_reviewers": 3
+  },
+  "failures": [],
+  "warnings": [],
+  "limitations": [
+    "Structural validation of planning data only; no product code, tests, inference, Relay run, CI, browser, deploy or business action was executed.",
+    "Axiom presence and nonempty text do not prove quality, semantic completeness or satisfaction.",
+    "References and ownership are checked against this plan, not against a live Git tree or actual permissions.",
+    "Contract references are validated by canonical ID where a Cxx token is present; TypeScript signatures, exports, runtime compatibility and prose semantics are not compiled or proven.",
+    "The120minute windows are internally checked, not empirically demonstrated estimates; resource effort and CI duration are not benchmarked.",
+    "Consumer integration edges are checked for valid targets; only depends_on is required to form an acyclic build DAG."
+  ]
+}

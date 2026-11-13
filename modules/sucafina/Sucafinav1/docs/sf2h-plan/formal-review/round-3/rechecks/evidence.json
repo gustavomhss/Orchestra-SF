@@ -1,0 +1,291 @@
+{
+  "schema_version": 1,
+  "review_id": "R3-EVIDENCE-RECHECK",
+  "reviewer": "/root/review_evidence",
+  "candidate_sha": "9a1812f360fa245fa2fac9aacf4938ddf8f21381",
+  "parent_sha": "10a99bf06c5578ec02dab590a680ab18766c7ff4",
+  "original_plan_parent_sha": "0aa2405bb3668314f60d6a674d2bd53fd5003091",
+  "candidate_root_tree": "39adba24caf2e217cf51ef40f68724fc2d7b6d67",
+  "snapshot_path": "/workspace/scratch/b5296ae7597d/sf2h-corrected",
+  "initial_review_path": "/workspace/scratch/b5296ae7597d/reviews/evidence-initial.json",
+  "assessed_date": "2026-11-13",
+  "independence": {
+    "authored_correction": false,
+    "read_other_current_rechecks": false,
+    "modified_candidate": false,
+    "modified_initial_review": false,
+    "external_messages_or_comments_sent": false
+  },
+  "scope": {
+    "type": "Rechecagem proporcional do impacto das correções de contexto no escopo de evidência",
+    "included": [
+      "Preservação de CI, evidência, invalidadores e envelope C/D",
+      "Integridade das provas, skills, perfis e pacotes de evidência referenciados pelas rotas MCP nos 23 packs",
+      "Preservação de assignments, leases, write_authority, critérios e execution_actor; contexto ampliado sem transferência de execução",
+      "Proveniência de fonte, manifesto, hashes e atribuição ao candidato remoto",
+      "Alinhamento da identidade dos eventos sem mudança da chave de dedupe de CI"
+    ],
+    "excluded": [
+      "Auditoria nova do produto inalterado",
+      "Produto, Actions, deploy, integrações ou repetição do guard",
+      "Conclusões dos outros rechecks atuais"
+    ]
+  },
+  "verdict": "APPROVED_FOR_EXECUTION",
+  "verdict_scope": "Mantida a aprovação focal do planejamento para o candidato corrigido. Não é aceite de implementação nem prova de execução do workflow ou de 120 minutos.",
+  "findings": [],
+  "severity_counts": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0
+  },
+  "p2_disposition": "Nenhum P2 identificado; nenhuma disposição pendente.",
+  "checks": [
+    {
+      "id": "EVID-RC-IDENTITY",
+      "status": "PASS",
+      "source": "/workspace/scratch/b5296ae7597d/corrected-mcp.json",
+      "observed": {
+        "candidate_sha": "9a1812f360fa245fa2fac9aacf4938ddf8f21381",
+        "parent_sha": "10a99bf06c5578ec02dab590a680ab18766c7ff4",
+        "root_tree": "39adba24caf2e217cf51ef40f68724fc2d7b6d67",
+        "scoped_git_blobs_checked": 39,
+        "mismatches": []
+      },
+      "method": "Metadados oficiais obtidos pela supervisora; cálculo independente do Git blob SHA-1 dos 39 arquivos usados na rechecagem."
+    },
+    {
+      "id": "EVID-RC-DELTA",
+      "status": "PASS",
+      "observed": "Na fonte campaign.json, apenas execution_workflow muda: topologia de eventos/key e path do recibo de medição baseline.",
+      "unchanged_canonical_sections": [
+        "execution",
+        "ci_plan",
+        "evidence",
+        "proof_assignments",
+        "execution_proofs",
+        "review_assignments",
+        "axioms",
+        "work_packages",
+        "scope",
+        "contracts",
+        "ownership",
+        "timebox",
+        "resident_ai",
+        "resident_ui_consumption",
+        "resident_packaging",
+        "output_handoffs",
+        "task_output_dependencies"
+      ],
+      "conclusion": "Oito seleções CI, suites adicionais, AM01–AM06, critérios, regras C/D, sf2-control, retries/paths exatos, guias antes de C e guards C/G7–D/G8 permanecem os mesmos já revisados."
+    },
+    {
+      "id": "EVID-RC-RENDER",
+      "status": "PASS",
+      "command": "python -B /workspace/scratch/b5296ae7597d/sf2h-corrected/tools/render_plan.py --check",
+      "code_reviewed": "render_plan.py permanece byte a byte igual ao inicial; delta integral de render_fast_context.py lido sobre a versão já examinada.",
+      "exit_code": 0,
+      "observed": {
+        "mode": "check",
+        "artifacts": 100,
+        "drift": []
+      }
+    },
+    {
+      "id": "EVID-RC-ROUTE-EVIDENCE",
+      "status": "PASS",
+      "locations": [
+        "tools/render_fast_context.py",
+        "execution/actors/*.json",
+        "campaign.json#/resident_ai",
+        "campaign.json#/execution_proofs",
+        "campaign.json#/evidence"
+      ],
+      "observed": {
+        "actors_checked": 23,
+        "route_references_across_packs": 645,
+        "canonical_operations": 39,
+        "missing_or_changed_route_skill_profile_proof_or_evidence": [],
+        "previous_proofs_removed": []
+      },
+      "method": "Para cada rota de cada pack, comparar o objeto canônico e conferir skill, perfil, proof_id nas duas coleções de provas e pacotes de evidência com conteúdo canônico. Para cada prova selecionada, conferir objeto integral e todos os proof_packages/evidence_packages.",
+      "conclusion": "As referências adicionadas são completas e mantêm status/semântica/execução dos objetos canônicos; 645 é a soma de referências repetidas entre packs, não uma ampliação das 39 operações."
+    },
+    {
+      "id": "EVID-RC-NO-AUTHORITY-TRANSFER",
+      "status": "PASS",
+      "observed": {
+        "actors_checked": 23,
+        "changed_fields": []
+      },
+      "compared_fields": [
+        "assignment",
+        "branch_provenance",
+        "write_authority",
+        "allocation",
+        "physical_slot",
+        "work_packages",
+        "proof_bindings",
+        "criterion_ids",
+        "review_assignment",
+        "review_sources_read_only",
+        "code_sources",
+        "completion",
+        "task_output_dependencies"
+      ],
+      "conclusion": "Todos esses campos coincidem com 10a99bf. Toda prova do pack é cópia integral da prova canônica, inclusive execution_actor. A nova reference_context_rule informa expressamente que contratos/rotas/skills/provas são leitura e não transferem task ownership, escrita ou execução."
+    },
+    {
+      "id": "EVID-RC-CI-CONSUMERS",
+      "status": "PASS",
+      "actors": [
+        "S0",
+        "S0-C",
+        "S2",
+        "S1-R1",
+        "S2-R2",
+        "S3-R3"
+      ],
+      "conclusion": "Os seis packs mantêm ci_plan integral e idêntico à fonte, sem mudança de dispatcher, dedupe, invalidadores ou aceitação final. A ampliação de evidence.packages não altera proof_bindings nem os criterion_ids atribuídos."
+    },
+    {
+      "id": "EVID-RC-EVENT-IDENTITY",
+      "status": "PASS",
+      "observed": {
+        "topology_events_equal_event_protocol": true,
+        "event_key": [
+          "execution_instance",
+          "event_id"
+        ],
+        "event_protocol_unchanged": true,
+        "ci_request_deduplication_unchanged": true
+      },
+      "conclusion": "A topologia passa a coincidir com o protocolo canônico já vigente. Identidade de evento não substitui a chave completa de request/run de CI; não há colapso de novas provas por lane ou candidato."
+    },
+    {
+      "id": "EVID-RC-PROVENANCE",
+      "status": "PASS",
+      "observed": {
+        "actor_source_hashes_current": 23,
+        "actor_common_hashes_current": 23,
+        "compiler_version": "1.0.1",
+        "all_actor_pack_bytes": 9516800,
+        "manifest_actor_pack_bytes": 9516800
+      },
+      "measurement_stat_checks": [
+        {
+          "actor": "S0",
+          "declared": 788588,
+          "actual": 788588
+        },
+        {
+          "actor": "S1",
+          "declared": 711403,
+          "actual": 711403
+        },
+        {
+          "actor": "S2",
+          "declared": 806833,
+          "actual": 806833
+        },
+        {
+          "actor": "S3",
+          "declared": 743698,
+          "actual": 743698
+        },
+        {
+          "actor": "S4",
+          "declared": 637761,
+          "actual": 637761
+        }
+      ],
+      "conclusion": "Proveniência e hashes refletem a nova fonte. Os tamanhos declarados das cinco leituras coincidem com stat dos arquivos selecionados. A medição declara bytes UTF-8, exclui código/expansões adicionais e não alega tokens, latência ou ganho de implementação."
+    },
+    {
+      "id": "EVID-RC-GUARD-RECEIPT",
+      "status": "PASS",
+      "source": "/workspace/scratch/b5296ae7597d/guards/9a1812f360fa-evidence/receipt.json",
+      "executed_by": "Supervisora /root; recibo lido, gate não repetido.",
+      "observed": {
+        "candidate": "9a1812f360fa245fa2fac9aacf4938ddf8f21381",
+        "command": "bun run check:guards --base origin/dev",
+        "exit_code": 0,
+        "rules": 78,
+        "changed_paths": 205,
+        "gate_findings": 0,
+        "warn_findings": 1,
+        "errors": 0,
+        "working_tree_after": ""
+      }
+    },
+    {
+      "id": "EVID-RC-INITIAL-PRESERVED",
+      "status": "PASS",
+      "observed": {
+        "/workspace/scratch/b5296ae7597d/reviews/evidence-initial.json": "1d9e381cb728973c60c3ad8cfd1540a1e01e07ae378de870f886eb8c240a021b",
+        "/workspace/scratch/b5296ae7597d/reviews/evidence-initial.md": "08ebc9223de34ca6c4b82f3dadbfaf117e817448f23b94329d7c99a9d5a9bffc"
+      },
+      "conclusion": "O parecer inicial permanece intacto; esta rechecagem acrescenta a atribuição ao novo candidato."
+    }
+  ],
+  "limits": [
+    "Produto, testes, Actions e AM01–AM06 permanecem NOT_RUN por este revisor.",
+    "Esta é uma rechecagem proporcional, não uma nova auditoria de todo o produto ou do plano inalterado.",
+    "O gate de repositório foi observado por seu recibo do SHA corrigido e não foi reexecutado.",
+    "A consulta remota foi feita pela supervisora; este revisor confirmou independentemente 39 blobs contra o mapa oficial.",
+    "O veredicto é limitado ao escopo de evidência e não substitui as rechecagens independentes de supervisor e contexto.",
+    "Nenhuma leitura de outro recheck atual ou alteração do candidato foi feita."
+  ],
+  "hashes": {
+    "algorithm": "SHA-256",
+    "candidate_files": {
+      "campaign.json": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "execution-workflow.json": "42f5898ec687e3e26fac6c20ceda9db90b5a83f04814ee994b8158eae894c160",
+      "ci-recipes.json": "ac598195282a917364ffb83aaef9d8e55e9023c58f6850f2a34c214a1a9c5777",
+      "evidence-plan.json": "7bfcd33469b2299cf7e98807479ebbebff82407a5621476e95a3a201a4676fee",
+      "proof-map.json": "ba1aff9bc8d716297bcc812bd9d5d5933262b0ef3d5734ff2bdbc859d85acf07",
+      "work-packages/WP10.json": "30686906dbfadb86d2022c06293423607a6ceb4cb7c1211bb9d1bd240a6dceb4",
+      "ownership.json": "3129c0156a21e319d71e8a4c4b38c12bbc8507226457af26752c4a049d5a1d32",
+      "schedule.json": "dfe70767e81524bd6212690357c10715eb3cc04f749f732377ff56daef0cdc7d",
+      "resident-proof-plan.json": "34afd1e6f5b7031ddca47563b3fc4b6520574be93876f82d38e648bb0e22deae",
+      "execution/COMMON.md": "a518cf4b3136d5c1126d59304afedf71b5f93168314f1f2f56743dcae719c94e",
+      "execution/manifest.json": "fb6a94a2dc868bb24b95f2924921584888a088ef4af25401daf82e154d6d8471",
+      "execution/context-measurement.json": "a9a3f3d889a5ccf7cad5f39e7ae13a804fae96efb801207046e689cfe7d8a9ed",
+      "tools/render_fast_context.py": "ac9650762b0296a78198d6106b099bd4bf2cf23a9273f783077c9c2a8d4278e9",
+      "tools/render_plan.py": "7df6394361619b374a2dcc3a91dd63585d6d4314cb3289e2e66d5d2606e37a42",
+      "tools/validate_execution_plan.py": "a1084f6971001285e9063099947484ee85646247a4da99dd10efede9b9c3cb2b",
+      "WORKFLOW.md": "67304dc752489fb63b8999cc1e87b79dde2367c33b04374fea20eefbe8f5a8d9",
+      "execution/actors/S0-A.json": "9eba95a91797a0c57934ee5be337dca38d278cc48296014fb9454f17cd4f2f37",
+      "execution/actors/S0-B.json": "c8889afba65defa16bf86f2aa89241eeaa5ad252bc280f6b31b0350a4765a770",
+      "execution/actors/S0-C.json": "73aefa0871ef12b3929249d82d52999313d91fb8c9f90beed39fa6d4af69ec36",
+      "execution/actors/S0.json": "c963114c688a112aad5dc0e45e9a3bad2bd7c652bc82b476b7f47fe7c2f8ff2b",
+      "execution/actors/S1-A.json": "f69157f616377a71428be6702c6fd4d960acdf1f8f617940cc3e72ae32570eaa",
+      "execution/actors/S1-B.json": "0862acbc55773218e5be426cda7822d40a8574def8cf6e96007bbf2ca4b0bd95",
+      "execution/actors/S1-C.json": "80cb4de030f2121a671f7d4ae37fd6f614330951772a90052347a0f8cbd272b9",
+      "execution/actors/S1-R1.json": "3b86aa8ce96f304d6f65af92fa20b185928e9c3220473eda25dd301065bc28c0",
+      "execution/actors/S1.json": "9c662cef3ded97a9f1c797c43114f10fd9124d1cd2e0ada54ea6d5bfb13b10b7",
+      "execution/actors/S2-A.json": "912d62bbffb99a70ca880c255036c31bad9ad694288f7c6c4267d05b0c49fed8",
+      "execution/actors/S2-B.json": "351680f3146cb7d4f23fba82ebab866f948b5bf0e00b0068a5bc996d68c35e11",
+      "execution/actors/S2-C.json": "7fff8d0e4f107407280f74fcd12ef53804d237f8bd7114f356dde249cac00a1b",
+      "execution/actors/S2-R2.json": "5f80b52c27f08a63b43f3933b0a3ad69e7c28cc475de609a20228b38a56bfa8f",
+      "execution/actors/S2.json": "1c9f58d1c0b61fa2d64a800d82c78b1d21be8e0c4365014c49d1e65d0cbe7623",
+      "execution/actors/S3-A.json": "40c0c362d277cdf840005fef2c09135a43b082e177460b0a41e69e959ee8bb56",
+      "execution/actors/S3-B.json": "2e988a40b09985cf258d244f0a62e0472c4ce35ff623d95843e79aab7f01601e",
+      "execution/actors/S3-C.json": "def4eb44e04764588eb996ceaf7fb22f95e8bd9f63777afd85f44a77a38e2bd9",
+      "execution/actors/S3-R3.json": "82c746193453a4c2b0a1d245829c2caffcdc230f8116d36a73497b2e60ecda86",
+      "execution/actors/S3.json": "bef39aaeafcb1d165c116116c939739d41dac7c29b07194d24038e5e551b4182",
+      "execution/actors/S4-A.json": "f5ecbabbfba0a4c997341f0c6a7b8d58acdc1f056768dd078ca1fc277aed2c99",
+      "execution/actors/S4-B.json": "fc1e51bf83fa30fd2daff082f81da3a1f81c600b4985a19b883ea2b0140e2744",
+      "execution/actors/S4-C.json": "1594efa92a3037505f8e89d09bb5908af2205e5d2c25a2e4c48b30a50765f2ce",
+      "execution/actors/S4.json": "31b644457c14098f1ecb0662868d5d4f1b64d116082bef0930625ee985607e28"
+    },
+    "supporting_files": {
+      "/workspace/scratch/b5296ae7597d/corrected-mcp.json": "ae99fb0947c436b43d8cf1f0127aee325661183b1b94882846fab1239c67bfe4",
+      "/workspace/scratch/b5296ae7597d/guards/9a1812f360fa-evidence/receipt.json": "6c86d68a48454fdd0aed3813de0f6573ee0eeb9191264410bb4a2ebff81d0e97",
+      "/workspace/scratch/b5296ae7597d/guards/9a1812f360fa-evidence/fidelity.json": "2196230f41be1991de476004a9ce45d3f29a68f5e1b97b9a093054411627df90",
+      "/workspace/scratch/b5296ae7597d/reviews/evidence-initial.json": "1d9e381cb728973c60c3ad8cfd1540a1e01e07ae378de870f886eb8c240a021b",
+      "/workspace/scratch/b5296ae7597d/reviews/evidence-initial.md": "08ebc9223de34ca6c4b82f3dadbfaf117e817448f23b94329d7c99a9d5a9bffc"
+    }
+  }
+}
+

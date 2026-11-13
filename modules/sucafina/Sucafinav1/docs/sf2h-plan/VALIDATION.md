@@ -6,6 +6,6 @@ O renderer confere 100 artefatos e o compilador produz 23 pacotes. Contratos ref
 
 [validation.json](validation.json) registra o resultado estrutural. A [medição de contexto](execution/context-measurement.json) informa os arquivos e bytes efetivamente contados. Bytes de documentação não medem tokens ou tempo de execução.
 
-O [guard inicial](formal-review/round-3/initial/guard/receipt.json) pertence exclusivamente a `10a99bf06c5578ec02dab590a680ab18766c7ff4`: 78 regras, 190 paths, zero bloqueios/erros e um aviso advisory de tamanho no canônico já existente. O candidato corrigido requer seu próprio guard e rechecagem.
+O [guard do candidato revisado](formal-review/round-3/guard/receipt.json) pertence a `9a1812f360fa245fa2fac9aacf4938ddf8f21381`: 78 regras, 205 caminhos, zero bloqueios/erros e um aviso advisory de tamanho no canônico. Os [três rechecks](formal-review/round-3/SUMMARY.md) aprovaram esse SHA e encerraram os cinco achados. O commit de fechamento conserva as fontes e os 100 artefatos revisados e recebe guard próprio, informado no fechamento externo.
 
 Repita `python tools/render_plan.py --check` e `python tools/validate_plan.py`. Esses comandos verificam planejamento. Produto, testes de produto, inferência, Actions e provas de runtime permanecem **NOT_RUN**.

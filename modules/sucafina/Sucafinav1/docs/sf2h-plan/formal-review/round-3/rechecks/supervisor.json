@@ -1,0 +1,375 @@
+{
+  "schema_version": 1,
+  "review_round": 3,
+  "reviewer": "supervisor",
+  "review_type": "PROPORTIONAL_RECHECK",
+  "created_at": "2026-11-13 03:17:54 UTC",
+  "candidate_sha": "9a1812f360fa245fa2fac9aacf4938ddf8f21381",
+  "previous_reviewed_candidate_sha": "10a99bf06c5578ec02dab590a680ab18766c7ff4",
+  "original_plan_parent_sha": "0aa2405bb3668314f60d6a674d2bd53fd5003091",
+  "candidate_snapshot": "/workspace/scratch/b5296ae7597d/sf2h-corrected",
+  "initial_review": {
+    "path": "/workspace/scratch/b5296ae7597d/reviews/supervisor-initial.json",
+    "sha256": "268cea267667a6b572a2cfe9cdaf75ef12b522bcde83a1580d8d79748436bc29",
+    "preserved": true
+  },
+  "scope": [
+    "Fechamento de R3-SUP-P2-01: identidade e roster de eventos",
+    "Eficácia dos guards documentais contra deriva da chave e de GLOBAL_RELEASE",
+    "Efeitos da expansão de contexto sobre atribuições, authority, allocation, physical_slot e criterion_ids dos 23 packs",
+    "Continuidade de capacidade/admissão, reservas e estados NOT_RUN",
+    "Integridade focal contra o commit remoto já capturado e sincronização dos espelhos"
+  ],
+  "verdict": "APPROVED_FOR_EXECUTION",
+  "verdict_rationale": "R3-SUP-P2-01 corrigido no candidato exato; nenhuma regressão demonstrada nas bordas de supervisão e nenhum novo P0/P1/P2 neste escopo. Aprovação do plano para execução futura sujeita aos próprios gates; não admite N4 no backend atual e não autoriza iniciar produto nesta sessão.",
+  "dispositions": [
+    {
+      "finding_id": "R3-SUP-P2-01",
+      "previous_severity": "P2",
+      "previous_status": "OPEN_WITH_NONBLOCKING_DISPOSITION",
+      "status": "CLOSED_FIXED",
+      "fixed_candidate_sha": "9a1812f360fa245fa2fac9aacf4938ddf8f21381",
+      "locations": [
+        "campaign.json:/execution_workflow/topology/event_idempotency_key",
+        "campaign.json:/execution_workflow/topology/events",
+        "execution-workflow.json:/topology/event_idempotency_key",
+        "execution-workflow.json:/topology/events",
+        "tools/validate_execution_plan.py:validate_execution"
+      ],
+      "evidence": "A chave ampla foi substituída pela identidade específica de evento/instância, o roster foi alinhado ao protocolo e o validador rejeita a regressão. O contraexemplo com dois FINDING distintos no mesmo candidato deixa de colidir.",
+      "residual_risk": "Nenhum resíduo do achado documental demonstrado. A eficácia de transporte/dispatcher real continua dependente da implementação e execução futuras, não exercitadas neste parecer."
+    }
+  ],
+  "findings": [],
+  "open_finding_counts": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0
+  },
+  "checks": [
+    {
+      "id": "SUP-RC01",
+      "status": "PASS_DOCUMENTARY",
+      "name": "Identidade do candidato e integridade dos arquivos",
+      "result": "O registro corrected-mcp.json identifica o commit 9a1812f360fa245fa2fac9aacf4938ddf8f21381, parent 10a99bf06c5578ec02dab590a680ab18766c7ff4 e mapa de 205 blobs. Os 41 arquivos pertinentes a esta rechecagem coincidem com seus Git blob SHA1; seus SHA256 estão registrados abaixo.",
+      "independence": "Mapa MCP já capturado pelo integrador; não foi feita nova chamada remota."
+    },
+    {
+      "id": "SUP-RC02",
+      "status": "PASS_DOCUMENTARY",
+      "name": "Fechamento da identidade e do roster de eventos",
+      "result": "topology.event_idempotency_key é exatamente ['execution_instance','event_id']. topology.events coincide integralmente com event_protocol.events, incluindo JOB_STARTED, CONSUMED, VALIDATION_REQUEST, CHECKPOINT e GLOBAL_RELEASE. O espelho execution-workflow.json coincide com o objeto canônico."
+    },
+    {
+      "id": "SUP-RC03",
+      "status": "PASS_DOCUMENTARY",
+      "name": "Contraexemplo original resolvido",
+      "result": "Validação documental com quatro entradas: F01 e F02 distintos na mesma instância, retry de F01 e F01 em outra instância. A chave corrigida conserva três eventos distintos e descarta apenas o retry exato. Não é execução de um transporte ou dispatcher de produto."
+    },
+    {
+      "id": "SUP-RC04",
+      "status": "PASS_DOCUMENTARY",
+      "name": "Validador positivo e controles negativos",
+      "result": "validate_execution_plan.validate_execution executou 458 asserções sem erros no candidato. Em cópias apenas em memória, restaurar a chave ampla produziu EVENT_IDENTITY_DRIFT; remover GLOBAL_RELEASE da topologia produziu EVENT_ROSTER_DRIFT. Os scripts e seu delta foram lidos antes da execução."
+    },
+    {
+      "id": "SUP-RC05",
+      "status": "PASS_DOCUMENTARY",
+      "name": "Atribuições, autoridade e capacidade preservadas",
+      "result": "115 comparações exatas, cinco campos em cada um dos 23 packs, sem alteração: assignment, write_authority, allocation, physical_slot e criterion_ids. schedule.json, ownership.json, START.md e os cinco prompts permanecem byte a byte iguais ao candidato anterior. Todos os packs recebem regra explícita de que contratos, rotas, skills e provas adicionais são contexto de leitura e não transferem propriedade, escrita ou execução de prova."
+    },
+    {
+      "id": "SUP-RC06",
+      "status": "PASS_DOCUMENTARY",
+      "name": "Geração e escopo",
+      "result": "PYTHONDONTWRITEBYTECODE=1 python tools/render_plan.py --check: exit 0, 100 artefatos, drift []. Preservados 15 WPs, 74 tasks, 17 contratos e 1.610 critérios; todos NOT_RUN. O preset mantém 20 slots desejados/23 identidades, com teto observado de quatro slots globais e N4_preset_admitted=false."
+    },
+    {
+      "id": "SUP-RC07",
+      "status": "PASS_DOCUMENTARY",
+      "name": "Medição e orçamento de contexto",
+      "result": "Tamanhos declarados por sessão coincidem com os arquivos presentes: 3.688.283 bytes para as listas conservadoras de arranque das cinco coordenadoras e 9.516.800 bytes nos 23 packs. A medição distingue bytes de tokens, latência e economia de implementação; exclui leituras de código real e expansões adicionais dependentes de evidência. Nenhum prazo ou slot foi ampliado por esta mudança."
+    },
+    {
+      "id": "SUP-RC08",
+      "status": "REVIEWED_EXISTING_RECEIPT",
+      "name": "Guard e fidelidade do candidato commitado",
+      "result": "Lidos os recibos do integrador em guards/9a1812f360fa-evidence: guard exit 0, 78 regras, 205 paths, zero gate findings, zero erros e uma advertência não bloqueante de arquivo maior que 1 MB para campaign.json. Fidelity declara 205 blobs remotos/locais, 101 inputs de guard/configuração e root/index remoto coincidente; todas as alterações estão no plano. O guard não foi reexecutado por este revisor."
+    }
+  ],
+  "limits": [
+    "Rechecagem proporcional do delta: não repete a revisão de produto inalterado nem certifica os outros escopos de revisão.",
+    "Produto, Actions, provas AM e guards de futuros candidatos C/D permanecem NOT_RUN. Nenhuma implementação, teste de produto, CI, deploy ou integração externa foi executada por este revisor.",
+    "A contraprova de deduplicação e os controles negativos validam a especificação/documentação, não um backend ou transporte real.",
+    "O backend observado continua limitado a quatro slots globais incluindo root; N4_preset_admitted=false. Cinco pools independentes, launcher, mensagens, retomada e fencing exigem comprovação de execução.",
+    "O prazo de 120 minutos permanece condicional e não medido. Tamanho de contexto não prova velocidade, custo ou redução de tokens.",
+    "A conferência de commit usou o mapa de blobs MCP e recibos já capturados pelo integrador, sem nova consulta remota. Foram conferidos 41 blobs pertinentes diretamente; a fidelidade dos 205 paths foi lida no recibo separado.",
+    "Não foram lidos rechecks de outros revisores, o snapshot não foi alterado e nenhum comentário ou mensagem externa foi publicado."
+  ],
+  "implementation_test_status": "NOT_RUN",
+  "independence": {
+    "read_other_reviewer_rechecks": false,
+    "modified_candidate": false,
+    "product_tests_run": false,
+    "external_messages_sent": false
+  },
+  "reviewed_file_hashes": [
+    {
+      "path": "campaign.json",
+      "sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "git_blob_sha1": "71b56906f8bb190c4d568f60c7511ce1ff63d5f3",
+      "review_mode": "Diff estrutural completo (somente três caminhos do workflow alterados); objetos operacionais pertinentes conferidos."
+    },
+    {
+      "path": "execution-workflow.json",
+      "sha256": "42f5898ec687e3e26fac6c20ceda9db90b5a83f04814ee994b8158eae894c160",
+      "git_blob_sha1": "21f0f4a42d0caa7c98a9234adbef3c7b5bcc0e9e",
+      "review_mode": "Conferência documental focal, igualdade gerada ou preservação de bytes, conforme os checks."
+    },
+    {
+      "path": "WORKFLOW.md",
+      "sha256": "67304dc752489fb63b8999cc1e87b79dde2367c33b04374fea20eefbe8f5a8d9",
+      "git_blob_sha1": "043205bee6031b4517a98591b3588fca0ab12925",
+      "review_mode": "Delta lido em relação ao candidato anterior já revisado; bordas operacionais conferidas."
+    },
+    {
+      "path": "schedule.json",
+      "sha256": "dfe70767e81524bd6212690357c10715eb3cc04f749f732377ff56daef0cdc7d",
+      "git_blob_sha1": "753eaea4ad36fcd557a53525cf8b4a180d9c4ad2",
+      "review_mode": "Conferência documental focal, igualdade gerada ou preservação de bytes, conforme os checks."
+    },
+    {
+      "path": "ownership.json",
+      "sha256": "3129c0156a21e319d71e8a4c4b38c12bbc8507226457af26752c4a049d5a1d32",
+      "git_blob_sha1": "843e41749fdca2a87160d2afba8c694dd4c395b9",
+      "review_mode": "Conferência documental focal, igualdade gerada ou preservação de bytes, conforme os checks."
+    },
+    {
+      "path": "START.md",
+      "sha256": "2fe153c2360feec3e937ecdc2a8a9460032303d5c0fad2d61ae97853f6e4aa49",
+      "git_blob_sha1": "522782bb7e113124a937d7ef17313032be9d6850",
+      "review_mode": "Conferência documental focal, igualdade gerada ou preservação de bytes, conforme os checks."
+    },
+    {
+      "path": "execution/COMMON.md",
+      "sha256": "a518cf4b3136d5c1126d59304afedf71b5f93168314f1f2f56743dcae719c94e",
+      "git_blob_sha1": "d61f32af03fe10747a50274233f953af044decf6",
+      "review_mode": "Conferência documental focal, igualdade gerada ou preservação de bytes, conforme os checks."
+    },
+    {
+      "path": "execution/manifest.json",
+      "sha256": "fb6a94a2dc868bb24b95f2924921584888a088ef4af25401daf82e154d6d8471",
+      "git_blob_sha1": "4973e8357187849f6ff66d480f55833f9ddb5165",
+      "review_mode": "Conferência documental focal, igualdade gerada ou preservação de bytes, conforme os checks."
+    },
+    {
+      "path": "execution/context-measurement.json",
+      "sha256": "a9a3f3d889a5ccf7cad5f39e7ae13a804fae96efb801207046e689cfe7d8a9ed",
+      "git_blob_sha1": "869b24216cacb94d67e69daaa08fd6e2808197a5",
+      "review_mode": "Conferência documental focal, igualdade gerada ou preservação de bytes, conforme os checks."
+    },
+    {
+      "path": "tools/validate_execution_plan.py",
+      "sha256": "a1084f6971001285e9063099947484ee85646247a4da99dd10efede9b9c3cb2b",
+      "git_blob_sha1": "7d2214fdf3b7e228acc1fe083b46502ff77037a5",
+      "review_mode": "Delta lido em relação ao candidato anterior já revisado; bordas operacionais conferidas."
+    },
+    {
+      "path": "tools/render_plan.py",
+      "sha256": "7df6394361619b374a2dcc3a91dd63585d6d4314cb3289e2e66d5d2606e37a42",
+      "git_blob_sha1": "f36499067ca01bbf0154d38f18c76ca43b7d1cc3",
+      "review_mode": "Conferência documental focal, igualdade gerada ou preservação de bytes, conforme os checks."
+    },
+    {
+      "path": "tools/render_fast_context.py",
+      "sha256": "ac9650762b0296a78198d6106b099bd4bf2cf23a9273f783077c9c2a8d4278e9",
+      "git_blob_sha1": "c5b861636500f715c17a32eb2a828ff3a5fca594",
+      "review_mode": "Delta lido em relação ao candidato anterior já revisado; bordas operacionais conferidas."
+    },
+    {
+      "path": "formal-review/round-3/correction-controls.json",
+      "sha256": "d10d5383bf02ba01ae4526f0dc686a82c535a88b57b6b12ca1be3745136926b9",
+      "git_blob_sha1": "95620aec36aa5bf5cee8e64dc19e7e388dc90480",
+      "review_mode": "Conferência documental focal, igualdade gerada ou preservação de bytes, conforme os checks."
+    },
+    {
+      "path": "prompts/S0.md",
+      "sha256": "ce8c6f744c7bb49f8c0eff654561314dadb7d63acf7bfa51b5c1ad27e77ecd83",
+      "git_blob_sha1": "2f114eb43167885a8cbc88b112c596dcdff15e61",
+      "review_mode": "Conferência documental focal, igualdade gerada ou preservação de bytes, conforme os checks."
+    },
+    {
+      "path": "prompts/S1.md",
+      "sha256": "10b40776f4f7d32784b45839a1477f9085c308b86ed3b539e4029660f5c9c5e7",
+      "git_blob_sha1": "48eedc89523c4d8563ff8a6d53fca068d7746de1",
+      "review_mode": "Conferência documental focal, igualdade gerada ou preservação de bytes, conforme os checks."
+    },
+    {
+      "path": "prompts/S2.md",
+      "sha256": "8622c0b542455e98e3173a321f4303d0580b631d95e02d80d7a443cc3979d406",
+      "git_blob_sha1": "a0614bd86f072f800490cd1c74d45eb27075b647",
+      "review_mode": "Conferência documental focal, igualdade gerada ou preservação de bytes, conforme os checks."
+    },
+    {
+      "path": "prompts/S3.md",
+      "sha256": "9086bef04de740bb88a71432ff5b7865c66d91f93dfe21708c9c39976f44c620",
+      "git_blob_sha1": "5be293a7583f17fdd30f1e1b7821d034da611e1d",
+      "review_mode": "Conferência documental focal, igualdade gerada ou preservação de bytes, conforme os checks."
+    },
+    {
+      "path": "prompts/S4.md",
+      "sha256": "fe18cc92d52f8ce6d381176241bae9d540bca8392cc05b3b0f8bb44cabe18975",
+      "git_blob_sha1": "b610957248e053a10c1db4479fe12ac6ddd45ae5",
+      "review_mode": "Conferência documental focal, igualdade gerada ou preservação de bytes, conforme os checks."
+    },
+    {
+      "path": "execution/actors/S0.json",
+      "sha256": "c963114c688a112aad5dc0e45e9a3bad2bd7c652bc82b476b7f47fe7c2f8ff2b",
+      "git_blob_sha1": "efbeae5d432735cee05d1d70219874136ad479a2",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S0-A.json",
+      "sha256": "9eba95a91797a0c57934ee5be337dca38d278cc48296014fb9454f17cd4f2f37",
+      "git_blob_sha1": "6ff8de164c225698f97a1457817a4b31b1af5eec",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S0-B.json",
+      "sha256": "c8889afba65defa16bf86f2aa89241eeaa5ad252bc280f6b31b0350a4765a770",
+      "git_blob_sha1": "7597a7e508228ac2878a9061887ac77fc70ad009",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S0-C.json",
+      "sha256": "73aefa0871ef12b3929249d82d52999313d91fb8c9f90beed39fa6d4af69ec36",
+      "git_blob_sha1": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S1.json",
+      "sha256": "9c662cef3ded97a9f1c797c43114f10fd9124d1cd2e0ada54ea6d5bfb13b10b7",
+      "git_blob_sha1": "821544bee889b8cfbcaba8700fcab90f7e78c2cf",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S2.json",
+      "sha256": "1c9f58d1c0b61fa2d64a800d82c78b1d21be8e0c4365014c49d1e65d0cbe7623",
+      "git_blob_sha1": "b49bca8162d815500a8bc2645b566dd8f12911e7",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S3.json",
+      "sha256": "bef39aaeafcb1d165c116116c939739d41dac7c29b07194d24038e5e551b4182",
+      "git_blob_sha1": "7f8e42677f3cfa0b9df7c756c8af16af843d7abe",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S4.json",
+      "sha256": "31b644457c14098f1ecb0662868d5d4f1b64d116082bef0930625ee985607e28",
+      "git_blob_sha1": "ee5b85742dee66964decb74d9e53526c5496ac63",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S1-A.json",
+      "sha256": "f69157f616377a71428be6702c6fd4d960acdf1f8f617940cc3e72ae32570eaa",
+      "git_blob_sha1": "2b4576e752bba8b2175a99a1807e0713695e7265",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S1-B.json",
+      "sha256": "0862acbc55773218e5be426cda7822d40a8574def8cf6e96007bbf2ca4b0bd95",
+      "git_blob_sha1": "02d1ac8d4e01e52574b726df446c6b72057abb7e",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S1-C.json",
+      "sha256": "80cb4de030f2121a671f7d4ae37fd6f614330951772a90052347a0f8cbd272b9",
+      "git_blob_sha1": "1e11cbde9135cb803c53a26be2f725dc681740e4",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S2-A.json",
+      "sha256": "912d62bbffb99a70ca880c255036c31bad9ad694288f7c6c4267d05b0c49fed8",
+      "git_blob_sha1": "7327be5449328c356a0f5b242ddc9d2014175e41",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S2-B.json",
+      "sha256": "351680f3146cb7d4f23fba82ebab866f948b5bf0e00b0068a5bc996d68c35e11",
+      "git_blob_sha1": "972e8a3c6146aa8937e7f7061a04594a70dbe9ed",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S2-C.json",
+      "sha256": "7fff8d0e4f107407280f74fcd12ef53804d237f8bd7114f356dde249cac00a1b",
+      "git_blob_sha1": "ad6c16e59b23ecbb82968181b157458039b0524f",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S3-A.json",
+      "sha256": "40c0c362d277cdf840005fef2c09135a43b082e177460b0a41e69e959ee8bb56",
+      "git_blob_sha1": "bb0e591a199e1d0b30285bef88da5e96e2b33bc6",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S3-B.json",
+      "sha256": "2e988a40b09985cf258d244f0a62e0472c4ce35ff623d95843e79aab7f01601e",
+      "git_blob_sha1": "31d35ffc12cf31f39204d38dcc43631588fc7c85",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S3-C.json",
+      "sha256": "def4eb44e04764588eb996ceaf7fb22f95e8bd9f63777afd85f44a77a38e2bd9",
+      "git_blob_sha1": "7021eb06156089aba03f02ca855b776cbfa375d9",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S4-A.json",
+      "sha256": "f5ecbabbfba0a4c997341f0c6a7b8d58acdc1f056768dd078ca1fc277aed2c99",
+      "git_blob_sha1": "75ead4aae6187f440df6d9f9cdda6b10e444da13",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S4-B.json",
+      "sha256": "fc1e51bf83fa30fd2daff082f81da3a1f81c600b4985a19b883ea2b0140e2744",
+      "git_blob_sha1": "69bfd1f93b9c87a787b435053a37a8b47c4b1caf",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S4-C.json",
+      "sha256": "1594efa92a3037505f8e89d09bb5908af2205e5d2c25a2e4c48b30a50765f2ce",
+      "git_blob_sha1": "c59d7593fe94808048a0377d365d0681482d7252",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S1-R1.json",
+      "sha256": "3b86aa8ce96f304d6f65af92fa20b185928e9c3220473eda25dd301065bc28c0",
+      "git_blob_sha1": "f164c7b081b77b47cec72085de07780a55cd2acb",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S2-R2.json",
+      "sha256": "5f80b52c27f08a63b43f3933b0a3ad69e7c28cc475de609a20228b38a56bfa8f",
+      "git_blob_sha1": "dfb48ef567034ebc235d47bb12be030083d3e065",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    },
+    {
+      "path": "execution/actors/S3-R3.json",
+      "sha256": "82c746193453a4c2b0a1d245829c2caffcdc230f8116d36a73497b2e60ecda86",
+      "git_blob_sha1": "6c8de729cc156f6672738c2f8403472a8c478338",
+      "review_mode": "Comparação exata de assignment/write_authority/allocation/physical_slot/criterion_ids; regra explícita de contexto de leitura; integridade por blob remoto."
+    }
+  ],
+  "external_evidence_hashes": [
+    {
+      "path": "/workspace/scratch/b5296ae7597d/guards/9a1812f360fa-evidence/receipt.json",
+      "sha256": "6c86d68a48454fdd0aed3813de0f6573ee0eeb9191264410bb4a2ebff81d0e97"
+    },
+    {
+      "path": "/workspace/scratch/b5296ae7597d/guards/9a1812f360fa-evidence/fidelity.json",
+      "sha256": "2196230f41be1991de476004a9ce45d3f29a68f5e1b97b9a093054411627df90"
+    }
+  ]
+}
+

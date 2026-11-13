@@ -1,6 +1,6 @@
 # Orchestra SF — plano integral e workflow de execução
 
-**Versão 3.2: candidato corrigido em rechecagem independente.** O plano preserva o produto integral e organiza a execução por uma supervisora S0, quatro sessões coordenadoras e seus auxiliares. O estado verificável está na [rodada 3](formal-review/round-3/SUMMARY.md).
+**Versão 3.2: APPROVED_FOR_EXECUTION após três rechecagens independentes.** O plano preserva o produto integral e organiza a execução por uma supervisora S0, quatro sessões coordenadoras e seus auxiliares. O estado verificável está na [rodada 3](formal-review/round-3/SUMMARY.md).
 
 ## Começar
 

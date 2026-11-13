@@ -11,7 +11,8 @@
         "execution/actors/",
         "execution/manifest.json"
       ],
-      "status": "APPLIED_PENDING_INDEPENDENT_RECHECK"
+      "status": "CLOSED_BY_INDEPENDENT_RECHECK",
+      "recheck": "rechecks/context.json"
     },
     {
       "id": "R3-CTX-02",
@@ -21,7 +22,8 @@
         "tools/render_fast_context.py",
         "execution/actors/S3.json"
       ],
-      "status": "APPLIED_PENDING_INDEPENDENT_RECHECK"
+      "status": "CLOSED_BY_INDEPENDENT_RECHECK",
+      "recheck": "rechecks/context.json"
     },
     {
       "id": "R3-CTX-03",
@@ -31,7 +33,8 @@
         "tools/render_fast_context.py",
         "execution/actors/S2-A.json"
       ],
-      "status": "APPLIED_PENDING_INDEPENDENT_RECHECK"
+      "status": "CLOSED_BY_INDEPENDENT_RECHECK",
+      "recheck": "rechecks/context.json"
     },
     {
       "id": "R3-CTX-04",
@@ -42,7 +45,8 @@
         "execution-workflow.json",
         "execution/context-measurement.json"
       ],
-      "status": "APPLIED_PENDING_INDEPENDENT_RECHECK"
+      "status": "CLOSED_BY_INDEPENDENT_RECHECK",
+      "recheck": "rechecks/context.json"
     },
     {
       "id": "R3-SUP-P2-01",
@@ -53,9 +57,11 @@
         "tools/validate_execution_plan.py",
         "execution-workflow.json"
       ],
-      "status": "APPLIED_PENDING_INDEPENDENT_RECHECK"
+      "status": "CLOSED_BY_INDEPENDENT_RECHECK",
+      "recheck": "rechecks/supervisor.json"
     }
   ],
   "controls": "correction-controls.json",
-  "implementation_test_status": "NOT_RUN"
+  "implementation_test_status": "NOT_RUN",
+  "verified_candidate_sha": "9a1812f360fa245fa2fac9aacf4938ddf8f21381"
 }
