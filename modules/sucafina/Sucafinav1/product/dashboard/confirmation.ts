@@ -163,7 +163,7 @@ export function createDashboardConfirmationObserver(input: {
     if (!Number.isFinite(Date.parse(environment.at))) return { status: "unavailable", reason: "historical-source-unavailable" }
     const day = new Date(environment.at).toISOString().slice(0, 10)
     // Current-state records need today's observation window; dated records retain their competence.
-    const currentFields = ["executive", "members", "leaders", "cio", "projects", "risks", "contracts", "stakeholders", "itperf", "signals", "hotTopics", "secActions", "secIncidents", "secPhishing"]
+    const currentFields = ["executive", "members", "leaders", "cio", "projects", "risks", "contracts", "stakeholders", "itperf", "itperf-item", "signals", "hotTopics", "secActions", "secIncidents", "secPhishing"]
     const currentState = original.target.recordType === "dashboard-page" ? original.target.fields.some((field) => currentFields.includes(field)) : currentFields.includes(original.target.recordType)
     const period = original.target.recordType === "hotTopics" ? { start: day, end: day } : currentState ? { start: `${day.slice(0, 4)}-01-01`, end: `${day.slice(0, 4)}-12-31` } : { ...original.target.period }
     const originalPage = await input.host.persistence.transaction("dashboard", async (snapshot) => {

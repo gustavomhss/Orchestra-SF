@@ -167,10 +167,7 @@ export function createSfAtlasBusiness(input: {
 }) {
   const dashboard = createSfDashboardSourceAccess({ host: input.host, issue: input.dashboardIssue, dashboard: input.dashboard })
   const dashboardRecord = createSfDashboardRecordSourceAccess({ host: input.host, records: input.dashboardRecords })
-  const caseEvent = createSfCaseEventSourceAccess({ host: input.host, state: input.state, authorizeCase: input.authorizeCase, authorizeEvidence: async (refs, call) => {
-    const results = await context.context({ refs }, call)
-    return results.length === refs.length && results.every((result, index) => (result.state === "fresh" || result.state === "historical") && digestSfValue(result.ref) === digestSfValue(refs[index])) && await input.host.revalidate(call)
-  } })
+  const caseEvent = createSfCaseEventSourceAccess({ host: input.host, cases: input.cases })
   const procurement = createSfProcurementSourceAccess({ host: input.host, resolve: input.procurementResolve, procurement: input.procurement })
   const document = createSfDocumentSourceAccess({ host: input.host, read: input.documentRead })
   const planner = async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {

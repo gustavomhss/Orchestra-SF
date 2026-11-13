@@ -10,7 +10,7 @@ export function createPortfolioCatalog(input: { cases: DecisionCasePort; revalid
     if (!await input.revalidate(context)) return { status: "denied", reason: "invalid-binding" } as const
     const current = await Promise.all(request.caseRefs.map((caseRef) => input.cases.read({ caseRef }, context)))
     const failure = current.find((item) => item.status !== "ok")
-    if (failure && failure.status !== "ok") return failure
+    if (failure) return failure
     const entries = current.flatMap((item, index) => {
       if (item.status !== "ok") return []
       const decision = item.value.case

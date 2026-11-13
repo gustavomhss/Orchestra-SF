@@ -24,7 +24,7 @@ export function dashboardConfirmationManifest(recordType: string, fields: readon
     if (fields.some((field) => !Object.hasOwn(rules, field))) return undefined
     return { version: "dashboard-c06-v1", internal: [...new Set(fields.flatMap((field) => rules[field]!))].sort(), requiredExternal: [] as readonly never[] }
   }
-  const records = ["hotTopics", "opexOwners", "opexEntries", "capexProjects", "capexEntries", "budgetYtd", "deviations", "budgetCurrentMonth", "revenueByYear", "members", "leaders", "itUsersMonthly", "projects", "risks", "contracts", "stakeholders", "itperf", "opsTickets", "opsSLA", "opsHeatmap", "secKpi", "secActions", "secIncidents", "secPhishing"]
+  const records = ["hotTopics", "opexOwners", "opexEntries", "capexProjects", "capexEntries", "budgetYtd", "deviations", "budgetCurrentMonth", "revenueByYear", "members", "leaders", "itUsersMonthly", "projects", "risks", "contracts", "stakeholders", "itperf", "itperf-item", "opsTickets", "opsSLA", "opsHeatmap", "secKpi", "secActions", "secIncidents", "secPhishing"]
   if (!records.includes(recordType)) return undefined
   return { version: "dashboard-c06-v1", internal: ["authorized-record-fields-v1"], requiredExternal: [] as readonly never[] }
 }

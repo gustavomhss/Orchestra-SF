@@ -14,7 +14,8 @@ export function createSfProductState(input: {
   /** Root-private callback identities; never exposed through a product capability or serialized input. */
   nativeEvidenceWrites?: WeakSet<object>
   proposalCoverageWrites?: WeakSet<object>
-  resolveTarget: (request: Request, snapshot: Snapshot, namespace: SfStateNamespace, targetRef: string) => Promise<{ incarnation: string } | undefined>
+  dashboardHostWrites?: WeakSet<object>
+  resolveTarget: (request: Request, snapshot: Snapshot, namespace: SfStateNamespace, targetRef: string, command: SfStateMutation) => Promise<{ incarnation: string } | undefined>
 }): SfProductStatePort {
   return {
     read: <T>(request: Request, namespace: SfStateNamespace, read: (state: Readonly<SfProductState>, authority: SfStateAuthority) => T | Promise<T>) =>
@@ -48,7 +49,7 @@ export function createSfProductState(input: {
         const stored = snapshot.data.__sfProductV1
         const state = stored === undefined ? emptySfState(input.createId()) : readSfState(snapshot)
         if (!state) return { commit: false, value: { status: "unavailable", reason: "invalid-product-state" } }
-        const target = await input.resolveTarget(request, snapshot, command.namespace, command.targetRef)
+        const target = await input.resolveTarget(request, snapshot, command.namespace, command.targetRef, command)
         if (!target) return { commit: false, value: { status: "denied", reason: "target-access-unavailable" } }
         if (target.incarnation !== command.targetIncarnation)
           return { commit: false, value: { status: "conflict", reason: "target-replaced" } }
@@ -60,7 +61,7 @@ export function createSfProductState(input: {
           const current = await Promise.all(admitted.map((entry) => input.authorize(request, snapshot, entry.namespace, "write")))
           if (request.signal.aborted || admitted.some((entry, index) => !sameAuthority(entry.authority, current[index])))
             return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
-          const currentTarget = await input.resolveTarget(request, snapshot, command.namespace, command.targetRef)
+          const currentTarget = await input.resolveTarget(request, snapshot, command.namespace, command.targetRef, command)
           if (currentTarget?.incarnation !== target.incarnation)
             return { commit: false, value: { status: "denied", reason: "target-authority-changed" } }
           return { commit: false, value: { status: "ok", storageVersion: prior.storageVersion, aggregateRevision: prior.aggregateRevision, incarnation: prior.incarnation, value: structuredClone(prior.value) as T } }
@@ -72,7 +73,7 @@ export function createSfProductState(input: {
         if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
         const current = await Promise.all(admitted.map((entry) => input.authorize(request, snapshot, entry.namespace, "write")))
         if (admitted.some((entry, index) => !sameAuthority(entry.authority, current[index]))) return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
-        const currentTarget = await input.resolveTarget(request, snapshot, command.namespace, command.targetRef)
+        const currentTarget = await input.resolveTarget(request, snapshot, command.namespace, command.targetRef, command)
         if (currentTarget?.incarnation !== target.incarnation)
           return { commit: false, value: { status: "denied", reason: "target-authority-changed" } }
         if (!result.commit) return { commit: false, value: { status: "preview", storageVersion: state.versions[command.namespace], aggregateRevision: state.revision, incarnation: state.incarnation, value: result.value } }
@@ -84,6 +85,9 @@ export function createSfProductState(input: {
         const proposalMetadata = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:proposal-coverage:") || key.startsWith("sf:criterion-rule:")))
         if (!input.proposalCoverageWrites?.has(work) && digestSfValue(proposalMetadata(staged.preferences)) !== digestSfValue(proposalMetadata(state.preferences)))
           return { commit: false, value: { status: "denied", reason: "proposal-coverage-write-outside-authority" } }
+        const dashboardMetadata = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:dashboard-host:")))
+        if (!input.dashboardHostWrites?.has(work) && digestSfValue(dashboardMetadata(staged.preferences)) !== digestSfValue(dashboardMetadata(state.preferences)))
+          return { commit: false, value: { status: "denied", reason: "dashboard-host-write-outside-authority" } }
         if (digestSfValue(staged.versions) !== digestSfValue(state.versions) || storedNamespaces.some((key) => !scope.some((entry) => entry.namespace === key) && digestSfValue(staged[key]) !== digestSfValue(state[key])) ||
           (!scope.some((entry) => entry.namespace === "contributions") && digestSfValue(staged.nativeRuns) !== digestSfValue(state.nativeRuns)) ||
           (!scope.some((entry) => entry.namespace === "cases") && digestSfValue(staged.decisionResults) !== digestSfValue(state.decisionResults)))
@@ -94,7 +98,7 @@ export function createSfProductState(input: {
         snapshot.data.__sfProductV1 = staged
         return { commit: true, value: { status: "ok", storageVersion: staged.versions[command.namespace], aggregateRevision: staged.revision, incarnation: staged.incarnation, value: result.value } }
       }
-      if (command.namespace === "documents" || command.additionalNamespaces?.some((entry) => entry.namespace === "documents") || (command.domainSurface && command.domainSurface !== "dashboard")) {
+      if (command.namespace === "documents" || command.additionalNamespaces?.some((entry) => entry.namespace === "documents") || command.domainSurface) {
         if (!input.persistence.transactionAll) return Promise.resolve({ status: "unavailable", reason: "cross-surface-transaction-unavailable" })
         const surface = command.domainSurface ?? "dashboard"
         return input.persistence.transactionAll((snapshots) => run(snapshots.dashboard, snapshots[surface]), { signal: request.signal })

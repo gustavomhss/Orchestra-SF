@@ -38,6 +38,7 @@ export function createSfProductAuthority(input: {
   providerGeneration: () => Promise<number | undefined>
   /** Composition-owned capability; never returned in browser or model services. */
   proposalCoverageWrites?: WeakSet<object>
+  dashboardHostWrites?: WeakSet<object>
   authorizeDocument: (request: Request, snapshot: Snapshot, assetId: string, principal: string, authority: SfStateAuthority) => Promise<{ incarnation: string } | undefined>
 }) {
   const grants = structuredClone(input.grants)
@@ -97,13 +98,13 @@ export function createSfProductAuthority(input: {
     return input.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await principal(request, snapshot) }), { signal: request.signal })
   }
   const state = createSfProductState({
-    persistence: input.persistence, createId: input.createId, nativeEvidenceWrites, proposalCoverageWrites: input.proposalCoverageWrites,
+    persistence: input.persistence, createId: input.createId, nativeEvidenceWrites, proposalCoverageWrites: input.proposalCoverageWrites, dashboardHostWrites: input.dashboardHostWrites,
     authorize: async (request, snapshot, namespace, mode) => {
       const actor = await principal(request, snapshot)
       if (!actor || !actor.grant.namespaces.includes(namespace) || (mode === "write" && !actor.canWrite)) return undefined
       return { principalRef: actor.principalRef, policyVersion: actor.policyVersion, accessRevision: actor.accessRevision }
     },
-    resolveTarget: async (request, snapshot, namespace, targetRef) => {
+    resolveTarget: async (request, snapshot, namespace, targetRef, command) => {
       const actor = await principal(request, snapshot)
       if (!actor || !actor.grant.namespaces.includes(namespace)) return undefined
       if (actor.canWrite && creationNamespaces.includes(namespace) && targetRef === creationTarget.ref) return { incarnation: creationTarget.incarnation }
@@ -115,6 +116,27 @@ export function createSfProductAuthority(input: {
       const entry = Object.hasOwn(cases, id) ? object(cases[id]) : undefined
       if (entry && entry.id === id && typeof entry.incarnation === "string" && (!parsed || parsed.incarnation === entry.incarnation) &&
         Array.isArray(entry.participants) && entry.participants.includes(actor.principalRef)) return { incarnation: entry.incarnation }
+      if (namespace === "receipts" && actor.canWrite && command.domainSurface === "dashboard") {
+        const preferences = object(state.preferences)
+        const targets = Object.values(cases).flatMap((value) => {
+          const decision = object(value)
+          if (typeof decision.id !== "string" || typeof decision.incarnation !== "string" || typeof decision.version !== "number" || !Array.isArray(decision.participants) || !decision.participants.includes(actor.principalRef) || !Array.isArray(decision.choices) || !Array.isArray(decision.preparedChanges)) return []
+          const changes: readonly unknown[] = decision.preparedChanges
+          const choices: readonly unknown[] = decision.choices
+          return changes.flatMap((value) => {
+            const change = object(value), target = object(change.target)
+            if (typeof change.id !== "string" || target.surface !== "dashboard" || target.id !== targetRef || typeof target.incarnation !== "string" || target.incarnation !== command.targetIncarnation || command.idempotencyKey !== `prepared:${change.idempotencyKey}`) return []
+            const binding = object(preferences[`sf:dashboard-host:prepared:${change.id}`])
+            const caseRef = object(binding.caseRef)
+            const boundChoices = choices.map(object).filter((choice) => choice.id === change.choiceId)
+            if (binding.schema !== "sf-dashboard-prepared-binding-v1" || binding.changeId !== change.id || binding.choiceId !== change.choiceId || caseRef.id !== decision.id || caseRef.incarnation !== decision.incarnation || typeof caseRef.version !== "number" || caseRef.version > decision.version || (change.state === "planned" && !change.receipt && caseRef.version !== decision.version) || binding.principalRef !== actor.principalRef || binding.accessRevision !== actor.accessRevision || binding.policyVersion !== actor.policyVersion || boundChoices.length !== 1 || binding.choiceDigest !== digestSfValue(boundChoices[0]) || digestSfValue(binding.command) !== digestSfValue(change.operation)) return []
+            const material = Object.fromEntries(Object.entries(binding).filter(([key]) => key !== "recordDigest"))
+            if (binding.recordDigest !== digestSfValue(material)) return []
+            return [{ incarnation: target.incarnation }]
+          })
+        })
+        if (targets.length === 1) return targets[0]
+      }
       if (namespace === "documents") return input.authorizeDocument(request, snapshot, targetRef, actor.principalRef, { principalRef: actor.principalRef, accessRevision: actor.accessRevision, policyVersion: actor.policyVersion })
       return undefined
     },

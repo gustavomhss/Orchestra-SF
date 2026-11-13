@@ -20,7 +20,11 @@ export function handleDashboardPreview(snapshot: Snapshot, actor: Actor, command
       ids.push(id)
       return id
     } })
-    if (preview.status !== "preview") return { commit: false, value: { ok: false, status: preview.status === "denied" ? 403 : preview.status === "conflict" ? 409 : 422, errors: [preview.reason] } }
+    if (preview.status !== "preview") return { commit: false, value: {
+      ok: false, status: preview.status === "denied" ? 403 : preview.status === "conflict" ? 409 : 422,
+      errors: preview.status === "invalid" && "errors" in preview ? [...preview.errors] : [preview.status === "conflict" ? "The stored record changed." : preview.reason],
+      ...(preview.status === "conflict" ? { by: preview.by, stored: preview.stored } : {}),
+    } }
     const previewRef = environment.id()
     if (!previewRef || ids.includes(previewRef) || snapshot.sfCommandPreviews?.[previewRef]) throw new Error("SF_PREVIEW_ID_COLLISION")
     const expiresAt = new Date(Date.parse(environment.at) + 5 * 60_000).toISOString()

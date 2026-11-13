@@ -70,7 +70,7 @@ test("human-confirmed conditional choice persists its C10 caveat and provenance"
       authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef),
       authorizeMutation: (_operation, payload, context) => human.authorize(context, humanAction, payload),
       verifyMutation: (_snapshot, _operation, payload, context) => context.kind === "ui" && ui.matchesIntent(context, command, digestSfValue(payload)),
-      operationIdentity: (context) => ui.operationIdentity(context),
+      operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined,
       confirmChoice: (_caseRef, _alternativeId, context) => human.authorize(context, humanAction, operation),
       resolveQuestion: unavailable, resolveAnswer: unavailable, confirmAnswer: async () => false,
       resolveChoiceValues: async () => ({ status: "ok", value: [] }), prepareDomainCommands: unavailable,

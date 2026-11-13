@@ -13,6 +13,14 @@ import { createSfAtlasDurableMemory } from "./atlas-store.ts"
 
 type AtlasPartition = { events: Parameters<typeof createSfAtlasDurableMemory>[0]["events"]; envelopes: Record<string, BusinessMemoryEnvelope>; originals: Record<string, { ref: BusinessEvidenceRef; projection: NonNullable<Awaited<ReturnType<BusinessContextService["resolve"]>>["authorizedProjection"]> }>; captureDigests: Record<string, Record<string, string>> }
 
+function isTaskEntry(value: unknown): value is Extract<SfAtlasProjection, { kind: "task" }>["entry"] {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false
+  return "taskId" in value && typeof value.taskId === "string" &&
+    "attempted" in value && Array.isArray(value.attempted) && value.attempted.every((item: unknown) => typeof item === "string") &&
+    "failedWith" in value && Array.isArray(value.failedWith) && value.failedWith.every((item: unknown) => typeof item === "string") &&
+    "stoppedAt" in value && typeof value.stoppedAt === "string" && "lesson" in value && typeof value.lesson === "string" && "ref" in value && typeof value.ref === "string"
+}
+
 /** C09 remains authoritative. This writer only projects an authenticated outbox event. */
 export function createSfAtlasMemory(input: {
   state: SfProductStatePort
@@ -118,6 +126,7 @@ export function createSfAtlasMemory(input: {
         const envelope = partition.envelopes[id]
         const boundCase = envelope?.caseRef
         if (!envelope || !boundCase || envelope.eventId !== id || envelope.owner !== owner || record.owner !== owner || envelope.kind !== "task" || record.kind !== "task" || boundCase.id !== caseRef.id || boundCase.incarnation !== caseRef.incarnation || boundCase.version > found.value.case.version) return { status: "unavailable" as const }
+        if (!isTaskEntry(record.entry)) return { status: "unavailable" as const }
         if (envelope.projectionDigest !== digestSfValue({ kind: "task", owner, entry: record.entry, sourceEventId: envelope.sourceEventId, evidenceRefs: envelope.evidenceRefs })) return { status: "unavailable" as const }
         const originals = [...envelope.evidenceRefs, ...envelope.dependencies]
         try {
@@ -134,12 +143,12 @@ export function createSfAtlasMemory(input: {
           const capture = partition.originals[ref.refDigest]
           if ((resolution.state !== "fresh" && resolution.state !== "historical") || !resolution.currentRef || !resolution.authorizedProjection || !capture || digestSfValue(capture.ref) !== digestSfValue(ref) || partition.captureDigests[id]?.[ref.refDigest] !== digestSfValue(capture) || (resolution.state === "historical" && (resolution.differences === undefined || digestSfValue(resolution.authorizedProjection) !== digestSfValue(capture.projection))) || !await input.proveContinuity(ref, resolution.currentRef, call)) return { status: "unavailable" as const }
         }
-        approved.push({ id, event, envelope, resolutions })
+        approved.push({ id, event, entry: record.entry, envelope, resolutions })
       }
       if (!await input.host.revalidate(call)) return { status: "unavailable" as const }
       const filtered = createSfAtlasDurableMemory({ events: approved.map((item) => [item.id, item.event]) })
       const recalled = createMemoryRead({ store: filtered, actor: owner }).recall({ kind: "task", owner })
-      const records = approved.flatMap((item) => recalled.some((record) => digestSfValue(record) === digestSfValue(item.event.payload)) ? [{ envelope: item.envelope, entry: (item.event.payload as MemoryRecord).entry, resolutions: item.resolutions, case: found.value, recordDigest: digestSfValue(item.event.payload) }] : [])
+      const records = approved.flatMap((item) => recalled.some((record) => digestSfValue(record) === digestSfValue(item.event.payload)) ? [{ envelope: item.envelope, entry: item.entry, resolutions: item.resolutions, case: found.value, recordDigest: digestSfValue(item.event.payload) }] : [])
       const current = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
       if (current.status !== "ok" || current.value.case.version !== found.value.case.version || !await input.host.revalidate(call)) return { status: "unavailable" as const }
       for (const record of records) {
@@ -226,7 +235,7 @@ export async function rankSfAtlasRecall(input: {
             sourceIncarnations[resolution.ref.refDigest] = incarnation
           }
         }
-        candidates.push({ envelope: record.envelope, entry: record.entry as SfAtlasProjection["entry"], case: record.case, features, resolutions: record.resolutions, atlasTrace: { module: "@orchestra/atlas-boundary/business-memory-ports", operation: "createMemoryRead.recall", recordDigest: record.recordDigest }, accessRevision: input.call.binding.accessRevision })
+        candidates.push({ envelope: record.envelope, entry: record.entry, case: record.case, features, resolutions: record.resolutions, atlasTrace: { module: "@orchestra/atlas-boundary/business-memory-ports", operation: "createMemoryRead.recall", recordDigest: record.recordDigest }, accessRevision: input.call.binding.accessRevision })
       }
     }
     const scope: RecallScope = { installationId: input.call.binding.installationId, projectId: input.call.binding.projectId, principalRef: input.call.binding.principalRef, accessRevision: input.call.binding.accessRevision, policyVersion: input.call.binding.policyVersion, ...input.runtimeVersions, sourceVersions, sourceIncarnations }

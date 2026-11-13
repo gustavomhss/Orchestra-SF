@@ -7,8 +7,9 @@ import { openLocalStore } from "../../../runtime/local-store.ts"
 import { resolve } from "../../../src/identity.ts"
 import { createSfSourcePersistence, sfSourceIdentity } from "../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
-import { createProcurementSourceResolver, procurementSourceSelector } from "../../../product/procurement/sources.ts"
-import { createProcurementPort, isCurrentProcurementSource } from "../../../product/procurement/port.ts"
+import { projectSfProcurementScope } from "../../../product/integration/procurement-projections.ts"
+import { createProcurementSourceResolver } from "../../../product/procurement/sources.ts"
+import { createProcurementPort } from "../../../product/procurement/port.ts"
 import { createSfProcurementSourceAccess } from "../../../product/decision-memory/source-access.ts"
 import type { DomainPortHost } from "../../../product/contracts/ports.ts"
 import type { TrustedDomainContext, TrustedUiLease } from "../../../product/contracts/sf-execution.ts"
@@ -20,7 +21,7 @@ test("Procurement evidence is read through current source and domain ports", asy
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-procurement-evidence-"))
   const store = await openLocalStore(directory, { lockTimeoutMs: 500 })
   try {
-    const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources })
+    const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: projectSfProcurementScope })
     await persistence.initializeSources("procurement")
     await persistence.transaction("procurement", async (snapshot) => { snapshot.data.roleMap = [{ surface: "procurement", role: "requester", entra: "requesters", version: 1, by: "admin" }]; snapshot.data.store = { requests: { "PR-1": { request: { number: "PR-1", status: "draft", createdBy: "alice", pr: { title: "Owned", estAmount: 100 } }, version: 1, by: "alice" } }, settings: { currency: "USD" }, suppliers: [] }; return { commit: true, value: undefined } })
     const session = { active: true }
@@ -28,9 +29,12 @@ test("Procurement evidence is read through current source and domain ports", asy
     const identity = await persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: sfSourceIdentity(snapshot, "procurement-request", "PR-1") }))
     expect(identity).toBeDefined()
     if (!identity) return
-    const resolver = createProcurementSourceResolver({ host, contextFor: async () => ({ status: "ok", value: { installationId: "i", projectId: "p", principalRef: "alice", accessRevision: "1", policyVersion: "1", surface: "procurement", period, currency: "USD", sourceRefs: [], capabilities: [] } }) })
-    const port = createProcurementPort({ ...host, resolveRequestSource: resolver, resolveSupplierSource: resolver, isCurrentRequestSource: isCurrentProcurementSource, isCurrentSupplierSource: isCurrentProcurementSource, resolveRequestCollection: async () => ({ status: "unavailable", reason: "not in this test" }), isCurrentRequestCollection: () => false, readContractSource: async () => ({ status: "unavailable", reason: "not in this test" }) })
-    const first = await resolver(procurementSourceSelector("procurement-request", "PR-1", identity.incarnation, identity.version), call)
+    const resolver = createProcurementSourceResolver({ host, scopedSources: persistence, contextFor: async () => ({ status: "ok", value: { installationId: "i", projectId: "p", principalRef: "alice", accessRevision: "1", policyVersion: "1", surface: "procurement", period, currency: "USD", sourceRefs: [], capabilities: [] } }) })
+    const port = createProcurementPort({ ...host, resolveRequestSource: resolver.resolve, resolveSupplierSource: resolver.resolve, isCurrentRequestSource: resolver.isCurrent, isCurrentSupplierSource: resolver.isCurrent, resolveRequestCollection: async () => ({ status: "unavailable", reason: "not in this test" }), isCurrentRequestCollection: () => false, readContractSource: async () => ({ status: "unavailable", reason: "not in this test" }) })
+    const issued = await resolver.issue("procurement-request", "PR-1", call)
+    expect(issued.status).toBe("ok")
+    if (issued.status !== "ok") throw new Error(issued.reason)
+    const first = await resolver.resolve(issued.value, call)
     expect(first.status).toBe("ok")
     if (first.status !== "ok") return
     const access = createSfProcurementSourceAccess({ host, resolve: resolver, procurement: port })

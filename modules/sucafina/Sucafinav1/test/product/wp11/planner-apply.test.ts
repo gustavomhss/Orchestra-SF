@@ -4,6 +4,7 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { randomUUID } from "node:crypto"
 import { openLocalStore } from "../../../runtime/local-store.ts"
+import { rows } from "../../../runtime/contract.ts"
 import { resolve } from "../../../src/identity.ts"
 import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
@@ -11,7 +12,11 @@ import { sfPlannerProjectionSelector, createSfSourceScopeProjector } from "../..
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { preparePlannerMutation } from "../../../product/planner/prepared.ts"
 import { createPlannerProduct } from "../../../product/planner/product.ts"
+import { projectPlannerSource } from "../../../product/planner/port.ts"
 import { createSfPreparedApply } from "../../../product/decisions/prepared-apply.ts"
+import { proposalReviewDigest, receiptProofTransactionKey, receiptReviewBinding, sameApplyRequest } from "../../../product/decisions/receipt-review-binding.ts"
+import type { ReviewDigestFor } from "../../../product/decisions/receipt-review-binding.ts"
+import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { DecisionCase, PreparedChange } from "../../../product/contracts/decisions.ts"
 import type { DomainPortHost } from "../../../product/contracts/ports.ts"
 import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
@@ -49,15 +54,49 @@ test("real Planner mutation and case receipt commit atomically across surfaces",
     const state = createSfProductState({ persistence, createId: () => "state", resolveTarget: async (_request, _snapshot, namespace) => ({ incarnation: namespace === "cases" ? "case-inc" : target.incarnation }), authorize: async () => ({ principalRef: "finance", policyVersion: "1", accessRevision: "1" }) })
     await state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, targetRef: "case", targetIncarnation: "case-inc", idempotencyKey: "seed", commandDigest: "a".repeat(64) }, async (value) => { value.cases.case = decision; return { commit: true, value: true } })
     const human = { granted: false, nextReceipt: 0 }
-    const apply = createSfPreparedApply({ state, host, authorizeCase: async () => true, authorizeLookup: async () => true, authorizeReceipt: async () => true, confirmHuman: async () => human.granted, resolveActor: () => actor, resolveMutation: (_snapshot, selected) => selected.id === "stale-change" ? stale.mutation : produced.mutation, verifyGrant: () => human.granted, receiptVersion: () => 1, environment: () => environment, createId: () => `receipt-${++human.nextReceipt}`, now: () => environment.at })
     const operation = { caseRef: { id: "case", incarnation: "case-inc", version: 1 }, changeId: "change", choiceId: "choice" }
+    const forecast = (projection: Record<string, unknown> | undefined): number | null => {
+      if (!projection) throw new Error("review projection unavailable")
+      const line = rows(projection.lines).find((entry) => entry.id === produced.command.id)
+      if (!line) throw new Error("review line unavailable")
+      const value = Array.isArray(line.f) ? line.f[0] ?? null : null
+      if (value !== null && (typeof value !== "number" || !Number.isFinite(value))) throw new Error("review forecast invalid")
+      return value
+    }
+    const before = forecast(projectPlannerSource(snapshot, actor, target.id))
+    const reviewed = new Map([
+      [change.id, [{ field: `${produced.command.id}:f0`, before, after: forecast(produced.preview) }]],
+      [staleChange.id, [{ field: `${stale.command.id}:f0`, before, after: forecast(stale.preview) }]],
+    ])
+    const reviewDigestFor: ReviewDigestFor = (binding, incoming, selected) => {
+      const expected = decision.preparedChanges.find((entry) => entry.id === selected.id)
+      const fields = reviewed.get(selected.id)
+      if (binding !== context || !expected || !fields || !sameApplyRequest(incoming, { ...operation, changeId: selected.id }) || digestSfValue(expected.operation) !== digestSfValue(selected.operation)) return undefined
+      return proposalReviewDigest({ caseId: decision.id, caseIncarnation: decision.incarnation, changeCaseVersion: selected.caseVersion, choiceDigest: digestSfValue(decision.choices[0]), change: selected, fields, sourceRefDigest: issued.value.evidence.refDigest })
+    }
+    const reviewDigest = reviewDigestFor(context, operation, change)
+    if (!reviewDigest) throw new Error("real review material unavailable")
+    const apply = createSfPreparedApply({ state, host, authorizeCase: async () => true, authorizeLookup: async () => true, authorizeReceipt: async () => true, confirmHuman: async () => human.granted, reviewDigestFor, resolveActor: () => actor, resolveMutation: (_snapshot, selected) => selected.id === "stale-change" ? stale.mutation : produced.mutation, verifyGrant: () => human.granted, receiptVersion: () => 1, environment: () => environment, createId: () => `receipt-${++human.nextReceipt}`, now: () => environment.at })
     expect((await apply.executePrepared(operation, context)).status).toBe("denied")
     human.granted = true
     const result = await apply.executePrepared(operation, context)
     expect(result.status).toBe("ok")
+    if (result.status !== "ok") throw new Error("first application unavailable")
+    const proof = await state.read(request, "receipts", (value) => value.transactions[receiptProofTransactionKey(actor.id, target.id, change.idempotencyKey)])
+    expect(proof).toMatchObject({ status: "ok", value: { commandDigest: receiptReviewBinding(change, reviewDigest), value: result.value } })
+    human.granted = false
     expect(await apply.executePrepared(operation, context)).toEqual(result)
+    human.granted = true
     const changed = await persistence.transaction("planner", async (value) => ({ commit: false, value: value.data.versions }))
     expect((changed as { lines: { f: (number | null)[] }[] }[])[0]!.lines[0]!.f[0]).toBe(42)
+    const originalReview = reviewed.get(change.id)
+    if (!originalReview) throw new Error("review unavailable")
+    reviewed.set(change.id, [{ field: `${produced.command.id}:f0`, before, after: forecast(stale.preview) }])
+    expect(reviewDigestFor(context, operation, change)).not.toBe(reviewDigest)
+    expect(await apply.executePrepared(operation, context)).toMatchObject({ status: "conflict", reason: "idempotency-content-changed" })
+    expect(await persistence.transaction("planner", async (value) => ({ commit: false, value: value.data.versions }))).toEqual(changed)
+    expect(await state.read(request, "receipts", (value) => value.transactions[receiptProofTransactionKey(actor.id, target.id, change.idempotencyKey)])).toEqual(proof)
+    reviewed.set(change.id, originalReview)
     const rejected = await apply.executePrepared({ ...operation, changeId: "stale-change" }, context)
     expect(rejected).toMatchObject({ status: "ok", value: { result: { ok: false, status: 409 } } })
     const afterRejected = await persistence.transaction("planner", async (value) => ({ commit: false, value: value.data.versions }))

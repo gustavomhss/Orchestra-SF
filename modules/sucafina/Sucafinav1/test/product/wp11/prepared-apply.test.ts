@@ -13,6 +13,9 @@ import { simulateDashboardCommand, applyDashboardPreview } from "../../../produc
 import { dashboardMutationImpact, prepareDashboardMutationScope } from "../../../product/dashboard/mutation-scope.ts"
 import { createDashboardPreparedMutation } from "../../../product/dashboard/prepared.ts"
 import { createSfPreparedApply } from "../../../product/decisions/prepared-apply.ts"
+import { proposalReviewDigest, receiptProofTransactionKey, receiptReviewBinding, sameApplyRequest } from "../../../product/decisions/receipt-review-binding.ts"
+import type { ReviewDigestFor } from "../../../product/decisions/receipt-review-binding.ts"
+import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { DecisionCase, PreparedChange } from "../../../product/contracts/decisions.ts"
 import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
 
@@ -51,18 +54,40 @@ test("human-approved prepared dashboard command and receipt commit together", as
     const state = createSfProductState({ persistence, createId: () => "state", resolveTarget: async (_request, _snapshot, namespace) => ({ incarnation: namespace === "cases" ? "case-inc" : target.incarnation }), authorize: async () => ({ principalRef: actor.id, policyVersion: "1", accessRevision: "1" }) })
     const http = new Request("https://example.test")
     await state.transaction(http, { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "seed", commandDigest: "a".repeat(64), targetRef: "case", targetIncarnation: "case-inc" }, async (value) => { value.cases.case = decision; return { commit: true, value: true } })
-    const approval = { human: false }
-    const apply = createSfPreparedApply({ state, host: { requestFor: () => new Request("https://example.test"), revalidate: async () => true }, authorizeCase: async () => true, authorizeLookup: async () => true, authorizeReceipt: async () => true, confirmHuman: async () => approval.human, resolveActor: () => actor, resolveMutation: () => mutation, verifyGrant: () => true, receiptVersion: () => 1, environment, createId: () => "receipt", now: () => "2026-11-13T00:00:00Z" })
     const request = { caseRef: { id: "case", incarnation: "case-inc", version: 1 }, changeId: "change", choiceId: "choice" }
+    const display = (value: unknown): string | number | boolean | null => value === null || typeof value === "string" || typeof value === "number" || typeof value === "boolean" ? value : JSON.stringify(value) ?? null
+    const approval = { human: false, available: true, fields: preview.changes.map((entry) => ({ field: entry.path, before: entry.before.state === "value" ? display(entry.before.value) : null, after: entry.after.state === "value" ? display(entry.after.value) : null })) }
+    const reviewDigestFor: ReviewDigestFor = (binding, incoming, selected) => binding === context && approval.available && sameApplyRequest(incoming, request) && digestSfValue(selected.operation) === digestSfValue(change.operation)
+      ? proposalReviewDigest({ caseId: decision.id, caseIncarnation: decision.incarnation, changeCaseVersion: selected.caseVersion, choiceDigest: digestSfValue(decision.choices[0]), change: selected, fields: approval.fields, sourceRefDigest: digestSfValue(target) })
+      : undefined
+    const reviewDigest = reviewDigestFor(context, request, change)
+    if (!reviewDigest || !approval.fields.length) throw new Error("real review material unavailable")
+    const apply = createSfPreparedApply({ state, host: { requestFor: () => new Request("https://example.test"), revalidate: async () => true }, authorizeCase: async () => true, authorizeLookup: async () => true, authorizeReceipt: async () => true, confirmHuman: async () => approval.human, reviewDigestFor, resolveActor: () => actor, resolveMutation: () => mutation, verifyGrant: () => true, receiptVersion: () => 1, environment, createId: () => "receipt", now: () => "2026-11-13T00:00:00Z" })
+    approval.available = false
+    expect(await apply.executePrepared(request, context)).toMatchObject({ status: "needs-input", reason: "review-proof-required" })
+    expect(await persistence.transaction("dashboard", async (value) => ({ commit: false, value: value.data.opexEntries }))).toEqual([])
+    approval.available = true
     expect((await apply.executePrepared(request, context)).status).toBe("denied")
     approval.human = true
     const applied = await apply.executePrepared(request, context)
     expect(applied.status).toBe("ok")
+    if (applied.status !== "ok") throw new Error("prepared dashboard command was not applied")
+    const recorded = await state.read(http, "receipts", (value) => value.transactions[receiptProofTransactionKey(actor.id, target.id, change.idempotencyKey)])
+    expect(recorded).toMatchObject({ status: "ok", value: { commandDigest: receiptReviewBinding(change, reviewDigest), value: applied.value } })
     const entries = await persistence.transaction("dashboard", async (value) => ({ commit: false, value: value.data.opexEntries }))
     expect(entries).toHaveLength(12)
     const lookup = await apply.readReceipt({ surface: "dashboard", targetRef: "o", targetIncarnation: target.incarnation, idempotencyKey: "annual", commandDigest: mutation.commandDigest }, context)
     expect(lookup).toMatchObject({ status: "ok", value: { state: "found", receipt: { id: "receipt" } } })
     expect((await apply.readReceipt({ surface: "dashboard", targetRef: "o", targetIncarnation: target.incarnation, idempotencyKey: "annual", commandDigest: "f".repeat(64) }, context)).status).toBe("conflict")
+    approval.human = false
     expect(await apply.executePrepared(request, context)).toEqual(applied)
+    const beforeRejected = await persistence.transaction("dashboard", async (value) => ({ commit: false, value: structuredClone(value) }))
+    const fieldIndex = approval.fields.findIndex((entry) => digestSfValue(entry.before) !== digestSfValue(entry.after))
+    const displayed = approval.fields[fieldIndex]
+    if (!displayed) throw new Error("changed review field unavailable")
+    approval.fields = approval.fields.map((entry, index) => index === fieldIndex ? { ...displayed, after: displayed.before } : entry)
+    expect(reviewDigestFor(context, request, change)).not.toBe(reviewDigest)
+    expect(await apply.executePrepared(request, context)).toMatchObject({ status: "conflict", reason: "idempotency-content-changed" })
+    expect(await persistence.transaction("dashboard", async (value) => ({ commit: false, value: value }))).toEqual(beforeRejected)
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })
