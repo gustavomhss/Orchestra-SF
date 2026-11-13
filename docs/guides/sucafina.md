@@ -18,3 +18,5 @@ Creating an HR domain in Planner requires an administrator editing an unlocked v
 
 
 Planner saves update the fields you edit. An empty save cannot advance a record revision, and editing actuals or forecasts leaves untouched budget fields as stored. On locked versions, an authorized roster import leaves the roster unchanged and reports a warning while applying other permitted rows.
+
+Before PO approval, the request amount uses the selected quote converted to base currency, then the requisition estimate if no selected quote is available. Approved and issued orders use their frozen PO exchange rate. A PO above its approved sourcing amount shows a warning and still follows the normal submission and approval rules. Quote evaluation displays technical, price, commercial and overall scores plus rank using the same calculation as validation.
