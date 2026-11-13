@@ -1,3 +1,13 @@
+import type { ReviewOutcomeComparison } from "./outcome.ts"
+import { reviewOutcomeComparisonLines, validOutcomeComparison, reviewOutcomeLines, validReviewOutcome } from "./outcome.ts"
+import type { ObservedResultProjection } from "../contracts/decisions.ts"
+import { reviewDecisionLines, validReviewDecision } from "./decision.ts"
+import { fitSlideText, reviewCoverageLines, SLIDE_BODY, SLIDE_HEADING } from "./report-layout.ts"
+import { createHash } from "node:crypto"
+import { reviewInclusion } from "./inclusion.ts"
+import type { ReviewInclusion } from "./inclusion.ts"
+import { digestSfValue } from "../contracts/canonical.ts"
+import type { Artifact } from "../../runtime/artifact.ts"
 import { matchesSelectedSources } from "./references.ts"
 import { renderReviewBars, renderReviewChart, renderReviewTimeline, renderReviewWaterfall, renderReviewSensitivity } from "./chart.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
@@ -22,7 +32,7 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
     const bars = renderReviewBars(projection, chart)
     const timeline = renderReviewTimeline(projection, chart)
     const waterfall = renderReviewWaterfall(projection, chart)
-    const scatter = renderReviewSensitivity(chart)
+    const scatter = renderReviewSensitivity(projection, chart)
     const images = lineImage ? [lineImage] : bars ?? timeline ?? waterfall ?? (scatter ? [scatter] : [])
     const chartValues = images.length && chart?.status === "ok" ? chart.series.flatMap((series) => series.values.filter((value) => typeof value.value === "number")) : []
     const range = waterfall && chart?.status === "ok" && chart.waterfall?.status === "ok" ? chart.waterfall.segments.flatMap((segment) => [segment.start, segment.end].filter((value): value is number => value !== null)) : chartValues.map((entry) => Number(entry.value))
@@ -41,6 +51,10 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
       images,
       title: `${section.title} · ${section.period.start} – ${section.period.end}`,
       lines: [
+        ...(typeof (projection as DomainProjection & { reviewAgendaNote?: unknown }).reviewAgendaNote === "string" ? [`Agenda note: ${(projection as DomainProjection & { reviewAgendaNote: string }).reviewAgendaNote}`] : []),
+        ...((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison && validOutcomeComparison((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison) ? reviewOutcomeComparisonLines((projection as DomainProjection & { reviewOutcomeComparison: ReviewOutcomeComparison }).reviewOutcomeComparison) : []),
+        ...((projection as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome && validReviewOutcome((projection as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome) ? [...reviewOutcomeLines((projection as DomainProjection & { reviewOutcome: ObservedResultProjection }).reviewOutcome), `Outcome snapshot: ${JSON.stringify((projection as DomainProjection & { reviewOutcome: ObservedResultProjection }).reviewOutcome)}`] : []),
+        ...(projection.decision ? validReviewDecision(projection.decision) ? [...reviewDecisionLines(projection.decision), `Decision snapshot: ${JSON.stringify(projection.decision)}`] : ["Decision details unavailable."] : []),
         `Selected records: ${section.count}`,
         ...(chart ? images.length && chart.status === "ok" ? [
           lineImage
@@ -84,6 +98,8 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
   if (comments.length) content.push({ title: "Preserved comments", images: [], lines: comments.map((comment) => {
     return `${comment.id} v${comment.version} · ${comment.authorRef} · ${comment.createdAt}: ${comment.content}`
   }) })
+  const coverage = reviewCoverageLines(review, options.sectionRefs)
+  if (coverage) content.unshift({ title: "Coverage", images: [], lines: [...coverage] })
   const name = options.title.replace(/[^a-z0-9]+/gi, "_") || "Review"
   if (options.format === "docx") {
     const { Document, Packer, Paragraph, HeadingLevel, ImageRun } = await import("docx")
@@ -92,27 +108,43 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
       new Paragraph(`Review ${review.id} v${review.version} · ${review.createdAt}`),
       ...content.flatMap((section) => [new Paragraph({ text: section.title, heading: HeadingLevel.HEADING_1 }), ...section.images.map((image) => new Paragraph({ children: [new ImageRun({ type: "png", data: image, transformation: { width: 600, height: 260 }, altText: { name: "Review chart", description: "Captured series and values are listed in the following text." } })] })), ...section.lines.map((line) => new Paragraph(line))]),
     ] }] })
-    return { ok: true, name: `${name}.docx`, type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", bytes: new Uint8Array(await Packer.toBuffer(document)) }
+    const artifact = { ok: true as const, name: `${name}.docx`, type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", bytes: new Uint8Array(await Packer.toBuffer(document)) }
+    sealReviewArtifact(artifact, review, options.sectionRefs)
+    return artifact
   }
   const { default: PptxGenJS } = await import("pptxgenjs")
   const presentation = new PptxGenJS()
   presentation.layout = "LAYOUT_WIDE"
   presentation.title = options.title
+  const cover = [options.title, `Review ${review.id} v${review.version} · ${review.createdAt}`]
+  cover.forEach((line, index) => {
+    const fragments = fitSlideText(line, SLIDE_BODY)
+    fragments.forEach((fragment, part) => {
+      const slide = presentation.addSlide()
+      slide.addText(`${index === 0 ? "Title" : "Review reference"}${fragments.length > 1 ? ` · ${part + 1}/${fragments.length}` : ""}`, { x: 0.6, y: 0.35, w: 12.1, h: 0.7, fontSize: 20, bold: true })
+      slide.addText(fragment, { x: 0.6, y: 1.3, w: 12.1, h: 5.4, fontSize: 14, margin: 0.08 })
+    })
+  })
   if (!content.length) {
     const slide = presentation.addSlide()
     slide.addText(`${options.title} · no sections selected`, { x: 0.6, y: 0.6, w: 12, h: 0.6, fontSize: 20 })
   }
   content.forEach((section) => {
-    const title = Array.from(section.title)
-    const heading = title.length > 32 ? `${title.slice(0, 31).join("")}…` : section.title
-    const lines = title.length > 32 ? [`Full section title: ${section.title}`, ...section.lines] : section.lines
+    const titles = fitSlideText(section.title, { ...SLIDE_HEADING, boxWidthInches: 9 })
+    const heading = titles.length > 1 ? "Section" : section.title
+    const lines = section.lines
+    if (titles.length > 1) titles.forEach((title, index) => {
+      const slide = presentation.addSlide()
+      slide.addText(`Section title · ${index + 1}/${titles.length}`, { x: 0.6, y: 0.35, w: 12.1, h: 0.6, fontSize: 20, bold: true })
+      slide.addText(title, { x: 0.6, y: 1.3, w: 12.1, h: 5.4, fontSize: 20, margin: 0.08 })
+    })
     section.images.forEach((image, page) => {
       const slide = presentation.addSlide()
       slide.addText(`${heading} · chart ${page + 1}/${section.images.length}`, { x: 0.6, y: 0.3, w: 12.1, h: 0.6, fontSize: 20, bold: true })
       slide.addImage({ data: `data:image/png;base64,${Buffer.from(image).toString("base64")}`, x: 0.7, y: 1.1, w: 11.8, h: 5.1, altText: "Review chart. Captured series and values follow in text." })
     })
     lines.forEach((line, index) => {
-    const fragments = line.replace(/\r\n|\r|\n/g, " ↵ ").match(/.{1,60}(?:\s|$)|\S{1,60}/gu)?.map((fragment) => fragment.trim()) ?? [""]
+    const fragments = fitSlideText(line, SLIDE_BODY)
     fragments.forEach((fragment, part) => {
       const slide = presentation.addSlide()
       slide.addText(`${heading} · ${index + 1}/${lines.length}${fragments.length > 1 ? ` · ${part + 1}/${fragments.length}` : ""}`, { x: 0.6, y: 0.35, w: 12.1, h: 0.7, fontSize: 20, bold: true })
@@ -122,5 +154,22 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
   })
   const output = await presentation.write({ outputType: "uint8array" })
   if (!(output instanceof Uint8Array)) throw new Error("Unexpected presentation output")
-  return { ok: true, name: `${name}.pptx`, type: "application/vnd.openxmlformats-officedocument.presentationml.presentation", bytes: output }
+  const artifact = { ok: true as const, name: `${name}.pptx`, type: "application/vnd.openxmlformats-officedocument.presentationml.presentation", bytes: output }
+  sealReviewArtifact(artifact, review, options.sectionRefs)
+  return artifact
+}
+
+const seals = new WeakMap<Artifact, { digest: string; inclusion: ReviewInclusion }>()
+
+function sealReviewArtifact(artifact: Artifact, review: PreservedReview, sectionRefs: readonly string[]) {
+  const inclusion = reviewInclusion(review, sectionRefs)
+  if (inclusion) seals.set(artifact, { digest: createHash("sha256").update(artifact.bytes).digest("hex"), inclusion })
+}
+
+/** A store can verify this receipt but only the renderer can create it. */
+export function readReviewArtifactSeal(artifact: Artifact, review: PreservedReview, sectionRefs: readonly string[]) {
+  const seal = seals.get(artifact)
+  const expected = reviewInclusion(review, sectionRefs)
+  if (!seal || !expected || seal.digest !== createHash("sha256").update(artifact.bytes).digest("hex") || digestSfValue(seal.inclusion) !== digestSfValue(expected)) return undefined
+  return structuredClone(seal.inclusion)
 }
