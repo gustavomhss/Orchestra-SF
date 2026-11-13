@@ -1,5 +1,5 @@
 {
-  "status": "APPLIED_PENDING_REVIEW",
+  "status": "ORIGINAL_FINDINGS_CLOSED_NEW_CORRECTIONS_PENDING_RECHECK",
   "implementation_test_status": "NOT_RUN",
   "groups": [
     {
@@ -10,7 +10,7 @@
         "E-F01"
       ],
       "severity": "P1",
-      "status": "APPLIED_PENDING_REVIEW",
+      "status": "CLOSED",
       "change": "Equipe residente na fonte canônica, C15, RA01–RA06, 74 tasks, leases, consumidores e AM01–AM06.",
       "paths": [
         "campaign.json",
@@ -18,6 +18,11 @@
         "resident-ui-consumption.json",
         "ownership.json",
         "schedule.json"
+      ],
+      "closure_evidence": [
+        "initial/product.json",
+        "initial/contracts.json",
+        "initial/execution.json"
       ]
     },
     {
@@ -26,12 +31,15 @@
         "T-F02"
       ],
       "severity": "P1",
-      "status": "APPLIED_PENDING_REVIEW",
+      "status": "CLOSED",
       "change": "C16: bridge MCP privada por chamada, contexto host, revalidação, lease e provider-conflict.",
       "paths": [
         "contracts.json",
         "work-packages/WP10.json",
         "specs/resident-runtime.md"
+      ],
+      "closure_evidence": [
+        "initial/contracts.json"
       ]
     },
     {
@@ -40,12 +48,15 @@
         "T-F03"
       ],
       "severity": "P1",
-      "status": "APPLIED_PENDING_REVIEW",
+      "status": "CLOSED",
       "change": "C17: tipos Atlas reais, packaging, ACL antes de leitura, outbox transacional, scanner e reinício.",
       "paths": [
         "contracts.json",
         "work-packages/WP10.json",
         "work-packages/WP14.json"
+      ],
+      "closure_evidence": [
+        "initial/contracts.json"
       ]
     },
     {
@@ -54,12 +65,15 @@
         "P-F02"
       ],
       "severity": "P1",
-      "status": "APPLIED_PENDING_REVIEW",
+      "status": "CLOSED",
       "change": "C06 separa versão observada, fingerprint material e CAS de armazenamento; variantes janeiro/fevereiro.",
       "paths": [
         "contracts.json",
         "specs/product-acceptance.md",
         "work-packages/WP08.json"
+      ],
+      "closure_evidence": [
+        "initial/product.json"
       ]
     },
     {
@@ -68,12 +82,15 @@
         "P-F03"
       ],
       "severity": "P1",
-      "status": "APPLIED_PENDING_REVIEW",
+      "status": "CLOSED",
       "change": "C10 inventário de custos versionado, categoria totalmente ausente derivada como pendência e oráculos sem dupla contagem.",
       "paths": [
         "contracts.json",
         "specs/product-acceptance.md",
         "work-packages/WP11.json"
+      ],
+      "closure_evidence": [
+        "initial/product.json"
       ]
     },
     {
@@ -82,7 +99,7 @@
         "E-F02"
       ],
       "severity": "P1",
-      "status": "APPLIED_PENDING_REVIEW",
+      "status": "CLOSED",
       "change": "Handoffs T02, branches e consumo WP14 até T75; outputs antecipados com tempo e writer.",
       "paths": [
         "output-handoffs.json",
@@ -90,6 +107,9 @@
         "work-packages/WP03.json",
         "work-packages/WP06.json",
         "work-packages/WP14.json"
+      ],
+      "closure_evidence": [
+        "initial/execution.json"
       ]
     },
     {
@@ -98,12 +118,15 @@
         "P-F04"
       ],
       "severity": "P2",
-      "status": "APPLIED_PENDING_REVIEW",
+      "status": "CLOSED",
       "change": "WP06 extrai documentos; WP09 consome evidências no dossiê; sem exclusão global de extração.",
       "paths": [
         "campaign.json",
         "work-packages/WP06.json",
         "work-packages/WP09.json"
+      ],
+      "closure_evidence": [
+        "initial/product.json"
       ]
     },
     {
@@ -112,12 +135,58 @@
         "E-F03"
       ],
       "severity": "P2",
-      "status": "APPLIED_PENDING_REVIEW",
+      "status": "CLOSED",
       "change": "APP-SRC e APP-BROWSER separados; seleção explícita e receipts por candidato. Atlas e três suites UI incluídos.",
       "paths": [
         "ci-recipes.json",
         "work-packages/WP10.json",
         "specs/execution-reconciliation.md"
+      ],
+      "closure_evidence": [
+        "initial/execution.json"
+      ]
+    }
+  ],
+  "reviewed_initial_candidate": "38986380cd7b5697c0be30c1f55d43eddee63045",
+  "round_2_findings": [
+    {
+      "id": "P-R2-01",
+      "severity": "P1",
+      "status": "APPLIED_PENDING_RECHECK",
+      "source": "initial/product.json",
+      "change": "39 rotas positivas perfil/skill/operação, grants nas skills existentes, consumo real de preview e rotina, sem bypass de C16; recursão de rotina negada.",
+      "paths": [
+        "agents-atlas-mcp.json",
+        "resident-ui-consumption.json",
+        "contracts.json",
+        "resident-proof-plan.json",
+        "tools/validate_resident_plan.py"
+      ]
+    },
+    {
+      "id": "T2-F01",
+      "severity": "P1",
+      "status": "APPLIED_PENDING_RECHECK",
+      "source": "initial/contracts.json",
+      "change": "Factories puros no novo bundle; scanner pelo native-memory existente; resolução exata da dependência transitiva, nove caminhos exclusivos, AST e spawn gate sem mudança de guard/allowlist.",
+      "paths": [
+        "specs/atlas-packaging.md",
+        "contracts.json",
+        "ownership.json",
+        "ci-recipes.json",
+        "work-packages/WP10.json"
+      ]
+    },
+    {
+      "id": "E2-F01",
+      "severity": "P2",
+      "status": "APPLIED_PENDING_RECHECK",
+      "source": "initial/execution.json",
+      "change": "createDecisionCasePort usa product/decisions/case-port.ts na interface, task e NATIVE-CASE; validador detecta divergência de handoff.",
+      "paths": [
+        "campaign.json",
+        "output-handoffs.json",
+        "tools/validate_execution_plan.py"
       ]
     }
   ]

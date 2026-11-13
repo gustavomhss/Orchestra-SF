@@ -79,18 +79,21 @@
       "allowed_profiles": [
         "sf_maestro"
       ],
-      "work_entry": "Analisar alternativas em contrato/pedido/projeto ou Novo caso na mesa.",
+      "work_entry": "Analisar alternativas em contrato/pedido/projeto ou Novo caso na mesa. Na prévia de importação, Analisar impacto do arquivo reutiliza a mesma skill e o mesmo manifesto C04.",
       "typed_inputs": [
         "IntentText",
         "C01 AuthorizedContext",
         "C09 CaseVersion",
-        "SelectedSourceRefs"
+        "SelectedSourceRefs",
+        "C04 AdmittedImportFileRef (opcional)",
+        "C04 ImportPreviewOptions (opcional)"
       ],
       "authorized_operations": [
         "sf_case_draft",
         "sf_case_read",
         "sf_context_get",
         "sf_freshness_check",
+        "sf_import_preview",
         "sf_question_prepare"
       ],
       "output_types": [
@@ -99,13 +102,15 @@
       ],
       "producer_tasks": [
         "WP12.T01",
-        "WP12.T02"
+        "WP12.T02",
+        "WP06.T02"
       ],
       "consumer_tasks": [
         "WP11.T01",
-        "WP01.T05"
+        "WP01.T05",
+        "WP06.T03"
       ],
-      "visible_consumption": "Objetivo, horizonte, critérios e fontes tornam-se campos editáveis do mesmo caso; plano mostra por que cada especialista necessário participa. Reabrir a mesa recupera o enquadramento e autoriza corrigir a intenção.",
+      "visible_consumption": "Objetivo, horizonte, critérios e fontes tornam-se campos editáveis do mesmo caso; plano mostra por que cada especialista necessário participa. Reabrir a mesa recupera o enquadramento e autoriza corrigir a intenção. O output guarda importPreviewRef; WP06.T03 abre o manifesto persistido, suas linhas/deltas/erros e o rótulo de simulação. A análise não altera o domínio.",
       "missing_or_failure": "Sem horizonte/critério suficiente: needs-input com lacunas, sem preencher prioridade ou prazo. Falha de modelo mantém rascunho humano e caso utilizáveis.",
       "stale_or_access_change": "Versão/contexto alterado identifica enquadramento stale e pede revalidar só a base afetada; perda de acesso remove referências restritas.",
       "adendum_proof_numbers": [
@@ -113,7 +118,7 @@
         2,
         3
       ],
-      "negative_discriminator": "Prompt idêntico com outra referência material muda a saída; resposta genérica sem campos consumidos não passa.",
+      "negative_discriminator": "Prompt idêntico com outra referência material muda a saída; resposta genérica sem campos consumidos não passa. Arquivo não admitido ou base alterada recusa/recalcula a prévia; ausência de mudança no estado de domínio é verificada antes e depois.",
       "status": "NOT_RUN",
       "existing_schema_mapping": {
         "IntentFrame": "IntentDraft existente, ampliado com sourceRefs/lacunas; sem segundo caso."
@@ -121,7 +126,8 @@
       "required_operations": [
         "sf_context_get",
         "sf_case_read",
-        "sf_case_draft"
+        "sf_case_draft",
+        "sf_import_preview"
       ],
       "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
     },
@@ -130,12 +136,15 @@
       "allowed_profiles": [
         "sf_maestro"
       ],
-      "work_entry": "Preparar revisão na mesa ou síntese opcional da rotina de revisão concluída.",
+      "work_entry": "Preparar revisão na mesa ou síntese opcional da rotina de revisão concluída. A entrada opcional Preparar com rotina conduz catálogo → proposta de admissão → execução admitida → progresso → resultado e pauta, no fluxo C07 existente.",
       "typed_inputs": [
         "C05 ReviewSelection",
         "C07 FactualRoutineResult",
         "C09 DecisionRefs",
-        "C06 ConfirmationValidityProjection"
+        "C06 ConfirmationValidityProjection",
+        "C07 RoutinePreparationIntent (opcional)",
+        "C07 AdmittedRunRef + expectedAdmissionVersion (opcional)",
+        "HostBoundEntryMode: interactive | routine-result"
       ],
       "authorized_operations": [
         "sf_artifact_get",
@@ -143,6 +152,11 @@
         "sf_context_get",
         "sf_report_prepare",
         "sf_review_prepare",
+        "sf_routine_catalog",
+        "sf_routine_prepare",
+        "sf_routine_result",
+        "sf_routine_run",
+        "sf_routine_status",
         "sf_source_get",
         "sf_work_list"
       ],
@@ -151,14 +165,19 @@
       ],
       "producer_tasks": [
         "WP12.T02",
-        "WP09.T02"
+        "WP09.T02",
+        "WP09.T01",
+        "WP09.T07"
       ],
       "consumer_tasks": [
         "WP07.T01",
         "WP07.T02",
-        "WP01.T05"
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
       ],
-      "visible_consumption": "Pauta apresenta mudanças, decisões e pendências com links; usuário ajusta ordem e preserva revisão C05 sem reconstruir o conteúdo em chat.",
+      "visible_consumption": "Pauta apresenta mudanças, decisões e pendências com links; usuário ajusta ordem e preserva revisão C05 sem reconstruir o conteúdo em chat. A UI de rotina mostra AdmissionProposal, runRef, estado e resultado canônico; a pauta preservada usa essas referências e a mesma contribuição persistida.",
       "missing_or_failure": "Sem revisão anterior: mostra primeira revisão. Se síntese falha, fatos/deltas/pendências determinísticos continuam disponíveis e a síntese falha fica explícita.",
       "stale_or_access_change": "Origem atualizada não reescreve revisão preservada; síntese nova identifica sua base. Revogação remove trechos e links no consumo/export.",
       "adendum_proof_numbers": [
@@ -167,12 +186,17 @@
         3,
         6
       ],
-      "negative_discriminator": "Texto de resumo sem pauta/referências consumidas por WP07 não satisfaz a skill; confirmar fevereiro não recobra janeiro.",
+      "negative_discriminator": "Texto de resumo sem pauta/referências consumidas por WP07 não satisfaz a skill; confirmar fevereiro não recobra janeiro. Sem admissão atual, sf_routine_run é denied. Em routine-result, prepare/run são denied para impedir loop, embora a mesma skill permita essas operações na entrada interactive autorizada.",
       "status": "NOT_RUN",
       "required_operations": [
         "sf_review_prepare",
         "sf_case_read",
-        "sf_source_get"
+        "sf_source_get",
+        "sf_routine_catalog",
+        "sf_routine_prepare",
+        "sf_routine_run",
+        "sf_routine_status",
+        "sf_routine_result"
       ],
       "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
     },
@@ -233,18 +257,21 @@
       "allowed_profiles": [
         "sf_finance"
       ],
-      "work_entry": "Explicar diferença no Planner/BI ou preparação de revisão de forecast.",
+      "work_entry": "Explicar diferença no Planner/BI ou preparação de revisão de forecast. Na prévia de importação, Analisar impacto do arquivo reutiliza a mesma skill e o mesmo manifesto C04.",
       "typed_inputs": [
         "C02 ForecastComparison",
         "SelectedPeriod",
         "Currency",
         "SourceRefs",
-        "RegisteredReasons"
+        "RegisteredReasons",
+        "C04 AdmittedImportFileRef (opcional)",
+        "C04 ImportPreviewOptions (opcional)"
       ],
       "authorized_operations": [
         "sf_context_get",
         "sf_forecast_compare",
         "sf_freshness_check",
+        "sf_import_preview",
         "sf_kpi_explain",
         "sf_source_get"
       ],
@@ -253,14 +280,16 @@
       ],
       "producer_tasks": [
         "WP12.T02",
-        "WP09.T03"
+        "WP09.T03",
+        "WP06.T02"
       ],
       "consumer_tasks": [
         "WP01.T05",
         "WP05.T01",
-        "WP09.T03"
+        "WP09.T03",
+        "WP06.T03"
       ],
-      "visible_consumption": "Diferença de forecast abre sua composição e motivos registrados; resultado persistido referencia os valores canônicos. Finance distingue margem do orçamento e mudança contra a base.",
+      "visible_consumption": "Diferença de forecast abre sua composição e motivos registrados; resultado persistido referencia os valores canônicos. Finance distingue margem do orçamento e mudança contra a base. O output guarda importPreviewRef; WP06.T03 abre o manifesto persistido, suas linhas/deltas/erros e o rótulo de simulação. A análise não altera o domínio.",
       "missing_or_failure": "FX/actual/justificativa ausentes ficam explícitos; erro de análise conserva a tabela determinística e não inventa causalidade.",
       "stale_or_access_change": "Nova base invalida interpretação antiga no escopo afetado; leitura de HR depende do mesmo acesso C02 em gráficos, texto e agregados.",
       "adendum_proof_numbers": [
@@ -269,12 +298,13 @@
         3,
         6
       ],
-      "negative_discriminator": "590000→602000/596000 deve apontar12000/6000; não trocar por margem-2000/+4000 nem calcular salário restrito no texto.",
+      "negative_discriminator": "590000→602000/596000 deve apontar12000/6000; não trocar por margem-2000/+4000 nem calcular salário restrito no texto. Arquivo não admitido ou base alterada recusa/recalcula a prévia; ausência de mudança no estado de domínio é verificada antes e depois.",
       "status": "NOT_RUN",
       "required_operations": [
         "sf_forecast_compare",
         "sf_kpi_explain",
-        "sf_source_get"
+        "sf_source_get",
+        "sf_import_preview"
       ],
       "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
     },
@@ -844,12 +874,14 @@
         "BusinessQuestion",
         "ApprovedViewCatalog",
         "C02AndC10ProjectionRefs",
-        "AuthorizedFilters"
+        "AuthorizedFilters",
+        "C02 AuthorizedDashboardSelection"
       ],
       "authorized_operations": [
         "sf_bi_view",
         "sf_case_read",
         "sf_context_get",
+        "sf_dashboard_read",
         "sf_kpi_explain",
         "sf_source_get"
       ],
@@ -858,13 +890,14 @@
       ],
       "producer_tasks": [
         "WP12.T02",
-        "WP05.T05"
+        "WP05.T05",
+        "WP02.T01"
       ],
       "consumer_tasks": [
         "WP05.T05",
         "WP01.T05"
       ],
-      "visible_consumption": "Proposta escolhe uma visualização do catálogo suportado, tabela equivalente e recorte autorizado; o componente real WP05 a renderiza com drilldown e cobertura C10.",
+      "visible_consumption": "Proposta escolhe uma visualização do catálogo suportado, tabela equivalente e recorte autorizado; o componente real WP05 a renderiza com drilldown e cobertura C10. A leitura de desempenho vem de sf_dashboard_read; gráfico e tabela preservam as mesmas fontes, filtros e versão.",
       "missing_or_failure": "Sem série/período/granularidade necessária: mostrar tabela ou lacuna suportada, sem interpolar valores. Erro de interpretação mantém BI determinístico acessível.",
       "stale_or_access_change": "Novo filtro/base/ACL revalida projection refs e marca proposta antiga stale quando necessário; nenhuma soma restrita fica no gráfico.",
       "adendum_proof_numbers": [
@@ -880,7 +913,8 @@
       "required_operations": [
         "sf_bi_view",
         "sf_kpi_explain",
-        "sf_source_get"
+        "sf_source_get",
+        "sf_dashboard_read"
       ],
       "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
     },

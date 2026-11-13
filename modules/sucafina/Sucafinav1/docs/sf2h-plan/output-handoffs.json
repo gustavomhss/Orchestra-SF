@@ -141,9 +141,15 @@
       ],
       "consume_not_before": 20,
       "artifacts": [
-        "@orchestra/atlas-boundary/business-memory-ports"
+        "@orchestra/atlas-boundary/business-memory-ports",
+        "@orchestra/atlas-boundary/native-memory",
+        "modules/atlas/packages/adapter-io/src/native-bound.ts",
+        "modules/atlas/boundary/src/generated/native-memory.js",
+        "modules/atlas/boundary/src/generated/native-memory.d.ts",
+        "modules/atlas/boundary/src/generated/business-memory-ports.js",
+        "modules/atlas/boundary/src/generated/business-memory-ports.d.ts"
       ],
-      "acceptance": "Portsfactories/scannerreais distribuidos por boundary gerada e import resolvido; não importar work space inexistente.",
+      "acceptance": "Factory ports e scanner real resolvem pelos dois subpaths públicos. Quatro artefatos canônicos gerados; AST prova zero spawning/computed imports no novo bundle e a ligação exata a native-memory. check:spawn-imports raiz e check:generated passam sem modificar allowlist/guard. Receipt identifica candidato, digests, comando e saídas; sem prova mantém HOLD.",
       "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/handoffs/atlas-package.json",
       "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
       "status": "PLANNED_NOT_PRODUCED",

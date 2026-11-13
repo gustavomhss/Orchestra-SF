@@ -61,7 +61,7 @@
     },
     {
       "id": "CI-ATLAS-BUSINESS",
-      "scope": "Suíte completa Bun da boundary Atlas alterada, incluindo business-memory-ports e suas exports reais; geração/tipo são gates estáticos adicionais explícitos.",
+      "scope": "Suíte completa da boundary alterada, incluindo import/export das duas portas, preservação dos exports bound e negativos de AST no teste business-memory-ports; geração/AST/check:spawn-imports/typecheck são gates estáticos explícitos adicionais.",
       "request": {
         "package": "atlas-boundary",
         "runner": "bun",
@@ -189,7 +189,7 @@
       "command": "bun run generate",
       "owner_task": "WP10.T07",
       "gate": "ATLAS-PACKAGE/T20",
-      "purpose": "Produzir JS/types pela entrada e gerador canônicos; geração de produto, não execução de teste local.",
+      "purpose": "Produzir os dois pares JS/d.ts pelo gerador canônico e executar a admissão AST do bundle; zero novo site spawning. Nenhum algoritmo ou teste de produto é executado por esta correção de planejamento.",
       "receipt_required": [
         "candidate_sha",
         "command",
@@ -227,6 +227,25 @@
       "owner_task": "WP10.T04",
       "gate": "G7",
       "purpose": "Gate exigido por AGENTS no checkout real do candidato; workflow atual não fornece dispatch de guards. Disponibilidade/readiness do executor é registrada em G0, sem inventar verde ou alterar workflow."
+    },
+    {
+      "id": "CHECK-SPAWNS",
+      "cwd": ".",
+      "command": "bun run check:spawn-imports",
+      "owner_task": "WP10.T07",
+      "execution_actor": "S0-A",
+      "gate": "ATLAS-PACKAGE/T20 + G4/G7",
+      "purpose": "Executar o guard existente na árvore candidata após geração; nenhum novo site de spawning, computed import, edição de allowlist ou substituição do comando. Nome lógico check:spawns; script real check:spawn-imports.",
+      "receipt_required": [
+        "candidate_sha",
+        "command",
+        "exit_status",
+        "guard_source_digest",
+        "allowlist_digest",
+        "generated_artifact_digests",
+        "stdout_digest"
+      ],
+      "status": "NOT_RUN"
     }
   ],
   "receipt_rules": [

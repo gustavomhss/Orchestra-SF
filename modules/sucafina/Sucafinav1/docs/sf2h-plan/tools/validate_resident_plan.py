@@ -33,6 +33,38 @@ def validate_resident(plan, require, tasks, contract_ids, evidence_ids):
     operations = [operation for pack in packs for operation in pack.get('operations', [])]
     operation_map = {item['id']: item for item in operations}
     require(len(operations) == len(operation_map) == 39, 'MCP_OPERATION_COVERAGE', 'resident_ai.mcp_packs', 'Expected 39 unique operations across eight packs')
+    for operation in operations:
+        reachable = [(profile['id'], skill['id']) for profile in profiles for skill in skills
+                     if profile['id'] in operation.get('profiles', [])
+                     and profile['id'] in skill.get('profiles', [])
+                     and skill['id'] in profile.get('allowed_skills', [])
+                     and operation['id'] in profile.get('allowed_operations', [])
+                     and operation['id'] in skill.get('allowed_operations', [])]
+        require(bool(reachable), 'MCP_UNREACHABLE_OPERATION', operation['id'],
+                'Every advertised operation needs at least one positive profile/loaded-skill authority path')
+    routes = resident.get('operation_call_routes', [])
+    require(len(routes) == len(operation_map) and {row['operation_id'] for row in routes} == set(operation_map),
+            'MCP_CALL_ROUTE_COVERAGE', 'resident_ai.operation_call_routes', 'One named positive route per operation')
+    for route in routes:
+        operation = operation_map.get(route['operation_id'], {})
+        profile = profile_map.get(route['profile_id'], {})
+        skill = skill_map.get(route['skill_id'], {})
+        require(bool(operation) and bool(profile) and bool(skill)
+                and profile.get('id') in operation.get('profiles', [])
+                and profile.get('id') in skill.get('profiles', [])
+                and skill.get('id') in profile.get('allowed_skills', [])
+                and operation.get('id') in profile.get('allowed_operations', [])
+                and operation.get('id') in skill.get('allowed_operations', []),
+                'MCP_CALL_ROUTE_GRANT', route['operation_id'], 'Named profile/skill must actually grant this operation')
+        require(route.get('requires_loaded_skill_receipt') is True and route.get('proof_id') == 'AM02',
+                'MCP_CALL_ROUTE_AUTHORITY', route['operation_id'], 'Direct proof calls cannot bypass the loaded skill')
+        require(route.get('producer_task') == operation.get('producer_task')
+                and route.get('input_schema') == operation.get('input_type')
+                and route.get('output_type') == operation.get('output_type')
+                and set(route.get('consumer_tasks', [])) <= set(skill.get('consumer_tasks', [])),
+                'MCP_CALL_ROUTE_CONSUMPTION', route['operation_id'], 'Route must use the real producer, schema and consumer')
+        require(route.get('requires_current_c07_admission') is (operation.get('mode') == 'execute_admitted'),
+                'MCP_CALL_ROUTE_ADMISSION', route['operation_id'], 'Executable routine route must retain C07 admission')
 
     def known(values, valid, location, required=True):
         require(isinstance(values, list), 'RESIDENT_REF_SHAPE', location, 'Expected a list of IDs')
@@ -134,6 +166,32 @@ def validate_resident(plan, require, tasks, contract_ids, evidence_ids):
 
     required_task_ids = {'WP10.T06', 'WP10.T07', 'WP14.T05'}
     require(required_task_ids <= set(tasks), 'RESIDENT_BUILD_DECOMPOSITION', 'tasks', 'Runtime/MCP, Atlas persistence and Atlas projection require their new explicit tasks')
+    packaging = plan['resident_packaging']
+    c17 = next(contract for contract in plan['contracts'] if contract['id'] == 'C17')
+    exports = {entry['path']: entry.get('exports', []) for entry in c17['exports']}
+    scanner_names = {'runScanner', 'detectAvailableScanner', 'KNOWN_SCANNERS', 'NO_SCANNER_NAME'}
+    require(not scanner_names.intersection(exports.get(packaging['entry'], [])),
+            'ATLAS_SCANNER_IN_NEW_BUNDLE', 'C17.exports', 'Scanner exports must stay in the existing native-memory subpath')
+    require(scanner_names <= set(exports.get(packaging['scanner_entry'], []))
+            and not {'createMemoryEmit', 'createMemoryRead', 'createDurableMemory'}.intersection(exports.get(packaging['scanner_entry'], [])),
+            'ATLAS_NATIVE_BOUND_EXPORTS', 'C17.exports', 'Add scanner exports while preserving the bound memory surface')
+    edges = packaging.get('external_edges', [])
+    require(len(edges) == 1 and edges[0].get('bundle') == 'business-memory-ports'
+            and edges[0].get('importer') == 'modules/atlas/packages/adapter-io/src/memory-emit.ts'
+            and edges[0].get('specifier') == './scanner.js'
+            and edges[0].get('replacement') == '@orchestra/atlas-boundary/native-memory'
+            and edges[0].get('external') is True,
+            'ATLAS_SCANNER_EXTERNAL_EDGE', 'resident_packaging.external_edges',
+            'The real transitive scanner dependency needs its exact public-module resolution')
+    atlas_paths = packaging.get('exact_atlas_paths', [])
+    require(len(atlas_paths) == len(set(atlas_paths)) == 9, 'ATLAS_PACKAGING_PATH_COUNT',
+            'resident_packaging.exact_atlas_paths', 'Nine exact Atlas paths, including both generated pairs')
+    actor = next(row for row in plan['ownership']['actor_boundaries'] if row.get('actor') == 'S0-A' and row.get('task') == 'WP10.T07')
+    actor_paths = set(actor.get('existing_files', []) + actor.get('new_files', []))
+    require(set(atlas_paths) <= actor_paths and all(path_owner(path, 'resident_packaging') == 'WP10' for path in atlas_paths),
+            'ATLAS_PACKAGING_WRITER', 'ownership', 'All exact Atlas files need the same S0-A/WP10.T07 writer')
+    require(any(gate.get('command') == 'bun run check:spawn-imports' for gate in plan['ci_plan']['static_gates']),
+            'ATLAS_SPAWN_GATE', 'ci_plan.static_gates', 'The actual repository spawn-import gate must remain required')
     return {'profiles': len(profiles), 'skills': len(skills), 'mcp_packs': len(packs), 'mcp_operations': len(operations), 'integrated_proofs': len(proofs)}
 
 

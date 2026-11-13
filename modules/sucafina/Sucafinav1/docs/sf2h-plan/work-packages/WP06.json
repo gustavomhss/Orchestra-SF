@@ -344,7 +344,8 @@
         "Construir a contribuição de UI de prévia com drilldown por item/campo, referência da versão/período/moeda e indicação explícita do que não será aplicado.",
         "Vincular o manifesto ao contexto-base C04 e marcar como indisponível a simulação sem adapter real; fixtures contratuais ficam apenas nas provas e não servem como execução de produto.",
         "Publicar descritores e handlers de sf_import_preview, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
-        "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
+        "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente.",
+        "sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados."
       ],
       "inputs": [
         "WP06.T01: parse normalizado, catálogo e fixtures de formatos.",
@@ -393,6 +394,11 @@
           "id": "WP06.T02.CHK.18",
           "text": "Executar sf_import_preview pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP06.T02.CHK.60",
+          "text": "sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados. Registrar entrada, binding/skill, saída, efeito de domínio e consumidor no mesmo candidato.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -410,6 +416,11 @@
           {
             "id": "WP06.T02.DOD.18",
             "text": "Descritores C16 de sf_import_preview são implementados e consumidos por T06 com referências reais.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP06.T02.DOD.60",
+            "text": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados.",
             "status": "NOT_RUN"
           }
         ],
@@ -433,6 +444,11 @@
             "id": "WP06.T02.INV.18",
             "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP06.T02.INV.60",
+            "text": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados.",
+            "status": "NOT_RUN"
           }
         ],
         "quality_standards": [
@@ -449,6 +465,11 @@
           {
             "id": "WP06.T02.QLT.18",
             "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP06.T02.QLT.60",
+            "text": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados.",
             "status": "NOT_RUN"
           }
         ],
@@ -467,6 +488,11 @@
             "id": "WP06.T02.CMP.18",
             "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP06.T02.CMP.60",
+            "text": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados.",
+            "status": "NOT_RUN"
           }
         ],
         "success_criteria": [
@@ -483,6 +509,11 @@
           {
             "id": "WP06.T02.SUC.18",
             "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP06.T02.SUC.60",
+            "text": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados.",
             "status": "NOT_RUN"
           }
         ]
@@ -532,7 +563,8 @@
         "Exigir a ação explícita de Apply com opções/contexto da prévia e rechecagem de revisões, lock e autoridade conforme C03/C04; mudanças relevantes devolvem conflito/reprévia em vez de overwrite.",
         "Preservar arquivo, opções e detalhes locais em cancelamento ou conflito quando isso não expuser dados restritos; reabrir a diferença atual antes de nova aplicação.",
         "Gerar recibo apenas do resultado confirmado, com registros/campos realmente alterados, ignorados/removidos, contexto, ator autorizado e impacto reconciliado; distinguir falha, ausência de mudanças e sucesso.",
-        "Publicar o recibo C04 para a experiência de importação composta por WP10 com os componentes WP01, sem disparar mensagens, tarefas ou decisões de negócio automaticamente."
+        "Publicar o recibo C04 para a experiência de importação composta por WP10 com os componentes WP01, sem disparar mensagens, tarefas ou decisões de negócio automaticamente.",
+        "Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística."
       ],
       "inputs": [
         "WP06.T02: manifesto, contexto-base e contribuição de prévia.",
@@ -578,6 +610,11 @@
           "id": "WP06.T03.CHK.06",
           "text": "O recibo distingue 'sem alterações', 'recusado' e 'aplicado' e conta somente mudanças efetivas, não quantidade de linhas lidas no Excel.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP06.T03.CHK.60",
+          "text": "Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística. Registrar entrada, binding/skill, saída, efeito de domínio e consumidor no mesmo candidato.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -590,6 +627,11 @@
           {
             "id": "WP06.T03.DOD.02",
             "text": "Os resultados positivos e negativos possuem provas locais de estados e um roteiro executável contra a composição real do WP10.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP06.T03.DOD.60",
+            "text": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística.",
             "status": "NOT_RUN"
           }
         ],
@@ -613,6 +655,11 @@
             "id": "WP06.T03.INV.04",
             "text": "Atomicidade vale para a aplicação dentro da superfície/import suportado; nunca declarar atomicidade global entre domínios. Metadados de confiança não são aceitos do JSON de entrada.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP06.T03.INV.60",
+            "text": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística.",
+            "status": "NOT_RUN"
           }
         ],
         "quality_standards": [
@@ -624,6 +671,11 @@
           {
             "id": "WP06.T03.QLT.02",
             "text": "Contexto e estado do recibo são inequívocos; números previstos e aplicados nunca aparecem com o mesmo rótulo.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP06.T03.QLT.60",
+            "text": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística.",
             "status": "NOT_RUN"
           }
         ],
@@ -637,6 +689,11 @@
             "id": "WP06.T03.CMP.02",
             "text": "Inclusões, exclusões, campos ignorados e referências mantidas são contabilizados no recibo segundo o resultado real.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP06.T03.CMP.60",
+            "text": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística.",
+            "status": "NOT_RUN"
           }
         ],
         "success_criteria": [
@@ -648,6 +705,11 @@
           {
             "id": "WP06.T03.SUC.02",
             "text": "Após sucesso, o usuário reconcilia o recibo com os valores exibidos pelo domínio; após falha, não encontra efeitos parciais ocultos.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP06.T03.SUC.60",
+            "text": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística.",
             "status": "NOT_RUN"
           }
         ]

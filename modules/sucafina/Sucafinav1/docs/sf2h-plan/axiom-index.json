@@ -1855,6 +1855,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.DOD.60",
+    "entity": "WP10",
+    "family": "dod",
+    "text": "Os dois subpaths canônicos resolvem, quatro artefatos são gerados, AST/guard passam e AM05 preserva scanner real.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.INV.01",
     "entity": "WP10",
     "family": "invariants",
@@ -1880,6 +1887,13 @@
     "entity": "WP10",
     "family": "invariants",
     "text": "S0 não escreve arquivos delegados; nenhum autor assina aceitação independente de sua própria seção.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.INV.60",
+    "entity": "WP10",
+    "family": "invariants",
+    "text": "Nove paths Atlas exatos; nenhum algoritmo/guard/allowlist alterado, nenhum factory sem binding em native-bound e nenhum novo site spawning.",
     "status": "NOT_RUN"
   },
   {
@@ -1911,6 +1925,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.QLT.60",
+    "entity": "WP10",
+    "family": "quality_standards",
+    "text": "Resolução da aresta exata é explícita, verificável e falha fechada; mesma constante/função canônica, sem confiar em tree-shaking.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.CMP.01",
     "entity": "WP10",
     "family": "completeness_criteria",
@@ -1939,6 +1960,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.CMP.60",
+    "entity": "WP10",
+    "family": "completeness_criteria",
+    "text": "Verificar imports transitivos, export surfaces, geração reproduzível, scanner clean/canary/unavailable e ownership exclusivo, com negativos que rejeitam bundle errado.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.SUC.01",
     "entity": "WP10",
     "family": "success_criteria",
@@ -1964,6 +1992,13 @@
     "entity": "WP10",
     "family": "success_criteria",
     "text": "O produto inteiro é revisável sem depender de trabalho oculto de coordenadores ou de checks atribuídos a seleção que não rodou.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.SUC.60",
+    "entity": "WP10",
+    "family": "success_criteria",
+    "text": "O consumidor usa emit/read e scanner reais dentro do guard existente; dependência de subprocesso não é duplicada nem ocultada.",
     "status": "NOT_RUN"
   },
   {
@@ -2583,6 +2618,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP00.T02.DOD.60",
+    "entity": "WP00.T02",
+    "family": "dod",
+    "text": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP00.T02.INV.01",
     "entity": "WP00.T02",
     "family": "invariants",
@@ -2597,6 +2639,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP00.T02.INV.60",
+    "entity": "WP00.T02",
+    "family": "invariants",
+    "text": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP00.T02.QLT.01",
     "entity": "WP00.T02",
     "family": "quality_standards",
@@ -2608,6 +2657,13 @@
     "entity": "WP00.T02",
     "family": "quality_standards",
     "text": "Contrato nomeia producer/export/path/consumidor e falhas observáveis, sem 'binding futuro' indefinido.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP00.T02.QLT.60",
+    "entity": "WP00.T02",
+    "family": "quality_standards",
+    "text": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
     "status": "NOT_RUN"
   },
   {
@@ -2632,6 +2688,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP00.T02.CMP.60",
+    "entity": "WP00.T02",
+    "family": "completeness_criteria",
+    "text": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP00.T02.SUC.01",
     "entity": "WP00.T02",
     "family": "success_criteria",
@@ -2643,6 +2706,13 @@
     "entity": "WP00.T02",
     "family": "success_criteria",
     "text": "Builder consegue produzir código compatível e consumidor consegue rejeitar substitutos sem uso real.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP00.T02.SUC.60",
+    "entity": "WP00.T02",
+    "family": "success_criteria",
+    "text": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
     "status": "NOT_RUN"
   },
   {
@@ -4781,6 +4851,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP06.T02.DOD.60",
+    "entity": "WP06.T02",
+    "family": "dod",
+    "text": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP06.T02.INV.01",
     "entity": "WP06.T02",
     "family": "invariants",
@@ -4809,6 +4886,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP06.T02.INV.60",
+    "entity": "WP06.T02",
+    "family": "invariants",
+    "text": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP06.T02.QLT.01",
     "entity": "WP06.T02",
     "family": "quality_standards",
@@ -4827,6 +4911,13 @@
     "entity": "WP06.T02",
     "family": "quality_standards",
     "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.T02.QLT.60",
+    "entity": "WP06.T02",
+    "family": "quality_standards",
+    "text": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados.",
     "status": "NOT_RUN"
   },
   {
@@ -4851,6 +4942,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP06.T02.CMP.60",
+    "entity": "WP06.T02",
+    "family": "completeness_criteria",
+    "text": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP06.T02.SUC.01",
     "entity": "WP06.T02",
     "family": "success_criteria",
@@ -4872,6 +4970,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP06.T02.SUC.60",
+    "entity": "WP06.T02",
+    "family": "success_criteria",
+    "text": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP06.T03.DOD.01",
     "entity": "WP06.T03",
     "family": "dod",
@@ -4883,6 +4988,13 @@
     "entity": "WP06.T03",
     "family": "dod",
     "text": "Os resultados positivos e negativos possuem provas locais de estados e um roteiro executável contra a composição real do WP10.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.T03.DOD.60",
+    "entity": "WP06.T03",
+    "family": "dod",
+    "text": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística.",
     "status": "NOT_RUN"
   },
   {
@@ -4914,6 +5026,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP06.T03.INV.60",
+    "entity": "WP06.T03",
+    "family": "invariants",
+    "text": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP06.T03.QLT.01",
     "entity": "WP06.T03",
     "family": "quality_standards",
@@ -4925,6 +5044,13 @@
     "entity": "WP06.T03",
     "family": "quality_standards",
     "text": "Contexto e estado do recibo são inequívocos; números previstos e aplicados nunca aparecem com o mesmo rótulo.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.T03.QLT.60",
+    "entity": "WP06.T03",
+    "family": "quality_standards",
+    "text": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística.",
     "status": "NOT_RUN"
   },
   {
@@ -4942,6 +5068,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP06.T03.CMP.60",
+    "entity": "WP06.T03",
+    "family": "completeness_criteria",
+    "text": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP06.T03.SUC.01",
     "entity": "WP06.T03",
     "family": "success_criteria",
@@ -4953,6 +5086,13 @@
     "entity": "WP06.T03",
     "family": "success_criteria",
     "text": "Após sucesso, o usuário reconcilia o recibo com os valores exibidos pelo domínio; após falha, não encontra efeitos parciais ocultos.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP06.T03.SUC.60",
+    "entity": "WP06.T03",
+    "family": "success_criteria",
+    "text": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística.",
     "status": "NOT_RUN"
   },
   {
@@ -6146,6 +6286,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP09.T01.DOD.60",
+    "entity": "WP09.T01",
+    "family": "dod",
+    "text": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. Conectar catálogo, preparação, admissão, run/status/result à skill de revisão executiva; admitir pelo C07 real e negar execução sem admissão e recursão do modo routine-result.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP09.T01.INV.01",
     "entity": "WP09.T01",
     "family": "invariants",
@@ -6167,6 +6314,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP09.T01.INV.60",
+    "entity": "WP09.T01",
+    "family": "invariants",
+    "text": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. Conectar catálogo, preparação, admissão, run/status/result à skill de revisão executiva; admitir pelo C07 real e negar execução sem admissão e recursão do modo routine-result.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP09.T01.QLT.01",
     "entity": "WP09.T01",
     "family": "quality_standards",
@@ -6178,6 +6332,13 @@
     "entity": "WP09.T01",
     "family": "quality_standards",
     "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP09.T01.QLT.60",
+    "entity": "WP09.T01",
+    "family": "quality_standards",
+    "text": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. Conectar catálogo, preparação, admissão, run/status/result à skill de revisão executiva; admitir pelo C07 real e negar execução sem admissão e recursão do modo routine-result.",
     "status": "NOT_RUN"
   },
   {
@@ -6195,6 +6356,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP09.T01.CMP.60",
+    "entity": "WP09.T01",
+    "family": "completeness_criteria",
+    "text": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. Conectar catálogo, preparação, admissão, run/status/result à skill de revisão executiva; admitir pelo C07 real e negar execução sem admissão e recursão do modo routine-result.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP09.T01.SUC.01",
     "entity": "WP09.T01",
     "family": "success_criteria",
@@ -6206,6 +6374,13 @@
     "entity": "WP09.T01",
     "family": "success_criteria",
     "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP09.T01.SUC.60",
+    "entity": "WP09.T01",
+    "family": "success_criteria",
+    "text": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. Conectar catálogo, preparação, admissão, run/status/result à skill de revisão executiva; admitir pelo C07 real e negar execução sem admissão e recursão do modo routine-result.",
     "status": "NOT_RUN"
   },
   {
@@ -6937,6 +7112,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.T06.DOD.60",
+    "entity": "WP10.T06",
+    "family": "dod",
+    "text": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.T06.INV.01",
     "entity": "WP10.T06",
     "family": "invariants",
@@ -6948,6 +7130,13 @@
     "entity": "WP10.T06",
     "family": "invariants",
     "text": "Bridge privada/grant não dependem de McpProvided global nem de identidade gerada.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T06.INV.60",
+    "entity": "WP10.T06",
+    "family": "invariants",
+    "text": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais.",
     "status": "NOT_RUN"
   },
   {
@@ -6965,6 +7154,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.T06.QLT.60",
+    "entity": "WP10.T06",
+    "family": "quality_standards",
+    "text": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.T06.CMP.01",
     "entity": "WP10.T06",
     "family": "completeness_criteria",
@@ -6976,6 +7172,13 @@
     "entity": "WP10.T06",
     "family": "completeness_criteria",
     "text": "Contar cinco perfis/dezoito skills/oito packs, incluindo chamada forçada, revogação e provider homônimo.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T06.CMP.60",
+    "entity": "WP10.T06",
+    "family": "completeness_criteria",
+    "text": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais.",
     "status": "NOT_RUN"
   },
   {
@@ -6993,6 +7196,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.T06.SUC.60",
+    "entity": "WP10.T06",
+    "family": "success_criteria",
+    "text": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.T07.DOD.01",
     "entity": "WP10.T07",
     "family": "dod",
@@ -7007,6 +7217,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.T07.DOD.60",
+    "entity": "WP10.T07",
+    "family": "dod",
+    "text": "Os dois subpaths canônicos resolvem, quatro artefatos são gerados, AST/guard passam e AM05 preserva scanner real.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.T07.INV.01",
     "entity": "WP10.T07",
     "family": "invariants",
@@ -7017,7 +7234,14 @@
     "id": "WP10.T07.INV.40",
     "entity": "WP10.T07",
     "family": "invariants",
-    "text": "Nenhuma escrita fora dos seis paths Atlas exatos; gerados são produzidos pelo gerador e engine permanece fonte.",
+    "text": "Nenhuma escrita fora dos nove paths Atlas exatos; gerados são produzidos pelo gerador, engines/guard/allowlist permanecem fonte inalterada.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T07.INV.60",
+    "entity": "WP10.T07",
+    "family": "invariants",
+    "text": "Nove paths Atlas exatos; nenhum algoritmo/guard/allowlist alterado, nenhum factory sem binding em native-bound e nenhum novo site spawning.",
     "status": "NOT_RUN"
   },
   {
@@ -7035,6 +7259,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.T07.QLT.60",
+    "entity": "WP10.T07",
+    "family": "quality_standards",
+    "text": "Resolução da aresta exata é explícita, verificável e falha fechada; mesma constante/função canônica, sem confiar em tree-shaking.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.T07.CMP.01",
     "entity": "WP10.T07",
     "family": "completeness_criteria",
@@ -7049,6 +7280,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP10.T07.CMP.60",
+    "entity": "WP10.T07",
+    "family": "completeness_criteria",
+    "text": "Verificar imports transitivos, export surfaces, geração reproduzível, scanner clean/canary/unavailable e ownership exclusivo, com negativos que rejeitam bundle errado.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP10.T07.SUC.01",
     "entity": "WP10.T07",
     "family": "success_criteria",
@@ -7060,6 +7298,13 @@
     "entity": "WP10.T07",
     "family": "success_criteria",
     "text": "Memória recupera precedente real após reinício comfonte/versão/acesso atual.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP10.T07.SUC.60",
+    "entity": "WP10.T07",
+    "family": "success_criteria",
+    "text": "O consumidor usa emit/read e scanner reais dentro do guard existente; dependência de subprocesso não é duplicada nem ocultada.",
     "status": "NOT_RUN"
   },
   {
@@ -7511,6 +7756,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP12.T02.DOD.60",
+    "entity": "WP12.T02",
+    "family": "dod",
+    "text": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. Distribuir as concessões e workflows concretos de dashboard_read, import_preview e routine_catalog/prepare/run/status/result nas skills nomeadas. UI e manifests usam os mesmos grants.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP12.T02.INV.01",
     "entity": "WP12.T02",
     "family": "invariants",
@@ -7529,6 +7781,13 @@
     "entity": "WP12.T02",
     "family": "invariants",
     "text": "Nenhum writer edita fonte sob lease de outro; retorno de inferência não substitui autorização determinística.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T02.INV.60",
+    "entity": "WP12.T02",
+    "family": "invariants",
+    "text": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. Distribuir as concessões e workflows concretos de dashboard_read, import_preview e routine_catalog/prepare/run/status/result nas skills nomeadas. UI e manifests usam os mesmos grants.",
     "status": "NOT_RUN"
   },
   {
@@ -7553,6 +7812,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP12.T02.QLT.60",
+    "entity": "WP12.T02",
+    "family": "quality_standards",
+    "text": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. Distribuir as concessões e workflows concretos de dashboard_read, import_preview e routine_catalog/prepare/run/status/result nas skills nomeadas. UI e manifests usam os mesmos grants.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP12.T02.CMP.01",
     "entity": "WP12.T02",
     "family": "completeness_criteria",
@@ -7574,6 +7840,13 @@
     "status": "NOT_RUN"
   },
   {
+    "id": "WP12.T02.CMP.60",
+    "entity": "WP12.T02",
+    "family": "completeness_criteria",
+    "text": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. Distribuir as concessões e workflows concretos de dashboard_read, import_preview e routine_catalog/prepare/run/status/result nas skills nomeadas. UI e manifests usam os mesmos grants.",
+    "status": "NOT_RUN"
+  },
+  {
     "id": "WP12.T02.SUC.01",
     "entity": "WP12.T02",
     "family": "success_criteria",
@@ -7592,6 +7865,13 @@
     "entity": "WP12.T02",
     "family": "success_criteria",
     "text": "Análises de especialistas alteram objetos persistentes e o Revisor é uma execução separada.",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "WP12.T02.SUC.60",
+    "entity": "WP12.T02",
+    "family": "success_criteria",
+    "text": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. Distribuir as concessões e workflows concretos de dashboard_read, import_preview e routine_catalog/prepare/run/status/result nas skills nomeadas. UI e manifests usam os mesmos grants.",
     "status": "NOT_RUN"
   },
   {

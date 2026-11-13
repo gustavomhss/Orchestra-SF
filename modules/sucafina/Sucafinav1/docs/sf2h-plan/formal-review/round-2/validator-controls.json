@@ -1,6 +1,7 @@
 {
   "scope": "Structural validator rejection controls only; not product tests",
   "status": "PASS",
+  "plan_sha256": "aaba00217ac1978860853fb0c72748b1b275fe4ee4d3b998c42a9f730dfe98a2",
   "cases": [
     {
       "case": "Two actors overlap the same physical slot",
@@ -8,23 +9,38 @@
       "status": "PASS"
     },
     {
-      "case": "Native input arrives after its qualification phase",
+      "case": "Native input arrives after qualification starts",
       "detected": "PHASE_INPUT_LATE",
       "status": "PASS"
     },
     {
-      "case": "Skill lease points to an unshipped source",
+      "case": "Skill lease names an unshipped source",
       "detected": "SKILL_LEASE_PATH",
       "status": "PASS"
     },
     {
-      "case": "A proof references a nonexistent criterion",
+      "case": "A proof names a nonexistent criterion",
       "detected": "PROOF_CRITERION_REF",
       "status": "PASS"
     },
     {
-      "case": "An original task is missing",
+      "case": "An original task is removed",
       "detected": "ORIGINAL_TASK_REMOVED",
+      "status": "PASS"
+    },
+    {
+      "case": "The last skill grant for an advertised operation is removed",
+      "detected": "MCP_UNREACHABLE_OPERATION",
+      "status": "PASS"
+    },
+    {
+      "case": "Resident interface path differs from its handoff",
+      "detected": "HANDOFF_INTERFACE_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "case": "Scanner is reexported from the new business bundle",
+      "detected": "ATLAS_SCANNER_IN_NEW_BUNDLE",
       "status": "PASS"
     }
   ],

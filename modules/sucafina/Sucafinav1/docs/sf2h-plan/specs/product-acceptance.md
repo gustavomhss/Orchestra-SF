@@ -95,3 +95,10 @@ A validação estática aplicou todos os patches em uma cópia Python em memóri
 - `contracts.json`, `campaign.json`, `coverage.json`, `evidence-plan.json` e consumption map.
 - WPs 08, 09, 11, 12 e 13; contratos consumidores pertinentes em WP01, WP05, WP06, WP07 e WP14.
 - `sources/AI-PRODUCT-VISION.md` e `AGENTS-ATLAS-MCP.md`; fontes aceitas de produto, sem tratá-las como implementação.
+
+
+## Correção da alcançabilidade das operações
+
+A matriz passou a incluir as entradas opcionais Analisar impacto do arquivo e Preparar com rotina. Elas reutilizam as skills existentes e os fluxos C04/C07: a primeira apresenta a prévia sem aplicar dados; a segunda apresenta proposta de admissão, progresso e resultado da rotina. Dashboard fornece a projeção autorizada para BI. O manifesto possui 39 rotas positivas perfil/skill/operação com consumidor e prova; catálogo ou recusa de todas as chamadas não contam como funcionalidade entregue.
+
+A contribuição de importação referencia o mesmo `ImportManifest` exibido por WP06.T03. A contribuição de rotina referencia o mesmo run e resultado exibidos por WP09. Leitura/execução direta de prova conserva skill carregada e autorização atual. Rotina sem admissão, contexto revogado, arquivo não admitido, base alterada e disparo recursivo são contraprovas obrigatórias.

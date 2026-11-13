@@ -363,7 +363,8 @@
       "checks": [
         "Usar o mesmo principal, caso, versão, porta e autorização nos caminhos UI, agente e MCP. actor/role/project forjados não alteram a concessão.",
         "Ligar o callID da bridge à chamada do domínio, à versão e ao resultado ou recibo. Stub ou engine paralelo falham.",
-        "Listar contratos e concessões dos oito packs em T+20; exercer sua funcionalidade real até T+75. Discovery não equivale a execução."
+        "Listar contratos e concessões dos oito packs em T+20; exercer sua funcionalidade real até T+75. Discovery não equivale a execução.",
+        "Conferir 39 rotas positivas nomeadas por perfil/skill/operação e SkillLoadReceipt. Chamada direta do harness passa pelo wrapper C16 com binding real; nunca usar ausência de skill como autorização alternativa."
       ],
       "status": "NOT_RUN",
       "integration_deadline": 75,
@@ -375,7 +376,8 @@
         103,
         118
       ],
-      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am02.json"
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am02.json",
+      "operation_routes_ref": "resident_ai.operation_call_routes"
     },
     {
       "id": "AM03",
@@ -466,7 +468,8 @@
         "Dois atores com o mesmo perfil, owner omitido ou forjado, sessão/caso incorretos e um canary privado não ampliam o acesso.",
         "Revalidar e invalidar após revogação ou mudança de encarnação. O precedente recuperado explica pertinência e diferenças atuais.",
         "Registrar binary path e versão do scanner real. Exercitar clean, secret-canary, timeout e ausência. Hit ou indisponibilidade não fazem append; indisponibilidade retorna scanner-unavailable. Não aceitar scanner simulado como prova real.",
-        "Falha de commit ou resposta perdida preserva consistência do log/ledger e retomada idempotente. A função síncrona append não significa que o commit assíncrono terminou."
+        "Falha de commit ou resposta perdida preserva consistência do log/ledger e retomada idempotente. A função síncrona append não significa que o commit assíncrono terminou.",
+        "Empacotamento: business-memory-ports tem factories reais e zero imports de spawning; scanner vem de native-memory já admitido. Verificar AST, a aresta external exata, quatro digests gerados, exports bound preservados e check:spawn-imports do candidato com guard/allowlist inalterados."
       ],
       "status": "NOT_RUN",
       "integration_deadline": 75,
@@ -501,7 +504,8 @@
         "Exercer admissão/publicação pinada, Relay, perfil/skill, operação SF, run/result e UI, com IDs e versões reais.",
         "Falha, retry e intervenção ficam visíveis. O run pode terminar com pergunta; a resposta ocorre no produto. Não inventar espera humana interna ao run.",
         "Retomar na nova versão sem duplicar proposta ou efeito. Schedule usa recorrência, dono e timezone atuais e não aprova negócio por conta própria.",
-        "Revogação e cancelamento afetam resultado e agenda. O progresso e a proveniência de C11 chegam à mesa."
+        "Revogação e cancelamento afetam resultado e agenda. O progresso e a proveniência de C11 chegam à mesa.",
+        "sf_maestro/sf-preparar-revisao-executiva percorre catalog/prepare com pedido humano, run só com admissão C07 atual, status/result e consumo na pauta. Em routine-result, prepare/run são recusados; nenhuma chamada recursiva é criada."
       ],
       "status": "NOT_RUN",
       "integration_deadline": 75,
@@ -809,6 +813,179 @@
       ],
       "integrated_proofs": [],
       "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP00.T02",
+      "criterion_ids": [
+        "WP00.T02.DOD.60",
+        "WP00.T02.INV.60",
+        "WP00.T02.QLT.60",
+        "WP00.T02.CMP.60",
+        "WP00.T02.SUC.60",
+        "WP00.T02.CHK.60"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "receipt_rule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio."
+    },
+    {
+      "entity_id": "WP10.T06",
+      "criterion_ids": [
+        "WP10.T06.DOD.60",
+        "WP10.T06.INV.60",
+        "WP10.T06.QLT.60",
+        "WP10.T06.CMP.60",
+        "WP10.T06.SUC.60",
+        "WP10.T06.CHK.60"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "receipt_rule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio."
+    },
+    {
+      "entity_id": "WP12.T02",
+      "criterion_ids": [
+        "WP12.T02.DOD.60",
+        "WP12.T02.INV.60",
+        "WP12.T02.QLT.60",
+        "WP12.T02.CMP.60",
+        "WP12.T02.SUC.60",
+        "WP12.T02.CHK.60"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "receipt_rule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio."
+    },
+    {
+      "entity_id": "WP06.T02",
+      "criterion_ids": [
+        "WP06.T02.DOD.60",
+        "WP06.T02.INV.60",
+        "WP06.T02.QLT.60",
+        "WP06.T02.CMP.60",
+        "WP06.T02.SUC.60",
+        "WP06.T02.CHK.60"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "receipt_rule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio."
+    },
+    {
+      "entity_id": "WP06.T03",
+      "criterion_ids": [
+        "WP06.T03.DOD.60",
+        "WP06.T03.INV.60",
+        "WP06.T03.QLT.60",
+        "WP06.T03.CMP.60",
+        "WP06.T03.SUC.60",
+        "WP06.T03.CHK.60"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "receipt_rule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio."
+    },
+    {
+      "entity_id": "WP09.T01",
+      "criterion_ids": [
+        "WP09.T01.DOD.60",
+        "WP09.T01.INV.60",
+        "WP09.T01.QLT.60",
+        "WP09.T01.CMP.60",
+        "WP09.T01.SUC.60",
+        "WP09.T01.CHK.60"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "receipt_rule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio."
+    },
+    {
+      "entity_id": "WP10",
+      "criterion_ids": [
+        "WP10.CMP.60",
+        "WP10.DOD.60",
+        "WP10.INV.60",
+        "WP10.QLT.60",
+        "WP10.SUC.60"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "receipt_rule": "Código/artefatos reais, identidade do scanner e resultado de geração/AST/spawn gate no mesmo candidato; sem dispensa."
+    },
+    {
+      "entity_id": "WP10.T07",
+      "criterion_ids": [
+        "WP10.T07.CHK.60",
+        "WP10.T07.CHK.61",
+        "WP10.T07.CHK.62",
+        "WP10.T07.CMP.60",
+        "WP10.T07.DOD.60",
+        "WP10.T07.INV.60",
+        "WP10.T07.QLT.60",
+        "WP10.T07.SUC.60"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "receipt_rule": "Código/artefatos reais, identidade do scanner e resultado de geração/AST/spawn gate no mesmo candidato; sem dispensa."
     }
   ],
   "review_assignments": [

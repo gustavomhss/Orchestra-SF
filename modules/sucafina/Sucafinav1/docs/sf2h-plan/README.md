@@ -1,6 +1,6 @@
 # Orchestra SF — plano integral de produto e IA
 
-**Estado: RECONCILED_PENDING_REVIEW.** As correções das seis frentes P1 e dos dois ajustes P2 da rodada 1 estão integradas. A rodada 2 examina um commit congelado com três revisores novos. [Estado e pareceres](formal-review/README.md).
+**Estado: RECHECK_PENDING.** Os três revisores fecharam os dez apontamentos originais. A rodada 2 encontrou dois P1 e um P2 adicionais, corrigidos neste candidato e enviados para rechecagem no novo SHA. [Estado e pareceres](formal-review/README.md).
 
 O plano preserva todo o escopo e incorpora a equipe residente: **15 WPs, 74 tasks, 17 contratos, cinco perfis, dezoito skills, um MCP com oito packs e 39 operações, Atlas SF e seis provas integradas**. A implementação permanece PLANNED/NOT_RUN.
 

@@ -1,0 +1,360 @@
+{
+  "review_id": "R3-R2",
+  "reviewer": "Revisor adversarial independente de execução, recursos, ownership e CI; sem autoria na correção",
+  "reviewed_commit": "38986380cd7b5697c0be30c1f55d43eddee63045",
+  "reviewed_branch": "sf-product-plan",
+  "repository": "gustavomhss/Orchestra-SF",
+  "code_baseline_commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "focus": "Rechecagem E-F01/E-F02/E-F03 e busca independente de defeitos demonstráveis de decomposição, DAG, recursos, escritores, handoffs, revisão, orçamento condicionado e CI/proveniência.",
+  "candidate_copy": "/workspace/scratch/838a0195183d/sf2h-candidate-3898638",
+  "candidate_provenance": "Cópia congelada fornecida pela integradora, com recibo de98 blobs verificados por SHA1 via GitHub MCP em sf2h-work/candidate-3898638.json. Leituras remotas adicionais deste parecer foram fixadas diretamente no reviewed_commit.",
+  "independence": {
+    "authored_candidate": false,
+    "read_other_reviewers_reports": false,
+    "read_round2_author_closure_decisions": false,
+    "consulted_original_findings": [
+      "E-F01",
+      "E-F02",
+      "E-F03"
+    ],
+    "candidate_modified": false,
+    "github_mutated": false,
+    "subagents_spawned": false,
+    "note": "Especificações e artefatos canônicos foram examinados como requisitos; alegações de validação/fechamento dos autores e o guard executado pela integradora não substituíram o julgamento."
+  },
+  "examined_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/formal-review/PROTOCOL.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/formal-review/round-2/PROTOCOL.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/formal-review/round-1/execution.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/formal-review/round-1/execution.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/manifest.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/CAMPAIGN.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/schedule.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/task-dag.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/ownership.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/output-handoffs.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/agents-atlas-mcp.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/AGENTS-ATLAS-MCP.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/resident-proof-plan.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/resident-ui-consumption.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/evidence-plan.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/proof-map.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/coverage.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/tools/validate_execution_plan.py",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/tools/validate_resident_plan.py",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/tools/render_plan.py",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/prompts/S0.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/prompts/S1.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/prompts/S2.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/prompts/S3.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/prompts/S4.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP00.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP01.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP02.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP03.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP04.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP05.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP06.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP07.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP08.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP09.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP10.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP11.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP12.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP13.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP14.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP00.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP03.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP06.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP10.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP12.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP14.md",
+    ".github/workflows/test-ci.yml",
+    "script/test-ci-request.ts",
+    "script/test-ci-location.ts",
+    "script/test-ci-package.ts",
+    "script/module-registry.json",
+    "script/test-ci.ts",
+    "script/test-guard.ts",
+    "packages/app-shell/bunfig.toml",
+    "packages/app-shell/package.json",
+    "packages/app-shell/playwright.config.ts",
+    "packages/app-shell/e2e/playwright.production.config.ts",
+    "modules/atlas/boundary/package.json",
+    "modules/atlas/boundary/script/build.ts",
+    "modules/atlas/boundary/bunfig.toml",
+    "AGENTS.md"
+  ],
+  "remote_source_receipts": [
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "ref": "38986380cd7b5697c0be30c1f55d43eddee63045",
+      "blob_sha": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "via": "GitHub MCP fetch_file",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/38986380cd7b5697c0be30c1f55d43eddee63045/.github/workflows/test-ci.yml"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "ref": "38986380cd7b5697c0be30c1f55d43eddee63045",
+      "blob_sha": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "via": "GitHub MCP fetch_file",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/38986380cd7b5697c0be30c1f55d43eddee63045/script/test-ci-request.ts"
+    },
+    {
+      "path": "script/test-ci-location.ts",
+      "ref": "38986380cd7b5697c0be30c1f55d43eddee63045",
+      "blob_sha": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+      "via": "GitHub MCP fetch_file",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/38986380cd7b5697c0be30c1f55d43eddee63045/script/test-ci-location.ts"
+    },
+    {
+      "path": "script/test-ci-package.ts",
+      "ref": "38986380cd7b5697c0be30c1f55d43eddee63045",
+      "blob_sha": "a10c7b04ca6633f688b62069a9a9832aaa4543dd",
+      "via": "GitHub MCP fetch_file",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/38986380cd7b5697c0be30c1f55d43eddee63045/script/test-ci-package.ts"
+    },
+    {
+      "path": "script/module-registry.json",
+      "ref": "38986380cd7b5697c0be30c1f55d43eddee63045",
+      "blob_sha": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+      "via": "GitHub MCP fetch_file",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/38986380cd7b5697c0be30c1f55d43eddee63045/script/module-registry.json"
+    },
+    {
+      "path": "script/test-ci.ts",
+      "ref": "38986380cd7b5697c0be30c1f55d43eddee63045",
+      "blob_sha": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "via": "GitHub MCP fetch_file",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/38986380cd7b5697c0be30c1f55d43eddee63045/script/test-ci.ts"
+    },
+    {
+      "path": "script/test-guard.ts",
+      "ref": "38986380cd7b5697c0be30c1f55d43eddee63045",
+      "blob_sha": "f2f55d97fd05a5136e17eac7043bbf315de88bb6",
+      "via": "GitHub MCP fetch_file",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/38986380cd7b5697c0be30c1f55d43eddee63045/script/test-guard.ts"
+    },
+    {
+      "path": "packages/app-shell/bunfig.toml",
+      "ref": "38986380cd7b5697c0be30c1f55d43eddee63045",
+      "blob_sha": "747797ac5c38cf6eeba52985e7df59a05f4ed172",
+      "via": "GitHub MCP fetch_file",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/38986380cd7b5697c0be30c1f55d43eddee63045/packages/app-shell/bunfig.toml"
+    },
+    {
+      "path": "packages/app-shell/package.json",
+      "ref": "38986380cd7b5697c0be30c1f55d43eddee63045",
+      "blob_sha": "32567c3e0d67a3cceacab355bb34e291cd419c26",
+      "via": "GitHub MCP fetch_file",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/38986380cd7b5697c0be30c1f55d43eddee63045/packages/app-shell/package.json"
+    },
+    {
+      "path": "packages/app-shell/playwright.config.ts",
+      "ref": "38986380cd7b5697c0be30c1f55d43eddee63045",
+      "blob_sha": "d935c68f5b996c0e53195ec832b969c217fcf858",
+      "via": "GitHub MCP fetch_file",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/38986380cd7b5697c0be30c1f55d43eddee63045/packages/app-shell/playwright.config.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "ref": "38986380cd7b5697c0be30c1f55d43eddee63045",
+      "blob_sha": "84dbab99cf1d6d28b2f1b3ba7e688809b0eb74d1",
+      "via": "GitHub MCP fetch_file",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/38986380cd7b5697c0be30c1f55d43eddee63045/packages/app-shell/e2e/playwright.production.config.ts"
+    },
+    {
+      "path": "modules/atlas/boundary/package.json",
+      "ref": "38986380cd7b5697c0be30c1f55d43eddee63045",
+      "blob_sha": "055b46b9d32d765c3c2dc54468137d031bb3de90",
+      "via": "GitHub MCP fetch_file",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/38986380cd7b5697c0be30c1f55d43eddee63045/modules/atlas/boundary/package.json"
+    },
+    {
+      "path": "modules/atlas/boundary/script/build.ts",
+      "ref": "38986380cd7b5697c0be30c1f55d43eddee63045",
+      "blob_sha": "df0a875e47e98e8803e00818d178166d0b1cb8dd",
+      "via": "GitHub MCP fetch_file",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/38986380cd7b5697c0be30c1f55d43eddee63045/modules/atlas/boundary/script/build.ts"
+    },
+    {
+      "path": "modules/atlas/boundary/bunfig.toml",
+      "ref": "38986380cd7b5697c0be30c1f55d43eddee63045",
+      "blob_sha": "f3832a4bb25078ca30e4a5bf1b11c989d2079235",
+      "via": "GitHub MCP fetch_file",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/38986380cd7b5697c0be30c1f55d43eddee63045/modules/atlas/boundary/bunfig.toml"
+    },
+    {
+      "path": "AGENTS.md",
+      "ref": "38986380cd7b5697c0be30c1f55d43eddee63045",
+      "blob_sha": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "via": "GitHub MCP fetch_file",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/38986380cd7b5697c0be30c1f55d43eddee63045/AGENTS.md"
+    }
+  ],
+  "original_findings": [
+    {
+      "id": "E-F01",
+      "original_severity": "P1",
+      "status": "CLOSED",
+      "rationale": "O adendo passou à decomposição canônica: WP10.T06 (S0-B, runtime/perfis/skills/MCP, 10–45), WP10.T07 (S0-A, packaging/BCS/Atlas/persistência, 10–55) e WP14.T05 (S4, tradução pura, 10–20). C15–C17, cinco perfis, dezoito fontes e oito packs/39 operações possuem produtores, consumidores e AM01–AM06. Documentos foram separados da fila de imports; T01 entrega C08, T07 persiste e WP14 permanece puro. A construção, as entregas intermediárias, a transferência WP14, as correções e a revisão independente têm atores dentro dos vinte slots. O fechamento é da lacuna operacional original, não uma prova de implementação. A divergência localizada de path NATIVE-CASE está registrada separadamente como E2-F01/P2.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json#/work_packages/WP10/tasks/WP10.T06",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json#/work_packages/WP10/tasks/WP10.T07",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json#/work_packages/WP14/tasks/WP14.T05",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/ownership.json#/technical_allocations",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/ownership.json#/skill_leases",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/schedule.json#/actor_allocations",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/output-handoffs.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/resident-proof-plan.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json#/C15-C17"
+      ]
+    },
+    {
+      "id": "E-F02",
+      "original_severity": "P1",
+      "status": "CLOSED",
+      "rationale": "WP03 e WP06 começam explicitamente por WP00.T02/T+10 mesmo quando GNATIVE/T04 permanece BLOCKED. As dependências e os espelhos concordam. As branches são sf2-planner e sf2-imports. WP14.DOD.01 e WP14.T04.DOD.01 agora exigem funções prontas em 68 e consumo real/provas em 75. Referências remanescentes a T04 nos caminhos nativos de WP09/WP12 são integração/qualificação, não bloqueio inicial de Planner/imports.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP03.md:430-437",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP06.md:449-457",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP03.json#/tasks/WP03.T01/depends_on",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP06.json#/tasks/WP06.T01/depends_on",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP14.md:33",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP14.md:287",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/task-dag.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/ownership.json#/work_packages",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/prompts/S0.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/prompts/S1.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/prompts/S2.md"
+      ]
+    },
+    {
+      "id": "E-F03",
+      "original_severity": "P2",
+      "status": "CLOSED",
+      "rationale": "CI-APP foi renomeada para CI-APP-SRC e limita corretamente args=[] à árvore src. CI-APP-BROWSER adiciona args=[test-browser] e é obrigatória no mesmo candidato, com recibo separado. O workflow real no SHA examinado distingue condições solid/browser e preload happydom. Playwright não é apresentado como substituto dessas seleções.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json#/recipes/CI-APP-SRC",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json#/recipes/CI-APP-BROWSER",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json#/receipt_rules",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP10.json#/tasks/WP10.T04",
+        ".github/workflows/test-ci.yml",
+        "packages/app-shell/bunfig.toml",
+        "packages/app-shell/package.json"
+      ]
+    }
+  ],
+  "new_findings": [
+    {
+      "id": "E2-F01",
+      "severity": "P2",
+      "status": "OPEN",
+      "title": "O handoff nativo do caso usa dois paths para o mesmo export",
+      "requirement_or_axiom": "G0 congela produtor/export/path/consumidor; GNATIVE depende de NATIVE-CASE em T+14; exclusividade e reprodutibilidade dos handoffs.",
+      "location": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+          "pointer": "/resident_handoff_interfaces/1/path",
+          "line": 28098
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/output-handoffs.json",
+          "pointer": "/outputs/1/artifacts/0",
+          "line": 32
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP11.json",
+          "pointer": "/tasks/0/outputs",
+          "line": 165
+        }
+      ],
+      "evidence": [
+        "resident_handoff_interfaces atribui a WP11.T01 o path modules/sucafina/Sucafinav1/product/decisions/port.ts e export createDecisionCasePort, ready_checkpoint=14, consumido por WP10.T06/WP00.T04.",
+        "NATIVE-CASE em output_handoffs e a saída explícita de WP11.T01 atribuem o mesmo export e T+14 a product/decisions/case-port.ts. Nenhum reexport/alias entre os dois paths está especificado."
+      ],
+      "counterexample": "S4-A publica somente case-port.ts, conforme sua task e NATIVE-CASE. S0-B implementa o import de decisions/port.ts seguindo resident_handoff_interfaces. Ambos seguem material canônico do mesmo commit, mas a composição não resolve o módulo esperado até o path ser reconciliado.",
+      "consequence": "Ambiguidade evitável no handoff crítico T+14→T+16; pode consumir a reserva curta de composição/GNATIVE. Não remove a capacidade nem deixa sem dono a implementação do port.",
+      "fix": "Escolher um único path — case-port.ts já coincide com a task e output-handoffs — e atualizar resident_handoff_interfaces e todos os espelhos. Se a intenção for manter port.ts como fachada, especificar o reexport, seu produtor e a mesma entrega T+14. Conferir igualdade produtor/export/path/checkpoint no congelamento G0.",
+      "suggested_owner": "S0/WP00.T02, em acordo com S4-A/WP11.T01 e S0-B/WP10.T06",
+      "blocks_execution": false,
+      "confidence": "HIGH",
+      "material_uncertainty": "Não há implementação a inspecionar; um reexport pode ser a intenção, mas não consta do candidato.",
+      "severity_reason": "É erro localizado de precisão em uma interface cuja capacidade, task, ator, prazo e export já estão determinados. Pode ser reconciliado no G0 agendado sem aumentar slots ou decompor nova entrega; não justifica reabrir a ausência ampla de decomposição de E-F01.",
+      "disposition": "CORRECT_AT_G0_BEFORE_NATIVE_HANDOFF; P2 não impede iniciar o plano, mas não deve ser propagado aos contratos congelados."
+    }
+  ],
+  "verdict": "APPROVED_FOR_EXECUTION",
+  "verdict_scope": "Aprovação de prontidão do plano nas áreas de execução/recursos/CI examinadas; zero P0/P1 aberto. Não aceita a implementação nem demonstra duas horas. O P2 tem disposição explícita em G0.",
+  "severity_summary": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 1
+  },
+  "reviewed_areas": [
+    {
+      "area": "Escopo e decomposição",
+      "conclusion": "15 WPs, 74 tasks e C01–C17 preservam o escopo integral. As três novas tasks têm trabalho, outputs, axiomas, escritor, janelas e provas; catálogo/documento isolado não satisfaz implementação."
+    },
+    {
+      "area": "DAG",
+      "conclusion": "Inspeção independente dos dados encontrou 74 nós, 114 arestas de construção, visita topológica dos 74 nós e nenhum predecessor de construção com término planejado posterior ao início do consumidor. task-dag coincide com depends_on. As 289 arestas de consumidor são verificações de integração, não bloqueios de construção; não foram tratadas como um DAG de execução serial."
+    },
+    {
+      "area": "Slots e atores",
+      "conclusion": "O roster declara vinte slots físicos, quatro por conversa incluindo coordenadora. Vinte e três identidades ao longo do tempo não são simultâneas: S1-B/S2-B encerram em 72; S3-A em 75; só então R1/R2/R3 novos ocupam os mesmos slots. Os intervalos declarados mantêm vinte vivos e nenhuma sobreposição entre fatias do mesmo ator."
+    },
+    {
+      "area": "Correções e independência",
+      "conclusion": "S1/S2/S3 recebem os leases WP02/WP05/WP07; os builders encerrados não voltam implicitamente. Os outros autores permanecem ativos. R1/R2/R3 só julgam, incluem leitura no orçamento e têm prefixos próprios de parecer. S0-A/B/C não são contados como revisores livres."
+    },
+    {
+      "area": "GNATIVE e outputs antecipados",
+      "conclusion": "AI-NATIVE13 → NATIVE-CASE14 → NATIVE-PLANNER15 → NATIVE-RUNTIME16 → NATIVE-COMPOSE18 → qualificação18–20 usa incrementos identificados, não conclusão das tasks inteiras. Caso real/persistência/principal e negativas constam do gate. Os oito packs são contratados em 20, mas a operação integral é exigida somente em 75."
+    },
+    {
+      "area": "Documentos e skills",
+      "conclusion": "Documentos têm writer S2 em 13–22/24–35, resolver20 e extração35; imports continuam S2-C até53 e a transferência documental é exclusiva. Os dezoito source_paths correspondem aos dezoito leases: seis S1, cinco S3, sete S4-B. Leitura por digest da primeira skill em13 não concede edição simultânea. AI-CATALOG-PORT25 é explicitamente interface; AI-FULL/AI-CATALOG42 é o bundle runtime."
+    },
+    {
+      "area": "Atlas e WP14",
+      "conclusion": "S0-A constrói T07 enquanto S0 fornece C08 e S4 a tradução pura. As exceções Atlas são exatas: package.json, script/build.ts, entry, JS/d.ts gerados e teste. T07 é persistência/I-O; WP14 é transformação/ranking/invalidação puros. S0-C recebe WP14 em43, constrói T03/T04 até68 e prova consumo até75; S0-A não é resgate fantasma."
+    },
+    {
+      "area": "Provas e consumo",
+      "conclusion": "AM01 contém cinco grupos que cobrem exatamente as dezoito skills com carga, output persistido e consumidor; AM02 enumera os oito packs/39 operações, produtores tardios e paridade; AM03–AM06 preservam isolamento, aplicação, Atlas real e Relay. E01–E18 e os critérios adicionais permanecem cumulativos e NOT_RUN. O calendário distingue implementação, prova de integração e repetição no candidato."
+    },
+    {
+      "area": "CI e seleções",
+      "conclusion": "As oito receitas mínimas correspondem a aliases/configs aceitos. APP-SRC e APP-BROWSER são separadas; atlas-boundary aponta ao pacote real e --timeout 30000 não estreita a seleção. Os três specs Playwright só podem rodar quando existirem; validateSelection recusa seleção vazia ou divergente e playwrightArgs impõe um worker/retries0. O mínimo não é chamado de suíte global."
+    },
+    {
+      "area": "Geração, tipos e proveniência",
+      "conclusion": "generate, check:generated e typecheck Atlas são gates separados, coerentes com scripts reais. CI não é fingido a partir de compilação. Candidato C → snapshot S que altera somente .ci-run.json → push em ci-run-linux-* → run/attempt/jobs/seleção é especificado; exige head_sha e branch reais. O conector documenta fetch GET de runs push e subrecursos, evitando o wrapper limitado a PRs. Nenhum run foi criado."
+    },
+    {
+      "area": "Espelhos e prompts",
+      "conclusion": "Os quinze WPs JSON coincidem integralmente com campaign.work_packages; ownership, contracts, ci-recipes, resident-ui-consumption e output-handoffs coincidem com suas fontes canônicas. Os prompts das cinco sessões apresentam a mesma rotação, checkpoints e deveres. A divergência entre duas representações de um path dentro da própria campanha é E2-F01."
+    },
+    {
+      "area": "Prazo",
+      "conclusion": "A grade é uma reserva planejada. G2H exige observações de roster, leases, trabalho residual, CI, modelos e revisão; desconhecido não vira zero. As janelas finais20/15min não são apresentadas como medições nem o timeout45min como duração. T+120 sem gates obriga registrar atraso e continuar integralmente."
+    }
+  ],
+  "residual_uncertainties": [
+    "As cinco conversas e os vinte slots são uma hipótese de execução; esta revisão não abriu a campanha nem observou seu roster real. GREADY deve confirmá-los e a transferência deve terminar o builder antes do novo spawn.",
+    "Não foram medidos fila, setup, execução, coleta, disponibilidade de runners ou concorrência/latência de modelos. Diversos packs recebem seu último produtor em T+72 e precisam de consumo até75; essa concentração exige medição real em G2H, não prova por soma nominal de janelas.",
+    "O inventário G0 da suíte exigida pelo epic/AGENTS e pela footprint final pode acrescentar seleções além das oito mínimas. Não há base para tratar oito requests como o custo final conhecido.",
+    "A existência de modelo autorizado, autoridade nativa revalidável e scanner real com binário/versão utilizáveis ainda depende do preflight e das provas. HOLD/BLOCKED não equivale a sucesso; não foram exercidos pelo revisor.",
+    "O config Playwright real inicia o frontend apps/web. Montar o backend SF real, corpus, identidades, persistência e entrada de UI permanece uma entrega explícita de S0-C/WP10, a qual o smoke inicial e as provas finais precisam demonstrar; os specs futuros ainda não foram executados.",
+    "O dev pode avançar e a frente cloud pode manter arquivos compartilhados sob ownership. A baseline do plano é fixa; eventual adoção de outra árvore exige comparação e reconciliação por SHA/patch, preservando um writer. Esta revisão não autorizou nem fez essa atualização.",
+    "E2-F01 permanece P2 aberto com disposição de unificação do path em G0. A aprovação não valida um import particular antes dessa reconciliação.",
+    "A inspeção estática demonstra consistência verificável do plano nas áreas examinadas. Não comprova qualidade do código futuro, sucesso dos critérios de produto, disponibilidade futura de serviços ou cumprimento de120 minutos."
+  ],
+  "implementation_test_status": "NOT_RUN",
+  "verification_performed": "Leitura local do candidato; inspeção estática própria dos nós/arestas, espelhos e intervalos; consulta somente de fontes primárias via GitHub MCP. Nenhum teste local do produto, nenhum CI remoto e nenhum comando de implementação foi executado."
+}

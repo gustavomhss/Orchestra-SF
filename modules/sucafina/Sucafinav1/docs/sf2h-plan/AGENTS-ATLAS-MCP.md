@@ -24,10 +24,10 @@ O coordenador SF é um perfil empresarial chamado `sf_maestro`; ele não renomei
 
 | Skill | Perfis | Saída tipada | Tasks consumidoras |
 | --- | --- | --- | --- |
-| `sf-enquadrar-decisao` | sf_maestro | IntentFrame, AnalysisPlan | WP11.T01, WP01.T05 |
-| `sf-preparar-revisao-executiva` | sf_maestro | DecisionBrief | WP07.T01, WP07.T02, WP01.T05 |
+| `sf-enquadrar-decisao` | sf_maestro | IntentFrame, AnalysisPlan | WP11.T01, WP01.T05, WP06.T03 |
+| `sf-preparar-revisao-executiva` | sf_maestro | DecisionBrief | WP07.T01, WP07.T02, WP01.T05, WP09.T01, WP09.T02, WP09.T07 |
 | `sf-coordenar-perguntas` | sf_maestro | QuestionProposal | WP08.T02, WP08.T06, WP01.T04, WP01.T05 |
-| `sf-explicar-forecast` | sf_finance | FinancialAnalysis | WP01.T05, WP05.T01, WP09.T03 |
+| `sf-explicar-forecast` | sf_finance | FinancialAnalysis | WP01.T05, WP05.T01, WP09.T03, WP06.T03 |
 | `sf-comparar-cenarios` | sf_finance | ScenarioComparison | WP01.T05, WP05.T05, WP11.T02 |
 | `sf-avaliar-sensibilidade` | sf_finance | SensitivityResult | WP05.T05, WP01.T05 |
 | `sf-comparar-sourcing` | sf_procurement | CommercialComparison | WP01.T05, WP09.T04 |
@@ -74,7 +74,7 @@ O `BusinessContextService` seleciona apenas registros atualmente autorizados e v
 
 A fachada síncrona `DurableMemory` opera sobre um snapshot preparado dentro da transação assíncrona C08. Evento, índice de referências, idempotência e confirmação do outbox são gravados juntos. O estado protegido `__sfProductV1.atlas` não entra em exportações de dados empresariais. A prova exige leitura após reinício, acesso revogado, referência substituída e scanner real com casos clean/canary/indisponível.
 
-O empacotamento público usa `@orchestra/atlas-boundary/business-memory-ports`. WP10.T07 possui exceções exatas para export, entry, gerador, artefatos gerados e teste; não recebe liberdade para alterar os algoritmos do Atlas. Os detalhes e fontes primárias estão em [specs/resident-runtime.md](specs/resident-runtime.md).
+O empacotamento público separa `@orchestra/atlas-boundary/business-memory-ports`, com os factories, de `@orchestra/atlas-boundary/native-memory`, com o scanner canônico. WP10.T07 possui nove caminhos Atlas exatos para reexports, gerador, artefatos e teste; preserva a composição bound e os algoritmos. AST e o guard de subprocessos verificam que não surgiu um site indevido. Os detalhes estão em [specs/resident-runtime.md](specs/resident-runtime.md) e [specs/atlas-packaging.md](specs/atlas-packaging.md).
 
 ## Quem constrói e quando integra
 
@@ -99,6 +99,6 @@ Os [19 handoffs](output-handoffs.json), os dezoito leases de fonte e as alocaç�
 | AM05 | Evidências e memória Atlas após reinício | E12, E15, E16 |
 | AM06 | Rotina nativa com contribuições e retorno | E11, E13, E14, E16 |
 
-[resident-proof-plan.json](resident-proof-plan.json) especifica atores, casos, checks, candidato, janela, rechecagem e recibos. Cada uma das dezoito skills precisa de carga real, saída persistida e uso observável. AM02 também testa chamadas diretas ao MCP; não exige uma skill artificial para esconder a ausência de paridade do handler.
+[resident-proof-plan.json](resident-proof-plan.json) especifica atores, casos, checks, candidato, janela, rechecagem e recibos. Cada uma das dezoito skills precisa de carga real, saída persistida e uso observável. AM02 exercita as 39 rotas declaradas em `resident_ai.operation_call_routes`. A chamada direta do harness atravessa o mesmo wrapper nativo, com perfil, skill carregada e binding autorizados; não há exceção à interseção de permissões.
 
 Todos os níveis têm DoD, invariants, quality standards, completeness criteria e success criteria. Uma aprovação estrutural ou um parecer favorável do plano não aprova os critérios de implementação.

@@ -196,7 +196,10 @@
         "modules/sucafina/Sucafinav1/local/entry.ts",
         "modules/sucafina/Sucafinav1/runtime/host.ts",
         "modules/atlas/boundary/package.json",
-        "modules/atlas/boundary/script/build.ts"
+        "modules/atlas/boundary/script/build.ts",
+        "modules/atlas/packages/adapter-io/src/native-bound.ts",
+        "modules/atlas/boundary/src/generated/native-memory.js",
+        "modules/atlas/boundary/src/generated/native-memory.d.ts"
       ],
       "new_prefixes": [
         "modules/sucafina/Sucafinav1/product/integration/",
@@ -207,7 +210,7 @@
         "packages/app-shell/e2e/sucafina/",
         "apps/cli/src/sucafina-product/"
       ],
-      "allowed_purpose": "Compor o produto e as portas reais nos entrypoints enumerados, fornecer persistência protegida e autorização contextual, integrar e verificar. As exceções exatas autorizam manifests/lock da raiz e os dois arquivos de factory/host para essa integração. Não alterar Azure, deploy, identidade, engines ou política de aprovação; não sobrescrever arquivo de outro escritor.",
+      "allowed_purpose": "Compor o produto e as portas reais nos entrypoints enumerados, fornecer persistência protegida e autorização contextual, integrar e verificar. As exceções exatas autorizam manifests/lock da raiz e os dois arquivos de factory/host para essa integração. Não alterar Azure, deploy, identidade, engines ou política de aprovação; não sobrescrever arquivo de outro escritor. Exceção Atlas de WP10.T07/S0-A limitada aos nove caminhos listados: reexports/geração e ligação pública da dependência scanner, sem algoritmo ou política nova.",
       "new_files": [
         "modules/atlas/boundary/src/business-memory-entry.ts",
         "modules/atlas/boundary/src/generated/business-memory-ports.js",
@@ -346,42 +349,63 @@
       "owner": "WP10",
       "task": "WP10.T07",
       "actor": "S0-A",
-      "purpose": "Export mínimo e empacotamento canônico dos ports/factories/scanner Atlas já existentes para consumo protegido SF; sem mudar engines, seats ou store git. Gerados são produzidos pelo gerador, nunca edita dos manualmente."
+      "purpose": "WP10.T07/S0-A: somente reexports/empacotamento canônico com aresta scanner explicitamente ligada ao subpath native-memory existente; gerar JS/d.ts sem editar bytes. Sem algoritmos, guard/allowlist, engine identities ou novo site de spawn."
     },
     {
       "path": "modules/atlas/boundary/script/build.ts",
       "owner": "WP10",
       "task": "WP10.T07",
       "actor": "S0-A",
-      "purpose": "Export mínimo e empacotamento canônico dos ports/factories/scanner Atlas já existentes para consumo protegido SF; sem mudar engines, seats ou store git. Gerados são produzidos pelo gerador, nunca edita dos manualmente."
+      "purpose": "WP10.T07/S0-A: somente reexports/empacotamento canônico com aresta scanner explicitamente ligada ao subpath native-memory existente; gerar JS/d.ts sem editar bytes. Sem algoritmos, guard/allowlist, engine identities ou novo site de spawn."
     },
     {
       "path": "modules/atlas/boundary/src/business-memory-entry.ts",
       "owner": "WP10",
       "task": "WP10.T07",
       "actor": "S0-A",
-      "purpose": "Export mínimo e empacotamento canônico dos ports/factories/scanner Atlas já existentes para consumo protegido SF; sem mudar engines, seats ou store git. Gerados são produzidos pelo gerador, nunca edita dos manualmente."
+      "purpose": "WP10.T07/S0-A: somente reexports/empacotamento canônico com aresta scanner explicitamente ligada ao subpath native-memory existente; gerar JS/d.ts sem editar bytes. Sem algoritmos, guard/allowlist, engine identities ou novo site de spawn."
     },
     {
       "path": "modules/atlas/boundary/src/generated/business-memory-ports.js",
       "owner": "WP10",
       "task": "WP10.T07",
       "actor": "S0-A",
-      "purpose": "Export mínimo e empacotamento canônico dos ports/factories/scanner Atlas já existentes para consumo protegido SF; sem mudar engines, seats ou store git. Gerados são produzidos pelo gerador, nunca edita dos manualmente."
+      "purpose": "WP10.T07/S0-A: somente reexports/empacotamento canônico com aresta scanner explicitamente ligada ao subpath native-memory existente; gerar JS/d.ts sem editar bytes. Sem algoritmos, guard/allowlist, engine identities ou novo site de spawn."
     },
     {
       "path": "modules/atlas/boundary/src/generated/business-memory-ports.d.ts",
       "owner": "WP10",
       "task": "WP10.T07",
       "actor": "S0-A",
-      "purpose": "Export mínimo e empacotamento canônico dos ports/factories/scanner Atlas já existentes para consumo protegido SF; sem mudar engines, seats ou store git. Gerados são produzidos pelo gerador, nunca edita dos manualmente."
+      "purpose": "WP10.T07/S0-A: somente reexports/empacotamento canônico com aresta scanner explicitamente ligada ao subpath native-memory existente; gerar JS/d.ts sem editar bytes. Sem algoritmos, guard/allowlist, engine identities ou novo site de spawn."
     },
     {
       "path": "modules/atlas/boundary/test/business-memory-ports.test.ts",
       "owner": "WP10",
       "task": "WP10.T07",
       "actor": "S0-A",
-      "purpose": "Export mínimo e empacotamento canônico dos ports/factories/scanner Atlas já existentes para consumo protegido SF; sem mudar engines, seats ou store git. Gerados são produzidos pelo gerador, nunca edita dos manualmente."
+      "purpose": "WP10.T07/S0-A: somente reexports/empacotamento canônico com aresta scanner explicitamente ligada ao subpath native-memory existente; gerar JS/d.ts sem editar bytes. Sem algoritmos, guard/allowlist, engine identities ou novo site de spawn."
+    },
+    {
+      "path": "modules/atlas/packages/adapter-io/src/native-bound.ts",
+      "owner": "WP10",
+      "task": "WP10.T07",
+      "actor": "S0-A",
+      "purpose": "WP10.T07/S0-A: somente reexports/empacotamento canônico com aresta scanner explicitamente ligada ao subpath native-memory existente; gerar JS/d.ts sem editar bytes. Sem algoritmos, guard/allowlist, engine identities ou novo site de spawn."
+    },
+    {
+      "path": "modules/atlas/boundary/src/generated/native-memory.js",
+      "owner": "WP10",
+      "task": "WP10.T07",
+      "actor": "S0-A",
+      "purpose": "WP10.T07/S0-A: somente reexports/empacotamento canônico com aresta scanner explicitamente ligada ao subpath native-memory existente; gerar JS/d.ts sem editar bytes. Sem algoritmos, guard/allowlist, engine identities ou novo site de spawn."
+    },
+    {
+      "path": "modules/atlas/boundary/src/generated/native-memory.d.ts",
+      "owner": "WP10",
+      "task": "WP10.T07",
+      "actor": "S0-A",
+      "purpose": "WP10.T07/S0-A: somente reexports/empacotamento canônico com aresta scanner explicitamente ligada ao subpath native-memory existente; gerar JS/d.ts sem editar bytes. Sem algoritmos, guard/allowlist, engine identities ou novo site de spawn."
     }
   ],
   "resolution_order": "Uma exceção exata listada para WP10 prevalece sobre o prefixo excluído correspondente. Todas as demais exclusões continuam válidas. Fora disso, arquivos existentes exatos e novos prefixos concedem escrita somente ao dono indicado; ausência significa somente leitura.",
@@ -392,9 +416,12 @@
       "operation": "add_exact_existing_files",
       "paths": [
         "modules/atlas/boundary/package.json",
-        "modules/atlas/boundary/script/build.ts"
+        "modules/atlas/boundary/script/build.ts",
+        "modules/atlas/packages/adapter-io/src/native-bound.ts",
+        "modules/atlas/boundary/src/generated/native-memory.js",
+        "modules/atlas/boundary/src/generated/native-memory.d.ts"
       ],
-      "reason": "Workspace raiz não resolve packages Atlas diretamente; subpath atual não expõe custom DurableMemory. Exceção somente de packaging/export/build, sem engines/identity/guard edits."
+      "reason": "WP10.T07/S0-A: somente reexports/empacotamento canônico com aresta scanner explicitamente ligada ao subpath native-memory existente; gerar JS/d.ts sem editar bytes. Sem algoritmos, guard/allowlist, engine identities ou novo site de spawn."
     },
     {
       "owner": "WP10",
@@ -878,7 +905,10 @@
       "branch": "sf2-atlas",
       "existing_files": [
         "modules/atlas/boundary/package.json",
-        "modules/atlas/boundary/script/build.ts"
+        "modules/atlas/boundary/script/build.ts",
+        "modules/atlas/packages/adapter-io/src/native-bound.ts",
+        "modules/atlas/boundary/src/generated/native-memory.js",
+        "modules/atlas/boundary/src/generated/native-memory.d.ts"
       ],
       "new_files": [
         "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
@@ -887,7 +917,9 @@
         "modules/atlas/boundary/src/business-memory-entry.ts",
         "modules/atlas/boundary/src/generated/business-memory-ports.js",
         "modules/atlas/boundary/src/generated/business-memory-ports.d.ts",
-        "modules/atlas/boundary/test/business-memory-ports.test.ts"
+        "modules/atlas/boundary/test/business-memory-ports.test.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts"
       ],
       "new_prefixes": [
         "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/",

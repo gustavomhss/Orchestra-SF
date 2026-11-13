@@ -255,7 +255,8 @@
         "Fixar que gráficos consomem projeções, imports simulam o mesmo comando e rotinas encerram em resultados revisáveis.",
         "Especificar C08 de estado durável de produto: preferências, C05, C06, recibos C04/C07 e correlações; definir formato versionado, migração aditiva e sem efeito quando repetida, versão esperada e aplicação atômica pelo store existente. WP10.T01 é o provider; não abrir uma frente de infraestrutura.",
         "Congelar C15/C16/C17 e matriz completa 5 perfis/18 skills/8 packs/39 operações/6 provas; publicar schemas e owner/export/path/consumidor.",
-        "Ratificar seam MCP privado via Tools/Tool.Context e as exceções exatas de empacotamento Atlas antes da edição; conservar scopes/cálculos/domínios originais."
+        "Ratificar seam MCP privado via Tools/Tool.Context e as exceções exatas de empacotamento Atlas antes da edição; conservar scopes/cálculos/domínios originais.",
+        "Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16."
       ],
       "inputs": [
         "Matriz WP00.T01",
@@ -304,6 +305,11 @@
           "id": "WP00.T02.CHK.12",
           "text": "Business template mappings passam validators reais no build; owners não são seats/PRs fictícios.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP00.T02.CHK.60",
+          "text": "Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16. Registrar entrada, binding/skill, saída, efeito de domínio e consumidor no mesmo candidato.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -317,6 +323,11 @@
             "id": "WP00.T02.DOD.10",
             "text": "C15–C17 e manifestos completos são aceitos por WP10/WP12/WP06/WP14 antes de construir dependência.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP00.T02.DOD.60",
+            "text": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
+            "status": "NOT_RUN"
           }
         ],
         "invariants": [
@@ -329,6 +340,11 @@
             "id": "WP00.T02.INV.10",
             "text": "Não retirar produto/autoridade/critério; nenhum ID de perfil vira principal ou seat técnico.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP00.T02.INV.60",
+            "text": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
+            "status": "NOT_RUN"
           }
         ],
         "quality_standards": [
@@ -340,6 +356,11 @@
           {
             "id": "WP00.T02.QLT.10",
             "text": "Contrato nomeia producer/export/path/consumidor e falhas observáveis, sem 'binding futuro' indefinido.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP00.T02.QLT.60",
+            "text": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
             "status": "NOT_RUN"
           }
         ],
@@ -358,6 +379,11 @@
             "id": "WP00.T02.CMP.10",
             "text": "5 perfis,18 skills,8 packs,39 operações,6 provas e empacotamento Atlas têm fechamento rastreável.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP00.T02.CMP.60",
+            "text": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
+            "status": "NOT_RUN"
           }
         ],
         "success_criteria": [
@@ -369,6 +395,11 @@
           {
             "id": "WP00.T02.SUC.10",
             "text": "Builder consegue produzir código compatível e consumidor consegue rejeitar substitutos sem uso real.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP00.T02.SUC.60",
+            "text": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
             "status": "NOT_RUN"
           }
         ]

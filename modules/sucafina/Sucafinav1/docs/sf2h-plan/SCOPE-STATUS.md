@@ -18,6 +18,6 @@ A baseline examinada é `9e4f3d35833f9b2cea6abdf58f42331f3973d9bf`. O dev observ
 
 ## Estado de revisão e execução
 
-O checkpoint `ec9d36da2385007b64a0aa627582ce7e60629a44` foi julgado na rodada 1; `5e6510cf5f514d30116d989ef27ee529b02f3184` preservou esses pareceres. A rodada 1 encontrou 8 P1 e 2 P2 brutos, consolidados em seis frentes P1 e dois ajustes P2. As correções agora estão aplicadas, pendentes da decisão independente da rodada 2.
+O checkpoint `ec9d36da2385007b64a0aa627582ce7e60629a44` foi julgado na rodada 1; `5e6510cf5f514d30116d989ef27ee529b02f3184` preservou esses pareceres. A rodada 1 encontrou 8 P1 e 2 P2 brutos, consolidados em seis frentes P1 e dois ajustes P2. Os três revisores da rodada 2 fecharam os dez achados originais no candidato 38986380cd7b5697c0be30c1f55d43eddee63045. Dois P1 e um P2 novos foram corrigidos neste candidato; a rechecagem independente permanece pendente.
 
 O resultado `PLAN_STRUCTURE_PASS` aplica-se ao hash da campanha em `validation.json`, incluindo a reconciliação residente. Verifica estrutura e consistência declaradas; não certifica algoritmos, APIs de runtime, UX real ou duração. Nenhum teste de implementação, inferência, MCP de negócio, Relay, Atlas empresarial ou CI de produto é declarado executado. Esses estados permanecem NOT_RUN.

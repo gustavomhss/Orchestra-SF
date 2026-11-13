@@ -331,7 +331,8 @@
       "ContributionEnvelope conserva runId, nativeSessionId, profile/skill+versão, sourceDigest, instructionsDigest, loadedMessageId, actualModel, contextFingerprint, evidenceRefs, accessRevision e outputRef persistente. Catálogo/prompt equivalente/SHA sem carga observada não satisfaz C15.",
       "Cada saída C15 tem schema WP00, decoder WP12 e consumidor real. Schema inválido não é ready; needs-input/failed/unavailable/stale/cancelled conservam estado sem conteúdo inventado.",
       "sf_reviewer executa em SessionV2.create nova, sem fork, com run/session distintos do produtor e instruções/skills próprias. Recebe pacote autorizado atual + alvo; reviewerRunId referencia targetRunId/targetOutputDigest. Mesmo modelo disponível é permitido, mesma execução não.",
-      "Persistência de contribuições/memória é delegada a WP10, com CAS de caso e revalidação na volta do modelo. Resultado tardio fica stale recuperável e não sobrepõe versão nova."
+      "Persistência de contribuições/memória é delegada a WP10, com CAS de caso e revalidação na volta do modelo. Resultado tardio fica stale recuperável e não sobrepõe versão nova.",
+      "IntentFrame/FinancialAnalysis podem referenciar ImportManifest C04 por importPreviewRef; analysisBasis=import-preview e domainApplied=false impedem confundir simulação com domínio gravado. DecisionBrief de rotina preserva runRef/resultRef e contribuição persistida; não cria outra aprovação."
     ],
     "proof": "AM01 contém recibo individual de carga+execução+consumo de todas as 18 skills e contribuição pertinente dos 5 perfis; AM03 exige Revisor próprio e recusa de identidade/scope forjados. Arquivos/nomes/outputs de fixture não fecham."
   },
@@ -459,7 +460,8 @@
       "SkillV2.DirectorySource reservado carrega fontes embarcadas. loadSfSkill verifica manifest pin, path real contido, SHA-256 dos bytes e conteúdo parseado. SessionV2.skill(resume:false) carrega; SessionV2.messages/context prova a mensagem exata antes de prompt. Hash/versão/arquivo divergente impede job.",
       "Digests reais são obrigatórios no build e recibos. No plano, required-at-build é explícito e SHA não é inventado. Probe/final gate rejeitam missing, placeholder e hash sem bytes.",
       "Cada skill produz tipo declarado persistido C11/C09 e consumido após reload. Chat, catálogo, arquivo e trace sem consumerRef não encerram aceite.",
-      "Revisor usa execução própria com fontes atuais e alvo; sem autoridade adicional, mutação de domínio ou aprovação. Orçamento é máximo, não obrigação de convocar todos."
+      "Revisor usa execução própria com fontes atuais e alvo; sem autoridade adicional, mutação de domínio ou aprovação. Orçamento é máximo, não obrigação de convocar todos.",
+      "operation_call_routes declara uma rota perfil+skill carregada para cada operação MCP. A validação rejeita ferramentas sem concessão efetiva em ao menos uma skill; catálogo e chamada direta não abrem exceção à autoridade C16."
     ],
     "type_shapes": {
       "ResidentProfile": "{id,version,mission,allowedSkills,allowedOperations,outputTypes,contextBudgetTokens,maxSteps,maxDelegations,modelClass,resumePolicy,sourcePath,sourceDigest}",
@@ -549,7 +551,8 @@
       "Destino repete Application.authenticate com Request real retido só no host e roleMap/access corrente. Não reconstruir Request/credencial a partir de actorId. Domínio conserva autorização final, CAS/locks e C03/C12; nenhum cálculo paralelo.",
       "Lease máxima de 5 min termina ao cancelar/finalizar, mudar caso/profile/manifest ou revogar. Operação longa revalida egress. Restart não reidrata credencial/grant: retoma com autenticação nova. C07 usa autoridade revalidável da admissão nativa, nunca perfil como usuário.",
       "Egress revalida escopo/fontes antes de modelo, UI, memória ou arquivo. Stale/denied não vaza conteúdo. Recibo registra operation, handler/export, input/result digests, versões, principal opaco, run/call/generation sem credenciais.",
-      "sf_routine_run aceita só admissão real vigente. Nenhum pack expõe approve/apply genérico, alteração de papel ou envio externo."
+      "sf_routine_run aceita só admissão real vigente. Nenhum pack expõe approve/apply genérico, alteração de papel ou envio externo.",
+      "Chamadas diretas de prova atravessam o mesmo wrapper/binding com SkillLoadReceipt válido; não há ingresso sem skill. Para rotinas, HostBoundEntryMode é fixado pelo host: interactive pode preparar e executar somente com admissão C07; routine-result bloqueia prepare/run e só consulta o run autorizado, impedindo recursão."
     ],
     "type_shapes": {
       "TrustedExecutionBinding": "{installationId,hostId,projectId,locationId,nativeSessionId,runId,caseId,caseVersion,caseIncarnation,principalRef,profileId,profileVersion,manifestDigest,skillReceipts,policyVersion,accessRevision,providerGeneration,expiresAt}",
@@ -640,10 +643,13 @@
       "Persistência reside apenas no namespace protegido __sfProductV1.atlas de Snapshot dashboard existente. Todas as entradas passam por port WP10; namespace nunca vai a JSON business exports, logs/git, browser snapshots, prompts sem ACL ou mensagens de erro. Auditoria pública usa ids/digests/estado, não conteúdo sensível.",
       "DurableMemory é síncrono e snapshot-local; façade não possui I/O async. read folda log já hidratado/validado; append só acrescenta evento canônico ao snapshot em staging. Um await Persistence.transaction externo é a única fronteira de durabilidade; só depois pode existir MemoryWriteReceipt committed.",
       "Transação serializa leitura da partição, cap/admissão/scanner, append, índice de refs, chave idempotente e outbox acknowledgment. callback ocorre uma vez, sem retry cego, e sem transações aninhadas. Concorrência de writers não perde evento nem admite sobre-cap; falha/cancelamento/commit=false deixa zero evento novo após restart.",
-      "createMemoryEmit/createMemoryRead são imports reais de @orchestra/atlas-boundary/business-memory-ports. A nova entry só reexporta módulos existentes; build.ts gera bundle/d.ts e check:generated detecta drift. Sem import runtime direto @atlas/* fora do workspace, sem substituto homônimo.",
-      "Scanner é obrigatório e nomeado: host fixa spec/path/version de gitleaks ou trufflehog existente/pinado. runScanner clean=>false, hit=>true, could-not-run=>throw; createMemoryEmit retorna scanner-unavailable para ausência/timeout/exceção, scanner-blocked para hit. Erro não inclui trecho secreto. Nenhum scanner sempre-clean ou regex improvisado qualifica.",
+      "createMemoryEmit/createMemoryRead, validators/fold e tipos vêm de @orchestra/atlas-boundary/business-memory-ports por reexports diretos dos arquivos canônicos; essa entry não exporta scanner nem importa o barrel adapter-io. O factory memory-emit tem uma dependência runtime NO_SCANNER_NAME → scanner.js: somente o descritor business-memory-ports resolve essa aresta exata como external @orchestra/atlas-boundary/native-memory. A constante continua vindo do scanner canônico; não depender de tree-shaking, copiar literal, criar shim ou alterar engine.",
+      "Scanner obrigatório e nomeado é importado por SF atlas-scanner.ts exclusivamente de @orchestra/atlas-boundary/native-memory. native-bound.ts recebe apenas reexports aditivos de detectAvailableScanner/runScanner/KNOWN_SCANNERS/NO_SCANNER_NAME e tipos ScannerBinarySpec/ScanVerdict de ./scanner.js; createNativeMemory e seus exports bound preservam identidade, assinatura e comportamento. Essa entry não passa a exportar factories de memória sem binding. O host fixa spec/path/version confiáveis; modelo não fornece comandos/argv/timeout. clean=>false, hit=>true, could-not-run=>throw; ausência/timeout/erro não admite append.",
       "Cache key inclui installation/project/principal + accessRevision/policyVersion + scope/owner + sourceVersions/incarnations + boundary/schema/manifest/skill versions. Toda chamada revalida revisões; evento de revogação invalida índice/cache/leases, e fonte inacessível não permanece em prompt, arquivo ou link.",
-      "Busca documental mantém backend RAG/documental e memória usa Atlas. Paridade requer o consumidor real, instrumentação do módulo/bundle, commit/read após restart e recusa em dois atores usando mesmo perfil."
+      "Busca documental mantém backend RAG/documental e memória usa Atlas. Paridade requer o consumidor real, instrumentação do módulo/bundle, commit/read após restart e recusa em dois atores usando mesmo perfil.",
+      "O gerador canônico produz os dois pares JS/d.ts. O novo bundle tem zero imports/exports-from/require/dynamic-import de módulos de spawn, zero computed imports e nenhuma implementação de scanner; a ligação literal à native-memory é verificável. Scanner continua no site generated/native-memory.js já admitido pelo guard, sem ampliar allowlist ou permissões. Native-bound mantém o isolamento de owner/root de suas APIs de memória.",
+      "ATLAS-PACKAGE exige geração, check:generated, typecheck, inspeção AST do bundle e bun run check:spawn-imports na raiz do candidato, com guard e allowlist inalterados. O nome lógico check:spawns não autoriza inventar script; o comando real é check:spawn-imports. Ausência de executor/prova mantém NOT_RUN/HOLD; nenhum teste de produto foi executado nesta correção do plano.",
+      "Nove caminhos Atlas exatos pertencem a WP10.T07/S0-A: seis já previstos e native-bound.ts + generated/native-memory.js/.d.ts. Gerados nunca são editados manualmente; alterações de guard/allowlist, scanner.ts, memory-emit.ts e native-memory.ts são proibidas."
     ],
     "type_shapes": {
       "BusinessEvidenceRef": "{schema:'sf-evidence-v1',refId,installationId,projectId,kind:'record'|'document'|'calculation'|'receipt'|'case-event'|'policy',target:variant,refDigest,evidenceLevel:'observed'|'claim'|'assumption'|'proposal'|'decision'}",
@@ -785,12 +791,26 @@
           "versioned",
           "respawnFromRecord",
           "memoryKindOf",
-          "validate",
+          "validate"
+        ],
+        "runtime_import": "@orchestra/atlas-boundary/business-memory-ports",
+        "source_policy": "Named exports from memory-read.ts, memory-emit.ts and pure memory/kernel modules; DurableMemory/MemoryRead only export type from memory-store.ts; never adapter-io/src/index.ts."
+      },
+      {
+        "owner_task": "WP10.T07",
+        "path": "modules/atlas/packages/adapter-io/src/native-bound.ts",
+        "exports": [
           "detectAvailableScanner",
           "runScanner",
+          "KNOWN_SCANNERS",
           "NO_SCANNER_NAME"
         ],
-        "runtime_import": "@orchestra/atlas-boundary/business-memory-ports"
+        "type_exports": [
+          "ScannerBinarySpec",
+          "ScanVerdict"
+        ],
+        "runtime_import": "@orchestra/atlas-boundary/native-memory",
+        "policy": "Additive reexports from ./scanner.js only; preserve existing bound exports; never export createMemoryEmit/createMemoryRead/createDurableMemory here."
       }
     ],
     "proof": "AM05 e AM03 exigem real Atlas module trace, append/recall após reinício, efeitos idempotentes, dois atores no mesmo perfil, owner omitido/forjado, revogação de campo/registro, import com mesma ID/nova encarnação, scanner hit/ausente/timeout e falha pré/pós commit. Nenhuma fixture ou memória própria substitui esta prova."

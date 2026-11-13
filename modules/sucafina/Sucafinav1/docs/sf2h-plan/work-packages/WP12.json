@@ -373,7 +373,8 @@
         "Executar jornadas distintas Finance/Compras/Portfólio/Maestro, persistir outputs C11 e vincular consumidores; garantir critique input próprio para T03.",
         "A criação de conteúdo começa pelo contrato C15 em 10; a fase runtime de interpretação 25-42 exige AI-CATALOG-PORT(T01) publicado 25. Isso substitui a dependência serial de T01 para a autoria de arquivos, sem dispensar sua saída real.",
         "Montar o manifest final com cinco perfis e dezoito fontes após receber commits/leases de S1 em 29 e S3 em 38. Verificar schema, operações permitidas, exemplos de aceite/recusa, versões e digest calculado; nenhum placeholder entra em bundle carregado.",
-        "AI-CATALOG-PORT T+25 é a interface de construção, não o bundle completo. Execução real das 18 skills exige AI-CATALOG/AI-FULL T+42 e ocorre na proof_window 42-75; não declarar contribuição de uma fonte ainda não empacotada."
+        "AI-CATALOG-PORT T+25 é a interface de construção, não o bundle completo. Execução real das 18 skills exige AI-CATALOG/AI-FULL T+42 e ocorre na proof_window 42-75; não declarar contribuição de uma fonte ainda não empacotada.",
+        "Distribuir as concessões e workflows concretos de dashboard_read, import_preview e routine_catalog/prepare/run/status/result nas skills nomeadas. UI e manifests usam os mesmos grants."
       ],
       "inputs": [
         "C01",
@@ -434,6 +435,11 @@
           "id": "WP12.T02.CHK.41",
           "text": "A fase runtime 25-42 só começa com AI-CATALOG-PORT T+25; fontes podem ser autoras antes por C15.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP12.T02.CHK.60",
+          "text": "Distribuir as concessões e workflows concretos de dashboard_read, import_preview e routine_catalog/prepare/run/status/result nas skills nomeadas. UI e manifests usam os mesmos grants. Registrar entrada, binding/skill, saída, efeito de domínio e consumidor no mesmo candidato.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -452,6 +458,11 @@
             "id": "WP12.T02.DOD.40",
             "text": "Conteúdo 17 skills restantes/manifestfull e interpretação reais comshasfornecidos.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP12.T02.DOD.60",
+            "text": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. Distribuir as concessões e workflows concretos de dashboard_read, import_preview e routine_catalog/prepare/run/status/result nas skills nomeadas. UI e manifests usam os mesmos grants.",
+            "status": "NOT_RUN"
           }
         ],
         "invariants": [
@@ -468,6 +479,11 @@
           {
             "id": "WP12.T02.INV.40",
             "text": "Nenhum writer edita fonte sob lease de outro; retorno de inferência não substitui autorização determinística.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP12.T02.INV.60",
+            "text": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. Distribuir as concessões e workflows concretos de dashboard_read, import_preview e routine_catalog/prepare/run/status/result nas skills nomeadas. UI e manifests usam os mesmos grants.",
             "status": "NOT_RUN"
           }
         ],
@@ -486,6 +502,11 @@
             "id": "WP12.T02.QLT.40",
             "text": "Manifest referencia fonte transportada/hashada e saída consumível, não apenas nomes.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP12.T02.QLT.60",
+            "text": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. Distribuir as concessões e workflows concretos de dashboard_read, import_preview e routine_catalog/prepare/run/status/result nas skills nomeadas. UI e manifests usam os mesmos grants.",
+            "status": "NOT_RUN"
           }
         ],
         "completeness_criteria": [
@@ -503,6 +524,11 @@
             "id": "WP12.T02.CMP.40",
             "text": "Todas 18 skills possuem execução AM01 positiva e recusa/limitepertinentes; perfis completos, parciais e ausentes cobertos.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP12.T02.CMP.60",
+            "text": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. Distribuir as concessões e workflows concretos de dashboard_read, import_preview e routine_catalog/prepare/run/status/result nas skills nomeadas. UI e manifests usam os mesmos grants.",
+            "status": "NOT_RUN"
           }
         ],
         "success_criteria": [
@@ -519,6 +545,11 @@
           {
             "id": "WP12.T02.SUC.40",
             "text": "Análises de especialistas alteram objetos persistentes e o Revisor é uma execução separada.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP12.T02.SUC.60",
+            "text": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. Distribuir as concessões e workflows concretos de dashboard_read, import_preview e routine_catalog/prepare/run/status/result nas skills nomeadas. UI e manifests usam os mesmos grants.",
             "status": "NOT_RUN"
           }
         ]

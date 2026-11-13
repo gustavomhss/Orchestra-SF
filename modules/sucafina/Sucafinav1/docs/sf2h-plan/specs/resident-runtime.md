@@ -62,10 +62,10 @@ Os budgets são limites do trabalho, não obrigação de preencher contexto. Mae
 
 | Skill | Perfil(s) | Saída canônica | Consumidores |
 | --- | --- | --- | --- |
-| sf-enquadrar-decisao | sf_maestro | IntentFrame, AnalysisPlan | WP11.T01, WP01.T05 |
-| sf-preparar-revisao-executiva | sf_maestro | DecisionBrief | WP07.T01, WP07.T02, WP01.T05 |
+| sf-enquadrar-decisao | sf_maestro | IntentFrame, AnalysisPlan | WP11.T01, WP01.T05, WP06.T03 |
+| sf-preparar-revisao-executiva | sf_maestro | DecisionBrief | WP07.T01, WP07.T02, WP01.T05, WP09.T01, WP09.T02, WP09.T07 |
 | sf-coordenar-perguntas | sf_maestro | QuestionProposal | WP08.T02, WP08.T06, WP01.T04, WP01.T05 |
-| sf-explicar-forecast | sf_finance | FinancialAnalysis | WP01.T05, WP05.T01, WP09.T03 |
+| sf-explicar-forecast | sf_finance | FinancialAnalysis | WP01.T05, WP05.T01, WP09.T03, WP06.T03 |
 | sf-comparar-cenarios | sf_finance | ScenarioComparison | WP01.T05, WP05.T05, WP11.T02 |
 | sf-avaliar-sensibilidade | sf_finance | SensitivityResult | WP05.T05, WP01.T05 |
 | sf-comparar-sourcing | sf_procurement | CommercialComparison | WP01.T05, WP09.T04 |
@@ -166,9 +166,9 @@ O host fixa binário/spec/path/versão de gitleaks ou trufflehog. A prova usa sc
 
 O workspace da raiz contém @orchestra/atlas-boundary, não os packages internos @atlas. O subpath native-memory existente compõe store ligado a repositório e não expõe as factories com DurableMemory customizável. Importá-las diretamente do package interno seria uma seam inexistente no produto. Fontes: [modules/atlas/boundary/package.json](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/boundary/package.json), [modules/atlas/packages/adapter-io/src/native-bound.ts](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/native-bound.ts) e [package.json](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/package.json).
 
-A exceção mínima aprovada no plano é de empacotamento: boundary/package.json e script/build.ts, nova src/business-memory-entry.ts, dois artefatos generated e um teste focal. A entry só reexporta factories/types/validators/fold/scanner reais. O gerador existente conserva sua resolução @atlas, bundle, declarações e check de determinismo. Não se alteram templates, gates, engine ou identidades. Fonte: [modules/atlas/boundary/script/build.ts](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/boundary/script/build.ts).
+A exceção de empacotamento possui nove caminhos Atlas exatos sob WP10.T07/S0-A. A business entry expõe somente factories/types/validators/fold; o scanner real é reexportado aditivamente por native-bound.ts e consumido pelo subpath público native-memory. O gerador preserva os descritores atuais e resolve somente a dependência literal memory-emit.ts → ./scanner.js do bundle business-memory-ports como external para native-memory. Assim a constante NO_SCANNER_NAME continua canônica e nenhum novo bundle incorpora código de subprocesso. São gerados dois pares JS/d.ts; AST e check:spawn-imports verificam a rota sem modificar guard/allowlist. Detalhes e fontes em [atlas-packaging.md](atlas-packaging.md). Não se alteram templates, algoritmos, gates ou identidades. Fonte: [modules/atlas/boundary/script/build.ts](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/boundary/script/build.ts).
 
-WP10.T07 produz @orchestra/atlas-boundary/business-memory-ports. A receita inclui generate, check:generated, typecheck, test e o import de produção SF; arquivos gerados não são escritos manualmente.
+WP10.T07 produz @orchestra/atlas-boundary/business-memory-ports. A receita inclui generate com admissão AST, check:generated, check:spawn-imports, typecheck, test e os imports de produção SF; arquivos gerados não são escritos manualmente.
 
 ## 5. Divisão de trabalho e caminho de prova
 
@@ -248,3 +248,12 @@ Esses são defeitos verificáveis de planejamento/implementação, não autoriza
 | [modules/rag-studio/src/index.ts](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/rag-studio/src/index.ts) | Exports públicos withStore/parseSource/searchWords/openRevision/readRevision/citationProof estão disponíveis. |
 | [modules/rag-studio/src/extract.ts](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/rag-studio/src/extract.ts) | extract aceita path e trata PDF digital; outros arquivos viram texto bruto, logo DOCX exige normalização própria. |
 | [modules/rag-studio/package.json](https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/rag-studio/package.json) | Pacote público expõe raiz e ./extract e é workspace existente; unpdf é dependência real. |
+
+
+## Cobertura autorizada das 39 operações
+
+`resident_ai.operation_call_routes` nomeia uma rota positiva para cada operação: perfil, skill carregada, schema de entrada, produtor, saída, consumidores e AM02. A chamada direta do harness passa pelo wrapper C16 com o mesmo `SkillLoadReceipt` e binding; não existe uma porta especial sem skill. O validador recusa uma operação anunciada que nenhuma combinação perfil/skill consiga chamar.
+
+`sf-produzir-bi-contextual` usa `sf_dashboard_read` como origem autorizada da visão. `sf-enquadrar-decisao` e `sf-explicar-forecast` podem usar `sf_import_preview` na entrada opcional de análise de um arquivo admitido. O output mantém `importPreviewRef`; o consumidor abre o mesmo manifesto C04 com deltas, erros e indicação de simulação. Nenhuma dessas skills recebe ferramenta de aplicação de importação.
+
+`sf-preparar-revisao-executiva`, sob `sf_maestro`, conecta catálogo, proposta, execução admitida, status e resultado de rotinas. Sem admissão C07 atual, o resultado é `needs-input`/proposta e o run termina; a resposta humana inicia novo run. O host fixa `HostBoundEntryMode`: `interactive` pode preparar e executar mediante admissão; `routine-result` bloqueia prepare/run para impedir recursão. Esse modo não é um argumento controlado pelo modelo. AM06 exige o percurso real e a contraprova de loop recusado.

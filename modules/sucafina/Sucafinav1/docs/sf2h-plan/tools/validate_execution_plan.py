@@ -40,6 +40,13 @@ def validate_execution(plan, require, tasks, definitions, evidence_ids):
                 'HANDOFF_TIME', ident, 'Consumption cannot precede its produced output')
         require(row.get('status') == 'PLANNED_NOT_PRODUCED', 'HANDOFF_FALSE_COMPLETION', ident,
                 'A planning handoff has not been produced by the product')
+    for interface in plan['resident_handoff_interfaces']:
+        matches = [row for row in handoffs.values()
+                   if row['producer_task'] == interface['producer_task']
+                   and row['ready_minute'] == interface['ready_checkpoint']
+                   and interface['path'] in [path.split('::', 1)[0].split('#', 1)[0] for path in row.get('artifacts', [])]]
+        require(bool(matches), 'HANDOFF_INTERFACE_DRIFT', interface['export'],
+                'The resident interface path, producer and checkpoint must match a canonical output handoff')
     for row in plan['task_output_dependencies']:
         require(row['consumer_task'] in tasks, 'PHASE_TASK', row['consumer_task'], 'Consumer task must exist')
         for refs_key, window_key in [('requires', 'window'), ('full_runtime_requires', 'full_runtime_window')]:

@@ -1,0 +1,195 @@
+{
+  "review_id": "R2-PRODUCT-3898638",
+  "reviewer": "Revisor adversarial independente de produto, UX e completude (/root/sf_formal2_product)",
+  "reviewed_commit": "38986380cd7b5697c0be30c1f55d43eddee63045",
+  "branch": "sf-product-plan",
+  "repository": "gustavomhss/Orchestra-SF",
+  "code_baseline": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "focus": "Escopo 28 capacidades/R01–R41/IA01–IA18/J01–J13; cinco perfis e dezoito skills com uso persistido; C06 materialidade/CAS; C10 omissão/dupla contagem; WP06–WP09; navegação/estados/uso real e autoridade.",
+  "snapshot_provenance": {
+    "frozen_copy": "/workspace/scratch/838a0195183d/sf2h-candidate-3898638",
+    "supplied_receipt": "/workspace/scratch/838a0195183d/sf2h-work/candidate-3898638.json",
+    "supplied_receipt_observation": "Recibo da integradora identifica o SHA exato e 98 blobs com git_blob_sha1_match=true. O revisor leu o recibo; não reivindica ter repetido a conferência integral de blobs."
+  },
+  "method": [
+    "Leitura inicial dos protocolos geral/rodada 2 e do parecer de produto da rodada 1.",
+    "Leitura de contratos, matriz de consumo integral, produtores/consumidores e provas; consultas jq/rg somente para inspeção dos artefatos de planejamento.",
+    "Consulta primária de src/nav.ts e index.ts na baseline exata exclusivamente por GitHub MCP.",
+    "Sem autoria no candidato, sem leitura dos pareceres dos outros revisores, sem edição do candidato/GitHub, sem implementação ou execução de testes de produto."
+  ],
+  "examined_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/formal-review/round-2/PROTOCOL.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/formal-review/PROTOCOL.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/formal-review/round-1/product.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/formal-review/round-1/product.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/README.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/SCOPE-STATUS.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/AGENTS-ATLAS-MCP.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/sources/AI-PRODUCT-VISION.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/coverage.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/resident-ui-consumption.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/agents-atlas-mcp.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/resident-proof-plan.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/evidence-plan.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/proof-map.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP00.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP01.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP02.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP03.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP04.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP05.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP06.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP07.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP08.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP09.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP10.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP11.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP12.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP13.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP14.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP06.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP07.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP08.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP09.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/tools/validate_resident_plan.py",
+    "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/src/nav.ts",
+    "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/index.ts"
+  ],
+  "original_findings": [
+    {
+      "id": "P-F01",
+      "original_severity": "P1",
+      "status": "CLOSED",
+      "rationale": "A ausência original de reconciliação/decomposição foi corrigida: RA01–RA06, C15–C17, manifesto 5/18/8, matriz de entrada→perfil/skill→operação→objeto persistido→consumidor e AM01–AM06 agora integram a fonte canônica e tarefas concretas. WP01.T05.CHK.30/31 e WP12.T02.CHK.11 exigem witness por skill e estados adversos; C11/WP12.T03 exigem Revisor em execução própria; C17/WP10.T07/WP14.T02/T05 exigem Atlas real, persistência e consumo após restart. Isso fecha o defeito original de ausência de decomposição, mas não aprova toda a camada: P-R2-01 registra um novo conflito interno das concessões.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/resident-ui-consumption.json: todas as 18 linhas e common",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json: C11/C15/C16/C17",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP01.json: WP01.T05",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP12.json: T01–T04",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP10.json: T06/T07 e T02",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP14.json: T02/T05",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/resident-proof-plan.json: AM01–AM06",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/coverage.json: RA01–RA06"
+      ]
+    },
+    {
+      "id": "P-F02",
+      "original_severity": "P1",
+      "status": "CLOSED",
+      "rationale": "C06 separa ConfirmationRecord imutável, observedSourceVersion, fingerprint de escopo, projeção atual e expectedStorageVersion. Fingerprint inclui dependências pertinentes e ausência/unidades, exclui versão global e campos fora do escopo. O contrato conserva CAS/locks, exige releitura/revalidação no conflito e não promete transação global. WP08.T03 e os consumidores WP08.T04/WP09.T02/T03 concordam: fevereiro independente preserva janeiro e não recobra; janeiro/dependência material gera uma pendência; revogação/substituição têm estados distintos. Os checks e proof-map já não exigem vencimento incondicional por nova versão.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json: C06, linhas 147–159",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json: numeric_oracles[CONFIRM-SCOPE]",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP08.json: T03.CHK.01–05; T04.CHK.20; T06",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP09.json: T02.CHK.02; T03.CHK.20",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/proof-map.json: WP08.T03.CHK.01/INV.03",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/evidence-plan.json: E09/E13"
+      ]
+    },
+    {
+      "id": "P-F03",
+      "original_severity": "P1",
+      "status": "CLOSED",
+      "rationale": "C10 define inventário versionado independente das linhas cadastradas e deriva pending(reason=missing-category) para categoria omitida. included e not-applicable exigem fonte; soma usa identidade de componente uma vez; zero confirmado difere de null/ausência/FX faltante. ScenarioResult/ScenarioComparison e costCoverageRefs são compartilhados por UI, BI, crítica e portfólio. O fixture completo inclui treinamento na implantação; a variante omitida usa outra cotação que o exclui e exige subtotal 210000/total null/conditioned. A confirmação posterior de 40000 leva a 250000, diferença -10000 e limiar 15000 sem reescrever ChoiceRecord. Os valores são oráculos sintéticos planejados, não resultados medidos.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json: C09/C10/C11/C14",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json: numeric_oracles[AI-RENEWAL, AI-RENEWAL-OMITTED-CATEGORY]",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP11.json: T02.CHK.01–03/20–21 e T03.CHK.20",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP05.json: T05.CHK.20",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP12.json: T03.CHK.20",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP13.json: T02.CHK.20 e T03.CHK.20",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP14.json: T01.CHK.20",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/evidence-plan.json: E06/E10/E11/E12"
+      ]
+    },
+    {
+      "id": "P-F04",
+      "original_severity": "P2",
+      "status": "CLOSED",
+      "rationale": "A exclusão global foi substituída pela fronteira local: WP06.T05 implementa obrigatoriamente PDF digital/DOCX/texto; WP09.T04 consome DocumentEvidence C14 e não duplica parser nem confirmação. JSON/Markdown de WP06/WP09, campaign, C14 e J11 são coerentes. Checks cruzados exigem a mesma evidenceRef antes/depois da confirmação, com atualização e revogação alcançando o dossiê. Disposição P2: corrigido no candidato.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json: C14, linhas 420–433",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP06.json e WP06.md: T05.CHK.20",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP09.json e WP09.md: T04.work, INV.20 e CHK.20",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/coverage.json: IA11/J11",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/proof-map.json: WP09.T04.CHK.20"
+      ]
+    }
+  ],
+  "new_findings": [
+    {
+      "id": "P-R2-01",
+      "severity": "P1",
+      "title": "Sete operações publicadas não têm caminho de concessão compatível com a interseção perfil/skill de C16",
+      "requirement": "RA03; AM02/AM06; WP00.T02.CHK.10; WP09.T01.CHK.18; C15/C16; preservação do escopo integral e dos limites de autoridade.",
+      "location": [
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json: resident_ui_consumption.common.allowlist_source (linha 22945); resident_ai.skills[].allowed_operations; resident_ai.mcp_packs[].operations",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json: WP00.T02.CHK.10 (linha 3313) e WP09.T01.CHK.18 (linha 11877)",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json: C16.content, execution_sequence e proof (linhas 543–566 e 608)",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md: sequência normativa e interseção da lease (linhas 21–31)",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/agents-atlas-mcp.json: AM02.skills e positive_checks (linhas 3364–3378)",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/resident-proof-plan.json: AM02.pack_matrix; AM06.checks",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/AGENTS-ATLAS-MCP.md: Seis provas integradas, linha 102"
+      ],
+      "evidence": [
+        "A fonte normativa declara resident_ai.skills[].allowed_operations como a allowlist normativa. A matriz de consumo também exige revalidação de perfil e skill por chamada.",
+        "A sequência normativa exige uma skill carregada; o escopo da lease é a interseção de principal, instalação/projeto/location, sessão/caso, perfil/skill, operação e regra de domínio. C16 exige SkillLoadReceipt válido e não descreve uma modalidade de chamada sem essa interseção.",
+        "A diferença entre as 39 operações dos packs e a união das operações permitidas às 18 skills contém exatamente sete nomes: sf_dashboard_read, sf_import_preview, sf_routine_catalog, sf_routine_prepare, sf_routine_result, sf_routine_run e sf_routine_status. As sete possuem concessão em perfis e produtores, mas nenhuma possui concessão em skill.",
+        "WP09.T01.CHK.18 exige execução positiva das cinco operações de rotina por UI/native/MCP. AM02 exige uma chamada permitida de cada operação, com mesma base/autoridade/handler; C16.proof descreve cobertura das 39 operações. Só sf_watch_prepare, entre as seis operações do pack Routines, aparece em uma allowlist de skill.",
+        "Considerei a defesa expressa em AGENTS-ATLAS-MCP.md:102 e AM02.skills=[]: a prova também usa chamadas diretas e não exige skill artificial. Essa redação não especifica ingresso ou modalidade de autoridade alternativos a C16. Chamar diretamente não resolve, por si só, a ausência de concessão na interseção normativa."
+      ],
+      "reproduction": {
+        "kind": "Inspeção determinística de JSON do plano; não é teste de implementação.",
+        "working_directory": "modules/sucafina/Sucafinav1/docs/sf2h-plan/",
+        "command": "jq '[.resident_ai.mcp_packs[].operations[].id] - [.resident_ai.skills[].allowed_operations[]] | unique' campaign.json",
+        "observed": [
+          "sf_dashboard_read",
+          "sf_import_preview",
+          "sf_routine_catalog",
+          "sf_routine_prepare",
+          "sf_routine_result",
+          "sf_routine_run",
+          "sf_routine_status"
+        ]
+      },
+      "counterexample": "Uma pessoa autorizada solicita uma rotina válida, já publicada e admitida em C07. O host cria o binding de sf_maestro, lê o caso real e carrega qualquer uma das suas sete skills permitidas. sf_routine_catalog e sf_routine_run constam na concessão do perfil, porém não constam na allowlist de nenhuma skill, inclusive fora desse perfil. Aplicar literalmente a interseção C16 recusa a operação antes do handler; trocar ou combinar as 18 skills não altera esse resultado. Uma prova que ignore a skill para produzir o resultado positivo usaria uma exceção que o contrato de chamada não definiu. O mesmo raciocínio vale para as outras cinco operações.",
+      "consequence": "O plano orienta duas saídas incompatíveis: preservar a fronteira e deixar parte do escopo obrigatório sem execução positiva, ou implementar uma exceção de autoridade não contratada para fechar a paridade. É um bloqueio do planejamento integral; não é uma alegação de vazamento ou falha observada em produto implementado.",
+      "verifiable_fix": [
+        "Reconciliar, na fonte canônica, o caminho autorizado de cada uma das sete operações. Vinculá-las a workflows pertinentes das skills existentes e sincronizar as allowlists de perfil/skill, inputs, saídas, consumidores e provas, preservando as 18 skills e o escopo dos 39 handlers.",
+        "Não conceder as operações indiscriminadamente e não tratar um teste direto como bypass da regra de C16. Se a intenção for uma modalidade de controle fora das skills, especificar explicitamente seu ingresso autenticado, sua autoridade, seus limites e sua relação com C16 antes de considerá-la executável; não deixar a exceção implícita.",
+        "Verificar no plano que cada operação tem ao menos um caminho de concessão efetivo coerente, e que chamadas por skill/perfil fora desse caminho são negadas. Regenerar os espelhos e atualizar AM02/AM06.",
+        "Na implementação futura, exigir para as sete operações recibo positivo do caminho real e contraprova negativa com principal/skill não concedidos. sf_routine_run continua exigindo admissão C07 atual. A correção do plano não pode marcar essas provas como executadas."
+      ],
+      "suggested_owner": "WP00.T02 e WP12.T01/T02, com WP10.T06 e WP09.T01; WP02.T01/WP06.T02 para seus consumidores.",
+      "blocking": true,
+      "confidence": 0.93,
+      "material_uncertainty": "Há redação favorável a testes diretos no AM02. O achado permanece porque não existe contrato explícito para que essa modalidade dispense ou substitua a interseção perfil/skill exigida no ingresso único C16."
+    }
+  ],
+  "coverage_observations": [
+    "A matriz contém 28 capacidades, 41 requisitos, 18 capacidades IA e 13 jornadas; os nomes das 16+7+5 capacidades conferem com nav.ts e o registro de index.ts da baseline. Os comportamentos detalhados seguem inventário e gates atribuídos a WP00/WP02–WP04, sem reduzir o produto à renovação.",
+    "WP01 mantém operação direta, busca/visões salvas, contexto de período/versão, teclado/telas estreitas e recuperação de rascunho/conflito; os usuários Finance/HR, contribuidor, requester/buyer/approver e leitores restritos têm contraprovas em jornadas e WPs.",
+    "A matriz residente exige contribuição diferente dos cinco perfis, outputRef persistido e ação observada após reload para cada skill; estados de falta/falha/cancelamento/stale e revogação não geram sucesso fictício.",
+    "WP07 preserva a base da reunião e comentários capturados, anexa o fechamento sem substituir números, exige PPTX/DOCX completos e inspeção de 25 registros/notas longas, com acesso revalidado.",
+    "Uso controlado e métricas de compreensão são critérios futuros de aceite. Adoção, satisfação, economia e a meta de 120 minutos não são apresentados como resultados medidos; implementação permanece NOT_RUN."
+  ],
+  "verdict": "REQUIRES_CHANGES",
+  "verdict_reason": "Os quatro defeitos originais de produto foram reconciliados, mas P-R2-01 mantém um conflito P1 entre as concessões das skills e o caminho normativo exigido para parte das 39 operações.",
+  "severity_counts": {
+    "P0": 0,
+    "P1": 1,
+    "P2": 0
+  },
+  "p2_disposition": "P-F04 corrigido; nenhum P2 novo demonstrável registrado.",
+  "residual_uncertainties": [
+    "Este é um parecer sobre coerência do plano. Nenhuma inferência, UI, MCP empresarial, Relay, Atlas, persistência, exportação ou CI do produto foi executada.",
+    "O catálogo de navegação foi conferido em fontes primárias da baseline; não houve auditoria de todos os comandos/campos do código legado. A paridade fina continua no inventário/provas atribuídos ao plano.",
+    "Compilação e comportamento das APIs de runtime, empacotamento Atlas/RAG, execução da autorização e duração real de trabalho continuam sujeitos à implementação e às revisões especializadas. Nenhuma estimativa foi promovida a medição.",
+    "Qualquer correção posterior ao SHA julgado exige novo candidato e rechecagem; intenção de corrigir não altera este veredicto."
+  ],
+  "implementation_test_status": "NOT_RUN"
+}

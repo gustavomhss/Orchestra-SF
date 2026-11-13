@@ -171,7 +171,8 @@
         "Revalidar capacidade/escopo no início efetivo e na recuperação de resultados/arquivos. Persistir apenas referências e conteúdo autorizado pelo C08 qualificado; links diretos não podem contornar o controle. Corridas de revogação ou falha devolvem estado bloqueado, sem resultado liberado.",
         "Fixar o principal de execução como o ator identificado da solicitação e, em recorrência, seu proprietário explicitamente registrado com permissões atuais. Não herdar privilégios administrativos de serviço; a disponibilidade desse contexto faz parte de C08.",
         "Publicar descritores e handlers de sf_routine_catalog, sf_routine_prepare, sf_routine_run, sf_routine_status, sf_routine_result, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
-        "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
+        "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente.",
+        "Conectar catálogo, preparação, admissão, run/status/result à skill de revisão executiva; admitir pelo C07 real e negar execução sem admissão e recursão do modo routine-result."
       ],
       "inputs": [
         "C07/C08 e prova mínima WP00.T04",
@@ -218,6 +219,11 @@
           "id": "WP09.T01.CHK.18",
           "text": "Executar sf_routine_catalog, sf_routine_prepare, sf_routine_run, sf_routine_status, sf_routine_result pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
           "status": "NOT_RUN"
+        },
+        {
+          "id": "WP09.T01.CHK.60",
+          "text": "Conectar catálogo, preparação, admissão, run/status/result à skill de revisão executiva; admitir pelo C07 real e negar execução sem admissão e recursão do modo routine-result. Registrar entrada, binding/skill, saída, efeito de domínio e consumidor no mesmo candidato.",
+          "status": "NOT_RUN"
         }
       ],
       "axioms": {
@@ -230,6 +236,11 @@
           {
             "id": "WP09.T01.DOD.18",
             "text": "Descritores C16 de sf_routine_catalog, sf_routine_prepare, sf_routine_run, sf_routine_status, sf_routine_result são implementados e consumidos por T06 com referências reais.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP09.T01.DOD.60",
+            "text": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. Conectar catálogo, preparação, admissão, run/status/result à skill de revisão executiva; admitir pelo C07 real e negar execução sem admissão e recursão do modo routine-result.",
             "status": "NOT_RUN"
           }
         ],
@@ -248,6 +259,11 @@
             "id": "WP09.T01.INV.18",
             "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP09.T01.INV.60",
+            "text": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. Conectar catálogo, preparação, admissão, run/status/result à skill de revisão executiva; admitir pelo C07 real e negar execução sem admissão e recursão do modo routine-result.",
+            "status": "NOT_RUN"
           }
         ],
         "quality_standards": [
@@ -259,6 +275,11 @@
           {
             "id": "WP09.T01.QLT.18",
             "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP09.T01.QLT.60",
+            "text": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. Conectar catálogo, preparação, admissão, run/status/result à skill de revisão executiva; admitir pelo C07 real e negar execução sem admissão e recursão do modo routine-result.",
             "status": "NOT_RUN"
           }
         ],
@@ -272,6 +293,11 @@
             "id": "WP09.T01.CMP.18",
             "text": "Cobrir todos os exports desta task (5), caso autorizado, direto proibido, stale e indisponível.",
             "status": "NOT_RUN"
+          },
+          {
+            "id": "WP09.T01.CMP.60",
+            "text": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. Conectar catálogo, preparação, admissão, run/status/result à skill de revisão executiva; admitir pelo C07 real e negar execução sem admissão e recursão do modo routine-result.",
+            "status": "NOT_RUN"
           }
         ],
         "success_criteria": [
@@ -283,6 +309,11 @@
           {
             "id": "WP09.T01.SUC.18",
             "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP09.T01.SUC.60",
+            "text": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. Conectar catálogo, preparação, admissão, run/status/result à skill de revisão executiva; admitir pelo C07 real e negar execução sem admissão e recursão do modo routine-result.",
             "status": "NOT_RUN"
           }
         ]
