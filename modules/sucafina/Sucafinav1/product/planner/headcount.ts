@@ -23,7 +23,7 @@ export function projectHeadcount(snapshot: Snapshot, actor: Actor, _environment:
   const version = projectPlannerSource(snapshot, actor, versionId)
   if (!version) return undefined
   const summary = object(version.summary)
-  const positions = rows(object(version.hc).positions).map((position) => ({ ...position, state: headcountState(position) }))
+  const positions = rows(object(version.hc).positions).map<Record<string, unknown> & { state: HeadcountState }>((position) => ({ ...position, state: headcountState(position) }))
   const domains = [...new Set(positions.map((position) => text(position.domain) || "Unassigned"))]
   return {
     versionId,

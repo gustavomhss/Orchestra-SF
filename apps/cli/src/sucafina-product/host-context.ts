@@ -46,6 +46,7 @@ import { createSfAnalysisAuthorReader } from "./analysis-author.ts"
 import { createSfDecisionCritiqueVerifier } from "./analysis-verifier-review.ts"
 import { createSfIntentVerifier } from "./analysis-verifier-intent.ts"
 import { createSfSourcingVerifier } from "./analysis-verifier-procurement.ts"
+import { createSfSourcingInputs } from "./sourcing-inputs.ts"
 import { createSfScenarioVerifier } from "./analysis-verifier-scenarios.ts"
 import { createSfForecastVerifier, withoutObservationTimes } from "./analysis-verifier.ts"
 import type { BusinessPorts, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
@@ -67,12 +68,14 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
   const requests = new Map<string, Request>()
   const observed = new Map<string, { value: SfLoadedSkillObservation; digest: string }>()
   const proposalCoverageWrites = new WeakSet<object>()
+  const procurementEvidenceWrites = new WeakSet<object>()
+  const preparedAuthority: { business?: ReturnType<typeof createSfBusinessServices> } = {}
   const identity = () => state.identity
   const selectionMatches = (value: SfSelectedRuntime) => validSfSelection(value) && selected.some((parent) =>
     parent.manifestDigest === value.manifestDigest && digestSfValue(parent.profile) === digestSfValue(value.profile) &&
     value.skills.every((skill) => parent.skills.some((allowed) => digestSfValue(allowed) === digestSfValue(skill))) &&
     value.operationIds.every((operation) => parent.operationIds.includes(operation)))
-  const authority = createSfProductAuthority({ ...input, identity, proposalCoverageWrites, policyVersion: "sf-product-v1", grants: input.grants ?? [], createId: randomUUID, now: Date.now,
+  const authority = createSfProductAuthority({ ...input, identity, proposalCoverageWrites, procurementEvidenceWrites, policyVersion: "sf-product-v1", grants: input.grants ?? [], createId: randomUUID, now: Date.now,
     commandIdentity: async (request, operation, digest) => {
       if (request.method === "GET" || request.method === "HEAD") return randomUUID()
       const key = request.headers.get("Idempotency-Key")
@@ -94,6 +97,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
     },
     providerGeneration: async () => await state.models?.() ? state.generation : undefined,
     authorizeDocument: createSfDocumentTargetAuthority(input),
+    authorizePreparedTarget: (request, snapshot, targetRef, actor) => preparedAuthority.business?.procurementDecisions.authorizeReceiptTarget(request, snapshot, targetRef, actor) ?? Promise.resolve(undefined),
   })
   const evidence = createSfNativeEvidenceStore({ state: authority.state, nativeEvidenceWrites: authority.nativeEvidenceWrites,
     persistence: input.persistence, createId: randomUUID, requestForRun: (id) => requests.get(id),
@@ -141,8 +145,10 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
   })
   const imports = createSfImportServices({ runtime: input, authority })
   const documents = createSfDocumentServices({ runtime: input, authority })
-  const business = createSfBusinessServices({ authority, persistence: input.persistence, proposalCoverageWrites, documentRead: documents?.documents.reader,
+  const business = createSfBusinessServices({ authority, persistence: input.persistence, proposalCoverageWrites, procurementEvidenceWrites, documentRead: documents?.documents.reader, documentEvidenceList: documents?.documents.list,
     extraDescriptors: [...imports?.descriptors ?? [], ...documents?.descriptors ?? []] })
+  preparedAuthority.business = business
+  const sourcingInputs = createSfSourcingInputs({ authority, business })
   const documentHttp = createSfDocumentHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() && documents ? { ui: authority.ui, human: authority.human, ...documents } : undefined })
   const importHttp = createSfImportHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() && imports ? { ui: authority.ui, human: authority.human, service: imports } : undefined })
   const monthly = createPlannerMonthlyHost({ host: authority.host, humanAuthorize: (context, action, value) => authority.human.authorize(context, action, value) })
@@ -548,7 +554,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
     })),
   })
   const personalViews = createSfPersonalViews({ host: authority.host, state: authority.state, creationTarget: authority.creationTarget,
-    operationIdentity: authority.ui.operationIdentity, humanAuthorize: (call, action, payload) => authority.human.authorize(call, action, payload),
+    operationIdentity: (call) => call.kind === "ui" ? authority.ui.operationIdentity(call) : undefined, humanAuthorize: (call, action, payload) => authority.human.authorize(call, action, payload),
     authorizeView: async (view, call) => {
       if (Object.keys(view.filters?.selections ?? {}).some((key) => !["year", "own", "execYear", "opsYear", "secYear", "month", "executiveMonth", "operationsMonth", "securityMonth", "opsMonth"].includes(key))) return false
       const request = authority.host.requestFor(call)
@@ -567,7 +573,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
       }, { signal: request.signal })
       return allowed && await authority.host.revalidate(call)
     } })
-  const services: SfHostServices = { ...authority, ...{ procurementSelections: business.procurementSelections, forecastInputs: business.forecastInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents, productHttp: async (request, surface) => await documentHttp(request, surface) ?? await importHttp(request, surface) }, selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
+  const services: SfHostServices = { ...authority, ...{ procurementSelections: business.procurementSelections, forecastInputs: business.forecastInputs, sourcingInputs, work: business.collaboration.work, analyses, plannerMonthly, personalViews, documents: documents?.documents, productHttp: async (request, surface) => await documentHttp(request, surface) ?? await importHttp(request, surface) }, selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
     prepare: async (request) => {
       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }
       if (requests.has(request.runId)) return { status: "conflict", reason: "native-run-already-admitted" }

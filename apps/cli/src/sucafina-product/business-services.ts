@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto"
 import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 import { domain } from "../../../../modules/sucafina/Sucafinav1/runtime/procurement.ts"
-import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+import { object, rows, text } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { Actor } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { CreateSfHostRuntime } from "../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
 import type { Period } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
@@ -9,11 +9,12 @@ import type { ForecastCompareRequest } from "../../../../modules/sucafina/Sucafi
 import type { CapabilityDescriptor } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
-import type { AuthorizedCaseProjection, BusinessContextService, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
-import type { DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
-import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+import type { AuthorizedCaseProjection, BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+import type { DecisionCase, DocumentEvidence } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
+import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
 import type { SfDocumentReader } from "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
+import { resolveSfDocumentEvidence } from "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import { createDashboardPort } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/port.ts"
 import { createDashboardRecordEvidenceHost, createDashboardSourceHost } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/sources.ts"
@@ -26,8 +27,15 @@ import { createDecisionCapabilities } from "../../../../modules/sucafina/Sucafin
 import { createProcurementCollectionRegistry, createProcurementSourceResolver } from "../../../../modules/sucafina/Sucafinav1/product/procurement/sources.ts"
 import { createProcurementSourcingEvidence } from "../../../../modules/sucafina/Sucafinav1/product/procurement/sourcing-evidence.ts"
 import { createProcurementPort } from "../../../../modules/sucafina/Sucafinav1/product/procurement/port.ts"
+import type { ProcurementSourceHost } from "../../../../modules/sucafina/Sucafinav1/product/procurement/port.ts"
 import { createProcurementCapabilities } from "../../../../modules/sucafina/Sucafinav1/product/procurement/capabilities.ts"
 import { createProcurementContractSource } from "../../../../modules/sucafina/Sucafinav1/product/procurement/contracts.ts"
+import { createProcurementConfirmationObserver } from "../../../../modules/sucafina/Sucafinav1/product/procurement/confirmation.ts"
+import { createProcurementCollectionMemberIssuer } from "../../../../modules/sucafina/Sucafinav1/product/procurement/collection-member.ts"
+import { createProcurementDecisionPreparation } from "../../../../modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts"
+import { createProcurementDecisionHost } from "../../../../modules/sucafina/Sucafinav1/product/procurement/decision-host.ts"
+import { createCollaborationHost } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/host.ts"
+import { prepareSourcingDossier } from "../../../../modules/sucafina/Sucafinav1/product/routines/dossier.ts"
 import { sfRunSourceFence } from "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts"
 import { createPlannerProduct, createPlannerCoverageRouter } from "../../../../modules/sucafina/Sucafinav1/product/planner/product.ts"
 import { createPlannerResultPersistence } from "../../../../modules/sucafina/Sucafinav1/product/planner/persistence.ts"
@@ -37,7 +45,7 @@ import { createSfAtlasBusiness } from "../../../../modules/sucafina/Sucafinav1/p
 import type { probeSfAtlasScanner } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts"
 import freeze from "../../../../modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json" with { type: "json" }
 
-export function createSfBusinessServices(input: { authority: ReturnType<typeof createSfProductAuthority>; persistence: Parameters<CreateSfHostRuntime>[0]["persistence"]; proposalCoverageWrites: WeakSet<object>; extraDescriptors?: readonly CapabilityDescriptor[]; documentRead?: SfDocumentReader }) {
+export function createSfBusinessServices(input: { authority: ReturnType<typeof createSfProductAuthority>; persistence: Parameters<CreateSfHostRuntime>[0]["persistence"]; proposalCoverageWrites: WeakSet<object>; procurementEvidenceWrites: WeakSet<object>; extraDescriptors?: readonly CapabilityDescriptor[]; documentRead?: SfDocumentReader; documentEvidenceList?: (documentRef: string, call: TrustedDomainContext) => Promise<PortResult<readonly DocumentEvidence[]>> }) {
   const host = input.authority.host
   const periods = new Map<string, { period: Period; expiresAt: number }>()
   const fences = (snapshots: NonNullable<ReturnType<NonNullable<typeof input.persistence.currentSnapshots>>>) => ({
@@ -75,12 +83,13 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   }
   const registry = createProcurementCollectionRegistry({ host, scopedSources: input.persistence, contextFor })
   const individual = createProcurementSourceResolver({ host, scopedSources: input.persistence, contextFor })
+  const procurementConfirmation = createProcurementConfirmationObserver({ host, scopedSources: input.persistence, contextFor })
   const contracts = createProcurementContractSource({ host, scopedSources: input.persistence })
   const resolveProcurement = async (ref: string, call: TrustedDomainContext) => {
     const selected = await registry.resolveRequestSource(ref, call)
     return selected.status === "unavailable" && selected.reason === "Request unavailable" ? individual.resolve(ref, call) : selected
   }
-  const procurementHost = { ...host, ...registry,
+  const procurementHost: ProcurementSourceHost = { ...host, ...registry,
     resolveRequestSource: resolveProcurement,
     isCurrentRequestSource: (snapshot, evidence) => registry.isCurrentRequestSource(snapshot, evidence) || individual.isCurrent(snapshot, evidence),
     resolveSupplierSource: individual.resolve, isCurrentSupplierSource: individual.isCurrent,
@@ -91,8 +100,23 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const dashboardSources = createDashboardSourceHost({ host, scopedSources: input.persistence })
   const dashboard = createDashboardPort({ host, sources: dashboardSources })
   const evidence: { current?: BusinessContextService } = {}
+  const decisionEvidence: { current?: ReturnType<typeof createProcurementDecisionHost> } = {}
+  const procurementEvidence = {
+    resolve: async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution | undefined> => {
+      const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() })
+      if (ref.kind !== "record" || !ref.refId.startsWith("sf-procurement-c06:")) return decisionEvidence.current?.resolveEvidence(ref, call)
+      if (ref.schema !== "sf-evidence-v1" || ref.target.surface !== "procurement" || ref.target.recordType !== "procurement-request" || !ref.target.period || ref.refDigest !== digestSfEvidenceRef(ref) || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) return unavailable()
+      const first = await procurementConfirmation.resolve(ref.refId, call)
+      if (first.status !== "ok" || digestSfValue(first.value.evidence) !== digestSfValue(ref)) return unavailable()
+      const observed = await procurementConfirmation.observe({ sourceRef: { surface: "procurement", type: "procurement-request", id: ref.target.recordId, incarnation: ref.target.incarnation }, fields: ref.target.fields, period: ref.target.period, materialDependencies: [], scopeDefinitionVersion: "procurement-c06-v1" }, call)
+      const again = await procurementConfirmation.resolve(ref.refId, call)
+      if (observed.state !== "available" || digestSfValue(observed.evidence) !== digestSfValue(ref) || again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(first.value) || !await host.revalidate(call)) return unavailable()
+      return { state: "fresh", ref, currentRef: observed.evidence, authorizedProjection: observed.projection, accessRevision: call.binding.accessRevision, checkedAt: observed.projection.context.sourceRefs[0]?.observedAt ?? new Date().toISOString() }
+    },
+    proveContinuity: (original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext) => decisionEvidence.current?.proveContinuity(original, current, call) ?? Promise.resolve(undefined),
+  }
   const context: BusinessContextService = {
-    resolve: (ref, call) => evidence.current ? evidence.current.resolve(ref, call) : Promise.resolve({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() }),
+    resolve: async (ref, call) => evidence.current ? evidence.current.resolve(ref, call) : await procurementEvidence.resolve(ref, call) ?? { state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() },
     context: async (request, call) => Promise.all(request.refs.map((ref) => context.resolve(ref, call))),
     recall: (request, call) => evidence.current ? evidence.current.recall(request, call) : Promise.reject(new Error("SF_ATLAS_UNAVAILABLE")),
     emitFromLedger: (ref, call) => evidence.current ? evidence.current.emitFromLedger(ref, call) : Promise.resolve({ status: "unavailable", sourceEventId: ref.kind === "case-event" ? ref.target.eventId : "", scanner: { name: "", version: "", status: "unavailable" }, reason: "atlas-unavailable" }),
@@ -103,6 +127,13 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     operationIdentity,
     authorizeCase,
     evidence: context, createId: randomUUID, now: () => new Date().toISOString() })
+  const collaboration = createCollaborationHost({ host, state: input.authority.state, creationTarget: input.authority.creationTarget,
+    scopedSources: input.persistence, evidence: context, procurement, collections: registry, cases,
+    authority: input.authority.authority, human: input.authority.human, confirmationSource: procurementConfirmation,
+    captureWorkSource: createProcurementCollectionMemberIssuer({ collection: registry, individual, revalidate: host.revalidate }),
+    issueForActor: individual.issueForActor, prepareReissueScope: individual.prepareReissueScope,
+    requiredAuthority: { sf_work_list: ["collaboration:read"], sf_question_prepare: ["collaboration:prepare"], sf_answer_read: ["collaboration:read"], sf_relation_read: ["collaboration:read"], sf_handoff_prepare: ["collaboration:prepare"] },
+    createId: randomUUID, now: () => new Date().toISOString() })
   type CaseRef = { id: string; incarnation: string; version: number }
   const caseBindings = new WeakMap<TrustedDomainContext, CaseRef>()
   const resolveCase = async (call: TrustedDomainContext): Promise<PortResult<CaseRef>> => {
@@ -138,6 +169,9 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     storedScenarios: { store: results, cases, coverageRefFor: (caseRef, alternative) => decisionCoverageRef(caseRef, alternative.id, alternative.version) } })
   const planner = product.planner
   const plannerSources = product.sources
+  const procurementDecisions = createProcurementDecisionHost({ host: procurementHost, port: procurement, individual, authority: input.authority, procurementEvidenceWrites: input.procurementEvidenceWrites, cases, planner, plannerSources,
+    operationIdentity, readSourceFences, lockedSourceFences, createId: randomUUID, now: () => new Date().toISOString() })
+  decisionEvidence.current = procurementDecisions
   const persist = createPlannerResultPersistence({ store: results, scenarios: product.scenarios, resolveCase })
   const receipt = input.authority.authority.receiptFor
   const descriptors = [
@@ -145,6 +179,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     ...createDashboardCapabilities(dashboard, async (call, operation, digest, result) => receipt(call, operation, digest, result)),
     ...createPlannerCapabilities(planner, receipt, persist),
     ...createProcurementCapabilities({ port: procurement, authority: input.authority.authority }),
+    ...collaboration.capabilities,
     ...createDecisionCapabilities({ cases, createReceipt: receipt, requiredAuthority: { read: ["cases:read"], draft: ["cases:write"], receipt: ["cases:read"], alternative: ["cases:read"], change: ["cases:read"] } }),
   ]
   const baseCount = descriptors.length
@@ -185,7 +220,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       return matches.length === 1 && await host.revalidate(call) ? matches[0]!.ref : undefined
     }
     const atlas = createSfAtlasBusiness({ host, authority: input.authority.authority, state: input.authority.state, cases, authorizeCase, dashboard, dashboardIssue, dashboardRecords,
-      procurement, procurementResolve: resolveProcurement, planner: { sources: plannerSources, port: planner },
+      procurement, procurementResolve: resolveProcurement, procurementEvidence, planner: { sources: plannerSources, port: planner },
       documentRead: input.documentRead ?? (async (_id, call) => ({ status: "unavailable", accessRevision: call.binding.accessRevision })),
       caseForEvidence, ...(scanner ? { scanner } : {}), now: () => new Date().toISOString(), selections: {
         runtimeVersions: versions, featuresForCase,
@@ -261,7 +296,51 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     return { status: "ok" as const, value: { forecastComparison: result.value, selectedPeriod: wanted.period, currency: wanted.currency, sourceRefs: refs, registeredReasons: [] } }
     })
   } }
-  return { dashboard, procurement, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, results, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, descriptors, procurementSelections, forecastInputs, initializeAtlas,
+  const prepareProcurement = createProcurementDecisionPreparation(procurement)
+  const dossierDocuments = async (requestRef: string, call: TrustedDomainContext): Promise<PortResult<readonly Extract<BusinessEvidenceRef, { kind: "document" }>[]>> => {
+    const request = host.requestFor(call)
+    const source = await resolveProcurement(requestRef, call)
+    if (!request || source.status !== "ok" || source.value.evidence.target.recordType !== "procurement-request" || !await host.revalidate(call)) return { status: "unavailable", reason: "dossier-request-unavailable" }
+    const environment = await host.environment(request)
+    const selected = await host.persistence.transaction<PortResult<readonly string[]>>("procurement", async (snapshot) => {
+      const principal = await host.authenticate(request, { surface: "procurement", roleMap: roleMap(snapshot, "procurement") })
+      if (!principal || principal.id !== call.binding.principalRef || principal.id.startsWith("local:")) return { commit: false, value: { status: "denied", reason: "dossier-authority-unavailable" } }
+      const actor: Actor = { id: principal.id, roles: principal.roles.filter((role) => role.surface === "procurement").map((role) => role.role), canWrite: principal.canWrite, assigned: [], domains: [] }
+      const record = rows(domain.view(snapshot, actor, environment).data.requests).find((value) => value.number === source.value.evidence.target.recordId)
+      if (!record || !procurementHost.isCurrentRequestSource(snapshot, source.value.evidence)) return { commit: false, value: { status: "stale", reason: "dossier-request-changed" } }
+      if (record.attachments !== undefined && !Array.isArray(record.attachments)) return { commit: false, value: { status: "unavailable", reason: "dossier-attachments-invalid" } }
+      const attachments = rows(record.attachments)
+      const ids = attachments.map((attachment) => text(attachment.id))
+      if (ids.some((id) => !id) || new Set(ids).size !== ids.length || ids.length > 100 || attachments.length !== (Array.isArray(record.attachments) ? record.attachments.length : 0)) return { commit: false, value: { status: "unavailable", reason: "dossier-attachments-invalid" } }
+      return { commit: false, value: { status: "ok", value: ids.sort() } }
+    }, { signal: request.signal })
+    if (selected.status !== "ok") return selected
+    if (selected.value.length && (!input.documentRead || !input.documentEvidenceList)) return { status: "unavailable", reason: "dossier-document-reader-unavailable" }
+    const listed = await Promise.all(selected.value.map((id) => input.documentEvidenceList!(id, call)))
+    if (listed.some((result) => result.status !== "ok" || !result.value.length)) return { status: "unavailable", reason: "dossier-document-evidence-unavailable" }
+    const refs = listed.flatMap((result, index) => result.status === "ok" ? result.value.map((entry) => ({ entry, documentId: selected.value[index] })) : [])
+    if (refs.some(({ entry, documentId }) => entry.ref.kind !== "document" || entry.ref.target.documentId !== documentId || entry.ref.installationId !== call.binding.installationId || entry.ref.projectId !== call.binding.projectId || entry.ref.refDigest !== digestSfEvidenceRef(entry.ref)) || !await host.revalidate(call)) return { status: "unavailable", reason: "dossier-document-selection-changed" }
+    const again = await resolveProcurement(requestRef, call)
+    if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(source.value)) return { status: "stale", reason: "dossier-request-changed" }
+    return { status: "ok", value: refs.map(({ entry }) => entry.ref).sort((a, b) => a.refDigest.localeCompare(b.refDigest)) }
+  }
+  const procurementDossier = { prepare: (requestRef: string, call: TrustedDomainContext) => prepareSourcingDossier({
+    requestRef, context: call, prepareProcurement, selectedDocuments: dossierDocuments,
+    reader: input.documentRead ?? (async (_id, binding) => ({ status: "unavailable", accessRevision: binding.binding.accessRevision })),
+    revalidate: async (refs) => {
+      const request = host.requestFor(call)
+      if (!request || request.signal.aborted || !await host.revalidate(call) || refs.length > 0 && !input.documentRead) return false
+      const resolved = await Promise.all(refs.map((ref) => resolveSfDocumentEvidence(ref, call, input.documentRead!)))
+      return resolved.every((value) => value.state === "fresh" && !!value.authorizedProjection) && !request.signal.aborted && await host.revalidate(call)
+    },
+    revalidateProcurement: async (material) => {
+      const current = await prepareProcurement(requestRef, call)
+      const stable = (value: typeof material) => ({ ...value, request: { ...value.request, values: value.request.values.filter((field) => field.id !== "ageDays") } })
+      return current.status === "ok" && digestSfValue(stable(current.value)) === digestSfValue(stable(material)) && await host.revalidate(call)
+    },
+  }) }
+  return { dashboard, procurement, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, results, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, descriptors, procurementSelections, procurementConfirmation, procurementDecisions, collaboration, procurementDossier, forecastInputs, initializeAtlas,
     remainingOperations: () => freeze.operations.map((entry) => entry.operation).filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation)),
-    dispose: () => { periods.clear(); evidence.current = undefined; descriptors.splice(baseCount) } }
+    dispose: () => { periods.clear(); evidence.current = undefined; decisionEvidence.current = undefined; procurementDecisions.dispose(); descriptors.splice(baseCount) } }
 }
+

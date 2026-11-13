@@ -97,7 +97,8 @@ export type SfStateMutation = {
   targetIncarnation: string
 }
 export type SfStateResult<T> =
-  | { status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: T }
+  | { status: "ok"; storageVersion: number; aggregateRevision: number; incarnation: string; value: T }
+  | { status: "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: T }
   | { status: "denied" | "unavailable" | "conflict"; reason: string }
 export type SfProductStatePort = {
   read: <T>(request: Request, namespace: SfStateNamespace, read: (state: Readonly<SfProductState>, authority: SfStateAuthority) => T | Promise<T>) => Promise<SfStateResult<T>>

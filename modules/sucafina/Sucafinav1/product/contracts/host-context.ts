@@ -16,7 +16,7 @@ import type { createSfPersonalViews } from "../interface/personal-views.ts"
 import type { ContributionEnvelope } from "./resident-ai.ts"
 import type { SfNativeRunRecord } from "./state.ts"
 import type { TrustedUiContext } from "./sf-execution.ts"
-import type { ForecastExplainInput } from "./skill-inputs.ts"
+import type { ForecastExplainInput, SourcingComparisonInput } from "./skill-inputs.ts"
 import type { ForecastCompareRequest } from "./operations.ts"
 import type { MonthlyDraft } from "../planner/monthly-edit.ts"
 import type { View, Result } from "../../runtime/contract.ts"
@@ -49,6 +49,9 @@ export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
   personalViews?: ReturnType<typeof createSfPersonalViews>
   forecastInputs?: {
     prepare: (context: TrustedUiContext, input: ForecastCompareRequest & { caseRef: { id: string; incarnation: string; version: number } }) => Promise<PortResult<ForecastExplainInput>>
+  }
+  sourcingInputs?: {
+    prepare: (context: TrustedUiContext, input: { requestRef: string; caseRef: { id: string; incarnation: string; version: number } }) => Promise<PortResult<SourcingComparisonInput>>
   }
   plannerMonthly?: {
     preview: (context: TrustedUiContext, input: SfPlannerMonthlyInput) => Promise<PortResult<SfPlannerMonthlyResult>>
