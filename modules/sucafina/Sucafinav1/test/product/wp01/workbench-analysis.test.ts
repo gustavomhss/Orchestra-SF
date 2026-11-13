@@ -60,6 +60,15 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
 
     const services = runtime.services?.()
     if (!services) throw new Error("host services unavailable after host startup")
+    expect(services.selected).toHaveLength(5)
+    for (const selected of services.selected) {
+      expect(selected.skills.length).toBeGreaterThan(0)
+      expect(selected.operationIds.length).toBeGreaterThan(0)
+      for (const operation of selected.operationIds) {
+        expect(selected.profile.allowedOperations).toContain(operation)
+        expect(selected.skills.some((skill) => skill.allowedOperations.includes(operation))).toBe(true)
+      }
+    }
     const model = (await services.models().catch(() => []))[0]
     const selection = services.selected.find((item) => item.skills.some((skill) => skill.id === "sf-explicar-forecast"))
     const skill = selection?.skills.find((item) => item.id === "sf-explicar-forecast")

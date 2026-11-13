@@ -11,6 +11,7 @@ import type { DecisionCasePort, PortResult } from "../../../../modules/sucafina/
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { SfProductState, SfStateAuthority } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
 import { createHotTopicDraftStore, verifyHotTopicDraftBinding } from "../../../../modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts"
+import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import type { HotTopicDraft, HotTopicDraftRequest } from "../../../../modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts"
 import { prepareDomainChange } from "../../../../modules/sucafina/Sucafinav1/product/decisions/prepared-change.ts"
 import { createDecisionPreparedReview } from "../../../../modules/sucafina/Sucafinav1/product/decisions/prepared-review.ts"
@@ -179,6 +180,70 @@ export function createSfDashboardDecisions(input: {
       return { state: receipt.result.ok ? "applied" : receipt.result.status === 409 ? "conflict" : "failed", evidence: { ...initial, refDigest: digestSfEvidenceRef(initial) } }
     } })
   return {
+    discover: async (context: TrustedDomainContext) => {
+      const request = host.requestFor(context)
+      if (!request || !await host.revalidate(context)) return { status: "denied" as const, reason: "decision-discovery-unavailable" }
+      const current = await state.read(request, "cases", (stored, authority) => sameAuthority(authority, context) ? Object.values(stored.cases)
+        .filter((decision) => decision.participants.includes(authority.principalRef)).sort((a, b) => a.objective.localeCompare(b.objective)).slice(0, 50) : [])
+      const protectedState = await state.read(request, "preferences", (stored, authority) => sameAuthority(authority, context) ? stored.preferences : undefined)
+      const receipts = await state.read(request, "receipts", (_stored, authority) => sameAuthority(authority, context))
+      const cases: { caseRef: CaseRef; label: string }[] = []
+      const emittedCases = new Map<string, DecisionCase>()
+      const emittedPreferences = new Map<string, string>()
+      const draftOptions: { caseRef: CaseRef; draftRef: string; version: number; label: string; target: HotTopicDraft["target"]; targetEvidence: HotTopicDraft["targetEvidence"]; fields: HotTopicDraft["fields"]; sourceRefs: HotTopicDraft["sourceRefs"] }[] = []
+      const preparations: { caseRef: CaseRef; choiceId: string; draftRef: string; label: string; reason: string }[] = []
+      const changes: { caseRef: CaseRef; choiceId: string; changeId: string; label: string; state: PreparedChange["state"] }[] = []
+      if (current.status === "ok") for (const decision of current.value) {
+        const selected = await input.cases.read({ caseRef: encodeCaseRef(decision) }, context)
+        if (selected.status !== "ok" || selected.value.case.version !== decision.version) continue
+        const caseRef = { id: decision.id, incarnation: decision.incarnation, version: decision.version }
+        cases.push({ caseRef, label: decision.objective })
+        emittedCases.set(decision.id, decision)
+        if (protectedState.status !== "ok" || !protectedState.value) continue
+        const available = await drafts.list({ caseRef }, context)
+        if (available.status === "ok") for (const draft of available.value) {
+          const actual = await drafts.readCurrent({ caseRef, draftRef: draft.draftRef }, context)
+          if (actual.status !== "ok" || actual.value.principalRef !== context.binding.principalRef) continue
+          emittedPreferences.set(`sf:proposal-coverage:hot-topic:active:${digestSfValue(actual.value.id)}`, digestSfValue(actual.value))
+          emittedPreferences.set(`sf:proposal-coverage:hot-topic:history:${digestSfValue(actual.value.draftRef)}`, digestSfValue(actual.value))
+          draftOptions.push({ caseRef, draftRef: draft.draftRef, version: draft.version, label: draft.label, target: actual.value.target, targetEvidence: actual.value.targetEvidence, fields: actual.value.fields, sourceRefs: actual.value.sourceRefs })
+          for (const choice of decision.choices) {
+            const operations = choice.scenario.operations.filter((operation) => operation.kind === "replace" && operation.targetRef === actual.value.targetEvidence.refId && operation.replacementRef === draft.draftRef)
+            if (operations.length !== 1 || decision.preparedChanges.some((change) => change.choiceId === choice.id && change.target.id === draft.target.id && change.state === "planned")) continue
+            const title = decision.alternatives.find((alternative) => alternative.id === choice.alternativeId && alternative.version === choice.alternativeVersion)?.title
+            preparations.push({ caseRef, choiceId: choice.id, draftRef: draft.draftRef, label: `${decision.objective} · ${title ?? draft.label}`, reason: choice.reason })
+          }
+        }
+        for (const change of decision.preparedChanges) {
+          const binding = protectedState.value[preparedKey(change.id)]
+          const choices = decision.choices.filter((choice) => choice.id === change.choiceId)
+          if (!isBinding(binding) || !sameAuthority(binding, context) || binding.recordDigest !== bindingDigest(binding) || digestSfValue(binding.command) !== digestSfValue(change.operation) ||
+            binding.caseRef.id !== decision.id || binding.caseRef.incarnation !== decision.incarnation || binding.choiceId !== change.choiceId || binding.changeId !== change.id ||
+            choices.length !== 1 || binding.choiceDigest !== digestSfValue(choices[0]) ||
+            (change.state === "planned" && binding.caseRef.version !== decision.version)) continue
+          changes.push({ caseRef, choiceId: change.choiceId, changeId: change.id, label: `${decision.objective} · ${binding.draft.fields.action}`, state: change.state })
+          emittedPreferences.set(preparedKey(change.id), digestSfValue(binding))
+        }
+      }
+      const actions = await input.authority.humanActions(request)
+      if (emittedCases.size) {
+        // The earlier preferences read proved that namespace's grant. One final C08 snapshot fences
+        // the exact emitted cases and draft/binding records together; authority alone does not bind participants.
+        const current = await state.read(request, "cases", (stored, authority) => sameAuthority(authority, context) &&
+          [...emittedCases].every(([id, previous]) => {
+            const actual = stored.cases[id]
+            return !!actual && actual.incarnation === previous.incarnation && actual.version === previous.version &&
+              actual.participants.includes(authority.principalRef) && digestSfValue(actual) === digestSfValue(previous)
+          }) && (!emittedPreferences.size || protectedState.status === "ok" && [...emittedPreferences].every(([key, digest]) => digestSfValue(stored.preferences[key]) === digest)))
+        if (current.status !== "ok" || !current.value) return { status: "stale" as const, reason: "decision-discovery-changed" }
+      }
+      if (!await host.revalidate(context)) return { status: "denied" as const, reason: "decision-discovery-unavailable" }
+      return { status: "ok" as const, value: { cases, drafts: draftOptions, preparations, changes, caseLimit: 50, permissions: {
+        draft: actions.includes("decisions.edit") && current.status === "ok" && protectedState.status === "ok",
+        prepare: actions.includes("decisions.prepare-changes") && current.status === "ok" && protectedState.status === "ok",
+        apply: actions.includes("decisions.apply") && current.status === "ok" && protectedState.status === "ok" && receipts.status === "ok" && receipts.value,
+      } } }
+    },
     drafts: {
       register: async (request: HotTopicDraftRequest, context: TrustedDomainContext) => {
         const source = host.requestFor(context)

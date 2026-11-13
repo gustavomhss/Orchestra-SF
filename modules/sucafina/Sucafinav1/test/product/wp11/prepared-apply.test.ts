@@ -16,8 +16,9 @@ import { createSfPreparedApply } from "../../../product/decisions/prepared-apply
 import { proposalReviewDigest, receiptProofTransactionKey, receiptReviewBinding, sameApplyRequest } from "../../../product/decisions/receipt-review-binding.ts"
 import type { ReviewDigestFor } from "../../../product/decisions/receipt-review-binding.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
-import type { DecisionCase, PreparedChange } from "../../../product/contracts/decisions.ts"
+import type { DecisionCase, PreparedChange, ScenarioResult } from "../../../product/contracts/decisions.ts"
 import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
+import type { SfProductStatePort } from "../../../product/contracts/state.ts"
 
 test("human-approved prepared dashboard command and receipt commit together", async () => {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-apply-real-"))
@@ -56,7 +57,8 @@ test("human-approved prepared dashboard command and receipt commit together", as
     await state.transaction(http, { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "seed", commandDigest: "a".repeat(64), targetRef: "case", targetIncarnation: "case-inc" }, async (value) => { value.cases.case = decision; return { commit: true, value: true } })
     const request = { caseRef: { id: "case", incarnation: "case-inc", version: 1 }, changeId: "change", choiceId: "choice" }
     const display = (value: unknown): string | number | boolean | null => value === null || typeof value === "string" || typeof value === "number" || typeof value === "boolean" ? value : JSON.stringify(value) ?? null
-    const approval = { human: false, available: true, fields: preview.changes.map((entry) => ({ field: entry.path, before: entry.before.state === "value" ? display(entry.before.value) : null, after: entry.after.state === "value" ? display(entry.after.value) : null })) }
+    const reviewedFields = preview.changes.map((entry) => ({ field: entry.path, before: entry.before.state === "value" ? display(entry.before.value) : null, after: entry.after.state === "value" ? display(entry.after.value) : null }))
+    const approval = { human: false, available: true, fields: reviewedFields }
     const reviewDigestFor: ReviewDigestFor = (binding, incoming, selected) => binding === context && approval.available && sameApplyRequest(incoming, request) && digestSfValue(selected.operation) === digestSfValue(change.operation)
       ? proposalReviewDigest({ caseId: decision.id, caseIncarnation: decision.incarnation, changeCaseVersion: selected.caseVersion, choiceDigest: digestSfValue(decision.choices[0]), change: selected, fields: approval.fields, sourceRefDigest: digestSfValue(target) })
       : undefined
@@ -89,5 +91,57 @@ test("human-approved prepared dashboard command and receipt commit together", as
     expect(reviewDigestFor(context, request, change)).not.toBe(reviewDigest)
     expect(await apply.executePrepared(request, context)).toMatchObject({ status: "conflict", reason: "idempotency-content-changed" })
     expect(await persistence.transaction("dashboard", async (value) => ({ commit: false, value: value }))).toEqual(beforeRejected)
+
+    const raceMutation = createDashboardPreparedMutation({ actorId: actor.id, target, command, baseDigest: preview.baseDigest, previewDigest: preview.commandDigest, idempotencyKey: "annual-race", mutationScope: proof, projectScope: project })
+    if (!raceMutation) throw new Error("race mutation unavailable")
+    const raceScenario: ScenarioResult = { id: "race-scenario", version: 1, components: [], currency: "USD", horizon: period, sourceRefs: [], unresolvedConditions: ["cost-coverage-unavailable"], restrictions: [], comparisonStatus: "unavailable", knownSubtotal: null, total: null, costCoverage: { basisId: "race-basis", basisVersion: 1, alternativeId: "race-alternative", alternativeVersion: 1, currency: "USD", horizon: period, issues: ["cost-coverage-unavailable"], evaluatedSourceRefs: [], coverageState: "unavailable", entries: [], derivedMissingCategoryIds: [] } }
+    const raceChange: PreparedChange = {
+      id: "race-change", caseId: "race-case", caseVersion: 1, choiceId: "race-choice", target, expectedVersion: command.version,
+      operation: {
+        id: "race-command", target, command, idempotencyKey: raceMutation.idempotencyKey, commandDigest: raceMutation.commandDigest, expectedVersion: command.version, requiredAuthority: [],
+        preview: { context: { installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: actor.id, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, surface: target.surface, period, currency: "USD", sourceRefs: [target], capabilities: [] }, version: target.version, engineVersion: "dashboard-command-preview-v1", components: [], values: reviewedFields.map((entry) => ({ id: entry.field, value: entry.after, period, granularity: "record", sourceRefs: [], drilldown: null, evidenceState: "hypothetical" })), missing: [] },
+      },
+      preview: raceScenario, requiredAuthority: [], idempotencyKey: raceMutation.idempotencyKey, state: "planned",
+    }
+    const raceDecision: DecisionCase = {
+      id: raceChange.caseId, incarnation: decision.incarnation, version: 1, state: "chosen", objective: "Apply the reviewed annual allocation", horizon: period, currency: "USD", criteria: [], participants: [actor.id], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [],
+      choices: [{ id: raceChange.choiceId, alternativeId: "race-alternative", alternativeVersion: 1, basisVersion: 1, criteria: [], values: [], evidenceRefs: [], principalRef: actor.id, reason: "Reviewed annual allocation", at: environment().at, scenario: { baseRef: target.id, operations: [], assumptions: [] }, result: raceScenario, comparison: { baselineResultRef: "race-baseline", alternativeResultRef: raceScenario.id, costCoverageRefs: [], criterionResults: [], unresolvedConditions: ["cost-coverage-unavailable"], comparisonStatus: "unavailable", knownDifference: null, completeDifference: null }, comparisonStatus: "unavailable", costCoverage: raceScenario.costCoverage }],
+      preparedChanges: [raceChange], receipts: [], ledger: [],
+    }
+    const beforeRace = await state.read(http, "cases", (value) => value.cases)
+    if (beforeRace.status !== "ok") throw new Error("case storage unavailable")
+    const seededRace = await state.transaction(http, { namespace: "cases", expectedStorageVersion: beforeRace.storageVersion, idempotencyKey: "seed-race", commandDigest: digestSfValue(raceDecision), targetRef: raceDecision.id, targetIncarnation: raceDecision.incarnation }, async (value) => { value.cases[raceDecision.id] = raceDecision; return { commit: true, value: true } })
+    expect(seededRace.status).toBe("ok")
+    if (seededRace.status !== "ok") throw new Error("race case unavailable")
+    const raceRequest = { caseRef: { id: raceDecision.id, incarnation: raceDecision.incarnation, version: raceDecision.version }, changeId: raceChange.id, choiceId: raceChange.choiceId }
+    const raceReviewDigestFor: ReviewDigestFor = (binding, incoming, selected) => binding === context && sameApplyRequest(incoming, raceRequest) && digestSfValue(selected) === digestSfValue(raceChange)
+      ? proposalReviewDigest({ caseId: raceDecision.id, caseIncarnation: raceDecision.incarnation, changeCaseVersion: selected.caseVersion, choiceDigest: digestSfValue(raceDecision.choices[0]), change: selected, fields: reviewedFields, sourceRefDigest: digestSfValue(target) })
+      : undefined
+    expect(raceReviewDigestFor(context, raceRequest, raceChange)).toMatch(/^[a-f0-9]{64}$/)
+    const racedReceipt = { ...applied.value, id: "receipt-without-review", idempotencyKey: raceChange.idempotencyKey, commandDigest: raceChange.operation.commandDigest }
+    const race = { receiptReads: 0, mutationCalls: 0, published: false }
+    const raceState: SfProductStatePort = {
+      ...state,
+      read: async (source, namespace, read) => {
+        const result = await state.read(source, namespace, read)
+        if (namespace === "receipts" && ++race.receiptReads === 1) {
+          if (result.status !== "ok") throw new Error("initial receipt read unavailable")
+          // Publish only after the first real read has released its lock. The next read
+          // observes the new storage version, but this separate writer has no review proof.
+          const published = await state.transaction(source, { namespace: "receipts", expectedStorageVersion: result.storageVersion, idempotencyKey: "external-receipt-publication", commandDigest: digestSfValue(racedReceipt), targetRef: target.id, targetIncarnation: target.incarnation }, async (value) => { value.receipts[racedReceipt.id] = racedReceipt; return { commit: true, value: racedReceipt } })
+          expect(published.status).toBe("ok")
+          if (published.status !== "ok") throw new Error("concurrent receipt publication failed")
+          race.published = true
+        }
+        return result
+      },
+    }
+    const raceApply = createSfPreparedApply({ state: raceState, host: { requestFor: () => http, revalidate: async () => true }, authorizeCase: async (value) => value.participants.includes(actor.id), authorizeLookup: async () => true, authorizeReceipt: async (receipt) => receipt.principalRef === actor.id, confirmHuman: async () => true, reviewDigestFor: raceReviewDigestFor, resolveActor: () => actor, resolveMutation: () => { race.mutationCalls += 1; return raceMutation }, verifyGrant: () => true, receiptVersion: () => 1, environment, createId: () => "race-application-receipt", now: () => environment().at })
+    expect(await raceApply.executePrepared(raceRequest, context)).toMatchObject({ status: "unavailable", reason: "domain-application-rejected" })
+    expect(race).toEqual({ receiptReads: 2, mutationCalls: 0, published: true })
+    const afterRace = await state.read(http, "receipts", (value) => ({ receipt: value.receipts[racedReceipt.id], proof: value.transactions[receiptProofTransactionKey(actor.id, target.id, raceChange.idempotencyKey)], originalProof: value.transactions[receiptProofTransactionKey(actor.id, target.id, change.idempotencyKey)], newReceipt: value.receipts["race-application-receipt"], cases: value.cases }))
+    if (afterRace.status !== "ok" || recorded.status !== "ok") throw new Error("receipt proof unavailable")
+    expect(afterRace.value).toEqual({ receipt: racedReceipt, proof: undefined, originalProof: recorded.value, newReceipt: undefined, cases: { ...beforeRace.value, [raceDecision.id]: raceDecision } })
+    expect(await persistence.transaction("dashboard", async (value) => ({ commit: false, value: value.data.opexEntries }))).toEqual(entries)
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })

@@ -10,7 +10,7 @@ import type { createSfDashboardServices, DashboardAgendaRequest, DashboardReview
 import type { createSfDashboardDecisions, DashboardPrepareRequest } from "./dashboard-decisions.ts"
 
 type Runtime = { authority: ReturnType<typeof createSfProductAuthority>; dashboard: ReturnType<typeof createSfDashboardServices>; decisions: ReturnType<typeof createSfDashboardDecisions> }
-const modes = ["dashboard-agenda", "dashboard-review-preserve", "dashboard-review", "dashboard-capture", "dashboard-history", "dashboard-hot-topic-source",
+const modes = ["dashboard-workbench", "dashboard-agenda", "dashboard-review-preserve", "dashboard-review", "dashboard-capture", "dashboard-history", "dashboard-hot-topic-source",
   "dashboard-hot-topic-draft", "dashboard-hot-topic-drafts", "dashboard-hot-topic-operation", "dashboard-hot-topic-prepare", "dashboard-hot-topic-review", "dashboard-hot-topic-apply"] as const
 
 /** Same-origin host routes. Browser payloads contain selections and human intent, never private commands. */
@@ -48,6 +48,12 @@ export function createSfDashboardHttp(input: { origin: string; mount: string; ru
 
 async function dispatch(runtime: Runtime, mode: string, value: unknown, context: TrustedDomainContext) {
   const payload = object(value)
+  if (mode === "dashboard-workbench" && keys(payload, ["page"], ["period"]) && text(payload.page) && (payload.period === undefined || isSfPeriod(payload.period))) {
+    const dashboard = await runtime.dashboard.discover({ page: payload.page, ...(payload.period ? { period: payload.period } : {}) }, context)
+    if (dashboard.status !== "ok") return dashboard
+    const decisions = await runtime.decisions.discover(context)
+    return decisions.status === "ok" ? { status: "ok" as const, value: { ...dashboard.value, decisions: decisions.value } } : decisions
+  }
   if (mode === "dashboard-agenda" && isAgenda(value)) return runtime.dashboard.agenda(value, context)
   if (mode === "dashboard-review-preserve" && isReview(value)) return runtime.dashboard.preserveReview(value, context)
   if (mode === "dashboard-review" && keys(payload, ["id"]) && text(payload.id)) return runtime.dashboard.readReview(payload.id, context)

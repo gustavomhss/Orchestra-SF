@@ -15,6 +15,7 @@ import type { createDashboardRecordEvidenceHost, createDashboardSourceHost } fro
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import { projectSfSourceScope } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
 import type { SfScopedSourcePort } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
+import { createDashboardSourceIssuer } from "../../../../modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts"
 import { createReviewPort } from "../../../../modules/sucafina/Sucafinav1/product/reviews/port.ts"
 import type { ReviewHost, ReviewSection } from "../../../../modules/sucafina/Sucafinav1/product/reviews/port.ts"
 import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
@@ -114,6 +115,95 @@ export function createSfDashboardServices(input: {
   const history = createDashboardHistoricalBindings({ host, observer, records: input.records, readProtectedCapture: readCapture })
   return {
     issue, observer, select,
+    discover: async (request: { page: string; period?: Period }, context: TrustedDomainContext) => {
+      const source = host.requestFor(context)
+      if (!source || !await host.revalidate(context)) return { status: "denied" as const, reason: "dashboard-discovery-unavailable" }
+      const environment = await host.environment(source)
+      const year = new Date(environment.at).getUTCFullYear()
+      const period = request.period ?? { start: `${year}-01-01`, end: `${year}-12-31` }
+      if (!isSfPeriod(period)) return { status: "needs-input" as const, reason: "invalid-dashboard-period" }
+      const definition = agendaDefinition(request.page, period)
+      const selected = definition ? await createDashboardSourceIssuer({ host, scopedSources: input.scopedSources })({ page: request.page, fields: definition.fields, period }, context) : undefined
+      if (selected && selected.status !== "ok") return selected
+      const agendaRequest = selected?.status === "ok" && definition ? { id: "dashboard", title: request.page, selectionRef: selected.value.selectionRef, topic: definition.topic, period } : undefined
+      const selectedAgenda = agendaRequest ? await agenda(agendaRequest, context) : undefined
+      if (selectedAgenda && selectedAgenda.status !== "ok") return selectedAgenda
+      const records: { label: string; sourceRef: string; draft?: { target: SourceRef; targetEvidence: Extract<BusinessEvidenceRef, { kind: "record" }>; fields: { action: string; owner: string; due: string; priority: "critical" | "high" | "normal"; notes: string } } }[] = []
+      if (selectedAgenda?.status === "ok") for (const reference of selectedAgenda.value.recordRefs.slice(0, 100)) {
+        const resolved = await input.records.resolve(reference, context)
+        if (resolved.status !== "ok" || !resolved.value.target.period) continue
+        const target = resolved.value.target
+        const recordPeriod = resolved.value.target.period
+        const prefix = target.recordType === "itperf-item" ? `itperf.items[id:${encodeURIComponent(target.recordId)}].` : `${target.recordType}[id:${encodeURIComponent(target.recordId)}].`
+        const values = selectedAgenda.value.projection.values.filter((value) => value.id.startsWith(prefix) && /^[A-Za-z][A-Za-z0-9_]*$/.test(value.id.slice(prefix.length)))
+        let fields = [...new Set(values.map((value) => value.id.slice(prefix.length)).filter((field) => field !== "id"))].sort()
+        let periodLabel: string | undefined
+        if (target.recordType === "opsTickets") {
+          const identity = await input.records.issue({ page: "IT Operations", recordType: "opsTickets", recordId: target.recordId, fields: ["year", "month"], period: recordPeriod }, context)
+          const observed = identity.status === "ok" ? await input.records.read(identity.value.refId, context) : undefined
+          if (observed?.status !== "ok") continue
+          const year = observed.value.values.find((value) => value.id.endsWith(":year"))?.value
+          const month = observed.value.values.find((value) => value.id.endsWith(":month"))?.value
+          if (typeof year !== "number" || !Number.isInteger(year) || typeof month !== "number" || !Number.isInteger(month) || month < 1 || month > 12) continue
+          periodLabel = `${year}-${String(month).padStart(2, "0")}`
+          const ticketPrefix = `tickets:${periodLabel}:`
+          // Metric names come from the authorized ticket producer, including its configured categories.
+          fields = ["year", "month", ...selectedAgenda.value.projection.values.filter((value) => value.id.startsWith(ticketPrefix)).map((value) => value.id.slice(ticketPrefix.length))]
+        }
+        const signal = request.page === "Executive Dashboard" ? selectedAgenda.value.projection.values.filter((value) => value.drilldown?.kind === "record" && value.drilldown.refId === reference) : []
+        if (signal.length) fields = target.fields.filter((field) => field !== "id")
+        if (!fields.length) continue
+        const record = signal.length ? resolved : await input.records.issue({ page: request.page, recordType: target.recordType, recordId: target.recordId, fields, period: recordPeriod }, context)
+        if (record.status !== "ok") continue
+        const material = await input.records.read(record.value.refId, context)
+        if (material.status !== "ok") continue
+        const labelValue = ["action", "name", "title", "vendor", "owner"].map((field) => values.find((value) => value.id === `${prefix}${field}`)?.value).find((value) => typeof value === "string" && value.trim())
+        const signalLabel = signal.find((value) => value.id.endsWith(".fact"))?.value
+        const label = typeof signalLabel === "string" ? signalLabel : typeof labelValue === "string" ? labelValue : periodLabel ? `Chamados · ${periodLabel}` : `${request.page} · ${records.length + 1}`
+        const entry: typeof records[number] = { label, sourceRef: record.value.refId }
+        if (target.recordType === "hotTopics") {
+          const draftSource = await issue({ recordType: "hotTopics", recordId: target.recordId, fields: ["action", "due", "notes", "owner", "priority"], period: recordPeriod }, context)
+          const projection = draftSource.status === "ok" ? await input.records.read(draftSource.value.refId, context) : undefined
+          if (draftSource.status === "ok" && projection?.status === "ok") {
+            const field = (name: string) => projection.value.values.find((value) => value.id === `hotTopics:${encodeURIComponent(target.recordId)}:${name}`)?.value
+            const action = field("action"), owner = field("owner"), due = field("due"), priority = field("priority"), notes = field("notes")
+            const identity = projection.value.context.sourceRefs[0]
+            if (identity && typeof action === "string" && typeof owner === "string" && typeof due === "string" && typeof notes === "string" && ["critical", "high", "normal"].some((value) => value === priority))
+              entry.draft = { target: identity, targetEvidence: draftSource.value, fields: { action, owner, due, notes, priority: priority === "critical" ? "critical" : priority === "high" ? "high" : "normal" } }
+          }
+        }
+        records.push(entry)
+      }
+      const preferences = await state.read(source, "preferences", (stored, authority) => sameAuthority(authority, context) ? Object.entries(stored.preferences)
+        .filter(([key, value]) => key.startsWith("sf:dashboard-host:capture:") && isCapture(value) && value.capturedBy === authority.principalRef)
+        .map(([, value]) => value).filter(isCapture).sort((a, b) => b.capturedAt.localeCompare(a.capturedAt)).slice(0, 100).map((capture) => capture.id) : [])
+      const historyOptions: { kind: "capture" | "review"; ref: string; label: string }[] = []
+      if (preferences.status === "ok") for (const id of preferences.value) {
+        const reopened = await history.reopen(id, context)
+        if (reopened.status !== "ok") continue
+        const label = reopened.value.projection.values.find((value) => typeof value.value === "string" && value.value.trim())?.value
+        historyOptions.push({ kind: "capture", ref: id, label: `${typeof label === "string" ? label : "Retrato de registro"} · ${reopened.value.capturedAt.slice(0, 10)}` })
+      }
+      const savedReviews = await state.read(source, "reviews", (stored, authority) => sameAuthority(authority, context) ? Object.values(stored.reviews)
+        .filter((review) => review.sections.every((section) => object(object(section.content).context).principalRef === authority.principalRef))
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 100).map((review) => review.id) : [])
+      if (savedReviews.status === "ok") for (const id of savedReviews.value) {
+        const current = await reviews.read(id, context)
+        if (current.status === "ok") historyOptions.push({ kind: "review", ref: id, label: `${current.value.sections.map((section) => section.title).join(", ")} · ${current.value.createdAt.slice(0, 10)}` })
+      }
+      const actions = await input.authority.humanActions(source)
+      if (selected?.status === "ok") {
+        const current = await input.sources.resolveDashboardSource(selected.value.selectionRef, context)
+        if (current.status !== "ok" || digestSfValue(current.value.evidence) !== digestSfValue(selected.value.evidence))
+          return { status: "stale" as const, reason: "dashboard-discovery-source-changed" }
+      }
+      if (!await host.revalidate(context)) return { status: "denied" as const, reason: "dashboard-discovery-unavailable" }
+      return { status: "ok" as const, value: { period, ...(agendaRequest && selectedAgenda?.status === "ok" ? { agenda: { section: agendaRequest, recordCount: selectedAgenda.value.recordCount } } : {}),
+        records, recordLimit: 100, history: historyOptions, permissions: {
+          preserve: actions.includes("reviews.preserve") && (savedReviews.status === "ok" || savedReviews.status === "unavailable" && savedReviews.reason === "product-state-uninitialized"),
+          capture: actions.includes("reviews.preserve") && (preferences.status === "ok" || preferences.status === "unavailable" && preferences.reason === "product-state-uninitialized"),
+        } } }
+    },
     agenda: async (request: DashboardAgendaRequest, context: TrustedDomainContext) => {
       if (!validAgenda(request) || !await host.revalidate(context)) return { status: "needs-input" as const, reason: "invalid-dashboard-agenda" }
       for (const [key, value] of selections) if (value.expiresAt <= Date.now()) selections.delete(key)
@@ -194,4 +284,18 @@ function isCapture(value: unknown): value is DashboardHistoricalCapture {
   const stored = object(value)
   return stored.schema === "sf-dashboard-historical-capture-v1" && typeof stored.id === "string" && typeof stored.capturedBy === "string" && typeof stored.capturedAt === "string" &&
     typeof stored.receiptDigest === "string" && typeof stored.projectionDigest === "string" && object(stored.source).kind === "record" && Array.isArray(object(stored.projection).values) && !!object(stored.projection).context
+}
+
+function agendaDefinition(page: string, period: Period) {
+  const pages: Record<string, { topic: string; fields: string[] }> = {
+    "Executive Dashboard": { topic: "executive", fields: ["executive", "executiveMonths", "signals"] },
+    "Budget Overview": { topic: "budget", fields: ["opexOwners", "opexEntries", "capexProjects", "capexEntries", ...(period.start.endsWith("01-01") && period.end.endsWith("12-31") ? ["budgetMetrics"] : ["budgetSeries"])] },
+    "OPEX Detail": { topic: "opex-detail", fields: ["opexOwners", "opexEntries"] }, "CAPEX Projects": { topic: "capex-projects", fields: ["capexProjects", "capexEntries"] },
+    "Headcount Overview": { topic: "headcount", fields: ["members"] }, "Team Structure": { topic: "team-structure", fields: ["leaders"] }, "Talent Review": { topic: "talent-review", fields: ["members", "leaders"] },
+    "Portfolio Dashboard": { topic: "projects", fields: ["projects", "milestoneDates"] }, "All Projects": { topic: "all-projects", fields: ["projects", "milestoneDates"] },
+    "Hot Topics & Actions": { topic: "hot-topics", fields: ["hotTopics"] }, "IT Operations": { topic: "it-operations", fields: ["opsTickets"] }, "IT Security KPIs": { topic: "it-security", fields: ["secKpi"] },
+    "IT Risks": { topic: "it-risks", fields: ["risks"] }, "Vendor Contracts": { topic: "vendor-contracts", fields: ["contracts"] }, "Stakeholder Management": { topic: "stakeholders", fields: ["stakeholders"] },
+    "IT Performance Contract": { topic: "it-performance", fields: ["itperf"] },
+  }
+  return pages[page]
 }

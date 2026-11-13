@@ -37,6 +37,7 @@ test("Procurement evidence is read through current source and domain ports", asy
     const first = await resolver.resolve(issued.value, call)
     expect(first.status).toBe("ok")
     if (first.status !== "ok") return
+    expect(first.value.evidence.target.fields).toContain("approvalStage")
     const access = createSfProcurementSourceAccess({ host, resolve: resolver, procurement: port })
     expect((await access(first.value.evidence, call)).state).toBe("fresh")
     session.active = false

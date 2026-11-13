@@ -72,7 +72,7 @@ async function fixture() {
     authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await authority.host.revalidate(context), evidence, createId: randomUUID, now: () => clock.at })
   const decisions = createSfDashboardDecisions({ authority, cases, records, issue: dashboard.issue, proposalCoverageWrites, dashboardHostWrites })
   const http = createSfDashboardHttp({ origin: "https://example.test", mount: "/sucafina", runtime: () => ({ authority, dashboard, decisions }) })
-  const request = (mode: string, payload?: unknown, key = randomUUID()) => new Request(`https://example.test/sucafina/dashboard?sf=${mode}`, payload === undefined ? undefined :
+  const request = (mode: string, payload?: unknown, key: string = randomUUID()) => new Request(`https://example.test/sucafina/dashboard?sf=${mode}`, payload === undefined ? undefined :
     { method: "POST", headers: { origin: "https://example.test", "content-type": "application/json", "Idempotency-Key": key }, body: JSON.stringify(payload) })
   const read = async <T>(payload: unknown, work: (context: TrustedDomainContext) => Promise<T>) => {
     const source = request("dashboard-agenda", payload)
@@ -82,7 +82,7 @@ async function fixture() {
     try { expect(await authority.ui.validate(context.value, "sf_dashboard_read", digest)).toBe(true); return await work(context.value) }
     finally { authority.ui.finish(context.value) }
   }
-  const human = async <T>(action: SfHumanAction, payload: unknown, work: (context: TrustedDomainContext) => Promise<T>, key = randomUUID()) => {
+  const human = async <T>(action: SfHumanAction, payload: unknown, work: (context: TrustedDomainContext) => Promise<T>, key: string = randomUUID()) => {
     const context = await authority.human.admit(request("dashboard-hot-topic-apply", payload, key), action, payload)
     if (context.status !== "ok") throw new Error(`human admission: ${context.status}`)
     try { return await work(context.value) } finally { authority.human.finish(context.value) }

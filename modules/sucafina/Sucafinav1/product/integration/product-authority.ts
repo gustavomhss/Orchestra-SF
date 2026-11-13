@@ -123,13 +123,14 @@ export function createSfProductAuthority(input: {
           if (typeof decision.id !== "string" || typeof decision.incarnation !== "string" || typeof decision.version !== "number" || !Array.isArray(decision.participants) || !decision.participants.includes(actor.principalRef) || !Array.isArray(decision.choices) || !Array.isArray(decision.preparedChanges)) return []
           const changes: readonly unknown[] = decision.preparedChanges
           const choices: readonly unknown[] = decision.choices
+          const decisionVersion = decision.version
           return changes.flatMap((value) => {
             const change = object(value), target = object(change.target)
             if (typeof change.id !== "string" || target.surface !== "dashboard" || target.id !== targetRef || typeof target.incarnation !== "string" || target.incarnation !== command.targetIncarnation || command.idempotencyKey !== `prepared:${change.idempotencyKey}`) return []
             const binding = object(preferences[`sf:dashboard-host:prepared:${change.id}`])
             const caseRef = object(binding.caseRef)
             const boundChoices = choices.map(object).filter((choice) => choice.id === change.choiceId)
-            if (binding.schema !== "sf-dashboard-prepared-binding-v1" || binding.changeId !== change.id || binding.choiceId !== change.choiceId || caseRef.id !== decision.id || caseRef.incarnation !== decision.incarnation || typeof caseRef.version !== "number" || caseRef.version > decision.version || (change.state === "planned" && !change.receipt && caseRef.version !== decision.version) || binding.principalRef !== actor.principalRef || binding.accessRevision !== actor.accessRevision || binding.policyVersion !== actor.policyVersion || boundChoices.length !== 1 || binding.choiceDigest !== digestSfValue(boundChoices[0]) || digestSfValue(binding.command) !== digestSfValue(change.operation)) return []
+            if (binding.schema !== "sf-dashboard-prepared-binding-v1" || binding.changeId !== change.id || binding.choiceId !== change.choiceId || caseRef.id !== decision.id || caseRef.incarnation !== decision.incarnation || typeof caseRef.version !== "number" || caseRef.version > decisionVersion || (change.state === "planned" && !change.receipt && caseRef.version !== decisionVersion) || binding.principalRef !== actor.principalRef || binding.accessRevision !== actor.accessRevision || binding.policyVersion !== actor.policyVersion || boundChoices.length !== 1 || binding.choiceDigest !== digestSfValue(boundChoices[0]) || digestSfValue(binding.command) !== digestSfValue(change.operation)) return []
             const material = Object.fromEntries(Object.entries(binding).filter(([key]) => key !== "recordDigest"))
             if (binding.recordDigest !== digestSfValue(material)) return []
             return [{ incarnation: target.incarnation }]
@@ -208,5 +209,12 @@ export function createSfProductAuthority(input: {
   const host: DomainPortHost = { persistence: input.persistence, authenticate: input.authenticate, environment: input.environment,
     requestFor: authority.requestFor, revalidate: authority.revalidateDomainContext }
   const human = createSfHumanAuthority({ origin: input.origin, ui })
-  return { state, ui, human, native, authority, host, creationTarget, nativeEvidenceWrites, authorizeNative, authorizeInterrupt }
+  const humanActions = async (request: Request): Promise<readonly SfHumanAction[]> => {
+    const actor = await resolve(request).catch(() => undefined)
+    if (!actor?.canWrite) return []
+    const current = await resolve(request).catch(() => undefined)
+    if (!current?.canWrite || current.principalRef !== actor.principalRef || current.accessRevision !== actor.accessRevision || request.signal.aborted) return []
+    return [...actor.grant.humanActions ?? []]
+  }
+  return { state, ui, human, humanActions, native, authority, host, creationTarget, nativeEvidenceWrites, authorizeNative, authorizeInterrupt }
 }

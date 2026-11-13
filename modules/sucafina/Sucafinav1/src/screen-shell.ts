@@ -141,6 +141,39 @@ function attach() {
     anchor.href = target.toString()
     if (target.searchParams.get("page") === document.querySelector("main")?.dataset.page) anchor.setAttribute("aria-current", "page")
   })
+  document.querySelectorAll("[data-dashboard-signal-link]").forEach((anchor) => {
+    const target = new URL(anchor.href)
+    for (const key of stateKeys) if (current.searchParams.has(key)) target.searchParams.set(key, current.searchParams.get(key))
+    anchor.href = target.toString()
+  })
+  document.querySelectorAll("[data-dashboard-signals]").forEach((section) => {
+    if (section.dataset.bound) return
+    section.dataset.bound = "true"
+    const records = [...section.querySelectorAll("[data-signal-priority]")].map((button, index) => ({ button, row: button.closest("tr"), id: button.dataset.signalPriority, index }))
+    const authorized = new Set(records.map((item) => item.id))
+    const pinned = new Set(current.searchParams.getAll("signalPriority").filter((id) => authorized.has(id)))
+    const order = () => {
+      const sorted = [...records].sort((a, b) => Number(pinned.has(b.id)) - Number(pinned.has(a.id)) || a.index - b.index)
+      for (const item of sorted) {
+        item.row.parentElement.append(item.row)
+        item.button.setAttribute("aria-pressed", String(pinned.has(item.id)))
+        item.button.textContent = pinned.has(item.id) ? "Remove priority" : "Prioritize"
+        item.button.setAttribute("aria-label", (pinned.has(item.id) ? "Remove priority for " : "Prioritize ") + item.button.dataset.signalLabel)
+      }
+      section.querySelector("[data-signal-order]").textContent = pinned.size + " of " + records.length + " signals prioritized by you. Your priorities first, then recorded date; undated records follow. Priorities belong to this view and do not change the records."
+    }
+    for (const item of records) item.button.addEventListener("click", () => {
+      if (pinned.has(item.id)) pinned.delete(item.id)
+      else pinned.add(item.id)
+      const url = new URL(location.href)
+      url.searchParams.delete("signalPriority")
+      for (const id of pinned) url.searchParams.append("signalPriority", id)
+      history.replaceState(history.state, "", url)
+      order()
+      item.button.focus()
+    })
+    order()
+  })
   document.querySelectorAll("[data-notifications]").forEach((menu) => {
     if (menu.dataset.bound) return
     menu.dataset.bound = "true"
@@ -416,7 +449,7 @@ function attach() {
   }) })
 }
 function applyRefresh() {
-  if (!pending.html || document.querySelector("form[data-dirty], dialog[open]") || document.activeElement && document.activeElement.closest("form")) return
+  if (!pending.html || document.querySelector("form[data-dirty], dialog[open], [data-sf-retain-view]") || document.activeElement && document.activeElement.closest("form")) return
   const next = new DOMParser().parseFromString(pending.html, "text/html")
   const main = next.querySelector("main")
   if (!main) { pending.html = null; return }
@@ -453,7 +486,7 @@ const businessTimer = setInterval(() => { if (!document.hidden) void refresh(tru
 window.addEventListener("pagehide", () => { pending.closed = true; clearInterval(businessTimer); pending.controller?.abort() })
 window.addEventListener("beforeunload", (event) => { if (document.querySelector("form[data-dirty]")) { event.preventDefault(); event.returnValue = "" } })
 window.addEventListener("pageshow", (event) => { if (event.persisted) location.reload() })
-window.sucafinaRefresh = refresh
+window.sucafinaRefresh = async () => { pending.generation++; pending.html = null; await refresh() }
 document.addEventListener("focusout", () => setTimeout(applyRefresh, 0))
 attach()
 `

@@ -22,7 +22,7 @@ export function handleDashboardPreview(snapshot: Snapshot, actor: Actor, command
     } })
     if (preview.status !== "preview") return { commit: false, value: {
       ok: false, status: preview.status === "denied" ? 403 : preview.status === "conflict" ? 409 : 422,
-      errors: preview.status === "invalid" && "errors" in preview ? [...preview.errors] : [preview.status === "conflict" ? "The stored record changed." : preview.reason],
+      errors: preview.status === "invalid" && preview.errors ? [...preview.errors] : [preview.status === "conflict" ? "The stored record changed." : preview.reason],
       ...(preview.status === "conflict" ? { by: preview.by, stored: preview.stored } : {}),
     } }
     const previewRef = environment.id()

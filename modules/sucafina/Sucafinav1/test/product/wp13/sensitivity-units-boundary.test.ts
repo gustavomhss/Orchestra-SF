@@ -46,7 +46,8 @@ const caseRef = { id: "case", incarnation: "case-incarnation", version: 1 }
 const initial = (): Snapshot => ({
   data: {
     roleMap: [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }],
-    versions: [{ id: "v0", year: 2027, closed: 9, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "EUR", b: Array(12).fill(100000), a: Array(12).fill(null), f: [null, null, null, null, null, null, null, null, null, 100000, 112000, 100000] }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }],
+    // EUR is a registered input currency with no conversion rate; editing an unknown currency is a different domain rejection.
+    versions: [{ id: "v0", year: 2027, closed: 9, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "EUR", b: Array(12).fill(100000), a: Array(12).fill(null), f: [null, null, null, null, null, null, null, null, null, 100000, 112000, 100000] }], fx: [{ id: "EUR", cur: "EUR", rate: null }], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }],
   },
   versions: {}, sequences: {}, audit: [], notices: [],
 })

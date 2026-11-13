@@ -61,8 +61,11 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
   if (!input.installationId.trim() || !path.isAbsolute(input.directory) || path.resolve(input.directory) !== input.directory) throw new Error("SF_HOST_PLACEMENT_INVALID")
   const directory = AbsolutePath.make(input.directory)
   const bundle = await createResidentAiBundle({ root: input.sourceRoot, manifestPath: path.join(input.sourceRoot, "manifests/resident.json") })
-  const selected = bundle.profiles.map((profile) => ({ profile, manifestDigest: bundle.manifestDigest,
-    skills: bundle.skills.filter((skill) => profile.allowedSkills.includes(skill.id)), operationIds: profile.allowedOperations }))
+  const selected = bundle.profiles.map((profile) => {
+    const skills = bundle.skills.filter((skill) => profile.allowedSkills.includes(skill.id))
+    return { profile, manifestDigest: bundle.manifestDigest, skills,
+      operationIds: profile.allowedOperations.filter((operation) => skills.some((skill) => skill.allowedOperations.includes(operation))) }
+  })
   const state: { identity?: ReturnType<SfHostRuntime["identity"]>; store?: SessionStore.Interface; api?: SfNativeHostApi;
     models?: SfHostServices["models"]; configuration?: string; generation: number } = { generation: 0 }
   const requests = new Map<string, Request>()

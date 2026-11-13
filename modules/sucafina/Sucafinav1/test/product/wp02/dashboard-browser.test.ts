@@ -47,13 +47,15 @@ test("Dashboard browser keeps the monthly draft through a real conflict, reviews
         { id: "project-1", name: "Cloud migration", status: "Planning", risk: "High", pm: "Owner", end: "2026-12-10", watchList: true },
         { id: "project-2", name: "Other project", status: "Completed", risk: "Low", pm: "Other", watchList: false },
       ]
+      snapshot.data.hotTopics = [{ id: "review-action", action: "Review action", owner: "owner", status: "open", priority: "normal", due: "2026-10-01", notes: "" }]
+      snapshot.data.risks = Array.from({ length: 20 }, (_, index) => ({ id: `risk-${index + 1}`, title: `Review risk ${String(index + 1).padStart(2, "0")}`, status: "open", impact: 4, probability: 4, due: `2026-11-${String(index + 1).padStart(2, "0")}` }))
       return { commit: true, value: undefined }
     })
     const context = await browser.newContext()
     const enrollment = await identity.enroll()
-    const login = await context.request.get(`${origin}/sucafina/auth/local?code=${enrollment}`)
-    expect(login.ok()).toBe(true)
     const page = await context.newPage()
+    const login = await page.goto(`${origin}/sucafina/auth/local?code=${enrollment}`)
+    expect(login?.ok()).toBe(true)
     const errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
     page.on("dialog", (dialog) => dialog.accept())
@@ -149,6 +151,25 @@ test("Dashboard browser keeps the monthly draft through a real conflict, reviews
     expect(await invalid.getByLabel("Year amount", { exact: true }).inputValue()).toBe("-10")
     expect(await invalid.getAttribute("data-dirty")).toBe("true")
     expect(await persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: rows(snapshot.data.opexEntries) }))).toEqual(rows(after.data.opexEntries))
+    const risks = await persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot.data.risks) }))
+    await page.goto(`${origin}/sucafina/dashboard?page=Executive+Dashboard&year=2026&execYear=2026&executiveMonth=11`)
+    const signals = page.locator("[data-dashboard-signals]")
+    await signals.getByText("Showing 21 of 21 eligible signals", { exact: false }).waitFor()
+    expect(await signals.locator("tbody tr").first().textContent()).toContain("Review action")
+    await signals.getByRole("button", { name: "Prioritize Review risk 20", exact: true }).click()
+    expect(await signals.locator("tbody tr").first().textContent()).toContain("Review risk 20")
+    expect(await signals.locator("[data-signal-order]").textContent()).toContain("1 of 21 signals prioritized by you")
+    expect(new URL(page.url()).searchParams.getAll("signalPriority")).toEqual(["risks:risk-20"])
+    await page.reload()
+    await signals.getByRole("button", { name: "Remove priority for Review risk 20", exact: true }).waitFor()
+    expect(await signals.locator("tbody tr").first().textContent()).toContain("Review risk 20")
+    await signals.locator("tbody tr").first().getByRole("link", { name: "Open record", exact: true }).click()
+    expect(new URL(page.url()).searchParams.get("page")).toBe("IT Risks")
+    expect(new URL(page.url()).searchParams.get("execYear")).toBe("2026")
+    expect(new URL(page.url()).searchParams.get("executiveMonth")).toBe("11")
+    expect(new URL(page.url()).hash).toBe("#record-risk-20")
+    await page.locator("#record-risk-20").waitFor()
+    expect(await persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot.data.risks }))).toEqual(risks)
     expect(errors).toEqual([])
   } finally {
     delayed.release?.()

@@ -27,7 +27,9 @@ test("real Planner mutation and case receipt commit atomically across surfaces",
   const store = await openLocalStore(directory)
   try {
     const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => "2026-11-13T00:00:00Z") })
+    await persistence.initializeSources("dashboard")
     await persistence.initializeSources("planner")
+    await persistence.initializeSources("procurement")
     await persistence.transaction("planner", async (snapshot) => {
       snapshot.data.roleMap = [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }]
       snapshot.data.versions = [{ id: "v0", year: 2027, closed: 0, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD", b: [100] }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
