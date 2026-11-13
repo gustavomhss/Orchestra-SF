@@ -33,6 +33,27 @@ test("USD and in-use FX are protected, comma rates retain six decimal places", (
   expect(plannerCatalogs(snapshot, admin, environment, "v1")?.fx.rates[0]?.rate).toBe(1.234568)
 })
 
+test("subquantum FX preserves the pinned manual and workbook boundaries while marking the converted amount unavailable", () => {
+  const snapshot = fixture()
+  const before = structuredClone(snapshot)
+  const command = { page: "FX rates", action: "save", id: "eur", version: 0, values: { versionId: "v1", cur: "EUR", rate: "0,0000001" } }
+  const preview = previewPlannerCatalog(snapshot, admin, environment, "v1", command)
+  expect(preview?.result.ok).toBe(true)
+  expect(preview?.after?.fx.rates[0]?.rate).toBe(0)
+  expect(snapshot).toEqual(before)
+  expect(domain.execute(snapshot, admin, command, environment).ok).toBe(true)
+  expect(plannerCurrencyComposition(snapshot, admin, environment, "v1", 100, "EUR")).toEqual({ amount: 100, currency: "EUR", rate: 0, usd: null, legacyUsd: 0, missingRate: true })
+  const rounded = structuredClone(snapshot)
+  expect(domain.execute(snapshot, admin, { ...command, version: 1, values: { ...command.values, rate: "0" } }, environment)).toMatchObject({ ok: false, status: 422 })
+  expect(snapshot).toEqual(rounded)
+  expect(domain.execute(snapshot, admin, { ...command, version: 1, values: { ...command.values, rate: "0,0000005" } }, environment).ok).toBe(true)
+  expect(plannerCurrencyComposition(snapshot, admin, environment, "v1", 100, "EUR")).toMatchObject({ rate: 0.000001, missingRate: false })
+  const workbook = fixture()
+  const workbookBefore = structuredClone(workbook)
+  expect(domain.execute(workbook, admin, { page: "Overview", action: "import-workbook", version: 0, values: { versionId: "v1", sheets: { "FX rates": [{ Currency: "EUR", "USD per 1 unit": 0.0000001 }] }, versions: structuredClone(workbook.versions) } }, environment)).toMatchObject({ ok: false, status: 422, errors: ["FX rate rounds to zero"] })
+  expect(workbook).toEqual(workbookBefore)
+})
+
 test("catalog preview allocates unused identities without replacing a saved catalog row", () => {
   const snapshot = fixture()
   const version = (snapshot.data.versions as Record<string, unknown>[])[0]!

@@ -107,3 +107,35 @@ test("an editable version can change fiscal year without moving the year's offic
     expect(await fixture.readSnapshot()).toEqual(after)
   } finally { await fixture.close() }
 })
+
+test("a legacy official without its lock flag rejects year changes in preview and apply while retaining rename and copy", async () => {
+  const fixture = await plannerFixture()
+  try {
+    const before = await fixture.readSnapshot()
+    expect(object(before.data.officials)["2027"]).toBe("v0")
+    expect(rows(before.data.versions).find((version) => version.id === "v0")?.locked).not.toBe(true)
+    const request = { action: "save" as const, id: "v0", revision: 0, name: "Forged next-year official", year: 2028 }
+    for (const action of ["preview", "apply"] as const) {
+      const context = await fixture.admit(`sf-human:planner.${action}`, request, "admin", true)
+      expect(await fixture.versions[action](request, context)).toMatchObject({ status: "ok", value: { request, outcome: { ok: false, status: 403 } } })
+      expect(await fixture.readSnapshot()).toEqual(before)
+    }
+    const rename = { action: "save" as const, id: "v0", revision: 0, name: "Renamed official" }
+    expect(await fixture.versions.apply(rename, await fixture.admit("sf-human:planner.apply", rename, "admin", true))).toMatchObject({ status: "ok", value: { outcome: { ok: true } } })
+    const copy = { action: "copy" as const, id: "v0", revision: 1, name: "Working copy" }
+    const copied = await fixture.versions.apply(copy, await fixture.admit("sf-human:planner.apply", copy, "admin", true))
+    expect(copied.status).toBe("ok")
+    if (copied.status !== "ok" || !copied.value.outcome.ok || !copied.value.outcome.versionId) throw new Error("official copy unavailable")
+    const copiedId = copied.value.outcome.versionId
+    const after = await fixture.readSnapshot()
+    const original = rows(after.data.versions).find((version) => version.id === "v0")!
+    const working = rows(after.data.versions).find((version) => version.id === copiedId)!
+    expect(original.name).toBe("Renamed official")
+    expect(original.year).toBe(2027)
+    expect(after.data.officials).toEqual(before.data.officials)
+    expect(working.locked).toBe(false)
+    expect(working.lines).toEqual(original.lines)
+    const draft = { action: "save" as const, id: "v1", revision: 0, name: "Next year draft", year: 2028 }
+    expect(await fixture.versions.apply(draft, await fixture.admit("sf-human:planner.apply", draft, "admin", true))).toMatchObject({ status: "ok", value: { outcome: { ok: true } } })
+  } finally { await fixture.close() }
+})

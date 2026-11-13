@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { rows } from "../../../runtime/contract.ts"
+import { object, rows } from "../../../runtime/contract.ts"
 import { createPlannerOverviewHost } from "../../../product/planner/overview-host.ts"
 import { plannerOverview, renderPlannerOverview } from "../../../product/planner/overview.ts"
 import { plannerDifferencePresentation } from "../../../product/planner/bi-difference.ts"
@@ -66,4 +66,54 @@ test("record additions and removals reconcile without matching labels or disguis
     expect(escaped).toContain("&lt;script&gt;unsafe&lt;/script&gt;")
     expect(escaped).not.toContain("<script>")
   } finally { await fixture.close() }
+})
+
+test("isolated FX and HR capacity changes reconcile to the exposed inputs and monthly components", async () => {
+  for (const vector of ["fx", "fte"] as const) {
+    const snapshot = plannerSnapshot()
+    const baseline = rows(snapshot.data.versions)[0]!
+    baseline.closed = 0
+    baseline.lines = vector === "fx" ? [{ id: "euro-license", sec: "opex", el: "licenses", cur: "EUR", b: Array(12).fill(1000), a: [], f: [] }] : []
+    baseline.fx = vector === "fx" ? [{ id: "eur", cur: "EUR", rate: 1 }] : []
+    baseline.hc = { positions: vector === "fte" ? [{ id: "position", name: "Planned position", include: true, fte: 1, start: 7, end: 12, domain: "IT", type: "Employee", location: "Brazil", rateId: "usd" }] : [], rates: vector === "fte" ? [{ id: "usd", name: "USD role", locs: "Brazil", annual: 120000, cur: "USD" }] : [], hrAF: {} }
+    const candidate = structuredClone(baseline)
+    candidate.id = "v1"
+    candidate.name = `Changed ${vector}`
+    if (vector === "fx") rows(candidate.fx)[0]!.rate = 1.5
+    if (vector === "fte") rows(object(candidate.hc).positions)[0]!.fte = 0.5
+    snapshot.data.versions = [baseline, candidate]
+    const fixture = await plannerFixture(snapshot)
+    try {
+      const context = await fixture.admit("sf-human:planner.read", {}, "finance", true)
+      const references = await Promise.all(["v0", "v1"].map((id) => fixture.issueSource(id, context)))
+      if (references[0]!.status !== "ok" || references[1]!.status !== "ok") throw new Error("isolated source unavailable")
+      const compared = await fixture.planner.compareForecast({ baseRef: references[0]!.value.evidence.refId, candidateRef: references[1]!.value.evidence.refId, period: plannerPeriod, currency: "USD" }, context)
+      if (compared.status !== "ok") throw new Error("isolated comparison unavailable")
+      const model = plannerOverview(compared.value)
+      if (model.status !== "ok") throw new Error("isolated Overview unavailable")
+      const expectedDelta = vector === "fx" ? 6000 : -30000
+      expect(compared.value.knownDifference).toBe(expectedDelta)
+      expect(model.value.metrics.deltaToBase).toBe(expectedDelta)
+      expect(model.value.components.reduce((sum, row) => sum + row.difference!, 0)).toBe(expectedDelta)
+      expect(model.value.coverageState).toBe("conditioned")
+      expect(plannerDifferencePresentation(compared.value, "BI03")).toMatchObject({ status: "ok", value: { presentation: { waterfall: { reconciliation: "reconciled" } } } })
+      if (vector === "fx") {
+        expect(model.value.metrics).toMatchObject({ baselineOutlook: 12000, candidateOutlook: 18000 })
+        expect(model.value.assumptions).toEqual([{ id: "fx:EUR", before: 1, after: 1.5, explanation: "The exchange-rate input changed; the comparison does not attribute the total difference to this input." }])
+        expect(model.value.components.every((row) => row.state === "matched" && row.difference === 500 && row.id.startsWith("euro-license:"))).toBe(true)
+        expect(compared.value.baseline.values.find((value) => value.id === "euro-license:1:budget")).toMatchObject({ value: 1000, currency: "EUR" })
+        expect(compared.value.candidate.values.find((value) => value.id === "euro-license:1:budget")).toMatchObject({ value: 1000, currency: "EUR" })
+      } else {
+        expect(model.value.metrics).toMatchObject({ baselineOutlook: 60000, candidateOutlook: 30000 })
+        expect(model.value.monthly.slice(0, 6).every((month) => month.baselineFte === 0 && month.fte === 0 && month.baselineOutlook === 0 && month.outlook === 0)).toBe(true)
+        expect(model.value.monthly.slice(6).every((month) => month.baselineFte === 1 && month.fte === 0.5 && month.baselineOutlook === 10000 && month.outlook === 5000)).toBe(true)
+        const changed = model.value.components.filter((row) => row.difference !== 0)
+        expect(changed).toHaveLength(6)
+        expect(changed.every((row) => row.state === "matched" && row.difference === -5000 && row.id.startsWith("HR:IT:"))).toBe(true)
+        expect(model.value.assumptions).toEqual([])
+        expect(renderPlannerOverview(model.value)).toContain("Base planned FTE")
+      }
+      expect((await fixture.readSnapshot()).data).toEqual(snapshot.data)
+    } finally { await fixture.close() }
+  }
 })

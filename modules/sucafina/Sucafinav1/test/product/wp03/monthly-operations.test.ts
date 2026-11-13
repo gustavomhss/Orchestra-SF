@@ -55,7 +55,7 @@ test("monthly entity operations use closed actions and per-record CAS", async ()
   } finally { await fixture.dispose() }
 })
 
-for (const role of ["viewer", "owner"] as const) test(`monthly ${role} response retains permitted HR aggregates and excludes private rates, individual costs and migrated Talent fields`, async () => {
+for (const role of ["viewer", "budget owner"] as const) test(`monthly ${role} response retains permitted HR aggregates and excludes private rates, individual costs and migrated Talent fields`, async () => {
   const fixture = await monthlyFixture(role)
   try {
     const request = { page: "OPEX" as const, versionId: "v1", drafts: [{ rowId: "line", revision: 0, cells: [{ measure: "forecast" as const, month: 1, text: "42" }] }] }
@@ -129,7 +129,7 @@ test("parallel independent rows survive and one stale row does not discard valid
   } finally { await fixture.dispose() }
 })
 
-async function monthlyFixture(role: "admin" | "viewer" | "owner" | "finance" = "admin") {
+async function monthlyFixture(role: "admin" | "viewer" | "budget owner" | "finance" = "admin") {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-planner-operations-"))
   const persistence = await openLocalStore(directory)
   await persistence.transaction("planner", async (snapshot) => {

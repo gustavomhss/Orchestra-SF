@@ -29,6 +29,36 @@ test("headcount publishes planned monthly FTE and independent budget, actual, fo
   expect(snapshot).toEqual(before)
 })
 
+test("automatic employee and contractor rates follow normalized location and type while explicit rates and overrides retain precedence", () => {
+  const snapshot = fixture()
+  const hc = object(rows(snapshot.data.versions)[0]!.hc)
+  hc.inc = 0
+  hc.rates = [
+    { id: "contractor", name: "Contractors", locs: "Brazil", annual: 240000, cur: "USD" },
+    { id: "brazil", name: "Employees South America", locs: "Brazil, Argentina", annual: 120000, cur: "USD" },
+    { id: "france", name: "Employees France", locs: "France", annual: 60000, cur: "USD" },
+  ]
+  const common = { include: true, fte: 1, start: 1, end: 12 }
+  hc.positions = [
+    { ...common, id: "employee", name: "Employee", type: "Employee", location: "São Paulo, Brázil", domain: "IT" },
+    { ...common, id: "contractor", name: "Contractor", type: "Contractor", location: "France", domain: "Operations" },
+    { ...common, id: "explicit", name: "Explicit rate", type: "Employee", location: "Brazil", domain: "Legal", rateId: "france" },
+    { ...common, id: "override", name: "Automatic with override", type: "Employee", location: "Brazil", domain: "Finance", rateOverride: 180000 },
+  ]
+  const before = structuredClone(snapshot)
+  const projected = projectHeadcount(snapshot, hr, environment, "v1")!
+  for (const [domainName, monthly] of [["IT", 10000], ["Operations", 20000], ["Legal", 5000], ["Finance", 15000]] as const) {
+    const group = projected.groups.find((entry) => entry.domain === domainName)!
+    expect(group.monthlyBudgetUsd).toEqual(Array(12).fill(monthly))
+    expect(group.monthlyPlannedFte).toEqual(Array(12).fill(1))
+    expect(group.budgetState).toBe("known")
+    expect(group.positions[0]).toMatchObject({ hasRate: true })
+  }
+  expect(projected.monthlyPlannedFte).toEqual(Array(12).fill(4))
+  expect(rows(hc.positions).find((position) => position.id === "employee")!.rateId).toBeUndefined()
+  expect(snapshot).toEqual(before)
+})
+
 test("missing rate and missing FX are scoped to the active domain and inherited budget month", () => {
   const snapshot = fixture()
   const version = rows(snapshot.data.versions)[0]

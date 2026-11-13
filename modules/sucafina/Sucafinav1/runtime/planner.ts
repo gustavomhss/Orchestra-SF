@@ -967,7 +967,7 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
                   value: item.year,
                   min: 2001,
                   max: 2099,
-                  readonly: item.locked,
+                  readonly: item.locked || idOf(object(safe.officials)[String(item.year)]) === item.id,
                 },
               ]),
               "Save",
@@ -1532,7 +1532,7 @@ function executeVersions(
   else if (command.action === "save") {
     if (values.year !== undefined) {
       const year = Number(values.year)
-      if (version.locked) return reject
+      if (version.locked || idOf(officials[String(version.year)]) === version.id) return reject
       if (!Number.isInteger(year) || year <= 2000 || year >= 2100) return invalid("Invalid fiscal year")
       version.year = year
     }

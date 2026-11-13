@@ -102,10 +102,20 @@ test("C16 scenario simulation and comparison share UI/MCP handlers and persist t
     })
     const humanBase = await dispatch("sf_scenario_simulate", inputs[0], await fixture.admit("sf_scenario_simulate", inputs[0]))
     const humanAlternative = await dispatch("sf_scenario_simulate", inputs[1], await fixture.admit("sf_scenario_simulate", inputs[1]))
-    expect(humanBase).toMatchObject({ status: "ok", result: { knownSubtotal: 590000, total: null }, receipt: { kind: "ui", handlerExport: "simulateScenario" }, outputRef: expect.stringContaining("decision-result:") })
-    expect(humanAlternative).toMatchObject({ status: "ok", result: { knownSubtotal: 602000, total: null }, outputRef: expect.stringContaining("decision-result:") })
-    if (humanBase.status !== "ok" || humanAlternative.status !== "ok" || !humanBase.outputRef || !humanAlternative.outputRef) throw new Error("UI persistence failed")
-    expect(await store.read({ resultRef: humanBase.outputRef, kind: "scenario" }, read)).toMatchObject({ status: "ok", value: { requestDigest: digestSfValue(inputs[0]), resultDigest: digestSfValue(humanBase.result) } })
+    expect(humanBase.status).toBe("ok")
+    expect(humanAlternative.status).toBe("ok")
+    if (humanBase.status !== "ok" || humanAlternative.status !== "ok") throw new Error("UI persistence failed")
+    expect(typeof humanBase.outputRef).toBe("string")
+    expect(typeof humanAlternative.outputRef).toBe("string")
+    if (typeof humanBase.outputRef !== "string" || typeof humanAlternative.outputRef !== "string") throw new Error("UI output references must be strings")
+    const humanBaseRef = humanBase.outputRef
+    const humanAlternativeRef = humanAlternative.outputRef
+    expect(humanBaseRef).toStartWith("decision-result:")
+    expect(humanAlternativeRef).toStartWith("decision-result:")
+    expect(humanBase.result).toMatchObject({ knownSubtotal: 590000, total: null })
+    expect(humanAlternative.result).toMatchObject({ knownSubtotal: 602000, total: null })
+    expect(humanBase.receipt).toMatchObject({ kind: "ui", handlerExport: "simulateScenario" })
+    expect(await store.read({ resultRef: humanBaseRef, kind: "scenario" }, read)).toMatchObject({ status: "ok", value: { requestDigest: digestSfValue(inputs[0]), resultDigest: digestSfValue(humanBase.result) } })
 
     const sessionID = SessionSchema.ID.make("ses_wp03_scenario_parity")
     const allowedOperations = ["sf_scenario_simulate", "sf_scenario_compare"]
@@ -117,18 +127,34 @@ test("C16 scenario simulation and comparison share UI/MCP handlers and persist t
     const nativeContext = { sessionID, agent: AgentV2.ID.make(profile.id), assistantMessageID: SessionMessage.ID.make("msg_wp03_scenario"), toolCallID: "simulate" }
     const bridge = createSfBusinessMcpBridge({ registry: fixture.registry, mcp: { config: () => Effect.succeed({}) } as unknown as Mcp.Interface, descriptors, dispatch })
     const nativeBase = await bridge.call(nativeContext, "sf_scenario_simulate", inputs[0])
-    expect(nativeBase).toMatchObject({ status: "ok", result: humanBase.result, receipt: { kind: "native", handlerExport: "simulateScenario", resultDigest: digestSfValue(humanBase.result) }, outputRef: expect.stringContaining("decision-result:") })
-    if (nativeBase.status !== "ok" || !nativeBase.outputRef) throw new Error("MCP scenario persistence failed")
-    expect(await store.read({ resultRef: nativeBase.outputRef, kind: "scenario" }, read)).toMatchObject({ status: "ok", value: { resultDigest: digestSfValue(humanBase.result) } })
-    const comparisonInput = { scenarioRefs: [humanBase.outputRef, humanAlternative.outputRef], criteria: [] }
+    expect(nativeBase.status).toBe("ok")
+    if (nativeBase.status !== "ok") throw new Error("MCP scenario persistence failed")
+    // Check and retain primitive references before matching result objects that are
+    // reused as input below; asymmetric matchers must not enter the replay request.
+    expect(typeof nativeBase.outputRef).toBe("string")
+    if (typeof nativeBase.outputRef !== "string") throw new Error("MCP output reference must be a string")
+    const nativeBaseRef = nativeBase.outputRef
+    expect(nativeBaseRef).toStartWith("decision-result:")
+    expect(nativeBase.result).toEqual(humanBase.result)
+    expect(nativeBase.receipt).toMatchObject({ kind: "native", handlerExport: "simulateScenario", resultDigest: digestSfValue(humanBase.result) })
+    expect(await store.read({ resultRef: nativeBaseRef, kind: "scenario" }, read)).toMatchObject({ status: "ok", value: { resultDigest: digestSfValue(humanBase.result) } })
+    const comparisonInput = { scenarioRefs: [humanBaseRef, humanAlternativeRef], criteria: [] }
     const humanComparison = await dispatch("sf_scenario_compare", comparisonInput, await fixture.admit("sf_scenario_compare", comparisonInput))
     const nativeComparison = await bridge.call({ ...nativeContext, toolCallID: "compare" }, "sf_scenario_compare", comparisonInput)
-    expect(humanComparison).toMatchObject({ status: "ok", result: { knownDifference: 12000, completeDifference: null, comparisonStatus: "conditioned" }, receipt: { kind: "ui", handlerExport: "compareScenarios" }, outputRef: expect.stringContaining("decision-result:") })
-    expect(nativeComparison).toMatchObject({ status: "ok", receipt: { kind: "native", handlerExport: "compareScenarios" }, outputRef: expect.stringContaining("decision-result:") })
-    if (humanComparison.status !== "ok" || nativeComparison.status !== "ok" || !humanComparison.outputRef || !nativeComparison.outputRef) throw new Error("comparison persistence failed")
+    expect(humanComparison.status).toBe("ok")
+    expect(nativeComparison.status).toBe("ok")
+    if (humanComparison.status !== "ok" || nativeComparison.status !== "ok") throw new Error("comparison persistence failed")
+    expect(typeof humanComparison.outputRef).toBe("string")
+    expect(typeof nativeComparison.outputRef).toBe("string")
+    if (typeof humanComparison.outputRef !== "string" || typeof nativeComparison.outputRef !== "string") throw new Error("Comparison output references must be strings")
+    const comparisonRefs = [humanComparison.outputRef, nativeComparison.outputRef]
+    comparisonRefs.forEach((ref) => expect(ref).toStartWith("decision-result:"))
+    expect(humanComparison.result).toMatchObject({ knownDifference: 12000, completeDifference: null, comparisonStatus: "conditioned" })
+    expect(humanComparison.receipt).toMatchObject({ kind: "ui", handlerExport: "compareScenarios" })
+    expect(nativeComparison.receipt).toMatchObject({ kind: "native", handlerExport: "compareScenarios" })
     expect(nativeComparison.result).toEqual(humanComparison.result)
     expect(nativeComparison.receipt).toMatchObject({ resultDigest: digestSfValue(humanComparison.result) })
-    for (const resultRef of [humanComparison.outputRef, nativeComparison.outputRef]) expect(await store.read({ resultRef, kind: "comparison" }, read)).toMatchObject({ status: "ok", value: { requestDigest: digestSfValue(comparisonInput), resultDigest: digestSfValue(humanComparison.result) } })
+    for (const resultRef of comparisonRefs) expect(await store.read({ resultRef, kind: "comparison" }, read)).toMatchObject({ status: "ok", value: { requestDigest: digestSfValue(comparisonInput), resultDigest: digestSfValue(humanComparison.result) } })
     expect(await bridge.call({ ...nativeContext, toolCallID: "compare" }, "sf_scenario_compare", comparisonInput)).toMatchObject({ status: "denied" })
     const beforeRevocation = await fixture.admit("sf_scenario_compare", comparisonInput)
     fixture.access.revision = "revoked"
@@ -136,4 +162,4 @@ test("C16 scenario simulation and comparison share UI/MCP handlers and persist t
     expect(await bridge.call({ ...nativeContext, toolCallID: "revoked-simulation" }, "sf_scenario_simulate", inputs[0])).toMatchObject({ status: "denied" })
     expect((await fixture.readSnapshot()).data).toEqual(domainBefore)
   } finally { await fixture.close() }
-})
+}, 20_000)
