@@ -10,6 +10,7 @@ import {
 import { esc } from "../src/screen-shell.ts"
 import { changed, conflict, object, rows, text, finite } from "./contract.ts"
 import type { Actor, Domain, Result, Snapshot } from "./contract.ts"
+import { operationActions, securityActions } from "./native-commands-operations.ts"
 import { fields, form, metric, metricGrid, table } from "./ui.ts"
 import type { Field, RenderContext } from "./ui.ts"
 
@@ -488,6 +489,30 @@ export const domain: Domain = {
         ),
       ),
     }
+  },
+  // Authorization is writable(); values and revisions come from the authorized view.
+  commands(_snapshot, actor, _environment, context) {
+    if ((context.page !== pages[0] && context.page !== pages[1]) || !writable(actor, context.page)) return []
+    const source = { year: context.year, month: context.month, versions: context.view.versions }
+    if (context.page === pages[0]) {
+      return operationActions({
+        ...source,
+        page: pages[0],
+        categories: list(context.view.data.opsCats, categories),
+        items: list(context.view.data.opsHmItems, items),
+        tickets: rows(context.view.data.opsTickets),
+        sla: rows(context.view.data.opsSLA),
+        heatmap: rows(context.view.data.opsHeatmap),
+      })
+    }
+    return securityActions({
+      ...source,
+      page: pages[1],
+      kpis: rows(context.view.data.secKpi),
+      actions: rows(context.view.data.secActions),
+      incidents: rows(context.view.data.secIncidents),
+      campaigns: rows(context.view.data.secPhishing),
+    })
   },
 }
 
