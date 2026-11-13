@@ -551,6 +551,7 @@ export function AppInterface(props: {
   defaultServer: ServerConnection.Key
   canonicalLocalServer?: ServerConnection.Key
   servers?: Array<ServerConnection.Any>
+  pinnedServer?: ServerConnection.Http
   router?: Component<BaseRouterProps>
   disableHealthCheck?: boolean
   /** A server the host already saw healthy; the first connection check skips it. */
@@ -579,6 +580,7 @@ export function AppInterface(props: {
       defaultServer={props.defaultServer}
       canonicalLocalServer={props.canonicalLocalServer}
       servers={props.servers}
+      pinnedServer={props.pinnedServer}
     >
       <GlobalProvider>
         <SettingsProvider>
