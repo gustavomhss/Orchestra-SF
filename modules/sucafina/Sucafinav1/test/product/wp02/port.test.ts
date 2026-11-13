@@ -28,6 +28,7 @@ test("dashboard port reads canonical effective budget and rejects stale and unau
   expect(result.status).toBe("ok")
   if (result.status === "ok") {
     expect(result.value.values).toContainEqual(expect.objectContaining({ id: "budgetMetrics.2026.totalBudget", value: 1300 }))
+    expect(result.value.components.reduce((total, component) => total + (component.amount ?? 0), 0)).toBe(1300)
     expect(result.value.values).toContainEqual(expect.objectContaining({ id: "budgetMetrics.2026.effectiveMonthlyBudget[0]", value: 200 }))
     expect(result.value.context.currency).toBe("unspecified")
     expect(result.value.values).toContainEqual(expect.objectContaining({ id: "budget:2026-01:actual", value: 0, period: { start: "2026-01-01", end: "2026-01-31" }, evidenceState: "confirmed" }))

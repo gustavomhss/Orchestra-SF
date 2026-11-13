@@ -196,7 +196,7 @@ async function read(input: DashboardPortInput, request: DashboardReadRequest, bi
       if (ytd && request.period.start.slice(5) !== "01-01") return
       const month = monthly ? Number(monthly[2]) + 1 : departures ? Number(departures[2]) + 1 : operationMonth ? Number(operationMonth[2]) : 0
       const year = monthly?.[1] ?? departures?.[1] ?? operationMonth?.[1]
-      const current = ["members", "leaders", "cio", "projects", "risks", "contracts", "stakeholders", "itperf", "signals", "hotTopics", "executive"].some((field) => id === field || id.startsWith(`${field}.`) || id.startsWith(`${field}[`)) || /^executiveByYear\.\d{4}\.active$/.test(id) || /^executiveMonths\.\d{4}:\d{1,2}\.openIncidents$/.test(id)
+      const current = ["members", "leaders", "cio", "projects", "risks", "contracts", "stakeholders", "itperf", "signals", "hotTopics", "executive", "secActions", "secIncidents", "secPhishing"].some((field) => id === field || id.startsWith(`${field}.`) || id.startsWith(`${field}[`)) || /^executiveByYear\.\d{4}\.active$/.test(id) || /^executiveMonths\.\d{4}:\d{1,2}\.openIncidents$/.test(id)
       const today = environment.at.slice(0, 10)
       if (current && (today < request.period.start || today > request.period.end)) return
       if (year && month && (month < Number(request.period.start.slice(5, 7)) || month > Number(request.period.end.slice(5, 7)))) return

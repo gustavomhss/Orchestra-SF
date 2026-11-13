@@ -14,7 +14,11 @@ export function simulateDashboardCommand(snapshot: Snapshot, actor: Actor, comma
   if (!before) return { status: "denied" as const, reason: "page-unavailable" }
   const staged = structuredClone(snapshot)
   const result = executeDashboardCommand(staged, actor, command, environment)
-  if (!result.ok) return result.status === 409 ? { status: "conflict" as const, reason: "source-changed" as const, by: result.by, stored: visibleStored(snapshot, before, result.stored) } : { status: result.status === 403 ? "denied" as const : "invalid" as const, reason: "command-rejected" as const }
+  if (!result.ok) {
+    if (result.status === 409) return { status: "conflict" as const, reason: "source-changed" as const, by: result.by, stored: visibleStored(snapshot, before, result.stored) }
+    if (result.status === 400 || result.status === 422) return { status: "invalid" as const, reason: "command-rejected" as const, errors: result.errors?.length ? [...result.errors] : ["Review the submitted fields."] }
+    return { status: result.status === 403 ? "denied" as const : "invalid" as const, reason: "command-rejected" as const }
+  }
   const after = projectDashboardSource(staged, actor, environment, command.page)
   if (!after) return { status: "denied" as const, reason: "page-unavailable" }
   const keys = [...new Set([...Object.keys(before), ...Object.keys(after)])].sort()
@@ -77,7 +81,7 @@ export function applyDashboardPreview(snapshot: Snapshot, actor: Actor, command:
   if (!projection) return { ok: false, status: 403, errors: ["Page is unavailable"] }
   if (previewBaseDigest(snapshot, projection, command.page) !== baseDigest || digestSfValue({ actor, command }) !== commandDigest) return { ok: false, status: 409, errors: ["Preview is stale"] }
   const result = executeDashboardCommand(snapshot, actor, command, environment)
-  if (!result.ok) return result.status === 409 ? { ok: false, status: 409, errors: ["The stored record changed."], by: result.by, stored: visibleStored(snapshot, projection, result.stored) } : { ok: false, status: result.status, errors: ["Command rejected; review your access and current data."] }
+  if (!result.ok) return result.status === 409 ? { ok: false, status: 409, errors: ["The stored record changed."], by: result.by, stored: visibleStored(snapshot, projection, result.stored) } : { ok: false, status: result.status, errors: result.status === 400 || result.status === 422 ? result.errors?.length ? [...result.errors] : ["Review the submitted fields."] : ["Command rejected; review your access and current data."] }
   return { ok: true, warnings: result.warnings, value: command.page === "All Projects" && command.action === "import" ? importSummary(result.value) : undefined }
 }
 

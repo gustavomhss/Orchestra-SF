@@ -7,9 +7,12 @@ import type { ChoiceRecord } from "../contracts/decisions.ts"
 import type { ScenarioOperation } from "../contracts/operations.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { PortResult } from "../contracts/ports.ts"
-import type { SourceRef } from "../contracts/context.ts"
+import type { PreparedCommand, SourceRef } from "../contracts/context.ts"
 import { simulateDashboardCommand } from "./commands.ts"
 import { hotTopicView } from "../../runtime/dashboard-people.ts"
+import { prepareDashboardMutationScope } from "./mutation-scope.ts"
+import { createDashboardPreparedMutation } from "./prepared.ts"
+import { projectSfSourceScope } from "../integration/source-projections.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 type Fields = { action: string; owner: string; due: string; priority: "critical" | "high" | "normal"; notes: string }
@@ -109,3 +112,46 @@ export async function previewHotTopicDraft(input: {
 function validVersion(value: number) {
   return Number.isSafeInteger(value) && value >= 0
 }
+
+/** C12 preparation is private to the host. The protected draft/choice binding is checked again at apply. */
+export async function prepareHotTopicDraft(input: Parameters<typeof previewHotTopicDraft>[0] & {
+  operationId: string
+  idempotencyKey: string
+  verifyDraftBinding: (snapshot: Snapshot, draft: HotTopicDraft, caseRef: CaseRef, choice: ChoiceRecord, operation: ScenarioOperation, context: TrustedDomainContext) => boolean
+}) {
+  if (!input.operationId.trim() || !input.idempotencyKey.trim()) return { status: "needs-input" as const, reason: "hot-topic-operation-identity-required" }
+  const draft = structuredClone(input.draft)
+  const choice = structuredClone(input.choice)
+  const operation = structuredClone(input.operation)
+  const caseRef = structuredClone(input.caseRef)
+  if (!input.verifyDraftBinding(input.snapshot, draft, caseRef, choice, operation, input.context)) return { status: "stale" as const, reason: "hot-topic-choice-binding-changed" }
+  const result = await previewHotTopicDraft({ ...input, draft, choice, operation, caseRef })
+  if (result.status !== "preview") return result
+  const entries = Object.values(input.snapshot.sfSources?.scopes ?? {}).filter((entry) => entry.alive && entry.incarnation === draft.target.incarnation && entry.version === draft.target.version && entry.inputDigest === draft.targetEvidence.target.projectionDigest)
+  if (entries.length !== 1 || !input.verifyDraftBinding(input.snapshot, draft, caseRef, choice, operation, input.context)) return { status: "stale" as const, reason: "hot-topic-choice-binding-changed" }
+  const mutationScope = prepareDashboardMutationScope({ snapshot: input.snapshot, actor: input.actor, environment: input.environment,
+    command: result.command, baseDigest: result.preview.baseDigest, previewDigest: result.preview.commandDigest, period: draft.target.period,
+    targets: [{ source: draft.target, scope: entries[0]!.scope }], creates: [], reservedIds: [] })
+  if (!mutationScope) return { status: "unavailable" as const, reason: "hot-topic-mutation-scope-unavailable" }
+  const prepared = createDashboardPreparedMutation({ actorId: input.actor.id, target: draft.target, command: result.command,
+    baseDigest: result.preview.baseDigest, previewDigest: result.preview.commandDigest, idempotencyKey: input.idempotencyKey, mutationScope,
+    projectScope: (snapshot, _actor, scope) => projectSfSourceScope("dashboard", snapshot, scope, input.environment.at) })
+  const after = rows(result.preview.after.hotTopics).filter((row) => String(row.id) === draft.target.id)
+  if (!prepared || after.length !== 1) return { status: "unavailable" as const, reason: "hot-topic-mutation-unavailable" }
+  const fields = ["action", "owner", "due", "priority", "notes"]
+  if (fields.some((field) => typeof after[0]![field] !== "string")) return { status: "unavailable" as const, reason: "hot-topic-preview-unavailable" }
+  const command: PreparedCommand = { id: input.operationId, target: draft.target, command: result.command, idempotencyKey: input.idempotencyKey,
+    commandDigest: prepared.commandDigest, expectedVersion: prepared.expectedVersion, requiredAuthority: ["dashboard:hot-topics:write"],
+    preview: { context: { installationId: input.context.binding.installationId, projectId: input.context.binding.projectId,
+      principalRef: input.actor.id, accessRevision: input.context.binding.accessRevision, policyVersion: input.context.binding.policyVersion,
+      surface: "dashboard", period: draft.target.period, currency: "unspecified", sourceRefs: [draft.target], capabilities: [] },
+      version: draft.target.version, engineVersion: "dashboard-hot-topic-command-v1", components: [], missing: [],
+      values: fields.map((field) => ({ id: `hotTopics:${encodeURIComponent(draft.target.id)}:${field}`, value: String(after[0]![field]),
+        period: draft.target.period, granularity: "record", sourceRefs: [draft.targetEvidence], drilldown: draft.targetEvidence, evidenceState: "hypothetical" })) } }
+  const mutation = { ...prepared, execute: (snapshot: Snapshot, actor: Actor, environment: Environment) => {
+    if (!input.verifyDraftBinding(snapshot, draft, caseRef, choice, operation, input.context)) return { commit: false, value: { status: "conflict", reason: "hot-topic-choice-binding-changed" } }
+    return prepared.execute(snapshot, actor, environment)
+  } }
+  return { status: "ok" as const, value: { command, mutation, mutationScope, baseDigest: result.preview.baseDigest, previewDigest: result.preview.commandDigest } }
+}
+

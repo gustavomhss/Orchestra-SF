@@ -658,7 +658,9 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         !["Critical", "Very High", "High", "Medium", "Low"].includes(filter) ||
         riskTier(riskScore(finite(row.impact), finite(row.probability))) === filter),
   )
-  const filters = `<form method="get">${hidden("page", page)}${fields([{ name: "q", label: "Search", value: query }, ...(collection === "projects" || collection === "risks" ? [{ name: "status", label: "Status", type: "select" as const, value: status, options: ["", ...(collection === "projects" ? projectStatus : riskStatus)] }] : []), { name: "filter", label: collection === "risks" ? "Risk tier" : "Show", type: "select", value: filter, options: collection === "projects" ? ["", "watch", "at-risk"] : collection === "risks" ? ["", "Critical", "Very High", "High", "Medium", "Low"] : [""] }])}<button type="submit">Apply filters</button></form>`
+  const filters = `<form method="get">${hidden("page", page)}${hidden("year", context.year)}${hidden("owner", owner)}${fields([{ name: "q", label: "Search", value: query }, ...(collection === "projects" || collection === "risks" ? [{ name: "status", label: "Status", type: "select" as const, value: status, options: ["", ...(collection === "projects" ? projectStatus : riskStatus)] }] : []), { name: "filter", label: collection === "risks" ? "Risk tier" : "Show", type: "select", value: filter, options: collection === "projects" ? ["", "watch", "at-risk"] : collection === "risks" ? ["", "Critical", "Very High", "High", "Medium", "Low"] : [""] }])}<button type="submit">Apply filters</button></form>`
+  const projectSelection = new URLSearchParams({ page: "All Projects", year: String(context.year), ...Object.fromEntries(Object.entries({ q: text(data.q).trim(), status, filter, owner }).filter(([, value]) => value)) })
+  if (page === "Portfolio Dashboard") return renderPortfolioReview(records, rows(data.projects), filters, projectSelection, context)
   const definitions = recordFields(collection)
   const editor = (row: Record<string, unknown>) => {
     const id = recordId(row.id)
@@ -713,12 +715,12 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
           ? ["Vendor", "Amount", "Amount type", "Renewal", "Evaluation", "Renewal date"]
           : ["Stakeholder", "Relevance", "Priority", "Category", "Owner"],
     records.map((row) => {
+      const id = recordId(row.id)
+      const identifiable = !!id && rows(data[collection]).filter((entry) => recordId(entry.id) === id).length === 1
       if (collection === "projects") {
         const variance = budgetVariance(finite(row.spent), finite(row.budget))
-        const id = recordId(row.id)
-        const params = new URLSearchParams({ page, ...Object.fromEntries(Object.entries({ q: text(data.q).trim(), status, filter, owner }).filter(([, value]) => value)) })
         return [
-          id && rows(data.projects).filter((project) => recordId(project.id) === id).length === 1 ? `<span id="record-${esc(id)}"><a href="?${esc(params.toString())}#record-${encodeURIComponent(id)}">${esc(text(row.name))}</a></span>` : esc(text(row.name)),
+          identifiable ? `<span id="record-${esc(id)}"><a href="?${esc(projectSelection.toString())}#record-${encodeURIComponent(id)}">${esc(text(row.name))}</a></span>` : esc(text(row.name)),
           esc(text(row.status)),
           esc(text(row.risk)),
           esc(dashboardMoney(finite(row.budget))),
@@ -731,7 +733,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
       if (collection === "risks") {
         const score = riskScore(finite(row.impact), finite(row.probability))
         return [
-          `<span id="record-${esc(recordId(row.id))}">${esc(text(row.title) || text(row.name))}</span>`,
+          identifiable ? `<span id="record-${esc(id)}">${esc(text(row.title) || text(row.name))}</span>` : esc(text(row.title) || text(row.name)),
           esc(text(row.responsible)),
           esc(text(row.status)),
           String(finite(row.impact)),
@@ -742,7 +744,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
       }
       if (collection === "contracts")
         return [
-          `<span id="record-${esc(recordId(row.id))}">${esc(text(row.vendor))}</span>`,
+          identifiable ? `<span id="record-${esc(id)}">${esc(text(row.vendor))}</span>` : esc(text(row.vendor)),
           esc(dashboardMoney(finite(row.amount))),
           esc(text(row.amtType)),
           esc(text(row.renewType)),
@@ -751,7 +753,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         ]
       const score = relevance(finite(row.biz), finite(row.iti))
       return [
-        esc(text(row.name)),
+        identifiable ? `<span id="record-${esc(id)}">${esc(text(row.name))}</span>` : esc(text(row.name)),
         String(score),
         priorityLabel(effectivePriority(row)),
         esc(stakeholderCategory(score, finite(row.perc))),
@@ -810,6 +812,24 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
       : ""
   return `<section>${filters}${header}${content}${details}<details><summary>Add ${collection === "contracts" ? "contract" : collection === "stakeholders" ? "stakeholder" : collection === "risks" ? "risk" : "project"}</summary>${editor({})}</details>${importer}</section>`
 }
+function renderPortfolioReview(records: Record<string, unknown>[], all: Record<string, unknown>[], filters: string, selection: URLSearchParams, context: RenderContext) {
+  const date = (value: unknown) => typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value) && Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value ? value : ""
+  const projects = [...records].sort((a, b) => Number(b.watchList === true) - Number(a.watchList === true) || (date(a.end) || "9999-12-31").localeCompare(date(b.end) || "9999-12-31") || recordId(a.id).localeCompare(recordId(b.id)))
+  const identifiable = (project: Record<string, unknown>) => !!recordId(project.id) && all.filter((entry) => recordId(entry.id) === recordId(project.id)).length === 1
+  const link = (project: Record<string, unknown>) => {
+    const id = recordId(project.id)
+    return identifiable(project) ? `<a href="?${esc(selection.toString())}#record-${encodeURIComponent(id)}">${esc(text(project.name) || id)}</a>` : `${esc(text(project.name) || "Unnamed project")} — record identity unavailable`
+  }
+  const milestones = projects.flatMap((project) => rows(project.milestones).map((milestone) => ({ project, milestone }))).sort((a, b) => (date(a.milestone.date) || "9999-12-31").localeCompare(date(b.milestone.date) || "9999-12-31") || recordId(a.project.id).localeCompare(recordId(b.project.id)))
+  return `<section data-view="portfolio-review"><h2>Portfolio review</h2><p>Current project records as of ${esc(context.at.slice(0, 10))}; this is not a preserved historical review. ${records.length} of ${all.length} accessible projects selected.</p><p>Watch list first, then recorded target date; no inferred executive priority. <a href="?${esc(selection.toString())}">Open All Projects with these filters</a></p>${filters}${metricGrid([
+    metric("Selected projects", String(records.length)),
+    metric("Watch list", String(records.filter((project) => project.watchList === true).length)),
+    metric("Recorded medium/high risk", String(records.filter((project) => ["Medium", "High"].includes(text(project.risk))).length)),
+  ], 3)}${table(["Project", "Status", "Risk", "Target date", "Watch list", "Owner"], projects.map((project) => [
+    identifiable(project) ? `<span id="record-${esc(recordId(project.id))}">${link(project)}</span>` : link(project), esc(text(project.status) || "Not specified"), esc(text(project.risk) || "Not specified"), esc(date(project.end) || "Not specified"), project.watchList === true ? "Yes" : "No", esc(text(project.pm) || "Not specified"),
+  ]))}<h3>Milestones</h3><p>${milestones.length} milestones in this selection, ordered by recorded date; undated milestones remain visible.</p>${table(["Project", "Milestone", "Date", "Recorded status"], milestones.map(({ project, milestone }) => [link(project), esc(text(milestone.name) || "Unnamed milestone"), esc(date(milestone.date) || "Not specified"), esc(text(milestone.status) || "Not specified")]))}</section>`
+}
+
 function priorityLabel(priority: string) {
   return priority === "action" ? "Action Plan Required" : priority === "monitor" ? "Monitored" : "Low"
 }
@@ -1156,12 +1176,13 @@ function renderPerformance(page: string, data: Record<string, unknown>, context:
   ]
   return `<nav class="section-tabs" aria-label="Performance views"><a href="#performance-contract">Contract</a><a href="#owner-dashboard">Owner Dashboard</a></nav>${metricGrid([metric("Global score", score === null ? "—" : score.toFixed(2)), metric("On target", String(onTargetCount(subs))), metric("Most recent complete quarter", completedQuarter(context.month).toUpperCase())], 3)}<section id="performance-contract"><h2>Contract</h2>${warning}${items
     .map((item) => {
+      const id = recordId(item.id)
       const itemScore = itPerfScore(perfSubs([item]))
       const weightWarning = itPerfWeightWarn(
         rows(item.subs).reduce((sum, sub) => sum + number(sub.totalWeight), 0),
         number(item.totalWeight),
       )
-      return `<article><h3>${esc(text(item.name))}</h3><span data-tone="${itPerfColor(itemScore)}">${itemScore === null ? "—" : itemScore.toFixed(2)}</span>${weightWarning ? '<p role="status">Sub-item weights differ from item weight.</p>' : ""}${itemEditor(item)}${form(page, "delete-item", "", version, hidden("itemId", item.id) + confirm, "Delete item", disabled)}${table(
+      return `<article${id && items.filter((entry) => recordId(entry.id) === id).length === 1 ? ` id="performance-item-${esc(id)}"` : ""}><h3>${esc(text(item.name))}</h3><span data-tone="${itPerfColor(itemScore)}">${itemScore === null ? "—" : itemScore.toFixed(2)}</span>${weightWarning ? '<p role="status">Sub-item weights differ from item weight.</p>' : ""}<details class="editor-panel"><summary>Edit ${esc(text(item.name) || "performance item")}</summary>${itemEditor(item)}${form(page, "delete-item", "", version, hidden("itemId", item.id) + confirm, "Delete item", disabled)}</details>${table(
         ["Sub-item", "Weight", "Score", "Status"],
         rows(item.subs).map((sub) => [
           esc(text(sub.label)),
@@ -1172,7 +1193,7 @@ function renderPerformance(page: string, data: Record<string, unknown>, context:
       )}${rows(item.subs)
         .map(
           (sub) =>
-            subEditor(item, sub) +
+            `<details class="editor-panel"><summary>Edit ${esc(text(sub.label) || "performance sub-item")}</summary>` + subEditor(item, sub) +
             form(
               page,
               "delete-sub",
@@ -1181,11 +1202,11 @@ function renderPerformance(page: string, data: Record<string, unknown>, context:
               hidden("itemId", item.id) + hidden("subId", sub.id) + confirm,
               "Delete sub-item",
               disabled,
-            ),
+            ) + "</details>",
         )
-        .join("")}${subEditor(item, {})}</article>`
+        .join("")}<details class="editor-panel"><summary>Add sub-item</summary>${subEditor(item, {})}</details></article>`
     })
-    .join("")}${itemEditor({})}</section><section id="owner-dashboard"><h2>Owner Dashboard</h2>${table(
+    .join("")}<details class="editor-panel"><summary>Add performance item</summary>${itemEditor({})}</details></section><section id="owner-dashboard"><h2>Owner Dashboard</h2>${table(
     ["Owner", "Allocated weight", "Score"],
     owners.map((owner) => {
       const assigned = items
