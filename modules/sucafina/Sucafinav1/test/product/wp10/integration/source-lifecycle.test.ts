@@ -174,3 +174,40 @@ test("authorized projection revisions persist and ignore restricted changes whil
     } finally { await second.store.dispose() }
   } finally { await first.store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })
+
+
+test("resolving an old scoped incarnation refuses deletion and recreation between lookup and observation", async () => {
+  const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-source-lookup-race-"))
+  await chmod(directory, 0o700)
+  const store = await openLocalStore(directory)
+  const persistence = createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources, createId: randomUUID,
+    projectScope: (_surface, snapshot, scope) => {
+      const projects = snapshot.data.projects
+      return Array.isArray(projects) ? projects.find((value) => value.id === scope.recordId) : undefined
+    },
+  })
+  try {
+    await persistence.initializeSources("dashboard")
+    await persistence.transaction("dashboard", async (snapshot) => { snapshot.data.projects = [{ id: "project-1", name: "Original" }]; return { commit: true, value: undefined } })
+    const scope = { principalRef: "principal-1", accessRevision: "access-1", policyVersion: "policy-1", recordType: "projects", recordId: "project-1", selector: { fields: ["name"] } }
+    const original = await persistence.readScopedSource("dashboard", scope, async () => true)
+    expect(original).toBeDefined()
+    const queued: Promise<unknown>[] = []
+    const phase = { queued: false }
+    const resolved = await persistence.resolveScopedSource("dashboard", original!.incarnation, async () => {
+      if (!phase.queued) {
+        phase.queued = true
+        // Queue both real writes under the held lookup lock, ahead of the subsequent observation.
+        queued.push(persistence.transaction("dashboard", async (snapshot) => { snapshot.data.projects = []; return { commit: true, value: undefined } }))
+        queued.push(persistence.transaction("dashboard", async (snapshot) => { snapshot.data.projects = [{ id: "project-1", name: "Recreated" }]; return { commit: true, value: undefined } }))
+      }
+      return true
+    })
+    await Promise.all(queued)
+    expect(resolved).toBeUndefined()
+    const current = await persistence.readScopedSource("dashboard", scope, async () => true)
+    expect(current?.incarnation).not.toBe(original!.incarnation)
+    expect(current?.projection).toMatchObject({ name: "Recreated" })
+    expect(current?.version).toBe(1)
+  } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
+})

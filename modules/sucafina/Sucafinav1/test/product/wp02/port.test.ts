@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test"
 import { createDashboardPort, projectDashboardSource } from "../../../product/dashboard/port.ts"
+import { projectDashboardScope } from "../../../product/dashboard/scope.ts"
 import { dashboardBiPresentation } from "../../../product/dashboard/bi.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
@@ -21,7 +22,8 @@ test("dashboard port reads canonical effective budget and rejects stale and unau
   const ref: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", refId: "budget", installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "observed", kind: "record", target: { surface: "dashboard", recordType: "dashboard-page", recordId: page, incarnation: "inc", version: 1, fields: Object.keys(projection), period, projectionDigest: digestSfValue({ page, projection }) } }
   ref.refDigest = digestSfEvidenceRef(ref)
   const access = { enabled: true }
-  const port = createDashboardPort({ host: { persistence: storage.persistence, authenticate: async (_request, context) => resolve("admin", [...context!.roleMap], (group) => group === "admins"), environment: async () => environment, requestFor: () => new Request("https://example.test"), revalidate: async () => access.enabled }, sources: { resolveDashboardSource: async () => ({ status: "ok", value: { page, evidence: ref } }), resolveDashboardMetric: async () => ({ status: "ok", value: { selectionRef: "budget", field: "budgetMetrics", valuePrefix: "budgetMetrics.2026" } }) } })
+  let sourceSnapshot = structuredClone(storage.state.dashboard)
+  const port = createDashboardPort({ host: { persistence: storage.persistence, authenticate: async (_request, context) => resolve("admin", [...context!.roleMap], (group) => group === "admins"), environment: async () => environment, requestFor: () => new Request("https://example.test"), revalidate: async () => access.enabled }, sources: { resolveDashboardSource: async (_reference, _binding, selection) => { if (!selection) return { status: "unavailable", reason: "selection-required" }; const scoped = projectDashboardScope(sourceSnapshot, actor, { page, fields: selection.fields, period: selection.period }, environment.at); if (!scoped) return { status: "unavailable", reason: "scope-unavailable" }; const evidence = { ...ref, target: { ...ref.target, fields: [...selection.fields], period: selection.period, projectionDigest: digestSfValue(scoped) } }; evidence.refDigest = digestSfEvidenceRef(evidence); return { status: "ok", value: { page, evidence } } }, resolveDashboardMetric: async () => ({ status: "ok", value: { selectionRef: "budget", field: "budgetMetrics", valuePrefix: "budgetMetrics.2026" } }) } })
   const result = await port.read({ selectionRef: "budget", period, fields: ["budgetMetrics"] }, binding)
   expect(result.status).toBe("ok")
   if (result.status === "ok") {
@@ -41,9 +43,7 @@ test("dashboard port reads canonical effective budget and rejects stale and unau
   expect(entries.status).toBe("ok")
   if (entries.status === "ok") expect(entries.value.values).toContainEqual(expect.objectContaining({ id: "opexEntries[id:jan].actual", value: 0, period: { start: "2026-01-01", end: "2026-01-31" }, granularity: "month" }))
   storage.state.dashboard.data.opexOwners = [{ id: "o" }]
-  const missingProjection = projectDashboardSource(storage.state.dashboard, actor, environment, page)!
-  ref.target.projectionDigest = digestSfValue({ page, projection: missingProjection })
-  ref.refDigest = digestSfEvidenceRef(ref)
+  sourceSnapshot = structuredClone(storage.state.dashboard)
   const missing = await port.read({ selectionRef: "budget", period, fields: ["budgetMetrics"] }, binding)
   expect(missing.status).toBe("ok")
   if (missing.status === "ok") {
@@ -99,8 +99,7 @@ test("ticket register projection preserves period, absent cells and BI roles", a
   state.data.opsTickets = [{ year: 2026, month: 2, "Infrastructure|Incidents|Open": 10, "Infrastructure|Incidents|Closed": 15, "Infrastructure|Incidents|Initial Balance": 20 }]
   const storage = testPersistence({ dashboard: state })
   const page = "IT Operations"
-  const projection = projectDashboardSource(state, actor, environment, page)!
-  const ref: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", refId: "tickets", installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "observed", kind: "record", target: { surface: "dashboard", recordType: "dashboard-page", recordId: page, incarnation: "inc", version: 1, fields: Object.keys(projection), period, projectionDigest: digestSfValue({ page, projection }) } }
+  const ref: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", refId: "tickets", installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "observed", kind: "record", target: { surface: "dashboard", recordType: "dashboard-page", recordId: page, incarnation: "inc", version: 1, fields: ["opsTickets"], period, projectionDigest: digestSfValue(projectDashboardScope(state, actor, { page, fields: ["opsTickets"], period }, environment.at)) } }
   ref.refDigest = digestSfEvidenceRef(ref)
   const port = createDashboardPort({ host: { persistence: storage.persistence, authenticate: async (_request, context) => resolve("admin", [...context!.roleMap], (group) => group === "admins"), environment: async () => environment, requestFor: () => new Request("https://example.test"), revalidate: async () => true }, sources: { resolveDashboardSource: async () => ({ status: "ok", value: { page, evidence: ref } }), resolveDashboardMetric: async () => ({ status: "unavailable", reason: "not-registered" }) } })
   const result = await port.read({ selectionRef: "tickets", period, fields: ["opsTickets"] }, binding)
@@ -119,8 +118,7 @@ test("milestones retain missing dates and never invent completed dates", async (
   state.data.projects = [{ id: "project", name: "Project", milestones: [{ id: "planned", name: "Planned", date: "2026-12-01", status: "upcoming" }, { id: "done", name: "Done", date: "2026-11-01", status: "done" }, { id: "undated", name: "Undated", date: "", status: "upcoming" }] }]
   const storage = testPersistence({ dashboard: state })
   const page = "Portfolio Dashboard"
-  const projection = projectDashboardSource(state, actor, environment, page)!
-  const ref: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", refId: "projects", installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "observed", kind: "record", target: { surface: "dashboard", recordType: "dashboard-page", recordId: page, incarnation: "inc", version: 1, fields: Object.keys(projection), period, projectionDigest: digestSfValue({ page, projection }) } }
+  const ref: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", refId: "projects", installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "observed", kind: "record", target: { surface: "dashboard", recordType: "dashboard-page", recordId: page, incarnation: "inc", version: 1, fields: ["projects"], period, projectionDigest: digestSfValue(projectDashboardScope(state, actor, { page, fields: ["projects"], period }, environment.at)) } }
   ref.refDigest = digestSfEvidenceRef(ref)
   const port = createDashboardPort({ host: { persistence: storage.persistence, authenticate: async (_request, context) => resolve("admin", [...context!.roleMap], (group) => group === "admins"), environment: async () => environment, requestFor: () => new Request("https://example.test"), revalidate: async () => true }, sources: { resolveDashboardSource: async () => ({ status: "ok", value: { page, evidence: ref } }), resolveDashboardMetric: async () => ({ status: "unavailable", reason: "not-registered" }) } })
   const result = await port.read({ selectionRef: "projects", period, fields: ["projects"] }, binding)
@@ -132,4 +130,39 @@ test("milestones retain missing dates and never invent completed dates", async (
   if (!("timeline" in presentation) || !presentation.timeline) return
   expect(presentation.timeline.items).toContainEqual({ label: "Done", dateValueId: "milestone:project:done:date", state: "unknown" })
   expect(presentation.timeline.items).toContainEqual({ label: "Planned", dateValueId: "milestone:project:planned:date", state: "planned" })
+})
+
+test("executive measurements preserve month, year-to-date and annual periods", async () => {
+  const state = initial()
+  state.data.opsSLA = [{ year: 2026, month: 1, incSLA: 80, svcSLA: 90 }, { year: 2026, month: 2, incSLA: 100, svcSLA: 80 }]
+  state.data.opsCats = ["Category"]
+  state.data.opsTickets = [{ year: 2026, month: 1, ...Object.fromEntries(["Incidents", "Service Requests"].flatMap((kind) => ["Initial Balance", "Open", "Closed"].map((measure) => [`Category|${kind}|${measure}`, measure === "Initial Balance" ? 10 : measure === "Open" ? 3 : 1]))) }]
+  state.data.secKpi = [{ year: 2026, month: 1, socClosure: 75 }]
+  state.data.secIncidents = [{ id: "incident", contained: false }]
+  state.data.members = [{ id: "m", status: "Terminated", end: "2026-02-01" }]
+  const storage = testPersistence({ dashboard: state })
+  const page = "Executive Dashboard"
+  const port = createDashboardPort({ host: { persistence: storage.persistence, authenticate: async (_request, context) => resolve("admin", [...context!.roleMap], (group) => group === "admins"), environment: async () => environment, requestFor: () => new Request("https://example.test"), revalidate: async () => true }, sources: { resolveDashboardSource: async (_ref, _binding, selection) => {
+    if (!selection) return { status: "unavailable", reason: "selection-required" }
+    const evidence: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", kind: "record", refId: "executive", installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "observed", target: { surface: "dashboard", recordType: "dashboard-page", recordId: page, incarnation: "inc", version: 1, fields: [...selection.fields], period: selection.period, projectionDigest: digestSfValue(projectDashboardScope(state, actor, { page, ...selection }, environment.at)) } }
+    evidence.refDigest = digestSfEvidenceRef(evidence)
+    return { status: "ok", value: { page, evidence } }
+  }, resolveDashboardMetric: async () => ({ status: "unavailable", reason: "not-registered" }) } })
+  const annual = await port.read({ selectionRef: "executive", period, fields: ["executiveMonths", "executiveByYear"] }, binding)
+  expect(annual.status).toBe("ok")
+  if (annual.status !== "ok") return
+  expect(annual.value.values).toContainEqual(expect.objectContaining({ id: "executiveMonths.2026:2.incYtd", value: 90, period: { start: "2026-01-01", end: "2026-02-28" }, granularity: "aggregate" }))
+  expect(annual.value.values).toContainEqual(expect.objectContaining({ id: "executiveByYear.2026.departures", value: 1, period, granularity: "year" }))
+  expect(annual.value.values).toContainEqual(expect.objectContaining({ id: "executiveMonths.2026:1.backlogYtd", value: 24, period: { start: "2026-01-01", end: "2026-01-31" }, granularity: "month" }))
+  expect(annual.value.values.some((value) => value.id === "executiveMonths.2026:2.backlogYtd")).toBe(false)
+  expect(annual.value.values).toContainEqual(expect.objectContaining({ id: "executiveMonths.2026:11.openIncidents", value: 1, period: { start: "2026-11-13", end: "2026-11-13" }, granularity: "record" }))
+  expect(annual.value.values.some((value) => value.id.startsWith("executiveMonths.2026:1.kpis"))).toBe(true)
+  expect(annual.value.values.some((value) => value.id.startsWith("executiveMonths.2026:2.kpis"))).toBe(false)
+  expect(annual.value.missing).toEqual(expect.arrayContaining([{ field: "executiveMonths.backlogYtd", reason: "unavailable" }]))
+  const february = await port.read({ selectionRef: "executive", period: { start: "2026-02-01", end: "2026-02-28" }, fields: ["executiveMonths", "executiveByYear"] }, binding)
+  expect(february.status).toBe("ok")
+  if (february.status === "ok") {
+    expect(february.value.values).toContainEqual(expect.objectContaining({ id: "executiveByYear.2026.monthlyDepartures[1]", value: 1, period: { start: "2026-02-01", end: "2026-02-28" } }))
+    expect(february.value.values.some((value) => /\.departures$|\.incYtd$|\.svcYtd$|monthlyDepartures\[(?!1\])/.test(value.id))).toBe(false)
+  }
 })

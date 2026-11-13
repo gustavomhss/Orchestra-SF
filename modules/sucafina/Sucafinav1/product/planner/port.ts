@@ -6,11 +6,12 @@ import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import type { DomainProjection } from "../contracts/context.ts"
 import type { DomainPortHost, FinancialAnalysis, PlannerPort, PlannerSourceHost, PortResult } from "../contracts/ports.ts"
 import type { ForecastCompareRequest } from "../contracts/operations.ts"
-import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
+import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { projectPlanner } from "./adapter.ts"
 import { plannerCoverageComplete } from "./coverage.ts"
 import { simulateScenario } from "./scenario-port.ts"
+import type { PlannerScenarioInputs } from "./scenario-port.ts"
 import { compareScenarios } from "./scenario-comparison-port.ts"
 import type { PlannerScenarioHost } from "./scenario-comparison-port.ts"
 
@@ -23,10 +24,10 @@ export function projectPlannerSource(snapshot: Snapshot, actor: Actor, versionId
   return { ...version, sharedEntities: rows(view.data.entities), sharedAllocations: rows(view.data.allocations) }
 }
 
-export function createPlannerPort(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios?: PlannerScenarioHost }): PlannerPort {
+export function createPlannerPort(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios?: PlannerScenarioHost; scenarioInputs?: PlannerScenarioInputs; evidence?: BusinessContextService }): PlannerPort {
   return {
     compareForecast: (request, binding) => compareForecast(input, request, binding),
-    simulateScenario: (request, binding) => simulateScenario({ ...input, compare: (request, binding) => compareForecast(input, request, binding), project: projectPlannerSource }, request, binding),
+    simulateScenario: (request, binding) => simulateScenario({ ...input, inputs: input.scenarioInputs, compare: (request, binding) => compareForecast(input, request, binding), project: projectPlannerSource }, request, binding),
     compareScenarios: (request, binding) => input.scenarios ? compareScenarios({ ...input, scenarios: input.scenarios }, request, binding) : Promise.resolve({ status: "unavailable", reason: "scenario-comparison-not-connected" }),
     evaluateSensitivity: async () => ({ status: "unavailable", reason: "sensitivity-not-connected" }),
   }

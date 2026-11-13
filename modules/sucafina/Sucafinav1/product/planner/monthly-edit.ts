@@ -9,12 +9,14 @@ export type MonthlyDraft = {
 /** Parse a pasted or edited range without discarding invalid cells or local text. */
 export function prepareMonthlyDrafts(page: "OPEX" | "CAPEX", versionId: string, drafts: readonly MonthlyDraft[]) {
   return drafts.map((draft) => {
-    const errors = draft.cells.flatMap((cell) => {
+    const errors: { cell?: MonthlyDraft["cells"][number]; reason: string }[] = draft.cells.flatMap((cell) => {
       if (!Number.isInteger(cell.month) || cell.month < 1 || cell.month > 12) return [{ cell, reason: "invalid-month" }]
       if (cell.text.trim() === "" && cell.measure === "budget") return [{ cell, reason: "budget-requires-value" }]
       if (cell.text.trim() !== "" && !Number.isFinite(Number(cell.text))) return [{ cell, reason: "invalid-number" }]
       return []
     })
+    if (!versionId.trim() || !draft.rowId.trim() || !Number.isSafeInteger(draft.revision) || draft.revision < 0 || !draft.cells.length)
+      errors.push({ reason: "invalid-row-context" })
     if (new Set(draft.cells.map((cell) => `${cell.measure}:${cell.month}`)).size !== draft.cells.length)
       errors.push({ cell: draft.cells[0], reason: "duplicate-cell" })
     const values: Record<string, unknown> = { versionId }

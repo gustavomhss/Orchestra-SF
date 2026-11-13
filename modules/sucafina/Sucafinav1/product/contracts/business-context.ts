@@ -38,6 +38,8 @@ export type BusinessMemoryEnvelope = {
   sourceEventId: string
   evidenceRefs: readonly BusinessEvidenceRef[]
   dependencies: readonly BusinessEvidenceRef[]
+  // Keys are original evidence refDigest values. Only numeric versioned refs occur here;
+  // immutable calculation/policy identity remains in typed evidence targets and their dependencies.
   sourceVersions: Readonly<Record<string, number>>
   sourceIncarnations: Readonly<Record<string, string>>
   projectionDigest: string

@@ -7,13 +7,14 @@ import { DashboardPeople, hotTopicView } from "../../runtime/dashboard-people.ts
 import { DashboardOperations } from "../../runtime/dashboard-operations.ts"
 import { DashboardPortfolio } from "../../runtime/dashboard-portfolio.ts"
 import { dashboardPages } from "../../src/nav.ts"
-import { computeBudgetTotals, effectiveBudgetSeries } from "../../src/dashboard-accounts.ts"
+import { computeBudgetTotals, effectiveBudgetSeries, SECURITY_KPIS, securityKpiStatus, socClosureValue } from "../../src/dashboard-accounts.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { DomainProjection, Period } from "../contracts/context.ts"
 import type { DashboardReadRequest, KpiExplainRequest } from "../contracts/operations.ts"
 import type { DashboardPort, DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+import { projectDashboardScope } from "./scope.ts"
 
 const pageFields: Record<string, readonly string[]> = {
   "Executive Dashboard": ["executive", "executiveByYear", "executiveMonths", "opsDefaultMonth", "opexOwners", "opexEntries", "capexProjects", "capexEntries", "itUsersMonthly", "signals"],
@@ -31,12 +32,14 @@ const pageFields: Record<string, readonly string[]> = {
 }
 
 export type DashboardSourceHost = {
-  resolveDashboardSource: (selectionRef: string, binding: TrustedDomainContext) => Promise<PortResult<{ page: string; evidence: Extract<BusinessEvidenceRef, { kind: "record" }> }>>
+  resolveDashboardSource: (selectionRef: string, binding: TrustedDomainContext, selection?: { fields: readonly string[]; period: Period }) => Promise<PortResult<{ page: string; evidence: Extract<BusinessEvidenceRef, { kind: "record" }> }>>
   resolveDashboardMetric: (metricRef: string, binding: TrustedDomainContext) => Promise<PortResult<{ selectionRef: string; field: string; valuePrefix: string }>>
 }
 
 // The resolver hashes exactly this actor-filtered view; no raw snapshot leaves the domain boundary.
 export function projectDashboardSource(snapshot: Snapshot, actor: Actor, environment: Environment, page: string): Record<string, unknown> | undefined {
+  if (!Number.isFinite(Date.parse(environment.at))) return undefined
+  const utcEnvironment = { ...environment, at: new Date(environment.at).toISOString() }
   const summaries = Array.isArray(snapshot.data.summaries) ? snapshot.data.summaries.filter((x): x is string => typeof x === "string") : []
   const allowed = dashboardPages(actor, summaries)
   if (!Object.hasOwn(pageFields, page) || !allowed.includes(page)) return undefined
@@ -44,7 +47,7 @@ export function projectDashboardSource(snapshot: Snapshot, actor: Actor, environ
   const domains = [DashboardBudget, DashboardPeople, DashboardOperations, DashboardPortfolio]
   const selected = domains.find((domain) => (domain.pages as readonly string[]).includes(page))
   if (!selected) return undefined
-  const view = selected.domain.view(snapshot, actor, environment)
+  const view = selected.domain.view(snapshot, actor, utcEnvironment)
   const projection = Object.fromEntries(pageFields[page].filter((field) => Object.hasOwn(view.data, field)).map((field) => [field, view.data[field]]))
   if (page === "Executive Dashboard") {
     if (!allowed.includes("Budget Overview")) ["opexOwners", "opexEntries", "capexProjects", "capexEntries"].forEach((key) => delete projection[key])
@@ -52,10 +55,28 @@ export function projectDashboardSource(snapshot: Snapshot, actor: Actor, environ
     if (!allowed.includes("IT Operations")) delete projection.opsDefaultMonth
     if (!allowed.includes("IT Operations") && !allowed.includes("IT Security KPIs")) delete projection.executiveMonths
     if (Object.hasOwn(projection, "executiveMonths")) {
-      const fields = [...(allowed.includes("IT Operations") ? ["opened", "closed", "netChange", "backlog", "backlogYtd", "p1", "incSLA", "svcSLA", "incYtd", "svcYtd"] : []), ...(allowed.includes("IT Security KPIs") ? ["kpis", "openIncidents"] : [])]
-      projection.executiveMonths = Object.fromEntries(Object.entries(object(projection.executiveMonths)).map(([key, value]) => [key, Object.fromEntries(Object.entries(object(value)).filter(([field]) => fields.includes(field)))]))
+      const fields = allowed.includes("IT Operations") ? ["opened", "closed", "netChange", "backlog", "p1", "incSLA", "svcSLA", "incYtd", "svcYtd"] : []
+      const operationsView = allowed.includes("IT Operations") || allowed.includes("IT Security KPIs") ? DashboardOperations.domain.view(snapshot, actor, utcEnvironment).data : {}
+      const securityView = allowed.includes("IT Security KPIs") ? operationsView : {}
+      const security = rows(securityView.secKpi)
+      projection.executiveMonths = Object.fromEntries(Object.entries(object(projection.executiveMonths)).map(([key, value]) => {
+        const [year, month] = key.split(":").map(Number)
+        const entries = security.filter((entry) => entry.year === year && entry.month === month)
+        const kpis = entries.length === 1 ? SECURITY_KPIS.map((definition) => {
+          const raw = definition.key === "socClosure" ? socClosureValue(entries[0]!) : entries[0]![definition.key]
+          const numeric = raw === null || raw === undefined || raw === "" ? null : Number(raw)
+          const value = numeric !== null && Number.isFinite(numeric) ? numeric : null
+          return { key: definition.key, value, status: securityKpiStatus(definition.better, definition.target, definition.moderate, value) }
+        }) : undefined
+        const directBacklog = allowed.includes("IT Operations") && rows(operationsView.opsTickets).filter((entry) => entry.year === year && entry.month === month).length === 1 ? { backlogYtd: object(value).backlogYtd } : {}
+        const currentMonth = `${year}-${String(month).padStart(2, "0")}` === utcEnvironment.at.slice(0, 7)
+        const incidents = currentMonth && allowed.includes("IT Security KPIs") ? { openIncidents: Array.isArray(securityView.secIncidents) ? rows(securityView.secIncidents).filter((row) => !row.contained || !row.remediated || !row.rootCause).length : null } : {}
+        return [key, { ...Object.fromEntries(Object.entries(object(value)).filter(([field]) => fields.includes(field))), ...(kpis ? { kpis } : {}), ...directBacklog, ...incidents }]
+      }))
     }
     const executive = object(projection.executive)
+    delete executive.departures
+    delete executive.monthlyDepartures
     if (!allowed.includes("Headcount Overview")) ["active", "departures", "monthlyDepartures"].forEach((key) => delete executive[key])
     if (!allowed.includes("Portfolio Dashboard")) ["pmoActive", "pmoAtRisk"].forEach((key) => delete executive[key])
     if (!allowed.includes("IT Risks")) ["activeRisks", "topRisks"].forEach((key) => delete executive[key])
@@ -99,15 +120,16 @@ async function read(input: { host: DomainPortHost; sources: DashboardSourceHost 
   const year = Number(request.period.start.slice(0, 4))
   if (year < 2024 || year > 2027) return { status: "needs-input", reason: "unsupported-dashboard-year" }
   if (request.fields.some((field) => ["opsTickets", "opsSLA", "opsHeatmap", "secKpi", "itUsersMonthly", "opexEntries", "capexEntries", "executiveMonths"].includes(field)) && (request.period.start.slice(8) !== "01" || Number(request.period.end.slice(8)) !== new Date(Date.UTC(year, Number(request.period.end.slice(5, 7)), 0)).getUTCDate())) return { status: "needs-input", reason: "monthly-data-requires-full-months" }
-  const source = await input.sources.resolveDashboardSource(request.selectionRef, binding).catch(() => ({ status: "unavailable" as const, reason: "source-resolver-failed" }))
+  const source = await input.sources.resolveDashboardSource(request.selectionRef, binding, { fields: request.fields, period: request.period }).catch(() => ({ status: "unavailable" as const, reason: "source-resolver-failed" }))
   if (source.status !== "ok") return source
   const selected = structuredClone(source.value)
   const ref = selected.evidence
   if (!Object.hasOwn(pageFields, selected.page)) return { status: "needs-input", reason: "unknown-dashboard-page" }
   if (ref.refDigest !== digestSfEvidenceRef(ref) || ref.installationId !== binding.binding.installationId || ref.projectId !== binding.binding.projectId || ref.target.surface !== "dashboard" || ref.target.recordType !== "dashboard-page" || ref.target.recordId !== selected.page || !ref.target.period || ref.target.period.start > request.period.start || ref.target.period.end < request.period.end)
     return { status: "denied", reason: "source-scope-mismatch" }
-  const environment = await input.host.environment(http)
-  if (!/^\d{4}-\d{2}-\d{2}T/.test(environment.at) || !Number.isFinite(Date.parse(environment.at))) return { status: "unavailable", reason: "observation-time-unavailable" }
+  const observedEnvironment = await input.host.environment(http)
+  if (!/^\d{4}-\d{2}-\d{2}T/.test(observedEnvironment.at) || !Number.isFinite(Date.parse(observedEnvironment.at))) return { status: "unavailable", reason: "observation-time-unavailable" }
+  const environment = { ...observedEnvironment, at: new Date(observedEnvironment.at).toISOString() }
   const get = () => input.host.persistence.transaction("dashboard", async (snapshot) => {
     const principal = await input.host.authenticate(http, { surface: "dashboard", roleMap: roleMap(snapshot, "dashboard") })
     if (!principal || principal.id !== binding.binding.principalRef || principal.id.startsWith("local:")) return { commit: false, value: undefined }
@@ -116,29 +138,40 @@ async function read(input: { host: DomainPortHost; sources: DashboardSourceHost 
     const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((x): x is string => typeof x === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((x): x is string => typeof x === "string") : [] }
     const auditStart = snapshot.audit.length
     const value = projectDashboardSource(snapshot, actor, environment, selected.page)
-    return { commit: snapshot.audit.length > auditStart, value }
+    const scoped = projectDashboardScope(snapshot, actor, { page: selected.page, fields: [...request.fields].sort(), period: request.period }, `${environment.at.slice(0, 10)}T00:00:00Z`)
+    const summaries = Array.isArray(snapshot.data.summaries) ? snapshot.data.summaries.filter((item): item is string => typeof item === "string") : []
+    const allowed = dashboardPages(actor, summaries)
+    const unavailable = selected.page === "Executive Dashboard" && request.fields.includes("executiveMonths") ? [...(allowed.includes("IT Operations") && Object.entries(object(scoped?.selected.executiveMonths)).some(([, entry]) => !Object.hasOwn(object(entry), "backlogYtd")) ? ["executiveMonths.backlogYtd"] : []), ...(allowed.includes("IT Security KPIs") ? [...(environment.at.slice(0, 10) < request.period.start || environment.at.slice(0, 10) > request.period.end ? ["executiveMonths.openIncidents"] : []), ...(Object.entries(object(scoped?.selected.executiveMonths)).some(([, entry]) => !Array.isArray(object(entry).kpis)) ? ["executiveMonths.kpis"] : [])] : [])] : []
+    return { commit: snapshot.audit.length > auditStart, value: value && scoped ? { projection: value, scoped, unavailable } : undefined }
   }, { signal: http.signal })
-  const projection = await get().catch(() => null)
-  if (projection === null) return { status: "unavailable", reason: "source-read-failed" }
-  if (!projection) return { status: "denied", reason: "source-unavailable" }
-  if (digestSfValue(Object.keys(projection).sort()) !== digestSfValue([...ref.target.fields].sort()) || digestSfValue({ page: selected.page, projection }) !== ref.target.projectionDigest) return { status: "stale", reason: "source-changed" }
+  const current = await get().catch(() => null)
+  if (current === null) return { status: "unavailable", reason: "source-read-failed" }
+  if (!current) return { status: "denied", reason: "source-unavailable" }
+  const projection: Record<string, unknown> = { ...current.projection, ...current.scoped.selected }
+  if (digestSfValue([...request.fields].sort()) !== digestSfValue([...ref.target.fields].sort()) || digestSfValue(current.scoped) !== ref.target.projectionDigest) return { status: "stale", reason: "source-changed" }
   if (request.fields.some((field) => !Object.hasOwn(projection, field))) return { status: "needs-input", reason: "field-unavailable" }
   if (request.fields.includes("budgetMetrics") && (request.period.start.slice(5) !== "01-01" || request.period.end.slice(5) !== "12-31")) return { status: "needs-input", reason: "budget-metrics-require-full-year" }
   const sourceRef = { surface: "dashboard" as const, type: ref.target.recordType, id: ref.target.recordId, incarnation: ref.target.incarnation, version: ref.target.version, fields: ref.target.fields, period: request.period, observedAt: environment.at }
   const values: DomainProjection["values"][number][] = []
-  const missing: DomainProjection["missing"][number][] = request.fields.includes("budgetMetrics") ? [{ field: "actual-and-forecast-coverage", reason: "unconfirmed" }] : []
+  const missing: DomainProjection["missing"][number][] = [...(request.fields.includes("budgetMetrics") ? [{ field: "actual-and-forecast-coverage", reason: "unconfirmed" as const }] : []), ...current.unavailable.map((field) => ({ field, reason: "unavailable" as const }))]
   const append = (id: string, value: unknown, recordPeriod?: Period, recordGranularity?: "month" | "year") => {
     if (value === null || typeof value === "string" || typeof value === "boolean" || (typeof value === "number" && Number.isFinite(value))) {
       const monthly = /^budgetMetrics\.(\d{4})\.effectiveMonthlyBudget\[(\d+)\]$/.exec(id)
       const departures = /^executiveByYear\.(\d{4})\.monthlyDepartures\[(\d+)\]$/.exec(id)
       const operationMonth = /^executiveMonths\.(\d{4}):(\d{1,2})\./.exec(id)
+      const annualDepartures = /^executiveByYear\.(\d{4})\.departures$/.exec(id)
+      if (annualDepartures && (request.period.start.slice(5) !== "01-01" || request.period.end.slice(5) !== "12-31")) return
+      const ytd = /^executiveMonths\.\d{4}:\d{1,2}\.(incYtd|svcYtd)$/.test(id)
+      if (ytd && request.period.start.slice(5) !== "01-01") return
       const month = monthly ? Number(monthly[2]) + 1 : departures ? Number(departures[2]) + 1 : operationMonth ? Number(operationMonth[2]) : 0
       const year = monthly?.[1] ?? departures?.[1] ?? operationMonth?.[1]
-      const current = ["members", "leaders", "cio", "projects", "risks", "contracts", "stakeholders", "itperf", "signals", "hotTopics", "executive"].some((field) => id === field || id.startsWith(`${field}.`) || id.startsWith(`${field}[`)) || /^executiveByYear\.\d{4}\.active$/.test(id)
+      const current = ["members", "leaders", "cio", "projects", "risks", "contracts", "stakeholders", "itperf", "signals", "hotTopics", "executive"].some((field) => id === field || id.startsWith(`${field}.`) || id.startsWith(`${field}[`)) || /^executiveByYear\.\d{4}\.active$/.test(id) || /^executiveMonths\.\d{4}:\d{1,2}\.openIncidents$/.test(id)
       const today = environment.at.slice(0, 10)
-      const period = year ? { start: `${year}-${String(month).padStart(2, "0")}-01`, end: `${year}-${String(month).padStart(2, "0")}-${String(new Date(Date.UTC(Number(year), month, 0)).getUTCDate()).padStart(2, "0")}` } : current ? { start: today, end: today } : recordPeriod ?? request.period
+      if (current && (today < request.period.start || today > request.period.end)) return
+      if (year && month && (month < Number(request.period.start.slice(5, 7)) || month > Number(request.period.end.slice(5, 7)))) return
+      const period = current ? { start: today, end: today } : annualDepartures ? { start: `${annualDepartures[1]}-01-01`, end: `${annualDepartures[1]}-12-31` } : year ? { start: ytd ? `${year}-01-01` : `${year}-${String(month).padStart(2, "0")}-01`, end: `${year}-${String(month).padStart(2, "0")}-${String(new Date(Date.UTC(Number(year), month, 0)).getUTCDate()).padStart(2, "0")}` } : current ? { start: today, end: today } : recordPeriod ?? request.period
       const currency = /^(opexEntries|capexEntries|opexOwners|capexProjects)\[.*\]\.(budget|actual|forecast)$/.test(id) ? { currency: "unspecified" } : {}
-      values.push({ id, value: value as string | number | boolean | null, ...currency, ...(/\.(opened|closed|netChange|backlog)$/.test(id) && operationMonth ? { unit: "tickets" } : {}), period, granularity: year ? "month" : current ? "record" : recordGranularity ?? (id.startsWith("budgetMetrics.") ? "year" : "record"), sourceRefs: [ref], drilldown: ref, evidenceState: value === null ? "absent" : id.startsWith("budgetMetrics.") ? "estimated" : "confirmed" })
+      values.push({ id, value: value as string | number | boolean | null, ...currency, ...(/\.(opened|closed|netChange|backlog)$/.test(id) && operationMonth ? { unit: "tickets" } : {}), period, granularity: current ? "record" : annualDepartures ? "year" : ytd ? "aggregate" : year ? "month" : current ? "record" : recordGranularity ?? (id.startsWith("budgetMetrics.") ? "year" : "record"), sourceRefs: [ref], drilldown: ref, evidenceState: value === null ? "absent" : ytd || id.startsWith("budgetMetrics.") ? "estimated" : "confirmed" })
       if (value === null) missing.push({ field: id, reason: "missing" })
       return
     }
@@ -236,8 +269,8 @@ async function read(input: { host: DomainPortHost; sources: DashboardSourceHost 
     })
   }
   const latest = await get().catch(() => null)
-  const refreshed = await input.sources.resolveDashboardSource(request.selectionRef, binding).catch(() => ({ status: "unavailable" as const, reason: "source-resolver-failed" }))
-  if (!(await input.host.revalidate(binding)) || !latest || digestSfValue({ page: selected.page, projection: latest }) !== ref.target.projectionDigest || refreshed.status !== "ok" || refreshed.value.evidence.refDigest !== ref.refDigest)
+  const refreshed = await input.sources.resolveDashboardSource(request.selectionRef, binding, { fields: request.fields, period: request.period }).catch(() => ({ status: "unavailable" as const, reason: "source-resolver-failed" }))
+  if (!(await input.host.revalidate(binding)) || !latest || digestSfValue(latest.scoped) !== ref.target.projectionDigest || refreshed.status !== "ok" || refreshed.value.evidence.refDigest !== ref.refDigest)
     return { status: "stale", reason: "source-or-authority-changed" }
   const components: DomainProjection["components"][number][] = values.filter((value) => value.id.startsWith("budget:") && value.id.endsWith(":effective")).map((value) => ({ id: value.id, amount: typeof value.value === "number" ? value.value : null, currency: "unspecified", period: value.period, sourceRefs: [sourceRef], evidenceState: value.value === null ? "absent" : "estimated" }))
   return { status: "ok", value: { context: { installationId: binding.binding.installationId, projectId: binding.binding.projectId, principalRef: binding.binding.principalRef, accessRevision: binding.binding.accessRevision, policyVersion: binding.binding.policyVersion, surface: "dashboard", period: request.period, currency: "unspecified", sourceRefs: [sourceRef], capabilities: ["sf_dashboard_read"] }, version: ref.target.version, engineVersion: "dashboard-runtime-v1", components, values, missing } }

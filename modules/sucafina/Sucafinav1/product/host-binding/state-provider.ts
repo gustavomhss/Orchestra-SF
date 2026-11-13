@@ -11,6 +11,8 @@ export function createSfProductState(input: {
   persistence: Persistence
   authorize: (request: Request, snapshot: Snapshot, namespace: SfStateNamespace, mode: "read" | "write") => Promise<SfStateAuthority | undefined>
   createId: () => string
+  /** Root-private callback identities; never exposed through a product capability or serialized input. */
+  nativeEvidenceWrites?: WeakSet<object>
   resolveTarget: (request: Request, snapshot: Snapshot, namespace: SfStateNamespace, targetRef: string) => Promise<{ incarnation: string } | undefined>
 }): SfProductStatePort {
   return {
@@ -73,7 +75,11 @@ export function createSfProductState(input: {
         if (!result.commit) return { commit: false, value: { status: "preview", storageVersion: state.versions[command.namespace], aggregateRevision: state.revision, incarnation: state.incarnation, value: result.value } }
         if (staged.schemaVersion !== 1 || staged.revision !== state.revision || staged.incarnation !== state.incarnation)
           return { commit: false, value: { status: "conflict", reason: "product-identity-changed" } }
-        if (digestSfValue(staged.versions) !== digestSfValue(state.versions) || storedNamespaces.some((key) => !scope.some((entry) => entry.namespace === key) && digestSfValue(staged[key]) !== digestSfValue(state[key])))
+        const nativeMetadata = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:native-session:")))
+        if (!input.nativeEvidenceWrites?.has(work) && digestSfValue(nativeMetadata(staged.preferences)) !== digestSfValue(nativeMetadata(state.preferences)))
+          return { commit: false, value: { status: "denied", reason: "native-evidence-write-outside-authority" } }
+        if (digestSfValue(staged.versions) !== digestSfValue(state.versions) || storedNamespaces.some((key) => !scope.some((entry) => entry.namespace === key) && digestSfValue(staged[key]) !== digestSfValue(state[key])) ||
+          (!scope.some((entry) => entry.namespace === "contributions") && digestSfValue(staged.nativeRuns) !== digestSfValue(state.nativeRuns)))
           return { commit: false, value: { status: "denied", reason: "namespace-write-outside-authority" } }
         staged.revision += 1
         scope.forEach((entry) => staged.versions[entry.namespace] += 1)
@@ -98,5 +104,6 @@ function readSfState(snapshot: Snapshot): SfProductState | undefined {
   if (state.schemaVersion !== 1 || !Number.isSafeInteger(state.revision) || Number(state.revision) < 0 || typeof state.incarnation !== "string" || !state.incarnation.trim()) return undefined
   if (Object.keys(object(state.versions)).length !== 11 || namespaces.some((key) => !Number.isSafeInteger(object(state.versions)[key]) || Number(object(state.versions)[key]) < 0)) return undefined
   if (storedNamespaces.some((key) => state[key] === null || typeof state[key] !== "object" || Array.isArray(state[key]))) return undefined
+  if (state.nativeRuns !== undefined && (!state.nativeRuns || typeof state.nativeRuns !== "object" || Array.isArray(state.nativeRuns))) return undefined
   return state as SfProductState
 }

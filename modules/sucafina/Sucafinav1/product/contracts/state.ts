@@ -1,7 +1,7 @@
 import type { Snapshot } from "../../runtime/contract.ts"
 import type { DecisionCase } from "./decisions.ts"
 import type { PreservedReview, ConfirmationRecord, CommandReceipt } from "./context.ts"
-import type { ContributionEnvelope } from "./resident-ai.ts"
+import type { ContributionEnvelope, ResidentProfile, SkillManifest, SkillLoadReceipt } from "./resident-ai.ts"
 import type { BusinessEvidenceRef, MemoryWriteReceipt } from "./business-context.ts"
 
 export type SfAtlasOutboxEntry = {
@@ -13,6 +13,30 @@ export type SfAtlasOutboxEntry = {
 } & (
   | { state: "pending"; receipt?: never }
   | { state: "settled"; receipt: MemoryWriteReceipt }
+)
+
+/** Private admission state, distinct from a contribution whose load provenance must already exist. */
+export type SfNativeRunRecord = {
+  schema: "sf-native-run-v1"
+  runRef: string
+  version: number
+  requestDigest: string
+  skillInputDigest: string
+  principalRef: string
+  accessRevision: string
+  policyVersion: string
+  caseRef: { id: string; incarnation: string; version: number }
+  selection: { profile: ResidentProfile; skills: readonly SkillManifest[]; operationIds: readonly string[]; manifestDigest: string }
+  model: { providerID: string; id: string; variant?: string }
+  skillId: string
+  objective: string
+  contextFingerprint: string
+  createdAt: string
+  updatedAt: string
+  reviewTarget?: { targetRunId: string; targetSessionId: string; targetOutputDigest: string; caseRef: { id: string; incarnation: string; version: number } }
+} & (
+  | { state: "preparing" | "needs-input" | "unavailable" | "failed" | "cancelled"; reason?: string; native?: never; outputRef?: never }
+  | { state: "queued" | "running" | "ready" | "stale" | "needs-input" | "unavailable" | "failed" | "cancelled"; reason?: string; native: { sessionID: string; skillReceipt: SkillLoadReceipt }; outputRef?: string }
 )
 
 export type SfProductState = {
@@ -27,6 +51,8 @@ export type SfProductState = {
   confirmations: Record<string, ConfirmationRecord>
   cases: Record<string, DecisionCase>
   contributions: Record<string, ContributionEnvelope>
+  /** Owned and versioned by the existing contributions namespace; omitted only in pre-admission stores. */
+  nativeRuns?: Record<string, SfNativeRunRecord>
   documents: Record<string, unknown>
   receipts: Record<string, CommandReceipt>
   atlas: Record<string, unknown>

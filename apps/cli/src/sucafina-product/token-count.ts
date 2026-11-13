@@ -20,8 +20,8 @@ export type SfTokenCountReceipt = {
 export function enforceSfResponseTokenBudget(request: HttpClientRequest.HttpClientRequest, executor: RequestExecutor.Interface, admission: {
   model: string
   contextBudgetTokens: number
-  revalidate: () => Promise<boolean>
-  persistReceipt: (receipt: SfTokenCountReceipt) => Promise<void>
+  revalidate: () => Effect.Effect<boolean, unknown>
+  persistReceipt: (receipt: SfTokenCountReceipt) => Effect.Effect<void, unknown>
 }) {
   const bound = Object.freeze({ ...admission })
   return Effect.gen(function* () {
@@ -43,7 +43,7 @@ export function enforceSfResponseTokenBudget(request: HttpClientRequest.HttpClie
       (body.max_output_tokens !== undefined && (!Number.isSafeInteger(body.max_output_tokens) || Number(body.max_output_tokens) < 1)))
       return yield* Effect.fail(refusal("budget-model-or-input-options-mismatch"))
     const stableRequest = HttpClientRequest.bodyText(request, text, "application/json")
-    if (!(yield* Effect.promise(() => awaitAuthorized(bound)))) return yield* Effect.fail(refusal("budget-authority-unavailable"))
+    if (!(yield* bound.revalidate().pipe(Effect.catch(() => Effect.succeed(false))))) return yield* Effect.fail(refusal("budget-authority-unavailable"))
     const countBody = Object.fromEntries(Object.entries(body).filter(([key]) => counted.includes(key)))
     const countRequest = HttpClientRequest.bodyJsonUnsafe(HttpClientRequest.setUrl(stableRequest, "https://api.openai.com/v1/responses/input_tokens"), countBody)
     // The original immutable request retains its existing authentication. No credential is read or logged here.
@@ -60,15 +60,11 @@ export function enforceSfResponseTokenBudget(request: HttpClientRequest.HttpClie
     const receipt: SfTokenCountReceipt = Object.freeze({ schema: "sf-token-count-v1", oracle: "https://api.openai.com/v1/responses/input_tokens", model: bound.model,
       inputDigest: digestSfValue(countBody), requestDigest: digestSfValue(guardedBody), inputTokens: result.input_tokens,
       contextBudgetTokens: budget, maxOutputTokens, observedAt: new Date().toISOString() })
-    if (!(yield* Effect.promise(() => awaitAuthorized(bound)))) return yield* Effect.fail(refusal("budget-authority-changed"))
-    yield* Effect.tryPromise({ try: () => bound.persistReceipt(receipt), catch: () => refusal("budget-receipt-not-durable") })
-    if (!(yield* Effect.promise(() => awaitAuthorized(bound)))) return yield* Effect.fail(refusal("budget-authority-changed"))
+    if (!(yield* bound.revalidate().pipe(Effect.catch(() => Effect.succeed(false))))) return yield* Effect.fail(refusal("budget-authority-changed"))
+    yield* bound.persistReceipt(receipt).pipe(Effect.mapError(() => refusal("budget-receipt-not-durable")))
+    if (!(yield* bound.revalidate().pipe(Effect.catch(() => Effect.succeed(false))))) return yield* Effect.fail(refusal("budget-authority-changed"))
     return guarded
   })
-}
-
-function awaitAuthorized(admission: { revalidate: () => Promise<boolean> }) {
-  return Promise.resolve().then(() => admission.revalidate()).then((value) => value === true).catch(() => false)
 }
 
 function refusal(message: string) {

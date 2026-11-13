@@ -1,10 +1,11 @@
 import { expect, test } from "bun:test"
 import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
-import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
+import type { BusinessContextService, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
 import type { CostCoverageBasis, CostCoverageAssessment, ScenarioResult } from "../../../product/contracts/decisions.ts"
+import type { DomainPortHost, PlannerSourceHost } from "../../../product/contracts/ports.ts"
 import type { DomainProjection } from "../../../product/contracts/context.ts"
 import type { Snapshot } from "../../../runtime/contract.ts"
 import { resolve } from "../../../src/identity.ts"
@@ -27,13 +28,11 @@ test("forecast port compares the real engine, and detects source changes", async
   })
   const basis: CostCoverageBasis = { id: "basis", version: 1, decisionType: "renewal-transition-v1", categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs: refs }
   const assessments = refs.map((ref): CostCoverageAssessment => ({ basisId: "basis", basisVersion: 1, alternativeId: `alternative-${ref.refId}`, alternativeVersion: 1, currency: "USD", horizon: period, issues: [], evaluatedSourceRefs: [ref], coverageState: "complete", derivedMissingCategoryIds: [], entries: RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => ({ status: "included", categoryId, componentRefs: Array.from({ length: 12 }, (_, index) => `line:${index + 1}`), evidenceRefs: [ref], scopeNote: "included in source" })) }))
-  const coverageMode = { available: false }
+  const coverageMode: { available: boolean; scenario?: CostCoverageAssessment } = { available: false }
   const scenarioRecords: Record<string, { result: ScenarioResult; coverageRef: string; basis: CostCoverageBasis; projection: DomainProjection; source: Extract<BusinessEvidenceRef, { kind: "record" }> }> = {}
-  const port = createPlannerPort({
-    host: { persistence: storage.persistence, authenticate: async (_request, context) => resolve("finance", [...context!.roleMap], (group) => group === "finance-group"), environment: async () => ({ at: "2026-11-13T00:00:00Z", id: () => "unused", directory: [] }), requestFor: () => new Request("https://example.test"), revalidate: async () => true },
-    sources: { resolveForecastSource: async (reference) => { const evidence = refs.find((ref) => ref.refId === reference); return evidence ? { status: "ok", value: { versionId: reference, evidence } } : { status: "unavailable", reason: "missing" } }, resolveForecastCoverage: async (reference) => coverageMode.available ? { status: "ok", value: { coverageRef: reference === "v0" || reference === "coverage-v0" ? "coverage-v0" : "coverage-v1", basis, assessment: assessments[reference === "v0" || reference === "coverage-v0" ? 0 : 1] } } : { status: "unavailable", reason: "missing" } },
-    scenarios: { resolve: async (reference) => scenarioRecords[reference] ? { status: "ok", value: scenarioRecords[reference] } : { status: "unavailable", reason: "missing" } },
-  })
+  const host: DomainPortHost = { persistence: storage.persistence, authenticate: async (_request, context) => resolve("finance", [...context!.roleMap], (group) => group === "finance-group"), environment: async () => ({ at: "2026-11-13T00:00:00Z", id: () => "unused", directory: [] }), requestFor: () => new Request("https://example.test"), revalidate: async () => true }
+  const sources: PlannerSourceHost = { resolveForecastSource: async (reference) => { const evidence = refs.find((ref) => ref.refId === reference); return evidence ? { status: "ok", value: { versionId: reference, evidence } } : { status: "unavailable", reason: "missing" } }, resolveForecastCoverage: async (reference) => coverageMode.available ? { status: "ok", value: { coverageRef: reference === "coverage-scenario" ? "coverage-scenario" : reference === "v0" || reference === "coverage-v0" ? "coverage-v0" : "coverage-v1", basis, assessment: reference === "coverage-scenario" && coverageMode.scenario ? coverageMode.scenario : assessments[reference === "v0" || reference === "coverage-v0" ? 0 : 1] } } : { status: "unavailable", reason: "missing" } }
+  const port = createPlannerPort({ host, sources, scenarios: { resolve: async (reference) => scenarioRecords[reference] ? { status: "ok", value: scenarioRecords[reference] } : { status: "unavailable", reason: "missing" } } })
   const before = structuredClone(storage.state.planner)
   const result = await port.compareForecast({ baseRef: "v0", candidateRef: "v1", period, currency: "USD" }, binding)
   expect(result.status).toBe("ok")
@@ -52,11 +51,15 @@ test("forecast port compares the real engine, and detects source changes", async
   if (simulated.status === "ok") {
     expect(simulated.value.knownSubtotal).toBe(602000)
     expect(simulated.value.total).toBeNull()
+    expect(simulated.value.costCoverage.coverageState).toBe("pending")
     expect(simulated.value.components[10].evidenceState).toBe("hypothetical")
     if (covered.status === "ok") {
       const baseline: ScenarioResult = { id: "baseline", version: 1, components: covered.value.baseline.components, currency: "USD", horizon: period, sourceRefs: [refs[0]], costCoverage: assessments[0], comparisonStatus: "conditioned", knownSubtotal: 590000, total: null, unresolvedConditions: ["hypothetical"], restrictions: [] }
       scenarioRecords.base = { result: baseline, coverageRef: "coverage-v0", basis, projection: covered.value.baseline, source: refs[0] }
       scenarioRecords.candidate = { result: simulated.value, coverageRef: "coverage-v0", basis, projection: covered.value.baseline, source: refs[0] }
+      expect(await port.compareScenarios({ scenarioRefs: ["base", "candidate"], criteria: [] }, binding)).toMatchObject({ status: "stale", reason: "scenario-source-or-coverage-changed" })
+      coverageMode.scenario = simulated.value.costCoverage
+      scenarioRecords.candidate.coverageRef = "coverage-scenario"
       const compared = await port.compareScenarios({ scenarioRefs: ["base", "candidate"], criteria: [] }, binding)
       expect(compared).toMatchObject({ status: "ok", value: { comparisonStatus: "conditioned", knownDifference: 12000, completeDifference: null } })
       const withCriterion = await port.compareScenarios({ scenarioRefs: ["base", "candidate"], criteria: ["cost"] }, binding)
@@ -66,8 +69,18 @@ test("forecast port compares the real engine, and detects source changes", async
     }
   }
   expect(storage.state.planner).toEqual(before)
+  const fresh = { value: true }
+  const evidence: BusinessContextService = { resolve: async (ref) => ({ state: fresh.value ? "fresh" : "revoked", ref, accessRevision: "1", checkedAt: "2026-11-13T00:00:00Z" }), context: async () => [], recall: async () => [], emitFromLedger: async () => { throw new Error("not used") } }
+  const november = { start: "2027-11-01", end: "2027-11-30" }
+  const sourced = createPlannerPort({ host, sources, evidence, scenarioInputs: { verifyAssumption: async () => ({ status: "ok", value: { fingerprint: "confirmed-scope" } }), resolveAmount: async () => ({ status: "ok", value: { amount: 124000, currency: "USD", period: november, source: { surface: "planner", type: "planner-version", id: "v0", incarnation: refs[0].target.incarnation, version: 1, fields: ["summary"], period: november, observedAt: "2026-11-13T00:00:00Z" }, evidence: refs[0] } }) } })
+  const sourcedRequest = { baseRef: "v0", operations: [{ kind: "replace" as const, targetRef: "line:11", replacementRef: "amount-ref" }], assumptions: [{ id: "source", value: 1, evidenceRefs: [refs[0]], state: "confirmed" as const }] }
+  const sourcedResult = await sourced.simulateScenario(sourcedRequest, binding)
+  expect(sourcedResult).toMatchObject({ status: "ok", value: { knownSubtotal: 602000, comparisonStatus: "conditioned" } })
+  fresh.value = false
+  expect(await sourced.simulateScenario(sourcedRequest, binding)).toMatchObject({ status: "stale", reason: "scenario-evidence-not-current" })
   expect(await port.simulateScenario({ baseRef: "v0", operations: [{ kind: "defer", targetRef: "line:11" }], assumptions: [] }, binding)).toMatchObject({ status: "needs-input" })
   expect(storage.state.planner).toEqual(before)
+  expect(await port.simulateScenario({ baseRef: "v0", operations: [], assumptions: [{ id: "unproven", value: 1, evidenceRefs: [], state: "confirmed" }] }, binding)).toMatchObject({ status: "needs-input", reason: "confirmed-assumption-needs-evidence" })
   const validAssessment = assessments[0]
   assessments[0] = { ...validAssessment, evaluatedSourceRefs: [] }
   expect(await port.simulateScenario({ baseRef: "v0", operations: [{ kind: "replace", targetRef: "line:11", amount: 124000 }], assumptions: [] }, binding)).toMatchObject({ status: "needs-input", reason: "coverage-source-mismatch" })

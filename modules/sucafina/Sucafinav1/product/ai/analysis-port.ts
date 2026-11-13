@@ -1,5 +1,4 @@
 import { Effect } from "effect"
-import type { SessionV2 } from "@orchestra/core/session"
 import type { BusinessPorts, PortResult } from "../contracts/ports.ts"
 import type { ContributionEnvelope, SkillLoadReceipt } from "../contracts/resident-ai.ts"
 import normative from "../contracts/normative-contracts.json"
@@ -9,28 +8,38 @@ import type { SfSkillInputMap } from "../contracts/skill-inputs.ts"
 import { digestSfContribution } from "../contracts/canonical.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 
+declare const nativeExecutionTicket: unique symbol
+/** Host-owned capability, bound to one Session, run, request digest and selected runtime. */
+export type SfNativeExecutionTicket = { readonly [nativeExecutionTicket]: true }
+export type NativeRunExecutionPort = {
+  /** Authenticate and admit a real case, pin the selected runtime and create a private Session-bound ticket. */
+  admit: (request: Parameters<BusinessPorts["analysis"]["create"]>[0], skillInput: unknown, target?: SfReviewTarget) => Promise<PortResult<{
+    runRef: string
+    sessionID: string
+    skillReceipt: SkillLoadReceipt
+    executionTicket: SfNativeExecutionTicket
+  }>>
+  /** Revalidate the ticket and budget, admit through the native host gate, and wait without retaining a call lease. */
+  execute: (ticket: SfNativeExecutionTicket) => Promise<PortResult<true>>
+  /** Revalidate the ticket and authority, then read and decode the durable native result. */
+  collect: (ticket: SfNativeExecutionTicket, context: TrustedDomainContext) => Promise<PortResult<ContributionEnvelope>>
+  /** Revalidate the ticket and authority before interrupting its own Session. */
+  interrupt: (ticket: SfNativeExecutionTicket, context: TrustedDomainContext) => Promise<PortResult<true>>
+}
+
 /** Host-provided services retain the real request and authority outside model input. */
 export type SfAnalysisHost = {
-  session: SessionV2.Interface
+  execution: NativeRunExecutionPort
   analysis: BusinessPorts["analysis"]
   result: BusinessPorts["result"]
   routines: BusinessPorts["routines"]
   /** Authenticate the current host-bound request afresh and scope one operation; revalidate session, case and ACL, then dispose its authority when the callback returns. After restart require a newly authenticated request. */
   withRunContext: <T>(runRef: string, action: (context: TrustedDomainContext) => Promise<PortResult<T>>) => Promise<PortResult<T>>
-  /** Resolve and validate the pinned skill input schema; admit the real case and Request, create a dedicated native session, bind and load the selected skill. Missing schema must fail closed. */
-  prepare: (request: Parameters<BusinessPorts["analysis"]["create"]>[0], skillInput: unknown, target?: SfReviewTarget) => Promise<PortResult<{
-    runRef: string
-    sessionID: Parameters<SessionV2.Interface["get"]>[0]
-    skillReceipt: SkillLoadReceipt
-    authorizedPrompt: string
-  }>>
-  /** Read the native session result and decode the entire envelope and pinned output schema; never synthesize success. */
-  collect: (input: { runRef: string; sessionID: Parameters<SessionV2.Interface["get"]>[0] }, context: TrustedDomainContext) => Promise<PortResult<ContributionEnvelope>>
   /** Persist an honest failed state for an admitted run; this must revalidate the binding and case. */
   fail: (runRef: string, reason: string, context: TrustedDomainContext) => Promise<PortResult<true>>
   /** Preserve a stale run and its safe references under the host's current access policy. */
   markStale: (runRef: string, reason: string, context: TrustedDomainContext) => Promise<PortResult<true>>
-  /** Verify the host-owned binding, actual load receipt, all output evidence and persisted review target, not just their fields. */
+  /** Verify host-owned binding and load receipt, current evidence and C10 semantics against real domain results, and persisted review target; field shape alone is insufficient. */
   revalidate: (context: TrustedDomainContext, input: { runRef: string; caseRef: ContributionEnvelope["caseRef"]; contextFingerprint: string; manifestDigest: string; accessRevision: string; outputKind?: ContributionEnvelope["kind"]; evidenceRefs?: ContributionEnvelope["evidenceRefs"]; output?: ContributionEnvelope; skillReceipts: readonly SkillLoadReceipt[]; reviewTarget?: SfReviewTarget }) => Promise<PortResult<true>>
 }
 
@@ -108,13 +117,13 @@ export async function runSfAnalysis(input: {
   if (!skill || !Object.hasOwn(sfSkillInputSchemas, skill.input_type)) return { status: "unavailable", reason: "skill-input-schema-unavailable" } as const
   const decoded = decodeSfSkillInput(skill.input_type as keyof SfSkillInputMap, input.skillInput)
   if (!decoded.ok) return { status: "failed", reason: "invalid-skill-input" } as const
-  const prepared = await input.host.prepare(input.request, decoded.value, input.reviewTarget)
+  const prepared = await input.host.execution.admit(input.request, decoded.value, input.reviewTarget)
   if (prepared.status !== "ok") return prepared
   const admission = prepared.value
   if (admission.skillReceipt.nativeSessionId !== admission.sessionID || admission.skillReceipt.profileId !== input.request.profileId ||
       admission.skillReceipt.profileVersion !== input.request.profileVersion || admission.skillReceipt.skillId !== input.request.skillId ||
       admission.skillReceipt.skillVersion !== input.request.skillVersion || admission.skillReceipt.manifestDigest !== input.request.manifestDigest ||
-      !admission.authorizedPrompt.trim()) {
+      !admission.executionTicket) {
     const failed = await input.host.withRunContext(admission.runRef, (context) => input.host.fail(admission.runRef, "invalid-native-admission", context))
     if (failed.status !== "ok") return failed
     return { status: "failed", reason: "invalid-native-admission" } as const
@@ -126,34 +135,24 @@ export async function runSfAnalysis(input: {
     if (failed.status !== "ok") return failed
     return { status: "failed", reason: "review-not-independent" } as const
   }
-  const admitted = await input.host.withRunContext(admission.runRef, async (context) => {
-    const authorized = await input.host.revalidate(context, {
-      runRef: admission.runRef,
-      caseRef: input.request.caseRef,
-      contextFingerprint: input.request.contextFingerprint,
-      manifestDigest: input.request.manifestDigest,
-      accessRevision: context.binding.accessRevision,
-      skillReceipts: [admission.skillReceipt],
-      reviewTarget: input.reviewTarget,
-    })
-    if (authorized.status !== "ok") return authorized
-    const started = await Effect.runPromise(Effect.result(input.host.session.prompt({ sessionID: admission.sessionID, prompt: { text: admission.authorizedPrompt } })))
-    if (started._tag === "Failure") return { status: "failed", reason: "native-session-admission-failed" } as const
-    return { status: "ok", value: true } as const
-  })
-  if (admitted.status === "failed") {
-    const failed = await input.host.withRunContext(admission.runRef, (context) => input.host.fail(admission.runRef, admitted.reason, context))
+  const authorized = await input.host.withRunContext(admission.runRef, (context) => input.host.revalidate(context, {
+    runRef: admission.runRef,
+    caseRef: input.request.caseRef,
+    contextFingerprint: input.request.contextFingerprint,
+    manifestDigest: input.request.manifestDigest,
+    accessRevision: context.binding.accessRevision,
+    skillReceipts: [admission.skillReceipt],
+    reviewTarget: input.reviewTarget,
+  }))
+  if (authorized.status !== "ok") return authorized
+  const run = await input.host.execution.execute(admission.executionTicket)
+  if (run.status === "failed") {
+    const failed = await input.host.withRunContext(admission.runRef, (context) => input.host.fail(admission.runRef, run.reason, context))
     if (failed.status !== "ok") return failed
-    return admitted
+    return run
   }
-  if (admitted.status !== "ok") return admitted
-  const run = await Effect.runPromise(Effect.result(input.host.session.wait(admission.sessionID)))
-  if (run._tag === "Failure") {
-    const failed = await input.host.withRunContext(admission.runRef, (context) => input.host.fail(admission.runRef, "native-session-failed", context))
-    if (failed.status !== "ok") return failed
-    return { status: "failed", reason: "native-session-failed" } as const
-  }
-  const collected = await input.host.withRunContext(admission.runRef, (context) => input.host.collect({ runRef: admission.runRef, sessionID: admission.sessionID }, context))
+  if (run.status !== "ok") return run
+  const collected = await input.host.withRunContext(admission.runRef, (context) => input.host.execution.collect(admission.executionTicket, context))
   if (collected.status !== "ok") return collected
   if (collected.value.caseRef.id !== input.request.caseRef.id || collected.value.caseRef.version !== input.request.caseRef.version ||
       collected.value.caseRef.incarnation !== input.request.caseRef.incarnation ||
@@ -169,7 +168,8 @@ export async function runSfAnalysis(input: {
 export async function cancelSfAnalysis(input: {
   host: SfAnalysisHost
   runRef: string
-  sessionID: Parameters<SessionV2.Interface["get"]>[0]
+  sessionID: string
+  executionTicket: SfNativeExecutionTicket
   skillReceipt: SkillLoadReceipt
   caseRef: ContributionEnvelope["caseRef"]
   contextFingerprint: string
@@ -196,8 +196,7 @@ export async function cancelSfAnalysis(input: {
       skillReceipts: [input.skillReceipt],
     })
     if (current.status !== "ok") return current
-    await Effect.runPromise(input.host.session.interrupt(input.sessionID))
-    return { status: "ok", value: true } as const
+    return input.host.execution.interrupt(input.executionTicket, context)
   })
   if (interrupted.status !== "ok") return interrupted
   return cancelled

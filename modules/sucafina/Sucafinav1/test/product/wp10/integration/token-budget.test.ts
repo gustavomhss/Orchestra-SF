@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Effect } from "effect"
+import { Deferred, Effect, Fiber } from "effect"
 import { HttpClientRequest, HttpClientResponse } from "effect/unstable/http"
 import { enforceSfResponseTokenBudget } from "../../../../../../../apps/cli/src/sucafina-product/token-count.ts"
 import type { SfTokenCountReceipt } from "../../../../../../../apps/cli/src/sucafina-product/token-count.ts"
@@ -18,11 +18,11 @@ function fixture() {
       ? { object: "response.input_tokens", input_tokens: state.tokens } : { emitted: true }), { status: 200 }))
   }) }
   const admission = { model: "fixture-model", contextBudgetTokens: 100,
-    revalidate: async () => state.active,
-    persistReceipt: async (receipt: SfTokenCountReceipt) => {
+    revalidate: () => Effect.sync(() => state.active),
+    persistReceipt: (receipt: SfTokenCountReceipt) => Effect.try({ try: () => {
       if (!state.persistenceAvailable) throw new Error("Fixture durable storage failure")
       receipts.push(receipt)
-    },
+    }, catch: (error) => error }),
   }
   const request = HttpClientRequest.bodyJsonUnsafe(HttpClientRequest.post("https://api.openai.com/v1/responses"), {
     model: "fixture-model", input: [{ role: "user", content: "Dados atuais: café, 日本語, 0 e ausência." }],
@@ -70,4 +70,21 @@ test("model mismatch and unsupported endpoint fail before any counter or inferen
   await expect(Effect.runPromise(enforceSfResponseTokenBudget(app.request, app.executor, { ...app.admission, model: "other-model" }))).rejects.toThrow("budget-model-or-input-options-mismatch")
   await expect(Effect.runPromise(enforceSfResponseTokenBudget(HttpClientRequest.setUrl(app.request, "https://other.example/v1/responses"), app.executor, app.admission))).rejects.toThrow("budget-provider-or-transport-unsupported")
   expect(app.calls).toHaveLength(0)
+})
+
+
+test("interrupting durable receipt work cancels the same fiber before inference", async () => {
+  const app = fixture()
+  await Effect.runPromise(Effect.gen(function* () {
+    const entered = yield* Deferred.make<void>()
+    const guarded = enforceSfResponseTokenBudget(app.request, app.executor, {
+      ...app.admission,
+      persistReceipt: () => Deferred.succeed(entered, undefined).pipe(Effect.andThen(Effect.never)),
+    }).pipe(Effect.flatMap(app.executor.execute))
+    const fiber = yield* guarded.pipe(Effect.forkChild)
+    yield* Deferred.await(entered)
+    yield* Fiber.interrupt(fiber)
+  }))
+  expect(app.calls.map((call) => call.url)).toEqual(["https://api.openai.com/v1/responses/input_tokens"])
+  expect(app.receipts).toHaveLength(0)
 })

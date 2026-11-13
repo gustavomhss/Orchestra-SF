@@ -30,7 +30,7 @@ export function createSfSourcePersistence(input: {
       })
       if (!scope) return undefined
       const value = await persistence.readScopedSource(surface, scope, (snapshot) => authorize(snapshot, structuredClone(scope)))
-      return value ? { ...value, scope } : undefined
+      return value?.incarnation === incarnation ? { ...value, scope } : undefined
     },
     readScopedSource: (surface, requested, authorize) => input.persistence.transaction(surface, async (snapshot) => {
       requireSourceIdentities(snapshot)

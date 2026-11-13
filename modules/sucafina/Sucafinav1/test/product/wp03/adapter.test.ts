@@ -83,6 +83,7 @@ test("monthly range keeps invalid text and preserves explicit zero and blank for
   expect(drafts[1].command).toBeUndefined()
   expect(drafts[1].draft.cells[0].text).toBe("bad")
   expect(drafts[1].errors[0].reason).toBe("invalid-number")
+  expect(prepareMonthlyDrafts("OPEX", "v1", [{ rowId: "", revision: 0, cells: [{ measure: "forecast", month: 1, text: "10" }] }])[0]).toMatchObject({ command: undefined, errors: [{ reason: "invalid-row-context" }] })
 })
 
 test("scenario replacement uses domain command on a copy and rejects duplicate targets", () => {
@@ -104,4 +105,28 @@ test("source projection changes when relevant Planner inputs change", () => {
   expect(digestSfValue({ versionId: "v1", projection: after })).not.toBe(digestSfValue({ versionId: "v1", projection: before }))
   snapshot.data.allocations = [{ id: "alloc", name: "Shared" }]
   expect(digestSfValue({ versionId: "v1", projection: projectPlannerSource(snapshot, actor, "v1") })).not.toBe(digestSfValue({ versionId: "v1", projection: after }))
+})
+
+
+test("scenario exclusion and deferral preserve the source and move only the selected contribution", () => {
+  const snapshot = fixture()
+  const before = structuredClone(snapshot)
+  const deferred = simulatePlannerOperations(snapshot, actor, environment, "v1", [{ kind: "defer", targetRef: "line:3", period: { start: "2027-04-01", end: "2027-04-30" } }])
+  expect(deferred.status).toBe("ok")
+  if (deferred.status === "ok") expect((deferred.view.data.versions as { summary: { outlook: number[] } }[])[0].summary.outlook.slice(2, 4)).toEqual([0, 200])
+  const excluded = simulatePlannerOperations(snapshot, actor, environment, "v1", [{ kind: "exclude", targetRef: "line:3" }])
+  expect(excluded.status).toBe("ok")
+  if (excluded.status === "ok") expect((excluded.view.data.versions as { summary: { outlook: number[] } }[])[0].summary.outlook[2]).toBe(0)
+  expect(snapshot).toEqual(before)
+})
+
+
+test("scenario inclusion cannot silently replace an existing contribution", () => {
+  const snapshot = fixture()
+  expect(simulatePlannerOperations(snapshot, actor, environment, "v1", [{ kind: "include", targetRef: "line:3", amount: 50 }])).toMatchObject({ status: "needs-input", reason: "contribution-already-present" })
+  const version = (snapshot.data.versions as { lines: { b: number[] }[] }[])[0]
+  version.lines[0].b[2] = 0
+  const included = simulatePlannerOperations(snapshot, actor, environment, "v1", [{ kind: "include", targetRef: "line:3", amount: 50 }])
+  expect(included.status).toBe("ok")
+  if (included.status === "ok") expect((included.view.data.versions as { summary: { outlook: number[] } }[])[0].summary.outlook[2]).toBe(50)
 })

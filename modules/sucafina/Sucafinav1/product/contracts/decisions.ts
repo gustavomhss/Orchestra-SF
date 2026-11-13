@@ -153,7 +153,7 @@ export type DocumentEvidence = {
   status: "extracted" | "confirmed" | "rejected" | "stale"
   ref: Extract<BusinessEvidenceRef, { kind: "document" }>
 }
-type PortfolioCombinationBase = { id: string; caseRefs: readonly string[]; components: readonly ProjectionComponent[]; costCoverageRefs: readonly string[]; conflicts: readonly string[]; restrictions: readonly string[] }
+type PortfolioCombinationBase = { analysis?: { scenarioResultRef: string; scenario: ScenarioResult; comparisonRef: string; comparison: ScenarioComparison }; id: string; caseRefs: readonly string[]; components: readonly ProjectionComponent[]; costCoverageRefs: readonly string[]; conflicts: readonly string[]; restrictions: readonly string[] }
 export type PortfolioCombination = PortfolioCombinationBase & (
   | { eligibility: "eligible-complete"; comparisonStatus: "complete" }
   | { eligibility: "conditioned" | "unavailable"; comparisonStatus: "conditioned" | "incompatible" | "unavailable" }

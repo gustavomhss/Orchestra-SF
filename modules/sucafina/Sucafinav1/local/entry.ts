@@ -21,7 +21,7 @@ import { loadLocalConfiguration, requireLocalIsolation } from "../runtime/local-
 import { scanLocalFile } from "../runtime/local-scanner.ts"
 import { createSfSourcePersistence } from "../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../product/integration/source-inventory.ts"
-import { projectSfSourceScope } from "../product/integration/source-projections.ts"
+import { createSfSourceScopeProjector } from "../product/integration/source-projections.ts"
 
 /** Explicit factory loaded by Orchestra serve --installation. No listener, global config or host credentials. */
 export default async function installation(context: { origin: string }) {
@@ -36,9 +36,11 @@ export async function createLocalInstallation(context: { origin: string }, file:
   const config = loaded.config
   const operator = config.authentication === "local-operator" && config.localOperator ? { ...config.localOperator, name: userInfo().username } : undefined
   const client = !operator && config.tenantId && config.clientId ? createEntraClient({ tenantId: config.tenantId, clientId: config.clientId }) : undefined
+  const now = () => new Date().toISOString()
+  const projectScope = createSfSourceScopeProjector(now)
   const driver = await openLocalStore(path.join(loaded.directory, operator ? "business-local" : "business"))
-  const store = { ...driver, ...createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope: projectSfSourceScope, createId: randomUUID }) }
-  const restoration = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope: projectSfSourceScope, createId: randomUUID, purpose: "business-restore" })
+  const store = { ...driver, ...createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope, createId: randomUUID }) }
+  const restoration = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope, createId: randomUUID, purpose: "business-restore" })
   const services = { jobs: undefined as Awaited<ReturnType<typeof createLocalJobs>> | undefined }
   const status = (request: Request) => {
     const url = new URL(request.url)
@@ -78,7 +80,7 @@ export async function createLocalInstallation(context: { origin: string }, file:
   const business = createModule(config.mount, {
     persistence: store,
     authenticate: identity.authenticate,
-    environment: async (request) => ({ at: new Date().toISOString(), id: randomUUID, directory: await identity.directory(request), bankKey: loaded.keys.bank }),
+    environment: async (request) => ({ at: now(), id: randomUUID, directory: await identity.directory(request), bankKey: loaded.keys.bank }),
     maxJsonBytes: 2 * 1024 * 1024,
     assets: { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes) => scanLocalFile(bytes, config.scanner) } },
   })
