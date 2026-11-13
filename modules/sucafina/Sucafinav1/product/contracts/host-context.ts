@@ -11,7 +11,12 @@ import type { TrustedDomainContext, TrustedExecutionBinding } from "./sf-executi
 import type { Period } from "./context.ts"
 import type { SfNativeRunRecord } from "./state.ts"
 import type { TrustedUiContext } from "./sf-execution.ts"
+import type { MonthlyDraft } from "../planner/monthly-edit.ts"
+import type { View, Result } from "../../runtime/contract.ts"
 import type { runSfAnalysis } from "../ai/analysis-port.ts"
+
+export type SfPlannerMonthlyInput = { page: "OPEX" | "CAPEX"; versionId: string; drafts: readonly MonthlyDraft[] }
+export type SfPlannerMonthlyResult = { view: View; rows: readonly { draft: MonthlyDraft; errors: readonly { cell?: MonthlyDraft["cells"][number]; reason: string }[]; result?: Result }[] }
 
 /** In-process host API. Neither this object nor its bindings are serialized into a model request. */
 export type SfHostSessionPort = {
@@ -28,6 +33,10 @@ export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
   /** Private UI discovery; absent until its real collection registry is mounted. */
   procurementSelections?: {
     create: (context: TrustedDomainContext, period: Period) => Promise<PortResult<{ selectionRef: string; label: string; period: Period }>>
+  }
+  plannerMonthly?: {
+    preview: (context: TrustedUiContext, input: SfPlannerMonthlyInput) => Promise<PortResult<SfPlannerMonthlyResult>>
+    apply: (context: TrustedUiContext, input: SfPlannerMonthlyInput) => Promise<PortResult<SfPlannerMonthlyResult>>
   }
   /** Human-authorized product operations; native tickets and bindings never cross this boundary. */
   analyses?: {

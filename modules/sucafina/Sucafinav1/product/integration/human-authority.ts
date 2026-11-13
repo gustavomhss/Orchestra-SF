@@ -5,7 +5,7 @@ import type { createSfUiAuthority } from "./ui-authority.ts"
 
 export const sfHumanActions = ["collaboration.thread.create", "collaboration.thread.reply", "collaboration.thread.resolve",
   "collaboration.relation.confirm", "collaboration.handoff.confirm", "collaboration.confirmation.confirm",
-  "documents.confirm", "analysis.start", "analysis.read", "analysis.cancel", "imports.admit", "imports.apply", "decisions.edit", "decisions.accept-analysis", "decisions.promote-alternative",
+  "planner.preview", "planner.apply", "documents.confirm", "analysis.start", "analysis.read", "analysis.cancel", "imports.admit", "imports.apply", "decisions.edit", "decisions.accept-analysis", "decisions.promote-alternative",
   "decisions.choose", "decisions.apply", "reviews.preserve",
   "routines.admit", "routines.run", "schedules.create", "schedules.update", "schedules.pause"] as const
 export type SfHumanAction = typeof sfHumanActions[number]
