@@ -1,0 +1,27 @@
+{
+  "status": "PLAN_STRUCTURE_PASS",
+  "plan_path": "/workspace/scratch/838a0195183d/sf2h-publish/campaign.json",
+  "plan_sha256": "a6765b12170334a27e915e7cc0d812cbb5caebc1cc9dcedbd4558610838423d5",
+  "checked_at": "2026-11-13T00:03:26.066298+00:00",
+  "counts": {
+    "work_packages": 15,
+    "tasks": 71,
+    "contracts": 14,
+    "evidence_packages": 18,
+    "journeys": 13,
+    "requirements": 41,
+    "capabilities": 28,
+    "ai_capabilities": 18,
+    "unique_defined_ids": 1252
+  },
+  "failures": [],
+  "warnings": [],
+  "limitations": [
+    "Structural validation of planning data only; no product code, tests, inference, Relay run, CI, browser, deploy or business action was executed.",
+    "Axiom presence and nonempty text do not prove quality, semantic completeness or satisfaction.",
+    "References and ownership are checked against this plan, not against a live Git tree or actual permissions.",
+    "Contract references are validated by canonical ID where a Cxx token is present; TypeScript signatures, exports, runtime compatibility and prose semantics are not compiled or proven.",
+    "The120minute windows are internally checked, not empirically demonstrated estimates; resource effort and CI duration are not benchmarked.",
+    "Consumer integration edges are checked for valid targets; only depends_on is required to form an acyclic build DAG."
+  ]
+}

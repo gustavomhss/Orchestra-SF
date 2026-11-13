@@ -1,0 +1,338 @@
+{
+  "default_policy": "read_only_unless_explicitly_owned",
+  "work_packages": [
+    {
+      "id": "WP00",
+      "branch": "sf2-contracts",
+      "existing_files": [],
+      "new_prefixes": [
+        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/",
+        "modules/sucafina/Sucafinav1/product/contracts/",
+        "modules/sucafina/Sucafinav1/test/product/wp00/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP00/"
+      ],
+      "allowed_purpose": "Congelar C01–C14, baseline, corpus sintético, oráculos e rastreabilidade da campanha; escrever contratos, documentação e fixtures próprios sem implementar domínios ou editar testes legados."
+    },
+    {
+      "id": "WP01",
+      "branch": "sf2-ui",
+      "existing_files": [
+        "modules/sucafina/Sucafinav1/runtime/ui.ts",
+        "modules/sucafina/Sucafinav1/src/nav.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+        "modules/sucafina/Sucafinav1/test/screen.test.ts",
+        "modules/sucafina/Sucafinav1/test/visual-layout.test.ts"
+      ],
+      "new_prefixes": [
+        "modules/sucafina/Sucafinav1/product/ui/",
+        "modules/sucafina/Sucafinav1/test/product/wp01/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/"
+      ],
+      "allowed_purpose": "Shell, navegação e componentes/estados compartilhados; consumir contexto e capacidades autorizadas, sem regras financeiras, mudança de papel ou escrita em renderizadores dos domínios."
+    },
+    {
+      "id": "WP02",
+      "branch": "sf2-dashboard",
+      "existing_files": [
+        "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+        "modules/sucafina/Sucafinav1/runtime/dashboard-operations.ts",
+        "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+        "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+        "modules/sucafina/Sucafinav1/src/dashboard-accounts.ts",
+        "modules/sucafina/Sucafinav1/src/dashboard-role.ts",
+        "modules/sucafina/Sucafinav1/src/dashboard-screen.ts",
+        "modules/sucafina/Sucafinav1/test/dashboard-budget-runtime.test.ts",
+        "modules/sucafina/Sucafinav1/test/dashboard-operations-runtime.test.ts",
+        "modules/sucafina/Sucafinav1/test/dashboard-people-runtime.test.ts",
+        "modules/sucafina/Sucafinav1/test/dashboard-portfolio-runtime.test.ts"
+      ],
+      "new_prefixes": [
+        "modules/sucafina/Sucafinav1/product/dashboard/",
+        "modules/sucafina/Sucafinav1/test/product/wp02/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/"
+      ],
+      "allowed_purpose": "Manter e projetar os quatro domínios do Dashboard, os cálculos/autorização já pertencentes a eles e a ação Hot Topic canônica; testes de domínio locais, sem tocar surfaces.ts, shell, imports ou relatórios."
+    },
+    {
+      "id": "WP03",
+      "branch": "sf2-planner",
+      "existing_files": [
+        "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "modules/sucafina/Sucafinav1/src/planner-accounts.ts",
+        "modules/sucafina/Sucafinav1/src/planner-role.ts",
+        "modules/sucafina/Sucafinav1/src/planner-screen.ts",
+        "modules/sucafina/Sucafinav1/test/parity-planner.test.ts",
+        "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts"
+      ],
+      "new_prefixes": [
+        "modules/sucafina/Sucafinav1/product/planner/",
+        "modules/sucafina/Sucafinav1/test/product/wp03/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/"
+      ],
+      "allowed_purpose": "Planner: cálculo/projeção/preview puro, sete superfícies, edição mensal, HR/FX/cadastros e cenários; preservar finanças, locks e privacidade, sem escrever importadores ou composição comum."
+    },
+    {
+      "id": "WP04",
+      "branch": "sf2-procurement",
+      "existing_files": [
+        "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "modules/sucafina/Sucafinav1/src/form.ts",
+        "modules/sucafina/Sucafinav1/src/initial-settings.ts",
+        "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+        "modules/sucafina/Sucafinav1/src/procurement.ts",
+        "modules/sucafina/Sucafinav1/src/requests.ts",
+        "modules/sucafina/Sucafinav1/src/supplier.ts",
+        "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "modules/sucafina/porta/act.ts",
+        "modules/sucafina/porta/codigo.test.ts",
+        "modules/sucafina/porta/linha.test.ts",
+        "modules/sucafina/porta/s3.test.ts"
+      ],
+      "new_prefixes": [
+        "modules/sucafina/Sucafinav1/product/procurement/",
+        "modules/sucafina/Sucafinav1/test/product/wp04/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/"
+      ],
+      "allowed_purpose": "Procurement: páginas e estados originais, propostas/seleção, aprovações, cadastros e porta/act.ts no seu escopo funcional; preservar alçadas, sem alterar identidade, runtime de anexos ou integrar automaticamente orçamento."
+    },
+    {
+      "id": "WP05",
+      "branch": "sf2-analytics",
+      "existing_files": [],
+      "new_prefixes": [
+        "modules/sucafina/Sucafinav1/product/analytics/",
+        "modules/sucafina/Sucafinav1/test/product/wp05/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/"
+      ],
+      "allowed_purpose": "Somente componentes, geometria, formatação, interação e verificações de gráficos em product/analytics e seu namespace de testes; consumir C02 real sem reproduzir fórmulas ou autorização."
+    },
+    {
+      "id": "WP06",
+      "branch": "sf2-imports",
+      "existing_files": [
+        "modules/sucafina/Sucafinav1/runtime/dashboard-import.ts",
+        "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+        "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+        "modules/sucafina/Sucafinav1/test/parity-legacy-workbooks.test.ts",
+        "modules/sucafina/Sucafinav1/test/workbooks.test.ts"
+      ],
+      "new_prefixes": [
+        "modules/sucafina/Sucafinav1/product/imports/",
+        "modules/sucafina/Sucafinav1/test/product/wp06/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/",
+        "modules/sucafina/Sucafinav1/product/documents/"
+      ],
+      "allowed_purpose": "Parse/export de arquivos existentes, normalização, manifesto/preview por adapter de domínio e coordenador Apply/recibo; preservar valores e referências confiáveis, sem editar planner.ts/application.ts ou persistência."
+    },
+    {
+      "id": "WP07",
+      "branch": "sf2-reviews",
+      "existing_files": [
+        "modules/sucafina/Sucafinav1/runtime/reports.ts",
+        "modules/sucafina/Sucafinav1/test/parity-reports.test.ts",
+        "modules/sucafina/Sucafinav1/test/reports-runtime.test.ts"
+      ],
+      "new_prefixes": [
+        "modules/sucafina/Sucafinav1/product/reviews/",
+        "modules/sucafina/Sucafinav1/test/product/wp07/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/"
+      ],
+      "allowed_purpose": "Revisão executiva, seleção/snapshot, meeting view e relatórios PPTX/DOCX de produto; consumir projeções e referências autorizadas, sem nova aprovação ou escrita em surfaces.ts e ações operacionais."
+    },
+    {
+      "id": "WP08",
+      "branch": "sf2-collaboration",
+      "existing_files": [],
+      "new_prefixes": [
+        "modules/sucafina/Sucafinav1/product/collaboration/",
+        "modules/sucafina/Sucafinav1/test/product/wp08/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/"
+      ],
+      "allowed_purpose": "Somente relações explícitas, comentários, pedidos de esclarecimento/revisão, confirmação por versão e projeção Meu trabalho no namespace novo; consumir a ação Hot Topic e comandos de domínio sem duplicar tarefas ou editar seus produtores."
+    },
+    {
+      "id": "WP09",
+      "branch": "sf2-routines",
+      "existing_files": [],
+      "new_prefixes": [
+        "modules/sucafina/Sucafinav1/product/routines/",
+        "modules/sucafina/Sucafinav1/test/product/wp09/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP09/"
+      ],
+      "allowed_purpose": "Somente receitas/adapters e experiência de rotinas de produto: preparação, recibos, assistência contextual e recorrência por portas nativas; não editar engine Relay/Maestro/Schedule, não autoaprovar nem ampliar acesso."
+    },
+    {
+      "id": "WP10",
+      "branch": "sf2-integrate",
+      "existing_files": [
+        "modules/sucafina/Sucafinav1/README.md",
+        "modules/sucafina/Sucafinav1/bun.lock",
+        "modules/sucafina/Sucafinav1/index.ts",
+        "modules/sucafina/Sucafinav1/package.json",
+        "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "modules/sucafina/Sucafinav1/src/records.ts",
+        "modules/sucafina/Sucafinav1/src/surfaces.ts",
+        "modules/sucafina/Sucafinav1/test/business-browser.test.ts",
+        "modules/sucafina/Sucafinav1/test/elo.test.ts",
+        "modules/sucafina/Sucafinav1/test/full-module.test.ts",
+        "modules/sucafina/Sucafinav1/test/io-browser.test.ts",
+        "modules/sucafina/Sucafinav1/test/lido.test.ts",
+        "modules/sucafina/Sucafinav1/test/migrate.test.ts",
+        "modules/sucafina/Sucafinav1/test/plug.test.ts",
+        "modules/sucafina/Sucafinav1/test/presentation.test.ts",
+        "modules/sucafina/Sucafinav1/test/s1.test.ts",
+        "modules/sucafina/Sucafinav1/test/s3.test.ts",
+        "modules/sucafina/Sucafinav1/test/s4.test.ts",
+        "modules/sucafina/Sucafinav1/test/s5.test.ts",
+        "modules/sucafina/Sucafinav1/test/s6.test.ts",
+        "modules/sucafina/package.json",
+        "bun.lock",
+        "package.json",
+        "apps/cli/src/host.ts",
+        "apps/cli/src/commands/handlers/serve.ts",
+        "modules/sucafina/Sucafinav1/local/entry.ts",
+        "modules/sucafina/Sucafinav1/runtime/host.ts"
+      ],
+      "new_prefixes": [
+        "modules/sucafina/Sucafinav1/product/integration/",
+        "modules/sucafina/Sucafinav1/test/product/wp10/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/",
+        "modules/sucafina/Sucafinav1/product/host-binding/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/control/",
+        "packages/app-shell/e2e/sucafina/",
+        "apps/cli/src/sucafina-product/"
+      ],
+      "allowed_purpose": "Compor o produto e as portas reais nos entrypoints enumerados, fornecer persistência protegida e autorização contextual, integrar e verificar. As exceções exatas autorizam manifests/lock da raiz e os dois arquivos de factory/host para essa integração. Não alterar Azure, deploy, identidade, engines ou política de aprovação; não sobrescrever arquivo de outro escritor."
+    },
+    {
+      "id": "WP11",
+      "branch": "sf2-decisions",
+      "existing_files": [],
+      "new_prefixes": [
+        "modules/sucafina/Sucafinav1/product/decisions/",
+        "modules/sucafina/Sucafinav1/test/product/wp11/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/"
+      ],
+      "allowed_purpose": "Implementar somente casos de decisão e execução preparada no namespace próprio; consumir contratos e portas reais; não editar UI, persistência concreta, domínio produtor ou scheduler de outros WPs."
+    },
+    {
+      "id": "WP12",
+      "branch": "sf2-ai",
+      "existing_files": [],
+      "new_prefixes": [
+        "modules/sucafina/Sucafinav1/product/ai/",
+        "modules/sucafina/Sucafinav1/test/product/wp12/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/"
+      ],
+      "allowed_purpose": "Implementar somente ia contextual e análise verificável no namespace próprio; consumir contratos e portas reais; não editar UI, persistência concreta, domínio produtor ou scheduler de outros WPs."
+    },
+    {
+      "id": "WP13",
+      "branch": "sf2-portfolio",
+      "existing_files": [],
+      "new_prefixes": [
+        "modules/sucafina/Sucafinav1/product/portfolio/",
+        "modules/sucafina/Sucafinav1/test/product/wp13/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/"
+      ],
+      "allowed_purpose": "Implementar somente cenários de portfólio e sensibilidade no namespace próprio; consumir contratos e portas reais; não editar UI, persistência concreta, domínio produtor ou scheduler de outros WPs."
+    },
+    {
+      "id": "WP14",
+      "branch": "sf2-memory",
+      "existing_files": [],
+      "new_prefixes": [
+        "modules/sucafina/Sucafinav1/product/decision-memory/",
+        "modules/sucafina/Sucafinav1/test/product/wp14/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/"
+      ],
+      "allowed_purpose": "Implementar somente reavaliação e memória das decisões no namespace próprio; consumir contratos e portas reais; não editar UI, persistência concreta, domínio produtor ou scheduler de outros WPs."
+    }
+  ],
+  "excluded_prefixes": [
+    ".github/",
+    "azure/",
+    "bun.lock",
+    "bun.lockb",
+    "bunfig.toml",
+    "deploy/",
+    "infra/",
+    "infrastructure/",
+    "modules/sucafina/Sucafinav1/installation.ts",
+    "modules/sucafina/Sucafinav1/local/",
+    "modules/sucafina/Sucafinav1/runtime/ACCEPTANCE.json",
+    "modules/sucafina/Sucafinav1/runtime/WAVE.json",
+    "modules/sucafina/Sucafinav1/runtime/admin.ts",
+    "modules/sucafina/Sucafinav1/runtime/artifact.ts",
+    "modules/sucafina/Sucafinav1/runtime/assets.ts",
+    "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+    "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+    "modules/sucafina/Sucafinav1/runtime/host.ts",
+    "modules/sucafina/Sucafinav1/runtime/local-",
+    "modules/sucafina/Sucafinav1/runtime/operations.ts",
+    "modules/sucafina/Sucafinav1/runtime/operator-",
+    "modules/sucafina/Sucafinav1/src/elo.ts",
+    "modules/sucafina/Sucafinav1/src/identity.ts",
+    "modules/sucafina/Sucafinav1/test/admin-plug.test.ts",
+    "modules/sucafina/Sucafinav1/test/admin-runtime.test.ts",
+    "modules/sucafina/Sucafinav1/test/assets.test.ts",
+    "modules/sucafina/Sucafinav1/test/entra-client.test.ts",
+    "modules/sucafina/Sucafinav1/test/fixture/",
+    "modules/sucafina/Sucafinav1/test/http-assets.test.ts",
+    "modules/sucafina/Sucafinav1/test/installation.test.ts",
+    "modules/sucafina/Sucafinav1/test/local-",
+    "modules/sucafina/Sucafinav1/test/operations-runtime.test.ts",
+    "modules/sucafina/Sucafinav1/test/operator-",
+    "modules/sucafina/Sucafinav1/test/papel.test.ts",
+    "modules/sucafina/Sucafinav1/test/parity-maintenance.test.ts",
+    "modules/sucafina/Sucafinav1/test/parity-pitr.test.ts",
+    "modules/sucafina/Sucafinav1/test/parity-polling-browser.test.ts",
+    "modules/sucafina/Sucafinav1/test/parity-recovery-plan.test.ts",
+    "modules/sucafina/Sucafinav1/test/parity-retention.test.ts",
+    "modules/sucafina/Sucafinav1/test/runtime-http.test.ts",
+    "modules/sucafina/Sucafinav1/tsconfig.json",
+    "modules/sucafina/Sucafinav1/vendor/",
+    "modules/sucafina/bunfig.toml",
+    "package-lock.json",
+    "package.json",
+    "pnpm-lock.yaml",
+    "yarn.lock",
+    "modules/relay/"
+  ],
+  "notes": [
+    "Este manifesto substitui o ownership da campanha anterior para a execução sf2h-integral-20261112; a baseline continua fixada.",
+    "Um escritor por arquivo. S0 controla contratos, composition root, rotas, manifests, lock e a branch integradora. Os demais WPs editam somente os próprios arquivos e testes.",
+    "As exceções exatas de WP10 autorizam local/entry.ts, runtime/host.ts e manifests/lock da raiz estritamente para injeção de serviços e dependência de produto. Nenhum outro arquivo de local/, identidade, Azure ou CI ganha escrita.",
+    "Se a frente cloud tiver ownership ativo do mesmo arquivo, combinar SHA/patch e delegar a gravação a um único escritor. Não usar um arquivo inteiro antigo para sobrescrever a outra frente.",
+    "Não importar estaticamente o módulo de cliente no grafo global de produto do Orchestra; preservar carregamento/composição explícitos da instalação e injetar serviços autorizados por porta.",
+    "Novos testes de UI pertencem a packages/app-shell/e2e/sucafina/, usando a configuração Playwright já permitida; não editar o validator ou desligar guard para criar um caminho de CI.",
+    "Subagentes centrais de contrato, fixture e qualificação têm artefatos auxiliares disjuntos; somente S0 publica os contratos e alterações de código compartilhadas."
+  ],
+  "coordination": "Um escritor por arquivo, inclusive manifests/lock, contratos, host, rotas e receipts. Subagente trabalha em worktree/checkout isolado e branch do WP. Integradora é a única escritora da branch sf2-integrate. Transferência de ownership é atômica e registrada antes da primeira edição pelo novo autor.",
+  "exact_exceptions": [
+    {
+      "path": "bun.lock",
+      "owner": "WP10",
+      "purpose": "Integração do produto e dependência necessária; sem ampliar autoridade, alterar deploy ou sobrescrever outro escritor."
+    },
+    {
+      "path": "package.json",
+      "owner": "WP10",
+      "purpose": "Integração do produto e dependência necessária; sem ampliar autoridade, alterar deploy ou sobrescrever outro escritor."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "owner": "WP10",
+      "purpose": "Integração do produto e dependência necessária; sem ampliar autoridade, alterar deploy ou sobrescrever outro escritor."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/host.ts",
+      "owner": "WP10",
+      "purpose": "Integração do produto e dependência necessária; sem ampliar autoridade, alterar deploy ou sobrescrever outro escritor."
+    }
+  ],
+  "resolution_order": "Uma exceção exata listada para WP10 prevalece sobre o prefixo excluído correspondente. Todas as demais exclusões continuam válidas. Fora disso, arquivos existentes exatos e novos prefixos concedem escrita somente ao dono indicado; ausência significa somente leitura."
+}

@@ -1,0 +1,568 @@
+{
+  "id": "WP14",
+  "title": "Reavaliação e memória das decisões",
+  "objective": "Identificar mudanças relevantes e tornar escolhas anteriores úteis sob acesso atual.",
+  "scope_in": [
+    "Classificação pura de materialidade por referência/versão/período/campo",
+    "Projeções de semelhantes autorizados",
+    "Previsto versus observado",
+    "Políticas puras de deduplicação e invalidação"
+  ],
+  "scope_out": [
+    "UI",
+    "Persistência",
+    "Domain writes",
+    "Scheduler",
+    "Entrega de notificações ou mensagens",
+    "Perfis ocultos e causalidade de economia"
+  ],
+  "contract_reads": [
+    "C01",
+    "C02",
+    "C06",
+    "C07",
+    "C09",
+    "C10"
+  ],
+  "contract_provides": [
+    "C13"
+  ],
+  "axioms": {
+    "dod": [
+      {
+        "id": "WP14.DOD.01",
+        "text": "Funções/projeções prontas atéT+65 e consumidas de forma comprovada na composição atéT+80.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP14.DOD.02",
+        "text": "Mudança material afeta a análise correspondente, preservando decisão histórica e autorização atual.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "invariants": [
+      {
+        "id": "WP14.INV.01",
+        "text": "WP14 não altera estado de domínio, persiste, renderiza ou agenda.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP14.INV.02",
+        "text": "Histórico e cache não ampliam acesso; comparação observada não prova causalidade.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "quality_standards": [
+      {
+        "id": "WP14.QLT.01",
+        "text": "Sinal mostra condição, fonte e delta; sem score opaco.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP14.QLT.02",
+        "text": "Semelhança explica correspondência e limites de aplicação.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "completeness_criteria": [
+      {
+        "id": "WP14.CMP.01",
+        "text": "Cobrir material/irrelevante, campo/período/incarnação, repetição/resolução/reabertura, memória vazia, observação parcial/incompatível e revogação.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "success_criteria": [
+      {
+        "id": "WP14.SUC.01",
+        "text": "A equipe retoma o motivo de uma escolha e reconhece precisamente quando ele precisa ser reconsiderado, com baixo ruído.",
+        "status": "NOT_RUN"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "WP14.T01",
+      "title": "Classificar mudanças materiais por escopo",
+      "intent": "Reabrir a análise apenas quando uma condição relevante for afetada.",
+      "work": [
+        "Implementar função pura que compara condição registrada e mudança com referência/incarnação, versão, período e campos relevantes.",
+        "Produzir ReconsiderationSignal com antes/depois, fonte, condição afetada, gravidade textual e razão; não escrever caso, notificar ou agendar.",
+        "Consumir resultados financeiros/criteriais existentes; preservar distinção entre escolha vigente e pedido de reavaliação."
+      ],
+      "inputs": [
+        "C01",
+        "C02",
+        "DecisionCasePort",
+        "DecisionMemoryPort",
+        "MaterialChangeEvent"
+      ],
+      "outputs": [
+        "MaterialityClassifier puro",
+        "ReconsiderationSignal",
+        "Reason codes e chave de correlação"
+      ],
+      "depends_on": [
+        "WP00.T02"
+      ],
+      "checks": [
+        {
+          "id": "WP14.T01.CHK.01",
+          "text": "Implantação45→70mil produz benefício30→5mil e rompe mínimo20mil; sinal identifica exatamente condição e componente e não desfaz escolha.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP14.T01.CHK.02",
+          "text": "Mudança em descrição irrelevante ou mês fora do escopo não gera reavaliação; alteração de prazo relevante gera sinal próprio.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP14.T01.CHK.03",
+          "text": "Reuso de ID com nova encarnação invalida referência de modo explícito; ausência de dado não é tratada como condição satisfeita.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP14.T01.DOD.01",
+            "text": "Classificador puro é consumido pela composição e produz sinal material a partir de mudança real de fonte.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP14.T01.INV.01",
+            "text": "Sinal não altera escolha vigente, aprovações, contratos ou ações; período/campo irrelevante não invalida tudo.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP14.T01.QLT.01",
+            "text": "Toda reavaliação mostra a condição, o delta e a referência causadora; nenhum score opaco.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP14.T01.CMP.01",
+            "text": "Cobrir limiar rompido, limiar mantido, campo/período irrelevante, referência substituída e evidência insuficiente.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP14.T01.SUC.01",
+            "text": "A equipe recebe uma explicação precisa do que merece reconsideração sem refazer a decisão inteira.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP14",
+      "ownership_ref": "WP14",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "IA08"
+      ],
+      "journeys": [
+        "J02",
+        "J06",
+        "J09",
+        "J12"
+      ],
+      "session": "S4",
+      "build_window": [
+        10,
+        22
+      ],
+      "proof_window": [
+        25,
+        75
+      ],
+      "evidence_packages": [
+        "E12"
+      ],
+      "integrates_with": [
+        "WP11.T01",
+        "WP08.T01",
+        "WP10.T01"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP14.T02",
+      "title": "Recuperar casos semelhantes sob autorização",
+      "intent": "Reaproveitar razões e evidências anteriores sem trazer conclusões fora de contexto.",
+      "work": [
+        "Implementar seleção/ranking explicável sobre projeções previamente autorizadas e revalidar acesso ao recuperar detalhes.",
+        "Expor características de correspondência explícitas: tipo de decisão, horizonte, componente, restrição e resultado disponível.",
+        "Definir interface de invalidação e chave de cache incluindo escopo de autorização/versões; cache concreto e persistência ficam no host."
+      ],
+      "inputs": [
+        "C01",
+        "DecisionCasePort",
+        "DecisionMemoryPort",
+        "AuthorizedCaseProjection",
+        "AccessRevision"
+      ],
+      "outputs": [
+        "SimilarCaseProjection",
+        "MatchExplanation",
+        "CacheScope e invalidation requirements"
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP14.T01"
+      ],
+      "checks": [
+        {
+          "id": "WP14.T02.CHK.01",
+          "text": "Consulta recupera caso pertinente e explica características usadas; caso de nome semelhante mas contexto incompatível não é apresentado como recomendação equivalente.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP14.T02.CHK.02",
+          "text": "Ator com permissão menor não obtém caso, trechos, contagens, score ou deltas derivados de conteúdo restrito.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP14.T02.CHK.03",
+          "text": "Revogação entre busca e detalhe invalida recuperação/cache e exige rechecagem, inclusive quando o ID já foi mostrado.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP14.T02.DOD.01",
+            "text": "Busca de semelhantes consome projeções reais autorizadas e retorna referências com explicação inspecionável.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP14.T02.INV.01",
+            "text": "Sem perfil oculto de André, inferência de preferência ou recuperação de texto excluído do acesso atual.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP14.T02.QLT.01",
+            "text": "Correspondência distingue semelhança de validade atual; toda conclusão anterior mantém suas condições e período.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP14.T02.CMP.01",
+            "text": "Cobrir nenhum caso, caso compatível, caso incompatível, conteúdo parcialmente visível e acesso revogado.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP14.T02.SUC.01",
+            "text": "Uma nova análise encontra precedente útil sem copiar sua conclusão como verdade atual.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP14",
+      "ownership_ref": "WP14",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "IA12"
+      ],
+      "journeys": [
+        "J06",
+        "J08",
+        "J12"
+      ],
+      "session": "S4",
+      "build_window": [
+        22,
+        30
+      ],
+      "proof_window": [
+        25,
+        75
+      ],
+      "evidence_packages": [
+        "E12"
+      ],
+      "integrates_with": [
+        "WP11.T01",
+        "WP08.T01",
+        "WP10.T01"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP14.T03",
+      "title": "Comparar previsto e observado sem atribuição falsa",
+      "intent": "Mostrar o que aconteceu em relação à base da escolha.",
+      "work": [
+        "Depois da coordenação30–40, integrar ChoiceRecord e ObservedResultProjection via contratos reais sem alterar produtores.",
+        "Implementar comparação pura por métrica/unidade/período/moeda e cobertura; manter baseline original preservado.",
+        "Produzir lições factuais e pendências para WP07/WP12; observação não vira causalidade nem ROI atribuível à IA."
+      ],
+      "inputs": [
+        "C01",
+        "C02",
+        "DecisionCasePort",
+        "ObservedResultProjection",
+        "DecisionMemoryPort"
+      ],
+      "outputs": [
+        "ExpectedObservedComparison",
+        "CoverageCompatibility",
+        "FactualOutcomeSummary"
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP14.T02"
+      ],
+      "checks": [
+        {
+          "id": "WP14.T03.CHK.01",
+          "text": "Comparação com observação na mesma base calcula delta correto e mantém fonte, período e cenário original.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP14.T03.CHK.02",
+          "text": "Resultado sem observação, parcial ou em moeda/período incompatível não vira zero, economia realizada ou sucesso confirmado.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP14.T03.CHK.03",
+          "text": "Mesmo com delta favorável, saída não afirma que IA causou a economia; dado restrito não aparece por subtração de agregados.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP14.T03.DOD.01",
+            "text": "Comparação real é consumida em reunião/memória com baseline e observação identificados.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP14.T03.INV.01",
+            "text": "Não alterar histórico, converter previsão em realizado ou inferir causalidade a partir de comparação.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP14.T03.QLT.01",
+            "text": "Compatibilidade, cobertura, unidades e limitação ficam junto do resultado; narrativa usa apenas fatos disponíveis.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP14.T03.CMP.01",
+            "text": "Cobrir observado total/parcial/ausente, base incompatível, resultado favorável/desfavorável e revogação.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP14.T03.SUC.01",
+            "text": "O usuário identifica qual premissa se confirmou e qual merece revisão com evidência verificável.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP14",
+      "ownership_ref": "WP14",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "IA12"
+      ],
+      "journeys": [
+        "J05",
+        "J08",
+        "J12"
+      ],
+      "session": "S4",
+      "build_window": [
+        40,
+        53
+      ],
+      "proof_window": [
+        40,
+        75
+      ],
+      "evidence_packages": [
+        "E12"
+      ],
+      "integrates_with": [
+        "WP11.T01",
+        "WP08.T01",
+        "WP10.T01"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP14.T04",
+      "title": "Deduplicar sinais e qualificar invalidação",
+      "intent": "Garantir atenção útil e acesso atual nos consumidores.",
+      "work": [
+        "Implementar chave e política puras de deduplicação por condição/versão/causa, com estados sinalizado/resolvido/alterado novamente.",
+        "Expor envelopes de sinal e contratos de invalidação para Meu trabalho/WP08, UI/WP01, cache/host e Schedule/WP09.",
+        "Provar consumo real por eventos/leitura autorizada ou rotina admitida; WP14 não envia notificação, não persiste, não agenda nem escreve domínios."
+      ],
+      "inputs": [
+        "ReconsiderationSignal",
+        "SimilarCaseProjection",
+        "AccessRevision",
+        "C06",
+        "C07"
+      ],
+      "outputs": [
+        "SignalDedupePolicy",
+        "InvalidationEnvelope",
+        "ProjectionContract e evidência de consumo"
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP14.T03"
+      ],
+      "checks": [
+        {
+          "id": "WP14.T04.CHK.01",
+          "text": "Repetir mesmo evento ou leitura gera um sinal; mudança material posterior distinta atualiza o motivo sem criar várias notificações equivalentes.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP14.T04.CHK.02",
+          "text": "Resolver a condição e alterá-la novamente permite novo sinal atribuível; alteração irrelevante permanece silenciosa.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP14.T04.CHK.03",
+          "text": "Revogar acesso remove informação dos sinais, detalhes e cache no consumidor real; evidência não é apenas teste da função pura.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP14.T04.DOD.01",
+            "text": "Consumidores reais aplicam deduplicação e invalidação com prova atéT+80, além das funções puras prontas atéT+65.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP14.T04.INV.01",
+            "text": "WP14 não assume escrita, UI, scheduler ou entrega de mensagens; permissões atuais prevalecem sobre cache/histórico.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP14.T04.QLT.01",
+            "text": "Sinais têm motivo explícito e relação com escolha; deduplicação não oculta mudança material nova.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP14.T04.CMP.01",
+            "text": "Cobrir evento repetido, nova mudança, resolução, reabertura, permissão revogada e consumidor temporariamente indisponível.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP14.T04.SUC.01",
+            "text": "O time vê uma pendência por causa relevante e não recebe ruído repetido ou informação que deixou de poder acessar.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP14",
+      "ownership_ref": "WP14",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "IA08",
+        "IA18"
+      ],
+      "journeys": [
+        "J01",
+        "J06",
+        "J07",
+        "J12"
+      ],
+      "session": "S4",
+      "build_window": [
+        53,
+        65
+      ],
+      "proof_window": [
+        53,
+        75
+      ],
+      "evidence_packages": [
+        "E12"
+      ],
+      "integrates_with": [
+        "WP11.T01",
+        "WP08.T01",
+        "WP10.T01"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    }
+  ],
+  "handoff": [
+    "Sinais para WP08 e modelos de UI para WP01",
+    "Memória/resultados para WP07/WP12",
+    "Envelope de invalidação para WP10 e consumidor de Schedule WP09"
+  ],
+  "risks": [
+    "Dedupe correta na função não prova consumidor correto; exigir integração.",
+    "Granularidade ampla demais cria alertas a cada edição e invalida confirmações irrelevantes."
+  ],
+  "status": "PLANNED",
+  "ownership": {
+    "id": "WP14",
+    "branch": "sf2-memory",
+    "existing_files": [],
+    "new_prefixes": [
+      "modules/sucafina/Sucafinav1/product/decision-memory/",
+      "modules/sucafina/Sucafinav1/test/product/wp14/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/"
+    ],
+    "allowed_purpose": "Implementar somente reavaliação e memória das decisões no namespace próprio; consumir contratos e portas reais; não editar UI, persistência concreta, domínio produtor ou scheduler de outros WPs."
+  },
+  "source_ids": [
+    "S02",
+    "S06",
+    "S08",
+    "S09",
+    "S14"
+  ],
+  "session": "S4",
+  "build_window": [
+    10,
+    65
+  ],
+  "integration_deadline": 75,
+  "evidence_packages": [
+    "E12"
+  ],
+  "implementation_readiness": "Produzir exports/outputs por contrato cedo. Ready não é Done; a aceitação exige host e consumidores reais."
+}

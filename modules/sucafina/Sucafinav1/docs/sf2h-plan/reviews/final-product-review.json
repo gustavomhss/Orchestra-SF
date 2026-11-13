@@ -1,0 +1,110 @@
+{
+  "review_type": "ADVERSARIAL_COLD_REVIEW_OF_PLAN_ONLY",
+  "status": "REQUIRES_TARGETED_EDITS",
+  "implementation_status": "NOT_REVIEWED_NOT_RUN",
+  "reviewed_files": {
+    "campaign.json": {
+      "path": "/workspace/scratch/838a0195183d/sf2h-plan/campaign.json",
+      "sha256": "1aafcec4deaa56370f18c31b4798695b69930f21f854378c708ab2f32597e5e8"
+    },
+    "coverage.json": {
+      "path": "/workspace/scratch/838a0195183d/sf2h-plan/coverage.json",
+      "sha256": "ac0882da7a1d5b5c53f565c5521c0ac46cd9b22edaeedc263714561f256a689d"
+    }
+  },
+  "scope_assessment": {
+    "full_scope_present": true,
+    "work_packages": 15,
+    "tasks": 71,
+    "original_requirements": 41,
+    "original_capabilities": 28,
+    "analytical_questions": 11,
+    "ai_capabilities": 18,
+    "all_wp_and_task_axiom_families_present": true,
+    "all_checked_criteria_not_run": true,
+    "dangling_coverage_task_references": [],
+    "full_scope_notes": [
+      "Dashboard16, Planner7 e Procurement5 permanecem no escopo.",
+      "Oito perguntas analíticas originais mais composição, timeline e sensibilidade estão cobertas; reúso do waterfall é explicitamente permitido.",
+      "Imports, PDF digital/DOCX/texto, exportações PPTX/DOCX, portfólio, memória, reunião, quatro preparações Relay e Schedule permanecem exigidos.",
+      "Nenhuma capacidade obrigatória foi substituída por mock ou primeira fatia; renovação é uma jornada de aceite.",
+      "Limites de formatos e operações de portfólio são finitos e explícitos, sem prometer OCR universal ou otimizador universal."
+    ]
+  },
+  "findings": [
+    {
+      "id": "FPR01",
+      "severity": "P1",
+      "title": "Fechamento conserva contagens e número de juízes da campanha antiga",
+      "locations": [
+        "campaign.axioms.CAMP.DOD.01",
+        "campaign.axioms.CAMP.DOD.03",
+        "campaign.axioms.CAMP.CMP.01",
+        "WP10.T03.work/outputs/axioms.DOD.01",
+        "WP10.T05.CHK.01"
+      ],
+      "evidence": "CAMP.DOD.01 e WP10.T05.CHK.01 ainda dizem11WPs/50steps; CAMP.DOD.03 e WP10.T03.DOD.01 exigem2juízes, embora o título/gate exijam3; CAMP.CMP.01 ainda enumera8contratos em vez de14.",
+      "impact": "Normas de encerramento contraditórias deixam a checklist local de integração terminar na cobertura antiga, apesar do DoD adicional correto exigir escopo integral.",
+      "required_change": "Reescrever os enunciados de fechamento contra listas canônicas:15WPs/71tasks/C01–C14/28capacidades/41requisitos/18IA/11perguntas analíticas/três revisores. Preferir cardinalidade calculada na validação, evitando textos herdados incoerentes.",
+      "acceptance": "Busca e validação não encontram contagens antigas como obrigações atuais; WP10.T03 work/outputs/DoD descrevem os mesmos três pareceres.",
+      "status": "OPEN_AT_REVIEW_SNAPSHOT"
+    },
+    {
+      "id": "FPR02",
+      "severity": "P1",
+      "title": "Roteiro integrado de jornadas ainda termina no produto anterior",
+      "locations": [
+        "campaign.journeys",
+        "campaign.axioms.CAMP.DOD.02",
+        "WP10.T02.work",
+        "WP10.T02.requirements"
+      ],
+      "evidence": "A lista de jornadas contém somente J01–J08 da campanha anterior. WP10.T02 manda executar J01–J08. Os pacotesE10–E15 e checks locais novos são úteis, mas não definem um roteiro completo com ator, entrada, contribuição humana, mudança de fonte e resultado para o novo conjunto.",
+      "impact": "É possível provar funções e partes de IA/portfólio/memória separadamente e executar apenas o roteiro end-to-end antigo, deixando descoberta→resposta→escolha→efeito→reavaliação sem uma jornada integral explicitamente conduzida pela integradora.",
+      "required_change": "Estender as jornadas atuais ou acrescentar jornadas concretas de: análise com contradição real e resposta humana; documento confirmado usado em cenário; portfólio com restrições/sensibilidade encaminhado porWP11; mudança material seguida de recuperação/memória/previsto-observado. Incluir versão variante não roteirizada e revogação. Atualizar WP10.T02 e DoD global para a lista canônica completa.",
+      "acceptance": "Cada IA01–IA18 é alcançada por pelo menos uma jornada com given/when/then, papéis e entrada real; a integradora referencia essas jornadas e seus pacotes de evidência.",
+      "status": "OPEN_AT_REVIEW_SNAPSHOT"
+    },
+    {
+      "id": "FPR03",
+      "severity": "P1",
+      "title": "Mapa de consumo não inclui a cadeia nova e o consumidor de resultado observado não é tarefa explícita",
+      "locations": [
+        "campaign.consumption_map",
+        "WP07.T03.work/checks",
+        "WP14.T03.inputs/integration_dependencies",
+        "WP01.T05.work/checks"
+      ],
+      "evidence": "consumption_map só descreve os produtores anteriores WP00–WP10/C01–C08; não há aresta com producerWP11/12/13/14. WP07.T03 continua implementando somente diff entre revisões, embora WP14.T03 dependa dele para mostrar previsto/observado. ObservedResultProjection é uma entrada sem um produtor de tarefa explicitado nesse mapa.",
+      "impact": "Os contratos novos listam consumidores porWP e vários DoDs dizem consumidor real, mas os donos das telas podem concluir seu trabalho antigo sem implementar a experiência correspondente às funções puras novas, especialmente memória e resultados.",
+      "required_change": "Acrescentar arestas e prova de consumidor para caso→mesa, análise→alternativas/perguntas, documento→premissa→cenário, portfólio→UI/BI→WP11, materialidade→Meu trabalho/mesa e recall/outcome→mesa/reunião. Declarar o produtor autorizado de ObservedResultProjection e uma task/check consumidor que mostre baseline versus observado, fonte/período/ausência e sem causalidade inventada.",
+      "acceptance": "Cada saída nova termina em entrypoint ou ação de consumidor nomeado; as tasks consumidoras incluem o comportamento e um check, além da assinatura da interface.",
+      "status": "OPEN_AT_REVIEW_SNAPSHOT"
+    },
+    {
+      "id": "FPR04",
+      "severity": "P2",
+      "title": "Mapeamento de intenção aponta para o setup de provider",
+      "locations": [
+        "coverage.ai_capabilities.IA01.tasks",
+        "coverage.ai_capabilities.IA05.tasks"
+      ],
+      "evidence": "IA01 Intenção estruturada e editável aponta para WP12.T01 e WP01.T05; a interpretação da intenção está em WP12.T02. IA05 cobre resposta/reformulação porWP12.T03 e colaboração, mas a geração da pergunta decisiva emWP12.T02 não está no mapeamento.",
+      "impact": "A cobertura é nominalmente completa, mas a prova escolhida para um requisito pode não exercitar o trabalho que o satisfaz.",
+      "required_change": "Mapear IA01 aWP12.T02+WP01.T05 e incluir WP12.T02 na cadeiaIA05, preservandoT03/colaboração para a reformulação após resposta.",
+      "acceptance": "As tasks de cada capacidade correspondem à intenção e ao comportamento descritos, com evidência do producer e do consumer.",
+      "status": "OPEN_AT_REVIEW_SNAPSHOT"
+    }
+  ],
+  "success_criteria_assessment": {
+    "fabricated_results_found": false,
+    "assessment": "Os critérios de sucesso são observáveis. Metas de30segundos, feedback200ms e investigação de regressão20% são explicitamente testes/objetivos a medir, não resultados atribuídos ao André ou economia já comprovada. Adoção/satisfação reais continuam hipóteses. Casos sintéticos e variante de IA não roteirizada estão identificados.",
+    "important_preservation": "Não enfraquecer critérios de inferência real, consumo integrado, recibos de domínio ou revogação para acomodar o prazo."
+  },
+  "timebox_assessment": {
+    "scope_cut_found": false,
+    "guarantee_claim_found": false,
+    "assessment": "O plano declara cinco conversas efetivas, até4slots cada, doze builders e coordenação parcialWP14. Reconhece que não existe prova empírica de conclusão em120min e mantém campanha aberta se faltar escopo/prova. Isso é honesto; a factibilidade temporal detalhada pertence ao review de execução."
+  },
+  "no_change_instructions": "Nenhum arquivo do plano foi alterado por este revisor. Achados referem-se aos hashes acima; root informou que está normalizando IDs/contratos e revisando axiomas locais em paralelo. Revalidar após a correção antes de declarar review fechado."
+}

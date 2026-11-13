@@ -1,0 +1,381 @@
+[
+  {
+    "id": "C01",
+    "name": "Contexto, capacidades e referências",
+    "definition_owner": "WP00",
+    "producers": [
+      "WP02",
+      "WP03",
+      "WP04",
+      "WP08",
+      "WP10",
+      "WP01",
+      "WP05"
+    ],
+    "consumers": [
+      "WP01",
+      "WP05",
+      "WP06",
+      "WP07",
+      "WP08",
+      "WP09",
+      "WP02",
+      "WP03",
+      "WP04",
+      "WP10",
+      "WP11",
+      "WP12",
+      "WP13",
+      "WP14"
+    ],
+    "content": "Identidade de registro e ator, superfície, período, versão, moeda, capabilities e proveniência; dados não legíveis já removidos.",
+    "proof": "Mesma seleção retorna o mesmo escopo; referência inválida, revogada ou ambígua nunca amplia acesso."
+  },
+  {
+    "id": "C02",
+    "name": "Projeções autorizadas dos domínios",
+    "definition_owner": "WP00",
+    "producers": [
+      "WP02",
+      "WP03",
+      "WP04"
+    ],
+    "consumers": [
+      "WP01",
+      "WP05",
+      "WP06",
+      "WP07",
+      "WP08",
+      "WP09",
+      "WP03",
+      "WP04",
+      "WP10",
+      "WP11",
+      "WP12",
+      "WP13",
+      "WP14"
+    ],
+    "content": "Valores calculados pelo motor, componentes, granularidade, origem, condição de ausência e referência de drilldown.",
+    "proof": "Totais reconciliam com domínio; nenhuma fórmula concorrente de BI/relatório."
+  },
+  {
+    "id": "C03",
+    "name": "Comandos e edição",
+    "definition_owner": "WP00",
+    "producers": [
+      "WP02",
+      "WP03",
+      "WP04",
+      "WP01"
+    ],
+    "consumers": [
+      "WP01",
+      "WP06",
+      "WP08",
+      "WP10",
+      "WP02",
+      "WP03",
+      "WP04",
+      "WP11",
+      "WP12",
+      "WP13"
+    ],
+    "content": [
+      "Intenção explícita, expected version, validação, diff, resposta de sucesso/conflito/recusa e comando puro quando necessário à simulação.",
+      "Cada comando preparado leva idempotencyKey e digest de conteúdo/ator/target/encarnação. O adapter WP10 consulta e grava o recibo no MESMO snapshot/commit da mutação daquele domínio. Retry idêntico revalida acesso e retorna o recibo; mesma chave com digest diferente é conflito. O caso central reconcilia recibos depois e pode estar parcialmente atualizado; nunca repetir uma mutação porque a resposta se perdeu."
+    ],
+    "proof": "Revisão velha não sobrescreve; entrada local permanece; simulação não grava."
+  },
+  {
+    "id": "C04",
+    "name": "Importação com impacto",
+    "definition_owner": "WP00",
+    "producers": [
+      "WP02",
+      "WP03",
+      "WP06"
+    ],
+    "consumers": [
+      "WP01",
+      "WP10",
+      "WP02",
+      "WP03",
+      "WP06"
+    ],
+    "content": "WP02/WP03 produzem adapters de comando; WP06 produz parse, prévia, manifesto, base identity, reprévia/Apply e recibo.",
+    "proof": "O mesmo comando de domínio governa preview e Apply; escrita é atômica e revalida contexto."
+  },
+  {
+    "id": "C05",
+    "name": "Revisão preservada",
+    "definition_owner": "WP00",
+    "producers": [
+      "WP07"
+    ],
+    "consumers": [
+      "WP01",
+      "WP08",
+      "WP09",
+      "WP10"
+    ],
+    "content": "Seleção, seções, conteúdo preservado, competência, contagens e captura imutável autorizada de comentários C06 com referência/versão; conversa corrente é separada. Revisão anterior preservada.",
+    "proof": "Origem alterada não muda a revisão; acesso revalidado na recuperação/export."
+  },
+  {
+    "id": "C06",
+    "name": "Colaboração e ação canônica",
+    "definition_owner": "WP00",
+    "producers": [
+      "WP02",
+      "WP08",
+      "WP07"
+    ],
+    "consumers": [
+      "WP01",
+      "WP07",
+      "WP09",
+      "WP10",
+      "WP02",
+      "WP04",
+      "WP08",
+      "WP11",
+      "WP12",
+      "WP14"
+    ],
+    "content": "WP08 fornece relações, threads, confirmações por versão e Meu trabalho; WP02 fornece Hot Topics; correlação liga handoff à única ação.",
+    "proof": "Sem relação inferida por nomes, estado paralelo ou duplicação no reenvio."
+  },
+  {
+    "id": "C07",
+    "name": "Rotina e resultado",
+    "definition_owner": "WP00",
+    "producers": [
+      "WP09",
+      "WP08"
+    ],
+    "consumers": [
+      "WP01",
+      "WP07",
+      "WP08",
+      "WP10",
+      "WP04",
+      "WP09",
+      "WP12",
+      "WP14"
+    ],
+    "content": "Receita publicada/pinada, entrada autorizada, estado de admissão, run real, versão, output revisável, pendências e correlação. Principal de execução explicitamente identificado, autorização atual em cada fronteira; resultado factual mínimo independente de narrativa opcional.",
+    "proof": "Resultado pertence ao run/entrada reais, revalida acesso e nunca representa aprovação de negócio."
+  },
+  {
+    "id": "C08",
+    "name": "BusinessPorts e composição nativa",
+    "definition_owner": "WP00",
+    "producers": [
+      "WP10",
+      "WP04",
+      "WP05",
+      "WP07"
+    ],
+    "consumers": [
+      "WP00",
+      "WP01",
+      "WP02",
+      "WP03",
+      "WP04",
+      "WP05",
+      "WP06",
+      "WP07",
+      "WP08",
+      "WP09",
+      "WP10",
+      "WP11",
+      "WP12",
+      "WP13",
+      "WP14"
+    ],
+    "content": [
+      "bindingIdentity: installationID, hostID, projectID, locationID e policyVersion validados pelo host; nenhum endpoint ou credencial escolhido por texto do modelo",
+      "actorAuthority: principal empresarial autenticado + capabilities verificadas por requisição; selecionar destinatário não concede acesso às fontes",
+      "analysis.create/read/cancel: job com caseID, caseVersion, contextFingerprint, recipeVersion, nativeSessionID e outputSchemaVersion",
+      "routines.catalog/prepareAdmission/readAdmission/readRun: documentID + publishedVersion + parâmetros + write scope + planRevisionID/authorizationID/armRef/childSessionID quando disponíveis",
+      "schedules.create/update/pause/list/readRun: binding de dono/projeto + política existente, sem tratar Schedule como aprovação automática de workflow",
+      "result.write: retorno autenticado, escopado ao job/caso/versão; sem comando genérico de alteração de negócio",
+      "directory.lookup: somente IDs autorizados do diretório existente; sem inferência de identidade por nome",
+      "unavailable e stale são resultados explícitos, jamais dados sintéticos de sucesso",
+      "O integrador monta a contribuição de produto no host já autenticado, sem abrir listener, trocar store ou alterar deployment Azure.",
+      "Adaptador recebe as Services já compostas; não cria um runtime paralelo com credenciais globais nem passa tokens para Sucafina/browser.",
+      "IA de análise pode usar uma sessão dedicada e escopada via SessionV2.Service.create + generate (tool-less) ou prompt com ferramentas estritamente delimitadas; a saída é validada no schema do caso. Isso é análise, não execução de workflow.",
+      "Fluxos Relay usam a sessão Maestro nativa: catálogo publicado, preparação da revisão, review e aprovação, arm/dispatch e leitura do resultado. LLM.generateObject é reutilizável para conteúdo tipado, mas não substitui admissão de workflow.",
+      "Se for usada SessionV2.generate, não reutilizar histórico de outro usuário/caso; cada sessão tem proveniência e escopo verificados. O retorno textual é schema-decoded antes de aceitar operações.",
+      "Routines C08 registra referencia ao workflow interno (arm/binding/session); não inventa external runID nem usa ledger de outra espécie.",
+      "A factory recebe BusinessPorts como dependência explícita; Application/ModuleServices preservam capacidade ausente como erro de feature. Browser nunca recebe credenciais do host.",
+      "Um único adaptador product-handler coordena leitura multi-surface, serviço de casos e propostas de comandos. Comandos finais voltam aos execute/handlers próprios, com actor e CAS revalidados.",
+      "A frente cloud e o integrador têm handoff de patch sobre SHA combinado para host/factory compartilhados: um escreve, o outro consome. Não sobrescrever a frente cloud com um arquivo inteiro baseado em outra revisão.",
+      "Usar Host.Contribution de forma aditiva, respeitando serviços reservados, e Tools.Service no Location correto para ferramentas de produto. Não chamar o registro interno nem criar engine paralelo.",
+      "As capacidades de ferramentas são restringidas efetivamente por Permission/Agent e pelas portas de domínio. advertisedNames é metadata, não autorização. SessionV2.generate é tool-less; a prova de ferramentas restritas usa SessionV2.prompt com a configuração autorizada.",
+      "Persistir namespace protegido para C09–C14, escolhas, confirmações, proveniência, vínculos e recibos locais. Import JSON só substitui os dados de negócio permitidos: preserva metadados canônicos, rejeita os fornecidos no arquivo e invalida referências a encarnações substituídas."
+    ],
+    "proof": "Gate nativo T+20: inferência real em entrada do produto, proveniência, projeção autorizada e preparação de admissão no Maestro correto. Gate de execução Relay completa T+55; indisponibilidade mantém o requisito aberto."
+  },
+  {
+    "id": "C09",
+    "name": "Caso de decisão e referências",
+    "definition_owner": "WP00",
+    "producers": [
+      "WP11"
+    ],
+    "consumers": [
+      "WP01",
+      "WP06",
+      "WP07",
+      "WP08",
+      "WP09",
+      "WP12",
+      "WP13",
+      "WP14",
+      "WP05",
+      "WP10"
+    ],
+    "content": [
+      "caseId, version, state, objective, horizon, currency, criteria, participants autorizados",
+      "sourceRefs com surface/type/id/incarnation/fields/period/version/observedAt e nível de evidência",
+      "alternatives, assumptions, questions, choices append-only, preparedChanges e receipts",
+      "escopo de política reavaliado na leitura; conteúdo privado filtrado inclusive em agregados"
+    ],
+    "proof": "Contrato validado por consumidor real e pacote de prova associado; fixtures somente aceleram desenvolvimento."
+  },
+  {
+    "id": "C10",
+    "name": "Simulação e operações de cenário",
+    "definition_owner": "WP00",
+    "producers": [
+      "WP03",
+      "WP11",
+      "WP13"
+    ],
+    "consumers": [
+      "WP01",
+      "WP05",
+      "WP06",
+      "WP09",
+      "WP12",
+      "WP14",
+      "WP10"
+    ],
+    "content": [
+      "operações tipadas para substituir contribuição vinculada uma vez; cenário copiado sem alteração oficial",
+      "ScenarioResult com componentes, total, moeda, horizonte, origem, lacunas e restrições",
+      "sensibilidade por limites explícitos; sem probabilidades, causalidade ou FTE-capacidade inventados",
+      "mesma regra de domínio em preview, comparação e aplicação validada"
+    ],
+    "proof": "Contrato validado por consumidor real e pacote de prova associado; fixtures somente aceleram desenvolvimento."
+  },
+  {
+    "id": "C11",
+    "name": "Análise de IA pelo host",
+    "definition_owner": "WP00",
+    "producers": [
+      "WP12",
+      "WP10"
+    ],
+    "consumers": [
+      "WP01",
+      "WP06",
+      "WP08",
+      "WP09",
+      "WP11",
+      "WP13",
+      "WP10"
+    ],
+    "content": [
+      "AnalysisRequest com case/version, objetivo, escopo de ferramentas e projeção autorizada",
+      "host injeta ator/projeto/sessão/provider já configurado; modelo não altera identidade",
+      "AnalysisResult tipado com propostas, referências, contradições, perguntas, incertezas, checks, provenance",
+      "estado queued/running/needs-input/ready/stale/cancelled/failed; saída não é comando de escrita"
+    ],
+    "proof": "Contrato validado por consumidor real e pacote de prova associado; fixtures somente aceleram desenvolvimento."
+  },
+  {
+    "id": "C12",
+    "name": "Mudanças preparadas e recibos",
+    "definition_owner": "WP00",
+    "producers": [
+      "WP10",
+      "WP11",
+      "WP02",
+      "WP03",
+      "WP04"
+    ],
+    "consumers": [
+      "WP01",
+      "WP02",
+      "WP03",
+      "WP04",
+      "WP07",
+      "WP08",
+      "WP09",
+      "WP13",
+      "WP10"
+    ],
+    "content": [
+      "PreparedChange id/case/version/target/expectedVersion/operation/preview/requiredAuthority/idempotencyKey",
+      "confirmação contextual e execução separada por domínio, com revalidação no destino",
+      "receipt planned/applied/awaiting-approval/conflict/failed/cancelled; recuperação só das operações não aplicadas",
+      "escolha de gestão distinta das aprovações PR/sourcing/PO; não prometer transação global",
+      "Cada comando preparado leva idempotencyKey e digest de conteúdo/ator/target/encarnação. O adapter WP10 consulta e grava o recibo no MESMO snapshot/commit da mutação daquele domínio. Retry idêntico revalida acesso e retorna o recibo; mesma chave com digest diferente é conflito. O caso central reconcilia recibos depois e pode estar parcialmente atualizado; nunca repetir uma mutação porque a resposta se perdeu."
+    ],
+    "proof": "Interromper depois do commit no domínio e antes de atualizar o caso; retry produz um único efeito financeiro e reconcilia o recibo autorizado. Mesma chave com outro conteúdo falha. Não existe atomicidade global."
+  },
+  {
+    "id": "C13",
+    "name": "Condições e memória autorizada",
+    "definition_owner": "WP00",
+    "producers": [
+      "WP14"
+    ],
+    "consumers": [
+      "WP01",
+      "WP07",
+      "WP09",
+      "WP11",
+      "WP12",
+      "WP13",
+      "WP05",
+      "WP10"
+    ],
+    "content": [
+      "Watch referencia campos/período/versão/limiar e razão original; current versus chosen não reescreve choice",
+      "ChangeImpact material/irrelevant/unknown e evidências; idempotência por condição+mudança",
+      "CaseRecall consulta autorizada, escopo explicitamente escolhido e similaridade explicável",
+      "Outcome expected/observed/cutoff/source sem alegação causal; preferências visíveis e editáveis",
+      "ObservedResultProjection é produzido por WP14 a partir de C02, cutoff e referências autorizadas; WP01 e WP07 renderizam, sem recalcular nem inferir causalidade."
+    ],
+    "proof": "Contrato validado por consumidor real e pacote de prova associado; fixtures somente aceleram desenvolvimento."
+  },
+  {
+    "id": "C14",
+    "name": "Documentos e portfólio",
+    "definition_owner": "WP00",
+    "producers": [
+      "WP06",
+      "WP13"
+    ],
+    "consumers": [
+      "WP01",
+      "WP05",
+      "WP07",
+      "WP11",
+      "WP12",
+      "WP14",
+      "WP06",
+      "WP10"
+    ],
+    "content": [
+      "DocumentEvidence fileRef/version/location/textRange/fieldCandidate/value/unit/status extracted|confirmed|rejected",
+      "limites de formatos e parsing; texto externo nunca é instrução",
+      "PortfolioRequest escopo, operações suportadas, restrições obrigatórias e prioridades declaradas",
+      "PortfolioResult combinações avaliadas, componentes, conflitos, cobertura/limites e vínculos; aplicar via C12"
+    ],
+    "proof": "Contrato validado por consumidor real e pacote de prova associado; fixtures somente aceleram desenvolvimento."
+  }
+]

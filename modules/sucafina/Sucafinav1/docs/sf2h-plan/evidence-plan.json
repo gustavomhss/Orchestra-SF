@@ -1,0 +1,234 @@
+{
+  "scope": "18 conjuntos de provas cobrem os axiomas e checks por correspondência explícita. Todos começam NOT_RUN. Não criar uma execução por frase.",
+  "required_fields": [
+    "criterion_id",
+    "entity_id",
+    "scope",
+    "status",
+    "candidate_sha",
+    "actor_or_role",
+    "fixture_id",
+    "entrypoint_or_action",
+    "expected",
+    "observed",
+    "evidence_uri",
+    "reviewer",
+    "verified_at",
+    "product_candidate_sha",
+    "ci_snapshot_sha",
+    "ci_request_hash",
+    "contract_version",
+    "producer_refs",
+    "consumer_entrypoint"
+  ],
+  "allowed_status": [
+    "NOT_RUN",
+    "PASS",
+    "FAIL",
+    "BLOCKED"
+  ],
+  "template": {
+    "criterion_id": "<criterion ID>",
+    "entity_id": "<task/WP/campaign ID>",
+    "scope": "local|integrated|review",
+    "status": "NOT_RUN",
+    "candidate_sha": null,
+    "actor_or_role": null,
+    "fixture_id": null,
+    "entrypoint_or_action": null,
+    "expected": null,
+    "observed": null,
+    "evidence_uri": null,
+    "reviewer": null,
+    "verified_at": null
+  },
+  "validity": "CI aponta SHA e run real; interação aponta entrypoint e ator; export contém arquivo e inspeção; rotina contém run/receita/entrada reais. Screenshot sozinho não prova cálculo, permissão ou persistência. Mudança posterior invalida o conjunto de critérios afetado.",
+  "usability": "Roteiros de 30 segundos e manutenção rápida são metas de aceite em avaliação controlada, não alegação de pesquisa com André. Registrar participante/avaliador, contexto e tempo; separar inferência de observação.",
+  "non_engineering_outcomes": "Após uso real autorizado, medir tempo de preparação de revisão, sucesso de tarefas, redigitação, retorno sem refazer contexto e repetição de uso. Não pedir novos acessos nem fazer analytics externo para concluir esta campanha.",
+  "packages": [
+    {
+      "id": "E01",
+      "title": "Contratos montagem e integridade",
+      "owners": [
+        "WP00",
+        "WP10"
+      ],
+      "coverage": "Contratos compilados, exports registrados, ownership disjunto, entrypoint real e persistência após reload.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E02",
+      "title": "Navegação e estados",
+      "owners": [
+        "WP01"
+      ],
+      "coverage": "28 entradas, navegação contextual, retorno, primeiro uso, teclado, 320/768/1440 px, rascunho, falha e conflito.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E03",
+      "title": "Dashboard completo",
+      "owners": [
+        "WP02"
+      ],
+      "coverage": "16 capacidades do Dashboard, manutenção, projeções, sinais com fontes e Hot Topics sem duplicação.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E04",
+      "title": "Planner financeiro",
+      "owners": [
+        "WP03"
+      ],
+      "coverage": "7 capacidades do Planner; edição mensal e em lote; FX, HR, locks, versões e separação budget/actual/forecast.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E05",
+      "title": "Procurement completo",
+      "owners": [
+        "WP04"
+      ],
+      "coverage": "5 capacidades de Procurement; PR, sourcing e PO; ranking, alçadas, moedas, fornecedores e estados completos.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E06",
+      "title": "BI e tabelas",
+      "owners": [
+        "WP05"
+      ],
+      "coverage": "8 perguntas analíticas originais e 3 novas; fontes, drilldown e tabela reconciliada com os valores dos gráficos.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E07",
+      "title": "Imports e confiança",
+      "owners": [
+        "WP06"
+      ],
+      "coverage": "XLSX, XLS e JSON; prévia, cancelamento, aplicação, recibo, roundtrip e proteção contra metadados forjados.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E08",
+      "title": "Reuniões e exportações",
+      "owners": [
+        "WP07"
+      ],
+      "coverage": "Pauta, revisão congelada, fechamento e ações; 25 registros e notas longas; PPTX e DOCX renderizados e conferidos.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E09",
+      "title": "Colaboração e primeiro ciclo",
+      "owners": [
+        "WP08"
+      ],
+      "coverage": "Primeiro ciclo, diretório autorizado, perguntas e respostas, confirmar sem alteração, escopo por período e Meu trabalho.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E10",
+      "title": "Decisão e execução",
+      "owners": [
+        "WP11",
+        "WP01"
+      ],
+      "coverage": "Caso persistente, alternativas, critérios, escolha, mudanças preparadas e recibos por domínio.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E11",
+      "title": "IA real e portfólio",
+      "owners": [
+        "WP12",
+        "WP13"
+      ],
+      "coverage": "IA real em variante não roteirizada; fontes, contradição, crítica, propostas tipadas e portfólio sob restrições.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E12",
+      "title": "Memória e reavaliação",
+      "owners": [
+        "WP14",
+        "WP11"
+      ],
+      "coverage": "Mudança material e irrelevante; escolha preservada; recuperação após commit e resposta perdida; memória e revogação.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E13",
+      "title": "Relay real",
+      "owners": [
+        "WP09"
+      ],
+      "coverage": "Quatro preparações originais e decisão por Relay; admissão, versão, run e checks reais; nenhuma espera humana inventada.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E14",
+      "title": "Schedule e retomada",
+      "owners": [
+        "WP09"
+      ],
+      "coverage": "Schedule nativo; timezone, recorrência, pausa, falha, revogação e deduplicação de execução/sinal.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E15",
+      "title": "Documentos e injeção",
+      "owners": [
+        "WP06",
+        "WP12"
+      ],
+      "coverage": "PDF digital, DOCX e texto; trecho de origem e confirmação; documento malicioso, inválido ou sem texto tratado corretamente.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E16",
+      "title": "Integração e regressão",
+      "owners": [
+        "WP10"
+      ],
+      "coverage": "Suites exigidas do epic e pacotes afetados, consumidores reais, compatibilidade, host binding e UI integrada.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E17",
+      "title": "Reviews independentes",
+      "owners": [
+        "WP10"
+      ],
+      "coverage": "Três pareceres independentes com achado, impacto, evidência, correção e reteste.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E18",
+      "title": "Entrega e proveniência",
+      "owners": [
+        "WP10"
+      ],
+      "coverage": "Candidato de produto, snapshot de CI, request, run, jobs e resultado; guias, demo e matriz completa.",
+      "status": "NOT_RUN"
+    }
+  ],
+  "judge_assignments": [
+    {
+      "id": "JUDGE-PRODUCT",
+      "focus": "Produto, UX, 28 capacidades, primeiro uso e relatórios",
+      "independence": "Sem autoria nos arquivos julgados; verifica app real e variantes com falha."
+    },
+    {
+      "id": "JUDGE-DOMAIN",
+      "focus": "Finanças, acesso, persistência, importação, replay e concorrência",
+      "independence": "Reconciliador independente com entradas negativas e oráculos; documentação não substitui comportamento."
+    },
+    {
+      "id": "JUDGE-AI",
+      "focus": "IA real, Relay, fontes, contradições e execução integrada",
+      "independence": "Varia os dados e exige identificação de execução real; stub e schema isolado não fecham aceite."
+    }
+  ]
+}

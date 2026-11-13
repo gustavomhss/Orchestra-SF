@@ -1,0 +1,60 @@
+{
+  "review": "Rechecagem restrita aos sete achados da revisão de cronograma",
+  "status": "PASS_PLANNING_REVIEW_ONLY",
+  "remaining_p0": 0,
+  "remaining_p1": 0,
+  "reviewed_sha256": {
+    "campaign.json": "3cc517883f4dc9373b03fb22cb393f3663c75f0ec7f9cd046297aeddef374057",
+    "schedule.json": "1252aa25e86271ba2139787da8824bcd5b01f29bfb4165186b6295d1aa0d9693",
+    "ci-recipes.json": "11deee315e99b1de1074aa39062033c9a332cbb5a7cff2ea991ad7af01b44b74"
+  },
+  "observed_counts": {
+    "work_packages": 15,
+    "tasks": 71
+  },
+  "findings": [
+    {
+      "id": "SCH-F01",
+      "status": "CLOSED",
+      "basis": "S0 possui root e três auxiliares identificados, com fases, escrita limitada, reaproveitamento dos slots e substituição de revisor que tiver autoria."
+    },
+    {
+      "id": "SCH-F02",
+      "status": "CLOSED",
+      "basis": "T05 não depende de T04 para iniciar; preparação110-118 e aceite118-120 estão separados, com acceptance_requires explícito."
+    },
+    {
+      "id": "SCH-F03",
+      "status": "CLOSED",
+      "basis": "G3 agora prova IA, fontes, simulação e Relay; C12 completo permanece obrigatório emT75."
+    },
+    {
+      "id": "SCH-F04",
+      "status": "CLOSED",
+      "basis": "schedule foi removido de todos os WPs e tasks. build_window/proof_window são a fonte de tempo; não há violação temporal de dependência de build."
+    },
+    {
+      "id": "SCH-F05",
+      "status": "CLOSED",
+      "basis": "ci-recipes define seis lanes mínimas, requests, runners, diretórios e arquivos planejados; seleção é validada no tree real. Há política para fullsuite adicional, zero testes, setup, baseline e candidato alterado."
+    },
+    {
+      "id": "SCH-F06",
+      "status": "CLOSED",
+      "basis": "Critérios canônicos usam a lista integral,14contratos e3revisores. WP10.T03 agora inclui expressamente o trabalho e parecer de IA/Relay. Nenhum critério permite encerrar com contagemantiga."
+    },
+    {
+      "id": "SCH-F07",
+      "status": "CLOSED",
+      "basis": "T0 é único e inclui ativação. GREADY emT5 confirma sessões sem reiniciar relógio."
+    }
+  ],
+  "nonblocking_notes": [
+    "Duas descrições derivadas de coverage.requirements[0] e consumption_map[0] ainda mencionamC01–C08; atualizar paraC01–C14econsumidoresnovos melhora coerência. Os contratos, axiomas de aceite e AIEDGE canônicos já exigem as capacidadesnovas, portanto isto não cria P1 residual nem exceção de completude."
+  ],
+  "limits": [
+    "Não foram executados testes do produto, runsRelay, inferência ouCI.",
+    "O prazo de120mincontinua hipótese agressiva, não garantia ou benchmark.",
+    "O aceite desta revisão confirma fechamento dos sete achados de planejamento; não audita novas áreas nem certifica implementação."
+  ]
+}

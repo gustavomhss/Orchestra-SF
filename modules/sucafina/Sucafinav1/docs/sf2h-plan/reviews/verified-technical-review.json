@@ -1,0 +1,176 @@
+{
+  "review_id": "SF2H-TECHNICAL-TARGETED-VERIFICATION",
+  "reviewer": "/root/sf2h_contracts",
+  "created_at": "2026-11-12T23:28:27.850103+00:00",
+  "scope": "Fechamento focal exclusivamente dos quatro pontos solicitados no campaign.json reconciliado. Nenhuma nova auditoria, revisão de outros temas, implementação ou teste do produto.",
+  "status": "ALL_FOUR_REMAINING_POINTS_CLOSED_IN_PLAN",
+  "implementation_status": "NOT_IMPLEMENTED_NOT_TESTED",
+  "candidate_files": {
+    "campaign.json": {
+      "path": "/workspace/scratch/838a0195183d/sf2h-plan/campaign.json",
+      "bytes": 669743,
+      "sha256": "b304b06c10d9d740392cd38b8e98cc95df434c09e6ab6a4164efbf9ce60ee85f"
+    }
+  },
+  "supersedes_candidate": {
+    "bytes": 668240,
+    "sha256": "3cc517883f4dc9373b03fb22cb393f3663c75f0ec7f9cd046297aeddef374057"
+  },
+  "verification_results": [
+    {
+      "point": 1,
+      "status": "VERIFIED_IN_PLAN",
+      "related_finding": "TECH-P1-03 / RES-PARTIAL-INVARIANT",
+      "location": "WP10.T01.INV.02",
+      "observed": "A composição preserva atomicidade dentro de cada domínio: comando e recibo local são commitados juntos ou nenhum deles é gravado. Uma operação entre domínios pode ficar parcial, com esse estado e seus recibos explícitos, sem repetir efeitos aplicados.",
+      "conclusion": "Atomicidade está limitada a cada domínio: efeito e recibo juntos. Parcial entre domínios é explícito e não repete efeitos aplicados. A ambiguidade anterior foi removida."
+    },
+    {
+      "point": 2,
+      "status": "VERIFIED_IN_PLAN",
+      "related_finding": "TECH-P0-03 / RES-OWNERSHIP-TEXT",
+      "location": "WP10.ownership.allowed_purpose e campaign.ownership.work_packages[WP10]",
+      "observed": "Compor o produto e as portas reais nos entrypoints enumerados, fornecer persistência protegida e autorização contextual, integrar e verificar. As exceções exatas autorizam manifests/lock da raiz e os dois arquivos de factory/host para essa integração. Não alterar Azure, deploy, identidade, engines ou política de aprovação; não sobrescrever arquivo de outro escritor.",
+      "exact_exceptions": [
+        {
+          "path": "bun.lock",
+          "owner": "WP10",
+          "purpose": "Integração do produto e dependência necessária; sem ampliar autoridade, alterar deploy ou sobrescrever outro escritor."
+        },
+        {
+          "path": "package.json",
+          "owner": "WP10",
+          "purpose": "Integração do produto e dependência necessária; sem ampliar autoridade, alterar deploy ou sobrescrever outro escritor."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "owner": "WP10",
+          "purpose": "Integração do produto e dependência necessária; sem ampliar autoridade, alterar deploy ou sobrescrever outro escritor."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/host.ts",
+          "owner": "WP10",
+          "purpose": "Integração do produto e dependência necessária; sem ampliar autoridade, alterar deploy ou sobrescrever outro escritor."
+        }
+      ],
+      "resolution_order": "Uma exceção exata listada para WP10 prevalece sobre o prefixo excluído correspondente. Todas as demais exclusões continuam válidas. Fora disso, arquivos existentes exatos e novos prefixos concedem escrita somente ao dono indicado; ausência significa somente leitura.",
+      "conclusion": "As duas cópias do propósito são iguais e autorizam as exceções exatas para manifests/lock da raiz e factory/host. A proibição geral conflitante foi removida; limites de Azure/deploy/identidade/engines e escritor único permanecem."
+    },
+    {
+      "point": 3,
+      "status": "VERIFIED_IN_PLAN",
+      "related_finding": "TECH-P1-01 / RES-CONTRACT-MAP",
+      "checks": {
+        "contract_fields_contain_only_C01_to_C14": true,
+        "missing_declared_provider_or_consumer_edges": [],
+        "WP00_only_definition_owner_not_runtime_producer": true,
+        "all_14_contracts_have_WP00_definition_owner": true,
+        "WP06_provides_C14": true,
+        "descriptive_notes_preserved_for_previous_descriptive_WPs": true
+      },
+      "conclusion": "Campos estruturados normalizados; todas as relações declaradas pelos WPs constam nos mapas de produtores/consumidores. Descrições foram preservadas em contract_notes. WP00 define os contratos e não figura como provider runtime."
+    },
+    {
+      "point": 4,
+      "status": "VERIFIED_IN_PLAN",
+      "related_finding": "TECH-P1-01 / RES-CONTRACT-PROVIDES",
+      "observed": {
+        "WP00_contract_provides": [
+          "C01",
+          "C02",
+          "C03",
+          "C04",
+          "C05",
+          "C06",
+          "C07",
+          "C08",
+          "C09",
+          "C10",
+          "C11",
+          "C12",
+          "C13",
+          "C14"
+        ],
+        "WP06_contract_provides": [
+          "C04",
+          "C14"
+        ],
+        "coverage_requirements_0": {
+          "id": "R01",
+          "title": "Baseline, contratos e corpus verificável",
+          "tasks": [
+            "WP00.T01",
+            "WP00.T02",
+            "WP00.T03",
+            "WP00.T04"
+          ],
+          "journeys": [
+            "J08"
+          ],
+          "evidence": "28 capacidades, C01–C14, oráculos e fronteiras congelados; IA01–IA18 incluídas na cobertura canônica."
+        },
+        "consumption_map_0": {
+          "producer": "WP00.T02",
+          "output": "C01–C14 e exemplos normativos",
+          "consumers": [
+            "WP01.T01",
+            "WP02.T01",
+            "WP03.T01",
+            "WP04.T01",
+            "WP05.T01",
+            "WP06.T01",
+            "WP07.T01",
+            "WP08.T01",
+            "WP09.T01",
+            "WP10.T01",
+            "WP11.T01",
+            "WP12.T01",
+            "WP13.T01",
+            "WP14.T01"
+          ],
+          "proof": "G0 confirma interfaces; alterações posteriores têm versão e análise de impacto."
+        }
+      },
+      "conclusion": "WP00 declara C01–C14, cobertura R01 cita os quatorze contratos e a entrada derivada de consumo inclui WP11–WP14. WP06 declara C14."
+    }
+  ],
+  "original_findings_status": [
+    {
+      "id": "TECH-P0-01",
+      "status": "CLOSED_IN_PLAN",
+      "verification": "Fechado na rodada anterior; não reaberto nesta verificação focal."
+    },
+    {
+      "id": "TECH-P0-02",
+      "status": "CLOSED_IN_PLAN",
+      "verification": "Fechado na rodada anterior; não reaberto nesta verificação focal."
+    },
+    {
+      "id": "TECH-P0-03",
+      "status": "CLOSED_IN_PLAN",
+      "verification": "Exceções fechadas anteriormente; resíduo de allowed_purpose fechado nesta rodada."
+    },
+    {
+      "id": "TECH-P1-01",
+      "status": "CLOSED_IN_PLAN",
+      "verification": "Normalização/mapas/provides e referências derivadas fechados nesta rodada."
+    },
+    {
+      "id": "TECH-P1-02",
+      "status": "CLOSED_IN_PLAN",
+      "verification": "Fechado na rodada anterior; não reaberto nesta verificação focal."
+    },
+    {
+      "id": "TECH-P1-03",
+      "status": "CLOSED_IN_PLAN",
+      "verification": "DoD de três juízes fechado anteriormente; ambiguidade obrigatória de parcial fechada nesta rodada. Não houve revisão adicional de outros textos."
+    }
+  ],
+  "residuals_in_requested_scope": [],
+  "limitations": [
+    "Este aceite refere-se à coerência dos quatro pontos do plano no hash identificado.",
+    "Não atesta implementação, disponibilidade de provider, execução Relay, deploy, execução de testes ou cumprimento futuro dos axiomas.",
+    "A observação editorial anterior sobre enumeração de outputs de revisão não fez parte do escopo desta rodada."
+  ],
+  "next_step": "Publicar o candidato de planejamento conforme o processo do integrador; os gates de implementação permanecem NOT_RUN."
+}

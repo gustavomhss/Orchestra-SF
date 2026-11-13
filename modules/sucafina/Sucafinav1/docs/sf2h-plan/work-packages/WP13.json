@@ -1,0 +1,551 @@
+{
+  "id": "WP13",
+  "title": "Cenários de portfólio e sensibilidade",
+  "objective": "Avaliar combinações de mudanças preservando compromissos e explicar seus limites.",
+  "scope_in": [
+    "Escopo e restrições explícitas",
+    "Combinações finitas de operações suportadas",
+    "Viabilidade e trade-offs",
+    "Sensibilidade",
+    "Handoff para escolhas/propostas WP11"
+  ],
+  "scope_out": [
+    "Fórmulas ou engine financeiro duplicado",
+    "Otimizador universal",
+    "Pesos opacos ou capacidade inferida de FTE",
+    "UI/renderizadores",
+    "Ledger de execução paralelo"
+  ],
+  "contract_reads": [
+    "C01",
+    "C02",
+    "C03",
+    "C09",
+    "C11"
+  ],
+  "contract_provides": [
+    "C10",
+    "C14"
+  ],
+  "axioms": {
+    "dod": [
+      {
+        "id": "WP13.DOD.01",
+        "text": "Campanha multi-registro pode ser comparada, escolhida e encaminhada aos domínios reais com a mesma semântica de casos individuais.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "invariants": [
+      {
+        "id": "WP13.INV.01",
+        "text": "Restrições não são relaxadas silenciosamente e compromisso não é duplicado.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP13.INV.02",
+        "text": "Amostra limitada não é ótimo comprovado; hipótese não vira economia confirmada.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "quality_standards": [
+      {
+        "id": "WP13.QLT.01",
+        "text": "Composição, motivo de viabilidade e limites da exploração são explícitos.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP13.QLT.02",
+        "text": "Interação usa cálculo determinístico sem nova inferência por célula.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "completeness_criteria": [
+      {
+        "id": "WP13.CMP.01",
+        "text": "Cobrir candidatos, combinações, restrições, sensibilidade e aplicação preparada em contrato/projeto/contratação, com casos sem solução e incompletos.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "success_criteria": [
+      {
+        "id": "WP13.SUC.01",
+        "text": "André compara alternativas de portfólio e descobre quais compromissos e limites cada uma preserva.",
+        "status": "NOT_RUN"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "WP13.T01",
+      "title": "Definir campanha e candidatos de portfólio",
+      "intent": "Representar mudanças em vários registros sob compromissos explícitos.",
+      "work": [
+        "Definir PortfolioScope, CandidateSet e ConstraintSet para custo/período/compromissos preservados e operações suportadas.",
+        "Consumir casos, referências e candidatos de IA, mantendo origem e condição de confirmação; edição humana modifica o conjunto.",
+        "Produzir readmodels para WP01 e WP05, sem escrever renderizadores nem fórmulas financeiras."
+      ],
+      "inputs": [
+        "C01",
+        "C02",
+        "C03",
+        "DecisionCasePort",
+        "PortfolioPort",
+        "ScenarioOps WP03"
+      ],
+      "outputs": [
+        "PortfolioDraft e catálogo finito de operações",
+        "Candidatos tipados por registro",
+        "Restrições e erros legíveis"
+      ],
+      "depends_on": [
+        "WP00.T02"
+      ],
+      "checks": [
+        {
+          "id": "WP13.T01.CHK.01",
+          "text": "Criar campanha com contrato, projeto e contratação preserva IDs, períodos e compromissos selecionados sem inferir capacidade livre a partir de FTE.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP13.T01.CHK.02",
+          "text": "Candidato sem efeito suportado no domínio é rejeitado; oportunidade de desconto permanece hipótese até confirmação.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP13.T01.CHK.03",
+          "text": "Pessoa sem acesso ao componente de HR não o obtém por lista de candidatos, total, delta ou exclusão de alternativa.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP13.T01.DOD.01",
+            "text": "Campanha multi-registro e critérios são persistidos via caso WP11 e exibidos por consumidor real.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP13.T01.INV.01",
+            "text": "Portfólio não cria política de corte, pesos ocultos, capacidade presumida ou novos tipos de lançamento.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP13.T01.QLT.01",
+            "text": "Escopo, limites e compromissos aparecem como campos editáveis e não como instruções opacas no prompt.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP13.T01.CMP.01",
+            "text": "Cobrir candidatos válidos/inválidos, hipóteses, escopo vazio, período incompatível e componente restrito.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP13.T01.SUC.01",
+            "text": "André expressa o que quer preservar e consegue conferir quais mudanças estão sendo consideradas.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP13",
+      "ownership_ref": "WP13",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "IA10"
+      ],
+      "journeys": [
+        "J02",
+        "J08",
+        "J10"
+      ],
+      "session": "S4",
+      "build_window": [
+        10,
+        24
+      ],
+      "proof_window": [
+        25,
+        75
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "integrates_with": [
+        "WP03.T01",
+        "WP11.T02"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP13.T02",
+      "title": "Avaliar combinações e restrições",
+      "intent": "Comparar alternativas de portfólio usando a mesma regra de cada domínio.",
+      "work": [
+        "Gerar combinações finitas e limitadas pela configuração, eliminando operações incompatíveis ou duplicadas.",
+        "Simular cada combinação pelo adapter WP03 e verificar critérios declarados; distinguir inviável, incompleto e elegível.",
+        "Expor trade-offs por objetivo e motivo de rejeição; não transformar uma heurística em promessa de ótimo global."
+      ],
+      "inputs": [
+        "PortfolioDraft",
+        "CandidateSet",
+        "ConstraintSet",
+        "ScenarioAdapter WP03"
+      ],
+      "outputs": [
+        "PortfolioComparison",
+        "FeasibilityResult por alternativa",
+        "Explicação de restrição/limite de exploração"
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP13.T01"
+      ],
+      "checks": [
+        {
+          "id": "WP13.T02.CHK.01",
+          "text": "Combinação com duas alterações na mesma contribuição não soma ambas; conflitos são recusados ou explicitamente alternativos.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP13.T02.CHK.02",
+          "text": "Soma da combinação reconcilia com execução isolada das mesmas operações no adapter; não existe fórmula financeira local concorrente.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP13.T02.CHK.03",
+          "text": "Corpus com nenhuma combinação que preserve compromissos retorna nenhuma solução elegível e os motivos, sem relaxar critério silenciosamente.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP13.T02.DOD.01",
+            "text": "Comparação multi-registro usa adapter real e entrega elegibilidade/limites ao caso integrado.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP13.T02.INV.01",
+            "text": "Não duplicar compromisso, relaxar restrição ou chamar amostra limitada de solução ótima comprovada.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP13.T02.QLT.01",
+            "text": "Resultado mantém composição, origem e motivo por critério; quantidade de combinações e limite ficam visíveis.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP13.T02.CMP.01",
+            "text": "Cobrir combinação válida, incompatível, incompleta, sem solução e limite de exploração atingido.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP13.T02.SUC.01",
+            "text": "O usuário identifica quais combinações atendem às restrições e qual compromisso muda entre elas.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP13",
+      "ownership_ref": "WP13",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "IA10"
+      ],
+      "journeys": [
+        "J02",
+        "J10"
+      ],
+      "session": "S4",
+      "build_window": [
+        24,
+        39
+      ],
+      "proof_window": [
+        25,
+        75
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "integrates_with": [
+        "WP03.T01",
+        "WP11.T02"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP13.T03",
+      "title": "Calcular sensibilidade e limites da escolha",
+      "intent": "Mostrar onde uma alternativa deixa de atender aos critérios.",
+      "work": [
+        "Usar ranges e limites explícitos dos parâmetros suportados; executar simulações pelo adapter em pontos verificáveis.",
+        "Derivar limiar exato quando o domínio permitir; caso não linear ou incompleto mostra range amostrado e limite de precisão.",
+        "Fornecer séries e transições de critério para WP05 e modelos de interação para WP01; cálculo não chama LLM por célula."
+      ],
+      "inputs": [
+        "PortfolioComparison",
+        "ConstraintSet",
+        "ScenarioAdapter WP03"
+      ],
+      "outputs": [
+        "SensitivityResult com fonte e escopo",
+        "ThresholdResult ou limite de precisão",
+        "Dados analíticos consumíveis"
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP13.T02"
+      ],
+      "checks": [
+        {
+          "id": "WP13.T03.CHK.01",
+          "text": "Base240mil, outros componentes165mil e benefício mínimo20mil resulta em implantação máxima55mil;55mil atende e55mil+1 não atende.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP13.T03.CHK.02",
+          "text": "Alterar prazo em compromisso sem regra de cancelamento não cria economia artificial; regra existente determina o efeito.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP13.T03.CHK.03",
+          "text": "Amostragem de função não linear não apresenta ponto de corte exato inventado; parâmetros ausentes produzem desconhecido sem curva fictícia.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP13.T03.DOD.01",
+            "text": "Sensibilidade e limites são calculados e consumidos pela UI/BI reais com a mesma base da alternativa.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP13.T03.INV.01",
+            "text": "Não inventar probabilidades, distribuições ou comportamento contratual a partir de um slider.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP13.T03.QLT.01",
+            "text": "Unidades, precisão, intervalo e fonte são explícitos; interação determinística não depende de latência de IA.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP13.T03.CMP.01",
+            "text": "Cobrir limite atendido/exato/rompido, função não linear, dado ausente e parâmetro não suportado.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP13.T03.SUC.01",
+            "text": "André identifica qual preço ou prazo precisa negociar e confere a condição que preserva sua escolha.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP13",
+      "ownership_ref": "WP13",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "IA10"
+      ],
+      "journeys": [
+        "J02",
+        "J10"
+      ],
+      "session": "S4",
+      "build_window": [
+        39,
+        54
+      ],
+      "proof_window": [
+        39,
+        75
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "integrates_with": [
+        "WP03.T01",
+        "WP11.T02"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP13.T04",
+      "title": "Encaminhar cenário escolhido sem duplicar execução",
+      "intent": "Usar a mesma escolha e os mesmos recibos dos casos individuais.",
+      "work": [
+        "Converter combinação escolhida em alternativas/propostas de WP11 com referências, versões, critérios e impacto reproduzíveis.",
+        "Preservar decisão humana explícita e preparar aplicação por domínio; escolha não converte todos os efeitos em transação global.",
+        "Reconciliar resultado aplicado com composição original e encaminhar condições de revisão ao consumidor WP14."
+      ],
+      "inputs": [
+        "PortfolioComparison",
+        "ChoiceRecord e PreparedChangeSet de WP11",
+        "DecisionMemoryPort"
+      ],
+      "outputs": [
+        "Handoff de portfólio para WP11",
+        "Mapa de efeitos/propostas",
+        "Condições materiais por componente"
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP13.T03"
+      ],
+      "checks": [
+        {
+          "id": "WP13.T04.CHK.01",
+          "text": "Escolher combinação gera uma proposta por efeito de domínio com expected version; preparação não grava finanças.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP13.T04.CHK.02",
+          "text": "Cenário com dois domínios e falha em um usa o estado parcial/retomada WP11 sem implementar outro ledger.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP13.T04.CHK.03",
+          "text": "Alterar preço de um componente vinculado afeta a condição correspondente da escolha e mantém a composição histórica.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP13.T04.DOD.01",
+            "text": "Uma campanha de portfólio chega a propostas reais e recibos do mecanismo WP11 no módulo integrado.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP13.T04.INV.01",
+            "text": "Nenhum caminho paralelo de aplicação, aprovação ou recibo; os mesmos efeitos mantêm a mesma correlação.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP13.T04.QLT.01",
+            "text": "A pessoa vê custos e compromissos do conjunto e o estado individual de cada mudança.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP13.T04.CMP.01",
+            "text": "Cobrir preparar, escolher, conflito da base, aplicação parcial e condição posterior alterada.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP13.T04.SUC.01",
+            "text": "Uma escolha sobre vários registros gera trabalho executável sem transportar manualmente cada mudança.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP13",
+      "ownership_ref": "WP13",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "IA10"
+      ],
+      "journeys": [
+        "J02",
+        "J04",
+        "J06",
+        "J10"
+      ],
+      "session": "S4",
+      "build_window": [
+        54,
+        72
+      ],
+      "proof_window": [
+        54,
+        75
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "integrates_with": [
+        "WP03.T01",
+        "WP11.T02"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    }
+  ],
+  "handoff": [
+    "Comparações/séries para WP01/WP05",
+    "Propostas de conjunto para WP11",
+    "Condições materiais por componente para WP14"
+  ],
+  "risks": [
+    "Combinações crescem rápido: limites devem ser configuráveis e visíveis.",
+    "Operações novas sem suporte de domínio não podem ser simuladas como se fossem executáveis."
+  ],
+  "status": "PLANNED",
+  "ownership": {
+    "id": "WP13",
+    "branch": "sf2-portfolio",
+    "existing_files": [],
+    "new_prefixes": [
+      "modules/sucafina/Sucafinav1/product/portfolio/",
+      "modules/sucafina/Sucafinav1/test/product/wp13/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/"
+    ],
+    "allowed_purpose": "Implementar somente cenários de portfólio e sensibilidade no namespace próprio; consumir contratos e portas reais; não editar UI, persistência concreta, domínio produtor ou scheduler de outros WPs."
+  },
+  "source_ids": [
+    "S05",
+    "S06",
+    "S09",
+    "S10",
+    "S11"
+  ],
+  "session": "S4",
+  "build_window": [
+    10,
+    72
+  ],
+  "integration_deadline": 75,
+  "evidence_packages": [
+    "E11"
+  ],
+  "implementation_readiness": "Produzir exports/outputs por contrato cedo. Ready não é Done; a aceitação exige host e consumidores reais."
+}

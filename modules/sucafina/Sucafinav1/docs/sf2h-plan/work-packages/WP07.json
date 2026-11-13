@@ -1,0 +1,711 @@
+{
+  "id": "WP07",
+  "title": "Revisões, reuniões e relatórios",
+  "objective": "Permitir preparar, apresentar e retomar uma revisão com conteúdo preservado, diferenças verificáveis e relatórios completos que respeitem o acesso de quem os utiliza.",
+  "scope_in": [
+    "Ownership exclusivo de modules/sucafina/Sucafinav1/runtime/reports.ts e de novos arquivos em modules/sucafina/Sucafinav1/product/reviews/**, incluindo suas provas de produto.",
+    "Seleção de pauta, meeting view, revisão preservada, comparação entre revisões e exportação PPTX/DOCX completa e paginada.",
+    "Contexto, contagens, comentários da revisão e referências de encaminhamento segundo C05/C06."
+  ],
+  "scope_out": [
+    "Não alterar src/surfaces.ts: qualquer adaptação compartilhada é entregue ao WP10 por porta e necessidade explícita.",
+    "Não escrever shell, navegação global, importadores, fórmulas de domínio, ações Hot Topics ou arquivos de colaboração.",
+    "Não criar fluxo de aprovação de negócio, enviar relatórios externamente ou exigir integração de agenda/ERP."
+  ],
+  "contract_reads": [
+    "C01",
+    "C02",
+    "C06",
+    "C08",
+    "C09",
+    "C12",
+    "C13"
+  ],
+  "contract_provides": [
+    "C05",
+    "C06",
+    "C08"
+  ],
+  "axioms": {
+    "dod": [
+      {
+        "id": "WP07.DOD.01",
+        "text": "Uma revisão pode ser selecionada, preservada, recuperada, comparada e exportada sem depender de dados correntes mutáveis para reproduzir o que foi apresentado.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.DOD.02",
+        "text": "PPTX e DOCX incluem todo o conteúdo autorizado escolhido, com paginação e contagens verificáveis; nenhum limite silencioso de linhas fecha a entrega.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "invariants": [
+      {
+        "id": "WP07.INV.01",
+        "text": "Preservar uma revisão não congela permissões: leitura, comparação e exportação rechecadas não revelam conteúdo revogado.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.INV.02",
+        "text": "Revisão e reunião não aprovam compras, não alteram fórmulas e não mantêm uma segunda ação operacional.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "quality_standards": [
+      {
+        "id": "WP07.QLT.01",
+        "text": "Pauta, tela de reunião, comparação e arquivo deixam claros período, referência, seleção e condição de comparabilidade.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.QLT.02",
+        "text": "A apresentação não corta texto ou registros sem declaração; comentários humanos são distinguíveis de números e fatos calculados.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "completeness_criteria": [
+      {
+        "id": "WP07.CMP.01",
+        "text": "O fluxo cobre primeira revisão, revisão posterior, atualização enquanto a reunião está aberta, exclusão de origem e revogação de acesso.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.CMP.02",
+        "text": "Os dois formatos existentes, seções vazias, listas extensas, notas longas e restrições de talento estão contemplados.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.CMP.03",
+        "text": "Reunião e exportação apresentam a decisão, suas condições e previsto versus observado com fontes/períodos; o fechamento mantém a base financeira debatida e incorpora as ações decididas.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "success_criteria": [
+      {
+        "id": "WP07.SUC.01",
+        "text": "André gera material que corresponde ao que revisou e consegue reabri-lo sem que uma edição posterior mude os números apresentados.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.SUC.02",
+        "text": "A revisão seguinte mostra diferenças objetivas e encaminhamentos canônicos, sem inventar causas ou passado não preservado.",
+        "status": "NOT_RUN"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "WP07.T01",
+      "title": "Entregar a seleção autorizada da pauta",
+      "intent": "Transformar os tópicos e registros existentes em uma pauta ordenada com cobertura e contexto conferíveis antes de uma reunião ou exportação.",
+      "work": [
+        "Implementar a seleção C05 de tópicos e registros a partir das projeções C02, produzindo prévia ordenada com períodos, contagens, comentários de pauta e restrições visíveis, sem duplicar cálculos ou criar ações operacionais."
+      ],
+      "inputs": [
+        "Contratos C01/C02/C05/C06 de WP00.T04.",
+        "Inventário de tópicos de Generate Report e critérios de seleção/ACL da baseline."
+      ],
+      "outputs": [
+        "Modelo e porta de seleção/ordenação da pauta em product/reviews/**.",
+        "Prévia de seções, referências selecionadas, contagens e períodos pronta para meeting view e exportação."
+      ],
+      "depends_on": [
+        "WP00.T02"
+      ],
+      "checks": [
+        {
+          "id": "WP07.T01.CHK.01",
+          "text": "Selecionar Budget, Projects e Hot Topics, reordená-los e remover um registro: a prévia deve conter exatamente a seleção remanescente, sem recriar ou editar os registros de origem.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP07.T01.CHK.02",
+          "text": "Selecionar Talent Review com ator sem essa capacidade: a pauta não deve incluir valores, notas, contagens privadas ou rótulos obtidos de conteúdo restrito.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP07.T01.CHK.03",
+          "text": "Misturar seção anual, operação mensal e uma coleção vazia: cada seção mantém sua competência e o vazio é explícito, sem um ano global falsamente uniformizador.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP07.T01.DOD.01",
+            "text": "A pauta seleciona e ordena referências autorizadas com contagens e períodos apresentados antes da geração.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T01.DOD.02",
+            "text": "A prévia expõe as seções efetivamente incluídas e distingue comentário de pauta de dado calculado.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP07.T01.INV.01",
+            "text": "Selecionar, reordenar ou retirar um item da pauta não modifica sua origem.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T01.INV.02",
+            "text": "A seleção não amplia acesso nem deduz relações entre registros de nomes semelhantes.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP07.T01.QLT.01",
+            "text": "Uma mudança de seleção atualiza contagens e ordem sem descartar comentários dos itens mantidos.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T01.QLT.02",
+            "text": "Período e origem acompanham o tópico até a representação consumida pelos próximos passos.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP07.T01.CMP.01",
+            "text": "Há comportamento definido para seleção vazia, tópico desconhecido, referência removida e seção sem dados.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T01.CMP.02",
+            "text": "Os tópicos existentes do Dashboard e as projeções contratadas de Planner/Procurement podem ser selecionados sem refazer seus motores.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP07.T01.SUC.01",
+            "text": "O usuário confirma exatamente quais registros e períodos entrarão no material antes de preservá-lo.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T01.SUC.02",
+            "text": "A ordenação escolhida é a mesma recebida pela meeting view e pelos exportadores.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP07",
+      "ownership_ref": "WP07",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "R25"
+      ],
+      "journeys": [
+        "J05"
+      ],
+      "session": "S3",
+      "build_window": [
+        10,
+        23
+      ],
+      "proof_window": [
+        25,
+        75
+      ],
+      "evidence_packages": [
+        "E08"
+      ],
+      "integrates_with": [
+        "WP02.T01",
+        "WP03.T01",
+        "WP04.T01",
+        "WP05.T04",
+        "WP11.T03",
+        "WP14.T03"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP07.T02",
+      "title": "Preservar e apresentar uma revisão estável",
+      "intent": "Permitir apresentar e reabrir o conteúdo efetivamente revisado mesmo após alterações nos dados atuais.",
+      "work": [
+        "Implementar a ação explícita de preservar revisão C05 e sua meeting view, guardando o conteúdo selecionado e suas referências de cálculo/versão; atualizações correntes são oferecidas como atualização explícita de revisão, sem modificar a base já preservada.",
+        "Notas/comentários são escritos pela porta C06 de WP08; preservar na revisão uma representação autorizada imutável com referência, autor e versão. Mostrar conversa corrente em área identificada separadamente, se acessada; edição posterior da thread não altera o conteúdo da revisão."
+      ],
+      "inputs": [
+        "Pauta e representação autorizada de WP07.T01.",
+        "Contratos C05/C08 de preservação/recuperação e C06 para referências de comentários e encaminhamentos."
+      ],
+      "outputs": [
+        "Revisão preservada recuperável por referência, com seleção, conteúdo apresentado e competência de cada seção.",
+        "Meeting view estável e sinalização de atualização disponível, sem aceitar a edição corrente como alteração retroativa."
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP07.T01"
+      ],
+      "checks": [
+        {
+          "id": "WP07.T02.CHK.01",
+          "text": "Preservar uma revisão com forecast 1320, alterar a origem para 1400 e recuperar a revisão: ela deve continuar em 1320; aceitar atualização cria referência nova e não sobrescreve a anterior.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP07.T02.CHK.02",
+          "text": "Revogar acesso a uma seção depois da preservação: a recuperação por ator revogado não revela números, notas ou detalhes da seção, embora a revisão original permaneça preservada para acesso autorizado.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP07.T02.CHK.03",
+          "text": "Abrir meeting view e mudar um registro na origem: a tela mantém o conteúdo apresentado e distingue atualização disponível; avançar tópicos não busca silenciosamente números novos.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP07.T02.CHK.04",
+          "text": "Preservar revisão com comentário C06 versão3, editar a thread para versão4 e recuperar/exportar a revisão: o texto preservado continua o da versão3; a conversa corrente, se aberta e autorizada, aparece explicitamente como corrente.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP07.T02.DOD.01",
+            "text": "A revisão pode ser recuperada por referência conservando os valores e a seleção apresentados.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T02.DOD.02",
+            "text": "A meeting view usa a revisão preservada e oferece atualização explícita sem reescrever o passado.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP07.T02.INV.01",
+            "text": "IDs de origem isolados não substituem a preservação do conteúdo quando seus valores atuais podem mudar.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T02.INV.02",
+            "text": "Acesso é reavaliado no uso; comentários posteriores não alteram os valores preservados.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T02.INV.03",
+            "text": "WP07 não mantém um segundo CRUD de comentário; a captura preservada não muda quando a conversa C06 evolui.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T02.INV.04",
+            "text": "Ao encerrar a reunião, conservar a base financeira usada e anexar escolhas, notas e ações do fechamento. Não substituir silenciosamente os valores debatidos por uma leitura posterior.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP07.T02.QLT.01",
+            "text": "A tela mostra a referência da revisão, seus períodos e a diferença entre conteúdo preservado e atualização disponível.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T02.QLT.02",
+            "text": "Uma falha ao preservar não apresenta a revisão como salva nem devolve referência inutilizável.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP07.T02.CMP.01",
+            "text": "Há cobertura de preservação, recuperação, reenvio de salvamento, atualização explícita e ausência/remoção da origem.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T02.CMP.02",
+            "text": "As referências necessárias para comentário e encaminhamento permanecem utilizáveis sem incluir tarefas operacionais na revisão.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP07.T02.SUC.01",
+            "text": "O mesmo conteúdo autorizado pode ser reaberto após atualização da origem e usado na reunião sem mudanças inesperadas.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T02.SUC.02",
+            "text": "Uma revisão apenas simulada ou mantida transitoriamente não é apresentada como preservada no produto.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP07",
+      "ownership_ref": "WP07",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "R26",
+        "IA16"
+      ],
+      "journeys": [
+        "J05"
+      ],
+      "session": "S3",
+      "build_window": [
+        23,
+        38
+      ],
+      "proof_window": [
+        25,
+        75
+      ],
+      "evidence_packages": [
+        "E08"
+      ],
+      "integrates_with": [
+        "WP02.T01",
+        "WP03.T01",
+        "WP04.T01",
+        "WP05.T04",
+        "WP11.T03",
+        "WP14.T03"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP07.T03",
+      "title": "Comparar revisões com contexto compatível",
+      "intent": "Mostrar o que mudou entre duas revisões preservadas sem atribuir causalidade ou equivalência indevida aos valores.",
+      "work": [
+        "Implementar a comparação C05 de revisões selecionadas por referência, expondo alterações, inclusões, remoções e encaminhamentos por identidade canônica e declarando diferenças de competência, moeda ou definição que impedem uma comparação numérica direta.",
+        "Consumir ExpectedObservedComparison de WP14, derivada de projeções autorizadas C02 para o cutoff selecionado, e apresentá-la na mesa/reunião com fonte e cobertura. Ausência de actual permanece ausência, sem atribuir economia causal à IA."
+      ],
+      "inputs": [
+        "Revisões preservadas de WP07.T02 e contexto C01/C02 de comparabilidade.",
+        "Referências C06 dos encaminhamentos, cujo estado corrente pertence à ação Hot Topic canônica."
+      ],
+      "outputs": [
+        "Projeção de diferenças entre revisões, com antes/depois, origem e condição de comparabilidade.",
+        "Estados explícitos de primeira revisão, referência anterior ausente e comparação parcialmente restrita por acesso."
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP07.T02"
+      ],
+      "checks": [
+        {
+          "id": "WP07.T03.CHK.01",
+          "text": "Comparar revisões sintéticas com forecast 1320→1400, um projeto removido e uma ação concluída: mostrar +80, remoção e estado da mesma ação, sem criar uma ação nova.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP07.T03.CHK.02",
+          "text": "Comparar valores em competências ou moedas não equivalentes: não calcular um delta monetário como se fossem homogêneos; a incompatibilidade precisa estar explícita.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP07.T03.CHK.03",
+          "text": "Comparar como usuário que perdeu acesso a um tópico e abrir a primeira revisão sem antecessora: nenhum conteúdo revogado ou diferença histórica inventada aparece.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP07.T03.DOD.01",
+            "text": "A comparação mostra alterações e mudanças de composição por referências estáveis das revisões.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T03.DOD.02",
+            "text": "Primeira revisão e bases não comparáveis possuem resultado próprio em vez de deltas fabricados.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP07.T03.INV.01",
+            "text": "Um delta não é calculado pela igualdade do nome do registro nem por soma de moedas ou competências incompatíveis.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T03.INV.02",
+            "text": "Explicações causais só são apresentadas quando registradas como comentário identificado, nunca inferidas do diff.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP07.T03.QLT.01",
+            "text": "Cada diferença mostra antes, depois e a base usada, com acesso ao item correspondente da revisão.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T03.QLT.02",
+            "text": "Comparações parciais deixam clara a cobertura autorizada sem revelar detalhes de tópicos restritos.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP07.T03.CMP.01",
+            "text": "Valores, prazos, status, inclusões e remoções estão cobertos, incluindo registros de origem posteriormente apagados.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T03.CMP.02",
+            "text": "São tratados ausência de revisão anterior, mudança de definição e restrição de acesso após preservação.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP07.T03.SUC.01",
+            "text": "O usuário identifica as mudanças da fixture sem reabrir cada cadastro ou redigitar seus valores.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T03.SUC.02",
+            "text": "Um valor não comparável aparece como tal, e não como uma melhoria/piora numérica enganosa.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T03.SUC.03",
+            "text": "Participante compara previsto e observado no mesmo escopo e abre a fonte; valores ausentes ou incompatíveis são visíveis, sem narrativa causal fabricada.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP07",
+      "ownership_ref": "WP07",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "R27"
+      ],
+      "journeys": [
+        "J05",
+        "J12"
+      ],
+      "session": "S3",
+      "build_window": [
+        38,
+        50
+      ],
+      "proof_window": [
+        38,
+        75
+      ],
+      "evidence_packages": [
+        "E08"
+      ],
+      "integrates_with": [
+        "WP02.T01",
+        "WP03.T01",
+        "WP04.T01",
+        "WP05.T04",
+        "WP11.T03",
+        "WP14.T03"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP07.T04",
+      "title": "Exportar o material completo e paginado",
+      "intent": "Produzir PPTX e DOCX que correspondam à revisão escolhida e possam ser usados sem corrigir cortes silenciosos de conteúdo.",
+      "work": [
+        "Adaptar runtime/reports.ts e os renderizadores exclusivos de product/reviews/** para exportar a representação C05 autorizada com paginação de tabelas/textos, contagens e períodos explícitos, preservando a entrada existente de Generate Report sem editar src/surfaces.ts.",
+        "Incluir nos materiais os gráficos selecionados da revisão quando a sua projeção estiver disponível: WP05 fornece modelo de apresentação/série e alternativa tabular; WP07 faz a renderização própria de PPTX/DOCX com os mesmos dados, unidades e referências. Não capturar uma UI viva que possa mudar durante a exportação."
+      ],
+      "inputs": [
+        "Representações de pauta/revisão/comparação de WP07.T01–T03.",
+        "Exportadores PPTX/DOCX existentes, contexto C01 e regra de rechecagem de acesso do C05."
+      ],
+      "outputs": [
+        "PPTX e DOCX completos com seções ordenadas, paginação e indicação de cobertura/seleção.",
+        "Porta de exportação compatível com Generate Report e necessidades de adaptação compartilhada entregues ao WP10."
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP07.T03"
+      ],
+      "checks": [
+        {
+          "id": "WP07.T04.CHK.01",
+          "text": "Exportar uma revisão com 25 projetos identificáveis e notas longas nos dois formatos, extrair e renderizar os arquivos: cada registro selecionado deve existir uma vez, sem truncamento na antiga barreira de 12 linhas e sem sobreposição/clipping.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP07.T04.CHK.02",
+          "text": "Alterar dados correntes depois de preservar a revisão e exportá-la: os números dos arquivos coincidem com a revisão escolhida e com sua prévia, não com a origem já modificada.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP07.T04.CHK.03",
+          "text": "Revogar Talent Review entre prévia e exportação: a geração revalida a capacidade e não entrega o conteúdo privado num arquivo aparentemente autorizado.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP07.T04.CHK.04",
+          "text": "Exportar uma revisão com trajetória financeira e gráfico sem série disponível: valores/rótulos da figura e tabela coincidem com o snapshot; o estado indisponível continua explícito no arquivo, sem gerar uma série falsa.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP07.T04.DOD.01",
+            "text": "PPTX e DOCX contêm todo o conteúdo autorizado selecionado, com páginas/slides adicionais quando necessários.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T04.DOD.02",
+            "text": "A verificação inclui conteúdo extraído e inspeção de renderização dos casos extensos, não apenas a existência do arquivo.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP07.T04.INV.01",
+            "text": "Exportação não recalcula o domínio com fórmula própria nem usa dados atuais para substituir uma revisão preservada.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T04.INV.02",
+            "text": "Nenhum limite fixo elimina registros silenciosamente e a permissão é rechecada na geração.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP07.T04.QLT.01",
+            "text": "Títulos, períodos, contagens e quebras mantêm o documento legível, sem texto cortado ou tabelas sobrepostas.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T04.QLT.02",
+            "text": "Resumo executivo representa os tópicos escolhidos, distinguindo números, comentários e seções sem dados.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP07.T04.CMP.01",
+            "text": "Os dois formatos, listas maiores que 12 linhas, notas longas, múltiplas competências e seções vazias têm cobertura verificável.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T04.CMP.02",
+            "text": "O caminho legado de seleção por tópicos e o caminho por revisão preservada possuem comportamento definido e não contornam ACL.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T04.CMP.03",
+            "text": "Figuras selecionadas e sua tabela equivalente conservam unidade, período, moeda e seleção do snapshot; ausência ou parcialidade não desaparece ao exportar.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP07.T04.SUC.01",
+            "text": "O usuário usa o material exportado sem editar manualmente cortes, ordem básica ou números divergentes da prévia.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP07.T04.SUC.02",
+            "text": "A contagem de registros selecionados, apresentados e exportados pode ser reconciliada para a mesma revisão.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP07",
+      "ownership_ref": "WP07",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "R28",
+        "IA16"
+      ],
+      "journeys": [
+        "J05"
+      ],
+      "session": "S3",
+      "build_window": [
+        50,
+        72
+      ],
+      "proof_window": [
+        50,
+        75
+      ],
+      "evidence_packages": [
+        "E08"
+      ],
+      "integrates_with": [
+        "WP02.T01",
+        "WP03.T01",
+        "WP04.T01",
+        "WP05.T04",
+        "WP11.T03",
+        "WP14.T03"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    }
+  ],
+  "handoff": [
+    "Entregar C05 ao WP08/WP09 e ao WP10, incluindo referências, recuperação, incompatibilidades de comparação e recusas de acesso.",
+    "Entregar ao WP10 as entradas de meeting view e exportação e qualquer adaptação necessária em src/surfaces.ts; esse arquivo permanece fora do ownership do WP07.",
+    "Fornecer a jornada de prova real: selecionar conteúdo de três produtos, preservar, alterar origem, comparar e exportar; vincular encaminhamento via WP08 à ação real de WP02."
+  ],
+  "risks": [
+    "O tipo Snapshot existente pode ser confundido com uma revisão histórica; resolver provando preservação e recuperação do conteúdo, não apenas salvando IDs mutáveis.",
+    "Um arquivo preservado pode divulgar conteúdo após mudança de acesso; toda nova leitura/exportação deve aplicar C01, e compartilhamento externo não é parte deste WP.",
+    "Paginação só textual pode mascarar clipping em PPTX/DOCX; usar casos extensos renderizados e não aceitar o simples sucesso do gerador.",
+    "A integração atual com src/surfaces.ts é compartilhada; publicar a necessidade pelo contrato e deixar a alteração física para WP10 evita conflito de ownership."
+  ],
+  "status": "PLANNED",
+  "ownership": {
+    "id": "WP07",
+    "branch": "sf2-reviews",
+    "existing_files": [
+      "modules/sucafina/Sucafinav1/runtime/reports.ts",
+      "modules/sucafina/Sucafinav1/test/parity-reports.test.ts",
+      "modules/sucafina/Sucafinav1/test/reports-runtime.test.ts"
+    ],
+    "new_prefixes": [
+      "modules/sucafina/Sucafinav1/product/reviews/",
+      "modules/sucafina/Sucafinav1/test/product/wp07/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/"
+    ],
+    "allowed_purpose": "Revisão executiva, seleção/snapshot, meeting view e relatórios PPTX/DOCX de produto; consumir projeções e referências autorizadas, sem nova aprovação ou escrita em surfaces.ts e ações operacionais."
+  },
+  "source_ids": [
+    "S15",
+    "S04"
+  ],
+  "session": "S3",
+  "build_window": [
+    10,
+    72
+  ],
+  "integration_deadline": 75,
+  "evidence_packages": [
+    "E08"
+  ],
+  "implementation_readiness": "Produzir exports/outputs por contrato cedo. Ready não é Done; a aceitação exige host e consumidores reais.",
+  "contract_notes": {
+    "contract_reads": [
+      "C01 — identidade, capacidades atuais, referência, período, versão e escopo de leitura.",
+      "C02 — projeções e componentes autorizados dos três produtos, sem recomputar fórmulas nos relatórios.",
+      "C06 — comentários, referências de encaminhamento e porta de colaboração, mantendo Hot Topics no owner WP02.",
+      "C08 — persistência e apresentação por portas existentes para composição real pelo WP10."
+    ],
+    "contract_provides": [
+      "C05 — agenda selecionada, revisão preservada e recuperável, comparação compatível e representação completa para relatório.",
+      "C05/C06 — referências de revisão e de tópico para comentário ou encaminhamento contextualizado.",
+      "C08 — entradas de meeting view e exportação consumíveis pelo host, sem editar os entrypoints compartilhados."
+    ]
+  }
+}

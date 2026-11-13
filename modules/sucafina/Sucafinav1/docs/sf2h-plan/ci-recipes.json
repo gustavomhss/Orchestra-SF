@@ -1,0 +1,127 @@
+{
+  "status": "PLANNED_NOT_RUN",
+  "mechanism": "GitData MCP cria snapshot S descendente do candidato C com .ci-run.json; criar branch ci-run-linux-<id> em S dispara test-ci.yml. Não criar workflow novo nem alterar validator.",
+  "request_validation": "Antes do push, validar com script/test-ci-request.ts e script/test-ci-location.ts contra o tree S. Paths novos só são válidos depois de implementados e commitados. Não enviar placeholders ao CI.",
+  "recipes": [
+    {
+      "id": "CI-SF",
+      "scope": "Suite completa do módulo Sucafina, inclusive casos novos",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": []
+      },
+      "directory": "modules/sucafina",
+      "required": true
+    },
+    {
+      "id": "CI-CLI",
+      "scope": "Suite completa do pacote CLI cujo composition root foi alterado",
+      "request": {
+        "package": "cli",
+        "runner": "bun",
+        "args": []
+      },
+      "directory": "apps/cli",
+      "required": true
+    },
+    {
+      "id": "CI-APP",
+      "scope": "Suite completa Bun do pacote app consumidor do harness e UI, conforme seleção nativa",
+      "request": {
+        "package": "app",
+        "runner": "bun",
+        "args": []
+      },
+      "directory": "packages/app-shell",
+      "required": true
+    },
+    {
+      "id": "CI-UI-OPERATIONS",
+      "scope": "UI real das 28 capacidades, edição, import e colaboração",
+      "request": {
+        "package": "app",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/operations.spec.ts"
+        ]
+      },
+      "directory": "packages/app-shell",
+      "planned_files": [
+        "packages/app-shell/e2e/sucafina/operations.spec.ts"
+      ],
+      "required": true
+    },
+    {
+      "id": "CI-UI-DECISIONS",
+      "scope": "Caso, portfólio, memória e estados assíncronos pela UI real",
+      "request": {
+        "package": "app",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/decisions.spec.ts"
+        ]
+      },
+      "directory": "packages/app-shell",
+      "planned_files": [
+        "packages/app-shell/e2e/sucafina/decisions.spec.ts"
+      ],
+      "required": true
+    },
+    {
+      "id": "CI-UI-REPORTS",
+      "scope": "Reunião, documentos e exportações com conteúdo completo",
+      "request": {
+        "package": "app",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/reports.spec.ts"
+        ]
+      },
+      "directory": "packages/app-shell",
+      "planned_files": [
+        "packages/app-shell/e2e/sucafina/reports.spec.ts"
+      ],
+      "required": true
+    }
+  ],
+  "full_suite_rule": "As suites completas acima são o conjunto mínimo da campanha neste footprint. S0 inventaria em T+10 a receita de full suite exigida pelo epic/AGENTS e todos os pacotes efetivamente alterados. Toda suite adicional exigida permanece obrigatória; não renomear este mínimo como suite global de Orchestra. Escopo/seleção são congelados antes de T+25 e só se ampliam por impacto observado.",
+  "native_ai_proof": "Além dos testes determinísticos, E11/E13 exigem execução real no host já configurado, com proveniência e casos variados. Não injetar chave de IA em .ci-run.json; o validator não autoriza esse segredo. Prova live é registrada separadamente no mesmo candidato.",
+  "parallelism": "Recipes independentes podem usar snapshots diferentes da mesma árvore de produto. Cada Playwright job usa um worker; paralelismo ocorre entre requests disjuntas, sujeito aos runners realmente disponíveis.",
+  "typecheck": [
+    "bun typecheck em modules/sucafina",
+    "bun typecheck em apps/cli",
+    "bun typecheck em packages/app-shell",
+    "bun run check:guards --base origin/dev na raiz"
+  ],
+  "early_probe": "Uma rodada inicial mede fila, setup, seleção e tempo observado; evidência antiga não é benchmark da suite nova. Recalcular ETA se o orçamento de 15 minutos não for sustentado.",
+  "evidence": [
+    "product_candidate_sha",
+    "ci_snapshot_sha",
+    "request_hash",
+    "selected_files",
+    "run_id",
+    "run_url",
+    "attempt",
+    "job_ids",
+    "conclusion",
+    "omni_control",
+    "artifacts"
+  ],
+  "failure_policy": "Falha de teste vai ao dono da mudança. Falha de setup/runner conserva BLOCKED. Seleção vazia ou divergente falha, sem aceitar zero testes. Regressão preexistente exige comparação reproduzível com a baseline e atribuição; não cria dispensa automática de gate obrigatório. Candidato alterado exige novo snapshot e checks afetados; verde antigo não cobre mudança nova. Ausência de prova obrigatória impede DONE mesmo ao atingir 120 minutos.",
+  "queries": [
+    "GET https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs; selecionar head_sha=S, evento push e ref esperada",
+    "GET run/jobs/artifacts pelo ID real; não usar wrapper limitado a PR-triggered runs"
+  ],
+  "source_paths": [
+    ".github/workflows/test-ci.yml",
+    "script/test-ci-request.ts",
+    "script/test-ci-location.ts",
+    "script/module-registry.json",
+    "packages/app-shell/e2e/playwright.production.config.ts",
+    "AGENTS.md"
+  ]
+}

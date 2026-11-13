@@ -1,0 +1,576 @@
+{
+  "id": "WP11",
+  "title": "Casos de decisão e execução preparada",
+  "objective": "Transformar intenção, alternativas, escolha e próximos passos em trabalho durável e retomável.",
+  "scope_in": [
+    "Caso versionado e autorizado",
+    "Alternativas tipadas e critérios",
+    "Escolha humana preservada",
+    "Propostas por domínio e recibos parciais"
+  ],
+  "scope_out": [
+    "Persistência concreta e composition root de WP10",
+    "Fórmulas financeiras de WP03",
+    "UI de WP01",
+    "Política de aprovação de Procurement",
+    "Alterar engine de Relay"
+  ],
+  "contract_reads": [
+    "C01",
+    "C02",
+    "C03",
+    "C06",
+    "C08"
+  ],
+  "contract_provides": [
+    "C09",
+    "C12"
+  ],
+  "axioms": {
+    "dod": [
+      {
+        "id": "WP11.DOD.01",
+        "text": "Caso e escolhas sobrevivem a reinício e são compartilhados conforme autorização.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP11.DOD.02",
+        "text": "Mudanças propostas chegam aos domínios reais e execução parcial é retomável no candidato integrado.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "invariants": [
+      {
+        "id": "WP11.INV.01",
+        "text": "Escolha não é aprovação e simulação não grava em fonte oficial.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP11.INV.02",
+        "text": "Não há transação global presumida nem efeito repetido em retry.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "quality_standards": [
+      {
+        "id": "WP11.QLT.01",
+        "text": "Fontes, versões, hipóteses e efeitos são inspecionáveis.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP11.QLT.02",
+        "text": "Falha conserva trabalho e estado de cada mudança.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "completeness_criteria": [
+      {
+        "id": "WP11.CMP.01",
+        "text": "Cobrir intenção/alternativas/premissas/escolha/propostas/recibos, concorrência, import e revogação.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "success_criteria": [
+      {
+        "id": "WP11.SUC.01",
+        "text": "Uma decisão passa de pergunta a trabalho executável e pode ser retomada sem reconstruir sua razão.",
+        "status": "NOT_RUN"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "WP11.T01",
+      "title": "Implementar caso durável e versionado",
+      "intent": "Conservar objetivo, fontes e trabalho da decisão entre pessoas e sessões.",
+      "work": [
+        "Definir agregado de caso com objetivo, horizonte, moeda, critérios, referências/incarnações, premissas e autores; usar schema congelado por WP00.",
+        "Implementar criar/ler/editar/listar com porta de persistência e autorização injetadas por WP10, expected version e auditoria do ator.",
+        "Preservar metadados confiáveis em área definida por C08; importação de dados referencia a política de WP06 e invalida referências substituídas."
+      ],
+      "inputs": [
+        "C01",
+        "C08",
+        "DecisionCasePort",
+        "Atores e catálogo autorizado"
+      ],
+      "outputs": [
+        "Agregado DecisionCase e migração de schema aditiva",
+        "Comandos e projeção autorizada",
+        "Erros de conflito e referência inválida"
+      ],
+      "depends_on": [
+        "WP00.T02"
+      ],
+      "checks": [
+        {
+          "id": "WP11.T01.CHK.01",
+          "text": "Criar caso em uma sessão, reiniciar provider real e ler em outra identidade autorizada conserva conteúdo/versão/autoria; ator sem acesso recebe projeção reduzida ou recusa.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP11.T01.CHK.02",
+          "text": "Duas atualizações com expected version idêntica produzem um commit e um conflito com rascunho recuperável, sem perda de dado.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP11.T01.CHK.03",
+          "text": "Import JSON malicioso ou troca de registro com ID reutilizado não fabrica confirmação, não apaga histórico confiável nem mantém vínculo à encarnação antiga como válido.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP11.T01.DOD.01",
+            "text": "Caso é criado, retomado e atualizado no provider real da composição; adapter em memória isolado não fecha DoD.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP11.T01.INV.01",
+            "text": "Ator e autorização vêm do host; versão e histórico não são escolhidos pelo modelo nem importados como confiança.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP11.T01.QLT.01",
+            "text": "Falhas distinguem acesso, referência inválida e versão antiga; cada seção mantém origem/período/versão próprios.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP11.T01.CMP.01",
+            "text": "Cobrir rascunho, objetivo corrigido, referência revogada/substituída, concorrência e reinício.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP11.T01.SUC.01",
+            "text": "André e um colaborador autorizado retomam a mesma pergunta e seus dados sem reconstruir contexto.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP11",
+      "ownership_ref": "WP11",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "IA06"
+      ],
+      "journeys": [
+        "J06",
+        "J08",
+        "J09"
+      ],
+      "session": "S4",
+      "build_window": [
+        10,
+        23
+      ],
+      "proof_window": [
+        25,
+        75
+      ],
+      "evidence_packages": [
+        "E10",
+        "E12"
+      ],
+      "integrates_with": [
+        "WP03.T01",
+        "WP08.T01",
+        "WP10.T01"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP11.T02",
+      "title": "Estruturar alternativas e premissas comparáveis",
+      "intent": "Transformar ideias em cenários editáveis com composição reproduzível.",
+      "work": [
+        "Implementar alternativa como conjunto finito de operações tipadas sobre cópia; chamar adapter financeiro WP03 para simulação.",
+        "Associar componentes a evidência e condição confirmado/estimado/hipotético/ausente; manter horizonte, moeda e cobertura comparáveis.",
+        "Expor modelos de alternativas, critérios e efeitos para WP01/WP05/WP12/WP13, sem construir UI nem duplicar fórmulas."
+      ],
+      "inputs": [
+        "C01",
+        "C02",
+        "C03",
+        "DecisionCasePort",
+        "ScenarioOps e SimulationResult de WP03"
+      ],
+      "outputs": [
+        "AlternativeDraft validado",
+        "PremiseSet e resultado comparável",
+        "Erros estruturados de cenário inválido/incompleto"
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP11.T01"
+      ],
+      "checks": [
+        {
+          "id": "WP11.T02.CHK.01",
+          "text": "Renovar240mil versus60+45+105mil produz210mil e diferença30mil; alterar implantação70mil produz235mil e diferença5mil, com componentes reconciliados pelo adapterWP03.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP11.T02.CHK.02",
+          "text": "Operação que substituiria contribuição já vinculada troca o componente uma vez; o teste com inclusão duplicada é recusado ou reconciliado pelo domínio.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP11.T02.CHK.03",
+          "text": "Moeda sem FX, custo de saída desconhecido e hipótese de desconto não aparecem como alternativa completa confirmada; editar esses campos mantém fonte e condição.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP11.T02.DOD.01",
+            "text": "Alternativas persistidas consomem cálculo real WP03 e são editáveis no consumidor WP01.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP11.T02.INV.01",
+            "text": "Simulação não altera oficial/actual/compra; ausência não vira zero e hipótese não vira compromisso.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP11.T02.QLT.01",
+            "text": "Todo total pode ser reconciliado aos componentes com moeda, período e origem; campos inválidos têm erro específico.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP11.T02.CMP.01",
+            "text": "Cobrir mesma base, base incompatível, operação inválida, alternativa incompleta e mudança de critério.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP11.T02.SUC.01",
+            "text": "O usuário altera uma premissa e obtém uma comparação que pode explicar e reproduzir.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP11",
+      "ownership_ref": "WP11",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "IA03"
+      ],
+      "journeys": [
+        "J02",
+        "J04",
+        "J09",
+        "J11"
+      ],
+      "session": "S4",
+      "build_window": [
+        23,
+        38
+      ],
+      "proof_window": [
+        25,
+        75
+      ],
+      "evidence_packages": [
+        "E10",
+        "E12"
+      ],
+      "integrates_with": [
+        "WP03.T01",
+        "WP08.T01",
+        "WP10.T01"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP11.T03",
+      "title": "Registrar escolha humana e preparar mudanças",
+      "intent": "Conectar a razão da decisão ao trabalho que será executado.",
+      "work": [
+        "Registrar escolha explícita com snapshot dos critérios, alternativas, fontes, justificativa e autor; novas escolhas acrescentam revisão sem reescrever a anterior.",
+        "Preparar mudanças por destino com diff, expected version, critério atendido e confirmação exigida; consumir comandos Planner/Procurement/Hot Topics.",
+        "Separar premissa aceita para simulação de atualização oficial; expor a divergência quando a confirmação humana contradiz o registro de origem."
+      ],
+      "inputs": [
+        "C03",
+        "C06",
+        "DecisionCasePort",
+        "AlternativeDraft e SimulationResult"
+      ],
+      "outputs": [
+        "ChoiceRecord preservado",
+        "PreparedChangeSet por domínio",
+        "Projeção de divergência entre premissa e registro oficial"
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP11.T02"
+      ],
+      "checks": [
+        {
+          "id": "WP11.T03.CHK.01",
+          "text": "Registrar escolha preserva a base financeira; alteração posterior de cotação e nova escolha não modificam o registro original.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP11.T03.CHK.02",
+          "text": "Escolher alternativa não aprova PR/PO, não aplica cenário oficial nem cria ação automaticamente; propostas mostram destino e confirmação cabível.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP11.T03.CHK.03",
+          "text": "Responsável confirma março enquanto projeto oficial segue maio: cenário usa premissa declarada, divergência permanece visível e atualização oficial exige comando próprio.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP11.T03.DOD.01",
+            "text": "Escolha humana gera propostas revisáveis que chegam aos consumidores reais de cada domínio.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP11.T03.INV.01",
+            "text": "Escolha gerencial não equivale a aprovação formal; UI ou IA não delegam autoridade inexistente.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP11.T03.QLT.01",
+            "text": "Cada proposta mostra alteração, motivo, destino e estado; a justificativa continua vinculada aos números debatidos.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP11.T03.CMP.01",
+            "text": "Cobrir escolher, manter escolha sob nova justificativa, substituir escolha, rejeitar proposta e conflito da fonte.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP11.T03.SUC.01",
+            "text": "A equipe consegue continuar o trabalho a partir da escolha sem transcrever sua justificativa e seus valores.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP11",
+      "ownership_ref": "WP11",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "IA06",
+        "IA07"
+      ],
+      "journeys": [
+        "J04",
+        "J05",
+        "J06",
+        "J09"
+      ],
+      "session": "S4",
+      "build_window": [
+        38,
+        54
+      ],
+      "proof_window": [
+        38,
+        75
+      ],
+      "evidence_packages": [
+        "E10",
+        "E12"
+      ],
+      "integrates_with": [
+        "WP03.T01",
+        "WP08.T01",
+        "WP10.T01"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP11.T04",
+      "title": "Reconciliar recibos e retomar execução parcial",
+      "intent": "Mostrar o que realmente ocorreu e evitar efeitos duplicados.",
+      "work": [
+        "Consumir execuções autorizadas dos domínios e persistir correlação, command identity e resultado de cada mudança.",
+        "Modelar preparado/aplicado/aguardando aprovação/falhou/conflito, incluindo ordem em que houve sucesso parcial.",
+        "Reconciliar confirmação perdida consultando recibo/estado pelo contrato do produtor antes de repetir; retomar apenas itens pendentes."
+      ],
+      "inputs": [
+        "C03",
+        "C06",
+        "C08",
+        "PreparedChangeSet",
+        "DomainReceiptPort"
+      ],
+      "outputs": [
+        "ChangeReceiptSet",
+        "Plano de retomada parcial",
+        "Estado consolidado sem falsa atomicidade"
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP11.T03"
+      ],
+      "checks": [
+        {
+          "id": "WP11.T04.CHK.01",
+          "text": "Aplicar Planner com sucesso e recusar Procurement mantém o primeiro resultado e exibe parcial; retomada não reaplica o Planner.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP11.T04.CHK.02",
+          "text": "Perder resposta depois do commit e reenviar a mesma correlação resulta em um efeito; caso sem receipt autoritativo fica indeterminado e exige reconciliação, nunca retry cego.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP11.T04.CHK.03",
+          "text": "Revogar permissão entre preparação e aplicação recusa a mudança pendente e não expõe resultado restrito em recibo agregado.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP11.T04.DOD.01",
+            "text": "O módulo integrado recupera falha parcial e resposta perdida usando recibos reais de domínio.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP11.T04.DOD.02",
+            "text": "Recuperação consulta recibos de domínio gravados atomicamente com a mutação e reconcilia o caso; a prova inclui resposta perdida após commit e ausência de efeito duplicado.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP11.T04.INV.01",
+            "text": "Não existe promessa de transação global; um erro posterior não desfaz ou oculta commits anteriores.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP11.T04.QLT.01",
+            "text": "Estado informa efeito comprovado e ação de recuperação; correlação estável independe de narrativa IA.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP11.T04.CMP.01",
+            "text": "Cobrir sucesso total, sucesso parcial, conflito, pendência de aprovação, permissão revogada e resultado desconhecido.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP11.T04.SUC.01",
+            "text": "O usuário sabe o que já foi feito e retoma só o restante, com ausência verificável de efeitos duplicados.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP11",
+      "ownership_ref": "WP11",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "IA07",
+        "IA18"
+      ],
+      "journeys": [
+        "J03",
+        "J04",
+        "J06",
+        "J09"
+      ],
+      "session": "S4",
+      "build_window": [
+        54,
+        72
+      ],
+      "proof_window": [
+        54,
+        75
+      ],
+      "evidence_packages": [
+        "E10",
+        "E12"
+      ],
+      "integrates_with": [
+        "WP03.T01",
+        "WP08.T01",
+        "WP10.T01"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    }
+  ],
+  "handoff": [
+    "Modelos para WP01/WP05/WP07/WP12/WP13/WP14",
+    "Provider e domain ports para WP10",
+    "Receipts e contratos de retomada"
+  ],
+  "risks": [
+    "Provider de estado e correlação dos domínios precisam ser concretos até a prova integrada.",
+    "Import legado pode invalidar referência ou confiança se o contrato de proteção não for consumido."
+  ],
+  "status": "PLANNED",
+  "ownership": {
+    "id": "WP11",
+    "branch": "sf2-decisions",
+    "existing_files": [],
+    "new_prefixes": [
+      "modules/sucafina/Sucafinav1/product/decisions/",
+      "modules/sucafina/Sucafinav1/test/product/wp11/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/"
+    ],
+    "allowed_purpose": "Implementar somente casos de decisão e execução preparada no namespace próprio; consumir contratos e portas reais; não editar UI, persistência concreta, domínio produtor ou scheduler de outros WPs."
+  },
+  "source_ids": [
+    "S02",
+    "S09",
+    "S11",
+    "S14"
+  ],
+  "session": "S4",
+  "build_window": [
+    10,
+    72
+  ],
+  "integration_deadline": 75,
+  "evidence_packages": [
+    "E10",
+    "E12"
+  ],
+  "implementation_readiness": "Produzir exports/outputs por contrato cedo. Ready não é Done; a aceitação exige host e consumidores reais."
+}

@@ -1,0 +1,56 @@
+{
+  "review_type": "TARGETED_CLOSURE_PLAN_ONLY",
+  "status": "APPROVED_PLAN_ONLY",
+  "verified_at": "2026-11-12T23:21:27.806196+00:00",
+  "hashes": {
+    "campaign.json": "3cc517883f4dc9373b03fb22cb393f3663c75f0ec7f9cd046297aeddef374057",
+    "coverage.json": "11989752a67a0dcfbc8379e0308ab82a871e81abd2869a551ed6e5d8ff0a08e2"
+  },
+  "scope": {
+    "work_packages": 15,
+    "tasks": 71,
+    "contracts": 14,
+    "original_capabilities": 28,
+    "original_requirements": 41,
+    "analytical_questions": 11,
+    "ai_capabilities": 18
+  },
+  "findings": [
+    {
+      "id": "FPR01",
+      "status": "CLOSED",
+      "verified": [
+        "Contagens e fechamento usam lista canônica15WPs/71tasks.",
+        "C01–C14 e três pareceres estão no DoD global/local."
+      ],
+      "residual": []
+    },
+    {
+      "id": "FPR02",
+      "status": "CLOSED",
+      "verified": [
+        "J09–J13 cobrem análise/contradição/resposta/efeitos, portfólio, documentos, memória e Relay; DoD global e WP10.T02 exigem J01–J13."
+      ],
+      "residual": []
+    },
+    {
+      "id": "FPR03",
+      "status": "CLOSED",
+      "verified": [
+        "16arestas AIEDGE com producer/consumer/acceptance_task/proof_package.",
+        "WP07.T03 consome ExpectedObservedComparison derivada de C02 autorizada, com cutoff/fonte/cobertura e sucesso observável; jornadas e edges completam prova."
+      ],
+      "residual": []
+    },
+    {
+      "id": "FPR04",
+      "status": "CLOSED",
+      "verified": [
+        "IA01 e IA05 incluem WP12.T02, preservando UI/colaboração/reformulação."
+      ],
+      "residual": []
+    }
+  ],
+  "qualification_gate": "WP00.T04 qualifica serviços; seu work declara que WP00.T02 libera as demais frentes independentemente. Não houve nova expansão de review.",
+  "implementation_status": "NOT_RUN; aprovação do plano não é aceite do produto, prova deprovider/CI ou promessa de120min."
+}

@@ -1,0 +1,498 @@
+{
+  "review_id": "SF-ATLAS-BUSINESS-READONLY-REVIEW",
+  "status": "DESIGN_RECOMMENDATION_SOURCE_VERIFIED_NOT_IMPLEMENTED",
+  "baseline": {
+    "repo": "gustavomhss/Orchestra-SF",
+    "sha": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "dev_head_rechecked": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "atlas_tree": "1753c737501592682d12edaf7a843565fdee39dc"
+  },
+  "upstream": {
+    "repo": "gustavomhss/hugr-orchestra",
+    "dev_sha": "40495341160f9c6e9876a4edfe460236d044d90a",
+    "atlas_tree": "1753c737501592682d12edaf7a843565fdee39dc",
+    "atlas_byte_identical": true,
+    "rag_studio_tree_sf": "d9e1a4265159c4d3603bd5ab5cc7c79f6038ee47",
+    "rag_studio_tree_upstream": "68783b34c2597c0ba926c04f60874630fcfd0981",
+    "limit": "Atlas comparado por Git tree SHA exato. Rag Studio upstream difere e não foi qualificado; conclusões de comportamento RAG abaixo referem-se ao baseline SF."
+  },
+  "conclusion": "Recomendar Atlas SF Business Profile v1 como nome de desenho novo, com BusinessContextService escopado e um único servidor sucafina-workbench com ferramentas de contexto. Atlas presente é produto de conhecimento de software, com componentes úteis, mas não é hoje o substrato empresarial de casos/contratos/compras. Para essa alegação ser verdadeira é necessário adaptar boundary, fontes/identidade/persistência e mostrar consumidores reais chamando implementações Atlas. Somente unir C09/C13/documentos e renomear a camada seria branding, não integração demonstrada.",
+  "verified_findings": [
+    {
+      "id": "F01",
+      "finding": "Conhecimento e retrieval presentes são centrados em software.",
+      "detail": "StructRef exige path real de repo; OwnLevel e RelationKind têm vocabularios fechados de software. Um supplierId/caseId não pode ser colocado em qualifiedPath mediante cast. Políticas como arquivos/sections podem ter âncoras válidas; isso não transforma todos os registros empresariais em código.",
+      "sources": [
+        "A01",
+        "A02",
+        "A03",
+        "A04",
+        "A22"
+      ]
+    },
+    {
+      "id": "F02",
+      "finding": "Memory core tem owner string, mas produto Maestro fecha owners nativos.",
+      "detail": "backend/jimmy/archie/live são os únicos owners; maestro/lucy têm leitura contextual conforme regras próprias. Agente sf_finance não herda Atlas Memory por perfil/alias. Não remapear agente empresarial para backend para contornar o guard.",
+      "sources": [
+        "A07",
+        "A13",
+        "A14"
+      ]
+    },
+    {
+      "id": "F03",
+      "finding": "Escopo de memória não é confidencialidade.",
+      "detail": "inject.ts declara explicitamente que git-native plaintext permite a qualquer leitor do repo ler bytes de todos os seats. Binding project/root/owner/session não contém ACL empresarial por registro, unidade, orçamento, pessoa ou caso. Business memory precisa de store e leitura autorizada adequados.",
+      "sources": [
+        "A08",
+        "A09"
+      ]
+    },
+    {
+      "id": "F04",
+      "finding": "Existem seams concretos de reuso, além de padrões conceituais.",
+      "detail": "createMemoryRead e createMemoryEmit recebem DurableMemory por injeção. Um adapter novo sobre snapshot C08 pode preservar o lifecycle real com commit serializado de SF. O native-memory atual constrói store de filesystem; não é suficiente trocar sua configuração para banco empresarial. Boundary pública nova exige trabalho e prova.",
+      "sources": [
+        "A09",
+        "A10",
+        "A11",
+        "A12"
+      ]
+    },
+    {
+      "id": "F05",
+      "finding": "Memória tem modelos e limites específicos, não aprendizagem irrestrita.",
+      "detail": "Templates task/pr/project/logbook; regras de projeto são propostas para indexação humana. Frecency usa valor e idade de log; não há ledger completo de citações. Gates do native-memory são corretos somente com um writer process por storage root. Decisões oficiais, resultados financeiros e expected/observed continuam canônicos em C09/C13.",
+      "sources": [
+        "A07",
+        "A09",
+        "A11",
+        "A14"
+      ]
+    },
+    {
+      "id": "F06",
+      "finding": "Rag Studio oferece componentes documentais, não RAG empresarial comprovado.",
+      "detail": "Há fonte/chunk/hash/revision/trace e código de vetores/fusão. enableEmbedding continua explicitamente recusado; pipeline com embeddingModel/encoder pode alcançar cálculos vetoriais. ask mantém filtro final por substring e devolve prompt/trace, sem resposta LLM. PDF digital existe; DOCX não tem extrator próprio. Não anunciar semântica ampla ou disponibilidade de provider sem prova.",
+      "sources": [
+        "A15",
+        "A16",
+        "A17",
+        "A18",
+        "A19",
+        "A20"
+      ]
+    },
+    {
+      "id": "F07",
+      "finding": "Maturidade de algumas superfícies é limitada e declarada.",
+      "detail": "Own usa hits zero, ppr ausente no fato e banda dependencies vazia. README documenta 45 comandos CLI e 18 ferramentas MCP, com várias operações CLI-only. Existência de código/testes não foi convertida nesta revisão em runtime PASS.",
+      "sources": [
+        "A01",
+        "A06"
+      ]
+    }
+  ],
+  "proposed_product": {
+    "name": "Atlas SF Business Profile v1",
+    "name_status": "Novo rótulo de desenho/produto proposto, não release existente",
+    "user_promise": "André e cada agente chegam a um caso com contexto autorizado, fontes verificáveis, decisões anteriores relevantes, lacunas e mudanças desde a última análise; cada afirmação pode ser aberta na origem e contestada.",
+    "entrypoint": "BusinessContextService escopado por trás do único servidor sucafina-workbench; context pack é uma capacidade desse servidor. Atlas técnico de codebase fica fora da UI empresarial normal.",
+    "inputs": [
+      {
+        "layer": "Estado operacional",
+        "source": "Projeções oficiais Dashboard/Planner/Procurement, calculadas e autorizadas pelos respectivos domínios",
+        "rule": "Ler estado atual por contrato; não reindexar números como verdade paralela."
+      },
+      {
+        "layer": "Casos e memória decisória",
+        "source": "C09 decisões, alternativas, confirmações, receipts e C13 expected/observed/material changes",
+        "rule": "Conservar fonte canônica e vínculos; Atlas serve contexto/continuidade, não um segundo banco de decisões."
+      },
+      {
+        "layer": "Conhecimento documental",
+        "source": "Documentos já autorizados/anexados/importados, política interna ratificada, atas e esclarecimentos confirmados",
+        "rule": "Fonte com ACL corrente, versão/hash, localização e estado de extração; nova conexão externa não é pré-condição."
+      },
+      {
+        "layer": "Memória de trabalho de agente",
+        "source": "Checkpoints e lições de um caso/tarefa com referências",
+        "rule": "Owner/escopo vinculados pelo host; não escrever payload sensível em repo compartilhado nem promover uma hipótese a política automaticamente."
+      }
+    ],
+    "entity_vocabulary_proposed": [
+      "Project",
+      "BudgetLine",
+      "PurchaseRequest",
+      "Sourcing",
+      "Supplier",
+      "Quote",
+      "PurchaseOrder",
+      "Contract",
+      "Risk",
+      "HotTopic",
+      "DecisionCase",
+      "Meeting",
+      "Document"
+    ],
+    "source_contract_proposed": {
+      "name": "BusinessEvidenceRef",
+      "variants": [
+        "DomainRecordRef {surface,type,id,incarnation,version,field?,period?,currency?}",
+        "DocumentSpanRef {assetId,contentHash,version,page?/paragraph?/sheet?/range?,extractorVersion}",
+        "CalculationReceiptRef {engineVersion,inputRefs,assumptions,outputDigest}",
+        "DecisionReceiptRef {caseId,version,choiceRef,domainReceiptRefs}"
+      ],
+      "rules": [
+        "SourceRef is server-minted and resolved under current actor authorization.",
+        "Provenance, freshness, human confirmation and mechanical calculation status are separate fields.",
+        "No fake repository path, global symbol or PR id for business content.",
+        "Unknown, stale, unavailable and conflicting evidence are explicit.",
+        "Revocation applies to search, source open, retrieval cache, model context, persisted analysis, history and export."
+      ],
+      "existence": "Proposto; não é schema presente no Atlas baseline."
+    },
+    "context_pack_proposed": {
+      "identity": [
+        "tenant/installation",
+        "business actor",
+        "agent",
+        "project/location",
+        "case/workspace",
+        "authorizationVersion",
+        "dataVersions"
+      ],
+      "bands": [
+        "Situação e objetivo",
+        "Fatos oficiais e cálculos",
+        "Políticas ratificadas relevantes",
+        "Histórico decisório e resultados",
+        "Documentos citados",
+        "Premissas e perguntas abertas",
+        "Contradições e mudanças materiais"
+      ],
+      "output_receipt": [
+        "sourcesUsed",
+        "sourcesDropped",
+        "coverage",
+        "freshness",
+        "authorizationScope",
+        "truncation",
+        "modelContextDigest"
+      ],
+      "note": "Reusar bounded packing, explicit recall, proveniência, refusal e freshness apenas mediante tipos/adapters corretos. Valores privados nunca entram no shared awareness global."
+    },
+    "memory_policy": [
+      "Memória pessoal do agente = continuidade de trabalho, sem autoridade para decidir compras ou alterar números.",
+      "Memória compartilhada = lição/política aprovada explicitamente e com fonte; visível somente a quem pode ver seu conteúdo.",
+      "Registros oficiais e comparações expected/observed pertencem a C09/C13; uma projeção para contexto carrega referência e versão.",
+      "Campo privado continua privado depois de resumido: gerar resumo não altera ACL.",
+      "Conflitos e fatos expirados sobrevivem como histórico identificado; não são injetados como verdade atual.",
+      "MemoryKind atual é fechado. Não codificar case como PR nem inventar PR IDs; reusar task somente para tarefa real e estender o schema de negócio explicitamente onde necessário."
+    ],
+    "tools_proposed_not_existing": [
+      "sf_context_pack",
+      "sf_sources_search",
+      "sf_source_read",
+      "sf_decision_history",
+      "sf_memory_recall",
+      "sf_memory_propose"
+    ],
+    "transport_rule": "Um único servidor sucafina-workbench expõe contratos de negócio autorizados, incluindo context pack. Não expor raw Atlas emit/link/CLI/stdio, ATLAS_ACTOR, filesystem roots ou owner selecionável pelo modelo."
+  },
+  "reuse_matrix": [
+    {
+      "component": "Atlas kernel CAS/identidade",
+      "reuse": "Helpers implementados de canonicalização/hash e identidade determinística podem ser reutilizados.",
+      "adapt": "Persistência/ACL e schema empresarial permanecem necessários; createStore em memória não comprova durabilidade.",
+      "readiness": "CODE_PRESENT_ADAPTER_REQUIRED",
+      "sources": [
+        "A21"
+      ]
+    },
+    {
+      "component": "Atlas memory gates/lifecycle",
+      "reuse": "createMemoryRead/Emit, templates adequados, caps, scanner, owner bound, replay/refusal.",
+      "adapt": "Adapter DurableMemory sobre snapshot C08 autorizado e serializado; boundary pública que suporte esse uso; não usar native FS store para confidencialidade.",
+      "readiness": "CONCRETE_PORT_PRESENT_NEW_INTEGRATION_REQUIRED",
+      "sources": [
+        "A09",
+        "A10",
+        "A11",
+        "A12"
+      ]
+    },
+    {
+      "component": "Conhecimento fundamentado",
+      "reuse": "Padrões e mecanismos de referência/freshness/supersession com oráculos reais.",
+      "adapt": "BusinessEvidenceRef e resolvers de domínio/documento/cálculo. Não reutilizar StructRef com path inventado ou fingir prova semântica.",
+      "readiness": "SEMANTIC_EXTENSION_REQUIRED",
+      "sources": [
+        "A02",
+        "A03",
+        "A22"
+      ]
+    },
+    {
+      "component": "Context packs/Own",
+      "reuse": "Composição determinística, bandas, budget, tail/coverage e drift visível.",
+      "adapt": "Vocabulário de território empresarial, feed autorizado e unidade de contexto. Own codepath permanece técnico; falta de hits/ppr não vira ranking inteligente.",
+      "readiness": "MIXED_CODE_AND_CONTRACT_ADAPTATION",
+      "sources": [
+        "A04",
+        "A05",
+        "A06"
+      ]
+    },
+    {
+      "component": "Rag Studio documental",
+      "reuse": "Admissão, extração PDF/texto, chunk/hash/span, revision, traces e componentes de encoder.",
+      "adapt": "ACL empresarial, DOCX, busca e query adequados, qualidade de citations e provider já existente qualificado. Não prometer semântica nem LLM answer por ask.",
+      "readiness": "COMPONENTS_PRESENT_NOT_BUSINESS_RAG_READY",
+      "sources": [
+        "A15",
+        "A16",
+        "A17",
+        "A18",
+        "A19",
+        "A20"
+      ]
+    },
+    {
+      "component": "Native seats/tools Atlas",
+      "reuse": "Exemplo concreto de binding host, permission por call e receipts.",
+      "adapt": "Novo bridge de produto para identidades/roles empresariais. Closed Owner nativo não aceita perfis SF por configuração.",
+      "readiness": "ENGINEERING_BINDING_PRESENT_BUSINESS_BINDING_ABSENT",
+      "sources": [
+        "A13",
+        "A14"
+      ]
+    }
+  ],
+  "what_makes_it_real_atlas": [
+    "Uma boundary/export público de produto chama os modules Atlas realmente usados; diagrama e nome de pacote não bastam.",
+    "Adapter C08 fornece store autorizado; tests/receipts demonstram que read/write atravessam gates/lifecycle Atlas e que isolamento não depende apenas de filtro de prompt.",
+    "BusinessEvidenceRef não é confundido com StructRef; extensão da semântica é explícita e testada.",
+    "BusinessContextService não duplica o cálculo nem o estado oficial de decisões.",
+    "Agentes residentes consomem packs/recall reais em chamadas integradas; fixtures servem QA.",
+    "Se somente o BusinessContextService novo compuser dados existentes sem invocar Atlas, denominar camada de contexto SF inspirada em Atlas até a integração existir."
+  ],
+  "readiness_gates_proposed": [
+    "Fonte autorizada de três domínios + caso C09 + resultado C13 + documento confirmado compõe pack real com referências resolvíveis.",
+    "Usuários com escopos distintos nunca recebem dado/citação/cache/memória do outro; revogação invalida as projeções derivadas.",
+    "Após reboot, checkpoint/lesson recuperado via adapter real Atlas/C08 sem recriar decisões oficiais.",
+    "Concorrência de agentes não perde registro nem burla caps/regras; garantia de serialização é demonstrada.",
+    "Troca de versão da fonte acusa staleness/contradição antes de executar mudança preparada.",
+    "Documento malicioso não troca ator, fonte, owner ou política; schema de saída e ferramentas restringem efeitos.",
+    "Busca distingue ausente no corpus, miss, corte por budget e conteúdo enviado; citation resolve trecho/version/hash correto.",
+    "Prova de wiring mostra módulo consumidor real e não apenas import type, mock ou factory sem caller."
+  ],
+  "non_claims": [
+    "Não há Atlas SF Business Profile v1 pronto no baseline inspecionado.",
+    "Não executei testes, queries de produção, provider, deploy ou migração.",
+    "Não foram pedidos acessos externos nem lidos dados empresariais de Sucafina.",
+    "O Atlas tree em upstream é idêntico, portanto atualizar para esse head não fornece por si adaptação empresarial.",
+    "Diferenças de Rag Studio upstream não foram promovidas nem qualificadas."
+  ],
+  "sources": [
+    {
+      "id": "A01",
+      "path": "modules/atlas/README.md",
+      "sha": "9852e48a76c541cf4c530e6262fef1d3160edf2e",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/README.md",
+      "fact": "Atlas é explicitamente knowledge de codebase, sem embeddings/RAG; CLI e MCP têm superfícies distintas; limites de ranking declarados."
+    },
+    {
+      "id": "A02",
+      "path": "modules/atlas/packages/contracts/src/struct.ts",
+      "sha": "c858ba3603c7d636d0fc8f3eec4d24fa28a70253",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/contracts/src/struct.ts",
+      "fact": "StructRef qualifica caminhos reais relativos ao repositório e hashes estruturais; não é referência genérica a entidades de negócio."
+    },
+    {
+      "id": "A03",
+      "path": "modules/atlas/packages/knowledge/src/types.ts",
+      "sha": "4cfbed2aafa860d11b1c214301093534550fe4ba",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/knowledge/src/types.ts",
+      "fact": "Famílias de fatos e relações fechadas: advisory/predicate/relation/negation/transition/test-vacuity; relações depends-on/calls."
+    },
+    {
+      "id": "A04",
+      "path": "modules/atlas/packages/retrieval/src/types.ts",
+      "sha": "359b26696e2703d41d727ad2811659f9525407f0",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/retrieval/src/types.ts",
+      "fact": "OwnLevel fechado crate/module/service/feature; retrieval por scope/dependência/trigger, sem vetor."
+    },
+    {
+      "id": "A05",
+      "path": "modules/atlas/packages/tools/src/query.ts",
+      "sha": "ad566924d4e65112206bc29ceb8f7cc47d13174a",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/tools/src/query.ts",
+      "fact": "createQuery implementa packs por índice injetado com bandas governante/advisory e freshness."
+    },
+    {
+      "id": "A06",
+      "path": "modules/atlas/packages/adapter-io/src/own-source.ts",
+      "sha": "9ffedf5ef15f3a6ea111cd79b9e4364ee7a6a331",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/own-source.ts",
+      "fact": "Provider Own real: hits sem writer, ppr sem persistência, dependencies vazio; não anunciar ranking adaptativo completo."
+    },
+    {
+      "id": "A07",
+      "path": "modules/atlas/packages/memory/src/types.ts",
+      "sha": "a8e8e32f77f1776957de91ba1a7315945bbd03cc",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/memory/src/types.ts",
+      "fact": "MemoryKind task/pr/project/logbook; owner é MemberId; awareness/orientation e regra injetada são distintos de recall."
+    },
+    {
+      "id": "A08",
+      "path": "modules/atlas/packages/memory/src/inject.ts",
+      "sha": "a09149a0f4c6ec512e036f1a912feb8ccadedcf8",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/memory/src/inject.ts",
+      "fact": "Injection scoping não é controle de acesso; repo readers podem ler todos os seats no store git plaintext."
+    },
+    {
+      "id": "A09",
+      "path": "modules/atlas/packages/adapter-io/src/native-memory.ts",
+      "sha": "6a068cac301e804e234f24fa5eac0390aea1aa30",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/native-memory.ts",
+      "fact": "AtlasBinding congela storage/project/root/owner/execution; native adapter usa filesystem e declara um writer process por root."
+    },
+    {
+      "id": "A10",
+      "path": "modules/atlas/packages/adapter-io/src/memory-store.ts",
+      "sha": "5a3ee6cf461f77f0f5f3fb3dc67228e45a3a906e",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/memory-store.ts",
+      "fact": "DurableMemory é port com read/append; implementação padrão usa logs em arquivos; existe ponto concreto para adapter."
+    },
+    {
+      "id": "A11",
+      "path": "modules/atlas/packages/adapter-io/src/memory-read.ts",
+      "sha": "67ca1d91873a6b7b232a7816e77c0473cdec7577",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/memory-read.ts",
+      "fact": "createMemoryRead injeta DurableMemory e actor; regras têm decay por ondas de log, não aprendizagem universal."
+    },
+    {
+      "id": "A12",
+      "path": "modules/atlas/packages/adapter-io/src/memory-emit.ts",
+      "sha": "f3164e8a7bc2e868afedb546c2511eaa901a805f",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/memory-emit.ts",
+      "fact": "createMemoryEmit injeta DurableMemory/actor/scanner; templates, partition, logbook, caps e scanner antecedem persistência."
+    },
+    {
+      "id": "A13",
+      "path": "modules/maestro/coordination/src/v2/atlas-source.ts",
+      "sha": "03d1070ea7705e856270447bbe8d27fafdd001ee",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/maestro/coordination/src/v2/atlas-source.ts",
+      "fact": "Integração nativa fecha owners em backend/jimmy/archie/live; reader adiciona maestro/lucy; fonte exige git e Own snapshot verificado."
+    },
+    {
+      "id": "A14",
+      "path": "modules/maestro/coordination/src/v2/tools/atlas-memory.ts",
+      "sha": "2cd1d53f69d1a9e42876b6dd72e57a04df587229",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/maestro/coordination/src/v2/tools/atlas-memory.ts",
+      "fact": "Ferramentas nativas vinculam sessão/call/owner e permission; memória de project é proposta humana, task/pr por templates."
+    },
+    {
+      "id": "A15",
+      "path": "modules/rag-studio/src/ask.ts",
+      "sha": "70bac8222b60402871242f4fd7032862eaf0f9cb",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/rag-studio/src/ask.ts",
+      "fact": "ask fornece QuestionResult com prompt e trace; final filtra includes(text), não demonstra retrieval semântico livre nem gera resposta LLM."
+    },
+    {
+      "id": "A16",
+      "path": "modules/rag-studio/src/embed.ts",
+      "sha": "ad6583657ee0f1c8c7b40febea33708b7fbbeaef",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/rag-studio/src/embed.ts",
+      "fact": "Há encoder injetável, armazenamento de vetores e fusão; disponibilidade depende de pipeline/encoder/vetores."
+    },
+    {
+      "id": "A17",
+      "path": "modules/rag-studio/src/index.ts",
+      "sha": "6901da34b99beeee182dea2e025d9a809a9e1825",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/rag-studio/src/index.ts",
+      "fact": "API exporta enableEmbedding de embed-off, mesmo tendo withEncoder e código de fusão."
+    },
+    {
+      "id": "A18",
+      "path": "modules/rag-studio/src/extract.ts",
+      "sha": "f1eaafe9993154469b5c0fae4697424ceabdc297",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/rag-studio/src/extract.ts",
+      "fact": "Extrator trata PDF digital via unpdf e resto como texto; sem parser DOCX dedicado."
+    },
+    {
+      "id": "A19",
+      "path": "packages/server/src/handlers/rag-studio.ts",
+      "sha": "97679cb012f927648774047307af1348ebe40643",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/server/src/handlers/rag-studio.ts",
+      "fact": "Encoder resolve conexão OpenRouter via Integration.Service e chama endpoint de embeddings; não provider abstrato universal."
+    },
+    {
+      "id": "A20",
+      "path": "packages/server/src/handlers/rag-studio-session.ts",
+      "sha": "4dc16c41d4a2ee4cfc00078ddf6d9a17455466e3",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/server/src/handlers/rag-studio-session.ts",
+      "fact": "Store/persistência RAG ligados ao Location e tabelas; não demonstra ACL por entidade/usuário de Sucafina."
+    },
+    {
+      "id": "A21",
+      "path": "modules/atlas/packages/kernel/src/store.ts",
+      "sha": "d6fe64685aba959528ab4706f752fad81b789841",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/kernel/src/store.ts",
+      "fact": "CAS genérico possui implementação createStore por canonicalização/hash; utilitário em memória não é sozinho persistência de produto."
+    },
+    {
+      "id": "A22",
+      "path": "modules/atlas/packages/grounding/src/drift.ts",
+      "sha": "ae7f5eda9a7b777a3aa8e2e39dbbd97d499c77ab",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/grounding/src/drift.ts",
+      "fact": "Drift real compara StructRef aos hashes das axes espaciais/território; não resolve BusinessEvidenceRef sem extensão."
+    }
+  ]
+}

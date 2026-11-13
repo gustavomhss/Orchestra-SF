@@ -1,0 +1,311 @@
+{
+  "review": "Cold adversarial de capacidade, prazo e evidência da campanha integral de produto SF com IA",
+  "status": "PLANNING_REVIEW_COMPLETE_IMPLEMENTATION_NOT_RUN",
+  "baseline": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "verdict": "O plano pode usar uma janela alvo de 120 minutos com cinco conversas realmente ativas, doze builders dedicados e uma frente parcial. A duração não está demonstrada: velocidade de implementação, fila do CI, duração do conjunto completo e reparos ainda não foram medidos. Nenhuma capacidade aceita deve ser removida para declarar o prazo cumprido.",
+  "scope_policy": {
+    "completion": "Todas as capacidades aceitas do plano anterior e da proposta de IA, consumidores reais, verificações e correções. A renovação é uma jornada de prova do produto completo, não o limite da entrega.",
+    "intermediate_deliveries": "Compilações e jornadas parciais são marcos de integração. Não são uma redefinição do produto final.",
+    "deadline": "T+120 é o objetivo de entrega completa. Se uma condição de aceite permanecer aberta, registrar atraso e o conjunto preciso de pendências; não declarar DONE nem converter capacidades aceitas em backlog para fechar.",
+    "clock": "T0 é o início conjunto da execução com este planejamento entregue. A validação de baseline, branches, contratos e caminhos de teste ocupa T0-10; não reiniciar o relógio depois de encontrar um impedimento. Preparação da proposta não é execução do produto.",
+    "out_of_scope": [
+      "Azure e deploy",
+      "novos acessos como pré-requisito",
+      "novas alçadas de negócio",
+      "envio de mensagens externas",
+      "refazer engines Maestro Relay Schedule"
+    ]
+  },
+  "resource_envelope": {
+    "available_in_one_thread": {
+      "total_slots": 4,
+      "root": 1,
+      "children": 3
+    },
+    "required_top_level_conversations": 5,
+    "note": "Não se obtêm cinco conversas ou doze builders chamando spawn_agent nesta única árvore. Cada conversa precisa existir e confirmar seu primeiro recibo; tokens disponíveis não confirmam slots nem runners.",
+    "conversations": [
+      {
+        "id": "CENTRAL",
+        "root": "WP00 contratos e WP10 composição, fila de integração, aceite",
+        "children_early": "Validação independente de contratos, preparação das provas e fiscalização do ownership; nenhuma escrita nos arquivos de feature",
+        "children_late": "Três revisores frios quando houver três slots livres e fronteiras independentes; correções retornam aos autores"
+      },
+      {
+        "id": "S1",
+        "root": "Coordenação UI e domínios de leitura e planejamento",
+        "children": [
+          "WP01 UI e navegação",
+          "WP02 Dashboard",
+          "WP03 Planner"
+        ]
+      },
+      {
+        "id": "S2",
+        "root": "Coordenação procurement, analytics e entrada de dados",
+        "children": [
+          "WP04 Procurement",
+          "WP05 BI",
+          "WP06 Importação e extração documental"
+        ]
+      },
+      {
+        "id": "S3",
+        "root": "Coordenação reuniões, colaboração e rotinas nativas",
+        "children": [
+          "WP07 Reuniões e exports",
+          "WP08 Colaboração",
+          "WP09 Relay e Schedule"
+        ]
+      },
+      {
+        "id": "S4",
+        "root": "Coordenação das frentes de IA mais WP14 com orçamento parcial explícito",
+        "children": [
+          "WP11 Caso de decisão e persistência",
+          "WP12 IA contextual e crítica",
+          "WP13 Cenários de portfólio"
+        ]
+      }
+    ],
+    "effective_builders": "12 dedicados mais S4 root parcialmente disponível para WP14; não vender isso como13buildersdedicados.",
+    "wp14_budget": {
+      "implementation_minutes": 45,
+      "coordination_minutes": 20,
+      "window": "T10-75",
+      "scope_boundary": "Somente avaliador de mudança material, condições e projeções de memória/previsto-observado. UI e armazenamento do histórico pertencem ao WP11; agendamento ao WP09; aplicação de mudanças aos domínios e WP10.",
+      "blocks": [
+        "T10-30: operadores puros e referências de premissas",
+        "T30-40: coordenar consumidores e handoffs",
+        "T40-60: ligar fontes reais e projeções",
+        "T60-75: provas e correções"
+      ],
+      "fallback_resource_not_scope": "Se não houver producer WP14 emT30, transferir sua escrita exclusivamente a um slot central que concluiu contratos. Registrar último commit, arquivos e próximo passo antes de liberar o owner antigo. Esse autor não julga WP14; usar os dois outros juízes centrais e um coordenador de outra sessão para a terceira revisão. Não adicionar um escritor concorrente."
+    },
+    "if_only_one_conversation": "Executar com três builders continua autorizado, mas a estimativa de120min não usa a capacidade planejada. Reportar a diferença de capacidade; não inventar paralelismo nem reduzir escopo."
+  },
+  "critical_path": [
+    {
+      "step": "Base e interfaces mínimas compatíveis",
+      "target": "T0-10",
+      "owners": "WP00 e coordenadores",
+      "exit": "SHA fixado, manifesto de escritores, assinaturas e fixtures publicadas"
+    },
+    {
+      "step": "Caso durável e projeções autorizadas",
+      "target": "T10-40",
+      "owners": "WP11, WP08 e WP10",
+      "exit": "Leitura e escrita reais com versão, ator, persistência e conflitos"
+    },
+    {
+      "step": "Cálculo e interpretação real por IA",
+      "target": "T25-55",
+      "owners": "WP03, WP12, WP13",
+      "exit": "Proposta tipada consumida pelo cálculo, evidências, contradição e resposta posterior"
+    },
+    {
+      "step": "Bridge nativa e consumidores de todas as frentes",
+      "target": "T35-75",
+      "owners": "WP09, WP10 e owners",
+      "exit": "Todas as capacidades estão acessíveis e ligadas no produto; fontes, execução e retorno reais"
+    },
+    {
+      "step": "Primeira aceitação completa mais revisão fria",
+      "target": "T75-95",
+      "owners": "WP10 e juízes",
+      "exit": "CI e jornadas discriminantes, findings atribuídos, nenhuma omissão escondida"
+    },
+    {
+      "step": "Correções e nova prova do candidato",
+      "target": "T95-118",
+      "owners": "Autores, integrador, juízes",
+      "exit": "Provas afetadas válidas no candidato final; obrigatório aberto=0"
+    },
+    {
+      "step": "Conferência de completude e recibo",
+      "target": "T118-120",
+      "owners": "WP10",
+      "exit": "Produto completo identificado por commit, runs, evidências e lista integral de capacidades"
+    }
+  ],
+  "timeline": [
+    {
+      "window": "T0-10",
+      "build": "Reconhecer baseline, owners, contratos e dados de prova; preparar artefatos dentro da fronteira já atribuída",
+      "integration": "Composição e contrato publicados cedo; bloquear somente a interface realmente incompatível",
+      "ci": "Validar caminho snapshotMCP, seletores e provas requeridas; observar runners e histórico quando disponível",
+      "gate": "G0 contratos suficientes para executar, distinto da qualificação da ponte Relay"
+    },
+    {
+      "window": "T10-25",
+      "build": "Implementar producers reais e exports pequenos; adaptadores de apresentação podem usar fixtures contratuais só em desenvolvimento",
+      "integration": "Montar shell real, rotas e portas; integrar o primeiro produtor antes deT25",
+      "ci": "Primeiro lote discriminante de testes dos produtores já disponíveis",
+      "gate": "Sem imports aguardando um último WP ou arquivos compartilhados escritos por várias frentes"
+    },
+    {
+      "window": "T25-45",
+      "build": "Fechar cálculo, persistência e entrada de contexto; UI, colaboração e relatórios consomem portas sem esperar o WP inteiro",
+      "integration": "Receber commits pequenos em fila única; candidato composto a cada lote, sem esperar13entregas finais",
+      "ci": "Testes por mudança agrupados por pacote; preservar receipts de cada snapshot",
+      "gate": "Primeira jornada com dados reais do módulo e gravação durável atéT40"
+    },
+    {
+      "window": "T45-60",
+      "build": "IA real, extração, perguntas, respostas, roteamento, memória e cenários de portfólio",
+      "integration": "Trocar fixtures de desenvolvimento por produtores reais; comportamento ausente continua OPEN",
+      "ci": "Provar cedo o caminho Relay e a ida e volta do modelo, sem esperar a revisão final",
+      "gate": "Ponte nativa e contribuição real da IA demonstráveis atéT55"
+    },
+    {
+      "window": "T60-75",
+      "build": "Fechar consumidores, erros, permissões, retomadas e estados; owners atendem integração",
+      "integration": "Todas as capacidades aceitas acessíveis e ligadas atéT75; nenhuma tela isolada conta",
+      "ci": "Preparar matriz final e snapshots equivalentes do candidato completo",
+      "gate": "G1 feature complete integral"
+    },
+    {
+      "window": "T75-95",
+      "build": "Autores fazem correções dos primeiros achados",
+      "integration": "Revisão fria de produto/UX, integridade de dados/acesso e IA/Relay; relatar riscos assim que encontrados",
+      "ci": "Primeiro conjunto completo em paralelo por pacotes e categorias independentes; concluiridealmenteatéT90",
+      "gate": "G2 resultados completos e findings discriminados"
+    },
+    {
+      "window": "T95-103",
+      "build": "Corrigir todos os achados obrigatórios por owner",
+      "integration": "Fixar candidato final; reabrir apenas provas realmente afetadas, preservando rastreabilidade",
+      "ci": "Disparar novo conjunto requerido no candidato corrigido; não rerodar um job antigo e chamá-lo prova do novo código",
+      "gate": "Nenhuma capacidade removida; nenhuma severidade reduzida por prazo"
+    },
+    {
+      "window": "T103-118",
+      "build": "Disponibilidade dos owners para correções finais; nenhum crescimento de escopo",
+      "integration": "Revisores conferem os deltas e a resolução dos achados",
+      "ci": "Concluir verificações requeridas e cobertura das capacidades no candidato final",
+      "gate": "G3 obrigatório aberto=0, todas as provas válidas"
+    },
+    {
+      "window": "T118-120",
+      "build": "Entrega de guias e roteiro já produzidos durante a construção",
+      "integration": "Recibo final e estado da campanha; release/deploy seguem processo fora deste escopo",
+      "ci": "Conferir URL, SHA, request, jobs esperados e resultado, sem declararPASSporfilaouausênciadelog",
+      "gate": "G4 DONE só com completude integral"
+    }
+  ],
+  "duration_conditions": {
+    "unmeasured": [
+      "Tempo de implementação de cada frente",
+      "Tempo de filas dos runners",
+      "Tempo de instalação e execução do CI completo",
+      "Latência do modelo e da admissão",
+      "Volume de conflitos ou findings"
+    ],
+    "ci_budget_assumption": "Para o cronograma acima, cada ciclo final de fila+setup+testes precisa caber aproximadamente em15min. É hipótese de planejamento, não medição nem SLA.",
+    "workflow_limit": "test-ci.yml admite timeout45min por job. Esse teto não prova execução em15min; um único job próximo de45min consome a reserva de correção.",
+    "feasibility_formula": "latest_final_dispatch = 120min - duração_observada_da_fila_e_CI_requerido - tempo_de_revisão_de_resultados. Recalcular emT10,T45,T75eT95. Se o instante já tiver passado, o prazo está ameaçado ou excedido, mesmo que o código pareça terminado.",
+    "no_deadline_magic": "Adicionar agentes não comprime portas sequenciais, admissão humana, fila do CI nem a revalidação do candidato. Escalar somente trabalho com fronteira independente e writer transferido formalmente."
+  },
+  "ci_protocol": {
+    "source_files_read": [
+      "AGENTS.md",
+      ".github/workflows/test-ci.yml",
+      "script/test-ci-request.ts"
+    ],
+    "verified": [
+      "test-ci é disparado por push emci-run-*",
+      "O pedido .ci-run.json é validado contra o package locator e arquivos existentes",
+      "Runners aceitos incluembun,node,pytest,playwright",
+      "Playwright exige pacote normalizadoapp, config permitida e specs nomeadas não vazias",
+      "Playwright executa workers1 e retries0 dentro de cada job",
+      "O workflow guarda evidência da request eGITHUB_SHA; os testes têm controleOmni",
+      "Cleanup apaga a branch temporária; resultados precisam ser recuperados pelo run e SHA"
+    ],
+    "mcp_path": [
+      "Congelar commit de produtoC",
+      "Criar snapshotS descendente deC contendo apenas a request deCI e qualquer metadado estritamente exigido pelo protocolo",
+      "Criar branchci-run-<os>-<identificador> apontada paraS porGitDataMCP; esse push inicia o workflow existente",
+      "Ler coleção/actions/runs e selecionar por head_shaS, nome/ref, evento push e horário; não usarwrapperlimitadoaPR",
+      "Conferir request, seleção real, todososjobsesperados, Run tests, controleOmni e artefatos",
+      "GuardarC,S,requesthash,runID,URL,attempt,jobIDs,resultado; não depender da branch que será apagada"
+    ],
+    "parallelism": "Pedidos diferentes sobre a mesma árvore de produto podem executar em snapshots separados, cada um com sua request. Usar isso para pacotes/categorias independentes eE2Edisjunto; não modificarvalidator, desligarguards ou adulterarseleçãoparacaber.",
+    "full_suite": "AGENTS pede suíte completa uma vez por epic, testes discriminantes por mudança e typecheck local do pacote. Localizar a receita real de suíte completa: não chamar um único pacote ou um conjunto arbitrário de specs de 'full suite'. Quando o candidato muda, executar as verificações requeridas para esse novo candidato; replay de um run antigo não valida código novo.",
+    "commands_policy": "Não executar bun test local. Package typecheck é bun typecheck no diretório do pacote, nunca tsc direto. Antes deDONE, bun run check:guards --base origin/dev. Não introduzir gh auth, GH_TOKEN ou bypass por ausência de dispatchmanual.",
+    "resolved_risk": "A ausência de ferramenta MCPdeworkflow_dispatchnão bloqueia este caminho: push ci-run usa o workflow nativo. A 404de test.yml foi um path errado; test-ci.yml foi localizado e lido."
+  },
+  "integration_rules": [
+    "Um único escritor de cada arquivo. Coordenador que implementa conta como escritor e tem orçamento de tempo.",
+    "Branches e checkouts isolados quando disponíveis; todas as frentes partem de basefixada e recebem o commit decontratos. Sem cherry-picks cruzados entre workers nem edição na árvore de outro autor.",
+    "Fila de integração única por CENTRAL. Consumir somente paths atribuídos e commits publicados; nunca copiar uma workingtree parcialmente editada.",
+    "Handoff inclui task, commit, paths, contrato/versão, consumidor, prova executada, ainda não provado e próxima ação. Handoff não precisa de longa narração.",
+    "Conflito semântico volta ao dono do contrato; conflito de arquivo volta ao owner. Integrador não vira segundo autor silencioso.",
+    "Portas aditivas e fixtures de contrato permitem construir em paralelo. A prova final usa produtores e consumidores reais e o mesmo domínio de autorização.",
+    "Provider estar pronto não significaWPtodoDONE. A integração pode consumir uma saída pronta sem aguardar a última task de documentação ou revisão do produtor.",
+    "Leituras crosssurface ocorrem fora da transação de escrita de outra surface. Nenhuma dependência nova presume commit atômico global.",
+    "Admissão Relay e fluxos de aprovação de negócio permanecem explícitos. Reprovar uma hipótese não pode ser resolvido simulando resposta deIA, aprovaçãooureciboderun.",
+    "Coordenação usa notificações por marco e impedimento concreto, com leitura consolidada a cada10min. Não interromper todos os autores para status individual frequente."
+  ],
+  "review_plan": {
+    "early": "Validar fronteiras, matemática, cenários e protocolos enquanto autores constroem; achados saem imediatamente com evidência discriminante.",
+    "cold_late": [
+      "Produto eUX: todosos28capabilities+novas jornadas, primeirautilização, rotina vsdecisão, aftermeeting, ausência de dados e acessibilidade",
+      "Integridade: cálculo, contribuição duplicada, moedas/versões, importação, concorrência, autorização, cache e históricorevogado",
+      "IA eRelay: resposta real, origem, contradição, conteúdo hostil, admission, versão fixada, perguntas fora do run, retomada e mudanças parciais"
+    ],
+    "independence": "Nenhum autor é o único juiz de sua própria fronteira. Se um slotcentral virarautor, outrocoordenadorassumeessaáreadeparecer. Os revisores recebem critérios e candidato, não uma conclusão pronta para confirmar.",
+    "fix_cycle": "Encontroudefeito→ownerfix→novo commit→integradorcompõe→provasafetadas→juizreavalia. Não esperar três pareceres completos para iniciar correções independentes.",
+    "severity": "Erro de número, acesso, perda de trabalho, caminho principal inviável ou capacidade aceita ausente são obrigatórios. Melhorias fora do critério não viram bloqueios novos. Nunca baixar severidade para satisfazer relógio."
+  },
+  "axiom_operating_model": {
+    "five_families_each_level": {
+      "dod": "Saída concreta e evidência que permitem encerrar aquela unidade",
+      "invariants": "Condições que precisam continuar verdadeiras durante suas mudanças",
+      "quality_standards": "Propriedade observável de qualidade relevante àquela unidade",
+      "completeness_criteria": "Casos, estados, consumidores e falhas que não podem faltar",
+      "success_criteria": "Resultado útil que a pessoa ou consumidor consegue produzir"
+    },
+    "minimum": "Cada campanha,WP e task tem ao menos uma frase específica de cada família. Critérios herdados continuam válidos, mas não substituem os cinco locais.",
+    "proof_economy": "Um mesmo percurso discrimina vários critérios. Manter aproximadamente12-18pacotesdeprova por jornada/categoria e mapear os critérios a eles; não criar um testeporaxioma nem rodar201checagens isoladas se as mesmas poucas jornadas provarem o conjunto.",
+    "evidence_reuse": "Reuso exige correspondência entre comportamento, entradas, identidade, versão e candidato. IDdechecksemexecuçãoéNOT_RUN. MockdemonstrativoéPROTOTYPE, jamaisPASSdeintegração.",
+    "task_granularity": "Cada task tem resultado independente e2-4ações de execução, não uma hierarquia infinita de substepsadministrativos. Se umstepédelegáveletemaceitepróprio, tratá-locomotaskcomos5axiomas.",
+    "ledger": "Um recibo curto por task e um manifesto de cobertura. Atualizar após marcos ou provas, não escrever centenas de linhas manualmente a cada minuto."
+  },
+  "milestone_reactions": [
+    {
+      "at": "T10",
+      "signal": "Conversa/worker não entrou ou interface crítica não está definida",
+      "action": "Tornar capacidade/contrato ausente explícito, redistribuir ownership só com handoff, recalcular prazo sem ocultar escopo"
+    },
+    {
+      "at": "T30",
+      "signal": "Nenhum producer WP14 ou composição depende de todos osWPs",
+      "action": "Ativar backup de recursoWP14 e corrigir dependência artificial; integrarproviderjápronto"
+    },
+    {
+      "at": "T55",
+      "signal": "IA ouRelay só funcionam emfixture ou chamada isolada",
+      "action": "Atribuir um owner de integração e primeiro erro concreto; esse caminho continua obrigatório, outras frentes continuam"
+    },
+    {
+      "at": "T75",
+      "signal": "Capacidade aceita ainda não implementada ou consumidor desconectado",
+      "action": "Campanha não estáfeaturecomplete. Concentrar slots livres na fronteira faltante, manter mapa de trabalho total e previsão de término"
+    },
+    {
+      "at": "T95",
+      "signal": "Fila/CI excede orçamento ou findings não cabem na reserva",
+      "action": "Recalcular latest_final_dispatch e expor risco de prazo. Aumentar paralelismo apenas no que é independente; não remover provas"
+    },
+    {
+      "at": "T120",
+      "signal": "Critério obrigatório aberto",
+      "action": "Declarar prazo não cumprido e campanha ainda aberta com evidência e pendências específicas. Não encerrar comoentregaintegralnemrenomearfatiaparaMVP; continuar correções autorizadas conforme a execução combinada"
+    }
+  ],
+  "sources": [
+    "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/AGENTS.md",
+    "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/.github/workflows/test-ci.yml",
+    "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/script/test-ci-request.ts"
+  ]
+}

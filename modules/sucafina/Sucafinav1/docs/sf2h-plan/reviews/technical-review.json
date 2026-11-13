@@ -1,0 +1,492 @@
+{
+  "schema": "sf-two-hour-technical-plan-review-v1",
+  "status": "PLANNING_REVIEW_NOT_IMPLEMENTATION_ACCEPTANCE",
+  "baseline": {
+    "repo": "gustavomhss/Orchestra-SF",
+    "sha": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "head_confirmation": "Parent confirmed dev still equals baseline"
+  },
+  "scope": "Entrega integral do produto aprovado, preservando 28 telas originais e incluindo IA real, BI, imports, exports, colaboração, reuniões, execução, memória, portfolio e rotinas. Nenhum mock, contrato sem binding ou fatia de renovação encerra a campanha.",
+  "principal_findings": [
+    {
+      "id": "TECH-P0-01",
+      "severity": "P0",
+      "title": "A porta nativa de IA/Relay não está injetada no módulo",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/local/entry.ts: createLocalInstallation(context:{origin},...) e createModule recebem persistence/authenticate/environment/assets; nenhum Session/Relay/BusinessPorts",
+        "modules/sucafina/Sucafinav1/runtime/host.ts: composeWithOrchestra apenas encadeia Request handlers"
+      ],
+      "impact": "Criar arquivos product/ai e product/routines não produz integração utilizável.",
+      "resolution": "Integrador cria binding de produto explícito no composition root do host, fornecendo BusinessPorts tipadas à factory e ao createModule. Qualificar modelo real e discovery de admissão em T+20; port indisponível é falha de requisito, não sucesso degradado."
+    },
+    {
+      "id": "TECH-P0-02",
+      "severity": "P0",
+      "title": "O launcher descrito não prova o caminho atual de host",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/README.md menciona serve --installation",
+        "apps/cli/src/commands/handlers/serve.ts tem ServeInput/bind sem installation/factory",
+        "apps/cli/src/host.ts contribui Maestro, Continuity, Claude e Dock"
+      ],
+      "impact": "Não presumir que a nova UI recebe serviços do host ou sequer que a entrada descrita pelo README é a utilizada pelo deploy paralelo.",
+      "resolution": "Inspecionar a entrada real entregue pela frente cloud. Dentro deste repo, o integrador assume explicitamente os arquivos de host abaixo para adicionar uma composição restrita de produto. Não concluir que o deploy está quebrado; esse não foi observado."
+    },
+    {
+      "id": "TECH-P0-03",
+      "severity": "P0",
+      "title": "Router e transação atuais não suportam agregação por simples renderizador",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/runtime/application.ts valida apenas 3 surfaces e abre transaction antes de autenticar/selecionar página",
+        "modules/sucafina/Sucafinav1/src/identity.ts Surface = dashboard|planner|procurement",
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts transaction usa fila de escritores e BEGIN IMMEDIATE"
+      ],
+      "impact": "Ler Planner/Procurement dentro da transaction de Dashboard pode bloquear; novas rotas sem handler explícito retornam404.",
+      "resolution": "Montar handler de produto no integrador antes do despacho convencional. Executar leituras autorizadas de cada surface separadamente fora de qualquer transaction externa. Cada seção conserva versão/observedAt; não anunciar snapshot global atômico."
+    },
+    {
+      "id": "TECH-P0-04",
+      "severity": "P0",
+      "title": "Memória confiável pode ser apagada/forjada por import legado",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/runtime/application.ts: snapshot.data = prepared.data",
+        "modules/sucafina/Sucafinav1/runtime/dashboard-import.ts preserva apenas installationKeys enumeradas"
+      ],
+      "impact": "Novo caso/confirmations/receipt no snapshot.data pode ser substituído ou introduzido por JSON sem confiança.",
+      "resolution": "Namespace server-owned protegido; import descarta metadados trazidos pelo arquivo, preserva os canônicos e invalida explicitamente referências a registros removidos/substituídos. Identidade de referência inclui incarnation, não apenas id."
+    },
+    {
+      "id": "TECH-P0-05",
+      "severity": "P0",
+      "title": "Endpoint de leitura de Relay não inicia workflow",
+      "evidence": [
+        "packages/server/src/handlers/relay-run.ts implementa list/get/audit/ledger",
+        "modules/maestro/coordination/src/v2/governance/workflow-admission.ts exige plan revision, authorization, arm e binding",
+        "modules/maestro/coordination/src/v2/workflow/relay.ts exige package-verification e cold-review como GLOBAL_ACCEPTANCE"
+      ],
+      "impact": "Um botão que chama relay.run.get ou executa LLM diretamente não é integração de workflow.",
+      "resolution": "Iniciar pelo fluxo nativo de Maestro, preservar publicação/revisão/review/aprovação/dispatch/arm. Qualificar compatibilidade dos checks com receita de negócio sem fingir passes nem remover checks."
+    },
+    {
+      "id": "TECH-P0-06",
+      "severity": "P0",
+      "title": "Prazo exige capacidade real e integração antecipada",
+      "evidence": [
+        "Quatro slots locais incluem o root; quantidade de tokens não cria mais slots.",
+        "Tests rodam GitHub Actions pelo contrato AGENTS.md; filas e duração não foram medidas aqui."
+      ],
+      "impact": "Dezesseis WPs disjuntos não significam dezesseis builders simultâneos. Integração ao final reproduz o gargalo do plano antigo.",
+      "resolution": "Mapear cada task a sessão/slot/janela reais, contar orquestradores na capacidade, iniciar integração em T+0, primeiro consumo nativo atéT+25 e rodadas de CI antesT+90. Se capacidade ou binding falhar, manter escopo e declarar risco de prazo; não reduzir silenciosamente a entrega."
+    }
+  ],
+  "native_binding": {
+    "proposed_contract": "C08 BusinessPorts",
+    "owner": "Integrador central; usar o ID final escolhido pelo root (WP00 na estrutura provisória, WP10 se renumerado). Somente um owner escreve todos os entrypoints compartilhados.",
+    "exact_existing_paths_for_explicit_additive_ownership": [
+      "apps/cli/src/host.ts",
+      "apps/cli/src/commands/handlers/serve.ts",
+      "modules/sucafina/Sucafinav1/local/entry.ts",
+      "modules/sucafina/Sucafinav1/runtime/host.ts",
+      "modules/sucafina/Sucafinav1/index.ts",
+      "modules/sucafina/Sucafinav1/runtime/application.ts"
+    ],
+    "new_paths": [
+      "modules/sucafina/Sucafinav1/product/integration/native-business-ports.ts",
+      "modules/sucafina/Sucafinav1/product/integration/product-handler.ts",
+      "modules/sucafina/Sucafinav1/product/integration/host-binding.ts"
+    ],
+    "contract_fields": [
+      "bindingIdentity: installationID, hostID, projectID, locationID e policyVersion validados pelo host; nenhum endpoint ou credencial escolhido por texto do modelo",
+      "actorAuthority: principal empresarial autenticado + capabilities verificadas por requisição; selecionar destinatário não concede acesso às fontes",
+      "analysis.create/read/cancel: job com caseID, caseVersion, contextFingerprint, recipeVersion, nativeSessionID e outputSchemaVersion",
+      "routines.catalog/prepareAdmission/readAdmission/readRun: documentID + publishedVersion + parâmetros + write scope + planRevisionID/authorizationID/armRef/childSessionID quando disponíveis",
+      "schedules.create/update/pause/list/readRun: binding de dono/projeto + política existente, sem tratar Schedule como aprovação automática de workflow",
+      "result.write: retorno autenticado, escopado ao job/caso/versão; sem comando genérico de alteração de negócio",
+      "directory.lookup: somente IDs autorizados do diretório existente; sem inferência de identidade por nome",
+      "unavailable e stale são resultados explícitos, jamais dados sintéticos de sucesso"
+    ],
+    "minimal_correct_path": [
+      "O integrador monta a contribuição de produto no host já autenticado, sem abrir listener, trocar store ou alterar deployment Azure.",
+      "Adaptador recebe as Services já compostas; não cria um runtime paralelo com credenciais globais nem passa tokens para Sucafina/browser.",
+      "IA de análise pode usar uma sessão dedicada e escopada via SessionV2.Service.create + generate (tool-less) ou prompt com ferramentas estritamente delimitadas; a saída é validada no schema do caso. Isso é análise, não execução de workflow.",
+      "Fluxos Relay usam a sessão Maestro nativa: catálogo publicado, preparação da revisão, review e aprovação, arm/dispatch e leitura do resultado. LLM.generateObject é reutilizável para conteúdo tipado, mas não substitui admissão de workflow.",
+      "Se for usada SessionV2.generate, não reutilizar histórico de outro usuário/caso; cada sessão tem proveniência e escopo verificados. O retorno textual é schema-decoded antes de aceitar operações.",
+      "Routines C08 registra referencia ao workflow interno (arm/binding/session); não inventa external runID nem usa ledger de outra espécie.",
+      "A factory recebe BusinessPorts como dependência explícita; Application/ModuleServices preservam capacidade ausente como erro de feature. Browser nunca recebe credenciais do host.",
+      "Um único adaptador product-handler coordena leitura multi-surface, serviço de casos e propostas de comandos. Comandos finais voltam aos execute/handlers próprios, com actor e CAS revalidados.",
+      "A frente cloud e o integrador têm handoff de patch sobre SHA combinado para host/factory compartilhados: um escreve, o outro consome. Não sobrescrever a frente cloud com um arquivo inteiro baseado em outra revisão."
+    ],
+    "existing_native_apis": [
+      {
+        "path": "packages/core/src/session.ts",
+        "api": "SessionV2.Service: create, prompt, events, history, generate; generate é completion sem tools após histórico, sem gravação da resposta",
+        "use": "Execução de IA com modelo e ciclo do host; o caso registra provenance/resultado."
+      },
+      {
+        "path": "packages/llm/src/llm.ts",
+        "api": "LLM.generateObject/schema decode; LLMClient.generate/stream",
+        "use": "Construção tipada quando fornecida uma rota já autorizada pelo host; não resolver credenciais no módulo."
+      },
+      {
+        "path": "packages/core/src/session/runner/model.ts",
+        "api": "SessionRunnerModel.resolve/fromCatalogModel",
+        "use": "Evidência de resolução nativa; preferir entry público de Session para não duplicar política."
+      },
+      {
+        "path": "modules/maestro/coordination/src/v2/tools/workflows.ts",
+        "api": "maestro_workflows, somente catálogo",
+        "use": "Descobrir documento publicado e disponibilidade; não é start API."
+      },
+      {
+        "path": "modules/maestro/coordination/src/v2/governance/workflow-admission.ts",
+        "api": "before, admit, turn",
+        "use": "Manter binding de aprovação/versão/escopo; não chamar internals para fabricar aprovação."
+      },
+      {
+        "path": "modules/maestro/coordination/src/v2/workflow/host.ts",
+        "api": "MaestroWorkflowHostV2.Service",
+        "use": "Host que adota binding, valida turns e resolve settlement."
+      },
+      {
+        "path": "packages/core/src/scheduled-task.ts",
+        "api": "ScheduledTask.Service create/update/remove/run; capability schedules têm scope de owner separado",
+        "use": "Recorrência com estado e recibos nativos."
+      },
+      {
+        "path": "packages/server/src/handlers/relay-run.ts",
+        "api": "relay.run.list/get/audit/ledger",
+        "use": "Somente leitura de runs externos; não usar para fingir start de workflow interno."
+      }
+    ],
+    "t20_gate": {
+      "checks": [
+        "Uma entrada real no produto chega ao job de análise e produz resposta de modelo real num caso sintético novo; registrar session/model provenance e a versão de entrada.",
+        "O usuário sem acesso a uma fonte não a envia ao modelo; permissão vem do runtime.",
+        "Catálogo e preparação de admissão chegam ao Maestro/projeto correto e identificam versão publicada e requisitos faltantes sem bypass.",
+        "A indisponibilidade de provider, host, projeto, publicação ou permissão aparece como falha específica e é atribuída a owner.",
+        "Um resultado preparado/mocado não fecha nenhuma destas verificações."
+      ],
+      "failure_policy": "Ativar correção dedicada no owner de host e replanejar capacidade mantendo requisitos; não declarar IA/Relay prontos nem substituir por mock. Prazo permanece em risco até a evidência real."
+    }
+  },
+  "contracts_t10": [
+    {
+      "id": "C01",
+      "name": "Referência e evidência",
+      "minimum": "surface, collection, id, incarnation, recordVersion, relevantFields, period, fingerprint, observedAt, evidenceState; permissões revalidadas a cada leitura e export."
+    },
+    {
+      "id": "C02",
+      "name": "Caso e estados",
+      "minimum": "objective/horizon/currency/criteria, alternatives, premises, sources, questions, chosenRevision, preparedChanges, receipts, reconsiderConditions; version/CAS e histórico imutável de escolhas."
+    },
+    {
+      "id": "C03",
+      "name": "Projeções de domínio",
+      "minimum": "authorized sections com sourceVersions; money amount+currency+period+basis+fxSnapshot; missing/zero separados; nada de snapshot global fictício."
+    },
+    {
+      "id": "C04",
+      "name": "Operações de cenário",
+      "minimum": "Typed operation, source economicContributionID, baselineVersion, period, newValue; cálculos pelos motores canônicos; substituição ligada não duplica PO/linha de orçamento."
+    },
+    {
+      "id": "C05",
+      "name": "Resultados da IA",
+      "minimum": "caseVersion/inputFingerprint/recipeVersion/nativeSessionID, findings com sourceRefs, alternative operations, criticalQuestions, limitations; nenhuma mutação genérica; stale/failed/cancelled explícitos."
+    },
+    {
+      "id": "C06",
+      "name": "Colaboração e memória",
+      "minimum": "ask/answer actor IDs explícitos, campo/período relevante, confirmação como premissa diferente de atualização do domínio, revisão por mudança material e dedup de alertas."
+    },
+    {
+      "id": "C07",
+      "name": "Proposta e execução",
+      "minimum": "caseRevision, destination record, baseVersion, idempotencyKey, authorized command, preconditions, independent receipt; estados prepared/applied/approval-pending/stale/failed. Retry não repete comando aplicado."
+    },
+    {
+      "id": "C08",
+      "name": "BusinessPorts nativas",
+      "minimum": "Identidade host/projeto/sessão/ator; analysis/routine/schedule/result ports no campo native_binding. Injeção pelo composition root obrigatório."
+    },
+    {
+      "id": "C09",
+      "name": "Visualização",
+      "minimum": "Dados de gráfico vindos das projeções calculadas, unidades/ticks/tooltip/teclado/estado vazio; UI não recalcula financeiro em paralelo."
+    },
+    {
+      "id": "C10",
+      "name": "Import e documentos",
+      "minimum": "Schema/format manifest, preview, patch result; metadados confiáveis não são importáveis. Extraction tem trecho/página ou célula/digest, extracted vs confirmed e erro de formato explícito."
+    },
+    {
+      "id": "C11",
+      "name": "Reunião e export",
+      "minimum": "Base financeira congelada + decisões/ações do encerramento ligadas à base; formatter consome projeção autorizada. Export segue as mesmas permissões e versões."
+    },
+    {
+      "id": "C12",
+      "name": "Eventos e outcomes",
+      "minimum": "Material change keyed case/condition/sourceVersion; granularidade campo/período; expected vs observed sem causalidade inventada; memória reutiliza somente casos ainda autorizados."
+    }
+  ],
+  "ownership_recommendation": {
+    "root_plan_mapping": "Aceitar 16 WPs provisórios do root, com os ajustes abaixo; este relatório não renumera o plano.",
+    "new_prefixes_by_wp": {
+      "WP00": [
+        "product/contracts/",
+        "product/integration/"
+      ],
+      "WP01": [
+        "product/decisions/"
+      ],
+      "WP02": [
+        "product/context/"
+      ],
+      "WP03": [
+        "product/scenarios/"
+      ],
+      "WP04": [
+        "product/ai/"
+      ],
+      "WP05": [
+        "product/routines/"
+      ],
+      "WP06": [
+        "product/collaboration/",
+        "product/meetings/"
+      ],
+      "WP07": [
+        "product/ui/"
+      ],
+      "WP08": [
+        "product/dashboard/"
+      ],
+      "WP09": [
+        "product/planner/"
+      ],
+      "WP10": [
+        "product/procurement/"
+      ],
+      "WP11": [
+        "product/analytics/"
+      ],
+      "WP12": [
+        "product/imports/",
+        "product/documents/"
+      ],
+      "WP13": [
+        "product/exports/"
+      ],
+      "WP14": [
+        "product/memory/"
+      ],
+      "WP15": [
+        "test/product/acceptance/",
+        "docs/product-evidence/"
+      ]
+    },
+    "prefix_base": "modules/sucafina/Sucafinav1/",
+    "rules": [
+      "Contracts e fixtures compartilhadas: somente integrador/WP00; builders consomem e não alteram oráculos.",
+      "runtime/application.ts, index.ts, src/surfaces.ts, runtime/contract.ts, package manifests e host entrypoints: somente integrador.",
+      "src/nav.ts, src/screen-shell.ts, runtime/ui.ts: somente WP07; não colocar reducer financeiro/casos no shell.",
+      "runtime/dashboard-{budget,operations,people,portfolio}.ts e src/dashboard-{accounts,role,screen}.ts: somente WP08.",
+      "runtime/planner.ts e src/planner-{accounts,role,screen}.ts: somente WP09. WP03 consome o engine puro extraído, não escreve planner.ts.",
+      "runtime/procurement.ts, src/form.ts, src/initial-settings.ts, src/procurement-screen.ts, src/procurement.ts, src/requests.ts, src/supplier.ts e modules/sucafina/porta/act.ts: somente WP10 procurement se mantido esse ID.",
+      "runtime/dashboard-import.ts e runtime/workbooks.ts: somente WP12. A aplicação preserva protected namespace via contrato, patchdeplumbing é do integrador.",
+      "runtime/reports.ts: somente WP13; reunião WP06 entrega ReviewPackage e não edita reports.ts.",
+      "Cada builder possui test/product/wpXX/ disjunto; WP15 não muda testes de domínio para fechar gate.",
+      "Mesmo diretório compartilhado pode ter files exclusivos enumerados; prefixo pai não deve pertencer a um owner se subdiretório pertence a outro.",
+      "Caso root decida chamar integrador WP10, renumerar procurement de forma atômica no manifesto; nunca dois WPs com o mesmo ID/ownership."
+    ]
+  },
+  "false_parallelism_and_resolution": [
+    {
+      "problem": "WP03 cenário depende da extração do cálculo puro em WP09",
+      "resolution": "WP09 entrega financial projection/preview signature+fixtureT+10 e primeiro produtor realT+25; WP03 constrói enumoperações/sensibilidade antes, integra cedo. Não esperar todas7telasPlanner."
+    },
+    {
+      "problem": "WP04 IA e WP05 Relay dependem de binding do host",
+      "resolution": "Integrador abre C08 noT+0; WPs podem desenvolver schemas/receitas em paralelo, mas native qualification é dependência explícita para aceitação e feature available."
+    },
+    {
+      "problem": "WP02 contexto depende de autorização dos3domínios",
+      "resolution": "Dominion adapters exportam projeções mínimasT+25. Coleçãofora detx usaautorizaçãoatual porseção; não copiar snapshotscrus paraeconomizarintegração."
+    },
+    {
+      "problem": "WP06 perguntas e WP14 watch precisam escrever no mesmo caso",
+      "resolution": "Somente reducer/repositoryWP01 possui persistência; ambos emitem comandos/events tipados e recebem receipt, não escritadireta emsnapshot."
+    },
+    {
+      "problem": "BI8 e trêsnovos visuais podem duplicar cálculo",
+      "resolution": "C09consomeformasprojeçãoC03/C04 e labels; canonic calculation remainsdomain engine. ChartWPtakesfirstrealprojectionsT+40."
+    },
+    {
+      "problem": "WPs13/14 em segundo turno podem perder janela de dependências",
+      "resolution": "WP13 exportformatter podecomeçar doReviewPackagefrozenC11; WP14 reducer/materiality doC12. Ambos precisam de firstfileearlier, não começardiscoveryemT+75."
+    },
+    {
+      "problem": "Fullsuite at end can finish after120",
+      "resolution": "Dispatch required suite on integrated candidate byT+85/90 with unchanged scope; scope tests already earlier; finalchanges rerunaffectedgates and bind exactSHA. Não reutilizarverdict deheadanterior."
+    }
+  ],
+  "mandatory_integration_cases": [
+    "Renovação240 vs60+45+105=210; benefício30; mínimo20; custoimplantação70=>235/benefício5; escolhaoriginalpreservada.",
+    "Contradição entre término pressuposto março e marco projeto maio; IA identifica refs, humanaresolvepremissa; update domínio permanece separado.",
+    "Portfolio com mais de uma mudança concorrente e restrição explícita, recusando combinação que viola compromisso; não rotularheurística comoótimoglobal.",
+    "Contratação com custo anual/prorrata/FX autorizado; FTE nunca equivale acapacidadelivre; papel semHR não obtémdados pordelta.",
+    "ImportJSON tenta forjar confirmação; caso e receiptscanônicos preservados, registrosreimportados comidreutilizado recebem incarnationnova/refstale.",
+    "Comandoparcial Planneraplicado Procurementstale; retry sópendente, nenhuma duplicação econômica.",
+    "Cancelamento/timeout/saídamalformadaAI e mudança dedados durantejob; UIrecuperável e resultadoantigo não sobrescreve atual.",
+    "Revogação de acesso remove dados de históricoAI/cache/export/comparações sem vazamento inferido.",
+    "Reunião fecha após discussão: números debatidos preservados e açõesnovasvinculadas.",
+    "Primeirouso sematribuições: usuário escolheregistros/responsáveis autorizados; vazio nãofingeconclusão.",
+    "Quatro rotinas são recebidas pelo host nativo e seus resultados voltam à tela; Schedule mantém scope/timezone/missed/failed próprios.",
+    "Todas28telasoriginais continuam acessíveis porseuspapéis, importsXLSX/XLS/JSON e exportsPPTX/DOCX exercitamcomposição real."
+  ],
+  "validation_discipline": [
+    "AGENTS: testes somenteGitHubActions; pacote typechecklocal e scopedCIporunidade; fullsuite1xepic, semtesteslocais bun test.",
+    "Headrefreshedbaselinefixed para todosbranches; uniqueowner; cadahandoffcontémSHA,parent,files,contractsconsumed/checkreceipts.",
+    "Contrato pronto não equivale implementação pronta; componentready não equivale endtoendaccepted; badgeavailable sócomportareal.",
+    "Review independente valida evidências noSHAcandidato; passdeplanejamento nãoépassdeproduto.",
+    "Nenhumcheck é apagado, skipadoporprazo ou convertidoemdocumentaçãoparasimularcompletude."
+  ],
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/AGENTS.md",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/README.md",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/README.md",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/index.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/index.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/runtime/application.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/dashboard-import.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/runtime/dashboard-import.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/identity.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/src/identity.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/local/entry.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "packages/llm/README.md",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/llm/README.md",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "packages/llm/src/llm.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/llm/src/llm.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "packages/core/src/session.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/core/src/session.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "packages/core/src/session/runner/model.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/core/src/session/runner/model.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "packages/core/src/catalog.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/core/src/catalog.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "packages/core/src/relay.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/core/src/relay.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "packages/core/src/scheduled-task.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/core/src/scheduled-task.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "packages/server/src/handlers/relay-run.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/server/src/handlers/relay-run.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "packages/server/src/handlers/relay-document.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/server/src/handlers/relay-document.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "packages/server/src/handlers/schedule.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/server/src/handlers/schedule.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "packages/server/src/handlers/session.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/server/src/handlers/session.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "modules/maestro/coordination/src/v2/tools/workflows.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/maestro/coordination/src/v2/tools/workflows.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "modules/maestro/coordination/src/v2/governance/workflow-admission.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/maestro/coordination/src/v2/governance/workflow-admission.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "modules/maestro/coordination/src/v2/workflow/host.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/maestro/coordination/src/v2/workflow/host.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "modules/maestro/coordination/src/v2/workflow/relay.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/maestro/coordination/src/v2/workflow/relay.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "apps/cli/src/host.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/apps/cli/src/host.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "apps/cli/src/commands/handlers/serve.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/apps/cli/src/commands/handlers/serve.ts",
+      "read_status": "READ_AT_BASELINE"
+    },
+    {
+      "path": "docs/guides/relay.md",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/docs/guides/relay.md",
+      "read_status": "READ_AT_BASELINE"
+    }
+  ]
+}

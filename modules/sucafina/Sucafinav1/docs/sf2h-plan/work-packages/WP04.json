@@ -1,0 +1,890 @@
+{
+  "id": "WP04",
+  "title": "Procurement orientado à decisão",
+  "objective": "Permitir que requester, buyer, aprovador e supplier admin saibam o que fazer, preencham a informação uma vez e decidam com comparação, valores e restrições compreensíveis, preservando todo o processo existente.",
+  "scope_in": [
+    "Ownership exclusivo: modules/sucafina/Sucafinav1/runtime/procurement.ts; src/procurement.ts; src/procurement-screen.ts; src/form.ts; src/initial-settings.ts; src/requests.ts; src/supplier.ts; modules/sucafina/porta/act.ts; novos modules/sucafina/Sucafinav1/product/procurement/**, incluindo verificações locais.",
+    "Cinco páginas e todos os fluxos originais: Dashboard, Requests, My approvals, Suppliers e Settings; criação, rascunho, submissões, seleção, aprovações, rejeições, cancelamento, exclusão permitida, emissão interna, cadastros, consultas, exportações e políticas configuráveis.",
+    "Filas por próxima ação, apresentação por etapa/papel, pré-preenchimento com origem, comparação das propostas, resumo por tipo de aprovação, apresentação de conflitos e valores monetários com proveniência.",
+    "Projeções C02 e comandos C03 reais do domínio Procurement, além de saída de preparação somente leitura para consumidores de C07; construção paralela contra os contratos congelados em WP00.T04."
+  ],
+  "scope_out": [
+    "Não escrever shell, application, navegação comum, workbooks, domínios Dashboard/Planner, product/analytics/**, repositório de relações/comentários ou implementação de Relay/Schedule; a composição nos entrypoints comuns pertence a WP10.",
+    "Não adicionar alçadas, papéis, política de compras, autoaprovação, exceção de admin, fase de recebimento/pagamento ou confirmação externa de emissão.",
+    "Não inferir vínculo com orçamento/projeto/contrato a partir de centro de custo, expenseType, assetRef ou contractRef; referências textuais continuam textuais salvo relação explícita recebida por contrato.",
+    "Nenhum Azure, deploy, identidade, novo acesso SAP/Fabric, mensagem externa ou entrevista como condição de entrega."
+  ],
+  "contract_reads": [
+    "C01",
+    "C02",
+    "C03",
+    "C06",
+    "C07",
+    "C08"
+  ],
+  "contract_provides": [
+    "C02",
+    "C03",
+    "C08"
+  ],
+  "axioms": {
+    "dod": [
+      {
+        "id": "WP04.DOD.01",
+        "text": "As cinco páginas e o inventário de comandos/estados originais têm cobertura explícita, com views exportadas, C02/C03 reais e evidências locais reproduzíveis.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP04.DOD.02",
+        "text": "Fila, pedido guiado, comparação, resumos por etapa e fornecedores estão demonstrados com os mesmos registros e versões, sem um store paralelo de demonstração.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP04.DOD.03",
+        "text": "O handoff lista consumidores, casos adversos, artefatos de evidência e verificações de composição reservadas a WP10; não declara entrega integrada com base apenas em fixtures.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "invariants": [
+      {
+        "id": "WP04.INV.01",
+        "text": "Alçadas, papéis, autorização por holder, opção de bloquear autoaprovação, política de fornecedores e transições legais permanecem os do domínio; decidir continua sendo ato explícito da pessoa autorizada.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP04.INV.02",
+        "text": "Histórico, identificadores já emitidos, versões esperadas e snapshots de aprovação/câmbio são preservados; po_issued continua significando emissão interna.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP04.INV.03",
+        "text": "Recortes autorizados e restrições bancárias valem para tela, exportação, resumo e C02; referência textual ou ausência nunca vira relação, autorização ou valor zero.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "quality_standards": [
+      {
+        "id": "WP04.QLT.01",
+        "text": "Cada etapa informa próxima ação, responsável conhecido e motivo concreto da restrição, sem expor uma parede de comandos que só falham depois do clique.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP04.QLT.02",
+        "text": "Valores, ranking e resumos mostram origem, moeda, versão e limitações; notas humanas não são apresentadas como medida objetiva de qualidade do fornecedor.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP04.QLT.03",
+        "text": "Formulários e ações críticas são operáveis por teclado, mantêm foco após erro/conflito e apresentam a correção junto ao campo correspondente.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "completeness_criteria": [
+      {
+        "id": "WP04.CMP.01",
+        "text": "A matriz de cobertura inclui requester, buyer, approver, supplier admin, admin, viewer e combinações já permitidas; estados normais, rejeitados, cancelados e emitidos não ficam fora.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP04.CMP.02",
+        "text": "A cobertura monetária inclui moeda base, moeda estrangeira, FX ausente, mudança de taxa após submissão, proposta incompleta e divergência entre total informado e quantidade vezes preço.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP04.CMP.03",
+        "text": "Cadastro/ativação/bloqueio/inativação/banco de fornecedor, configurações/reset, histórico, registros/exportações e referências existentes permanecem acessíveis.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "success_criteria": [
+      {
+        "id": "WP04.SUC.01",
+        "text": "No roteiro sintético, o aprovador identifica em até 30 segundos a etapa que decide, o valor, a diferença relevante, a razão da escolha e o próximo passo, sem abrir Settings.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP04.SUC.02",
+        "text": "No roteiro PR até PO, o buyer não redigita fornecedor, moeda e quantidade já selecionados quando esses valores podem ser reutilizados; sugestões identificam a origem e preservam ajustes negociados.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP04.SUC.03",
+        "text": "Os casos adversos distinguem aprovado de emitido, desconhecido de zero e versão atual de versão desatualizada; nenhuma dessas diferenças é ocultada por um resultado visual aparentemente correto.",
+        "status": "NOT_RUN"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "WP04.T01",
+      "title": "Filas e projeções de Procurement com próxima ação verificável",
+      "intent": "Entregar a leitura autorizada do pedido que sustenta Requests, My approvals, BI e rotinas, com estado, responsável e idade semanticamente corretos.",
+      "work": [
+        "Mapear páginas, estados e comandos do baseline para uma projeção C02 única do pedido; obter capacidades pelo C01 e comandos existentes, sem duplicar a máquina de estados em uma view.",
+        "Apresentar filas por próxima ação, com busca/filtros de requester, buyer, etapa e responsável quando os campos existem; separar esperando por você, por outros e sem holder atribuído.",
+        "Produzir entrada comprovada na etapa a partir do evento correto de submissão/transição, considerando rejeição e ressubmissão; não usar createdAt, último save ou importação como substituto silencioso.",
+        "Expor referências C01 de drilldown e motivos de pendência consumíveis por WP05/WP08/WP09; callbacks ficam exportados, e a navegação comum será composta por WP10.",
+        "Manter a organização das filas baseada em datas e critérios visíveis, sem inventar SLA, prioridade numérica ou inferir responsáveis ausentes."
+      ],
+      "inputs": [
+        "WP00.T04: C01, C02, C03 e C08 congelados, inventário do baseline e fixtures provenientes dos motores reais.",
+        "Baseline 9e4f3d35833f9b2cea6abdf58f42331f3973d9bf: src/requests.ts, runtime/procurement.ts, src/procurement-screen.ts e porta/act.ts.",
+        "Registros representativos com história íntegra, histórico importado incompleto, rejeição/ressubmissão e holder ausente."
+      ],
+      "outputs": [
+        "Projeção C02 real de filas/pedidos, com evidência de entrada na etapa ou ausência explícita.",
+        "Views locais de Requests/My approvals e referências de drilldown exportadas em product/procurement/**.",
+        "Mapa de cobertura de estados/papéis e casos discriminantes para consumidores."
+      ],
+      "depends_on": [
+        "WP00.T02"
+      ],
+      "checks": [
+        {
+          "id": "WP04.T01.CHK.01",
+          "text": "Comparar a leitura do mesmo conjunto por requester puro e buyer: o requester recebe apenas seus pedidos também em totais, pendências e referências; inserir um pedido alheio deve alterar o buyer e não o requester.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP04.T01.CHK.02",
+          "text": "Dado pedido submetido, rejeitado, ressubmetido e salvo depois, a idade usa a última entrada na etapa pendente; alterar apenas o horário do save não altera essa idade.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP04.T01.CHK.03",
+          "text": "Retirar o evento que comprova a entrada na etapa: C02 marca idade indisponível e a fila mantém o pedido; não usa criação como fallback nem calcula uma duração fictícia.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP04.T01.CHK.04",
+          "text": "Um pedido com holder diferente do ator não oferece aprovação como próxima ação; holder ausente aparece explicitamente sem responsável, sem criar autorização nova.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP04.T01.DOD.01",
+            "text": "As filas exportadas consomem a projeção C02 de Procurement e cobrem cada estado atual do baseline.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T01.DOD.02",
+            "text": "O mapa estado/papel/próxima ação e a proveniência da idade estão anexados ao handoff local.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP04.T01.INV.01",
+            "text": "Filas, totais e deep links compartilham o mesmo recorte autorizado de requests.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T01.INV.02",
+            "text": "Salvar um campo não reinicia a idade da etapa; histórico insuficiente não produz data presumida.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP04.T01.QLT.01",
+            "text": "Cada linha explica estado, próxima ação e responsável conhecido sem depender de códigos internos.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T01.QLT.02",
+            "text": "Ordenação e filtros são visíveis, reversíveis e operáveis por teclado.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP04.T01.CMP.01",
+            "text": "Incluir rejeitados, cancelados, emitidos, sem holder e históricos incompletos, além do caminho feliz.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T01.CMP.02",
+            "text": "Entregar referência estável de drilldown e contexto de versão para cada pedido visível.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP04.T01.SUC.01",
+            "text": "Requester e buyer localizam seus pedidos e distinguem falta de informação de espera por outra pessoa sem executar uma ação inválida.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T01.SUC.02",
+            "text": "Aging e contagens fornecidos a WP05 reproduzem a seleção autorizada e não divergem da fila.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP04",
+      "ownership_ref": "WP04",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "R15"
+      ],
+      "journeys": [
+        "J04"
+      ],
+      "session": "S2",
+      "build_window": [
+        10,
+        20
+      ],
+      "proof_window": [
+        25,
+        75
+      ],
+      "evidence_packages": [
+        "E05"
+      ],
+      "integrates_with": [
+        "WP01.T02"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP04.T02",
+      "title": "Pedido guiado e preenchimento reaproveitado com origem",
+      "intent": "Permitir editar somente o que cabe à etapa atual, retomando o trabalho sem reentrada desnecessária nem perda de alterações.",
+      "work": [
+        "Organizar PR, sourcing e PO em detalhe progressivo com resumo persistente do pedido, pendências locais e controles coerentes com etapa/papel; conservar os quatro detalhes Requisition, Sourcing, Purchase order e History.",
+        "Reaproveitar dados existentes entre requisição, proposta selecionada, fornecedor e PO, distinguindo valores negociados de sugestões do cadastro e defaults; mostrar origem e preservar sobrescritas permitidas.",
+        "Aplicar validações existentes junto aos campos, incluindo recorrência, estratégia de contrato, condições de entrega e linhas; campos condicionais ficam acessíveis quando aplicáveis e não são descartados ao ocultar.",
+        "Apresentar save, cancelamento, exclusão permitida e retomada usando C03; em conflito preservar entrada local, mostrar a versão recebida e exigir revisão antes de reaplicar.",
+        "Exportar as views e comandos para o compositor sem alterar shell, application ou workbooks."
+      ],
+      "inputs": [
+        "WP04.T01: filas, capacidades e projeção contextual do pedido.",
+        "C01/C03/C08 congelados e inventário dos campos PR/sourcing/PO do baseline.",
+        "src/form.ts, runtime/procurement.ts e comportamento existente de proposta de PO/endereço padrão."
+      ],
+      "outputs": [
+        "Detalhe guiado de PR, sourcing e PO com origem do preenchimento e pendências locais.",
+        "Apresentação de conflito que conserva os valores digitados e referencia o registro atual.",
+        "Cobertura de preservação de campos, cancelamento, exclusão e retomada por etapa."
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP04.T01"
+      ],
+      "checks": [
+        {
+          "id": "WP04.T02.CHK.01",
+          "text": "Percorrer PR aprovada até a proposta de PO: fornecedor, moeda e quantidade selecionados reaparecem sem redigitação; uma condição negociada já presente na PO não é substituída por default do fornecedor.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP04.T02.CHK.02",
+          "text": "Alternar compra recorrente e não recorrente e estratégia existing/new: campos e validações aplicáveis acompanham o estado sem apagar valores previamente salvos nem aceitar submissão que o validador existente recusa.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP04.T02.CHK.03",
+          "text": "Dois atores abrem a mesma versão; o segundo tenta salvar após a alteração do primeiro: o comando retorna conflito, os valores do segundo continuam visíveis e o primeiro registro não é sobrescrito silenciosamente.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP04.T02.CHK.04",
+          "text": "Tentar excluir pedido fora de draft ou cancelar po_issued continua recusado; ocultar o botão não substitui a recusa do comando real.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP04.T02.DOD.01",
+            "text": "PR, sourcing e PO têm apresentação progressiva e roundtrip completo dos campos originais.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T02.DOD.02",
+            "text": "Os estados de erro e conflito conservam entradas locais e permitem retomar a tarefa.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP04.T02.INV.01",
+            "text": "Pré-preenchimento é sugestão identificada ou cópia de dado existente; não inventa condição comercial nem substitui ajuste negociado.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T02.INV.02",
+            "text": "Ocultar uma seção ou comando não altera a autorização, a transição legal ou os dados persistidos.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP04.T02.QLT.01",
+            "text": "A pendência aponta o campo e a correção necessária, sem um erro genérico no fim do formulário.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T02.QLT.02",
+            "text": "Ações de salvar, revisar conflito e continuar mantêm foco e contexto do pedido.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP04.T02.CMP.01",
+            "text": "Cobrir os campos obrigatórios/condicionais de PR, sourcing e PO, defaults, linhas repetidas e histórico.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T02.CMP.02",
+            "text": "Cobrir retomada, rejeição, cancelamento e exclusão somente nas condições existentes.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP04.T02.SUC.01",
+            "text": "O roteiro de compra reutiliza os dados já confirmados e deixa visível a origem de cada sugestão.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T02.SUC.02",
+            "text": "Uma edição concorrente não destrói entrada local nem produz confirmação de salvamento inexistente.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP04",
+      "ownership_ref": "WP04",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "R16",
+        "IA13"
+      ],
+      "journeys": [
+        "J04"
+      ],
+      "session": "S2",
+      "build_window": [
+        20,
+        34
+      ],
+      "proof_window": [
+        25,
+        75
+      ],
+      "evidence_packages": [
+        "E05"
+      ],
+      "integrates_with": [
+        "WP01.T02"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP04.T03",
+      "title": "Comparação honesta e valores financeiros consistentes",
+      "intent": "Permitir compreender por que uma proposta lidera, quanto custa a diferença e quais números são comparáveis, sem criar política nova.",
+      "work": [
+        "Expor o ranking e seus componentes a partir de quoteRanking/validações existentes: preço normalizado, notas humanas, pesos, elegibilidade e justificativas; não criar outro algoritmo de avaliação.",
+        "Tratar uma única proposta, notas incompletas e dados desconhecidos como limitações explícitas; uma pontuação provisória não deve parecer recomendação definitiva.",
+        "Produzir valores C02 com moeda original, base, fonte da taxa e snapshot pertinente à etapa; corrigir a apresentação monetária da PO conforme a definição C02 congelada, sem buscar câmbio externo ou reinterpretar alçadas.",
+        "Separar aprovados, emitidos internamente e estimativas nas métricas; não oferecer realizado ou saldo orçamentário sem projeção real correspondente.",
+        "Mostrar discrepância entre total da proposta e quantidade vezes preço antes de reaproveitar a PO, sem inventar desconto, imposto ou frete para fechar os números; manter as decisões na revisão humana dos campos existentes."
+      ],
+      "inputs": [
+        "WP04.T02: detalhe guiado e dados de propostas/PO preservados.",
+        "C02: definição congelada de valores de apresentação, moeda, snapshots, estados e ausência.",
+        "src/form.ts, src/procurement-screen.ts, src/initial-settings.ts e porta/act.ts no baseline.",
+        "Fixture sintética com as configurações existentes: pesos técnico/comercial 60/40, critérios técnicos 35/20/15/15/15 e comerciais 70 automático/15/15."
+      ],
+      "outputs": [
+        "Comparação de propostas com decomposição explicável do ranking e limitações visíveis.",
+        "Projeção monetária C02 reconciliada com o domínio, com estados e taxas identificados.",
+        "Casos de referência para WP05/WP07/WP09, inclusive comparação incompleta e FX ausente."
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP04.T02"
+      ],
+      "checks": [
+        {
+          "id": "WP04.T03.CHK.01",
+          "text": "Fixture: A USD 32.400, notas técnicas [5,4,4,4,4], comerciais manuais [4,4]; B EUR 28.000 a 1,08, notas [4,4,4,3,4] e [5,4]; C USD 29.000 não conforme. Esperar A 87,9333..., B 85, C fora do ranking, diferença A versus menor conforme USD 2.160/7,142857...%; a UI deve mostrar o arredondamento sem alterar a ordem.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP04.T03.CHK.02",
+          "text": "Deixar uma nota obrigatória vazia ou manter somente uma proposta: a UI declara incompletude/comparação limitada e a submissão segue exatamente o validador vigente; não inventa nota zero nem nova exceção.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP04.T03.CHK.03",
+          "text": "Mudar a taxa configurada depois da submissão: a decisão pendente preserva o valor/câmbio congelado; remover FX de uma comparação sem snapshot produz indisponibilidade/pendência, nunca total zero.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP04.T03.CHK.04",
+          "text": "Misturar PO em moeda base e estrangeira, uma po_approved e outra po_issued: totais por estado usam valores C02 comparáveis e apresentam itens não conversíveis; aprovado não vira emitido ou realizado.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP04.T03.CHK.05",
+          "text": "Introduzir total informado diferente de qty vezes unitPrice: ambas as bases e a discrepância aparecem; nenhum cálculo silencioso altera preço, política de aprovação ou documento.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP04.T03.DOD.01",
+            "text": "A comparação visual utiliza o motor existente e entrega componentes reconciliáveis no C02.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T03.DOD.02",
+            "text": "Moeda, taxa/snapshot e estado monetário ficam definidos para cada valor exibido.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP04.T03.INV.01",
+            "text": "Pesos, mínimo de propostas, critérios, elegibilidade e justificativas continuam os da configuração existente.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T03.INV.02",
+            "text": "Ausência de taxa/nota/valor não vira zero, precisão inventada ou confirmação de gasto realizado.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP04.T03.QLT.01",
+            "text": "A comparação distingue avaliação humana, cálculo e informação ausente; diferença de preço e razão do ranking são legíveis juntas.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T03.QLT.02",
+            "text": "Arredondamento é de apresentação e não altera ranking, valor aprovado ou reconciliação.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP04.T03.CMP.01",
+            "text": "Cobrir moedas diferentes, snapshot, FX ausente, empate, proposta não conforme, menos propostas e notas incompletas.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T03.CMP.02",
+            "text": "Cobrir PR estimada, sourcing, PO aprovada e PO emitida internamente sem agregar estados como se fossem equivalentes.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP04.T03.SUC.01",
+            "text": "O leitor explica a liderança de A e seu custo adicional no cenário sintético usando apenas a comparação e sua decomposição.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T03.SUC.02",
+            "text": "O mesmo valor de domínio aparece coerentemente no detalhe, resumo e C02 entregue a consumidores.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP04",
+      "ownership_ref": "WP04",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "R17"
+      ],
+      "journeys": [
+        "J04"
+      ],
+      "session": "S2",
+      "build_window": [
+        34,
+        47
+      ],
+      "proof_window": [
+        34,
+        75
+      ],
+      "evidence_packages": [
+        "E05"
+      ],
+      "integrates_with": [
+        "WP01.T02"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP04.T04",
+      "title": "Resumo por tipo de aprovação e decisão sobre a versão correta",
+      "intent": "Dar ao aprovador contexto suficiente para decidir a etapa atual rapidamente e entender o efeito exato da sua ação.",
+      "work": [
+        "Criar resumos distintos para aprovar a necessidade/PR, a seleção de fornecedor/sourcing e a PO; reutilizar C02 e mostrar objeto, valor, diferença pertinente, justificativa, evidências disponíveis e próximo passo.",
+        "Explicar holder, etapas ainda pendentes e efeitos de approve/reject usando a rota real; comentários e motivos usam comandos existentes, sem criar estado informal que substitua rejeição.",
+        "Vincular a decisão à versão esperada C03; em conflito interromper a tentativa e apresentar o que mudou sem descartar o comentário digitado ou reaplicar a decisão automaticamente.",
+        "Exportar preparação somente leitura do resumo e pendências como C02, consumida pela receita C07 de WP09, terminando em rascunho; Relay e outros consumidores não recebem um caminho implícito de aprovação.",
+        "Apresentar referências textuais como tal e relações C06 somente quando fornecidas explicitamente; o resumo não declara orçamento disponível ou contrato validado por inferência."
+      ],
+      "inputs": [
+        "WP04.T03: comparação, valores, snapshots e limitações C02.",
+        "C01/C03/C06/C07/C08 congelados.",
+        "Porta real de approve/reject, holders, etapas e histórico do baseline."
+      ],
+      "outputs": [
+        "Três variantes de resumo decisório com resultado esperado de cada ação.",
+        "Apresentação de recusa/conflito de decisão preservando comentário local.",
+        "Porta de preparação read-only por versão e recibo dos dados usados, consumível por WP09/WP10."
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP04.T03"
+      ],
+      "checks": [
+        {
+          "id": "WP04.T04.CHK.01",
+          "text": "Em cada variante, uma pessoa identifica em até 30 segundos o que está aprovando, valor, diferença relevante, razão/evidência e próximo passo; registrar respostas incorretas, não apenas tempo.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP04.T04.CHK.02",
+          "text": "Aprovar uma etapa intermediária mantém o pedido pendente se ainda houver holder seguinte; concluir sourcing libera po_draft, nunca po_issued ou aprovação de PO implícita.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP04.T04.CHK.03",
+          "text": "Ator que não é o holder, inclusive admin sem direito de override, recebe a recusa existente também no comando; opção blockSelfApproval continua configurável e respeitada.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP04.T04.CHK.04",
+          "text": "Alterar a versão entre abertura e confirmação: decisão é recusada por conflito, comentário local permanece e nenhuma aprovação é reaplicada automaticamente após recarregar.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP04.T04.CHK.05",
+          "text": "Executar a preparação determinística C02 consumida pela receita C07 de WP09 duas vezes na mesma versão: obter o mesmo conteúdo de decisão/pendências sem transição de estado, novo identificador de PO ou mensagem externa.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP04.T04.DOD.01",
+            "text": "PR, sourcing e PO possuem resumos próprios ligados à versão e aos comandos reais.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T04.DOD.02",
+            "text": "Preparação read-only e ações humanas estão separadas no contrato exportado.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP04.T04.INV.01",
+            "text": "Aprovar uma etapa não pula outras aprovações nem muda os poderes do holder/admin.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T04.INV.02",
+            "text": "Uma decisão desatualizada nunca é reaplicada automaticamente e referências textuais não ganham validação fictícia.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP04.T04.QLT.01",
+            "text": "O título nomeia a decisão concreta e a área de ação explica seu efeito e a próxima etapa.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T04.QLT.02",
+            "text": "Resumo curto e drilldown detalhado apresentam os mesmos valores, contexto e limitações.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP04.T04.CMP.01",
+            "text": "Cobrir PR, sourcing, PO, aprovador intermediário/final, rejeição com motivo, autoaprovação configurável e holder alheio.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T04.CMP.02",
+            "text": "Cobrir versão desatualizada, evidência incompleta e execução read-only por consumidor de rotinas.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP04.T04.SUC.01",
+            "text": "O aprovador completa o roteiro de compreensão sem abrir Settings nem reconstruir a comparação manualmente.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T04.SUC.02",
+            "text": "Uma preparação automática é útil como rascunho e demonstravelmente não produz decisão de negócio.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP04",
+      "ownership_ref": "WP04",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "R04",
+        "R18"
+      ],
+      "journeys": [
+        "J04"
+      ],
+      "session": "S2",
+      "build_window": [
+        47,
+        60
+      ],
+      "proof_window": [
+        47,
+        75
+      ],
+      "evidence_packages": [
+        "E05"
+      ],
+      "integrates_with": [
+        "WP01.T02"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP04.T05",
+      "title": "Fornecedores e preservação completa do processo de compras",
+      "intent": "Concluir a experiência de fornecedores e provar que a nova apresentação preserva os fluxos e controles originais de Procurement.",
+      "work": [
+        "Organizar cadastro, categorias, contatos, comercial, banco, compliance, linked requests e auditoria do fornecedor com busca/filtros e mensagens de ativação específicas; preservar os campos e validações existentes.",
+        "Manter criação pelo buyer, ativação/bloqueio/inativação e edição bancária pelos papéis permitidos; apresentar a revalidação após mudança bancária sem expor dados sensíveis no resumo/histórico/C02.",
+        "Preservar Settings completo: matriz, moedas, critérios, minQuotes, endereços, condições, anexos, lembretes e reset; essa task melhora sua compreensão e não define novos defaults ou políticas.",
+        "Conferir consultas, registro/exportações, download da PO, identidade PR/PO/SUP, histórico, rascunhos rejeitados, cancelamento e exclusão; adaptar apenas dentro dos arquivos de ownership.",
+        "Entregar recibo de cobertura e portas reais a WP05/WP06/WP07/WP08/WP09/WP10; importação, colaboração, rotinas e composição seguem com seus proprietários e não são implementadas aqui."
+      ],
+      "inputs": [
+        "WP04.T04: jornada completa até decisão e preparação de PO.",
+        "src/supplier.ts, src/procurement.ts, src/initial-settings.ts e runtime/procurement.ts; inventário funcional congelado por WP00.",
+        "C01/C02/C03/C08 e fixtures de fornecedor ativo/pendente/bloqueado/inativo, dados bancários e identificadores importados."
+      ],
+      "outputs": [
+        "Experiência de Suppliers/Settings preservando campos, restrições e feedback específico.",
+        "Recibo de cobertura dos fluxos originais, cenários adversos e portas exportadas.",
+        "Handoff verificável de Procurement para composição final e consumidores reais, sem alterações fora do ownership."
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP04.T04"
+      ],
+      "checks": [
+        {
+          "id": "WP04.T05.CHK.01",
+          "text": "Fornecedor ativo tem IBAN/account alterado por ator permitido: volta a pending, validação é removida e a interface indica revalidação; ator sem permissão é recusado e não vê material bancário em view, erro, histórico, register ou C02.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP04.T05.CHK.02",
+          "text": "Fornecedor com taxId duplicado não é aceito; legalName duplicado segue o aviso existente; ativação incompleta aponta os requisitos reais sem declarar sanctions screening externo realizado.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP04.T05.CHK.03",
+          "text": "Reset de Settings restaura exatamente os defaults do baseline sem apagar requests/suppliers; edição de matriz/câmbio não modifica snapshots já congelados.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP04.T05.CHK.04",
+          "text": "Após importação representativa ou exclusão permitida, criar PR/PO/SUP não reutiliza identificador já emitido; registro/PO exportados preservam campos de negócio e omitem material restrito.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP04.T05.CHK.05",
+          "text": "Percorrer create → submit_pr → approve → sourcing/select/submit → approve → PO/submit → approve → issue e caminhos de rejeição/cancelamento: estados e recusas coincidem com o inventário; po_issued permanece interno e terminal para cancel/delete.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP04.T05.DOD.01",
+            "text": "Suppliers e Settings conservam todas as operações e campos do inventário com feedback utilizável.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T05.DOD.02",
+            "text": "O pacote fecha o recibo de preservação dos fluxos e entrega as portas ao integrador com limitações explícitas.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP04.T05.INV.01",
+            "text": "Alteração bancária e ativação seguem os papéis, cifragem, máscara e revalidação existentes; dados sensíveis não vazam para consumidores.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T05.INV.02",
+            "text": "Reset, exclusão e retomada não apagam histórico nem reutilizam identificadores PR/PO/SUP já emitidos.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP04.T05.QLT.01",
+            "text": "Pendências de fornecedor explicam a ação corretiva sem confundir preenchimento declarado com verificação externa.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T05.QLT.02",
+            "text": "Operações raras e Settings ficam em acesso secundário claro, preservando descoberta por teclado e todos os controles.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP04.T05.CMP.01",
+            "text": "Cobrir os quatro estados de fornecedor, dados comerciais/bancários/compliance, linked requests, auditoria, busca e exportação.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T05.CMP.02",
+            "text": "Cobrir configurações/reset, todos os comandos originais e preservação de identificadores/campos após dados migrados representativos.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP04.T05.SUC.01",
+            "text": "Buyer e supplier admin concluem cadastro, correção e revalidação sem consultar códigos internos nem expor informação bancária indevida.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP04.T05.SUC.02",
+            "text": "O integrador consegue executar a jornada real completa com os exports entregues, sem solicitar um substituto de demonstração ou escrever dentro do domínio.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP04",
+      "ownership_ref": "WP04",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "R19"
+      ],
+      "journeys": [
+        "J04"
+      ],
+      "session": "S2",
+      "build_window": [
+        60,
+        72
+      ],
+      "proof_window": [
+        60,
+        75
+      ],
+      "evidence_packages": [
+        "E05"
+      ],
+      "integrates_with": [
+        "WP01.T02"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    }
+  ],
+  "handoff": [
+    "Para WP10: exports de views/capacidades/comandos de Procurement, mapa página/estado/papel, referências de drilldown e receita de composição; WP10 conecta entrada comum e verifica usuários/consumidores reais.",
+    "Para WP05: C02 real de estoque por etapa, idade comprovada, valores/FX/snapshots e estados monetários; histórico insuficiente e recorte autorizado explícitos.",
+    "Para WP07: projeções autorizadas que possam compor a pauta; para WP08: fila de decisões por holder/etapa e referências canônicas; para WP09: comparação e pendências de sourcing em C02, consumidas na receita C07. Nenhum consumidor lê o store interno para reconstruir regras; não há import de Procurement no WP06.",
+    "Evidências locais incluem fixtures identificadas, origem dos dados, resultado esperado versus observado, limitações e checks integrados ainda reservados a WP10."
+  ],
+  "risks": [
+    "A mudança visual pode encobrir campos/ações do protótipo. Resolver com inventário fechado por WP00 e roundtrip completo em WP04.T02/T05, sem remover capacidade por conveniência de layout.",
+    "requestValue atualmente soma linhas da PO sem converter moeda e o rótulo Issued inclui aprovados. Corrigir a apresentação na definição C02 congelada, separando estados e snapshots, sem alterar base de alçada silenciosamente.",
+    "Históricos importados podem não provar a entrada na etapa. Publicar idade indisponível e manter o pedido na fila; não reconstruir duração por suposição.",
+    "C02/C03 congelados permitem construção paralela, mas produtores/consumidores podem divergir em semântica. Registrar incompatibilidade como falha de contrato e levar a WP10; não manter um store ou adapter fictício como entrega.",
+    "Pré-preenchimento pode substituir condição negociada ou sugerir vínculo inexistente. Priorizar valor já confirmado, identificar sugestões e manter referências textuais sem associação automática."
+  ],
+  "status": "PLANNED",
+  "ownership": {
+    "id": "WP04",
+    "branch": "sf2-procurement",
+    "existing_files": [
+      "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "modules/sucafina/Sucafinav1/src/form.ts",
+      "modules/sucafina/Sucafinav1/src/initial-settings.ts",
+      "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+      "modules/sucafina/Sucafinav1/src/procurement.ts",
+      "modules/sucafina/Sucafinav1/src/requests.ts",
+      "modules/sucafina/Sucafinav1/src/supplier.ts",
+      "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+      "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+      "modules/sucafina/porta/act.ts",
+      "modules/sucafina/porta/codigo.test.ts",
+      "modules/sucafina/porta/linha.test.ts",
+      "modules/sucafina/porta/s3.test.ts"
+    ],
+    "new_prefixes": [
+      "modules/sucafina/Sucafinav1/product/procurement/",
+      "modules/sucafina/Sucafinav1/test/product/wp04/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/"
+    ],
+    "allowed_purpose": "Procurement: páginas e estados originais, propostas/seleção, aprovações, cadastros e porta/act.ts no seu escopo funcional; preservar alçadas, sem alterar identidade, runtime de anexos ou integrar automaticamente orçamento."
+  },
+  "source_ids": [
+    "S11",
+    "S12"
+  ],
+  "session": "S2",
+  "build_window": [
+    10,
+    72
+  ],
+  "integration_deadline": 75,
+  "evidence_packages": [
+    "E05"
+  ],
+  "implementation_readiness": "Produzir exports/outputs por contrato cedo. Ready não é Done; a aceitação exige host e consumidores reais.",
+  "contract_notes": {
+    "contract_reads": [
+      "C01: contexto autorizado, papel/capacidades, referências, período, versão, moeda e significado de ausência.",
+      "C02: envelope e convenções congeladas para projeções de domínio; Procurement permanece proprietário de seus valores e componentes.",
+      "C03: versão esperada, validação, diferença e conflito preservando a entrada local.",
+      "C06: somente relações explícitas e referências autorizadas fornecidas por seu proprietário; ausência não autoriza correspondência por nome.",
+      "C07: formato de preparação/pendências que termina em rascunho e não decide uma aprovação de negócio.",
+      "C08: exportação das portas de produto para composição real em WP10, sem escrever os entrypoints comuns."
+    ],
+    "contract_provides": [
+      "C02: projeções autorizadas de filas, estado/etapa, responsável, entrada comprovada na etapa, valores originais/base/snapshot, comparação, aprovações e fornecedores, com campos restritos removidos.",
+      "C03: edição e transições de Procurement mantidas nos comandos reais existentes, com validações e conflitos explicáveis.",
+      "C02 — preparação determinística da decisão e lista de pendências por versão, consumidas por WP09 na receita C07; sem submissão, aprovação ou mensagem externa implícita.",
+      "C08: views e registro de capacidades de Procurement exportados para WP10; referências de drilldown consumíveis por WP05/WP08 sem acesso direto ao store."
+    ]
+  }
+}

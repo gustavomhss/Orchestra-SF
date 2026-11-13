@@ -1,0 +1,93 @@
+{
+  "review": "Cold review final de prazo, recursos, DAG e CI",
+  "status": "CHANGES_REQUIRED",
+  "reviewed_files": ["sf2h-plan/campaign.json", "sf2h-plan/schedule.json", "sf2h-plan/evidence-plan.json", "sf2h-plan/task-dag.json"],
+  "observed_counts": {"work_packages": 15, "tasks": 71},
+  "confirmed_positive": [
+    "O escopo declara integralidade das capacidades antigas e novas, sem limitar a entrega à renovação.",
+    "O DAG de build é acíclico e não possui referências ausentes no draft lido.",
+    "A integração começa desde T0 e não espera todos os WPs completos.",
+    "A janela de120min é explicitamente uma hipótese não medida; o teto45min do workflow não é apresentado como duração esperada.",
+    "O plano distingue commit do produto, snapshot de CI e hash da request.",
+    "WP14 tem orçamento parcial e possibilidade de transferência exclusiva, sem contar um13ºbuilderdedicado.",
+    "Um critério obrigatório aberto impedeDONE, mesmo apósT120."
+  ],
+  "already_announced_by_root_do_not_duplicate": [
+    "WP00.T03 terminar emT10, nãoT12",
+    "WP09.T07 antecipado para segundo passo, T25-38",
+    "WP14 implementação até65 e prova até75",
+    "Ownership dos arquivos de composition root do host",
+    "Retirada de textos e gates legados incompatíveis"
+  ],
+  "findings": [
+    {
+      "id": "SCH-F01",
+      "severity": "P1",
+      "title": "A capacidade de S0 não tem alocação executável",
+      "evidence": "schedule.sessions.S0 declara workers0 e3review_slots. campaign tem WP00.T02[4,10], WP00.T03[4,12], WP00.T04[0,20] e WP10.T01[0,75], seguidos de WP10.T02[20,95], sob a mesma sessão e sem executor por task.",
+      "consequence": "As janelas sobrepostas não demonstram quem produz contratos, fixtures, qualificação, código de composição e provas enquanto a integradora recebe13frentes. O texto permite assumir implicitamente execução simultânea pela mesma root.",
+      "correction": "Nomear as ocupações dos três slots centrais antes da fase de reviews: um produz fixtures e prepara QA, outro qualifica serviços e CI, outro verifica contratos e evidências; root publica contratos e escreve composição. Definir subfronteiras de escrita e intervalos sem colisão. Quando começar revisão fria, trocar ou redistribuir os autores e reservar tempo para devolutivas.",
+      "acceptance": "Uma tabela task→executor→intervalo→paths cobre todas as tarefas centrais e não usa o mesmo executor simultaneamente para duas atividades de construção contínua. As janelas podem ser envelopes, mas o orçamento de trabalho deve ser explícito."
+    },
+    {
+      "id": "SCH-F02",
+      "severity": "P1",
+      "title": "O encerramento depende de uma tarefa que ainda não terminou",
+      "evidence": "WP10.T05.build_window=[110,120] e depends_on=['WP10.T04']; WP10.T04.build_window=[75,118]. A semântica declarada dedepends_onébuildreadiness.",
+      "consequence": "O DAG de tempo exige começar a entrega em110com a dependência disponível sóem118. Um executor obediente pode esperar118 e perder o tempo previsto de preparação.",
+      "correction": "Permitir preparar guias e o recibo antes, retirando T04 da dependência de início e colocando-o emacceptance_requires; separar janela de preparação110-118 e fechamento118-120. Alternativamente criar um marco explícito de evidência completa em118 sem duplicar a tarefa.",
+      "acceptance": "A validação temporal não encontra predecessor de build terminando depois do início do consumidor, e T05 não pode fechar antes das provas finais."
+    },
+    {
+      "id": "SCH-F03",
+      "severity": "P1",
+      "title": "O marco T55 exige um produtor com entrega planejada paraT72",
+      "evidence": "G3/T55 exige que escolhas e propostas cruzem domínios. WP11.T04, que prepara mudanças e recibos, possui build_window[54,72]. Não há handoff parcial explícito antes deT55.",
+      "consequence": "Antecipar a ponte Relay sozinho não torna esse marco coerente. O produtor tem um minuto entre o início previsto e a prova exigida.",
+      "correction": "Usar G3para provar inferência real, contradição com fontes, admissão/run e cálculo com projeções reais. A execução preparada completaC12 permanece obrigatória emG4/T75. Se quiser mantê-la emG3, declarar e agendar um producerC12mínimo real antes deT55 e manter os demais casos até75.",
+      "acceptance": "Todo resultado exigido emG3tem um produtor real publicado e um consumidor com tempo para exercer o caminho antes do marco; a mudança de marco não exclui capacidade final."
+    },
+    {
+      "id": "SCH-F04",
+      "severity": "P1",
+      "title": "Há dois cronogramas normativos para as mesmas tasks novas",
+      "evidence": "WP11–WP14 mantêm schedule.start_minute/target_ready_minute/integrated_proof_deadline_minute e também build_window/proof_window. ExemploWP12.T03: schedule40-55/prova80 versus build42-56/prova75. Todas as16tasks novas têm divergência de algum campo.",
+      "consequence": "Os executores podem cumprir prazos diferentes usando campos igualmente estruturados. O relógio de aceitação também pode se estender silenciosamente de75para80.",
+      "correction": "Escolher build_window/proof_window como fonte única, remover os campos legados ou gerá-los exatamente dessa fonte. Aplicar o mesmo a schedule em nívelWP.",
+      "acceptance": "Validador confirma que nenhuma task/WP possui horários conflitantes e que todos os artefatos derivados refletem a mesma fonte."
+    },
+    {
+      "id": "SCH-F05",
+      "severity": "P1",
+      "title": "Suíte completa e falhas de baseline ainda não têm receita operacional",
+      "evidence": "E16 cobre 'suites completas dos módulos alterados + consumidores impactados', eWP10.T04fala emverificações cumulativas. Nos quatro arquivos lidos não há catálogo de packageSelector/runner/specs/config/OS esperado nem política explícita para falha preexistente, novo snapshot após correção ou impacto no orçamento.",
+      "consequence": "O executor pode descobrir a seleção exigida apenas emT75, chamar um subconjunto de full suite ou tratar uma falha preexistente como dispensada. Essas decisões afetam tanto a completude quanto a duração.",
+      "correction": "Adicionar um runbook deCIcom uma linha por lane requerida: selector resolvido, request, runner, OS, comportamento coberto, artefatos e invalidadores. Distinguir suíte completa de pacote, consumidores impactados e regressão de host. Para falha: verificar evidência, atribuir aoowner; comparar baseline se houver suspeita concreta; manter gates obrigatórios abertos mesmo quando a falha for preexistente até a resolução prevista pela política. Correção gera novo snapshot do candidato, não rerun do SHAantigo.",
+      "acceptance": "S0consegue produzir as requests sem inferir escopo durante o teste; há regra parazero testes, falha de setup, nova regressão, falha preexistente e evidência desatualizada. Tempos continuam hipóteses até observação real."
+    },
+    {
+      "id": "SCH-F06",
+      "severity": "P1",
+      "title": "Axiomas locais ainda normatizam números e saídas do plano anterior",
+      "evidence": "CAMP.DOD.01diz11WPs/50steps; WP10.T05.CHK.01repete50/11; WP00.T02.DOD.01diz8contratos e workC01-C08; WP00.T04.SUC.01fala9frentes; WP10.T03título pede3revisões, mas work/outputs/DOD.01ainda pedem2.",
+      "consequence": "O plano novo tem15WPs/71tasks/14contratos. Acrescentar critérios mais amplos sem substituir os antigos deixa uma definição de entrega contraditória e pode orientar uma revisão incompleta.",
+      "correction": "Gerar contagens a partir da estrutura e atualizar todas as frases normativas, outputs, dependências de consumo e recibos. Reescrever os critérios de revisão para três focos e remover a referência aoG0como saída deWP00.T04 seG0já é liberado porT02.",
+      "acceptance": "Busca automatizada e leitura de coerência não encontram contagens antigas ou duas fontes de aceite; cada afirmação de cobertura corresponde à estrutura final."
+    },
+    {
+      "id": "SCH-F07",
+      "severity": "P1",
+      "title": "O marco inicial contradiz a definição do relógio",
+      "evidence": "clock_start diz queT0é a primeira execução da integradora e inclui iniciar as outras quatro sessões. milestoneT0exige que as cinco já estejam admitidas e confirmadas.",
+      "consequence": "Um executor pode iniciar o relógio somente depois das confirmações, excluindo ativação que o plano diz incluir; outro pode tratarT0como gate impossível.",
+      "correction": "ManterT0na primeira execução; definirT0como início de ativação eT+5como recebimento dos cinco recibos de prontidão, dentro do preflight. Não reiniciar o relógio caso uma sessão atrase; recalcular capacidade e ETA.",
+      "acceptance": "Existe um único timestamp inicial persistido e as confirmações são eventos posteriores com deadline explícito."
+    }
+  ],
+  "not_findings": [
+    "Consumer edges recíprocas não são automaticamente ciclos de build: o plano distingue integração conjunta de precedência de implementação.",
+    "Não há base para afirmar que oCIleva15min nem para declarar que o escopo é fisicamente impossível em120min. O problema verificável é a falta de medição e orçamento condicional, já reconhecida emparte no plano.",
+    "A existência de mocks contratuais durante desenvolvimento não viola a entrega se todos os caminhos de aceite exigirem produtores e consumidores reais, como o plano estabelece."
+  ],
+  "closure": "Revisão do planejamento, não execução do produto. Resolver osP1e conferir o draft regenerado; nenhum resultado deCIouproduto foi marcadoPASS."
+}

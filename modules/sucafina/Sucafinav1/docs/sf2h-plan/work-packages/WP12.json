@@ -1,0 +1,591 @@
+{
+  "id": "WP12",
+  "title": "IA contextual e análise verificável",
+  "objective": "Fazer IA real investigar, estruturar e criticar decisões com ferramentas limitadas e resultados utilizáveis.",
+  "scope_in": [
+    "Provider host injetado",
+    "Ferramentas tipadas e autorizadas",
+    "Intenção, contradição, alternativas e crítica",
+    "Validação de evidência/schema",
+    "Lifecycle assíncrono e Relay consumido"
+  ],
+  "scope_out": [
+    "Credenciais e novo acesso",
+    "Mutation tool genérica",
+    "UI própria",
+    "Persistência concreta",
+    "Scheduler ou engine Relay/Maestro",
+    "Cálculo financeiro paralelo"
+  ],
+  "contract_reads": [
+    "C01",
+    "C02",
+    "C03",
+    "C06",
+    "C07",
+    "C08",
+    "C09"
+  ],
+  "contract_provides": [
+    "C11"
+  ],
+  "axioms": {
+    "dod": [
+      {
+        "id": "WP12.DOD.01",
+        "text": "Inferência real demonstra descoberta, proposta e reformulação com fontes em caso não roteirizado.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP12.DOD.02",
+        "text": "Admissão, execução e retorno de Relay são verificados com run/version reais.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "invariants": [
+      {
+        "id": "WP12.INV.01",
+        "text": "Modelo não escolhe ator, não aprova e não trata documentos como instruções.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP12.INV.02",
+        "text": "Cálculo e regras pertencem aos motores; saída velha não substitui atual.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "quality_standards": [
+      {
+        "id": "WP12.QLT.01",
+        "text": "Afirmação material possui referência ou marcação de hipótese.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP12.QLT.02",
+        "text": "Limites de execução, cancelamento e erros preservam uso determinístico.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "completeness_criteria": [
+      {
+        "id": "WP12.CMP.01",
+        "text": "Cobrir intenção corrigida, contradição/ausência, crítica, resposta humana, falha, limite, cancelamento, stale e revogação.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "success_criteria": [
+      {
+        "id": "WP12.SUC.01",
+        "text": "A IA identifica uma questão verificável que muda a preparação e reduz investigação manual observável.",
+        "status": "NOT_RUN"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "WP12.T01",
+      "title": "Expor ferramentas e provider de IA com escopo",
+      "intent": "Permitir IA real sem entregar autoridade ou dados indevidos ao modelo.",
+      "work": [
+        "Consumir provider/model gateway e identidade injetados pelo host WP10; não criar credenciais, novo SDK direto nem configuração de conta.",
+        "Expor apenas read context, draft analysis, simulate, check, prepare questions e prepare changes, cada qual com schema e autorização atual.",
+        "Limitar dados, tool calls, tokens, tentativas e tempo por execução segundo configuração explícita; tratar documento e comentário como dados."
+      ],
+      "inputs": [
+        "C01",
+        "C02",
+        "C03",
+        "C07",
+        "C08",
+        "AnalysisPort",
+        "HostModelProviderPort"
+      ],
+      "outputs": [
+        "Tool catalog tipado e restrito",
+        "Provider adapter injetável",
+        "Budget e erros de execução"
+      ],
+      "depends_on": [
+        "WP00.T02"
+      ],
+      "checks": [
+        {
+          "id": "WP12.T01.CHK.01",
+          "text": "Chamada real usa provider host, principal e escopo observáveis no recibo; nenhuma chave ou credencial passa pelo prompt.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP12.T01.CHK.02",
+          "text": "Modelo tenta alterar ator, ler Talent sem permissão e invocar mutação genérica: cada tentativa é recusada na fronteira real.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP12.T01.CHK.03",
+          "text": "Documento com instrução para ignorar regras/autorizar compra e loop de ferramentas não vencem schemas, regras ou limite declarado; caso determinístico continua utilizável.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP12.T01.DOD.01",
+            "text": "Uma execução real do provider acessa as ferramentas restritas no módulo integrado com proveniência verificável.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP12.T01.INV.01",
+            "text": "Modelo não escolhe identidade nem recebe ferramenta genérica para aprovar, enviar ou escrever em qualquer domínio.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP12.T01.QLT.01",
+            "text": "Erros de limite, indisponibilidade e permissão são distintos; conteúdo não confiável não vira instrução do sistema.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP12.T01.CMP.01",
+            "text": "Cobrir credencial host disponível/indisponível, limite, revogação, prompt injection e pedido de operação fora do catálogo.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP12.T01.SUC.01",
+            "text": "O produto usa inferência real no contexto autorizado sem pedir novos acessos nem conceder autoridade extra.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP12",
+      "ownership_ref": "WP12",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "IA17"
+      ],
+      "journeys": [
+        "J07",
+        "J08",
+        "J13"
+      ],
+      "session": "S4",
+      "build_window": [
+        10,
+        25
+      ],
+      "proof_window": [
+        25,
+        75
+      ],
+      "evidence_packages": [
+        "E11",
+        "E15"
+      ],
+      "integrates_with": [
+        "WP00.T04",
+        "WP10.T01",
+        "WP11.T01",
+        "WP03.T01",
+        "WP06.T05"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP12.T02",
+      "title": "Interpretar intenção e descobrir contradições",
+      "intent": "Fazer a IA acrescentar uma investigação útil ao trabalho.",
+      "work": [
+        "Transformar intenção em objetivo, horizonte, restrições e lacunas editáveis com referências aos dados usados.",
+        "Reunir somente relações confirmadas e projeções autorizadas; apontar contradições entre premissa e fonte sem unir registros por nome.",
+        "Produzir perguntas priorizadas por sua capacidade de alterar a escolha e candidatos de alternativas com schema de WP11."
+      ],
+      "inputs": [
+        "C01",
+        "C02",
+        "C06",
+        "DecisionCasePort",
+        "AnalysisPort",
+        "Tool catalog restrito"
+      ],
+      "outputs": [
+        "IntentDraft",
+        "EvidenceClaim com source refs",
+        "Contradiction e QuestionProposal",
+        "AlternativeDraft candidato"
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP12.T01"
+      ],
+      "checks": [
+        {
+          "id": "WP12.T02.CHK.01",
+          "text": "Em corpus não roteirizado com intenção nova e marco maio versus premissa março, inferência real identifica as duas fontes e formula a pendência correta; resposta pré-gravada não satisfaz.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP12.T02.CHK.02",
+          "text": "Trocar a fonte decisiva, mantendo o prompt, modifica a análise correspondente; remove-se a contradição e a IA não insiste na mesma pergunta.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP12.T02.CHK.03",
+          "text": "Nome semelhante sem relação confirmada não entra como evidência; ausência de dado produz pergunta ou desconhecido, sem completar a lacuna como fato.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP12.T02.DOD.01",
+            "text": "Saída real de IA estrutura a intenção e identifica uma condição decisiva com fontes no caso integrado.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP12.T02.INV.01",
+            "text": "Inferência é proposta revisável; referência inexistente, relação presumida e certeza sem dado são rejeitadas ou sinalizadas.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP12.T02.QLT.01",
+            "text": "Cada afirmação material aponta fonte ou é marcada hipótese; pergunta explica o efeito de sua resposta.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP12.T02.CMP.01",
+            "text": "Cobrir objetivo ambíguo/editado, fonte contraditória, fonte ausente, relação inválida e nenhuma contradição.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP12.T02.SUC.01",
+            "text": "A análise revela algo verificável que reduz trabalho de investigação e muda a preparação da decisão.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP12",
+      "ownership_ref": "WP12",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "IA01",
+        "IA02",
+        "IA03",
+        "IA05",
+        "IA11"
+      ],
+      "journeys": [
+        "J02",
+        "J04",
+        "J06",
+        "J09",
+        "J11"
+      ],
+      "session": "S4",
+      "build_window": [
+        25,
+        42
+      ],
+      "proof_window": [
+        25,
+        75
+      ],
+      "evidence_packages": [
+        "E11",
+        "E15"
+      ],
+      "integrates_with": [
+        "WP00.T04",
+        "WP10.T01",
+        "WP11.T01",
+        "WP03.T01",
+        "WP06.T05"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP12.T03",
+      "title": "Criticar e validar resultados estruturados",
+      "intent": "Encontrar omissões sem confiar a correção financeira à narrativa.",
+      "work": [
+        "Executar crítica delimitada sobre alternativas, fontes e condições; devolver itens acionáveis com evidência ou hipótese.",
+        "Validar schema, references, tipos de operação e compatibilidade da base; delegar totais e elegibilidade aos engines.",
+        "Reformular análise após resposta humana usando premissa escopada, preservando o que foi alterado e por quê."
+      ],
+      "inputs": [
+        "AnalysisPort",
+        "AlternativeDraft",
+        "SimulationResult",
+        "QuestionAnswer da colaboração"
+      ],
+      "outputs": [
+        "CritiqueResult verificável",
+        "ValidatedAnalysisResult",
+        "Delta da análise depois da contribuição"
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP12.T02"
+      ],
+      "checks": [
+        {
+          "id": "WP12.T03.CHK.01",
+          "text": "Custo de operação paralela omitido é levantado por inferência real, com distinção entre cláusula encontrada e hipótese a confirmar.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP12.T03.CHK.02",
+          "text": "Saída contendo total falso, operação fora do schema ou source ref inventada não é publicada como análise validada; o motor mantém seus valores.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP12.T03.CHK.03",
+          "text": "Resposta humana que nega março altera viabilidade/questões da alternativa e o resultado mostra a diferença; texto reescrito sem efeito no caso não passa.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP12.T03.DOD.01",
+            "text": "Análise e crítica reais produzem objetos aceitos pelo schema e calculados/verificados pelos domínios.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP12.T03.INV.01",
+            "text": "Um segundo LLM não é oráculo numérico; crítica não altera política, fontes ou aprovação.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP12.T03.QLT.01",
+            "text": "Achados priorizam consequência e ação; ausência de evidência é explícita, sem score de confiança inventado.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP12.T03.CMP.01",
+            "text": "Cobrir omissão, hipótese, fonte inválida, cálculo errado, contradição resolvida e resposta que mantém dúvida.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP12.T03.SUC.01",
+            "text": "O usuário consegue corrigir a alternativa ou pedir confirmação a partir de uma crítica específica, e vê a análise evoluir.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP12",
+      "ownership_ref": "WP12",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "IA04",
+        "IA05"
+      ],
+      "journeys": [
+        "J02",
+        "J04",
+        "J06"
+      ],
+      "session": "S4",
+      "build_window": [
+        42,
+        56
+      ],
+      "proof_window": [
+        42,
+        75
+      ],
+      "evidence_packages": [
+        "E11",
+        "E15"
+      ],
+      "integrates_with": [
+        "WP00.T04",
+        "WP10.T01",
+        "WP11.T01",
+        "WP03.T01",
+        "WP06.T05"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP12.T04",
+      "title": "Controlar análise assíncrona e retorno de Relay",
+      "intent": "Tornar inferência retomável e honesta sobre sua base.",
+      "work": [
+        "Implementar lifecycle solicitado/admitido/executando/concluído/falhou/cancelado/stale com case version, input refs e procedure/run IDs.",
+        "Consumir WP09 para admissão/execução Relay linear; quando faltar humano, concluir com perguntas, sem espera humana dentro do run.",
+        "Revalidar acesso e versões antes da publicação; expor modelos de progresso/resultado para WP01, sem escrever UI ou scheduler."
+      ],
+      "inputs": [
+        "C07",
+        "C08",
+        "AnalysisPort",
+        "DecisionCasePort",
+        "RoutineRunPort de WP09"
+      ],
+      "outputs": [
+        "AnalysisRunState",
+        "Resultado com proveniência e stale reason",
+        "Cancelamento e nova execução sobre base atual"
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP12.T03"
+      ],
+      "checks": [
+        {
+          "id": "WP12.T04.CHK.01",
+          "text": "Alterar caso durante inferência entrega resultado stale com sua versão original e não substitui a análise atual.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP12.T04.CHK.02",
+          "text": "Cancelar/estourar limite/falhar provider preserva caso e cálculo; nova execução admitida usa a versão correta e não duplica propostas anteriores.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP12.T04.CHK.03",
+          "text": "Prova real de Relay publicado/pinado termina em perguntas, resposta ocorre na aplicação e novo run retoma; logs de mock ou judge stub não fecham a evidência de análise real.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP12.T04.DOD.01",
+            "text": "Ciclo completo com provider e Relay reais é observado no candidato integrado, incluindo retorno ao caso.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP12.T04.INV.01",
+            "text": "Run não espera humano nem autoaprova; resultado antigo ou revogado não é promovido silenciosamente.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP12.T04.QLT.01",
+            "text": "Progresso informa etapa/pendência sem inventar percentual; cancelamento não apaga trabalho confirmado.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP12.T04.CMP.01",
+            "text": "Cobrir fila/admissão, execução, conclusão, cancelamento, limite, falha, stale e permissão revogada.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP12.T04.SUC.01",
+            "text": "A equipe continua trabalhando enquanto a análise ocorre e consegue distinguir resultado atual de resultado superado.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP12",
+      "ownership_ref": "WP12",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "IA09",
+        "IA18"
+      ],
+      "journeys": [
+        "J07",
+        "J08",
+        "J13"
+      ],
+      "session": "S4",
+      "build_window": [
+        56,
+        72
+      ],
+      "proof_window": [
+        56,
+        75
+      ],
+      "evidence_packages": [
+        "E11",
+        "E15"
+      ],
+      "integrates_with": [
+        "WP00.T04",
+        "WP10.T01",
+        "WP11.T01",
+        "WP03.T01",
+        "WP06.T05"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    }
+  ],
+  "handoff": [
+    "Tool catalog e provider requirements para WP10",
+    "Readmodels de análise para WP01",
+    "Inputs/outputs de rotinas para WP09",
+    "Alternativas/perguntas para WP11/WP08"
+  ],
+  "risks": [
+    "Provider indisponível impede aceite de IA real; texto predefinido não é substituto.",
+    "Judge stub e resposta roteirizada não podem fechar critérios de análise real."
+  ],
+  "status": "PLANNED",
+  "ownership": {
+    "id": "WP12",
+    "branch": "sf2-ai",
+    "existing_files": [],
+    "new_prefixes": [
+      "modules/sucafina/Sucafinav1/product/ai/",
+      "modules/sucafina/Sucafinav1/test/product/wp12/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/"
+    ],
+    "allowed_purpose": "Implementar somente ia contextual e análise verificável no namespace próprio; consumir contratos e portas reais; não editar UI, persistência concreta, domínio produtor ou scheduler de outros WPs."
+  },
+  "source_ids": [
+    "S02",
+    "S09",
+    "S16",
+    "S17"
+  ],
+  "session": "S4",
+  "build_window": [
+    10,
+    72
+  ],
+  "integration_deadline": 75,
+  "evidence_packages": [
+    "E11",
+    "E15"
+  ],
+  "implementation_readiness": "Produzir exports/outputs por contrato cedo. Ready não é Done; a aceitação exige host e consumidores reais."
+}

@@ -1,0 +1,182 @@
+<style>
+#sf-ai-desk{--sf-bg:light-dark(#f3f5f8,#111923);--sf-surface:light-dark(#ffffff,#192430);--sf-text:light-dark(#152236,#edf3fa);--sf-muted:light-dark(#526174,#aab9c9);--sf-line:light-dark(#dce3ec,#344352);--sf-soft:light-dark(#edf2f8,#22313f);--sf-blue:light-dark(#175cd3,#91bdff);--sf-blue-soft:light-dark(#eaf2ff,#203751);--sf-good:light-dark(#246449,#97d6b6);--sf-good-bg:light-dark(#eaf6ef,#203d32);--sf-warn:light-dark(#84520c,#f4ca83);--sf-warn-bg:light-dark(#fff3dd,#44341f);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px;line-height:1.5;color:var(--sf-text);background:var(--sf-bg);border:1px solid var(--sf-line);border-radius:16px;overflow:hidden;max-width:100%;box-sizing:border-box}
+#sf-ai-desk *{box-sizing:border-box}
+#sf-ai-desk h1,#sf-ai-desk h2,#sf-ai-desk h3,#sf-ai-desk p{margin:0}
+#sf-ai-desk h1{font-size:25px;line-height:1.2;letter-spacing:-.65px;font-weight:500}
+#sf-ai-desk h2{font-size:16px;line-height:1.35;font-weight:500}
+#sf-ai-desk h3{font-size:14px;font-weight:500}
+#sf-ai-desk .sf-chrome{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:15px 102px 15px 22px;background:var(--sf-surface);border-bottom:1px solid var(--sf-line)}
+#sf-ai-desk .sf-brand{font-weight:500;letter-spacing:-.25px;white-space:nowrap}
+#sf-ai-desk .sf-chrome-label{color:var(--sf-muted);font-size:12px;border-left:1px solid var(--sf-line);padding-left:14px}
+#sf-ai-desk .sf-demo{padding:8px 22px;background:var(--sf-soft);font-size:12px;color:var(--sf-muted)}
+#sf-ai-desk .sf-main{padding:23px;display:grid;gap:18px}
+#sf-ai-desk .sf-heading{display:flex;gap:14px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
+#sf-ai-desk .sf-eyebrow{font-size:12px;color:var(--sf-muted);margin-bottom:5px}
+#sf-ai-desk .sf-context{color:var(--sf-muted);font-size:12px;margin-top:8px}
+#sf-ai-desk .sf-status{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:99px;font-size:12px;font-weight:500;background:var(--sf-warn-bg);color:var(--sf-warn);white-space:nowrap}
+#sf-ai-desk .sf-status[data-tone="good"]{background:var(--sf-good-bg);color:var(--sf-good)}
+#sf-ai-desk .sf-status[data-tone="neutral"]{background:var(--sf-soft);color:var(--sf-muted)}
+#sf-ai-desk .sf-options{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+#sf-ai-desk .sf-option{min-width:0;background:var(--sf-surface);border:1px solid var(--sf-line);border-radius:12px;padding:19px;display:flex;flex-direction:column;gap:13px}
+#sf-ai-desk .sf-option.sf-transition{border-color:var(--sf-blue)}
+#sf-ai-desk .sf-option-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap}
+#sf-ai-desk .sf-option-tag{color:var(--sf-muted);font-size:12px}
+#sf-ai-desk .sf-price{font-size:31px;line-height:1.15;font-weight:500;letter-spacing:-.8px;font-variant-numeric:tabular-nums}
+#sf-ai-desk .sf-price-caption{color:var(--sf-muted);font-size:12px;margin-top:3px}
+#sf-ai-desk .sf-composition{margin:0;padding:0;display:grid;gap:7px;font-size:12px}
+#sf-ai-desk .sf-composition div{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+#sf-ai-desk .sf-composition dt{color:var(--sf-muted)}
+#sf-ai-desk .sf-composition dd{margin:0;font-variant-numeric:tabular-nums;white-space:nowrap}
+#sf-ai-desk .sf-advantage{margin-top:auto;display:flex;justify-content:space-between;gap:12px;align-items:baseline;padding-top:12px;border-top:1px solid var(--sf-line)}
+#sf-ai-desk .sf-advantage span{font-size:12px;color:var(--sf-muted)}
+#sf-ai-desk .sf-advantage strong{font-size:19px;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
+#sf-ai-desk .sf-baseline-note{margin-top:auto;color:var(--sf-muted);font-size:12px;padding-top:12px;border-top:1px solid var(--sf-line)}
+#sf-ai-desk .sf-bottom{display:grid;grid-template-columns:1.15fr 1fr;gap:14px}
+#sf-ai-desk .sf-panel{min-width:0;background:var(--sf-surface);border:1px solid var(--sf-line);border-radius:12px;padding:18px;display:grid;align-content:start;gap:13px}
+#sf-ai-desk .sf-label{color:var(--sf-muted);font-size:12px}
+#sf-ai-desk .sf-question{font-size:15px;font-weight:500}
+#sf-ai-desk .sf-rules{margin:0;padding:0;list-style:none;display:grid;gap:9px}
+#sf-ai-desk .sf-rules li{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;font-size:12px}
+#sf-ai-desk .sf-rule-state{white-space:nowrap;font-weight:500;color:var(--sf-good)}
+#sf-ai-desk .sf-rule-state[data-met="false"]{color:var(--sf-warn)}
+#sf-ai-desk .sf-actions{display:flex;gap:9px;flex-wrap:wrap}
+#sf-ai-desk button{font:inherit;font-size:13px;font-weight:500;min-height:42px;padding:9px 13px;border-radius:8px;border:1px solid var(--sf-line);background:var(--sf-surface);color:var(--sf-text);max-width:100%;text-align:center}
+#sf-ai-desk button.sf-primary{background:var(--sf-text);border-color:var(--sf-text);color:var(--sf-surface)}
+#sf-ai-desk button:disabled{opacity:.5;cursor:not-allowed}
+#sf-ai-desk .sf-live{padding:11px 12px;border-radius:8px;background:var(--sf-blue-soft);color:var(--sf-text);font-size:12px}
+#sf-ai-desk .sf-live[data-tone="warn"]{background:var(--sf-warn-bg)}
+#sf-ai-desk .sf-steps{margin:0;padding:0;list-style:none;display:grid;gap:12px}
+#sf-ai-desk .sf-steps li{padding-bottom:10px;border-bottom:1px solid var(--sf-line)}
+#sf-ai-desk .sf-steps li:last-child{border:0;padding-bottom:0}
+#sf-ai-desk .sf-steps strong{display:block;font-weight:500;font-size:13px}
+#sf-ai-desk .sf-steps span{display:block;color:var(--sf-muted);font-size:12px;margin-top:2px}
+#sf-ai-desk .sf-history{background:var(--sf-surface);border:1px solid var(--sf-line);border-radius:12px;padding:18px;display:grid;gap:13px}
+#sf-ai-desk .sf-history-top{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}
+#sf-ai-desk .sf-history-copy{color:var(--sf-muted);font-size:12px}
+#sf-ai-desk .sf-history-values{display:flex;gap:22px;flex-wrap:wrap;font-size:12px}
+#sf-ai-desk .sf-history-values strong{display:block;font-size:17px;font-weight:500;color:var(--sf-text);font-variant-numeric:tabular-nums}
+#sf-ai-desk .sf-footnote{color:var(--sf-muted);font-size:12px}
+#sf-ai-desk [hidden]{display:none!important}
+@media(max-width:650px){#sf-ai-desk .sf-options,#sf-ai-desk .sf-bottom{grid-template-columns:1fr}#sf-ai-desk .sf-main{padding:15px;gap:13px}#sf-ai-desk .sf-chrome{padding-left:16px;gap:7px}#sf-ai-desk .sf-chrome-label{border:0;padding:0}#sf-ai-desk .sf-demo{padding:8px 16px}#sf-ai-desk h1{font-size:23px}#sf-ai-desk .sf-option,#sf-ai-desk .sf-panel,#sf-ai-desk .sf-history{padding:15px}#sf-ai-desk .sf-actions button{flex:1 1 180px}#sf-ai-desk .sf-rules li{flex-wrap:wrap;gap:2px 10px}}
+@media(pointer:coarse){#sf-ai-desk button{min-height:44px}}
+</style>
+<div id="sf-ai-desk" data-state="pending" aria-label="Simulação da mesa de decisão do Orchestra SF">
+<header class="sf-chrome"><span class="sf-brand">Orchestra SF</span><span class="sf-chrome-label">Mesa de decisão</span></header>
+<div class="sf-demo">Simulação · dados fictícios · IA ilustrativa</div>
+<main class="sf-main">
+<div class="sf-heading">
+<div><p class="sf-eyebrow">Renovação de serviço · caso demonstrativo</p><h1>Renovar ou fazer a transição?</h1><p class="sf-context">Janeiro–dezembro de 2027 · USD · 12 meses · custos de implantação incluídos</p></div>
+<span id="sf-case-status" class="sf-status">Falta uma confirmação</span>
+</div>
+<section class="sf-options" aria-label="Alternativas no mesmo horizonte financeiro">
+<article class="sf-option">
+<div class="sf-option-top"><h2>A · Renovar</h2><span class="sf-option-tag">Referência</span></div>
+<div><p class="sf-price">US$ 240.000</p><p class="sf-price-caption">Custo projetado no horizonte</p></div>
+<dl class="sf-composition"><div><dt>Renovação da solução atual</dt><dd>US$ 240.000</dd></div></dl>
+<p class="sf-baseline-note">Manter a solução atual nas condições deste cenário.</p>
+</article>
+<article class="sf-option sf-transition">
+<div class="sf-option-top"><h2>B · Fazer a transição</h2><span id="sf-option-status" class="sf-option-tag">Prazo pendente</span></div>
+<div><p id="sf-total" class="sf-price">US$ 210.000</p><p class="sf-price-caption">Custo projetado no horizonte</p></div>
+<dl class="sf-composition">
+<div><dt>Contrato de transição</dt><dd>US$ 60.000</dd></div>
+<div><dt>Implantação</dt><dd id="sf-implementation">US$ 45.000</dd></div>
+<div><dt>Nova solução</dt><dd>US$ 105.000</dd></div>
+</dl>
+<div class="sf-advantage"><span>Vantagem projetada sobre A</span><strong id="sf-advantage">US$ 30.000</strong></div>
+</article>
+</section>
+<div class="sf-bottom">
+<section class="sf-panel" aria-labelledby="sf-critical-title">
+<div><p class="sf-label">Pergunta preparada pela IA · ilustrativa</p><h2 id="sf-critical-title">A informação que muda a escolha</h2></div>
+<p id="sf-question" class="sf-question">Time do projeto: a transição pode estar entregue até 31 de março de 2027?</p>
+<ul class="sf-rules" aria-label="Condições declaradas para escolher a transição">
+<li><span>Vantagem mínima de US$ 20.000</span><span id="sf-money-rule" class="sf-rule-state" data-met="true">Atendida</span></li>
+<li><span>Entrega até 31 mar 2027 confirmada</span><span id="sf-date-rule" class="sf-rule-state" data-met="false">Pendente</span></li>
+</ul>
+<div class="sf-actions">
+<button id="sf-confirm-date" class="sf-primary cursor-interaction" type="button" aria-controls="sf-result">Confirmar prazo · simulação</button>
+<button id="sf-register" class="cursor-interaction" type="button" disabled aria-controls="sf-history sf-result">Registrar escolha · simulação</button>
+</div>
+<p id="sf-result" class="sf-live" role="status" aria-live="polite" aria-atomic="true">A transição atende ao valor mínimo. Falta confirmar o prazo antes de registrar a escolha.</p>
+</section>
+<section class="sf-panel" aria-labelledby="sf-next-title">
+<div><p class="sf-label">Contexto compartilhado entre as áreas</p><h2 id="sf-next-title">Próximos passos preparados</h2></div>
+<ul class="sf-steps">
+<li><strong>Planner</strong><span>Proposta de cenário com a composição da alternativa B.</span></li>
+<li><strong>Procurement</strong><span>Comparação para revisão do comprador, no processo existente.</span></li>
+<li><strong>Projeto</strong><span>Encaminhamento com a data e a justificativa da escolha.</span></li>
+</ul>
+<p id="sf-drafts-status" class="sf-footnote">Rascunhos ilustrativos · nenhuma alteração aplicada.</p>
+</section>
+</div>
+<section id="sf-history" class="sf-history" aria-labelledby="sf-history-title" hidden>
+<div class="sf-history-top"><div><p class="sf-label">Memória da decisão · registro simulado 01</p><h2 id="sf-history-title">Escolha histórica: fazer a transição</h2></div><span class="sf-status" data-tone="neutral">Base original preservada</span></div>
+<div class="sf-history-values"><span class="sf-history-copy">Custo no momento da escolha<strong id="sf-original-total"></strong></span><span class="sf-history-copy">Vantagem no momento da escolha<strong id="sf-original-advantage"></strong></span><span class="sf-history-copy">Prazo confirmado<strong>31 mar 2027</strong></span></div>
+<div class="sf-actions"><button id="sf-new-quote" class="cursor-interaction" type="button" aria-controls="sf-total sf-implementation sf-advantage sf-result">Nova cotação +25 mil</button></div>
+<p id="sf-history-note" class="sf-history-copy">A escolha registra esta base. Uma mudança posterior será comparada com ela.</p>
+</section>
+<p class="sf-footnote">Todos os controles são locais a esta simulação. Nenhuma compra é aprovada ou executada.</p>
+</main>
+</div>
+<script>
+(function(){
+const root=document.getElementById('sf-ai-desk');
+if(!root)return;
+const get=id=>root.querySelector('#'+id);
+const money=n=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n);
+const state={deadlineConfirmed:false,choice:null,newQuote:false};
+const confirm=get('sf-confirm-date'),register=get('sf-register'),quote=get('sf-new-quote');
+function render(){
+const implantation=state.newQuote?70000:45000;
+const total=60000+implantation+105000;
+const advantage=240000-total;
+const meetsMoney=advantage>=20000;
+const eligible=state.deadlineConfirmed&&meetsMoney;
+root.dataset.state=state.newQuote?'reconsider':state.choice?'chosen':eligible?'ready':'pending';
+get('sf-implementation').textContent=money(implantation);
+get('sf-total').textContent=money(total);
+get('sf-advantage').textContent=money(advantage);
+get('sf-money-rule').textContent=meetsMoney?'Atendida':'Não atendida';
+get('sf-money-rule').dataset.met=String(meetsMoney);
+get('sf-date-rule').textContent=state.deadlineConfirmed?'Confirmada':'Pendente';
+get('sf-date-rule').dataset.met=String(state.deadlineConfirmed);
+confirm.disabled=state.deadlineConfirmed;
+confirm.textContent=state.deadlineConfirmed?'Prazo confirmado · simulação':'Confirmar prazo · simulação';
+confirm.classList.toggle('sf-primary',!state.deadlineConfirmed);
+register.disabled=!eligible||Boolean(state.choice);
+register.classList.toggle('sf-primary',eligible&&!state.choice);
+register.textContent=state.choice?'Escolha registrada · simulação':'Registrar escolha · simulação';
+quote.disabled=state.newQuote;
+quote.textContent=state.newQuote?'Cotação atualizada · simulação':'Nova cotação +25 mil';
+get('sf-history').hidden=!state.choice;
+const badge=get('sf-case-status'),result=get('sf-result');
+badge.dataset.tone=state.newQuote?'warn':eligible?'good':'warn';
+result.dataset.tone=state.newQuote?'warn':'neutral';
+if(state.newQuote){
+badge.textContent='Reavaliar';
+get('sf-option-status').textContent='Premissa financeira rompida';
+get('sf-question').textContent='A condição de vantagem mínima deixou de ser atendida.';
+result.textContent='Implantação: '+money(45000)+' → '+money(70000)+'. A vantagem caiu de '+money(30000)+' para '+money(5000)+', abaixo do mínimo de '+money(20000)+'. O prazo continua confirmado; a escolha precisa ser reavaliada.';
+get('sf-drafts-status').textContent='Rascunhos anteriores desatualizados · aguardam reavaliação. Nada foi aplicado.';
+get('sf-history-note').textContent='A escolha original permanece em '+money(state.choice.total)+'. A cotação nova altera a comparação atual, sem reescrever o histórico.';
+}else if(state.choice){
+badge.textContent='Escolha registrada';
+get('sf-option-status').textContent='Escolhida nesta simulação';
+get('sf-question').textContent='Prazo confirmado. A escolha foi registrada com suas condições.';
+result.textContent='Transição registrada por '+money(state.choice.total)+', com vantagem de '+money(state.choice.advantage)+' e prazo confirmado. As mudanças estão apenas preparadas para revisão.';
+get('sf-drafts-status').textContent='Preparados para revisão · nenhuma alteração aplicada.';
+}else if(eligible){
+badge.textContent='Pronta para escolher';
+get('sf-option-status').textContent='Atende aos dois critérios';
+get('sf-question').textContent='Prazo confirmado nesta simulação: 31 de março de 2027.';
+result.textContent='As duas condições declaradas estão atendidas. É possível registrar a escolha pela transição.';
+}
+if(state.choice){get('sf-original-total').textContent=money(state.choice.total);get('sf-original-advantage').textContent=money(state.choice.advantage);}
+}
+confirm.addEventListener('click',()=>{if(state.deadlineConfirmed)return;state.deadlineConfirmed=true;render();});
+register.addEventListener('click',()=>{if(!state.deadlineConfirmed||state.choice||state.newQuote)return;state.choice=Object.freeze({alternative:'transition',bridge:60000,implementation:45000,solution:105000,total:210000,advantage:30000,deadline:'2027-03-31',minimumAdvantage:20000});render();});
+quote.addEventListener('click',()=>{if(!state.choice||state.newQuote)return;state.newQuote=true;render();});
+render();
+})();
+</script>

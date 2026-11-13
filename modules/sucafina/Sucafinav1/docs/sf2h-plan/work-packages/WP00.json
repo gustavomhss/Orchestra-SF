@@ -1,0 +1,558 @@
+{
+  "id": "WP00",
+  "title": "Contratos, baseline e critérios de aceitação",
+  "objective": "Dar às frentes paralelas uma referência única de produto, dados, fronteiras e provas sem mudar processos de negócio.",
+  "scope_in": [
+    "Inventário de 28 capacidades canônicas, ações, estados, papéis, formatos e saídas",
+    "Contratos C01–C14 e vocabulário financeiro/contextual",
+    "Fixtures sintéticas reconciliáveis e cenários de aceitação",
+    "Matriz de ownership e congelamento de interfaces para execução"
+  ],
+  "scope_out": [
+    "Implementar telas ou regras pertencentes aos domínios",
+    "Mudar Azure, identidade, deploy ou runtime central do Relay",
+    "Inventar dados reais ou consultar outras áreas como requisito"
+  ],
+  "contract_reads": [],
+  "contract_provides": [
+    "C01",
+    "C02",
+    "C03",
+    "C04",
+    "C05",
+    "C06",
+    "C07",
+    "C08",
+    "C09",
+    "C10",
+    "C11",
+    "C12",
+    "C13",
+    "C14"
+  ],
+  "axioms": {
+    "dod": [
+      {
+        "id": "WP00.DOD.01",
+        "text": "Baseline, contratos, fixtures e mapa de ownership estão versionados e aceitos pelos consumidores; divergências materiais têm resolução explícita.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP00.DOD.02",
+        "text": "Nenhuma frente recebe autorização para implementar contra uma interface ainda ambígua.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "invariants": [
+      {
+        "id": "WP00.INV.01",
+        "text": "Os HTMLs e comportamentos conhecidos guiam a compatibilidade; defeito comprovado não vira regra intocável.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP00.INV.02",
+        "text": "Cada arquivo tem um único escritor e toda saída planejada tem um consumidor.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "quality_standards": [
+      {
+        "id": "WP00.QLT.01",
+        "text": "Cada medida tem nome, período, moeda, regra de agregação, tratamento de ausência e fonte; critérios usam resultados observáveis.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP00.QLT.02",
+        "text": "Uma pessoa que não participou desta conversa consegue localizar entradas, saídas e limite de cada WP.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "completeness_criteria": [
+      {
+        "id": "WP00.CMP.01",
+        "text": "As 16 capacidades Dashboard, 7 Planner e 5 Procurement, todas as propostas aceitas e os 8 contratos estão mapeados.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP00.CMP.02",
+        "text": "Casos normais, vazios, ausentes, bloqueados, concorrentes e restritos estão representados nas fixtures pertinentes.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "success_criteria": [
+      {
+        "id": "WP00.SUC.01",
+        "text": "Cada WP consegue iniciar sem perguntar a outro executor quem escreve um arquivo compartilhado.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP00.SUC.02",
+        "text": "Os exemplos financeiros e de procurement reconciliam e as limitações atuais do Relay estão explícitas no plano de produto.",
+        "status": "NOT_RUN"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "WP00.T01",
+      "title": "Fixar baseline funcional e decisões de escopo",
+      "intent": "Preservar a intenção do André e tornar explícito o que muda, continua ou é corrigido.",
+      "work": [
+        "Inventariar páginas, comandos, papéis, campos e formatos do SHA de referência.",
+        "Mapear cada capacidade antiga para sua entrada proposta e cada nova capacidade para um WP.",
+        "Registrar correções semânticas permitidas separadamente de alterações de política excluídas."
+      ],
+      "inputs": [
+        "Código e guias no SHA fixado",
+        "Proposta de produto aprovada e restrições da conversa"
+      ],
+      "outputs": [
+        "Matriz de rastreabilidade funcional",
+        "Registro de semântica financeira e correções propostas",
+        "Lista de exclusões de produto e de arquivos da frente de deploy"
+      ],
+      "depends_on": [],
+      "checks": [
+        {
+          "id": "WP00.T01.CHK.01",
+          "text": "Conferir 28 capacidades sem linha órfã e sem exclusão silenciosa.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP00.T01.CHK.02",
+          "text": "Encontrar destino para Talent Review, stakeholders, performance contract, suppliers/settings, FX e allocations, além dos fluxos mais visíveis.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP00.T01.DOD.01",
+            "text": "A matriz lista cada capacidade e comando observado, destino, owner e cenário de preservação.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP00.T01.INV.01",
+            "text": "Nenhuma regra de alçada, classificação contábil ou permissões é alterada por preferência estética.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP00.T01.QLT.01",
+            "text": "Distinguir capacidade atual, proposta nova, defeito comprovado e hipótese; citar a origem de afirmações sobre o código.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP00.T01.CMP.01",
+            "text": "Cobrir as três superfícies, import/export, efeitos de escrita e saídas de relatório; registrar itens sem evidência suficiente.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP00.T01.SUC.01",
+            "text": "Um revisor consegue identificar exatamente quais comportamentos a campanha preserva e quais resultados pretende melhorar.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP00",
+      "ownership_ref": "WP00",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP00",
+      "requirements": [
+        "R01"
+      ],
+      "journeys": [
+        "J08"
+      ],
+      "session": "S0",
+      "build_window": [
+        0,
+        4
+      ],
+      "proof_window": [
+        0,
+        4
+      ],
+      "evidence_packages": [
+        "E01"
+      ],
+      "integrates_with": [],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP00.T02",
+      "title": "Definir contratos de consumo e vocabulário",
+      "intent": "Permitir construção paralela sem duplicar cálculo, estado ou autoridade.",
+      "work": [
+        "Especificar C01–C14 com formas de entrada/saída, semântica, erros e exemplos.",
+        "Definir registro, versão, exercício, moeda, período de referência, atualização, fonte e capacidade de acesso.",
+        "Fixar que gráficos consomem projeções, imports simulam o mesmo comando e rotinas encerram em resultados revisáveis.",
+        "Especificar C08 de estado durável de produto: preferências, C05, C06, recibos C04/C07 e correlações; definir formato versionado, migração aditiva e sem efeito quando repetida, versão esperada e aplicação atômica pelo store existente. WP10.T01 é o provider; não abrir uma frente de infraestrutura."
+      ],
+      "inputs": [
+        "Matriz WP00.T01",
+        "Contratos atuais de Domain, Snapshot, Command e ModuleServices"
+      ],
+      "outputs": [
+        "Contratos tipados em product/contracts",
+        "Exemplos válidos/inválidos por contrato",
+        "Tabela produtor-consumidor por contrato",
+        "Tabela formato → parser WP06 → comando puro WP02/WP03 → composição persistente WP10; C08 inclui estados e falhas antes/depois do commit."
+      ],
+      "depends_on": [
+        "WP00.T01"
+      ],
+      "checks": [
+        {
+          "id": "WP00.T02.CHK.01",
+          "text": "Consumidores compilam contra o contrato sem importar a implementação privada de outro WP.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP00.T02.CHK.02",
+          "text": "Exemplos rejeitam período ausente, soma de moedas incompatíveis, referência inventada e campo restrito em projeção pública.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP00.T02.CHK.03",
+          "text": "Para cada formato importável e cada estado novo persistido, apontar exatamente um produtor e o consumidor real; nenhum aparece como responsabilidade genérica da integração.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP00.T02.DOD.01",
+            "text": "Os quatorze contratos possuem produtores, consumidores, erros, versionamento e exemplos de compatibilidade definidos.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP00.T02.INV.01",
+            "text": "C02 não se torna um segundo motor financeiro; C06 não cria outra fonte de tarefas; C07 não concede aprovação de negócio.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP00.T02.QLT.01",
+            "text": "Interfaces pequenas correspondem a necessidades presentes e não antecipam um framework empresarial.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP00.T02.CMP.01",
+            "text": "Incluir leitura, escrita, conflito, importação, revisão, relações, rotinas e composição real.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP00.T02.CMP.02",
+            "text": "Congelar C01–C14, assinaturas mínimas, enumerações de estado, identidade/escopo, exemplos válidos e negativos, export names e mapa produtor/consumidor. A qualificação nativa é paralela.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP00.T02.SUC.01",
+            "text": "Duas frentes conseguem trocar uma saída pelos contratos sem coordenar edição no mesmo arquivo.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP00",
+      "ownership_ref": "WP00",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP00",
+      "requirements": [
+        "R01"
+      ],
+      "journeys": [
+        "J08"
+      ],
+      "session": "S0",
+      "build_window": [
+        4,
+        10
+      ],
+      "proof_window": [
+        4,
+        10
+      ],
+      "evidence_packages": [
+        "E01"
+      ],
+      "integrates_with": [],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP00.T03",
+      "title": "Preparar cenários sintéticos e resultados esperados",
+      "intent": "Dar a todas as frentes uma base verificável comum de demonstração e testes.",
+      "work": [
+        "Preparar fixtures sem dados reais: finanças, pessoas, ações, projetos, operação, riscos, contratos e compras.",
+        "Declarar valores esperados independentes da implementação e vetores mensais completos onde houver séries.",
+        "Incluir papéis autorizados e restritos, concorrência, ausência de FX/rate, retornos de aprovação e mais de 12 registros em relatório.",
+        "Definir corpus de volume sem dados reais e ambiente de medição: 1000 linhas financeiras, 200 pedidos e 100 projetos; registrar ao menos 30 repetições dos fluxos comparáveis, com separação entre resposta visual e conclusão. São fixtures de teste propostas, não volume conhecido da Sucafina."
+      ],
+      "inputs": [
+        "C01–C14",
+        "Cálculos conferidos da proposta"
+      ],
+      "outputs": [
+        "Corpus sintético versionado",
+        "Oráculos numéricos e de autorização",
+        "Roteiros de jornadas J01–J08",
+        "Roteiro de medição com ambiente, volumes, repetições e baseline, incluindo 320/768/1440 px e zoom de200%."
+      ],
+      "depends_on": [
+        "WP00.T01"
+      ],
+      "checks": [
+        {
+          "id": "WP00.T03.CHK.01",
+          "text": "Planner: budget 600000, actual 400000 e forecast 190000 com item 72000 produzem outlook 590000; substituições por 84000/78000 produzem 602000/596000.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP00.T03.CHK.02",
+          "text": "Procurement: EUR28000×1,08=USD30240; A USD32400 pontua aproximadamente87,9333; B85; C não conforme fica fora do ranking.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP00.T03.CHK.03",
+          "text": "Um relatório com 20 registros conserva os 20 ou declara explicitamente um resumo escolhido.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP00.T03.DOD.01",
+            "text": "Corpus, resultados esperados e roteiros foram conferidos e não dependem de respostas geradas pelo próprio código sob teste.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP00.T03.INV.01",
+            "text": "Dados são sintéticos identificados; nenhuma série mensal é inventada interpolando um total anual.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP00.T03.QLT.01",
+            "text": "Fixtures são pequenas para diagnóstico e incluem volume representativo para o uso de tabelas, sem dados decorativos.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP00.T03.QLT.02",
+            "text": "Cada pacote de prova cobre vários axiomas por relações explícitas; resultados esperados vêm de oráculos independentes, nunca de copiar a função a testar.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP00.T03.CMP.01",
+            "text": "Cobrir alternativas, branco/zero/herdado, períodos distintos, informações restritas, import reexecutado e evento de ressubmissão.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP00.T03.SUC.01",
+            "text": "Qualquer executor consegue reproduzir os mesmos deltas, permissões e transições a partir do corpus.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP00",
+      "ownership_ref": "WP00",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP00",
+      "requirements": [
+        "R01"
+      ],
+      "journeys": [
+        "J08"
+      ],
+      "session": "S0",
+      "build_window": [
+        4,
+        10
+      ],
+      "proof_window": [
+        4,
+        10
+      ],
+      "evidence_packages": [
+        "E01"
+      ],
+      "integrates_with": [],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP00.T04",
+      "title": "Qualificar serviços nativos de IA Relay e execução de provas",
+      "intent": "Qualificar a integração real em paralelo à construção de produto, sem bloquear UI/cálculos por uma disponibilidade de Relay ainda não provada.",
+      "work": [
+        "Identificar no host atual o composition root que entrega identidade/projeto/sessão, resolução de modelo e credenciais já configuradas, admissão Maestro/Relay e Schedule.",
+        "Exercitar leitura/admissão nativa autorizada e uma inferência real pelo provider existente; registrar o resultado e o limite concreto quando uma capacidade estiver ausente.",
+        "Localizar test-ci.yml, validar requests com os validadores reais e confirmar o mecanismo push ci-run; não depender de workflow_dispatch não exposto pelo conector.",
+        "Entregar prova de qualificação ao WP09/WP12 e ownership dos arquivos de binding ao WP10. O gate de contratos WP00.T02 libera as demais frentes independentemente."
+      ],
+      "inputs": [
+        "Contratos e corpus de WP00.T02/T03",
+        "Árvore do repositório e AGENTS.md",
+        "Guia nativo de Workflows, Relay e Schedule"
+      ],
+      "outputs": [
+        "Ownership congelado sem sobreposição",
+        "Matriz de integração e admissão C08",
+        "Gate GNATIVE e lista de riscos com responsáveis",
+        "ci-recipes.json validado contra os scripts reais e inventário de suites exigidas, com tempo observado da primeira rodada"
+      ],
+      "depends_on": [],
+      "checks": [
+        {
+          "id": "WP00.T04.CHK.01",
+          "text": "Verificador detecta qualquer colisão entre escritores existentes ou prefixos novos.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP00.T04.CHK.02",
+          "text": "Uma receita mínima linear percorre a admissão governada prevista e produz uma saída verificável no caminho nativo disponível; aprovação humana permanece fora dos steps Relay.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP00.T04.CHK.03",
+          "text": "Qualquer incapacidade do host é registrada como bloqueio da ligação correspondente, sem redefinir o aceite para passar.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP00.T04.CHK.04",
+          "text": "Qualificar a autorização do run e dos resultados/arquivos nativos: acesso revogado não pode ser recuperado por link alternativo. Se o caminho nativo não suportar o recorte, definir saída sem conteúdo sensível e resolver o contrato antes de declarar C08 apto, sem modificar o engine.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP00.T04.DOD.01",
+            "text": "GNATIVE registra o binding real, a inferência escopada, a preparação de admissão e o resultado da qualificação. Impedimentos mantêm esta task aberta; G0 de contratos não depende desta conclusão.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP00.T04.DOD.02",
+            "text": "Qualificação identifica e exercita os serviços reais ou registra o impedimento específico. Um impedimento mantém esta task aberta; não transforma o gate de contratos em bloqueio global.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP00.T04.INV.01",
+            "text": "Não contornar o início governado nem simular execução nativa usando um botão local ou resultado pré-fabricado.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP00.T04.QLT.01",
+            "text": "A prova mínima é limitada ao caminho necessário de produto e não vira uma investigação de infraestrutura.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP00.T04.CMP.01",
+            "text": "Cobrir edição compartilhada, consumo de contratos, admissão, versão publicada, resultado, falha e diferença entre Schedule e Relay.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP00.T04.SUC.01",
+            "text": "As frentes de produto desta campanha podem construir em paralelo com fontes de verdade e pontos de integração conhecidos.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP00",
+      "ownership_ref": "WP00",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP00",
+      "requirements": [
+        "R01",
+        "IA17"
+      ],
+      "journeys": [
+        "J08"
+      ],
+      "session": "S0",
+      "build_window": [
+        0,
+        20
+      ],
+      "proof_window": [
+        0,
+        20
+      ],
+      "evidence_packages": [
+        "E01"
+      ],
+      "integrates_with": [],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    }
+  ],
+  "handoff": [
+    "Baseline, contratos, corpus e G0 para todos os WPs",
+    "Mudanças de contrato futuras passam por emenda com produtores e consumidores afetados"
+  ],
+  "risks": [
+    "Fonte original pode ter regras ambíguas; preservar a conta e explicitar o significado até a correção estar especificada.",
+    "Código de rotina e capacidade do host podem divergir; qualificar C08 cedo e manter o bloqueio visível."
+  ],
+  "status": "PLANNED",
+  "ownership": {
+    "id": "WP00",
+    "branch": "sf2-contracts",
+    "existing_files": [],
+    "new_prefixes": [
+      "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/",
+      "modules/sucafina/Sucafinav1/product/contracts/",
+      "modules/sucafina/Sucafinav1/test/product/wp00/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP00/"
+    ],
+    "allowed_purpose": "Congelar C01–C14, baseline, corpus sintético, oráculos e rastreabilidade da campanha; escrever contratos, documentação e fixtures próprios sem implementar domínios ou editar testes legados."
+  },
+  "source_ids": [
+    "S01",
+    "S19",
+    "S16",
+    "S17",
+    "S18"
+  ],
+  "session": "S0",
+  "build_window": [
+    0,
+    20
+  ],
+  "integration_deadline": 20,
+  "evidence_packages": [
+    "E01"
+  ],
+  "implementation_readiness": "Produzir exports/outputs por contrato cedo. Ready não é Done; a aceitação exige host e consumidores reais."
+}

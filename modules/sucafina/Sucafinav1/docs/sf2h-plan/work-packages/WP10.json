@@ -1,0 +1,750 @@
+{
+  "id": "WP10",
+  "title": "Composição, revisão independente e aceitação",
+  "objective": "Provar que as partes formam um produto completo para André e time, com jornadas reais e sem regressões ocultas.",
+  "scope_in": [
+    "Entry points, handlers, contratos legados e composição compartilhada do módulo Sucafina",
+    "Compatibilidade e migração aditiva dos metadados de produto",
+    "Jornadas E2E, evidências visuais, revisão independente e CI cumulativa",
+    "Documentação operacional de produto e pacote final de aceite"
+  ],
+  "scope_out": [
+    "Reimplementar funcionalidades cujo owner é outro WP",
+    "Alterar deploy, Azure, configuração de identidade ou permissões para tornar um teste verde",
+    "Fechar critérios com mockup, fixtures pré-concluídas, promessas de wiring futuro ou autoavaliação do autor"
+  ],
+  "contract_reads": [
+    "C01",
+    "C02",
+    "C03",
+    "C04",
+    "C05",
+    "C06",
+    "C07",
+    "C08",
+    "C09",
+    "C10",
+    "C11",
+    "C12",
+    "C13",
+    "C14"
+  ],
+  "contract_provides": [
+    "C08"
+  ],
+  "axioms": {
+    "dod": [
+      {
+        "id": "WP10.DOD.01",
+        "text": "Todos os WPs e suas tasks satisfazem os axiomas locais e as jornadas integradas; três pareceres independentes não têm achado obrigatório aberto.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP10.DOD.02",
+        "text": "O commit final possui evidência de CI, comportamento, autorização, visualização e preservação correspondente ao seu conteúdo.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "invariants": [
+      {
+        "id": "WP10.INV.01",
+        "text": "Só WP10 escreve composição compartilhada; defeitos em arquivos de domínio retornam ao owner, com revisão do delta.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP10.INV.02",
+        "text": "Nenhum gate é removido, teste enfraquecido, dado real exposto ou frente de deploy alterada para fechar a campanha.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "quality_standards": [
+      {
+        "id": "WP10.QLT.01",
+        "text": "Evidências são pequenas e suficientes para julgar cada resultado; validade é do comportamento observado, não da quantidade de testes.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP10.QLT.02",
+        "text": "A entrega usa linguagem de produto e inclui limites materiais e semântica dos números.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "completeness_criteria": [
+      {
+        "id": "WP10.CMP.01",
+        "text": "Todas as capacidades antigas e novas, três superfícies, quatro rotinas, oito gráficos e estados relevantes têm cobertura rastreável.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP10.CMP.02",
+        "text": "Inclui regressão, concorrência, permissões, migração de estado anterior, export completo, falha e ausência de dados.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "success_criteria": [
+      {
+        "id": "WP10.SUC.01",
+        "text": "As jornadas de contribuição, comparação, decisão, reunião e retomada funcionam com identidades e dados compartilhados no módulo real.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP10.SUC.02",
+        "text": "André e o time podem completar suas tarefas sem reconstruir contexto em ferramentas auxiliares para os cenários cobertos.",
+        "status": "NOT_RUN"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "WP10.T01",
+      "title": "Compor host e módulo continuamente desde o início",
+      "intent": "Conectar os contratos aos consumidores e preservar instalações/dados existentes.",
+      "work": [
+        "Consumir os handoffs dos WPs01–09 e WP11–WP14 sem copiar lógica privada.",
+        "Atualizar somente os arquivos compartilhados atribuídos, ligar UI/handlers/ports e metadados aditivos; manter dados/rotas existentes compatíveis.",
+        "Aplicar os adapters nativos qualificados e substituir qualquer fixture de composição por implementação real no caminho de entrega.",
+        "Implementar o provider C08 de estado de produto nos arquivos de composição atribuídos: formatos versionados de preferências/revisões/relações/threads/confirmações e referências de run/recibo/correlação. Usar o store existente, migração aditiva/idempotente, comparação de versão e unidade de commit para Apply; não substituir todo estado por uma cópia desatualizada.",
+        "Criar a ponte autorizada de serviços do host com escopo explícito de projeto/sessão/ator, na composição; não obter credenciais globais dentro do módulo.",
+        "Montar as rotas de Hoje/Decisões sem inventar um quarto Surface no contrato existente; resolver acesso antes da leitura e manter as três superfícies canônicas.",
+        "Fazer agregação de projeções fora das transações de domínio, mantendo versões por seção. Encaminhar cada mudança pelo comando do seu domínio e confirmar recibos individualmente.",
+        "Integrar incrementos em T+25, T+40, T+55 e T+75. Nenhuma dependência desta task espera todos os WPs completos para começar.",
+        "Fornecer persistência protegida de metadados, revisão de acesso em reload/cache/export e política de importação acordada com WP06/WP11/WP14.",
+        "Cada comando preparado leva idempotencyKey e digest de conteúdo/ator/target/encarnação. O adapter WP10 consulta e grava o recibo no MESMO snapshot/commit da mutação daquele domínio. Retry idêntico revalida acesso e retorna o recibo; mesma chave com digest diferente é conflito. O caso central reconcilia recibos depois e pode estar parcialmente atualizado; nunca repetir uma mutação porque a resposta se perdeu."
+      ],
+      "inputs": [
+        "WPs01–09 e WP11–WP14 prontos para integrar",
+        "C01–C14 congelados",
+        "Baseline e matriz funcional"
+      ],
+      "outputs": [
+        "Composição real do módulo",
+        "Compatibilidade dos estados antigos e novos",
+        "Mapa de comandos/projeções/consumidores integrados",
+        "Provider C08 durável e versionado, composição atômica dos comandos C04 e recuperação idempotente de recibos/correlações depois de falha ou resposta perdida."
+      ],
+      "depends_on": [],
+      "checks": [
+        {
+          "id": "WP10.T01.CHK.01",
+          "text": "Inicializar estado anterior e acessar as 28 capacidades sem perda de dados ou mudança de permissão.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T01.CHK.02",
+          "text": "Abrir cada função nova através da navegação real e observar leitura/escrita no domínio correto.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T01.CHK.03",
+          "text": "Rotinas usam recibo de run real; gráficos, imports e relatórios usam os mesmos valores autorizados dos domínios.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T01.CHK.04",
+          "text": "Salvar preferência, revisão, thread/vínculo e recibo/correlação; recarregar em nova sessão autorizada: o estado permanece. Migrar a mesma base antiga duas vezes produz o mesmo estado, sem duplicar registro nem ampliar acesso.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T01.CHK.05",
+          "text": "Injetar falha antes do commit de Apply: nenhum efeito. Perder resposta depois do commit e repetir correlação: recuperar o mesmo resultado sem aplicar outra vez; edição independente não é perdida. Se o store existente não suportar a atomicidade exigida, registrar incompatibilidade em C08 e resolver dentro da fronteira de produto antes de declarar pronto.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP10.T01.DOD.01",
+            "text": "As superfícies reais consomem todas as portas e funções da campanha, sem caminhos de produção vazios ou simulados.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP10.T01.INV.01",
+            "text": "Composição não altera fórmulas/políticas por conveniência e não escreve arquivos de feature de outro WP.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T01.INV.02",
+            "text": "A composição preserva atomicidade dentro de cada domínio: comando e recibo local são commitados juntos ou nenhum deles é gravado. Uma operação entre domínios pode ficar parcial, com esse estado e seus recibos explícitos, sem repetir efeitos aplicados.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T01.INV.03",
+            "text": "Cada comando preparado leva idempotencyKey e digest de conteúdo/ator/target/encarnação. O adapter WP10 consulta e grava o recibo no MESMO snapshot/commit da mutação daquele domínio. Retry idêntico revalida acesso e retorna o recibo; mesma chave com digest diferente é conflito. O caso central reconcilia recibos depois e pode estar parcialmente atualizado; nunca repetir uma mutação porque a resposta se perdeu.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP10.T01.QLT.01",
+            "text": "Mudanças de compatibilidade são aditivas, pequenas e documentadas junto ao consumidor afetado.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP10.T01.CMP.01",
+            "text": "Cobrir entrypoint, rotas, handlers, contratos legados, preferências, revisões, relações, imports e rotinas.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T01.CMP.02",
+            "text": "Preferências, C05/C06, recibos/referências C04/C07 e correlação têm formato, migração, save/load, ACL e falha antes/depois do commit verificados.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP10.T01.SUC.01",
+            "text": "A funcionalidade deixa de depender de abrir páginas isoladas ou scripts de demonstração para existir.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP10",
+      "ownership_ref": "WP10",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "R40",
+        "IA07",
+        "IA17",
+        "IA18"
+      ],
+      "journeys": [
+        "J08",
+        "J13"
+      ],
+      "session": "S0",
+      "build_window": [
+        0,
+        75
+      ],
+      "proof_window": [
+        0,
+        75
+      ],
+      "evidence_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrates_with": [],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP10.T02",
+      "title": "Executar jornadas reais e verificar experiência",
+      "intent": "Demonstrar o trabalho completo com papéis e estados representativos.",
+      "work": [
+        "Executar J01–J13 com corpus sintético no módulo montado e identidades distintas.",
+        "Verificar tarefas com teclado e em 320/768/1440 px, incluindo textos longos, listas densas, dados ausentes e retorno ao contexto.",
+        "Registrar medidas de esforço e telas decisivas; corrigir causas nos WPs responsáveis."
+      ],
+      "inputs": [
+        "Composição WP10.T01",
+        "Corpus/oráculos WP00.T03",
+        "Critérios de produto da campanha"
+      ],
+      "outputs": [
+        "Recibos E2E com entrada, ação e resultado",
+        "Evidência visual de telas e estados essenciais",
+        "Resultados de usabilidade por tarefa e achados"
+      ],
+      "depends_on": [],
+      "checks": [
+        {
+          "id": "WP10.T02.CHK.01",
+          "text": "Um segundo usuário altera o registro entre leitura e escrita: entrada local preservada, conflito visível, nenhuma perda silenciosa.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T02.CHK.02",
+          "text": "Após salvar revisão, alterar origem não muda o apresentado; comparação seguinte mostra a mudança.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T02.CHK.03",
+          "text": "Gerar relatório com25 registros preserva cobertura e nega dado sensível fora do papel.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T02.CHK.04",
+          "text": "Demo de preparar→revisar→decidir→acompanhar percorre o caminho de produto, não botões de mockup.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T02.CHK.05",
+          "text": "No ambiente/corpus fixados em G0, medir resposta visual e conclusão com30repetições comparáveis. Verificar feedback em até200ms e investigar p95 que regrida mais de20%; registrar resultado observado, sem inventar benchmark.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP10.T02.DOD.01",
+            "text": "Jornadas e estados de interface foram observados na composição real, com evidência suficiente para reproduzir cada conclusão.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP10.T02.INV.01",
+            "text": "Captura bonita ou teste de markup não substitui comportamento; identidade de teste não pode ter privilégios extras ocultos.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP10.T02.QLT.01",
+            "text": "Toda falha visual com perda de conteúdo/ação e toda perda de contexto relevante recebe correção antes do aceite.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP10.T02.CMP.01",
+            "text": "Cobrir usuários, formatos, moedas, períodos, comparações, approvals, revisão, rotinas, busca, filtros e acessibilidade previstos.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP10.T02.SUC.01",
+            "text": "Cada persona conclui sua tarefa e entende o resultado; entender uma aprovação em cerca de30 segundos é objetivo observado no roteiro, não promessa universal.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP10",
+      "ownership_ref": "WP10",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "R41"
+      ],
+      "journeys": [
+        "J08"
+      ],
+      "session": "S0",
+      "build_window": [
+        20,
+        95
+      ],
+      "proof_window": [
+        20,
+        95
+      ],
+      "evidence_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrates_with": [],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP10.T03",
+      "title": "Executar três revisões independentes e fechar correções",
+      "intent": "Atacar a entrega por experiência e por integridade, sem autoaprovação.",
+      "work": [
+        "Designar três revisores independentes: produto/UX; finanças, semântica, permissões e persistência; IA, Relay e integração. Cada um examina o candidato e produz achados reproduzíveis fora da própria autoria.",
+        "Fornecer intenção, matriz de critérios, commit e evidências; permitir que os juízes tentem refutar os resultados.",
+        "Devolver achados aos owners, revisar deltas e repetir apenas provas afetadas até não haver achados obrigatórios abertos."
+      ],
+      "inputs": [
+        "Resultados WP10.T02",
+        "Commit candidato",
+        "Axiomas e matriz de evidências"
+      ],
+      "outputs": [
+        "Parecer de produto/UX",
+        "Parecer de semântica/integridade",
+        "Registro de achados, correções e reavaliação",
+        "Parecer independente de IA, Relay e integração"
+      ],
+      "depends_on": [],
+      "checks": [
+        {
+          "id": "WP10.T03.CHK.01",
+          "text": "Juiz identifica se o comparador confunde margem e economia, se o aging usa evento errado ou se dados restritos escapam por relatório.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T03.CHK.02",
+          "text": "Juiz de UX percorre contribuição e conclusão, não apenas a home de André.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T03.CHK.03",
+          "text": "Recibo de autor não conta como parecer independente; correção relevante invalida evidência afetada.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP10.T03.DOD.01",
+            "text": "Três juízes independentes emitem aceite fundamentado no candidato final, após correções necessárias.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP10.T03.INV.01",
+            "text": "Nenhum achado que viole axioma obrigatório pode ser reclassificado como opcional só para encerrar.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP10.T03.QLT.01",
+            "text": "Pareceres citam cenário, comportamento e consequência; evitar notas genéricas ou placares sem evidência.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP10.T03.CMP.01",
+            "text": "Produto/UX cobre tarefa e conclusão; semântica cobre cálculo, estado, papéis, fontes, versões e automações.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T03.CMP.02",
+            "text": "Cobrir produto/UX, finanças/permissões/persistência e IA/Relay/integração com três revisores sem autoria nos arquivos julgados; cobrir substituição de revisor caso um assuma WP14.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP10.T03.SUC.01",
+            "text": "Um revisor sem autoria da implementação consegue sustentar o aceite e explicar seus limites concretos.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP10",
+      "ownership_ref": "WP10",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "R41"
+      ],
+      "journeys": [
+        "J08"
+      ],
+      "session": "S0",
+      "build_window": [
+        55,
+        103
+      ],
+      "proof_window": [
+        55,
+        103
+      ],
+      "evidence_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrates_with": [],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP10.T04",
+      "title": "Concluir verificação cumulativa no commit final",
+      "intent": "Ligar o aceite ao código que será efetivamente entregue.",
+      "work": [
+        "Executar verificações escopadas durante desenvolvimento e uma rodada cumulativa após composição/correções, respeitando AGENTS.md.",
+        "Rodar testes do repositório pelo caminho GitHub Actions test:ci; typecheck conforme pacote e guardrails vigentes.",
+        "Registrar SHA, URLs/IDs dos runs reais, seletores, resultados e validade da evidência; não disparar deploy.",
+        "Executar todas as recipes obrigatórias de ci-recipes.json e a receita completa exigida pelo epic/AGENTS, ampliando por footprint real. Associar prova live de IA/Relay ao mesmo candidato sem transmitir segredo no request CI."
+      ],
+      "inputs": [
+        "Candidato após WP10.T03",
+        "Scripts do repositório no baseline ou emenda documentada",
+        "Mapa de testes por ownership"
+      ],
+      "outputs": [
+        "Recibos de CI e typecheck",
+        "Resultado de guardrails",
+        "Matriz critério→evidência no mesmo candidato"
+      ],
+      "depends_on": [],
+      "checks": [
+        {
+          "id": "WP10.T04.CHK.01",
+          "text": "Uma mudança depois de um run invalida os critérios afetados até nova verificação; não chamar green antigo de green atual.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T04.CHK.02",
+          "text": "As suítes necessárias executam testes reais e não somente passam com zero testes coletados.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T04.CHK.03",
+          "text": "Não rodar bun test local nem alterar guards para fugir do caminho exigido pelo repositório.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP10.T04.DOD.01",
+            "text": "O candidato final tem resultados válidos das verificações exigidas, sem falha obrigatória ou prova desatualizada.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP10.T04.INV.01",
+            "text": "CI verde não prova automaticamente UX; pareceres e jornadas continuam obrigatórios e separados.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP10.T04.QLT.01",
+            "text": "Reusar evidência ainda válida e repetir somente o necessário para resolver risco concreto ou gate exigido.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP10.T04.CMP.01",
+            "text": "Cobrir seletores de domínio, integração, browsers, relatórios, imports, concorrência, rotinas e guards afetados.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP10.T04.SUC.01",
+            "text": "Qualquer pessoa consegue ligar cada resultado declarado ao commit e à execução que o demonstraram.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP10",
+      "ownership_ref": "WP10",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "R41"
+      ],
+      "journeys": [
+        "J08"
+      ],
+      "session": "S0",
+      "build_window": [
+        75,
+        118
+      ],
+      "proof_window": [
+        75,
+        118
+      ],
+      "evidence_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrates_with": [],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP10.T05",
+      "title": "Fechar a campanha e entregar o produto revisável",
+      "intent": "Concluir com capacidade demonstrada, orientação de uso e rastreabilidade.",
+      "work": [
+        "Consolidar a matriz de capacidades/axiomas e conferir nenhum item órfão ou estado intermediário vendido como concluído.",
+        "Entregar guia de tarefas por papel, sem detalhes de deploy, e roteiro de demonstração com dados sintéticos.",
+        "Publicar changelog de produto, semânticas corrigidas, evidências e limites; submissão/merge segue a autorização e políticas do repositório.",
+        "Preparar recibo e documentação entre T+110 e T+118; só publicar aceitação após G7 e WP10.T04, entre T+118 e T+120. Preparação não declara conclusão."
+      ],
+      "inputs": [
+        "WP10.T04 aprovado",
+        "Pareceres independentes válidos",
+        "Artefatos e handoffs de todos os WPs"
+      ],
+      "outputs": [
+        "Pacote final de aceite e guia de uso",
+        "Roteiro de demonstração",
+        "Matriz completa e registro de versão"
+      ],
+      "depends_on": [],
+      "checks": [
+        {
+          "id": "WP10.T05.CHK.01",
+          "text": "Todas as tasks, WPs e capacidades obrigatórias da matriz canônica têm aceite e evidência válidos; o encerramento consulta a lista, sem contagem antiga fixa.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T05.CHK.02",
+          "text": "Uma pessoa executa o roteiro a partir do guia sem depender desta conversa.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP10.T05.CHK.03",
+          "text": "Itens explicitamente fora de escopo não são apresentados como entregues e capacidades aceitas não são movidas para depois sem mudança de escopo.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP10.T05.DOD.01",
+            "text": "Campanha fechada somente com cobertura completa, critérios satisfeitos e pacote final coerente com o código entregue.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP10.T05.INV.01",
+            "text": "Planejamento, implementação, revisão, publicação e deploy são estados distintos; não confundir um com outro.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP10.T05.QLT.01",
+            "text": "Guia explica o trabalho do usuário e o significado dos dados; detalhes internos ficam nas referências técnicas pertinentes.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP10.T05.CMP.01",
+            "text": "Incluir todas as personas, principais jornadas, gráficos/rotinas, import/export, estados de erro e semânticas alteradas.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP10.T05.SUC.01",
+            "text": "André e time conseguem usar e retomar o trabalho; o usuário recebe uma entrega comprovada e fácil de revisar.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP10",
+      "ownership_ref": "WP10",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "R41"
+      ],
+      "journeys": [
+        "J08"
+      ],
+      "session": "S0",
+      "build_window": [
+        110,
+        120
+      ],
+      "proof_window": [
+        110,
+        120
+      ],
+      "evidence_packages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "integrates_with": [],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+      "acceptance_requires": [
+        "WP10.T04",
+        "G7"
+      ]
+    }
+  ],
+  "handoff": [
+    "Aceite da campanha, guia, demonstração e evidência do candidato final",
+    "Integração/merge somente pelo fluxo autorizado; deploy fica com a frente já existente"
+  ],
+  "risks": [
+    "Correções cruzadas podem reabrir critérios; rastrear impacto e repetir só as provas afetadas.",
+    "Mudança concorrente da frente de deploy exige rebase/reconciliação, não ampliação unilateral do ownership."
+  ],
+  "status": "PLANNED",
+  "ownership": {
+    "id": "WP10",
+    "branch": "sf2-integrate",
+    "existing_files": [
+      "modules/sucafina/Sucafinav1/README.md",
+      "modules/sucafina/Sucafinav1/bun.lock",
+      "modules/sucafina/Sucafinav1/index.ts",
+      "modules/sucafina/Sucafinav1/package.json",
+      "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "modules/sucafina/Sucafinav1/src/records.ts",
+      "modules/sucafina/Sucafinav1/src/surfaces.ts",
+      "modules/sucafina/Sucafinav1/test/business-browser.test.ts",
+      "modules/sucafina/Sucafinav1/test/elo.test.ts",
+      "modules/sucafina/Sucafinav1/test/full-module.test.ts",
+      "modules/sucafina/Sucafinav1/test/io-browser.test.ts",
+      "modules/sucafina/Sucafinav1/test/lido.test.ts",
+      "modules/sucafina/Sucafinav1/test/migrate.test.ts",
+      "modules/sucafina/Sucafinav1/test/plug.test.ts",
+      "modules/sucafina/Sucafinav1/test/presentation.test.ts",
+      "modules/sucafina/Sucafinav1/test/s1.test.ts",
+      "modules/sucafina/Sucafinav1/test/s3.test.ts",
+      "modules/sucafina/Sucafinav1/test/s4.test.ts",
+      "modules/sucafina/Sucafinav1/test/s5.test.ts",
+      "modules/sucafina/Sucafinav1/test/s6.test.ts",
+      "modules/sucafina/package.json",
+      "bun.lock",
+      "package.json",
+      "apps/cli/src/host.ts",
+      "apps/cli/src/commands/handlers/serve.ts",
+      "modules/sucafina/Sucafinav1/local/entry.ts",
+      "modules/sucafina/Sucafinav1/runtime/host.ts"
+    ],
+    "new_prefixes": [
+      "modules/sucafina/Sucafinav1/product/integration/",
+      "modules/sucafina/Sucafinav1/test/product/wp10/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/",
+      "modules/sucafina/Sucafinav1/product/host-binding/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/control/",
+      "packages/app-shell/e2e/sucafina/",
+      "apps/cli/src/sucafina-product/"
+    ],
+    "allowed_purpose": "Compor o produto e as portas reais nos entrypoints enumerados, fornecer persistência protegida e autorização contextual, integrar e verificar. As exceções exatas autorizam manifests/lock da raiz e os dois arquivos de factory/host para essa integração. Não alterar Azure, deploy, identidade, engines ou política de aprovação; não sobrescrever arquivo de outro escritor."
+  },
+  "source_ids": [
+    "S01",
+    "S02",
+    "S04",
+    "S19"
+  ],
+  "session": "S0",
+  "build_window": [
+    0,
+    120
+  ],
+  "integration_deadline": 118,
+  "evidence_packages": [
+    "E01",
+    "E16",
+    "E17",
+    "E18"
+  ],
+  "implementation_readiness": "Produzir exports/outputs por contrato cedo. Ready não é Done; a aceitação exige host e consumidores reais.",
+  "contract_notes": {
+    "contract_provides": [
+      "C08 — composição e estado durável de produto pelo store existente: preferências, C05/C06, recibos/referências C04/C07 e correlação; expected version, commit atômico, retomada e migração aditiva. Sem trocar engine de persistência, identidade ou infraestrutura."
+    ]
+  }
+}

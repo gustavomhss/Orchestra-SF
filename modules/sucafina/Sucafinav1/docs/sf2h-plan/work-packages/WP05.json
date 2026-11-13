@@ -1,0 +1,878 @@
+{
+  "id": "WP05",
+  "title": "BI contextual e gráficos",
+  "objective": "Permitir que André e o time respondam perguntas financeiras e operacionais com oito gráficos explicáveis, filtros consistentes e drilldown para os registros reais, usando exclusivamente as projeções calculadas pelos domínios.",
+  "scope_in": [
+    "Ownership exclusivo: novos modules/sucafina/Sucafinav1/product/analytics/**, incluindo componentes, modelos visuais, registro de gráficos, interações acessíveis e verificações locais.",
+    "Oito gráficos: trajetória budget/actual/outlook; waterfall de cenários; barras divergentes por contribuição; FTE e custo alinhados; pedidos por etapa; aging; tickets abertos/fechados; agenda de marcos.",
+    "Consumo dos C02 reais de Dashboard, Planner e Procurement; geometria/formatação/interação dos gráficos sem reimplementar cálculos financeiros, autorização ou extração de eventos de domínio.",
+    "Contexto C01 e portas C08 exportadas para composição paralela por WP10; cada seleção visual preserva referência, filtros, período, moeda, versão e recorte autorizado.",
+    "Entregar BI de consequência e sensibilidade"
+  ],
+  "scope_out": [
+    "Não escrever runtime de domínio, src financeiro, shell, application, workbooks, product/procurement/**, produtor C02 ou entrypoint comum.",
+    "Não criar motor financeiro, BI builder genérico, ontologia, fontes externas, dashboards sintéticos vendidos como dados reais ou métricas sem suporte na projeção.",
+    "Não inferir séries mensais a partir de um total anual, coortes a partir de estoque por etapa, tempo na etapa a partir de createdAt/último save ou zero a partir de ausência.",
+    "Nenhum Azure/deploy/identidade, acesso SAP/Fabric, política nova, aprovação, edição de negócio ou mensagem externa."
+  ],
+  "contract_reads": [
+    "C01",
+    "C02",
+    "C08",
+    "C09",
+    "C10",
+    "C13",
+    "C14"
+  ],
+  "contract_provides": [
+    "C08",
+    "C01"
+  ],
+  "axioms": {
+    "dod": [
+      {
+        "id": "WP05.DOD.01",
+        "text": "Os oito gráficos têm pergunta explícita, eixos/unidades, fonte C02, comportamento de ausência e drilldown exportado, com evidências verificáveis para cada um.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP05.DOD.02",
+        "text": "Os gráficos são consumidores do C02 real: o pacote não calcula salários, OPEX/CAPEX, alçadas, ranking, aging ou métricas de tickets a partir de dados brutos.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP05.DOD.03",
+        "text": "A entrega inclui tabela equivalente, operações por teclado e recibo de filtros/referências; WP10 verifica os gráficos nos entrypoints comuns com os produtores reais.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP05.DOD.04",
+        "text": "Oito perguntas analíticas originais e três perguntas de decisão funcionam com o motor canônico, suas fontes e tabelas equivalentes; não basta renderizar novos gráficos vazios.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "invariants": [
+      {
+        "id": "WP05.INV.01",
+        "text": "A mesma seleção contextual do domínio produz os mesmos valores no gráfico e no detalhe; moeda, período, versão e recorte autorizado não mudam silenciosamente no drilldown.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP05.INV.02",
+        "text": "Ausente não é zero, estoque não é funil/coorte, prazo planejado não é conclusão real e idade sem evento comprovado não é duração conhecida.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP05.INV.03",
+        "text": "Componentes financeiros são os fornecidos por C02; diferenças não reconciliadas ficam visíveis e não são escondidas por uma parcela de ajuste criada no BI.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "quality_standards": [
+      {
+        "id": "WP05.QLT.01",
+        "text": "Cada gráfico permite responder uma pergunta concreta sem depender apenas de cor, hover ou memória da escala.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP05.QLT.02",
+        "text": "Sinais, unidades, eixos, arredondamento e granularidade ficam claros; FTE e moeda usam painéis alinhados em vez de um eixo duplo que sugira equivalência.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP05.QLT.03",
+        "text": "Estados vazio, parcial, indisponível e restrito são distintos e não inventam números para preencher espaço.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "completeness_criteria": [
+      {
+        "id": "WP05.CMP.01",
+        "text": "Cobrir os oito gráficos, seus filtros e caminhos de drilldown, incluindo dados parciais, negativos, nulos e séries/tempos indisponíveis.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP05.CMP.02",
+        "text": "Cobrir navegação por teclado, tabela equivalente, foco/retorno e contexto de dados restritos em cada par de gráficos.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP05.CMP.03",
+        "text": "Identificar o produtor C02 e a referência de origem de cada marca ou agregado; fixtures de contrato não substituem a prova final com consumidores reais.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP05.CMP.04",
+        "text": "Oito perguntas analíticas originais e três perguntas de decisão funcionam com o motor canônico, suas fontes e tabelas equivalentes; não basta renderizar novos gráficos vazios.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "success_criteria": [
+      {
+        "id": "WP05.SUC.01",
+        "text": "Nos roteiros, o usuário identifica desvio, contribuição, capacidade ou pendência e abre os registros que explicam o resultado sem refazer filtros.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP05.SUC.02",
+        "text": "Mudar os valores projetados pelo domínio muda as marcas correspondentes; inserir um cálculo divergente, zero fictício ou registro fora do recorte faz uma verificação falhar.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP05.SUC.03",
+        "text": "Oito visualizações funcionam com dados disponíveis e degradam honestamente quando o C02 não suporta uma série, componente ou data.",
+        "status": "NOT_RUN"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "WP05.T01",
+      "title": "Trajetória financeira e waterfall de cenários",
+      "intent": "Mostrar a evolução de budget/actual/outlook e explicar a diferença entre cenários por componentes reconciliáveis, sem um segundo motor financeiro.",
+      "work": [
+        "Consumir as projeções C02 congeladas para trajetória e cenário, com adaptadores de apresentação restritos a geometria, formatação e seleção; não importar store bruto ou fórmulas financeiras.",
+        "Trajetória: pergunta 'Como orçamento, realizado disponível e outlook evoluem no período?'; eixo X usa competências realmente fornecidas e eixo Y usa valores na mesma moeda/base; marcar competência e partes conhecidas/desconhecidas.",
+        "Waterfall: pergunta 'Quais componentes explicam a diferença deste cenário para a referência?'; mostrar total inicial, contribuições assinadas e total final já projetados pelo domínio, sem parcela residual inventada.",
+        "Exportar o contexto e as referências C01 de cada série/componente, junto de tabela acessível e estados de dados parciais; cada seleção abre o detalhe correspondente pelo callback C08.",
+        "Desenvolver em paralelo contra a assinatura congelada e exemplos originados no motor real; marcar integração pendente quando o produtor final ainda não estiver disponível, sem entregar stub como produtor."
+      ],
+      "inputs": [
+        "WP00.T04: C01/C02/C08 congelados, catálogo de produtores e exemplos com proveniência dos motores reais.",
+        "Projeções reais de trajetória financeira e diferença de cenário fornecidas pelos proprietários Dashboard/Planner.",
+        "Contextos com competência mensal válida, somente total anual, actual parcial, valor negativo e componentes não reconciliados."
+      ],
+      "outputs": [
+        "Gráfico de trajetória budget/actual/outlook e waterfall de cenário em product/analytics/**.",
+        "Contrato de interação e tabela equivalente preservando moeda, competência, versão e referência.",
+        "Casos discriminantes de granularidade, lacunas e reconciliação com produtor C02 identificado."
+      ],
+      "depends_on": [
+        "WP00.T02"
+      ],
+      "checks": [
+        {
+          "id": "WP05.T01.CHK.01",
+          "text": "Receber apenas total anual sem distribuição mensal: a trajetória não gera 12 pontos por divisão/interpolação; informa granularidade disponível e não aparenta conhecer um perfil mensal.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP05.T01.CHK.02",
+          "text": "Dado actual desconhecido em uma competência e zero confirmado em outra: o primeiro produz lacuna/indisponibilidade, o segundo marca zero; os dois casos não compartilham tooltip/representação.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP05.T01.CHK.03",
+          "text": "Usar cenário C02 com referência 100, contribuições +20 e -5 e final 115: waterfall termina em 115 e cada seleção preserva seu componente; trocar o final para 116 deve sinalizar não reconciliação, não criar '+1 ajuste'.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP05.T01.CHK.04",
+          "text": "Alterar moeda, competência ou versão entre contexto e projeção: o gráfico recusa a mistura ou apresenta grupos explicitamente separados conforme C02, sem sobrepor valores incompatíveis.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP05.T01.CHK.05",
+          "text": "Abrir uma contribuição por teclado: destino recebe a referência e os filtros exatos e retorna mantendo foco; componente sem autorização nunca aparece no gráfico ou na tabela.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP05.T01.DOD.01",
+            "text": "Trajetória e waterfall estão exportados com tabela equivalente e produtor C02 identificável.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP05.T01.DOD.02",
+            "text": "Granularidade, lacunas e reconciliação têm resultados esperados e falhas demonstráveis.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP05.T01.INV.01",
+            "text": "Nenhum mês, realizado ou contribuição é fabricado para completar a visualização.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP05.T01.INV.02",
+            "text": "O waterfall usa valores de domínio e não recalcula a semântica do cenário.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP05.T01.QLT.01",
+            "text": "Competência, moeda, referência e cenário ficam legíveis na própria visualização.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP05.T01.QLT.02",
+            "text": "Lacunas e contribuições negativas preservam significado em cor e texto.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP05.T01.CMP.01",
+            "text": "Cobrir trajetória completa/parcial/anual e waterfall com aumentos, reduções, zero e falha de reconciliação.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP05.T01.CMP.02",
+            "text": "Cobrir seleção por mouse/teclado e equivalência entre marcas e tabela.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP05.T01.SUC.01",
+            "text": "O usuário distingue o que é orçamento, realizado disponível e outlook sem tratar previsão como realizado.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP05.T01.SUC.02",
+            "text": "O usuário explica o delta de um cenário por seus componentes e acessa sua origem com o contexto preservado.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP05",
+      "ownership_ref": "WP05",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "R20"
+      ],
+      "journeys": [
+        "J02"
+      ],
+      "session": "S2",
+      "build_window": [
+        10,
+        22
+      ],
+      "proof_window": [
+        25,
+        75
+      ],
+      "evidence_packages": [
+        "E06"
+      ],
+      "integrates_with": [
+        "WP02.T01",
+        "WP03.T01",
+        "WP04.T01",
+        "WP11.T02",
+        "WP13.T02"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP05.T02",
+      "title": "Contribuições divergentes e FTE/custo alinhados",
+      "intent": "Permitir localizar os fatores que aumentam/reduzem um resultado e comparar capacidade com custo sem confundir unidades ou expor dados restritos.",
+      "work": [
+        "Barras divergentes: pergunta 'Quem ou o que mais contribui para o desvio?'; eixo Y usa categorias/componentes autorizados do C02 e eixo X usa contribuição assinada em unidade definida; preservar sinal e referência.",
+        "Usar agregados e agrupamentos fornecidos pelo produtor; Top N/outros só é apresentado quando o C02 fornece agrupamento reconciliável, sem excluir contribuições silenciosamente.",
+        "FTE/custo: pergunta 'Como capacidade e custo se distribuem no mesmo recorte?'; mostrar dois painéis alinhados por período/equipe/domínio disponível, com escalas próprias e labels claros.",
+        "Preservar valores faltantes e proibir granularidade pessoal que o C02 não autoriza; drilldown abre a referência permitida, não reconstrói salário ou custo a partir de nomes.",
+        "Compartilhar controles contextuais e componentes acessíveis de WP05.T01, mantendo as duas medidas independentes e contextualizadas."
+      ],
+      "inputs": [
+        "WP05.T01: apresentação/seleção/tabela C01/C08 e tratamento de ausência.",
+        "Projeções C02 reais de contribuições e capacidade/custo de Dashboard/Planner, com componentes autorizados.",
+        "Casos com sinais opostos, categoria sem dado, agrupamento parcial, FTE zero e custo desconhecido, restrição de dados pessoais."
+      ],
+      "outputs": [
+        "Gráfico de barras divergentes por contribuição.",
+        "Visualização de FTE e custo em painéis alinhados, com tabelas e referências autorizadas.",
+        "Recibo de coerência de sinais, agrupamentos e restrições dos dados."
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP05.T01"
+      ],
+      "checks": [
+        {
+          "id": "WP05.T02.CHK.01",
+          "text": "Projetar contribuições +40 e -30: mostrar ambas com sinais corretos e delta 10 somente quando fornecido/reconciliado pelo C02; usar valor absoluto ou omitir a contribuição negativa deve falhar.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP05.T02.CHK.02",
+          "text": "Receber Top N sem agregado do restante: não apresentar o subtotal como total; com 'outros' C02, a marca e o drilldown preservam os componentes definidos pelo produtor.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP05.T02.CHK.03",
+          "text": "No mesmo recorte, FTE confirmado como zero e custo ausente: mostrar zero de FTE e custo indisponível, sem converter nenhum deles no outro ou presumir custo zero.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP05.T02.CHK.04",
+          "text": "Aplicar um filtro/período: ambos os painéis usam o mesmo contexto, mantendo unidades e escalas separadas; nomes/custos pessoais removidos pelo C02 não podem aparecer em tooltip, tabela ou referência.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP05.T02.CHK.05",
+          "text": "Navegar categoria por teclado e abrir detalhe: manter grupo, período, moeda, versão e retorno de foco; nenhuma seleção depende exclusivamente de hover.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP05.T02.DOD.01",
+            "text": "Contribuições e FTE/custo estão exportados com eixos, unidades, tabelas e referências reais.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP05.T02.DOD.02",
+            "text": "A entrega documenta a origem de agrupamentos e o tratamento de componentes restritos/ausentes.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP05.T02.INV.01",
+            "text": "Sinal da contribuição e unidade de cada medida não são alterados por ordenação ou formatação.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP05.T02.INV.02",
+            "text": "FTE e custo permanecem medidas distintas e os dados pessoais ausentes do C02 não são reconstruídos.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP05.T02.QLT.01",
+            "text": "As maiores contribuições positivas e negativas são comparáveis sem um gráfico visualmente dominado por valores absolutos.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP05.T02.QLT.02",
+            "text": "Painéis alinhados mostram o mesmo recorte e usam escalas explícitas sem eixo duplo enganoso.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP05.T02.CMP.01",
+            "text": "Cobrir positivos, negativos, zero, desconhecido, Top N parcial e agrupamento reconciliado.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP05.T02.CMP.02",
+            "text": "Cobrir recorte agregado e restrito, filtro conjunto e drilldown autorizado dos dois painéis.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP05.T02.SUC.01",
+            "text": "O usuário localiza quem aumenta e quem reduz o desvio e consegue abrir o componente correspondente.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP05.T02.SUC.02",
+            "text": "O usuário compara capacidade e custo sem inferir produtividade ou custo unitário que o domínio não fornece.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP05",
+      "ownership_ref": "WP05",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "R20"
+      ],
+      "journeys": [
+        "J02"
+      ],
+      "session": "S2",
+      "build_window": [
+        22,
+        32
+      ],
+      "proof_window": [
+        25,
+        75
+      ],
+      "evidence_packages": [
+        "E06"
+      ],
+      "integrates_with": [
+        "WP02.T01",
+        "WP03.T01",
+        "WP04.T01",
+        "WP11.T02",
+        "WP13.T02"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP05.T03",
+      "title": "Estoque por etapa e aging de Procurement",
+      "intent": "Mostrar onde o trabalho está acumulado e quais aprovações aguardam há mais tempo, distinguindo fatos conhecidos de inferências indevidas.",
+      "work": [
+        "Pedidos por etapa: pergunta 'Onde estão os pedidos abertos agora?'; barras horizontais com Y=etapa atual e X=quantidade C02, explicitamente identificadas como estoque atual e nunca funil de conversão.",
+        "Aging: pergunta 'Quais aprovações esperam há mais tempo e com quem?'; X=dias comprovados na etapa e Y=tipo de aprovação, com um ponto por pedido autorizado e referência de drilldown.",
+        "Consumir idade/entrada na etapa/proveniência fornecidas por Procurement; não interpretar strings de history, createdAt, save ou importação dentro de analytics.",
+        "Exibir contagem separada de pedidos sem idade comprovada, preservando-os no universo; dados ausentes não viram zero dias nem desaparecem.",
+        "Oferecer filtros autorizados de etapa/responsável/buyer e acesso ao detalhe/resumo do pedido, preservando moeda/estado quando houver medida monetária secundária; não criar SLA ou risco numérico."
+      ],
+      "inputs": [
+        "WP05.T02: componentes/interações acessíveis e preservação contextual.",
+        "C02 de Procurement congelado, fornecido realmente por WP04: estoque, etapa, holder, datas comprovadas, idade indisponível e referência.",
+        "Casos com requester restrito, holder ausente, rejeição/ressubmissão, save recente e histórico importado incompleto."
+      ],
+      "outputs": [
+        "Barras de estoque atual por etapa e pontos de aging por aprovação.",
+        "Lista/tabela de pedidos selecionados e grupo explícito de idade indisponível.",
+        "Contraprovas contra funil/coorte falsa e cálculo de idade fora do produtor."
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP05.T02"
+      ],
+      "checks": [
+        {
+          "id": "WP05.T03.CHK.01",
+          "text": "Dado estoque com 7 PRs, 2 sourcings e 3 POs distintos: mostrar contagens atuais sem taxas entre barras, abandono ou conversão; rejeição/retorno muda a etapa de um pedido sem criar uma coorte histórica.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP05.T03.CHK.02",
+          "text": "Receber do C02 pedido ressubmetido há 2 dias e salvo hoje: aging continua 2 dias; analytics não recalcula pelo save nem lê o histórico bruto.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP05.T03.CHK.03",
+          "text": "Dois pedidos sem entrada comprovada: ambos aparecem no grupo 'idade indisponível' e no denominador autorizado; não entram em zero dias ou numa média fabricada.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP05.T03.CHK.04",
+          "text": "Filtrar por requester restrito: contagem das barras, pontos e tabela corresponde exatamente aos pedidos visíveis no domínio; pedido alheio não vaza por agregado ou drilldown.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP05.T03.CHK.05",
+          "text": "Clicar numa etapa e depois num pedido mantém o filtro e abre a referência correta; linha de SLA só existe se recebida com política/origem explícita, não pelo mero uso de uma cor vermelha.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP05.T03.DOD.01",
+            "text": "Estoque e aging consomem as projeções reais de Procurement e têm drilldown para os pedidos correspondentes.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP05.T03.DOD.02",
+            "text": "Estoque/coorte e idade comprovada/indisponível estão diferenciados na UI e nas contraprovas.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP05.T03.INV.01",
+            "text": "A quantidade em etapas atuais não é convertida em taxa de conversão, abandono ou produtividade.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP05.T03.INV.02",
+            "text": "Analytics não inventa idade nem exclui do universo os pedidos sem evento confiável.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP05.T03.QLT.01",
+            "text": "Título e legenda deixam claro que a primeira visualização é estoque e a segunda é tempo na etapa.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP05.T03.QLT.02",
+            "text": "Responsável desconhecido, idade indisponível e prazo informado são distinguíveis sem uso exclusivo de cor.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP05.T03.CMP.01",
+            "text": "Cobrir todas as etapas abertas e aprovações, holder ausente, rejeição/ressubmissão e histórico insuficiente.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP05.T03.CMP.02",
+            "text": "Cobrir filtros por papel e reconciliação entre agregado, pontos e lista autorizada.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP05.T03.SUC.01",
+            "text": "O gestor identifica concentração de trabalho e abre seus pedidos sem inferir uma conversão inexistente.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP05.T03.SUC.02",
+            "text": "O aprovador encontra o pedido mais antigo dentre os tempos comprovados e vê quantos não podem ser comparados.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP05",
+      "ownership_ref": "WP05",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "R20"
+      ],
+      "journeys": [
+        "J04"
+      ],
+      "session": "S2",
+      "build_window": [
+        32,
+        42
+      ],
+      "proof_window": [
+        32,
+        75
+      ],
+      "evidence_packages": [
+        "E06"
+      ],
+      "integrates_with": [
+        "WP02.T01",
+        "WP03.T01",
+        "WP04.T01",
+        "WP11.T02",
+        "WP13.T02"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP05.T04",
+      "title": "Tickets, agenda de marcos e catálogo consumível de BI",
+      "intent": "Completar a leitura operacional com eventos/competências de tickets e datas de marcos reais, entregando o catálogo de oito gráficos pronto para composição.",
+      "work": [
+        "Tickets abertos/fechados: pergunta 'O que entrou e o que foi concluído no período?'; X=períodos suportados e Y=contagens C02, usando eventos ou agregados datados válidos. Se só existe fotografia atual, mostrar a fotografia explicitamente e não desenhar tendência.",
+        "Agenda de marcos: pergunta 'Quais entregas e decisões têm data neste horizonte?'; X=tempo e Y=projeto/domínio autorizado, diferenciando marco planejado e conclusão comprovada; marcos sem data ficam em lista própria.",
+        "Preservar definições de aberto/fechado/concluído do produtor e origem/competência; não inferir resolução histórica a partir de status atual nem percentual de progresso de uma lista de marcos.",
+        "Consolidar o registro dos oito gráficos com pergunta, unidades, produtor C02, filtros, ausência e referências, exportando C08 para WP10 sem montar uma segunda entrada de aplicação.",
+        "Qualificar transversalmente foco/teclado, alternativa tabular, estados parciais/restritos, contexto de retorno e consumo de C02 real; fixtures permanecem verificações locais, e a composição final ocorre em WP10."
+      ],
+      "inputs": [
+        "WP05.T03: seis gráficos anteriores e contratos de interação/contexto.",
+        "Projeções C02 reais de operação/tickets e marcos de Dashboard, com granularidade e evidência temporal.",
+        "C01/C08 congelados e catálogo de consumidores para WP01/WP07/WP08/WP10."
+      ],
+      "outputs": [
+        "Gráfico de tickets abertos/fechados e agenda de marcos com listas acessíveis de dados indisponíveis.",
+        "Catálogo exportado dos oito gráficos e referências de drilldown, sem edição de entrypoints.",
+        "Recibo gráfico/produtor/origem e pacote de evidências locais para composição e julgamento independente."
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP05.T03"
+      ],
+      "checks": [
+        {
+          "id": "WP05.T04.CHK.01",
+          "text": "Receber apenas contagem/status atual de tickets sem eventos ou agregados datados: mostrar fotografia com data de referência, sem série semanal nem taxa de resolução inventada; ao fornecer série C02 válida, os pontos reproduzem cada período.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP05.T04.CHK.02",
+          "text": "Ticket aberto num período e fechado em outro segue os eventos/projeção do produtor; mover apenas status atual não deve retroativamente reescrever uma série histórica fornecida.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP05.T04.CHK.03",
+          "text": "Marco planejado, marco concluído e marco sem data: os dois primeiros são distinguíveis e o terceiro permanece listado sem receber hoje, primeiro dia do mês ou outro fallback.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP05.T04.CHK.04",
+          "text": "Para os oito gráficos, abrir por teclado uma marca/agregado com filtro, voltar e comparar com o detalhe: referência, versão, período, moeda, recorte e foco são preservados; falhar se o destino cair num overview sem a seleção.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP05.T04.CHK.05",
+          "text": "Injetar valor ausente, componente restrito e série parcial nos consumidores reais de C02: nenhum aparece como zero ou dado completo em marca, tooltip ou tabela; registrar qual produtor/caso foi usado.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP05.T04.CHK.06",
+          "text": "No handoff, cada gráfico aponta seu produtor real e check de composição WP10; um stub/fixture sem produtor identificável impede classificar o gráfico como integrado.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP05.T04.DOD.01",
+            "text": "Tickets e agenda estão exportados e o catálogo identifica os oito gráficos, produtores e destinos reais.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP05.T04.DOD.02",
+            "text": "O recibo de interação/ausência/restrição permite a WP10 verificar composição sem descobrir contratos novos.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP05.T04.INV.01",
+            "text": "Fotografia atual não se transforma em histórico de tickets e data planejada não se transforma em conclusão.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP05.T04.INV.02",
+            "text": "Nenhum marco sem data recebe data artificial e nenhuma fonte restrita é recuperada fora do C02.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP05.T04.QLT.01",
+            "text": "A operação distingue entrada, conclusão, planejamento e desconhecido com texto, formas e unidades claros.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP05.T04.QLT.02",
+            "text": "Os oito gráficos têm interação equivalente por teclado/tabela e retorno contextual previsível.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP05.T04.CMP.01",
+            "text": "Cobrir tickets com série válida e só fotografia, além de marcos planejados, concluídos e sem data.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP05.T04.CMP.02",
+            "text": "Fechar o catálogo de oito gráficos com estados vazio/parcial/restrito, filtros e drilldowns verificáveis.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP05.T04.SUC.01",
+            "text": "O time identifica o que entrou/foi concluído quando há evidência e localiza os marcos do horizonte sem interpretar planejado como entregue.",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP05.T04.SUC.02",
+            "text": "WP10 compõe o catálogo e verifica os consumidores reais sem refazer cálculo financeiro ou aceitar uma demonstração desconectada como entrega.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP05",
+      "ownership_ref": "WP05",
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "final_evidence_owner": "WP10",
+      "requirements": [
+        "R20"
+      ],
+      "journeys": [
+        "J05"
+      ],
+      "session": "S2",
+      "build_window": [
+        42,
+        53
+      ],
+      "proof_window": [
+        42,
+        75
+      ],
+      "evidence_packages": [
+        "E06"
+      ],
+      "integrates_with": [
+        "WP02.T01",
+        "WP03.T01",
+        "WP04.T01",
+        "WP11.T02",
+        "WP13.T02"
+      ],
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    },
+    {
+      "id": "WP05.T05",
+      "title": "Entregar BI de consequência e sensibilidade",
+      "intent": "Mostrar o que altera uma decisão e qual variável merece confirmação ou negociação.",
+      "work": [
+        "Reaproveitar waterfall para composição da diferença, acrescentar linha do tempo contratual e sensibilidade derivada do engine.",
+        "Consumir cenários de caso e portfólio, com unidades, horizonte, premissas e intervalos explicitamente informados.",
+        "Ligar marcas à fonte e à tabela equivalente; não inventar séries mensais, probabilidades, scores ou custo evitado por simples arraste de data."
+      ],
+      "inputs": [
+        "Contratos publicados por WP00",
+        "Projeções autorizadas e serviços reais dos produtores declarados"
+      ],
+      "outputs": [
+        "Linha do tempo da decisão",
+        "Sensibilidade e limites",
+        "Waterfall aplicável a casos e portfólio"
+      ],
+      "depends_on": [
+        "WP00.T02",
+        "WP05.T04"
+      ],
+      "checks": [
+        {
+          "id": "WP05.T05.CHK.01",
+          "text": "Com outros custos 165 mil e referência 240 mil/meta 20 mil, limiteimplantação 55 mil provém do engine.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP05.T05.CHK.02",
+          "text": "Atraso sem regra financeira não inventa economia ou obrigação eliminada.",
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "WP05.T05.CHK.03",
+          "text": "Tabela e marcas retornam exatamente os mesmos valores autorizados.",
+          "status": "NOT_RUN"
+        }
+      ],
+      "axioms": {
+        "dod": [
+          {
+            "id": "WP05.T05.DOD.01",
+            "text": "As três perguntas analíticas novas e as oito antigas são respondidas com produtores reais e valores reconciliados.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "invariants": [
+          {
+            "id": "WP05.T05.INV.01",
+            "text": "Geometria usa o resultado do motor; visualização não recalcula regra de negócio nem estima probabilidades ausentes.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "quality_standards": [
+          {
+            "id": "WP05.T05.QLT.01",
+            "text": "Rótulos legíveis, sinais/unidades claros, comparação no mesmo horizonte e dados acessíveis por tabela e teclado.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "completeness_criteria": [
+          {
+            "id": "WP05.T05.CMP.01",
+            "text": "Cobrir custo incerto, componente ausente, moeda, limite atingido/não atingido, cenário inviável e referência removida.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "success_criteria": [
+          {
+            "id": "WP05.T05.SUC.01",
+            "text": "Usuário identifica qual componente ou premissa inverte a escolha e abre sua origem sem perder o caso.",
+            "status": "NOT_RUN"
+          }
+        ]
+      },
+      "status": "PLANNED",
+      "owner": "WP05",
+      "ownership_ref": "WP05",
+      "requirements": [
+        "IA15"
+      ],
+      "journeys": [
+        "J10"
+      ],
+      "final_evidence_owner": "WP10",
+      "session": "S2",
+      "build_window": [
+        53,
+        70
+      ],
+      "proof_window": [
+        53,
+        75
+      ],
+      "evidence_packages": [
+        "E06"
+      ],
+      "integrates_with": [
+        "WP02.T01",
+        "WP03.T01",
+        "WP04.T01",
+        "WP11.T02",
+        "WP13.T02"
+      ],
+      "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+      "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+    }
+  ],
+  "handoff": [
+    "Para WP10: registro C08 dos oito gráficos, parâmetros C01, callbacks de drilldown e roteiro de composição na entrada comum; não há aplicação paralela a integrar por cópia.",
+    "Para produtores WP02/WP03/WP04: recibo de uso de C02 com campos/granularidades consumidos, divergências e casos ausentes; qualquer falta semântica é devolvida ao proprietário, não corrigida por fórmula em analytics.",
+    "Para WP07/WP08: modelos visuais/contextos exportados e referências autorizadas para revisões/Meu trabalho, sem duplicar dados de negócio.",
+    "Evidências por gráfico identificam produtor real, contexto, expectativa, observação e falha discriminada; integração de entrypoints e revisão independente permanecem em WP10."
+  ],
+  "risks": [
+    "C02 pode não oferecer mensalização, eventos de tickets, entrada comprovada na etapa ou contribuições reconciliáveis. Mostrar a granularidade real/indisponibilidade e registrar a lacuna ao proprietário; não fabricar série, taxa ou componente.",
+    "Construção paralela pode produzir nomes compatíveis mas semânticas diferentes. Congelar unidades/competência/versão em WP00.T04 e exigir a prova final com produtores reais em WP10, sem dependências cruzadas de implementação entre tasks.",
+    "Drilldown pode perder filtro/versão ou ampliar visibilidade. Usar apenas referências C01/C02 autorizadas e contraprovas agregado→lista→registro para cada gráfico.",
+    "Visualizações podem ocultar negativos, desconhecidos ou grupos fora do Top N. Exigir tabelas equivalentes, reconciliação por domínio e estados parciais explícitos.",
+    "Um gráfico visualmente convincente pode sugerir causalidade, conversão ou desempenho sem suporte. Títulos/perguntas e limites documentados restringem a interpretação à medida realmente projetada."
+  ],
+  "status": "PLANNED",
+  "ownership": {
+    "id": "WP05",
+    "branch": "sf2-analytics",
+    "existing_files": [],
+    "new_prefixes": [
+      "modules/sucafina/Sucafinav1/product/analytics/",
+      "modules/sucafina/Sucafinav1/test/product/wp05/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/"
+    ],
+    "allowed_purpose": "Somente componentes, geometria, formatação, interação e verificações de gráficos em product/analytics e seu namespace de testes; consumir C02 real sem reproduzir fórmulas ou autorização."
+  },
+  "source_ids": [
+    "S05",
+    "S10",
+    "S11"
+  ],
+  "session": "S2",
+  "build_window": [
+    10,
+    70
+  ],
+  "integration_deadline": 75,
+  "evidence_packages": [
+    "E06"
+  ],
+  "implementation_readiness": "Produzir exports/outputs por contrato cedo. Ready não é Done; a aceitação exige host e consumidores reais.",
+  "contract_notes": {
+    "contract_reads": [
+      "C01: filtros, período, moeda, referência, versão e contexto autorizado; ausência permanece explícita.",
+      "C02: valores e componentes reais calculados pelos proprietários Dashboard/Planner/Procurement, com granularidade, origem, competência e campos restritos removidos.",
+      "C08: registro de views e callbacks para entrada comum e drilldown reais, compostos por WP10."
+    ],
+    "contract_provides": [
+      "C08: catálogo e exports dos oito gráficos com pergunta, medidas/eixos, estados sem dados, filtros e callbacks de drilldown para consumidores reais.",
+      "C01: preservação de contexto e referência na seleção visual, tabela acessível e retorno da navegação.",
+      "Recibo de correspondência gráfico → produtor C02 → registro de origem, com casos de ausência, restrição, granularidade e reconciliação."
+    ]
+  }
+}

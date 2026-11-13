@@ -1,0 +1,364 @@
+{
+  "review_id": "SF2H-FINAL-TECHNICAL-COLD-REVIEW",
+  "reviewer": "/root/sf2h_contracts",
+  "created_at": "2026-11-12T23:17:37.544125+00:00",
+  "status": "REQUEST_CHANGES_ON_REVIEWED_DRAFT",
+  "implementation_status": "NOT_IMPLEMENTED_NOT_TESTED",
+  "baseline": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "sha": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf"
+  },
+  "candidate_files": {
+    "campaign.json": {
+      "bytes": 666031,
+      "sha256": "b4ef52b5ce2e471a69ff52d7dd6092be86695cd7ae2ca443be740457c05b7eab"
+    },
+    "contracts.json": {
+      "bytes": 13592,
+      "sha256": "1b1d9a65a8e1bc02ddf023b120a020d17180c0e308e998aa085877ba10b1d0bd"
+    },
+    "ownership.json": {
+      "bytes": 18412,
+      "sha256": "761454c841edba3e20d4deca73ed514265c9c3ef3166b804f4c0820192edfa2a"
+    }
+  },
+  "scope": "Revisão adversarial de contratos, consumidores, composição nativa, persistência e ownership. Nenhuma edição do plano ou código do produto. O integrador anunciou correções em paralelo; achados descrevem estes hashes, não uma versão posterior.",
+  "summary": {
+    "p0": 3,
+    "p1": 3,
+    "observed_positive": [
+      "Não há arquivo existente atribuído a dois WPs no ownership revisado.",
+      "Não há sobreposição entre prefixos novos de escritores diferentes.",
+      "WP11 distingue escolha de gestão de aprovação de Procurement e admite execução parcial.",
+      "WP10.T01 já exige agregação fora de transações e conserva as três superfícies.",
+      "O escopo inclui IA real, casos duráveis, cenários, memória, extração documental e rotinas; fixtures são exclusivamente desenvolvimento/QA."
+    ],
+    "must_not_claim": "Esta revisão não atesta implementação PASS, disponibilidade de credenciais/serviço nem sucesso do deploy."
+  },
+  "findings": [
+    {
+      "id": "TECH-P0-01",
+      "severity": "P0",
+      "title": "Recibo de comando precisa do mesmo commit do efeito no domínio",
+      "evidence": [
+        "contracts.json C03 não inclui idempotencyKey/digest/receipt.",
+        "C12 tem idempotencyKey e recuperação, mas não define a unidade durável do recibo; produtores somente WP11/WP10.",
+        "WP11.T04.CHK.02 exige um efeito após resposta perdida e proíbe retry cego.",
+        "Baseline runtime/contract.ts oferece transaction por Surface sobre um Snapshot, não transação global."
+      ],
+      "failure": "Gravar efeito no Planner/Procurement e depois o recibo no caso central abre uma janela de crash. O caso não prova se o efeito ocorreu, e repetir a correlação pode repetir o efeito.",
+      "correction": [
+        "C03/C12: envelope idempotencyKey, commandDigest, targetRef/incarnation, expectedVersion, actorScope e receipt resultRef/versions/status. Mesma chave com digest diferente é conflito.",
+        "WP10.T01 envolve o comando puro do domínio e grava o recibo em metadados protegidos do MESMO Snapshot/transaction em que o efeito é aplicado. WP02/03/04 fornecem adapters de domínio; WP11 somente prepara e reconcilia.",
+        "Revalida autoridade atual e consulta recibo autorizado ANTES de reaplicar. A consulta de recibo não concede leitura de dados revogados.",
+        "Commit do caso agregado ocorre depois e pode falhar; reconciliação usa recibos dos domínios, exibindo parcial. Não adotar rollback/transação global."
+      ],
+      "owners": [
+        "WP00",
+        "WP10",
+        "WP02",
+        "WP03",
+        "WP04",
+        "WP11"
+      ],
+      "acceptance": [
+        "Falha antes do commit não deixa efeito nem recibo.",
+        "Falha depois do commit e antes da resposta, inclusive antes da atualização do caso, recupera o mesmo recibo e não duplica efeito.",
+        "Dois retries concorrentes com a mesma chave resultam em um efeito.",
+        "Planner aplicado + Procurement recusado resulta em parcial recuperável; retry não reaplica Planner."
+      ],
+      "communicated_to_parent": true
+    },
+    {
+      "id": "TECH-P0-02",
+      "severity": "P0",
+      "title": "C08 deve especificar binding nativo suficiente para IA com ferramentas e Relay admitido",
+      "evidence": [
+        "C08 atual diz apenas adapter de start/status/result e composição real.",
+        "WP12.T01.DOD.01 exige inferência real acessando ferramentas restritas.",
+        "SessionV2.Service.generate é explicitamente tool-less e não registra histórico; sozinho não cumpre esse DoD.",
+        "RelayRunHandler expõe somente list/get/audit/ledger de runs externos; não fornece start.",
+        "O baseline local/entry.ts recebe somente origin e não injeta Session/Relay; runtime/host.ts compõe handlers HTTP."
+      ],
+      "failure": "Um provider genérico pode ficar apenas injetável/testado com double; uma chamada generate pode passar como prova da feature sem tool execution; um consumidor pode inventar start em relay-run ou usar permissões amplas da sessão padrão.",
+      "correction": [
+        "Definir C08 BusinessPorts e HostBindingRef conforme seção c08_proposed_contract deste relatório.",
+        "Um contribution aditivo do produto em ProductHost.contributions usa o único grafo nativo existente; não construir outro SessionExecution/LocationMap. Injetar serviços através do root/installation.",
+        "Usar SessionV2.Service público e Tools.Service para catálogo restrito no Location correto. AdvertisedNames não autoriza nem bloqueia execução; aplicar Permission/Agent efetivos e autorização corrente dentro de cada ferramenta.",
+        "Escolher explicitamente caminho de análise: Session.prompt com ferramentas registradas e escopo efetivo; generate tool-less pode servir probe de credencial, jamais substituir prova tool-enabled.",
+        "Adapter Relay deve chamar a admissão governada Maestro/workflow/arm com publicação e aprovação exigidas; status/result traduzem identidade nativa correta. Não tratar handlers de external runs como start."
+      ],
+      "owners": [
+        "WP00",
+        "WP10",
+        "WP12",
+        "WP09"
+      ],
+      "acceptance": [
+        "T+20: recibo de inferência real do provider existente com modelo/session/project/actor correlacionados e sem credencial em prompt.",
+        "T+20: descoberta e exercício mínimo de admissão nativa, publicação, regras de aprovação, status/resultado; se indisponível, bloqueio explícito sem mudar o aceite.",
+        "Até gate de IA: chamada real executa ferramenta SF permitida; tentativa de ferramenta genérica, troca de ator ou leitura negada é recusada na fronteira real.",
+        "Revogação torna contexto, resultado, histórico e links inacessíveis também nos caminhos nativos alternativos."
+      ],
+      "known_in_flight": "Parent já anunciou adição de host paths e C08; verificar nova versão antes de considerar aberto."
+    },
+    {
+      "id": "TECH-P0-03",
+      "severity": "P0",
+      "title": "Allowlist e exclusões de ownership se contradizem e ainda bloqueiam binding",
+      "evidence": [
+        "WP10.existing_files inclui bun.lock e package.json da raiz; excluded_prefixes inclui os mesmos dois.",
+        "WP10.allowed_purpose e notes proíbem manifestos/lock da raiz, CI e operação local apesar do escopo aditivo prometido.",
+        "runtime/host.ts e toda local/ continuam excluídos no hash revisado; local/entry.ts e runtime/host.ts não constam como escrita WP10."
+      ],
+      "failure": "Executor obediente não consegue compor a feature; executor que segue somente a allowlist viola a exclusão. O conflito surge no caminho crítico e reabre autorização/coordenação tarde.",
+      "correction": [
+        "Resolver precedência expressamente, preferindo lista exata de exceções WP10 e exclusão de todas as demais famílias.",
+        "Enumerar apps/cli/src/host.ts, apps/cli/src/commands/handlers/serve.ts, modules/sucafina/Sucafinav1/local/entry.ts, modules/sucafina/Sucafinav1/runtime/host.ts e arquivos exatos de app/CI necessários ao caminho de prova.",
+        "Atualizar allowed_purpose, notes, scope_out e manifesto derivado junto com existing_files; não conceder ownership genérico de .github/ ou local/.",
+        "Arquivos em edição pela frente cloud exigem escritor único e patch handoff ao owner vigente; sem overwrite ou branch divergente silenciosa."
+      ],
+      "owners": [
+        "WP00",
+        "WP10"
+      ],
+      "acceptance": [
+        "Verificador encontra zero allowlist-vs-deny sem exceção declarada, zero duplicatas e zero prefixos sobrepostos.",
+        "Cada mudança do binding/CI/import dependency tem arquivo dono e ponto de handoff."
+      ],
+      "known_in_flight": "Parent informou que está corrigindo host/CI paths; esta constatação é do snapshot anterior."
+    },
+    {
+      "id": "TECH-P1-01",
+      "severity": "P1",
+      "title": "Congelamento e mapa produtor-consumidor ainda descrevem oito contratos",
+      "evidence": [
+        "WP00.T02.work e DOD.01 falam C01–C08/oito contratos; CMP.02 e G0 falam C01–C14.",
+        "WP00.contract_provides lista somente C01–C08.",
+        "WP10.T01.work/inputs ainda falam WPs01–09 e C01–C08.",
+        "C01/C02/C03/C06/C08 não declaram vários novos consumidores WP11–14.",
+        "WP06.contract_provides não declara C14 apesar de produtor em contracts.json."
+      ],
+      "failure": "Fixtures/exports de C09–C14 e consumers novos podem ficar fora do congelamento; compilação isolada passa sem integrador conhecer dependência real.",
+      "correction": [
+        "Atualizar tarefa, DoD, inputs/outputs, contract_provides e handoff para C01–C14 e WPs01–14, preservando ownership.",
+        "Usar identificadores canônicos nos campos estruturados e nomes de tipos somente como exports de um contrato; remover aliases soltos como contratos independentes.",
+        "Gerar contracts.json, ownership, consumption_map e prompts da mesma fonte; assert cada contrato consumido tem produtor runtime e cada produtor tem consumer real.",
+        "Distinguir definition_owner de provider da implementação e de adapter/view que consome o contrato; não atribuir a todo reader o papel de provider."
+      ],
+      "owners": [
+        "WP00",
+        "WP10"
+      ],
+      "acceptance": [
+        "Zero contrato/alias não resolvido; todos os 14 contratos congelados em T+10 com schemas, erros, exports e exemplos válidos/negativos.",
+        "Cada WP11–14 aparece nos contratos que lê e cada import/export novo tem owner e consumidor real."
+      ],
+      "known_in_flight": "Normalização de aliases AI/IA e contratos foi anunciada; ainda não refletida nos hashes revisados."
+    },
+    {
+      "id": "TECH-P1-02",
+      "severity": "P1",
+      "title": "Persistência e import precisam namespace confiável para todos os novos estados",
+      "evidence": [
+        "WP10.T01 lista preferências/C05/C06/recibos C04/C07, mas não enumera o ciclo C09–C14 durável.",
+        "WP11.T01 exige caso persistente e preservação de metadados; WP06 tem runtime/dashboard-import.ts e WP10 possui o commit em application.ts.",
+        "Baseline backup-import substitui snapshot.data por prepared.data; a proteção de instalação do parser atual não conhece novas chaves do produto."
+      ],
+      "failure": "Um JSON importado pode apagar casos/memórias/receipts ou injetar estado apresentado como decisão ou execução confiável, mesmo com domínio legítimo.",
+      "correction": [
+        "C08 define namespace versionado de casos, alternativas/escolhas, runRefs, questões/human answers, prepared changes/receipts, expected/observed e invalidation refs, com ACL e migração.",
+        "WP06 preserva dados confiáveis atuais e rejeita/descarta campos de confiança vindos do arquivo; WP10 conserva o namespace na unidade de commit.",
+        "Import que substitui registros invalida referências por incarnation/version; não religar memória a outro registro que reutiliza ID. Export de backup não transforma dados exportados em prova confiável no reimport.",
+        "Reconciliar receipts de domínio protegidos com backup/import sem permitir reaplicar comando já aplicado por perda de índice."
+      ],
+      "owners": [
+        "WP00",
+        "WP06",
+        "WP10",
+        "WP11",
+        "WP14"
+      ],
+      "acceptance": [
+        "Import válido conserva casos, metadados e recibos existentes; payload forjado não cria escolha aprovada, execução aplicada, principal ou prova confiável.",
+        "Reload/restart recupera casos, escolhas, perguntas, análises e memórias autorizadas; revogação vale para cache/export/link.",
+        "Import que muda origem material sinaliza reavaliação e invalida referência afetada."
+      ]
+    },
+    {
+      "id": "TECH-P1-03",
+      "severity": "P1",
+      "title": "DoD antigo contradiz três revisores e semântica de parcial",
+      "evidence": [
+        "WP10.T03 título e CMP.02 exigem três revisores; work/outputs/DOD.01 ainda descrevem dois.",
+        "WP10.T01.INV.02 diz não permite gravação parcial, sem limitar à transação de um domínio.",
+        "WP11.T04 exige e modela sucesso parcial entre domínios."
+      ],
+      "failure": "Aceite pode fechar com duas revisões ou reprovar comportamento correto de execução parcial; os executores recebem requisitos incompatíveis.",
+      "correction": [
+        "Alinhar work/outputs/DoD/checagens para três revisões independentes: produto/UX; finanças/permissões/persistência; IA/Relay/integração.",
+        "Especificar atomicidade e ausência de parcial DENTRO de cada commit de domínio. ENTRE domínios, parcial é estado explícito e recuperável sem rollback fictício.",
+        "Atualizar texto legado de integração, não apenas acrescentar um novo CMP no final."
+      ],
+      "owners": [
+        "WP00",
+        "WP10"
+      ],
+      "acceptance": [
+        "Três recibos independentes referentes ao candidato final e sem autoria nos arquivos avaliados.",
+        "Nenhum axioma exige simultaneamente atomicidade global e aceitação de parcial."
+      ]
+    }
+  ],
+  "c08_proposed_contract": {
+    "status": "PROPOSED_PLANNING_CONTRACT_NOT_EXISTING_API",
+    "definition_owner": "WP00",
+    "runtime_provider": "WP10",
+    "host_binding": {
+      "fields": [
+        "installationRef",
+        "projectID",
+        "locationRef",
+        "sessionID",
+        "actorRef",
+        "authorizationScopeVersion",
+        "correlationID"
+      ],
+      "authority": "Binding criado e validado pelo host a partir da requisição autenticada; modelo e payload importado não escolhem actor/session/project. Cada Surface valida acesso próprio. Sem mapeamento de usuário por semelhança de nome."
+    },
+    "business_ports": [
+      {
+        "name": "context.read",
+        "purpose": "Projeções autorizadas e refs/version/incarnation por domínio; agregação fora das transações de domínio."
+      },
+      {
+        "name": "productState.load/save",
+        "purpose": "Estado durável C05/C06/C09–C14 com expected version, namespace confiável, migração e leitura autorizada."
+      },
+      {
+        "name": "domain.execute/readReceipt",
+        "purpose": "Envelope idempotente, comando puro e recibo no mesmo commit do domínio; resultados individuais revalidados."
+      },
+      {
+        "name": "analysis.start/status/result",
+        "purpose": "SessionV2 público no grafo nativo, catálogo restrito registrado via Tools.Service, policy efetiva e limites observáveis."
+      },
+      {
+        "name": "workflow.discover/admit/status/result",
+        "purpose": "Publicação/revisão e admissão Maestro/Relay com identidade nativa; ausência não é substituída por fixture ou endpoint fictício."
+      },
+      {
+        "name": "schedule.list/create/update/remove/run",
+        "purpose": "Adapter autorizado de ScheduledTask.Service; Schedule dispara caminho admitido e não cria aprovação."
+      },
+      {
+        "name": "assets.read/extract",
+        "purpose": "Assets autorizados existentes; limites e localizadores de página/parágrafo; texto não confiável somente como dados."
+      }
+    ],
+    "native_composition": [
+      "Host.Contribution aditivo em apps/cli/src/host.ts, root real em serve.ts; nunca duplicar grafo SessionExecution/LocationMap.",
+      "Bridge tipada até ModuleServices/local/entry.ts e runtime/host.ts; política e credenciais ficam no host.",
+      "Ferramentas SF são estritamente read/draft/simulate/check/questions/prepare; escrita final passa por confirmação e domínio.",
+      "SessionV2.generate qualifica inferência tool-less; SessionV2.prompt + Tools.Service e permissões efetivas qualificam a experiência com ferramentas.",
+      "RelayRunHandler é somente leitura de external runs; usar admissão Maestro e correlação do workflow host para execução nativa."
+    ],
+    "native_failures": [
+      "provider_unavailable",
+      "binding_missing",
+      "scope_revoked",
+      "tool_denied",
+      "budget_exceeded",
+      "workflow_not_published",
+      "admission_rejected",
+      "awaiting_human_approval",
+      "run_failed",
+      "result_access_denied"
+    ],
+    "t20_gate": "Provider real e admissão nativa qualificados até T+20; nenhum pedido de novos acessos. Se capacidades já existentes não suportarem o contrato, registrar bloqueio concreto e manter o critério final não cumprido; não simular como entrega.",
+    "t55_gate": "Análise com tool execution restrita, contradição com evidências e recibo de run nativo verificáveis no módulo integrado."
+  },
+  "scope_out_assessment": {
+    "direct_ai_or_docs_exclusion_found": false,
+    "compatible_exclusions": [
+      "WP12 exclui credenciais novas, mutação genérica, cálculo duplicado e engine Relay; isso é compatível com IA real via host.",
+      "WP06 exclui inferência de colunas por IA: restringir explicitamente a importação legada de planilhas, pois extração documental confirmável é escopo incluído.",
+      "WP14 exclui persistência/UI/scheduler na própria fatia: válido somente com providers C08 e consumers WP01/WP08/WP09/WP10 mapeados.",
+      "Exclusão de mudança de engine Maestro/Relay não proíbe contribution/tools/adapters do produto pela extensão nativa.",
+      "Exclusão de Azure/deploy não pode ser interpretada como proibição do binding de produto ou configuração do harness CI já existente."
+    ],
+    "stale_conflicts": [
+      "Narrativa de oito contratos e nove frentes.",
+      "Dois juízes em DoD com três exigidos.",
+      "Ownership local/host/manifestos e CI mantém proibições antigas.",
+      "Não permitir gravação parcial sem delimitar domínio."
+    ]
+  },
+  "verified_sources": [
+    {
+      "path": "packages/core/src/host.ts",
+      "fact": "Host.Contribution possui nodes/locationNodes/references; merge recusa contribuição duplicada e ownership de serviços reservados."
+    },
+    {
+      "path": "packages/core/src/session.ts",
+      "fact": "SessionV2.Service público; prompt admite execução, generate é tool-less e nada grava."
+    },
+    {
+      "path": "packages/core/src/tool/registry.ts",
+      "fact": "register interno exposto via Tools.Service; advertisedNames e registrationIdentity são metadata, não autorização."
+    },
+    {
+      "path": "packages/core/src/agent.ts",
+      "fact": "AgentV2.Service fornece seleção/withPermissions; ausência de regras de agente usa deny-all."
+    },
+    {
+      "path": "packages/core/src/scheduled-task.ts",
+      "fact": "Service público de Schedule possui list/create/update/remove/run/tick."
+    },
+    {
+      "path": "packages/server/src/handlers/relay-run.ts",
+      "fact": "Handlers somente list/get/audit/ledger de external runs; não start."
+    },
+    {
+      "path": "modules/maestro/coordination/src/v2/governance/workflow-admission.ts",
+      "fact": "Admissão exige plano/publicação/escopo e governança nativa."
+    },
+    {
+      "path": "modules/maestro/coordination/src/v2/workflow/host.ts",
+      "fact": "Binding e execução de workflow possuem identidade e validações nativas próprias."
+    },
+    {
+      "path": "apps/cli/src/host.ts",
+      "fact": "ProductHost.contributions é composition root aditivo de produtos; Sucafina ainda não consta no baseline."
+    },
+    {
+      "path": "apps/cli/src/commands/handlers/serve.ts",
+      "fact": "Root CLI cria routes e fornece contribuições; não apresenta factory de instalação no baseline."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "fact": "Factory recebe origin e injeta persistência/auth/assets; não injeta serviços IA/Relay no baseline."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/host.ts",
+      "fact": "composeWithOrchestra compõe handlers HTTP; comentário atual separa módulo do grafo de produto."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "fact": "Comando baseline sem idempotencyKey; Persistence.transaction é por Surface sobre Snapshot."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "fact": "Request de domínio envolve transaction e backup import pode substituir snapshot.data."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "fact": "Escritores serializados; não usar transações/leituras de domínio aninhadas no agregador."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/dashboard-import.ts",
+      "fact": "Preservação de chaves de instalação baseline não define ainda os novos namespaces C09–C14."
+    }
+  ],
+  "handoff": "Correções são de planejamento. Root deve reler hashes atuais, incorporar mudanças já em andamento e rodar apenas o verificador estrutural necessário antes de publicar; não abrir nova revisão irrestrita nem afirmar implementação concluída."
+}

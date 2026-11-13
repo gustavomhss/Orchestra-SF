@@ -1,0 +1,172 @@
+{
+  "duration_minutes": 120,
+  "clock_start": "T0 é a primeira execução da integradora; inclui preflight e início das outras quatro sessões. Não reiniciar o relógio depois da qualificação.",
+  "scope_policy": "FULL_SCOPE_ONLY",
+  "feasibility": "Alvo agressivo, condicionado a capacidade efetivamente iniciada, serviços existentes e CI medido. Tokens não substituem slots, serviços ou tempo de testes. Não existe evidência empírica de que toda esta campanha termina em120 min.",
+  "sessions": {
+    "S0": {
+      "role": "Integração e controle",
+      "wps": [
+        "WP00",
+        "WP10"
+      ],
+      "workers": 3,
+      "review_slots": 3,
+      "branch": "sf2-integrate",
+      "mode": "Os mesmos três slots mudam de função ao longo do tempo; não são seis agentes simultâneos."
+    },
+    "S1": {
+      "role": "Experiência e domínios financeiros",
+      "wps": [
+        "WP01",
+        "WP02",
+        "WP03"
+      ],
+      "workers": 3
+    },
+    "S2": {
+      "role": "Compras dados e BI",
+      "wps": [
+        "WP04",
+        "WP05",
+        "WP06"
+      ],
+      "workers": 3
+    },
+    "S3": {
+      "role": "Trabalho de equipe e rotinas",
+      "wps": [
+        "WP07",
+        "WP08",
+        "WP09"
+      ],
+      "workers": 3
+    },
+    "S4": {
+      "role": "Decisões IA e portfólio",
+      "wps": [
+        "WP11",
+        "WP12",
+        "WP13",
+        "WP14"
+      ],
+      "workers": 3,
+      "coordinator_implementation": "WP14"
+    }
+  },
+  "capacity": "Cinco conversas efetivamente iniciadas, cada uma com até quatro slots. Quatro coordenadoras com 12 builders dedicados; S4 também implementa WP14 parcialmente. S0 tem três auxiliares que depois viram revisores, respeitando independência de autoria. Pico: 20 agentes incluindo as cinco coordenadoras, não 20 builders.",
+  "wp14_budget": "S4 reserva T+10–30 para funções puras, T+30–40 para coordenação, T+40–65 para ligação real e T+65–75 para provas. Se não publicar producer até T+30, S0-A assume por transferência exclusiva e um coordenador sem autoria cobre sua revisão.",
+  "milestones": [
+    {
+      "minute": 0,
+      "gate": "T0",
+      "condition": "Integradora registra T0 e baseline e publica os cinco prompts. A abertura e confirmação das demais sessões entram no relógio."
+    },
+    {
+      "minute": 5,
+      "gate": "GREADY",
+      "condition": "Cinco sessões confirmadas e ownership aceito. Se faltar capacidade, registrar efeito no prazo e iniciar as frentes já disponíveis, sem fingir paralelismo nem reduzir escopo."
+    },
+    {
+      "minute": 10,
+      "gate": "G0",
+      "condition": "C01–C14, writers, exports e fixtures congelados; execução nativa continua em qualificação separada."
+    },
+    {
+      "minute": 20,
+      "gate": "GNATIVE",
+      "condition": "Entrada real do produto chega ao modelo configurado e ao contexto correto de Maestro; acesso, proveniência e indisponibilidade explícitos. Não é gate de início de UI/BI/domínios."
+    },
+    {
+      "minute": 25,
+      "gate": "G1",
+      "condition": "Primeiros providers no módulo real; contexto autorizado, persistência e uma rota composta. Primeira rodada de CI iniciada cedo."
+    },
+    {
+      "minute": 40,
+      "gate": "G2",
+      "condition": "Projeções/ações dos três módulos e consumidores novos conectados; imports/BI/reunião já em integração."
+    },
+    {
+      "minute": 55,
+      "gate": "G3",
+      "condition": "Inferência real, contradição com fontes, simulação canônica e execução/admissão Relay demonstráveis. Execução C12 completa por domínio é exigida em T+75."
+    },
+    {
+      "minute": 75,
+      "gate": "G4",
+      "condition": "Escopo funcional integral conectado, com persistência real e consumidores presentes; candidato disponível para suites e revisões."
+    },
+    {
+      "minute": 95,
+      "gate": "G5",
+      "condition": "Primeiro conjunto completo de provas e revisões; defeitos atribuídos e correções em andamento."
+    },
+    {
+      "minute": 103,
+      "gate": "G6",
+      "condition": "Candidato corrigido congelado; verificação dos componentes afetados e cumulativa disparada."
+    },
+    {
+      "minute": 118,
+      "gate": "G7",
+      "condition": "Checks exigidos concluídos, três revisões reconciliadas e nenhum achado obrigatório aberto."
+    },
+    {
+      "minute": 120,
+      "gate": "G8",
+      "condition": "Recibo de entrega integral ou relatório de atraso com pendências concretas; o prazo não relaxa os critérios de conclusão."
+    }
+  ],
+  "ci_budget": "Duas janelas finais de aproximadamente 15 minutos são hipótese a medir cedo. O timeout de 45 minutos do workflow é um teto, não uma previsão; fila e setup também entram na conta.",
+  "central_allocation": [
+    {
+      "slot": "S0",
+      "window": [
+        0,
+        120
+      ],
+      "work": "Integradora: WP00.T01/T02, autoria dos contratos e shared files de WP10, merge queue e encerramento. Janelas de integração/QA são atividades intercaladas, não quatro builders simultâneos."
+    },
+    {
+      "slot": "S0-A",
+      "window": [
+        0,
+        20
+      ],
+      "work": "Assistente de fixtures/oráculos WP00.T03 e consistência de contratos. Escreve somente artefatos auxiliares de WP00; S0 publica schema comum."
+    },
+    {
+      "slot": "S0-B",
+      "window": [
+        0,
+        25
+      ],
+      "work": "Qualificação nativa WP00.T04: inspeção e exercício autorizado dos serviços; entrega achados/recibos sem editar host compartilhado."
+    },
+    {
+      "slot": "S0-C",
+      "window": [
+        0,
+        25
+      ],
+      "work": "Qualifica receitas CI, seleção e inventário de regressão; prepara harness de aceite em namespace WP10 mediante ownership exclusivo de seus novos arquivos de teste."
+    },
+    {
+      "slot": "S0-A/B/C",
+      "window": [
+        25,
+        55
+      ],
+      "work": "Provas de consumidores, inspeção de incrementos e apoio. Um slot pode assumir WP14 com transferência exclusiva; sua revisão vai para coordenador independente."
+    },
+    {
+      "slot": "S0-A/B/C",
+      "window": [
+        55,
+        118
+      ],
+      "work": "Três revisões independentes por área e retestes. Ajudante que escreveu parte julgada é substituído nessa parte por coordenador S1/S2/S3 sem autoria."
+    }
+  ]
+}
