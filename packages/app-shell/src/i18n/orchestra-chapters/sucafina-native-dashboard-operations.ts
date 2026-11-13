@@ -1,5 +1,13 @@
 // Copy owned by the native Sucafina dashboard operations view. Source labels stay verbatim in English.
 export const SF_NATIVE_DASHBOARD_OPERATIONS_COPY = {
+  "sucafina.native.dashboard-operations.summary.title": "Security KPI summary",
+  "sucafina.native.dashboard-operations.summary.unavailable": "Security KPI summary unavailable.",
+  "sucafina.native.dashboard-operations.summary.noData": "No data",
+  "sucafina.native.dashboard-operations.summary.socClosure": "SOC Closure",
+  "sucafina.native.dashboard-operations.summary.status.noData": "No data",
+  "sucafina.native.dashboard-operations.summary.status.good": "Good",
+  "sucafina.native.dashboard-operations.summary.status.moderate": "Moderate",
+  "sucafina.native.dashboard-operations.summary.status.highRisk": "High risk",
   "sucafina.native.dashboard-operations.page.operations": "IT Operations",
   "sucafina.native.dashboard-operations.page.security": "IT Security KPIs",
   "sucafina.native.dashboard-operations.page.contracts": "Vendor Contracts",
@@ -126,12 +134,20 @@ export const SF_NATIVE_DASHBOARD_OPERATIONS_COPY = {
   "sucafina.native.dashboard-operations.detail.storedNotes": "Stored notes",
 
   "sucafina.native.dashboard-operations.note.operationsProjection": "Customer monthly totals, annual totals, Final Balance, and the opened/closed chart require a server-owned projection. This view shows source ticket values only.",
-  "sucafina.native.dashboard-operations.note.securityProjection": "KPI status/targets, missing-versus-zero summaries, calculated SOC Closure, and derived SOC severity totals require a server-owned projection.",
+  "sucafina.native.dashboard-operations.note.securityProjection": "SOC severity totals are unavailable.",
   "sucafina.native.dashboard-operations.note.securityDerived": "Campaign rates and tones, incident status, and selected-year open incident count require a server-owned projection.",
   "sucafina.native.dashboard-operations.note.contractsProjection": "Contract sort modes and fixed-renewal alerts are not supplied by the native projection. Currency display semantics are unverified; amounts are shown as source values with their supplied currency and amount type.",
 } as const
 
 export const SF_NATIVE_DASHBOARD_OPERATIONS_COPY_BR: Record<keyof typeof SF_NATIVE_DASHBOARD_OPERATIONS_COPY, string> = {
+  "sucafina.native.dashboard-operations.summary.title": "Resumo dos indicadores de segurança",
+  "sucafina.native.dashboard-operations.summary.unavailable": "Resumo dos indicadores de segurança indisponível.",
+  "sucafina.native.dashboard-operations.summary.noData": "Sem dados",
+  "sucafina.native.dashboard-operations.summary.socClosure": "Encerramento do SOC",
+  "sucafina.native.dashboard-operations.summary.status.noData": "Sem dados",
+  "sucafina.native.dashboard-operations.summary.status.good": "Bom",
+  "sucafina.native.dashboard-operations.summary.status.moderate": "Moderado",
+  "sucafina.native.dashboard-operations.summary.status.highRisk": "Alto risco",
   "sucafina.native.dashboard-operations.page.operations": "Operações de TI",
   "sucafina.native.dashboard-operations.page.security": "Indicadores de segurança de TI",
   "sucafina.native.dashboard-operations.page.contracts": "Contratos de fornecedores",
@@ -258,7 +274,7 @@ export const SF_NATIVE_DASHBOARD_OPERATIONS_COPY_BR: Record<keyof typeof SF_NATI
   "sucafina.native.dashboard-operations.detail.storedNotes": "Observações salvas",
 
   "sucafina.native.dashboard-operations.note.operationsProjection": "Os totais mensais e anuais por cliente, o saldo final e o gráfico de chamados abertos e fechados exigem uma projeção do servidor. Esta visualização mostra somente os valores de chamados de origem.",
-  "sucafina.native.dashboard-operations.note.securityProjection": "O status e as metas dos KPIs, a distinção entre valor ausente e zero, o encerramento calculado de SOC e os totais derivados de gravidade de SOC exigem uma projeção do servidor.",
+  "sucafina.native.dashboard-operations.note.securityProjection": "Os totais por gravidade de SOC estão indisponíveis.",
   "sucafina.native.dashboard-operations.note.securityDerived": "As taxas e classificações das campanhas, o status dos incidentes e a contagem de incidentes abertos no ano selecionado exigem uma projeção do servidor.",
   "sucafina.native.dashboard-operations.note.contractsProjection": "Os modos de ordenação dos contratos e os alertas de renovação fixa não são fornecidos pela projeção nativa. A apresentação da moeda não foi verificada; os valores são exibidos como recebidos, com a moeda e o tipo de valor informados.",
 }

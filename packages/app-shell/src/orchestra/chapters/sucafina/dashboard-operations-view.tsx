@@ -161,6 +161,70 @@ function OperationsView(props: NativeViewProps) {
   )
 }
 
+const securitySummaryFields = [
+  ["training", "sucafina.native.dashboard-operations.kpi.training"],
+  ["patch", "sucafina.native.dashboard-operations.kpi.patchGeneral"],
+  ["patchEndpoint", "sucafina.native.dashboard-operations.kpi.patchEndpoint"],
+  ["patchServer", "sucafina.native.dashboard-operations.kpi.patchServer"],
+  ["scan", "sucafina.native.dashboard-operations.kpi.scan"],
+  ["assessment", "sucafina.native.dashboard-operations.kpi.assessment"],
+  ["socPending", "sucafina.native.dashboard-operations.kpi.pending"],
+  ["socClosure", "sucafina.native.dashboard-operations.summary.socClosure"],
+] as const
+
+const securityStatusLabels = {
+  "No data": "sucafina.native.dashboard-operations.summary.status.noData",
+  Good: "sucafina.native.dashboard-operations.summary.status.good",
+  Moderate: "sucafina.native.dashboard-operations.summary.status.moderate",
+  "High risk": "sucafina.native.dashboard-operations.summary.status.highRisk",
+} as const
+
+type SecurityTile = {
+  key: (typeof securitySummaryFields)[number][0]
+  value: number | string | null
+  status: keyof typeof securityStatusLabels
+}
+
+function securitySummaryTiles(value: unknown): SecurityTile[] | undefined {
+  if (!Array.isArray(value) || value.length !== securitySummaryFields.length) return
+  // Densify before checking so a sparse array cannot bypass validation.
+  if (![...value].every((entry, index) => {
+    const tile = object(entry)
+    if (!tile || tile.key !== securitySummaryFields[index]![0] ||
+      typeof tile.status !== "string" || !Object.hasOwn(securityStatusLabels, tile.status)) return false
+    return tile.value === null ||
+      (typeof tile.value === "number" && Number.isFinite(tile.value)) ||
+      (typeof tile.value === "string" && tile.value.trim() !== "" && Number.isFinite(Number(tile.value)))
+  })) return
+  return value as SecurityTile[]
+}
+
+function SecuritySummary(props: { payload: unknown; year: string; month: string }) {
+  const language = useLanguage()
+  const tiles = () => securitySummaryTiles(object(object(object(props.payload)?.[props.year])?.[props.month])?.tiles)
+  return (
+    <section class="mx-card" aria-label={language.t("sucafina.native.dashboard-operations.summary.title")}>
+      <h2 class="mx-section">{language.t("sucafina.native.dashboard-operations.summary.title")}</h2>
+      <Show when={tiles()} fallback={<p class="mx-note">{language.t("sucafina.native.dashboard-operations.summary.unavailable")}</p>}>
+        {(admitted) => (
+          <div class="mx-grid">
+            <For each={securitySummaryFields}>{(field, index) => {
+              const tile = () => admitted()[index()]!
+              return (
+                <article class="mx-card" aria-label={language.t(field[1])}>
+                  <h3>{language.t(field[1])}</h3>
+                  <strong>{tile().value === null ? language.t("sucafina.native.dashboard-operations.summary.noData") : String(tile().value)}</strong>
+                  <p>{language.t(securityStatusLabels[tile().status])}</p>
+                </article>
+              )
+            }}</For>
+          </div>
+        )}
+      </Show>
+    </section>
+  )
+}
+
 function SecurityView(props: NativeViewProps) {
   const language = useLanguage()
   const selectedYear = () => yearOptions.includes(props.query.secYear ?? "") ? props.query.secYear! : String(props.page.year)
@@ -175,6 +239,7 @@ function SecurityView(props: NativeViewProps) {
         onYear={(year) => props.onQuery({ ...props.query, secYear: year })}
         onMonth={(month) => props.onQuery({ ...props.query, securityMonth: month })}
       />
+      <SecuritySummary payload={props.page.data.nativeSecuritySummaryByYear} year={selectedYear()} month={selectedMonth()} />
       <Show when={Array.isArray(props.page.data.secKpi)} fallback={<ProjectionUnavailable name={language.t("sucafina.native.dashboard-operations.table.monthlyEntriesUnavailable")} />}>
         <ReadTable name={language.t("sucafina.native.dashboard-operations.table.monthlyEntries")} columns={[
           language.t("sucafina.native.dashboard-operations.column.month"), ...securityFields.map(([, key]) => language.t(key)),
