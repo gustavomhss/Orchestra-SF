@@ -62,6 +62,23 @@ export const domain: Domain = {
         .filter((key) => Object.hasOwn(snapshot.data, key))
         .map((key) => [key, structuredClone(snapshot.data[key])]),
     )
+    const budget = budgetData(data)
+    const hasOpex = Array.isArray(data.opexOwners) && Array.isArray(data.opexEntries)
+    const hasCapex = Array.isArray(data.capexProjects) && Array.isArray(data.capexEntries)
+    data.nativeBudgetSummaryByYear = Object.fromEntries(
+      [2024, 2025, 2026, 2027].map((year) => {
+        const totals = computeBudgetTotals(budget, year)
+        return [year, {
+          currentMonth: currentBudgetMonth(data, year, environment.at),
+          ...(hasOpex ? { opex: budgetSummaryCategory(totals.opexBudget, totals.opexActual, totals.opexForecast) } : {}),
+          ...(hasCapex ? { capex: budgetSummaryCategory(totals.capexBudget, totals.capexActual, totals.capexForecast) } : {}),
+          ...(hasOpex && hasCapex ? {
+            total: budgetSummaryCategory(totals.totalBudget, totals.totalActual, totals.totalForecast),
+            monthlyBudget: budgetChartSeries(totals.totalBudget),
+          } : {}),
+        }]
+      }),
+    )
     // Executive metrics are derived here; private member notes/classification never leave this boundary.
     const members = rows(snapshot.data.members)
     // Aggregate reads still identify every member read, without logging talent or changing record versions.
@@ -546,6 +563,9 @@ function parseRows(value: string): unknown {
   } catch {
     return undefined
   }
+}
+function budgetSummaryCategory(budget: number, actual: number, forecast: number) {
+  return { budget, actual, forecast, variance: budget - forecast, actualBudgetPercent: budget !== 0 ? actual / budget * 100 : null }
 }
 function budgetData(data: Record<string, unknown>): BudgetData {
   return {
