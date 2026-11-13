@@ -57,10 +57,14 @@ test("Planner grid previews pasted values and preserves a conflicting draft", as
     const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
     try {
       const tab = await browser.newPage()
+      tab.setDefaultTimeout(10_000)
+      tab.setDefaultNavigationTimeout(15_000)
       await tab.goto(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`)
-      await tab.goto(`${origin}/sucafina/planner?page=OPEX`)
+      // The bulk editor may only expose cells rendered by the authorized grid.
+      await tab.goto(`${origin}/sucafina/planner?page=OPEX&mode=forecast`)
       await tab.getByLabel("Measure", { exact: true }).selectOption("forecast")
       const first = tab.locator('section input[data-row="line"][data-month="1"]')
+      expect(await first.isEnabled()).toBe(true)
       await first.dispatchEvent("paste", { clipboardData: await tab.evaluateHandle(() => { const data = new DataTransfer(); data.setData("text/plain", "42\t99"); return data }) })
       expect(await tab.locator('section input[data-row="line"][data-month="2"]').inputValue()).toBe("99")
       await tab.getByRole("button", { name: "Preview changes" }).click()

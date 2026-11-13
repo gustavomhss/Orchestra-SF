@@ -84,7 +84,7 @@ test("workbench uses actual identity, SQLite and case dispatcher with revocation
       await tab.getByLabel("Decision objective").fill("Compare renewals")
       await tab.getByLabel("Start", { exact: true }).fill("2027-01-01")
       await tab.getByLabel("End", { exact: true }).fill("2027-12-31")
-      await tab.getByLabel("Currency").fill("USD")
+      await tab.locator("[data-decision-create]").getByLabel("Currency", { exact: true }).fill("USD")
       await tab.getByLabel("Criteria, one per line").fill("Cost\nCoverage")
       await tab.getByRole("button", { name: "Create decision" }).click()
       await tab.getByRole("heading", { name: "Compare renewals" }).waitFor()

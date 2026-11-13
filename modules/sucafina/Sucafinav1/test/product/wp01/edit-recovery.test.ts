@@ -1,24 +1,35 @@
 import { expect, test } from "bun:test"
-import type { Page } from "@playwright/test"
+import type { Browser, Page } from "@playwright/test"
 import { plannerMonthlyScript } from "../../../product/ui/planner-monthly.ts"
 import { caseQuestionScript } from "../../../product/ui/work-collaboration.ts"
 import { forecastAnalysisScript } from "../../../product/ui/forecast-analysis.ts"
 
 // These transport fixtures exercise the shipped browser consumers, including a lost
 // response after admission. They do not qualify native execution or domain policy.
-async function browserCase(body: string, post: (request: Request) => Response | Promise<Response>, check: (page: Page) => Promise<void>) {
-  const server = Bun.serve({ hostname: "localhost", port: 0, fetch: (request) => request.method === "GET"
+async function within<T>(operation: Promise<T>, step: string, timeout = 5_000): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined
+  try {
+    return await Promise.race([operation, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`Recovery fixture timed out: ${step}`)), timeout) })])
+  } finally { clearTimeout(timer) }
+}
+
+async function browserCase(body: string, post: (request: Request) => Response | Promise<Response>, check: (page: Page) => Promise<void>, release?: () => void) {
+  const server = Bun.serve({ hostname: "localhost", port: 0, idleTimeout: 30, fetch: (request) => request.method === "GET"
     ? new Response(`<!doctype html><html><body>${body}</body></html>`, { headers: { "Content-Type": "text/html" } })
     : post(request) })
-  const { chromium } = await import("@playwright/test")
-  const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+  let browser: Browser | undefined
   try {
-    const page = await browser.newPage()
+    const { chromium } = await import("@playwright/test")
+    browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 8_000 })
+    const page = await within(browser.newPage(), "open browser page")
+    page.setDefaultTimeout(5_000)
+    page.setDefaultNavigationTimeout(8_000)
     await page.goto(server.url.href)
     await check(page)
   } finally {
-    await browser.close()
-    await server.stop(true)
+    release?.()
+    try { if (browser) await within(browser.close(), "close browser") }
+    finally { await within(Promise.resolve(server.stop(true)), "stop fixture server") }
   }
 }
 
@@ -48,10 +59,9 @@ test("monthly apply freezes its draft and replays the exact admitted request aft
       await page.getByRole("button", { name: "Preview changes", exact: true }).click()
       await page.getByText("Preview complete. Review the entries and save when ready.").waitFor()
       await page.getByRole("button", { name: "Save changes", exact: true }).click()
-      await started
+      await within(started, "monthly apply entered the delayed handler")
       expect(await cell.isDisabled()).toBe(true)
       expect(await page.getByLabel("Measure", { exact: true }).isDisabled()).toBe(true)
-      expect(await page.getByLabel("Annual budget").isDisabled()).toBe(true)
       wait.release?.()
       await page.getByText("Could not confirm the operation. Your entries are preserved and locked; retry the same save request.").waitFor()
       expect(await cell.isDisabled()).toBe(true)
@@ -66,39 +76,75 @@ test("monthly apply freezes its draft and replays the exact admitted request aft
       await page.getByText("Changes saved. Refresh before editing these rows again.").waitFor()
       expect(calls).toHaveLength(2)
       expect(calls[1]).toEqual(calls[0])
+      expect(JSON.parse(calls[0]!.body).input).not.toHaveProperty("operation")
+      expect(JSON.parse(calls[0]!.body).input).not.toHaveProperty("entity")
       expect(admitted.size).toBe(1)
       expect(await cell.isDisabled()).toBe(true)
       expect(await cell.inputValue()).toBe("42")
       expect(await page.locator("form[data-dirty]").count()).toBe(0)
-    })
+    }, () => wait.release?.())
   } finally { wait.release?.() }
 }, 30_000)
 
-test("an uncertain annual budget change also locks the monthly grid until exact retry", async () => {
-  const calls: { body: string; key: string | null }[] = []
+test("the live monthly grid exposes only the published draft contract and preserves the existing record form", async () => {
+  await browserCase(planner, () => Response.json({ status: "unavailable" }, { status: 503 }), async (page) => {
+    expect(await page.getByRole("button", { name: "Preview annual budget", exact: true }).count()).toBe(0)
+    expect(await page.getByRole("button", { name: "Preview spread", exact: true }).count()).toBe(0)
+    expect(await page.getByRole("button", { name: "Preview reset", exact: true }).count()).toBe(0)
+    expect(await page.getByRole("button", { name: "Apply budget change", exact: true }).count()).toBe(0)
+    expect(await page.getByLabel("Annual budget", { exact: true }).count()).toBe(0)
+    expect(await page.getByText("This grid saves monthly values. For annual budgets, spread and reset, use the actions available on each record below.", { exact: true }).isVisible()).toBe(true)
+    expect(await page.locator('form[data-command="save"][data-record="line"]').count()).toBe(1)
+    expect(await page.getByRole("button", { name: "Save row", exact: true }).isVisible()).toBe(true)
+  })
+}, 30_000)
+
+test("monthly apply times out while reading an unfinished response body and retries the identical request", async () => {
+  const attempts: { body: string; key: string | null }[] = []
+  const stream: { close?: () => void } = {}
   await browserCase(planner, async (request) => {
     const body = await request.text()
     const input = JSON.parse(body)
+    const result = { status: "ok", value: { rows: input.input.drafts.map((draft: unknown) => ({ draft, errors: [], result: { ok: true } })) } }
     if (input.action === "apply") {
-      calls.push({ body, key: request.headers.get("idempotency-key") })
-      if (calls.length === 1) return new Response("response interrupted after admission")
+      attempts.push({ body, key: request.headers.get("idempotency-key") })
+      if (attempts.length === 1) {
+        const unfinished = new ReadableStream<Uint8Array>({
+          start(controller) {
+            controller.enqueue(new TextEncoder().encode('{"status":"ok","value":'))
+            stream.close = () => { stream.close = undefined; controller.close() }
+          },
+          cancel() { stream.close = undefined },
+        })
+        return new Response(unfinished, { headers: { "Content-Type": "application/json", "X-Fixture-Body-Pending": "yes" } })
+      }
     }
-    return Response.json({ status: "ok", value: { operation: { errors: [], before: [{ month: 1, value: 100 }], after: [{ month: 1, value: 200 }], changedMonths: [1] } } })
+    return Response.json(result)
   }, async (page) => {
-    await page.getByLabel("Annual budget").fill("2400")
-    await page.getByRole("button", { name: "Preview annual budget", exact: true }).click()
-    await page.getByText(/current 100, proposed 200/).waitFor()
-    await page.getByRole("button", { name: "Apply budget change", exact: true }).click()
-    await page.getByText("Could not confirm the budget change. Your monthly entries are preserved; retry the same request.").waitFor()
-    expect(await page.locator('section input[data-row="line"][data-month="1"]').isDisabled()).toBe(true)
-    expect(await page.getByLabel("Measure", { exact: true }).isDisabled()).toBe(true)
-    expect(await page.getByLabel("Annual budget").isDisabled()).toBe(true)
-    expect(await page.getByRole("button", { name: "Preview annual budget", exact: true }).isDisabled()).toBe(true)
-    await page.getByRole("button", { name: "Apply budget change", exact: true }).click()
-    await page.getByText("Budget change saved. Refresh before editing these months again.").waitFor()
-    expect(calls).toHaveLength(2)
-    expect(calls[1]).toEqual(calls[0])
-  })
+    const cell = page.locator('section input[data-row="line"][data-month="1"]')
+    await cell.fill("42")
+    await page.getByRole("button", { name: "Preview changes", exact: true }).click()
+    await page.getByText("Preview complete. Review the entries and save when ready.").waitFor()
+    const headers = page.waitForResponse((response) => response.headers()["x-fixture-body-pending"] === "yes")
+    const aborted = page.waitForEvent("requestfailed", { predicate: (request) => new URL(request.url()).searchParams.get("sf") === "workbench-planner", timeout: 15_000 })
+    await page.getByRole("button", { name: "Save changes", exact: true }).click()
+    expect((await headers).status()).toBe(200)
+    expect(await cell.isDisabled()).toBe(true)
+    const [failed] = await Promise.all([
+      aborted,
+      page.getByText("Could not confirm the operation. Your entries are preserved and locked; retry the same save request.", { exact: true }).waitFor({ timeout: 15_000 }),
+    ])
+    expect(failed.failure()?.errorText).toContain("ERR_ABORTED")
+    expect(await cell.inputValue()).toBe("42")
+    expect(await cell.isDisabled()).toBe(true)
+    expect(await page.getByRole("button", { name: "Save changes", exact: true }).isDisabled()).toBe(false)
+    await page.getByRole("button", { name: "Save changes", exact: true }).click()
+    await page.getByText("Changes saved. Refresh before editing these rows again.").waitFor()
+    expect(attempts).toHaveLength(2)
+    expect(attempts[1]).toEqual(attempts[0])
+    expect(await cell.inputValue()).toBe("42")
+    expect(await page.locator("form[data-dirty]").count()).toBe(0)
+  }, () => stream.close?.())
 }, 30_000)
 
 const caseRef = { id: "case", incarnation: "incarnation", version: 1 }
@@ -117,13 +163,64 @@ test("scenario analysis retries the prepared input and admission key without pre
   }, async (page) => {
     await page.getByRole("button", { name: "Start specialist analysis", exact: true }).click()
     await page.getByText("Could not confirm whether analysis started. Retry the same request to recover its result.").waitFor()
-    expect(await page.getByLabel("First", { exact: true }).isDisabled()).toBe(true)
-    expect(await page.getByLabel("Second", { exact: true }).isDisabled()).toBe(true)
+    expect(await page.locator('[data-scenario-analysis] select[name="first"]').isDisabled()).toBe(true)
+    expect(await page.locator('[data-scenario-analysis] select[name="second"]').isDisabled()).toBe(true)
     await page.getByRole("button", { name: "Retry the same analysis request", exact: true }).click()
     await page.getByText("Analysis started. Follow progress in analysis history.").waitFor()
     expect(prepares).toBe(1)
     expect(starts).toHaveLength(2)
     expect(starts[1]).toEqual(starts[0])
+  })
+}, 30_000)
+
+test("decision framing retries its exact prepared input and start key without preparing again", async () => {
+  const framingRequest = { ...request, objective: "Frame this decision", skillId: "sf-enquadrar-decisao" }
+  const model = { id: "model", providerID: "provider" }
+  const intent = `<form data-intent-analysis data-config='${JSON.stringify({ request: framingRequest, model })}'><button type="submit">Prepare decision framing</button><p role="status"></p></form><script>${forecastAnalysisScript}</script>`
+  const preparedInput = { binding: "framing-source-v1", objective: "Frame this decision" }
+  const preparations: string[] = []
+  const starts: { body: string; key: string | null }[] = []
+  await browserCase(intent, async (incoming) => {
+    const body = await incoming.text()
+    if (JSON.parse(body).action === "prepare") { preparations.push(body); return Response.json({ status: "ok", value: preparedInput }) }
+    starts.push({ body, key: incoming.headers.get("idempotency-key") })
+    return starts.length === 1 ? new Response("response lost after framing admission") : Response.json({ status: "ok", value: { runRef: "same-framing-run" } })
+  }, async (page) => {
+    await page.getByRole("button", { name: "Prepare decision framing", exact: true }).click()
+    await page.getByText("Could not confirm whether analysis started. Retry the same request to recover its result.", { exact: true }).waitFor()
+    await page.locator('[data-intent-analysis]').dispatchEvent("change")
+    await page.getByRole("button", { name: "Retry the same analysis request", exact: true }).click()
+    await page.getByText("Analysis started. Follow progress in analysis history.", { exact: true }).waitFor()
+    expect(preparations).toHaveLength(1)
+    expect(JSON.parse(preparations[0]!)).toEqual({ action: "prepare", input: { request: framingRequest, selection: {} } })
+    expect(starts).toHaveLength(2)
+    expect(starts[1]).toEqual(starts[0])
+    expect(JSON.parse(starts[0]!.body)).toEqual({ action: "start", input: { request: framingRequest, skillInput: preparedInput, model } })
+    expect(await page.locator('[data-intent-analysis] button[type="submit"]').isDisabled()).toBe(true)
+    await page.locator('[data-intent-analysis]').dispatchEvent("submit")
+    expect(starts).toHaveLength(2)
+  })
+}, 30_000)
+
+test.each([401, 403])("scenario %i revokes its options and configuration and prevents another start", async (denial) => {
+  const actions: string[] = []
+  await browserCase(scenario, async (incoming) => {
+    const command = await incoming.json()
+    actions.push(command.action)
+    return command.action === "prepare" ? Response.json({ status: "ok", value: { binding: "restricted-preparation" } }) : Response.json({ status: "denied", detail: "PRIVATE-ANALYSIS-DENIAL" }, { status: denial })
+  }, async (page) => {
+    await page.locator('[data-scenario-analysis]').dispatchEvent("change")
+    await page.getByRole("button", { name: "Start specialist analysis", exact: true }).click()
+    await page.getByText("Analysis access changed. Reopen this decision with your current access.", { exact: true }).waitFor()
+    expect(await page.locator('[data-scenario-analysis] option').count()).toBe(0)
+    expect(await page.locator('[data-scenario-analysis]').getAttribute("data-config")).toBeNull()
+    expect(await page.locator('[data-scenario-analysis]').getAttribute("data-dirty")).toBeNull()
+    expect(await page.locator('[data-scenario-analysis] select[name="first"]').isDisabled()).toBe(true)
+    expect(await page.locator('[data-scenario-analysis] select[name="second"]').isDisabled()).toBe(true)
+    expect(await page.locator('[data-scenario-analysis] button[type="submit"]').isDisabled()).toBe(true)
+    expect(await page.content()).not.toContain("PRIVATE-ANALYSIS-DENIAL")
+    await page.locator('[data-scenario-analysis]').dispatchEvent("submit")
+    expect(actions).toEqual(["prepare", "start"])
   })
 }, 30_000)
 
@@ -143,7 +240,7 @@ test("forecast start recovers an uncertain admission without changing its model 
     await page.getByRole("button", { name: "Start analysis", exact: true }).click()
     await page.getByText("Could not confirm whether analysis started. Retry the same request to recover its result.").waitFor()
     expect(await page.getByLabel("Currency", { exact: true }).isDisabled()).toBe(true)
-    expect(await page.getByLabel("Model", { exact: true }).isDisabled()).toBe(true)
+    expect(await page.locator('[data-forecast-analysis] select[name="model"]').isDisabled()).toBe(true)
     await page.getByRole("button", { name: "Retry the same analysis request", exact: true }).click()
     await page.getByText("Analysis: running.", { exact: true }).waitFor()
     expect(prepares).toBe(1)
@@ -296,8 +393,8 @@ test("a definitive rejected analysis start unlocks input without treating it as 
     : Response.json({ status: "stale" }, { status: 409 }), async (page) => {
     await page.getByRole("button", { name: "Start specialist analysis", exact: true }).click()
     await page.getByText("The analysis request was rejected. Review the alternatives and current decision before retrying.").waitFor()
-    expect(await page.getByLabel("First", { exact: true }).isDisabled()).toBe(false)
-    expect(await page.getByLabel("Second", { exact: true }).isDisabled()).toBe(false)
+    expect(await page.locator('[data-scenario-analysis] select[name="first"]').isDisabled()).toBe(false)
+    expect(await page.locator('[data-scenario-analysis] select[name="second"]').isDisabled()).toBe(false)
     expect(await page.getByRole("button", { name: "Start specialist analysis", exact: true }).isDisabled()).toBe(false)
   })
 }, 30_000)
@@ -314,12 +411,12 @@ test("a queued history refresh observes a new run after an older empty list fini
       }
       return Response.json({ status: "ok", value: [{ runRef: "new-run", state: "ready", version: 1 }] })
     }, async (page) => {
-      await started
+      await within(started, "first history list entered the delayed handler")
       await page.locator("[data-analysis-history]").dispatchEvent("sf-analysis-refresh")
       wait.release?.()
       await page.getByRole("button", { name: "Open result", exact: true }).waitFor()
       expect(wait.calls).toBe(2)
-    })
+    }, () => wait.release?.())
   } finally { wait.release?.() }
 }, 30_000)
 
@@ -335,7 +432,7 @@ test("an earlier authorized list cannot repopulate results after an output revoc
     }, async (page) => {
       await page.getByRole("button", { name: "Open result", exact: true }).waitFor()
       await page.locator("[data-analysis-history]").dispatchEvent("sf-analysis-refresh")
-      await started
+      await within(started, "history refresh entered the delayed handler")
       await page.getByRole("button", { name: "Open result", exact: true }).click()
       await page.getByText("Analysis access changed. Reopen the decision with your current access.").waitFor()
       wait.release?.()
@@ -343,7 +440,7 @@ test("an earlier authorized list cannot repopulate results after an output revoc
       expect(await page.locator("[data-results] article").count()).toBe(0)
       expect(await page.getByText("Analysis access changed. Reopen the decision with your current access.").isVisible()).toBe(true)
       expect(wait.calls).toBe(2)
-    })
+    }, () => wait.release?.())
   } finally { wait.release?.() }
 }, 30_000)
 
@@ -360,5 +457,140 @@ test("answer confirmation preflight failure restores the reply and conversation 
     expect(await page.getByLabel("Reply", { exact: true }).inputValue()).toBe("Unsent draft")
     expect(await page.getByRole("button", { name: "Open conversation", exact: true }).isDisabled()).toBe(false)
     expect(await page.getByRole("button", { name: "Send reply", exact: true }).isDisabled()).toBe(false)
+  })
+}, 30_000)
+
+const questionContext = { caseRef, period: { start: "2027-01-01", end: "2027-12-31" }, sources: [{ refId: "restricted-record", target: { incarnation: "record-incarnation", version: 3, recordType: "budget", surface: "planner" } }] }
+const questionForm = `<form data-case-question data-context='${JSON.stringify(questionContext)}'><label>Record<select name="source"><option value="0">Restricted budget source</option></select></label><button type="button" data-find-recipients>Find recipients</button><label>Recipient<select name="recipient" required><option value="recipient-1" selected>Restricted recipient</option></select></label><label>Question<textarea name="question" required></textarea></label><button type="submit">Create question</button><p role="status"></p></form><script>${caseQuestionScript}</script>`
+
+test.each([401, 403])("question %i clears the draft and context and fences an older recipient response", async (denial) => {
+  const gate: { release?: () => void; started?: () => void } = {}
+  const started = new Promise<void>((resolve) => { gate.started = resolve })
+  const calls: string[] = []
+  await browserCase(questionForm, async (request) => {
+    const mode = new URL(request.url).searchParams.get("sf")!
+    calls.push(mode)
+    if (mode === "collaboration-recipient-list") {
+      await new Promise<void>((resolve) => { gate.release = resolve; gate.started?.() })
+      return Response.json({ status: "ok", value: [{ id: "late-recipient", name: "Late restricted recipient" }] }, { headers: { "X-Late-Fixture": "question-recipients" } })
+    }
+    return Response.json({ status: "denied", detail: "PRIVATE-DENIAL" }, { status: denial })
+  }, async (page) => {
+    await page.getByLabel("Question", { exact: true }).fill("Private unsent question")
+    await page.getByRole("button", { name: "Find recipients", exact: true }).click()
+    await within(started, "recipient lookup entered its delayed handler")
+    await page.getByRole("button", { name: "Create question", exact: true }).click()
+    await page.getByText("Question access changed. Reopen the decision with your current access.", { exact: true }).waitFor()
+    expect(await page.locator('[data-case-question] input, [data-case-question] select, [data-case-question] textarea, [data-case-question] button').count()).toBe(0)
+    expect(await page.locator('[data-case-question]').getAttribute("data-context")).toBeNull()
+    expect(await page.locator('[data-case-question]').getAttribute("data-dirty")).toBeNull()
+    const late = page.waitForResponse((response) => response.headers()["x-late-fixture"] === "question-recipients")
+    gate.release?.()
+    expect(await within((await late).finished(), "finish the older recipient response")).toBeNull()
+    await within(page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))), "settle the older recipient response")
+    expect(await page.locator('[data-case-question] select, [data-case-question] textarea').count()).toBe(0)
+    expect(await page.content()).not.toContain("Late restricted recipient")
+    expect(await page.content()).not.toContain("Restricted budget source")
+    expect(await page.content()).not.toContain("restricted-record")
+    expect(await page.content()).not.toContain("PRIVATE-DENIAL")
+    await page.locator('[data-case-question]').dispatchEvent("submit")
+    expect(calls).toEqual(["collaboration-recipient-list", "collaboration-storage-version"])
+  }, () => gate.release?.())
+}, 30_000)
+
+test("transient question recipient and preflight failures preserve the selected recipient and editable draft", async () => {
+  const calls: string[] = []
+  await browserCase(questionForm, (request) => {
+    calls.push(new URL(request.url).searchParams.get("sf")!)
+    return Response.json({ status: "unavailable" }, { status: 503 })
+  }, async (page) => {
+    await page.getByLabel("Question", { exact: true }).fill("Keep my unsent question")
+    await page.getByRole("button", { name: "Find recipients", exact: true }).click()
+    await page.getByText("Recipients are temporarily unavailable. Your question and current selection are preserved; try again.", { exact: true }).waitFor()
+    expect(await page.locator('[data-case-question] select[name="recipient"]').inputValue()).toBe("recipient-1")
+    expect(await page.getByLabel("Question", { exact: true }).inputValue()).toBe("Keep my unsent question")
+    await page.getByRole("button", { name: "Create question", exact: true }).click()
+    await page.getByText("Could not prepare the question. Your entries are preserved; try again.", { exact: true }).waitFor()
+    expect(await page.getByLabel("Question", { exact: true }).isDisabled()).toBe(false)
+    expect(await page.getByLabel("Question", { exact: true }).inputValue()).toBe("Keep my unsent question")
+    expect(await page.locator('[data-case-question] select[name="recipient"]').inputValue()).toBe("recipient-1")
+    expect(await page.locator('[data-case-question]').getAttribute("data-context")).not.toBeNull()
+    expect(await page.locator('[data-case-question]').getAttribute("data-dirty")).toBe("true")
+    await page.getByLabel("Question", { exact: true }).fill("I can still correct the question")
+    expect(calls).toEqual(["collaboration-recipient-list", "collaboration-storage-version"])
+  })
+}, 30_000)
+
+test("question creation replays its frozen request after uncertainty and retries attachment without creating another thread", async () => {
+  const creations: { body: string; key: string | null }[] = []
+  const attachments: { body: string; key: string | null }[] = []
+  const gate: { release?: () => void; started?: () => void; preflights: number } = { preflights: 0 }
+  const started = new Promise<void>((resolve) => { gate.started = resolve })
+  await browserCase(questionForm, async (request) => {
+    const mode = new URL(request.url).searchParams.get("sf")
+    if (mode === "collaboration-storage-version") { gate.preflights++; return Response.json({ status: "ok", value: 4 }) }
+    if (mode === "collaboration-thread-create") {
+      creations.push({ body: await request.text(), key: request.headers.get("idempotency-key") })
+      if (creations.length === 1) { await new Promise<void>((resolve) => { gate.release = resolve; gate.started?.() }); return new Response("response lost after admission") }
+      if (creations.length === 2) return Response.json({ status: "conflict" }, { status: 409 })
+      return Response.json({ status: "ok", value: { id: "known-question" } })
+    }
+    if (mode === "decision-add-question") {
+      attachments.push({ body: await request.text(), key: request.headers.get("idempotency-key") })
+      return attachments.length === 1 ? Response.json({ status: "unavailable" }, { status: 503 }) : Response.json({ status: "ok", value: {} })
+    }
+    return Response.json({ status: "unavailable" }, { status: 503 })
+  }, async (page) => {
+    await page.getByLabel("Question", { exact: true }).fill("Original question")
+    await page.getByRole("button", { name: "Create question", exact: true }).click()
+    await within(started, "question create entered its delayed handler")
+    expect(await page.getByLabel("Question", { exact: true }).isDisabled()).toBe(true)
+    expect(await page.getByRole("button", { name: "Find recipients", exact: true }).isDisabled()).toBe(true)
+    await page.locator('[data-case-question]').dispatchEvent("submit")
+    await page.getByLabel("Question", { exact: true }).evaluate((element) => {
+      if (!(element instanceof HTMLTextAreaElement)) throw new Error("expected question textarea")
+      element.value = "Replacement must not become a new intention"
+      element.dispatchEvent(new Event("input", { bubbles: true }))
+    })
+    expect(await page.getByLabel("Question", { exact: true }).inputValue()).toBe("Original question")
+    expect(creations).toHaveLength(1)
+    gate.release?.()
+    await page.getByText("Could not confirm the question. Your text is preserved and locked; retry the same request.", { exact: true }).waitFor()
+    await page.getByRole("button", { name: "Retry same question", exact: true }).click()
+    await page.getByText("Could not confirm the question. Your text is preserved and locked; retry the same request.", { exact: true }).waitFor()
+    expect(await page.getByLabel("Question", { exact: true }).isDisabled()).toBe(true)
+    expect(creations).toHaveLength(2)
+    await page.getByRole("button", { name: "Retry same question", exact: true }).click()
+    await page.getByText("The question exists but could not be added to this decision. Retry the same request.", { exact: true }).waitFor()
+    expect(creations).toHaveLength(3)
+    expect(await page.getByLabel("Question", { exact: true }).isDisabled()).toBe(true)
+    await Promise.all([page.waitForEvent("load"), page.getByRole("button", { name: "Retry adding question", exact: true }).click()])
+    expect(gate.preflights).toBe(1)
+    expect(creations).toHaveLength(3)
+    expect(creations.every((attempt) => attempt.body === creations[0]!.body && attempt.key === creations[0]!.key)).toBe(true)
+    expect(JSON.parse(creations[0]!.body)).toMatchObject({ draft: { body: "Original question", recipientRef: "recipient-1", sourceRef: "restricted-record" }, mutation: { expectedStorageVersion: 4, idempotencyKey: creations[0]!.key } })
+    expect(attachments).toHaveLength(2)
+    expect(attachments[1]).toEqual(attachments[0])
+    expect(JSON.parse(attachments[0]!.body)).toEqual({ caseRef, questionRef: "known-question" })
+  }, () => gate.release?.())
+}, 30_000)
+
+test("an initial definite question rejection permits correction with a new request identity", async () => {
+  const creations: { key: string | null; body: string }[] = []
+  await browserCase(questionForm, async (request) => {
+    if (new URL(request.url).searchParams.get("sf") === "collaboration-storage-version") return Response.json({ status: "ok", value: 4 })
+    creations.push({ key: request.headers.get("idempotency-key"), body: await request.text() })
+    return Response.json({ status: "needs-input" }, { status: 400 })
+  }, async (page) => {
+    await page.getByLabel("Question", { exact: true }).fill("First question")
+    await page.getByRole("button", { name: "Create question", exact: true }).click()
+    await page.getByText("The question request was rejected. Your entries are preserved; review the record and recipient before trying again.", { exact: true }).waitFor()
+    expect(await page.getByLabel("Question", { exact: true }).isDisabled()).toBe(false)
+    await page.getByLabel("Question", { exact: true }).fill("Corrected question")
+    await page.getByRole("button", { name: "Create question", exact: true }).click()
+    await page.getByText("The question request was rejected. Your entries are preserved; review the record and recipient before trying again.", { exact: true }).waitFor()
+    expect(creations).toHaveLength(2)
+    expect(creations[1]!.key).not.toBe(creations[0]!.key)
+    expect(JSON.parse(creations[1]!.body).draft.body).toBe("Corrected question")
   })
 }, 30_000)

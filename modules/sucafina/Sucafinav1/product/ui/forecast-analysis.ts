@@ -1,11 +1,10 @@
 import type { AuthorizedCaseProjection } from "../contracts/business-context.ts"
 import type { SfHostServices } from "../contracts/host-context.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
-import { getSfAnalysisInputs } from "../interface/analysis-input-port.ts"
 import { esc } from "../../src/screen-shell.ts"
 
 export async function scenarioAnalysisForm(projection: AuthorizedCaseProjection, runtime: SfHostServices) {
-  if (!runtime.analyses || !getSfAnalysisInputs(runtime)) return "<p>Specialist scenario analysis is currently unavailable.</p>"
+  if (!runtime.analyses) return "<p>Specialist scenario analysis is currently unavailable.</p>"
   const parent = runtime.selected.find((item) => item.skills.some((skill) => skill.id === "sf-comparar-cenarios"))
   const skill = parent?.skills.find((item) => item.id === "sf-comparar-cenarios")
   const models = await runtime.models().catch(() => [])
@@ -14,6 +13,17 @@ export async function scenarioAnalysisForm(projection: AuthorizedCaseProjection,
   const config = { request: { caseRef: { id: item.id, incarnation: item.incarnation, version: item.version }, objective: item.objective, profileId: parent.profile.id, profileVersion: parent.profile.version, skillId: skill.id, skillVersion: skill.version, manifestDigest: parent.manifestDigest, outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: skill.allowedOperations.filter((operation) => parent.operationIds.includes(operation)) }, alternatives: item.alternatives.map((alternative) => ({ id: alternative.id, version: alternative.version })), model: models[0] }
   const options = item.alternatives.map((alternative, index) => `<option value="${index}">${esc(alternative.title)}</option>`).join("")
   return `<section><h3>Analyze alternatives</h3><form data-scenario-analysis data-config="${esc(JSON.stringify(config))}"><label>First alternative<select name="first">${options}</select></label><label>Second alternative<select name="second">${options}</select></label><button type="submit">Start specialist analysis</button><p role="status" aria-live="polite"></p></form></section>`
+}
+
+export async function intentAnalysisForm(projection: AuthorizedCaseProjection, runtime: SfHostServices) {
+  if (!runtime.analyses) return "<p>Decision framing is currently unavailable.</p>"
+  const parent = runtime.selected.find((item) => item.skills.some((skill) => skill.id === "sf-enquadrar-decisao"))
+  const skill = parent?.skills.find((item) => item.id === "sf-enquadrar-decisao")
+  const models = await runtime.models().catch(() => [])
+  if (!parent || !skill || !models.length) return "<p>Decision framing needs an available analysis service.</p>"
+  const item = projection.case
+  const config = { request: { caseRef: { id: item.id, incarnation: item.incarnation, version: item.version }, objective: item.objective, profileId: parent.profile.id, profileVersion: parent.profile.version, skillId: skill.id, skillVersion: skill.version, manifestDigest: parent.manifestDigest, outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: skill.allowedOperations.filter((operation) => parent.operationIds.includes(operation)) }, model: models[0] }
+  return `<section><h3>Frame this decision</h3><p>Use the current objective and attached sources to clarify the decision. Review the resulting contribution before accepting it.</p><form data-intent-analysis data-config="${esc(JSON.stringify(config))}"><button type="submit">Prepare decision framing</button><p role="status" aria-live="polite"></p></form></section>`
 }
 
 /** The selections and source references are restricted to the authorized case. */
@@ -34,28 +44,31 @@ export async function forecastAnalysisForm(projection: AuthorizedCaseProjection,
 }
 
 export const forecastAnalysisScript = `
-document.querySelectorAll('[data-scenario-analysis]').forEach((form) => {
+document.querySelectorAll('[data-scenario-analysis], [data-intent-analysis]').forEach((form) => {
   if (form.dataset.sfScenarioAnalysisReady) return; form.dataset.sfScenarioAnalysisReady = 'true'
-  const config = JSON.parse(form.dataset.config); const status = form.querySelector('[role=status]'); const button = form.querySelector('button[type=submit]')
+  let config = JSON.parse(form.dataset.config); const status = form.querySelector('[role=status]'); const button = form.querySelector('button[type=submit]')
+  const scenario = form.hasAttribute('data-scenario-analysis'); const startLabel = scenario ? 'Start specialist analysis' : 'Prepare decision framing'
   let prepareKey = crypto.randomUUID(); let startKey = crypto.randomUUID(); let pending; let busy = false; let uncertain = false; let reconciliationRequired = false; let started = false; let accessRevoked = false
   const freeze = (locked) => form.querySelectorAll('select,input,textarea').forEach((control) => { control.disabled = locked })
+  const revoke = () => { if (accessRevoked) return; accessRevoked = true; pending = undefined; config = undefined; delete form.dataset.config; delete form.dataset.dirty; form.querySelectorAll('select,input,textarea').forEach((control) => { if (control.tagName === 'SELECT') control.replaceChildren(); else control.value = ''; control.disabled = true }); button.disabled = true; status.textContent = 'Analysis access changed. Reopen this decision with your current access.' }
+  addEventListener('sf-access-revoked', () => { if (form.isConnected) revoke() })
   form.addEventListener('change', () => { if (busy || uncertain || started || accessRevoked) return; pending = undefined; prepareKey = crypto.randomUUID(); startKey = crypto.randomUUID(); form.dataset.dirty = 'true' })
   form.addEventListener('submit', async (event) => {
     event.preventDefault(); if (button.disabled || busy || started || accessRevoked || reconciliationRequired) return
     const reconciling = uncertain
-    const fields = new FormData(form); const first = config.alternatives[Number(fields.get('first'))]; const second = config.alternatives[Number(fields.get('second'))]
-    if (!pending && (!first || !second || first.id === second.id)) { status.textContent = 'Choose two different alternatives.'; return }
-    const send = async (payload, key) => { const url = new URL(location.href); url.search = '?sf=workbench-analysis'; const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify(payload) }); if (response.status === 401 || response.status === 403) throw Object.assign(new Error('access-changed'), { accessDenied: true }); const result = await response.json(); if (!response.ok || result.status !== 'ok') throw Object.assign(new Error('unavailable'), { rejected: [400, 409, 422].includes(response.status) && ['invalid', 'needs-input', 'stale', 'conflict'].includes(result.status) }); return result.value }
+    const fields = new FormData(form); const first = scenario && config.alternatives[Number(fields.get('first'))]; const second = scenario && config.alternatives[Number(fields.get('second'))]
+    if (scenario && !pending && (!first || !second || first.id === second.id)) { status.textContent = 'Choose two different alternatives.'; return }
+    const send = async (payload, key) => { const url = new URL(location.href); url.search = '?sf=workbench-analysis'; const response = await fetch(url, { method: 'POST', credentials: 'same-origin', signal: AbortSignal.timeout(15000), headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify(payload) }); if (accessRevoked || response.status === 401 || response.status === 403) throw Object.assign(new Error('access-changed'), { accessDenied: true }); const result = await response.json(); if (accessRevoked) throw Object.assign(new Error('access-changed'), { accessDenied: true }); if (!response.ok || result.status !== 'ok') throw Object.assign(new Error('unavailable'), { rejected: [400, 409, 422].includes(response.status) && ['invalid', 'needs-input', 'stale', 'conflict'].includes(result.status) }); return result.value }
     busy = true; button.disabled = true; freeze(true); status.textContent = pending ? 'Confirming the same analysis request…' : 'Preparing analysis…'
     try {
-      if (!pending) { const skillInput = await send({ action: 'prepare', input: { request: config.request, selection: { caseRef: config.request.caseRef, alternatives: [first, second] } } }, prepareKey); pending = { action: 'start', input: { request: config.request, skillInput, model: config.model } } }
+      if (!pending) { const skillInput = await send({ action: 'prepare', input: { request: config.request, selection: scenario ? { caseRef: config.request.caseRef, alternatives: [first, second] } : {} } }, prepareKey); pending = { action: 'start', input: { request: config.request, skillInput, model: config.model } } }
       uncertain = true
       const run = await send(pending, startKey)
       if (!run.runRef) throw new Error('unavailable')
       started = true; uncertain = false
       delete form.dataset.dirty; status.textContent = 'Analysis started. Follow progress in analysis history.'; document.querySelector('[data-analysis-history]')?.dispatchEvent(new Event('sf-analysis-refresh'))
-    } catch (error) { accessRevoked = !!error?.accessDenied; if (error?.rejected) { if (reconciling) reconciliationRequired = true; else { uncertain = false; pending = undefined; prepareKey = crypto.randomUUID(); startKey = crypto.randomUUID() } } if (accessRevoked) { form.querySelectorAll('select').forEach((select) => select.replaceChildren()); status.textContent = 'Analysis access changed. Reopen this decision with your current access.' } else status.textContent = reconciliationRequired ? 'The retry was rejected but the earlier start is still unconfirmed. Reconcile analysis history before starting another run.' : error?.rejected ? 'The analysis request was rejected. Review the alternatives and current decision before retrying.' : uncertain ? 'Could not confirm whether analysis started. Retry the same request to recover its result.' : 'Analysis could not be prepared. Check the alternatives and access, then retry.' }
-    finally { busy = false; freeze(uncertain || started || accessRevoked); button.disabled = started || accessRevoked || reconciliationRequired; button.textContent = uncertain ? 'Retry the same analysis request' : 'Start specialist analysis' }
+    } catch (error) { if (error?.accessDenied) revoke(); if (accessRevoked) return; if (error?.rejected) { if (reconciling) reconciliationRequired = true; else { uncertain = false; pending = undefined; prepareKey = crypto.randomUUID(); startKey = crypto.randomUUID() } } status.textContent = reconciliationRequired ? 'The retry was rejected but the earlier start is still unconfirmed. Reconcile analysis history before starting another run.' : error?.rejected ? scenario ? 'The analysis request was rejected. Review the alternatives and current decision before retrying.' : 'The analysis request was rejected. Review the objective and current decision before retrying.' : uncertain ? 'Could not confirm whether analysis started. Retry the same request to recover its result.' : scenario ? 'Analysis could not be prepared. Check the alternatives and access, then retry.' : 'Analysis could not be prepared. Check the decision sources and access, then retry.' }
+    finally { busy = false; freeze(uncertain || started || accessRevoked); button.disabled = started || accessRevoked || reconciliationRequired; button.textContent = uncertain ? 'Retry the same analysis request' : startLabel }
   })
 })
 document.querySelectorAll('[data-analysis-history]').forEach((section) => {
@@ -64,9 +77,10 @@ document.querySelectorAll('[data-analysis-history]').forEach((section) => {
   const output = section.querySelector('[data-results]')
   let timer; let signature; let loading = false; let again = false; let unavailable = false; let accessRevoked = false
   const revoke = () => { accessRevoked = true; clearTimeout(timer); output.replaceChildren(); delete section.dataset.case; status.textContent = 'Analysis access changed. Reopen the decision with your current access.' }
+  addEventListener('sf-access-revoked', () => { if (section.isConnected) revoke() })
   const send = async (payload) => {
     const url = new URL(location.href); url.search = '?sf=workbench-analysis'
-    const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() }, body: JSON.stringify(payload) })
+    const response = await fetch(url, { method: 'POST', credentials: 'same-origin', signal: AbortSignal.timeout(15000), headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() }, body: JSON.stringify(payload) })
     if (response.status === 401 || response.status === 403) throw Object.assign(new Error('access-changed'), { accessDenied: true })
     const result = await response.json(); if (!response.ok || result.status !== 'ok') throw Object.assign(new Error('unavailable'), { rejected: [400, 409, 422].includes(response.status) && ['invalid', 'needs-input', 'stale', 'conflict'].includes(result.status) }); return result.value
   }
@@ -114,7 +128,7 @@ document.querySelectorAll('[data-analysis-history]').forEach((section) => {
             try {
               const url = new URL(location.href); url.search = '?sf=decision-accept-analysis'
               if (!pending) pending = { caseRef: JSON.parse(section.dataset.case), outputRef: result.outputRef, runRef: run.runRef, rationale: rationale.value.trim() }
-              const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify(pending) })
+              const response = await fetch(url, { method: 'POST', credentials: 'same-origin', signal: AbortSignal.timeout(15000), headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify(pending) })
               if (response.status === 401 || response.status === 403) throw Object.assign(new Error('access-changed'), { accessDenied: true })
               const accepted = await response.json(); if (!response.ok || accepted.status !== 'ok') throw new Error('unavailable')
               delete form.dataset.dirty; location.reload()
@@ -134,7 +148,7 @@ document.querySelectorAll('[data-analysis-history]').forEach((section) => {
 })
 document.querySelectorAll('[data-forecast-analysis]').forEach((form) => {
   if (form.dataset.sfForecastReady) return; form.dataset.sfForecastReady = 'true'
-  const config = JSON.parse(form.dataset.config)
+  let config = JSON.parse(form.dataset.config)
   const status = form.querySelector('[role=status]')
   const cancel = form.querySelector('[data-analysis-cancel]')
   const button = form.querySelector('button:not([type]), button[type=submit]')
@@ -143,14 +157,16 @@ document.querySelectorAll('[data-forecast-analysis]').forEach((form) => {
   let timer
   let pending; let startKey = crypto.randomUUID(); let busy = false; let uncertain = false; let reconciliationRequired = false; let accessRevoked = false; let refreshEpoch = 0
   const freeze = (locked) => form.querySelectorAll('input,select,textarea').forEach((control) => { control.disabled = locked })
-  const revoke = () => { accessRevoked = true; clearTimeout(timer); form.querySelectorAll('input,select,textarea').forEach((control) => { if (control.tagName === 'SELECT') control.replaceChildren(); else control.value = ''; control.disabled = true }); button.disabled = true; cancel.hidden = true; retryStatus.hidden = true; delete form.dataset.dirty; status.textContent = 'Analysis access changed. Reopen the decision with your current access.' }
+  const revoke = () => { if (accessRevoked) return; accessRevoked = true; refreshEpoch++; clearTimeout(timer); pending = undefined; runRef = undefined; config = undefined; delete form.dataset.config; form.querySelectorAll('input,select,textarea').forEach((control) => { if (control.tagName === 'SELECT') control.replaceChildren(); else control.value = ''; control.disabled = true }); button.disabled = true; cancel.hidden = true; retryStatus.hidden = true; delete form.dataset.dirty; status.textContent = 'Analysis access changed. Reopen the decision with your current access.' }
+  addEventListener('sf-access-revoked', () => { if (form.isConnected) revoke() })
   const changed = () => { if (busy || uncertain || runRef || accessRevoked) return; pending = undefined; startKey = crypto.randomUUID(); form.dataset.dirty = 'true' }
   form.addEventListener('input', changed); form.addEventListener('change', changed)
   const send = async (mode, payload, key = crypto.randomUUID()) => {
     const url = new URL(location.href); url.search = '?sf=' + mode
-    const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify(payload) })
-    if (response.status === 401 || response.status === 403) throw Object.assign(new Error('access-changed'), { accessDenied: true })
+    const response = await fetch(url, { method: 'POST', credentials: 'same-origin', signal: AbortSignal.timeout(15000), headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify(payload) })
+    if (accessRevoked || response.status === 401 || response.status === 403) throw Object.assign(new Error('access-changed'), { accessDenied: true })
     const result = await response.json()
+    if (accessRevoked) throw Object.assign(new Error('access-changed'), { accessDenied: true })
     if (!response.ok || result.status !== 'ok') throw Object.assign(new Error('unavailable'), { rejected: [400, 409, 422].includes(response.status) && ['invalid', 'needs-input', 'stale', 'conflict'].includes(result.status) })
     return result.value
   }

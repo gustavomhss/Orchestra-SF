@@ -4,6 +4,7 @@ import { contribution } from "../ui/components.ts"
 import { getSfAnalysisInputs } from "./analysis-input-port.ts"
 import { decodeSfSkillInput } from "../contracts/schema-admission.ts"
 import type { SfSkillInputMap } from "../contracts/skill-inputs.ts"
+import { hasCaseAnalysisInput, prepareCaseAnalysisInput } from "./case-analysis-input.ts"
 
 /** The host owns authorization and execution; this boundary exposes no native binding. */
 export async function handleSfAnalysis(request: Request, origin: string, runtime: SfHostServices) {
@@ -20,15 +21,16 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
   const input = action === "prepare" ? prepareInput(parsed.input) : action === "start" ? await analysisInput(parsed.input, runtime) : action === "list" ? caseInput(parsed.caseRef) : typeof parsed.runRef === "string" && parsed.runRef.trim() ? { runRef: parsed.runRef } : undefined
   if (!input || Object.keys(parsed).some((key) => key !== "action" && key !== (action === "start" || action === "prepare" ? "input" : action === "list" ? "caseRef" : "runRef"))) return reply({ status: "invalid" }, 400)
   const inputs = getSfAnalysisInputs(runtime)
-  if (action === "prepare" && !inputs) return reply({ status: "unavailable", reason: "analysis-inputs-unavailable" }, 503)
   const admitted = await runtime.human.admit(request, action === "list" || action === "output" || action === "read" ? "analysis.read" : action === "cancel" ? "analysis.cancel" : "analysis.start", input)
   if (admitted.status !== "ok") return reply({ status: admitted.status }, admitted.status === "unavailable" ? 503 : 403)
   try {
-    if (action === "prepare" && "selection" in input && inputs) {
+    if (action === "prepare" && "selection" in input) {
       const selected = runtime.selected.find((entry) => entry.profile.id === input.request.profileId && entry.profile.version === input.request.profileVersion && entry.manifestDigest === input.request.manifestDigest)
       const skill = selected?.skills.find((entry) => entry.id === input.request.skillId && entry.version === input.request.skillVersion)
       if (!skill || !selected || input.request.requestedOperationScope.some((operation) => !skill.allowedOperations.includes(operation) || !selected.operationIds.includes(operation))) return reply({ status: "denied" }, 403)
-      const prepared = await inputs.prepare(admitted.value, input).catch(() => undefined)
+      const prepared = await (hasCaseAnalysisInput(skill.id)
+        ? prepareCaseAnalysisInput(request, runtime, input)
+        : inputs?.prepare(admitted.value, input) ?? Promise.resolve(undefined)).catch(() => undefined)
       if (!prepared) return reply({ status: "unavailable" }, 503)
       if (prepared.status !== "ok") return reply({ status: prepared.status }, prepared.status === "denied" ? 403 : prepared.status === "stale" || prepared.status === "conflict" ? 409 : prepared.status === "needs-input" ? 400 : 503)
       if (!decodeSfSkillInput(skill.inputSchemaRef as keyof SfSkillInputMap, prepared.value).ok) return reply({ status: "unavailable" }, 503)
@@ -45,7 +47,7 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
     if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
     if (action === "read") {
       if (!("runRef" in result.value) || !("state" in result.value) || !("version" in result.value)) return reply({ status: "unavailable" }, 503)
-      return reply({ status: "ok", value: { runRef: result.value.runRef, state: result.value.state, version: result.value.version, ...(result.value.outputRef ? { outputRef: result.value.outputRef } : {}) } }, 200)
+      return reply({ status: "ok", value: { runRef: result.value.runRef, state: result.value.state, version: result.value.version, ...("outputRef" in result.value && typeof result.value.outputRef === "string" && result.value.outputRef ? { outputRef: result.value.outputRef } : {}) } }, 200)
     }
     if (action === "output" && "kind" in result.value) {
       const output = result.value

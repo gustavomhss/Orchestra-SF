@@ -42,12 +42,11 @@ document.querySelectorAll('table').forEach((table) => {
   let monthlyUncertain = false
   let reconciliationRequired = false
   let accessRevoked = false
-  let operationBusy = false; let operationUncertain = false
   const revoke = () => { accessRevoked = true; const scope = table.closest('main') || section; const message = document.createElement('p'); message.setAttribute('role', 'alert'); message.textContent = 'Your Planner access changed. Reload this page with your current access.'; scope.replaceChildren(message); if (scope === section) table.closest('.table-scroll')?.remove(); delete dirtyGuard.dataset.dirty }
   const idFor = (row, kind, month) => JSON.stringify([row, kind, month])
   const update = (input) => {
     const id = idFor(input.dataset.row, input.dataset.measure, Number(input.dataset.month))
-    if (accessRevoked || busy || monthlyUncertain || operationBusy || operationUncertain) { input.value = changes.get(id)?.text ?? input.dataset.original; return }
+    if (accessRevoked || busy || monthlyUncertain) { input.value = changes.get(id)?.text ?? input.dataset.original; return }
     invalidCells.delete(id); input.removeAttribute('aria-invalid')
     if (input.value === input.dataset.original) changes.delete(id)
     else changes.set(id, { rowId: input.dataset.row, measure: input.dataset.measure, month: Number(input.dataset.month), text: input.value })
@@ -66,7 +65,7 @@ document.querySelectorAll('table').forEach((table) => {
         input.type = 'text'; input.inputMode = 'decimal'; input.setAttribute('aria-label', row.label + ' ' + kind + ' month ' + (index + 1)); input.setAttribute('aria-describedby', status.id)
         input.dataset.row = row.id; input.dataset.measure = kind; input.dataset.month = String(index + 1); input.dataset.rowIndex = String(rowIndex); input.dataset.original = row.values[prefix + index] ?? ''
         input.value = changes.get(idFor(row.id, kind, index + 1))?.text ?? input.dataset.original
-        input.disabled = busy || monthlyUncertain || operationBusy || operationUncertain || !!row.saved || !Object.hasOwn(row.values, prefix + index)
+        input.disabled = busy || monthlyUncertain || !!row.saved || !Object.hasOwn(row.values, prefix + index)
         if (invalidCells.has(idFor(row.id, kind, index + 1))) input.setAttribute('aria-invalid', 'true')
         input.addEventListener('input', () => update(input))
         input.addEventListener('paste', (event) => {
@@ -85,15 +84,16 @@ document.querySelectorAll('table').forEach((table) => {
     })
   }
   const send = async (action) => {
-    if (accessRevoked || reconciliationRequired || busy || operationBusy || operationUncertain || !changes.size || (action === 'preview' && monthlyUncertain) || (action === 'apply' && !approved && !pendingApply)) return
+    if (accessRevoked || reconciliationRequired || busy || !changes.size || (action === 'preview' && monthlyUncertain) || (action === 'apply' && !approved && !pendingApply)) return
     const reconciling = monthlyUncertain
     const drafts = rows.flatMap((row) => { const cells = [...changes.values()].filter((cell) => cell.rowId === row.id).map(({ measure, month, text }) => ({ measure, month, text })); return cells.length ? [{ rowId: row.id, revision: row.revision, cells }] : [] })
     if (action === 'apply' && !pendingApply) pendingApply = { key, body: JSON.stringify({ action, input: { page, versionId, drafts } }) }
     const request = pendingApply || { key, body: JSON.stringify({ action, input: { page, versionId, drafts } }) }
     const url = new URL(location.href); url.search = '?sf=workbench-planner'
     busy = true; freeze(true); status.textContent = action === 'preview' ? 'Checking changes…' : 'Saving changes…'
+    const controller = new AbortController(); const timeout = setTimeout(() => controller.abort(), 10000)
     try {
-      const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': request.key }, body: request.body })
+      const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': request.key }, body: request.body, signal: controller.signal })
       if (response.status === 401 || response.status === 403) throw Object.assign(new Error('access-changed'), { accessDenied: true })
       const result = await response.json()
       if (!response.ok || result.status !== 'ok') throw Object.assign(new Error('unavailable'), { rejected: [400, 409, 422].includes(response.status) && ['invalid', 'needs-input', 'stale', 'conflict'].includes(result.status) })
@@ -120,52 +120,14 @@ document.querySelectorAll('table').forEach((table) => {
       if (action === 'apply' && reconciling && problems.length) { reconciliationRequired = true; const warning = document.createElement('p'); warning.textContent = 'The retry could not reconcile the earlier save. Its outcome is still uncertain. Your original entries remain locked; reconcile the stored record before starting another change.'; status.append(warning); return }
       if (action === 'apply') { approved = false; pendingApply = undefined; monthlyUncertain = false; key = crypto.randomUUID() }
     } catch (error) { if (error?.accessDenied) { revoke(); return } if (error?.rejected) { if (reconciling) { reconciliationRequired = true; status.textContent = 'The retry was rejected but the earlier save is still unconfirmed. Your original entries remain locked; reconcile the stored record before starting another change.'; return } monthlyUncertain = false; pendingApply = undefined; approved = false; key = crypto.randomUUID(); status.textContent = 'The request was rejected. Your entries are preserved; review the values and current record before previewing again.'; return } monthlyUncertain = action === 'apply'; status.textContent = action === 'apply' ? 'Could not confirm the operation. Your entries are preserved and locked; retry the same save request.' : 'Could not confirm the preview. Your entries are preserved; retry the preview.' }
-    finally { busy = false; if (!accessRevoked) { freeze(monthlyUncertain); save.disabled = reconciliationRequired || !(monthlyUncertain || approved); render() } }
+    finally { clearTimeout(timeout); busy = false; if (!accessRevoked) { freeze(monthlyUncertain); save.disabled = reconciliationRequired || !(monthlyUncertain || approved); render() } }
   }
   preview.addEventListener('click', () => send('preview'))
   save.addEventListener('click', () => send('apply'))
   measure.addEventListener('change', () => { if (!measure.disabled) render() })
-  const recordLabel = document.createElement('label'); recordLabel.textContent = 'Budget record '; const recordSelect = document.createElement('select'); recordSelect.setAttribute('aria-label', 'Budget record'); rows.forEach((row, index) => { const option = document.createElement('option'); option.value = String(index); option.textContent = row.label; recordSelect.append(option) }); recordLabel.append(recordSelect)
-  const annualInput = document.createElement('input'); annualInput.type = 'text'; annualInput.inputMode = 'decimal'; annualInput.setAttribute('aria-label', 'Annual budget')
-  const applyBudget = document.createElement('button'); applyBudget.type = 'button'; applyBudget.textContent = 'Apply budget change'; applyBudget.disabled = true
-  const budgetStatus = document.createElement('div'); budgetStatus.setAttribute('role', 'status'); budgetStatus.setAttribute('aria-live', 'polite')
-  const budgetButtons = []; let operationKey = crypto.randomUUID(); let operationApproved = false; let pending = null
-  const phrases = { 'row-unavailable': 'This row changed or is unavailable.', 'invalid-revision': 'This row cannot be saved as shown.', 'invalid-annual': 'Enter a valid annual amount.', 'operation-rejected': 'The change was not accepted.', 'operation-unavailable': 'The change could not be checked.' }
-  const amount = (cell) => !cell || cell.value === null ? 'empty' : typeof cell.value === 'number' && Number.isFinite(cell.value) ? String(cell.value) : 'unavailable'
-  const annualValue = () => { const text = annualInput.value.trim(); return text !== '' && Number.isFinite(Number(text)) ? Number(text) : undefined }
-  const freeze = (locked) => { recordSelect.disabled = locked; annualInput.disabled = locked; measure.disabled = locked; budgetButtons.forEach((button) => { button.disabled = locked }); preview.disabled = locked; save.disabled = locked || !approved; if (locked) { applyBudget.disabled = true; grid.querySelectorAll('input').forEach((input) => { input.disabled = true }) } else render() }
-  const invalidate = () => { if (operationBusy || operationUncertain || busy || monthlyUncertain) return; pending = null; operationApproved = false; applyBudget.disabled = true; operationKey = crypto.randomUUID() }
-  recordSelect.addEventListener('change', invalidate); annualInput.addEventListener('input', () => { invalidate(); dirtyGuard.dataset.dirty = 'true' })
-  const runBudget = async (action, request) => {
-    if (accessRevoked || operationBusy || busy || monthlyUncertain || request !== pending || (action === 'apply' && !operationApproved)) return
-    const reconciling = operationUncertain
-    operationBusy = true; freeze(true); budgetStatus.textContent = action === 'preview' ? 'Checking the budget change…' : 'Saving the budget change…'
-    try {
-      const url = new URL(location.href); url.search = '?sf=workbench-planner'
-      const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': operationKey }, body: JSON.stringify({ action, input: request }) })
-      if (response.status === 401 || response.status === 403) throw Object.assign(new Error('access-changed'), { accessDenied: true })
-      const result = await response.json()
-      if (!response.ok || result.status !== 'ok') throw Object.assign(new Error('unavailable'), { rejected: [400, 409, 422].includes(response.status) && ['invalid', 'needs-input', 'stale', 'conflict'].includes(result.status) })
-      const operation = result?.value?.operation
-      if (request !== pending) return
-      if (!response.ok || result.status !== 'ok' || !operation || !Array.isArray(operation.errors) || !Array.isArray(operation.before) || !Array.isArray(operation.after) || !Array.isArray(operation.changedMonths)) throw new Error('unavailable')
-      budgetStatus.replaceChildren()
-      operation.errors.forEach((reason) => { const line = document.createElement('p'); line.textContent = phrases[reason] || 'Check this budget change.'; budgetStatus.append(line) })
-      operation.changedMonths.forEach((month) => { const line = document.createElement('p'); line.textContent = (rows.find((entry) => entry.id === request.operation.rowId)?.label || 'This row') + ', month ' + month + ': current ' + amount(operation.before.find((cell) => cell.month === month)) + ', proposed ' + amount(operation.after.find((cell) => cell.month === month)); budgetStatus.append(line) })
-      if (action === 'apply' && reconciling && operation.errors.length) { operationApproved = false; const warning = document.createElement('p'); warning.textContent = 'The retry could not reconcile the earlier budget change. Its outcome is still uncertain. Reconcile the stored record before starting another change.'; budgetStatus.append(warning); return }
-      operationUncertain = false
-      const applied = action === 'apply' && operation.errors.length === 0
-      operationApproved = action === 'preview' && request === pending && operation.errors.length === 0
-      if (applied) { const line = document.createElement('p'); line.textContent = 'Budget change saved. Refresh before editing these months again.'; budgetStatus.append(line); pending = null; if (!changes.size) delete dirtyGuard.dataset.dirty }
-      else if (action === 'apply') { const line = document.createElement('p'); line.textContent = 'The budget change was not saved. Your monthly entries remain.'; budgetStatus.append(line) }
-      else if (!operation.changedMonths.length && !operation.errors.length) { const line = document.createElement('p'); line.textContent = 'Preview complete. No monthly budget change was returned.'; budgetStatus.append(line) }
-      if (action === 'apply') { operationApproved = false; operationKey = crypto.randomUUID() }
-    } catch (error) { if (error?.accessDenied) { revoke(); return } if (error?.rejected) { if (reconciling) { operationApproved = false; budgetStatus.textContent = 'The retry was rejected but the earlier budget change is still unconfirmed. Reconcile the stored record before starting another change.'; return } operationUncertain = false; operationApproved = false; pending = null; operationKey = crypto.randomUUID(); budgetStatus.textContent = 'The budget request was rejected. Your entries are preserved; review the current record before previewing again.'; return } if (request === pending) { operationUncertain = action === 'apply'; operationApproved = action === 'apply'; budgetStatus.textContent = action === 'apply' ? 'Could not confirm the budget change. Your monthly entries are preserved; retry the same request.' : 'Could not confirm the preview. Your monthly entries are preserved.' } }
-    finally { operationBusy = false; if (!accessRevoked) { freeze(operationUncertain); applyBudget.disabled = !(operationApproved && request === pending) } }
-  }
-  ;[['annual', 'Preview annual budget'], ['spread', 'Preview spread'], ['reset', 'Preview reset']].forEach(([kind, text]) => { const button = document.createElement('button'); button.type = 'button'; button.textContent = text; budgetButtons.push(button); button.addEventListener('click', () => { if (operationBusy || operationUncertain || busy || monthlyUncertain) return; const row = rows[Number(recordSelect.value)]; const annual = annualValue(); if (!row || (kind === 'annual' && annual === undefined)) { operationApproved = false; applyBudget.disabled = true; budgetStatus.textContent = 'Choose a record and enter an annual amount.'; return } operationKey = crypto.randomUUID(); operationApproved = false; applyBudget.disabled = true; pending = { page, versionId, operation: { rowId: row.id, revision: row.revision, kind, ...(kind === 'annual' ? { annual } : {}) } }; runBudget('preview', pending) }); section.append(button) })
-  applyBudget.addEventListener('click', () => { if (operationBusy || !operationApproved || !pending) return; runBudget('apply', pending) })
-  section.append(heading, label, instructions, scroll, preview, save, recordLabel, annualInput, applyBudget, budgetStatus, status, dirtyGuard)
+  const guidance = document.createElement('p'); guidance.textContent = 'This grid saves monthly values. For annual budgets, spread and reset, use the actions available on each record below.'
+  const freeze = (locked) => { measure.disabled = locked; preview.disabled = locked; save.disabled = locked || !approved; if (locked) grid.querySelectorAll('input').forEach((input) => { input.disabled = true }); else render() }
+  section.append(heading, label, instructions, guidance, scroll, preview, save, status, dirtyGuard)
   table.closest('.table-scroll')?.before(section)
   render()
 })

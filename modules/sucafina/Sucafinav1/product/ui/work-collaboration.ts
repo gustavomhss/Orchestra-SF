@@ -69,26 +69,85 @@ document.querySelectorAll('[data-case-thread]').forEach((entry) => {
 })
 document.querySelectorAll('[data-case-question]').forEach((form) => {
   if (form.dataset.sfCaseQuestionReady) return; form.dataset.sfCaseQuestionReady = 'true'
-  const context = JSON.parse(form.dataset.context); const status = form.querySelector('[role=status]'); const recipientsButton = form.querySelector('[data-find-recipients]'); const select = form.elements.namedItem('recipient'); const submit = form.querySelector('button[type=submit]')
-  let thread; let pending; let createKey = crypto.randomUUID(); let attachKey = crypto.randomUUID()
-  const send = async (mode, payload, key) => { const url = new URL(location.href); url.search = '?sf=' + mode; const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify(payload) }); const result = await response.json(); if (!response.ok || result.status !== 'ok') throw new Error('unavailable'); return result.value }
-  recipientsButton.addEventListener('click', async () => {
-    if (thread) return; recipientsButton.disabled = true; status.textContent = 'Finding recipients…'
-    try { const items = await send('collaboration-recipient-list', {}, crypto.randomUUID()); select.replaceChildren(); const placeholder = document.createElement('option'); placeholder.value = ''; placeholder.textContent = 'Choose a recipient'; select.append(placeholder); items.forEach((item) => { const option = document.createElement('option'); option.value = item.id; option.textContent = item.name; select.append(option) }); status.textContent = items.length ? 'Choose a recipient.' : 'No recipients are available.' }
-    catch { status.textContent = 'Recipients are unavailable or access changed.' }
-    finally { recipientsButton.disabled = false }
-  })
-  form.addEventListener('input', () => { if (!thread) { createKey = crypto.randomUUID(); attachKey = crypto.randomUUID(); form.dataset.dirty = 'true' } })
-  form.addEventListener('change', () => { if (!thread) { createKey = crypto.randomUUID(); attachKey = crypto.randomUUID(); form.dataset.dirty = 'true' } })
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault(); if (submit.disabled || !form.reportValidity()) return
-    const fields = new FormData(form); const source = context.sources[Number(fields.get('source'))]; if (!thread && !pending && (!source || !fields.get('recipient') || !String(fields.get('question') || '').trim())) { status.textContent = 'Choose a record and recipient and enter a question.'; return }
-    const controls = [...form.querySelectorAll('input,select,textarea,button')]; controls.forEach((control) => { control.disabled = true }); status.textContent = thread ? 'Adding question to the decision…' : 'Creating question…'
+  let context = JSON.parse(form.dataset.context)
+  const status = form.querySelector('[role=status]'); const recipientsButton = form.querySelector('[data-find-recipients]'); const select = form.elements.namedItem('recipient'); const submit = form.querySelector('button[type=submit]')
+  const controls = [...form.querySelectorAll('input,select,textarea,button')]; const disabled = new Map(controls.map((control) => [control, control.disabled]))
+  let thread; let pending; let attachment; let snapshot; let createKey = crypto.randomUUID(); let attachKey = crypto.randomUUID()
+  let busy = false; let reading = false; let closed = false; let completed = false; let epoch = 0; let readGeneration = 0
+  const active = () => !closed && form.isConnected
+  const sync = () => {
+    if (!active()) return
+    controls.forEach((control) => { control.disabled = disabled.get(control) || busy || (!!(pending || thread || completed) && control !== submit) || (reading && control === recipientsButton) })
+    submit.textContent = completed ? 'Reload decision' : thread ? 'Retry adding question' : pending ? 'Retry same question' : 'Create question'
+  }
+  const revoke = () => {
+    if (!active()) return
+    closed = true; epoch++; readGeneration++; context = undefined; pending = undefined; attachment = undefined; snapshot = undefined; thread = undefined
+    delete form.dataset.context; delete form.dataset.dirty
+    controls.forEach((control) => { control.disabled = true; if ('value' in control) control.value = ''; if (control.tagName === 'SELECT' || control.tagName === 'TEXTAREA') control.replaceChildren() }); disabled.clear()
+    const message = document.createElement('p'); message.setAttribute('role', 'status'); message.textContent = 'Question access changed. Reopen the decision with your current access.'
+    form.replaceChildren(message)
+  }
+  addEventListener('sf-access-revoked', revoke)
+  const send = async (mode, payload, key, body = JSON.stringify(payload)) => {
+    const ticket = epoch; const controller = new AbortController(); const timeout = setTimeout(() => controller.abort(), 10000)
     try {
-      if (!thread) { if (!pending) { const version = await send('collaboration-storage-version', { namespace: 'threads' }, crypto.randomUUID()); pending = { draft: { kind: 'clarification', sourceRef: source.refId, sourceIncarnation: source.target.incarnation, observedVersion: source.target.version, period: context.period, recipientRef: fields.get('recipient'), evidenceRefs: [source], body: String(fields.get('question')).trim() }, mutation: { expectedStorageVersion: version, idempotencyKey: createKey } } } const created = await send('collaboration-thread-create', pending, createKey); if (!created.id) throw new Error('unavailable'); thread = created.id }
-      await send('decision-add-question', { caseRef: context.caseRef, questionRef: thread }, attachKey); delete form.dataset.dirty; status.textContent = 'Question added to the decision.'; location.reload()
-    } catch { status.textContent = thread ? 'The question exists but could not be added to this decision. Retry the same request.' : 'Could not confirm the question. Your text is preserved; retry the same request.' }
-    finally { controls.forEach((control) => { control.disabled = !!(thread || pending) && control !== submit }); submit.disabled = false }
+      const url = new URL(location.href); url.search = '?sf=' + mode
+      const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body, signal: controller.signal })
+      if (!active()) throw Object.assign(new Error('superseded'), { ignored: true })
+      if (response.status === 401 || response.status === 403) { revoke(); throw Object.assign(new Error('access-changed'), { accessDenied: true }) }
+      if (ticket !== epoch) throw Object.assign(new Error('superseded'), { ignored: true })
+      const result = await response.json()
+      if (!active() || ticket !== epoch) throw Object.assign(new Error('superseded'), { ignored: true })
+      if (!response.ok || result.status !== 'ok') throw Object.assign(new Error('unavailable'), { rejected: [400, 409, 422].includes(response.status) && ['invalid', 'needs-input', 'conflict'].includes(result.status) })
+      return result.value
+    } finally { clearTimeout(timeout) }
+  }
+  recipientsButton.addEventListener('click', async () => {
+    if (!active() || busy || reading || thread || pending || completed) return
+    const generation = ++readGeneration; reading = true; sync(); status.textContent = 'Finding recipients…'
+    try {
+      const items = await send('collaboration-recipient-list', {}, crypto.randomUUID())
+      if (!active() || generation !== readGeneration || busy || pending || thread) return
+      if (!Array.isArray(items) || items.some((item) => typeof item?.id !== 'string' || typeof item?.name !== 'string')) throw new Error('unavailable')
+      const selected = select.value
+      select.replaceChildren(); const placeholder = document.createElement('option'); placeholder.value = ''; placeholder.textContent = 'Choose a recipient'; select.append(placeholder)
+      items.forEach((item) => { const option = document.createElement('option'); option.value = item.id; option.textContent = item.name; select.append(option) })
+      if (items.some((item) => item.id === selected)) select.value = selected
+      status.textContent = selected && select.value !== selected ? 'Your selected recipient is no longer available. Choose another recipient; your question is preserved.' : items.length ? 'Choose a recipient.' : 'No recipients are available.'
+    } catch (error) { if (active() && generation === readGeneration && !error?.ignored) status.textContent = 'Recipients are temporarily unavailable. Your question and current selection are preserved; try again.' }
+    finally { if (generation === readGeneration) { reading = false; sync() } }
+  })
+  const changed = () => {
+    if (!active()) return
+    if (busy || thread || pending || completed) { if (snapshot) Object.entries(snapshot).forEach(([name, value]) => { form.elements.namedItem(name).value = value }); return }
+    createKey = crypto.randomUUID(); attachKey = crypto.randomUUID(); form.dataset.dirty = 'true'
+  }
+  form.addEventListener('input', changed)
+  form.addEventListener('change', changed)
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault(); if (!active() || busy || submit.disabled) return
+    if (completed) { location.reload(); return }
+    if (!pending && !thread && !form.reportValidity()) return
+    const fields = new FormData(form); const source = context.sources[Number(fields.get('source'))]
+    if (!thread && !pending && (!source || !fields.get('recipient') || !String(fields.get('question') || '').trim())) { status.textContent = 'Choose a record and recipient and enter a question.'; return }
+    if (!snapshot) snapshot = { source: String(fields.get('source')), recipient: String(fields.get('recipient')), question: String(fields.get('question')) }
+    busy = true; epoch++; readGeneration++; reading = false; form.dataset.dirty = 'true'; sync(); status.textContent = thread ? 'Adding question to the decision…' : 'Creating question…'
+    try {
+      if (!thread) {
+        if (!pending) { const version = await send('collaboration-storage-version', { namespace: 'threads' }, crypto.randomUUID()); pending = { key: createKey, uncertain: false, body: JSON.stringify({ draft: { kind: 'clarification', sourceRef: source.refId, sourceIncarnation: source.target.incarnation, observedVersion: source.target.version, period: context.period, recipientRef: snapshot.recipient, evidenceRefs: [source], body: snapshot.question.trim() }, mutation: { expectedStorageVersion: version, idempotencyKey: createKey } }) } }
+        const created = await send('collaboration-thread-create', undefined, pending.key, pending.body)
+        if (typeof created?.id !== 'string' || !created.id) throw new Error('unavailable')
+        thread = created.id
+      }
+      if (!attachment) attachment = { key: attachKey, body: JSON.stringify({ caseRef: context.caseRef, questionRef: thread }) }
+      await send('decision-add-question', undefined, attachment.key, attachment.body)
+      completed = true; delete form.dataset.dirty; status.textContent = 'Question added to the decision.'; location.reload()
+    } catch (error) {
+      if (!active() || error?.ignored) return
+      if (!thread && pending && error?.rejected && !pending.uncertain) { pending = undefined; snapshot = undefined; createKey = crypto.randomUUID(); attachKey = crypto.randomUUID(); status.textContent = 'The question request was rejected. Your entries are preserved; review the record and recipient before trying again.' }
+      else { if (pending) pending.uncertain = true; if (!pending && !thread) snapshot = undefined; status.textContent = thread ? 'The question exists but could not be added to this decision. Retry the same request.' : pending ? 'Could not confirm the question. Your text is preserved and locked; retry the same request.' : 'Could not prepare the question. Your entries are preserved; try again.' }
+    } finally { busy = false; sync() }
   })
 })
 `

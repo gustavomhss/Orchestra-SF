@@ -23,7 +23,7 @@ test("import reports the persisted unchanged outcome after an uncertain response
     await page.getByText("Import with preview").click()
     await page.getByRole("button", { name: "Find destinations" }).click()
     await page.getByLabel("Destination").selectOption("0")
-    await page.getByLabel("File").setInputFiles({ name: "budget.json", mimeType: "application/json", buffer: Buffer.from("{}") })
+    await page.locator("[data-import-form]").getByLabel("File", { exact: true }).setInputFiles({ name: "budget.json", mimeType: "application/json", buffer: Buffer.from("{}") })
     await page.getByRole("button", { name: "Preview import" }).click()
     await page.getByRole("button", { name: "Apply reviewed import" }).click()
     await page.getByText("Import completed; no fields needed changing.").waitFor()

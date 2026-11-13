@@ -10,6 +10,7 @@ function revokeAccess(status) {
   pending.focus = null
   pending.again = false
   pending.controller?.abort()
+  dispatchEvent(new CustomEvent("sf-access-revoked", { detail: { status } }))
   clearInterval(businessTimer)
   document.title = "Sucafina · Access unavailable"
   const main = document.createElement("main")

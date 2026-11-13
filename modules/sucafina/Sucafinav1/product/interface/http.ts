@@ -3,14 +3,14 @@ import { digestSfValue } from "../contracts/canonical.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
 import { documentHtml, esc, pageMain } from "../../src/screen-shell.ts"
 import { htmlPolicy } from "../../runtime/application.ts"
-import { decisionDesk, routineStatus, workList } from "../ui/components.ts"
+import { decisionDesk, routineStatus } from "../ui/components.ts"
 import { encodeCaseRef } from "../decisions/case-port.ts"
 import { handleSfAnalysis } from "./analysis-http.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
 import { decisionCreateForm, decisionCreateScript } from "../ui/decision-create.ts"
 import { handleSfPlannerMonthly } from "./planner-http.ts"
 import { handleSfForecastInput } from "./forecast-http.ts"
-import { forecastAnalysisForm, forecastAnalysisScript, scenarioAnalysisForm } from "../ui/forecast-analysis.ts"
+import { forecastAnalysisForm, forecastAnalysisScript, scenarioAnalysisForm, intentAnalysisForm } from "../ui/forecast-analysis.ts"
 import { decisionEditForm, decisionEditScript } from "../ui/decision-edit.ts"
 import { decisionChoiceForm, decisionChoiceScript } from "../ui/decision-choice.ts"
 import { handleSfViews } from "./views-http.ts"
@@ -20,18 +20,27 @@ import { recordSearchScript, recordSearchWidget } from "../ui/record-search.ts"
 import { portfolioHistory, portfolioScript, portfolioWidget } from "../ui/portfolio.ts"
 import { decisionApplyForms, decisionApplyScript } from "../ui/decision-apply.ts"
 import { caseQuestionForm, caseQuestionScript, caseQuestionThreads, workDestinationScript } from "../ui/work-collaboration.ts"
+import { contextualCaseReturn, handleContextualDecision } from "./contextual-decision.ts"
 
 /** Mount in the existing authenticated application; authority remains private to the host. */
 export function createSfWorkbenchHttp(input: { origin: string; mount: string; runtime: () => SfHostServices | undefined }) {
-  const modes = ["workbench", "workbench-case", "workbench-work", "workbench-work-select", "workbench-search", "workbench-routine", "workbench-command", "workbench-analysis", "workbench-planner", "workbench-forecast", "workbench-views"] as const
+  const modes = ["workbench", "workbench-case", "workbench-context", "workbench-work", "workbench-work-select", "workbench-search", "workbench-routine", "workbench-command", "workbench-analysis", "workbench-planner", "workbench-forecast", "workbench-views"] as const
   return async (request: Request, surface: string): Promise<Response | undefined> => {
     const url = new URL(request.url)
     const mode = url.searchParams.get("sf")
     if (!mode || !modes.some((entry) => entry === mode)) return undefined
     const reply = (value: unknown, status: number) => Response.json(value, { status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
     if (url.origin !== input.origin || !["dashboard", "planner", "procurement"].includes(surface) || url.pathname !== `${input.mount}/${surface}`) return reply({ status: "denied" }, 403)
+    const pageReply = (body: string, status: number, revision = "") => {
+      const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, `<p><a href="?sf=workbench">Workbench</a></p>${body}`), "", "", revision)
+      return new Response(request.method === "HEAD" ? null : html, { status, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff", ...(revision ? { "X-SF-Access-Revision": revision } : {}) } })
+    }
+    const workMode = mode === "workbench-work" || mode === "workbench-work-select"
     const runtime = input.runtime()
-    if (!runtime) return reply({ status: "unavailable", reason: "workbench-unavailable" }, 503)
+    if (!runtime) return workMode ? pageReply("<h2>Work unavailable</h2><p>The work service is not available in this installation. Return to Workbench and retry when the service is available.</p>", 503) : reply({ status: "unavailable", reason: "workbench-unavailable" }, 503)
+    const workForm = () => `<form method="get"><input type="hidden" name="sf" value="workbench-work-select"><label>Start<input name="start" type="date" required value="${esc(url.searchParams.get("start") ?? "")}"></label><label>End<input name="end" type="date" required value="${esc(url.searchParams.get("end") ?? "")}"></label><button${runtime.work && runtime.procurementSelections ? "" : " disabled"}>Find work</button></form>`
+    const workFailure = (status: number, message: string) => pageReply(`<h2>${status === 403 ? "Work access unavailable" : status === 400 ? "Review the work period" : status === 409 ? "Work selection changed" : "Work unavailable"}</h2><p role="status">${esc(message)}</p>${status !== 403 ? `<p>Selected period: ${esc(url.searchParams.get("start") ?? "Not selected")} – ${esc(url.searchParams.get("end") ?? "Not selected")}</p>${status === 400 || runtime.work && runtime.procurementSelections ? workForm() : `<p><a href="${esc(url.pathname + url.search)}">Retry this selection</a></p>`}` : ""}`, status)
+    if (mode === "workbench-context") return handleContextualDecision(request, { ...input, surface, runtime })
     if (mode === "workbench-analysis") {
       if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1) return reply({ status: "invalid" }, 400)
       return handleSfAnalysis(request, input.origin, runtime)
@@ -49,19 +58,19 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
       return handleSfViews(request, input.origin, runtime)
     }
     if (mode === "workbench-work-select") {
-      if (request.method !== "GET" && request.method !== "HEAD") return reply({ status: "denied" }, 405)
-      if ([...url.searchParams.keys()].some((key) => !["sf", "start", "end"].includes(key) || url.searchParams.getAll(key).length !== 1)) return reply({ status: "invalid" }, 400)
+      if (request.method !== "GET" && request.method !== "HEAD") return workFailure(405, "Open My work from Workbench to choose a period.")
+      if ([...url.searchParams.keys()].some((key) => !["sf", "start", "end"].includes(key) || url.searchParams.getAll(key).length !== 1)) return workFailure(400, "Choose a valid start and end date, then find work again.")
       const period = { start: url.searchParams.get("start") ?? "", end: url.searchParams.get("end") ?? "" }
-      if (!isSfPeriod(period)) return reply({ status: "invalid" }, 400)
-      if (!runtime.procurementSelections) return reply({ status: "unavailable" }, 503)
+      if (!isSfPeriod(period)) return workFailure(400, "Choose a valid start date and an end date on or after it.")
+      if (!runtime.procurementSelections || !runtime.work) return workFailure(503, "Work discovery is not available in this installation. Return to Workbench and retry when the work service is available.")
       const digest = digestSfValue({ purpose: "work-selection", period })
       const access = await runtime.ui.admit(request, "sf_work_list", digest)
-      if (access.status !== "ok") return reply({ status: access.status }, 403)
+      if (access.status !== "ok") return workFailure(access.status === "denied" ? 403 : 503, access.status === "denied" ? "Your access changed or does not permit this work. Reopen the application before continuing." : "Work access could not be checked. Your period is preserved; retry.")
       try {
-        if (!await runtime.ui.validate(access.value, "sf_work_list", digest)) return reply({ status: "denied" }, 403)
+        if (!await runtime.ui.validate(access.value, "sf_work_list", digest)) return workFailure(403, "Your access changed. Reopen the application before continuing.")
         const selection = await runtime.procurementSelections.create(access.value, period).catch(() => undefined)
-        if (!selection || selection.status !== "ok") return reply({ status: selection?.status ?? "unavailable" }, selection?.status === "denied" ? 403 : 503)
-        if (!await runtime.ui.revalidate(access.value)) return reply({ status: "denied" }, 403)
+        if (!selection || selection.status !== "ok") return workFailure(selection?.status === "denied" ? 403 : selection?.status === "stale" || selection?.status === "conflict" ? 409 : selection?.status === "needs-input" ? 400 : 503, selection?.status === "denied" ? "Your access changed. Reopen the application before continuing." : "The work selection could not be confirmed. Review the period and select it again.")
+        if (!await runtime.ui.revalidate(access.value)) return workFailure(403, "Your access changed. Reopen the application before continuing.")
         const query = new URLSearchParams({ sf: "workbench-work", selectionRef: selection.value.selectionRef, start: selection.value.period.start, end: selection.value.period.end })
         const body = `<p><a href="?sf=workbench">Workbench</a></p><h2>Work selection</h2><p><a href="?${esc(query.toString())}">${esc(selection.value.label)}</a> · ${esc(selection.value.period.start)} – ${esc(selection.value.period.end)}</p>`
         const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, body), "", "", access.value.binding.accessRevision)
@@ -91,13 +100,14 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
         return reply({ status: "ok", value: output.value, outputRef: result.outputRef }, 200)
       } finally { runtime.ui.finish(admitted.value) }
     }
-    if (request.method !== "GET" && request.method !== "HEAD") return reply({ status: "denied" }, 405)
-    const allowed = mode === "workbench" ? ["sf"] : mode === "workbench-case" ? ["sf", "caseRef"] : mode === "workbench-work" ? ["sf", "selectionRef", "start", "end"] : mode === "workbench-search" ? ["sf", "q"] : ["sf", "runRef"]
-    if ([...url.searchParams.keys()].some((key) => !allowed.includes(key) || url.searchParams.getAll(key).length !== 1)) return reply({ status: "invalid" }, 400)
+    if (request.method !== "GET" && request.method !== "HEAD") return workMode ? workFailure(405, "Open My work from Workbench to choose a period.") : reply({ status: "denied" }, 405)
+    const allowed = mode === "workbench" ? ["sf"] : mode === "workbench-case" ? ["sf", "caseRef", "returnTo"] : mode === "workbench-work" ? ["sf", "selectionRef", "start", "end"] : mode === "workbench-search" ? ["sf", "q"] : ["sf", "runRef"]
+    if ([...url.searchParams.keys()].some((key) => !allowed.includes(key) || url.searchParams.getAll(key).length !== 1)) return workMode ? workFailure(400, "Review the work period and choose a new selection.") : reply({ status: "invalid" }, 400)
     const operation = mode === "workbench" || mode === "workbench-case" ? "sf_case_read" : mode === "workbench-search" ? "sf_knowledge_search" : mode === "workbench-routine" ? "sf_routine_status" : "sf_work_list"
     const payload = mode === "workbench-case" ? { caseRef: url.searchParams.get("caseRef") ?? "" } : mode === "workbench-search" ? { query: url.searchParams.get("q") ?? "", limit: 20 } : mode === "workbench-routine" ? { runRef: url.searchParams.get("runRef") ?? "" } : { selectionRef: url.searchParams.get("selectionRef") ?? "", period: { start: url.searchParams.get("start") ?? "", end: url.searchParams.get("end") ?? "" } }
     const decoded = mode === "workbench" ? undefined : decodeSfOperationInput(operation, payload)
-    if (decoded && !decoded.ok) return reply({ status: "invalid", reason: "invalid-selection" }, 400)
+    if (decoded && !decoded.ok) return workMode ? workFailure(400, "Choose a valid period and find work again.") : reply({ status: "invalid", reason: "invalid-selection" }, 400)
+    if (workMode && !runtime.work) return workFailure(503, "The work presentation service is not available in this installation. Return to Workbench and retry when the service is available.")
     const landing = { caseAccess: false }
     const admitted = mode === "workbench" ? await (async () => {
       for (const candidate of ["sf_case_read", "sf_work_list", "sf_knowledge_search", "sf_routine_catalog"] as const) {
@@ -106,16 +116,16 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
       }
       return { status: "denied" as const, reason: "workbench-unavailable" }
     })() : await runtime.ui.admit(request, operation, digestSfValue(decoded?.ok ? decoded.value : {}))
-    if (admitted.status !== "ok") return reply({ status: admitted.status }, 403)
+    if (admitted.status !== "ok") return workMode ? workFailure(admitted.status === "denied" ? 403 : 503, "Work access could not be confirmed. Reopen the application before continuing.") : reply({ status: admitted.status }, 403)
     try {
       if (mode === "workbench-work" && runtime.work) {
         const selection = decodeSfOperationInput("sf_work_list", payload)
-        if (!selection.ok) return reply({ status: "invalid" }, 400)
-        if (!await runtime.ui.validate(admitted.value, "sf_work_list", digestSfValue(selection.value))) return reply({ status: "denied" }, 403)
+        if (!selection.ok) return workFailure(400, "Choose a valid period and find work again.")
+        if (!await runtime.ui.validate(admitted.value, "sf_work_list", digestSfValue(selection.value))) return workFailure(403, "Your access changed. Reopen the application before continuing.")
         const work = await runtime.work.listPresentation(selection.value, admitted.value).catch(() => undefined)
-        if (!work) return reply({ status: "unavailable" }, 503)
-        if (work.status !== "ok") return reply({ status: work.status }, work.status === "denied" ? 403 : work.status === "stale" || work.status === "conflict" ? 409 : 503)
-        if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
+        if (!work) return workFailure(503, "Work could not be loaded. Your period is preserved; find work again to retry.")
+        if (work.status !== "ok") return workFailure(work.status === "denied" ? 403 : work.status === "stale" || work.status === "conflict" ? 409 : work.status === "needs-input" ? 400 : 503, work.status === "denied" ? "Your access changed. Reopen the application before continuing." : "Work could not be confirmed for this selection. Review the period and select it again.")
+        if (!await runtime.ui.revalidate(admitted.value)) return workFailure(403, "Your access changed. Reopen the application before continuing.")
         const body = `<p><a href="?sf=workbench">Workbench</a></p><h2>My work</h2>${work.value.items.length ? `<ul>${work.value.items.map((item) => `<li><strong>${esc(item.title ?? "Work item")}</strong> · ${esc(item.state)}${item.ownerLabel ? ` · ${esc(item.ownerLabel)}` : ""}${item.due ? ` · Due ${esc(item.due)}` : ""}${item.period ? ` · ${esc(item.period.start)} – ${esc(item.period.end)}` : ""}${item.observedVersion === undefined ? "" : ` · Observed version ${item.observedVersion}`}${item.sourceVersion === undefined ? "" : ` · Current version ${item.sourceVersion}`}${item.destination ? ` <button type="button" data-work-destination data-selection="${esc(JSON.stringify(selection.value))}" data-action-ref="${esc(item.actionRef)}" data-mount="${esc(input.mount.replace(/\/$/, ""))}">Open work</button><span role="status" aria-live="polite"></span>` : ""}</li>`).join("")}</ul>` : "<p>No work is currently assigned in this selection.</p>"}`
         const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, body), "", "", admitted.value.binding.accessRevision).replace("</body>", `<script>${workDestinationScript}</script></body>`)
         return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
@@ -135,7 +145,7 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
       })) : []
       const visible = cases.filter((item) => item !== undefined)
       const listUnavailable = !landing.caseAccess || (listed && listed.status !== "ok" && !(listed.status === "unavailable" && listed.reason === "product-state-uninitialized"))
-      const work = runtime.procurementSelections ? `<form method="get"><input type="hidden" name="sf" value="workbench-work-select"><h2>My work</h2><label>Start<input name="start" type="date" required></label><label>End<input name="end" type="date" required></label><button>Find work</button></form>` : "<p>Work list is currently unavailable.</p>"
+      const work = runtime.procurementSelections && runtime.work ? `<h2>My work</h2>${workForm()}` : "<p>Work list is currently unavailable.</p>"
       const runs = mode === "workbench" && runtime.routineRuns ? await (async () => {
         const digest = digestSfValue({ purpose: "routine-discovery" })
         const access = await runtime.ui.admit(request, "sf_routine_status", digest)
@@ -158,10 +168,11 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
       if (output && !output.ok) return reply({ status: "unavailable" }, 503)
       if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
       const caseOutput = operation === "sf_case_read" && result?.status === "ok" ? decodeSfOperationOutput("sf_case_read", result.result) : undefined
-      const workOutput = operation === "sf_work_list" && result?.status === "ok" ? decodeSfOperationOutput("sf_work_list", result.result) : undefined
       const routineOutput = operation === "sf_routine_status" && result?.status === "ok" ? decodeSfOperationOutput("sf_routine_status", result.result) : undefined
       const searchOutput = operation === "sf_knowledge_search" && result?.status === "ok" ? decodeSfOperationOutput("sf_knowledge_search", result.result) : undefined
-      const body = caseOutput?.ok ? decisionDesk(caseOutput.value) + decisionEditForm(caseOutput.value) + decisionChoiceForm(caseOutput.value) + decisionApplyForms(caseOutput.value) + caseQuestionForm(caseOutput.value) + caseQuestionThreads(caseOutput.value) + portfolioHistory(caseOutput.value) + await forecastAnalysisForm(caseOutput.value, runtime) + await scenarioAnalysisForm(caseOutput.value, runtime) : workOutput?.ok ? workList(workOutput.value) : routineOutput?.ok ? routineStatus(routineOutput.value) : searchOutput?.ok ? `<h2>Search results</h2>${searchOutput.value.matches.length ? `<ul>${searchOutput.value.matches.map((item) => `<li data-document-result data-ref="${esc(JSON.stringify(item.documentRef))}"><strong data-document-title>Checking source…</strong><p data-document-text>${esc(item.text)}</p></li>`).join("")}</ul>` : "<p>No accessible results.</p>"}${searchOutput.value.limitations.map((item) => `<p>${esc(item)}</p>`).join("")}` : forms
+      const returnTo = caseOutput?.ok && url.searchParams.has("returnTo") ? contextualCaseReturn({ ...input, returnTo: url.searchParams.get("returnTo")!, sourceRefs: caseOutput.value.case.sourceRefs }) : undefined
+      if (caseOutput?.ok && url.searchParams.has("returnTo") && !returnTo) return pageReply("<h2>Source context unavailable</h2><p>The return destination does not match this decision's contract evidence. Open the decision again from Workbench.</p>", 400)
+      const body = caseOutput?.ok ? (returnTo ? `<p><a href="${esc(returnTo)}">Return to contract</a></p>` : "") + decisionDesk(caseOutput.value) + decisionEditForm(caseOutput.value) + decisionChoiceForm(caseOutput.value) + decisionApplyForms(caseOutput.value) + caseQuestionForm(caseOutput.value) + caseQuestionThreads(caseOutput.value) + portfolioHistory(caseOutput.value) + await forecastAnalysisForm(caseOutput.value, runtime) + await scenarioAnalysisForm(caseOutput.value, runtime) + await intentAnalysisForm(caseOutput.value, runtime) : routineOutput?.ok ? routineStatus(routineOutput.value) : searchOutput?.ok ? `<h2>Search results</h2>${searchOutput.value.matches.length ? `<ul>${searchOutput.value.matches.map((item) => `<li data-document-result data-ref="${esc(JSON.stringify(item.documentRef))}"><strong data-document-title>Checking source…</strong><p data-document-text>${esc(item.text)}</p></li>`).join("")}</ul>` : "<p>No accessible results.</p>"}${searchOutput.value.limitations.map((item) => `<p>${esc(item)}</p>`).join("")}` : forms
       if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
       const script = `;(() => { const initialize = () => {${decisionCreateScript}${decisionEditScript}${decisionChoiceScript}${decisionApplyScript}${caseQuestionScript}${forecastAnalysisScript}${personalViewsScript}${documentSearchScript}${recordSearchScript}${portfolioScript}}; initialize(); const root = document.querySelector('#content'); if (root) new MutationObserver(initialize).observe(root, { childList: true, subtree: true }) })();`
       const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, `<p><a href="?sf=workbench">Workbench</a></p>${body}`), "", "", admitted.value.binding.accessRevision).replace("</script>", `${script}</script>`)

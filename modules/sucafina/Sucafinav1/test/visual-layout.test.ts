@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import type { Browser } from "@playwright/test"
 import { mkdir, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -9,22 +10,31 @@ import { createLocalInstallation } from "../local/entry.ts"
 
 test("Executive metrics align, fill the content area and fit desktop and mobile viewports", async () => {
   const root = await mkdtemp(path.join(await realpath(tmpdir()), "operator-browser-"))
-  const file = await prepareLocalConfiguration(root)
-  const access = await prepareOperatorAccess(file, true)
-  const environment = {
-    ORCHESTRA_DB: path.join(root, "host-data", "orchestra.db"), ORCHESTRA_INHERIT_CREDENTIALS: "0",
-    ORCHESTRA_CONFIG_DIR: path.join(root, "host-config"), ORCHESTRA_CREDENTIAL_KEY_FILE: path.join(root, "host-credential.key"),
-    TMPDIR: path.join(root, "host-tmp"), XDG_DATA_HOME: path.join(root, "host-data"), XDG_CONFIG_HOME: path.join(root, "host-config"),
-    XDG_CACHE_HOME: path.join(root, "host-cache"), XDG_STATE_HOME: path.join(root, "host-state"),
-  }
-  const installation = await createLocalInstallation({ origin: "http://localhost:4110" }, file, environment)
-  const server = Bun.serve({ hostname: "localhost", port: 4110, fetch: async (request) => await installation.handler(request) ?? new Response(null, { status: 404 }) })
-  const { chromium } = await import("@playwright/test")
-  const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
-  const failures: string[] = []
+  const resources: { installation?: Awaited<ReturnType<typeof createLocalInstallation>>; browser?: Browser; server?: { stop(closeActiveConnections?: boolean): void | Promise<void> } } = {}
+  let stage = "prepare isolated installation"
   try {
+    const file = await prepareLocalConfiguration(root)
+    const access = await prepareOperatorAccess(file, true)
+    const environment = {
+      ORCHESTRA_DB: path.join(root, "host-data", "orchestra.db"), ORCHESTRA_INHERIT_CREDENTIALS: "0",
+      ORCHESTRA_CONFIG_DIR: path.join(root, "host-config"), ORCHESTRA_CREDENTIAL_KEY_FILE: path.join(root, "host-credential.key"),
+      TMPDIR: path.join(root, "host-tmp"), XDG_DATA_HOME: path.join(root, "host-data"), XDG_CONFIG_HOME: path.join(root, "host-config"),
+      XDG_CACHE_HOME: path.join(root, "host-cache"), XDG_STATE_HOME: path.join(root, "host-state"),
+    }
+    const installation = await createLocalInstallation({ origin: "http://localhost:4110" }, file, environment)
+    resources.installation = installation
+    const server = Bun.serve({ hostname: "localhost", port: 4110, fetch: async (request) => await installation.handler(request) ?? new Response(null, { status: 404 }) })
+    resources.server = server
+    const { chromium } = await import("@playwright/test")
+    stage = "launch browser"
+    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+    resources.browser = browser
+    const failures: string[] = []
     const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } })
+    page.setDefaultTimeout(10_000)
+    page.setDefaultNavigationTimeout(15_000)
     page.on("pageerror", (error) => { failures.push(error.message) })
+    stage = "enroll operator"
     await page.goto(pathToFileURL(access.artifact).href)
     await page.waitForURL("http://localhost:4110/sucafina/dashboard")
     await mkdir(path.join(import.meta.dir, "artifacts"), { recursive: true })
@@ -36,6 +46,7 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
     })
     expect(plan.ok()).toBe(true)
     expect(await plan.json()).toMatchObject({ ok: true })
+    stage = "desktop executive metrics"
     await page.goto("http://localhost:4110/sucafina/dashboard?page=Executive+Dashboard")
     await page.screenshot({ path: path.join(import.meta.dir, "artifacts", "visual-dashboard-desktop.png"), fullPage: true })
     const metrics = page.locator(".metric")
@@ -54,9 +65,11 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
     expect(Math.max(...people.map((box) => box!.y)) - Math.min(...people.map((box) => box!.y))).toBeLessThanOrEqual(2)
     expect(Math.max(...people.map((box) => box!.width)) - Math.min(...people.map((box) => box!.width))).toBeLessThanOrEqual(2)
     expect(Math.max(...people.map((box) => box!.height)) - Math.min(...people.map((box) => box!.height))).toBeLessThanOrEqual(2)
-    for (const width of [1440, 1024, 390]) {
+    // Include the pack's 320/768/1440 widths alongside the prior layout checks.
+    for (const width of [1440, 1024, 768, 390, 320]) {
       await page.setViewportSize({ width, height: 1000 })
       for (const surface of ["dashboard", "planner", "procurement"]) {
+        stage = `${surface} entry at ${width}px`
         await page.goto(`http://localhost:4110/sucafina/${surface}`)
         const hrefs = await page.locator("nav a").evaluateAll((links) => links.map((link) => link.getAttribute("href")!))
         expect(hrefs).toHaveLength(surface === "dashboard" ? 16 : surface === "planner" ? 7 : 5)
@@ -72,6 +85,7 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
         }
         await page.screenshot({ path: path.join(import.meta.dir, "artifacts", `visual-${surface}-${width}.png`), fullPage: true })
         for (const href of hrefs) {
+          stage = `${surface} ${new URL(href, page.url()).searchParams.get("page")} at ${width}px`
           const response = await page.goto(new URL(href, `http://localhost:4110/sucafina/${surface}`).href)
           expect(response?.status()).toBe(200)
           const expectedPage = new URL(href, page.url()).searchParams.get("page")!
@@ -90,10 +104,13 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
       }
     }
     expect(failures).toEqual([])
+  } catch (error) {
+    console.error(`WP01 visual layout failed at: ${stage}`)
+    throw error
   } finally {
-    await server.stop(true)
-    await browser.close()
-    await installation.dispose()
+    await resources.browser?.close()
+    await resources.server?.stop(true)
+    await resources.installation?.dispose()
     await rm(root, { recursive: true, force: true })
   }
 }, 60000)

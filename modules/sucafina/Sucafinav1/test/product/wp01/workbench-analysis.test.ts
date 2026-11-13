@@ -14,6 +14,8 @@ import { createSfSourcePersistence } from "../../../product/integration/source-l
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
 import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
+import { decodeSfOperationOutput } from "../../../product/contracts/schema-admission.ts"
+import { digestSfValue } from "../../../product/contracts/canonical.ts"
 
 test("Workbench analysis HTTP enforces human authority and hides forged run references", async () => {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-analysis-http-"))
@@ -40,7 +42,7 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
     runtime = await createSfHostRuntime({ installationId, directory, sourceRoot: path.resolve(import.meta.dir, "../../../product/ai"), origin,
       mount: "/sucafina", persistence, authenticate: identity.authenticate,
-      grants: [{ principalRef, namespaces: ["cases", "contributions"], operations: [], humanActions: ["analysis.start", "analysis.read", "analysis.cancel"] }],
+      grants: [{ principalRef, namespaces: ["cases", "contributions"], operations: ["sf_case_draft", "sf_case_read"], humanActions: ["analysis.start", "analysis.read", "analysis.cancel"] }],
       environment: async () => ({ at: new Date().toISOString(), id: randomUUID, directory: [] }) })
     workbench = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => runtime?.services?.() })
     web = HttpRouter.toWebHandler(createEmbeddedRoutes({ host: [...ProductHost.contributions(), ...runtime.contributions] })
@@ -60,6 +62,55 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
 
     const services = runtime.services?.()
     if (!services) throw new Error("host services unavailable after host startup")
+    const command = (operation: string, input: unknown) => fetch(`${origin}/sucafina/dashboard?sf=workbench-command`, {
+      method: "POST", headers: { cookie: cookie ?? "", origin, "content-type": "application/json", "idempotency-key": randomUUID() },
+      body: JSON.stringify({ operation, input }),
+    })
+    const draftInput = { objective: "Frame the current renewal", horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD", criteria: ["Cost", "Coverage"], sourceRefs: [] }
+    const draft = await command("sf_case_draft", draftInput)
+    expect(draft.status).toBe(200)
+    const created = await draft.json()
+    const projection = await (async () => {
+      const payload = { caseRef: created.outputRef }
+      const source = new Request(`${origin}/sucafina/dashboard?sf=workbench-case`, { headers: { cookie: cookie ?? "" } })
+      const admitted = await services.ui.admit(source, "sf_case_read", digestSfValue(payload))
+      if (admitted.status !== "ok") throw new Error("real case read was not authorized")
+      try {
+        const result = await services.dispatch("sf_case_read", payload, admitted.value)
+        if (result.status !== "ok") throw new Error("real case read failed")
+        const decoded = decodeSfOperationOutput("sf_case_read", result.result)
+        if (!decoded.ok || !await services.ui.revalidate(admitted.value)) throw new Error("real case projection was rejected")
+        return decoded.value
+      } finally { services.ui.finish(admitted.value) }
+    })()
+    const currentCase = projection.case
+    const intentRuntime = services.selected.find((item) => item.skills.some((skill) => skill.id === "sf-enquadrar-decisao"))
+    const intentSkill = intentRuntime?.skills.find((skill) => skill.id === "sf-enquadrar-decisao")
+    if (!intentRuntime || !intentSkill) throw new Error("intent skill must be registered")
+    const intentRequest = { caseRef: { id: currentCase.id, incarnation: currentCase.incarnation, version: currentCase.version },
+      profileId: intentRuntime.profile.id, profileVersion: intentRuntime.profile.version, skillId: intentSkill.id, skillVersion: intentSkill.version,
+      manifestDigest: intentRuntime.manifestDigest, outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: intentSkill.allowedOperations,
+      objective: currentCase.objective }
+    const intentPrepare = { action: "prepare", input: { request: intentRequest, selection: {} } }
+    const framed = await post(intentPrepare)
+    expect(framed.status).toBe(200)
+    expect(await framed.json()).toEqual({ status: "ok", value: { intentText: currentCase.objective, case: intentRequest.caseRef,
+      context: { surface: "dashboard", period: currentCase.horizon, currency: currentCase.currency, sourceRefs: [] }, selectedSourceRefs: currentCase.sourceRefs } })
+    expect((await post({ ...intentPrepare, input: { ...intentPrepare.input, selection: { sourceRefs: ["forged"] } } })).status).toBe(400)
+    expect((await post({ ...intentPrepare, input: { ...intentPrepare.input, request: { ...intentRequest, caseRef: { ...intentRequest.caseRef, version: currentCase.version + 1 } } } })).status).toBe(409)
+    const scenarioRuntime = services.selected.find((item) => item.skills.some((skill) => skill.id === "sf-comparar-cenarios"))
+    const scenarioSkill = scenarioRuntime?.skills.find((skill) => skill.id === "sf-comparar-cenarios")
+    if (!scenarioRuntime || !scenarioSkill) throw new Error("scenario skill must be registered")
+    const scenarioRequest = { ...intentRequest, profileId: scenarioRuntime.profile.id, profileVersion: scenarioRuntime.profile.version,
+      skillId: scenarioSkill.id, skillVersion: scenarioSkill.version, manifestDigest: scenarioRuntime.manifestDigest, requestedOperationScope: scenarioSkill.allowedOperations }
+    const scenarioPrepare = { action: "prepare", input: { request: scenarioRequest, selection: { caseRef: scenarioRequest.caseRef,
+      alternatives: [{ id: "missing-first", version: 1 }, { id: "missing-second", version: 1 }] } } }
+    // A real empty case cannot acquire invented saved alternatives through selection.
+    expect((await post(scenarioPrepare)).status).toBe(409)
+    expect((await post({ ...scenarioPrepare, input: { ...scenarioPrepare.input, selection: { ...scenarioPrepare.input.selection,
+      alternatives: [{ id: "same", version: 1 }, { id: "same", version: 1 }] } } })).status).toBe(400)
+    expect((await post({ ...scenarioPrepare, input: { ...scenarioPrepare.input, selection: { ...scenarioPrepare.input.selection,
+      caseRef: { ...scenarioRequest.caseRef, id: "another-case" } } } })).status).toBe(400)
     const model = (await services.models().catch(() => []))[0]
     const selection = services.selected.find((item) => item.skills.some((skill) => skill.id === "sf-explicar-forecast"))
     const skill = selection?.skills.find((item) => item.id === "sf-explicar-forecast")
@@ -115,6 +166,8 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     expect(crossSite.status).toBe(403)
     const missingIdempotency = await post({ action: "read", runRef: "sf-run-forged-reference" }, { "idempotency-key": "" })
     expect(missingIdempotency.status).toBe(400)
+    await identity.handle(new Request(`${origin}/sucafina/auth/logout`, { method: "POST", headers: { cookie: cookie ?? "", origin } }))
+    expect((await post(intentPrepare)).status).toBe(403)
   } finally {
     await web?.dispose()
     await server.stop(true)

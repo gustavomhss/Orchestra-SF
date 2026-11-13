@@ -58,10 +58,17 @@ async function withSearch(role: SearchPolicy["role"], check: (fixture: SearchFix
     const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
     try {
       const page = await browser.newPage()
+      page.setDefaultTimeout(10_000)
+      page.setDefaultNavigationTimeout(15_000)
       const errors: string[] = []
       page.on("pageerror", (error) => { errors.push(error.message) })
       await page.goto(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`)
-      await check({ page, origin, policy, errors, store })
+      try {
+        await check({ page, origin, policy, errors, store })
+      } catch (error) {
+        console.error("WP01 record-search failure context", { url: page.url(), errors, searchStatus: await page.locator('[data-record-search] [role="status"]').textContent().catch(() => null) })
+        throw error
+      }
     } finally { await browser.close() }
   } finally {
     await server.stop(true)
@@ -96,7 +103,7 @@ test("record search opens an actual authorized project with year, canonical anch
     await result.click()
     await page.waitForURL((url) => url.searchParams.get("page") === "All Projects" && decodeURIComponent(url.hash) === "#record-project:needle")
     await page.waitForFunction(() => document.activeElement?.querySelector('[id="record-project:needle"]') !== null && document.activeElement?.tagName === "TR")
-    expect(await page.locator('select[data-query="year"]').inputValue()).toBe("2025")
+    expect(await page.locator('select[data-year="sidebar"]').inputValue()).toBe("2025")
     await page.goBack()
     await page.getByText("Open a result to review its current record.", { exact: true }).waitFor()
     expect(new URL(page.url()).searchParams.get("page")).toBe("IT Risks")

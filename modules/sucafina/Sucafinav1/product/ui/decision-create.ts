@@ -1,5 +1,13 @@
+import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
+import type { Period } from "../contracts/context.ts"
+import { esc } from "../../src/screen-shell.ts"
+
 /** Human input is submitted to the authorized domain command, never saved by the view. */
-export const decisionCreateForm = `<details><summary>Create a decision</summary><form data-decision-create><label>Decision objective<input name="objective" required></label><label>Start<input name="start" type="date" required></label><label>End<input name="end" type="date" required></label><label>Currency<input name="currency" required maxlength="12"></label><label>Criteria, one per line<textarea name="criteria" required></textarea></label><button type="submit">Create decision</button><p role="status" aria-live="polite"></p></form></details>`
+function createForm(context?: { sourceRefs: readonly BusinessEvidenceRef[]; period: Period; returnTo: string }) {
+  return `<details${context ? " open" : ""}><summary>Create a decision</summary><form data-decision-create${context ? ` data-source-refs="${esc(JSON.stringify(context.sourceRefs))}" data-return-to="${esc(context.returnTo)}"` : ""}><label>Decision objective<input name="objective" required></label><label>Start<input name="start" type="date" required${context ? ` value="${esc(context.period.start)}" readonly` : ""}></label><label>End<input name="end" type="date" required${context ? ` value="${esc(context.period.end)}" readonly` : ""}></label><label>Currency<input name="currency" required maxlength="12"></label><label>Criteria, one per line<textarea name="criteria" required></textarea></label><button type="submit">Create decision</button><p role="status" aria-live="polite"></p></form></details>`
+}
+export const decisionCreateForm = createForm()
+export const decisionCreateFromContext = (context: { sourceRefs: readonly BusinessEvidenceRef[]; period: Period; returnTo: string }) => createForm(context)
 
 // A lost response retains the exact command and identity until its outcome is reconciled.
 export const decisionCreateScript = `
@@ -13,13 +21,24 @@ document.querySelectorAll('[data-decision-create]').forEach((form) => {
   const button = form.querySelector('button[type=submit]')
   const inputs = [...form.querySelectorAll('input, textarea')]
   const disabled = new Map(inputs.map((input) => [input, input.disabled]))
-  const destination = (ref) => { const url = new URL(location.href); url.search = new URLSearchParams({ sf: 'workbench-case', caseRef: ref }).toString(); location.assign(url) }
+  const contextual = form.hasAttribute('data-source-refs')
+  let sourceRefs
+  try { sourceRefs = contextual ? JSON.parse(form.dataset.sourceRefs) : [] } catch { sourceRefs = undefined }
+  let returnTo = form.dataset.returnTo
+  const destination = (created) => { const url = new URL(location.href); url.hash = ''; url.search = new URLSearchParams({ sf: 'workbench-case', caseRef: created.ref, ...(created.returnTo ? { returnTo: created.returnTo } : {}) }).toString(); location.assign(url) }
   const accessChanged = () => {
+    if (intention) { intention.body = ''; intention.returnTo = undefined }
     denied = true; intention = undefined; completed = undefined
-    form.replaceChildren()
-    const message = document.createElement('p'); message.setAttribute('role', 'status'); message.textContent = 'Your access changed. Reload before creating a decision.'; form.append(message)
+    sourceRefs = undefined; returnTo = undefined
+    inputs.forEach((input) => { input.value = ''; input.defaultValue = ''; input.removeAttribute('value'); input.disabled = true })
+    disabled.clear(); button.disabled = true
+    delete form.dataset.sourceRefs; delete form.dataset.returnTo
+    const panel = form.closest('[data-decision-context]') || form
+    panel.replaceChildren()
+    const message = document.createElement('p'); message.setAttribute('role', 'status'); message.textContent = 'Your access changed. Reload before creating a decision.'; panel.append(message)
     delete form.dataset.dirty
   }
+  addEventListener('sf-access-revoked', () => { if (form.isConnected) accessChanged() })
   form.addEventListener('input', () => { if (!submitting && !intention?.uncertain && !denied) { intention = undefined; completed = undefined; button.textContent = 'Create decision'; form.dataset.dirty = 'true' } })
   form.addEventListener('submit', async (event) => {
     event.preventDefault()
@@ -30,7 +49,8 @@ document.querySelectorAll('[data-decision-create]').forEach((form) => {
       const fields = new FormData(form)
       const criteria = String(fields.get('criteria') || '').split('\\n').map((line) => line.trim()).filter(Boolean)
       if (!criteria.length) { status.textContent = 'Enter at least one criterion.'; return }
-      intention = { key: crypto.randomUUID(), uncertain: false, body: JSON.stringify({ operation: 'sf_case_draft', input: { objective: String(fields.get('objective') || '').trim(), horizon: { start: String(fields.get('start') || ''), end: String(fields.get('end') || '') }, currency: String(fields.get('currency') || '').trim(), criteria, sourceRefs: [] } }) }
+      if (!Array.isArray(sourceRefs) || contextual && (!sourceRefs.length || !returnTo)) { status.textContent = 'Source context is unavailable. Return to the contract and open Create decision again.'; return }
+      intention = { key: crypto.randomUUID(), uncertain: false, returnTo, body: JSON.stringify({ operation: 'sf_case_draft', input: { objective: String(fields.get('objective') || '').trim(), horizon: { start: String(fields.get('start') || ''), end: String(fields.get('end') || '') }, currency: String(fields.get('currency') || '').trim(), criteria, sourceRefs } }) }
     }
     const attempt = intention
     const url = new URL(location.href)
@@ -54,7 +74,7 @@ document.querySelectorAll('[data-decision-create]').forEach((form) => {
         return
       }
       if (!response.ok || result.status !== 'ok' || typeof result.outputRef !== 'string' || !result.outputRef) throw new Error('unconfirmed')
-      completed = result.outputRef
+      completed = { ref: result.outputRef, returnTo: attempt.returnTo }
       intention = undefined
       delete form.dataset.dirty
       status.textContent = 'Decision created. Opening the saved decision…'

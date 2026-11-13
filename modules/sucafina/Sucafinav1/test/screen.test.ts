@@ -194,7 +194,9 @@ test("the screen draws the server list, the footer is not a page, and a refused 
 
 test("planner and procurement screens do not add a page and do not carry another surface", () => {
   const plan = plannerScreen({ actor: actor("fin", ["finance"]) })
-  expect(anchors(plan.html)).toEqual([...PLANNER_TABS])
+  expect(anchors(plan.html)).toEqual(["Overview", "Versions", "OPEX", "CAPEX", "Headcount", "Entities & allocations", "FX rates"])
+  expect([...anchors(plan.html)].sort()).toEqual([...PLANNER_TABS].sort())
+  expect(plan.drawn.nav.find((item) => item.key === "Versions")?.index).toBe(6)
   expect(plan.drawn.active).toEqual({ drawn: true, key: "Overview", index: 0 })
   expect(anchors(plan.html)).not.toContain("Excel")
   expect(showPage("Excel")).toEqual({ drawn: false })
