@@ -4,7 +4,7 @@ Estado: fixtures propostas; nenhuma medição executada. Todos os datasets são 
 
 ## Carga e repetição
 
-- Gerar/preparar 1.000 linhas financeiras, 200 pedidos e 100 projetos conforme `test/product/wp00/fixtures/corpus-v1.json`; registrar digest dos dados e ambiente candidato usado.
+- Gerar/preparar 1.000 linhas financeiras, 200 pedidos e 100 projetos conforme `test/product/wp00/fixtures/corpus-v2.json`; a prova `test/product/wp00/corpus-consumer.test.ts` gera os conjuntos de volume deterministicamente em memória. Registrar digest dos dados gerados e ambiente candidato usado quando a medição for executada.
 - Executar pelo menos 30 repetições por fluxo comparável: abrir/filtrar Dashboard, comparar cenário Planner, ranquear Procurement, pesquisar/preparar relatório e prévia/reimportação exata.
 - Registrar cada repetição individualmente. Separar tempo até a resposta visual utilizável de conclusão da tarefa e correção do resultado. Não misturar essas medidas em uma média única.
 - Fixar e registrar runtime, sistema, dispositivo, browser, commit candidato, viewport, zoom, estado de cache e forma de carga. Se um campo não puder ser observado, registrar como ausente.

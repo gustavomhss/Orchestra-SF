@@ -565,6 +565,61 @@
           "import preview and exact reimport"
         ]
       }
+    },
+    "people": {
+      "id": "WP00-T03-PEOPLE-V1",
+      "synthetic": true,
+      "plan_year": 2027,
+      "roster": [
+        { "name": "Synthetic Person A", "status": "Active", "start": "2027-03-01", "leader": "Synthetic Leader", "domain": "Finance" },
+        { "name": "Synthetic Person B", "status": "Terminated", "start": "2026-01-01", "leader": "Synthetic Leader", "domain": "Operations" }
+      ],
+      "positions": [
+        { "name": "synthetic person a", "domainManual": false },
+        { "name": "Synthetic Person B", "domainManual": false }
+      ],
+      "leader_domains": { "Synthetic Leader": "Finance" },
+      "expected": { "position_count": 2, "second_position_left": false, "manual_domains_preserved": true }
+    },
+    "actions": {
+      "id": "WP00-T03-ACTIONS-V1",
+      "synthetic": true,
+      "events": [
+        { "id": "synthetic-action-1", "kind": "approval-returned-for-correction", "attempt": 1 },
+        { "id": "synthetic-action-2", "kind": "approval-resubmitted", "attempt": 2, "supersedes_event_id": "synthetic-action-1" }
+      ],
+      "expected": { "event_count": 2, "attempts_distinct": true, "prior_event_preserved": true }
+    },
+    "projects": {
+      "id": "WP00-T03-PROJECTS-V1",
+      "synthetic": true,
+      "projects": [
+        { "id": "synthetic-project-linked", "budget": 12000, "capex_id": "synthetic-capex-linked" },
+        { "id": "synthetic-project-unlinked", "budget": 8000, "capex_id": null }
+      ],
+      "capex_projects": [
+        { "id": "synthetic-capex-linked", "budget": 12000 }
+      ],
+      "expected": { "linked_count": 1, "unlinked_remains_unlinked": true }
+    },
+    "operations": {
+      "id": "WP00-T03-OPERATIONS-V1",
+      "synthetic": true,
+      "monthly_budget": { "annual": 1200, "months": [{ "month": 1, "budget": 200 }, { "month": 2, "budget": 0 }] },
+      "expected": { "month_1_effective_budget": 200, "month_2_effective_budget": 100 }
+    },
+    "risks": {
+      "id": "WP00-T03-RISKS-V1",
+      "synthetic": true,
+      "items": [{ "id": "synthetic-risk-high", "impact": 4, "probability": 5 }, { "id": "synthetic-risk-low", "impact": 1, "probability": 1 }],
+      "expected": { "high_score": 20, "high_tier": "Very High", "low_score": 1, "low_tier": "Low" }
+    },
+    "contracts": {
+      "id": "WP00-T03-CONTRACTS-V1",
+      "synthetic": true,
+      "contract": { "id": "synthetic-contract-1", "vendor": "Synthetic Supplier A" },
+      "supplier": { "id": "synthetic-supplier-1", "name": "Synthetic Supplier A" },
+      "expected": { "same_display_name_does_not_link": true }
     }
   },
   "supersedes": {
