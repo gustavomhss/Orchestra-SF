@@ -79,82 +79,8 @@ async function compareForecast(input: { host: DomainPortHost; sources: PlannerSo
   if (!projections || projections.some((value) => !value)) return { status: "denied", reason: "source-unavailable" }
   if (projections.some((projection, index) => !projection || digestSfValue(Object.keys(projection).sort()) !== digestSfValue([...evidence[index].target.fields].sort()) || digestSfValue({ versionId: evidence[index].target.recordId, projection }) !== evidence[index].target.projectionDigest)) return { status: "stale", reason: "source-changed" }
   if (projections.some((projection) => projection?.year !== Number(start[1]))) return { status: "needs-input", reason: "period-version-mismatch" }
-  const build = (projection: Record<string, unknown>, ref: Extract<BusinessEvidenceRef, { kind: "record" }>): DomainProjection => {
-    const sourceRef = { surface: "planner" as const, type: ref.target.recordType, id: ref.target.recordId, incarnation: ref.target.incarnation, version: ref.target.version, fields: ref.target.fields, period: request.period, observedAt: environment.at }
-    const summary = object(projection.summary)
-    const lines = rows(summary.lines)
-    const missing: DomainProjection["missing"][number][] = []
-    const values: DomainProjection["values"][number][] = []
-    if (Array.isArray(summary.warnings) && summary.warnings.length) missing.push({ field: "currency", reason: "missing-fx" })
-    if (rows(object(projection.hc).positions).some((position) => position.include === true && position.hasRate === false)) missing.push({ field: "headcount:rate", reason: "missing-rate" })
-    const currencies = [...new Set(lines.map((line) => typeof line.cur === "string" && line.cur ? line.cur : "USD"))]
-    for (const currency of currencies) {
-      const raw = currency.toUpperCase() === "USD" ? 1 : rows(projection.fx).find((rate) => rate.cur === currency)?.rate
-      const rate = typeof raw === "number" && Number.isFinite(raw) && raw > 0 ? raw : null
-      values.push({ id: `fx:${encodeURIComponent(currency)}`, value: rate, unit: `USD/${currency}`, period: request.period, granularity: "aggregate", sourceRefs: [ref], drilldown: ref, evidenceState: rate === null ? "absent" : "confirmed" })
-    }
-    const components = lines.flatMap((line) => {
-      const outlook = Array.isArray(line.outlook) ? line.outlook : []
-      return outlook.slice(Number(start[2]) - 1, Number(end[2])).map((value, offset) => {
-        const month = Number(start[2]) + offset
-        const period = { start: `${start[1]}-${String(month).padStart(2, "0")}-01`, end: `${start[1]}-${String(month).padStart(2, "0")}-${String(new Date(Date.UTC(Number(start[1]), month, 0)).getUTCDate()).padStart(2, "0")}` }
-        const budget = Array.isArray(line.b) && typeof line.b[month - 1] === "number" && Number.isFinite(line.b[month - 1]) ? line.b[month - 1] : null
-        const actual = Array.isArray(line.a) && typeof line.a[month - 1] === "number" && Number.isFinite(line.a[month - 1]) ? line.a[month - 1] : null
-        const forecast = Array.isArray(line.f) && typeof line.f[month - 1] === "number" && Number.isFinite(line.f[month - 1]) ? line.f[month - 1] : null
-        for (const [measure, raw] of [["budget", budget], ["actual", actual], ["forecast", forecast]] as const) values.push({ id: `${line.id}:${month}:${measure}`, value: typeof raw === "number" ? raw : null, currency: typeof line.cur === "string" ? line.cur : "USD", period, granularity: "month", sourceRefs: [ref], drilldown: ref, evidenceState: typeof raw === "number" ? "confirmed" : "absent" })
-        const declaredCurrency = typeof line.cur === "string" && line.cur.trim() ? line.cur : null
-        values.push({ id: `${line.id}:${month}:currency-declared`, value: declaredCurrency, period, granularity: "month", sourceRefs: [ref], drilldown: ref, evidenceState: declaredCurrency === null ? "absent" : "confirmed" })
-        for (const measure of ["budget", "actual"] as const) {
-          const raw = measure === "budget" ? budget : actual
-          const converted = Array.isArray(line[measure]) ? line[measure][month - 1] : null
-          const unavailable = raw === null || (Array.isArray(summary.warnings) && (summary.warnings.includes(String(line.cur ?? "USD").toUpperCase()) || line.synthetic === true && summary.warnings.length > 0)) || (line.synthetic === true && missing.some((entry) => entry.reason === "missing-rate"))
-          const amount = !unavailable && typeof converted === "number" && Number.isFinite(converted) ? converted : null
-          values.push({ id: `${line.id}:${month}:${measure}-usd`, value: amount, currency: "USD", period, granularity: "month", sourceRefs: [ref], drilldown: ref, evidenceState: amount === null ? "absent" : "confirmed" })
-        }
-        if (month > Number(projection.closed) && forecast == null && budget == null) missing.push({ field: `${line.id}:${month}:budget`, reason: "missing" })
-        if (month <= Number(projection.closed) && actual == null) missing.push({ field: `${line.id}:${month}:actual`, reason: "missing" })
-        if (Array.isArray(summary.warnings) && summary.warnings.includes(String(line.cur ?? "USD").toUpperCase())) missing.push({ field: `${line.id}:${month}:fx`, reason: "missing-fx" })
-        const unknown = (month <= Number(projection.closed) && actual === null) || (month > Number(projection.closed) && forecast === null && budget === null) || (Array.isArray(summary.warnings) && summary.warnings.includes(String(line.cur ?? "USD").toUpperCase())) || (line.synthetic === true && missing.some((entry) => entry.reason === "missing-fx" || entry.reason === "missing-rate"))
-        const amount = !unknown && typeof value === "number" && Number.isFinite(value) ? value : null
-        const evidenceState = amount === null ? "absent" as const : month > Number(projection.closed) && forecast === null ? "estimated" as const : "confirmed" as const
-        const budgetUsd = Array.isArray(line.budget) && typeof line.budget[month - 1] === "number" && Number.isFinite(line.budget[month - 1]) && budget !== null && !(Array.isArray(summary.warnings) && (summary.warnings.includes(String(line.cur ?? "USD").toUpperCase()) || line.synthetic === true && summary.warnings.length > 0)) && !(line.synthetic === true && missing.some((entry) => entry.reason === "missing-rate")) ? line.budget[month - 1] : null
-        values.push({ id: `${line.id}:${month}:outlook-usd`, value: amount, currency: "USD", period, granularity: "month", sourceRefs: [ref], drilldown: ref, evidenceState })
-        values.push({ id: `${line.id}:${month}:variance-usd`, value: amount === null || budgetUsd === null ? null : variance(amount, budgetUsd).value, currency: "USD", period, granularity: "month", sourceRefs: [ref], drilldown: ref, evidenceState: budgetUsd === null ? "absent" : evidenceState })
-        return { id: `${line.id}:${month}`, amount, currency: "USD", period, sourceRefs: [sourceRef], evidenceState }
-      })
-    })
-    const monthlyPrefix = plannerMonthlyPrefix(components)
-    // These monthly totals use the Planner's converted calculations; missing inputs stay unknown.
-    for (let month = Number(start[2]); month <= Number(end[2]); month++) {
-      const period = { start: `${start[1]}-${String(month).padStart(2, "0")}-01`, end: `${start[1]}-${String(month).padStart(2, "0")}-${String(new Date(Date.UTC(Number(start[1]), month, 0)).getUTCDate()).padStart(2, "0")}` }
-      const matching = components.filter((component) => component.period.start === period.start)
-      const positionRows = summary.positions
-      const positions = rows(positionRows)
-      const fteKnown = projection.fteInputsKnown === true && Array.isArray(positionRows) && positions.length === positionRows.length && positions.every((position) => typeof position.include === "boolean" && typeof position.fte === "number" && Number.isFinite(position.fte) && typeof position.start === "number" && Number.isFinite(position.start) && typeof position.end === "number" && Number.isFinite(position.end))
-      // Shift the requested month to December so the existing FTE selection rule stays authoritative.
-      const fte = fteKnown ? fteDecember(positions.map((position) => ({ include: position.include === true, fte: Number(position.fte), start: Number(position.start) + 12 - month, end: Number(position.end) + 12 - month }))) : null
-      values.push({ id: `${monthlyPrefix}:${month}:fte`, value: fte, unit: "fte", period, granularity: "month", sourceRefs: [ref], drilldown: ref, evidenceState: fte === null ? "absent" : "confirmed" })
-      const hr = lines.filter((line) => line.synthetic === true)
-      const hrKnown = fteKnown && !missing.some((entry) => entry.reason === "missing-rate" || entry.reason === "missing-fx") && (!positions.some((position) => position.include === true) || hr.length > 0) && hr.every((line) => Array.isArray(line.b) && typeof line.b[month - 1] === "number" && Number.isFinite(line.b[month - 1]) && Array.isArray(line.budget) && typeof line.budget[month - 1] === "number" && Number.isFinite(line.budget[month - 1]))
-      const hrBudget = hrKnown ? hr.reduce((sum, line) => sum + Number((line.budget as number[])[month - 1]), 0) : null
-      values.push({ id: `${monthlyPrefix}:${month}:hr-budget`, value: hrBudget, currency: "USD", period, granularity: "month", sourceRefs: [ref], drilldown: ref, evidenceState: hrBudget === null ? "absent" : "confirmed" })
-      for (const measure of ["budget", "actual", "outlook"] as const) {
-        const totals = Array.isArray(summary[measure]) ? summary[measure] : []
-        const unknown = !lines.length || lines.some((line) => {
-          if (Array.isArray(summary.warnings) && (summary.warnings.includes(String(line.cur ?? "USD").toUpperCase()) || line.synthetic === true && summary.warnings.length > 0)) return true
-          if (line.synthetic === true && missing.some((entry) => entry.reason === "missing-rate")) return true
-          if (measure === "outlook") return false
-          const raw = measure === "budget" ? line.b : line.a
-          return !Array.isArray(raw) || typeof raw[month - 1] !== "number" || !Number.isFinite(raw[month - 1])
-        }) || measure === "outlook" && (matching.length !== lines.length || matching.some((component) => component.amount === null))
-        const value = !unknown && typeof totals[month - 1] === "number" && Number.isFinite(totals[month - 1]) ? totals[month - 1] : null
-        values.push({ id: `${monthlyPrefix}:${month}:${measure}`, value, currency: "USD", period, granularity: "month", sourceRefs: [ref], drilldown: ref, evidenceState: value === null ? "absent" : measure === "outlook" && matching.some((component) => component.evidenceState === "estimated") ? "estimated" : "confirmed" })
-      }
-    }
-    return { context: { installationId: binding.binding.installationId, projectId: binding.binding.projectId, principalRef: binding.binding.principalRef, accessRevision: binding.binding.accessRevision, policyVersion: binding.binding.policyVersion, surface: "planner", period: request.period, currency: "USD", sourceRefs: [sourceRef], capabilities: ["sf_forecast_compare"] }, version: ref.target.version, engineVersion: "planner-runtime-v1", components, values, missing }
-  }
-  const base = build(projections[0]!, evidence[0])
-  const candidate = build(projections[1]!, evidence[1])
+  const base = buildPlannerFinancialProjection({ projection: projections[0]!, ref: evidence[0], period: request.period, binding, at: environment.at })
+  const candidate = buildPlannerFinancialProjection({ projection: projections[1]!, ref: evidence[1], period: request.period, binding, at: environment.at })
   if ([base, candidate].some((projection) => new Set(projection.values.map((value) => value.id)).size !== projection.values.length)) return { status: "unavailable", reason: "duplicate-projection-value-id" }
   const total = (projection: DomainProjection) => projection.components.reduce((sum, item) => sum + (item.amount ?? 0), 0)
   const unknown = [...base.missing, ...candidate.missing].length > 0
@@ -179,4 +105,81 @@ async function compareForecast(input: { host: DomainPortHost; sources: PlannerSo
   }
   const comparison = { baselineResultRef: request.baseRef, alternativeResultRef: request.candidateRef, costCoverageRefs: refs, criterionResults: [], unresolvedConditions: gaps, comparisonStatus: "conditioned" as const, knownDifference: difference, completeDifference: null }
   return { status: "ok", value: { ...common, comparison, knownDifference: difference, completeDifference: null, explanation: "Forecast difference is conditional on the listed data and coverage limitations." } }
+}
+
+export function buildPlannerFinancialProjection(input: { projection: Record<string, unknown>; ref: Extract<BusinessEvidenceRef, { kind: "record" }>; period: ForecastCompareRequest["period"]; binding: TrustedDomainContext; at: string }): DomainProjection {
+  const start = /^(\d{4})-(\d{2})-01$/.exec(input.period.start)!
+  const end = /^(\d{4})-(\d{2})-(\d{2})$/.exec(input.period.end)!
+  const sourceRef = { surface: "planner" as const, type: input.ref.target.recordType, id: input.ref.target.recordId, incarnation: input.ref.target.incarnation, version: input.ref.target.version, fields: input.ref.target.fields, period: input.period, observedAt: input.at }
+  const summary = object(input.projection.summary)
+  const lines = rows(summary.lines)
+  const missing: DomainProjection["missing"][number][] = []
+  const values: DomainProjection["values"][number][] = []
+  if (Array.isArray(summary.warnings) && summary.warnings.length) missing.push({ field: "currency", reason: "missing-fx" })
+  if (rows(object(input.projection.hc).positions).some((position) => position.include === true && position.hasRate === false)) missing.push({ field: "headcount:rate", reason: "missing-rate" })
+  const currencies = [...new Set(lines.map((line) => typeof line.cur === "string" && line.cur ? line.cur : "USD"))]
+  for (const currency of currencies) {
+    const raw = currency.toUpperCase() === "USD" ? 1 : rows(input.projection.fx).find((rate) => rate.cur === currency)?.rate
+    const rate = typeof raw === "number" && Number.isFinite(raw) && raw > 0 ? raw : null
+    values.push({ id: `fx:${encodeURIComponent(currency)}`, value: rate, unit: `USD/${currency}`, period: input.period, granularity: "aggregate", sourceRefs: [input.ref], drilldown: input.ref, evidenceState: rate === null ? "absent" : "confirmed" })
+  }
+  const components = lines.flatMap((line) => {
+    const outlook = Array.isArray(line.outlook) ? line.outlook : []
+    return outlook.slice(Number(start[2]) - 1, Number(end[2])).map((value, offset) => {
+      const month = Number(start[2]) + offset
+      const period = { start: `${start[1]}-${String(month).padStart(2, "0")}-01`, end: `${start[1]}-${String(month).padStart(2, "0")}-${String(new Date(Date.UTC(Number(start[1]), month, 0)).getUTCDate()).padStart(2, "0")}` }
+      const budget = Array.isArray(line.b) && typeof line.b[month - 1] === "number" && Number.isFinite(line.b[month - 1]) ? line.b[month - 1] : null
+      const actual = Array.isArray(line.a) && typeof line.a[month - 1] === "number" && Number.isFinite(line.a[month - 1]) ? line.a[month - 1] : null
+      const forecast = Array.isArray(line.f) && typeof line.f[month - 1] === "number" && Number.isFinite(line.f[month - 1]) ? line.f[month - 1] : null
+      for (const [measure, raw] of [["budget", budget], ["actual", actual], ["forecast", forecast]] as const) values.push({ id: `${line.id}:${month}:${measure}`, value: typeof raw === "number" ? raw : null, currency: typeof line.cur === "string" ? line.cur : "USD", period, granularity: "month", sourceRefs: [input.ref], drilldown: input.ref, evidenceState: typeof raw === "number" ? "confirmed" : "absent" })
+      const declaredCurrency = typeof line.cur === "string" && line.cur.trim() ? line.cur : null
+      values.push({ id: `${line.id}:${month}:currency-declared`, value: declaredCurrency, period, granularity: "month", sourceRefs: [input.ref], drilldown: input.ref, evidenceState: declaredCurrency === null ? "absent" : "confirmed" })
+      for (const measure of ["budget", "actual"] as const) {
+        const raw = measure === "budget" ? budget : actual
+        const converted = Array.isArray(line[measure]) ? line[measure][month - 1] : null
+        const unavailable = raw === null || (Array.isArray(summary.warnings) && (summary.warnings.includes(String(line.cur ?? "USD").toUpperCase()) || line.synthetic === true && summary.warnings.length > 0)) || (line.synthetic === true && missing.some((entry) => entry.reason === "missing-rate"))
+        const amount = !unavailable && typeof converted === "number" && Number.isFinite(converted) ? converted : null
+        values.push({ id: `${line.id}:${month}:${measure}-usd`, value: amount, currency: "USD", period, granularity: "month", sourceRefs: [input.ref], drilldown: input.ref, evidenceState: amount === null ? "absent" : "confirmed" })
+      }
+      if (month > Number(input.projection.closed) && forecast == null && budget == null) missing.push({ field: `${line.id}:${month}:budget`, reason: "missing" })
+      if (month <= Number(input.projection.closed) && actual == null) missing.push({ field: `${line.id}:${month}:actual`, reason: "missing" })
+      if (Array.isArray(summary.warnings) && summary.warnings.includes(String(line.cur ?? "USD").toUpperCase())) missing.push({ field: `${line.id}:${month}:fx`, reason: "missing-fx" })
+      const unknown = (month <= Number(input.projection.closed) && actual === null) || (month > Number(input.projection.closed) && forecast === null && budget === null) || (Array.isArray(summary.warnings) && summary.warnings.includes(String(line.cur ?? "USD").toUpperCase())) || (line.synthetic === true && missing.some((entry) => entry.reason === "missing-fx" || entry.reason === "missing-rate"))
+      const amount = !unknown && typeof value === "number" && Number.isFinite(value) ? value : null
+      const evidenceState = amount === null ? "absent" as const : month > Number(input.projection.closed) && forecast === null ? "estimated" as const : "confirmed" as const
+      const budgetUsd = Array.isArray(line.budget) && typeof line.budget[month - 1] === "number" && Number.isFinite(line.budget[month - 1]) && budget !== null && !(Array.isArray(summary.warnings) && (summary.warnings.includes(String(line.cur ?? "USD").toUpperCase()) || line.synthetic === true && summary.warnings.length > 0)) && !(line.synthetic === true && missing.some((entry) => entry.reason === "missing-rate")) ? line.budget[month - 1] : null
+      values.push({ id: `${line.id}:${month}:outlook-usd`, value: amount, currency: "USD", period, granularity: "month", sourceRefs: [input.ref], drilldown: input.ref, evidenceState })
+      values.push({ id: `${line.id}:${month}:variance-usd`, value: amount === null || budgetUsd === null ? null : variance(amount, budgetUsd).value, currency: "USD", period, granularity: "month", sourceRefs: [input.ref], drilldown: input.ref, evidenceState: budgetUsd === null ? "absent" : evidenceState })
+      return { id: `${line.id}:${month}`, amount, currency: "USD", period, sourceRefs: [sourceRef], evidenceState }
+    })
+  })
+  const monthlyPrefix = plannerMonthlyPrefix(components)
+  // These monthly totals use the Planner's converted calculations; missing inputs stay unknown.
+  for (let month = Number(start[2]); month <= Number(end[2]); month++) {
+    const period = { start: `${start[1]}-${String(month).padStart(2, "0")}-01`, end: `${start[1]}-${String(month).padStart(2, "0")}-${String(new Date(Date.UTC(Number(start[1]), month, 0)).getUTCDate()).padStart(2, "0")}` }
+    const matching = components.filter((component) => component.period.start === period.start)
+    const positionRows = summary.positions
+    const positions = rows(positionRows)
+    const fteKnown = input.projection.fteInputsKnown === true && Array.isArray(positionRows) && positions.length === positionRows.length && positions.every((position) => typeof position.include === "boolean" && typeof position.fte === "number" && Number.isFinite(position.fte) && typeof position.start === "number" && Number.isFinite(position.start) && typeof position.end === "number" && Number.isFinite(position.end))
+    // Shift the requested month to December so the existing FTE selection rule stays authoritative.
+    const fte = fteKnown ? fteDecember(positions.map((position) => ({ include: position.include === true, fte: Number(position.fte), start: Number(position.start) + 12 - month, end: Number(position.end) + 12 - month }))) : null
+    values.push({ id: `${monthlyPrefix}:${month}:fte`, value: fte, unit: "fte", period, granularity: "month", sourceRefs: [input.ref], drilldown: input.ref, evidenceState: fte === null ? "absent" : "confirmed" })
+    const hr = lines.filter((line) => line.synthetic === true)
+    const hrKnown = fteKnown && !missing.some((entry) => entry.reason === "missing-rate" || entry.reason === "missing-fx") && (!positions.some((position) => position.include === true) || hr.length > 0) && hr.every((line) => Array.isArray(line.b) && typeof line.b[month - 1] === "number" && Number.isFinite(line.b[month - 1]) && Array.isArray(line.budget) && typeof line.budget[month - 1] === "number" && Number.isFinite(line.budget[month - 1]))
+    const hrBudget = hrKnown ? hr.reduce((sum, line) => sum + Number((line.budget as number[])[month - 1]), 0) : null
+    values.push({ id: `${monthlyPrefix}:${month}:hr-budget`, value: hrBudget, currency: "USD", period, granularity: "month", sourceRefs: [input.ref], drilldown: input.ref, evidenceState: hrBudget === null ? "absent" : "confirmed" })
+    for (const measure of ["budget", "actual", "outlook"] as const) {
+      const totals = Array.isArray(summary[measure]) ? summary[measure] : []
+      const unknown = !lines.length || lines.some((line) => {
+        if (Array.isArray(summary.warnings) && (summary.warnings.includes(String(line.cur ?? "USD").toUpperCase()) || line.synthetic === true && summary.warnings.length > 0)) return true
+        if (line.synthetic === true && missing.some((entry) => entry.reason === "missing-rate")) return true
+        if (measure === "outlook") return false
+        const raw = measure === "budget" ? line.b : line.a
+        return !Array.isArray(raw) || typeof raw[month - 1] !== "number" || !Number.isFinite(raw[month - 1])
+      }) || measure === "outlook" && (matching.length !== lines.length || matching.some((component) => component.amount === null))
+      const value = !unknown && typeof totals[month - 1] === "number" && Number.isFinite(totals[month - 1]) ? totals[month - 1] : null
+      values.push({ id: `${monthlyPrefix}:${month}:${measure}`, value, currency: "USD", period, granularity: "month", sourceRefs: [input.ref], drilldown: input.ref, evidenceState: value === null ? "absent" : measure === "outlook" && matching.some((component) => component.evidenceState === "estimated") ? "estimated" : "confirmed" })
+    }
+  }
+  return { context: { installationId: input.binding.binding.installationId, projectId: input.binding.binding.projectId, principalRef: input.binding.binding.principalRef, accessRevision: input.binding.binding.accessRevision, policyVersion: input.binding.binding.policyVersion, surface: "planner", period: input.period, currency: "USD", sourceRefs: [sourceRef], capabilities: ["sf_forecast_compare"] }, version: input.ref.target.version, engineVersion: "planner-runtime-v1", components, values, missing }
 }

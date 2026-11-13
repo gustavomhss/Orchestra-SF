@@ -77,9 +77,17 @@ test("human workbook admission, Planner preview, atomic receipt and retry surviv
     const previewGrant = await ui.admit(request, "sf_import_preview", digestSfValue(selection))
     if (previewGrant.status !== "ok" || !await ui.validate(previewGrant.value, "sf_import_preview", digestSfValue(selection))) throw new Error("preview grant")
     const preview = await imports.preview(selection, previewGrant.value)
-    ui.finish(previewGrant.value)
     expect(preview.status).toBe("ok")
     if (preview.status !== "ok") return
+    const analysis = await imports.readPreviewForAnalysis({ previewRef: preview.value.id, request: selection }, previewGrant.value)
+    expect(analysis.status).toBe("ok")
+    if (analysis.status === "ok") {
+      expect(analysis.value.manifest).toEqual(preview.value)
+      expect(analysis.value.detail.manifestId).toBe(preview.value.id)
+    }
+    expect(await imports.readPreviewForAnalysis({ previewRef: preview.value.id, request: { ...selection, options: { sheet: "other" } } }, previewGrant.value)).toMatchObject({ status: "stale" })
+    expect(await imports.readPreviewForAnalysis({ previewRef: preview.value.id, request: { ...selection, admittedFileRef: "other" } }, previewGrant.value)).toMatchObject({ status: "stale" })
+    ui.finish(previewGrant.value)
     const applyInput = { manifestId: preview.value.id, version: preview.value.version }
     const apply = async () => { const grant = await human.admit(request, "imports.apply", applyInput); if (grant.status !== "ok") throw new Error(grant.reason); const result = await imports.apply(applyInput, grant.value); human.finish(grant.value); return result }
     const first = await apply()
