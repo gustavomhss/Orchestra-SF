@@ -131,12 +131,12 @@ export function createSfProductAuthority(input: {
         principalRef: actor.principalRef, policyVersion: actor.policyVersion, accessRevision: actor.accessRevision }
     },
   })
-  const admission = async (value: SfNativeAdmission, purpose: "execute" | "interrupt" = "execute") => {
-    const actor = await resolve(value.request).catch(() => undefined)
-    if (!actor || !actor.grant.namespaces.includes("contributions") || !actor.grant.operations.length ||
+  const admission = async (value: SfNativeAdmission, purpose: "execute" | "interrupt" = "execute", request = value.request) => {
+    const actor = await resolve(request).catch(() => undefined)
+    if (!actor || (purpose === "interrupt" && !actor.grant.humanActions?.includes("analysis.cancel")) || !actor.grant.namespaces.includes("contributions") || !actor.grant.operations.length ||
       value.selected.operationIds.some((operation) => !actor.grant.operations.includes(operation)) || value.skillReceipts.length !== 1 ||
       !await input.verifySelection(value.selected) || !await input.verifySkillReceipt(value)) return undefined
-    const record = await state.read(value.request, "contributions", (stored, authority) => {
+    const record = await state.read(request, "contributions", (stored, authority) => {
       const run = stored.nativeRuns?.[value.runId]
       const currentCase = stored.cases[value.caseRef.id]
       if (!run || !(purpose === "interrupt" ? run.state === "cancelled" && !!run.native : ["preparing", "queued", "running"].includes(run.state)) || run.runRef !== value.runId || run.principalRef !== authority.principalRef || run.accessRevision !== authority.accessRevision ||
@@ -151,11 +151,11 @@ export function createSfProductAuthority(input: {
     const session = await input.inspectSession(value.sessionID)
     if (!session || session.id !== value.sessionID || session.agent !== value.profile.id || session.projectID !== actor.identity.projectId ||
       digestSfValue(session.location) !== digestSfValue(actor.identity.location) || digestSfValue(session.model) !== digestSfValue(record.value.model) ||
-      digestSfValue(identity()) !== digestSfValue(actor.identity) || value.request.signal.aborted) return undefined
+      digestSfValue(identity()) !== digestSfValue(actor.identity) || request.signal.aborted) return undefined
     return actor
   }
-  const authorizeBinding = async (value: SfNativeAdmission, binding: TrustedExecutionBinding, purpose: "execute" | "interrupt"): Promise<boolean> => {
-    const actor = await admission(value, purpose).catch(() => undefined)
+  const authorizeBinding = async (value: SfNativeAdmission, binding: TrustedExecutionBinding, purpose: "execute" | "interrupt", request = value.request): Promise<boolean> => {
+    const actor = await admission(value, purpose, request).catch(() => undefined)
     return !!actor && binding.nativeSessionId === value.sessionID && binding.runId === value.runId &&
       binding.caseId === value.caseRef.id && binding.caseVersion === value.caseRef.version && binding.caseIncarnation === value.caseRef.incarnation &&
       binding.profileId === value.profile.id && binding.profileVersion === value.profile.version && binding.manifestDigest === value.manifestDigest &&
@@ -166,7 +166,9 @@ export function createSfProductAuthority(input: {
   }
   const authorizeNative = (value: SfNativeAdmission, binding: TrustedExecutionBinding) => authorizeBinding(value, binding, "execute")
   // Cleanup after durable cancellation never reauthorizes model execution or tool leases.
-  const authorizeInterrupt = (value: SfNativeAdmission, binding: TrustedExecutionBinding) => authorizeBinding(value, binding, "interrupt")
+  const authorizeInterrupt = (value: SfNativeAdmission, binding: TrustedExecutionBinding, request: Request) =>
+    request.method === "POST" && request.headers.get("origin") === input.origin && request.headers.get("sec-fetch-site") !== "cross-site"
+      ? authorizeBinding(value, binding, "interrupt", request) : Promise.resolve(false)
   const native = createSfExecutionBindingRegistry({
     authenticateAndResolve: async (value) => {
       const actor = await admission(value).catch(() => undefined)

@@ -148,7 +148,7 @@ test("native binding cannot be invented without a current stored run", async () 
 })
 
 test("a real C08 run and case still cannot bind a missing native Session", async () => {
-  await fixture([{ principalRef: "person", namespaces: ["cases", "contributions"], operations: ["sf_forecast_compare"] }], async ({ product, request, changes, actor, location }) => {
+  await fixture([{ principalRef: "person", namespaces: ["cases", "contributions"], operations: ["sf_forecast_compare"], humanActions: ["analysis.cancel"] }], async ({ product, request, changes, actor, location }) => {
     const caseRef = { id: "case", incarnation: "inc", version: 1 }
     const created = await product.state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, targetRef: product.creationTarget.ref,
       targetIncarnation: product.creationTarget.incarnation, idempotencyKey: "seed-case", commandDigest: "e".repeat(64) }, async (state) => {
@@ -178,7 +178,8 @@ test("a real C08 run and case still cannot bind a missing native Session", async
     const receipt: SkillLoadReceipt = { runId: "run", nativeSessionId: sessionID, profileId: profile.id, profileVersion: profile.version,
       profileDigest: profile.sourceDigest, skillId: "sf-explicar-forecast", skillVersion: "1", sourceDigest: "b".repeat(64),
       instructionsDigest: "c".repeat(64), loadedMessageId: "msg_fixture", loadedAt: "2026-11-13T00:00:00Z", manifestDigest: selected.manifestDigest }
-    const admission = { request, selected, sessionID, runId: "run", caseRef, profile,
+    const lifecycle = new AbortController()
+    const admission = { request: new Request(request, { signal: lifecycle.signal }), selected, sessionID, runId: "run", caseRef, profile,
       manifestDigest: selected.manifestDigest, skillReceipts: [receipt], entryMode: "interactive" as const }
     expect((await product.native.bind(admission)).status).toBe("denied")
     changes.session = Schema.decodeUnknownSync(SessionSchema.Info)({ id: sessionID, projectID: "project", agent: profile.id,
@@ -192,7 +193,8 @@ test("a real C08 run and case still cannot bind a missing native Session", async
       actor.active = false
       expect(await product.authorizeNative(admission, baseline.value)).toBe(false)
       actor.active = true
-      expect(await product.authorizeInterrupt(admission, baseline.value)).toBe(false)
+      const cancellationRequest = new Request(request.url, { method: "POST", headers: { origin: "https://example.test" } })
+      expect(await product.authorizeInterrupt(admission, baseline.value, cancellationRequest)).toBe(false)
       const current = await product.state.read(request, "contributions", () => null)
       expect(current.status).toBe("ok")
       if (current.status !== "ok") throw new Error("current contributions unavailable")
@@ -204,12 +206,14 @@ test("a real C08 run and case still cannot bind a missing native Session", async
         return { commit: true, value: true }
       })
       expect(cancelled.status).toBe("ok")
+      lifecycle.abort()
       expect(await product.authorizeNative(admission, baseline.value)).toBe(false)
-      expect(await product.authorizeInterrupt(admission, baseline.value)).toBe(true)
-      expect(await product.authorizeInterrupt(admission, { ...baseline.value, runId: "another-run" })).toBe(false)
-      expect(await product.authorizeInterrupt(admission, { ...baseline.value, nativeSessionId: SessionSchema.ID.make("ses_another") })).toBe(false)
+      expect(await product.authorizeInterrupt(admission, baseline.value, admission.request)).toBe(false)
+      expect(await product.authorizeInterrupt(admission, baseline.value, cancellationRequest)).toBe(true)
+      expect(await product.authorizeInterrupt(admission, { ...baseline.value, runId: "another-run" }, cancellationRequest)).toBe(false)
+      expect(await product.authorizeInterrupt(admission, { ...baseline.value, nativeSessionId: SessionSchema.ID.make("ses_another") }, cancellationRequest)).toBe(false)
       actor.active = false
-      expect(await product.authorizeInterrupt(admission, baseline.value)).toBe(false)
+      expect(await product.authorizeInterrupt(admission, baseline.value, cancellationRequest)).toBe(false)
       actor.active = true
       product.native.revoke(baseline.value)
     }

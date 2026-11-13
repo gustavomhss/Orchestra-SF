@@ -66,7 +66,7 @@ export async function extractDocumentEvidence(request: DocumentExtractRequest, c
   if (loaded.status !== "ok") return { status: loaded.status === "preview" ? "unavailable" : loaded.status, reason: loaded.status === "preview" ? "state-preview" : loaded.reason }
   if (!(await input.host.revalidate(context)) || !(await input.documents.revalidate(request.documentRef, { incarnation: document.value.incarnation, revision: document.value.revision, blobDigest: document.value.blobDigest.value }, context))) return { status: "stale", reason: "document-changed" }
   const saved = await input.state.transaction(hostRequest, { namespace: "documents", expectedStorageVersion: loaded.storageVersion, idempotencyKey: operationId, commandDigest: digestSfValue({ request, document: document.value.blobDigest, schema: schema.value }), targetRef: document.value.documentId, targetIncarnation: document.value.incarnation }, async (state, authority) => {
-    if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || records.some((record) => state.documents[record.evidence.id])) return { commit: false, value: null as DocumentEvidence | null }
+    if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || records.some((record) => state.documents[record.evidence.id])) return { commit: false, value: null as DocumentEvidence | null }
     records.forEach((record) => { state.documents[record.evidence.id] = record })
     return { commit: true, value: records[0]?.evidence ?? null }
   })
@@ -83,34 +83,39 @@ export async function confirmDocumentEvidence(id: string, context: TrustedDomain
   const loaded = await input.state.read(request, "documents", (state) => state.documents[id])
   if (loaded.status !== "ok" || !loaded.value || typeof loaded.value !== "object") return { status: "unavailable", reason: "candidate-unavailable" }
   const record = loaded.value as StoredDocumentEvidence
-  if (record.schema !== "sf-document-v1" || record.evidence.id !== id || record.evidence.status !== "extracted" || record.evidence.ref.refDigest !== digestSfEvidenceRef(record.evidence.ref)) return { status: "conflict", reason: "candidate-invalid" }
-  if (!(await input.confirmDocument(record.evidence, context))) return { status: "denied", reason: "human-confirmation-required" }
+  if (record.schema !== "sf-document-v1" || record.evidence.id !== id || (record.evidence.status !== "extracted" && record.evidence.status !== "confirmed") || record.evidence.ref.refDigest !== digestSfEvidenceRef(record.evidence.ref)) return { status: "conflict", reason: "candidate-invalid" }
+  const admittedEvidence: DocumentEvidence = { ...record.evidence, status: "extracted" }
+  if (!(await input.confirmDocument(admittedEvidence, context))) return { status: "denied", reason: "human-confirmation-required" }
   const identity = { incarnation: record.snapshot.incarnation, revision: record.snapshot.revision, blobDigest: record.snapshot.blobDigest }
   if (!(await input.documents.revalidate(record.snapshot.documentRef, identity, context)) || !(await input.host.revalidate(context))) return { status: "stale", reason: "document-changed" }
   const confirmed: DocumentEvidence = { ...record.evidence, status: "confirmed" }
   const saved = await input.state.transaction(request, { namespace: "documents", expectedStorageVersion: loaded.storageVersion, idempotencyKey: operationId, commandDigest: digestSfValue({ action: "confirm", id, ref: confirmed.ref }), targetRef: confirmed.ref.target.documentId, targetIncarnation: identity.incarnation }, async (state, authority) => {
     const current = state.documents[id] as StoredDocumentEvidence | undefined
-    if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || !current || digestSfValue(current) !== digestSfValue(record)) return { commit: false, value: null as DocumentEvidence | null }
-    state.documents[id] = { ...record, evidence: confirmed, snapshot: { ...record.snapshot, evidence: confirmed } }
+    if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !current || record.evidence.status !== "extracted" || digestSfValue(current) !== digestSfValue(record) || !await input.confirmDocument(admittedEvidence, context)) return { commit: false, value: null as DocumentEvidence | null }
+    state.documents[id] = { ...record, confirmationVersion: 1, evidence: confirmed, snapshot: { ...record.snapshot, confirmationVersion: 1, evidence: confirmed } }
     return { commit: true, value: confirmed as DocumentEvidence | null }
   })
   if (saved.status !== "ok" || !saved.value) return { status: "conflict", reason: "candidate-changed" }
-  if (!(await input.host.revalidate(context)) || !(await input.documents.revalidate(record.snapshot.documentRef, identity, context))) return { status: "stale", reason: "document-changed" }
-  return { status: "ok", value: saved.value }
+  if (!(await input.host.revalidate(context)) || !(await input.documents.revalidate(record.snapshot.documentRef, identity, context)) || !(await input.confirmDocument(admittedEvidence, context))) return { status: "stale", reason: "document-changed" }
+  const versioned = { ...saved.value.ref, target: { ...saved.value.ref.target, confirmationVersion: 1 }, refDigest: "" }
+  return { status: "ok", value: { ...saved.value, ref: { ...versioned, refDigest: digestSfEvidenceRef(versioned) } } }
 }
 
 export async function searchDocumentEvidence(request: KnowledgeSearchRequest, context: TrustedDomainContext, input: DocumentEvidenceHost): Promise<PortResult<EvidenceSearchResult>> {
   if (!request.query.trim() || request.query.length > 256 || !Number.isSafeInteger(request.limit) || request.limit < 1 || request.limit > 100) return { status: "needs-input", reason: "invalid-search" }
   const hostRequest = input.host.requestFor(context)
   if (!hostRequest || !(await input.host.revalidate(context))) return { status: "denied", reason: "authority-unavailable" }
-  const loaded = await input.state.read(hostRequest, "documents", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision ? Object.values(state.documents) : [])
+  const loaded = await input.state.read(hostRequest, "documents", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? Object.values(state.documents) : [])
   if (loaded.status !== "ok") return { status: "unavailable", reason: "document-state-unavailable" }
   const records = loaded.value.filter((value): value is StoredDocumentEvidence => !!value && typeof value === "object" && (value as StoredDocumentEvidence).schema === "sf-document-v1").filter((record) => !request.documentRefs || request.documentRefs.includes(record.snapshot.documentRef))
   const matches: EvidenceSearchResult["matches"][number][] = []
   for (const record of records.slice(0, 100)) {
     if (matches.length >= request.limit) break
     if (record.evidence.ref.installationId !== context.binding.installationId || record.evidence.ref.projectId !== context.binding.projectId) continue
-    const reader = createSfDocumentEvidenceAdapter(async () => ({ status: "ok", snapshot: record.snapshot }), input.documents, input.parser)
+    const reader = createSfDocumentEvidenceAdapter(async (_documentId, call) => {
+      const current = await readDocumentEvidence(record.evidence.id, call, { state: input.state, documents: input.documents, requestFor: input.host.requestFor, revalidate: input.host.revalidate })
+      return current.status === "ok" ? { status: "ok", snapshot: current.value.snapshot } : { status: "unavailable", accessRevision: call.binding.accessRevision }
+    }, input.documents, input.parser)
     const document = await reader(record.evidence.ref.target.documentId, context)
     if (document.status !== "ok") continue
     const revision = record.snapshot.ragRevision
@@ -140,12 +145,17 @@ export async function listDocumentEvidence(documentRef: string, context: Trusted
   if (!request || !(await input.host.revalidate(context))) return { status: "denied", reason: "authority-unavailable" }
   const source = await input.documents.read(documentRef, context)
   if (source.status !== "ok") return source
-  const loaded = await input.state.read(request, "documents", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision ? Object.values(state.documents) : [])
+  const loaded = await input.state.read(request, "documents", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? Object.values(state.documents) : [])
   if (loaded.status !== "ok") return { status: "unavailable", reason: "document-state-unavailable" }
   const records = loaded.value.filter((value): value is StoredDocumentEvidence => !!value && typeof value === "object" && (value as StoredDocumentEvidence).schema === "sf-document-v1").filter((record) => record.snapshot?.documentRef === documentRef && record.evidence?.ref.target.documentId === source.value.documentId && record.snapshot.incarnation === source.value.incarnation && record.snapshot.revision === source.value.revision)
   if (records.length > 100) return { status: "unavailable", reason: "candidate-limit-exceeded" }
   const values = await Promise.all(records.map((record) => readDocumentEvidence(record.evidence.id, context, { state: input.state, documents: input.documents, requestFor: input.host.requestFor, revalidate: input.host.revalidate })))
   if (values.some((value) => value.status !== "ok")) return { status: "unavailable", reason: "candidate-unavailable" }
   if (!(await input.host.revalidate(context)) || !(await input.documents.revalidate(documentRef, { incarnation: source.value.incarnation, revision: source.value.revision, blobDigest: source.value.blobDigest.value }, context))) return { status: "stale", reason: "document-changed" }
-  return { status: "ok", value: values.flatMap((value) => value.status === "ok" ? [value.value.evidence] : []) }
+  return { status: "ok", value: values.flatMap((value) => {
+    if (value.status !== "ok") return []
+    if (value.value.evidence.status !== "confirmed") return [value.value.evidence]
+    const versioned = { ...value.value.evidence.ref, target: { ...value.value.evidence.ref.target, confirmationVersion: value.value.confirmationVersion }, refDigest: "" }
+    return [{ ...value.value.evidence, ref: { ...versioned, refDigest: digestSfEvidenceRef(versioned) } }]
+  }) }
 }

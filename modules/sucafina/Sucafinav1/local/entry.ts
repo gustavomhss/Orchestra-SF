@@ -24,6 +24,7 @@ import { enumerateSfSources } from "../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../product/integration/source-projections.ts"
 import { createSfBiHttp } from "../product/integration/bi-http.ts"
 import { createSfWorkbenchHttp } from "../product/interface/http.ts"
+import { decorateSfProductHtml } from "../product/interface/html.ts"
 import { sfHumanActions } from "../product/integration/human-authority.ts"
 import { digestSfValue } from "../product/contracts/canonical.ts"
 import freeze from "../product/contracts/freeze-v1.json"
@@ -100,6 +101,7 @@ export async function createLocalInstallation(context: { origin: string; createH
     authenticate: identity.authenticate,
     environment: requestEnvironment,
     product: async (request, surface) => await workbench(request, surface) ?? await bi(request, surface),
+    productHtml: decorateSfProductHtml,
     maxJsonBytes: 2 * 1024 * 1024,
     assets,
   })
