@@ -24,8 +24,8 @@
     {
       "id": "Terra",
       "model": "Terra (exact model id not measured)",
-      "status": "STOPPING",
-      "lease": "revoked after checkpoint"
+      "status": "TERMINAL",
+      "lease": "revoked"
     },
     {
       "id": "01a1d644-b241-7f42-a9e9-4512e2ee7716",
@@ -64,5 +64,12 @@
     "Origin repository does not contain local base c873998a; remote checkpoint requires reconstructing tree from verified ancestor and cannot assume local commit SHA exists remotely."
   ],
   "resume": "Obtain explicit resume instruction; review checkpoint and accepted inputs, reconcile contracts and host consumers, finish all four tasks, author meaningful tests, run authorized hosted scoped checks and guardrail, then prepare one WP PR. Do not execute while stopped.",
-  "recorded_at": "2026-11-13T20:31:19.965154+00:00"
+  "recorded_at": "2026-11-13T20:31:19.965154+00:00",
+  "publication": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "branch": "sf2-decisions-ready",
+    "base_commit": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "scope": "WP11 owned paths plus this handoff only; global tree and local commit history differ; foreign baseline commits are not included",
+    "verification": "Compare owned blobs against local checkpoint; final remote SHA and tree are recorded in campaign handoff/WP11.json"
+  }
 }
