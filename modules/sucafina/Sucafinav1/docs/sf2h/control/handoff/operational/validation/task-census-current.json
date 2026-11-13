@@ -1,0 +1,175 @@
+{
+  "at": "2026-11-13T20:10:44.438152+00:00",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaign": "sf2h-integral-20261112",
+  "source": "Fresh responses from all15 existing Terra leads to explicit user progress/ETA census",
+  "rows": [
+    {
+      "wp": "WP00",
+      "tasks_total": 4,
+      "whole_tasks_implemented_reported": null,
+      "partial_tasks_reported": 4,
+      "basis": "current native lead reply, no new tests/discovery",
+      "verification": "No current hosted task completion proof supplied"
+    },
+    {
+      "wp": "WP01",
+      "tasks_total": 5,
+      "whole_tasks_implemented_reported": 0,
+      "partial_tasks_reported": 5,
+      "basis": "current native lead reply, no new tests/discovery",
+      "verification": "No current hosted task completion proof supplied"
+    },
+    {
+      "wp": "WP02",
+      "tasks_total": 4,
+      "whole_tasks_implemented_reported": 0,
+      "partial_tasks_reported": 4,
+      "basis": "current native lead reply, no new tests/discovery",
+      "verification": "No current hosted task completion proof supplied"
+    },
+    {
+      "wp": "WP03",
+      "tasks_total": 5,
+      "whole_tasks_implemented_reported": null,
+      "partial_tasks_reported": null,
+      "basis": "current native lead reply, no new tests/discovery",
+      "verification": "No current hosted task completion proof supplied"
+    },
+    {
+      "wp": "WP04",
+      "tasks_total": 5,
+      "whole_tasks_implemented_reported": 0,
+      "partial_tasks_reported": 5,
+      "basis": "current native lead reply, no new tests/discovery",
+      "verification": "No current hosted task completion proof supplied"
+    },
+    {
+      "wp": "WP05",
+      "tasks_total": 5,
+      "whole_tasks_implemented_reported": 0,
+      "partial_tasks_reported": 5,
+      "basis": "current native lead reply, no new tests/discovery",
+      "verification": "No current hosted task completion proof supplied"
+    },
+    {
+      "wp": "WP06",
+      "tasks_total": 5,
+      "whole_tasks_implemented_reported": 1,
+      "partial_tasks_reported": 4,
+      "basis": "current native lead reply, no new tests/discovery",
+      "verification": "No current hosted task completion proof supplied",
+      "reported_complete_task_ids": [
+        "WP06.T01"
+      ]
+    },
+    {
+      "wp": "WP07",
+      "tasks_total": 4,
+      "whole_tasks_implemented_reported": 0,
+      "partial_tasks_reported": 4,
+      "basis": "current native lead reply, no new tests/discovery",
+      "verification": "No current hosted task completion proof supplied"
+    },
+    {
+      "wp": "WP08",
+      "tasks_total": 6,
+      "whole_tasks_implemented_reported": 0,
+      "partial_tasks_reported": 6,
+      "basis": "current native lead reply, no new tests/discovery",
+      "verification": "No current hosted task completion proof supplied"
+    },
+    {
+      "wp": "WP09",
+      "tasks_total": 7,
+      "whole_tasks_implemented_reported": 0,
+      "partial_tasks_reported": 7,
+      "basis": "current native lead reply, no new tests/discovery",
+      "verification": "No current hosted task completion proof supplied"
+    },
+    {
+      "wp": "WP10",
+      "tasks_total": 7,
+      "whole_tasks_implemented_reported": 0,
+      "partial_tasks_reported": 7,
+      "basis": "current native lead reply, no new tests/discovery",
+      "verification": "No current hosted task completion proof supplied"
+    },
+    {
+      "wp": "WP11",
+      "tasks_total": 4,
+      "whole_tasks_implemented_reported": 0,
+      "partial_tasks_reported": 4,
+      "basis": "current native lead reply, no new tests/discovery",
+      "verification": "No current hosted task completion proof supplied"
+    },
+    {
+      "wp": "WP12",
+      "tasks_total": 4,
+      "whole_tasks_implemented_reported": 0,
+      "partial_tasks_reported": 4,
+      "basis": "current native lead reply, no new tests/discovery",
+      "verification": "No current hosted task completion proof supplied"
+    },
+    {
+      "wp": "WP13",
+      "tasks_total": 4,
+      "whole_tasks_implemented_reported": 0,
+      "partial_tasks_reported": 4,
+      "basis": "current native lead reply, no new tests/discovery",
+      "verification": "No current hosted task completion proof supplied"
+    },
+    {
+      "wp": "WP14",
+      "tasks_total": 5,
+      "whole_tasks_implemented_reported": 1,
+      "partial_tasks_reported": 4,
+      "basis": "current native lead reply, no new tests/discovery",
+      "verification": "No current hosted task completion proof supplied",
+      "reported_complete_task_ids": [
+        "WP14.T05"
+      ]
+    }
+  ],
+  "totals": {
+    "tasks": 74,
+    "whole_implemented_reported": 2,
+    "WPs_without_closed_count": [
+      "WP00",
+      "WP03"
+    ],
+    "tasks_in_WPs_without_closed_count": 9,
+    "qualified_WPs": 0
+  },
+  "do_not_infer": "2reported complete tasks is not a functional percent: most tasks partial, twoWPs unmeasured, no complete current hosted evidence. Not a1610criterion audit.",
+  "eta_forecast": {
+    "central_remaining_hours": 36,
+    "range_remaining_hours": [
+      24,
+      48
+    ],
+    "confidence": "low",
+    "basis": {
+      "WP01_UI_likely_hours": 20,
+      "WP10_runtime_likely_hours": 16,
+      "WP09_routines_likely_hours": 12,
+      "WP06_imports_likely_hours": "5\u201310",
+      "WP11_decisions_range_hours": [
+        8,
+        16
+      ]
+    },
+    "method": "Parallel fronts, critical dependency path between runtime and UI, then integration/corrections/epic/AM/reviews. Engineering forecast, not sum of allWP hours or commitment.",
+    "conditions": [
+      "C07 supported authorized governed route resolved during implementation; otherwise additional external wait unbounded",
+      "Remaining package leads have not supplied measured durations; high variance",
+      "No scope reduction or finalproof waiver"
+    ]
+  },
+  "resume_control": {
+    "user_explicit_resume": true,
+    "native_goal_last_observed": "paused",
+    "no_worker_stop_requests_sent": true,
+    "no_second_controller_created": true
+  }
+}

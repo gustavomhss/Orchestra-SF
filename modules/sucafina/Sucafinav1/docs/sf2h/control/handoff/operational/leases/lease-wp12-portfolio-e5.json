@@ -1,0 +1,19 @@
+{
+  "event_id": "wp12-portfolio-sensitivity-e5",
+  "target_actor": "S4-B",
+  "lease_epoch": 5,
+  "new_paths": [
+    "apps/cli/src/sucafina-product/analysis-verifier-portfolio.ts",
+    "apps/cli/src/sucafina-product/analysis-verifier-sensitivity.ts"
+  ],
+  "excluded": [
+    "analysis-verifier.ts",
+    "host-context.ts",
+    "native-execution.ts",
+    "native-host.ts",
+    "analysis-verifier-scenarios.ts",
+    "analysis-verifier-procurement.ts"
+  ],
+  "source": "S0 approval; S0-B confirmed no writer",
+  "at": "2026-11-13T18:35:25.719749+00:00"
+}

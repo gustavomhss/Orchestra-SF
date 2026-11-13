@@ -1,0 +1,948 @@
+{
+  "revision": 3,
+  "at": "2026-11-13T19:13:05.946767+00:00",
+  "source_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "source_digest": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "scope": {
+    "WPs": 15,
+    "tasks": 74,
+    "criteria": 1610,
+    "contracts": 17
+  },
+  "assignment_unit": "whole canonical tasks; never replace with a list of micro-file changes",
+  "assignments": [
+    {
+      "wp": "WP00",
+      "source_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_digest": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "seats": [
+        {
+          "seat": "Terra",
+          "tasks": [
+            {
+              "id": "WP00.T02",
+              "title": "Definir contratos de consumo e vocabulário",
+              "criteria_source": "plan/campaign.json#WP00.T02",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G1",
+          "tasks": [
+            {
+              "id": "WP00.T01",
+              "title": "Fixar baseline funcional e decisões de escopo",
+              "criteria_source": "plan/campaign.json#WP00.T01",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G2",
+          "tasks": [
+            {
+              "id": "WP00.T04",
+              "title": "Qualificar serviços nativos de IA Relay e execução de provas",
+              "criteria_source": "plan/campaign.json#WP00.T04",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "Luna",
+          "tasks": [
+            {
+              "id": "WP00.T03",
+              "title": "Preparar cenários sintéticos e resultados esperados",
+              "criteria_source": "plan/campaign.json#WP00.T03",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        }
+      ],
+      "assignment_unit": "entire existing canonical task, including its full criteria and consumers; file patches are internal steps",
+      "preserve_existing_outputs": true,
+      "techlead": "Terra implements its tasks, manages disjoint internal paths, consolidates all existing/contributed work, final scoped hosted testing and one WP PR",
+      "helpers_no_tests": true,
+      "no_root_microtasks": true,
+      "authority_note": "Task ownership coordinates required proofs, not substitute author approval: final independent reviewers remain separate; only Terra executes tests; S0 retains final acceptance, CI dispatcher, freeze/remote integration decisions."
+    },
+    {
+      "wp": "WP01",
+      "source_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_digest": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "seats": [
+        {
+          "seat": "Terra",
+          "tasks": [
+            {
+              "id": "WP01.T01",
+              "title": "Reorganizar shell e navegação contextual",
+              "criteria_source": "plan/campaign.json#WP01.T01",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            },
+            {
+              "id": "WP01.T05",
+              "title": "Entregar Hoje e mesa de decisão com IA",
+              "criteria_source": "plan/campaign.json#WP01.T05",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G1",
+          "tasks": [
+            {
+              "id": "WP01.T02",
+              "title": "Construir os padrões de revisar, editar e decidir",
+              "criteria_source": "plan/campaign.json#WP01.T02",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G2",
+          "tasks": [
+            {
+              "id": "WP01.T03",
+              "title": "Tornar edição, falhas e conflitos compreensíveis",
+              "criteria_source": "plan/campaign.json#WP01.T03",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "Luna",
+          "tasks": [
+            {
+              "id": "WP01.T04",
+              "title": "Oferecer busca, visões salvas e entrada por responsabilidade",
+              "criteria_source": "plan/campaign.json#WP01.T04",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        }
+      ],
+      "assignment_unit": "entire existing canonical task, including its full criteria and consumers; file patches are internal steps",
+      "preserve_existing_outputs": true,
+      "techlead": "Terra implements its tasks, manages disjoint internal paths, consolidates all existing/contributed work, final scoped hosted testing and one WP PR",
+      "helpers_no_tests": true,
+      "no_root_microtasks": true
+    },
+    {
+      "wp": "WP02",
+      "source_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_digest": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "seats": [
+        {
+          "seat": "Terra",
+          "tasks": [
+            {
+              "id": "WP02.T01",
+              "title": "Publicar as projeções autorizadas das 16 capacidades",
+              "criteria_source": "plan/campaign.json#WP02.T01",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G1",
+          "tasks": [
+            {
+              "id": "WP02.T02",
+              "title": "Entregar manutenção contextual com prévia e conflito legível",
+              "criteria_source": "plan/campaign.json#WP02.T02",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G2",
+          "tasks": [
+            {
+              "id": "WP02.T03",
+              "title": "Entregar as vistas de revisão do Dashboard",
+              "criteria_source": "plan/campaign.json#WP02.T03",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "Luna",
+          "tasks": [
+            {
+              "id": "WP02.T04",
+              "title": "Publicar a porta canônica de Hot Topics",
+              "criteria_source": "plan/campaign.json#WP02.T04",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        }
+      ],
+      "assignment_unit": "entire existing canonical task, including its full criteria and consumers; file patches are internal steps",
+      "preserve_existing_outputs": true,
+      "techlead": "Terra implements its tasks, manages disjoint internal paths, consolidates all existing/contributed work, final scoped hosted testing and one WP PR",
+      "helpers_no_tests": true,
+      "no_root_microtasks": true
+    },
+    {
+      "wp": "WP03",
+      "source_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_digest": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "seats": [
+        {
+          "seat": "Terra",
+          "tasks": [
+            {
+              "id": "WP03.T01",
+              "title": "Publicar projeções e adapter financeiro puros",
+              "criteria_source": "plan/campaign.json#WP03.T01",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            },
+            {
+              "id": "WP03.T05",
+              "title": "Entregar Overview e comparação explicável entre versões",
+              "criteria_source": "plan/campaign.json#WP03.T05",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G1",
+          "tasks": [
+            {
+              "id": "WP03.T03",
+              "title": "Entregar planejamento de pessoas e premissas de HR",
+              "criteria_source": "plan/campaign.json#WP03.T03",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G2",
+          "tasks": [
+            {
+              "id": "WP03.T04",
+              "title": "Entregar FX e cadastros com escopo explícito",
+              "criteria_source": "plan/campaign.json#WP03.T04",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "Luna",
+          "tasks": [
+            {
+              "id": "WP03.T02",
+              "title": "Entregar edição mensal e linhas OPEX/CAPEX previsíveis",
+              "criteria_source": "plan/campaign.json#WP03.T02",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        }
+      ],
+      "assignment_unit": "entire existing canonical task, including its full criteria and consumers; file patches are internal steps",
+      "preserve_existing_outputs": true,
+      "techlead": "Terra implements its tasks, manages disjoint internal paths, consolidates all existing/contributed work, final scoped hosted testing and one WP PR",
+      "helpers_no_tests": true,
+      "no_root_microtasks": true
+    },
+    {
+      "wp": "WP04",
+      "source_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_digest": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "seats": [
+        {
+          "seat": "Terra",
+          "tasks": [
+            {
+              "id": "WP04.T01",
+              "title": "Filas e projeções de Procurement com próxima ação verificável",
+              "criteria_source": "plan/campaign.json#WP04.T01",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            },
+            {
+              "id": "WP04.T04",
+              "title": "Resumo por tipo de aprovação e decisão sobre a versão correta",
+              "criteria_source": "plan/campaign.json#WP04.T04",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G1",
+          "tasks": [
+            {
+              "id": "WP04.T02",
+              "title": "Pedido guiado e preenchimento reaproveitado com origem",
+              "criteria_source": "plan/campaign.json#WP04.T02",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G2",
+          "tasks": [
+            {
+              "id": "WP04.T05",
+              "title": "Fornecedores e preservação completa do processo de compras",
+              "criteria_source": "plan/campaign.json#WP04.T05",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "Luna",
+          "tasks": [
+            {
+              "id": "WP04.T03",
+              "title": "Comparação honesta e valores financeiros consistentes",
+              "criteria_source": "plan/campaign.json#WP04.T03",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        }
+      ],
+      "assignment_unit": "entire existing canonical task, including its full criteria and consumers; file patches are internal steps",
+      "preserve_existing_outputs": true,
+      "techlead": "Terra implements its tasks, manages disjoint internal paths, consolidates all existing/contributed work, final scoped hosted testing and one WP PR",
+      "helpers_no_tests": true,
+      "no_root_microtasks": true
+    },
+    {
+      "wp": "WP05",
+      "source_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_digest": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "seats": [
+        {
+          "seat": "Terra",
+          "tasks": [
+            {
+              "id": "WP05.T01",
+              "title": "Trajetória financeira e waterfall de cenários",
+              "criteria_source": "plan/campaign.json#WP05.T01",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            },
+            {
+              "id": "WP05.T05",
+              "title": "Entregar BI de consequência e sensibilidade",
+              "criteria_source": "plan/campaign.json#WP05.T05",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G1",
+          "tasks": [
+            {
+              "id": "WP05.T03",
+              "title": "Estoque por etapa e aging de Procurement",
+              "criteria_source": "plan/campaign.json#WP05.T03",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G2",
+          "tasks": [
+            {
+              "id": "WP05.T02",
+              "title": "Contribuições divergentes e FTE/custo alinhados",
+              "criteria_source": "plan/campaign.json#WP05.T02",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "Luna",
+          "tasks": [
+            {
+              "id": "WP05.T04",
+              "title": "Tickets, agenda de marcos e catálogo consumível de BI",
+              "criteria_source": "plan/campaign.json#WP05.T04",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        }
+      ],
+      "assignment_unit": "entire existing canonical task, including its full criteria and consumers; file patches are internal steps",
+      "preserve_existing_outputs": true,
+      "techlead": "Terra implements its tasks, manages disjoint internal paths, consolidates all existing/contributed work, final scoped hosted testing and one WP PR",
+      "helpers_no_tests": true,
+      "no_root_microtasks": true
+    },
+    {
+      "wp": "WP06",
+      "source_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_digest": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "seats": [
+        {
+          "seat": "Terra",
+          "tasks": [
+            {
+              "id": "WP06.T02",
+              "title": "Construir prévia do impacto e manifesto de mudanças",
+              "criteria_source": "plan/campaign.json#WP06.T02",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            },
+            {
+              "id": "WP06.T05",
+              "title": "Extrair evidências de documentos com confirmação",
+              "criteria_source": "plan/campaign.json#WP06.T05",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G1",
+          "tasks": [
+            {
+              "id": "WP06.T03",
+              "title": "Entregar Apply explícito, reprévia e recibo fiel",
+              "criteria_source": "plan/campaign.json#WP06.T03",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G2",
+          "tasks": [
+            {
+              "id": "WP06.T04",
+              "title": "Qualificar roundtrip e entregar as fronteiras de importação",
+              "criteria_source": "plan/campaign.json#WP06.T04",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "Luna",
+          "tasks": [
+            {
+              "id": "WP06.T01",
+              "title": "Preservar formatos e normalização dos arquivos originais",
+              "criteria_source": "plan/campaign.json#WP06.T01",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        }
+      ],
+      "assignment_unit": "entire existing canonical task, including its full criteria and consumers; file patches are internal steps",
+      "preserve_existing_outputs": true,
+      "techlead": "Terra implements its tasks, manages disjoint internal paths, consolidates all existing/contributed work, final scoped hosted testing and one WP PR",
+      "helpers_no_tests": true,
+      "no_root_microtasks": true
+    },
+    {
+      "wp": "WP07",
+      "source_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_digest": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "seats": [
+        {
+          "seat": "Terra",
+          "tasks": [
+            {
+              "id": "WP07.T02",
+              "title": "Preservar e apresentar uma revisão estável",
+              "criteria_source": "plan/campaign.json#WP07.T02",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G1",
+          "tasks": [
+            {
+              "id": "WP07.T03",
+              "title": "Comparar revisões com contexto compatível",
+              "criteria_source": "plan/campaign.json#WP07.T03",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G2",
+          "tasks": [
+            {
+              "id": "WP07.T04",
+              "title": "Exportar o material completo e paginado",
+              "criteria_source": "plan/campaign.json#WP07.T04",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "Luna",
+          "tasks": [
+            {
+              "id": "WP07.T01",
+              "title": "Entregar a seleção autorizada da pauta",
+              "criteria_source": "plan/campaign.json#WP07.T01",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        }
+      ],
+      "assignment_unit": "entire existing canonical task, including its full criteria and consumers; file patches are internal steps",
+      "preserve_existing_outputs": true,
+      "techlead": "Terra implements its tasks, manages disjoint internal paths, consolidates all existing/contributed work, final scoped hosted testing and one WP PR",
+      "helpers_no_tests": true,
+      "no_root_microtasks": true
+    },
+    {
+      "wp": "WP08",
+      "source_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_digest": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "seats": [
+        {
+          "seat": "Terra",
+          "tasks": [
+            {
+              "id": "WP08.T03",
+              "title": "Confirmar sem alteração no escopo material revisado",
+              "criteria_source": "plan/campaign.json#WP08.T03",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            },
+            {
+              "id": "WP08.T04",
+              "title": "Projetar Meu trabalho a partir das fontes canônicas",
+              "criteria_source": "plan/campaign.json#WP08.T04",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G1",
+          "tasks": [
+            {
+              "id": "WP08.T01",
+              "title": "Implementar relações explícitas entre referências",
+              "criteria_source": "plan/campaign.json#WP08.T01",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            },
+            {
+              "id": "WP08.T05",
+              "title": "Encaminhar contexto para a ação Hot Topic existente",
+              "criteria_source": "plan/campaign.json#WP08.T05",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G2",
+          "tasks": [
+            {
+              "id": "WP08.T02",
+              "title": "Entregar comentários e pedidos contextuais de esclarecimento",
+              "criteria_source": "plan/campaign.json#WP08.T02",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "Luna",
+          "tasks": [
+            {
+              "id": "WP08.T06",
+              "title": "Inicializar ciclos e direcionar perguntas decisivas",
+              "criteria_source": "plan/campaign.json#WP08.T06",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        }
+      ],
+      "assignment_unit": "entire existing canonical task, including its full criteria and consumers; file patches are internal steps",
+      "preserve_existing_outputs": true,
+      "techlead": "Terra implements its tasks, manages disjoint internal paths, consolidates all existing/contributed work, final scoped hosted testing and one WP PR",
+      "helpers_no_tests": true,
+      "no_root_microtasks": true
+    },
+    {
+      "wp": "WP09",
+      "source_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_digest": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "seats": [
+        {
+          "seat": "Terra",
+          "tasks": [
+            {
+              "id": "WP09.T01",
+              "title": "Conectar o ciclo de rotina à admissão e aos resultados",
+              "criteria_source": "plan/campaign.json#WP09.T01",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            },
+            {
+              "id": "WP09.T07",
+              "title": "Executar análise e reavaliação de decisão por Relay",
+              "criteria_source": "plan/campaign.json#WP09.T07",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G1",
+          "tasks": [
+            {
+              "id": "WP09.T02",
+              "title": "Preparar revisão com checagem de cobertura",
+              "criteria_source": "plan/campaign.json#WP09.T02",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            },
+            {
+              "id": "WP09.T03",
+              "title": "Preparar revisão de forecast e explicar diferenças",
+              "criteria_source": "plan/campaign.json#WP09.T03",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G2",
+          "tasks": [
+            {
+              "id": "WP09.T04",
+              "title": "Preparar dossiê de sourcing",
+              "criteria_source": "plan/campaign.json#WP09.T04",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            },
+            {
+              "id": "WP09.T05",
+              "title": "Consolidar encaminhamentos em ações propostas",
+              "criteria_source": "plan/campaign.json#WP09.T05",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "Luna",
+          "tasks": [
+            {
+              "id": "WP09.T06",
+              "title": "Adicionar recorrência e resumos internos sem ruído",
+              "criteria_source": "plan/campaign.json#WP09.T06",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        }
+      ],
+      "assignment_unit": "entire existing canonical task, including its full criteria and consumers; file patches are internal steps",
+      "preserve_existing_outputs": true,
+      "techlead": "Terra implements its tasks, manages disjoint internal paths, consolidates all existing/contributed work, final scoped hosted testing and one WP PR",
+      "helpers_no_tests": true,
+      "no_root_microtasks": true
+    },
+    {
+      "wp": "WP10",
+      "source_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_digest": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "seats": [
+        {
+          "seat": "Terra",
+          "tasks": [
+            {
+              "id": "WP10.T01",
+              "title": "Compor host e módulo continuamente desde o início",
+              "criteria_source": "plan/campaign.json#WP10.T01",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            },
+            {
+              "id": "WP10.T05",
+              "title": "Fechar a campanha e entregar o produto revisável",
+              "criteria_source": "plan/campaign.json#WP10.T05",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G1",
+          "tasks": [
+            {
+              "id": "WP10.T06",
+              "title": "Registrar equipe residente e executar MCP com contexto confiável",
+              "criteria_source": "plan/campaign.json#WP10.T06",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            },
+            {
+              "id": "WP10.T07",
+              "title": "Compor BusinessContextService e memória Atlas transacional",
+              "criteria_source": "plan/campaign.json#WP10.T07",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G2",
+          "tasks": [
+            {
+              "id": "WP10.T03",
+              "title": "Executar três revisões independentes e fechar correções",
+              "criteria_source": "plan/campaign.json#WP10.T03",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "Luna",
+          "tasks": [
+            {
+              "id": "WP10.T02",
+              "title": "Executar jornadas reais e verificar experiência",
+              "criteria_source": "plan/campaign.json#WP10.T02",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            },
+            {
+              "id": "WP10.T04",
+              "title": "Concluir verificação cumulativa no candidato de produto C",
+              "criteria_source": "plan/campaign.json#WP10.T04",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        }
+      ],
+      "assignment_unit": "entire existing canonical task, including its full criteria and consumers; file patches are internal steps",
+      "preserve_existing_outputs": true,
+      "techlead": "Terra implements its tasks, manages disjoint internal paths, consolidates all existing/contributed work, final scoped hosted testing and one WP PR",
+      "helpers_no_tests": true,
+      "no_root_microtasks": true,
+      "authority_note": "Task ownership coordinates required proofs, not substitute author approval: final independent reviewers remain separate; only Terra executes tests; S0 retains final acceptance, CI dispatcher, freeze/remote integration decisions."
+    },
+    {
+      "wp": "WP11",
+      "source_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_digest": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "seats": [
+        {
+          "seat": "Terra",
+          "tasks": [
+            {
+              "id": "WP11.T03",
+              "title": "Registrar escolha humana e preparar mudanças",
+              "criteria_source": "plan/campaign.json#WP11.T03",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G1",
+          "tasks": [
+            {
+              "id": "WP11.T02",
+              "title": "Estruturar alternativas e premissas comparáveis",
+              "criteria_source": "plan/campaign.json#WP11.T02",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G2",
+          "tasks": [
+            {
+              "id": "WP11.T04",
+              "title": "Reconciliar recibos e retomar execução parcial",
+              "criteria_source": "plan/campaign.json#WP11.T04",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "Luna",
+          "tasks": [
+            {
+              "id": "WP11.T01",
+              "title": "Implementar caso durável e versionado",
+              "criteria_source": "plan/campaign.json#WP11.T01",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        }
+      ],
+      "assignment_unit": "entire existing canonical task, including its full criteria and consumers; file patches are internal steps",
+      "preserve_existing_outputs": true,
+      "techlead": "Terra implements its tasks, manages disjoint internal paths, consolidates all existing/contributed work, final scoped hosted testing and one WP PR",
+      "helpers_no_tests": true,
+      "no_root_microtasks": true
+    },
+    {
+      "wp": "WP12",
+      "source_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_digest": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "seats": [
+        {
+          "seat": "Terra",
+          "tasks": [
+            {
+              "id": "WP12.T01",
+              "title": "Expor ferramentas e provider de IA com escopo",
+              "criteria_source": "plan/campaign.json#WP12.T01",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G1",
+          "tasks": [
+            {
+              "id": "WP12.T02",
+              "title": "Interpretar intenção e descobrir contradições",
+              "criteria_source": "plan/campaign.json#WP12.T02",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G2",
+          "tasks": [
+            {
+              "id": "WP12.T03",
+              "title": "Criticar e validar resultados estruturados",
+              "criteria_source": "plan/campaign.json#WP12.T03",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "Luna",
+          "tasks": [
+            {
+              "id": "WP12.T04",
+              "title": "Controlar análise assíncrona e retorno de Relay",
+              "criteria_source": "plan/campaign.json#WP12.T04",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        }
+      ],
+      "assignment_unit": "entire existing canonical task, including its full criteria and consumers; file patches are internal steps",
+      "preserve_existing_outputs": true,
+      "techlead": "Terra implements its tasks, manages disjoint internal paths, consolidates all existing/contributed work, final scoped hosted testing and one WP PR",
+      "helpers_no_tests": true,
+      "no_root_microtasks": true
+    },
+    {
+      "wp": "WP13",
+      "source_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_digest": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "seats": [
+        {
+          "seat": "Terra",
+          "tasks": [
+            {
+              "id": "WP13.T02",
+              "title": "Avaliar combinações e restrições",
+              "criteria_source": "plan/campaign.json#WP13.T02",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G1",
+          "tasks": [
+            {
+              "id": "WP13.T01",
+              "title": "Definir campanha e candidatos de portfólio",
+              "criteria_source": "plan/campaign.json#WP13.T01",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G2",
+          "tasks": [
+            {
+              "id": "WP13.T03",
+              "title": "Calcular sensibilidade e limites da escolha",
+              "criteria_source": "plan/campaign.json#WP13.T03",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "Luna",
+          "tasks": [
+            {
+              "id": "WP13.T04",
+              "title": "Encaminhar cenário escolhido sem duplicar execução",
+              "criteria_source": "plan/campaign.json#WP13.T04",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        }
+      ],
+      "assignment_unit": "entire existing canonical task, including its full criteria and consumers; file patches are internal steps",
+      "preserve_existing_outputs": true,
+      "techlead": "Terra implements its tasks, manages disjoint internal paths, consolidates all existing/contributed work, final scoped hosted testing and one WP PR",
+      "helpers_no_tests": true,
+      "no_root_microtasks": true
+    },
+    {
+      "wp": "WP14",
+      "source_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_digest": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "seats": [
+        {
+          "seat": "Terra",
+          "tasks": [
+            {
+              "id": "WP14.T02",
+              "title": "Recuperar casos semelhantes sob autorização",
+              "criteria_source": "plan/campaign.json#WP14.T02",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            },
+            {
+              "id": "WP14.T05",
+              "title": "Traduzir projeções de negócio para templates Atlas admitidos",
+              "criteria_source": "plan/campaign.json#WP14.T05",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G1",
+          "tasks": [
+            {
+              "id": "WP14.T01",
+              "title": "Classificar mudanças materiais por escopo",
+              "criteria_source": "plan/campaign.json#WP14.T01",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "G2",
+          "tasks": [
+            {
+              "id": "WP14.T03",
+              "title": "Comparar previsto e observado sem atribuição falsa",
+              "criteria_source": "plan/campaign.json#WP14.T03",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        },
+        {
+          "seat": "Luna",
+          "tasks": [
+            {
+              "id": "WP14.T04",
+              "title": "Deduplicar sinais e qualificar invalidação",
+              "criteria_source": "plan/campaign.json#WP14.T04",
+              "status": "RECONCILE_EXISTING_WORK_BEFORE_IMPLEMENTING"
+            }
+          ]
+        }
+      ],
+      "assignment_unit": "entire existing canonical task, including its full criteria and consumers; file patches are internal steps",
+      "preserve_existing_outputs": true,
+      "techlead": "Terra implements its tasks, manages disjoint internal paths, consolidates all existing/contributed work, final scoped hosted testing and one WP PR",
+      "helpers_no_tests": true,
+      "no_root_microtasks": true
+    }
+  ],
+  "validation": {
+    "all74_exactly_once": true,
+    "source_unchanged": true,
+    "all4_seats_per_WP": true,
+    "WPs": 15
+  },
+  "logical_coverage_not_simultaneous_capacity": true
+}

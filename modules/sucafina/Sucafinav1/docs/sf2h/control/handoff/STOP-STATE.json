@@ -1,0 +1,32 @@
+{
+  "at": "2026-11-13T20:42:14.934674+00:00",
+  "campaign": "sf2h-integral-20261112",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "state": "PAUSED_BY_USER_STOPPED_INCOMPLETE",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "source_campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "goal_status": "paused",
+  "user_request": "Stop all campaign agents; commit and publish to GitHub via MCP; organized continuation handoffs. No implementation or tests.",
+  "implementation_allowed": false,
+  "allowed_remaining_actions": [
+    "safe stop/checkpoints",
+    "commit already authorized existing campaign work",
+    "publish exact snapshots via GitHub MCP only",
+    "verify remote heads/trees",
+    "write continuation handoff"
+  ],
+  "CI_allowed": false,
+  "provider_retries_allowed": false,
+  "resume_requires_user": true,
+  "release_status": {
+    "qualified_WPs": 0,
+    "C": null,
+    "D": null,
+    "GLOBAL_RELEASE": false
+  },
+  "all_15_leads_observed_idle": true,
+  "all_product_branches_verified_via_MCP": true,
+  "all_writer_authorities": "REVOKED",
+  "automatic_resume": false
+}

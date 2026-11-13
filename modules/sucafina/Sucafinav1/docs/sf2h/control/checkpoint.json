@@ -18,7 +18,7 @@
   "acceptance": [
     "all product criteria implemented and consumed",
     "eight final CI selections plus mandatory epic/package/static gates on accepted C",
-    "AM01\u2013AM06 actual native product proofs",
+    "AM01–AM06 actual native product proofs",
     "three independent reviewer approvals and zero mandatory open findings",
     "D evidence-only envelope preserving all C product blobs",
     "actual C/G7 and D/G8 check:guards --base origin/dev with separate SHA receipts",
@@ -28,8 +28,10 @@
   "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
   "goal": {
     "thread_id": "01a1d309-ba0e-7490-b044-0899d9fa008f",
-    "status": "active",
-    "continuation": "native Goal; no second supervisor"
+    "status": "paused",
+    "continuation": "native Goal; no second supervisor",
+    "user_explicit_resume_requested": false,
+    "host_limitation": "Native goal status still paused; no active/resume transition tool exposed. Continue authorized current work and existing campaign workers; no new Goal/controller."
   },
   "hook": {
     "path": "/Users/gustavoschneiter/Documents/HuGR/Orchestra-SF/.codex/hooks.json",
@@ -259,26 +261,27 @@
       "scope": "contract delta; not finalreview"
     }
   },
-  "revision": 21,
-  "state": "CONTINUING_LATE",
-  "checkpoint_at": "2026-11-13T13:36:00.654927+00:00",
+  "revision": 32,
+  "state": "PAUSED",
+  "checkpoint_at": "2026-11-13T15:39:30.428052+00:00",
   "previous_checkpoint": {
-    "path": "checkpoints/rev20.json",
-    "sha256": "51f0f88161f623ef75d2db173be0fa89a49d0d9241fc539bc78e6c4b0056fe61",
-    "remote_control": "a7ae10036ec592f6ed76180b47e9ef433082f492"
+    "revision": 31,
+    "sha256": "aa40139f376a2a0a80fec982af7c87cf3c64ae7893db114fb4e68e91e674d0b0"
   },
   "current_local_product": {
-    "head": "83cd002e1b44b520f20ce990884ced442f556036",
-    "tree": "f321969eded803d7c272886dc4591ff3bc62a02a",
+    "head": "1669549f78d78ad7f712aec967749a571a99b2db",
+    "tree": "682bf27a0155f536f90ead8f786aa3348363a6f1",
     "branch": "sf2-compose",
-    "state": "DEVELOPMENT_NOT_FINAL_C"
+    "state": "DEVELOPMENT_NOT_FINAL_C",
+    "clean": true
   },
   "remote_product": {
-    "head": "370c084870c90c4fccba2991dd8700d1b89897bd",
-    "tree": "438aacccae5f4e33a49a3d6ef83730c16a7c0227",
     "branch": "sf2-integrate",
-    "local_equivalent": "aa88b9347737b54dfded301cc30ec2e219ed63b3",
-    "verified": "GitHub MCP ref+commit; canonical Git objects imported/hash checked"
+    "head": "aad9bcd25d875a5792f724d091d80492b3426461",
+    "tree": "f5a0d94ff33e07639404ef7e8e7fbbb19cd392c5",
+    "local_equivalent": "775e3280dfc58f1143c7d7a41119e8f566e4846e",
+    "verified_by": "GitHub MCP tree+ref",
+    "final_C": false
   },
   "active_session_authority": [
     {
@@ -519,7 +522,50 @@
       "artifacts": [],
       "receipt_status": "TESTS_PASSED_RECEIPT_REVIEW"
     },
-    "final_selections": "ALL_NOT_RUN"
+    "final_selections": "ALL_NOT_RUN",
+    "CLI10": {
+      "candidate": "4bba7618f510c06207140045ee102238113f30bb",
+      "snapshot": "540f433b3cd269595b097365b22072a03fbbfd1a",
+      "run": 43449474661,
+      "job": 131967540963,
+      "status": "FAIL",
+      "pass": 1,
+      "fail": 1,
+      "cause": "Unbound crypto.randomUUID fixture callback; fixed6c512 then publishedaad9",
+      "log": "validation/ci-cli-10-job.log"
+    },
+    "CLI11": {
+      "candidate": "aad9bcd25d875a5792f724d091d80492b3426461",
+      "snapshot": "2eb11fd461735554e4e01b62a86027c09b8dccc0",
+      "run": 43452450426,
+      "job": 131977841134,
+      "status": "FAIL",
+      "pass": 0,
+      "fail": 1,
+      "selection": [
+        "apps/cli/test/sucafina-host-context.test.ts"
+      ],
+      "cause": "Actual graph hoist conflict @orchestra/v2/SkillDiscovery after dependency replacement normalization",
+      "local_fix": "1669549f78",
+      "log": "validation/ci-cli-11-job.log"
+    },
+    "ATOMIC1": {
+      "candidate": "e7af65b645a26f1c074796cfe89bd9c0d5fb9af5",
+      "snapshot": "2f732d61db748a67545d774d2ef237b3263fdafe",
+      "run": 43452439405,
+      "job": 131977802988,
+      "status": "TESTS_PASSED_RECEIPT_REVIEW",
+      "pass": 42,
+      "fail": 0,
+      "tests_reported": 44,
+      "files": 4,
+      "expects": 483,
+      "omni": "not applicable: no declaring test ran; proves no omni runtime",
+      "log": "validation/ci-sf2h-atomic-1-job.log",
+      "final_selection": false,
+      "current_PR_head_proof": false
+    },
+    "in_flight_at_checkpoint": []
   },
   "candidate_C": null,
   "delivery_D": null,
@@ -538,19 +584,23 @@
     "CLI04": "FAIL only2 invalid await in Effect generator test; bd440 fix integratedaa88; rerun pending"
   },
   "required_findings": [
-    "C/G7 D/G8 and all8 final selections, mandatory gates/reviews/AMs remain NOT_RUN",
-    "Actual native host/C08/provider composition incomplete, not real AM yet",
-    "Native authority mutable-identity conditional finding fixed118\u21928b86; root currentidentity alreadyfrozen; hosted test pending",
-    "NativeHost observer72c7+token-gate orphan cleanup46749 NOT_CONSUMED",
-    "Atlas historical authorization and unsupported reference kinds incomplete; no silentupgrade",
-    "C12 cross-surface atomic Apply and Planner import+receipt require actualhost support",
-    "Remaining WP07/08/09/13/06imports tranches not fully consumed; see pendinghandoffs"
+    "Full15WP/74tasks/1610criteria still not accepted; finalC/D,8finalCI,AM01–06,final3reviews,G7/G8 allNOT_RUN.",
+    "Native graph fails real CLI fixture due hoist clone conflict. Rootfix166954 static only; publish own2file PR then scoped core+callerCI after R2 review.",
+    "Invariant sf2h-integral-20261112.INV.11 prohibits cross-surface reads inside an existing transaction. currentSnapshots source8cc/PR088 ready; root principal/resolve must stop nested transactions; sourcecheck also uses active read snapshot.",
+    "Human actions source775 grants/action/digest/Request+CSRF implemented; no intrinsic new P0/P1 from R1 staticpass, hosted tests pending.",
+    "C06 material dependencies/observed receipt and cross-principal source rebind not composed; literal source scope A cannot authorize recipient B.",
+    "C17 human answer projection requires actual authorized ProductContext from source/case; claim stays claim.",
+    "Root still registers2/39 native capability operations; deterministic components exist in branches, full actual domain/case/planner/AI/Atlas composition incomplete.",
+    "Imports actual Planner candidate exists; Dashboard trusted confirmation/JSON/multi-source/parser physical-row provenance incomplete.",
+    "UI work/routine discovery and actual root capabilities pending; source8bd inPR14 not yet consumed at root."
   ],
   "next_executable_actions": [
-    "Consume native observer72c7/gate46749 and mount realHost contributions in host-context using product-authority+C08+actualSessionStore/Location/Catalog/bundle; callbacks must be real",
-    "Integrate remaining bounded output tranches; root solewriter/dispatcher; package typechecks one heavy at a time",
-    "Qualify real scanner for hosted Atlas proof; no SF envallowlist weakening/no mock",
-    "Run next scoped CI at newly published exacttree; preserve current357pass74file evidence but no finalcriterion shortcuts"
+    "Reconcile same Goal, source heads, five live worker sessions, PR13/14 and exact CI IDs above. Never relaunch or rerun completed unchanged work.",
+    "Receive R2 core-hoist review166954; fix if needed; publish only2corefiles as root-owned componentPR on sf2-base. Surgical core layer-node test then exact CLI graph caller test; no localtests/TC.",
+    "Consume source8cc/PR088 currentSnapshots delta and refactor root product-authority principal/resolve to use active cloned snapshots or one external transactionAll; no nested cross-surface transaction.",
+    "Use existing5writers to close current consumers end-to-end before new fronts. S0 must implement actual context/recall selectors, source rebind/contextForAnswer, work/routine discovery producer and all domain descriptors.",
+    "S2-C asks lease runtime/workbooks.ts for physical sheet/row/field preservation; S0 needs approved trusted human confirmation for Dashboard replacement imports (do not accept client confirmed flag).",
+    "Agent PRs target stable sf2-base; finalcombined sf2-integrate includes allacceptedPRs. Epic/fullE2E only after ALLwork; pinned final8/gates still mandatory."
   ],
   "resource_governor": {
     "native_threads_admitted": 20,
@@ -583,14 +633,572 @@
   },
   "scope_lock": "15WPs/74tasks/17contracts/1610criteria intact; full GLOBAL_RELEASE still unproven",
   "pending_handoffs": {
-    "S0-B": "72c7f8a4cf observer +46749d2b1e gate cleanup",
+    "S0-B": "Observer/gate/subset/authorizeNative consumed; token-gate-lifecycle.test.ts f5a2dd8726 remains unconsumed",
     "S0-A": "c6bf263796 router; depends S4latest; sourcehistoryNOTDONE",
     "S4": "b6e35b46dc current record reader; 9129b6664e scanner realprobe; 4a15 doc reader and272207procurement tests",
     "S2": "773a72b88b3 worker parser; bfdadc9687 versionedconfirmation; hardtimeout/workerpackaging NEEDS_GATES",
-    "S3-A": "457ccc904d reports integrated83cd; TC/CI pending",
+    "S3-A": "Reports and authorization fix 520adc consumed; scoped hosted validation and actual route consumption pending",
     "S3-B": "081e9d7f30 C08+catalog2dee/cd2a; integration pending",
     "S3-C": "306eccee65 Relay catalog; governeddispatch public seam unresolved",
     "S4-C": "cd2e5a665c canonical persistentportfolio; integrationpending",
     "S2-C": "17cd1f7386 Plannerimportmutation; atomichostrequired"
+  },
+  "delivery_reconciliation": {
+    "compose_head": "2648a039cddb3f7c27268b1cf952d1cae005910e",
+    "report": "validation/agent-delivery-reconciliation.md",
+    "path_occurrences": {
+      "identical": 123,
+      "absent": 74,
+      "different": 18
+    },
+    "dirty_files": {
+      "identical_to_compose": 35,
+      "different_backed_up": 29,
+      "absent": 0
+    },
+    "recovery_manifest": "recovery/agent-uncommitted-audit/manifest.json",
+    "two_grok_discoveries": [
+      {
+        "lane": "product",
+        "session_id": "01a1d561-d2b5-70f1-9d84-28afbb0f5da5",
+        "request_id": "b864bbf3-b9b0-439c-b0ed-9538fd609008",
+        "models_confirmed": [
+          "grok-4.7-build"
+        ],
+        "stop_reason": "end_turn",
+        "receipt": "validation/discovery-product-summary-result.json",
+        "sha256": "27184099626c357d281c110b39ce212c2f4223c26e563b07bb82a0024dcbaeb2"
+      },
+      {
+        "lane": "runtime",
+        "session_id": "01a1d561-d300-7420-b1e4-7111a5af08ad",
+        "request_id": "033d1e17-d196-4872-bbab-3378cea9cd56",
+        "models_confirmed": [
+          "grok-4.7-build"
+        ],
+        "stop_reason": "end_turn",
+        "receipt": "validation/discovery-runtime-summary-result.json",
+        "sha256": "e3b50d3775f4468564136ea38784a4d5d6d10bd02d0a46b11ab05396c1413d8f"
+      }
+    ],
+    "limits": "Not a per-task acceptance audit. Dirty overlays do not prove lease violations or new work. No tests run. Native source registration counts do not measure implemented operations across branches.",
+    "newly_recognized_delivery": "UI components/contribution-body/dispatch and test exist in interface lane; earlier summary omitted them.",
+    "scope_unchanged": true
+  },
+  "user_workflow_amendment": "operational-amendments/user-pr-workflow-v1.json",
+  "current_local_product_at_audit": {
+    "head": "2648a039cddb3f7c27268b1cf952d1cae005910e",
+    "branch": "sf2-compose",
+    "clean": true
+  },
+  "operational_roster_revision23": {
+    "S0": {
+      "session_id": "01a1d309-ba0e-7490-b044-0899d9fa008f",
+      "sole_integrator": true,
+      "sole_dispatcher": true
+    },
+    "lanes": [
+      {
+        "actor_id": "S1-A",
+        "lease_epoch": 2,
+        "session_id": "01a1d378-b854-7e50-b74a-6b338f265e1d",
+        "model_previously_confirmed": "gpt-6.1-terra",
+        "branch": "sf2-ui-ready",
+        "head": "8bd0dc4cbfe22da7ed5caae75a8de9cc63e07f64",
+        "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/interface",
+        "mission": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/missions/S1-A-e2-pr-ready.json",
+        "write_paths": [
+          "modules/sucafina/Sucafinav1/product/ui/**",
+          "modules/sucafina/Sucafinav1/product/interface/**",
+          "modules/sucafina/Sucafinav1/test/product/wp01/**"
+        ],
+        "authority": "ACK received at epoch; old epoch worktree preserved read-only; no duplicate session",
+        "dirty": ""
+      },
+      {
+        "actor_id": "S2-C",
+        "lease_epoch": 2,
+        "session_id": "01a1d3ab-f105-7fa3-852f-58a17257a557",
+        "model_previously_confirmed": "gpt-6.1-terra",
+        "branch": "sf2-import-ready",
+        "head": "ada0e79aeba13572248a284550c8d87061c1915a",
+        "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/imports",
+        "mission": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/missions/S2-C-e2-pr-ready.json",
+        "write_paths": [
+          "modules/sucafina/Sucafinav1/product/imports/**",
+          "modules/sucafina/Sucafinav1/runtime/dashboard-import.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp06/imports/**",
+          "modules/sucafina/Sucafinav1/test/product/wp06/dashboard-import.test.ts"
+        ],
+        "authority": "ACK received at epoch; old epoch worktree preserved read-only; no duplicate session",
+        "dirty": ""
+      },
+      {
+        "actor_id": "S3-B",
+        "lease_epoch": 2,
+        "session_id": "01a1d3c6-528d-78e2-aab8-51c7e64b6ce7",
+        "model_previously_confirmed": "gpt-6.1-terra",
+        "branch": "sf2-collab-ready",
+        "head": "f7fe6ab12d73c12217d31cf6926eccf904926306",
+        "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/collaboration",
+        "mission": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/missions/S3-B-e2-pr-ready.json",
+        "write_paths": [
+          "modules/sucafina/Sucafinav1/product/collaboration/**",
+          "modules/sucafina/Sucafinav1/test/product/wp08/**"
+        ],
+        "authority": "ACK received at epoch; old epoch worktree preserved read-only; no duplicate session",
+        "dirty": ""
+      },
+      {
+        "actor_id": "S0-B",
+        "lease_epoch": 4,
+        "session_id": "01a1d331-1d75-7c62-b12f-a95876ffa4de",
+        "model_previously_confirmed": "gpt-6.1-terra",
+        "branch": "sf2-atomic-ready",
+        "head": "8cc8b89f6dea816e99e967a81dd9359a6ccde128",
+        "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/atomic",
+        "mission": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/missions/S0-B-e4-atomic-domain.json",
+        "write_paths": [
+          "modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+          "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/cross-surface.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/source-read-fence.test.ts"
+        ],
+        "authority": "ACK received at epoch; old epoch worktree preserved read-only; no duplicate session",
+        "dirty": ""
+      },
+      {
+        "actor_id": "S0-A",
+        "lease_epoch": 4,
+        "session_id": "01a1d378-b21f-77f0-b324-a2e4b8ac0e47",
+        "model_previously_confirmed": "gpt-6.1-terra",
+        "branch": "sf2-atlas-ready",
+        "head": "b7ba6eb57a5d9cad26254d36ca653d2f787256bd",
+        "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/atlas-ready",
+        "mission": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/missions/S0-A-e4-pr-ready.json",
+        "write_paths": [
+          "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+          "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+          "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/**",
+          "modules/atlas/boundary/**",
+          "modules/atlas/packages/adapter-io/src/native-bound.ts"
+        ],
+        "authority": "ACK received at epoch; old epoch worktree preserved read-only; no duplicate session",
+        "dirty": ""
+      }
+    ],
+    "other_existing_writers": "Not reactivated; preserve source branches/outputs and earlier records. Do not launch replacements.",
+    "reviews": {
+      "R1": "01a1d417-7d20-7de2-824b-f4c838a457b5 readonly human authority, no new intrinsic P0/P1; nested cross-surface finding open",
+      "R2": "01a1d43b-969a-7a21-a8c1-166e882cddc0 readonly atomic recheck accepted static; core hoist delta166954 under review"
+    }
+  },
+  "component_PRs": [
+    {
+      "number": 13,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/13",
+      "base": "sf2-base",
+      "base_sha": "aad9bcd25d875a5792f724d091d80492b3426461",
+      "head": "088559e6717596a10efddd31122c1abe29a5f0c5",
+      "head_status": "worker reported after MCP update; reverify",
+      "previous_verified_head": "e7af65b645a26f1c074796cfe89bd9c0d5fb9af5",
+      "draft": true,
+      "ready": false,
+      "note": "First four-file surgical CI passed old e7af; currentSnapshots delta088 needs current-head proof."
+    },
+    {
+      "number": 14,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/14",
+      "base": "sf2-base",
+      "head": "7d7bb1148c6ac164974f14d8f388a60b2647ccfb",
+      "head_status": "MCP verified",
+      "draft": true,
+      "ready": false,
+      "note": "Own two-file delta only; selection/routine producer + scoped CI pending."
+    }
+  ],
+  "progress_this_turn": "Explicit user stop:15WP source checkpoints committed and published via GitHub MCP; all15 heads/trees independently verified; writer/helper stop ACKs and native idle states collected.139readonly/unknown inputs archived inertly. Central handoff prepared; no implementation/CI continues.",
+  "eta": {
+    "latest_user_estimate": "8–12 additional hours was stated provisional then explicitly withdrawn as ungrounded after user objection.",
+    "current": "No reliable ETA; do not repeat unsupported estimate or percentage.",
+    "T0_unchanged": true
+  },
+  "updated_at": "2026-11-13T20:42:14.937819+00:00",
+  "user_resume": "Superseded: user explicitly requested STOP, commit and GitHub publication with continuation handoffs. No automatic restart.",
+  "operational_rule_current": {
+    "source": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/teams/PR-DELIVERY-WORKFLOW-v4.json",
+    "all_four_implement": true,
+    "same_tree_branch_per_WP": true,
+    "only_git_writer": "WP Terra",
+    "only_tester": "WP Terra at final full WP, hosted scoped tests; no local tests",
+    "final": "All WP PRs in stacked epic/full E2E, original GLOBAL_RELEASE gates preserved",
+    "historical_auxiliary_branches": "read-only; completed helpers released",
+    "priority": "No global WP06-first barrier",
+    "assignment_unit": "Whole preplanned canonical tasks assigned to four implementers, each with all criteria/consumers",
+    "supervisor_scope": "Receive completed WP PRs, stack and run epic bundle; return errors to author team",
+    "no_microdrain": true,
+    "cache_policy": "Reuse same sessions; stable context and delta-only followups, no guaranteed cache hit claims",
+    "model_roles": "All4 implement whole existing tasks autonomously, no discovery-only/fixture-only model limitation",
+    "grok_permissions": "DIRECT_WRITES_VERIFIED using --no-plan --permission-mode acceptEdits --allow Write(/ABS/owned-subtree/**); scoped exactfile and directoryglob read back actual files, no bypass",
+    "removed": [
+      "Forced plan/read-only Grok toolset",
+      "Arbitrary six-turn cap",
+      "Forced low reasoning for full tasks",
+      "Routine root file/API approvals",
+      "Partial-source microdrain",
+      "Unrequested WindowsE2E expansion"
+    ]
+  },
+  "current_heads": {
+    "compose": {
+      "head": "55f7e707c8c9a01aa880fce542b851ad7840508f",
+      "branch": "sf2-compose"
+    },
+    "stack": {
+      "head": "820df8b601b988647904b1c3187b4744b829e0a8",
+      "branch": "sf2-stack"
+    },
+    "composition": {
+      "head": "5909c92b619b8a51260b073528c24d0a6499a90a",
+      "branch": "sf2-host-ready"
+    },
+    "interface": {
+      "head": "2c5ed2c0a5db059a62bf6830feca0a532ca5ec7f",
+      "branch": "sf2-ui-ready"
+    },
+    "dashboard-ready": {
+      "head": "176437b7a66b3520dddd0f4d4c9a51a40bffc554",
+      "branch": "sf2-dashboard-ready"
+    },
+    "planner-ready": {
+      "head": "d6f74023936b27283109fbaccc39174dc57ba002",
+      "branch": "sf2-planner-ready"
+    },
+    "procurement-ready": {
+      "head": "10405f04336876db5eed0a16f99084d333d2e71a",
+      "branch": "sf2-procurement-ready"
+    },
+    "analytics-ready": {
+      "head": "136efcfe653367941c526ddb93ca46f041027da7",
+      "branch": "sf2-bi-ready"
+    },
+    "imports": {
+      "head": "ae49b0baab9f9caa586310221b40a6f6369c6696",
+      "branch": "sf2-import-ready"
+    },
+    "reviews-ready": {
+      "head": "95aaa0b82ad1609359c93f7a1ca8cb9a0c3bfc83",
+      "branch": "sf2-reports-ready"
+    },
+    "collaboration": {
+      "head": "a995fffa928f5baf8decdf3ce3c385269fcfb1b7",
+      "branch": "sf2-collab-ready"
+    },
+    "routines-ready": {
+      "head": "a678997a352d00e7eed2e5801de50ff0c8fa806d",
+      "branch": "sf2-relay-ready"
+    },
+    "decisions-ready": {
+      "head": "d751ab63f9da1fd4172a792563a050529a3f5ee1",
+      "branch": "sf2-decisions-ready"
+    },
+    "ai-ready": {
+      "head": "3dcfb0ded58d6c7587c1f1ea88b6e3bf7e65b85e",
+      "branch": "sf2-ai-ready"
+    },
+    "portfolio-ready": {
+      "head": "58a622b3c4277baba5046d2412ea759b489f3bb4",
+      "branch": "sf2-portfolio-ready"
+    },
+    "memory-ready": {
+      "head": "e5aa5f6d5d239f52ecc43f0c958c75fc935b2535",
+      "branch": "sf2-memory-ready"
+    },
+    "atlas-ready": {
+      "head": "4496c44b3ed0c53f9b7718465fdbd947bb17228f",
+      "branch": "sf2-atlas-ready"
+    }
+  },
+  "live_reconciliation": {
+    "ten_primary_leads": "actual native messages show implementation queues and outputs; tests NOT_RUN",
+    "WP05_WP07_WP09_WP14": "same IDs active, each confirmed whole tasks distributed four seats; actual Grok results include grok-4.7-build",
+    "integrator": "completed after safe microdrain closure; no ongoing writer, same identity kept for actual future gate/PR",
+    "old_root_lunas": "all completed and leases released, preserve commits",
+    "Grok": "lead-managed original sessions resumed with textual implementation patches; headless write host approval unavailable, not bypassed",
+    "WP00": "Same S0-A native instance ACKe14 work/compose55f7 clean; tasks T01G1,T02Terra,T03Luna,T04G2; atlas e4 released explicitly",
+    "latest_verified_wait": "Native read_thread WP02/WP08/WP10 inProgress with completed recent tool markers at19:52; no ready PR requests at observation. No restart/replacement."
+  },
+  "next_actions": [
+    "Wait for explicit user resume; then read handoff/README.md and reconcile recorded remote refs/local inputs/sessions before any write."
+  ],
+  "release_status": {
+    "complete_wps": 0,
+    "accepted_C": null,
+    "accepted_D": null,
+    "GLOBAL_RELEASE": false
+  },
+  "shared_input_manifest": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/validation/dispatcher-e4/shared-inputs-3.json",
+  "root_increment": {
+    "head": "2d354010e91457f739dd75871fb9127181782406",
+    "assets": "6de334328b",
+    "interrupt_authority": "39e1abaef1",
+    "private_analysis_contract": "c32b393fd9",
+    "model_and_document_confirmation": "5ec0a89e13",
+    "proposal_coverage_capability": "6eaf0886fd",
+    "cancellation_regression_authored_not_run": "fd4fa3e322",
+    "remote_status": "integrator publication pending exact manifest",
+    "forecast_producer_contract": "af137c5f38",
+    "fresh_cancel_request": "7af6d510cb",
+    "abort_regression_not_run": "88b4af7bba",
+    "planner_monthly_contract": "b2ce1c3b97",
+    "real_planner_page_mount": "4226ffef96",
+    "analysis_recovery_contract": "6d90e417ec",
+    "private_criterion_action": "94e228e24a",
+    "private_prepare_changes_action": "b039d4a29f",
+    "unified_criterion_authority": "c89200301f",
+    "cancel_after_case_revision": "2d354010e9"
+  },
+  "grok_results": {
+    "delivered": 12,
+    "effective_model": "grok-4.7-build",
+    "jobs": [
+      "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/teams/grok-wave1-jobs.json",
+      "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/teams/grok-wave2-jobs.json"
+    ],
+    "wave2_handles": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/teams/grok-wave2-handles.json",
+    "headless_resume_used": "same existing session after maxturn; no trust autoapproval",
+    "tests_executed": false
+  },
+  "lease_addenda": [
+    "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/teams/lease-memory-seam-e6.json",
+    "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/teams/lease-private-shared-e10.json",
+    "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/teams/lease-source-projectors-e11.json",
+    "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/teams/lease-local-entry-e8.json",
+    "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/teams/lease-wp12-two-verifiers-e5.json",
+    "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/teams/lease-runtime-private-e12.json",
+    "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/teams/lease-atlas-to-wp10-e13.json",
+    "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/teams/WP00/mission-e14.json",
+    "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/teams/lease-wp10-harness-e15.json"
+  ],
+  "guard_prerequisite": {
+    "receipt": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/validation/guard-materialization.json",
+    "resolved": "materialized missing tracked guard files from each worktree HEAD; existing files untouched",
+    "guard_run": false
+  },
+  "waves_current": {
+    "active_WPs": [
+      "WP00",
+      "WP01",
+      "WP02",
+      "WP03",
+      "WP04",
+      "WP05",
+      "WP06",
+      "WP07",
+      "WP08",
+      "WP09",
+      "WP10",
+      "WP11",
+      "WP12",
+      "WP13",
+      "WP14"
+    ],
+    "scoped_tasks_in_active_WPs": 30,
+    "remaining_WPs": [],
+    "remaining_tasks": 44,
+    "rule": "4 seats/WP:2Grok+Terra+Luna; delivered seats remain recorded, no fabricated occupancy; only Terra tests at final complete WP",
+    "wave1_manifest": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/teams/active-wave1.json",
+    "wave2_manifest": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/teams/active-wave2.json",
+    "native_capacity": 21,
+    "memory_free_observed": "71% system memory_pressure",
+    "source_scope_unreduced": true,
+    "scope_unreduced": true,
+    "capacity_note": "Actual ACKs/handles per queue; do not infer 60 simultaneous slots from logical teams.",
+    "all_tasks_assigned": 74,
+    "not_qualification": true
+  },
+  "luna_delivery_addenda": {
+    "WP01": {
+      "commit": "ddc7704dc7182e202c8c419dab741d6ce91fb4cc",
+      "blob": "1e1b1772042c17c5c0d3848abb7e7dff20b9de19",
+      "status": "NOT_RUN; native successful run proof still pending",
+      "lease": "released to Terra"
+    },
+    "WP13": {
+      "commit": "b15831b370940262d93f87629cbf856e009ec0de",
+      "blob": "67ace7598c28478f72cb613e1749415bc34ec54a",
+      "status": "NOT_RUN; fixture unit issuer still synthetic; actual domain issuer pending",
+      "lease": "released to Terra; primary integrated delta"
+    }
+  },
+  "integration_current": {
+    "dispatcher": "S0-C e4 /root/pr_integrator",
+    "shared_manifest": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/validation/dispatcher-e4/shared-inputs-5.json",
+    "one_pr_map": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/validation/dispatcher-e4/one-pr-per-wp-2.json",
+    "request": "integrate exact owned blobs from coherent WP snapshots into actual draft stack, not only maps; no tests until Terra finalWP",
+    "remote_last_verified": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "candidate_C": null,
+    "remote_tree": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af",
+    "local_matching_head": "46fcf031b4f420ccf3f46cdc6ab107c9b6c3f46d",
+    "verification": "Integrator MCP publication receipt; root fresh independent verification pending",
+    "receipts": [
+      "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/validation/dispatcher-e4/stack-draft-1.json",
+      "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/validation/dispatcher-e4/stack-draft-2.json"
+    ],
+    "latest_receipt": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/validation/dispatcher-e4/stack-draft-28-published.json",
+    "status": "MICRODRAIN_CLOSED; existing draft preserved clean; next integration only ready full WP PRs",
+    "dispatcher_resume": "collaboration.followup_task same /root/pr_integrator on real FINAL_WP_GATE_READY surgical request or completed WP PR; never wake empty nor create replacement",
+    "inflight_CI": []
+  },
+  "review_current": {
+    "phase": "preliminary static only, no final C approvals",
+    "closed_static": [
+      "native retry/cancel original triggers",
+      "critique preflight TOCTOU",
+      "blob generation pre-SQL overflow"
+    ],
+    "open": [
+      {
+        "finding": "call-identity omits authenticated assistantMessageID and may collide across messages",
+        "reviewer": "S2-R2",
+        "assigned": "S0-B",
+        "delta": "77782a"
+      }
+    ],
+    "status": "Preliminary rechecks identity/roster material-version and period resolved statically; no final C approval; runtime/document/native/Relay proofs still required."
+  },
+  "native_luna_current": {
+    "WP06": {
+      "id": "01a1d640-4dba-71e1-9c26-16e840c2ef92",
+      "direct_handshake": "confirmed with S2-C; production detail integrated b3c9cc08df"
+    },
+    "WP01": {
+      "id": "01a1d64b-6598-7d21-a5c9-a9c49414b1f9",
+      "state": "created, lead notified; ACK pending"
+    },
+    "WP10": {
+      "id": "01a1d64b-597e-7ea2-9dca-12ccf401dee6",
+      "state": "created, lead notified; ACK pending"
+    },
+    "WP11": {
+      "id": "01a1d644-b241-7f42-a9e9-4512e2ee7716",
+      "state": "lead-managed"
+    },
+    "other": "lead-managed recorded queues; not fabricated occupancy"
+  },
+  "optimization_advisor": {
+    "actor": "OPT-GROK",
+    "session": "a78561ee-6e55-4a91-8ac4-673533281a3a",
+    "effective_model": "grok-4.7-build",
+    "output": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/optimization/insights-001.md",
+    "skill": "CREATED: /Users/gustavoschneiter/.codex/skills/run-efficient-agent-campaign/SKILL.md; structural validation passed; no end-to-end speedup/release claim",
+    "latest_result": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/optimization/result-002.json",
+    "receipt": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/optimization/skill-receipt.json"
+  },
+  "workflow_v4": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/teams/PR-DELIVERY-WORKFLOW-v4.json",
+  "task_allocation": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/teams/TASK-OWNERSHIP-v3.json",
+  "allocation_validation": {
+    "source_campaign_hash_verified": true,
+    "WPs": 15,
+    "tasks": 74,
+    "all_tasks_once": true,
+    "four_implementers_per_WP": true,
+    "actual_concurrency": "Only actual ACK/session handles count; no inferred 60slots"
+  },
+  "source_head_observation_note": "current_heads are prior revision28 observations, not current live source acceptance; supervisor now consumes complete PRs, no microdrain.",
+  "final_bundle_preparation": {
+    "status": "PREPARED_STATICALLY_VALIDATED_NOT_EXECUTED",
+    "path": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/validation/final-bundle/sf2-epic.yml",
+    "sha256": "87aeb489a441ed24cd823c747748bff53053831b7307e4e94ab85ddf8e714c4c",
+    "manifest": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/validation/final-bundle/manifest.json",
+    "manifest_sha256": "38d6dd42c3dbc321f1c7a45b28a73398173cfc130d7174204c6b02a76c4136d3",
+    "review_receipt": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/validation/final-bundle/root-review.json",
+    "trigger": "push refsf2-epic-c in exact repository/name/id, after all ready WP PRs and freezeC",
+    "test_source": "Pinned eight recipes + inherited full Linux/Windows units and default Linux app E2E; no previous-pass/old-SHA reuse",
+    "root_findings_returned_and_fixed": [
+      "jq global replacement corruption",
+      "missing Core typecheck",
+      "unrequested Windows E2E expansion"
+    ],
+    "static_validation_reported": [
+      "actionlint with inherited SC2020 info only",
+      "62 shell steps bash -n",
+      "six Node programs node --check",
+      "jq null/empty inputs"
+    ],
+    "not_global_proof": true,
+    "external_azure_workflows_and_global_actions": "unchanged; dev contains app-build/azure-mvp outside campaign"
+  },
+  "phase_clarification": {
+    "at": "2026-11-13T19:54:58.239269+00:00",
+    "source": "Pinned workflow READY_FOR_INTEGRATION differs from DONE; user requires PRs then final epic",
+    "FINAL_WP_GATE_READY": "All required product implementation and relevant consumers available; Terra may request final surgical hosted validation before a green PR exists. Do not require green to obtain CI lease.",
+    "READY_FOR_BUNDLE": "Complete product implementation, own mandatory findings closed and final WP scoped hosted proof, PR/dependency/criterion mappings delivered; final integrated campaign proofs may be explicitly pending.",
+    "DONE": "Only after applicable criteria and final candidate proof are satisfied. Never count READY_FOR_BUNDLE as delivered GLOBAL_RELEASE.",
+    "no_circular_gate": "WP10.T04/T05 campaign execution/receipts require the final bundle; their code/harness/config/operational inputs must be delivered first. Do not require final epic/AM/C/D receipts as prerequisites to constructing that same bundle.",
+    "not_a_waiver": "Missing product code, broken consumers or missing supported runtime authority are implementation gaps, not deferred final evidence."
+  },
+  "native_C07_dependency": {
+    "status": "REPORTED_CAPABILITY_GAP_NOT_YET_GLOBAL_BLOCK",
+    "evidence": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/validation/external-c07-capability.json",
+    "owners": [
+      "WP00.T04",
+      "WP09.T01",
+      "WP09.T07",
+      "WP10.T06"
+    ],
+    "reported_by": "WP00/WP09/WP10",
+    "reported_missing": [
+      "supported public governed admission/arm producer",
+      "authorized workflow historical index",
+      "immutable result reader/digest and secure SF C07/C08 binding"
+    ],
+    "correction": "Native Schedule occurrence/run/claim/missed exist. Missing SF binding and reauthorization, not native occurrence storage.",
+    "constraints": "Do not modify Maestro/Relay/Schedule engines or use private API/bypass. Actual existing supported route investigation stays with owners.",
+    "independent_work": "continues across active teams; do not mark Goal blocked while meaningful independent work remains"
+  },
+  "model_verification_delta": {
+    "WP07_Luna": "Requestedgpt-6-luna but self-identification disagrees; self-report not authoritative. Lead instructed verify configured/provider receipt, no silent fallback or duplicate writer. Product helper attempted typecheck failed tsgo absent; instructed no helpers tests/typecheck."
+  },
+  "grok_capability_correction": {
+    "prior_claim": "Read-only adapter, textual patches only",
+    "corrected": "Client supports direct writes with documented scoped allow rules; previous restriction came from supervisor configuration",
+    "session_reused": "0f726c7b-8348-4e51-9bdb-2f4b69033f69",
+    "model_requested": "grok-4.7",
+    "model_confirmed": "grok-4.7-build",
+    "receipt": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/capabilities/grok-write-capability.json",
+    "exact_proof": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/capabilities/grok-scoped-write-proof.txt",
+    "glob_proof": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/capabilities/grok-scoped-write-nested/proof.txt",
+    "not_product_acceptance": true,
+    "rollout": "Directive delivered to all15 existing Terra leads; switch existing Grok jobs only after terminal/safe handoff, same primary tree and exclusive paths"
+  },
+  "progress_measurement": {
+    "census": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/validation/task-census-current.json",
+    "reported_whole_tasks": 2,
+    "scope_tasks": 74,
+    "unknown_count_WPs": [
+      "WP00",
+      "WP03"
+    ],
+    "meaning": "Whole-task completion only, does not measure partial implementation percentage",
+    "eta_correction": "Prior36h extrapolation not validated as a full-goal forecast; do not present as a commitment or as measured progress"
+  },
+  "next_action": null,
+  "all_writer_authorities": "REVOKED",
+  "handoff": {
+    "path": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/control/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/README.md",
+    "wp_count": 15,
+    "product_remote_heads_verified": 15,
+    "native_sessions_observed_idle": true,
+    "dirty_inputs_archived": 139,
+    "prepared_epic_only": true,
+    "control_publication": "pending final snapshot; finalSHA receipt external to avoid circularity"
   }
 }

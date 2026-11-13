@@ -1,0 +1,80 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "source_status": "COMMITTED_READONLY_INPUT_NOT_PRODUCT_ACCEPTANCE",
+  "revision": 15,
+  "at": "2026-11-13T20:18:50.647120+00:00",
+  "shared_git_common_dir": "/Users/gustavoschneiter/Documents/HuGR/Orchestra-SF/.git",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "source_sha": "9d1a1b3f0d4a20f6ddb7213933998697eff00a42",
+      "blob": "584aacfd94c18459222d903b6439298916039a43",
+      "owner": "S0-B",
+      "consumer_permission": "git show exact blob into own worktree read-only; no stage/commit/edits on foreign source",
+      "lease_epoch": 10
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "source_sha": "a43ddbfde798bb9547da7af96076d927251a904d",
+      "blob": "d1e3ed1cdb64e38f6770ea5e864f80b41b05b688",
+      "owner": "S0",
+      "consumer_permission": "git show exact blob into own worktree read-only; no stage/commit/edits on foreign source"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "source_sha": "a43ddbfde798bb9547da7af96076d927251a904d",
+      "blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "owner": "S0",
+      "consumer_permission": "git show exact blob into own worktree read-only; no stage/commit/edits on foreign source"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts",
+      "source_sha": "a43ddbfde798bb9547da7af96076d927251a904d",
+      "blob": "dae3f65d645a80ab319498f9c50743a0141706fa",
+      "owner": "S0",
+      "consumer_permission": "git show exact blob into own worktree read-only; no stage/commit/edits on foreign source"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "source_sha": "40455e32b4ba76b8aae26dacbb65b331f03dabbf",
+      "blob": "6b5938e2b7ad1d0fa97abdb74c44ac4d4a31d691",
+      "owner": "S0-B",
+      "consumer_permission": "git show exact blob into own worktree read-only; no stage/commit/edits on foreign source",
+      "lease_epoch": 10
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "source_sha": "6947ec56928bb395b0ed55e065938d45782cf734",
+      "blob": "85ecd5923a8f57250bac976ee4668ec005bd2d2a",
+      "owner": "S0-B",
+      "consumer_permission": "git show exact blob into own worktree read-only; no stage/commit/edits on foreign source",
+      "lease_epoch": 10
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "source_sha": "55f7e707c8c9a01aa880fce542b851ad7840508f",
+      "blob": "5e163e5983701ea48ea7aa62fb871903607b6672",
+      "owner": "S0-B",
+      "consumer_permission": "git show exact blob into own worktree read-only; no stage/commit/edits on foreign source",
+      "lease_epoch": 11
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "source_sha": "55f7e707c8c9a01aa880fce542b851ad7840508f",
+      "blob": "96489f309b5b91e9f981cc4741f0e7303de66c7a",
+      "owner": "S0-B",
+      "consumer_permission": "git show exact blob into own worktree read-only; no stage/commit/edits on foreign source",
+      "lease_epoch": 11
+    }
+  ],
+  "notes": [
+    "a43ddbfde7 dataset admin source included",
+    "5831ab9c9d productHttp included",
+    "b386 personalViews factory exact, not earlier flattened API",
+    "b807 C14 corrected to canonical financial/eligibility independence; generated schema paired",
+    "root has transferred local/entry.ts to S0-B epoch8; do not restore earlier entry over newer output",
+    "All input bytes need actual combined candidate before validation; no commit alone proves product",
+    "Inventory blob generation paired with S0-B 4e5d9d5909 runtime; source-inventory and projections transferred to S0-B e11. Source manifest is not final acceptance."
+  ]
+}

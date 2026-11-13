@@ -1,0 +1,86 @@
+{
+  "wp": "WP12",
+  "status": "STOPPED_INCOMPLETE",
+  "branch": "sf2-ai-ready",
+  "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/ai-ready",
+  "checkpoint_parent_sha": "c18afe62fb03c3d27f2b0dd42666b193c3aae941",
+  "checkpoint_parent_tree": "02e857a09ff2744f7f7e920ab476d19adc1781c4",
+  "head_tree_note": "The commit containing this file is the final local head; its SHA/tree cannot self-identify in committed content. See external handoff WP12.json.",
+  "tasks": {
+    "T01": "partial",
+    "T02": "partial",
+    "T03": "partial",
+    "T04": "partial; latest interrupted lifecycle edits saved without review"
+  },
+  "workers": [
+    {
+      "id": "Terra",
+      "model": "gpt-6.1-terra",
+      "state": "stopped after checkpoint",
+      "lease": "revoked"
+    },
+    {
+      "id": "/root/wp12_luna",
+      "model": "gpt-6-luna",
+      "state": "interrupted; collaboration reports interrupted, no voluntary stop ACK",
+      "lease": "revoked"
+    },
+    {
+      "id": "G1",
+      "session": "0ed6376b-07f8-4d0d-b8b5-20bd556d6c60",
+      "model": "grok-4.7-build",
+      "state": "terminal HTTP 402",
+      "lease": "revoked"
+    },
+    {
+      "id": "G2",
+      "session": "dd136e61-e365-4c96-8662-611fabb1373a",
+      "model": "grok-4.7-build",
+      "state": "terminal HTTP 402",
+      "lease": "revoked"
+    }
+  ],
+  "inputs": {
+    "shared_contracts": "WP00 ca44c9362f, 4589fbabe6, afc0b5a17a; additional upstream corrections pending",
+    "WP10": "09fbe48fe3, 40455e32b4, 8fec699440; host bindings still incomplete",
+    "WP11": "ffe1007328, 4ebaa745b7, c2697b91cb",
+    "WP09": "18bb23e298",
+    "WP14": "39fd17df04",
+    "WP05": "8b41a5ea0a",
+    "foreign_copies": "Inherited upstream source trees are read-only, not WP12 delivery; do not copy them from the sparse tree."
+  },
+  "behavior": "15 WP12 input producers and verifiers, resident catalog, run store, continuation and provenance seams exist but are not complete integrated product. Lifecycle edits in checkpoint parent were interrupted mid-review, including stale-output preservation; do not treat as trusted until reviewed.",
+  "validations": {
+    "hosted_tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guardrails": "NOT_RUN",
+    "real_provider_and_18_skill_runs": "NOT_RUN",
+    "relay_body_consumption": "NOT_RUN"
+  },
+  "outstanding": [
+    "Review interrupted T04 stale-output code; validate authority and source fences before use.",
+    "Integrate actual host durable human selections, C16 capture/lease, C08 write grant and all 15 producer/verifier pairs; 18 real executions and consumers after reload.",
+    "Relay C07 factual result producer/reader absent; do not treat metadata or resultRef as content.",
+    "Reconcile WP00/05 BI artifact fields contract, WP14 materiality snapshot and historical continuity, WP11 alternative replay/provenance, WP08/07/13 real ports.",
+    "Integrate preserved historical reader with current ACL, sources and read-only replay.",
+    "Review all WP12 changes and shared input SHAs in a composed candidate; local worktree is sparse and cannot typecheck alone.",
+    "Run change-scoped hosted tests, package typecheck and bun run check:guards --base origin/dev only when resumed and appropriate; report evidence honestly.",
+    "No Grok retry until user authorizes; no fabricated provider proof or ready PR."
+  ],
+  "resume": "Explicit user resume required. Start from final local checkpoint SHA in external handoff, preserve tree and upstream heads; coordinate with WP00/WP10 and compose exact foreign contracts read-only before implementation or validation.",
+  "recorded_at": "2026-11-13T20:31:06.914715+00:00",
+  "local_head": "b8d185f60a53896e9320cec9589ebe469ffe3d65",
+  "local_tree": "449a45374918a2976d782a56ea8e493e7a3146ec",
+  "dirty": "clean",
+  "remote": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "branch": "sf2-ai-ready",
+    "sha": "574841e2409a9523000c4c1976c81804c9a86fde",
+    "tree": "4d86e00c574658b38f6c3659ab49445a6afce142",
+    "parent": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "publication": "MCP owned-file snapshot; local commit ancestry includes foreign read-only history and is not on GitHub",
+    "owned_blobs_verified": 63,
+    "mismatches": 0,
+    "cas_expected": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+  }
+}

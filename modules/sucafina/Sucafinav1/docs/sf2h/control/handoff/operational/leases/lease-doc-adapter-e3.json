@@ -1,0 +1,16 @@
+{
+  "event_id": "wp06-document-adapter-e3",
+  "source_actors": [
+    "S0-B",
+    "S1-A"
+  ],
+  "target_actor": "S2-C",
+  "target_session": "01a1d3ab-f105-7fa3-852f-58a17257a557",
+  "lease_epoch": 3,
+  "paths": [
+    "apps/cli/src/sucafina-product/document-services.ts",
+    "modules/sucafina/Sucafinav1/product/interface/document-http.ts"
+  ],
+  "condition": "new paths only; old owners notified and cannot write until accepted handoff",
+  "at": "2026-11-13T17:45:14.284285+00:00"
+}

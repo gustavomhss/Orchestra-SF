@@ -1,0 +1,19 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "event_id": "wp10-memory-seam-transfer-e6",
+  "source_actor": "S4",
+  "source_session": "01a1d321-c227-7c23-a31c-6d8114724ee9",
+  "source_observed": "idle/completed; clean worktree",
+  "target_actor": "S0-B",
+  "target_session": "01a1d331-1d75-7c62-b12f-a95876ffa4de",
+  "lease_epoch": 6,
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/decision-memory/recall.ts",
+    "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp14/recall.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp14/atlas-projection.test.ts"
+  ],
+  "purpose": "WP10 real Atlas consumer seam: historical ledger/current authorization; reject recursively nested case-event in emit/reload",
+  "source_inputs": "Use S4 accepted head source manifest, preserve newer changes. No tests until complete WP final Terra lease",
+  "timestamp": "2026-11-13T17:08:32.445224+00:00"
+}

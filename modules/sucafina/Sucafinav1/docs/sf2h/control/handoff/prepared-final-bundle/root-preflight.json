@@ -1,0 +1,50 @@
+{
+  "at": "2026-11-13T19:42:49.947981+00:00",
+  "campaign": "sf2h-integral-20261112",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "repo": {
+    "full_name": "gustavomhss/Orchestra-SF",
+    "numeric_id": "1455724710",
+    "default_branch": "dev",
+    "verified_via": "GitHub MCP get_repo"
+  },
+  "source": {
+    "stack_head": "46fcf031b4f420ccf3f46cdc6ab107c9b6c3f46d",
+    "archived_epic_path": ".github/inherited-workflows/test.yml.disabled",
+    "epic_blob": "acfaa90cdad6a165139fe7c45e0ac9acbdfde3e1",
+    "epic_sha256": "07746ae7ffb780c729f852feed68368fe55ac347ad78b23cd3adf074fd35868d",
+    "recipes_sha256": "ac598195282a917364ffb83aaef9d8e55e9023c58f6850f2a34c214a1a9c5777"
+  },
+  "current_candidate_workflows": [
+    ".github/workflows/test-ci.yml"
+  ],
+  "observed_dev_workflows": [
+    ".github/workflows/app-build.yml",
+    ".github/workflows/azure-mvp.yml",
+    ".github/workflows/test-ci.yml"
+  ],
+  "preserve_external_azure": true,
+  "remote_actions_settings_mutated": false,
+  "ci_dispatched": false,
+  "accepted_C": null,
+  "accepted_D": null,
+  "required_recipes": [
+    "CI-SF",
+    "CI-CLI",
+    "CI-APP-SRC",
+    "CI-APP-BROWSER",
+    "CI-ATLAS-BUSINESS",
+    "CI-UI-OPERATIONS",
+    "CI-UI-DECISIONS",
+    "CI-UI-REPORTS"
+  ],
+  "required_gate_source": "plan/execution-workflow.json#/validation/final_acceptance",
+  "preparation_owner": "S0-C e4 same pr_integrator; only local final-bundle artifacts until actual ready WP PRs",
+  "root_owned_path": "root-preflight.json",
+  "operational_adaptation": {
+    "reason": "Remote mutations restricted to exposed GitHub MCP; workflow_dispatch mutation not exposed. Dedicated bounded branch push can target the exact candidate using supported ref CAS without PR merge-ref ambiguity.",
+    "proposal": "Prepare epic workflow on.push branch sf2-epic-c with exact repo/id guards; one run when all WP PRs ready; root validates artifact before publishing to final candidate. No pull_request duplicate trigger.",
+    "quarantine": "Keep existing candidate non-epic workflows archived; do not disable repository Actions or alter external Azure workflows. Existing final WP scoped test-ci must stay available.",
+    "not_proof": "Prepared configuration does not satisfy CI, AM, review, C/D or GLOBAL_RELEASE."
+  }
+}
