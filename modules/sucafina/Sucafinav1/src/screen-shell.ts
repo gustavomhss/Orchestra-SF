@@ -1,7 +1,7 @@
 // O botão mostra. Não decide. Sem rede, a escrita não ficou gravada, e o ecrã diz isso.
 // Não importa superfície. Não há localStorage.
 
-import { showPage } from "./nav.ts"
+import { DASHBOARD_PAGES, showPage } from "./nav.ts"
 
 export const UNSAVED = "A escrita não ficou gravada."
 
@@ -45,7 +45,26 @@ async function valuesOf(form) {
   function compact(value) { if (Array.isArray(value)) return value.filter((entry) => entry !== undefined).map(compact); if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, entry]) => [key, compact(entry)])); return value }
   return compact(values)
 }
-function showResult(result, attempt) {
+function showResult(result, attempt, form) {
+  if (form && Array.isArray(result?.fieldErrors)) {
+    let first
+    result.fieldErrors.forEach((error, index) => {
+      if (typeof error?.field !== "string" || typeof error.message !== "string") return
+      const inputs = [...(form.closest("section") || form).querySelectorAll("input,select,textarea")].filter((element) => element.name === error.field && !element.disabled)
+      if (inputs.length !== 1) return
+      const input = inputs[0]
+      const message = document.createElement("span")
+      message.id = "field-error-" + crypto.randomUUID() + "-" + index
+      message.dataset.fieldError = "true"
+      message.textContent = error.message
+      input.insertAdjacentElement("afterend", message)
+      input.setAttribute("aria-invalid", "true")
+      input.dataset.fieldInvalid = "true"
+      input.setAttribute("aria-describedby", [input.getAttribute("aria-describedby"), message.id].filter(Boolean).join(" "))
+      first ||= input
+    })
+    if (result.status !== 409) first?.focus()
+  }
   if (result && result.status === 409) {
     const describe = (value) => value && typeof value === "object" ? Object.entries(value).map(([key, item]) => key + ": " + (item == null ? "Not provided" : typeof item === "object" ? JSON.stringify(item) : String(item))).join(" · ") : String(value ?? "Not available")
     notice("This record changed since you opened it. Your edits are still here. Current: " + describe(result.stored) + ". Your attempt: " + describe(attempt) + ". Review the current record before retrying.")
@@ -59,12 +78,12 @@ function beginWrite() {
   pending.html = null
   return () => { pending.writing--; pending.generation++; pending.html = null }
 }
-async function send(command) {
+async function send(command, form) {
   const finish = beginWrite()
   try {
   const response = await fetch(location.href, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify(command) })
   const result = await response.json()
-  if (!response.ok || !result || result.ok !== true) { showResult(result, command.values); return false }
+  if (!response.ok || !result || result.ok !== true) { showResult(result, command.values, form); return false }
   notice(result.warnings && result.warnings.length ? result.warnings.join(" · ") : "Saved.")
   return true
   } finally { finish() }
@@ -268,12 +287,26 @@ function attach() {
     form.dataset.bound = "true"
     form.addEventListener("submit", async (event) => {
       event.preventDefault()
+      const errorScope = form.closest("section") || form
+      errorScope.querySelectorAll("[data-field-error]").forEach((message) => {
+        errorScope.querySelectorAll("[aria-describedby]").forEach((input) => {
+          const ids = input.getAttribute("aria-describedby").split(/\\s+/).filter((id) => id !== message.id)
+          if (ids.length) input.setAttribute("aria-describedby", ids.join(" ")); else input.removeAttribute("aria-describedby")
+          if (input.dataset.fieldInvalid) { input.removeAttribute("aria-invalid"); delete input.dataset.fieldInvalid }
+        })
+        message.remove()
+      })
       const confirmed = /import|delete|replace|restore/.test(form.dataset.command)
       if (confirmed && !window.confirm("Confirm this change?")) return
       const buttons = [...form.querySelectorAll("button")]
       buttons.forEach((button) => button.disabled = true)
       try {
-        const values = await valuesOf(form)
+        const submitsEditor = document.body.dataset.surface === "procurement" && ["submit_pr", "submit_sourcing", "submit_po"].includes(form.dataset.command)
+        const editors = submitsEditor ? [...(form.closest("section") || form).querySelectorAll('form[data-command="save"]')].filter((editor) => editor.dataset.record === form.dataset.record && editor.dataset.page === form.dataset.page) : []
+        if (submitsEditor && editors.length !== 1) { notice("The current editor is unavailable. Reopen the record before submitting."); return }
+        if (submitsEditor && !editors[0].reportValidity()) return
+        const editorRevision = submitsEditor ? editors[0].dataset.previewRevision || "0" : undefined
+        const values = submitsEditor ? { ...await valuesOf(editors[0]), ...await valuesOf(form) } : await valuesOf(form)
         const command = { page: form.dataset.page, action: form.dataset.command, id: form.dataset.record || undefined, version: Number(form.dataset.version), values, confirmed: confirmed || values.confirmed === true }
         if (document.body.dataset.surface === "dashboard" && ["OPEX Detail", "CAPEX Projects"].includes(command.page) && ["year-amount", "annual-entry", "save-entry"].includes(command.action)) {
           const revision = form.dataset.previewRevision || "0"
@@ -281,7 +314,7 @@ function attach() {
           try {
             const response = await fetch(location.href, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ page: command.page, action: "preview-change", version: 0, values: { command: { ...command, confirmed: false } } }) })
             const result = await response.json()
-            if (!response.ok || !result?.ok || result.value?.status !== "preview") { showResult(result, values); return }
+            if (!response.ok || !result?.ok || result.value?.status !== "preview") { showResult(result, values, form); return }
             if ((form.dataset.previewRevision || "0") !== revision) { notice("The draft changed. Review a new preview."); return }
             const preview = result.value
             const panel = document.createElement("section")
@@ -307,7 +340,7 @@ function attach() {
               try {
                 const response = await fetch(location.href, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ page: command.page, action: "apply-preview", version: 0, values: { previewRef: preview.previewRef } }) })
                 const result = await response.json()
-                if (!response.ok || !result?.ok || result.value?.applied !== true) { showResult(result, values); if (response.status === 409) panel.remove(); return }
+                if (!response.ok || !result?.ok || result.value?.applied !== true) { showResult(result, values, form); if (response.status === 409) panel.remove(); return }
                 if ((form.dataset.previewRevision || "0") !== revision) { panel.remove(); notice("The reviewed changes were saved. New edits remain unsaved; review them before applying."); return }
                 delete form.dataset.dirty
                 const dialog = form.closest("dialog")
@@ -325,8 +358,10 @@ function attach() {
           } finally { finish() }
           return
         }
-        const saved = await send(command)
+        const saved = await send(command, form)
         if (saved) {
+          if (submitsEditor && (editors[0].dataset.previewRevision || "0") !== editorRevision) { notice("The submission was saved. Later edits remain unsaved; review them before continuing."); return }
+          if (submitsEditor) delete editors[0].dataset.dirty
           delete form.dataset.dirty
           const dialog = form.closest("dialog")
           if (dialog) {
@@ -434,6 +469,21 @@ export function listed(keys: readonly string[], surface: Drawn["surface"]): { ke
 }
 
 export function links(nav: { key: string; index: number }[]): string {
+  if (nav.length && nav.every((item) => (DASHBOARD_PAGES as readonly string[]).includes(item.key))) {
+    const groups = [
+      { label: "Overview", pages: ["Executive Dashboard", "Hot Topics & Actions"] },
+      { label: "Budget and people", pages: ["Budget Overview", "OPEX Detail", "CAPEX Projects", "Headcount Overview", "Team Structure", "Talent Review"] },
+      { label: "Portfolio", pages: ["Portfolio Dashboard", "All Projects"] },
+      { label: "Operations and governance", pages: ["IT Operations", "IT Security KPIs", "IT Risks", "Vendor Contracts", "Stakeholder Management", "IT Performance Contract"] },
+    ]
+    const remaining = nav.filter((item) => !groups.some((group) => group.pages.includes(item.key)))
+    if (remaining.length) groups.push({ label: "Other", pages: remaining.map((item) => item.key) })
+    return groups.map((group) => {
+      const items = nav.filter((item) => group.pages.includes(item.key))
+      if (!items.length) return ""
+      return `<span class="nav-section">${esc(group.label)}</span>${items.map((item) => `<a data-index="${item.index}" href="?page=${encodeURIComponent(item.key)}">${esc(item.key)}</a>`).join("")}`
+    }).join("")
+  }
   return nav
     .map((item) => `<a data-index="${item.index}" href="?page=${encodeURIComponent(item.key)}">${esc(item.key)}</a>`)
     .join("")

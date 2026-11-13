@@ -27,8 +27,11 @@ function record(value: unknown): value is Record<string, unknown> {
 }
 
 function monthlyInput(value: unknown): value is SfPlannerMonthlyInput {
-  return record(value) && Object.keys(value).every((key) => ["page", "versionId", "drafts"].includes(key)) &&
-    (value.page === "OPEX" || value.page === "CAPEX") && typeof value.versionId === "string" && Array.isArray(value.drafts) && value.drafts.length > 0 && value.drafts.length <= 500 &&
+  if (!record(value) || Object.keys(value).some((key) => !["page", "versionId", "drafts", "operation", "entity"].includes(key)) || (value.page !== "OPEX" && value.page !== "CAPEX") || typeof value.versionId !== "string" || !value.versionId.trim()) return false
+  if ([value.drafts, value.operation, value.entity].filter((item) => item !== undefined).length !== 1) return false
+  if (record(value.operation)) return Object.keys(value.operation).every((key) => ["rowId", "revision", "kind", "annual"].includes(key)) && typeof value.operation.rowId === "string" && !!value.operation.rowId.trim() && typeof value.operation.revision === "number" && Number.isSafeInteger(value.operation.revision) && value.operation.revision >= 0 && (value.operation.kind === "annual" || value.operation.kind === "spread" || value.operation.kind === "reset") && (value.operation.kind === "annual" ? typeof value.operation.annual === "number" && Number.isFinite(value.operation.annual) : value.operation.annual === undefined)
+  if (record(value.entity)) return Object.keys(value.entity).every((key) => ["collection", "kind", "id", "revision", "values"].includes(key)) && (value.entity.collection === "lines" || value.entity.collection === "projects") && (value.entity.kind === "create" || value.entity.kind === "edit" || value.entity.kind === "delete") && typeof value.entity.revision === "number" && Number.isSafeInteger(value.entity.revision) && value.entity.revision >= 0 && (value.entity.kind === "create" ? value.entity.id === undefined : typeof value.entity.id === "string" && !!value.entity.id.trim()) && (value.entity.kind === "delete" ? value.entity.values === undefined : record(value.entity.values))
+  return Array.isArray(value.drafts) && value.drafts.length > 0 && value.drafts.length <= 500 &&
     value.drafts.every((draft: unknown) => record(draft) && Object.keys(draft).every((key) => ["rowId", "revision", "cells"].includes(key)) &&
       typeof draft.rowId === "string" && typeof draft.revision === "number" && Number.isSafeInteger(draft.revision) && Array.isArray(draft.cells) && draft.cells.length > 0 && draft.cells.length <= 36 &&
       draft.cells.every((cell: unknown) => record(cell) && Object.keys(cell).every((key) => ["measure", "month", "text"].includes(key)) &&

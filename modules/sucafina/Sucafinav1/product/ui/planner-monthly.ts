@@ -38,6 +38,7 @@ document.querySelectorAll('table').forEach((table) => {
   let key = crypto.randomUUID()
   let busy = false
   let approved = false
+  let operationBusy = false; let operationUncertain = false
   const idFor = (row, kind, month) => JSON.stringify([row, kind, month])
   const update = (input) => {
     const id = idFor(input.dataset.row, input.dataset.measure, Number(input.dataset.month))
@@ -78,7 +79,7 @@ document.querySelectorAll('table').forEach((table) => {
     })
   }
   const send = async (action) => {
-    if (busy || !changes.size) return
+    if (busy || operationBusy || operationUncertain || !changes.size) return
     const drafts = rows.flatMap((row) => { const cells = [...changes.values()].filter((cell) => cell.rowId === row.id).map(({ measure, month, text }) => ({ measure, month, text })); return cells.length ? [{ rowId: row.id, revision: row.revision, cells }] : [] })
     const url = new URL(location.href); url.search = '?sf=workbench-planner'
     busy = true; preview.disabled = true; save.disabled = true; measure.disabled = true; grid.querySelectorAll('input').forEach((input) => { input.disabled = true }); status.textContent = action === 'preview' ? 'Checking changes…' : 'Saving changes…'
@@ -112,7 +113,43 @@ document.querySelectorAll('table').forEach((table) => {
   preview.addEventListener('click', () => send('preview'))
   save.addEventListener('click', () => send('apply'))
   measure.addEventListener('change', render)
-  section.append(heading, label, instructions, scroll, preview, save, status, dirtyGuard)
+  const recordLabel = document.createElement('label'); recordLabel.textContent = 'Budget record '; const recordSelect = document.createElement('select'); recordSelect.setAttribute('aria-label', 'Budget record'); rows.forEach((row, index) => { const option = document.createElement('option'); option.value = String(index); option.textContent = row.label; recordSelect.append(option) }); recordLabel.append(recordSelect)
+  const annualInput = document.createElement('input'); annualInput.type = 'text'; annualInput.inputMode = 'decimal'; annualInput.setAttribute('aria-label', 'Annual budget')
+  const applyBudget = document.createElement('button'); applyBudget.type = 'button'; applyBudget.textContent = 'Apply budget change'; applyBudget.disabled = true
+  const budgetStatus = document.createElement('div'); budgetStatus.setAttribute('role', 'status'); budgetStatus.setAttribute('aria-live', 'polite')
+  const budgetButtons = []; let operationKey = crypto.randomUUID(); let operationApproved = false; let pending = null
+  const phrases = { 'row-unavailable': 'This row changed or is unavailable.', 'invalid-revision': 'This row cannot be saved as shown.', 'invalid-annual': 'Enter a valid annual amount.', 'operation-rejected': 'The change was not accepted.', 'operation-unavailable': 'The change could not be checked.' }
+  const amount = (cell) => !cell || cell.value === null ? 'empty' : typeof cell.value === 'number' && Number.isFinite(cell.value) ? String(cell.value) : 'unavailable'
+  const annualValue = () => { const text = annualInput.value.trim(); return text !== '' && Number.isFinite(Number(text)) ? Number(text) : undefined }
+  const freeze = (locked) => { recordSelect.disabled = locked; annualInput.disabled = locked; budgetButtons.forEach((button) => { button.disabled = locked }); preview.disabled = locked; save.disabled = locked || !approved; if (locked) applyBudget.disabled = true }
+  const invalidate = () => { if (operationBusy) return; pending = null; operationApproved = false; applyBudget.disabled = true; operationKey = crypto.randomUUID() }
+  recordSelect.addEventListener('change', invalidate); annualInput.addEventListener('input', () => { invalidate(); dirtyGuard.dataset.dirty = 'true' })
+  const runBudget = async (action, request) => {
+    if (operationBusy || busy || request !== pending) return
+    operationBusy = true; freeze(true); budgetStatus.textContent = action === 'preview' ? 'Checking the budget change…' : 'Saving the budget change…'
+    try {
+      const url = new URL(location.href); url.search = '?sf=workbench-planner'
+      const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': operationKey }, body: JSON.stringify({ action, input: request }) })
+      const result = await response.json()
+      const operation = result?.value?.operation
+      if (request !== pending) return
+      if (!response.ok || result.status !== 'ok' || !operation || !Array.isArray(operation.errors) || !Array.isArray(operation.before) || !Array.isArray(operation.after) || !Array.isArray(operation.changedMonths)) throw new Error('unavailable')
+      budgetStatus.replaceChildren()
+      operation.errors.forEach((reason) => { const line = document.createElement('p'); line.textContent = phrases[reason] || 'Check this budget change.'; budgetStatus.append(line) })
+      operation.changedMonths.forEach((month) => { const line = document.createElement('p'); line.textContent = (rows.find((entry) => entry.id === request.operation.rowId)?.label || 'This row') + ', month ' + month + ': current ' + amount(operation.before.find((cell) => cell.month === month)) + ', proposed ' + amount(operation.after.find((cell) => cell.month === month)); budgetStatus.append(line) })
+      operationUncertain = false
+      const applied = action === 'apply' && operation.errors.length === 0
+      operationApproved = action === 'preview' && request === pending && operation.errors.length === 0
+      if (applied) { const line = document.createElement('p'); line.textContent = 'Budget change saved. Refresh before editing these months again.'; budgetStatus.append(line); pending = null; if (!changes.size) delete dirtyGuard.dataset.dirty }
+      else if (action === 'apply') { const line = document.createElement('p'); line.textContent = 'The budget change was not saved. Your monthly entries remain.'; budgetStatus.append(line) }
+      else if (!operation.changedMonths.length && !operation.errors.length) { const line = document.createElement('p'); line.textContent = 'Preview complete. No monthly budget change was returned.'; budgetStatus.append(line) }
+      if (action === 'apply') { operationApproved = false; operationKey = crypto.randomUUID() }
+    } catch { if (request === pending) { operationUncertain = action === 'apply'; operationApproved = action === 'apply'; budgetStatus.textContent = action === 'apply' ? 'Could not confirm the budget change. Your monthly entries are preserved; retry the same request.' : 'Could not confirm the preview. Your monthly entries are preserved.' } }
+    finally { operationBusy = false; freeze(operationUncertain); applyBudget.disabled = !(operationApproved && request === pending) }
+  }
+  ;[['annual', 'Preview annual budget'], ['spread', 'Preview spread'], ['reset', 'Preview reset']].forEach(([kind, text]) => { const button = document.createElement('button'); button.type = 'button'; button.textContent = text; budgetButtons.push(button); button.addEventListener('click', () => { if (operationBusy) return; const row = rows[Number(recordSelect.value)]; const annual = annualValue(); if (!row || (kind === 'annual' && annual === undefined)) { operationApproved = false; applyBudget.disabled = true; budgetStatus.textContent = 'Choose a record and enter an annual amount.'; return } operationKey = crypto.randomUUID(); operationApproved = false; applyBudget.disabled = true; pending = { page, versionId, operation: { rowId: row.id, revision: row.revision, kind, ...(kind === 'annual' ? { annual } : {}) } }; runBudget('preview', pending) }); section.append(button) })
+  applyBudget.addEventListener('click', () => { if (operationBusy || !operationApproved || !pending) return; runBudget('apply', pending) })
+  section.append(heading, label, instructions, scroll, preview, save, recordLabel, annualInput, applyBudget, budgetStatus, status, dirtyGuard)
   table.closest('.table-scroll')?.before(section)
   render()
 })

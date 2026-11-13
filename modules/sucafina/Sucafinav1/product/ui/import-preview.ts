@@ -51,8 +51,16 @@ document.querySelectorAll('[data-import-preview]').forEach((section) => {
   apply.addEventListener('click', async () => {
     if (!manifest) return
     const controls = section.querySelectorAll('[data-import-start], [data-import-end], [data-import-targets], form input, form select, form button'); controls.forEach((control) => { control.disabled = true }); apply.disabled = true; status.textContent = 'Applying reviewed import…'
-    try { const result = await post('import-apply', { manifestId: manifest.id, version: manifest.version }, applyKey); if (!result.domainApplied) { status.textContent = 'Import is not fully applied. Current state: ' + result.state + '.'; return } delete form.dataset.dirty; status.textContent = 'Import applied.' }
-    catch { status.textContent = 'Could not confirm application. The preview is preserved; retry the same request.'; apply.disabled = false }
+    try {
+      await post('import-apply', { manifestId: manifest.id, version: manifest.version }, applyKey).catch(() => undefined)
+      const url = endpoint('import-detail'); url.searchParams.set('manifestId', manifest.id); url.searchParams.set('version', String(manifest.version))
+      const result = await json(url); const receipt = result.receipt
+      if (!receipt || receipt.manifestId !== manifest.id || !Number.isSafeInteger(receipt.changedFields) || receipt.changedFields < 0) throw new Error('unconfirmed')
+      if (receipt.outcome === 'rejected') { status.textContent = 'The import was rejected. Review the preview before starting another import.'; return }
+      if (receipt.outcome === 'unchanged' && receipt.changedFields === 0) { delete form.dataset.dirty; status.textContent = 'Import completed; no fields needed changing.'; return }
+      if (receipt.outcome !== 'applied') throw new Error('unconfirmed')
+      delete form.dataset.dirty; status.textContent = 'Import applied. Fields changed: ' + receipt.changedFields + '.'
+    } catch { status.textContent = 'Could not confirm application. The preview is preserved; retry the same request.'; apply.disabled = false }
     finally { controls.forEach((control) => { control.disabled = false }) }
   })
 })

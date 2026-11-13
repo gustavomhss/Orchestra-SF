@@ -3,6 +3,18 @@ import type { SfHostServices } from "../contracts/host-context.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import { esc } from "../../src/screen-shell.ts"
 
+export async function scenarioAnalysisForm(projection: AuthorizedCaseProjection, runtime: SfHostServices) {
+  if (!runtime.analyses || !runtime.analysisInputs) return "<p>Specialist scenario analysis is currently unavailable.</p>"
+  const parent = runtime.selected.find((item) => item.skills.some((skill) => skill.id === "sf-comparar-cenarios"))
+  const skill = parent?.skills.find((item) => item.id === "sf-comparar-cenarios")
+  const models = await runtime.models().catch(() => [])
+  if (!parent || !skill || !models.length || projection.case.alternatives.length < 2) return "<p>Specialist scenario analysis needs two saved alternatives and an available model.</p>"
+  const item = projection.case
+  const config = { request: { caseRef: { id: item.id, incarnation: item.incarnation, version: item.version }, objective: item.objective, profileId: parent.profile.id, profileVersion: parent.profile.version, skillId: skill.id, skillVersion: skill.version, manifestDigest: parent.manifestDigest, outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: skill.allowedOperations.filter((operation) => parent.operationIds.includes(operation)) }, alternatives: item.alternatives.map((alternative) => ({ id: alternative.id, version: alternative.version })), model: models[0] }
+  const options = item.alternatives.map((alternative, index) => `<option value="${index}">${esc(alternative.title)}</option>`).join("")
+  return `<section><h3>Analyze alternatives</h3><form data-scenario-analysis data-config="${esc(JSON.stringify(config))}"><label>First alternative<select name="first">${options}</select></label><label>Second alternative<select name="second">${options}</select></label><button type="submit">Start specialist analysis</button><p role="status" aria-live="polite"></p></form></section>`
+}
+
 /** The selections and source references are restricted to the authorized case. */
 export async function forecastAnalysisForm(projection: AuthorizedCaseProjection, runtime: SfHostServices) {
   if (!runtime.analyses) return "<p>Forecast analysis is currently unavailable.</p>"
@@ -17,10 +29,31 @@ export async function forecastAnalysisForm(projection: AuthorizedCaseProjection,
     profileId: parent.profile.id, profileVersion: parent.profile.version, skillId: skill.id, skillVersion: skill.version, manifestDigest: parent.manifestDigest,
     outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: skill.allowedOperations.filter((operation) => parent.operationIds.includes(operation)), models }
   const options = sources.map((source, index) => `<option value="${esc(source.refId)}">Forecast source ${index + 1}${source.target.period ? ` · ${esc(source.target.period.start)} – ${esc(source.target.period.end)}` : ""}</option>`).join("")
-  return `${history}<section><h3>Explain a forecast</h3><form data-forecast-analysis data-config="${esc(JSON.stringify(config))}"><label>Baseline<select name="baseRef">${options}</select></label><label>Comparison<select name="candidateRef">${options}</select></label><label>Start<input name="start" type="date" required value="${esc(projection.case.horizon.start)}"></label><label>End<input name="end" type="date" required value="${esc(projection.case.horizon.end)}"></label><label>Currency<input name="currency" value="${esc(projection.case.currency)}" required></label><label>Model<select name="model" required><option value="">Choose a model</option>${models.map((model, index) => `<option value="${index}">${esc(model.providerID)} · ${esc(model.id)}</option>`).join("")}</select></label><button>Start analysis</button><button type="button" data-analysis-cancel hidden>Cancel analysis</button><p role="status" aria-live="polite"></p></form></section>`
+  return `${history}<section><h3>Explain a forecast</h3><form data-forecast-analysis data-config="${esc(JSON.stringify(config))}"><label>Baseline<select name="baseRef">${options}</select></label><label>Comparison<select name="candidateRef">${options}</select></label><label>Start<input name="start" type="date" required value="${esc(projection.case.horizon.start)}"></label><label>End<input name="end" type="date" required value="${esc(projection.case.horizon.end)}"></label><label>Currency<input name="currency" value="${esc(projection.case.currency)}" required></label><details><summary>Analysis settings</summary><label>Model<select name="model">${models.map((model, index) => `<option value="${index}">${esc(model.providerID)} · ${esc(model.id)}</option>`).join("")}</select></label></details><button>Start analysis</button><button type="button" data-analysis-cancel hidden>Cancel analysis</button><p role="status" aria-live="polite"></p></form></section>`
 }
 
 export const forecastAnalysisScript = `
+document.querySelectorAll('[data-scenario-analysis]').forEach((form) => {
+  if (form.dataset.sfScenarioAnalysisReady) return; form.dataset.sfScenarioAnalysisReady = 'true'
+  const config = JSON.parse(form.dataset.config); const status = form.querySelector('[role=status]'); const button = form.querySelector('button[type=submit]')
+  let prepareKey = crypto.randomUUID(); let startKey = crypto.randomUUID()
+  form.addEventListener('change', () => { prepareKey = crypto.randomUUID(); startKey = crypto.randomUUID(); form.dataset.dirty = 'true' })
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault(); if (button.disabled) return
+    const fields = new FormData(form); const first = config.alternatives[Number(fields.get('first'))]; const second = config.alternatives[Number(fields.get('second'))]
+    if (!first || !second || first.id === second.id) { status.textContent = 'Choose two different alternatives.'; return }
+    const send = async (payload, key) => { const url = new URL(location.href); url.search = '?sf=workbench-analysis'; const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify(payload) }); const result = await response.json(); if (!response.ok || result.status !== 'ok') throw new Error('unavailable'); return result.value }
+    button.disabled = true; status.textContent = 'Preparing analysis…'; let starting = false
+    try {
+      const skillInput = await send({ action: 'prepare', input: { request: config.request, selection: { caseRef: config.request.caseRef, alternatives: [first, second] } } }, prepareKey)
+      starting = true
+      const run = await send({ action: 'start', input: { request: config.request, skillInput, model: config.model } }, startKey)
+      if (!run.runRef) throw new Error('unavailable')
+      delete form.dataset.dirty; status.textContent = 'Analysis started. Follow progress in analysis history.'; document.querySelector('[data-analysis-history]')?.dispatchEvent(new Event('sf-analysis-refresh'))
+    } catch { status.textContent = starting ? 'Could not confirm whether analysis started. Check analysis history before retrying.' : 'Analysis could not be prepared. Check the alternatives and access, then retry.' }
+    finally { button.disabled = false }
+  })
+})
 document.querySelectorAll('[data-analysis-history]').forEach((section) => {
   if (section.dataset.sfAnalysisHistoryReady) return; section.dataset.sfAnalysisHistoryReady = 'true'
   const status = section.querySelector('[role=status]')
@@ -44,9 +77,13 @@ document.querySelectorAll('[data-analysis-history]').forEach((section) => {
           button.addEventListener('click', async () => { button.disabled = true; try { await send({ action: 'cancel', runRef: run.runRef }); await load() } catch { state.textContent = 'Could not confirm cancellation.'; button.disabled = false } })
           entry.append(button)
         }
-        if (!run.outputRef) continue
+        if (run.state !== 'ready') continue
+        const open = document.createElement('button'); open.type = 'button'; open.textContent = 'Open result'; entry.append(open)
+        open.addEventListener('click', async () => {
+        open.disabled = true
         try {
           const result = await send({ action: 'output', runRef: run.runRef }); const body = document.createElement('div'); body.innerHTML = result.html; entry.append(body)
+          if (!result.outputRef) { open.remove(); return }
           const form = document.createElement('form'); const label = document.createElement('label'); label.textContent = 'Reason for accepting this contribution'
           const rationale = document.createElement('textarea'); rationale.required = true; label.append(rationale)
           const button = document.createElement('button'); button.textContent = 'Accept contribution'
@@ -57,15 +94,16 @@ document.querySelectorAll('[data-analysis-history]').forEach((section) => {
             button.disabled = true; rationale.disabled = true; message.textContent = 'Recording your decision…'
             try {
               const url = new URL(location.href); url.search = '?sf=decision-accept-analysis'
-              const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify({ caseRef: JSON.parse(section.dataset.case), outputRef: run.outputRef, runRef: run.runRef, rationale: rationale.value.trim() }) })
+              const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify({ caseRef: JSON.parse(section.dataset.case), outputRef: result.outputRef, runRef: run.runRef, rationale: rationale.value.trim() }) })
               const accepted = await response.json(); if (!response.ok || accepted.status !== 'ok') throw new Error('unavailable')
               delete form.dataset.dirty; location.reload()
             } catch { message.textContent = 'Could not confirm acceptance. Your reason is preserved; retry the same request.' }
             finally { button.disabled = false; rationale.disabled = false }
           })
-          form.append(label, button, message); entry.append(form)
+          form.append(label, button, message); entry.append(form); open.remove()
         }
-        catch { state.textContent += ' · Result unavailable or access changed.' }
+        catch { state.textContent += ' · Result unavailable or access changed.'; open.disabled = false }
+        })
       }
       if (runs.some((run) => ['preparing', 'queued', 'running'].includes(run.state))) timer = setTimeout(load, 3000)
     } catch { output.replaceChildren(); status.textContent = 'Analysis history unavailable or access changed.' }
@@ -77,7 +115,7 @@ document.querySelectorAll('[data-forecast-analysis]').forEach((form) => {
   const config = JSON.parse(form.dataset.config)
   const status = form.querySelector('[role=status]')
   const cancel = form.querySelector('[data-analysis-cancel]')
-  const button = form.querySelector('button[type=submit]')
+  const button = form.querySelector('button:not([type]), button[type=submit]')
   let runRef
   let timer
   form.addEventListener('input', () => { form.dataset.dirty = 'true' })

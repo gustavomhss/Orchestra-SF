@@ -25,13 +25,12 @@ document.querySelectorAll('[data-decision-edit]').forEach((form) => {
     const inputs = form.querySelectorAll('input'); button.disabled = true; inputs.forEach((input) => { input.disabled = true }); status.textContent = 'Saving decision…'
     try {
       const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify(payload) })
-      const result = await response.json()
       if (response.status === 409) {
-        status.textContent = 'The decision changed or its basis is in use. Your entries are preserved.'
+        status.textContent = 'The decision changed or its basis is in use. Your entries and the version you opened are preserved.'
         const currentResponse = await fetch(location.href, { credentials: 'same-origin', cache: 'no-store' })
         if (!currentResponse.ok) { status.textContent += ' Current values are unavailable.'; return }
         const currentPage = new DOMParser().parseFromString(await currentResponse.text(), 'text/html')
-        const current = currentPage.querySelector('[data-decision-edit]')
+        const current = [...currentPage.querySelectorAll('[data-decision-edit]')].find((candidate) => { try { return JSON.parse(candidate.dataset.context).caseRef.id === context.caseRef.id && JSON.parse(candidate.dataset.context).caseRef.incarnation === context.caseRef.incarnation } catch { return false } })
         if (!current) { status.textContent += ' Current values are unavailable.'; return }
         const previous = form.querySelector('[data-decision-conflict]'); if (previous) previous.remove()
         const comparison = document.createElement('div'); comparison.dataset.decisionConflict = 'true'
@@ -46,6 +45,7 @@ document.querySelectorAll('[data-decision-edit]').forEach((form) => {
         })
         form.append(comparison); return
       }
+      const result = await response.json()
       if (!response.ok || result.status !== 'ok') throw new Error('unavailable')
       delete form.dataset.dirty; status.textContent = 'Decision saved.'; location.reload()
     } catch { status.textContent = 'Could not confirm the save. Your entries are preserved; retry the same request.' }

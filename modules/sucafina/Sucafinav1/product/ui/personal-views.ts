@@ -37,7 +37,7 @@ document.querySelectorAll('[data-personal-views]').forEach((section) => {
         const monthly = view.surface === 'dashboard' ? { 'Executive Dashboard': ['execYear', 'executiveMonth'], 'IT Operations': ['opsYear', 'operationsMonth'], 'IT Security KPIs': ['secYear', 'securityMonth'] }[view.page] : undefined
         const wholeMonth = start && end && start[1] === end[1] && start[2] === end[2] && Number(end[3]) === new Date(Date.UTC(Number(end[1]), Number(end[2]), 0)).getUTCDate()
         const wholeYear = start && end && start[1] === end[1] && start[2] === '01' && end[2] === '12' && end[3] === '31'
-        if (!start || !end || monthly && !wholeMonth || !monthly && !wholeYear) { status.textContent = 'This view has a period that cannot be restored on this page.'; return }
+        if (!start || !end || !/^202[4-7]$/.test(start[1]) || monthly && !wholeMonth || !monthly && !wholeYear) { status.textContent = 'This view has a period that cannot be restored on this page.'; return }
         const values = monthly ? [[monthly[0], start[1]], [monthly[1], String(Number(start[2]))]] : [['year', start[1]]]
         if (values.some(([key, value]) => url.searchParams.has(key) && url.searchParams.get(key) !== value)) { status.textContent = 'This view has conflicting period settings.'; return }
         values.forEach(([key, value]) => url.searchParams.set(key, value))

@@ -6,7 +6,7 @@ Abra **Workbench** na barra do Dashboard, Planner ou Procurement. As informaçõ
 
 ## Encontrar trabalho e documentos
 
-Em **My work**, informe as datas de início e fim e selecione **Find work**. A lista mostra os itens atribuídos que podem ser consultados nesse período. Se ela estiver vazia, confira o período; se disser que o serviço está indisponível ou que o acesso mudou, atualize a página e confirme suas permissões.
+Em **My work**, informe as datas de início e fim e selecione **Find work**. A lista mostra os itens atribuídos que podem ser consultados nesse período. Quando houver um destino disponível, selecione **Open work** para abri-lo; o acesso é conferido novamente. Se a lista estiver vazia, confira o período; se disser que o serviço está indisponível ou que o acesso mudou, atualize a página e confirme suas permissões.
 
 Em **Search documents**, procure documentos que você tem autorização para consultar. Abra o resultado para verificar a origem. Um resultado pode deixar de estar disponível se o acesso ou a fonte mudar.
 
@@ -31,7 +31,9 @@ Use **Create a decision** quando precisar manter objetivo, critérios, alternati
 
 O detalhe mostra o estado e a versão do caso, seus critérios, alternativas e resultados disponíveis. Em cada alternativa, leia o estado da comparação e as condições. **Known subtotal** e **Known difference** mostram somente o que pode ser calculado com as informações atuais; não equivalem a um total ou diferença completos. Uma categoria pendente ou ausente não é zero. Abra **Coverage and sources** para consultar a cobertura e as fontes.
 
-Com pelo menos duas alternativas, use **Compare and choose**:
+Em **Ask a question**, escolha um registro do caso, encontre e selecione o destinatário e escreva sua pergunta. A conversa é criada e depois vinculada à decisão. Se o vínculo não puder ser confirmado, mantenha a tela aberta e tente novamente a mesma solicitação. Em **Question conversations**, selecione **Open conversation** para consultar as mensagens autorizadas.
+
+Com pelo menos duas alternativas, use **Compare and choose**. Para pedir uma análise especializada das alternativas salvas, use **Analyze alternatives**, escolha duas alternativas diferentes e selecione **Start specialist analysis**; acompanhe o resultado no histórico de análises. A análise não registra a escolha nem aplica uma mudança. Para comparar e escolher:
 
 1. Selecione uma linha de base e uma alternativa diferente.
 2. Mantenha os critérios necessários e selecione **Compare**.
@@ -45,13 +47,15 @@ Em **Explore a portfolio**, você pode selecionar decisões e alternativas autor
 
 ## Explicar uma previsão
 
-Na seção **Explain a forecast** de um caso, escolha duas fontes de previsão diferentes, o período, a moeda e um modelo disponível. Selecione **Start analysis** para pedir uma explicação. A tela mostra o andamento e o histórico. Enquanto estiver em preparação, na fila ou em execução, você pode selecionar **Cancel analysis**.
+Na seção **Explain a forecast** de um caso, escolha duas fontes de previsão diferentes, o período e a moeda. Um modelo disponível já vem selecionado; para alterá-lo, abra **Analysis settings**. Selecione **Start analysis** para pedir uma explicação. A tela mostra o andamento e o histórico. Enquanto estiver em preparação, na fila ou em execução, você pode selecionar **Cancel analysis**.
 
 Quando houver um resultado, abra suas fontes e detalhes para entender a contribuição. A contribuição é uma proposta para revisão; **Accept contribution** registra sua aceitação no caso com o motivo informado, não aplica valores no Planner. Se a análise ficar indisponível, desatualizada ou perder acesso à fonte, confira as fontes e o estado atual antes de tentar novamente.
 
 Essa opção depende de duas fontes de Planner anexadas ao caso e de um modelo disponível. Se o formulário não aparecer, continue usando a comparação normal no Planner ou confira as fontes do caso e o acesso disponível.
 
 ## Colar e salvar valores mensais no Planner
+
+No Dashboard, abra o diálogo da linha OPEX ou CAPEX para editar seus campos mensais. Em **Annual Entry** ou **Year amount**, confira o alcance apresentado antes de confirmar a aplicação. Ao abrir um projeto de uma lista filtrada, os filtros de busca, estado e responsável são mantidos no retorno. A navegação a partir do Executivo também preserva o ano e o mês de Operations.
 
 Nas páginas **OPEX** e **CAPEX**, a seção **Edit monthly values together** permite colar um intervalo de valores:
 
@@ -66,7 +70,7 @@ O sistema pode aceitar algumas linhas e sinalizar outras separadamente. Em caso 
 
 Em **Dashboard** e **Planner**, abra **Import with preview**. Selecione **Find destinations**, informe as duas datas do período quando precisar filtrar os destinos e escolha um destino. Selecione um arquivo XLSX, XLS ou JSON e, se for apropriado, marque **Create a new version** ou **Remove records missing from the file**.
 
-Selecione **Preview import** e confira as alterações, origens e erros de linha. A prévia não aplica mudanças. Só selecione **Apply reviewed import** depois de revisar o destino e as alterações. Corrija erros ou atualize a prévia se a fonte mudar. Se a tela não puder confirmar a aplicação, confira o estado atual antes de repetir a ação.
+Selecione **Preview import** e confira as alterações, origens e erros de linha. A prévia não aplica mudanças. Só selecione **Apply reviewed import** depois de revisar o destino e as alterações. O resultado informa se a importação foi aplicada, não precisou alterar campos ou foi recusada. Corrija erros ou atualize a prévia se a fonte mudar. Se a tela não puder confirmar a aplicação, confira o estado atual antes de repetir a ação.
 
 ## Quando uma ação falha ou o acesso muda
 
