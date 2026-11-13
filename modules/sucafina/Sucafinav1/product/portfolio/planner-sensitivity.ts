@@ -56,7 +56,7 @@ export function createPlannerSensitivity(input: {
     if (operations.length !== 1 || operations[0].kind !== "replace" || operations[0].replacementRef !== undefined || typeof operations[0].amount !== "number" || !Number.isFinite(operations[0].amount)) return { status: "needs-input", reason: "unsupported-sensitivity-parameter" } as const
     const key = await input.idempotencyKey(digestSfValue(request), context)
     if (!key?.trim()) return { status: "denied", reason: "operation-identity-unavailable" } as const
-    const samples: { request: ScenarioRequest; resultRef: string; digest: string; coverageRefs: readonly string[]; conditions: readonly string[] }[] = []
+    const samples: { request: ScenarioRequest; resultRef: string; digest: string; coverageRefs: readonly string[]; conditions: readonly string[]; complete: boolean }[] = []
     const exactEvidence: { value?: { value: number | null; evidenceRefs: readonly BusinessEvidenceRef[] } } = {}
     const evaluate = createSensitivityEvaluator({
       sample: async (_request, value, trusted) => {
@@ -73,11 +73,11 @@ export function createPlannerSensitivity(input: {
         const saved = existing?.status === "ok" && existing.value.state === "found" ? { status: "ok" as const, value: existing.value.result } : await input.results.write({ kind: "scenario", result: preview.value.sample, caseRef: binding.caseRef, requestDigest, sourceRefs: refs, idempotencyKey }, trusted)
         if (saved.status !== "ok") return saved
         if (saved.value.kind !== "scenario" || saved.value.requestDigest !== requestDigest || digestSfValue(saved.value.caseRef) !== digestSfValue(binding.caseRef) || plannerScenarioDigest(saved.value.result) !== plannerScenarioDigest(preview.value.sample)) return { status: "stale", reason: "sensitivity-sample-changed" }
-        samples.push({ request: scenario, resultRef: saved.value.resultRef, digest: plannerPreviewDigest(preview.value), coverageRefs: preview.value.comparison.costCoverageRefs, conditions: preview.value.comparison.unresolvedConditions })
+        samples.push({ request: scenario, resultRef: saved.value.resultRef, digest: plannerPreviewDigest(preview.value), coverageRefs: preview.value.comparison.costCoverageRefs, conditions: preview.value.comparison.unresolvedConditions, complete: preview.value.comparison.comparisonStatus === "complete" && preview.value.sample.costCoverage.coverageState === "complete" })
         return { status: "ok", value: { resultRef: saved.value.resultRef, scenario: saved.value.result, criterionValue: preview.value.comparison.knownDifference, parameterUnit: binding.parameterUnit, resultUnit: binding.resultUnit, unitMetadataRef: binding.unitMetadataRef, unitMetadataVersion: binding.unitMetadataVersion } }
       },
       exactThreshold: async (_request, trusted) => {
-        if (!input.exactThreshold) return { status: "unavailable", reason: "exact-threshold-not-proven" }
+        if (!input.exactThreshold || samples.some((sample) => !sample.complete) || baseline.value.result.costCoverage.coverageState !== "complete" || source.value.result.costCoverage.coverageState !== "complete") return { status: "unavailable", reason: "exact-threshold-not-proven" }
         const result = await input.exactThreshold(request, binding, trusted)
         if (result.status === "ok") exactEvidence.value = result.value
         return result

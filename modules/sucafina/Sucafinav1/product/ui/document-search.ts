@@ -14,5 +14,6 @@ document.querySelectorAll('[data-document-result]').forEach(async (entry) => {
     if (target.origin !== location.origin || !target.pathname.startsWith(mount + '/')) throw new Error('invalid-target')
     const link = document.createElement('a'); link.href = target.href; link.textContent = 'Open source'; entry.append(link)
   } catch { title.textContent = 'Document unavailable or access changed.'; entry.querySelector('[data-document-text]')?.remove() }
+  finally { entry.removeAttribute('data-ref') }
 })
 `

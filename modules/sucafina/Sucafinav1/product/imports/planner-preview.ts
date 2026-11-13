@@ -8,6 +8,7 @@ import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { projectPlannerSource } from "../planner/port.ts"
 import { plannerImportDetail } from "./detail.ts"
+import { plannerUnchangedOutcomes } from "./planner-unchanged.ts"
 import type { ParsedImport } from "./files.ts"
 import { preparePlannerWorkbook } from "./planner.ts"
 import type { ImportTarget } from "./staged-files.ts"
@@ -80,7 +81,7 @@ export function createSfPlannerImportPreview(input: {
       const origin = matches[0]!
       return [[change.path, { sheet: origin.sheet, row: origin.row, column: origin.column, address: origin.address, field: origin.field }]]
     }))
-    const outcomes = (request.parsed.origins ?? []).filter((origin) => (["OPEX", "CAPEX"].includes(origin.sheet) && origin.field === "Total") || (origin.sheet === "Headcount" && origin.field === "FY cost")).map((origin) => ({ kind: "ignored" as const, source: { sheet: origin.sheet, row: origin.row, column: origin.column, address: origin.address, field: origin.field }, reason: "not-consumed-by-import" as const }))
+    const outcomes = [...plannerUnchangedOutcomes({ parsed: request.parsed, before: preview.before, after: preview.after, versionId: resolved.value.versionId }), ...(request.parsed.origins ?? []).filter((origin) => (["OPEX", "CAPEX"].includes(origin.sheet) && origin.field === "Total") || (origin.sheet === "Headcount" && origin.field === "FY cost")).map((origin) => ({ kind: "ignored" as const, source: { sheet: origin.sheet, row: origin.row, column: origin.column, address: origin.address, field: origin.field }, reason: "not-consumed-by-import" as const }))]
     return { status: "ok", value: { manifest, detail: plannerImportDetail({ manifestId: id, version: 1, sourceDigest: request.parsed.sourceDigest, domainReference: evidence.refId, changes: preview.changes, locations, outcomes }), execution: { operationId, previewDigest: preview.previewDigest, previewAt: environment.at, actorId: context.binding.principalRef, idempotencyKey, targetIncarnation: request.target.incarnation, commandDigest: preview.commandDigest } } }
   }
 }

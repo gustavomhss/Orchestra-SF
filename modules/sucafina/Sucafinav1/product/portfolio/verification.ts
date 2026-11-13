@@ -100,7 +100,7 @@ export function createPortfolioProofVerifier(input: {
     const source = await input.results.readHistoricalScenario({ resultRef: binding.request.scenarioRef }, context)
     const baseline = await input.results.readHistoricalScenario({ resultRef: unitBinding.baselineRef }, context)
     if (source.status !== "ok" || baseline.status !== "ok" || source.value.kind !== "scenario" || baseline.value.kind !== "scenario" || source.value.requestDigest !== digestSfValue(unitBinding.scenario)) return false
-    const samples: { resultRef: string; coverageRefs: readonly string[]; conditions: readonly string[] }[] = []
+    const samples: { resultRef: string; coverageRefs: readonly string[]; conditions: readonly string[]; complete: boolean }[] = []
     const exact: { value?: { value: number | null; evidenceRefs: readonly import("../contracts/business-context.ts").BusinessEvidenceRef[] } } = {}
     const evaluate = createSensitivityEvaluator({
       sample: async (_request, value, trusted) => {
@@ -112,11 +112,11 @@ export function createPortfolioProofVerifier(input: {
         const preview = await input.sensitivityPreview({ baselineRef: unitBinding.baselineRef, scenario }, trusted)
         if (preview.status !== "ok") return preview
         if (saved.value.kind !== "scenario" || digestSfValue(saved.value.caseRef) !== digestSfValue(binding.caseRef) || saved.value.requestDigest !== digestSfValue(scenario) || plannerScenarioDigest(saved.value.result) !== plannerScenarioDigest(preview.value.sample) || preview.value.metric.metricRef !== "planner:known-subtotal-difference" || preview.value.metric.state !== "conditioned" || !preview.value.metric.evidenceRefs.length || digestSfValue(preview.value.metric.period) !== digestSfValue(preview.value.sample.horizon) || digestSfValue(preview.value.comparison.costCoverageRefs) !== digestSfValue([unitBinding.baselineCoverageRef]) || preview.value.comparison.comparisonStatus === "incompatible" || preview.value.comparison.comparisonStatus === "unavailable" || preview.value.metric.unit !== unitBinding.resultUnit || preview.value.metric.engineVersion !== unitBinding.engineVersion || preview.value.metric.value !== point.value || preview.value.comparison.knownDifference !== point.value || preview.value.comparison.baselineResultRef !== unitBinding.baselineRef || preview.value.comparison.alternativeResultRef !== preview.value.sample.id) return { status: "stale", reason: "sensitivity-sample-changed" }
-        samples.push({ resultRef: point.resultRef, coverageRefs: preview.value.comparison.costCoverageRefs, conditions: preview.value.comparison.unresolvedConditions })
+        samples.push({ resultRef: point.resultRef, coverageRefs: preview.value.comparison.costCoverageRefs, conditions: preview.value.comparison.unresolvedConditions, complete: preview.value.comparison.comparisonStatus === "complete" && preview.value.sample.costCoverage.coverageState === "complete" })
         return { status: "ok", value: { resultRef: point.resultRef, scenario: saved.value.result, criterionValue: point.value, parameterUnit: unitBinding.parameterUnit, resultUnit: unitBinding.resultUnit, unitMetadataRef: unitBinding.unitMetadataRef, unitMetadataVersion: unitBinding.unitMetadataVersion } }
       },
       exactThreshold: async (_request, trusted) => {
-        if (!input.exactThreshold) return { status: "unavailable", reason: "exact-threshold-not-proven" }
+        if (!input.exactThreshold || samples.some((sample) => !sample.complete) || baseline.value.result.costCoverage.coverageState !== "complete" || source.value.result.costCoverage.coverageState !== "complete") return { status: "unavailable", reason: "exact-threshold-not-proven" }
         const result = await input.exactThreshold(binding.request, unitBinding, trusted)
         if (result.status === "ok") exact.value = result.value
         return result

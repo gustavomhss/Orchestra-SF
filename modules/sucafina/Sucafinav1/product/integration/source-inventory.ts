@@ -18,7 +18,8 @@ export function enumerateSfSources(surface: Surface, snapshot: Snapshot): readon
     const versions = Array.isArray(snapshot.data.versions)
       ? rows(snapshot.data.versions).map((value) => ({ key: String(value.id ?? ""), value }))
       : Object.entries(object(snapshot.data.versions)).map(([key, value]) => ({ key: String(object(value).id ?? key), value }))
-    return [...assets, ...versions.map(({ key, value }) => ({ recordType: "planner-version", recordId: key, inputDigest: digestSfValue({ value,
+    const roster = Array.isArray(snapshot.data.roster) ? [{ recordType: "planner-roster", recordId: "file", inputDigest: digestSfValue({ roster: snapshot.data.roster, revision: snapshot.versions["roster:file"] }) }] : []
+    return [...assets, ...roster, ...versions.map(({ key, value }) => ({ recordType: "planner-version", recordId: key, inputDigest: digestSfValue({ value,
       entities: snapshot.data.entities === undefined ? object(snapshot.data.app).entities : snapshot.data.entities,
       allocations: snapshot.data.allocations === undefined ? object(snapshot.data.app).allocations : snapshot.data.allocations,
       officials: snapshot.data.officials, officialId: snapshot.data.officialId, appOfficialId: object(snapshot.data.app).officialId,

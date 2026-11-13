@@ -18,7 +18,7 @@ export function dashboardSignals(snapshot: Snapshot, actor: Actor, environment: 
     }, new Map<string, number>())
     return new Set([...counts].filter(([, count]) => count === 1).map(([id]) => id))
   }
-  const topicIds = allowed.includes("Hot Topics & Actions") ? uniqueIds(snapshot.data.hotTopics) : new Set<string>()
+  const topicIds = uniqueIds(topics)
   const riskIds = allowed.includes("IT Risks") ? uniqueIds(portfolio.risks) : new Set<string>()
   const contractIds = allowed.includes("Vendor Contracts") ? uniqueIds(portfolio.contracts) : new Set<string>()
   const today = environment.at.slice(0, 10)

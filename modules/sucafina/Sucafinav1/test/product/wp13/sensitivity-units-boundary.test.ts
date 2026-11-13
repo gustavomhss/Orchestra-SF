@@ -189,7 +189,8 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     const changedCase = await state.transaction(request, { namespace: "cases", expectedStorageVersion: caseState.storageVersion, idempotencyKey: "change-other", commandDigest: "d".repeat(64), targetRef: otherCase.id, targetIncarnation: otherCase.incarnation }, async (value) => { value.cases.other = { ...value.cases.other, version: 2 }; return { commit: true, value: true } })
     expect(changedCase.status).toBe("ok")
     expect((await contribution.persistent.read(crossSaved.value.portfolioResultRef, context)).status).toBe("stale")
-    const evaluate = createPlannerSensitivity({ results, resolve: issuer.resolve, revalidate: issuer.revalidate, preview: (input, trusted) => comparePlannerPreview({ host, sources, scenarios, planner }, input, trusted), idempotencyKey: async (digest) => `sensitivity-${digest}` })
+    let exactCalls = 0
+    const evaluate = createPlannerSensitivity({ results, resolve: issuer.resolve, revalidate: issuer.revalidate, preview: (input, trusted) => comparePlannerPreview({ host, sources, scenarios, planner }, input, trusted), exactThreshold: async () => { exactCalls++; return { status: "ok", value: { value: 110000, evidenceRefs: [evidence] } } }, idempotencyKey: async (digest) => `sensitivity-${digest}` })
     const portfolio: PortfolioPort = { evaluate: async () => ({ status: "unavailable", reason: "unused-by-sensitivity-test" }), sensitivity: evaluate }
     const persistent = createPersistentSensitivityPort({ portfolio, results, bindings, resolveBinding: issuer.resolve, idempotencyKey: async (digest) => `persisted-${digest}` })
     const sensitivityRequest: SensitivityRequest = { scenarioRef: selectedRef, parameterBounds: { parameterRef: "line:11", minimum: 100000, maximum: 120000, steps: 2 }, criterion: { id: "renewal-difference", operator: "gte", value: 0 } }
@@ -204,6 +205,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     expect(saved.value.sensitivity.evaluated.map((point) => point.parameterValue)).toEqual([100000, 110000, 120000])
     expect(saved.value.sensitivity.evaluated.every((point) => point.value === null)).toBe(true)
     expect(saved.value.sensitivity.threshold).toBeNull()
+    expect(exactCalls).toBe(0)
     expect(saved.value.sensitivity.thresholdEvidence).toEqual({ state: "unavailable", reason: "sample-value-unavailable" })
     expect(saved.value.sensitivity.costCoverageRefs).toEqual([decisionCoverageRef(caseRef, "baseline", 1), decisionCoverageRef(caseRef, "selected", 1)])
     expect(saved.value.sensitivity.comparisonStatus).toBe("conditioned")
