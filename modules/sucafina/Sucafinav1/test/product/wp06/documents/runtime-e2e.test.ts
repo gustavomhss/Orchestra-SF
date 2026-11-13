@@ -45,7 +45,7 @@ test("real host persists procurement document evidence and Planner import under 
     const code = await identity.enroll()
     const session = await identity.handle(new Request(`${origin}/sucafina/auth/local?code=${code}`))
     const cookie = session!.headers.get("set-cookie")!.split(";")[0]!
-    const request = (surface = "dashboard") => new Request(`${origin}/sucafina/${surface}`, { method: "POST", headers: { cookie, origin } })
+    const request = (surface = "dashboard") => new Request(`${origin}/sucafina/${surface}`, { method: "POST", headers: { cookie, origin, "Idempotency-Key": randomUUID() } })
     const principal = await store.transaction("procurement", async (snapshot) => ({ commit: false, value: await identity.authenticate(request("procurement"), { surface: "procurement", roleMap: roleMap(snapshot, "procurement") }) }))
     if (!principal) throw new Error("missing operator")
     const uploaded = await store.transaction("procurement", async (snapshot, blobs) => {
@@ -54,7 +54,7 @@ test("real host persists procurement document evidence and Planner import under 
     })
     expect(uploaded.ok).toBe(true)
     const installation = { installationId: operator.installationId, hostId: "test-host", projectId: "project", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }
-    const authority = createSfProductAuthority({ identity: () => installation, installationId: operator.installationId, origin, policyVersion: "policy", persistence: store, authenticate: identity.authenticate, environment, grants: [{ principalRef: principal.id, namespaces: ["documents", "receipts"], operations: ["sf_document_extract", "sf_knowledge_search", "sf_evidence_get", "sf_import_preview"], humanActions: ["documents.schema", "documents.confirm", "imports.admit", "imports.apply"] }], createId: randomUUID, now: () => Date.parse(at), commandIdentity: async (_, operation, digest) => digestSfValue({ operation, digest }), inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => 1, authorizeDocument: createSfDocumentTargetAuthority({ persistence: store, authenticate: identity.authenticate, environment, assets }) })
+    const authority = createSfProductAuthority({ identity: () => installation, installationId: operator.installationId, origin, policyVersion: "policy", persistence: store, authenticate: identity.authenticate, environment, grants: [{ principalRef: principal.id, namespaces: ["documents", "receipts"], operations: ["sf_document_extract", "sf_knowledge_search", "sf_evidence_get", "sf_import_preview"], humanActions: ["documents.schema", "documents.confirm", "imports.admit", "imports.apply"] }], createId: randomUUID, now: () => Date.parse(at), commandIdentity: async (request, operation) => { if (request.method === "GET" || request.method === "HEAD") return randomUUID(); const key = request.headers.get("Idempotency-Key"); return key && /^[A-Za-z0-9._:-]{8,128}$/.test(key) ? digestSfValue({ operation, key }) : undefined }, inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => 1, authorizeDocument: createSfDocumentTargetAuthority({ persistence: store, authenticate: identity.authenticate, environment, assets }) })
     const runtime = { installationId: operator.installationId, directory, sourceRoot: directory, origin, mount: "/sucafina", persistence: store, authenticate: identity.authenticate, environment, assets }
     const service = createSfDocumentServices({ runtime, authority })
     const importing = createSfImportServices({ runtime, authority })
@@ -104,6 +104,8 @@ test("real host persists procurement document evidence and Planner import under 
     expect(String(opened.value.href).startsWith("/sucafina/procurement?asset=")).toBe(true)
     const importHttp = createSfImportHttp({ origin, mount: "/sucafina", runtime: () => ({ ui: authority.ui, human: authority.human, service: importing }) })
     const url = (mode: string) => `${origin}/sucafina/planner?sf=${mode}`
+    const missingKey = await importHttp(new Request(url("import-preview"), { method: "POST", headers: { cookie, origin, "content-type": "application/json" }, body: JSON.stringify({ admittedFileRef: "not-admitted", format: "xlsx", options: {} }) }), "planner")
+    expect(missingKey?.status).toBe(403)
     const discovery = await importHttp(new Request(`${url("import-targets")}&surface=planner`, { headers: { cookie } }), "planner")
     expect(discovery?.status).toBe(200)
     const choices = await discovery!.json() as { value: { label: string; surface: string; selectionRef: string }[] }
@@ -116,11 +118,11 @@ test("real host persists procurement document evidence and Planner import under 
     form.set("file", new File([bytes], "forecast.xlsx", { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }))
     form.set("surface", planner.surface); form.set("selectionRef", planner.selectionRef)
     form.set("options", JSON.stringify({ newVersion: false, removeMissing: false, preview: {} }))
-    const uploadedImport = await importHttp(new Request(url("import-admit"), { method: "POST", headers: { cookie, origin }, body: form }), "planner")
+    const uploadedImport = await importHttp(new Request(url("import-admit"), { method: "POST", headers: { cookie, origin, "Idempotency-Key": randomUUID() }, body: form }), "planner")
     expect(uploadedImport?.status).toBe(200)
     const file = await uploadedImport!.json() as { value: { ref: string } }
     const previewInput = { admittedFileRef: file.value.ref, format: "xlsx", options: {} }
-    const post = (mode: string, value: unknown) => importHttp(new Request(url(mode), { method: "POST", headers: { cookie, origin, "content-type": "application/json" }, body: JSON.stringify(value) }), "planner")
+    const post = (mode: string, value: unknown) => importHttp(new Request(url(mode), { method: "POST", headers: { cookie, origin, "content-type": "application/json", "Idempotency-Key": randomUUID() }, body: JSON.stringify(value) }), "planner")
     const preview = await post("import-preview", previewInput)
     expect(preview?.status).toBe(200)
     const manifest = await preview!.json() as { value: { id: string; version: number } }

@@ -10,6 +10,9 @@ import { projectSfProcurementScope } from "../../../product/integration/procurem
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
 import { createProcurementCollectionRegistry, createProcurementSourceResolver } from "../../../product/procurement/sources.ts"
 import { createProcurementCollectionMemberIssuer } from "../../../product/procurement/collection-member.ts"
+import { prepareProcurementMutation } from "../../../product/procurement/prepared.ts"
+import { createProcurementPreparedReview } from "../../../product/procurement/prepared-review.ts"
+import { createProcurementPort } from "../../../product/procurement/port.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 
@@ -20,7 +23,7 @@ test("reissue requires the recipient's current scope and the same physical reque
     const persistence = createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources, projectScope: projectSfProcurementScope, createId: randomUUID })
     await persistence.initializeSources("procurement")
     await persistence.transaction("procurement", async (snapshot) => {
-      snapshot.data.store = { requests: { "PR-1": { request: { number: "PR-1", createdBy: "a", status: "draft", pr: { title: "Owned" } }, version: 1, by: "a" } }, suppliers: [], settings: { currency: "USD" } }
+      snapshot.data.store = { requests: { "PR-1": { request: { number: "PR-1", createdBy: "a", status: "draft", pr: { title: "Owned" } }, version: 1, by: "a" } }, suppliers: [], settings: { currency: "USD" }, issued: { pr: ["PR-1"], po: [] } }
       return { commit: true, value: undefined }
     })
     const roles = { b: "requester" }
@@ -44,6 +47,12 @@ test("reissue requires the recipient's current scope and the same physical reque
     if (first.status !== "ok") throw new Error("source issuance failed")
     const original = await resolver.resolve(first.value, a)
     if (original.status !== "ok") throw new Error("source resolution failed")
+    const privateSource = await resolver.resolveForPreparation(first.value, a)
+    if (privateSource.status !== "ok") throw new Error("source scope unavailable")
+    const originalTarget = original.value.evidence.target
+    const target = { surface: "procurement" as const, type: originalTarget.recordType, id: originalTarget.recordId, incarnation: originalTarget.incarnation, version: originalTarget.version, fields: originalTarget.fields, period: original.value.context.period, observedAt: "2026-01-01T00:00:00Z" }
+    const prepared = await persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: prepareProcurementMutation({ snapshot, actor: { id: "a", roles: ["requester"], canWrite: true, assigned: [], domains: [] }, environment: { at: target.observedAt, directory: [], id: randomUUID }, context: a, target, scope: privateSource.value.scope, evidence: original.value.evidence, command: { page: "Requests", action: "save", id: "PR-1", version: 0, values: { pr: { title: "Updated" } } }, operationId: "op", idempotencyKey: "key" }) }))
+    if (!prepared) throw new Error("source preparation failed")
     const collection = createProcurementCollectionRegistry({ host, scopedSources: persistence, contextFor })
     const selected = await collection.createSelection(a)
     if (selected.status !== "ok") throw new Error("collection issuance failed")
@@ -64,6 +73,11 @@ test("reissue requires the recipient's current scope and the same physical reque
     expect(admitted.value.target).toMatchObject({ recordType: "procurement-request", recordId: "PR-1", fields: original.value.evidence.target.fields, period: original.value.evidence.target.period })
     expect(admitted.value.target.incarnation).not.toBe(original.value.evidence.target.incarnation)
     expect((await resolver.resolve(admitted.value.refId, b)).status).toBe("ok")
+    const unavailable = async () => ({ status: "unavailable" as const, reason: "unused" })
+    const port = createProcurementPort({ ...host, resolveRequestSource: resolver.resolve, resolveSupplierSource: resolver.resolve, isCurrentRequestSource: resolver.isCurrent, isCurrentSupplierSource: resolver.isCurrent, resolveRequestCollection: unavailable, isCurrentRequestCollection: () => false, readContractSource: unavailable })
+    const reviewed = await createProcurementPreparedReview({ port, individual: resolver })(prepared.command, b)
+    expect(reviewed).toMatchObject({ status: "ok", value: { fields: [{ field: "subject", before: "Owned", after: "Updated" }], source: { refId: admitted.value.refId }, originalTargetDigest: digestSfValue(target) } })
+    expect(JSON.stringify(reviewed)).not.toContain(original.value.evidence.refId)
     expect((await reissue({ ...original.value.evidence.target, fields: ["status"] }, b)).status).toBe("unavailable")
     expect((await reissue({ ...original.value.evidence.target, incarnation: "forged" }, b)).status).toBe("unavailable")
     roles.b = "requester"

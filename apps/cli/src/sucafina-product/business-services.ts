@@ -28,6 +28,7 @@ import { createProcurementSourcingEvidence } from "../../../../modules/sucafina/
 import { createProcurementPort } from "../../../../modules/sucafina/Sucafinav1/product/procurement/port.ts"
 import { createProcurementCapabilities } from "../../../../modules/sucafina/Sucafinav1/product/procurement/capabilities.ts"
 import { createProcurementContractSource } from "../../../../modules/sucafina/Sucafinav1/product/procurement/contracts.ts"
+import { sfRunSourceFence } from "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts"
 import { createPlannerProduct, createPlannerCoverageRouter } from "../../../../modules/sucafina/Sucafinav1/product/planner/product.ts"
 import { createPlannerResultPersistence } from "../../../../modules/sucafina/Sucafinav1/product/planner/persistence.ts"
 import { createDecisionCoverageAccess, decisionCoverageRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts"
@@ -39,6 +40,19 @@ import freeze from "../../../../modules/sucafina/Sucafinav1/product/contracts/fr
 export function createSfBusinessServices(input: { authority: ReturnType<typeof createSfProductAuthority>; persistence: Parameters<CreateSfHostRuntime>[0]["persistence"]; proposalCoverageWrites: WeakSet<object>; extraDescriptors?: readonly CapabilityDescriptor[]; documentRead?: SfDocumentReader }) {
   const host = input.authority.host
   const periods = new Map<string, { period: Period; expiresAt: number }>()
+  const fences = (snapshots: NonNullable<ReturnType<NonNullable<typeof input.persistence.currentSnapshots>>>) => ({
+    dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement),
+  })
+  const readSourceFences = async (call: TrustedDomainContext) => {
+    const request = host.requestFor(call)
+    if (!request || !input.persistence.transactionAll || !await host.revalidate(call)) return undefined
+    const found = await input.persistence.transactionAll(async (snapshots) => ({ commit: false, value: fences(snapshots) }), { signal: request.signal })
+    return await host.revalidate(call) && !request.signal.aborted ? found : undefined
+  }
+  const lockedSourceFences = () => {
+    const snapshots = input.persistence.currentSnapshots?.()
+    return snapshots ? fences(snapshots) : undefined
+  }
   const key = (call: TrustedDomainContext) => digestSfValue({ installationId: call.binding.installationId, projectId: call.binding.projectId,
     principalRef: call.binding.principalRef, policyVersion: call.binding.policyVersion, accessRevision: call.binding.accessRevision })
   const contextFor = async (call: TrustedDomainContext) => {
@@ -246,7 +260,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     return { status: "ok" as const, value: { forecastComparison: result.value, selectedPeriod: wanted.period, currency: wanted.currency, sourceRefs: refs, registeredReasons: [] } }
     })
   } }
-  return { dashboard, procurement, planner, plannerSources, registry, individual, contracts, cases, context, evidence, results, scenarioLookup, sourcingEvidence, resolveCase, withCase, descriptors, procurementSelections, forecastInputs, initializeAtlas,
+  return { dashboard, procurement, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, results, scenarioLookup, sourcingEvidence, resolveCase, withCase, readSourceFences, lockedSourceFences, descriptors, procurementSelections, forecastInputs, initializeAtlas,
     remainingOperations: () => freeze.operations.map((entry) => entry.operation).filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation)),
     dispose: () => { periods.clear(); evidence.current = undefined; descriptors.splice(baseCount) } }
 }
