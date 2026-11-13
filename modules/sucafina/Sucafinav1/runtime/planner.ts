@@ -1,4 +1,5 @@
 import type { Actor, Command, Domain, Environment, Result, Snapshot } from "./contract.ts"
+import { plannerCommands } from "./native-commands-planner.ts"
 import { WorkbookAmount } from "./workbook-amount.ts"
 import { changed, conflict, finite, object, rows, text } from "./contract.ts"
 import type { RenderContext } from "./ui.ts"
@@ -354,6 +355,7 @@ export const domain: Domain = {
       versions: structuredClone(snapshot.versions),
     }
   },
+  commands: plannerCommands,
 }
 function lineScope(line: Row | undefined) {
   if (!line) return undefined
