@@ -1,3 +1,4 @@
+import { SF_NATIVE_ACCESS_COPY, SF_NATIVE_ACCESS_COPY_BR } from "./orchestra-chapters/sucafina-native-access"
 import { HOME_COPY, HOME_COPY_BR } from "./orchestra-chapters/home"
 import { SHELL_COPY, SHELL_COPY_BR } from "./orchestra-chapters/shell"
 import { MCP_COPY, MCP_COPY_BR } from "./orchestra-chapters/mcp"
@@ -33,6 +34,7 @@ import { FRONTEND_RECOVERY_COPY, FRONTEND_RECOVERY_COPY_BR } from "./frontend-re
 
 // Preserve approved identity copy across locales; inherited product labels retain their translations.
 export const ORCHESTRA_COPY = {
+  ...SF_NATIVE_ACCESS_COPY,
   "orchestra.nav.expand": "Expand sidebar",
   "orchestra.nav.collapse": "Collapse sidebar",
   "orchestra.nav.compactWidth": "The sidebar stays compact in this window width.",
@@ -709,6 +711,7 @@ export const ORCHESTRA_BASE_COPY_BR: Partial<Record<keyof typeof ORCHESTRA_COPY,
 
 // Brazilian Portuguese for every Orchestra key, composed like ORCHESTRA_COPY. Keys without a twin fall back to English.
 export const ORCHESTRA_COPY_BR: Partial<Record<keyof typeof ORCHESTRA_COPY, string>> = {
+  ...SF_NATIVE_ACCESS_COPY_BR,
   ...ORCHESTRA_BASE_COPY_BR,
   ...HOME_COPY_BR,
   ...SHELL_COPY_BR,
