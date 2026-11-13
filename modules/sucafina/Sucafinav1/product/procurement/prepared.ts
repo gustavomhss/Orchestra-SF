@@ -27,6 +27,7 @@ export function prepareProcurementMutation(input: { snapshot: Snapshot; actor: A
   if (keys.some((key) => key === "estAmount" ? typeof values[key] !== "number" || !Number.isFinite(values[key]) || Number(values[key]) < 0 : typeof values[key] !== "string")) return undefined
   if (keys.some((key) => !prepared.target.fields.includes(key === "title" ? "subject" : key === "justification" ? "reason" : "originalAmount"))) return undefined
   const selector = object(prepared.scope.selector)
+  if (digestSfValue(selector.fields) !== digestSfValue(prepared.target.fields) || digestSfValue(selector.period) !== digestSfValue(prepared.target.period)) return undefined
   const valid = (snapshot: Snapshot, actor: Actor) => {
     if (actor.id !== prepared.actor.id || digestSfValue(actor) !== digestSfValue(prepared.actor) || selector.kind !== "procurement-record-v1" || digestSfValue(selector.roles) !== digestSfValue(actor.roles) || selector.canWrite !== actor.canWrite || selector.roleMapDigest !== digestSfValue(roleMap(snapshot, "procurement"))) return false
     const identity = sfScopedSourceIdentity(snapshot, prepared.scope)
@@ -39,8 +40,12 @@ export function prepareProcurementMutation(input: { snapshot: Snapshot; actor: A
     const staged = structuredClone(snapshot)
     const result = domain.execute(staged, actor, prepared.command, { ...environment, at, id: () => "" })
     if (!result.ok) return { result }
-    const before = object(object(object(snapshot.data.store).requests)[prepared.target.id]).request
-    const after = object(object(object(staged.data.store).requests)[prepared.target.id]).request
+    const beforeStore = object(snapshot.data.store)
+    const afterStore = object(staged.data.store)
+    const before = object(object(beforeStore.requests)[prepared.target.id]).request
+    const after = object(object(afterStore.requests)[prepared.target.id]).request
+    const others = (value: unknown) => Object.fromEntries(Object.entries(object(value)).filter(([id]) => id !== prepared.target.id))
+    if (digestSfValue(others(beforeStore.requests)) !== digestSfValue(others(afterStore.requests)) || digestSfValue(beforeStore.suppliers ?? []) !== digestSfValue(afterStore.suppliers ?? []) || digestSfValue(beforeStore.issued ?? { pr: [], po: [] }) !== digestSfValue(afterStore.issued)) return { result }
     const untouched = (value: unknown) => Object.fromEntries(Object.entries(object(value)).filter(([key]) => key !== "pr" && key !== "history"))
     const prUntouched = (value: unknown) => Object.fromEntries(Object.entries(object(object(value).pr)).filter(([key]) => !keys.includes(key)))
     const history = rows(object(after).history)
@@ -105,7 +110,7 @@ export function staleProcurementPreparedMutation(snapshot: Snapshot, actor: Acto
     const selector = object(scope.selector)
     const projection = projectSfProcurementScope("procurement", state, scope)
     const identity = sfScopedSourceIdentity(state, scope)
-    if (!identity || !projection || identity.incarnation !== prepared.target.incarnation || identity.inputDigest !== digestSfValue(projection) || digestSfValue(selector.roles) !== digestSfValue(currentActor.roles) || selector.canWrite !== currentActor.canWrite || selector.roleMapDigest !== digestSfValue(roleMap(state, "procurement"))) return false
+    if (!identity || !projection || identity.incarnation !== prepared.target.incarnation || identity.inputDigest !== digestSfValue(projection) || digestSfValue(selector.roles) !== digestSfValue(currentActor.roles) || digestSfValue(selector.fields) !== digestSfValue(prepared.target.fields) || digestSfValue(selector.period) !== digestSfValue(prepared.target.period) || selector.canWrite !== currentActor.canWrite || selector.roleMapDigest !== digestSfValue(roleMap(state, "procurement"))) return false
     const revision = procurementPreparedRevision(state, prepared.command)
     return revision !== undefined && (identity.version !== prepared.target.version || revision !== prepared.expectedVersion)
   }

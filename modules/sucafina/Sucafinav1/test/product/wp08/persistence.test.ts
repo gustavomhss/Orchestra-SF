@@ -115,3 +115,26 @@ test("thread mutation requires the admitted payload again at commit", async () =
     await rm(directory, { recursive: true, force: true })
   }
 })
+
+test("versioned relations keep immutable identity and cannot reuse a retired id", async () => {
+  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-relation-version-"))
+  await chmod(directory, 0o700)
+  const store = await openLocalStore(directory)
+  try {
+    const context = { kind: "ui", binding: { installationId: "install", projectId: "project", principalRef: "person-A", requestId: "request", policyVersion: "policy", accessRevision: "access", expiresAt: "2100-01-01T00:00:00Z" }, lease: {} } as unknown as TrustedUiContext
+    const state = createSfProductState({ persistence: store, createId: () => "state-inc", resolveTarget: async () => ({ incarnation: "inc-A" }), authorize: async () => ({ principalRef: "person-A", policyVersion: "policy", accessRevision: "access" }) })
+    const relations = createRelationPort({ state, host: { requestFor: () => new Request("https://example.test/"), revalidate: async () => true }, human: { authorize: async () => true }, mutationFence: createCollaborationMutationFence({ persistence: store }), handoffPermit: Symbol("test"), authorizePair: async () => true, creationTarget: { ref: "workspace", incarnation: "inc-A" }, createId: () => "relation-1", now: () => "2026-11-13T00:00:00Z" })
+    const source = (refId: string) => ({ schema: "sf-evidence-v1", refId, installationId: "install", projectId: "project", refDigest: "a".repeat(64), evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "line", recordId: refId, incarnation: `inc-${refId}`, version: 1, fields: ["amount"], projectionDigest: "b".repeat(64) } }) as const
+    const from = source("from")
+    const to = source("to")
+    const pair = { fromRef: from.refId, toRef: to.refId, kind: "line-request", evidenceRefs: [from, to] }
+    expect((await relations.create(pair, { expectedStorageVersion: 0, idempotencyKey: "create" }, context)).status).toBe("ok")
+    expect(await relations.readVersioned(["from"], context)).toMatchObject({ status: "ok", value: [{ id: "relation-1", version: 1, from, to, state: "confirmed" }] })
+    expect((await relations.remove("relation-1", pair, { expectedStorageVersion: 1, idempotencyKey: "remove" }, context)).status).toBe("ok")
+    expect((await relations.create(pair, { expectedStorageVersion: 2, idempotencyKey: "reuse" }, context)).status).toBe("conflict")
+    expect(await relations.readVersioned(["from"], context)).toEqual({ status: "ok", value: [] })
+  } finally {
+    await store.dispose()
+    await rm(directory, { recursive: true, force: true })
+  }
+})

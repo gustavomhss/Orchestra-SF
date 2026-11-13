@@ -42,6 +42,9 @@ import { createSfAnalysisHost } from "../../../../modules/sucafina/Sucafinav1/pr
 import { runSfAnalysis } from "../../../../modules/sucafina/Sucafinav1/product/ai/analysis-port.ts"
 import { decodeSfContributionEnvelope, decodeSfSkillInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import type { SfSkillInputMap } from "../../../../modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts"
+import { createSfAnalysisAuthorReader } from "./analysis-author.ts"
+import { createSfDecisionCritiqueVerifier } from "./analysis-verifier-review.ts"
+import { createSfIntentVerifier } from "./analysis-verifier-intent.ts"
 import { createSfSourcingVerifier } from "./analysis-verifier-procurement.ts"
 import { createSfScenarioVerifier } from "./analysis-verifier-scenarios.ts"
 import { createSfForecastVerifier, withoutObservationTimes } from "./analysis-verifier.ts"
@@ -151,7 +154,8 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
   const starts = new Map<string, { digest: string; promise: Promise<PortResult<{ runRef: string }>> }>()
   const stopped = new Map<string, { marker: SfStoppedRun; timer: ReturnType<typeof setTimeout> }>()
   const analysisDependencies = { cases: business.cases, planner: business.planner, procurement: business.procurement, context: business.context, host: authority.host }
-  const verifiers = [createSfForecastVerifier(analysisDependencies), createSfSourcingVerifier({ ...analysisDependencies, sourcingEvidence: business.sourcingEvidence }), createSfScenarioVerifier({ ...analysisDependencies,
+  const readAuthorAnalysis = createSfAnalysisAuthorReader({ authority, context: business.context, resolveCase: business.resolveCase })
+  const verifiers = [createSfDecisionCritiqueVerifier({ ...analysisDependencies, readAuthorAnalysis }), createSfIntentVerifier({ ...analysisDependencies, replayIntent: business.cases.prepareIntentForCase }), createSfForecastVerifier(analysisDependencies), createSfSourcingVerifier({ ...analysisDependencies, sourcingEvidence: business.sourcingEvidence }), createSfScenarioVerifier({ ...analysisDependencies,
     scenarioRef: async (caseRef, alternative, call) => {
       const result = await business.scenarioLookup({ caseRef, alternativeId: alternative.id, alternativeVersion: alternative.version }, call)
       return result.status === "ok" ? { status: "ok", value: result.value.resultRef } : result
@@ -195,6 +199,13 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
       const decoded = decodeSfSkillInput(skill.inputSchemaRef as keyof SfSkillInputMap, captured.skillInput)
       if (!decoded.ok) return { status: "needs-input", reason: "invalid-analysis-input" }
       const skillInput = decoded.value
+      const critique = skill.id === "sf-contestar-decisao" ? decodeSfSkillInput("DecisionCritiqueInput", skillInput) : undefined
+      if (critique && !critique.ok) return { status: "needs-input", reason: "invalid-analysis-input" }
+      const author = critique?.ok ? await readAuthorAnalysis(critique.value.authorAnalysis.runRef, critique.value.authorAnalysis.outputDigest, context) : undefined
+      if (critique?.ok && (!author || author.status !== "ok" || !author.value.run.native || author.value.run.runRef === runRef))
+        return { status: "unavailable", reason: "author-analysis-unavailable" }
+      const reviewTarget = author?.status === "ok" && author.value.run.native ? { targetRunId: author.value.run.runRef, targetSessionId: author.value.run.native.sessionID,
+        targetOutputDigest: author.value.output.outputDigest, caseRef: author.value.run.caseRef } : undefined
       const chosen = { profile: parent.profile, manifestDigest: parent.manifestDigest, skills: [skill], operationIds: [...captured.request.requestedOperationScope] }
       if (!selectionMatches(chosen)) return { status: "denied", reason: "analysis-selection-unavailable" }
       const actualModel = model.value
@@ -209,7 +220,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
         if (!run.intentDigest || !/^[a-f0-9]{64}$/.test(run.intentDigest)) return { status: "unavailable", reason: "analysis-legacy-intent-unavailable" }
         if (run.intentDigest !== intentDigest) return { status: "conflict", reason: "analysis-idempotency-content-changed" }
         if (run.requestDigest !== digestSfValue({ ...captured.request, contextFingerprint: run.contextFingerprint }) || run.skillInputDigest !== digestSfValue(skillInput) ||
-          digestSfValue(run.model) !== digestSfValue(actualModel) || digestSfValue(run.selection) !== digestSfValue(chosen) || digestSfValue(run.reviewTarget) !== digestSfValue(captured.reviewTarget))
+          digestSfValue(run.model) !== digestSfValue(actualModel) || digestSfValue(run.selection) !== digestSfValue(chosen) || digestSfValue(run.reviewTarget) !== digestSfValue(reviewTarget))
           return { status: "conflict", reason: "analysis-idempotency-content-changed" }
         const current = await business.cases.read({ caseRef: encodeCaseRef(run.caseRef) }, context)
         if (current.status !== "ok" || !await authority.human.authorize(context, "analysis.start", captured)) return { status: "denied", reason: "analysis-authority-unavailable" }
@@ -229,7 +240,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
         if (id !== runRef || request.signal.aborted || !identity()) return { status: "denied", reason: "analysis-authority-unavailable" }
         const admitted = await authority.human.admit(request, "analysis.start", captured)
         if (admitted.status !== "ok") return admitted
-        try { return await business.withCase(admitted.value, baseRequest.caseRef, () => action(admitted.value)) } finally { authority.human.finish(admitted.value) }
+        try { return await business.withCase(admitted.value, baseRequest.caseRef, {}, () => action(admitted.value)) } finally { authority.human.finish(admitted.value) }
       }
       const verify = async (call: TrustedDomainContext) => {
         const result = await verifier.verify(verifiedInput, baseRequest, call)
@@ -243,7 +254,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
       const sourceProjection = (proof: NonNullable<Awaited<ReturnType<typeof verify>>>) => proof.sources.map((item) => ({ ref: item.ref, projection: item.authorizedProjection }))
       const first = await verify(context)
       if (!first) return { status: "unavailable", reason: "analysis-source-unavailable" }
-      const fingerprint = digestSfValue(withoutObservationTimes({ case: first.current, skillInput: verifiedInput, selected: selectedRuntime,
+      const fingerprint = digestSfValue(withoutObservationTimes({ case: first.current, skillInput: verifiedInput, selected: selectedRuntime, reviewTarget,
         accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, sources: sourceProjection(first) }))
       const fullRequest = { ...baseRequest, contextFingerprint: fingerprint }
       const fences: { current?: Record<"dashboard" | "planner" | "procurement", string> } = {}
@@ -277,7 +288,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
           const proof = await verify(call)
           const after = await readFences()
           if (!proof || !after || digestSfValue(before) !== digestSfValue(after) || record.contextFingerprint !== fingerprint ||
-            digestSfValue(withoutObservationTimes({ case: proof.current, skillInput: verifiedInput, selected: selectedRuntime,
+            digestSfValue(withoutObservationTimes({ case: proof.current, skillInput: verifiedInput, selected: selectedRuntime, reviewTarget,
               accessRevision: call.binding.accessRevision, policyVersion: call.binding.policyVersion, sources: sourceProjection(proof) })) !== fingerprint)
             return { status: "stale", reason: "analysis-source-changed" }
           if (output) {
@@ -308,7 +319,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
             const at = new Date().toISOString()
             const record: SfNativeRunRecord = { schema: "sf-native-run-v1", runRef, version: 1, intentDigest, requestDigest: digestSfValue(fullRequest), skillInputDigest: digestSfValue(verifiedInput),
               principalRef: call.binding.principalRef, accessRevision: call.binding.accessRevision, policyVersion: call.binding.policyVersion, caseRef: baseRequest.caseRef,
-              selection: selectedRuntime, model: actualModel, skillId: skill.id, objective: baseRequest.objective, contextFingerprint: fingerprint, createdAt: at, updatedAt: at, state: "preparing" }
+              selection: selectedRuntime, model: actualModel, skillId: skill.id, objective: baseRequest.objective, contextFingerprint: fingerprint, createdAt: at, updatedAt: at, state: "preparing", ...(reviewTarget ? { reviewTarget } : {}) }
             const location = identity()?.location
             if (!location) return { status: "unavailable", reason: "analysis-host-unavailable" }
             requests.set(runRef, request)
@@ -351,7 +362,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
           }
           return { status: "ok", value: true }
         } })
-      void runSfAnalysis({ host: analysisHost, request: fullRequest, skillInput: verifiedInput }).then(async (result) => {
+      void runSfAnalysis({ host: analysisHost, request: fullRequest, skillInput: verifiedInput, ...(reviewTarget ? { reviewTarget } : {}) }).then(async (result) => {
         if (result.status !== "ok") announcement.resolve(await existing() ?? result)
         else announcement.resolve({ status: "unavailable", reason: "analysis-admission-missing" })
       }).catch(async () => {
@@ -370,7 +381,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
       })
       return announcement.promise
       }
-      const promise = Promise.resolve().then(() => business.withCase(context, captured.request.caseRef, work)).catch(() => ({ status: "unavailable" as const, reason: "analysis-start-unavailable" }))
+      const promise = Promise.resolve().then(() => business.withCase(context, captured.request.caseRef, {}, work)).catch(() => ({ status: "unavailable" as const, reason: "analysis-start-unavailable" }))
       starts.set(runRef, { digest: intentDigest, promise })
       void promise.finally(() => { if (starts.get(runRef)?.promise === promise) starts.delete(runRef) })
       return promise

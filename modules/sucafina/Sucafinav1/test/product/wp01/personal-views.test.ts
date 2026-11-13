@@ -13,12 +13,16 @@ import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { SfHostServices } from "../../../product/contracts/host-context.ts"
 import { PLANNER_TABS } from "../../../src/nav.ts"
+import { createModule } from "../../../index.ts"
+import { decorateSfProductHtml } from "../../../product/interface/html.ts"
 
 test("personal views isolate authenticated principals and reconcile exact retries", async () => {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-personal-views-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
-  const origin = "http://localhost"
+  const serverState: { handle?: (request: Request) => Promise<Response | undefined> } = {}
+  const server = Bun.serve({ hostname: "localhost", port: 0, fetch: async (request) => await serverState.handle?.(request) ?? new Response(null, { status: 503 }) })
+  const origin = server.url.origin
   const installationId = randomUUID()
   const first = createOperatorIdentity({ origin, mount: "/sucafina", operator: { installationId, uid: 1, name: "First" }, secrets: store.secrets, key: randomBytes(32) })
   const second = createOperatorIdentity({ origin, mount: "/sucafina", operator: { installationId, uid: 2, name: "Second" }, secrets: store.secrets, key: randomBytes(32) })
@@ -32,6 +36,8 @@ test("personal views isolate authenticated principals and reconcile exact retrie
     authorizeView: async (view, context) => view.surface === "planner" && PLANNER_TABS.some((page) => page === view.page) && await authority.host.revalidate(context) })
   const services = { ...authority, personalViews } as SfHostServices
   const app = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
+  const module = createModule("/sucafina", { persistence: store, authenticate, environment, product: app, productHtml: decorateSfProductHtml, maxJsonBytes: 100000 })
+  serverState.handle = async (request) => await first.handle(request) ?? await module(request)
   try {
     const cookie = async (identity: typeof first) => (await identity.handle(new Request(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`)))!.headers.get("set-cookie")!.split(";")[0]!
     const firstCookie = await cookie(first)
@@ -62,5 +68,22 @@ test("personal views isolate authenticated principals and reconcile exact retrie
     expect(await (await post(firstCookie, "open", { id: filtered.view.id }, "filtered-open-key"))!.json()).toMatchObject({ status: "ok", value: { view: { density: "compact", filters: filtered.view.filters } } })
     const invalid = { view: { ...filtered.view, id: "invalid-view-1", filters: { selections: { supplier: "not-allowed-on-opex" } } }, expectedVersion: null }
     expect((await post(firstCookie, "save", invalid, "invalid-intention"))?.status).toBe(400)
-  } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
+    await store.transaction("planner", async (snapshot) => {
+      snapshot.data.versions = [{ id: "v1", year: 2027, closed: 0, lines: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
+      return { commit: true, value: undefined }
+    })
+    const { chromium } = await import("@playwright/test")
+    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+    try {
+      const tab = await browser.newPage()
+      await tab.goto(`${origin}/sucafina/auth/local?code=${await first.enroll()}`)
+      await tab.goto(`${origin}/sucafina/planner?page=OPEX`)
+      await tab.getByRole("button", { name: "Filtered plan" }).click()
+      await tab.waitForURL((url) => url.searchParams.get("view") === filtered.view.id)
+      expect(new URL(tab.url()).searchParams.get("year")).toBe("2027")
+      expect(new URL(tab.url()).searchParams.get("mode")).toBe("forecast")
+      expect(new URL(tab.url()).searchParams.get("q")).toBe("renewal")
+      await tab.locator('html[data-sf-density="compact"]').waitFor()
+    } finally { await browser.close() }
+  } finally { await server.stop(true); await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })

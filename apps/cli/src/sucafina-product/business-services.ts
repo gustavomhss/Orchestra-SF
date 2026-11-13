@@ -97,10 +97,10 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     return current.status === "ok" && current.value.case.version === selected.version && await host.revalidate(call)
       ? { status: "ok", value: structuredClone(selected) } : { status: "unavailable", reason: "case-selection-unavailable" }
   }
-  const withCase = async <T>(call: TrustedDomainContext, selected: CaseRef, action: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
+  const withCase = async <T>(call: TrustedDomainContext, selected: CaseRef, options: { allowHistoricalRetry?: boolean }, action: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
     if (call.kind !== "ui" || caseBindings.has(call)) return { status: "denied", reason: "case-selection-unavailable" }
     const current = await cases.read({ caseRef: encodeCaseRef(selected) }, call)
-    if (current.status !== "ok" || current.value.case.version !== selected.version || !await host.revalidate(call)) return { status: "denied", reason: "case-selection-unavailable" }
+    if (current.status !== "ok" || (options.allowHistoricalRetry ? current.value.case.version < selected.version : current.value.case.version !== selected.version) || !await host.revalidate(call)) return { status: "denied", reason: "case-selection-unavailable" }
     caseBindings.set(call, structuredClone(selected))
     try { return await action() } finally { caseBindings.delete(call) }
   }
@@ -229,7 +229,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     const wanted = structuredClone(request)
     if (call.kind !== "ui" || !input.authority.ui.matchesIntent(call, "sf_forecast_compare", digestSfValue(wanted)) || !await host.revalidate(call))
       return { status: "denied" as const, reason: "forecast-input-authority-unavailable" }
-    return withCase(call, wanted.caseRef, async () => {
+    return withCase(call, wanted.caseRef, {}, async () => {
     const current = await cases.read({ caseRef: encodeCaseRef(wanted.caseRef) }, call)
     if (current.status !== "ok" || current.value.case.version !== wanted.caseRef.version) return { status: "unavailable" as const, reason: "forecast-case-unavailable" }
     const result = await planner.compareForecast({ baseRef: wanted.baseRef, candidateRef: wanted.candidateRef, period: wanted.period, currency: wanted.currency }, call)

@@ -92,6 +92,14 @@ test("prepared Procurement mutation records a stale source conflict without chan
       }, { at, id: randomUUID, directory: [{ id: "alice", name: "Alice" }] })
       return { commit: result.ok, value: result }
     })
+
+    const denied = await fixture.persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: staleProcurementPreparedMutation(snapshot, { id: "mallory", canWrite: true, roles: ["requester"], assigned: [], domains: [] }, fixture.context, prepared.operation) }))
+    expect(denied).toBeUndefined()
+    const missing = await fixture.persistence.transaction("procurement", async (snapshot) => {
+      delete (snapshot.data.store as { requests: Record<string, unknown> }).requests["PR-1"]
+      return { commit: false, value: staleProcurementPreparedMutation(snapshot, { id: "alice", canWrite: true, roles: ["requester"], assigned: [], domains: [] }, fixture.context, prepared.operation) }
+    })
+    expect(missing).toBeUndefined()
     await fixture.persistence.transaction("procurement", async (snapshot) => {
       const result = domain.execute(snapshot, { id: "alice", canWrite: true, roles: ["requester"], assigned: [], domains: [] }, {
         page: "Requests", action: "save", id: "PR-1", version: 1, values: { pr: { title: "Second concurrent edit" } },
@@ -294,6 +302,7 @@ async function createFixture() {
     prepare: async () => ({
       target: sourceRef,
       command: prepared.command.command,
+      operation: prepared.command,
       idempotencyKey: prepared.command.idempotencyKey,
       mutation: prepared.mutation,
       snapshot,

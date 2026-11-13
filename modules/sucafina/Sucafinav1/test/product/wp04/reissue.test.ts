@@ -8,7 +8,8 @@ import { createSfSourcePersistence } from "../../../product/integration/source-l
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
 import { projectSfProcurementScope } from "../../../product/integration/procurement-projections.ts"
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
-import { createProcurementSourceResolver } from "../../../product/procurement/sources.ts"
+import { createProcurementCollectionRegistry, createProcurementSourceResolver } from "../../../product/procurement/sources.ts"
+import { createProcurementCollectionMemberIssuer } from "../../../product/procurement/collection-member.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 
@@ -43,6 +44,17 @@ test("reissue requires the recipient's current scope and the same physical reque
     if (first.status !== "ok") throw new Error("source issuance failed")
     const original = await resolver.resolve(first.value, a)
     if (original.status !== "ok") throw new Error("source resolution failed")
+    const collection = createProcurementCollectionRegistry({ host, scopedSources: persistence, contextFor })
+    const selected = await collection.createSelection(a)
+    if (selected.status !== "ok") throw new Error("collection issuance failed")
+    const list = await collection.resolveRequestCollection(selected.value, a)
+    if (list.status !== "ok") throw new Error("collection unavailable")
+    const member = list.value.requests[0]
+    if (!member) throw new Error("collection member unavailable")
+    const persistMember = createProcurementCollectionMemberIssuer({ collection, individual: resolver, revalidate: host.revalidate })
+    const persisted = await persistMember(member.refId, a)
+    expect(persisted).toEqual({ status: "ok", value: original.value.evidence })
+    expect((await persistMember(member.refId, b)).status).toBe("denied")
     const reissue = resolver.issueForActor
     expect((await reissue(original.value.evidence.target, b)).status).toBe("unavailable")
     roles.b = "buyer"
@@ -60,5 +72,6 @@ test("reissue requires the recipient's current scope and the same physical reque
     await persistence.transaction("procurement", async (snapshot) => { delete (snapshot.data.store as { requests: Record<string, unknown> }).requests["PR-1"]; return { commit: true, value: undefined } })
     await persistence.transaction("procurement", async (snapshot) => { (snapshot.data.store as { requests: Record<string, unknown> }).requests["PR-1"] = { request: { number: "PR-1", createdBy: "a", status: "draft", pr: { title: "Replacement" } }, version: 1, by: "a" }; return { commit: true, value: undefined } })
     expect((await reissue(original.value.evidence.target, b)).status).toBe("unavailable")
+    expect((await persistMember(member.refId, a)).status).toBe("stale")
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })

@@ -64,5 +64,5 @@ export function createCollaborationComposition(input: {
     return { status: "ok", value: { ref: ref.refId, evidence: ref } }
   } })
   const work = createCollaborationWorkPort({ host: input.host, state: input.state, collaboration: { authority, hotTopics, threads, recipientThread: input.recipientThread, reissue: input.reissue, confirmationWork: input.confirmationWork }, procurement: input.procurement, topicSource, selections: input.selections })
-  return { authority, hotTopics: { read: hotTopics.read }, relations: { read: relations.read, create: relations.create, remove: relations.remove, storageVersion: relations.storageVersion }, threads, handoff, work }
+  return { authority, hotTopics: { read: hotTopics.read }, relations: { read: relations.read, create: relations.create, remove: relations.remove, storageVersion: relations.storageVersion, readVersioned: relations.readVersioned }, threads, handoff, work }
 }

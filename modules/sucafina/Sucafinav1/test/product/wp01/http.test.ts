@@ -17,6 +17,7 @@ import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../produc
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { SfHostServices } from "../../../product/contracts/host-context.ts"
 import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
+import { decorateSfProductHtml } from "../../../product/interface/html.ts"
 
 test("workbench uses actual identity, SQLite and case dispatcher with revocation and CSRF", async () => {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-workbench-http-"))
@@ -39,7 +40,7 @@ test("workbench uses actual identity, SQLite and case dispatcher with revocation
     validateOutput: (_descriptor, result) => result.status !== "ok" || (operation === "sf_case_read" ? decodeSfOperationOutput("sf_case_read", result.result).ok : operation === "sf_case_draft" && decodeSfOperationOutput("sf_case_draft", result.result).ok) })
   const services = { ...authority, dispatch } as SfHostServices
   const product = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
-  const app = createModule("/sucafina", { persistence: store, authenticate: identity.authenticate, environment, product, maxJsonBytes: 100000 })
+  const app = createModule("/sucafina", { persistence: store, authenticate: identity.authenticate, environment, product, productHtml: decorateSfProductHtml, maxJsonBytes: 100000 })
   serverState.handle = async (request) => await identity.handle(request) ?? await app(request)
   try {
     const enrollment = await identity.enroll()
@@ -86,6 +87,11 @@ test("workbench uses actual identity, SQLite and case dispatcher with revocation
       await tab.getByLabel("Criteria, one per line").fill("Cost\nCoverage")
       await tab.getByRole("button", { name: "Create decision" }).click()
       await tab.getByRole("heading", { name: "Compare renewals" }).waitFor()
+      for (const surface of ["dashboard", "planner", "procurement"]) {
+        await tab.goto(`${origin}/sucafina/${surface}`)
+        await tab.getByRole("link", { name: "Workbench", exact: true }).click()
+        await tab.getByRole("heading", { name: "Workbench", exact: true }).waitFor()
+      }
     } finally { await browser.close() }
     await identity.handle(new Request(`${origin}/sucafina/auth/logout`, { method: "POST", headers: { cookie, origin } }))
     expect((await read())?.status).toBe(403)

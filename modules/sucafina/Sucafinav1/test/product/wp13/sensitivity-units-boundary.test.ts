@@ -22,6 +22,8 @@ import { createDecisionComparisonService } from "../../../product/decisions/comp
 import { createDecisionPortfolioSelection } from "../../../product/decisions/portfolio-selection.ts"
 import { createPortfolioResultBindings } from "../../../product/decisions/portfolio-bindings.ts"
 import { createDecisionCandidateResolver, portfolioCandidateRef } from "../../../product/portfolio/candidates.ts"
+import { createPortfolioProofVerifier } from "../../../product/portfolio/verification.ts"
+import { sfRunSourceFence } from "../../../product/ai/run-store.ts"
 import { createPortfolioProduct } from "../../../product/portfolio/product.ts"
 import { createProductionPortfolio } from "../../../product/portfolio/production.ts"
 import { createCriterionComparisonBindings } from "../../../product/decisions/criterion-comparison.ts"
@@ -196,6 +198,21 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     const beforeRead = ids.value
     expect((await product.http.readSensitivity(saved.value.sensitivityResultRef, caseRef, context)).status).toBe("ok")
     expect(ids.value).toBe(beforeRead)
+    const verifier = createPortfolioProofVerifier({ cases, planner: plannerWithCriteria, sources, evidence: evidenceService, results, revalidate: host.revalidate, readSourceFences: async () => access.allowed ? store.transactionAll(async (snapshots) => ({ commit: false, value: { dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) } })) : undefined, lockedSourceFences: () => { const snapshots = store.currentSnapshots?.(); return snapshots ? { dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) } : undefined }, caseFor: async () => ({ status: "ok", value: caseRef }), idempotencyKey: async (digest) => `verify-${digest}`, decisions: { prepareChanges: async () => ({ status: "unavailable", reason: "unused" }) }, createReceipt: async () => undefined, candidateCoverageRefFor: async (candidate) => candidate.result ? { status: "ok", value: decisionCoverageRef(caseRef, candidate.result.costCoverage.alternativeId, candidate.result.costCoverage.alternativeVersion) } : { status: "unavailable", reason: "candidate-unavailable" }, revalidateAnalysis: analysis.revalidate, units: issuer, sensitivityPreview: (input, trusted) => comparePlannerPreview({ host, sources, scenarios, planner }, input, trusted) })
+    const portfolioProof = await portfolioBindings.read({ caseRef, resultRef: portfolioSaved.value.portfolioResultRef }, context)
+    const portfolioRecord = await results.read({ kind: "portfolio", resultRef: portfolioSaved.value.portfolioResultRef }, context)
+    const comparisonProof = await comparisonBindings.read({ caseRef, resultRef: compared.value.analysis.comparisonRef }, context)
+    const comparisonRecord = await results.read({ kind: "comparison", resultRef: compared.value.analysis.comparisonRef }, context)
+    const sensitivityProof = await bindings.read({ caseRef, resultRef: saved.value.sensitivityResultRef }, context)
+    const sensitivityRecord = await results.read({ kind: "sensitivity", resultRef: saved.value.sensitivityResultRef }, context)
+    if (portfolioProof.status !== "ok" || portfolioRecord.status !== "ok" || comparisonProof.status !== "ok" || comparisonRecord.status !== "ok" || sensitivityProof.status !== "ok" || sensitivityRecord.status !== "ok") throw new Error("proof unavailable")
+    const beforeVerification = ids.value
+    expect(await verifier.verifyPortfolio(portfolioProof.value, portfolioRecord.value, context)).toBe(true)
+    expect(await verifier.verifyComparison(comparisonProof.value, comparisonRecord.value, context)).toBe(true)
+    expect(await verifier.verifySensitivity(sensitivityProof.value, sensitivityRecord.value, context)).toBe(true)
+    const fence = await store.transactionAll(async (snapshots) => ({ commit: false, value: { current: verifier.verifySnapshot(snapshots.planner, portfolioProof.value, context), changed: verifier.verifySnapshot({ ...snapshots.planner, data: { ...snapshots.planner.data, changed: true } }, portfolioProof.value, context) } }))
+    expect(fence).toEqual({ current: true, changed: false })
+    expect(ids.value).toBe(beforeVerification)
     expect(await persistent.evaluateAndStore(sensitivityRequest, caseRef, context)).toEqual(saved)
     const orphan = await results.write({ kind: "sensitivity", result: saved.value.sensitivity, caseRef, requestDigest: digestSfValue(sensitivityRequest), sourceRefs: [evidence], idempotencyKey: "orphan" }, context)
     expect(orphan.status).toBe("ok")

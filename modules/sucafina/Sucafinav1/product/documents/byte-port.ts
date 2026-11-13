@@ -94,7 +94,7 @@ export async function admitSfDocumentAsset(selection: { surface: "dashboard" | "
       if (!response.ok) return { commit: false, value: false }
       const bytes = new Uint8Array(await response.arrayBuffer())
       return { commit: false, value: bytes.byteLength <= input.maxBytes && new Bun.CryptoHasher("sha256").update(bytes).digest("hex") === candidate.value.blobDigest }
-    }, { signal: request.signal })
+    }, { signal: request.signal }).catch(() => false)
     if (!current) return { commit: false, value: null as SfDocumentAssetCatalogEntry | null }
     const existing = state.documents[`asset:${candidate.value.documentId}`]
     if (existing && typeof existing === "object" && (existing as SfDocumentAssetCatalogEntry).surface !== candidate.value.surface) return { commit: false, value: null as SfDocumentAssetCatalogEntry | null }

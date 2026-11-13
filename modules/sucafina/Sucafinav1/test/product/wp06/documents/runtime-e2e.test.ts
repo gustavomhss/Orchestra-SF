@@ -17,6 +17,8 @@ import { createSfProductAuthority } from "../../../../product/integration/produc
 import type { TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { resolveSfDocumentEvidence } from "../../../../product/documents/evidence-resolver.ts"
+import { createSfDocumentHttp } from "../../../../product/interface/document-http.ts"
+import { createSfImportHttp } from "../../../../product/interface/import-http.ts"
 import { createSfDocumentTargetAuthority } from "../../../../../../../apps/cli/src/sucafina-product/document-authority.ts"
 import { createSfDocumentServices } from "../../../../../../../apps/cli/src/sucafina-product/document-services.ts"
 import { createSfImportServices } from "../../../../../../../apps/cli/src/sucafina-product/import-services.ts"
@@ -30,6 +32,7 @@ test("real host persists procurement document evidence and Planner import under 
   const origin = "http://localhost:4110"
   const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator, secrets: driver.secrets, key: randomBytes(32) })
   const environment = async () => ({ at, id: randomUUID, directory: [] })
+  // This fixture exercises the real host and storage; the scanner stub is not scanner qualification.
   const assets = { persistence: store, services: { signingKey: randomBytes(32), scan: async () => true } }
   try {
     for (const surface of ["dashboard", "planner", "procurement"] as const) await store.initializeSources(surface)
@@ -90,38 +93,57 @@ test("real host persists procurement document evidence and Planner import under 
     if (confirmed.status !== "ok") return
     const resolution = await uiCall("sf_evidence_get", { evidenceRef: confirmed.value.ref }, (context) => resolveSfDocumentEvidence(confirmed.value.ref, context, service.documents.reader))
     expect(resolution.state).toBe("fresh")
-    const discovery = await uiCall("sf_import_preview", { surface: "planner" }, (context) => importing.discover("planner", context))
-    expect(discovery.status).toBe("ok")
-    if (discovery.status !== "ok") return
-    const planner = discovery.value.find((row) => row.label === "FY27")
+    const documentHttp = createSfDocumentHttp({ origin, mount: "/sucafina", runtime: () => ({ ui: authority.ui, human: authority.human, ...service }) })
+    const openUrl = new URL(`${origin}/sucafina/dashboard`)
+    openUrl.searchParams.set("sf", "document-open")
+    openUrl.searchParams.set("ref", JSON.stringify(confirmed.value.ref))
+    const presentation = await documentHttp(new Request(openUrl, { headers: { cookie } }), "dashboard")
+    expect(presentation?.status).toBe(200)
+    const opened = await presentation!.json()
+    expect(opened.value.title).toBe("terms.txt")
+    expect(String(opened.value.href).startsWith("/sucafina/procurement?asset=")).toBe(true)
+    const importHttp = createSfImportHttp({ origin, mount: "/sucafina", runtime: () => ({ ui: authority.ui, human: authority.human, service: importing }) })
+    const url = (mode: string) => `${origin}/sucafina/planner?sf=${mode}`
+    const discovery = await importHttp(new Request(`${url("import-targets")}&surface=planner`, { headers: { cookie } }), "planner")
+    expect(discovery?.status).toBe(200)
+    const choices = await discovery!.json() as { value: { label: string; surface: string; selectionRef: string }[] }
+    const planner = choices.value.find((row) => row.label === "FY27")
     if (!planner) throw new Error("Planner version not discovered")
-    const selection = { surface: "planner" as const, selectionRef: planner.selectionRef, options: { newVersion: false, removeMissing: false, preview: {} } }
-    const target = await uiCall("sf_import_preview", selection, (context) => importing.prepareTarget(selection, context))
-    expect(target.status).toBe("ok")
-    if (target.status !== "ok") return
     const workbook = new Workbook(); const sheet = workbook.addWorksheet("OPEX")
     sheet.addRow(["Line ID", "Cost element", "Vendor / item", "Currency", "Measure", "Jan"]); sheet.addRow(["42", "Licenses", "Licences", "USD", "Forecast", 0])
     const bytes = new Uint8Array(await workbook.xlsx.writeBuffer())
-    const digest = new Bun.CryptoHasher("sha256").update(bytes).digest("hex")
-    const importGrant = await authority.human.admit(request(), "imports.admit", { target: target.value, format: "xlsx", digest })
-    if (importGrant.status !== "ok") throw new Error(importGrant.reason)
-    const file = await importing.imports.admit({ target: target.value, format: "xlsx", bytes }, importGrant.value)
-    authority.human.finish(importGrant.value)
-    expect(file.status).toBe("ok")
-    if (file.status !== "ok") return
+    const form = new FormData()
+    form.set("file", new File([bytes], "forecast.xlsx", { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }))
+    form.set("surface", planner.surface); form.set("selectionRef", planner.selectionRef)
+    form.set("options", JSON.stringify({ newVersion: false, removeMissing: false, preview: {} }))
+    const uploadedImport = await importHttp(new Request(url("import-admit"), { method: "POST", headers: { cookie, origin }, body: form }), "planner")
+    expect(uploadedImport?.status).toBe(200)
+    const file = await uploadedImport!.json() as { value: { ref: string } }
     const previewInput = { admittedFileRef: file.value.ref, format: "xlsx", options: {} }
-    const preview = await uiCall("sf_import_preview", previewInput, (context) => importing.imports.preview(previewInput, context))
-    expect(preview.status).toBe("ok")
-    if (preview.status !== "ok") return
-    const applyInput = { manifestId: preview.value.id, version: preview.value.version }
-    const applyGrant = await authority.human.admit(request(), "imports.apply", applyInput)
-    if (applyGrant.status !== "ok") throw new Error(applyGrant.reason)
-    const applied = await importing.imports.apply(applyInput, applyGrant.value)
-    authority.human.finish(applyGrant.value)
-    expect(applied.status).toBe("ok")
+    const post = (mode: string, value: unknown) => importHttp(new Request(url(mode), { method: "POST", headers: { cookie, origin, "content-type": "application/json" }, body: JSON.stringify(value) }), "planner")
+    const preview = await post("import-preview", previewInput)
+    expect(preview?.status).toBe(200)
+    const manifest = await preview!.json() as { value: { id: string; version: number } }
+    const detail = await importHttp(new Request(`${url("import-detail")}&manifestId=${encodeURIComponent(manifest.value.id)}&version=${manifest.value.version}`, { headers: { cookie } }), "planner")
+    expect(detail?.status).toBe(200)
+    const applied = await post("import-apply", { manifestId: manifest.value.id, version: manifest.value.version })
+    expect(applied?.status).toBe(200)
     expect(await store.transaction("planner", async (snapshot) => ({ commit: false, value: ((snapshot.data.versions as { lines: { f: (number | null)[] }[] }[])[0]!).lines[0]!.f[0] }))).toBe(0)
     const originalIdentity = await store.transaction("procurement", async (snapshot) => ({ commit: false, value: sfSourceIdentity(snapshot, "document-asset", "asset-1") }))
-    await store.transaction("procurement", async (_, blobs) => { await blobs.put("supplier/s1/asset-1", new TextEncoder().encode("Price: 99"), "text/plain"); return { commit: true, value: undefined } })
+    const entered = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
+    const locked = store.transactionAll!(async () => {
+      const read = () => store.transaction("procurement", async (_, blobs) => ({ commit: false, value: await blobs.get("supplier/s1/asset-1") }))
+      expect(new TextDecoder().decode(await read())).toBe("Price: 42")
+      entered.resolve()
+      await release.promise
+      expect(new TextDecoder().decode(await read())).toBe("Price: 42")
+      return { commit: false, value: undefined }
+    })
+    await entered.promise
+    const replacement = store.transaction("procurement", async (_, blobs) => { await blobs.put("supplier/s1/asset-1", new TextEncoder().encode("Price: 99"), "text/plain"); return { commit: true, value: undefined } })
+    release.resolve()
+    await locked
+    await replacement
     const modified = await uiCall("sf_evidence_get", { evidenceRef: confirmed.value.ref }, (context) => resolveSfDocumentEvidence(confirmed.value.ref, context, service.documents.reader))
     expect(modified.state).not.toBe("fresh")
     await store.transaction("procurement", async (_, blobs) => { await blobs.put("supplier/s1/asset-1", new TextEncoder().encode("Price: 42"), "text/plain"); return { commit: true, value: undefined } })
@@ -137,6 +159,7 @@ test("real host persists procurement document evidence and Planner import under 
     })
     const revoked = await uiCall("sf_evidence_get", { evidenceRef: confirmed.value.ref }, (context) => resolveSfDocumentEvidence(confirmed.value.ref, context, service.documents.reader))
     expect(revoked.state).not.toBe("fresh")
+    expect((await documentHttp(new Request(openUrl, { headers: { cookie } }), "dashboard"))?.status).not.toBe(200)
     const replaced = await store.transaction("procurement", async (snapshot, blobs) => {
       const result = await uploadAsset(snapshot, blobs, { id: principal.id, roles: ["admin"], canWrite: true, assigned: [], domains: [] }, { page: "Suppliers", action: "upload", id: "s1", version: snapshot.versions["suppliers:s1"]?.version ?? 0, values: {} }, { at, id: () => "asset-1", directory: [] }, assets.services, "supplier", { name: "terms.txt", type: "text/plain", bytes: new TextEncoder().encode("Price: 99") })
       return { commit: result.ok, value: result }

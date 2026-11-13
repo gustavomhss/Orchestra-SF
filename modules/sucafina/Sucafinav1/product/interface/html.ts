@@ -7,5 +7,5 @@ import { documentEvidenceScript, documentEvidenceWidget } from "../ui/document-e
 export function decorateSfProductHtml(html: string, surface: string, page: string) {
   if (!["dashboard", "planner", "procurement"].includes(surface)) return html
   const script = `${personalViewsScript}${documentEvidenceScript}${surface === "planner" && (page === "OPEX" || page === "CAPEX") ? plannerMonthlyScript : ""}${surface === "planner" || surface === "dashboard" ? importPreviewScript : ""}`
-  return html.replace("</main>", `${personalViewsWidget({ surface, page })}${documentEvidenceWidget}${surface === "planner" || surface === "dashboard" ? importPreviewWidget : ""}</main>`).replace("</body>", `<script>${script}</script></body>`)
+  return html.replace('<div class="workspace-tools">', '<div class="workspace-tools"><a href="?sf=workbench">Workbench</a>').replace("</main>", `${personalViewsWidget({ surface, page })}${documentEvidenceWidget}${surface === "planner" || surface === "dashboard" ? importPreviewWidget : ""}</main>`).replace("</body>", `<script>${script}</script></body>`)
 }

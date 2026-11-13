@@ -15,7 +15,7 @@ import type { Store } from "../src/procurement.ts"
 import { visibleRequests } from "../src/requests.ts"
 import { quoteAssessment } from "../src/form.ts"
 import type { FormSettings } from "../src/form.ts"
-import { approvalStageEntry, exportRegister, requestValue } from "../src/procurement-screen.ts"
+import { approvalDecision, approvalQueue, approvalStageEntry, exportRegister, requestValue } from "../src/procurement-screen.ts"
 import type { RequestView } from "../src/procurement-screen.ts"
 import { initialProcurementSettings } from "../src/initial-settings.ts"
 import { activateSupplier, open, seal } from "../src/supplier.ts"
@@ -1166,35 +1166,30 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
     )
   }
   if (page === "My approvals") {
-    const waiting = requests.filter((request) => text(request.status).endsWith("_pending"))
+    const grouped = approvalQueue(requests as RequestView[], context.actor.id)
     return ["you", "others", "unassigned"]
       .map(
         (group) =>
           `<h2>${group === "you" ? "Waiting for you" : group === "others" ? "Waiting for others" : "Unassigned"}</h2>` +
           table(
             ["Request", "Subject", "Decision", "Amount", "Reason", "Holder", "Waiting since", "Next step"],
-            waiting
-              .filter((request) => {
-                const holder = text(pending(request).step?.holderId)
-                return group === "you" ? holder === context.actor.id : group === "others" ? !!holder && holder !== context.actor.id : !holder
-              })
+            (group === "you" ? grouped.waitingForYou : group === "others" ? grouped.waitingForOthers : grouped.unassigned)
               .map((request) => {
-                const holder = String(pending(request).step?.holderId ?? "")
-                const approval = pending(request).approval
-                const baseCurrency = request.status === "pr_pending" ? text(request.prApprovalBaseCurrency) : request.status === "src_pending" ? text(object(request.sourcing).approvalBaseCurrency) : text(object(request.po).approvalBaseCurrency)
-                const enteredAt = approvalStageEntry(request as RequestView)
+                const approval = object(request.status === "pr_pending" ? request.prApproval : request.status === "src_pending" ? request.sourcing?.approval : request.status === "po_pending" ? request.po?.approval : undefined)
+                const holder = text(rows(approval.steps).find((step) => step.status === "pending")?.holderId)
+                const baseCurrency = request.status === "pr_pending" ? text(request.prApprovalBaseCurrency) : request.status === "src_pending" ? text(object(request.sourcing).approvalBaseCurrency) : request.status === "po_pending" ? text(object(request.po).approvalBaseCurrency) : ""
+                const enteredAt = approvalStageEntry(request)
+                const decision = approvalDecision(request, context.actor, settings.blockSelfApproval === true)
+                const holderName = text(directory.find((person) => String(person.id ?? "") === holder)?.name)
                 return [
                   `<a href="?page=Requests&amp;filter=All#${encodeURIComponent(String(request.number ?? ""))}">${esc(String(request.number ?? ""))}</a>`,
-                  esc(text(object(request.pr).title)),
-                  request.status === "pr_pending" ? "Requisition" : request.status === "src_pending" ? "Sourcing selection" : "Purchase order",
+                  esc(text(object(request.pr).title) || "Unavailable"),
+                  request.status === "pr_pending" ? "Requisition" : request.status === "src_pending" ? "Sourcing selection" : request.status === "po_pending" ? "Purchase order" : "Unrecognized approval stage",
                   typeof approval.amount === "number" && Number.isFinite(approval.amount) ? `${approval.amount} ${baseCurrency ? esc(baseCurrency) : "(submitted base currency unavailable)"}` : "Unavailable",
-                  esc(request.status === "pr_pending" ? text(object(request.pr).justification) : request.status === "src_pending" ? text(object(request.sourcing).selectionJustification) || "See proposal comparison" : text(object(request.po).description)),
-                  esc(
-                    text(directory.find((person) => String(person.id ?? "") === holder)?.name) ||
-                      (holder ? "Assigned approver" : "Unassigned"),
-                  ),
+                  esc(request.status === "pr_pending" ? text(object(request.pr).justification) || "Unavailable" : request.status === "src_pending" ? text(object(request.sourcing).selectionJustification) || (rows(object(request.sourcing).quotes).length ? "See proposal comparison" : "Unavailable") : request.status === "po_pending" ? text(object(request.po).description) || "Unavailable" : "Unavailable"),
+                  esc(holderName || (holder ? `Responsible person not resolved (${holder})` : "Unassigned")),
                   enteredAt && Number.isFinite(Date.parse(context.at)) && Date.parse(enteredAt) <= Date.parse(context.at) ? esc(enteredAt) : "Unavailable",
-                  request.status === "pr_pending" ? "Sourcing after all approvals" : request.status === "src_pending" ? "PO draft after all approvals" : "Internal issuance after all approvals",
+                  decision.allowed ? "Review approval" : esc(decision.reason),
                 ]
               }),
           ),
@@ -1326,10 +1321,8 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         const source = object(request.sourcing)
         const po = object(request.po)
         const status = text(request.status)
-        const current = pending(request).step
-        const canDecide = context.actor.canWrite && status.endsWith("_pending") && !!current &&
-          (!current.holderId || current.holderId === context.actor.id) &&
-          !(settings.blockSelfApproval === true && request.createdBy === context.actor.id)
+        const decision = approvalDecision(request as RequestView, context.actor, settings.blockSelfApproval === true)
+        const canDecide = decision.allowed
         const canCancel = context.actor.canWrite && !["cancelled", "po_issued"].includes(status) && (request.createdBy === context.actor.id || has(context.actor, "admin"))
         const actions = [
           ...(canDecide ? ["approve", "reject"] : []),
@@ -1337,7 +1330,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
           ...(context.actor.canWrite && status === "po_approved" && has(context.actor, "buyer", "admin") ? ["issue"] : []),
           ...(context.actor.canWrite && status === "draft" && (request.createdBy === context.actor.id || has(context.actor, "admin")) ? ["delete"] : []),
         ]
-        const decisionHint = status.endsWith("_pending") && !canDecide ? `<p>Decision unavailable: ${!current ? "approval step unavailable" : current.holderId && current.holderId !== context.actor.id ? "waiting for the assigned holder" : settings.blockSelfApproval === true && request.createdBy === context.actor.id ? "self-approval is blocked" : "write access required"}.</p>` : ""
+        const decisionHint = status.endsWith("_pending") && !canDecide ? `<p>Decision unavailable: ${esc(decision.reason)}.</p>` : ""
         const snapshotRequired = ["src_pending", "po_draft", "po_pending", "po_approved", "po_issued", "po_rejected"].includes(status)
         const sameBase = !snapshotRequired || source.approvalBaseCurrency === settings.currency
         const evaluation = quoteAssessment({ sourcing: { ...source, ...(snapshotRequired && source.fxSnapshot == null ? { fxSnapshot: { [text(settings.currency)]: 1 } } : {}) } as Parameters<typeof quoteAssessment>[0]["sourcing"] }, { ...settings, currency: text(settings.currency) } as FormSettings)

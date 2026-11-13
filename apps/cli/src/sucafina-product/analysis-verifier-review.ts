@@ -55,6 +55,8 @@ export function createSfDecisionCritiqueVerifier(dependencies: SfAnalysisDepende
           output.runProvenance.targetRunId !== value.authorAnalysis.runRef || output.runProvenance.targetOutputDigest !== value.authorAnalysis.outputDigest ||
           output.runProvenance.reviewerRunId !== output.runProvenance.runId || output.runProvenance.profileId !== "sf_reviewer" ||
           digestSfValue(output.evidenceRefs) !== digestSfValue(report.evidenceRefs) ||
+          report.claimIssues.some((issue) => !issue.claimRef.trim() || !issue.reason.trim() || issue.kind === "access-unavailable" || (issue.kind === "missing-category" ? !current.missing.includes(issue.claimRef) : !issue.evidenceRefs.length)) ||
+          report.unresolvedConditions.some((condition) => !condition.reason.trim() || (!current.missing.includes(condition.category) && !condition.evidenceRefs.length)) ||
           [...output.evidenceRefs, ...report.claimIssues.flatMap((issue) => issue.evidenceRefs), ...report.unresolvedConditions.flatMap((condition) => condition.evidenceRefs)].some((ref) => !value.authorizedEvidenceRefs.some((item) => digestSfValue(item) === digestSfValue(ref))) ||
           current.missing.some((category) => !report.unresolvedConditions.some((condition) => condition.category === category) && !report.claimIssues.some((issue) => issue.kind === "missing-category" && issue.claimRef === category))) return { status: "unavailable", reason: "analysis-output-unverified" }
         return { status: "ok", value: true }

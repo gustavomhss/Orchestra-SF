@@ -50,10 +50,10 @@ document.querySelectorAll('[data-decision-choice]').forEach((form) => {
     const controls = form.querySelectorAll('select, input, textarea, button'); controls.forEach((control) => { control.disabled = true }); basis.textContent = 'Checking criterion and units…'
     try {
       const current = await send('decision-criterion-read', { purpose: 'criterion', caseRef: context.caseRef, criterionId: id }, crypto.randomUUID())
-      if (current.criterionId !== id || !current.sensitivity) throw new Error('unavailable')
+      if (current.criterionId !== id || !current.sensitivity || current.sensitivity.baselineRef !== result.request.scenarioRefs[0]) throw new Error('unavailable')
       const source = await send('decision-sensitivity-units', { purpose: 'sensitivity-units', caseRef: context.caseRef, scenarioRef: result.request.scenarioRefs[1], baselineRef: current.sensitivity.baselineRef, parameterRef: current.sensitivity.parameterRef }, crypto.randomUUID())
       if (source.caseRef?.id !== context.caseRef.id || source.caseRef?.incarnation !== context.caseRef.incarnation || source.caseRef?.version !== context.caseRef.version || source.units?.baselineRef !== current.sensitivity.baselineRef || source.units?.parameterRef !== current.sensitivity.parameterRef || source.units?.parameterUnit !== current.sensitivity.parameterUnit || source.units?.resultUnit !== current.sensitivity.resultUnit || source.units?.engineVersion !== current.sensitivity.engineVersion) throw new Error('stale')
-      rule = current; sensitivityKey = crypto.randomUUID(); basis.textContent = 'Criterion: ' + current.operator + ' ' + current.value + ' ' + current.unit + '. Parameter unit: ' + source.units.parameterUnit + '; result unit: ' + source.units.resultUnit + '. Enter your own range; domain limits are not declared.'
+      rule = current; sensitivityKey = crypto.randomUUID(); basis.textContent = 'Criterion: ' + ({ lte: 'at most', gte: 'at least', eq: 'equal to' }[current.operator] || current.operator) + ' ' + current.value + ' ' + current.unit + '. Parameter unit: ' + source.units.parameterUnit + '; result unit: ' + source.units.resultUnit + '. Enter your own range; domain limits are not declared.'
     } catch { rule = undefined; basis.textContent = 'Criterion, source or units unavailable or changed.' }
     finally { controls.forEach((control) => { control.disabled = false }) }
   })

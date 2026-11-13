@@ -42,6 +42,9 @@ test("case draft survives a real store reopen, exact retry is idempotent and rev
     const intent = await first.cases.prepareIntent({ ...request, objective: "Reframe within this case" }, boundNative)
     expect(intent.status).toBe("ok")
     if (intent.status === "ok") expect(intent.value.criteria).toEqual(draft.value.criteria)
+    const reviewRef = { id: draft.value.id, incarnation: draft.value.incarnation, version: draft.value.version }
+    expect(await first.cases.prepareIntentForCase({ ...request, objective: "Reframe within this case" }, reviewRef, binding)).toEqual(intent)
+    expect((await first.cases.prepareIntentForCase(request, { ...reviewRef, version: reviewRef.version + 1 }, binding)).status).toBe("stale")
     const outside = { schema: "sf-evidence-v1", refId: "outside", installationId: "install", projectId: "project", refDigest: "a".repeat(64), evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "quote", recordId: "outside", incarnation: "inc", version: 1, fields: ["amount"], projectionDigest: "b".repeat(64) } } as const
     expect(await first.cases.prepareIntent({ ...request, sourceRefs: [outside] }, boundNative)).toEqual({ status: "denied", reason: "source-outside-case-scope" })
     const afterIntent = await first.cases.read({ caseRef: ref }, binding)
@@ -61,6 +64,7 @@ test("case draft survives a real store reopen, exact retry is idempotent and rev
     expect((await reopened.cases.read({ caseRef: draft.value.id }, binding)).status).toBe("needs-input")
     access.allowed = false
     expect((await reopened.cases.read({ caseRef: ref }, binding)).status).toBe("denied")
+    expect((await reopened.cases.prepareIntentForCase(request, reviewRef, binding)).status).toBe("denied")
     await reopened.store.dispose()
   } finally {
     await rm(directory, { recursive: true, force: true })

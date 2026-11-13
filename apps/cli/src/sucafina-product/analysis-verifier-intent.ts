@@ -1,11 +1,11 @@
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfSkillInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
-import type { DecisionCasePort } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+import type { createDecisionCasePort } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { SfAnalysisDependencies, SfAnalysisVerifier } from "./analysis-verifier.ts"
 
-export function createSfIntentVerifier(dependencies: SfAnalysisDependencies & { replayIntent: DecisionCasePort["prepareIntent"] }): SfAnalysisVerifier {
+export function createSfIntentVerifier(dependencies: SfAnalysisDependencies & { replayIntent: ReturnType<typeof createDecisionCasePort>["prepareIntentForCase"] }): SfAnalysisVerifier {
   return {
     skillIds: ["sf-enquadrar-decisao"],
     verify: async (input, request, call) => {
@@ -31,7 +31,7 @@ export function createSfIntentVerifier(dependencies: SfAnalysisDependencies & { 
         if (output.state !== "ready" || output.kind !== "IntentFrame" || !await read(currentCall) ||
           digestSfValue(output.evidenceRefs) !== digestSfValue(value.selectedSourceRefs) || digestSfValue(output.payload.sourceRefs) !== digestSfValue(value.selectedSourceRefs) ||
           digestSfValue(output.payload.horizon) !== digestSfValue(value.context.period) || output.payload.currency !== value.context.currency || output.payload.gaps.length) return { status: "unavailable", reason: "analysis-output-unverified" }
-        const replay = await dependencies.replayIntent({ objective: output.payload.objective, horizon: output.payload.horizon, currency: output.payload.currency, criteria: output.payload.criteria.map((item) => item.description), sourceRefs: value.selectedSourceRefs }, currentCall)
+        const replay = await dependencies.replayIntent({ objective: output.payload.objective, horizon: output.payload.horizon, currency: output.payload.currency, criteria: output.payload.criteria.map((item) => item.description), sourceRefs: value.selectedSourceRefs }, request.caseRef, currentCall)
         return replay.status === "ok" && digestSfValue(replay.value) === digestSfValue(output.payload) && await read(currentCall)
           ? { status: "ok", value: true } : { status: "unavailable", reason: "analysis-output-unverified" }
       } } }

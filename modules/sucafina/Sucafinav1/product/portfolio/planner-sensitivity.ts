@@ -7,6 +7,7 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { createSfDecisionResultStore, StoredDecisionResult } from "../decisions/result-store.ts"
 import { plannerPreviewDigest, plannerScenarioDigest } from "../planner/preview-comparison.ts"
 import { createSensitivityEvaluator } from "./sensitivity.ts"
+import type { SensitivitySampledResult } from "./sensitivity.ts"
 import { attachSensitivityV6 } from "./sensitivity-v6.ts"
 
 export type PlannerSensitivityBinding = {
@@ -99,11 +100,24 @@ export function createPlannerSensitivity(input: {
     })
     const evaluated = await evaluate(request, context)
     if (evaluated.status !== "ok") return evaluated
-    const meets = (value: number) => request.criterion.operator === "lte" ? value <= request.criterion.value : request.criterion.operator === "gte" ? value >= request.criterion.value : value === request.criterion.value
-    const points = evaluated.value.evaluated
-    const transitions = points.flatMap((point, index) => index > 0 && point.value !== null && points[index - 1].value !== null && meets(point.value) !== meets(points[index - 1].value!) ? [index] : [])
-    const transition = transitions.length === 1 && points.every((point) => point.value !== null) ? transitions[0] : undefined
-    const thresholdEvidence = evaluated.value.threshold !== null && exactEvidence.value ? { state: "exact" as const, value: evaluated.value.threshold, evidenceRefs: exactEvidence.value.evidenceRefs } : transition === undefined ? { state: "unavailable" as const, reason: transitions.length > 1 ? "multiple-sampled-transitions" : points.some((point) => point.value === null) ? "sample-value-unavailable" : "no-sampled-transition" } : { state: "sampled" as const, interval: { minimum: points[transition - 1].parameterValue, maximum: points[transition].parameterValue }, evidenceRefs: [...binding.evidenceRefs, ...baseline.value.sourceRefs, ...evaluated.value.evidenceRefs] }
-    return attachSensitivityV6({ result: { ...evaluated.value, comparisonStatus: "conditioned", unresolvedConditions: [...evaluated.value.unresolvedConditions, ...samples.flatMap((sample) => sample.conditions.map((reason) => ({ id: `${sample.resultRef}:${reason}`, category: "coverage", reason, evidenceRefs: baseline.value.sourceRefs }))), { id: "preview-coverage", category: "coverage", reason: "Threshold evidence concerns known subtotal differences only; unresolved coverage can change the decision.", evidenceRefs: baseline.value.sourceRefs }], evidenceRefs: [...evaluated.value.evidenceRefs, ...binding.evidenceRefs, ...baseline.value.sourceRefs] }, costCoverageRefs: [...new Set(samples.flatMap((sample) => sample.coverageRefs))], unit: binding.unit, engineVersion: binding.engineVersion, thresholdEvidence })
+    return finalizePlannerSensitivity({ request, binding, result: evaluated.value, samples, baselineRefs: baseline.value.sourceRefs, exact: exactEvidence.value })
   }
+}
+
+
+/** Attach the same threshold and disclosure semantics to calculated or read-only reproduced samples. */
+export function finalizePlannerSensitivity(input: {
+  request: SensitivityRequest
+  binding: PlannerSensitivityBinding
+  result: SensitivitySampledResult
+  samples: readonly { resultRef: string; coverageRefs: readonly string[]; conditions: readonly string[] }[]
+  baselineRefs: readonly BusinessEvidenceRef[]
+  exact?: { value: number | null; evidenceRefs: readonly BusinessEvidenceRef[] }
+}) {
+  const meets = (value: number) => input.request.criterion.operator === "lte" ? value <= input.request.criterion.value : input.request.criterion.operator === "gte" ? value >= input.request.criterion.value : value === input.request.criterion.value
+  const points = input.result.evaluated
+  const transitions = points.flatMap((point, index) => index > 0 && point.value !== null && points[index - 1].value !== null && meets(point.value) !== meets(points[index - 1].value!) ? [index] : [])
+  const transition = transitions.length === 1 && points.every((point) => point.value !== null) ? transitions[0] : undefined
+  const thresholdEvidence = input.result.threshold !== null && input.exact ? { state: "exact" as const, value: input.result.threshold, evidenceRefs: input.exact.evidenceRefs } : transition === undefined ? { state: "unavailable" as const, reason: transitions.length > 1 ? "multiple-sampled-transitions" : points.some((point) => point.value === null) ? "sample-value-unavailable" : "no-sampled-transition" } : { state: "sampled" as const, interval: { minimum: points[transition - 1].parameterValue, maximum: points[transition].parameterValue }, evidenceRefs: [...input.binding.evidenceRefs, ...input.baselineRefs, ...input.result.evidenceRefs] }
+  return attachSensitivityV6({ result: { ...input.result, comparisonStatus: "conditioned", unresolvedConditions: [...input.result.unresolvedConditions, ...input.samples.flatMap((sample) => sample.conditions.map((reason) => ({ id: `${sample.resultRef}:${reason}`, category: "coverage", reason, evidenceRefs: input.baselineRefs }))), { id: "preview-coverage", category: "coverage", reason: "Threshold evidence concerns known subtotal differences only; unresolved coverage can change the decision.", evidenceRefs: input.baselineRefs }], evidenceRefs: [...input.result.evidenceRefs, ...input.binding.evidenceRefs, ...input.baselineRefs] }, costCoverageRefs: [...new Set(input.samples.flatMap((sample) => sample.coverageRefs))], unit: input.binding.unit, engineVersion: input.binding.engineVersion, thresholdEvidence })
 }

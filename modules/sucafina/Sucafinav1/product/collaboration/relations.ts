@@ -36,11 +36,11 @@ export function createRelationPort(input: {
       const fence = await input.mutationFence.prepare(() => input.authorizePair(structuredClone(selected.pair), context))
       if (!fence) return { status: "unavailable", reason: "relation-source-fence-unavailable" }
       const relation: Relation = { fromRef: selected.pair.fromRef, toRef: selected.pair.toRef, kind: selected.pair.kind, evidenceRefs: selected.pair.evidenceRefs, id: input.createId(), confirmedBy: context.binding.principalRef, confirmedAt: input.now() }
-      if (!relation.id.trim() || relation.id.startsWith("sf:hot-topic:") || relation.id.startsWith("sf:assignment:")) return { status: "unavailable", reason: "identity-unavailable" }
+      if (!relation.id.trim() || relation.id.startsWith("sf:hot-topic:") || relation.id.startsWith("sf:assignment:") || relation.id.startsWith("sf:relation-version:") || relation.id.startsWith("sf:relation-retired:")) return { status: "unavailable", reason: "identity-unavailable" }
       const target = input.creationTarget
       const result = await input.state.transaction(request, { namespace: "relations", ...selected.mutation, commandDigest: digestSfValue(selected.pair), targetRef: target.ref, targetIncarnation: target.incarnation }, async (state, authority) => {
         if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, admission.action, admittedPayload) || !input.mutationFence.check(fence)) return { commit: false, value: null }
-        const relations = Object.entries(state.relations).filter(([key]) => !key.startsWith("sf:hot-topic:") && !key.startsWith("sf:assignment:")).map(([, value]) => value)
+        const relations = Object.entries(state.relations).filter(([key]) => !isInternalRelationKey(key)).map(([, value]) => value)
         if (!relations.every(isRelation)) return { commit: false, value: null }
         const existing = relations.find((item) => item.fromRef === selected.pair.fromRef && item.toRef === selected.pair.toRef && item.kind === selected.pair.kind)
         if (existing) {
@@ -48,8 +48,9 @@ export function createRelationPort(input: {
           if (digestSfValue(assignment) !== digestSfValue(selected.pair.recipientRef ? { relationId: existing.id, recipientRef: selected.pair.recipientRef } : undefined)) return { commit: false, value: null }
           return { commit: false, value: existing }
         }
-        if (state.relations[relation.id]) return { commit: false, value: null }
+        if (state.relations[relation.id] || state.relations[`sf:relation-version:${relation.id}`] || state.relations[`sf:relation-retired:${relation.id}`]) return { commit: false, value: null }
         state.relations[relation.id] = relation
+        state.relations[`sf:relation-version:${relation.id}`] = { relationId: relation.id, version: 1 }
         if (selected.pair.recipientRef) state.relations[`sf:assignment:${relation.id}`] = { relationId: relation.id, recipientRef: selected.pair.recipientRef }
         return { commit: true, value: relation }
       })
@@ -58,7 +59,7 @@ export function createRelationPort(input: {
       if (!await input.host.revalidate(context) || !await input.authorizePair(result.value, context)) return { status: "unavailable", reason: "relation-access-unavailable" }
       return { status: "ok", value: result.value }
   }
-  return {
+  const port = {
     storageVersion: async (context: TrustedDomainContext): Promise<PortResult<number>> => {
       const request = input.host.requestFor(context)
       if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "relation-access-unavailable" }
@@ -83,6 +84,7 @@ export function createRelationPort(input: {
         if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, "collaboration.relation.confirm", { operation: "remove", id, pair: selected.pair, mutation: selected.mutation }) || !input.mutationFence.check(fence) || !isRelation(relation) || digestSfValue({ fromRef: relation.fromRef, toRef: relation.toRef, kind: relation.kind, evidenceRefs: relation.evidenceRefs, ...(selected.pair.recipientRef ? { recipientRef: selected.pair.recipientRef } : {}) }) !== digestSfValue(selected.pair) || digestSfValue(state.relations[`sf:assignment:${id}`]) !== digestSfValue(selected.pair.recipientRef ? { relationId: id, recipientRef: selected.pair.recipientRef } : undefined)) return { commit: false, value: null }
         delete state.relations[id]
         delete state.relations[`sf:assignment:${id}`]
+        state.relations[`sf:relation-retired:${id}`] = { relationId: id }
         return { commit: true, value: relation }
       })
       if (result.status === "preview") return { status: "conflict", reason: "relation-not-found-or-changed" }
@@ -95,7 +97,7 @@ export function createRelationPort(input: {
       const refs = [...recordRefs]
       const request = input.host.requestFor(context)
       if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "relation-access-unavailable" }
-      const result = await input.state.read(request, "relations", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? Object.entries(state.relations).filter(([key]) => !key.startsWith("sf:hot-topic:") && !key.startsWith("sf:assignment:")).map(([, value]) => value) : undefined)
+      const result = await input.state.read(request, "relations", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? Object.entries(state.relations).filter(([key]) => !isInternalRelationKey(key)).map(([, value]) => value) : undefined)
       if (result.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
       if (result.status !== "ok") return result
       if (!result.value || !result.value.every(isRelation)) return { status: "unavailable", reason: "invalid-relations" }
@@ -114,13 +116,41 @@ export function createRelationPort(input: {
       }))
       const candidates = projected.filter((relation): relation is Relation => !!relation && (refs.includes(relation.fromRef) || refs.includes(relation.toRef)))
       const access = await Promise.all(candidates.map((relation) => input.authorizePair(relation, context)))
-      const again = await input.state.read(request, "relations", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? Object.entries(state.relations).filter(([key]) => !key.startsWith("sf:hot-topic:") && !key.startsWith("sf:assignment:")).map(([, value]) => value) : undefined)
+      const again = await input.state.read(request, "relations", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? Object.entries(state.relations).filter(([key]) => !isInternalRelationKey(key)).map(([, value]) => value) : undefined)
       if (again.status !== "ok" || !again.value || digestSfValue(again.value) !== digestSfValue(result.value) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "relation-access-unavailable" }
       const finalAccess = await Promise.all(candidates.map((relation) => input.authorizePair(relation, context)))
       if (!await input.host.revalidate(context)) return { status: "denied", reason: "relation-access-unavailable" }
       return { status: "ok", value: { relations: candidates.filter((_, index) => access[index] && finalAccess[index]) } }
     },
   }
+  return {
+    ...port,
+    readVersioned: async (recordRefs: readonly string[], context: TrustedDomainContext): Promise<PortResult<readonly { id: string; version: number; from: BusinessEvidenceRef; to: BusinessEvidenceRef; state: "confirmed"; evidenceRefs: readonly BusinessEvidenceRef[] }[]>> => {
+      const selected = await port.read(recordRefs, context)
+      if (selected.status !== "ok") return selected
+      const request = input.host.requestFor(context)
+      if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "relation-access-unavailable" }
+      const metadata = await input.state.read(request, "relations", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? selected.value.relations.map((relation) => ({ relation: state.relations[relation.id], version: state.relations[`sf:relation-version:${relation.id}`] })) : undefined)
+      if (metadata.status !== "ok" || !metadata.value || metadata.value.length !== selected.value.relations.length) return { status: "unavailable", reason: "relation-version-unavailable" }
+      const values = selected.value.relations.map((relation, index) => {
+        const entry = metadata.value![index]
+        const version = entry?.version
+        if (!isRelation(entry?.relation) || !version || typeof version !== "object" || !("relationId" in version) || version.relationId !== relation.id || !("version" in version) || version.version !== 1) return undefined
+        const from = relation.evidenceRefs.filter((ref) => ref.refId === relation.fromRef)
+        const to = relation.evidenceRefs.filter((ref) => ref.refId === relation.toRef)
+        if (from.length !== 1 || to.length !== 1) return undefined
+        return { id: relation.id, version: 1, from: from[0]!, to: to[0]!, state: "confirmed" as const, evidenceRefs: relation.evidenceRefs }
+      })
+      if (values.some((value) => !value)) return { status: "unavailable", reason: "relation-version-unavailable" }
+      const again = await port.read(recordRefs, context)
+      if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(selected.value) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "relation-access-unavailable" }
+      return { status: "ok", value: values.filter((value) => value !== undefined) }
+    },
+  }
+}
+
+function isInternalRelationKey(key: string) {
+  return key.startsWith("sf:hot-topic:") || key.startsWith("sf:assignment:") || key.startsWith("sf:relation-version:") || key.startsWith("sf:relation-retired:")
 }
 
 function validPair(pair: Pair) {

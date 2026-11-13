@@ -33,7 +33,7 @@ test("authorized capability reads through an issued scoped source and consumes o
   try {
     await persistence.initializeSources("procurement")
     await persistence.transaction("procurement", async (snapshot) => {
-      snapshot.data.store = { requests: { "PR-1": { request: { number: "PR-1", status: "draft", createdBy: "a", pr: { title: "Owned", estAmount: 100 } }, version: 4, by: "a" } }, settings: { currency: "USD" }, suppliers: [] }
+      snapshot.data.store = { requests: { "PR-1": { request: { number: "PR-1", status: "draft", createdBy: "a", pr: { title: "Owned", estAmount: 100 } }, version: 4, by: "a" } }, settings: { currency: "USD" }, suppliers: [], issued: { pr: ["PR-1"], po: [] } }
       return { commit: true, value: undefined }
     })
     const request = new Request("https://local.invalid/procurement")
@@ -57,11 +57,17 @@ test("authorized capability reads through an issued scoped source and consumes o
     const restarted = createProcurementSourceResolver({ host, scopedSources: persistence, contextFor })
     expect(await restarted.resolveForPreparation(issued.value, admission.value)).toEqual(preparationSource)
     if (preparationSource.status !== "ok") throw new Error("preparation scope unavailable")
-    const { procurementPreparedScope } = await import("../../../product/procurement/prepared.ts")
+    const { prepareProcurementMutation, procurementPreparedScope } = await import("../../../product/procurement/prepared.ts")
     const target = preparationSource.value.evidence.target
     const targetRef = { surface: "procurement" as const, type: target.recordType, id: target.recordId, incarnation: target.incarnation, version: target.version, fields: target.fields, period: preparationSource.value.context.period, observedAt: "2026-01-01T00:00:00Z" }
     const recovered = await persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: procurementPreparedScope(snapshot, targetRef, admission.value) }))
     expect(recovered).toEqual(preparationSource.value.scope)
+    const collateral = await persistence.transaction("procurement", async (snapshot) => {
+      const store = snapshot.data.store as { suppliers: unknown[] }
+      store.suppliers = [{ id: 1, legalName: "Unrelated" }]
+      return { commit: false, value: prepareProcurementMutation({ snapshot, actor: { id: "a", roles: ["requester"], canWrite: true, assigned: [], domains: [] }, environment: await host.environment(), context: admission.value, target: targetRef, scope: preparationSource.value.scope, evidence: preparationSource.value.evidence, command: { page: "Requests", action: "save", id: "PR-1", version: 0, values: { pr: { estAmount: 125 } } }, operationId: "collateral", idempotencyKey: "collateral" }) }
+    })
+    expect(collateral).toBeUndefined()
     const { createProcurementScenarioPreparation } = await import("../../../product/procurement/scenario-preparation.ts")
     const operation = { kind: "replace" as const, targetRef: issued.value, amount: 125, currency: "USD", period: targetRef.period }
     const coverage = { basisId: "basis", basisVersion: 1, alternativeId: "a", alternativeVersion: 1, currency: "USD", horizon: targetRef.period, issues: [], evaluatedSourceRefs: [], coverageState: "pending" as const, entries: [], derivedMissingCategoryIds: [] }

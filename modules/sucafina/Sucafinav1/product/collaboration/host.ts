@@ -46,6 +46,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   authority: SfDomainValidation
   human: CollaborationHumanAuthority
   issueForActor?: (target: Extract<BusinessEvidenceRef, { kind: "record" }>["target"], context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>>
+  captureWorkSource?: (memberRef: string, context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>>
   confirmationSource?: ConfirmationObserver<T> & {
     verifyManifest: (scope: ConfirmationScope, context: TrustedDomainContext) => Promise<boolean>
     /** Read-only check of the same manifest in the protected transaction snapshot. */
@@ -58,7 +59,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   const issueRecord = createDashboardRecordSourceIssuer({ host: input.host, scopedSources: input.scopedSources })
   const recordEvidence = createDashboardRecordEvidenceHost({ host: input.host, scopedSources: input.scopedSources, issueRecord })
   const authority = createCollaborationAuthority({ host: input.host, evidence: input.evidence })
-  const selections = input.workSelections ?? createWorkSelectionPort({ collections: input.collections, authority })
+  const selections = input.workSelections ?? createWorkSelectionPort({ collections: input.collections, authority, captureMember: input.captureWorkSource })
   const reissue = input.issueForActor ? createCollaborationReissuer({ host: input.host, issueForActor: input.issueForActor, authorize: (ref, context) => authority.sources([ref], context) }) : undefined
   const recipientThread = reissue ? createRecipientThreadReader({ host: input.host, state: input.state, reissue, authorize: authority.sources }) : undefined
   const confirmation = (() => {
@@ -106,8 +107,15 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
     if (!await input.authority.revalidateDomainContext(context)) return undefined
     return input.authority.receiptFor(context, operation, digest, resultDigest)
   } })
+  const captureWorkSource = async (memberRef: string, context: TrustedDomainContext): Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>> => {
+    if (!input.captureWorkSource || typeof memberRef !== "string" || !memberRef.trim()) return { status: "unavailable", reason: "work-source-capture-unavailable" }
+    const captured = await input.captureWorkSource(memberRef, context)
+    if (captured.status !== "ok") return captured
+    if (!await authority.sources([captured.value], context) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "work-source-capture-unavailable" }
+    return captured
+  }
   const recipientActions = recipientThread ? createRecipientThreadActions({ state: input.state, host: input.host, human: input.human, mutationFence: createCollaborationMutationFence(input.host), read: recipientThread, creationTarget: input.creationTarget, createId: input.createId, now: input.now }) : undefined
   const answerEvidence = createThreadAnswerEvidence(threadReads)
 
-  return { ...collaboration, confirmation, recipientThread, recipientActions, recordEvidence, selections, sourceFence: createCollaborationSourceFence({ host: input.host, scopedSources: input.scopedSources }), resolveQuestion: createQuestionSource(threadReads), answerEvidence, resolveAnswer: answerEvidence.resolve, projectAnswer: answerEvidence.project, capabilities: createCollaborationCapabilities(dispatch) }
+  return { ...collaboration, confirmation, recipientThread, recipientActions, captureWorkSource, recordEvidence, selections, sourceFence: createCollaborationSourceFence({ host: input.host, scopedSources: input.scopedSources }), resolveQuestion: createQuestionSource(threadReads), answerEvidence, resolveAnswer: answerEvidence.resolve, projectAnswer: answerEvidence.project, capabilities: createCollaborationCapabilities(dispatch) }
 }
