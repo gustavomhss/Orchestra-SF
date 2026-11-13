@@ -17,6 +17,7 @@ import {
   normName,
   orderSpan,
   outlookMonth,
+  plannerMonthlyAmount,
   resetSpread,
   spread,
   syncEnters,
@@ -700,7 +701,7 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     next[field] = value
   const warnings: string[] = []
   for (const [field, value] of Object.entries(values).filter(([field]) => /^[baf](?:[0-9]|1[01])$/.test(field))) {
-    const number = value === "" || value === null ? null : Number(value)
+    const number = plannerMonthlyAmount(value)
     if (number !== null && !Number.isFinite(number)) return invalid("Invalid monthly amount")
     if (field[0] === "b") continue
     const vector = months(next[field[0]], true)

@@ -450,7 +450,8 @@ function importProjectRows(
     }
   }
   snapshot.data.projects = nextProjects
-  return { ok: true, value: { added: result.added, updated: result.updated } }
+  const ignored = (Array.isArray(command.values.rows) ? command.values.rows.length : 0) - imported.filter((row) => row._status !== "error").length
+  return { ok: true, value: { added: result.added, updated: result.updated, ignored } }
 }
 
 const itemFields = [
@@ -715,7 +716,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
       if (collection === "projects") {
         const variance = budgetVariance(finite(row.spent), finite(row.budget))
         return [
-          esc(text(row.name)),
+          `<span id="record-${esc(recordId(row.id))}">${esc(text(row.name))}</span>`,
           esc(text(row.status)),
           esc(text(row.risk)),
           esc(dashboardMoney(finite(row.budget))),
@@ -728,7 +729,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
       if (collection === "risks") {
         const score = riskScore(finite(row.impact), finite(row.probability))
         return [
-          esc(text(row.name)),
+          `<span id="record-${esc(recordId(row.id))}">${esc(text(row.title) || text(row.name))}</span>`,
           esc(text(row.responsible)),
           esc(text(row.status)),
           String(finite(row.impact)),
@@ -739,7 +740,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
       }
       if (collection === "contracts")
         return [
-          esc(text(row.vendor)),
+          `<span id="record-${esc(recordId(row.id))}">${esc(text(row.vendor))}</span>`,
           esc(dashboardMoney(finite(row.amount))),
           esc(text(row.amtType)),
           esc(text(row.renewType)),
@@ -759,7 +760,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
   const details = records
     .map(
       (row) =>
-        `<details><summary>${esc(text(row.name) || text(row.vendor))}</summary>${editor(row)}${collection === "projects" ? renderMilestones(page, row, context, disabled) : ""}${collection === "stakeholders" && effectivePriority(row) === "action" && !text(row.owner).trim() ? '<p role="status">Action plan requires an owner.</p>' : ""}${
+        `<details><summary>${esc(text(row.title) || text(row.name) || text(row.vendor))}</summary>${editor(row)}${collection === "projects" ? renderMilestones(page, row, context, disabled) : ""}${collection === "stakeholders" && effectivePriority(row) === "action" && !text(row.owner).trim() ? '<p role="status">Action plan requires an owner.</p>' : ""}${
           collection === "contracts"
             ? table(
                 ["Document", "Availability"],
@@ -805,7 +806,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
           disabled || !context.actor.roles.includes("admin"),
         )}</details>`
       : ""
-  return `<section>${filters}${header}${content}${details}<details open><summary>Add ${collection === "contracts" ? "contract" : collection === "stakeholders" ? "stakeholder" : collection === "risks" ? "risk" : "project"}</summary>${editor({})}</details>${importer}</section>`
+  return `<section>${filters}${header}${content}${details}<details><summary>Add ${collection === "contracts" ? "contract" : collection === "stakeholders" ? "stakeholder" : collection === "risks" ? "risk" : "project"}</summary>${editor({})}</details>${importer}</section>`
 }
 function priorityLabel(priority: string) {
   return priority === "action" ? "Action Plan Required" : priority === "monitor" ? "Monitored" : "Low"

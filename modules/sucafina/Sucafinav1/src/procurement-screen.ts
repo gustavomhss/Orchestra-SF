@@ -33,7 +33,7 @@ const SUPPLIER_SECTIONS = [
   "audit",
 ] as const
 
-type Step = { holderId: string | null; status: string }
+type Step = { holderId: string | null; status: string; levelName?: string }
 type Approval = { amount: number; steps?: Step[] }
 type Quote = { id?: string; total?: number; currency?: string; scores?: unknown; cscores?: unknown }
 type Line = { qty: number; unitPrice: number }
@@ -43,16 +43,21 @@ export type RequestView = {
   status: string
   createdBy: string
   requesterName?: string
+  prApprovalBaseCurrency?: string
   pr?: { estAmount?: number | null; title?: string; description?: string; costCenter?: string } | null
   prApproval?: Approval | null
   sourcing?: {
     quotes?: Quote[]
     selectedId?: string | null
     fxSnapshot?: Record<string, number | null> | null
+    approvalBaseCurrency?: string
     approval?: Approval | null
   } | null
   po?: {
     number?: string
+    currency?: string
+    fxRate?: number | null
+    approvalBaseCurrency?: string
     expenseType?: string
     supplier?: string
     lines?: Line[]
@@ -95,29 +100,53 @@ const FILTERS: Record<string, (status: string) => boolean> = {
 
 export function requestValue(request: RequestView, rates: Rates): number | null {
   const lines = request.po?.lines
-  if (lines && lines.length) return lines.reduce((sum, line) => sum + line.qty * line.unitPrice, 0)
+  if (lines && lines.length) {
+    if (lines.some((line) => !Number.isFinite(line.qty) || !Number.isFinite(line.unitPrice) || !Number.isFinite(line.qty * line.unitPrice))) return null
+    const total = lines.reduce((sum, line) => sum + line.qty * line.unitPrice, 0)
+    if (!Number.isFinite(total)) return null
+    if (["po_pending", "po_approved", "po_issued"].includes(request.status) && request.po?.approvalBaseCurrency !== rates.currency) return null
+    const currency = request.po?.currency || rates.currency
+    if (currency === rates.currency) return total
+    if (request.po?.fxRate != null) return request.po.fxRate > 0 && Number.isFinite(total * request.po.fxRate) ? total * request.po.fxRate : null
+    if (["po_pending", "po_approved", "po_issued"].includes(request.status)) return null
+    return toBase(total, currency, rates, null)
+  }
   const selected = request.sourcing?.quotes?.find((quote) => quote.id === request.sourcing?.selectedId)
-  if (selected && typeof selected.total === "number") {
+  if (selected) {
+    if (typeof selected.total !== "number" || !Number.isFinite(selected.total)) return null
+    if (["src_pending", "po_draft", "po_pending", "po_approved", "po_issued", "po_rejected"].includes(request.status) && request.sourcing?.approvalBaseCurrency !== rates.currency) return null
+    if (["src_pending", "po_draft", "po_pending", "po_approved", "po_issued", "po_rejected"].includes(request.status) && request.sourcing?.fxSnapshot == null && selected.currency && selected.currency !== rates.currency) return null
     const base = toBase(selected.total, selected.currency || rates.currency, rates, request.sourcing?.fxSnapshot)
-    if (base != null) return base
+    return base
   }
   const amount = request.pr?.estAmount
-  if (typeof amount === "number") return amount
+  if (["pr_pending", "sourcing", "src_pending", "src_rejected", "po_draft", "po_pending", "po_rejected", "po_approved", "po_issued"].includes(request.status) && request.prApprovalBaseCurrency !== rates.currency) return null
+  if (typeof amount === "number" && Number.isFinite(amount)) return amount
   return null
 }
 
 export function procurementDashboard(requests: RequestView[], rates: Rates) {
   const issued = { OPEX: 0, CAPEX: 0 }
+  const approved = { OPEX: 0, CAPEX: 0 }
+  const unavailable: string[] = []
   for (const request of requests) {
     if (request.status !== "po_approved" && request.status !== "po_issued") continue
     const type = request.po?.expenseType
     if (type !== "OPEX" && type !== "CAPEX") continue
-    issued[type] += requestValue(request, rates) || 0
+    const value = requestValue(request, rates)
+    if (value == null) {
+      unavailable.push(request.number ?? "")
+      continue
+    }
+    if (request.status === "po_issued") issued[type] += value
+    if (request.status === "po_approved") approved[type] += value
   }
   return {
     edits: false as const,
     open: requests.filter((request) => request.status !== "po_issued" && request.status !== "cancelled").length,
     issued,
+    approved,
+    unavailable,
   }
 }
 
@@ -140,18 +169,60 @@ export function exportRegister(requests: RequestView[]) {
   return requests.map((request) => strip(request))
 }
 
-export function myApprovals(requests: RequestView[], actorId: string) {
-  const waitingForYou = []
-  const waitingForOthers = []
+export function approvalQueue(requests: RequestView[], actorId: string) {
+  const waitingForYou: RequestView[] = []
+  const waitingForOthers: RequestView[] = []
+  const unassigned: RequestView[] = []
   for (const request of requests) {
+    if (typeof request.status !== "string" || !request.status.endsWith("_pending")) continue
     const approval = approvalOf(request)
-    const step = approval?.steps?.find((item) => item.status === "pending")
-    if (!approval || !step) continue
-    const row = { number: request.number, amount: approval.amount }
-    if (step.holderId === actorId) waitingForYou.push(row)
-    if (step.holderId !== actorId) waitingForOthers.push(row)
+    const step = Array.isArray(approval?.steps) ? approval.steps.find((item) => item?.status === "pending") : undefined
+    if (step?.holderId && step.holderId === actorId) waitingForYou.push(request)
+    if (step?.holderId && step.holderId !== actorId) waitingForOthers.push(request)
+    if (!step?.holderId) unassigned.push(request)
   }
-  return { waitingForYou, waitingForOthers }
+  return { waitingForYou, waitingForOthers, unassigned }
+}
+
+export function myApprovals(requests: RequestView[], actorId: string) {
+  const groups = approvalQueue(requests, actorId)
+  const brief = (request: RequestView) => {
+    const amount = approvalOf(request)?.amount
+    return { number: request.number, amount: typeof amount === "number" && Number.isFinite(amount) ? amount : null }
+  }
+  return { waitingForYou: groups.waitingForYou.map(brief), waitingForOthers: groups.waitingForOthers.map(brief), unassigned: groups.unassigned.map(brief) }
+}
+
+/** Uses the same holder and self-approval checks as the actual request detail. */
+export function approvalDecision(request: RequestView, actor: Pick<ScreenActor, "id" | "canWrite" | "roles">, blockSelfApproval: boolean) {
+  if (!["pr_pending", "src_pending", "po_pending"].includes(request.status)) return { allowed: false, reason: "approval step unavailable" }
+  const approval = approvalOf(request)
+  const step = Array.isArray(approval?.steps) ? approval.steps.find((item) => item?.status === "pending") : undefined
+  if (!step) return { allowed: false, reason: "approval step unavailable" }
+  if (step.holderId !== null && (typeof step.holderId !== "string" || !step.holderId)) return { allowed: false, reason: "approval holder unavailable" }
+  if (step.holderId && step.holderId !== actor.id) return { allowed: false, reason: "waiting for the assigned holder" }
+  if (blockSelfApproval && request.createdBy === actor.id) return { allowed: false, reason: "self-approval is blocked" }
+  if (!actor.id.trim() || !actor.canWrite || !actor.roles.length || actor.roles.every((role) => role === "viewer")) return { allowed: false, reason: "write access required" }
+  return { allowed: true, reason: "" }
+}
+
+/** An imported history without the actual transition cannot establish when this holder began waiting. */
+export function approvalStageEntry(request: RequestView): string | null {
+  const label = request.status === "pr_pending" ? "Requisition" : request.status === "src_pending" ? "Sourcing" : request.status === "po_pending" ? "Purchase order" : ""
+  if (!label) return null
+  const approval = approvalOf(request)
+  const steps = Array.isArray(approval?.steps) ? approval.steps : []
+  const pending = steps.findIndex((step) => step?.status === "pending")
+  const history = Array.isArray(request.history) ? request.history : []
+  const submitted = history.findLastIndex((line) => line?.action === `${label} submitted for approval`)
+  if (pending < 0 || submitted < 0) return null
+  const previous = steps[pending - 1]
+  const entry = pending === 0 ? history[submitted] : previous?.status === "approved" && previous.levelName
+    ? history.slice(submitted + 1).findLast((line) => line?.action === `${label} approved by ${previous.levelName}`)
+    : undefined
+  if (typeof entry?.at !== "string" || !/^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?Z)?$/.test(entry.at)) return null
+  const time = Date.parse(entry.at)
+  return Number.isFinite(time) && new Date(time).toISOString().slice(0, 10) === entry.at.slice(0, 10) ? entry.at : null
 }
 
 export function historyView(history: { at: string; by: string; action: string; note: string }[]) {
@@ -290,8 +361,16 @@ function procurementBody(
       .map((request) => `<p>${esc(request.number ?? "")} ${esc(request.status)}</p>`)
       .join("")
   if (key === "My approvals" && input.requests) {
-    const mine = myApprovals(input.requests, input.actor.id)
-    return `<ul>${mine.waitingForYou.map((row) => `<li>${esc(row.number ?? "")} ${row.amount}</li>`).join("")}</ul>`
+    const groups = approvalQueue(input.requests, input.actor.id)
+    return [{ title: "Waiting for you", rows: groups.waitingForYou }, { title: "Waiting for others", rows: groups.waitingForOthers }, { title: "Unassigned", rows: groups.unassigned }].map((group) => `<h2>${group.title}</h2><ul>${group.rows.map((request) => {
+      const approval = approvalOf(request)
+      const step = Array.isArray(approval?.steps) ? approval.steps.find((item) => item?.status === "pending") : undefined
+      const currency = request.status === "pr_pending" ? request.prApprovalBaseCurrency : request.status === "src_pending" ? request.sourcing?.approvalBaseCurrency : request.status === "po_pending" ? request.po?.approvalBaseCurrency : undefined
+      const amount = typeof approval?.amount === "number" && Number.isFinite(approval.amount) ? `${approval.amount} ${currency || "(submitted base currency unavailable)"}` : "Unavailable"
+      const stage = request.status === "pr_pending" ? "Requisition" : request.status === "src_pending" ? "Sourcing selection" : request.status === "po_pending" ? "Purchase order" : "Unrecognized approval stage"
+      const holder = step?.holderId ? `Assigned holder: ${step.holderId}` : "Unassigned"
+      return `<li>${esc(request.number ?? "")} · ${esc(request.pr?.title || "Unavailable")} · ${esc(stage)} · ${esc(amount)} · ${esc(holder)} · ${step ? "Review approval" : "Approval step unavailable"}</li>`
+    }).join("")}</ul>`).join("")
   }
   return ""
 }
@@ -343,18 +422,21 @@ function toBase(
 ): number | null {
   if (!currency || currency === rates.currency) return total
   const snap = snapshot?.[currency]
-  if (snap != null && snap > 0) return total * snap
+  if (snap != null && snap > 0 && Number.isFinite(total * snap)) return total * snap
+  if (snapshot != null) return null
   const found = rates.fxRates?.find((rate) => rate.code === currency)
-  if (found && found.rate > 0) return total * found.rate
+  if (found && found.rate > 0 && Number.isFinite(total * found.rate)) return total * found.rate
   return null
 }
 
 function strip(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(strip)
   if (!value || typeof value !== "object") return value
+  const field = (value as Record<string, unknown>).field
+  if (typeof field === "string" && ["iban", "account", "bankname", "swift", "accountholder", "bankcountry"].includes(field.toLowerCase())) return { field }
   const out: Record<string, unknown> = {}
   for (const [key, item] of Object.entries(value as Record<string, unknown>)) {
-    if (key === "scores" || key === "cscores" || key === "iban") continue
+    if (["scores", "cscores", "iban", "account", "bankname", "swift", "accountholder", "bankcountry"].includes(key.toLowerCase())) continue
     out[key] = strip(item)
   }
   return out

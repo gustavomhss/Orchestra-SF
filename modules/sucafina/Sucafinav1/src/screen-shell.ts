@@ -45,8 +45,12 @@ async function valuesOf(form) {
   function compact(value) { if (Array.isArray(value)) return value.filter((entry) => entry !== undefined).map(compact); if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, entry]) => [key, compact(entry)])); return value }
   return compact(values)
 }
-function showResult(result) {
-  if (result && result.status === 409) { notice(JSON.stringify({ stored: result.stored, by: result.by })); return }
+function showResult(result, attempt) {
+  if (result && result.status === 409) {
+    const describe = (value) => value && typeof value === "object" ? Object.entries(value).map(([key, item]) => key + ": " + (item == null ? "Not provided" : typeof item === "object" ? JSON.stringify(item) : String(item))).join(" · ") : String(value ?? "Not available")
+    notice("This record changed since you opened it. Your edits are still here. Current: " + describe(result.stored) + ". Your attempt: " + describe(attempt) + ". Review the current record before retrying.")
+    return
+  }
   notice(result && result.errors ? result.errors.join(" · ") : unsaved)
 }
 function beginWrite() {
@@ -60,7 +64,7 @@ async function send(command) {
   try {
   const response = await fetch(location.href, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify(command) })
   const result = await response.json()
-  if (!response.ok || !result || result.ok !== true) { showResult(result); return false }
+  if (!response.ok || !result || result.ok !== true) { showResult(result, command.values); return false }
   notice(result.warnings && result.warnings.length ? result.warnings.join(" · ") : "Saved.")
   return true
   } finally { finish() }
@@ -154,6 +158,13 @@ function attach() {
     const form = dialog.querySelector("form[data-command]")
     button.dataset.editorKey = form ? JSON.stringify([form.dataset.page, form.dataset.command, form.dataset.record]) : ""
     button.addEventListener("click", () => dialog.showModal())
+    dialog.addEventListener("cancel", (event) => {
+      const dirty = dialog.querySelectorAll("form[data-dirty]")
+      if (!dirty.length) return
+      if (!window.confirm("Discard unsaved changes?")) { event.preventDefault(); return }
+      dirty.forEach((form) => delete form.dataset.dirty)
+      setTimeout(() => void refresh(true), 0)
+    })
     dialog.addEventListener("keydown", (event) => {
       if (event.key !== "Tab" || event.altKey || event.ctrlKey || event.metaKey) return
       const stops = [...dialog.querySelectorAll('button:not(:disabled), input:not([type=hidden]):not(:disabled), select:not(:disabled), textarea:not(:disabled), a[href], [tabindex="0"]')].filter((node) => node.getClientRects().length)
@@ -167,7 +178,13 @@ function attach() {
   document.querySelectorAll("[data-close-editor]").forEach((button) => {
     if (button.dataset.bound) return
     button.dataset.bound = "true"
-    button.addEventListener("click", () => button.closest("dialog").close())
+    button.addEventListener("click", () => {
+      const dialog = button.closest("dialog")
+      if (dialog.querySelector("form[data-dirty]") && !window.confirm("Discard unsaved changes?")) return
+      dialog.querySelectorAll("form[data-dirty]").forEach((form) => delete form.dataset.dirty)
+      dialog.close()
+      void refresh(true)
+    })
   })
   document.querySelectorAll(".section-tabs a").forEach((anchor, index) => {
     if (location.hash ? anchor.hash === location.hash : index === 0) anchor.setAttribute("aria-current", "location")
@@ -257,7 +274,58 @@ function attach() {
       buttons.forEach((button) => button.disabled = true)
       try {
         const values = await valuesOf(form)
-        const saved = await send({ page: form.dataset.page, action: form.dataset.command, id: form.dataset.record || undefined, version: Number(form.dataset.version), values, confirmed: confirmed || values.confirmed === true })
+        const command = { page: form.dataset.page, action: form.dataset.command, id: form.dataset.record || undefined, version: Number(form.dataset.version), values, confirmed: confirmed || values.confirmed === true }
+        if (document.body.dataset.surface === "dashboard" && ["OPEX Detail", "CAPEX Projects"].includes(command.page) && ["year-amount", "annual-entry", "save-entry"].includes(command.action)) {
+          const revision = form.dataset.previewRevision || "0"
+          const finish = beginWrite()
+          try {
+            const response = await fetch(location.href, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ page: command.page, action: "preview-change", version: 0, values: { command: { ...command, confirmed: false } } }) })
+            const result = await response.json()
+            if (!response.ok || !result?.ok || result.value?.status !== "preview") { showResult(result, values); return }
+            if ((form.dataset.previewRevision || "0") !== revision) { notice("The draft changed. Review a new preview."); return }
+            const preview = result.value
+            const panel = document.createElement("section")
+            panel.dataset.preview = "true"
+            panel.setAttribute("aria-label", "Review changes")
+            const heading = document.createElement("h3")
+            heading.textContent = "Review changes before applying"
+            panel.append(heading)
+            const format = (item) => item?.state === "absent" ? "Absent" : item?.state === "undefined" ? "Undefined" : item?.state === "value" ? (item.value == null ? "Not provided" : typeof item.value === "object" ? JSON.stringify(item.value) : String(item.value)) : "Unavailable"
+            const list = document.createElement("ul")
+            for (const change of preview.changes || []) { const row = document.createElement("li"); row.textContent = change.path + ": " + format(change.before) + " → " + format(change.after); list.append(row) }
+            if (!list.children.length) { const row = document.createElement("li"); row.textContent = "No changes."; list.append(row) }
+            panel.append(list)
+            for (const warning of preview.warnings || []) { const message = document.createElement("p"); message.textContent = warning; panel.append(message) }
+            if (preview.summary) { const summary = document.createElement("p"); summary.textContent = "Added: " + preview.summary.added + " · Updated: " + preview.summary.updated + " · Ignored: " + preview.summary.ignored; panel.append(summary) }
+            const apply = document.createElement("button")
+            apply.type = "button"
+            apply.textContent = "Confirm and apply"
+            apply.addEventListener("click", async () => {
+              if ((form.dataset.previewRevision || "0") !== revision) { panel.remove(); notice("The draft changed. Review a new preview."); return }
+              apply.disabled = true
+              const done = beginWrite()
+              try {
+                const response = await fetch(location.href, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ page: command.page, action: "apply-preview", version: 0, values: { previewRef: preview.previewRef } }) })
+                const result = await response.json()
+                if (!response.ok || !result?.ok || result.value?.applied !== true) { showResult(result, values); if (response.status === 409) panel.remove(); return }
+                if ((form.dataset.previewRevision || "0") !== revision) { panel.remove(); notice("The reviewed changes were saved. New edits remain unsaved; review them before applying."); return }
+                delete form.dataset.dirty
+                const dialog = form.closest("dialog")
+                if (dialog) { pending.focus = dialog.closest("td").querySelector("[data-open-editor]").dataset.editorKey; dialog.close() }
+                notice("Saved.")
+                pending.again = true
+              } catch { notice(unsaved) }
+              finally { done(); apply.disabled = false; if (pending.again) { pending.again = false; void refresh() } }
+            })
+            panel.append(apply)
+            form.querySelector("[data-preview]")?.remove()
+            form.append(panel)
+            heading.tabIndex = -1
+            heading.focus()
+          } finally { finish() }
+          return
+        }
+        const saved = await send(command)
         if (saved) {
           delete form.dataset.dirty
           const dialog = form.closest("dialog")
@@ -315,11 +383,12 @@ async function refresh(silent = false) {
   } catch { if (!silent && !pending.closed) notice(unsaved) }
   finally { clearTimeout(deadline); pending.loading = false; pending.controller = null; if (pending.again) { pending.again = false; void refresh() } }
 }
-const markDirty = (event) => { const form = event.target.closest("form[data-command], form[data-private-upload]"); if (form) form.dataset.dirty = "true" }
+const markDirty = (event) => { const form = event.target.closest("form[data-command], form[data-private-upload]"); if (form) { form.dataset.dirty = "true"; form.dataset.previewRevision = String(Number(form.dataset.previewRevision || "0") + 1); form.querySelector("[data-preview]")?.remove() } }
 document.addEventListener("input", markDirty)
 document.addEventListener("change", markDirty)
 const businessTimer = setInterval(() => { if (!document.hidden) void refresh(true) }, 30000)
 window.addEventListener("pagehide", () => { pending.closed = true; clearInterval(businessTimer); pending.controller?.abort() })
+window.addEventListener("beforeunload", (event) => { if (document.querySelector("form[data-dirty]")) { event.preventDefault(); event.returnValue = "" } })
 window.addEventListener("pageshow", (event) => { if (event.persisted) location.reload() })
 window.sucafinaRefresh = refresh
 document.addEventListener("focusout", () => setTimeout(applyRefresh, 0))
@@ -410,6 +479,7 @@ form.filter-bar{display:flex;align-items:end;padding:16px;gap:12px}form.filter-b
 th{white-space:normal;min-width:96px;max-width:220px;line-height:1.5}th:first-child,td:first-child{min-width:140px}td:first-child{max-width:360px;white-space:normal;overflow-wrap:anywhere}th.table-action,td.table-action{width:1%;min-width:80px;max-width:120px;white-space:nowrap}.section-tabs{display:flex;gap:4px;padding:0 0 12px;border-bottom:1px solid var(--border);margin-bottom:20px;overflow-x:auto}.section-tabs a{color:#496655;background:transparent;border-radius:5px;white-space:nowrap}.section-tabs a[aria-current=location]{background:#e3eee6;color:#174e37;font-weight:600}.section-tabs a:hover{background:#e8eeea}
 form[method=get]:not(.report-form){display:flex;align-items:end;padding:16px;gap:12px}form[method=get]:not(.report-form)>label{flex:0 1 200px;min-width:120px}form[method=get]:not(.report-form)>button{margin:0 0 0 auto;width:auto;grid-column:auto}.row-dialog{width:min(800px,calc(100vw - 32px));max-height:85dvh;border:1px solid var(--border);border-radius:10px;padding:24px;color:#20372e;background:#fff;box-shadow:0 20px 80px #12352833;white-space:normal}.row-dialog::backdrop{background:#122b2266}.row-dialog>header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}.row-dialog h2{margin:0}.row-dialog [data-close-editor]{padding:4px 10px;min-height:32px;background:#f0f4f1;border-color:var(--border);color:#34523f;font-size:20px}.row-dialog form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 16px;padding:0;margin:0 0 16px;white-space:normal}.row-dialog form label{min-width:0}.row-dialog form input,.row-dialog form select{max-width:100%;min-height:38px}.row-dialog form>button{grid-column:1/-1;justify-self:end}.row-dialog form textarea{min-height:104px}form[data-command^=delete]>button{background:#fff;color:#9b4136;border-color:#dfbbb5}@media(max-width:800px){.row-dialog{padding:20px}.row-dialog form{grid-template-columns:minmax(0,1fr)}}
 [data-editor-status]{padding:12px;border-radius:5px;background:#fcf4de;color:#724c12;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere}[data-editor-status]:empty{display:none}
+.product-context{display:flex;flex-wrap:wrap;gap:8px 20px;padding:12px 16px;background:#eaf0eb;border:1px solid var(--border);border-radius:8px}.product-state,.product-scenario,.product-contribution,.product-decision{padding:16px;background:#fff;border:1px solid var(--border);border-radius:8px;min-width:0;overflow-wrap:anywhere}.product-decision>header h2,.product-contribution>h3,.product-scenario>h3{margin-top:0}.product-decision article{padding:12px 0;border-top:1px solid var(--border)}.product-decision dl,.product-contribution dl{display:grid;grid-template-columns:minmax(90px,auto) minmax(0,1fr);gap:4px 12px}.product-contribution dd{margin:0;overflow-wrap:anywhere}
 .chart-legend{display:flex;flex-wrap:wrap;gap:10px 20px;list-style:none;margin:12px 0 0;padding:0;font-size:12px;color:#4b6357}.chart-legend li{display:flex;align-items:center;gap:6px}.chart-legend span{display:inline-block;width:10px;height:10px;border-radius:2px}.chart-empty{padding:24px 12px;color:var(--muted);text-align:center;font-size:13px}.chart-axis{font-size:10px;fill:#62756c}.workspace-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.workspace-tools>button{background:#fff;color:#34583f;border-color:var(--border);min-height:32px;padding:5px 10px}.workspace-bar{flex-wrap:wrap}.workspace-tools details{position:relative;margin:0;padding:0;border:0;background:transparent}.workspace-tools summary{font-size:12px;font-weight:500;padding:7px 10px}.notification-popover{position:absolute;right:0;top:100%;z-index:20;width:min(360px,calc(100vw - 48px));background:#fff;border:1px solid var(--border);box-shadow:0 10px 32px #12352822;border-radius:8px;padding:12px;max-height:400px;overflow:auto}.notification-item{padding:12px 0;border-bottom:1px solid var(--border);font-size:12px}.notification-item:last-child{border:0}.notification-item a{padding:0;display:block}.notification-item small{color:var(--muted)}.notification-item button{background:#fff;color:var(--green);border-color:var(--border);font-size:11px;min-height:28px;padding:3px 8px;margin-top:8px}.notification-count{font-variant-numeric:tabular-nums;color:var(--green);font-weight:600}.utility-empty{background:#fff;border:1px solid var(--border);padding:24px;border-radius:8px;color:var(--muted)}
 @media(prefers-reduced-motion:no-preference){button,nav a{transition:background-color .15s}}
 `

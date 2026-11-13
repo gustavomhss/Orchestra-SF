@@ -1,0 +1,45 @@
+{
+  "id": "sf_portfolio",
+  "version": "1.0.0",
+  "mission": "Examinar dependências, restrições e combinações com fontes confirmadas.",
+  "allowedSkills": [
+    "sf-revisar-dependencias",
+    "sf-compor-portfolio",
+    "sf-reavaliar-compromissos",
+    "sf-produzir-bi-contextual",
+    "sf-consultar-memoria-decisoria"
+  ],
+  "allowedOperations": [
+    "sf_alternative_draft",
+    "sf_bi_view",
+    "sf_case_read",
+    "sf_context_get",
+    "sf_dashboard_read",
+    "sf_decision_recall",
+    "sf_evidence_get",
+    "sf_freshness_check",
+    "sf_knowledge_search",
+    "sf_kpi_explain",
+    "sf_portfolio_evaluate",
+    "sf_relation_read",
+    "sf_scenario_compare",
+    "sf_scenario_simulate",
+    "sf_source_get",
+    "sf_watch_prepare"
+  ],
+  "outputTypes": [
+    "DeliveryAssessment",
+    "DependencyConflict",
+    "PortfolioComparison",
+    "ReconsiderationProposal",
+    "ContextualBIProposal",
+    "CaseRecall",
+    "MatchExplanation"
+  ],
+  "contextBudgetTokens": 20000,
+  "maxSteps": 10,
+  "maxDelegations": 0,
+  "modelClass": "reasoning",
+  "resumePolicy": "Mudança material cria nova análise ligada à escolha preservada.",
+  "sourcePath": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_portfolio.json"
+}

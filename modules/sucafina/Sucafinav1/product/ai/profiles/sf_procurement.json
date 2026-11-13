@@ -1,0 +1,45 @@
+{
+  "id": "sf_procurement",
+  "version": "1.0.0",
+  "mission": "Comparar propostas e condições e preparar dossiê sem aprovar compra.",
+  "allowedSkills": [
+    "sf-comparar-sourcing",
+    "sf-revisar-condicoes-contratuais",
+    "sf-preparar-compra",
+    "sf-extrair-evidencias",
+    "sf-consultar-memoria-decisoria"
+  ],
+  "allowedOperations": [
+    "sf_alternative_draft",
+    "sf_case_read",
+    "sf_change_prepare",
+    "sf_context_get",
+    "sf_contract_read",
+    "sf_decision_recall",
+    "sf_document_extract",
+    "sf_evidence_get",
+    "sf_freshness_check",
+    "sf_knowledge_search",
+    "sf_receipt_get",
+    "sf_request_read",
+    "sf_source_get",
+    "sf_sourcing_compare",
+    "sf_supplier_read"
+  ],
+  "outputTypes": [
+    "CommercialComparison",
+    "CommercialGap",
+    "EvidenceCandidate",
+    "PreparedChangeSet",
+    "DossierDraft",
+    "DocumentEvidence",
+    "CaseRecall",
+    "MatchExplanation"
+  ],
+  "contextBudgetTokens": 20000,
+  "maxSteps": 10,
+  "maxDelegations": 0,
+  "modelClass": "reasoning",
+  "resumePolicy": "Documento/solicitação alterados exigem nova leitura; candidato antigo fica stale.",
+  "sourcePath": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_procurement.json"
+}

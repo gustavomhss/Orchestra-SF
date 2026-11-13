@@ -14,6 +14,7 @@ import {
   costPerUserTone,
   dashboardMoney,
   effectiveMonthlyBudget,
+  effectiveBudgetSeries,
   isYearDeparture,
   itUsersForMonth,
   itUsersWrite,
@@ -22,8 +23,10 @@ import {
   SECURITY_KPIS,
   securityKpiStatus,
   socClosureValue,
+  sumOwnerBudget,
 } from "../src/dashboard-accounts.ts"
 import type { BudgetData } from "../src/dashboard-accounts.ts"
+import { dashboardSignals } from "../product/dashboard/signals.ts"
 export const pages = ["Executive Dashboard", "Budget Overview", "OPEX Detail", "CAPEX Projects"] as const
 const budgetKeys = [
   "opexOwners",
@@ -63,6 +66,7 @@ export const domain: Domain = {
     )
     // Executive metrics are derived here; private member notes/classification never leave this boundary.
     const members = rows(snapshot.data.members)
+    const membersAvailable = Array.isArray(snapshot.data.members)
     // Aggregate reads still identify every member read, without logging talent or changing record versions.
     members.forEach((member) =>
       snapshot.audit.push({
@@ -74,25 +78,25 @@ export const domain: Domain = {
       }),
     )
     data.executive = {
-      active: members.filter((row) => row.status === "Active").length,
-      departures: members.filter((row) => isYearDeparture(text(row.status), text(row.end), environment.at.slice(0, 4)))
-        .length,
-      monthlyDepartures: members.filter(
+      active: membersAvailable ? members.filter((row) => row.status === "Active").length : null,
+      departures: membersAvailable ? members.filter((row) => isYearDeparture(text(row.status), text(row.end), environment.at.slice(0, 4)))
+        .length : null,
+      monthlyDepartures: membersAvailable ? members.filter(
         (row) => row.status === "Terminated" && text(row.end).startsWith(environment.at.slice(0, 7)),
-      ).length,
-      pmoActive: rows(snapshot.data.projects).filter((row) => row.status !== "Completed").length,
-      pmoAtRisk: rows(snapshot.data.projects).filter(
+      ).length : null,
+      pmoActive: Array.isArray(snapshot.data.projects) ? rows(snapshot.data.projects).filter((row) => row.status !== "Completed").length : null,
+      pmoAtRisk: Array.isArray(snapshot.data.projects) ? rows(snapshot.data.projects).filter(
         (row) => row.status !== "Completed" && ["High", "Medium"].includes(text(row.risk)),
-      ).length,
-      activeRisks: rows(snapshot.data.risks).filter((row) => row.status !== "closed").length,
+      ).length : null,
+      activeRisks: Array.isArray(snapshot.data.risks) ? rows(snapshot.data.risks).filter((row) => row.status !== "closed").length : null,
     }
     data.executiveByYear = Object.fromEntries(
       [2024, 2025, 2026, 2027].map((year) => [
         year,
         {
-          active: members.filter((row) => row.status === "Active").length,
-          departures: members.filter((row) => isYearDeparture(text(row.status), text(row.end), String(year))).length,
-          monthlyDepartures: Array.from(
+          active: membersAvailable ? members.filter((row) => row.status === "Active").length : null,
+          departures: membersAvailable ? members.filter((row) => isYearDeparture(text(row.status), text(row.end), String(year))).length : null,
+          monthlyDepartures: membersAvailable ? Array.from(
             { length: 12 },
             (_, index) =>
               members.filter(
@@ -100,16 +104,16 @@ export const domain: Domain = {
                   row.status === "Terminated" &&
                   text(row.end).startsWith(`${year}-${String(index + 1).padStart(2, "0")}`),
               ).length,
-          ),
+          ) : null,
         },
       ]),
     )
     data.executive = {
       ...object(data.executive),
-      topRisks: rows(snapshot.data.risks).filter(
+      topRisks: Array.isArray(snapshot.data.risks) ? rows(snapshot.data.risks).filter(
         (row) => row.status !== "closed" && riskScore(finite(row.impact), finite(row.probability)) >= 16,
-      ).length,
-      onTarget: onTargetCount(
+      ).length : null,
+      onTarget: Array.isArray(object(snapshot.data.itperf).items) ? onTargetCount(
         rows(object(snapshot.data.itperf).items)
           .flatMap((item) => rows(item.subs))
           .map((sub) => ({
@@ -117,7 +121,7 @@ export const domain: Domain = {
             score: typeof sub.score === "number" ? sub.score : null,
             totalWeight: finite(sub.totalWeight),
           })),
-      ),
+      ) : null,
     }
     data.opsDefaultMonth = Object.fromEntries(
       [2024, 2025, 2026, 2027].map((year) => [
@@ -159,9 +163,21 @@ export const domain: Domain = {
                 ["Incidents", "Service Requests"].map((type) => finite(row?.[`${category}|${type}|${metric}`])),
               )
               .reduce((sum, value) => sum + value, 0)
-          const opened = total(ticket, "Open")
-          const closed = total(ticket, "Closed")
+          const measured = (row: Record<string, unknown> | undefined, measure: string) => {
+            const keys = categories.flatMap((category) => ["Incidents", "Service Requests"].map((type) => `${category}|${type}|${measure}`))
+            if (!row || keys.some((key) => typeof row[key] !== "number" || !Number.isFinite(row[key]))) return null
+            return total(row, measure)
+          }
+          const opened = measured(ticket, "Open")
+          const closed = measured(ticket, "Closed")
           const latest = tickets.at(-1)
+          const backlog = (row: Record<string, unknown> | undefined) => {
+            const initial = measured(row, "Initial Balance")
+            const entered = measured(row, "Open")
+            const exited = measured(row, "Closed")
+            return initial === null || entered === null || exited === null ? null : initial + entered - exited
+          }
+          const heatmap = rows(snapshot.data.opsHeatmap).filter((row) => row.year === year && row.month === month)
           const security = rows(snapshot.data.secKpi)
             .filter((row) => row.year === year && finite(row.month) <= month)
             .sort((a, b) => finite(b.month) - finite(a.month))
@@ -181,25 +197,25 @@ export const domain: Domain = {
             {
               opened,
               closed,
-              backlog: Math.max(opened - closed, 0),
-              p1: rows(snapshot.data.opsHeatmap)
-                .filter((row) => row.year === year && row.month === month)
-                .reduce((sum, row) => sum + finite(row.p1), 0),
+              netChange: opened === null || closed === null ? null : opened - closed,
+              backlog: backlog(ticket),
+              p1: heatmap.length && heatmap.every((row) => typeof row.p1 === "number" && Number.isFinite(row.p1)) ? heatmap.reduce((sum, row) => sum + finite(row.p1), 0) : null,
               incSLA: sla?.incSLA ?? null,
               svcSLA: sla?.svcSLA ?? null,
               incYtd: average("incSLA"),
               svcYtd: average("svcSLA"),
-              backlogYtd: Math.max(total(latest, "Open") - total(latest, "Closed"), 0),
+              backlogYtd: backlog(latest),
               kpis,
-              openIncidents: rows(snapshot.data.secIncidents).filter(
+              openIncidents: Array.isArray(snapshot.data.secIncidents) ? rows(snapshot.data.secIncidents).filter(
                 (row) => !row.contained || !row.remediated || !row.rootCause,
-              ).length,
+              ).length : null,
             },
           ]
         }),
       ),
     )
     data.budgetLineIds = structuredClone(object(snapshot.data.budgetLineIds)[actor.id] ?? [])
+    data.signals = dashboardSignals(snapshot, actor, environment)
     return {
       data,
       versions: Object.fromEntries(
@@ -471,13 +487,18 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
   const current = currentBudgetMonth(snapshot.data, year, environment.at)
   const kind = capex ? "capex" : "opex"
   const ytdKey = `${year}:${line.id}`
-  const applied = applyYearAmount(typeof value.amount === "number" ? value.amount : text(value.amount), current)
+  const rawAmount = value.amount
+  const amountText = typeof rawAmount === "string" ? rawAmount.replace(/[^0-9.\-]/g, "") : ""
+  const clearing = rawAmount === null || rawAmount === undefined || (typeof rawAmount === "string" && !rawAmount.trim())
+  const amount = typeof rawAmount === "number" ? rawAmount : typeof rawAmount === "string" && amountText ? Number(amountText) : NaN
+  if (command.action === "year-amount" && !clearing && (!Number.isFinite(amount) || amount < 0)) return { ok: false, status: 422, errors: ["Enter a nonnegative year amount or clear the field."] }
+  const applied = applyYearAmount(clearing || command.action !== "year-amount" ? null : amount, current)
   if (command.action === "year-amount") {
     const group = { ...object(object(snapshot.data.budgetYtd)[kind]) }
     if (applied.cleared) delete group[ytdKey]
     if (!applied.cleared)
       group[ytdKey] = {
-        amount: typeof value.amount === "number" ? value.amount : Number(text(value.amount).replace(/[^0-9.\-]/g, "")),
+        amount,
         months: current,
         perMonth: applied.per,
         at: environment.at,
@@ -544,7 +565,7 @@ function parseRows(value: string): unknown {
     return undefined
   }
 }
-function budgetData(data: Record<string, unknown>): BudgetData {
+export function budgetData(data: Record<string, unknown>): BudgetData {
   return {
     opexOwners: rows(data.opexOwners).map((row) => ({
       id: String(row.id ?? ""),
@@ -580,7 +601,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
   const current = currentBudgetMonth(data, context.year, context.at)
   const admin = context.actor.canWrite && context.actor.roles.includes("admin")
   const control = (action: string, id: string, key: string, body: string, label = "Save", allowed = admin) =>
-    form(
+    `<details class="editor-panel"><summary>${esc(label)}</summary>${form(
       page,
       action,
       id,
@@ -590,16 +611,16 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         body,
       label,
       !allowed,
-    )
+    )}</details>`
   const money = dashboardMoney
   const summary =
     metricGrid([
       metric("Budget — 12 months", money(totals.totalBudget)),
-      metric("Actuals — 12 months", money(totals.totalActual)),
-      metric("Forecast — 12 months", money(totals.totalForecast)),
+      metric("Known actuals — 12 months", money(totals.totalActual)),
+      metric("Known forecast — 12 months", money(totals.totalForecast)),
     ], 3) +
     table(
-      ["12 months", "Budget", "Actuals", "Forecast", "Variance (under if positive)", "Actuals / budget"],
+      ["12 months", "Budget", "Known actuals", "Known forecast", "Budget minus known forecast", "Known actuals / budget"],
       [
         ["OPEX", totals.opexBudget, totals.opexActual, totals.opexForecast],
         ["CAPEX", totals.capexBudget, totals.capexActual, totals.capexForecast],
@@ -611,17 +632,18 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         money(Number(budget) - Number(forecast)),
         Number(budget) ? `${(Number(actual) / Number(budget)) * 100}%` : "—",
       ]),
-    )
+    ) + "<p>Actual and forecast totals sum available entries; missing entries are not observed zero. The $ symbol is a legacy display convention; source currency is unspecified.</p>"
   if (page === "Executive Dashboard") {
-    const users = itUsersForMonth(
-      rows(data.itUsersMonthly).map((row) => ({
+    const userEntries = rows(data.itUsersMonthly).filter((row) => typeof row.year === "number" && typeof row.month === "number" && typeof row.users === "number" && Number.isFinite(row.users)).map((row) => ({
         year: finite(row.year),
         month: finite(row.month),
         users: finite(row.users),
-      })),
+      }))
+    const users = userEntries.length ? itUsersForMonth(
+      userEntries,
       context.month,
       context.year,
-    )
+    ) : null
     const benchmark = rows(data.costPerUserBenchmarks).find((row) => row.year === context.year)
     const executive = {
       ...object(data.executive),
@@ -630,6 +652,8 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
     const monthly = object(object(data.executiveMonths)[`${context.year}:${context.month}`])
     const opsMonth = Number(data.opsMonth ?? object(data.opsDefaultMonth)[context.year] ?? context.month)
     const ops = object(object(data.executiveMonths)[`${context.year}:${opsMonth}`])
+    const attrition = typeof executive.departures === "number" && typeof executive.active === "number" && executive.active + executive.departures / 2 > 0 ? attritionYtd(executive.departures, executive.active) : null
+    const count = (value: unknown) => typeof value === "number" ? String(value) : "Unavailable"
     const slaMetric = (label: string, value: unknown, target: number) =>
       `<section class="metric-tone" data-tone="${typeof value !== "number" ? "none" : value >= target ? "green" : value >= target - 3 ? "amber" : "red"}">${metric(label, typeof value === "number" ? `${value}%` : "—")}</section>`
     return (
@@ -650,39 +674,44 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
             options: Array.from({ length: 12 }, (_, index) => String(index + 1)),
           },
         ],
-      )}<button>Show snapshot</button></form>` +
+      )}<button>Show selected period</button></form>` +
+      `<p>Figures below use different references; this view is not a preserved historical review.</p><p>Budget: year ${context.year}. People and delivery: current records; departures use the selected year and month.</p>` +
+      `<section><h2>Attention</h2><p>Current records as of ${esc(context.at.slice(0, 10))}; eligibility follows the rule shown for each item.</p>${rows(data.signals).length ? table(["Fact", "Rule", "Date", "Source"], rows(data.signals).map((signal) => [esc(text(signal.fact)), esc(text(signal.rule)), esc(text(signal.date) || "Not specified"), `<a href="?page=${encodeURIComponent(text(signal.page))}#record-${encodeURIComponent(text(signal.recordId))}">Open record</a>`])) : "<p>No eligible signals in accessible records.</p>"}</section>` +
       summary +
-      `<h2>People &amp; efficiency</h2>` +
+      `<h2>People &amp; efficiency</h2><p>IT users use the selected month or the existing fallback entry when that month is absent.</p>` +
       metricGrid([
-        metric("Total IT Users", String(users)),
+        metric("Total IT Users", count(users)),
         ...[
           ["OPEX", totals.opexBudget, finite(benchmark?.value)],
           ["OPEX + CAPEX", totals.totalBudget, finite(benchmark?.value)],
         ].map(
-          ([label, total, target]) =>
-            `<section class="metric-tone" data-tone="${costPerUserTone(costPerUser(Number(total), users), Number(target))}">${metric(`Cost per User (${label})`, money(costPerUser(Number(total), users)))}</section>`,
+          ([label, total, target]) => {
+            const cost = users !== null && users > 0 ? costPerUser(Number(total), users) : null
+            return `<section class="metric-tone" data-tone="${cost === null || typeof benchmark?.value !== "number" ? "neutral" : costPerUserTone(cost, Number(target))}">${metric(`Cost per User (${label})`, cost === null ? "Unavailable" : money(cost))}</section>`
+          },
         ),
-        `<section class="metric-tone" data-tone="${attritionTone(attritionYtd(finite(executive.departures), finite(executive.active)) || 0)}">${metric("Attrition YTD", `${attritionYtd(finite(executive.departures), finite(executive.active)) || 0}%`)}</section>`,
+        `<section class="metric-tone" data-tone="${attrition === null ? "neutral" : attritionTone(attrition)}">${metric("Attrition YTD", attrition === null ? "Unavailable" : `${attrition}%`)}</section>`,
       ], 4) +
       `<h2>Delivery &amp; risk</h2>` +
       metricGrid([
-        metric("Active PMO projects", String(finite(executive.pmoActive))),
-        metric("PMO at risk", String(finite(executive.pmoAtRisk))),
-        metric("Active risks", String(finite(executive.activeRisks))),
-        metric("Top risks", String(finite(executive.topRisks))),
-        metric("IT Performance on target", String(finite(executive.onTarget))),
+        metric("Active PMO projects", count(executive.pmoActive)),
+        metric("PMO at risk", count(executive.pmoAtRisk)),
+        metric("Active risks", count(executive.activeRisks)),
+        metric("Top risks", count(executive.topRisks)),
+        metric("IT Performance on target", count(executive.onTarget)),
         metric(
           "Departures this month",
-          String(Array.isArray(executive.monthlyDepartures) ? (executive.monthlyDepartures[context.month - 1] ?? 0) : 0),
+          Array.isArray(executive.monthlyDepartures) ? count(executive.monthlyDepartures[context.month - 1]) : "Unavailable",
         ),
       ], 3) +
-      `<h2>Service operations</h2>` +
+      `<h2>Service operations</h2><p>Operations reference: ${esc(String(context.year))}-${esc(String(opsMonth).padStart(2, "0"))}. <a href="?page=IT%20Operations">Open IT Operations</a></p>` +
       `<form method="get" class="filter-bar"><input type="hidden" name="page" value="Executive Dashboard"><input type="hidden" name="year" value="${finite(data.sidebarYear, 2026)}"><input type="hidden" name="execYear" value="${context.year}"><input type="hidden" name="executiveMonth" value="${context.month}">${fields([{ name: "opsMonth", label: "Operations month", type: "select", value: opsMonth, options: Array.from({ length: 12 }, (_, index) => String(index + 1)) }])}<button>Show operations</button></form>` +
       metricGrid([
-        metric("Tickets opened", String(finite(ops.opened))),
-        metric("Tickets closed", String(finite(ops.closed))),
-        `<section class="metric-tone" data-tone="${finite(ops.backlog) > 20 ? "amber" : "green"}">${metric("Final backlog", String(finite(ops.backlog)))}</section>`,
-        metric("Backlog YTD — latest month", String(finite(ops.backlogYtd))),
+        metric("Tickets opened", typeof ops.opened === "number" ? String(ops.opened) : "Unavailable — incomplete data"),
+        metric("Tickets closed", typeof ops.closed === "number" ? String(ops.closed) : "Unavailable — incomplete data"),
+        `<section class="metric-tone" data-tone="${typeof ops.backlog !== "number" ? "neutral" : ops.backlog > 20 ? "amber" : "green"}">${metric("Final backlog", typeof ops.backlog === "number" ? String(ops.backlog) : "Unavailable — initial balance missing")}</section>`,
+        metric("Net ticket change", typeof ops.netChange === "number" ? String(ops.netChange) : "Unavailable"),
+        metric("Backlog YTD — latest month", typeof ops.backlogYtd === "number" ? String(ops.backlogYtd) : "Unavailable — initial balance missing"),
       ], 4) +
       `<h2>Service levels</h2>` +
       metricGrid([
@@ -693,8 +722,8 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
       ], 4) +
       `<h2>Security overview</h2>` +
       metricGrid([
-        `<section class="metric-tone" data-tone="${finite(ops.p1) > 0 ? "red" : "green"}">${metric("P1", String(finite(ops.p1)))}</section>`,
-        metric("Open security incidents", String(finite(monthly.openIncidents))),
+        `<section class="metric-tone" data-tone="${typeof ops.p1 !== "number" ? "neutral" : ops.p1 > 0 ? "red" : "green"}">${metric("P1", count(ops.p1))}</section>`,
+        metric("Open security incidents", count(monthly.openIncidents)),
       ], 2) +
       table(
         ["Security KPI", "Latest value", "Status"],
@@ -752,7 +781,8 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
   }
   if (page === "Budget Overview") {
     const revenue = finite(object(data.revenueByYear)[context.year])
-    const series = budgetChartSeries(totals.totalBudget)
+    const series = effectiveBudgetSeries(budgetData(data), context.year)
+    const flat = budgetChartSeries(sumOwnerBudget(budgetData(data)))
     const minimum = Math.min(0, ...series)
     const maximum = Math.max(0, ...series)
     const graphY = (amount: number) =>
@@ -760,7 +790,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
     return (
       summary +
       metricGrid([
-        metric("Variance — budget minus forecast", money(totals.totalBudget - totals.totalForecast)),
+        metric("Budget minus known forecast", money(totals.totalBudget - totals.totalForecast)),
         metric("Actuals / budget", totals.totalBudget ? `${(totals.totalActual / totals.totalBudget) * 100}%` : "—"),
       ], 2) +
       metricGrid([
@@ -777,10 +807,10 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
           ),
         ), 3) +
       `<label>Actuals / budget<progress aria-label="Actuals / budget" max="100" value="${totals.totalBudget ? Math.max(0, (totals.totalActual / totals.totalBudget) * 100) : 0}" style="display:block;width:100%"></progress></label>` +
-      `<figure><svg role="img" aria-label="Monthly budget — flat total divided by twelve" viewBox="0 0 700 200" style="display:block;width:100%;height:auto"><title>Monthly budget — flat total divided by twelve</title><line x1="45" y1="${graphY(0)}" x2="665" y2="${graphY(0)}" stroke="currentColor"/><text x="45" y="30" fill="currentColor">${esc(money(totals.totalBudget / 12))} per month</text><polyline data-budget-series="flat" points="${series.map((amount, index) => `${45 + index * 55},${graphY(amount)}`).join(" ")}" fill="none" stroke="#0f766e" stroke-width="3"/>${series.map((amount, index) => `<circle cx="${45 + index * 55}" cy="${graphY(amount)}" r="4" fill="#0f766e"><title>Month ${index + 1}: ${esc(money(amount))}</title></circle><text x="${45 + index * 55}" y="185" text-anchor="middle" fill="currentColor">${index + 1}</text>`).join("")}</svg><figcaption>Budget — twelve equal monthly values</figcaption></figure>` +
+      `<figure><svg role="img" aria-label="Effective monthly budget" viewBox="0 0 700 200" style="display:block;width:100%;height:auto"><title>Effective monthly budget</title><line x1="45" y1="${graphY(0)}" x2="665" y2="${graphY(0)}" stroke="currentColor"/><polyline data-budget-series="effective" points="${series.map((amount, index) => `${45 + index * 55},${graphY(amount)}`).join(" ")}" fill="none" stroke="#0f766e" stroke-width="3"/>${series.map((amount, index) => `<circle cx="${45 + index * 55}" cy="${graphY(amount)}" r="4" fill="#0f766e"><title>Month ${index + 1}: ${esc(money(amount))}</title></circle><text x="${45 + index * 55}" y="185" text-anchor="middle" fill="currentColor">${index + 1}</text>`).join("")}</svg><figcaption>Effective budget, including monthly overrides</figcaption></figure>` +
       table(
-        ["Month", "Budget chart — flat /12"],
-        budgetChartSeries(totals.totalBudget).map((amount, index) => [String(index + 1), money(amount)]),
+        ["Month", "Effective budget", "Flat reference (annual allocations / 12)"],
+        series.map((amount, index) => [String(index + 1), money(amount), money(flat[index])]),
       ) +
       control(
         "save-month",
@@ -862,11 +892,13 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
             ["Month", "Effective budget", "Actual", "Forecast", "Deviation", "Flag", "Utilization", "Edit all months"],
             Array.from({ length: 12 }, (_, index) => {
               const entry = monthEntries.find((row) => row.month === index + 1)
-              const budget = effectiveMonthlyBudget(finite(entry?.budget), finite(owner.budget))
-              const deviation = finite(entry?.forecast) - budget
-              const pct = budget ? (deviation / budget) * 100 : 0
-              const utilization = Math.min((finite(entry?.actual) / budget) * 100, 100) || 0
-              const utilizationTone = utilization > 110 ? "red" : utilization > 90 ? "amber" : "teal"
+              const budget = typeof owner.budget === "number" || (typeof entry?.budget === "number" && entry.budget > 0) ? effectiveMonthlyBudget(typeof entry?.budget === "number" ? entry.budget : undefined, typeof owner.budget === "number" ? owner.budget : undefined) : null
+              const actual = typeof entry?.actual === "number" && Number.isFinite(entry.actual) ? entry.actual : null
+              const forecast = typeof entry?.forecast === "number" && Number.isFinite(entry.forecast) ? entry.forecast : null
+              const deviation = forecast !== null && budget !== null ? forecast - budget : null
+              const pct = deviation !== null && budget ? (deviation / budget) * 100 : null
+              const utilization = budget !== null && budget > 0 && actual !== null ? (actual / budget) * 100 : null
+              const utilizationTone = utilization === null ? "neutral" : utilization > 110 ? "red" : utilization > 90 ? "amber" : "teal"
               const deviationId = `${capex ? "capex" : "opex"}-${id}-${context.year}-${index + 1}`
               const saved = object(object(data.deviations)[deviationId])
               const flag =
@@ -875,13 +907,13 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
                     .flag,
                 ) ||
                 text(entry?.flag) ||
-                (Math.abs(pct) < 10 ? "green" : Math.abs(pct) < 25 ? "amber" : "red")
+                (pct === null ? "Not available" : Math.abs(pct) < 10 ? "green" : Math.abs(pct) < 25 ? "amber" : "red")
               return [
                 String(index + 1),
-                money(budget),
-                money(finite(entry?.actual)),
-                money(finite(entry?.forecast)),
-                `<span data-tone="${deviation > 0 ? "red" : "green"}">${money(deviation)}</span>`,
+                budget === null ? "Not available" : money(budget),
+                actual === null ? "Not available" : money(actual),
+                forecast === null ? "Not available" : money(forecast),
+                deviation === null ? "Not available" : `<span data-tone="${deviation > 0 ? "red" : "green"}">${money(deviation)}</span>`,
                 esc(flag) +
                   control(
                     "save-deviation",
@@ -910,7 +942,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
                     "Save deviation",
                     allowed,
                   ),
-                `<span data-utilization="${utilization}" data-tone="${utilizationTone}" style="color:${utilizationTone === "red" ? "#dc2626" : utilizationTone === "amber" ? "#b45309" : "#0f766e"}">${utilization}%</span>`,
+                `<span data-utilization="${utilization ?? ""}" data-tone="${utilizationTone}">${utilization !== null ? `${utilization}%` : budget === null ? "Unavailable — budget missing" : budget === 0 ? "Unavailable — budget is zero" : "Unavailable — actual missing"}</span>`,
                 control(
                   "save-entry",
                   String(entry?.id ?? ""),
