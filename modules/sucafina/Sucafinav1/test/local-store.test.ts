@@ -11,6 +11,36 @@ import type { Snapshot } from "../runtime/contract.ts"
 const bytes = new Uint8Array([0, 255, 17, 128])
 const empty: Snapshot = { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
 
+test("current snapshots are isolated copies in a live transaction and expire with its scope", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    if (!store.currentSnapshots) throw new Error("currentSnapshots unavailable")
+    expect(store.currentSnapshots()).toBeUndefined()
+    await store.transaction("planner", async (snapshot) => { snapshot.data.value = "persisted"; return { commit: true, value: undefined } })
+    const release = Promise.withResolvers<void>()
+    const late: { pending?: Promise<unknown> } = {}
+    await store.transaction("dashboard", async (snapshot) => {
+      snapshot.data.value = "staged"
+      const current = store.currentSnapshots!()
+      expect(current?.dashboard.data.value).toBe("staged")
+      expect(current?.planner.data.value).toBe("persisted")
+      if (!current) throw new Error("missing current snapshots")
+      current.dashboard.data.value = "copy-only"
+      current.planner.data.value = "copy-only"
+      expect(store.currentSnapshots!()?.dashboard.data.value).toBe("staged")
+      expect(store.currentSnapshots!()?.planner.data.value).toBe("persisted")
+      late.pending = release.promise.then(() => store.currentSnapshots!())
+      void late.pending.catch(() => undefined)
+      return { commit: true, value: undefined }
+    })
+    release.resolve()
+    await expect(late.pending).rejects.toThrow("scope has ended")
+    expect(store.currentSnapshots()).toBeUndefined()
+    expect(await store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot.data.value }))).toBe("persisted")
+    expect(await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot.data.value }))).toBe("staged")
+  })
+})
+
 test("all-surface transaction exposes staged nested reads and rejects nested writes", async () => {
   await fixture(async (_directory, open) => {
     const store = await open()

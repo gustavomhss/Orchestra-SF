@@ -74,6 +74,7 @@ export type Persistence = {
   // Production adapters must run the conformance suite against their real driver; the test Map adapter is not durability proof.
   transaction: <T>(surface: Surface, work: (snapshot: Snapshot) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
   transactionAll?: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
+  currentSnapshots?: () => Readonly<Record<Surface, Snapshot>> | undefined
 }
 
 export function object(value: unknown): Record<string, unknown> {

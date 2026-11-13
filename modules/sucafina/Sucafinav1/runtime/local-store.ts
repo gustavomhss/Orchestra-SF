@@ -151,6 +151,15 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   }
 
   return {
+    currentSnapshots: () => {
+      const scope = context.getStore()
+      if (!scope) return undefined
+      requireScope(scope)
+      const snapshots = scope.root.snapshots
+      if (!snapshots.dashboard || !snapshots.planner || !snapshots.procurement) throw new Error("Local transaction snapshots unavailable")
+      return { dashboard: decodeSnapshot(encodeSnapshot(snapshots.dashboard)), planner: decodeSnapshot(encodeSnapshot(snapshots.planner)),
+        procurement: decodeSnapshot(encodeSnapshot(snapshots.procurement)) }
+    },
     transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) => {
       const parent = context.getStore()
       if (parent) return (async () => {
@@ -188,9 +197,13 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         }
       })()
       return operation(true, async (db) => {
-        const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
-        const snapshot = row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
-        const scope: ReadScope = { root: { db, snapshots: { [surface]: snapshot }, poisoned: false, readers: 0 }, open: true, signal: transactionOptions?.signal }
+        const read = (name: Surface) => {
+          const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(name)
+          return row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
+        }
+        const snapshots = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
+        const snapshot = snapshots[surface]
+        const scope: ReadScope = { root: { db, snapshots, poisoned: false, readers: 0 }, open: true, signal: transactionOptions?.signal }
         const requireOpen = () => {
           requireScope(scope)
           if (context.getStore() !== scope) throw new Error("Blob capability used outside its transaction scope")

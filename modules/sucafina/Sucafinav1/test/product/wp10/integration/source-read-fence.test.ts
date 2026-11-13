@@ -4,6 +4,9 @@ import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
+import type { BlobTransaction } from "../../../../runtime/assets.ts"
+import type { Snapshot, TransactionOptions } from "../../../../runtime/contract.ts"
+import type { Surface } from "../../../../src/identity.ts"
 import { createSfProductState } from "../../../../product/host-binding/state-provider.ts"
 import { createSfSourcePersistence } from "../../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../../product/integration/source-inventory.ts"
@@ -12,7 +15,12 @@ test("read-only source fence checks staged material and authorization without re
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-source-fence-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
-  const source = createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources, createId: randomUUID,
+  const calls = { transactions: 0 }
+  const counted = { ...store, transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => {
+    calls.transactions++
+    return store.transaction(surface, work, options)
+  } }
+  const source = createSfSourcePersistence({ persistence: counted, enumerate: enumerateSfSources, createId: randomUUID,
     projectScope: (_surface, snapshot, scope) => {
       const projects = snapshot.data.projects
       if (!Array.isArray(projects) || snapshot.data.revoked) return undefined
@@ -39,12 +47,16 @@ test("read-only source fence checks staged material and authorization without re
     expect(await check("dashboard", { ...scope, selector: { fields: ["name"] } }, async () => true, expected)).toBe(false)
     expect(await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot.sfSources }))).toEqual(before)
     if (!store.transactionAll) throw new Error("transactionAll unavailable")
+    calls.transactions = 0
     await store.transactionAll(async (snapshots) => {
       snapshots.dashboard.data.dependency = "staged-change"
       expect(await check("dashboard", scope, async () => true, expected)).toBe(false)
+      expect(calls.transactions).toBe(0)
       return { commit: false, value: undefined }
     })
+    expect(calls.transactions).toBe(0)
     expect(await check("dashboard", scope, async () => true, expected)).toBe(true)
+    expect(calls.transactions).toBe(1)
     const product = createSfProductState({ persistence: source, createId: randomUUID,
       authorize: async () => ({ principalRef: "person", policyVersion: "policy", accessRevision: "access" }),
       resolveTarget: async () => ({ incarnation: "target" }) })

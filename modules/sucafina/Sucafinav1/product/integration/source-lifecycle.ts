@@ -14,12 +14,12 @@ export type SfSourceIdentityInput = { recordType: string; recordId: string; inpu
 
 /** Wrap the installation's existing driver once, shared by HTTP, jobs and restore. No new store. */
 export function createSfSourcePersistence(input: {
-  persistence: AssetPersistence & Pick<Persistence, "transactionAll">
+  persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots">
   enumerate: (surface: Surface, snapshot: Snapshot) => readonly SfSourceIdentityInput[]
   createId: () => string
   purpose?: "business-restore"
   projectScope?: (surface: Surface, snapshot: Snapshot, scope: SfSourceScope) => unknown | undefined
-}): AssetPersistence & Pick<Persistence, "transactionAll"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } {
+}): AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } {
   const observe = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>) => {
     requireSourceIdentities(snapshot)
     const scope = structuredClone(requested)
@@ -53,7 +53,8 @@ export function createSfSourcePersistence(input: {
       requireSourceIdentities(snapshot)
     }
   }
-  const persistence: AssetPersistence & Pick<Persistence, "transactionAll"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } = {
+  const persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } = {
+    ...(input.persistence.currentSnapshots ? { currentSnapshots: () => input.persistence.currentSnapshots!() } : {}),
     resolveScopedSource: async (surface, incarnation, authorize) => {
       const scope = await input.persistence.transaction(surface, async (snapshot) => {
         requireSourceIdentities(snapshot)
@@ -81,13 +82,18 @@ export function createSfSourcePersistence(input: {
       requireSourceIdentities(snapshot)
       return { commit: digestSfValue(prior) !== digestSfValue(entry), value: { projection: structuredClone(projection), incarnation: entry.incarnation, version: entry.version, inputDigest } }
     }),
-    checkScopedSource: (surface, scope, authorize, expected) => input.persistence.transaction(surface, async (snapshot) => {
-      const observed = await observe(surface, snapshot, scope, authorize)
-      if (!observed) return { commit: false, value: false }
-      const current = sfScopedSourceIdentity(snapshot, observed.scope)
-      return { commit: false, value: !!current && current.incarnation === expected.incarnation && current.version === expected.version &&
-        current.inputDigest === expected.inputDigest && observed.inputDigest === expected.inputDigest }
-    }),
+    ...(input.persistence.currentSnapshots ? { checkScopedSource: async (surface: Surface, scope: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>, expected: { incarnation: string; version: number; inputDigest: string }) => {
+      const check = async (snapshot: Snapshot) => {
+        const observed = await observe(surface, snapshot, scope, authorize)
+        if (!observed) return false
+        const current = sfScopedSourceIdentity(snapshot, observed.scope)
+        return !!current && current.incarnation === expected.incarnation && current.version === expected.version &&
+          current.inputDigest === expected.inputDigest && observed.inputDigest === expected.inputDigest
+      }
+      const snapshots = input.persistence.currentSnapshots?.()
+      if (snapshots) return check(snapshots[surface])
+      return input.persistence.transaction(surface, async (snapshot) => ({ commit: false, value: await check(snapshot) }))
+    } } : {}),
     initializeSources: (surface) => input.persistence.transaction(surface, async (snapshot) => {
       if (snapshot.sfSources) {
         requireSourceIdentities(snapshot)
