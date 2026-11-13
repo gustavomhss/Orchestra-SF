@@ -15,7 +15,7 @@ export function projectDashboardScope(snapshot: Snapshot, actor: Actor, selector
   if (selector.fields.some((field) => ["executive", "members", "leaders", "cio", "projects", "risks", "contracts", "stakeholders", "itperf", "signals", "hotTopics"].includes(field)) && (day < selector.period.start || day > selector.period.end)) return undefined
   const year = Number(selector.period.start.slice(0, 4))
   if (year < 2024 || year > 2027) return undefined
-  const monthly = ["opsTickets", "opsSLA", "opsHeatmap", "secKpi", "itUsersMonthly", "opexEntries", "capexEntries", "executiveMonths"]
+  const monthly = ["opsTickets", "opsSLA", "opsHeatmap", "secKpi", "itUsersMonthly", "opexEntries", "capexEntries", "executiveMonths", "budgetSeries"]
   if (selector.fields.some((field) => monthly.includes(field)) && (selector.period.start.slice(8) !== "01" || Number(selector.period.end.slice(8)) !== new Date(Date.UTC(year, Number(selector.period.end.slice(5, 7)), 0)).getUTCDate())) return undefined
   if (selector.fields.includes("budgetMetrics") && (selector.period.start.slice(5) !== "01-01" || selector.period.end.slice(5) !== "12-31")) return undefined
   const observed = structuredClone(snapshot)
@@ -24,6 +24,7 @@ export function projectDashboardScope(snapshot: Snapshot, actor: Actor, selector
   const selected = Object.fromEntries([...selector.fields].sort().map((field) => {
     const value = projection[field]
     if (field === "budgetMetrics") return [field, { [year]: object(value)[year] }]
+    if (field === "budgetSeries") return [field, { [year]: (Array.isArray(object(value)[year]) ? object(value)[year] as unknown[] : []).map((amount, index) => index + 1 >= Number(selector.period.start.slice(5, 7)) && index + 1 <= Number(selector.period.end.slice(5, 7)) ? amount : null) }]
     if (field === "executiveByYear") {
       const current = object(object(value)[year])
       const inYear = selector.period.start.slice(5) === "01-01" && selector.period.end.slice(5) === "12-31"
@@ -43,6 +44,7 @@ export function projectDashboardScope(snapshot: Snapshot, actor: Actor, selector
   }))
   // Derived annual totals alone cannot detect compensating line edits; include the authorized components.
   const budgetDependencies = selector.fields.includes("budgetMetrics") ? Object.fromEntries(["opexOwners", "opexEntries", "capexProjects", "capexEntries"].map((field) => [field, field.endsWith("Entries") ? rows(projection[field]).filter((row) => row.year === year) : projection[field]])) : {}
+  const seriesDependencies = selector.fields.includes("budgetSeries") && !selector.fields.includes("budgetMetrics") ? Object.fromEntries(["opexOwners", "opexEntries", "capexProjects", "capexEntries"].map((field) => [field, rows(projection[field]).filter((row) => !field.endsWith("Entries") || (row.year === year && typeof row.month === "number" && row.month >= Number(selector.period.start.slice(5, 7)) && row.month <= Number(selector.period.end.slice(5, 7)) && rows(projection[field === "opexEntries" ? "opexOwners" : "capexProjects"]).some((owner) => field === "opexEntries" ? row.ownerId == owner.id : row.projId == owner.id || row.projectId == owner.id))).map((row) => Object.fromEntries(Object.entries(row).filter(([key]) => (field.endsWith("Entries") ? ["id", "ownerId", "projId", "projectId", "year", "month", "budget", "actual", "forecast"] : ["id", "budget"]).includes(key))))])) : {}
   const operationView = selector.fields.includes("executiveMonths") ? DashboardOperations.domain.view(observed, actor, { at: `${day}T00:00:00Z`, id: () => "", directory: [] }).data : projection
   const summaries = Array.isArray(snapshot.data.summaries) ? snapshot.data.summaries.filter((value): value is string => typeof value === "string") : []
   const allowed = dashboardPages(actor, summaries)
@@ -51,7 +53,7 @@ export function projectDashboardScope(snapshot: Snapshot, actor: Actor, selector
   const currentFields = ["executive", "executiveByYear", "members", "leaders", "cio", "projects", "risks", "contracts", "stakeholders", "itperf", "signals", "hotTopics"]
   const today = day
   const observesToday = today >= selector.period.start && today <= selector.period.end && (selector.fields.some((field) => currentFields.includes(field)) || (selector.fields.includes("executiveMonths") && allowed.includes("IT Security KPIs")))
-  const privateDependencyDigest = digestSfValue({ ...budgetDependencies, ...operationalDependencies, ...(observesToday ? { observationDay: today } : {}) })
+  const privateDependencyDigest = digestSfValue({ ...budgetDependencies, ...seriesDependencies, ...operationalDependencies, ...(observesToday ? { observationDay: today } : {}) })
   // The host uses this digest for versioning only and returns selected values, never this private field.
   return { selected, privateDependencyDigest }
 }

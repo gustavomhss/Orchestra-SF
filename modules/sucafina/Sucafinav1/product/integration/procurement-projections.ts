@@ -1,0 +1,29 @@
+import { roleMap } from "../../runtime/admin.ts"
+import { object, rows, text } from "../../runtime/contract.ts"
+import type { Actor, Snapshot } from "../../runtime/contract.ts"
+import { domain } from "../../runtime/procurement.ts"
+import type { Surface } from "../../src/identity.ts"
+import { procurementKeys } from "../../src/nav.ts"
+import { digestSfValue } from "../contracts/canonical.ts"
+import { digestProcurementSource } from "../procurement/sources.ts"
+
+const statuses = ["draft", "pr_pending", "pr_rejected", "sourcing", "src_pending", "src_rejected", "po_draft", "po_pending", "po_rejected", "po_approved", "po_issued", "cancelled"]
+
+// The selector is host-authenticated when issued and reauthenticated on every resolution.
+export function projectSfProcurementScope(surface: Surface, snapshot: Snapshot, scope: { principalRef: string; accessRevision: string; policyVersion: string; recordType: string; recordId: string; selector: unknown }) {
+  const selector = object(scope.selector)
+  if (surface !== "procurement" || selector.roleMapDigest !== digestSfValue(roleMap(snapshot, "procurement")) || typeof selector.canWrite !== "boolean" || !Array.isArray(selector.roles) || !selector.roles.every((role): role is string => typeof role === "string") || !procurementKeys({ roles: selector.roles }).length) return undefined
+  const actor: Actor = { id: scope.principalRef, roles: selector.roles, canWrite: selector.canWrite, assigned: [], domains: [] }
+  const view = domain.view(snapshot, actor, { at: "1970-01-01T00:00:00Z", directory: [], id: () => "" })
+  if (selector.kind === "procurement-record-v1" && (scope.recordType === "procurement-request" || scope.recordType === "procurement-supplier")) {
+    const fields = scope.recordType === "procurement-request" ? ["status", "holder", "stageEnteredAt", "ageDays", "baseAmount", "submittedAmount", "submittedCurrency", "submittedFxRate", "originalAmount", "originalCurrency", "fxRate", "fxSource", "monetaryState", "subject", "reason", "nextStep", "sourcing"] : ["number", "legalName", "status", "categories", "taxId"]
+    if (digestSfValue(selector.fields) !== digestSfValue(fields)) return undefined
+    const records = rows(scope.recordType === "procurement-request" ? view.data.requests : view.data.suppliers).filter((record) => (scope.recordType === "procurement-request" ? record.number : record.id) === scope.recordId)
+    if (records.length !== 1) return undefined
+    return { id: scope.recordId, privateDependencyDigest: digestProcurementSource(records[0], view.data.formSettings, scope.recordType === "procurement-supplier" ? "supplier" : "request") }
+  }
+  if (scope.recordType !== "procurement-request-selection" || scope.recordId !== "all" || selector.kind !== "procurement-selection-v1" || typeof selector.status !== "string" || !["all", "unknown", ...statuses].includes(selector.status)) return undefined
+  const records = rows(view.data.requests).map((record) => ({ id: text(record.number), status: statuses.includes(text(record.status)) ? text(record.status) : "unknown", privateDependencyDigest: digestProcurementSource(record, view.data.formSettings) })).filter((record) => selector.status === "all" || record.status === selector.status).sort((a, b) => a.id.localeCompare(b.id))
+  if (records.some((record) => !record.id) || new Set(records.map((record) => record.id)).size !== records.length) return undefined
+  return { records }
+}

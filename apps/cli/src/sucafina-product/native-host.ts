@@ -56,6 +56,7 @@ export type SfNativeBudgetReservation = {
 
 export type SfNativeHostPolicy = {
   registry: SfBindingRegistry
+  onReady?: (api: SfNativeHostApi) => () => void
   budget?: {
     gate: ReturnType<typeof createSfTokenGate>
     reserveSession: (input: SfNativeBudgetReservation) => Effect.Effect<void, unknown>
@@ -85,7 +86,7 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
           return Effect.suspend(() => input.authorize(run.admission, binding)).pipe(Effect.catch(() => Effect.succeed(false)),
             Effect.map((valid) => valid && runs.get(binding) === run && !run.admission.request.signal.aborted && Date.now() < Date.parse(binding.expiresAt)))
         }
-        return SfNativeHost.of({
+        const api = SfNativeHost.of({
           prepare: (request) => Effect.gen(function* () {
             const args = Object.freeze({ ...freezeHostInput(structuredClone({ selected: request.selected, location: request.location, model: request.model,
               skillId: request.skillId, prompt: request.prompt, runId: request.runId, caseRef: request.caseRef, entryMode: request.entryMode,
@@ -193,6 +194,9 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
             return { status: "ok", value: true } as const
           }),
         })
+        const release = input.onReady?.(api)
+        if (release) yield* Effect.addFinalizer(() => Effect.sync(release))
+        return api
       })),
     })
   const contribution: Host.Contribution = { id: "sucafina-native-host", nodes: [node] }

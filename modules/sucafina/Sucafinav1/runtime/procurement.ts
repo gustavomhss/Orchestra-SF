@@ -1353,7 +1353,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
           const snapshot = source.fxSnapshot == null ? (snapshotRequired ? {} : null) : object(source.fxSnapshot)
           const code = text(quote.currency) || text(settings.currency)
           const rate = code === text(settings.currency) ? 1 : snapshot ? snapshot[code] : rows(settings.fxRates).find((entry) => entry.code === code)?.rate
-          const base = sameBase && stated != null && typeof rate === "number" && rate > 0 && Number.isFinite(stated * rate) ? `${stated * rate} ${esc(text(settings.currency))} (${code === text(settings.currency) ? "base" : snapshot ? "submitted FX" : "current FX"}: ${rate})` : "Unavailable"
+          const base = sameBase && stated != null && typeof rate === "number" && rate > 0 && Number.isFinite(stated * rate) ? `${Number((stated * rate).toPrecision(15))} ${esc(text(settings.currency))} (${code === text(settings.currency) ? "base" : snapshot ? "submitted FX" : "current FX"}: ${rate})` : "Unavailable"
           return [esc(text(quote.supplier)), stated == null ? "Unavailable" : `${stated} ${currency}`, calculated == null ? "Unavailable" : `${calculated} ${currency}${stated != null && Math.abs(stated - calculated) > 0.005 ? " (differs)" : ""}`, base, figure(score?.technical), figure(score?.price), figure(score?.commercial), figure(score?.overall), criteriaAvailable && score?.complete && score.eligible && score.rank != null ? String(score.rank) : "Unavailable"]
         }))
         const selectedQuote = rows(source.quotes).find((quote) => quote.id === source.selectedId)

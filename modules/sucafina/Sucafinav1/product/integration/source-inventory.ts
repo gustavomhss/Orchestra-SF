@@ -8,6 +8,7 @@ import { DashboardPeople } from "../../runtime/dashboard-people.ts"
 import { DashboardOperations } from "../../runtime/dashboard-operations.ts"
 import { DashboardPortfolio } from "../../runtime/dashboard-portfolio.ts"
 import { publicSfData } from "./public-state.ts"
+import { normalizeDashboardRecords } from "../dashboard/records.ts"
 
 /** Private lifecycle inventory, not an authorized business projection or a calculation engine. */
 export function enumerateSfSources(surface: Surface, snapshot: Snapshot): readonly SfSourceIdentityInput[] {
@@ -25,6 +26,7 @@ export function enumerateSfSources(surface: Surface, snapshot: Snapshot): readon
   if (surface === "procurement") {
     const store = object(snapshot.data.store)
     return [
+      { recordType: "procurement-request-selection", recordId: "all", inputDigest: digestSfValue(store.requests) },
       ...Object.entries(object(store.requests)).map(([id, value]) => ({ recordType: "procurement-request", recordId: id, inputDigest: digestSfValue(value) })),
       ...rows(store.suppliers).map((value) => ({ recordType: "procurement-supplier", recordId: String(value.id ?? ""), inputDigest: digestSfValue(value) })),
     ]
@@ -34,6 +36,11 @@ export function enumerateSfSources(surface: Surface, snapshot: Snapshot): readon
     .map((record) => ({ recordType: collection, recordId: String(record.id), inputDigest: digestSfValue(record) })))
   // A page selection is a real aggregate source. Conservative revisioning never grants visibility;
   // the producer's actor-filtered projection and scoped fingerprint still decide material equality.
-  return [...records, ...[...DashboardBudget.pages, ...DashboardPeople.pages, ...DashboardOperations.pages, ...DashboardPortfolio.pages]
+  const keyed = ["budgetYtd", "deviations", "budgetCurrentMonth", "revenueByYear"].flatMap((collection) => {
+    const logical = normalizeDashboardRecords(collection, snapshot.data[collection])
+    if (!logical) return []
+    return logical.map((record) => ({ recordType: collection, recordId: String(record.id), inputDigest: digestSfValue(record) }))
+  })
+  return [...records, ...keyed, ...[...DashboardBudget.pages, ...DashboardPeople.pages, ...DashboardOperations.pages, ...DashboardPortfolio.pages]
     .map((page) => ({ recordType: "dashboard-page", recordId: page, inputDigest: digestSfValue({ page, data: publicSfData(snapshot.data) }) }))]
 }

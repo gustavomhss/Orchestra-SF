@@ -12,6 +12,7 @@ test("scoped budget projection ignores restricted unrelated content and detects 
   const selector = { page: "Budget Overview", fields: ["budgetMetrics"], period: annual }
   const before = structuredClone(state)
   const initial = projectDashboardScope(state, admin, selector, asOf)!
+  expect(Object.keys(initial.selected)).toEqual(["budgetMetrics"])
   expect(state).toEqual(before)
   const changedPrivate = structuredClone(state)
   const members = changedPrivate.data.members as { notes: string }[]
@@ -27,7 +28,7 @@ test("scoped budget projection ignores restricted unrelated content and detects 
 })
 
 test("scope filters unrelated months and does not incorporate ungranted security inputs", () => {
-  const state: Snapshot = { data: { summaries: ["IT Operations"], opexOwners: [{ id: "o", budget: 1200 }], opexEntries: [{ id: "jan", ownerId: "o", year: 2026, month: 1, actual: 10 }, { id: "feb", ownerId: "o", year: 2026, month: 2, actual: 20 }], opsTickets: [], secIncidents: [{ id: "secret", title: "private" }] }, versions: {}, sequences: {}, audit: [], notices: [] }
+  const state: Snapshot = { data: { summaries: ["IT Operations"], opexOwners: [{ id: "o", budget: 1200 }], opexEntries: [{ id: "jan", ownerId: "o", year: 2026, month: 1, actual: 10 }, { id: "feb", ownerId: "o", year: 2026, month: 2, actual: 20 }], opsTickets: [], secIncidents: [{ id: "restricted-incident-id", title: "confidential-incident-alpha" }] }, versions: {}, sequences: {}, audit: [], notices: [] }
   const jan = { page: "OPEX Detail", fields: ["opexEntries"], period: { start: "2026-01-01", end: "2026-01-31" } }
   const original = projectDashboardScope(state, admin, jan, asOf)!
   const changed = structuredClone(state)
@@ -40,9 +41,10 @@ test("scope filters unrelated months and does not incorporate ungranted security
   const ops = { page: "Executive Dashboard", fields: ["executiveMonths"], period: annual }
   const safe = projectDashboardScope(state, viewer, ops, asOf)!
   const revoked = structuredClone(state)
-  revoked.data.secIncidents = [{ id: "secret", title: "changed-private" }]
+  revoked.data.secIncidents = [{ id: "restricted-incident-id", title: "confidential-incident-beta" }]
   expect(projectDashboardScope(revoked, viewer, ops, asOf)).toEqual(safe)
-  expect(JSON.stringify(safe)).not.toContain("private")
+  expect(JSON.stringify(safe)).not.toContain("confidential-incident-alpha")
+  expect(JSON.stringify(safe.selected)).not.toContain("restricted-incident-id")
 })
 
 
@@ -56,4 +58,18 @@ test("February headcount scope excludes annual and other-month changes", () => {
   const months = ((before!.selected.executiveByYear as Record<string, { monthlyDepartures: (number | null)[] }>)["2026"]!).monthlyDepartures
   expect(months[1]).toBe(1)
   expect(months[2]).toBeNull()
+})
+
+
+test("monthly budget series ignores other months while binding annual fallback", () => {
+  const state: Snapshot = { data: { opexOwners: [{ id: "o", budget: 1200, name: "Owner" }], opexEntries: [{ id: "jan", ownerId: "o", year: 2026, month: 1, actual: 0 }, { id: "feb", ownerId: "o", year: 2026, month: 2, actual: 20 }, { id: "orphan", ownerId: "missing", year: 2026, month: 1, actual: 1 }] }, versions: {}, sequences: {}, audit: [], notices: [] }
+  const selector = { page: "Budget Overview", fields: ["budgetSeries"], period: { start: "2026-01-01", end: "2026-01-31" } }
+  const original = projectDashboardScope(state, admin, selector, asOf)
+  const changed = structuredClone(state)
+  ;(changed.data.opexEntries as { actual: number }[])[1]!.actual = 99
+  ;(changed.data.opexEntries as { actual: number }[])[2]!.actual = 42
+  ;(changed.data.opexOwners as { name: string }[])[0]!.name = "Renamed"
+  expect(projectDashboardScope(changed, admin, selector, asOf)).toEqual(original)
+  ;(changed.data.opexOwners as { budget: number }[])[0]!.budget = 2400
+  expect(projectDashboardScope(changed, admin, selector, asOf)).not.toEqual(original)
 })

@@ -21,7 +21,7 @@ export function createDashboardSourceIssuer(input: { host: DomainPortHost; scope
     const selector = await input.host.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await authenticate(snapshot) }), { signal: request.signal }).catch(() => undefined)
     if (!selector) return { status: "denied", reason: "source-authority-unavailable" }
     const scope = { principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, recordType: "dashboard-page", recordId: wanted.page, selector }
-    const current = await input.scopedSources.readScopedSource("dashboard", scope, async (snapshot) => !request.signal.aborted && await input.host.revalidate(context) && digestSfValue(await authenticate(snapshot)) === digestSfValue(selector)).catch(() => undefined)
+    const current = await input.scopedSources.readScopedSource("dashboard", scope, async (snapshot) => !request.signal.aborted && digestSfValue(await authenticate(snapshot)) === digestSfValue(selector)).catch(() => undefined)
     if (!current || !await input.host.revalidate(context)) return { status: "denied", reason: "source-unavailable" }
     const environment = await input.host.environment(request)
     const observed = await input.host.persistence.transaction("dashboard", async (snapshot) => {
@@ -47,7 +47,7 @@ export function createDashboardRecordSourceIssuer(input: { host: DomainPortHost;
     const selector = await input.host.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await authenticate(snapshot) }), { signal: request.signal }).catch(() => undefined)
     if (!selector) return undefined
     const scope = { principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, recordType: selection.recordType, recordId: selection.recordId, selector }
-    const current = await input.scopedSources.readScopedSource("dashboard", scope, async (snapshot) => !request.signal.aborted && await input.host.revalidate(context) && digestSfValue(await authenticate(snapshot)) === digestSfValue(selector)).catch(() => undefined)
+    const current = await input.scopedSources.readScopedSource("dashboard", scope, async (snapshot) => !request.signal.aborted && digestSfValue(await authenticate(snapshot)) === digestSfValue(selector)).catch(() => undefined)
     if (!current || !await input.host.revalidate(context)) return undefined
     const environment = await input.host.environment(request)
     if (!Number.isFinite(Date.parse(environment.at)) || !await input.host.revalidate(context)) return undefined
@@ -56,7 +56,7 @@ export function createDashboardRecordSourceIssuer(input: { host: DomainPortHost;
       return { commit: false, value: projectSfSourceScope("dashboard", snapshot, scope, environment.at) }
     }, { signal: request.signal }).catch(() => undefined)
     if (observed === undefined || digestSfValue(observed) !== current.inputDigest) return undefined
-    const again = await input.scopedSources.readScopedSource("dashboard", scope, async (snapshot) => !request.signal.aborted && await input.host.revalidate(context) && digestSfValue(await authenticate(snapshot)) === digestSfValue(selector)).catch(() => undefined)
+    const again = await input.scopedSources.readScopedSource("dashboard", scope, async (snapshot) => !request.signal.aborted && digestSfValue(await authenticate(snapshot)) === digestSfValue(selector)).catch(() => undefined)
     if (!again || digestSfValue(again) !== digestSfValue(current) || !await input.host.revalidate(context)) return undefined
     return { scope, source: { surface: "dashboard" as const, type: scope.recordType, id: scope.recordId, incarnation: current.incarnation, version: current.version, fields: wanted.fields, period: wanted.period, observedAt: new Date(environment.at).toISOString() } }
   }

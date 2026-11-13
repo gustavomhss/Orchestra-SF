@@ -39,6 +39,13 @@ test("dashboard port reads canonical effective budget and rejects stale and unau
     expect(presentation.series.find((series) => series.role === "actual")?.valueIds).toContain("budget:2026-01:actual")
     expect(presentation.series.find((series) => series.id === "forecast")).toMatchObject({ role: "other", label: "Forecast" })
   }
+  const january = await port.read({ selectionRef: "budget", period: { start: "2026-01-01", end: "2026-01-31" }, fields: ["budgetSeries"] }, binding)
+  expect(january.status).toBe("ok")
+  if (january.status === "ok") {
+    expect(january.value.values).toContainEqual(expect.objectContaining({ id: "budget:2026-01:actual", value: 0, evidenceState: "confirmed" }))
+    expect(january.value.values).toContainEqual(expect.objectContaining({ id: "budget:2026-01:forecast", value: null, evidenceState: "absent" }))
+    expect(january.value.values.some((value) => value.id.startsWith("budget:2026-02:") || value.id.includes("totalBudget"))).toBe(false)
+  }
   const entries = await port.read({ selectionRef: "budget", period, fields: ["opexEntries"] }, binding)
   expect(entries.status).toBe("ok")
   if (entries.status === "ok") expect(entries.value.values).toContainEqual(expect.objectContaining({ id: "opexEntries[id:jan].actual", value: 0, period: { start: "2026-01-01", end: "2026-01-31" }, granularity: "month" }))

@@ -22,13 +22,17 @@ import { scanLocalFile } from "../runtime/local-scanner.ts"
 import { createSfSourcePersistence } from "../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../product/integration/source-projections.ts"
+import { createSfBiHttp } from "../product/integration/bi-http.ts"
+import { digestSfValue } from "../product/contracts/canonical.ts"
+import biBrowser from "../product/integration/generated/bi-entry.txt" with { type: "text" }
+import type { CreateSfHostRuntime } from "../product/contracts/host-context.ts"
 
 /** Explicit factory loaded by Orchestra serve --installation. No listener, global config or host credentials. */
-export default async function installation(context: { origin: string }) {
+export default async function installation(context: { origin: string; createHostRuntime?: CreateSfHostRuntime }) {
   return createLocalInstallation(context, process.env.SUCAFINA_LOCAL_CONFIG)
 }
 
-export async function createLocalInstallation(context: { origin: string }, file: string | undefined, environment: Readonly<Record<string, string | undefined>> = process.env) {
+export async function createLocalInstallation(context: { origin: string; createHostRuntime?: CreateSfHostRuntime }, file: string | undefined, environment: Readonly<Record<string, string | undefined>> = process.env) {
   if (!file) throw new Error("Explicit private installation configuration required")
   const loaded = await loadLocalConfiguration(file)
   if (context.origin !== loaded.config.origin) throw new Error("Installation origin mismatch")
@@ -77,15 +81,23 @@ export async function createLocalInstallation(context: { origin: string }, file:
   } : undefined
   const jobs = await createLocalJobs({ store, backupDirectory, mount: config.mount, ...(recoveryDrill ? { recoveryDrill } : {}), ...(operator ? { operator: { id: `macos:${operator.installationId}:${operator.uid}`, name: operator.name } } : {}), schedule: !!operator })
   services.jobs = jobs
+  const requestEnvironment = async (request: Request) => ({ at: now(), id: randomUUID, directory: await identity.directory(request), bankKey: loaded.keys.bank })
+  const installationId = operator?.installationId ?? digestSfValue({ origin: config.origin, mount: config.mount, directory: loaded.directory })
+  const runtime = await context.createHostRuntime?.({ installationId, directory: loaded.directory, sourceRoot: path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
+    mount: config.mount, persistence: store, authenticate: identity.authenticate, environment: requestEnvironment })
+  const product = createSfBiHttp({ installationId, projectId: installationId, policyVersion: "sf-product-v1", origin: config.origin, mount: config.mount,
+    persistence: store, authenticate: identity.authenticate, environment: requestEnvironment, browserScript: async () => biBrowser, ...(runtime ? { identity: runtime.identity } : {}) })
   const business = createModule(config.mount, {
     persistence: store,
     authenticate: identity.authenticate,
-    environment: async (request) => ({ at: now(), id: randomUUID, directory: await identity.directory(request), bankKey: loaded.keys.bank }),
+    environment: requestEnvironment,
+    product,
     maxJsonBytes: 2 * 1024 * 1024,
     assets: { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes) => scanLocalFile(bytes, config.scanner) } },
   })
   return {
     mount: config.mount,
+    ...(runtime ? { host: runtime.contributions } : {}),
     async handler(request: Request) {
       const url = new URL(request.url)
       if (url.origin !== config.origin) return new Response("Access denied", { status: 403 })

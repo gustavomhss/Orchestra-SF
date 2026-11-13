@@ -7,10 +7,12 @@ test("submitted PO uses its frozen exchange rate and approved and issued totals 
   const approved = { number: "PR-1", status: "po_approved", createdBy: "a", po: { currency: "EUR", fxRate: 1.08, approvalBaseCurrency: "USD", expenseType: "OPEX", lines: [{ qty: 1, unitPrice: 28000 }] } }
   const issued = { number: "PR-2", status: "po_issued", createdBy: "a", po: { currency: "USD", approvalBaseCurrency: "USD", expenseType: "OPEX", lines: [{ qty: 1, unitPrice: 100 }] } }
   const unknown = { number: "PR-3", status: "po_issued", createdBy: "a", po: { currency: "EUR", fxRate: null, expenseType: "CAPEX", lines: [{ qty: 1, unitPrice: 50 }] } }
-  expect(requestValue(approved, rates)).toBe(30240)
+  expect(requestValue(approved, rates)).toBeCloseTo(30240, 6)
   expect(requestValue(approved, { currency: "EUR", fxRates: [{ code: "USD", rate: 0.9 }] })).toBeNull()
   expect(requestValue(unknown, rates)).toBeNull()
-  expect(procurementDashboard([approved, issued, unknown], rates)).toMatchObject({ approved: { OPEX: 30240 }, issued: { OPEX: 100 }, unavailable: ["PR-3"] })
+  const dashboard = procurementDashboard([approved, issued, unknown], rates)
+  expect(dashboard.approved.OPEX).toBeCloseTo(30240, 6)
+  expect(dashboard).toMatchObject({ issued: { OPEX: 100 }, unavailable: ["PR-3"] })
 })
 
 test("an unavailable frozen quote rate does not use a later rate or the requisition estimate", () => {

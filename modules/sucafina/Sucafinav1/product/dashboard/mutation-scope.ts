@@ -3,6 +3,7 @@ import { digestSfValue } from "../contracts/canonical.ts"
 import type { Period, SourceRef } from "../contracts/context.ts"
 import type { SfSourceScope } from "../integration/source-lifecycle.ts"
 import { applyDashboardPreview } from "./commands.ts"
+import { normalizeDashboardRecords } from "./records.ts"
 
 export type DashboardMutationScope = {
   period: Period
@@ -24,9 +25,10 @@ export function dashboardMutationImpact(before: Snapshot, after: Snapshot, comma
     const years = [left?.year, right?.year].filter((value) => value !== undefined)
     const months = [left?.month, right?.month].filter((value) => value !== undefined)
     if (years.some((year) => !Number.isInteger(year) || Number(year) < 1 || Number(year) > 9999) || new Set(years).size > 1 || months.some((month) => !Number.isInteger(month) || Number(month) < 1 || Number(month) > 12) || new Set(months).size > 1 || (months.length && !years.length)) return undefined
-    const year = years[0] ?? command.values.year
-    if (year === undefined) return period
-    if (!Number.isInteger(year) || Number(year) < 1 || Number(year) > 9999) return undefined
+    const rawYear = years[0] ?? command.values.year
+    if (rawYear === undefined) return period
+    const year = typeof rawYear === "number" ? rawYear : typeof rawYear === "string" && /^\d{4}$/.test(rawYear) ? Number(rawYear) : NaN
+    if (!Number.isInteger(year) || year < 1 || year > 9999) return undefined
     const y = String(year).padStart(4, "0")
     if (!months.length) return { start: `${y}-01-01`, end: `${y}-12-31` }
     const month = Number(months[0])
@@ -36,15 +38,16 @@ export function dashboardMutationImpact(before: Snapshot, after: Snapshot, comma
     const left = before.data[type]
     const right = after.data[type]
     if (digestSfValue(left) === digestSfValue(right)) continue
+    const keyed = ["budgetYtd", "deviations", "budgetCurrentMonth", "revenueByYear"].includes(type)
     const arrays = (Array.isArray(left) || left === undefined) && (Array.isArray(right) || right === undefined)
-    const leftRows = arrays ? left ?? [] : left === undefined ? [] : [{ ...record(left), id: "__singleton__" }]
-    const rightRows = arrays ? right ?? [] : right === undefined ? [] : [{ ...record(right), id: "__singleton__" }]
-    if (!arrays && ((left !== undefined && !record(left)) || (right !== undefined && !record(right)))) return undefined
+    const leftRows = keyed ? normalizeDashboardRecords(type, left) : arrays ? left ?? [] : left === undefined ? [] : [{ ...record(left), id: "__singleton__" }]
+    const rightRows = keyed ? normalizeDashboardRecords(type, right) : arrays ? right ?? [] : right === undefined ? [] : [{ ...record(right), id: "__singleton__" }]
+    if (!keyed && !arrays && ((left !== undefined && !record(left)) || (right !== undefined && !record(right)))) return undefined
     if (!Array.isArray(leftRows) || !Array.isArray(rightRows)) return undefined
     const index = (items: unknown[]) => {
       const records = items.map(record)
-      if (records.some((row) => !row || typeof row.id !== "string" || !row.id) || new Set(records.map((row) => row?.id)).size !== records.length) return undefined
-      return new Map(records.map((row) => [row!.id as string, row!]))
+      if (records.some((row) => !row || !((typeof row.id === "string" && !!row.id) || (typeof row.id === "number" && Number.isSafeInteger(row.id)))) || new Set(records.map((row) => String(row?.id))).size !== records.length) return undefined
+      return new Map(records.map((row) => [String(row!.id), row!]))
     }
     const a = index(leftRows), b = index(rightRows)
     if (!a || !b) return undefined
@@ -62,6 +65,7 @@ export function dashboardMutationImpact(before: Snapshot, after: Snapshot, comma
 
 export function dashboardImpactCovered(impact: NonNullable<ReturnType<typeof dashboardMutationImpact>>, scope: DashboardMutationScope) {
   return impact.every((change) => {
+    if (change.period.start < scope.period.start || change.period.end > scope.period.end) return false
     const grants = change.operation === "create" ? scope.creates : scope.targets.map((entry) => entry.source)
     return grants.some((grant) => grant.type === change.type && grant.id === change.id && change.fields.every((field) => grant.fields.includes(field)) && grant.period.start <= change.period.start && grant.period.end >= change.period.end)
   })

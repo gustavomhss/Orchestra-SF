@@ -66,7 +66,7 @@ export function createProcurementPort(host: ProcurementSourceHost): ProcurementP
         const view = domain.view(snapshot, actor, environment)
         const supplier = rows(view.data.suppliers).find((row) => row.id === evidence.target.recordId)
         if (!supplier) return { commit: false, value: { status: "unavailable", reason: "Supplier unavailable" } }
-        if (!host.isCurrentSupplierSource(snapshot, evidence) || digestProcurementSource(supplier, view.data.formSettings) !== evidence.target.projectionDigest || text(object(view.data.formSettings).currency) !== context.currency) return { commit: false, value: { status: "stale", reason: "Supplier identity or version changed" } }
+        if (!host.isCurrentSupplierSource(snapshot, evidence) || digestProcurementSource(supplier, view.data.formSettings, "supplier") !== evidence.target.projectionDigest || text(object(view.data.formSettings).currency) !== context.currency) return { commit: false, value: { status: "stale", reason: "Supplier identity or version changed" } }
         const values: DomainProjection["values"] = input.fields.flatMap((field): DomainProjection["values"] => {
           const value = supplier[field]
           if (field === "categories" && Array.isArray(value) && value.every((item) => typeof item === "string")) return [

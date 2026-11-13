@@ -96,7 +96,7 @@ test("sourcing comparison reads the authorized request and uses frozen FX", asyn
   expect(result.status).toBe("ok")
   if (result.status !== "ok") return
   expect(result.value.ranking).toEqual(["A", "B"])
-  expect(result.value.proposals.find((quote) => quote.proposalRef === "B")?.convertedAmount).toBe(30240)
+  expect(result.value.proposals.find((quote) => quote.proposalRef === "B")?.convertedAmount).toBeCloseTo(30240, 6)
   expect(result.value.proposals.find((quote) => quote.proposalRef === "A")?.score).toBeCloseTo(87.933333, 4)
   const configured = [...settings.criteria, ...settings.commCriteria].map((criterion) => criterion.name)
   expect((await port.compareSourcing({ requestRef: "r", proposalRefs: ["A", "B"], criteria: configured }, binding)).status).toBe("ok")

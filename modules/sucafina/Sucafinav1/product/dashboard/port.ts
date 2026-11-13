@@ -85,6 +85,7 @@ export function projectDashboardSource(snapshot: Snapshot, actor: Actor, environ
   if (page === "Budget Overview" || (page === "Executive Dashboard" && allowed.includes("Budget Overview"))) {
     const data = budgetData(view.data)
     projection.budgetMetrics = Object.fromEntries([2024, 2025, 2026, 2027].map((year) => [year, { ...computeBudgetTotals(data, year), effectiveMonthlyBudget: effectiveBudgetSeries(data, year) }]))
+    projection.budgetSeries = Object.fromEntries([2024, 2025, 2026, 2027].map((year) => [year, effectiveBudgetSeries(data, year)]))
   }
   return projection
 }
@@ -119,7 +120,7 @@ async function read(input: { host: DomainPortHost; sources: DashboardSourceHost 
     return { status: "needs-input", reason: "invalid-period" }
   const year = Number(request.period.start.slice(0, 4))
   if (year < 2024 || year > 2027) return { status: "needs-input", reason: "unsupported-dashboard-year" }
-  if (request.fields.some((field) => ["opsTickets", "opsSLA", "opsHeatmap", "secKpi", "itUsersMonthly", "opexEntries", "capexEntries", "executiveMonths"].includes(field)) && (request.period.start.slice(8) !== "01" || Number(request.period.end.slice(8)) !== new Date(Date.UTC(year, Number(request.period.end.slice(5, 7)), 0)).getUTCDate())) return { status: "needs-input", reason: "monthly-data-requires-full-months" }
+  if (request.fields.some((field) => ["opsTickets", "opsSLA", "opsHeatmap", "secKpi", "itUsersMonthly", "opexEntries", "capexEntries", "executiveMonths", "budgetSeries"].includes(field)) && (request.period.start.slice(8) !== "01" || Number(request.period.end.slice(8)) !== new Date(Date.UTC(year, Number(request.period.end.slice(5, 7)), 0)).getUTCDate())) return { status: "needs-input", reason: "monthly-data-requires-full-months" }
   const source = await input.sources.resolveDashboardSource(request.selectionRef, binding, { fields: request.fields, period: request.period }).catch(() => ({ status: "unavailable" as const, reason: "source-resolver-failed" }))
   if (source.status !== "ok") return source
   const selected = structuredClone(source.value)
@@ -153,7 +154,7 @@ async function read(input: { host: DomainPortHost; sources: DashboardSourceHost 
   if (request.fields.includes("budgetMetrics") && (request.period.start.slice(5) !== "01-01" || request.period.end.slice(5) !== "12-31")) return { status: "needs-input", reason: "budget-metrics-require-full-year" }
   const sourceRef = { surface: "dashboard" as const, type: ref.target.recordType, id: ref.target.recordId, incarnation: ref.target.incarnation, version: ref.target.version, fields: ref.target.fields, period: request.period, observedAt: environment.at }
   const values: DomainProjection["values"][number][] = []
-  const missing: DomainProjection["missing"][number][] = [...(request.fields.includes("budgetMetrics") ? [{ field: "actual-and-forecast-coverage", reason: "unconfirmed" as const }] : []), ...current.unavailable.map((field) => ({ field, reason: "unavailable" as const }))]
+  const missing: DomainProjection["missing"][number][] = [...((request.fields.includes("budgetMetrics") || request.fields.includes("budgetSeries")) ? [{ field: "actual-and-forecast-coverage", reason: "unconfirmed" as const }] : []), ...current.unavailable.map((field) => ({ field, reason: "unavailable" as const }))]
   const append = (id: string, value: unknown, recordPeriod?: Period, recordGranularity?: "month" | "year") => {
     if (value === null || typeof value === "string" || typeof value === "boolean" || (typeof value === "number" && Number.isFinite(value))) {
       const monthly = /^budgetMetrics\.(\d{4})\.effectiveMonthlyBudget\[(\d+)\]$/.exec(id)
@@ -196,7 +197,7 @@ async function read(input: { host: DomainPortHost; sources: DashboardSourceHost 
       append(`${id}.${key}`, entry, recordPeriod, recordGranularity)
     })
   }
-  request.fields.filter((field) => field !== "opsTickets" && field !== "budgetMetrics").forEach((field) => append(field, projection[field]))
+  request.fields.filter((field) => field !== "opsTickets" && field !== "budgetMetrics" && field !== "budgetSeries").forEach((field) => append(field, projection[field]))
   if (request.fields.includes("opsTickets")) {
     const categories = Array.isArray(projection.opsCats) && projection.opsCats.length ? projection.opsCats.filter((value): value is string => typeof value === "string") : ["IT Security", "Infrastructure", "Application", "IT Operations", "Others (Beyers OT)"]
     rows(projection.opsTickets).forEach((row) => {
@@ -213,13 +214,13 @@ async function read(input: { host: DomainPortHost; sources: DashboardSourceHost 
       })))
     })
   }
-  if (request.fields.includes("budgetMetrics")) {
+  if (request.fields.includes("budgetMetrics") || request.fields.includes("budgetSeries")) {
     const year = Number(request.period.start.slice(0, 4))
     const owners = rows(projection.opexOwners).map((row) => ({ row, entries: rows(projection.opexEntries), key: "ownerId" as const }))
     const projects = rows(projection.capexProjects).map((row) => ({ row, entries: rows(projection.capexEntries), key: "projectId" as const }))
     const records = [...owners, ...projects]
     const effective = effectiveBudgetSeries(budgetData(projection), year)
-    Array.from({ length: 12 }, (_, index) => index + 1).forEach((month) => {
+    Array.from({ length: 12 }, (_, index) => index + 1).filter((month) => month >= Number(request.period.start.slice(5, 7)) && month <= Number(request.period.end.slice(5, 7))).forEach((month) => {
       const period = { start: `${year}-${String(month).padStart(2, "0")}-01`, end: `${year}-${String(month).padStart(2, "0")}-${String(new Date(Date.UTC(year, month, 0)).getUTCDate()).padStart(2, "0")}` }
       const entry = (item: typeof records[number]) => item.entries.find((row) => row.year === year && row.month === month && (item.key === "ownerId" ? row.ownerId == item.row.id : (row.projId ?? row.projectId) == item.row.id))
       const measurements = (["actual", "forecast"] as const).map((measure) => {
@@ -241,12 +242,12 @@ async function read(input: { host: DomainPortHost; sources: DashboardSourceHost 
       series.forEach(({ measure, amount }) => {
         const id = `budget:${year}-${String(month).padStart(2, "0")}:${measure}`
         values.push({ id, value: amount, currency: "unspecified", period, granularity: "month", sourceRefs: [ref], drilldown: ref, evidenceState: amount === null ? "absent" : measure === "effective" ? "estimated" : "confirmed" })
-        if (measure === "effective") values.push({ id: `budgetMetrics.${year}.effectiveMonthlyBudget[${month - 1}]`, value: amount, currency: "unspecified", period, granularity: "month", sourceRefs: [ref], drilldown: ref, evidenceState: amount === null ? "absent" : "estimated" })
+        if (measure === "effective" && request.fields.includes("budgetMetrics")) values.push({ id: `budgetMetrics.${year}.effectiveMonthlyBudget[${month - 1}]`, value: amount, currency: "unspecified", period, granularity: "month", sourceRefs: [ref], drilldown: ref, evidenceState: amount === null ? "absent" : "estimated" })
         if (amount === null) missing.push({ field: id, reason: "missing" })
       })
     })
     const totals = [{ measure: "effective", name: "totalBudget" }, { measure: "actual", name: "totalActual" }, { measure: "forecast", name: "totalForecast" }] as const
-    totals.forEach(({ measure, name }) => {
+    if (request.fields.includes("budgetMetrics")) totals.forEach(({ measure, name }) => {
       const months = values.filter((value) => value.id.startsWith(`budget:${year}-`) && value.id.endsWith(`:${measure}`))
       const total = months.length === 12 && months.every((value) => typeof value.value === "number") ? months.reduce((sum, value) => sum + Number(value.value), 0) : null
       values.push({ id: `budgetMetrics.${year}.${name}`, value: total, currency: "unspecified", period: request.period, granularity: "year", sourceRefs: [ref], drilldown: ref, evidenceState: total === null ? "absent" : measure === "effective" ? "estimated" : "confirmed" })

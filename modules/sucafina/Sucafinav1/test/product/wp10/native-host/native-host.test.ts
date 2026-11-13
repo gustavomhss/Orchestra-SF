@@ -8,6 +8,7 @@ import { SessionExecutionLocal } from "@orchestra/core/session/execution/local"
 import { SessionSchema } from "@orchestra/core/session/schema"
 import { Effect } from "effect"
 import { createSfNativeHostContribution, SfNativeHost } from "../../../../../../../apps/cli/src/sucafina-product/native-host.ts"
+import type { SfNativeHostApi } from "../../../../../../../apps/cli/src/sucafina-product/native-host.ts"
 import { createSfExecutionBindingRegistry } from "../../../../product/host-binding/execution-context.ts"
 import type { ResidentProfile, SkillLoadReceipt } from "../../../../product/contracts/resident-ai.ts"
 import { selection } from "../resident-runtime/fixture.ts"
@@ -27,15 +28,20 @@ test("native host adds no reserved service and refuses execution without a C15 g
     caseRef: { id: "case", version: 1, incarnation: "inc" }, profile, manifestDigest: receipt.manifestDigest, skillReceipts: [receipt], entryMode: "interactive" })
   expect(bound.status).toBe("ok")
   if (bound.status !== "ok") return
-  const product = createSfNativeHostContribution({ registry, admit: () => Effect.succeed(true), authorize: () => Effect.succeed(true) })
+  const exposure: { current?: SfNativeHostApi; released: number } = { released: 0 }
+  const product = createSfNativeHostContribution({ registry, admit: () => Effect.succeed(true), authorize: () => Effect.succeed(true),
+    onReady: (api) => { exposure.current = api; return () => { delete exposure.current; exposure.released++ } } })
   expect(Host.merge([product.contribution]).nodes).toHaveLength(1)
   const layer = AppNodeBuilder.build(LayerNode.group([product.node, SessionV2.node]), [[SessionExecution.node, SessionExecutionLocal.node]])
   await Effect.gen(function* () {
     const session = yield* SessionV2.Service
     const host = yield* SfNativeHost
+    expect(exposure.current).toBe(host)
     const before = yield* session.list()
     const result = yield* host.execute(bound.value)
     expect(result).toEqual({ status: "unavailable", reason: "c15-context-budget-gate-unavailable" })
     expect(yield* session.list()).toEqual(before)
   }).pipe(Effect.scoped, Effect.provide(layer), Effect.runPromise)
+  expect(exposure.current).toBeUndefined()
+  expect(exposure.released).toBe(1)
 })

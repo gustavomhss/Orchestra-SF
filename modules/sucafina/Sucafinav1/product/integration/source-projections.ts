@@ -7,6 +7,9 @@ import { projectPlannerSource } from "../planner/port.ts"
 import { projectDashboardScope } from "../dashboard/scope.ts"
 import type { Period } from "../contracts/context.ts"
 import type { SfSourceScope } from "./source-lifecycle.ts"
+import { projectSfProcurementScope } from "./procurement-projections.ts"
+import { normalizeDashboardRecords } from "../dashboard/records.ts"
+import { projectDashboardSource } from "../dashboard/port.ts"
 
 /** Saved roles define the projection, never authenticate a later caller. Reads authenticate again. */
 export function sfPlannerProjectionSelector(snapshot: Snapshot, actor: Actor) {
@@ -20,6 +23,7 @@ export function createSfSourceScopeProjector(now: () => string) {
 
 export function projectSfSourceScope(surface: Surface, snapshot: Snapshot, scope: SfSourceScope, observedAt?: string) {
   const selector = object(scope.selector)
+  if (surface === "procurement") return projectSfProcurementScope(surface, snapshot, scope)
   if (surface === "dashboard") {
     const stored = object(selector.actor)
     const access = object(object(snapshot.data.access)[scope.principalRef])
@@ -31,12 +35,26 @@ export function projectSfSourceScope(surface: Surface, snapshot: Snapshot, scope
     if (scope.recordType === "dashboard-page" && scope.recordId === selector.page) return projectDashboardScope(snapshot, actor, { page: selector.page, fields: selector.fields, period: selector.period as Period }, asOf)
     // Record scopes are admitted only through a page the same actor can view.
     if (scope.recordType === "dashboard-page" || scope.recordId === "__singleton__") return undefined
-    const projection = projectDashboardScope(snapshot, actor, { page: selector.page, fields: [scope.recordType], period: selector.period as Period }, asOf)
-    const records = projection?.selected[scope.recordType]
+    const logical = ["budgetYtd", "deviations", "budgetCurrentMonth", "revenueByYear"].includes(scope.recordType)
+    const visible = logical ? projectDashboardSource(snapshot, actor, { at: asOf, id: () => "", directory: [] }, selector.page) : undefined
+    const projection = logical ? undefined : projectDashboardScope(snapshot, actor, { page: selector.page, fields: [scope.recordType], period: selector.period as Period }, asOf)
+    const records = logical ? normalizeDashboardRecords(scope.recordType, snapshot.data[scope.recordType]) : projection?.selected[scope.recordType]
     if (!Array.isArray(records)) return undefined
     const matches = records.filter((entry) => String(object(entry).id ?? "") === scope.recordId)
     if (matches.length !== 1 || selector.fields.some((field) => !Object.hasOwn(object(matches[0]), field))) return undefined
     const record = object(matches[0])
+    if (logical) {
+      if (!visible) return undefined
+      if (scope.recordType === "revenueByYear" || scope.recordType === "budgetCurrentMonth") {
+        if (selector.page !== "Budget Overview" || selector.fields.some((field) => !["value", "year"].includes(field))) return undefined
+      }
+      if (scope.recordType === "budgetYtd" || scope.recordType === "deviations") {
+        const page = record.kind === "opex" ? "OPEX Detail" : record.kind === "capex" ? "CAPEX Projects" : undefined
+        const owners = page === "OPEX Detail" ? visible.opexOwners : page === "CAPEX Projects" ? visible.capexProjects : undefined
+        const fields = scope.recordType === "budgetYtd" ? ["kind", "year", "ownerId", "amount", "months", "perMonth", "at"] : ["kind", "year", "month", "ownerId", "flag", "text"]
+        if (selector.page !== page || !Array.isArray(owners) || !owners.some((owner) => String(object(owner).id ?? "") === record.ownerId) || selector.fields.some((field) => !fields.includes(field))) return undefined
+      }
+    }
     const period = object(selector.period)
     if (typeof period.start !== "string" || typeof period.end !== "string") return undefined
     const year = record.year === undefined ? Number(period.start.slice(0, 4)) : Number(record.year)

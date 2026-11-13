@@ -32,6 +32,7 @@ export type Application = {
   maxJsonBytes: number
   workbookLimits?: Partial<WorkbookLimits>
   assets?: { persistence: AssetPersistence; services: AssetServices }
+  product?: (request: Request, surface: Surface) => Promise<Response | undefined>
 }
 
 /** Mount this in the installation's existing fetch composition. It starts no listener and selects no database. */
@@ -55,6 +56,9 @@ export function createApplication(mount: string, application: Application) {
     )
       return reply("Access denied", 403)
     const uploading = request.method === "POST" && url.searchParams.has("upload")
+    // Product operations own fresh authentication and transactions; never nest them in the page lock.
+    const product = await application.product?.(request, surface)
+    if (product) return product
     const parsed =
       request.method === "POST" && !uploading ? await readCommand(request, application.maxJsonBytes) : undefined
     if (parsed instanceof Response) return parsed
@@ -481,7 +485,7 @@ export function createApplication(mount: string, application: Application) {
       )
       return {
         commit: snapshot.audit.length !== auditBefore,
-        value: reply(request.method === "HEAD" ? null : html, 200, {
+        value: reply(request.method === "HEAD" ? null : application.product ? html.replace("<!--local-tools-->", `<a href="${mount}/dashboard?sf=bi">Business intelligence</a><!--local-tools-->`) : html, 200, {
           "Content-Type": "text/html; charset=utf-8",
           "Content-Security-Policy": htmlPolicy(html),
         }),
