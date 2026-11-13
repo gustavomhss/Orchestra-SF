@@ -16,6 +16,7 @@ type PersistedWithReady<T> = [
 
 type PersistTarget = {
   draft?: boolean
+  readOnlyHydration?: boolean
   storage?: string
   scope?: "window"
   legacyStorageNames?: string[]
@@ -219,15 +220,16 @@ function readCurrent(input: {
   key: string
   defaults: unknown
   migrate?: (value: unknown) => unknown
+  readOnlyHydration?: boolean
 }) {
   const raw = input.storage.getItem(input.key)
   if (raw === null) return
   const next = normalize(input.defaults, raw, input.migrate)
   if (next === undefined) {
-    input.storage.removeItem(input.key)
+    if (!input.readOnlyHydration) input.storage.removeItem(input.key)
     return null
   }
-  if (raw !== next) input.storage.setItem(input.key, next)
+  if (!input.readOnlyHydration && raw !== next) input.storage.setItem(input.key, next)
   return next
 }
 
@@ -239,6 +241,7 @@ function migrateLegacy(input: {
   key: string
   defaults: unknown
   migrate?: (value: unknown) => unknown
+  readOnlyHydration?: boolean
 }) {
   for (const store of input.stores) {
     const raw = store.getItem(input.key)
@@ -246,11 +249,13 @@ function migrateLegacy(input: {
 
     const next = normalize(input.defaults, raw, input.migrate)
     if (next === undefined) {
-      store.removeItem(input.key)
+      if (!input.readOnlyHydration) store.removeItem(input.key)
       continue
     }
-    input.current.setItem(input.key, next)
-    store.removeItem(input.key)
+    if (!input.readOnlyHydration) {
+      input.current.setItem(input.key, next)
+      store.removeItem(input.key)
+    }
     return next
   }
 
@@ -262,11 +267,13 @@ function migrateLegacy(input: {
 
     const next = normalize(input.defaults, raw, input.migrate)
     if (next === undefined) {
-      input.legacyStore.removeItem(key)
+      if (!input.readOnlyHydration) input.legacyStore.removeItem(key)
       continue
     }
-    input.current.setItem(input.key, next)
-    input.legacyStore.removeItem(key)
+    if (!input.readOnlyHydration) {
+      input.current.setItem(input.key, next)
+      input.legacyStore.removeItem(key)
+    }
     return next
   }
 
@@ -278,15 +285,16 @@ async function readCurrentAsync(input: {
   key: string
   defaults: unknown
   migrate?: (value: unknown) => unknown
+  readOnlyHydration?: boolean
 }) {
   const raw = await input.storage.getItem(input.key)
   if (raw === null) return
   const next = normalize(input.defaults, raw, input.migrate)
   if (next === undefined) {
-    await input.storage.removeItem(input.key).catch(() => undefined)
+    if (!input.readOnlyHydration) await input.storage.removeItem(input.key).catch(() => undefined)
     return null
   }
-  if (raw !== next) await input.storage.setItem(input.key, next)
+  if (!input.readOnlyHydration && raw !== next) await input.storage.setItem(input.key, next)
   return next
 }
 
@@ -312,6 +320,7 @@ async function migrateLegacyAsync(input: {
   key: string
   defaults: unknown
   migrate?: (value: unknown) => unknown
+  readOnlyHydration?: boolean
 }) {
   for (const store of input.stores) {
     const raw = await store.getItem(input.key)
@@ -319,11 +328,13 @@ async function migrateLegacyAsync(input: {
 
     const next = normalize(input.defaults, raw, input.migrate)
     if (next === undefined) {
-      await removeAsync(store, input.key)
+      if (!input.readOnlyHydration) await removeAsync(store, input.key)
       continue
     }
-    await input.current.setItem(input.key, next)
-    await store.removeItem(input.key)
+    if (!input.readOnlyHydration) {
+      await input.current.setItem(input.key, next)
+      await store.removeItem(input.key)
+    }
     return next
   }
 
@@ -335,11 +346,13 @@ async function migrateLegacyAsync(input: {
 
     const next = normalize(input.defaults, raw, input.migrate)
     if (next === undefined) {
-      await removeAsync(input.legacyStore, key)
+      if (!input.readOnlyHydration) await removeAsync(input.legacyStore, key)
       continue
     }
-    await input.current.setItem(input.key, next)
-    await input.legacyStore.removeItem(key)
+    if (!input.readOnlyHydration) {
+      await input.current.setItem(input.key, next)
+      await input.legacyStore.removeItem(key)
+    }
     return next
   }
 
@@ -609,7 +622,7 @@ export function persisted<T>(
 
       const api: SyncStorage = {
         getItem: (key) => {
-          const value = readCurrent({ storage: current, key, defaults, migrate: config.migrate })
+          const value = readCurrent({ storage: current, key, defaults, migrate: config.migrate, readOnlyHydration: config.readOnlyHydration })
           if (value !== undefined) return value
           return migrateLegacy({
             current,
@@ -619,6 +632,7 @@ export function persisted<T>(
             key,
             defaults,
             migrate: config.migrate,
+            readOnlyHydration: config.readOnlyHydration,
           })
         },
         setItem: (key, value) => {
@@ -651,7 +665,7 @@ export function persisted<T>(
 
     const api: AsyncStorage = {
       getItem: async (key) => {
-        const value = await readCurrentAsync({ storage: current, key, defaults, migrate: config.migrate })
+        const value = await readCurrentAsync({ storage: current, key, defaults, migrate: config.migrate, readOnlyHydration: config.readOnlyHydration })
         if (value !== undefined) return value
         const migrated = await migrateLegacyAsync({
           current,
@@ -661,12 +675,13 @@ export function persisted<T>(
           key,
           defaults,
           migrate: config.migrate,
+          readOnlyHydration: config.readOnlyHydration,
         })
         if (draftLatest === undefined) {
           if (draft && migrated !== null) return (await current.getItem(key)) ?? migrated
           return migrated
         }
-        await current.setItem(key, draftLatest)
+        if (!config.readOnlyHydration) await current.setItem(key, draftLatest)
         return draftLatest
       },
       setItem: async (key, value) => {
