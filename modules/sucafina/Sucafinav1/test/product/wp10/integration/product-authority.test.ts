@@ -11,12 +11,22 @@ import type { LocalStore } from "../../../../runtime/local-contract.ts"
 import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
 import type { SfProductGrant } from "../../../../product/integration/product-authority.ts"
 import type { ResidentProfile, SkillLoadReceipt } from "../../../../product/contracts/resident-ai.ts"
+import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { selection } from "../resident-runtime/fixture.ts"
 
-async function fixture(grants: readonly SfProductGrant[], work: (input: { product: ReturnType<typeof createSfProductAuthority>; request: Request; location: Location.Ref; persistence: LocalStore; actor: { write: boolean; active: boolean }; changes: { role: string; mutateAuth: boolean; mutateInspect: boolean; session?: SessionSchema.Info } }) => Promise<void>) {
+async function fixture(grants: readonly SfProductGrant[], work: (input: { product: ReturnType<typeof createSfProductAuthority>; request: Request; location: Location.Ref; persistence: LocalStore; actor: { write: boolean; active: boolean }; changes: { role: string; mutateAuth: boolean; mutateInspect: boolean; session?: SessionSchema.Info } }) => Promise<void>, options: { rejectNested?: boolean } = {}) {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-product-authority-"))
   await chmod(directory, 0o700)
-  const persistence = await openLocalStore(join(directory, "store"))
+  const driver = await openLocalStore(join(directory, "store"))
+  const callback = { active: false }
+  const persistence: LocalStore = options.rejectNested ? { ...driver, transaction: (surface, work, transactionOptions) => {
+    if (callback.active) throw new Error("Cross-surface nested transaction forbidden")
+    return driver.transaction(surface, async (snapshot, blobs) => {
+      callback.active = true
+      try { return await work(snapshot, blobs) }
+      finally { callback.active = false }
+    }, transactionOptions)
+  } } : driver
   const actor = { write: true, active: true }
   const changes: { role: string; mutateAuth: boolean; mutateInspect: boolean; session?: SessionSchema.Info } = { role: "viewer", mutateAuth: false, mutateInspect: false }
   const request = new Request("https://example.test/product")
@@ -42,6 +52,20 @@ async function fixture(grants: readonly SfProductGrant[], work: (input: { produc
     await rm(directory, { recursive: true, force: true })
   }
 }
+
+test("product authority revalidates current surfaces without opening a nested transaction", async () => {
+  await fixture([{ principalRef: "person", namespaces: ["cases"], operations: ["sf_context_get"] }], async ({ product, request }) => {
+    const admitted = await product.ui.admit(request, "sf_context_get", "a".repeat(64))
+    expect(admitted.status).toBe("ok")
+    if (admitted.status !== "ok") return
+    const result = await product.state.transaction(request, { namespace: "cases", expectedStorageVersion: 0,
+      targetRef: product.creationTarget.ref, targetIncarnation: product.creationTarget.incarnation,
+      idempotencyKey: "nested-free", commandDigest: "b".repeat(64) }, async () => ({ commit: false, value: await product.ui.revalidate(admitted.value) }))
+    expect(result.status).toBe("preview")
+    if (result.status === "preview") expect(result.value).toBe(true)
+    product.ui.finish(admitted.value)
+  }, { rejectNested: true })
+})
 
 test("human writes require their own action grant and cannot borrow a consumed read lease", async () => {
   await fixture([{ principalRef: "person", namespaces: ["threads"], operations: ["sf_context_get"] }], async ({ product, request }) => {
@@ -124,7 +148,7 @@ test("native binding cannot be invented without a current stored run", async () 
 })
 
 test("a real C08 run and case still cannot bind a missing native Session", async () => {
-  await fixture([{ principalRef: "person", namespaces: ["cases", "contributions"], operations: ["sf_forecast_compare"] }], async ({ product, request, changes, actor }) => {
+  await fixture([{ principalRef: "person", namespaces: ["cases", "contributions"], operations: ["sf_forecast_compare"] }], async ({ product, request, changes, actor, location }) => {
     const caseRef = { id: "case", incarnation: "inc", version: 1 }
     const created = await product.state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, targetRef: product.creationTarget.ref,
       targetIncarnation: product.creationTarget.incarnation, idempotencyKey: "seed-case", commandDigest: "e".repeat(64) }, async (state) => {
