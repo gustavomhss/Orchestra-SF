@@ -704,7 +704,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
           Array.isArray(executive.monthlyDepartures) ? count(executive.monthlyDepartures[context.month - 1]) : "Unavailable",
         ),
       ], 3) +
-      `<h2>Service operations</h2><p>Operations reference: ${esc(String(context.year))}-${esc(String(opsMonth).padStart(2, "0"))}. <a href="?page=IT%20Operations">Open IT Operations</a></p>` +
+      `<h2>Service operations</h2><p>Operations reference: ${esc(String(context.year))}-${esc(String(opsMonth).padStart(2, "0"))}. <a href="?page=IT%20Operations&amp;opsYear=${context.year}&amp;operationsMonth=${opsMonth}">Open IT Operations</a></p>` +
       `<form method="get" class="filter-bar"><input type="hidden" name="page" value="Executive Dashboard"><input type="hidden" name="year" value="${finite(data.sidebarYear, 2026)}"><input type="hidden" name="execYear" value="${context.year}"><input type="hidden" name="executiveMonth" value="${context.month}">${fields([{ name: "opsMonth", label: "Operations month", type: "select", value: opsMonth, options: Array.from({ length: 12 }, (_, index) => String(index + 1)) }])}<button>Show operations</button></form>` +
       metricGrid([
         metric("Tickets opened", typeof ops.opened === "number" ? String(ops.opened) : "Unavailable — incomplete data"),
@@ -889,7 +889,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
             allowed,
           ) +
           table(
-            ["Month", "Effective budget", "Actual", "Forecast", "Deviation", "Flag", "Utilization", "Edit all months"],
+            ["Month", "Effective budget", "Actual", "Forecast", "Deviation", "Flag", "Utilization", "Edit"],
             Array.from({ length: 12 }, (_, index) => {
               const entry = monthEntries.find((row) => row.month === index + 1)
               const budget = typeof owner.budget === "number" || (typeof entry?.budget === "number" && entry.budget > 0) ? effectiveMonthlyBudget(typeof entry?.budget === "number" ? entry.budget : undefined, typeof owner.budget === "number" ? owner.budget : undefined) : null
@@ -914,7 +914,8 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
                 actual === null ? "Not available" : money(actual),
                 forecast === null ? "Not available" : money(forecast),
                 deviation === null ? "Not available" : `<span data-tone="${deviation > 0 ? "red" : "green"}">${money(deviation)}</span>`,
-                esc(flag) +
+                esc(flag),
+                `<span data-utilization="${utilization ?? ""}" data-tone="${utilizationTone}">${utilization !== null ? `${utilization}%` : budget === null ? "Unavailable — budget missing" : budget === 0 ? "Unavailable — budget is zero" : "Unavailable — actual missing"}</span>`,
                   control(
                     "save-deviation",
                     id,
@@ -941,8 +942,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
                     ]),
                     "Save deviation",
                     allowed,
-                  ),
-                `<span data-utilization="${utilization ?? ""}" data-tone="${utilizationTone}">${utilization !== null ? `${utilization}%` : budget === null ? "Unavailable — budget missing" : budget === 0 ? "Unavailable — budget is zero" : "Unavailable — actual missing"}</span>`,
+                  ) +
                 control(
                   "save-entry",
                   String(entry?.id ?? ""),
@@ -973,7 +973,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
             "annual-entry",
             id,
             `${collection}:${id}`,
-            fields([
+            `<p>Annual Entry writes the selected field in all 12 months of ${context.year} for this line.</p>` + fields([
               {
                 name: "annual",
                 label: "Annual Entry ÷12",
@@ -994,7 +994,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
             "year-amount",
             id,
             "budgetYtd",
-            fields([
+            `<p>Year amount writes actual through month ${current} and forecast in all 12 months of ${context.year}. Clearing removes the year hint without rewriting monthly entries.</p>` + fields([
               {
                 name: "amount",
                 label: "Year amount",

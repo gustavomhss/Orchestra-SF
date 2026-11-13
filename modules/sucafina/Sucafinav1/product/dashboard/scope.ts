@@ -25,7 +25,12 @@ export function projectDashboardScope(snapshot: Snapshot, actor: Actor, selector
     const value = projection[field]
     if (field === "budgetMetrics") return [field, { [year]: object(value)[year] }]
     if (field === "budgetSeries") return [field, { [year]: (Array.isArray(object(value)[year]) ? object(value)[year] as unknown[] : []).map((amount, index) => index + 1 >= Number(selector.period.start.slice(5, 7)) && index + 1 <= Number(selector.period.end.slice(5, 7)) ? amount : null) }]
-    if (field === "milestoneDates") return [field, rows(value).filter((row) => typeof row.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(row.date) && Number.isFinite(Date.parse(row.date)) && new Date(row.date).toISOString().slice(0, 10) === row.date && row.date >= selector.period.start && row.date <= selector.period.end)]
+    if (field === "milestoneDates") return [field, rows(value).flatMap((row) => {
+      const valid = typeof row.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(row.date) && Number.isFinite(Date.parse(row.date)) && new Date(row.date).toISOString().slice(0, 10) === row.date
+      const current = day >= selector.period.start && day <= selector.period.end ? row : Object.fromEntries(Object.entries(row).filter(([key]) => key !== "status"))
+      if (!valid) return [{ ...current, date: null }]
+      return (row.date as string) >= selector.period.start && (row.date as string) <= selector.period.end ? [current] : []
+    })]
     if (field === "executiveByYear") {
       const current = object(object(value)[year])
       const inYear = selector.period.start.slice(5) === "01-01" && selector.period.end.slice(5) === "12-31"
@@ -63,7 +68,7 @@ export function projectDashboardScope(snapshot: Snapshot, actor: Actor, selector
   const operationalDependencies = Object.fromEntries(operationalFields.filter((field) => Object.hasOwn(operationView, field)).map((field) => [field, ["opsTickets", "opsSLA", "opsHeatmap", "secKpi"].includes(field) ? rows(operationView[field]).filter((row) => row.year === year && typeof row.month === "number" && row.month >= Number(selector.period.start.slice(5, 7)) && row.month <= Number(selector.period.end.slice(5, 7))) : operationView[field]]))
   const currentFields = ["executive", "executiveByYear", "members", "leaders", "cio", "projects", "risks", "contracts", "stakeholders", "itperf", "signals", "hotTopics"]
   const today = day
-  const observesToday = today >= selector.period.start && today <= selector.period.end && (selector.fields.some((field) => currentFields.includes(field)) || (selector.fields.includes("executiveMonths") && allowed.includes("IT Security KPIs")))
+  const observesToday = today >= selector.period.start && today <= selector.period.end && (selector.fields.some((field) => currentFields.includes(field)) || selector.fields.includes("milestoneDates") || (selector.fields.includes("executiveMonths") && allowed.includes("IT Security KPIs")))
   const privateDependencyDigest = digestSfValue({ ...budgetDependencies, ...seriesDependencies, ...operationalDependencies, ...(observesToday ? { observationDay: today } : {}) })
   // The host uses this digest for versioning only and returns selected values, never this private field.
   return { selected, privateDependencyDigest }

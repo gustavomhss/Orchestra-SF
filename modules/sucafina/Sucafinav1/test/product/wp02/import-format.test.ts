@@ -13,5 +13,9 @@ test("unknown import formats are rejected while supported formats use the domain
   expect(applyDashboardImport("json-dashboard", state, actor, command, environment, "base", "command")).toMatchObject({ ok: false, status: 400 })
   expect(state).toEqual(snapshot())
   expect(previewDashboardImport("all-projects", state, actor, command, environment)).toEqual({ status: "invalid", reason: "format-command-mismatch" })
+  const backup: Command = { page: "Budget Overview", action: "backup-import", version: 0, values: {} }
+  expect(previewDashboardImport("backup", state, actor, backup, environment)).toEqual({ status: "invalid", reason: "backup-producer-unavailable" })
+  expect(applyDashboardImport("backup", state, actor, backup, environment, "base", "command")).toMatchObject({ ok: false, status: 503 })
+  expect(previewDashboardImport("backup", state, actor, command, environment)).toEqual({ status: "invalid", reason: "format-command-mismatch" })
   expect(previewDashboardImport("all-members", snapshot(), actor, command, environment)).toEqual(simulateDashboardCommand(snapshot(), actor, command, environment))
 })

@@ -14,7 +14,7 @@ export function simulateDashboardCommand(snapshot: Snapshot, actor: Actor, comma
   if (!before) return { status: "denied" as const, reason: "page-unavailable" }
   const staged = structuredClone(snapshot)
   const result = executeDashboardCommand(staged, actor, command, environment)
-  if (!result.ok) return { status: result.status === 403 ? "denied" as const : result.status === 409 ? "conflict" as const : "invalid" as const, reason: result.status === 409 ? "source-changed" : "command-rejected" }
+  if (!result.ok) return result.status === 409 ? { status: "conflict" as const, reason: "source-changed" as const, by: result.by, stored: visibleStored(snapshot, before, result.stored) } : { status: result.status === 403 ? "denied" as const : "invalid" as const, reason: "command-rejected" as const }
   const after = projectDashboardSource(staged, actor, environment, command.page)
   if (!after) return { status: "denied" as const, reason: "page-unavailable" }
   const keys = [...new Set([...Object.keys(before), ...Object.keys(after)])].sort()
@@ -77,8 +77,24 @@ export function applyDashboardPreview(snapshot: Snapshot, actor: Actor, command:
   if (!projection) return { ok: false, status: 403, errors: ["Page is unavailable"] }
   if (previewBaseDigest(snapshot, projection, command.page) !== baseDigest || digestSfValue({ actor, command }) !== commandDigest) return { ok: false, status: 409, errors: ["Preview is stale"] }
   const result = executeDashboardCommand(snapshot, actor, command, environment)
-  if (!result.ok) return { ok: false, status: result.status, errors: ["Command rejected; review your access and current data."] }
+  if (!result.ok) return result.status === 409 ? { ok: false, status: 409, errors: ["The stored record changed."], by: result.by, stored: visibleStored(snapshot, projection, result.stored) } : { ok: false, status: result.status, errors: ["Command rejected; review your access and current data."] }
   return { ok: true, warnings: result.warnings, value: command.page === "All Projects" && command.action === "import" ? importSummary(result.value) : undefined }
+}
+
+/** The submitted command stays with the client. `stored` is the same projected row, never the raw record. */
+function visibleStored(snapshot: Snapshot, projection: Record<string, unknown> | undefined, stored: unknown): unknown {
+  if (!projection || stored === undefined || stored === null || typeof stored !== "object") return undefined
+  const record = stored as Record<string, unknown>
+  const id = typeof record.id === "string" || typeof record.id === "number" ? String(record.id) : undefined
+  if (id) {
+    const collections = Object.entries(snapshot.data).filter(([, value]) => rows(value).some((item) => String(item.id ?? "") === id && digestSfValue(item) === digestSfValue(record)))
+    if (collections.length !== 1) return undefined
+    const matches = rows(projection[collections[0]![0]]).filter((item) => String(item.id ?? "") === id)
+    if (matches.length === 1) return matches[0]
+    return undefined
+  }
+  for (const value of Object.values(projection)) if (digestSfValue(value) === digestSfValue(stored)) return value
+  return undefined
 }
 
 function previewBaseDigest(snapshot: Snapshot, projection: Record<string, unknown>, page: string) {

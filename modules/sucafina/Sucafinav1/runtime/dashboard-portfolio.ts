@@ -715,8 +715,10 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
     records.map((row) => {
       if (collection === "projects") {
         const variance = budgetVariance(finite(row.spent), finite(row.budget))
+        const id = recordId(row.id)
+        const params = new URLSearchParams({ page, ...Object.fromEntries(Object.entries({ q: text(data.q).trim(), status, filter, owner }).filter(([, value]) => value)) })
         return [
-          `<span id="record-${esc(recordId(row.id))}">${esc(text(row.name))}</span>`,
+          id && rows(data.projects).filter((project) => recordId(project.id) === id).length === 1 ? `<span id="record-${esc(id)}"><a href="?${esc(params.toString())}#record-${encodeURIComponent(id)}">${esc(text(row.name))}</a></span>` : esc(text(row.name)),
           esc(text(row.status)),
           esc(text(row.risk)),
           esc(dashboardMoney(finite(row.budget))),
