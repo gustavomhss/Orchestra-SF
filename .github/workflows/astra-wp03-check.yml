@@ -1,0 +1,60 @@
+name: Astra WP03 scoped checks
+
+on:
+  push:
+    branches: [astra-check-wp03]
+
+permissions:
+  contents: read
+
+jobs:
+  planner-checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout exact product commit
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - name: Record product and guard base
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git merge-base --is-ancestor 73ee7fd812d233f898ef79a9378014d4339d9875 HEAD
+          git fetch --no-tags origin dev:refs/remotes/origin/dev
+          git merge-base HEAD origin/dev
+          mkdir -p astra-wp03-evidence
+          node --input-type=module <<'NODE'
+          import { execFileSync } from 'node:child_process'
+          import { writeFileSync } from 'node:fs'
+          const git = (...args) => execFileSync('git', args, { encoding: 'utf8' }).trim()
+          const evidence = { productSha: process.env.GITHUB_SHA, productTree: git('rev-parse', 'HEAD^{tree}'), guardBase: git('rev-parse', 'origin/dev'), mergeBase: git('merge-base', 'HEAD', 'origin/dev'), seed: '73ee7fd812d233f898ef79a9378014d4339d9875' }
+          writeFileSync('astra-wp03-evidence/source.json', JSON.stringify(evidence, null, 2) + '\n')
+          process.stdout.write(JSON.stringify(evidence) + '\n')
+          NODE
+      - name: Setup Bun
+        id: setup
+        uses: ./.github/actions/setup-bun
+      - name: Typecheck Sucafina package
+        if: always() && steps.setup.outcome == 'success'
+        working-directory: modules/sucafina
+        run: |
+          set -o pipefail
+          bun typecheck 2>&1 | tee "$GITHUB_WORKSPACE/astra-wp03-evidence/typecheck.log"
+      - name: Guardrails against origin/dev
+        if: always() && steps.setup.outcome == 'success'
+        run: |
+          set -o pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee astra-wp03-evidence/guards.log
+      - name: Upload exact check evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: astra-wp03-checks-${{ github.sha }}-${{ github.run_attempt }}
+          path: astra-wp03-evidence
+          if-no-files-found: error
+          retention-days: 14

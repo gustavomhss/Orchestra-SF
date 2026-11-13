@@ -1,0 +1,57 @@
+--- a/modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts
++++ b/modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts
+@@ -30,7 +30,7 @@
+   const scroll = document.createElement('div'); scroll.className = 'table-scroll'
+   const grid = document.createElement('table'); scroll.append(grid)
+   const preview = document.createElement('button'); preview.type = 'button'; preview.textContent = 'Preview changes'
+-  const save = document.createElement('button'); save.type = 'button'; save.textContent = 'Save changes'; save.disabled = true
++  const save = document.createElement('button'); save.type = 'button'; save.textContent = 'Save valid rows'; save.disabled = true
+   const status = document.createElement('div'); status.id = 'monthly-status-' + crypto.randomUUID(); status.setAttribute('role', 'status'); status.setAttribute('aria-live', 'polite')
+   const dirtyGuard = document.createElement('form'); dirtyGuard.hidden = true
+   const changes = new Map()
+@@ -88,11 +88,20 @@
+       if (!response.ok || result.status !== 'ok' || !Array.isArray(result.value?.rows)) throw new Error('unavailable')
+       invalidCells.clear()
+       const problems = result.value.rows.filter((row) => row.errors.length || !row.result?.ok)
+-      if (action === 'apply') result.value.rows.filter((row) => !row.errors.length && row.result?.ok).forEach((row) => { const saved = rows.find((entry) => entry.id === row.draft.rowId); if (saved) saved.saved = true; for (const [id, cell] of changes) if (cell.rowId === row.draft.rowId) changes.delete(id) })
++      if (action === 'apply') result.value.rows.filter((row) => !row.errors.length && row.result?.ok).forEach((row) => {
++        const saved = rows.find((entry) => entry.id === row.draft.rowId)
++        if (saved) {
++          const revisionKey = versionId + ':' + (saved.id.startsWith('HR:') ? 'hrAF' : 'lines') + ':' + saved.id
++          const revision = result.value.view?.versions?.[revisionKey]?.version
++          if (Number.isSafeInteger(revision)) saved.revision = revision
++          row.draft.cells.forEach((cell) => { const prefix = cell.measure === 'budget' ? 'b' : cell.measure === 'actual' ? 'a' : 'f'; saved.values[prefix + (cell.month - 1)] = cell.text })
++        }
++        for (const [id, cell] of changes) if (cell.rowId === row.draft.rowId) changes.delete(id)
++      })
+       if (!changes.size) delete dirtyGuard.dataset.dirty
+       status.replaceChildren()
+-      const message = document.createElement('p'); message.textContent = problems.length ? 'Some rows need attention. Your entries remain in the grid.' : action === 'preview' ? 'Preview complete. Review the entries and save when ready.' : 'Changes saved. Refresh before editing these rows again.'; status.append(message)
+-      problems.forEach((item) => { const row = rows.find((entry) => entry.id === item.draft.rowId); const detail = document.createElement('p'); detail.textContent = (row?.label || 'Row') + ': ' + (item.errors.some((error) => error.reason === 'row-unavailable') ? 'Row unavailable or changed.' : item.result?.status === 409 ? 'Changed by another user. Refresh and compare before retrying.' : 'Check the values and your access.'); status.append(detail) })
++      const message = document.createElement('p'); message.textContent = problems.length ? 'Some rows need attention. Your entries remain in the grid.' : action === 'preview' ? 'Preview complete. Review the entries and save when ready.' : 'Changes saved. Remaining entries are preserved.'; status.append(message)
++      problems.forEach((item) => { const row = rows.find((entry) => entry.id === item.draft.rowId); const detail = document.createElement('p'); detail.textContent = (row?.label || 'Row') + ': ' + (item.errors.some((error) => error.reason === 'row-unavailable') ? 'Row unavailable or changed.' : item.result?.status === 409 ? 'Changed by another user. Compare the stored values below before retrying.' : 'Check the values and your access.'); status.append(detail) })
+       problems.forEach((item) => item.errors.forEach((error) => {
+         if (!error.cell) return
+         invalidCells.add(idFor(item.draft.rowId, error.cell.measure, error.cell.month))
+@@ -104,7 +113,20 @@
+         const current = stored && Array.isArray(stored[prefix]) ? stored[prefix][cell.month - 1] : undefined
+         const detail = document.createElement('p'); detail.textContent = cell.measure + ' month ' + cell.month + ': current ' + (current === undefined ? 'unavailable' : current === null ? 'empty' : String(current)) + '; your entry ' + cell.text; status.append(detail)
+       }))
+-      approved = action === 'preview' && !problems.length
++      problems.filter((item) => item.result?.status === 409 && item.result.stored).forEach((item) => {
++        const row = rows.find((entry) => entry.id === item.draft.rowId)
++        const revisionKey = versionId + ':' + (item.draft.rowId.startsWith('HR:') ? 'hrAF' : 'lines') + ':' + item.draft.rowId
++        const revision = result.value.view?.versions?.[revisionKey]?.version
++        if (!row || !Number.isSafeInteger(revision)) return
++        const retry = document.createElement('button'); retry.type = 'button'; retry.textContent = 'Keep my entries against the displayed revision'
++        retry.addEventListener('click', () => {
++          row.revision = revision
++          for (const prefix of ['b', 'a', 'f']) if (Array.isArray(item.result.stored[prefix])) item.result.stored[prefix].forEach((value, index) => { if (Object.hasOwn(row.values, prefix + index)) row.values[prefix + index] = value == null ? '' : String(value) })
++          key = crypto.randomUUID(); approved = false; save.disabled = true; status.textContent = 'Your entries are preserved. Preview again against the displayed revision.'; render()
++        })
++        status.append(retry)
++      })
++      approved = action === 'preview' && result.value.rows.some((row) => !row.errors.length && row.result?.ok)
+       if (action === 'apply') { approved = false; key = crypto.randomUUID() }
+     } catch { status.textContent = 'Could not confirm the operation. Your entries are preserved; retry the same request.' }
+     finally { busy = false; preview.disabled = false; measure.disabled = false; save.disabled = !approved; render() }

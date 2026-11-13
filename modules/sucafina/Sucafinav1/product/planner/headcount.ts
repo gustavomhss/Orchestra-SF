@@ -1,11 +1,22 @@
 import type { Actor, Command, Environment, Snapshot } from "../../runtime/contract.ts"
 import { object, rows, text } from "../../runtime/contract.ts"
 import { plannerKeys } from "../../src/nav.ts"
+import { fteDecember } from "../../src/planner-accounts.ts"
+import { plannerHrMonthState } from "./headcount-months.ts"
 import { projectPlanner, simulatePlannerCommand } from "./adapter.ts"
 import { projectPlannerSource } from "./port.ts"
 
 /** Same order as the Headcount screen. These states are not interchangeable. */
 export type HeadcountState = "excluded" | "not-in-roster" | "no-rate" | "new-hire" | "in-roster"
+
+export function headcountStates(position: Record<string, unknown>): readonly HeadcountState[] {
+  if (position.include !== true) return ["excluded"]
+  const states: HeadcountState[] = []
+  if (position.left) states.push("not-in-roster")
+  if (position.hasRate === false) states.push("no-rate")
+  if (position.src === "new") states.push("new-hire")
+  return states.length ? states : ["in-roster"]
+}
 
 export function headcountState(position: Record<string, unknown>): HeadcountState {
   if (position.include !== true) return "excluded"
@@ -23,12 +34,16 @@ export function projectHeadcount(snapshot: Snapshot, actor: Actor, environment: 
   const version = projectPlannerSource(snapshot, actor, versionId)
   if (!version) return undefined
   const summary = object(version.summary)
-  const positions = rows(object(version.hc).positions).map((position) => ({ ...position, state: headcountState(position), revision: snapshot.versions[`${versionId}:positions:${text(position.id)}`]?.version ?? 0 }))
+  const positions = rows(object(version.hc).positions).map((position) => ({ ...position, state: headcountState(position), states: headcountStates(position), revision: snapshot.versions[`${versionId}:positions:${text(position.id)}`]?.version ?? 0 }))
   const domains = [...new Set([...positions.map((position) => text(object(position).domain) || "Unassigned"), ...Object.keys(object(object(version.hc).hrAF)).map((id) => id.replace(/^HR:/, ""))])]
   const privateAccess = actor.roles.some((role) => ["admin", "hr", "finance"].includes(role))
   return {
     versionId,
     locked: version.locked === true,
+    year: version.year,
+    versionName: text(version.name),
+    closedThrough: version.closed,
+    monthlyPlannedFte: plannedFte(positions, version.fteInputsKnown === true),
     syncRevision: snapshot.versions[`${versionId}:positions:sync`]?.version ?? 0,
     increaseRevision: snapshot.versions[`${versionId}:increase`]?.version ?? 0,
     leaderDomainsRevision: snapshot.versions[`${versionId}:leaderDomains`]?.version ?? 0,
@@ -40,24 +55,31 @@ export function projectHeadcount(snapshot: Snapshot, actor: Actor, environment: 
     groups: domains.map((domain) => {
       const line = rows(summary.lines).find((item) => item.id === `HR:${domain}`)
       const members = positions.filter((position) => (text(object(position).domain) || "Unassigned") === domain)
-      const missingRate = members.some((position) => object(position).include === true && object(position).hasRate === false)
-      const missingFx = Array.isArray(summary.warnings) && summary.warnings.length > 0
-      const outlook = Array.isArray(line?.outlook) ? line.outlook : []
-      const actual = Array.isArray(line?.a) ? line.a : []
-      const forecast = Array.isArray(line?.f) ? line.f : []
-      const budget = Array.isArray(line?.b) ? line.b : []
-      const monthly = privateAccess && line ? Array.from({ length: 12 }, (_, index) => missingRate || missingFx || (index < Number(version.closed) ? actual[index] == null : forecast[index] == null && budget[index] == null) || typeof outlook[index] !== "number" || !Number.isFinite(outlook[index]) ? null : outlook[index] as number) : null
+      const months = line ? Array.from({ length: 12 }, (_, index) => plannerHrMonthState(version, line, index + 1)) : []
+      const monthly = line ? months.map((entry) => entry.outlookUsd) : null
+      const budgetMissing = [...new Set(months.flatMap((entry) => entry.budgetMissing))]
       return {
         domain,
         syntheticLineId: `HR:${domain}`,
         revision: snapshot.versions[`${versionId}:hrAF:HR:${domain}`]?.version ?? 0,
+        monthlyPlannedFte: plannedFte(members, version.fteInputsKnown === true),
+        monthlyBudgetUsd: line ? months.map((entry) => entry.budgetUsd) : null,
+        monthlyActualUsd: line ? months.map((entry) => entry.actualUsd) : null,
+        monthlyForecastUsd: line ? months.map((entry) => entry.forecastUsd) : null,
         monthlyOutlookUsd: monthly,
-        costState: !privateAccess ? "restricted" as const : !monthly || monthly.some((value) => value === null) ? "partial" as const : "known" as const,
-        costNote: !privateAccess ? null : missingRate ? "no-rate-is-not-confirmed-savings" as const : missingFx ? "missing-fx-is-not-confirmed-savings" as const : null,
-        positions: members.map((position) => privateAccess ? position : Object.fromEntries(["id", "name", "title", "type", "location", "include", "fte", "start", "end", "domain", "left", "src", "hasRate", "state", "revision"].filter((field) => field in position).map((field) => [field, object(position)[field]]))),
+        outlookSources: line ? months.map((entry) => entry.source) : null,
+        budgetState: budgetMissing.length || !line ? "partial" as const : "known" as const,
+        costState: !monthly || monthly.some((value) => value === null) ? "partial" as const : "known" as const,
+        costNote: budgetMissing.includes("missing-rate") ? "no-rate-is-not-confirmed-savings" as const : budgetMissing.includes("missing-fx") ? "missing-fx-is-not-confirmed-savings" as const : null,
+        positions: members.map((position) => privateAccess ? position : Object.fromEntries(["id", "name", "title", "type", "location", "include", "fte", "start", "end", "domain", "left", "src", "hasRate", "state", "states", "revision"].filter((field) => field in position).map((field) => [field, object(position)[field]]))),
       }
     }),
   }
+}
+
+/** Reuse the existing December selection rule for each requested month. */
+function plannedFte(positions: readonly Record<string, unknown>[], known: boolean) {
+  return Array.from({ length: 12 }, (_, index) => known ? fteDecember(positions.map((position) => ({ include: position.include === true, fte: Number(position.fte), start: Number(position.start) + 11 - index, end: Number(position.end) + 11 - index }))) : null)
 }
 
 export function prepareHeadcountSync(versionId: string, revision: number): Command | undefined {

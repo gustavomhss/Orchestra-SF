@@ -5,6 +5,7 @@ import type { CostCoverageBasis, ScenarioResult } from "../contracts/decisions.t
 import type { ScenarioCompareRequest } from "../contracts/operations.ts"
 import type { DomainPortHost, PlannerPort, PlannerSourceHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
 import { comparePlannerScenarios, plannerComponentDigest } from "./comparison.ts"
 
 type ResolvedScenario = { result: ScenarioResult; coverageRef: string; basis: CostCoverageBasis; projection: DomainProjection; source: Extract<BusinessEvidenceRef, { kind: "record" }> }
@@ -12,7 +13,10 @@ export type PlannerScenarioHost = { resolve: (reference: string, context: Truste
 export type PlannerCriteriaHost = { evaluate: (request: { scenarioRef: string; baselineRef: string; criterionId: string }, context: TrustedDomainContext) => Promise<PortResult<{ criterionId: string; state: "satisfied" | "failed" | "unknown"; reason: string; ruleRef?: string; evidenceRefs: readonly BusinessEvidenceRef[] }>> }
 
 /** Resolve current, authorized case results and recheck their sources before returning. */
-export async function compareScenarios(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios: PlannerScenarioHost; criteria?: PlannerCriteriaHost }, request: ScenarioCompareRequest, binding: TrustedDomainContext): ReturnType<PlannerPort["compareScenarios"]> {
+export async function compareScenarios(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios: PlannerScenarioHost; criteria?: PlannerCriteriaHost }, incoming: ScenarioCompareRequest, binding: TrustedDomainContext): ReturnType<PlannerPort["compareScenarios"]> {
+  const parsed = decodeSfOperationInput("sf_scenario_compare", incoming)
+  if (!parsed.ok) return { status: "needs-input", reason: "invalid-scenario-comparison-input" }
+  const request = parsed.value
   if (new Set(request.criteria).size !== request.criteria.length) return { status: "needs-input", reason: "duplicate-criteria" }
   if (request.scenarioRefs.length !== 2 || request.scenarioRefs[0] === request.scenarioRefs[1]) return { status: "needs-input", reason: "two-distinct-scenarios-required" }
   if (!(await input.host.revalidate(binding))) return { status: "denied", reason: "invalid-binding" }

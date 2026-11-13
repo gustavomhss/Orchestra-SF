@@ -3,6 +3,8 @@ import { object, rows } from "../../runtime/contract.ts"
 import type { Actor, Result, Snapshot, View } from "../../runtime/contract.ts"
 import { domain } from "../../runtime/planner.ts"
 import { plannerKeys } from "../../src/nav.ts"
+import { OPEX_ELEMENTS } from "../../src/planner-accounts.ts"
+import { projectMonthlyGrid } from "./monthly-grid.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
@@ -10,8 +12,9 @@ import { prepareMonthlyDrafts, previewMonthlyDrafts, previewMonthlyOperation } f
 import type { MonthlyDraft, MonthlySpreadPreview } from "./monthly-edit.ts"
 
 export type MonthlyEntityOperation = { collection: "lines" | "projects"; kind: "create" | "edit" | "delete"; id?: string; revision: number; values?: Record<string, unknown> }
-export type MonthlyRequest = { page: "OPEX" | "CAPEX"; versionId: string; drafts?: readonly MonthlyDraft[]; operation?: { rowId: string; revision: number; kind: "annual" | "spread" | "reset"; annual?: number }; entity?: MonthlyEntityOperation }
-export type MonthlyResult = { view: View; rows: readonly { draft: MonthlyDraft; errors: readonly { cell?: MonthlyDraft["cells"][number]; reason: string }[]; result?: Result }[]; operation?: Omit<MonthlySpreadPreview, "command">; entityResult?: { ok: boolean; status?: number; errors?: readonly string[] } }
+export type MonthlySetting = { kind: "closed-through"; revision: number; closed: number } | { kind: "breakdown"; revision: number; element: string; split: boolean }
+export type MonthlyRequest = { page: "OPEX" | "CAPEX"; versionId: string; drafts?: readonly MonthlyDraft[]; operation?: { rowId: string; revision: number; kind: "annual" | "spread" | "reset"; annual?: number }; entity?: MonthlyEntityOperation; setting?: MonthlySetting }
+export type MonthlyResult = { view: View; before?: ReturnType<typeof projectMonthlyGrid>; after?: ReturnType<typeof projectMonthlyGrid>; rows: readonly { draft: MonthlyDraft; errors: readonly { cell?: MonthlyDraft["cells"][number]; reason: string }[]; result?: Result }[]; operation?: Omit<MonthlySpreadPreview, "command">; settingResult?: { ok: boolean; status?: number; errors?: readonly string[] }; entityResult?: { ok: boolean; status?: number; errors?: readonly string[] } }
 
 /** Host-private entrypoint: the browser supplies edits, never the actor or snapshot. */
 export function createPlannerMonthlyHost(input: { host: DomainPortHost; humanAuthorize: (context: TrustedDomainContext, action: "planner.preview" | "planner.apply", payload: MonthlyRequest) => Promise<boolean> }) {
@@ -37,6 +40,14 @@ export function createPlannerMonthlyHost(input: { host: DomainPortHost; humanAut
       if (!actor || !await allowed()) return { commit: false, value: { status: "denied" as const, reason: "monthly-authority-unavailable" } }
       const version = rows(domain.view(snapshot, actor, environment).data.versions).find((item) => item.id === request.versionId)
       if (!version) return { commit: false, value: { status: "needs-input" as const, reason: "planner-version-unavailable" } }
+      if (request.setting) {
+        const setting = request.setting
+        const command: import("../../runtime/contract.ts").Command = { page: "OPEX", action: "save", version: setting.revision, values: { versionId: request.versionId, ...(setting.kind === "closed-through" ? { closed: setting.closed } : { el: setting.element, split: setting.split }) } }
+        const target = action === "planner.preview" ? structuredClone(snapshot) : snapshot
+        const executed = domain.execute(target, actor, command, environment)
+        if (digestSfValue(await identify(snapshot).catch(() => undefined)) !== digestSfValue(actor) || !await allowed()) return { commit: false, value: { status: "denied" as const, reason: "monthly-authority-changed" } }
+        return { commit: action === "planner.apply" && executed.ok, value: { status: "ok" as const, value: { view: monthlyView(domain.view(target, actor, environment), actor), rows: [], settingResult: sanitizeEntityResult(executed) } } }
+      }
       if (request.entity) {
         const entity = request.entity
         if (entity.collection === "projects" && request.page !== "CAPEX" || entity.collection === "lines" && entity.id?.startsWith("HR:")) return { commit: false, value: { status: "needs-input" as const, reason: "entity-unavailable" } }
@@ -81,7 +92,7 @@ export function createPlannerMonthlyHost(input: { host: DomainPortHost; humanAut
       if (action === "planner.preview") {
         const preview = previewMonthlyDrafts(snapshot, actor, environment, request.page, request.versionId, admitted.map((row) => row.draft))
         if (digestSfValue(await identify(snapshot).catch(() => undefined)) !== digestSfValue(actor) || !await allowed()) return { commit: false, value: { status: "denied" as const, reason: "monthly-authority-changed" } }
-        return { commit: false, value: { status: "ok" as const, value: { view: monthlyView(preview.view, actor), rows: prepared.map((row) => ({ draft: row.draft, errors: row.errors, ...(row.command && preview.rows[admitted.indexOf(row)]?.result ? { result: sanitizeMonthlyResult(preview.rows[admitted.indexOf(row)]!.result!, snapshot, actor, environment, request.versionId, row.draft.rowId) } : {}) })) } } }
+        return { commit: false, value: { status: "ok" as const, value: { view: monthlyView(preview.view, actor), before: preview.before, after: preview.after, rows: prepared.map((row) => ({ draft: row.draft, errors: row.errors, ...(row.command && preview.rows[admitted.indexOf(row)]?.result ? { result: sanitizeMonthlyResult(preview.rows[admitted.indexOf(row)]!.result!, snapshot, actor, environment, request.versionId, row.draft.rowId) } : {}) })) } } }
       }
       const results = prepared.map((row) => {
         if (!row.command) return { ...row, result: undefined }
@@ -95,7 +106,7 @@ export function createPlannerMonthlyHost(input: { host: DomainPortHost; humanAut
     }, { signal: http.signal }).catch(() => ({ status: "unavailable" as const, reason: "monthly-storage-unavailable" }))
     if (action === "planner.apply" && result.status === "ok" && !await allowed()) return { status: "unavailable" as const, reason: "monthly-apply-outcome-requires-reconciliation" }
     if (!await allowed()) {
-      const applied = action === "planner.apply" && result.status === "ok" && (result.value.entityResult?.ok === true || result.value.rows.some((row) => row.result?.ok === true) || !!result.value.operation && !result.value.operation.errors.length)
+      const applied = action === "planner.apply" && result.status === "ok" && (result.value.settingResult?.ok === true || result.value.entityResult?.ok === true || result.value.rows.some((row) => row.result?.ok === true) || !!result.value.operation && !result.value.operation.errors.length)
       return applied ? { status: "unavailable" as const, reason: "monthly-apply-outcome-requires-reconciliation" } : { status: "denied" as const, reason: "monthly-authority-changed" }
     }
     return result
@@ -103,19 +114,26 @@ export function createPlannerMonthlyHost(input: { host: DomainPortHost; humanAut
   return { preview: (request: MonthlyRequest, context: TrustedDomainContext) => run(request, context, "planner.preview"), apply: (request: MonthlyRequest, context: TrustedDomainContext) => run(request, context, "planner.apply") }
 }
 
-function validMonthlyRequest(request: MonthlyRequest) {
-  if (!request || Object.keys(request).some((key) => !["page", "versionId", "drafts", "operation", "entity"].includes(key)) || (request.page !== "OPEX" && request.page !== "CAPEX") || typeof request.versionId !== "string" || !request.versionId.trim()) return false
+export function validMonthlyRequest(request: MonthlyRequest) {
+  if (!request || Object.keys(request).some((key) => !["page", "versionId", "drafts", "operation", "entity", "setting"].includes(key)) || (request.page !== "OPEX" && request.page !== "CAPEX") || typeof request.versionId !== "string" || !request.versionId.trim()) return false
+  if ([request.entity, request.operation, request.drafts, request.setting].filter((value) => value !== undefined).length !== 1) return false
+  if (request.setting) {
+    const setting = request.setting
+    if (request.page !== "OPEX" || !Number.isSafeInteger(setting.revision) || setting.revision < 0) return false
+    if (setting.kind === "closed-through") return Object.keys(setting).every((key) => ["kind", "revision", "closed"].includes(key)) && Number.isInteger(setting.closed) && setting.closed >= 0 && setting.closed <= 12
+    return setting.kind === "breakdown" && Object.keys(setting).every((key) => ["kind", "revision", "element", "split"].includes(key)) && OPEX_ELEMENTS.includes(setting.element as (typeof OPEX_ELEMENTS)[number]) && setting.element !== "hr" && typeof setting.split === "boolean"
+  }
   if (request.entity) {
     const entity = request.entity
     if (Object.keys(entity).some((key) => !["collection", "kind", "id", "revision", "values"].includes(key)) || !["lines", "projects"].includes(entity.collection) || !["create", "edit", "delete"].includes(entity.kind) || !Number.isSafeInteger(entity.revision) || entity.revision < 0) return false
     if (entity.kind === "create" ? entity.id !== undefined : typeof entity.id !== "string" || !entity.id.trim()) return false
     const fields = entity.collection === "lines" ? ["name", "desc", "owner", "entity", "alloc", "cls", "cur", "annual", "b", "a", "f", "el", "proj", "domain", "month", "value"] : ["name", "desc", "owner", "code"]
     if (entity.kind === "delete") return entity.values === undefined && !request.drafts && !request.operation
-    if (!entity.values || Object.keys(entity.values).some((key) => !fields.includes(key) && !(entity.collection === "lines" && /^[baf](?:[0-9]|1[01])$/.test(key))) || !validEntityValues(entity.values)) return false
+    if (!entity.values || typeof entity.values !== "object" || Array.isArray(entity.values) || Object.keys(entity.values).some((key) => !fields.includes(key) && !(entity.collection === "lines" && /^[baf](?:[0-9]|1[01])$/.test(key))) || !validEntityValues(entity.values)) return false
     return !request.drafts && !request.operation
   }
   if (request.operation) return Object.keys(request.operation).every((key) => ["rowId", "revision", "kind", "annual"].includes(key)) && typeof request.operation.rowId === "string" && !!request.operation.rowId.trim() && Number.isSafeInteger(request.operation.revision) && request.operation.revision >= 0 && ["annual", "spread", "reset"].includes(request.operation.kind) && (request.operation.kind !== "annual" || typeof request.operation.annual === "number" && Number.isFinite(request.operation.annual)) && !request.drafts
-  return Array.isArray(request.drafts) && request.drafts.length > 0 && request.drafts.every((draft) => !!draft && Object.keys(draft).every((key) => ["rowId", "revision", "cells"].includes(key)) && typeof draft.rowId === "string" && Number.isSafeInteger(draft.revision) && draft.revision >= 0 && Array.isArray(draft.cells) && draft.cells.length > 0 && draft.cells.every((cell) => !!cell && Object.keys(cell).every((key) => ["measure", "month", "text"].includes(key)) && ["budget", "actual", "forecast"].includes(cell.measure) && Number.isInteger(cell.month) && cell.month >= 1 && cell.month <= 12 && typeof cell.text === "string"))
+  return Array.isArray(request.drafts) && request.drafts.length > 0 && request.drafts.length <= 500 && request.drafts.every((draft) => !!draft && Object.keys(draft).every((key) => ["rowId", "revision", "cells"].includes(key)) && typeof draft.rowId === "string" && Number.isSafeInteger(draft.revision) && draft.revision >= 0 && Array.isArray(draft.cells) && draft.cells.length > 0 && draft.cells.length <= 36 && draft.cells.every((cell) => !!cell && Object.keys(cell).every((key) => ["measure", "month", "text"].includes(key)) && ["budget", "actual", "forecast"].includes(cell.measure) && Number.isInteger(cell.month) && typeof cell.text === "string"))
 }
 
 function validEntityValues(values: Record<string, unknown>) {

@@ -62,16 +62,19 @@ test("headcount domain cost follows rate, months and uplift while AF stays indep
     const base = projectHeadcount(snapshot, hr, environment, "v1")
     expect(base?.groups.find((group) => group.domain === "IT")?.monthlyOutlookUsd).toEqual([0, 0, 0, 0, 0, 0, 10000, 10000, 10000, 10000, 10000, 10000])
     expect(base?.plannedDecemberFte).toBe(1)
-    const version = (snapshot.data.versions as { hc: { inc: number; incMonth: number } }[])[0]!
+    const version = (snapshot.data.versions as { closed: number; hc: { inc: number; incMonth: number } }[])[0]!
     version.hc.inc = 10
     version.hc.incMonth = 10
     const uplifted = projectHeadcount(snapshot, hr, environment, "v1")
     expect(uplifted?.groups.find((group) => group.domain === "IT")?.monthlyOutlookUsd?.slice(9)).toEqual([11000, 11000, 11000])
     const command = prepareHrDomainActualForecast("v1", "Finance", 0, { a0: 500, f1: 600 })!
-    expect(domain.execute(snapshot, hr, command, environment).ok).toBe(true)
+    expect(domain.execute(snapshot, hr, command, environment)).toMatchObject({ ok: false, status: 403 })
+    const finance = { id: "finance", roles: ["finance"], canWrite: true, assigned: [], domains: [] }
+    expect(domain.execute(snapshot, finance, command, environment).ok).toBe(true)
+    version.closed = 1
     const withHrAf = projectHeadcount(snapshot, hr, environment, "v1")
     expect(withHrAf?.groups.find((group) => group.domain === "Finance")?.monthlyOutlookUsd?.slice(0, 2)).toEqual([500, 600])
-    expect(withHrAf?.groups.find((group) => group.domain === "IT")?.monthlyOutlookUsd?.slice(0, 2)).toEqual([0, 0])
+    expect(withHrAf?.groups.find((group) => group.domain === "IT")?.monthlyOutlookUsd?.slice(0, 2)).toEqual([null, 0])
     expect(await persistence.transaction("planner", async (value) => ({ commit: false, value }))).toEqual(before)
   } finally { await persistence.dispose(); await rm(directory, { recursive: true, force: true }) }
 })

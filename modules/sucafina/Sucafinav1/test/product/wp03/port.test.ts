@@ -44,15 +44,15 @@ const initial = (): Snapshot => ({
 test("headcount projection follows domain visibility and increase preview is disposable", () => {
   const snapshot = initial()
   const version = (snapshot.data.versions as Record<string, unknown>[])[0]!
-  version.hc = { positions: [{ id: "person", name: "Private Person", include: true, fte: 1, start: 1, end: 12, type: "Employee", location: "Brazil", domain: "IT", rateId: "rate" }], rates: [{ id: "rate", name: "Employee", locs: "Brazil", annual: 120000, cur: "USD" }], hrAF: {}, inc: 0, incMonth: 1 }
+  version.hc = { positions: [{ id: "person", name: "Private Person", include: true, fte: 1, start: 1, end: 12, type: "Employee", location: "Brazil", domain: "IT", rateId: "rate", talentReview: "Private classification", outlook: "Private talent outlook" }], rates: [{ id: "rate", name: "Employee", locs: "Brazil", annual: 120000, cur: "USD" }], hrAF: {}, inc: 0, incMonth: 1 }
   const environment = { at: "2026-11-13T00:00:00Z", id: () => "unused", directory: [] }
   expect(projectHeadcount(snapshot, { id: "none", roles: [], canWrite: false }, environment, "v0")).toBeUndefined()
   const viewer = projectHeadcount(snapshot, { id: "viewer", roles: ["viewer"], canWrite: false }, environment, "v0")
-  expect(viewer?.groups[0]?.monthlyOutlookUsd).toBeNull()
+  expect(viewer?.groups[0]?.monthlyOutlookUsd?.slice(9)).toEqual([10000, 10000, 10000])
   const viewerSource = projectPlannerSource(snapshot, { id: "viewer", roles: ["viewer"], canWrite: false }, "v0")
-  expect(viewerSource?.restrictedHr).toBe(true)
-  expect(JSON.stringify(viewerSource)).not.toContain("120000")
-  expect(JSON.stringify(viewerSource)).not.toContain("HR:IT")
+  expect(viewerSource?.restrictedHr).toBe(false)
+  expect(JSON.stringify(viewerSource)).toContain("HR:IT")
+  for (const privateField of ['"rates"', '"rateId"', "Private classification", "Private talent outlook"]) expect(JSON.stringify(viewerSource)).not.toContain(privateField)
   const finance = projectHeadcount(snapshot, actor, environment, "v0")
   expect(finance?.plannedDecemberFte).toBe(1)
   expect(Array.isArray(finance?.groups[0]?.monthlyOutlookUsd)).toBe(true)
@@ -145,14 +145,14 @@ test("forecast port compares the real engine, and detects source changes", async
     expect(waterfall.value.presentation.series.find((series) => series.role === "contribution")?.valueIds).toHaveLength(12)
   }
   const partialWaterfall = plannerDifferencePresentation({ ...result.value, candidate: { ...result.value.candidate, components: result.value.candidate.components.slice(1) } }, "BI03")
-  expect(partialWaterfall).toMatchObject({ status: "ok", value: { presentation: { waterfall: { reconciliation: "unavailable" } } } })
+  expect(partialWaterfall).toMatchObject({ status: "ok", value: { presentation: { waterfall: { reconciliation: "unreconciled" } } } })
   const breakdown = comparePlannerVersions(result.value.baseline, result.value.candidate)
   expect(breakdown.status).toBe("ok")
   expect(breakdown.rows.find((row) => row.id === "line:11")).toMatchObject({ state: "matched", difference: 12000 })
   expect(breakdown.rows.find((row) => row.id === "line:11")).toMatchObject({ evidenceStates: ["confirmed"], explanation: "The projected amount changed; this comparison does not identify a cause." })
   const changes = comparePlannerVersions({ ...result.value.baseline, components: result.value.baseline.components.slice(0, 1) }, { ...result.value.candidate, components: result.value.candidate.components.slice(1, 2) })
   expect(changes.rows.map((row) => row.state)).toEqual(["removed", "added"])
-  expect(changes.rows.every((row) => row.difference === null)).toBe(true)
+  expect(changes.rows.map((row) => row.difference)).toEqual([-40000, 40000])
   expect(result.value.comparison.comparisonStatus).toBe("conditioned")
   expect(result.value.completeDifference).toBeNull()
   expect(result.value.baseline.components.reduce((sum, component) => sum + (component.amount ?? 0), 0)).toBe(590000)

@@ -67,7 +67,58 @@ test("monthly viewer response excludes HR values", async () => {
   } finally { await fixture.dispose() }
 })
 
-async function monthlyFixture(role: "admin" | "viewer" = "admin") {
+test("monthly settings preserve finance closed-through on locked plans and reject structural changes", async () => {
+  const fixture = await monthlyFixture("finance")
+  try {
+    await fixture.persistence.transaction("planner", async (snapshot) => {
+      const version = (snapshot.data.versions as { locked: boolean }[])[0]
+      version.locked = true
+      return { commit: true, value: undefined }
+    })
+    const closed = { page: "OPEX" as const, versionId: "v1", setting: { kind: "closed-through" as const, revision: 0, closed: 3 } }
+    const preview = await fixture.monthly.preview(closed, await fixture.admit("planner.preview", closed))
+    expect(preview).toMatchObject({ status: "ok", value: { settingResult: { ok: true } } })
+    const unchanged = await fixture.persistence.transaction("planner", async (snapshot) => ({ commit: false, value: (snapshot.data.versions as { closed: number }[])[0].closed }))
+    expect(unchanged).toBe(0)
+    expect(await fixture.monthly.apply(closed, await fixture.admit("planner.apply", closed))).toMatchObject({ status: "ok", value: { settingResult: { ok: true } } })
+    expect(await fixture.monthly.apply(closed, await fixture.admit("planner.apply", closed))).toMatchObject({ status: "ok", value: { settingResult: { ok: false, status: 409 } } })
+    const structural = { page: "OPEX" as const, versionId: "v1", setting: { kind: "breakdown" as const, revision: 0, element: "licenses", split: true } }
+    expect(await fixture.monthly.apply(structural, await fixture.admit("planner.apply", structural))).toMatchObject({ status: "ok", value: { settingResult: { ok: false, status: 403 } } })
+  } finally { await fixture.dispose() }
+})
+
+test("parallel independent rows survive and one stale row does not discard valid or invalid local drafts", async () => {
+  const fixture = await monthlyFixture()
+  try {
+    await fixture.persistence.transaction("planner", async (snapshot) => {
+      const version = (snapshot.data.versions as { lines: unknown[] }[])[0]
+      version.lines.push({ id: "other", sec: "opex", el: "licenses", cur: "USD", annual: 1200, b: Array(12).fill(100), f: [] })
+      return { commit: true, value: undefined }
+    })
+    const input = (rowId: string, text: string) => ({ page: "OPEX" as const, versionId: "v1", drafts: [{ rowId, revision: 0, cells: [{ measure: "forecast" as const, month: 1, text }] }] })
+    const first = input("line", "42")
+    const second = input("other", "70")
+    const contexts = await Promise.all([fixture.admit("planner.apply", first), fixture.admit("planner.apply", second)])
+    const applied = await Promise.all([fixture.monthly.apply(first, contexts[0]), fixture.monthly.apply(second, contexts[1])])
+    expect(applied.every((result) => result.status === "ok" && result.value.rows[0].result?.ok)).toBe(true)
+    const batch = { page: "OPEX" as const, versionId: "v1", drafts: [
+      { rowId: "line", revision: 0, cells: [{ measure: "forecast" as const, month: 2, text: "99" }] },
+      { rowId: "other", revision: 1, cells: [{ measure: "forecast" as const, month: 2, text: "0" }] },
+      { rowId: "other", revision: 2, cells: [{ measure: "forecast" as const, month: 13, text: "bad" }] },
+    ] }
+    const result = await fixture.monthly.apply(batch, await fixture.admit("planner.apply", batch))
+    expect(result.status).toBe("ok")
+    if (result.status !== "ok") return
+    expect(result.value.rows[0]).toMatchObject({ draft: { cells: [{ text: "99" }] }, result: { ok: false, status: 409, stored: { f: [42, null, null, null, null, null, null, null, null, null, null, null] } } })
+    expect(result.value.rows[1].result).toMatchObject({ ok: true })
+    expect(result.value.rows[2]).toMatchObject({ draft: { cells: [{ text: "bad" }] }, errors: [{ reason: "invalid-month" }] })
+    const after = await fixture.persistence.transaction("planner", async (snapshot) => ({ commit: false, value: (snapshot.data.versions as { lines: { id: string; f: (number | null)[] }[] }[])[0].lines }))
+    expect(after.find((line) => line.id === "line")!.f.slice(0, 2)).toEqual([42, null])
+    expect(after.find((line) => line.id === "other")!.f.slice(0, 2)).toEqual([70, 0])
+  } finally { await fixture.dispose() }
+})
+
+async function monthlyFixture(role: "admin" | "viewer" | "finance" = "admin") {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-planner-operations-"))
   const persistence = await openLocalStore(directory)
   await persistence.transaction("planner", async (snapshot) => {
@@ -80,6 +131,7 @@ async function monthlyFixture(role: "admin" | "viewer" = "admin") {
   const monthly = createPlannerMonthlyHost({ host, humanAuthorize: async (context, action, payload) => context.kind === "ui" && ui.matchesIntent(context, `sf-human:${action}`, digestSfValue(payload)) && await ui.revalidate(context) })
   return {
     monthly,
+    persistence,
     admit: async (action: "planner.preview" | "planner.apply", payload: unknown) => {
       const digest = digestSfValue(payload)
       const admitted = await ui.admit(new Request("https://example.test", { method: "POST", headers: { authorization: "planner-user" } }), `sf-human:${action}`, digest)

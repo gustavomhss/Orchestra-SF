@@ -33,16 +33,17 @@ export function createPlannerHeadcountHost(input: { host: DomainPortHost; humanA
   }
   const read = async (versionId: string, context: TrustedDomainContext): Promise<PortResult<HeadcountBody>> => {
     const http = input.host.requestFor(context)
-    if (context.kind !== "ui" || !http || http.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "headcount-authority-unavailable" }
+    if (context.kind !== "ui" || !http || http.signal.aborted || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "headcount-authority-unavailable" }
     if (typeof versionId !== "string" || !versionId.trim()) return { status: "needs-input", reason: "invalid-version-id" }
-    const environment = await input.host.environment(http)
+    const environment = await input.host.environment(http).catch(() => undefined)
+    if (!environment) return { status: "unavailable", reason: "headcount-environment-unavailable" }
     const load = () => input.host.persistence.transaction("planner", async (snapshot) => {
       const actor = await identify(snapshot, http, context)
       return { commit: false, value: actor ? projectHeadcount(snapshot, actor, environment, versionId) : undefined }
     }, { signal: http.signal }).catch(() => undefined)
     const current = await load()
     const latest = await load()
-    if (!current || !latest || digestSfValue(current) !== digestSfValue(latest) || http.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "headcount-authority-unavailable" }
+    if (!current || !latest || digestSfValue(current) !== digestSfValue(latest) || http.signal.aborted || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "headcount-authority-unavailable" }
     return { status: "ok", value: current }
   }
   const run = async (incoming: HeadcountRequest, context: TrustedDomainContext, gate: "planner.preview" | "planner.apply"): Promise<PortResult<HeadcountOutcome>> => {

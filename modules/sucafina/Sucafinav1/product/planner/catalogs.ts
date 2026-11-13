@@ -27,17 +27,27 @@ export function previewPlannerCatalog(snapshot: Snapshot, actor: Actor, environm
   if (!before || command.page === "FX rates" && command.values.versionId !== versionId) return undefined
   const copy = structuredClone(snapshot)
   const sequence = { value: 0 }
-  const result = domain.execute(copy, actor, command, { ...environment, id: () => `catalog-preview-${sequence.value++}` })
+  const occupied = new Set([
+    ...before.shared.entities.map((record) => record.id), ...before.shared.allocations.map((record) => record.id),
+    ...before.fx.rates.map((record) => record.id), ...Object.keys(copy.versions).map((key) => key.split(":").at(-1)),
+  ])
+  const result = domain.execute(copy, actor, command, { ...environment, id: () => {
+    while (occupied.has(`catalog-preview-${sequence.value}`)) sequence.value++
+    const id = `catalog-preview-${sequence.value++}`
+    occupied.add(id)
+    return id
+  } })
   const after = result.ok ? plannerCatalogs(copy, actor, environment, versionId) : undefined
   return { before, ...(after ? { after } : {}), result: result.ok ? { ok: true as const, warnings: result.warnings ?? [] } : { ok: false as const, status: result.status, errors: result.errors ?? [] } }
 }
 
 /** Keep missing rates explicit while preserving the domain's numeric fallback. */
 export function plannerCurrencyComposition(snapshot: Snapshot, actor: Actor, environment: Environment, versionId: string, amount: number, currency: string) {
-  if (!Number.isFinite(amount) || !currency.trim()) return undefined
+  const code = currency.trim().toUpperCase()
+  if (!Number.isFinite(amount) || !/^[A-Z]{3}$/.test(code)) return undefined
   const catalogs = plannerCatalogs(snapshot, actor, environment, versionId)
   if (!catalogs) return undefined
-  const rate = currency.toUpperCase() === "USD" ? 1 : catalogs.fx.rates.find((entry) => entry.currency === currency)?.rate ?? null
-  const result = usdAmount(amount, currency, rate)
-  return { amount, currency, rate, usd: result.warning ? null : result.usd, legacyUsd: result.usd, missingRate: !!result.warning }
+  const rate = code === "USD" ? 1 : catalogs.fx.rates.find((entry) => entry.currency === code)?.rate ?? null
+  const result = usdAmount(amount, code, rate)
+  return { amount, currency: code, rate, usd: result.warning ? null : result.usd, legacyUsd: result.usd, missingRate: !!result.warning }
 }
