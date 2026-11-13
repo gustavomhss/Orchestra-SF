@@ -3886,7 +3886,7 @@ const Endpoint54_0 = (raw: RawClient["server.sucafina"]) => () =>
 type Endpoint54_1Request = Parameters<RawClient["server.sucafina"]["sucafina.state"]>[0]
 type Endpoint54_1Input = {
   readonly surface: Endpoint54_1Request["params"]["surface"]
-  readonly page: Endpoint54_1Request["query"]["page"]
+  readonly page?: Endpoint54_1Request["query"]["page"]
   readonly year?: Endpoint54_1Request["query"]["year"]
   readonly own?: Endpoint54_1Request["query"]["own"]
   readonly month?: Endpoint54_1Request["query"]["month"]
@@ -3919,7 +3919,7 @@ const Endpoint54_1 = (raw: RawClient["server.sucafina"]) => (input: Endpoint54_1
   raw["sucafina.state"]({
     params: { surface: input["surface"] },
     query: {
-      page: input["page"],
+      ...(input["page"] === undefined ? {} : { page: input["page"] }),
       ...(input["year"] === undefined ? {} : { year: input["year"] }),
       ...(input["own"] === undefined ? {} : { own: input["own"] }),
       ...(input["month"] === undefined ? {} : { month: input["month"] }),

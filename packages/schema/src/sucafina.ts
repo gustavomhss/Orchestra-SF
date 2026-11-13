@@ -24,11 +24,14 @@ export const Status = Schema.Struct({
   authenticated: Schema.Boolean,
   enrollmentRequired: Schema.Boolean,
   surfaces: Schema.Array(Surface),
+  hostAuthenticated: Schema.optional(Schema.Boolean),
+  principal: Schema.optional(Schema.Struct({ id: Schema.String, name: Schema.String })),
+  sessionScope: Schema.optional(Schema.String.check(Schema.isPattern(/^[0-9a-f]{64}(?![\s\S])/))),
 })
 export type Status = typeof Status.Type
 
 export const PageQuery = Schema.Struct({
-  page: Schema.String,
+  page: Schema.optional(Schema.String),
   year: Schema.optional(Schema.String),
   own: Schema.optional(Schema.String),
   month: Schema.optional(Schema.String),

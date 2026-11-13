@@ -14014,12 +14014,15 @@ export type SucafinaStatusOutput = {
   readonly authenticated: boolean
   readonly enrollmentRequired: boolean
   readonly surfaces: ReadonlyArray<"dashboard" | "planner" | "procurement">
+  readonly hostAuthenticated?: boolean | undefined
+  readonly principal?: { readonly id: string; readonly name: string } | undefined
+  readonly sessionScope?: string | undefined
 }
 
 export type SucafinaStateInput = {
   readonly surface: { readonly surface: "dashboard" | "planner" | "procurement" }["surface"]
-  readonly page: {
-    readonly page: string
+  readonly page?: {
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14049,7 +14052,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["page"]
   readonly year?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14079,7 +14082,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["year"]
   readonly own?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14109,7 +14112,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["own"]
   readonly month?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14139,7 +14142,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["month"]
   readonly version?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14169,7 +14172,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["version"]
   readonly owner?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14199,7 +14202,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["owner"]
   readonly class?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14229,7 +14232,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["class"]
   readonly q?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14259,7 +14262,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["q"]
   readonly filter?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14289,7 +14292,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["filter"]
   readonly status?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14319,7 +14322,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["status"]
   readonly priority?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14349,7 +14352,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["priority"]
   readonly request?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14379,7 +14382,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["request"]
   readonly supplier?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14409,7 +14412,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["supplier"]
   readonly mode?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14439,7 +14442,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["mode"]
   readonly risk?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14469,7 +14472,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["risk"]
   readonly topicStatus?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14499,7 +14502,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["topicStatus"]
   readonly memberStatus?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14529,7 +14532,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["memberStatus"]
   readonly projectStatus?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14559,7 +14562,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["projectStatus"]
   readonly projectRisk?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14589,7 +14592,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["projectRisk"]
   readonly stakeholderPriority?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14619,7 +14622,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["stakeholderPriority"]
   readonly opsMonth?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14649,7 +14652,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["opsMonth"]
   readonly tab?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14679,7 +14682,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["tab"]
   readonly execYear?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14709,7 +14712,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["execYear"]
   readonly opsYear?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14739,7 +14742,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["opsYear"]
   readonly secYear?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14769,7 +14772,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["secYear"]
   readonly executiveMonth?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14799,7 +14802,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["executiveMonth"]
   readonly operationsMonth?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined
@@ -14829,7 +14832,7 @@ export type SucafinaStateInput = {
     readonly securityMonth?: string | undefined
   }["operationsMonth"]
   readonly securityMonth?: {
-    readonly page: string
+    readonly page?: string | undefined
     readonly year?: string | undefined
     readonly own?: string | undefined
     readonly month?: string | undefined

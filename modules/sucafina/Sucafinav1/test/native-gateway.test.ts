@@ -370,3 +370,20 @@ for (const entry of ["adapter", "direct"] as const) {
     }
   }
 }
+
+// Schema accepts an omitted page; the authorized domain chooses the initial screen.
+test.each([
+  { token: "session-admin", id: ADMIN_ID, roles: ["admin"] },
+  { token: "session-leader", id: LEADER_ID, roles: ["domain leader"] },
+])("an omitted page uses the first permitted page for $token", async (session) => {
+  const app = installation()
+  const response = await app.handler(new Request(`${ORIGIN}${MOUNT}/dashboard/state?year=2025&own=2025&month=3`, {
+    headers: { authorization: `Bearer ${session.token}` },
+  }))
+  const body = await readState(response)
+  const permitted = dashboardPages({ roles: session.roles })
+  expect(permitted.length).toBeGreaterThan(0)
+  expect(body.pages).toEqual(permitted)
+  expect(body.page).toBe(permitted[0])
+  expect(body.actor.id).toBe(session.id)
+})
