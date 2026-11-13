@@ -17,6 +17,7 @@ import { handleSfViews } from "./views-http.ts"
 import { personalViewsScript, personalViewsWidget } from "../ui/personal-views.ts"
 import { documentSearchScript } from "../ui/document-search.ts"
 import { portfolioHistory, portfolioScript, portfolioWidget } from "../ui/portfolio.ts"
+import { decisionApplyForms, decisionApplyScript } from "../ui/decision-apply.ts"
 
 /** Mount in the existing authenticated application; authority remains private to the host. */
 export function createSfWorkbenchHttp(input: { origin: string; mount: string; runtime: () => SfHostServices | undefined }) {
@@ -156,9 +157,10 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
       const workOutput = operation === "sf_work_list" && result?.status === "ok" ? decodeSfOperationOutput("sf_work_list", result.result) : undefined
       const routineOutput = operation === "sf_routine_status" && result?.status === "ok" ? decodeSfOperationOutput("sf_routine_status", result.result) : undefined
       const searchOutput = operation === "sf_knowledge_search" && result?.status === "ok" ? decodeSfOperationOutput("sf_knowledge_search", result.result) : undefined
-      const body = caseOutput?.ok ? decisionDesk(caseOutput.value) + decisionEditForm(caseOutput.value) + decisionChoiceForm(caseOutput.value) + portfolioHistory(caseOutput.value) + await forecastAnalysisForm(caseOutput.value, runtime) : workOutput?.ok ? workList(workOutput.value) : routineOutput?.ok ? routineStatus(routineOutput.value) : searchOutput?.ok ? `<h2>Search results</h2>${searchOutput.value.matches.length ? `<ul>${searchOutput.value.matches.map((item) => `<li data-document-result data-ref="${esc(JSON.stringify(item.documentRef))}"><strong data-document-title>Checking source…</strong><p data-document-text>${esc(item.text)}</p></li>`).join("")}</ul>` : "<p>No accessible results.</p>"}${searchOutput.value.limitations.map((item) => `<p>${esc(item)}</p>`).join("")}` : forms
+      const body = caseOutput?.ok ? decisionDesk(caseOutput.value) + decisionEditForm(caseOutput.value) + decisionChoiceForm(caseOutput.value) + decisionApplyForms(caseOutput.value) + portfolioHistory(caseOutput.value) + await forecastAnalysisForm(caseOutput.value, runtime) : workOutput?.ok ? workList(workOutput.value) : routineOutput?.ok ? routineStatus(routineOutput.value) : searchOutput?.ok ? `<h2>Search results</h2>${searchOutput.value.matches.length ? `<ul>${searchOutput.value.matches.map((item) => `<li data-document-result data-ref="${esc(JSON.stringify(item.documentRef))}"><strong data-document-title>Checking source…</strong><p data-document-text>${esc(item.text)}</p></li>`).join("")}</ul>` : "<p>No accessible results.</p>"}${searchOutput.value.limitations.map((item) => `<p>${esc(item)}</p>`).join("")}` : forms
       if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
-      const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, `<p><a href="?sf=workbench">Workbench</a></p>${body}`), "").replace("</script>", `${decisionCreateScript}${decisionEditScript}${decisionChoiceScript}${forecastAnalysisScript}${personalViewsScript}${documentSearchScript}${portfolioScript}</script>`)
+      const script = `;(() => { const initialize = () => {${decisionCreateScript}${decisionEditScript}${decisionChoiceScript}${decisionApplyScript}${forecastAnalysisScript}${personalViewsScript}${documentSearchScript}${portfolioScript}}; initialize(); const root = document.querySelector('#content'); if (root) new MutationObserver(initialize).observe(root, { childList: true, subtree: true }) })();`
+      const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, `<p><a href="?sf=workbench">Workbench</a></p>${body}`), "").replace("</script>", `${script}</script>`)
       return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
     } finally { runtime.ui.finish(admitted.value) }
   }

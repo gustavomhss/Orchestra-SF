@@ -3,6 +3,7 @@ export const importPreviewWidget = `<details><summary>Import with preview</summa
 
 export const importPreviewScript = `
 document.querySelectorAll('[data-import-preview]').forEach((section) => {
+  if (section.dataset.sfImportReady) return; section.dataset.sfImportReady = 'true'
   const surface = document.body.dataset.surface; if (!['dashboard', 'planner'].includes(surface)) return
   const status = section.querySelector('[role=status]'); const form = section.querySelector('[data-import-form]'); const select = form.elements.namedItem('target')
   const detail = section.querySelector('[data-import-detail]'); const apply = section.querySelector('[data-import-apply]'); const targetsButton = section.querySelector('[data-import-targets]')

@@ -22,6 +22,7 @@ export async function forecastAnalysisForm(projection: AuthorizedCaseProjection,
 
 export const forecastAnalysisScript = `
 document.querySelectorAll('[data-analysis-history]').forEach((section) => {
+  if (section.dataset.sfAnalysisHistoryReady) return; section.dataset.sfAnalysisHistoryReady = 'true'
   const status = section.querySelector('[role=status]')
   const output = section.querySelector('[data-results]')
   let timer
@@ -31,6 +32,7 @@ document.querySelectorAll('[data-analysis-history]').forEach((section) => {
     const result = await response.json(); if (!response.ok || result.status !== 'ok') throw new Error('unavailable'); return result.value
   }
   const load = async () => {
+    if (!section.isConnected) return
     try {
       const runs = await send({ action: 'list', caseRef: JSON.parse(section.dataset.case) })
       if (section.querySelector('form[data-dirty]')) { clearTimeout(timer); timer = setTimeout(load, 3000); return }
@@ -71,12 +73,14 @@ document.querySelectorAll('[data-analysis-history]').forEach((section) => {
   section.addEventListener('sf-analysis-refresh', load); load()
 })
 document.querySelectorAll('[data-forecast-analysis]').forEach((form) => {
+  if (form.dataset.sfForecastReady) return; form.dataset.sfForecastReady = 'true'
   const config = JSON.parse(form.dataset.config)
   const status = form.querySelector('[role=status]')
   const cancel = form.querySelector('[data-analysis-cancel]')
   const button = form.querySelector('button[type=submit]')
   let runRef
   let timer
+  form.addEventListener('input', () => { form.dataset.dirty = 'true' })
   const send = async (mode, payload) => {
     const url = new URL(location.href); url.search = '?sf=' + mode
     const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() }, body: JSON.stringify(payload) })
@@ -85,7 +89,7 @@ document.querySelectorAll('[data-forecast-analysis]').forEach((form) => {
     return result.value
   }
   const refresh = async () => {
-    if (!runRef) return
+    if (!form.isConnected || !runRef) return
     try {
       const run = await send('workbench-analysis', { action: 'read', runRef })
       status.textContent = 'Analysis: ' + run.state + (run.outputRef ? '. The result is being prepared for display.' : '.')
@@ -107,7 +111,7 @@ document.querySelectorAll('[data-forecast-analysis]').forEach((form) => {
       attempted = true
       const started = await send('workbench-analysis', { action: 'start', input: { request: { caseRef: config.caseRef, objective: config.objective, profileId: config.profileId, profileVersion: config.profileVersion, skillId: config.skillId, skillVersion: config.skillVersion, manifestDigest: config.manifestDigest, outputSchemaVersion: config.outputSchemaVersion, requestedOperationScope: config.requestedOperationScope }, skillInput, model } })
       if (!started.runRef) throw new Error('unavailable')
-      runRef = started.runRef; await refresh()
+      runRef = started.runRef; delete form.dataset.dirty; await refresh()
     } catch { status.textContent = attempted ? 'Could not confirm whether analysis started. Check the decision before starting another.' : 'Analysis could not be prepared. Check the sources and period, then try again.' }
     finally { if (!attempted) button.disabled = false }
   })

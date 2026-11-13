@@ -4,9 +4,10 @@ export const decisionCreateForm = `<details><summary>Create a decision</summary>
 // Keep one intention key for identical retries, including after an uncertain network outcome.
 export const decisionCreateScript = `
 document.querySelectorAll('[data-decision-create]').forEach((form) => {
+  if (form.dataset.sfCreateReady) return; form.dataset.sfCreateReady = 'true'
   let key = crypto.randomUUID()
   let submitting = false
-  form.addEventListener('input', () => { if (!submitting) key = crypto.randomUUID() })
+  form.addEventListener('input', () => { if (!submitting) { key = crypto.randomUUID(); form.dataset.dirty = 'true' } })
   form.addEventListener('submit', async (event) => {
     event.preventDefault()
     if (submitting || !form.reportValidity()) return
@@ -28,6 +29,7 @@ document.querySelectorAll('[data-decision-create]').forEach((form) => {
       const result = await response.json()
       if (!response.ok || result.status !== 'ok' || typeof result.outputRef !== 'string' || !result.outputRef) throw new Error('not-created')
       url.search = new URLSearchParams({ sf: 'workbench-case', caseRef: result.outputRef }).toString()
+      delete form.dataset.dirty
       location.assign(url)
     } catch { status.textContent = 'Could not confirm creation. Your entries are preserved; retry to check the same request.' }
     finally { submitting = false; button.disabled = false; inputs.forEach((input) => { input.disabled = false }) }

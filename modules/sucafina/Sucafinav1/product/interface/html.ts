@@ -6,6 +6,6 @@ import { documentEvidenceScript, documentEvidenceWidget } from "../ui/document-e
 /** Decorate only a document the host has already authorized and rendered. */
 export function decorateSfProductHtml(html: string, surface: string, page: string) {
   if (!["dashboard", "planner", "procurement"].includes(surface)) return html
-  const script = `${personalViewsScript}${documentEvidenceScript}${surface === "planner" && (page === "OPEX" || page === "CAPEX") ? plannerMonthlyScript : ""}${surface === "planner" || surface === "dashboard" ? importPreviewScript : ""}`
+  const script = `;(() => { const initialize = () => {${personalViewsScript}${documentEvidenceScript}${surface === "planner" && (page === "OPEX" || page === "CAPEX") ? plannerMonthlyScript : ""}${surface === "planner" || surface === "dashboard" ? importPreviewScript : ""}}; initialize(); const root = document.querySelector('#content'); if (root) new MutationObserver(initialize).observe(root, { childList: true, subtree: true }) })();`
   return html.replace('<div class="workspace-tools">', '<div class="workspace-tools"><a href="?sf=workbench">Workbench</a>').replace("</main>", `${personalViewsWidget({ surface, page })}${documentEvidenceWidget}${surface === "planner" || surface === "dashboard" ? importPreviewWidget : ""}</main>`).replace("</body>", `<script>${script}</script></body>`)
 }

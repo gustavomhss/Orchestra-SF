@@ -3,8 +3,9 @@ export const documentEvidenceWidget = `<details><summary>Extract document eviden
 
 export const documentEvidenceScript = `
 document.querySelectorAll('[data-document-evidence]').forEach((section) => {
+  if (section.dataset.sfEvidenceReady) return; section.dataset.sfEvidenceReady = 'true'
   const status = section.querySelector('[role=status]'); const source = section.querySelector('[data-document-source]'); const schema = section.querySelector('[data-document-schema-list]'); const candidates = section.querySelector('[data-document-candidates]')
-  let sources = []; let schemas = []; let documentRef; let schemaKey = crypto.randomUUID(); let extractKey = crypto.randomUUID()
+  let sources = []; let schemas = []; let documentRef; let admitKey = crypto.randomUUID(); let schemaKey = crypto.randomUUID(); let extractKey = crypto.randomUUID()
   let busy = false
   const lock = () => { if (busy) return false; busy = true; section.querySelectorAll('button, input, select').forEach((control) => { control.disabled = true }); return true }
   const unlock = () => { busy = false; section.querySelectorAll('button, input, select').forEach((control) => { control.disabled = false }) }
@@ -39,16 +40,16 @@ document.querySelectorAll('[data-document-evidence]').forEach((section) => {
     })
   }
   section.querySelector('[data-document-sources]').addEventListener('click', async (event) => {
-    if (!lock()) return; documentRef = undefined; schemas = []; schema.replaceChildren(); candidates.replaceChildren(); status.textContent = 'Finding documents…'
+    if (!lock()) return; documentRef = undefined; admitKey = crypto.randomUUID(); schemas = []; schema.replaceChildren(); candidates.replaceChildren(); status.textContent = 'Finding documents…'
     try { sources = await request(endpoint('document-sources')); source.replaceChildren(); const empty = document.createElement('option'); empty.value = ''; empty.textContent = 'Choose a document'; source.append(empty); sources.forEach((item, index) => { const option = document.createElement('option'); option.value = String(index); option.textContent = item.label; source.append(option) }); status.textContent = sources.length ? 'Choose a document.' : 'No accessible documents.' }
     catch { status.textContent = 'Documents unavailable or access changed.' }
     finally { unlock() }
   })
-  source.addEventListener('change', () => { documentRef = undefined; schemas = []; schema.replaceChildren(); candidates.replaceChildren(); extractKey = crypto.randomUUID() })
+  source.addEventListener('change', () => { documentRef = undefined; schemas = []; schema.replaceChildren(); candidates.replaceChildren(); admitKey = crypto.randomUUID(); extractKey = crypto.randomUUID(); form.dataset.dirty = 'true' })
   section.querySelector('[data-document-admit]').addEventListener('click', async (event) => {
     const selected = source.value === '' ? undefined : sources[Number(source.value)]; if (!selected) { status.textContent = 'Choose a document.'; return }
     if (!lock()) return; status.textContent = 'Opening document…'
-    try { const admitted = await post('document-admit', { selectionRef: selected.selectionRef }, crypto.randomUUID()); documentRef = admitted.documentRef; await refreshSchemas(); await refreshCandidates(); status.textContent = 'Document ready for review.' }
+    try { const admitted = await post('document-admit', { selectionRef: selected.selectionRef }, admitKey); documentRef = admitted.documentRef; await refreshSchemas(); await refreshCandidates(); status.textContent = 'Document ready for review.' }
     catch { documentRef = undefined; candidates.replaceChildren(); status.textContent = 'Document unavailable or access changed.' }
     finally { unlock() }
   })

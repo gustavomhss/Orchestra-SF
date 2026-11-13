@@ -1,9 +1,11 @@
 /** Mounted into the real Planner document after its authorized rows have rendered. */
 export const plannerMonthlyScript = `
 document.querySelectorAll('table').forEach((table) => {
+  if (table.dataset.sfMonthlyReady) return
   const forms = [...table.querySelectorAll('form[data-command="save"][data-record][data-version]')].filter((form) =>
     ['OPEX', 'CAPEX'].includes(form.dataset.page) && form.querySelector('[name=versionId]') && form.querySelector('[name=collection][value=lines]') && form.querySelector('[name=b0], [name=a0], [name=f0]') && !form.querySelector('button[type=submit]:disabled'))
   if (!forms.length) return
+  table.dataset.sfMonthlyReady = 'true'
   const page = forms[0].dataset.page
   const versionId = forms[0].querySelector('[name=versionId]').value
   const records = new Map()
@@ -100,7 +102,6 @@ document.querySelectorAll('table').forEach((table) => {
   preview.addEventListener('click', () => send('preview'))
   save.addEventListener('click', () => send('apply'))
   measure.addEventListener('change', render)
-  window.addEventListener('beforeunload', (event) => { if (changes.size) { event.preventDefault(); event.returnValue = '' } })
   section.append(heading, label, instructions, scroll, preview, save, status, dirtyGuard)
   table.closest('.table-scroll')?.before(section)
   render()

@@ -12,6 +12,7 @@ export function decisionChoiceForm(projection: AuthorizedCaseProjection) {
 
 export const decisionChoiceScript = `
 document.querySelectorAll('[data-decision-choice]').forEach((form) => {
+  if (form.dataset.sfChoiceReady) return; form.dataset.sfChoiceReady = 'true'
   const context = JSON.parse(form.dataset.context)
   const compare = form.querySelector('[data-compare]'); const choose = form.querySelector('button[type=submit]'); const portfolio = form.querySelector('[data-portfolio]')
   const output = form.querySelector('[data-comparison]'); const status = form.querySelector('p[role=status]')

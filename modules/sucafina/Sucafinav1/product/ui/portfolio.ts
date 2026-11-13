@@ -10,6 +10,7 @@ export function portfolioHistory(projection: AuthorizedCaseProjection) {
 
 export const portfolioScript = `
 document.querySelectorAll('[data-portfolio-history]').forEach(async (section) => {
+  if (section.dataset.sfPortfolioHistoryReady) return; section.dataset.sfPortfolioHistoryReady = 'true'
   const caseRef = JSON.parse(section.dataset.case); const status = section.querySelector('[role=status]'); const results = section.querySelector('[data-results]')
   const request = async (mode, payload) => { const url = new URL(location.href); url.search = '?sf=' + mode; const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() }, body: JSON.stringify(payload) }); const value = await response.json(); if (!response.ok || value.status !== 'ok') throw new Error('unavailable'); return value.value }
   try {
@@ -25,6 +26,7 @@ document.querySelectorAll('[data-portfolio-history]').forEach(async (section) =>
   } catch { results.replaceChildren(); status.textContent = 'Portfolio history unavailable or access changed.' }
 })
 document.querySelectorAll('[data-portfolio]').forEach((section) => {
+  if (section.dataset.sfPortfolioReady) return; section.dataset.sfPortfolioReady = 'true'
   const status = section.querySelector('[role=status]'); const casesNode = section.querySelector('[data-portfolio-case-list]'); const candidatesNode = section.querySelector('[data-portfolio-candidates]'); const output = section.querySelector('[data-portfolio-results]'); const save = section.querySelector('[data-portfolio-save]'); const form = section.querySelector('[data-portfolio-form]')
   let cases = []; let catalog; let prepared; let evaluationKey = crypto.randomUUID(); let busy = false
   const lock = () => { if (busy) return false; busy = true; section.querySelectorAll('button,input,select').forEach((control) => { control.disabled = true }); return true }
@@ -34,7 +36,7 @@ document.querySelectorAll('[data-portfolio]').forEach((section) => {
   const reset = () => { prepared = undefined; save.disabled = true; evaluationKey = crypto.randomUUID(); output.replaceChildren() }
   section.querySelector('[data-portfolio-cases]').addEventListener('click', async () => {
     if (!lock()) return; status.textContent = 'Finding decisions…'; reset()
-    try { const response = await fetch(url('decision-list'), { credentials: 'same-origin', cache: 'no-store' }); const result = await response.json(); if (!response.ok || result.status !== 'ok') throw new Error('unavailable'); cases = result.value; casesNode.replaceChildren(); const legend = document.createElement('legend'); legend.textContent = 'Decisions to include'; casesNode.append(legend); cases.forEach((item, index) => { const label = document.createElement('label'); const input = document.createElement('input'); input.type = 'checkbox'; input.value = String(index); input.addEventListener('change', () => { catalog = undefined; candidatesNode.replaceChildren(); reset() }); label.append(input, item.objective); casesNode.append(label) }); status.textContent = cases.length ? 'Choose decisions, then find alternatives.' : 'No accessible decisions.' }
+    try { const response = await fetch(url('decision-list'), { credentials: 'same-origin', cache: 'no-store' }); const result = await response.json(); if (!response.ok || result.status !== 'ok') throw new Error('unavailable'); cases = result.value; casesNode.replaceChildren(); const legend = document.createElement('legend'); legend.textContent = 'Decisions to include'; casesNode.append(legend); cases.forEach((item, index) => { const label = document.createElement('label'); const input = document.createElement('input'); input.type = 'checkbox'; input.value = String(index); input.addEventListener('change', () => { catalog = undefined; candidatesNode.replaceChildren(); reset(); form.dataset.dirty = 'true' }); label.append(input, item.objective); casesNode.append(label) }); status.textContent = cases.length ? 'Choose decisions, then find alternatives.' : 'No accessible decisions.' }
     catch { status.textContent = 'Decisions unavailable or access changed.' }
     finally { unlock() }
   })
@@ -44,7 +46,7 @@ document.querySelectorAll('[data-portfolio]').forEach((section) => {
     status.textContent = 'Finding alternatives…'; reset()
     try {
       catalog = await request('decision-portfolio-catalog', { purpose: 'catalog', caseRefs: selected.map((item) => item.caseRef) }); candidatesNode.replaceChildren(); const legend = document.createElement('legend'); legend.textContent = 'Alternatives'; candidatesNode.append(legend)
-      catalog.cases.forEach((item) => item.alternatives.forEach((alternative) => { const label = document.createElement('label'); const input = document.createElement('input'); input.type = 'checkbox'; input.value = alternative.candidateRef; input.addEventListener('change', reset); label.append(input, item.objective + ' · ' + alternative.title + ' · ' + alternative.comparisonStatus); candidatesNode.append(label) }))
+      catalog.cases.forEach((item) => item.alternatives.forEach((alternative) => { const label = document.createElement('label'); const input = document.createElement('input'); input.type = 'checkbox'; input.value = alternative.candidateRef; input.addEventListener('change', () => { reset(); form.dataset.dirty = 'true' }); label.append(input, item.objective + ' · ' + alternative.title + ' · ' + alternative.comparisonStatus); candidatesNode.append(label) }))
       const anchor = form.elements.namedItem('anchor'); anchor.replaceChildren(); const empty = document.createElement('option'); empty.value = ''; empty.textContent = 'Choose a decision'; anchor.append(empty)
       selected.forEach((item) => { const option = document.createElement('option'); option.value = String(cases.indexOf(item)); option.textContent = item.objective; anchor.append(option) })
       form.elements.namedItem('limit').min = String(catalog.explorationLimit.minimum); form.elements.namedItem('limit').max = String(catalog.explorationLimit.maximum)
@@ -52,7 +54,7 @@ document.querySelectorAll('[data-portfolio]').forEach((section) => {
     } catch { catalog = undefined; candidatesNode.replaceChildren(); status.textContent = 'Alternatives unavailable or access changed.' }
     finally { unlock() }
   })
-  form.addEventListener('input', reset)
+  form.addEventListener('input', () => { reset(); form.dataset.dirty = 'true' })
   form.addEventListener('submit', async (event) => {
     event.preventDefault(); if (!form.reportValidity() || !catalog) return
     const candidateRefs = [...candidatesNode.querySelectorAll('input:checked')].map((input) => input.value); if (!candidateRefs.length) { status.textContent = 'Choose at least one alternative.'; return }
@@ -83,7 +85,7 @@ document.querySelectorAll('[data-portfolio]').forEach((section) => {
   })
   save.addEventListener('click', async () => {
     if (!prepared || !lock()) return; status.textContent = 'Saving evaluation…'
-    try { const value = await request('decision-portfolio-evaluate', prepared, evaluationKey); if (!value.portfolioResultRef) throw new Error('unavailable'); status.textContent = 'Portfolio evaluation saved.'; prepared = undefined }
+    try { const value = await request('decision-portfolio-evaluate', prepared, evaluationKey); if (!value.portfolioResultRef) throw new Error('unavailable'); status.textContent = 'Portfolio evaluation saved.'; prepared = undefined; delete form.dataset.dirty }
     catch { status.textContent = 'Could not confirm the evaluation. Retry the same request.' }
     finally { unlock() }
   })

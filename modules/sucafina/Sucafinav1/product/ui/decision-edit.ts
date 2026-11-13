@@ -11,6 +11,7 @@ export function decisionEditForm(projection: AuthorizedCaseProjection) {
 
 export const decisionEditScript = `
 document.querySelectorAll('[data-decision-edit]').forEach((form) => {
+  if (form.dataset.sfEditReady) return; form.dataset.sfEditReady = 'true'
   const context = JSON.parse(form.dataset.context)
   const status = form.querySelector('[role=status]')
   const button = form.querySelector('button')

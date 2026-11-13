@@ -9,6 +9,7 @@ export function personalViewsWidget(context?: { surface: string; page: string })
 
 export const personalViewsScript = `
 document.querySelectorAll('[data-personal-views]').forEach((section) => {
+  if (section.dataset.sfViewsReady) return; section.dataset.sfViewsReady = 'true'
   const status = section.querySelector('[role=status]'); const list = section.querySelector('[data-view-list]')
   const context = section.dataset.context ? JSON.parse(section.dataset.context) : undefined
   let entries = []

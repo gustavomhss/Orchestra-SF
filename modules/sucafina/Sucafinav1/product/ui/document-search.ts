@@ -1,6 +1,7 @@
 /** Resolve each result again before presenting a source link. */
 export const documentSearchScript = `
 document.querySelectorAll('[data-document-result]').forEach(async (entry) => {
+  if (entry.dataset.sfDocumentReady) return; entry.dataset.sfDocumentReady = 'true'
   const title = entry.querySelector('[data-document-title]')
   try {
     const url = new URL(location.href); url.search = ''; url.searchParams.set('sf', 'document-open'); url.searchParams.set('ref', entry.dataset.ref)
