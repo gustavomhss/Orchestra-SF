@@ -1,0 +1,131 @@
+{
+  "review_id": "R2-PRODUCT-RECHECK-1feb949",
+  "reviewer": "Revisor adversarial independente de produto, UX e completude (/root/sf_formal2_product)",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-product-plan",
+  "reviewed_commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+  "code_baseline": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "focus": "Rechecagem proporcional do P-R2-01: concessões alcançáveis das 39 operações, quatro skills alteradas, saídas persistidas, consumidores, C04/C07/C11/C15/C16, AM02/AM06 e preservação dos fechamentos P-F01–P-F04.",
+  "references_to_initial": {
+    "review_id": "R2-PRODUCT-3898638",
+    "reviewed_commit": "38986380cd7b5697c0be30c1f55d43eddee63045",
+    "json": "/workspace/scratch/838a0195183d/sf2h-recheck/product.json",
+    "markdown": "/workspace/scratch/838a0195183d/sf2h-recheck/product.md",
+    "prior_verdict": "REQUIRES_CHANGES",
+    "preserved": true
+  },
+  "candidate": {
+    "frozen_directory": "/workspace/scratch/838a0195183d/sf2h-candidate-1feb949",
+    "receipt": "/workspace/scratch/838a0195183d/sf2h-work/candidate-1feb949.json",
+    "receipt_read": true,
+    "receipt_reported_verified_blobs": 110,
+    "receipt_reported_changed_files": 49,
+    "provenance_note": "Cópia congelada entregue pela integradora com recibo de SHA1 dos blobs comparados via GitHub MCP. Li o recibo; não alego ter repetido pessoalmente as 110 comparações remotas. Não alterei o candidato."
+  },
+  "source_path_prefix": "modules/sucafina/Sucafinav1/docs/sf2h-plan/",
+  "examined_paths": [
+    "formal-review/round-2/PROTOCOL.md",
+    "campaign.json: resident_ai, resident_ui_consumption, C04/C06/C07/C10/C11/C14/C15/C16, tarefas e seções comparadas",
+    "agents-atlas-mcp.json: quatro skills alteradas, operation_call_routes, output_aliases e AM02/AM06",
+    "resident-ui-consumption.json: common e linhas das quatro skills alteradas",
+    "contracts.json: comparação integral com campaign.contracts",
+    "resident-proof-plan.json: AM02/AM06 e critérios novos vinculados",
+    "AGENTS-ATLAS-MCP.md: diff e regra de chamada direta",
+    "specs/resident-runtime.md: ingresso/interseção e seção Cobertura autorizada das 39 operações",
+    "tools/validate_resident_plan.py: leitura das regras MCP_UNREACHABLE_OPERATION e MCP_CALL_ROUTE_*",
+    "work-packages/WP06.json e WP06.md: T02/T03, invariantes e espelho canônico",
+    "work-packages/WP09.json e WP09.md: T01/T02/T07 e espelho canônico",
+    "campaign.json: WP00.T02, WP01.T05, WP02.T01, WP05.T05, WP10.T06, WP12.T01/T02",
+    "campaign.json: comparação de C06/C10/C14, escopo, cobertura, jornadas, oráculos e critérios de WP06.T05/WP08.T03/T04/WP09.T02/T03/T04/WP11.T02/T03/WP13.T02/T03"
+  ],
+  "method": {
+    "description": "Leitura adversarial de contratos e percursos, diffs estruturados e consultas jq somente sobre artefatos de planejamento. A descrição do autor foi tratada como indicação de onde olhar, não como evidência de fechamento. Não li pareceres dos outros revisores.",
+    "product_tests_run": false,
+    "plan_validator_executed": false,
+    "new_remote_consultation_needed": false,
+    "scope_limit": "A rechecagem cobre a correção e suas bordas de produto; a revisão inicial preservada sustenta o escopo inalterado. Não é nova certificação de APIs, packaging Atlas ou duração de execução."
+  },
+  "finding_dispositions": [
+    {
+      "id": "P-R2-01",
+      "original_severity": "P1",
+      "previous_status": "OPEN",
+      "status": "CLOSED",
+      "rationale": "O candidato remove a incompatibilidade entre catálogo e interseção C16. As 39 operações possuem rotas nomeadas que resolvem perfil e skill existentes, com concessão efetiva nos dois níveis e compatibilidade com o perfil declarado pela operação. As sete operações anteriormente inalcançáveis ganharam workflows pertinentes, schemas, produtores, saídas e consumidores. A chamada direta de AM02 continua exigindo binding e SkillLoadReceipt; não há modalidade alternativa sem skill. O fechamento é do defeito de planejamento, não execução medida das rotas.",
+      "evidence": [
+        "campaign.json: resident_ai.operation_call_routes e operation_coverage_rule; 39 rotas únicas cobrem exatamente as 39 operações. A diferença antiga entre operações e união das allowlists agora é vazia, e a inspeção das interseções nomeadas não encontra par inválido.",
+        "campaign.json: resident_ai.skills[sf-produzir-bi-contextual] e resident_ui_consumption; sf_dashboard_read fornece AuthorizedDashboard à visão e à tabela equivalente, via WP02.T01, com consumo WP05.T05/WP01.T05.",
+        "campaign.json: skills sf-enquadrar-decisao/sf-explicar-forecast, output_aliases e C11; sf_import_preview usa arquivo admitido/base autorizada, preserva importPreviewRef e identifica analysisBasis=import-preview/domainApplied=false. WP06.T02 produz o mesmo ImportManifest e WP06.T03 abre a análise opcional sem Apply automático ou caso obrigatório para importação determinística.",
+        "campaign.json: sf-preparar-revisao-executiva.workflow/limits/typed_inputs; as cinco operações de rotina percorrem catálogo/proposta, admissão C07 atual, execução, status/resultado e DecisionBrief com runRef/resultRef. WP09.T01 fornece o ciclo e os componentes; WP09.T02 mantém resultado factual utilizável sem síntese; WP09.T07 encerra perguntas e inicia continuação versionada.",
+        "C16 e specs/resident-runtime.md:19–31,253–259; HostBoundEntryMode é contexto do host. routine-result bloqueia prepare/run, inclusive retry/chamada direta, enquanto interactive executa somente após admissão. Sem admissão, o run encerra needs-input/AdmissionProposal e a resposta humana inicia novo run com binding atual.",
+        "agents-atlas-mcp.json: AM02 possui skills nomeadas, prova positiva das 39 rotas e negativo que remove a última concessão; AM06 exige percurso de rotina e recusa de recursão. resident-proof-plan.json mantém observações e recibos reais como requisitos futuros.",
+        "tools/validate_resident_plan.py:36–67; a regra verifica alcançabilidade perfil/skill/operação, cobertura de rotas, SkillLoadReceipt, produtor/schema/consumidor e admissão de execute_admitted. O código foi lido, não executado nesta revisão.",
+        "WP00.T02.CHK.60, WP10.T06.CHK.60, WP12.T02.CHK.60, WP06.T02/T03.CHK.60 e WP09.T01.CHK.60 distribuem a implementação e as provas entre produtores, wrapper e consumidores."
+      ],
+      "static_observations": {
+        "operations": 39,
+        "unique_named_routes": 39,
+        "operations_without_any_skill_grant": [],
+        "named_routes_with_invalid_profile_skill_operation_intersection": [],
+        "routes_with_mismatched_producer_input_output_or_empty_consumer": [],
+        "all_routes_require_loaded_skill_receipt": true,
+        "sf_routine_run_requires_current_c07_admission": true,
+        "agents_manifest_equals_canonical_resident_ai": true,
+        "ui_matrix_equals_canonical_resident_ui_consumption": true,
+        "contracts_and_wp06_wp09_json_match_canonical": true,
+        "interpretation": "Observações estáticas dos documentos, não resultados de produto."
+      },
+      "reproduction": {
+        "working_directory": "modules/sucafina/Sucafinav1/docs/sf2h-plan/",
+        "command": "jq '[.resident_ai.mcp_packs[].operations[].id] - [.resident_ai.skills[].allowed_operations[]] | unique' campaign.json",
+        "observed": [],
+        "additional_manual_check": "Para cada operation_call_routes, conferir existência de profile_id/skill_id/operation_id; perfil em operation.profiles e skill.profiles; skill em profile.allowed_skills; operação em profile.allowed_operations e skill.allowed_operations. Conferir também producer_task/input_schema/output_type contra o descriptor e o consumidor contra a skill/matriz UI."
+      },
+      "old_counterexample_resolution": "A pessoa autorizada com rotina admitida pode carregar sf-preparar-revisao-executiva sob sf_maestro em modo interactive; a operação agora pertence à interseção declarada. Sem admissão, sem recibo de carga, após revogação ou no modo routine-result para prepare/run, o contrato exige recusa. O plano já não precisa contornar C16 para tornar as sete operações exercitáveis."
+    }
+  ],
+  "original_findings": [
+    {
+      "id": "P-F01",
+      "original_severity": "P1",
+      "status": "CLOSED",
+      "disposition": "RATIFIED",
+      "rationale": "Mantida a decomposição integral 5 perfis/18 skills, saídas tipadas persistidas e consumo após reload. A alteração acrescenta percursos às skills existentes; não substitui os witnesses por presença de catálogo. P-R2-01, antes ressalvado separadamente, agora fecha. Escopo, coverage, journeys e product_promise são idênticos ao candidato inicial revisto.",
+      "evidence": ["campaign.json: resident_ai/resident_ui_consumption e comparação das seções de escopo", "C11/C15/C16", "WP01.T05.CHK.30/31", "agents-atlas-mcp.json: AM01/AM02/AM06"]
+    },
+    {
+      "id": "P-F02",
+      "original_severity": "P1",
+      "status": "CLOSED",
+      "disposition": "RATIFIED",
+      "rationale": "C06 e os critérios de produto WP08.T03/T04 e WP09.T02/T03 permanecem idênticos. A nova rota de revisão continua consumindo ConfirmationValidityProjection; não reintroduz invalidação por versão global nem dispensa CAS. CONFIRM-SCOPE permanece inalterado.",
+      "evidence": ["campaign.json: contracts[C06]", "numeric_oracles[CONFIRM-SCOPE]", "WP08.T03/T04 e WP09.T02/T03", "resident_ai.skills[sf-preparar-revisao-executiva].typed_inputs"]
+    },
+    {
+      "id": "P-F03",
+      "original_severity": "P1",
+      "status": "CLOSED",
+      "disposition": "RATIFIED",
+      "rationale": "C10, oráculos e critérios de WP11.T02/T03 e WP13.T02/T03 estão inalterados; a leitura de dashboard não cria cálculo paralelo. A análise opcional de import distingue explicitamente valores simulados dos aplicados. Permanecem inventário independente das linhas, categoria omitida pendente, soma por identidade, zero distinto de ausência e histórico da escolha.",
+      "evidence": ["campaign.json: contracts[C10] e numeric_oracles", "WP11.T02/T03 e WP13.T02/T03", "WP05.T05", "C11 e resident_ai.output_aliases.FinancialAnalysis"]
+    },
+    {
+      "id": "P-F04",
+      "original_severity": "P2",
+      "status": "CLOSED",
+      "disposition": "RATIFIED_CORRECTED",
+      "rationale": "C14 e o trabalho/checks/axiomas de WP06.T05 e WP09.T04 permanecem idênticos. O novo caminho de prévia não substitui extração obrigatória nem duplica parser/confirmador; o dossiê continua consumindo a mesma evidenceRef. Não há reabertura do P2 corrigido.",
+      "evidence": ["campaign.json: contracts[C14]", "WP06.T05 e WP09.T04", "coverage/journeys inalterados", "work-packages/WP06.json e WP09.json coerentes com a fonte canônica"]
+    }
+  ],
+  "new_findings": [],
+  "verdict": "APPROVED_FOR_EXECUTION",
+  "verdict_rationale": "Nenhum P0/P1 de produto permanece aberto na revisão inicial e nesta rechecagem; o P2 original segue corrigido. A correção é coerente como planejamento e contém requisitos positivos e negativos reproduzíveis para implementação. Não identifiquei novo defeito demonstrável nas bordas alteradas.",
+  "residual_uncertainties": [
+    "As rotas autorizadas, a persistência/recarga, a UI, o MCP, os runs nativos e os negativos continuam por implementar e provar; seus estados NOT_RUN não mudam com este parecer.",
+    "A análise distingue a função de prévia sem mutação de domínio da persistência da contribuição C11 pelo host. A implementação deve demonstrar ambos os efeitos previstos e preservar a ação explícita de Apply C04; o parecer não presume que isso já exista.",
+    "Rechecagem proporcional de produto: packaging Atlas, APIs de runtime, gates executáveis e orçamento de 120 minutos não foram certificados aqui. Estimativas de planejamento não são resultados medidos.",
+    "A aprovação vale somente para 1feb949244357b8ee7ea7a0c27310281accc7592. Alteração posterior que afete esses percursos exige rechecagem correspondente."
+  ],
+  "implementation_test_status": "NOT_RUN"
+}

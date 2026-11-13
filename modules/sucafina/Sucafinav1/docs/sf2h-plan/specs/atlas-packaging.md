@@ -1,6 +1,6 @@
 # T2-F01 — separar os ports empresariais do scanner nativo sem ampliar o guard
 
-**Estado: planejamento corrigido e integrado; rechecagem independente pendente. Produto, geração de bundles e testes de runtime: NOT_RUN.**
+**Estado: planejamento corrigido e integrado; T2-F01 CLOSED em rechecagem independente, com veredicto APPROVED_FOR_EXECUTION. Produto, geração de bundles e testes de runtime: NOT_RUN.** [Pareceres e SHA examinado](../formal-review/round-2/SUMMARY.md).
 
 O contraexemplo T2-F01 é procedente. Acrescentar o scanner ao novo `business-memory-ports.js` copiaria um import de `node:child_process` para um site que não está no allowlist. A correção mantém a implementação canônica do scanner no bundle `native-memory.js`, já admitido, e torna explícita a dependência entre os dois subpaths. Não altera guard, allowlist, algoritmo, identidade, acesso empresarial ou engine.
 

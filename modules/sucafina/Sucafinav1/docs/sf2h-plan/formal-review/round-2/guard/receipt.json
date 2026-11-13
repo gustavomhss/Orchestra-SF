@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "head": "1feb949244357b8ee7ea7a0c27310281accc7592",
+  "dev": "f08941a346ef0d072dff8e67e49823505ad7a12e",
+  "merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "command": "bun run check:guards --base origin/dev",
+  "cwd": "/workspace/scratch/838a0195183d/sf2h-fixes/guards/materialization/candidate-1feb94924435",
+  "bun_version": "1.3.14",
+  "exit_code": 0,
+  "started_at": "2026-11-13T01:46:30.489084+00:00",
+  "finished_at": "2026-11-13T01:46:32.680739+00:00",
+  "counts": {
+    "rules": 78,
+    "changed_paths": 110,
+    "gate_findings": 0,
+    "warn_findings": 1,
+    "errors": 0
+  },
+  "stdout": "WARN modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json [large-file] Large file added (over 1 MB). Check it belongs in git; generated data and media usually do not.\nguards: 78 rules, 110 changed paths, 0 gate and 1 warn findings, 0 errors.\n",
+  "stderr": "$ bun run script/guards/run.ts --base origin/dev\n",
+  "approved": [],
+  "warn_flag": false,
+  "working_tree_after": "",
+  "fidelity_receipt": "/workspace/scratch/838a0195183d/sf2h-fixes/guards/materialization/ready-1feb94924435.json",
+  "execution_scope": "Mandatory repository guard, not product tests or CI."
+}

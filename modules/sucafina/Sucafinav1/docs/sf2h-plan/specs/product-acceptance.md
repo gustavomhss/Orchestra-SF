@@ -1,6 +1,6 @@
 # Correções normativas de produto — FR1-D/E/G e consumo das skills
 
-**Estado: especificação integrada; revisão independente pendente. Produto e testes de implementação: NOT_RUN.** As correções estão em [../campaign.json](../campaign.json). Os pareceres históricos da rodada 1 permanecem intactos.
+**Estado: especificação integrada; planejamento APPROVED_FOR_EXECUTION após rechecagem independente. Produto e testes de implementação: NOT_RUN.** [Pareceres e SHA examinado](../formal-review/round-2/SUMMARY.md). As correções estão em [../campaign.json](../campaign.json). Os pareceres históricos da rodada 1 permanecem intactos.
 
 ## 1. Confirmação humana: base observada e validade atual
 
@@ -87,7 +87,7 @@ Aplicar os 66 patches por selector, conforme `integration_instructions`, sobre a
 
 Regenerar os JSON/Markdown dos WPs, contratos, cobertura, índices e mapas de prova sem editar os relatórios históricos. Preservar todas as cinco famílias em campanha, WP e task. Os novos sufixos .20–.29 são critérios de produto; .30–.39 são de consumo das skills.
 
-A validação estática aplicou todos os patches em uma cópia Python em memória, confirmou as strings antigas, preservou as cinco famílias e IDs únicos, conferiu os 18 nomes contra o adendo e reconciliou inventários e aritmética. Essa validação passou. **Todos os axiomas/checks de produto continuam NOT_RUN.** Não foi executado produto, UI, modelo, Relay, MCP, Atlas ou CI; a revisão independente do candidato integrado ainda cabe aos revisores designados.
+A validação estática aplicou todos os patches em uma cópia Python em memória, confirmou as strings antigas, preservou as cinco famílias e IDs únicos, conferiu os 18 nomes contra o adendo e reconciliou inventários e aritmética. Essa validação passou. **Todos os axiomas/checks de produto continuam NOT_RUN.** Não foi executado produto, UI, modelo, Relay, MCP, Atlas ou CI; a revisão independente foi concluída no SHA indicado na consolidação formal, sem transformar critérios de implementação em PASS.
 
 ### Fontes examinadas
 

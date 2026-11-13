@@ -1,6 +1,6 @@
 # Orchestra-SF — contratos reconciliados da equipe residente, MCP e Atlas
 
-**Estado: especificação integrada; revisão independente pendente. Implementação e provas de produto: NOT_RUN.**
+**Estado: especificação integrada; planejamento APPROVED_FOR_EXECUTION após rechecagem independente. Implementação e provas de produto: NOT_RUN.** [Pareceres e SHA examinado](../formal-review/round-2/SUMMARY.md).
 
 Este documento explica o delta técnico de FR1-A, FR1-B e FR1-C, incluindo T-F01/T-F02/T-F03 e a parte técnica de P-F01/E-F01. O snapshot do plano é 5e6510cf5f514d30116d989ef27ee529b02f3184; a baseline de código examinada pelo GitHub MCP é 9e4f3d35833f9b2cea6abdf58f42331f3973d9bf. Não houve alteração de código do produto, GitHub, Azure, deploy, identidade empresarial ou permissões da instalação.
 

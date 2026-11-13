@@ -1,0 +1,444 @@
+{
+  "review_id": "SF2H-R2-T-RECHECK-1feb949",
+  "reviewer": "Revisor adversarial técnico independente — rechecagem do próprio T2-F01 e bordas C15/C16/C17",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-product-plan",
+  "reviewed_commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+  "baseline_commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "references_to_initial": [
+    {
+      "review_id": "SF2H-R2-T",
+      "reviewed_commit": "38986380cd7b5697c0be30c1f55d43eddee63045",
+      "json_path": "/workspace/scratch/838a0195183d/sf2h-recheck/contracts.json",
+      "markdown_path": "/workspace/scratch/838a0195183d/sf2h-recheck/contracts.md",
+      "finding_id": "T2-F01",
+      "preservation": "Parecer inicial preservado. O novo julgamento não altera seu resultado para o SHA anterior."
+    }
+  ],
+  "focus": [
+    "T2-F01: grafo de imports e scanner no site já admitido",
+    "Exports/tipos, self-import público, gerador e dependências de desenvolvimento",
+    "Ownership exato e writer de lock; gates de AST/spawn",
+    "Novas rotas positivas perfil/skill/operação e HostBoundEntryMode",
+    "Ratificação de T-F01/T-F02/T-F03 nas bordas alteradas"
+  ],
+  "examined_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/agents-atlas-mcp.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/atlas-packaging.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/ownership.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/resident-proof-plan.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP10.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP12.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP09.json"
+  ],
+  "baseline_examined_paths": [
+    "package.json",
+    "packages/script/package.json",
+    "packages/script/src/spawn-imports.ts",
+    "script/check-spawn-imports.ts",
+    "script/spawn-allowlist.json",
+    "modules/atlas/boundary/package.json",
+    "modules/atlas/boundary/script/build.ts",
+    "modules/atlas/boundary/script/tsconfig.json",
+    "modules/atlas/boundary/src/generated/native-memory.d.ts",
+    "modules/atlas/packages/adapter-io/src/native-bound.ts",
+    "modules/atlas/packages/adapter-io/src/native-memory.ts",
+    "modules/atlas/packages/adapter-io/src/memory-read.ts",
+    "modules/atlas/packages/adapter-io/src/memory-emit.ts",
+    "modules/atlas/packages/adapter-io/src/scanner.ts",
+    "modules/atlas/packages/memory/src/index.ts",
+    "modules/atlas/packages/memory/src/portable.ts",
+    "modules/atlas/packages/memory/src/respawn.ts",
+    "modules/atlas/packages/memory/src/inject.ts",
+    "modules/atlas/packages/memory/src/kinds.ts",
+    "modules/atlas/packages/memory/src/awareness.ts",
+    "modules/atlas/packages/memory/src/orient.ts",
+    "modules/atlas/packages/memory/src/rules.ts",
+    "modules/atlas/packages/memory/src/template.ts",
+    "modules/atlas/packages/memory/src/logbook.ts",
+    "modules/atlas/packages/kernel/src/index.ts",
+    "modules/atlas/packages/kernel/src/brand.ts",
+    "modules/atlas/packages/kernel/src/encoder.ts",
+    "modules/atlas/packages/kernel/src/canonical.ts",
+    "modules/atlas/packages/kernel/src/store.ts",
+    "modules/atlas/packages/kernel/src/log.ts",
+    "modules/atlas/packages/kernel/src/fold.ts",
+    "modules/atlas/packages/kernel/src/jsonl.ts",
+    "modules/atlas/packages/kernel/src/portable.ts"
+  ],
+  "method": {
+    "candidate": "Cópia congelada sf2h-candidate-1feb949. Recibo sf2h-work/candidate-1feb949.json do integrador registra 110 blobs com SHA1 coincidente, 49 mudanças apenas sob docs/sf2h-plan, parent 3898638 e candidato 1feb949. Não repeti a verificação de todos os blobs.",
+    "independent_reads": "Leitura do novo C16/C17, diff C11/C15–C17 contra o candidato anterior, especificação de packaging, resident_packaging, WP10.T07 completo, ownership, receitas e AM02/05/06. Rotas e concessões foram recalculadas a partir dos JSONs. Fontes remotas somente por GitHub MCP no SHA de baseline; APIs do scanner/boundary/guard/dependências foram reabertas.",
+    "proportionality": "Rechecagem concentrada na correção e bordas alteradas; a análise primária anterior permanece referenciada para APIs não modificadas. Em módulos Memory/Kernel, a rechecagem examinou principalmente declarações/imports e a ausência de outra aresta de scanner, não constituiu nova auditoria integral dos algoritmos.",
+    "independence": "Sem autoria, alteração do candidato ou leitura de pareceres alheios. Declarações do autor sobre correção/validação não foram tomadas como prova. Nenhuma implementação, build, bundle, scanner, guard ou teste de produto foi executado.",
+    "static_document_checks": "Somente inspeção, diff e cálculo de relações dos documentos. campaign.contracts e campaign.resident_ai coincidem com seus espelhos; tasks de WP10 também coincidem. Os relatórios JSON/Markdown são os únicos artefatos escritos."
+  },
+  "finding_dispositions": [
+    {
+      "id": "T2-F01",
+      "status": "CLOSED",
+      "original_severity": "P1",
+      "closure_scope": "PLANNING_CONTRADICTION_RESOLVED",
+      "reason": "O candidato deixa de impor um novo site child_process: business-memory-ports publica factories/fold/validators e tipos, enquanto o scanner permanece em generated/native-memory.js já admitido. A aresta runtime da constante em memory-emit é explicitamente externalizada para o subpath público nativo mediante match de descritor+importer+specifier. Nenhuma regra/allowlist é ampliada e nenhuma implementação de scanner é substituída. Ownership e gates verificáveis acompanham a rota.",
+      "counterexample_recheck": [
+        "No candidato inicial, reexportar runScanner no novo bundle preservava execFileSync em um path não admitido. O candidato atual proíbe esses exports empresariais e atribui os reexports reais à native entry existente.",
+        "Remover somente os exports não bastaria: memory-emit.ts:62 importa NO_SCANNER_NAME em runtime. Esse ponto foi confirmado e está tratado por uma regra exata e limitada ao descritor empresarial.",
+        "O valor continua proveniente de scanner.ts por native-bound → native-memory. Native-memory mantém o descritor canônico e não volta a importar o business bundle: não há ciclo exigido nem necessidade de copiar constante.",
+        "A regra existente de spawning continua rejeitando qualquer ocorrência no novo bundle. O plano exige examiná-la na árvore após geração, junto de AST, exports/declarations e digests inalterados de guard/allowlist. Portanto o contraexemplo original não é mais uma consequência obrigatória do plano."
+      ],
+      "evidence": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json",
+          "commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+          "location": "C17.content e C17.exports",
+          "observation": "Scanners saem dos exports de business-memory-ports. O novo contrato usa native-memory para os scanners e externaliza somente a aresta literal memory-emit.ts → ./scanner.js do descritor empresarial, mantendo a constante canônica e proibindo alteração do scanner/engine/guard.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/1feb949244357b8ee7ea7a0c27310281accc7592/modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/atlas-packaging.md",
+          "commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+          "location": "§§2–4",
+          "observation": "Define os quatro valores e dois tipos aditivos da native entry; três condições simultâneas do resolver; dts/JS canônicos; falha em aresta ausente/alterada; AST/hits e guard real. Não usa tree-shaking como premissa.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/1feb949244357b8ee7ea7a0c27310281accc7592/modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/atlas-packaging.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+          "commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+          "location": "resident_packaging",
+          "observation": "A rota completa, external_edges, source_policy, imports públicos, devDependencies, writer do lock, nove paths e admissão estática são normativos e coerentes com C17.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/1feb949244357b8ee7ea7a0c27310281accc7592/modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json"
+        },
+        {
+          "path": "modules/atlas/packages/adapter-io/src/memory-emit.ts",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "imports, linhas 47–62; MemoryEmitDeps/MemoryEmit, linhas 98–112",
+          "observation": "A dependência runtime a NO_SCANNER_NAME é exatamente './scanner.js'; o DurableMemory é importado como tipo. Externalizar a aresta declarada mantém o valor utilizado pelo factory, sem importar o store em disco.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/memory-emit.ts",
+          "blob_sha": "f3164e8a7bc2e868afedb546c2511eaa901a805f"
+        },
+        {
+          "path": "modules/atlas/packages/adapter-io/src/memory-read.ts",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "imports, linhas 47–66",
+          "observation": "DurableMemory/MemoryRead são type-only. As dependências runtime são funções de @atlas/memory, cuja cadeia Memory/Kernel foi inspecionada; não há uma segunda aresta de scanner nessas portas.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/memory-read.ts",
+          "blob_sha": "67ca1d91873a6b7b232a7816e77c0473cdec7577"
+        },
+        {
+          "path": "modules/atlas/packages/adapter-io/src/native-bound.ts",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "linhas 3–11 e 12–41",
+          "observation": "Entry real é composta por reexports; publica createNativeMemory/decideProjectRule/proposeProjectRule e tipos bound. A alteração aditiva declarada não exige trocar essas funções nem publicar factories crus.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/native-bound.ts",
+          "blob_sha": "c77be4b3d2f491a306d15fd7e8ede34d4bef5385"
+        },
+        {
+          "path": "modules/atlas/packages/adapter-io/src/native-memory.ts",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "imports 67–76; createNativeMemory 198–202; recall 270–280; write 300; scannerFor 539–563",
+          "observation": "O scanner já pertence à composição nativa; o binding fixa store/root/owner e o recall força owner após estreitar a query. Reexports adicionais do scanner não alteram essas implementações.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/native-memory.ts",
+          "blob_sha": "6a068cac301e804e234f24fa5eac0390aea1aa30"
+        },
+        {
+          "path": "modules/atlas/packages/adapter-io/src/scanner.ts",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "ScanVerdict/ScannerBinarySpec 40–56; KNOWN_SCANNERS 81; NO_SCANNER_NAME 100; detectAvailableScanner 139; runScanner 165",
+          "observation": "Todos os quatro valores e dois tipos prometidos existem na fonte canônica. A função continua retornando clean/hit/could-not-run e permanece no mesmo site já admitido.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/scanner.ts",
+          "blob_sha": "02fb7a3206dea948bf171bd649a0119bf8482fbe"
+        },
+        {
+          "path": "modules/atlas/boundary/package.json",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "exports ./native-memory, linhas 19–22; scripts, linhas 44–49",
+          "observation": "O subpath externo proposto já existe, com JS e d.ts. O plano adiciona somente o subpath empresarial e regenera os artefatos afetados.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/boundary/package.json",
+          "blob_sha": "055b46b9d32d765c3c2dc54468137d031bb3de90"
+        },
+        {
+          "path": "modules/atlas/boundary/script/build.ts",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "descritor native-memory; Bun.build/plugins; generateDtsBundle e emissão/check",
+          "observation": "O gerador possui resolução por plugin, descritor explícito da native entry e geração separada de JS/d.ts; a alteração proposta cabe nesse arquivo concedido. Mantém a resolução original nos demais descritores.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/boundary/script/build.ts",
+          "blob_sha": "df0a875e47e98e8803e00818d178166d0b1cb8dd"
+        },
+        {
+          "path": "modules/atlas/boundary/src/generated/native-memory.d.ts",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "exports bound; ScannerBinarySpec 382; AtlasBinding 390; funções 523/531/553",
+          "observation": "A declaração existente inclui os contratos bound e já conhece o tipo ScannerBinarySpec. Reexportar explicitamente seus tipos na fonte é compatível com a geração; não requer edição manual de d.ts.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/boundary/src/generated/native-memory.d.ts",
+          "blob_sha": "e830876f591a2ffca28974db0dd5041f07734e1c"
+        },
+        {
+          "path": "packages/script/package.json",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "dependencies e exports ./spawn-imports",
+          "observation": "@orchestra/script/spawn-imports é um export público real; typescript já é dependência catalog do pacote. A boundary passará a declarar ambas as devDependencies diretamente, sem depender de hoisting incidental.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/script/package.json",
+          "blob_sha": "d46362d2c404fb7fc2c4848b4a43d12de00e5bce"
+        },
+        {
+          "path": "package.json",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "workspaces.packages/catalog.typescript e scripts.check:spawn-imports",
+          "observation": "A raiz inclui packages/* e modules/atlas/boundary; typescript do catálogo é 5.8.2 e o comando real check:spawn-imports está definido.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/package.json",
+          "blob_sha": "3bac883dfbc44466be9afb54a1e175a9643ecdab"
+        },
+        {
+          "path": "script/check-spawn-imports.ts",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "SOURCE/SKIPPED, linhas 22–23; consulta allowed[file], linhas 49–52",
+          "observation": "A regra continua exata por path e cobre .js gerado. O plano novo deixa de exigir child_process no path novo, mantendo o import no path admitido.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/script/check-spawn-imports.ts",
+          "blob_sha": "2dbd447ee433f34bf4d0d02e6299bbb44357df86"
+        },
+        {
+          "path": "script/spawn-allowlist.json",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "linhas 23 e 29–32",
+          "observation": "scanner.ts e generated/native-memory.js já são admitidos. O plano proíbe qualquer mudança à allowlist e não acrescenta site de spawning.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/script/spawn-allowlist.json",
+          "blob_sha": "532e0a09e7ca43777ec6f9792f9429bb73148348"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP10.json",
+          "commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+          "location": "WP10.T07.work/outputs; CHK.10/40/60/61/62; cinco famílias de axiomas",
+          "observation": "Entrega deve incluir ambos subpaths, quatro artefatos, AST, guard real inalterado e preservação dos exports bound. Negativos impedem retornar ao bundle defeituoso ou exportar factories brutos na native entry.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/1feb949244357b8ee7ea7a0c27310281accc7592/modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP10.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/ownership.json",
+          "commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+          "location": "exact_exceptions, technical_allocations e reserva S0-A/WP10.T07",
+          "observation": "Nove paths Atlas distintos possuem owner WP10, task T07 e actor S0-A. atlas-scanner.ts e capabilities.ts estão na reserva. package/lock da raiz continuam sob writer existente.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/1feb949244357b8ee7ea7a0c27310281accc7592/modules/sucafina/Sucafinav1/docs/sf2h-plan/ownership.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+          "commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+          "location": "BUILD-ATLAS, CHECK-ATLAS-GENERATED, TYPECHECK-ATLAS, CHECK-SPAWNS e CI-ATLAS-BUSINESS",
+          "observation": "A geração e o guard da raiz têm comandos/receipts explícitos; a suíte da boundary permanece CI. Digests de guard/allowlist e quatro artefatos são obrigatórios.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/1feb949244357b8ee7ea7a0c27310281accc7592/modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/resident-proof-plan.json",
+          "commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+          "location": "AM05.checks",
+          "observation": "Mantém módulo real, scanner clean/canary/ausente/timeout, commit/restart, ACL e idempotência; acrescenta origem dos imports, quatro digests, exports bound e check:spawn-imports.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/1feb949244357b8ee7ea7a0c27310281accc7592/modules/sucafina/Sucafinav1/docs/sf2h-plan/resident-proof-plan.json"
+        }
+      ],
+      "implementation_acceptance_still_required": [
+        "Geração real dos dois pares JS/d.ts e resolução dos subpaths a partir do consumidor SF.",
+        "Verificação AST/hits, check:generated, typecheck e check:spawn-imports na árvore candidata, sem alterações de guard/allowlist.",
+        "Suite da boundary em GitHub Actions, preservação dos exports bound e negativos que reintroduzem scanner no novo bundle ou removem a regra external.",
+        "AM05 real com scanner, facade DurableMemory, commit/restart, idempotência e autorização corrente."
+      ],
+      "confidence": "Alta para o fechamento da contradição do plano. Nenhum sucesso de build/guard ou preservação comportamental executada é afirmado."
+    }
+  ],
+  "original_findings": [
+    {
+      "id": "T-F01",
+      "status": "CLOSED",
+      "disposition": "RATIFIED",
+      "reason": "C15 conserva registro/carga/digests/shipping/execução própria do Revisor e adiciona a obrigação de uma rota efetiva por operação. C11 adiciona refs de import-preview e run/result sem retirar a prova de carga/consumo ou independência. A ampliação de grants de quatro skills está dentro das concessões dos perfis e do domínio."
+    },
+    {
+      "id": "T-F02",
+      "status": "CLOSED",
+      "disposition": "RATIFIED",
+      "reason": "C16 conserva binding host-only, CallLease, transporte privado, dispatch e autorização atual. A chamada direta continua exigindo SkillLoadReceipt. HostBoundEntryMode é dado do host, não argumento; routine-result bloqueia prepare/run. sf_routine_run continua exigindo admissão C07 vigente, inclusive no caminho positivo."
+    },
+    {
+      "id": "T-F03",
+      "status": "CLOSED",
+      "disposition": "RATIFIED",
+      "reason": "Referências, mappings task/project, owners separados de principal, ACL antes do store Atlas, transação externa e outbox permanecem. A mudança corrige a distribuição dos módulos e não altera templates, memória canônica, source resolver, proteção do namespace ou scanner real."
+    }
+  ],
+  "new_findings": [],
+  "finding_counts": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0
+  },
+  "boundary_assessment": {
+    "packaging": {
+      "runtime_public_paths": [
+        "@orchestra/atlas-boundary/business-memory-ports",
+        "@orchestra/atlas-boundary/native-memory"
+      ],
+      "external_edge": {
+        "bundle": "business-memory-ports",
+        "importer": "modules/atlas/packages/adapter-io/src/memory-emit.ts",
+        "specifier": "./scanner.js",
+        "replacement": "@orchestra/atlas-boundary/native-memory",
+        "external": true
+      },
+      "admitted_spawn_site": "modules/atlas/boundary/src/generated/native-memory.js",
+      "statement": "Sem nova exceção de spawning; reexports aditivos não alteram as funções bound de memória. A garantia final depende dos artefatos reais."
+    },
+    "declarations_and_dependencies": {
+      "existing_native_value_exports": [
+        "createNativeMemory",
+        "decideProjectRule",
+        "proposeProjectRule"
+      ],
+      "planned_additive_value_exports": [
+        "detectAvailableScanner",
+        "runScanner",
+        "KNOWN_SCANNERS",
+        "NO_SCANNER_NAME"
+      ],
+      "planned_additive_type_exports": [
+        "ScannerBinarySpec",
+        "ScanVerdict"
+      ],
+      "direct_dev_dependencies": {
+        "typescript": "catalog:",
+        "@orchestra/script": "workspace:*"
+      },
+      "root_catalog_typescript": "5.8.2",
+      "public_guard_helper": "@orchestra/script/spawn-imports",
+      "lock_writer": "WP10.T01/S0, em bun.lock já concedido",
+      "statement": "ScannerBinarySpec/MemoryRecord são tipos reais usados pela declaração nativa; nenhuma assinatura bound precisa ser redefinida. O gerador de d.ts lê as fontes e não exige imports runtime de tipos."
+    },
+    "ownership": {
+      "atlas_path_count": 9,
+      "unique_atlas_path_count": 9,
+      "exception_mismatches": [],
+      "actor": "S0-A",
+      "task": "WP10.T07",
+      "sf_adapter_paths_added_to_reservation": [
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts"
+      ]
+    },
+    "operation_routes": {
+      "profile_count": 5,
+      "skill_count": 18,
+      "pack_count": 8,
+      "operation_count": 39,
+      "route_count": 39,
+      "unique_route_operation_count": 39,
+      "uncovered_operations": [],
+      "join_mismatches": [],
+      "compared_fields": [
+        "pack_id",
+        "profile.allowed_operations",
+        "skill.allowed_operations",
+        "skill.profiles",
+        "operation.profiles",
+        "input_schema/input_type",
+        "output_type",
+        "producer_task",
+        "consumer_tasks",
+        "requires_loaded_skill_receipt"
+      ],
+      "campaign_manifest_equal": true,
+      "campaign_contracts_equal": true,
+      "wp10_tasks_mirror_equal": true
+    },
+    "changed_skill_grants": [
+      {
+        "skill": "sf-enquadrar-decisao",
+        "added": [
+          "sf_import_preview"
+        ],
+        "removed": []
+      },
+      {
+        "skill": "sf-preparar-revisao-executiva",
+        "added": [
+          "sf_routine_catalog",
+          "sf_routine_prepare",
+          "sf_routine_result",
+          "sf_routine_run",
+          "sf_routine_status"
+        ],
+        "removed": []
+      },
+      {
+        "skill": "sf-explicar-forecast",
+        "added": [
+          "sf_import_preview"
+        ],
+        "removed": []
+      },
+      {
+        "skill": "sf-produzir-bi-contextual",
+        "added": [
+          "sf_dashboard_read"
+        ],
+        "removed": []
+      }
+    ],
+    "authority": "Os grants novos tornam operações já contratadas alcançáveis por skills identificadas; não concedem nova role/ACL, aplicação de import, aprovação de negócio ou execução sem admissão. Preview permanece domínio não aplicado; rotina interactive requer C07 para run. routine-result só consulta a execução autorizada e sintetiza, sem iniciar rotina filha. Todas as rotas continuam exigindo skill carregada e autorização de domínio atual.",
+    "authority_evidence": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json",
+        "commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+        "location": "C11.content final; C15.content final; C16.content final e regras anteriores",
+        "observation": "Define importPreviewRef/analysisBasis/domainApplied=false; rota efetiva com skill; nenhuma chamada direta sem binding/skill; modo de entrada fixado pelo host; C07 vigente.",
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/1feb949244357b8ee7ea7a0c27310281accc7592/modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/agents-atlas-mcp.json",
+        "commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+        "location": "operation_call_routes; quatro skills alteradas; operation_coverage_rule",
+        "observation": "39 rotas positivas com receipts obrigatórios. sf_routine_run exige requires_current_c07_admission:true; workflow de revisão executiva apresenta proposta e só inicia após admissão real.",
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/1feb949244357b8ee7ea7a0c27310281accc7592/modules/sucafina/Sucafinav1/docs/sf2h-plan/agents-atlas-mcp.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+        "commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+        "location": "Cobertura autorizada das 39 operações",
+        "observation": "Preview de arquivo admitido não ganha ferramenta de aplicação. Em routine-result, prepare/run são bloqueados; resposta humana gera novo run.",
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/1feb949244357b8ee7ea7a0c27310281accc7592/modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP10.json",
+        "commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+        "location": "WP10.T06 e checks/axiomas adicionados",
+        "observation": "Wrapper deve validar rota/grants/SkillLoadReceipt, recusar ausência de skill e prepare/run em routine-result.",
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/1feb949244357b8ee7ea7a0c27310281accc7592/modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP10.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP09.json",
+        "commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+        "location": "WP09.T01 e acréscimos de integração",
+        "observation": "Catálogo, preparação, admissão, status/result seguem C07 e usam o mesmo resultado real; proibida recursão.",
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/1feb949244357b8ee7ea7a0c27310281accc7592/modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP09.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/resident-proof-plan.json",
+        "commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+        "location": "AM02 e AM06",
+        "observation": "Exige percorrer rotas reais, ausência de skill como negativo, admissão atual e contraprova de loop negado.",
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/1feb949244357b8ee7ea7a0c27310281accc7592/modules/sucafina/Sucafinav1/docs/sf2h-plan/resident-proof-plan.json"
+      }
+    ]
+  },
+  "verdict": "APPROVED_FOR_EXECUTION",
+  "verdict_scope": "Aprovação do planejamento na especialidade técnica e nas bordas rechecadas. Não é aceite do produto, comprovação de implementação, aprovação de cronograma ou substituição dos outros pareceres independentes.",
+  "residual_uncertainties": [
+    "Os quatro artefatos futuros não foram gerados. A ausência final de spawning no bundle empresarial, self-import público, reproducibilidade e declarações só podem ser aceitos após gates reais.",
+    "A regra de resolução exata precisa ser implementada com o triplo match e falhar em ausência/alteração da aresta; um alias global ou externalização incompleta não satisfaz o plano aprovado.",
+    "A preservação de comportamento dos consumidores bound e a identidade das funções reexportadas precisam da suite real da boundary. Scanner, template, owner/root e engine permanecem fora do escopo de alteração.",
+    "Os devDependencies e bun.lock ainda serão materializados pelo writer designado. Existência do catálogo e do export público é evidência de viabilidade, não receipt de instalação/build.",
+    "As 39 rotas conferidas são relações estáticas coerentes. AM02/AM03/AM06 ainda precisam provar chamadas reais, C07, modo host, revogação, expiry/replay e consumidores.",
+    "Os gates de modelo, scanner, identidade revalidável, persistência e ambiente continuam sujeitos a HOLD quando indisponíveis. Nenhuma aprovação de planejamento transforma NOT_RUN em PASS.",
+    "Sem edição de candidato/GitHub, sem testes locais de produto, sem consulta a pareceres de outros revisores. O parecer anterior continua válido para o SHA anterior."
+  ],
+  "implementation_test_status": "NOT_RUN"
+}

@@ -1,5 +1,5 @@
 {
-  "status": "ORIGINAL_FINDINGS_CLOSED_NEW_CORRECTIONS_PENDING_RECHECK",
+  "status": "ALL_FINDINGS_CLOSED",
   "implementation_test_status": "NOT_RUN",
   "groups": [
     {
@@ -23,6 +23,11 @@
         "initial/product.json",
         "initial/contracts.json",
         "initial/execution.json"
+      ],
+      "closure_ratified_by": [
+        "rechecks/contracts.json",
+        "rechecks/execution.json",
+        "rechecks/product.json"
       ]
     },
     {
@@ -40,6 +45,9 @@
       ],
       "closure_evidence": [
         "initial/contracts.json"
+      ],
+      "closure_ratified_by": [
+        "rechecks/contracts.json"
       ]
     },
     {
@@ -57,6 +65,9 @@
       ],
       "closure_evidence": [
         "initial/contracts.json"
+      ],
+      "closure_ratified_by": [
+        "rechecks/contracts.json"
       ]
     },
     {
@@ -74,6 +85,9 @@
       ],
       "closure_evidence": [
         "initial/product.json"
+      ],
+      "closure_ratified_by": [
+        "rechecks/product.json"
       ]
     },
     {
@@ -91,6 +105,9 @@
       ],
       "closure_evidence": [
         "initial/product.json"
+      ],
+      "closure_ratified_by": [
+        "rechecks/product.json"
       ]
     },
     {
@@ -110,6 +127,9 @@
       ],
       "closure_evidence": [
         "initial/execution.json"
+      ],
+      "closure_ratified_by": [
+        "rechecks/execution.json"
       ]
     },
     {
@@ -127,6 +147,9 @@
       ],
       "closure_evidence": [
         "initial/product.json"
+      ],
+      "closure_ratified_by": [
+        "rechecks/product.json"
       ]
     },
     {
@@ -144,6 +167,9 @@
       ],
       "closure_evidence": [
         "initial/execution.json"
+      ],
+      "closure_ratified_by": [
+        "rechecks/execution.json"
       ]
     }
   ],
@@ -152,7 +178,7 @@
     {
       "id": "P-R2-01",
       "severity": "P1",
-      "status": "APPLIED_PENDING_RECHECK",
+      "status": "CLOSED",
       "source": "initial/product.json",
       "change": "39 rotas positivas perfil/skill/operação, grants nas skills existentes, consumo real de preview e rotina, sem bypass de C16; recursão de rotina negada.",
       "paths": [
@@ -161,12 +187,14 @@
         "contracts.json",
         "resident-proof-plan.json",
         "tools/validate_resident_plan.py"
-      ]
+      ],
+      "closed_on_commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+      "closure_evidence": "rechecks/product.json"
     },
     {
       "id": "T2-F01",
       "severity": "P1",
-      "status": "APPLIED_PENDING_RECHECK",
+      "status": "CLOSED",
       "source": "initial/contracts.json",
       "change": "Factories puros no novo bundle; scanner pelo native-memory existente; resolução exata da dependência transitiva, nove caminhos exclusivos, AST e spawn gate sem mudança de guard/allowlist.",
       "paths": [
@@ -175,19 +203,25 @@
         "ownership.json",
         "ci-recipes.json",
         "work-packages/WP10.json"
-      ]
+      ],
+      "closed_on_commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+      "closure_evidence": "rechecks/contracts.json"
     },
     {
       "id": "E2-F01",
       "severity": "P2",
-      "status": "APPLIED_PENDING_RECHECK",
+      "status": "CLOSED",
       "source": "initial/execution.json",
       "change": "createDecisionCasePort usa product/decisions/case-port.ts na interface, task e NATIVE-CASE; validador detecta divergência de handoff.",
       "paths": [
         "campaign.json",
         "output-handoffs.json",
         "tools/validate_execution_plan.py"
-      ]
+      ],
+      "closed_on_commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+      "closure_evidence": "rechecks/execution.json"
     }
-  ]
+  ],
+  "reviewed_corrected_candidate": "1feb949244357b8ee7ea7a0c27310281accc7592",
+  "recheck_verdict": "APPROVED_FOR_EXECUTION"
 }

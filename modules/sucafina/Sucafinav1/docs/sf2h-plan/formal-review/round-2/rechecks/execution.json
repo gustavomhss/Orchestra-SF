@@ -1,0 +1,339 @@
+{
+  "review_id": "SF2H-ROUND2-EXECUTION-RECHECK-1feb949",
+  "reviewer": "sf_formal2_execution",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewed_branch": "sf-product-plan",
+  "reviewed_commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+  "code_baseline_commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "review_type": "INDEPENDENT_PROPORTIONAL_RECHECK",
+  "initial_review": {
+    "reviewed_commit": "38986380cd7b5697c0be30c1f55d43eddee63045",
+    "json": "/workspace/scratch/838a0195183d/sf2h-recheck/execution.json",
+    "markdown": "/workspace/scratch/838a0195183d/sf2h-recheck/execution.md",
+    "sha256": {
+      "execution.json": "b085d2310f047ab2771fac8cece73ed0a0991d34cb5bc403f321f18fda1bd73e",
+      "execution.md": "a93ef97902a7c330069f2605de552172914cb444f883e61eb99117ef5d94b9ed"
+    },
+    "unchanged": true,
+    "initial_verdict": "APPROVED_FOR_EXECUTION",
+    "scope": "Reexaminar E2-F01 e bordas de execução alteradas; ratificar ou reabrir E-F01/E-F02/E-F03 com base no delta."
+  },
+  "candidate_provenance": {
+    "candidate_copy": "/workspace/scratch/838a0195183d/sf2h-candidate-1feb949",
+    "supplied_receipt": "/workspace/scratch/838a0195183d/sf2h-work/candidate-1feb949.json",
+    "receipt_candidate_commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+    "receipt_parent": "38986380cd7b5697c0be30c1f55d43eddee63045",
+    "receipt_verified_blob_count": 110,
+    "receipt_changed_files": 49,
+    "receipt_git_blob_sha1_match": true,
+    "receipt_all_changes_within": "modules/sucafina/Sucafinav1/docs/sf2h-plan/",
+    "provenance_limit": "O recibo de cópia congelada foi fornecido e lido; os 110 downloads não foram repetidos por este revisor. Fontes de código necessárias foram consultadas independentemente no GitHub MCP no SHA exato, com blobs abaixo."
+  },
+  "independence": {
+    "candidate_authorship": false,
+    "candidate_edited": false,
+    "github_mutated": false,
+    "other_reviewer_reports_read": false,
+    "subagents_spawned": false,
+    "remote_access": "GitHub MCP somente",
+    "product_tests_executed": false,
+    "validators_executed": false,
+    "method": "Leitura dos protocolos já examinados, comparação estática do delta, conferência de referências/campos e inspeção das APIs/fontes primárias. A aprovação do guard executado por outra frente não foi usada como substituto desta análise."
+  },
+  "finding_dispositions": [
+    {
+      "id": "E2-F01",
+      "original_severity": "P2",
+      "previous_status": "OPEN",
+      "status": "CLOSED",
+      "title": "O handoff nativo do caso usa dois paths para o mesmo export",
+      "closure_basis": "resident_handoff_interfaces agora aponta para product/decisions/case-port.ts, igual à saída de WP11.T01 e ao handoff NATIVE-CASE. Produtor WP11.T01, export createDecisionCasePort e checkpoint14 permanecem coerentes. O validador passa a exigir coincidência de path normalizado, produtor e checkpoint com um output_handoff.",
+      "evidence": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+          "pointer": "/resident_handoff_interfaces/1",
+          "line": 29714,
+          "value": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/output-handoffs.json",
+          "pointer": "/outputs/1",
+          "line": 32,
+          "value": "case-port.ts::createDecisionCasePort; WP11.T01; ready_minute14"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP11.json",
+          "pointer": "/tasks/0/outputs",
+          "value": "NATIVE-CASE T+14: product/decisions/case-port.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/tools/validate_execution_plan.py",
+          "lines": [
+            43,
+            49
+          ],
+          "value": "HANDOFF_INTERFACE_DRIFT compara path/produtor/checkpoint"
+        }
+      ],
+      "counterexample_recheck": "O produtor que segue a task e o consumidor que segue resident_handoff_interfaces agora selecionam o mesmo arquivo. O contraexemplo original de imports distintos deixou de ser autorizado pelo plano.",
+      "limits": "Conferência de especificação e leitura do validador; não é execução do import nem teste de produto.",
+      "blocks_execution": false
+    }
+  ],
+  "original_findings": [
+    {
+      "id": "E-F01",
+      "original_severity": "P1",
+      "previous_status": "CLOSED",
+      "status": "CLOSED",
+      "disposition": "RATIFIED",
+      "rationale": "T06/T07/T05, 74 tasks, 15 WPs e C01–C17 permanecem decompostos. Atlas recebe três paths adicionais no mesmo T07/S0-A, sem ator, lease ou task novos. Root lock continua no writer existente T01/S0. As 39 rotas usam os dezoito skills já atribuídos. Nenhum incremento novo ficou sem produtor/consumidor ou criou dependência de construção incompatível com a alocação declarada.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json#/work_packages",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/ownership.json#/exact_exceptions",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/ownership.json#/actor_boundaries",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/schedule.json#/actor_allocations",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/agents-atlas-mcp.json#/operation_call_routes",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/output-handoffs.json"
+      ]
+    },
+    {
+      "id": "E-F02",
+      "original_severity": "P1",
+      "previous_status": "CLOSED",
+      "status": "CLOSED",
+      "disposition": "RATIFIED",
+      "rationale": "DAG e campos de dependências/build/proof/atores das tasks não mudaram. Planner/imports continuam podendo iniciar T+10 por T02, e WP14 continua com construção68 e consumo75. Prompts S0–S4 permanecem idênticos; as branches e a transferência WP14 não foram revertidas.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/task-dag.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP03.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP06.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP14.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/schedule.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/prompts/S0.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/prompts/S1.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/prompts/S2.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/prompts/S3.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/prompts/S4.md"
+      ]
+    },
+    {
+      "id": "E-F03",
+      "original_severity": "P2",
+      "previous_status": "CLOSED",
+      "status": "CLOSED",
+      "disposition": "RATIFIED",
+      "rationale": "As oito requests CI estão inalteradas. APP-SRC e APP-BROWSER continuam seleções obrigatórias e distintas, com recibos separados. O delta muda a descrição de cobertura Atlas e acrescenta um gate estático; não funde as duas seleções de app. Workflow e validação de requests foram relidos no novo SHA e conservam os blobs examinados anteriormente.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json#/recipes",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json#/receipt_rules",
+        ".github/workflows/test-ci.yml",
+        "script/test-ci-request.ts",
+        "script/test-ci-package.ts"
+      ]
+    }
+  ],
+  "new_findings": [],
+  "severity_summary": {
+    "open_P0": 0,
+    "open_P1": 0,
+    "open_P2": 0,
+    "new_findings": 0,
+    "closed_on_recheck": [
+      "E2-F01"
+    ]
+  },
+  "reviewed_areas": [
+    {
+      "area": "Footprint e mirrors",
+      "result": "CONSISTENT",
+      "observations": [
+        "Permanecem 15 WPs, 74 tasks,17 contratos,19 outputs intermediários,18 leases e18 skills. As cinco prompts não mudaram.",
+        "Os espelhos contracts/ownership/ci/resident_ai/output_handoffs/resident_ui_consumption e os15 JSONs de WPs coincidem com campaign.json nos campos correspondentes.",
+        "O proof-map adiciona49 critérios; não remove nenhum. Os49 novos permanecem NOT_RUN. Três expectativas antigas de T07 foram atualizadas para refletir a borda Atlas."
+      ],
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/manifest.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/proof-map.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/prompts/"
+      ]
+    },
+    {
+      "area": "Alocação física e DAG",
+      "result": "UNCHANGED_AND_RATIFIED",
+      "observations": [
+        "schedule.actor_allocations,central_allocation,slot_lifecycle,actor_capacity_check,feasibility_gate e budgets são idênticos ao candidato anterior.",
+        "Cinco sessões com quatro slots incluindo coordenador; vinte físicos e vinte e três identidades ao longo do tempo. Os três reviewers novos continuam dependentes da liberação efetiva dos builders.",
+        "Correções de WP02/WP05/WP07 permanecem com S1/S2/S3; nenhum builder encerrado ou reviewer foi acrescentado como escritor.",
+        "task-dag.json não mudou em bytes; os campos de dependências,atores,build/proof das74tasks não mudaram. Não se criou novo pré-requisito de construção em ordem impossível."
+      ],
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/schedule.json#/actor_allocations",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/schedule.json#/slot_lifecycle",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/ownership.json#/skill_leases",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/task-dag.json"
+      ]
+    },
+    {
+      "area": "Atlas: nove paths e root lock",
+      "result": "CONSISTENT",
+      "observations": [
+        "Os nove paths Atlas aparecem como exceções exatas de WP10.T07/S0-A e cabem no mesmo actor_boundary sf2-atlas. As três adições são native-bound.ts e generated/native-memory.js/.d.ts.",
+        "Os demais seis paths são package.json,build.ts,business-memory-entry.ts,o par business-memory-ports e seu teste. Todos continuam com um escritor.",
+        "A declaração das devDependencies typescript e @orchestra/script na boundary pertence a S0-A; o root lock fica explicitamente com WP10.T01/S0, que já possui manifests/locks compartilhados. Não há transferência tácita de root lock ao delegado.",
+        "A exceção não autoriza scanner.ts,memory-emit.ts,native-memory.ts,guard ou allowlist. Source scanner permanece canônico e o native-bound conserva APIs bound."
+      ],
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/ownership.json#/exact_exceptions",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/ownership.json#/technical_allocations",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/ownership.json#/actor_boundaries",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json#/resident_packaging/package_change",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json#/16"
+      ]
+    },
+    {
+      "area": "ATLAS-PACKAGE e dependências antecipadas",
+      "result": "CONSISTENT",
+      "observations": [
+        "ATLAS-PACKAGE mantém produtor T07,ready20 e consumidores T07/T02 de WP12, agora cobrindo ambos subpaths e quatro gerados. Exige geração,AST,check:generated e guard real com recibo de candidato e digests; sem prova é HOLD.",
+        "A tranche10–20 de S0-A agora descreve esse trabalho adicional;20–35 continua consumindo DOC-REF eATLAS-MAP20 eprotected-store25,seguida de roundtrip45 efull55.",
+        "Nenhum outro output-handoff ou task_output_dependency foi alterado. GNATIVE13/14/15/16→18→20,docs20/35,catalog25/full42 eWP14/Atlas mantêm as bordas examinadas.",
+        "A linguagem de cabe na tranche é tratada como orçamento condicional à luz de schedule.feasibility e G2H; não foi usada como evidência de duração."
+      ],
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/output-handoffs.json#/outputs/7",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/output-handoffs.json#/task_output_dependencies",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json#/work_packages/WP10/tasks/WP10.T07/implementation_segments",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/schedule.json#/feasibility_gate"
+      ]
+    },
+    {
+      "area": "MCP39 e consumo",
+      "result": "CONSISTENT",
+      "observations": [
+        "As39operation_call_routes cobrem exatamente as39operações,sem duplicata e sem task/skill/perfil inexistente.",
+        "Para todas as rotas conferi pertença da skill ao perfil,da operação aos grants de perfil+skill,do perfil à operação e correspondência pack/produtor. Nenhuma interseção inválida.",
+        "Todos exigem SkillLoadReceipt eAM02; routine_run exige admissãoC07. O modo routine-result bloqueia prepare/run e a importação opcional reutiliza C04preview sem aplicar domínio.",
+        "Os novos critérios ficam em WP00.T02,WP06.T02/T03,WP09.T01,WP10.T06 eWP12.T02 já atribuídos. Nenhuma fonte de skill,arquivo,lease ou ator novo foi introduzido por essas rotas."
+      ],
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/agents-atlas-mcp.json#/operation_call_routes",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/resident-ui-consumption.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/resident-proof-plan.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/ownership.json#/skill_leases"
+      ]
+    },
+    {
+      "area": "CI,gates e proveniência",
+      "result": "CONSISTENT",
+      "observations": [
+        "CHECK-SPAWNS executa bun run check:spawn-imports na raiz,ownerT07/actorS0-A,emATLAS-PACKAGE20 eG4/G7. O comando existe no package.json exato consultado.",
+        "O módulo @orchestra/script/spawn-imports expõe hits(file,text),typescript existe no catálogo,eo subpath native-memory já é público. O allowlist admite child_process em generated/native-memory.js e não em business-memory-ports.js.",
+        "generate/check:generated/typecheck são comandos existentes da boundary. A verificação AST adicional é trabalho explicitamente planejado em build.ts e no teste já possuído; não foi confundida com comportamento existente.",
+        "As oito requests e as regras de validação/seleção/recibos permanecem intactas. A prova cumulativa candidato→snapshot→request→run e exigência de repetir gates afetados não foram enfraquecidas.",
+        "A suíte Atlas remote mantém a seleção integral; o gate estático extra não substitui negativos de produto,AM05 nem as seleções UI."
+      ],
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json#/static_gates",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json#/receipt_rules",
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/resident-proof-plan.json#/proofs/4",
+        "package.json",
+        "packages/script/package.json",
+        "packages/script/src/spawn-imports.ts",
+        "script/check-spawn-imports.ts",
+        "script/spawn-allowlist.json",
+        "modules/atlas/boundary/package.json",
+        ".github/workflows/test-ci.yml",
+        "script/test-ci-request.ts"
+      ]
+    }
+  ],
+  "remote_source_receipts": [
+    {
+      "path": "package.json",
+      "blob_sha": "3bac883dfbc44466be9afb54a1e175a9643ecdab",
+      "ref": "1feb949244357b8ee7ea7a0c27310281accc7592",
+      "transport": "GitHub MCP fetch_file"
+    },
+    {
+      "path": "packages/script/package.json",
+      "blob_sha": "d46362d2c404fb7fc2c4848b4a43d12de00e5bce",
+      "ref": "1feb949244357b8ee7ea7a0c27310281accc7592",
+      "transport": "GitHub MCP fetch_file"
+    },
+    {
+      "path": "packages/script/src/spawn-imports.ts",
+      "blob_sha": "42d087c33f314523c0a4fb3e4731d39f60e2f907",
+      "ref": "1feb949244357b8ee7ea7a0c27310281accc7592",
+      "transport": "GitHub MCP fetch_file"
+    },
+    {
+      "path": "modules/atlas/packages/adapter-io/src/native-bound.ts",
+      "blob_sha": "c77be4b3d2f491a306d15fd7e8ede34d4bef5385",
+      "ref": "1feb949244357b8ee7ea7a0c27310281accc7592",
+      "transport": "GitHub MCP fetch_file"
+    },
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "blob_sha": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "ref": "1feb949244357b8ee7ea7a0c27310281accc7592",
+      "transport": "GitHub MCP fetch_file"
+    },
+    {
+      "path": "modules/atlas/boundary/script/build.ts",
+      "blob_sha": "df0a875e47e98e8803e00818d178166d0b1cb8dd",
+      "ref": "1feb949244357b8ee7ea7a0c27310281accc7592",
+      "transport": "GitHub MCP fetch_file"
+    },
+    {
+      "path": "script/check-spawn-imports.ts",
+      "blob_sha": "2dbd447ee433f34bf4d0d02e6299bbb44357df86",
+      "ref": "1feb949244357b8ee7ea7a0c27310281accc7592",
+      "transport": "GitHub MCP fetch_file"
+    },
+    {
+      "path": "modules/atlas/boundary/package.json",
+      "blob_sha": "055b46b9d32d765c3c2dc54468137d031bb3de90",
+      "ref": "1feb949244357b8ee7ea7a0c27310281accc7592",
+      "transport": "GitHub MCP fetch_file"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "blob_sha": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "ref": "1feb949244357b8ee7ea7a0c27310281accc7592",
+      "transport": "GitHub MCP fetch_file"
+    },
+    {
+      "path": "script/test-ci-package.ts",
+      "blob_sha": "a10c7b04ca6633f688b62069a9a9832aaa4543dd",
+      "ref": "1feb949244357b8ee7ea7a0c27310281accc7592",
+      "transport": "GitHub MCP fetch_file"
+    },
+    {
+      "path": "script/spawn-allowlist.json",
+      "blob_sha": "532e0a09e7ca43777ec6f9792f9429bb73148348",
+      "ref": "1feb949244357b8ee7ea7a0c27310281accc7592",
+      "transport": "GitHub MCP fetch_file"
+    }
+  ],
+  "verdict": "APPROVED_FOR_EXECUTION",
+  "verdict_scope": "Aprovação do plano no SHA exato sob o protocolo de execução; E2-F01 fechado e fechamentos originais ratificados. Não é aceite de produto implementado nem garantia de término em120minutos.",
+  "residual_uncertainties": [
+    "Gerar quatro artefatos,instalar/resolver devDependencies,inspecionar AST e executar guard dentro da tranche10–20 continua orçamento não medido. Root lock deve ser produzido pelo writerS0/T01 e incorporado ao mesmo candidato; atraso real deve repercutir emATLAS-PACKAGE/G2H,sem pular gate.",
+    "As39rotas positivas adicionais detalham execução/prova e podem aumentar o trabalho real de AM02. Mesmo número de tasks/leases não demonstra custo constante. G2H deve usar trabalho remanescente e latências observadas.",
+    "As incertezas anteriores de sessões/roster,runners/modelos,scanner,seleção final completa,harness UI real,correções/rechecks e integração tardia continuam. Nenhuma foi transformada em zero ou em prova de sucesso nesta revisão.",
+    "Os scripts existentes e seus exports foram conferidos; a nova AST, a aresta external, os quatro artefatos gerados e a preservação das APIs bound ainda precisam ser implementados e demonstrados no candidato de produto. Não executei geração, typecheck, guards ou testes.",
+    "Os checkpoints de capacidade podem resultar em AT_RISK/MISSED. A regra exige manter todo o escopo e continuar com ETA observado; esta aprovação não certifica os120minutos.",
+    "Rechecagem proporcional de delta sobre a revisão integral anterior; não houve nova auditoria irrestrita de todo código do repositório nem consulta a conclusões de outros revisores."
+  ],
+  "implementation_test_status": "NOT_RUN",
+  "verification_performed": [
+    "Comparação estática de estruturas JSON,spelling de paths e mirrors.",
+    "Leitura dos validadores alterados,sem executá-los.",
+    "Consulta read-only GitHubMCP no commit exato para APIs/comandos/allowlist relevantes.",
+    "Nenhum teste local de produto,nenhum CI disparado,nenhuma escrita no candidato ou GitHub."
+  ]
+}
+

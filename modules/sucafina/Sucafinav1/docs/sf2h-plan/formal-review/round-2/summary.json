@@ -1,0 +1,124 @@
+{
+  "status": "APPROVED_FOR_EXECUTION",
+  "reviewed_content_commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+  "plan_sha256": "aaba00217ac1978860853fb0c72748b1b275fe4ee4d3b998c42a9f730dfe98a2",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-product-plan",
+  "reviewers": [
+    {
+      "role": "product",
+      "review_id": "R2-PRODUCT-RECHECK-1feb949",
+      "verdict": "APPROVED_FOR_EXECUTION",
+      "report_json": "rechecks/product.json",
+      "report_markdown": "rechecks/product.md",
+      "closed_originals": [
+        "P-F01",
+        "P-F02",
+        "P-F03",
+        "P-F04"
+      ],
+      "closed_round_2_findings": [
+        "P-R2-01"
+      ]
+    },
+    {
+      "role": "contracts",
+      "review_id": "SF2H-R2-T-RECHECK-1feb949",
+      "verdict": "APPROVED_FOR_EXECUTION",
+      "report_json": "rechecks/contracts.json",
+      "report_markdown": "rechecks/contracts.md",
+      "closed_originals": [
+        "T-F01",
+        "T-F02",
+        "T-F03"
+      ],
+      "closed_round_2_findings": [
+        "T2-F01"
+      ]
+    },
+    {
+      "role": "execution",
+      "review_id": "SF2H-ROUND2-EXECUTION-RECHECK-1feb949",
+      "verdict": "APPROVED_FOR_EXECUTION",
+      "report_json": "rechecks/execution.json",
+      "report_markdown": "rechecks/execution.md",
+      "closed_originals": [
+        "E-F01",
+        "E-F02",
+        "E-F03"
+      ],
+      "closed_round_2_findings": [
+        "E2-F01"
+      ]
+    }
+  ],
+  "findings": {
+    "original_closed": 10,
+    "round_2_closed": 3,
+    "total_closed": 13,
+    "total_by_severity": {
+      "P0": 0,
+      "P1": 10,
+      "P2": 3
+    },
+    "open_by_severity": {
+      "P0": 0,
+      "P1": 0,
+      "P2": 0
+    }
+  },
+  "coverage": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "axioms": 1230,
+    "checks": 380,
+    "criteria_mapped": 1610,
+    "profiles": 5,
+    "skills": 18,
+    "mcp_packs": 8,
+    "mcp_operations": 39,
+    "integrated_proofs": 6,
+    "physical_slots": 20,
+    "output_handoffs": 19,
+    "skill_leases": 18
+  },
+  "plan_validation": {
+    "status": "PLAN_STRUCTURE_PASS",
+    "derived_artifacts": 50,
+    "negative_controls": 8,
+    "product_proofs_run": false
+  },
+  "mandatory_guard": {
+    "status": "PASS",
+    "candidate_commit": "1feb949244357b8ee7ea7a0c27310281accc7592",
+    "command": "bun run check:guards --base origin/dev",
+    "counts": {
+      "rules": 78,
+      "changed_paths": 110,
+      "gate_findings": 0,
+      "warn_findings": 1,
+      "errors": 0
+    },
+    "receipt": "guard/receipt.json",
+    "warning_disposition": "guard/README.md",
+    "final_delivery_commit": "Must be checked again after reports are committed; this receipt applies only to its recorded SHA."
+  },
+  "publication_receipt": "checkpoint.json",
+  "mcp_large_file_read": "access-check.json",
+  "content_preservation": "content-preservation.json",
+  "implementation_test_status": "NOT_RUN",
+  "execution_target": {
+    "minutes": 120,
+    "status": "CONDITIONAL_NOT_MEASURED",
+    "scope_reduction_allowed": false,
+    "policy": "Use actual resource and latency observations; mark AT_RISK/MISSED and continue the full scope when necessary."
+  },
+  "delivery_scope": "Review reports and status only; the approved canonical source and 50 generated mirrors remain byte-identical. Four explanatory guides change review-status sentences only.",
+  "remaining_uncertainties": [
+    "Runtime, real AI/MCP/Atlas/Relay, persistence, authorization, UI and complete CI need implementation and execution evidence.",
+    "Actual model/scanner/runner/session capacity and latency remain execution gates.",
+    "Atlas generation and 39 positive MCP routes may exceed their initial time reserves; actual timing must govern G2H.",
+    "Reconcile any newer dev code at T0 before adopting it; the examined baseline stays pinned."
+  ]
+}

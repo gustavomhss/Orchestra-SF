@@ -132,7 +132,7 @@ Se a execução adotar um `dev` mais novo, o preflight reconcilia o workflow de 
 
 C15–C17, as três tasks novas e as alocações estão integrados à campanha. Após qualquer mudança na fonte canônica, regenere campanha, WPs/Markdown, ownership, schedule, DAG, coverage, evidence-plan, proof-map, prompts e índices. Os relatórios da primeira rodada são históricos e não devem ser reescritos.
 
-A verificação pontual deste delta passou para IDs, dependências de outputs, janelas, ocupação de slots, dezoito leases, cobertura 5/18/8/39, seis provas e oito recipes. Não implementou o produto, não rodou testes do repositório, não disparou CI e não executou as provas nativas. A revisão independente do candidato integrado permanece necessária.
+A verificação pontual deste delta passou para IDs, dependências de outputs, janelas, ocupação de slots, dezoito leases, cobertura 5/18/8/39, seis provas e oito recipes. Não implementou o produto, não rodou testes do repositório, não disparou CI e não executou as provas nativas. A revisão independente foi concluída no SHA indicado na [consolidação formal](../formal-review/round-2/SUMMARY.md); a aprovação mantém os gates e a meta de prazo condicionada.
 
 ### Fontes consultadas
 

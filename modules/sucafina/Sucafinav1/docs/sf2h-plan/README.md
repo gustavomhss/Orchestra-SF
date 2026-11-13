@@ -1,6 +1,6 @@
 # Orchestra SF — plano integral de produto e IA
 
-**Estado: RECHECK_PENDING.** Os três revisores fecharam os dez apontamentos originais. A rodada 2 encontrou dois P1 e um P2 adicionais, corrigidos neste candidato e enviados para rechecagem no novo SHA. [Estado e pareceres](formal-review/README.md).
+**Estado: APPROVED_FOR_EXECUTION.** Três agentes independentes aprovaram o planejamento corrigido em `1feb949244357b8ee7ea7a0c27310281accc7592`. Os 13 achados das duas rodadas formais estão encerrados; nenhum P0, P1 ou P2 ficou aberto nos escopos examinados. Este commit de entrega registra os pareceres e o fechamento, preservando a fonte canônica e seus 50 espelhos. [Consolidação e limites](formal-review/round-2/SUMMARY.md).
 
 O plano preserva todo o escopo e incorpora a equipe residente: **15 WPs, 74 tasks, 17 contratos, cinco perfis, dezoito skills, um MCP com oito packs e 39 operações, Atlas SF e seis provas integradas**. A implementação permanece PLANNED/NOT_RUN.
 
@@ -26,3 +26,13 @@ Use `python tools/render_plan.py` depois de alterar a campanha; `python tools/re
 As [fontes históricas](sources), [protótipos sintéticos](prototypes/README.md), [pareceres anteriores](reviews/README.md) e [primeira rodada formal](formal-review/round-1/SUMMARY.md) continuam preservados. [SCOPE-STATUS.md](SCOPE-STATUS.md) explica a precedência.
 
 A meta de implementação é 120 minutos, condicionada à capacidade e às durações observadas. A campanha continua com o escopo inteiro se o prazo não for atingido. Azure/deploy e novos acessos corporativos ficam fora desta frente.
+
+## Leitura pelo GitHub MCP
+
+O leitor de arquivo raw do conector pode recusar `campaign.json` por tamanho. A leitura integral foi conferida pelo endpoint de Git blob, no mesmo MCP e com as mesmas permissões:
+
+```text
+https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/376ec1b545812f44652d2ae834bdbc86ba888106
+```
+
+Neste conector, `structuredContent.content` retorna o JSON canônico já decodificado. Faça o parse e selecione as seções necessárias, sem despejar o documento inteiro no contexto. Se a fonte mudar, obtenha o novo SHA do blob na árvore Git do commit fixado; não reutilize o SHA antigo como se fosse a versão nova. Os WPs, contratos e demais espelhos menores continuam disponíveis para leitura direta. [Recibo de acesso e igualdade do conteúdo](formal-review/round-2/access-check.json).
