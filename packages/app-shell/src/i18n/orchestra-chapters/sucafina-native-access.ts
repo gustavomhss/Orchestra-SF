@@ -8,6 +8,7 @@ export const SF_NATIVE_ACCESS_COPY = {
   "sucafina.native.access.error": "Access could not be verified.",
   "sucafina.native.access.errorDescription": "Check your connection and try again.",
   "sucafina.native.access.retry": "Check again",
+  "sucafina.native.access.signOut": "Sign out",
 }
 
 export const SF_NATIVE_ACCESS_COPY_BR: Record<keyof typeof SF_NATIVE_ACCESS_COPY, string> = {
@@ -20,4 +21,5 @@ export const SF_NATIVE_ACCESS_COPY_BR: Record<keyof typeof SF_NATIVE_ACCESS_COPY
   "sucafina.native.access.error": "Não foi possível verificar o acesso.",
   "sucafina.native.access.errorDescription": "Verifique sua conexão e tente novamente.",
   "sucafina.native.access.retry": "Verificar novamente",
+  "sucafina.native.access.signOut": "Sair",
 }
