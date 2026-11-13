@@ -79,6 +79,7 @@ test("human workbook admission, Planner preview, atomic receipt and retry surviv
     const preview = await imports.preview(selection, previewGrant.value)
     expect(preview.status).toBe("ok")
     if (preview.status !== "ok") return
+    const domainBeforeAnalysis = await app.store.transaction("planner", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
     const analysis = await imports.readPreviewForAnalysis({ previewRef: preview.value.id, request: selection }, previewGrant.value)
     expect(analysis.status).toBe("ok")
     if (analysis.status === "ok") {
@@ -87,6 +88,10 @@ test("human workbook admission, Planner preview, atomic receipt and retry surviv
     }
     expect(await imports.readPreviewForAnalysis({ previewRef: preview.value.id, request: { ...selection, options: { sheet: "other" } } }, previewGrant.value)).toMatchObject({ status: "stale" })
     expect(await imports.readPreviewForAnalysis({ previewRef: preview.value.id, request: { ...selection, admittedFileRef: "other" } }, previewGrant.value)).toMatchObject({ status: "stale" })
+    expect(await app.store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot }))).toEqual(domainBeforeAnalysis)
+    await app.store.transaction("dashboard", async (_, blobs) => { await blobs.put(`sf-import/${file.value.ref}`, new Uint8Array([1, 2, 3]), "application/octet-stream"); return { commit: true, value: undefined } })
+    expect((await imports.readPreviewForAnalysis({ previewRef: preview.value.id, request: selection }, previewGrant.value)).status).not.toBe("ok")
+    await app.store.transaction("dashboard", async (_, blobs) => { await blobs.put(`sf-import/${file.value.ref}`, bytes, "application/octet-stream"); return { commit: true, value: undefined } })
     ui.finish(previewGrant.value)
     const applyInput = { manifestId: preview.value.id, version: preview.value.version }
     const apply = async () => { const grant = await human.admit(request, "imports.apply", applyInput); if (grant.status !== "ok") throw new Error(grant.reason); const result = await imports.apply(applyInput, grant.value); human.finish(grant.value); return result }

@@ -68,6 +68,12 @@ test("authorized capability reads through an issued scoped source and consumes o
       return { commit: false, value: prepareProcurementMutation({ snapshot, actor: { id: "a", roles: ["requester"], canWrite: true, assigned: [], domains: [] }, environment: await host.environment(), context: admission.value, target: targetRef, scope: preparationSource.value.scope, evidence: preparationSource.value.evidence, command: { page: "Requests", action: "save", id: "PR-1", version: 0, values: { pr: { estAmount: 125 } } }, operationId: "collateral", idempotencyKey: "collateral" }) }
     })
     expect(collateral).toBeUndefined()
+    const unrelatedSettings = await persistence.transaction("procurement", async (snapshot) => {
+      const store = snapshot.data.store as { form?: unknown }
+      store.form = { currency: "EUR" }
+      return { commit: false, value: prepareProcurementMutation({ snapshot, actor: { id: "a", roles: ["requester"], canWrite: true, assigned: [], domains: [] }, environment: await host.environment(), context: admission.value, target: targetRef, scope: preparationSource.value.scope, evidence: preparationSource.value.evidence, command: { page: "Requests", action: "save", id: "PR-1", version: 0, values: { pr: { estAmount: 125 } } }, operationId: "settings", idempotencyKey: "settings" }) }
+    })
+    expect(unrelatedSettings).toBeUndefined()
     const { createProcurementScenarioPreparation } = await import("../../../product/procurement/scenario-preparation.ts")
     const operation = { kind: "replace" as const, targetRef: issued.value, amount: 125, currency: "USD", period: targetRef.period }
     const coverage = { basisId: "basis", basisVersion: 1, alternativeId: "a", alternativeVersion: 1, currency: "USD", horizon: targetRef.period, issues: [], evaluatedSourceRefs: [], coverageState: "pending" as const, entries: [], derivedMissingCategoryIds: [] }

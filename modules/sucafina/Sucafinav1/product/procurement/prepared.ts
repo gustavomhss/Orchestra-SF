@@ -45,7 +45,7 @@ export function prepareProcurementMutation(input: { snapshot: Snapshot; actor: A
     const before = object(object(beforeStore.requests)[prepared.target.id]).request
     const after = object(object(afterStore.requests)[prepared.target.id]).request
     const others = (value: unknown) => Object.fromEntries(Object.entries(object(value)).filter(([id]) => id !== prepared.target.id))
-    if (digestSfValue(others(beforeStore.requests)) !== digestSfValue(others(afterStore.requests)) || digestSfValue(beforeStore.suppliers ?? []) !== digestSfValue(afterStore.suppliers ?? []) || digestSfValue(beforeStore.issued ?? { pr: [], po: [] }) !== digestSfValue(afterStore.issued)) return { result }
+    if (digestSfValue(others(beforeStore.requests)) !== digestSfValue(others(afterStore.requests)) || digestSfValue(beforeStore.suppliers ?? []) !== digestSfValue(afterStore.suppliers ?? []) || digestSfValue(beforeStore.issued ?? { pr: [], po: [] }) !== digestSfValue(afterStore.issued) || ["settings", "form", "sup", "lastIssued", "actCalls"].some((key) => Object.hasOwn(beforeStore, key) && digestSfValue(beforeStore[key]) !== digestSfValue(afterStore[key]))) return { result }
     const untouched = (value: unknown) => Object.fromEntries(Object.entries(object(value)).filter(([key]) => key !== "pr" && key !== "history"))
     const prUntouched = (value: unknown) => Object.fromEntries(Object.entries(object(object(value).pr)).filter(([key]) => !keys.includes(key)))
     const history = rows(object(after).history)

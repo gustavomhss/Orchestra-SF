@@ -22,6 +22,10 @@ Informe mínimo, máximo e quantidade de passos e selecione **Evaluate sensitivi
 
 ## Escolher e encaminhar
 
-A prévia e a avaliação salva apoiam a decisão humana. Para registrar uma escolha ou preparar mudanças, use o fluxo da decisão e confirme a alternativa, o motivo e as condições apresentadas. Preparar uma mudança não a executa nem concede aprovação. A aplicação e os recibos permanecem nos domínios responsáveis.
+A prévia e a avaliação salva apoiam a decisão humana. Em **Promote a combination**, escolha uma combinação disponível, use **Find coverage assessments** para selecionar uma cobertura autorizada, informe o título e selecione **Create alternative**. A criação registra uma alternativa na decisão; não aplica as operações ao domínio.
+
+Abra a decisão, compare a nova alternativa, examine as condições e registre a escolha com seu motivo. Como a decisão mudou de versão, atualize o catálogo e faça uma nova prévia antes de prosseguir. Em **Prepare the selected combination**, use **Find recorded choices**, selecione a escolha registrada e a mesma combinação, e então selecione **Prepare changes from choice**. Revise as mudanças preparadas na decisão antes de qualquer aplicação.
+
+Preparar uma mudança não a executa nem concede aprovação. A aplicação e os recibos permanecem nos domínios responsáveis.
 
 Se o caso, uma regra ou uma fonte mudar, atualize o catálogo e refaça a comparação antes de continuar. A perda de acesso pode tornar uma avaliação salva indisponível; o portfólio não concede acesso adicional aos casos incluídos.
