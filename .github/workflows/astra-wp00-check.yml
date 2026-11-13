@@ -114,7 +114,8 @@ jobs:
           EVIDENCE: ${{ runner.temp }}/astra-wp00-evidence
         run: |
           bun run typecheck:e2e --project e2e/sucafina/wp00/tsconfig.json --showConfig > "$EVIDENCE/ui-typecheck-config.json"
-          bun run typecheck:e2e --project e2e/sucafina/wp00/tsconfig.json --listFilesOnly > "$EVIDENCE/ui-typecheck-files.txt"
+          set -o pipefail
+          bun run typecheck:e2e --project e2e/sucafina/wp00/tsconfig.json --listFilesOnly | tee "$EVIDENCE/ui-typecheck-files.txt"
           node --input-type=module <<'NODE'
           import { readFileSync } from 'node:fs'
           import path from 'node:path'
@@ -127,7 +128,8 @@ jobs:
           for (const file of ['baseline-ui.spec.ts', 'prepare-installation.ts']) {
             if (!files.has(path.join(root, file))) throw new Error(`The official typecheck omitted ${file}`)
           }
-          if (config.configFilePath !== path.join(root, 'tsconfig.json') || config.noEmit !== true || config.composite !== false)
+          if (config.configFilePath !== path.join(root, 'tsconfig.json') || config.noEmit !== true ||
+              config.composite !== false || config.emitDeclarationOnly !== false)
             throw new Error('Unexpected UI typecheck compiler configuration')
           console.log('Verified official app typecheck resolves both WP00 UI source files')
           NODE
