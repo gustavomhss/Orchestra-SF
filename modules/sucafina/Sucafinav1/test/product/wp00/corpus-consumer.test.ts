@@ -1,7 +1,9 @@
 import { expect, test } from "bun:test"
 import corpus from "./fixtures/corpus-v2.json"
+import inputs from "./fixtures/consumer-inputs.json"
+import { createVolumeCorpus } from "./fixtures/volume.ts"
 import { requestValue } from "../../../src/procurement-screen.ts"
-import { domain as operationsDomain } from "../../../runtime/dashboard-operations.ts"
+import { domain } from "../../../runtime/dashboard-operations.ts"
 import type { Snapshot } from "../../../runtime/contract.ts"
 import { contractVendor } from "../../../src/dashboard-role.ts"
 import { syncRoster } from "../../../src/planner-accounts.ts"
@@ -58,31 +60,18 @@ test("synthetic people, operations, risks, and contracts exercise domain behavio
 })
 
 test("synthetic volume proposal creates the declared deterministic row counts", () => {
-  const counts = corpus.datasets.volume.datasets
-  const financial = Array.from({ length: counts.financial_lines }, (_, index) => ({
-    year: 2027,
-    month: index % 12 + 1,
-    ownerId: "synthetic-owner",
-    actual: 1,
-    forecast: 2,
-  }))
-  const financialTotals = computeBudgetTotals({ opexOwners: [{ id: "synthetic-owner", budget: 1200 }], opexEntries: financial }, 2027)
-  expect(financialTotals.opexActual).toBe(counts.financial_lines)
-  expect(financialTotals.opexForecast).toBe(counts.financial_lines * 2)
-
-  const purchaseOrders = Array.from({ length: counts.purchase_orders }, (_, index) => ({
-    status: "sourcing",
-    createdBy: "synthetic-buyer",
-    prApprovalBaseCurrency: "USD",
-    pr: { estAmount: index + 1 },
-  }))
-  expect(purchaseOrders.reduce((sum, request) => sum + (requestValue(request, { currency: "USD" }) ?? 0), 0)).toBe(
-    (counts.purchase_orders * (counts.purchase_orders + 1)) / 2,
-  )
+  const volume = createVolumeCorpus()
+  expect(volume.financial).toHaveLength(inputs.volume.expected.financialRows)
+  expect(volume.purchaseOrders).toHaveLength(inputs.volume.expected.purchaseOrders)
+  expect(volume.projects).toHaveLength(inputs.volume.expected.projects)
+  const financialTotals = computeBudgetTotals({ opexOwners: [{ id: "synthetic-owner", budget: 1200 }], opexEntries: volume.financial }, 2027)
+  expect(financialTotals.opexActual).toBe(inputs.volume.expected.financialActual)
+  expect(financialTotals.opexForecast).toBe(inputs.volume.expected.financialForecast)
+  expect(volume.purchaseOrders.reduce((sum, request) => sum + (requestValue(request, { currency: "USD" }) ?? 0), 0)).toBe(inputs.volume.expected.purchaseOrderTotal)
 
   let nextId = 0
-  const projectImport = importProjects([], [], Array.from({ length: counts.projects }, (_, index) => ({ name: `Synthetic volume project ${index + 1}`, budget: index + 1 })), "replace", true, "2027-01-01", () => `synthetic-volume-${++nextId}`)
-  expect(projectImport).toMatchObject({ ok: true, added: counts.projects, updated: 0 })
+  const projectImport = importProjects([], [], volume.projects, "replace", true, "2027-01-01", () => `synthetic-volume-${++nextId}`)
+  expect(projectImport).toMatchObject({ ok: true, added: inputs.volume.expected.projects, updated: 0 })
 })
 
 test("synthetic projects and action text use existing product boundaries", () => {
@@ -102,7 +91,7 @@ test("synthetic projects and action text use existing product boundaries", () =>
   // This verifies action text persistence only; approval transitions need their own domain proof.
   const events = corpus.datasets.actions.events
   events.forEach((event) => {
-    expect(operationsDomain.execute(
+    expect(domain.execute(
       state,
       { id: "synthetic-operator", canWrite: true, roles: ["admin"] },
       { page: "IT Security KPIs", action: "save-action", version: 0, values: { text: `${event.kind} attempt ${event.attempt}`, done: false } },

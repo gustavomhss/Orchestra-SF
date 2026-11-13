@@ -1,0 +1,522 @@
+{
+  "schema": "sf-wp00-t02-criteria-v1",
+  "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "observed_seed": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+  "count": 23,
+  "qualification": "No CI or native run is attributed by this authoring map; root delivery receipts supply exact runs.",
+  "criteria": [
+    {
+      "criterion_id": "WP00.T02.CHK.01",
+      "text": "Consumidores compilam contra o contrato sem importar a implementação privada de outro WP.",
+      "status": "BLOCKED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "bun typecheck (modules/sucafina)",
+        "test/product/wp00/contract-consumers.test.ts"
+      ],
+      "run": null,
+      "evidence_scope": "Package typecheck and real consumer composition required; seed provider and runtime manifest drift are explicit."
+    },
+    {
+      "criterion_id": "WP00.T02.CHK.02",
+      "text": "Exemplos rejeitam período ausente, soma de moedas incompatíveis, referência inventada e campo restrito em projeção pública.",
+      "status": "PARTIAL",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contracts.test.ts",
+        "test/product/wp00/envelope.test.ts",
+        "AM03 (required native authorization proof, NOT_RUN)"
+      ],
+      "run": null,
+      "evidence_scope": "Decoder examples reject impossible/missing periods, malformed references and undeclared fields; structural checks do not prove source existence or current ACL."
+    },
+    {
+      "criterion_id": "WP00.T02.CHK.03",
+      "text": "Para cada formato importável e cada estado novo persistido, apontar exatamente um produtor e o consumidor real; nenhum aparece como responsabilidade genérica da integração.",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "test/product/wp00/contract-consumers.test.ts"
+      ],
+      "run": null,
+      "evidence_scope": "Formats map names parser WP06, original domain command and persistent host; C08 layout assigns every field. Await composed consumer proof."
+    },
+    {
+      "criterion_id": "WP00.T02.CHK.10",
+      "text": "Os 5/18/8 têm IDs únicos, profile↔skill↔operation↔schema↔consumer↔proof sem órfão; cada produtor tem path no ownership.",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "test/product/wp00/contract-consumers.test.ts"
+      ],
+      "run": null,
+      "evidence_scope": "Freeze revision7 includes complete 5/18/8/39/6 matrix, closed schema references and declared producer/consumer paths. Await contract-freeze CI."
+    },
+    {
+      "criterion_id": "WP00.T02.CHK.11",
+      "text": "C15 runtime exige bytes/digests de implementação; um plano sem digest inventado não se confunde com prova de carga.",
+      "status": "BLOCKED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-consumers.test.ts",
+        "GNATIVE/AM01 (required native load and output consumption, NOT_RUN)"
+      ],
+      "run": null,
+      "evidence_scope": "Current loader checks distributed bytes and parsed instructions. Seed bundle mismatches AlternativeDraft; WP12 current candidate must be integrated and real skill load observed."
+    },
+    {
+      "criterion_id": "WP00.T02.CHK.12",
+      "text": "Business template mappings passam validators reais no build; owners não são seats/PRs fictícios.",
+      "status": "NOT_RUN",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp14/atlas-projection.test.ts (required, NOT_RUN)",
+        "ATLAS-PACKAGE (required, NOT_RUN)"
+      ],
+      "run": null,
+      "evidence_scope": "Atlas real template validators and package build qualification are required; no fake engineering owner introduced. WP14 atlas-projection test exists but has not run in this WP receipt."
+    },
+    {
+      "criterion_id": "WP00.T02.CHK.60",
+      "text": "Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16. Registrar entrada, binding/skill, saída, efeito de domínio e consumidor no mesmo candidato.",
+      "status": "PARTIAL",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "AM02 (required native parity, NOT_RUN)",
+        "AM06 (required native routine, NOT_RUN)"
+      ],
+      "run": null,
+      "evidence_scope": "All39 loaded-skill routes are frozen, import is preview-only and routine_run requires current C07; native operation parity and revocation remain unproven."
+    },
+    {
+      "criterion_id": "WP00.T02.DOD.01",
+      "text": "Os quatorze contratos possuem produtores, consumidores, erros, versionamento e exemplos de compatibilidade definidos.",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "test/product/wp00/contract-consumers.test.ts"
+      ],
+      "run": null,
+      "evidence_scope": "C01-C17 public shapes, producers, consumers, versioning, error policy and admitted/refused examples are documented and frozen. Await CI and consumer acceptance."
+    },
+    {
+      "criterion_id": "WP00.T02.DOD.10",
+      "text": "C15–C17 e manifestos completos são aceitos por WP10/WP12/WP06/WP14 antes de construir dependência.",
+      "status": "BLOCKED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-consumers.test.ts",
+        "GNATIVE/AM01 (required native load and output consumption, NOT_RUN)"
+      ],
+      "run": null,
+      "evidence_scope": "No consumer acceptance is manufactured. WP10/WP12 candidate deltas are published remotely and await integration; WP06/WP14 integrated proof remains open."
+    },
+    {
+      "criterion_id": "WP00.T02.DOD.60",
+      "text": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
+      "status": "BLOCKED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "AM02 (required native parity, NOT_RUN)",
+        "AM06 (required native routine, NOT_RUN)"
+      ],
+      "run": null,
+      "evidence_scope": "AM02/AM06 real producer-consumer chains are not executed in this handoff."
+    },
+    {
+      "criterion_id": "WP00.T02.INV.01",
+      "text": "C02 não se torna um segundo motor financeiro; C06 não cria outra fonte de tarefas; C07 não concede aprovação de negócio.",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "test/product/wp00/contract-consumers.test.ts"
+      ],
+      "run": null,
+      "evidence_scope": "No new financial calculation, task source or approval path is introduced; state-layout is declarative only. Scope review and scoped CI are required."
+    },
+    {
+      "criterion_id": "WP00.T02.INV.10",
+      "text": "Não retirar produto/autoridade/critério; nenhum ID de perfil vira principal ou seat técnico.",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "test/product/wp00/contract-consumers.test.ts"
+      ],
+      "run": null,
+      "evidence_scope": "Existing grants, profile identities, authority and criteria preserved. New layout grants no principal or technical seat identity."
+    },
+    {
+      "criterion_id": "WP00.T02.INV.60",
+      "text": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
+      "status": "PARTIAL",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "AM02 (required native parity, NOT_RUN)",
+        "AM06 (required native routine, NOT_RUN)"
+      ],
+      "run": null,
+      "evidence_scope": "Contracts require identity+profile+loaded skill+grant+current authorization. No native execution or live revocation proof exists yet."
+    },
+    {
+      "criterion_id": "WP00.T02.QLT.01",
+      "text": "Interfaces pequenas correspondem a necessidades presentes e não antecipam um framework empresarial.",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "test/product/wp00/contract-consumers.test.ts"
+      ],
+      "run": null,
+      "evidence_scope": "Single small C08 layout map makes current fields explicit without provider infrastructure. Frozen contracts reference existing domain ports."
+    },
+    {
+      "criterion_id": "WP00.T02.QLT.10",
+      "text": "Contrato nomeia producer/export/path/consumidor e falhas observáveis, sem 'binding futuro' indefinido.",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "test/product/wp00/contract-consumers.test.ts"
+      ],
+      "run": null,
+      "evidence_scope": "Every operation identifies producerTask/handlerPath/handlerExport/consumerTasks/proofIds, with failure states; absent routines are explicitly blocked."
+    },
+    {
+      "criterion_id": "WP00.T02.QLT.60",
+      "text": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
+      "status": "PARTIAL",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "AM02 (required native parity, NOT_RUN)",
+        "AM06 (required native routine, NOT_RUN)"
+      ],
+      "run": null,
+      "evidence_scope": "Frozen route/entry/output mapping is complete; agreement with actual wrapper and UI awaits composed AM02/AM06."
+    },
+    {
+      "criterion_id": "WP00.T02.CMP.01",
+      "text": "Incluir leitura, escrita, conflito, importação, revisão, relações, rotinas e composição real.",
+      "status": "PARTIAL",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "test/product/wp00/contract-consumers.test.ts"
+      ],
+      "run": null,
+      "evidence_scope": "Contracts cover read/write/conflict/import/review/relations/routines/composition. Positive consumer tests remain required for implemented behavior."
+    },
+    {
+      "criterion_id": "WP00.T02.CMP.02",
+      "text": "Congelar C01–C17, assinaturas mínimas, enumerações de estado, identidade/escopo, exemplos válidos e negativos, export names e mapa produtor/consumidor. A qualificação nativa é paralela.",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "test/product/wp00/contract-consumers.test.ts"
+      ],
+      "run": null,
+      "evidence_scope": "Public C01-C17 types, enumerations, identities, examples and maps frozen. Native qualification remains separate and open."
+    },
+    {
+      "criterion_id": "WP00.T02.CMP.10",
+      "text": "5 perfis,18 skills,8 packs,39 operações,6 provas e empacotamento Atlas têm fechamento rastreável.",
+      "status": "PARTIAL",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "test/product/wp00/contract-consumers.test.ts"
+      ],
+      "run": null,
+      "evidence_scope": "Complete 5/18/8/39/6 definition and exact Atlas packaging exceptions recorded; runtime/build closure remains open."
+    },
+    {
+      "criterion_id": "WP00.T02.CMP.60",
+      "text": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
+      "status": "PARTIAL",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "AM02 (required native parity, NOT_RUN)",
+        "AM06 (required native routine, NOT_RUN)"
+      ],
+      "run": null,
+      "evidence_scope": "Positive and denial expectations are retained in routes/contracts; loaded receipt, revocation, preview and admission native proofs remain open."
+    },
+    {
+      "criterion_id": "WP00.T02.SUC.01",
+      "text": "Duas frentes conseguem trocar uma saída pelos contratos sem coordenar edição no mesmo arquivo.",
+      "status": "BLOCKED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-consumers.test.ts",
+        "GNATIVE/AM01 (required native load and output consumption, NOT_RUN)"
+      ],
+      "run": null,
+      "evidence_scope": "The inter-WP contracts exist; successful real exchange is not claimed before current producer integration and consumers CI."
+    },
+    {
+      "criterion_id": "WP00.T02.SUC.10",
+      "text": "Builder consegue produzir código compatível e consumidor consegue rejeitar substitutos sem uso real.",
+      "status": "PARTIAL",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-consumers.test.ts",
+        "GNATIVE/AM01 (required native load and output consumption, NOT_RUN)"
+      ],
+      "run": null,
+      "evidence_scope": "Decoders and real loader reject structural substitutes; actual compatible full bundle and native use are not yet qualified."
+    },
+    {
+      "criterion_id": "WP00.T02.SUC.60",
+      "text": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
+      "status": "BLOCKED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "AM02 (required native parity, NOT_RUN)",
+        "AM06 (required native routine, NOT_RUN)"
+      ],
+      "run": null,
+      "evidence_scope": "A person opening the real output through the required route is not demonstrated by structural tests or source inspection."
+    }
+  ]
+}

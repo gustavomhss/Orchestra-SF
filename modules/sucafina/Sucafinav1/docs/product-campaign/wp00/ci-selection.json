@@ -1,0 +1,26 @@
+{
+  "contracts": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp00/contracts.test.ts",
+      "Sucafinav1/test/product/wp00/corpus-consumer.test.ts",
+      "Sucafinav1/test/product/wp00/envelope.test.ts",
+      "Sucafinav1/test/product/wp00/evidence-source-maps.test.ts",
+      "Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+      "Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+      "Sucafinav1/test/product/wp00/ownership.test.ts"
+    ]
+  },
+  "consumers": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts",
+      "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts"
+    ]
+  }
+}

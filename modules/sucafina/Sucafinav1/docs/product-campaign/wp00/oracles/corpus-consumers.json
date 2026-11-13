@@ -1,0 +1,93 @@
+{
+  "schema": "sf-wp00-corpus-consumers-v1",
+  "synthetic": true,
+  "productProofStatus": "NOT_RUN_PENDING_SCOPED_CI",
+  "run": null,
+  "datasets": [
+    {
+      "dataset": "finance",
+      "consumer": "product/planner/adapter.ts; product/planner/scenario.ts",
+      "test": "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+      "scope": "FX01/FX03 outlook and monthly replacement; no native C09/GNATIVE claim"
+    },
+    {
+      "dataset": "procurement",
+      "consumer": "src/form.ts#quoteAssessment; src/procurement-screen.ts#requestValue",
+      "test": [
+        "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts"
+      ],
+      "scope": "FX02 score/eligibility/snapshot conversion and missing FX; no approval lifecycle claim"
+    },
+    {
+      "dataset": "authorization",
+      "consumer": "src/nav.ts; product/planner/adapter.ts",
+      "test": "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+      "scope": "Native domain role fixtures and denied write; no live host principal, reauthentication or revocation receipt"
+    },
+    {
+      "dataset": "report",
+      "consumer": "product/reviews/render.ts#renderPreservedReview",
+      "test": "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+      "scope": "All20 records in both DOCX and PPTX XML; no rendered-page visual QA or host ACL qualification"
+    },
+    {
+      "dataset": "volume",
+      "consumer": "fixtures/volume.ts#createVolumeCorpus; src/dashboard-accounts.ts; src/procurement-screen.ts",
+      "test": "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts",
+      "scope": "1000 financial rows,200 orders,100 projects consumed by domain code; no UI latency or measured repetition count"
+    },
+    {
+      "dataset": "people",
+      "consumer": "src/planner-accounts.ts#syncRoster",
+      "test": "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts",
+      "scope": "Synthetic roster sync and native domain projection; no live identity changes"
+    },
+    {
+      "dataset": "operations",
+      "consumer": "src/dashboard-accounts.ts#effectiveMonthlyBudget",
+      "test": "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts",
+      "scope": "Legacy zero/fallback semantics retained"
+    },
+    {
+      "dataset": "risks",
+      "consumer": "src/dashboard-accounts.ts#riskScore,riskTier",
+      "test": "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts",
+      "scope": "Independent expected high/low risk inputs; currently high-tier consumer assertion"
+    },
+    {
+      "dataset": "contracts",
+      "consumer": "src/dashboard-role.ts#contractVendor",
+      "test": "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts",
+      "scope": "Display-name equality does not establish supplier identity"
+    },
+    {
+      "dataset": "projects",
+      "consumer": "src/dashboard-accounts.ts#importProjects",
+      "test": "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts",
+      "scope": "Synthetic existing-domain import and linkage boundary"
+    },
+    {
+      "dataset": "actions",
+      "consumer": "runtime/dashboard-operations.ts#domain.execute; src/procurement.ts#createRequest,submitPR,reject",
+      "test": [
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts"
+      ],
+      "scope": "Action text persistence plus real procurement return/resubmission history and stale retry; no live host authority or approval completion claim"
+    },
+    {
+      "dataset": "import",
+      "consumer": "src/dashboard-accounts.ts#importProjects",
+      "test": "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts",
+      "scope": "Project input recipe exists; generic preview/apply receipt, exact reimport and stale-base atomicity still require WP06 integration"
+    }
+  ],
+  "notEstablished": [
+    "30 comparable UI measurements per flow/configuration",
+    "320/768/1440px and zoom200% observations",
+    "Native identity/provider/Relay/MCP qualification",
+    "Full J01-J08 end-to-end execution",
+    "Exact generic import reexecution and revocation through the live host"
+  ]
+}

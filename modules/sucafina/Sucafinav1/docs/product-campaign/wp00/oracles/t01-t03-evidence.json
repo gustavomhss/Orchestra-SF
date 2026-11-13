@@ -1,0 +1,310 @@
+{
+  "schema": "sf-wp00-local-evidence-v1",
+  "scope": [
+    "WP00.T01",
+    "WP00.T03"
+  ],
+  "sourceCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "criteria": [
+    {
+      "criterionId": "WP00.T01.CHK.01",
+      "requirement": "Conferir 28 capacidades sem linha órfã e sem exclusão silenciosa.",
+      "implementation": [
+        "docs/product-campaign/wp00/baseline-capabilities.json",
+        "docs/product-campaign/wp00/baseline-new-capabilities.json",
+        "docs/product-campaign/wp00/baseline-decisions.md"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts"
+      ],
+      "proofStatus": "NOT_RUN_PENDING_SCOPED_CI",
+      "run": null,
+      "limitations": [
+        "Inventory and current registry reconciliation; legacy baseline execution and all UI commands not observed."
+      ]
+    },
+    {
+      "criterionId": "WP00.T01.CHK.02",
+      "requirement": "Encontrar destino para Talent Review, stakeholders, performance contract, suppliers/settings, FX e allocations, além dos fluxos mais visíveis.",
+      "implementation": [
+        "docs/product-campaign/wp00/baseline-capabilities.json",
+        "docs/product-campaign/wp00/baseline-new-capabilities.json",
+        "docs/product-campaign/wp00/baseline-decisions.md"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts"
+      ],
+      "proofStatus": "NOT_RUN_PENDING_SCOPED_CI",
+      "run": null,
+      "limitations": [
+        "Inventory and current registry reconciliation; legacy baseline execution and all UI commands not observed."
+      ]
+    },
+    {
+      "criterionId": "WP00.T01.DOD.01",
+      "requirement": "A matriz lista cada capacidade e comando observado, destino, owner e cenário de preservação.",
+      "implementation": [
+        "docs/product-campaign/wp00/baseline-capabilities.json",
+        "docs/product-campaign/wp00/baseline-new-capabilities.json",
+        "docs/product-campaign/wp00/baseline-decisions.md"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts"
+      ],
+      "proofStatus": "NOT_RUN_PENDING_SCOPED_CI",
+      "run": null,
+      "limitations": [
+        "Inventory and current registry reconciliation; legacy baseline execution and all UI commands not observed."
+      ]
+    },
+    {
+      "criterionId": "WP00.T01.INV.01",
+      "requirement": "Nenhuma regra de alçada, classificação contábil ou permissões é alterada por preferência estética.",
+      "implementation": [
+        "docs/product-campaign/wp00/baseline-capabilities.json",
+        "docs/product-campaign/wp00/baseline-new-capabilities.json",
+        "docs/product-campaign/wp00/baseline-decisions.md"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts"
+      ],
+      "proofStatus": "NOT_RUN_PENDING_SCOPED_CI",
+      "run": null,
+      "limitations": [
+        "Inventory and current registry reconciliation; legacy baseline execution and all UI commands not observed."
+      ]
+    },
+    {
+      "criterionId": "WP00.T01.QLT.01",
+      "requirement": "Distinguir capacidade atual, proposta nova, defeito comprovado e hipótese; citar a origem de afirmações sobre o código.",
+      "implementation": [
+        "docs/product-campaign/wp00/baseline-capabilities.json",
+        "docs/product-campaign/wp00/baseline-new-capabilities.json",
+        "docs/product-campaign/wp00/baseline-decisions.md"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts"
+      ],
+      "proofStatus": "NOT_RUN_PENDING_SCOPED_CI",
+      "run": null,
+      "limitations": [
+        "Inventory and current registry reconciliation; legacy baseline execution and all UI commands not observed."
+      ]
+    },
+    {
+      "criterionId": "WP00.T01.CMP.01",
+      "requirement": "Cobrir as três superfícies, import/export, efeitos de escrita e saídas de relatório; registrar itens sem evidência suficiente.",
+      "implementation": [
+        "docs/product-campaign/wp00/baseline-capabilities.json",
+        "docs/product-campaign/wp00/baseline-new-capabilities.json",
+        "docs/product-campaign/wp00/baseline-decisions.md"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts"
+      ],
+      "proofStatus": "NOT_RUN_PENDING_SCOPED_CI",
+      "run": null,
+      "limitations": [
+        "Inventory and current registry reconciliation; legacy baseline execution and all UI commands not observed."
+      ]
+    },
+    {
+      "criterionId": "WP00.T01.SUC.01",
+      "requirement": "Um revisor consegue identificar exatamente quais comportamentos a campanha preserva e quais resultados pretende melhorar.",
+      "implementation": [
+        "docs/product-campaign/wp00/baseline-capabilities.json",
+        "docs/product-campaign/wp00/baseline-new-capabilities.json",
+        "docs/product-campaign/wp00/baseline-decisions.md"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts"
+      ],
+      "proofStatus": "NOT_RUN_PENDING_SCOPED_CI",
+      "run": null,
+      "limitations": [
+        "Inventory and current registry reconciliation; legacy baseline execution and all UI commands not observed."
+      ]
+    },
+    {
+      "criterionId": "WP00.T03.CHK.01",
+      "requirement": "Planner: budget 600000, actual 400000 e forecast 190000 com item 72000 produzem outlook 590000; substituições por 84000/78000 produzem 602000/596000.",
+      "implementation": [
+        "test/product/wp00/fixtures/corpus-v2.json",
+        "test/product/wp00/fixtures/consumer-inputs.json",
+        "test/product/wp00/fixtures/planner.ts",
+        "test/product/wp00/fixtures/volume.ts",
+        "docs/product-campaign/wp00/oracles/journeys-j01-j08.json",
+        "docs/product-campaign/wp00/oracles/numeric-oracles.json"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts"
+      ],
+      "proofStatus": "NOT_RUN_PENDING_SCOPED_CI",
+      "run": null,
+      "limitations": []
+    },
+    {
+      "criterionId": "WP00.T03.CHK.02",
+      "requirement": "Procurement: EUR28000×1,08=USD30240; A USD32400 pontua aproximadamente87,9333; B85; C não conforme fica fora do ranking.",
+      "implementation": [
+        "test/product/wp00/fixtures/corpus-v2.json",
+        "test/product/wp00/fixtures/consumer-inputs.json",
+        "test/product/wp00/fixtures/planner.ts",
+        "test/product/wp00/fixtures/volume.ts",
+        "docs/product-campaign/wp00/oracles/journeys-j01-j08.json",
+        "docs/product-campaign/wp00/oracles/numeric-oracles.json"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts"
+      ],
+      "proofStatus": "NOT_RUN_PENDING_SCOPED_CI",
+      "run": null,
+      "limitations": []
+    },
+    {
+      "criterionId": "WP00.T03.CHK.03",
+      "requirement": "Um relatório com 20 registros conserva os 20 ou declara explicitamente um resumo escolhido.",
+      "implementation": [
+        "test/product/wp00/fixtures/corpus-v2.json",
+        "test/product/wp00/fixtures/consumer-inputs.json",
+        "test/product/wp00/fixtures/planner.ts",
+        "test/product/wp00/fixtures/volume.ts",
+        "docs/product-campaign/wp00/oracles/journeys-j01-j08.json",
+        "docs/product-campaign/wp00/oracles/numeric-oracles.json"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts"
+      ],
+      "proofStatus": "NOT_RUN_PENDING_SCOPED_CI",
+      "run": null,
+      "limitations": []
+    },
+    {
+      "criterionId": "WP00.T03.DOD.01",
+      "requirement": "Corpus, resultados esperados e roteiros foram conferidos e não dependem de respostas geradas pelo próprio código sob teste.",
+      "implementation": [
+        "test/product/wp00/fixtures/corpus-v2.json",
+        "test/product/wp00/fixtures/consumer-inputs.json",
+        "test/product/wp00/fixtures/planner.ts",
+        "test/product/wp00/fixtures/volume.ts",
+        "docs/product-campaign/wp00/oracles/journeys-j01-j08.json",
+        "docs/product-campaign/wp00/oracles/numeric-oracles.json"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts"
+      ],
+      "proofStatus": "NOT_RUN_PENDING_SCOPED_CI",
+      "run": null,
+      "limitations": [
+        "No30 measured UI repetitions; J01-J08 and generic import/revocation transitions remain unqualified."
+      ]
+    },
+    {
+      "criterionId": "WP00.T03.INV.01",
+      "requirement": "Dados são sintéticos identificados; nenhuma série mensal é inventada interpolando um total anual.",
+      "implementation": [
+        "test/product/wp00/fixtures/corpus-v2.json",
+        "test/product/wp00/fixtures/consumer-inputs.json",
+        "test/product/wp00/fixtures/planner.ts",
+        "test/product/wp00/fixtures/volume.ts",
+        "docs/product-campaign/wp00/oracles/journeys-j01-j08.json",
+        "docs/product-campaign/wp00/oracles/numeric-oracles.json"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts"
+      ],
+      "proofStatus": "NOT_RUN_PENDING_SCOPED_CI",
+      "run": null,
+      "limitations": []
+    },
+    {
+      "criterionId": "WP00.T03.QLT.01",
+      "requirement": "Fixtures são pequenas para diagnóstico e incluem volume representativo para o uso de tabelas, sem dados decorativos.",
+      "implementation": [
+        "test/product/wp00/fixtures/corpus-v2.json",
+        "test/product/wp00/fixtures/consumer-inputs.json",
+        "test/product/wp00/fixtures/planner.ts",
+        "test/product/wp00/fixtures/volume.ts",
+        "docs/product-campaign/wp00/oracles/journeys-j01-j08.json",
+        "docs/product-campaign/wp00/oracles/numeric-oracles.json"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts"
+      ],
+      "proofStatus": "NOT_RUN_PENDING_SCOPED_CI",
+      "run": null,
+      "limitations": [
+        "No30 measured UI repetitions; J01-J08 and generic import/revocation transitions remain unqualified."
+      ]
+    },
+    {
+      "criterionId": "WP00.T03.QLT.02",
+      "requirement": "Cada pacote de prova cobre vários axiomas por relações explícitas; resultados esperados vêm de oráculos independentes, nunca de copiar a função a testar.",
+      "implementation": [
+        "test/product/wp00/fixtures/corpus-v2.json",
+        "test/product/wp00/fixtures/consumer-inputs.json",
+        "test/product/wp00/fixtures/planner.ts",
+        "test/product/wp00/fixtures/volume.ts",
+        "docs/product-campaign/wp00/oracles/journeys-j01-j08.json",
+        "docs/product-campaign/wp00/oracles/numeric-oracles.json"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts"
+      ],
+      "proofStatus": "NOT_RUN_PENDING_SCOPED_CI",
+      "run": null,
+      "limitations": [
+        "No30 measured UI repetitions; J01-J08 and generic import/revocation transitions remain unqualified."
+      ]
+    },
+    {
+      "criterionId": "WP00.T03.CMP.01",
+      "requirement": "Cobrir alternativas, branco/zero/herdado, períodos distintos, informações restritas, import reexecutado e evento de ressubmissão.",
+      "implementation": [
+        "test/product/wp00/fixtures/corpus-v2.json",
+        "test/product/wp00/fixtures/consumer-inputs.json",
+        "test/product/wp00/fixtures/planner.ts",
+        "test/product/wp00/fixtures/volume.ts",
+        "docs/product-campaign/wp00/oracles/journeys-j01-j08.json",
+        "docs/product-campaign/wp00/oracles/numeric-oracles.json"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts"
+      ],
+      "proofStatus": "NOT_RUN_PENDING_SCOPED_CI",
+      "run": null,
+      "limitations": [
+        "No30 measured UI repetitions; J01-J08 and generic import/revocation transitions remain unqualified."
+      ]
+    },
+    {
+      "criterionId": "WP00.T03.SUC.01",
+      "requirement": "Qualquer executor consegue reproduzir os mesmos deltas, permissões e transições a partir do corpus.",
+      "implementation": [
+        "test/product/wp00/fixtures/corpus-v2.json",
+        "test/product/wp00/fixtures/consumer-inputs.json",
+        "test/product/wp00/fixtures/planner.ts",
+        "test/product/wp00/fixtures/volume.ts",
+        "docs/product-campaign/wp00/oracles/journeys-j01-j08.json",
+        "docs/product-campaign/wp00/oracles/numeric-oracles.json"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts"
+      ],
+      "proofStatus": "NOT_RUN_PENDING_SCOPED_CI",
+      "run": null,
+      "limitations": [
+        "No30 measured UI repetitions; J01-J08 and generic import/revocation transitions remain unqualified."
+      ]
+    }
+  ]
+}

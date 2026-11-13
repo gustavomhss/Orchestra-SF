@@ -1,0 +1,700 @@
+{
+  "schema": "sf-wp00-new-capabilities-v1",
+  "source": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/coverage.json",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+  },
+  "meaning": "Approved task destinations, not implementation or runtime acceptance evidence. Existing CAP01-CAP28 remain in baseline-capabilities.json.",
+  "requirements": [
+    {
+      "id": "R01",
+      "title": "Baseline, contratos e corpus verificável",
+      "tasks": [
+        "WP00.T01",
+        "WP00.T02",
+        "WP00.T03",
+        "WP00.T04"
+      ],
+      "journeys": [
+        "J08"
+      ],
+      "evidence": "28 capacidades, C01–C17, oráculos e fronteiras congelados; IA01–IA18 incluídas na cobertura canônica."
+    },
+    {
+      "id": "R02",
+      "title": "Navegação e contexto entre módulos",
+      "tasks": [
+        "WP01.T01"
+      ],
+      "journeys": [
+        "J01",
+        "J08"
+      ],
+      "evidence": "Abrir, voltar, recarregar e recuperar filtros/posição no mesmo contexto."
+    },
+    {
+      "id": "R03",
+      "title": "Padrões de revisar, editar e decidir",
+      "tasks": [
+        "WP01.T02"
+      ],
+      "journeys": [
+        "J04",
+        "J05",
+        "J08"
+      ],
+      "evidence": "Hierarquia, teclado, densidade, acessibilidade e estados comprovados."
+    },
+    {
+      "id": "R04",
+      "title": "Salvar, corrigir e resolver conflitos",
+      "tasks": [
+        "WP01.T03",
+        "WP02.T02",
+        "WP03.T02",
+        "WP04.T04"
+      ],
+      "journeys": [
+        "J01",
+        "J03",
+        "J04"
+      ],
+      "evidence": "Rascunho conservado; validação junto ao campo; sem overwrite silencioso."
+    },
+    {
+      "id": "R05",
+      "title": "Busca, visões salvas e entrada por responsabilidade",
+      "tasks": [
+        "WP01.T04"
+      ],
+      "journeys": [
+        "J01",
+        "J08"
+      ],
+      "evidence": "Preferências opcionais; resultados/contagens autorizados; retomada."
+    },
+    {
+      "id": "R06",
+      "title": "Dashboard com fatos, sinais e origem",
+      "tasks": [
+        "WP02.T01",
+        "WP02.T03"
+      ],
+      "journeys": [
+        "J05",
+        "J08"
+      ],
+      "evidence": "Sinal abre sua evidência e declara competência/cobertura."
+    },
+    {
+      "id": "R07",
+      "title": "Manutenção contextual dos domínios Dashboard",
+      "tasks": [
+        "WP02.T02"
+      ],
+      "journeys": [
+        "J01",
+        "J03"
+      ],
+      "evidence": "Campos/ações originais acessíveis; comandos amplos com prévia fiel."
+    },
+    {
+      "id": "R08",
+      "title": "Portfolio para revisão e All Projects para manutenção",
+      "tasks": [
+        "WP02.T03"
+      ],
+      "journeys": [
+        "J05",
+        "J08"
+      ],
+      "evidence": "Vistas distintas da mesma coleção, sem projeto duplicado."
+    },
+    {
+      "id": "R09",
+      "title": "Uma ação operacional canônica",
+      "tasks": [
+        "WP02.T04"
+      ],
+      "journeys": [
+        "J06"
+      ],
+      "evidence": "Hot Topic real; reenvio conserva identidade; conclusão reflete na origem."
+    },
+    {
+      "id": "R10",
+      "title": "Composição financeira explicável e adapter puro",
+      "tasks": [
+        "WP03.T01"
+      ],
+      "journeys": [
+        "J02",
+        "J03"
+      ],
+      "evidence": "Uma regra para projeção, simulação e aplicação; componentes reconciliam."
+    },
+    {
+      "id": "R11",
+      "title": "Edição mensal OPEX e CAPEX",
+      "tasks": [
+        "WP03.T02"
+      ],
+      "journeys": [
+        "J02"
+      ],
+      "evidence": "Branco, zero, herdado, budget/actual/forecast e locks distintos."
+    },
+    {
+      "id": "R12",
+      "title": "Headcount, FTE e custo de HR",
+      "tasks": [
+        "WP03.T03"
+      ],
+      "journeys": [
+        "J02"
+      ],
+      "evidence": "Meses/rates/reajuste/roster e acesso salarial preservados."
+    },
+    {
+      "id": "R13",
+      "title": "FX, entidades e alocações",
+      "tasks": [
+        "WP03.T04"
+      ],
+      "journeys": [
+        "J02"
+      ],
+      "evidence": "Moeda ausente explícita; catálogos não viram engine de rateio."
+    },
+    {
+      "id": "R14",
+      "title": "Overview, versões e cenários comparáveis",
+      "tasks": [
+        "WP03.T05"
+      ],
+      "journeys": [
+        "J02"
+      ],
+      "evidence": "Hipótese separada da oficial; criação/cópia/ano/lock/official/delete preservados."
+    },
+    {
+      "id": "R15",
+      "title": "Fila de compras com próxima ação e responsável",
+      "tasks": [
+        "WP04.T01"
+      ],
+      "journeys": [
+        "J04",
+        "J06"
+      ],
+      "evidence": "Etapa, holder e datas comprovadas; sem aging inventado."
+    },
+    {
+      "id": "R16",
+      "title": "Pedido progressivo e reaproveitamento com origem",
+      "tasks": [
+        "WP04.T02"
+      ],
+      "journeys": [
+        "J04"
+      ],
+      "evidence": "Sem redigitar dado já selecionado; ajuste negociado não é sobrescrito."
+    },
+    {
+      "id": "R17",
+      "title": "Comparação de propostas, ranking e moeda",
+      "tasks": [
+        "WP04.T03"
+      ],
+      "journeys": [
+        "J04"
+      ],
+      "evidence": "Inelegível excluída; pesos e FX/snapshot corretos; total reconciliado."
+    },
+    {
+      "id": "R18",
+      "title": "Decisão por PR, sourcing e PO",
+      "tasks": [
+        "WP04.T04"
+      ],
+      "journeys": [
+        "J04"
+      ],
+      "evidence": "Resumo próprio da etapa, versão e autoridade; entendimento observado em30s."
+    },
+    {
+      "id": "R19",
+      "title": "Fornecedores e processo completo de compras",
+      "tasks": [
+        "WP04.T05"
+      ],
+      "journeys": [
+        "J04",
+        "J08"
+      ],
+      "evidence": "Cadastro, controles, configurações e transições originais preservados."
+    },
+    {
+      "id": "R20",
+      "title": "Oito gráficos contextuais acionáveis",
+      "tasks": [
+        "WP05.T01",
+        "WP05.T02",
+        "WP05.T03",
+        "WP05.T04"
+      ],
+      "journeys": [
+        "J02",
+        "J04",
+        "J05"
+      ],
+      "evidence": "Pergunta e dados reais, tabela equivalente, drilldown com contexto."
+    },
+    {
+      "id": "R21",
+      "title": "Formatos e normalização de arquivos",
+      "tasks": [
+        "WP06.T01"
+      ],
+      "journeys": [
+        "J03"
+      ],
+      "evidence": "XLSX/XLS/JSON e abas originais; limites e referências privadas respeitados."
+    },
+    {
+      "id": "R22",
+      "title": "Prévia de importação com impacto",
+      "tasks": [
+        "WP02.T02",
+        "WP03.T01",
+        "WP06.T02"
+      ],
+      "journeys": [
+        "J03"
+      ],
+      "evidence": "Manifesto de mudança/ignorados/remoção e delta do mesmo comando."
+    },
+    {
+      "id": "R23",
+      "title": "Apply, revalidação e recibo",
+      "tasks": [
+        "WP06.T03"
+      ],
+      "journeys": [
+        "J03"
+      ],
+      "evidence": "Cancelamento sem efeitos; aplicação atômica, base atual e recibo confirmado."
+    },
+    {
+      "id": "R24",
+      "title": "Roundtrip e paridade dos imports",
+      "tasks": [
+        "WP06.T04"
+      ],
+      "journeys": [
+        "J03"
+      ],
+      "evidence": "Identidades/valores preservados; flags fora do formato seguem semântica declarada."
+    },
+    {
+      "id": "R25",
+      "title": "Pauta selecionável e autorizada",
+      "tasks": [
+        "WP07.T01"
+      ],
+      "journeys": [
+        "J05"
+      ],
+      "evidence": "Seleção e ordem exatas, seções/contagens/períodos claros."
+    },
+    {
+      "id": "R26",
+      "title": "Revisão preservada e meeting view",
+      "tasks": [
+        "WP07.T02"
+      ],
+      "journeys": [
+        "J05"
+      ],
+      "evidence": "Origem/comentário posterior não altera reunião; recuperação revalida acesso."
+    },
+    {
+      "id": "R27",
+      "title": "Mudanças desde a revisão anterior",
+      "tasks": [
+        "WP07.T03"
+      ],
+      "journeys": [
+        "J05"
+      ],
+      "evidence": "Antes/depois compatíveis; primeira revisão e incompatibilidades explícitas."
+    },
+    {
+      "id": "R28",
+      "title": "PPTX e DOCX completos",
+      "tasks": [
+        "WP07.T04"
+      ],
+      "journeys": [
+        "J05"
+      ],
+      "evidence": "25 registros e notas longas; gráficos selecionados, paginação e ACL."
+    },
+    {
+      "id": "R29",
+      "title": "Relações explícitas entre registros",
+      "tasks": [
+        "WP08.T01"
+      ],
+      "journeys": [
+        "J06"
+      ],
+      "evidence": "Identidades confirmadas, compra/contrato/linha+versão; sem posting automático."
+    },
+    {
+      "id": "R30",
+      "title": "Comentários e esclarecimentos contextuais",
+      "tasks": [
+        "WP08.T02"
+      ],
+      "journeys": [
+        "J01",
+        "J06"
+      ],
+      "evidence": "Ator/período/versão corretos; não é aprovação adicional."
+    },
+    {
+      "id": "R31",
+      "title": "Revisei e nada mudou",
+      "tasks": [
+        "WP08.T03"
+      ],
+      "journeys": [
+        "J01",
+        "J07"
+      ],
+      "evidence": "C06 guarda versão observada e fingerprint de escopo. Janeiro confirmado continua válido após fevereiro independente e não é cobrado novamente; mudança material, revogação e substituição têm estados distintos; idade/faltantes continuam visíveis."
+    },
+    {
+      "id": "R32",
+      "title": "Meu trabalho consolidado",
+      "tasks": [
+        "WP08.T04"
+      ],
+      "journeys": [
+        "J01",
+        "J04",
+        "J06"
+      ],
+      "evidence": "Ações, perguntas, confirmações e decisões por holder em projeção autorizada."
+    },
+    {
+      "id": "R33",
+      "title": "Encaminhar para Hot Topics",
+      "tasks": [
+        "WP08.T05"
+      ],
+      "journeys": [
+        "J06"
+      ],
+      "evidence": "Correlação, origem, estado verdadeiro e ausência de duplicatas."
+    },
+    {
+      "id": "R34",
+      "title": "Ciclo nativo e seguro de rotina",
+      "tasks": [
+        "WP09.T01"
+      ],
+      "journeys": [
+        "J07"
+      ],
+      "evidence": "Admissão, run, versão, resultado, falha e autorização atuais."
+    },
+    {
+      "id": "R35",
+      "title": "Rotina preparar revisão",
+      "tasks": [
+        "WP09.T02"
+      ],
+      "journeys": [
+        "J05",
+        "J07"
+      ],
+      "evidence": "Pauta factual e pendências consomem a validade C06: versão irrelevante não recobra; stale material reabre uma vez; unavailable não divulga fonte nem imputa tarefa a pessoa sem acesso."
+    },
+    {
+      "id": "R36",
+      "title": "Rotina forecast e explicar diferença",
+      "tasks": [
+        "WP09.T03"
+      ],
+      "journeys": [
+        "J02",
+        "J07"
+      ],
+      "evidence": "Deltas e motivos existentes; ausência de justificativa explícita."
+    },
+    {
+      "id": "R37",
+      "title": "Rotina dossiê de sourcing",
+      "tasks": [
+        "WP09.T04"
+      ],
+      "journeys": [
+        "J04",
+        "J07"
+      ],
+      "evidence": "Dossiê consome evidência extraída/confirmada C14 de WP06.T05, compara sem escolher/submeter/aprovar e conserva pendências de conteúdo não confirmado ou stale."
+    },
+    {
+      "id": "R38",
+      "title": "Rotina consolidar encaminhamentos",
+      "tasks": [
+        "WP09.T05"
+      ],
+      "journeys": [
+        "J06",
+        "J07"
+      ],
+      "evidence": "Ações propostas confirmadas uma vez; responsável/prazo não inventados."
+    },
+    {
+      "id": "R39",
+      "title": "Recorrência e resumo interno",
+      "tasks": [
+        "WP09.T06"
+      ],
+      "journeys": [
+        "J07"
+      ],
+      "evidence": "Schedule separado, timezone, pausa, revogação, falha e deduplicação."
+    },
+    {
+      "id": "R40",
+      "title": "Composição e persistência real",
+      "tasks": [
+        "WP10.T01"
+      ],
+      "journeys": [
+        "J01",
+        "J03",
+        "J05",
+        "J06",
+        "J07",
+        "J08"
+      ],
+      "evidence": "Provider C08; estado durável, migração aditiva, atomicidade e retomada."
+    },
+    {
+      "id": "R41",
+      "title": "Aceitação e entrega completa",
+      "tasks": [
+        "WP10.T02",
+        "WP10.T03",
+        "WP10.T04",
+        "WP10.T05"
+      ],
+      "journeys": [
+        "J08"
+      ],
+      "evidence": "Jornadas, três pareceres, CI/candidato, guia e demo; nenhum critério obrigatório aberto."
+    }
+  ],
+  "aiCapabilities": [
+    {
+      "id": "IA01",
+      "title": "Intenção estruturada e editável",
+      "tasks": [
+        "WP12.T02",
+        "WP01.T05"
+      ],
+      "status": "NOT_RUN",
+      "mandatory": true
+    },
+    {
+      "id": "IA02",
+      "title": "Contradições com evidências",
+      "tasks": [
+        "WP12.T02"
+      ],
+      "status": "NOT_RUN",
+      "mandatory": true
+    },
+    {
+      "id": "IA03",
+      "title": "Alternativas tipadas e calculadas",
+      "tasks": [
+        "WP11.T02",
+        "WP12.T02",
+        "WP03.T01",
+        "WP01.T05",
+        "WP05.T05"
+      ],
+      "status": "NOT_RUN",
+      "mandatory": true,
+      "evidence": "Inventário C10 detecta categoria inteiramente omitida, conserva comparação condicionada e recalcula após resolução com a mesma regra financeira."
+    },
+    {
+      "id": "IA04",
+      "title": "Crítica de custos e dependências",
+      "tasks": [
+        "WP12.T03"
+      ],
+      "status": "NOT_RUN",
+      "mandatory": true,
+      "evidence": "Crítica consome cobertura determinística C10, distingue omissão de hipótese e exige fonte sem inventar custo; resposta altera resultado consumido."
+    },
+    {
+      "id": "IA05",
+      "title": "Perguntas decisivas e resposta com escopo",
+      "tasks": [
+        "WP08.T06",
+        "WP12.T03",
+        "WP12.T02"
+      ],
+      "status": "NOT_RUN",
+      "mandatory": true
+    },
+    {
+      "id": "IA06",
+      "title": "Casos e escolhas persistentes",
+      "tasks": [
+        "WP11.T01",
+        "WP11.T03"
+      ],
+      "status": "NOT_RUN",
+      "mandatory": true
+    },
+    {
+      "id": "IA07",
+      "title": "Mudanças por domínio com recibos",
+      "tasks": [
+        "WP11.T03",
+        "WP11.T04",
+        "WP10.T01"
+      ],
+      "status": "NOT_RUN",
+      "mandatory": true
+    },
+    {
+      "id": "IA08",
+      "title": "Reavaliação material",
+      "tasks": [
+        "WP14.T01",
+        "WP14.T04"
+      ],
+      "status": "NOT_RUN",
+      "mandatory": true
+    },
+    {
+      "id": "IA09",
+      "title": "Ciclo assíncrono da análise",
+      "tasks": [
+        "WP12.T04",
+        "WP01.T05"
+      ],
+      "status": "NOT_RUN",
+      "mandatory": true
+    },
+    {
+      "id": "IA10",
+      "title": "Cenários de portfólio",
+      "tasks": [
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "status": "NOT_RUN",
+      "mandatory": true,
+      "evidence": "Comparação de portfólio conserva cobertura C10 por candidato/interação e não promove subtotal condicionado a combinação elegível-completa."
+    },
+    {
+      "id": "IA11",
+      "title": "Documentos com fonte e confirmação",
+      "tasks": [
+        "WP06.T05",
+        "WP12.T02",
+        "WP09.T04"
+      ],
+      "status": "NOT_RUN",
+      "mandatory": true,
+      "evidence": "WP06.T05 é produtor obrigatório; cenário e dossiê WP09.T04 consomem a mesma evidenceRef após confirmação, com atualização/revogação."
+    },
+    {
+      "id": "IA12",
+      "title": "Memória previsto versus observado",
+      "tasks": [
+        "WP14.T02",
+        "WP14.T03"
+      ],
+      "status": "NOT_RUN",
+      "mandatory": true
+    },
+    {
+      "id": "IA13",
+      "title": "Entrada contextual em contrato pedido e projeto",
+      "tasks": [
+        "WP01.T05",
+        "WP02.T02",
+        "WP04.T02"
+      ],
+      "status": "NOT_RUN",
+      "mandatory": true
+    },
+    {
+      "id": "IA14",
+      "title": "Hoje e mesa de decisão",
+      "tasks": [
+        "WP01.T05",
+        "WP08.T04"
+      ],
+      "status": "NOT_RUN",
+      "mandatory": true
+    },
+    {
+      "id": "IA15",
+      "title": "BI de composição tempo e sensibilidade",
+      "tasks": [
+        "WP05.T05"
+      ],
+      "status": "NOT_RUN",
+      "mandatory": true
+    },
+    {
+      "id": "IA16",
+      "title": "Reunião vinculada às decisões",
+      "tasks": [
+        "WP07.T02",
+        "WP07.T04"
+      ],
+      "status": "NOT_RUN",
+      "mandatory": true
+    },
+    {
+      "id": "IA17",
+      "title": "IA e Relay nativos reais",
+      "tasks": [
+        "WP00.T04",
+        "WP09.T07",
+        "WP12.T01",
+        "WP10.T01"
+      ],
+      "status": "NOT_RUN",
+      "mandatory": true
+    },
+    {
+      "id": "IA18",
+      "title": "Autorização e revogação em toda a cadeia",
+      "tasks": [
+        "WP10.T01",
+        "WP11.T04",
+        "WP12.T04",
+        "WP14.T04"
+      ],
+      "status": "NOT_RUN",
+      "mandatory": true
+    }
+  ]
+}
