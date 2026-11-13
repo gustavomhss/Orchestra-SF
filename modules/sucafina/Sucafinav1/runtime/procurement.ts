@@ -833,6 +833,7 @@ export const domain: Domain = {
       }),
       actor,
     )
+    const bankVisible = has(actor, "admin", "supplier admin")
     const suppliers = store.suppliers.map((item) => {
       const supplier = object(item)
       const safe = {
@@ -841,7 +842,10 @@ export const domain: Domain = {
         iban: "masked",
         account: "masked",
       }
-      if (!has(actor, "admin", "supplier admin")) return { ...safe, swift: undefined }
+      if (!bankVisible) return {
+        ...safe,
+        ...Object.fromEntries(bankFields.map((field) => [field, field === "iban" || field === "account" ? "masked" : undefined])),
+      }
       if (!environment.bankKey) return { ...safe, iban: "", account: "" }
       return {
         ...safe,
@@ -862,6 +866,7 @@ export const domain: Domain = {
       data: {
         requests,
         suppliers,
+        bankVisible,
         register,
         directory: environment.directory,
         formSettings: pick(store.settings, [
