@@ -7,6 +7,7 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { CollaborationCapabilityHost } from "./capabilities.ts"
 import type { createThreadPort } from "./threads.ts"
 import type { createCollaborationComposition } from "./composition.ts"
+import type { createAnswerReusePort } from "./answer-reuse.ts"
 
 type Operation = "sf_work_list" | "sf_question_prepare" | "sf_answer_read" | "sf_relation_read" | "sf_handoff_prepare"
 
@@ -15,6 +16,7 @@ export function createCollaborationDispatch(input: {
   collaboration: ReturnType<typeof createCollaborationComposition>
   cases: Pick<DecisionCasePort, "read">
   threadReads?: Pick<ReturnType<typeof createThreadPort>, "read">
+  answerReuse?: Pick<ReturnType<typeof createAnswerReusePort>, "read">
   createReceipt: CollaborationCapabilityHost["createReceipt"]
   requiredAuthority: CollaborationCapabilityHost["requiredAuthority"]
 }): CollaborationCapabilityHost {
@@ -35,7 +37,11 @@ export function createCollaborationDispatch(input: {
       if (thread.value.kind === "comment" || !thread.value.recipientRef) return { status: "needs-input", reason: "answer-unavailable" }
       const answer = thread.value.messages.slice(1).reverse().find((message) => message.authorRef === thread.value.recipientRef)
       if (!answer) return { status: "needs-input", reason: "answer-unavailable" }
-      return { status: "ok", value: { questionRef: thread.value.id, answer: answer.body, evidenceRefs: thread.value.evidenceRefs, state: "unconfirmed" } }
+      const reusable = await input.answerReuse?.read(thread.value.id, context)
+      if (reusable?.status === "ok" && (reusable.value.answer !== answer.body || reusable.value.authorRef !== answer.authorRef)) return { status: "stale", reason: "answer-changed" }
+      const current = await (input.threadReads ?? input.collaboration.threads).read(parsed.value.questionRef, context)
+      if (current.status !== "ok" || digestSfValue(current.value) !== digestSfValue(thread.value)) return { status: "unavailable", reason: "answer-unavailable" }
+      return { status: "ok", value: { questionRef: thread.value.id, answer: answer.body, evidenceRefs: current.value.evidenceRefs, state: reusable?.status === "ok" ? "confirmed" : reusable?.status === "stale" ? "stale" : "unconfirmed" } }
     }
     if (operation === "sf_question_prepare") {
       const parsed = decodeSfOperationInput(operation, payload)

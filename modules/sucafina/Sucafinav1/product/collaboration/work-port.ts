@@ -18,21 +18,24 @@ import type { WorkSelectionPort } from "./selection.ts"
 import { projectMyWork } from "./work.ts"
 
 export type WorkPresentationItem = {
-  kind: "clarification" | "handoff" | "procurement" | "confirmation"
+  kind: "clarification" | "handoff" | "procurement" | "confirmation" | "signal"
   actionRef: string
   title: string | null
   ownerRef: string
   ownerLabel?: string
+  approvalStage?: string
+  reason?: string
   due?: string
   period?: Period
   sourceVersion?: number
   observedVersion?: number
   state: string
-  destination?: { kind: "thread"; threadId: string } | { kind: "hot-topic"; topicId: string } | { kind: "procurement-request"; recordId: string; incarnation: string } | { kind: "confirmation"; confirmationId: string }
+  destination?: { kind: "thread"; threadId: string } | { kind: "hot-topic"; topicId: string } | { kind: "procurement-request"; recordId: string; incarnation: string } | { kind: "confirmation"; confirmationId: string } | { kind: "signal"; ref: string }
   sourceRefs: readonly BusinessEvidenceRef[]
 }
 
 export type ConfirmationWork = { state: "valid" | "stale"; sourceRefs: readonly BusinessEvidenceRef[]; period: Period; observedVersion: number; sourceVersion?: number }
+export type WorkSignals = (selectionRef: string, period: Period, context: TrustedDomainContext) => Promise<{ status: "ok"; signals: readonly { workRef: string; label: string; impact: { state: string; reason: string }; recipientRef: string; destination: string; sourceRefs: readonly BusinessEvidenceRef[] }[] } | { status: "unavailable" }>
 
 /** Projects canonical producers on every read; it never stores operational status. */
 export function createCollaborationWorkPort(input: {
@@ -41,6 +44,7 @@ export function createCollaborationWorkPort(input: {
   collaboration: { authority: ReturnType<typeof createCollaborationAuthority>; hotTopics: ReturnType<typeof createHotTopicPort>; threads: ReturnType<typeof createThreadPort>; recipientThread?: ReturnType<typeof createRecipientThreadReader>; reissue?: ReturnType<typeof createCollaborationReissuer>; captureWorkSource?: (memberRef: string, context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>>; confirmationWork?: (id: string, context: TrustedDomainContext) => Promise<PortResult<ConfirmationWork>> }
   procurement: Pick<ReturnType<typeof createProcurementPort>, "list">
   selections: WorkSelectionPort
+  signals?: WorkSignals
   topicSource: { issue: (topic: HotTopic, context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>> }
 }) {
   const collect = async (selection: WorkListRequest, context: TrustedDomainContext): Promise<PortResult<{ list: AuthorizedWorkList; presentation: readonly WorkPresentationItem[] }>> => {
@@ -60,12 +64,23 @@ export function createCollaborationWorkPort(input: {
       const threadIds = threads.status === "ok" ? threads.value : []
       const relationData = relations.status === "ok" ? relations.value : {}
       const confirmationRecords = confirmations.status === "ok" ? confirmations.value : []
-      const confirmationIds = confirmationRecords && [...new Map(confirmationRecords.toSorted((a, b) => a.confirmedAt.localeCompare(b.confirmedAt)).map((record) => [digestSfValue(record.scope), record.id])).values()]
+      const confirmationIds = confirmationRecords && [...new Map(confirmationRecords.toSorted((a, b) => a.confirmedAt.localeCompare(b.confirmedAt)).map((record) => [digestSfValue({ ...record.scope, fields: [...record.scope.fields].sort(), materialDependencies: record.scope.materialDependencies.toSorted((a, b) => digestSfValue(a).localeCompare(digestSfValue(b))) }), record.id])).values()]
       if (!threadIds || !relationData || !confirmationIds) return { status: "denied", reason: "work-access-unavailable" }
       if (confirmationIds.length && !input.collaboration.confirmationWork) return { status: "unavailable", reason: "confirmation-work-source-unavailable" }
       const items: AuthorizedWorkList["items"][number][] = []
       const presentation: WorkPresentationItem[] = []
       const presentationProofs: BusinessEvidenceRef[] = []
+      if (selected.selectionRef.startsWith("sf:case-work-selection:") && !input.signals) return { status: "unavailable", reason: "work-signals-unavailable" }
+      const signals = input.signals && selected.selectionRef.startsWith("sf:case-work-selection:") ? await input.signals(selected.selectionRef, selected.period, context) : undefined
+      if (signals && signals.status !== "ok") return { status: "unavailable", reason: "work-signals-unavailable" }
+      const signalItems = signals?.status === "ok" ? signals.signals : []
+      if (new Set(signalItems.map((signal) => signal.workRef)).size !== signalItems.length) return { status: "unavailable", reason: "work-signals-unavailable" }
+      for (const signal of signalItems) {
+        if (!signal.workRef.trim() || !signal.label.trim() || !signal.destination.trim() || signal.recipientRef !== own || !signal.sourceRefs.length || !await input.collaboration.authority.sources(signal.sourceRefs, context)) return { status: "unavailable", reason: "work-signals-unavailable" }
+        const actionRef = `sf-signal:${signal.workRef}`
+        items.push({ actionRef, ownerRef: own, state: signal.impact.state, sourceRefs: signal.sourceRefs })
+        presentation.push({ kind: "signal", actionRef, title: signal.label, ownerRef: own, period: selected.period, reason: signal.impact.reason, state: signal.impact.state, destination: { kind: "signal", ref: signal.destination }, sourceRefs: signal.sourceRefs })
+      }
       for (const id of confirmationIds) {
         const confirmation = await input.collaboration.confirmationWork!(id, context)
         if (confirmation.status !== "ok") return confirmation
@@ -129,12 +144,15 @@ export function createCollaborationWorkPort(input: {
         const target = refs[0]
         if (!target || target.kind !== "record" || target.target.surface !== "procurement" || target.target.recordType !== "procurement-request") return { status: "unavailable", reason: "work-destination-unavailable" }
         const subject = projection.values.find((value) => value.id === "subject")?.value
+        const approvalStage = projection.values.find((value) => value.id === "approvalStage")
+        if (typeof approvalStage?.value === "string" && (!approvalStage.sourceRefs.length || !await input.collaboration.authority.sources(approvalStage.sourceRefs, context))) return { status: "unavailable", reason: "procurement-work-source-unavailable" }
+        if (typeof approvalStage?.value === "string") presentationProofs.push(...approvalStage.sourceRefs)
         const captured = input.collaboration.captureWorkSource ? await input.collaboration.captureWorkSource(target.refId, context) : undefined
         if (captured && (captured.status !== "ok" || !await input.collaboration.authority.sources([captured.value], context))) return { status: "unavailable", reason: "procurement-work-source-unavailable" }
         const individual = captured?.status === "ok" ? captured.value : undefined
         if (individual) presentationProofs.push(individual)
         items.push({ actionRef: target.refId, ownerRef: own, state: status.value, sourceRefs: refs })
-        presentation.push({ kind: "procurement", actionRef: target.refId, title: typeof subject === "string" && subject.trim() ? subject : null, ownerRef: own, period: projection.context.period, ...(individual ? { sourceVersion: individual.target.version, destination: { kind: "procurement-request" as const, recordId: individual.target.recordId, incarnation: individual.target.incarnation } } : {}), state: status.value, sourceRefs: refs })
+        presentation.push({ kind: "procurement", actionRef: target.refId, title: typeof subject === "string" && subject.trim() ? subject : null, ownerRef: own, ...(typeof approvalStage?.value === "string" && approvalStage.value.trim() ? { approvalStage: approvalStage.value } : {}), period: projection.context.period, ...(individual ? { sourceVersion: individual.target.version, destination: { kind: "procurement-request" as const, recordId: individual.target.recordId, incarnation: individual.target.incarnation } } : {}), state: status.value, sourceRefs: refs })
       }
       const after = await Promise.all((["threads", "relations", "confirmations"] as const).map((namespace) => input.state.read(request, namespace, (_state, authority) => authority.principalRef === own && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion)))
       const before = [threads, relations, confirmations]
@@ -144,7 +162,11 @@ export function createCollaborationWorkPort(input: {
         if (result.status !== "ok" || !result.value) return true
         return result.storageVersion !== (prior?.status === "ok" ? prior.storageVersion : 0)
       })) return { status: "stale", reason: "work-state-changed" }
-      const checks = await Promise.all(items.map((item) => input.selections.contains(scope.value, item.sourceRefs, context)))
+      const signalRefs = new Set(signalItems.map((signal) => `sf-signal:${signal.workRef}`))
+      if (items.filter((item) => signalRefs.has(item.actionRef)).length !== signalItems.length) return { status: "unavailable", reason: "work-signal-identity-conflict" }
+      const checks = await Promise.all(items.map((item) => signalRefs.has(item.actionRef) ? Promise.resolve({ status: "ok" as const, value: true }) : input.selections.contains(scope.value, item.sourceRefs, context)))
+      const signalsAgain = signals && input.signals ? await input.signals(selected.selectionRef, selected.period, context) : undefined
+      if (signals && (!signalsAgain || signalsAgain.status !== "ok" || digestSfValue(signalsAgain.signals) !== digestSfValue(signalItems))) return { status: "stale", reason: "work-signals-changed" }
       const current = await input.selections.resolve(selected.selectionRef, selected.period, context)
       if (current.status !== "ok" || digestSfValue(current.value) !== digestSfValue(scope.value)) return { status: "stale", reason: "work-selection-changed" }
       if (checks.some((result) => result.status !== "ok" || !result.value) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "work-source-or-selection-changed" }
@@ -153,7 +175,7 @@ export function createCollaborationWorkPort(input: {
       const entries = result.value.items.map((item) => {
         const matches = presentation.filter((entry) => entry.actionRef === item.actionRef)
         const first = matches[0]
-        if (!first || matches.some((entry) => entry.kind !== first.kind || entry.title !== first.title || entry.due !== first.due || entry.sourceVersion !== first.sourceVersion || entry.observedVersion !== first.observedVersion || digestSfValue(entry.period) !== digestSfValue(first.period) || digestSfValue(entry.destination) !== digestSfValue(first.destination))) return undefined
+        if (!first || matches.some((entry) => entry.kind !== first.kind || entry.title !== first.title || entry.approvalStage !== first.approvalStage || entry.reason !== first.reason || entry.due !== first.due || entry.sourceVersion !== first.sourceVersion || entry.observedVersion !== first.observedVersion || digestSfValue(entry.period) !== digestSfValue(first.period) || digestSfValue(entry.destination) !== digestSfValue(first.destination))) return undefined
         return { ...first, sourceRefs: item.sourceRefs }
       })
       if (entries.some((item) => !item)) return { status: "stale", reason: "work-presentation-conflict" }

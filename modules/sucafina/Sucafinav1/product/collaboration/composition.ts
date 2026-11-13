@@ -11,7 +11,7 @@ import { createRelationPort } from "./relations.ts"
 import { createThreadPort } from "./threads.ts"
 import { createHandoffPort } from "./handoff.ts"
 import { createCollaborationWorkPort } from "./work-port.ts"
-import type { ConfirmationWork } from "./work-port.ts"
+import type { ConfirmationWork, WorkSignals } from "./work-port.ts"
 import type { createProcurementPort } from "../procurement/port.ts"
 import type { createDashboardRecordEvidenceHost } from "../dashboard/sources.ts"
 import type { createCollaborationReissuer } from "./reissue.ts"
@@ -28,6 +28,7 @@ export function createCollaborationComposition(input: {
   recordEvidence: Pick<ReturnType<typeof createDashboardRecordEvidenceHost>, "issue">
   procurement: Pick<ReturnType<typeof createProcurementPort>, "list">
   selections: WorkSelectionPort
+  signals?: WorkSignals
   human: CollaborationHumanAuthority
   recipientThread?: ReturnType<typeof createRecipientThreadReader>
   reissue?: ReturnType<typeof createCollaborationReissuer>
@@ -58,13 +59,21 @@ export function createCollaborationComposition(input: {
     if (activeHandoffs.has(context)) return { status: "conflict", reason: "handoff-in-progress" }
     activeHandoffs.set(context, request)
     try { return await work() } finally { activeHandoffs.delete(context) }
-  }, authorizeIntent: authority.authorizeIntent, resolveTopic: async (topic, context) => {
+  }, authorizeIntent: authority.authorizeIntent, authorizeUpdate: async (request, context) => {
+    if (request.values.notes?.trim() || !await authority.sources(request.sourceRefs, context)) return false
+    const topic = await hotTopics.read(request.topicId, request.sourceRefs, context)
+    if (topic.status !== "ok") return false
+    const owner = request.values.owner ?? topic.value.owner
+    if (!request.recipientRef) return !owner.trim()
+    const person = await authority.recipient(request.recipientRef, context)
+    return !!person && person.name === owner
+  }, resolveTopic: async (topic, context) => {
     const issued = await topicSource.issue(topic, context)
     if (issued.status !== "ok") return issued
     const ref = issued.value
     if (ref.target.surface !== "dashboard" || ref.target.recordType !== "hotTopics" || ref.target.recordId !== topic.id || !await authority.sources([ref], context)) return { status: "unavailable", reason: "topic-source-unavailable" }
     return { status: "ok", value: { ref: ref.refId, evidence: ref } }
   } })
-  const work = createCollaborationWorkPort({ host: input.host, state: input.state, collaboration: { authority, hotTopics, threads, recipientThread: input.recipientThread, reissue: input.reissue, captureWorkSource: input.captureWorkSource, confirmationWork: input.confirmationWork }, procurement: input.procurement, topicSource, selections: input.selections })
+  const work = createCollaborationWorkPort({ host: input.host, state: input.state, collaboration: { authority, hotTopics, threads, recipientThread: input.recipientThread, reissue: input.reissue, captureWorkSource: input.captureWorkSource, confirmationWork: input.confirmationWork }, procurement: input.procurement, topicSource, selections: input.selections, signals: input.signals })
   return { authority, hotTopics: { read: hotTopics.read }, relations: { read: relations.read, create: relations.create, remove: relations.remove, storageVersion: relations.storageVersion, readVersioned: relations.readVersioned }, threads, handoff, work }
 }

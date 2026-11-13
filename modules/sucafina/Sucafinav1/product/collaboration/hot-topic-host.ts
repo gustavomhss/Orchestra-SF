@@ -26,7 +26,7 @@ export function createCollaborationHotTopicHost(input: { host: DomainPortHost; s
     const transactionId = environment.id()
     if (!transactionId.trim() || !await input.host.revalidate(context)) return { status: "unavailable", reason: "authority-unavailable" }
     const saved = await input.state.transaction(request, {
-      namespace: "relations", expectedStorageVersion: before.status === "ok" ? before.storageVersion : 0,
+      namespace: "relations", sourceFence: "all", expectedStorageVersion: before.status === "ok" ? before.storageVersion : 0,
       targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation,
       idempotencyKey: `sf:hot-topic:transaction:${transactionId}`, commandDigest: digestSfValue({ refs, transactionId }),
     }, async (state, authority, snapshot) => {
