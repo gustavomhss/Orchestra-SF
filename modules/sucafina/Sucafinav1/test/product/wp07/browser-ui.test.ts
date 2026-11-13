@@ -54,7 +54,9 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
       updateChecks: [] as string[], sourceNavigations: [] as { reviewRef: string; refDigest: string }[],
       reviewNavigations: [] as { reviewRef: string; sectionId: string }[],
     }
-    const period = { start: "2027-01-01", end: "2027-12-31" }
+    // Functional browser witness uses the real Planner's January slice, with every returned value.
+    // Annual runs exposed unresolved C08/WP10 snapshot-copy latency; this does not qualify annual UI performance.
+    const period = { start: "2027-01-01", end: "2027-01-31" }
     const at = "2026-11-13T08:00:00Z"
     const origin = server.url.origin
     const operator = { installationId: randomUUID(), uid: process.getuid!(), name: "WP07 isolated test operator" }
