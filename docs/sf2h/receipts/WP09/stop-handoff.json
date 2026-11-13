@@ -1,0 +1,71 @@
+{
+  "wp": "WP09",
+  "status": "STOPPED_INCOMPLETE",
+  "branch": "sf2-relay-ready",
+  "checkpoint_parent": "98a44a9a12bf66eadafeeabadfa4ca80fe1624b9",
+  "checkpoint_parent_tree": "15b14ad10d0a35577545b61a0fa471cd80c44d4d",
+  "local_head_note": "The containing commit identifies the exact checkpoint head; self-SHA cannot be embedded.",
+  "baseline": "c873998a4bf597cb8fe3d94b48b58a7441d533e8",
+  "campaign_plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "task_states": {
+    "WP09.T01": "PARTIAL_NOT_RUN",
+    "WP09.T02": "PARTIAL_NOT_RUN",
+    "WP09.T03": "PARTIAL_NOT_RUN",
+    "WP09.T04": "PARTIAL_NOT_RUN",
+    "WP09.T05": "PARTIAL_NOT_RUN",
+    "WP09.T06": "PARTIAL_NOT_RUN",
+    "WP09.T07": "PARTIAL_NOT_RUN"
+  },
+  "workers": [
+    {
+      "seat": "Terra",
+      "model": "gpt-6.1-terra",
+      "state": "stopping",
+      "leases": "released after checkpoint"
+    },
+    {
+      "seat": "Luna",
+      "model": "gpt-6-luna",
+      "id": "/root/wp09_luna",
+      "state": "interrupted",
+      "leases": "revoked"
+    },
+    {
+      "seat": "G1",
+      "model": "grok-4.7-build",
+      "id": "c2f4d629-7883-45db-93c2-67389cb61687",
+      "state": "terminal-http-402",
+      "leases": "revoked"
+    },
+    {
+      "seat": "G2",
+      "model": "grok-4.7-build",
+      "id": "9a76f229-12f2-4516-af67-870371c11532",
+      "state": "terminal-http-402",
+      "leases": "revoked"
+    }
+  ],
+  "behavior": "Partial review, forecast, dossier, followup, publication, decision and schedule adapters; schedule execution remains unavailable without occurrence authority.",
+  "foreign_inputs_not_copied": {
+    "WP03": "35a4853525",
+    "WP06": "44e86adbeb",
+    "WP08": "55b21f076e"
+  },
+  "validation": {
+    "local_tests": "NOT_RUN",
+    "hosted_tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "pr": "NOT_CREATED"
+  },
+  "open_findings": [
+    "C07 governed admission and run index producer not demonstrated",
+    "C08 authorized immutable result reader missing",
+    "schedule occurrence-to-admission and current SF principal reauthorization missing",
+    "authenticated private Request-document selection producer missing",
+    "host composition and cross-WP consumer proofs outstanding",
+    "Luna review changes interrupted and untested"
+  ],
+  "resume": "Only after explicit user restart: inspect this branch and exact dependency PRs; preserve state and continue whole-task ownership; do not call Grok while its provider constraint remains. Complete consumers, run authorized final hosted surgical checks, then prepare one WP PR.",
+  "remote_publication": "Checkpoint mirror uses a remote-accessible parent because the original local base is unpublished; see external handoff for exact mapping."
+}
