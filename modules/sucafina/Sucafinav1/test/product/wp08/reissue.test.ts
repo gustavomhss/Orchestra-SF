@@ -45,7 +45,7 @@ test("reissue checks actor access and the live physical incarnation", async () =
       const source = ref.kind === "record" ? await persistence.resolveScopedSource(ref.target.surface, ref.target.incarnation, async (_snapshot, scope) => current.allowed && scope.principalRef === binding.binding.principalRef) : undefined
       return { state: source && ref.kind === "record" && source.version === ref.target.version && source.inputDigest === ref.target.projectionDigest ? "fresh" : "unavailable", ref, accessRevision: binding.binding.accessRevision, checkedAt: "2026-11-13T00:00:00Z" }
     }, proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "not used" }) })
-    const reissue = createCollaborationReissuer({ host, issueForActor: async (target) => ({ status: "ok", value: await issue("B", target.recordId) }), authorize: async (ref, binding) => (await evidence.resolve(ref, binding)).state === "fresh" })
+    const reissue = createCollaborationReissuer({ host, issueForActor: async (target) => ({ status: "ok", value: await issue("B", target.recordId) }), authorize: async (ref, binding) => (await evidence.resolve(ref, binding)).state === "fresh", proveMaterialScope: async (original, current) => original.target.projectionDigest === current.target.projectionDigest })
     const result = await reissue(original, context)
     expect(result).toMatchObject({ status: "ok", value: { target: { recordId: "A", fields: ["amount"], period } } })
     if (result.status === "ok") expect(result.value.target.incarnation).not.toBe(original.target.incarnation)
@@ -101,7 +101,7 @@ test("reissue checks actor access and the live physical incarnation", async () =
     expect((await reissue(original, context)).status).toBe("ok")
     await persistence.transaction("planner", async (snapshot) => { snapshot.data.value = 11; return { commit: true, value: undefined } })
     const updated = await reissue(original, context)
-    expect(updated).toMatchObject({ status: "ok", value: { target: { recordId: "A", version: 2 } } })
+    expect(updated).toMatchObject({ status: "unavailable", reason: "source-material-scope-unavailable" })
     await persistence.transaction("planner", async (snapshot) => { snapshot.data.exists = false; return { commit: true, value: undefined } })
     await persistence.transaction("planner", async (snapshot) => { snapshot.data.exists = true; return { commit: true, value: undefined } })
     expect((await reissue(original, context)).status).not.toBe("ok")

@@ -14,6 +14,7 @@ export function createCollaborationReissuer(input: {
   host: DomainPortHost
   issueForActor: (target: RecordEvidence["target"], context: TrustedDomainContext) => Promise<PortResult<RecordEvidence>>
   authorize: (ref: RecordEvidence, context: TrustedDomainContext) => Promise<boolean>
+  proveMaterialScope?: (original: RecordEvidence, current: RecordEvidence, context: TrustedDomainContext) => Promise<boolean>
 }) {
   const transactionAll = input.host.persistence.transactionAll
   const issuedRefs = new Map<string, RecordEvidence>()
@@ -42,6 +43,7 @@ export function createCollaborationReissuer(input: {
     if (issued.status !== "ok") return issued
     const current = issued.value
     if (current.installationId !== selected.installationId || current.projectId !== selected.projectId || current.refDigest !== digestSfEvidenceRef(current) || current.evidenceLevel !== selected.evidenceLevel || current.target.surface !== selected.target.surface || current.target.recordType !== selected.target.recordType || current.target.recordId !== selected.target.recordId || digestSfValue([...current.target.fields].sort()) !== digestSfValue([...selected.target.fields].sort()) || digestSfValue(current.target.period) !== digestSfValue(selected.target.period) || !await input.authorize(current, context)) return { status: "unavailable", reason: "source-reissue-unavailable" }
+    if (!input.proveMaterialScope || !await input.proveMaterialScope(selected, current, context)) return { status: "unavailable", reason: "source-material-scope-unavailable" }
     const samePhysical = await transactionAll(async (snapshots: Record<Surface, Snapshot>) => ({ commit: false, value: inspect(snapshots[selected.target.surface], selected) === physical && inspect(snapshots[current.target.surface], current, context.binding) === physical })).catch(() => false)
     if (!samePhysical || !await input.host.revalidate(context)) { issuedRefs.delete(cacheKey); return { status: "stale", reason: "source-replaced-or-inaccessible" } }
     issuedRefs.set(cacheKey, structuredClone(current))

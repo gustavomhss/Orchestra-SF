@@ -48,6 +48,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   human: CollaborationHumanAuthority
   issueForActor?: (target: Extract<BusinessEvidenceRef, { kind: "record" }>["target"], context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>>
   captureWorkSource?: (memberRef: string, context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>>
+  proveReissueScope?: (original: Extract<BusinessEvidenceRef, { kind: "record" }>, current: Extract<BusinessEvidenceRef, { kind: "record" }>, context: TrustedDomainContext) => Promise<boolean>
   confirmationSource?: ConfirmationObserver<T> & {
     verifyManifest: (scope: ConfirmationScope, context: TrustedDomainContext) => Promise<boolean>
     /** Read-only check of the same manifest in the protected transaction snapshot. */
@@ -61,7 +62,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   const recordEvidence = createDashboardRecordEvidenceHost({ host: input.host, scopedSources: input.scopedSources, issueRecord })
   const authority = createCollaborationAuthority({ host: input.host, evidence: input.evidence })
   const selections = input.workSelections ?? createWorkSelectionPort({ collections: input.collections, authority, captureMember: input.captureWorkSource })
-  const reissue = input.issueForActor ? createCollaborationReissuer({ host: input.host, issueForActor: input.issueForActor, authorize: (ref, context) => authority.sources([ref], context) }) : undefined
+  const reissue = input.issueForActor ? createCollaborationReissuer({ host: input.host, issueForActor: input.issueForActor, authorize: (ref, context) => authority.sources([ref], context), proveMaterialScope: input.proveReissueScope }) : undefined
   const recipientThread = reissue ? createRecipientThreadReader({ host: input.host, state: input.state, reissue, authorize: authority.sources }) : undefined
   const confirmation = (() => {
     if (!input.confirmationSource || typeof input.confirmationSource.verifyManifest !== "function" || typeof input.confirmationSource.fenceManifest !== "function") return undefined

@@ -19,6 +19,9 @@ import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { resolveSfDocumentEvidence } from "../../../../product/documents/evidence-resolver.ts"
 import { createSfBusinessContext } from "../../../../product/host-binding/business-context.ts"
 import { createSfDocumentSourceAccess } from "../../../../product/decision-memory/source-access.ts"
+import { createPlannerProduct } from "../../../../product/planner/product.ts"
+import { createPlannerImportAnalysis } from "../../../../product/planner/import-analysis.ts"
+import { verifyPlannerImportTarget } from "../../../../product/imports/source-fences.ts"
 import { createSfDocumentHttp } from "../../../../product/interface/document-http.ts"
 import { createSfImportHttp } from "../../../../product/interface/import-http.ts"
 import { createSfDocumentTargetAuthority } from "../../../../../../../apps/cli/src/sucafina-product/document-authority.ts"
@@ -40,7 +43,7 @@ test("real host persists procurement document evidence and Planner import under 
     for (const surface of ["dashboard", "planner", "procurement"] as const) await store.initializeSources(surface)
     await store.transaction("procurement", async (snapshot) => { snapshot.data.store = { suppliers: [{ id: "s1", name: "Supplier" }], settings: { uploadCap: 100000 } }; return { commit: true, value: undefined } })
     await store.transaction("planner", async (snapshot) => {
-      snapshot.data.versions = [{ id: "v1", name: "FY27", year: 2027, closed: 0, locked: false, lines: [{ id: "42", sec: "opex", el: "licenses", name: "Licences", cur: "USD", b: Array(12).fill(100), a: Array(12).fill(null), f: Array(12).fill(null) }], projects: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, lists: {} }]
+      snapshot.data.versions = [{ id: "v1", name: "FY27", year: 2027, closed: 9, locked: false, lines: [{ id: "42", sec: "opex", el: "licenses", name: "Licences", cur: "USD", b: [40000, 45000, 45000, 50000, 50000, 50000, 50000, 50000, 50000, 50000, 60000, 60000], a: [40000, 40000, 45000, 45000, 45000, 45000, 45000, 45000, 50000, null, null, null], f: [null, null, null, null, null, null, null, null, null, 38000, 112000, 40000] }], projects: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, lists: {} }]
       snapshot.data.officials = {}; snapshot.data.entities = []; snapshot.data.allocations = []
       return { commit: true, value: undefined }
     })
@@ -119,6 +122,40 @@ test("real host persists procurement document evidence and Planner import under 
     const choices = await discovery!.json() as { value: { label: string; surface: string; selectionRef: string }[] }
     const planner = choices.value.find((row) => row.label === "FY27")
     if (!planner) throw new Error("Planner version not discovered")
+    const product = createPlannerProduct({ host: authority.host, scopedSources: store, coverageFor: async () => ({ status: "unavailable", reason: "not-covered" }) })
+    const analyze = createPlannerImportAnalysis({ host: authority.host, issueSource: product.issueSource, readPreview: importing.imports.readPreparedPreviewForAnalysis, verifyTarget: (snapshot, manifest, actor, context) => {
+      const source = manifest.baseIdentity[0]
+      return !!source && verifyPlannerImportTarget(snapshot, { surface: "planner", selectionRef: planner.selectionRef, incarnation: source.incarnation, version: source.version, options: { newVersion: false, removeMissing: false, preview: {} } }, actor, context)
+    } })
+    const beforeAnalysis = await store.transaction("planner", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
+    const analyses: { previewRef: string; importRequest: { admittedFileRef: string; format: string; options: {} }; period: { start: string; end: string }; currency: string }[] = []
+    for (const [amount, expected] of [[124000, 602000], [118000, 596000]] as const) {
+      const analysisWorkbook = new Workbook(); const analysisSheet = analysisWorkbook.addWorksheet("OPEX")
+      analysisSheet.addRow(["Line ID", "Cost element", "Vendor / item", "Currency", "Measure", "Oct", "Nov", "Dec"]); analysisSheet.addRow(["42", "Licenses", "Licences", "USD", "Forecast", 38000, amount, 40000])
+      const analysisForm = new FormData()
+      const analysisBytes = new Uint8Array(await analysisWorkbook.xlsx.writeBuffer())
+      analysisForm.set("file", new File([analysisBytes], "analysis.xlsx", { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }))
+      analysisForm.set("surface", planner.surface); analysisForm.set("selectionRef", planner.selectionRef); analysisForm.set("options", JSON.stringify({ newVersion: false, removeMissing: false, preview: {} }))
+      const admittedFile = await importHttp(new Request(url("import-admit"), { method: "POST", headers: { cookie, origin, "Idempotency-Key": randomUUID() }, body: analysisForm }), "planner")
+      expect(admittedFile?.status).toBe(200)
+      const admittedValue = await admittedFile!.json() as { value: { ref: string } }
+      const importRequest = { admittedFileRef: admittedValue.value.ref, format: "xlsx", options: {} }
+      const proposed = await importHttp(new Request(url("import-preview"), { method: "POST", headers: { cookie, origin, "content-type": "application/json", "Idempotency-Key": randomUUID() }, body: JSON.stringify(importRequest) }), "planner")
+      expect(proposed?.status).toBe(200)
+      const proposedValue = await proposed!.json() as { value: { id: string } }
+      const analysisRequest = { previewRef: proposedValue.value.id, importRequest, period: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD" }
+      analyses.push(analysisRequest)
+      const analysis = await uiCall("sf_import_preview", importRequest, (context) => analyze(analysisRequest, context))
+      expect(analysis.status).toBe("ok")
+      if (analysis.status !== "ok") throw new Error(analysis.reason)
+      expect(analysis.value).toMatchObject({ analysisBasis: "import-preview", importPreviewRef: proposedValue.value.id, domainApplied: false, knownDifference: expected - 590000 })
+      expect(analysis.value.baseline.components.reduce((sum, component) => sum + (component.amount ?? 0), 0)).toBe(590000)
+      expect(analysis.value.candidate.components.reduce((sum, component) => sum + (component.amount ?? 0), 0)).toBe(expected)
+      await store.transaction("dashboard", async (_, blobs) => { await blobs.put(`sf-import/${admittedValue.value.ref}`, new Uint8Array([1]), "application/octet-stream"); return { commit: true, value: undefined } })
+      expect((await uiCall("sf_import_preview", importRequest, (context) => analyze(analysisRequest, context))).status).not.toBe("ok")
+      await store.transaction("dashboard", async (_, blobs) => { await blobs.put(`sf-import/${admittedValue.value.ref}`, analysisBytes, "application/octet-stream"); return { commit: true, value: undefined } })
+    }
+    expect(await store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot }))).toEqual(beforeAnalysis)
     const workbook = new Workbook(); const sheet = workbook.addWorksheet("OPEX")
     sheet.addRow(["Line ID", "Cost element", "Vendor / item", "Currency", "Measure", "Jan"]); sheet.addRow(["42", "Licenses", "Licences", "USD", "Forecast", 0])
     const bytes = new Uint8Array(await workbook.xlsx.writeBuffer())
@@ -139,6 +176,7 @@ test("real host persists procurement document evidence and Planner import under 
     const applied = await post("import-apply", { manifestId: manifest.value.id, version: manifest.value.version })
     expect(applied?.status).toBe(200)
     expect(await store.transaction("planner", async (snapshot) => ({ commit: false, value: ((snapshot.data.versions as { lines: { f: (number | null)[] }[] }[])[0]!).lines[0]!.f[0] }))).toBe(0)
+    expect((await uiCall("sf_import_preview", analyses[0]!.importRequest, (context) => analyze(analyses[0]!, context))).status).not.toBe("ok")
     const originalIdentity = await store.transaction("procurement", async (snapshot) => ({ commit: false, value: sfSourceIdentity(snapshot, "document-asset", "asset-1") }))
     const entered = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
     const locked = store.transactionAll!(async () => {

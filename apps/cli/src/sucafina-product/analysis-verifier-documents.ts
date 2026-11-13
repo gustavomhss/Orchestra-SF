@@ -90,3 +90,45 @@ export function createSfContractReviewVerifier(dependencies: SfAnalysisDependenc
     },
   }
 }
+
+export function createSfPurchasePreparationVerifier(dependencies: SfAnalysisDependencies): SfAnalysisVerifier {
+  return {
+    skillIds: ["sf-preparar-compra"],
+    verify: async (input, request, call) => {
+      const decoded = decodeSfSkillInput("PurchasePreparationInput", input)
+      if (!decoded.ok) return { status: "needs-input", reason: "invalid-analysis-input" }
+      const value = decoded.value
+      if (value.commercialComparisons.length) return { status: "unavailable", reason: "commercial-comparison-binding-unavailable" }
+      const read = async (currentCall: TrustedDomainContext) => {
+        const current = await dependencies.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, currentCall)
+        if (current.status !== "ok" || current.value.case.version !== request.caseRef.version || !current.value.case.choices.some((choice) => digestSfValue(choice) === digestSfValue(value.choice))) return undefined
+        const purchase = await dependencies.procurement.read({ requestRef: value.request.requestRef }, currentCall)
+        if (purchase.status !== "ok") return undefined
+        const status = purchase.value.values.find((item) => item.id === "status" && item.evidenceState === "confirmed")
+        if (!status || status.value !== value.request.stage) return undefined
+        const requestRefs = status.sourceRefs.filter((ref) => ref.kind === "record" && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request" && ref.target.version === value.request.version)
+        if (requestRefs.length !== 1 || value.allowedChangeTargets.some((target) => !purchase.value.context.sourceRefs.some((item) => digestSfValue(item) === digestSfValue(target)) && !current.value.case.preparedChanges.some((change) => digestSfValue(change.target) === digestSfValue(target)))) return undefined
+        const refs = [...requestRefs, ...value.choice.evidenceRefs].filter((ref, index, all) => all.findIndex((item) => digestSfValue(item) === digestSfValue(ref)) === index)
+        if (refs.some((ref) => !current.value.evidenceRefs.some((item) => digestSfValue(item) === digestSfValue(ref)))) return undefined
+        const sources = await dependencies.context.context({ refs }, currentCall)
+        if (sources.length !== refs.length || sources.some((item, index) => item.state !== "fresh" || !item.authorizedProjection || !item.currentRef || digestSfValue(item.ref) !== digestSfValue(refs[index]) || digestSfValue(item.currentRef) !== digestSfValue(item.ref)) || !await dependencies.host.revalidate(currentCall)) return undefined
+        return { current: current.value.case, refs, sources }
+      }
+      const proof = await read(call)
+      if (!proof) return { status: "unavailable", reason: "analysis-source-unavailable" }
+      return { status: "ok", value: { current: proof.current, input: value, sources: proof.sources, acceptsOutput: async (output, currentCall) => {
+        if (output.state !== "ready" || output.kind !== "DossierDraft") return { status: "unavailable", reason: "analysis-output-unverified" }
+        const current = await read(currentCall)
+        if (!current) return { status: "unavailable", reason: "analysis-output-unverified" }
+        const dossier = output.payload
+        const pending = value.choice.costCoverage.entries.filter((entry) => entry.status === "pending")
+        const missing = value.choice.costCoverage.derivedMissingCategoryIds
+        if (dossier.requestRef !== value.request.requestRef || dossier.requestVersion !== value.request.version || dossier.domainApplied !== false || digestSfValue(dossier.alternatives) !== digestSfValue([value.choice.alternativeId]) ||
+          digestSfValue(dossier.gaps) !== digestSfValue(value.choice.costCoverage.issues) || pending.some((entry) => !dossier.conditions.some((condition) => condition.category === entry.categoryId && condition.reason === entry.reason)) || missing.some((category) => !dossier.conditions.some((condition) => condition.category === category)) ||
+          dossier.conditions.some((condition) => !condition.reason.trim() || (!pending.some((entry) => entry.categoryId === condition.category && entry.reason === condition.reason) && !missing.includes(condition.category)) || condition.evidenceRefs.some((ref) => !current.refs.some((item) => digestSfValue(item) === digestSfValue(ref)))) ||
+          digestSfValue(dossier.sourceRefs) !== digestSfValue(current.refs) || digestSfValue(output.evidenceRefs) !== digestSfValue(current.refs)) return { status: "unavailable", reason: "analysis-output-unverified" }
+        return { status: "ok", value: true }
+      } } }
+    },
+  }
+}
