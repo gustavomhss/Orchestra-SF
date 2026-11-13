@@ -243,3 +243,13 @@ test("unrecognized imported status stays explicitly unavailable", () => {
   expect(projection.values.map((value) => value.value)).toEqual([null, null])
   expect(projection.missing).toContainEqual({ field: "status", reason: "unavailable" })
 })
+
+test("approval stage is the current pending level and is scoped to its evidence", () => {
+  const ref = { ...evidence, target: { ...evidence.target, fields: ["approvalStage"] } }
+  const record = { status: "pr_pending", prApproval: { steps: [{ status: "approved", levelName: "First" }, { status: "pending", holderId: "b", levelName: "Finance" }] } }
+  const projection = projectProcurementSource(record, context, ref)
+  expect(projection.values).toMatchObject([{ id: "approvalStage", value: "Finance", sourceRefs: [ref], evidenceState: "confirmed" }])
+  const missing = projectProcurementSource({ ...record, prApproval: { steps: [{ status: "pending" }] } }, context, ref)
+  expect(missing.values[0]).toMatchObject({ id: "approvalStage", value: null, evidenceState: "absent" })
+  expect(missing.missing).toContainEqual({ field: "approvalStage", reason: "missing" })
+})

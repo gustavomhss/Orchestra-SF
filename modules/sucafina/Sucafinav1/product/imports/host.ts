@@ -28,15 +28,15 @@ export function createSfImportHost(input: {
   authorizeAdmission: (payload: { target: ImportTarget; format: "xlsx" | "xls" | "json"; digest: string }, context: TrustedDomainContext) => Promise<boolean>
   preview: Pick<ImportPreviewHost, "revalidate">
   apply: Pick<ImportApplyHost, "revalidate" | "confirm">
-  planner: Pick<Parameters<typeof createSfPlannerImportPreview>[0], "resolveTarget" | "verifyTarget">
+  planner: Pick<Parameters<typeof createSfPlannerImportPreview>[0], "resolveTarget" | "verifyTarget" | "resolveRoster" | "verifyRoster">
   dashboard: Pick<Parameters<typeof createSfDashboardImportPreview>[0], "resolveTarget" | "verifyScope">
 }) {
   const pending = new WeakMap<TrustedDomainContext, { name: "sf_import_preview"; digest: string }>()
   const operationIdentity = (context: TrustedDomainContext) => input.operationIdentity(context, pending.get(context))
   const files = createSfStagedImportFiles({ ...input, operationIdentity })
-  const store = createSfImportPreviewStore({ ...input, operationIdentity, validateFile: files.revalidate })
+  const store = createSfImportPreviewStore({ ...input, operationIdentity, validateFile: files.revalidate, validateRoster: async (target, evidence, context) => { const current = await input.planner.resolveRoster?.(target, context); return current?.status === "ok" && digestSfValue(current.value) === digestSfValue(evidence) } })
   const plannerPreview = createSfPlannerImportPreview({ host: input.host, operationIdentity, ...input.planner })
-  const plannerApply = createSfPlannerImportAtomic({ host: input.host, state: input.state, files, authorizeTarget: input.authorizeTarget, verifyTarget: input.planner.verifyTarget, readView: async (id, context) => { const result = await store.read(id, context); return result.status === "ok" ? { status: "ok", value: store.view(result.value.manifest) } : result } })
+  const plannerApply = createSfPlannerImportAtomic({ host: input.host, state: input.state, files, authorizeTarget: input.authorizeTarget, verifyTarget: input.planner.verifyTarget, verifyRoster: input.planner.verifyRoster, readView: async (id, context) => { const result = await store.read(id, context); return result.status === "ok" ? { status: "ok", value: store.view(result.value.manifest) } : result } })
   const dashboardPreview = createSfDashboardImportPreview({ host: input.host, operationIdentity, ...input.dashboard })
   const dashboardApply = createSfDashboardImportAtomic({ host: input.host, state: input.state, files, authorizeTarget: input.authorizeTarget, verifyScope: (snapshot, staged, target, actor, manifest, evidence, context, at) => !!manifest.commands[0] && input.dashboard.verifyScope(snapshot, staged, target, actor, manifest.commands[0].command, evidence, context, at), readView: async (id, context) => { const result = await store.read(id, context); return result.status === "ok" ? { status: "ok", value: store.view(result.value.manifest) } : result } })
   // Private host seam: prepared commands must never be returned to a model or UI.

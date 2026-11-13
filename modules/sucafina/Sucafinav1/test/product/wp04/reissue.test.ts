@@ -73,6 +73,17 @@ test("reissue requires the recipient's current scope and the same physical reque
     expect(admitted.value.target).toMatchObject({ recordType: "procurement-request", recordId: "PR-1", fields: original.value.evidence.target.fields, period: original.value.evidence.target.period })
     expect(admitted.value.target.incarnation).not.toBe(original.value.evidence.target.incarnation)
     expect((await resolver.resolve(admitted.value.refId, b)).status).toBe("ok")
+    const fence = await resolver.prepareReissueScope(original.value.evidence, admitted.value, b)
+    expect(fence.status).toBe("ok")
+    if (fence.status !== "ok") return
+    expect(await fence.value.fence()).toBe(false)
+    const fenced = await persistence.transactionAll!(async () => ({ commit: false, value: await fence.value.fence() }))
+    expect(fenced).toBe(true)
+    roles.b = "requester"
+    const revokedFence = await persistence.transactionAll!(async () => ({ commit: false, value: await fence.value.fence() }))
+    expect(revokedFence).toBe(false)
+    roles.b = "buyer"
+
     const unavailable = async () => ({ status: "unavailable" as const, reason: "unused" })
     const port = createProcurementPort({ ...host, resolveRequestSource: resolver.resolve, resolveSupplierSource: resolver.resolve, isCurrentRequestSource: resolver.isCurrent, isCurrentSupplierSource: resolver.isCurrent, resolveRequestCollection: unavailable, isCurrentRequestCollection: () => false, readContractSource: unavailable })
     const reviewed = await createProcurementPreparedReview({ port, individual: resolver })(prepared.command, b)

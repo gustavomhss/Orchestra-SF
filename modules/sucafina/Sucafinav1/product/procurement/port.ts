@@ -239,6 +239,7 @@ export function projectProcurementSource(record: Record<string, unknown>, contex
   const values = ([
     { id: "status", value: knownStatus ? status : null, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: knownStatus ? "confirmed" : "absent" },
     { id: "holder", value: typeof holder?.holderId === "string" && holder.holderId ? holder.holderId : null, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: holder?.holderId ? "confirmed" : "absent" },
+    { id: "approvalStage", value: typeof holder?.levelName === "string" && holder.levelName ? holder.levelName : null, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: typeof holder?.levelName === "string" && holder.levelName ? "confirmed" : "absent" },
     { id: "stageEnteredAt", value: entry, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: entry ? "confirmed" : "absent" },
     { id: "ageDays", value: age, unit: "days", period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: age == null ? "absent" : "confirmed" },
     { id: "baseAmount", value: baseAmount, currency: context.currency, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: baseAmount == null ? "absent" : moneyEvidence },
@@ -262,5 +263,6 @@ export function projectProcurementSource(record: Record<string, unknown>, contex
     ...(evidence.target.fields.includes("originalCurrency") && !explicitCurrency ? [{ field: "originalCurrency", reason: "missing" as const }] : []),
     ...(evidence.target.fields.includes("fxRate") && validRate == null ? [{ field: "fxRate", reason: "missing-fx" as const }] : []),
     ...(evidence.target.fields.includes("holder") && action && !holder?.holderId ? [{ field: "holder", reason: "missing" as const }] : []),
+    ...(evidence.target.fields.includes("approvalStage") && action && !holder?.levelName ? [{ field: "approvalStage", reason: "missing" as const }] : []),
   ] }
 }

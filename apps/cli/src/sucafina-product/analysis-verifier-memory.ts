@@ -17,6 +17,7 @@ export function createSfDecisionMemoryVerifier(dependencies: SfAnalysisDependenc
       const decoded = decodeSfSkillInput("DecisionRecallInput", input)
       if (!decoded.ok || !decoded.value.query.trim() || decoded.value.query !== request.objective || digestSfValue(decoded.value.currentCase) !== digestSfValue(request.caseRef)) return { status: "needs-input", reason: "invalid-analysis-input" }
       const value = decoded.value
+      if (value.recallScope.includeHistorical) return { status: "unavailable", reason: "historical-memory-unavailable" }
       const read = async (currentCall: TrustedDomainContext) => {
         const current = await dependencies.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, currentCall)
         if (current.status !== "ok" || current.value.case.version !== request.caseRef.version) return undefined

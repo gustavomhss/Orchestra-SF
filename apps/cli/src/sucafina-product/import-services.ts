@@ -19,7 +19,7 @@ import { createSfImportHost } from "../../../../modules/sucafina/Sucafinav1/prod
 import { verifyDashboardImportTarget, verifyPlannerImportTarget } from "../../../../modules/sucafina/Sucafinav1/product/imports/source-fences.ts"
 import type { ImportTarget } from "../../../../modules/sucafina/Sucafinav1/product/imports/staged-files.ts"
 
-export function createSfImportServices(input: { runtime: Parameters<CreateSfHostRuntime>[0]; authority: ReturnType<typeof createSfProductAuthority> }) {
+export function createSfImportServices(input: { runtime: Parameters<CreateSfHostRuntime>[0]; authority: ReturnType<typeof createSfProductAuthority>; roster?: Pick<Parameters<typeof createSfImportHost>[0]["planner"], "resolveRoster" | "verifyRoster"> }) {
   const assets = input.runtime.assets
   if (!assets || !Object.is(assets.persistence, input.runtime.persistence)) return undefined
   const authority = input.authority
@@ -73,7 +73,7 @@ export function createSfImportServices(input: { runtime: Parameters<CreateSfHost
     if (!operation) return undefined
     const receipt = authority.authority.receiptFor(context, operation.name, operation.digest)
     return receipt?.kind === "native" ? digestSfValue({ runId: receipt.runId, callId: receipt.callId, operation: operation.name }) : undefined
-  }, authorizeTarget, authorizeAdmission: (payload, context) => authority.human.authorize(context, "imports.admit", payload), preview: { revalidate: host.revalidate }, apply: { revalidate: host.revalidate, confirm: (manifest, context) => authority.human.authorize(context, "imports.apply", { manifestId: manifest.id, version: manifest.version }) }, planner: { resolveTarget: (target, context) => plannerSources.resolveForecastSource(target.selectionRef, context), verifyTarget: verifyPlannerImportTarget }, dashboard: { resolveTarget: (target, context) => target.selectionRef.startsWith("sf-dataset:") ? resolveDataset(target, context) : dashboardSources.resolveDashboardSource(target.selectionRef, context), verifyScope: verifyDashboardImportTarget } })
+  }, authorizeTarget, authorizeAdmission: (payload, context) => authority.human.authorize(context, "imports.admit", payload), preview: { revalidate: host.revalidate }, apply: { revalidate: host.revalidate, confirm: (manifest, context) => authority.human.authorize(context, "imports.apply", { manifestId: manifest.id, version: manifest.version }) }, planner: { resolveTarget: (target, context) => plannerSources.resolveForecastSource(target.selectionRef, context), verifyTarget: verifyPlannerImportTarget, ...input.roster }, dashboard: { resolveTarget: (target, context) => target.selectionRef.startsWith("sf-dataset:") ? resolveDataset(target, context) : dashboardSources.resolveDashboardSource(target.selectionRef, context), verifyScope: verifyDashboardImportTarget } })
   const prepareTarget = async (selection: { surface: "planner" | "dashboard"; selectionRef: string; options: ImportTarget["options"] }, context: TrustedDomainContext) => {
     const match = /^sf-dataset:([^:]+):([1-9]\d*)$/.exec(selection.selectionRef)
     const incarnation = match ? (() => { try { return decodeURIComponent(match[1]!) } catch { return undefined } })() : undefined

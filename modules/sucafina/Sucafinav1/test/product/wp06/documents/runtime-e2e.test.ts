@@ -15,7 +15,7 @@ import { enumerateSfSources } from "../../../../product/integration/source-inven
 import { createSfSourceScopeProjector } from "../../../../product/integration/source-projections.ts"
 import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
 import type { TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
-import { digestSfValue } from "../../../../product/contracts/canonical.ts"
+import { digestSfEvidenceRef, digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { resolveSfDocumentEvidence } from "../../../../product/documents/evidence-resolver.ts"
 import { createSfBusinessContext } from "../../../../product/host-binding/business-context.ts"
 import { createSfDocumentSourceAccess } from "../../../../product/decision-memory/source-access.ts"
@@ -28,6 +28,8 @@ import { createSfImportHttp } from "../../../../product/interface/import-http.ts
 import { createSfDocumentTargetAuthority } from "../../../../../../../apps/cli/src/sucafina-product/document-authority.ts"
 import { createSfDocumentServices } from "../../../../../../../apps/cli/src/sucafina-product/document-services.ts"
 import { createSfImportServices } from "../../../../../../../apps/cli/src/sucafina-product/import-services.ts"
+import { createSfRosterSources } from "../../../../../../../apps/cli/src/sucafina-product/roster-sources.ts"
+import { createSfPlannerSourceHost } from "../../../../product/integration/planner-sources.ts"
 
 test("real host persists procurement document evidence and Planner import under current authority", async () => {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-document-host-"))
@@ -45,7 +47,7 @@ test("real host persists procurement document evidence and Planner import under 
     await store.transaction("procurement", async (snapshot) => { snapshot.data.store = { suppliers: [{ id: "s1", name: "Supplier" }], settings: { uploadCap: 100000 } }; return { commit: true, value: undefined } })
     await store.transaction("planner", async (snapshot) => {
       snapshot.data.versions = [{ id: "v1", name: "FY27", year: 2027, closed: 9, locked: false, lines: [{ id: "42", sec: "opex", el: "licenses", name: "Licences", cur: "USD", b: [40000, 45000, 45000, 50000, 50000, 50000, 50000, 50000, 50000, 50000, 60000, 60000], a: [40000, 40000, 45000, 45000, 45000, 45000, 45000, 45000, 50000, null, null, null], f: [null, null, null, null, null, null, null, null, null, 38000, 112000, 40000] }], projects: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, lists: {} }]
-      snapshot.data.officials = {}; snapshot.data.entities = []; snapshot.data.allocations = []
+      snapshot.data.officials = {}; snapshot.data.entities = []; snapshot.data.allocations = []; snapshot.data.roster = []
       return { commit: true, value: undefined }
     })
     const code = await identity.enroll()
@@ -63,7 +65,9 @@ test("real host persists procurement document evidence and Planner import under 
     const authority = createSfProductAuthority({ identity: () => installation, installationId: operator.installationId, origin, policyVersion: "policy", persistence: store, authenticate: identity.authenticate, environment, grants: [{ principalRef: principal.id, namespaces: ["documents", "receipts"], operations: ["sf_document_extract", "sf_knowledge_search", "sf_evidence_get", "sf_import_preview"], humanActions: ["documents.schema", "documents.confirm", "imports.admit", "imports.apply"] }], createId: randomUUID, now: () => Date.parse(at), commandIdentity: async (request, operation) => { if (request.method === "GET" || request.method === "HEAD") return randomUUID(); const key = request.headers.get("Idempotency-Key"); return key && /^[A-Za-z0-9._:-]{8,128}$/.test(key) ? digestSfValue({ operation, key }) : undefined }, inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => 1, authorizeDocument: createSfDocumentTargetAuthority({ persistence: store, authenticate: identity.authenticate, environment, assets }) })
     const runtime = { installationId: operator.installationId, directory, sourceRoot: directory, origin, mount: "/sucafina", persistence: store, authenticate: identity.authenticate, environment, assets }
     const service = createSfDocumentServices({ runtime, authority })
-    const importing = createSfImportServices({ runtime, authority })
+    const plannerSources = createSfPlannerSourceHost({ host: authority.host, scopedSources: store, coverageFor: async () => ({ status: "unavailable", reason: "not-covered" }) })
+    const roster = createSfRosterSources({ host: authority.host, scopedSources: store, plannerSources })
+    const importing = createSfImportServices({ runtime, authority, roster })
     if (!service || !importing) throw new Error("missing production services")
     const business = createSfBusinessContext({ revalidate: authority.host.revalidate, resolveSource: createSfDocumentSourceAccess({ host: authority.host, read: service.documents.reader }), proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => { throw new Error("not used") } })
     const uiCall = async <T>(operation: string, payload: unknown, work: (context: TrustedUiContext) => Promise<T>) => {
@@ -127,6 +131,20 @@ test("real host persists procurement document evidence and Planner import under 
     const choices = await discovery!.json() as { value: { label: string; surface: string; selectionRef: string }[] }
     const planner = choices.value.find((row) => row.label === "FY27")
     if (!planner) throw new Error("Planner version not discovered")
+    await uiCall("sf_import_preview", { roster: planner.selectionRef }, async (context) => {
+      const selected = await importing.prepareTarget({ surface: "planner", selectionRef: planner.selectionRef, options: { newVersion: false, removeMissing: false, preview: {} } }, context)
+      if (selected.status !== "ok") throw new Error(selected.reason)
+      const issued = await roster.resolveRoster(selected.value, context)
+      if (issued.status !== "ok") throw new Error(issued.reason)
+      const forged = structuredClone(issued.value)
+      forged.target.period = { start: "2028-01-01", end: "2028-12-31" }
+      forged.refDigest = digestSfEvidenceRef(forged)
+      const valid = await store.transaction("planner", async (snapshot) => {
+        const actor = { id: principal.id, roles: principal.roles.filter((row) => row.surface === "planner").map((row) => row.role), canWrite: principal.canWrite, assigned: [], domains: [] }
+        return { commit: false, value: { original: roster.verifyRoster(snapshot, issued.value, actor, context), forged: roster.verifyRoster(snapshot, forged, actor, context) } }
+      })
+      expect(valid).toEqual({ original: true, forged: false })
+    })
     const product = createPlannerProduct({ host: authority.host, scopedSources: store, coverageFor: async () => ({ status: "unavailable", reason: "not-covered" }) })
     const analyze = createPlannerImportAnalysis({ host: authority.host, issueSource: product.issueSource, readPreview: importing.imports.readPreparedPreviewForAnalysis, verifyTarget: (snapshot, manifest, actor, context) => {
       const source = manifest.baseIdentity[0]
@@ -188,6 +206,26 @@ test("real host persists procurement document evidence and Planner import under 
     expect(receiptValue.value.receipt.changedFields).toBeGreaterThan(0)
     expect(await store.transaction("planner", async (snapshot) => ({ commit: false, value: ((snapshot.data.versions as { lines: { f: (number | null)[] }[] }[])[0]!).lines[0]!.f[0] }))).toBe(0)
     expect((await uiCall("sf_import_preview", analyses[0]!.importRequest, (context) => analyze(analyses[0]!, context))).status).not.toBe("ok")
+    const currentChoices = await importHttp(new Request(`${url("import-targets")}&surface=planner`, { headers: { cookie } }), "planner")
+    const currentPlanner = ((await currentChoices!.json()) as { value: { label: string; surface: string; selectionRef: string }[] }).value.find((row) => row.label === "FY27")
+    if (!currentPlanner) throw new Error("current Planner version not discovered")
+    const membersWorkbook = new Workbook(); const members = membersWorkbook.addWorksheet("All Members")
+    members.addRow(["Name", "Title", "Type", "Leader", "Location", "Start Date", "End Date", "Status", "Classification", "Outlook", "Notes"])
+    members.addRow(["Roster person", "Analyst", "Employee", "Lead", "Geneva", "2027-01-01", "", "Active", "ignore", "ignore", "ignore"])
+    membersWorkbook.addWorksheet("Summary by Leader").addRow(["Leader", "Count"])
+    const membersForm = new FormData()
+    membersForm.set("file", new File([new Uint8Array(await membersWorkbook.xlsx.writeBuffer())], "members.xlsx", { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }))
+    membersForm.set("surface", currentPlanner.surface); membersForm.set("selectionRef", currentPlanner.selectionRef); membersForm.set("options", JSON.stringify({ newVersion: false, removeMissing: false, preview: {} }))
+    const membersAdmission = await importHttp(new Request(url("import-admit"), { method: "POST", headers: { cookie, origin, "Idempotency-Key": randomUUID() }, body: membersForm }), "planner")
+    expect(membersAdmission?.status).toBe(200)
+    const membersFile = await membersAdmission!.json() as { value: { ref: string } }
+    const membersPreview = await post("import-preview", { admittedFileRef: membersFile.value.ref, format: "xlsx", options: {} })
+    expect(membersPreview?.status).toBe(200)
+    const membersManifest = await membersPreview!.json() as { value: { id: string; version: number; baseIdentity: { type: string }[] } }
+    expect(membersManifest.value.baseIdentity.map((source) => source.type)).toEqual(["planner-version", "planner-roster"])
+    expect((await post("import-apply", { manifestId: membersManifest.value.id, version: membersManifest.value.version }))?.status).toBe(200)
+    const storedRoster = await store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot.data.roster }))
+    expect(storedRoster).toEqual([{ name: "Roster person", title: "Analyst", type: "Employee", leader: "Lead", location: "Geneva", start: "2027-01-01", end: "", status: "Active" }])
     const originalIdentity = await store.transaction("procurement", async (snapshot) => ({ commit: false, value: sfSourceIdentity(snapshot, "document-asset", "asset-1") }))
     const entered = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
     const locked = store.transactionAll!(async () => {

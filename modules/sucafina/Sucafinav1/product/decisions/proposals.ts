@@ -1,5 +1,6 @@
 import { digestSfValue } from "../contracts/canonical.ts"
 import { reassessScenarioCoverage, validateScenarioCoverage } from "./cost-coverage.ts"
+import { parseCaseRef } from "./case-port.ts"
 import { prepareDomainChange } from "./prepared-change.ts"
 import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
@@ -71,6 +72,7 @@ export function createChangeProposalService(input: {
   cases: DecisionCasePort
   host: Pick<DomainPortHost, "revalidate">
   resolveChanges: (request: ChangePrepareRequest, context: TrustedDomainContext) => Promise<PortResult<{ changes: readonly { command: PreparedCommand; preview: ScenarioResult; targetEvidence: Extract<BusinessEvidenceRef, { kind: "record" }> }[]; conditions: readonly UnresolvedCondition[] }>>
+  resolvePreview: (request: { caseRef: { id: string; incarnation: string; version: number }; choiceId: string; preview: ScenarioResult }, context: TrustedDomainContext) => Promise<PortResult<{ previewRef: string }>>
   authorizeProposal: (request: ChangePrepareRequest, output: SfOperationOutputMap["sf_change_prepare"], context: TrustedDomainContext) => Promise<boolean>
 }) {
   return async (request: ChangePrepareRequest, context: TrustedDomainContext): Promise<PortResult<SfOperationOutputMap["sf_change_prepare"]>> => {
@@ -83,20 +85,28 @@ export function createChangeProposalService(input: {
     if (resolved.status !== "ok") return resolved
     if (!resolved.value.changes.length) return { status: "unavailable", reason: "domain-commands-unavailable" }
     if (new Set(resolved.value.changes.map((item) => item.command.idempotencyKey)).size !== resolved.value.changes.length) return { status: "conflict", reason: "change-identity-conflict" }
+    const caseRef = parseCaseRef(parsed.value.caseRef)
+    if (!caseRef) return { status: "needs-input", reason: "invalid-case-reference" }
+    const previews = await Promise.all(resolved.value.changes.map((item) => input.resolvePreview({ caseRef: { ...caseRef, version: current.value.case.version }, choiceId: parsed.value.choiceRef, preview: item.preview }, context)))
+    const failedPreview = previews.find((item) => item.status !== "ok")
+    if (failedPreview && failedPreview.status !== "ok") return failedPreview
     const changes = resolved.value.changes.map((item, index) => {
       const target = item.command.target
       const evidence = item.targetEvidence
       if (evidence.installationId !== context.binding.installationId || evidence.projectId !== context.binding.projectId || evidence.target.surface !== target.surface || evidence.target.recordType !== target.type || evidence.target.recordId !== target.id || evidence.target.incarnation !== target.incarnation || evidence.target.version !== target.version || !evidence.target.period || evidence.target.period.start > target.period.start || evidence.target.period.end < target.period.end || target.fields.some((field) => !evidence.target.fields.includes(field))) return undefined
       const prepared = prepareDomainChange({ case: current.value.case, expectedCaseVersion: current.value.case.version, choiceId: parsed.value.choiceRef, command: item.command, preview: item.preview, id: `proposal:${digestSfValue({ caseRef: parsed.value.caseRef, choiceRef: parsed.value.choiceRef, index, commandDigest: item.command.commandDigest })}` })
       if (prepared.status !== "ok") return undefined
-      return { changeRef: prepared.change.id, targetRef: evidence, expectedVersion: prepared.change.expectedVersion, operationRef: item.command.id, previewRef: item.preview.id, requiredAuthority: prepared.change.requiredAuthority }
+      const preview = previews[index]
+      if (!preview || preview.status !== "ok" || !preview.value.previewRef.trim()) return undefined
+      return { changeRef: prepared.change.id, targetRef: evidence, expectedVersion: prepared.change.expectedVersion, operationRef: item.command.id, previewRef: preview.value.previewRef, requiredAuthority: prepared.change.requiredAuthority }
     })
     if (changes.some((change) => !change)) return { status: "conflict", reason: "invalid-domain-command" }
     const output: SfOperationOutputMap["sf_change_prepare"] = { caseRef: parsed.value.caseRef, caseVersion: current.value.case.version, changes: changes.filter((change): change is NonNullable<typeof change> => change !== undefined), conditions: resolved.value.conditions }
     if (!await input.authorizeProposal(parsed.value, output, context).catch(() => false)) return { status: "denied", reason: "change-access-unavailable" }
     const again = await callProposalPort(() => input.cases.read({ caseRef: parsed.value.caseRef }, context))
     if (again.status !== "ok") return again
-    if (again.value.case.version !== current.value.case.version || !await input.authorizeProposal(parsed.value, output, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "stale", reason: "case-changed" }
+    const previewsAgain = await Promise.all(resolved.value.changes.map((item) => input.resolvePreview({ caseRef: { ...caseRef, version: current.value.case.version }, choiceId: parsed.value.choiceRef, preview: item.preview }, context)))
+    if (again.value.case.version !== current.value.case.version || digestSfValue(previewsAgain) !== digestSfValue(previews) || !await input.authorizeProposal(parsed.value, output, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "stale", reason: "case-or-preview-changed" }
     return { status: "ok", value: output }
   }
 }

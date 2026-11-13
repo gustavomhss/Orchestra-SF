@@ -11,6 +11,7 @@ import { createPlannerImportMutation } from "./planner.ts"
 import { settleSfImportReceipt } from "./store.ts"
 import type { ImportExecution } from "./store.ts"
 import type { ImportTarget } from "./staged-files.ts"
+import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 
 /** Compose with the e4 C08 provider: Planner snapshot, preview and receipt commit together. */
 export function createSfPlannerImportAtomic(input: {
@@ -19,6 +20,7 @@ export function createSfPlannerImportAtomic(input: {
   files: ImportFileHost
   authorizeTarget: (target: ImportTarget, context: TrustedDomainContext, mode?: "receipt") => Promise<boolean>
   verifyTarget: (snapshot: Snapshot, target: ImportTarget, actor: Actor, context: TrustedDomainContext) => boolean
+  verifyRoster?: (snapshot: Snapshot, evidence: Extract<BusinessEvidenceRef, { kind: "record" }>, actor: Actor, context: TrustedDomainContext) => boolean
   readView: (id: string, context: TrustedDomainContext) => Promise<PortResult<ImportManifest>>
 }) {
   return async (manifest: StoredImportManifest, scope: { fileRef: string; target: ImportTarget; previewDigest: string; execution?: ImportExecution }, context: TrustedDomainContext): Promise<PortResult<ImportManifest>> => {
@@ -28,6 +30,10 @@ export function createSfPlannerImportAtomic(input: {
     if (manifest.state !== "applied" && !await input.files.revalidate(scope.fileRef, manifest.sourceDigest, context)) return { status: "stale", reason: "file-changed" }
     if (!("transactionAll" in input.host.persistence) || typeof input.host.persistence.transactionAll !== "function") return { status: "unavailable", reason: "atomic-domain-unavailable" }
     const command = manifest.commands[0]!
+    const hasRoster = Object.hasOwn(object(command.command.values.sheets), "All Members")
+    const roster = execution.rosterEvidence
+    const rosterSource = manifest.baseIdentity.filter((source) => source.surface === "planner" && source.type === "planner-roster")
+    if (hasRoster !== !!roster || rosterSource.length !== (roster ? 1 : 0) || (roster && (!input.verifyRoster || rosterSource[0]!.id !== roster.target.recordId || rosterSource[0]!.incarnation !== roster.target.incarnation || rosterSource[0]!.version !== roster.target.version || digestSfValue(rosterSource[0]!.fields) !== digestSfValue(roster.target.fields) || digestSfValue(roster.target.period) !== digestSfValue(command.target.period) || digestSfValue(rosterSource[0]!.period) !== digestSfValue(command.target.period)))) return { status: "conflict", reason: "roster-scope-mismatch" }
     if (execution.actorId !== context.binding.principalRef || execution.commandDigest !== command.commandDigest || execution.idempotencyKey !== command.idempotencyKey || execution.targetIncarnation !== command.target.incarnation || execution.targetIncarnation !== scope.target.incarnation) return { status: "conflict", reason: "preview-identity-mismatch" }
     if (manifest.state === "applied") {
       const receipt = manifest.receipts.find((entry) => entry.principalRef === execution.actorId && entry.targetIncarnation === execution.targetIncarnation && entry.commandDigest === execution.commandDigest && entry.idempotencyKey === execution.idempotencyKey && entry.result.ok)
@@ -52,6 +58,7 @@ export function createSfPlannerImportAtomic(input: {
       const access = object(object(snapshot.data.access)[principal.id])
       const roles = principal.roles.filter((row) => row.surface === "planner").map((row) => row.role)
       const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((value): value is string => typeof value === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((value): value is string => typeof value === "string") : [] }
+      if (roster && !input.verifyRoster?.(snapshot, roster, actor, context)) return { commit: false, value: false }
       const staged = mutation.execute(snapshot, actor, environment)
       if (!staged.commit) return { commit: false, value: false }
       const receipt = { id: digestSfValue({ principal: actor.id, target: scope.target.incarnation, key: execution.idempotencyKey }), idempotencyKey: execution.idempotencyKey, commandDigest: execution.commandDigest, targetIncarnation: scope.target.incarnation, principalRef: actor.id, surface: "planner" as const, version: snapshot.versions[`versions:${command.target.id}`]?.version ?? 0, result: { ok: true as const, value: staged.value }, at: environment.at }

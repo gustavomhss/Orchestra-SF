@@ -20,6 +20,8 @@ export function createSfPlannerImportPreview(input: {
   operationIdentity: (context: TrustedDomainContext) => string | undefined
   resolveTarget: (target: ImportTarget, context: TrustedDomainContext) => Promise<PortResult<{ versionId: string; evidence: Extract<BusinessEvidenceRef, { kind: "record" }> }>>
   verifyTarget: (snapshot: Snapshot, target: ImportTarget, actor: Actor, context: TrustedDomainContext) => boolean
+  resolveRoster?: (target: ImportTarget, context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>>
+  verifyRoster?: (snapshot: Snapshot, evidence: Extract<BusinessEvidenceRef, { kind: "record" }>, actor: Actor, context: TrustedDomainContext) => boolean
 }) {
   return async (request: { parsed: ParsedImport; target: ImportTarget }, context: TrustedDomainContext): Promise<PortResult<{ manifest: StoredImportManifest; detail: ImportDetail; execution: ImportExecution }>> => {
     const http = input.host.requestFor(context)
@@ -30,6 +32,10 @@ export function createSfPlannerImportPreview(input: {
     const evidence = resolved.value.evidence
     if (evidence.refDigest !== digestSfEvidenceRef(evidence) || evidence.installationId !== context.binding.installationId || evidence.projectId !== context.binding.projectId || evidence.target.surface !== "planner" || evidence.target.recordType !== "planner-version" || evidence.target.recordId !== resolved.value.versionId || evidence.target.incarnation !== request.target.incarnation || evidence.target.version !== request.target.version || !evidence.target.period) return { status: "denied", reason: "target-scope-mismatch" }
     const environment = await input.host.environment(http)
+    const rosterResult = request.parsed.sheets["All Members"] ? await input.resolveRoster?.(request.target, context) : undefined
+    if (request.parsed.sheets["All Members"] && (!rosterResult || rosterResult.status !== "ok" || !input.verifyRoster)) return { status: "unavailable", reason: "roster-source-unavailable" }
+    const roster = rosterResult?.status === "ok" ? rosterResult.value : undefined
+    if (roster && (roster.refDigest !== digestSfEvidenceRef(roster) || roster.installationId !== context.binding.installationId || roster.projectId !== context.binding.projectId || roster.target.surface !== "planner" || roster.target.recordType !== "planner-roster" || roster.target.recordId !== "file" || digestSfValue(roster.target.fields) !== digestSfValue(["end", "leader", "location", "name", "start", "status", "title", "type"]) || digestSfValue(roster.target.period) !== digestSfValue(evidence.target.period))) return { status: "denied", reason: "roster-scope-mismatch" }
     const source: SourceRef = { surface: "planner", type: evidence.target.recordType, id: evidence.target.recordId, incarnation: evidence.target.incarnation, version: evidence.target.version, fields: evidence.target.fields, period: evidence.target.period, observedAt: environment.at }
     const idempotencyKey = digestSfValue({ operationId, principal: context.binding.principalRef, target: request.target, file: request.parsed.sourceDigest })
     const preview = await input.host.persistence.transaction("planner", async (snapshot) => {
@@ -39,26 +45,28 @@ export function createSfPlannerImportPreview(input: {
       const roles = principal.roles.filter((row) => row.surface === "planner").map((row) => row.role)
       const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((value): value is string => typeof value === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((value): value is string => typeof value === "string") : [] }
       const base = projectPlannerSource(snapshot, actor, resolved.value.versionId)
-      if (!base || !input.verifyTarget(snapshot, request.target, actor, context) || digestSfValue(Object.keys(base).sort()) !== digestSfValue([...evidence.target.fields].sort()) || digestSfValue({ versionId: evidence.target.recordId, projection: base }) !== evidence.target.projectionDigest) return { commit: false, value: undefined }
+      if (!base || !input.verifyTarget(snapshot, request.target, actor, context) || (roster && !input.verifyRoster?.(snapshot, roster, actor, context)) || digestSfValue(Object.keys(base).sort()) !== digestSfValue([...evidence.target.fields].sort()) || digestSfValue({ versionId: evidence.target.recordId, projection: base }) !== evidence.target.projectionDigest) return { commit: false, value: undefined }
       return { commit: false, value: preparePlannerWorkbook({ snapshot, actor, environment, versionId: resolved.value.versionId, sheets: request.parsed.sheets!, newVersion: request.target.options.newVersion, removeMissing: request.target.options.removeMissing, operationId, idempotencyKey, targetIncarnation: request.target.incarnation }) }
     }, { signal: http.signal })
     if (!preview) return { status: "stale", reason: "target-changed" }
     if (!preview.result.ok) return { status: preview.result.status === 403 ? "denied" : preview.result.status === 409 ? "stale" : "needs-input", reason: "planner-command-rejected" }
     const escape = (value: string) => value.replace(/~/g, "~0").replace(/\//g, "~1")
     const versionIds = [resolved.value.versionId, ...(typeof preview.result.value === "string" ? [preview.result.value] : [])].map((value) => `/versions/@id=${escape(value)}/`)
-    if (preview.changes.some((change) => !versionIds.some((prefix) => change.path.startsWith(prefix)))) return { status: "unavailable", reason: "multi-source-preview-unavailable" }
+    if (preview.changes.some((change) => !versionIds.some((prefix) => change.path.startsWith(prefix)) && !(roster && /^\/roster\/(?:\d+|@id=[^/]+)\/(?:name|title|type|leader|location|start|end|status)$/.test(change.path)))) return { status: "unavailable", reason: "multi-source-preview-unavailable" }
     if (!await input.host.revalidate(context)) return { status: "denied", reason: "import-access-unavailable" }
-    const productContext = { installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, surface: "planner" as const, period: source.period, currency: "USD", sourceRefs: [source], capabilities: ["sf_import_preview"] }
+    const rosterSource: SourceRef | undefined = roster ? { surface: "planner", type: "planner-roster", id: roster.target.recordId, incarnation: roster.target.incarnation, version: roster.target.version, fields: roster.target.fields, period: source.period, observedAt: environment.at } : undefined
+    const productContext = { installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, surface: "planner" as const, period: source.period, currency: "USD", sourceRefs: [source, ...(rosterSource ? [rosterSource] : [])], capabilities: ["sf_import_preview"] }
     const values: DomainProjection["values"][number][] = []
     const missing: DomainProjection["missing"][number][] = []
     preview.changes.forEach((change) => ([ ["before", change.before], ["after", change.after] ] as const).forEach(([side, entry]) => {
       if (entry.state !== "present") { missing.push({ field: `${change.path}:${side}`, reason: "missing" }); return }
       if (entry.value !== null && typeof entry.value !== "string" && typeof entry.value !== "boolean" && !(typeof entry.value === "number" && Number.isFinite(entry.value))) return
-      values.push({ id: `${change.path}:${change.kind}:${side}`, value: entry.value as string | number | boolean | null, period: source.period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: entry.value === null ? "absent" : "confirmed" })
+      const reference = change.path.startsWith("/roster/") && roster ? roster : evidence
+      values.push({ id: `${change.path}:${change.kind}:${side}`, value: entry.value as string | number | boolean | null, period: source.period, granularity: "record", sourceRefs: [reference], drilldown: reference, evidenceState: entry.value === null ? "absent" : "confirmed" })
     }))
     const projection: DomainProjection = { context: productContext, version: source.version, engineVersion: "planner-runtime-v1", components: [], values, missing }
     const id = digestSfValue({ operationId, sourceDigest: request.parsed.sourceDigest, target: request.target, principal: context.binding.principalRef })
-    const manifest: StoredImportManifest = { id, version: 1, sourceDigest: request.parsed.sourceDigest, format: request.parsed.format, context: productContext, baseIdentity: [source], commands: [{ id: idempotencyKey, target: source, command: preview.command, idempotencyKey, commandDigest: preview.commandDigest, expectedVersion: preview.command.version, requiredAuthority: ["planner:write"], preview: projection }], issues: (preview.result.warnings ?? []).map((warning) => ({ row: 0, field: "domain", reason: plannerWarning(warning) })), state: "preview", domainApplied: false, receipts: [] }
+    const manifest: StoredImportManifest = { id, version: 1, sourceDigest: request.parsed.sourceDigest, format: request.parsed.format, context: productContext, baseIdentity: [source, ...(rosterSource ? [rosterSource] : [])], commands: [{ id: idempotencyKey, target: source, command: preview.command, idempotencyKey, commandDigest: preview.commandDigest, expectedVersion: preview.command.version, requiredAuthority: ["planner:write"], preview: projection }], issues: (preview.result.warnings ?? []).map((warning) => ({ row: 0, field: "domain", reason: plannerWarning(warning) })), state: "preview", domainApplied: false, receipts: [] }
     const indexed = new Map<string, NonNullable<ParsedImport["origins"]>>()
     for (const origin of request.parsed.origins ?? []) {
       if (!["OPEX", "CAPEX"].includes(origin.sheet)) continue
@@ -82,7 +90,9 @@ export function createSfPlannerImportPreview(input: {
       return [[change.path, { sheet: origin.sheet, row: origin.row, column: origin.column, address: origin.address, field: origin.field }]]
     }))
     const outcomes = [...plannerUnchangedOutcomes({ parsed: request.parsed, before: preview.before, after: preview.after, versionId: resolved.value.versionId }), ...(request.parsed.origins ?? []).filter((origin) => (["OPEX", "CAPEX"].includes(origin.sheet) && origin.field === "Total") || (origin.sheet === "Headcount" && origin.field === "FY cost")).map((origin) => ({ kind: "ignored" as const, source: { sheet: origin.sheet, row: origin.row, column: origin.column, address: origin.address, field: origin.field }, reason: "not-consumed-by-import" as const }))]
-    return { status: "ok", value: { manifest, detail: plannerImportDetail({ manifestId: id, version: 1, sourceDigest: request.parsed.sourceDigest, domainReference: evidence.refId, changes: preview.changes, locations, outcomes }), execution: { operationId, previewDigest: preview.previewDigest, previewAt: environment.at, actorId: context.binding.principalRef, idempotencyKey, targetIncarnation: request.target.incarnation, commandDigest: preview.commandDigest } } }
+    const detail = plannerImportDetail({ manifestId: id, version: 1, sourceDigest: request.parsed.sourceDigest, domainReference: evidence.refId, changes: preview.changes, locations, outcomes })
+    if (roster) detail.changes = detail.changes.map((change) => change.path.startsWith("/roster/") && change.source.kind === "domain" ? { ...change, source: { kind: "domain", reference: roster.refId } } : change)
+    return { status: "ok", value: { manifest, detail, execution: { operationId, previewDigest: preview.previewDigest, previewAt: environment.at, actorId: context.binding.principalRef, idempotencyKey, targetIncarnation: request.target.incarnation, commandDigest: preview.commandDigest, ...(roster ? { rosterEvidence: roster } : {}) } } }
   }
 }
 

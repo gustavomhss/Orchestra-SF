@@ -7,6 +7,7 @@ import { createPlannerScenarioInputs, plannerValueRef } from "../../../product/p
 import { comparePlannerVersions } from "../../../product/planner/version-comparison.ts"
 import { plannerCapacityPresentation, plannerMonthlyPresentation } from "../../../product/planner/bi.ts"
 import { plannerDifferencePresentation } from "../../../product/planner/bi-difference.ts"
+import { projectHeadcount, prepareHeadcountIncrease, previewHeadcountCommand } from "../../../product/planner/headcount.ts"
 import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
@@ -24,6 +25,23 @@ const binding = { kind: "ui", binding: { installationId: "i", projectId: "p", pr
 const actor = { id: "finance", roles: ["finance"], canWrite: true, assigned: [], domains: [] }
 const initial = (): Snapshot => ({
   data: { roleMap: [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }], versions: [72000, 84000].map((license, index) => ({ id: `v${index}`, year: 2027, closed: 9, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD", b: [40000,45000,45000,50000,50000,50000,50000,50000,50000,50000,60000,60000], a: [40000,40000,45000,45000,45000,45000,45000,45000,50000,null,null,null], f: [null,null,null,null,null,null,null,null,null,38000,40000+license,40000] }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} })) }, versions: {}, sequences: {}, audit: [], notices: [],
+})
+
+test("headcount projection follows domain visibility and increase preview is disposable", () => {
+  const snapshot = initial()
+  const version = (snapshot.data.versions as Record<string, unknown>[])[0]!
+  version.hc = { positions: [{ id: "person", name: "Private Person", include: true, fte: 1, start: 1, end: 12, type: "Employee", location: "Brazil", domain: "IT", rateId: "rate" }], rates: [{ id: "rate", name: "Employee", locs: "Brazil", annual: 120000, cur: "USD" }], hrAF: {}, inc: 0, incMonth: 1 }
+  const environment = { at: "2026-11-13T00:00:00Z", id: () => "unused", directory: [] }
+  expect(projectHeadcount(snapshot, { id: "none", roles: [], canWrite: false }, environment, "v0")).toBeUndefined()
+  const viewer = projectHeadcount(snapshot, { id: "viewer", roles: ["viewer"], canWrite: false }, environment, "v0")
+  expect(viewer?.groups[0]?.monthlyOutlookUsd).toBeNull()
+  const finance = projectHeadcount(snapshot, actor, environment, "v0")
+  expect(finance?.plannedDecemberFte).toBe(1)
+  expect(Array.isArray(finance?.groups[0]?.monthlyOutlookUsd)).toBe(true)
+  const command = prepareHeadcountIncrease("v0", 0, 10, 12)!
+  const before = structuredClone(snapshot)
+  expect(previewHeadcountCommand(snapshot, { id: "hr", roles: ["hr"], canWrite: true }, environment, command)?.result.ok).toBe(true)
+  expect(snapshot).toEqual(before)
 })
 
 test("forecast port compares the real engine, and detects source changes", async () => {
