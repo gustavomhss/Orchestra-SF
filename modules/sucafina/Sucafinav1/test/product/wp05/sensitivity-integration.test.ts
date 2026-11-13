@@ -3,10 +3,10 @@ import path from "node:path"
 import { createStoredScenarioBiProjection } from "../../../product/analytics/stored-scenario.ts"
 import type { DomainProjection } from "../../../product/contracts/context.ts"
 import { localBrowser } from "../../fixture/local-browser.ts"
-import { createWp13SensitivityFixture } from "../wp13/sensitivity-fixture.ts"
+import { createWp05SensitivityFixture } from "./engine-fixture.ts"
 
 test("BI consumes the persisted Planner sensitivity and rejects a changed criterion", async () => {
-  const fixture = await createWp13SensitivityFixture()
+  const fixture = await createWp05SensitivityFixture()
   try {
     const projection: DomainProjection = {
       context: { installationId: "install", projectId: "project", principalRef: "finance", policyVersion: "policy", accessRevision: "access", surface: "planner", period: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD", sourceRefs: [], capabilities: [] },

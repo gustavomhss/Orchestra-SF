@@ -6,7 +6,7 @@
 
 `renderBiView` returns a DOM element, preserving the projection context and selected period in the drilldown callback. Its optional `BiDecisionNavigation` callbacks expose the exact result, evidence, coverage, question, case and component references; the host reauthorizes each destination and can return focus using `restoreBiFocus`. The host must reauthenticate and revalidate the reference when opening the destination. `renderDecisionView` consumes the current authorized C10 result/comparison and optionally an engine-produced sensitivity result. These elements do not fetch or persist data themselves.
 
-The catalog defines the eleven planned questions. Catalog entries alone are not evidence that an individual view is supported: each requires its real domain producer, semantic description, native/UI composition, and the acceptance checks in WP05. In particular, the current shared projection does not specify waterfall cumulative positions or planned/completed milestone semantics; a producer must explicitly supply those facts rather than having this package infer them.
+The catalog defines eleven questions. Catalog entries alone are not evidence that an individual view is supported: each requires its real domain producer, semantic description, native/UI composition, and the acceptance checks in WP05. Waterfall cumulative positions and planned/completed milestone semantics must be supplied explicitly by the producer rather than inferred by this package.
 
 `createProcurementBiSource` adapts the WP04 collection port for BI05 and BI06. It passes through producer-computed counts and ages, keeps per-request evidence references, checks that every row has the same authorized context, and does not treat unknown age as zero. The host supplies the actual collection port and its revalidation boundary. WP04 must provide an open-request selection for BI05; until that is verified the catalog question cannot be treated as a proven integrated view.
 
@@ -49,3 +49,34 @@ Sensitivity points expose their engine-provided `resultRef` to the `openResult` 
 `createStoredScenarioBiProjection` binds a host-authorized C02 selection to persisted C08 scenario and comparison results from the same case. When requested, sensitivity is read through the persistent sensitivity reader, which must revalidate the criterion and sampled results. The projection and results are re-read before return; the host's projection validator must verify the selection, the comparison's current decision binding and all source references. Matching result IDs alone do not prove the comparison binding. `bindStoredScenarioBiPort` and `createScenarioBiSource` pass that same projection to UI and `sf_bi_view`; BI11 is unavailable without the persisted sensitivity result. The host owns selection resolution, authority and drilldown.
 
 `bindProjectedPlannerBiPort` accepts a real Planner `compareForecast` plus a producer-owned projection such as `plannerDifferencePresentation`; it checks context, period and currency and re-reads before presenting. BI only consumes the producer's endpoints and reconciliation, never calculates a financial difference.
+
+## Consumer and drilldown
+
+`dispatchBiPresentation` is the C08 consumer for a freshly admitted UI or native context. It invokes `dispatchSfCapability` with the same descriptor used by MCP, then verifies the presentation against that operation's result. A projection change between dispatch and presentation returns `stale`. A direct unconsumed handler call, a reused lease or revoked access cannot return data. The rendering metadata is separate from the closed C16 output schema.
+
+`createSfBiFactory(...).dispatchPresentation(request, context)` exposes that consumer with the registered real producers. Overlapping routes are pinned to one producer for each context/request across asynchronous read, describe and revalidation; changing the human selection requires a new host admission. Projection and presentation snapshots are detached from callback-owned objects.
+
+`readBiDestination` accepts the original `BiSelection`, a fresh `sf_bi_view` admission, the same producer and the host's real `BusinessContextService.resolve`. It rereads the projection, matches value ID, version, engine, context and the entire C17 reference, then resolves that exact reference and revalidates on egress. It returns the authorized source projection and selection for the existing detail surface. It never manufactures a collection URL. Historical, replaced, revoked or missing references return an explicit failure without source content. The host retains the originating selection and calls `restoreBiFocus` after returning.
+
+A period brush adds `visualPeriod` to the selected mark and leaves `context.period` and its C17 reference unchanged. The destination validates that this display crop is inside the original authorized request, rereads that original request, and returns the crop for restoring the view. A display crop never becomes a new authorization scope or a reconstructed source reference.
+
+The current WP10 HTTP entrypoint still needs to consume this port and register Planner, Procurement and decision sources. The patch and dependency receipt under `docs/sf2h/receipts/WP05/` describe that owner boundary. Component tests do not qualify the common entrypoint or native execution.
+
+## Contextual filters and artifacts
+
+The sixth `renderBiView` argument accepts `BiFilterControls` for stage, holder and buyer. Both options and current values come from the authorized domain catalog. Applying the controls requests a new selection from the host; analytics does not filter raw records, reconstruct permissions or change counts locally. The host must replace the chart/table with its freshly authorized projection before returning success. An unavailable or denied response remains explicit. WP04/WP10 must supply this selection lifecycle; unavailable producer filters are not fabricated from visible labels.
+
+`createContextualBiSelectionReader` validates and preserves the entire frozen `DashboardReadRequest`, including `fields`, before exposing contextual BI input. `createStoredContextualBiSelectionReader` reopens both artifact references and checks their case, selection and latest human choice. Actual persistence, reference integrity and source authorization remain with the WP10 store.
+
+## Visual semantics
+
+- A numeric residual marked `absent` does not affect scales or draw a mark. Confirmed zero remains a value.
+- Financial trajectories and dated ticket series reject overlapping or unordered periods. Annual data is never expanded into months.
+- Waterfall displays producer-supplied initial/final totals and signed contributions with the same references in its table. Incompatible periods/currencies are rejected and no residual adjustment is invented.
+- Aging displays one point per authorized request, grouped using its projected approval type. Unknown age and holder remain explicit; history strings are never interpreted here.
+- Milestones with no date remain in their own list and in the equivalent table even after a period brush.
+- Sensitivity has a keyboard-accessible point table, declared axis units, result/coverage references and a condition label beside its threshold.
+
+## Evidence boundary
+
+WP05 tests distinguish pure adapters, browser components, real domain/store integrations and unavailable native/host evidence. Only GitHub Actions executions qualify the tested commit. A runtime prerequisite published on another WP branch is a dependency, not an automatic part of this candidate. In particular, shared BI types/schemas and the WP10 artifact store must be integrated by their owners; native SkillLoadReceipt, reload, revocation and universal-coverage witnesses cannot be replaced with controlled callbacks.

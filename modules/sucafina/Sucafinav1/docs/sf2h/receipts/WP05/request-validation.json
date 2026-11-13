@@ -1,0 +1,110 @@
+{
+  "schema": "wp05-ci-request-validation-v1",
+  "status": "validated-metadata-only",
+  "generatedAt": "2026-11-13T22:14:54.072Z",
+  "sourceRevision": "b33541ede0fd715fc0990aebeb3fe484d0991cb7",
+  "runtime": {
+    "node": "v24.22.1",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "command": "node ci-prep/validate-wp05-request.mjs",
+  "canonicalFunctions": [
+    "parseOptions",
+    "locateTestPackage",
+    "testPathsAt",
+    "validateRequest",
+    "omniControlScope"
+  ],
+  "package": "sucafina",
+  "packageSelector": "packages/sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "os": "linux",
+  "omniControlScope": "declared",
+  "baselineTestCount": 27,
+  "addedTestCount": 6,
+  "selectedTestCount": 33,
+  "addedTestPaths": [
+    "./Sucafinav1/test/product/wp05/consumer.test.ts",
+    "./Sucafinav1/test/product/wp05/factory-selection.test.ts",
+    "./Sucafinav1/test/product/wp05/projection-validation.test.ts",
+    "./Sucafinav1/test/product/wp05/render-completion-browser.test.ts",
+    "./Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+    "./Sucafinav1/test/product/wp05/consumer-dashboard.test.ts"
+  ],
+  "allSelectedFilesExistAndAreContained": true,
+  "registeredManifestCount": 35,
+  "sourceFiles": [
+    {
+      "path": "script/test-ci-request.ts",
+      "sha256": "453c758ab98dc5febaddc3c9d95c96d3208093199fefcf598703e6d98725a76e"
+    },
+    {
+      "path": "script/test-ci-location.ts",
+      "sha256": "bd01398eb2fe8e9d9962f1f144645410229692b5e2068122ca0ea55489995bd2"
+    },
+    {
+      "path": "script/test-ci-package.ts",
+      "sha256": "623e2b222d54b588e17dd45c86b8b4567c9715a99a4abaeb6acbaf497ffbba52"
+    },
+    {
+      "path": "script/test-ci-paths.ts",
+      "sha256": "10373d98bd0b0947e30e903243b3d7ecb04a245d8a1ba2fd403f974588f5b827"
+    },
+    {
+      "path": "packages/script/src/module-catalog.ts",
+      "sha256": "ab3361a61c68159253cf20820090d0934142d0d6f2095d015a74d531b04d89c5"
+    },
+    {
+      "path": "packages/script/src/module-resolver.ts",
+      "sha256": "56df6fe192d5b92a2aec58d0bdb59553217e36a0ff20046851931e173b43b868"
+    },
+    {
+      "path": "script/module-registry.json",
+      "sha256": "1d0e039864095ec60a05ac20824fc5cb4c997f54a7b00d114dd806c541cc6742"
+    }
+  ],
+  "manifestSha256": {
+    "modules/app-dock/package.json": "9c5f82a7e845e59ab79d03681c5757c4fad26c33ce141109bf6880c552199dc7",
+    "modules/atlas/boundary/package.json": "b673539f03091954a08663b953408ce7e4bfe374639bddf0e100153897b8ba97",
+    "packages/app-shell/package.json": "b2e1fa57886983bc308f37db40c401afd2fcdecc09a6abbe68db2897f611f155",
+    "modules/capability-assets/package.json": "544b38cbfcabf7be585d91c35423396609e284b3ea05f8860bfc9261c0bea1fa",
+    "apps/cli/package.json": "c6a7e4907aa7d3fdffbe1938d019fb077c5138426ac61f81e6d1080e3fd89fd9",
+    "packages/client/package.json": "ef573a29ebca082018b27e72dcaf96771daa9286d5ce8537b56d4f12126ab881",
+    "packages/codemode/package.json": "489b59dfe1a57da39a4314a45a7ca806a94b7b7ba98985e7f4c6de99abce8d2f",
+    "modules/continuity/package.json": "f81d4c7950311726334b06e1726d97da3b92749bcbcb3a94748fd023c626efbe",
+    "packages/core/package.json": "9a5b15a81bada218dfc1e4527c10c6ceeb79e4aa1339e8a858a1562baf2c41d2",
+    "apps/desktop/package.json": "cb11bc929a46b3bbeb1e5ed323f3fa06aa612bfa3f9743489f14f0de3e821d9f",
+    "packages/effect-drizzle-sqlite/package.json": "1777b6c8010392f7e964422a5bbbc1b1f86f59dfadfb9fd04f2a45d85ab36ea4",
+    "packages/effect-sqlite-node/package.json": "8873d26d9b98dee1304e5e3f36f6eae8f9e0987f0cae4a7485b956ab6da0c943",
+    "modules/engine-adapters/claude-code/package.json": "669464513351bf9bc3443547f63361c971fff6820bddf8e1e39c1219799ad42d",
+    "tooling/http-recorder/package.json": "913278b6857c59b808ccedae530e0179cbf9869f008abd6ef8272965da4bb7dc",
+    "tooling/httpapi-codegen/package.json": "6f3d32f8c7c677ff31416438c83bb4df5c55a484fae0e8d463bde0d32565706d",
+    "modules/janitor/package.json": "96fdcb5392deceec963e4a45635a6942fe65d36de4541d9faadf747ef08b0720",
+    "packages/llm/package.json": "364c1e8f8e65c8efe8cd858b20c8af3b5f2f5125c12840b0417fc47f3603a254",
+    "modules/maestro/coordination/package.json": "d99ccbaad3dd30a0842dbae7fd705b48c295d335e03d1bba71adda7f50e2d5d8",
+    "modules/maestro/arsenal/package.json": "e6bc13db55708f9fb306765490ece8bc35d5a212432eeeb3a57e927824998f1d",
+    "native/omni/bindings/node/package.json": "46c899676f2da58f457e293caf1f519753b45f63dbc752068022864d56883bfb",
+    "native/omni/campaign/package.json": "dd2c1e768ff42007605c46d6855cdb6ae901c214e521fb92882dd041c9b59fd4",
+    "packages/plugin/package.json": "d92a83145f3b57a3cf101267d6e45a96793c4cc0ab0d61552c2a9882d6b5c502",
+    "packages/protocol/package.json": "457427cd69a300ae8b0e1ddb4808907ff8dc69d22076a6dc5d7fa2e5fa63a4be",
+    "modules/rag-studio/package.json": "07b99e3ef5b6d04707491e14185797902d0c1f6e34c773b2ca2d5fc52458d0f7",
+    "modules/relay/package.json": "932b3b1432e0e8b210540025ac72fad4fce71c7f67185fa3c8c735af96fb3f1f",
+    "packages/schema/package.json": "0f784e5085aa5c1646a6605c6b09335be90316ef231ef9670be62d30a2a4c3d1",
+    "packages/sdk-next/package.json": "abcd041f5e0e271cde8f11debbd7bbe214a627474423e0c65fe2d3bce5196931",
+    "packages/script/package.json": "a2aa2da403e4199daa1729e369ca683a65f76386f032ae8132d5f90b32a8f0b4",
+    "packages/server/package.json": "4661bb16ff40856fa0320ed8cd54ba9b8b75ea84fdd93741360e94e279f6f860",
+    "packages/session-ui/package.json": "42b168226b976a8de78f1e02d8051328f66d377b9c64b249241c8435ad63b5ba",
+    "apps/storybook/package.json": "9d3733d450e5e381b5e81c61034f27be017a053389a89214a78784495d529ec3",
+    "modules/sucafina/package.json": "83fb7283847569d46c1750a87f329215f497fe1e26f926a4f91c371639af7d68",
+    "packages/tui/package.json": "38d10bd45fccfbc00c8e296eb6d4e0e324fc592dc3ea8b7e8075798573a59786",
+    "packages/ui/package.json": "fc3b68411a620337819460e2cd860a74781c9a1ea9e502eb81e20051d9dbffb7",
+    "apps/web/package.json": "9600ebcb94c013599fd8264e213dc53c05bb08bdef1c0d1dee275abcefdfcc38"
+  },
+  "inputSha256": "592a0dd91fe2b56f74c275df14720e454e9a860c938a5c18e93bd09317530b92",
+  "requestSha256": "579ff9103f5656a14615608b52f0c6f730d804b53bc45bc5182c4c58944adbe2",
+  "compactCanonicalRequestSha256": "7f0c56745b1610b6ed2234fe4a02962792bae19a29afbc9932df4a4c6032455c",
+  "productTestsExecuted": false,
+  "remoteActionsExecuted": false
+}

@@ -17,7 +17,8 @@ export const biViews = [
 ] as const
 
 export type BiViewId = (typeof biViews)[number]["id"]
-export type BiSelection = { context: ProductContext; selectionRef: string; projectionVersion: number; engineVersion: string; valueId: string; reference: DomainProjection["values"][number]["drilldown"] }
+/** visualPeriod is a display crop; context and reference retain the original authorized scope. */
+export type BiSelection = { context: ProductContext; visualPeriod?: ProductContext["period"]; selectionRef: string; projectionVersion: number; engineVersion: string; valueId: string; reference: DomainProjection["values"][number]["drilldown"] }
 
 /** Consumer-facing C08 registration; producer and drilldown resolution stay host-owned. */
 export const consumableBiCatalog = biViews.slice(0, 8).map((view) => ({

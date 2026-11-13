@@ -55,7 +55,8 @@ test("chart and equivalent table preserve selection through keyboard and period 
     await page.getByRole("button", { name: "Abrir origem" }).click()
     const brushed = JSON.parse(await page.locator("body").getAttribute("data-selection") ?? "null")
     expect(brushed.valueId).toBe("feb")
-    expect(brushed.context.period).toEqual({ start: "2027-02-01", end: "2027-02-28" })
+    expect(brushed.context.period).toEqual(period)
+    expect(brushed.visualPeriod).toEqual({ start: "2027-02-01", end: "2027-02-28" })
     expect(brushed.reference.refId).toBe("ref")
     await page.evaluate(async (input) => {
       const module = await import(input.url)

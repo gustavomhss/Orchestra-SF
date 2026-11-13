@@ -5,7 +5,7 @@ import type { SfSkillInputMap } from "../contracts/skill-inputs.ts"
 import type { SfBiArtifact } from "../contracts/state.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
-import { decodeSfOperationOutput } from "../contracts/schema-admission.ts"
+import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
 import { createApprovedCatalog } from "./approved-catalog.ts"
 import type { ApprovedSelection, ApprovedView } from "./approved-catalog.ts"
 
@@ -43,6 +43,8 @@ export function createContextualBiSelectionReader(input: {
     })
     const artifacts = state.artifacts
     if (!resolved || !artifacts) return { status: "unavailable", reason: "bi-selection-unavailable" } as const
+    const dashboardSelection = decodeSfOperationInput("sf_dashboard_read", artifacts.dashboardSelection)
+    if (!dashboardSelection.ok) return { status: "unavailable", reason: "bi-dashboard-selection-invalid" } as const
     const decoded = decodeSfOperationOutput("sf_bi_view", artifacts.projection)
     if (!decoded.ok) return { status: "unavailable", reason: "bi-projection-invalid" } as const
     const projection = decoded.value
@@ -51,7 +53,7 @@ export function createContextualBiSelectionReader(input: {
     if (!refs.size || artifacts.projectionRefs.length !== refs.size || projection.values.some((value) => (value.value !== null && !value.sourceRefs.length) || value.sourceRefs.some((reference) => !refs.has(digestSfValue(reference))) || (value.drilldown && !refs.has(digestSfValue(value.drilldown))))) return { status: "unavailable", reason: "bi-evidence-unavailable" } as const
     const revision = digestSfValue({ caseRef, selection, artifacts })
     if (!await input.verifyArtifacts(caseRef, selection, artifacts, context) || !await input.revalidate(context) || revision !== digestSfValue({ caseRef, selection, artifacts })) return { status: "denied", reason: "bi-artifacts-unavailable" } as const
-    return { status: "ok", value: { approvedViews: catalog.views.map((view) => ({ ...view, allowedFilters: [...view.allowedFilters] })), authorizedFilters: selection.filters, dashboardSelection: artifacts.dashboardSelection, projectionRefs: artifacts.projectionRefs, projection, viewId: resolved.viewId, canonicalProjectionRefs: artifacts.canonicalProjectionRefs, tableRef: artifacts.tableRef } } as const
+    return { status: "ok", value: { approvedViews: catalog.views.map((view) => ({ ...view, allowedFilters: [...view.allowedFilters] })), authorizedFilters: selection.filters, dashboardSelection: structuredClone(dashboardSelection.value), projectionRefs: artifacts.projectionRefs, projection, viewId: resolved.viewId, canonicalProjectionRefs: artifacts.canonicalProjectionRefs, tableRef: artifacts.tableRef } } as const
   }
 }
 

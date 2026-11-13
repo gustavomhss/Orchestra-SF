@@ -1,5 +1,6 @@
 import type { DomainProjection } from "../contracts/context.ts"
 import type { BiPresentation } from "./semantics.ts"
+import { resolveBiPresentation } from "./semantics.ts"
 
 export type TicketSeries = { id: string; label: string; unit: string; role: "opened" | "closed"; valueIds: readonly string[] }
 export type TicketPlan = { mode: "snapshot" | "dated-series"; series: readonly TicketSeries[] }
@@ -22,9 +23,10 @@ export function presentTickets(projection: DomainProjection, plan: TicketPlan): 
   }))) return null
   if (plan.series.some((series) => new Set(series.valueIds.map((id) => `${values.get(id)!.period.start}/${values.get(id)!.period.end}`)).size !== series.valueIds.length)) return null
   if (plan.mode === "snapshot" && new Set(allIds.map((id) => `${values.get(id)!.period.start}/${values.get(id)!.period.end}`)).size !== 1) return null
-  return {
+  const presentation: BiPresentation = {
     viewId: "BI07",
     series: plan.series.map((series) => ({ ...series, valueIds: [...series.valueIds] })),
     limitations: plan.mode === "snapshot" ? ["Fotografia atual; não representa histórico de entradas ou conclusões."] : [],
   }
+  return resolveBiPresentation(projection, presentation).status === "ok" ? presentation : null
 }

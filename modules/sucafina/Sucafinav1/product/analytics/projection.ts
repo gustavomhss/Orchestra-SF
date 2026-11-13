@@ -1,5 +1,11 @@
-import type { DomainProjection, ProjectionComponent } from "../contracts/context.ts"
+import type { DomainProjection, ProductContext, ProjectionComponent } from "../contracts/context.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
+
+/** Re-observing an unchanged source does not change its identity or the selected scope. */
+export function sameBiContext(left: ProductContext, right: ProductContext) {
+  const normalize = (context: ProductContext) => ({ ...context, sourceRefs: context.sourceRefs.map((reference) => ({ ...reference, observedAt: "" })) })
+  return digestSfValue(normalize(left)) === digestSfValue(normalize(right))
+}
 
 /** Observation time is not part of source identity; all other decision data is compared. */
 export function sameBiProjection(left: DomainProjection, right: DomainProjection) {

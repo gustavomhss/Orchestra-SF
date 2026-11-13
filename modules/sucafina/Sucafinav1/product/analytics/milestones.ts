@@ -17,7 +17,7 @@ export function resolveTimeline(projection: DomainProjection, plan: TimelinePlan
   }) } as const
 }
 
-export function renderTimeline(projection: DomainProjection, selectionRef: string, plan: TimelinePlan, open: (selection: BiSelection) => void) {
+export function renderTimeline(projection: DomainProjection, selectionRef: string, plan: TimelinePlan, open: (selection: BiSelection) => void, visualPeriod = projection.context.period) {
   const section = document.createElement("section")
   const title = document.createElement("h3")
   title.textContent = "Datas e marcos fornecidos pelo domínio"
@@ -43,7 +43,7 @@ export function renderTimeline(projection: DomainProjection, selectionRef: strin
   chart.setAttribute("width", "100%")
   chart.setAttribute("role", "group")
   chart.setAttribute("aria-label", "Marcos no horizonte; a lista informa estado, data e origem")
-  const marks = timelineGeometry(data.items.map((item) => ({ id: item.dateValueId, start: item.date ?? "", end: item.date ?? "" })), projection.context.period, 600)
+  const marks = timelineGeometry(data.items.map((item) => ({ id: item.dateValueId, start: item.date ?? "", end: item.date ?? "" })), visualPeriod, 600)
   marks.forEach((mark, index) => {
     if (mark.x1 === null) return
     const item = data.items[index]
@@ -75,6 +75,9 @@ export function renderTimeline(projection: DomainProjection, selectionRef: strin
   })
   section.append(chart)
   const list = document.createElement("ul")
+  list.setAttribute("aria-label", "Marcos com data")
+  const undated = document.createElement("ul")
+  undated.setAttribute("aria-label", "Marcos sem data")
   for (const item of data.items) {
     const row = document.createElement("li")
     row.append(document.createTextNode(`${item.label}: ${item.state}; ${item.date ?? "data indisponível"} `))
@@ -86,8 +89,14 @@ export function renderTimeline(projection: DomainProjection, selectionRef: strin
       button.addEventListener("click", () => open({ context: projection.context, selectionRef, projectionVersion: projection.version, engineVersion: projection.engineVersion, valueId: item.dateValueId, reference: item.source.drilldown }))
       row.append(button)
     }
-    list.append(row)
+    if (item.date === null) undated.append(row)
+    if (item.date !== null) list.append(row)
   }
   section.append(list)
+  if (undated.childElementCount) {
+    const heading = document.createElement("h4")
+    heading.textContent = "Marcos sem data"
+    section.append(heading, undated)
+  }
   return section
 }

@@ -19,8 +19,10 @@ export type BiSourcePort = {
   revalidate: (request: BiViewRequest, context: TrustedDomainContext, projection?: DomainProjection) => Promise<boolean>
 }
 
-export async function readBiView(request: BiViewRequest, context: TrustedDomainContext, source: BiSourcePort, authority: SfDomainValidation): Promise<PortResult<DomainProjection>> {
-  if (!decodeSfOperationInput("sf_bi_view", request).ok) return { status: "needs-input", reason: "invalid-selection-or-period" }
+export async function readBiView(incoming: BiViewRequest, context: TrustedDomainContext, source: BiSourcePort, authority: SfDomainValidation): Promise<PortResult<DomainProjection>> {
+  const decoded = decodeSfOperationInput("sf_bi_view", incoming)
+  if (!decoded.ok) return { status: "needs-input", reason: "invalid-selection-or-period" }
+  const request = structuredClone(decoded.value)
   const inputDigest = digestSfValue(request)
   const receipt = authority.receiptFor(context, "sf_bi_view", inputDigest)
   if (!receipt || receipt.operation !== "sf_bi_view" || receipt.inputDigest !== inputDigest || receipt.handlerExport !== "readBiView" || receipt.kind !== context.kind || receipt.principalRef !== context.binding.principalRef || receipt.accessRevision !== context.binding.accessRevision || !await authority.revalidateDomainContext(context)) return { status: "denied", reason: "authority-unavailable" }
@@ -28,15 +30,19 @@ export async function readBiView(request: BiViewRequest, context: TrustedDomainC
   if (context.kind === "ui" && (receipt.kind !== "ui" || receipt.requestId !== context.binding.requestId)) return { status: "denied", reason: "authority-unavailable" }
   if (!request.selectionRef || !isSfPeriod(request.period)) return { status: "needs-input", reason: "invalid-selection-or-period" }
   if (!biViews.some((view) => view.id === request.viewId)) return { status: "unavailable", reason: "unsupported-view" }
-  if (!await source.revalidate(request, context)) return { status: "denied", reason: "binding-unavailable" }
-  const result = await source.read(request, context)
+  if (!await source.revalidate(structuredClone(request), context)) return { status: "denied", reason: "binding-unavailable" }
+  const result = await source.read(structuredClone(request), context)
   if (result.status !== "ok") return result
-  if (["BI09", "BI10", "BI11"].includes(request.viewId) && !hasBiDecision(result.value, request.viewId)) return { status: "unavailable", reason: "decision-unavailable" }
-  if (result.value.context.installationId !== context.binding.installationId || result.value.context.projectId !== context.binding.projectId || result.value.context.principalRef !== context.binding.principalRef || result.value.context.accessRevision !== context.binding.accessRevision || result.value.context.policyVersion !== context.binding.policyVersion) return { status: "denied", reason: "context-mismatch" }
-  if (new Set(result.value.values.map((value) => value.id)).size !== result.value.values.length) return { status: "unavailable", reason: "duplicate-value-id" }
-  if (result.value.context.period.start !== request.period.start || result.value.context.period.end !== request.period.end) return { status: "stale", reason: "period-mismatch" }
-  if (!await source.revalidate(request, context, result.value) || !await authority.revalidateDomainContext(context)) return { status: "denied", reason: "access-changed" }
-  return result
+  const output = decodeSfOperationOutput("sf_bi_view", result.value)
+  if (!output.ok) return { status: "unavailable", reason: "invalid-operation-output" }
+  // Retain the checked bytes across host awaits; callbacks never receive the returned snapshot.
+  const projection = structuredClone(output.value)
+  if (["BI09", "BI10", "BI11"].includes(request.viewId) && !hasBiDecision(projection, request.viewId)) return { status: "unavailable", reason: "decision-unavailable" }
+  if (projection.context.installationId !== context.binding.installationId || projection.context.projectId !== context.binding.projectId || projection.context.principalRef !== context.binding.principalRef || projection.context.accessRevision !== context.binding.accessRevision || projection.context.policyVersion !== context.binding.policyVersion) return { status: "denied", reason: "context-mismatch" }
+  if (new Set(projection.values.map((value) => value.id)).size !== projection.values.length) return { status: "unavailable", reason: "duplicate-value-id" }
+  if (projection.context.period.start !== request.period.start || projection.context.period.end !== request.period.end) return { status: "stale", reason: "period-mismatch" }
+  if (!await source.revalidate(structuredClone(request), context, structuredClone(projection)) || !await authority.revalidateDomainContext(context)) return { status: "denied", reason: "access-changed" }
+  return { status: "ok", value: projection }
 }
 
 // The host supplies the trusted source and creates the authenticated C16 receipt.
@@ -55,16 +61,18 @@ export type BiPresentationPort = BiSourcePort & {
   describe: (request: BiViewRequest, context: TrustedDomainContext, projection: DomainProjection) => Promise<PortResult<BiPresentation>>
 }
 
-export async function readBiPresentation(request: BiViewRequest, context: TrustedDomainContext, source: BiPresentationPort, authority: SfDomainValidation) {
+export async function readBiPresentation(incoming: BiViewRequest, context: TrustedDomainContext, source: BiPresentationPort, authority: SfDomainValidation) {
+  const request = structuredClone(incoming)
   const projection = await readBiView(request, context, source, authority)
   if (projection.status !== "ok") return projection
-  const presentation = await source.describe(request, context, projection.value)
+  const presentation = await source.describe(structuredClone(request), context, structuredClone(projection.value))
   if (presentation.status !== "ok") return presentation
-  if (presentation.value.viewId !== request.viewId) return { status: "unavailable", reason: "view-mismatch" } as const
-  const resolved = resolveBiPresentation(projection.value, presentation.value)
+  const description = structuredClone(presentation.value)
+  if (description.viewId !== request.viewId) return { status: "unavailable", reason: "view-mismatch" } as const
+  const resolved = resolveBiPresentation(projection.value, description)
   if (resolved.status !== "ok") return resolved
-  if (!await source.revalidate(request, context, projection.value) || !await authority.revalidateDomainContext(context)) return { status: "denied", reason: "access-changed" } as const
-  return { status: "ok", value: { projection: projection.value, presentation: presentation.value } } as const
+  if (!await source.revalidate(structuredClone(request), context, structuredClone(projection.value)) || !await authority.revalidateDomainContext(context)) return { status: "denied", reason: "access-changed" } as const
+  return { status: "ok", value: { projection: projection.value, presentation: description } } as const
 }
 
 /** Descriptor for the shared UI/native dispatcher. The host supplies its private authority registry. */

@@ -2,6 +2,8 @@ import type { SfDomainValidation } from "../contracts/runtime.ts"
 import type { PortResult } from "../contracts/ports.ts"
 import type { BiViewRequest } from "../contracts/operations.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+import { digestSfValue } from "../contracts/canonical.ts"
+import { dispatchBiPresentation } from "./consumer.ts"
 import { createBiDescriptor, createBiSourceRouter, readBiPresentation } from "./capabilities.ts"
 import type { BiPresentationPort } from "./capabilities.ts"
 import type { BiViewId } from "./catalog.ts"
@@ -41,13 +43,20 @@ export function createSfBiFactory(input: {
   const views = [...new Set(entries.map((entry) => entry.view))]
   const routes: Partial<Record<BiViewId, BiPresentationPort>> = Object.fromEntries(views.map((view) => {
     const candidates = entries.filter((entry) => entry.view === view)
+    const selections = new WeakMap<TrustedDomainContext, { digest: string; producer: BiProducer }>()
     const resolve = async (request: BiViewRequest, context: TrustedDomainContext): Promise<PortResult<BiPresentationPort>> => {
       if (candidates.length === 1) return { status: "ok", value: candidates[0]!.source }
       if (!input.select) return { status: "unavailable", reason: "producer-selection-unavailable" }
-      const selected = await input.select(request, context, candidates.map((candidate) => candidate.producer))
+      const digest = digestSfValue(request)
+      const selected = await input.select(structuredClone(request), context, candidates.map((candidate) => candidate.producer))
       if (selected.status !== "ok") return selected
       const candidate = candidates.find((entry) => entry.producer === selected.value)
-      return candidate ? { status: "ok", value: candidate.source } : { status: "denied", reason: "producer-selection-invalid" }
+      if (!candidate) return { status: "denied", reason: "producer-selection-invalid" }
+      const previous = selections.get(context)
+      if (previous && (previous.digest !== digest || previous.producer !== candidate.producer)) return { status: "stale", reason: "producer-selection-changed" }
+      // A consumed call cannot change producers between read, describe and the final fence.
+      selections.set(context, { digest, producer: candidate.producer })
+      return { status: "ok", value: candidate.source }
     }
     const route: BiPresentationPort = {
       async read(request, context) {
@@ -70,5 +79,6 @@ export function createSfBiFactory(input: {
     source,
     descriptor: createBiDescriptor(source, input.authority),
     readPresentation: (request: BiViewRequest, context: TrustedDomainContext) => readBiPresentation(request, context, source, input.authority),
+    dispatchPresentation: (request: BiViewRequest, context: TrustedDomainContext) => dispatchBiPresentation(request, context, source, input.authority),
   }
 }
