@@ -381,7 +381,7 @@ test.each([
     headers: { authorization: `Bearer ${session.token}` },
   }))
   const body = await readState(response)
-  const permitted = dashboardPages({ roles: session.roles })
+  const permitted = dashboardPages({ roles: [...session.roles] })
   expect(permitted.length).toBeGreaterThan(0)
   expect(body.pages).toEqual(permitted)
   expect(body.page).toBe(permitted[0])
