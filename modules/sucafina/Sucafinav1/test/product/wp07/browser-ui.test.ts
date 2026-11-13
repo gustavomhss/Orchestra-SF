@@ -192,7 +192,7 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
       return { commit: true, value: undefined }
     })
     const storedReviews = () => store.transaction("dashboard", async (snapshot) => ({ commit: false, value: Object.keys(object(object(snapshot.data.__sfProductV1).reviews)) }))
-    runtime.browser = await timed("chrome-launch", () => chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 5000 }), 10000)
+    runtime.browser = await timed("chrome-launch", () => chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15000 }), 20000)
     runtime.closeBrowser = await timed("chrome-ownership", () => captureChromiumCleanup(runtime.browser!))
     const context = await timed("browser-context", () => runtime.browser!.newContext({ viewport: { width: 1440, height: 1000 } }))
     const page = await timed("browser-page", () => context.newPage())

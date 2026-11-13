@@ -34,7 +34,7 @@ async function fixture(refs: readonly BusinessEvidenceRef[], mode?: "revoke" | "
   const projection: DomainProjection = {
     context: { ...binding, surface: "planner", period, currency: "USD", capabilities: [], sourceRefs: [{ surface: "planner", type: "planner-version", id: "v1", incarnation: "v1-inc", version: 1, fields: ["forecast"], period, observedAt: at }] },
     version: 1, engineVersion: "controlled-projection", components: [], missing: [],
-    values: refs.map((ref, index) => ({ id: `amount-${index}`, value: index, currency: "USD", period, granularity: "record", sourceRefs: [ref], evidenceState: "confirmed" })),
+    values: refs.map((ref, index) => ({ id: `amount-${index}`, value: index, currency: "USD", period, granularity: "record", sourceRefs: [ref], drilldown: ref, evidenceState: "confirmed" })),
   }
   const authorized = async () => host.revalidate()
   const services = createReviewServices({
