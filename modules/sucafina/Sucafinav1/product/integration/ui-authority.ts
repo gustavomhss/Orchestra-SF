@@ -13,7 +13,9 @@ export function createSfUiAuthority(input: {
   commandIdentity: (request: Request, operation: string, inputDigest: string) => Promise<string | undefined>
   createId: () => string
   now: () => number
+  privateCommands?: readonly string[]
 }) {
+  const privateCommands = new Set(input.privateCommands)
   const admissions = new WeakMap<TrustedUiContext, UiAdmission>()
   const current = (context: TrustedUiContext) => {
     const admission = admissions.get(context)
@@ -32,7 +34,7 @@ export function createSfUiAuthority(input: {
   }
   return {
     async admit(request: Request, operation: string, inputDigest: string): Promise<PortResult<TrustedUiContext>> {
-      if (freeze.operations.filter((entry) => entry.operation === operation).length !== 1 || !/^[a-f0-9]{64}$/.test(inputDigest))
+      if ((!privateCommands.has(operation) && freeze.operations.filter((entry) => entry.operation === operation).length !== 1) || !/^[a-f0-9]{64}$/.test(inputDigest))
         return { status: "denied", reason: "invalid-ui-operation" }
       const identity = await input.authorize(request, operation, inputDigest)
       if (request.signal.aborted || !identity || Object.keys(identity).length !== identityFields.length || identityFields.some((key) => typeof identity[key] !== "string" || !identity[key].trim()))
@@ -60,6 +62,10 @@ export function createSfUiAuthority(input: {
       if (!current(context) || admission.consumed) return false
       admission.consumed = true
       return true
+    },
+    matchesIntent(context: TrustedUiContext, operation: string, inputDigest: string) {
+      const admission = current(context)
+      return !!admission?.consumed && admission.operation === operation && admission.inputDigest === inputDigest
     },
     requestFor(context: TrustedUiContext) {
       const admission = current(context)

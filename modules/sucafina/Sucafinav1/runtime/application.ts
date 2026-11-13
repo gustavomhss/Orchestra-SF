@@ -485,7 +485,7 @@ export function createApplication(mount: string, application: Application) {
       )
       return {
         commit: snapshot.audit.length !== auditBefore,
-        value: reply(request.method === "HEAD" ? null : application.product ? html.replace("<!--local-tools-->", `<a href="${mount}/dashboard?sf=bi">Business intelligence</a><!--local-tools-->`) : html, 200, {
+        value: reply(request.method === "HEAD" ? null : application.product ? html.replace("<!--local-tools-->", `<a href="${mount}/dashboard?sf=bi">Business intelligence</a><a href="${mount}/${surface}?sf=workbench">Workbench</a><!--local-tools-->`) : html, 200, {
           "Content-Type": "text/html; charset=utf-8",
           "Content-Security-Policy": htmlPolicy(html),
         }),

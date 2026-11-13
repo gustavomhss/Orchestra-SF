@@ -24,12 +24,12 @@ test("installation registers its five real resident profiles and eighteen shippe
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-host-composition-"))
   await chmod(directory, 0o700)
   const driver = await openLocalStore(path.join(directory, "business"))
-  const persistence = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, createId: crypto.randomUUID })
+  const persistence = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, createId: () => crypto.randomUUID() })
   try {
     for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
     const runtime = await createSfHostRuntime({ installationId: "installation-1", directory, sourceRoot: path.resolve(import.meta.dir,
       "../../../modules/sucafina/Sucafinav1/product/ai"), origin: "http://127.0.0.1:43121", mount: "/sucafina", persistence,
-      authenticate: async () => null, environment: async () => ({ at: new Date().toISOString(), id: crypto.randomUUID, directory: [] }) })
+      authenticate: async () => null, environment: async () => ({ at: new Date().toISOString(), id: () => crypto.randomUUID(), directory: [] }) })
     const merged = Host.merge([...ProductHost.contributions(), ...runtime.contributions])
     const layer = AppNodeBuilder.build(LayerNode.group([...merged.nodes, SessionV2.node, LocationServiceMap.node]), [
       [SessionExecution.node, SessionExecutionLocal.node], ...merged.replacements,

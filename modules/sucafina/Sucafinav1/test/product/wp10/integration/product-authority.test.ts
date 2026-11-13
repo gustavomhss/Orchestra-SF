@@ -43,6 +43,39 @@ async function fixture(grants: readonly SfProductGrant[], work: (input: { produc
   }
 }
 
+test("human writes require their own action grant and cannot borrow a consumed read lease", async () => {
+  await fixture([{ principalRef: "person", namespaces: ["threads"], operations: ["sf_context_get"] }], async ({ product, request }) => {
+    const payload = { threadId: "thread", body: "Human reply" }
+    const read = await product.ui.admit(request, "sf_context_get", digestSfValue(payload))
+    expect(read.status).toBe("ok")
+    if (read.status !== "ok") return
+    expect(await product.ui.validate(read.value, "sf_context_get", digestSfValue(payload))).toBe(true)
+    expect(await product.human.authorize(read.value, "collaboration.thread.reply", payload)).toBe(false)
+    const post = new Request(request, { method: "POST", headers: { origin: "https://example.test" } })
+    expect((await product.human.admit(post, "collaboration.thread.reply", payload)).status).toBe("denied")
+    product.ui.finish(read.value)
+  })
+})
+
+test("human command admission binds exact action and payload and revokes on authority change", async () => {
+  await fixture([{ principalRef: "person", namespaces: ["threads"], operations: [], humanActions: ["collaboration.thread.reply"] }], async ({ product, request, actor }) => {
+    const payload = { threadId: "thread", body: "Human reply" }
+    expect((await product.human.admit(request, "collaboration.thread.reply", payload)).status).toBe("denied")
+    const post = new Request(request, { method: "POST", headers: { origin: "https://example.test" } })
+    const admitted = await product.human.admit(post, "collaboration.thread.reply", payload)
+    expect(admitted.status).toBe("ok")
+    if (admitted.status !== "ok") return
+    expect(product.ui.requestFor(admitted.value)).toBe(post)
+    expect(await product.human.authorize(admitted.value, "collaboration.thread.reply", payload)).toBe(true)
+    expect(await product.human.authorize(admitted.value, "collaboration.thread.reply", { ...payload, body: "Changed" })).toBe(false)
+    expect(await product.human.authorize(admitted.value, "collaboration.thread.resolve", payload)).toBe(false)
+    expect(product.ui.receiptFor(admitted.value, "sf-human:collaboration.thread.reply", digestSfValue(payload))).toBeUndefined()
+    actor.write = false
+    expect(await product.human.authorize(admitted.value, "collaboration.thread.reply", payload)).toBe(false)
+    product.human.finish(admitted.value)
+  })
+})
+
 test("dashboard roles alone do not grant C08 or a business operation", async () => {
   await fixture([], async ({ product, request }) => {
     expect(await product.state.read(request, "preferences", () => "secret")).toMatchObject({ status: "denied" })
@@ -171,8 +204,8 @@ test("assignment and domain revocation invalidate authority without incorporatin
 })
 
 test("workspace target is limited to explicit creation namespaces and still requires current grant and write access", async () => {
-  await fixture([{ principalRef: "person", namespaces: ["cases", "reviews", "relations", "documents", "preferences", "receipts", "outbox"], operations: ["sf_context_get"] }], async ({ product, request, actor }) => {
-    for (const namespace of ["cases", "reviews", "relations", "documents", "preferences", "receipts", "outbox"] as const) {
+  await fixture([{ principalRef: "person", namespaces: ["cases", "reviews", "relations", "threads", "confirmations", "documents", "preferences", "receipts", "outbox"], operations: ["sf_context_get"] }], async ({ product, request, actor }) => {
+    for (const namespace of ["cases", "reviews", "relations", "threads", "confirmations", "documents", "preferences", "receipts", "outbox"] as const) {
       const result = await product.state.transaction(request, { namespace, expectedStorageVersion: 0, targetRef: product.creationTarget.ref,
         targetIncarnation: product.creationTarget.incarnation, idempotencyKey: `preview-${namespace}`, commandDigest: "c".repeat(64) },
         async () => ({ commit: false, value: true }))

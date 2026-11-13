@@ -3,9 +3,12 @@ import { object } from "../../runtime/contract.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../contracts/business-context.ts"
-import type { DashboardPort, DecisionCasePort, DomainPortHost, PortResult } from "../contracts/ports.ts"
+import type { DashboardPort, DecisionCasePort, DomainPortHost, PortResult, ProcurementPort } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { Period } from "../contracts/context.ts"
+import type { SfDocumentReader } from "../documents/evidence-resolver.ts"
+import type { createProcurementSourceResolver } from "../procurement/sources.ts"
+import type { createDashboardRecordEvidenceHost } from "../dashboard/sources.ts"
 import { encodeCaseRef } from "../decisions/case-port.ts"
 
 type RecordRef = Extract<BusinessEvidenceRef, { kind: "record" }>
@@ -51,6 +54,32 @@ export function createSfDashboardSourceAccess(input: { host: DomainPortHost; iss
       const projection = await input.dashboard.read({ selectionRef: issued.value.selectionRef, fields, period }, call)
       if (projection.status !== "ok" || !await continuity() || !await input.host.revalidate(call)) return unavailable(now.at)
       return { state: "fresh", ref, currentRef: current, authorizedProjection: projection.value, accessRevision: call.binding.accessRevision, checkedAt: now.at }
+    } catch {
+      return unavailable()
+    }
+  }
+}
+
+/** Individual records remain bound to the currently authorized scoped reference. */
+export function createSfDashboardRecordSourceAccess(input: { host: DomainPortHost; records: Pick<ReturnType<typeof createDashboardRecordEvidenceHost>, "resolve" | "read"> }) {
+  return async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
+    const unavailable = (checkedAt = ""): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt })
+    try {
+      if (ref.kind !== "record" || ref.target.surface !== "dashboard" || ref.target.recordType === "dashboard-page" || !ref.target.period || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId || ref.refDigest !== digestSfEvidenceRef(ref)) return unavailable()
+      const request = input.host.requestFor(call)
+      const binding = digestSfValue(call.binding)
+      if (!request || request.signal.aborted || !await input.host.revalidate(call) || digestSfValue(call.binding) !== binding) return unavailable()
+      const now = await input.host.environment(request)
+      if (!Number.isFinite(Date.parse(now.at))) return unavailable()
+      const first = await input.records.resolve(ref.refId, call)
+      if (first.status !== "ok" || digestSfValue(first.value) !== digestSfValue(ref) || !await input.host.revalidate(call) || digestSfValue(call.binding) !== binding) return unavailable(now.at)
+      const projection = await input.records.read(ref.refId, call)
+      if (projection.status !== "ok" || projection.value.context.installationId !== call.binding.installationId || projection.value.context.projectId !== call.binding.projectId || projection.value.context.principalRef !== call.binding.principalRef || projection.value.context.accessRevision !== call.binding.accessRevision || projection.value.context.policyVersion !== call.binding.policyVersion || projection.value.context.surface !== "dashboard" || digestSfValue(projection.value.context.period) !== digestSfValue(ref.target.period)) return unavailable(now.at)
+      const source = projection.value.context.sourceRefs
+      if (source.length !== 1 || source[0]!.surface !== "dashboard" || source[0]!.type !== ref.target.recordType || source[0]!.id !== ref.target.recordId || source[0]!.incarnation !== ref.target.incarnation || source[0]!.version !== ref.target.version || digestSfValue(source[0]!.fields) !== digestSfValue(ref.target.fields) || digestSfValue(source[0]!.period) !== digestSfValue(ref.target.period) || projection.value.values.some((value) => value.sourceRefs.length !== 1 || digestSfValue(value.sourceRefs[0]) !== digestSfValue(ref) || digestSfValue(value.drilldown) !== digestSfValue(ref))) return unavailable(now.at)
+      const again = await input.records.resolve(ref.refId, call)
+      if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(ref) || request.signal.aborted || !await input.host.revalidate(call) || digestSfValue(call.binding) !== binding) return unavailable(now.at)
+      return { state: "fresh", ref, currentRef: again.value, authorizedProjection: projection.value, accessRevision: call.binding.accessRevision, checkedAt: now.at }
     } catch {
       return unavailable()
     }
@@ -168,6 +197,51 @@ export function createSfCaseEventSourceAccess(input: { host: DomainPortHost; cas
       const again = await read()
       if (!again || digestSfValue(event) !== digestSfValue(again) || request.signal.aborted || !await input.host.revalidate(call)) return unavailable(now.at)
       return { state: "fresh", ref, currentRef: ref, authorizedProjection: event, accessRevision: call.binding.accessRevision, checkedAt: now.at }
+    } catch {
+      return unavailable()
+    }
+  }
+}
+
+/** The existing Procurement resolver and port reauthenticate and project the current record. */
+export function createSfProcurementSourceAccess(input: { host: DomainPortHost; resolve: ReturnType<typeof createProcurementSourceResolver>; procurement: ProcurementPort }) {
+  return async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
+    const unavailable = (checkedAt = ""): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt })
+    try {
+      if (ref.kind !== "record" || ref.target.surface !== "procurement" || !["procurement-request", "procurement-supplier"].includes(ref.target.recordType) || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId || ref.refDigest !== digestSfEvidenceRef(ref)) return unavailable()
+      const request = input.host.requestFor(call)
+      if (!request || request.signal.aborted || !await input.host.revalidate(call)) return unavailable()
+      const now = await input.host.environment(request)
+      if (!Number.isFinite(Date.parse(now.at))) return unavailable()
+      const current = await input.resolve(ref.refId, call)
+      if (current.status !== "ok" || digestSfValue(current.value.evidence) !== digestSfValue(ref) || !await input.host.revalidate(call)) return unavailable(now.at)
+      const projection = ref.target.recordType === "procurement-request"
+        ? await input.procurement.read({ requestRef: ref.refId }, call)
+        : await input.procurement.readSupplier({ supplierRef: ref.refId, fields: ref.target.fields }, call)
+      if (projection.status !== "ok" || projection.value.context.installationId !== call.binding.installationId || projection.value.context.projectId !== call.binding.projectId || projection.value.context.principalRef !== call.binding.principalRef || projection.value.context.accessRevision !== call.binding.accessRevision || projection.value.context.policyVersion !== call.binding.policyVersion) return unavailable(now.at)
+      const again = await input.resolve(ref.refId, call)
+      if (again.status !== "ok" || digestSfValue(again.value.evidence) !== digestSfValue(ref) || request.signal.aborted || !await input.host.revalidate(call)) return unavailable(now.at)
+      return { state: "fresh", ref, currentRef: again.value.evidence, authorizedProjection: projection.value, accessRevision: call.binding.accessRevision, checkedAt: now.at }
+    } catch {
+      return unavailable()
+    }
+  }
+}
+
+/** Documents use the document owner's resolver and require its confirmed typed projection. */
+export function createSfDocumentSourceAccess(input: { host: DomainPortHost; read: SfDocumentReader }) {
+  return async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
+    const unavailable = (checkedAt = ""): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt })
+    try {
+      if (ref.kind !== "document" || !ref.target.fieldCandidateId || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId || ref.refDigest !== digestSfEvidenceRef(ref)) return unavailable()
+      const request = input.host.requestFor(call)
+      if (!request || request.signal.aborted || !await input.host.revalidate(call)) return unavailable()
+      const { resolveSfDocumentEvidence } = await import("../documents/evidence-resolver.ts")
+      const first = await resolveSfDocumentEvidence(ref, call, input.read)
+      if (first.state !== "fresh" || !first.authorizedProjection || !("status" in first.authorizedProjection) || first.authorizedProjection.status !== "confirmed" || !("ref" in first.authorizedProjection) || first.authorizedProjection.ref.refDigest !== ref.refDigest || first.authorizedProjection.id !== ref.target.fieldCandidateId || first.accessRevision !== call.binding.accessRevision || !await input.host.revalidate(call)) return unavailable(first.checkedAt)
+      const second = await resolveSfDocumentEvidence(ref, call, input.read)
+      if (second.state !== "fresh" || !second.authorizedProjection || !("status" in second.authorizedProjection) || second.authorizedProjection.status !== "confirmed" || !("ref" in second.authorizedProjection) || second.authorizedProjection.ref.refDigest !== ref.refDigest || second.authorizedProjection.id !== ref.target.fieldCandidateId || second.accessRevision !== call.binding.accessRevision || digestSfValue(first.authorizedProjection) !== digestSfValue(second.authorizedProjection) || request.signal.aborted || !await input.host.revalidate(call)) return unavailable(second.checkedAt)
+      return { ...second, currentRef: ref }
     } catch {
       return unavailable()
     }

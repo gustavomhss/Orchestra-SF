@@ -14,8 +14,10 @@ import { parseCaseRef } from "../decisions/case-port.ts"
 import { createSfExecutionBindingRegistry } from "../host-binding/execution-context.ts"
 import { createSfProductState } from "../host-binding/state-provider.ts"
 import { createSfDomainAuthority, createSfUiAuthority } from "./ui-authority.ts"
+import { createSfHumanAuthority, sfHumanActions } from "./human-authority.ts"
+import type { SfHumanAction } from "./human-authority.ts"
 
-export type SfProductGrant = Readonly<{ principalRef: string; namespaces: readonly SfStateNamespace[]; operations: readonly string[] }>
+export type SfProductGrant = Readonly<{ principalRef: string; namespaces: readonly SfStateNamespace[]; operations: readonly string[]; humanActions?: readonly SfHumanAction[] }>
 
 /** Compose authority over the installation's own store and authenticator; no serialized identity becomes authority. */
 export function createSfProductAuthority(input: {
@@ -39,12 +41,13 @@ export function createSfProductAuthority(input: {
   const grants = structuredClone(input.grants)
   if (!input.installationId.trim() || !input.policyVersion.trim() || !URL.canParse(input.origin) || new URL(input.origin).origin !== input.origin ||
     new Set(grants.map((grant) => grant.principalRef)).size !== grants.length || grants.some((grant) => !grant.principalRef.trim() ||
-      new Set(grant.namespaces).size !== grant.namespaces.length || new Set(grant.operations).size !== grant.operations.length))
+      new Set(grant.namespaces).size !== grant.namespaces.length || new Set(grant.operations).size !== grant.operations.length ||
+      new Set(grant.humanActions).size !== (grant.humanActions?.length ?? 0) || grant.humanActions?.some((action) => !sfHumanActions.some((value) => value === action))))
     throw new Error("SF_PRODUCT_AUTHORITY_CONFIG_INVALID")
   const creationTarget = Object.freeze({ ref: `sf-workspace:${encodeURIComponent(input.installationId)}`, incarnation: input.installationId })
   const nativeEvidenceWrites = new WeakSet<object>()
   const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
-  const creationNamespaces: readonly SfStateNamespace[] = ["cases", "reviews", "relations", "documents", "preferences"]
+  const creationNamespaces: readonly SfStateNamespace[] = ["cases", "reviews", "relations", "threads", "confirmations", "documents", "preferences"]
   const identity = () => {
     const current = input.identity()
     if (!current || current.installationId !== input.installationId || !current.hostId || !current.projectId) return undefined
@@ -82,7 +85,7 @@ export function createSfProductAuthority(input: {
     const canWrite = present.some((entry) => entry.actor.canWrite)
     const scopes = present.map((entry) => ({ surface: entry.surface, assigned: entry.assigned, domains: entry.domains }))
     const accessRevision = digestSfValue({ installationId: current.installationId, projectId: current.projectId,
-      principalRef: first.id, roles, scopes, canWrite, namespaces: [...grant.namespaces].toSorted(), operations: [...grant.operations].toSorted(), policyVersion: input.policyVersion })
+      principalRef: first.id, roles, scopes, canWrite, namespaces: [...grant.namespaces].toSorted(), operations: [...grant.operations].toSorted(), humanActions: [...grant.humanActions ?? []].toSorted(), policyVersion: input.policyVersion })
     if (digestSfValue(identity()) !== identityDigest) return undefined
     return { principalRef: first.id, policyVersion: input.policyVersion, accessRevision, canWrite, grant, identity: current }
   }
@@ -111,10 +114,13 @@ export function createSfProductAuthority(input: {
     },
   })
   const ui = createSfUiAuthority({
+    privateCommands: sfHumanActions.map((action) => `sf-human:${action}`),
     createId: input.createId, now: input.now, commandIdentity: input.commandIdentity,
     authorize: async (request, operation) => {
       const actor = await resolve(request).catch(() => undefined)
-      if (!actor || !actor.grant.operations.includes(operation)) return undefined
+      if (!actor || !(operation.startsWith("sf-human:")
+        ? actor.canWrite && actor.grant.humanActions?.some((action) => operation === `sf-human:${action}`)
+        : actor.grant.operations.includes(operation))) return undefined
       return { installationId: actor.identity.installationId, projectId: actor.identity.projectId,
         principalRef: actor.principalRef, policyVersion: actor.policyVersion, accessRevision: actor.accessRevision }
     },
@@ -165,5 +171,6 @@ export function createSfProductAuthority(input: {
   const authority = createSfDomainAuthority({ native, ui })
   const host: DomainPortHost = { persistence: input.persistence, authenticate: input.authenticate, environment: input.environment,
     requestFor: authority.requestFor, revalidate: authority.revalidateDomainContext }
-  return { state, ui, native, authority, host, creationTarget, nativeEvidenceWrites, authorizeNative }
+  const human = createSfHumanAuthority({ origin: input.origin, ui })
+  return { state, ui, human, native, authority, host, creationTarget, nativeEvidenceWrites, authorizeNative }
 }

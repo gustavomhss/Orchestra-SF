@@ -23,6 +23,8 @@ import { createSfSourcePersistence } from "../product/integration/source-lifecyc
 import { enumerateSfSources } from "../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../product/integration/source-projections.ts"
 import { createSfBiHttp } from "../product/integration/bi-http.ts"
+import { createSfWorkbenchHttp } from "../product/interface/http.ts"
+import { sfHumanActions } from "../product/integration/human-authority.ts"
 import { digestSfValue } from "../product/contracts/canonical.ts"
 import freeze from "../product/contracts/freeze-v1.json"
 import biBrowser from "../product/integration/generated/bi-entry.txt" with { type: "text" }
@@ -88,14 +90,15 @@ export async function createLocalInstallation(context: { origin: string; createH
     mount: config.mount, persistence: store, authenticate: identity.authenticate, environment: requestEnvironment,
     grants: operator ? [{ principalRef: `macos:${operator.installationId}:${operator.uid}`,
       namespaces: ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox"],
-      operations: freeze.operations.map((operation) => operation.operation) }] : [] })
-  const product = createSfBiHttp({ installationId, projectId: installationId, policyVersion: "sf-product-v1", origin: config.origin, mount: config.mount,
+      operations: freeze.operations.map((operation) => operation.operation), humanActions: sfHumanActions }] : [] })
+  const bi = createSfBiHttp({ installationId, projectId: installationId, policyVersion: "sf-product-v1", origin: config.origin, mount: config.mount,
     persistence: store, authenticate: identity.authenticate, environment: requestEnvironment, browserScript: async () => biBrowser, ...(runtime ? { identity: runtime.identity } : {}) })
+  const workbench = createSfWorkbenchHttp({ origin: config.origin, mount: config.mount, runtime: () => runtime?.services?.() })
   const business = createModule(config.mount, {
     persistence: store,
     authenticate: identity.authenticate,
     environment: requestEnvironment,
-    product,
+    product: async (request, surface) => await workbench(request, surface) ?? await bi(request, surface),
     maxJsonBytes: 2 * 1024 * 1024,
     assets: { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes) => scanLocalFile(bytes, config.scanner) } },
   })
