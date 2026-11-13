@@ -1728,7 +1728,7 @@
       "single writer per live path claim; source actor boundaries and explicit transfers preserved"
     ]
   },
-  "revision": 3,
+  "revision": 5,
   "current_actual_slots": {
     "S0": "root",
     "S0-B": "runtime",
@@ -1755,5 +1755,69 @@
     "preferred": 1,
     "resource_reason": "Observed4tsgo~6GiBRSS/16GiBhost, serialized followups; external processes untouched"
   },
-  "rolling_rule": "All74tasks/23actors retained; activeglobal8with7workers; completed coordinators quiescent, review independence preserved. Later lanes queued, release upon read/implementation handoff. SourceN4 validators untouched."
+  "rolling_rule": "All74tasks/23actors retained; activeglobal8with7workers; completed coordinators quiescent, review independence preserved. Later lanes queued, release upon read/implementation handoff. SourceN4 validators untouched.",
+  "operational_global_limit": 12,
+  "observed_new_native_instances": [
+    {
+      "actor": "S1-B",
+      "session_id": "01a1d3ab-ed3d-7bb1-b362-e5f8310a231d",
+      "model_requested": "gpt-6.1-terra",
+      "model_host_confirmed": "gpt-6.1-terra",
+      "provider": "openai",
+      "host_version": "0.168.0",
+      "ACK": "actual native message, clean branch/head/lease acceptance",
+      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/dashboard",
+      "branch": "sf2-dashboard",
+      "lease_epoch": 1,
+      "mission_sha256": "460abba6b5599700e9aec5c33713c298bdf2c7401d5d6f3468e4b9f24b1a55dd"
+    },
+    {
+      "actor": "S2-A",
+      "session_id": "01a1d3ab-ee20-7592-9121-530cc81c069e",
+      "model_requested": "gpt-6.1-terra",
+      "model_host_confirmed": "gpt-6.1-terra",
+      "provider": "openai",
+      "host_version": "0.168.0",
+      "ACK": "actual native message, clean branch/head/lease acceptance",
+      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/procurement",
+      "branch": "sf2-procurement",
+      "lease_epoch": 1,
+      "mission_sha256": "a40e6713f8bd6efb678b891f73b2f56f00b83870584073a3f50444d6aa1ff4f1"
+    },
+    {
+      "actor": "S2-B",
+      "session_id": "01a1d3ab-efa7-7fa0-9ef6-4571f963032e",
+      "model_requested": "gpt-6.1-terra",
+      "model_host_confirmed": "gpt-6.1-terra",
+      "provider": "openai",
+      "host_version": "0.168.0",
+      "ACK": "actual native message, clean branch/head/lease acceptance",
+      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/analytics",
+      "branch": "sf2-analytics",
+      "lease_epoch": 1,
+      "mission_sha256": "075fe0627b55f13cd0c03c3315cf4c715ef9ec0bf08c06873d2137a93d0f7083"
+    },
+    {
+      "actor": "S2-C",
+      "session_id": "01a1d3ab-f105-7fa3-852f-58a17257a557",
+      "model_requested": "gpt-6.1-terra",
+      "model_host_confirmed": "gpt-6.1-terra",
+      "provider": "openai",
+      "host_version": "0.168.0",
+      "ACK": "actual native message, clean branch/head/lease acceptance",
+      "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/imports",
+      "branch": "sf2-imports",
+      "lease_epoch": 1,
+      "mission_sha256": "c3ebdb0cff0f3a910e6d49923cb7b93faf7cf7237527ac7a641f77ed72e35eda"
+    }
+  ],
+  "source_preset_unchanged": true,
+  "admission_record": {
+    "path": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/allocation-12-admitted.json",
+    "sha256": "1df08bef9f2e51e5483efe1b9d57314f771f717379647f9f6e6d774378334690"
+  },
+  "coverage_preservation": "Original complete23actor/74task allocation retained; only active window/resource admission changes. No task, consumer, criterion, review, CI or AM removed.",
+  "actual_slot_ceiling": 16,
+  "admission_file": "allocation-16-admitted.json",
+  "admission_sha256": "f3484f6c5a40beeac21532b0d60de7ddf4d67e4b2f8cdfd933cbb2f8867f016b"
 }
