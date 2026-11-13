@@ -11,6 +11,7 @@ import type { LocalStore } from "../../../../runtime/local-contract.ts"
 import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
 import type { SfProductGrant } from "../../../../product/integration/product-authority.ts"
 import type { ResidentProfile, SkillLoadReceipt } from "../../../../product/contracts/resident-ai.ts"
+import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { selection } from "../resident-runtime/fixture.ts"
 
 async function fixture(grants: readonly SfProductGrant[], work: (input: { product: ReturnType<typeof createSfProductAuthority>; request: Request; location: Location.Ref; persistence: LocalStore; actor: { write: boolean; active: boolean }; changes: { role: string; mutateAuth: boolean; mutateInspect: boolean; session?: SessionSchema.Info } }) => Promise<void>, options: { rejectNested?: boolean } = {}) {
@@ -147,7 +148,7 @@ test("native binding cannot be invented without a current stored run", async () 
 })
 
 test("a real C08 run and case still cannot bind a missing native Session", async () => {
-  await fixture([{ principalRef: "person", namespaces: ["cases", "contributions"], operations: ["sf_forecast_compare"] }], async ({ product, request, changes, actor }) => {
+  await fixture([{ principalRef: "person", namespaces: ["cases", "contributions"], operations: ["sf_forecast_compare"] }], async ({ product, request, changes, actor, location }) => {
     const caseRef = { id: "case", incarnation: "inc", version: 1 }
     const created = await product.state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, targetRef: product.creationTarget.ref,
       targetIncarnation: product.creationTarget.incarnation, idempotencyKey: "seed-case", commandDigest: "e".repeat(64) }, async (state) => {
