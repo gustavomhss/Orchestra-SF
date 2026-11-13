@@ -78,6 +78,8 @@ export function compile<Id extends string, Groups extends HttpApiGroup.Any>(
     readonly groupNames?: Readonly<Record<string, string>>
     readonly endpointNames?: Readonly<Record<string, string>>
     readonly omitEndpoints?: ReadonlySet<string>
+    /** Success schemas retained through an authoritative API import, rather than serialized into a client. */
+    readonly importedSuccessEndpoints?: ReadonlySet<string>
   },
 ): Contract {
   const endpoints: Array<Endpoint> = []
@@ -106,7 +108,10 @@ export function compile<Id extends string, Groups extends HttpApiGroup.Any>(
         throw new GenerationError({ reason: `Multiple payload schemas: ${name}` })
       }
       const payloads = sourcePayloads.map((schema) => normalizeTransport(schema, "payload", endpoint, name)!)
-      const success = normalizeTransport(successSchemas[0], "success", endpoint, name)!
+      const success = normalizeTransport(
+        successSchemas[0], "success", endpoint, name,
+        options?.importedSuccessEndpoints?.has(endpoint.name) ?? false,
+      )!
       const errorSchemas = Array.from(errors).flatMap(([status, schemas]) =>
         schemas.map((schema) => ({ status, ...normalizeTransport(schema, "error", endpoint, name)! })),
       )
@@ -588,9 +593,15 @@ function normalizeTransport(
   source: InputField["source"] | "success" | "error",
   endpoint: HttpApiEndpoint.AnyWithProps,
   operation: string,
+  imported = false,
 ) {
   if (schema === undefined) return undefined
   if (isStreamSchema(schema)) return { schema, effectPortable: true } as const
+  if (imported && source === "success") {
+    if (!isPathInput(endpoint.path)) throw new GenerationError({ reason: `Invalid endpoint path: ${operation}` })
+    // Imported Effect clients retain the original validators. Standalone emitEffect still rejects this endpoint.
+    return { schema, effectPortable: false } as const
+  }
   if (!metadataPortable(schema.ast, new Set())) {
     throw new GenerationError({ reason: `Unportable schema: ${operation}.${source}` })
   }
