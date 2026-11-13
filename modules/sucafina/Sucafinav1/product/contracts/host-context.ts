@@ -7,7 +7,8 @@ import type { SfScopedSourcePort } from "../integration/source-lifecycle.ts"
 import type { createSfProductAuthority, SfProductGrant } from "../integration/product-authority.ts"
 import type { SfNativeAdmission, SfSelectedRuntime } from "./runtime.ts"
 import type { BusinessPorts, PortResult } from "./ports.ts"
-import type { TrustedExecutionBinding } from "./sf-execution.ts"
+import type { TrustedDomainContext, TrustedExecutionBinding } from "./sf-execution.ts"
+import type { Period } from "./context.ts"
 
 /** In-process host API. Neither this object nor its bindings are serialized into a model request. */
 export type SfHostSessionPort = {
@@ -21,6 +22,10 @@ export type SfHostSessionPort = {
 }
 export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
   dispatch: BusinessPorts["dispatch"]
+  /** Private UI discovery; absent until its real collection registry is mounted. */
+  procurementSelections?: {
+    create: (context: TrustedDomainContext, period: Period) => Promise<PortResult<{ selectionRef: string; label: string; period: Period }>>
+  }
   sessions: SfHostSessionPort
   selected: readonly SfSelectedRuntime[]
   models: () => Promise<readonly ModelV2.Ref[]>
