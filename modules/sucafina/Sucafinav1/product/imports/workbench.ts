@@ -11,7 +11,7 @@ export function renderSfImportWorkbench(surface: string) {
     <h1>Import with impact preview</h1><p>Choose a destination, review the simulation and apply it explicitly. Previewing never applies domain changes.</p>
     <label>Period start<input data-period-start type="date"></label><label>Period end<input data-period-end type="date"></label>
     <button type="button" data-find>Find destinations</button>
-    <form data-import-form><label>Destination<select name="target" required><option value="">Choose a destination</option></select></label>
+    <form data-import-form><label for="sf-import-target">Destination</label><select id="sf-import-target" name="target" required><option value="">Choose a destination</option></select>
     <label>File<input name="file" type="file" accept=".xlsx,.xls,.json" required></label>
     ${options}
     <button type="submit">Preview changes</button></form>

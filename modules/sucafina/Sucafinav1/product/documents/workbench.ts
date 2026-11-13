@@ -5,13 +5,13 @@ export function sfDocumentWorkbench(surface: string) {
   const body = `<p><a href="?sf=workbench">Workbench</a></p><h2>Documents</h2>
 <p>Select an authorized attachment, review extracted candidates, and confirm each field explicitly. Search and extraction do not apply business changes.</p>
 <section data-document-workbench>
-<label>Request<select data-request><option value="">All accessible attachments</option></select></label>
+<label for="sf-document-request">Request</label><select id="sf-document-request" data-request><option value="">All accessible attachments</option></select>
 <button type="button" data-refresh>Refresh sources</button>
-<label>Document<select data-source><option value="">Choose a document</option></select></label>
+<label for="sf-document-source">Document</label><select id="sf-document-source" data-source><option value="">Choose a document</option></select>
 <button type="button" data-admit disabled>Open document</button>
 <p role="status" data-status></p>
 <section data-fields hidden><h3>Extract a field</h3><p>Use the exact label from a line such as Price: 42. Ambiguous values remain unconfirmed.</p>
-<form data-schema><label>Field label<input name="field" maxlength="120" required></label><label>Type<select name="type"><option value="string">Text</option><option value="number">Number</option><option value="boolean">True or false</option><option value="date">ISO date</option></select></label><label>Unit<input name="unit" maxlength="40"></label><button>Extract candidate</button></form>
+<form data-schema><label>Field label<input name="field" maxlength="120" required></label><label for="sf-document-field-type">Type</label><select id="sf-document-field-type" name="type"><option value="string">Text</option><option value="number">Number</option><option value="boolean">True or false</option><option value="date">ISO date</option></select><label>Unit<input name="unit" maxlength="40"></label><button>Extract candidate</button></form>
 <h3>Candidates</h3><div data-candidates></div></section>
 <form data-search><h3>Search authorized documents</h3><label>Exact text<input name="query" maxlength="256" required></label><button>Search</button></form><div data-results></div>
 </section>`
