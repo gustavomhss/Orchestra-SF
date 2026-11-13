@@ -17,6 +17,8 @@ import { createSfProductAuthority } from "../../../../product/integration/produc
 import type { TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { resolveSfDocumentEvidence } from "../../../../product/documents/evidence-resolver.ts"
+import { createSfBusinessContext } from "../../../../product/host-binding/business-context.ts"
+import { createSfDocumentSourceAccess } from "../../../../product/decision-memory/source-access.ts"
 import { createSfDocumentHttp } from "../../../../product/interface/document-http.ts"
 import { createSfImportHttp } from "../../../../product/interface/import-http.ts"
 import { createSfDocumentTargetAuthority } from "../../../../../../../apps/cli/src/sucafina-product/document-authority.ts"
@@ -59,6 +61,7 @@ test("real host persists procurement document evidence and Planner import under 
     const service = createSfDocumentServices({ runtime, authority })
     const importing = createSfImportServices({ runtime, authority })
     if (!service || !importing) throw new Error("missing production services")
+    const business = createSfBusinessContext({ revalidate: authority.host.revalidate, resolveSource: createSfDocumentSourceAccess({ host: authority.host, read: service.documents.reader }), proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => { throw new Error("not used") } })
     const uiCall = async <T>(operation: string, payload: unknown, work: (context: TrustedUiContext) => Promise<T>) => {
       const digest = digestSfValue(payload)
       const grant = await authority.ui.admit(request(), operation, digest)
@@ -85,6 +88,8 @@ test("real host persists procurement document evidence and Planner import under 
     expect(candidate.status).toBe("ok")
     if (candidate.status !== "ok") return
     expect(candidate.value).toMatchObject({ fieldCandidate: "Price", value: 42, status: "extracted" })
+    const pending = await uiCall("sf_evidence_get", { evidenceRef: candidate.value.ref }, (context) => business.resolve(candidate.value.ref, context))
+    expect(pending.state).not.toBe("fresh")
     const confirmGrant = await authority.human.admit(request(), "documents.confirm", candidate.value)
     if (confirmGrant.status !== "ok") throw new Error(confirmGrant.reason)
     const confirmed = await service.documents.confirm(candidate.value.id, confirmGrant.value)
@@ -93,6 +98,9 @@ test("real host persists procurement document evidence and Planner import under 
     if (confirmed.status !== "ok") return
     const resolution = await uiCall("sf_evidence_get", { evidenceRef: confirmed.value.ref }, (context) => resolveSfDocumentEvidence(confirmed.value.ref, context, service.documents.reader))
     expect(resolution.state).toBe("fresh")
+    const businessResolution = await uiCall("sf_evidence_get", { evidenceRef: confirmed.value.ref }, (context) => business.resolve(confirmed.value.ref, context))
+    expect(businessResolution.state).toBe("fresh")
+    expect(businessResolution.currentRef).toEqual(confirmed.value.ref)
     const documentHttp = createSfDocumentHttp({ origin, mount: "/sucafina", runtime: () => ({ ui: authority.ui, human: authority.human, ...service }) })
     const openUrl = new URL(`${origin}/sucafina/dashboard`)
     openUrl.searchParams.set("sf", "document-open")
@@ -153,6 +161,8 @@ test("real host persists procurement document evidence and Planner import under 
     expect(afterABA?.version).toBeGreaterThan(originalIdentity?.version ?? 0)
     const staleAfterABA = await uiCall("sf_evidence_get", { evidenceRef: confirmed.value.ref }, (context) => resolveSfDocumentEvidence(confirmed.value.ref, context, service.documents.reader))
     expect(staleAfterABA.state).not.toBe("fresh")
+    const businessAfterABA = await uiCall("sf_evidence_get", { evidenceRef: confirmed.value.ref }, (context) => business.resolve(confirmed.value.ref, context))
+    expect(businessAfterABA.state).not.toBe("fresh")
     await store.transaction("procurement", async (snapshot) => {
       snapshot.data.assets = []
       const suppliers = (snapshot.data.store as { suppliers: { attachments?: unknown[] }[] }).suppliers

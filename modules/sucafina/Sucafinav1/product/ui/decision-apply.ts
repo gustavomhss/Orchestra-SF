@@ -22,7 +22,7 @@ document.querySelectorAll('[data-decision-apply]').forEach((entry) => {
     try {
       const value = await send('decision-review', { purpose: 'review', caseRef: context.caseRef, choiceId: context.choiceId, changeId: context.changeId }, crypto.randomUUID())
       if (value.changeId !== context.changeId || value.choiceId !== context.choiceId || value.surface !== context.surface || value.expectedVersion !== context.expectedVersion || !Array.isArray(value.fields)) throw new Error('changed')
-      output.replaceChildren(); const summary = document.createElement('p'); summary.textContent = 'Destination: ' + value.surface + ' · expected version ' + value.expectedVersion + ' · state ' + value.state; output.append(summary)
+      output.replaceChildren(); const summary = document.createElement('p'); summary.textContent = 'Destination: ' + value.surface + (value.target?.label ? ' · ' + value.target.label : '') + ' · expected version ' + value.expectedVersion + ' · state ' + value.state; output.append(summary)
       const display = (item) => item === null ? 'Empty' : ['string', 'number', 'boolean'].includes(typeof item) ? String(item) : 'Unavailable'
       value.fields.forEach((field) => { const line = document.createElement('p'); line.textContent = field.field + ': ' + display(field.before) + (field.beforeCurrency ? ' ' + field.beforeCurrency : '') + ' → ' + display(field.after) + (field.afterCurrency ? ' ' + field.afterCurrency : ''); output.append(line) })
       if (value.receipt) { const receipt = document.createElement('p'); receipt.textContent = 'Recorded receipt: ' + value.receipt.surface + ' · version ' + value.receipt.version; output.append(receipt) }

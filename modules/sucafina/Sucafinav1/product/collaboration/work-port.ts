@@ -52,7 +52,7 @@ export function createCollaborationWorkPort(input: {
       if (scope.status !== "ok") return scope
       const own = context.binding.principalRef
       const [threads, relations, confirmations] = await Promise.all([
-        input.state.read(request, "threads", (state, authority) => authority.principalRef === own && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? Object.entries(state.threads).map(([id, value]) => ({ id, recipientRef: object(value).recipientRef })) : undefined),
+        input.state.read(request, "threads", (state, authority) => authority.principalRef === own && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? Object.entries(state.threads).map(([id, value]) => ({ id, recipientRef: object(value).recipientRef, state: object(value).state })) : undefined),
         input.state.read(request, "relations", (state, authority) => authority.principalRef === own && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.relations : undefined),
         input.state.read(request, "confirmations", (state, authority) => authority.principalRef === own && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? Object.values(state.confirmations).filter((record) => record.authorId === own).map((record) => record.id) : undefined),
       ])
@@ -76,7 +76,8 @@ export function createCollaborationWorkPort(input: {
         presentation.push({ kind: "confirmation", actionRef: id, title: null, ownerRef: own, period: confirmation.value.period, observedVersion: confirmation.value.observedVersion, ...(confirmation.value.sourceVersion === undefined ? {} : { sourceVersion: confirmation.value.sourceVersion }), state: "confirmation-stale", destination: { kind: "confirmation", confirmationId: id }, sourceRefs: confirmation.value.sourceRefs })
       }
       for (const entry of threadIds) {
-        if (entry.recipientRef !== own) continue
+        if (entry.recipientRef !== own || entry.state === "resolved") continue
+        if (entry.state !== "open") return { status: "unavailable", reason: "thread-work-source-unavailable" }
         const id = entry.id
         const thread = await input.collaboration.threads.read(id, context)
         const recipient = thread.status !== "ok" && input.collaboration.recipientThread ? await input.collaboration.recipientThread(id, context) : undefined

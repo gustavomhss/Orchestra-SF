@@ -111,7 +111,7 @@ function validMutation(value: Mutation) {
 export function isThread(value: unknown): value is CollaborationThread {
   if (!value || typeof value !== "object") return false
   const thread = value as Record<string, unknown>
-  return typeof thread.id === "string" && !!thread.id.trim() && typeof thread.sourceRef === "string" && !!thread.sourceRef.trim() && typeof thread.sourceIncarnation === "string" && !!thread.sourceIncarnation.trim() && ["comment", "clarification", "review"].includes(String(thread.kind)) && ["open", "resolved"].includes(String(thread.state)) && Number.isSafeInteger(thread.observedVersion) && isSfPeriod(thread.period) && Array.isArray(thread.messages) && thread.messages.every((value: unknown) => {
+  return typeof thread.id === "string" && !!thread.id.trim() && typeof thread.sourceRef === "string" && !!thread.sourceRef.trim() && typeof thread.sourceIncarnation === "string" && !!thread.sourceIncarnation.trim() && ["comment", "clarification", "review"].includes(String(thread.kind)) && ["open", "resolved"].includes(String(thread.state)) && Number.isSafeInteger(thread.observedVersion) && Number(thread.observedVersion) > 0 && isSfPeriod(thread.period) && Array.isArray(thread.messages) && thread.messages.every((value: unknown) => {
     if (!value || typeof value !== "object") return false
     const message = value as Record<string, unknown>
     return [message.id, message.incarnation, message.authorRef, message.body, message.createdAt].every((part) => typeof part === "string" && !!part.trim()) && Number.isSafeInteger(message.version) && Number(message.version) > 0
