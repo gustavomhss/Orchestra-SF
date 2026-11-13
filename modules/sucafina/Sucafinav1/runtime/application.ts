@@ -64,7 +64,20 @@ export function createApplication(mount: string, application: Application) {
     const parsed =
       request.method === "POST" && !uploading ? await readCommand(request, application.maxJsonBytes) : undefined
     if (parsed instanceof Response) return parsed
-    const environment = await application.environment(request)
+    if (application.presentation === "native" && parsed?.action === "preview-workbook")
+      return reply("Not found", 404)
+    const resolvedEnvironment = await application.environment(request)
+    const environment =
+      application.presentation === "native"
+        ? {
+            ...resolvedEnvironment,
+            directory: resolvedEnvironment.directory.flatMap((person) =>
+              typeof person?.id === "string" && typeof person?.name === "string"
+                ? [{ id: person.id, name: person.name }]
+                : [],
+            ),
+          }
+        : resolvedEnvironment
     const transaction: TransactionRunner = (work) =>
       application.assets
         ? application.assets.persistence.transaction(surface, work, { signal: request.signal })
