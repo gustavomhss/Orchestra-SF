@@ -4,6 +4,7 @@ import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/sc
 import { documentHtml, esc, pageMain } from "../../src/screen-shell.ts"
 import { htmlPolicy } from "../../runtime/application.ts"
 import { decisionDesk, routineStatus, workList } from "../ui/components.ts"
+import { encodeCaseRef } from "../decisions/case-port.ts"
 
 /** Mount in the existing authenticated application; authority remains private to the host. */
 export function createSfWorkbenchHttp(input: { origin: string; mount: string; runtime: () => SfHostServices | undefined }) {
@@ -31,8 +32,9 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
       const admitted = await runtime.ui.admit(request, operation, digestSfValue(decoded.value))
       if (admitted.status !== "ok") return reply({ status: admitted.status }, 403)
       try {
-        const result = await runtime.dispatch(operation, decoded.value, admitted.value)
-        if (result.status !== "ok") return reply({ status: result.status, reason: result.reason }, result.status === "denied" ? 403 : result.status === "stale" ? 409 : 503)
+        const result = await runtime.dispatch(operation, decoded.value, admitted.value).catch(() => undefined)
+        if (!result) return reply({ status: "unavailable", reason: "workbench-unavailable" }, 503)
+        if (result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" ? 409 : 503)
         const output = decodeSfOperationOutput(operation, result.result)
         if (!output.ok || !await runtime.ui.revalidate(admitted.value)) return reply({ status: "unavailable" }, 503)
         return reply({ status: "ok", value: output.value, outputRef: result.outputRef }, 200)
@@ -41,16 +43,39 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
     if (request.method !== "GET" && request.method !== "HEAD") return reply({ status: "denied" }, 405)
     const allowed = mode === "workbench" ? ["sf"] : mode === "workbench-case" ? ["sf", "caseRef"] : mode === "workbench-work" ? ["sf", "selectionRef", "start", "end"] : mode === "workbench-search" ? ["sf", "q"] : ["sf", "runRef"]
     if ([...url.searchParams.keys()].some((key) => !allowed.includes(key) || url.searchParams.getAll(key).length !== 1)) return reply({ status: "invalid" }, 400)
-    const operation = mode === "workbench-case" ? "sf_case_read" : mode === "workbench-search" ? "sf_knowledge_search" : mode === "workbench-routine" ? "sf_routine_status" : "sf_work_list"
+    const operation = mode === "workbench" || mode === "workbench-case" ? "sf_case_read" : mode === "workbench-search" ? "sf_knowledge_search" : mode === "workbench-routine" ? "sf_routine_status" : "sf_work_list"
     const payload = mode === "workbench-case" ? { caseRef: url.searchParams.get("caseRef") ?? "" } : mode === "workbench-search" ? { query: url.searchParams.get("q") ?? "", limit: 20 } : mode === "workbench-routine" ? { runRef: url.searchParams.get("runRef") ?? "" } : { selectionRef: url.searchParams.get("selectionRef") ?? "", period: { start: url.searchParams.get("start") ?? "", end: url.searchParams.get("end") ?? "" } }
     const decoded = mode === "workbench" ? undefined : decodeSfOperationInput(operation, payload)
     if (decoded && !decoded.ok) return reply({ status: "invalid", reason: "invalid-selection" }, 400)
-    const admitted = await runtime.ui.admit(request, operation, digestSfValue(decoded?.ok ? decoded.value : {}))
+    const landing = { caseAccess: false }
+    const admitted = mode === "workbench" ? await (async () => {
+      for (const candidate of ["sf_case_read", "sf_work_list", "sf_knowledge_search", "sf_routine_catalog"] as const) {
+        const access = await runtime.ui.admit(request, candidate, digestSfValue({}))
+        if (access.status === "ok") { landing.caseAccess = candidate === "sf_case_read"; return access }
+      }
+      return { status: "denied" as const, reason: "workbench-unavailable" }
+    })() : await runtime.ui.admit(request, operation, digestSfValue(decoded?.ok ? decoded.value : {}))
     if (admitted.status !== "ok") return reply({ status: admitted.status }, 403)
     try {
-      const forms = `<p>Open a decision, work list, source search or routine using an authorized reference.</p><form method="get"><input type="hidden" name="sf" value="workbench-case"><label>Decision reference<input name="caseRef" required></label><button>Open decision</button></form><form method="get"><input type="hidden" name="sf" value="workbench-work"><label>Selection reference<input name="selectionRef" required></label><label>Start<input name="start" type="date" required></label><label>End<input name="end" type="date" required></label><button>Open work</button></form><form method="get"><input type="hidden" name="sf" value="workbench-search"><label>Search documents<input name="q" required></label><button>Search</button></form><form method="get"><input type="hidden" name="sf" value="workbench-routine"><label>Routine reference<input name="runRef" required></label><button>Open routine</button></form>`
-      const result = decoded?.ok ? await runtime.dispatch(operation, decoded.value, admitted.value) : undefined
-      if (result && result.status !== "ok") return reply({ status: result.status, reason: result.reason }, result.status === "denied" ? 403 : result.status === "stale" ? 409 : 503)
+      const search = `<form method="get"><input type="hidden" name="sf" value="workbench-search"><label>Search documents<input name="q" required></label><button>Search</button></form>`
+      const listed = mode === "workbench" && landing.caseAccess ? await runtime.state.read(request, "cases", (state, authority) => Object.values(state.cases).filter((item) => item.participants.includes(authority.principalRef)).map((item) => encodeCaseRef(item))).catch(() => ({ status: "unavailable" as const, reason: "decision-list-unavailable" })) : undefined
+      const cases = listed?.status === "ok" ? await Promise.all(listed.value.map(async (caseRef) => {
+        const selection = { caseRef }
+        const access = await runtime.ui.admit(request, "sf_case_read", digestSfValue(selection))
+        if (access.status !== "ok") return undefined
+        try {
+          const result = await runtime.dispatch("sf_case_read", selection, access.value).catch(() => undefined)
+          if (!result || result.status !== "ok" || !await runtime.ui.revalidate(access.value)) return undefined
+          const output = decodeSfOperationOutput("sf_case_read", result.result)
+          return output.ok ? { caseRef, title: output.value.case.objective, version: output.value.case.version } : undefined
+        } finally { runtime.ui.finish(access.value) }
+      })) : []
+      const visible = cases.filter((item) => item !== undefined)
+      const listUnavailable = !landing.caseAccess || (listed && listed.status !== "ok" && !(listed.status === "unavailable" && listed.reason === "product-state-uninitialized"))
+      const forms = `<h2>Decisions</h2>${listUnavailable ? "<p>Decision list unavailable.</p>" : visible.length ? `<ul>${visible.map((item) => `<li><a href="?${esc(new URLSearchParams({ sf: "workbench-case", caseRef: item.caseRef }).toString())}">${esc(item.title)}</a> · version ${item.version}</li>`).join("")}</ul>` : "<p>No accessible decisions.</p>"}${search}<p>Work and routine lists are currently unavailable.</p>`
+      const result = decoded?.ok ? await runtime.dispatch(operation, decoded.value, admitted.value).catch(() => undefined) : undefined
+      if (decoded?.ok && !result) return reply({ status: "unavailable", reason: "workbench-unavailable" }, 503)
+      if (result && result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" ? 409 : 503)
       const output = result?.status === "ok" ? decodeSfOperationOutput(operation, result.result) : undefined
       if (output && !output.ok) return reply({ status: "unavailable" }, 503)
       if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)

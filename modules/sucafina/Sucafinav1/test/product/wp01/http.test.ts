@@ -21,7 +21,9 @@ test("workbench uses actual identity, SQLite and case dispatcher with revocation
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-workbench-http-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
-  const origin = "http://localhost:4110"
+  const serverState: { handle?: (request: Request) => Promise<Response | undefined> } = {}
+  const server = Bun.serve({ hostname: "localhost", port: 0, fetch: async (request) => await serverState.handle?.(request) ?? new Response(null, { status: 503 }) })
+  const origin = server.url.origin
   const operator = { installationId: randomUUID(), uid: 1000, name: "Test operator" }
   const person = `macos:${operator.installationId}:${operator.uid}`
   const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator, secrets: store.secrets, key: randomBytes(32) })
@@ -37,6 +39,7 @@ test("workbench uses actual identity, SQLite and case dispatcher with revocation
   const services = { ...authority, dispatch } as SfHostServices
   const product = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
   const app = createModule("/sucafina", { persistence: store, authenticate: identity.authenticate, environment, product, maxJsonBytes: 100000 })
+  serverState.handle = async (request) => await identity.handle(request) ?? await app(request)
   try {
     const enrollment = await identity.enroll()
     const authenticated = await identity.handle(new Request(`${origin}/sucafina/auth/local?code=${enrollment}`))
@@ -48,11 +51,31 @@ test("workbench uses actual identity, SQLite and case dispatcher with revocation
     expect(created?.status).toBe(200)
     const result = await created!.json()
     expect(result.outputRef).toBeTruthy()
+    const landing = await app(new Request(`${origin}/sucafina/dashboard?sf=workbench`, { headers: { cookie } }))
+    expect(landing?.status).toBe(200)
+    const landingHtml = await landing!.text()
+    expect(landingHtml).toContain("Review renewal")
+    expect(landingHtml).toContain("workbench-case")
+    expect(landingHtml).not.toContain('name="caseRef"')
+    expect(landingHtml).not.toContain('name="selectionRef"')
+    expect(landingHtml).not.toContain('name="runRef"')
     const read = () => app(new Request(`${origin}/sucafina/dashboard?${new URLSearchParams({ sf: "workbench-case", caseRef: result.outputRef })}`, { headers: { cookie } }))
     const page = await read()
     expect(page?.status).toBe(200)
     expect(await page!.text()).toContain("Review renewal")
+    const { chromium } = await import("@playwright/test")
+    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+    try {
+      const tab = await browser.newPage()
+      await tab.goto(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`)
+      await tab.goto(`${origin}/sucafina/dashboard?sf=workbench`)
+      await tab.getByRole("link", { name: "Review renewal" }).click()
+      await tab.getByRole("heading", { name: "Review renewal" }).waitFor()
+      await tab.goBack()
+      await tab.getByRole("link", { name: "Review renewal" }).waitFor()
+      expect(await tab.locator('input[name="caseRef"], input[name="selectionRef"], input[name="runRef"]').count()).toBe(0)
+    } finally { await browser.close() }
     await identity.handle(new Request(`${origin}/sucafina/auth/logout`, { method: "POST", headers: { cookie, origin } }))
     expect((await read())?.status).toBe(403)
-  } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
-})
+  } finally { await server.stop(true); await store.dispose(); await rm(directory, { recursive: true, force: true }) }
+}, 60000)
