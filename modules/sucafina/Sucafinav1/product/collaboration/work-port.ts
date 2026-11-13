@@ -32,11 +32,13 @@ export type WorkPresentationItem = {
   sourceRefs: readonly BusinessEvidenceRef[]
 }
 
+export type ConfirmationWork = { state: "valid" | "stale"; sourceRefs: readonly BusinessEvidenceRef[]; period: Period; observedVersion: number; sourceVersion?: number }
+
 /** Projects canonical producers on every read; it never stores operational status. */
 export function createCollaborationWorkPort(input: {
   host: DomainPortHost
   state: SfProductStatePort
-  collaboration: { authority: ReturnType<typeof createCollaborationAuthority>; hotTopics: ReturnType<typeof createHotTopicPort>; threads: ReturnType<typeof createThreadPort>; recipientThread?: ReturnType<typeof createRecipientThreadReader>; reissue?: ReturnType<typeof createCollaborationReissuer>; captureWorkSource?: (memberRef: string, context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>>; confirmationWork?: (id: string, context: TrustedDomainContext) => Promise<PortResult<{ state: "valid" | "stale"; sourceRefs: readonly BusinessEvidenceRef[] }>> }
+  collaboration: { authority: ReturnType<typeof createCollaborationAuthority>; hotTopics: ReturnType<typeof createHotTopicPort>; threads: ReturnType<typeof createThreadPort>; recipientThread?: ReturnType<typeof createRecipientThreadReader>; reissue?: ReturnType<typeof createCollaborationReissuer>; captureWorkSource?: (memberRef: string, context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>>; confirmationWork?: (id: string, context: TrustedDomainContext) => Promise<PortResult<ConfirmationWork>> }
   procurement: Pick<ReturnType<typeof createProcurementPort>, "list">
   selections: WorkSelectionPort
   topicSource: { issue: (topic: HotTopic, context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>> }
@@ -71,7 +73,7 @@ export function createCollaborationWorkPort(input: {
         if (membership.status !== "ok") return membership
         if (!membership.value) continue
         items.push({ actionRef: id, ownerRef: own, state: "confirmation-stale", sourceRefs: confirmation.value.sourceRefs })
-        presentation.push({ kind: "confirmation", actionRef: id, title: null, ownerRef: own, state: "confirmation-stale", destination: { kind: "confirmation", confirmationId: id }, sourceRefs: confirmation.value.sourceRefs })
+        presentation.push({ kind: "confirmation", actionRef: id, title: null, ownerRef: own, period: confirmation.value.period, observedVersion: confirmation.value.observedVersion, ...(confirmation.value.sourceVersion === undefined ? {} : { sourceVersion: confirmation.value.sourceVersion }), state: "confirmation-stale", destination: { kind: "confirmation", confirmationId: id }, sourceRefs: confirmation.value.sourceRefs })
       }
       for (const entry of threadIds) {
         if (entry.recipientRef !== own) continue

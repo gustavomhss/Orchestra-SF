@@ -11,6 +11,7 @@ import { createRelationPort } from "./relations.ts"
 import { createThreadPort } from "./threads.ts"
 import { createHandoffPort } from "./handoff.ts"
 import { createCollaborationWorkPort } from "./work-port.ts"
+import type { ConfirmationWork } from "./work-port.ts"
 import type { createProcurementPort } from "../procurement/port.ts"
 import type { createDashboardRecordEvidenceHost } from "../dashboard/sources.ts"
 import type { createCollaborationReissuer } from "./reissue.ts"
@@ -31,7 +32,7 @@ export function createCollaborationComposition(input: {
   recipientThread?: ReturnType<typeof createRecipientThreadReader>
   reissue?: ReturnType<typeof createCollaborationReissuer>
   captureWorkSource?: (memberRef: string, context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>>
-  confirmationWork?: (id: string, context: TrustedDomainContext) => Promise<PortResult<{ state: "valid" | "stale"; sourceRefs: readonly BusinessEvidenceRef[] }>>
+  confirmationWork?: (id: string, context: TrustedDomainContext) => Promise<PortResult<ConfirmationWork>>
   createId: () => string
   now: () => string
 }) {

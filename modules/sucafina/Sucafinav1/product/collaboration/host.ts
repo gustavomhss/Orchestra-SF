@@ -9,6 +9,7 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductStatePort } from "../contracts/state.ts"
 import type { createProcurementPort } from "../procurement/port.ts"
 import type { createProcurementCollectionRegistry } from "../procurement/sources.ts"
+import type { ConfirmationWork } from "./work-port.ts"
 import { createCollaborationCapabilities } from "./capabilities.ts"
 import type { CollaborationCapabilityHost } from "./capabilities.ts"
 import { createCollaborationAuthority } from "./authority.ts"
@@ -72,21 +73,21 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
     const fence: ConfirmationObserver<T>["fence"] = async (scope, observation, context) => await source.fenceManifest(scope, context) && await source.fence(scope, observation, context)
     const observations = createConfirmationObservationReceipts({ host: input.host, observe, now: () => Date.parse(input.now()) })
     const port = createConfirmationPort({ host: input.host, state: input.state, creationTarget: input.creationTarget, human: input.human, observe, fence, verifyObserved: observations.verifyObserved, createId: input.createId, now: input.now })
-    const work = async (id: string, context: TrustedDomainContext): Promise<PortResult<{ state: "valid" | "stale"; sourceRefs: readonly BusinessEvidenceRef[] }>> => {
+    const work = async (id: string, context: TrustedDomainContext): Promise<PortResult<ConfirmationWork>> => {
       const request = input.host.requestFor(context)
       if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "confirmation-work-unavailable" }
       const stored = await input.state.read(request, "confirmations", (state, current) => current.principalRef === context.binding.principalRef && current.accessRevision === context.binding.accessRevision && current.policyVersion === context.binding.policyVersion ? state.confirmations[id] : undefined)
       if (stored.status !== "ok" || !stored.value || stored.value.authorId !== context.binding.principalRef) return { status: "unavailable", reason: "confirmation-work-unavailable" }
       const validity = await port.project(id, context)
       if (validity.status !== "ok" || validity.value.state === "unavailable") return { status: "unavailable", reason: "confirmation-work-unavailable" }
-      if (validity.value.state === "valid") return { status: "ok", value: { state: "valid", sourceRefs: [] } }
+      if (validity.value.state === "valid") return { status: "ok", value: { state: "valid", sourceRefs: [], period: stored.value.scope.period, observedVersion: stored.value.observedSourceVersion } }
       const current = await observe(stored.value.scope, context)
       if (current.state !== "available") return { status: "unavailable", reason: "confirmation-work-source-unavailable" }
       const refs = [current.evidence]
       if (!await authority.sources(refs, context)) return { status: "unavailable", reason: "confirmation-work-source-unavailable" }
       const again = await port.project(id, context)
       if (again.status !== "ok" || again.value.state !== "stale" || (again.value.reason !== validity.value.reason || again.value.evaluatedSourceVersion !== validity.value.evaluatedSourceVersion || again.value.scopeFingerprint !== validity.value.scopeFingerprint) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "confirmation-work-changed" }
-      return { status: "ok", value: { state: "stale", sourceRefs: refs } }
+      return { status: "ok", value: { state: "stale", sourceRefs: refs, period: stored.value.scope.period, observedVersion: stored.value.observedSourceVersion, sourceVersion: current.sourceVersion } }
     }
     const prepare = async (scope: ConfirmationScope, context: TrustedDomainContext) => {
       const result = await observations.prepare(scope, context)

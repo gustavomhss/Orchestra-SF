@@ -86,6 +86,6 @@ test("reissue requires the recipient's current scope and the same physical reque
     await persistence.transaction("procurement", async (snapshot) => { delete (snapshot.data.store as { requests: Record<string, unknown> }).requests["PR-1"]; return { commit: true, value: undefined } })
     await persistence.transaction("procurement", async (snapshot) => { (snapshot.data.store as { requests: Record<string, unknown> }).requests["PR-1"] = { request: { number: "PR-1", createdBy: "a", status: "draft", pr: { title: "Replacement" } }, version: 1, by: "a" }; return { commit: true, value: undefined } })
     expect((await reissue(original.value.evidence.target, b)).status).toBe("unavailable")
-    expect((await persistMember(member.refId, a)).status).toBe("unavailable")
+    expect((await persistMember(member.refId, a)).status).toBe("stale")
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })

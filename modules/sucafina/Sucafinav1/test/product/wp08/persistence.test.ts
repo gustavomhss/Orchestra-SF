@@ -133,6 +133,7 @@ test("versioned relations keep immutable identity and cannot reuse a retired id"
     const removed = await relations.remove("relation-1", pair, { expectedStorageVersion: 1, idempotencyKey: "remove" }, context)
     expect(removed.status).toBe("ok")
     expect(await relations.remove("relation-1", pair, { expectedStorageVersion: 1, idempotencyKey: "remove" }, context)).toEqual(removed)
+    expect((await relations.remove("relation-1", { ...pair, kind: "different" }, { expectedStorageVersion: 1, idempotencyKey: "remove" }, context)).status).toBe("conflict")
     expect((await relations.create(pair, { expectedStorageVersion: 2, idempotencyKey: "reuse" }, context)).status).toBe("conflict")
     expect(await relations.readVersioned(["from"], context)).toEqual({ status: "ok", value: [] })
   } finally {

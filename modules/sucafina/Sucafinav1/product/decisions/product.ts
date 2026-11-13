@@ -2,6 +2,7 @@ import { createAnalysisAcceptance } from "./analysis-acceptance.ts"
 import { createPreparedExecution } from "./apply.ts"
 import { createDecisionBaselineCoverage } from "./baseline-coverage.ts"
 import { createDecisionCaseManagement } from "./case-management.ts"
+import { createDecisionChoiceCatalog } from "./choice-catalog.ts"
 import { createDecisionCoverageCatalog } from "./coverage-catalog.ts"
 import { createDecisionComparisonService } from "./comparison.ts"
 import { createCriterionComparisonBindings } from "./criterion-comparison.ts"
@@ -46,9 +47,10 @@ export function createDecisionProduct(input: Common & Evidence & {
   const sensitivityBindings = createCriterionResultBindings({ ...input.sensitivityBindings, ...common, ...evidence, rules: criteria, results: input.results })
   const comparisonBindings = createCriterionComparisonBindings({ ...input.comparisonBindings, ...common, ...evidence, rules: criteria, results: input.results })
   const reviewChange = createDecisionPreparedReview({ state: input.state, cases: input.cases, host: input.host, reviewDomain: input.reviewDomain })
+  const choiceCatalog = createDecisionChoiceCatalog({ cases: input.cases, host: input.host })
   const coverageCatalog = createDecisionCoverageCatalog({ cases: input.cases, host: input.host, sources: input.sources })
   const compare = createDecisionComparisonService({ cases: input.cases, state: input.state, host: input.host, results: input.results, planner: input.planner })
   const selection = createDecisionPortfolioSelection({ ...input.selection, ...common, ...evidence, compare })
   const portfolioBindings = createPortfolioResultBindings({ ...input.portfolioBindings, ...common, ...evidence, selection, results: input.results })
-  return { baseline, management, mutations, accept, apply, criteria, sensitivityBindings, comparisonBindings, compare, selection, portfolioBindings, coverageCatalog, reviewChange }
+  return { baseline, management, mutations, accept, apply, criteria, sensitivityBindings, comparisonBindings, compare, selection, portfolioBindings, coverageCatalog, choiceCatalog, reviewChange }
 }
