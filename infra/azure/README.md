@@ -242,3 +242,19 @@ A interface estável, ainda futura, entre a inicialização e o manifesto de rel
 - [Backup jobs list](https://learn.microsoft.com/en-us/rest/api/backup/backup-jobs/list)
 - [az backup recoverypoint](https://learn.microsoft.com/en-us/cli/azure/backup/recoverypoint)
 - [Soft delete do Azure Backup](https://learn.microsoft.com/en-us/azure/backup/secure-by-default)
+
+## Payload web opcional
+
+`prepareDistribution` aceita a raiz web já construída (`web`). Com `index.html` não vazio na raiz, os arquivos entram em `bin/web`, lido pelo `webRoot` do servidor existente. A chamada prepara nativo e web num manifesto e em `checksums.sha256` já existentes, com reutilização imutável da saída. O exemplo não é executado. Não constrói projetos, não prova Git SHA da mesma revisão, o runtime completo da Sucafina, SSO no browser nem deploy. O chamador ainda qualifica nativo e web da mesma revisão em Linux. Entra e a aceitação de negócio seguem pendentes. Os testes usam cabeçalhos inertes e assets de fixture para admissão, integridade e preservação, sem qualificar um CLI executável. Não há entrypoint novo nem workflow de release da aplicação. O runbook de ativação futura permanece válido. Não houve execução na cloud.
+
+```ts
+import { prepareDistribution } from "../../apps/cli/script/distribution-payload"
+
+await prepareDistribution({
+  dist: "apps/cli/dist",
+  web: "apps/web/dist",
+  target: "linux-x64-baseline",
+  version: "EXACT_VERIFIED_VERSION",
+  out: "<producer-owned destination, not inside dist or web>",
+})
+```
