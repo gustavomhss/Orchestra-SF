@@ -107,7 +107,12 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
     const document = new Document({
       title: options.title,
       creator: "Sucafina",
-      styles: { default: { document: { run: { font: "Aptos", size: 22, color: "243C30" }, paragraph: { spacing: { after: 120, line: 280 } } }, heading1: { run: { color: "173D2C", size: 30 }, paragraph: { spacing: { before: 260, after: 160 }, keepNext: true } } },
+      styles: {
+        default: {
+          document: { run: { font: "Aptos", size: 22, color: "243C30" }, paragraph: { spacing: { after: 120, line: 280 } } },
+          heading1: { run: { color: "173D2C", size: 30 }, paragraph: { spacing: { before: 260, after: 160 }, keepNext: true } },
+        },
+      },
       sections: [{
         properties: { page: { size: { width: 11906, height: 16838 }, margin: { top: 1000, right: 1000, bottom: 1000, left: 1000 } } },
         footers: { default: new Footer({ children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun("Preserved review · Page "), new TextRun({ children: [PageNumber.CURRENT] }), new TextRun(" of "), new TextRun({ children: [PageNumber.TOTAL_PAGES] })] })] }) },
@@ -132,7 +137,9 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
           ],
         })] : []),
       ]),
-    ] }] })
+        ],
+      }],
+    })
     const artifact = { ok: true as const, name: `${name}.docx`, type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", bytes: new Uint8Array(await Packer.toBuffer(document)) }
     sealReviewArtifact(artifact, review, options)
     return artifact
