@@ -18,6 +18,9 @@ import { createDashboardRecordEvidenceHost } from "./sources.ts"
 type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
 type Identity = Pick<SourceRef, "surface" | "type" | "id" | "incarnation">
 type ScopedExpected = { scope: SfSourceScope; incarnation: string; version: number; inputDigest: string; original: Identity; fields: readonly string[]; period: ConfirmationScope["period"]; physicalFingerprint: string; observedAt: string }
+type ScopedContinuityResult =
+  | { state: "same"; index: number; fingerprints: readonly string[]; physicalIncarnations: readonly string[] }
+  | { state: "replaced" | "unavailable"; index: number; fingerprints: readonly string[] }
 export type DashboardConfirmationObservation =
   | { state: "available"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; evidence: RecordEvidence; projection: DomainProjection }
   | { state: "access-unavailable" | "dependency-unavailable" | "replaced"; sourceVersion: number }
@@ -65,7 +68,7 @@ export function createDashboardConfirmationObserver(input: {
   const manifestFor = (scope: ConfirmationScope) => {
     if (!scope || !scope.sourceRef || scope.sourceRef.surface !== "dashboard" || !Array.isArray(scope.fields) || !Array.isArray(scope.materialDependencies) || !isSfPeriod(scope.period)) return undefined
     const manifest = dashboardConfirmationManifest(scope.sourceRef.type, scope.fields)
-    if (!manifest || scope.scopeDefinitionVersion !== manifest.version || scope.materialDependencies.some((reference) => !reference || reference.surface !== "dashboard" || typeof reference.type !== "string" || !reference.type || typeof reference.id !== "string" || !reference.id || typeof reference.incarnation !== "string" || !reference.incarnation || !isSfPeriod(reference.period) || !Array.isArray(reference.fields) || !reference.fields.length || reference.fields.some((field) => typeof field !== "string" || !field) || new Set(reference.fields).size !== reference.fields.length)) return undefined
+    if (!manifest || scope.scopeDefinitionVersion !== manifest.version || scope.materialDependencies.some((reference) => !reference || reference.surface !== "dashboard" || typeof reference.type !== "string" || !reference.type || typeof reference.id !== "string" || !reference.id || typeof reference.incarnation !== "string" || !reference.incarnation || !isSfPeriod(reference.period) || !Array.isArray(reference.fields) || !reference.fields.length || reference.fields.some((field: unknown) => typeof field !== "string" || !field) || new Set(reference.fields).size !== reference.fields.length)) return undefined
     return manifest
   }
   const verifyManifest = async (scope: ConfirmationScope, context: TrustedDomainContext) => !!manifestFor(scope) && !!input.host.requestFor(context) && await input.host.revalidate(context)
@@ -103,7 +106,7 @@ export function createDashboardConfirmationObserver(input: {
     const check = input.scopedSources.checkScopedSource
     const transactionAll = input.host.persistence.transactionAll
     if (!check || !transactionAll) return unavailable
-    const stable = await transactionAll(async (snapshots) => {
+    const stable = await transactionAll<ScopedContinuityResult>(async (snapshots) => {
       const fingerprints: string[] = []
       const physicalIncarnations: string[] = []
       for (const [index, entry] of expected.entries()) {

@@ -1004,6 +1004,11 @@ test("utilization preserves excess and overview renders effective monthly distri
   expect(detail).toContain('data-utilization="125" data-tone="red"')
   expect(detail).toContain('data-utilization="90" data-tone="teal"')
   expect(detail).toContain('Unavailable — actual missing')
+  const literalExcess = render("OPEX Detail", {
+    opexOwners: data.opexOwners,
+    opexEntries: [{ id: "literal", ownerId: "o", year: 2026, month: 1, budget: 100, actual: 120 }],
+  }, context)!
+  expect(literalExcess).toContain('data-utilization="120" data-tone="red"')
   const overview = render("Budget Overview", data, context)!
   expect(overview).toContain('<progress aria-label="Actuals / budget"')
   expect(overview).toContain('value="26.153846153846157"')

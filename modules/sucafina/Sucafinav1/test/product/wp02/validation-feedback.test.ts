@@ -13,7 +13,7 @@ test("preview preserves field validation and the submitted draft without mutatin
   const before = structuredClone({ state, command })
   expect(simulateDashboardCommand(state, actor, command, environment)).toEqual({ status: "invalid", reason: "command-rejected", errors: ["Enter a nonnegative year amount or clear the field."] })
   expect({ state, command }).toEqual(before)
-  expect(simulateDashboardCommand(state, { id: "contributor", roles: ["contributor"], canWrite: true }, command, environment)).toEqual({ status: "denied", reason: "command-rejected" })
+  expect(simulateDashboardCommand(state, { id: "contributor", roles: ["contributor"], canWrite: true }, command, environment)).toEqual({ status: "denied", reason: "page-unavailable" })
 })
 
 test("apply returns the domain validation and conflicts expose only the authorized stored row", () => {

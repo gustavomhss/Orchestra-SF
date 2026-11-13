@@ -37,8 +37,9 @@ test("executive signals open authorized canonical records and fail closed withou
     if (result.status !== "ok") return
     for (const [id, type] of [["hotTopics:t", "hotTopics"], ["risks:r", "risks"], ["contracts:c", "contracts"]]) {
       const value = result.value.values.find((entry) => entry.id === `signals[id:${encodeURIComponent(id!)}].rule`)
-      expect(value?.drilldown).toMatchObject({ kind: "record", target: { recordType: type } })
-      expect(value?.sourceRefs).toEqual([value?.drilldown])
+      if (!value?.drilldown) throw new Error(`Signal ${id} has no canonical record evidence`)
+      expect(value.drilldown).toMatchObject({ kind: "record", target: { recordType: type } })
+      expect(value.sourceRefs).toEqual([value.drilldown])
     }
     await persistence.transaction("dashboard", async (snapshot) => { snapshot.data.roleMap = []; return { commit: true, value: undefined } })
     expect((await createDashboardPort({ host, sources, recordEvidence }).read(request, binding)).status).not.toBe("ok")

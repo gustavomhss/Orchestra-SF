@@ -1,0 +1,120 @@
+{
+  "schema": "wp02-wp10-integration-patch-v1",
+  "created_at": "2026-11-13T22:02:20.758460+00:00",
+  "repository": "gustavomhss/Orchestra-SF",
+  "owner": "WP10",
+  "base_ref": "sf2-host-ready",
+  "base_commit": "dc6bf9e4e8f3d2fa01d01c76d5575892a8ced82f",
+  "wp11_reviewed_commit": "ba2822bb06a8ad741ecbcf0d47654d1a86a3a95b",
+  "wp02_seed_commit": "855c17f66fd71964d88a63ca53fd90240159eb08",
+  "status": "PROPOSED_NOT_APPLIED_TO_OWNER_BRANCH",
+  "patch": {
+    "file": "wp10-integration-combined.patch",
+    "bytes": 9464,
+    "sha256": "ada59ee693cc5b098f4348e7b1135df81810e968706ff8e9e61441007c87be6f"
+  },
+  "input_patches": [
+    {
+      "path": "inputs/WP02-WP10-agenda.patch",
+      "sha256": "a389922d0b0e546cf7e9a03a69ce20d9f8d6727c4055e62112c04b17144b04e9",
+      "individual_apply_check_exit_code": 0
+    },
+    {
+      "path": "inputs/wp02-wp10-business-services.patch",
+      "sha256": "861207a7d8e7a70e77e30ca4f2054550c1a0ead62c9c9696a78364c0df0b19cb",
+      "individual_apply_check_exit_code": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/integration/wp10-preview-feedback.patch",
+      "sha256": "26c0959828940c45e72885ce72efed8ae3b21f169fff9dd1f2bf77f8990b8e21",
+      "individual_apply_check_exit_code": 0
+    }
+  ],
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "base_git_blob_sha": "c4f4811234948daa04394e2dc82b58fd86622b16",
+      "base_sha256": "42fee3b4c99e34f7170adb3b8bf9e8530269c3178b24974c2995d8a1bbd86c13",
+      "proposed_git_blob_sha": "f915df46b499b01a274ddacf43a3dbbeff99ceb8",
+      "proposed_sha256": "1a87eee1207704c593ad8d695b035cef07a2ee5a94a5e6ca0c5b1c324195bd41",
+      "reconstructed_sha256": "1a87eee1207704c593ad8d695b035cef07a2ee5a94a5e6ca0c5b1c324195bd41",
+      "pinned_source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc6bf9e4e8f3d2fa01d01c76d5575892a8ced82f/apps/cli/src/sucafina-product/business-services.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "base_git_blob_sha": "1b183b82758f8f49954a5038b675bb784fc89915",
+      "base_sha256": "f224d17c0207dc505554c5464e9070e883cdaa5460c0dab0e48703589a8c49d7",
+      "proposed_git_blob_sha": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509",
+      "proposed_sha256": "41d15d919b969d24671a7cec27516f164c899682d5fe12d2fd2676f0ad633574",
+      "reconstructed_sha256": "41d15d919b969d24671a7cec27516f164c899682d5fe12d2fd2676f0ad633574",
+      "pinned_source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc6bf9e4e8f3d2fa01d01c76d5575892a8ced82f/modules/sucafina/Sucafinav1/product/integration/source-inventory.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "base_git_blob_sha": "c28a167575bf2713590f97798e463ccb33dc50c8",
+      "base_sha256": "68477e9a97c4f5aeb74fa1896f2fea8768a9de160d71c9a9d828cc5be4904765",
+      "proposed_git_blob_sha": "ec265772aa3100f6f69648cbd444fcdfde01b754",
+      "proposed_sha256": "f6f7db8d392ab07123e0f872831c3d2600070dae3d9b218d751a16b55097ca12",
+      "reconstructed_sha256": "f6f7db8d392ab07123e0f872831c3d2600070dae3d9b218d751a16b55097ca12",
+      "pinned_source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc6bf9e4e8f3d2fa01d01c76d5575892a8ced82f/modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/dashboard-preview.ts",
+      "base_git_blob_sha": "3e879308f39de2b71119f3c3c3b31e0c6541e3de",
+      "base_sha256": "cf793bf7157c09f26bcf001f34a366768fe611a7165d63dd101be6d07f770086",
+      "proposed_git_blob_sha": "2c4958600a327fd51f986a06d0bcf1e1e8d8746a",
+      "proposed_sha256": "f4a3d83223c9464d5eb22939ad6fc0ea8f448c3601add21ec064aaaf21e562e0",
+      "reconstructed_sha256": "f4a3d83223c9464d5eb22939ad6fc0ea8f448c3601add21ec064aaaf21e562e0",
+      "pinned_source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc6bf9e4e8f3d2fa01d01c76d5575892a8ced82f/modules/sucafina/Sucafinav1/product/integration/dashboard-preview.ts"
+    }
+  ],
+  "wp02_prerequisite_worktree_snapshots": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/agenda.ts",
+      "sha256": "de91827bb2c4816a75a56a6e5ca5ca8b8c77c4f7c27a1918db1e2215aad9768f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation-issuer.ts",
+      "sha256": "39286f6af30cb787bad8602f81f3dac800d31404cc5d12908015a344a5909952"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "sha256": "5a69b3a5016b5f54b7ffd0e74cb82986d64e6eec8d14aabf611aae467b5e0c1f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/prepared-review.ts",
+      "sha256": "7616c3def2b566bd16d3a4a2a8ce868484369b336258d6bd69fbb84e07c251bd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/commands.ts",
+      "sha256": "28e6e045bab7b1ccdd054155858b727210ebfc6c0011c0afdbdc87d969db35a5"
+    }
+  ],
+  "validation": {
+    "pinned_base_blob_identity": "PASS_4_OF_4",
+    "source_patch_additions_preserved": 27,
+    "business_services_return": "ONE_UNION_NO_DUPLICATED_PRODUCERS",
+    "combined_apply_check": {
+      "command": "git apply --check --whitespace=error-all wp10-integration-combined.patch",
+      "exit_code": 0,
+      "scope": "temporary exact pinned producer copies"
+    },
+    "combined_temporary_reconstruction": {
+      "command": "git apply --whitespace=error-all wp10-integration-combined.patch",
+      "exit_code": 0,
+      "result": "BYTE_IDENTICAL_TO_PROPOSAL_4_OF_4"
+    },
+    "local_tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "owner_source_files_in_repo": "NOT_EDITED",
+    "remote_owner_branch": "NOT_MODIFIED",
+    "native_consumer_proof": "NOT_PROVIDED"
+  },
+  "remaining_consumer_work": [
+    "Compose real protected C06 confirmation capture and historical receipt storage/reopen.",
+    "Compose WP11 draft registration, current Case/Choice binding, protected PreparedChange lookup, human review grant, apply and durable receipt retry.",
+    "Consume dashboardAgenda through WP07 ReviewHost.select and the WP09 routine consumer and verify projection lifecycle through current host authority.",
+    "Render preview validation/conflict details in the actual UI feedback path and preserve the draft.",
+    "Run owner package typecheck and surgical integrated UI/native/MCP consumer CI after applying the proposal with WP02 prerequisites."
+  ]
+}

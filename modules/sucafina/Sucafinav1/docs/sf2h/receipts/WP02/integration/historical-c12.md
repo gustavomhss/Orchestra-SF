@@ -34,7 +34,7 @@ These are domain adapter tests using real local-store, source lifecycle, project
 
 ## Exact WP10 composition delta
 
-`inputs/wp02-wp10-business-services.patch` targets `apps/cli/src/sucafina-product/business-services.ts` at the WP10 revision above. It constructs and exposes the actual Dashboard C06 issuer/observer and record host, and exposes `bindDashboardPreparedReview(verifyPreparedBinding)` as a factory that requires the private verifier. It does not instantiate an unchecked reviewer or introduce a model-callable apply operation.
+`wp10-integration-combined.patch` targets `apps/cli/src/sucafina-product/business-services.ts` at the WP10 revision above. It constructs and exposes the actual Dashboard C06 issuer/observer and record host, and exposes `bindDashboardPreparedReview(verifyPreparedBinding)` as a factory that requires the private verifier. It does not instantiate an unchecked reviewer or introduce a model-callable apply operation.
 
 Current WP10 `createSfBusinessServices` has the C02 Dashboard source/record host and capabilities, but no C06/C12/Hot Topic draft composition. The patch only exposes the missing domain producers; the following authoritative wiring remains WP10/WP11 owner work.
 
