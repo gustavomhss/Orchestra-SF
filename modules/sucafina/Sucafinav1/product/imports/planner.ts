@@ -1,6 +1,7 @@
 import { digestSfValue } from "../contracts/canonical.ts"
 import { domain } from "../../runtime/planner.ts"
 import { projectPlanner } from "../planner/adapter.ts"
+import { projectPlannerSource } from "../planner/port.ts"
 import type { Actor, Command, Environment, Snapshot } from "../../runtime/contract.ts"
 import { compareImportProjections } from "./changes.ts"
 import { publicSfData } from "../integration/public-state.ts"
@@ -41,7 +42,9 @@ export function preparePlannerWorkbook(input: {
   const result = domain.execute(staged, input.actor, command, environment)
   const previewDigest = digestSfValue({ result, audit: staged.audit.slice(input.snapshot.audit.length) })
   const after = result.ok ? projectPlanner(staged, input.actor, environment) : before
-  return { command, commandDigest: digestSfValue({ command, previewDigest, principal: input.actor.id, operationId: input.operationId, idempotencyKey: input.idempotencyKey, targetIncarnation: input.targetIncarnation, previewAt: input.environment.at }), previewDigest, result, before, after, changes: compareImportProjections(before.data, after.data) }
+  const financialBefore = projectPlannerSource(input.snapshot, input.actor, input.versionId)
+  const financialAfter = result.ok ? projectPlannerSource(staged, input.actor, typeof result.value === "string" ? result.value : input.versionId) : financialBefore
+  return { command, commandDigest: digestSfValue({ command, previewDigest, principal: input.actor.id, operationId: input.operationId, idempotencyKey: input.idempotencyKey, targetIncarnation: input.targetIncarnation, previewAt: input.environment.at }), previewDigest, result, before, after, financialBefore, financialAfter, changes: compareImportProjections(before.data, after.data) }
 }
 
 /** Recreate the same generated identities at preview and commit; never consume host ID state. */

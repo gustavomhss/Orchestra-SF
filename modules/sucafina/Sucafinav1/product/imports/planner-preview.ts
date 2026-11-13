@@ -6,7 +6,7 @@ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { DomainProjection, SourceRef, StoredImportManifest } from "../contracts/context.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
-import { projectPlannerSource } from "../planner/port.ts"
+import { buildPlannerFinancialProjection, projectPlannerSource } from "../planner/port.ts"
 import { plannerImportDetail } from "./detail.ts"
 import { plannerUnchangedOutcomes } from "./planner-unchanged.ts"
 import type { ParsedImport } from "./files.ts"
@@ -31,6 +31,9 @@ export function createSfPlannerImportPreview(input: {
     if (resolved.status !== "ok") return resolved
     const evidence = resolved.value.evidence
     if (evidence.refDigest !== digestSfEvidenceRef(evidence) || evidence.installationId !== context.binding.installationId || evidence.projectId !== context.binding.projectId || evidence.target.surface !== "planner" || evidence.target.recordType !== "planner-version" || evidence.target.recordId !== resolved.value.versionId || evidence.target.incarnation !== request.target.incarnation || evidence.target.version !== request.target.version || !evidence.target.period) return { status: "denied", reason: "target-scope-mismatch" }
+    const start = /^(\d{4})-(\d{2})-01$/.exec(evidence.target.period.start)
+    const end = /^(\d{4})-(\d{2})-(\d{2})$/.exec(evidence.target.period.end)
+    if (!start || !end || start[1] !== end[1] || Number(start[2]) < 1 || Number(end[2]) > 12 || Number(start[2]) > Number(end[2]) || Number(end[3]) !== new Date(Date.UTC(Number(end[1]), Number(end[2]), 0)).getUTCDate()) return { status: "needs-input", reason: "period-must-cover-whole-months-in-one-year" }
     const environment = await input.host.environment(http)
     const hasRoster = plannerWorkbookHasRoster(request.parsed.sheets)
     const rosterResult = hasRoster ? await input.resolveRoster?.(request.target, context) : undefined
@@ -65,7 +68,19 @@ export function createSfPlannerImportPreview(input: {
       const reference = change.path.startsWith("/roster/") && roster ? roster : evidence
       values.push({ id: `${change.path}:${change.kind}:${side}`, value: entry.value as string | number | boolean | null, period: source.period, granularity: "record", sourceRefs: [reference], drilldown: reference, evidenceState: entry.value === null ? "absent" : side === "after" ? "hypothetical" : "confirmed" })
     }))
-    const projection: DomainProjection = { context: productContext, version: source.version, engineVersion: "planner-runtime-v1", components: [], values, missing }
+    if (!preview.financialBefore || !preview.financialAfter) return { status: "unavailable", reason: "planner-impact-unavailable" }
+    if (preview.financialBefore.year !== Number(start[1]) || preview.financialAfter.year !== Number(start[1])) return { status: "needs-input", reason: "period-version-mismatch" }
+    const baseline = buildPlannerFinancialProjection({ projection: preview.financialBefore, ref: evidence, period: source.period, binding: context, at: environment.at })
+    const candidate = buildPlannerFinancialProjection({ projection: preview.financialAfter, ref: evidence, period: source.period, binding: context, at: environment.at })
+    // Components describe the candidate once; paired values preserve the domain's
+    // baseline, missing inputs and monthly budget/actual/outlook without new formulas.
+    const projection: DomainProjection = {
+      context: productContext, version: source.version, engineVersion: candidate.engineVersion,
+      components: candidate.components.map((component) => ({ ...component, evidenceState: component.evidenceState === "absent" ? "absent" as const : "hypothetical" as const })),
+      values: [...values, ...baseline.values.map((value) => ({ ...value, id: `before:${value.id}` })), ...candidate.values.map((value) => ({ ...value, id: `after:${value.id}`, evidenceState: value.evidenceState === "absent" ? "absent" as const : "hypothetical" as const }))],
+      missing: [...missing, ...baseline.missing.map((entry) => ({ ...entry, field: `before:${entry.field}` })), ...candidate.missing.map((entry) => ({ ...entry, field: `after:${entry.field}` }))],
+    }
+    if (new Set(projection.values.map((value) => value.id)).size !== projection.values.length) return { status: "unavailable", reason: "duplicate-projection-value-id" }
     const id = digestSfValue({ operationId, sourceDigest: request.parsed.sourceDigest, target: request.target, principal: context.binding.principalRef })
     const manifest: StoredImportManifest = { id, version: 1, sourceDigest: request.parsed.sourceDigest, format: request.parsed.format, context: productContext, baseIdentity: [source, ...(rosterSource ? [rosterSource] : [])], commands: [{ id: idempotencyKey, target: source, command: preview.command, idempotencyKey, commandDigest: preview.commandDigest, expectedVersion: preview.command.version, requiredAuthority: ["planner:write"], preview: projection }], issues: (preview.result.warnings ?? []).map((warning) => ({ row: 0, field: "domain", reason: plannerWarning(warning) })), state: "preview", domainApplied: false, receipts: [] }
     const indexed = new Map<string, NonNullable<ParsedImport["origins"]>>()

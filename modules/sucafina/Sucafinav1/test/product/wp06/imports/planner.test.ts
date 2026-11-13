@@ -55,6 +55,26 @@ test("replayed operation identities are deterministic and distinct per operation
   expect(other.id()).not.toBe(plannerImportEnvironment(environment, "one").id())
 })
 
+test("Apply preserves an independent concurrent value and rejects a changed lock without mutation", () => {
+  const version = (id: string) => ({ id, year: 2027, closed: 0, locked: false, lines: [{ id: "line", sec: "opex", el: "licenses", name: "Licences", cur: "USD", b: Array(12).fill(100), a: Array(12).fill(null), f: Array(12).fill(null) }], projects: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, lists: {} })
+  const snapshot: Snapshot = { data: { versions: [version("v1"), version("independent")], officials: {}, entities: [], allocations: [] }, versions: {}, sequences: {}, audit: [], notices: [] }
+  const preview = preparePlannerWorkbook({ snapshot, actor, environment, versionId: "v1", sheets: { OPEX: [{ "Line ID": "line", "Cost element": "Licenses", "Vendor / item": "Licences", Currency: "USD", Measure: "Forecast", Jan: 84 }] }, newVersion: false, removeMissing: false, operationId: "independent", idempotencyKey: "independent-key", targetIncarnation: "inc-1" })
+  const mutation = createPlannerImportMutation({ command: preview.command, commandDigest: preview.commandDigest, previewDigest: preview.previewDigest, actorId: actor.id, operationId: "independent", idempotencyKey: "independent-key", targetIncarnation: "inc-1", previewAt: environment.at, verifyTarget: () => true })
+  if (!mutation) throw new Error("Missing mutation")
+  const concurrent = structuredClone(snapshot)
+  ;(concurrent.data.versions as ReturnType<typeof version>[])[1]!.lines[0]!.f[0] = 999
+  concurrent.versions["independent:lines:line"] = { version: 7, by: "other" }
+  expect(mutation.execute(concurrent, actor, environment).commit).toBe(true)
+  expect((concurrent.data.versions as ReturnType<typeof version>[])[1]!.lines[0]!.f[0]).toBe(999)
+  expect(concurrent.versions["independent:lines:line"]).toEqual({ version: 7, by: "other" })
+  const locked = structuredClone(snapshot)
+  ;(locked.data.versions as ReturnType<typeof version>[])[0]!.locked = true
+  locked.versions["versions:v1"] = { version: 1, by: "other" }
+  const before = structuredClone(locked)
+  expect(mutation.execute(locked, actor, environment).commit).toBe(false)
+  expect(locked).toEqual(before)
+})
+
 test("forecast workbook replaces the included amount without changing budget or actual", () => {
   const snapshot: Snapshot = { data: { versions: [{ id: "v1", year: 2027, closed: 9, lines: [{ id: "line", sec: "opex", el: "licenses", name: "Licences", cur: "USD", b: [40000, 45000, 45000, 50000, 50000, 50000, 50000, 50000, 50000, 50000, 60000, 60000], a: [40000, 40000, 45000, 45000, 45000, 45000, 45000, 45000, 50000, null, null, null], f: [null, null, null, null, null, null, null, null, null, 38000, 112000, 40000] }], projects: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, lists: {} }], officials: {}, entities: [], allocations: [] }, versions: {}, sequences: {}, audit: [], notices: [] }
   const before = projectPlannerSource(snapshot, actor, "v1")!
@@ -72,6 +92,27 @@ test("forecast workbook replaces the included amount without changing budget or 
   const appliedLine = (applied.data.versions as { lines: { b: unknown; a: unknown }[] }[])[0].lines[0]
   expect(appliedLine.b).toEqual(originalLine.b)
   expect(appliedLine.a).toEqual(originalLine.a)
+})
+
+test("the 72000 included forecast becomes 84000 and reconciles 590000 to 602000", () => {
+  const month = (value: number) => [value, ...Array(11).fill(null)]
+  const line = (id: string, value: number) => ({ id, sec: "opex", el: "licenses", name: id, cur: "USD", b: Array(12).fill(0), a: Array(12).fill(null), f: month(value) })
+  const snapshot: Snapshot = { data: { versions: [{ id: "v1", year: 2027, closed: 0, lines: [line("included", 72000), line("remaining", 518000)], projects: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, lists: {} }], officials: {}, entities: [], allocations: [] }, versions: {}, sequences: {}, audit: [], notices: [] }
+  const preview = preparePlannerWorkbook({ snapshot, actor, environment, versionId: "v1", sheets: { OPEX: [{ "Line ID": "included", "Cost element": "Licenses", "Vendor / item": "included", Currency: "USD", Measure: "Forecast", Jan: 84000 }] }, newVersion: false, removeMissing: false, operationId: "exact-oracle", idempotencyKey: "exact-oracle-key", targetIncarnation: "inc-1" })
+  expect(preview.result.ok).toBe(true)
+  const total = (view: typeof preview.before) => (view.data.versions as { summary: { fullYear: number } }[])[0]!.summary.fullYear
+  expect(total(preview.before)).toBe(590000)
+  expect(total(preview.after)).toBe(602000)
+  expect(total(preview.after) - total(preview.before)).toBe(12000)
+  expect(preview.changes).toContainEqual({ path: "/versions/@id=v1/lines/@id=included/f/0", kind: "changed", before: { state: "present", value: 72000 }, after: { state: "present", value: 84000 } })
+  const mutation = createPlannerImportMutation({ command: preview.command, commandDigest: preview.commandDigest, previewDigest: preview.previewDigest, actorId: actor.id, operationId: "exact-oracle", idempotencyKey: "exact-oracle-key", targetIncarnation: "inc-1", previewAt: environment.at, verifyTarget: () => true })
+  const applied = structuredClone(snapshot)
+  expect(mutation?.execute(applied, actor, environment).commit).toBe(true)
+  const result = (applied.data.versions as { lines: { id: string; b: unknown; a: unknown; f: unknown }[] }[])[0]!.lines
+  expect(result).toHaveLength(2)
+  expect(result.find((item) => item.id === "included")!.f).toEqual(month(84000))
+  expect(result.find((item) => item.id === "remaining")!.f).toEqual(month(518000))
+  expect(result.every((item) => JSON.stringify(item.b) === JSON.stringify(Array(12).fill(0)) && JSON.stringify(item.a) === JSON.stringify(Array(12).fill(null)))).toBe(true)
 })
 
 test("exported workbook reimports through the Planner engine without new lines and normalizes absent bm", async () => {

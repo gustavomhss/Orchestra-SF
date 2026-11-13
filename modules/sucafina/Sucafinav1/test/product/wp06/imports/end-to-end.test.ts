@@ -86,13 +86,24 @@ test("human workbook admission, Planner preview, atomic receipt and retry surviv
       expect(analysis.value.manifest).toEqual(preview.value)
       expect(analysis.value.detail.manifestId).toBe(preview.value.id)
     }
+    const reopenedPreview = await imports.readPreviewReference(preview.value.id, previewGrant.value)
+    expect(reopenedPreview.status).toBe("ok")
+    if (reopenedPreview.status === "ok") {
+      expect(reopenedPreview.value.manifest).toEqual(preview.value)
+      expect(reopenedPreview.value.detail.manifestId).toBe(preview.value.id)
+      expect(reopenedPreview.value.manifest.commands.every((command) => !("command" in command))).toBe(true)
+    }
+    expect((await imports.readPreviewReference("another-preview", previewGrant.value)).status).not.toBe("ok")
+    expect(await imports.readPreviewReference(preview.value.id, { ...previewGrant.value, binding: { ...previewGrant.value.binding, principalRef: "other-principal" } })).toMatchObject({ status: "denied" })
     expect(await imports.readPreviewForAnalysis({ previewRef: preview.value.id, request: { ...selection, options: { sheet: "other" } } }, previewGrant.value)).toMatchObject({ status: "stale" })
     expect(await imports.readPreviewForAnalysis({ previewRef: preview.value.id, request: { ...selection, admittedFileRef: "other" } }, previewGrant.value)).toMatchObject({ status: "stale" })
     expect(await app.store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot }))).toEqual(domainBeforeAnalysis)
     await app.store.transaction("dashboard", async (_, blobs) => { await blobs.put(`sf-import/${file.value.ref}`, new Uint8Array([1, 2, 3]), "application/octet-stream"); return { commit: true, value: undefined } })
     expect((await imports.readPreviewForAnalysis({ previewRef: preview.value.id, request: selection }, previewGrant.value)).status).not.toBe("ok")
+    expect((await imports.readPreviewReference(preview.value.id, previewGrant.value)).status).not.toBe("ok")
     await app.store.transaction("dashboard", async (_, blobs) => { await blobs.put(`sf-import/${file.value.ref}`, bytes, "application/octet-stream"); return { commit: true, value: undefined } })
     ui.finish(previewGrant.value)
+    expect(await imports.readPreviewReference(preview.value.id, previewGrant.value)).toMatchObject({ status: "denied" })
     const applyInput = { manifestId: preview.value.id, version: preview.value.version }
     const apply = async () => { const grant = await human.admit(request, "imports.apply", applyInput); if (grant.status !== "ok") throw new Error(grant.reason); const result = await imports.apply(applyInput, grant.value); human.finish(grant.value); return result }
     const first = await apply()

@@ -119,6 +119,7 @@ export async function searchDocumentEvidence(request: KnowledgeSearchRequest, co
   const records = loaded.value.filter((value): value is StoredDocumentEvidence | StoredDocumentIndex => !!value && typeof value === "object" && ((value as StoredDocumentEvidence).schema === "sf-document-v1" || (value as StoredDocumentIndex).schema === "sf-document-index-v1")).filter((record) => !!record.snapshot && (!request.documentRefs || request.documentRefs.includes(record.snapshot.documentRef)))
   const matches: EvidenceSearchResult["matches"][number][] = []
   const seen = new Set<string>()
+  const sources = new Map<string, () => Promise<boolean>>()
   for (const record of records.slice(0, 100)) {
     if (matches.length >= request.limit) break
     const installationId = record.schema === "sf-document-v1" ? record.evidence.ref.installationId : record.installationId
@@ -146,9 +147,10 @@ export async function searchDocumentEvidence(request: KnowledgeSearchRequest, co
       if (!(await document.revalidate()) || !(await input.host.revalidate(context))) return { status: "unavailable", reason: "authority-changed" }
       seen.add(checkedRef.refId)
       matches.push({ documentRef: checkedRef, text: request.query, lexicalScore: 1 })
+      sources.set(documentId, document.revalidate)
     }
   }
-  if (!(await input.host.revalidate(context))) return { status: "unavailable", reason: "authority-changed" }
+  if ((await Promise.all([...sources.values()].map((revalidate) => revalidate().catch(() => false)))).some((current) => !current) || hostRequest.signal.aborted || !(await input.host.revalidate(context))) return { status: "unavailable", reason: "authority-changed" }
   return { status: "ok", value: { matches, limitations: ["lexical-exact-match", ...(records.length > 100 ? ["document-scan-limited"] : [])] } }
 }
 

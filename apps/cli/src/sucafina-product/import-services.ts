@@ -1,6 +1,9 @@
 import type { CreateSfHostRuntime } from "../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
 import type { CapabilityDescriptor, CapabilityResult, TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+import type { Period } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
+import { dispatchSfCapability } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { sfOperationInputSchemas } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
 import { sfOperationOutputSchemas } from "../../../../modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts"
@@ -18,6 +21,7 @@ import { rows } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.t
 import { createSfImportHost } from "../../../../modules/sucafina/Sucafinav1/product/imports/host.ts"
 import { verifyDashboardImportTarget, verifyPlannerImportTarget } from "../../../../modules/sucafina/Sucafinav1/product/imports/source-fences.ts"
 import type { ImportTarget } from "../../../../modules/sucafina/Sucafinav1/product/imports/staged-files.ts"
+import { createSfRosterSources } from "./roster-sources.ts"
 
 export function createSfImportServices(input: { runtime: Parameters<CreateSfHostRuntime>[0]; authority: ReturnType<typeof createSfProductAuthority>; roster?: Pick<Parameters<typeof createSfImportHost>[0]["planner"], "resolveRoster" | "verifyRoster"> }) {
   const assets = input.runtime.assets
@@ -26,6 +30,7 @@ export function createSfImportServices(input: { runtime: Parameters<CreateSfHost
   const host = authority.host
   const dashboardSources = createDashboardSourceHost({ host, scopedSources: input.runtime.persistence })
   const plannerSources = createSfPlannerSourceHost({ host, scopedSources: input.runtime.persistence, coverageFor: async () => ({ status: "unavailable", reason: "not-used-by-import" }) })
+  const roster = input.roster ?? createSfRosterSources({ host, scopedSources: input.runtime.persistence, plannerSources })
   const datasetActor = async (snapshot: Parameters<typeof roleMap>[0], request: Request, context: TrustedDomainContext) => {
     const principal = await host.authenticate(request, { surface: "dashboard", roleMap: roleMap(snapshot, "dashboard") })
     if (!principal || principal.id !== context.binding.principalRef || principal.id.startsWith("local:")) return undefined
@@ -73,7 +78,7 @@ export function createSfImportServices(input: { runtime: Parameters<CreateSfHost
     if (!operation) return undefined
     const receipt = authority.authority.receiptFor(context, operation.name, operation.digest)
     return receipt?.kind === "native" ? digestSfValue({ runId: receipt.runId, callId: receipt.callId, operation: operation.name }) : undefined
-  }, authorizeTarget, authorizeAdmission: (payload, context) => authority.human.authorize(context, "imports.admit", payload), preview: { revalidate: host.revalidate }, apply: { revalidate: host.revalidate, confirm: (manifest, context) => authority.human.authorize(context, "imports.apply", { manifestId: manifest.id, version: manifest.version }) }, planner: { resolveTarget: (target, context) => plannerSources.resolveForecastSource(target.selectionRef, context), verifyTarget: verifyPlannerImportTarget, ...input.roster }, dashboard: { resolveTarget: (target, context) => target.selectionRef.startsWith("sf-dataset:") ? resolveDataset(target, context) : dashboardSources.resolveDashboardSource(target.selectionRef, context), verifyScope: verifyDashboardImportTarget } })
+  }, authorizeTarget, authorizeAdmission: (payload, context) => authority.human.authorize(context, "imports.admit", payload), preview: { revalidate: host.revalidate }, apply: { revalidate: host.revalidate, confirm: (manifest, context) => authority.human.authorize(context, "imports.apply", { manifestId: manifest.id, version: manifest.version }) }, planner: { resolveTarget: (target, context) => plannerSources.resolveForecastSource(target.selectionRef, context), verifyTarget: verifyPlannerImportTarget, ...roster }, dashboard: { resolveTarget: (target, context) => target.selectionRef.startsWith("sf-dataset:") ? resolveDataset(target, context) : dashboardSources.resolveDashboardSource(target.selectionRef, context), verifyScope: verifyDashboardImportTarget } })
   const prepareTarget = async (selection: { surface: "planner" | "dashboard"; selectionRef: string; options: ImportTarget["options"] }, context: TrustedDomainContext) => {
     const match = /^sf-dataset:([^:]+):([1-9]\d*)$/.exec(selection.selectionRef)
     const incarnation = match ? (() => { try { return decodeURIComponent(match[1]!) } catch { return undefined } })() : undefined
@@ -145,5 +150,10 @@ export function createSfImportServices(input: { runtime: Parameters<CreateSfHost
     return receipt ? { status: "ok", result: output.value, receipt } : { status: "unavailable", reason: "receipt-unavailable", receipt: admission }
   }
   const descriptors: readonly CapabilityDescriptor[] = [{ id: "sf_import_preview", pack: "documents_reports", mode: "simulate", inputSchema: sfOperationInputSchemas.sf_import_preview, outputSchema: sfOperationOutputSchemas.sf_import_preview, handler: preview, handlerExport: "previewImport", producerTask: "WP06.T02", grantProfiles: ["sf_maestro", "sf_finance"], requiredAuthority: ["documents:read"] }]
-  return { imports, prepareTarget, discover, descriptors }
+  const dispatch = (payload: unknown, context: TrustedDomainContext) => dispatchSfCapability({
+    operation: "sf_import_preview", payload, context, descriptors, authority: authority.authority,
+    validateInput: (descriptor, value) => decodeSfOperationInput(descriptor.id, value).ok,
+    validateOutput: (descriptor, value) => value.status !== "ok" || decodeSfOperationOutput(descriptor.id, value.result).ok,
+  })
+  return { imports, prepareTarget, discover, descriptors, dispatch }
 }
