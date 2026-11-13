@@ -43,16 +43,17 @@ export function createPlannerCatalogHost(input: { host: DomainPortHost; humanAut
   }
   const read = async (versionId: string, context: TrustedDomainContext): Promise<PortResult<NonNullable<ReturnType<typeof plannerCatalogs>>>> => {
     const http = input.host.requestFor(context)
-    if (context.kind !== "ui" || !http || http.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "catalog-authority-unavailable" }
+    if (context.kind !== "ui" || !http || http.signal.aborted || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "catalog-authority-unavailable" }
     if (typeof versionId !== "string" || !versionId.trim()) return { status: "needs-input", reason: "invalid-version-id" }
-    const environment = await input.host.environment(http)
+    const environment = await input.host.environment(http).catch(() => undefined)
+    if (!environment) return { status: "unavailable", reason: "catalog-environment-unavailable" }
     const load = () => input.host.persistence.transaction("planner", async (snapshot) => {
       const actor = await identify(snapshot, http, context)
       return { commit: false, value: actor ? plannerCatalogs(snapshot, actor, environment, versionId) : undefined }
     }, { signal: http.signal }).catch(() => undefined)
     const current = await load()
     const latest = await load()
-    if (!current || !latest || digestSfValue(current) !== digestSfValue(latest) || http.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "catalog-authority-unavailable" }
+    if (!current || !latest || digestSfValue(current) !== digestSfValue(latest) || http.signal.aborted || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "catalog-authority-unavailable" }
     return { status: "ok", value: current }
   }
   const run = async (incoming: CatalogRequest, context: TrustedDomainContext, gate: "planner.preview" | "planner.apply"): Promise<PortResult<CatalogHostResult>> => {
@@ -98,12 +99,12 @@ function commandFor(request: CatalogRequest): Command {
 }
 
 function knownTarget(catalogs: NonNullable<ReturnType<typeof plannerCatalogs>>, request: CatalogRequest) {
-  if (request.action === "fx-save") return request.id === "" || catalogs.fx.rates.some((rate) => rate.id === request.id)
-  if (request.action === "fx-delete") return catalogs.fx.rates.some((rate) => rate.id === request.id)
-  if (request.action === "entity-save") return request.id === "" || catalogs.shared.entities.some((entry) => entry.id === request.id)
-  if (request.action === "entity-delete") return catalogs.shared.entities.some((entry) => entry.id === request.id)
-  if (request.action === "allocation-save") return request.id === "" || catalogs.shared.allocations.some((entry) => entry.id === request.id)
-  if (request.action === "allocation-delete") return catalogs.shared.allocations.some((entry) => entry.id === request.id)
+  if (request.action === "fx-save") return request.id === "" || catalogs.fx.rates.filter((rate) => rate.id === request.id).length === 1
+  if (request.action === "fx-delete") return catalogs.fx.rates.filter((rate) => rate.id === request.id).length === 1
+  if (request.action === "entity-save") return request.id === "" || catalogs.shared.entities.filter((entry) => entry.id === request.id).length === 1
+  if (request.action === "entity-delete") return catalogs.shared.entities.filter((entry) => entry.id === request.id).length === 1
+  if (request.action === "allocation-save") return request.id === "" || catalogs.shared.allocations.filter((entry) => entry.id === request.id).length === 1
+  if (request.action === "allocation-delete") return catalogs.shared.allocations.filter((entry) => entry.id === request.id).length === 1
   return catalogs.fx.versionId === request.versionId
 }
 

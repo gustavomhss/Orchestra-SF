@@ -6,6 +6,7 @@ import { plannerKeys } from "../../src/nav.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+import { createPlannerPreviewEnvironment } from "./preview-environment.ts"
 import { prepareHeadcountDelete, prepareHeadcountIncrease, prepareHeadcountLeaderDomain, prepareHeadcountPositionSave, prepareHeadcountRateSave, prepareHeadcountSync, prepareHrDomainActualForecast, projectHeadcount } from "./headcount.ts"
 
 export type HeadcountRequest =
@@ -63,7 +64,7 @@ export function createPlannerHeadcountHost(input: { host: DomainPortHost; humanA
       if (!current) return { commit: false, value: { status: "needs-input", reason: "headcount-version-unavailable" } }
       if (((request.action === "position-save" || request.action === "position-delete") && request.id && current.groups.flatMap((group) => group.positions).filter((position) => object(position).id === request.id).length !== 1) || ((request.action === "rate-save" || request.action === "rate-delete") && request.id && current.rates.filter((rate) => object(rate).id === request.id).length !== 1) || (request.action === "hr-actual-forecast" && current.groups.filter((group) => group.domain === request.domain).length !== 1)) return { commit: false, value: { status: "needs-input", reason: "headcount-target-unavailable" } }
       const target = gate === "planner.preview" ? structuredClone(snapshot) : snapshot
-      const executed = domain.execute(target, actor, command, environment)
+      const executed = domain.execute(target, actor, command, gate === "planner.preview" ? createPlannerPreviewEnvironment(snapshot, environment) : environment)
       const headcount = projectHeadcount(target, actor, environment, request.versionId)
       if (!headcount || digestSfValue(await identify(target, http, context).catch(() => undefined)) !== digestSfValue(actor) || !await allowed()) return { commit: false, value: { status: "denied", reason: "headcount-authority-changed" } }
       return { commit: gate === "planner.apply" && executed.ok === true, value: { status: "ok", value: { headcount, result: publicResult(executed) } } }

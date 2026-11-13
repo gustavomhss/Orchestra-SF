@@ -10,6 +10,7 @@ import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { prepareMonthlyDrafts, previewMonthlyDrafts, previewMonthlyOperation } from "./monthly-edit.ts"
 import type { MonthlyDraft, MonthlySpreadPreview } from "./monthly-edit.ts"
+import { createPlannerPreviewEnvironment } from "./preview-environment.ts"
 
 export type MonthlyEntityOperation = { collection: "lines" | "projects"; kind: "create" | "edit" | "delete"; id?: string; revision: number; values?: Record<string, unknown> }
 export type MonthlySetting = { kind: "closed-through"; revision: number; closed: number } | { kind: "breakdown"; revision: number; element: string; split: boolean }
@@ -58,7 +59,7 @@ export function createPlannerMonthlyHost(input: { host: DomainPortHost; humanAut
         const command: import("../../runtime/contract.ts").Command = { page: request.page, action: entity.kind === "delete" ? "delete" : "save", ...(entity.kind !== "create" && entity.id ? { id: entity.id } : {}), version: entity.revision, values: { versionId: request.versionId, collection: entity.collection, ...entity.values } }
         if (action === "planner.preview") {
           const previewSnapshot = structuredClone(snapshot)
-          const simulated = domain.execute(previewSnapshot, actor, command, environment)
+          const simulated = domain.execute(previewSnapshot, actor, command, createPlannerPreviewEnvironment(snapshot, environment))
           if (digestSfValue(await identify(snapshot).catch(() => undefined)) !== digestSfValue(actor) || !await allowed()) return { commit: false, value: { status: "denied" as const, reason: "monthly-authority-changed" } }
           return { commit: false, value: { status: "ok" as const, value: { view: monthlyView(domain.view(previewSnapshot, actor, environment), actor), rows: [], entityResult: sanitizeEntityResult(simulated) } } }
         }
@@ -104,7 +105,6 @@ export function createPlannerMonthlyHost(input: { host: DomainPortHost; humanAut
       const response = { rows: results.map((row) => ({ draft: row.draft, errors: row.errors, ...(row.result ? { result: row.result } : {}) })), view: monthlyView(domain.view(snapshot, actor, environment), actor) }
       return { commit, value: { status: "ok" as const, value: response } }
     }, { signal: http.signal }).catch(() => ({ status: "unavailable" as const, reason: "monthly-storage-unavailable" }))
-    if (action === "planner.apply" && result.status === "ok" && !await allowed()) return { status: "unavailable" as const, reason: "monthly-apply-outcome-requires-reconciliation" }
     if (!await allowed()) {
       const applied = action === "planner.apply" && result.status === "ok" && (result.value.settingResult?.ok === true || result.value.entityResult?.ok === true || result.value.rows.some((row) => row.result?.ok === true) || !!result.value.operation && !result.value.operation.errors.length)
       return applied ? { status: "unavailable" as const, reason: "monthly-apply-outcome-requires-reconciliation" } : { status: "denied" as const, reason: "monthly-authority-changed" }

@@ -4,6 +4,7 @@ import type { Actor, Command, Environment, Snapshot } from "../../runtime/contra
 import { plannerKeys } from "../../src/nav.ts"
 import { plannerField } from "../../src/planner-role.ts"
 import { usdAmount } from "../../src/planner-accounts.ts"
+import { createPlannerPreviewEnvironment } from "./preview-environment.ts"
 
 /** Read only the two catalog surfaces from the authorized Planner view. */
 export function plannerCatalogs(snapshot: Snapshot, actor: Actor, environment: Environment, versionId: string) {
@@ -26,17 +27,7 @@ export function previewPlannerCatalog(snapshot: Snapshot, actor: Actor, environm
   const before = plannerCatalogs(snapshot, actor, environment, versionId)
   if (!before || command.page === "FX rates" && command.values.versionId !== versionId) return undefined
   const copy = structuredClone(snapshot)
-  const sequence = { value: 0 }
-  const occupied = new Set([
-    ...before.shared.entities.map((record) => record.id), ...before.shared.allocations.map((record) => record.id),
-    ...before.fx.rates.map((record) => record.id), ...Object.keys(copy.versions).map((key) => key.split(":").at(-1)),
-  ])
-  const result = domain.execute(copy, actor, command, { ...environment, id: () => {
-    while (occupied.has(`catalog-preview-${sequence.value}`)) sequence.value++
-    const id = `catalog-preview-${sequence.value++}`
-    occupied.add(id)
-    return id
-  } })
+  const result = domain.execute(copy, actor, command, createPlannerPreviewEnvironment(snapshot, environment, "catalog-preview"))
   const after = result.ok ? plannerCatalogs(copy, actor, environment, versionId) : undefined
   return { before, ...(after ? { after } : {}), result: result.ok ? { ok: true as const, warnings: result.warnings ?? [] } : { ok: false as const, status: result.status, errors: result.errors ?? [] } }
 }
@@ -51,3 +42,4 @@ export function plannerCurrencyComposition(snapshot: Snapshot, actor: Actor, env
   const result = usdAmount(amount, code, rate)
   return { amount, currency: code, rate, usd: result.warning ? null : result.usd, legacyUsd: result.usd, missingRate: !!result.warning }
 }
+
