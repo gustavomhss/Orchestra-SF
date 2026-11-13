@@ -1,13 +1,13 @@
 import type { Application } from "../../runtime/application.ts"
 import type { Actor, Environment, Persistence, Snapshot } from "../../runtime/contract.ts"
-import type { ForecastCompareRequest, CaseDraftRequest, CaseReadRequest, DashboardReadRequest, RequestReadRequest, ScenarioRequest, ScenarioCompareRequest, SensitivityRequest, JsonValue } from "./operations.ts"
+import type { ForecastCompareRequest, CaseDraftRequest, CaseReadRequest, DashboardReadRequest, RequestReadRequest, SupplierReadRequest, ContractReadRequest, SourcingCompareRequest, ScenarioRequest, ScenarioCompareRequest, SensitivityRequest, JsonValue } from "./operations.ts"
 import type { DomainProjection, ImportManifest, PreservedReview, RoutineResult, CommandReceipt } from "./context.ts"
 import type { DecisionCase, ScenarioResult, ScenarioComparison, PortfolioResult, ObservedResultProjection, CostCoverageAssessment, CostCoverageBasis } from "./decisions.ts"
 import type { BusinessEvidenceRef, BusinessContextService, AuthorizedCaseProjection } from "./business-context.ts"
 import type { TrustedDomainContext, CapabilityResult } from "./sf-execution.ts"
 import type { ContributionEnvelope } from "./resident-ai.ts"
 import type { SfProductStatePort } from "./state.ts"
-import type { SensitivityResult } from "./outputs.ts"
+import type { SensitivityResult, IntentFrame, CommercialComparison } from "./outputs.ts"
 
 export type DomainPortHost = {
   persistence: Persistence
@@ -49,6 +49,7 @@ export type PlannerSourceHost = {
 }
 export type DecisionCasePort = {
   draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>
+  prepareIntent: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<IntentFrame>>
   read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<PortResult<AuthorizedCaseProjection>>
 }
 export type DashboardPort = {
@@ -56,6 +57,9 @@ export type DashboardPort = {
 }
 export type ProcurementPort = {
   read: (request: RequestReadRequest, binding: TrustedDomainContext) => Promise<PortResult<DomainProjection>>
+  readSupplier: (request: SupplierReadRequest, binding: TrustedDomainContext) => Promise<PortResult<DomainProjection>>
+  readContract: (request: ContractReadRequest, binding: TrustedDomainContext) => Promise<PortResult<DomainProjection>>
+  compareSourcing: (request: SourcingCompareRequest, binding: TrustedDomainContext) => Promise<PortResult<CommercialComparison>>
 }
 export type PreparedDomainMutation = {
   surface: "dashboard" | "planner" | "procurement"

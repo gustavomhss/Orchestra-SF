@@ -8,7 +8,8 @@ import type { ContributionEnvelope } from "../../../product/contracts/resident-a
 import type { SfProductStatePort } from "../../../product/contracts/state.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { testPersistence } from "../../fixture/persistence.ts"
-import { decodeSfOperationInput, decodeSfContributionOutput } from "../../../product/contracts/schema-admission.ts"
+import { decodeSfOperationInput, decodeSfContributionOutput, decodeSfOperationOutput, decodeSfSkillInput } from "../../../product/contracts/schema-admission.ts"
+import { sfSkillInputSchemas } from "../../../product/contracts/output-schemas.ts"
 import type { SfOutputSchemaBuild } from "../../../product/contracts/generate-output-schemas.ts"
 import type { CreateSfProductContribution } from "../../../product/contracts/runtime.ts"
 import type { PlannerPort, FinancialAnalysis, DecisionCasePort } from "../../../product/contracts/ports.ts"
@@ -83,4 +84,22 @@ test("renewal inventory cannot omit training or invent a new decision inventory"
   expect(requiredSfCostCategories(basis)).toEqual(RENEWAL_TRANSITION_CATEGORIES)
   expect(requiredSfCostCategories({ ...basis, categoryIds: basis.categoryIds.filter((id) => id !== "training") })).toBeUndefined()
   expect(requiredSfCostCategories({ ...basis, decisionType: "undeclared-inventory" })).toBeUndefined()
+})
+
+test("schema registries reject inherited names rather than admitting an empty schema", () => {
+  for (const name of ["constructor", "__proto__", "toString", "missing-schema"]) {
+    expect(Reflect.apply(decodeSfOperationInput, undefined, [name, {}]).ok).toBe(false)
+    expect(Reflect.apply(decodeSfOperationOutput, undefined, [name, {}]).ok).toBe(false)
+    expect(Reflect.apply(decodeSfContributionOutput, undefined, [name, {}]).ok).toBe(false)
+    expect(Reflect.apply(decodeSfSkillInput, undefined, [name, {}]).ok).toBe(false)
+  }
+})
+
+test("all resident input names have real closed decoders and identity stays outside the input", () => {
+  expect(Object.keys(sfSkillInputSchemas)).toHaveLength(18)
+  const value = { currentCase: { id: "case-1", incarnation: "incarnation-1", version: 1 }, recallScope: { cases: [], period: context.period, includeHistorical: true }, query: "contract renewal" }
+  expect(decodeSfSkillInput("DecisionRecallInput", value).ok).toBe(true)
+  expect(decodeSfSkillInput("DecisionRecallInput", { ...value, currentAuthorization: { principalRef: "forged" } }).ok).toBe(false)
+  expect(decodeSfSkillInput("DecisionRecallInput", { ...value, recallScope: { ...value.recallScope, provider: "forged" } }).ok).toBe(false)
+  expect(decodeSfSkillInput("ForecastExplainInput", { baseRef: "base", candidateRef: "candidate", period: context.period, currency: "USD" }).ok).toBe(false)
 })

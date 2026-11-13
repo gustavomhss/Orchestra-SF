@@ -1,7 +1,8 @@
 import { isSfPeriod } from "./validation.ts"
 import { sfOperationInputSchemas } from "./operations.ts"
 import type { SfOperationInputMap } from "./operations.ts"
-import { sfContributionOutputSchemas, sfOperationOutputSchemas } from "./output-schemas.ts"
+import { sfContributionOutputSchemas, sfOperationOutputSchemas, sfSkillInputSchemas } from "./output-schemas.ts"
+import type { SfSkillInputMap } from "./skill-inputs.ts"
 import type { SfContributionOutputMap, SfOperationOutputMap } from "./outputs.ts"
 
 type JsonSchema = {
@@ -23,19 +24,29 @@ type JsonSchema = {
   definitions?: Readonly<Record<string, JsonSchema>>
 }
 
+export function decodeSfSkillInput<K extends keyof SfSkillInputMap>(kind: K, value: unknown): { ok: true; value: SfSkillInputMap[K] } | { ok: false; reason: "invalid-skill-input" } {
+  if (!Object.hasOwn(sfSkillInputSchemas, kind)) return { ok: false, reason: "invalid-skill-input" }
+  const schema = sfSkillInputSchemas[kind]
+  if (!schema || !valid(schema, value, schema.definitions)) return { ok: false, reason: "invalid-skill-input" }
+  return { ok: true, value: structuredClone(value) as SfSkillInputMap[K] }
+}
+
 export function decodeSfOperationInput<K extends keyof SfOperationInputMap>(operation: K, value: unknown): { ok: true; value: SfOperationInputMap[K] } | { ok: false; reason: "invalid-operation-input" } {
+  if (!Object.hasOwn(sfOperationInputSchemas, operation)) return { ok: false, reason: "invalid-operation-input" }
   const schema = sfOperationInputSchemas[operation]
   if (!schema || !valid(schema, value, schema.definitions)) return { ok: false, reason: "invalid-operation-input" }
   return { ok: true, value: structuredClone(value) as SfOperationInputMap[K] }
 }
 
 export function decodeSfContributionOutput<K extends keyof SfContributionOutputMap>(kind: K, value: unknown): { ok: true; value: SfContributionOutputMap[K] } | { ok: false; reason: "invalid-contribution-output" } {
+  if (!Object.hasOwn(sfContributionOutputSchemas, kind)) return { ok: false, reason: "invalid-contribution-output" }
   const schema = sfContributionOutputSchemas[kind]
   if (!schema || !valid(schema, value, schema.definitions)) return { ok: false, reason: "invalid-contribution-output" }
   return { ok: true, value: structuredClone(value) as SfContributionOutputMap[K] }
 }
 
 export function decodeSfOperationOutput<K extends keyof SfOperationOutputMap>(operation: K, value: unknown): { ok: true; value: SfOperationOutputMap[K] } | { ok: false; reason: "invalid-operation-output" } {
+  if (!Object.hasOwn(sfOperationOutputSchemas, operation)) return { ok: false, reason: "invalid-operation-output" }
   const schema = sfOperationOutputSchemas[operation]
   if (!schema || !valid(schema, value, schema.definitions)) return { ok: false, reason: "invalid-operation-output" }
   return { ok: true, value: structuredClone(value) as SfOperationOutputMap[K] }

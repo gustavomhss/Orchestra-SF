@@ -1,5 +1,6 @@
 import type { Period, ProjectionComponent, SourceRef, PreparedCommand, CommandReceipt } from "./context.ts"
 import type { BusinessEvidenceRef } from "./business-context.ts"
+import type { ScenarioRequest } from "./operations.ts"
 
 export const RENEWAL_TRANSITION_CATEGORIES = ["service", "service_overlap", "implementation", "contract_exit", "migration", "taxes", "training", "internal_costs", "other_relevant_costs"] as const
 
@@ -65,6 +66,7 @@ type ChoiceRecordBase = {
   principalRef: string
   reason: string
   at: string
+  scenario: ScenarioRequest
   result: ScenarioResult
   comparison: ScenarioComparison
 }
@@ -98,7 +100,7 @@ export type DecisionCase = {
   criteria: readonly { id: string; description: string; required: boolean }[]
   participants: readonly string[]
   sourceRefs: readonly BusinessEvidenceRef[]
-  alternatives: readonly { id: string; version: number; title: string; result: ScenarioResult }[]
+  alternatives: readonly { id: string; version: number; title: string; scenario: ScenarioRequest; result: ScenarioResult }[]
   costCoverageBases: readonly CostCoverageBasis[]
   assumptions: readonly { id: string; text: string; evidenceRefs: readonly BusinessEvidenceRef[]; state: "open" | "confirmed" | "rejected" }[]
   questions: readonly { id: string; text: string; state: "open" | "answered"; answerRef?: string }[]

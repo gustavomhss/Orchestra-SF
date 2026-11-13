@@ -4,7 +4,7 @@ import type { DecisionCase, ScenarioResult, ScenarioComparison, PortfolioResult,
 import type { FinancialAnalysis } from "./ports.ts"
 
 export type UnresolvedCondition = { id: string; category: string; reason: string; evidenceRefs: readonly BusinessEvidenceRef[]; questionRef?: string }
-type IntentFrameBase = { objective: string; horizon: { start: string; end: string }; currency: string; sourceRefs: readonly BusinessEvidenceRef[]; gaps: readonly UnresolvedCondition[]; domainApplied: false }
+type IntentFrameBase = { objective: string; horizon: { start: string; end: string }; currency: string; criteria: DecisionCase["criteria"]; sourceRefs: readonly BusinessEvidenceRef[]; gaps: readonly UnresolvedCondition[]; domainApplied: false }
 export type IntentFrame = IntentFrameBase & ({ analysisBasis: "domain"; importPreviewRef?: never } | { analysisBasis: "import-preview"; importPreviewRef: string })
 export type AnalysisPlan = { objective: string; steps: readonly { profileId: string; skillId: string; operationIds: readonly string[]; expectedOutputTypes: readonly string[]; sourceRefs: readonly BusinessEvidenceRef[] }[]; gaps: readonly UnresolvedCondition[] }
 export type DecisionBrief = { caseRef: string; caseVersion: number; objective: string; orderedResultRefs: readonly string[]; evidenceRefs: readonly BusinessEvidenceRef[]; conditions: readonly UnresolvedCondition[]; choiceRef?: string; runRef?: string; resultRef?: string }

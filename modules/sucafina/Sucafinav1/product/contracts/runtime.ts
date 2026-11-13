@@ -34,6 +34,7 @@ export type SfBindingRegistry = {
 export type SfDomainValidation = {
   validateDomainContext: (context: TrustedDomainContext, operation: string, inputDigest: string) => Promise<boolean>
   revalidateDomainContext: (context: TrustedDomainContext) => Promise<boolean>
+  receiptFor: (context: TrustedDomainContext, operation: string, inputDigest: string, resultDigest?: string) => BoundCapabilityReceipt | undefined
 }
 export type SfResidentRegistration = { agents: AgentV2.Interface; skills: SkillV2.Interface; profiles: readonly ResidentProfile[]; source: SkillV2.Source }
 export type RegisterSfResidentAgents = (input: SfResidentRegistration) => Effect.Effect<void, SfRuntimeError, Scope.Scope>
