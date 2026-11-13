@@ -1,6 +1,7 @@
 import { object, rows, text } from "../../runtime/contract.ts"
 import type { Actor, View } from "../../runtime/contract.ts"
 import { plannerField } from "../../src/planner-role.ts"
+import { normName } from "../../src/planner-accounts.ts"
 import { plannerKeys } from "../../src/nav.ts"
 import { esc } from "../../src/screen-shell.ts"
 
@@ -19,7 +20,13 @@ export function projectMonthlyGrid(view: View, actor: Actor, page: "OPEX" | "CAP
     year: version.year,
     page,
     closedThrough: Number(version.closed),
-    rows: rows(object(version.summary).lines).filter((line) => line.sec === (page === "OPEX" ? "opex" : "capex")).map((line) => {
+    rows: rows(object(version.summary).lines).filter((line) => {
+      if (line.sec !== (page === "OPEX" ? "opex" : "capex")) return false
+      const idOf = (value: unknown) => typeof value === "string" || typeof value === "number" && Number.isFinite(value) ? String(value) : ""
+      const project = rows(version.projects).find((entry) => entry.id === line.proj)
+      const owner = idOf(object(line.owner).id) || idOf(line.owner) || idOf(object(project?.owner).id) || idOf(project?.owner)
+      return (!view.data.owner || owner === idOf(view.data.owner)) && (!view.data.class || text(line.cls) === text(view.data.class)) && (!view.data.q || normName(`${text(line.name)} ${text(line.desc)}`).includes(normName(text(view.data.q))))
+    }).map((line) => {
       const id = text(line.id)
       const permission = { ownerId: text(line.ownerId) || text(object(line.owner).id) || text(line.owner), domain: text(line.domain), hr: line.synthetic === true }
       return {

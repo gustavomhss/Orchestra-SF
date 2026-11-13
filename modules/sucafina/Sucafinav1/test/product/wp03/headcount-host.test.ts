@@ -71,7 +71,7 @@ test("headcount domain cost follows rate, months and uplift while AF stays indep
     expect(domain.execute(snapshot, hr, command, environment)).toMatchObject({ ok: false, status: 403 })
     const finance = { id: "finance", roles: ["finance"], canWrite: true, assigned: [], domains: [] }
     expect(domain.execute(snapshot, finance, command, environment).ok).toBe(true)
-    version.closed = 1
+    expect(domain.execute(snapshot, finance, { page: "OPEX", action: "save", version: 0, values: { versionId: "v1", closed: 1 } }, environment)).toMatchObject({ ok: true })
     const withHrAf = projectHeadcount(snapshot, hr, environment, "v1")
     expect(withHrAf?.groups.find((group) => group.domain === "Finance")?.monthlyOutlookUsd?.slice(0, 2)).toEqual([500, 600])
     expect(withHrAf?.groups.find((group) => group.domain === "IT")?.monthlyOutlookUsd?.slice(0, 2)).toEqual([null, 0])

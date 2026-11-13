@@ -133,7 +133,15 @@ export function validMonthlyRequest(request: MonthlyRequest) {
     return !request.drafts && !request.operation
   }
   if (request.operation) return Object.keys(request.operation).every((key) => ["rowId", "revision", "kind", "annual"].includes(key)) && typeof request.operation.rowId === "string" && !!request.operation.rowId.trim() && Number.isSafeInteger(request.operation.revision) && request.operation.revision >= 0 && ["annual", "spread", "reset"].includes(request.operation.kind) && (request.operation.kind !== "annual" || typeof request.operation.annual === "number" && Number.isFinite(request.operation.annual)) && !request.drafts
-  return Array.isArray(request.drafts) && request.drafts.length > 0 && request.drafts.length <= 500 && request.drafts.every((draft) => !!draft && Object.keys(draft).every((key) => ["rowId", "revision", "cells"].includes(key)) && typeof draft.rowId === "string" && Number.isSafeInteger(draft.revision) && draft.revision >= 0 && Array.isArray(draft.cells) && draft.cells.length > 0 && draft.cells.length <= 36 && draft.cells.every((cell) => !!cell && Object.keys(cell).every((key) => ["measure", "month", "text"].includes(key)) && ["budget", "actual", "forecast"].includes(cell.measure) && Number.isInteger(cell.month) && typeof cell.text === "string"))
+  return Array.isArray(request.drafts) && request.drafts.length > 0 && request.drafts.length <= 500 && request.drafts.every((incoming: unknown) => {
+    if (!incoming || typeof incoming !== "object" || Array.isArray(incoming)) return false
+    const draft = object(incoming)
+    return Object.keys(draft).every((key) => ["rowId", "revision", "cells"].includes(key)) && typeof draft.rowId === "string" && typeof draft.revision === "number" && Number.isSafeInteger(draft.revision) && draft.revision >= 0 && Array.isArray(draft.cells) && draft.cells.length > 0 && draft.cells.length <= 36 && draft.cells.every((incomingCell: unknown) => {
+      if (!incomingCell || typeof incomingCell !== "object" || Array.isArray(incomingCell)) return false
+      const cell = object(incomingCell)
+      return Object.keys(cell).every((key) => ["measure", "month", "text"].includes(key)) && typeof cell.measure === "string" && ["budget", "actual", "forecast"].includes(cell.measure) && typeof cell.month === "number" && Number.isInteger(cell.month) && typeof cell.text === "string"
+    })
+  })
 }
 
 function validEntityValues(values: Record<string, unknown>) {
@@ -142,11 +150,8 @@ function validEntityValues(values: Record<string, unknown>) {
 
 function monthlyView(view: View, actor: Actor): View {
   if (actor.roles.includes("admin") || actor.roles.includes("hr") || actor.roles.includes("finance")) return view
-  return { ...view, data: { ...view.data, roster: [], versions: rows(view.data.versions).map((version) => {
-    const summary = { ...object(version.summary) }
-    for (const field of ["budget", "actual", "outlook", "total", "fullYear", "hrTotal", "positions", "hr"]) delete summary[field]
-    return { ...version, lines: rows(version.lines).filter((line) => line.el !== "hr" && typeof line.id === "string" && !line.id.startsWith("HR:")), hr: undefined, hc: undefined, summary: { ...summary, lines: rows(summary.lines).filter((line) => line.synthetic !== true && line.el !== "hr" && typeof line.id === "string" && !line.id.startsWith("HR:")) } }
-  }) } }
+  // The domain already removes rates and individual costs while retaining permitted HR aggregates.
+  return { ...view, data: { ...view.data, roster: [] } }
 }
 
 function omitCommand(operation: MonthlySpreadPreview): Omit<MonthlySpreadPreview, "command"> {

@@ -1067,8 +1067,10 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
         metric("HR Staff", money(summary.hrTotal)),
       ]) +
       monthlyChart(summary, version.closed) +
-      `<form method="get" class="filter-bar"><input type="hidden" name="page" value="Overview"><input type="hidden" name="version" value="${esc(version.id)}"><label>Compare budget <select name="filter"><option value="">All budgets</option>${versions
-        .filter((item) => item.id !== version.id)
+      `<p>Budget comparison uses FY ${version.year} in USD. These are budgets; outlook changes and variance to the official budget are separate measures.</p>` +
+      (safe.filter && !versions.some((item) => item.id === idOf(safe.filter) && item.year === version.year) ? '<p role="status">The comparison plan is unavailable or uses a different fiscal year.</p>' : "") +
+      `<form method="get" class="filter-bar"><input type="hidden" name="page" value="Overview"><input type="hidden" name="version" value="${esc(version.id)}"><label>Compare budget <select name="filter"><option value="">Budgets in this fiscal year</option>${versions
+        .filter((item) => item.id !== version.id && item.year === version.year)
         .map((item) => `<option value="${esc(item.id)}">${esc(item.name)}</option>`)
         .join("")}</select></label><button type="submit">Compare budgets</button></form>` +
       table(
@@ -1094,7 +1096,7 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
       table(
         ["Version", "Budget USD", "FTE December"],
         rows(safe.versions)
-          .filter((item) => !safe.filter || idOf(item.id) === version.id || idOf(item.id) === idOf(safe.filter))
+          .filter((item) => Number(item.year) === version.year && (!safe.filter || idOf(item.id) === version.id || idOf(item.id) === idOf(safe.filter)))
           .map((item) => [
             esc(text(item.name)),
             money(object(item.summary).total),

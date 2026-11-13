@@ -11,6 +11,8 @@ jobs:
   planner-checks:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
+    env:
+      WP03_CHECK_EVIDENCE: ${{ runner.temp }}/astra-wp03-evidence
     defaults:
       run:
         shell: bash
@@ -27,34 +29,59 @@ jobs:
           git merge-base --is-ancestor 73ee7fd812d233f898ef79a9378014d4339d9875 HEAD
           git fetch --no-tags origin dev:refs/remotes/origin/dev
           git merge-base HEAD origin/dev
-          mkdir -p astra-wp03-evidence
+          mkdir -p "$WP03_CHECK_EVIDENCE"
           node --input-type=module <<'NODE'
           import { execFileSync } from 'node:child_process'
           import { writeFileSync } from 'node:fs'
           const git = (...args) => execFileSync('git', args, { encoding: 'utf8' }).trim()
           const evidence = { productSha: process.env.GITHUB_SHA, productTree: git('rev-parse', 'HEAD^{tree}'), guardBase: git('rev-parse', 'origin/dev'), mergeBase: git('merge-base', 'HEAD', 'origin/dev'), seed: '73ee7fd812d233f898ef79a9378014d4339d9875' }
-          writeFileSync('astra-wp03-evidence/source.json', JSON.stringify(evidence, null, 2) + '\n')
+          writeFileSync(process.env.WP03_CHECK_EVIDENCE + '/source.json', JSON.stringify(evidence, null, 2) + '\n')
           process.stdout.write(JSON.stringify(evidence) + '\n')
           NODE
       - name: Setup Bun
         id: setup
         uses: ./.github/actions/setup-bun
       - name: Typecheck Sucafina package
+        id: typecheck
         if: always() && steps.setup.outcome == 'success'
         working-directory: modules/sucafina
         run: |
           set -o pipefail
-          bun typecheck 2>&1 | tee "$GITHUB_WORKSPACE/astra-wp03-evidence/typecheck.log"
+          bun typecheck 2>&1 | tee "$WP03_CHECK_EVIDENCE/typecheck.log"
       - name: Guardrails against origin/dev
         if: always() && steps.setup.outcome == 'success'
         run: |
           set -o pipefail
-          bun run check:guards --base origin/dev 2>&1 | tee astra-wp03-evidence/guards.log
+          bun run check:guards --base origin/dev 2>&1 | tee "$WP03_CHECK_EVIDENCE/guards.log"
+      - name: Attribute type diagnostics to saved seed
+        if: always() && steps.typecheck.outcome == 'failure'
+        run: |
+          set -euo pipefail
+          trap 'git checkout --detach "$GITHUB_SHA"' EXIT
+          git checkout --detach 73ee7fd812d233f898ef79a9378014d4339d9875
+          test "$(git rev-parse HEAD)" = 73ee7fd812d233f898ef79a9378014d4339d9875
+          if (cd modules/sucafina && bun typecheck) > "$WP03_CHECK_EVIDENCE/seed-typecheck.log" 2>&1; then
+            echo 'seed typecheck: success'
+          else
+            echo 'seed typecheck: failure (diagnostic attribution only)'
+          fi
+          git checkout --detach "$GITHUB_SHA"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          node --input-type=module <<'NODE'
+          import { readFileSync, writeFileSync } from 'node:fs'
+          const root = process.env.WP03_CHECK_EVIDENCE
+          const diagnostics = (file) => readFileSync(root + '/' + file, 'utf8').split('\n').filter((line) => /error TS\d+:/.test(line)).map((line) => line.replace(/\(\d+,\d+\)/, '')).sort()
+          const seed = diagnostics('seed-typecheck.log')
+          const candidate = diagnostics('typecheck.log')
+          const evidence = { seed: '73ee7fd812d233f898ef79a9378014d4339d9875', candidate: process.env.GITHUB_SHA, seedCount: seed.length, candidateCount: candidate.length, introduced: candidate.filter((line) => !seed.includes(line)), resolved: seed.filter((line) => !candidate.includes(line)), remainingOwned: candidate.filter((line) => /^(product\/planner\/|test\/product\/wp03\/|runtime\/planner\.ts|src\/planner-)/.test(line)), candidateGate: 'failure' }
+          writeFileSync(root + '/typecheck-differential.json', JSON.stringify(evidence, null, 2) + '\n')
+          process.stdout.write(JSON.stringify(evidence) + '\n')
+          NODE
       - name: Upload exact check evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: astra-wp03-checks-${{ github.sha }}-${{ github.run_attempt }}
-          path: astra-wp03-evidence
+          path: ${{ runner.temp }}/astra-wp03-evidence
           if-no-files-found: error
           retention-days: 14

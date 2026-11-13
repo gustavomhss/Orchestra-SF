@@ -26,7 +26,7 @@ export function createPlannerOperationResolver(input: { host: DomainPortHost; pl
     if (!await verify({ baseRef: request.baseRef, operations: [request.operation], assumptions: [] }, context)) return { status: "stale", reason: "planner-operation-changed" }
     const latest = await input.sources.resolveForecastSource(request.baseRef, context)
     const replacementAgain = request.operation.replacementRef ? await input.scenarioInputs.resolveAmount(request.operation.replacementRef, context) : undefined
-    const stable = (entry: typeof replacement) => entry?.status === "ok" ? digestSfValue({ ...entry.value, source: { ...entry.value.source, observedAt: "" } }) : digestSfValue(entry)
+    const stable = (entry: Awaited<ReturnType<PlannerScenarioInputs["resolveAmount"]>> | undefined) => entry?.status === "ok" ? digestSfValue({ ...entry.value, source: { ...entry.value.source, observedAt: "" } }) : digestSfValue(entry)
     if (latest.status !== "ok" || latest.value.evidence.refDigest !== source.value.evidence.refDigest || stable(replacementAgain) !== stable(replacement) || !await input.host.revalidate(context)) return { status: "stale", reason: "planner-operation-changed" }
     return { status: "ok", value: { operationDigest: digestSfValue(request.operation), target: source.value.evidence, producer: "planner", sourceVersion: source.value.evidence.target.version, ...(replacement?.status === "ok" ? { replacement: replacement.value.evidence } : {}) } }
   }

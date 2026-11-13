@@ -1,0 +1,56 @@
+{
+  "schema": "sf2h.wp03.baseline-review.v1",
+  "finding": "HR-AGGREGATE-PARITY",
+  "status": "BASELINE_VERIFIED_STATIC_NOT_EXECUTED",
+  "source": {
+    "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+    "git_blob": "e836d3f83bd7707b27f5bd3052494c84d67a2442",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/runtime/planner.ts",
+    "retrieval": "GitHub MCP fetch_file at fixed commit; functions privateAccess, redact, calculated and domain.view inspected."
+  },
+  "observed_baseline": {
+    "private_roles": [
+      "admin",
+      "hr",
+      "finance"
+    ],
+    "owner_viewer_path": "domain.view returns object(redact(data)); it does not remove HR synthetic lines or summary totals.",
+    "removed_recursively": [
+      "salary/cost/override keys",
+      "rates",
+      "rateId",
+      "inc",
+      "incMonth",
+      "rate outside FX",
+      "annual/months/total/budget/annualCost within positions"
+    ],
+    "preserved_aggregate_fields": [
+      "computed.hr by domain: b, annual, a, f, owner, entity, alloc",
+      "summary.hr",
+      "summary.lines including HR:<domain> synthetic lines",
+      "summary.budget",
+      "summary.actual",
+      "summary.outlook",
+      "summary.total",
+      "summary.fullYear",
+      "summary.hrTotal",
+      "summary.fte"
+    ]
+  },
+  "observed_seed_divergence": {
+    "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+    "function": "projectPlannerSource",
+    "behavior": "restrictedHr branch removes all HR lines and aggregate totals for owner/viewer; tests that only assert salary strings absent do not prove permitted aggregate parity."
+  },
+  "decision_required": "Preserve baseline-permitted aggregates while excluding individual compensation, or record an explicit approved discrepancy. Reviewer did not edit product. Worktree changes after this review require recheck.",
+  "criteria": [
+    "WP03.INV.01",
+    "WP03.INV.02",
+    "WP03.T01.CHK.04",
+    "WP03.T03.CHK.05",
+    "WP03.T03.DOD.02"
+  ],
+  "required_test": "Using the same snapshot, compare owner/viewer aggregate from domain.view with C02/headcount/monthly consumer projection; reconcile HR by domain and totals, assert absent private per-position/rate/override/increase fields, and preserve missing-input metadata.",
+  "tests_executed": false
+}

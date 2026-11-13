@@ -4,6 +4,7 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { randomUUID } from "node:crypto"
 import { openLocalStore } from "../../../runtime/local-store.ts"
+import { object, rows } from "../../../runtime/contract.ts"
 import { resolve } from "../../../src/identity.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
@@ -34,7 +35,7 @@ test("monthly annual, spread and reset previews preserve manual months and domai
   } finally { await fixture.dispose() }
 })
 
-test("monthly entity operations use closed actions, CAS and never expose HR data", async () => {
+test("monthly entity operations use closed actions and per-record CAS", async () => {
   const fixture = await monthlyFixture()
   try {
     const createLine = { page: "OPEX" as const, versionId: "v1", entity: { collection: "lines" as const, kind: "create" as const, revision: 0, values: { name: "New line", el: "services", cur: "USD", annual: 120 } } }
@@ -42,7 +43,7 @@ test("monthly entity operations use closed actions, CAS and never expose HR data
     expect(created.status).toBe("ok")
     if (created.status !== "ok") return
     expect(created.value.rows).toEqual([])
-    const line = created.value.view.data.versions && (created.value.view.data.versions as { summary: { lines: { id: string; name: string }[] }[] })[0]?.summary.lines.find((entry) => entry.name === "New line")
+    const line = rows(object(rows(created.value.view.data.versions)[0]?.summary).lines).find((entry) => entry.name === "New line")
     expect(line).toBeDefined()
     const createProject = { page: "CAPEX" as const, versionId: "v1", entity: { collection: "projects" as const, kind: "create" as const, revision: 0, values: { name: "Project", code: "CPX-2027-9" } } }
     expect((await fixture.monthly.apply(createProject, await fixture.admit("planner.apply", createProject))).status).toBe("ok")
@@ -54,15 +55,20 @@ test("monthly entity operations use closed actions, CAS and never expose HR data
   } finally { await fixture.dispose() }
 })
 
-test("monthly viewer response excludes HR values", async () => {
+test("monthly viewer response retains permitted HR aggregates and excludes private rates and individual costs", async () => {
   const fixture = await monthlyFixture("viewer")
   try {
     const request = { page: "OPEX" as const, versionId: "v1", drafts: [{ rowId: "line", revision: 0, cells: [{ measure: "forecast" as const, month: 1, text: "42" }] }] }
     const preview = await fixture.monthly.preview(request, await fixture.admit("planner.preview", request))
     expect(preview.status).toBe("ok")
     if (preview.status !== "ok") return
-    expect(JSON.stringify(preview.value.view)).not.toContain("HR:")
+    const version = rows(preview.value.view.data.versions)[0]
+    expect(rows(object(version.summary).lines).find((line) => line.id === "HR:IT")).toMatchObject({ synthetic: true, cur: "USD" })
+    expect(preview.value.before!.rows.some((line) => line.id === "HR:IT")).toBe(true)
     expect(JSON.stringify(preview.value.view)).not.toContain("salary-secret")
+    expect(JSON.stringify(preview.value.view)).not.toContain('"rateId"')
+    expect(JSON.stringify(preview.value.view)).not.toContain('"rateOverride"')
+    expect(rows(object(version.hc).rates)).toEqual([])
     expect(preview.value.view.data.roster).toEqual([])
   } finally { await fixture.dispose() }
 })
@@ -123,7 +129,7 @@ async function monthlyFixture(role: "admin" | "viewer" | "finance" = "admin") {
   const persistence = await openLocalStore(directory)
   await persistence.transaction("planner", async (snapshot) => {
     snapshot.data.roleMap = [{ surface: "planner", role, entra: "planner-group", version: 1, by: "admin" }]
-    snapshot.data.versions = [{ id: "v1", year: 2027, closed: 0, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD", annual: 1300, b: [200, ...Array(11).fill(100)], bm: [true, ...Array(11).fill(false)], f: [] }, { id: "HR:secret", sec: "opex", synthetic: true, name: "salary-secret", annual: 999999 }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
+    snapshot.data.versions = [{ id: "v1", year: 2027, closed: 0, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD", annual: 1300, b: [200, ...Array(11).fill(100)], bm: [true, ...Array(11).fill(false)], f: [] }], fx: [], hc: { positions: [{ id: "person", name: "Person", type: "Employee", location: "Brazil", domain: "IT", include: true, fte: 1, start: 1, end: 12, rateId: "private-rate", rateOverride: 987654 }], rates: [{ id: "private-rate", name: "salary-secret", locs: "Brazil", annual: 120000, cur: "USD" }], hrAF: {} }, projects: [], lists: {} }]
     return { commit: true, value: undefined }
   })
   const ui = createSfUiAuthority({ authorize: async () => ({ installationId: "i", projectId: "p", principalRef: "planner-user", policyVersion: "1", accessRevision: "1" }), commandIdentity: async () => "monthly-op", createId: randomUUID, now: () => Date.parse("2026-11-13T00:00:00Z"), privateCommands: ["sf-human:planner.preview", "sf-human:planner.apply"] })

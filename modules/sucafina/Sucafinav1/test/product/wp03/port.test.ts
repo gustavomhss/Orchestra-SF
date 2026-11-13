@@ -262,6 +262,31 @@ test("forecast port compares the real engine, and detects source changes", async
   const sourcedRequest = { baseRef: "v0", operations: [{ kind: "replace" as const, targetRef: "line:11", replacementRef: "amount-ref" }], assumptions: [{ id: "source", value: 1, evidenceRefs: [refs[0]], state: "confirmed" as const }] }
   const sourcedResult = await sourced.simulateScenario(sourcedRequest, binding)
   expect(sourcedResult).toMatchObject({ status: "ok", value: { knownSubtotal: 602000, comparisonStatus: "conditioned" } })
+  const clock = { ticks: 0 }
+  const advancingHost: DomainPortHost = { ...host, environment: async () => ({ at: new Date(Date.parse("2026-11-13T00:00:00Z") + ++clock.ticks * 1000).toISOString(), id: () => "unused", directory: [] }) }
+  const advancingRead = createPlannerPort({ host: advancingHost, sources })
+  const actualInputs = createPlannerScenarioInputs({ planner: advancingRead, sources })
+  const referenceRequest = { baseRef: "v0", operations: [{ kind: "replace" as const, targetRef: "line:11", replacementRef: plannerValueRef("v1", "line:11:forecast") }], assumptions: [] }
+  const advancing = createPlannerPort({ host: advancingHost, sources, evidence, scenarioInputs: actualInputs })
+  expect(await advancing.simulateScenario(referenceRequest, binding)).toMatchObject({ status: "ok", value: { knownSubtotal: 602000 } })
+  expect(clock.ticks).toBeGreaterThan(2)
+  for (const mutation of ["amount", "identity"] as const) {
+    const reads = { count: 0 }
+    const changed = createPlannerPort({ host: advancingHost, sources, evidence, scenarioInputs: { ...actualInputs, resolveAmount: async (reference, context) => {
+      const resolved = await actualInputs.resolveAmount(reference, context)
+      if (++reads.count !== 2 || resolved.status !== "ok") return resolved
+      return { status: "ok", value: mutation === "amount" ? { ...resolved.value, amount: resolved.value.amount + 1 } : { ...resolved.value, source: { ...resolved.value.source, id: "changed-identity" } } }
+    } } })
+    expect(await changed.simulateScenario(referenceRequest, binding)).toMatchObject({ status: "stale", reason: "replacement-changed" })
+  }
+  const mutableForecast = { baseRef: "v0", candidateRef: "v1", period: structuredClone(period), currency: "USD" }
+  const mutatedPort = createPlannerPort({ host: { ...host, revalidate: async () => { mutableForecast.candidateRef = "mutated-after-admission"; return true } }, sources })
+  expect(await mutatedPort.compareForecast(mutableForecast, binding)).toMatchObject({ status: "ok", value: { knownDifference: 12000 } })
+  const mutableScenario = { baseRef: "v0", operations: [{ kind: "replace" as const, targetRef: "line:11", amount: 124000, currency: "USD" }], assumptions: [] }
+  const mutatedScenarioPort = createPlannerPort({ host: { ...host, revalidate: async () => { mutableScenario.operations[0]!.amount = 1; return true } }, sources })
+  expect(await mutatedScenarioPort.simulateScenario(mutableScenario, binding)).toMatchObject({ status: "ok", value: { knownSubtotal: 602000 } })
+  expect(await port.compareForecast({ ...mutableForecast, actor: "admin" } as unknown as Parameters<typeof port.compareForecast>[0], binding)).toMatchObject({ status: "needs-input", reason: "invalid-forecast-input" })
+  expect(await port.simulateScenario({ ...referenceRequest, actor: "admin" } as unknown as Parameters<typeof port.simulateScenario>[0], binding)).toMatchObject({ status: "needs-input", reason: "invalid-scenario-input" })
   fresh.value = false
   expect(await sourced.simulateScenario(sourcedRequest, binding)).toMatchObject({ status: "stale", reason: "scenario-evidence-not-current" })
   expect(await port.simulateScenario({ baseRef: "v0", operations: [{ kind: "defer", targetRef: "line:11" }], assumptions: [] }, binding)).toMatchObject({ status: "needs-input" })

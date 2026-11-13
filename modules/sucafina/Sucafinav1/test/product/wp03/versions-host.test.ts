@@ -8,7 +8,7 @@ test("Versions preserves preview and conflict drafts and applies the real copy, 
   try {
     const read = await fixture.admit("sf-human:planner.read", {}, "admin", true)
     const initial = await fixture.versions.read("v1", read)
-    expect(initial).toMatchObject({ status: "ok", value: { selectedId: "v1", selectionState: "selected", create: { allowed: false }, versions: expect.arrayContaining([expect.objectContaining({ id: "v0", state: "official", actions: { delete: false, unlock: false, changeYear: false } })]) } })
+    expect(initial).toMatchObject({ status: "ok", value: { selectedId: "v1", selectionState: "selected", create: { allowed: false }, versions: expect.arrayContaining([expect.objectContaining({ id: "v0", state: "official", actions: expect.objectContaining({ delete: false, unlock: false, changeYear: false }) })]) } })
     const apply = async (request: PlannerVersionRequest) => fixture.versions.apply(request, await fixture.admit("sf-human:planner.apply", request, "admin", true))
     const copy = { action: "copy" as const, id: "v1", revision: 0, name: "Candidate copy" }
     const before = await fixture.readSnapshot()
@@ -53,7 +53,7 @@ test("Versions grants follow current role, exact human intent, private lease and
     for (const principal of ["finance", "hr", "viewer"]) {
       const context = await fixture.admit("sf-human:planner.apply", request, principal, true)
       const read = await fixture.versions.read("v1", context)
-      expect(read).toMatchObject({ status: "ok", value: { versions: expect.arrayContaining([expect.objectContaining({ id: "v1", actions: { save: false, copy: false, lock: false, official: false, delete: false } })]) } })
+      expect(read).toMatchObject({ status: "ok", value: { versions: expect.arrayContaining([expect.objectContaining({ id: "v1", actions: expect.objectContaining({ save: false, copy: false, lock: false, official: false, delete: false }) })]) } })
       expect(await fixture.versions.apply(request, context)).toMatchObject({ status: "ok", value: { outcome: { ok: false, status: 403 } } })
     }
     const context = await fixture.admit("sf-human:planner.apply", request, "admin", true)

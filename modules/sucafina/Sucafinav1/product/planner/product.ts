@@ -10,6 +10,7 @@ import { createStoredPlannerScenarioHost } from "./stored-scenarios.ts"
 import { createPlannerScenarioInputs } from "./scenario-inputs.ts"
 import { createPlannerVersionsHost } from "./versions-host.ts"
 import { createPlannerOverviewHost } from "./overview-host.ts"
+import { plannerScenarioCostPresentation } from "./comparison.ts"
 
 /** Bind Planner to the installation's authenticated source lifecycle and domain ports. */
 export function createPlannerProduct(input: { host: DomainPortHost; scopedSources: SfScopedSourcePort; coverageFor: PlannerSourceHost["resolveForecastCoverage"]; evidence?: BusinessContextService; scenarios?: PlannerScenarioHost; criteria?: PlannerCriteriaHost; scenarioInputs?: PlannerScenarioInputs; verifyAssumption?: PlannerScenarioInputs["verifyAssumption"]; sensitivity?: PlannerPort["evaluateSensitivity"]; storedScenarios?: Omit<Parameters<typeof createStoredPlannerScenarioHost>[0], "planner">; versionAuthorize?: Parameters<typeof createPlannerVersionsHost>[0]["humanAuthorize"] }) {
@@ -21,7 +22,7 @@ export function createPlannerProduct(input: { host: DomainPortHost; scopedSource
   const issueSource = createPlannerSourceIssuer({ host: input.host, scopedSources: input.scopedSources, sources })
   const versions = createPlannerVersionsHost({ host: input.host, humanAuthorize: input.versionAuthorize ?? (async () => false) })
   const overview = createPlannerOverviewHost({ host: input.host, planner, issueSource, versions })
-  return { planner, sources, scenarios, scenarioInputs, issueSource, versions, overview }
+  return { planner, sources, scenarios, scenarioInputs, issueSource, versions, overview, presentComparison: plannerScenarioCostPresentation }
 }
 
 /** Route case coverage to its case-scoped authority and original sources to the forecast authority. */

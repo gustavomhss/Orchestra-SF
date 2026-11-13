@@ -56,7 +56,9 @@ test("runtime controls mirror admin catalogs and version authority, and explain 
     for (const page of ["Versions", "Entities & allocations"]) expect(html(page, actor)).not.toMatch(/<button type="submit">/)
   }
   expect(html("Versions", admin)).toMatch(/<button type="submit">/)
-  expect(html("FX rates", { id: "hr", roles: ["hr"], canWrite: true })).not.toMatch(/<button type="submit">/)
+  const fxWrites = [...html("FX rates", { id: "hr", roles: ["hr"], canWrite: true }).matchAll(/<form data-command="(?:save|delete)"[\s\S]*?<\/form>/g)].map(([form]) => form)
+  expect(fxWrites.length).toBeGreaterThan(0)
+  for (const form of fxWrites) expect(form).not.toContain('<button type="submit">')
   expect(html("FX rates", { id: "finance", roles: ["finance"], canWrite: true })).toContain("These rates belong to this version")
   expect(html("Entities & allocations", admin)).toContain("Shared catalogs")
   expect(html("Entities & allocations", admin)).toContain("does not distribute costs")
@@ -84,4 +86,14 @@ test("monthly and headcount controls use the same field authority as saved comma
   version.locked = false
   expect(editable(html("Headcount", "hr"), "inc")).toBe(true)
   expect(editable(html("Headcount", "finance"), "inc")).toBe(false)
+})
+
+test("the mounted budget comparison states its measure and rejects a different fiscal year", () => {
+  const snapshot = fixture()
+  const html = render("Overview", { ...domain.view(snapshot, admin, environment).data, version: "v1", filter: "v2" }, { actor: admin, year: 2027, month: 1, at: environment.at, versions: snapshot.versions })!
+  expect(html).toContain("Budget comparison uses FY 2027 in USD")
+  expect(html).toContain("outlook changes and variance to the official budget are separate measures")
+  expect(html).toContain("The comparison plan is unavailable or uses a different fiscal year")
+  const compare = [...html.matchAll(/<form method="get"[\s\S]*?<\/form>/g)].map(([form]) => form).find((form) => form.includes('name="filter"'))!
+  expect(compare).not.toContain('value="v2"')
 })

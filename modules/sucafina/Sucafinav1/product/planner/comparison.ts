@@ -26,3 +26,12 @@ export function comparePlannerScenarios(input: { baselineRef: string; alternativ
 export function plannerComponentDigest(components: DomainProjection["components"]) {
   return digestSfValue(components.map((component) => ({ ...component, sourceRefs: component.sourceRefs.map((ref) => ({ ...ref, observedAt: "" })) })))
 }
+
+/** A cost change is alternative minus baseline; savings reverses that display orientation. */
+export function plannerScenarioCostPresentation(comparison: ScenarioComparison) {
+  const finite = (value: number | null) => value !== null && Number.isFinite(value) ? value : null
+  const knownCostChange = ["complete", "conditioned"].includes(comparison.comparisonStatus) ? finite(comparison.knownDifference) : null
+  const completeCostChange = comparison.comparisonStatus === "complete" ? finite(comparison.completeDifference) : null
+  const savings = (value: number | null) => value === null ? null : value === 0 ? 0 : -value
+  return { comparisonStatus: comparison.comparisonStatus, costChangeDefinition: "alternative minus baseline", savingsDefinition: "baseline minus alternative", knownCostChange, knownSavings: savings(knownCostChange), completeCostChange, completeSavings: savings(completeCostChange), unresolvedConditions: comparison.unresolvedConditions }
+}

@@ -24,7 +24,7 @@ export function createPlannerOverviewHost(input: { host: DomainPortHost; planner
     const ids = [...new Set([request.baseVersionId, request.candidateVersionId, ...officials.map((version) => version.id)])]
     const issued = await Promise.all(ids.map((id) => input.issueSource(id, context)))
     const failed = issued.find((source) => source.status !== "ok")
-    if (failed && failed.status !== "ok") return failed
+    if (failed) return failed
     const sources = new Map(issued.flatMap((source, index) => source.status === "ok" ? [[ids[index]!, source.value.evidence.refId] as const] : []))
     const compare = (baseId: string) => input.planner.compareForecast({ baseRef: sources.get(baseId)!, candidateRef: sources.get(request.candidateVersionId)!, period: request.period, currency: "USD" }, context)
     const analysis = await compare(request.baseVersionId)
