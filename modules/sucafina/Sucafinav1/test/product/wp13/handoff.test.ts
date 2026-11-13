@@ -27,10 +27,13 @@ test("prepares through the WP11 port only when the persisted human choice matche
   if (comparison.status !== "ok") throw new Error(comparison.reason)
   const ref = { id: "case", incarnation: "one", version: 2 }
   let prepared = 0
-  const cases = { read: async () => ({ status: "ok", value: { case: { version: 2, choices: [{ id: "choice", scenario: { baseRef: "base", operations, assumptions: [] }, result: scenario }] } } as unknown as AuthorizedCaseProjection }) } as unknown as DecisionCasePort
+  const cases = { read: async () => ({ status: "ok", value: { case: { id: "case", incarnation: "one", version: 2, choices: [{ id: "choice", scenario: { baseRef: "base", operations, assumptions: [] }, result: scenario }] } } as unknown as AuthorizedCaseProjection }) } as unknown as DecisionCasePort
   const decisions = { prepareChanges: async () => { prepared++; return { status: "ok" as const, value: { caseRef: ref } } } }
   const input = { portfolio, host, cases, decisions, request, selectedCandidateRefs: ["a"], combinationId: comparison.value.combinations[0].id, expectedEvaluationDigest: portfolioEvaluationDigest(request, comparison.value), caseRef: ref, choiceId: "choice" }
   expect((await preparePortfolioChoice(input, context)).status).toBe("ok")
+  expect(prepared).toBe(1)
+  const replaced = { read: async () => ({ status: "ok", value: { case: { id: "case", incarnation: "replacement", version: 2, choices: [] } } }) } as unknown as DecisionCasePort
+  expect(await preparePortfolioChoice({ ...input, cases: replaced }, context)).toEqual({ status: "stale", reason: "case-changed" })
   expect(prepared).toBe(1)
   expect(await preparePortfolioChoice({ ...input, choiceId: "other" }, context)).toEqual({ status: "conflict", reason: "choice-does-not-match-combination" })
   expect(prepared).toBe(1)

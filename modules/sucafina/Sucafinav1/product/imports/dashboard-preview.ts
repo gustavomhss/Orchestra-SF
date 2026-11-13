@@ -13,7 +13,7 @@ import { projectDashboardScope } from "../dashboard/scope.ts"
 import { publicSfData } from "../integration/public-state.ts"
 import { compareImportProjections } from "./changes.ts"
 import { plannerImportDetail } from "./detail.ts"
-import { dashboardImportLocations } from "./dashboard-provenance.ts"
+import { dashboardImportLocations, dashboardImportUnchangedOutcomes } from "./dashboard-provenance.ts"
 import type { ParsedImport } from "./files.ts"
 import type { ImportTarget } from "./staged-files.ts"
 import type { ImportDetail, ImportExecution } from "./store.ts"
@@ -72,6 +72,6 @@ export function createSfDashboardImportPreview(input: {
     const projection: DomainProjection = { context: productContext, version: source.version, engineVersion: "dashboard-runtime-v1", components: [], values, missing }
     const id = digestSfValue({ operationId, sourceDigest: request.parsed.sourceDigest, target: request.target, principal: context.binding.principalRef })
     const manifest: StoredImportManifest = { id, version: 1, sourceDigest: request.parsed.sourceDigest, format: request.parsed.format, context: productContext, baseIdentity: [source], commands: [{ id: idempotencyKey, target: source, command: preview.result.command, idempotencyKey, commandDigest: preview.result.commandDigest, expectedVersion: preview.result.command.version, requiredAuthority: ["dashboard:write"], preview: projection }], issues: preview.result.warnings.map(() => ({ row: 0, field: "domain", reason: "The Dashboard reported a warning; review the source data." })), state: "preview", domainApplied: false, receipts: [] }
-    return { status: "ok", value: { manifest, detail: plannerImportDetail({ manifestId: id, version: 1, sourceDigest: request.parsed.sourceDigest, domainReference: evidence.refId, changes, locations: dashboardImportLocations({ parsed: request.parsed, sheet: request.target.options.preview.sheet, after: preview.after, changes }) }), execution: { kind: "dashboard", format: preview.format, baseDigest: preview.result.baseDigest, impactDigest: preview.impactDigest, evidence, operationId, previewDigest: preview.result.previewDigest, previewAt: environment.at, actorId: context.binding.principalRef, idempotencyKey, targetIncarnation: request.target.incarnation, commandDigest: preview.result.commandDigest } } }
+    return { status: "ok", value: { manifest, detail: plannerImportDetail({ manifestId: id, version: 1, sourceDigest: request.parsed.sourceDigest, domainReference: evidence.refId, changes, locations: dashboardImportLocations({ parsed: request.parsed, sheet: request.target.options.preview.sheet, after: preview.after, changes }), outcomes: dashboardImportUnchangedOutcomes({ parsed: request.parsed, sheet: request.target.options.preview.sheet, before: preview.before, after: preview.after }) }), execution: { kind: "dashboard", format: preview.format, baseDigest: preview.result.baseDigest, impactDigest: preview.impactDigest, evidence, operationId, previewDigest: preview.result.previewDigest, previewAt: environment.at, actorId: context.binding.principalRef, idempotencyKey, targetIncarnation: request.target.incarnation, commandDigest: preview.result.commandDigest } } }
   }
 }

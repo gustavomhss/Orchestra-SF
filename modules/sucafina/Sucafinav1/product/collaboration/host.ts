@@ -10,6 +10,7 @@ import type { SfProductStatePort } from "../contracts/state.ts"
 import type { createProcurementPort } from "../procurement/port.ts"
 import type { createProcurementCollectionRegistry } from "../procurement/sources.ts"
 import { createWorkDestinationResolver } from "./destination.ts"
+import { createCollaborationCycleView } from "./cycle-view.ts"
 import type { WorkPresentationItem } from "./work-port.ts"
 import type { ConfirmationWork } from "./work-port.ts"
 import { createCollaborationCapabilities } from "./capabilities.ts"
@@ -123,5 +124,6 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   const recipientActions = recipientThread ? createRecipientThreadActions({ state: input.state, host: input.host, human: input.human, mutationFence: createCollaborationMutationFence(input.host), read: recipientThread, creationTarget: input.creationTarget, createId: input.createId, now: input.now }) : undefined
   const answerEvidence = createThreadAnswerEvidence(threadReads)
 
-  return { ...collaboration, confirmation, recipientThread, recipientActions, captureWorkSource, resolveWorkDestination, recordEvidence, selections, sourceFence: createCollaborationSourceFence({ host: input.host, scopedSources: input.scopedSources }), resolveQuestion: createQuestionSource(threadReads), answerEvidence, resolveAnswer: answerEvidence.resolve, projectAnswer: answerEvidence.project, capabilities: createCollaborationCapabilities(dispatch) }
+  const cycle = createCollaborationCycleView({ cases: input.cases, work: collaboration.work, host: input.host })
+  return { ...collaboration, cycle, confirmation, recipientThread, recipientActions, captureWorkSource, resolveWorkDestination, recordEvidence, selections, sourceFence: createCollaborationSourceFence({ host: input.host, scopedSources: input.scopedSources }), resolveQuestion: createQuestionSource(threadReads), answerEvidence, resolveAnswer: answerEvidence.resolve, projectAnswer: answerEvidence.project, capabilities: createCollaborationCapabilities(dispatch) }
 }

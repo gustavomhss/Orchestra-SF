@@ -3,6 +3,8 @@ import { decodeSfSkillInput } from "../../../../modules/sucafina/Sucafinav1/prod
 import type { DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { ReviewCapabilityHost } from "../../../../modules/sucafina/Sucafinav1/product/reviews/capabilities.ts"
+import { renderReviewBars, renderReviewChart, renderReviewSensitivity, renderReviewTimeline, renderReviewWaterfall } from "../../../../modules/sucafina/Sucafinav1/product/reviews/chart.ts"
+import { matchesSelectedSources } from "../../../../modules/sucafina/Sucafinav1/product/reviews/references.ts"
 import { reviewChartEvidence } from "../../../../modules/sucafina/Sucafinav1/product/reviews/port.ts"
 import type { ReviewChart } from "../../../../modules/sucafina/Sucafinav1/product/reviews/port.ts"
 import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
@@ -26,7 +28,7 @@ export function createSfMeetingVerifier(dependencies: SfAnalysisDependencies & {
         const review = await dependencies.reviews.read(value.preservedReviewRef.id, currentCall)
         if (review.status !== "ok" || review.value.version !== value.preservedReviewRef.version || value.authorizedSections.some((id) => !review.value.sections.some((section) => section.id === id))) return undefined
         const sections = value.authorizedSections.flatMap((id) => review.value.sections.filter((section) => section.id === id))
-        if (review.value.comments.length || sections.some((section) => { const projection = section.content as DomainProjection & { reviewChart?: ReviewChart }; return !Array.isArray(projection.missing) || !!projection.reviewChart })) return undefined
+        if (sections.some((section) => !Array.isArray((section.content as DomainProjection).missing))) return undefined
         const refs = sections.flatMap((section) => {
           const projection = section.content as DomainProjection & { reviewChart?: ReviewChart }
           return [...projection.values.flatMap((item) => item.sourceRefs), ...reviewChartEvidence(projection.reviewChart)]
@@ -46,7 +48,17 @@ export function createSfMeetingVerifier(dependencies: SfAnalysisDependencies & {
           current.sections.some((section) => !material.coverage.some((item) => item.sectionRef === section.id)) || output.evidenceRefs.some((ref) => !current.refs.some((item) => digestSfValue(item) === digestSfValue(ref)))) return { status: "unavailable", reason: "analysis-output-unverified" }
         const artifact = await dependencies.artifacts.read(material.orderedResultRefs[0]!, currentCall)
         if (artifact.status !== "ok" || artifact.value.reviewRef !== value.preservedReviewRef.id || digestSfValue(artifact.value.sectionRefs) !== digestSfValue(value.authorizedSections) || artifact.value.artifact.artifactRef !== material.orderedResultRefs[0] || artifact.value.artifact.accessRevision !== currentCall.binding.accessRevision || artifact.value.artifact.recordCount !== current.sections.reduce((total, section) => total + section.count, 0) || digestSfValue(artifact.value.artifact.evidenceRefs) !== digestSfValue(output.evidenceRefs)) return { status: "unavailable", reason: "analysis-output-unverified" }
-        const gaps = current.sections.flatMap((section) => (section.content as DomainProjection).missing.map((item) => ({ id: `${section.id}:${item.field}`, category: item.field, reason: item.reason, evidenceRefs: [] })))
+        const selectedRefs = current.sections.flatMap((section) => section.sourceRefs)
+        const gaps = [
+          ...current.sections.flatMap((section) => (section.content as DomainProjection).missing.map((item) => ({ id: `${section.id}:${item.field}`, category: item.field, reason: item.reason, evidenceRefs: [] }))),
+          ...(current.review.comments.some((comment) => !matchesSelectedSources(comment.sourceRefs, selectedRefs)) ? [{ id: "comments-outside-selection", category: "comment", reason: "Comment sources do not match the selected sections.", evidenceRefs: [] }] : []),
+          ...current.sections.flatMap((section) => {
+            const projection = section.content as DomainProjection & { reviewChart?: ReviewChart }
+            const chart = projection.reviewChart
+            return chart && !renderReviewChart(projection, chart) && !renderReviewBars(projection, chart) && !renderReviewTimeline(projection, chart) && !renderReviewWaterfall(projection, chart) && !renderReviewSensitivity(chart)
+              ? [{ id: `${section.id}:chart`, category: "chart", reason: chart.status === "ok" ? "Chart rendering unavailable; captured data remains in the report." : chart.reason, evidenceRefs: [] }] : []
+          }),
+        ]
         return digestSfValue(material.gaps) === digestSfValue(gaps) && !!await read(currentCall)
           ? { status: "ok", value: true } : { status: "unavailable", reason: "analysis-output-unverified" }
       } } }

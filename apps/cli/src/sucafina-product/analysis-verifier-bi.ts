@@ -36,13 +36,15 @@ export function createSfBiVerifier(dependencies: SfAnalysisDependencies & {
         if (selected.status !== "ok") return undefined
         const selection = selected.value
         if (!selection.tableRef.trim() || !selection.canonicalProjectionRefs.length || selection.canonicalProjectionRefs.some((ref) => !ref.trim()) ||
+          selection.approvedViews.some((view) => !view.id.trim() || !Number.isSafeInteger(view.version) || view.version < 1 || new Set(view.allowedFilters).size !== view.allowedFilters.length) ||
           !selection.approvedViews.some((view) => view.id === selection.viewId) ||
           selection.authorizedFilters.some((filter) => !selection.approvedViews.some((view) => view.id === selection.viewId && view.allowedFilters.includes(filter.field))) ||
           digestSfValue(selection.approvedViews) !== digestSfValue(value.approvedViews) || digestSfValue(selection.authorizedFilters) !== digestSfValue(value.authorizedFilters) ||
           digestSfValue(selection.dashboardSelection) !== digestSfValue(value.dashboardSelection) || digestSfValue(selection.projectionRefs) !== digestSfValue(value.projectionRefs) ||
           selection.projection.context.installationId !== currentCall.binding.installationId || selection.projection.context.projectId !== currentCall.binding.projectId ||
           selection.projection.context.principalRef !== currentCall.binding.principalRef || selection.projection.context.accessRevision !== currentCall.binding.accessRevision ||
-          selection.projection.context.policyVersion !== currentCall.binding.policyVersion || digestSfValue(selection.projection.context.period) !== digestSfValue(selection.dashboardSelection.period)) return undefined
+          selection.projection.context.policyVersion !== currentCall.binding.policyVersion || digestSfValue(selection.projection.context.period) !== digestSfValue(selection.dashboardSelection.period) ||
+          selection.projection.values.some((item) => (item.value !== null && !item.sourceRefs.length) || item.sourceRefs.some((ref) => !selection.projectionRefs.some((allowed) => digestSfValue(ref) === digestSfValue(allowed))) || (item.drilldown !== null && !selection.projectionRefs.some((allowed) => digestSfValue(item.drilldown) === digestSfValue(allowed))))) return undefined
         const sources = await dependencies.context.context({ refs: selection.projectionRefs }, currentCall)
         if (sources.length !== selection.projectionRefs.length || sources.some((item, index) => item.state !== "fresh" || !item.authorizedProjection || !item.currentRef || digestSfValue(item.ref) !== digestSfValue(selection.projectionRefs[index]) || digestSfValue(item.currentRef) !== digestSfValue(item.ref)) || !await dependencies.host.revalidate(currentCall)) return undefined
         return { current: current.value.case, selection, sources }

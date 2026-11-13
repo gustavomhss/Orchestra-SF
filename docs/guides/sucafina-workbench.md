@@ -17,7 +17,7 @@ O recurso **Extract document evidence** permite extrair candidatos de documentos
 3. Escolha o esquema e selecione **Extract candidates**.
 4. Confira cada valor e sua localização no documento. Abra a fonte antes de selecionar **Confirm this candidate**.
 
-A extração cria candidatos para revisão; não confirma os valores por conta própria. São aceitos texto UTF-8, DOCX e PDF com camada de texto. PDFs digitalizados sem texto não passam por OCR.
+A extração cria candidatos para revisão; não confirma os valores por conta própria. São aceitos texto UTF-8, DOCX e PDF com camada de texto. Os limites são 20 MiB, 500 páginas de PDF, um milhão de caracteres extraídos, 8 MiB de XML DOCX expandido e 2.000 entradas DOCX; o processamento expira após 15 segundos. Limites de upload da instalação podem ser menores. PDFs digitalizados sem texto não passam por OCR.
 
 ## Usar e salvar uma visualização
 
