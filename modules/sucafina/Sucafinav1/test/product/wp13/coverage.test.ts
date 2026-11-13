@@ -43,4 +43,6 @@ test("portfolio distinguishes omitted training from sourced zero using WP11 cove
   const pending = await candidatePending.evaluate(request, {} as TrustedDomainContext)
   expect(pending.status === "ok" && pending.value.combinations[0].eligibility).toBe("conditioned")
   expect(pending.status === "ok" && pending.value.combinations[0].restrictions).toContain("candidate:a:missing-category:training")
+  const missingCriterion = await candidatePending.evaluate({ ...request, constraints: ["max-cost"] }, {} as TrustedDomainContext)
+  expect(missingCriterion).toEqual({ status: "unavailable", reason: "comparison-criteria-incomplete" })
 })

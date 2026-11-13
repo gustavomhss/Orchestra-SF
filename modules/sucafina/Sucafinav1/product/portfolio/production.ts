@@ -84,10 +84,15 @@ export function createProductionPortfolio(input: {
         if (candidatesResult.status !== "ok") return candidatesResult
         const costCoverageRefs = [...new Set([...result.value, ...candidatesResult.value])]
         if (!input.analysis) return { status: "ok", value: { costCoverageRefs, constraints: request.constraints.map((ref) => ({ ref, state: "unknown" as const, reason: "criterion-rule-unavailable" })) } }
+        if (!input.candidateCoverageRefFor) return { status: "unavailable", reason: "candidate-coverage-references-unavailable" }
         const analysis = await input.analysis.evaluate({ portfolio: request, candidates, scenario: scenarioRequest, result: scenario, costCoverageRefs }, context)
+        if (analysis.status === "unavailable" && analysis.reason === "portfolio-analysis-not-yet-persisted") return { status: "ok", value: { costCoverageRefs, constraints: request.constraints.map((ref) => ({ ref, state: "unknown" as const, reason: "criterion-rule-unavailable" })) } }
         if (analysis.status !== "ok") return analysis
         if (costCoverageRefs.some((ref) => !analysis.value.analysis.comparison.costCoverageRefs.includes(ref))) return { status: "stale", reason: "candidate-coverage-not-in-analysis" }
-        return { status: "ok", value: { costCoverageRefs: analysis.value.analysis.comparison.costCoverageRefs, ...analysis.value } }
+        const stored = await input.persistence.results.read({ kind: "scenario", resultRef: analysis.value.analysis.scenarioResultRef }, context)
+        if (stored.status !== "ok") return stored
+        if (stored.value.kind !== "scenario" || stored.value.requestDigest !== digestSfValue(scenarioRequest) || digestSfValue(stored.value.result) !== digestSfValue(analysis.value.analysis.scenario)) return { status: "stale", reason: "portfolio-scenario-changed" }
+        return { status: "ok", value: { scenario: stored.value.result, costCoverageRefs: analysis.value.analysis.comparison.costCoverageRefs, ...analysis.value } }
       },
       revalidateEvaluation: async (scenario, refs, analysis, context, candidates) => {
         if (!await fresh(evidenceRefs(scenario), context)) return false

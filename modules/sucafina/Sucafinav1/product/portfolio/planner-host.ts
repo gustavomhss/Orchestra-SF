@@ -13,7 +13,7 @@ export function createPortfolioPlannerHost(input: {
   revalidateEvaluation: PortfolioHost["revalidateEvaluation"]
   sensitivity?: PortfolioHost["sensitivity"]
   scenarioRequest: (request: PortfolioRequest, candidates: readonly PortfolioCandidate[], operations: readonly ScenarioOperation[], context: TrustedDomainContext) => Promise<PortResult<ScenarioRequest>>
-  assess: (request: PortfolioRequest, candidates: readonly PortfolioCandidate[], result: ScenarioResult, context: TrustedDomainContext, scenario: ScenarioRequest) => Promise<PortResult<{ costCoverageRefs: readonly string[]; analysis?: PortfolioCombination["analysis"]; constraints: readonly { ref: string; state: "satisfied" | "failed" | "unknown"; reason: string }[] }>>
+  assess: (request: PortfolioRequest, candidates: readonly PortfolioCandidate[], result: ScenarioResult, context: TrustedDomainContext, scenario: ScenarioRequest) => Promise<PortResult<{ scenario?: ScenarioResult; costCoverageRefs: readonly string[]; analysis?: PortfolioCombination["analysis"]; constraints: readonly { ref: string; state: "satisfied" | "failed" | "unknown"; reason: string }[] }>>
 }): PortfolioHost {
   return {
     resolveCandidate: input.resolveCandidate,
@@ -30,7 +30,7 @@ export function createPortfolioPlannerHost(input: {
       const assessment = await input.assess(request, candidates, result.value, context, scenario.value)
       if (assessment.status !== "ok") return assessment
       if (!await input.revalidate(context)) return { status: "stale", reason: "authority-changed" }
-      return { status: "ok", value: { scenario: result.value, ...assessment.value } }
+      return { status: "ok", value: { ...assessment.value, scenario: assessment.value.scenario ?? result.value } }
     },
   }
 }

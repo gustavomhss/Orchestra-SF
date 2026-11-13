@@ -5,6 +5,7 @@ import type { ScenarioRequest, SensitivityRequest } from "../contracts/operation
 import type { PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { createSfDecisionResultStore } from "../decisions/result-store.ts"
+import { plannerPreviewDigest, plannerScenarioDigest } from "../planner/preview-comparison.ts"
 import { createSensitivityEvaluator } from "./sensitivity.ts"
 import { attachSensitivityV6 } from "./sensitivity-v6.ts"
 
@@ -28,7 +29,7 @@ export function createPlannerSensitivity(input: {
   results: ReturnType<typeof createSfDecisionResultStore> & { readHistoricalScenario?: (request: { resultRef: string }, context: TrustedDomainContext) => ReturnType<ReturnType<typeof createSfDecisionResultStore>["read"]> }
   resolve: (request: SensitivityRequest, context: TrustedDomainContext) => Promise<PortResult<PlannerSensitivityBinding>>
   revalidate: (binding: PlannerSensitivityBinding, context: TrustedDomainContext) => Promise<boolean>
-  preview: (request: { baselineRef: string; scenario: ScenarioRequest }, context: TrustedDomainContext) => Promise<PortResult<{ sample: ScenarioResult; comparison: ScenarioComparison }>>
+  preview: (request: { baselineRef: string; scenario: ScenarioRequest }, context: TrustedDomainContext) => Promise<PortResult<{ sample: ScenarioResult; comparison: ScenarioComparison; metric: { metricRef: "planner:known-subtotal-difference"; value: number | null; unit: string; period: ScenarioResult["horizon"]; evidenceRefs: readonly BusinessEvidenceRef[]; state: "conditioned"; engineVersion: string } }>>
   idempotencyKey: (requestDigest: string, context: TrustedDomainContext) => Promise<string | undefined>
 }) {
   return async (request: SensitivityRequest, context: TrustedDomainContext) => {
@@ -53,12 +54,13 @@ export function createPlannerSensitivity(input: {
         const preview = await input.preview({ baselineRef: binding.baselineRef, scenario }, trusted)
         if (preview.status !== "ok") return preview
         if (preview.value.comparison.baselineResultRef !== binding.baselineRef || preview.value.comparison.alternativeResultRef !== preview.value.sample.id || !preview.value.comparison.costCoverageRefs.length || preview.value.comparison.comparisonStatus === "incompatible" || preview.value.comparison.comparisonStatus === "unavailable") return { status: "unavailable", reason: "sensitivity-comparison-unavailable" }
+        if (preview.value.metric.metricRef !== "planner:known-subtotal-difference" || preview.value.metric.state !== "conditioned" || preview.value.metric.value !== preview.value.comparison.knownDifference || preview.value.metric.unit !== binding.resultUnit || preview.value.metric.engineVersion !== binding.engineVersion || digestSfValue(preview.value.metric.period) !== digestSfValue(preview.value.sample.horizon) || !preview.value.metric.evidenceRefs.length) return { status: "unavailable", reason: "sensitivity-metric-mismatch" }
         const requestDigest = digestSfValue(scenario)
-        const refs = [...preview.value.sample.sourceRefs, ...baseline.value.sourceRefs, ...source.value.sourceRefs, ...binding.evidenceRefs].filter((ref, index, all) => all.findIndex((item) => item.refDigest === ref.refDigest) === index)
+        const refs = [...preview.value.sample.sourceRefs, ...baseline.value.sourceRefs, ...source.value.sourceRefs, ...preview.value.metric.evidenceRefs, ...binding.evidenceRefs].filter((ref, index, all) => all.findIndex((item) => item.refDigest === ref.refDigest) === index)
         const saved = await input.results.write({ kind: "scenario", result: preview.value.sample, caseRef: binding.caseRef, requestDigest, sourceRefs: refs, idempotencyKey: `sensitivity:${key}:${requestDigest}` }, trusted)
         if (saved.status !== "ok") return saved
-        if (saved.value.kind !== "scenario" || digestSfValue(saved.value.result) !== digestSfValue(preview.value.sample)) return { status: "stale", reason: "sensitivity-sample-changed" }
-        samples.push({ request: scenario, resultRef: saved.value.resultRef, digest: digestSfValue(preview.value), coverageRefs: preview.value.comparison.costCoverageRefs, conditions: preview.value.comparison.unresolvedConditions })
+        if (saved.value.kind !== "scenario" || plannerScenarioDigest(saved.value.result) !== plannerScenarioDigest(preview.value.sample)) return { status: "stale", reason: "sensitivity-sample-changed" }
+        samples.push({ request: scenario, resultRef: saved.value.resultRef, digest: plannerPreviewDigest(preview.value), coverageRefs: preview.value.comparison.costCoverageRefs, conditions: preview.value.comparison.unresolvedConditions })
         return { status: "ok", value: { resultRef: saved.value.resultRef, scenario: saved.value.result, criterionValue: preview.value.comparison.knownDifference, parameterUnit: binding.parameterUnit, resultUnit: binding.resultUnit, unitMetadataRef: binding.unitMetadataRef, unitMetadataVersion: binding.unitMetadataVersion } }
       },
       exactThreshold: async () => ({ status: "unavailable", reason: "exact-threshold-not-proven" }),
@@ -71,7 +73,7 @@ export function createPlannerSensitivity(input: {
         const checked = await Promise.all(samples.map(async (sample) => {
           const stored = await input.results.read({ kind: "scenario", resultRef: sample.resultRef }, trusted)
           const current = await input.preview({ baselineRef: binding.baselineRef, scenario: sample.request }, trusted)
-          return stored.status === "ok" && stored.value.kind === "scenario" && current.status === "ok" && digestSfValue(current.value) === sample.digest && digestSfValue(stored.value.result) === digestSfValue(current.value.sample)
+          return stored.status === "ok" && stored.value.kind === "scenario" && current.status === "ok" && plannerPreviewDigest(current.value) === sample.digest && plannerScenarioDigest(stored.value.result) === plannerScenarioDigest(current.value.sample)
         }))
         return checked.every(Boolean) && await input.revalidate(binding, trusted)
       },
