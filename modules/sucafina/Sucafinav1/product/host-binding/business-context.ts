@@ -107,7 +107,7 @@ export function createSfBusinessContext(host: {
 
 /** Textual IDs cannot carry historical authorization across replacement incarnations. */
 function sameHistoricalSource(original: BusinessEvidenceRef, current: BusinessEvidenceRef): boolean {
-  if (original.kind === "record" && current.kind === "record") return original.target.surface === current.target.surface && original.target.recordType === current.target.recordType && original.target.recordId === current.target.recordId && (original.target.surface === "dashboard" || original.target.incarnation === current.target.incarnation)
+  if (original.kind === "record" && current.kind === "record") return original.target.surface === current.target.surface && original.target.recordType === current.target.recordType && original.target.recordId === current.target.recordId && (original.target.surface === "dashboard" || original.target.surface === "procurement" || original.target.incarnation === current.target.incarnation)
   if (original.kind === "document" && current.kind === "document") return original.target.documentId === current.target.documentId && original.target.incarnation === current.target.incarnation
   if (original.kind === "receipt" && current.kind === "receipt") return original.target.surface === current.target.surface && original.target.receiptId === current.target.receiptId && original.target.targetIncarnation === current.target.targetIncarnation
   if (original.kind === "case-event" && current.kind === "case-event") return original.target.caseId === current.target.caseId && original.target.caseIncarnation === current.target.caseIncarnation && original.target.eventId === current.target.eventId

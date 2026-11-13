@@ -2,7 +2,7 @@ import { digestSfValue } from "../contracts/canonical.ts"
 import type { SfHostServices } from "../contracts/host-context.ts"
 
 /** A selector prepares current domain material; it never admits an analysis or writes a decision. */
-export async function handleSfSourcingInput(request: Request, origin: string, runtime: SfHostServices) {
+export async function handleSfSourcingInput(request: Request, origin: string, runtime: Pick<SfHostServices, "ui" | "sourcingInputs">) {
   const reply = (value: unknown, status: number) => Response.json(value, { status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
   if (request.method !== "POST") return reply({ status: "denied" }, 405)
   if (request.headers.get("origin") !== origin || request.headers.get("sec-fetch-site") === "cross-site") return reply({ status: "denied" }, 403)

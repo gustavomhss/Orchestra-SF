@@ -44,6 +44,7 @@ export function createSfSourcingVerifier(dependencies: Pick<SfAnalysisDependenci
       const proof = await read(call)
       if (!proof) return { status: "unavailable", reason: "sourcing-proof-unavailable" }
       return { status: "ok", value: { current: proof.current, input: value, sources: proof.sources, acceptsOutput: async (output, freshCall) => {
+        if (output.state !== "ready") return { status: "unavailable", reason: "analysis-output-unverified" }
         const current = await read(freshCall)
         return current && output.kind === "CommercialComparison" && digestSfValue(output.evidenceRefs) === digestSfValue(current.replay.sourceRefs) &&
           digestSfValue(withoutObservationTimes(output.payload)) === digestSfValue(withoutObservationTimes(current.replay))

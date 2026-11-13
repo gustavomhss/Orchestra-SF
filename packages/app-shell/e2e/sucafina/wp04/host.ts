@@ -7,6 +7,8 @@ import { openLocalStore } from "../../../../../modules/sucafina/Sucafinav1/runti
 import { createOperatorIdentity } from "../../../../../modules/sucafina/Sucafinav1/runtime/operator-identity.ts"
 import { ProcurementModule } from "../../../../../modules/sucafina/Sucafinav1/runtime/procurement.ts"
 import { initialProcurementSettings } from "../../../../../modules/sucafina/Sucafinav1/src/initial-settings.ts"
+import { object, text } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+import type { Command } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 
 // Playwright starts this composition in Bun because the production adapter uses bun:sqlite.
 // The fixture serves only the real authenticated application, domain, renderer and shell.
@@ -19,6 +21,7 @@ const installationId = randomUUID()
 const configurations = [
   { key: "first", mount: "/wp04/first", uid: 1001, name: "First procurement operator" },
   { key: "second", mount: "/wp04/second", uid: 1002, name: "Second procurement operator" },
+  { key: "viewer", mount: "/wp04/viewer", uid: 1003, name: "Read-only procurement observer" },
 ] as const
 const people = configurations.map((entry) => ({ id: "macos:" + installationId + ":" + entry.uid, name: entry.name }))
 const active: { ready: boolean; handle?: (request: Request) => Promise<Response> } = { ready: false }
@@ -39,7 +42,7 @@ const accounts = configurations.map((configuration) => {
   const identity = createOperatorIdentity({
     origin,
     mount: configuration.mount,
-    operator: { installationId, uid: configuration.uid, name: configuration.name, buyer: true },
+    operator: { installationId, uid: configuration.uid, name: configuration.name, buyer: configuration.key !== "viewer" },
     secrets: store.secrets,
     key: randomBytes(32),
   })
@@ -48,14 +51,20 @@ const accounts = configurations.map((configuration) => {
     identity,
     application: createApplication(configuration.mount, {
       persistence: store,
-      authenticate: identity.authenticate,
+      authenticate: async (request, context) => {
+        const authenticated = await identity.authenticate(request, context)
+        // This synthetic test policy only reduces the real local-operator session's grants.
+        return authenticated && configuration.key === "viewer"
+          ? { ...authenticated, canWrite: false, roles: [{ surface: context.surface, role: "viewer" }] }
+          : authenticated
+      },
       environment,
       domains: { procurement: [ProcurementModule], dashboard: [], planner: [] },
       maxJsonBytes: 100_000,
     }),
   }
 })
-await store.transaction("procurement", async (snapshot) => {
+const records = await store.transaction("procurement", async (snapshot) => {
   const actor = { id: people[0]!.id, roles: ["admin", "buyer"], canWrite: true }
   const context = await environment()
   const reset = ProcurementModule.domain.execute(snapshot, actor, { page: "Settings", action: "reset", version: 0, values: {} }, context)
@@ -65,7 +74,36 @@ await store.transaction("procurement", async (snapshot) => {
     values: { levels: initialProcurementSettings().levels.map((level) => ({ ...level, holderId: actor.id })) },
   }, context)
   if (!holders.ok) throw new Error("Synthetic approval holder could not be configured")
-  return { commit: true, value: undefined }
+  const execute = (command: Command) => {
+    const result = ProcurementModule.domain.execute(snapshot, actor, command, context)
+    if (!result.ok) throw new Error(`Fixture command ${command.page}/${command.action} was refused (${result.status})`)
+    return object(result.value)
+  }
+  const supplier = execute({ page: "Suppliers", action: "create", version: 0, values: {
+    legalName: "Journey registered supplier", country: "France", address: "Synthetic supplier address", taxId: "WP04-FIXTURE-1",
+    contactEmail: "supplier@example.invalid", paymentTerms: "Net 45", currency: "EUR", riskRating: "Low", dueDiligence: true,
+    sanctionsDate: "2026-11-01", bankName: "Synthetic fixture bank", iban: "TEST-ORIGINAL-IBAN", account: "TEST-ORIGINAL-ACCOUNT",
+  } })
+  const supplierId = text(supplier.id)
+  if (!supplierId) throw new Error("Supplier fixture identity unavailable")
+  execute({ page: "Suppliers", action: "activate", id: supplierId, version: snapshot.versions[`suppliers:${supplierId}`]!.version, values: {} })
+  const created = execute({ page: "Requests", action: "create", version: 0, values: { pr: {
+    title: "Frozen browser sourcing comparison", type: "service", description: "The same A/B/C sourcing facts used by the Procurement comparison producer",
+    estAmount: 32400, costCenter: "Synthetic IT", needBy: "2026-12-01", justification: "Review the recorded commercial comparison", expenseType: "OPEX",
+  } } })
+  const comparison = text(created.number)
+  if (!comparison) throw new Error("Comparison fixture identity unavailable")
+  const command = (action: string, values: Command["values"] = {}) => execute({ page: "Requests", action, id: comparison, version: snapshot.versions[`requests:${comparison}`]!.version, values })
+  command("submit_pr")
+  command("approve", { comment: "Synthetic fixture approval through the actual domain" })
+  command("save", { sourcing: { evaluator: "Synthetic comparison evaluator", selectionJustification: "Recorded technical preference", quotes: [
+    { id: "A", supplier: "Browser quote A", total: 32400, currency: "USD", qty: 1, unitPrice: 32400, techPass: true, scores: [5, 4, 4, 4, 4], cscores: [null, 4, 4] },
+    { id: "B", supplier: "Browser quote B", total: 28000, currency: "EUR", qty: 1, unitPrice: 28000, techPass: true, scores: [4, 4, 4, 3, 4], cscores: [null, 5, 4] },
+    { id: "C", supplier: "Browser quote C", total: 29000, currency: "USD", qty: 1, unitPrice: 29000, techPass: false, scores: [5, 5, 5, 5, 5], cscores: [null, 5, 5] },
+  ] } })
+  command("select_quote", { quoteId: "A" })
+  command("submit_sourcing")
+  return { commit: true, value: { supplier: supplierId, comparison } }
 })
 active.handle = async (request) => {
   const pathname = new URL(request.url).pathname
@@ -77,11 +115,11 @@ active.handle = async (request) => {
 const enrolled: Record<string, { baseURL: string; principal: string; enrollments: Record<string, string> }> = {}
 for (const [index, account] of accounts.entries()) {
   const enrollments: Record<string, string> = {}
-  for (const scenario of ["validation", "conflict", "comment", "late-edit"]) enrollments[scenario] = origin + account.mount + "/auth/local?code=" + await account.identity.enroll()
+  for (const scenario of ["validation", "conflict", "comment", "late-edit", "journey", "comparison", "suppliers", "settings"]) enrollments[scenario] = origin + account.mount + "/auth/local?code=" + await account.identity.enroll()
   enrolled[account.key] = { baseURL: origin + account.mount, principal: people[index]!.id, enrollments }
 }
 // Enrollment credentials remain private to this ephemeral test process and are not artifacts.
-await writeFile(manifest, JSON.stringify({ origin, accounts: enrolled }), { mode: 0o600 })
+await writeFile(manifest, JSON.stringify({ origin, accounts: enrolled, records }), { mode: 0o600 })
 active.ready = true
 const closing = { started: false }
 async function close() {

@@ -30,6 +30,7 @@ import { createSfDocumentServices } from "./document-services.ts"
 import { createSfDocumentHttp } from "../../../../modules/sucafina/Sucafinav1/product/interface/document-http.ts"
 import { createSfImportServices } from "./import-services.ts"
 import { createSfImportHttp } from "../../../../modules/sucafina/Sucafinav1/product/interface/import-http.ts"
+import { createProcurementDecisionHttp } from "../../../../modules/sucafina/Sucafinav1/product/procurement/decision-http.ts"
 import { createSfBusinessServices } from "./business-services.ts"
 import { createSfProductContribution, createSfProductDispatch } from "./contribution.ts"
 import { createSfTokenGate } from "./token-gate.ts"
@@ -151,6 +152,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
   const sourcingInputs = createSfSourcingInputs({ authority, business })
   const documentHttp = createSfDocumentHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() && documents ? { ui: authority.ui, human: authority.human, ...documents } : undefined })
   const importHttp = createSfImportHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() && imports ? { ui: authority.ui, human: authority.human, service: imports } : undefined })
+  const procurementDecisionHttp = createProcurementDecisionHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() ? { human: authority.human, decisions: business.procurementDecisions, withCase: business.withCase } : undefined })
   const monthly = createPlannerMonthlyHost({ host: authority.host, humanAuthorize: (context, action, value) => authority.human.authorize(context, action, value) })
   const plannerMonthly: NonNullable<SfHostServices["plannerMonthly"]> = {
     preview: (context, value) => monthly.preview(value, context), apply: (context, value) => monthly.apply(value, context),
@@ -573,7 +575,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
       }, { signal: request.signal })
       return allowed && await authority.host.revalidate(call)
     } })
-  const services: SfHostServices = { ...authority, ...{ procurementSelections: business.procurementSelections, forecastInputs: business.forecastInputs, sourcingInputs, work: business.collaboration.work, analyses, plannerMonthly, personalViews, documents: documents?.documents, productHttp: async (request, surface) => await documentHttp(request, surface) ?? await importHttp(request, surface) }, selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
+  const services: SfHostServices = { ...authority, ...{ procurementSelections: business.procurementSelections, forecastInputs: business.forecastInputs, sourcingInputs, work: business.collaboration.work, analyses, plannerMonthly, personalViews, documents: documents?.documents, productHttp: async (request, surface) => await procurementDecisionHttp(request, surface) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) }, selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
     prepare: async (request) => {
       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }
       if (requests.has(request.runId)) return { status: "conflict", reason: "native-run-already-admitted" }

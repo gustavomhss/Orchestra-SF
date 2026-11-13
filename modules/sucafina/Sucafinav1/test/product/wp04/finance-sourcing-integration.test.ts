@@ -3,18 +3,27 @@ import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { randomUUID } from "node:crypto"
+import { Location } from "@orchestra/core/location"
+import { AbsolutePath } from "@orchestra/core/schema"
 import { createSfSourcingInput, createSfSourcingVerifier } from "../../../../../../apps/cli/src/sucafina-product/analysis-verifier-procurement.ts"
+import { createSfBusinessServices } from "../../../../../../apps/cli/src/sucafina-product/business-services.ts"
+import { createSfSourcingInputs } from "../../../../../../apps/cli/src/sucafina-product/sourcing-inputs.ts"
+import atlasPackage from "../../../../../atlas/boundary/package.json" with { type: "json" }
+import contractFreeze from "../../../product/contracts/freeze-v1.json" with { type: "json" }
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { object, rows } from "../../../runtime/contract.ts"
 import { initialProcurementSettings } from "../../../src/initial-settings.ts"
-import { digestSfValue } from "../../../product/contracts/canonical.ts"
-import { decodeSfContributionOutput, decodeSfOperationInput, decodeSfOperationOutput } from "../../../product/contracts/schema-admission.ts"
+import { digestSfContribution, digestSfValue } from "../../../product/contracts/canonical.ts"
+import { decodeSfContributionEnvelope, decodeSfContributionOutput, decodeSfOperationInput, decodeSfOperationOutput, decodeSfSkillInput } from "../../../product/contracts/schema-admission.ts"
+import type { ContributionEnvelope } from "../../../product/contracts/resident-ai.ts"
 import type { DomainPortHost } from "../../../product/contracts/ports.ts"
 import type { SfDomainValidation } from "../../../product/contracts/runtime.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
+import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
+import { createResidentAiBundle } from "../../../product/ai/resident.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { createSfBusinessContext } from "../../../product/host-binding/business-context.ts"
 import { dispatchSfCapability } from "../../../product/host-binding/capability-dispatch.ts"
@@ -25,6 +34,7 @@ import { createProcurementPort } from "../../../product/procurement/port.ts"
 import { createProcurementSourceResolver } from "../../../product/procurement/sources.ts"
 import { projectProcurementScope } from "../../../product/procurement/source-projection.ts"
 import { createProcurementSourcingEvidence } from "../../../product/procurement/sourcing-evidence.ts"
+import { handleSfSourcingInput } from "../../../product/procurement/sourcing-input-http.ts"
 import { createProcurementUiBindings } from "../../../product/procurement/ui-bindings.ts"
 
 const period = { start: "2026-01-01", end: "2026-12-31" }
@@ -143,6 +153,159 @@ test("revoked sourcing authority cannot reuse a prepared input or a dispatched c
   } finally { await fixture.dispose() }
 })
 
+test("case-bound sourcing input crosses the real business composition and HTTP authority boundary", async () => {
+  const fixture = await sourcingFixture()
+  try {
+    const composed = await sourcingHostFixture(fixture)
+    try {
+      const before = await fixture.requestMaterial()
+      const direct = await composed.authority.ui.admit(composed.post(composed.selector), "sf_sourcing_compare", digestSfValue(composed.selector))
+      if (direct.status !== "ok") throw new Error("real sourcing input admission unavailable")
+      expect((await composed.sourcingInputs.prepare(direct.value, composed.selector)).status).toBe("denied")
+      expect(await composed.authority.ui.validate(direct.value, "sf_sourcing_compare", digestSfValue(composed.selector))).toBe(true)
+      const prepared = await composed.sourcingInputs.prepare(direct.value, composed.selector)
+      expect(prepared.status).toBe("ok")
+      if (prepared.status !== "ok") throw new Error(`case-bound sourcing preparation failed: ${prepared.reason}`)
+      expect(prepared.value.sourceRefs).toEqual([composed.evidence])
+      expect(prepared.value.weightsAndEligibility).toHaveLength(10)
+      composed.authority.ui.finish(direct.value)
+      expect((await composed.sourcingInputs.prepare(direct.value, composed.selector)).status).toBe("denied")
+
+      const response = await handleSfSourcingInput(composed.post(composed.selector), composed.origin, composed)
+      expect(response.status).toBe(200)
+      expect(response.headers.get("cache-control")).toBe("no-store")
+      const body: unknown = await response.json()
+      expect(object(body).status).toBe("ok")
+      const decoded = decodeSfSkillInput("SourcingComparisonInput", object(body).value)
+      expect(decoded.ok).toBe(true)
+      if (!decoded.ok) throw new Error("HTTP returned a noncanonical sourcing input")
+      expect(decoded.value).toEqual(prepared.value)
+      expect(object(body)).not.toHaveProperty("authority")
+      expect(object(body)).not.toHaveProperty("lease")
+      expect(await fixture.requestMaterial()).toEqual(before)
+
+      const outside = await handleSfSourcingInput(composed.post({ ...composed.selector, requestRef: composed.outsideRef }), composed.origin, composed)
+      expect(outside.status).toBe(403)
+      expect(await outside.json()).toEqual({ status: "denied" })
+      const injected = await handleSfSourcingInput(composed.post({ ...composed.selector, authority: "forged" }), composed.origin, composed)
+      expect(injected.status).toBe(400)
+      const crossOrigin = await handleSfSourcingInput(composed.post(composed.selector, { origin: "https://other.invalid" }), composed.origin, composed)
+      expect(crossOrigin.status).toBe(403)
+
+      let preparedBeforeRevocation = false
+      const revoked = await handleSfSourcingInput(composed.post(composed.selector), composed.origin, { ui: composed.ui, sourcingInputs: {
+        prepare: async (call, selection) => {
+          const result = await composed.sourcingInputs.prepare(call, selection)
+          preparedBeforeRevocation = result.status === "ok"
+          fixture.revoke()
+          return result
+        },
+      } })
+      expect(preparedBeforeRevocation).toBe(true)
+      expect(revoked.status).toBe(403)
+      expect(await revoked.json()).toEqual({ status: "denied" })
+      expect(await fixture.requestMaterial()).toEqual(before)
+    } finally { composed.dispose() }
+  } finally { await fixture.dispose() }
+})
+
+test("sourcing output verifier rejects non-ready envelopes and tampered replay material", async () => {
+  const fixture = await sourcingFixture()
+  try {
+    const input = await fixture.prepareInput(fixture.evidence.refId, fixture.issuer)
+    if (input.status !== "ok") throw new Error("sourcing input unavailable")
+    const proof = await fixture.verifier.verify(input.value, fixture.analysisRequest, fixture.issuer)
+    if (proof.status !== "ok") throw new Error("sourcing proof unavailable")
+    const dispatched = await fixture.compare()
+    if (dispatched.status !== "ok") throw new Error("sourcing replay unavailable")
+    const comparison = decodeSfOperationOutput("sf_sourcing_compare", dispatched.result)
+    if (!comparison.ok) throw new Error("sourcing replay invalid")
+    // These contract envelopes exercise the pure output predicate only. They are
+    // never admitted or stored as a native Session or a verified SkillLoadReceipt.
+    const harnessDigest = digestSfValue({ purpose: "adversarial-envelope-only; no native execution" })
+    const base: Omit<Extract<ContributionEnvelope, { kind: "CommercialComparison"; state: "ready" }>, "state" | "payload"> = {
+      id: "adversarial-envelope-only", caseRef: fixture.analysisRequest.caseRef, kind: "CommercialComparison", schemaVersion: "sf-contribution-v1",
+      evidenceRefs: [fixture.evidence], accessRevision: fixture.issuer.binding.accessRevision, createdAt: at, outputDigest: "",
+      runProvenance: { runId: "unadmitted-harness", nativeSessionId: "no-native-session", profileId: "sf_procurement", profileVersion: "1.0.0", profileDigest: harnessDigest,
+        skillId: "sf-comparar-sourcing", skillVersion: "1.0.0", sourceDigest: harnessDigest, instructionsDigest: harnessDigest,
+        loadedMessageId: "no-skill-load", loadedAt: at, manifestDigest: harnessDigest, actualModel: "harness/not-executed", contextFingerprint: harnessDigest },
+    }
+    const ready: Extract<ContributionEnvelope, { kind: "CommercialComparison"; state: "ready" }> = { ...base, state: "ready", payload: comparison.value }
+    ready.outputDigest = digestSfContribution(ready)
+    expect(await proof.value.acceptsOutput(ready, fixture.issuer)).toEqual({ status: "ok", value: true })
+    expect((await proof.value.acceptsOutput({ ...ready, evidenceRefs: [] }, fixture.issuer)).status).toBe("unavailable")
+    expect((await proof.value.acceptsOutput({ ...ready, payload: { ...ready.payload, ranking: ["B", "A"] } }, fixture.issuer)).status).toBe("unavailable")
+    const stale: ContributionEnvelope = { ...base, state: "stale", reason: "adversarial non-ready envelope" }
+    stale.outputDigest = digestSfContribution(stale)
+    expect((await proof.value.acceptsOutput(stale, fixture.issuer)).status).toBe("unavailable")
+    // Also attack the predicate directly with a mutated runtime object. The
+    // closed envelope decoder and the autonomous predicate must both reject it.
+    const malformed = structuredClone(ready)
+    expect(Reflect.set(malformed, "state", "stale")).toBe(true)
+    malformed.outputDigest = digestSfContribution(malformed)
+    expect(decodeSfContributionEnvelope(malformed).ok).toBe(false)
+    expect((await proof.value.acceptsOutput(malformed, fixture.issuer)).status).toBe("unavailable")
+    fixture.revoke()
+    expect((await proof.value.acceptsOutput(ready, fixture.issuer)).status).toBe("unavailable")
+  } finally { await fixture.dispose() }
+})
+
+async function sourcingHostFixture(fixture: Awaited<ReturnType<typeof sourcingFixture>>) {
+  await fixture.persistence.transaction("procurement", async (snapshot) => {
+    const store = object(snapshot.data.store)
+    const requests = object(store.requests)
+    const original = object(requests["PR-1"])
+    requests["PR-2"] = { ...structuredClone(original), request: { ...structuredClone(object(original.request)), number: "PR-2" } }
+    const issued = object(store.issued)
+    if (!Array.isArray(issued.pr)) throw new Error("issued request registry unavailable")
+    issued.pr = [...issued.pr, "PR-2"]
+    return { commit: true, value: undefined }
+  })
+  const origin = "https://local.invalid"
+  const proposalCoverageWrites = new WeakSet<object>()
+  const procurementEvidenceWrites = new WeakSet<object>()
+  const authority = createSfProductAuthority({
+    identity: () => ({ installationId: "i", hostId: "sourcing-http-host", projectId: "p", location: Location.Ref.make({ directory: AbsolutePath.make(fixture.directory) }) }),
+    installationId: "i", origin, policyVersion: "1", persistence: fixture.persistence, authenticate: fixture.host.authenticate, environment: fixture.host.environment,
+    grants: [{ principalRef: "buyer", namespaces: ["cases", "preferences"], operations: ["sf_work_list", "sf_request_read", "sf_case_draft", "sf_sourcing_compare"] }],
+    createId: randomUUID, now: Date.now, commandIdentity: async () => randomUUID(), inspectSession: async () => undefined,
+    verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined,
+    proposalCoverageWrites, procurementEvidenceWrites,
+  })
+  const business = createSfBusinessServices({ authority, persistence: fixture.persistence, proposalCoverageWrites, procurementEvidenceWrites })
+  const sourceRoot = path.resolve(import.meta.dir, "../../../product/ai")
+  const bundle = await createResidentAiBundle({ root: sourceRoot, manifestPath: path.join(sourceRoot, "manifests/resident.json") })
+  business.initializeAtlas(undefined, { boundaryVersion: atlasPackage.version, schemaVersion: contractFreeze.canonicalSha256,
+    manifestVersion: bundle.manifestDigest, skillVersion: digestSfValue(bundle.skills.map((skill) => ({ id: skill.id, version: skill.version, sourceDigest: skill.sourceDigest }))) })
+  const post = (payload: unknown, headers: Record<string, string> = {}) => new Request(`${origin}/procurement?sf=sourcing-input`, {
+    method: "POST", headers: { authorization: "Bearer buyer", origin, "content-type": "application/json", "idempotency-key": randomUUID(), ...headers }, body: JSON.stringify(payload),
+  })
+  const admit = async (operation: string, payload: unknown) => {
+    const result = await authority.ui.admit(post(payload), operation, digestSfValue(payload))
+    if (result.status !== "ok" || !await authority.ui.validate(result.value, operation, digestSfValue(payload))) throw new Error(`real composition admission unavailable: ${operation}`)
+    return result.value
+  }
+  const selected = await admit("sf_work_list", { purpose: "work-selection", period })
+  const selection = await business.procurementSelections.create(selected, period)
+  if (selection.status !== "ok") throw new Error(`real procurement selection unavailable: ${selection.reason}`)
+  const issued = await business.individual.issue("procurement-request", "PR-1", selected)
+  const outside = await business.individual.issue("procurement-request", "PR-2", selected)
+  if (issued.status !== "ok" || outside.status !== "ok") throw new Error("real request selectors unavailable")
+  const source = await business.individual.resolve(issued.value, selected)
+  if (source.status !== "ok") throw new Error("real source evidence unavailable")
+  authority.ui.finish(selected)
+  const draft = { objective: "Prepare sourcing from the selected case", criteria: ["Technical fit", "Commercial terms"], horizon: period, currency: "USD", sourceRefs: [source.value.evidence] }
+  const draftCall = await admit("sf_case_draft", draft)
+  const created = await business.cases.draft(draft, draftCall)
+  authority.ui.finish(draftCall)
+  if (created.status !== "ok") throw new Error(`real business case unavailable: ${created.reason}`)
+  const sourcingInputs = createSfSourcingInputs({ authority, business })
+  return { authority, ui: authority.ui, sourcingInputs, origin, post, evidence: source.value.evidence, outsideRef: outside.value,
+    selector: { requestRef: issued.value, caseRef: { id: created.value.id, incarnation: created.value.incarnation, version: created.value.version } },
+    dispose: business.dispose,
+  }
+}
+
 async function sourcingFixture(variant?: "missing-fx" | "missing-assessment" | "single-offer") {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-sourcing-dispatch-"))
   await chmod(directory, 0o700)
@@ -222,7 +385,7 @@ async function sourcingFixture(variant?: "missing-fx" | "missing-assessment" | "
   const sourcingEvidence = createProcurementSourcingEvidence(sourceHost)
   const verifier = createSfSourcingVerifier({ cases, context, host, sourcingEvidence })
   const analysisRequest = { caseRef: { id: created.value.id, incarnation: created.value.incarnation, version: created.value.version }, profileId: "sf_procurement", profileVersion: "1.0.0", skillId: "sf-comparar-sourcing", skillVersion: "1.0.0", manifestDigest: "a".repeat(64), outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: ["sf_sourcing_compare"], objective: draft.objective }
-  return { persistence, issuer, evidence, payload, admit, dispatch, verifier, analysisRequest,
+  return { directory, host, persistence, issuer, evidence, payload, admit, dispatch, verifier, analysisRequest,
     compare: () => bindings.compareSourcing(request, payload), prepareInput: createSfSourcingInput({ sourcingEvidence }),
     revoke: () => { access.allowed = false },
     requestMaterial: () => persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: structuredClone(snapshot.data.store) })),

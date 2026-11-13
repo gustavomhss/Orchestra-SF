@@ -1,15 +1,19 @@
 import { readFile } from "node:fs/promises"
 import path from "node:path"
 import { expect, test } from "@playwright/test"
-import type { Page, TestInfo } from "@playwright/test"
+import type { Locator, Page, TestInfo } from "@playwright/test"
 
 type Account = { baseURL: string; principal: string; enrollments: Record<string, string> }
-type Manifest = { origin: string; accounts: { first: Account; second: Account } }
+type Manifest = { origin: string; accounts: { first: Account; second: Account; viewer: Account }; records: { supplier: string; comparison: string } }
 
 test.describe.configure({ retries: 0 })
 
-async function login(page: Page, account: "first" | "second", scenario: string) {
-  const manifest = JSON.parse(await readFile(path.join(import.meta.dirname, ".host-manifest.json"), "utf8")) as Manifest
+async function readManifest() {
+  return JSON.parse(await readFile(path.join(import.meta.dirname, ".host-manifest.json"), "utf8")) as Manifest
+}
+
+async function login(page: Page, account: "first" | "second" | "viewer", scenario: string) {
+  const manifest = await readManifest()
   const selected = manifest.accounts[account]
   const enrollment = selected.enrollments[scenario]
   if (!enrollment) throw new Error("The selected real-host enrollment is unavailable")
@@ -17,7 +21,8 @@ async function login(page: Page, account: "first" | "second", scenario: string) 
   expect(response.status()).toBe(303)
   await page.goto(selected.baseURL + "/procurement?page=Requests")
   await expect(page.getByRole("heading", { name: "Requests", exact: true })).toBeVisible()
-  await expect(page.getByRole("button", { name: "Create request", exact: true })).toBeEnabled()
+  if (account === "viewer") await expect(page.getByRole("button", { name: "Create request", exact: true })).toHaveCount(0)
+  if (account !== "viewer") await expect(page.getByRole("button", { name: "Create request", exact: true })).toBeEnabled()
   return selected
 }
 
@@ -48,7 +53,7 @@ async function createDraft(page: Page, account: Account, title: string) {
   await expect(link).toHaveText(/^PR-2026-\d+$/)
   const id = (await link.textContent())!.trim()
   await openRecord(page, account, id)
-  await expect(page.locator('[data-request-summary="' + id + '"]')).toContainText("Draft")
+  await expect(page.locator('[data-request-summary="' + id + '"]')).toContainText("Requisition draft")
   return id
 }
 
@@ -60,9 +65,23 @@ async function openRecord(page: Page, account: Account, id: string) {
   return detail
 }
 
-async function proof(page: Page, info: TestInfo, name: string, observation: Record<string, unknown>) {
-  await info.attach(name + ".png", { body: await page.screenshot(), contentType: "image/png" })
+async function proof(page: Page, info: TestInfo, name: string, observation: Record<string, unknown>, mask: Locator[] = []) {
+  const path = info.outputPath(name + ".png")
+  await page.screenshot({ path, mask })
+  await info.attach(name + ".png", { path, contentType: "image/png" })
   await info.attach(name + ".json", { body: Buffer.from(JSON.stringify({ ...observation, humanTimingMeasured: false })), contentType: "application/json" })
+}
+
+async function requestAction(page: Page, id: string, form: Locator, label: string) {
+  const action = await form.getAttribute("data-command")
+  const version = Number(await form.getAttribute("data-version"))
+  if (!action || !Number.isSafeInteger(version)) throw new Error("The current production command is unavailable")
+  const pending = responseFor(page, action, id)
+  await form.getByRole("button", { name: label, exact: true }).click()
+  const response = await pending
+  expect(response.status()).toBe(200)
+  await expect(page.locator('[data-request-summary="' + id + '"]')).toContainText("Version " + (version + 1))
+  return response
 }
 
 test("keyboard submission uses current entries and focuses the real 422 field without clearing the draft", async ({ page }, info) => {
@@ -247,4 +266,224 @@ test("a real committed save cannot clear edits typed before its response arrives
     await expect(observer.locator('section[id="' + id + '-pr"]').getByRole("textbox", { name: "Description", exact: true })).toHaveValue("The value sent to the real host")
     await proof(page, info, "later-edits-preserved", { id, status: 200, committedValue: "The value sent to the real host", unsavedValue: "Later edits remain unsaved" })
   } finally { committed.release?.(); await observerContext.close() }
+})
+
+test("a recurring request reaches an internally issued PO with source values and negotiated entries preserved", async ({ page }, info) => {
+  test.setTimeout(90_000)
+  const account = await login(page, "first", "journey")
+  const manifest = await readManifest()
+  const id = await createDraft(page, account, "Recurring source-to-order browser journey")
+  const detail = page.locator('details[id="' + id + '"]')
+  const pr = detail.locator('section[id="' + id + '-pr"]')
+  const prForm = pr.locator('form[data-command="save"]')
+  await pr.getByRole("checkbox", { name: "Recurring", exact: true }).check()
+  await pr.locator("details > summary").click()
+  await pr.getByRole("textbox", { name: "Frequency", exact: true }).fill("Monthly")
+  await pr.getByRole("spinbutton", { name: "Estimated annual value", exact: true }).fill("1200")
+  await requestAction(page, id, prForm, "Save requisition")
+  await pr.getByRole("checkbox", { name: "Recurring", exact: true }).uncheck()
+  await requestAction(page, id, prForm, "Save requisition")
+  await pr.locator("details > summary").click()
+  await expect(pr.getByRole("textbox", { name: "Frequency", exact: true })).toHaveValue("Monthly")
+  await expect(pr.getByRole("spinbutton", { name: "Estimated annual value", exact: true })).toHaveValue("1200")
+  await pr.getByRole("checkbox", { name: "Recurring", exact: true }).check()
+  await pr.getByRole("combobox", { name: "Expense type", exact: true }).selectOption("OPEX")
+  await requestAction(page, id, pr.locator('form[data-command="submit_pr"]'), "Submit requisition")
+  await expect(detail.locator("[data-request-summary]")).toContainText("Requisition approval")
+  await requestAction(page, id, detail.locator('form[data-command="approve"]'), "Approve")
+
+  const sourcing = detail.locator('section[id="' + id + '-sourcing"]')
+  const sourceForm = sourcing.locator('form[data-command="save"]')
+  await expect(sourceForm.getByRole("button", { name: "Save sourcing", exact: true })).toBeEnabled()
+  await sourceForm.getByRole("textbox", { name: "Technical evaluator", exact: true }).fill("Browser sourcing evaluator")
+  await sourceForm.getByRole("textbox", { name: "Fewer quotations justification", exact: true }).fill("One qualified proposal is recorded; this does not establish a complete competition")
+  await sourceForm.getByRole("textbox", { name: "Selection justification", exact: true }).fill("Recorded service continuity decision")
+  await sourceForm.getByRole("combobox", { name: "Contract strategy", exact: true }).selectOption("existing")
+  await sourceForm.locator('[name="sourcing.quotes.0.supplier"]').fill("Journey registered supplier")
+  await sourceForm.locator('[name="sourcing.quotes.0.supplierId"]').selectOption(manifest.records.supplier)
+  await sourceForm.locator('[name="sourcing.quotes.0.currency"]').fill("EUR")
+  await sourceForm.locator('[name="sourcing.quotes.0.total"]').fill("100")
+  await sourceForm.locator('[name="sourcing.quotes.0.qty"]').fill("2")
+  await sourceForm.locator('[name="sourcing.quotes.0.unitPrice"]').fill("50")
+  for (const index of [0, 1, 2, 3, 4]) await sourceForm.locator(`[name="sourcing.quotes.0.scores.${index}"]`).fill("5")
+  for (const index of [1, 2]) await sourceForm.locator(`[name="sourcing.quotes.0.cscores.${index}"]`).fill("4")
+  await requestAction(page, id, sourceForm, "Save sourcing")
+  const selection = sourcing.locator('form[data-command="select_quote"]')
+  await selection.getByRole("combobox", { name: "Winning quote", exact: true }).selectOption({ label: "Journey registered supplier · EUR 100" })
+  await requestAction(page, id, selection, "Select quote")
+  const po = detail.locator('section[id="' + id + '-po"]')
+  await expect(po.locator('[name="po.supplierId"]')).toHaveValue(manifest.records.supplier)
+  await expect(po.locator('[name="po.currency"]')).toHaveValue("EUR")
+  await expect(po.locator('[name="po.lines.0.qty"]')).toHaveValue("2")
+  for (const strategy of ["new", "existing"]) {
+    await sourceForm.getByRole("combobox", { name: "Contract strategy", exact: true }).selectOption(strategy)
+    await requestAction(page, id, sourceForm, "Save sourcing")
+    await expect(sourceForm.getByRole("textbox", { name: "Selection justification", exact: true })).toHaveValue("Recorded service continuity decision")
+    await expect(sourceForm.locator('[name="sourcing.quotes.0.qty"]')).toHaveValue("2")
+    await expect(selection.getByRole("combobox", { name: "Winning quote", exact: true })).toHaveValue("sourcing.quotes-1")
+    await expect(po.locator('[name="po.supplierId"]')).toHaveValue(manifest.records.supplier)
+  }
+  await requestAction(page, id, sourcing.locator('form[data-command="submit_sourcing"]'), "Submit sourcing")
+  await expect(detail.locator("[data-request-summary]")).toContainText("Sourcing approval")
+  await requestAction(page, id, detail.locator('form[data-command="approve"]'), "Approve")
+  await expect(detail.locator("[data-request-summary]")).toContainText("Purchase order draft")
+
+  const poForm = po.locator('form[data-command="save"]')
+  await poForm.locator('[name="po.description"]').fill("Negotiated delivery scope")
+  await poForm.locator('[name="po.paymentTerms"]').fill("Net 60 negotiated")
+  await poForm.locator('[name="po.deliveryDate"]').fill("2026-12-20")
+  await poForm.locator('[name="po.deliveryConditions"]').fill("Inspection and acceptance on delivery")
+  await poForm.locator('[name="po.billingAddress"]').fill("Negotiated invoice address")
+  await poForm.locator('[name="po.lines.0.unitPrice"]').fill("48")
+  const missingReference = responseFor(page, "submit_po", id)
+  await po.getByRole("button", { name: "Submit purchase order", exact: true }).click()
+  expect((await missingReference).status()).toBe(422)
+  await expect(poForm.locator('[name="po.contractRef"]')).toBeFocused()
+  await expect(poForm.locator('[name="po.contractRef"]')).toHaveAccessibleDescription("Contract reference is required (call-off under existing contract)")
+  await expect(poForm.locator('[name="po.paymentTerms"]')).toHaveValue("Net 60 negotiated")
+  await expect(poForm.locator('[name="po.lines.0.unitPrice"]')).toHaveValue("48")
+  await poForm.locator('[name="po.contractRef"]').fill("FRAME-2026-01")
+  const saved = await requestAction(page, id, poForm, "Save purchase order")
+  expect((await saved.json()).value.po).toMatchObject({ supplierId: manifest.records.supplier, currency: "EUR", contractRef: "FRAME-2026-01", paymentTerms: "Net 60 negotiated", lines: [{ qty: 2, unitPrice: 48 }] })
+  const origins = po.getByRole("region", { name: "Purchase order field origins", exact: true })
+  await expect(origins).toContainText("Net 45")
+  await expect(origins).toContainText("Net 60 negotiated")
+  await poForm.locator('[name="po.notes"]').fill("A later edit must not reapply master defaults")
+  await requestAction(page, id, poForm, "Save purchase order")
+  await expect(poForm.locator('[name="po.paymentTerms"]')).toHaveValue("Net 60 negotiated")
+  await expect(poForm.locator('[name="po.billingAddress"]')).toHaveValue("Negotiated invoice address")
+  await expect(poForm.locator('[name="po.contractRef"]')).toHaveValue("FRAME-2026-01")
+  await expect(poForm.locator('[name="po.lines.0.qty"]')).toHaveValue("2")
+  await requestAction(page, id, po.locator('form[data-command="submit_po"]'), "Submit purchase order")
+  await expect(detail.locator("[data-request-summary]")).toContainText("Purchase order approval")
+  await requestAction(page, id, detail.locator('form[data-command="approve"]'), "Approve")
+  await expect(detail.locator("[data-request-summary]")).toContainText("Purchase order approved")
+  const issued = await requestAction(page, id, detail.locator('form[data-command="issue"]'), "Issue internally")
+  expect((await issued.json()).value).toMatchObject({ status: "po_issued", po: { paymentTerms: "Net 60 negotiated", contractRef: "FRAME-2026-01", lines: [{ qty: 2, unitPrice: 48 }] } })
+  await expect(detail.locator("[data-request-summary]")).toContainText("Issued internally")
+  await expect(detail.locator("[data-request-summary]")).toContainText("103.68 USD")
+  await po.scrollIntoViewIfNeeded()
+  await proof(page, info, "pr-sourcing-po-issued", { id, sourceSupplier: manifest.records.supplier, currency: "EUR", quantity: 2, negotiatedUnitPrice: 48, savedPaymentTerms: "Net 60 negotiated", issuedInternally: true })
+})
+
+test("the A B C comparison shows score components and retains submitted FX in the real detail and queue", async ({ page }, info) => {
+  const account = await login(page, "first", "comparison")
+  const manifest = await readManifest()
+  const id = manifest.records.comparison
+  const detail = await openRecord(page, account, id)
+  const sourcing = detail.locator('section[id="' + id + '-sourcing"]')
+  const comparison = sourcing.getByRole("table").filter({ has: page.getByRole("columnheader", { name: "Base amount / FX", exact: true }) })
+  const row = (name: string) => comparison.getByRole("row").filter({ has: page.getByRole("cell", { name, exact: true }) })
+  await expect(row("Browser quote A").getByRole("cell")).toHaveText(["Browser quote A", "Eligible", "32400 USD", "32400 USD", "32400 USD (base: 1)", "87.0", "93.3", "89.3", "87.9", "1"])
+  await expect(row("Browser quote B").getByRole("cell")).toHaveText(["Browser quote B", "Eligible", "28000 EUR", "28000 EUR", "30240 USD (submitted FX: 1.08)", "77.0", "100.0", "97.0", "85.0", "2"])
+  await expect(row("Browser quote C").getByRole("cell")).toHaveText(["Browser quote C", "Not compliant", "29000 USD", "29000 USD", "29000 USD (base: 1)", "Unavailable", "Unavailable", "Unavailable", "Unavailable", "Unavailable"])
+  await expect(sourcing).toContainText("Rank 1: Browser quote A")
+  await expect(sourcing).toContainText("2160 USD (7.14%) above the lowest eligible proposal")
+  await expect(sourcing).toContainText("Selection: Browser quote A. Reason: Recorded technical preference")
+  await expect(detail.locator("[data-request-summary]")).toContainText("32400 USD")
+  const queue = page.getByRole("table").filter({ has: page.getByRole("columnheader", { name: "Value basis", exact: true }) })
+  await expect(queue.getByRole("row").filter({ has: page.getByRole("cell", { name: "Frozen browser sourcing comparison", exact: true }) }).getByRole("cell", { name: "32400 USD", exact: true })).toHaveCount(1)
+  await comparison.scrollIntoViewIfNeeded()
+  await proof(page, info, "abc-submitted-comparison", { id, selectedBaseAmount: 32400, euroOriginal: 28000, submittedFx: 1.08, euroBaseAmount: 30240, rank: ["A", "B"], excluded: ["C"] })
+
+  await page.goto(account.baseURL + "/procurement?page=Settings")
+  const settings = page.locator('form[data-command="save"][data-page="Settings"]')
+  const version = Number(await settings.getAttribute("data-version"))
+  await settings.locator('[name="fxRates.1.rate"]').fill("2")
+  const saved = responseFor(page, "save")
+  await settings.getByRole("button", { name: "Save settings", exact: true }).click()
+  expect((await saved).status()).toBe(200)
+  await expect(settings).toHaveAttribute("data-version", String(version + 1))
+  await openRecord(page, account, id)
+  await expect(row("Browser quote B").getByRole("cell")).toContainText(["Browser quote B", "Eligible", "28000 EUR", "28000 EUR", "30240 USD (submitted FX: 1.08)"])
+  await expect(comparison).not.toContainText("56000 USD")
+  await expect(detail.locator("[data-request-summary]")).toContainText("32400 USD")
+})
+
+test("an authorized bank change requires supplier revalidation and a real viewer cannot read or update bank details", async ({ page, browser }, info) => {
+  const first = await login(page, "first", "suppliers")
+  const manifest = await readManifest()
+  const id = manifest.records.supplier
+  await page.goto(first.baseURL + "/procurement?" + new URLSearchParams({ page: "Suppliers", supplier: id }))
+  const supplier = page.locator('details[id="supplier-' + id + '"]')
+  await expect(supplier).toHaveAttribute("open", "")
+  await expect(page.getByRole("row").filter({ has: page.getByRole("link", { name: "Journey registered supplier", exact: true }) })).toContainText("active")
+  const bank = supplier.locator('form[data-command="change-bank"]')
+  const before = Number(await bank.getAttribute("data-version"))
+  await bank.getByRole("textbox", { name: "IBAN", exact: true }).fill("TEST-REVISED-IBAN")
+  const changed = responseFor(page, "change-bank", id)
+  await bank.getByRole("button", { name: "Save bank details", exact: true }).click()
+  const response = await changed
+  expect(response.status()).toBe(200)
+  const result = await response.json()
+  expect(result.value).toMatchObject({ status: "pending", validatedAt: null, validatedBy: null })
+  expect(JSON.stringify(result)).not.toContain("TEST-REVISED-IBAN")
+  expect(JSON.stringify(result)).not.toContain("TEST-ORIGINAL-IBAN")
+  await expect(bank).toHaveAttribute("data-version", String(before + 1))
+  await expect(supplier).toContainText("Bank details changed after activation. Supplier validation was cleared")
+  await expect(bank.getByRole("textbox", { name: "IBAN", exact: true })).toHaveValue("TEST-REVISED-IBAN")
+  await supplier.getByText("Bank details changed after activation. Supplier validation was cleared; an authorized supplier administrator must review and reactivate the supplier.", { exact: true }).scrollIntoViewIfNeeded()
+  await proof(page, info, "supplier-bank-revalidation", { supplier: id, result: "pending", validationCleared: true, actorRole: "admin" }, [bank])
+
+  const viewerContext = await browser.newContext()
+  try {
+    const observer = await viewerContext.newPage()
+    const viewer = await login(observer, "viewer", "suppliers")
+    const read = await observer.goto(viewer.baseURL + "/procurement?" + new URLSearchParams({ page: "Suppliers", supplier: id }))
+    expect(read?.status()).toBe(200)
+    const visible = observer.locator('details[id="supplier-' + id + '"]')
+    await expect(visible).toContainText("Bank details masked.")
+    await expect(visible.locator('[name="iban"], [name="account"], [name="bankName"], [name="swift"]')).toHaveCount(0)
+    await expect(visible.locator('form[data-command="change-bank"]')).toHaveCount(0)
+    expect(await read!.text()).not.toContain("TEST-REVISED-IBAN")
+    expect(await read!.text()).not.toContain("TEST-ORIGINAL-ACCOUNT")
+    const denied = await observer.request.post(viewer.baseURL + "/procurement?page=Suppliers", { headers: { origin: manifest.origin, "sec-fetch-site": "same-origin" },
+      data: { page: "Suppliers", action: "change-bank", id, version: before + 1, values: { iban: "FORGED-VIEWER-CHANGE" } } })
+    expect(denied.status()).toBe(403)
+    expect(await denied.text()).not.toContain("TEST-REVISED-IBAN")
+    await proof(observer, info, "supplier-viewer-redaction", { supplier: id, bankControls: 0, unauthorizedWrite: 403, syntheticPolicy: "viewer-only" })
+    await page.reload()
+    await expect(bank.getByRole("textbox", { name: "IBAN", exact: true })).toHaveValue("TEST-REVISED-IBAN")
+  } finally { await viewerContext.close() }
+})
+
+test("settings reject invalid currencies with visible feedback and reset restores defaults without changing a submitted request", async ({ page }, info) => {
+  const account = await login(page, "first", "settings")
+  const manifest = await readManifest()
+  const comparison = await openRecord(page, account, manifest.records.comparison)
+  const unchanged = await comparison.locator("[data-request-summary]").textContent()
+  await page.goto(account.baseURL + "/procurement?page=Settings")
+  const settings = page.locator('form[data-command="save"][data-page="Settings"]')
+  const version = Number(await settings.getAttribute("data-version"))
+  await settings.locator('[name="fxRates.1.rate"]').fill("0")
+  await settings.locator('[name="billingAddress"]').fill("Preserved unsent settings address")
+  const rejected = responseFor(page, "save")
+  await settings.getByRole("button", { name: "Save settings", exact: true }).click()
+  expect((await rejected).status()).toBe(422)
+  await expect(page.locator("#notice")).toHaveText("Invalid matrix or currencies")
+  await expect(settings).toHaveAttribute("data-version", String(version))
+  await expect(settings.locator('[name="fxRates.1.rate"]')).toHaveValue("0")
+  await expect(settings.locator('[name="billingAddress"]')).toHaveValue("Preserved unsent settings address")
+  await settings.locator('[name="fxRates.1.rate"]').fill("1.2")
+  const accepted = responseFor(page, "save")
+  await settings.getByRole("button", { name: "Save settings", exact: true }).click()
+  expect((await accepted).status()).toBe(200)
+  await expect(settings).toHaveAttribute("data-version", String(version + 1))
+  await expect(page.locator("#notice")).toHaveText("Saved.")
+  await expect(settings.locator('[name="billingAddress"]')).toHaveValue("Preserved unsent settings address")
+  await page.locator("details.editor-panel > summary").click()
+  const reset = page.locator('form[data-command="reset"][data-page="Settings"]')
+  await expect(reset).toContainText("Requests, suppliers, issued identifiers and submitted approval/FX snapshots remain preserved")
+  const restored = responseFor(page, "reset")
+  await reset.getByRole("button", { name: "Reset settings", exact: true }).click()
+  expect((await restored).status()).toBe(200)
+  await expect(settings).toHaveAttribute("data-version", String(version + 2))
+  await expect(settings.locator('[name="fxRates.1.rate"]')).toHaveValue("1.08")
+  await expect(settings.locator('[name="minQuotes"]')).toHaveValue("3")
+  await expect(settings.locator('[name="billingAddress"]')).toHaveValue("")
+  await expect(page.locator("#notice")).toHaveText("Saved.")
+  await openRecord(page, account, manifest.records.comparison)
+  await expect(comparison.locator("[data-request-summary]")).toHaveText(unchanged!)
+  await expect(comparison.locator('section[id="' + manifest.records.comparison + '-sourcing"]')).toContainText("30240 USD (submitted FX: 1.08)")
+  await proof(page, info, "settings-reset-preserves-submitted-source", { invalidSave: 422, validSave: 200, reset: 200, retainedRequest: manifest.records.comparison, submittedEuroFx: 1.08 })
 })

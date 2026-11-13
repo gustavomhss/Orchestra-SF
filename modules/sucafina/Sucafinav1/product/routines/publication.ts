@@ -1,6 +1,5 @@
 import { Effect } from "effect"
 import { RelayWorkflowBinding } from "@orchestra/core/relay-workflow-binding"
-import type { ProjectID } from "@orchestra/schema/project-id"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 
 /** The host binds this port to the authenticated project and revalidates the real Request. */
@@ -28,7 +27,7 @@ export async function listPublishedRoutineWorkflows(host: RoutinePublicationHost
 export async function acquireRoutineWorkflow(input: {
   host: RoutinePublicationHost
   context: TrustedDomainContext
-  projectID: ProjectID
+  projectID: RelayWorkflowBinding.PublicationPort["projectID"]
   documentId: string
   parameters: Readonly<Record<string, string>>
   writePaths: readonly string[]

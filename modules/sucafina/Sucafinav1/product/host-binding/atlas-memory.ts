@@ -117,7 +117,7 @@ export function createSfAtlasMemory(input: {
         const record = event.payload as MemoryRecord
         const envelope = partition.envelopes[id]
         const boundCase = envelope?.caseRef
-        if (!envelope || !boundCase || envelope.eventId !== id || envelope.owner !== owner || record.owner !== owner || envelope.kind !== "task" || record.kind !== "task" || !("taskId" in record.entry) || boundCase.id !== caseRef.id || boundCase.incarnation !== caseRef.incarnation || boundCase.version > found.value.case.version) return { status: "unavailable" as const }
+        if (!envelope || !boundCase || envelope.eventId !== id || envelope.owner !== owner || record.owner !== owner || envelope.kind !== "task" || record.kind !== "task" || !("taskId" in record.entry) || typeof record.entry.ref !== "string" || !record.entry.ref.trim() || boundCase.id !== caseRef.id || boundCase.incarnation !== caseRef.incarnation || boundCase.version > found.value.case.version) return { status: "unavailable" as const }
         if (envelope.projectionDigest !== digestSfValue({ kind: "task", owner, entry: record.entry, sourceEventId: envelope.sourceEventId, evidenceRefs: envelope.evidenceRefs })) return { status: "unavailable" as const }
         const originals = [...envelope.evidenceRefs, ...envelope.dependencies]
         try {
@@ -134,7 +134,7 @@ export function createSfAtlasMemory(input: {
           const capture = partition.originals[ref.refDigest]
           if ((resolution.state !== "fresh" && resolution.state !== "historical") || !resolution.currentRef || !resolution.authorizedProjection || !capture || digestSfValue(capture.ref) !== digestSfValue(ref) || partition.captureDigests[id]?.[ref.refDigest] !== digestSfValue(capture) || (resolution.state === "historical" && (resolution.differences === undefined || digestSfValue(resolution.authorizedProjection) !== digestSfValue(capture.projection))) || !await input.proveContinuity(ref, resolution.currentRef, call)) return { status: "unavailable" as const }
         }
-        approved.push({ id, event, envelope, resolutions, entry: record.entry })
+        approved.push({ id, event, envelope, resolutions, entry: { ...record.entry, ref: record.entry.ref } })
       }
       if (!await input.host.revalidate(call)) return { status: "unavailable" as const }
       const filtered = createSfAtlasDurableMemory({ events: approved.map((item) => [item.id, item.event]) })
