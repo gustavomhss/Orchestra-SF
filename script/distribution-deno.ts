@@ -6,7 +6,7 @@ export const distributionDenoVersion = "2.9.7"
 
 // Exact native upstream release assets; GitHub v2.9.7 asset SHA-256 receipts,
 // 2026-10-14. npm's wrapper publication is not this release's availability oracle.
-const pins = {
+export const pins = {
   "darwin-arm64": ["aarch64-apple-darwin", "5cd46d6268f6f78f5d88bdc7159d20bd44cdaa4b3303474839f87ec6fe7ae25c"],
   "darwin-x64": ["x86_64-apple-darwin", "95daaff11c116a52ad54785e7914c8e9c9cdcaba793c5ed929c74ca2d8e6259a"],
   "linux-arm64": ["aarch64-unknown-linux-gnu", "c832298b1ad4422481334855f6003e0f54145762c5a134f20a489511d2f65bbf"],
