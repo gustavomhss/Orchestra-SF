@@ -89,8 +89,8 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
       return source.observe(scope, context)
     }
     const fence: ConfirmationObserver<T>["fence"] = async (scope, observation, context) => await source.fenceManifest(scope, context) && await source.fence(scope, observation, context)
-    const observations = createConfirmationObservationReceipts({ host: input.host, observe, now: () => Date.parse(input.now()) })
-    const port = createConfirmationPort({ host: input.host, state: input.state, creationTarget: input.creationTarget, human: input.human, observe, fence, verifyObserved: observations.verifyObserved, createId: input.createId, now: input.now })
+    const observations = createConfirmationObservationReceipts<T>({ host: input.host, observe, now: () => Date.parse(input.now()) })
+    const port = createConfirmationPort<T>({ host: input.host, state: input.state, creationTarget: input.creationTarget, human: input.human, observe, fence, verifyObserved: observations.verifyObserved, createId: input.createId, now: input.now })
     const work = async (id: string, context: TrustedDomainContext): Promise<PortResult<ConfirmationWork>> => {
       const request = input.host.requestFor(context)
       if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "confirmation-work-unavailable" }
@@ -153,7 +153,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
     if (confirmed.some((person) => !person) || digestSfValue(current) !== digestSfValue(directory) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "recipient-directory-unavailable" }
     return { status: "ok", value: confirmed.filter((person): person is { id: string; name: string } => !!person).sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id)) }
   }
-  const answerReuse = input.confirmationSource ? createAnswerReusePort({
+  const answerReuse = input.confirmationSource ? createAnswerReusePort<T>({
     host: input.host,
     state: input.state,
     now: () => Date.parse(input.now()),

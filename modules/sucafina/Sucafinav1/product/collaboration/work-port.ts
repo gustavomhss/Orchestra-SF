@@ -17,6 +17,7 @@ import type { createThreadPort } from "./threads.ts"
 import type { WorkSelectionPort } from "./selection.ts"
 import { projectMyWork } from "./work.ts"
 import { latestConfirmationWork } from "./confirmation-work.ts"
+import { sameHandoffWorkSource } from "./work-handoff-source.ts"
 
 export type WorkPresentationItem = {
   kind: "clarification" | "handoff" | "procurement" | "confirmation" | "signal"
@@ -116,20 +117,20 @@ export function createCollaborationWorkPort(input: {
         const original = relation.evidenceRefs as BusinessEvidenceRef[]
         const targetIndex = original.findIndex((ref) => ref.refId === relation.toRef && ref.kind === "record" && ref.target.surface === "dashboard" && ref.target.recordType === "hotTopics")
         if (targetIndex < 0 || original.filter((ref) => ref.refId === relation.toRef).length !== 1) return { status: "unavailable", reason: "invalid-work-source" }
-        const available = await input.collaboration.authority.sources(original, context)
-        const reissued = !available && input.collaboration.reissue && original.every((ref) => ref.kind === "record") ? await Promise.all(original.map((ref) => input.collaboration.reissue!(ref as Extract<BusinessEvidenceRef, { kind: "record" }>, context))) : undefined
+        const target = original[targetIndex]
+        if (!target || target.kind !== "record") return { status: "unavailable", reason: "invalid-work-source" }
+        const origins = original.filter((_, index) => index !== targetIndex)
+        const available = await input.collaboration.authority.sources(origins, context)
+        const reissued = !available && input.collaboration.reissue && origins.every((ref) => ref.kind === "record") ? await Promise.all(origins.map((ref) => input.collaboration.reissue!(ref as Extract<BusinessEvidenceRef, { kind: "record" }>, context))) : undefined
         if (!available && (!reissued || reissued.some((entry) => entry.status !== "ok"))) return { status: "unavailable", reason: "handoff-work-source-unavailable" }
-        const refs = available ? original : reissued!.flatMap((entry) => entry.status === "ok" ? [entry.value] : [])
-        const membership = await input.selections.contains(scope.value, refs, context)
+        const sourceRefs = available ? origins : reissued!.flatMap((entry) => entry.status === "ok" ? [entry.value] : [])
+        const membership = await input.selections.contains(scope.value, sourceRefs, context)
         if (membership.status !== "ok") return membership
         if (!membership.value) continue
-        const target = refs[targetIndex]
-        if (!target || target.kind !== "record") return { status: "unavailable", reason: "invalid-work-source" }
-        const sourceRefs = refs.filter((_, index) => index !== targetIndex)
         const topic = await input.collaboration.hotTopics.read(target.target.recordId, sourceRefs, context)
         if (topic.status !== "ok") return { status: "unavailable", reason: "handoff-work-source-unavailable" }
         const current = await input.topicSource.issue(topic.value, context)
-        if (current.status !== "ok" || current.value.target.recordId !== topic.value.id || !await input.collaboration.authority.sources([current.value], context)) return { status: "unavailable", reason: "handoff-work-source-unavailable" }
+        if (current.status !== "ok" || current.value.target.recordId !== topic.value.id || !await input.collaboration.authority.sources([current.value], context) || !await sameHandoffWorkSource(input.host, target, current.value, context)) return { status: "unavailable", reason: "handoff-work-source-unavailable" }
         items.push({ actionRef: current.value.refId, ownerRef: own, state: topic.value.status, sourceRefs: [...sourceRefs, current.value] })
         presentation.push({ kind: "handoff", actionRef: current.value.refId, title: topic.value.action || null, ownerRef: own, ...(topic.value.due.trim() ? { due: topic.value.due } : {}), ...(current.value.target.period ? { period: current.value.target.period } : {}), sourceVersion: current.value.target.version, state: topic.value.status, destination: { kind: "hot-topic", topicId: topic.value.id }, sourceRefs: [...sourceRefs, current.value] })
       }

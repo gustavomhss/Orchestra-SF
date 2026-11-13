@@ -45,7 +45,7 @@ export function createCollaborationHotTopicHost(input: { host: DomainPortHost; s
       commit.requested = true
       return { commit: true, value: outcome.value }
     }).catch(() => ({ status: "unavailable" as const, reason: "action-outcome-unknown-retry-same-correlation" }))
-    if (saved.status !== "ok" && saved.status !== "preview") return saved
+    if ("reason" in saved) return saved
     if (saved.status === "preview" && commit.requested) return { status: "unavailable", reason: "action-commit-unconfirmed" }
     if (!await input.host.revalidate(context) || !await sourcesAvailable(input.evidence, refs, context)) return { status: "denied", reason: "source-access-unavailable" }
     return saved.value

@@ -76,7 +76,7 @@ export function createConfirmationPort<T extends AvailableConfirmationScopeObser
         return { commit: true, value: record }
       })
       if (saved.status === "preview") return { status: "conflict", reason: "confirmation-not-committed" }
-      if (saved.status !== "ok") return saved
+      if ("reason" in saved) return saved
       if (!saved.value) return { status: "conflict", reason: "confirmation-not-committed" }
       const current = await input.observe(saved.value.scope, context)
       if (!await input.host.revalidate(context) || current.state !== "available") return { status: "unavailable", reason: "scope-unavailable" }
@@ -88,7 +88,7 @@ export function createConfirmationPort<T extends AvailableConfirmationScopeObser
       if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "authority-unavailable" }
       const found = await input.state.read(request, "confirmations", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.confirmations[id] : undefined)
       if (found.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
-      if (found.status !== "ok") return found
+      if ("reason" in found) return found
       const record = found.value as (ConfirmationRecord & Partial<ConfirmationBaseline>) | undefined
       if (!record) return { status: "unavailable", reason: "confirmation-unavailable" }
       const observation = await input.observe(record.scope, context)

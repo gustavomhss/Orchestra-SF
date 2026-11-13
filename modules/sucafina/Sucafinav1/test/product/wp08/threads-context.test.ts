@@ -17,13 +17,15 @@ test("contextual questions retain separate periods, exact recipients, and commun
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
   try {
+    const currentSnapshots = store.currentSnapshots
+    if (!currentSnapshots) throw new Error("Fixture requires currentSnapshots to detect nested source reads")
     const access = new Set(["author", "recipient-B"])
     await store.transaction("dashboard", async (snapshot) => { snapshot.data.access = { author: {}, "recipient-B": {}, "recipient-C": {} }; return { commit: true, value: undefined } })
     const context = { kind: "ui", binding: { installationId: "installation", projectId: "project", principalRef: "author", requestId: "request", accessRevision: "access", policyVersion: "policy", expiresAt: "2100-01-01T00:00:00Z" }, lease: {} } as unknown as TrustedUiContext
     const request = new Request("https://example.test/")
     const host: DomainPortHost = { persistence: store, requestFor: () => request, revalidate: async () => access.has("author"), authenticate: async () => access.has("author") ? { id: "author", canWrite: true, roles: [{ surface: "dashboard", role: "admin" }] } : null, environment: async () => ({ at: "2026-11-13T00:00:00Z", id: () => "unused", directory: [{ id: "author", name: "Author" }, { id: "recipient-B", name: "Same Name" }, { id: "recipient-C", name: "Same Name" }] }) }
     const resolve: BusinessContextService["resolve"] = async (ref, call) => {
-      if (store.currentSnapshots()) throw new Error("Cross-surface source reads cannot run inside the mutation transaction")
+      if (currentSnapshots()) throw new Error("Cross-surface source reads cannot run inside the mutation transaction")
       return { state: access.has(call.binding.principalRef) ? "fresh" : "revoked", ref, accessRevision: call.binding.accessRevision, checkedAt: "2026-11-13T00:00:00Z" }
     }
     const evidence: BusinessContextService = { resolve, context: async ({ refs }, call) => Promise.all(refs.map((ref) => resolve(ref, call))), recall: async () => [], emitFromLedger: async () => { throw new Error("Memory is outside this fixture") } }

@@ -3,7 +3,7 @@ import type { ConfirmationScope } from "../contracts/context.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { SfProductStatePort } from "../contracts/state.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
-import type { AvailableConfirmationScopeObservation, ConfirmationScopeObservation } from "./confirmation.ts"
+import type { AvailableConfirmationScopeObservation, ConfirmationObserver } from "./confirmation.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
 import type { Surface } from "../../src/identity.ts"
 
@@ -23,7 +23,7 @@ export function createAnswerReusePort<T extends AvailableConfirmationScopeObserv
   answer: (questionId: string, context: TrustedDomainContext) => Promise<PortResult<Answer>>
   belongsToQuestion: (questionId: string, answerRef: string, context: TrustedDomainContext) => Promise<boolean>
   scopeForAnswer: (questionId: string, answerRef: string, context: TrustedDomainContext) => Promise<PortResult<{ scope: ConfirmationScope }>>
-  observe: (scope: ConfirmationScope, context: TrustedDomainContext) => Promise<T | Exclude<ConfirmationScopeObservation, T>>
+  observe: ConfirmationObserver<T>["observe"]
   fence: (scope: ConfirmationScope, observation: T, context: TrustedDomainContext) => Promise<boolean>
   authorizeConfirmation: (context: TrustedDomainContext, questionId: string, answerRef: string, mutation: AnswerConfirmationMutation) => Promise<boolean>
   now?: () => number
@@ -84,8 +84,9 @@ export function createAnswerReusePort<T extends AvailableConfirmationScopeObserv
         state.threads[key(questionId, answer.value.id, context)] = baseline
         return { commit: true, value: true }
       })
+      if ("reason" in saved) return { status: saved.status === "conflict" ? "stale" : saved.status, reason: saved.reason }
       if (saved.status === "preview") return { status: "conflict", reason: "answer-confirmation-not-committed" }
-      if (saved.status !== "ok" || !saved.value || !await input.host.revalidate(context)) return { status: saved.status === "conflict" ? "stale" : saved.status === "ok" ? "unavailable" : saved.status, reason: saved.status === "ok" ? "answer-confirmation-unavailable" : saved.reason }
+      if (!saved.value || !await input.host.revalidate(context)) return { status: "unavailable", reason: "answer-confirmation-unavailable" }
       if (!await capture(scope, observation, context)) return { status: "stale", reason: "answer-scope-changed" }
       return { status: "ok", value: { answerRef: answer.value.ref, observedVersion: observed.observation.sourceVersion } }
     },

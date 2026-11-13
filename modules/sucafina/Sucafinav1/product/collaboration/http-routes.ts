@@ -49,7 +49,9 @@ export function createCollaborationHttpRoutes(host: Host) {
       if (!result) return unavailable()
       if (result.status !== "ok") return result
       const value = result.value
-      return { status: "ok", value: { observationRef: value.observationRef, observedSourceVersion: value.observedSourceVersion, expectedScopeFingerprint: value.expectedScopeFingerprint, answerRef: value.answerRef, answer: value.answer, authorRef: value.authorRef, scope: value.scope, evidence: value.observation.evidence, projection: value.observation.projection } }
+      const observation = value.observation
+      const presented = { ...("evidence" in observation ? { evidence: observation.evidence } : {}), ...("projection" in observation ? { projection: observation.projection } : {}) }
+      return { status: "ok", value: { observationRef: value.observationRef, observedSourceVersion: value.observedSourceVersion, expectedScopeFingerprint: value.expectedScopeFingerprint, answerRef: value.answerRef, answer: value.answer, authorRef: value.authorRef, scope: value.scope, ...presented } }
     } }],
     ["answer-confirm", { keys: ["questionId", "answerRef", "mutation"], action: "collaboration.answer.confirm", invoke: (p, c) => host.answerReuse?.confirm(p.questionId as string, p.answerRef as string, p.mutation as Parameters<NonNullable<Host["answerReuse"]>["confirm"]>[2], c) ?? unavailable() }],
     ["answer-read", { keys: ["questionId"], read: "collaboration.answer.read", invoke: (p, c) => host.answerReuse?.read(p.questionId as string, c) ?? unavailable() }],

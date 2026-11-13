@@ -21,7 +21,7 @@ test("reconfirmation with a new dependency manifest keeps one canonical obligati
   updated.confirmedAt = "2026-11-13T01:00:00Z"
   updated.observedSourceVersion = 8
   updated.observedScopeFingerprint = "january-with-fx"
-  updated.scope = { ...updated.scope, fields: ["currency", "amount"], materialDependencies: [{ surface: "planner", type: "fx-rate", id: "EUR-USD", incarnation: "fx-A", version: 2, fields: ["rate"], period: january.scope.period }], scopeDefinitionVersion: "planner-v2" }
+  updated.scope = { ...updated.scope, fields: ["currency", "amount"], materialDependencies: [{ surface: "planner", type: "fx-rate", id: "EUR-USD", incarnation: "fx-A", version: 2, fields: ["rate"], period: january.scope.period, observedAt: updated.confirmedAt }], scopeDefinitionVersion: "planner-v2" }
   const before = latestConfirmationWork([january])
   const after = latestConfirmationWork([updated, january])
   expect(after).toHaveLength(1)

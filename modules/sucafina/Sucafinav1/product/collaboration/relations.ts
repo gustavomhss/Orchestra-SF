@@ -71,7 +71,7 @@ export function createRelationPort(input: {
         if (selected.pair.recipientRef) state.relations[`sf:assignment:${relation.id}`] = { relationId: relation.id, recipientRef: selected.pair.recipientRef }
         return { commit: true, value: relation }
       })
-      if (result.status !== "ok" && result.status !== "preview") return result
+      if ("reason" in result) return result
       if (!result.value) return { status: "conflict", reason: "relation-not-committed" }
       if (!await input.host.revalidate(context) || !await input.authorizePair(structuredClone(selected.pair), context)) return { status: "unavailable", reason: "relation-access-unavailable" }
       return { status: "ok", value: result.value }
@@ -117,7 +117,7 @@ export function createRelationPort(input: {
         return { commit: true, value: relation }
       })
       if (result.status === "preview") return { status: "conflict", reason: "relation-not-found-or-changed" }
-      if (result.status !== "ok") return result
+      if ("reason" in result) return result
       if (!result.value || !await input.host.revalidate(context) || !await input.authorizePair(visible, context)) return { status: "unavailable", reason: "relation-access-unavailable" }
       return { status: "ok", value: visible }
     },
@@ -128,7 +128,7 @@ export function createRelationPort(input: {
       if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "relation-access-unavailable" }
       const result = await input.state.read(request, "relations", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? Object.entries(state.relations).filter(([key]) => !isInternalRelationKey(key)).map(([key, value]) => isRelation(value) && value.id === key ? value : undefined) : undefined)
       if (result.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
-      if (result.status !== "ok") return result
+      if ("reason" in result) return result
       if (!result.value || !result.value.every(isRelation)) return { status: "unavailable", reason: "invalid-relations" }
       const projected = await Promise.all(result.value.map((relation) => project(relation, context)))
       const candidates = projected.filter((relation): relation is Relation => !!relation && (refs.includes(relation.fromRef) || refs.includes(relation.toRef)))
