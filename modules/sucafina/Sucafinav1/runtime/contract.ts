@@ -54,7 +54,7 @@ export type NativeText = { en: string; br: string }
 export type NativePath = readonly (string | number)[]
 export type NativeChoice = { value: string | number | boolean | null; label: NativeText }
 export type NativeScalar = {
-  kind: "text" | "textarea" | "number" | "date" | "select" | "checkbox"
+  kind: "text" | "textarea" | "number" | "date" | "select" | "multiselect" | "checkbox"
   path: NativePath
   label: NativeText
   required?: boolean

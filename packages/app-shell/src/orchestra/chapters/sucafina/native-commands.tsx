@@ -196,9 +196,42 @@ function Fields(props: { fields: readonly Field[]; prefix: Path; editor: Editor;
         return <fieldset><Show when={field.label}>{(label) => <legend>{props.editor.text(label())}</legend>}</Show><Fields fields={field.fields} prefix={props.prefix} editor={props.editor} readOnly={props.readOnly} /></fieldset>
       if (field.kind === "list")
         return <ListField field={field} prefix={props.prefix} editor={props.editor} readOnly={props.readOnly} />
+      if (field.kind === "multiselect")
+        return <MultiselectField field={field} prefix={props.prefix} editor={props.editor} readOnly={props.readOnly} />
       return <ScalarField field={field} prefix={props.prefix} editor={props.editor} readOnly={props.readOnly} />
     }}</For>
   </div>
+}
+
+
+function MultiselectField(props: { field: Sucafina.NativeScalar; prefix: Path; editor: Editor; readOnly: boolean }): JSX.Element {
+  const id = createUniqueId()
+  const path = () => [...props.prefix, ...props.field.path]
+  const selected = () => {
+    const value = props.editor.read(path())
+    return Array.isArray(value) ? value as unknown[] : []
+  }
+  const disabled = () => props.readOnly || props.field.readOnly === true || props.editor.disabled()
+  return <fieldset class="sf-native-command-multiselect" disabled={disabled()} aria-describedby={props.field.required ? `${id}-required` : undefined}>
+    <legend>{props.editor.text(props.field.label)}{props.field.required ? " *" : ""}</legend>
+    <Show when={props.field.required}>
+      <p id={`${id}-required`}>{props.editor.copy("Select at least one option.", "Selecione pelo menos uma opção.")}</p>
+    </Show>
+    <For each={props.field.options}>{(choice, index) => <label class="mx-meta" for={`${id}-${index()}`}>
+      <input id={`${id}-${index()}`} type="checkbox" disabled={disabled()}
+        checked={selected().some((value) => Object.is(value, choice.value))}
+        onChange={(event) => {
+          if (disabled() || !validMultiselect(props.editor.read(path()), props.field.options)) return
+          const values = selected()
+          props.editor.change(path(), (props.field.options ?? [])
+            .filter((option) => Object.is(option.value, choice.value)
+              ? event.currentTarget.checked
+              : values.some((value) => Object.is(value, option.value)))
+            .map((option) => option.value))
+        }} />
+      <span>{props.editor.text(choice.label)}</span>
+    </label>}</For>
+  </fieldset>
 }
 
 function ScalarField(props: { field: Sucafina.NativeScalar; prefix: Path; editor: Editor; readOnly: boolean }): JSX.Element {
@@ -365,10 +398,13 @@ function validFields(fields: readonly Field[], values: unknown): boolean {
       paths.push(field.path)
       const current = own(values, field.path)
       if (!current.valid) return false
-      if (field.kind !== "list") return !(field.blank === "omit" && typeof field.path[field.path.length - 1] === "number") &&
+      if (field.kind !== "list") return (field.kind === "multiselect" || !(field.blank === "omit" && typeof field.path[field.path.length - 1] === "number")) &&
         (field.min === undefined || field.max === undefined || field.min <= field.max) &&
         (field.step === undefined || field.step > 0) &&
-        (field.kind !== "select" || (!!field.options && new Set(field.options.map((option) => JSON.stringify(option.value))).size === field.options.length))
+        (field.kind !== "select" || (!!field.options && new Set(field.options.map((option) => JSON.stringify(option.value))).size === field.options.length)) &&
+        (field.kind !== "multiselect" || (!!field.options &&
+          field.options.every((option, index, options) => !options.slice(0, index).some((previous) => Object.is(previous.value, option.value))) &&
+          validMultiselect(current.value, field.options)))
       if (field.minimum !== undefined && field.maximum !== undefined && field.minimum > field.maximum) return false
       return Array.isArray(current.value) && current.value.every((row) => record(row) && validFields(field.fields, row)) &&
         (field.add === undefined || (safeJson(field.add) && validFields(field.fields, field.add)))
@@ -383,6 +419,7 @@ function validValues(fields: readonly Field[], values: unknown): boolean {
     if (field.kind === "group") return validValues(field.fields, values)
     const value = own(values, field.path).value
     if (field.kind === "list") return Array.isArray(value) && value.length >= (field.minimum ?? 0) && value.length <= (field.maximum ?? Infinity) && value.every((row) => validValues(field.fields, row))
+    if (field.kind === "multiselect") return validMultiselect(value, field.options) && (!field.required || (Array.isArray(value) && value.length > 0))
     if (field.readOnly || (value === undefined && !field.required)) return true
     if (field.kind === "select") {
       if (!field.required && ((field.blank === "null" && value === null) || (field.blank === "empty" && value === ""))) return true
@@ -400,4 +437,14 @@ function validValues(fields: readonly Field[], values: unknown): boolean {
     if (field.kind !== "date") return true
     return /^\d{4}-\d{2}-\d{2}$/.test(value) && Number.isFinite(Date.parse(value + "T00:00:00Z")) && new Date(value + "T00:00:00Z").toISOString().slice(0, 10) === value
   })
+}
+
+function validMultiselect(value: unknown, options: readonly Sucafina.NativeChoice[] | undefined): boolean {
+  if (!Array.isArray(value) || options === undefined) return false
+  // Array.from visits holes; typed membership also rejects objects and unsupported primitive values.
+  return Array.from(value, (item: unknown, index) => {
+    if (!Object.hasOwn(value, index) || !(item === null || typeof item === "string" || typeof item === "boolean" || (typeof item === "number" && Number.isFinite(item)))) return false
+    return options.some((option) => Object.is(option.value, item)) &&
+      !value.slice(0, index).some((previous: unknown) => Object.is(previous, item))
+  }).every(Boolean)
 }

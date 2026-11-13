@@ -109,7 +109,7 @@ export const NativeChoice = Schema.Struct({
 export type NativeChoice = typeof NativeChoice.Type
 
 export const NativeScalar = Schema.Struct({
-  kind: Schema.Literals(["text", "textarea", "number", "date", "select", "checkbox"]),
+  kind: Schema.Literals(["text", "textarea", "number", "date", "select", "multiselect", "checkbox"]),
   path: NativePath,
   label: NativeText,
   required: Schema.optional(Schema.Boolean),

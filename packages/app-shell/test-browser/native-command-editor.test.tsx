@@ -367,3 +367,117 @@ test("unsaved navigation Cancel preserves the draft and Yes navigates, with huma
     view.close()
   }
 })
+
+const multiselectField = {
+  kind: "multiselect", path: ["consequences"], label: { en: "Consequences", br: "Consequências" },
+  options: [
+    { value: 0, label: { en: "Zero", br: "Zero" } },
+    { value: false, label: { en: "False", br: "Falso" } },
+    { value: null, label: { en: "None", br: "Nenhum" } },
+    { value: 7, label: { en: "Numeric seven", br: "Sete numérico" } },
+    { value: "7", label: { en: "Text seven", br: "Sete textual" } },
+  ],
+} satisfies Sucafina.NativeScalar
+const multiselectAction = {
+  ...action,
+  command: { ...action.command, values: { ...action.command.values, consequences: [] } },
+  fields: [...action.fields, multiselectField],
+} satisfies Sucafina.NativeAction
+
+function multiselectChoice(group: HTMLFieldSetElement, label: string) {
+  const matches = [...group.querySelectorAll("label")].filter((item) => item.textContent?.trim() === label)
+  expect(matches).toHaveLength(1)
+  const input = matches[0]!.querySelector<HTMLInputElement>('input[type="checkbox"]')
+  if (!input) throw new Error(`Missing labeled multiselect checkbox ${label}`)
+  return input
+}
+
+test("multiselect EN/BR checkboxes submit dense typed primitives in option order, including empty selection", async () => {
+  for (const locale of ["en", "br"] as const) {
+    for (const empty of [false, true]) {
+      const view = mount(locale)
+      await shown(view, { ...page, actions: [multiselectAction] })
+      await choose(view, locale)
+      const groups = lists(view.host, multiselectField.label[locale])
+      expect(groups).toHaveLength(1)
+      const group = groups[0]!
+      expect(group.querySelector("textarea")).toBeNull()
+      // Select in reverse order; the wire must still follow the declared option order.
+      multiselectField.options.toReversed().forEach((option) => multiselectChoice(group, option.label[locale]).click())
+      multiselectField.options.forEach((option) => expect(multiselectChoice(group, option.label[locale]).checked).toBe(true))
+      if (empty) multiselectField.options.forEach((option) => multiselectChoice(group, option.label[locale]).click())
+      multiselectField.options.forEach((option) => expect(multiselectChoice(group, option.label[locale]).checked).toBe(!empty))
+      button(view.host, action.label[locale]).click()
+      expect(await posted(view)).toEqual({
+        ...multiselectAction.command, confirmed: false,
+        values: { ...multiselectAction.command.values, consequences: empty ? [] : [0, false, null, 7, "7"] },
+      })
+      view.close()
+    }
+  }
+})
+
+test("multiselect readOnly preserves selections while required empty blocks POST and accepts a false choice", async () => {
+  for (const mode of ["readOnly", "required"] as const) {
+    const view = mount()
+    const current = {
+      ...multiselectAction,
+      command: {
+        ...multiselectAction.command,
+        values: { ...multiselectAction.command.values, consequences: mode === "readOnly" ? [0, false, null] : [] },
+      },
+      fields: [...action.fields, { ...multiselectField, readOnly: mode === "readOnly", required: mode === "required" }],
+    } satisfies Sucafina.NativeAction
+    await shown(view, { ...page, actions: [current] })
+    await choose(view)
+    const groups = lists(view.host, mode === "required" ? "Consequences *" : "Consequences")
+    expect(groups).toHaveLength(1)
+    const group = groups[0]!
+    multiselectField.options.forEach((option, index) => {
+      const checkbox = multiselectChoice(group, option.label.en)
+      expect(checkbox.disabled).toBe(mode === "readOnly")
+      expect(checkbox.checked).toBe(mode === "readOnly" && index < 3)
+      if (mode === "readOnly") {
+        checkbox.click()
+        expect(checkbox.checked).toBe(index < 3)
+      }
+    })
+    button(view.host, "Save profile").click()
+    if (mode === "readOnly") expect(await posted(view)).toEqual({ ...current.command, confirmed: false })
+    if (mode === "required") {
+      await settle()
+      expect(posts(view)).toEqual([])
+      multiselectField.options.forEach((option) => expect(multiselectChoice(group, option.label.en).checked).toBe(false))
+      multiselectChoice(group, "False").click()
+      button(view.host, "Save profile").click()
+      expect(await posted(view)).toEqual({
+        ...current.command, confirmed: false,
+        values: { ...current.command.values, consequences: [false] },
+      })
+    }
+    view.close()
+  }
+})
+
+test("multiselect unsupported selections and duplicate typed choices fail closed without canonicalizing private values", async () => {
+  const invalid = [
+    { ...multiselectAction, command: { ...multiselectAction.command, values: { ...multiselectAction.command.values, consequences: ["PRIVATE-UNSUPPORTED-CHOICE", 0] } } },
+    { ...multiselectAction, command: { ...multiselectAction.command, values: { ...multiselectAction.command.values, consequences: [7, 7] } } },
+    { ...multiselectAction, fields: [...action.fields, { ...multiselectField, options: [...multiselectField.options, { value: 7, label: { en: "Duplicate seven", br: "Sete duplicado" } }] }] },
+  ] satisfies readonly Sucafina.NativeAction[]
+  for (const descriptor of invalid) {
+    const view = mount()
+    await shown(view, { ...page, actions: [descriptor] })
+    await settle()
+    expect(controls(view.host, "Action")).toHaveLength(0)
+    expect(controls(view.host, "Display name")).toHaveLength(0)
+    expect(lists(view.host, "Consequences")).toHaveLength(0)
+    expect(view.host.textContent).not.toContain("PRIVATE-UNSUPPORTED-CHOICE")
+    const save = button(view.host, "Save")
+    expect(save.disabled).toBe(true)
+    save.click()
+    await settle()
+    expect(posts(view)).toEqual([])
+    view.close()
+  }
+})

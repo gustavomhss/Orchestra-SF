@@ -26,6 +26,22 @@ const action = {
 }
 const decode = Schema.decodeUnknownSync(Sucafina.PageState)
 
+test("multiselect descriptors preserve typed primitive choices and dense array defaults", () => {
+  const descriptor = {
+    ...action,
+    command: { ...command, values: { consequences: ["7", 7, false, null] } },
+    fields: [{
+      kind: "multiselect", path: ["consequences"], label: text,
+      options: ["7", 7, false, null].map((value) => ({ value, label: text })),
+    }],
+  } satisfies Sucafina.NativeAction
+  expect(decode({ ...page, actions: [descriptor] }).actions).toEqual([descriptor])
+  expect(() => decode({ ...page, actions: [{
+    ...descriptor,
+    fields: [{ ...descriptor.fields[0], options: [{ value: { hidden: "invalid" }, label: text }] }],
+  }] })).toThrow()
+})
+
 test("PageState retains complete nested action descriptors and literal command defaults", () => {
   const actions = [{
     ...action,
