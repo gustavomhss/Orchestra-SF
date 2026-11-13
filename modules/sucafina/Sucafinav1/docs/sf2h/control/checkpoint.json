@@ -1,0 +1,284 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "T0": "2026-11-13T04:01:10Z",
+  "revision": 2,
+  "state": "STARTING",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "canonical_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "code_baseline": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "observed_dev": "f08941a346ef0d072dff8e67e49823505ad7a12e",
+  "observed_native": "767e22ebce034b7f9834a29ccd051497bcdb0dc5",
+  "goal": {
+    "thread_id": "01a1d309-ba0e-7490-b044-0899d9fa008f",
+    "status": "active",
+    "continuation": "native Goal; no second supervisor"
+  },
+  "scope": {
+    "wps": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "profiles": 5,
+    "skills": 18,
+    "packs": 8,
+    "operations": 39
+  },
+  "acceptance": [
+    "all product criteria implemented and consumed",
+    "eight final CI selections plus mandatory epic/package/static gates on accepted C",
+    "AM01–AM06 actual native product proofs",
+    "three independent reviewer approvals and zero mandatory open findings",
+    "D evidence-only envelope preserving all C product blobs",
+    "actual C/G7 and D/G8 check:guards --base origin/dev with separate SHA receipts",
+    "all necessary commits published and verified through GitHub MCP",
+    "no orphaned authorized writers"
+  ],
+  "roster": [
+    {
+      "session_id": "01a1d309-ba0e-7490-b044-0899d9fa008f",
+      "agent_path": null,
+      "confirmed_model": "gpt-6.1-sol",
+      "provider": "openai",
+      "host_version": "0.167.2"
+    },
+    {
+      "session_id": "01a1d318-c1cc-7233-a581-54666d63f6f3",
+      "agent_path": "/root/s4",
+      "confirmed_model": "gpt-6.1-terra",
+      "provider": "openai",
+      "host_version": "0.167.2"
+    },
+    {
+      "session_id": "01a1d318-9867-7f60-ac45-33bdcca59a73",
+      "agent_path": "/root/s3",
+      "confirmed_model": "gpt-6.1-terra",
+      "provider": "openai",
+      "host_version": "0.167.2"
+    },
+    {
+      "session_id": "01a1d318-7704-7853-975c-633cdbda36d5",
+      "agent_path": "/root/s2",
+      "confirmed_model": "gpt-6.1-terra",
+      "provider": "openai",
+      "host_version": "0.167.2"
+    },
+    {
+      "session_id": "01a1d318-51f5-7603-929d-955e257bf611",
+      "agent_path": "/root/s1",
+      "confirmed_model": "gpt-6.1-terra",
+      "provider": "openai",
+      "host_version": "0.167.2"
+    },
+    {
+      "session_id": "01a1d314-baca-77e0-bef7-23ea04ced98c",
+      "agent_path": "/root/s0_c",
+      "confirmed_model": "gpt-6.1-terra",
+      "provider": "openai",
+      "host_version": "0.167.2"
+    },
+    {
+      "session_id": "01a1d313-56e4-7082-a4a3-27428a14e966",
+      "agent_path": "/root/s0_b",
+      "confirmed_model": "gpt-6.1-terra",
+      "provider": "openai",
+      "host_version": "0.167.2"
+    },
+    {
+      "session_id": "01a1d313-2829-7071-9307-2226fdf76c01",
+      "agent_path": "/root/s0_a",
+      "confirmed_model": "gpt-6-luna",
+      "provider": "openai",
+      "host_version": "0.167.2"
+    }
+  ],
+  "leases": [
+    {
+      "actor": "S0-A",
+      "epoch": 1,
+      "write_paths": [
+        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S0-A"
+      ],
+      "state": "staging-only"
+    },
+    {
+      "actor": "S0-B",
+      "epoch": 1,
+      "write_paths": [
+        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S0-B"
+      ],
+      "state": "staging-only"
+    },
+    {
+      "actor": "S0-C",
+      "epoch": 1,
+      "write_paths": [
+        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S0-C"
+      ],
+      "state": "staging-only"
+    },
+    {
+      "actor": "S1",
+      "epoch": 1,
+      "write_paths": [
+        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S1"
+      ],
+      "state": "staging-only"
+    },
+    {
+      "actor": "S2",
+      "epoch": 1,
+      "write_paths": [
+        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S2"
+      ],
+      "state": "staging-only"
+    },
+    {
+      "actor": "S3",
+      "epoch": 1,
+      "write_paths": [
+        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S3"
+      ],
+      "state": "staging-only"
+    },
+    {
+      "actor": "S4",
+      "epoch": 1,
+      "write_paths": [
+        "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S4"
+      ],
+      "state": "staging-only"
+    }
+  ],
+  "ci": {
+    "dispatcher": "S0-C",
+    "in_flight": [],
+    "requests": []
+  },
+  "candidate_C": null,
+  "delivery_D": null,
+  "required_findings": [],
+  "blockers": [],
+  "next_action": "Integrate reviewed C08 acceptance test, typecheck imported product, complete G0 port/schema seams, publish control checkpoint via GitHub MCP",
+  "resume": {
+    "api": "same native Goal thread; collaboration followup_task for recorded agent paths",
+    "cli_supported": "codex resume <SESSION_ID>; no automatic restart on human interruption",
+    "checkpoint": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/control/modules/sucafina/Sucafinav1/docs/sf2h/control/checkpoint.json"
+  },
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "hook": {
+    "path": "/Users/gustavoschneiter/Documents/HuGR/Orchestra-SF/.codex/hooks.json",
+    "script": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/hooks/lifecycle.py",
+    "status": "PREPARED_REQUIRES_HOST_TRUST",
+    "manual_probes": [
+      "different-session-noop",
+      "stop_hook_active-suppression",
+      "SessionStart-compact-context"
+    ],
+    "active_not_claimed": true
+  },
+  "capabilities": {
+    "collaboration_global_slots_including_root": 21,
+    "independent_pools_verified": false,
+    "resource_active_limit_including_S0": 8,
+    "RAM_bytes": 17179869184,
+    "cpu_count": 12,
+    "CLI_version": "0.167.1",
+    "host_version": "0.167.2",
+    "model_context_cache": {
+      "gpt-6.1-sol": 500000,
+      "gpt-6.1-terra": 500000,
+      "gpt-6-luna": 272000
+    },
+    "Grok": {
+      "binary_version": "1.0.77",
+      "requested_model": "grok-4.7",
+      "reported_usage_model": "grok-4.7-build",
+      "session_id": "01a1d315-3334-7bf3-984e-cc0b6b1d7d3c",
+      "receipt": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/staging/S0-B/grok-probe.json",
+      "native_product_proof": false
+    }
+  },
+  "outputs": [
+    {
+      "actor": "S0-A",
+      "state": "STAGING_PROPOSAL",
+      "paths": [
+        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/numeric-oracles.json",
+        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/measurement-protocol.md",
+        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/journeys-j01-j08.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP00/T03/checkpoint.json",
+        "modules/sucafina/Sucafinav1/test/product/wp00/fixtures/corpus-v1.json"
+      ]
+    },
+    {
+      "actor": "S0-B",
+      "state": "STAGING_PROPOSAL",
+      "paths": [
+        "grok-probe.json",
+        "grok-probe.stderr",
+        "preflight.md"
+      ]
+    },
+    {
+      "actor": "S0-C",
+      "state": "STAGING_PROPOSAL",
+      "paths": [
+        "state-provider-checkpoint.md",
+        "reconciliation.md",
+        "ci-inventory.json",
+        "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts"
+      ]
+    },
+    {
+      "actor": "S1",
+      "state": "STAGING_PROPOSAL",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-dependencias/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-avaliar-sensibilidade/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-cenarios/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-explicar-forecast/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-reavaliar-compromissos/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-compor-portfolio/SKILL.md"
+      ]
+    },
+    {
+      "actor": "S2",
+      "state": "STAGING_PROPOSAL",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+        "modules/sucafina/Sucafinav1/product/documents/rag-adapter.ts"
+      ]
+    },
+    {
+      "actor": "S3",
+      "state": "STAGING_PROPOSAL",
+      "paths": [
+        "gnative-checklist.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-enquadrar-decisao/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-contestar-decisao/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-evidencias/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-coordenar-perguntas/SKILL.md"
+      ]
+    },
+    {
+      "actor": "S4",
+      "state": "STAGING_PROPOSAL",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts"
+      ]
+    }
+  ],
+  "product_progress": {
+    "branch": "sf2-integrate",
+    "base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "uncommitted": [
+      "product/contracts/",
+      "product/host-binding/state-provider.ts"
+    ],
+    "typecheck": "baseline package typecheck passes but product is excluded until test imports; not product proof",
+    "G0": "IN_PROGRESS; schemas and port seams not fully frozen",
+    "GNATIVE": "NOT_RUN"
+  }
+}
