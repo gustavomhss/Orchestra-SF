@@ -74,10 +74,10 @@ export function addReportValueSlides(presentation: PptxGenJS, title: string, row
     slide.background = { color: "F6F8F5" }
     slide.addText(heading.length > 2 ? "Captured data continued" : heading.join("\n"), { x: 0.6, y: 0.3, w: 12.1, h: 0.85, fontSize: 20, fontFace: "Aptos", color: "173D2C", bold: true, margin: 0 })
     const tableOptions = { x: 0.6, w: 12.1, colW: widths, fontFace: "Aptos", fontSize: 12, color: "243C30", margin: 0.06, autoPage: false, border: { type: "solid" as const, pt: 0.4, color: "D8E2DB" } }
-    slide.addTable([["Captured value", "Period", "Sources"].map((text) => ({ text }))], { ...tableOptions, y: 1.25, h: 0.4, rowH: 0.4, fill: "E4ECE6", bold: true })
+    slide.addTable([["Captured value", "Period", "Sources"].map((text) => ({ text }))], { ...tableOptions, y: 1.25, h: 0.4, rowH: 0.4, fill: { color: "E4ECE6" }, bold: true })
     const position = { y: 1.65 }
     page.forEach((row) => {
-      slide.addTable([row.cells.map((text) => ({ text }))], { ...tableOptions, y: position.y, h: row.height, rowH: row.height, fill: "FFFFFF", valign: "top" })
+      slide.addTable([row.cells.map((text) => ({ text }))], { ...tableOptions, y: position.y, h: row.height, rowH: row.height, fill: { color: "FFFFFF" }, valign: "top" })
       position.y += row.height
     })
     slide.addText(`Preserved review · Complete data ${index + 1}/${pages.length} · Long values continue in the next row`, { x: 0.6, y: 7.0, w: 11.6, h: 0.2, fontSize: 9, color: "607469", margin: 0 })

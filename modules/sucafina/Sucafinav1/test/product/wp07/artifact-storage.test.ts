@@ -4,8 +4,10 @@ import { createReviewPort } from "../../../product/reviews/port.ts"
 import { renderPreservedReview } from "../../../product/reviews/render.ts"
 import { createReviewArtifactStorage } from "../../../product/reports/storage.ts"
 import type { DomainProjection } from "../../../product/contracts/context.ts"
+import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
-import { testPersistence } from "../../fixture/persistence.ts"
+import { digestSfValue } from "../../../product/contracts/canonical.ts"
+import { testPersistence } from "./persistence.ts"
 import { exportFixture } from "./export-fixture.ts"
 
 test("artifact retry preserves the first bytes across ZIP timestamps, conflicts on changed intent, and rechecks access", async () => {
@@ -16,18 +18,33 @@ test("artifact retry preserves the first bytes across ZIP timestamps, conflicts 
   const state = createSfProductState({ persistence: persistence.persistence, createId: () => "fixture-state", resolveTarget: async () => ({ incarnation: "fixture-creation" }), authorize: async () => access.allowed ? { principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion } : undefined })
   const fixture = exportFixture()
   const section = fixture.review.sections[0]!
+  // The render corpus deliberately contains no resolver. This storage fixture
+  // supplies typed synthetic C17 identities and admits exactly those identities.
+  const captured = section.content as DomainProjection
+  const projection: DomainProjection = {
+    ...captured,
+    values: captured.values.map((value) => {
+      const target = { surface: "dashboard" as const, recordType: "projects", recordId: value.id, incarnation: `fixture-${value.id}-v1`, version: 1, fields: ["notes"], period: value.period, projectionDigest: digestSfValue(value) }
+      const evidence: BusinessEvidenceRef = { schema: "sf-evidence-v1", refId: `fixture-evidence:${value.id}`, installationId: "fixture", projectId: "fixture", refDigest: digestSfValue(target), evidenceLevel: "observed", kind: "record", target }
+      return { ...value, sourceRefs: [evidence], drilldown: evidence }
+    }),
+  }
+  const evidenceRefs = projection.values.flatMap((value) => value.sourceRefs)
+  const evidenceIdentities = new Set(evidenceRefs.map(digestSfValue))
   const reviews = createReviewPort({
     state, creationTarget: { ref: "review-creation", incarnation: "fixture-creation" }, now: () => "2026-11-13T04:01:10Z", requestFor: () => request,
-    revalidate: async () => access.allowed, revalidateEvidence: async () => access.allowed,
+    revalidate: async () => access.allowed, revalidateEvidence: async (_context, refs) => access.allowed && refs.every((ref) => evidenceIdentities.has(digestSfValue(ref))),
     authorizeSections: async () => access.allowed, authorizeComments: async () => access.allowed, authorizeDecision: async () => access.allowed, authorizeSensitivity: async () => access.allowed, authorizeOutcome: async () => access.allowed, authorizeOutcomeComparison: async () => access.allowed,
-    select: async () => ({ status: "ok", value: [{ id: section.id, title: section.title, period: section.period, recordCount: section.count, projection: section.content as DomainProjection, comments: fixture.review.comments }] }),
+    select: async () => ({ status: "ok", value: [{ id: section.id, title: section.title, period: section.period, recordCount: section.count, projection, comments: fixture.review.comments }] }),
   })
   const preserved = await reviews.preserve({ id: "retry-review", selectionRef: "fixture", sectionRefs: [section.id], expectedStorageVersion: 0, idempotencyKey: "preserve", targetIncarnation: "fixture-creation" }, context)
   if (preserved.status !== "ok") throw new Error(`Review unavailable: ${preserved.reason}`)
   const storage = createReviewArtifactStorage({ state, host: { requestFor: () => request, revalidate: async () => access.allowed }, reviews, creationTarget: { ref: "review-creation", incarnation: "fixture-creation" }, operationIdentity: () => "artifact-save", maxBytes: 5_000_000 })
   const first = await renderPreservedReview(preserved.value, { title: "Retry report", format: "docx", sectionRefs: [section.id] })
   if (!first.ok) throw new Error("First render unavailable")
-  const entry = { reviewRef: preserved.value.id, sectionRefs: [section.id], format: "docx" as const, recordCount: 25, evidenceRefs: [], artifact: first }
+  const entry = { reviewRef: preserved.value.id, sectionRefs: [section.id], format: "docx" as const, recordCount: 25, evidenceRefs, artifact: first }
+  const unavailableStorage = createReviewArtifactStorage({ state: { ...state, transaction: async () => ({ status: "unavailable", reason: "cross-surface-transaction-unavailable" }) }, host: { requestFor: () => request, revalidate: async () => access.allowed }, reviews, creationTarget: { ref: "review-creation", incarnation: "fixture-creation" }, operationIdentity: () => "artifact-save", maxBytes: 5_000_000 })
+  expect(await unavailableStorage.put(entry, context)).toEqual({ status: "unavailable", reason: "cross-surface-transaction-unavailable" })
   const saved = await storage.put(entry, context)
   if (saved.status !== "ok") throw new Error(`Storage unavailable: ${saved.reason}`)
   const before = await state.read(request, "documents", () => null)

@@ -104,9 +104,11 @@ export function createReviewArtifactStorage(input: {
         state.documents[ref] = stored
         return { commit: true, value: true }
       })
+      if (saved.status === "unavailable" || saved.status === "denied") return saved
       if (saved.status !== "ok" || !saved.value) {
         const existing = await load(ref, context)
         if (existing.status === "ok" && digestSfValue(reportIntent(existing.value.stored)) === commandDigest) return { status: "ok", value: { artifactRef: ref } }
+        if (saved.status === "conflict") return saved
         return { status: "conflict", reason: "artifact-storage-conflict" }
       }
       const current = await load(ref, context)

@@ -9,7 +9,7 @@ import { createReviewDownloadHandler } from "../../../product/reports/download.t
 import { createReviewArtifactStorage } from "../../../product/reports/storage.ts"
 import { createReviewHumanPort } from "../../../product/reviews/human.ts"
 import { createReviewPort } from "../../../product/reviews/port.ts"
-import { testPersistence } from "../../fixture/persistence.ts"
+import { testPersistence } from "./persistence.ts"
 
 test("human preservation uses the authorized creation target and reconciles an exact retry", async () => {
   const persistence = testPersistence()

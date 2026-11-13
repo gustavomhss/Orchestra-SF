@@ -6,7 +6,7 @@ import type { ReviewCapabilityHost } from "../../../product/reviews/capabilities
 import type { DomainProjection } from "../../../product/contracts/context.ts"
 import type { SfProductState } from "../../../product/contracts/state.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
-import { testPersistence } from "../../fixture/persistence.ts"
+import { testPersistence } from "./persistence.ts"
 
 test("preserved review survives changed projections and is denied after access revocation", async () => {
   const storage = testPersistence()

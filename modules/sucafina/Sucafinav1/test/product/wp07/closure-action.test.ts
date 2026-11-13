@@ -5,7 +5,7 @@ import { createSfUiAuthority } from "../../../product/integration/ui-authority.t
 import { createSfHumanAuthority } from "../../../product/integration/human-authority.ts"
 import { createReviewPort } from "../../../product/reviews/port.ts"
 import { createReviewClosurePort } from "../../../product/reviews/closure-action.ts"
-import { testPersistence } from "../../fixture/persistence.ts"
+import { testPersistence } from "./persistence.ts"
 
 test("closure binds an authorized handoff to the immutable review and rereads its action", async () => {
   const persistence = testPersistence()
