@@ -3,6 +3,7 @@ import { domain } from "../../runtime/planner.ts"
 import { projectPlanner } from "../planner/adapter.ts"
 import type { Actor, Command, Environment, Snapshot } from "../../runtime/contract.ts"
 import { compareImportProjections } from "./changes.ts"
+import { publicSfData } from "../integration/public-state.ts"
 
 /** Build the exact Planner command whose simulation and transactional execution must match. */
 export function preparePlannerWorkbook(input: {
@@ -71,8 +72,11 @@ export function createPlannerImportMutation(input: {
       const applied = domain.execute(staged, actor, prepared.command, plannerImportEnvironment({ ...environment, at: prepared.previewAt }, prepared.operationId))
       if (!applied.ok) return { commit: false, value: { status: applied.status === 403 ? "denied" : applied.status === 409 ? "conflict" : "failed", reason: "command-rejected" } }
       if (digestSfValue({ result: applied, audit: staged.audit.slice(snapshot.audit.length) }) !== prepared.previewDigest) return { commit: false, value: { status: "conflict", reason: "preview-changed" } }
-      Object.assign(snapshot, staged)
-      return { commit: true, value: { status: "applied", warnings: applied.warnings ?? [] } }
+      // The Planner returns without audit entries when a workbook has no domain changes;
+      // its view normalization alone must not turn that no-op into a persisted mutation.
+      const changedFields = staged.audit.length === snapshot.audit.length ? 0 : compareImportProjections({ data: publicSfData(snapshot.data), sequences: snapshot.sequences }, { data: publicSfData(staged.data), sequences: staged.sequences }).length
+      if (changedFields) Object.assign(snapshot, staged)
+      return { commit: true, value: { status: changedFields ? "applied" as const : "unchanged" as const, changedFields, warnings: applied.warnings ?? [] } }
     },
   }
 }

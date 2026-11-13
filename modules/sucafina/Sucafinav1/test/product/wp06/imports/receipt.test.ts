@@ -15,10 +15,11 @@ test("settlement binds the confirmed domain receipt to the exact private preview
   const payload = { schema: "sf-import-preview-v1" as const, fileRef: "file", target, manifest, detail }
   const entry = { ...payload, digest: digestSfValue(payload) }
   const state = { documents: { "import-preview:preview": entry }, receipts: {} } as unknown as SfProductState
-  const receipt = { id: "receipt", idempotencyKey: "key", commandDigest: command.commandDigest, targetIncarnation: "inc", principalRef: "user", surface: "planner" as const, version: 2, result: { ok: true as const }, at: "2026-11-13T00:00:00Z" }
+  const receipt = { id: "receipt", idempotencyKey: "key", commandDigest: command.commandDigest, targetIncarnation: "inc", principalRef: "user", surface: "planner" as const, version: 2, result: { ok: true as const, value: { status: "applied", changedFields: 2 } }, at: "2026-11-13T00:00:00Z" }
   expect(settleSfImportReceipt(state, { manifestId: "preview", expectedDigest: entry.digest, receipt: { ...receipt, commandDigest: "c".repeat(64) } })).toBe(false)
   expect(state.documents["import-preview:preview"]).toEqual(entry)
   expect(settleSfImportReceipt(state, { manifestId: "preview", expectedDigest: entry.digest, receipt })).toBe(true)
   expect(state.receipts.receipt).toEqual(receipt)
+  expect(state.documents["import-receipt:receipt"]).toEqual({ receiptId: "receipt", manifestId: "preview", idempotencyKey: "key", commandDigest: command.commandDigest, outcome: "applied", changedFields: 2 })
   expect(state.documents["import-preview:preview"]).toMatchObject({ manifest: { state: "applied", domainApplied: true, receipts: [receipt] }, detail })
 })

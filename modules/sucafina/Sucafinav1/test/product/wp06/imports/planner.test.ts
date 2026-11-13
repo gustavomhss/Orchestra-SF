@@ -25,6 +25,11 @@ test("workbook preview and real Planner command agree without mutating the sourc
   const commit = structuredClone(snapshot)
   expect(mutation.execute(commit, actor, environment).commit).toBe(true)
   expect(commit).toEqual(applied)
+  const repeated = preparePlannerWorkbook({ ...input, snapshot: applied, operationId: "operation-2", idempotencyKey: "key-2" })
+  const noChange = createPlannerImportMutation({ command: repeated.command, commandDigest: repeated.commandDigest, previewDigest: repeated.previewDigest, actorId: actor.id, operationId: "operation-2", idempotencyKey: "key-2", targetIncarnation: "inc-1", previewAt: environment.at, verifyTarget: () => true })!
+  const unchanged = structuredClone(applied)
+  expect(noChange.execute(unchanged, actor, environment)).toMatchObject({ commit: true, value: { status: "unchanged", changedFields: 0 } })
+  expect(unchanged).toEqual(applied)
   const stale = structuredClone(snapshot)
   stale.versions["versions:v1"] = { version: 1, by: "another" }
   const staleBefore = structuredClone(stale)

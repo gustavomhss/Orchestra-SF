@@ -75,7 +75,7 @@ export function createSfImportHost(input: {
       const result = await store.read(request.manifestId, context)
       if (result.status !== "ok") return result
       if (result.value.manifest.version !== request.version || (request.digest !== undefined && result.value.digest !== request.digest)) return { status: "stale" as const, reason: "preview-changed" }
-      return { status: "ok" as const, value: { digest: result.value.digest, detail: result.value.detail } }
+      return { status: "ok" as const, value: { digest: result.value.digest, detail: result.value.detail, ...(result.value.summary ? { receipt: result.value.summary } : {}) } }
     },
     apply: async (request: { manifestId: string; version: number }, context: TrustedDomainContext) => {
       const resolved = await store.read(request.manifestId, context)

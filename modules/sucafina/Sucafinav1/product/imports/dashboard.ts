@@ -10,6 +10,7 @@ import { dashboardMutationImpact } from "../dashboard/mutation-scope.ts"
 import type { Period } from "../contracts/context.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import { projectDashboardScope } from "../dashboard/scope.ts"
+import { compareImportProjections } from "./changes.ts"
 
 type ImportFormat = DashboardImportFormat | "backup"
 
@@ -74,8 +75,9 @@ export function createDashboardImportMutation(input: { format: ImportFormat; com
       const applied = prepared.format === "backup" ? executeDashboardBackupImport(staged, actor, internal, effective) : applyDashboardImport(prepared.format, staged, actor, internal, effective, preview.baseDigest, preview.commandDigest)
       if (!("commit" in applied ? applied.commit : applied.ok)) return { commit: false, value: { status: "failed", reason: "command-rejected" } }
       if (!input.verifyScope(snapshot, staged, actor)) return { commit: false, value: { status: "denied", reason: "source-access-unavailable" } }
-      Object.assign(snapshot, staged)
-      return { commit: true, value: { status: "applied", warnings: "warnings" in applied ? applied.warnings ?? [] : [] } }
+      const changedFields = compareImportProjections({ data: publicSfData(snapshot.data), sequences: snapshot.sequences }, { data: publicSfData(staged.data), sequences: staged.sequences }).length
+      if (changedFields) Object.assign(snapshot, staged)
+      return { commit: true, value: { status: changedFields ? "applied" as const : "unchanged" as const, changedFields, warnings: "warnings" in applied ? applied.warnings ?? [] : [] } }
     },
   }
 }

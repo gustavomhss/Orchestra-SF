@@ -6,6 +6,8 @@ import type { SfProductState, SfProductStatePort } from "../contracts/state.ts"
 import type { ImportTarget } from "./staged-files.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 
+export type ImportReceiptSummary = { receiptId: string; manifestId: string; idempotencyKey: string; commandDigest: string; outcome: "applied" | "unchanged"; changedFields: number }
+
 export type ImportDetail = {
   manifestId: string
   version: number
@@ -21,10 +23,16 @@ export function settleSfImportReceipt(state: SfProductState, input: { manifestId
   if (!stored || stored.schema !== "sf-import-preview-v1" || stored.digest !== input.expectedDigest || stored.digest !== digestSfValue({ schema: stored.schema, fileRef: stored.fileRef, target: stored.target, manifest: stored.manifest, detail: stored.detail, ...(stored.execution ? { execution: stored.execution } : {}) }) || stored.manifest.state !== "preview" || stored.manifest.commands.length !== 1 || !input.receipt.result.ok) return false
   const command = stored.manifest.commands[0]!
   if (input.receipt.principalRef !== stored.manifest.context.principalRef || input.receipt.surface !== command.target.surface || input.receipt.targetIncarnation !== command.target.incarnation || input.receipt.commandDigest !== command.commandDigest || input.receipt.idempotencyKey !== command.idempotencyKey || (state.receipts[input.receipt.id] && digestSfValue(state.receipts[input.receipt.id]) !== digestSfValue(input.receipt))) return false
+  const result = input.receipt.result.value
+  if (!result || typeof result !== "object" || !("status" in result) || !("changedFields" in result) || (result.status !== "applied" && result.status !== "unchanged") || typeof result.changedFields !== "number" || !Number.isSafeInteger(result.changedFields) || result.changedFields < 0 || (result.status === "unchanged") !== (result.changedFields === 0)) return false
+  const summary: ImportReceiptSummary = { receiptId: input.receipt.id, manifestId: input.manifestId, idempotencyKey: input.receipt.idempotencyKey, commandDigest: input.receipt.commandDigest, outcome: result.status, changedFields: result.changedFields }
+  const summaryKey = `import-receipt:${input.receipt.id}`
+  if (state.documents[summaryKey] !== undefined && digestSfValue(state.documents[summaryKey]) !== digestSfValue(summary)) return false
   const manifest: StoredImportManifest = { ...stored.manifest, state: "applied", domainApplied: true, receipts: [input.receipt] }
   const payload = { schema: stored.schema, fileRef: stored.fileRef, target: stored.target, manifest, detail: stored.detail, ...(stored.execution ? { execution: stored.execution } : {}) }
   state.documents[`import-preview:${input.manifestId}`] = { ...payload, digest: digestSfValue(payload) }
   state.receipts[input.receipt.id] = structuredClone(input.receipt)
+  state.documents[summaryKey] = summary
   return true
 }
 
@@ -56,14 +64,17 @@ export function createSfImportPreviewStore(input: { host: DomainPortHost; state:
       if (!await input.host.revalidate(context) || !await input.authorizeTarget(target, context) || !await input.validateFile(fileRef, manifest.sourceDigest, context)) return { status: "stale", reason: "preview-context-changed" }
       return { status: "ok", value: view(manifest) }
     },
-    read: async (id: string, context: TrustedDomainContext): Promise<PortResult<{ manifest: StoredImportManifest; detail: ImportDetail; execution?: ImportExecution; digest: string; fileRef: string; target: ImportTarget }>> => {
+    read: async (id: string, context: TrustedDomainContext): Promise<PortResult<{ manifest: StoredImportManifest; detail: ImportDetail; execution?: ImportExecution; digest: string; fileRef: string; target: ImportTarget; summary?: ImportReceiptSummary }>> => {
       const request = input.host.requestFor(context)
       if (!request || !id || !await input.host.revalidate(context)) return { status: "denied", reason: "preview-access-unavailable" }
-      const read = await input.state.read(request, "documents", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.documents[`import-preview:${id}`] : undefined)
+      const read = await input.state.read(request, "documents", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? { entry: state.documents[`import-preview:${id}`], documents: state.documents } : undefined)
       if (read.status !== "ok" || !read.value || typeof read.value !== "object") return { status: "unavailable", reason: "preview-unavailable" }
-      const entry = read.value as StoredPreview
-      if (entry.schema !== "sf-import-preview-v1" || !entry.manifest || entry.manifest.id !== id || !entry.detail || entry.detail.manifestId !== id || entry.detail.version !== entry.manifest.version || entry.detail.sourceDigest !== entry.manifest.sourceDigest || !entry.target || !entry.fileRef || entry.digest !== digestSfValue({ schema: entry.schema, fileRef: entry.fileRef, target: entry.target, manifest: entry.manifest, detail: entry.detail, ...(entry.execution ? { execution: entry.execution } : {}) }) || entry.manifest.context.principalRef !== context.binding.principalRef || entry.manifest.context.installationId !== context.binding.installationId || entry.manifest.context.projectId !== context.binding.projectId || entry.manifest.context.accessRevision !== context.binding.accessRevision || entry.manifest.context.policyVersion !== context.binding.policyVersion || !await input.authorizeTarget(entry.target, context, entry.manifest.state === "applied" ? "receipt" : undefined) || (entry.manifest.state !== "applied" && !await input.validateFile(entry.fileRef, entry.manifest.sourceDigest, context)) || !await input.host.revalidate(context)) return { status: "denied", reason: "preview-access-unavailable" }
-      return { status: "ok", value: { manifest: entry.manifest, detail: entry.detail, execution: entry.execution, digest: entry.digest, fileRef: entry.fileRef, target: entry.target } }
+      const entry = read.value.entry as StoredPreview
+      if (!entry || entry.schema !== "sf-import-preview-v1" || !entry.manifest || entry.manifest.id !== id || !entry.detail || entry.detail.manifestId !== id || entry.detail.version !== entry.manifest.version || entry.detail.sourceDigest !== entry.manifest.sourceDigest || !entry.target || !entry.fileRef || entry.digest !== digestSfValue({ schema: entry.schema, fileRef: entry.fileRef, target: entry.target, manifest: entry.manifest, detail: entry.detail, ...(entry.execution ? { execution: entry.execution } : {}) }) || entry.manifest.context.principalRef !== context.binding.principalRef || entry.manifest.context.installationId !== context.binding.installationId || entry.manifest.context.projectId !== context.binding.projectId || entry.manifest.context.accessRevision !== context.binding.accessRevision || entry.manifest.context.policyVersion !== context.binding.policyVersion || !await input.authorizeTarget(entry.target, context, entry.manifest.state === "applied" ? "receipt" : undefined) || (entry.manifest.state !== "applied" && !await input.validateFile(entry.fileRef, entry.manifest.sourceDigest, context)) || !await input.host.revalidate(context)) return { status: "denied", reason: "preview-access-unavailable" }
+      const receipt = entry.manifest.receipts[0]
+      const summary = receipt ? read.value.documents[`import-receipt:${receipt.id}`] as ImportReceiptSummary | undefined : undefined
+      if (entry.manifest.state === "applied" && (!receipt || !summary || summary.receiptId !== receipt.id || summary.manifestId !== id || summary.idempotencyKey !== receipt.idempotencyKey || summary.commandDigest !== receipt.commandDigest || !receipt.result.ok || !receipt.result.value || typeof receipt.result.value !== "object" || !("changedFields" in receipt.result.value) || !("status" in receipt.result.value) || receipt.result.value.changedFields !== summary.changedFields || receipt.result.value.status !== summary.outcome)) return { status: "unavailable", reason: "receipt-summary-unavailable" }
+      return { status: "ok", value: { manifest: entry.manifest, detail: entry.detail, execution: entry.execution, digest: entry.digest, fileRef: entry.fileRef, target: entry.target, summary } }
     },
     view,
   }

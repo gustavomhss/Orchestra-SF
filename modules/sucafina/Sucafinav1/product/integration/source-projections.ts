@@ -4,6 +4,7 @@ import { roleMap } from "../../runtime/admin.ts"
 import { object } from "../../runtime/contract.ts"
 import type { Actor, Snapshot } from "../../runtime/contract.ts"
 import type { Surface } from "../../src/identity.ts"
+import { isSfPeriod } from "../contracts/validation.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { projectPlannerSource } from "../planner/port.ts"
 import { projectDashboardScope } from "../dashboard/scope.ts"
@@ -19,8 +20,8 @@ export function sfPlannerProjectionSelector(snapshot: Snapshot, actor: Actor) {
   return { kind: "planner-source-v1", roles: [...actor.roles].sort(), canWrite: actor.canWrite, roleMapDigest: digestSfValue(roleMap(snapshot, "planner")) }
 }
 
-export function sfPlannerRosterProjectionSelector(snapshot: Snapshot, actor: Actor, fields: readonly string[]) {
-  return { ...sfPlannerProjectionSelector(snapshot, actor), kind: "planner-roster-v1", fields: [...fields].sort() }
+export function sfPlannerRosterProjectionSelector(snapshot: Snapshot, actor: Actor, fields: readonly string[], period: Period) {
+  return { ...sfPlannerProjectionSelector(snapshot, actor), kind: "planner-roster-v1", fields: [...fields].sort(), period: structuredClone(period) }
 }
 
 // The host shares this clock with its request environment; a client cannot supply it.
@@ -94,7 +95,7 @@ export function projectSfSourceScope(surface: Surface, snapshot: Snapshot, scope
   const fields = selector.fields
   if (scope.recordType !== "planner-roster" || scope.recordId !== "file" || selector.kind !== "planner-roster-v1" || !actor.canWrite ||
     !actor.roles.some((role) => role === "admin" || role === "hr") || !plannerKeys(actor).includes("Headcount") || !Array.isArray(snapshot.data.roster) ||
-    !Array.isArray(fields) || !fields.length || fields.some((field) => typeof field !== "string" || !["name", "title", "type", "leader", "location", "start", "end", "status"].includes(field)) ||
+    !isSfPeriod(selector.period) || !Array.isArray(fields) || !fields.length || fields.some((field) => typeof field !== "string" || !["name", "title", "type", "leader", "location", "start", "end", "status"].includes(field)) ||
     new Set(fields).size !== fields.length || digestSfValue(fields) !== digestSfValue([...fields].sort())) return undefined
   const roster = domain.view(snapshot, actor, { at: observedAt ?? "1970-01-01T00:00:00.000Z", id: () => "", directory: [] }).data.roster
   if (!Array.isArray(roster) || roster.some((row) => !row || typeof row !== "object" || Array.isArray(row))) return undefined

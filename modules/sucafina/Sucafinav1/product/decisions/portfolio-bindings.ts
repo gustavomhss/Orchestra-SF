@@ -1,5 +1,5 @@
 import { digestSfValue } from "../contracts/canonical.ts"
-import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
+import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
 import type { DecisionCase } from "../contracts/decisions.ts"
 import type { PortfolioRequest } from "../contracts/operations.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
@@ -56,6 +56,26 @@ export function createPortfolioResultBindings(input: {
       return { status: "ok", value: structuredClone(binding) }
     } catch { return { status: "unavailable", reason: "portfolio-binding-unavailable" } }
   }
+  const readHistoricalBinding = async (request: { caseRef: CaseRef; resultRef: string }, context: TrustedDomainContext): Promise<PortResult<{ binding: PortfolioBinding; selection: unknown }>> => {
+    try {
+      const source = input.host.requestFor(context)
+      if (!source || !request.resultRef.trim() || !await input.host.revalidate(context)) return { status: "denied", reason: "portfolio-history-access-unavailable" }
+      const readCases = () => input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { current: state.cases[request.caseRef.id], result: state.decisionResults?.[request.resultRef] } : undefined)
+      const readPreferences = () => input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? { binding: state.preferences[key(request.resultRef)], selections: Object.entries(state.preferences).filter(([name]) => name.startsWith("sf:criterion-rule:selection:history:")).map(([, value]) => value) } : undefined)
+      const cases = await readCases()
+      const preferences = await readPreferences()
+      if (cases.status !== "ok" || !cases.value || !allowed(cases.value.current, request.caseRef, context) || !await input.authorizeCase(cases.value.current!, context) || preferences.status !== "ok" || !preferences.value || !isBinding(preferences.value.binding)) return { status: "denied", reason: "portfolio-history-access-unavailable" }
+      const binding = preferences.value.binding
+      const result = cases.value.result
+      if (!result || result.kind !== "portfolio" || binding.resultRef !== request.resultRef || result.resultRef !== request.resultRef || binding.caseRef.id !== request.caseRef.id || binding.caseRef.incarnation !== request.caseRef.incarnation || binding.caseRef.version >= request.caseRef.version || digestSfValue(result.caseRef) !== digestSfValue(binding.caseRef) || binding.resultDigest !== result.resultDigest || result.resultDigest !== digestSfValue(result.result) || binding.requestDigest !== result.requestDigest || binding.requestDigest !== digestSfValue(binding.request) || binding.bindingDigest !== bindingDigest(binding) || !decodeSfOperationInput("sf_portfolio_evaluate", binding.request).ok || !decodeSfOperationOutput("sf_portfolio_evaluate", result.result).ok) return { status: "unavailable", reason: "portfolio-history-binding-invalid" }
+      const selections = preferences.value.selections.filter((value) => !!value && typeof value === "object" && !Array.isArray(value) && "selectionDigest" in value && value.selectionDigest === binding.proof.selectionDigest && digestSfValue(Object.fromEntries(Object.entries(value).filter(([name]) => name !== "selectionDigest"))) === binding.proof.selectionDigest && "caseRef" in value && digestSfValue(value.caseRef) === digestSfValue(binding.caseRef))
+      if (selections.length !== 1) return { status: "unavailable", reason: "portfolio-history-selection-unavailable" }
+      const casesAgain = await readCases()
+      const preferencesAgain = await readPreferences()
+      if (casesAgain.status !== "ok" || !casesAgain.value || digestSfValue(casesAgain.value) !== digestSfValue(cases.value) || !allowed(casesAgain.value.current, request.caseRef, context) || !await input.authorizeCase(casesAgain.value.current!, context) || preferencesAgain.status !== "ok" || digestSfValue(preferencesAgain.value) !== digestSfValue(preferences.value) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "portfolio-history-changed" }
+      return { status: "ok", value: { binding: structuredClone(binding), selection: structuredClone(selections[0]) } }
+    } catch { return { status: "unavailable", reason: "portfolio-history-binding-unavailable" } }
+  }
   const list = async (request: { caseRef: CaseRef }, context: TrustedDomainContext): Promise<PortResult<readonly { resultRef: string; createdAt: string }[]>> => {
     try {
       const source = input.host.requestFor(context)
@@ -99,7 +119,7 @@ export function createPortfolioResultBindings(input: {
       return read({ caseRef: request.caseRef, resultRef: request.resultRef }, context)
     } catch { return { status: "unavailable", reason: "portfolio-binding-unavailable" } }
   }
-  return { proofs, bind, read, list }
+  return { proofs, bind, read, list, readHistoricalBinding }
 }
 function sameAuthority(authority: SfStateAuthority, context: TrustedDomainContext) { return authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision }
 function allowed(value: DecisionCase | undefined, ref: CaseRef, context: TrustedDomainContext) { return !!value && value.id === ref.id && value.incarnation === ref.incarnation && value.version === ref.version && value.participants.includes(context.binding.principalRef) && (context.kind !== "native" || (context.binding.caseId === value.id && context.binding.caseIncarnation === value.incarnation && context.binding.caseVersion === value.version)) }

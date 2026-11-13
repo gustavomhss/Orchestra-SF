@@ -182,6 +182,10 @@ test("real host persists procurement document evidence and Planner import under 
     expect(detailValue.value.detail.changes).toContainEqual(expect.objectContaining({ kind: "ignored", source: expect.objectContaining({ field: "Total", address: "G2" }) }))
     const applied = await post("import-apply", { manifestId: manifest.value.id, version: manifest.value.version })
     expect(applied?.status).toBe(200)
+    const receiptDetail = await importHttp(new Request(`${url("import-detail")}&manifestId=${encodeURIComponent(manifest.value.id)}&version=${manifest.value.version}`, { headers: { cookie } }), "planner")
+    const receiptValue = await receiptDetail!.json() as { value: { receipt: { outcome: string; changedFields: number } } }
+    expect(receiptValue.value.receipt.outcome).toBe("applied")
+    expect(receiptValue.value.receipt.changedFields).toBeGreaterThan(0)
     expect(await store.transaction("planner", async (snapshot) => ({ commit: false, value: ((snapshot.data.versions as { lines: { f: (number | null)[] }[] }[])[0]!).lines[0]!.f[0] }))).toBe(0)
     expect((await uiCall("sf_import_preview", analyses[0]!.importRequest, (context) => analyze(analyses[0]!, context))).status).not.toBe("ok")
     const originalIdentity = await store.transaction("procurement", async (snapshot) => ({ commit: false, value: sfSourceIdentity(snapshot, "document-asset", "asset-1") }))
