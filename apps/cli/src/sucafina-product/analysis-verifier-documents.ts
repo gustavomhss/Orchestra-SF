@@ -46,3 +46,47 @@ export function createSfDocumentExtractionVerifier(dependencies: SfAnalysisDepen
     },
   }
 }
+
+export function createSfContractReviewVerifier(dependencies: SfAnalysisDependencies & { documentHost: DocumentEvidenceHost }): SfAnalysisVerifier {
+  return {
+    skillIds: ["sf-revisar-condicoes-contratuais"],
+    verify: async (input, request, call) => {
+      const decoded = decodeSfSkillInput("ContractReviewInput", input)
+      if (!decoded.ok) return { status: "needs-input", reason: "invalid-analysis-input" }
+      const value = decoded.value
+      if (digestSfValue(value.decisionScope.case) !== digestSfValue(request.caseRef) || value.contractProjectionRef.kind !== "record" || value.contractProjectionRef.target.surface !== "procurement") return { status: "needs-input", reason: "analysis-input-mismatch" }
+      const contractRef = value.contractProjectionRef
+      const read = async (currentCall: TrustedDomainContext) => {
+        const current = await dependencies.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, currentCall)
+        if (current.status !== "ok" || current.value.case.version !== request.caseRef.version || current.value.case.currency !== value.decisionScope.currency || digestSfValue(current.value.case.horizon) !== digestSfValue(value.decisionScope.horizon) ||
+          ![...current.value.case.alternatives.map((item) => item.result.costCoverage), ...current.value.case.choices.map((item) => item.costCoverage)].some((coverage) => digestSfValue(coverage) === digestSfValue(value.costCoverage))) return undefined
+        const refs = [contractRef, ...value.documentEvidence.map((item) => item.ref)]
+        if (refs.some((ref) => !current.value.evidenceRefs.some((item) => digestSfValue(item) === digestSfValue(ref)))) return undefined
+        const contract = await dependencies.procurement.readContract({ contractRef: contractRef.refId, fields: contractRef.target.fields }, currentCall)
+        if (contract.status !== "ok" || !contract.value.values.some((item) => item.sourceRefs.some((ref) => digestSfValue(ref) === digestSfValue(contractRef)))) return undefined
+        const documents = await Promise.all(value.documentEvidence.map((item) => readDocumentEvidence(item.id, currentCall, { state: dependencies.documentHost.state, documents: dependencies.documentHost.documents, requestFor: dependencies.documentHost.host.requestFor, revalidate: dependencies.documentHost.host.revalidate })))
+        if (documents.some((item, index) => item.status !== "ok" || digestSfValue(item.value.evidence) !== digestSfValue(value.documentEvidence[index]))) return undefined
+        const sources = await dependencies.context.context({ refs }, currentCall)
+        if (sources.length !== refs.length || sources.some((item, index) => item.state !== "fresh" || !item.authorizedProjection || !item.currentRef || digestSfValue(item.ref) !== digestSfValue(refs[index]) || digestSfValue(item.currentRef) !== digestSfValue(item.ref)) || !await dependencies.host.revalidate(currentCall)) return undefined
+        return { current: current.value.case, contract: contract.value, sources, refs }
+      }
+      const proof = await read(call)
+      if (!proof) return { status: "unavailable", reason: "analysis-source-unavailable" }
+      return { status: "ok", value: { current: proof.current, input: value, sources: proof.sources, acceptsOutput: async (output, currentCall) => {
+        const current = await read(currentCall)
+        if (!current || output.state !== "ready") return { status: "unavailable", reason: "analysis-output-unverified" }
+        if (output.kind === "EvidenceCandidate") {
+          const candidate = output.payload
+          const document = value.documentEvidence.find((item) => item.id === candidate.id)
+          return document && candidate.state !== "rejected" && digestSfValue(candidate.value) === digestSfValue(document.value) && candidate.unit === document.unit && digestSfValue(candidate.evidenceRefs) === digestSfValue([document.ref]) && digestSfValue(output.evidenceRefs) === digestSfValue(candidate.evidenceRefs)
+            ? { status: "ok", value: true } : { status: "unavailable", reason: "analysis-output-unverified" }
+        }
+        if (output.kind !== "CommercialGap") return { status: "unavailable", reason: "analysis-output-unverified" }
+        const gap = output.payload
+        if (gap.recordRef !== contractRef.refId || !gap.question.trim() || !current.contract.missing.some((item) => item.field === gap.field && ((gap.issue === "missing" && item.reason === "missing") || (gap.issue === "unavailable" && item.reason === "unavailable"))) ||
+          digestSfValue(output.evidenceRefs) !== digestSfValue(gap.evidenceRefs) || gap.evidenceRefs.some((ref) => !current.refs.some((item) => digestSfValue(item) === digestSfValue(ref)))) return { status: "unavailable", reason: "analysis-output-unverified" }
+        return { status: "ok", value: true }
+      } } }
+    },
+  }
+}

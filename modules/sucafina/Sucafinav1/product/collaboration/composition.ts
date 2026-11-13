@@ -30,6 +30,7 @@ export function createCollaborationComposition(input: {
   human: CollaborationHumanAuthority
   recipientThread?: ReturnType<typeof createRecipientThreadReader>
   reissue?: ReturnType<typeof createCollaborationReissuer>
+  captureWorkSource?: (memberRef: string, context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>>
   confirmationWork?: (id: string, context: TrustedDomainContext) => Promise<PortResult<{ state: "valid" | "stale"; sourceRefs: readonly BusinessEvidenceRef[] }>>
   createId: () => string
   now: () => string
@@ -63,6 +64,6 @@ export function createCollaborationComposition(input: {
     if (ref.target.surface !== "dashboard" || ref.target.recordType !== "hotTopics" || ref.target.recordId !== topic.id || !await authority.sources([ref], context)) return { status: "unavailable", reason: "topic-source-unavailable" }
     return { status: "ok", value: { ref: ref.refId, evidence: ref } }
   } })
-  const work = createCollaborationWorkPort({ host: input.host, state: input.state, collaboration: { authority, hotTopics, threads, recipientThread: input.recipientThread, reissue: input.reissue, confirmationWork: input.confirmationWork }, procurement: input.procurement, topicSource, selections: input.selections })
+  const work = createCollaborationWorkPort({ host: input.host, state: input.state, collaboration: { authority, hotTopics, threads, recipientThread: input.recipientThread, reissue: input.reissue, captureWorkSource: input.captureWorkSource, confirmationWork: input.confirmationWork }, procurement: input.procurement, topicSource, selections: input.selections })
   return { authority, hotTopics: { read: hotTopics.read }, relations: { read: relations.read, create: relations.create, remove: relations.remove, storageVersion: relations.storageVersion, readVersioned: relations.readVersioned }, threads, handoff, work }
 }

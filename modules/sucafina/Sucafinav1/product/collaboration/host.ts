@@ -101,7 +101,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
     }
     return { prepare, confirm, project: port.project, inspect: port.inspect, work }
   })()
-  const collaboration = createCollaborationComposition({ host: input.host, state: input.state, creationTarget: input.creationTarget, evidence: input.evidence, procurement: input.procurement, selections, recordEvidence, human: input.human, recipientThread, reissue, confirmationWork: confirmation?.work, createId: input.createId, now: input.now })
+  const collaboration = createCollaborationComposition({ host: input.host, state: input.state, creationTarget: input.creationTarget, evidence: input.evidence, procurement: input.procurement, selections, recordEvidence, human: input.human, recipientThread, reissue, captureWorkSource: input.captureWorkSource, confirmationWork: confirmation?.work, createId: input.createId, now: input.now })
   const threadReads = createRecipientAwareThreadReads(collaboration.threads, recipientThread)
   const dispatch = createCollaborationDispatch({ collaboration, threadReads, cases: input.cases, requiredAuthority: input.requiredAuthority, createReceipt: async (context, operation, digest, resultDigest) => {
     if (!await input.authority.revalidateDomainContext(context)) return undefined

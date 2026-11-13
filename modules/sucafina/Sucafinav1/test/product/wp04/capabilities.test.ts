@@ -115,6 +115,6 @@ test("authorized capability reads through an issued scoped source and consumes o
       const result = domain.execute(snapshot, { id: "a", roles: ["requester"], canWrite: true, assigned: [], domains: [] }, { page: "Requests", action: "save", id: "PR-1", version: 0, values: { pr: { estAmount: 100 } } }, { at: "2026-01-01T01:00:00Z", directory: [], id: randomUUID })
       return { commit: result.ok, value: result }
     })
-    expect((await review(proposed.value.command, admission.value)).status).not.toBe("ok")
+    expect((await review(proposed.value.command, admission.value)).status).toBe("stale")
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })

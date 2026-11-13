@@ -39,7 +39,7 @@ Com pelo menos duas alternativas, use **Compare and choose**:
 4. Selecione **Explore sensitivity** para escolher um critério, carregar suas unidades e avaliar um intervalo, quando essa opção estiver disponível.
 5. Para registrar sua decisão, escreva o motivo em **Reason for choosing** e selecione **Record choice**.
 
-Comparar não registra uma escolha. Registrar a escolha guarda seu motivo no caso, mas não altera um valor do Planner, aprova um pedido ou executa uma mudança no domínio. Faça qualquer alteração oficial na página de origem, usando as permissões normais, e volte ao caso para consultar o histórico.
+Comparar não registra uma escolha. Registrar a escolha guarda seu motivo no caso, mas não altera por si só o Planner nem aprova um pedido. Quando houver uma mudança preparada, use **Review current changes** para conferir destino, versão e valores anteriores e propostos. Somente depois marque a confirmação e selecione **Apply reviewed change**. Se a revisão estiver indisponível ou desatualizada, atualize o caso; consulte o recibo e o estado retornado para saber o que foi efetivamente aplicado.
 
 Em **Explore a portfolio**, você pode selecionar decisões e alternativas autorizadas, definir qual decisão guardará a avaliação, período, moeda e limite de combinações e selecionar **Preview portfolio**. Leia elegibilidade, estados de comparação, restrições e limitações antes de selecionar **Save this evaluation**. A avaliação salva fica no histórico do caso. Um resultado parcial ou condicionado continua assim no histórico.
 

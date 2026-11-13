@@ -5,11 +5,13 @@ import path from "node:path"
 import { randomUUID } from "node:crypto"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { resolve } from "../../../src/identity.ts"
-import { digestSfEvidenceRef } from "../../../product/contracts/canonical.ts"
+import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
 import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
 import { sfPlannerProjectionSelector, createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
 import { plannerPreparedRevision, preparePlannerMutation } from "../../../product/planner/prepared.ts"
+import { createPlannerPreparedReview } from "../../../product/planner/prepared-review.ts"
+import type { PreparedCommand } from "../../../product/contracts/context.ts"
 import { createPlannerProduct } from "../../../product/planner/product.ts"
 import type { DomainPortHost } from "../../../product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
@@ -46,6 +48,10 @@ test("planner issuer resolves authenticated current identities and rejects stale
     expect(preparePlannerMutation({ snapshot: captured, actor, environment, context: binding, target, evidence: foreign, scope, command: { page: "OPEX", action: "save", id: "line", version: 0, values: { versionId: "v0", f0: 42 } }, operationId: "operation", idempotencyKey: "edit" })).toBeUndefined()
     expect(prepared).toBeDefined()
     if (!prepared) return
+    const review = createPlannerPreparedReview({ host, issueSource: product.issueSource })
+    const operation = { id: "operation", target, command: prepared.command, idempotencyKey: "edit", commandDigest: prepared.mutation.commandDigest, expectedVersion: 0, requiredAuthority: [], preview: { values: [{ id: "line:1:forecast", currency: "USD", value: 42 }] } } as unknown as PreparedCommand
+    expect(await review(operation, binding)).toMatchObject({ status: "ok", value: { originalTargetDigest: digestSfValue(target), fields: [{ field: "line:1:forecast", before: null, after: 42, beforeCurrency: "USD", afterCurrency: "USD" }], source: first.value.evidence } })
+    expect(await review({ ...operation, preview: { ...operation.preview, values: [{ ...operation.preview.values[0]!, value: 43 }] } }, binding)).toMatchObject({ status: "stale" })
     const staged = structuredClone(captured)
     expect(prepared.mutation.execute(staged, actor, environment)).toMatchObject({ commit: true, value: { status: "applied" } })
     expect((staged.data.versions as { lines: { f: (number | null)[] }[] }[])[0].lines[0].f[0]).toBe(42)

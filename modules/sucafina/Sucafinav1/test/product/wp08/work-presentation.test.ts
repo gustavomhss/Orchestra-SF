@@ -11,6 +11,7 @@ import { enumerateSfSources } from "../../../product/integration/source-inventor
 import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
 import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
 import { createProcurementCollectionRegistry, createProcurementSourceResolver } from "../../../product/procurement/sources.ts"
+import { createProcurementCollectionMemberIssuer } from "../../../product/procurement/collection-member.ts"
 import { createProcurementPort } from "../../../product/procurement/port.ts"
 import { createSfBusinessContext } from "../../../product/host-binding/business-context.ts"
 import { dispatchSfCapability } from "../../../product/host-binding/capability-dispatch.ts"
@@ -43,12 +44,14 @@ test("canonical My Work presentation resolves current Procurement title and dest
     const contextFor = async (binding: Parameters<typeof product.host.revalidate>[0]) => ({ status: "ok" as const, value: { installationId: binding.binding.installationId, projectId: binding.binding.projectId, principalRef: binding.binding.principalRef, accessRevision: binding.binding.accessRevision, policyVersion: binding.binding.policyVersion, surface: "procurement" as const, period, currency: "USD", sourceRefs: [], capabilities: [] } })
     const collections = createProcurementCollectionRegistry({ host: product.host, scopedSources: persistence, contextFor })
     const individual = createProcurementSourceResolver({ host: product.host, scopedSources: persistence, contextFor })
+    const captureWorkSource = createProcurementCollectionMemberIssuer({ collection: collections, individual, revalidate: product.host.revalidate })
     const procurement = createProcurementPort({ ...product.host, ...collections, resolveSupplierSource: individual.resolve, isCurrentSupplierSource: individual.isCurrent, readContractSource: async () => ({ status: "unavailable", reason: "not used" }) })
     const evidence = createSfBusinessContext({ revalidate: product.host.revalidate, resolveSource: async (ref, binding) => {
-      const source = await collections.resolveRequestSource(ref.refId, binding)
+      const member = await collections.resolveRequestSource(ref.refId, binding)
+      const source = member.status === "ok" ? member : await individual.resolve(ref.refId, binding)
       return { state: source.status === "ok" && digestSfValue(source.value.evidence) === digestSfValue(ref) ? "fresh" : "unavailable", ref, accessRevision: binding.binding.accessRevision, checkedAt: at }
     }, proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "not used" }) })
-    const factory = createCollaborationHost({ human: { authorize: async () => false }, host: product.host, state: product.state, creationTarget: product.creationTarget, scopedSources: persistence, evidence, procurement, collections, cases: { read: async () => ({ status: "unavailable", reason: "not used" }) }, authority: product.authority, createId: randomUUID, now: () => at, requiredAuthority: { sf_work_list: [], sf_question_prepare: [], sf_answer_read: [], sf_relation_read: [], sf_handoff_prepare: [] } })
+    const factory = createCollaborationHost({ captureWorkSource, human: { authorize: async () => false }, host: product.host, state: product.state, creationTarget: product.creationTarget, scopedSources: persistence, evidence, procurement, collections, cases: { read: async () => ({ status: "unavailable", reason: "not used" }) }, authority: product.authority, createId: randomUUID, now: () => at, requiredAuthority: { sf_work_list: [], sf_question_prepare: [], sf_answer_read: [], sf_relation_read: [], sf_handoff_prepare: [] } })
     const initial = { selectionRef: "pending", period }
     const discovery = await product.ui.admit(request, "sf_work_list", digestSfValue(initial))
     if (discovery.status !== "ok" || !await product.ui.validate(discovery.value, "sf_work_list", digestSfValue(initial))) throw new Error("discovery admission failed")
@@ -68,6 +71,7 @@ test("canonical My Work presentation resolves current Procurement title and dest
     expect(presented).toMatchObject({ status: "ok", value: { list: { items: [{ actionRef: decoded.value.items[0]?.actionRef, ownerRef: "person", state: "pr_pending" }] }, items: [{ kind: "procurement", actionRef: decoded.value.items[0]?.actionRef, title: "Approval", ownerRef: "person", ownerLabel: "Person", state: "pr_pending", destination: { kind: "procurement-request", recordId: "PR-1" } }] } })
     if (presented.status !== "ok") throw new Error("presentation unavailable")
     expect(presented.value.items[0]?.actionRef).toBe(decoded.value.items[0]?.actionRef)
+    expect(presented.value.items[0]?.sourceVersion).toBe(1)
     expect(presented.value.items[0]?.sourceRefs[0]).toMatchObject({ kind: "record", target: { surface: "procurement", recordType: "procurement-request", recordId: "PR-1" } })
     directoryPeople.push({ id: "person", name: "Duplicate directory identity" })
     const ambiguousLabel = await factory.work.listPresentation(payload, admitted.value)
