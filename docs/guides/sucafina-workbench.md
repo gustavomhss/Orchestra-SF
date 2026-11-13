@@ -6,6 +6,10 @@ Abra **Workbench** na barra do Dashboard, Planner ou Procurement. As informaçõ
 
 ## Encontrar trabalho e documentos
 
+Use **Find a record** para procurar um registro pelo nome ou por um valor visível. Escolha Dashboard, Budget Planner ou Procurement e selecione **Find records**. A busca consulta as páginas disponíveis para o seu acesso; cada resultado abre o registro na página de origem. Ano e plano efetivamente usados na busca acompanham o link. Ao voltar, a consulta é executada novamente para conferir o acesso e os registros atuais. Resultados são limitados a 100; refine o termo quando necessário.
+
+Se alguma página estiver temporariamente indisponível, a busca informa que a lista está incompleta. Uma mudança de acesso limpa os resultados. A consulta continua preenchida para você tentar novamente. A busca encontra registros que as páginas apresentam com uma identidade ou um link de detalhe; não procura conteúdo oculto de documentos ou campos que a aplicação não apresenta.
+
 Em **My work**, informe as datas de início e fim e selecione **Find work**. A lista mostra os itens atribuídos que podem ser consultados nesse período. Quando houver um destino disponível, selecione **Open work** para abri-lo; o acesso é conferido novamente. Se a lista estiver vazia, confira o período; se disser que o serviço está indisponível ou que o acesso mudou, atualize a página e confirme suas permissões.
 
 Em **Search documents**, procure documentos que você tem autorização para consultar. Abra o resultado para verificar a origem. Um resultado pode deixar de estar disponível se o acesso ou a fonte mudar.
@@ -25,9 +29,13 @@ Na seção **Saved views**, escolha a densidade confortável ou compacta. Para g
 
 Uma visualização só restaura filtros e períodos compatíveis com a página e com o acesso atual. Se a tela informar que o contexto não pode ser restaurado, revise o período e os filtros na página atual e salve uma nova visualização.
 
+Se a confirmação de salvar, remover ou definir a página inicial não chegar, mantenha a página aberta e use a opção de repetir a mesma solicitação. Nome, densidade e filtros ficam preservados enquanto o resultado é incerto. Abrir outra visualização com uma edição pendente exige confirmar o descarte.
+
 ## Registrar e comparar uma decisão
 
 Use **Create a decision** quando precisar manter objetivo, critérios, alternativas e histórico juntos. Informe o objetivo, as datas, a moeda e um critério por linha; depois selecione **Create decision**. A tela abre o caso criado. Você pode editar objetivo, período, moeda e critérios em **Edit decision**.
+
+Quando a confirmação de criação não chegar, os campos permanecem preenchidos e bloqueados para repetir a mesma tentativa. Isso evita transformar uma resposta perdida em uma segunda decisão com conteúdo diferente.
 
 O detalhe mostra o estado e a versão do caso, seus critérios, alternativas e resultados disponíveis. Em cada alternativa, leia o estado da comparação e as condições. **Known subtotal** e **Known difference** mostram somente o que pode ser calculado com as informações atuais; não equivalem a um total ou diferença completos. Uma categoria pendente ou ausente não é zero. Abra **Coverage and sources** para consultar a cobertura e as fontes.
 
@@ -53,6 +61,8 @@ Quando houver um resultado, abra suas fontes e detalhes para entender a contribu
 
 Essa opção depende de duas fontes de Planner anexadas ao caso e de um modelo disponível. Se o formulário não aparecer, continue usando a comparação normal no Planner ou confira as fontes do caso e o acesso disponível.
 
+Enquanto o início de uma análise estiver sem confirmação, as seleções e o modelo ficam preservados para repetir a mesma tentativa. Falhas transitórias na atualização do histórico conservam o resultado aberto e a justificativa digitada. Um resultado desatualizado deixa de poder ser aceito; uma revogação de acesso remove o conteúdo anterior.
+
 ## Colar e salvar valores mensais no Planner
 
 No Dashboard, abra o diálogo da linha OPEX ou CAPEX para editar seus campos mensais. Em **Annual Entry** ou **Year amount**, confira o alcance apresentado antes de confirmar a aplicação. Ao abrir um projeto de uma lista filtrada, os filtros de busca, estado e responsável são mantidos no retorno. A navegação a partir do Executivo também preserva o ano e o mês de Operations.
@@ -66,6 +76,10 @@ Nas páginas **OPEX** e **CAPEX**, a seção **Edit monthly values together** pe
 
 O sistema pode aceitar algumas linhas e sinalizar outras separadamente. Em caso de conflito, a tela mostra o valor atual e a sua tentativa; suas entradas são preservadas. Compare os valores, atualize a página se necessário e faça uma nova prévia antes de salvar.
 
+Se a gravação perder a resposta, a grade e as operações de orçamento ficam bloqueadas e o botão repete exatamente a tentativa original. Um conflito nessa repetição não confirma que a primeira gravação falhou. Nesse caso, confira o registro persistido antes de iniciar outra alteração; o estado continua inconclusivo até essa reconciliação.
+
+As operações anuais, de distribuição e de reset da grade dependem da integração do serviço correspondente. Enquanto ele não estiver publicado, a solicitação é recusada antes de gravar. Os formulários operacionais já disponíveis nas páginas continuam sendo os pontos de entrada para essas tarefas.
+
 ## Importar com prévia
 
 Em **Dashboard** e **Planner**, abra **Import with preview**. Selecione **Find destinations**, informe as duas datas do período quando precisar filtrar os destinos e escolha um destino. Selecione um arquivo XLSX, XLS ou JSON e, se for apropriado, marque **Create a new version** ou **Remove records missing from the file**.
@@ -76,4 +90,7 @@ Selecione **Preview import** e confira as alterações, origens e erros de linha
 
 Mensagens de indisponibilidade, mudança de acesso, informação desatualizada ou edição simultânea indicam que a informação ou a permissão não pôde ser confirmada naquele momento. Atualize a página e confira o registro de origem. Se houver uma edição em andamento, compare os valores atuais com os seus antes de tentar novamente.
 
+Uma atualização que detecta sessão expirada ou mudança de permissão remove a visualização anterior, inclusive diálogos e rascunhos que não podem mais ser exibidos. Já uma indisponibilidade temporária conserva a edição e informa que a atualização falhou. Se você continuar digitando durante um salvamento, o novo texto permanece pendente depois que a tentativa anterior termina.
+
 Uma lista vazia pode significar que não há itens atribuídos no período, decisões acessíveis ou resultados salvos. Uma tela indisponível não confirma que a ação foi concluída. Em caso de dúvida, consulte o registro de origem antes de repetir uma gravação.
+

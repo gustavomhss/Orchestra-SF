@@ -2,6 +2,7 @@ import type { ContributionEnvelope } from "../contracts/resident-ai.ts"
 import { esc } from "../../src/screen-shell.ts"
 
 const list = (items: readonly string[]) => items.length ? `<ul>${items.map((item) => `<li>${esc(item)}</li>`).join("")}</ul>` : "<p>None recorded.</p>"
+const coverage = (refs: readonly string[], state: string) => `<p>Cost coverage references</p>${list(refs)}${state === "complete" ? "" : "<p>Review the unresolved coverage with the responsible owner before treating this comparison as complete.</p>"}`
 
 /** Display persisted outputs without deriving financial values or granting actions. */
 export function contributionBody(output: ContributionEnvelope): string {
@@ -11,9 +12,9 @@ export function contributionBody(output: ContributionEnvelope): string {
     case "AnalysisPlan": return `<p>${esc(output.payload.objective)}</p>${list(output.payload.steps.map((step) => step.expectedOutputTypes.join(", ")))}${list(output.payload.gaps.map((gap) => gap.reason))}`
     case "DecisionBrief": return `<p>${esc(output.payload.objective)}</p>${list(output.payload.conditions.map((item) => item.reason))}`
     case "QuestionProposal": return `<p>${esc(output.payload.question)}</p><p>${output.payload.recipientRef ? `Recipient: ${esc(output.payload.recipientRef)}` : "Recipient not selected"}</p>`
-    case "FinancialAnalysis": return `<p>${esc(output.payload.explanation)}</p><p>Comparison: ${esc(output.payload.comparison.comparisonStatus)} · Known difference: ${output.payload.knownDifference ?? "Unavailable"}</p>${output.payload.analysisBasis === "import-preview" ? "<p>Import preview; not applied.</p>" : ""}${list(output.payload.gaps)}`
-    case "ScenarioComparison": return `<p>Comparison: ${esc(output.payload.comparisonStatus)} · ${output.payload.comparisonStatus === "complete" ? "Difference" : "Known difference"}: ${output.payload.knownDifference ?? "Unavailable"}</p>${list(output.payload.unresolvedConditions)}`
-    case "SensitivityResult": return `<p>Comparison: ${esc(output.payload.comparisonStatus)} · ${output.payload.thresholdEvidence.state === "exact" ? `Threshold: ${output.payload.thresholdEvidence.value}` : output.payload.thresholdEvidence.state === "sampled" ? `Sampled interval: ${output.payload.thresholdEvidence.interval.minimum} – ${output.payload.thresholdEvidence.interval.maximum}` : `Threshold unavailable: ${esc(output.payload.thresholdEvidence.reason)}`} ${esc(output.payload.unit)}</p>${list(output.payload.evaluated.map((point) => `${point.parameterValue}: ${point.value ?? "Unavailable"}`))}${list(output.payload.unresolvedConditions.map((item) => item.reason))}`
+    case "FinancialAnalysis": return `<p>${esc(output.payload.explanation)}</p><p>Comparison: ${esc(output.payload.comparison.comparisonStatus)} · ${output.payload.comparison.comparisonStatus === "complete" ? "Difference" : "Known difference"}: ${(output.payload.comparison.comparisonStatus === "complete" ? output.payload.completeDifference : output.payload.knownDifference) ?? "Unavailable"}</p>${coverage(output.payload.comparison.costCoverageRefs, output.payload.comparison.comparisonStatus)}${output.payload.analysisBasis === "import-preview" ? "<p>Import preview; not applied.</p>" : ""}${list(output.payload.gaps)}`
+    case "ScenarioComparison": return `<p>Comparison: ${esc(output.payload.comparisonStatus)} · ${output.payload.comparisonStatus === "complete" ? "Difference" : "Known difference"}: ${(output.payload.comparisonStatus === "complete" ? output.payload.completeDifference : output.payload.knownDifference) ?? "Unavailable"}</p>${coverage(output.payload.costCoverageRefs, output.payload.comparisonStatus)}${list(output.payload.unresolvedConditions)}`
+    case "SensitivityResult": return `<p>Comparison: ${esc(output.payload.comparisonStatus)} · ${output.payload.thresholdEvidence.state === "exact" ? `Threshold: ${output.payload.thresholdEvidence.value}` : output.payload.thresholdEvidence.state === "sampled" ? `Sampled interval: ${output.payload.thresholdEvidence.interval.minimum} – ${output.payload.thresholdEvidence.interval.maximum}` : `Threshold unavailable: ${esc(output.payload.thresholdEvidence.reason)}`} ${esc(output.payload.unit)}</p>${coverage(output.payload.costCoverageRefs, output.payload.comparisonStatus)}${list(output.payload.evaluated.map((point) => `${point.parameterValue}: ${point.value ?? "Unavailable"}`))}${list(output.payload.unresolvedConditions.map((item) => item.reason))}`
     case "CommercialComparison": {
       const payload = output.payload
       const position = (ref: string) => { const found = payload.proposals.flatMap((item, index) => item.proposalRef === ref ? [index + 1] : []); return found.length === 1 ? `Proposal ${found[0]}` : "Unmatched supplied entry" }
@@ -51,3 +52,4 @@ export function contributionBody(output: ContributionEnvelope): string {
     case "MatchExplanation": return list(output.payload.matchedCriteria) + list(output.payload.currentDifferences) + list(output.payload.limitations)
   }
 }
+

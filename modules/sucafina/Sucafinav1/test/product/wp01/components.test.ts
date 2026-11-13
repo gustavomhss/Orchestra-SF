@@ -47,4 +47,16 @@ test("contribution renders a persisted question and retains explicit stale state
   const stale: ContributionEnvelope = { ...base, kind: "QuestionProposal", state: "stale", reason: "Base changed" }
   expect(contribution(stale)).toContain("stale · Base changed")
   expect(contribution(stale)).not.toContain("Ready for review")
+  const compared: ContributionEnvelope = { ...base, kind: "ScenarioComparison", state: "ready", payload: {
+    baselineResultRef: "base", alternativeResultRef: "alternative", costCoverageRefs: ["coverage-base", "<coverage-alternative>"],
+    criterionResults: [], unresolvedConditions: ["Training is missing"], comparisonStatus: "conditioned", knownDifference: 30000, completeDifference: null,
+  } }
+  const html = contribution(compared)
+  expect(html).toContain("Known difference: 30000")
+  expect(html).toContain("coverage-base")
+  expect(html).toContain("&lt;coverage-alternative&gt;")
+  expect(html).toContain("Review the unresolved coverage")
+  expect(html).toContain("Training is missing")
+  expect(html).not.toContain("Total:")
 })
+

@@ -14,6 +14,21 @@ import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
 import { decorateSfProductHtml } from "../../../product/interface/html.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { SfHostServices } from "../../../product/contracts/host-context.ts"
+import { handleSfPlannerMonthly } from "../../../product/interface/planner-http.ts"
+
+test("Planner boundary rejects unpublished operations and invalid monthly context before host admission", async () => {
+  const service = {} as SfHostServices
+  const post = (input: unknown) => handleSfPlannerMonthly(new Request("http://localhost/sucafina/planner?sf=workbench-planner", {
+    method: "POST", headers: { origin: "http://localhost", "content-type": "application/json", "idempotency-key": "planner-boundary-1" },
+    body: JSON.stringify({ action: "apply", input }),
+  }), "http://localhost", service)
+  const extended = await post({ page: "OPEX", versionId: "v1", operation: { rowId: "line", revision: 0, kind: "reset" } })
+  expect(extended.status).toBe(400)
+  expect(await extended.json()).toEqual({ status: "needs-input", reason: "planner-operation-not-published" })
+  for (const [rowId, revision, month] of [["", 0, 1], ["line", -1, 1], ["line", 0, 13], ["line", 0, 1.5]]) {
+    expect((await post({ page: "OPEX", versionId: "v1", drafts: [{ rowId, revision, cells: [{ measure: "budget", month, text: "2" }] }] })).status).toBe(400)
+  }
+})
 
 test("Planner grid previews pasted values and preserves a conflicting draft", async () => {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-planner-grid-"))
@@ -58,3 +73,4 @@ test("Planner grid previews pasted values and preserves a conflicting draft", as
     } finally { await browser.close() }
   } finally { await server.stop(true); await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 }, 60000)
+

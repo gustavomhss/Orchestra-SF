@@ -1,0 +1,94 @@
+name: astra-wp01-check
+
+on:
+  push:
+    branches: [astra-check-wp01]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: astra-wp01-check
+  cancel-in-progress: false
+
+jobs:
+  checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout exact product commit
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Record product and guard base
+        id: source
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = astra-check-wp01
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git merge-base --is-ancestor b0fa725b835149e222d48bd023b8899311abaefd HEAD
+          git rev-parse --verify origin/dev
+          mkdir -p "$RUNNER_TEMP/wp01-check-evidence"
+          jq -n \
+            --arg sha "$GITHUB_SHA" \
+            --arg tree "$(git rev-parse 'HEAD^{tree}')" \
+            --arg guardTarget "$(git rev-parse origin/dev)" \
+            --arg guardBase "$(git merge-base origin/dev HEAD)" \
+            --arg run "$GITHUB_RUN_ID" \
+            --arg attempt "$GITHUB_RUN_ATTEMPT" \
+            '{schema:"sf2h.wp01.check.v1",productSha:$sha,productTree:$tree,guardTargetRef:"origin/dev",guardTargetSha:$guardTarget,guardMergeBase:$guardBase,runId:$run,runAttempt:$attempt}' \
+            | tee "$RUNNER_TEMP/wp01-check-evidence/product.json"
+          git ls-tree -r --full-tree HEAD > "$RUNNER_TEMP/wp01-check-evidence/product-blobs.txt"
+
+      - name: Setup Bun
+        id: setup
+        uses: ./.github/actions/setup-bun
+
+      - name: Typecheck Sucafina
+        id: typecheck
+        working-directory: modules/sucafina
+        run: |
+          set -euo pipefail
+          bun typecheck 2>&1 | tee "$RUNNER_TEMP/wp01-check-evidence/typecheck.log"
+
+      - name: Run repository guards against dev
+        id: guards
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' && steps.source.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/wp01-check-evidence/guards.log"
+
+      - name: Record check outcomes
+        if: always()
+        env:
+          TYPECHECK_OUTCOME: ${{ steps.typecheck.outcome }}
+          GUARDS_OUTCOME: ${{ steps.guards.outcome }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/wp01-check-evidence"
+          jq -n --arg sha "$GITHUB_SHA" --arg typecheck "$TYPECHECK_OUTCOME" --arg guards "$GUARDS_OUTCOME" \
+            '{productSha:$sha,typecheck:$typecheck,guards:$guards}' \
+            | tee "$RUNNER_TEMP/wp01-check-evidence/outcomes.json"
+          {
+            echo "### WP01 scoped static checks"
+            echo ""
+            echo "- Product commit: $GITHUB_SHA"
+            echo "- Typecheck: $TYPECHECK_OUTCOME"
+            echo "- Guards: $GUARDS_OUTCOME"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload exact product check evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: astra-wp01-check-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/wp01-check-evidence
+          if-no-files-found: error
+          retention-days: 14
+

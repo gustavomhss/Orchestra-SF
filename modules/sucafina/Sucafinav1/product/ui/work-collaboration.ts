@@ -19,25 +19,34 @@ document.querySelectorAll('[data-case-thread]').forEach((entry) => {
   if (entry.dataset.sfThreadReady) return; entry.dataset.sfThreadReady = 'true'
   const button = entry.querySelector('[data-open-thread]'); const output = entry.querySelector('[data-thread-messages]'); const status = entry.querySelector('[role=status]'); const caseRef = JSON.parse(entry.dataset.case)
   const guard = document.createElement('form'); guard.hidden = true; entry.append(guard)
-  let pending; let confirmed = false; let confirmKey = crypto.randomUUID(); let attachKey = crypto.randomUUID()
-  const send = async (mode, body, key = crypto.randomUUID()) => { const url = new URL(location.href); url.search = '?sf=' + mode; const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify(body) }); const result = await response.json(); if (!response.ok || result.status !== 'ok') throw new Error('unavailable'); return result.value }
+  let pending; let confirmed = false; let replyPending = false; let accessRevoked = false; let confirmKey = crypto.randomUUID(); let attachKey = crypto.randomUUID()
+  const revoke = () => { accessRevoked = true; output.replaceChildren(); entry.querySelector('h4')?.replaceChildren(); delete guard.dataset.dirty; button.disabled = true; status.textContent = 'Conversation access changed. Reopen the decision with your current access.' }
+  const send = async (mode, body, key = crypto.randomUUID()) => { const url = new URL(location.href); url.search = '?sf=' + mode; const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify(body) }); if (response.status === 401 || response.status === 403) throw Object.assign(new Error('access-changed'), { accessDenied: true }); const result = await response.json(); if (!response.ok || result.status !== 'ok') throw new Error('unavailable'); return result.value }
   button.addEventListener('click', async () => {
-    button.disabled = true; status.textContent = 'Opening conversation…'; output.replaceChildren()
+    if (button.disabled || accessRevoked) return
+    if (pending || replyPending) { status.textContent = 'Resolve the pending request before reopening this conversation.'; return }
+    if (output.querySelector('form[data-dirty]') && !confirm('Discard your unsent reply and reload this conversation?')) return
+    const controls = [...output.querySelectorAll('input,select,textarea,button')].map((control) => ({ control, disabled: control.disabled }))
+    controls.forEach(({ control }) => { control.disabled = true }); button.disabled = true; status.textContent = 'Opening conversation…'
     try {
       const result = await send('collaboration-thread-read', { id: entry.dataset.thread })
       if (!Array.isArray(result?.messages)) throw new Error('unavailable')
+      output.replaceChildren()
       result.messages.forEach((message, index) => {
         const item = document.createElement('div'); const paragraph = document.createElement('p'); paragraph.textContent = typeof message.body === 'string' ? message.body : 'Message unavailable'; item.append(paragraph); output.append(item)
         if (index === 0 || !result.recipientRef || message.authorRef !== result.recipientRef || typeof message.id !== 'string') return
         const confirm = document.createElement('button'); confirm.type = 'button'; confirm.textContent = 'Confirm this answer and add to decision'; item.append(confirm)
         confirm.addEventListener('click', async () => {
-          confirm.disabled = true; button.disabled = true; output.querySelectorAll('button').forEach((other) => { other.disabled = true }); status.textContent = 'Confirming answer…'
+          if (confirm.disabled || accessRevoked || replyPending) return
+          if (output.querySelector('form[data-dirty]') && !window.confirm('Discard your unsent reply and confirm this answer?')) return
+          const previous = [...output.querySelectorAll('button,textarea')].map((control) => ({ control, disabled: control.disabled }))
+          confirm.disabled = true; button.disabled = true; output.querySelectorAll('button,textarea').forEach((other) => { other.disabled = true }); status.textContent = 'Confirming answer…'
           try {
             if (!pending) { const evidence = await send('collaboration-answer-evidence', { questionId: entry.dataset.thread, messageId: message.id }); const version = await send('collaboration-storage-version', { namespace: 'confirmations' }); if (!evidence?.answerRef) throw new Error('unavailable'); pending = { questionId: entry.dataset.thread, answerRef: evidence.answerRef, mutation: { expectedStorageVersion: version, idempotencyKey: confirmKey } }; guard.dataset.dirty = 'true' }
             if (!confirmed) { await send('collaboration-answer-confirm', pending, confirmKey); confirmed = true }
             const answer = await send('collaboration-answer-reuse', { questionId: entry.dataset.thread }); if (!answer?.answerRef) throw new Error('unavailable')
             await send('decision-answer-question', { caseRef, questionId: entry.dataset.thread, answerRef: answer.answerRef }, attachKey); delete guard.dataset.dirty; status.textContent = 'Answer recorded in the decision.'; location.reload()
-          } catch { status.textContent = 'Could not confirm the answer. Retry this same request.'; confirm.disabled = false }
+          } catch (error) { if (error?.accessDenied) { revoke(); return } status.textContent = 'Could not confirm the answer. Retry this same request.'; if (!pending) { previous.forEach(({ control, disabled }) => { control.disabled = disabled }); button.disabled = false } confirm.disabled = false }
         })
       })
       if (result.state === 'open') {
@@ -45,17 +54,17 @@ document.querySelectorAll('[data-case-thread]').forEach((entry) => {
         let replyKey = crypto.randomUUID(); let replyRequest
         text.addEventListener('input', () => { if (!replyRequest) { replyKey = crypto.randomUUID(); form.dataset.dirty = 'true' } })
         form.addEventListener('submit', async (event) => {
-          event.preventDefault(); if (reply.disabled || (!replyRequest && !text.value.trim())) return
-          reply.disabled = true; text.disabled = true; button.disabled = true; status.textContent = 'Sending reply…'
+          event.preventDefault(); if (reply.disabled || accessRevoked || pending || (!replyRequest && !text.value.trim())) return
+          replyPending = true; reply.disabled = true; text.disabled = true; button.disabled = true; output.querySelectorAll('button').forEach((other) => { other.disabled = true }); status.textContent = 'Sending reply…'
           try {
-            if (!replyRequest) { const version = await send('collaboration-storage-version', { namespace: 'threads' }); replyRequest = { id: entry.dataset.thread, body: text.value.trim(), mutation: { expectedStorageVersion: version, idempotencyKey: replyKey } } }
-            await send('collaboration-thread-reply', replyRequest, replyKey); delete form.dataset.dirty; button.disabled = false; button.click()
-          } catch { status.textContent = 'Could not confirm the reply. Your text is preserved; retry the same request.'; reply.disabled = false; text.disabled = !!replyRequest; button.disabled = !!replyRequest }
+            if (!replyRequest) { const version = await send('collaboration-storage-version', { namespace: 'threads' }); replyRequest = { id: entry.dataset.thread, body: text.value.trim(), mutation: { expectedStorageVersion: version, idempotencyKey: replyKey } }; replyPending = true }
+            await send('collaboration-thread-reply', replyRequest, replyKey); replyPending = false; delete form.dataset.dirty; button.disabled = false; button.click()
+          } catch (error) { if (error?.accessDenied) { revoke(); return } replyPending = !!replyRequest; status.textContent = 'Could not confirm the reply. Your text is preserved; retry the same request.'; if (!replyRequest) output.querySelectorAll('button').forEach((other) => { other.disabled = false }); reply.disabled = false; text.disabled = !!replyRequest; button.disabled = !!replyRequest }
         })
       }
       status.textContent = result.messages.length ? '' : 'No messages are available.'
-    } catch { status.textContent = 'Conversation unavailable or access changed.' }
-    finally { button.disabled = false }
+    } catch (error) { if (error?.accessDenied) revoke(); else { status.textContent = 'Conversation unavailable. Your unsent reply is preserved.'; controls.forEach(({ control, disabled }) => { if (control.isConnected) control.disabled = disabled }) } }
+    finally { button.disabled = accessRevoked || !!pending || replyPending }
   })
 })
 document.querySelectorAll('[data-case-question]').forEach((form) => {
@@ -101,3 +110,4 @@ document.querySelectorAll('[data-work-destination]').forEach((button) => {
   })
 })
 `
+

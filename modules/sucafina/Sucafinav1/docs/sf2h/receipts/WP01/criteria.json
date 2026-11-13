@@ -1,0 +1,3607 @@
+{
+  "schema": "sf2h.wp01.criteria.v1",
+  "work_package": "WP01",
+  "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "handoff_commit": "4e4d873e7e93bba3dc82df45e243999e7c8e76b6",
+  "observed_seed_head": "b0fa725b835149e222d48bd023b8899311abaefd",
+  "reviewer": "/root/acceptance_review",
+  "review_scope": "Independent source review, no authorship in product or tests; source map is provisional while root finishes implementation and hosted CI.",
+  "execution_claim": "NO_PRODUCT_TESTS_RUN_LOCALLY; hosted CI pending",
+  "criterion_count": 75,
+  "criteria": [
+    {
+      "criterion_id": "WP01.DOD.01",
+      "criterion_text": "Shell e componentes são consumidos pelas três superfícies reais e as entradas canônicas continuam acessíveis; o pacote local pode chegar a READY_FOR_INTEGRATION, mas este critério de conclusão só fecha na prova WP10.",
+      "status": "BLOCKED_INTEGRATION_PROOF",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/nav.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/shell-state.ts"
+      ],
+      "consumer": [
+        "Dashboard: 16 canonical pages",
+        "Planner: 7 canonical tabs",
+        "Procurement: 5 canonical entries",
+        "Direct URLs, detail return and browser history"
+      ],
+      "proof_required": [
+        "Hosted browser evidence for direct links, back/forward, reload, invalid/denied routes, independent periods, filter/scroll/selection restoration at 320/768/1440 px",
+        "Canonical criterion explicitly closes only with WP10 integration of all three real surfaces; local readiness is separate."
+      ],
+      "dependency": [
+        "WP00: C01 frozen context contract",
+        "WP02/WP03/WP04/WP10: authorized real surface composition"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "modules/sucafina/Sucafinav1/test/screen.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.DOD.02",
+      "criterion_text": "Navegação, contexto, teclado e estados de falha têm evidência em telas largas e estreitas.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/nav.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/shell-state.ts"
+      ],
+      "consumer": [
+        "Dashboard: 16 canonical pages",
+        "Planner: 7 canonical tabs",
+        "Procurement: 5 canonical entries",
+        "Direct URLs, detail return and browser history"
+      ],
+      "proof_required": [
+        "Hosted browser evidence for direct links, back/forward, reload, invalid/denied routes, independent periods, filter/scroll/selection restoration at 320/768/1440 px"
+      ],
+      "dependency": [
+        "WP00: C01 frozen context contract",
+        "WP02/WP03/WP04/WP10: authorized real surface composition"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "modules/sucafina/Sucafinav1/test/screen.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.DOD.03",
+      "criterion_text": "Hoje e mesa de decisão consomem casos, IA, cenários, perguntas e recibos reais; entrada contextual e operação direta funcionam sem exigir um caso para tarefas simples.",
+      "status": "BLOCKED_INTEGRATION_PROOF",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Persisted authorized cases and real producer outputs consumed after reload",
+        "Start/cancel/failed/needs-input/stale/revoked paths without fabricated ready output",
+        "Human choice and domain application remain separate; partial receipts and original choice are preserved"
+      ],
+      "dependency": [
+        "WP11: C09/C10 cases, choices and coverage",
+        "WP12/WP10: C11/C15 native analysis and resident runtime",
+        "WP13: portfolio projection",
+        "WP14/WP10: C13 current changes and authorized memory",
+        "WP06: C14 document and import outputs"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.DOD.20",
+      "criterion_text": "UI usa os resultados e a cobertura reais C10 em alternativa, escolha e reavaliação.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Same C10 revision/result/costCoverageRefs consumed by alternative, choice and reevaluation",
+        "Training omitted: known subtotal 210000 and known difference 30000 remain conditioned; confirmed training 40000 yields total 250000/difference -10000, preserving historical choice/caveat",
+        "Exercise confirmed zero versus absent category, revoked source and later inversion; display source, pending category and next action"
+      ],
+      "dependency": [
+        "WP03/WP11: canonical C10 calculations and versioned cost coverage",
+        "WP13/WP14: portfolio and reevaluation using the same revision"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.DOD.30",
+      "criterion_text": "Entradas de trabalho da mesa consomem as 18 saídas da matriz C15 em cenários pertinentes; cinco perfis deixam contribuições verificáveis e o Revisor tem run próprio.",
+      "status": "BLOCKED_NATIVE_EVIDENCE",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Per-skill witness for all 18 C15 skills: loaded profile/version, source and instruction digests, actual run/session/model, authorized inputs/operations, persisted outputRef, real consumer action after reload",
+        "Five distinct profile contributions; reviewer has its own execution/session and linked review target",
+        "Missing input, failed, cancelled and stale for every output class without new authority; integrated AM01-AM06 references as applicable"
+      ],
+      "dependency": [
+        "WP12/WP10: 18 real skill execution and persistence witnesses",
+        "WP11/WP13/WP14/WP06/WP08: typed producer outputs and domain consumers",
+        "Native Orchestra Session/SkillLoadReceipt cannot be replaced by this Chat assistant or HTTP fixtures"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.INV.01",
+      "criterion_text": "Visibilidade de controles não substitui autorização; pesquisa e preferências nunca expõem dados fora do acesso existente.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/nav.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/shell-state.ts"
+      ],
+      "consumer": [
+        "Dashboard: 16 canonical pages",
+        "Planner: 7 canonical tabs",
+        "Procurement: 5 canonical entries",
+        "Direct URLs, detail return and browser history"
+      ],
+      "proof_required": [
+        "Hosted browser evidence for direct links, back/forward, reload, invalid/denied routes, independent periods, filter/scroll/selection restoration at 320/768/1440 px"
+      ],
+      "dependency": [
+        "WP00: C01 frozen context contract",
+        "WP02/WP03/WP04/WP10: authorized real surface composition"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "modules/sucafina/Sucafinav1/test/screen.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.INV.02",
+      "criterion_text": "Trocar visualização não altera registros financeiros, estado de compra ou período silenciosamente.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/nav.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/shell-state.ts"
+      ],
+      "consumer": [
+        "Dashboard: 16 canonical pages",
+        "Planner: 7 canonical tabs",
+        "Procurement: 5 canonical entries",
+        "Direct URLs, detail return and browser history"
+      ],
+      "proof_required": [
+        "Hosted browser evidence for direct links, back/forward, reload, invalid/denied routes, independent periods, filter/scroll/selection restoration at 320/768/1440 px"
+      ],
+      "dependency": [
+        "WP00: C01 frozen context contract",
+        "WP02/WP03/WP04/WP10: authorized real surface composition"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "modules/sucafina/Sucafinav1/test/screen.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.INV.20",
+      "criterion_text": "UI não transforma pending em zero nem esconde condição financeira por haver um número válido.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Same C10 revision/result/costCoverageRefs consumed by alternative, choice and reevaluation",
+        "Training omitted: known subtotal 210000 and known difference 30000 remain conditioned; confirmed training 40000 yields total 250000/difference -10000, preserving historical choice/caveat",
+        "Exercise confirmed zero versus absent category, revoked source and later inversion; display source, pending category and next action"
+      ],
+      "dependency": [
+        "WP03/WP11: canonical C10 calculations and versioned cost coverage",
+        "WP13/WP14: portfolio and reevaluation using the same revision"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.INV.30",
+      "criterion_text": "Catálogo, nome de perfil ou chat sem outputRef consumido não satisfaz entrega; perfil não concede autoridade nova e fonte oficial continua no domínio.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Per-skill witness for all 18 C15 skills: loaded profile/version, source and instruction digests, actual run/session/model, authorized inputs/operations, persisted outputRef, real consumer action after reload",
+        "Five distinct profile contributions; reviewer has its own execution/session and linked review target",
+        "Missing input, failed, cancelled and stale for every output class without new authority; integrated AM01-AM06 references as applicable"
+      ],
+      "dependency": [
+        "WP12/WP10: 18 real skill execution and persistence witnesses",
+        "WP11/WP13/WP14/WP06/WP08: typed producer outputs and domain consumers",
+        "Native Orchestra Session/SkillLoadReceipt cannot be replaced by this Chat assistant or HTTP fixtures"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.QLT.01",
+      "criterion_text": "Revisar, editar e decidir têm hierarquias próprias; linguagem de negócio substitui nomes técnicos no fluxo do usuário.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/runtime/ui.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts"
+      ],
+      "consumer": [
+        "Domain renderers using shared field, table, modal, metric and scenario components"
+      ],
+      "proof_required": [
+        "Hosted actual browser with long/missing/restricted values at 320/768/1440 px; keyboard traversal, dialog escape and return focus; no essential clipping or color-only state"
+      ],
+      "dependency": [
+        "WP02/WP03/WP04/WP10: actual component composition in domain screens"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/components.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+        "modules/sucafina/Sucafinav1/test/visual-layout.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.QLT.02",
+      "criterion_text": "Manter foco visível, status além de cor, texto legível e controles operáveis por teclado e toque.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/runtime/ui.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts"
+      ],
+      "consumer": [
+        "Domain renderers using shared field, table, modal, metric and scenario components"
+      ],
+      "proof_required": [
+        "Hosted actual browser with long/missing/restricted values at 320/768/1440 px; keyboard traversal, dialog escape and return focus; no essential clipping or color-only state"
+      ],
+      "dependency": [
+        "WP02/WP03/WP04/WP10: actual component composition in domain screens"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/components.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+        "modules/sucafina/Sucafinav1/test/visual-layout.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.QLT.20",
+      "criterion_text": "Estado e categoria pendente acompanham o subtotal, fonte e próximo passo, inclusive por teclado/tabela.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Same C10 revision/result/costCoverageRefs consumed by alternative, choice and reevaluation",
+        "Training omitted: known subtotal 210000 and known difference 30000 remain conditioned; confirmed training 40000 yields total 250000/difference -10000, preserving historical choice/caveat",
+        "Exercise confirmed zero versus absent category, revoked source and later inversion; display source, pending category and next action"
+      ],
+      "dependency": [
+        "WP03/WP11: canonical C10 calculations and versioned cost coverage",
+        "WP13/WP14: portfolio and reevaluation using the same revision"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.QLT.30",
+      "criterion_text": "Mostrar contribuição, fontes e progresso útil; detalhes de perfil/modelo/skill/versão/run ficam sob demanda e seleção manual de agente não é obrigatória.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Per-skill witness for all 18 C15 skills: loaded profile/version, source and instruction digests, actual run/session/model, authorized inputs/operations, persisted outputRef, real consumer action after reload",
+        "Five distinct profile contributions; reviewer has its own execution/session and linked review target",
+        "Missing input, failed, cancelled and stale for every output class without new authority; integrated AM01-AM06 references as applicable"
+      ],
+      "dependency": [
+        "WP12/WP10: 18 real skill execution and persistence witnesses",
+        "WP11/WP13/WP14/WP06/WP08: typed producer outputs and domain consumers",
+        "Native Orchestra Session/SkillLoadReceipt cannot be replaced by this Chat assistant or HTTP fixtures"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.CMP.01",
+      "criterion_text": "Cobrir os três módulos, todas as entradas canônicas, detalhe/volta, estados vazios/erro/carregando e recuperação de edição.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/nav.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/shell-state.ts"
+      ],
+      "consumer": [
+        "Dashboard: 16 canonical pages",
+        "Planner: 7 canonical tabs",
+        "Procurement: 5 canonical entries",
+        "Direct URLs, detail return and browser history"
+      ],
+      "proof_required": [
+        "Hosted browser evidence for direct links, back/forward, reload, invalid/denied routes, independent periods, filter/scroll/selection restoration at 320/768/1440 px"
+      ],
+      "dependency": [
+        "WP00: C01 frozen context contract",
+        "WP02/WP03/WP04/WP10: authorized real surface composition"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "modules/sucafina/Sucafinav1/test/screen.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.CMP.02",
+      "criterion_text": "Hoje e mesa de decisão consomem casos, IA, cenários, perguntas e recibos reais; entrada contextual e operação direta funcionam sem exigir um caso para tarefas simples.",
+      "status": "BLOCKED_INTEGRATION_PROOF",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Persisted authorized cases and real producer outputs consumed after reload",
+        "Start/cancel/failed/needs-input/stale/revoked paths without fabricated ready output",
+        "Human choice and domain application remain separate; partial receipts and original choice are preserved"
+      ],
+      "dependency": [
+        "WP11: C09/C10 cases, choices and coverage",
+        "WP12/WP10: C11/C15 native analysis and resident runtime",
+        "WP13: portfolio projection",
+        "WP14/WP10: C13 current changes and authorized memory",
+        "WP06: C14 document and import outputs"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.CMP.20",
+      "criterion_text": "Cobrir categoria ausente, zero confirmado, comparação condicionada, fonte revogada e inversão posterior.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Same C10 revision/result/costCoverageRefs consumed by alternative, choice and reevaluation",
+        "Training omitted: known subtotal 210000 and known difference 30000 remain conditioned; confirmed training 40000 yields total 250000/difference -10000, preserving historical choice/caveat",
+        "Exercise confirmed zero versus absent category, revoked source and later inversion; display source, pending category and next action"
+      ],
+      "dependency": [
+        "WP03/WP11: canonical C10 calculations and versioned cost coverage",
+        "WP13/WP14: portfolio and reevaluation using the same revision"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.CMP.30",
+      "criterion_text": "Cobrir18 skills com witnesses de carga/digest/saída persistida/consumo real, cinco perfis distintos e falta/falha/stale/cancelamento, usando as seis provas integradas.",
+      "status": "BLOCKED_NATIVE_EVIDENCE",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Per-skill witness for all 18 C15 skills: loaded profile/version, source and instruction digests, actual run/session/model, authorized inputs/operations, persisted outputRef, real consumer action after reload",
+        "Five distinct profile contributions; reviewer has its own execution/session and linked review target",
+        "Missing input, failed, cancelled and stale for every output class without new authority; integrated AM01-AM06 references as applicable"
+      ],
+      "dependency": [
+        "WP12/WP10: 18 real skill execution and persistence witnesses",
+        "WP11/WP13/WP14/WP06/WP08: typed producer outputs and domain consumers",
+        "Native Orchestra Session/SkillLoadReceipt cannot be replaced by this Chat assistant or HTTP fixtures"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.SUC.01",
+      "criterion_text": "O usuário abre um registro e retorna à mesma consulta e posição sem refazer filtros.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/nav.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/shell-state.ts"
+      ],
+      "consumer": [
+        "Dashboard: 16 canonical pages",
+        "Planner: 7 canonical tabs",
+        "Procurement: 5 canonical entries",
+        "Direct URLs, detail return and browser history"
+      ],
+      "proof_required": [
+        "Hosted browser evidence for direct links, back/forward, reload, invalid/denied routes, independent periods, filter/scroll/selection restoration at 320/768/1440 px"
+      ],
+      "dependency": [
+        "WP00: C01 frozen context contract",
+        "WP02/WP03/WP04/WP10: authorized real surface composition"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "modules/sucafina/Sucafinav1/test/screen.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.SUC.02",
+      "criterion_text": "Cada pessoa chega à sua tarefa a partir da entrada escolhida, sem atravessar a experiência executiva inteira.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/interface/views-http.ts",
+        "modules/sucafina/Sucafinav1/product/ui/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Saved views and preferred entry",
+        "Workbench document search",
+        "My work presentation and authorized destination"
+      ],
+      "proof_required": [
+        "Real authorized search of canonical records with type, reference, context and direct open",
+        "Saved-view restoration after version deletion or ACL change across all three modules",
+        "First-cycle configuration/access/no-work states and authorized record/period/recipient selection"
+      ],
+      "dependency": [
+        "WP08: C06 work projections and authorized directory",
+        "WP10: record discovery/selection and per-user durable preferences",
+        "Observed seed search is document-only and discovery is procurementSelections-only"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.SUC.20",
+      "criterion_text": "A pessoa reconhece por que a comparação está condicionada e vê a consequência da resposta sem reconstruir o caso.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Same C10 revision/result/costCoverageRefs consumed by alternative, choice and reevaluation",
+        "Training omitted: known subtotal 210000 and known difference 30000 remain conditioned; confirmed training 40000 yields total 250000/difference -10000, preserving historical choice/caveat",
+        "Exercise confirmed zero versus absent category, revoked source and later inversion; display source, pending category and next action"
+      ],
+      "dependency": [
+        "WP03/WP11: canonical C10 calculations and versioned cost coverage",
+        "WP13/WP14: portfolio and reevaluation using the same revision"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.SUC.30",
+      "criterion_text": "Usuários concluem enquadramento, comparação, pergunta, revisão, preparo ou reavaliação sem coordenar cinco conversas nem reconstruir resultado no chat.",
+      "status": "BLOCKED_NATIVE_EVIDENCE",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Per-skill witness for all 18 C15 skills: loaded profile/version, source and instruction digests, actual run/session/model, authorized inputs/operations, persisted outputRef, real consumer action after reload",
+        "Five distinct profile contributions; reviewer has its own execution/session and linked review target",
+        "Missing input, failed, cancelled and stale for every output class without new authority; integrated AM01-AM06 references as applicable"
+      ],
+      "dependency": [
+        "WP12/WP10: 18 real skill execution and persistence witnesses",
+        "WP11/WP13/WP14/WP06/WP08: typed producer outputs and domain consumers",
+        "Native Orchestra Session/SkillLoadReceipt cannot be replaced by this Chat assistant or HTTP fixtures"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T01.CHK.01",
+      "criterion_text": "Todas as capacidades da matriz continuam alcançáveis por seus papéis.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/nav.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/shell-state.ts"
+      ],
+      "consumer": [
+        "Dashboard: 16 canonical pages",
+        "Planner: 7 canonical tabs",
+        "Procurement: 5 canonical entries",
+        "Direct URLs, detail return and browser history"
+      ],
+      "proof_required": [
+        "Hosted browser evidence for direct links, back/forward, reload, invalid/denied routes, independent periods, filter/scroll/selection restoration at 320/768/1440 px"
+      ],
+      "dependency": [
+        "WP00: C01 frozen context contract",
+        "WP02/WP03/WP04/WP10: authorized real surface composition"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "modules/sucafina/Sucafinav1/test/screen.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T01.CHK.02",
+      "criterion_text": "Voltar de detalhe restaura filtros/scroll/seleção e abrir link direto restaura contexto permitido.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/nav.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/shell-state.ts"
+      ],
+      "consumer": [
+        "Dashboard: 16 canonical pages",
+        "Planner: 7 canonical tabs",
+        "Procurement: 5 canonical entries",
+        "Direct URLs, detail return and browser history"
+      ],
+      "proof_required": [
+        "Hosted browser evidence for direct links, back/forward, reload, invalid/denied routes, independent periods, filter/scroll/selection restoration at 320/768/1440 px"
+      ],
+      "dependency": [
+        "WP00: C01 frozen context contract",
+        "WP02/WP03/WP04/WP10: authorized real surface composition"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "modules/sucafina/Sucafinav1/test/screen.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T01.CHK.03",
+      "criterion_text": "Ano do Planner não sobrescreve silenciosamente mês de Operations ou referência de Security.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/nav.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/shell-state.ts"
+      ],
+      "consumer": [
+        "Dashboard: 16 canonical pages",
+        "Planner: 7 canonical tabs",
+        "Procurement: 5 canonical entries",
+        "Direct URLs, detail return and browser history"
+      ],
+      "proof_required": [
+        "Planner year/version navigation leaves Operations month and Security reference separately named and preserved; unsupported shared filter explicitly explained"
+      ],
+      "dependency": [
+        "WP00: C01 frozen context contract",
+        "WP02/WP03/WP04/WP10: authorized real surface composition"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "modules/sucafina/Sucafinav1/test/screen.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T01.DOD.01",
+      "criterion_text": "Navegação nova funciona no shell real com cobertura de todas as entradas mapeadas.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/nav.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/shell-state.ts"
+      ],
+      "consumer": [
+        "Dashboard: 16 canonical pages",
+        "Planner: 7 canonical tabs",
+        "Procurement: 5 canonical entries",
+        "Direct URLs, detail return and browser history"
+      ],
+      "proof_required": [
+        "Hosted browser evidence for direct links, back/forward, reload, invalid/denied routes, independent periods, filter/scroll/selection restoration at 320/768/1440 px"
+      ],
+      "dependency": [
+        "WP00: C01 frozen context contract",
+        "WP02/WP03/WP04/WP10: authorized real surface composition"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "modules/sucafina/Sucafinav1/test/screen.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T01.INV.01",
+      "criterion_text": "URLs e estado de navegação não criam referências ou permissões de negócio.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/nav.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/shell-state.ts"
+      ],
+      "consumer": [
+        "Dashboard: 16 canonical pages",
+        "Planner: 7 canonical tabs",
+        "Procurement: 5 canonical entries",
+        "Direct URLs, detail return and browser history"
+      ],
+      "proof_required": [
+        "Hosted browser evidence for direct links, back/forward, reload, invalid/denied routes, independent periods, filter/scroll/selection restoration at 320/768/1440 px"
+      ],
+      "dependency": [
+        "WP00: C01 frozen context contract",
+        "WP02/WP03/WP04/WP10: authorized real surface composition"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "modules/sucafina/Sucafinav1/test/screen.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T01.QLT.01",
+      "criterion_text": "Nomes dos módulos permanecem reconhecíveis; grupos e ações raras reduzem densidade sem esconder o trabalho principal.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/nav.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/shell-state.ts"
+      ],
+      "consumer": [
+        "Dashboard: 16 canonical pages",
+        "Planner: 7 canonical tabs",
+        "Procurement: 5 canonical entries",
+        "Direct URLs, detail return and browser history"
+      ],
+      "proof_required": [
+        "Hosted browser evidence for direct links, back/forward, reload, invalid/denied routes, independent periods, filter/scroll/selection restoration at 320/768/1440 px"
+      ],
+      "dependency": [
+        "WP00: C01 frozen context contract",
+        "WP02/WP03/WP04/WP10: authorized real surface composition"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "modules/sucafina/Sucafinav1/test/screen.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T01.CMP.01",
+      "criterion_text": "Incluir acesso direto, voltar/avançar, recarregar, filtro inválido, página não autorizada e tela pequena.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/nav.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/shell-state.ts"
+      ],
+      "consumer": [
+        "Dashboard: 16 canonical pages",
+        "Planner: 7 canonical tabs",
+        "Procurement: 5 canonical entries",
+        "Direct URLs, detail return and browser history"
+      ],
+      "proof_required": [
+        "Hosted browser evidence for direct links, back/forward, reload, invalid/denied routes, independent periods, filter/scroll/selection restoration at 320/768/1440 px"
+      ],
+      "dependency": [
+        "WP00: C01 frozen context contract",
+        "WP02/WP03/WP04/WP10: authorized real surface composition"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "modules/sucafina/Sucafinav1/test/screen.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T01.SUC.01",
+      "criterion_text": "O usuário sabe em que módulo, período e versão está e chega ao registro que procura sem reconstruir a consulta.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/nav.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/shell-state.ts"
+      ],
+      "consumer": [
+        "Dashboard: 16 canonical pages",
+        "Planner: 7 canonical tabs",
+        "Procurement: 5 canonical entries",
+        "Direct URLs, detail return and browser history"
+      ],
+      "proof_required": [
+        "Hosted browser evidence for direct links, back/forward, reload, invalid/denied routes, independent periods, filter/scroll/selection restoration at 320/768/1440 px"
+      ],
+      "dependency": [
+        "WP00: C01 frozen context contract",
+        "WP02/WP03/WP04/WP10: authorized real surface composition"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "modules/sucafina/Sucafinav1/test/screen.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T01",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T02.CHK.01",
+      "criterion_text": "Conferir em 320, 768 e 1440 px: texto/ações essenciais sem corte; rolagem horizontal confinada a grades que exigem largura.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/runtime/ui.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts"
+      ],
+      "consumer": [
+        "Domain renderers using shared field, table, modal, metric and scenario components"
+      ],
+      "proof_required": [
+        "Hosted actual browser with long/missing/restricted values at 320/768/1440 px; keyboard traversal, dialog escape and return focus; no essential clipping or color-only state"
+      ],
+      "dependency": [
+        "WP02/WP03/WP04/WP10: actual component composition in domain screens"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/components.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+        "modules/sucafina/Sucafinav1/test/visual-layout.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T02",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T02.CHK.02",
+      "criterion_text": "Teclado alcança controles, fecha detalhe e devolve foco ao registro correto.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/runtime/ui.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts"
+      ],
+      "consumer": [
+        "Domain renderers using shared field, table, modal, metric and scenario components"
+      ],
+      "proof_required": [
+        "Actual browser keyboard Tab/Shift-Tab/escape through shared dialog and return to correct originating record after refresh"
+      ],
+      "dependency": [
+        "WP02/WP03/WP04/WP10: actual component composition in domain screens"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/components.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+        "modules/sucafina/Sucafinav1/test/visual-layout.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T02",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T02.CHK.03",
+      "criterion_text": "Cor não é a única indicação de atraso, seleção, erro ou sucesso.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/runtime/ui.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts"
+      ],
+      "consumer": [
+        "Domain renderers using shared field, table, modal, metric and scenario components"
+      ],
+      "proof_required": [
+        "Hosted actual browser with long/missing/restricted values at 320/768/1440 px; keyboard traversal, dialog escape and return focus; no essential clipping or color-only state"
+      ],
+      "dependency": [
+        "WP02/WP03/WP04/WP10: actual component composition in domain screens"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/components.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+        "modules/sucafina/Sucafinav1/test/visual-layout.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T02",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T02.DOD.01",
+      "criterion_text": "Os três layouts são reutilizáveis e foram exercitados com dados longos, ausentes e restritos.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/runtime/ui.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts"
+      ],
+      "consumer": [
+        "Domain renderers using shared field, table, modal, metric and scenario components"
+      ],
+      "proof_required": [
+        "Hosted actual browser with long/missing/restricted values at 320/768/1440 px; keyboard traversal, dialog escape and return focus; no essential clipping or color-only state"
+      ],
+      "dependency": [
+        "WP02/WP03/WP04/WP10: actual component composition in domain screens"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/components.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+        "modules/sucafina/Sucafinav1/test/visual-layout.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T02",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T02.INV.01",
+      "criterion_text": "Componente visual não inventa cálculo, causa, recomendação ou ação permitida.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/runtime/ui.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts"
+      ],
+      "consumer": [
+        "Domain renderers using shared field, table, modal, metric and scenario components"
+      ],
+      "proof_required": [
+        "Hosted actual browser with long/missing/restricted values at 320/768/1440 px; keyboard traversal, dialog escape and return focus; no essential clipping or color-only state"
+      ],
+      "dependency": [
+        "WP02/WP03/WP04/WP10: actual component composition in domain screens"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/components.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+        "modules/sucafina/Sucafinav1/test/visual-layout.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T02",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T02.QLT.01",
+      "criterion_text": "Densidade serve à atividade; tipografia e alinhamento numérico permitem comparar sem decoração competitiva.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/runtime/ui.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts"
+      ],
+      "consumer": [
+        "Domain renderers using shared field, table, modal, metric and scenario components"
+      ],
+      "proof_required": [
+        "Hosted actual browser with long/missing/restricted values at 320/768/1440 px; keyboard traversal, dialog escape and return focus; no essential clipping or color-only state"
+      ],
+      "dependency": [
+        "WP02/WP03/WP04/WP10: actual component composition in domain screens"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/components.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+        "modules/sucafina/Sucafinav1/test/visual-layout.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T02",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T02.CMP.01",
+      "criterion_text": "Cobrir cabeçalhos, tabelas, formulários, detalhes, comparações, estados vazios e ações de conclusão.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/runtime/ui.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts"
+      ],
+      "consumer": [
+        "Domain renderers using shared field, table, modal, metric and scenario components"
+      ],
+      "proof_required": [
+        "Hosted actual browser with long/missing/restricted values at 320/768/1440 px; keyboard traversal, dialog escape and return focus; no essential clipping or color-only state"
+      ],
+      "dependency": [
+        "WP02/WP03/WP04/WP10: actual component composition in domain screens"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/components.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+        "modules/sucafina/Sucafinav1/test/visual-layout.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T02",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T02.SUC.01",
+      "criterion_text": "WPs de domínio conseguem compor as telas sem criar um segundo sistema de componentes.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/runtime/ui.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts"
+      ],
+      "consumer": [
+        "Domain renderers using shared field, table, modal, metric and scenario components"
+      ],
+      "proof_required": [
+        "Hosted actual browser with long/missing/restricted values at 320/768/1440 px; keyboard traversal, dialog escape and return focus; no essential clipping or color-only state"
+      ],
+      "dependency": [
+        "WP02/WP03/WP04/WP10: actual component composition in domain screens"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/components.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+        "modules/sucafina/Sucafinav1/test/visual-layout.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T02",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T03.CHK.01",
+      "criterion_text": "Uma falha não exibe Saved e não descarta o texto digitado.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts"
+      ],
+      "consumer": [
+        "Monthly Planner editor",
+        "Decision and analysis forms",
+        "Question/reply/confirmation forms",
+        "Shared record dialogs and live refresh"
+      ],
+      "proof_required": [
+        "On transient save/list/refresh failure, no Saved message and no draft loss",
+        "First-write unknown, same payload/key retry, then CAS conflict remains unresolved rather than falsely not-applied",
+        "Browser test proves client transport behavior only; real host receipt proof must be separate"
+      ],
+      "dependency": [
+        "WP03/WP10: monthly mutation idempotency receipt and reconciliation unavailable in observed producer baseline",
+        "WP08/WP11/WP10: real collaboration/decision CAS and durable receipt boundaries"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T03",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T03.CHK.02",
+      "criterion_text": "Dois usuários alteram a mesma versão: o perdedor vê conflito e sua tentativa; nenhum merge silencioso.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts"
+      ],
+      "consumer": [
+        "Monthly Planner editor",
+        "Decision and analysis forms",
+        "Question/reply/confirmation forms",
+        "Shared record dialogs and live refresh"
+      ],
+      "proof_required": [
+        "Two authorized users submit same observed revision; one commits, the other sees both current and attempted values",
+        "No silent merge, no expectedVersion replacement without new explicit review"
+      ],
+      "dependency": [
+        "WP03/WP10: monthly mutation idempotency receipt and reconciliation unavailable in observed producer baseline",
+        "WP08/WP11/WP10: real collaboration/decision CAS and durable receipt boundaries"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T03",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T03.CHK.03",
+      "criterion_text": "Refresh de dados não substitui formulário sujo nem muda o número estável de reunião.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts"
+      ],
+      "consumer": [
+        "Monthly Planner editor",
+        "Decision and analysis forms",
+        "Question/reply/confirmation forms",
+        "Shared record dialogs and live refresh"
+      ],
+      "proof_required": [
+        "Hosted UI failures, dirty refresh, concurrent edits, timeout/connection loss, read-only and navigation cases",
+        "After unknown write, exact payload/key must remain frozen; a later CAS conflict is not proof that the first write failed",
+        "Domain integration must prove persisted effect/receipt and current-vs-attempt conflict without silent merge"
+      ],
+      "dependency": [
+        "WP03/WP10: monthly mutation idempotency receipt and reconciliation unavailable in observed producer baseline",
+        "WP08/WP11/WP10: real collaboration/decision CAS and durable receipt boundaries"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T03",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T03.DOD.01",
+      "criterion_text": "Salvamento, validação, cancelamento e conflito têm estados completos e recuperáveis nos componentes reais.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts"
+      ],
+      "consumer": [
+        "Monthly Planner editor",
+        "Decision and analysis forms",
+        "Question/reply/confirmation forms",
+        "Shared record dialogs and live refresh"
+      ],
+      "proof_required": [
+        "Hosted UI failures, dirty refresh, concurrent edits, timeout/connection loss, read-only and navigation cases",
+        "After unknown write, exact payload/key must remain frozen; a later CAS conflict is not proof that the first write failed",
+        "Domain integration must prove persisted effect/receipt and current-vs-attempt conflict without silent merge"
+      ],
+      "dependency": [
+        "WP03/WP10: monthly mutation idempotency receipt and reconciliation unavailable in observed producer baseline",
+        "WP08/WP11/WP10: real collaboration/decision CAS and durable receipt boundaries"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T03",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T03.INV.01",
+      "criterion_text": "Reconciliação visual nunca faz escrita não solicitada nem ignora a versão esperada.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts"
+      ],
+      "consumer": [
+        "Monthly Planner editor",
+        "Decision and analysis forms",
+        "Question/reply/confirmation forms",
+        "Shared record dialogs and live refresh"
+      ],
+      "proof_required": [
+        "Hosted UI failures, dirty refresh, concurrent edits, timeout/connection loss, read-only and navigation cases",
+        "After unknown write, exact payload/key must remain frozen; a later CAS conflict is not proof that the first write failed",
+        "Domain integration must prove persisted effect/receipt and current-vs-attempt conflict without silent merge"
+      ],
+      "dependency": [
+        "WP03/WP10: monthly mutation idempotency receipt and reconciliation unavailable in observed producer baseline",
+        "WP08/WP11/WP10: real collaboration/decision CAS and durable receipt boundaries"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T03",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T03.QLT.01",
+      "criterion_text": "Mensagens citam campo/registro e próximo passo útil; JSON bruto e códigos internos ficam fora do fluxo normal.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts"
+      ],
+      "consumer": [
+        "Monthly Planner editor",
+        "Decision and analysis forms",
+        "Question/reply/confirmation forms",
+        "Shared record dialogs and live refresh"
+      ],
+      "proof_required": [
+        "Hosted UI failures, dirty refresh, concurrent edits, timeout/connection loss, read-only and navigation cases",
+        "After unknown write, exact payload/key must remain frozen; a later CAS conflict is not proof that the first write failed",
+        "Domain integration must prove persisted effect/receipt and current-vs-attempt conflict without silent merge"
+      ],
+      "dependency": [
+        "WP03/WP10: monthly mutation idempotency receipt and reconciliation unavailable in observed producer baseline",
+        "WP08/WP11/WP10: real collaboration/decision CAS and durable receipt boundaries"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T03",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T03.CMP.01",
+      "criterion_text": "Cobrir sucesso, validação, perda de conexão, timeout, conflito, read-only e navegação com edição pendente.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts"
+      ],
+      "consumer": [
+        "Monthly Planner editor",
+        "Decision and analysis forms",
+        "Question/reply/confirmation forms",
+        "Shared record dialogs and live refresh"
+      ],
+      "proof_required": [
+        "Hosted UI failures, dirty refresh, concurrent edits, timeout/connection loss, read-only and navigation cases",
+        "After unknown write, exact payload/key must remain frozen; a later CAS conflict is not proof that the first write failed",
+        "Domain integration must prove persisted effect/receipt and current-vs-attempt conflict without silent merge"
+      ],
+      "dependency": [
+        "WP03/WP10: monthly mutation idempotency receipt and reconciliation unavailable in observed producer baseline",
+        "WP08/WP11/WP10: real collaboration/decision CAS and durable receipt boundaries"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T03",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T03.SUC.01",
+      "criterion_text": "A pessoa consegue corrigir o problema e continuar sem redigitar sua contribuição.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts"
+      ],
+      "consumer": [
+        "Monthly Planner editor",
+        "Decision and analysis forms",
+        "Question/reply/confirmation forms",
+        "Shared record dialogs and live refresh"
+      ],
+      "proof_required": [
+        "Hosted UI failures, dirty refresh, concurrent edits, timeout/connection loss, read-only and navigation cases",
+        "After unknown write, exact payload/key must remain frozen; a later CAS conflict is not proof that the first write failed",
+        "Domain integration must prove persisted effect/receipt and current-vs-attempt conflict without silent merge"
+      ],
+      "dependency": [
+        "WP03/WP10: monthly mutation idempotency receipt and reconciliation unavailable in observed producer baseline",
+        "WP08/WP11/WP10: real collaboration/decision CAS and durable receipt boundaries"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T03",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T04.CHK.01",
+      "criterion_text": "Usuário restrito não encontra registro proibido nem recebe contagens/títulos que o revelem.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/interface/views-http.ts",
+        "modules/sucafina/Sucafinav1/product/ui/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/product/ui/record-search.ts"
+      ],
+      "consumer": [
+        "Saved views and preferred entry",
+        "Workbench document search",
+        "My work presentation and authorized destination"
+      ],
+      "proof_required": [
+        "Two actors with disjoint access search records/documents; prohibited title/count/reference must never appear in response or rendered DOM"
+      ],
+      "dependency": [
+        "WP08: C06 work projections and authorized directory",
+        "WP10: record discovery/selection and per-user durable preferences",
+        "Observed seed search is document-only and discovery is procurementSelections-only"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Authorized-page record search and frozen view mutation recovery implemented; hosted validation pending. Full first-cycle work selection remains a producer/composition dependency.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T04",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T04.CHK.02",
+      "criterion_text": "Uma visão salva não força versão inexistente; explica referência indisponível e permite corrigir.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/interface/views-http.ts",
+        "modules/sucafina/Sucafinav1/product/ui/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/product/ui/record-search.ts"
+      ],
+      "consumer": [
+        "Saved views and preferred entry",
+        "Workbench document search",
+        "My work presentation and authorized destination"
+      ],
+      "proof_required": [
+        "Save a view, remove its referenced version/change ACL, reopen; explain unavailability and preserve explicit correction path without forcing version"
+      ],
+      "dependency": [
+        "WP08: C06 work projections and authorized directory",
+        "WP10: record discovery/selection and per-user durable preferences",
+        "Observed seed search is document-only and discovery is procurementSelections-only"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Authorized-page record search and frozen view mutation recovery implemented; hosted validation pending. Full first-cycle work selection remains a producer/composition dependency.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T04",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T04.CHK.03",
+      "criterion_text": "Nenhuma pendência resulta em estado claro de conclusão, não em erro ou painel vazio sem orientação.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/interface/views-http.ts",
+        "modules/sucafina/Sucafinav1/product/ui/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/product/ui/record-search.ts"
+      ],
+      "consumer": [
+        "Saved views and preferred entry",
+        "Workbench document search",
+        "My work presentation and authorized destination"
+      ],
+      "proof_required": [
+        "Real authorized search of canonical records with type, reference, context and direct open",
+        "Saved-view restoration after version deletion or ACL change across all three modules",
+        "First-cycle configuration/access/no-work states and authorized record/period/recipient selection"
+      ],
+      "dependency": [
+        "WP08: C06 work projections and authorized directory",
+        "WP10: record discovery/selection and per-user durable preferences",
+        "Observed seed search is document-only and discovery is procurementSelections-only"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Authorized-page record search and frozen view mutation recovery implemented; hosted validation pending. Full first-cycle work selection remains a producer/composition dependency.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T04",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T04.DOD.01",
+      "criterion_text": "Entradas, busca e visões salvas têm comportamento local comprovado; seu DoD fecha quando retomam contexto válido nos três módulos reais na composição WP10.",
+      "status": "BLOCKED_INTEGRATION_PROOF",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/interface/views-http.ts",
+        "modules/sucafina/Sucafinav1/product/ui/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/product/ui/record-search.ts"
+      ],
+      "consumer": [
+        "Saved views and preferred entry",
+        "Workbench document search",
+        "My work presentation and authorized destination"
+      ],
+      "proof_required": [
+        "Real authorized search of canonical records with type, reference, context and direct open",
+        "Saved-view restoration after version deletion or ACL change across all three modules",
+        "First-cycle configuration/access/no-work states and authorized record/period/recipient selection",
+        "Canonical criterion explicitly closes only with WP10 integration of all three real surfaces; local readiness is separate."
+      ],
+      "dependency": [
+        "WP08: C06 work projections and authorized directory",
+        "WP10: record discovery/selection and per-user durable preferences",
+        "Observed seed search is document-only and discovery is procurementSelections-only"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Authorized-page record search and frozen view mutation recovery implemented; hosted validation pending. Full first-cycle work selection remains a producer/composition dependency.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T04",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T04.INV.01",
+      "criterion_text": "Preferência não altera dado de negócio nem contorna papel; Meu trabalho é uma projeção dos registros canônicos.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/interface/views-http.ts",
+        "modules/sucafina/Sucafinav1/product/ui/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/product/ui/record-search.ts"
+      ],
+      "consumer": [
+        "Saved views and preferred entry",
+        "Workbench document search",
+        "My work presentation and authorized destination"
+      ],
+      "proof_required": [
+        "Real authorized search of canonical records with type, reference, context and direct open",
+        "Saved-view restoration after version deletion or ACL change across all three modules",
+        "First-cycle configuration/access/no-work states and authorized record/period/recipient selection"
+      ],
+      "dependency": [
+        "WP08: C06 work projections and authorized directory",
+        "WP10: record discovery/selection and per-user durable preferences",
+        "Observed seed search is document-only and discovery is procurementSelections-only"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Authorized-page record search and frozen view mutation recovery implemented; hosted validation pending. Full first-cycle work selection remains a producer/composition dependency.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T04",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T04.QLT.01",
+      "criterion_text": "Configuração inicial é curta e opcional; defaults úteis funcionam sem personalização obrigatória.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/interface/views-http.ts",
+        "modules/sucafina/Sucafinav1/product/ui/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/product/ui/record-search.ts"
+      ],
+      "consumer": [
+        "Saved views and preferred entry",
+        "Workbench document search",
+        "My work presentation and authorized destination"
+      ],
+      "proof_required": [
+        "Real authorized search of canonical records with type, reference, context and direct open",
+        "Saved-view restoration after version deletion or ACL change across all three modules",
+        "First-cycle configuration/access/no-work states and authorized record/period/recipient selection"
+      ],
+      "dependency": [
+        "WP08: C06 work projections and authorized directory",
+        "WP10: record discovery/selection and per-user durable preferences",
+        "Observed seed search is document-only and discovery is procurementSelections-only"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Authorized-page record search and frozen view mutation recovery implemented; hosted validation pending. Full first-cycle work selection remains a producer/composition dependency.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T04",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T04.CMP.01",
+      "criterion_text": "Cobrir usuário novo, preferência existente, registro removido/inacessível, busca sem resultado e nenhuma pendência.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/interface/views-http.ts",
+        "modules/sucafina/Sucafinav1/product/ui/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/product/ui/record-search.ts"
+      ],
+      "consumer": [
+        "Saved views and preferred entry",
+        "Workbench document search",
+        "My work presentation and authorized destination"
+      ],
+      "proof_required": [
+        "Real authorized search of canonical records with type, reference, context and direct open",
+        "Saved-view restoration after version deletion or ACL change across all three modules",
+        "First-cycle configuration/access/no-work states and authorized record/period/recipient selection"
+      ],
+      "dependency": [
+        "WP08: C06 work projections and authorized directory",
+        "WP10: record discovery/selection and per-user durable preferences",
+        "Observed seed search is document-only and discovery is procurementSelections-only"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Authorized-page record search and frozen view mutation recovery implemented; hosted validation pending. Full first-cycle work selection remains a producer/composition dependency.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T04",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T04.CMP.02",
+      "criterion_text": "Primeiro ciclo distingue ausência de configuração, ausência de acesso e ausência de pendência; permite selecionar registros, período e responsáveis confirmados pelo diretório já autorizado.",
+      "status": "PARTIAL_IMPLEMENTATION",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/interface/views-http.ts",
+        "modules/sucafina/Sucafinav1/product/ui/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/product/ui/record-search.ts"
+      ],
+      "consumer": [
+        "Saved views and preferred entry",
+        "Workbench document search",
+        "My work presentation and authorized destination"
+      ],
+      "proof_required": [
+        "Real authorized search of canonical records with type, reference, context and direct open",
+        "Saved-view restoration after version deletion or ACL change across all three modules",
+        "First-cycle configuration/access/no-work states and authorized record/period/recipient selection"
+      ],
+      "dependency": [
+        "WP08: C06 work projections and authorized directory",
+        "WP10: record discovery/selection and per-user durable preferences",
+        "Observed seed search is document-only and discovery is procurementSelections-only"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Authorized-page record search and frozen view mutation recovery implemented; hosted validation pending. Full first-cycle work selection remains a producer/composition dependency.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T04",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T04.SUC.01",
+      "criterion_text": "Responsáveis chegam aos seus registros, André à revisão e aprovadores às suas decisões com contexto preservado.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/interface/views-http.ts",
+        "modules/sucafina/Sucafinav1/product/ui/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/product/ui/record-search.ts"
+      ],
+      "consumer": [
+        "Saved views and preferred entry",
+        "Workbench document search",
+        "My work presentation and authorized destination"
+      ],
+      "proof_required": [
+        "Real authorized search of canonical records with type, reference, context and direct open",
+        "Saved-view restoration after version deletion or ACL change across all three modules",
+        "First-cycle configuration/access/no-work states and authorized record/period/recipient selection"
+      ],
+      "dependency": [
+        "WP08: C06 work projections and authorized directory",
+        "WP10: record discovery/selection and per-user durable preferences",
+        "Observed seed search is document-only and discovery is procurementSelections-only"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Authorized-page record search and frozen view mutation recovery implemented; hosted validation pending. Full first-cycle work selection remains a producer/composition dependency.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T04",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.CHK.01",
+      "criterion_text": "Abrir de contrato e retornar ao mesmo registro/filtro depois da escolha.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Persisted authorized cases and real producer outputs consumed after reload",
+        "Start/cancel/failed/needs-input/stale/revoked paths without fabricated ready output",
+        "Human choice and domain application remain separate; partial receipts and original choice are preserved"
+      ],
+      "dependency": [
+        "WP11: C09/C10 cases, choices and coverage",
+        "WP12/WP10: C11/C15 native analysis and resident runtime",
+        "WP13: portfolio projection",
+        "WP14/WP10: C13 current changes and authorized memory",
+        "WP06: C14 document and import outputs"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T05",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.CHK.02",
+      "criterion_text": "Trocar permissões com análise antiga e confirmar ausência de vazamento na tela e nos detalhes.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Ready contribution plus open details/dirty reason, then permission revocation; clear restricted values and references",
+        "Concurrent prior list/output response must not repopulate after 401/403",
+        "Transient transport failure must preserve draft; distinguish from denial/revocation"
+      ],
+      "dependency": [
+        "WP11: C09/C10 cases, choices and coverage",
+        "WP12/WP10: C11/C15 native analysis and resident runtime",
+        "WP13: portfolio projection",
+        "WP14/WP10: C13 current changes and authorized memory",
+        "WP06: C14 document and import outputs"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T05",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.CHK.03",
+      "criterion_text": "Confirmar premissa, escolher, aplicar por domínio e reavaliar a cotação pela UI integrada.",
+      "status": "BLOCKED_INTEGRATION_PROOF",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Persisted authorized cases and real producer outputs consumed after reload",
+        "Start/cancel/failed/needs-input/stale/revoked paths without fabricated ready output",
+        "Human choice and domain application remain separate; partial receipts and original choice are preserved"
+      ],
+      "dependency": [
+        "WP11: C09/C10 cases, choices and coverage",
+        "WP12/WP10: C11/C15 native analysis and resident runtime",
+        "WP13: portfolio projection",
+        "WP14/WP10: C13 current changes and authorized memory",
+        "WP06: C14 document and import outputs"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T05",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.CHK.20",
+      "criterion_text": "No caso de treinamento omitido, a mesa mostra subtotal 210000 e diferença conhecida30000 condicionados; após confirmação40000 mostra total 250000/diferença -10000 e a escolha histórica com sua ressalva.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Same C10 revision/result/costCoverageRefs consumed by alternative, choice and reevaluation",
+        "Training omitted: known subtotal 210000 and known difference 30000 remain conditioned; confirmed training 40000 yields total 250000/difference -10000, preserving historical choice/caveat",
+        "Exercise confirmed zero versus absent category, revoked source and later inversion; display source, pending category and next action"
+      ],
+      "dependency": [
+        "WP03/WP11: canonical C10 calculations and versioned cost coverage",
+        "WP13/WP14: portfolio and reevaluation using the same revision"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T05",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.CHK.30",
+      "criterion_text": "Executar os cenários compartilhados da matriz de18 skills e registrar, por skill, perfil/versão/digest efetivamente carregados, run, outputRef persistido e ação no consumidor após reload. Cada perfil deve contribuir de forma distinta em caso pertinente; Revisor possui execução própria. Apenas catalogar arquivos, renomear um perfil genérico ou mostrar texto de chat falha.",
+      "status": "BLOCKED_NATIVE_EVIDENCE",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Per-skill witness for all 18 C15 skills: loaded profile/version, source and instruction digests, actual run/session/model, authorized inputs/operations, persisted outputRef, real consumer action after reload",
+        "Five distinct profile contributions; reviewer has its own execution/session and linked review target",
+        "Missing input, failed, cancelled and stale for every output class without new authority; integrated AM01-AM06 references as applicable"
+      ],
+      "dependency": [
+        "WP12/WP10: 18 real skill execution and persistence witnesses",
+        "WP11/WP13/WP14/WP06/WP08: typed producer outputs and domain consumers",
+        "Native Orchestra Session/SkillLoadReceipt cannot be replaced by this Chat assistant or HTTP fixtures"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T05",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.CHK.31",
+      "criterion_text": "Para cada classe de saída da matriz, provocar falta de entrada, falha, cancelamento e mudança material durante execução: consumidor mostra needs-input/failed/cancelled/stale e preserva trabalho confirmado; não cria saída pronta nem amplia acesso por perfil. Variantes podem compartilhar uma execução de prova.",
+      "status": "BLOCKED_NATIVE_EVIDENCE",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Per-skill witness for all 18 C15 skills: loaded profile/version, source and instruction digests, actual run/session/model, authorized inputs/operations, persisted outputRef, real consumer action after reload",
+        "Five distinct profile contributions; reviewer has its own execution/session and linked review target",
+        "Missing input, failed, cancelled and stale for every output class without new authority; integrated AM01-AM06 references as applicable"
+      ],
+      "dependency": [
+        "WP12/WP10: 18 real skill execution and persistence witnesses",
+        "WP11/WP13/WP14/WP06/WP08: typed producer outputs and domain consumers",
+        "Native Orchestra Session/SkillLoadReceipt cannot be replaced by this Chat assistant or HTTP fixtures"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T05",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.DOD.01",
+      "criterion_text": "Hoje e mesa funcionam com casos persistentes, atores reais e resultados de IA/engine recebidos pelo host.",
+      "status": "BLOCKED_INTEGRATION_PROOF",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Persisted authorized cases and real producer outputs consumed after reload",
+        "Start/cancel/failed/needs-input/stale/revoked paths without fabricated ready output",
+        "Human choice and domain application remain separate; partial receipts and original choice are preserved"
+      ],
+      "dependency": [
+        "WP11: C09/C10 cases, choices and coverage",
+        "WP12/WP10: C11/C15 native analysis and resident runtime",
+        "WP13: portfolio projection",
+        "WP14/WP10: C13 current changes and authorized memory",
+        "WP06: C14 document and import outputs"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T05",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.DOD.20",
+      "criterion_text": "UI usa os resultados e a cobertura reais C10 em alternativa, escolha e reavaliação.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Same C10 revision/result/costCoverageRefs consumed by alternative, choice and reevaluation",
+        "Training omitted: known subtotal 210000 and known difference 30000 remain conditioned; confirmed training 40000 yields total 250000/difference -10000, preserving historical choice/caveat",
+        "Exercise confirmed zero versus absent category, revoked source and later inversion; display source, pending category and next action"
+      ],
+      "dependency": [
+        "WP03/WP11: canonical C10 calculations and versioned cost coverage",
+        "WP13/WP14: portfolio and reevaluation using the same revision"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T05",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.DOD.30",
+      "criterion_text": "Entradas de trabalho da mesa consomem as 18 saídas da matriz C15 em cenários pertinentes; cinco perfis deixam contribuições verificáveis e o Revisor tem run próprio.",
+      "status": "BLOCKED_NATIVE_EVIDENCE",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Per-skill witness for all 18 C15 skills: loaded profile/version, source and instruction digests, actual run/session/model, authorized inputs/operations, persisted outputRef, real consumer action after reload",
+        "Five distinct profile contributions; reviewer has its own execution/session and linked review target",
+        "Missing input, failed, cancelled and stale for every output class without new authority; integrated AM01-AM06 references as applicable"
+      ],
+      "dependency": [
+        "WP12/WP10: 18 real skill execution and persistence witnesses",
+        "WP11/WP13/WP14/WP06/WP08: typed producer outputs and domain consumers",
+        "Native Orchestra Session/SkillLoadReceipt cannot be replaced by this Chat assistant or HTTP fixtures"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T05",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.INV.01",
+      "criterion_text": "UI nunca inventa permissão, confirmação, resultado de IA ou sucesso de comando; chat não é fonte única dos dados da decisão.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Persisted authorized cases and real producer outputs consumed after reload",
+        "Start/cancel/failed/needs-input/stale/revoked paths without fabricated ready output",
+        "Human choice and domain application remain separate; partial receipts and original choice are preserved"
+      ],
+      "dependency": [
+        "WP11: C09/C10 cases, choices and coverage",
+        "WP12/WP10: C11/C15 native analysis and resident runtime",
+        "WP13: portfolio projection",
+        "WP14/WP10: C13 current changes and authorized memory",
+        "WP06: C14 document and import outputs"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T05",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.INV.20",
+      "criterion_text": "UI não transforma pending em zero nem esconde condição financeira por haver um número válido.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Same C10 revision/result/costCoverageRefs consumed by alternative, choice and reevaluation",
+        "Training omitted: known subtotal 210000 and known difference 30000 remain conditioned; confirmed training 40000 yields total 250000/difference -10000, preserving historical choice/caveat",
+        "Exercise confirmed zero versus absent category, revoked source and later inversion; display source, pending category and next action"
+      ],
+      "dependency": [
+        "WP03/WP11: canonical C10 calculations and versioned cost coverage",
+        "WP13/WP14: portfolio and reevaluation using the same revision"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T05",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.INV.30",
+      "criterion_text": "Catálogo, nome de perfil ou chat sem outputRef consumido não satisfaz entrega; perfil não concede autoridade nova e fonte oficial continua no domínio.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Per-skill witness for all 18 C15 skills: loaded profile/version, source and instruction digests, actual run/session/model, authorized inputs/operations, persisted outputRef, real consumer action after reload",
+        "Five distinct profile contributions; reviewer has its own execution/session and linked review target",
+        "Missing input, failed, cancelled and stale for every output class without new authority; integrated AM01-AM06 references as applicable"
+      ],
+      "dependency": [
+        "WP12/WP10: 18 real skill execution and persistence witnesses",
+        "WP11/WP13/WP14/WP06/WP08: typed producer outputs and domain consumers",
+        "Native Orchestra Session/SkillLoadReceipt cannot be replaced by this Chat assistant or HTTP fixtures"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T05",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.QLT.01",
+      "criterion_text": "Uma ação principal por estado, fonte consultável, foco preservado, teclado/toque e layout legível em 320/768/1440 px.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Persisted authorized cases and real producer outputs consumed after reload",
+        "Start/cancel/failed/needs-input/stale/revoked paths without fabricated ready output",
+        "Human choice and domain application remain separate; partial receipts and original choice are preserved"
+      ],
+      "dependency": [
+        "WP11: C09/C10 cases, choices and coverage",
+        "WP12/WP10: C11/C15 native analysis and resident runtime",
+        "WP13: portfolio projection",
+        "WP14/WP10: C13 current changes and authorized memory",
+        "WP06: C14 document and import outputs"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T05",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.QLT.20",
+      "criterion_text": "Estado e categoria pendente acompanham o subtotal, fonte e próximo passo, inclusive por teclado/tabela.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Same C10 revision/result/costCoverageRefs consumed by alternative, choice and reevaluation",
+        "Training omitted: known subtotal 210000 and known difference 30000 remain conditioned; confirmed training 40000 yields total 250000/difference -10000, preserving historical choice/caveat",
+        "Exercise confirmed zero versus absent category, revoked source and later inversion; display source, pending category and next action"
+      ],
+      "dependency": [
+        "WP03/WP11: canonical C10 calculations and versioned cost coverage",
+        "WP13/WP14: portfolio and reevaluation using the same revision"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T05",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.QLT.30",
+      "criterion_text": "Mostrar contribuição, fontes e progresso útil; detalhes de perfil/modelo/skill/versão/run ficam sob demanda e seleção manual de agente não é obrigatória.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Per-skill witness for all 18 C15 skills: loaded profile/version, source and instruction digests, actual run/session/model, authorized inputs/operations, persisted outputRef, real consumer action after reload",
+        "Five distinct profile contributions; reviewer has its own execution/session and linked review target",
+        "Missing input, failed, cancelled and stale for every output class without new authority; integrated AM01-AM06 references as applicable"
+      ],
+      "dependency": [
+        "WP12/WP10: 18 real skill execution and persistence witnesses",
+        "WP11/WP13/WP14/WP06/WP08: typed producer outputs and domain consumers",
+        "Native Orchestra Session/SkillLoadReceipt cannot be replaced by this Chat assistant or HTTP fixtures"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T05",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.CMP.01",
+      "criterion_text": "Cobrir novo caso, caso existente, lacuna, análise em curso, cancelamento, falha, stale, escolha, aplicação parcial, reavaliação e acesso revogado.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Persisted authorized cases and real producer outputs consumed after reload",
+        "Start/cancel/failed/needs-input/stale/revoked paths without fabricated ready output",
+        "Human choice and domain application remain separate; partial receipts and original choice are preserved"
+      ],
+      "dependency": [
+        "WP11: C09/C10 cases, choices and coverage",
+        "WP12/WP10: C11/C15 native analysis and resident runtime",
+        "WP13: portfolio projection",
+        "WP14/WP10: C13 current changes and authorized memory",
+        "WP06: C14 document and import outputs"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T05",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.CMP.20",
+      "criterion_text": "Cobrir categoria ausente, zero confirmado, comparação condicionada, fonte revogada e inversão posterior.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Same C10 revision/result/costCoverageRefs consumed by alternative, choice and reevaluation",
+        "Training omitted: known subtotal 210000 and known difference 30000 remain conditioned; confirmed training 40000 yields total 250000/difference -10000, preserving historical choice/caveat",
+        "Exercise confirmed zero versus absent category, revoked source and later inversion; display source, pending category and next action"
+      ],
+      "dependency": [
+        "WP03/WP11: canonical C10 calculations and versioned cost coverage",
+        "WP13/WP14: portfolio and reevaluation using the same revision"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T05",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.CMP.30",
+      "criterion_text": "Cobrir18 skills com witnesses de carga/digest/saída persistida/consumo real, cinco perfis distintos e falta/falha/stale/cancelamento, usando as seis provas integradas.",
+      "status": "BLOCKED_NATIVE_EVIDENCE",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Per-skill witness for all 18 C15 skills: loaded profile/version, source and instruction digests, actual run/session/model, authorized inputs/operations, persisted outputRef, real consumer action after reload",
+        "Five distinct profile contributions; reviewer has its own execution/session and linked review target",
+        "Missing input, failed, cancelled and stale for every output class without new authority; integrated AM01-AM06 references as applicable"
+      ],
+      "dependency": [
+        "WP12/WP10: 18 real skill execution and persistence witnesses",
+        "WP11/WP13/WP14/WP06/WP08: typed producer outputs and domain consumers",
+        "Native Orchestra Session/SkillLoadReceipt cannot be replaced by this Chat assistant or HTTP fixtures"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T05",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.SUC.01",
+      "criterion_text": "O participante identifica a pergunta, a alternativa, a pendência e o próximo passo sem reconstruir contexto em outra ferramenta.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Persisted authorized cases and real producer outputs consumed after reload",
+        "Start/cancel/failed/needs-input/stale/revoked paths without fabricated ready output",
+        "Human choice and domain application remain separate; partial receipts and original choice are preserved"
+      ],
+      "dependency": [
+        "WP11: C09/C10 cases, choices and coverage",
+        "WP12/WP10: C11/C15 native analysis and resident runtime",
+        "WP13: portfolio projection",
+        "WP14/WP10: C13 current changes and authorized memory",
+        "WP06: C14 document and import outputs"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T05",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.SUC.20",
+      "criterion_text": "A pessoa reconhece por que a comparação está condicionada e vê a consequência da resposta sem reconstruir o caso.",
+      "status": "PARTIAL_NOT_VERIFIED",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Same C10 revision/result/costCoverageRefs consumed by alternative, choice and reevaluation",
+        "Training omitted: known subtotal 210000 and known difference 30000 remain conditioned; confirmed training 40000 yields total 250000/difference -10000, preserving historical choice/caveat",
+        "Exercise confirmed zero versus absent category, revoked source and later inversion; display source, pending category and next action"
+      ],
+      "dependency": [
+        "WP03/WP11: canonical C10 calculations and versioned cost coverage",
+        "WP13/WP14: portfolio and reevaluation using the same revision"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T05",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.SUC.30",
+      "criterion_text": "Usuários concluem enquadramento, comparação, pergunta, revisão, preparo ou reavaliação sem coordenar cinco conversas nem reconstruir resultado no chat.",
+      "status": "BLOCKED_NATIVE_EVIDENCE",
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts"
+      ],
+      "consumer": [
+        "Today/workbench decision desk",
+        "Persisted analysis history and contribution acceptance",
+        "Choice, prepared change, portfolio, question and memory views"
+      ],
+      "proof_required": [
+        "Per-skill witness for all 18 C15 skills: loaded profile/version, source and instruction digests, actual run/session/model, authorized inputs/operations, persisted outputRef, real consumer action after reload",
+        "Five distinct profile contributions; reviewer has its own execution/session and linked review target",
+        "Missing input, failed, cancelled and stale for every output class without new authority; integrated AM01-AM06 references as applicable"
+      ],
+      "dependency": [
+        "WP12/WP10: 18 real skill execution and persistence witnesses",
+        "WP11/WP13/WP14/WP06/WP08: typed producer outputs and domain consumers",
+        "Native Orchestra Session/SkillLoadReceipt cannot be replaced by this Chat assistant or HTTP fixtures"
+      ],
+      "test_candidates": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts"
+      ],
+      "proof_observed": [],
+      "run": null,
+      "review_note": "Source review and unexecuted test candidates only; root must bind the final product SHA and verified hosted evidence before promoting status.",
+      "planned_proof_bindings": [
+        {
+          "source": "plan/proof-map.json",
+          "entity_id": "WP01.T05",
+          "proof_packages": [
+            "E02",
+            "E10"
+          ],
+          "integrated_proofs": [],
+          "status": "NOT_RUN"
+        }
+      ]
+    }
+  ],
+  "known_limits": [
+    "Monthly-host observed producer has no durable idempotency receipt; equal browser request keys do not prove single persisted effect or reconciliation.",
+    "Transport/browser fixtures can qualify client behaviors only, not native load/execution, model access, business identity or full C15/C17.",
+    "New root interfaces and shell/C10 changes require their own final diff review and hosted evidence."
+  ],
+  "cold_review": {
+    "verdict": "NO_NEW_BLOCKING_FINDING_IN_REVIEWED_DELTAS_BY_SOURCE_INSPECTION",
+    "executed_tests": false,
+    "reviewed_files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts",
+        "sha256": "d395772dca99863372be9aff22e6153894852832087d9b9a9a83a6e9e95f97c3"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "sha256": "9f585b93705630e03eaa79afde8b9cf39b47230d6f03e612bf998ccc90293bed"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "sha256": "8f6d227a6df05e75e9c1028da70cebca28bf016da49ac47bbc0588e0b3713f94"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "sha256": "0043184e18bde5eb4fcfce068d43a67e9a6b08861b8aef7451da618e4eeff3b8"
+      }
+    ],
+    "resolved_findings": [
+      "Unknown writes keep payload/key frozen; later CAS rejection remains inconclusive instead of falsely not-applied.",
+      "Late analysis list/output responses cannot repopulate restricted history after revocation.",
+      "Refresh requests coalesce while an earlier empty list is in flight.",
+      "Transient history failures preserve open result and reason; explicit denial removes restricted content.",
+      "Conversation reopen asks before discarding reply; preflight answer-confirmation failure restores controls."
+    ],
+    "test_review": "13 browser tests inspect shipped UI scripts with explicit transport fixtures. These discriminate client branches, not native execution or durable domain receipt behavior.",
+    "remaining_boundary": "Real monthly producer lacks durable idempotency receipt/reconciliation. A request key observed twice is not proof of one persisted effect."
+  },
+  "delivery_status": "DRAFT_IMPLEMENTATION_CI_PENDING",
+  "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+}

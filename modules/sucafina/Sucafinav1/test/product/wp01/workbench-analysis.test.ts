@@ -63,6 +63,29 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     const model = (await services.models().catch(() => []))[0]
     const selection = services.selected.find((item) => item.skills.some((skill) => skill.id === "sf-explicar-forecast"))
     const skill = selection?.skills.find((item) => item.id === "sf-explicar-forecast")
+    if (!selection || !skill) throw new Error("forecast skill must be registered for the boundary test")
+    const prepare = { action: "prepare", input: {
+      request: { caseRef: { id: "missing-case", incarnation: "missing-incarnation", version: 1 }, profileId: selection.profile.id,
+        profileVersion: selection.profile.version, skillId: skill.id, skillVersion: skill.version, manifestDigest: selection.manifestDigest,
+        outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: skill.allowedOperations, objective: "Review forecast" },
+      selection: {},
+    } }
+    expect((await post(prepare)).status).toBe(503)
+    // Exercise the optional boundary with real authority and an intentionally invalid producer payload.
+    // This checks schema/selection rejection; it is not a native analysis or producer witness.
+    let prepareCalls = 0
+    const boundary = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => ({ ...services,
+      analysisInputs: { prepare: async () => { prepareCalls++; return { status: "ok" as const, value: {} } } },
+    }) })
+    const boundaryPost = (body: unknown) => boundary(new Request(`${origin}/sucafina/dashboard?sf=workbench-analysis`, {
+      method: "POST", headers: { cookie: cookie ?? "", origin, "content-type": "application/json", "idempotency-key": randomUUID() }, body: JSON.stringify(body),
+    }), "dashboard")
+    expect((await boundaryPost(prepare))?.status).toBe(503)
+    expect(prepareCalls).toBe(1)
+    expect((await boundaryPost({ ...prepare, input: { ...prepare.input, request: { ...prepare.input.request, manifestDigest: "forged" } } }))?.status).toBe(403)
+    expect(prepareCalls).toBe(1)
+    expect((await boundaryPost({ ...prepare, input: { ...prepare.input, request: { ...prepare.input.request, caseRef: { id: "", incarnation: "", version: -1 } } } }))?.status).toBe(400)
+    expect((await boundaryPost({ action: "list", caseRef: { id: "", incarnation: "", version: -1 } }))?.status).toBe(400)
     if (model && selection && skill) {
       const start = await post({ action: "start", input: {
         request: { caseRef: { id: "missing-case", incarnation: "missing-incarnation", version: 1 }, profileId: selection.profile.id,
@@ -107,3 +130,4 @@ test("Workbench analysis returns unavailable when its host services are absent",
   const handler = createSfWorkbenchHttp({ origin: "http://localhost", mount: "/sucafina", runtime: () => undefined })
   expect((await handler(request, "dashboard"))?.status).toBe(503)
 })
+

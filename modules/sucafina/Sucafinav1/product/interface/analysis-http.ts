@@ -1,6 +1,9 @@
 import type { SfHostServices } from "../contracts/host-context.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { contribution } from "../ui/components.ts"
+import { getSfAnalysisInputs } from "./analysis-input-port.ts"
+import { decodeSfSkillInput } from "../contracts/schema-admission.ts"
+import type { SfSkillInputMap } from "../contracts/skill-inputs.ts"
 
 /** The host owns authorization and execution; this boundary exposes no native binding. */
 export async function handleSfAnalysis(request: Request, origin: string, runtime: SfHostServices) {
@@ -16,14 +19,19 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
   const action = parsed.action
   const input = action === "prepare" ? prepareInput(parsed.input) : action === "start" ? await analysisInput(parsed.input, runtime) : action === "list" ? caseInput(parsed.caseRef) : typeof parsed.runRef === "string" && parsed.runRef.trim() ? { runRef: parsed.runRef } : undefined
   if (!input || Object.keys(parsed).some((key) => key !== "action" && key !== (action === "start" || action === "prepare" ? "input" : action === "list" ? "caseRef" : "runRef"))) return reply({ status: "invalid" }, 400)
-  if (action === "prepare" && !runtime.analysisInputs) return reply({ status: "unavailable" }, 503)
-  const admitted = await runtime.human.admit(request, action === "list" || action === "output" ? "analysis.read" : `analysis.${action}`, input)
+  const inputs = getSfAnalysisInputs(runtime)
+  if (action === "prepare" && !inputs) return reply({ status: "unavailable", reason: "analysis-inputs-unavailable" }, 503)
+  const admitted = await runtime.human.admit(request, action === "list" || action === "output" || action === "read" ? "analysis.read" : action === "cancel" ? "analysis.cancel" : "analysis.start", input)
   if (admitted.status !== "ok") return reply({ status: admitted.status }, admitted.status === "unavailable" ? 503 : 403)
   try {
-    if (action === "prepare" && "selection" in input && runtime.analysisInputs) {
-      const prepared = await runtime.analysisInputs.prepare(admitted.value, input).catch(() => undefined)
+    if (action === "prepare" && "selection" in input && inputs) {
+      const selected = runtime.selected.find((entry) => entry.profile.id === input.request.profileId && entry.profile.version === input.request.profileVersion && entry.manifestDigest === input.request.manifestDigest)
+      const skill = selected?.skills.find((entry) => entry.id === input.request.skillId && entry.version === input.request.skillVersion)
+      if (!skill || !selected || input.request.requestedOperationScope.some((operation) => !skill.allowedOperations.includes(operation) || !selected.operationIds.includes(operation))) return reply({ status: "denied" }, 403)
+      const prepared = await inputs.prepare(admitted.value, input).catch(() => undefined)
       if (!prepared) return reply({ status: "unavailable" }, 503)
       if (prepared.status !== "ok") return reply({ status: prepared.status }, prepared.status === "denied" ? 403 : prepared.status === "stale" || prepared.status === "conflict" ? 409 : prepared.status === "needs-input" ? 400 : 503)
+      if (!decodeSfSkillInput(skill.inputSchemaRef as keyof SfSkillInputMap, prepared.value).ok) return reply({ status: "unavailable" }, 503)
       if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
       return reply({ status: "ok", value: prepared.value }, 200)
     }
@@ -51,7 +59,7 @@ function record(value: unknown): value is Record<string, unknown> {
 }
 
 function caseInput(value: unknown) {
-  if (!record(value) || Object.keys(value).some((key) => !["id", "incarnation", "version"].includes(key)) || typeof value.id !== "string" || typeof value.incarnation !== "string" || typeof value.version !== "number" || !Number.isSafeInteger(value.version)) return undefined
+  if (!record(value) || Object.keys(value).some((key) => !["id", "incarnation", "version"].includes(key)) || typeof value.id !== "string" || !value.id.trim() || typeof value.incarnation !== "string" || !value.incarnation.trim() || typeof value.version !== "number" || !Number.isSafeInteger(value.version) || value.version < 0) return undefined
   return { caseRef: { id: value.id, incarnation: value.incarnation, version: value.version } }
 }
 
@@ -67,7 +75,7 @@ async function analysisInput(value: unknown, runtime: SfHostServices) {
 function prepareInput(value: unknown) {
   if (!record(value) || Object.keys(value).some((key) => !["request", "selection"].includes(key)) || !record(value.selection)) return undefined
   const request = analysisRequest(value.request)
-  if (!request || !["sf-comparar-cenarios", "sf-explicar-forecast"].includes(request.skillId)) return undefined
+  if (!request) return undefined
   return { request, selection: value.selection }
 }
 
@@ -77,9 +85,10 @@ function analysisRequest(request: unknown) {
   if (!record(caseRef)) return undefined
   if (Object.keys(request).some((key) => !["caseRef", "profileId", "profileVersion", "skillId", "skillVersion", "manifestDigest", "outputSchemaVersion", "requestedOperationScope", "objective"].includes(key)) ||
     Object.keys(caseRef).some((key) => !["id", "incarnation", "version"].includes(key)) ||
-    typeof caseRef.id !== "string" || typeof caseRef.incarnation !== "string" || !Number.isSafeInteger(caseRef.version) ||
+    typeof caseRef.id !== "string" || !caseRef.id.trim() || typeof caseRef.incarnation !== "string" || !caseRef.incarnation.trim() || !Number.isSafeInteger(caseRef.version) || Number(caseRef.version) < 0 ||
     typeof request.profileId !== "string" || typeof request.profileVersion !== "string" || typeof request.skillId !== "string" || typeof request.skillVersion !== "string" ||
     typeof request.manifestDigest !== "string" || typeof request.outputSchemaVersion !== "string" || typeof request.objective !== "string" ||
     !Array.isArray(request.requestedOperationScope) || !request.requestedOperationScope.every((item) => typeof item === "string")) return undefined
   return { caseRef: { id: caseRef.id, incarnation: caseRef.incarnation, version: caseRef.version as number }, profileId: request.profileId, profileVersion: request.profileVersion, skillId: request.skillId, skillVersion: request.skillVersion, manifestDigest: request.manifestDigest, outputSchemaVersion: request.outputSchemaVersion, requestedOperationScope: request.requestedOperationScope, objective: request.objective }
 }
+

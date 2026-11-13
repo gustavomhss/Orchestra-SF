@@ -16,6 +16,7 @@ import { decisionChoiceForm, decisionChoiceScript } from "../ui/decision-choice.
 import { handleSfViews } from "./views-http.ts"
 import { personalViewsScript, personalViewsWidget } from "../ui/personal-views.ts"
 import { documentSearchScript } from "../ui/document-search.ts"
+import { recordSearchScript, recordSearchWidget } from "../ui/record-search.ts"
 import { portfolioHistory, portfolioScript, portfolioWidget } from "../ui/portfolio.ts"
 import { decisionApplyForms, decisionApplyScript } from "../ui/decision-apply.ts"
 import { caseQuestionForm, caseQuestionScript, caseQuestionThreads, workDestinationScript } from "../ui/work-collaboration.ts"
@@ -63,7 +64,7 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
         if (!await runtime.ui.revalidate(access.value)) return reply({ status: "denied" }, 403)
         const query = new URLSearchParams({ sf: "workbench-work", selectionRef: selection.value.selectionRef, start: selection.value.period.start, end: selection.value.period.end })
         const body = `<p><a href="?sf=workbench">Workbench</a></p><h2>Work selection</h2><p><a href="?${esc(query.toString())}">${esc(selection.value.label)}</a> · ${esc(selection.value.period.start)} – ${esc(selection.value.period.end)}</p>`
-        const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, body), "")
+        const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, body), "", "", access.value.binding.accessRevision)
         return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
       } finally { runtime.ui.finish(access.value) }
     }
@@ -116,7 +117,7 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
         if (work.status !== "ok") return reply({ status: work.status }, work.status === "denied" ? 403 : work.status === "stale" || work.status === "conflict" ? 409 : 503)
         if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
         const body = `<p><a href="?sf=workbench">Workbench</a></p><h2>My work</h2>${work.value.items.length ? `<ul>${work.value.items.map((item) => `<li><strong>${esc(item.title ?? "Work item")}</strong> · ${esc(item.state)}${item.ownerLabel ? ` · ${esc(item.ownerLabel)}` : ""}${item.due ? ` · Due ${esc(item.due)}` : ""}${item.period ? ` · ${esc(item.period.start)} – ${esc(item.period.end)}` : ""}${item.observedVersion === undefined ? "" : ` · Observed version ${item.observedVersion}`}${item.sourceVersion === undefined ? "" : ` · Current version ${item.sourceVersion}`}${item.destination ? ` <button type="button" data-work-destination data-selection="${esc(JSON.stringify(selection.value))}" data-action-ref="${esc(item.actionRef)}" data-mount="${esc(input.mount.replace(/\/$/, ""))}">Open work</button><span role="status" aria-live="polite"></span>` : ""}</li>`).join("")}</ul>` : "<p>No work is currently assigned in this selection.</p>"}`
-        const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, body), "").replace("</body>", `<script>${workDestinationScript}</script></body>`)
+        const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, body), "", "", admitted.value.binding.accessRevision).replace("</body>", `<script>${workDestinationScript}</script></body>`)
         return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
       }
       const search = `<form method="get"><input type="hidden" name="sf" value="workbench-search"><label>Search documents<input name="q" required></label><button>Search</button></form>`
@@ -147,7 +148,7 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
         } finally { runtime.ui.finish(access.value) }
       })() : undefined
       const routines = runs ? `<h2>Routines</h2>${runs.length ? `<ul>${runs.map((run, index) => `<li>${run.runRef ? `<a href="?${esc(new URLSearchParams({ sf: "workbench-routine", runRef: run.runRef }).toString())}">Routine ${index + 1}</a>` : `Routine ${index + 1}`} · ${esc(run.admission)}</li>`).join("")}</ul>` : "<p>No accessible routine runs.</p>"}` : "<p>Routine list is currently unavailable.</p>"
-      const forms = `<h2>Decisions</h2>${listUnavailable ? "<p>Decision list unavailable.</p>" : visible.length ? `<ul>${visible.map((item) => `<li><a href="?${esc(new URLSearchParams({ sf: "workbench-case", caseRef: item.caseRef }).toString())}">${esc(item.title)}</a> · version ${item.version}</li>`).join("")}</ul>` : "<p>No accessible decisions.</p>"}${decisionCreateForm}${portfolioWidget}${search}${work}${runtime.personalViews ? personalViewsWidget() : ""}${routines}`
+      const forms = `<h2>Decisions</h2>${listUnavailable ? "<p>Decision list unavailable.</p>" : visible.length ? `<ul>${visible.map((item) => `<li><a href="?${esc(new URLSearchParams({ sf: "workbench-case", caseRef: item.caseRef }).toString())}">${esc(item.title)}</a> · version ${item.version}</li>`).join("")}</ul>` : "<p>No accessible decisions.</p>"}${decisionCreateForm}${portfolioWidget}${recordSearchWidget(surface)}${search}${work}${runtime.personalViews ? personalViewsWidget() : ""}${routines}`
       const result = decoded?.ok ? await runtime.dispatch(operation, decoded.value, admitted.value).catch(() => undefined) : undefined
       if (decoded?.ok && !result) return reply({ status: "unavailable", reason: "workbench-unavailable" }, 503)
       if (result && result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" ? 409 : 503)
@@ -160,9 +161,10 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
       const searchOutput = operation === "sf_knowledge_search" && result?.status === "ok" ? decodeSfOperationOutput("sf_knowledge_search", result.result) : undefined
       const body = caseOutput?.ok ? decisionDesk(caseOutput.value) + decisionEditForm(caseOutput.value) + decisionChoiceForm(caseOutput.value) + decisionApplyForms(caseOutput.value) + caseQuestionForm(caseOutput.value) + caseQuestionThreads(caseOutput.value) + portfolioHistory(caseOutput.value) + await forecastAnalysisForm(caseOutput.value, runtime) + await scenarioAnalysisForm(caseOutput.value, runtime) : workOutput?.ok ? workList(workOutput.value) : routineOutput?.ok ? routineStatus(routineOutput.value) : searchOutput?.ok ? `<h2>Search results</h2>${searchOutput.value.matches.length ? `<ul>${searchOutput.value.matches.map((item) => `<li data-document-result data-ref="${esc(JSON.stringify(item.documentRef))}"><strong data-document-title>Checking source…</strong><p data-document-text>${esc(item.text)}</p></li>`).join("")}</ul>` : "<p>No accessible results.</p>"}${searchOutput.value.limitations.map((item) => `<p>${esc(item)}</p>`).join("")}` : forms
       if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
-      const script = `;(() => { const initialize = () => {${decisionCreateScript}${decisionEditScript}${decisionChoiceScript}${decisionApplyScript}${caseQuestionScript}${forecastAnalysisScript}${personalViewsScript}${documentSearchScript}${portfolioScript}}; initialize(); const root = document.querySelector('#content'); if (root) new MutationObserver(initialize).observe(root, { childList: true, subtree: true }) })();`
-      const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, `<p><a href="?sf=workbench">Workbench</a></p>${body}`), "").replace("</script>", `${script}</script>`)
+      const script = `;(() => { const initialize = () => {${decisionCreateScript}${decisionEditScript}${decisionChoiceScript}${decisionApplyScript}${caseQuestionScript}${forecastAnalysisScript}${personalViewsScript}${documentSearchScript}${recordSearchScript}${portfolioScript}}; initialize(); const root = document.querySelector('#content'); if (root) new MutationObserver(initialize).observe(root, { childList: true, subtree: true }) })();`
+      const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, `<p><a href="?sf=workbench">Workbench</a></p>${body}`), "", "", admitted.value.binding.accessRevision).replace("</script>", `${script}</script>`)
       return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
     } finally { runtime.ui.finish(admitted.value) }
   }
 }
+
