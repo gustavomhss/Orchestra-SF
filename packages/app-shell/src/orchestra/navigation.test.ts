@@ -15,7 +15,7 @@ const crumb = (route: Parameters<typeof breadcrumbLabel>[0]) => copy[breadcrumbL
 const ids = (items: readonly { id: string }[]) => items.map((item) => item.id)
 
 test("keeps Inbox independent in primary navigation, then Advanced, with Settings last", () => {
-  expect(ids(primaryNavigation)).toEqual(["home", "chat", "inbox", "board", "agents", "cicd"])
+  expect(ids(primaryNavigation)).toEqual(["home", "chat", "inbox", "sucafina", "board", "agents", "cicd"])
   expect(ids(advancedNavigation)).toEqual([
     "maestro",
     "flight-engineer",
@@ -55,6 +55,8 @@ describe("breadcrumbLabel", () => {
     expect(crumb({ type: "dir-new-sesssion", dir: "/repo", dirBase64: "L3JlcG8" })).toBe("Home")
     expect(crumb({ type: "chapter", chapter: "agents" })).toBe("Agents")
     expect(crumb({ type: "chapter", chapter: "inbox" })).toBe("Inbox")
+    expect(breadcrumbLabel({ type: "chapter", chapter: "sucafina" })).toBe("sucafina.native.access.brand")
+    expect(isWip("sucafina")).toBe(false)
     expect(crumb({ type: "chapter", chapter: "dock" })).toBe("MCP Dock")
     expect(crumb({ type: "chapter", chapter: "workspaces" })).toBe("Workspaces")
     expect(crumb({ type: "chapter", chapter: "settings" })).toBe("Settings")
