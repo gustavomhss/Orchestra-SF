@@ -1,0 +1,308 @@
+{
+  "review_id": "R2",
+  "reviewer": "Revisor adversarial formal independente — contratos, identidade, MCP, Atlas e integridade",
+  "reviewed_commit": "ec9d36da2385007b64a0aa627582ce7e60629a44",
+  "baseline_commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "repository": "gustavomhss/Orchestra-SF",
+  "focus": [
+    "C01–C14 e paridade entre superfícies",
+    "Identidade confiável e ACL por registro/campo",
+    "AgentV2, skills, allowlist efetiva e MCP",
+    "Atlas de software versus boundary de negócio",
+    "Persistência, migração, importação e encarnação",
+    "Finanças canônicas, idempotência e recibo atômico por domínio",
+    "Leituras versionadas, revogação e documentos adversariais"
+  ],
+  "examined_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/formal-review/PROTOCOL.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/formal-review/README.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/README.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/SCOPE-STATUS.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/CAMPAIGN.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/AGENTS-ATLAS-MCP.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/ownership.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/evidence-plan.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP00.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP06.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP09.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP10.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP12.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP14.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/axiom-index.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/proof-map.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/task-dag.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/prompts/S0.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/prompts/S1.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/prompts/S2.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/prompts/S3.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/prompts/S4.md"
+  ],
+  "baseline_examined_paths": [
+    "AGENTS.md",
+    "packages/core/src/agent.ts",
+    "packages/schema/src/agent.ts",
+    "packages/core/src/skill.ts",
+    "packages/core/src/host.ts",
+    "packages/core/src/tool/registry.ts",
+    "packages/core/src/tool/tool.ts",
+    "packages/core/src/tool/tools.ts",
+    "packages/core/src/permission.ts",
+    "packages/core/src/mcp/provided.ts",
+    "packages/core/src/mcp/catalog.ts",
+    "packages/core/src/mcp.ts",
+    "modules/engine-adapters/claude-code/src/v2/host.ts",
+    "modules/maestro/coordination/src/seats/seat.ts",
+    "modules/atlas/packages/memory/src/types.ts",
+    "modules/atlas/packages/memory/src/template.ts",
+    "modules/atlas/packages/memory/src/kinds.ts",
+    "modules/atlas/packages/memory/src/inject.ts",
+    "modules/atlas/packages/adapter-io/src/memory-read.ts",
+    "modules/atlas/packages/adapter-io/src/memory-emit.ts",
+    "modules/atlas/packages/adapter-io/src/memory-store.ts",
+    "modules/atlas/packages/adapter-io/src/native-memory.ts",
+    "modules/rag-studio/src/context.ts",
+    "modules/capability-assets/README.md",
+    "modules/sucafina/Sucafinav1/README.md",
+    "modules/sucafina/Sucafinav1/runtime/contract.ts",
+    "modules/sucafina/Sucafinav1/runtime/application.ts",
+    "modules/sucafina/Sucafinav1/runtime/assets.ts"
+  ],
+  "examination_method": "Leitura primária por GitHub MCP nos SHAs fixados e inspeção seletiva da cópia local congelada. campaign.json foi examinado nos contratos, semântica, WPs/tasks/checks/axiomas relevantes, consumo e gates; os demais índices foram pesquisados por entidades novas do adendo. Não foram lidos reviews históricos, verified-* ou pareceres dos outros revisores. O recibo remote-checkpoint.json informado pelo integrador declara 73 blobs coincidentes; esta revisão não repete essa validação.",
+  "verdict": "REQUIRES_CHANGES",
+  "finding_counts": {
+    "P0": 0,
+    "P1": 3,
+    "P2": 0
+  },
+  "findings": [
+    {
+      "id": "T-F01",
+      "severity": "P1",
+      "requirement": "Adendo: cinco perfis residentes via AgentV2, dezoito skills carregadas e usadas, proveniência por versão/digest e execução independente de crítica; CAMP.CMP.05 e WP00.T02.CHK.03 exigem responsabilidade e prova rastreáveis.",
+      "location": "modules/sucafina/Sucafinav1/docs/sf2h-plan/AGENTS-ATLAS-MCP.md:25–60,183–199; modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json:C08/C11; campaign.json:WP00.T02, WP10.T01, WP12.T01–T04; evidence-plan.json:E01/E11/E16.",
+      "evidence": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/AGENTS-ATLAS-MCP.md",
+          "commit": "ec9d36da2385007b64a0aa627582ce7e60629a44",
+          "location": "linhas 25,50,56,60,183–185,199",
+          "observation": "O adendo exige AgentV2, 18 skills com versão/digest e carga efetiva, configuração por perfil e uma execução própria do Revisor. Atribui essas entregas adicionais a WP00/WP10/WP12.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ec9d36da2385007b64a0aa627582ce7e60629a44/modules/sucafina/Sucafinav1/docs/sf2h-plan/AGENTS-ATLAS-MCP.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json",
+          "commit": "ec9d36da2385007b64a0aa627582ce7e60629a44",
+          "location": "C08:197–218; C11:290–296",
+          "observation": "C08/C11 ainda descrevem job genérico de análise e proveniência genérica. Não definem manifest de perfis/skills, vínculo de skill efetivamente carregada à execução, versão/digest, composição de especialistas ou vínculo entre análise e crítica independente.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ec9d36da2385007b64a0aa627582ce7e60629a44/modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+          "commit": "ec9d36da2385007b64a0aa627582ce7e60629a44",
+          "location": "work_packages[WP12].tasks; work_packages[WP10].tasks[WP10.T01]; consumption_map AIEDGE02/13",
+          "observation": "As quatro tasks de WP12 entregam catálogo de ferramentas, intenção, crítica e lifecycle de uma análise. Seus checks verificam inferência real, autorização e resultados; não discriminam cinco perfis, 18 skills ou isolamento da execução do Revisor. WP10.T01 não acrescenta registro/carga desses assets. A busca nos contratos, campanha, ownership, axiomas, proof-map e WPs não encontrou os IDs dos perfis nem as novas entidades do adendo.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ec9d36da2385007b64a0aa627582ce7e60629a44/modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/evidence-plan.json",
+          "commit": "ec9d36da2385007b64a0aa627582ce7e60629a44",
+          "location": "E01, E11, E16 e required_fields",
+          "observation": "As provas continuam centradas em contratos, análise/portfólio e host binding. Não há matriz consumível de perfil → skill → versão/digest → execução → saída, nem critério que detecte uma skill apenas catalogada.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ec9d36da2385007b64a0aa627582ce7e60629a44/modules/sucafina/Sucafinav1/docs/sf2h-plan/evidence-plan.json"
+        },
+        {
+          "path": "packages/schema/src/agent.ts",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "Info.skills",
+          "observation": "O campo skills de Agent.Info contém metadados da árvore, não o corpo carregado.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/schema/src/agent.ts"
+        },
+        {
+          "path": "packages/core/src/skill.ts",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "Draft.source; load, linhas 79–84 e 119–132",
+          "observation": "A carga de conteúdo depende de uma Source registrada no SkillV2; o código admite fontes embedded/directory/url e reserva opcional de nomes. Registrar um Agent.Info e listar skills não implementa essa etapa.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/core/src/skill.ts"
+        },
+        {
+          "path": "AGENTS.md",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "What Ships and What Stays in the Repo",
+          "observation": "Conteúdo necessário ao agente em execução precisa estar em prompt ou skill distribuída; docs e catálogo de manutenção não constituem entrega de runtime.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/AGENTS.md"
+        }
+      ],
+      "counterexample": "Uma implementação pode cumprir os checks atuais de WP12 usando um único agente de análise, uma crítica na mesma sessão e prompts montados diretamente pelo provider. Pode produzir propostas reais, detectar contradições e passar E11 sem carregar nenhuma das 18 skills e sem registrar os cinco perfis. Isso satisfaz a matriz estruturada examinada, mas descumpre o DoD explícito do adendo. O SCOPE-STATUS reconhece que a validação anterior não cobre essa integração, portanto não classifiquei esse caminho como um aceite já ocorrido.",
+      "impact": "As frentes recebem critérios canônicos insuficientes para distinguir a equipe residente contratada de uma análise genérica. A ausência de ligação entre perfil, asset carregado e execução também impede auditar as operações concedidas e a independência da crítica.",
+      "requested_change": "Reconciliar a campanha antes de liberar a construção dependente: acrescentar contrato/manifest de perfis e skills com identificação, versão, digest, fontes distribuídas, permissões e schemas; atribuir writer, caminho, task produtora e consumidores de registro/carga/roteamento; distinguir execução do Revisor; incluir checks discriminantes e matriz de prova para os cinco perfis e as 18 skills. Vincular o GNATIVE do adendo ao gate canônico, exigindo perfil real e skill efetivamente carregada. O artefato pode ser produzido em WP00, mas a obrigação, seus consumidores e seu gate precisam constar da lista executável.",
+      "suggested_owner": "S0/WP00: contratos e rastreabilidade; WP12: perfis/skills/roteamento; WP10: distribuição, registro e carga no host.",
+      "blocking": true,
+      "confidence": "Alta quanto à lacuna no snapshot; nenhuma alegação de que o runtime seja incapaz de implementá-la."
+    },
+    {
+      "id": "T-F02",
+      "severity": "P1",
+      "requirement": "Identidade confiável por execução, interseção de permissões usuário/sessão/caso/perfil/domínio, paridade UI/agente/MCP e recusa de provider conflitante; adendo §§ Política de concessão e Seis provas integradas.",
+      "location": "modules/sucafina/Sucafinav1/docs/sf2h-plan/AGENTS-ATLAS-MCP.md:87–103,123,183–193; modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json:C08; modules/sucafina/Sucafinav1/docs/sf2h-plan/ownership.json:WP10/resolution_order; baseline packages/core/src/mcp.ts:174–200,277–305 e mcp/provided.ts:Server.",
+      "evidence": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/AGENTS-ATLAS-MCP.md",
+          "commit": "ec9d36da2385007b64a0aa627582ce7e60629a44",
+          "location": "linhas 101–103,123,184,191,219–223",
+          "observation": "O adendo identifica corretamente que McpProvided não transmite identidade SF e exige binding equivalente à closure de turno e proteção contra substituição pelo mesmo nome. Não define qual caminho implementará esse binding.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ec9d36da2385007b64a0aa627582ce7e60629a44/modules/sucafina/Sucafinav1/docs/sf2h-plan/AGENTS-ATLAS-MCP.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json",
+          "commit": "ec9d36da2385007b64a0aa627582ce7e60629a44",
+          "location": "C08:197–218",
+          "observation": "O contrato congela identidade do BusinessPorts e uso de Host.Contribution/Tools.Service, porém não especifica transporte/handshake do servidor sucafina-workbench, origem confiável do contexto por chamada, duração do binding, invalidação ou resolução de colisão de provider. A prova canônica T+20 ainda é inferência/projeção/admissão, sem o percurso MCP.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ec9d36da2385007b64a0aa627582ce7e60629a44/modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/ownership.json",
+          "commit": "ec9d36da2385007b64a0aa627582ce7e60629a44",
+          "location": "WP10 existing_files/new_prefixes; resolution_order",
+          "observation": "WP10 pode escrever nos entrypoints enumerados e nos namespaces product/host-binding, product/integration e apps/cli/src/sucafina-product. O core MCP e o adaptador Claude são somente leitura pela política padrão. O plano não identifica um caminho concreto dentro das fronteiras concedidas, nem declara uma exceção, caso o binding necessite outra seam.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ec9d36da2385007b64a0aa627582ce7e60629a44/modules/sucafina/Sucafinav1/docs/sf2h-plan/ownership.json"
+        },
+        {
+          "path": "packages/core/src/mcp/provided.ts",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "Server; Interface; tracker",
+          "observation": "Server fornece apenas name, key e connect(): Transport; servers() não recebe sessão, ator ou caso. O tracker conserva o servidor pelo nome/key.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/core/src/mcp/provided.ts"
+        },
+        {
+          "path": "packages/core/src/mcp.ts",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "configured, linhas 174–200",
+          "observation": "Servidores configurados vencem o mesmo nome: um provided só é inserido se servers.has(name) for falso. A proteção de colisão de nomes sanitizados não altera essa precedência.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/core/src/mcp.ts"
+        },
+        {
+          "path": "packages/core/src/mcp.ts",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "mcpTool, linhas 277–305",
+          "observation": "A permissão recebe sessionID/agent do contexto nativo, mas client.callTool transmite ao servidor somente name e arguments. A autorização nativa não converte automaticamente esses IDs no principal empresarial SF.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/packages/core/src/mcp.ts"
+        },
+        {
+          "path": "modules/engine-adapters/claude-code/src/v2/host.ts",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "linhas 368–369",
+          "observation": "A ponte existente recebe turn.execute por closure de turno. Esse padrão explica a necessidade do novo binding, mas a função desse arquivo não é uma porta MCP SF já disponível.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/engine-adapters/claude-code/src/v2/host.ts"
+        }
+      ],
+      "counterexample": "Duas sessões autorizadas de usuários SF diferentes chamam o mesmo servidor provided, conectado no Location. Se o servidor usar somente a API provided descrita, recebe os mesmos tipos de argumentos sem o ator empresarial autenticado de cada chamada. Um ator capturado globalmente pode atribuir a chamada ao usuário errado; aceitar actor nos argumentos viola o invariante. Além disso, uma configuração com o nome sucafina-workbench é escolhida antes do provided nativo. O plano exige bloquear ambos os cenários, mas não possui um contrato/handoff e um gate canônico que demonstrem o caminho escolhido para isso.",
+      "impact": "O principal mecanismo de segurança da nova superfície permanece uma intenção sem fronteira executável reconciliada. Os builders podem chegar ao gate com uma ponte nativa segura e um MCP ainda indisponível, ou descobrir tardiamente que sua solução requer arquivos não concedidos. Não afirmo que uma solução segura seja impossível; o ponto é que ela ainda precisa ser escolhida e contratada.",
+      "requested_change": "Acrescentar uma sequência de execução normativa do MCP: como o host autentica e vincula installation/project/location/session/case/actor/profile; qual componente entrega esse contexto fora dos argumentos do modelo; quando ele expira/revalida; como a chamada chega à mesma porta C01–C14; e como recusa provider homônimo ou geração substituída. Nomear producer/export/path e owner compatíveis com ownership. Acrescentar provas por chamada direta, duas sessões/principais concorrentes, revogação entre descoberta e execução, operação não concedida e provider homônimo. Reconciliar o gate T+20 e a prova de paridade dos oito packs sem abrir novos acessos ou modificar engines como atalho.",
+      "suggested_owner": "S0/WP00 e WP10; WP12 consome o binding e as concessões; WPs de domínio conservam a autorização final.",
+      "blocking": true,
+      "confidence": "Alta sobre o comportamento das APIs consultadas e a ausência do contrato específico; viabilidade de uma seam alternativa dentro do ownership permanece a qualificar."
+    },
+    {
+      "id": "T-F03",
+      "severity": "P1",
+      "requirement": "Atlas SF deve consumir módulos/ports reais com BusinessEvidenceRef, owners e kinds empresariais explícitos, armazenamento protegido/serializado, recuperação autorizada e prova de reinício; não reutilizar PRs fictícios nem identidades de engenharia.",
+      "location": "modules/sucafina/Sucafinav1/docs/sf2h-plan/AGENTS-ATLAS-MCP.md:157–177,186; modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json:C09/C13/C14; campaign.json:WP14 e WP10.T01; baseline modules/atlas/packages/adapter-io/src/{memory-read,memory-emit,memory-store}.ts e packages/memory/src/{types,template,inject}.ts.",
+      "evidence": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/AGENTS-ATLAS-MCP.md",
+          "commit": "ec9d36da2385007b64a0aa627582ce7e60629a44",
+          "location": "linhas 163–177 e 186",
+          "observation": "O adendo pede BusinessEvidenceRef, BusinessContextService, adaptação de createMemoryRead/createMemoryEmit/DurableMemory, persistência serializada protegida e resolução explícita de owners/kinds. Atribui genericamente a boundary a WP06 + WP14.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ec9d36da2385007b64a0aa627582ce7e60629a44/modules/sucafina/Sucafinav1/docs/sf2h-plan/AGENTS-ATLAS-MCP.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json",
+          "commit": "ec9d36da2385007b64a0aa627582ce7e60629a44",
+          "location": "C09:239–245; C13:346–353; C14:373–379",
+          "observation": "Os contratos ainda definem referências do caso, CaseRecall e DocumentEvidence. Não há contrato para a tradução dessas entidades para as entradas Atlas, owner empresarial, scanner de escrita, DurableMemory protegido ou resolver de BusinessEvidenceRef.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ec9d36da2385007b64a0aa627582ce7e60629a44/modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+          "commit": "ec9d36da2385007b64a0aa627582ce7e60629a44",
+          "location": "WP14 scope_in/scope_out/INV.01; WP14.T02/T04; WP10.T01",
+          "observation": "WP14 permanece uma frente de funções/projeções puras e explicitamente não persiste. WP10 mantém persistência genérica de metadados SF. Não há task/saída que atribua a tradução Atlas, o adapter de seu store e seu consumo ao provider concreto. Os checks de recuperação/revogação podem ser executados sobre AuthorizedCaseProjection sem chamar Atlas.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ec9d36da2385007b64a0aa627582ce7e60629a44/modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json"
+        },
+        {
+          "path": "modules/atlas/packages/memory/src/types.ts",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "MemoryKind, MemoryEntry, Ref e MemoryRecord",
+          "observation": "Atlas admite quatro kinds: task/pr/project/logbook; Ref é StructRef ou string. Um objeto empresarial com campos de caso/documento não é automaticamente uma entrada ou referência reconhecida.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/memory/src/types.ts"
+        },
+        {
+          "path": "modules/atlas/packages/memory/src/template.ts",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "REQUIRED/OPTIONAL:56–73; memoryKindOf:127–132; isRef:151–168",
+          "observation": "Templates são fechados; campos extras ou ausência das chaves requeridas impedem derivar o kind. Objetos Ref aceitos têm forma de StructRef de código. Uma referência empresarial precisa de tradução/resolução declarada.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/memory/src/template.ts"
+        },
+        {
+          "path": "modules/atlas/packages/adapter-io/src/memory-emit.ts",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "MemoryEmitDeps:98–108; emit:124–156,219–255",
+          "observation": "A escrita exige entrada de template admitida, owner e scanner nomeado. Scanner ausente resulta em scanner-unavailable; apenas depois dos gates ocorre append.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/memory-emit.ts"
+        },
+        {
+          "path": "modules/atlas/packages/adapter-io/src/memory-read.ts",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "createMemoryRead.recall:200–204",
+          "observation": "O actor do adapter não é injetado automaticamente no recall: a função passa a query ao recallOver sobre todo o store retornado. A boundary deve impor o recorte autorizado, não presumir que actor já filtra essa leitura.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/memory-read.ts"
+        },
+        {
+          "path": "modules/atlas/packages/memory/src/inject.ts",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "injectFor/readRepoBytes e recall",
+          "observation": "Owner-scoping não é controle de acesso; recall filtra pelos seletores fornecidos. Um kind reconhecido sem owner pode selecionar registros de vários owners.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/memory/src/inject.ts"
+        },
+        {
+          "path": "modules/atlas/packages/adapter-io/src/memory-store.ts",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "DurableMemory e createDurableMemory",
+          "observation": "O port tem read/append síncronos; a implementação pronta grava logs por seat no repositório. Sua substituição por armazenamento SF protegido é trabalho distinto, incluindo serialização dos gates de admissão.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/atlas/packages/adapter-io/src/memory-store.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "location": "Persistence.transaction",
+          "observation": "A instalação oferece transaction assíncrona e commit durável por Snapshot. A composição entre esse ciclo e os métodos síncronos de DurableMemory precisa de adapter explícito; não é compatibilidade automática de assinatura.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/runtime/contract.ts"
+        }
+      ],
+      "counterexample": "Uma implementação de WP14 pode recuperar casos parecidos e passar seus checks usando só projeções do ledger SF, sem consumo algum do Atlas, o que o adendo proíbe chamar de substrato integrado. Se o integrador tentar passar diretamente um caso/BusinessEvidenceRef a createMemoryEmit, os templates não o admitem; mesmo uma entrada convertida falha sem scanner. Se usar actor=sf_finance e recall({kind:'task'}) sobre store compartilhado, o lower-level read não restringe por actor. O código permite uma boundary segura, mas as traduções, o recorte e o provider de persistência não estão contratados na campanha.",
+      "impact": "Não há uma divisão implementável e testável da adaptação Atlas entre WP06/WP14/WP10. Isso deixa sem responsável preciso os requisitos que distinguem memória empresarial confidencial de memória de engenharia e o uso real do engine de um wrapper com o mesmo nome.",
+      "requested_change": "Definir a boundary empresarial no plano com produtor, export/path, consumidor e owner únicos para: BusinessEvidenceRef/resolver; projeção autorizada de memória; mapeamento permitido de owner/kind/entry; scanner e seus estados; adapter DurableMemory sobre o armazenamento SF com atomicidade/serialização; e invalidação por access revision, versão e encarnação. Preservar o ledger do caso como fonte oficial e evitar PRs/identidades fictícios. Incluir prova integrada instrumentada de consumo dos módulos reais, append/read após reinício, dois atores usando o mesmo perfil, recall com owner omitido/forjado, revogação por campo/registro, importação que substitui encarnação e falha do scanner. Reconciliar C08/C13/C14 e os checks E12/E15/E16 sem atribuir persistência a WP14 contrariando seu invariante.",
+      "suggested_owner": "S0/WP00: contrato e divisão explícita; WP14: transformação/recuperação pura; WP06: documentos e referências; WP10: boundary confiável e adapter persistente serializado.",
+      "blocking": true,
+      "confidence": "Alta quanto à incompatibilidade de formas e aos limites reais dos adapters; não alego inviabilidade do reaproveitamento, apenas a ausência da especificação necessária para realizá-lo."
+    }
+  ],
+  "supported_plan_controls": [
+    "C03/C12 exigem digest, revalidação e mutação/recibo no mesmo commit do domínio; WP10.T01 e WP11.T04 incluem resposta perdida e retomada parcial sem transação global.",
+    "C08 e WP11.T01 preservam metadados confiáveis e invalidam referências por encarnação; a importação maliciosa tem contraprova explícita.",
+    "WP03 mantém o motor financeiro canônico, oráculos 590000/602000/596000, HR restrito, moeda/período e distinções de ausência; WP04 mantém alçadas e FX da submissão.",
+    "WP10.T01 coleta projeções fora de transactions de outros domínios, preservando versões por seção.",
+    "WP06.T05/WP12.T01 tratam texto externo como dado, exigem confirmação e cobrem injeção; WP09 revalida principal, admissão e resultados nas fronteiras de Relay/Schedule."
+  ],
+  "residual_uncertainties": [
+    "Análise estática do plano e das APIs: nenhum comportamento do produto foi executado e nenhuma prova de implementação foi marcada como PASS.",
+    "Os três achados distinguem conteúdo/execução dos perfis (T-F01), transporte da identidade MCP (T-F02) e compatibilidade/armazenamento Atlas (T-F03); não são três contagens da mesma ausência de implementação.",
+    "Há APIs públicas compatíveis para uma solução. Não foi demonstrada impossibilidade arquitetural, e não é necessário remover escopo, criar acesso corporativo ou modificar engines para fechar estes achados.",
+    "A disponibilidade concreta de provider, identidade empresarial, armazenamento protegido e serviços nativos no futuro ambiente de execução continua sujeita à qualificação GNATIVE.",
+    "Os controles financeiros e de integridade considerados adequadamente planejados ainda precisam de provas reais no candidato implementado; esta avaliação não os certifica.",
+    "A frase de WP09.T04 sobre nova extração fora da campanha está desalinhada com WP06.T05, mas não foi aberta como achado separado: o escopo obrigatório de extração está expresso e a reconciliação de contratos do adendo já precisa preservar seu consumo."
+  ],
+  "implementation_test_status": "NOT_RUN"
+}

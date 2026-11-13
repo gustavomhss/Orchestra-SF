@@ -1,11 +1,16 @@
 # Revisão adversarial formal — rodada 1
 
-**Estado no checkpoint inicial: PENDING.** Três agentes independentes examinarão o mesmo commit depois de ele ser salvo e verificado no GitHub.
+**Estado: CONCLUÍDA. Veredicto: REQUIRES_CHANGES.** Três agentes independentes avaliaram o mesmo snapshot: [`ec9d36da2385007b64a0aa627582ce7e60629a44`](https://github.com/gustavomhss/Orchestra-SF/commit/ec9d36da2385007b64a0aa627582ce7e60629a44).
 
-- R1: produto, UX, jornadas e completude.
-- R2: contratos, identidade, MCP, Atlas e integridade dos dados.
-- R3: cronograma, recursos, dependências, ownership e provas de execução.
+- [Consolidação, responsáveis e critérios de fechamento](round-1/SUMMARY.md).
+- [R1 — produto, UX e completude](round-1/product.md).
+- [R2 — contratos, identidade, MCP e Atlas](round-1/contracts.md).
+- [R3 — prazo, recursos, integração e CI](round-1/execution.md).
+- [Recibo do checkpoint](round-1/checkpoint.json) e [resumo estruturado](round-1/summary.json).
+- [Protocolo](PROTOCOL.md).
 
-Os relatórios desta pasta serão adicionados em um commit posterior e indicarão o SHA exato avaliado. Os reviews em ../reviews/ são históricos, não são os três pareceres desta rodada.
+Contagem original: **0 P0, 8 P1 e 2 P2**. Após agrupar a sobreposição relativa à incorporação do adendo: **6 frentes P1 e 2 ajustes P2**. Os pareceres individuais foram preservados integralmente.
 
-A revisão pode concluir APPROVED_FOR_EXECUTION ou REQUIRES_CHANGES. Aprovação do plano não é aceite da implementação e não demonstra duração de duas horas.
+As correções ainda não foram aplicadas. Todos os achados permanecem abertos. Os reviews em `../reviews/` são históricos e não substituem esta rodada.
+
+Testes de implementação: **NOT_RUN**. Aprovação do plano não é aceite da implementação e não demonstra duração de duas horas.

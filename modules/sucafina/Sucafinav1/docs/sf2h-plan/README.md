@@ -1,6 +1,6 @@
 # Orchestra SF — plano integral de produto e IA
 
-**Estado deste checkpoint: SAVED_FOR_FORMAL_REVIEW.** Este diretório conserva todo o planejamento produzido e sua origem. Não contém implementação nova do produto.
+**Estado: REQUIRES_CHANGES após a revisão formal da rodada 1.** [Parecer consolidado](formal-review/round-1/SUMMARY.md): 6 frentes P1 e 2 ajustes P2, sem P0. O snapshot avaliado foi `ec9d36da2385007b64a0aa627582ce7e60629a44`; as correções ainda não foram aplicadas. Este diretório conserva todo o planejamento, sua origem e os três pareceres independentes. Não contém implementação nova do produto.
 
 ## Ordem de leitura
 

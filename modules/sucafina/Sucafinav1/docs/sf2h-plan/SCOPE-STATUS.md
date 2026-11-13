@@ -8,7 +8,7 @@ AGENTS-ATLAS-MCP.md acrescenta a especificação explícita da equipe residente:
 
 ## Limite da validação anterior
 
-PLAN_STRUCTURE_PASS verifica a campanha estruturada anterior ao adendo. Os pareceres verified-* se referem aos hashes que registram. Nenhum desses resultados comprova que o adendo foi incorporado integralmente em contratos, ownership, tasks, cobertura, tempo ou provas. Essa reconciliação faz parte da revisão formal agora solicitada.
+PLAN_STRUCTURE_PASS verifica a campanha estruturada anterior ao adendo. Os pareceres verified-* se referem aos hashes que registram. Nenhum desses resultados comprova que o adendo foi incorporado integralmente em contratos, ownership, tasks, cobertura, tempo ou provas. A rodada formal 1 confirmou lacunas nessa reconciliação; as correções seguem abertas e são descritas em formal-review/round-1/SUMMARY.md.
 
 ## Precedência
 
@@ -16,4 +16,4 @@ O pedido do usuário preserva escopo integral, foco no produto e ausência de no
 
 ## Estado
 
-Este commit salva o material para três revisores independentes. Não inicia a campanha de implementação nem indica sucesso de IA, Relay, UI, MCP, Atlas empresarial ou CI de produto. O primeiro parecer formal deve avaliar esse snapshot exato.
+O checkpoint `ec9d36da2385007b64a0aa627582ce7e60629a44` preservou o material e foi examinado por três revisores independentes. A rodada 1 concluiu REQUIRES_CHANGES: 6 frentes P1 e 2 ajustes P2 consolidados, sem P0. Este estado registra os pareceres sem aplicar suas correções. Não inicia a campanha de implementação nem indica sucesso de IA, Relay, UI, MCP, Atlas empresarial ou CI de produto. Testes de implementação permanecem NOT_RUN.
