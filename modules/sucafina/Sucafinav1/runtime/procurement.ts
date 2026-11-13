@@ -12,16 +12,17 @@ import {
   nextSup,
 } from "../src/procurement.ts"
 import type { Store } from "../src/procurement.ts"
-import { visibleRequests } from "../src/requests.ts"
-import { quoteAssessment } from "../src/form.ts"
+import { visibleRequests, requestStageGuidance, orderSourceGuidance } from "../src/requests.ts"
+import { quoteAssessment, quoteComparisonPresentation } from "../src/form.ts"
 import type { FormSettings } from "../src/form.ts"
 import { approvalDecision, approvalQueue, approvalStageEntry, exportRegister, requestValue } from "../src/procurement-screen.ts"
 import type { RequestView } from "../src/procurement-screen.ts"
 import { initialProcurementSettings } from "../src/initial-settings.ts"
-import { activateSupplier, open, seal } from "../src/supplier.ts"
+import { activateSupplier, open, seal, supplierActivationRequirements } from "../src/supplier.ts"
 import type { BankSupplier } from "../src/supplier.ts"
 import { esc } from "../src/screen-shell.ts"
 import { changed, conflict, object, rows, text, finite } from "./contract.ts"
+import { purchaseOrderFieldErrors, requisitionFieldErrors, sourcingFieldErrors } from "../product/procurement/guided-request.ts"
 import type { Actor, Domain, Snapshot, Command, Environment, Result } from "./contract.ts"
 import { fields, form, table, metric, metricGrid } from "./ui.ts"
 import type { RenderContext } from "./ui.ts"
@@ -545,15 +546,17 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
                       : command.action === "cancel"
                         ? cancel(store, id, version, gate, environment.at, text(command.values.reason))
                         : deleteDraft(store, id, version, gate)
-  if (!result.ok)
-    return {
-      ok: false,
-      status: "errors" in result ? 422 : 403,
-      errors:
-        "errors" in result && Array.isArray(result.errors)
-          ? result.errors.filter((error): error is string => typeof error === "string")
-          : ["code" in result ? text(result.code) : "Action refused"],
-    }
+  if (!result.ok) {
+    const errors = "errors" in result && Array.isArray(result.errors)
+      ? result.errors.filter((error): error is string => typeof error === "string")
+      : ["code" in result ? text(result.code) : "Action refused"]
+    const fieldErrors = !("errors" in result) ? [] : command.action === "submit_pr"
+      ? requisitionFieldErrors(submitted.pr as Parameters<typeof requisitionFieldErrors>[0])
+      : command.action === "submit_sourcing" ? sourcingFieldErrors(submitted as Parameters<typeof sourcingFieldErrors>[0], store.form, store.suppliers)
+      : command.action === "submit_po" ? purchaseOrderFieldErrors(submitted as Parameters<typeof purchaseOrderFieldErrors>[0], store.form, store.suppliers) : []
+    const failure = { ok: false as const, status: "errors" in result ? 422 as const : 403 as const, errors, fieldErrors: fieldErrors.filter((error) => errors.includes(error.message)).map((error) => ({ field: error.field, message: error.message })) }
+    return failure
+  }
   store.settings = fullSettings
   const actualId = command.action === "create" && "request" in result ? text(object(result.request).number) : id
   const saved = store.requests[actualId]
@@ -738,12 +741,14 @@ function supplier(snapshot: Snapshot, store: Store, actor: Actor, command: Comma
   }
   if (command.action === "activate") {
     const activated = activateSupplier(next, actor, store.suppliers, store.settings.blockSelfApproval === true)
-    if (!activated.ok)
+    if (!activated.ok) {
+      const missing = supplierActivationRequirements(next)
       return {
         ok: false,
         status: 422,
-        errors: ["Supplier activation refused"],
+        errors: missing.length ? missing.map((field) => `Recorded activation prerequisite missing: ${field}`) : ["Supplier activation refused"],
       }
+    }
     Object.assign(next, activated.supplier, {
       validatedBy: actor.id,
       validatedAt: environment.at,
@@ -826,13 +831,14 @@ export const domain: Domain = {
     )
     const suppliers = store.suppliers.map((item) => {
       const supplier = object(item)
-      const safe = {
-        ...supplier,
-        history: redactBank(supplier.history),
-        iban: "masked",
-        account: "masked",
-      }
-      if (!has(actor, "admin", "supplier admin")) return { ...safe, swift: undefined }
+      if (!has(actor, "admin", "supplier admin"))
+        return {
+          ...Object.fromEntries(Object.entries(supplier).filter(([key]) => !bankFields.some((field) => field.toLowerCase() === key.toLowerCase()))),
+          history: redactBank(supplier.history),
+          iban: "masked",
+          account: "masked",
+        }
+      const safe = { ...supplier, history: redactBank(supplier.history) }
       if (!environment.bankKey) return { ...safe, iban: "", account: "" }
       return {
         ...safe,
@@ -876,6 +882,7 @@ export const domain: Domain = {
         ]),
         settings: has(actor, "admin") ? store.settings : {},
         uploadCap: store.settings.uploadCap ?? null,
+        bankVerificationAvailable: has(actor, "admin", "supplier admin") && environment.bankKey?.length === 32,
       },
       versions,
     }
@@ -1082,8 +1089,9 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
                 const selected = rows(sourcing.quotes).find((quote) => quote.id === sourcing.selectedId)
                 return !!selected && !text(selected.currency)
               }).length
+              const known = matching.filter((request) => amount(request) != null).length
               const total = matching.reduce((sum, request) => sum + (amount(request) ?? 0), 0)
-              return `${missing ? "Known subtotal " : ""}${total} ${text(object(data.formSettings).currency)}${missing ? `; ${missing} unavailable` : ""}${assumed ? `; ${assumed} use default base currency` : ""}`
+              return `${!matching.length ? "No matching purchase orders" : !known || !Number.isFinite(total) ? "Unavailable" : `${missing ? "Known subtotal " : ""}${total} ${text(object(data.formSettings).currency)}`}${missing ? `; ${missing} unavailable` : ""}${assumed ? `; ${assumed} use default base currency` : ""}`
             })(),
           ),
         )),
@@ -1223,7 +1231,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
           label: value,
         })),
       )}${fields([{ name: "q", label: "Search", value: query }])}<button>Filter</button></form><a href="?download=suppliers">Download suppliers CSV</a>` +
-      controls(page, "create", "", "<h2>New supplier</h2>" + scalarFields("", {}, general), "Create supplier") +
+      (has(context.actor, "buyer") ? controls(page, "create", "", "<h2>New supplier</h2>" + scalarFields("", {}, general), "Create supplier") : "") +
       table(
         ["Number", "Supplier", "Status"],
         visible.map((supplier) => [
@@ -1235,7 +1243,15 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
       visible
         .map((supplier) => {
           const id = String(supplier.id ?? "")
-          return `<details id="supplier-${esc(id)}"${supplier === requestedSupplier ? " open" : ""}><summary>${esc(text(supplier.legalName))}</summary><nav>General · Categories · Contacts · Commercial · Bank · Compliance · Linked requests · Audit</nav>${controls(page, "save", id, "<h3>Update supplier</h3>" + scalarFields("", supplier, general) + fields([{ name: "categories", label: "Categories (one per line)", type: "textarea", value: Array.isArray(supplier.categories) ? supplier.categories.join("\n") : supplier.categories }]) + repeatRows("contacts", rows(supplier.contacts), ["name", "email", "phone"]) + scalarFields("commercial", object(supplier.commercial), ["notes"]) + scalarFields("compliance", object(supplier.compliance), ["notes"]), "Save supplier")}<section><h3>Bank</h3>${has(context.actor, "admin", "supplier admin") ? controls(page, "change-bank", id, scalarFields("", supplier, [...bankFields]), "Save bank details") : "<p>Bank details masked.</p>"}</section>${["activate", "block", "inactivate", "delete"].map((action) => controls(page, action, id, "", action.charAt(0).toUpperCase() + action.slice(1))).join("")}<h3>Linked requests</h3>${table(
+          const privileged = has(context.actor, "admin", "supplier admin")
+          const canMaintain = privileged || has(context.actor, "buyer")
+          const linked = requests.some((request) => String(object(request.po).supplierId ?? "") === id || rows(object(request.sourcing).quotes).some((quote) => String(quote.supplierId ?? "") === id))
+          const bankUnavailable = data.bankVerificationAvailable !== true && !text(supplier.bankName)
+          const requirements = supplierActivationRequirements(supplier as BankSupplier).filter((item) => item !== "iban or bankName" || !bankUnavailable)
+          const readiness = privileged
+            ? `<section><h3>Activation prerequisites</h3><p>This checklist reports recorded prerequisites only; eligibility also depends on authorization and supplier policies.</p>${bankUnavailable ? "<p>Bank verification is unavailable; the masked or empty bank view cannot establish whether IBAN is recorded.</p>" : ""}${requirements.length ? `<p>Recorded missing prerequisites: ${requirements.map((item) => `<span>${esc(item)}</span>`).join(", ")}</p>` : "<p>No missing prerequisites are visible in this view. Policy eligibility has not been evaluated.</p>"}</section>`
+            : ""
+          return `<details id="supplier-${esc(id)}"${supplier === requestedSupplier ? " open" : ""}><summary>${esc(text(supplier.legalName))}</summary><nav>General · Categories · Contacts · Commercial · Bank · Compliance · Linked requests · Audit</nav>${canMaintain ? controls(page, "save", id, "<h3>Update supplier</h3>" + scalarFields("", supplier, general) + fields([{ name: "categories", label: "Categories (one per line)", type: "textarea", value: Array.isArray(supplier.categories) ? supplier.categories.join("\n") : supplier.categories }]) + repeatRows("contacts", rows(supplier.contacts), ["name", "email", "phone"]) + scalarFields("commercial", object(supplier.commercial), ["notes"]) + scalarFields("compliance", object(supplier.compliance), ["notes"]), "Save supplier") : ""}<section><h3>Bank</h3>${privileged ? controls(page, "change-bank", id, scalarFields("", supplier, [...bankFields]), "Save bank details") : "<p>Bank details masked.</p>"}</section>${readiness}${[...(privileged ? ["activate", "block", "inactivate"] : []), ...(canMaintain && supplier.status === "pending" && !linked ? ["delete"] : [])].map((action) => controls(page, action, id, "", action.charAt(0).toUpperCase() + action.slice(1))).join("")}<h3>Linked requests</h3>${table(
             ["Request"],
             requests
               .filter(
@@ -1291,7 +1307,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         label: value,
       })),
     )}${fields([{ name: "q", label: "Search", value: query }])}<button>Filter</button></form><a href="?download=register">Download request register</a>` +
-    controls(
+    (has(context.actor, "requester", "admin") ? controls(
       page,
       "create",
       "",
@@ -1305,13 +1321,16 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         scalarFields("pr", {}, prFields.filter((name) => ["estAmount", "estAnnual", "expenseType"].includes(name))) +
         "</fieldset>",
       "Create request",
-    ) +
+    ) : "") +
     table(
-      ["Request", "Title", "Status", "Amount"],
+      ["Request", "Title", "Status", "Stage", "Next action", "Value basis", "Base amount"],
       filtered.map((request) => [
         `<a href="#${encodeURIComponent(String(request.number ?? ""))}">${esc(String(request.number ?? ""))}</a>`,
         esc(text(object(request.pr).title)),
         esc(requestStatusLabel(text(request.status))),
+        esc(requestStageGuidance(text(request.status)).stage),
+        esc(requestStageGuidance(text(request.status)).next),
+        rows(object(request.po).lines).length ? "Purchase order lines" : rows(object(request.sourcing).quotes).some((quote) => quote.id === object(request.sourcing).selectedId) ? "Selected sourcing proposal" : "Requisition estimate",
         amount(request) == null ? "Unavailable" : `${amount(request)} ${esc(text(settings.currency))}`,
       ]),
     ) +
@@ -1323,6 +1342,9 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         const status = text(request.status)
         const decision = approvalDecision(request as RequestView, context.actor, settings.blockSelfApproval === true)
         const canDecide = decision.allowed
+        const prEditable = context.actor.canWrite && ["draft", "pr_rejected"].includes(status) && (request.createdBy === context.actor.id || has(context.actor, "admin"))
+        const sourcingEditable = context.actor.canWrite && ["sourcing", "src_rejected"].includes(status) && has(context.actor, "buyer", "admin")
+        const poEditable = context.actor.canWrite && ["po_draft", "po_rejected"].includes(status) && has(context.actor, "buyer", "admin")
         const canCancel = context.actor.canWrite && !["cancelled", "po_issued"].includes(status) && (request.createdBy === context.actor.id || has(context.actor, "admin"))
         const actions = [
           ...(canDecide ? ["approve", "reject"] : []),
@@ -1334,32 +1356,94 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         const snapshotRequired = ["src_pending", "po_draft", "po_pending", "po_approved", "po_issued", "po_rejected"].includes(status)
         const sameBase = !snapshotRequired || source.approvalBaseCurrency === settings.currency
         const evaluation = quoteAssessment({ sourcing: { ...source, ...(snapshotRequired && source.fxSnapshot == null ? { fxSnapshot: { [text(settings.currency)]: 1 } } : {}) } as Parameters<typeof quoteAssessment>[0]["sourcing"] }, { ...settings, currency: text(settings.currency) } as FormSettings)
+        const presentation = quoteComparisonPresentation({ sourcing: source as Parameters<typeof quoteComparisonPresentation>[0]["sourcing"] }, { ...settings, currency: text(settings.currency) } as FormSettings, { submitted: snapshotRequired, submittedBaseCurrency: text(source.approvalBaseCurrency) })
+        const statedTotalsDiffer = rows(source.quotes).some((quote) => {
+          const calculated = typeof quote.qty === "number" && typeof quote.unitPrice === "number" ? quote.qty * quote.unitPrice : null
+          const stated = typeof quote.total === "number" ? quote.total : null
+          return calculated != null && (!Number.isFinite(calculated) || stated != null && Number.isFinite(stated) && Math.abs(stated - calculated) > 0.005)
+        })
+        const monetaryProblem = presentation.some((row) => row.monetary.length > 0) || statedTotalsDiffer
+        const incompleteScores = evaluation.some((item) => item.eligible && !item.complete)
+        const eligibleCount = evaluation.filter((item) => item.eligible).length
+        const tiedScores = evaluation.filter((item) => item.eligible && item.complete && evaluation.some((other) => other.id !== item.id && other.eligible && other.complete && other.overall === item.overall))
         const weights = object(source.weights)
-        const criteriaAvailable = sameBase && rows(weights.criteria ?? settings.criteria).some((criterion) => typeof criterion.weight === "number" && criterion.weight > 0) && rows(weights.commCriteria ?? settings.commCriteria).some((criterion) => typeof criterion.weight === "number" && criterion.weight > 0) && Number(weights.tech ?? settings.techWeight ?? 0) + Number(weights.comm ?? settings.commWeight ?? 0) > 0
-        const comparisonLimit = !sameBase ? "<p>Comparison unavailable: the submitted base currency is missing or differs from the current base.</p>" : evaluation.length && evaluation.filter((item) => item.eligible).length < 2 ? "<p>Comparison is limited: fewer than two proposals are eligible.</p>" : ""
-        const comparison = table(["Proposal", "Stated total", "Quantity × unit price", "Base amount / FX", "Technical", "Price", "Commercial", "Overall", "Rank"], rows(source.quotes).map((quote) => {
-          const score = evaluation.find((item) => item.id === quote.id)
+        const technicalCriteria = rows(source.weights == null ? settings.criteria : weights.criteria)
+        const commercialCriteria = rows(source.weights == null ? settings.commCriteria : weights.commCriteria)
+        const criteriaValid = [...technicalCriteria, ...commercialCriteria].every((criterion) => typeof criterion.name === "string" && criterion.name.trim().length > 0 && typeof criterion.weight === "number" && Number.isFinite(criterion.weight)) && commercialCriteria.every((criterion) => criterion.auto == null || typeof criterion.auto === "boolean")
+        const technicalWeight = source.weights == null ? settings.techWeight : weights.tech
+        const commercialWeight = source.weights == null ? settings.commWeight : weights.comm
+        const criteriaAvailable = sameBase && criteriaValid && typeof technicalWeight === "number" && Number.isFinite(technicalWeight) && typeof commercialWeight === "number" && Number.isFinite(commercialWeight) && technicalCriteria.some((criterion) => typeof criterion.weight === "number" && criterion.weight > 0) && commercialCriteria.some((criterion) => typeof criterion.weight === "number" && criterion.weight > 0) && technicalWeight + commercialWeight > 0
+        const comparisonLimit = [
+          monetaryProblem ? `<p>Comparison ranking unavailable: at least one proposal has missing, invalid or inconsistent monetary data. Resolve every proposal's currency, positive total, applicable FX${statedTotalsDiffer ? " and stated total versus quantity × unit price discrepancy" : ""} before comparing rankings.</p>` : "",
+          !sameBase && !monetaryProblem ? "<p>Comparison unavailable: the submitted base currency is missing or differs from the current base.</p>" : "",
+          !evaluation.length ? "<p>Comparison unavailable: no proposals are recorded.</p>" : evaluation.filter((item) => item.eligible).length < 2 ? "<p>Comparison is limited: fewer than two proposals are eligible.</p>" : "",
+          incompleteScores ? "<p>Comparison is incomplete: one or more eligible proposals have missing required human assessments; ranking is withheld so a provisional score is not presented as a recommendation.</p>" : "",
+          !criteriaAvailable ? "<p>Ranking unavailable: configured comparison criteria or weights are incomplete.</p>" : "",
+          tiedScores.length && !monetaryProblem && sameBase && criteriaAvailable && !incompleteScores && eligibleCount >= 2 ? `<p>Equal overall scores: ${tiedScores.map((item) => esc(text(rows(source.quotes).find((quote) => quote.id === item.id)?.supplier) || "Supplier unavailable")).join(", ")}. Displayed order preserves the existing evaluator ordering.</p>` : "",
+        ].join("")
+        const rankingUnavailable = monetaryProblem || !sameBase || !criteriaAvailable || incompleteScores || eligibleCount < 2
+        const comparison = table(["Proposal", "Eligibility", "Stated total", "Quantity × unit price", "Base amount / FX", "Technical", "Price", "Commercial", "Overall", "Rank"], rows(source.quotes).map((quote, index) => {
+          const score = evaluation[index]
+          const shown = presentation[index]
           const figure = (value: number | undefined) => criteriaAvailable && score?.complete && score.eligible && value != null && Number.isFinite(value) ? value.toFixed(1) : "Unavailable"
           const stated = typeof quote.total === "number" && Number.isFinite(quote.total) ? quote.total : null
           const calculated = typeof quote.qty === "number" && typeof quote.unitPrice === "number" && Number.isFinite(quote.qty * quote.unitPrice) ? quote.qty * quote.unitPrice : null
-          const currency = esc(text(quote.currency) || text(settings.currency))
-          const snapshot = source.fxSnapshot == null ? (snapshotRequired ? {} : null) : object(source.fxSnapshot)
+          const currency = esc(text(quote.currency) || "Currency unavailable")
           const code = text(quote.currency) || text(settings.currency)
-          const rate = code === text(settings.currency) ? 1 : snapshot ? snapshot[code] : rows(settings.fxRates).find((entry) => entry.code === code)?.rate
-          const base = sameBase && stated != null && typeof rate === "number" && rate > 0 && Number.isFinite(stated * rate) ? `${Number((stated * rate).toPrecision(15))} ${esc(text(settings.currency))} (${code === text(settings.currency) ? "base" : snapshot ? "submitted FX" : "current FX"}: ${rate})` : "Unavailable"
-          return [esc(text(quote.supplier)), stated == null ? "Unavailable" : `${stated} ${currency}`, calculated == null ? "Unavailable" : `${calculated} ${currency}${stated != null && Math.abs(stated - calculated) > 0.005 ? " (differs)" : ""}`, base, figure(score?.technical), figure(score?.price), figure(score?.commercial), figure(score?.overall), criteriaAvailable && score?.complete && score.eligible && score.rank != null ? String(score.rank) : "Unavailable"]
+          const base = sameBase && shown?.total != null && shown.fxRate != null && Number.isFinite(shown.total * shown.fxRate) ? `${Number((shown.total * shown.fxRate).toPrecision(15))} ${esc(text(settings.currency))} (${code === text(settings.currency) ? "base" : source.fxSnapshot != null ? "submitted FX" : "current FX"}: ${shown.fxRate})` : `Unavailable${shown?.monetary.length ? ` (${shown.monetary.join(", ")})` : ""}`
+          const eligibility = quote.techPass === false ? "Not compliant" : monetaryProblem && shown?.monetary.length ? "Unavailable: monetary data" : score?.eligible ? "Eligible" : "Ineligible: price/FX"
+          return [esc(text(quote.supplier) || "Supplier unavailable"), eligibility, shown?.total == null ? `Unavailable${shown?.monetary.length ? ` (${shown.monetary.join(", ")})` : ""}` : `${shown.total} ${esc(shown.currency ?? "Currency unavailable")}`, calculated == null ? "Unavailable" : `${calculated} ${currency}${stated != null && Math.abs(stated - calculated) > 0.005 ? " (differs)" : ""}`, base, monetaryProblem ? "Unavailable" : figure(score?.technical), monetaryProblem ? "Unavailable" : figure(score?.price), monetaryProblem ? "Unavailable" : figure(score?.commercial), rankingUnavailable ? "Unavailable" : figure(score?.overall), rankingUnavailable ? "Unavailable" : score?.complete && score.eligible && score.rank != null ? `${score.rank}${tiedScores.some((item) => item.id === score.id) ? " (tie)" : ""}` : "Unavailable"]
         }))
         const selectedQuote = rows(source.quotes).find((quote) => quote.id === source.selectedId)
         const quotedTotal = selectedQuote?.total
         const quoteQuantity = selectedQuote?.qty
         const quoteUnitPrice = selectedQuote?.unitPrice
-        const discrepancy = typeof quotedTotal === "number" && typeof quoteQuantity === "number" && typeof quoteUnitPrice === "number" && [quotedTotal, quoteQuantity, quoteUnitPrice].every(Number.isFinite) && Math.abs(quotedTotal - quoteQuantity * quoteUnitPrice) > 0.005
-          ? `<p role="status">Selected proposal: stated total ${quotedTotal}; quantity × unit price ${quoteQuantity * quoteUnitPrice} ${esc(text(selectedQuote?.currency))}. Review the difference before preparing the order.</p>` : ""
+        const selectionReason = selectedQuote ? text(source.selectionJustification) || "No selection reason recorded." : "No proposal selected."
+        const rankedLeader = rankingUnavailable ? undefined : evaluation.find((item) => item.rank === 1 && item.complete && item.eligible)
+        const lowestComparable = presentation.flatMap((item, index) => evaluation[index]?.eligible && item.total != null && item.fxRate != null ? [{ id: item.id, base: item.total * item.fxRate }] : []).sort((left, right) => left.base - right.base)[0]
+        const leaderAmount = rankedLeader ? presentation.find((item) => item.id === rankedLeader.id) : undefined
+        const premium = !monetaryProblem && sameBase && rankedLeader && lowestComparable && leaderAmount?.total != null && leaderAmount.fxRate != null && lowestComparable.base > 0
+          ? leaderAmount.total * leaderAmount.fxRate - lowestComparable.base
+          : null
+        const rankedLeaderQuote = rankedLeader ? rows(source.quotes).find((quote) => quote.id === rankedLeader.id) : undefined
+        const comparisonBasis = `<p>Recorded weights: technical ${typeof technicalWeight === "number" && Number.isFinite(technicalWeight) ? technicalWeight : "unavailable"}, commercial ${typeof commercialWeight === "number" && Number.isFinite(commercialWeight) ? commercialWeight : "unavailable"}. Technical and commercial scores use configured criteria; price is normalized against eligible proposals. Criteria scores are assessments or configured calculations, not new policy.</p>`
+        const rankingReason = !monetaryProblem && criteriaAvailable && rankedLeader
+          ? `<p role="status">Rank 1: ${esc(text(rankedLeaderQuote?.supplier) || "Supplier unavailable")} with technical score ${rankedLeader.technical.toFixed(1)} and commercial score ${rankedLeader.commercial.toFixed(1)}. Its base amount is ${leaderAmount?.total != null && leaderAmount.fxRate != null ? `${Number((leaderAmount.total * leaderAmount.fxRate).toPrecision(15))} ${esc(text(settings.currency))}` : "unavailable"}${premium != null ? `; ${Number(premium.toPrecision(15))} ${esc(text(settings.currency))} (${(premium / lowestComparable!.base * 100).toFixed(2)}%) above the lowest eligible proposal` : ""}.</p>`
+          : ""
+        const discrepancy = `<p role="status">Selection: ${selectedQuote ? esc(text(selectedQuote.supplier) || "Supplier unavailable") : "No proposal selected"}. Reason: ${esc(selectionReason)}</p>${rankingReason}` + (typeof quotedTotal === "number" && typeof quoteQuantity === "number" && typeof quoteUnitPrice === "number" && [quotedTotal, quoteQuantity, quoteUnitPrice].every(Number.isFinite) && Math.abs(quotedTotal - quoteQuantity * quoteUnitPrice) > 0.005
+          ? `<p role="status">Selected proposal: stated total ${quotedTotal}; quantity × unit price ${quoteQuantity * quoteUnitPrice} ${esc(text(selectedQuote?.currency))}. Review the difference before preparing the order.</p>` : "")
         const approvedSourcing = object(source.approval).amount
         const orderValue = amount(request)
         const orderDifference = typeof approvedSourcing !== "number" || !Number.isFinite(approvedSourcing) || orderValue == null ? "" : source.approvalBaseCurrency !== settings.currency
           ? `<p role="status">Order and approved sourcing values cannot be compared because the submitted base currency is missing or changed.</p>`
           : Math.abs(orderValue - approvedSourcing) > 0.005 ? `<p role="status">Order value ${orderValue} ${esc(text(settings.currency))}; approved sourcing value ${approvedSourcing} ${esc(text(settings.currency))}. Review the difference.</p>` : ""
+        const poLines = rows(po.lines)
+        const poHasLines = poLines.length > 0
+        const poCurrencyAssumed = poHasLines && !text(po.currency) || !poHasLines && !!selectedQuote && !text(selectedQuote.currency)
+        const poCurrency = text(po.currency) || (!poHasLines ? text(selectedQuote?.currency) : text(settings.currency))
+        const poLineAmount = poHasLines
+          ? poLines.every((line) => typeof line.qty === "number" && typeof line.unitPrice === "number" && Number.isFinite(line.qty * line.unitPrice))
+            ? poLines.reduce((sum, line) => sum + Number(line.qty) * Number(line.unitPrice), 0)
+            : null
+          : typeof selectedQuote?.total === "number" && Number.isFinite(selectedQuote.total) ? selectedQuote.total : null
+        const poNativeAmount = poLineAmount != null && Number.isFinite(poLineAmount) ? poLineAmount : null
+        const poFrozen = ["po_pending", "po_approved", "po_issued"].includes(status)
+        const poFxSnapshot = source.fxSnapshot == null ? null : object(source.fxSnapshot)
+        const poFxCandidate = poCurrency === text(settings.currency)
+          ? 1
+          : poHasLines
+            ? typeof po.fxRate === "number" && Number.isFinite(po.fxRate) && po.fxRate > 0 ? po.fxRate : poFrozen ? null : rows(settings.fxRates).find((rate) => rate.code === poCurrency)?.rate
+            : poFxSnapshot && poFxSnapshot[poCurrency] != null ? poFxSnapshot[poCurrency] : snapshotRequired ? null : rows(settings.fxRates).find((rate) => rate.code === poCurrency)?.rate
+        const poFxRate = typeof poFxCandidate === "number" && Number.isFinite(poFxCandidate) && poFxCandidate > 0 ? poFxCandidate : null
+        const poFxSource = poFxRate == null ? "unavailable" : poCurrencyAssumed ? "default base currency" : poCurrency === text(settings.currency) ? "base" : poHasLines ? po.fxRate === poFxRate ? poFrozen ? "PO submitted FX" : "PO draft FX" : "current FX" : snapshotRequired ? "sourcing submitted FX" : "current FX"
+        const poMoneyState = status === "po_approved" ? "Approved" : status === "po_issued" ? "Issued internally" : status === "po_pending" ? "Pending approval" : status === "po_draft" ? "PO draft" : status === "po_rejected" ? "PO rejected" : "Estimate"
+        const hasPoMoneyBasis = poHasLines || !!selectedQuote
+        const poBaseValue = hasPoMoneyBasis ? orderValue : null
+        const poMoneySummary = `<p role="status">${esc(poMoneyState)} value: ${poNativeAmount == null || !poCurrency ? "Unavailable" : `${poNativeAmount} ${esc(poCurrency)}${poCurrencyAssumed ? " (default base currency assumed)" : ""}`}; base value: ${poBaseValue == null ? "Unavailable" : `${poBaseValue} ${esc(text(settings.currency))}${poCurrencyAssumed ? " (default base currency assumed)" : ""}`}; FX: ${poFxRate == null ? "Unavailable" : `${poFxRate} (${esc(poFxSource)})`}.</p>`
+        const sourceGuidance = orderSourceGuidance(request)
+        const orderSourceComparison = sourceGuidance.state === "unavailable"
+          ? `<p role="status">Current PO comparison with the selected proposal is unavailable (${esc(sourceGuidance.reason)}).</p>`
+          : `<p role="status">Current PO fields versus selected proposal: supplier ${esc(sourceGuidance.supplier)}, currency ${esc(sourceGuidance.currency)}, first-line quantity ${esc(sourceGuidance.quantity)}. This compares current values only; it does not establish historical changes or authorization.</p>`
         const quoteRows = repeatRows(
           "sourcing.quotes",
           rows(source.quotes),
@@ -1408,7 +1492,21 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
             })),
             ["desc", "qty", "unitPrice", "uom"],
           )
-        return `<details id="${esc(id)}"${request === requestedRequest ? " open" : ""}><summary>${esc(id)} · ${esc(text(object(request.pr).title))}</summary><ol class="stepper">${["Requisition", "PR approval", "Sourcing", "Sourcing approval", "Purchase order", "PO approval", "Approved", "Issued internally"].map((step) => `<li>${esc(step)}</li>`).join("")}</ol><nav><a href="#${esc(id)}-pr">Requisition</a><a href="#${esc(id)}-sourcing"${request.sourcing == null ? ' aria-disabled="true"' : ""}>Sourcing</a><a href="#${esc(id)}-po"${request.po == null ? ' aria-disabled="true"' : ""}>Purchase order</a><a href="#${esc(id)}-history">History</a></nav><section id="${esc(id)}-pr"><h3>Requisition</h3>${controls(
+        const explicitSupplierId = text(po.supplierId)
+        const masterMatches = explicitSupplierId ? suppliers.filter((supplier) => String(supplier.id ?? "") === explicitSupplierId) : []
+        const supplierMaster = masterMatches.length === 1 ? masterMatches[0] : undefined
+        const masterTerms = text(supplierMaster?.paymentTerms)
+        const storedTerms = text(po.paymentTerms)
+        const paymentSuggestion = `<p role="status">${!explicitSupplierId ? "No explicit supplier is selected, so no supplier-master payment terms are suggested." : !supplierMaster ? "No authorized supplier master matches the selected supplier id, so no payment terms are suggested." : !masterTerms ? "Current supplier master has no payment terms recorded." : `Current supplier master payment terms: ${esc(masterTerms)}.`} Saved order payment terms: ${storedTerms ? esc(storedTerms) : "none recorded"}.</p>`
+        const validationSuppliers: Parameters<typeof sourcingFieldErrors>[2] = suppliers.map((supplier) => ({ id: String(supplier.id ?? ""), status: text(supplier.status), legalName: text(supplier.legalName) || undefined }))
+        const validationSettings = { ...settings, currency: text(settings.currency) } as FormSettings
+        const pendingErrors = [
+          ...(["draft", "pr_rejected"].includes(status) ? requisitionFieldErrors(object(request.pr) as Parameters<typeof requisitionFieldErrors>[0]) : []),
+          ...(["sourcing", "src_rejected"].includes(status) ? sourcingFieldErrors({ pr: object(request.pr), sourcing: source } as Parameters<typeof sourcingFieldErrors>[0], validationSettings, validationSuppliers) : []),
+          ...(["po_draft", "po_rejected"].includes(status) ? purchaseOrderFieldErrors({ sourcing: source, po } as Parameters<typeof purchaseOrderFieldErrors>[0], validationSettings, validationSuppliers) : []),
+        ]
+        const pendingBeside = (prefix: string) => pendingErrors.filter((error) => error.field === prefix || error.field.startsWith(`${prefix}.`)).map((error) => `<p role="status">${esc(error.message)}</p>`).join("")
+        return `<details id="${esc(id)}"${request === requestedRequest ? " open" : ""}><summary>${esc(id)} · ${esc(text(object(request.pr).title))}</summary><ol class="stepper">${["Requisition", "PR approval", "Sourcing", "Sourcing approval", "Purchase order", "PO approval", "Approved", "Issued internally"].map((step) => `<li>${esc(step)}</li>`).join("")}</ol><nav><a href="#${esc(id)}-pr">Requisition</a><a href="#${esc(id)}-sourcing"${request.sourcing == null ? ' aria-disabled="true"' : ""}>Sourcing</a><a href="#${esc(id)}-po"${request.po == null ? ' aria-disabled="true"' : ""}>Purchase order</a><a href="#${esc(id)}-history">History</a></nav><section id="${esc(id)}-pr"><h3>Requisition</h3>${pendingBeside("pr")}${prEditable ? "" : "<p>Editing is unavailable for this stage or role.</p>"}<fieldset${prEditable ? "" : " disabled"}>${controls(
           page,
           "save",
           id,
@@ -1418,7 +1516,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
             prFields.filter((name) => name !== "requesterName"),
           ),
           "Save requisition",
-        )}${controls(page, "submit_pr", id, "", "Submit requisition")}</section><section id="${esc(id)}-sourcing"><h3>Sourcing</h3><p>Scores use configured weights and human assessments. Missing scores or exchange rates make the comparison incomplete.</p>${comparisonLimit}${comparison}${discrepancy}<fieldset${request.sourcing == null ? " disabled" : ""}>${controls(page, "save", id, scalarFields("sourcing", source, ["evaluator", "fewQuotesJustification", "selectionJustification", "contractStrategy"]) + scalarFields("sourcing.weights", { tech: settings.techWeight, comm: settings.commWeight, ...object(source.weights) }, ["tech", "comm"]) + "<h4>Technical criteria</h4>" + repeatRows("sourcing.weights.criteria", rows(object(source.weights).criteria ?? settings.criteria), ["name", "weight"]) + "<h4>Commercial criteria</h4>" + repeatRows("sourcing.weights.commCriteria", rows(object(source.weights).commCriteria ?? settings.commCriteria), ["name", "weight", "auto"]) + quoteRows, "Save sourcing")}${controls(
+        )}${controls(page, "submit_pr", id, "", "Submit requisition")}</fieldset></section><section id="${esc(id)}-sourcing"><h3>Sourcing</h3>${pendingBeside("sourcing")}${comparisonBasis}${comparisonLimit}${comparison}${discrepancy}${sourcingEditable ? "" : "<p>Editing is unavailable for this stage or role.</p>"}<fieldset${sourcingEditable && request.sourcing != null ? "" : " disabled"}>${controls(page, "save", id, scalarFields("sourcing", source, ["evaluator", "fewQuotesJustification", "selectionJustification", "contractStrategy"]) + scalarFields("sourcing.weights", { tech: settings.techWeight, comm: settings.commWeight, ...object(source.weights) }, ["tech", "comm"]) + "<h4>Technical criteria</h4>" + repeatRows("sourcing.weights.criteria", rows(object(source.weights).criteria ?? settings.criteria), ["name", "weight"]) + "<h4>Commercial criteria</h4>" + repeatRows("sourcing.weights.commCriteria", rows(object(source.weights).commCriteria ?? settings.commCriteria), ["name", "weight", "auto"]) + quoteRows, "Save sourcing")}${controls(
           page,
           "select_quote",
           id,
@@ -1432,7 +1530,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
             })),
           ),
           "Select quote",
-        )}${controls(page, "submit_sourcing", id, "", "Submit sourcing")}</fieldset></section><section id="${esc(id)}-po"><h3>Purchase order</h3>${orderDifference}<fieldset${request.po == null ? " disabled" : ""}>${controls(page, "save", id, poInputs, "Save purchase order")}${controls(page, "submit_po", id, "", "Submit purchase order")}</fieldset><a href="?download=po&amp;request=${encodeURIComponent(id)}">Download purchase order</a></section>${decisionHint}${actions.map((action) => controls(page, action, id, ["reject", "cancel"].includes(action) ? fields([{ name: "reason", label: "Reason", required: true }]) : action === "approve" ? fields([{ name: "comment", label: "Comment" }]) : "", action === "issue" ? "Issue internally" : action.charAt(0).toUpperCase() + action.slice(1))).join("")}<article class="po-document"><h3>Purchase order ${esc(text(po.number))}</h3><p>${esc(text(po.supplier))}</p><p>${esc(text(po.description))}</p>${table(
+        )}${controls(page, "submit_sourcing", id, "", "Submit sourcing")}</fieldset></section><section id="${esc(id)}-po"><h3>Purchase order</h3>${pendingBeside("po")}${poMoneySummary}${orderDifference}${orderSourceComparison}${poEditable ? "" : "<p>Editing is unavailable for this stage or role.</p>"}<fieldset${poEditable && request.po != null ? "" : " disabled"}>${controls(page, "save", id, poInputs + paymentSuggestion, "Save purchase order")}${controls(page, "submit_po", id, "", "Submit purchase order")}</fieldset><a href="?download=po&amp;request=${encodeURIComponent(id)}">Download purchase order</a></section>${decisionHint}${actions.map((action) => controls(page, action, id, ["reject", "cancel"].includes(action) ? fields([{ name: "reason", label: "Reason", required: true }]) : action === "approve" ? fields([{ name: "comment", label: "Comment" }]) : "", action === "issue" ? "Issue internally" : action.charAt(0).toUpperCase() + action.slice(1))).join("")}<article class="po-document"><h3>Purchase order ${esc(text(po.number))}</h3><p>${esc(text(po.supplier))}</p><p>${esc(text(po.description))}</p>${table(
           ["Description", "Quantity", "Unit price"],
           rows(po.lines).map((line) => [
             esc(text(line.desc ?? line.description)),

@@ -127,12 +127,13 @@ export function createProcurementSourceResolver(input: { host: DomainPortHost; s
         const prior = entries.filter((entry) => entry.alive && entry.incarnation === original.target.incarnation && entry.version === original.target.version && entry.scope.recordType === original.target.recordType && entry.scope.recordId === original.target.recordId)
         const present = entries.filter((entry) => entry.alive && entry.incarnation === current.target.incarnation && entry.version === current.target.version && digestSfValue(entry.scope) === digestSfValue(selected.value.scope))
         if (prior.length !== 1 || present.length !== 1 || prior[0]!.sourceIncarnation !== present[0]!.sourceIncarnation) return false
-        return [original, current].every((evidence, index) => {
+        const materialCurrent = [original, current].every((evidence, index) => {
           const entry = index === 0 ? prior[0]! : present[0]!
           const identity = sfScopedSourceIdentity(snapshot, entry.scope)
           const projection = projectSfProcurementScope("procurement", snapshot, entry.scope)
           return identity?.incarnation === evidence.target.incarnation && identity.version === evidence.target.version && identity.inputDigest === digestSfValue(projection) && object(projection).privateDependencyDigest === evidence.target.projectionDigest && digestSfValue(object(entry.scope.selector).fields) === digestSfValue(evidence.target.fields) && digestSfValue(object(entry.scope.selector).period) === digestSfValue(evidence.target.period)
         })
+        return materialCurrent && await input.host.revalidate(binding)
       }
       const prepared = await input.host.persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: await check(snapshot) }), { signal: request.signal })
       if (!prepared) return { status: "unavailable", reason: "material-scope-unavailable" }
