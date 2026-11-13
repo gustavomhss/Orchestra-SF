@@ -1,0 +1,1766 @@
+{
+  "schema": "wp04-test-observations-v1",
+  "final": {
+    "log_sha256": "74c87ab651e5c0e4e927502e30d7908f8b59d90d9db28b056d023a3596808177",
+    "count": 146,
+    "counts": {
+      "pass": 146
+    },
+    "results": [
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-actor-invalid extra field",
+        "result": "pass",
+        "duration_ms": 7.28
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-at-invalid",
+        "result": "pass",
+        "duration_ms": 0.23
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-settings-invalid empty levels",
+        "result": "pass",
+        "duration_ms": 0.11
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-issued-invalid",
+        "result": "pass",
+        "duration_ms": 0.17
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-supplier-invalid",
+        "result": "pass",
+        "duration_ms": 0.08
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-action-invalid",
+        "result": "pass",
+        "duration_ms": 0.29
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-request-invalid empty holder on a step",
+        "result": "pass",
+        "duration_ms": 0.27
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-read-only",
+        "result": "pass",
+        "duration_ms": 0.06
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-not-a-transition cancel on null",
+        "result": "pass",
+        "duration_ms": 0.2
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-cancelled",
+        "result": "pass",
+        "duration_ms": 0.14
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-already-issued",
+        "result": "pass",
+        "duration_ms": 0.26
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-no-step",
+        "result": "pass",
+        "duration_ms": 0.2
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-not-requester",
+        "result": "pass",
+        "duration_ms": 0.12
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-not-buyer",
+        "result": "pass",
+        "duration_ms": 0.24
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-not-canceller",
+        "result": "pass",
+        "duration_ms": 0.06
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-no-override stays no_override when the admin is also the creator and the flag is on",
+        "result": "pass",
+        "duration_ms": 0.15
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-not-approver the word approver does not authorize",
+        "result": "pass",
+        "duration_ms": 0.06
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-self-approval empty holder, flag on, creator",
+        "result": "pass",
+        "duration_ms": 0.07
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-reason-required",
+        "result": "pass",
+        "duration_ms": 0.1
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-no-quote",
+        "result": "pass",
+        "duration_ms": 0.13
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-not-compliant",
+        "result": "pass",
+        "duration_ms": 0.09
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-no-selection",
+        "result": "pass",
+        "duration_ms": 0.07
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-no-po",
+        "result": "pass",
+        "duration_ms": 0.03
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-no-expense-type",
+        "result": "pass",
+        "duration_ms": 0.05
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-supplier-blocked",
+        "result": "pass",
+        "duration_ms": 0.07
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-no-fx",
+        "result": "pass",
+        "duration_ms": 0.13
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-create requester mints a draft and create on draft is not a transition",
+        "result": "pass",
+        "duration_ms": 0.5
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-submit-pr replaces approval and submit on sourcing is not a transition",
+        "result": "pass",
+        "duration_ms": 0.44
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-approve-pr-resta keeps the status and approve on draft is not a transition",
+        "result": "pass",
+        "duration_ms": 0.26
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-approve-pr-ultimo opens sourcing and does not create a PO",
+        "result": "pass",
+        "duration_ms": 0.38
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-reject-pr rejects the first pending and leaves the others",
+        "result": "pass",
+        "duration_ms": 0.21
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-select writes the proposal and select on draft is not a transition",
+        "result": "pass",
+        "duration_ms": 0.31
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-submit-sourcing copies entram and keeps a PO that already came from the selected quote",
+        "result": "pass",
+        "duration_ms": 0.44
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-approve-src-resta stays pending and approve on draft is not a transition",
+        "result": "pass",
+        "duration_ms": 0.21
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-approve-src-ultimo clears issuedAt and does not create a PO",
+        "result": "pass",
+        "duration_ms": 0.28
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-reject-src clears the snapshot",
+        "result": "pass",
+        "duration_ms": 0.27
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-submit-po stores the rate and the amount times that rate",
+        "result": "pass",
+        "duration_ms": 0.44
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-approve-po-resta stays pending",
+        "result": "pass",
+        "duration_ms": 0.19
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-approve-po-ultimo approves and clears issuedAt",
+        "result": "pass",
+        "duration_ms": 0.25
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-reject-po clears the rate",
+        "result": "pass",
+        "duration_ms": 0.24
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-issue stamps at and does not change the number",
+        "result": "pass",
+        "duration_ms": 0.21
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-cancel cancels and leaves every other field",
+        "result": "pass",
+        "duration_ms": 0.19
+      },
+      {
+        "path": "modules/sucafina/porta/s3.test.ts",
+        "test_name": "S3-1 create then submit_pr copies only L1",
+        "result": "pass",
+        "duration_ms": 0.21
+      },
+      {
+        "path": "modules/sucafina/porta/s3.test.ts",
+        "test_name": "S3-2 sourcing 30000 USD stays on L1 even in matrix mode",
+        "result": "pass",
+        "duration_ms": 0.17
+      },
+      {
+        "path": "modules/sucafina/porta/s3.test.ts",
+        "test_name": "S3-3 EUR amount is total times the EUR rate, and steps are L1 then L2",
+        "result": "pass",
+        "duration_ms": 0.15
+      },
+      {
+        "path": "modules/sucafina/porta/s3.test.ts",
+        "test_name": "S3-4 blocked supplier refuses and leaves the input request intact",
+        "result": "pass",
+        "duration_ms": 0.08
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "settings reset restores the original complete defaults and preserves procurement records",
+        "result": "pass",
+        "duration_ms": 1.38
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "default addresses and FX update date save, read, render and reset to empty defaults",
+        "result": "pass",
+        "duration_ms": 2.45
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "new PO proposals use saved address defaults and retain existing nonblank PO addresses",
+        "result": "pass",
+        "duration_ms": 2.76
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "request query opens its authorized target, includes closed rows and leaves other rows closed",
+        "result": "pass",
+        "duration_ms": 5.36
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "request query cannot reveal a record omitted by the authorization-filtered view",
+        "result": "pass",
+        "duration_ms": 1.97
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "supplier query opens only its matching visible supplier detail",
+        "result": "pass",
+        "duration_ms": 0.98
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "requester supplier deeplink opens the real view target while bank values stay masked",
+        "result": "pass",
+        "duration_ms": 0.88
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "unknown supplier query opens no supplier detail or exposes a record outside view",
+        "result": "pass",
+        "duration_ms": 0.44
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "supplier query cannot open or disclose a supplier excluded from the authorization-filtered view",
+        "result": "pass",
+        "duration_ms": 0.42
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "procurement required pages contain functional controls or nonempty read views",
+        "result": "pass",
+        "duration_ms": 0.87
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "procurement direct write without canWrite fails atomically",
+        "result": "pass",
+        "duration_ms": 0.11
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "request fields survive creation, save, submission and actual holder decisions",
+        "result": "pass",
+        "duration_ms": 2.24
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "supplier creation persists and deletion never reuses its SUP allocation",
+        "result": "pass",
+        "duration_ms": 0.87
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "complete procurement field roundtrip and frozen approvals survive settings edits",
+        "result": "pass",
+        "duration_ms": 9.84
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "bank changes encrypt, reset active validation, audit only fields and protect actor views",
+        "result": "pass",
+        "duration_ms": 1.87
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "unknown pages and actions, missing keys, and invalid PR reject without mutation",
+        "result": "pass",
+        "duration_ms": 0.81
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "request ownership, self-approval flag and independent record versions are enforced",
+        "result": "pass",
+        "duration_ms": 1.44
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "render escapes persisted values and the PO document excludes banking",
+        "result": "pass",
+        "duration_ms": 1.02
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "imported high-water marks and deleted requests do not reuse issued numbers",
+        "result": "pass",
+        "duration_ms": 0.72
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "asset metadata survives business transitions and deletion returns the deleted record",
+        "result": "pass",
+        "duration_ms": 0.59
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "ordinary nested form rows decode and numeric supplier references remain linked",
+        "result": "pass",
+        "duration_ms": 1.4
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "dual-role request transitions retain porta authorization without permitting foreign PR edits",
+        "result": "pass",
+        "duration_ms": 3.1
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "missing and invalid encryption keys fail closed on bank writes without altering state",
+        "result": "pass",
+        "duration_ms": 1.1
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "nested supplier bank material is excluded recursively from audits and history",
+        "result": "pass",
+        "duration_ms": 0.48
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "decision and supplier revalidation notices carry symbolic roles without fake directory IDs",
+        "result": "pass",
+        "duration_ms": 1.66
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "actual browser-shaped nested arrays omit untouched repeat placeholders and preserve zero thresholds",
+        "result": "pass",
+        "duration_ms": 0.69
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts",
+        "test_name": "capability refuses forged arguments and refuses an ungranted direct call",
+        "result": "pass",
+        "duration_ms": 0.64
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts",
+        "test_name": "authorized capability reads through an issued scoped source and consumes once",
+        "result": "pass",
+        "duration_ms": 150.42
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "test_name": "the canonical three-offer fixture preserves scoring, eligibility and exact price premium",
+        "result": "pass",
+        "duration_ms": 0.36
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "test_name": "equal complete proposals retain recorded order without adding a tie-break policy",
+        "result": "pass",
+        "duration_ms": 0.16
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "test_name": "missing currency and incomplete purchase orders cannot inherit a base-currency estimate",
+        "result": "pass",
+        "duration_ms": 0.21
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "test_name": "ambiguous selected quotes and an overflowing order remain unavailable",
+        "result": "pass",
+        "duration_ms": 0.13
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "test_name": "rejected submissions preserve the submitted currency and never reinterpret a frozen rate",
+        "result": "pass",
+        "duration_ms": 0.1
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "test_name": "C06 preserves zero versus absence and fingerprints compensating financial inputs",
+        "result": "pass",
+        "duration_ms": 0.36
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "submitted PO uses its frozen exchange rate and approved and issued totals remain separate",
+        "result": "pass",
+        "duration_ms": 0.27
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "an unavailable frozen quote rate does not use a later rate or the requisition estimate",
+        "result": "pass",
+        "duration_ms": 0.12
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "approval view separates unassigned holders and labels the pending decision",
+        "result": "pass",
+        "duration_ms": 0.52
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "request detail shows the discrepancy without changing the quoted total",
+        "result": "pass",
+        "duration_ms": 1.39
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "register export removes bank material recursively including audit values",
+        "result": "pass",
+        "duration_ms": 0.19
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "request detail explains why a different holder cannot be overridden",
+        "result": "pass",
+        "duration_ms": 0.62
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "unassigned approvals are not attributed to another holder",
+        "result": "pass",
+        "duration_ms": 0.22
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "approval queue retains missing steps and does not invent holder names or actions",
+        "result": "pass",
+        "duration_ms": 1.24
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "ranking does not replace a missing submitted FX snapshot with a later rate",
+        "result": "pass",
+        "duration_ms": 0.21
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "comparison displays the submitted rate even after the current rate changes",
+        "result": "pass",
+        "duration_ms": 0.71
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "submitted sourcing without a snapshot does not display live FX as historical",
+        "result": "pass",
+        "duration_ms": 0.64
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "invalid PO or selected quote values remain unavailable rather than falling back",
+        "result": "pass",
+        "duration_ms": 0.09
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "quote comparison preserves missing currency and frozen FX provenance",
+        "result": "pass",
+        "duration_ms": 0.27
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "request guidance distinguishes internal issue and unknown stages",
+        "result": "pass",
+        "duration_ms": 0.1
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "quote comparison distinguishes an invalid rate from a missing rate",
+        "result": "pass",
+        "duration_ms": 0.15
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "request comparison does not label an unspecified quote currency as base currency",
+        "result": "pass",
+        "duration_ms": 0.81
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "supplier activation explains alternative required fields without revealing bank values",
+        "result": "pass",
+        "duration_ms": 0.17
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "order guidance compares the linked selected quote without asserting edit history",
+        "result": "pass",
+        "duration_ms": 0.17
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "nonprivileged supplier view removes bank metadata and audit values",
+        "result": "pass",
+        "duration_ms": 0.24
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "request detail displays current stage validation without mutating the draft",
+        "result": "pass",
+        "duration_ms": 0.79
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "requisition rejection returns field errors from the actual validator",
+        "result": "pass",
+        "duration_ms": 0.83
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "supplier controls reflect existing buyer and supplier admin roles",
+        "result": "pass",
+        "duration_ms": 0.66
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "supplier presentation removes bank and audit material from a viewer",
+        "result": "pass",
+        "duration_ms": 0.22
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "order shows supplier terms as a suggestion without replacing recorded terms",
+        "result": "pass",
+        "duration_ms": 0.9
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts",
+        "test_name": "confirmation reauthorizes material across buyers and fences physical replacement",
+        "result": "pass",
+        "duration_ms": 72.26
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/sources.test.ts",
+        "test_name": "projection digest excludes bank details while retaining authorized business fields",
+        "result": "pass",
+        "duration_ms": 0.63
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/queue-lifecycle.test.ts",
+        "test_name": "durable queue selection, counts and drilldowns keep requester scope across unrelated changes",
+        "result": "pass",
+        "duration_ms": 35.35
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/confirmation.test.ts",
+        "test_name": "confirmation observes scoped material and fences against source changes and revoked authority",
+        "result": "pass",
+        "duration_ms": 20.62
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/reissue.test.ts",
+        "test_name": "reissue requires the recipient's current scope and the same physical request",
+        "result": "pass",
+        "duration_ms": 95.61
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "test_name": "bank change through the real domain clears validation and explains revalidation without leaking secrets",
+        "result": "pass",
+        "duration_ms": 2.23
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "test_name": "supplier activation reports recorded prerequisites and duplicate tax IDs remain rejected",
+        "result": "pass",
+        "duration_ms": 0.37
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "test_name": "duplicate legal names warn on success while distinct tax IDs remain separate",
+        "result": "pass",
+        "duration_ms": 0.38
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "test_name": "Settings exposes complete baseline policy controls and secondary reset without inventing defaults",
+        "result": "pass",
+        "duration_ms": 0.47
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+        "test_name": "the prepared command retains its reviewed inputs when caller-owned outputs are mutated",
+        "result": "pass",
+        "duration_ms": 34.81
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/contracts.test.ts",
+        "test_name": "contract capability reads only the issued Dashboard scope and rejects revocation and ABA",
+        "result": "pass",
+        "duration_ms": 34.9
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-queues.test.ts",
+        "test_name": "approval queues sort only by proven entry, keep unavailable history and do not use a save timestamp",
+        "result": "pass",
+        "duration_ms": 0.41
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-queues.test.ts",
+        "test_name": "request search covers stored requester, buyer and holder identifiers and authorized directory names",
+        "result": "pass",
+        "duration_ms": 1.02
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+        "test_name": "prepared Procurement mutation uses current actor and SQLite revision, and retries by receipt",
+        "result": "pass",
+        "duration_ms": 46.61
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+        "test_name": "prepared Procurement mutation records a stale source conflict without changing the domain",
+        "result": "pass",
+        "duration_ms": 36.09
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts",
+        "test_name": "producer with missing submitted FX suppresses every score and rank despite a current rate",
+        "result": "pass",
+        "duration_ms": 1.5
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts",
+        "test_name": "producer with absent weights or incomplete human assessments withholds ranking",
+        "result": "pass",
+        "duration_ms": 1.34
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts",
+        "test_name": "a stated total mismatch in one proposal suppresses the whole producer ranking",
+        "result": "pass",
+        "duration_ms": 1.68
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts",
+        "test_name": "runtime and producer present the same submitted quote amount and FX source",
+        "result": "pass",
+        "duration_ms": 2.0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "test_name": "sourcing identifies the missing commercial control without blaming completed technical scores",
+        "result": "pass",
+        "duration_ms": 1.17
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "test_name": "adjacent error text is escaped and field ids remain separate across requests",
+        "result": "pass",
+        "duration_ms": 0.09
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "test_name": "saved order terms survive source suggestions and ambiguous supplier identity supplies no terms",
+        "result": "pass",
+        "duration_ms": 0.2
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "test_name": "recurring draft values survive collapsing and saving the nonrecurring section",
+        "result": "pass",
+        "duration_ms": 1.9
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "test_name": "contract strategy changes preserve saved references and existing-contract submission uses the real validator",
+        "result": "pass",
+        "duration_ms": 2.92
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "test_name": "money never labels a missing order or ambiguous quotation as an approved amount",
+        "result": "pass",
+        "duration_ms": 0.2
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "queue projection uses the latest submission, never a later save",
+        "result": "pass",
+        "duration_ms": 0.25
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "missing history and holder stay unavailable, and restricted fields are omitted",
+        "result": "pass",
+        "duration_ms": 0.15
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "requisition drafts and revisions expose their saved justification in the authorized projection",
+        "result": "pass",
+        "duration_ms": 0.14
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "port authenticates against the current snapshot and does not reveal another request",
+        "result": "pass",
+        "duration_ms": 0.58
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "aging uses the trusted observation time and leaves unproven ages unavailable",
+        "result": "pass",
+        "duration_ms": 0.42
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "sourcing comparison reads the authorized request and uses frozen FX",
+        "result": "pass",
+        "duration_ms": 6.03
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "stock counts open stages only and retains a stage-specific drilldown",
+        "result": "pass",
+        "duration_ms": 0.99
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "aging for the next holder starts at the preceding approval, or remains unavailable without that event",
+        "result": "pass",
+        "duration_ms": 0.28
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "supplier projection returns authorized fields and refuses bank fields",
+        "result": "pass",
+        "duration_ms": 1.06
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "decision preparation is deterministic and does not change the request",
+        "result": "pass",
+        "duration_ms": 0.25
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "revocation during the domain read prevents returning the projection",
+        "result": "pass",
+        "duration_ms": 0.64
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "projection reports PO original amount and submitted FX without replacing the base value",
+        "result": "pass",
+        "duration_ms": 0.28
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "a legacy PO with no currency leaves its monetary basis unavailable",
+        "result": "pass",
+        "duration_ms": 0.13
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "unrecognized imported status stays explicitly unavailable",
+        "result": "pass",
+        "duration_ms": 0.08
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "approval stage is the current pending level and is scoped to its evidence",
+        "result": "pass",
+        "duration_ms": 0.15
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "confirmation material tracks only selected fields and the status dependency",
+        "result": "pass",
+        "duration_ms": 0.22
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "confirmation material isolates relevant monetary inputs and preserves missing FX",
+        "result": "pass",
+        "duration_ms": 0.29
+      }
+    ],
+    "product_sha": "c9f861851c5b8c9f341e2be7f9c525267987eb80",
+    "snapshot_sha": "df1b7a42f52eb125930f93e70c2281823f1fdf8b",
+    "run_id": 43517984814,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43517984814",
+    "conclusion": "success"
+  },
+  "prior": {
+    "log_sha256": "e2465c6d8a36b90f1bd911c804701e3a89e70b9813b979403764f833aeed3a51",
+    "count": 143,
+    "counts": {
+      "pass": 137,
+      "fail": 6
+    },
+    "results": [
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-actor-invalid extra field",
+        "result": "pass",
+        "duration_ms": 6.64
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-at-invalid",
+        "result": "pass",
+        "duration_ms": 0.23
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-settings-invalid empty levels",
+        "result": "pass",
+        "duration_ms": 0.1
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-issued-invalid",
+        "result": "pass",
+        "duration_ms": 0.15
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-supplier-invalid",
+        "result": "pass",
+        "duration_ms": 0.07
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-action-invalid",
+        "result": "pass",
+        "duration_ms": 0.37
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-request-invalid empty holder on a step",
+        "result": "pass",
+        "duration_ms": 0.21
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-read-only",
+        "result": "pass",
+        "duration_ms": 0.05
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-not-a-transition cancel on null",
+        "result": "pass",
+        "duration_ms": 0.04
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-cancelled",
+        "result": "pass",
+        "duration_ms": 0.04
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-already-issued",
+        "result": "pass",
+        "duration_ms": 0.09
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-no-step",
+        "result": "pass",
+        "duration_ms": 0.1
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-not-requester",
+        "result": "pass",
+        "duration_ms": 0.05
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-not-buyer",
+        "result": "pass",
+        "duration_ms": 0.14
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-not-canceller",
+        "result": "pass",
+        "duration_ms": 0.03
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-no-override stays no_override when the admin is also the creator and the flag is on",
+        "result": "pass",
+        "duration_ms": 0.06
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-not-approver the word approver does not authorize",
+        "result": "pass",
+        "duration_ms": 0.04
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-self-approval empty holder, flag on, creator",
+        "result": "pass",
+        "duration_ms": 0.09
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-reason-required",
+        "result": "pass",
+        "duration_ms": 0.08
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-no-quote",
+        "result": "pass",
+        "duration_ms": 0.14
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-not-compliant",
+        "result": "pass",
+        "duration_ms": 0.1
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-no-selection",
+        "result": "pass",
+        "duration_ms": 0.08
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-no-po",
+        "result": "pass",
+        "duration_ms": 0.04
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-no-expense-type",
+        "result": "pass",
+        "duration_ms": 0.07
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-supplier-blocked",
+        "result": "pass",
+        "duration_ms": 0.11
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-no-fx",
+        "result": "pass",
+        "duration_ms": 0.12
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-create requester mints a draft and create on draft is not a transition",
+        "result": "pass",
+        "duration_ms": 0.48
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-submit-pr replaces approval and submit on sourcing is not a transition",
+        "result": "pass",
+        "duration_ms": 0.4
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-approve-pr-resta keeps the status and approve on draft is not a transition",
+        "result": "pass",
+        "duration_ms": 0.24
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-approve-pr-ultimo opens sourcing and does not create a PO",
+        "result": "pass",
+        "duration_ms": 0.35
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-reject-pr rejects the first pending and leaves the others",
+        "result": "pass",
+        "duration_ms": 0.2
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-select writes the proposal and select on draft is not a transition",
+        "result": "pass",
+        "duration_ms": 0.25
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-submit-sourcing copies entram and keeps a PO that already came from the selected quote",
+        "result": "pass",
+        "duration_ms": 0.37
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-approve-src-resta stays pending and approve on draft is not a transition",
+        "result": "pass",
+        "duration_ms": 0.2
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-approve-src-ultimo clears issuedAt and does not create a PO",
+        "result": "pass",
+        "duration_ms": 0.21
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-reject-src clears the snapshot",
+        "result": "pass",
+        "duration_ms": 0.16
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-submit-po stores the rate and the amount times that rate",
+        "result": "pass",
+        "duration_ms": 0.37
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-approve-po-resta stays pending",
+        "result": "pass",
+        "duration_ms": 0.16
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-approve-po-ultimo approves and clears issuedAt",
+        "result": "pass",
+        "duration_ms": 0.15
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-reject-po clears the rate",
+        "result": "pass",
+        "duration_ms": 0.14
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-issue stamps at and does not change the number",
+        "result": "pass",
+        "duration_ms": 0.13
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-cancel cancels and leaves every other field",
+        "result": "pass",
+        "duration_ms": 0.11
+      },
+      {
+        "path": "modules/sucafina/porta/s3.test.ts",
+        "test_name": "S3-1 create then submit_pr copies only L1",
+        "result": "pass",
+        "duration_ms": 0.16
+      },
+      {
+        "path": "modules/sucafina/porta/s3.test.ts",
+        "test_name": "S3-2 sourcing 30000 USD stays on L1 even in matrix mode",
+        "result": "pass",
+        "duration_ms": 0.16
+      },
+      {
+        "path": "modules/sucafina/porta/s3.test.ts",
+        "test_name": "S3-3 EUR amount is total times the EUR rate, and steps are L1 then L2",
+        "result": "pass",
+        "duration_ms": 0.13
+      },
+      {
+        "path": "modules/sucafina/porta/s3.test.ts",
+        "test_name": "S3-4 blocked supplier refuses and leaves the input request intact",
+        "result": "pass",
+        "duration_ms": 0.05
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "procurement required pages contain functional controls or nonempty read views",
+        "result": "pass",
+        "duration_ms": 1.74
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "procurement direct write without canWrite fails atomically",
+        "result": "pass",
+        "duration_ms": 0.42
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "request fields survive creation, save, submission and actual holder decisions",
+        "result": "pass",
+        "duration_ms": 3.51
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "supplier creation persists and deletion never reuses its SUP allocation",
+        "result": "pass",
+        "duration_ms": 1.15
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "complete procurement field roundtrip and frozen approvals survive settings edits",
+        "result": "pass",
+        "duration_ms": 8.82
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "bank changes encrypt, reset active validation, audit only fields and protect actor views",
+        "result": "pass",
+        "duration_ms": 1.85
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "unknown pages and actions, missing keys, and invalid PR reject without mutation",
+        "result": "pass",
+        "duration_ms": 0.86
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "request ownership, self-approval flag and independent record versions are enforced",
+        "result": "pass",
+        "duration_ms": 1.23
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "render escapes persisted values and the PO document excludes banking",
+        "result": "pass",
+        "duration_ms": 2.88
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "imported high-water marks and deleted requests do not reuse issued numbers",
+        "result": "pass",
+        "duration_ms": 0.58
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "asset metadata survives business transitions and deletion returns the deleted record",
+        "result": "pass",
+        "duration_ms": 0.46
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "ordinary nested form rows decode and numeric supplier references remain linked",
+        "result": "pass",
+        "duration_ms": 1.18
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "dual-role request transitions retain porta authorization without permitting foreign PR edits",
+        "result": "pass",
+        "duration_ms": 2.55
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "missing and invalid encryption keys fail closed on bank writes without altering state",
+        "result": "pass",
+        "duration_ms": 1.08
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "nested supplier bank material is excluded recursively from audits and history",
+        "result": "pass",
+        "duration_ms": 0.47
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "decision and supplier revalidation notices carry symbolic roles without fake directory IDs",
+        "result": "pass",
+        "duration_ms": 1.46
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "actual browser-shaped nested arrays omit untouched repeat placeholders and preserve zero thresholds",
+        "result": "pass",
+        "duration_ms": 0.67
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "settings reset restores the original complete defaults and preserves procurement records",
+        "result": "pass",
+        "duration_ms": 0.35
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "default addresses and FX update date save, read, render and reset to empty defaults",
+        "result": "pass",
+        "duration_ms": 0.69
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "new PO proposals use saved address defaults and retain existing nonblank PO addresses",
+        "result": "pass",
+        "duration_ms": 0.95
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "request query opens its authorized target, includes closed rows and leaves other rows closed",
+        "result": "pass",
+        "duration_ms": 1.54
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "request query cannot reveal a record omitted by the authorization-filtered view",
+        "result": "pass",
+        "duration_ms": 1.08
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "supplier query opens only its matching visible supplier detail",
+        "result": "pass",
+        "duration_ms": 0.39
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "requester supplier deeplink opens the real view target while bank values stay masked",
+        "result": "pass",
+        "duration_ms": 0.43
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "unknown supplier query opens no supplier detail or exposes a record outside view",
+        "result": "pass",
+        "duration_ms": 0.27
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "supplier query cannot open or disclose a supplier excluded from the authorization-filtered view",
+        "result": "pass",
+        "duration_ms": 0.22
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "test_name": "bank change through the real domain clears validation and explains revalidation without leaking secrets",
+        "result": "pass",
+        "duration_ms": 1.38
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "test_name": "supplier activation reports recorded prerequisites and duplicate tax IDs remain rejected",
+        "result": "pass",
+        "duration_ms": 0.33
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "test_name": "Settings exposes complete baseline policy controls and secondary reset without inventing defaults",
+        "result": "pass",
+        "duration_ms": 0.37
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/reissue.test.ts",
+        "test_name": "reissue requires the recipient's current scope and the same physical request",
+        "result": "pass",
+        "duration_ms": 120.77
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts",
+        "test_name": "capability refuses forged arguments and refuses an ungranted direct call",
+        "result": "pass",
+        "duration_ms": 0.47
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts",
+        "test_name": "authorized capability reads through an issued scoped source and consumes once",
+        "result": "pass",
+        "duration_ms": 102.7
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "test_name": "sourcing identifies the missing commercial control without blaming completed technical scores",
+        "result": "pass",
+        "duration_ms": 1.98
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "test_name": "adjacent error text is escaped and field ids remain separate across requests",
+        "result": "pass",
+        "duration_ms": 0.1
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "test_name": "saved order terms survive source suggestions and ambiguous supplier identity supplies no terms",
+        "result": "pass",
+        "duration_ms": 0.2
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "test_name": "recurring draft values survive collapsing and saving the nonrecurring section",
+        "result": "pass",
+        "duration_ms": 2.31
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "test_name": "money never labels a missing order or ambiguous quotation as an approved amount",
+        "result": "pass",
+        "duration_ms": 0.2
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/queue-lifecycle.test.ts",
+        "test_name": "durable queue selection, counts and drilldowns keep requester scope across unrelated changes",
+        "result": "pass",
+        "duration_ms": 36.83
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts",
+        "test_name": "producer with missing submitted FX suppresses every score and rank despite a current rate",
+        "result": "pass",
+        "duration_ms": 1.42
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts",
+        "test_name": "producer with absent weights or incomplete human assessments withholds ranking",
+        "result": "pass",
+        "duration_ms": 1.04
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts",
+        "test_name": "a stated total mismatch in one proposal suppresses the whole producer ranking",
+        "result": "fail",
+        "duration_ms": 1.65
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts",
+        "test_name": "runtime and producer present the same submitted quote amount and FX source",
+        "result": "fail",
+        "duration_ms": 1.97
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+        "test_name": "prepared Procurement mutation uses current actor and SQLite revision, and retries by receipt",
+        "result": "pass",
+        "duration_ms": 47.87
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+        "test_name": "prepared Procurement mutation records a stale source conflict without changing the domain",
+        "result": "pass",
+        "duration_ms": 41.51
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/contracts.test.ts",
+        "test_name": "contract capability reads only the issued Dashboard scope and rejects revocation and ABA",
+        "result": "pass",
+        "duration_ms": 36.36
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/confirmation.test.ts",
+        "test_name": "confirmation observes scoped material and fences against source changes and revoked authority",
+        "result": "pass",
+        "duration_ms": 23.5
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "test_name": "the canonical three-offer fixture preserves scoring, eligibility and exact price premium",
+        "result": "pass",
+        "duration_ms": 0.24
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "test_name": "missing currency and incomplete purchase orders cannot inherit a base-currency estimate",
+        "result": "pass",
+        "duration_ms": 0.22
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "test_name": "ambiguous selected quotes and an overflowing order remain unavailable",
+        "result": "pass",
+        "duration_ms": 0.11
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "test_name": "rejected submissions preserve the submitted currency and never reinterpret a frozen rate",
+        "result": "pass",
+        "duration_ms": 0.09
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "test_name": "C06 preserves zero versus absence and fingerprints compensating financial inputs",
+        "result": "pass",
+        "duration_ms": 0.35
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts",
+        "test_name": "confirmation reauthorizes material across buyers and fences physical replacement",
+        "result": "pass",
+        "duration_ms": 63.16
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "submitted PO uses its frozen exchange rate and approved and issued totals remain separate",
+        "result": "pass",
+        "duration_ms": 0.38
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "an unavailable frozen quote rate does not use a later rate or the requisition estimate",
+        "result": "pass",
+        "duration_ms": 0.14
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "approval view separates unassigned holders and labels the pending decision",
+        "result": "pass",
+        "duration_ms": 0.46
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "request detail shows the discrepancy without changing the quoted total",
+        "result": "pass",
+        "duration_ms": 1.25
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "register export removes bank material recursively including audit values",
+        "result": "pass",
+        "duration_ms": 0.18
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "request detail explains why a different holder cannot be overridden",
+        "result": "pass",
+        "duration_ms": 0.58
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "unassigned approvals are not attributed to another holder",
+        "result": "pass",
+        "duration_ms": 0.23
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "approval queue retains missing steps and does not invent holder names or actions",
+        "result": "fail",
+        "duration_ms": 0.37
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "ranking does not replace a missing submitted FX snapshot with a later rate",
+        "result": "pass",
+        "duration_ms": 0.18
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "comparison displays the submitted rate even after the current rate changes",
+        "result": "pass",
+        "duration_ms": 0.71
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "submitted sourcing without a snapshot does not display live FX as historical",
+        "result": "pass",
+        "duration_ms": 0.69
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "invalid PO or selected quote values remain unavailable rather than falling back",
+        "result": "pass",
+        "duration_ms": 0.08
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "quote comparison preserves missing currency and frozen FX provenance",
+        "result": "pass",
+        "duration_ms": 0.23
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "request guidance distinguishes internal issue and unknown stages",
+        "result": "pass",
+        "duration_ms": 0.09
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "quote comparison distinguishes an invalid rate from a missing rate",
+        "result": "pass",
+        "duration_ms": 0.13
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "request comparison does not label an unspecified quote currency as base currency",
+        "result": "pass",
+        "duration_ms": 0.72
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "supplier activation explains alternative required fields without revealing bank values",
+        "result": "pass",
+        "duration_ms": 0.15
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "order guidance compares the linked selected quote without asserting edit history",
+        "result": "pass",
+        "duration_ms": 0.14
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "nonprivileged supplier view removes bank metadata and audit values",
+        "result": "pass",
+        "duration_ms": 0.2
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "request detail displays current stage validation without mutating the draft",
+        "result": "pass",
+        "duration_ms": 0.74
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "requisition rejection returns field errors from the actual validator",
+        "result": "fail",
+        "duration_ms": 0.34
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "supplier controls reflect existing buyer and supplier admin roles",
+        "result": "pass",
+        "duration_ms": 0.54
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "supplier presentation removes bank and audit material from a viewer",
+        "result": "pass",
+        "duration_ms": 0.18
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "order shows supplier terms as a suggestion without replacing recorded terms",
+        "result": "pass",
+        "duration_ms": 0.97
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+        "test_name": "the prepared command retains its reviewed inputs when caller-owned outputs are mutated",
+        "result": "pass",
+        "duration_ms": 37.57
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-queues.test.ts",
+        "test_name": "approval queues sort only by proven entry, keep unavailable history and do not use a save timestamp",
+        "result": "pass",
+        "duration_ms": 0.37
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-queues.test.ts",
+        "test_name": "request search covers stored requester, buyer and holder identifiers and authorized directory names",
+        "result": "pass",
+        "duration_ms": 0.81
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "queue projection uses the latest submission, never a later save",
+        "result": "pass",
+        "duration_ms": 0.2
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "missing history and holder stay unavailable, and restricted fields are omitted",
+        "result": "pass",
+        "duration_ms": 0.12
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "requisition drafts and revisions expose their saved justification in the authorized projection",
+        "result": "pass",
+        "duration_ms": 0.13
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "port authenticates against the current snapshot and does not reveal another request",
+        "result": "pass",
+        "duration_ms": 0.44
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "aging uses the trusted observation time and leaves unproven ages unavailable",
+        "result": "pass",
+        "duration_ms": 0.41
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "sourcing comparison reads the authorized request and uses frozen FX",
+        "result": "fail",
+        "duration_ms": 1.35
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "stock counts open stages only and retains a stage-specific drilldown",
+        "result": "pass",
+        "duration_ms": 0.82
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "aging for the next holder starts at the preceding approval, or remains unavailable without that event",
+        "result": "pass",
+        "duration_ms": 0.28
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "supplier projection returns authorized fields and refuses bank fields",
+        "result": "pass",
+        "duration_ms": 0.97
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "decision preparation is deterministic and does not change the request",
+        "result": "pass",
+        "duration_ms": 0.2
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "revocation during the domain read prevents returning the projection",
+        "result": "pass",
+        "duration_ms": 0.5
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "projection reports PO original amount and submitted FX without replacing the base value",
+        "result": "fail",
+        "duration_ms": 0.28
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "a legacy PO with no currency leaves its monetary basis unavailable",
+        "result": "pass",
+        "duration_ms": 0.17
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "unrecognized imported status stays explicitly unavailable",
+        "result": "pass",
+        "duration_ms": 0.09
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "approval stage is the current pending level and is scoped to its evidence",
+        "result": "pass",
+        "duration_ms": 0.13
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "confirmation material tracks only selected fields and the status dependency",
+        "result": "pass",
+        "duration_ms": 0.18
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "confirmation material isolates relevant monetary inputs and preserves missing FX",
+        "result": "pass",
+        "duration_ms": 0.23
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/sources.test.ts",
+        "test_name": "projection digest excludes bank details while retaining authorized business fields",
+        "result": "pass",
+        "duration_ms": 0.32
+      }
+    ],
+    "product_sha": "a04f9c2d09ae08319d0a5c284d954108a049f9bd",
+    "snapshot_sha": "d3b19b5c6272dd8d031e7254acc38863fac7490f",
+    "run_id": 43516884819,
+    "conclusion": "failure"
+  },
+  "log_hash_scope": "Decoded job log as retrieved and stored for analysis, including normalized final newline. GitHub job URL is authoritative."
+}
