@@ -53,6 +53,7 @@ export function NativeShell(props: NativeShellProps) {
               disabled={props.surfaces.length === 0}
               onChange={(event) => {
                 const surface = props.surfaces.find((item) => item === event.currentTarget.value)
+                event.currentTarget.value = props.surface
                 if (surface) props.onSurface(surface)
               }}
             >
@@ -67,6 +68,7 @@ export function NativeShell(props: NativeShellProps) {
                   value={page().page}
                   onChange={(event) => {
                     const selected = event.currentTarget.value
+                    event.currentTarget.value = page().page
                     if (page().pages.includes(selected)) props.onPage(selected)
                   }}
                 >
@@ -93,9 +95,12 @@ export function NativeShell(props: NativeShellProps) {
             type="button"
             class="mx-btn primary"
             disabled={busy() || !state().page?.actor.canWrite || !state().draft || state().draft?.page !== state().page?.page}
-            onClick={() => void props.controller.save()}
+            onClick={() => {
+              if (props.onSave) { props.onSave(); return }
+              void props.controller.save()
+            }}
           >
-            {language.t("sucafina.native.shell.save")}
+            {props.saveLabel ?? language.t("sucafina.native.shell.save")}
           </button>
           <button type="button" class="mx-btn" disabled={busy()} onClick={() => void props.controller.refresh()}>
             {language.t("sucafina.native.shell.refresh")}
