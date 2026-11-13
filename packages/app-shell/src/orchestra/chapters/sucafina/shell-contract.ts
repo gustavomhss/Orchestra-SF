@@ -8,6 +8,8 @@ export type NativeShellProps = {
   surfaces: readonly Sucafina.Surface[]
   onSurface: (surface: Sucafina.Surface) => void
   onPage: (page: string) => void
+  onSave?: () => void
+  saveLabel?: string
   filters?: JSX.Element
   children: (page: Sucafina.PageState) => JSX.Element
 }
