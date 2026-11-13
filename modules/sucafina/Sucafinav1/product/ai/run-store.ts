@@ -48,13 +48,14 @@ export function createSfRunStore(input: {
     const request = input.requestFor(context)
     if (!request || !await input.revalidate(context)) return { status: "denied", reason: "invalid-authority" }
     if (!record.runRef || !record.principalRef || !Number.isSafeInteger(record.version) || record.version !== (expectedVersion === null ? 1 : expectedVersion + 1) || record.principalRef !== context.binding.principalRef || record.policyVersion !== context.binding.policyVersion || record.accessRevision !== context.binding.accessRevision || (context.kind === "native" && (context.binding.runId !== record.runRef || context.binding.caseId !== record.caseRef.id || context.binding.caseIncarnation !== record.caseRef.incarnation || (record.native && context.binding.nativeSessionId !== record.native.sessionID)))) return { status: "denied", reason: "invalid-run-identity" }
-    const checked = await input.preflight(record, context, output)
-    if (checked.status !== "ok") return checked
-    if (!/^[a-f0-9]{64}$/.test(checked.value.sourceFence)) return { status: "unavailable", reason: "source-fence-unavailable" }
     const contributions = await input.state.read(request, "contributions", () => null)
     const cases = await input.state.read(request, "cases", () => null)
     if (contributions.status !== "ok") return "reason" in contributions ? { status: contributions.status, reason: contributions.reason } : { status: "unavailable", reason: "unexpected-state-preview" }
     if (cases.status !== "ok") return "reason" in cases ? { status: cases.status, reason: cases.reason } : { status: "unavailable", reason: "unexpected-state-preview" }
+    // Pin the C08 versions before the preflight reads other runs and their outputs.
+    const checked = await input.preflight(record, context, output)
+    if (checked.status !== "ok") return checked
+    if (!/^[a-f0-9]{64}$/.test(checked.value.sourceFence)) return { status: "unavailable", reason: "source-fence-unavailable" }
     if (!await input.revalidate(context)) return { status: "denied", reason: "invalid-authority" }
     const saved = await input.state.transaction<PortResult<SfNativeRunRecord> | undefined>(request, {
       namespace: "contributions", expectedStorageVersion: contributions.storageVersion,
@@ -97,7 +98,7 @@ export function createSfRunStore(input: {
   return {
     read,
     create: (record: SfNativeRunRecord, context: TrustedDomainContext) => {
-      if (record.state !== "preparing" || record.native || record.outputRef) return Promise.resolve({ status: "failed", reason: "invalid-run-admission" } as const)
+      if (record.state !== "preparing" || record.native || record.outputRef || !record.intentDigest || !/^[a-f0-9]{64}$/.test(record.intentDigest) || !/^[a-f0-9]{64}$/.test(record.requestDigest) || !/^[a-f0-9]{64}$/.test(record.skillInputDigest)) return Promise.resolve({ status: "failed", reason: "invalid-run-admission" } as const)
       return mutate(record, null, context)
     },
     markStale: async (runRef: string, reason: string, context: TrustedDomainContext) => {

@@ -44,7 +44,7 @@ export function createCollaborationWorkPort(input: {
   topicSource: { issue: (topic: HotTopic, context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>> }
 }) {
   const collect = async (selection: WorkListRequest, context: TrustedDomainContext): Promise<PortResult<{ list: AuthorizedWorkList; presentation: readonly WorkPresentationItem[] }>> => {
-      if (!selection.selectionRef.trim() || !isSfPeriod(selection.period)) return { status: "needs-input", reason: "invalid-work-selection" }
+      if (!selection || typeof selection.selectionRef !== "string" || !selection.selectionRef.trim() || !isSfPeriod(selection.period)) return { status: "needs-input", reason: "invalid-work-selection" }
       const selected = structuredClone(selection)
       const request = input.host.requestFor(context)
       if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "work-access-unavailable" }
@@ -54,12 +54,13 @@ export function createCollaborationWorkPort(input: {
       const [threads, relations, confirmations] = await Promise.all([
         input.state.read(request, "threads", (state, authority) => authority.principalRef === own && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? Object.entries(state.threads).map(([id, value]) => ({ id, recipientRef: object(value).recipientRef, state: object(value).state })) : undefined),
         input.state.read(request, "relations", (state, authority) => authority.principalRef === own && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.relations : undefined),
-        input.state.read(request, "confirmations", (state, authority) => authority.principalRef === own && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? Object.values(state.confirmations).filter((record) => record.authorId === own).map((record) => record.id) : undefined),
+        input.state.read(request, "confirmations", (state, authority) => authority.principalRef === own && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? Object.values(state.confirmations).filter((record) => record.authorId === own) : undefined),
       ])
       if ([threads, relations, confirmations].some((result) => result.status !== "ok" && !(result.status === "unavailable" && result.reason === "product-state-uninitialized"))) return { status: "unavailable", reason: "work-state-unavailable" }
       const threadIds = threads.status === "ok" ? threads.value : []
       const relationData = relations.status === "ok" ? relations.value : {}
-      const confirmationIds = confirmations.status === "ok" ? confirmations.value : []
+      const confirmationRecords = confirmations.status === "ok" ? confirmations.value : []
+      const confirmationIds = confirmationRecords && [...new Map(confirmationRecords.toSorted((a, b) => a.confirmedAt.localeCompare(b.confirmedAt)).map((record) => [digestSfValue(record.scope), record.id])).values()]
       if (!threadIds || !relationData || !confirmationIds) return { status: "denied", reason: "work-access-unavailable" }
       if (confirmationIds.length && !input.collaboration.confirmationWork) return { status: "unavailable", reason: "confirmation-work-source-unavailable" }
       const items: AuthorizedWorkList["items"][number][] = []

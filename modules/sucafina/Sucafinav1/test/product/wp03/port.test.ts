@@ -6,6 +6,7 @@ import type { createPlannerSensitivityUnits } from "../../../product/planner/sen
 import { createPlannerScenarioInputs, plannerValueRef } from "../../../product/planner/scenario-inputs.ts"
 import { comparePlannerVersions } from "../../../product/planner/version-comparison.ts"
 import { plannerCapacityPresentation, plannerMonthlyPresentation } from "../../../product/planner/bi.ts"
+import { plannerDifferencePresentation } from "../../../product/planner/bi-difference.ts"
 import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
@@ -50,6 +51,13 @@ test("forecast port compares the real engine, and detects source changes", async
   expect(result.status).toBe("ok")
   if (result.status !== "ok") return
   expect(result.value.knownDifference).toBe(12000)
+  const waterfall = plannerDifferencePresentation(result.value, "BI02")
+  expect(waterfall).toMatchObject({ status: "ok", value: { presentation: { viewId: "BI02", waterfall: { reconciliation: "reconciled" } } } })
+  if (waterfall.status === "ok") {
+    expect(waterfall.value.projection.values.find((value) => value.id === "difference:baseline")?.value).toBe(590000)
+    expect(waterfall.value.projection.values.find((value) => value.id === "difference:candidate-total")?.value).toBe(602000)
+    expect(waterfall.value.presentation.series.find((series) => series.role === "contribution")?.valueIds).toHaveLength(12)
+  }
   const breakdown = comparePlannerVersions(result.value.baseline, result.value.candidate)
   expect(breakdown.status).toBe("ok")
   expect(breakdown.rows.find((row) => row.id === "line:11")).toMatchObject({ state: "matched", difference: 12000 })
