@@ -1,0 +1,62 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "state": "CONTRACT_FROZEN_CONSTRUCTION_RELEASE",
+  "accepted_by": "S0",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "code_sha": "10ec437623cc6a275530875d25a02b329cc72407",
+  "tree": "09456a6df46b0820ff58ba95a5983b0bd3eae299",
+  "freeze_sha256": "5b05835aa5c9810ffe248c77b3cb60a41f001015e0126c0aa22ec824b7043f7d",
+  "revision": 6,
+  "scope": "C01–C17,5profiles,18skills,8packs,39operations,24outputs,AM01–06; deterministic and native construction released",
+  "consumer_acks": {
+    "WP10": "S0-B typed runtime anchors+S0-C static consumer; root package typecheck realgraph",
+    "WP12": "S4-B fullpack+v2consumer typecheck ACK, resident/runtime unchanged",
+    "WP06": "S2 document byteport/C14 typed context review and staged adapter corrections",
+    "WP14": "S4 C17 read-only ACK with required implementation corrections",
+    "WP03": "S1-C realengine/fullpack/v2compile ACK+PlannerSourceHost callback accepted",
+    "WP11": "S4-A fullpack/v2compile ACK+approvedfactory+choice snapshot correction"
+  },
+  "static_validation": "bun typecheck SF latest exit0; output generator --check159 definitions; guards78 rules31paths0gate/0error5dependency advisories",
+  "hosted_development": "run43372139290 product5fa3 24pass0fail; v2/v3newtests pending hosted run, not finalCI proof",
+  "open_work": [
+    "new private-state HTTP tests hosted validation",
+    "all runtime implementations, all productconsumers, GNATIVE and allAMs",
+    "per-section persisted payload semantic validation; ACL and incarnationregistry realhost",
+    "C10 complete comparison/coverage validation using requiredSfCostCategories and actual engine",
+    "C06 fingerprint producer use and scope tests",
+    "all8finalCIs, requiredartifacts, reviews C/Dguards",
+    "18 C15 skill input schemas/decoders from canonical typed_inputs (current refs names only; native admission must fail closed until implemented)",
+    "Artifact requirement for Bun finalCI remains unresolved; workflow excludes upload, .github writes excluded; no PASS waiver"
+  ],
+  "review": "Grok delta2 HOLD retained unchanged; root resolved remaining contract findings by coupled unions/inventoryguard/scope/choiceledger/IDs-only; implementation findings remain mandatory open. No reviewer/product approval inferred.",
+  "not_done": [
+    "WP00.T02 full criteria not DONE",
+    "GNATIVE NOT_RUN",
+    "GLOBAL_RELEASE NOT_RUN",
+    "finalC/D absent"
+  ],
+  "writer_rule": "Only own assigned writepaths and currentlease, never contracts or integrate. S0 sole integrator/dispatcher. Incremental handoffs required.",
+  "previous_release": {
+    "path": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/gates/g0-v3.json",
+    "sha256": "0125f0822dfcfca07b8c48a652be499d51ff236ffcc08074ae3dc72f694d6145"
+  },
+  "amendment_reason": "Concrete consumer findings: declared coverage basis, historical choice/choiceId, private receipt metadata, scenario/apply/Relay publicports, canonical evidence/contribution digest. Scope unchanged and sourceplan immutable.",
+  "acceptedCodeCommit": "762d35f5db79f41a4c12606b6622815f9860aeac",
+  "productTree": "d7cda37bd52ed1c8a28e23eb64b368e8e8b1a774",
+  "freezeSha256": "ac3956a159fcca62dbafc17c43abcbaac8734cd53669439f715a448ae89fb2fd",
+  "v5Gate": {
+    "typecheck": "PASS",
+    "log": "validation/v5-typecheck-1.log",
+    "generatedSchemas": "24/39/18;227 closed definitions",
+    "CI": "NOT_RUN",
+    "release": "NOT_C"
+  },
+  "v6Gate": {
+    "typecheck": "PASS v6-typecheck-1.log",
+    "schemas": "24/39/18;234 closed definitions; --check PASS",
+    "guards": "78 rules/89 paths, 0 gate/errors, 5 dependency advisories",
+    "hostedCI": "NOT_RUN for v6; CI3 68/0 applies only a5488f45",
+    "release": "NOT_C"
+  }
+}
