@@ -1,5 +1,5 @@
 import { changed, conflict, object, rows, text } from "./contract.ts"
-import type { Actor, Command, Domain, Environment, Result, Snapshot } from "./contract.ts"
+import type { Actor, Command, Domain, Environment, NativeAction, NativeChoice, NativeCommandContext, NativeScalar, NativeText, Result, Snapshot } from "./contract.ts"
 import { fields, form, metric, metricGrid, table } from "./ui.ts"
 import type { Field, RenderContext } from "./ui.ts"
 import { esc } from "../src/screen-shell.ts"
@@ -73,7 +73,7 @@ export const domain: Domain = {
     if (command.page === pages[2]) {
       if (!["saveCio", "saveLeader", "deleteLeader", "saveMember", "deleteMember"].includes(command.action))
         return { ok: false, status: 400 }
-      if (!admin && !actor.roles.includes("domain leader"))
+      if (!canChangeTeam(actor))
         return {
           ok: false,
           status: 403,
@@ -102,8 +102,100 @@ export const domain: Domain = {
     }
     if (!["save", "delete"].includes(command.action)) return { ok: false, status: 400 }
     // §4.1 authorizes domain leaders' hot topics without an owner qualifier.
-    if (!admin && !actor.roles.includes("domain leader")) return { ok: false, status: 403 }
+    if (!canChangeTeam(actor)) return { ok: false, status: 403 }
     return saveRecord(snapshot, actor, command, environment, "hotTopics", topicFields)
+  },
+  commands(snapshot, actor, _environment, context) {
+    if (!actor.canWrite || !canRead(snapshot, actor, context.page)) return []
+    if (context.page === pages[1] || !(pages as readonly string[]).includes(context.page)) return []
+    if (context.page === pages[3] ? !actor.roles.includes("admin") : !canChangeTeam(actor)) return []
+    const definitions = context.page === pages[0]
+      ? [{ collection: "hotTopics", keys: topicFields, save: "save", remove: "delete", group: { en: "Hot topics and actions", br: "Temas e ações" }, entity: { en: "action", br: "ação" } }]
+      : context.page === pages[2]
+        ? [
+            { collection: "leaders", keys: leaderFields, save: "saveLeader", remove: "deleteLeader", group: { en: "Leaders", br: "Líderes" }, entity: { en: "leader", br: "líder" } },
+            { collection: "members", keys: memberFields.filter((key) => !["cls", "outlook", "notes"].includes(key)), save: "saveMember", remove: "deleteMember", group: { en: "Members", br: "Membros" }, entity: { en: "member", br: "membro" } },
+          ]
+        : [{ collection: "members", keys: memberFields, save: "save", remove: "delete", group: { en: "Talent review", br: "Avaliação de talentos" }, entity: { en: "member", br: "membro" } }]
+    const actions = definitions.flatMap((definition): NativeAction[] => {
+      const fields = nativePeopleFields(definition.keys, context)
+      const defaults = definition.collection === "hotTopics"
+        ? { status: "open", priority: "normal" }
+        : definition.collection === "members"
+          ? { type: "Employee", status: "Active", leaderId: "", ...(context.page === pages[3] ? { cls: "", outlook: "" } : {}) }
+          : {}
+      return [
+        {
+          key: `${definition.collection}:create`,
+          label: { en: `Add ${definition.entity.en}`, br: `Adicionar ${definition.entity.br}` },
+          group: definition.group,
+          command: { page: context.page, action: definition.save, version: 0, values: { ...defaults } },
+          fields,
+        },
+        ...rows(context.view.data[definition.collection]).flatMap((row): NativeAction[] => {
+          const id = idOf(row.id)
+          const version = context.view.versions[`${definition.collection}:${id}`]?.version ?? 0
+          const target = { collection: definition.collection, id }
+          const identity = text(definition.collection === "hotTopics" ? row.action : row.name)
+          return [
+            {
+              key: `${definition.collection}:edit:${id}`,
+              label: { en: `Edit ${definition.entity.en}: ${identity}`, br: `Editar ${definition.entity.br}: ${identity}` },
+              group: definition.group,
+              target,
+              command: {
+                page: context.page,
+                action: definition.save,
+                id,
+                version,
+                values: {
+                  ...defaults,
+                  ...pick(row, definition.keys),
+                  ...(definition.collection === "members" ? { leaderId: idOf(row.leaderId) } : {}),
+                },
+              },
+              fields,
+            },
+            {
+              key: `${definition.collection}:delete:${id}`,
+              label: { en: `Delete ${definition.entity.en}: ${identity}`, br: `Excluir ${definition.entity.br}: ${identity}` },
+              group: definition.group,
+              target,
+              command: {
+                page: context.page,
+                action: definition.remove,
+                id,
+                version,
+                values: definition.collection === "leaders"
+                  ? {
+                      versions: Object.fromEntries(rows(context.view.data.members)
+                        .filter((member) => idOf(member.leaderId) === id)
+                        .map((member) => [`members:${idOf(member.id)}`, context.view.versions[`members:${idOf(member.id)}`]?.version ?? 0])),
+                    }
+                  : {},
+                confirmed: true,
+              },
+              fields: [],
+              danger: true,
+              confirm: definition.collection === "leaders"
+                ? { en: "Delete this leader and leave their members unassigned?", br: "Excluir este líder e deixar seus membros sem líder?" }
+                : { en: `Delete this ${definition.entity.en}?`, br: `Excluir este registro (${definition.entity.br})?` },
+            },
+          ]
+        }),
+      ]
+    })
+    if (context.page !== pages[2]) return actions
+    return [
+      {
+        key: "cio:save",
+        label: { en: "Save CIO", br: "Salvar CIO" },
+        group: { en: "CIO", br: "CIO" },
+        command: { page: context.page, action: "saveCio", version: context.view.versions.cio?.version ?? 0, values: pick(object(context.view.data.cio), cioFields) },
+        fields: nativePeopleFields(cioFields, context),
+      },
+      ...actions,
+    ]
   },
   view(snapshot, actor, environment) {
     const allowed = pages.filter((page) => canRead(snapshot, actor, page))
@@ -139,6 +231,75 @@ export const domain: Domain = {
       ),
     }
   },
+}
+
+function canChangeTeam(actor: Actor) {
+  return actor.roles.includes("admin") || actor.roles.includes("domain leader")
+}
+
+function nativePeopleFields(keys: readonly string[], context: NativeCommandContext): NativeScalar[] {
+  const labels: Record<string, NativeText> = {
+    name: { en: "Name", br: "Nome" },
+    title: { en: "Job title", br: "Cargo" },
+    domain: { en: "Domain", br: "Domínio" },
+    type: { en: "Employment type", br: "Tipo de vínculo" },
+    leaderId: { en: "Reports to", br: "Líder" },
+    location: { en: "Location", br: "Localidade" },
+    start: { en: "Start date", br: "Data de início" },
+    end: { en: "End date", br: "Data de término" },
+    status: { en: "Status", br: "Situação" },
+    cls: { en: "Classification", br: "Classificação" },
+    outlook: { en: "Outlook", br: "Perspectiva" },
+    notes: { en: "Notes", br: "Observações" },
+    action: { en: "Action", br: "Ação" },
+    responsible: { en: "Responsible", br: "Responsável" },
+    owner: { en: "Owner", br: "Titular" },
+    due: { en: "Due date", br: "Prazo" },
+    priority: { en: "Priority", br: "Prioridade" },
+  }
+  const choices: Record<string, NativeText> = {
+    "": { en: "Not reviewed", br: "Não avaliado" },
+    Active: { en: "Active", br: "Ativo" },
+    "On Leave": { en: "On leave", br: "Afastado" },
+    Terminated: { en: "Terminated", br: "Desligado" },
+    Employee: { en: "Employee", br: "Funcionário" },
+    Contractor: { en: "Contractor", br: "Prestador de serviços" },
+    Talent: { en: "Talent", br: "Talento" },
+    "Solid Contributor": { en: "Solid contributor", br: "Colaborador consistente" },
+    Lagger: { en: "Lagger", br: "Abaixo do esperado" },
+    Promote: { en: "Promote", br: "Promover" },
+    Stay: { en: "Stay", br: "Manter" },
+    Replace: { en: "Replace", br: "Substituir" },
+    Termination: { en: "Termination", br: "Desligamento" },
+    open: { en: "Open", br: "Aberto" },
+    progress: { en: "In progress", br: "Em andamento" },
+    blocked: { en: "Blocked", br: "Bloqueado" },
+    done: { en: "Done", br: "Concluído" },
+    critical: { en: "Critical", br: "Crítica" },
+    high: { en: "High", br: "Alta" },
+    normal: { en: "Normal", br: "Normal" },
+  }
+  return keys.map((key): NativeScalar => {
+    const options: NativeChoice[] | undefined = key === "leaderId"
+      ? [
+          { value: "", label: { en: "No leader", br: "Sem líder" } },
+          ...rows(context.view.data.leaders).map((leader) => ({ value: idOf(leader.id), label: { en: text(leader.name), br: text(leader.name) } })),
+        ]
+      : (key === "status" ? context.page === pages[0] ? ["open", "progress", "blocked", "done"] : statuses
+        : key === "type" ? ["Employee", "Contractor"]
+          : key === "cls" ? classifications
+            : key === "outlook" ? outlooks
+              : key === "priority" ? ["critical", "high", "normal"] : undefined)
+        ?.map((value) => ({ value, label: choices[value] ?? { en: value, br: value } }))
+    return {
+      kind: options ? "select" : key === "notes" ? "textarea" : key === "due" || (["start", "end"].includes(key) && keys.includes("leaderId")) ? "date" : "text",
+      path: [key],
+      label: labels[key] ?? { en: key, br: key },
+      required: key === "action" || (key === "name" && keys !== cioFields),
+      blank: "empty",
+      ...(options ? { options } : {}),
+    }
+  })
 }
 
 function canRead(snapshot: Snapshot, actor: Actor, page: string) {
