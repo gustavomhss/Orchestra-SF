@@ -11,7 +11,8 @@
       "Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
       "Sucafinav1/test/product/wp00/contract-freeze.test.ts",
       "Sucafinav1/test/product/wp00/ownership.test.ts",
-      "Sucafinav1/test/product/wp00/scanner-host-preflight.test.ts"
+      "Sucafinav1/test/product/wp00/scanner-host-preflight.test.ts",
+      "Sucafinav1/test/product/wp00/contract-boundaries.test.ts"
     ]
   },
   "consumers": {
@@ -30,7 +31,9 @@
     "directory": "packages/app-shell",
     "runner": "playwright",
     "config": "e2e/playwright.production.config.ts",
-    "args": ["e2e/sucafina/wp00/baseline-ui.spec.ts"],
+    "args": [
+      "e2e/sucafina/wp00/baseline-ui.spec.ts"
+    ],
     "env": {
       "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
       "ORCHESTRA_CHANNEL": "prod"
