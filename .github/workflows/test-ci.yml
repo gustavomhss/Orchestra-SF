@@ -83,13 +83,14 @@ jobs:
             git fetch --unshallow --no-tags origin
           fi
 
+      # Tooling Node smokes use the Node already installed; core Node smokes keep native setup. Required optimization for this gate, not a new CI path.
       - name: Setup Bun
-        if: steps.request.outputs.runner != 'pytest'
+        if: steps.request.outputs.runner != 'pytest' && !(steps.request.outputs.runner == 'node' && steps.request.outputs.package == 'script')
         uses: ./.github/actions/setup-bun
 
       # Tests find rg on PATH and must never download it (packages/core/src/ripgrep/binary.ts).
       - name: ripgrep
-        if: steps.request.outputs.runner != 'pytest'
+        if: steps.request.outputs.runner != 'pytest' && !(steps.request.outputs.runner == 'node' && steps.request.outputs.package == 'script')
         uses: ./.github/actions/ripgrep
 
       # setup-bun selects Node 24; match the existing e2e lane's extraction workaround afterwards.
@@ -105,7 +106,7 @@ jobs:
         run: bunx playwright install --with-deps chromium
 
       - name: Linux sandbox dependencies
-        if: runner.os == 'Linux'
+        if: runner.os == 'Linux' && !(steps.request.outputs.runner == 'node' && steps.request.outputs.package == 'script')
         run: |
           # Hosted ubuntu-24.04 sometimes cannot resolve azure.archive.ubuntu.com. apt reads that
           # name from apt-mirrors.txt. Fall back to archive.ubuntu.com only after the fetch fails.
@@ -162,7 +163,7 @@ jobs:
           done
 
       - name: omni binaries
-        if: steps.request.outputs.runner != 'pytest'
+        if: steps.request.outputs.runner != 'pytest' && !(steps.request.outputs.runner == 'node' && steps.request.outputs.package == 'script')
         uses: ./.github/actions/omni-binaries
 
       # The CLI's native Windows artifact controls compile with `rustup run 1.98.0` (packages/core/src/
