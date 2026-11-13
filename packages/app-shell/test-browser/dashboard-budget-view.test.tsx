@@ -136,7 +136,6 @@ test("Executive Dashboard renders actual authorized projection fields without in
   expect(fieldValue(view.host, "Active PMO projects")).toBe("1")
   expect(fieldValue(view.host, "Cost per User Benchmark")).toBe("87.25")
   expect(fieldValue(view.host, "P1")).toBe("2")
-  expect(fieldValue(view.host, "Budget and cost per user metrics")).toContain("Unavailable: authoritative budget summary projection is not supplied.")
 })
 
 test("Budget Overview associates exact projected owner, project, month, revenue and raw entry cells", () => {
@@ -145,10 +144,6 @@ test("Budget Overview associates exact projected owner, project, month, revenue 
   expect(fieldValue(view.host, "Revenue")).toBe("500")
   expect(cells(view.host, "OPEX budget records for 2026")).toEqual(["Northern Operations", "240", "3", "201", "173", "189"])
   expect(cells(view.host, "CAPEX budget records for 2026")).toEqual(["Router Renewal", "120", "3", "113", "83", "97"])
-  expect(view.host.textContent).toContain("OPEX/CAPEX totals, variance, actual-to-budget, revenue ratios, progress, and monthly budget series are unavailable until the server supplies the authoritative summary projection.")
-  const fieldLabels = [...view.host.querySelectorAll("dt")].map((item) => item.textContent?.trim())
-  expect(fieldLabels).not.toContain("OPEX total")
-  expect(fieldLabels).not.toContain("CAPEX total")
   expect(view.host.querySelector('table[aria-label*="chart"]')).toBeNull()
 })
 
@@ -336,35 +331,96 @@ test("Executive query filters call onQuery and retain prior selections and unrel
 test("dashboard budget English copy preserves the frozen source wording byte for byte", () => {
   expect(Object.keys(SF_NATIVE_DASHBOARD_BUDGET_COPY_BR)).toEqual(Object.keys(SF_NATIVE_DASHBOARD_BUDGET_COPY))
   expect(Object.keys(SF_NATIVE_DASHBOARD_BUDGET_COPY).every((key) => key.startsWith("sucafina.native.dashboard-budget."))).toBe(true)
-  expect(Object.values(SF_NATIVE_DASHBOARD_BUDGET_COPY)).toEqual([
-    "Executive snapshot", "Year", "Month", "Executive snapshot projection is unavailable.",
-    "No executive snapshot is available for this year and month.", "Active people", "Departures this year",
-    "Departures this month", "Active PMO projects", "PMO at risk", "Active risks", "Top risks",
-    "IT performance on target", "Cost per User Benchmark", "Budget and cost per user metrics",
-    "Unavailable: authoritative budget summary projection is not supplied.", "Reported monthly IT users · {{year}}",
-    "Reported monthly IT users for {{year}}", "Monthly IT users projection is unavailable.",
-    "No monthly IT users records are available for {{year}}.", "Reported users", "Service operations",
-    "Operations month", "Operations projection is unavailable.", "Tickets opened", "Tickets closed",
-    "Final backlog", "Backlog YTD — latest month", "Incidents SLA", "Service Requests SLA", "Incidents SLA YTD",
-    "Service Requests SLA YTD", "P1", "Open security incidents for selected snapshot",
-    "Security KPI projection is unavailable.", "Security KPI", "Security KPI status", "Latest value", "Status",
-    "Budget summary",
-    "Budget, actual, forecast, variance, and cost per user totals require an authoritative server summary projection. No totals are calculated from budget rows in this view.",
-    "Budget Overview · {{year}}",
-    "OPEX/CAPEX totals, variance, actual-to-budget, revenue ratios, progress, and monthly budget series are unavailable until the server supplies the authoritative summary projection.",
-    "Current month", "Revenue", "{{collection}} records · {{year}}", "OPEX", "CAPEX",
-    "OPEX projection is unavailable.", "CAPEX projection is unavailable.",
-    "{{collection}} monthly entry projection is unavailable.", "No OPEX records are available.",
-    "No CAPEX records are available.", "Owner", "Project", "Annual budget", "Budget", "Actual", "Forecast",
-    "Read-only projection for fiscal year {{year}}. Monthly effective budgets, deviations, utilization, and 12-month totals are not supplied as authoritative fields.",
-    "OPEX owners", "CAPEX Projects", "Monthly entry projection is unavailable.",
-    "OPEX owners projection is unavailable.", "CAPEX Projects projection is unavailable.",
-    "No owners are available for this year.", "No projects are available for this year.", "Total 12mo",
-    "Unavailable: server projection required.", "Overridden", "No monthly records are available for {{year}}.",
-    "{{name}} monthly budget records", "{{collection}} · {{year}}", "OPEX budget records for {{year}}", "CAPEX budget records for {{year}}",
-    "Deviation flag", "Deviation notes", "January", "February", "March", "April", "May", "June", "July",
-    "August", "September", "October", "November", "December",
-  ])
+  const frozen: Record<string, string> = {
+    "sucafina.native.dashboard-budget.executiveSnapshot": "Executive snapshot",
+    "sucafina.native.dashboard-budget.year": "Year",
+    "sucafina.native.dashboard-budget.month": "Month",
+    "sucafina.native.dashboard-budget.executiveUnavailable": "Executive snapshot projection is unavailable.",
+    "sucafina.native.dashboard-budget.executiveEmpty": "No executive snapshot is available for this year and month.",
+    "sucafina.native.dashboard-budget.activePeople": "Active people",
+    "sucafina.native.dashboard-budget.departuresThisYear": "Departures this year",
+    "sucafina.native.dashboard-budget.departuresThisMonth": "Departures this month",
+    "sucafina.native.dashboard-budget.activePmoProjects": "Active PMO projects",
+    "sucafina.native.dashboard-budget.pmoAtRisk": "PMO at risk",
+    "sucafina.native.dashboard-budget.activeRisks": "Active risks",
+    "sucafina.native.dashboard-budget.topRisks": "Top risks",
+    "sucafina.native.dashboard-budget.itPerformanceOnTarget": "IT performance on target",
+    "sucafina.native.dashboard-budget.costPerUserBenchmark": "Cost per User Benchmark",
+    "sucafina.native.dashboard-budget.budgetAndCostPerUserMetrics": "Budget and cost per user metrics",
+    "sucafina.native.dashboard-budget.reportedMonthlyUsers": "Reported monthly IT users · {{year}}",
+    "sucafina.native.dashboard-budget.reportedMonthlyUsersTable": "Reported monthly IT users for {{year}}",
+    "sucafina.native.dashboard-budget.monthlyUsersUnavailable": "Monthly IT users projection is unavailable.",
+    "sucafina.native.dashboard-budget.monthlyUsersEmpty": "No monthly IT users records are available for {{year}}.",
+    "sucafina.native.dashboard-budget.reportedUsers": "Reported users",
+    "sucafina.native.dashboard-budget.serviceOperations": "Service operations",
+    "sucafina.native.dashboard-budget.operationsMonth": "Operations month",
+    "sucafina.native.dashboard-budget.operationsUnavailable": "Operations projection is unavailable.",
+    "sucafina.native.dashboard-budget.ticketsOpened": "Tickets opened",
+    "sucafina.native.dashboard-budget.ticketsClosed": "Tickets closed",
+    "sucafina.native.dashboard-budget.finalBacklog": "Final backlog",
+    "sucafina.native.dashboard-budget.backlogYtdLatestMonth": "Backlog YTD — latest month",
+    "sucafina.native.dashboard-budget.incidentsSla": "Incidents SLA",
+    "sucafina.native.dashboard-budget.serviceRequestsSla": "Service Requests SLA",
+    "sucafina.native.dashboard-budget.incidentsSlaYtd": "Incidents SLA YTD",
+    "sucafina.native.dashboard-budget.serviceRequestsSlaYtd": "Service Requests SLA YTD",
+    "sucafina.native.dashboard-budget.p1": "P1",
+    "sucafina.native.dashboard-budget.openSecurityIncidents": "Open security incidents for selected snapshot",
+    "sucafina.native.dashboard-budget.securityKpiUnavailable": "Security KPI projection is unavailable.",
+    "sucafina.native.dashboard-budget.securityKpi": "Security KPI",
+    "sucafina.native.dashboard-budget.securityKpiTable": "Security KPI status",
+    "sucafina.native.dashboard-budget.latestValue": "Latest value",
+    "sucafina.native.dashboard-budget.status": "Status",
+    "sucafina.native.dashboard-budget.budgetSummary": "Budget summary",
+    "sucafina.native.dashboard-budget.budgetOverview": "Budget Overview · {{year}}",
+    "sucafina.native.dashboard-budget.currentMonth": "Current month",
+    "sucafina.native.dashboard-budget.revenue": "Revenue",
+    "sucafina.native.dashboard-budget.recordsHeading": "{{collection}} records · {{year}}",
+    "sucafina.native.dashboard-budget.opex": "OPEX",
+    "sucafina.native.dashboard-budget.capex": "CAPEX",
+    "sucafina.native.dashboard-budget.opexProjectionUnavailable": "OPEX projection is unavailable.",
+    "sucafina.native.dashboard-budget.capexProjectionUnavailable": "CAPEX projection is unavailable.",
+    "sucafina.native.dashboard-budget.monthlyEntriesUnavailable": "{{collection}} monthly entry projection is unavailable.",
+    "sucafina.native.dashboard-budget.opexEmpty": "No OPEX records are available.",
+    "sucafina.native.dashboard-budget.capexEmpty": "No CAPEX records are available.",
+    "sucafina.native.dashboard-budget.owner": "Owner",
+    "sucafina.native.dashboard-budget.project": "Project",
+    "sucafina.native.dashboard-budget.annualBudget": "Annual budget",
+    "sucafina.native.dashboard-budget.budget": "Budget",
+    "sucafina.native.dashboard-budget.actual": "Actual",
+    "sucafina.native.dashboard-budget.forecast": "Forecast",
+    "sucafina.native.dashboard-budget.detailProjection": "Read-only projection for fiscal year {{year}}. Monthly effective budgets, deviations, utilization, and 12-month totals are not supplied as authoritative fields.",
+    "sucafina.native.dashboard-budget.opexOwners": "OPEX owners",
+    "sucafina.native.dashboard-budget.capexProjects": "CAPEX Projects",
+    "sucafina.native.dashboard-budget.monthlyEntryUnavailable": "Monthly entry projection is unavailable.",
+    "sucafina.native.dashboard-budget.ownersUnavailable": "OPEX owners projection is unavailable.",
+    "sucafina.native.dashboard-budget.projectsUnavailable": "CAPEX Projects projection is unavailable.",
+    "sucafina.native.dashboard-budget.ownersEmpty": "No owners are available for this year.",
+    "sucafina.native.dashboard-budget.projectsEmpty": "No projects are available for this year.",
+    "sucafina.native.dashboard-budget.total12Months": "Total 12mo",
+    "sucafina.native.dashboard-budget.serverProjectionRequired": "Unavailable: server projection required.",
+    "sucafina.native.dashboard-budget.overridden": "Overridden",
+    "sucafina.native.dashboard-budget.noMonthlyRecords": "No monthly records are available for {{year}}.",
+    "sucafina.native.dashboard-budget.monthlyBudgetRecordsTable": "{{name}} monthly budget records",
+    "sucafina.native.dashboard-budget.detailRecordsHeading": "{{collection}} · {{year}}",
+    "sucafina.native.dashboard-budget.opexBudgetRecordsTable": "OPEX budget records for {{year}}",
+    "sucafina.native.dashboard-budget.capexBudgetRecordsTable": "CAPEX budget records for {{year}}",
+    "sucafina.native.dashboard-budget.deviationFlag": "Deviation flag",
+    "sucafina.native.dashboard-budget.deviationNotes": "Deviation notes",
+    "sucafina.native.dashboard-budget.january": "January",
+    "sucafina.native.dashboard-budget.february": "February",
+    "sucafina.native.dashboard-budget.march": "March",
+    "sucafina.native.dashboard-budget.april": "April",
+    "sucafina.native.dashboard-budget.may": "May",
+    "sucafina.native.dashboard-budget.june": "June",
+    "sucafina.native.dashboard-budget.july": "July",
+    "sucafina.native.dashboard-budget.august": "August",
+    "sucafina.native.dashboard-budget.september": "September",
+    "sucafina.native.dashboard-budget.october": "October",
+    "sucafina.native.dashboard-budget.november": "November",
+    "sucafina.native.dashboard-budget.december": "December",
+  }
+  for (const [key, value] of Object.entries(frozen))
+    expect(SF_NATIVE_DASHBOARD_BUDGET_COPY[key as keyof typeof SF_NATIVE_DASHBOARD_BUDGET_COPY]).toBe(value)
 })
 
 test("dashboard budget copy and month options react EN to pt-BR and back through the real providers", async () => {
@@ -398,7 +454,6 @@ test("dashboard budget copy and month options react EN to pt-BR and back through
   expect(fieldValue(view.host, "Referência de custo por usuário")).toBe("87,25")
   expect(cells(view.host, "Registros mensais de usuários de TI de 2026")).toEqual(["2026", "3", "142"])
   expect(view.host.querySelector('table[aria-label="Registros mensais de usuários de TI de 2026"] tbody tr')).toBe(usersRow)
-  expect(view.host.textContent).toContain("Os totais de orçamento, valores realizados e previstos, variação e custo por usuário exigem uma projeção oficial do servidor. Esta tela não calcula totais a partir dos registros orçamentários.")
 
   view.language.setLocale("en")
   await until(() => view.host.querySelector("h2")?.textContent === "Executive snapshot")

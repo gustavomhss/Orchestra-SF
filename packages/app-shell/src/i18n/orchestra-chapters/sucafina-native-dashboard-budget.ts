@@ -1,5 +1,17 @@
 // Copy owned by the Sucafina native dashboard budget view. Page IDs and source data stay unchanged.
 export const SF_NATIVE_DASHBOARD_BUDGET_COPY = {
+  "sucafina.native.dashboard-budget.annualSummary": "Annual budget summary",
+  "sucafina.native.dashboard-budget.monthlyBudget": "Monthly budget",
+  "sucafina.native.dashboard-budget.annualCategory": "Category",
+  "sucafina.native.dashboard-budget.variance": "Variance",
+  "sucafina.native.dashboard-budget.actualBudgetPercent": "Actuals/Budget%",
+  "sucafina.native.dashboard-budget.unavailable": "Unavailable",
+  "sucafina.native.dashboard-budget.utilization": "Budget utilization",
+  "sucafina.native.dashboard-budget.costPerUserUnavailable": "Cost per user is unavailable.",
+  "sucafina.native.dashboard-budget.revenueRatiosUnavailable": "Revenue ratios are unavailable.",
+  "sucafina.native.dashboard-budget.monthlyBudgetChart": "Monthly budget chart",
+  "sucafina.native.dashboard-budget.monthlyBudgetChartDescription": "Budget by month for the selected year.",
+  "sucafina.native.dashboard-budget.annualTotals": "Annual totals",
   "sucafina.native.dashboard-budget.executiveSnapshot": "Executive snapshot",
   "sucafina.native.dashboard-budget.year": "Year",
   "sucafina.native.dashboard-budget.month": "Month",
@@ -92,6 +104,18 @@ export const SF_NATIVE_DASHBOARD_BUDGET_COPY = {
 }
 
 export const SF_NATIVE_DASHBOARD_BUDGET_COPY_BR: Record<keyof typeof SF_NATIVE_DASHBOARD_BUDGET_COPY, string> = {
+  "sucafina.native.dashboard-budget.annualSummary": "Resumo orçamentário anual",
+  "sucafina.native.dashboard-budget.monthlyBudget": "Orçamento mensal",
+  "sucafina.native.dashboard-budget.annualCategory": "Categoria",
+  "sucafina.native.dashboard-budget.variance": "Variação",
+  "sucafina.native.dashboard-budget.actualBudgetPercent": "Realizado/Orçamento%",
+  "sucafina.native.dashboard-budget.unavailable": "Indisponível",
+  "sucafina.native.dashboard-budget.utilization": "Utilização do orçamento",
+  "sucafina.native.dashboard-budget.costPerUserUnavailable": "O custo por usuário está indisponível.",
+  "sucafina.native.dashboard-budget.revenueRatiosUnavailable": "As proporções da receita estão indisponíveis.",
+  "sucafina.native.dashboard-budget.monthlyBudgetChart": "Gráfico do orçamento mensal",
+  "sucafina.native.dashboard-budget.monthlyBudgetChartDescription": "Orçamento por mês no ano selecionado.",
+  "sucafina.native.dashboard-budget.annualTotals": "Totais anuais",
   "sucafina.native.dashboard-budget.executiveSnapshot": "Visão executiva",
   "sucafina.native.dashboard-budget.year": "Ano",
   "sucafina.native.dashboard-budget.month": "Mês",

@@ -53,6 +53,12 @@ export function DashboardBudgetView(props: NativeViewProps) {
   const changeQuery = (key: "year" | "execYear" | "executiveMonth" | "opsMonth", value: string) =>
     props.onQuery({ ...props.query, [key]: value })
   const selectedYear = () => String(props.page.year)
+  const currentMonth = () => {
+    const month = object(object(data().nativeBudgetSummaryByYear)[selectedYear()]).currentMonth
+    return typeof month === "number" && Number.isInteger(month) && month >= 1 && month <= 12
+      ? month
+      : object(data().budgetCurrentMonth)[selectedYear()]
+  }
   const monthNames = () => [
     language.t("sucafina.native.dashboard-budget.january"),
     language.t("sucafina.native.dashboard-budget.february"),
@@ -105,7 +111,6 @@ export function DashboardBudgetView(props: NativeViewProps) {
                   <div><dt>{language.t("sucafina.native.dashboard-budget.topRisks")}</dt><dd>{display(object(data().executive).topRisks, language)}</dd></div>
                   <div><dt>{language.t("sucafina.native.dashboard-budget.itPerformanceOnTarget")}</dt><dd>{display(object(data().executive).onTarget, language)}</dd></div>
                   <div><dt>{language.t("sucafina.native.dashboard-budget.costPerUserBenchmark")}</dt><dd>{display(rows(data().costPerUserBenchmarks).find((item) => item.year === Number(execYear()))?.value, language)}</dd></div>
-                  <div><dt>{language.t("sucafina.native.dashboard-budget.budgetAndCostPerUserMetrics")}</dt><dd>{language.t("sucafina.native.dashboard-budget.budgetSummaryUnavailable")}</dd></div>
                 </dl>
               </Show>
             </Show>
@@ -145,21 +150,20 @@ export function DashboardBudgetView(props: NativeViewProps) {
               </table></div>
             </Show>
           </div>
-          <div class="mx-card">
-            <h2>{language.t("sucafina.native.dashboard-budget.budgetSummary")}</h2>
-            <p class="mx-empty">{language.t("sucafina.native.dashboard-budget.authoritativeBudgetSummaryRequired")}</p>
-          </div>
+          <BudgetAnnualSummary payload={data().nativeBudgetSummaryByYear} year={execYear()} />
+          <p class="mx-empty">{language.t("sucafina.native.dashboard-budget.costPerUserUnavailable")}</p>
         </Show>
 
         <Show when={props.page.page === "Budget Overview"}>
           <div class="mx-card">
             <h2>{language.t("sucafina.native.dashboard-budget.budgetOverview", { year: selectedYear() })}</h2>
-            <p class="mx-empty">{language.t("sucafina.native.dashboard-budget.budgetSummaryGaps")}</p>
             <dl class="mx-grid">
-              <div><dt>{language.t("sucafina.native.dashboard-budget.currentMonth")}</dt><dd>{display(object(data().budgetCurrentMonth)[selectedYear()], language)}</dd></div>
+              <div><dt>{language.t("sucafina.native.dashboard-budget.currentMonth")}</dt><dd>{display(currentMonth(), language)}</dd></div>
               <div><dt>{language.t("sucafina.native.dashboard-budget.revenue")}</dt><dd>{display(object(data().revenueByYear)[selectedYear()], language)}</dd></div>
             </dl>
           </div>
+          <BudgetAnnualSummary payload={data().nativeBudgetSummaryByYear} year={selectedYear()} />
+          <p class="mx-empty">{language.t("sucafina.native.dashboard-budget.revenueRatiosUnavailable")}</p>
           <For each={["opex", "capex"] as const}>{(collection) => {
             const name = () => collection === "opex"
               ? language.t("sucafina.native.dashboard-budget.opex")
@@ -234,5 +238,113 @@ export function DashboardBudgetView(props: NativeViewProps) {
         </Show>
       </section>
     </Show>
+  )
+}
+
+type AnnualCategory = {
+  budget: number
+  actual: number
+  forecast: number
+  variance: number
+  actualBudgetPercent: number | null
+}
+
+function annualCategory(value: unknown): AnnualCategory | undefined {
+  const item = object(value)
+  if (![item.budget, item.actual, item.forecast, item.variance].every((value) => typeof value === "number" && Number.isFinite(value))) return
+  if (item.actualBudgetPercent !== null && (typeof item.actualBudgetPercent !== "number" || !Number.isFinite(item.actualBudgetPercent))) return
+  return item as AnnualCategory
+}
+
+function BudgetAnnualSummary(props: { payload: unknown; year: string }) {
+  const language = useLanguage()
+  const summary = () => object(object(props.payload)[props.year])
+  const total = () => annualCategory(summary().total)
+  const series = () => {
+    const values = summary().monthlyBudget
+    if (!Array.isArray(values) || values.length !== 12 || ![...values].every((value) => typeof value === "number" && Number.isFinite(value))) return
+    return values as number[]
+  }
+  const monthNames = () => [
+    language.t("sucafina.native.dashboard-budget.january"), language.t("sucafina.native.dashboard-budget.february"),
+    language.t("sucafina.native.dashboard-budget.march"), language.t("sucafina.native.dashboard-budget.april"),
+    language.t("sucafina.native.dashboard-budget.may"), language.t("sucafina.native.dashboard-budget.june"),
+    language.t("sucafina.native.dashboard-budget.july"), language.t("sucafina.native.dashboard-budget.august"),
+    language.t("sucafina.native.dashboard-budget.september"), language.t("sucafina.native.dashboard-budget.october"),
+    language.t("sucafina.native.dashboard-budget.november"), language.t("sucafina.native.dashboard-budget.december"),
+  ]
+  const unavailable = () => language.t("sucafina.native.dashboard-budget.unavailable")
+  const currency = (value: number) => `${value < 0 ? "-" : ""}$${display(Math.abs(value), language)}`
+  const percent = (value: number | null) => value === null ? "—" : `${display(value, language)}%`
+  const columns = [
+    { key: "budget", label: "sucafina.native.dashboard-budget.budget" },
+    { key: "actual", label: "sucafina.native.dashboard-budget.actual" },
+    { key: "forecast", label: "sucafina.native.dashboard-budget.forecast" },
+  ] as const
+  const categories = [
+    { key: "opex", label: "sucafina.native.dashboard-budget.opex" },
+    { key: "capex", label: "sucafina.native.dashboard-budget.capex" },
+  ] as const
+
+  return (
+    <section class="mx-card" aria-label={language.t("sucafina.native.dashboard-budget.annualSummary")}>
+      <h2>{language.t("sucafina.native.dashboard-budget.annualSummary")}</h2>
+      <dl class="mx-grid">
+        <For each={columns}>{(column) => (
+          <div><dt>{language.t(column.label)}</dt><dd>{total() ? currency(total()![column.key]) : unavailable()}</dd></div>
+        )}</For>
+      </dl>
+      <Show when={total()} fallback={<p>{unavailable()}</p>}>
+        {(value) => (
+          <div class="mx-field">
+            <span>{language.t("sucafina.native.dashboard-budget.utilization")}: {percent(value().actualBudgetPercent)}</span>
+            <progress aria-label={language.t("sucafina.native.dashboard-budget.utilization")} max="100" value={Math.max(0, Math.min(100, value().actualBudgetPercent ?? 0))} />
+          </div>
+        )}
+      </Show>
+      <div class="mx-table" style={{ overflow: "auto" }}>
+        <table aria-label={language.t("sucafina.native.dashboard-budget.annualSummary")}>
+          <thead><tr>
+            <th>{language.t("sucafina.native.dashboard-budget.annualCategory")}</th>
+            <For each={columns}>{(column) => <th>{language.t(column.label)}</th>}</For>
+            <th>{language.t("sucafina.native.dashboard-budget.variance")}</th>
+            <th>{language.t("sucafina.native.dashboard-budget.actualBudgetPercent")}</th>
+          </tr></thead>
+          <tbody><For each={categories}>{(category) => {
+            const value = () => annualCategory(summary()[category.key])
+            return <tr>
+              <th scope="row">{language.t(category.label)}</th>
+              <For each={columns}>{(column) => <td>{value() ? currency(value()![column.key]) : unavailable()}</td>}</For>
+              <td>{value() ? currency(value()!.variance) : unavailable()}</td>
+              <td>{value() ? percent(value()!.actualBudgetPercent) : unavailable()}</td>
+            </tr>
+          }}</For></tbody>
+        </table>
+      </div>
+      <section aria-label={language.t("sucafina.native.dashboard-budget.monthlyBudget")}>
+        <h3>{language.t("sucafina.native.dashboard-budget.monthlyBudget")}</h3>
+        <Show when={series()} fallback={<p>{unavailable()}</p>}>
+          {(values) => {
+            const scale = () => Math.max(1, ...values().map((value) => Math.abs(value)))
+            const x = (index: number) => 35 + index * 58
+            const y = (value: number) => 100 - value / scale() * 70
+            return <>
+              <svg viewBox="0 0 720 240" style={{ width: "100%", height: "auto" }} role="img">
+                <title>{language.t("sucafina.native.dashboard-budget.monthlyBudgetChart")}</title>
+                <desc>{language.t("sucafina.native.dashboard-budget.monthlyBudgetChartDescription")}</desc>
+                <polyline fill="none" stroke="currentColor" stroke-width="2" points={values().map((value, index) => `${x(index)},${y(value)}`).join(" ")} />
+                <For each={monthNames()}>{(month, index) => <text x={x(index())} y="185" fill="currentColor" font-size="10" transform={`rotate(-50 ${x(index())} 185)`}>{month}</text>}</For>
+              </svg>
+              <div class="mx-table" style={{ overflow: "auto" }}>
+                <table aria-label={language.t("sucafina.native.dashboard-budget.monthlyBudget")}>
+                  <thead><tr><th>{language.t("sucafina.native.dashboard-budget.month")}</th><th>{language.t("sucafina.native.dashboard-budget.budget")}</th></tr></thead>
+                  <tbody><For each={values()}>{(value, index) => <tr><th scope="row">{monthNames()[index()]}</th><td>{currency(value)}</td></tr>}</For></tbody>
+                </table>
+              </div>
+            </>
+          }}
+        </Show>
+      </section>
+    </section>
   )
 }
