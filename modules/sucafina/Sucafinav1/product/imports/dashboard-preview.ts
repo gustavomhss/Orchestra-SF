@@ -67,7 +67,7 @@ export function createSfDashboardImportPreview(input: {
     changes.forEach((change) => ([["before", change.before], ["after", change.after]] as const).forEach(([side, entry]) => {
       if (entry.state !== "present") { missing.push({ field: `${change.path}:${side}`, reason: "missing" }); return }
       if (entry.value !== null && typeof entry.value !== "string" && typeof entry.value !== "boolean" && !(typeof entry.value === "number" && Number.isFinite(entry.value))) return
-      values.push({ id: `${change.path}:${change.kind}:${side}`, value: entry.value as string | number | boolean | null, period: source.period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: entry.value === null ? "absent" : "confirmed" })
+      values.push({ id: `${change.path}:${change.kind}:${side}`, value: entry.value as string | number | boolean | null, period: source.period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: entry.value === null ? "absent" : side === "after" ? "hypothetical" : "confirmed" })
     }))
     const projection: DomainProjection = { context: productContext, version: source.version, engineVersion: "dashboard-runtime-v1", components: [], values, missing }
     const id = digestSfValue({ operationId, sourceDigest: request.parsed.sourceDigest, target: request.target, principal: context.binding.principalRef })

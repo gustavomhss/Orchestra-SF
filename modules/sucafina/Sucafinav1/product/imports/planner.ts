@@ -5,6 +5,15 @@ import type { Actor, Command, Environment, Snapshot } from "../../runtime/contra
 import { compareImportProjections } from "./changes.ts"
 import { publicSfData } from "../integration/public-state.ts"
 
+/** Match the Planner's roster-shaped Headcount admission as well as All Members. */
+export function plannerWorkbookHasRoster(sheets: Record<string, unknown>) {
+  if (Object.hasOwn(sheets, "All Members")) return true
+  const headcount = Object.entries(sheets).find(([name]) => name.trim().toLowerCase() === "headcount")?.[1]
+  if (!Array.isArray(headcount)) return false
+  const rows = headcount.filter((row): row is Record<string, unknown> => !!row && typeof row === "object" && !Array.isArray(row))
+  return rows.some((row) => ["Start Date", "End Date", "Start", "End", "Leader", "Status"].some((key) => key in row)) && !rows.some((row) => ["Position ID", "FTE", "Start month"].some((key) => key in row))
+}
+
 /** Build the exact Planner command whose simulation and transactional execution must match. */
 export function preparePlannerWorkbook(input: {
   snapshot: Snapshot

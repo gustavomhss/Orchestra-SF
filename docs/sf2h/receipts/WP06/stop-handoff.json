@@ -1,0 +1,77 @@
+{
+  "schema": "sf2h-stop-handoff-v1",
+  "wp": "WP06",
+  "stopped_at_utc": "2026-11-13T20:31:38.551346+00:00",
+  "branch": "sf2-import-ready",
+  "source_head_before_handoff": "396758eab95e61460416b7ec1d52adb0d57a1afe",
+  "source_tree_before_handoff": "7cd42de7143236f919951a95168e21c9538adaf9",
+  "checkpoint_commit": "This file is committed by the immediately following checkpoint commit; final SHA and tree are recorded in the external handoff.",
+  "campaign_baseline": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "wp_base": "d3aa698d9279d6f9d14f230aaa7ccf9088fd2257",
+  "tasks": {
+    "WP06.T01": "implementation reconciled; validation not run",
+    "WP06.T02": "partial: preview and finance producer, actual governed consumer/UI incomplete",
+    "WP06.T03": "partial: atomic apply, private receipts, no-op/retry; complete integrated validation pending",
+    "WP06.T04": "partial: scoped roster and roundtrip proofs authored; dependent WP10 composition and validation pending",
+    "WP06.T05": "partial: documents, RAG, confirmation, dossier seam; actual authenticated Request-document selection and consumer pending"
+  },
+  "inputs": {
+    "WP02_dashboard_backup_adapter": "4f1f8a0d18",
+    "WP03_planner_import_analysis": "d19b5b8d97",
+    "WP09_dossier_selection_seam": "ddea8a8cb7",
+    "WP10_roster_host": "9b36ed10d4",
+    "WP10_roster_scope_period": "0d9041ed38",
+    "WP10_blob_generation": "4e5d9d5909",
+    "WP10_forecast_host": "1e92ec4376",
+    "WP01_receipt_ui": "d8596daca3",
+    "WP12_intent_verifier": "bf7adef7f4",
+    "shared_manifest": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/accepted-inputs/shared.json"
+  },
+  "foreign_sources": "Shared source inputs read via git show; no foreign dirty files staged. The local ancestor includes committed shared campaign baseline, which is not independent acceptance.",
+  "workers": [
+    {
+      "seat": "Terra",
+      "model": "session inherited",
+      "state": "stopping after checkpoint",
+      "lease": "sole Git/index; all work leases revoked on stop"
+    },
+    {
+      "seat": "Luna",
+      "model": "gpt-6-luna requested",
+      "thread": "01a1d640-4dba-71e1-9c26-16e840c2ef92",
+      "state": "TERMINAL ACK; no pending changes",
+      "lease": "released"
+    },
+    {
+      "seat": "G1",
+      "model": "grok-4.7-build effective",
+      "session": "c53b574f-fcb9-4abb-84fc-9dfe81657f17",
+      "state": "terminal; HTTP 402 balance exhausted",
+      "lease": "revoked"
+    },
+    {
+      "seat": "G2",
+      "model": "grok-4.7-build effective",
+      "session": "d295f59b-5c30-4d04-a376-442bb4cec001",
+      "state": "terminal; direct write refused as plan mode",
+      "lease": "revoked"
+    }
+  ],
+  "behavior": "Authenticated import staging, Planner/Dashboard preview and explicit C08 apply, scoped roster source, private confirmed/no-change/refused receipt, document extraction/confirmation/RAG and HTTP adapters are authored. Preview impact is hypothetical; apply revalidates bytes inside C08. This is incomplete and not a release.",
+  "validations": {
+    "local_product_tests": "NOT_RUN (user instruction)",
+    "local_typecheck": "NOT_RUN (user instruction)",
+    "hosted_surgical_ci": "NOT_RUN",
+    "check_guards": "NOT_RUN; sparse checkout lacked materialized tracked guard files on earlier attempt",
+    "pr": "not created; not ready"
+  },
+  "findings": [
+    "WP10/WP12/WP01 must complete and prove authenticated import-preview skill consumer and UI journey.",
+    "WP09/WP10 must implement and prove explicit authenticated Request-to-document selection and dossier consumer.",
+    "Rejected receipt branch is authored and has settlement unit evidence; actual authenticated domain refusal has no verified reachable end-to-end scenario.",
+    "Roster multi-source, blob ABA, nested import lock read, PDF/DOCX and no-op receipt tests are authored but unrun.",
+    "WP02 backup callback integration requires source 4f1f8a0d18 in candidate.",
+    "No full or partial test pass or PR readiness may be inferred."
+  ],
+  "resume": "Only on new user authorization: inspect this checkpoint, confirm external inputs and exact branch/head, reconcile dependencies without overwriting foreign sources, complete remaining consumers and tests, run required guards, obtain serialized CI lease, run final hosted change-scoped gate, fix failures, and create one WP06 PR. Do not auto-resume."
+}

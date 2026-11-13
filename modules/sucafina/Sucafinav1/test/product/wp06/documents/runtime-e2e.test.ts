@@ -140,7 +140,9 @@ test("real host persists procurement document evidence and Planner import under 
       forged.target.period = { start: "2028-01-01", end: "2028-12-31" }
       forged.refDigest = digestSfEvidenceRef(forged)
       const valid = await store.transaction("planner", async (snapshot) => {
-        const actor = { id: principal.id, roles: principal.roles.filter((row) => row.surface === "planner").map((row) => row.role), canWrite: principal.canWrite, assigned: [], domains: [] }
+        const current = await identity.authenticate(request("planner"), { surface: "planner", roleMap: roleMap(snapshot, "planner") })
+        if (!current) return { commit: false, value: { original: false, forged: false } }
+        const actor = { id: current.id, roles: current.roles.filter((row) => row.surface === "planner").map((row) => row.role), canWrite: current.canWrite, assigned: [], domains: [] }
         return { commit: false, value: { original: roster.verifyRoster(snapshot, issued.value, actor, context), forged: roster.verifyRoster(snapshot, forged, actor, context) } }
       })
       expect(valid).toEqual({ original: true, forged: false })
@@ -193,7 +195,9 @@ test("real host persists procurement document evidence and Planner import under 
     const post = (mode: string, value: unknown) => importHttp(new Request(url(mode), { method: "POST", headers: { cookie, origin, "content-type": "application/json", "Idempotency-Key": randomUUID() }, body: JSON.stringify(value) }), "planner")
     const preview = await post("import-preview", previewInput)
     expect(preview?.status).toBe(200)
-    const manifest = await preview!.json() as { value: { id: string; version: number } }
+    const manifest = await preview!.json() as { value: { id: string; version: number; commands: { preview: { values: { id: string; evidenceState: string }[] } }[] } }
+    expect(manifest.value.commands[0]!.preview.values.some((value) => value.id.endsWith(":after") && value.evidenceState === "hypothetical")).toBe(true)
+    expect(manifest.value.commands[0]!.preview.values.filter((value) => value.id.endsWith(":after")).every((value) => value.evidenceState === "hypothetical" || value.evidenceState === "absent")).toBe(true)
     const detail = await importHttp(new Request(`${url("import-detail")}&manifestId=${encodeURIComponent(manifest.value.id)}&version=${manifest.value.version}`, { headers: { cookie } }), "planner")
     expect(detail?.status).toBe(200)
     const detailValue = await detail!.json() as { value: { detail: { changes: { kind: string; source: { field?: string; address?: string } }[] } } }
@@ -209,10 +213,42 @@ test("real host persists procurement document evidence and Planner import under 
     const currentChoices = await importHttp(new Request(`${url("import-targets")}&surface=planner`, { headers: { cookie } }), "planner")
     const currentPlanner = ((await currentChoices!.json()) as { value: { label: string; surface: string; selectionRef: string }[] }).value.find((row) => row.label === "FY27")
     if (!currentPlanner) throw new Error("current Planner version not discovered")
+    const noChangeForm = new FormData()
+    noChangeForm.set("file", new File([bytes], "forecast.xlsx", { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }))
+    noChangeForm.set("surface", currentPlanner.surface); noChangeForm.set("selectionRef", currentPlanner.selectionRef); noChangeForm.set("options", JSON.stringify({ newVersion: false, removeMissing: false, preview: {} }))
+    const noChangeAdmission = await importHttp(new Request(url("import-admit"), { method: "POST", headers: { cookie, origin, "Idempotency-Key": randomUUID() }, body: noChangeForm }), "planner")
+    expect(noChangeAdmission?.status).toBe(200)
+    const noChangeFile = await noChangeAdmission!.json() as { value: { ref: string } }
+    const noChangePreview = await post("import-preview", { admittedFileRef: noChangeFile.value.ref, format: "xlsx", options: {} })
+    expect(noChangePreview?.status).toBe(200)
+    const noChangeManifest = await noChangePreview!.json() as { value: { id: string; version: number } }
+    const beforeNoChange = await store.transaction("planner", async (snapshot) => ({ commit: false, value: { data: structuredClone(snapshot.data), versions: structuredClone(snapshot.versions), audit: structuredClone(snapshot.audit), sequences: structuredClone(snapshot.sequences) } }))
+    expect((await post("import-apply", { manifestId: noChangeManifest.value.id, version: noChangeManifest.value.version }))?.status).toBe(200)
+    const noChangeDetail = await importHttp(new Request(`${url("import-detail")}&manifestId=${encodeURIComponent(noChangeManifest.value.id)}&version=${noChangeManifest.value.version}`, { headers: { cookie } }), "planner")
+    const noChangeReceipt = (await noChangeDetail!.json() as { value: { receipt: unknown } }).value.receipt
+    expect(noChangeReceipt).toMatchObject({ outcome: "unchanged", changedFields: 0 })
+    expect((await post("import-apply", { manifestId: noChangeManifest.value.id, version: noChangeManifest.value.version }))?.status).toBe(200)
+    const noChangeRetry = await importHttp(new Request(`${url("import-detail")}&manifestId=${encodeURIComponent(noChangeManifest.value.id)}&version=${noChangeManifest.value.version}`, { headers: { cookie } }), "planner")
+    expect((await noChangeRetry!.json() as { value: { receipt: unknown } }).value.receipt).toEqual(noChangeReceipt)
+    const afterNoChange = await store.transaction("planner", async (snapshot) => ({ commit: false, value: { data: snapshot.data, versions: snapshot.versions, audit: snapshot.audit, sequences: snapshot.sequences } }))
+    expect(afterNoChange).toEqual(beforeNoChange)
+    const cancelForm = new FormData()
+    cancelForm.set("file", new File([bytes], "forecast.xlsx", { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }))
+    cancelForm.set("surface", currentPlanner.surface); cancelForm.set("selectionRef", currentPlanner.selectionRef); cancelForm.set("options", JSON.stringify({ newVersion: false, removeMissing: false, preview: {} }))
+    const cancelAdmission = await importHttp(new Request(url("import-admit"), { method: "POST", headers: { cookie, origin, "Idempotency-Key": randomUUID() }, body: cancelForm }), "planner")
+    expect(cancelAdmission?.status).toBe(200)
+    const cancelFile = await cancelAdmission!.json() as { value: { ref: string } }
+    const cancelPreview = await post("import-preview", { admittedFileRef: cancelFile.value.ref, format: "xlsx", options: {} })
+    expect(cancelPreview?.status).toBe(200)
+    const cancelManifest = await cancelPreview!.json() as { value: { id: string; version: number } }
+    const cancelDetail = await importHttp(new Request(`${url("import-detail")}&manifestId=${encodeURIComponent(cancelManifest.value.id)}&version=${cancelManifest.value.version}`, { headers: { cookie } }), "planner")
+    expect((await cancelDetail!.json() as { value: { receipt?: unknown } }).value.receipt).toBeUndefined()
+    expect(await store.transaction("planner", async (snapshot) => ({ commit: false, value: { data: snapshot.data, versions: snapshot.versions, audit: snapshot.audit, sequences: snapshot.sequences } }))).toEqual(beforeNoChange)
     const membersWorkbook = new Workbook(); const members = membersWorkbook.addWorksheet("All Members")
     members.addRow(["Name", "Title", "Type", "Leader", "Location", "Start Date", "End Date", "Status", "Classification", "Outlook", "Notes"])
     members.addRow(["Roster person", "Analyst", "Employee", "Lead", "Geneva", "2027-01-01", "", "Active", "ignore", "ignore", "ignore"])
-    membersWorkbook.addWorksheet("Summary by Leader").addRow(["Leader", "Count"])
+    const summarySheet = membersWorkbook.addWorksheet("Summary by Leader")
+    summarySheet.addRow(["Leader", "Count"]); summarySheet.addRow(["Lead", 1])
     const membersForm = new FormData()
     membersForm.set("file", new File([new Uint8Array(await membersWorkbook.xlsx.writeBuffer())], "members.xlsx", { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }))
     membersForm.set("surface", currentPlanner.surface); membersForm.set("selectionRef", currentPlanner.selectionRef); membersForm.set("options", JSON.stringify({ newVersion: false, removeMissing: false, preview: {} }))
@@ -223,9 +259,42 @@ test("real host persists procurement document evidence and Planner import under 
     expect(membersPreview?.status).toBe(200)
     const membersManifest = await membersPreview!.json() as { value: { id: string; version: number; baseIdentity: { type: string }[] } }
     expect(membersManifest.value.baseIdentity.map((source) => source.type)).toEqual(["planner-version", "planner-roster"])
-    expect((await post("import-apply", { manifestId: membersManifest.value.id, version: membersManifest.value.version }))?.status).toBe(200)
+    const membersDetail = await importHttp(new Request(`${url("import-detail")}&manifestId=${encodeURIComponent(membersManifest.value.id)}&version=${membersManifest.value.version}`, { headers: { cookie } }), "planner")
+    const ignored = (await membersDetail!.json() as { value: { detail: { changes: { kind: string; source: { sheet?: string; field?: string } }[] } } }).value.detail.changes.filter((change) => change.kind === "ignored")
+    expect(ignored.some((change) => change.source.sheet === "All Members" && change.source.field === "Classification")).toBe(true)
+    expect(ignored.some((change) => change.source.sheet === "Summary by Leader")).toBe(true)
+    await store.transaction("planner", async (snapshot) => { snapshot.data.roster = [{ name: "Concurrent" }]; return { commit: true, value: undefined } })
+    await store.transaction("planner", async (snapshot) => { snapshot.data.roster = []; return { commit: true, value: undefined } })
+    expect((await post("import-apply", { manifestId: membersManifest.value.id, version: membersManifest.value.version }))?.status).not.toBe(200)
+    expect(await store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot.data.roster }))).toEqual([])
+    const refreshedMembers = await post("import-preview", { admittedFileRef: membersFile.value.ref, format: "xlsx", options: {} })
+    expect(refreshedMembers?.status).toBe(200)
+    const refreshedManifest = await refreshedMembers!.json() as { value: { id: string; version: number } }
+    expect((await post("import-apply", { manifestId: refreshedManifest.value.id, version: refreshedManifest.value.version }))?.status).toBe(200)
     const storedRoster = await store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot.data.roster }))
     expect(storedRoster).toEqual([{ name: "Roster person", title: "Analyst", type: "Employee", leader: "Lead", location: "Geneva", start: "2027-01-01", end: "", status: "Active" }])
+    const lockedPositions = await store.transaction("planner", async (snapshot) => {
+      const version = (snapshot.data.versions as { locked: boolean; hc: { positions: unknown } }[])[0]!
+      version.locked = true
+      return { commit: true, value: structuredClone(version.hc.positions) }
+    })
+    const lockedChoices = await importHttp(new Request(`${url("import-targets")}&surface=planner`, { headers: { cookie } }), "planner")
+    const lockedPlanner = ((await lockedChoices!.json()) as { value: { label: string; surface: string; selectionRef: string }[] }).value.find((row) => row.label === "FY27")
+    if (!lockedPlanner) throw new Error("locked Planner version not discovered")
+    members.getCell("A2").value = "Updated person"
+    const lockedForm = new FormData()
+    lockedForm.set("file", new File([new Uint8Array(await membersWorkbook.xlsx.writeBuffer())], "members.xlsx", { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }))
+    lockedForm.set("surface", lockedPlanner.surface); lockedForm.set("selectionRef", lockedPlanner.selectionRef); lockedForm.set("options", JSON.stringify({ newVersion: false, removeMissing: false, preview: {} }))
+    const lockedAdmission = await importHttp(new Request(url("import-admit"), { method: "POST", headers: { cookie, origin, "Idempotency-Key": randomUUID() }, body: lockedForm }), "planner")
+    expect(lockedAdmission?.status).toBe(200)
+    const lockedFile = await lockedAdmission!.json() as { value: { ref: string } }
+    const lockedPreview = await post("import-preview", { admittedFileRef: lockedFile.value.ref, format: "xlsx", options: {} })
+    expect(lockedPreview?.status).toBe(200)
+    const lockedManifest = await lockedPreview!.json() as { value: { id: string; version: number } }
+    expect((await post("import-apply", { manifestId: lockedManifest.value.id, version: lockedManifest.value.version }))?.status).toBe(200)
+    const lockedResult = await store.transaction("planner", async (snapshot) => ({ commit: false, value: { roster: snapshot.data.roster, positions: (snapshot.data.versions as { hc: { positions: unknown } }[])[0]!.hc.positions } }))
+    expect(lockedResult.roster).toMatchObject([{ name: "Updated person" }])
+    expect(lockedResult.positions).toEqual(lockedPositions)
     const originalIdentity = await store.transaction("procurement", async (snapshot) => ({ commit: false, value: sfSourceIdentity(snapshot, "document-asset", "asset-1") }))
     const entered = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
     const locked = store.transactionAll!(async () => {
@@ -271,4 +340,4 @@ test("real host persists procurement document evidence and Planner import under 
     const oldSource = await uiCall("sf_evidence_get", { evidenceRef: confirmed.value.ref }, (context) => resolveSfDocumentEvidence(confirmed.value.ref, context, service.documents.reader))
     expect(oldSource.state).not.toBe("fresh")
   } finally { await driver.dispose(); await rm(directory, { recursive: true, force: true }) }
-})
+}, 120_000)
