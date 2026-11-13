@@ -80,7 +80,8 @@ export function createSfPlannerImportPreview(input: {
       const origin = matches[0]!
       return [[change.path, { sheet: origin.sheet, row: origin.row, column: origin.column, address: origin.address, field: origin.field }]]
     }))
-    return { status: "ok", value: { manifest, detail: plannerImportDetail({ manifestId: id, version: 1, sourceDigest: request.parsed.sourceDigest, domainReference: evidence.refId, changes: preview.changes, locations }), execution: { operationId, previewDigest: preview.previewDigest, previewAt: environment.at, actorId: context.binding.principalRef, idempotencyKey, targetIncarnation: request.target.incarnation, commandDigest: preview.commandDigest } } }
+    const outcomes = (request.parsed.origins ?? []).filter((origin) => (["OPEX", "CAPEX"].includes(origin.sheet) && origin.field === "Total") || (origin.sheet === "Headcount" && origin.field === "FY cost")).map((origin) => ({ kind: "ignored" as const, source: { sheet: origin.sheet, row: origin.row, column: origin.column, address: origin.address, field: origin.field }, reason: "not-consumed-by-import" as const }))
+    return { status: "ok", value: { manifest, detail: plannerImportDetail({ manifestId: id, version: 1, sourceDigest: request.parsed.sourceDigest, domainReference: evidence.refId, changes: preview.changes, locations, outcomes }), execution: { operationId, previewDigest: preview.previewDigest, previewAt: environment.at, actorId: context.binding.principalRef, idempotencyKey, targetIncarnation: request.target.incarnation, commandDigest: preview.commandDigest } } }
   }
 }
 

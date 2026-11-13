@@ -157,7 +157,7 @@ test("real host persists procurement document evidence and Planner import under 
     }
     expect(await store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot }))).toEqual(beforeAnalysis)
     const workbook = new Workbook(); const sheet = workbook.addWorksheet("OPEX")
-    sheet.addRow(["Line ID", "Cost element", "Vendor / item", "Currency", "Measure", "Jan"]); sheet.addRow(["42", "Licenses", "Licences", "USD", "Forecast", 0])
+    sheet.addRow(["Line ID", "Cost element", "Vendor / item", "Currency", "Measure", "Jan", "Total"]); sheet.addRow(["42", "Licenses", "Licences", "USD", "Forecast", 0, 1200])
     const bytes = new Uint8Array(await workbook.xlsx.writeBuffer())
     const form = new FormData()
     form.set("file", new File([bytes], "forecast.xlsx", { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }))
@@ -173,6 +173,8 @@ test("real host persists procurement document evidence and Planner import under 
     const manifest = await preview!.json() as { value: { id: string; version: number } }
     const detail = await importHttp(new Request(`${url("import-detail")}&manifestId=${encodeURIComponent(manifest.value.id)}&version=${manifest.value.version}`, { headers: { cookie } }), "planner")
     expect(detail?.status).toBe(200)
+    const detailValue = await detail!.json() as { value: { detail: { changes: { kind: string; source: { field?: string; address?: string } }[] } } }
+    expect(detailValue.value.detail.changes).toContainEqual(expect.objectContaining({ kind: "ignored", source: expect.objectContaining({ field: "Total", address: "G2" }) }))
     const applied = await post("import-apply", { manifestId: manifest.value.id, version: manifest.value.version })
     expect(applied?.status).toBe(200)
     expect(await store.transaction("planner", async (snapshot) => ({ commit: false, value: ((snapshot.data.versions as { lines: { f: (number | null)[] }[] }[])[0]!).lines[0]!.f[0] }))).toBe(0)
