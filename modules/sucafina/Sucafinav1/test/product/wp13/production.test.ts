@@ -13,7 +13,7 @@ import type { BusinessContextService, BusinessEvidenceRef } from "../../../produ
 import type { PlannerPort, PlannerSourceHost } from "../../../product/contracts/ports.ts"
 import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
 
-test("production factory preserves a Planner preview as conditional and stores it in C08", async () => {
+test("production factory keeps an unbound Planner preview conditional", async () => {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-portfolio-production-"))
   await chmod(directory, 0o700)
   const request = new Request("https://example.test")
@@ -41,19 +41,28 @@ test("production factory preserves a Planner preview as conditional and stores i
     const cases = createDecisionCasePort({ state, host, creationTarget: { ref: "case", incarnation: "inc" }, operationIdentity: () => "operation", authorizeCase: async () => access.allowed, evidence, createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
     const results = createSfDecisionResultStore({ state, host, authorizeCase: async () => access.allowed, verifySources: async () => access.allowed, createId: () => "portfolio-id", now: () => "2026-11-13T00:00:00Z" })
     const contribution = createProductionPortfolio({ cases, planner, sources, evidence, revalidate: host.revalidate, createReceipt: async () => undefined, decisions: { prepareChanges: unavailable }, persistence: { results, caseFor: async () => ({ status: "ok", value: caseRef }), idempotencyKey: async () => "operation" }, enabledOperations: ["sf_portfolio_evaluate", "sf_sensitivity_evaluate"] })
-    expect(contribution.capabilities.map((item) => item.id)).toEqual(["sf_portfolio_evaluate"])
+    expect(contribution.capabilities).toEqual([])
     if (!contribution.persistent) throw new Error("persistent portfolio unavailable")
     const candidate = portfolioCandidateRef({ caseRef: encodeCaseRef(caseRef), caseVersion: 1, alternativeId: "alt", alternativeVersion: 1 })
-    const saved = await contribution.persistent.evaluateAndStore({ scope: { horizon, currency: "USD" }, candidateRefs: [candidate], operations: [], constraints: ["max-cost"], priorities: [], explorationLimit: 1 }, caseRef, context)
-    expect(saved.status).toBe("ok")
-    if (saved.status !== "ok") return
+    const portfolioRequest = { scope: { horizon, currency: "USD" }, candidateRefs: [candidate], operations: [], constraints: ["max-cost"], priorities: [], explorationLimit: 1 }
+    expect(await contribution.persistent.evaluateAndStore(portfolioRequest, caseRef, context)).toEqual({ status: "unavailable", reason: "portfolio-binding-unavailable" })
+    const preview = await contribution.preview(portfolioRequest, context)
+    expect(preview.status).toBe("ok")
+    if (preview.status !== "ok") return
     expect(access.simulations).toBe(1)
-    expect(saved.value.portfolioResultRef).toBe("decision-result:portfolio-id")
-    expect(saved.value.portfolio.combinations[0].eligibility).toBe("conditioned")
-    expect(saved.value.portfolio.combinations[0].costCoverageRefs).toEqual([])
-    expect(saved.value.portfolio.combinations[0].restrictions).toContain("analysis-unavailable")
+    expect(preview.value.portfolio.combinations[0].eligibility).toBe("conditioned")
+    expect(preview.value.portfolio.combinations[0].costCoverageRefs).toEqual([])
+    expect(preview.value.portfolio.combinations[0].restrictions).toContain("analysis-unavailable")
+    const withCandidateCoverage = createProductionPortfolio({ cases, planner, sources: { ...sources, resolveForecastCoverage: async (reference) => reference === "candidate-coverage" ? { status: "ok", value: { coverageRef: reference, basis: { id: "basis", version: 1, decisionType: "unknown", categoryIds: [], additionalCategoryIds: [], sourceRefs: assumptionRefs }, assessment: scenario.costCoverage } } : { status: "unavailable", reason: "unknown-coverage" } }, candidateCoverageRefFor: async () => ({ status: "ok", value: "candidate-coverage" }), evidence, revalidate: host.revalidate, createReceipt: async () => undefined, decisions: { prepareChanges: unavailable }, persistence: { results, caseFor: async () => ({ status: "ok", value: caseRef }), idempotencyKey: async () => "operation" }, enabledOperations: ["sf_portfolio_evaluate"] })
+    const covered = await withCandidateCoverage.port.evaluate({ scope: { horizon, currency: "USD" }, candidateRefs: [candidate], operations: [], constraints: [], priorities: [], explorationLimit: 1 }, context)
+    expect(covered.status).toBe("ok")
+    if (covered.status === "ok") {
+      expect(covered.value.combinations[0].costCoverageRefs).toEqual(["candidate-coverage"])
+      expect(covered.value.combinations[0].restrictions.some((reason) => reason.includes("missing-category:training"))).toBe(true)
+      expect(covered.value.combinations[0].eligibility).toBe("conditioned")
+    }
     access.allowed = false
-    expect((await contribution.persistent.read(saved.value.portfolioResultRef, context)).status).toBe("denied")
+    expect((await contribution.preview(portfolioRequest, context)).status).toBe("denied")
   } finally {
     await store.dispose()
     await rm(directory, { recursive: true, force: true })

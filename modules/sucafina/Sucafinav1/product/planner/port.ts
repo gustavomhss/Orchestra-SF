@@ -15,7 +15,7 @@ import { plannerCoverageComplete } from "./coverage.ts"
 import { simulateScenario } from "./scenario-port.ts"
 import type { PlannerScenarioInputs } from "./scenario-port.ts"
 import { compareScenarios } from "./scenario-comparison-port.ts"
-import type { PlannerScenarioHost } from "./scenario-comparison-port.ts"
+import type { PlannerCriteriaHost, PlannerScenarioHost } from "./scenario-comparison-port.ts"
 
 // The registry and port hash the same actor-filtered inputs and engine output.
 export function projectPlannerSource(snapshot: Snapshot, actor: Actor, versionId: string): Record<string, unknown> | undefined {
@@ -37,7 +37,7 @@ export function projectPlannerSource(snapshot: Snapshot, actor: Actor, versionId
   return { ...version, fteInputsKnown, sharedEntities: rows(view.data.entities), sharedAllocations: rows(view.data.allocations) }
 }
 
-export function createPlannerPort(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios?: PlannerScenarioHost; scenarioInputs?: PlannerScenarioInputs; evidence?: BusinessContextService; sensitivity?: PlannerPort["evaluateSensitivity"] }): PlannerPort {
+export function createPlannerPort(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios?: PlannerScenarioHost; criteria?: PlannerCriteriaHost; scenarioInputs?: PlannerScenarioInputs; evidence?: BusinessContextService; sensitivity?: PlannerPort["evaluateSensitivity"] }): PlannerPort {
   return {
     compareForecast: (request, binding) => compareForecast(input, request, binding),
     simulateScenario: (request, binding) => simulateScenario({ ...input, inputs: input.scenarioInputs, compare: (request, binding) => compareForecast(input, request, binding), project: projectPlannerSource }, request, binding),
@@ -102,6 +102,8 @@ async function compareForecast(input: { host: DomainPortHost; sources: PlannerSo
         const actual = Array.isArray(line.a) && typeof line.a[month - 1] === "number" && Number.isFinite(line.a[month - 1]) ? line.a[month - 1] : null
         const forecast = Array.isArray(line.f) && typeof line.f[month - 1] === "number" && Number.isFinite(line.f[month - 1]) ? line.f[month - 1] : null
         for (const [measure, raw] of [["budget", budget], ["actual", actual], ["forecast", forecast]] as const) values.push({ id: `${line.id}:${month}:${measure}`, value: typeof raw === "number" ? raw : null, currency: typeof line.cur === "string" ? line.cur : "USD", period, granularity: "month", sourceRefs: [ref], drilldown: ref, evidenceState: typeof raw === "number" ? "confirmed" : "absent" })
+        const declaredCurrency = typeof line.cur === "string" && line.cur.trim() ? line.cur : null
+        values.push({ id: `${line.id}:${month}:currency-declared`, value: declaredCurrency, period, granularity: "month", sourceRefs: [ref], drilldown: ref, evidenceState: declaredCurrency === null ? "absent" : "confirmed" })
         for (const measure of ["budget", "actual"] as const) {
           const raw = measure === "budget" ? budget : actual
           const converted = Array.isArray(line[measure]) ? line[measure][month - 1] : null

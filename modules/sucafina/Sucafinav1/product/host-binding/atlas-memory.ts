@@ -30,6 +30,7 @@ export function createSfAtlasMemory(input: {
       const request = input.host.requestFor(call)
       if (ref.kind !== "case-event" || !request || request.signal.aborted || !input.scannerVersion.trim() || !await input.host.revalidate(call)) return unavailable("authority-unavailable")
       try { sfEvidenceSourceMaps([ref]) } catch { return unavailable("invalid-evidence") }
+      if (ref.target.evidenceRefs.flatMap(expandEvidence).some((dependency) => dependency.kind === "case-event")) return unavailable("nested-case-event-unavailable")
       const found = await input.cases.read({ caseRef: encodeCaseRef({ id: ref.target.caseId, incarnation: ref.target.caseIncarnation }) }, call)
       if (found.status !== "ok") return unavailable("case-unavailable")
       const mapped = mapSfAtlasEntry({ kind: "task", projection: found.value, eventId: ref.target.eventId, bundleRef: ref })
@@ -116,19 +117,22 @@ export function createSfAtlasMemory(input: {
         const record = event.payload as MemoryRecord
         const envelope = partition.envelopes[id]
         const boundCase = envelope?.caseRef
-        if (!envelope || !boundCase || envelope.eventId !== id || envelope.owner !== owner || record.owner !== owner || envelope.kind !== "task" || record.kind !== "task" || boundCase.id !== caseRef.id || boundCase.incarnation !== caseRef.incarnation || boundCase.version !== found.value.case.version) return { status: "unavailable" as const }
+        if (!envelope || !boundCase || envelope.eventId !== id || envelope.owner !== owner || record.owner !== owner || envelope.kind !== "task" || record.kind !== "task" || boundCase.id !== caseRef.id || boundCase.incarnation !== caseRef.incarnation || boundCase.version > found.value.case.version) return { status: "unavailable" as const }
         if (envelope.projectionDigest !== digestSfValue({ kind: "task", owner, entry: record.entry, sourceEventId: envelope.sourceEventId, evidenceRefs: envelope.evidenceRefs })) return { status: "unavailable" as const }
         const originals = [...envelope.evidenceRefs, ...envelope.dependencies]
         try {
           const maps = sfEvidenceSourceMaps(originals)
           if (digestSfValue(maps.sourceVersions) !== digestSfValue(envelope.sourceVersions) || digestSfValue(maps.sourceIncarnations) !== digestSfValue(envelope.sourceIncarnations)) return { status: "unavailable" as const }
         } catch { return { status: "unavailable" as const } }
+        if (envelope.dependencies.flatMap(expandEvidence).some((ref) => ref.kind === "case-event") || envelope.evidenceRefs.some((ref) =>
+          ref.kind === "case-event" && ref.target.evidenceRefs.flatMap(expandEvidence).some((dependency) => dependency.kind === "case-event")))
+          return { status: "unavailable" as const }
         const refs = [...new Map(originals.flatMap(expandEvidence).map((ref) => [ref.refDigest, ref])).values()]
         const resolutions = await Promise.all(refs.map((ref) => input.evidence.resolve(ref, call)))
         for (const [index, resolution] of resolutions.entries()) {
           const ref = refs[index]!
           const capture = partition.originals[ref.refDigest]
-          if (resolution.state !== "fresh" || !resolution.currentRef || !resolution.authorizedProjection || !capture || digestSfValue(capture.ref) !== digestSfValue(ref) || partition.captureDigests[id]?.[ref.refDigest] !== digestSfValue(capture) || !await input.proveContinuity(ref, resolution.currentRef, call)) return { status: "unavailable" as const }
+          if ((resolution.state !== "fresh" && resolution.state !== "historical") || !resolution.currentRef || !resolution.authorizedProjection || !capture || digestSfValue(capture.ref) !== digestSfValue(ref) || partition.captureDigests[id]?.[ref.refDigest] !== digestSfValue(capture) || (resolution.state === "historical" && (resolution.differences === undefined || digestSfValue(resolution.authorizedProjection) !== digestSfValue(capture.projection))) || !await input.proveContinuity(ref, resolution.currentRef, call)) return { status: "unavailable" as const }
         }
         approved.push({ id, event, envelope, resolutions })
       }
@@ -141,7 +145,7 @@ export function createSfAtlasMemory(input: {
       for (const record of records) {
         for (const resolution of record.resolutions) {
           const again = await input.evidence.resolve(resolution.ref, call)
-          if (again.state !== "fresh" || !again.currentRef || !again.authorizedProjection || digestSfValue(again.currentRef) !== digestSfValue(resolution.currentRef) || !await input.proveContinuity(resolution.ref, again.currentRef, call)) return { status: "unavailable" as const }
+          if (again.state !== resolution.state || !again.currentRef || !again.authorizedProjection || digestSfValue(again.currentRef) !== digestSfValue(resolution.currentRef) || digestSfValue(again.authorizedProjection) !== digestSfValue(resolution.authorizedProjection) || (again.state === "historical" && (again.differences === undefined || digestSfValue(again.differences) !== digestSfValue(resolution.differences))) || !await input.proveContinuity(resolution.ref, again.currentRef, call)) return { status: "unavailable" as const }
         }
       }
       const latest = await input.state.read(request, "atlas", (state) => state.atlas[owner]).catch(() => undefined)

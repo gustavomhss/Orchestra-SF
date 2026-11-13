@@ -41,7 +41,8 @@ export type SfNativeHostApi = {
   prepare: (input: SfNativePrepareInput) => Effect.Effect<PortResult<SfNativeRun>>
   collect: (binding: TrustedExecutionBinding) => Effect.Effect<PortResult<ReadonlyArray<{ seq: number; message: import("@orchestra/core/session/message").SessionMessage.Message }>>>
   execute: (binding: TrustedExecutionBinding) => Effect.Effect<PortResult<true>>
-  interrupt: (binding: TrustedExecutionBinding) => Effect.Effect<PortResult<true>>
+  interrupt: (binding: TrustedExecutionBinding, request?: Request) => Effect.Effect<PortResult<true>>
+  release: (binding: TrustedExecutionBinding) => Effect.Effect<void>
 }
 
 export class SfNativeHost extends Context.Service<SfNativeHost, SfNativeHostApi>()("@orchestra/sucafina/NativeHost") {}
@@ -72,6 +73,7 @@ export type SfNativeHostPolicy = {
   }
   admit: (input: SfNativePrepareInput) => Effect.Effect<boolean, unknown>
   authorize: (admission: SfNativeAdmission, binding: TrustedExecutionBinding) => Effect.Effect<boolean, unknown>
+  authorizeInterrupt?: (admission: SfNativeAdmission, binding: TrustedExecutionBinding, request: Request) => Effect.Effect<boolean, unknown>
 }
 
 /** Product-owned node and registration callback share one private Location-bound capability registry. */
@@ -230,12 +232,24 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
               return { status: "ok", value: true } as const
             })
           }),
-          interrupt: (binding) => Effect.gen(function* () {
-            if (!(yield* authorized(binding))) return { status: "denied", reason: "native-authority-unavailable" } as const
-            const run = runs.get(binding)!
+          interrupt: (binding, request) => Effect.gen(function* () {
+            const run = runs.get(binding)
+            if (!run || !lifetime.open)
+              return { status: "denied", reason: "native-authority-unavailable" } as const
+            const current = request ? false : (yield* authorized(binding))
+            const cancelled = request && !request.signal.aborted && input.authorizeInterrupt
+              ? yield* Effect.suspend(() => input.authorizeInterrupt!(run.admission, binding, request)).pipe(Effect.catch(() => Effect.succeed(false))) : false
+            if ((!current && !cancelled) || !lifetime.open || runs.get(binding) !== run || (request && request.signal.aborted))
+              return { status: "denied", reason: "native-authority-unavailable" } as const
             yield* session.interrupt(run.admission.sessionID)
             run.release()
             return { status: "ok", value: true } as const
+          }),
+          release: (binding) => Effect.gen(function* () {
+            const run = runs.get(binding)
+            if (!run) return
+            yield* session.interrupt(run.admission.sessionID)
+            run.release()
           }),
         })
         const release = input.onReady?.(api)

@@ -1,7 +1,8 @@
 import { domain } from "../../runtime/planner.ts"
 import { object, rows } from "../../runtime/contract.ts"
 import type { Actor, Command, Environment, Snapshot } from "../../runtime/contract.ts"
-import { digestSfValue } from "../contracts/canonical.ts"
+import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
+import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { SourceRef } from "../contracts/context.ts"
 import type { PreparedDomainMutation } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
@@ -12,11 +13,12 @@ import { sfPlannerProjectionSelector } from "../integration/source-projections.t
 import { projectPlannerSource } from "./port.ts"
 
 /** Prepare one existing Planner line's forecast edit; the caller retains the human approval boundary. */
-export function preparePlannerMutation(input: { snapshot: Snapshot; actor: Actor; environment: Environment; context: TrustedDomainContext; target: SourceRef; scope: SfSourceScope; command: Command; operationId: string; idempotencyKey: string }) {
-  const prepared = structuredClone({ actor: input.actor, target: input.target, scope: input.scope, command: input.command, operationId: input.operationId, idempotencyKey: input.idempotencyKey, at: input.environment.at })
+export function preparePlannerMutation(input: { snapshot: Snapshot; actor: Actor; environment: Environment; context: TrustedDomainContext; target: SourceRef; evidence: Extract<BusinessEvidenceRef, { kind: "record" }>; scope: SfSourceScope; command: Command; operationId: string; idempotencyKey: string }) {
+  const prepared = structuredClone({ actor: input.actor, target: input.target, evidence: input.evidence, scope: input.scope, command: input.command, operationId: input.operationId, idempotencyKey: input.idempotencyKey, installationId: input.context.binding.installationId, projectId: input.context.binding.projectId, at: input.environment.at })
   const fields = Object.keys(prepared.command.values)
-  if (!prepared.actor.id.trim() || !prepared.operationId.trim() || !prepared.idempotencyKey.trim() || !Number.isFinite(Date.parse(prepared.at))) return undefined
+  if (!prepared.actor.id.trim() || !prepared.installationId.trim() || !prepared.projectId.trim() || !prepared.operationId.trim() || !prepared.idempotencyKey.trim() || !Number.isFinite(Date.parse(prepared.at))) return undefined
   if (prepared.target.surface !== "planner" || prepared.target.type !== "planner-version" || !prepared.target.id || !prepared.target.incarnation || !Number.isFinite(Date.parse(prepared.target.observedAt)) || !isSfPeriod(prepared.target.period) || !Array.isArray(prepared.target.fields) || prepared.target.fields.some((field) => typeof field !== "string")) return undefined
+  if (prepared.evidence.schema !== "sf-evidence-v1" || prepared.evidence.kind !== "record" || prepared.evidence.installationId !== prepared.installationId || prepared.evidence.projectId !== prepared.projectId || prepared.evidence.refDigest !== digestSfEvidenceRef(prepared.evidence) || prepared.evidence.target.surface !== "planner" || prepared.evidence.target.recordType !== prepared.target.type || prepared.evidence.target.recordId !== prepared.target.id || prepared.evidence.target.incarnation !== prepared.target.incarnation || prepared.evidence.target.version !== prepared.target.version || !prepared.evidence.target.period || prepared.evidence.target.period.start > prepared.target.period.start || prepared.evidence.target.period.end < prepared.target.period.end || digestSfValue([...prepared.evidence.target.fields].sort()) !== digestSfValue([...prepared.target.fields].sort())) return undefined
   if (prepared.scope.principalRef !== prepared.actor.id || prepared.actor.id !== input.context.binding.principalRef || prepared.scope.accessRevision !== input.context.binding.accessRevision || prepared.scope.policyVersion !== input.context.binding.policyVersion || prepared.scope.recordType !== prepared.target.type || prepared.scope.recordId !== prepared.target.id) return undefined
   if (!["OPEX", "CAPEX"].includes(prepared.command.page) || prepared.command.action !== "save" || !prepared.command.id || prepared.command.id.startsWith("HR:") || prepared.command.confirmed === true || !Number.isSafeInteger(prepared.command.version) || prepared.command.version < 0 || prepared.command.values.versionId !== prepared.target.id) return undefined
   if (!fields.some((key) => /^f(?:[0-9]|1[01])$/.test(key)) || fields.some((key) => key !== "versionId" && !/^f(?:[0-9]|1[01])$/.test(key))) return undefined
@@ -34,6 +36,7 @@ export function preparePlannerMutation(input: { snapshot: Snapshot; actor: Actor
     return prepared.target.period.start > start || prepared.target.period.end < end
   })) return undefined
   if (rows(projection.lines).filter((line) => line.id === prepared.command.id && line.sec === (prepared.command.page === "OPEX" ? "opex" : "capex")).length !== 1) return undefined
+  if (prepared.evidence.target.projectionDigest !== digestSfValue({ versionId: prepared.target.id, projection })) return undefined
   const baseDigest = digestSfValue(projection)
   const run = (snapshot: Snapshot, actor: Actor, environment: Environment) => {
     const ids = { next: 0 }

@@ -23,19 +23,21 @@ export function createSfImportHost(input: {
   assets: AssetPersistence
   services: AssetServices
   state: SfProductStatePort
-  operationIdentity: (context: TrustedDomainContext) => string | undefined
-  authorizeTarget: (target: ImportTarget, context: TrustedDomainContext) => Promise<boolean>
+  operationIdentity: (context: TrustedDomainContext, operation?: { name: "sf_import_preview"; digest: string }) => string | undefined
+  authorizeTarget: (target: ImportTarget, context: TrustedDomainContext, mode?: "receipt") => Promise<boolean>
   authorizeAdmission: (payload: { target: ImportTarget; format: "xlsx" | "xls" | "json"; digest: string }, context: TrustedDomainContext) => Promise<boolean>
   preview: Pick<ImportPreviewHost, "revalidate">
   apply: Pick<ImportApplyHost, "revalidate" | "confirm">
   planner: Pick<Parameters<typeof createSfPlannerImportPreview>[0], "resolveTarget" | "verifyTarget">
   dashboard: Pick<Parameters<typeof createSfDashboardImportPreview>[0], "resolveTarget" | "verifyScope">
 }) {
-  const files = createSfStagedImportFiles(input)
-  const store = createSfImportPreviewStore({ ...input, validateFile: files.revalidate })
-  const plannerPreview = createSfPlannerImportPreview({ host: input.host, operationIdentity: input.operationIdentity, ...input.planner })
+  const pending = new WeakMap<TrustedDomainContext, { name: "sf_import_preview"; digest: string }>()
+  const operationIdentity = (context: TrustedDomainContext) => input.operationIdentity(context, pending.get(context))
+  const files = createSfStagedImportFiles({ ...input, operationIdentity })
+  const store = createSfImportPreviewStore({ ...input, operationIdentity, validateFile: files.revalidate })
+  const plannerPreview = createSfPlannerImportPreview({ host: input.host, operationIdentity, ...input.planner })
   const plannerApply = createSfPlannerImportAtomic({ host: input.host, state: input.state, files, authorizeTarget: input.authorizeTarget, verifyTarget: input.planner.verifyTarget, readView: async (id, context) => { const result = await store.read(id, context); return result.status === "ok" ? { status: "ok", value: store.view(result.value.manifest) } : result } })
-  const dashboardPreview = createSfDashboardImportPreview({ host: input.host, operationIdentity: input.operationIdentity, ...input.dashboard })
+  const dashboardPreview = createSfDashboardImportPreview({ host: input.host, operationIdentity, ...input.dashboard })
   const dashboardApply = createSfDashboardImportAtomic({ host: input.host, state: input.state, files, authorizeTarget: input.authorizeTarget, verifyScope: (snapshot, staged, target, actor, manifest, evidence, context, at) => !!manifest.commands[0] && input.dashboard.verifyScope(snapshot, staged, target, actor, manifest.commands[0].command, evidence, context, at), readView: async (id, context) => { const result = await store.read(id, context); return result.status === "ok" ? { status: "ok", value: store.view(result.value.manifest) } : result } })
   return {
     admit: files.admit,
@@ -43,8 +45,10 @@ export function createSfImportHost(input: {
       const admitted = await files.target(request.admittedFileRef, context)
       if (admitted.status !== "ok") return admitted
       if (request.format !== admitted.value.format || digestSfValue(request.options) !== digestSfValue(admitted.value.target.options.preview)) return { status: "stale" as const, reason: "file-options-changed" }
+      if (pending.has(context)) return { status: "denied" as const, reason: "preview-already-active" }
       const prepared: { detail?: ImportDetail; execution?: ImportExecution } = {}
-      return previewImport(request, context, { ...input.preview, files, prepare: async ({ parsed }, trusted) => { const request = { parsed, target: admitted.value.target }; const result = request.target.surface === "planner" ? await plannerPreview(request, trusted) : await dashboardPreview(request, trusted); if (result.status !== "ok") return result; prepared.detail = result.value.detail; prepared.execution = result.value.execution; return { status: "ok", value: result.value.manifest } }, save: (manifest, trusted) => prepared.detail ? store.save(manifest, prepared.detail, request.admittedFileRef, admitted.value.target, trusted, prepared.execution) : Promise.resolve({ status: "unavailable", reason: "preview-detail-unavailable" }) })
+      pending.set(context, { name: "sf_import_preview", digest: digestSfValue(request) })
+      try { return await previewImport(request, context, { ...input.preview, files, prepare: async ({ parsed }, trusted) => { const request = { parsed, target: admitted.value.target }; const result = request.target.surface === "planner" ? await plannerPreview(request, trusted) : await dashboardPreview(request, trusted); if (result.status !== "ok") return result; prepared.detail = result.value.detail; prepared.execution = result.value.execution; return { status: "ok", value: result.value.manifest } }, save: (manifest, trusted) => prepared.detail ? store.save(manifest, prepared.detail, request.admittedFileRef, admitted.value.target, trusted, prepared.execution) : Promise.resolve({ status: "unavailable", reason: "preview-detail-unavailable" }) }) } finally { pending.delete(context) }
     },
     detail: async (request: { manifestId: string; version: number; digest?: string }, context: TrustedDomainContext) => {
       if (context.kind !== "ui" || !await input.host.revalidate(context)) return { status: "denied" as const, reason: "human-authority-required" }

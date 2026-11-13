@@ -9,7 +9,7 @@ import type { SfHostRuntime } from "../contracts/host-context.ts"
 import type { DomainPortHost } from "../contracts/ports.ts"
 import type { SfNativeAdmission, SfSelectedRuntime } from "../contracts/runtime.ts"
 import type { TrustedExecutionBinding } from "../contracts/sf-execution.ts"
-import type { SfStateNamespace } from "../contracts/state.ts"
+import type { SfStateAuthority, SfStateNamespace } from "../contracts/state.ts"
 import { parseCaseRef } from "../decisions/case-port.ts"
 import { createSfExecutionBindingRegistry } from "../host-binding/execution-context.ts"
 import { createSfProductState } from "../host-binding/state-provider.ts"
@@ -38,7 +38,7 @@ export function createSfProductAuthority(input: {
   providerGeneration: () => Promise<number | undefined>
   /** Composition-owned capability; never returned in browser or model services. */
   proposalCoverageWrites?: WeakSet<object>
-  authorizeDocument: (request: Request, snapshot: Snapshot, assetId: string, principal: string) => Promise<{ incarnation: string } | undefined>
+  authorizeDocument: (request: Request, snapshot: Snapshot, assetId: string, principal: string, authority: SfStateAuthority) => Promise<{ incarnation: string } | undefined>
 }) {
   const grants = structuredClone(input.grants)
   if (!input.installationId.trim() || !input.policyVersion.trim() || !URL.canParse(input.origin) || new URL(input.origin).origin !== input.origin ||
@@ -115,7 +115,7 @@ export function createSfProductAuthority(input: {
       const entry = Object.hasOwn(cases, id) ? object(cases[id]) : undefined
       if (entry && entry.id === id && typeof entry.incarnation === "string" && (!parsed || parsed.incarnation === entry.incarnation) &&
         Array.isArray(entry.participants) && entry.participants.includes(actor.principalRef)) return { incarnation: entry.incarnation }
-      if (namespace === "documents") return input.authorizeDocument(request, snapshot, targetRef, actor.principalRef)
+      if (namespace === "documents") return input.authorizeDocument(request, snapshot, targetRef, actor.principalRef, { principalRef: actor.principalRef, accessRevision: actor.accessRevision, policyVersion: actor.policyVersion })
       return undefined
     },
   })
@@ -125,7 +125,7 @@ export function createSfProductAuthority(input: {
     authorize: async (request, operation) => {
       const actor = await resolve(request).catch(() => undefined)
       if (!actor || !(operation.startsWith("sf-human:")
-        ? actor.canWrite && actor.grant.humanActions?.some((action) => operation === `sf-human:${action}`)
+        ? (actor.canWrite || operation === "sf-human:views.read" || operation === "sf-human:analysis.read" || operation === "sf-human:decisions.portfolio.read") && actor.grant.humanActions?.some((action) => operation === `sf-human:${action}`)
         : actor.grant.operations.includes(operation))) return undefined
       return { installationId: actor.identity.installationId, projectId: actor.identity.projectId,
         principalRef: actor.principalRef, policyVersion: actor.policyVersion, accessRevision: actor.accessRevision }

@@ -61,10 +61,10 @@ export function createProductionPortfolio(input: {
   }
   return createPortfolioContribution({
     cases: input.cases,
-    enabledOperations: input.enabledOperations.filter((operation) => operation !== "sf_sensitivity_evaluate" || !!input.sensitivity),
+    enabledOperations: input.enabledOperations.filter((operation) => operation === "sf_portfolio_evaluate" ? !!input.persistence.portfolioBindings : !!input.sensitivity),
     createReceipt: input.createReceipt,
     decisions: input.decisions,
-    persistence: input.persistence,
+    persistence: { ...input.persistence, requireBindings: true, revalidateAnalysis: input.analysis?.revalidate },
     plannerHost: {
       planner: input.planner,
       sensitivity: input.sensitivity,
@@ -88,11 +88,13 @@ export function createProductionPortfolio(input: {
         const analysis = await input.analysis.evaluate({ portfolio: request, candidates, scenario: scenarioRequest, result: scenario, costCoverageRefs }, context)
         if (analysis.status === "unavailable" && analysis.reason === "portfolio-analysis-not-yet-persisted") return { status: "ok", value: { costCoverageRefs, constraints: request.constraints.map((ref) => ({ ref, state: "unknown" as const, reason: "criterion-rule-unavailable" })) } }
         if (analysis.status !== "ok") return analysis
-        if (costCoverageRefs.some((ref) => !analysis.value.analysis.comparison.costCoverageRefs.includes(ref))) return { status: "stale", reason: "candidate-coverage-not-in-analysis" }
-        const stored = await input.persistence.results.read({ kind: "scenario", resultRef: analysis.value.analysis.scenarioResultRef }, context)
+        const stored = input.persistence.results.readHistoricalScenario ? await input.persistence.results.readHistoricalScenario({ resultRef: analysis.value.analysis.scenarioResultRef }, context) : await input.persistence.results.read({ kind: "scenario", resultRef: analysis.value.analysis.scenarioResultRef }, context)
         if (stored.status !== "ok") return stored
         if (stored.value.kind !== "scenario" || stored.value.requestDigest !== digestSfValue(scenarioRequest) || digestSfValue(stored.value.result) !== digestSfValue(analysis.value.analysis.scenario)) return { status: "stale", reason: "portfolio-scenario-changed" }
-        return { status: "ok", value: { scenario: stored.value.result, costCoverageRefs: analysis.value.analysis.comparison.costCoverageRefs, ...analysis.value } }
+        const compared = await input.persistence.results.read({ kind: "comparison", resultRef: analysis.value.analysis.comparisonRef }, context)
+        if (compared.status !== "ok") return compared
+        if (compared.value.kind !== "comparison" || (compared.value.caseRef.id !== stored.value.caseRef.id || compared.value.caseRef.incarnation !== stored.value.caseRef.incarnation || compared.value.caseRef.version < stored.value.caseRef.version) || digestSfValue(compared.value.result) !== digestSfValue(analysis.value.analysis.comparison) || compared.value.result.alternativeResultRef !== stored.value.resultRef) return { status: "stale", reason: "portfolio-comparison-changed" }
+        return { status: "ok", value: { scenario: stored.value.result, costCoverageRefs: [...new Set([...costCoverageRefs, ...analysis.value.analysis.comparison.costCoverageRefs])], ...analysis.value } }
       },
       revalidateEvaluation: async (scenario, refs, analysis, context, candidates) => {
         if (!await fresh(evidenceRefs(scenario), context)) return false
@@ -100,7 +102,11 @@ export function createProductionPortfolio(input: {
         const candidatesResult = await candidateCoverage(candidates, context)
         if (current.status !== "ok" || candidatesResult.status !== "ok") return false
         const known = [...new Set([...current.value, ...candidatesResult.value])]
-        if (analysis) return !!input.analysis && known.every((ref) => refs.includes(ref)) && await input.analysis.revalidate(analysis, context)
+        if (analysis) {
+          const stored = input.persistence.results.readHistoricalScenario ? await input.persistence.results.readHistoricalScenario({ resultRef: analysis.scenarioResultRef }, context) : await input.persistence.results.read({ kind: "scenario", resultRef: analysis.scenarioResultRef }, context)
+          const compared = await input.persistence.results.read({ kind: "comparison", resultRef: analysis.comparisonRef }, context)
+          return !!input.analysis && stored.status === "ok" && stored.value.kind === "scenario" && compared.status === "ok" && compared.value.kind === "comparison" && stored.value.caseRef.id === compared.value.caseRef.id && stored.value.caseRef.incarnation === compared.value.caseRef.incarnation && stored.value.caseRef.version <= compared.value.caseRef.version && digestSfValue(stored.value.result) === digestSfValue(analysis.scenario) && digestSfValue(compared.value.result) === digestSfValue(analysis.comparison) && known.every((ref) => refs.includes(ref)) && await input.analysis.revalidate(analysis, context)
+        }
         return digestSfValue(known) === digestSfValue(refs)
       },
     },

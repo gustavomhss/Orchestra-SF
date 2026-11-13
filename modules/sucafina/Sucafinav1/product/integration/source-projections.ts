@@ -10,6 +10,7 @@ import type { SfSourceScope } from "./source-lifecycle.ts"
 import { projectSfProcurementScope } from "./procurement-projections.ts"
 import { normalizeDashboardRecords } from "../dashboard/records.ts"
 import { projectDashboardSource } from "../dashboard/port.ts"
+import { publicSfData } from "./public-state.ts"
 
 /** Saved roles define the projection, never authenticate a later caller. Reads authenticate again. */
 export function sfPlannerProjectionSelector(snapshot: Snapshot, actor: Actor) {
@@ -29,7 +30,12 @@ export function projectSfSourceScope(surface: Surface, snapshot: Snapshot, scope
     const access = object(object(snapshot.data.access)[scope.principalRef])
     if (stored.id !== scope.principalRef || selector.roleMapDigest !== digestSfValue(roleMap(snapshot, "dashboard")) || typeof stored.canWrite !== "boolean" || !Array.isArray(stored.roles) || !stored.roles.every((role) => typeof role === "string")) return undefined
     const actor: Actor = { id: scope.principalRef, roles: stored.roles, canWrite: stored.canWrite, assigned: Array.isArray(access.assigned) ? access.assigned.filter((value): value is string => typeof value === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((value): value is string => typeof value === "string") : [] }
-    if (digestSfValue(actor) !== digestSfValue(stored) || typeof selector.page !== "string" || !Array.isArray(selector.fields) || !selector.fields.every((field) => typeof field === "string") || !selector.period || typeof selector.period !== "object") return undefined
+    if (digestSfValue(actor) !== digestSfValue(stored)) return undefined
+    // Whole-backup authority is explicit and retains the legacy dashboard administrator boundary.
+    if (scope.recordType === "dashboard-dataset") return scope.recordId === "all" && selector.kind === "dashboard-dataset-v1" && actor.canWrite && actor.roles.includes("admin") &&
+      Array.isArray(selector.fields) && selector.fields.length === 1 && selector.fields[0] === "data" && selector.period === undefined
+      ? { data: publicSfData(snapshot.data) } : undefined
+    if (typeof selector.page !== "string" || !Array.isArray(selector.fields) || !selector.fields.every((field) => typeof field === "string") || !selector.period || typeof selector.period !== "object") return undefined
     if (typeof observedAt !== "string" || !Number.isFinite(Date.parse(observedAt))) return undefined
     const asOf = `${new Date(observedAt).toISOString().slice(0, 10)}T00:00:00Z`
     if (scope.recordType === "dashboard-page" && scope.recordId === selector.page) return projectDashboardScope(snapshot, actor, { page: selector.page, fields: selector.fields, period: selector.period as Period }, asOf)

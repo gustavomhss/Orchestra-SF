@@ -5,7 +5,7 @@ import type { PortfolioHost } from "../../../product/portfolio/port.ts"
 import type { DecisionCasePort } from "../../../product/contracts/ports.ts"
 import type { AuthorizedCaseProjection } from "../../../product/contracts/business-context.ts"
 import type { PortfolioRequest } from "../../../product/contracts/operations.ts"
-import type { ScenarioResult } from "../../../product/contracts/decisions.ts"
+import type { PortfolioResult, ScenarioResult } from "../../../product/contracts/decisions.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 
 const context = { kind: "ui" } as TrustedDomainContext
@@ -60,4 +60,15 @@ test("promotes the reviewed combination through the case domain only for a human
   expect(await promotePortfolioAlternative({ ...input, expectedEvaluationDigest: "stale" }, context)).toEqual({ status: "stale", reason: "combination-changed" })
   expect(await promotePortfolioAlternative(input, { kind: "native" } as TrustedDomainContext)).toEqual({ status: "denied", reason: "human-promotion-required" })
   expect(calls).toHaveLength(1)
+})
+
+
+test("review digest ignores observation clocks but retains financial changes", () => {
+  const source = { surface: "planner", type: "line", id: "line", incarnation: "inc", version: 1, fields: ["amount"], period, observedAt: "2026-11-13T00:00:00Z" } as const
+  const component = { id: "line", amount: 40, currency: "USD", period, sourceRefs: [source], evidenceState: "confirmed" as const }
+  const result: PortfolioResult = { combinations: [{ id: "combination", caseRefs: ["case"], components: [component], costCoverageRefs: [], conflicts: [], restrictions: [], eligibility: "conditioned", comparisonStatus: "conditioned" }], limitations: [], evidenceRefs: [] }
+  const later: PortfolioResult = { ...result, combinations: [{ ...result.combinations[0], components: [{ ...component, sourceRefs: [{ ...source, observedAt: "2026-11-13T00:01:00Z" }] }] }] }
+  const changed: PortfolioResult = { ...result, combinations: [{ ...result.combinations[0], components: [{ ...component, amount: 41 }] }] }
+  expect(portfolioEvaluationDigest(request, later)).toBe(portfolioEvaluationDigest(request, result))
+  expect(portfolioEvaluationDigest(request, changed)).not.toBe(portfolioEvaluationDigest(request, result))
 })

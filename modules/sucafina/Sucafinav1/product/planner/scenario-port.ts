@@ -9,6 +9,7 @@ import type { ScenarioRequest } from "../contracts/operations.ts"
 import type { DomainPortHost, PlannerPort, PlannerSourceHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { simulatePlannerOperations } from "./scenario.ts"
+import { plannerKnownSubtotal } from "../../src/planner-accounts.ts"
 
 /** Host resolves the quantifiable value from the currently authorized source, not from model arguments. */
 export type PlannerScenarioInputs = {
@@ -99,5 +100,5 @@ export async function simulateScenario(input: { host: DomainPortHost; sources: P
   if (egress.length !== admission.length || egress.some((entry, index) => entry.state !== "fresh" || entry.ref.refDigest !== admission[index].ref.refDigest || entry.accessRevision !== admission[index].accessRevision) || !(await input.host.revalidate(binding))) return { status: "stale", reason: "scenario-evidence-changed" }
   const scenarioCoverage = { ...coverage.value.assessment, coverageState: coverage.value.assessment.coverageState === "unavailable" ? "unavailable" as const : "pending" as const, issues: [...coverage.value.assessment.issues, "scenario-coverage-reassessment-required"] }
   const unresolved = [...current.value.gaps, "scenario-is-hypothetical", "scenario-coverage-reassessment-required", ...request.assumptions.map((assumption) => `assumption:${assumption.id}:${assumption.state}:not-applied`)]
-  return { status: "ok", value: { id: `preview:${digestSfValue({ request, source: source.value.evidence.refDigest })}`, version: 0, components, knownSubtotal: components.some((component) => component.amount !== null) ? components.reduce((sum, component) => sum + (component.amount ?? 0), 0) : null, total: null, currency, horizon: period, sourceRefs: [source.value.evidence, ...evidenceRefs], costCoverage: scenarioCoverage, comparisonStatus: "conditioned", unresolvedConditions: unresolved, restrictions: ["preview-not-applied"] } }
+  return { status: "ok", value: { id: `preview:${digestSfValue({ request, source: source.value.evidence.refDigest })}`, version: 0, components, knownSubtotal: components.some((component) => component.amount !== null) ? plannerKnownSubtotal(components.map((component) => component.amount)) : null, total: null, currency, horizon: period, sourceRefs: [source.value.evidence, ...evidenceRefs], costCoverage: scenarioCoverage, comparisonStatus: "conditioned", unresolvedConditions: unresolved, restrictions: ["preview-not-applied"] } }
 }

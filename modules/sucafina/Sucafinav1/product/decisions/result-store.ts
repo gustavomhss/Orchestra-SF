@@ -21,7 +21,7 @@ export function createSfDecisionResultStore(input: {
   createId: () => string
   now: () => string
 }) {
-  const read = async (request: { resultRef: string; kind: keyof ResultMap }, context: TrustedDomainContext): Promise<PortResult<StoredDecisionResult>> => {
+  const readResult = async (request: { resultRef: string; kind: keyof ResultMap }, context: TrustedDomainContext, historical: boolean): Promise<PortResult<StoredDecisionResult>> => {
     const source = input.host.requestFor(context)
     if (!source || !request.resultRef.trim() || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "invalid-authority" }
     const current = await input.state.read(source, "cases", (state, authority) => {
@@ -32,11 +32,31 @@ export function createSfDecisionResultStore(input: {
     if (current.status !== "ok") return { status: current.status === "preview" ? "unavailable" : current.status, reason: "result-unavailable" }
     const value = current.value
     if (!value || value.stored.kind !== request.kind || !validResult(value.stored) || value.stored.resultRef !== request.resultRef || value.stored.resultDigest !== digestSfValue(value.stored.result)) return { status: "unavailable", reason: "result-unavailable" }
-    if (!allowedCase(value.current, value.stored.caseRef, context) || !await input.authorizeCase(value.current!, context).catch(() => false) || !await input.verifySources(value.stored, value.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
+    if (!allowedCase(value.current, value.stored.caseRef, context, historical) || !await input.authorizeCase(value.current!, context).catch(() => false) || !await input.verifySources(value.stored, value.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
     const again = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { current: state.cases[value.stored.caseRef.id], stored: (state as typeof state & { decisionResults?: Record<string, StoredDecisionResult> }).decisionResults?.[request.resultRef] } : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
     if (again.status !== "ok") return { status: "unavailable", reason: "result-unavailable" }
-    if (!again.value || !allowedCase(again.value.current, value.stored.caseRef, context) || !again.value.stored || digestSfValue(again.value.stored) !== digestSfValue(value.stored) || !await input.authorizeCase(again.value.current!, context).catch(() => false) || !await input.verifySources(again.value.stored, again.value.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
+    if (!again.value || !allowedCase(again.value.current, value.stored.caseRef, context, historical) || again.value.current?.version !== value.current?.version || !again.value.stored || digestSfValue(again.value.stored) !== digestSfValue(value.stored) || !await input.authorizeCase(again.value.current!, context).catch(() => false) || !await input.verifySources(again.value.stored, again.value.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
     return { status: "ok", value: structuredClone(value.stored) }
+  }
+  const read = (request: { resultRef: string; kind: keyof ResultMap }, context: TrustedDomainContext) => readResult(request, context, false)
+  const readHistoricalScenario = (request: { resultRef: string }, context: TrustedDomainContext) => readResult({ resultRef: request.resultRef, kind: "scenario" }, context, true)
+  const readByRequest = async (request: { caseRef: CaseRef; kind: keyof ResultMap; idempotencyKey: string; requestDigest: string }, context: TrustedDomainContext): Promise<PortResult<{ state: "found"; result: StoredDecisionResult } | { state: "not-found" }>> => {
+    const source = input.host.requestFor(context)
+    if (!source || !request.idempotencyKey.trim() || !/^[a-f0-9]{64}$/.test(request.requestDigest) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "invalid-authority" }
+    const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { decision: state.cases[request.caseRef.id], prior: state.transactions[JSON.stringify([authority.principalRef, "cases", request.caseRef.id, `decision-result:${request.idempotencyKey}`])] } : undefined).catch(() => undefined)
+    if (!current || current.status !== "ok" || !current.value) return { status: "unavailable", reason: "result-unavailable" }
+    if (!allowedCase(current.value.decision, request.caseRef, context) || !await input.authorizeCase(current.value.decision!, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
+    if (!current.value.prior) {
+      const again = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { decision: state.cases[request.caseRef.id], prior: state.transactions[JSON.stringify([authority.principalRef, "cases", request.caseRef.id, `decision-result:${request.idempotencyKey}`])] } : undefined).catch(() => undefined)
+      if (!again || again.status !== "ok" || !again.value || again.value.prior || !allowedCase(again.value.decision, request.caseRef, context) || !await input.authorizeCase(again.value.decision!, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "stale", reason: "result-state-changed" }
+      return { status: "ok", value: { state: "not-found" } }
+    }
+    const saved = current.value.prior.value
+    if (!saved || typeof saved !== "object" || !("resultRef" in saved) || typeof saved.resultRef !== "string" || !("requestDigest" in saved) || saved.requestDigest !== request.requestDigest || !("kind" in saved) || saved.kind !== request.kind || current.value.prior.targetIncarnation !== request.caseRef.incarnation) return { status: "conflict", reason: "idempotency-content-changed" }
+    const result = await read({ resultRef: saved.resultRef, kind: request.kind }, context)
+    if (result.status !== "ok") return result
+    if (result.value.requestDigest !== request.requestDigest || digestSfValue(result.value.caseRef) !== digestSfValue(request.caseRef) || digestSfValue(result.value) !== digestSfValue(saved)) return { status: "conflict", reason: "idempotency-content-changed" }
+    return { status: "ok", value: { state: "found", result: result.value } }
   }
   const write = async (incoming: Write, context: TrustedDomainContext): Promise<PortResult<StoredDecisionResult>> => {
     const request = structuredClone(incoming)
@@ -61,15 +81,15 @@ export function createSfDecisionResultStore(input: {
     if (!saved.value) return { status: "conflict", reason: "result-identity-conflict" }
     return read({ resultRef: saved.value.resultRef, kind: request.kind }, context)
   }
-  return { write, read }
+  return { write, read, readHistoricalScenario, readByRequest }
 }
 
 function sameAuthority(authority: { principalRef: string; policyVersion: string; accessRevision: string }, context: TrustedDomainContext) {
   return authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision
 }
 
-function allowedCase(value: DecisionCase | undefined, ref: CaseRef, context: TrustedDomainContext) {
-  return !!value && value.id === ref.id && value.incarnation === ref.incarnation && value.version === ref.version && value.participants.includes(context.binding.principalRef) && (context.kind !== "native" || (context.binding.caseId === ref.id && context.binding.caseIncarnation === ref.incarnation && context.binding.caseVersion === ref.version))
+function allowedCase(value: DecisionCase | undefined, ref: CaseRef, context: TrustedDomainContext, historical = false) {
+  return !!value && value.id === ref.id && value.incarnation === ref.incarnation && (historical ? value.version >= ref.version : value.version === ref.version) && value.participants.includes(context.binding.principalRef) && (context.kind !== "native" || (context.binding.caseId === ref.id && context.binding.caseIncarnation === ref.incarnation && context.binding.caseVersion === value.version))
 }
 
 function validResult(value: Result) {

@@ -30,6 +30,7 @@ document.querySelectorAll('table').forEach((table) => {
   const preview = document.createElement('button'); preview.type = 'button'; preview.textContent = 'Preview changes'
   const save = document.createElement('button'); save.type = 'button'; save.textContent = 'Save changes'; save.disabled = true
   const status = document.createElement('div'); status.setAttribute('role', 'status'); status.setAttribute('aria-live', 'polite')
+  const dirtyGuard = document.createElement('form'); dirtyGuard.hidden = true
   const changes = new Map()
   let key = crypto.randomUUID()
   let busy = false
@@ -39,6 +40,7 @@ document.querySelectorAll('table').forEach((table) => {
     const id = idFor(input.dataset.row, input.dataset.measure, Number(input.dataset.month))
     if (input.value === input.dataset.original) changes.delete(id)
     else changes.set(id, { rowId: input.dataset.row, measure: input.dataset.measure, month: Number(input.dataset.month), text: input.value })
+    if (changes.size) dirtyGuard.dataset.dirty = 'true'; else delete dirtyGuard.dataset.dirty
     key = crypto.randomUUID(); approved = false; save.disabled = true
     status.textContent = changes.size ? changes.size + ' changed cells. Preview before saving.' : 'No pending changes.'
   }
@@ -81,6 +83,7 @@ document.querySelectorAll('table').forEach((table) => {
       if (!response.ok || result.status !== 'ok' || !Array.isArray(result.value?.rows)) throw new Error('unavailable')
       const problems = result.value.rows.filter((row) => row.errors.length || !row.result?.ok)
       if (action === 'apply') result.value.rows.filter((row) => !row.errors.length && row.result?.ok).forEach((row) => { const saved = rows.find((entry) => entry.id === row.draft.rowId); if (saved) saved.saved = true; for (const [id, cell] of changes) if (cell.rowId === row.draft.rowId) changes.delete(id) })
+      if (!changes.size) delete dirtyGuard.dataset.dirty
       status.replaceChildren()
       const message = document.createElement('p'); message.textContent = problems.length ? 'Some rows need attention. Your entries remain in the grid.' : action === 'preview' ? 'Preview complete. Review the entries and save when ready.' : 'Changes saved. Refresh before editing these rows again.'; status.append(message)
       problems.forEach((item) => { const row = rows.find((entry) => entry.id === item.draft.rowId); const detail = document.createElement('p'); detail.textContent = (row?.label || 'Row') + ': ' + (item.errors.some((error) => error.reason === 'row-unavailable') ? 'Row unavailable or changed.' : item.result?.status === 409 ? 'Changed by another user. Refresh and compare before retrying.' : 'Check the values and your access.'); status.append(detail) })
@@ -98,7 +101,7 @@ document.querySelectorAll('table').forEach((table) => {
   save.addEventListener('click', () => send('apply'))
   measure.addEventListener('change', render)
   window.addEventListener('beforeunload', (event) => { if (changes.size) { event.preventDefault(); event.returnValue = '' } })
-  section.append(heading, label, instructions, scroll, preview, save, status)
+  section.append(heading, label, instructions, scroll, preview, save, status, dirtyGuard)
   table.closest('.table-scroll')?.before(section)
   render()
 })

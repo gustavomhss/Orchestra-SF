@@ -23,6 +23,7 @@ export function dashboardImportImpact(snapshot: Snapshot, staged: Snapshot, comm
 
 export function verifyDashboardImportEvidence(snapshot: Snapshot, staged: Snapshot, actor: Actor, command: Command, evidence: Extract<BusinessEvidenceRef, { kind: "record" }>, at: string) {
   const target = evidence.target
+  if (command.action === "backup-import") return target.surface === "dashboard" && target.recordType === "dashboard-dataset" && target.recordId === "all" && target.period === undefined && digestSfValue(target.fields) === digestSfValue(["data"]) && actor.canWrite && actor.roles.includes("admin") && digestSfValue({ data: publicSfData(snapshot.data) }) === target.projectionDigest
   if (target.surface !== "dashboard" || target.recordType !== "dashboard-page" || target.recordId !== command.page || !target.period) return false
   const scope = { page: command.page, fields: [...target.fields].sort(), period: target.period }
   const before = projectDashboardScope(snapshot, actor, scope, at)

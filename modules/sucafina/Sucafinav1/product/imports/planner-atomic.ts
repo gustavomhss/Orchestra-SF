@@ -17,14 +17,14 @@ export function createSfPlannerImportAtomic(input: {
   host: DomainPortHost
   state: SfProductStatePort
   files: ImportFileHost
-  authorizeTarget: (target: ImportTarget, context: TrustedDomainContext) => Promise<boolean>
+  authorizeTarget: (target: ImportTarget, context: TrustedDomainContext, mode?: "receipt") => Promise<boolean>
   verifyTarget: (snapshot: Snapshot, target: ImportTarget, actor: Actor, context: TrustedDomainContext) => boolean
   readView: (id: string, context: TrustedDomainContext) => Promise<PortResult<ImportManifest>>
 }) {
   return async (manifest: StoredImportManifest, scope: { fileRef: string; target: ImportTarget; previewDigest: string; execution?: ImportExecution }, context: TrustedDomainContext): Promise<PortResult<ImportManifest>> => {
     const request = input.host.requestFor(context)
     const execution = scope.execution
-    if (context.kind !== "ui" || !request || !execution || execution.kind === "dashboard" || scope.target.surface !== "planner" || manifest.commands.length !== 1 || !await input.host.revalidate(context) || !await input.authorizeTarget(scope.target, context)) return { status: "denied", reason: "import-access-unavailable" }
+    if (context.kind !== "ui" || !request || !execution || execution.kind === "dashboard" || scope.target.surface !== "planner" || manifest.commands.length !== 1 || !await input.host.revalidate(context) || !await input.authorizeTarget(scope.target, context, manifest.state === "applied" ? "receipt" : undefined)) return { status: "denied", reason: "import-access-unavailable" }
     if (manifest.state !== "applied" && !await input.files.revalidate(scope.fileRef, manifest.sourceDigest, context)) return { status: "stale", reason: "file-changed" }
     if (!("transactionAll" in input.host.persistence) || typeof input.host.persistence.transactionAll !== "function") return { status: "unavailable", reason: "atomic-domain-unavailable" }
     const command = manifest.commands[0]!
@@ -33,7 +33,7 @@ export function createSfPlannerImportAtomic(input: {
       const receipt = manifest.receipts.find((entry) => entry.principalRef === execution.actorId && entry.targetIncarnation === execution.targetIncarnation && entry.commandDigest === execution.commandDigest && entry.idempotencyKey === execution.idempotencyKey && entry.result.ok)
       if (!manifest.domainApplied || !receipt) return { status: "conflict", reason: "receipt-inconsistent" }
       const stored = await input.state.read(request, "receipts", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.receipts[receipt.id] : undefined)
-      if (stored.status !== "ok" || !stored.value || digestSfValue(stored.value) !== digestSfValue(receipt) || !await input.host.revalidate(context) || !await input.authorizeTarget(scope.target, context)) return { status: "denied", reason: "receipt-access-unavailable" }
+      if (stored.status !== "ok" || !stored.value || digestSfValue(stored.value) !== digestSfValue(receipt) || !await input.host.revalidate(context) || !await input.authorizeTarget(scope.target, context, "receipt")) return { status: "denied", reason: "receipt-access-unavailable" }
       return input.readView(manifest.id, context)
     }
     const mutation = createPlannerImportMutation({ ...execution, command: command.command, verifyTarget: (snapshot, _, incarnation, actor) => incarnation === scope.target.incarnation && input.verifyTarget(snapshot, scope.target, actor, context) })
@@ -59,7 +59,7 @@ export function createSfPlannerImportAtomic(input: {
       return { commit: true, value: true }
     })
     if (saved.status !== "ok" || !saved.value) return { status: saved.status === "conflict" || saved.status === "preview" ? "conflict" : "unavailable", reason: "import-not-applied" }
-    if (!await input.host.revalidate(context) || !await input.authorizeTarget(scope.target, context)) return { status: "denied", reason: "import-access-unavailable" }
+    if (!await input.host.revalidate(context) || !await input.authorizeTarget(scope.target, context, "receipt")) return { status: "denied", reason: "import-access-unavailable" }
     return input.readView(manifest.id, context)
   }
 }

@@ -1,12 +1,14 @@
 import { digestSfValue } from "../contracts/canonical.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
+import { sfOperationInputSchemas } from "../contracts/operations.ts"
+import { sfOperationOutputSchemas } from "../contracts/output-schemas.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { BusinessContextRequest, BusinessRecallRequest } from "../contracts/operations.ts"
 import type { RecallFeatures, RecallScope } from "../decision-memory/recall.ts"
 import type { AuthorizedCaseProjection } from "../contracts/business-context.ts"
 import { rankSfAtlasRecall } from "./atlas-memory.ts"
 import type { createSfAtlasMemory } from "./atlas-memory.ts"
-import type { BoundCapabilityReceipt, CapabilityResult, TrustedDomainContext } from "../contracts/sf-execution.ts"
+import type { BoundCapabilityReceipt, CapabilityDescriptor, CapabilityResult, TrustedDomainContext } from "../contracts/sf-execution.ts"
 
 type EvidenceCapabilityHost = {
   context: BusinessContextService
@@ -18,6 +20,17 @@ type EvidenceCapabilityHost = {
   proveContinuity: (original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<boolean>
   revalidate: (call: TrustedDomainContext) => Promise<boolean>
   createReceipt: (context: TrustedDomainContext, operation: string, inputDigest: string, resultDigest?: string) => BoundCapabilityReceipt | undefined
+}
+
+export function createSfEvidenceCapabilities(host: EvidenceCapabilityHost): readonly CapabilityDescriptor[] {
+  const profiles = ["sf_maestro", "sf_finance", "sf_procurement", "sf_portfolio", "sf_reviewer"] as const
+  return [
+    { id: "sf_source_get", pack: "performance", mode: "read", inputSchema: sfOperationInputSchemas.sf_source_get, outputSchema: sfOperationOutputSchemas.sf_source_get, handler: (value, call) => resolveSfSource(value, call, host), handlerExport: "resolveSfSource", producerTask: "WP10.T07", grantProfiles: profiles, requiredAuthority: [] },
+    { id: "sf_context_get", pack: "knowledge", mode: "read", inputSchema: sfOperationInputSchemas.sf_context_get, outputSchema: sfOperationOutputSchemas.sf_context_get, handler: (value, call) => readSfBusinessContext(value, call, host), handlerExport: "readSfBusinessContext", producerTask: "WP10.T07", grantProfiles: profiles, requiredAuthority: [] },
+    { id: "sf_evidence_get", pack: "knowledge", mode: "read", inputSchema: sfOperationInputSchemas.sf_evidence_get, outputSchema: sfOperationOutputSchemas.sf_evidence_get, handler: (value, call) => resolveSfBusinessEvidence(value, call, host), handlerExport: "resolveSfBusinessEvidence", producerTask: "WP10.T07", grantProfiles: profiles, requiredAuthority: [] },
+    { id: "sf_decision_recall", pack: "knowledge", mode: "read", inputSchema: sfOperationInputSchemas.sf_decision_recall, outputSchema: sfOperationOutputSchemas.sf_decision_recall, handler: (value, call) => recallSfDecisions(value, call, host), handlerExport: "recallSfDecisions", producerTask: "WP10.T07", grantProfiles: profiles, requiredAuthority: [] },
+    { id: "sf_freshness_check", pack: "knowledge", mode: "read", inputSchema: sfOperationInputSchemas.sf_freshness_check, outputSchema: sfOperationOutputSchemas.sf_freshness_check, handler: (value, call) => checkSfFreshness(value, call, host), handlerExport: "checkSfFreshness", producerTask: "WP10.T07", grantProfiles: profiles, requiredAuthority: [] },
+  ]
 }
 
 export async function resolveSfSource(value: unknown, call: TrustedDomainContext, host: EvidenceCapabilityHost): Promise<CapabilityResult> {

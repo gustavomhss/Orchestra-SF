@@ -44,6 +44,6 @@ export function enumerateSfSources(surface: Surface, snapshot: Snapshot): readon
     if (!logical) return []
     return logical.map((record) => ({ recordType: collection, recordId: String(record.id), inputDigest: digestSfValue(record) }))
   })
-  return [...assets, ...records, ...keyed, ...[...DashboardBudget.pages, ...DashboardPeople.pages, ...DashboardOperations.pages, ...DashboardPortfolio.pages]
+  return [...assets, { recordType: "dashboard-dataset", recordId: "all", inputDigest: digestSfValue(publicSfData(snapshot.data)) }, ...records, ...keyed, ...[...DashboardBudget.pages, ...DashboardPeople.pages, ...DashboardOperations.pages, ...DashboardPortfolio.pages]
     .map((page) => ({ recordType: "dashboard-page", recordId: page, inputDigest: digestSfValue({ page, data: publicSfData(snapshot.data) }) }))]
 }

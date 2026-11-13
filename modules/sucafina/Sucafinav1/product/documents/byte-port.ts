@@ -78,8 +78,24 @@ export async function admitSfDocumentAsset(selection: { surface: "dashboard" | "
   if (candidate.status !== "ok") return candidate
   const prior = await input.state.read(request, "documents", (state) => state.documents[`asset:${candidate.value.documentId}`])
   if ((prior.status !== "ok" && !(prior.status === "unavailable" && prior.reason === "product-state-uninitialized")) || !(await input.host.revalidate(context))) return { status: "unavailable", reason: "document-state-unavailable" }
-  const saved = await input.state.transaction(request, { namespace: "documents", expectedStorageVersion: prior.status === "ok" ? prior.storageVersion : 0, idempotencyKey: operationId, commandDigest: digestSfValue({ action: "admit-document", entry: candidate.value }), targetRef: candidate.value.documentId, targetIncarnation: candidate.value.incarnation }, async (state, authority) => {
-    if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion) return { commit: false, value: null as SfDocumentAssetCatalogEntry | null }
+  const saved = await input.state.transaction(request, { namespace: "documents", expectedStorageVersion: prior.status === "ok" ? prior.storageVersion : 0, domainSurface: candidate.value.surface, idempotencyKey: operationId, commandDigest: digestSfValue({ action: "admit-document", entry: candidate.value }), targetRef: candidate.value.documentId, targetIncarnation: candidate.value.incarnation }, async (state, authority, snapshot) => {
+    const source = sfSourceIdentity(snapshot, "document-asset", candidate.value.assetId)
+    if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !source || source.incarnation !== candidate.value.incarnation || source.version !== candidate.value.revision) return { commit: false, value: null as SfDocumentAssetCatalogEntry | null }
+    // Nested reads use the same SQLite transaction and cannot acquire a separate write lock.
+    const current = await input.assets.transaction(candidate.value.surface, async (locked, blobs) => {
+      const principal = await input.host.authenticate(request, { surface: candidate.value.surface, roleMap: roleMap(locked, candidate.value.surface) })
+      if (!principal || principal.id !== context.binding.principalRef || principal.id.startsWith("local:")) return { commit: false, value: false }
+      const access = object(object(locked.data.access)[principal.id])
+      const roles = principal.roles.filter((row) => row.surface === candidate.value.surface).map((row) => row.role)
+      const actor: Actor = { id: principal.id, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), roles, assigned: Array.isArray(access.assigned) ? access.assigned.filter((value): value is string => typeof value === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((value): value is string => typeof value === "string") : [] }
+      const link = assetLink(locked, actor, environment, input.services, candidate.value.assetId)
+      if (!link.ok || !("query" in link)) return { commit: false, value: false }
+      const response = await downloadAsset(locked, blobs, actor, environment, input.services, new URLSearchParams(link.query))
+      if (!response.ok) return { commit: false, value: false }
+      const bytes = new Uint8Array(await response.arrayBuffer())
+      return { commit: false, value: bytes.byteLength <= input.maxBytes && new Bun.CryptoHasher("sha256").update(bytes).digest("hex") === candidate.value.blobDigest }
+    }, { signal: request.signal })
+    if (!current) return { commit: false, value: null as SfDocumentAssetCatalogEntry | null }
     const existing = state.documents[`asset:${candidate.value.documentId}`]
     if (existing && typeof existing === "object" && (existing as SfDocumentAssetCatalogEntry).surface !== candidate.value.surface) return { commit: false, value: null as SfDocumentAssetCatalogEntry | null }
     state.documents[`asset:${candidate.value.documentId}`] = candidate.value

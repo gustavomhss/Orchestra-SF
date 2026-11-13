@@ -10,8 +10,10 @@ import { buildDashboardWorkbookCommand } from "./dashboard-command.ts"
 import { createDashboardImportMutation, previewDashboardWorkbook } from "./dashboard.ts"
 import { dashboardImportImpact, verifyDashboardImportEvidence } from "./dashboard.ts"
 import { projectDashboardScope } from "../dashboard/scope.ts"
+import { publicSfData } from "../integration/public-state.ts"
 import { compareImportProjections } from "./changes.ts"
 import { plannerImportDetail } from "./detail.ts"
+import { dashboardImportLocations } from "./dashboard-provenance.ts"
 import type { ParsedImport } from "./files.ts"
 import type { ImportTarget } from "./staged-files.ts"
 import type { ImportDetail, ImportExecution } from "./store.ts"
@@ -29,9 +31,9 @@ export function createSfDashboardImportPreview(input: {
     const resolved = await input.resolveTarget(request.target, context)
     if (resolved.status !== "ok") return resolved
     const evidence = resolved.value.evidence
-    if (evidence.refDigest !== digestSfEvidenceRef(evidence) || evidence.installationId !== context.binding.installationId || evidence.projectId !== context.binding.projectId || evidence.target.surface !== "dashboard" || evidence.target.incarnation !== request.target.incarnation || evidence.target.version !== request.target.version || !evidence.target.period) return { status: "denied", reason: "target-scope-mismatch" }
+    if (evidence.refDigest !== digestSfEvidenceRef(evidence) || evidence.installationId !== context.binding.installationId || evidence.projectId !== context.binding.projectId || evidence.target.surface !== "dashboard" || evidence.target.incarnation !== request.target.incarnation || evidence.target.version !== request.target.version || (!request.parsed.data && !evidence.target.period) || (request.parsed.data && (evidence.target.recordType !== "dashboard-dataset" || evidence.target.recordId !== "all" || evidence.target.period !== undefined))) return { status: "denied", reason: "target-scope-mismatch" }
     const environment = await input.host.environment(http)
-    const source: SourceRef = { surface: "dashboard", type: evidence.target.recordType, id: evidence.target.recordId, incarnation: evidence.target.incarnation, version: evidence.target.version, fields: evidence.target.fields, period: evidence.target.period, observedAt: environment.at }
+    const source: SourceRef = { surface: "dashboard", type: evidence.target.recordType, id: evidence.target.recordId, incarnation: evidence.target.incarnation, version: evidence.target.version, fields: evidence.target.fields, period: evidence.target.period ?? { start: "0001-01-01", end: "9999-12-31" }, observedAt: environment.at }
     const idempotencyKey = digestSfValue({ operationId, principal: context.binding.principalRef, target: request.target, file: request.parsed.sourceDigest })
     const preview = await input.host.persistence.transaction("dashboard", async (snapshot) => {
       const principal = await input.host.authenticate(http, { surface: "dashboard", roleMap: roleMap(snapshot, "dashboard") })
@@ -49,8 +51,8 @@ export function createSfDashboardImportPreview(input: {
       const impact = dashboardImportImpact(snapshot, staged, result.command, source.period)
       if (!impact) return { commit: false, value: undefined }
       const selector = { page: result.command.page, fields: [...evidence.target.fields].sort(), period: source.period }
-      const before = projectDashboardScope(snapshot, actor, selector, environment.at)
-      const after = projectDashboardScope(staged, actor, selector, environment.at)
+      const before = built.value.format === "backup" ? { selected: { data: publicSfData(snapshot.data) } } : projectDashboardScope(snapshot, actor, selector, environment.at)
+      const after = built.value.format === "backup" ? { selected: { data: publicSfData(staged.data) } } : projectDashboardScope(staged, actor, selector, environment.at)
       if (!before || !after) return { commit: false, value: undefined }
       return { commit: false, value: { format: built.value.format, result, impactDigest: digestSfValue(impact), before: before.selected, after: after.selected } }
     }, { signal: http.signal })
@@ -70,6 +72,6 @@ export function createSfDashboardImportPreview(input: {
     const projection: DomainProjection = { context: productContext, version: source.version, engineVersion: "dashboard-runtime-v1", components: [], values, missing }
     const id = digestSfValue({ operationId, sourceDigest: request.parsed.sourceDigest, target: request.target, principal: context.binding.principalRef })
     const manifest: StoredImportManifest = { id, version: 1, sourceDigest: request.parsed.sourceDigest, format: request.parsed.format, context: productContext, baseIdentity: [source], commands: [{ id: idempotencyKey, target: source, command: preview.result.command, idempotencyKey, commandDigest: preview.result.commandDigest, expectedVersion: preview.result.command.version, requiredAuthority: ["dashboard:write"], preview: projection }], issues: preview.result.warnings.map(() => ({ row: 0, field: "domain", reason: "The Dashboard reported a warning; review the source data." })), state: "preview", domainApplied: false, receipts: [] }
-    return { status: "ok", value: { manifest, detail: plannerImportDetail({ manifestId: id, version: 1, sourceDigest: request.parsed.sourceDigest, domainReference: evidence.refId, changes, locations: {} }), execution: { kind: "dashboard", format: preview.format, baseDigest: preview.result.baseDigest, impactDigest: preview.impactDigest, evidence, operationId, previewDigest: preview.result.previewDigest, previewAt: environment.at, actorId: context.binding.principalRef, idempotencyKey, targetIncarnation: request.target.incarnation, commandDigest: preview.result.commandDigest } } }
+    return { status: "ok", value: { manifest, detail: plannerImportDetail({ manifestId: id, version: 1, sourceDigest: request.parsed.sourceDigest, domainReference: evidence.refId, changes, locations: dashboardImportLocations({ parsed: request.parsed, sheet: request.target.options.preview.sheet, after: preview.after, changes }) }), execution: { kind: "dashboard", format: preview.format, baseDigest: preview.result.baseDigest, impactDigest: preview.impactDigest, evidence, operationId, previewDigest: preview.result.previewDigest, previewAt: environment.at, actorId: context.binding.principalRef, idempotencyKey, targetIncarnation: request.target.incarnation, commandDigest: preview.result.commandDigest } } }
   }
 }

@@ -100,7 +100,7 @@ export async function createLocalInstallation(context: { origin: string; createH
     persistence: store,
     authenticate: identity.authenticate,
     environment: requestEnvironment,
-    product: async (request, surface) => await workbench(request, surface) ?? await bi(request, surface),
+    product: async (request, surface) => await runtime?.services?.()?.productHttp?.(request, surface) ?? await workbench(request, surface) ?? await bi(request, surface),
     productHtml: decorateSfProductHtml,
     maxJsonBytes: 2 * 1024 * 1024,
     assets,

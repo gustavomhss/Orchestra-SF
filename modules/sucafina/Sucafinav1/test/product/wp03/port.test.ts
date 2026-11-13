@@ -1,5 +1,8 @@
 import { expect, test } from "bun:test"
+import { plannerOperationUnits } from "../../../product/planner/sensitivity-units.ts"
 import { comparePlannerPreview } from "../../../product/planner/preview-comparison.ts"
+import { createPlannerExactThreshold } from "../../../product/planner/exact-threshold.ts"
+import type { createPlannerSensitivityUnits } from "../../../product/planner/sensitivity-units.ts"
 import { createPlannerScenarioInputs, plannerValueRef } from "../../../product/planner/scenario-inputs.ts"
 import { comparePlannerVersions } from "../../../product/planner/version-comparison.ts"
 import { plannerCapacityPresentation, plannerMonthlyPresentation } from "../../../product/planner/bi.ts"
@@ -60,6 +63,8 @@ test("forecast port compares the real engine, and detects source changes", async
   expect(result.value.baseline.values.find((value) => value.id === "month:1:actual")).toMatchObject({ value: 40000, evidenceState: "confirmed" })
   expect(result.value.baseline.values.find((value) => value.id === "month:10:outlook")).toMatchObject({ value: 38000, evidenceState: "confirmed" })
   expect(result.value.baseline.values.find((value) => value.id === "line:10:variance-usd")).toMatchObject({ value: -12000, currency: "USD", evidenceState: "confirmed" })
+  expect(plannerOperationUnits({ projection: result.value.baseline, source: refs[0], operation: { kind: "replace", targetRef: "line:11", amount: 124000, currency: "USD" } })).toMatchObject({ parameterUnit: "USD", resultUnit: "USD", period: { start: "2027-11-01", end: "2027-11-30" } })
+  expect(plannerOperationUnits({ projection: result.value.baseline, source: refs[0], operation: { kind: "replace", targetRef: "line:11", amount: 124000, currency: "EUR" } })).toBeUndefined()
   expect(result.value.baseline.values.find((value) => value.id === "month:10:actual")).toMatchObject({ value: null, evidenceState: "absent" })
   const presentation = plannerMonthlyPresentation(result.value.baseline)
   expect(presentation.series.map((series) => series.role)).toEqual(["budget", "actual", "outlook"])
@@ -82,7 +87,15 @@ test("forecast port compares the real engine, and detects source changes", async
       const preview = await comparePlannerPreview({ host, sources, scenarios, planner: port }, { baselineRef: "base", scenario: { baseRef: "v0", operations: [{ kind: "replace", targetRef: "line:11", amount: 124000, currency: "USD" }], assumptions: [] } }, binding)
       expect(preview).toMatchObject({ status: "ok", value: { comparison: { comparisonStatus: "conditioned", knownDifference: 12000, completeDifference: null, costCoverageRefs: ["coverage-v0"] } } })
       if (preview.status === "ok") expect(preview.value.comparison.alternativeResultRef).toBe(preview.value.sample.id)
-      expect(await comparePlannerPreview({ host, sources, scenarios, planner: port }, { baselineRef: "base", scenario: { baseRef: "v1", operations: [], assumptions: [] } }, binding)).toMatchObject({ status: "needs-input", reason: "preview-base-mismatch" })
+      if (preview.status === "ok") expect(preview.value.metric).toMatchObject({ metricRef: "planner:known-subtotal-difference", value: 12000, unit: "USD", period, state: "conditioned", evidenceRefs: [refs[0]] })
+      const scenario = { baseRef: "v0", operations: [{ kind: "replace" as const, targetRef: "line:11", amount: 124000, currency: "USD" }], assumptions: [] }
+      const units = { issue: async () => ({ status: "ok", value: { scenario, metadataDigest: "stable", units: { sourceRefs: [refs[0]], engineVersion: "planner-runtime-v1", parameterUnit: "USD", resultUnit: "USD" } } }) } as unknown as ReturnType<typeof createPlannerSensitivityUnits>
+      const compare = (request: Parameters<typeof comparePlannerPreview>[1], context: TrustedDomainContext) => comparePlannerPreview({ host, sources, scenarios, planner: port }, request, context)
+      const threshold = createPlannerExactThreshold({ units, preview: compare })
+      for (const criterion of [{ id: "cost", operator: "gte" as const, value: -57000 }, { id: "cost", operator: "lte" as const, value: -97000 }]) {
+        expect(await threshold({ scenarioRef: "candidate", parameterBounds: { parameterRef: "line:11", minimum: 0, maximum: 150000, steps: 3 }, criterion }, "base", binding)).toMatchObject({ status: "unavailable", reason: "exact-threshold-domain-unproven" })
+      }
+      expect(await comparePlannerPreview({ host, sources, scenarios, planner: port }, { baselineRef: "base", scenario: { baseRef: "missing", operations: [], assumptions: [] } }, binding)).toMatchObject({ status: "unavailable" })
       scenarioRecords.candidate = { result: simulated.value, coverageRef: "coverage-v0", basis, projection: covered.value.baseline, source: refs[0] }
       expect(await port.compareScenarios({ scenarioRefs: ["base", "candidate"], criteria: [] }, binding)).toMatchObject({ status: "stale", reason: "scenario-source-or-coverage-changed" })
       coverageMode.scenario = simulated.value.costCoverage
@@ -158,6 +171,7 @@ test("forecast port compares the real engine, and detects source changes", async
     expect(knownFx.value.candidate.values.find((value) => value.id === "line:1:budget")).toMatchObject({ value: 40000, currency: "EUR" })
     expect(knownFx.value.candidate.values.find((value) => value.id === "line:1:budget-usd")).toMatchObject({ value: 80000, currency: "USD", evidenceState: "confirmed" })
     expect(knownFx.value.candidate.values.find((value) => value.id === "fx:EUR")).toMatchObject({ value: 2, unit: "USD/EUR", evidenceState: "confirmed" })
+    expect(plannerOperationUnits({ projection: knownFx.value.candidate, source: refs[1], operation: { kind: "replace", targetRef: "line:11", amount: 124000, currency: "EUR" } })).toMatchObject({ parameterUnit: "EUR", resultUnit: "USD" })
     expect(knownFx.value.candidate.values.find((value) => value.id === "month:1:actual")).toMatchObject({ value: 80000, currency: "USD", evidenceState: "confirmed" })
     expect(knownFx.value.candidate.values.find((value) => value.id === "month:10:outlook")).toMatchObject({ value: 76000, currency: "USD", evidenceState: "confirmed" })
   }
@@ -218,5 +232,15 @@ test("forecast port compares the real engine, and detects source changes", async
   if (collidingName.status === "ok") {
     expect(collidingName.value.candidate.values.find((value) => value.id === "month~:1:budget")).toMatchObject({ value: 40000 })
     expect(plannerMonthlyPresentation(collidingName.value.candidate).series[0].valueIds[0]).toBe("month~:1:budget")
+  }
+  collision[1].lines[0].id = "line"
+  delete (modified[1].lines[0] as { cur?: string }).cur
+  refs[1].target.projectionDigest = digestSfValue({ versionId: "v1", projection: projectPlannerSource(storage.state.planner, actor, "v1")! })
+  refs[1].refDigest = digestSfEvidenceRef(refs[1])
+  const currencyless = await port.compareForecast({ baseRef: "v0", candidateRef: "v1", period, currency: "USD" }, binding)
+  expect(currencyless.status).toBe("ok")
+  if (currencyless.status === "ok") {
+    expect(currencyless.value.candidate.values.find((value) => value.id === "line:11:currency-declared")).toMatchObject({ value: null, evidenceState: "absent" })
+    expect(plannerOperationUnits({ projection: currencyless.value.candidate, source: refs[1], operation: { kind: "replace", targetRef: "line:11", amount: 1, currency: "USD" } })).toBeUndefined()
   }
 })

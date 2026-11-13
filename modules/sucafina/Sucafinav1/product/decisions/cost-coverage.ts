@@ -37,6 +37,8 @@ export function assessCostCoverage(input: {
     if (!entry.scopeNote.trim() || !components.length || components.some((component) => !component || component.amount === null || !Number.isFinite(component.amount) || component.currency !== input.currency || component.period.start < input.horizon.start || component.period.end > input.horizon.end || component.evidenceState === "absent" || !component.sourceRefs.length || component.sourceRefs.some((source) => !entry.evidenceRefs.some((ref) => ref.kind === "record" && ref.target.surface === source.surface && ref.target.recordType === source.type && ref.target.recordId === source.id && ref.target.incarnation === source.incarnation && ref.target.version === source.version && ref.target.period !== undefined && ref.target.period.start <= source.period.start && ref.target.period.end >= source.period.end && source.fields.every((field) => ref.kind === "record" && ref.target.fields.includes(field)))))) return { categoryId, status: "pending", reason: "component-unresolved" }
     return entry
   })
+  const included = input.entries.flatMap((entry) => entry.status === "included" ? entry.componentRefs : [])
+  if (input.components.some((component) => included.filter((ref) => ref === component.id).length !== 1)) issues.push("uncategorized-component")
   if (input.entries.some((entry) => !categories.includes(entry.categoryId))) issues.push("unexpected-category")
   if (new Set(input.components.map((item) => item.id)).size !== input.components.length) issues.push("duplicate-component")
   if (entries.some((entry) => entry.status === "pending") || issues.length) return { ...base, entries, derivedMissingCategoryIds: missing, issues, coverageState: "pending" }
@@ -45,10 +47,35 @@ export function assessCostCoverage(input: {
 
 /** Producer output must carry the same assessment and a complete inventory before claiming completeness. */
 export function validateScenarioCoverage(scenario: import("../contracts/decisions.ts").ScenarioResult, basis: CostCoverageBasis, assessment: CostCoverageAssessment): string | undefined {
-  if (digestSfValue(scenario.costCoverage) !== digestSfValue(assessment) || scenario.costCoverage.basisId !== basis.id || scenario.costCoverage.basisVersion !== basis.version) return "alternative-basis-mismatch"
-  if (scenario.comparisonStatus !== "complete") return undefined
+  if (digestSfValue(scenario.costCoverage) !== digestSfValue(assessment) || scenario.costCoverage.basisId !== basis.id || scenario.costCoverage.basisVersion !== basis.version || scenario.costCoverage.currency !== scenario.currency || scenario.costCoverage.horizon.start !== scenario.horizon.start || scenario.costCoverage.horizon.end !== scenario.horizon.end || !scenario.costCoverage.alternativeId.trim() || !Number.isSafeInteger(scenario.costCoverage.alternativeVersion) || scenario.costCoverage.alternativeVersion < 1) return "alternative-basis-mismatch"
   const categories = requiredSfCostCategories(basis)
+  if (assessment.coverageState === "complete" && (!categories || !basis.sourceRefs.length || basis.sourceRefs.some((ref) => !assessment.evaluatedSourceRefs.some((evaluated) => digestSfValue(ref) === digestSfValue(evaluated))) || assessment.issues.length || assessment.derivedMissingCategoryIds.length || assessment.entries.length !== categories.length || new Set(scenario.components.map((component) => component.id)).size !== scenario.components.length || scenario.components.some((component) => assessment.entries.filter((entry) => entry.status === "included" && entry.componentRefs.includes(component.id)).length !== 1) || categories.some((category) => assessment.entries.filter((entry) => entry.categoryId === category).length !== 1) || assessment.entries.some((entry) => !entry.evidenceRefs.length || entry.evidenceRefs.some((ref) => !assessment.evaluatedSourceRefs.some((evaluated) => digestSfValue(ref) === digestSfValue(evaluated))) || (entry.status === "included" ? !entry.componentRefs.length || new Set(entry.componentRefs).size !== entry.componentRefs.length || !entry.scopeNote.trim() || entry.componentRefs.some((ref) => !scenario.components.some((component) => component.id === ref && component.amount !== null && Number.isFinite(component.amount) && component.currency === scenario.currency && component.period.start >= scenario.horizon.start && component.period.end <= scenario.horizon.end && component.evidenceState !== "absent" && component.sourceRefs.length > 0 && component.sourceRefs.every((source) => entry.evidenceRefs.some((evidence) => evidence.kind === "record" && evidence.target.surface === source.surface && evidence.target.recordType === source.type && evidence.target.recordId === source.id && evidence.target.incarnation === source.incarnation && evidence.target.version === source.version && evidence.target.period !== undefined && evidence.target.period.start <= source.period.start && evidence.target.period.end >= source.period.end && source.fields.every((field) => evidence.kind === "record" && evidence.target.fields.includes(field)))))) : !entry.justification.trim())))) return "incomplete-cost-coverage"
   if (!scenario.sourceRefs.some((ref) => ref.kind === "record" && ref.target.surface === "planner" && scenario.costCoverage.evaluatedSourceRefs.some((evidence) => digestSfValue(evidence) === digestSfValue(ref)))) return "planner-coverage-source-mismatch"
+  if (scenario.comparisonStatus !== "complete") return undefined
+  if (scenario.components.reduce((sum, component) => sum + (component.amount ?? 0), 0) !== scenario.knownSubtotal) return "incomplete-cost-coverage"
   if (!categories || scenario.costCoverage.coverageState !== "complete" || scenario.costCoverage.entries.length !== categories.length || categories.some((category) => scenario.costCoverage.entries.filter((entry) => entry.categoryId === category).length !== 1) || scenario.total !== scenario.knownSubtotal || scenario.components.some((component) => component.amount === null || !Number.isFinite(component.amount) || component.evidenceState !== "confirmed" || component.currency !== scenario.currency || !component.sourceRefs.length)) return "incomplete-cost-coverage"
   return undefined
+}
+
+/** Reassess the scenario itself; a baseline assessment cannot prove a changed preview. */
+export async function reassessScenarioCoverage(input: {
+  scenario: import("../contracts/decisions.ts").ScenarioResult
+  basis: CostCoverageBasis
+  baseline: CostCoverageAssessment
+  entries: readonly CostCoverageEntry[]
+  resolveEvidence: (refs: readonly import("../contracts/business-context.ts").BusinessEvidenceRef[]) => Promise<readonly BusinessEvidenceResolution[]>
+  supports: Parameters<typeof assessCostCoverage>[0]["supports"]
+}): Promise<import("../contracts/decisions.ts").ScenarioResult | undefined> {
+  try {
+    if (input.baseline.basisId !== input.basis.id || input.baseline.basisVersion !== input.basis.version) return undefined
+    const refs = [...input.basis.sourceRefs, ...input.scenario.sourceRefs, ...input.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)].filter((ref, index, all) => all.findIndex((other) => digestSfValue(other) === digestSfValue(ref)) === index)
+    const evidence = await input.resolveEvidence(refs)
+    if (evidence.length !== refs.length || refs.some((ref) => !evidence.some((item) => item.state === "fresh" && digestSfValue(item.ref) === digestSfValue(ref)))) return undefined
+    const assessment = assessCostCoverage({ basis: input.basis, alternativeId: input.scenario.costCoverage.alternativeId, alternativeVersion: input.scenario.costCoverage.alternativeVersion, currency: input.scenario.currency, horizon: input.scenario.horizon, entries: input.entries, components: input.scenario.components, evidence, supports: input.supports })
+    const unresolvedConditions = input.scenario.unresolvedConditions.filter((condition) => condition !== "scenario-coverage-reassessment-required")
+    if (input.scenario.comparisonStatus === "complete" && assessment.coverageState === "complete") return { ...input.scenario, unresolvedConditions, costCoverage: assessment }
+    return { ...input.scenario, unresolvedConditions, comparisonStatus: input.scenario.comparisonStatus === "complete" ? "conditioned" : input.scenario.comparisonStatus, total: null, costCoverage: assessment }
+  } catch {
+    return undefined
+  }
 }

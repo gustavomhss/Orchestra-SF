@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { digestSfEvidenceRef } from "../../../../product/contracts/canonical.ts"
+import { digestSfEvidenceRef, digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { createSfDocumentEvidenceAdapter } from "../../../../product/documents/rag-adapter.ts"
 import { resolveSfDocumentEvidence } from "../../../../product/documents/evidence-resolver.ts"
 import { readDocumentEvidence } from "../../../../product/documents/store.ts"
@@ -7,17 +7,18 @@ import { createSfProductState } from "../../../../product/host-binding/state-pro
 import type { TrustedDomainContext } from "../../../../product/contracts/sf-execution.ts"
 import { confirmDocumentEvidence, extractDocumentEvidence, listDocumentEvidence, searchDocumentEvidence } from "../../../../product/documents/capabilities.ts"
 import { createPrivateDocumentParser } from "../../../../product/documents/parser.ts"
-import { testPersistence } from "../../../fixture/persistence.ts"
+import { documentTestPersistence } from "./fixture.ts"
 
 test("multi-field candidates commit together and confirmation retry preserves evidence", async () => {
-  const storage = testPersistence()
+  const storage = documentTestPersistence()
   const request = new Request("https://example.test/document")
   const context = { kind: "ui", binding: { installationId: "i", projectId: "p", principalRef: "u", accessRevision: "a", policyVersion: "v", requestId: "r", expiresAt: "2100-01-01T00:00:00Z" }, lease: {} } as unknown as TrustedDomainContext
   const state = createSfProductState({ persistence: storage.persistence, authorize: async () => ({ principalRef: "u", accessRevision: "a", policyVersion: "v" }), resolveTarget: async () => ({ incarnation: "inc" }), createId: () => "state-inc" })
-  const initialized = await state.transaction(request, { namespace: "documents", expectedStorageVersion: 0, idempotencyKey: "initialize", commandDigest: "a".repeat(64), targetRef: "doc", targetIncarnation: "inc" }, async (snapshot) => { snapshot.documents.initialized = true; return { commit: true, value: true } })
-  expect(initialized.status).toBe("ok")
   const bytes = new TextEncoder().encode("Price: 42\nActive: true")
   const digest = new Bun.CryptoHasher("sha256").update(bytes).digest("hex")
+  storage.state.dashboard.sfSources = { schemaVersion: 1, records: { [JSON.stringify(["document-asset", "doc"])]: { incarnation: "inc", version: 1, alive: true, inputDigest: digest } } }
+  const initialized = await state.transaction(request, { namespace: "documents", expectedStorageVersion: 0, idempotencyKey: "initialize", commandDigest: "a".repeat(64), targetRef: "doc", targetIncarnation: "inc" }, async (snapshot) => { snapshot.documents["asset:doc"] = { schema: "sf-asset-v1", documentId: "doc", assetId: "doc", surface: "dashboard", incarnation: "inc", revision: 1, blobDigest: digest }; return { commit: true, value: true } })
+  expect(initialized.status).toBe("ok")
   let operation = "extract"
   let allowed = true
   let admittedEvidence = ""
@@ -27,7 +28,11 @@ test("multi-field candidates commit together and confirmation retry preserves ev
     documents: { read: async () => ({ status: "ok" as const, value: { documentId: "doc", incarnation: "inc", revision: 1, fileName: "a.txt", mediaType: "text/plain" as const, blobDigest: { algorithm: "sha256" as const, value: digest }, bytes } }), revalidate: async () => allowed },
     parser: createPrivateDocumentParser({ maxBytes: 1000, maxTextLength: 1000, maxPages: 1, maxXmlBytes: 1000, maxZipEntries: 10 }),
     resolveFieldSchema: async () => ({ status: "ok" as const, value: { id: "schema", version: "1", fields: [{ id: "Price", type: "number" as const }, { id: "Active", type: "boolean" as const }] } }),
-    operationIdentity: () => operation,
+    verifyFieldSchema: () => true,
+    operationIdentity: (_context: TrustedDomainContext, call?: { name: "sf_document_extract"; digest: string }) => {
+      if (operation === "extract") expect(call).toEqual({ name: "sf_document_extract", digest: digestSfValue({ documentRef: "doc", fieldSchemaRef: "schema" }) })
+      return operation
+    },
     confirmDocument: async (evidence: { status: string; id: string }) => evidence.status === "extracted" && evidence.id === admittedEvidence,
     createId: () => "unused",
     now: () => "2026-01-01T00:00:00Z",
@@ -71,4 +76,35 @@ test("multi-field candidates commit together and confirmation retry preserves ev
   expect((await confirmDocumentEvidence(first.value.id, context, input)).status).toBe("ok")
   allowed = false
   expect((await listDocumentEvidence("doc", context, input)).status).not.toBe("ok")
+})
+
+test("an admitted document can be indexed and searched without a field candidate", async () => {
+  const { indexSfDocument } = await import("../../../../product/documents/index.ts")
+  const storage = documentTestPersistence()
+  const request = new Request("https://example.test/document")
+  const context = { kind: "ui", binding: { installationId: "i", projectId: "p", principalRef: "u", accessRevision: "a", policyVersion: "v", requestId: "r", expiresAt: "2100-01-01T00:00:00Z" }, lease: {} } as unknown as TrustedDomainContext
+  const state = createSfProductState({ persistence: storage.persistence, authorize: async () => ({ principalRef: "u", accessRevision: "a", policyVersion: "v" }), resolveTarget: async () => ({ incarnation: "inc" }), createId: () => "state-inc" })
+  const bytes = new TextEncoder().encode("Original contract price: 42")
+  const digest = new Bun.CryptoHasher("sha256").update(bytes).digest("hex")
+  storage.state.dashboard.sfSources = { schemaVersion: 1, records: { [JSON.stringify(["document-asset", "doc"])]: { incarnation: "inc", version: 1, alive: true, inputDigest: digest } } }
+  await state.transaction(request, { namespace: "documents", expectedStorageVersion: 0, idempotencyKey: "init", commandDigest: "a".repeat(64), targetRef: "doc", targetIncarnation: "inc" }, async (snapshot) => { snapshot.documents["asset:doc"] = { schema: "sf-asset-v1", documentId: "doc", assetId: "doc", surface: "dashboard", incarnation: "inc", revision: 1, blobDigest: digest }; return { commit: true, value: true } })
+  let current = true
+  const documents = { read: async () => current ? { status: "ok" as const, value: { documentId: "doc", incarnation: "inc", revision: 1, fileName: "contract.txt", mediaType: "text/plain" as const, blobDigest: { algorithm: "sha256" as const, value: digest }, bytes } } : { status: "denied" as const, reason: "revoked" }, revalidate: async () => current }
+  const parser = createPrivateDocumentParser({ maxBytes: 1000, maxTextLength: 1000, maxPages: 1, maxXmlBytes: 1000, maxZipEntries: 10 })
+  const host = { requestFor: () => request, revalidate: async () => current }
+  expect((await indexSfDocument("doc", context, { state, documents, parser, ...host, operationIdentity: () => "index" })).status).toBe("ok")
+  const reader = createSfDocumentEvidenceAdapter(async (_id, call) => {
+    const key = `document-index:${digestSfValue(["i", "p", "doc"])}`
+    const result = await state.read(request, "documents", (snapshot) => snapshot.documents[key])
+    const index = result.status === "ok" ? result.value as import("../../../../product/documents/index.ts").StoredDocumentIndex | undefined : undefined
+    return index ? { status: "ok", snapshot: index.snapshot } : { status: "unavailable", accessRevision: call.binding.accessRevision }
+  }, documents, parser)
+  const input = { state, documents, parser, host, reader, verifyFieldSchema: () => false, resolveFieldSchema: async () => ({ status: "unavailable" as const, reason: "not-needed" }), operationIdentity: () => "index", confirmDocument: async () => false, createId: () => "unused", now: () => "2026-01-01T00:00:00Z" }
+  const found = await searchDocumentEvidence({ query: "price", documentRefs: ["doc"], limit: 5 }, context, input)
+  expect(found.status).toBe("ok")
+  if (found.status !== "ok") return
+  expect(found.value.matches).toHaveLength(1)
+  expect((await resolveSfDocumentEvidence(found.value.matches[0]!.documentRef, context, reader)).state).toBe("fresh")
+  current = false
+  expect((await resolveSfDocumentEvidence(found.value.matches[0]!.documentRef, context, reader)).state).not.toBe("fresh")
 })

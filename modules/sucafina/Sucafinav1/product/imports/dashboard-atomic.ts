@@ -19,14 +19,14 @@ export function createSfDashboardImportAtomic(input: {
   host: DomainPortHost
   state: SfProductStatePort
   files: ImportFileHost
-  authorizeTarget: (target: ImportTarget, context: TrustedDomainContext) => Promise<boolean>
+  authorizeTarget: (target: ImportTarget, context: TrustedDomainContext, mode?: "receipt") => Promise<boolean>
   verifyScope: (snapshot: Snapshot, staged: Snapshot, target: ImportTarget, actor: Actor, manifest: StoredImportManifest, evidence: Extract<BusinessEvidenceRef, { kind: "record" }>, context: TrustedDomainContext, at: string) => boolean
   readView: (id: string, context: TrustedDomainContext) => Promise<PortResult<ImportManifest>>
 }) {
   return async (manifest: StoredImportManifest, scope: { fileRef: string; target: ImportTarget; previewDigest: string; execution?: ImportExecution }, context: TrustedDomainContext): Promise<PortResult<ImportManifest>> => {
     const request = input.host.requestFor(context)
     const execution = scope.execution
-    if (context.kind !== "ui" || !request || !execution || execution.kind !== "dashboard" || scope.target.surface !== "dashboard" || manifest.commands.length !== 1 || !await input.host.revalidate(context) || !await input.authorizeTarget(scope.target, context)) return { status: "denied", reason: "import-access-unavailable" }
+    if (context.kind !== "ui" || !request || !execution || execution.kind !== "dashboard" || scope.target.surface !== "dashboard" || manifest.commands.length !== 1 || !await input.host.revalidate(context) || !await input.authorizeTarget(scope.target, context, manifest.state === "applied" ? "receipt" : undefined)) return { status: "denied", reason: "import-access-unavailable" }
     if (manifest.state !== "applied" && !await input.files.revalidate(scope.fileRef, manifest.sourceDigest, context)) return { status: "stale", reason: "file-changed" }
     const command = manifest.commands[0]!
     if (execution.actorId !== context.binding.principalRef || execution.commandDigest !== command.commandDigest || execution.idempotencyKey !== command.idempotencyKey || execution.targetIncarnation !== command.target.incarnation || execution.targetIncarnation !== scope.target.incarnation) return { status: "conflict", reason: "preview-identity-mismatch" }
@@ -34,7 +34,7 @@ export function createSfDashboardImportAtomic(input: {
       const receipt = manifest.receipts.find((entry) => entry.principalRef === execution.actorId && entry.targetIncarnation === execution.targetIncarnation && entry.commandDigest === execution.commandDigest && entry.idempotencyKey === execution.idempotencyKey && entry.result.ok)
       if (!manifest.domainApplied || !receipt) return { status: "conflict", reason: "receipt-inconsistent" }
       const stored = await input.state.read(request, "receipts", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.receipts[receipt.id] : undefined)
-      if (stored.status !== "ok" || !stored.value || digestSfValue(stored.value) !== digestSfValue(receipt) || !await input.host.revalidate(context) || !await input.authorizeTarget(scope.target, context)) return { status: "denied", reason: "receipt-access-unavailable" }
+      if (stored.status !== "ok" || !stored.value || digestSfValue(stored.value) !== digestSfValue(receipt) || !await input.host.revalidate(context) || !await input.authorizeTarget(scope.target, context, "receipt")) return { status: "denied", reason: "receipt-access-unavailable" }
       return input.readView(manifest.id, context)
     }
     const mutation = createDashboardImportMutation({ format: execution.format, command: command.command, actorId: execution.actorId, operationId: execution.operationId, idempotencyKey: execution.idempotencyKey, target: command.target, baseDigest: execution.baseDigest, previewDigest: execution.previewDigest, commandDigest: execution.commandDigest, at: execution.previewAt, verifyScope: (snapshot, staged, actor) => { const impact = dashboardImportImpact(snapshot, staged, command.command, command.target.period); return !!impact && digestSfValue(impact) === execution.impactDigest && verifyDashboardImportEvidence(snapshot, staged, actor, command.command, execution.evidence, execution.previewAt) && input.verifyScope(snapshot, staged, scope.target, actor, manifest, execution.evidence, context, execution.previewAt) } })
@@ -60,7 +60,7 @@ export function createSfDashboardImportAtomic(input: {
       return { commit: true, value: true }
     })
     if (saved.status !== "ok" || !saved.value) return { status: saved.status === "conflict" || saved.status === "preview" ? "conflict" : "unavailable", reason: "import-not-applied" }
-    if (!await input.host.revalidate(context) || !await input.authorizeTarget(scope.target, context)) return { status: "denied", reason: "import-access-unavailable" }
+    if (!await input.host.revalidate(context) || !await input.authorizeTarget(scope.target, context, "receipt")) return { status: "denied", reason: "import-access-unavailable" }
     return input.readView(manifest.id, context)
   }
 }

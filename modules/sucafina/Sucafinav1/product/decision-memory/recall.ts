@@ -23,9 +23,16 @@ function rankSfCases(input: RecallInput, proofs?: RecallProof) {
     if (!candidate.envelope.caseRef || candidate.envelope.kind !== "task" || candidate.envelope.owner !== deriveSfMemoryOwner(context, candidate.case.case) || context.installationId !== input.scope.installationId || context.projectId !== input.scope.projectId || context.principalRef !== input.scope.principalRef || context.accessRevision !== input.scope.accessRevision || context.policyVersion !== input.scope.policyVersion || candidate.accessRevision !== input.scope.accessRevision || (!proven && candidate.envelope.accessRevision !== input.scope.accessRevision) || candidate.atlasTrace.operation !== "createMemoryRead.recall" || candidate.atlasTrace.module !== "@orchestra/atlas-boundary/business-memory-ports" || !/^[a-f0-9]{64}$/i.test(candidate.atlasTrace.recordDigest) || !candidate.envelope.evidenceRefs.length || !candidate.envelope.dependencies.length) return []
     const caseRef = candidate.envelope.caseRef
     const entry = candidate.entry
-    if (!("taskId" in entry) || !entry.ref || !candidate.envelope.evidenceRefs.some((ref) => ref.kind === "case-event" && ref.target.eventId === candidate.envelope.sourceEventId && ref.target.caseId === caseRef.id && ref.target.caseIncarnation === caseRef.incarnation && entry.ref === `sf-evidence:v1:${ref.refId}:${ref.refDigest}`)) return []
+    if (!("taskId" in entry) || !entry.ref) return []
+    const events = candidate.envelope.evidenceRefs.filter((ref) => ref.kind === "case-event" && ref.target.eventId === candidate.envelope.sourceEventId && ref.target.caseId === caseRef.id && ref.target.caseIncarnation === caseRef.incarnation && entry.ref === `sf-evidence:v1:${ref.refId}:${ref.refDigest}`)
+    const event = events[0]
+    if (events.length !== 1 || !event || event.kind !== "case-event") return []
+    const ledger = candidate.case.events.filter((item) => item.id === event.target.eventId && item.caseRef.id === caseRef.id && item.caseRef.incarnation === caseRef.incarnation &&
+      item.caseRef.version === event.target.caseVersion && item.outputDigest === event.target.outputDigest && digestSfValue(item.evidenceRefs) === digestSfValue(event.target.evidenceRefs))
+    if (ledger.length !== 1 || !candidate.case.case.ledger.some((item) => digestSfValue(item) === digestSfValue(ledger[0])) ||
+      !candidate.case.case.participants.includes(input.scope.principalRef)) return []
     if (candidate.envelope.projectionDigest !== digestSfValue({ kind: "task", owner: candidate.envelope.owner, entry: candidate.entry, sourceEventId: candidate.envelope.sourceEventId, evidenceRefs: candidate.envelope.evidenceRefs })) return []
-    if (candidate.case.case.id !== candidate.envelope.caseRef.id || candidate.case.case.incarnation !== candidate.envelope.caseRef.incarnation || candidate.case.case.version !== candidate.envelope.caseRef.version) return []
+    if (candidate.case.case.id !== candidate.envelope.caseRef.id || candidate.case.case.incarnation !== candidate.envelope.caseRef.incarnation || candidate.case.case.version < candidate.envelope.caseRef.version || event.target.caseVersion > candidate.envelope.caseRef.version) return []
     const references = [...candidate.envelope.evidenceRefs, ...candidate.envelope.dependencies]
     // Canonical mapping validates original reference digests and expands nested references.
     try {

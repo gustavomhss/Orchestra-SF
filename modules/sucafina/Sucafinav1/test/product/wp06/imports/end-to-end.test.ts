@@ -12,7 +12,7 @@ import { createSfSourcePersistence, sfSourceIdentity } from "../../../../product
 import { enumerateSfSources } from "../../../../product/integration/source-inventory.ts"
 import { createSfProductState } from "../../../../product/host-binding/state-provider.ts"
 import { createSfUiAuthority } from "../../../../product/integration/ui-authority.ts"
-import { createSfHumanAuthority } from "../../../../product/integration/human-authority.ts"
+import { createSfHumanAuthority, sfHumanActions } from "../../../../product/integration/human-authority.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../../../../product/contracts/business-context.ts"
 import type { TrustedDomainContext } from "../../../../product/contracts/sf-execution.ts"
@@ -47,7 +47,7 @@ test("human workbook admission, Planner preview, atomic receipt and retry surviv
     const targetIdentity = await app.store.transaction("planner", async (snapshot) => ({ commit: false, value: sfSourceIdentity(snapshot, "planner-version", "v1") }))
     if (!targetIdentity) throw new Error("missing Planner source")
     const access = { installationId: operator.installationId, projectId: "project", principalRef: principal.id, policyVersion: "policy", accessRevision: "access" }
-    const ui = createSfUiAuthority({ authorize: async () => access, createId: randomUUID, now: () => Date.parse("2026-11-13T00:00:00Z"), commandIdentity: async () => "human-command" })
+    const ui = createSfUiAuthority({ privateCommands: sfHumanActions.map((action) => `sf-human:${action}`), authorize: async () => access, createId: randomUUID, now: () => Date.parse("2026-11-13T00:00:00Z"), commandIdentity: async (_, operation) => operation })
     const human = createSfHumanAuthority({ origin: "http://localhost:4110", ui })
     const host = { persistence: app.store, authenticate: app.identity.authenticate, environment: async () => ({ at: "2026-11-13T00:00:00Z", id: randomUUID, directory: [] }), requestFor: (context: TrustedDomainContext) => context.kind === "ui" ? ui.requestFor(context) : undefined, revalidate: async (context: TrustedDomainContext) => context.kind === "ui" && await ui.revalidate(context) }
     const state = createSfProductState({ persistence: app.store, createId: randomUUID, authorize: async (input, snapshot) => await app.identity.authenticate(input, { surface: "dashboard", roleMap: roleMap(snapshot, "dashboard") }) ? { principalRef: principal.id, accessRevision: "access", policyVersion: "policy" } : undefined, resolveTarget: async (_, __, ___, ref) => { const snapshot = (app.store as typeof app.store & { currentSnapshots?: () => { planner: Snapshot } | undefined }).currentSnapshots?.()?.planner; return snapshot ? sfSourceIdentity(snapshot, "planner-version", ref) : undefined } })

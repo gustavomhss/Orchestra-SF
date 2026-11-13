@@ -2,7 +2,8 @@ import { Effect, Option, Schema } from "effect"
 import type { NativeRunExecutionPort, SfNativeExecutionTicket, SfReviewTarget } from "../../../../modules/sucafina/Sucafinav1/product/ai/analysis-port.ts"
 import type { createSfRunStore } from "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts"
 import { digestSfContribution, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
-import { decodeSfContributionEnvelope, decodeSfContributionOutput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
+import { decodeSfContributionOutput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
+import { buildSfContribution } from "../../../../modules/sucafina/Sucafinav1/product/ai/contribution-builder.ts"
 import type { BusinessPorts, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { ContributionEnvelope } from "../../../../modules/sucafina/Sucafinav1/product/contracts/resident-ai.ts"
 import type { SfNativeRunRecord } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
@@ -12,6 +13,7 @@ import type { SfNativeHostApi, SfNativePrepareInput, SfNativeRun } from "./nativ
 const ticketMark = Symbol("sf-native-execution-ticket")
 type Admission = { record: SfNativeRunRecord; native: SfNativePrepareInput }
 type WithContext = <T>(runRef: string, action: (context: TrustedDomainContext) => Promise<PortResult<T>>) => Promise<PortResult<T>>
+export type SfStoppedRun = { runRef: string; principalRef: string; accessRevision: string; policyVersion: string; caseRef: SfNativeRunRecord["caseRef"]; sessionID: string; receiptDigest: string; cancelled: boolean }
 
 /** Product root supplies actual preflight, semantic output verification and fresh request-bound authority. */
 export function createSfNativeExecution(input: {
@@ -19,10 +21,17 @@ export function createSfNativeExecution(input: {
   store: ReturnType<typeof createSfRunStore>
   withRunContext: WithContext
   preflight: (request: Parameters<BusinessPorts["analysis"]["create"]>[0], skillInput: unknown, target?: SfReviewTarget) => Promise<PortResult<Admission>>
+  intentDigest?: string
   verifyOutput: (output: ContributionEnvelope, run: SfNativeRunRecord, context: TrustedDomainContext) => Promise<PortResult<true>>
-}): NativeRunExecutionPort {
+  onAdmitted?: (runRef: string) => void
+  authorizeCancellation?: (runRef: string, context: TrustedDomainContext) => Promise<boolean>
+  cancellationRequest?: (context: TrustedDomainContext) => Request | undefined
+  readForCancellation?: (runRef: string, context: TrustedDomainContext) => Promise<PortResult<SfNativeRunRecord>>
+  cancelAdmitted?: BusinessPorts["analysis"]["cancel"]
+}): NativeRunExecutionPort & { cancelRun: (runRef: string, context: TrustedDomainContext) => Promise<PortResult<{ cancelled: boolean }>>; releaseRun: (runRef: string) => Promise<SfStoppedRun | undefined>; shutdown: () => Promise<void> } {
   const admittedRuns = new Set<string>()
-  const tickets = new WeakMap<SfNativeExecutionTicket, { run: SfNativeRun; request: Request; record: SfNativeRunRecord; phase: "prepared" | "running" | "completed" | "failed" }>()
+  const tickets = new WeakMap<SfNativeExecutionTicket, { run: SfNativeRun; request: Request; record: SfNativeRunRecord; phase: "prepared" | "running" | "completed" | "failed"; output?: ContributionEnvelope; candidateDigest?: string }>()
+  const active = new Map<string, { ticket: SfNativeExecutionTicket; run: SfNativeRun; record: SfNativeRunRecord; cancelling: boolean; cancelled: boolean; cancelDone?: Promise<void> }>()
   return {
     admit: async (request, skillInput, target) => {
       const requested = freezeFacts(structuredClone(request))
@@ -32,7 +41,8 @@ export function createSfNativeExecution(input: {
       if (prepared.status !== "ok") return prepared
       const record = freezeFacts(structuredClone(prepared.value.record))
       const native = Object.freeze({ ...freezeFacts(structuredClone({ ...prepared.value.native, request: undefined })), request: prepared.value.native.request })
-      if (record.state !== "preparing" || record.version !== 1 || !record.runRef || native.request.signal.aborted ||
+      if (record.state !== "preparing" || record.version !== 1 || !record.runRef || !record.intentDigest || !/^[a-f0-9]{64}$/.test(record.intentDigest) ||
+        record.intentDigest !== input.intentDigest || native.request.signal.aborted ||
         record.requestDigest !== digestSfValue(requested) || record.skillInputDigest !== digestSfValue(decodedInput) ||
         digestSfValue(record.caseRef) !== digestSfValue(requested.caseRef) || digestSfValue(record.caseRef) !== digestSfValue(native.caseRef) ||
         digestSfValue(record.selection) !== digestSfValue(native.selected) || digestSfValue(record.model) !== digestSfValue(native.model) ||
@@ -44,6 +54,7 @@ export function createSfNativeExecution(input: {
         digestSfValue([...record.selection.operationIds].toSorted()) !== digestSfValue([...requested.requestedOperationScope].toSorted()))
         return { status: "denied", reason: "native-preflight-mismatch" }
       if (admittedRuns.has(record.runRef)) return { status: "conflict", reason: "native-run-already-admitted" }
+      if (active.size >= 5000) return { status: "unavailable", reason: "native-run-registry-full" }
       admittedRuns.add(record.runRef)
       const created = await input.withRunContext(record.runRef, (context) => input.store.create(record, context))
       if (created.status !== "ok") return created
@@ -71,6 +82,15 @@ export function createSfNativeExecution(input: {
       const ticket = Object.freeze({ [ticketMark]: true as const })
       assertTicket(ticket)
       tickets.set(ticket, { run, request: native.request, record: attached.value, phase: "prepared" })
+      active.set(record.runRef, { ticket, run, record: attached.value, cancelling: false, cancelled: false })
+      const announced = await Promise.resolve().then(() => { input.onAdmitted?.(record.runRef); return true }).catch(() => false)
+      if (!announced) {
+        active.delete(record.runRef)
+        tickets.delete(ticket)
+        await Effect.runPromise(input.host.interrupt(run.binding)).catch(() => undefined)
+        await input.withRunContext(record.runRef, (context) => input.store.transition(record.runRef, attached.value.version, "unavailable", "native-admission-not-announced", context))
+        return { status: "unavailable", reason: "native-admission-not-announced" }
+      }
       return { status: "ok", value: { runRef: record.runRef, sessionID: run.sessionID, skillReceipt: run.skillReceipt, executionTicket: ticket } }
     },
     execute: async (ticket) => {
@@ -108,17 +128,21 @@ export function createSfNativeExecution(input: {
       const candidates = messages.value.flatMap(({ message }) => message.type !== "assistant" || !message.time.completed || message.error ? [] : message.content.flatMap((part) => {
         if (part.type === "text") {
           const parsed = Schema.decodeUnknownOption(Schema.UnknownFromJsonString)(part.text)
-          return Option.isSome(parsed) ? [parsed.value] : []
+          return Option.isSome(parsed) ? [{ candidate: parsed.value, model: message.model }] : []
         }
         if (part.type !== "tool" || part.state.status !== "completed") return []
-        return [part.state.structured.result, part.state.result]
-      })).filter((candidate) => candidate !== null && typeof candidate === "object" && !Array.isArray(candidate) &&
-        "schemaVersion" in candidate && candidate.schemaVersion === "sf-contribution-v1")
-      const unique = new Map(candidates.map((candidate) => [digestSfValue(candidate), candidate]))
+        return [part.state.structured.result, part.state.result].map((candidate) => ({ candidate, model: message.model }))
+      })).filter((item) => item.candidate !== null && typeof item.candidate === "object" && !Array.isArray(item.candidate) &&
+        "kind" in item.candidate && "payload" in item.candidate && "evidenceRefs" in item.candidate)
+      const unique = new Map(candidates.map((item) => [digestSfValue(item), item]))
       if (unique.size !== 1) return { status: "unavailable", reason: "native-output-unavailable" }
-      const decoded = decodeSfContributionEnvelope([...unique.values()][0])
-      if (!decoded.ok) return { status: "denied", reason: "native-output-invalid" }
-      const output = decoded.value
+      const candidate = [...unique.values()][0]!
+      const candidateDigest = digestSfValue(candidate)
+      if (entry.output && entry.candidateDigest !== candidateDigest) return { status: "stale", reason: "native-output-changed" }
+      const built = entry.output ? { status: "ok" as const, value: entry.output } : buildSfContribution({ candidate: candidate.candidate, run: before.value,
+        actualModel: candidate.model, outputId: crypto.randomUUID(), createdAt: new Date().toISOString() })
+      if (built.status !== "ok") return built
+      const output = built.value
       const receipt = Object.fromEntries(Object.keys(entry.run.skillReceipt).map((key) => [key, output.runProvenance[key as keyof typeof entry.run.skillReceipt]]))
       const allowed = ["id", "caseRef", "kind", "schemaVersion", "state", "payload", "evidenceRefs", "runProvenance", "accessRevision", "createdAt", "outputDigest"]
       if (Reflect.ownKeys(output).some((key) => typeof key !== "string" || !allowed.includes(key)) ||
@@ -136,6 +160,8 @@ export function createSfNativeExecution(input: {
       const after = await input.store.read(entry.record.runRef, context)
       if (after.status !== "ok") return after
       if (after.value.version !== before.value.version || after.value.state !== "running") return { status: "stale", reason: "native-run-changed" }
+      entry.output = output
+      entry.candidateDigest = candidateDigest
       return { status: "ok", value: output }
     },
     interrupt: async (ticket, context) => {
@@ -146,8 +172,54 @@ export function createSfNativeExecution(input: {
       if (current.status !== "ok") return current
       if (current.value.native?.sessionID !== entry.run.sessionID) return { status: "denied", reason: "native-ticket-changed" }
       const interrupted = await Effect.runPromise(input.host.interrupt(entry.run.binding))
-      if (interrupted.status === "ok") tickets.delete(ticket)
+      if (interrupted.status === "ok") { tickets.delete(ticket); active.delete(entry.record.runRef) }
       return interrupted
+    },
+    cancelRun: async (runRef, context) => {
+      const entry = active.get(runRef)
+      if (!entry || !input.cancelAdmitted || !input.authorizeCancellation || !input.cancellationRequest || !input.readForCancellation) return { status: "unavailable", reason: "native-run-not-active" }
+      if (entry.cancelling) return { status: "conflict", reason: "native-cancellation-in-progress" }
+      if (!sameAuthority(context, entry.run.binding)) return { status: "denied", reason: "native-authority-mismatch" }
+      entry.cancelling = true
+      const done = Promise.withResolvers<void>()
+      entry.cancelDone = done.promise
+      try {
+        const request = input.cancellationRequest(context)
+        if (!request || request.signal.aborted || !await input.authorizeCancellation(runRef, context) || active.get(runRef) !== entry) return { status: "denied", reason: "native-authority-mismatch" }
+        if (!entry.cancelled) {
+          const current = await input.readForCancellation(runRef, context)
+          if (current.status !== "ok") return current
+          if (current.value.native?.sessionID !== entry.run.sessionID || digestSfValue(current.value.native.skillReceipt) !== digestSfValue(entry.run.skillReceipt))
+            return { status: "denied", reason: "native-ticket-changed" }
+          const result = await input.cancelAdmitted(runRef, context)
+          if (result.status !== "ok" || !result.value.cancelled) return result
+          entry.cancelled = true
+        }
+        const interrupted = await Effect.runPromise(input.host.interrupt(entry.run.binding, request))
+        if (interrupted.status !== "ok") return interrupted
+        if (active.get(runRef) === entry) active.delete(runRef)
+        tickets.delete(entry.ticket)
+        return { status: "ok", value: { cancelled: true } }
+      } finally { entry.cancelling = false; done.resolve() }
+    },
+    releaseRun: async (runRef) => {
+      const entry = active.get(runRef)
+      if (!entry) return undefined
+      if (entry.cancelDone) await entry.cancelDone
+      if (active.get(runRef) !== entry) return undefined
+      const aborted = tickets.get(entry.ticket)?.request.signal.aborted === true
+      await Effect.runPromise(input.host.release(entry.run.binding))
+      tickets.delete(entry.ticket)
+      active.delete(runRef)
+      if (!aborted && !entry.cancelled) return undefined
+      return { runRef, principalRef: entry.record.principalRef, accessRevision: entry.record.accessRevision, policyVersion: entry.record.policyVersion,
+        caseRef: structuredClone(entry.record.caseRef), sessionID: entry.run.sessionID, receiptDigest: digestSfValue(entry.run.skillReceipt), cancelled: entry.cancelled }
+    },
+    shutdown: async () => {
+      await Promise.allSettled([...active.values()].map((entry) => Effect.runPromise(input.host.interrupt(entry.run.binding))))
+      await Promise.allSettled([...active.values()].map((entry) => Effect.runPromise(input.host.release(entry.run.binding))))
+      active.forEach((entry) => tickets.delete(entry.ticket))
+      active.clear()
     },
   }
 }

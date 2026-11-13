@@ -1,5 +1,5 @@
 import { digestSfValue } from "../contracts/canonical.ts"
-import { validateScenarioCoverage } from "./cost-coverage.ts"
+import { reassessScenarioCoverage, validateScenarioCoverage } from "./cost-coverage.ts"
 import { prepareDomainChange } from "./prepared-change.ts"
 import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
@@ -15,8 +15,10 @@ export function createDecisionProposalService(input: {
   cases: DecisionCasePort
   planner: PlannerPort
   sources: PlannerSourceHost
+  coverageEvidence?: { entries: (scenario: ScenarioResult, baseline: import("../contracts/decisions.ts").CostCoverageAssessment, context: TrustedDomainContext) => Promise<PortResult<readonly import("../contracts/decisions.ts").CostCoverageEntry[]>>; resolve: (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<readonly import("../contracts/business-context.ts").BusinessEvidenceResolution[]>; supports: Parameters<typeof reassessScenarioCoverage>[0]["supports"] }
   host: Pick<DomainPortHost, "revalidate">
   resolveAlternative: (request: AlternativeDraftRequest, context: TrustedDomainContext) => Promise<PortResult<{ scenario: ScenarioRequest; coverageRef: string }>>
+  registerProposalCoverage?: (request: { caseRef: string; expectedCaseVersion: number; basis: CostCoverageBasis; assessment: import("../contracts/decisions.ts").CostCoverageAssessment; result: ScenarioResult; scenario: ScenarioRequest }, context: TrustedDomainContext) => Promise<PortResult<{ coverageRef: string }>>
   authorizeProposal: (request: AlternativeDraftRequest, proposal: SfOperationOutputMap["sf_alternative_draft"]["proposal"], basis: CostCoverageBasis, context: TrustedDomainContext) => Promise<boolean>
 }) {
   return async (request: AlternativeDraftRequest, context: TrustedDomainContext): Promise<PortResult<SfOperationOutputMap["sf_alternative_draft"]>> => {
@@ -36,16 +38,31 @@ export function createDecisionProposalService(input: {
     const coverage = await callProposalPort(() => input.sources.resolveForecastCoverage(resolved.value.coverageRef, context))
     if (coverage.status !== "ok") return coverage
     if (coverage.value.coverageRef !== resolved.value.coverageRef || scenario.value.currency !== current.value.case.currency || scenario.value.horizon.start !== current.value.case.horizon.start || scenario.value.horizon.end !== current.value.case.horizon.end) return { status: "conflict", reason: "alternative-basis-mismatch" }
-    const coverageError = validateScenarioCoverage(scenario.value, coverage.value.basis, coverage.value.assessment)
+    const reassessed = digestSfValue(scenario.value.costCoverage) !== digestSfValue(coverage.value.assessment)
+    const entries = reassessed && input.coverageEvidence ? await callProposalPort(() => input.coverageEvidence!.entries(scenario.value, coverage.value.assessment, context)) : undefined
+    if (entries && entries.status !== "ok") return entries
+    const evaluated = !reassessed ? scenario.value : input.coverageEvidence && entries?.status === "ok" ? await reassessScenarioCoverage({ scenario: scenario.value, basis: coverage.value.basis, baseline: coverage.value.assessment, entries: entries.value, resolveEvidence: (refs) => input.coverageEvidence!.resolve(refs, context), supports: input.coverageEvidence.supports }) : undefined
+    if (!evaluated) return { status: "unavailable", reason: "scenario-coverage-reassessment-unavailable" }
+    const previous = current.value.case.alternatives.find((item) => item.id === evaluated.costCoverage.alternativeId)
+    const provisional = evaluated.costCoverage.alternativeVersion !== (previous?.version ?? 0) + 1 || current.value.case.alternatives.some((item) => item.result.id === evaluated.id)
+    const identity = provisional ? { alternativeId: `proposal:${digestSfValue({ caseRef: parsed.value.caseRef, request: parsed.value, scenario: scenarioInput.value })}`, alternativeVersion: 1 } : { alternativeId: evaluated.costCoverage.alternativeId, alternativeVersion: evaluated.costCoverage.alternativeVersion }
+    const result: ScenarioResult = evaluated.comparisonStatus === "complete" ? { ...evaluated, costCoverage: { ...evaluated.costCoverage, ...identity } } : { ...evaluated, costCoverage: { ...evaluated.costCoverage, ...identity } }
+    const coverageError = validateScenarioCoverage(result, coverage.value.basis, result.costCoverage)
     if (coverageError) return { status: "conflict", reason: coverageError }
-    const alternative = { id: scenario.value.costCoverage.alternativeId, version: scenario.value.costCoverage.alternativeVersion, title: parsed.value.proposal.title, scenario: scenarioInput.value, result: scenario.value }
-    if (!await input.authorizeProposal(parsed.value, alternative, coverage.value.basis, context).catch(() => false)) return { status: "denied", reason: "alternative-access-unavailable" }
-    const previous = current.value.case.alternatives.find((item) => item.id === alternative.id)
-    if (!alternative.id.trim() || !Number.isSafeInteger(alternative.version) || alternative.version !== (previous?.version ?? 0) + 1 || current.value.case.alternatives.some((item) => item.result.id === alternative.result.id)) return { status: "conflict", reason: "alternative-identity-conflict" }
+    const alternative = { id: result.costCoverage.alternativeId, version: result.costCoverage.alternativeVersion, title: parsed.value.proposal.title, scenario: scenarioInput.value, result }
+    if (!alternative.id.trim() || !Number.isSafeInteger(alternative.version) || !await input.authorizeProposal(parsed.value, alternative, coverage.value.basis, context).catch(() => false)) return { status: "denied", reason: "alternative-access-unavailable" }
     const again = await callProposalPort(() => input.cases.read({ caseRef: parsed.value.caseRef }, context))
     if (again.status !== "ok") return again
     if (again.value.case.version !== current.value.case.version || !await input.authorizeProposal(parsed.value, alternative, coverage.value.basis, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "stale", reason: "case-changed" }
-    return { status: "ok", value: { caseRef: parsed.value.caseRef, proposal: alternative, costCoverageBasis: coverage.value.basis, coverageRef: coverage.value.coverageRef, domainApplied: false } }
+    const changed = digestSfValue(result.costCoverage) !== digestSfValue(coverage.value.assessment)
+    if (changed && !input.registerProposalCoverage) return { status: "unavailable", reason: "proposal-coverage-registration-unavailable" }
+    const registered = changed ? await callProposalPort(() => input.registerProposalCoverage!({ caseRef: parsed.value.caseRef, expectedCaseVersion: current.value.case.version, basis: coverage.value.basis, assessment: result.costCoverage, result, scenario: scenarioInput.value }, context)) : { status: "ok" as const, value: { coverageRef: coverage.value.coverageRef } }
+    if (registered.status !== "ok" || !registered.value.coverageRef.trim()) return { status: "unavailable", reason: "proposal-coverage-registration-unavailable" }
+    const coverageRef = registered.value.coverageRef
+    const proof = await callProposalPort(() => input.sources.resolveForecastCoverage(coverageRef, context))
+    const finalCase = await callProposalPort(() => input.cases.read({ caseRef: parsed.value.caseRef }, context))
+    if (finalCase.status !== "ok" || finalCase.value.case.version !== current.value.case.version || proof.status !== "ok" || proof.value.coverageRef !== coverageRef || digestSfValue(proof.value.basis) !== digestSfValue(coverage.value.basis) || digestSfValue(proof.value.assessment) !== digestSfValue(result.costCoverage) || !await input.authorizeProposal(parsed.value, alternative, coverage.value.basis, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "unavailable", reason: "proposal-coverage-proof-unavailable" }
+    return { status: "ok", value: { caseRef: parsed.value.caseRef, proposal: alternative, costCoverageBasis: coverage.value.basis, coverageRef, domainApplied: false } }
   }
 }
 

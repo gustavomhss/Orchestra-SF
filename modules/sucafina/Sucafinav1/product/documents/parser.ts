@@ -16,6 +16,7 @@ export function createPrivateDocumentParser(limits: { maxBytes: number; maxTextL
     if (![limits.maxBytes, limits.maxTextLength, limits.maxPages, limits.maxXmlBytes, limits.maxZipEntries, timeout].every((value) => Number.isSafeInteger(value) && value > 0) || bytes.byteLength < 1 || bytes.byteLength > limits.maxBytes) return { status: "failed", reason: "invalid document limits" }
     if (kind === "pdf" && (bytes.byteLength < 5 || new TextDecoder().decode(bytes.subarray(0, 5)) !== "%PDF-")) return { status: "failed", reason: "invalid PDF" }
     if (active >= maxActive) return { status: "unavailable", reason: "document-parser-busy" }
+    const started = performance.now()
     active += 1
     const worker = (() => {
       try { return new Worker(new URL("./parser-worker.ts", import.meta.url), { resourceLimits: { maxOldGenerationSizeMb: 128, maxYoungGenerationSizeMb: 16 } }) }
@@ -46,8 +47,10 @@ export function createPrivateDocumentParser(limits: { maxBytes: number; maxTextL
       const file = directory ? path.join(directory, "document.pdf") : undefined
       if (file) await Bun.write(file, bytes)
       if (signal?.aborted) return { status: "unavailable", reason: "cancelled" }
+      const remaining = timeout - (performance.now() - started)
+      if (remaining <= 0) return { status: "unavailable", reason: "document-parser-timeout" }
       return await new Promise<PortResult<string>>((resolve) => {
-        const timer = setTimeout(() => finish({ status: "unavailable", reason: "document-parser-timeout" }), timeout)
+        const timer = setTimeout(() => finish({ status: "unavailable", reason: "document-parser-timeout" }), remaining)
         const abort = () => finish({ status: "unavailable", reason: "cancelled" })
         const finish = (result: PortResult<string>) => { clearTimeout(timer); signal?.removeEventListener("abort", abort); resolve(result) }
         signal?.addEventListener("abort", abort, { once: true })

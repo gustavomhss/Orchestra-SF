@@ -1,4 +1,6 @@
 import { digestSfValue } from "../contracts/canonical.ts"
+import { plannerComponentDigest } from "../planner/comparison.ts"
+import { portfolioResultDigest } from "./result-store.ts"
 import type { PortfolioResult } from "../contracts/decisions.ts"
 import type { PortfolioRequest, ScenarioOperation } from "../contracts/operations.ts"
 import type { DecisionCasePort, PortResult } from "../contracts/ports.ts"
@@ -11,7 +13,7 @@ type DecisionPreparation = {
 }
 
 export function portfolioEvaluationDigest(request: PortfolioRequest, result: PortfolioResult) {
-  return digestSfValue({ request, result })
+  return digestSfValue({ request, result: portfolioResultDigest(result) })
 }
 
 /** Revalidate the selected set against the persisted human choice, then use WP11's preparation path. */
@@ -46,7 +48,7 @@ export async function preparePortfolioChoice(input: {
   if (current.value.case.version !== input.caseRef.version) return { status: "stale", reason: "case-changed" }
   const choice = current.value.case.choices.find((item) => item.id === input.choiceId)
   if (!choice || digestSfValue(choice.scenario.operations) !== digestSfValue(operations) || candidates.some((candidate) => candidate.scenario.baseRef !== choice.scenario.baseRef || candidate.scenario.assumptions.some((assumption) => !choice.scenario.assumptions.some((item) => digestSfValue(item) === digestSfValue(assumption))))) return { status: "conflict", reason: "choice-does-not-match-combination" }
-  if (digestSfValue(choice.result.components) !== digestSfValue(selected.components) || choice.result.currency !== input.request.scope.currency || choice.result.horizon.start !== input.request.scope.horizon.start || choice.result.horizon.end !== input.request.scope.horizon.end) return { status: "stale", reason: "choice-result-changed" }
+  if (plannerComponentDigest(choice.result.components) !== plannerComponentDigest(selected.components) || choice.result.currency !== input.request.scope.currency || choice.result.horizon.start !== input.request.scope.horizon.start || choice.result.horizon.end !== input.request.scope.horizon.end) return { status: "stale", reason: "choice-result-changed" }
   if (!(await input.host.revalidate(context))) return { status: "stale", reason: "authority-changed" }
   return input.decisions.prepareChanges({ caseRef: input.caseRef, choiceId: input.choiceId, operations }, context)
 }

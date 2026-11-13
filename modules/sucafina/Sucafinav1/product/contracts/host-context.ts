@@ -9,6 +9,10 @@ import type { SfNativeAdmission, SfSelectedRuntime } from "./runtime.ts"
 import type { BusinessPorts, PortResult } from "./ports.ts"
 import type { TrustedDomainContext, TrustedExecutionBinding } from "./sf-execution.ts"
 import type { Period } from "./context.ts"
+import type { createCollaborationWorkPort } from "../collaboration/work-port.ts"
+import type { createSfDocumentHost } from "../documents/host.ts"
+import type { createSfRoutineProduct } from "../routines/factory.ts"
+import type { createSfPersonalViews } from "../interface/personal-views.ts"
 import type { ContributionEnvelope } from "./resident-ai.ts"
 import type { SfNativeRunRecord } from "./state.ts"
 import type { TrustedUiContext } from "./sf-execution.ts"
@@ -33,10 +37,16 @@ export type SfHostSessionPort = {
 }
 export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
   dispatch: BusinessPorts["dispatch"]
+  /** Private HTTP adapters mounted in the existing local application. */
+  productHttp?: NonNullable<Application["product"]>
   /** Private UI discovery; absent until its real collection registry is mounted. */
   procurementSelections?: {
     create: (context: TrustedDomainContext, period: Period) => Promise<PortResult<{ selectionRef: string; label: string; period: Period }>>
   }
+  work?: Pick<ReturnType<typeof createCollaborationWorkPort>, "listPresentation">
+  documents?: Pick<ReturnType<typeof createSfDocumentHost>, "resolvePresentation">
+  routineRuns?: Pick<ReturnType<typeof createSfRoutineProduct>, "discoverRuns">
+  personalViews?: ReturnType<typeof createSfPersonalViews>
   forecastInputs?: {
     prepare: (context: TrustedUiContext, input: ForecastCompareRequest & { caseRef: { id: string; incarnation: string; version: number } }) => Promise<PortResult<ForecastExplainInput>>
   }

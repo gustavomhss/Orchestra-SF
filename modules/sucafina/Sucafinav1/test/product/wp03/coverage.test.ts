@@ -42,4 +42,18 @@ test("unknown non-financial criteria do not erase financially complete differenc
   const scenarios = { resolve: async (reference: string) => ({ status: "ok" as const, value: { result, coverageRef: `coverage-${reference}`, basis, projection: { ...proofProjection, components: proofProjection.components.map((item) => ({ ...item, sourceRefs: item.sourceRefs.map((ref) => ({ ...ref, observedAt: `tick-${++clock.ticks}` })) })) }, source } }) }
   const context = {} as import("../../../product/contracts/sf-execution.ts").TrustedDomainContext
   expect(await compareScenarios({ host, sources, scenarios }, { scenarioRefs: ["base", "candidate"], criteria: ["delivery"] }, context)).toMatchObject({ status: "ok", value: { comparisonStatus: "complete", completeDifference: 0, criterionResults: [{ criterionId: "delivery", state: "unknown" }] } })
+  const criteria = { evaluate: async () => ({ status: "ok" as const, value: { criterionId: "delivery", state: "satisfied" as const, reason: "registered-rule-satisfied", ruleRef: "rule", evidenceRefs: [source] } }) }
+  expect(await compareScenarios({ host, sources, scenarios, criteria }, { scenarioRefs: ["base", "candidate"], criteria: ["delivery"] }, context)).toMatchObject({ status: "ok", value: { comparisonStatus: "complete", completeDifference: 0, criterionResults: [{ criterionId: "delivery", state: "satisfied" }] } })
+  const revision = { value: 0 }
+  const changed = { evaluate: async () => ({ status: "ok" as const, value: { criterionId: "delivery", state: "satisfied" as const, reason: `rule-${++revision.value}`, ruleRef: "rule", evidenceRefs: [source] } }) }
+  expect(await compareScenarios({ host, sources, scenarios, criteria: changed }, { scenarioRefs: ["base", "candidate"], criteria: ["delivery"] }, context)).toMatchObject({ status: "stale", reason: "criterion-or-authority-changed" })
+})
+
+test("scenario identity ignores observation clocks but binds financial values", async () => {
+  const { plannerScenarioDigest } = await import("../../../product/planner/preview-comparison.ts")
+  const component = { ...projection.components[0]!, sourceRefs: [{ surface: "planner" as const, type: "planner-version", id: "v", incarnation: "inc", version: 1, fields: ["amount"], period, observedAt: "2026-11-13T00:00:00Z" }] }
+  const scenario = { id: "result", version: 1, components: [component], currency: "USD", horizon: period, sourceRefs: [evidence], costCoverage: complete, unresolvedConditions: ["hypothetical"], restrictions: [], comparisonStatus: "conditioned" as const, knownSubtotal: 0, total: null }
+  const later = { ...scenario, components: [{ ...component, sourceRefs: [{ ...component.sourceRefs[0]!, observedAt: "2026-11-14T00:00:00Z" }] }] }
+  expect(plannerScenarioDigest(scenario)).toBe(plannerScenarioDigest(later))
+  expect(plannerScenarioDigest(scenario)).not.toBe(plannerScenarioDigest({ ...later, components: [{ ...later.components[0]!, amount: 1 }] }))
 })

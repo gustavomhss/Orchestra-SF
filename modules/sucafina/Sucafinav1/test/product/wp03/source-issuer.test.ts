@@ -5,6 +5,7 @@ import path from "node:path"
 import { randomUUID } from "node:crypto"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { resolve } from "../../../src/identity.ts"
+import { digestSfEvidenceRef } from "../../../product/contracts/canonical.ts"
 import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
 import { sfPlannerProjectionSelector, createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
@@ -39,7 +40,10 @@ test("planner issuer resolves authenticated current identities and rejects stale
     const environment = { at: "2026-11-13T00:00:00Z", id: randomUUID, directory: [] }
     const target = { surface: "planner" as const, type: "planner-version", id: "v0", incarnation: first.value.evidence.target.incarnation, version: first.value.evidence.target.version, fields: first.value.evidence.target.fields, period: first.value.evidence.target.period!, observedAt: environment.at }
     const scope = { principalRef: "finance", accessRevision: "1", policyVersion: "1", recordType: "planner-version", recordId: "v0", selector: sfPlannerProjectionSelector(captured, actor) }
-    const prepared = preparePlannerMutation({ snapshot: captured, actor, environment, context: binding, target, scope, command: { page: "OPEX", action: "save", id: "line", version: 0, values: { versionId: "v0", f0: 42 } }, operationId: "operation", idempotencyKey: "edit" })
+    const prepared = preparePlannerMutation({ snapshot: captured, actor, environment, context: binding, target, evidence: first.value.evidence, scope, command: { page: "OPEX", action: "save", id: "line", version: 0, values: { versionId: "v0", f0: 42 } }, operationId: "operation", idempotencyKey: "edit" })
+    const foreign = { ...first.value.evidence, projectId: "other", refDigest: "" }
+    foreign.refDigest = digestSfEvidenceRef(foreign)
+    expect(preparePlannerMutation({ snapshot: captured, actor, environment, context: binding, target, evidence: foreign, scope, command: { page: "OPEX", action: "save", id: "line", version: 0, values: { versionId: "v0", f0: 42 } }, operationId: "operation", idempotencyKey: "edit" })).toBeUndefined()
     expect(prepared).toBeDefined()
     if (!prepared) return
     const staged = structuredClone(captured)
@@ -51,9 +55,9 @@ test("planner issuer resolves authenticated current identities and rejects stale
     expect(prepared.mutation.execute(staged, actor, environment)).toMatchObject({ commit: false, value: { status: "conflict" } })
     expect(prepared.mutation.execute(structuredClone(captured), { ...actor, id: "other" }, environment)).toMatchObject({ commit: false, value: { status: "denied" } })
     expect(prepared.mutation.execute(structuredClone(captured), { ...actor, assigned: ["forged"] }, environment)).toMatchObject({ commit: false, value: { status: "denied" } })
-    expect(preparePlannerMutation({ snapshot: captured, actor, environment, context: binding, target, scope, command: { page: "OPEX", action: "save", id: "line", version: 0, values: { versionId: "v0", b0: 42 } }, operationId: "operation", idempotencyKey: "edit" })).toBeUndefined()
-    expect(preparePlannerMutation({ snapshot: captured, actor, environment, context: binding, target, scope: { ...scope, accessRevision: "revoked" }, command: { page: "OPEX", action: "save", id: "line", version: 0, values: { versionId: "v0", f0: 42 } }, operationId: "operation", idempotencyKey: "edit" })).toBeUndefined()
-    expect(preparePlannerMutation({ snapshot: captured, actor, environment, context: binding, target: { ...target, period: { start: "2027-02-01", end: "2027-02-28" } }, scope, command: { page: "OPEX", action: "save", id: "line", version: 0, values: { versionId: "v0", f0: 42 } }, operationId: "operation", idempotencyKey: "edit" })).toBeUndefined()
+    expect(preparePlannerMutation({ snapshot: captured, actor, environment, context: binding, target, evidence: first.value.evidence, scope, command: { page: "OPEX", action: "save", id: "line", version: 0, values: { versionId: "v0", b0: 42 } }, operationId: "operation", idempotencyKey: "edit" })).toBeUndefined()
+    expect(preparePlannerMutation({ snapshot: captured, actor, environment, context: binding, target, evidence: first.value.evidence, scope: { ...scope, accessRevision: "revoked" }, command: { page: "OPEX", action: "save", id: "line", version: 0, values: { versionId: "v0", f0: 42 } }, operationId: "operation", idempotencyKey: "edit" })).toBeUndefined()
+    expect(preparePlannerMutation({ snapshot: captured, actor, environment, context: binding, evidence: first.value.evidence, target: { ...target, period: { start: "2027-02-01", end: "2027-02-28" } }, scope, command: { page: "OPEX", action: "save", id: "line", version: 0, values: { versionId: "v0", f0: 42 } }, operationId: "operation", idempotencyKey: "edit" })).toBeUndefined()
 
     await persistence.transaction("planner", async (snapshot) => { const versions = snapshot.data.versions as { lines: { b: number[] }[] }[]; versions[0].lines[0].b[0] = 200; return { commit: true, value: undefined } })
     expect(await product.sources.resolveForecastSource(first.value.evidence.refId, binding)).toMatchObject({ status: "stale" })

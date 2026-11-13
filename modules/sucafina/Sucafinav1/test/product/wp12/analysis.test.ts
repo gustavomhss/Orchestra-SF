@@ -229,7 +229,7 @@ test("real SQLite and C08 reject a changed Planner source and persist settlement
       state.cases.case = { id: "case", incarnation: "inc", version: 1, participants: ["principal"] } as unknown as typeof state.cases[string]
       return { commit: true, value: true }
     })
-    const record = { schema: "sf-native-run-v1", runRef: "run", version: 1, requestDigest: "1".repeat(64), skillInputDigest: "2".repeat(64), principalRef: "principal", accessRevision: "access", policyVersion: "policy", caseRef, selection, model: { providerID: "openai", id: "model" }, skillId: skill.id, objective: "review", contextFingerprint: "context", createdAt: "2026-11-13T00:00:00Z", updatedAt: "2026-11-13T00:00:00Z", state: "preparing" } as const
+    const record = { schema: "sf-native-run-v1", runRef: "run", version: 1, intentDigest: "c".repeat(64), requestDigest: "1".repeat(64), skillInputDigest: "2".repeat(64), principalRef: "principal", accessRevision: "access", policyVersion: "policy", caseRef, selection, model: { providerID: "openai", id: "model" }, skillId: skill.id, objective: "review", contextFingerprint: "context", createdAt: "2026-11-13T00:00:00Z", updatedAt: "2026-11-13T00:00:00Z", state: "preparing" } as const
     expect(await withRunContext("run", (context) => first.store.create(record, context))).toEqual({ status: "denied", reason: "invalid-authority" })
     access.allowed = true
     access.revokeAtEgress = false
