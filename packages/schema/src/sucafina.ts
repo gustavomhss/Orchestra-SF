@@ -73,6 +73,11 @@ export const PageState = Schema.Struct({
   data: Values,
   versions: Versions,
   directory: Schema.Array(Schema.Struct({ id: Schema.String, name: Schema.String })),
+  actions: Schema.optional(
+    Schema.Array(Schema.suspend(() => NativeAction)).check(
+      Schema.makeFilter((actions) => new Set(actions.map((action) => action.key)).size === actions.length),
+    ),
+  ),
 })
 export type PageState = typeof PageState.Type
 
@@ -85,6 +90,73 @@ export const Command = Schema.Struct({
   confirmed: Schema.optional(Schema.Boolean),
 })
 export type Command = typeof Command.Type
+
+export const NativeText = Schema.Struct({ en: Schema.String, br: Schema.String })
+export type NativeText = typeof NativeText.Type
+
+export const NativePath = Schema.Array(
+  Schema.Union([
+    Schema.String.check(Schema.makeFilter((key) => !["__proto__", "prototype", "constructor"].includes(key))),
+    Schema.Int.check(Schema.isGreaterThanOrEqualTo(0), Schema.isLessThanOrEqualTo(Number.MAX_SAFE_INTEGER)),
+  ]),
+).check(Schema.isMinLength(1))
+export type NativePath = typeof NativePath.Type
+
+export const NativeChoice = Schema.Struct({
+  value: Schema.Union([Schema.String, Schema.Finite, Schema.Boolean, Schema.Null]),
+  label: NativeText,
+})
+export type NativeChoice = typeof NativeChoice.Type
+
+export const NativeScalar = Schema.Struct({
+  kind: Schema.Literals(["text", "textarea", "number", "date", "select", "checkbox"]),
+  path: NativePath,
+  label: NativeText,
+  required: Schema.optional(Schema.Boolean),
+  readOnly: Schema.optional(Schema.Boolean),
+  blank: Schema.optional(Schema.Literals(["omit", "null", "empty"])),
+  min: Schema.optional(Schema.Finite),
+  max: Schema.optional(Schema.Finite),
+  step: Schema.optional(Schema.Finite),
+  options: Schema.optional(Schema.Array(NativeChoice)),
+}).annotate({ identifier: "Sucafina.NativeScalar" })
+export type NativeScalar = typeof NativeScalar.Type
+
+export interface NativeGroup extends Schema.Schema.Type<typeof NativeGroup> {}
+export const NativeGroup = Schema.Struct({
+  kind: Schema.Literal("group"),
+  label: Schema.optional(NativeText),
+  fields: Schema.Array(Schema.suspend(() => NativeField)),
+}).annotate({ identifier: "Sucafina.NativeGroup" })
+
+export interface NativeList extends Schema.Schema.Type<typeof NativeList> {}
+export const NativeList = Schema.Struct({
+  kind: Schema.Literal("list"),
+  path: NativePath,
+  label: NativeText,
+  fields: Schema.Array(Schema.suspend(() => NativeField)),
+  add: Schema.optional(Values),
+  remove: Schema.optional(Schema.Boolean),
+  readOnly: Schema.optional(Schema.Boolean),
+  minimum: Schema.optional(Schema.Int.check(Schema.isGreaterThanOrEqualTo(0))),
+  maximum: Schema.optional(Schema.Int.check(Schema.isGreaterThanOrEqualTo(0))),
+}).annotate({ identifier: "Sucafina.NativeList" })
+
+export type NativeField = NativeScalar | NativeGroup | NativeList
+export const NativeField: Schema.Codec<NativeField> = Schema.Union([NativeScalar, NativeGroup, NativeList])
+  .annotate({ identifier: "Sucafina.NativeField" })
+
+export const NativeAction = Schema.Struct({
+  key: Schema.String,
+  label: NativeText,
+  group: Schema.optional(NativeText),
+  target: Schema.optional(Schema.Struct({ collection: Schema.String, id: Schema.String })),
+  command: Command,
+  fields: Schema.Array(NativeField),
+  confirm: Schema.optional(NativeText),
+  danger: Schema.optional(Schema.Boolean),
+}).annotate({ identifier: "Sucafina.NativeAction" })
+export type NativeAction = typeof NativeAction.Type
 
 export const CommandResult = Schema.Struct({
   ok: Schema.Literal(true),

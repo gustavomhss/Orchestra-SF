@@ -483,6 +483,13 @@ export function createApplication(mount: string, application: Application) {
               data: view.data,
               versions: view.versions,
               directory: environment.directory,
+              actions: contribution.domain.commands?.(snapshot, actor, environment, {
+                page,
+                year: selected,
+                month,
+                query: Object.fromEntries(url.searchParams),
+                view,
+              }) ?? [],
             },
             200,
           ),

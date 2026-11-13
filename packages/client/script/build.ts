@@ -4,7 +4,10 @@ import { ClientApi, endpointNames, groupNames, omitEndpoints } from "../src/cont
 import { Effect } from "effect"
 import { fileURLToPath } from "url"
 
-const contract = compile(ClientApi, { groupNames, endpointNames, omitEndpoints })
+const contract = compile(ClientApi, {
+  groupNames, endpointNames, omitEndpoints,
+  importedSuccessEndpoints: new Set(["sucafina.state"]),
+})
 const splitGroups = new Set([
   "research",
   "schedules",
@@ -26,6 +29,10 @@ await Effect.runPromise(
         emitPromise(contract, {
           splitGroups,
           outputTypes: {
+            "sucafina.state": {
+              name: "Sucafina.PageState",
+              import: 'import type { Sucafina } from "@orchestra/schema/sucafina"',
+            },
             "sessions.events": {
               name: "SessionEventEncoded",
               import: 'import type { SessionEventEncoded } from "../wire"',

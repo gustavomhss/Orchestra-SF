@@ -1,3 +1,5 @@
+import type { Sucafina } from "@orchestra/schema/sucafina"
+
 import type { SessionEventEncoded } from "../wire"
 
 import type { OrchestraEventEncoded } from "@orchestra/protocol/groups/event"
@@ -14863,24 +14865,7 @@ export type SucafinaStateInput = {
   }["securityMonth"]
 }
 
-export type SucafinaStateOutput = {
-  readonly surface: "dashboard" | "planner" | "procurement"
-  readonly page: string
-  readonly pages: ReadonlyArray<string>
-  readonly actor: {
-    readonly id: string
-    readonly name: string
-    readonly canWrite: boolean
-    readonly roles: ReadonlyArray<string>
-    readonly assigned: ReadonlyArray<string>
-    readonly domains: ReadonlyArray<string>
-  }
-  readonly year: number
-  readonly month: number
-  readonly data: { readonly [x: string]: JsonValue }
-  readonly versions: { readonly [x: string]: { readonly version: number; readonly by: string } }
-  readonly directory: ReadonlyArray<{ readonly id: string; readonly name: string }>
-}
+export type SucafinaStateOutput = Sucafina.PageState
 
 export type SucafinaCommandInput = {
   readonly surface: { readonly surface: "dashboard" | "planner" | "procurement" }["surface"]
