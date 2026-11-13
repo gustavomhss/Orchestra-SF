@@ -1,6 +1,6 @@
 import type { BusinessEvidenceRef, BusinessEvidenceResolution, AuthorizedCaseProjection } from "./business-context.ts"
 import type { DomainProjection, ImportManifest, RoutineResult, CommandReceiptView } from "./context.ts"
-import type { DecisionCase, ScenarioResult, ScenarioComparison, PortfolioResult, DocumentEvidence, ChangeImpact } from "./decisions.ts"
+import type { DecisionCase, ScenarioResult, ScenarioComparison, PortfolioResult, DocumentEvidence, ChangeImpact, CostCoverageBasis } from "./decisions.ts"
 import type { FinancialAnalysis } from "./ports.ts"
 
 export type UnresolvedCondition = { id: string; category: string; reason: string; evidenceRefs: readonly BusinessEvidenceRef[]; questionRef?: string }
@@ -9,7 +9,7 @@ export type IntentFrame = IntentFrameBase & ({ analysisBasis: "domain"; importPr
 export type AnalysisPlan = { objective: string; steps: readonly { profileId: string; skillId: string; operationIds: readonly string[]; expectedOutputTypes: readonly string[]; sourceRefs: readonly BusinessEvidenceRef[] }[]; gaps: readonly UnresolvedCondition[] }
 export type DecisionBrief = { caseRef: string; caseVersion: number; objective: string; orderedResultRefs: readonly string[]; evidenceRefs: readonly BusinessEvidenceRef[]; conditions: readonly UnresolvedCondition[]; choiceRef?: string; runRef?: string; resultRef?: string }
 export type QuestionProposal = { caseRef: string; question: string; criterionRef?: string; recipientRef?: string; evidenceRefs: readonly BusinessEvidenceRef[]; expectedCaseVersion: number }
-export type SensitivityResult = { scenarioRef: string; parameterRef: string; bounds: { minimum: number; maximum: number; steps: number }; evaluated: readonly { parameterValue: number; resultRef: string; value: number | null }[]; threshold: number | null; comparisonStatus: ScenarioComparison["comparisonStatus"]; unresolvedConditions: readonly UnresolvedCondition[]; evidenceRefs: readonly BusinessEvidenceRef[] }
+export type SensitivityResult = { scenarioRef: string; parameterRef: string; bounds: { minimum: number; maximum: number; steps: number }; evaluated: readonly { parameterValue: number; resultRef: string; value: number | null }[]; threshold: number | null; thresholdEvidence: { state: "exact"; value: number; evidenceRefs: readonly BusinessEvidenceRef[] } | { state: "sampled"; interval: { minimum: number; maximum: number }; evidenceRefs: readonly BusinessEvidenceRef[] } | { state: "unavailable"; reason: string }; unit: string; engineVersion: string; costCoverageRefs: readonly string[]; comparisonStatus: ScenarioComparison["comparisonStatus"]; unresolvedConditions: readonly UnresolvedCondition[]; evidenceRefs: readonly BusinessEvidenceRef[] }
 export type CommercialComparison = { requestRef: string; requestVersion: number; currency: string; proposals: readonly { proposalRef: string; eligible: boolean; score: number | null; convertedAmount: number | null; evidenceRefs: readonly BusinessEvidenceRef[]; issues: readonly string[] }[]; ranking: readonly string[]; conditions: readonly UnresolvedCondition[]; sourceRefs: readonly BusinessEvidenceRef[] }
 export type CommercialGap = { recordRef: string; field: string; issue: "missing" | "expired" | "contradictory" | "unconfirmed" | "unavailable"; evidenceRefs: readonly BusinessEvidenceRef[]; question: string }
 export type EvidenceCandidate = { id: string; value: string | number | boolean | null; unit?: string; evidenceRefs: readonly BusinessEvidenceRef[]; state: "claim" | "extracted" | "needs-confirmation" | "rejected" }
@@ -70,7 +70,7 @@ export type SfOperationOutputMap = {
   sf_sourcing_compare: CommercialComparison
   sf_case_read: AuthorizedCaseProjection
   sf_case_draft: IntentFrame
-  sf_alternative_draft: { caseRef: string; proposal: DecisionCase["alternatives"][number]; domainApplied: false }
+  sf_alternative_draft: { caseRef: string; proposal: DecisionCase["alternatives"][number]; costCoverageBasis: CostCoverageBasis; coverageRef: string; domainApplied: false }
   sf_change_prepare: PreparedChangeSet
   sf_receipt_get: { receipts: readonly CommandReceiptView[] }
   sf_work_list: { items: readonly { actionRef: string; sourceRefs: readonly BusinessEvidenceRef[]; state: string; ownerRef: string }[] }

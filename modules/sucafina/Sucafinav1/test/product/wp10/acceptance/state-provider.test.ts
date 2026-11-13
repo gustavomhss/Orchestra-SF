@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test"
 import type { Snapshot } from "../../../../runtime/contract.ts"
-import type { SfStateAuthority, SfProductStatePort, SfProductState } from "../../../../product/contracts/state.ts"
+import type { SfStateAuthority, SfProductStatePort, SfProductState, SfAtlasOutboxEntry } from "../../../../product/contracts/state.ts"
+import { digestSfEvidenceRef } from "../../../../product/contracts/canonical.ts"
 import { createSfProductState } from "../../../../product/host-binding/state-provider.ts"
 import { testPersistence } from "../../../fixture/persistence.ts"
 
@@ -204,18 +205,18 @@ test("admitted Atlas and outbox commit atomically with independent versions", as
   const input = { ...command, namespace: "atlas" as const, additionalNamespaces: [{ namespace: "outbox" as const, expectedStorageVersion: 0 }] }
   const result = await f.port.transaction(request(), input, async (state) => {
     state.atlas.event = "event-1"
-    state.outbox.event = "acknowledged"
+    state.outbox.event = outboxEntry("acknowledged")
     return { commit: true, value: "saved" }
   })
   expect(result).toMatchObject({ status: "ok", storageVersion: 1, aggregateRevision: 1 })
-  expect(await f.port.read(request(), "atlas", (state) => ({ atlas: state.atlas.event, outbox: state.outbox.event, versions: state.versions }))).toMatchObject({
+  expect(await f.port.read(request(), "atlas", (state) => ({ atlas: state.atlas.event, outbox: state.outbox.event?.eventRef.refId, versions: state.versions }))).toMatchObject({
     status: "ok", value: { atlas: "event-1", outbox: "acknowledged", versions: { atlas: 1, outbox: 1, preferences: 0 } },
   })
   const before = structuredClone(f.storage.state.dashboard)
   f.storage.fail.beforeCommit = true
   await expect(f.port.transaction(request(), { ...input, expectedStorageVersion: 1, additionalNamespaces: [{ namespace: "outbox", expectedStorageVersion: 1 }], idempotencyKey: "command-2" }, async (state) => {
     state.atlas.event = "event-2"
-    state.outbox.event = "new"
+    state.outbox.event = outboxEntry("new")
     return { commit: true, value: "saved" }
   })).rejects.toThrow("Injected commit failure")
   expect(f.storage.state.dashboard).toEqual(before)
@@ -224,7 +225,7 @@ test("admitted Atlas and outbox commit atomically with independent versions", as
 test("stale secondary namespace blocks all work", async () => {
   const f = fixture()
   expect((await f.port.transaction(request(), { ...command, namespace: "outbox" }, async (state) => {
-    state.outbox.event = "existing"
+    state.outbox.event = outboxEntry("existing")
     return { commit: true, value: null }
   })).status).toBe("ok")
   const before = structuredClone(f.storage.state.dashboard)
@@ -240,7 +241,7 @@ test("secondary authority revoked at egress rolls back both sections", async () 
   const before = structuredClone(f.storage.state.dashboard)
   expect(await f.port.transaction(request(), { ...command, namespace: "atlas", additionalNamespaces: [{ namespace: "outbox", expectedStorageVersion: 0 }] }, async (state) => {
     state.atlas.event = "secret"
-    state.outbox.event = "secret"
+    state.outbox.event = outboxEntry("secret")
     return { commit: true, value: "secret" }
   })).toEqual({ status: "denied", reason: "product-authority-changed" })
   expect(f.storage.state.dashboard).toEqual(before)
@@ -251,7 +252,7 @@ test("retry with a changed admitted namespace scope conflicts without executing"
   const input = { ...command, namespace: "atlas" as const, additionalNamespaces: [{ namespace: "outbox" as const, expectedStorageVersion: 0 }] }
   const first = await f.port.transaction(request(), input, async (state) => {
     state.atlas.event = "event-1"
-    state.outbox.event = "acknowledged"
+    state.outbox.event = outboxEntry("acknowledged")
     return { commit: true, value: "saved" }
   })
   expect(first.status).toBe("ok")
@@ -273,3 +274,8 @@ test("runtime rejects internal and prototype-key namespaces before work", async 
     expect(f.storage.state.dashboard).toEqual(before)
   }
 })
+
+function outboxEntry(label: string): SfAtlasOutboxEntry {
+  const ref: SfAtlasOutboxEntry["eventRef"] = { schema: "sf-evidence-v1", kind: "case-event", refId: label, installationId: "test-installation", projectId: "test-project", refDigest: "", evidenceLevel: "decision", target: { caseId: "test-case", caseIncarnation: "test-incarnation", caseVersion: 1, eventId: label, outputDigest: "a".repeat(64), evidenceRefs: [] } }
+  return { eventRef: { ...ref, refDigest: digestSfEvidenceRef(ref) }, writerPrincipalRef: authority.principalRef, accessRevision: authority.accessRevision, createdAt: "2026-11-13T00:00:00Z", attempts: 0, state: "pending" }
+}

@@ -30,6 +30,11 @@ export type Snapshot = {
   sequences: Record<string, number>
   audit: Audit[]
   notices: Notice[]
+  // Host-private source lifecycle metadata. Business views and JSON export expose only data/versions.
+  sfSources?: {
+    schemaVersion: 1
+    records: Record<string, { incarnation: string; version: number; alive: boolean; inputDigest: string }>
+  }
 }
 export type Environment = {
   at: string

@@ -2,6 +2,18 @@ import type { Snapshot } from "../../runtime/contract.ts"
 import type { DecisionCase } from "./decisions.ts"
 import type { PreservedReview, ConfirmationRecord, CommandReceipt } from "./context.ts"
 import type { ContributionEnvelope } from "./resident-ai.ts"
+import type { BusinessEvidenceRef, MemoryWriteReceipt } from "./business-context.ts"
+
+export type SfAtlasOutboxEntry = {
+  eventRef: Extract<BusinessEvidenceRef, { kind: "case-event" }>
+  writerPrincipalRef: string
+  accessRevision: string
+  createdAt: string
+  attempts: number
+} & (
+  | { state: "pending"; receipt?: never }
+  | { state: "settled"; receipt: MemoryWriteReceipt }
+)
 
 export type SfProductState = {
   schemaVersion: 1
@@ -18,7 +30,7 @@ export type SfProductState = {
   documents: Record<string, unknown>
   receipts: Record<string, CommandReceipt>
   atlas: Record<string, unknown>
-  outbox: Record<string, unknown>
+  outbox: Record<string, SfAtlasOutboxEntry>
   transactions: Record<string, { namespace: SfStateNamespace; scopeDigest: string; principalRef: string; targetRef: string; targetIncarnation: string; commandDigest: string; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown }>
 }
 export type SfStateNamespace = "preferences" | "reviews" | "relations" | "threads" | "confirmations" | "cases" | "contributions" | "documents" | "receipts" | "atlas" | "outbox"

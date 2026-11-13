@@ -3,7 +3,7 @@ import type { DecisionCase, PreparedChange, ScenarioResult } from "../contracts/
 
 /** The command and preview must already come from the authorized target-domain producer. */
 export function prepareDomainChange(input: {
-  case: DecisionCase
+  case: Pick<DecisionCase, "id" | "version" | "choices" | "currency" | "horizon">
   expectedCaseVersion: number
   choiceId: string
   command: PreparedCommand

@@ -38,9 +38,9 @@ export function createDecisionMutations(input: MutationHost) {
       if (!request.title.trim() || !request.coverageRef.trim()) return { status: "needs-input", reason: "alternative-input-required" }
       const loaded = await loadCase(input, request.caseRef, context)
       if (loaded.status !== "ok") return loaded
-      const scenario = await input.planner.simulateScenario(request.scenario, context)
+      const scenario = await callMutationPort(() => input.planner.simulateScenario(request.scenario, context))
       if (scenario.status !== "ok") return scenario
-      const coverage = await input.sources.resolveForecastCoverage(request.coverageRef, context)
+      const coverage = await callMutationPort(() => input.sources.resolveForecastCoverage(request.coverageRef, context))
       if (coverage.status !== "ok") return coverage
       if (coverage.value.coverageRef !== request.coverageRef) return { status: "conflict", reason: "coverage-reference-mismatch" }
       if (scenario.value.currency !== loaded.value.case.currency || scenario.value.horizon.start !== loaded.value.case.horizon.start || scenario.value.horizon.end !== loaded.value.case.horizon.end) return { status: "conflict", reason: "alternative-basis-mismatch" }
@@ -61,7 +61,7 @@ export function createDecisionMutations(input: MutationHost) {
       const loaded = await loadCase(input, request.caseRef, context)
       if (loaded.status !== "ok") return loaded
       if (!loaded.value.case.choices.some((choice) => choice.id === request.choiceId)) return { status: "conflict", reason: "choice-unavailable" }
-      const prepared = await input.prepareDomainCommands(request.caseRef, request.choiceId, request.operations, context)
+      const prepared = await callMutationPort(() => input.prepareDomainCommands(request.caseRef, request.choiceId, request.operations, context))
       if (prepared.status !== "ok") return prepared
       if (!prepared.value.length) return { status: "unavailable", reason: "domain-commands-unavailable" }
       if (prepared.value.some((item) => item.targetEvidence.installationId !== context.binding.installationId || item.targetEvidence.projectId !== context.binding.projectId || item.targetEvidence.target.surface !== item.command.target.surface || item.targetEvidence.target.recordType !== item.command.target.type || item.targetEvidence.target.recordId !== item.command.target.id || item.targetEvidence.target.incarnation !== item.command.target.incarnation || item.targetEvidence.target.version !== item.command.target.version || !item.targetEvidence.target.period || item.targetEvidence.target.period.start > item.command.target.period.start || item.targetEvidence.target.period.end < item.command.target.period.end || item.command.target.fields.some((field) => !item.targetEvidence.target.fields.includes(field)))) return { status: "conflict", reason: "change-evidence-mismatch" }
@@ -79,7 +79,7 @@ export function createDecisionMutations(input: MutationHost) {
       if (!request.questionRef.trim()) return { status: "needs-input", reason: "question-required" }
       const loaded = await loadCase(input, request.caseRef, context)
       if (loaded.status !== "ok") return loaded
-      const question = await input.resolveQuestion(request.questionRef, context)
+      const question = await callMutationPort(() => input.resolveQuestion(request.questionRef, context))
       if (question.status !== "ok") return question
       if (question.value.id !== request.questionRef || !question.value.id.trim() || !question.value.text.trim() || !question.value.evidenceRefs.length || loaded.value.case.questions.some((item) => item.id === question.value.id)) return { status: "conflict", reason: "question-identity-conflict" }
       return saveCase(input, loaded.value, context, "add-question", request, (value) => ({ ...value, questions: [...value.questions, { id: question.value.id, text: question.value.text, state: "open" }], sourceRefs: [...value.sourceRefs, ...question.value.evidenceRefs].filter((ref, index, refs) => refs.findIndex((other) => other.refDigest === ref.refDigest) === index) }))
@@ -87,24 +87,24 @@ export function createDecisionMutations(input: MutationHost) {
     answerQuestion: async (request: { caseRef: CaseRef; questionId: string; answerRef: string }, context: TrustedDomainContext): Promise<PortResult<MutationReceipt>> => {
       const replay = await replayMutation(input, request.caseRef, context, "answer-question", request)
       if (replay) return replay
-      if (context.kind !== "ui" || !await input.confirmAnswer(request.caseRef, request.questionId, request.answerRef, context)) return { status: "denied", reason: "human-answer-required" }
+      if (context.kind !== "ui" || !await input.confirmAnswer(request.caseRef, request.questionId, request.answerRef, context).catch(() => false)) return { status: "denied", reason: "human-answer-required" }
       const loaded = await loadCase(input, request.caseRef, context)
       if (loaded.status !== "ok") return loaded
       if (!loaded.value.case.questions.some((question) => question.id === request.questionId && question.state === "open")) return { status: "conflict", reason: "question-not-open" }
-      const evidence = await input.resolveAnswer(request.answerRef, context)
+      const evidence = await callMutationPort(() => input.resolveAnswer(request.answerRef, context))
       if (evidence.status !== "ok") return evidence
       return saveCase(input, loaded.value, context, "answer-question", request, (value) => ({ ...value, questions: value.questions.map((question) => question.id === request.questionId ? { ...question, state: "answered" as const, answerRef: request.answerRef } : question), sourceRefs: [...value.sourceRefs, evidence.value].filter((ref, index, refs) => refs.findIndex((other) => other.refDigest === ref.refDigest) === index) }))
     },
     recordChoice: async (request: { caseRef: CaseRef; alternativeId: string; alternativeVersion: number; comparison: ScenarioCompareRequest; criteria: readonly string[]; reason: string }, context: TrustedDomainContext): Promise<PortResult<MutationReceipt>> => {
       const replay = await replayMutation(input, request.caseRef, context, "record-choice", request)
       if (replay) return replay
-      if (context.kind !== "ui" || !await input.confirmChoice(request.caseRef, request.alternativeId, context)) return { status: "denied", reason: "human-choice-required" }
+      if (context.kind !== "ui" || !await input.confirmChoice(request.caseRef, request.alternativeId, context).catch(() => false)) return { status: "denied", reason: "human-choice-required" }
       const loaded = await loadCase(input, request.caseRef, context)
       if (loaded.status !== "ok") return loaded
       if (new Set(request.comparison.criteria).size !== request.criteria.length || request.criteria.some((criterion) => !request.comparison.criteria.includes(criterion))) return { status: "conflict", reason: "comparison-criteria-mismatch" }
-      const comparison = await input.planner.compareScenarios(request.comparison, context)
+      const comparison = await callMutationPort(() => input.planner.compareScenarios(request.comparison, context))
       if (comparison.status !== "ok") return comparison
-      const values = await input.resolveChoiceValues(request.caseRef, request.comparison, context)
+      const values = await callMutationPort(() => input.resolveChoiceValues(request.caseRef, request.comparison, context))
       if (values.status !== "ok") return values
       const choice = createChoiceSnapshot({ case: loaded.value.case, alternativeId: request.alternativeId, alternativeVersion: request.alternativeVersion, comparison: comparison.value, criteria: request.criteria, values: values.value, evidenceRefs: loaded.value.case.sourceRefs, id: input.createId(), principalRef: context.binding.principalRef, reason: request.reason, at: input.now() })
       if (choice.status !== "ok") return choice
@@ -160,6 +160,14 @@ async function saveCase(input: MutationHost, loaded: LoadedCase, context: Truste
   if (saved.status !== "ok") return failure(saved)
   if (!saved.value || !await input.authorizeCase(saved.value, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "case-access-unavailable" }
   return { status: "ok", value: { caseRef: { id: saved.value.id, incarnation: saved.value.incarnation, version: saved.value.version } } }
+}
+
+async function callMutationPort<T>(work: () => Promise<PortResult<T>>): Promise<PortResult<T>> {
+  try {
+    return await work()
+  } catch {
+    return { status: "unavailable", reason: "domain-source-unavailable" }
+  }
 }
 
 function failure(value: SfStateResult<unknown>): PortResult<never> {

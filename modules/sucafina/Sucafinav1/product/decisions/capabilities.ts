@@ -5,12 +5,13 @@ import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/sc
 import type { DecisionCasePort } from "../contracts/ports.ts"
 import type { BoundCapabilityReceipt, CapabilityDescriptor, CapabilityResult, TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { encodeCaseRef } from "./case-port.ts"
-import type { createDecisionProposalService } from "./proposals.ts"
+import type { createChangeProposalService, createDecisionProposalService } from "./proposals.ts"
 
 type DecisionCapabilityHost = {
   cases: DecisionCasePort
-  requiredAuthority: { read: readonly string[]; draft: readonly string[]; receipt: readonly string[]; alternative: readonly string[] }
+  requiredAuthority: { read: readonly string[]; draft: readonly string[]; receipt: readonly string[]; alternative: readonly string[]; change: readonly string[] }
   alternative?: ReturnType<typeof createDecisionProposalService>
+  change?: ReturnType<typeof createChangeProposalService>
   createReceipt: (context: TrustedDomainContext, operation: string, inputDigest: string, resultDigest?: string) => BoundCapabilityReceipt | undefined
 }
 
@@ -60,6 +61,19 @@ export async function draftAlternative(value: unknown, context: TrustedDomainCon
   return { status: "ok", result: result.value, receipt }
 }
 
+export async function prepareChange(value: unknown, context: TrustedDomainContext, host: DecisionCapabilityHost): Promise<CapabilityResult> {
+  const parsed = decodeSfOperationInput("sf_change_prepare", value)
+  if (!parsed.ok) return reject("sf_change_prepare", "invalid-change-proposal", "invalid-input", "needs-input")
+  if (!host.change) return reject("sf_change_prepare", "change-producer-unavailable", "unavailable", "unavailable")
+  if (!host.createReceipt(context, "sf_change_prepare", digestSfValue(parsed.value))) return reject("sf_change_prepare", "authority-unavailable", "invalid-binding")
+  const result = await host.change(parsed.value, context)
+  if (result.status !== "ok") return reject("sf_change_prepare", result.reason, result.status === "denied" ? "invalid-binding" : "unavailable", result.status === "conflict" ? "stale" : result.status)
+  if (!decodeSfOperationOutput("sf_change_prepare", result.value).ok) return reject("sf_change_prepare", "invalid-change-output", "unavailable", "unavailable")
+  const receipt = host.createReceipt(context, "sf_change_prepare", digestSfValue(parsed.value), digestSfValue(result.value))
+  if (!receipt) return reject("sf_change_prepare", "authority-unavailable", "invalid-binding")
+  return { status: "ok", result: result.value, receipt }
+}
+
 export function encodeReceiptRef(caseRef: string, receiptId: string) {
   return `receipt:${encodeURIComponent(caseRef)}:${encodeURIComponent(receiptId)}`
 }
@@ -98,7 +112,7 @@ export function createDecisionCapabilities(host: DecisionCapabilityHost): readon
   return [
     { id: "sf_case_read", pack: "decisions", mode: "read", inputSchema: sfOperationInputSchemas.sf_case_read, outputSchema: sfOperationOutputSchemas.sf_case_read, handler: (input, context) => readCase(input, context, host), handlerExport: "readCase", producerTask: "WP11.T01", grantProfiles: ["sf_maestro", "sf_finance", "sf_procurement", "sf_portfolio", "sf_reviewer"], requiredAuthority: host.requiredAuthority.read },
     { id: "sf_receipt_get", pack: "decisions", mode: "read", inputSchema: sfOperationInputSchemas.sf_receipt_get, outputSchema: sfOperationOutputSchemas.sf_receipt_get, handler: (input, context) => readReceipt(input, context, host), handlerExport: "readReceipt", producerTask: "WP11.T04", grantProfiles: ["sf_procurement"], requiredAuthority: host.requiredAuthority.receipt },
-    ...(host.alternative ? [{ id: "sf_alternative_draft", pack: "decisions", mode: "prepare" as const, inputSchema: sfOperationInputSchemas.sf_alternative_draft, outputSchema: sfOperationOutputSchemas.sf_alternative_draft, handler: (input: unknown, context: TrustedDomainContext) => draftAlternative(input, context, host), handlerExport: "draftAlternative", producerTask: "WP11.T02", grantProfiles: ["sf_finance", "sf_procurement", "sf_portfolio"] as const, requiredAuthority: host.requiredAuthority.alternative }] : []),
+    ...(host.change ? [{ id: "sf_change_prepare", pack: "decisions", mode: "prepare" as const, inputSchema: sfOperationInputSchemas.sf_change_prepare, outputSchema: sfOperationOutputSchemas.sf_change_prepare, handler: (input: unknown, context: TrustedDomainContext) => prepareChange(input, context, host), handlerExport: "prepareChange", producerTask: "WP11.T03", grantProfiles: ["sf_procurement"] as const, requiredAuthority: host.requiredAuthority.change }] : []),
     { id: "sf_case_draft", pack: "decisions", mode: "prepare", inputSchema: sfOperationInputSchemas.sf_case_draft, outputSchema: sfOperationOutputSchemas.sf_case_draft, handler: (input, context) => draftCase(input, context, host), handlerExport: "draftCase", producerTask: "WP11.T01", grantProfiles: ["sf_maestro"], requiredAuthority: host.requiredAuthority.draft },
   ]
 }

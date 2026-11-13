@@ -1,5 +1,5 @@
 {
-  "revision": 5,
+  "revision": 6,
   "scope": "C01–C17,24 contribution outputs,39 operation entry/output schemas,18 skill input schemas",
   "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
   "canonicalSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
@@ -1098,18 +1098,18 @@
   "artifacts": {
     "business-context.ts": "51bce13a057cdf28bf6f2f890ca3a38ac5cf8d38fcaa1944235ec76c5688c5f4",
     "canonical.ts": "8e600493ed8ae6e7a002198e10f901c25bc11090d086cee7568c3667dfffef3b",
-    "context.ts": "215b4a24cd38ceb5d9f4bb72321e965f7bc46b14cec7a5efd7ad6e37dd8bb245",
+    "context.ts": "90a076389150d6fdca121ab686ee066bfc7d6aa1ba82a51d67adeb05e516b520",
     "decisions.ts": "cccc8df09683b4fd1b43eb886264cc9248355ad198d6582ad0c090c820b71910",
     "generate-output-schemas.ts": "2e818d8f35a768257fb2f2bbc3eec914ff96eed5fa0e6d70ba2ae5570b15f308",
     "operations.ts": "4b4dea78486ca436a03725e44d98951333ca15f353bdf02e204e8a0914f58527",
-    "output-schemas.ts": "3ac852c3f8ed56a178bbe35907cb6ddaa084ccc2c551f1588e0d11efcd1719f4",
-    "outputs.ts": "a33c9f2ebde08c2aff2ff391689f95ddea990b8c05bb03598ad3fa2151c932b6",
-    "ports.ts": "46264d549c276577773e804c0fa0a4444d0edfdf2422a1924c4b4e198acd206b",
+    "output-schemas.ts": "11c4d20cabef7bd2686940212d4bd81f779c771d843e06d687899c44a4be9e35",
+    "outputs.ts": "1a20ee4932de9ce7f0f1540cf6aba391345a530dc4d9f4935088e2631fd16099",
+    "ports.ts": "07eb4dfc264a1150b5b06b00170ebcc8da1ce0b62e0ef94f5dfee57bddfa5aad",
     "resident-ai.ts": "12bd719f16aae9d41dc58baaaa090285cd9e5f11b3a790d67351c14d59e58697",
     "runtime.ts": "db83f9a37ca000511efe482e1d701371a6a5830cbcb62cbd5a8f0276456109d2",
     "schema-admission.ts": "1d125b9146ad36f925dce3248bb891b092b585f24d275e258b2c0d76a72fcf38",
     "sf-execution.ts": "a3cf340b5c4e73b9a6cb64892ee47de1c2176bb77a34d93cec326b09f5fdc1d6",
-    "state.ts": "08610e7798e24f21ef45f669b12a3c6156373debe43c2d7fede350062b9d2847",
+    "state.ts": "b0a03c10edf95f0dbcd1ca441959679f9412a62e6ab4d888fce7b0056b8eaa49",
     "validation.ts": "2fe8236bd56162cb9e5398b1155320057fd12f5f51f3700eb46aee2a8d7b1b15",
     "coverage-inventory.ts": "b55dbfb3edb5235cb6f8120773fee243d440f40fe118bde3c86c9a6e8a1d2da7",
     "skill-inputs.ts": "db1081f488c897caf6ed10b02d1389326a02f0edd124c657e9c4ffc805b1abc7"
@@ -2280,7 +2280,7 @@
     "AM05",
     "AM06"
   ],
-  "runtimeSeams": "runtime.ts factory types approved by S0; native Registry requires real Tool.Context/Request/Session/skill identity. UI registry remains distinct and host-only. Case ledger lives in DecisionCase.ledger. Case reads return AuthorizedCaseProjection, native/UI context discriminated. Creation target and operation identity are injected by private host; namespace permission never grants every case. v4: receiptFor exposes only registry-derived bound metadata while consumed/inflight (not a new consume); host source coverage includes immutable declared basis; DecisionCase persists costCoverageBases. v5: eighteen closed skill input decoders; IntentFrame preserves editable criteria; alternative and immutable choice preserve ScenarioRequest; native prepareIntent stays in pinned case; common authority exposes registry receiptFor for UI/native egress; ProcurementPort includes all four canonical capabilities. Routes are positive proof coverage, grants remain the current profile/skill intersection.",
+  "runtimeSeams": "runtime.ts factory types approved by S0; native Registry requires real Tool.Context/Request/Session/skill identity. UI registry remains distinct and host-only. Case ledger lives in DecisionCase.ledger. Case reads return AuthorizedCaseProjection, native/UI context discriminated. Creation target and operation identity are injected by private host; namespace permission never grants every case. v4: receiptFor exposes only registry-derived bound metadata while consumed/inflight (not a new consume); host source coverage includes immutable declared basis; DecisionCase persists costCoverageBases. v5: eighteen closed skill input decoders; IntentFrame preserves editable criteria; alternative and immutable choice preserve ScenarioRequest; native prepareIntent stays in pinned case; common authority exposes registry receiptFor for UI/native egress; ProcurementPort includes all four canonical capabilities. Routes are positive proof coverage, grants remain the current profile/skill intersection. v6: C11 alternative carries immutable CostCoverageBasis and coverageRef; C09 typed atomic Atlas outbox; C05 comments carry author/time and sections sourceRefs; C07 admitted result carries admissionRef/version and run checks expectedAdmissionVersion; sensitivity includes coverage, units, engine and explicit threshold precision/evidence. Job orchestration reacquires private Request authority at each boundary rather than retaining a one-shot call lease across provider wait.",
   "errorPolicy": "No fabricated data or authority; structural decoders are not ACL. Denied/unavailable/stale/provider-conflict never become ok; domain authorization and semantic validation remain producer/consumer duties.",
   "implementationStatus": "NOT_ATTESTED_BY_CONTRACT_FREEZE",
   "nonCircularity": "This inventory hashes typed artifacts only, not itself, future commits or future guards. Its accepted commit/digest and consumer receipts are external."

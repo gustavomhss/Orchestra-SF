@@ -119,17 +119,16 @@ export type PreservedReview = {
   version: number
   createdAt: string
   sourceRefs: readonly SourceRef[]
-  sections: readonly { id: string; title: string; period: Period; content: unknown; count: number }[]
-  comments: readonly { id: string; version: number; content: string; sourceRefs: readonly SourceRef[] }[]
+  sections: readonly { id: string; title: string; period: Period; content: unknown; count: number; sourceRefs: readonly SourceRef[] }[]
+  comments: readonly { id: string; version: number; content: string; authorRef: string; createdAt: string; sourceRefs: readonly SourceRef[] }[]
   previousReviewRef?: string
 }
 export type HostBoundEntryMode = "interactive" | "routine-result"
-export type RoutineResult = {
+type RoutineResultBase = {
   documentId: string
   publishedVersion: string
   principalRef: string
   projectId: string
-  admission: "preparing" | "needs-review" | "admitted" | "denied" | "unavailable" | "stale"
   runRef?: string
   resultRef?: string
   authorizationId?: string
@@ -139,3 +138,7 @@ export type RoutineResult = {
   sourceRefs: readonly SourceRef[]
   pending: readonly string[]
 }
+export type RoutineResult = RoutineResultBase & (
+  | { admission: "admitted"; admissionRef: string; admissionVersion: number }
+  | { admission: "preparing" | "needs-review" | "denied" | "unavailable" | "stale"; admissionRef?: string; admissionVersion?: number }
+)

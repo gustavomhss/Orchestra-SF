@@ -50,3 +50,33 @@ test("analysis rejects invalid skill input before host admission", async () => {
   const input = { request: { skillId: "sf-explicar-forecast" }, skillInput: {} } as unknown as Parameters<typeof runSfAnalysis>[0]
   expect(await runSfAnalysis(input)).toEqual({ status: "failed", reason: "invalid-skill-input" })
 })
+
+test("revoked access after a native wait blocks collection and publication", async () => {
+  const { Effect } = await import("effect")
+  const { runSfAnalysis } = await import("../../../product/ai/analysis-port.ts")
+  const caseRef = { id: "case-1", incarnation: "incarnation-1", version: 1 }
+  const receipt = {
+    runId: "run-1", nativeSessionId: "session-1", profileId: "sf_finance", profileVersion: "1.0.0", profileDigest: "a".repeat(64),
+    skillId: "sf-consultar-memoria-decisoria", skillVersion: "1.0.0", sourceDigest: "b".repeat(64), instructionsDigest: "c".repeat(64),
+    loadedMessageId: "message-1", loadedAt: "2026-11-13T00:00:00Z", manifestDigest: "d".repeat(64),
+  }
+  const observations = { scopes: 0, writes: 0 }
+  const host = {
+    prepare: async () => ({ status: "ok", value: { runRef: "run-1", sessionID: "session-1", skillReceipt: receipt, authorizedPrompt: "Review the authorized case." } }),
+    withRunContext: async (_runRef: string, action: (context: unknown) => Promise<unknown>) => {
+      observations.scopes++
+      if (observations.scopes === 2) return { status: "denied", reason: "access-revoked" }
+      return action({ binding: { accessRevision: "access-1" } })
+    },
+    revalidate: async () => ({ status: "ok", value: true }),
+    session: { prompt: () => Effect.succeed({}), wait: () => Effect.void },
+    collect: async () => { throw new Error("collection must not run") },
+    result: { write: async () => { observations.writes++; throw new Error("publication must not run") } },
+  }
+  const request = { caseRef, profileId: "sf_finance", profileVersion: "1.0.0", skillId: receipt.skillId, skillVersion: "1.0.0", manifestDigest: receipt.manifestDigest, outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: [], objective: "Review", contextFingerprint: "context-1" }
+  const skillInput = { currentCase: caseRef, recallScope: { cases: [], period: { start: "2027-01-01", end: "2027-12-31" }, includeHistorical: true }, query: "renewal" }
+  const input = { host, request, skillInput } as unknown as Parameters<typeof runSfAnalysis>[0]
+  expect(await runSfAnalysis(input)).toEqual({ status: "denied", reason: "access-revoked" })
+  expect(observations.scopes).toBe(2)
+  expect(observations.writes).toBe(0)
+})

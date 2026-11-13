@@ -92,7 +92,7 @@ export type BusinessPorts = {
     prepareAdmission: (request: { publishedRecipeRef: string; planRevisionId: string; writeScope: readonly string[]; inputRefs: readonly string[]; parameters: Readonly<Record<string, JsonValue>> }, binding: TrustedDomainContext) => Promise<PortResult<RoutineResult>>
     readAdmission: (admissionRef: string, binding: TrustedDomainContext) => Promise<PortResult<RoutineResult>>
     readRun: (runRef: string, binding: TrustedDomainContext) => Promise<PortResult<RoutineResult>>
-    run: (request: { admissionRef: string; caseRef: { id: string; incarnation: string; version: number } }, binding: TrustedDomainContext) => Promise<PortResult<RoutineResult>>
+    run: (request: { admissionRef: string; expectedAdmissionVersion: number; caseRef: { id: string; incarnation: string; version: number } }, binding: TrustedDomainContext) => Promise<PortResult<RoutineResult>>
   }
   result: { write: (request: { runRef: string; caseRef: { id: string; version: number; incarnation: string }; output: ContributionEnvelope }, binding: TrustedDomainContext) => Promise<PortResult<{ outputRef: string; caseVersion: number }>> }
   schedules: {
