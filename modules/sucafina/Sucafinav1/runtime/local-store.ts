@@ -79,7 +79,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   }
 
   type ReadScope = {
-    root: { db: Database; surface: Surface; snapshot: Snapshot; poisoned: boolean; readers: number }
+    root: { db: Database; snapshots: Partial<Record<Surface, Snapshot>>; poisoned: boolean; readers: number }
     parent?: ReadScope
     open: boolean
     signal?: AbortSignal
@@ -151,6 +151,15 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   }
 
   return {
+    currentSnapshots: () => {
+      const scope = context.getStore()
+      if (!scope) return undefined
+      requireScope(scope)
+      const snapshots = scope.root.snapshots
+      if (!snapshots.dashboard || !snapshots.planner || !snapshots.procurement) throw new Error("Local transaction snapshots unavailable")
+      return { dashboard: decodeSnapshot(encodeSnapshot(snapshots.dashboard)), planner: decodeSnapshot(encodeSnapshot(snapshots.planner)),
+        procurement: decodeSnapshot(encodeSnapshot(snapshots.procurement)) }
+    },
     transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) => {
       const parent = context.getStore()
       if (parent) return (async () => {
@@ -158,8 +167,9 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         requireScope(parent)
         transactionOptions?.signal?.throwIfAborted()
         const scope: ReadScope = { root: parent.root, parent, open: true, signal: transactionOptions?.signal }
-        const row = surface === parent.root.surface ? undefined : parent.root.db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
-        const snapshot = surface === parent.root.surface ? decodeSnapshot(encodeSnapshot(parent.root.snapshot)) :
+        const staged = parent.root.snapshots[surface]
+        const row = staged ? undefined : parent.root.db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
+        const snapshot = staged ? decodeSnapshot(encodeSnapshot(staged)) :
           row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
         const blobs: BlobTransaction = {
           get: async (key) => {
@@ -187,9 +197,13 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         }
       })()
       return operation(true, async (db) => {
-        const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
-        const snapshot = row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
-        const scope: ReadScope = { root: { db, surface, snapshot, poisoned: false, readers: 0 }, open: true, signal: transactionOptions?.signal }
+        const read = (name: Surface) => {
+          const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(name)
+          return row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
+        }
+        const snapshots = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
+        const snapshot = snapshots[surface]
+        const scope: ReadScope = { root: { db, snapshots, poisoned: false, readers: 0 }, open: true, signal: transactionOptions?.signal }
         const requireOpen = () => {
           requireScope(scope)
           if (context.getStore() !== scope) throw new Error("Blob capability used outside its transaction scope")
@@ -236,6 +250,33 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         return result.value
       }, transactionOptions?.signal)
     },
+    transactionAll: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) =>
+      operation(true, async (db) => {
+        const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
+        const read = (surface: Surface) => {
+          const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
+          return row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
+        }
+        const snapshots = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
+        const scope: ReadScope = { root: { db, snapshots, poisoned: false, readers: 0 }, open: true, signal: transactionOptions?.signal }
+        const result = await (async () => {
+          try { return await context.run(scope, () => work(snapshots)) }
+          finally { scope.open = false }
+        })()
+        transactionOptions?.signal?.throwIfAborted()
+        if (scope.root.poisoned) throw new Error("Nested local write attempted")
+        if (scope.root.readers) throw new Error("Nested local read still active")
+        if (result.commit) {
+          surfaces.forEach((surface) => {
+            const payload = encodeSnapshot(snapshots[surface])
+            decodeSnapshot(payload)
+            db.query("INSERT INTO snapshots (surface, payload) VALUES (?, ?) ON CONFLICT (surface) DO UPDATE SET payload=excluded.payload").run(surface, payload)
+          })
+          transactionOptions?.signal?.throwIfAborted()
+          db.exec("COMMIT")
+        }
+        return result.value
+      }, transactionOptions?.signal),
     secrets: {
       put: (key, bytes, expiresAt) => operation(true, async (db) => {
         if (!Number.isFinite(expiresAt)) throw new Error("Invalid authentication expiry")

@@ -28,8 +28,8 @@ export function createSfProductState(input: {
         if (!sameAuthority(authority, current)) return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
         return { commit: false, value: { status: "ok", storageVersion: state.versions[namespace], aggregateRevision: state.revision, incarnation: state.incarnation, value } }
       }, { signal: request.signal }),
-    transaction: <T>(request: Request, command: SfStateMutation, work: (state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: boolean; value: T }>) =>
-      input.persistence.transaction<SfStateResult<T>>("dashboard", async (snapshot) => {
+    transaction: <T>(request: Request, command: SfStateMutation, work: (state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: boolean; value: T }>) => {
+      const run = async (snapshot: Snapshot, domain: Snapshot): Promise<{ commit: boolean; value: SfStateResult<T> }> => {
         const authority = await input.authorize(request, snapshot, command.namespace, "write")
         if (!authority) return { commit: false, value: { status: "denied", reason: "product-access-unavailable" } }
         const scope = [{ namespace: command.namespace, expectedStorageVersion: command.expectedStorageVersion }, ...command.additionalNamespaces ?? []]
@@ -39,7 +39,9 @@ export function createSfProductState(input: {
         if (extraAuthority.some((entry) => !entry.authority || entry.authority.principalRef !== authority.principalRef))
           return { commit: false, value: { status: "denied", reason: "product-access-unavailable" } }
         const admitted = [{ namespace: command.namespace, authority }, ...extraAuthority.filter((entry): entry is { namespace: SfStateNamespace; authority: SfStateAuthority } => entry.authority !== undefined)]
-        const scopeDigest = digestSfValue(scope.map((entry) => entry.namespace).sort())
+        const scopeDigest = digestSfValue(command.domainSurface && command.domainSurface !== "dashboard"
+          ? { namespaces: scope.map((entry) => entry.namespace).sort(), domainSurface: command.domainSurface }
+          : scope.map((entry) => entry.namespace).sort())
         if (!command.targetRef.trim() || !command.targetIncarnation.trim() || !command.idempotencyKey.trim() || !/^[a-f0-9]{64}$/.test(command.commandDigest))
           return { commit: false, value: { status: "conflict", reason: "invalid-command-identity" } }
         const stored = snapshot.data.__sfProductV1
@@ -65,7 +67,7 @@ export function createSfProductState(input: {
         if (scope.some((entry) => state.versions[entry.namespace] !== entry.expectedStorageVersion))
           return { commit: false, value: { status: "conflict", reason: "product-state-changed" } }
         const staged = structuredClone(state)
-        const result = await work(staged, authority, snapshot)
+        const result = await work(staged, authority, domain)
         if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
         const current = await Promise.all(admitted.map((entry) => input.authorize(request, snapshot, entry.namespace, "write")))
         if (admitted.some((entry, index) => !sameAuthority(entry.authority, current[index]))) return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
@@ -87,7 +89,14 @@ export function createSfProductState(input: {
         staged.transactions[key] = { namespace: command.namespace, scopeDigest, principalRef: authority.principalRef, targetRef: command.targetRef, targetIncarnation: command.targetIncarnation, commandDigest: command.commandDigest, storageVersion: staged.versions[command.namespace], aggregateRevision: staged.revision, incarnation: staged.incarnation, value: structuredClone(result.value) }
         snapshot.data.__sfProductV1 = staged
         return { commit: true, value: { status: "ok", storageVersion: staged.versions[command.namespace], aggregateRevision: staged.revision, incarnation: staged.incarnation, value: result.value } }
-      }, { signal: request.signal }),
+      }
+      if (command.domainSurface && command.domainSurface !== "dashboard") {
+        if (!input.persistence.transactionAll) return Promise.resolve({ status: "unavailable", reason: "cross-surface-transaction-unavailable" })
+        const surface = command.domainSurface
+        return input.persistence.transactionAll((snapshots) => run(snapshots.dashboard, snapshots[surface]), { signal: request.signal })
+      }
+      return input.persistence.transaction("dashboard", (snapshot) => run(snapshot, snapshot), { signal: request.signal })
+    },
   }
 }
 

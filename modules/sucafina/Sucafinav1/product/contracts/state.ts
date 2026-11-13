@@ -1,4 +1,5 @@
 import type { Snapshot } from "../../runtime/contract.ts"
+import type { Surface } from "../../src/identity.ts"
 import type { DecisionCase, ScenarioResult, ScenarioComparison, PortfolioResult } from "./decisions.ts"
 import type { SensitivityResult } from "./outputs.ts"
 import type { PreservedReview, ConfirmationRecord, CommandReceipt } from "./context.ts"
@@ -85,6 +86,7 @@ export type SfStateNamespace = "preferences" | "reviews" | "relations" | "thread
 export type SfStateAuthority = { principalRef: string; accessRevision: string; policyVersion: string }
 export type SfStateMutation = {
   namespace: SfStateNamespace
+  domainSurface?: Surface
   expectedStorageVersion: number
   additionalNamespaces?: readonly { namespace: SfStateNamespace; expectedStorageVersion: number }[]
   idempotencyKey: string
