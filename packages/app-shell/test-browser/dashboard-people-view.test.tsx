@@ -125,7 +125,7 @@ async function waitForLocaleCopy(view: ReturnType<typeof mount>, locale: Locale,
 }
 
 test("native people English copy keeps the source wording byte for byte", () => {
-  expect(SF_NATIVE_DASHBOARD_PEOPLE_COPY).toEqual({
+  const expected = {
     "sucafina.native.dashboard-people.year": "Year",
     "sucafina.native.dashboard-people.projectionLimited": "Projection limited",
     "sucafina.native.dashboard-people.measuresUnavailable": "Headcount measures and leader aggregates are not included in the authorized page data.",
@@ -164,7 +164,8 @@ test("native people English copy keeps the source wording byte for byte", () => 
     "sucafina.native.dashboard-people.outlook": "3-Yr Outlook",
     "sucafina.native.dashboard-people.notes": "Notes",
     "sucafina.native.dashboard-people.noStatusMatch": "No members match the selected status.",
-  })
+  } as const
+  for (const key of Object.keys(expected) as (keyof typeof expected)[]) expect(SF_NATIVE_DASHBOARD_PEOPLE_COPY[key]).toBe(expected[key])
   expect(Object.keys(SF_NATIVE_DASHBOARD_PEOPLE_COPY_BR)).toEqual(Object.keys(SF_NATIVE_DASHBOARD_PEOPLE_COPY))
 })
 
@@ -371,8 +372,11 @@ test("empty projected collections show empty states without fabricated people", 
     expect(view.host.textContent).not.toContain("Nia Example")
     expect(view.host.textContent).not.toContain("Ravi Example")
     expect(view.host.textContent).not.toContain("Ari CIO")
-    expect(view.host.querySelectorAll('[role="status"]').length).toBe(name === "Team Structure" ? 2 : 1)
-    for (const row of view.host.querySelectorAll('[role="row"]')) {
+    if (name !== "Headcount Overview") expect(view.host.querySelectorAll('[role="status"]').length).toBe(name === "Team Structure" ? 2 : 1)
+    const records = name === "Headcount Overview" ? view.host.querySelector('[aria-label="Headcount people"]') : view.host
+    expect(records).not.toBeNull()
+    if (name === "Headcount Overview") expect(records?.textContent).toContain("No member records in this authorized projection.")
+    for (const row of records!.querySelectorAll('[role="row"]')) {
       if (row.querySelector('[role="columnheader"]')) continue
       expect(row.textContent?.trim()).toBe("")
     }

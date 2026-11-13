@@ -1,12 +1,12 @@
 import { For, Match, Show, Switch } from "solid-js"
 import type { Sucafina } from "@orchestra/schema/sucafina"
 import { useLanguage } from "@/context/language"
-import { MxBadge } from "../kit"
 import type { NativeViewProps } from "./view-contract"
 
 type Row = Record<string, unknown>
 type Collection = { available: true; rows: Row[] } | { available: false }
 type TableRow = { key: string; cells: string[] }
+type HeadcountSummary = Row & { leaders: Row[]; unassigned: Row; leaderTotals: Row; departureDetails: Row[] }
 
 const peoplePages = ["Headcount Overview", "Team Structure", "Talent Review"] as const
 const memberStatuses = ["", "Active", "On Leave", "Terminated"] as const
@@ -36,6 +36,47 @@ function HeadcountView(props: { props: NativeViewProps }) {
     headcountYears.includes(props.props.query.year as (typeof headcountYears)[number])
       ? props.props.query.year!
       : String(props.props.page.year)
+  const summary = () => {
+    const years = props.props.page.data.nativeHeadcountSummaryByYear
+    return isRow(years) ? headcountSummaryProjection(years[year()]) : undefined
+  }
+  const number = (value: unknown, format: "number" | "decimal" | "percent" = "number") => {
+    if (!headcountNumber(value)) return "—"
+    return new Intl.NumberFormat(language.intl(), {
+      minimumFractionDigits: format === "number" ? 0 : 1,
+      maximumFractionDigits: format === "number" ? 2 : 1,
+    }).format(value) + (format === "percent" ? "%" : "")
+  }
+  const metricFields = [
+    ["active", "totalActive", "number"], ["employees", "employees", "number"],
+    ["contractors", "contractors", "number"], ["terminated", "terminated", "number"],
+    ["departures", "departures", "number"], ["itLeaders", "itLeaders", "number"],
+    ["averageTenureMonths", "averageTenureMonths", "decimal"], ["attritionPercent", "attritionYtd", "percent"],
+    ["staffRatio", "staffRatio", "number"], ["users", "itUsers", "number"], ["usersMonth", "usersMonth", "number"],
+    ["averageHeadcount", "averageHeadcount", "number"], ["tenureCount", "tenureCount", "number"],
+    ["staffPercent", "staffPercent", "percent"], ["talent", "talent", "number"],
+    ["solid", "solidContributors", "number"], ["laggers", "laggers", "number"],
+  ] as const
+  const classificationColumns = () => {
+    const supplied = summary()
+    if (!supplied) return []
+    return (["talent", "solid", "laggers"] as const).filter((field) =>
+      [...supplied.leaders, supplied.unassigned, supplied.leaderTotals].some((row) => Object.hasOwn(row, field)),
+    )
+  }
+  const leaderSummaryRows = (): TableRow[] => {
+    const supplied = summary()
+    if (!supplied) return []
+    return [
+      ...supplied.leaders.map((row, index) => ({ key: string(row.id) || `leader-${index}`, row, name: display(row.name) })),
+      { key: "unassigned", row: supplied.unassigned, name: language.t("sucafina.native.dashboard-people.leaderUnassigned") },
+      { key: "total", row: supplied.leaderTotals, name: language.t("sucafina.native.dashboard-people.headcountTotal") },
+    ].map((item) => ({
+      key: item.key,
+      cells: [item.name, display(item.row.domain), display(item.row.location), number(item.row.employees), number(item.row.contractors),
+        number(item.row.active), number(item.row.averageTenureMonths, "decimal"), ...classificationColumns().map((field) => number(item.row[field]))],
+    }))
+  }
   const memberRows = (): TableRow[] => {
     const members = memberProjection()
     const leaders = leaderProjection()
@@ -70,11 +111,45 @@ function HeadcountView(props: { props: NativeViewProps }) {
             </select>
           </label>
         </div>
-        <div class="mx-meta">
-          <MxBadge>{language.t("sucafina.native.dashboard-people.projectionLimited")}</MxBadge>
-          <span>{language.t("sucafina.native.dashboard-people.measuresUnavailable")}</span>
-        </div>
       </div>
+      <Show when={summary()} fallback={<UnavailableProjection message={language.t("sucafina.native.dashboard-people.headcountSummaryUnavailable")} />}>
+        {(supplied) => (
+          <>
+            <section class="mx-card" aria-label={language.t("sucafina.native.dashboard-people.headcountSummary")}>
+              <h2>{language.t("sucafina.native.dashboard-people.headcountSummary")}</h2>
+              <dl class="mx-fields">
+                <For each={metricFields.filter(([field]) => Object.hasOwn(supplied(), field))}>
+                  {([field, copy, format]) => <Value label={language.t(`sucafina.native.dashboard-people.${copy}`)} value={number(supplied()[field], format)} />}
+                </For>
+              </dl>
+            </section>
+            <div class="mx-card" style={{ overflow: "auto" }}>
+              <div style={{ "min-width": "54rem" }}>
+                <ReadTable
+                  label={language.t("sucafina.native.dashboard-people.headcountByLeader")}
+                  columns={[
+                    language.t("sucafina.native.dashboard-people.leader"), language.t("sucafina.native.dashboard-people.domain"),
+                    language.t("sucafina.native.dashboard-people.location"), language.t("sucafina.native.dashboard-people.employees"),
+                    language.t("sucafina.native.dashboard-people.contractors"), language.t("sucafina.native.dashboard-people.active"),
+                    language.t("sucafina.native.dashboard-people.averageTenureMonths"),
+                    ...classificationColumns().map((field) => language.t(field === "talent" ? "sucafina.native.dashboard-people.talent" : field === "solid" ? "sucafina.native.dashboard-people.solid" : "sucafina.native.dashboard-people.lagger")),
+                  ]}
+                  rows={leaderSummaryRows()}
+                  empty={language.t("sucafina.native.dashboard-people.noLeaders")}
+                />
+              </div>
+            </div>
+            <div class="mx-card" style={{ overflow: "auto" }}>
+              <ReadTable
+                label={language.t("sucafina.native.dashboard-people.headcountDepartures")}
+                columns={[language.t("sucafina.native.dashboard-people.name"), language.t("sucafina.native.dashboard-people.endDate")]}
+                rows={supplied().departureDetails.map((row) => ({ key: string(row.id), cells: [display(row.name), display(row.end)] }))}
+                empty={language.t("sucafina.native.dashboard-people.noDepartures")}
+              />
+            </div>
+          </>
+        )}
+      </Show>
       <Show when={memberProjection().available} fallback={<UnavailableProjection message={language.t("sucafina.native.dashboard-people.memberRecordsUnavailable")} />}>
         <ReadTable
           label={language.t("sucafina.native.dashboard-people.headcountPeople")}
@@ -313,6 +388,33 @@ function Value(props: { label: string; value: unknown }) {
 
 function UnavailableProjection(props: { message: string }) {
   return <div class="mx-empty" role="status">{props.message}</div>
+}
+
+function headcountSummaryProjection(value: unknown): HeadcountSummary | undefined {
+  if (!isRow(value)) return undefined
+  if (!["active", "employees", "contractors", "terminated", "departures", "itLeaders", "attritionPercent", "users", "usersMonth", "averageHeadcount", "tenureCount"].every((field) => headcountNumber(value[field]))) return undefined
+  if (!["averageTenureMonths", "staffRatio", "staffPercent"].every((field) => value[field] === null || headcountNumber(value[field]))) return undefined
+  if (!headcountClassifications(value)) return undefined
+  if (!Array.isArray(value.leaders) || !value.leaders.every(headcountLeader)) return undefined
+  if (!headcountLeader(value.unassigned)) return undefined
+  const totals = value.leaderTotals
+  if (!isRow(totals) || !["active", "employees", "contractors"].every((field) => headcountNumber(totals[field])) || !headcountClassifications(totals)) return undefined
+  if (!Array.isArray(value.departureDetails) || !value.departureDetails.every((row): row is Row => isRow(row) && ["id", "name", "end"].every((field) => typeof row[field] === "string"))) return undefined
+  return { ...value, leaders: value.leaders, unassigned: value.unassigned, leaderTotals: totals, departureDetails: value.departureDetails }
+}
+
+function headcountLeader(value: unknown): value is Row {
+  return isRow(value) && ["id", "name", "domain", "location"].every((field) => typeof value[field] === "string") &&
+    ["active", "employees", "contractors"].every((field) => headcountNumber(value[field])) &&
+    (value.averageTenureMonths === null || headcountNumber(value.averageTenureMonths)) && headcountClassifications(value)
+}
+
+function headcountClassifications(value: Row) {
+  return ["talent", "solid", "laggers"].every((field) => !Object.hasOwn(value, field) || headcountNumber(value[field]))
+}
+
+function headcountNumber(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value)
 }
 
 function collection(value: Sucafina.PageState["data"][string]): Collection {
