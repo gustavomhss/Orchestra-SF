@@ -169,41 +169,20 @@ export function exportRegister(requests: RequestView[]) {
   return requests.map((request) => strip(request))
 }
 
-export function approvalQueue(requests: RequestView[], actorId: string) {
-  const waitingForYou: RequestView[] = []
-  const waitingForOthers: RequestView[] = []
-  const unassigned: RequestView[] = []
+export function myApprovals(requests: RequestView[], actorId: string) {
+  const waitingForYou = []
+  const waitingForOthers = []
+  const unassigned = []
   for (const request of requests) {
-    if (typeof request.status !== "string" || !request.status.endsWith("_pending")) continue
     const approval = approvalOf(request)
-    const step = Array.isArray(approval?.steps) ? approval.steps.find((item) => item?.status === "pending") : undefined
-    if (step?.holderId && step.holderId === actorId) waitingForYou.push(request)
-    if (step?.holderId && step.holderId !== actorId) waitingForOthers.push(request)
-    if (!step?.holderId) unassigned.push(request)
+    const step = approval?.steps?.find((item) => item.status === "pending")
+    if (!approval || !step) continue
+    const row = { number: request.number, amount: approval.amount }
+    if (step.holderId === actorId) waitingForYou.push(row)
+    if (step.holderId && step.holderId !== actorId) waitingForOthers.push(row)
+    if (!step.holderId) unassigned.push(row)
   }
   return { waitingForYou, waitingForOthers, unassigned }
-}
-
-export function myApprovals(requests: RequestView[], actorId: string) {
-  const groups = approvalQueue(requests, actorId)
-  const brief = (request: RequestView) => {
-    const amount = approvalOf(request)?.amount
-    return { number: request.number, amount: typeof amount === "number" && Number.isFinite(amount) ? amount : null }
-  }
-  return { waitingForYou: groups.waitingForYou.map(brief), waitingForOthers: groups.waitingForOthers.map(brief), unassigned: groups.unassigned.map(brief) }
-}
-
-/** Uses the same holder and self-approval checks as the actual request detail. */
-export function approvalDecision(request: RequestView, actor: Pick<ScreenActor, "id" | "canWrite" | "roles">, blockSelfApproval: boolean) {
-  if (!["pr_pending", "src_pending", "po_pending"].includes(request.status)) return { allowed: false, reason: "approval step unavailable" }
-  const approval = approvalOf(request)
-  const step = Array.isArray(approval?.steps) ? approval.steps.find((item) => item?.status === "pending") : undefined
-  if (!step) return { allowed: false, reason: "approval step unavailable" }
-  if (step.holderId !== null && (typeof step.holderId !== "string" || !step.holderId)) return { allowed: false, reason: "approval holder unavailable" }
-  if (step.holderId && step.holderId !== actor.id) return { allowed: false, reason: "waiting for the assigned holder" }
-  if (blockSelfApproval && request.createdBy === actor.id) return { allowed: false, reason: "self-approval is blocked" }
-  if (!actor.id.trim() || !actor.canWrite || !actor.roles.length || actor.roles.every((role) => role === "viewer")) return { allowed: false, reason: "write access required" }
-  return { allowed: true, reason: "" }
 }
 
 /** An imported history without the actual transition cannot establish when this holder began waiting. */
@@ -361,16 +340,8 @@ function procurementBody(
       .map((request) => `<p>${esc(request.number ?? "")} ${esc(request.status)}</p>`)
       .join("")
   if (key === "My approvals" && input.requests) {
-    const groups = approvalQueue(input.requests, input.actor.id)
-    return [{ title: "Waiting for you", rows: groups.waitingForYou }, { title: "Waiting for others", rows: groups.waitingForOthers }, { title: "Unassigned", rows: groups.unassigned }].map((group) => `<h2>${group.title}</h2><ul>${group.rows.map((request) => {
-      const approval = approvalOf(request)
-      const step = Array.isArray(approval?.steps) ? approval.steps.find((item) => item?.status === "pending") : undefined
-      const currency = request.status === "pr_pending" ? request.prApprovalBaseCurrency : request.status === "src_pending" ? request.sourcing?.approvalBaseCurrency : request.status === "po_pending" ? request.po?.approvalBaseCurrency : undefined
-      const amount = typeof approval?.amount === "number" && Number.isFinite(approval.amount) ? `${approval.amount} ${currency || "(submitted base currency unavailable)"}` : "Unavailable"
-      const stage = request.status === "pr_pending" ? "Requisition" : request.status === "src_pending" ? "Sourcing selection" : request.status === "po_pending" ? "Purchase order" : "Unrecognized approval stage"
-      const holder = step?.holderId ? `Assigned holder: ${step.holderId}` : "Unassigned"
-      return `<li>${esc(request.number ?? "")} · ${esc(request.pr?.title || "Unavailable")} · ${esc(stage)} · ${esc(amount)} · ${esc(holder)} · ${step ? "Review approval" : "Approval step unavailable"}</li>`
-    }).join("")}</ul>`).join("")
+    const mine = myApprovals(input.requests, input.actor.id)
+    return [{ title: "Waiting for you", rows: mine.waitingForYou }, { title: "Waiting for others", rows: mine.waitingForOthers }, { title: "Unassigned", rows: mine.unassigned }].map((group) => `<h2>${group.title}</h2><ul>${group.rows.map((row) => `<li>${esc(row.number ?? "")} ${row.amount}</li>`).join("")}</ul>`).join("")
   }
   return ""
 }

@@ -31,8 +31,6 @@ export type Snapshot = {
   audit: Audit[]
   notices: Notice[]
   sfCommandPreviews?: Record<string, { principalRef: string; actorDigest: string; command: Command; baseDigest: string; commandDigest: string; ids: string[]; expiresAt: string; receipt?: Result }>
-  // Host-private blob generations survive deletion and are updated atomically with blob bytes.
-  sfBlobGenerations?: Record<string, number>
   // Host-private source lifecycle metadata. Business views and JSON export expose only data/versions.
   sfSources?: {
     schemaVersion: 1

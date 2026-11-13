@@ -1,0 +1,66 @@
+{
+  "schema": "sf2h-stop-handoff-v1",
+  "wp": "WP03",
+  "status": "STOPPED_INCOMPLETE",
+  "branch": "sf2-planner-ready",
+  "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/planner-ready",
+  "checkpoint_parent_head": "851d28202bcba8ffed13a8785353bdd297d4431d",
+  "checkpoint_parent_tree": "da19e86e0f28fe7551a0bc82e5cd3ea5051c1093",
+  "tree_note": "This file is committed after checkpoint_parent_head; final local head/tree are recorded in external handoff and must be resolved from the branch.",
+  "inputs": {
+    "campaign_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "wp_base": "c873998a4bf597cb8fe3d94b48b58a7441d533e8",
+    "campaign_ownership_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "foreign_copies": "WP base includes previously committed cross-WP contract and host inputs; do not attribute them to WP03. See git log campaign_base..wp_base."
+  },
+  "workers": [
+    {
+      "id": "Terra",
+      "role": "lead and sole git writer",
+      "state": "stopping",
+      "lease": "revoked after checkpoint"
+    },
+    {
+      "id": "/root/planner_luna",
+      "model": "inherited Luna session",
+      "state": "interrupted",
+      "lease": "revoked"
+    },
+    {
+      "id": "7a093505-bbfa-4e46-8c12-4b5e7e7f1e27",
+      "model": "grok-4.7-build",
+      "state": "terminal HTTP 402",
+      "lease": "revoked"
+    },
+    {
+      "id": "ac5aabb3-4cd9-4b0a-8ca7-f1ce3a5cb32d",
+      "model": "grok-4.7-build",
+      "state": "terminal HTTP 402",
+      "lease": "revoked"
+    }
+  ],
+  "tasks": {
+    "WP03.T01": "partial; ports exist; MCP/native composition and proof pending",
+    "WP03.T02": "partial; monthly backend exists; WP01 UI and integrated proof pending",
+    "WP03.T03": "partial; headcount producer and unverified interrupted work preserved; WP01 UI/composition pending",
+    "WP03.T04": "partial; catalog producer exists; WP01 UI/composition pending",
+    "WP03.T05": "partial; BI/comparison producer exists; end-to-end consumers and proof pending"
+  },
+  "behavior": "Planner projection, simulation, monthly, headcount, catalog, comparison, evidence adapters and producer code are preserved. Calculation evidence must not be connected until bounded replay and coverage resolution are safe. Exact threshold is conditioned until independent C10 certificate is verified. Mixed-domain scenario must retain complete request and partial results separately.",
+  "validations": {
+    "local_product_tests": "NOT_RUN",
+    "package_typecheck": "NOT_RUN on final checkpoint",
+    "hosted_ci": "NOT_RUN on final checkpoint; older run 43385260685 does not validate this head",
+    "guards": "NOT_RUN on final checkpoint; earlier run passed before later edits"
+  },
+  "pending": [
+    "Review interrupted Luna changes and all checkpoints",
+    "Connect and verify WP01 monthly/HR/catalog real UI and WP10 runtime/native/MCP composition",
+    "WP11/WP13 C10 proof, certified threshold, mixed-domain persistence and C06/C08/C17 fences",
+    "Prove cycle-safe record-only or ancestry-aware calculation replay before connecting issuer",
+    "Run package typecheck and bun run check:guards --base origin/dev",
+    "Obtain serial CI lease and run change-scoped hosted WP03 tests on exact head; fix failures",
+    "Only then prepare ready PR and deliver evidence to campaign lead"
+  ],
+  "resume": "Start only on explicit user instruction; inspect checkpoint, team workflow and leases, review interrupted work, reconcile consumer heads, then complete scope and final gates. No automatic resumption."
+}
