@@ -1062,7 +1062,7 @@ test("dashboard headcount file normalizes Start Date and End Date, stores only r
   expect((state.data.versions as { hc: { positions: unknown[] } }[])[0].hc.positions).toEqual([])
   expect(state.versions["roster:file"].version).toBe(1)
 })
-test("budget owner workbook applies only owned forecasts and rejects a mixed unauthorized forecast atomically", () => {
+test("budget owner workbook updates permitted Budget, ignores unauthorized Actual, and atomically rejects foreign Forecast", () => {
   const state = seeded()
   expect(
     run(state, "OPEX", "save", "a", {
@@ -1112,8 +1112,8 @@ test("budget owner workbook applies only owned forecasts and rejects a mixed una
       }[]
     }[]
   )[0].lines[0]
-  expect(line.name).toBe("A")
-  expect(line.annual).toBe(100)
+  expect(line.name).toBe("Rename")
+  expect(line.annual).toBe(900)
   expect(line.f[0]).toBe(0)
   expect(line.a[0]).toBeNull()
 })

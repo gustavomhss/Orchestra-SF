@@ -2265,10 +2265,36 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
               (sec !== "capex" || line.proj === project?.id) &&
               normName(text(line.name)) === normName(name),
           )
-      if (!synthetic && !found && !can("structure")) {
+      const original = found && !synthetic ? before.lines.find((item) => item.id === found.id) : undefined
+      if (!synthetic && !found && !can("structure") && actor.roles.includes("budget owner") && measure !== "b")
+        return { ok: false, status: 403 }
+      if (
+        original && row.Owner !== undefined && actor.roles.includes("budget owner") &&
+        !can("owner", original) && !ownerLineScope(actor, lineScope(original))
+      ) {
+        const postedOwner = workbookOwner(row.Owner, undefined, environment, issue)
+        if (issue.result) break
+        if (idOf(object(postedOwner).id) === actor.id && lineScope(original)?.ownerId !== actor.id)
+          return { ok: false, status: 403 }
+      }
+      const newOwner = !synthetic && !found && !can("structure")
+        ? workbookOwner(row.Owner, undefined, environment, issue)
+        : undefined
+      if (issue.result) break
+      const scope = lineScope(original ?? found ?? (newOwner ? { owner: newOwner } : undefined))
+      const ownerBudget = !synthetic && ownerMayEdit("budget", version, asNew ? undefined : official, actor, scope)
+      if (
+        !synthetic && !found && !can("structure") &&
+        (!ownerBudget || (text(row.Domain).trim() && !ownerLineScope(actor, { domain: text(row.Domain) })))
+      ) {
         issue.warnings.push(`Unknown line unchanged: ${name || suppliedId}`)
         continue
       }
+      if (
+        original && !synthetic && measure === "b" && !budgetOK &&
+        actor.roles.includes("budget owner") && !version.locked && official !== version.id &&
+        !ownerBudget && (row.Owner !== undefined || workbookMonths.some((month) => row[month] != null && row[month] !== ""))
+      ) return { ok: false, status: 403 }
       const line: Row = synthetic
         ? { ...found, id: `HR:${domain}`, domain, synthetic: true }
         : found
@@ -2279,6 +2305,7 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
               el,
               proj: project?.id ?? "",
               name,
+              ...(newOwner ? { owner: newOwner } : {}),
               cur: "USD",
               annual: 0,
               b: zeroMonths(),
@@ -2292,12 +2319,12 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
         break
       }
       businessRows.add(duplicateKey)
-      if (!synthetic && budgetOK) {
+      if (!synthetic && (budgetOK || (ownerBudget && measure === "b"))) {
         line.sec = sec
         line.el = el
         line.proj = project?.id ?? text(line.proj)
         line.name = name || text(line.name)
-        line.desc = row.Description == null ? text(line.desc) : text(row.Description)
+        if (budgetOK) line.desc = row.Description == null ? text(line.desc) : text(row.Description)
         line.cur = workbookCurrency(row.Currency, line.cur, version, issue)
         if (sec === "capex") {
           const classification = normName(text(row.Classification))
@@ -2308,14 +2335,20 @@ function importWorkbook(snapshot: Snapshot, actor: Actor, command: Command, envi
           line.cls = line.cls ?? "capex"
         }
       }
-      if (can("owner", line) && row.Owner !== undefined)
+      if ((can("owner", original ?? line) || (ownerBudget && measure === "b")) && row.Owner !== undefined)
         line.owner = workbookOwner(row.Owner, line.owner, environment, issue)
-      if (can("entity", line) && row.Entity !== undefined)
+      if (issue.result) break
+      const previous = original ?? found
+      if (
+        ownerBudget && measure === "b" && previous && !can("owner", previous) && row.Owner !== undefined &&
+        !ownerLineScope(actor, mergedLineScope(previous, { owner: line.owner }))
+      ) return { ok: false, status: 403 }
+      if ((can("entity", original ?? line) || (ownerBudget && measure === "b")) && row.Entity !== undefined)
         line.entity = workbookReference(row.Entity, line.entity, rows(snapshot.data.entities), "entity", issue)
-      if (can("allocation", line) && row.Allocation !== undefined)
+      if ((can("allocation", original ?? line) || (ownerBudget && measure === "b")) && row.Allocation !== undefined)
         line.alloc = workbookReference(row.Allocation, line.alloc, rows(snapshot.data.allocations), "allocation", issue)
       const field = measure === "b" ? "budget" : measure === "a" ? "actual" : "forecast"
-      if (!(synthetic && measure === "b") && can(field, line)) {
+      if (!(synthetic && measure === "b") && (can(field, original ?? line) || (measure === "b" && ownerBudget))) {
         const amounts = workbookMonths.map((month) => workbookNumber(row[month], measure === "b" ? 0 : null))
         if (amounts.some((amount) => amount === undefined)) {
           fail(`${section}: Invalid monthly amount`)
