@@ -147,10 +147,20 @@ test("hosted linux x64 glibc qualifies packaged native CLI and built web from th
     const archiveFile = "orchestra-sf-linux-x64-baseline.tar.gz"
     console.info("WEB_NATIVE_STAGE before-archive")
     const archived = await archiveDistribution({ directory: payload, file: join(logs, archiveFile) })
-    const archiveSha256 = sha256(await readFile(join(logs, archiveFile)))
+    const archiveBytes = await readFile(join(logs, archiveFile))
+    const archiveSha256 = sha256(archiveBytes)
     expect(archiveSha256).toBe(archived.sha256)
     expect(archived.version).toBe(version)
     expect(archived.target).toBe(target)
+    // Independent tar closure: the executed payload snapshot, including descriptors, matches decoded archive bytes.
+    expect([archiveBytes[0], archiveBytes[1], archiveBytes[2]]).toEqual([0x1f, 0x8b, 8])
+    const decoded = await new Bun.Archive(archiveBytes).files()
+    expect([...decoded.keys()].sort()).toEqual([...packed.files.keys()].sort())
+    for (const [path, file] of decoded) {
+      const expected = packed.files.get(path)
+      if (!expected) throw new Error(`ARCHIVE_ENTRY_MISSING: ${path}`)
+      expect(sha256(Buffer.from(await file.arrayBuffer()))).toBe(sha256(expected.bytes))
+    }
     const receipt = {
       schema: "orchestra-web-build-proof-v1", repository: "gustavomhss/Orchestra-SF", sourceSHA, workflowSHA, target, version, modelsSha256,
       archive: { file: archiveFile, sha256: archiveSha256 }, manifest,
