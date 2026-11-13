@@ -50,9 +50,55 @@ export type View = {
   data: Record<string, unknown>
   versions: Snapshot["versions"]
 }
+export type NativeText = { en: string; br: string }
+export type NativePath = readonly (string | number)[]
+export type NativeChoice = { value: string | number | boolean | null; label: NativeText }
+export type NativeScalar = {
+  kind: "text" | "textarea" | "number" | "date" | "select" | "checkbox"
+  path: NativePath
+  label: NativeText
+  required?: boolean
+  readOnly?: boolean
+  blank?: "omit" | "null" | "empty"
+  min?: number
+  max?: number
+  step?: number
+  options?: readonly NativeChoice[]
+}
+export type NativeGroup = { kind: "group"; label?: NativeText; fields: readonly NativeField[] }
+export type NativeList = {
+  kind: "list"
+  path: NativePath
+  label: NativeText
+  fields: readonly NativeField[]
+  add?: Record<string, unknown>
+  remove?: boolean
+  readOnly?: boolean
+  minimum?: number
+  maximum?: number
+}
+export type NativeField = NativeScalar | NativeGroup | NativeList
+export type NativeAction = {
+  key: string
+  label: NativeText
+  group?: NativeText
+  target?: { collection: string; id: string }
+  command: Command
+  fields: readonly NativeField[]
+  confirm?: NativeText
+  danger?: boolean
+}
+export type NativeCommandContext = {
+  page: string
+  year: number
+  month: number
+  query: Readonly<Record<string, string>>
+  view: View
+}
 export type Domain = {
   execute: (snapshot: Snapshot, actor: Actor, command: Command, environment: Environment) => Result
   view: (snapshot: Snapshot, actor: Actor, environment: Environment) => View
+  commands?: (snapshot: Snapshot, actor: Actor, environment: Environment, context: NativeCommandContext) => readonly NativeAction[]
 }
 export type TransactionOptions = { signal?: AbortSignal }
 
