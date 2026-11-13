@@ -107,8 +107,11 @@ test("legacy XLS removeMissing removes only supplied OPEX and a subsequent no-op
     expect(preview.format).toBe("xls")
     const detail = await app.detail(preview)
     const removed = detail.detail.changes.filter((change) => change.kind === "removed")
-    expect(removed.length).toBeGreaterThan(0)
-    expect(removed.every((change) => change.path.startsWith("/versions/@id=v1/lines/@id=removed/"))).toBe(true)
+    // The real Planner view includes the source row and its calculated summary row.
+    // Both disappear together; no other raw or derived record may be removed.
+    const removedPrefixes = ["/versions/@id=v1/lines/@id=removed/", "/versions/@id=v1/summary/lines/@id=removed/"]
+    expect(removedPrefixes.every((prefix) => removed.some((change) => change.path.startsWith(prefix)))).toBe(true)
+    expect(removed.every((change) => removedPrefixes.some((prefix) => change.path.startsWith(prefix)))).toBe(true)
     expect(await app.store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot }))).toEqual(before)
     const key = randomUUID()
     const applied = await app.apply(preview, key)

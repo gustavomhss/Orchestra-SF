@@ -21,7 +21,7 @@ import { createSfImportHost } from "../../../../product/imports/host.ts"
 
 /** Real signed local session, C08 provider and SQLite store. The domain role policy is
  * deliberately mutable test input; it is not a native SessionV2 or corporate identity proof. */
-export async function importHostFixture(forecasts?: [number, number]) {
+export async function importHostFixture(forecasts?: [number, number], configure?: (snapshot: Snapshot, principalId: string) => void) {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-import-negative-"))
   const driver = await openLocalStore(directory)
   const store = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, createId: randomUUID })
@@ -41,6 +41,7 @@ export async function importHostFixture(forecasts?: [number, number]) {
     snapshot.data.versions = [{ id: "v1", year: 2027, closed: 0, locked: false, lines: [line("owned", principal.id, forecasts?.[0]), line("foreign", "other-principal", forecasts?.[1])], projects: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, lists: {} }]
     snapshot.data.roster = []
     snapshot.data.officials = {}; snapshot.data.entities = []; snapshot.data.allocations = []
+    configure?.(snapshot, principal.id)
     return { commit: true, value: undefined }
   })
   const access = { installationId: operator.installationId, projectId: "project", principalRef: principal.id, policyVersion: "policy", accessRevision: "access" }
