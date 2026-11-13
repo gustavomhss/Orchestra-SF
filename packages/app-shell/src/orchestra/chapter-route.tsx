@@ -21,6 +21,7 @@ type ChapterPage = Component<ChapterPageProps> & { preload?: () => Promise<unkno
 // registered chapters.
 export const chapterPages: Partial<Record<string, ChapterPage>> = {
   inbox: lazy(() => import("./chapters/inbox/inbox")),
+  sucafina: lazy(() => import("./chapters/sucafina/page")),
   "flight-engineer": lazy(() => import("./chapters/flight-engineer/flight-engineer")),
   lean: lazy(() => import("./chapters/lean")),
   mcp: lazy(() => import("./chapters/mcp")),
@@ -45,7 +46,7 @@ export const chapterPages: Partial<Record<string, ChapterPage>> = {
 }
 
 // These chapters span the whole server, so they render without a project (with an empty directory).
-const serverWideChapters = ["settings", "providers", "shortcuts", "board", "flight-engineer", "inbox"]
+const serverWideChapters = ["settings", "providers", "shortcuts", "board", "flight-engineer", "inbox", "sucafina"]
 
 const ChapterEmpty = lazy(() => import("./chapter-empty"))
 
@@ -77,6 +78,7 @@ export function OrchestraChapterRoute() {
   // Pages are owned by the selected repository profile. Remount only when that owner changes.
   const owner = createMemo(
     () => {
+      if (params.chapter === "sucafina") return
       const selection = layout.home.selection()
       const server = global.servers.list().find((item) => ServerConnection.key(item) === selection.server)
       if (!server || !selection.directory) return
