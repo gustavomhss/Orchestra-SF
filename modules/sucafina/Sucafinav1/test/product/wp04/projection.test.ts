@@ -106,6 +106,7 @@ test("sourcing comparison reads the authorized request and uses frozen FX", asyn
   if (result.status !== "ok") return
   expect(result.value.ranking).toEqual(["A", "B"])
   expect(result.value.proposals.find((quote) => quote.proposalRef === "B")?.convertedAmount).toBeCloseTo(30240, 6)
+  expect(result.value).toMatchObject({ weights: { technical: 60, commercial: 40 }, selection: { proposalRef: null, reason: null }, proposals: expect.arrayContaining([expect.objectContaining({ proposalRef: "B", money: { originalAmount: 28000, originalCurrency: "EUR", baseCurrency: "USD", fxRate: 1.08, fxSource: "submitted" }, components: expect.objectContaining({ overall: expect.any(Number) }) })]) })
   expect(result.value.proposals.find((quote) => quote.proposalRef === "A")?.score).toBeCloseTo(87.933333, 4)
   const { createProcurementSourcingEvidence } = await import("../../../product/procurement/sourcing-evidence.ts")
   const facts = await createProcurementSourcingEvidence(host)("r", binding)
@@ -116,6 +117,10 @@ test("sourcing comparison reads the authorized request and uses frozen FX", asyn
   const incompleteHost = { ...host, persistence: { transaction: async (_surface, work) => (await work(structuredClone(missingCurrency))).value }, resolveRequestSource: async () => ({ status: "ok" as const, value: { evidence: currentRef(missingCurrency, reference, "buyer"), context } }) } satisfies import("../../../product/procurement/port.ts").ProcurementSourceHost
   const missingFacts = await createProcurementSourcingEvidence(incompleteHost)("r", binding)
   expect(missingFacts).toMatchObject({ status: "ok", value: { offers: expect.arrayContaining([expect.objectContaining({ offerRef: "B", currency: null })]) } })
+  if (missingFacts.status !== "ok" || !missingFacts.value.comparison) throw new Error("comparison unavailable")
+  expect(missingFacts.value.comparison.ranking).toEqual([])
+  expect(missingFacts.value.comparison.proposals.every((proposal) => proposal.score === null)).toBe(true)
+  expect(missingFacts.value.comparison.proposals.find((proposal) => proposal.proposalRef === "B")?.convertedAmount).toBeNull()
   const configured = [...settings.criteria, ...settings.commCriteria].map((criterion) => criterion.name)
   expect((await port.compareSourcing({ requestRef: "r", proposalRefs: ["A", "B"], criteria: configured }, binding)).status).toBe("ok")
   expect((await port.compareSourcing({ requestRef: "r", proposalRefs: ["A", "B"], criteria: ["invented"] }, binding)).status).toBe("needs-input")
@@ -252,4 +257,27 @@ test("approval stage is the current pending level and is scoped to its evidence"
   const missing = projectProcurementSource({ ...record, prApproval: { steps: [{ status: "pending" }] } }, context, ref)
   expect(missing.values[0]).toMatchObject({ id: "approvalStage", value: null, evidenceState: "absent" })
   expect(missing.missing).toContainEqual({ field: "approvalStage", reason: "missing" })
+})
+
+test("confirmation material tracks only selected fields and the status dependency", async () => {
+  const { projectProcurementConfirmationFields } = await import("../../../product/procurement/confirmation-fields.ts")
+  const record = { status: "pr_pending", pr: { title: "Need", justification: "Reason" }, prApproval: { steps: [{ status: "pending", holderId: "a", levelName: "Finance" }] }, history: [{ action: "Saved" }] }
+  const selected = projectProcurementConfirmationFields(record, ["subject", "approvalStage"])
+  expect(selected).toMatchObject({ status: "pr_pending", values: { subject: "Need", approvalStage: "Finance" } })
+  expect(projectProcurementConfirmationFields({ ...record, history: [{ action: "Changed unrelated note" }] }, ["subject", "approvalStage"])).toEqual(selected)
+  expect(projectProcurementConfirmationFields({ ...record, status: "pr_rejected" }, ["subject", "approvalStage"])).not.toEqual(selected)
+  expect(projectProcurementConfirmationFields(record, ["sourcing"])).toBeUndefined()
+})
+
+test("confirmation material isolates relevant monetary inputs and preserves missing FX", async () => {
+  const { projectProcurementConfirmationFields } = await import("../../../product/procurement/confirmation-fields.ts")
+  const record = { status: "sourcing", value: 20, sourcing: { selectedId: "q", quotes: [{ id: "q", currency: "EUR", total: 10, qty: 2, unitPrice: 5 }] } }
+  const fields = ["baseAmount", "fxRate", "originalAmount"]
+  const settings = { fxRates: [{ code: "EUR", rate: 2 }, { code: "GBP", rate: 3 }] }
+  const material = projectProcurementConfirmationFields(record, fields, { currency: "USD", formSettings: settings })
+  expect(material).toMatchObject({ values: { baseAmount: 20, fxRate: 2, originalAmount: 10 }, currencies: { baseAmount: "USD", originalAmount: "EUR" } })
+  expect(projectProcurementConfirmationFields(record, fields, { currency: "USD", formSettings: { fxRates: [{ code: "EUR", rate: 2 }, { code: "GBP", rate: 9 }] } })).toEqual(material)
+  const changed = projectProcurementConfirmationFields(record, fields, { currency: "USD", formSettings: { fxRates: [{ code: "EUR", rate: 4 }] } })
+  expect(changed?.dependencies).not.toEqual(material?.dependencies)
+  expect(projectProcurementConfirmationFields(record, fields, { currency: "USD", formSettings: {} })?.values).toMatchObject({ baseAmount: null, fxRate: null, originalAmount: 10 })
 })

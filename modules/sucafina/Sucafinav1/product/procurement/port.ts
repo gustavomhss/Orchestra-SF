@@ -9,8 +9,10 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { digestSfEvidenceRef } from "../contracts/canonical.ts"
 import { digestProcurementSource } from "./sources.ts"
 import { procurementKeys } from "../../src/nav.ts"
-import { quoteAssessment } from "../../src/form.ts"
+import { quoteAssessment, quoteComparisonPresentation } from "../../src/form.ts"
 import { approvalStageEntry } from "../../src/procurement-screen.ts"
+import { projectProcurementConfirmationFields } from "./confirmation-fields.ts"
+import { procurementMonetaryFacts } from "./monetary.ts"
 import type { RequestView } from "../../src/procurement-screen.ts"
 import type { FormSettings } from "../../src/form.ts"
 import type { ContractReadRequest, SourcingCompareRequest, SupplierReadRequest } from "../contracts/operations.ts"
@@ -95,34 +97,81 @@ export function createProcurementPort(host: ProcurementSourceHost): ProcurementP
         if (!host.isCurrentRequestSource(snapshot, evidence) || digestProcurementSource(record, view.data.formSettings) !== evidence.target.projectionDigest || text(object(view.data.formSettings).currency) !== context.currency) return { commit: false, value: { status: "stale", reason: "Request identity or version changed" } }
         const sourcing = object(record.sourcing)
         const quotes = rows(sourcing.quotes)
+        const quoteIds = quotes.map((quote) => text(quote.id))
         const snapshotRequired = ["src_pending", "po_draft", "po_pending", "po_approved", "po_issued", "po_rejected"].includes(text(record.status))
         const sameBase = !snapshotRequired || sourcing.approvalBaseCurrency === context.currency
         if (!quotes.length || input.proposalRefs.some((id) => !quotes.some((quote) => quote.id === id))) return { commit: false, value: { status: "needs-input", reason: "Proposals unavailable" } }
+        if (quoteIds.some((id) => !id) || new Set(quoteIds).size !== quoteIds.length) return { commit: false, value: { status: "unavailable", reason: "Proposal identities are missing or duplicated" } }
         const settings = { ...object(view.data.formSettings), currency: text(object(view.data.formSettings).currency) } as FormSettings
         const weights = object(sourcing.weights)
-        const technical = rows(weights.criteria ?? settings.criteria)
-        const commercial = rows(weights.commCriteria ?? settings.commCriteria)
+        const technical = rows(sourcing.weights == null ? settings.criteria : weights.criteria)
+        const commercial = rows(sourcing.weights == null ? settings.commCriteria : weights.commCriteria)
         const criteria = [...technical, ...commercial].map((criterion) => text(criterion.name))
-        const configured = technical.length > 0 && commercial.length > 0 && technical.some((criterion) => typeof criterion.weight === "number" && criterion.weight > 0) && commercial.some((criterion) => typeof criterion.weight === "number" && criterion.weight > 0) && Number(weights.tech ?? settings.techWeight ?? 0) + Number(weights.comm ?? settings.commWeight ?? 0) > 0
+        const criteriaValid = [...technical, ...commercial].every((criterion) => typeof criterion.name === "string" && criterion.name.trim().length > 0 && typeof criterion.weight === "number" && Number.isFinite(criterion.weight)) && commercial.every((criterion) => criterion.auto == null || typeof criterion.auto === "boolean")
+        const technicalWeight = sourcing.weights == null ? settings.techWeight : weights.tech
+        const commercialWeight = sourcing.weights == null ? settings.commWeight : weights.comm
+        const numericTechnicalWeight = typeof technicalWeight === "number" && Number.isFinite(technicalWeight) ? technicalWeight : null
+        const numericCommercialWeight = typeof commercialWeight === "number" && Number.isFinite(commercialWeight) ? commercialWeight : null
+        const weightsOutput = criteriaValid
+          ? {
+              technical: numericTechnicalWeight,
+              commercial: numericCommercialWeight,
+              technicalCriteria: technical.map((criterion) => ({ name: criterion.name as string, weight: criterion.weight as number })),
+              commercialCriteria: commercial.map((criterion) => ({ name: criterion.name as string, weight: criterion.weight as number, automatic: criterion.auto === true })),
+            }
+          : null
+        const configured = technical.length > 0 && commercial.length > 0 && criteriaValid && numericTechnicalWeight != null && numericCommercialWeight != null && technical.some((criterion) => typeof criterion.weight === "number" && criterion.weight > 0) && commercial.some((criterion) => typeof criterion.weight === "number" && criterion.weight > 0) && numericTechnicalWeight + numericCommercialWeight > 0
         if (input.criteria.length && (criteria.some((criterion) => !criterion) || new Set(input.criteria).size !== criteria.length || criteria.some((criterion) => !input.criteria.includes(criterion)))) return { commit: false, value: { status: "needs-input", reason: "Comparison uses all configured criteria; custom criteria are not supported" } }
         const ranking = quoteAssessment({ sourcing: { ...sourcing, ...(snapshotRequired && sourcing.fxSnapshot == null ? { fxSnapshot: { [context.currency]: 1 } } : {}) } as Parameters<typeof quoteAssessment>[0]["sourcing"] }, settings)
+        const presentation = quoteComparisonPresentation({ sourcing: sourcing as Parameters<typeof quoteComparisonPresentation>[0]["sourcing"] }, settings, { submitted: snapshotRequired, submittedBaseCurrency: text(sourcing.approvalBaseCurrency) })
+        const monetaryIssues = quotes.map((quote, index) => {
+          const shown = presentation[index]
+          const differs = typeof quote.total === "number" && typeof quote.qty === "number" && typeof quote.unitPrice === "number" && [quote.total, quote.qty, quote.unitPrice].every(Number.isFinite) && Math.abs(quote.total - quote.qty * quote.unitPrice) > 0.005
+          return [...(shown?.monetary ?? ["monetary-data-unavailable"]), ...(shown?.total != null && shown.fxRate != null && !Number.isFinite(shown.total * shown.fxRate) ? ["base-amount-overflow"] : []), ...(differs ? ["total-quantity-mismatch"] : [])]
+        })
+        const monetaryProblem = monetaryIssues.some((issues) => issues.length > 0)
+        const incompleteScores = ranking.some((item) => item.eligible && !item.complete)
         const selected = input.proposalRefs.length ? quotes.filter((quote) => input.proposalRefs.includes(text(quote.id))) : quotes
+        const eligibleCount = ranking.filter((item) => item.eligible && selected.some((quote) => quote.id === item.id)).length
+        const rankingAvailable = !monetaryProblem && sameBase && configured && !incompleteScores && eligibleCount >= 2
         const proposals = selected.map((quote) => {
           const evaluation = ranking.find((item) => item.id === quote.id)
-          const currency = text(quote.currency) || context.currency
+          const quoteIndex = quotes.findIndex((item) => item.id === quote.id)
+          const shown = presentation[quoteIndex]
+          const currency = text(quote.currency)
           const snapshotRates = sourcing.fxSnapshot == null ? (snapshotRequired ? {} : null) : object(sourcing.fxSnapshot)
-          const rate = currency === context.currency ? 1 : snapshotRates ? snapshotRates[currency] : settings.fxRates?.find((item) => item.code === currency)?.rate
-          const convertedAmount = sameBase && typeof quote.total === "number" && Number.isFinite(quote.total) && typeof rate === "number" && Number.isFinite(rate) && rate > 0 ? quote.total * rate : null
+          const rate = !currency ? null : currency === context.currency ? 1 : snapshotRates ? snapshotRates[currency] : settings.fxRates?.find((item) => item.code === currency)?.rate
+          const converted = sameBase && currency.length > 0 && typeof quote.total === "number" && Number.isFinite(quote.total) && typeof rate === "number" && Number.isFinite(rate) && rate > 0 ? quote.total * rate : null
+          const convertedAmount = converted != null && Number.isFinite(converted) && !(monetaryIssues[quoteIndex] ?? []).some((issue) => issue !== "total-quantity-mismatch") ? converted : null
           const differs = typeof quote.total === "number" && typeof quote.qty === "number" && typeof quote.unitPrice === "number" && [quote.total, quote.qty, quote.unitPrice].every(Number.isFinite) && Math.abs(quote.total - quote.qty * quote.unitPrice) > 0.005
-          const issues = [...(!sameBase ? ["Submitted base currency unavailable or changed"] : []), ...(convertedAmount == null ? ["Missing amount or exchange rate"] : []), ...(!configured ? ["Evaluation criteria unavailable"] : []), ...(!evaluation?.complete ? ["Scores incomplete"] : []), ...(quote.techPass === false ? ["Technically ineligible"] : []), ...(differs ? ["Stated total differs from quantity times unit price"] : [])]
-          return { proposalRef: text(quote.id), eligible: sameBase && evaluation?.eligible === true, score: sameBase && configured && evaluation?.complete && evaluation.eligible ? evaluation.overall : null, convertedAmount, evidenceRefs: [evidence], issues }
+          const scoreAvailable = rankingAvailable && evaluation?.complete === true && evaluation?.eligible === true
+          const components = {
+            technical: scoreAvailable && evaluation && Number.isFinite(evaluation.technical) ? evaluation.technical : null,
+            price: scoreAvailable && evaluation && Number.isFinite(evaluation.price) ? evaluation.price : null,
+            commercial: scoreAvailable && evaluation && Number.isFinite(evaluation.commercial) ? evaluation.commercial : null,
+            overall: scoreAvailable && evaluation && Number.isFinite(evaluation.overall) ? evaluation.overall : null,
+          }
+          const money = {
+            originalAmount: shown?.total ?? null,
+            originalCurrency: shown?.currency ?? null,
+            baseCurrency: sameBase ? context.currency : null,
+            fxRate: shown?.fxRate ?? null,
+            fxSource: shown?.fxRate == null || shown.currency == null ? null : shown.currency === context.currency ? "base" as const : sourcing.fxSnapshot != null ? "submitted" as const : "current" as const,
+          }
+          const issues = [...(!sameBase ? ["Submitted base currency unavailable or changed"] : []), ...(convertedAmount == null ? ["Missing, invalid or overflowing amount/exchange rate"] : []), ...((monetaryIssues[quoteIndex] ?? []).filter((issue) => issue === "currency-missing" || issue === "total-missing" || issue === "total-invalid" || issue === "total-not-positive" || issue === "fx-missing" || issue === "fx-invalid" || issue === "submitted-base-unavailable" || issue === "base-amount-overflow").map((issue) => `Monetary issue: ${issue}`)), ...(!configured ? ["Evaluation criteria unavailable"] : []), ...(!evaluation?.complete ? ["Scores incomplete"] : []), ...(quote.techPass === false ? ["Technically ineligible"] : []), ...(differs ? ["Stated total differs from quantity times unit price"] : [])]
+          return { proposalRef: text(quote.id), eligible: sameBase && !(monetaryIssues[quoteIndex] ?? []).some((issue) => issue !== "total-quantity-mismatch") && evaluation?.eligible === true, score: components.overall, components, money, convertedAmount, evidenceRefs: [evidence], issues }
         })
         const conditions = [
-          ...(quotes.length < 2 ? [{ id: "few-proposals", category: "comparison", reason: "Only one proposal is available", evidenceRefs: [evidence] }] : []),
-          ...(quotes.length >= 2 && ranking.filter((item) => item.eligible).length < 2 ? [{ id: "few-eligible-proposals", category: "comparison", reason: "Fewer than two proposals are eligible for comparison", evidenceRefs: [evidence] }] : []),
+          ...(selected.length < 2 ? [{ id: "few-proposals", category: "comparison", reason: "Fewer than two proposals were selected for comparison", evidenceRefs: [evidence] }] : []),
+          ...(selected.length >= 2 && eligibleCount < 2 ? [{ id: "few-eligible-proposals", category: "comparison", reason: "Fewer than two selected proposals are eligible for comparison", evidenceRefs: [evidence] }] : []),
+          ...(incompleteScores ? [{ id: "incomplete-scores", category: "comparison", reason: "Required human assessments are incomplete; ranking is withheld", evidenceRefs: [evidence] }] : []),
+          ...(monetaryProblem ? [{ id: "monetary-comparison-unavailable", category: "comparison", reason: "Ranking withheld because one or more proposals has missing, invalid or inconsistent monetary data", evidenceRefs: [evidence] }] : []),
           ...(proposals.some((item) => item.issues.length) ? [{ id: "incomplete-proposals", category: "comparison", reason: "Some proposals are incomplete or ineligible", evidenceRefs: [evidence] }] : []),
         ]
-        return { commit: false, value: { status: "ok", value: { requestRef: input.requestRef, requestVersion: evidence.target.version, currency: context.currency, proposals, ranking: sameBase && configured ? ranking.filter((item) => item.rank != null && item.complete && selected.some((quote) => quote.id === item.id)).sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0)).flatMap((item) => item.id ? [item.id] : []) : [], conditions, sourceRefs: [evidence] } } }
+        const selectedId = text(sourcing.selectedId)
+        const selection = { proposalRef: selectedId && quotes.some((quote) => text(quote.id) === selectedId) ? selectedId : null, reason: text(sourcing.selectionJustification) || null }
+        const comparison = { requestRef: input.requestRef, requestVersion: evidence.target.version, currency: context.currency, proposals, ranking: rankingAvailable ? ranking.filter((item) => item.rank != null && item.complete && selected.some((quote) => quote.id === item.id)).sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0)).flatMap((item) => item.id ? [item.id] : []) : [], conditions, sourceRefs: [evidence], weights: weightsOutput, selection }
+        return { commit: false, value: { status: "ok", value: comparison } }
       }, { signal: request.signal })
       if (!(await host.revalidate(binding))) return { status: "denied", reason: "Current authority unavailable" }
       return result
@@ -207,50 +256,26 @@ export function projectProcurementSource(record: Record<string, unknown>, contex
   const enteredAt = entry ? Date.parse(entry) : NaN
   const now = observedAt ? Date.parse(observedAt) : NaN
   const age = Number.isFinite(enteredAt) && Number.isFinite(now) && now >= enteredAt ? (now - enteredAt) / 86400000 : null
-  const subject = text(object(record.pr).title)
-  const reason = ["draft", "pr_rejected", "pr_pending"].includes(status) ? text(object(record.pr).justification) : status === "src_pending" ? text(object(record.sourcing).selectionJustification) : status === "po_pending" ? text(object(record.po).description) : ""
-  const next = status === "draft" ? "Complete and submit requisition" : status === "pr_rejected" ? "Revise and resubmit requisition" : status === "pr_pending" ? "Sourcing after all approvals" : status === "sourcing" ? "Compare and select proposals" : status === "src_rejected" ? "Revise and resubmit sourcing" : status === "src_pending" ? "PO draft after all approvals" : status === "po_draft" ? "Complete and submit purchase order" : status === "po_rejected" ? "Revise and resubmit purchase order" : status === "po_pending" ? "Internal issuance after all approvals" : status === "po_approved" ? "Issue purchase order internally" : status === "po_issued" ? "Issued internally" : status === "cancelled" ? "Cancelled" : ""
-  const sourcing = object(record.sourcing)
-  const po = object(record.po)
-  const pr = object(record.pr)
-  const lines = rows(po.lines)
-  const selected = rows(sourcing.quotes).find((quote) => quote.id === sourcing.selectedId)
-  const original = lines.length
-    ? lines.every((line) => typeof line.qty === "number" && typeof line.unitPrice === "number" && Number.isFinite(line.qty * line.unitPrice)) ? lines.reduce((sum, line) => sum + Number(line.qty) * Number(line.unitPrice), 0) : null
-    : selected ? typeof selected.total === "number" && Number.isFinite(selected.total) ? selected.total : null
-      : typeof pr.estAmount === "number" && Number.isFinite(pr.estAmount) ? pr.estAmount : null
-  const currencyInput = lines.length ? text(po.currency) : selected ? text(selected.currency) : context.currency
-  const explicitCurrency = /^[A-Z]{3}$/.test(currencyInput) ? currencyInput : ""
-  const currency = explicitCurrency || context.currency
-  const frozen = lines.length ? po.fxRate != null || ["po_pending", "po_approved", "po_issued"].includes(status) : sourcing.fxSnapshot != null || ["src_pending", "po_draft", "po_pending", "po_approved", "po_issued", "po_rejected"].includes(status)
-  const snapshot = lines.length ? po.fxRate : object(sourcing.fxSnapshot)[currency]
-  const live = rows(object(formSettings).fxRates).find((rate) => rate.code === currency)?.rate
-  const baseCurrency = lines.length ? po.approvalBaseCurrency : sourcing.approvalBaseCurrency
-  const rate = frozen && baseCurrency !== context.currency ? null : currency === context.currency ? 1 : frozen ? snapshot : live
-  const validRate = typeof rate === "number" && Number.isFinite(rate) && rate > 0 ? rate : null
-  const baseAmount = validRate != null && typeof record.value === "number" && Number.isFinite(record.value) ? record.value : null
-  const submittedApproval = lines.length ? object(po.approval) : selected ? object(sourcing.approval) : object(record.prApproval)
-  const storedCurrency = lines.length ? text(po.approvalBaseCurrency) : selected ? text(sourcing.approvalBaseCurrency) : text(record.prApprovalBaseCurrency)
-  const submittedCurrency = /^[A-Z]{3}$/.test(storedCurrency) ? storedCurrency : ""
-  const submittedAmount = submittedCurrency && typeof submittedApproval.amount === "number" && Number.isFinite(submittedApproval.amount) ? submittedApproval.amount : null
-  const submittedFxRate = submittedCurrency && currency === submittedCurrency ? 1 : submittedCurrency && typeof snapshot === "number" && Number.isFinite(snapshot) && snapshot > 0 ? snapshot : null
-  const monetaryState = !knownStatus ? null : status === "po_issued" ? "issued-internally" : status === "po_approved" ? "approved" : status === "cancelled" ? "cancelled" : ["pr_pending", "src_pending", "po_pending"].includes(status) ? "pending-approval" : "estimate"
-  const moneyEvidence = !knownStatus || monetaryState === "estimate" || !explicitCurrency ? "estimated" as const : "confirmed" as const
+  const material = projectProcurementConfirmationFields(record, ["status", "subject", "reason", "holder", "approvalStage", "nextStep"])!
+  const subject = material.values.subject
+  const reason = material.values.reason
+  const next = material.values.nextStep
+  const money = procurementMonetaryFacts(record, context.currency, formSettings)
   const values = ([
     { id: "status", value: knownStatus ? status : null, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: knownStatus ? "confirmed" : "absent" },
-    { id: "holder", value: typeof holder?.holderId === "string" && holder.holderId ? holder.holderId : null, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: holder?.holderId ? "confirmed" : "absent" },
-    { id: "approvalStage", value: typeof holder?.levelName === "string" && holder.levelName ? holder.levelName : null, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: typeof holder?.levelName === "string" && holder.levelName ? "confirmed" : "absent" },
+    { id: "holder", value: material.values.holder ?? null, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: material.values.holder ? "confirmed" : "absent" },
+    { id: "approvalStage", value: material.values.approvalStage ?? null, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: typeof holder?.levelName === "string" && holder.levelName ? "confirmed" : "absent" },
     { id: "stageEnteredAt", value: entry, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: entry ? "confirmed" : "absent" },
     { id: "ageDays", value: age, unit: "days", period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: age == null ? "absent" : "confirmed" },
-    { id: "baseAmount", value: baseAmount, currency: context.currency, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: baseAmount == null ? "absent" : moneyEvidence },
-    { id: "submittedAmount", value: submittedAmount, ...(submittedCurrency ? { currency: submittedCurrency } : {}), period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: submittedAmount == null ? "absent" : "confirmed" },
-    { id: "submittedCurrency", value: submittedCurrency || null, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: submittedCurrency ? "confirmed" : "absent" },
-    { id: "submittedFxRate", value: submittedFxRate, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: submittedFxRate == null ? "absent" : "confirmed" },
-    { id: "originalAmount", value: original != null && Number.isFinite(original) ? original : null, ...(currency ? { currency } : {}), period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: original != null && Number.isFinite(original) ? moneyEvidence : "absent" },
-    { id: "originalCurrency", value: currency || null, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: !currency ? "absent" : explicitCurrency ? "confirmed" : "estimated" },
-    { id: "fxRate", value: validRate, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: validRate == null ? "absent" : explicitCurrency ? "confirmed" : "estimated" },
-    { id: "fxSource", value: validRate == null ? null : !explicitCurrency ? "base-default" : currency === context.currency ? "base" : frozen ? "submitted" : "current", period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: validRate == null ? "absent" : "confirmed" },
-    { id: "monetaryState", value: monetaryState, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: monetaryState ? "confirmed" : "absent" },
+    { id: "baseAmount", value: money.baseAmount, currency: context.currency, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: money.baseAmount == null ? "absent" : money.moneyEvidence },
+    { id: "submittedAmount", value: money.submittedAmount, ...(money.submittedCurrency ? { currency: money.submittedCurrency } : {}), period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: money.submittedAmount == null ? "absent" : "confirmed" },
+    { id: "submittedCurrency", value: money.submittedCurrency || null, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: money.submittedCurrency ? "confirmed" : "absent" },
+    { id: "submittedFxRate", value: money.submittedFxRate, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: money.submittedFxRate == null ? "absent" : "confirmed" },
+    { id: "originalAmount", value: money.original != null && Number.isFinite(money.original) ? money.original : null, ...(money.currency ? { currency: money.currency } : {}), period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: money.original != null && Number.isFinite(money.original) ? money.moneyEvidence : "absent" },
+    { id: "originalCurrency", value: money.currency || null, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: !money.currency ? "absent" : money.explicitCurrency ? "confirmed" : "estimated" },
+    { id: "fxRate", value: money.validRate, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: money.validRate == null ? "absent" : money.explicitCurrency ? "confirmed" : "estimated" },
+    { id: "fxSource", value: money.fxSource, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: money.validRate == null ? "absent" : "confirmed" },
+    { id: "monetaryState", value: money.monetaryState, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: money.monetaryState ? "confirmed" : "absent" },
     { id: "subject", value: subject || null, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: subject ? "confirmed" : "absent" },
     { id: "reason", value: reason || null, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: reason ? "confirmed" : "absent" },
     { id: "nextStep", value: next || null, period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: next ? "confirmed" : "absent" },
@@ -259,10 +284,10 @@ export function projectProcurementSource(record: Record<string, unknown>, contex
     ...(evidence.target.fields.includes("status") && !knownStatus ? [{ field: "status", reason: "unavailable" as const }] : []),
     ...(evidence.target.fields.includes("stageEnteredAt") && action && !Number.isFinite(enteredAt) ? [{ field: "stageEnteredAt", reason: "unavailable" as const }] : []),
     ...(evidence.target.fields.includes("ageDays") && action && age == null ? [{ field: "ageDays", reason: "unavailable" as const }] : []),
-    ...(evidence.target.fields.includes("baseAmount") && baseAmount == null ? [{ field: "baseAmount", reason: "unavailable" as const }] : []),
-    ...(evidence.target.fields.includes("originalCurrency") && !explicitCurrency ? [{ field: "originalCurrency", reason: "missing" as const }] : []),
-    ...(evidence.target.fields.includes("fxRate") && validRate == null ? [{ field: "fxRate", reason: "missing-fx" as const }] : []),
-    ...(evidence.target.fields.includes("holder") && action && !holder?.holderId ? [{ field: "holder", reason: "missing" as const }] : []),
+    ...(evidence.target.fields.includes("baseAmount") && money.baseAmount == null ? [{ field: "baseAmount", reason: "unavailable" as const }] : []),
+    ...(evidence.target.fields.includes("originalCurrency") && !money.explicitCurrency ? [{ field: "originalCurrency", reason: "missing" as const }] : []),
+    ...(evidence.target.fields.includes("fxRate") && money.validRate == null ? [{ field: "fxRate", reason: "missing-fx" as const }] : []),
+    ...(evidence.target.fields.includes("holder") && action && !material.values.holder ? [{ field: "holder", reason: "missing" as const }] : []),
     ...(evidence.target.fields.includes("approvalStage") && action && !holder?.levelName ? [{ field: "approvalStage", reason: "missing" as const }] : []),
   ] }
 }

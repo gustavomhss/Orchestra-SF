@@ -5,7 +5,7 @@ import type { ResolvedActor } from "./identity.ts"
 import { writeVersioned } from "./records.ts"
 import type { Change, Versioned } from "./records.ts"
 import { openProcurement, procurementKeys } from "./nav.ts"
-import { visibleRequests } from "./requests.ts"
+import { requestStageGuidance, visibleRequests } from "./requests.ts"
 import { documentHtml, esc, links, listed, openKey, pageMain } from "./screen-shell.ts"
 import type { Drawn, ScreenActor } from "./screen-shell.ts"
 
@@ -358,7 +358,10 @@ function procurementBody(
   }
   if (key === "Requests" && input.requests)
     return requestList(input.requests, input.actor, input.filter, input.query)
-      .map((request) => `<p>${esc(request.number ?? "")} ${esc(request.status)}</p>`)
+      .map((request) => {
+        const guidance = requestStageGuidance(request.status)
+        return `<p>${esc(request.number ?? "")} · ${esc(guidance.stage)} · ${esc(guidance.next)}</p>`
+      })
       .join("")
   if (key === "My approvals" && input.requests) {
     const groups = approvalQueue(input.requests, input.actor.id)
