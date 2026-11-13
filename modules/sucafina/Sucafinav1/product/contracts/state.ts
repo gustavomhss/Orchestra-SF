@@ -23,6 +23,8 @@ export type SfNativeRunRecord = {
   runRef: string
   version: number
   requestDigest: string
+  /** New admissions persist the entire human start intent; legacy records cannot prove an exact retry. */
+  intentDigest?: string
   skillInputDigest: string
   principalRef: string
   accessRevision: string

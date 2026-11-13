@@ -156,7 +156,8 @@ export type DocumentEvidence = {
 type PortfolioCombinationBase = { analysis?: { scenarioResultRef: string; scenario: ScenarioResult; comparisonRef: string; comparison: ScenarioComparison }; id: string; caseRefs: readonly string[]; components: readonly ProjectionComponent[]; costCoverageRefs: readonly string[]; conflicts: readonly string[]; restrictions: readonly string[] }
 export type PortfolioCombination = PortfolioCombinationBase & (
   | { eligibility: "eligible-complete"; comparisonStatus: "complete" }
-  | { eligibility: "conditioned" | "unavailable"; comparisonStatus: "conditioned" | "incompatible" | "unavailable" }
+  | { eligibility: "conditioned"; comparisonStatus: ScenarioResult["comparisonStatus"] }
+  | { eligibility: "unavailable"; comparisonStatus: "conditioned" | "incompatible" | "unavailable" }
   | { eligibility: "ineligible"; comparisonStatus: ScenarioResult["comparisonStatus"] }
 )
 export type PortfolioResult = {
