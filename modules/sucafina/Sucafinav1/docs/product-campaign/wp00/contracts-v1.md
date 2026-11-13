@@ -34,6 +34,10 @@ O corpus financeiro v2 usa os vetores FX01/FX03 explicitamente fornecidos: budge
 
 ## Consumer corrections before G0
 
+### Emenda de compatibilidade C11: AlternativeDraft
+
+O tipo existente de `sf_alternative_draft` também é uma saída de contribuição `AlternativeDraft` para `sf_portfolio` e `sf-compor-portfolio`. A proposta conserva `domainApplied: false`, o resultado determinístico e sua cobertura; a origem, o digest e o recibo pertencem ao envelope C11. A confirmação humana para incorporar a proposta à campanha permanece separada em C08. A emenda não adiciona operações ou grants. `freeze-v1.json` continua sendo o snapshot anterior, e o manifesto normativo e os assets do produtor precisam acompanhar esta emenda antes da carga real. Os consumidores WP12/WP13 e a prova integrada ainda precisam ser validados; esta descrição não é um recibo de execução.
+
 DecisionCase stores its append-only CaseLedgerEvent ledger; read returns AuthorizedCaseProjection. Its context discriminates native (profileId required) from UI (no resident profile fabricated). The case factory receives a host-resolved creation target tied to the current installation and a privately validated operation identity. Only an explicitly uninitialized state admits section version zero; invalid stored state fails closed. Case membership and each current evidence reference are authorized before disclosure and rechecked at egress without nested cross-surface transactions.
 
 Directory lookup returns authorized IDs only. Public backups, legacy projections, dataset conflicts and audit rendering exclude __sfProductV1; imported private product metadata is refused and existing private state survives ordinary business dataset replacement. These boundaries require hosted acceptance; this document is not their execution proof.
