@@ -1,4 +1,5 @@
 import { Database } from "bun:sqlite"
+import { AsyncLocalStorage } from "node:async_hooks"
 import { constants } from "node:fs"
 import { lstat, mkdir, open, realpath } from "node:fs/promises"
 import { isAbsolute, join, parse, resolve, sep } from "node:path"
@@ -77,11 +78,44 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     initial.close()
   }
 
+  type ReadScope = {
+    root: { db: Database; surface: Surface; snapshot: Snapshot; poisoned: boolean; readers: number }
+    parent?: ReadScope
+    open: boolean
+    signal?: AbortSignal
+  }
+  const context = new AsyncLocalStorage<ReadScope>()
+  const requireScope = (scope: ReadScope) => {
+    let current: ReadScope | undefined = scope
+    while (current) {
+      if (!current.open) throw new Error("Local transaction scope has ended")
+      current.signal?.throwIfAborted()
+      current = current.parent
+    }
+  }
   const lifecycle = { closed: false, disposing: undefined as Promise<void> | undefined }
   const active = new Set<Promise<unknown>>()
   const queue = { tail: undefined as Promise<void> | undefined }
   const operation = <T>(write: boolean, work: (db: Database) => Promise<T>, signal?: AbortSignal): Promise<T> => {
     if (lifecycle.closed) return Promise.reject(new Error("Local store is disposed"))
+    const inherited = context.getStore()
+    if (inherited) {
+      try {
+        requireScope(inherited)
+        signal?.throwIfAborted()
+        if (write) {
+          inherited.root.poisoned = true
+          throw new Error("Nested local writes are forbidden")
+        }
+        return work(inherited.root.db).then((value) => {
+          requireScope(inherited)
+          signal?.throwIfAborted()
+          return value
+        })
+      } catch (error) {
+        return Promise.reject(error)
+      }
+    }
     const previous = write ? queue.tail : undefined
     const deadline = performance.now() + timeout
     const pending = (async () => {
@@ -117,18 +151,59 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   }
 
   return {
-    transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) =>
-      operation(true, async (db) => {
+    transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) => {
+      const parent = context.getStore()
+      if (parent) return (async () => {
+        if (lifecycle.closed) throw new Error("Local store is disposed")
+        requireScope(parent)
+        transactionOptions?.signal?.throwIfAborted()
+        const scope: ReadScope = { root: parent.root, parent, open: true, signal: transactionOptions?.signal }
+        const row = surface === parent.root.surface ? undefined : parent.root.db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
+        const snapshot = surface === parent.root.surface ? decodeSnapshot(encodeSnapshot(parent.root.snapshot)) :
+          row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
+        const blobs: BlobTransaction = {
+          get: async (key) => {
+            requireScope(scope)
+            if (context.getStore() !== scope) throw new Error("Blob capability used outside its transaction scope")
+            const blob = scope.root.db.query<{ payload: Uint8Array }, [string, string]>("SELECT payload FROM blobs WHERE surface = ? AND key = ?").get(surface, key)
+            return blob ? new Uint8Array(blob.payload) : undefined
+          },
+          put: async () => { requireScope(scope); scope.root.poisoned = true; throw new Error("Nested blob writes are forbidden") },
+          remove: async () => { requireScope(scope); scope.root.poisoned = true; throw new Error("Nested blob writes are forbidden") },
+        }
+        scope.root.readers++
+        try {
+          const result = await context.run(scope, () => work(snapshot, blobs))
+          requireScope(scope)
+          if (result.commit) {
+            scope.root.poisoned = true
+            throw new Error("Nested local writes are forbidden")
+          }
+          if (scope.root.poisoned) throw new Error("Nested local write attempted")
+          return result.value
+        } finally {
+          scope.open = false
+          scope.root.readers--
+        }
+      })()
+      return operation(true, async (db) => {
         const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
         const snapshot = row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
-        const capability = { open: true }
+        const scope: ReadScope = { root: { db, surface, snapshot, poisoned: false, readers: 0 }, open: true, signal: transactionOptions?.signal }
         const requireOpen = () => {
-          if (!capability.open) throw new Error("Blob transaction has ended")
-          transactionOptions?.signal?.throwIfAborted()
+          requireScope(scope)
+          if (context.getStore() !== scope) throw new Error("Blob capability used outside its transaction scope")
+        }
+        const requireWritable = () => {
+          requireScope(scope)
+          if (context.getStore() !== scope || scope.root.readers > 0) {
+            scope.root.poisoned = true
+            throw new Error("Nested blob writes are forbidden")
+          }
         }
         const blobs: BlobTransaction = {
           put: async (key, bytes, type) => {
-            requireOpen()
+            requireWritable()
             db.query("INSERT INTO blobs (surface, key, payload, type) VALUES (?, ?, ?, ?) ON CONFLICT (surface, key) DO UPDATE SET payload=excluded.payload, type=excluded.type").run(surface, key, bytes, type)
           },
           get: async (key) => {
@@ -137,18 +212,20 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
             return blob ? new Uint8Array(blob.payload) : undefined
           },
           remove: async (key) => {
-            requireOpen()
+            requireWritable()
             db.query("DELETE FROM blobs WHERE surface = ? AND key = ?").run(surface, key)
           },
         }
         const result = await (async () => {
           try {
-            return await work(snapshot, blobs)
+            return await context.run(scope, () => work(snapshot, blobs))
           } finally {
-            capability.open = false
+            scope.open = false
           }
         })()
         transactionOptions?.signal?.throwIfAborted()
+        if (scope.root.poisoned) throw new Error("Nested local write attempted")
+        if (scope.root.readers) throw new Error("Nested local read still active")
         if (result.commit) {
           const payload = encodeSnapshot(snapshot)
           decodeSnapshot(payload)
@@ -157,7 +234,8 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
           db.exec("COMMIT")
         }
         return result.value
-      }, transactionOptions?.signal),
+      }, transactionOptions?.signal)
+    },
     secrets: {
       put: (key, bytes, expiresAt) => operation(true, async (db) => {
         if (!Number.isFinite(expiresAt)) throw new Error("Invalid authentication expiry")
@@ -183,6 +261,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       }),
     },
     dispose: () => {
+      if (context.getStore()) return Promise.reject(new Error("Cannot dispose a store from its transaction scope"))
       lifecycle.closed = true
       lifecycle.disposing ??= Promise.allSettled([...active]).then(() => undefined)
       return lifecycle.disposing

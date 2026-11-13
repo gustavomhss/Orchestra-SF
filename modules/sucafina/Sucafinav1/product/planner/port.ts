@@ -1,0 +1,137 @@
+import { roleMap } from "../../runtime/admin.ts"
+import { object, rows } from "../../runtime/contract.ts"
+import type { Actor, Snapshot } from "../../runtime/contract.ts"
+import { plannerKeys } from "../../src/nav.ts"
+import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
+import type { DomainProjection } from "../contracts/context.ts"
+import type { DomainPortHost, FinancialAnalysis, PlannerPort, PlannerSourceHost, PortResult } from "../contracts/ports.ts"
+import type { ForecastCompareRequest } from "../contracts/operations.ts"
+import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
+import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+import { projectPlanner } from "./adapter.ts"
+import { plannerCoverageComplete } from "./coverage.ts"
+import { simulateScenario } from "./scenario-port.ts"
+import type { PlannerScenarioInputs } from "./scenario-port.ts"
+import { compareScenarios } from "./scenario-comparison-port.ts"
+import type { PlannerScenarioHost } from "./scenario-comparison-port.ts"
+
+// The registry and port hash the same actor-filtered inputs and engine output.
+export function projectPlannerSource(snapshot: Snapshot, actor: Actor, versionId: string): Record<string, unknown> | undefined {
+  if (!plannerKeys(actor).length) return undefined
+  const view = projectPlanner(snapshot, actor, { at: "", id: () => "", directory: [] })
+  const version = rows(view.data.versions).find((item) => item.id === versionId)
+  if (!version) return undefined
+  return { ...version, sharedEntities: rows(view.data.entities), sharedAllocations: rows(view.data.allocations) }
+}
+
+export function createPlannerPort(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios?: PlannerScenarioHost; scenarioInputs?: PlannerScenarioInputs; evidence?: BusinessContextService }): PlannerPort {
+  return {
+    compareForecast: (request, binding) => compareForecast(input, request, binding),
+    simulateScenario: (request, binding) => simulateScenario({ ...input, inputs: input.scenarioInputs, compare: (request, binding) => compareForecast(input, request, binding), project: projectPlannerSource }, request, binding),
+    compareScenarios: (request, binding) => input.scenarios ? compareScenarios({ ...input, scenarios: input.scenarios }, request, binding) : Promise.resolve({ status: "unavailable", reason: "scenario-comparison-not-connected" }),
+    evaluateSensitivity: async () => ({ status: "unavailable", reason: "sensitivity-not-connected" }),
+  }
+}
+
+async function compareForecast(input: { host: DomainPortHost; sources: PlannerSourceHost }, request: ForecastCompareRequest, binding: TrustedDomainContext): Promise<PortResult<FinancialAnalysis>> {
+  if (!(await input.host.revalidate(binding))) return { status: "denied", reason: "invalid-binding" }
+  const http = input.host.requestFor(binding)
+  if (!http) return { status: "denied", reason: "missing-request" }
+  const environment = await input.host.environment(http)
+  if (request.currency !== "USD") return { status: "needs-input", reason: "planner-requires-usd" }
+  const start = /^(\d{4})-(\d{2})-01$/.exec(request.period.start)
+  const end = /^(\d{4})-(\d{2})-(\d{2})$/.exec(request.period.end)
+  if (!start || !end || start[1] !== end[1] || Number(start[2]) < 1 || Number(end[2]) > 12 || Number(start[2]) > Number(end[2]) || Number(end[3]) !== new Date(Date.UTC(Number(end[1]), Number(end[2]), 0)).getUTCDate())
+    return { status: "needs-input", reason: "period-must-cover-whole-months-in-one-year" }
+  const source = await Promise.all([input.sources.resolveForecastSource(request.baseRef, binding), input.sources.resolveForecastSource(request.candidateRef, binding)])
+  const failure = source.find((result) => result.status !== "ok")
+  if (failure) return failure
+  if (source[0].status !== "ok" || source[1].status !== "ok") return { status: "unavailable", reason: "source-unavailable" }
+  const selected = structuredClone([source[0].value, source[1].value])
+  const evidence = selected.map((entry) => entry.evidence)
+  if (evidence.some((ref, index) => ref.refDigest !== digestSfEvidenceRef(ref) || ref.installationId !== binding.binding.installationId || ref.projectId !== binding.binding.projectId || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" || ref.target.recordId !== selected[index].versionId || !ref.target.period || ref.target.period.start > request.period.start || ref.target.period.end < request.period.end))
+    return { status: "denied", reason: "source-scope-mismatch" }
+  const coverage = structuredClone(await Promise.all([input.sources.resolveForecastCoverage(request.baseRef, binding), input.sources.resolveForecastCoverage(request.candidateRef, binding)]))
+  const coverageFailure = coverage.find((entry) => entry.status !== "ok" && entry.status !== "unavailable" && entry.status !== "needs-input")
+  if (coverageFailure && coverageFailure.status !== "ok") return coverageFailure
+  const read = async () => input.host.persistence.transaction("planner", async (snapshot) => {
+    const principal = await input.host.authenticate(http, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
+    if (!principal || principal.id !== binding.binding.principalRef || principal.id.startsWith("local:")) return { commit: false, value: undefined }
+    const roles = principal.roles.filter((role) => role.surface === "planner").map((role) => role.role)
+    const access = object(object(snapshot.data.access)[principal.id])
+    const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((x): x is string => typeof x === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((x): x is string => typeof x === "string") : [] }
+    return { commit: false, value: selected.map((item) => projectPlannerSource(snapshot, actor, item.versionId)) }
+  })
+  const projections = await read()
+  if (!projections || projections.some((value) => !value)) return { status: "denied", reason: "source-unavailable" }
+  if (projections.some((projection, index) => !projection || digestSfValue(Object.keys(projection).sort()) !== digestSfValue([...evidence[index].target.fields].sort()) || digestSfValue({ versionId: evidence[index].target.recordId, projection }) !== evidence[index].target.projectionDigest)) return { status: "stale", reason: "source-changed" }
+  if (projections.some((projection) => projection?.year !== Number(start[1]))) return { status: "needs-input", reason: "period-version-mismatch" }
+  const build = (projection: Record<string, unknown>, ref: Extract<BusinessEvidenceRef, { kind: "record" }>): DomainProjection => {
+    const sourceRef = { surface: "planner" as const, type: ref.target.recordType, id: ref.target.recordId, incarnation: ref.target.incarnation, version: ref.target.version, fields: ref.target.fields, period: request.period, observedAt: environment.at }
+    const summary = object(projection.summary)
+    const lines = rows(summary.lines)
+    const missing: DomainProjection["missing"][number][] = []
+    const values: DomainProjection["values"][number][] = []
+    if (Array.isArray(summary.warnings) && summary.warnings.length) missing.push({ field: "currency", reason: "missing-fx" })
+    if (rows(object(projection.hc).positions).some((position) => position.include === true && position.hasRate === false)) missing.push({ field: "headcount:rate", reason: "missing-rate" })
+    const components = lines.flatMap((line) => {
+      const outlook = Array.isArray(line.outlook) ? line.outlook : []
+      return outlook.slice(Number(start[2]) - 1, Number(end[2])).map((value, offset) => {
+        const month = Number(start[2]) + offset
+        const period = { start: `${start[1]}-${String(month).padStart(2, "0")}-01`, end: `${start[1]}-${String(month).padStart(2, "0")}-${String(new Date(Date.UTC(Number(start[1]), month, 0)).getUTCDate()).padStart(2, "0")}` }
+        const budget = Array.isArray(line.b) && typeof line.b[month - 1] === "number" && Number.isFinite(line.b[month - 1]) ? line.b[month - 1] : null
+        const actual = Array.isArray(line.a) && typeof line.a[month - 1] === "number" && Number.isFinite(line.a[month - 1]) ? line.a[month - 1] : null
+        const forecast = Array.isArray(line.f) && typeof line.f[month - 1] === "number" && Number.isFinite(line.f[month - 1]) ? line.f[month - 1] : null
+        for (const [measure, raw] of [["budget", budget], ["actual", actual], ["forecast", forecast]] as const) values.push({ id: `${line.id}:${month}:${measure}`, value: typeof raw === "number" ? raw : null, currency: typeof line.cur === "string" ? line.cur : "USD", period, granularity: "month", sourceRefs: [ref], drilldown: ref, evidenceState: typeof raw === "number" ? "confirmed" : "absent" })
+        if (month > Number(projection.closed) && forecast == null && budget == null) missing.push({ field: `${line.id}:${month}:budget`, reason: "missing" })
+        if (month <= Number(projection.closed) && actual == null) missing.push({ field: `${line.id}:${month}:actual`, reason: "missing" })
+        if (Array.isArray(summary.warnings) && summary.warnings.includes(line.cur)) missing.push({ field: `${line.id}:${month}:fx`, reason: "missing-fx" })
+        const unknown = (month <= Number(projection.closed) && actual === null) || (month > Number(projection.closed) && forecast === null && budget === null) || (Array.isArray(summary.warnings) && summary.warnings.includes(line.cur)) || (line.synthetic === true && missing.some((entry) => entry.reason === "missing-fx" || entry.reason === "missing-rate"))
+        return { id: `${line.id}:${month}`, amount: !unknown && typeof value === "number" ? value : null, currency: "USD", period, sourceRefs: [sourceRef], evidenceState: unknown ? "absent" as const : month > Number(projection.closed) && forecast === null ? "estimated" as const : "confirmed" as const }
+      })
+    })
+    // These monthly totals use the Planner's converted calculations; missing inputs stay unknown.
+    for (let month = Number(start[2]); month <= Number(end[2]); month++) {
+      const period = { start: `${start[1]}-${String(month).padStart(2, "0")}-01`, end: `${start[1]}-${String(month).padStart(2, "0")}-${String(new Date(Date.UTC(Number(start[1]), month, 0)).getUTCDate()).padStart(2, "0")}` }
+      const matching = components.filter((component) => component.period.start === period.start)
+      for (const measure of ["budget", "actual", "outlook"] as const) {
+        const totals = Array.isArray(summary[measure]) ? summary[measure] : []
+        const unknown = !lines.length || lines.some((line) => {
+          if (Array.isArray(summary.warnings) && (summary.warnings.includes(line.cur) || line.synthetic === true && summary.warnings.length > 0)) return true
+          if (line.synthetic === true && missing.some((entry) => entry.reason === "missing-rate")) return true
+          if (measure === "outlook") return false
+          const raw = measure === "budget" ? line.b : line.a
+          return !Array.isArray(raw) || typeof raw[month - 1] !== "number" || !Number.isFinite(raw[month - 1])
+        }) || measure === "outlook" && (matching.length !== lines.length || matching.some((component) => component.amount === null))
+        const value = !unknown && typeof totals[month - 1] === "number" && Number.isFinite(totals[month - 1]) ? totals[month - 1] : null
+        values.push({ id: `month:${month}:${measure}`, value, currency: "USD", period, granularity: "month", sourceRefs: [ref], drilldown: ref, evidenceState: value === null ? "absent" : measure === "outlook" && matching.some((component) => component.evidenceState === "estimated") ? "estimated" : "confirmed" })
+      }
+    }
+    return { context: { installationId: binding.binding.installationId, projectId: binding.binding.projectId, principalRef: binding.binding.principalRef, accessRevision: binding.binding.accessRevision, policyVersion: binding.binding.policyVersion, surface: "planner", period: request.period, currency: "USD", sourceRefs: [sourceRef], capabilities: ["sf_forecast_compare"] }, version: ref.target.version, engineVersion: "planner-runtime-v1", components, values, missing }
+  }
+  const base = build(projections[0]!, evidence[0])
+  const candidate = build(projections[1]!, evidence[1])
+  const total = (projection: DomainProjection) => projection.components.reduce((sum, item) => sum + (item.amount ?? 0), 0)
+  const unknown = [...base.missing, ...candidate.missing].length > 0
+  const difference = unknown ? null : total(candidate) - total(base)
+  const gaps = [...new Set([...base.missing, ...candidate.missing].map((entry) => `${entry.field}:${entry.reason}`))]
+  const complete = coverage[0].status === "ok" && coverage[1].status === "ok" && difference !== null &&
+    digestSfValue(coverage[0].value.basis) === digestSfValue(coverage[1].value.basis) &&
+    plannerCoverageComplete(coverage[0].value.basis, coverage[0].value.assessment, base, evidence[0]) &&
+    plannerCoverageComplete(coverage[1].value.basis, coverage[1].value.assessment, candidate, evidence[1])
+  if (!complete) gaps.push(coverage.some((entry) => entry.status !== "ok") ? "cost-coverage-unavailable" : "cost-coverage-unresolved-or-source-mismatch")
+  const refs = coverage.flatMap((entry) => entry.status === "ok" ? [entry.value.coverageRef] : [])
+  const latest = await read()
+  if (!(await input.host.revalidate(binding)) || !latest || latest.some((projection, index) => !projection || digestSfValue({ versionId: evidence[index].target.recordId, projection }) !== evidence[index].target.projectionDigest)) return { status: "stale", reason: "source-or-authority-changed" }
+  const refreshed = await Promise.all([input.sources.resolveForecastSource(request.baseRef, binding), input.sources.resolveForecastSource(request.candidateRef, binding)])
+  if (!(await input.host.revalidate(binding)) || refreshed.some((entry, index) => entry.status !== "ok" || entry.value.evidence.refDigest !== evidence[index].refDigest)) return { status: "stale", reason: "source-revoked-or-replaced" }
+  const latestCoverage = await Promise.all([input.sources.resolveForecastCoverage(request.baseRef, binding), input.sources.resolveForecastCoverage(request.candidateRef, binding)])
+  if (!(await input.host.revalidate(binding)) || latestCoverage.some((entry, index) => digestSfValue(entry) !== digestSfValue(coverage[index]))) return { status: "stale", reason: "coverage-or-authority-changed" }
+  const common = { analysisBasis: "domain" as const, domainApplied: true, baseline: base, candidate, sourceRefs: evidence, gaps }
+  if (complete && difference !== null) {
+    const comparison = { baselineResultRef: request.baseRef, alternativeResultRef: request.candidateRef, costCoverageRefs: refs, criterionResults: [], unresolvedConditions: [], comparisonStatus: "complete" as const, knownDifference: difference, completeDifference: difference }
+    return { status: "ok", value: { ...common, comparison, knownDifference: difference, completeDifference: difference, explanation: "Forecast difference is reconciled to the current covered components." } }
+  }
+  const comparison = { baselineResultRef: request.baseRef, alternativeResultRef: request.candidateRef, costCoverageRefs: refs, criterionResults: [], unresolvedConditions: gaps, comparisonStatus: "conditioned" as const, knownDifference: difference, completeDifference: null }
+  return { status: "ok", value: { ...common, comparison, knownDifference: difference, completeDifference: null, explanation: "Forecast difference is conditional on the listed data and coverage limitations." } }
+}

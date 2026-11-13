@@ -1,0 +1,195 @@
+import { expect, test } from "bun:test"
+import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
+import { Location } from "@orchestra/core/location"
+import { AbsolutePath } from "@orchestra/core/schema"
+import { SessionSchema } from "@orchestra/core/session/schema"
+import { Schema } from "effect"
+import { openLocalStore } from "../../../../runtime/local-store.ts"
+import type { LocalStore } from "../../../../runtime/local-contract.ts"
+import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
+import type { SfProductGrant } from "../../../../product/integration/product-authority.ts"
+import type { ResidentProfile, SkillLoadReceipt } from "../../../../product/contracts/resident-ai.ts"
+import { selection } from "../resident-runtime/fixture.ts"
+
+async function fixture(grants: readonly SfProductGrant[], work: (input: { product: ReturnType<typeof createSfProductAuthority>; request: Request; location: Location.Ref; persistence: LocalStore; actor: { write: boolean; active: boolean }; changes: { role: string; mutateAuth: boolean; mutateInspect: boolean; session?: SessionSchema.Info } }) => Promise<void>) {
+  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-product-authority-"))
+  await chmod(directory, 0o700)
+  const persistence = await openLocalStore(join(directory, "store"))
+  const actor = { write: true, active: true }
+  const changes: { role: string; mutateAuth: boolean; mutateInspect: boolean; session?: SessionSchema.Info } = { role: "viewer", mutateAuth: false, mutateInspect: false }
+  const request = new Request("https://example.test/product")
+  const identity = { installationId: "installation", hostId: "host-epoch", projectId: "project",
+    location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }
+  const product = createSfProductAuthority({ identity: () => identity, installationId: "installation", origin: "https://example.test",
+    policyVersion: "policy", persistence, grants, now: Date.now, createId: () => crypto.randomUUID(),
+    authenticate: async (_request, context) => {
+      if (changes.mutateAuth) identity.hostId = "changed-during-auth"
+      return !actor.active || !context ? null : { id: "person", canWrite: actor.write,
+        roles: [{ surface: context.surface, role: context.surface === "dashboard" ? changes.role : "viewer" }] }
+    },
+    environment: async () => ({ at: "2026-11-13T00:00:00Z", id: () => "unused", directory: [] }),
+    commandIdentity: async () => "stable-command", inspectSession: async () => {
+      if (changes.mutateInspect) identity.hostId = "changed-during-inspection"
+      return changes.session
+    },
+    verifySelection: async () => true, verifySkillReceipt: async () => true, providerGeneration: async () => 1, authorizeDocument: async () => undefined })
+  try {
+    await work({ product, request, location: identity.location, persistence, actor, changes })
+  } finally {
+    await persistence.dispose()
+    await rm(directory, { recursive: true, force: true })
+  }
+}
+
+test("dashboard roles alone do not grant C08 or a business operation", async () => {
+  await fixture([], async ({ product, request }) => {
+    expect(await product.state.read(request, "preferences", () => "secret")).toMatchObject({ status: "denied" })
+    expect((await product.ui.admit(request, "sf_context_get", "a".repeat(64))).status).toBe("denied")
+  })
+})
+
+test("private grants narrow namespaces and operations; role changes revoke existing UI authority", async () => {
+  await fixture([{ principalRef: "person", namespaces: ["cases", "preferences"], operations: ["sf_context_get"] }], async ({ product, request, changes }) => {
+    const context = await product.ui.admit(request, "sf_context_get", "a".repeat(64))
+    expect(context.status).toBe("ok")
+    expect((await product.ui.admit(request, "sf_forecast_compare", "a".repeat(64))).status).toBe("denied")
+    expect(await product.state.read(request, "documents", () => "secret")).toMatchObject({ status: "denied" })
+    changes.role = "contributor"
+    if (context.status === "ok") expect(await product.ui.revalidate(context.value)).toBe(false)
+  })
+})
+
+test("write requires current write authority and document targets do not accept unverified identifiers", async () => {
+  await fixture([{ principalRef: "person", namespaces: ["cases", "documents"], operations: ["sf_context_get"] }], async ({ product, request, actor }) => {
+    actor.write = false
+    const denied = await product.state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, targetRef: product.creationTarget.ref,
+      targetIncarnation: product.creationTarget.incarnation, idempotencyKey: "create-case", commandDigest: "b".repeat(64) }, async () => ({ commit: true, value: true }))
+    expect(denied.status).toBe("denied")
+    actor.write = true
+    const document = await product.state.transaction(request, { namespace: "documents", expectedStorageVersion: 0, targetRef: "made-up-asset",
+      targetIncarnation: "made-up-incarnation", idempotencyKey: "document", commandDigest: "c".repeat(64) }, async () => ({ commit: true, value: true }))
+    expect(document.status).toBe("denied")
+  })
+})
+
+test("native binding cannot be invented without a current stored run", async () => {
+  await fixture([{ principalRef: "person", namespaces: ["contributions"], operations: ["sf_forecast_compare"] }], async ({ product, request }) => {
+    const profile: ResidentProfile = { id: "sf_finance", version: "1", mission: "Finance", sourcePath: "profile.json", sourceDigest: "a".repeat(64),
+      allowedSkills: ["sf-explicar-forecast"], allowedOperations: ["sf_forecast_compare"], outputTypes: [], contextBudgetTokens: 1000,
+      maxSteps: 2, maxDelegations: 0, modelClass: "reasoning", resumePolicy: "fresh" }
+    const sessionID = SessionSchema.ID.make("ses_forged")
+    const receipt: SkillLoadReceipt = { runId: "run", nativeSessionId: sessionID, profileId: profile.id, profileVersion: profile.version,
+      profileDigest: profile.sourceDigest, skillId: "sf-explicar-forecast", skillVersion: "1", sourceDigest: "b".repeat(64),
+      instructionsDigest: "c".repeat(64), loadedMessageId: "msg_forged", loadedAt: "2026-11-13T00:00:00Z", manifestDigest: "d".repeat(64) }
+    const result = await product.native.bind({ request, selected: selection(profile), sessionID, runId: receipt.runId,
+      caseRef: { id: "case", incarnation: "inc", version: 1 }, profile, manifestDigest: receipt.manifestDigest,
+      skillReceipts: [receipt], entryMode: "interactive" })
+    expect(result.status).toBe("denied")
+  })
+})
+
+test("a real C08 run and case still cannot bind a missing native Session", async () => {
+  await fixture([{ principalRef: "person", namespaces: ["cases", "contributions"], operations: ["sf_forecast_compare"] }], async ({ product, request, changes, actor }) => {
+    const caseRef = { id: "case", incarnation: "inc", version: 1 }
+    const created = await product.state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, targetRef: product.creationTarget.ref,
+      targetIncarnation: product.creationTarget.incarnation, idempotencyKey: "seed-case", commandDigest: "e".repeat(64) }, async (state) => {
+      state.cases.case = { ...caseRef, state: "draft", objective: "Review", horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD",
+        criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+      return { commit: true, value: true }
+    })
+    expect(created.status).toBe("ok")
+    const profile: ResidentProfile = { id: "sf_finance", version: "1", mission: "Finance", sourcePath: "profile.json", sourceDigest: "a".repeat(64),
+      allowedSkills: ["sf-explicar-forecast"], allowedOperations: ["sf_forecast_compare"], outputTypes: [], contextBudgetTokens: 1000,
+      maxSteps: 2, maxDelegations: 0, modelClass: "reasoning", resumePolicy: "fresh" }
+    const selected = selection(profile)
+    const state = await product.state.read(request, "contributions", (_current, authority) => authority)
+    expect(state.status).toBe("ok")
+    if (state.status !== "ok") return
+    const prepared = await product.state.transaction(request, { namespace: "contributions", expectedStorageVersion: state.storageVersion,
+      targetRef: caseRef.id, targetIncarnation: caseRef.incarnation, idempotencyKey: "seed-run", commandDigest: "f".repeat(64) }, async (current) => {
+      current.nativeRuns ??= {}
+      current.nativeRuns.run = { schema: "sf-native-run-v1", runRef: "run", version: 1, requestDigest: "1".repeat(64), skillInputDigest: "2".repeat(64),
+        principalRef: "person", accessRevision: state.value.accessRevision, policyVersion: state.value.policyVersion, caseRef, selection: selected,
+        model: { providerID: "openai", id: "model" }, skillId: "sf-explicar-forecast", objective: "Review", contextFingerprint: "context",
+        createdAt: "2026-11-13T00:00:00Z", updatedAt: "2026-11-13T00:00:00Z", state: "preparing" }
+      return { commit: true, value: true }
+    })
+    expect(prepared.status).toBe("ok")
+    const sessionID = SessionSchema.ID.make("ses_missing")
+    const receipt: SkillLoadReceipt = { runId: "run", nativeSessionId: sessionID, profileId: profile.id, profileVersion: profile.version,
+      profileDigest: profile.sourceDigest, skillId: "sf-explicar-forecast", skillVersion: "1", sourceDigest: "b".repeat(64),
+      instructionsDigest: "c".repeat(64), loadedMessageId: "msg_fixture", loadedAt: "2026-11-13T00:00:00Z", manifestDigest: selected.manifestDigest }
+    const admission = { request, selected, sessionID, runId: "run", caseRef, profile,
+      manifestDigest: selected.manifestDigest, skillReceipts: [receipt], entryMode: "interactive" as const }
+    expect((await product.native.bind(admission)).status).toBe("denied")
+    changes.session = Schema.decodeUnknownSync(SessionSchema.Info)({ id: sessionID, projectID: "project", agent: profile.id,
+      location, model: { providerID: "openai", id: "model" }, cost: 0,
+      tokens: { input: 0, output: 0, reasoning: 0, cache: { read: 0, write: 0 } },
+      time: { created: Date.now(), updated: Date.now() }, title: "fixture" })
+    const baseline = await product.native.bind(admission)
+    expect(baseline.status).toBe("ok")
+    if (baseline.status === "ok") {
+      expect(await product.authorizeNative(admission, baseline.value)).toBe(true)
+      actor.active = false
+      expect(await product.authorizeNative(admission, baseline.value)).toBe(false)
+      actor.active = true
+      product.native.revoke(baseline.value)
+    }
+    changes.mutateInspect = true
+    expect((await product.native.bind(admission)).status).toBe("denied")
+  })
+})
+
+test("assignment and domain revocation invalidate authority without incorporating other principals", async () => {
+  await fixture([{ principalRef: "person", namespaces: ["cases"], operations: ["sf_context_get"] }], async ({ product, request, persistence }) => {
+    await persistence.transaction("dashboard", async (snapshot) => {
+      snapshot.data.access = { person: { assigned: ["contracts"], domains: ["finance"] }, another: { assigned: ["one"] } }
+      return { commit: true, value: undefined }
+    })
+    const first = await product.ui.admit(request, "sf_context_get", "a".repeat(64))
+    expect(first.status).toBe("ok")
+    await persistence.transaction("dashboard", async (snapshot) => {
+      snapshot.data.access = { person: { assigned: ["contracts"], domains: ["finance"] }, another: { assigned: ["two"] } }
+      return { commit: true, value: undefined }
+    })
+    if (first.status === "ok") expect(await product.ui.revalidate(first.value)).toBe(true)
+    await persistence.transaction("dashboard", async (snapshot) => {
+      snapshot.data.access = { person: { assigned: [], domains: ["finance"] }, another: { assigned: ["two"] } }
+      return { commit: true, value: undefined }
+    })
+    if (first.status === "ok") expect(await product.ui.revalidate(first.value)).toBe(false)
+    const second = await product.ui.admit(request, "sf_context_get", "b".repeat(64))
+    expect(second.status).toBe("ok")
+    await persistence.transaction("planner", async (snapshot) => {
+      snapshot.data.access = { person: { domains: ["planning"] } }
+      return { commit: true, value: undefined }
+    })
+    if (second.status === "ok") expect(await product.ui.revalidate(second.value)).toBe(false)
+  })
+})
+
+test("workspace target is limited to explicit creation namespaces and still requires current grant and write access", async () => {
+  await fixture([{ principalRef: "person", namespaces: ["cases", "reviews", "relations", "documents", "preferences", "receipts", "outbox"], operations: ["sf_context_get"] }], async ({ product, request, actor }) => {
+    for (const namespace of ["cases", "reviews", "relations", "documents", "preferences", "receipts", "outbox"] as const) {
+      const result = await product.state.transaction(request, { namespace, expectedStorageVersion: 0, targetRef: product.creationTarget.ref,
+        targetIncarnation: product.creationTarget.incarnation, idempotencyKey: `preview-${namespace}`, commandDigest: "c".repeat(64) },
+        async () => ({ commit: false, value: true }))
+      expect(result.status).toBe(namespace === "receipts" || namespace === "outbox" ? "denied" : "preview")
+    }
+    actor.write = false
+    const denied = await product.state.transaction(request, { namespace: "reviews", expectedStorageVersion: 0, targetRef: product.creationTarget.ref,
+      targetIncarnation: product.creationTarget.incarnation, idempotencyKey: "no-write", commandDigest: "d".repeat(64) },
+      async () => ({ commit: false, value: true }))
+    expect(denied.status).toBe("denied")
+  })
+})
+
+
+test("identity mutation during authentication is denied", async () => {
+  await fixture([{ principalRef: "person", namespaces: ["cases"], operations: ["sf_context_get"] }], async ({ product, request, changes }) => {
+    changes.mutateAuth = true
+    expect((await product.ui.admit(request, "sf_context_get", "a".repeat(64))).status).toBe("denied")
+  })
+})

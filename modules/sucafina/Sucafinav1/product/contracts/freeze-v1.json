@@ -1,0 +1,2287 @@
+{
+  "revision": 6,
+  "scope": "C01–C17,24 contribution outputs,39 operation entry/output schemas,18 skill input schemas",
+  "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "canonicalSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "codeBaseline": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "contracts": [
+    {
+      "id": "C01",
+      "module": "context.ts",
+      "exports": [
+        "ProductContext",
+        "SourceRef",
+        "Period"
+      ],
+      "producers": [
+        "WP02",
+        "WP03",
+        "WP04",
+        "WP08",
+        "WP10",
+        "WP01",
+        "WP05"
+      ],
+      "consumers": [
+        "WP01",
+        "WP05",
+        "WP06",
+        "WP07",
+        "WP08",
+        "WP09",
+        "WP02",
+        "WP03",
+        "WP04",
+        "WP10",
+        "WP11",
+        "WP12",
+        "WP13",
+        "WP14"
+      ],
+      "proof": "Mesma seleção retorna o mesmo escopo; referência inválida, revogada ou ambígua nunca amplia acesso."
+    },
+    {
+      "id": "C02",
+      "module": "context.ts",
+      "exports": [
+        "DomainProjection",
+        "ProjectionComponent"
+      ],
+      "producers": [
+        "WP02",
+        "WP03",
+        "WP04"
+      ],
+      "consumers": [
+        "WP01",
+        "WP05",
+        "WP06",
+        "WP07",
+        "WP08",
+        "WP09",
+        "WP03",
+        "WP04",
+        "WP10",
+        "WP11",
+        "WP12",
+        "WP13",
+        "WP14"
+      ],
+      "proof": "Totais reconciliam com domínio; nenhuma fórmula concorrente de BI/relatório."
+    },
+    {
+      "id": "C03",
+      "module": "context.ts",
+      "exports": [
+        "PreparedCommand",
+        "CommandReceipt",
+        "CommandReceiptView"
+      ],
+      "producers": [
+        "WP02",
+        "WP03",
+        "WP04",
+        "WP01"
+      ],
+      "consumers": [
+        "WP01",
+        "WP06",
+        "WP08",
+        "WP10",
+        "WP02",
+        "WP03",
+        "WP04",
+        "WP11",
+        "WP12",
+        "WP13"
+      ],
+      "proof": "Revisão velha não sobrescreve; entrada local permanece; simulação não grava."
+    },
+    {
+      "id": "C04",
+      "module": "context.ts",
+      "exports": [
+        "ImportManifest",
+        "StoredImportManifest"
+      ],
+      "producers": [
+        "WP02",
+        "WP03",
+        "WP06"
+      ],
+      "consumers": [
+        "WP01",
+        "WP10",
+        "WP02",
+        "WP03",
+        "WP06"
+      ],
+      "proof": "O mesmo comando de domínio governa preview e Apply; escrita é atômica e revalida contexto."
+    },
+    {
+      "id": "C05",
+      "module": "context.ts",
+      "exports": [
+        "PreservedReview"
+      ],
+      "producers": [
+        "WP07"
+      ],
+      "consumers": [
+        "WP01",
+        "WP08",
+        "WP09",
+        "WP10"
+      ],
+      "proof": "Origem alterada não muda a revisão; acesso revalidado na recuperação/export."
+    },
+    {
+      "id": "C06",
+      "module": "context.ts",
+      "exports": [
+        "ConfirmationScope",
+        "ConfirmationRecord",
+        "ConfirmationCommand",
+        "ConfirmationValidityProjection"
+      ],
+      "producers": [
+        "WP02",
+        "WP08",
+        "WP07"
+      ],
+      "consumers": [
+        "WP01",
+        "WP07",
+        "WP09",
+        "WP10",
+        "WP02",
+        "WP04",
+        "WP08",
+        "WP11",
+        "WP12",
+        "WP14"
+      ],
+      "proof": "E09/E13 executam CONFIRM-SCOPE: janeiro confirmado em v7; fevereiro isolado em v8 preserva valid e zero nova cobrança; janeiro ou dependência pertinente alterados tornam stale e uma pendência; concorrência material recusa; revogação impede uso e conteúdo restrito; substituição de encarnação não herda confirmação. AuditRef mantém a versão v7 e autoria em todos os casos."
+    },
+    {
+      "id": "C07",
+      "module": "context.ts",
+      "exports": [
+        "RoutineResult",
+        "HostBoundEntryMode"
+      ],
+      "producers": [
+        "WP09",
+        "WP08"
+      ],
+      "consumers": [
+        "WP01",
+        "WP07",
+        "WP08",
+        "WP10",
+        "WP04",
+        "WP09",
+        "WP12",
+        "WP14"
+      ],
+      "proof": "Resultado pertence ao run/entrada reais, revalida acesso e nunca representa aprovação de negócio."
+    },
+    {
+      "id": "C08",
+      "module": "ports.ts",
+      "exports": [
+        "BusinessPorts",
+        "DomainPortHost",
+        "SfDocumentReadPort"
+      ],
+      "producers": [
+        "WP10",
+        "WP04",
+        "WP05",
+        "WP07"
+      ],
+      "consumers": [
+        "WP00",
+        "WP01",
+        "WP02",
+        "WP03",
+        "WP04",
+        "WP05",
+        "WP06",
+        "WP07",
+        "WP08",
+        "WP09",
+        "WP10",
+        "WP11",
+        "WP12",
+        "WP13",
+        "WP14"
+      ],
+      "proof": "GNATIVE T+20: sf_finance registrado, sf-explicar-forecast carregada por SessionV2.skill com digest observado, caso C09 real, sf_forecast_compare pelo MCP privado ao adapter WP03 real e resultado/proveniência no produto. Todos os 8 packs e C17 completos no G4/aceite. Implementação NOT_RUN."
+    },
+    {
+      "id": "C09",
+      "module": "decisions.ts",
+      "exports": [
+        "DecisionCase",
+        "ChoiceRecord",
+        "CaseLedgerEvent"
+      ],
+      "producers": [
+        "WP11"
+      ],
+      "consumers": [
+        "WP01",
+        "WP06",
+        "WP07",
+        "WP08",
+        "WP09",
+        "WP12",
+        "WP13",
+        "WP14",
+        "WP05",
+        "WP10"
+      ],
+      "proof": "Contrato validado por consumidor real e pacote de prova associado; fixtures somente aceleram desenvolvimento."
+    },
+    {
+      "id": "C10",
+      "module": "decisions.ts",
+      "exports": [
+        "CostCoverageBasis",
+        "CostCoverageEntry",
+        "CostCoverageAssessment",
+        "ScenarioResult",
+        "ScenarioComparison",
+        "RENEWAL_TRANSITION_CATEGORIES"
+      ],
+      "producers": [
+        "WP03",
+        "WP11",
+        "WP13"
+      ],
+      "consumers": [
+        "WP01",
+        "WP05",
+        "WP06",
+        "WP09",
+        "WP12",
+        "WP14",
+        "WP10",
+        "WP11",
+        "WP13"
+      ],
+      "proof": "AI-RENEWAL completo reconcilia 240000 vs 210000, vantagem 30000 e teto 55000. AI-RENEWAL-OMITTED-CATEGORY remove inteiramente training e produz missing-category/conditioned, sem zero fictício. Confirmar training=40000 muda total para 250000, diferença para -10000 e teto para 15000; UI/BI/crítica/portfólio consomem a mesma revisão, e ChoiceRecord original fica preservado."
+    },
+    {
+      "id": "C11",
+      "module": "resident-ai.ts",
+      "exports": [
+        "ContributionEnvelope",
+        "ConsumptionReceipt"
+      ],
+      "producers": [
+        "WP12",
+        "WP10"
+      ],
+      "consumers": [
+        "WP01",
+        "WP06",
+        "WP08",
+        "WP09",
+        "WP11",
+        "WP13",
+        "WP10"
+      ],
+      "proof": "AM01 contém recibo individual de carga+execução+consumo de todas as 18 skills e contribuição pertinente dos 5 perfis; AM03 exige Revisor próprio e recusa de identidade/scope forjados. Arquivos/nomes/outputs de fixture não fecham."
+    },
+    {
+      "id": "C12",
+      "module": "decisions.ts",
+      "exports": [
+        "PreparedChange",
+        "PreparedChangeView"
+      ],
+      "producers": [
+        "WP10",
+        "WP11",
+        "WP02",
+        "WP03",
+        "WP04"
+      ],
+      "consumers": [
+        "WP01",
+        "WP02",
+        "WP03",
+        "WP04",
+        "WP07",
+        "WP08",
+        "WP09",
+        "WP13",
+        "WP10"
+      ],
+      "proof": "Interromper depois do commit no domínio e antes de atualizar o caso; retry produz um único efeito financeiro e reconcilia o recibo autorizado. Mesma chave com outro conteúdo falha. Não existe atomicidade global."
+    },
+    {
+      "id": "C13",
+      "module": "decisions.ts",
+      "exports": [
+        "ChangeImpact",
+        "ObservedResultProjection"
+      ],
+      "producers": [
+        "WP14",
+        "WP10"
+      ],
+      "consumers": [
+        "WP01",
+        "WP07",
+        "WP09",
+        "WP11",
+        "WP12",
+        "WP13",
+        "WP05",
+        "WP10"
+      ],
+      "proof": "AM05 exige createMemoryEmit -> commit SF real -> restart -> createMemoryRead -> mesa. AM03/AM05 excluem revogação de registro/campo, owner forjado e encarnação substituída. WP14 puro não fecha consumo Atlas sozinho."
+    },
+    {
+      "id": "C14",
+      "module": "decisions.ts",
+      "exports": [
+        "DocumentEvidence",
+        "PortfolioResult"
+      ],
+      "producers": [
+        "WP06",
+        "WP13"
+      ],
+      "consumers": [
+        "WP01",
+        "WP05",
+        "WP07",
+        "WP11",
+        "WP12",
+        "WP14",
+        "WP06",
+        "WP10"
+      ],
+      "proof": "Contrato validado por consumidor real e pacote de prova associado; fixtures somente aceleram desenvolvimento.  A prova do dossiê atravessa WP06→C14→WP09: campo extraído não é fato confirmado; confirmação reaproveita a mesma origem/versão, e revogação ou atualização da fonte impede reutilização silenciosa."
+    },
+    {
+      "id": "C15",
+      "module": "resident-ai.ts",
+      "exports": [
+        "ResidentProfile",
+        "SkillManifest",
+        "SkillLoadReceipt",
+        "ContributionEnvelope",
+        "ConsumptionReceipt"
+      ],
+      "producers": [
+        "WP12",
+        "WP10"
+      ],
+      "consumers": [
+        "WP01",
+        "WP06",
+        "WP07",
+        "WP08",
+        "WP09",
+        "WP10",
+        "WP11",
+        "WP12",
+        "WP13",
+        "WP14"
+      ],
+      "proof": "AM01/AM03 e matriz 5/18. Remover skill, trocar bytes sem versão, executar crítico na mesma sessão ou não consumir output após reload impede PASS."
+    },
+    {
+      "id": "C16",
+      "module": "sf-execution.ts",
+      "exports": [
+        "TrustedExecutionBinding",
+        "TrustedCallLease",
+        "TrustedCallContext",
+        "TrustedUiContext",
+        "TrustedDomainContext",
+        "CapabilityDescriptor",
+        "CapabilityResult"
+      ],
+      "producers": [
+        "WP10",
+        "WP12",
+        "WP02",
+        "WP03",
+        "WP04",
+        "WP05",
+        "WP06",
+        "WP07",
+        "WP08",
+        "WP09",
+        "WP11",
+        "WP13",
+        "WP14"
+      ],
+      "consumers": [
+        "WP00",
+        "WP01",
+        "WP09",
+        "WP10",
+        "WP12"
+      ],
+      "proof": "AM02 cobre as 39 operações/8 packs com resultado/versão iguais UI/native/MCP. AM03 força operação proibida, dois usuários/perfis iguais, duas sessões/casos, revogação após discovery, homônimo, generation stale e lease forjada/expirada."
+    },
+    {
+      "id": "C17",
+      "module": "business-context.ts",
+      "exports": [
+        "BusinessEvidenceRef",
+        "BusinessEvidenceResolution",
+        "BusinessContextService",
+        "BusinessMemoryEnvelope",
+        "MemoryWriteReceipt",
+        "AuthorizedCaseProjection",
+        "AuthorizedPolicyProjection",
+        "SfAtlasProjection"
+      ],
+      "producers": [
+        "WP06",
+        "WP10",
+        "WP14"
+      ],
+      "consumers": [
+        "WP01",
+        "WP06",
+        "WP07",
+        "WP09",
+        "WP10",
+        "WP11",
+        "WP12",
+        "WP14"
+      ],
+      "proof": "AM05 e AM03 exigem real Atlas module trace, append/recall após reinício, efeitos idempotentes, dois atores no mesmo perfil, owner omitido/forjado, revogação de campo/registro, import com mesma ID/nova encarnação, scanner hit/ausente/timeout e falha pré/pós commit. Nenhuma fixture ou memória própria substitui esta prova."
+    }
+  ],
+  "operations": [
+    {
+      "operation": "sf_dashboard_read",
+      "pack": "performance",
+      "producerTask": "WP02.T01",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts",
+      "handlerExport": "readDashboard",
+      "inputType": "DashboardReadRequest",
+      "outputType": "AuthorizedDashboard",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_dashboard_read",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_dashboard_read",
+      "profiles": [
+        "sf_maestro",
+        "sf_finance",
+        "sf_portfolio"
+      ],
+      "mode": "read"
+    },
+    {
+      "operation": "sf_kpi_explain",
+      "pack": "performance",
+      "producerTask": "WP02.T01",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts",
+      "handlerExport": "explainKpi",
+      "inputType": "KpiExplainRequest",
+      "outputType": "KpiBreakdown",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_kpi_explain",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_kpi_explain",
+      "profiles": [
+        "sf_maestro",
+        "sf_finance",
+        "sf_portfolio"
+      ],
+      "mode": "read"
+    },
+    {
+      "operation": "sf_bi_view",
+      "pack": "performance",
+      "producerTask": "WP05.T04",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/analytics/capabilities.ts",
+      "handlerExport": "readBiView",
+      "inputType": "BiViewRequest",
+      "outputType": "ContextualBIView",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_bi_view",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_bi_view",
+      "profiles": [
+        "sf_maestro",
+        "sf_finance",
+        "sf_portfolio"
+      ],
+      "mode": "read"
+    },
+    {
+      "operation": "sf_source_get",
+      "pack": "performance",
+      "producerTask": "WP10.T07",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+      "handlerExport": "resolveSfSource",
+      "inputType": "SourceGetRequest",
+      "outputType": "BusinessEvidenceResolution",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_source_get",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_source_get",
+      "profiles": [
+        "sf_maestro",
+        "sf_finance",
+        "sf_procurement",
+        "sf_portfolio",
+        "sf_reviewer"
+      ],
+      "mode": "read"
+    },
+    {
+      "operation": "sf_forecast_compare",
+      "pack": "planning",
+      "producerTask": "WP03.T01",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+      "handlerExport": "compareForecast",
+      "inputType": "ForecastCompareRequest",
+      "outputType": "FinancialAnalysis",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_forecast_compare",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_forecast_compare",
+      "profiles": [
+        "sf_finance"
+      ],
+      "mode": "simulate"
+    },
+    {
+      "operation": "sf_scenario_simulate",
+      "pack": "planning",
+      "producerTask": "WP03.T01",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+      "handlerExport": "simulateScenario",
+      "inputType": "ScenarioRequest",
+      "outputType": "ScenarioResult",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_scenario_simulate",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_scenario_simulate",
+      "profiles": [
+        "sf_finance",
+        "sf_portfolio",
+        "sf_reviewer"
+      ],
+      "mode": "simulate"
+    },
+    {
+      "operation": "sf_scenario_compare",
+      "pack": "planning",
+      "producerTask": "WP03.T05",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+      "handlerExport": "compareScenarios",
+      "inputType": "ScenarioCompareRequest",
+      "outputType": "ScenarioComparison",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_scenario_compare",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_scenario_compare",
+      "profiles": [
+        "sf_finance",
+        "sf_portfolio",
+        "sf_reviewer"
+      ],
+      "mode": "simulate"
+    },
+    {
+      "operation": "sf_sensitivity_evaluate",
+      "pack": "planning",
+      "producerTask": "WP13.T03",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/portfolio/capabilities.ts",
+      "handlerExport": "evaluateSensitivity",
+      "inputType": "SensitivityRequest",
+      "outputType": "SensitivityResult",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_sensitivity_evaluate",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_sensitivity_evaluate",
+      "profiles": [
+        "sf_finance",
+        "sf_reviewer"
+      ],
+      "mode": "simulate"
+    },
+    {
+      "operation": "sf_portfolio_evaluate",
+      "pack": "planning",
+      "producerTask": "WP13.T02",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/portfolio/capabilities.ts",
+      "handlerExport": "evaluatePortfolio",
+      "inputType": "PortfolioRequest",
+      "outputType": "PortfolioComparison",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_portfolio_evaluate",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_portfolio_evaluate",
+      "profiles": [
+        "sf_portfolio"
+      ],
+      "mode": "simulate"
+    },
+    {
+      "operation": "sf_request_read",
+      "pack": "procurement",
+      "producerTask": "WP04.T01",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+      "handlerExport": "readRequest",
+      "inputType": "RequestReadRequest",
+      "outputType": "AuthorizedRequest",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_request_read",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_request_read",
+      "profiles": [
+        "sf_procurement"
+      ],
+      "mode": "read"
+    },
+    {
+      "operation": "sf_supplier_read",
+      "pack": "procurement",
+      "producerTask": "WP04.T05",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+      "handlerExport": "readSupplier",
+      "inputType": "SupplierReadRequest",
+      "outputType": "AuthorizedSupplier",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_supplier_read",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_supplier_read",
+      "profiles": [
+        "sf_procurement"
+      ],
+      "mode": "read"
+    },
+    {
+      "operation": "sf_contract_read",
+      "pack": "procurement",
+      "producerTask": "WP04.T05",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+      "handlerExport": "readContract",
+      "inputType": "ContractReadRequest",
+      "outputType": "AuthorizedContract",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_contract_read",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_contract_read",
+      "profiles": [
+        "sf_procurement"
+      ],
+      "mode": "read"
+    },
+    {
+      "operation": "sf_sourcing_compare",
+      "pack": "procurement",
+      "producerTask": "WP04.T03",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+      "handlerExport": "compareSourcing",
+      "inputType": "SourcingCompareRequest",
+      "outputType": "CommercialComparison",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_sourcing_compare",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_sourcing_compare",
+      "profiles": [
+        "sf_procurement"
+      ],
+      "mode": "simulate"
+    },
+    {
+      "operation": "sf_case_read",
+      "pack": "decisions",
+      "producerTask": "WP11.T01",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+      "handlerExport": "readCase",
+      "inputType": "CaseReadRequest",
+      "outputType": "AuthorizedCaseProjection",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_case_read",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_case_read",
+      "profiles": [
+        "sf_maestro",
+        "sf_finance",
+        "sf_procurement",
+        "sf_portfolio",
+        "sf_reviewer"
+      ],
+      "mode": "read"
+    },
+    {
+      "operation": "sf_case_draft",
+      "pack": "decisions",
+      "producerTask": "WP11.T01",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+      "handlerExport": "draftCase",
+      "inputType": "CaseDraftRequest",
+      "outputType": "IntentFrame",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_case_draft",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_case_draft",
+      "profiles": [
+        "sf_maestro"
+      ],
+      "mode": "prepare"
+    },
+    {
+      "operation": "sf_alternative_draft",
+      "pack": "decisions",
+      "producerTask": "WP11.T02",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+      "handlerExport": "draftAlternative",
+      "inputType": "AlternativeDraftRequest",
+      "outputType": "AlternativeDraft",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_alternative_draft",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_alternative_draft",
+      "profiles": [
+        "sf_finance",
+        "sf_procurement",
+        "sf_portfolio"
+      ],
+      "mode": "prepare"
+    },
+    {
+      "operation": "sf_change_prepare",
+      "pack": "decisions",
+      "producerTask": "WP11.T03",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+      "handlerExport": "prepareChange",
+      "inputType": "ChangePrepareRequest",
+      "outputType": "PreparedChangeSet",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_change_prepare",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_change_prepare",
+      "profiles": [
+        "sf_procurement"
+      ],
+      "mode": "prepare"
+    },
+    {
+      "operation": "sf_receipt_get",
+      "pack": "decisions",
+      "producerTask": "WP11.T04",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+      "handlerExport": "readReceipt",
+      "inputType": "ReceiptGetRequest",
+      "outputType": "ChangeReceiptSet",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_receipt_get",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_receipt_get",
+      "profiles": [
+        "sf_procurement"
+      ],
+      "mode": "read"
+    },
+    {
+      "operation": "sf_work_list",
+      "pack": "collaboration",
+      "producerTask": "WP08.T04",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts",
+      "handlerExport": "listWork",
+      "inputType": "WorkListRequest",
+      "outputType": "AuthorizedWorkList",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_work_list",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_work_list",
+      "profiles": [
+        "sf_maestro"
+      ],
+      "mode": "read"
+    },
+    {
+      "operation": "sf_question_prepare",
+      "pack": "collaboration",
+      "producerTask": "WP08.T06",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts",
+      "handlerExport": "prepareQuestion",
+      "inputType": "QuestionPrepareRequest",
+      "outputType": "QuestionProposal",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_question_prepare",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_question_prepare",
+      "profiles": [
+        "sf_maestro"
+      ],
+      "mode": "prepare"
+    },
+    {
+      "operation": "sf_answer_read",
+      "pack": "collaboration",
+      "producerTask": "WP08.T02",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts",
+      "handlerExport": "readAnswer",
+      "inputType": "AnswerReadRequest",
+      "outputType": "AnswerProjection",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_answer_read",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_answer_read",
+      "profiles": [
+        "sf_maestro"
+      ],
+      "mode": "read"
+    },
+    {
+      "operation": "sf_relation_read",
+      "pack": "collaboration",
+      "producerTask": "WP08.T01",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts",
+      "handlerExport": "readRelations",
+      "inputType": "RelationReadRequest",
+      "outputType": "ConfirmedRelations",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_relation_read",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_relation_read",
+      "profiles": [
+        "sf_maestro",
+        "sf_portfolio"
+      ],
+      "mode": "read"
+    },
+    {
+      "operation": "sf_handoff_prepare",
+      "pack": "collaboration",
+      "producerTask": "WP08.T05",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts",
+      "handlerExport": "prepareHandoff",
+      "inputType": "HandoffPrepareRequest",
+      "outputType": "HandoffProposal",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_handoff_prepare",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_handoff_prepare",
+      "profiles": [
+        "sf_maestro"
+      ],
+      "mode": "prepare"
+    },
+    {
+      "operation": "sf_document_extract",
+      "pack": "documents_reports",
+      "producerTask": "WP06.T05",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+      "handlerExport": "extractDocumentEvidence",
+      "inputType": "DocumentExtractRequest",
+      "outputType": "DocumentEvidence",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_document_extract",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_document_extract",
+      "profiles": [
+        "sf_maestro",
+        "sf_procurement"
+      ],
+      "mode": "prepare"
+    },
+    {
+      "operation": "sf_import_preview",
+      "pack": "documents_reports",
+      "producerTask": "WP06.T02",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/imports/capabilities.ts",
+      "handlerExport": "previewImport",
+      "inputType": "ImportPreviewRequest",
+      "outputType": "ImportManifest",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_import_preview",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_import_preview",
+      "profiles": [
+        "sf_maestro",
+        "sf_finance"
+      ],
+      "mode": "simulate"
+    },
+    {
+      "operation": "sf_review_prepare",
+      "pack": "documents_reports",
+      "producerTask": "WP07.T02",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/reviews/capabilities.ts",
+      "handlerExport": "prepareReview",
+      "inputType": "ReviewPrepareRequest",
+      "outputType": "ReviewDraft",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_review_prepare",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_review_prepare",
+      "profiles": [
+        "sf_maestro"
+      ],
+      "mode": "prepare"
+    },
+    {
+      "operation": "sf_report_prepare",
+      "pack": "documents_reports",
+      "producerTask": "WP07.T04",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/reviews/capabilities.ts",
+      "handlerExport": "prepareReport",
+      "inputType": "ReportPrepareRequest",
+      "outputType": "MeetingMaterialProposal",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_report_prepare",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_report_prepare",
+      "profiles": [
+        "sf_maestro"
+      ],
+      "mode": "prepare"
+    },
+    {
+      "operation": "sf_artifact_get",
+      "pack": "documents_reports",
+      "producerTask": "WP07.T04",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/reviews/capabilities.ts",
+      "handlerExport": "readArtifact",
+      "inputType": "ArtifactGetRequest",
+      "outputType": "AuthorizedArtifact",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_artifact_get",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_artifact_get",
+      "profiles": [
+        "sf_maestro"
+      ],
+      "mode": "read"
+    },
+    {
+      "operation": "sf_context_get",
+      "pack": "knowledge",
+      "producerTask": "WP10.T07",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+      "handlerExport": "readSfBusinessContext",
+      "inputType": "BusinessContextRequest",
+      "outputType": "AuthorizedBusinessContext",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_context_get",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_context_get",
+      "profiles": [
+        "sf_maestro",
+        "sf_finance",
+        "sf_procurement",
+        "sf_portfolio",
+        "sf_reviewer"
+      ],
+      "mode": "read"
+    },
+    {
+      "operation": "sf_knowledge_search",
+      "pack": "knowledge",
+      "producerTask": "WP06.T05",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+      "handlerExport": "searchDocumentEvidence",
+      "inputType": "KnowledgeSearchRequest",
+      "outputType": "EvidenceSearchResult",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_knowledge_search",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_knowledge_search",
+      "profiles": [
+        "sf_maestro",
+        "sf_finance",
+        "sf_procurement",
+        "sf_portfolio",
+        "sf_reviewer"
+      ],
+      "mode": "read"
+    },
+    {
+      "operation": "sf_evidence_get",
+      "pack": "knowledge",
+      "producerTask": "WP10.T07",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+      "handlerExport": "resolveSfBusinessEvidence",
+      "inputType": "EvidenceGetRequest",
+      "outputType": "BusinessEvidenceResolution",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_evidence_get",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_evidence_get",
+      "profiles": [
+        "sf_maestro",
+        "sf_finance",
+        "sf_procurement",
+        "sf_portfolio",
+        "sf_reviewer"
+      ],
+      "mode": "read"
+    },
+    {
+      "operation": "sf_decision_recall",
+      "pack": "knowledge",
+      "producerTask": "WP10.T07",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+      "handlerExport": "recallSfDecisions",
+      "inputType": "BusinessRecallRequest",
+      "outputType": "CaseRecall",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_decision_recall",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_decision_recall",
+      "profiles": [
+        "sf_maestro",
+        "sf_finance",
+        "sf_procurement",
+        "sf_portfolio",
+        "sf_reviewer"
+      ],
+      "mode": "read"
+    },
+    {
+      "operation": "sf_freshness_check",
+      "pack": "knowledge",
+      "producerTask": "WP10.T07",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+      "handlerExport": "checkSfFreshness",
+      "inputType": "FreshnessCheckRequest",
+      "outputType": "FreshnessResult",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_freshness_check",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_freshness_check",
+      "profiles": [
+        "sf_maestro",
+        "sf_finance",
+        "sf_procurement",
+        "sf_portfolio",
+        "sf_reviewer"
+      ],
+      "mode": "read"
+    },
+    {
+      "operation": "sf_routine_catalog",
+      "pack": "routines",
+      "producerTask": "WP09.T01",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+      "handlerExport": "readRoutineCatalog",
+      "inputType": "RoutineCatalogRequest",
+      "outputType": "AuthorizedRoutineCatalog",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_routine_catalog",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_routine_catalog",
+      "profiles": [
+        "sf_maestro"
+      ],
+      "mode": "read"
+    },
+    {
+      "operation": "sf_routine_prepare",
+      "pack": "routines",
+      "producerTask": "WP09.T01",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+      "handlerExport": "prepareRoutine",
+      "inputType": "RoutinePrepareRequest",
+      "outputType": "AdmissionProposal",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_routine_prepare",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_routine_prepare",
+      "profiles": [
+        "sf_maestro"
+      ],
+      "mode": "prepare"
+    },
+    {
+      "operation": "sf_routine_run",
+      "pack": "routines",
+      "producerTask": "WP09.T01",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+      "handlerExport": "runAdmittedRoutine",
+      "inputType": "RoutineRunRequest",
+      "outputType": "AuthorizedRunReceipt",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_routine_run",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_routine_run",
+      "profiles": [
+        "sf_maestro"
+      ],
+      "mode": "execute_admitted"
+    },
+    {
+      "operation": "sf_routine_status",
+      "pack": "routines",
+      "producerTask": "WP09.T01",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+      "handlerExport": "readRoutineStatus",
+      "inputType": "RoutineStatusRequest",
+      "outputType": "RunStatus",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_routine_status",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_routine_status",
+      "profiles": [
+        "sf_maestro"
+      ],
+      "mode": "read"
+    },
+    {
+      "operation": "sf_routine_result",
+      "pack": "routines",
+      "producerTask": "WP09.T01",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+      "handlerExport": "readRoutineResult",
+      "inputType": "RoutineResultRequest",
+      "outputType": "AuthorizedRoutineResult",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_routine_result",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_routine_result",
+      "profiles": [
+        "sf_maestro"
+      ],
+      "mode": "read"
+    },
+    {
+      "operation": "sf_watch_prepare",
+      "pack": "routines",
+      "producerTask": "WP09.T06",
+      "handlerPath": "modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+      "handlerExport": "prepareWatch",
+      "inputType": "WatchPrepareRequest",
+      "outputType": "ScheduleProposal",
+      "inputSchema": "operations.ts#sfOperationInputSchemas.sf_watch_prepare",
+      "outputSchema": "output-schemas.ts#sfOperationOutputSchemas.sf_watch_prepare",
+      "profiles": [
+        "sf_maestro",
+        "sf_portfolio"
+      ],
+      "mode": "prepare"
+    }
+  ],
+  "artifacts": {
+    "business-context.ts": "51bce13a057cdf28bf6f2f890ca3a38ac5cf8d38fcaa1944235ec76c5688c5f4",
+    "canonical.ts": "8e600493ed8ae6e7a002198e10f901c25bc11090d086cee7568c3667dfffef3b",
+    "context.ts": "90a076389150d6fdca121ab686ee066bfc7d6aa1ba82a51d67adeb05e516b520",
+    "decisions.ts": "cccc8df09683b4fd1b43eb886264cc9248355ad198d6582ad0c090c820b71910",
+    "generate-output-schemas.ts": "2e818d8f35a768257fb2f2bbc3eec914ff96eed5fa0e6d70ba2ae5570b15f308",
+    "operations.ts": "4b4dea78486ca436a03725e44d98951333ca15f353bdf02e204e8a0914f58527",
+    "output-schemas.ts": "11c4d20cabef7bd2686940212d4bd81f779c771d843e06d687899c44a4be9e35",
+    "outputs.ts": "1a20ee4932de9ce7f0f1540cf6aba391345a530dc4d9f4935088e2631fd16099",
+    "ports.ts": "07eb4dfc264a1150b5b06b00170ebcc8da1ce0b62e0ef94f5dfee57bddfa5aad",
+    "resident-ai.ts": "12bd719f16aae9d41dc58baaaa090285cd9e5f11b3a790d67351c14d59e58697",
+    "runtime.ts": "db83f9a37ca000511efe482e1d701371a6a5830cbcb62cbd5a8f0276456109d2",
+    "schema-admission.ts": "1d125b9146ad36f925dce3248bb891b092b585f24d275e258b2c0d76a72fcf38",
+    "sf-execution.ts": "a3cf340b5c4e73b9a6cb64892ee47de1c2176bb77a34d93cec326b09f5fdc1d6",
+    "state.ts": "b0a03c10edf95f0dbcd1ca441959679f9412a62e6ab4d888fce7b0056b8eaa49",
+    "validation.ts": "2fe8236bd56162cb9e5398b1155320057fd12f5f51f3700eb46aee2a8d7b1b15",
+    "coverage-inventory.ts": "b55dbfb3edb5235cb6f8120773fee243d440f40fe118bde3c86c9a6e8a1d2da7",
+    "skill-inputs.ts": "db1081f488c897caf6ed10b02d1389326a02f0edd124c657e9c4ffc805b1abc7"
+  },
+  "nativeProfiles": [
+    {
+      "id": "sf_maestro",
+      "name": "Maestro SF",
+      "version": "1.0.0",
+      "mission": "Enquadrar intenção, coordenar especialistas pertinentes e preparar revisão/perguntas.",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_maestro.json",
+      "owner_task": "WP12.T01",
+      "registration_task": "WP10.T06",
+      "allowed_skills": [
+        "sf-enquadrar-decisao",
+        "sf-preparar-revisao-executiva",
+        "sf-coordenar-perguntas",
+        "sf-extrair-evidencias",
+        "sf-produzir-bi-contextual",
+        "sf-produzir-material-reuniao",
+        "sf-consultar-memoria-decisoria"
+      ],
+      "allowed_operations": [
+        "sf_answer_read",
+        "sf_artifact_get",
+        "sf_bi_view",
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_dashboard_read",
+        "sf_decision_recall",
+        "sf_document_extract",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_handoff_prepare",
+        "sf_import_preview",
+        "sf_knowledge_search",
+        "sf_kpi_explain",
+        "sf_question_prepare",
+        "sf_relation_read",
+        "sf_report_prepare",
+        "sf_review_prepare",
+        "sf_routine_catalog",
+        "sf_routine_prepare",
+        "sf_routine_result",
+        "sf_routine_run",
+        "sf_routine_status",
+        "sf_source_get",
+        "sf_watch_prepare",
+        "sf_work_list"
+      ],
+      "output_types": [
+        "IntentFrame",
+        "AnalysisPlan",
+        "DecisionBrief",
+        "QuestionProposal",
+        "DocumentEvidence",
+        "ContextualBIProposal",
+        "MeetingMaterialProposal",
+        "CaseRecall",
+        "MatchExplanation"
+      ],
+      "context_budget_tokens": 24000,
+      "max_steps": 12,
+      "max_delegations": 4,
+      "model_class": "reasoning",
+      "resume_policy": "Nova sessão por job/caso; retomada cria continuação versionada, não reaproveita histórico alheio.",
+      "proof_ids": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "evidence_packages": [
+        "E01",
+        "E10",
+        "E11",
+        "E12",
+        "E13",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "native_engine": "orchestra",
+      "permission_floor": "deny *; allow only listed sf_* operations and own reserved skill resources; deny shell/edit/engineering Atlas/Maestro approval tools",
+      "actual_model_policy": "Resolver classe entre modelos já configurados; gravar provider/model efetivos e indisponibilidade; não presumir nova conta."
+    },
+    {
+      "id": "sf_finance",
+      "name": "Finance",
+      "version": "1.0.0",
+      "mission": "Reconciliar forecast, comparar cenários e calcular sensibilidade pelo motor canônico.",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_finance.json",
+      "owner_task": "WP12.T01",
+      "registration_task": "WP10.T06",
+      "allowed_skills": [
+        "sf-explicar-forecast",
+        "sf-comparar-cenarios",
+        "sf-avaliar-sensibilidade",
+        "sf-produzir-bi-contextual",
+        "sf-consultar-memoria-decisoria"
+      ],
+      "allowed_operations": [
+        "sf_alternative_draft",
+        "sf_bi_view",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_dashboard_read",
+        "sf_decision_recall",
+        "sf_evidence_get",
+        "sf_forecast_compare",
+        "sf_freshness_check",
+        "sf_import_preview",
+        "sf_knowledge_search",
+        "sf_kpi_explain",
+        "sf_scenario_compare",
+        "sf_scenario_simulate",
+        "sf_sensitivity_evaluate",
+        "sf_source_get"
+      ],
+      "output_types": [
+        "FinancialAnalysis",
+        "ScenarioComparison",
+        "SensitivityResult",
+        "ContextualBIProposal",
+        "CaseRecall",
+        "MatchExplanation"
+      ],
+      "context_budget_tokens": 20000,
+      "max_steps": 10,
+      "max_delegations": 0,
+      "model_class": "reasoning",
+      "resume_policy": "Retomar somente após nova validação de referências/base e skill pinada.",
+      "proof_ids": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "evidence_packages": [
+        "E01",
+        "E10",
+        "E11",
+        "E12",
+        "E13",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "native_engine": "orchestra",
+      "permission_floor": "deny *; allow only listed sf_* operations and own reserved skill resources; deny shell/edit/engineering Atlas/Maestro approval tools",
+      "actual_model_policy": "Resolver classe entre modelos já configurados; gravar provider/model efetivos e indisponibilidade; não presumir nova conta."
+    },
+    {
+      "id": "sf_procurement",
+      "name": "Compras e Contratos",
+      "version": "1.0.0",
+      "mission": "Comparar propostas e condições e preparar dossiê sem aprovar compra.",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_procurement.json",
+      "owner_task": "WP12.T01",
+      "registration_task": "WP10.T06",
+      "allowed_skills": [
+        "sf-comparar-sourcing",
+        "sf-revisar-condicoes-contratuais",
+        "sf-preparar-compra",
+        "sf-extrair-evidencias",
+        "sf-consultar-memoria-decisoria"
+      ],
+      "allowed_operations": [
+        "sf_alternative_draft",
+        "sf_case_read",
+        "sf_change_prepare",
+        "sf_context_get",
+        "sf_contract_read",
+        "sf_decision_recall",
+        "sf_document_extract",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_knowledge_search",
+        "sf_receipt_get",
+        "sf_request_read",
+        "sf_source_get",
+        "sf_sourcing_compare",
+        "sf_supplier_read"
+      ],
+      "output_types": [
+        "CommercialComparison",
+        "CommercialGap",
+        "EvidenceCandidate",
+        "PreparedChangeSet",
+        "DossierDraft",
+        "DocumentEvidence",
+        "CaseRecall",
+        "MatchExplanation"
+      ],
+      "context_budget_tokens": 20000,
+      "max_steps": 10,
+      "max_delegations": 0,
+      "model_class": "reasoning",
+      "resume_policy": "Documento/solicitação alterados exigem nova leitura; candidato antigo fica stale.",
+      "proof_ids": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "evidence_packages": [
+        "E01",
+        "E10",
+        "E11",
+        "E12",
+        "E13",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "native_engine": "orchestra",
+      "permission_floor": "deny *; allow only listed sf_* operations and own reserved skill resources; deny shell/edit/engineering Atlas/Maestro approval tools",
+      "actual_model_policy": "Resolver classe entre modelos já configurados; gravar provider/model efetivos e indisponibilidade; não presumir nova conta."
+    },
+    {
+      "id": "sf_portfolio",
+      "name": "Portfólio e Entrega",
+      "version": "1.0.0",
+      "mission": "Examinar dependências, restrições e combinações com fontes confirmadas.",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_portfolio.json",
+      "owner_task": "WP12.T01",
+      "registration_task": "WP10.T06",
+      "allowed_skills": [
+        "sf-revisar-dependencias",
+        "sf-compor-portfolio",
+        "sf-reavaliar-compromissos",
+        "sf-produzir-bi-contextual",
+        "sf-consultar-memoria-decisoria"
+      ],
+      "allowed_operations": [
+        "sf_alternative_draft",
+        "sf_bi_view",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_dashboard_read",
+        "sf_decision_recall",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_knowledge_search",
+        "sf_kpi_explain",
+        "sf_portfolio_evaluate",
+        "sf_relation_read",
+        "sf_scenario_compare",
+        "sf_scenario_simulate",
+        "sf_source_get",
+        "sf_watch_prepare"
+      ],
+      "output_types": [
+        "DeliveryAssessment",
+        "DependencyConflict",
+        "PortfolioComparison",
+        "ReconsiderationProposal",
+        "ContextualBIProposal",
+        "CaseRecall",
+        "MatchExplanation"
+      ],
+      "context_budget_tokens": 20000,
+      "max_steps": 10,
+      "max_delegations": 0,
+      "model_class": "reasoning",
+      "resume_policy": "Mudança material cria nova análise ligada à escolha preservada.",
+      "proof_ids": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM05",
+        "AM06"
+      ],
+      "evidence_packages": [
+        "E01",
+        "E11",
+        "E12",
+        "E13",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "native_engine": "orchestra",
+      "permission_floor": "deny *; allow only listed sf_* operations and own reserved skill resources; deny shell/edit/engineering Atlas/Maestro approval tools",
+      "actual_model_policy": "Resolver classe entre modelos já configurados; gravar provider/model efetivos e indisponibilidade; não presumir nova conta."
+    },
+    {
+      "id": "sf_reviewer",
+      "name": "Revisor de Decisões",
+      "version": "1.0.0",
+      "mission": "Contestar a proposta e testar a sustentação em execução própria.",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_reviewer.json",
+      "owner_task": "WP12.T01",
+      "registration_task": "WP10.T06",
+      "allowed_skills": [
+        "sf-contestar-decisao",
+        "sf-revisar-evidencias",
+        "sf-consultar-memoria-decisoria"
+      ],
+      "allowed_operations": [
+        "sf_case_read",
+        "sf_context_get",
+        "sf_decision_recall",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_knowledge_search",
+        "sf_scenario_compare",
+        "sf_scenario_simulate",
+        "sf_sensitivity_evaluate",
+        "sf_source_get"
+      ],
+      "output_types": [
+        "CritiqueReport",
+        "UnresolvedCondition",
+        "ClaimIssue",
+        "CaseRecall",
+        "MatchExplanation"
+      ],
+      "context_budget_tokens": 24000,
+      "max_steps": 12,
+      "max_delegations": 0,
+      "model_class": "reasoning-review",
+      "resume_policy": "Sempre sessão nova e run próprio; nunca fork/reuso da sessão analítica; expiração pede novo contexto.",
+      "proof_ids": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM05",
+        "AM06"
+      ],
+      "evidence_packages": [
+        "E01",
+        "E11",
+        "E12",
+        "E13",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "native_engine": "orchestra",
+      "permission_floor": "deny *; allow only listed sf_* operations and own reserved skill resources; deny shell/edit/engineering Atlas/Maestro approval tools",
+      "actual_model_policy": "Resolver classe entre modelos já configurados; gravar provider/model efetivos e indisponibilidade; não presumir nova conta."
+    }
+  ],
+  "skillRoutes": [
+    {
+      "operation_id": "sf_dashboard_read",
+      "pack_id": "performance",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-produzir-bi-contextual",
+      "entry_mode": "interactive",
+      "input_schema": "DashboardReadRequest",
+      "output_type": "AuthorizedDashboard",
+      "producer_task": "WP02.T01",
+      "consumer_tasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_kpi_explain",
+      "pack_id": "performance",
+      "profile_id": "sf_finance",
+      "skill_id": "sf-explicar-forecast",
+      "entry_mode": "interactive",
+      "input_schema": "KpiExplainRequest",
+      "output_type": "KpiBreakdown",
+      "producer_task": "WP02.T01",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_bi_view",
+      "pack_id": "performance",
+      "profile_id": "sf_finance",
+      "skill_id": "sf-produzir-bi-contextual",
+      "entry_mode": "interactive",
+      "input_schema": "BiViewRequest",
+      "output_type": "ContextualBIView",
+      "producer_task": "WP05.T04",
+      "consumer_tasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_source_get",
+      "pack_id": "performance",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "entry_mode": "interactive",
+      "input_schema": "SourceGetRequest",
+      "output_type": "BusinessEvidenceResolution",
+      "producer_task": "WP10.T07",
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_forecast_compare",
+      "pack_id": "planning",
+      "profile_id": "sf_finance",
+      "skill_id": "sf-explicar-forecast",
+      "entry_mode": "interactive",
+      "input_schema": "ForecastCompareRequest",
+      "output_type": "FinancialAnalysis",
+      "producer_task": "WP03.T01",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_scenario_simulate",
+      "pack_id": "planning",
+      "profile_id": "sf_finance",
+      "skill_id": "sf-comparar-cenarios",
+      "entry_mode": "interactive",
+      "input_schema": "ScenarioRequest",
+      "output_type": "ScenarioResult",
+      "producer_task": "WP03.T01",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_scenario_compare",
+      "pack_id": "planning",
+      "profile_id": "sf_finance",
+      "skill_id": "sf-comparar-cenarios",
+      "entry_mode": "interactive",
+      "input_schema": "ScenarioCompareRequest",
+      "output_type": "ScenarioComparison",
+      "producer_task": "WP03.T05",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_sensitivity_evaluate",
+      "pack_id": "planning",
+      "profile_id": "sf_finance",
+      "skill_id": "sf-avaliar-sensibilidade",
+      "entry_mode": "interactive",
+      "input_schema": "SensitivityRequest",
+      "output_type": "SensitivityResult",
+      "producer_task": "WP13.T03",
+      "consumer_tasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_portfolio_evaluate",
+      "pack_id": "planning",
+      "profile_id": "sf_portfolio",
+      "skill_id": "sf-compor-portfolio",
+      "entry_mode": "interactive",
+      "input_schema": "PortfolioRequest",
+      "output_type": "PortfolioComparison",
+      "producer_task": "WP13.T02",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP13.T04"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_request_read",
+      "pack_id": "procurement",
+      "profile_id": "sf_procurement",
+      "skill_id": "sf-comparar-sourcing",
+      "entry_mode": "interactive",
+      "input_schema": "RequestReadRequest",
+      "output_type": "AuthorizedRequest",
+      "producer_task": "WP04.T01",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_supplier_read",
+      "pack_id": "procurement",
+      "profile_id": "sf_procurement",
+      "skill_id": "sf-comparar-sourcing",
+      "entry_mode": "interactive",
+      "input_schema": "SupplierReadRequest",
+      "output_type": "AuthorizedSupplier",
+      "producer_task": "WP04.T05",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_contract_read",
+      "pack_id": "procurement",
+      "profile_id": "sf_procurement",
+      "skill_id": "sf-comparar-sourcing",
+      "entry_mode": "interactive",
+      "input_schema": "ContractReadRequest",
+      "output_type": "AuthorizedContract",
+      "producer_task": "WP04.T05",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_sourcing_compare",
+      "pack_id": "procurement",
+      "profile_id": "sf_procurement",
+      "skill_id": "sf-comparar-sourcing",
+      "entry_mode": "interactive",
+      "input_schema": "SourcingCompareRequest",
+      "output_type": "CommercialComparison",
+      "producer_task": "WP04.T03",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_case_read",
+      "pack_id": "decisions",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-enquadrar-decisao",
+      "entry_mode": "interactive",
+      "input_schema": "CaseReadRequest",
+      "output_type": "AuthorizedCaseProjection",
+      "producer_task": "WP11.T01",
+      "consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_case_draft",
+      "pack_id": "decisions",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-enquadrar-decisao",
+      "entry_mode": "interactive",
+      "input_schema": "CaseDraftRequest",
+      "output_type": "IntentFrame",
+      "producer_task": "WP11.T01",
+      "consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_alternative_draft",
+      "pack_id": "decisions",
+      "profile_id": "sf_finance",
+      "skill_id": "sf-comparar-cenarios",
+      "entry_mode": "interactive",
+      "input_schema": "AlternativeDraftRequest",
+      "output_type": "AlternativeDraft",
+      "producer_task": "WP11.T02",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_change_prepare",
+      "pack_id": "decisions",
+      "profile_id": "sf_procurement",
+      "skill_id": "sf-preparar-compra",
+      "entry_mode": "interactive",
+      "input_schema": "ChangePrepareRequest",
+      "output_type": "PreparedChangeSet",
+      "producer_task": "WP11.T03",
+      "consumer_tasks": [
+        "WP11.T03",
+        "WP09.T04",
+        "WP01.T05"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_receipt_get",
+      "pack_id": "decisions",
+      "profile_id": "sf_procurement",
+      "skill_id": "sf-preparar-compra",
+      "entry_mode": "interactive",
+      "input_schema": "ReceiptGetRequest",
+      "output_type": "ChangeReceiptSet",
+      "producer_task": "WP11.T04",
+      "consumer_tasks": [
+        "WP11.T03",
+        "WP09.T04",
+        "WP01.T05"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_work_list",
+      "pack_id": "collaboration",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "entry_mode": "interactive",
+      "input_schema": "WorkListRequest",
+      "output_type": "AuthorizedWorkList",
+      "producer_task": "WP08.T04",
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_question_prepare",
+      "pack_id": "collaboration",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-enquadrar-decisao",
+      "entry_mode": "interactive",
+      "input_schema": "QuestionPrepareRequest",
+      "output_type": "QuestionProposal",
+      "producer_task": "WP08.T06",
+      "consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_answer_read",
+      "pack_id": "collaboration",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-coordenar-perguntas",
+      "entry_mode": "interactive",
+      "input_schema": "AnswerReadRequest",
+      "output_type": "AnswerProjection",
+      "producer_task": "WP08.T02",
+      "consumer_tasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_relation_read",
+      "pack_id": "collaboration",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-coordenar-perguntas",
+      "entry_mode": "interactive",
+      "input_schema": "RelationReadRequest",
+      "output_type": "ConfirmedRelations",
+      "producer_task": "WP08.T01",
+      "consumer_tasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_handoff_prepare",
+      "pack_id": "collaboration",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-coordenar-perguntas",
+      "entry_mode": "interactive",
+      "input_schema": "HandoffPrepareRequest",
+      "output_type": "HandoffProposal",
+      "producer_task": "WP08.T05",
+      "consumer_tasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_document_extract",
+      "pack_id": "documents_reports",
+      "profile_id": "sf_procurement",
+      "skill_id": "sf-revisar-condicoes-contratuais",
+      "entry_mode": "interactive",
+      "input_schema": "DocumentExtractRequest",
+      "output_type": "DocumentEvidence",
+      "producer_task": "WP06.T05",
+      "consumer_tasks": [
+        "WP09.T04",
+        "WP11.T02",
+        "WP01.T05"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_import_preview",
+      "pack_id": "documents_reports",
+      "profile_id": "sf_finance",
+      "skill_id": "sf-explicar-forecast",
+      "entry_mode": "interactive",
+      "input_schema": "ImportPreviewRequest",
+      "output_type": "ImportManifest",
+      "producer_task": "WP06.T02",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_review_prepare",
+      "pack_id": "documents_reports",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "entry_mode": "interactive",
+      "input_schema": "ReviewPrepareRequest",
+      "output_type": "ReviewDraft",
+      "producer_task": "WP07.T02",
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_report_prepare",
+      "pack_id": "documents_reports",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "entry_mode": "interactive",
+      "input_schema": "ReportPrepareRequest",
+      "output_type": "MeetingMaterialProposal",
+      "producer_task": "WP07.T04",
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_artifact_get",
+      "pack_id": "documents_reports",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "entry_mode": "interactive",
+      "input_schema": "ArtifactGetRequest",
+      "output_type": "AuthorizedArtifact",
+      "producer_task": "WP07.T04",
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_context_get",
+      "pack_id": "knowledge",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-enquadrar-decisao",
+      "entry_mode": "interactive",
+      "input_schema": "BusinessContextRequest",
+      "output_type": "AuthorizedBusinessContext",
+      "producer_task": "WP10.T07",
+      "consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_knowledge_search",
+      "pack_id": "knowledge",
+      "profile_id": "sf_procurement",
+      "skill_id": "sf-revisar-condicoes-contratuais",
+      "entry_mode": "interactive",
+      "input_schema": "KnowledgeSearchRequest",
+      "output_type": "EvidenceSearchResult",
+      "producer_task": "WP06.T05",
+      "consumer_tasks": [
+        "WP09.T04",
+        "WP11.T02",
+        "WP01.T05"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_evidence_get",
+      "pack_id": "knowledge",
+      "profile_id": "sf_procurement",
+      "skill_id": "sf-comparar-sourcing",
+      "entry_mode": "interactive",
+      "input_schema": "EvidenceGetRequest",
+      "output_type": "BusinessEvidenceResolution",
+      "producer_task": "WP10.T07",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_decision_recall",
+      "pack_id": "knowledge",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-consultar-memoria-decisoria",
+      "entry_mode": "interactive",
+      "input_schema": "BusinessRecallRequest",
+      "output_type": "CaseRecall",
+      "producer_task": "WP10.T07",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP11.T01",
+        "WP09.T07"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_freshness_check",
+      "pack_id": "knowledge",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-enquadrar-decisao",
+      "entry_mode": "interactive",
+      "input_schema": "FreshnessCheckRequest",
+      "output_type": "FreshnessResult",
+      "producer_task": "WP10.T07",
+      "consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_routine_catalog",
+      "pack_id": "routines",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "entry_mode": "interactive",
+      "input_schema": "RoutineCatalogRequest",
+      "output_type": "AuthorizedRoutineCatalog",
+      "producer_task": "WP09.T01",
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_routine_prepare",
+      "pack_id": "routines",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "entry_mode": "interactive",
+      "input_schema": "RoutinePrepareRequest",
+      "output_type": "AdmissionProposal",
+      "producer_task": "WP09.T01",
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_routine_run",
+      "pack_id": "routines",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "entry_mode": "interactive",
+      "input_schema": "RoutineRunRequest",
+      "output_type": "AuthorizedRunReceipt",
+      "producer_task": "WP09.T01",
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": true,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_routine_status",
+      "pack_id": "routines",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "entry_mode": "interactive",
+      "input_schema": "RoutineStatusRequest",
+      "output_type": "RunStatus",
+      "producer_task": "WP09.T01",
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_routine_result",
+      "pack_id": "routines",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "entry_mode": "interactive",
+      "input_schema": "RoutineResultRequest",
+      "output_type": "AuthorizedRoutineResult",
+      "producer_task": "WP09.T01",
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_watch_prepare",
+      "pack_id": "routines",
+      "profile_id": "sf_portfolio",
+      "skill_id": "sf-reavaliar-compromissos",
+      "entry_mode": "interactive",
+      "input_schema": "WatchPrepareRequest",
+      "output_type": "ScheduleProposal",
+      "producer_task": "WP09.T06",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP08.T04",
+        "WP09.T07"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    }
+  ],
+  "requiredSkillCount": 18,
+  "requiredProofs": [
+    "AM01",
+    "AM02",
+    "AM03",
+    "AM04",
+    "AM05",
+    "AM06"
+  ],
+  "runtimeSeams": "runtime.ts factory types approved by S0; native Registry requires real Tool.Context/Request/Session/skill identity. UI registry remains distinct and host-only. Case ledger lives in DecisionCase.ledger. Case reads return AuthorizedCaseProjection, native/UI context discriminated. Creation target and operation identity are injected by private host; namespace permission never grants every case. v4: receiptFor exposes only registry-derived bound metadata while consumed/inflight (not a new consume); host source coverage includes immutable declared basis; DecisionCase persists costCoverageBases. v5: eighteen closed skill input decoders; IntentFrame preserves editable criteria; alternative and immutable choice preserve ScenarioRequest; native prepareIntent stays in pinned case; common authority exposes registry receiptFor for UI/native egress; ProcurementPort includes all four canonical capabilities. Routes are positive proof coverage, grants remain the current profile/skill intersection. v6: C11 alternative carries immutable CostCoverageBasis and coverageRef; C09 typed atomic Atlas outbox; C05 comments carry author/time and sections sourceRefs; C07 admitted result carries admissionRef/version and run checks expectedAdmissionVersion; sensitivity includes coverage, units, engine and explicit threshold precision/evidence. Job orchestration reacquires private Request authority at each boundary rather than retaining a one-shot call lease across provider wait.",
+  "errorPolicy": "No fabricated data or authority; structural decoders are not ACL. Denied/unavailable/stale/provider-conflict never become ok; domain authorization and semantic validation remain producer/consumer duties.",
+  "implementationStatus": "NOT_ATTESTED_BY_CONTRACT_FREEZE",
+  "nonCircularity": "This inventory hashes typed artifacts only, not itself, future commits or future guards. Its accepted commit/digest and consumer receipts are external."
+}

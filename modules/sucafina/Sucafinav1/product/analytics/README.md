@@ -1,0 +1,45 @@
+# Analytics composition
+
+`readBiView` accepts the frozen `BiViewRequest`, an injected `BiSourcePort`, and the host `SfDomainValidation`. It requires an already-consumed binding with a matching operation and input digest before reading; the source reads the requested view from a domain and revalidates authority. Its output is the frozen `DomainProjection` used by `sf_bi_view`. The composition host owns binding, input/output validation, receipt generation and final C16 dispatch. A source must revalidate before the read and at egress; the BI layer does not grant access or calculate domain values.
+
+`readBiPresentation` adds an explicit producer-supplied `BiPresentation` for rendering. Its series reference actual projection value IDs and declare labels, roles, units and limitations; unknown or duplicate IDs and mixed currencies are rejected. This interface does not add fields to the frozen MCP output. When no valid series description is available, `renderBiView` shows the available data in a table and reports the chart unavailable. It never derives monthly data, aging, stage history, a conversion rate, a financial delta or missing FX.
+
+`renderBiView` returns a DOM element, preserving the projection context and selected period in the drilldown callback. The host must reauthenticate and revalidate the reference when opening the destination. `renderDecisionView` consumes the current authorized C10 result/comparison and optionally an engine-produced sensitivity result. These elements do not fetch or persist data themselves.
+
+The catalog defines the eleven planned questions. Catalog entries alone are not evidence that an individual view is supported: each requires its real domain producer, semantic description, native/UI composition, and the acceptance checks in WP05. In particular, the current shared projection does not specify waterfall cumulative positions or planned/completed milestone semantics; a producer must explicitly supply those facts rather than having this package infer them.
+
+`createProcurementBiSource` adapts the WP04 collection port for BI05 and BI06. It passes through producer-computed counts and ages, keeps per-request evidence references, checks that every row has the same authorized context, and does not treat unknown age as zero. The host supplies the actual collection port and its revalidation boundary. WP04 must provide an open-request selection for BI05; until that is verified the catalog question cannot be treated as a proven integrated view.
+
+`resolveWaterfall` requires domain-projected start and end values for each contribution and an explicit producer reconciliation state. It checks continuity and the final endpoint but does not sum financial contributions or introduce a residual. `renderWaterfall` uses those projected coordinates and provides an equivalent table; its producer binding and integrated proof remain pending.
+
+`createBiDescriptor(source, authority)` binds `sf_bi_view` to the existing C16 dispatcher. The dispatcher must consume the one-use lease first; the handler verifies the host receipt, decodes the frozen request and output, invokes the same `readBiView` port, and revalidates before returning a host-issued receipt. Calling the handler directly without a consumed binding is denied. This is the composition seam; a live host still has to register it and inject the authorized source.
+
+`createBiSourceRouter` combines explicitly registered view sources; an unregistered view returns `producer-unavailable`. For example, the host may bind BI05 and BI06 to the same `createProcurementBiSource` instance after WP04's collection port is composed. The router cannot make an unimplemented domain view available.
+
+`createPlannerBiSource` is an injected adapter for the actual `PlannerPort.compareForecast` result. The host resolves the authorized versions and supplies an explicit series description and selected baseline/candidate; the adapter exposes the corresponding unchanged domain projection. It re-reads and compares the projection, ignoring only the per-read observation timestamp, before returning presentation metadata. The adapter never sums components, calculates FX or interprets value IDs. Real host binding and producer-supplied metadata are still required.
+
+`createDashboardBiSource` accepts the real `DashboardPort.read` output together with producer-defined series metadata from a trusted host. It re-reads and compares the projection, ignoring only the per-read observation timestamp, before exposing metadata. Fields without the required period, unit or series semantics stay in the table; the adapter does not infer them from flattened field names.
+
+`TimelinePlan` binds milestone labels and planned/completed state to authorized date values supplied by the producer. Missing or invalid dates remain in the list without a fallback; a completed state is shown only for a confirmed date. The UI does not infer completion or calculate financial effects from moving a date.
+
+For BI04, each FTE and cost series must include matching `alignmentKeys` (one per value, same order and selected periods); otherwise the paired charts are unavailable and the table remains visible. This prevents independent scales from suggesting that unrelated groups align.
+
+`bindDashboardBiPort` connects the actual `DashboardPort.read` to a host-authorized field resolver and producer presentation function. `bindPlannerBiPort` similarly connects `PlannerPort.compareForecast` to a host-authorized version resolver. Neither resolver may accept authority or arbitrary provider configuration from the caller; the host fixes the source and validates selection access.
+
+BI01 and BI07 position points by their supplied dates, preserve temporal gaps, and reject repeated periods within one series. A filtered period that only partially overlaps a projected year or month retains the source row in the table but does not pretend to have a finer chart point. The producer must separate ticket categories/types into distinct series.
+
+After returning from a drilldown, the host can call `restoreBiFocus(container, selection)` to focus the originating mark or table action. If a changed filter removed that value, focus falls back to the filter action. The host is responsible for restoring the selected context and revalidating the reference before navigation.
+
+`renderPortfolioView` consumes a freshly authorized `PortfolioResult` directly, preserving each combination's eligibility, coverage references, conflicts, restrictions and component evidence. It never sums portfolio amounts or treats missing components as zero. Where no producer supplies cumulative waterfall positions, the component table is the available representation.
+
+`readPortfolioBi` reads the authorized portfolio from `DomainProjection.decision`, the same projection returned by `sf_bi_view`. The host must resolve and revalidate every persisted decision and evidence reference and the full projection on egress. Missing decision metadata remains unavailable; the UI does not invent it.
+
+`bindPortfolioBiPort` accepts the real WP13 evaluation port plus a trusted selection resolver and producer projection. It rejects a different horizon before evaluation. WP13's current output does not provide per-combination scenario/comparison references; the host must not claim waterfall or total parity until those references and the domain projection are available.
+
+`bindStoredPortfolioBiPort` connects the persisted portfolio projection reader to a host-resolved selection and producer-defined presentation. It checks the persisted result reference and period; the host revalidates all access and evidence.
+
+`createPortfolioBiSource` exposes the same host source to the C16 router, with fresh source validation and a re-read before presentation metadata. The host's `revalidate` must check the binding, selection and all portfolio/evidence references even when no bundle argument is supplied, and compare any supplied expected projection against current authorized source state. The adapter rejects projections without a persisted portfolio reference.
+
+Sensitivity charts use the producer’s canonical `SensitivityResult.parameterUnit` and `resultUnit` for their axes. Legacy results without both fields retain their point list and mark the chart unavailable; the single `unit` field does not establish which axis it describes. Portfolio combinations with canonical `analysis` display the supplied scenario and comparison with their references; legacy combinations explicitly mark that analysis unavailable.
+
+Sensitivity points expose their engine-provided `resultRef` to the `openResult` callback; the host revalidates access on open. `restoreBiFocus` also accepts that reference string to return focus after the result view closes.

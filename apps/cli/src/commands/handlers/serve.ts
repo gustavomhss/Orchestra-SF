@@ -6,8 +6,7 @@ import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { PermissionSaved } from "@orchestra/core/permission/saved"
 import { SessionV2 } from "@orchestra/core/session"
-import { Context, Layer, Option } from "effect"
-import * as Effect from "effect/Effect"
+import { Context, Effect, Layer, Option } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { createServer } from "node:http"
 import { writeSync } from "node:fs"
@@ -34,6 +33,7 @@ export type ServeInput = {
   readonly hostname: string
   readonly port: Option.Option<number>
   readonly register: boolean
+  readonly installation?: Option.Option<string>
   readonly cors?: ReadonlyArray<string>
   readonly allowedHosts?: ReadonlyArray<string>
   /** Runs once the server answers, with the address it bound. */
@@ -95,7 +95,17 @@ export const serveForever = Effect.fn("cli.serve")(function* (input: ServeInput)
           Effect.catchCause((cause) => Effect.logError("legacy session import failed", cause)),
         )
         const allowedHosts = listenerHosts(input.hostname, input.allowedHosts)
-        const listening = yield* listen(input.hostname, input.port, password, hosts(), root, allowedHosts, input.cors)
+        const installationFile = input.installation && Option.isSome(input.installation) ? input.installation.value : undefined
+        const installation = installationFile
+          ? yield* Effect.tryPromise({ try: async () => {
+              const port = Option.getOrUndefined(input.port)
+              if (port === undefined) throw new Error("An explicit installation requires an explicit port")
+              const { loadSfInstallation } = await import("../../sucafina-product/installation")
+              return loadSfInstallation(installationFile, `http://${input.hostname.includes(":") ? `[${input.hostname}]` : input.hostname}:${port}`)
+            }, catch: (error) => error instanceof Error ? error : new Error("Installation unavailable") })
+          : undefined
+        if (installation) yield* Effect.addFinalizer(() => Effect.promise(async () => { await installation.dispose() }))
+        const listening = yield* listen(input.hostname, input.port, password, [...hosts(), ...(installation?.host ?? [])], root, allowedHosts, input.cors, installation?.layer)
         const address = listening.address
         // Closing the server waits for every open connection, and the event stream never ends on its own. Scope
         // finalizers run in reverse, so this drops the connections before the server closes.
@@ -123,8 +133,9 @@ function listen(
   root: string | undefined,
   allowedHosts: ReadonlyArray<string>,
   cors?: ReadonlyArray<string>,
+  installation?: Layer.Layer<never, unknown, HttpRouter.HttpRouter>,
 ) {
-  if (Option.isSome(port)) return bind(hostname, port.value, password, host, root, allowedHosts, cors)
+  if (Option.isSome(port)) return bind(hostname, port.value, password, host, root, allowedHosts, cors, installation)
   const next = (port: number): ReturnType<typeof bind> =>
     bind(hostname, port, password, host, root, allowedHosts, cors).pipe(
       Effect.catch((error) => (port === 65_535 || !addressInUse(error) ? Effect.fail(error) : next(port + 1))),
@@ -140,10 +151,11 @@ function bind(
   root: string | undefined,
   allowedHosts: ReadonlyArray<string>,
   cors?: ReadonlyArray<string>,
+  installation?: Layer.Layer<never, unknown, HttpRouter.HttpRouter>,
 ) {
   const server = createServer()
   return Layer.build(
-    HttpRouter.serve(createRoutes({ password, host, webRoot: root, cors, allowedHosts }), {
+    HttpRouter.serve(Layer.merge(createRoutes({ password, host, webRoot: root, cors, allowedHosts }), installation ?? Layer.empty), {
       disableListenLog: true,
       disableLogger: true,
     }).pipe(

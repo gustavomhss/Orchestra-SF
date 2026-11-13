@@ -65,6 +65,7 @@ test("request fields survive creation, save, submission and actual holder decisi
       environment,
     ).ok,
   ).toBe(true)
+  expect((domain.view(state, requester, environment).data.requests as Record<string, unknown>[])[0]!.prApprovalBaseCurrency).toBe("USD")
   expect(
     domain.execute(state, actor, { page: "Requests", action: "approve", id, version: 2, values: {} }, environment).ok,
   ).toBe(true)
@@ -259,6 +260,13 @@ test("complete procurement field roundtrip and frozen approvals survive settings
   expect(record.status).toBe("po_issued")
   expect(record.po).toMatchObject(po)
   expect(record.sourcing).toMatchObject(sourcing)
+  expect(record.po).toMatchObject({ approvalBaseCurrency: "USD" })
+  expect(record.sourcing).toMatchObject({ approvalBaseCurrency: "USD" })
+  const changedBase = structuredClone(state)
+  expect(domain.execute(changedBase, actor, { page: "Settings", action: "save", version: changedBase.versions.settings!.version, values: { currency: "EUR" } }, environment).ok).toBe(true)
+  const afterBaseChange = (domain.view(changedBase, buyer, environment).data.requests as Record<string, unknown>[])[0]!
+  expect(afterBaseChange.value).toBeNull()
+  expect(afterBaseChange.po).toMatchObject({ approvalBaseCurrency: "USD" })
   expect(JSON.stringify(view.data.register)).not.toContain('"scores"')
   expect(state.notices.some((notice) => notice.kind === "pending" && notice.to.includes("holder"))).toBe(true)
   const before = structuredClone(state)

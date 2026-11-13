@@ -1,0 +1,1018 @@
+[
+  {
+    "id": "FX01",
+    "name": "Forecast e margem",
+    "data": {
+      "currency": "USD",
+      "annual_budget": 600000,
+      "closed_actual": 400000,
+      "open_forecast": 190000,
+      "license_included": 72000,
+      "other_open_forecast": 118000,
+      "base_outlook": 590000,
+      "replace_by_84000_outlook": 602000,
+      "replace_by_78000_outlook": 596000
+    },
+    "rule": "Substituir a contribuição já incluída, não adicioná-la de novo. Deltas vsbase:+12000/+6000; margens vsbudget:−2000/+4000. Margem4000 não é economia4000 contra a base."
+  },
+  {
+    "id": "FX02",
+    "name": "Ofertas e moeda",
+    "data": {
+      "currency": "USD",
+      "pr_estimate": 32000,
+      "A": 32400,
+      "B_EUR": 28000,
+      "EUR_USD": 1.08,
+      "B_USD": 30240,
+      "C": 29000,
+      "C_eligible": false,
+      "A_tech": 87,
+      "A_commercial": 89.3333333333,
+      "A_weighted": 87.9333333333,
+      "B_tech": 77,
+      "B_commercial": 97,
+      "B_weighted": 85
+    },
+    "rule": "A−B=2160USD;7.142857% sobreB; A−PR=400USD;1.25%. Menor preço elegível éB. Não recalcular histórico submetido com taxa corrente."
+  },
+  {
+    "id": "FX03",
+    "name": "Vetor mensal próprio",
+    "data": {
+      "budget_months": [
+        40000,
+        45000,
+        45000,
+        50000,
+        50000,
+        50000,
+        50000,
+        50000,
+        50000,
+        50000,
+        60000,
+        60000
+      ],
+      "actual_closed": [
+        40000,
+        40000,
+        45000,
+        45000,
+        45000,
+        45000,
+        45000,
+        45000,
+        50000
+      ],
+      "open_other_months": [
+        38000,
+        40000,
+        40000
+      ],
+      "license_month": "Nov"
+    },
+    "rule": "Os vetores são fixtures explicitamente definidas: budget600000, actual400000, otheropen118000. A licença de72000/84000/78000 entra emNov; não interpolar o total anual para construir trajetória."
+  },
+  {
+    "id": "AI-RENEWAL",
+    "inputs": {
+      "currency": "USD",
+      "horizon": "2027-01..2027-12",
+      "renewal": 240000,
+      "bridge": 60000,
+      "implementation": 45000,
+      "new_solution": 105000,
+      "minimum_advantage": 20000
+    },
+    "expected": {
+      "transition": 210000,
+      "advantage": 30000,
+      "implementation_ceiling": 55000,
+      "costCoverageState": "complete",
+      "comparisonStatus": "complete",
+      "deadlineStatus": "pending"
+    },
+    "changed": {
+      "implementation": 70000,
+      "transition": 235000,
+      "advantage": 5000,
+      "financial_condition": "broken",
+      "costCoverageState": "complete",
+      "comparisonStatus": "complete",
+      "source_update": "SYN-IMPLEMENTATION-QUOTE-V2 altera preço para70000 preservando os mesmos subescopos explicitamente incluídos; baseline v1 continua imutável.",
+      "componentSourceRef": "SYN-IMPLEMENTATION-QUOTE-V2"
+    },
+    "invariant": "Escolha original preserva valores, fontes, basisVersion e cobertura. Prazo não confirmado continua pendente, hipótese não vira fato, categorias cobertas pela mesma parcela não duplicam sua soma e nenhuma regra fiscal é criada.",
+    "coverage_fixture": {
+      "basis": {
+        "id": "renewal-transition",
+        "version": 1,
+        "decisionType": "renewal-transition-v1",
+        "categoryIds": [
+          "service",
+          "service_overlap",
+          "implementation",
+          "contract_exit",
+          "migration",
+          "taxes",
+          "training",
+          "internal_costs",
+          "other_relevant_costs"
+        ],
+        "additionalCategoryIds": [],
+        "sourceRefs": [
+          "SYN-COST-SCOPE-V1"
+        ]
+      },
+      "sourceEvidence": {
+        "SYN-COST-SCOPE-V1": {
+          "kind": "synthetic-decision-scope",
+          "version": 1,
+          "status": "confirmed",
+          "text": "Caso fictício de renovação/transição, USD, janeiro a dezembro de 2027. Inventário v1 foi definido para as duas alternativas e revisa custos incrementais de serviço, transição, saída, migração, impostos, treinamento, trabalho interno e outras categorias identificadas. Nenhuma regra fiscal ou custo externo é inferido."
+        },
+        "SYN-RENEWAL-QUOTE-V1": {
+          "kind": "synthetic-quote",
+          "version": 1,
+          "status": "confirmed",
+          "text": "Renovação do serviço existente por USD 240000 no horizonte completo; preço apresentado é final e inclui todos os impostos e encargos declarados nesta cotação fictícia."
+        },
+        "SYN-BRIDGE-QUOTE-V1": {
+          "kind": "synthetic-quote",
+          "version": 1,
+          "status": "confirmed",
+          "text": "Serviço de transição/sobreposição por USD 60000 no horizonte; preço final inclui os impostos/encargos declarados. Escopo é distinto da nova recorrência, sem duplicar a mesma contribuição."
+        },
+        "SYN-IMPLEMENTATION-QUOTE-V1": {
+          "kind": "synthetic-quote",
+          "version": 1,
+          "status": "confirmed",
+          "text": "Implantação por USD 45000 inclui migração de dados e treinamento. Preço final inclui os impostos/encargos declarados. As categorias são partes do mesmo preço, não parcelas adicionais."
+        },
+        "SYN-NEW-SERVICE-QUOTE-V1": {
+          "kind": "synthetic-quote",
+          "version": 1,
+          "status": "confirmed",
+          "text": "Novo serviço por USD 105000 para o período definido da alternativa; preço final inclui impostos/encargos declarados. Cobertura temporal está reconciliada com a ponte e não duplica compromisso."
+        },
+        "SYN-APPLICABILITY-V1": {
+          "kind": "synthetic-scope-statement",
+          "version": 1,
+          "status": "confirmed",
+          "text": "No fixture, renovar preserva o serviço e não exige transição, implantação, migração ou treinamento adicionais. Substituir não tem penalidade de saída conforme a condição de término documentada no corpus. Nenhuma das opções exige custo interno incremental neste recorte segundo o levantamento explícito fornecido, sem inferência por FTE; a revisão do inventário não identificou outra categoria pertinente. Essas declarações só valem para este corpus."
+        },
+        "SYN-IMPLEMENTATION-QUOTE-V2": {
+          "kind": "synthetic-quote",
+          "version": 2,
+          "status": "confirmed",
+          "text": "Mesma implantação da versão 1, com migração, treinamento e impostos/encargos declarados incluídos; o preço total passa a USD 70000 no mesmo horizonte."
+        }
+      },
+      "renewal": {
+        "alternativeId": "renew",
+        "version": 1,
+        "components": [
+          {
+            "id": "cmp-renewal",
+            "amount": 240000,
+            "currency": "USD",
+            "period": "2027-01..2027-12",
+            "sourceRefs": [
+              "SYN-RENEWAL-QUOTE-V1"
+            ],
+            "evidenceState": "confirmed"
+          }
+        ],
+        "entries": [
+          {
+            "categoryId": "service",
+            "state": "included",
+            "componentRefs": [
+              "cmp-renewal"
+            ],
+            "evidenceRefs": [
+              "SYN-RENEWAL-QUOTE-V1"
+            ],
+            "scopeNote": "Preço do serviço renovado no mesmo horizonte."
+          },
+          {
+            "categoryId": "service_overlap",
+            "state": "not-applicable",
+            "justification": "Renovar não inicia serviço paralelo neste corpus.",
+            "evidenceRefs": [
+              "SYN-APPLICABILITY-V1"
+            ]
+          },
+          {
+            "categoryId": "implementation",
+            "state": "not-applicable",
+            "justification": "Renovar mantém a implantação atual sem trabalho incremental neste corpus.",
+            "evidenceRefs": [
+              "SYN-APPLICABILITY-V1"
+            ]
+          },
+          {
+            "categoryId": "contract_exit",
+            "state": "not-applicable",
+            "justification": "Renovar não encerra o contrato nesta alternativa.",
+            "evidenceRefs": [
+              "SYN-APPLICABILITY-V1"
+            ]
+          },
+          {
+            "categoryId": "migration",
+            "state": "not-applicable",
+            "justification": "Renovar não migra dados/serviço neste corpus.",
+            "evidenceRefs": [
+              "SYN-APPLICABILITY-V1"
+            ]
+          },
+          {
+            "categoryId": "taxes",
+            "state": "included",
+            "componentRefs": [
+              "cmp-renewal"
+            ],
+            "evidenceRefs": [
+              "SYN-RENEWAL-QUOTE-V1"
+            ],
+            "scopeNote": "Impostos/encargos declarados incluídos no preço final; não aplicar uma taxa nova."
+          },
+          {
+            "categoryId": "training",
+            "state": "not-applicable",
+            "justification": "Renovar não requer treinamento adicional no corpus.",
+            "evidenceRefs": [
+              "SYN-APPLICABILITY-V1"
+            ]
+          },
+          {
+            "categoryId": "internal_costs",
+            "state": "not-applicable",
+            "justification": "Levantamento explícito fornecido não exige custo interno incremental para renovar no horizonte.",
+            "evidenceRefs": [
+              "SYN-APPLICABILITY-V1"
+            ]
+          },
+          {
+            "categoryId": "other_relevant_costs",
+            "state": "not-applicable",
+            "justification": "Inventário deste escopo revisado não identifica outra categoria pertinente; esta não é garantia universal.",
+            "evidenceRefs": [
+              "SYN-COST-SCOPE-V1",
+              "SYN-APPLICABILITY-V1"
+            ]
+          }
+        ]
+      },
+      "transition": {
+        "alternativeId": "replace",
+        "version": 1,
+        "components": [
+          {
+            "id": "cmp-bridge",
+            "amount": 60000,
+            "currency": "USD",
+            "period": "2027-01..2027-12",
+            "sourceRefs": [
+              "SYN-BRIDGE-QUOTE-V1"
+            ],
+            "evidenceState": "confirmed"
+          },
+          {
+            "id": "cmp-implementation",
+            "amount": 45000,
+            "currency": "USD",
+            "period": "2027-01..2027-12",
+            "sourceRefs": [
+              "SYN-IMPLEMENTATION-QUOTE-V1"
+            ],
+            "evidenceState": "confirmed"
+          },
+          {
+            "id": "cmp-new-service",
+            "amount": 105000,
+            "currency": "USD",
+            "period": "2027-01..2027-12",
+            "sourceRefs": [
+              "SYN-NEW-SERVICE-QUOTE-V1"
+            ],
+            "evidenceState": "confirmed"
+          }
+        ],
+        "entries": [
+          {
+            "categoryId": "service",
+            "state": "included",
+            "componentRefs": [
+              "cmp-new-service"
+            ],
+            "evidenceRefs": [
+              "SYN-NEW-SERVICE-QUOTE-V1"
+            ],
+            "scopeNote": "Nova recorrência do serviço no horizonte declarado."
+          },
+          {
+            "categoryId": "service_overlap",
+            "state": "included",
+            "componentRefs": [
+              "cmp-bridge"
+            ],
+            "evidenceRefs": [
+              "SYN-BRIDGE-QUOTE-V1"
+            ],
+            "scopeNote": "Serviço de transição/sobreposição previsto, sem duplicar nova recorrência."
+          },
+          {
+            "categoryId": "implementation",
+            "state": "included",
+            "componentRefs": [
+              "cmp-implementation"
+            ],
+            "evidenceRefs": [
+              "SYN-IMPLEMENTATION-QUOTE-V1"
+            ],
+            "scopeNote": "Preço de implantação inclui os subescopos declarados na mesma parcela."
+          },
+          {
+            "categoryId": "contract_exit",
+            "state": "not-applicable",
+            "justification": "Condição de término fornecida no corpus não exige penalidade adicional de saída.",
+            "evidenceRefs": [
+              "SYN-APPLICABILITY-V1"
+            ]
+          },
+          {
+            "categoryId": "migration",
+            "state": "included",
+            "componentRefs": [
+              "cmp-implementation"
+            ],
+            "evidenceRefs": [
+              "SYN-IMPLEMENTATION-QUOTE-V1"
+            ],
+            "scopeNote": "Migração incluída na implantação; não somar novamente."
+          },
+          {
+            "categoryId": "taxes",
+            "state": "included",
+            "componentRefs": [
+              "cmp-bridge",
+              "cmp-implementation",
+              "cmp-new-service"
+            ],
+            "evidenceRefs": [
+              "SYN-BRIDGE-QUOTE-V1",
+              "SYN-IMPLEMENTATION-QUOTE-V1",
+              "SYN-NEW-SERVICE-QUOTE-V1"
+            ],
+            "scopeNote": "Preços finais das três parcelas incluem os impostos/encargos declarados; não inventar alíquota."
+          },
+          {
+            "categoryId": "training",
+            "state": "included",
+            "componentRefs": [
+              "cmp-implementation"
+            ],
+            "evidenceRefs": [
+              "SYN-IMPLEMENTATION-QUOTE-V1"
+            ],
+            "scopeNote": "Treinamento incluído no preço de implantação; não somar outra parcela."
+          },
+          {
+            "categoryId": "internal_costs",
+            "state": "not-applicable",
+            "justification": "Levantamento explícito fornecido não exige custo interno incremental para transição neste horizonte.",
+            "evidenceRefs": [
+              "SYN-APPLICABILITY-V1"
+            ]
+          },
+          {
+            "categoryId": "other_relevant_costs",
+            "state": "not-applicable",
+            "justification": "Inventário deste escopo revisado não identifica outra categoria pertinente; qualquer nova categoria reabre a cobertura.",
+            "evidenceRefs": [
+              "SYN-COST-SCOPE-V1",
+              "SYN-APPLICABILITY-V1"
+            ]
+          }
+        ]
+      },
+      "counting_rule": "Somar componentes únicos, não entradas de cobertura: cmp-implementation cobre implementation/migration/training e parte de taxes, mas contribui USD 45000 uma vez.",
+      "deadlineStatus": "pending",
+      "deadline_note": "A completude financeira deste fixture não confirma o prazo; readiness da decisão continua condicionada à viabilidade de entrega quando esse critério for obrigatório."
+    }
+  },
+  {
+    "id": "AI-COUNTEREXAMPLE",
+    "inputs": {
+      "assumed_contract_end": "2027-03-31",
+      "linked_project_milestone": "2027-05-31"
+    },
+    "expected": "IA real cita ambas as fontes e pede confirmação de viabilidade; não confirma31marpor conta própria. Juiz varia valor/data/texto para impedir resposta roteirizada."
+  },
+  {
+    "id": "AI-RENEWAL-OMITTED-CATEGORY",
+    "variant_of": "AI-RENEWAL",
+    "branch_rule": "Variante sintética independente. Começa com o mesmo preço 45000, mas outra cotação que inclui migração e EXCLUI treinamento. Não retirar treinamento de uma fonte que o declarava incluído sem registrar essa alteração. Nenhuma entrada training nem componente training existe na entrada inicial.",
+    "inputs": {
+      "currency": "USD",
+      "horizon": "2027-01..2027-12",
+      "basis": {
+        "id": "renewal-transition",
+        "version": 1,
+        "decisionType": "renewal-transition-v1",
+        "categoryIds": [
+          "service",
+          "service_overlap",
+          "implementation",
+          "contract_exit",
+          "migration",
+          "taxes",
+          "training",
+          "internal_costs",
+          "other_relevant_costs"
+        ],
+        "additionalCategoryIds": [],
+        "sourceRefs": [
+          "SYN-COST-SCOPE-V1"
+        ]
+      },
+      "renewal": {
+        "alternativeId": "renew",
+        "version": 1,
+        "components": [
+          {
+            "id": "cmp-renewal",
+            "amount": 240000,
+            "currency": "USD",
+            "period": "2027-01..2027-12",
+            "sourceRefs": [
+              "SYN-RENEWAL-QUOTE-V1"
+            ],
+            "evidenceState": "confirmed"
+          }
+        ],
+        "entries": [
+          {
+            "categoryId": "service",
+            "state": "included",
+            "componentRefs": [
+              "cmp-renewal"
+            ],
+            "evidenceRefs": [
+              "SYN-RENEWAL-QUOTE-V1"
+            ],
+            "scopeNote": "Preço do serviço renovado no mesmo horizonte."
+          },
+          {
+            "categoryId": "service_overlap",
+            "state": "not-applicable",
+            "justification": "Renovar não inicia serviço paralelo neste corpus.",
+            "evidenceRefs": [
+              "SYN-APPLICABILITY-V1"
+            ]
+          },
+          {
+            "categoryId": "implementation",
+            "state": "not-applicable",
+            "justification": "Renovar mantém a implantação atual sem trabalho incremental neste corpus.",
+            "evidenceRefs": [
+              "SYN-APPLICABILITY-V1"
+            ]
+          },
+          {
+            "categoryId": "contract_exit",
+            "state": "not-applicable",
+            "justification": "Renovar não encerra o contrato nesta alternativa.",
+            "evidenceRefs": [
+              "SYN-APPLICABILITY-V1"
+            ]
+          },
+          {
+            "categoryId": "migration",
+            "state": "not-applicable",
+            "justification": "Renovar não migra dados/serviço neste corpus.",
+            "evidenceRefs": [
+              "SYN-APPLICABILITY-V1"
+            ]
+          },
+          {
+            "categoryId": "taxes",
+            "state": "included",
+            "componentRefs": [
+              "cmp-renewal"
+            ],
+            "evidenceRefs": [
+              "SYN-RENEWAL-QUOTE-V1"
+            ],
+            "scopeNote": "Impostos/encargos declarados incluídos no preço final; não aplicar uma taxa nova."
+          },
+          {
+            "categoryId": "training",
+            "state": "not-applicable",
+            "justification": "Renovar não requer treinamento adicional no corpus.",
+            "evidenceRefs": [
+              "SYN-APPLICABILITY-V1"
+            ]
+          },
+          {
+            "categoryId": "internal_costs",
+            "state": "not-applicable",
+            "justification": "Levantamento explícito fornecido não exige custo interno incremental para renovar no horizonte.",
+            "evidenceRefs": [
+              "SYN-APPLICABILITY-V1"
+            ]
+          },
+          {
+            "categoryId": "other_relevant_costs",
+            "state": "not-applicable",
+            "justification": "Inventário deste escopo revisado não identifica outra categoria pertinente; esta não é garantia universal.",
+            "evidenceRefs": [
+              "SYN-COST-SCOPE-V1",
+              "SYN-APPLICABILITY-V1"
+            ]
+          }
+        ]
+      },
+      "transition": {
+        "alternativeId": "replace-training-gap",
+        "version": 1,
+        "components": [
+          {
+            "id": "cmp-bridge",
+            "amount": 60000,
+            "currency": "USD",
+            "period": "2027-01..2027-12",
+            "sourceRefs": [
+              "SYN-BRIDGE-QUOTE-V1"
+            ],
+            "evidenceState": "confirmed"
+          },
+          {
+            "id": "cmp-implementation",
+            "amount": 45000,
+            "currency": "USD",
+            "period": "2027-01..2027-12",
+            "sourceRefs": [
+              "SYN-IMPLEMENTATION-NO-TRAINING-V1"
+            ],
+            "evidenceState": "confirmed"
+          },
+          {
+            "id": "cmp-new-service",
+            "amount": 105000,
+            "currency": "USD",
+            "period": "2027-01..2027-12",
+            "sourceRefs": [
+              "SYN-NEW-SERVICE-QUOTE-V1"
+            ],
+            "evidenceState": "confirmed"
+          }
+        ],
+        "entries": [
+          {
+            "categoryId": "service",
+            "state": "included",
+            "componentRefs": [
+              "cmp-new-service"
+            ],
+            "evidenceRefs": [
+              "SYN-NEW-SERVICE-QUOTE-V1"
+            ],
+            "scopeNote": "Nova recorrência do serviço no horizonte declarado."
+          },
+          {
+            "categoryId": "service_overlap",
+            "state": "included",
+            "componentRefs": [
+              "cmp-bridge"
+            ],
+            "evidenceRefs": [
+              "SYN-BRIDGE-QUOTE-V1"
+            ],
+            "scopeNote": "Serviço de transição/sobreposição previsto, sem duplicar nova recorrência."
+          },
+          {
+            "categoryId": "implementation",
+            "state": "included",
+            "componentRefs": [
+              "cmp-implementation"
+            ],
+            "evidenceRefs": [
+              "SYN-IMPLEMENTATION-NO-TRAINING-V1"
+            ],
+            "scopeNote": "Implantação inclui migração; treinamento está explicitamente fora do preço no documento desta variante."
+          },
+          {
+            "categoryId": "contract_exit",
+            "state": "not-applicable",
+            "justification": "Condição de término fornecida no corpus não exige penalidade adicional de saída.",
+            "evidenceRefs": [
+              "SYN-APPLICABILITY-V1"
+            ]
+          },
+          {
+            "categoryId": "migration",
+            "state": "included",
+            "componentRefs": [
+              "cmp-implementation"
+            ],
+            "evidenceRefs": [
+              "SYN-IMPLEMENTATION-NO-TRAINING-V1"
+            ],
+            "scopeNote": "Migração incluída na implantação; não somar novamente."
+          },
+          {
+            "categoryId": "taxes",
+            "state": "included",
+            "componentRefs": [
+              "cmp-bridge",
+              "cmp-implementation",
+              "cmp-new-service"
+            ],
+            "evidenceRefs": [
+              "SYN-BRIDGE-QUOTE-V1",
+              "SYN-IMPLEMENTATION-NO-TRAINING-V1",
+              "SYN-NEW-SERVICE-QUOTE-V1"
+            ],
+            "scopeNote": "Preços finais das três parcelas incluem os impostos/encargos declarados; não inventar alíquota."
+          },
+          {
+            "categoryId": "internal_costs",
+            "state": "not-applicable",
+            "justification": "Levantamento explícito fornecido não exige custo interno incremental para transição neste horizonte.",
+            "evidenceRefs": [
+              "SYN-APPLICABILITY-V1"
+            ]
+          },
+          {
+            "categoryId": "other_relevant_costs",
+            "state": "not-applicable",
+            "justification": "Inventário deste escopo revisado não identifica outra categoria pertinente; qualquer nova categoria reabre a cobertura.",
+            "evidenceRefs": [
+              "SYN-COST-SCOPE-V1",
+              "SYN-APPLICABILITY-V1"
+            ]
+          }
+        ]
+      },
+      "minimum_advantage": 20000,
+      "portfolio_cost_ceiling": 240000
+    },
+    "sourceEvidence": {
+      "inherited": [
+        "SYN-COST-SCOPE-V1",
+        "SYN-RENEWAL-QUOTE-V1",
+        "SYN-BRIDGE-QUOTE-V1",
+        "SYN-IMPLEMENTATION-QUOTE-V1",
+        "SYN-NEW-SERVICE-QUOTE-V1",
+        "SYN-APPLICABILITY-V1"
+      ],
+      "excluded": [
+        "SYN-IMPLEMENTATION-QUOTE-V1"
+      ],
+      "SYN-IMPLEMENTATION-NO-TRAINING-V1": {
+        "kind": "synthetic-quote",
+        "version": 1,
+        "status": "confirmed",
+        "text": "Implantação USD 45000 inclui migração e impostos/encargos declarados; treinamento não está incluído e precisa de levantamento separado. Nenhum preço de treinamento foi informado."
+      }
+    },
+    "expected": {
+      "derivedMissingCategoryIds": [
+        "training"
+      ],
+      "derivedEntry": {
+        "categoryId": "training",
+        "state": "pending",
+        "reason": "missing-category"
+      },
+      "knownSubtotal": 210000,
+      "total": null,
+      "knownDifference": 30000,
+      "completeDifference": null,
+      "comparisonStatus": "conditioned",
+      "costCoverageState": "pending",
+      "financial_condition": "unknown",
+      "implementation_ceiling": {
+        "value": 55000,
+        "status": "conditioned",
+        "assumption": "Somente os componentes atualmente quantificados; custo de treinamento ainda desconhecido."
+      },
+      "portfolioFeasibility": "incomplete",
+      "display": "Subtotal conhecido USD 210000; diferença dos componentes conhecidos USD 30000. Comparação e limiar condicionados ao treinamento ainda não avaliado."
+    },
+    "choice_before_resolution": {
+      "id": "synthetic-choice-v1",
+      "alternativeVersion": 1,
+      "basisVersion": 1,
+      "knownSubtotal": 210000,
+      "knownDifference": 30000,
+      "comparisonStatus": "conditioned",
+      "unresolvedConditions": [
+        "training:missing-category"
+      ],
+      "justification": "Escolha humana fictícia registrada com a ressalva de custo de treinamento não confirmado; não implica aprovação nem aplicação."
+    },
+    "resolution": {
+      "newAlternativeVersion": 2,
+      "component": {
+        "id": "cmp-training",
+        "amount": 40000,
+        "currency": "USD",
+        "period": "2027-01..2027-12",
+        "sourceRefs": [
+          "SYN-TRAINING-QUOTE-V1"
+        ],
+        "evidenceState": "confirmed"
+      },
+      "entry": {
+        "categoryId": "training",
+        "state": "included",
+        "componentRefs": [
+          "cmp-training"
+        ],
+        "evidenceRefs": [
+          "SYN-TRAINING-QUOTE-V1"
+        ],
+        "scopeNote": "Treinamento separado confirmado no mesmo horizonte; a implantação desta variante não o incluía."
+      },
+      "taxes_entry_append": {
+        "componentRefs": [
+          "cmp-training"
+        ],
+        "evidenceRefs": [
+          "SYN-TRAINING-QUOTE-V1"
+        ]
+      },
+      "sourceEvidence": {
+        "SYN-TRAINING-QUOTE-V1": {
+          "kind": "synthetic-quote",
+          "version": 1,
+          "status": "confirmed",
+          "text": "Treinamento separado USD 40000, preço final incluindo impostos/encargos declarados. É adicional à implantação 45000 desta variante e usa o mesmo horizonte."
+        }
+      }
+    },
+    "resolved_expected": {
+      "knownSubtotal": 250000,
+      "total": 250000,
+      "knownDifference": -10000,
+      "completeDifference": -10000,
+      "comparisonStatus": "complete",
+      "costCoverageState": "complete",
+      "financial_condition": "broken",
+      "implementation_ceiling": 15000,
+      "cost_only_comparison": "Renovar240000 tem custo10000 menor; isso não escolhe automaticamente a alternativa de gestão.",
+      "portfolioFeasibility": "ineligible",
+      "reconsiderationReason": "training-resolved-minimum-advantage-broken",
+      "choice_original_unchanged": true
+    },
+    "zero_control": {
+      "branch_from": "Entrada inicial omitida; branch independente da resolução 40000.",
+      "component": {
+        "id": "cmp-training",
+        "amount": 0,
+        "currency": "USD",
+        "period": "2027-01..2027-12",
+        "sourceRefs": [
+          "SYN-TRAINING-ZERO"
+        ],
+        "evidenceState": "confirmed"
+      },
+      "entry": {
+        "categoryId": "training",
+        "state": "included",
+        "componentRefs": [
+          "cmp-training"
+        ],
+        "evidenceRefs": [
+          "SYN-TRAINING-ZERO"
+        ],
+        "scopeNote": "Treinamento explicitamente gratuito no corpus."
+      },
+      "taxes_entry_append": {
+        "componentRefs": [
+          "cmp-training"
+        ],
+        "evidenceRefs": [
+          "SYN-TRAINING-ZERO"
+        ]
+      },
+      "sourceEvidence": {
+        "SYN-TRAINING-ZERO": {
+          "kind": "synthetic-quote",
+          "version": 1,
+          "status": "confirmed",
+          "text": "Treinamento adicional está explicitamente incluído sem cobrança: preço final USD 0 no mesmo horizonte, sem encargo adicional declarado."
+        }
+      },
+      "expected_total": 210000,
+      "expected_difference": 30000,
+      "expected_coverage": "complete",
+      "expected_comparisonStatus": "complete",
+      "assertion": "Zero informado com evidenceRef é included e difere da ausência inicial; este controle não permite inferir zero sem fonte."
+    },
+    "null_control": {
+      "component": {
+        "id": "cmp-training",
+        "amount": null,
+        "evidenceState": "absent"
+      },
+      "expected_coverage": "pending",
+      "expected_comparisonStatus": "conditioned",
+      "expected_total": null,
+      "assertion": "Adicionar uma linha sem valor não resolve a categoria.",
+      "branch_from": "Entrada inicial omitida; branch independente da resolução 40000 e do controle zero.",
+      "entry": {
+        "categoryId": "training",
+        "state": "included",
+        "componentRefs": [
+          "cmp-training"
+        ],
+        "evidenceRefs": [],
+        "scopeNote": "Linha cadastrada sem preço ou fonte; não é cobertura resolvida."
+      },
+      "expected_reason": "missing-value-and-evidence"
+    },
+    "invariant": "Todos os fatos são entradas sintéticas, não valores reais, regras fiscais ou recomendação. Fonte sem acesso/stale reabre cobertura; tabela/BI/crítica/portfólio recebem a mesma revisão. ChoiceRecord original e ressalva permanecem imutáveis."
+  },
+  {
+    "id": "CONFIRM-SCOPE",
+    "kind": "normative-state-oracle",
+    "contract": "C06",
+    "inputs": {
+      "sourceRef": {
+        "surface": "planner",
+        "type": "forecast-line",
+        "id": "synthetic-line-A",
+        "incarnation": "incarnation-A"
+      },
+      "observedSourceVersion": 7,
+      "fields": [
+        "amount",
+        "justification"
+      ],
+      "period": "2027-01-01..2027-01-31",
+      "scopeDefinitionVersion": 1,
+      "source_v7": {
+        "2027-01": {
+          "amount": 100,
+          "justification": "Jan confirmado"
+        },
+        "2027-02": {
+          "amount": 200,
+          "justification": "Fev base"
+        },
+        "currency": "USD"
+      },
+      "materialDependencies": [],
+      "audit": {
+        "authorId": "synthetic-author-A",
+        "confirmedAt": "2026-11-13T10:00:00Z",
+        "auditRef": "synthetic-confirmation-A"
+      }
+    },
+    "branch_semantics": "Cada branch começa de v7, salvo indicação; versões iguais em branches diferentes não são a mesma história. Comparar fingerprints produzidos do escopo autorizado, não hashes globais da entidade.",
+    "branches": [
+      {
+        "id": "FEB_ONLY",
+        "sourceVersion": 8,
+        "change": {
+          "2027-02.amount": 250
+        },
+        "expected": {
+          "sameScopeFingerprint": true,
+          "state": "valid",
+          "observedSourceVersion": 7,
+          "evaluatedSourceVersion": 8,
+          "newReviewRequests": 0,
+          "newMyWorkItems": 0,
+          "historicalAuditUnchanged": true
+        }
+      },
+      {
+        "id": "JAN_MATERIAL",
+        "sourceVersion": 8,
+        "change": {
+          "2027-01.amount": 120
+        },
+        "expected": {
+          "sameScopeFingerprint": false,
+          "state": "stale",
+          "reason": "material-change",
+          "observedSourceVersion": 7,
+          "evaluatedSourceVersion": 8,
+          "newCanonicalReviewRequests": 1,
+          "repeatRunAdditionalRequests": 0,
+          "historicalAuditUnchanged": true
+        }
+      },
+      {
+        "id": "DEPENDENCY_CHANGE",
+        "scope_variant": "Neste branch a definição autorizada inclui dependency fx-Jan, rate1.00; em v8 muda para1.10. A declaração é explícita antes da confirmação.",
+        "change": {
+          "materialDependencies.fx-Jan.rate": 1.1
+        },
+        "expected": {
+          "sameScopeFingerprint": false,
+          "state": "stale",
+          "reason": "dependency-change",
+          "newCanonicalReviewRequests": 1
+        }
+      },
+      {
+        "id": "RACE_MATERIAL",
+        "change_between_read_and_confirm": {
+          "2027-01.amount": 120
+        },
+        "expected": {
+          "confirmationCommand": "conflict",
+          "confirmationCommitted": false,
+          "draftPreserved": true
+        }
+      },
+      {
+        "id": "RACE_IRRELEVANT",
+        "change_between_read_and_confirm": {
+          "2027-02.amount": 250
+        },
+        "expected": {
+          "confirmationCommand": "accepted-only-after-scope-equality-check",
+          "observedSourceVersion": 7,
+          "evaluatedSourceVersion": 8,
+          "state": "valid",
+          "claimReviewedFebruary": false
+        }
+      },
+      {
+        "id": "ACCESS_REVOKED",
+        "change": "Consumidor perde acesso pertinente antes da leitura/reuso.",
+        "expected": {
+          "state": "unavailable",
+          "reason": "access-unavailable",
+          "restrictedValuesExposed": false,
+          "restrictedFingerprintExposed": false,
+          "restrictedLinksExposed": false,
+          "newRequestToUnauthorizedActor": false,
+          "protectedAuditPreserved": true
+        }
+      },
+      {
+        "id": "REPLACED",
+        "change": {
+          "sourceRef.incarnation": "incarnation-B"
+        },
+        "expected": {
+          "state": "stale-or-unavailable-according-to-current-projection",
+          "valid": false,
+          "reasonWhenReadable": "source-replaced",
+          "idReuseRestoresValidity": false,
+          "historicalAuditUnchanged": true
+        }
+      },
+      {
+        "id": "SOURCE_REMOVED",
+        "change": "Fonte removida.",
+        "expected": {
+          "valid": false,
+          "state": "stale-if-removal-readable-otherwise-unavailable",
+          "reasonWhenReadable": "source-removed",
+          "historicalAuditUnchanged": true
+        }
+      },
+      {
+        "id": "ACCESS_RESTORED",
+        "previous_branch": "ACCESS_REVOKED",
+        "change": "Acesso retorna; resolver consulta fonte e dependências atuais.",
+        "expected": {
+          "automaticReuseFromCache": false,
+          "validOnlyIfSameIncarnationAndSameScope": true
+        }
+      },
+      {
+        "id": "ABSENT_VS_ZERO",
+        "scope_variant": "Um campo confirmado é ausente; outro é zero observado.",
+        "expected": {
+          "absenceStillVisible": true,
+          "zeroStillDistinct": true,
+          "sourceAgeUnchanged": true,
+          "confirmationDoesNotFillData": true
+        }
+      }
+    ],
+    "required_consumers": [
+      "WP08.T03",
+      "WP08.T04",
+      "WP09.T02",
+      "WP09.T03"
+    ],
+    "evidence_packages": [
+      "E09",
+      "E13"
+    ],
+    "implementation_test_status": "NOT_RUN"
+  }
+]

@@ -42,6 +42,7 @@
         "@orchestra/continuity": "workspace:*",
         "@orchestra/core": "workspace:*",
         "@orchestra/engine-claude-code": "workspace:*",
+        "@orchestra/llm": "workspace:*",
         "@orchestra/maestro": "workspace:*",
         "@orchestra/server": "workspace:*",
         "@orchestra/tui": "workspace:*",
@@ -191,6 +192,9 @@
         "@types/node": "catalog:",
         "@typescript/native-preview": "catalog:",
         "dts-bundle-generator": "9.5.1",
+        "@orchestra/script": "workspace:*",
+        "typescript": "catalog:",
+        "esbuild": "0.25.12",
       },
     },
     "modules/capability-assets": {
@@ -315,12 +319,18 @@
     "modules/sucafina": {
       "name": "@orchestra/sucafina",
       "dependencies": {
+        "@modelcontextprotocol/sdk": "1.32.0",
+        "@orchestra/atlas-boundary": "workspace:*",
+        "@orchestra/core": "workspace:*",
+        "@orchestra/rag-studio": "workspace:*",
         "docx": "9.5.1",
+        "effect": "catalog:",
         "exceljs": "4.4.0",
         "jose": "6.2.16",
         "jszip": "3.10.1",
         "pptxgenjs": "4.0.1",
         "saxes": "5.0.1",
+        "unpdf": "1.4.0",
         "xlsx": "./Sucafinav1/vendor/xlsx-0.20.3.tgz",
       },
       "devDependencies": {
