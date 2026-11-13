@@ -6,6 +6,8 @@ import assert from "node:assert/strict"
 import { test } from "node:test"
 import { compileBicep, expectedPins, pins, requireHostedLinux, source, tool } from "./fixture/azure-tools.mjs"
 
+const publicIpFqdn = "reference(resourceId('Microsoft.Network/publicIPAddresses', 'orchsf-pip'), '2024-05-01').dnsSettings.fqdn"
+
 test("pinned bicep compiles the Azure foundation", { timeout: 120_000 }, async () => {
   requireHostedLinux()
   assert.deepEqual(pins().bicep, expectedPins.bicep)
@@ -66,6 +68,8 @@ function assertParameters(template) {
     ["int", 64, 32, 1024],
   )
   assert.deepEqual(Object.keys(template.outputs).sort(), ["backupPolicyName", "backupVaultName", "dataDiskId", "fqdn", "protectedItemName", "publicOrigin", "vmName"])
+  assert.equal(template.outputs.fqdn.value, `[${publicIpFqdn}]`)
+  assert.equal(template.outputs.publicOrigin.value, `[format('https://{0}', ${publicIpFqdn})]`)
   const rendered = JSON.stringify(template.outputs)
   assert.equal(Object.values(template.outputs).every((output) => output.type.toLowerCase() !== "securestring"), true)
   assert.equal(/listKeys|listSecrets|password/i.test(rendered), false)
@@ -77,7 +81,7 @@ function assertTopology(template) {
   const vm = vms[0].properties
   const image = vm.storageProfile.imageReference
   assert.deepEqual([image.publisher, image.offer, image.sku], ["Canonical", "ubuntu-24_04-lts", "server"])
-  assert.match(String(image.version), /parameters\('imageVersion'\)/)
+  assert.equal(image.version, "[parameters('imageVersion')]")
   assert.notEqual(image.version, "latest")
   assert.equal(vm.securityProfile.securityType, "TrustedLaunch")
   assert.equal(vm.securityProfile.uefiSettings.secureBootEnabled, true)
@@ -90,22 +94,26 @@ function assertTopology(template) {
   assert.equal(vm.storageProfile.osDisk.managedDisk.storageAccountType, "StandardSSD_LRS")
   const data = vm.storageProfile.dataDisks
   assert.deepEqual([data.length, data[0].lun, data[0].caching, data[0].deleteOption], [1, 0, "None", "Detach"])
+  assert.equal(data[0].createOption, "Attach")
+  assert.equal(data[0].managedDisk.id, "[resourceId('Microsoft.Compute/disks', 'orchsf-data')]")
   const disks = typed(template, "Microsoft.Compute/disks")
   assert.equal(disks.length, 1)
+  assert.equal(disks[0].name, "orchsf-data")
   assert.equal(disks[0].sku.name, "StandardSSD_LRS")
   assert.equal(disks[0].properties.networkAccessPolicy, "DenyAll")
+  assert.equal(disks[0].properties.diskSizeGB, "[parameters('dataDiskSizeGiB')]")
   const vnet = typed(template, "Microsoft.Network/virtualNetworks")
   assert.equal(vnet.length, 1)
+  assert.equal(vnet[0].name, "orchsf-vnet")
   assert.deepEqual(vnet[0].properties.addressSpace.addressPrefixes, ["10.62.0.0/24"])
   assert.equal(vnet[0].properties.subnets.length, 1)
+  assert.equal(vnet[0].properties.subnets[0].name, "orchsf-subnet")
   assert.equal(vnet[0].properties.subnets[0].properties.addressPrefix, "10.62.0.0/26")
   const nsgId = vnet[0].properties.subnets[0].properties.networkSecurityGroup?.id
   const matched = typed(template, "Microsoft.Network/networkSecurityGroups").filter((nsg) => nsgId === `[resourceId('Microsoft.Network/networkSecurityGroups', '${nsg.name}')]`)
   assert.equal(matched.length, 1)
-  const security = [
-    ...(matched[0].properties?.securityRules ?? []),
-    ...typed(template, "Microsoft.Network/networkSecurityGroups/securityRules").filter((rule) => String(rule.name ?? "").startsWith(`${matched[0].name}/`)),
-  ].map((rule) => rule.properties ?? rule)
+  assert.equal(typed(template, "Microsoft.Network/networkSecurityGroups/securityRules").length, 0)
+  const security = (matched[0].properties?.securityRules ?? []).map((rule) => rule.properties ?? rule)
   const allows = security.filter((rule) => rule.direction === "Inbound" && rule.access === "Allow")
   for (const rule of allows) {
     assert.equal(rule.destinationPortRanges, undefined)
@@ -117,18 +125,39 @@ function assertTopology(template) {
   assert.deepEqual(allows.map((rule) => String(rule.destinationPortRange)).sort(), ["443", "80"])
   const denies = security.filter((rule) => rule.direction === "Inbound" && rule.access === "Deny" && (rule.destinationPortRange === "*" || rule.destinationPortRange === "0-65535"))
   assert.ok(denies.length >= 1)
+  for (const rule of denies) {
+    assert.equal(rule.protocol, "*")
+    assert.equal(rule.sourceAddressPrefix, "*")
+    assert.equal(rule.sourcePortRange, "*")
+    assert.equal(rule.destinationAddressPrefix, "*")
+    assert.equal(rule.sourceAddressPrefixes, undefined)
+    assert.equal(rule.destinationAddressPrefixes, undefined)
+    assert.equal(Number(rule.priority) < 65000, true)
+  }
   const denyPriority = Math.min(...denies.map((rule) => Number(rule.priority)))
   assert.equal(allows.every((rule) => Number(rule.priority) < denyPriority), true)
   assert.equal(security.some((rule) => rule.direction === "Outbound" && rule.access === "Deny"), false)
   assert.equal(allSecurityRules(template).some((rule) => rule.direction === "Outbound" && rule.access === "Deny"), false)
   const ips = typed(template, "Microsoft.Network/publicIPAddresses")
   assert.equal(ips.length, 1)
+  assert.equal(ips[0].name, "orchsf-pip")
   assert.equal(ips[0].sku.name, "Standard")
   assert.equal(ips[0].properties.publicIPAllocationMethod, "Static")
   assert.equal(ips[0].properties.publicIPAddressVersion, "IPv4")
   const label = String(ips[0].properties.dnsSettings.domainNameLabel)
   assert.match(label, /orchsf-/)
   assert.match(label, /uniqueString\(resourceGroup\(\)\.id\)/)
+  const nics = typed(template, "Microsoft.Network/networkInterfaces")
+  assert.equal(nics.length, 1)
+  assert.equal(nics[0].name, "orchsf-nic")
+  assert.equal(nics[0].properties.networkSecurityGroup, undefined)
+  assert.equal(typed(template, "Microsoft.Network/networkSecurityGroups").length, 1)
+  const ipConfig = nics[0].properties.ipConfigurations
+  assert.equal(ipConfig.length, 1)
+  assert.equal(ipConfig[0].properties.privateIPAllocationMethod, "Dynamic")
+  assert.equal(ipConfig[0].properties.subnet.id, "[format('{0}/subnets/orchsf-subnet', resourceId('Microsoft.Network/virtualNetworks', 'orchsf-vnet'))]")
+  assert.equal(ipConfig[0].properties.publicIPAddress.id, "[resourceId('Microsoft.Network/publicIPAddresses', 'orchsf-pip')]")
+  assert.deepEqual(vm.networkProfile.networkInterfaces, [{ id: "[resourceId('Microsoft.Network/networkInterfaces', 'orchsf-nic')]" }])
   assert.equal(resources(template).some((resource) => resource.identity || /Microsoft\.(Storage|NetApp|ManagedIdentity)\//.test(resource.type) || resource.type.startsWith("Microsoft.Authorization/roleAssignments")), false)
 }
 
@@ -182,14 +211,15 @@ function assertCloud(template, script) {
   assert.equal(cloud.write_files.length, 1)
   assert.equal(cloud.write_files[0].path, "[variables('bootstrapPath')]")
   assert.equal(variableValue(template, cloud.write_files[0].path), template.variables.bootstrapPath)
-  assert.ok(String(variableValue(template, cloud.write_files[0].content)).replaceAll("\r\n", "\n").includes(script.replaceAll("\r\n", "\n").trim()))
+  const written = String(cloud.write_files[0].content)
+  const resolved = /^\[variables\('[^']+'\)\]$/.test(written) ? String(variableValue(template, written)) : written
+  assert.equal(resolved.replaceAll("\r\n", "\n"), script.replaceAll("\r\n", "\n"))
   assert.deepEqual(cloud.runcmd, [["[variables('bootstrapPath')]", "__PUBLIC_FQDN__"]])
   assert.equal(variableValue(template, cloud.runcmd[0][0]), template.variables.bootstrapPath)
   assert.doesNotMatch(JSON.stringify(cloud.runcmd), /\|\||\|\s*true\b/)
-  const rendered = JSON.stringify(template)
-  assert.match(rendered, /base64\(/)
-  assert.match(rendered, /replace\([\s\S]*__PUBLIC_FQDN__/)
-  assert.equal(rendered.includes("#cloud-config\\n"), true)
+  // Bicep keeps the cloud-config newline as a raw character inside the ARM expression string.
+  assert.equal(typed(template, "Microsoft.Compute/virtualMachines")[0].properties.osProfile.customData, `[base64(replace(format('#cloud-config
+{0}', string(variables('cloudConfig'))), '__PUBLIC_FQDN__', ${publicIpFqdn}))]`)
   assert.match(`${script}\n${JSON.stringify(cloud)}`, /\b503\b/)
 }
 

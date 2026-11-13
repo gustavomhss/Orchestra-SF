@@ -44,7 +44,7 @@ export function source(relative) {
 
 export async function tool(pin, name) {
   requireHostedLinux()
-  const response = await fetch(pin.url)
+  const response = await fetch(pin.url, { signal: AbortSignal.timeout(30000) })
   const bytes = Buffer.from(await response.arrayBuffer())
   assert.equal(response.ok, true, `${name} download HTTP ${response.status}`)
   assert.equal(createHash("sha256").update(bytes).digest("hex"), pin.sha256)
@@ -55,7 +55,7 @@ export async function tool(pin, name) {
 }
 
 export function compileBicep(bin, file) {
-  const stdout = execFileSync(bin, ["build", file, "--stdout"], { encoding: "utf8" })
+  const stdout = execFileSync(bin, ["build", file, "--stdout"], { encoding: "utf8", timeout: 30000 })
   const start = stdout.indexOf("{")
   assert.ok(start >= 0)
   return JSON.parse(stdout.slice(start))
@@ -63,11 +63,11 @@ export function compileBicep(bin, file) {
 
 export function runActionlint(archive, workflow) {
   const dir = path.dirname(archive)
-  execFileSync("tar", ["-xzf", archive, "-C", dir, "actionlint"])
+  execFileSync("tar", ["-xzf", archive, "-C", dir, "actionlint"], { timeout: 15000 })
   const bin = path.join(dir, "actionlint")
   chmodSync(bin, 0o755)
   // actionlint 1.7.12 uses -config-file instead of .github/actionlint.yaml, so a repo paths.ignore cannot hide this workflow.
   const config = path.join(dir, "actionlint.yaml")
   writeFileSync(config, "{}\n")
-  execFileSync(bin, ["-no-color", "-config-file", config, workflow], { encoding: "utf8" })
+  execFileSync(bin, ["-no-color", "-config-file", config, workflow], { encoding: "utf8", timeout: 15000 })
 }

@@ -16,6 +16,7 @@ fi
 
 device=/dev/disk/azure/scsi1/lun0
 state=/var/lib/orchestra-sf
+fstab=/etc/fstab
 deadline=$((SECONDS + 90))
 until [[ -b "$device" ]]; do
   if ((SECONDS >= deadline)); then
@@ -27,8 +28,7 @@ done
 
 # blkid exit 2 means the requested tag is absent. Any other failure is I/O or probe error.
 probe_tag() {
-  local tag=$1
-  local value status
+  local tag=$1 value status
   set +e
   value=$(blkid -p -s "$tag" -o value -- "$device")
   status=$?
@@ -43,7 +43,7 @@ probe_tag() {
 probe_uuid() {
   local value status
   set +e
-  value=$(blkid -s UUID -o value -- "$device")
+  value=$(blkid -p -s UUID -o value -- "$device")
   status=$?
   set -e
   if [[ "$status" -eq 2 ]]; then
@@ -57,13 +57,90 @@ probe_uuid() {
   printf '%s' "$value"
 }
 
-# A failed wipefs is not an empty disk. Only a successful probe with no signatures is blank.
+replace_fstab() (
+  local candidate=$1 next backup
+  next=$(mktemp "${fstab}.next.XXXXXX")
+  backup=$(mktemp "${fstab}.backup.XXXXXX")
+  trap 'rm -f -- "$next" "$backup" "$candidate"' EXIT
+  cp --preserve=mode,ownership -- "$fstab" "$backup"
+  sync -f "$backup"
+  mv -f -- "$backup" "${fstab}.orchestra-sf.bak"
+  cat -- "$candidate" > "$next"
+  chmod --reference="$fstab" "$next"
+  chown --reference="$fstab" "$next"
+  sync -f "$next"
+  mv -f -- "$next" "$fstab"
+  sync -f "$fstab"
+)
+
+require_canonical_mount() {
+  local source target source_canonical device_canonical
+  source=$(findmnt --noheadings --output SOURCE --mountpoint "$state") || return 1
+  source_canonical=$(readlink -f "$source") || return 1
+  device_canonical=$(readlink -f "$device") || return 1
+  if [[ -z "$source_canonical" || -z "$device_canonical" || "$source_canonical" != "$device_canonical" ]]; then
+    echo "state is mounted from ${source}" >&2
+    return 1
+  fi
+  target=$(findmnt --noheadings --output TARGET --mountpoint "$state") || return 1
+  if [[ "$target" != "$state" ]]; then
+    echo "state mount target is ${target}" >&2
+    return 1
+  fi
+}
+
+refuse_fstab_conflicts() {
+  local expected=$1 status
+  set +e
+  awk -v path="$state" -v uuid="$expected" '
+    $0 ~ /^[[:space:]]*(#|$)/ { next }
+    uuid == "" && $2 == path { found = 1 }
+    uuid != "" && ($1 == "UUID=" uuid || $2 == path) {
+      count++
+      if ($1 != "UUID=" uuid || $2 != path) found = 1
+    }
+    END { exit (found || count > 1) ? 0 : 1 }
+  ' "$fstab"
+  status=$?
+  set -e
+  if [[ "$status" -eq 1 ]]; then
+    return 0
+  fi
+  if [[ "$status" -ne 0 ]]; then
+    echo "failed to read ${fstab}" >&2
+    exit 1
+  fi
+  echo "fstab already mounts ${state}" >&2
+  exit 1
+}
+
 signatures=$(wipefs --no-act -- "$device")
 fstype=$(probe_tag TYPE)
 label=$(probe_tag LABEL)
 pttype=$(probe_tag PTTYPE)
 partition_types=$(lsblk --noheadings --list --output TYPE -- "$device")
-if [[ -n "$pttype" ]] || grep -qx partition <<< "$partition_types"; then
+mounted_now=0
+
+if [[ -L "$state" ]]; then
+  echo "refusing symlink at ${state}" >&2
+  exit 1
+fi
+if [[ -e "$state" && ! -d "$state" ]]; then
+  echo "state path is not a directory" >&2
+  exit 1
+fi
+if findmnt --noheadings --mountpoint "$state" >/dev/null; then
+  if [[ -z "$fstype" && -z "$signatures" ]]; then
+    echo "refusing blank disk mounted at ${state}" >&2
+    exit 1
+  fi
+  require_canonical_mount || exit 1
+fi
+if ! findmnt --noheadings --mountpoint "$state" >/dev/null && [[ -d "$state" && -n "$(ls -A "$state")" ]]; then
+  echo "refusing to cover preexisting files in ${state}" >&2
+  exit 1
+fi
+if [[ -n "$pttype" ]] || grep -Eq '^[[:space:]]*part[[:space:]]*$' <<< "$partition_types"; then
   echo "refusing partitioned data disk" >&2
   exit 1
 fi
@@ -79,106 +156,36 @@ if [[ -z "$fstype" && -n "$signatures" ]]; then
   echo "refusing disk with an unknown signature" >&2
   exit 1
 fi
+uuid=$(probe_uuid)
+refuse_fstab_conflicts "$uuid"
 if [[ -z "$fstype" ]]; then
   mkfs.ext4 -F -L orchsf-data -- "$device"
   udevadm settle
-fi
-
-uuid=$(probe_uuid)
-if [[ -z "$uuid" ]]; then
-  udevadm settle
   uuid=$(probe_uuid)
+  if [[ -z "$uuid" ]]; then
+    udevadm settle
+    uuid=$(probe_uuid)
+  fi
+  refuse_fstab_conflicts "$uuid"
 fi
 if [[ -z "$uuid" ]]; then
   echo "data disk has no uuid" >&2
   exit 1
 fi
-
-fstab_line="UUID=${uuid} ${state} ext4 defaults 0 2"
-strict_fstab="^UUID=${uuid}[[:space:]]+${state}[[:space:]]+ext4[[:space:]]+defaults[[:space:]]+0[[:space:]]+2[[:space:]]*$"
-if awk -v path="$state" -v uuid="$uuid" '
-  $0 ~ /^[[:space:]]*#/ { next }
-  $2 == path && $1 != "UUID=" uuid { found = 1 }
-  END { exit found ? 0 : 1 }
-' /etc/fstab; then
-  echo "fstab already mounts ${state}" >&2
-  exit 1
-fi
-
-# Drop only the entry this disk owns. A refusal must not survive into the next boot.
-drop_owned_fstab() {
-  local tmp
-  tmp=$(mktemp)
-  awk -v path="$state" -v uuid="$uuid" '
-    $0 ~ /^[[:space:]]*#/ { print; next }
-    $2 == path && $1 == "UUID=" uuid { next }
-    { print }
-  ' /etc/fstab > "$tmp"
-  cp "$tmp" /etc/fstab
-  rm -f "$tmp"
-}
-
-mounted_now=0
-if [[ -L "$state" ]]; then
-  drop_owned_fstab
-  echo "refusing symlink at ${state}" >&2
-  exit 1
-fi
-if findmnt --noheadings --mountpoint "$state" >/dev/null; then
-  mounted_now=0
-else
-  if [[ -e "$state" && ! -d "$state" ]]; then
-    drop_owned_fstab
-    echo "state path is not a directory" >&2
-    exit 1
-  fi
-  if [[ -d "$state" && -n "$(ls -A "$state")" ]]; then
-    drop_owned_fstab
-    echo "refusing to cover preexisting files in ${state}" >&2
-    exit 1
-  fi
-  install -d -m 0755 "$state"
+if ! findmnt --noheadings --mountpoint "$state" >/dev/null; then
+  install -d -o root -g root -m 0700 "$state"
   if [[ -L "$state" ]]; then
-    drop_owned_fstab
     echo "refusing symlink at ${state}" >&2
     exit 1
   fi
   mount -- "$device" "$state"
   mounted_now=1
 fi
-source=$(findmnt --noheadings --output SOURCE --mountpoint "$state")
-if [[ "$(readlink -f "$source")" != "$(readlink -f "$device")" ]]; then
-  source_status=0
-  source_uuid=$(blkid -s UUID -o value -- "$(readlink -f "$source")") || source_status=$?
-  if [[ "$source_status" -ne 0 || "$source_uuid" != "$uuid" ]]; then
-    echo "state is mounted from ${source}" >&2
-    if [[ "$mounted_now" -eq 1 ]]; then
-      umount -- "$state"
-    fi
-    exit 1
-  fi
-fi
-target=$(findmnt --noheadings --output TARGET --mountpoint "$state")
-if [[ "$target" != "$state" ]]; then
-  echo "state mount target is ${target}" >&2
+if ! require_canonical_mount; then
   if [[ "$mounted_now" -eq 1 ]]; then
     umount -- "$state"
   fi
   exit 1
-fi
-
-if grep -Eq "$strict_fstab" /etc/fstab && ! grep -E "^UUID=${uuid}[[:space:]]+${state}[[:space:]]" /etc/fstab | grep -Evq "$strict_fstab"; then
-  true
-else
-  fstab_tmp=$(mktemp)
-  awk -v path="$state" -v uuid="$uuid" '
-    $0 ~ /^[[:space:]]*#/ { print; next }
-    $2 == path && $1 == "UUID=" uuid { next }
-    { print }
-  ' /etc/fstab > "$fstab_tmp"
-  printf '%s\n' "$fstab_line" >> "$fstab_tmp"
-  cp "$fstab_tmp" /etc/fstab
-  rm -f "$fstab_tmp"
 fi
 
 home="${state}/home"
@@ -229,6 +236,16 @@ fi
 install -d -o "$uid" -g "$expected_gid" -m 0700 "$home"
 install -d -o root -g root -m 0755 /opt/orchestra-sf
 install -d -o root -g root -m 0700 /etc/orchestra-sf
+
+fstab_line="UUID=${uuid} ${state} ext4 defaults 0 2"
+strict_fstab="^UUID=${uuid}[[:space:]]+${state}[[:space:]]+ext4[[:space:]]+defaults[[:space:]]+0[[:space:]]+2[[:space:]]*$"
+refuse_fstab_conflicts "$uuid"
+if ! grep -Eq "$strict_fstab" "$fstab"; then
+  candidate=$(mktemp "${fstab}.candidate.XXXXXX")
+  awk -v path="$state" -v uuid="$uuid" '$0 ~ /^[[:space:]]*#/ { print; next } $2 == path && $1 == "UUID=" uuid { next } { print }' "$fstab" > "$candidate"
+  printf '%s\n' "$fstab_line" >> "$candidate"
+  replace_fstab "$candidate"
+fi
 
 install -d -o root -g root -m 0755 /etc/caddy
 cat > /etc/caddy/Caddyfile <<EOF
