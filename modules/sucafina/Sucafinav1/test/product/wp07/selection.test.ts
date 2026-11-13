@@ -25,6 +25,8 @@ const pages = {
   "it-risks": "IT Risks",
   "vendor-contracts": "Vendor Contracts",
   stakeholders: "Stakeholder Management",
+  executive: "Executive Dashboard",
+  "it-performance": "IT Performance Contract",
 } as const
 
 function fixture(options: { now?: () => string; maxSelections?: number } = {}) {
@@ -121,21 +123,23 @@ test("agenda preserves each competence, represents empty sections and handles re
   if (selected.status !== "ok") throw new Error(selected.reason)
   state.records.projects = ["projects-1"]
   expect((await agenda.select(selected.value.selectionRef, ["project"], context, year)).status).toBe("unavailable")
-  expect((await agenda.select(selected.value.selectionRef, ["annual"], context, year)).status).toBe("unavailable")
+  expect((await agenda.select(selected.value.selectionRef, ["annual"], context, year)).status).toBe("needs-input")
 })
 
 test("agenda handles all Dashboard topic IDs and fails closed for unsupported or private topics", async () => {
   const { agenda, state } = fixture()
+  state.talentAccess = true
   const topics = Object.keys(pages)
   const selected = await agenda.create(topics.map((topic) => ({ id: topic, kind: "dashboard" as const, topic, selectionRef: `source:${topic}`, period: year })), context)
   if (selected.status !== "ok") throw new Error(selected.reason)
   expect(selected.value.sections.map((section) => section.projection.context.sourceRefs[0]?.id)).toEqual(Object.values(pages))
   const calls = state.calls.length
-  for (const topic of ["executive", "it-performance", "unknown-topic"]) {
+  for (const topic of ["unknown-topic"]) {
     const result = await agenda.create([{ id: topic, kind: "dashboard", topic, selectionRef: `source:${topic}`, period: year }], context)
     expect(result.status).toBe("unavailable")
   }
   expect(state.calls).toHaveLength(calls)
+  state.talentAccess = false
   const privateResult = await agenda.create([{ id: "private", kind: "dashboard", topic: "talent-review", selectionRef: "private-source", period: year, agendaNote: "private note" }], context)
   expect(privateResult.status).toBe("denied")
   expect("value" in privateResult).toBe(false)
@@ -229,9 +233,77 @@ test("agenda selection is bounded, expires, revalidates authority and rejects ho
   if (first.status !== "ok") throw new Error(first.reason)
   expect((await agenda.create([item], context)).status).toBe("unavailable")
   expect((await agenda.preview("hostile", [null] as unknown as readonly ReviewAgendaItem[], context)).status).toBe("needs-input")
+  expect((await agenda.preview("hostile", [{ ...item, principalRef: "other" }] as readonly ReviewAgendaItem[], context)).status).toBe("needs-input")
+  expect((await agenda.preview("hostile", [{ ...item, biView: { viewId: "BI01", selectionRef: "source", provider: "external" } }] as readonly ReviewAgendaItem[], context)).status).toBe("needs-input")
   expect((await agenda.select(first.value.selectionRef, [null] as unknown as readonly string[], context)).status).toBe("needs-input")
   now = "2026-11-13T00:15:00Z"
   expect((await agenda.select(first.value.selectionRef, ["budget"], context)).status).toBe("denied")
   const next = await agenda.create([item], context)
   expect(next.status).toBe("ok")
+})
+
+test("agenda delegates singleton topic availability to the authenticated producer", async () => {
+  const { ports } = fixture()
+  const agenda = createReviewAgendaSelection({ ports: { ...ports, selectDashboardAgenda: async () => ({ status: "unavailable", reason: "agenda-source-identity-unavailable" }) }, revalidate: async () => true, now: () => "2026-11-13T00:00:00Z" })
+  for (const topic of ["executive", "it-performance"]) {
+    expect(await agenda.create([{ id: topic, kind: "dashboard", topic, selectionRef: "source", period: year }], context)).toEqual({ status: "unavailable", reason: "agenda-source-identity-unavailable" })
+  }
+})
+
+test("agenda pins caller input before awaiting authority and does not adopt a mutated binding", async () => {
+  const { ports } = fixture()
+  const item: ReviewAgendaItem = { id: "projects", kind: "dashboard", topic: "projects", selectionRef: "source", period: year, agendaNote: "original" }
+  const agenda = createReviewAgendaSelection({ ports, revalidate: async () => { item.id = "changed"; item.agendaNote = "changed"; return true }, now: () => "2026-11-13T00:00:00Z" })
+  const created = await agenda.create([item], context)
+  if (created.status !== "ok") throw new Error(created.reason)
+  expect(created.value.sections.map((section) => [section.id, section.agendaNote])).toEqual([["projects", "original"]])
+  expect((await agenda.select(created.value.selectionRef, ["projects"], context)).status).toBe("ok")
+  const changedContext = { ...context, binding: { ...context.binding, accessRevision: "later-access" } } as TrustedDomainContext
+  expect((await agenda.select(created.value.selectionRef, ["projects"], changedContext)).status).toBe("denied")
+})
+
+test("released or expired selection is refused after an in-flight producer read", async () => {
+  const { ports } = fixture()
+  const phase = { reading: false, now: "2026-11-13T00:00:00Z", release: () => {} }
+  const agenda = createReviewAgendaSelection({ ports: { ...ports, selectDashboardAgenda: async (request, binding) => {
+    const result = await ports.selectDashboardAgenda(request, binding)
+    if (phase.reading) phase.release()
+    return result
+  } }, revalidate: async () => true, now: () => phase.now })
+  const item: ReviewAgendaItem = { id: "projects", kind: "dashboard", topic: "projects", selectionRef: "source", period: year }
+  const created = await agenda.create([item], context)
+  if (created.status !== "ok") throw new Error(created.reason)
+  phase.reading = true
+  phase.release = () => agenda.release(created.value.selectionRef)
+  expect((await agenda.select(created.value.selectionRef, ["projects"], context)).status).toBe("denied")
+  phase.reading = false
+  const next = await agenda.create([item], context)
+  if (next.status !== "ok") throw new Error(next.reason)
+  phase.reading = true
+  phase.release = () => { phase.now = "2026-11-13T00:15:00Z" }
+  expect((await agenda.select(next.value.selectionRef, ["projects"], context)).status).toBe("denied")
+})
+
+test("selection refuses changed preview content while retaining its original observation time", async () => {
+  const { ports } = fixture()
+  const source = { value: 1320, observedAt: "2026-11-13T00:00:00Z" }
+  const agenda = createReviewAgendaSelection({ ports: { ...ports, selectDashboardAgenda: async (request, binding) => {
+    const result = await ports.selectDashboardAgenda(request, binding)
+    if (result.status !== "ok") return result
+    return { status: "ok", value: { ...result.value, projection: { ...result.value.projection, context: { ...result.value.projection.context, sourceRefs: result.value.projection.context.sourceRefs.map((ref) => ({ ...ref, observedAt: source.observedAt })) }, values: result.value.projection.values.map((value) => ({ ...value, value: source.value })) } } }
+  } }, revalidate: async () => true, now: () => "2026-11-13T00:00:00Z" })
+  const item: ReviewAgendaItem = { id: "budget", kind: "dashboard", topic: "budget", selectionRef: "source", period: year }
+  const initial = await agenda.create([item], context)
+  if (initial.status !== "ok") throw new Error(initial.reason)
+  source.observedAt = "2026-11-13T00:01:00Z"
+  const unchanged = await agenda.select(initial.value.selectionRef, ["budget"], context)
+  if (unchanged.status !== "ok") throw new Error(unchanged.reason)
+  expect(unchanged.value[0]?.projection.context.sourceRefs[0]?.observedAt).toBe("2026-11-13T00:00:00Z")
+  source.value = 1400
+  expect(await agenda.select(initial.value.selectionRef, ["budget"], context)).toEqual({ status: "stale", reason: "agenda-preview-changed" })
+  const refreshed = await agenda.create([item], context)
+  if (refreshed.status !== "ok") throw new Error(refreshed.reason)
+  expect(refreshed.value.selectionRef).not.toBe(initial.value.selectionRef)
+  expect(refreshed.value.sections[0]?.projection.values[0]?.value).toBe(1400)
+  expect(initial.value.sections[0]?.projection.values[0]?.value).toBe(1320)
 })

@@ -26,6 +26,17 @@ test("decision access reopens actual results and denies changed evidence or mism
   const authorize = createReviewDecisionAccess({ host: { revalidate: async () => true }, results, sensitivity: { read: async () => ({ status: "unavailable", reason: "unused" }) } })
   expect(await authorize(context, [selected])).toBe(true)
   expect(await authorize(context, [{ ...selected, scenario: { ...scenario, knownSubtotal: 999 } }])).toBe(false)
-  access.sources = false
+  const currentState = await state.read(request, "cases", () => null)
+  if (currentState.status !== "ok") throw new Error("case storage unavailable")
+  const advanced = await state.transaction(request, { namespace: "cases", expectedStorageVersion: currentState.storageVersion, idempotencyKey: "advance", commandDigest: "d".repeat(64), targetRef: "case", targetIncarnation: "inc" }, async (staged) => { staged.cases.case = { ...decisionCase, version: 2 }; return { commit: true, value: true } })
+  expect(advanced.status).toBe("ok")
+  const laterComparison = await results.write({ kind: "comparison", result: comparison, caseRef: { ...caseRef, version: 2 }, requestDigest: "e".repeat(64), sourceRefs: [], idempotencyKey: "later-comparison" }, context)
+  if (laterComparison.status !== "ok") throw new Error("current comparison unavailable")
+  // The actual WP11 historical scenario reader keeps the v1 result usable for a v2 comparison.
+  const later = { ...selected, comparisonRef: laterComparison.value.resultRef }
+  expect(await authorize(context, [later])).toBe(true)
+  // WP11 has no historical comparison reader at this pin; do not silently recompute or bless v1.
   expect(await authorize(context, [selected])).toBe(false)
+  access.sources = false
+  expect(await authorize(context, [later])).toBe(false)
 })

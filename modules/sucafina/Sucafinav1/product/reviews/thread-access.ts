@@ -17,14 +17,18 @@ export function createReviewThreadComments(input: {
 }) {
   if (!Number.isSafeInteger(input.maxMessages) || input.maxMessages < 1) throw new Error("SF_REVIEW_COMMENT_LIMIT_INVALID")
   const load = async (threadId: string, sources: readonly SourceRef[], context: TrustedDomainContext) => {
-    if (!threadId || !sources.length || !await input.host.revalidate(context)) return undefined
+    if (typeof threadId !== "string" || !threadId.trim() || !Array.isArray(sources) || !sources.length || !await input.host.revalidate(context)) return undefined
     const first = await input.threads.read(threadId, context)
-    if (first.status !== "ok" || first.value.id !== threadId || !["comment", "review"].includes(first.value.kind) || !Array.isArray(first.value.messages) || first.value.messages.length > input.maxMessages || !await input.authorizeSourceMapping(first.value, sources, context)) return undefined
+    if (first.status !== "ok" || !first.value || first.value.id !== threadId || !["comment", "review"].includes(first.value.kind) || !Array.isArray(first.value.messages)) return undefined
+    const snapshot = structuredClone(first.value)
+    if (!await input.authorizeSourceMapping(structuredClone(snapshot), sources, context)) return undefined
     const second = await input.threads.read(threadId, context)
-    if (second.status !== "ok" || digestSfValue(first.value) !== digestSfValue(second.value) || !await input.authorizeSourceMapping(second.value, sources, context) || !await input.host.revalidate(context)) return undefined
-    return second.value
+    if (second.status !== "ok" || digestSfValue(snapshot) !== digestSfValue(second.value) || !await input.authorizeSourceMapping(structuredClone(second.value), sources, context) || !await input.host.revalidate(context)) return undefined
+    return snapshot
   }
-  const authorizeComments: ReviewHost["authorizeComments"] = async (context, comments) => {
+  const authorizeComments: ReviewHost["authorizeComments"] = async (context, incoming) => {
+    if (!Array.isArray(incoming) || incoming.some((comment) => !comment || typeof comment.id !== "string" || !Number.isSafeInteger(comment.version) || comment.version < 1 || typeof comment.content !== "string" || typeof comment.authorRef !== "string" || typeof comment.createdAt !== "string" || !Array.isArray(comment.sourceRefs))) return false
+    const comments = structuredClone(incoming)
     if (!await input.host.revalidate(context)) return false
     const checked = await Promise.all(comments.map(async (comment) => {
       const key = /^thread-message:([^:]+):([^:]+):([^:]+):([a-f0-9]{64})$/.exec(comment.id)
@@ -39,16 +43,20 @@ export function createReviewThreadComments(input: {
       const message = found.length === 1 ? found[0] : historical?.status === "ok" ? historical.value.message : undefined
       if (!message || message.id !== parts[1] || message.incarnation !== parts[2] || message.version !== comment.version || digestSfValue(message) !== key[4] || message.body !== comment.content || message.authorRef !== comment.authorRef || message.createdAt !== comment.createdAt) return false
       if (historical?.status !== "ok") return true
+      const historicalDigest = digestSfValue(historical.value)
       const again = await input.history!.readVersion(parts[0]!, parts[1]!, parts[2]!, comment.version, context)
-      return again.status === "ok" && digestSfValue(again.value) === digestSfValue(historical.value)
+      return again.status === "ok" && digestSfValue(again.value) === historicalDigest
     }))
     return checked.every(Boolean) && await input.host.revalidate(context)
   }
   return {
-    async capture(threadId: string, sources: readonly SourceRef[], context: TrustedDomainContext): Promise<PortResult<NonNullable<ReviewSection["comments"]>>> {
+    async capture(threadId: string, incoming: readonly SourceRef[], context: TrustedDomainContext): Promise<PortResult<NonNullable<ReviewSection["comments"]>>> {
+      if (!Array.isArray(incoming) || !incoming.length) return { status: "unavailable", reason: "thread-access-unavailable" }
+      const sources = structuredClone(incoming)
       const thread = await load(threadId, sources, context)
       if (!thread) return { status: "unavailable", reason: "thread-access-unavailable" }
-      if (thread.messages.some((message) => !message.id || !message.incarnation || !Number.isSafeInteger(message.version) || message.version < 1 || !message.authorRef || typeof message.body !== "string" || !message.createdAt) || new Set(thread.messages.map((message) => JSON.stringify([message.id, message.incarnation, message.version]))).size !== thread.messages.length) return { status: "unavailable", reason: "invalid-thread-snapshot" }
+      if (thread.messages.length > input.maxMessages) return { status: "unavailable", reason: "thread-capture-limit-exceeded" }
+      if (thread.messages.some((message) => !message || typeof message.id !== "string" || !message.id || typeof message.incarnation !== "string" || !message.incarnation || !Number.isSafeInteger(message.version) || message.version < 1 || typeof message.authorRef !== "string" || !message.authorRef || typeof message.body !== "string" || typeof message.createdAt !== "string" || !Number.isFinite(Date.parse(message.createdAt))) || new Set(thread.messages.map((message) => JSON.stringify([message.id, message.incarnation, message.version]))).size !== thread.messages.length) return { status: "unavailable", reason: "invalid-thread-snapshot" }
       const comments = thread.messages.map((message) => ({ id: `thread-message:${encodeURIComponent(thread.id)}:${encodeURIComponent(message.id)}:${encodeURIComponent(message.incarnation)}:${digestSfValue(message)}`, version: message.version, content: message.body, authorRef: message.authorRef, createdAt: message.createdAt, sourceRefs: structuredClone(sources) }))
       return await authorizeComments(context, comments) ? { status: "ok", value: comments } : { status: "denied", reason: "thread-access-unavailable" }
     },

@@ -12,7 +12,6 @@ import { validOutcomeComparison, validReviewOutcome } from "./outcome.ts"
 import type { ReviewOutcomeComparison } from "./outcome.ts"
 
 export type DashboardTopic = "budget" | "projects" | "hot-topics" | "talent-review" | "opex-detail" | "capex-projects" | "headcount" | "team-structure" | "all-projects" | "it-operations" | "it-security" | "it-risks" | "vendor-contracts" | "stakeholders" | "executive" | "it-performance"
-type SupportedDashboardTopic = Exclude<DashboardTopic, "executive" | "it-performance">
 type AgendaBase = { id: string; period: Period; recordRefs?: readonly string[]; agendaNote?: string; threadIds?: readonly string[]; biView?: Pick<BiViewRequest, "viewId" | "selectionRef">; outcome?: { caseRef: ObservedResultProjection["caseRef"]; choiceId: string } }
 export type ReviewAgendaItem =
   | (AgendaBase & { kind: "dashboard"; topic: string; selectionRef: string })
@@ -35,7 +34,9 @@ export type DashboardAgendaSelectionRequest = { selectionRef: string; topic: str
 export type DashboardAgendaSelector = (request: DashboardAgendaSelectionRequest, context: TrustedDomainContext) => Promise<PortResult<{ projection: DomainProjection; recordRefs: readonly string[]; recordCount: number }>>
 /** Structural copy of WP14 d6c97669d6's adapter result; inject the authorized factory output. */
 export type ReviewOutcomeAdapter = (request: { caseRef: ObservedResultProjection["caseRef"]; choiceId: string }, context: TrustedDomainContext) => Promise<{ status: "ready"; observation: ObservedResultProjection; comparison: ReviewOutcomeComparison } | { status: "unavailable" }>
-export type ReviewAgendaPorts = Pick<BusinessPorts, "planner" | "procurement"> & {
+export type ReviewAgendaPorts = {
+  planner: Pick<BusinessPorts["planner"], "compareForecast">
+  procurement: Pick<BusinessPorts["procurement"], "read" | "readSupplier" | "readContract">
   selectDashboardAgenda: DashboardAgendaSelector
   /** Bind to WP05 9c539e6800's authorized readBiPresentation and captureBiReviewChart exports. */
   readBiPresentation?: (request: BiViewRequest, context: TrustedDomainContext) => Promise<PortResult<{ projection: DomainProjection; presentation: BiPresentation }>>
@@ -45,7 +46,7 @@ export type ReviewAgendaPorts = Pick<BusinessPorts, "planner" | "procurement"> &
   reviewOutcome?: ReviewOutcomeAdapter
 }
 
-const dashboardTopics: Record<SupportedDashboardTopic, { page: string; title: string }> = {
+const dashboardTopics: Record<DashboardTopic, { page: string; title: string }> = {
   budget: { page: "Budget Overview", title: "Budget" },
   projects: { page: "Portfolio Dashboard", title: "Projects" },
   "hot-topics": { page: "Hot Topics & Actions", title: "Hot Topics" },
@@ -60,8 +61,9 @@ const dashboardTopics: Record<SupportedDashboardTopic, { page: string; title: st
   "it-risks": { page: "IT Risks", title: "IT Risks" },
   "vendor-contracts": { page: "Vendor Contracts", title: "Vendor Contracts" },
   stakeholders: { page: "Stakeholder Management", title: "Stakeholders" },
+  executive: { page: "Executive Dashboard", title: "Executive Dashboard" },
+  "it-performance": { page: "IT Performance Contract", title: "IT Performance Contract" },
 }
-const unavailableDashboardTopics = { executive: "dashboard-topic-singleton-identity-unavailable", "it-performance": "dashboard-topic-singleton-identity-unavailable" } as const
 
 /** Resolves an ordered, editable agenda through the authenticated C02 producer ports. */
 export function createReviewAgendaSelection(input: {
@@ -70,30 +72,30 @@ export function createReviewAgendaSelection(input: {
   now: () => string
   maxSelections?: number
 }) {
-  const selections = new Map<string, { binding: TrustedDomainContext["binding"]; items: readonly ReviewAgendaItem[]; expiresAt: number }>()
+  const selections = new Map<string, { binding: Pick<TrustedDomainContext["binding"], "installationId" | "projectId" | "principalRef" | "accessRevision" | "policyVersion">; items: readonly ReviewAgendaItem[]; sections: readonly ReviewSection[]; digests: ReadonlyMap<string, string>; expiresAt: number }>()
   const maximum = input.maxSelections ?? 128
   if (!Number.isSafeInteger(maximum) || maximum < 1) throw new Error("SF_REVIEW_AGENDA_LIMIT_INVALID")
   const lifetime = 15 * 60 * 1000
   const prune = (at: number) => {
     for (const [ref, selection] of selections) if (selection.expiresAt <= at) selections.delete(ref)
   }
-  const preview = async (selectionRef: string, items: readonly ReviewAgendaItem[], context: TrustedDomainContext): Promise<PortResult<ReviewAgendaPreview>> => {
-    if (typeof selectionRef !== "string" || !selectionRef.trim() || !Array.isArray(items) || !items.length || items.some((item) => !validAgendaItem(item)) || new Set(items.map((item) => item.id)).size !== items.length) return { status: "needs-input", reason: "invalid-or-empty-agenda" }
+  const preview = async (selectionRef: string, incoming: readonly ReviewAgendaItem[], context: TrustedDomainContext): Promise<PortResult<ReviewAgendaPreview>> => {
+    if (typeof selectionRef !== "string" || !selectionRef.trim() || !Array.isArray(incoming) || !incoming.length || incoming.some((item) => !validAgendaItem(item)) || new Set(incoming.map((item) => item.id)).size !== incoming.length) return { status: "needs-input", reason: "invalid-or-empty-agenda" }
+    const items = structuredClone(incoming)
     if (!await input.revalidate(context)) return { status: "denied", reason: "agenda-authority-unavailable" }
     const sections: ReviewSection[] = []
     const sectionRecordRefs: { sectionRef: string; recordRefs: readonly string[] }[] = []
     const agendaNotes: { sectionRef: string; text: string }[] = []
     for (const item of items) {
       if (item.kind === "dashboard") {
-        if (Object.hasOwn(unavailableDashboardTopics, item.topic)) return { status: "unavailable", reason: unavailableDashboardTopics[item.topic as keyof typeof unavailableDashboardTopics] }
         if (!isDashboardTopic(item.topic)) return { status: "unavailable", reason: "dashboard-topic-unsupported" }
         const topic = dashboardTopics[item.topic]
         const selected = await input.ports.selectDashboardAgenda({ selectionRef: item.selectionRef, topic: item.topic, period: item.period, ...(item.recordRefs === undefined ? {} : { recordRefs: item.recordRefs }) }, context)
         if (selected.status !== "ok") return selected
         if (!selected.value || typeof selected.value !== "object" || !Array.isArray(selected.value.recordRefs) || selected.value.recordRefs.some((ref) => typeof ref !== "string" || !ref.trim()) || !Number.isSafeInteger(selected.value.recordCount) || selected.value.recordCount < 0 || selected.value.recordCount !== selected.value.recordRefs.length || new Set(selected.value.recordRefs).size !== selected.value.recordRefs.length || (item.recordRefs !== undefined && digestRefs(selected.value.recordRefs) !== digestRefs(item.recordRefs))) return { status: "unavailable", reason: "dashboard-record-count-or-selection-invalid" }
         const projection = selected.value.projection
-        if (!projection || typeof projection !== "object" || !Array.isArray(projection.values) || !Array.isArray(projection.components) || !Array.isArray(projection.missing) || !projection.context || !Array.isArray(projection.context.sourceRefs) || !isSfPeriod(projection.context.period)) return { status: "unavailable", reason: "dashboard-projection-invalid" }
-        if (!matchesContext(projection, context) || projection.context.period.start !== item.period.start || projection.context.period.end !== item.period.end || projection.context.sourceRefs.length === 0 || projection.context.sourceRefs.some((ref) => !ref || ref.type !== "dashboard-page" || ref.id !== topic.page)) return { status: "denied", reason: "dashboard-section-access-unavailable" }
+        if (!validAgendaProjection(projection)) return { status: "unavailable", reason: "dashboard-projection-invalid" }
+        if (!matchesContext(projection, context) || projection.context.surface !== "dashboard" || projection.context.period.start !== item.period.start || projection.context.period.end !== item.period.end || projection.context.sourceRefs.length === 0 || projection.context.sourceRefs.some((ref) => !ref || ref.surface !== "dashboard" || ref.type !== "dashboard-page" || ref.id !== topic.page)) return { status: "denied", reason: "dashboard-section-access-unavailable" }
         if (item.recordRefs?.length === 0 && (projection.values.length > 0 || projection.components.length > 0 || projection.missing.length > 0)) return { status: "unavailable", reason: "empty-dashboard-selection-returned-data" }
         const section = await captureReviewChart({ id: item.id, title: topic.title, period: item.period, recordCount: selected.value.recordCount, projection }, item, input.ports, context)
         if (section.status !== "ok") return section
@@ -126,10 +128,11 @@ export function createReviewAgendaSelection(input: {
           ? await input.ports.procurement.readSupplier({ supplierRef: item.supplierRef, fields: item.fields }, context)
           : await input.ports.procurement.readContract({ contractRef: item.contractRef, fields: item.fields }, context)
       if (result.status !== "ok") return { ...result, reason: "procurement-source-unavailable" }
+      if (!validAgendaProjection(result.value)) return { status: "unavailable", reason: "procurement-projection-invalid" }
       const source = result.value.context.sourceRefs[0]
       const sourceRef = source ? `${source.surface}:${source.type}:${source.id}:${source.incarnation}:${source.version}` : ""
       if (!matchesContext(result.value, context) || result.value.context.period.start !== item.period.start || result.value.context.period.end !== item.period.end || result.value.context.sourceRefs.length !== 1 || !sourceRef) return { status: "denied", reason: "procurement-section-access-unavailable" }
-      if (item.recordRefs !== undefined && !item.recordRefs.includes(sourceRef)) return { status: "unavailable", reason: "procurement-record-identity-unavailable" }
+      if (item.recordRefs !== undefined && (item.recordRefs.length !== 1 || item.recordRefs[0] !== sourceRef)) return { status: "unavailable", reason: "procurement-record-identity-unavailable" }
       const section = await captureReviewChart({ id: item.id, title: item.title, period: item.period, recordCount: 1, projection: result.value }, item, input.ports, context)
       if (section.status !== "ok") return section
       sections.push(item.agendaNote ? { ...section.value, agendaNote: item.agendaNote } : section.value)
@@ -144,7 +147,11 @@ export function createReviewAgendaSelection(input: {
     ] } }
   }
   return {
-    async create(items: readonly ReviewAgendaItem[], context: TrustedDomainContext) {
+    async create(incoming: readonly ReviewAgendaItem[], context: TrustedDomainContext) {
+      if (!Array.isArray(incoming) || !incoming.length || incoming.some((item) => !validAgendaItem(item))) return { status: "needs-input" as const, reason: "invalid-or-empty-agenda" }
+      const items = structuredClone(incoming)
+      const { installationId, projectId, principalRef, accessRevision, policyVersion } = context.binding
+      const binding = { installationId, projectId, principalRef, accessRevision, policyVersion }
       const at = Date.parse(input.now())
       if (!Number.isFinite(at)) return { status: "unavailable" as const, reason: "agenda-clock-unavailable" }
       prune(at)
@@ -153,27 +160,31 @@ export function createReviewAgendaSelection(input: {
       const result = await preview(selectionRef, items, context)
       if (result.status !== "ok") return result
       const frozen = items.map((item) => {
-        if (item.kind === "forecast-comparison") return { ...item, recordRefs: result.value.sectionRecordRefs.filter((entry) => entry.sectionRef.startsWith(`${item.id}:`)).flatMap((entry) => entry.recordRefs) }
+        if (item.kind === "forecast-comparison") return { ...item, recordRefs: result.value.sectionRecordRefs.filter((entry) => item.sides.some((side) => entry.sectionRef === forecastSideRef(item.id, side))).flatMap((entry) => entry.recordRefs) }
         const selected = result.value.sectionRecordRefs.find((entry) => entry.sectionRef === item.id)
         return selected ? { ...item, recordRefs: selected.recordRefs } : item
       })
       const committedAt = Date.parse(input.now())
-      if (!Number.isFinite(committedAt)) return { status: "unavailable" as const, reason: "agenda-clock-unavailable" }
+      if (!Number.isFinite(committedAt) || committedAt < at) return { status: "unavailable" as const, reason: "agenda-clock-unavailable" }
       prune(committedAt)
       if (selections.size >= maximum) return { status: "unavailable" as const, reason: "agenda-selection-capacity-reached" }
       const expiresAt = committedAt + lifetime
-      selections.set(selectionRef, { binding: context.binding, items: structuredClone(frozen), expiresAt })
+      if (!sameBinding(binding, context.binding)) return { status: "denied" as const, reason: "agenda-authority-unavailable" }
+      const sections = structuredClone(result.value.sections)
+      selections.set(selectionRef, { binding, items: structuredClone(frozen), sections, digests: new Map(sections.map((section) => [section.id, sectionDigest(section)])), expiresAt })
       return result
     },
     preview,
-    async select(selectionRef: string, sectionRefs: readonly string[], context: TrustedDomainContext, period?: Period): Promise<PortResult<readonly ReviewSection[]>> {
-      if (typeof selectionRef !== "string" || !Array.isArray(sectionRefs) || sectionRefs.some((ref) => typeof ref !== "string")) return { status: "needs-input", reason: "invalid-agenda-sections" }
+    async select(selectionRef: string, incomingRefs: readonly string[], context: TrustedDomainContext, incomingPeriod?: Period): Promise<PortResult<readonly ReviewSection[]>> {
+      if (typeof selectionRef !== "string" || !Array.isArray(incomingRefs) || incomingRefs.some((ref) => typeof ref !== "string")) return { status: "needs-input", reason: "invalid-agenda-sections" }
+      if (incomingPeriod !== undefined && !isSfPeriod(incomingPeriod)) return { status: "needs-input", reason: "invalid-review-period" }
+      const sectionRefs = [...incomingRefs]
+      const period = incomingPeriod ? { ...incomingPeriod } : undefined
       const at = Date.parse(input.now())
       if (!Number.isFinite(at)) return { status: "unavailable", reason: "agenda-clock-unavailable" }
       prune(at)
       const selected = selections.get(selectionRef)
-      if (!selected || selected.binding.installationId !== context.binding.installationId || selected.binding.projectId !== context.binding.projectId || selected.binding.principalRef !== context.binding.principalRef || selected.binding.accessRevision !== context.binding.accessRevision || selected.binding.policyVersion !== context.binding.policyVersion) return { status: "denied", reason: "agenda-selection-unavailable" }
-      if (period !== undefined && !isSfPeriod(period)) return { status: "needs-input", reason: "invalid-review-period" }
+      if (!selected || !sameBinding(selected.binding, context.binding)) return { status: "denied", reason: "agenda-selection-unavailable" }
       if (!await input.revalidate(context)) return { status: "denied", reason: "agenda-authority-unavailable" }
       if (!sectionRefs.length || new Set(sectionRefs).size !== sectionRefs.length || sectionRefs.some((ref) => !selected.items.some((item) => item.kind === "forecast-comparison" ? item.sides.some((side) => ref === `${item.id}:${side}`) : item.id === ref))) return { status: "needs-input", reason: "invalid-agenda-sections" }
       const wanted = new Set(sectionRefs)
@@ -190,8 +201,12 @@ export function createReviewAgendaSelection(input: {
       const ordered = sectionRefs.map((ref) => sections.get(ref))
       if (ordered.some((section) => !section)) return { status: "unavailable", reason: "agenda-section-removed" }
       if (period && ordered.some((section) => section!.period.start < period.start || section!.period.end > period.end)) return { status: "needs-input", reason: "review-period-does-not-cover-selected-sections" }
+      if (ordered.some((section) => sectionDigest(section!) !== selected.digests.get(section!.id))) return { status: "stale", reason: "agenda-preview-changed" }
       if (!await input.revalidate(context)) return { status: "denied", reason: "agenda-authority-unavailable" }
-      return { status: "ok", value: ordered.filter((section): section is ReviewSection => !!section) }
+      const completedAt = Date.parse(input.now())
+      if (!Number.isFinite(completedAt) || completedAt < at) return { status: "unavailable", reason: "agenda-clock-unavailable" }
+      if (completedAt >= selected.expiresAt || selections.get(selectionRef) !== selected || !sameBinding(selected.binding, context.binding)) return { status: "denied", reason: "agenda-selection-unavailable" }
+      return { status: "ok", value: structuredClone(sectionRefs.map((ref) => selected.sections.find((section) => section.id === ref)!)) }
     },
     release(selectionRef: string) { selections.delete(selectionRef) },
   }
@@ -200,10 +215,12 @@ export function createReviewAgendaSelection(input: {
 function validAgendaItem(item: unknown): item is ReviewAgendaItem {
   if (!item || typeof item !== "object" || Array.isArray(item)) return false
   const value = item as Record<string, unknown>
+  const kindKeys = value.kind === "dashboard" ? ["topic", "selectionRef"] : value.kind === "forecast-comparison" ? ["title", "baseRef", "candidateRef", "currency", "sides"] : value.kind === "procurement-request" ? ["title", "requestRef"] : value.kind === "procurement-supplier" ? ["title", "supplierRef", "fields"] : value.kind === "procurement-contract" ? ["title", "contractRef", "fields"] : undefined
+  if (!kindKeys || Object.keys(value).some((key) => !["id", "kind", "period", "recordRefs", "agendaNote", "threadIds", "biView", "outcome", ...kindKeys].includes(key))) return false
   if (typeof value.id !== "string" || !value.id.trim() || !isSfPeriod(value.period) || (value.recordRefs !== undefined && (!Array.isArray(value.recordRefs) || value.recordRefs.some((ref) => typeof ref !== "string" || !ref.trim()) || new Set(value.recordRefs).size !== value.recordRefs.length)) || (value.agendaNote !== undefined && (typeof value.agendaNote !== "string" || value.agendaNote.length > 2000))) return false
   if (value.threadIds !== undefined && (!Array.isArray(value.threadIds) || value.threadIds.some((id) => typeof id !== "string" || !id.trim()) || new Set(value.threadIds).size !== value.threadIds.length)) return false
-  if (value.biView !== undefined && (!value.biView || typeof value.biView !== "object" || Array.isArray(value.biView) || typeof (value.biView as Record<string, unknown>).viewId !== "string" || typeof (value.biView as Record<string, unknown>).selectionRef !== "string" || !(value.biView as Record<string, unknown>).selectionRef)) return false
-  if (value.outcome !== undefined && (!value.outcome || typeof value.outcome !== "object" || Array.isArray(value.outcome) || typeof (value.outcome as Record<string, unknown>).choiceId !== "string" || !(value.outcome as Record<string, unknown>).choiceId || !validOutcomeCaseRef((value.outcome as Record<string, unknown>).caseRef))) return false
+  if (value.biView !== undefined && (!value.biView || typeof value.biView !== "object" || Array.isArray(value.biView) || Object.keys(value.biView).some((key) => !["viewId", "selectionRef"].includes(key)) || typeof (value.biView as Record<string, unknown>).viewId !== "string" || !(value.biView as Record<string, unknown>).viewId || typeof (value.biView as Record<string, unknown>).selectionRef !== "string" || !(value.biView as Record<string, unknown>).selectionRef)) return false
+  if (value.outcome !== undefined && (!value.outcome || typeof value.outcome !== "object" || Array.isArray(value.outcome) || Object.keys(value.outcome).some((key) => !["caseRef", "choiceId"].includes(key)) || typeof (value.outcome as Record<string, unknown>).choiceId !== "string" || !(value.outcome as Record<string, unknown>).choiceId || !validOutcomeCaseRef((value.outcome as Record<string, unknown>).caseRef))) return false
   if (value.kind === "dashboard") return typeof value.topic === "string" && !!value.topic.trim() && typeof value.selectionRef === "string" && !!value.selectionRef.trim()
   if (value.kind === "forecast-comparison") return typeof value.title === "string" && !!value.title.trim() && typeof value.baseRef === "string" && !!value.baseRef.trim() && typeof value.candidateRef === "string" && !!value.candidateRef.trim() && typeof value.currency === "string" && !!value.currency.trim() && Array.isArray(value.sides) && value.sides.every((side) => side === "baseline" || side === "candidate")
   if (value.kind === "procurement-request") return typeof value.title === "string" && !!value.title.trim() && typeof value.requestRef === "string" && !!value.requestRef.trim()
@@ -212,13 +229,31 @@ function validAgendaItem(item: unknown): item is ReviewAgendaItem {
 }
 
 function matchesContext(projection: DomainProjection, context: TrustedDomainContext) {
-  return projection.context.installationId === context.binding.installationId && projection.context.projectId === context.binding.projectId && projection.context.principalRef === context.binding.principalRef && projection.context.accessRevision === context.binding.accessRevision && projection.context.policyVersion === context.binding.policyVersion
+  return validAgendaProjection(projection) && projection.context.installationId === context.binding.installationId && projection.context.projectId === context.binding.projectId && projection.context.principalRef === context.binding.principalRef && projection.context.accessRevision === context.binding.accessRevision && projection.context.policyVersion === context.binding.policyVersion
+}
+
+function validAgendaProjection(projection: DomainProjection) {
+  return !!projection && typeof projection === "object" && !!projection.context && isSfPeriod(projection.context.period) && Array.isArray(projection.context.sourceRefs) && projection.context.sourceRefs.every((ref) => !!ref && typeof ref === "object") && Array.isArray(projection.values) && projection.values.every((value) => !!value && typeof value.id === "string" && Array.isArray(value.sourceRefs) && (value.value === null || typeof value.value === "string" || typeof value.value === "boolean" || typeof value.value === "number" && Number.isFinite(value.value))) && Array.isArray(projection.components) && projection.components.every((component) => !!component && Array.isArray(component.sourceRefs) && component.sourceRefs.every((ref) => !!ref && typeof ref === "object") && (component.amount === null || typeof component.amount === "number" && Number.isFinite(component.amount))) && Array.isArray(projection.missing)
 }
 
 function digestRefs(refs: readonly string[]) { return JSON.stringify([...refs].sort()) }
 
-function isDashboardTopic(topic: string): topic is SupportedDashboardTopic {
+function isDashboardTopic(topic: string): topic is DashboardTopic {
   return Object.hasOwn(dashboardTopics, topic)
+}
+
+function sameBinding(left: Pick<TrustedDomainContext["binding"], "installationId" | "projectId" | "principalRef" | "accessRevision" | "policyVersion">, right: TrustedDomainContext["binding"]) {
+  return left.installationId === right.installationId && left.projectId === right.projectId && left.principalRef === right.principalRef && left.accessRevision === right.accessRevision && left.policyVersion === right.policyVersion
+}
+
+/** A repeated authorized observation may advance its timestamp; the selected content and source identity must remain exact. */
+function sectionDigest(section: ReviewSection) {
+  const source = (ref: SourceRef) => Object.fromEntries(Object.entries(ref).filter(([key]) => key !== "observedAt"))
+  return digestSfValue({
+    ...section,
+    projection: { ...section.projection, context: { ...section.projection.context, sourceRefs: section.projection.context.sourceRefs.map(source) }, components: section.projection.components.map((component) => ({ ...component, sourceRefs: component.sourceRefs.map(source) })) },
+    ...(section.comments ? { comments: section.comments.map((comment) => ({ ...comment, sourceRefs: comment.sourceRefs.map(source) })) } : {}),
+  })
 }
 
 async function captureReviewChart(section: ReviewSection, item: ReviewAgendaItem, ports: ReviewAgendaPorts, context: TrustedDomainContext): Promise<PortResult<ReviewSection>> {
@@ -244,7 +279,7 @@ async function captureReviewChartData(section: ReviewSection, item: ReviewAgenda
 function validOutcomeCaseRef(value: unknown): value is ObservedResultProjection["caseRef"] {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false
   const ref = value as Record<string, unknown>
-  return typeof ref.id === "string" && !!ref.id.trim() && typeof ref.incarnation === "string" && !!ref.incarnation.trim() && Number.isSafeInteger(ref.version) && (ref.version as number) > 0
+  return Object.keys(ref).every((key) => ["id", "incarnation", "version"].includes(key)) && typeof ref.id === "string" && !!ref.id.trim() && typeof ref.incarnation === "string" && !!ref.incarnation.trim() && Number.isSafeInteger(ref.version) && (ref.version as number) > 0
 }
 
 function forecastSideRef(itemId: string, side: "baseline" | "candidate") {

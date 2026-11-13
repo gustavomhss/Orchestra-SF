@@ -19,13 +19,18 @@ test("human preservation uses the authorized creation target and reconciles an e
   const period = { start: "2026-01-01", end: "2026-12-31" }
   const source = { selects: 0, available: true }
   const reviews = createReviewPort({ state, creationTarget: { ref: "workspace", incarnation: "installation" }, now: () => "2026-11-13T00:00:00Z", requestFor: (context) => context.kind === "ui" ? ui.requestFor(context) : undefined, authorizeOutcomeComparison: async () => true, authorizeOutcome: async () => true, authorizeDecision: async () => true, authorizeSections: async () => true, authorizeComments: async () => true, authorizeSensitivity: async () => true, revalidate: async () => true, revalidateEvidence: async () => true,
-    select: async () => { source.selects++; return source.available ? { status: "ok", value: [{ id: "section", title: "Section", period, recordCount: 0, projection: { version: 1, engineVersion: "v1", context: { principalRef: "principal", installationId: "installation", projectId: "project", accessRevision: "access", policyVersion: "policy", surface: "dashboard", period, currency: "USD", sourceRefs: [], capabilities: [] }, components: [], values: [], missing: [] } }] } : { status: "unavailable", reason: "source-changed" } },
+    select: async (selectionRef, sectionRefs) => { source.selects++; expect(selectionRef).toBe("selection"); expect(sectionRefs).toEqual(["section"]); return source.available ? { status: "ok", value: [{ id: "section", title: "Section", period, recordCount: 0, projection: { version: 1, engineVersion: "v1", context: { principalRef: "principal", installationId: "installation", projectId: "project", accessRevision: "access", policyVersion: "policy", surface: "dashboard", period, currency: "USD", sourceRefs: [], capabilities: [] }, components: [], values: [], missing: [] } }] } : { status: "unavailable", reason: "source-changed" } },
   })
   const port = createReviewHumanPort({ state, reviews, human, ui, creationTarget: { ref: "workspace", incarnation: "installation" } })
   const request = () => new Request("https://example.test/reviews", { method: "POST", headers: { origin: "https://example.test" } })
   const payload = { selectionRef: "selection", sectionRefs: ["section"] }
-  const first = await port.preserve(request(), payload)
+  const saving = port.preserve(request(), payload)
+  payload.selectionRef = "mutated-after-admission"
+  payload.sectionRefs[0] = "mutated-after-admission"
+  const first = await saving
   expect(first.status).toBe("ok")
+  payload.selectionRef = "selection"
+  payload.sectionRefs[0] = "section"
   source.available = false
   const retry = await port.preserve(request(), payload)
   expect(retry).toEqual(first)

@@ -7,7 +7,7 @@ import { matchesSelectedSources } from "./references.ts"
 
 type Value = DomainProjection["values"][number]
 type ProjectionContent = DomainProjection & { reviewOutcome?: ObservedResultProjection; reviewOutcomeComparison?: ReviewOutcomeComparison }
-type Entry = { value: Value; engineVersion: string; fields: string; key: string; aligned: boolean }
+type Entry = { value: Value; engineVersion: string; fields: string; key: string; recordKey: string; aligned: boolean }
 type Row = { sectionId: string; valueId: string; value: Value; identity?: Entry }
 type Change =
   | { kind: "added"; after: Value; sectionId: string; reviewId: string; basis: string }
@@ -18,7 +18,7 @@ type Omission = { sectionId: string; valueId: string; reason: "identification-lo
 type IndexedSection = { readable: boolean; rows: Row[]; idless: number }
 type Pair = { changes: Change[]; omissions: Omission[]; limitations: string[] }
 
-/** Pair by section and value id. A missing identity is an omission; a different identity stays incompatible and has no numeric delta. */
+/** Prefer stable row IDs, then an unambiguous canonical record/field identity. Never pair by a display name. */
 export function compareReviews(previous: PreservedReview | null, current: PreservedReview) {
   if (!previous) return current.previousReviewRef ? unavailable("The preserved previous reference is not available for comparison.") : firstReview(current)
   if (current.previousReviewRef && current.previousReviewRef !== previous.id) return unavailable("The preserved previous reference does not match the review supplied for comparison.")
@@ -37,7 +37,7 @@ export function compareReviews(previous: PreservedReview | null, current: Preser
     outcomes: [...previousFacts.outcomes, ...currentFacts.outcomes],
     limitations: [
       "Values without a single record or fully identified calculation are not compared.",
-      "Action state is not in the preserved review and is not compared.",
+      "Forwarding state is read separately from the canonical action; it does not change the preserved financial base.",
       ...paired.flatMap((part) => part.limitations),
       ...previousFacts.limitations,
       ...currentFacts.limitations,
@@ -54,7 +54,7 @@ function firstReview(current: PreservedReview) {
     comments: facts.comments.matched,
     outcomeComparisons: facts.comparisons,
     outcomes: facts.outcomes,
-    limitations: ["Action state is not in the preserved review and is not compared.", ...facts.limitations],
+    limitations: ["Forwarding state is read separately from the canonical action; it does not change the preserved financial base.", ...facts.limitations],
   }
 }
 
@@ -95,19 +95,34 @@ function pairSection(sectionId: string, previous: PreservedReview, current: Pres
   if (!present?.readable) return { changes: [], omissions: [], limitations: present ? [`Omitted: section ${sectionId} · projection unavailable`] : [] }
   const leftRows = new Map((left?.rows ?? []).map((row) => [row.valueId, row]))
   const rightRows = new Map((right?.rows ?? []).map((row) => [row.valueId, row]))
-  const ids = [...new Set([...leftRows.keys(), ...rightRows.keys()])]
+  const pairs: { before?: Row; after?: Row }[] = []
+  for (const [id, before] of leftRows) {
+    const after = rightRows.get(id)
+    if (!after) continue
+    pairs.push({ before, after })
+    leftRows.delete(id)
+    rightRows.delete(id)
+  }
+  for (const [id, before] of leftRows) {
+    if (!before.identity) continue
+    const sameIdentity = (row: Row) => !!row.identity && row.identity.recordKey === before.identity!.recordKey && row.identity.fields === before.identity!.fields
+    const candidates = [...rightRows.values()].filter(sameIdentity)
+    if (candidates.length !== 1 || [...leftRows.values()].filter(sameIdentity).length !== 1) continue
+    const after = candidates[0]!
+    pairs.push({ before, after })
+    leftRows.delete(id)
+    rightRows.delete(after.valueId)
+  }
+  pairs.push(...[...leftRows.values()].map((before) => ({ before })), ...[...rightRows.values()].map((after) => ({ after })))
   return {
-    changes: ids.flatMap((valueId) => {
-      const before = leftRows.get(valueId)
-      const after = rightRows.get(valueId)
+    changes: pairs.flatMap(({ before, after }) => {
       if (before && after) return samePair(before, after, previous.id, current.id)
       if (before) return compositionChange(before, previous.id, "removed")
       if (after) return compositionChange(after, current.id, "added")
       return []
     }),
-    omissions: ids.flatMap((valueId) => {
-      const before = leftRows.get(valueId)
-      const after = rightRows.get(valueId)
+    omissions: pairs.flatMap(({ before, after }) => {
+      const valueId = after?.valueId ?? before!.valueId
       if (before && after && (!before.identity || !after.identity)) return [{ sectionId, valueId, reason: "identification-lost" as const }]
       if ((before && !after && !before.identity) || (after && !before && !after.identity)) return [{ sectionId, valueId, reason: "identification-unavailable" as const }]
       return []
@@ -126,7 +141,7 @@ function samePair(before: Row, after: Row, previousId: string, currentId: string
   if (!before.identity || !after.identity) return []
   const basis = `${basisOf(before.identity)} → ${basisOf(after.identity)}`
   const change = { before: before.value, after: after.value, sectionId: after.sectionId, reviewId: currentId, previousReviewId: previousId, basis }
-  if (before.identity.key !== after.identity.key) return [{ kind: "incompatible", ...change }]
+  if (before.identity.recordKey !== after.identity.recordKey) return [{ kind: "incompatible", ...change }]
   const comparable = before.identity.aligned && after.identity.aligned && before.identity.engineVersion === after.identity.engineVersion && before.identity.fields === after.identity.fields && samePeriod(before.value, after.value) && before.value.currency === after.value.currency && before.value.unit === after.value.unit && before.value.granularity === after.value.granularity
   if (!comparable || nonFinite(before.value.value) || nonFinite(after.value.value)) return [{ kind: "incompatible", ...change }]
   if (before.value.value === after.value.value && before.value.evidenceState === after.value.evidenceState) return []
@@ -137,12 +152,13 @@ function samePair(before: Row, after: Row, previousId: string, currentId: string
 function identify(sectionId: string, engineVersion: string, value: Value): Entry | undefined {
   if (!Array.isArray(value.sourceRefs) || value.sourceRefs.length !== 1) return undefined
   const ref = value.sourceRefs[0] as BusinessEvidenceRef | undefined
-  if (ref?.kind === "record" && Array.isArray(ref.target?.fields)) return {
-    value, aligned: true, engineVersion,
+  if (ref?.kind === "record" && validRecord(ref)) return {
+    value, aligned: !ref.target.period || !!value.period && ref.target.period.start <= value.period.start && ref.target.period.end >= value.period.end, engineVersion,
     fields: JSON.stringify([[...ref.target.fields].sort(), ref.target.period ?? null]),
     key: JSON.stringify([sectionId, value.id, ref.installationId, ref.projectId, ref.target.surface, ref.target.recordType, ref.target.recordId, ref.target.incarnation]),
+    recordKey: JSON.stringify([ref.installationId, ref.projectId, ref.target.surface, ref.target.recordType, ref.target.recordId, ref.target.incarnation]),
   }
-  if (ref?.kind !== "calculation" || !ref.target?.engineVersion || !Array.isArray(ref.target.sourceRefs) || !ref.target.sourceRefs.length || ref.target.sourceRefs.some((source: BusinessEvidenceRef) => source?.kind !== "record" || !Array.isArray(source.target?.fields))) return undefined
+  if (ref?.kind !== "calculation" || !ref.target?.engineVersion || !ref.target.calculationId || !Array.isArray(ref.target.sourceRefs) || !ref.target.sourceRefs.length || ref.target.sourceRefs.some((source: BusinessEvidenceRef) => source?.kind !== "record" || !validRecord(source))) return undefined
   const sources = ref.target.sourceRefs.filter((source: BusinessEvidenceRef): source is Extract<BusinessEvidenceRef, { kind: "record" }> => source?.kind === "record")
   const period = ref.target.period
   const valuePeriod = value.period
@@ -152,7 +168,12 @@ function identify(sectionId: string, engineVersion: string, value: Value): Entry
     engineVersion: JSON.stringify([engineVersion, ref.target.engineVersion]),
     fields: JSON.stringify(sources.map((source) => JSON.stringify([source.target.surface, source.target.recordType, source.target.recordId, source.target.incarnation, [...source.target.fields].sort(), source.target.period ?? null])).sort()),
     key: JSON.stringify([sectionId, value.id, ref.installationId, ref.projectId, ref.target.calculationId, sources.map((source) => JSON.stringify([source.installationId, source.projectId, source.target.surface, source.target.recordType, source.target.recordId, source.target.incarnation])).sort()]),
+    recordKey: JSON.stringify([ref.installationId, ref.projectId, ref.target.calculationId, sources.map((source) => JSON.stringify([source.installationId, source.projectId, source.target.surface, source.target.recordType, source.target.recordId, source.target.incarnation])).sort()]),
   }
+}
+
+function validRecord(ref: Extract<BusinessEvidenceRef, { kind: "record" }>) {
+  return !!ref.target && [ref.installationId, ref.projectId, ref.target.surface, ref.target.recordType, ref.target.recordId, ref.target.incarnation].every((value) => typeof value === "string" && !!value.trim()) && Number.isSafeInteger(ref.target.version) && ref.target.version >= 0 && Array.isArray(ref.target.fields) && ref.target.fields.length > 0 && ref.target.fields.every((field) => typeof field === "string" && !!field.trim()) && new Set(ref.target.fields).size === ref.target.fields.length
 }
 
 function basisOf(entry: Entry) {

@@ -1,4 +1,5 @@
-import { fitSlideText, SLIDE_BODY, SLIDE_HEADING } from "../product/reviews/report-layout.ts"
+import { addReportTextSlides } from "../product/reviews/report-layout.ts"
+import { projectDashboardSource } from "../product/dashboard/port.ts"
 import { computeBudgetTotals, dashboardMoney, socClosureValue } from "../src/dashboard-accounts.ts"
 import type { BudgetData } from "../src/dashboard-accounts.ts"
 import { dashboardPages } from "../src/nav.ts"
@@ -41,11 +42,11 @@ export async function createReport(
     topics: string[]
   },
 ): Promise<ArtifactResult> {
-  if (!Number.isInteger(options.year) || options.year < 2024 || options.year > 2027 || !options.topics.length)
+  if (!Number.isInteger(options.year) || options.year < 2024 || options.year > 2027 || !options.topics.length || !["pptx", "docx"].includes(options.format) || new Set(options.topics).size !== options.topics.length)
     return {
       ok: false,
       status: 422,
-      errors: ["Select a valid year and at least one topic."],
+      errors: ["Select a valid year, format and at least one distinct topic."],
     }
   const allowed = dashboardPages(
     actor,
@@ -63,13 +64,14 @@ export async function createReport(
   const topics = options.topics.map((name) => topic(snapshot, actor, environment, name, options.year, allowed.includes("Budget Overview")))
   const title = options.title || "Sucafina IT — CIO Dashboard Report"
   if (options.format === "docx") {
-    const script = wordScript(title, options.year, environment.at, topics)
+    const script = wordScript(title, options.year, environment.at, topics.map((selected) => ({ ...selected, bullets: selected.table.length ? selected.table.map((row) => row.join(" · ")) : selected.bullets })))
     if (!script.ok) return { ok: false, status: 422, errors: ["Select at least one topic."] }
-    const { Document, Packer, Paragraph, HeadingLevel } = await import("docx")
+    const { Document, Packer, Paragraph, HeadingLevel, Footer, PageNumber, TextRun, AlignmentType } = await import("docx")
     const paragraphs = [
       new Paragraph({ text: script.title, heading: HeadingLevel.TITLE }),
       new Paragraph(script.line),
       new Paragraph("A review of the selected IT dashboard topics and their recorded figures."),
+      new Paragraph(`Selection order: ${options.topics.join(" → ")}. Annual and monthly measures use FY ${options.year}; record lists show the authorized state captured at ${environment.at}.`),
     ]
     const sections = script.sections.flatMap((section) => [
       new Paragraph({ text: section.heading, heading: HeadingLevel.HEADING_1 }),
@@ -80,7 +82,12 @@ export async function createReport(
     const document = new Document({
       creator: "Sucafina",
       title,
-      sections: [{ children: [...paragraphs, ...sections] }],
+      styles: { default: { document: { run: { font: "Aptos", size: 22, color: "243C30" }, paragraph: { spacing: { after: 120, line: 280 }, widowControl: true } }, heading1: { run: { color: "173D2C", size: 30 }, paragraph: { spacing: { before: 260, after: 160 }, keepNext: true } } },
+      sections: [{
+        properties: { page: { size: { width: 11906, height: 16838 }, margin: { top: 1000, right: 1000, bottom: 1000, left: 1000 } } },
+        footers: { default: new Footer({ children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun("Dashboard report · Page "), new TextRun({ children: [PageNumber.CURRENT] }), new TextRun(" of "), new TextRun({ children: [PageNumber.TOTAL_PAGES] })] })] }) },
+        children: [...paragraphs, ...sections],
+      }],
     })
     return {
       ok: true,
@@ -96,44 +103,19 @@ export async function createReport(
   presentation.title = title
   presentation.subject = `IT Dashboard · FY ${options.year}`
   for (const selected of topics) {
-    const titles = fitSlideText(selected.title, SLIDE_HEADING)
-    if (titles.length > 1) titles.forEach((title, index) => {
-      const page = presentation.addSlide()
-      page.background = { color: "F3F6F2" }
-      page.addText(`Topic title · ${index + 1}/${titles.length}`, { x: 0.6, y: 0.35, w: 12.1, h: 0.6, fontSize: 20, bold: true })
-      page.addText(title, { x: 0.6, y: 1.3, w: 12.1, h: 5.4, fontSize: 20, margin: 0.08 })
-    })
-    const heading = titles.length > 1 ? "Topic" : selected.title
-    const slide = presentation.addSlide()
-    slide.background = { color: "F3F6F2" }
-    slide.addText(heading, { x: 0.6, y: 0.35, w: 12.1, h: 0.6, color: "173D2C", fontSize: 27, bold: true })
-    slide.addText(`FY ${options.year} · ${environment.at.slice(0, 10)}`, {
-      x: 0.6, y: 1.0, w: 12, h: 0.25, fontSize: 10, color: "607469",
-    })
-    if (selected.subtitle) slide.addText(selected.subtitle, { x: 0.6, y: 1.24, w: 12, h: 0.2, fontSize: 10, color: "607469", margin: 0 })
-    selected.metrics.forEach((metric, index) => {
-      const target = index < 6 ? slide : presentation.addSlide()
-      target.addText(`${metric.label}\n${metric.value}`, {
-        x: index < 6 ? 0.6 + (index % 3) * 4.1 : 0.6,
-        y: index < 6 ? 1.45 + Math.floor(index / 3) * 0.8 : 1.45,
-        w: 3.8, h: 0.7, fontSize: 15, color: "173D2C", margin: 0.08, fill: { color: "FFFFFF" },
-      })
-    })
     const records = selected.table.length ? selected.table.map((row) => row.join(" · ")) : selected.bullets
-    if (!records.length) slide.addText("No records.", { x: 0.6, y: 3.2, w: 12, h: 0.5, fontSize: 17 })
-    records.forEach((record, recordIndex) => {
-      // Bounded text fragments prevent a long note from silently clipping in a fixed-height shape.
-      const fragments = fitSlideText(record, SLIDE_BODY)
-      fragments.forEach((fragment, fragmentIndex) => {
-        const page = presentation.addSlide()
-        page.background = { color: "F3F6F2" }
-        page.addText(`${heading} · FY ${options.year} · ${recordIndex + 1}/${records.length}${fragments.length > 1 ? ` · ${fragmentIndex + 1}/${fragments.length}` : ""}`, {
-          x: 0.6, y: 0.35, w: 12.1, h: 0.6, color: "173D2C", fontSize: 20, bold: true,
-        })
-        page.addText(fragment, { x: 0.6, y: 1.3, w: 12.1, h: 5.4, fontSize: 14, color: "243C30", margin: 0.08, breakLine: true })
-      })
-    })
+    addReportTextSlides(presentation, selected.title, [
+      ...(selected.subtitle ? [selected.subtitle] : []),
+      ...selected.metrics.map((metric) => `${metric.label} ${metric.value}`),
+      ...(records.length ? records : ["No records."]),
+    ], `FY ${options.year} · ${environment.at.slice(0, 10)}`)
   }
+  addReportTextSlides(presentation, "Selected content", [
+    title,
+    `Selection order: ${options.topics.join(" → ")}.`,
+    `Annual and monthly measures use FY ${options.year}; record lists show the authorized state captured at ${environment.at}.`,
+    ...topics.map((selected) => `${selected.title}: ${selected.table.length ? `${selected.table.length} presented source row(s)` : `${selected.bullets.length} factual note(s)`}; ${selected.metrics.length} metric(s).`),
+  ], "Dashboard report")
   const output = await presentation.write({ outputType: "uint8array" })
   if (!(output instanceof Uint8Array)) throw new Error("Unexpected presentation output")
   return {
@@ -145,9 +127,11 @@ export async function createReport(
 }
 
 function topic(snapshot: Snapshot, actor: Actor, environment: Environment, name: string, year: number, canReadBudget: boolean): Topic {
+  const data = projectDashboardSource(snapshot, actor, environment, name === "Executive Summary" ? "Executive Dashboard" : name)
+  if (!data) return { title: name, bullets: ["This topic is unavailable for the current access and context."], metrics: [], table: [] }
   if (name === "Executive Dashboard" || name === "Executive Summary" || name === "Budget Overview") {
     if (!canReadBudget) return { title: name, bullets: ["Budget figures are unavailable for this selection."], metrics: [], table: [] }
-    const totals = computeBudgetTotals(budget(snapshot.data), year)
+    const totals = computeBudgetTotals(budget(data), year)
     return {
       title: name,
       bullets: ["Budget, actual and forecast figures cover all twelve months."],
@@ -162,7 +146,7 @@ function topic(snapshot: Snapshot, actor: Actor, environment: Environment, name:
     }
   }
   if (name === "IT Performance Contract") {
-    const contract = object(snapshot.data.itperf)
+    const contract = object(data.itperf)
     const items = rows(contract.items)
     return {
       title: name,
@@ -172,50 +156,39 @@ function topic(snapshot: Snapshot, actor: Actor, environment: Environment, name:
     }
   }
   if (name === "IT Operations") {
-    const entries = rows(snapshot.data.opsTickets).filter((entry) => finite(entry.year) === year)
-    const configured = Array.isArray(snapshot.data.opsCats)
-      ? snapshot.data.opsCats
+    const entries = rows(data.opsTickets).filter((entry) => finite(entry.year) === year).sort((left, right) => finite(left.month) - finite(right.month))
+    const configured = Array.isArray(data.opsCats)
+      ? data.opsCats
           .map((category) => (typeof category === "string" ? category : text(object(category).key)))
           .filter((category) => category.length > 0)
       : []
     const categories = configured.length
       ? configured
       : ["IT Security", "Infrastructure", "Application", "IT Operations", "Others (Beyers OT)"]
-    const total = (measure: string) =>
-      entries.reduce(
-        (entryTotal, entry) =>
-          entryTotal +
-          categories.reduce(
-            (categoryTotal, category) =>
-              categoryTotal +
-              ["Incidents", "Service Requests"].reduce(
-                (typeTotal, type) => typeTotal + finite(entry[`${category}|${type}|${measure}`]),
-                0,
-              ),
-            0,
-          ),
-        0,
-      )
-    const opened = total("Open")
-    const closed = total("Closed")
+    const measurements = entries.flatMap((entry) => [...new Set(categories)].flatMap((category) => ["Incidents", "Service Requests"].map((type) => [
+      `${year}-${String(entry.month).padStart(2, "0")}`,
+      category,
+      type,
+      `Opened: ${display(entry[`${category}|${type}|Open`]) || "unavailable"}`,
+      `Closed: ${display(entry[`${category}|${type}|Closed`]) || "unavailable"}`,
+      `Initial balance: ${display(entry[`${category}|${type}|Initial Balance`]) || "unavailable"}`,
+    ])))
     return {
       title: name,
-      subtitle: `Ticket Volume · FY ${year}`,
+      subtitle: `Monthly source measurements · FY ${year}. YTD totals are unavailable from this source projection; no aggregate is inferred.`,
       bullets: [
         entries.length
-          ? `IT Operations recorded ${opened} ticket(s) opened and ${closed} closed year-to-date across ${entries.length} month(s) of data.`
+          ? `IT Operations contains ${entries.length} monthly source record(s). Missing measurements remain unavailable; a measured zero remains zero.`
           : `No IT Operations ticket data has been entered yet for ${year}.`,
       ],
       metrics: [
-        { label: "Tickets Opened YTD", value: entries.length ? String(opened) : "—" },
-        { label: "Tickets Closed YTD", value: entries.length ? String(closed) : "—" },
         { label: "Months w/ Data", value: String(entries.length) },
       ],
-      table: [],
+      table: measurements,
     }
   }
   if (name === "IT Security KPIs") {
-    const entries = rows(snapshot.data.secKpi)
+    const entries = rows(data.secKpi)
       .filter((entry) => finite(entry.year) === year)
       .sort((left, right) => finite(left.month) - finite(right.month))
     const latest = entries.at(-1)
@@ -262,17 +235,7 @@ function topic(snapshot: Snapshot, actor: Actor, environment: Environment, name:
       table: [],
     }
   }
-  const records = rows(snapshot.data[COLLECTIONS[name]])
-  if (["Talent Review", "Headcount Overview"].includes(name)) {
-    for (const member of records)
-      snapshot.audit.push({
-        who: actor.id,
-        at: environment.at,
-        record: `members:${String(member.id ?? "")}`,
-        was: null,
-        became: { read: true, member: String(member.id ?? "") },
-      })
-  }
+  const records = rows(data[COLLECTIONS[name]])
   const columns =
     name === "Talent Review"
       ? ["name", "status", "cls", "outlook", "notes"]
@@ -282,7 +245,7 @@ function topic(snapshot: Snapshot, actor: Actor, environment: Environment, name:
           ? ["name", "title", "type", "status"]
           : name === "Vendor Contracts"
             ? ["vendor", "name", "amount", "renewType"]
-            : ["name", "title", "status", "priority"]
+            : ["name", "title", "status", "priority", "notes", "comments", "due"]
   return {
     title: name,
     bullets: records.map((record) =>

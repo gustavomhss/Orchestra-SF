@@ -28,7 +28,7 @@ export type ReviewHost = {
   now: () => string
   requestFor: (binding: TrustedDomainContext) => Request | undefined
   authorizeSections: (binding: TrustedDomainContext, sections: readonly { id: string; sourceRefs: readonly SourceRef[] }[]) => Promise<boolean>
-  authorizeComments: (binding: TrustedDomainContext, comments: readonly { id: string; version: number; sourceRefs: readonly SourceRef[] }[]) => Promise<boolean>
+  authorizeComments: (binding: TrustedDomainContext, comments: PreservedReview["comments"]) => Promise<boolean>
   authorizeOutcomeComparison: (binding: TrustedDomainContext, outcomes: readonly ReviewOutcomeComparison[]) => Promise<boolean>
   authorizeOutcome: (binding: TrustedDomainContext, outcomes: readonly ObservedResultProjection[]) => Promise<boolean>
   authorizeDecision: (binding: TrustedDomainContext, decisions: readonly NonNullable<DomainProjection["decision"]>[]) => Promise<boolean>
@@ -40,10 +40,13 @@ export type ReviewHost = {
 
 export function createReviewPort(host: ReviewHost) {
   return {
-    async preview(selectionRef: string, sectionRefs: readonly string[], binding: TrustedDomainContext, period?: Period) {
-      if (!selectionRef || new Set(sectionRefs).size !== sectionRefs.length) return { status: "needs-input", reason: "invalid-selection" } as const
-      const selected = await host.select(selectionRef, sectionRefs, binding, period)
-      if (selected.status !== "ok") return selected
+    async preview(selectionRef: string, incomingRefs: readonly string[], binding: TrustedDomainContext, period?: Period) {
+      if (typeof selectionRef !== "string" || !selectionRef.trim() || !Array.isArray(incomingRefs) || !incomingRefs.length || incomingRefs.some((ref) => typeof ref !== "string" || !ref.trim()) || new Set(incomingRefs).size !== incomingRefs.length || (period !== undefined && !isSfPeriod(period))) return { status: "needs-input", reason: "invalid-selection" } as const
+      const sectionRefs = [...incomingRefs]
+      const resolved = await host.select(selectionRef, sectionRefs, binding, period ? { ...period } : undefined)
+      if (resolved.status !== "ok") return resolved
+      if (!Array.isArray(resolved.value) || resolved.value.some((section) => !validSectionProjection(section))) return { status: "unavailable", reason: "invalid-section-projection" } as const
+      const selected = { status: "ok" as const, value: structuredClone(resolved.value) }
       if (selected.value.some((section) => !validOutcomeComparison(section.outcomeComparison) || (section.outcomeComparison && (!section.outcome || digestSfValue(section.outcomeComparison.observation) !== digestSfValue(section.outcome))))) return { status: "unavailable", reason: "invalid-outcome-comparison" } as const
       if (!(await host.authorizeOutcomeComparison(binding, selected.value.flatMap((section) => section.outcomeComparison ? [section.outcomeComparison] : [])))) return { status: "denied", reason: "access-unavailable" } as const
       if (selected.value.some((section) => !validReviewOutcome(section.outcome))) return { status: "unavailable", reason: "invalid-outcome-snapshot" } as const
@@ -74,10 +77,12 @@ export function createReviewPort(host: ReviewHost) {
         return { status: "denied", reason: "access-unavailable" } as const
       return { status: "ok", value: structuredClone(selected.value) } as const
     },
-    async preserve(input: { id: string; selectionRef: string; sectionRefs: readonly string[]; previousReviewRef?: string; expectedStorageVersion: number; idempotencyKey: string; targetIncarnation: string }, binding: TrustedDomainContext) {
+    async preserve(incoming: { id: string; selectionRef: string; sectionRefs: readonly string[]; previousReviewRef?: string; expectedStorageVersion: number; idempotencyKey: string; targetIncarnation: string }, binding: TrustedDomainContext) {
       const request = host.requestFor(binding)
       if (!request) return { status: "denied", reason: "binding-unavailable" } as const
-      if (typeof input.id !== "string" || !input.id.trim()) return { status: "needs-input", reason: "invalid-review-identity" } as const
+      if (!incoming || typeof incoming !== "object" || typeof incoming.id !== "string" || !incoming.id.trim()) return { status: "needs-input", reason: "invalid-review-identity" } as const
+      if (typeof incoming.selectionRef !== "string" || !incoming.selectionRef.trim() || !Array.isArray(incoming.sectionRefs) || !incoming.sectionRefs.length || incoming.sectionRefs.some((ref) => typeof ref !== "string" || !ref.trim()) || new Set(incoming.sectionRefs).size !== incoming.sectionRefs.length || !Number.isSafeInteger(incoming.expectedStorageVersion) || incoming.expectedStorageVersion < 0 || typeof incoming.idempotencyKey !== "string" || !incoming.idempotencyKey.trim() || (incoming.previousReviewRef !== undefined && (typeof incoming.previousReviewRef !== "string" || !incoming.previousReviewRef.trim() || incoming.previousReviewRef === incoming.id))) return { status: "needs-input", reason: "invalid-review-request" } as const
+      const input = structuredClone(incoming)
       if (!host.creationTarget.ref || !host.creationTarget.incarnation || input.targetIncarnation !== host.creationTarget.incarnation) return { status: "denied", reason: "creation-target-unavailable" } as const
       const command = {
         namespace: "reviews" as const, expectedStorageVersion: input.expectedStorageVersion, idempotencyKey: input.idempotencyKey,
@@ -173,7 +178,7 @@ export function createReviewPort(host: ReviewHost) {
 }
 
 function validReviewSources(review: PreservedReview) {
-  if (typeof review.id !== "string" || !review.id.trim() || !Number.isSafeInteger(review.version) || review.version < 1 || typeof review.createdAt !== "string" || !Number.isFinite(Date.parse(review.createdAt)) || !Array.isArray(review.sourceRefs) || !Array.isArray(review.sections) || !Array.isArray(review.comments)) return false
+  if (typeof review.id !== "string" || !review.id.trim() || !Number.isSafeInteger(review.version) || review.version < 1 || typeof review.createdAt !== "string" || !Number.isFinite(Date.parse(review.createdAt)) || !Array.isArray(review.sourceRefs) || !Array.isArray(review.sections) || !review.sections.length || !Array.isArray(review.comments)) return false
   if (new Set(review.sections.map((section: PreservedReview["sections"][number]) => section?.id)).size !== review.sections.length) return false
   const allowed = new Set(review.sourceRefs.map((ref: SourceRef) => digestSfValue(ref)))
   if (new Set(review.comments.map((comment: PreservedReview["comments"][number]) => JSON.stringify([comment?.id, comment?.version]))).size !== review.comments.length) return false
@@ -181,8 +186,14 @@ function validReviewSources(review: PreservedReview) {
     if (!section || typeof section !== "object") return false
     const projection = section.content as DomainProjection
     return typeof section.id === "string" && !!section.id && typeof section.title === "string" && Number.isSafeInteger(section.count) && section.count >= 0 && !!section.period && isSfPeriod(section.period) && Array.isArray(section.sourceRefs) && !!projection?.context && Array.isArray(projection.context.sourceRefs) &&
-      digestSfValue(section.sourceRefs) === digestSfValue(projection.context.sourceRefs) && ((projection as DomainProjection & { reviewAgendaNote?: unknown }).reviewAgendaNote === undefined || (typeof (projection as DomainProjection & { reviewAgendaNote?: unknown }).reviewAgendaNote === "string" && ((projection as DomainProjection & { reviewAgendaNote: string }).reviewAgendaNote.length <= 2000))) && validChart(projection, (projection as DomainProjection & { reviewChart?: ReviewChart }).reviewChart) && validReviewDecision(projection.decision) && validReviewOutcome((projection as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome) && validOutcomeComparison((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison) && (!(projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison || digestSfValue((projection as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome) === digestSfValue((projection as DomainProjection & { reviewOutcomeComparison: ReviewOutcomeComparison }).reviewOutcomeComparison.observation)) && section.sourceRefs.every((ref: SourceRef) => allowed.has(digestSfValue(ref)))
+      isSfPeriod(projection.context.period) && digestSfValue(section.period) === digestSfValue(projection.context.period) && digestSfValue(section.sourceRefs) === digestSfValue(projection.context.sourceRefs) && ((projection as DomainProjection & { reviewAgendaNote?: unknown }).reviewAgendaNote === undefined || (typeof (projection as DomainProjection & { reviewAgendaNote?: unknown }).reviewAgendaNote === "string" && ((projection as DomainProjection & { reviewAgendaNote: string }).reviewAgendaNote.length <= 2000))) && validChart(projection, (projection as DomainProjection & { reviewChart?: ReviewChart }).reviewChart) && validReviewDecision(projection.decision) && validReviewOutcome((projection as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome) && validOutcomeComparison((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison) && (!(projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison || digestSfValue((projection as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome) === digestSfValue((projection as DomainProjection & { reviewOutcomeComparison: ReviewOutcomeComparison }).reviewOutcomeComparison.observation)) && section.sourceRefs.every((ref: SourceRef) => allowed.has(digestSfValue(ref)))
   }) && review.comments.every((comment: PreservedReview["comments"][number]) => !!comment && typeof comment === "object" && typeof comment.id === "string" && !!comment.id && Number.isSafeInteger(comment.version) && comment.version > 0 && typeof comment.content === "string" && typeof comment.authorRef === "string" && !!comment.authorRef && typeof comment.createdAt === "string" && !!comment.createdAt && Array.isArray(comment.sourceRefs) && comment.sourceRefs.length > 0 && comment.sourceRefs.every((ref: SourceRef) => allowed.has(digestSfValue(ref))))
+}
+
+function validSectionProjection(section: ReviewSection) {
+  if (!section || typeof section !== "object" || typeof section.id !== "string" || !section.id.trim() || typeof section.title !== "string" || !isSfPeriod(section.period)) return false
+  const projection = section.projection
+  return !!projection && typeof projection === "object" && !!projection.context && isSfPeriod(projection.context.period) && digestSfValue(section.period) === digestSfValue(projection.context.period) && Array.isArray(projection.context.sourceRefs) && Array.isArray(projection.components) && Array.isArray(projection.missing) && Array.isArray(projection.values) && projection.values.every((value) => !!value && typeof value === "object" && Array.isArray(value.sourceRefs)) && (section.comments === undefined || Array.isArray(section.comments))
 }
 
 function validChart(projection: DomainProjection, chart: ReviewChart | undefined) {

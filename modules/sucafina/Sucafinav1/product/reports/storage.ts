@@ -1,7 +1,7 @@
 import type { ReviewOutcomeComparison } from "../reviews/outcome.ts"
 import type { ObservedResultProjection } from "../contracts/decisions.ts"
 import { reviewInclusion } from "../reviews/inclusion.ts"
-import { readReviewArtifactSeal } from "../reviews/render.ts"
+import { readReviewArtifactSeal, readReviewArtifactRenderDigest } from "../reviews/render.ts"
 import type { ReviewInclusion } from "../reviews/inclusion.ts"
 import { reviewDecisionEvidence } from "../reviews/decision.ts"
 import { createHash } from "node:crypto"
@@ -20,6 +20,7 @@ type StoredReport = {
   kind: "sf-review-artifact-v1"
   reviewRef: string
   reviewDigest: string
+  renderDigest?: string
   inclusion: ReviewInclusion
   sectionRefs: readonly string[]
   principalRef: string
@@ -71,7 +72,8 @@ export function createReviewArtifactStorage(input: {
       const review = await input.reviews.read(entry.reviewRef, context)
       if (review.status !== "ok") return { status: "denied", reason: "artifact-unavailable" }
       const inclusion = readReviewArtifactSeal(entry.artifact, review.value, entry.sectionRefs)
-      if (!inclusion) return { status: "denied", reason: "artifact-render-proof-unavailable" }
+      const renderDigest = readReviewArtifactRenderDigest(entry.artifact, review.value, entry.sectionRefs)
+      if (!inclusion || !renderDigest) return { status: "denied", reason: "artifact-render-proof-unavailable" }
       const selected = entry.sectionRefs.map((id) => review.value.sections.find((section) => section.id === id))
       if (selected.some((section) => !section) || selected.reduce((total, section) => total + (section?.count ?? 0), 0) !== entry.recordCount) return { status: "denied", reason: "artifact-coverage-mismatch" }
       const evidence = selected.flatMap((section) => {
@@ -80,17 +82,33 @@ export function createReviewArtifactStorage(input: {
       })
       if (digestSfValue(evidence) !== digestSfValue(entry.evidenceRefs)) return { status: "denied", reason: "artifact-evidence-mismatch" }
       const digest = createHash("sha256").update(entry.artifact.bytes).digest("hex")
-      const stored: StoredReport = { kind: "sf-review-artifact-v1", reviewRef: entry.reviewRef, reviewDigest: digestSfValue(review.value), inclusion, sectionRefs: [...entry.sectionRefs], principalRef: context.binding.principalRef, installationId: context.binding.installationId, projectId: context.binding.projectId, policyVersion: context.binding.policyVersion, format: entry.format, name: entry.artifact.name, mediaType: entry.artifact.type, recordCount: entry.recordCount, evidenceRefs: entry.evidenceRefs, digest, bytes: Buffer.from(entry.artifact.bytes).toString("base64") }
-      const ref = `report:${digestSfValue({ principal: context.binding.principalRef, operation })}`
-      const before = await input.state.read(request, "documents", () => null)
+      const stored: StoredReport = { kind: "sf-review-artifact-v1", reviewRef: entry.reviewRef, reviewDigest: digestSfValue(review.value), renderDigest, inclusion, sectionRefs: [...entry.sectionRefs], principalRef: context.binding.principalRef, installationId: context.binding.installationId, projectId: context.binding.projectId, policyVersion: context.binding.policyVersion, format: entry.format, name: entry.artifact.name, mediaType: entry.artifact.type, recordCount: entry.recordCount, evidenceRefs: entry.evidenceRefs, digest, bytes: Buffer.from(entry.artifact.bytes).toString("base64") }
+      const ref = `report:${digestSfValue({ installation: context.binding.installationId, project: context.binding.projectId, principal: context.binding.principalRef, operation })}`
+      // ZIP container timestamps can change on an exact retry. The command identifies the
+      // preserved content; the first committed bytes remain the immutable downloadable file.
+      const commandDigest = digestSfValue(reportIntent(stored))
+      const before = await input.state.read(request, "documents", (state, authority) => {
+        if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion) return undefined
+        return state.documents[ref]
+      })
       if (before.status !== "ok" && !(before.status === "unavailable" && before.reason === "product-state-uninitialized")) return { status: "unavailable", reason: "artifact-storage-unavailable" }
       if (!await input.host.revalidate(context)) return { status: "denied", reason: "artifact-unavailable" }
-      const saved = await input.state.transaction(request, { namespace: "documents", expectedStorageVersion: before.status === "ok" ? before.storageVersion : 0, targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation, idempotencyKey: operation, commandDigest: digestSfValue(stored) }, async (state, authority) => {
+      if (before.status === "ok" && before.value) {
+        const existing = await load(ref, context)
+        if (existing.status !== "ok") return existing
+        if (digestSfValue(reportIntent(existing.value.stored)) !== commandDigest) return { status: "conflict", reason: "artifact-operation-reused" }
+        return { status: "ok", value: { artifactRef: ref } }
+      }
+      const saved = await input.state.transaction(request, { namespace: "documents", expectedStorageVersion: before.status === "ok" ? before.storageVersion : 0, targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation, idempotencyKey: operation, commandDigest }, async (state, authority) => {
         if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || state.documents[ref]) return { commit: false, value: false }
         state.documents[ref] = stored
         return { commit: true, value: true }
       })
-      if (saved.status !== "ok" || !saved.value) return { status: "conflict", reason: "artifact-storage-conflict" }
+      if (saved.status !== "ok" || !saved.value) {
+        const existing = await load(ref, context)
+        if (existing.status === "ok" && digestSfValue(reportIntent(existing.value.stored)) === commandDigest) return { status: "ok", value: { artifactRef: ref } }
+        return { status: "conflict", reason: "artifact-storage-conflict" }
+      }
       const current = await load(ref, context)
       if (current.status !== "ok") return current
       return { status: "ok", value: { artifactRef: ref } }
@@ -110,5 +128,15 @@ export function createReviewArtifactStorage(input: {
       if (result.status !== "ok") return new Response("Access denied", { status: 403, headers: { "Cache-Control": "no-store" } })
       return new Response(new Uint8Array(result.value.bytes), { headers: { "Content-Type": result.value.stored.mediaType, "Content-Disposition": `attachment; filename*=UTF-8''${encodeURIComponent(result.value.stored.name)}`, "X-Content-Type-Options": "nosniff", "Cache-Control": "no-store" } })
     },
+  }
+}
+
+function reportIntent(stored: StoredReport) {
+  return {
+    kind: stored.kind, reviewRef: stored.reviewRef, reviewDigest: stored.reviewDigest, renderDigest: stored.renderDigest ?? "legacy-renderer",
+    inclusion: stored.inclusion, sectionRefs: stored.sectionRefs, principalRef: stored.principalRef,
+    installationId: stored.installationId, projectId: stored.projectId, policyVersion: stored.policyVersion,
+    format: stored.format, name: stored.name, mediaType: stored.mediaType,
+    recordCount: stored.recordCount, evidenceRefs: stored.evidenceRefs,
   }
 }

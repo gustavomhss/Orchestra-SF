@@ -25,13 +25,24 @@ test("closure binds an authorized handoff to the immutable review and rereads it
   if (reviewContext.status !== "ok" || !await ui.validate(reviewContext.value, "sf_review_prepare", digest)) throw new Error("review admission failed")
   const actionContext = await human.admit(request, "collaboration.handoff.confirm", handoff)
   if (actionContext.status !== "ok") throw new Error("handoff admission failed")
-  const access = { allowed: true, current: { id: "topic", version: 1, action: "Follow up", owner: "Owner", due: "2026-12-31", status: "open", priority: "normal", notes: "" } }
-  const closures = createReviewClosurePort({ state, host: { requestFor: (context) => context.kind === "ui" ? ui.requestFor(context) : undefined, revalidate: (context) => context.kind === "ui" ? ui.revalidate(context) : Promise.resolve(false) }, reviews, human, ui, creationTarget: { ref: "workspace", incarnation: "install" }, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, handoff: { create: async () => ({ status: "ok", value: { topic: structuredClone(access.current), state: "created", relationId: "relation-id" } }) }, verifyHandoff: async () => access.allowed, readAction: async () => ({ status: "ok", value: structuredClone(access.current) }) })
+  const access = { allowed: true, handoffs: 0, current: { id: "topic", version: 1, action: "Follow up", owner: "Owner", due: "2026-12-31", status: "open", priority: "normal", notes: "" } }
+  const closures = createReviewClosurePort({ state, host: { requestFor: (context) => context.kind === "ui" ? ui.requestFor(context) : undefined, revalidate: (context) => context.kind === "ui" ? ui.revalidate(context) : Promise.resolve(false) }, reviews, human, ui, creationTarget: { ref: "workspace", incarnation: "install" }, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, handoff: { create: async () => { access.handoffs++; return { status: "ok", value: { topic: structuredClone(access.current), state: "created", relationId: "relation-id" } } } }, verifyHandoff: async () => access.allowed, readAction: async () => ({ status: "ok", value: structuredClone(access.current) }) })
   const closed = await closures.confirm("review", handoff, reviewContext.value, actionContext.value)
   if (closed.status !== "ok") throw new Error(closed.reason)
   access.current = { ...access.current, status: "done", version: 2 }
   const reopened = await closures.read(closed.value.closureRef, reviewContext.value)
   expect(reopened).toMatchObject({ status: "ok", value: { review: { id: "review" }, closure: { topic: { status: "open" } }, currentAction: { status: "done" } } })
+  expect(await closures.confirm("review", handoff, reviewContext.value, actionContext.value)).toEqual(closed)
+  expect(access.handoffs).toBe(1)
+  const listed = await closures.listByReview("review", reviewContext.value)
+  expect(listed).toMatchObject({ status: "ok", value: { coverage: "complete", entries: [{ closure: { id: closed.value.closureRef, topic: { status: "open" } }, currentAction: { id: "topic", status: "done", version: 2 } }] } })
+  if (listed.status !== "ok") throw new Error("closure list unavailable")
+  expect(listed.value.entries[0]?.review).toEqual(review)
   access.allowed = false
   expect((await closures.read(closed.value.closureRef, reviewContext.value)).status).toBe("denied")
+  const restricted = await closures.listByReview("review", reviewContext.value)
+  expect(restricted).toMatchObject({ status: "ok", value: { coverage: "partial", entries: [] } })
+  expect(JSON.stringify(restricted)).not.toContain("Follow up")
+  expect((await closures.confirm("review", handoff, reviewContext.value, actionContext.value)).status).toBe("denied")
+  expect(access.handoffs).toBe(1)
 })

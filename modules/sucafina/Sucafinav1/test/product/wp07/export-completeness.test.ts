@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test"
 import JSZip from "jszip"
 import { renderPreservedReview } from "../../../product/reviews/render.ts"
+import { exportFixture, extractReportText } from "./export-fixture.ts"
 
 test("presentation keeps its title and review reference alongside the selected material", async () => {
   const period = { start: "2026-01-01", end: "2026-12-31" }
@@ -13,4 +14,25 @@ test("presentation keeps its title and review reference alongside the selected m
   expect(text).toContain("Annual meeting")
   expect(text).toContain("review-cover-42")
   expect(text).toContain("Empty selection")
+})
+
+test("25 long project notes, every monthly value, missing series and captured comments survive both formats", async () => {
+  const fixture = exportFixture()
+  for (const format of ["pptx", "docx"] as const) {
+    const result = await renderPreservedReview(fixture.review, { title: "Complete review", format, sectionRefs: fixture.sectionRefs })
+    if (!result.ok) throw new Error("report unavailable")
+    const extracted = await extractReportText(result.bytes, format)
+    const text = extracted.text.replace(/\s/gu, "")
+    for (let index = 1; index <= 25; index++) {
+      const id = String(index).padStart(2, "0")
+      expect(text.split(`PRJ-${id}:`).length - 1).toBe(1)
+      expect(text.split(`END-NOTE-${id}`).length - 1).toBe(1)
+    }
+    expect(text).toContain("END-COMMENT-V3")
+    expect(text).toContain("Noauthorizedserieswascaptured")
+    expect(text).toContain("outlook-11:112000USD")
+    expect(text).toContain("actual-12:unavailableUSD")
+    expect(extracted.figures).toBe(1)
+    if (format === "pptx") expect(extracted.pages!).toBeLessThan(60)
+  }
 })
