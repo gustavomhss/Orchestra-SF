@@ -41,7 +41,8 @@ function initial(options: FixtureOptions): Snapshot {
       roleMap: [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }],
       versions: options.mode === "renewal-usd"
         ? [version("renewal", [line("renewal", 240000)]), version(`transition-${options.training ?? "bundled"}`, [line("bridge", 60000), line("implementation", 45000), line("new-service", 105000), ...(options.training === "confirmed" ? [line("training", 40000)] : [])])]
-        : [{ id: "v0", year: 2027, closed: 9, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "EUR", b: Array(12).fill(100000), a: Array(12).fill(null), f: [null, null, null, null, null, null, null, null, null, 100000, 112000, 100000] }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }],
+        // Planner admits a registered currency with an unknown rate, while retaining missing FX.
+        : [{ id: "v0", year: 2027, closed: 9, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "EUR", b: Array(12).fill(100000), a: Array(12).fill(null), f: [null, null, null, null, null, null, null, null, null, 100000, 112000, 100000] }], fx: [{ id: "EUR", cur: "EUR", rate: null }], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }],
     },
     versions: {}, sequences: {}, audit: [], notices: [],
   }
@@ -124,6 +125,7 @@ export async function createWp05SensitivityFixture(options: FixtureOptions = {})
     const selectedPreview = await planner.simulateScenario(scenario, context)
     const baselinePreview = await planner.simulateScenario(baselineScenario, context)
     if (selectedPreview.status !== "ok" || baselinePreview.status !== "ok") throw new Error(`Planner simulation unavailable: ${JSON.stringify({ selectedPreview, baselinePreview })}`)
+    if (selectedPreview.value.comparisonStatus !== "conditioned" || baselinePreview.value.comparisonStatus !== "conditioned") throw new Error("WP05 fixture requires the actual conditioned Planner preview")
     // Assign case identity to the producer assessment without changing values or completeness.
     const selectedResult: ScenarioResult = { ...selectedPreview.value, costCoverage: { ...selectedPreview.value.costCoverage, alternativeId: "selected", alternativeVersion: 1 } }
     const baselineResult: ScenarioResult = { ...baselinePreview.value, costCoverage: { ...baselinePreview.value.costCoverage, alternativeId: "baseline", alternativeVersion: 1 } }

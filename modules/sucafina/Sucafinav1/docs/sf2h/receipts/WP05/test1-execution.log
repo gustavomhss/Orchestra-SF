@@ -1,0 +1,588 @@
+2026-11-13T22:19:59.7825888Z Sucafinav1/test/product/wp05/aging-browser.test.ts:
+2026-11-13T22:20:00.1790444Z browser fixture: prepare
+2026-11-13T22:20:00.1926694Z browser fixture: installation
+2026-11-13T22:20:00.2076845Z browser fixture: direct pipe Chrome launch
+2026-11-13T22:20:15.5130600Z browser fixture: private enrollment navigation
+2026-11-13T22:20:16.0459446Z browser fixture: authenticated
+2026-11-13T22:20:16.3200306Z browser fixture: cleanup 0
+2026-11-13T22:20:16.3300416Z browser fixture: cleanup 1
+2026-11-13T22:20:16.4293601Z browser fixture: OS proof: isolated owned group has no live members; transport disconnected {
+2026-11-13T22:20:16.4294136Z   pid: 4088,
+2026-11-13T22:20:16.4294303Z   pgid: 4088,
+2026-11-13T22:20:16.4294456Z   uid: 1001,
+2026-11-13T22:20:16.4294617Z   starttime: "17079",
+2026-11-13T22:20:16.4294799Z   pendingCloseRPCs: [],
+2026-11-13T22:20:16.4294972Z }
+2026-11-13T22:20:16.4295136Z browser fixture: cleanup 2
+2026-11-13T22:20:16.4295344Z browser fixture: cleanup 3
+2026-11-13T22:20:16.4296056Z browser fixture: cleanup 4
+2026-11-13T22:20:16.4316069Z (pass) unavailable ages remain in the selected population and retain request drilldown [16256.87ms]
+2026-11-13T22:20:16.4316490Z 
+2026-11-13T22:20:16.4316745Z Sucafinav1/test/product/wp05/approved-catalog.test.ts:
+2026-11-13T22:20:16.4336788Z (pass) catalog requires explicit valid host view definitions [0.37ms]
+2026-11-13T22:20:16.4340415Z (pass) resolution forwards only approved selection and preserves host references [0.39ms]
+2026-11-13T22:20:16.4344029Z (pass) resolution fails closed for unapproved inputs, changed authority, and missing host references [0.35ms]
+2026-11-13T22:20:16.4344529Z 
+2026-11-13T22:20:16.4344748Z Sucafinav1/test/product/wp05/capability.test.ts:
+2026-11-13T22:20:16.4368187Z (pass) read requires current authorization before and after reading [0.99ms]
+2026-11-13T22:20:16.4374048Z (pass) read rejects a projection from a different principal or period [0.60ms]
+2026-11-13T22:20:16.4380239Z (pass) presentation rejects references absent from the authorized projection [0.60ms]
+2026-11-13T22:20:16.4384492Z (pass) descriptor refuses an unconsumed direct call before reading the domain [0.44ms]
+2026-11-13T22:20:16.4386764Z (pass) an unregistered view is explicitly unavailable [0.25ms]
+2026-11-13T22:20:16.4388460Z (pass) a receipt bound to another principal is denied before source access [0.16ms]
+2026-11-13T22:20:16.4393566Z (pass) a receipt for another input is denied before source access [0.18ms]
+2026-11-13T22:20:16.4394632Z (pass) a receipt from another UI request cannot read the projection [0.25ms]
+2026-11-13T22:20:16.4397076Z (pass) duplicate value identifiers are unavailable instead of targeting the wrong detail [0.39ms]
+2026-11-13T22:20:16.4405699Z (pass) decision views require persisted decision metadata in the projection [0.84ms]
+2026-11-13T22:20:16.4405978Z 
+2026-11-13T22:20:16.4406130Z Sucafinav1/test/product/wp05/contextual.test.ts:
+2026-11-13T22:20:16.4452898Z (pass) contextual BI preserves the complete DashboardReadRequest and rejects missing fields [1.75ms]
+2026-11-13T22:20:16.4459395Z (pass) contextual selection passes host-owned refs and denies revoked authority [0.69ms]
+2026-11-13T22:20:16.4469986Z (pass) host must verify references and cannot return a different principal or unlisted evidence [1.02ms]
+2026-11-13T22:20:16.4497920Z (pass) stored contextual selection reopens both references and detects a changed human choice [2.79ms]
+2026-11-13T22:20:16.4498291Z 
+2026-11-13T22:20:16.4498503Z Sucafinav1/test/product/wp05/contributions-browser.test.ts:
+2026-11-13T22:20:16.4545844Z browser fixture: prepare
+2026-11-13T22:20:16.4614384Z browser fixture: installation
+2026-11-13T22:20:16.4692346Z browser fixture: direct pipe Chrome launch
+2026-11-13T22:20:16.6920160Z browser fixture: private enrollment navigation
+2026-11-13T22:20:16.7852530Z browser fixture: authenticated
+2026-11-13T22:20:16.9997979Z browser fixture: cleanup 0
+2026-11-13T22:20:17.0127263Z browser fixture: cleanup 1
+2026-11-13T22:20:17.0914209Z browser fixture: OS proof: isolated owned group has no live members; transport disconnected {
+2026-11-13T22:20:17.0914773Z   pid: 4247,
+2026-11-13T22:20:17.0914999Z   pgid: 4247,
+2026-11-13T22:20:17.0915209Z   uid: 1001,
+2026-11-13T22:20:17.0915422Z   starttime: "18705",
+2026-11-13T22:20:17.0915692Z   pendingCloseRPCs: [],
+2026-11-13T22:20:17.0915880Z }
+2026-11-13T22:20:17.0916047Z browser fixture: cleanup 2
+2026-11-13T22:20:17.0916245Z browser fixture: cleanup 3
+2026-11-13T22:20:17.0916469Z browser fixture: cleanup 4
+2026-11-13T22:20:17.0919157Z (pass) contribution and capacity panels preserve signs, missing values, selection and focus [640.72ms]
+2026-11-13T22:20:17.0919562Z 
+2026-11-13T22:20:17.0919813Z Sucafinav1/test/product/wp05/dashboard-integration.test.ts:
+2026-11-13T22:20:17.1977459Z 82 |     expect(milestoneOutput.status).toBe("ok")
+2026-11-13T22:20:17.1977911Z 83 |     if (milestoneOutput.status !== "ok") return
+2026-11-13T22:20:17.1978467Z 84 |     const milestoneProjection = decodeSfOperationOutput("sf_bi_view", milestoneOutput.result)
+2026-11-13T22:20:17.1979287Z 85 |     expect(milestoneProjection.ok).toBe(true)
+2026-11-13T22:20:17.1979652Z 86 |     if (milestoneProjection.ok) {
+2026-11-13T22:20:17.1980524Z 87 |       expect(milestoneProjection.value.values).toContainEqual(expect.objectContaining({ id: "milestone:p:undated:date", value: null, evidenceState: "absent" }))
+2026-11-13T22:20:17.1981234Z                                                     ^
+2026-11-13T22:20:17.1981604Z error: expect(received).toContainEqual(expected)
+2026-11-13T22:20:17.1981973Z 
+2026-11-13T22:20:17.1982148Z Expected to contain: ObjectContaining {
+2026-11-13T22:20:17.1982458Z   id: "milestone:p:undated:date",
+2026-11-13T22:20:17.1982705Z   value: null,
+2026-11-13T22:20:17.1982878Z   evidenceState: "absent",
+2026-11-13T22:20:17.1983162Z }
+2026-11-13T22:20:17.1983303Z Received: [
+2026-11-13T22:20:17.1983456Z   {
+2026-11-13T22:20:17.1983623Z     id: "milestone:p:dated:date",
+2026-11-13T22:20:17.1983816Z     value: "2026-03-05",
+2026-11-13T22:20:17.1984001Z     unit: "date",
+2026-11-13T22:20:17.1984159Z     period: {
+2026-11-13T22:20:17.1984312Z       start: "2026-03-05",
+2026-11-13T22:20:17.1984481Z       end: "2026-03-05",
+2026-11-13T22:20:17.1984647Z     },
+2026-11-13T22:20:17.1984794Z     granularity: "record",
+2026-11-13T22:20:17.1984964Z     sourceRefs: [
+2026-11-13T22:20:17.1985110Z       {
+2026-11-13T22:20:17.1985274Z         schema: "sf-evidence-v1",
+2026-11-13T22:20:17.1985462Z         kind: "record",
+2026-11-13T22:20:17.1985837Z         refId: "sf-source:685a068c-ce9f-4bcc-be05-03c25abb35f1:1",
+2026-11-13T22:20:17.1986100Z         installationId: "i",
+2026-11-13T22:20:17.1986292Z         projectId: "p",
+2026-11-13T22:20:17.1986608Z         refDigest: "249bcde8acf2096643bfa0b7b7e3b279c812092e1aaccc80fbeab0af20be30b7",
+2026-11-13T22:20:17.1986937Z         evidenceLevel: "observed",
+2026-11-13T22:20:17.1987127Z         target: {
+2026-11-13T22:20:17.1987391Z           surface: "dashboard",
+2026-11-13T22:20:17.1987608Z           recordType: "dashboard-page",
+2026-11-13T22:20:17.1987845Z           recordId: "Portfolio Dashboard",
+2026-11-13T22:20:17.1988115Z           incarnation: "685a068c-ce9f-4bcc-be05-03c25abb35f1",
+2026-11-13T22:20:17.1988355Z           version: 1,
+2026-11-13T22:20:17.1988553Z           fields: [ "milestoneDates" ],
+2026-11-13T22:20:17.1988747Z           period: {
+2026-11-13T22:20:17.1988922Z             start: "2026-01-01",
+2026-11-13T22:20:17.1989117Z             end: "2026-12-31",
+2026-11-13T22:20:17.1989327Z           },
+2026-11-13T22:20:17.1989652Z           projectionDigest: "acad19ed6c82dbeae9ed612c6431aa0aca136ebbc5c0067d17624aadfff661c5",
+2026-11-13T22:20:17.1989978Z         },
+2026-11-13T22:20:17.1990118Z       }
+2026-11-13T22:20:17.1990252Z     ],
+2026-11-13T22:20:17.1990403Z     drilldown: {
+2026-11-13T22:20:17.1990580Z       schema: "sf-evidence-v1",
+2026-11-13T22:20:17.1990762Z       kind: "record",
+2026-11-13T22:20:17.1991001Z       refId: "sf-source:685a068c-ce9f-4bcc-be05-03c25abb35f1:1",
+2026-11-13T22:20:17.1991258Z       installationId: "i",
+2026-11-13T22:20:17.1991436Z       projectId: "p",
+2026-11-13T22:20:17.1991885Z       refDigest: "249bcde8acf2096643bfa0b7b7e3b279c812092e1aaccc80fbeab0af20be30b7",
+2026-11-13T22:20:17.1992223Z       evidenceLevel: "observed",
+2026-11-13T22:20:17.1992404Z       target: {
+2026-11-13T22:20:17.1992568Z         surface: "dashboard",
+2026-11-13T22:20:17.1992801Z         recordType: "dashboard-page",
+2026-11-13T22:20:17.1993096Z         recordId: "Portfolio Dashboard",
+2026-11-13T22:20:17.1993441Z         incarnation: "685a068c-ce9f-4bcc-be05-03c25abb35f1",
+2026-11-13T22:20:17.1993729Z         version: 1,
+2026-11-13T22:20:17.1993917Z         fields: [ "milestoneDates" ],
+2026-11-13T22:20:17.1994110Z         period: {
+2026-11-13T22:20:17.1994280Z           start: "2026-01-01",
+2026-11-13T22:20:17.1994456Z           end: "2026-12-31",
+2026-11-13T22:20:17.1994649Z         },
+2026-11-13T22:20:17.1995023Z         projectionDigest: "acad19ed6c82dbeae9ed612c6431aa0aca136ebbc5c0067d17624aadfff661c5",
+2026-11-13T22:20:17.1995428Z       },
+2026-11-13T22:20:17.1995566Z     },
+2026-11-13T22:20:17.1995733Z     evidenceState: "confirmed",
+2026-11-13T22:20:17.1995906Z   }, {
+2026-11-13T22:20:17.1996080Z     id: "milestone:p:dated:name",
+2026-11-13T22:20:17.1996266Z     value: "Launch",
+2026-11-13T22:20:17.1996426Z     period: {
+2026-11-13T22:20:17.1996580Z       start: "2026-03-05",
+2026-11-13T22:20:17.1996752Z       end: "2026-03-05",
+2026-11-13T22:20:17.1996914Z     },
+2026-11-13T22:20:17.1997070Z     granularity: "record",
+2026-11-13T22:20:17.1997238Z     sourceRefs: [
+2026-11-13T22:20:17.1997384Z       {
+2026-11-13T22:20:17.1997568Z         schema: "sf-evidence-v1",
+2026-11-13T22:20:17.1997760Z         kind: "record",
+2026-11-13T22:20:17.1998002Z         refId: "sf-source:685a068c-ce9f-4bcc-be05-03c25abb35f1:1",
+2026-11-13T22:20:17.1998316Z         installationId: "i",
+2026-11-13T22:20:17.1998561Z         projectId: "p",
+2026-11-13T22:20:17.1998978Z         refDigest: "249bcde8acf2096643bfa0b7b7e3b279c812092e1aaccc80fbeab0af20be30b7",
+2026-11-13T22:20:17.1999428Z         evidenceLevel: "observed",
+2026-11-13T22:20:17.1999687Z         target: {
+2026-11-13T22:20:17.1999908Z           surface: "dashboard",
+2026-11-13T22:20:17.2000153Z           recordType: "dashboard-page",
+2026-11-13T22:20:17.2000387Z           recordId: "Portfolio Dashboard",
+2026-11-13T22:20:17.2000656Z           incarnation: "685a068c-ce9f-4bcc-be05-03c25abb35f1",
+2026-11-13T22:20:17.2000966Z           version: 1,
+2026-11-13T22:20:17.2001157Z           fields: [ "milestoneDates" ],
+2026-11-13T22:20:17.2001356Z           period: {
+2026-11-13T22:20:17.2001538Z             start: "2026-01-01",
+2026-11-13T22:20:17.2001915Z             end: "2026-12-31",
+2026-11-13T22:20:17.2002090Z           },
+2026-11-13T22:20:17.2002409Z           projectionDigest: "acad19ed6c82dbeae9ed612c6431aa0aca136ebbc5c0067d17624aadfff661c5",
+2026-11-13T22:20:17.2002739Z         },
+2026-11-13T22:20:17.2002881Z       }
+2026-11-13T22:20:17.2003032Z     ],
+2026-11-13T22:20:17.2003174Z     drilldown: {
+2026-11-13T22:20:17.2003347Z       schema: "sf-evidence-v1",
+2026-11-13T22:20:17.2003522Z       kind: "record",
+2026-11-13T22:20:17.2003755Z       refId: "sf-source:685a068c-ce9f-4bcc-be05-03c25abb35f1:1",
+2026-11-13T22:20:17.2003999Z       installationId: "i",
+2026-11-13T22:20:17.2004179Z       projectId: "p",
+2026-11-13T22:20:17.2004481Z       refDigest: "249bcde8acf2096643bfa0b7b7e3b279c812092e1aaccc80fbeab0af20be30b7",
+2026-11-13T22:20:17.2004809Z       evidenceLevel: "observed",
+2026-11-13T22:20:17.2004988Z       target: {
+2026-11-13T22:20:17.2005148Z         surface: "dashboard",
+2026-11-13T22:20:17.2005357Z         recordType: "dashboard-page",
+2026-11-13T22:20:17.2005589Z         recordId: "Portfolio Dashboard",
+2026-11-13T22:20:17.2005850Z         incarnation: "685a068c-ce9f-4bcc-be05-03c25abb35f1",
+2026-11-13T22:20:17.2006087Z         version: 1,
+2026-11-13T22:20:17.2006269Z         fields: [ "milestoneDates" ],
+2026-11-13T22:20:17.2006459Z         period: {
+2026-11-13T22:20:17.2006627Z           start: "2026-01-01",
+2026-11-13T22:20:17.2006815Z           end: "2026-12-31",
+2026-11-13T22:20:17.2006979Z         },
+2026-11-13T22:20:17.2007344Z         projectionDigest: "acad19ed6c82dbeae9ed612c6431aa0aca136ebbc5c0067d17624aadfff661c5",
+2026-11-13T22:20:17.2007768Z       },
+2026-11-13T22:20:17.2007949Z     },
+2026-11-13T22:20:17.2008181Z     evidenceState: "confirmed",
+2026-11-13T22:20:17.2008429Z   }, {
+2026-11-13T22:20:17.2008668Z     id: "milestone:p:planned:date",
+2026-11-13T22:20:17.2008959Z     value: "2026-12-05",
+2026-11-13T22:20:17.2009189Z     unit: "date",
+2026-11-13T22:20:17.2009393Z     period: {
+2026-11-13T22:20:17.2009606Z       start: "2026-12-05",
+2026-11-13T22:20:17.2009865Z       end: "2026-12-05",
+2026-11-13T22:20:17.2010093Z     },
+2026-11-13T22:20:17.2010311Z     granularity: "record",
+2026-11-13T22:20:17.2010566Z     sourceRefs: [
+2026-11-13T22:20:17.2010786Z       {
+2026-11-13T22:20:17.2011032Z         schema: "sf-evidence-v1",
+2026-11-13T22:20:17.2011479Z         kind: "record",
+2026-11-13T22:20:17.2012053Z         refId: "sf-source:685a068c-ce9f-4bcc-be05-03c25abb35f1:1",
+2026-11-13T22:20:17.2012438Z         installationId: "i",
+2026-11-13T22:20:17.2012703Z         projectId: "p",
+2026-11-13T22:20:17.2013168Z         refDigest: "249bcde8acf2096643bfa0b7b7e3b279c812092e1aaccc80fbeab0af20be30b7",
+2026-11-13T22:20:17.2013668Z         evidenceLevel: "observed",
+2026-11-13T22:20:17.2013946Z         target: {
+2026-11-13T22:20:17.2014151Z           surface: "dashboard",
+2026-11-13T22:20:17.2014360Z           recordType: "dashboard-page",
+2026-11-13T22:20:17.2014591Z           recordId: "Portfolio Dashboard",
+2026-11-13T22:20:17.2014855Z           incarnation: "685a068c-ce9f-4bcc-be05-03c25abb35f1",
+2026-11-13T22:20:17.2015086Z           version: 1,
+2026-11-13T22:20:17.2015276Z           fields: [ "milestoneDates" ],
+2026-11-13T22:20:17.2015470Z           period: {
+2026-11-13T22:20:17.2015645Z             start: "2026-01-01",
+2026-11-13T22:20:17.2015840Z             end: "2026-12-31",
+2026-11-13T22:20:17.2016008Z           },
+2026-11-13T22:20:17.2016321Z           projectionDigest: "acad19ed6c82dbeae9ed612c6431aa0aca136ebbc5c0067d17624aadfff661c5",
+2026-11-13T22:20:17.2016650Z         },
+2026-11-13T22:20:17.2016787Z       }
+2026-11-13T22:20:17.2016917Z     ],
+2026-11-13T22:20:17.2017047Z     drilldown: {
+2026-11-13T22:20:17.2017221Z       schema: "sf-evidence-v1",
+2026-11-13T22:20:17.2017404Z       kind: "record",
+2026-11-13T22:20:17.2017747Z       refId: "sf-source:685a068c-ce9f-4bcc-be05-03c25abb35f1:1",
+2026-11-13T22:20:17.2018004Z       installationId: "i",
+2026-11-13T22:20:17.2018180Z       projectId: "p",
+2026-11-13T22:20:17.2018484Z       refDigest: "249bcde8acf2096643bfa0b7b7e3b279c812092e1aaccc80fbeab0af20be30b7",
+2026-11-13T22:20:17.2018811Z       evidenceLevel: "observed",
+2026-11-13T22:20:17.2019003Z       target: {
+2026-11-13T22:20:17.2019162Z         surface: "dashboard",
+2026-11-13T22:20:17.2019368Z         recordType: "dashboard-page",
+2026-11-13T22:20:17.2019585Z         recordId: "Portfolio Dashboard",
+2026-11-13T22:20:17.2019841Z         incarnation: "685a068c-ce9f-4bcc-be05-03c25abb35f1",
+2026-11-13T22:20:17.2020069Z         version: 1,
+2026-11-13T22:20:17.2020256Z         fields: [ "milestoneDates" ],
+2026-11-13T22:20:17.2020458Z         period: {
+2026-11-13T22:20:17.2020660Z           start: "2026-01-01",
+2026-11-13T22:20:17.2020865Z           end: "2026-12-31",
+2026-11-13T22:20:17.2021065Z         },
+2026-11-13T22:20:17.2021443Z         projectionDigest: "acad19ed6c82dbeae9ed612c6431aa0aca136ebbc5c0067d17624aadfff661c5",
+2026-11-13T22:20:17.2021983Z       },
+2026-11-13T22:20:17.2022125Z     },
+2026-11-13T22:20:17.2022292Z     evidenceState: "confirmed",
+2026-11-13T22:20:17.2022471Z   }, {
+2026-11-13T22:20:17.2022643Z     id: "milestone:p:planned:name",
+2026-11-13T22:20:17.2022842Z     value: "Review",
+2026-11-13T22:20:17.2023093Z     period: {
+2026-11-13T22:20:17.2023256Z       start: "2026-12-05",
+2026-11-13T22:20:17.2023432Z       end: "2026-12-05",
+2026-11-13T22:20:17.2023590Z     },
+2026-11-13T22:20:17.2023733Z     granularity: "record",
+2026-11-13T22:20:17.2023903Z     sourceRefs: [
+2026-11-13T22:20:17.2024054Z       {
+2026-11-13T22:20:17.2024226Z         schema: "sf-evidence-v1",
+2026-11-13T22:20:17.2024412Z         kind: "record",
+2026-11-13T22:20:17.2024650Z         refId: "sf-source:685a068c-ce9f-4bcc-be05-03c25abb35f1:1",
+2026-11-13T22:20:17.2024898Z         installationId: "i",
+2026-11-13T22:20:17.2025081Z         projectId: "p",
+2026-11-13T22:20:17.2025384Z         refDigest: "249bcde8acf2096643bfa0b7b7e3b279c812092e1aaccc80fbeab0af20be30b7",
+2026-11-13T22:20:17.2025720Z         evidenceLevel: "observed",
+2026-11-13T22:20:17.2025904Z         target: {
+2026-11-13T22:20:17.2026077Z           surface: "dashboard",
+2026-11-13T22:20:17.2026283Z           recordType: "dashboard-page",
+2026-11-13T22:20:17.2026512Z           recordId: "Portfolio Dashboard",
+2026-11-13T22:20:17.2026787Z           incarnation: "685a068c-ce9f-4bcc-be05-03c25abb35f1",
+2026-11-13T22:20:17.2027121Z           version: 1,
+2026-11-13T22:20:17.2027313Z           fields: [ "milestoneDates" ],
+2026-11-13T22:20:17.2027509Z           period: {
+2026-11-13T22:20:17.2027685Z             start: "2026-01-01",
+2026-11-13T22:20:17.2027880Z             end: "2026-12-31",
+2026-11-13T22:20:17.2028058Z           },
+2026-11-13T22:20:17.2028365Z           projectionDigest: "acad19ed6c82dbeae9ed612c6431aa0aca136ebbc5c0067d17624aadfff661c5",
+2026-11-13T22:20:17.2028686Z         },
+2026-11-13T22:20:17.2028836Z       }
+2026-11-13T22:20:17.2029009Z     ],
+2026-11-13T22:20:17.2029169Z     drilldown: {
+2026-11-13T22:20:17.2029383Z       schema: "sf-evidence-v1",
+2026-11-13T22:20:17.2029624Z       kind: "record",
+2026-11-13T22:20:17.2029860Z       refId: "sf-source:685a068c-ce9f-4bcc-be05-03c25abb35f1:1",
+2026-11-13T22:20:17.2030105Z       installationId: "i",
+2026-11-13T22:20:17.2030280Z       projectId: "p",
+2026-11-13T22:20:17.2030572Z       refDigest: "249bcde8acf2096643bfa0b7b7e3b279c812092e1aaccc80fbeab0af20be30b7",
+2026-11-13T22:20:17.2030906Z       evidenceLevel: "observed",
+2026-11-13T22:20:17.2031087Z       target: {
+2026-11-13T22:20:17.2031246Z         surface: "dashboard",
+2026-11-13T22:20:17.2031452Z         recordType: "dashboard-page",
+2026-11-13T22:20:17.2031815Z         recordId: "Portfolio Dashboard",
+2026-11-13T22:20:17.2032087Z         incarnation: "685a068c-ce9f-4bcc-be05-03c25abb35f1",
+2026-11-13T22:20:17.2032326Z         version: 1,
+2026-11-13T22:20:17.2032584Z         fields: [ "milestoneDates" ],
+2026-11-13T22:20:17.2032775Z         period: {
+2026-11-13T22:20:17.2032947Z           start: "2026-01-01",
+2026-11-13T22:20:17.2033169Z           end: "2026-12-31",
+2026-11-13T22:20:17.2033389Z         },
+2026-11-13T22:20:17.2033804Z         projectionDigest: "acad19ed6c82dbeae9ed612c6431aa0aca136ebbc5c0067d17624aadfff661c5",
+2026-11-13T22:20:17.2034236Z       },
+2026-11-13T22:20:17.2034415Z     },
+2026-11-13T22:20:17.2034637Z     evidenceState: "confirmed",
+2026-11-13T22:20:17.2034871Z   }, {
+2026-11-13T22:20:17.2035092Z     id: "milestone:p:historical:date",
+2026-11-13T22:20:17.2035355Z     value: "2026-02-05",
+2026-11-13T22:20:17.2035566Z     unit: "date",
+2026-11-13T22:20:17.2035724Z     period: {
+2026-11-13T22:20:17.2035877Z       start: "2026-02-05",
+2026-11-13T22:20:17.2036043Z       end: "2026-02-05",
+2026-11-13T22:20:17.2036195Z     },
+2026-11-13T22:20:17.2036345Z     granularity: "record",
+2026-11-13T22:20:17.2036548Z     sourceRefs: [
+2026-11-13T22:20:17.2036707Z       {
+2026-11-13T22:20:17.2036875Z         schema: "sf-evidence-v1",
+2026-11-13T22:20:17.2037063Z         kind: "record",
+2026-11-13T22:20:17.2037304Z         refId: "sf-source:685a068c-ce9f-4bcc-be05-03c25abb35f1:1",
+2026-11-13T22:20:17.2037563Z         installationId: "i",
+2026-11-13T22:20:17.2037742Z         projectId: "p",
+2026-11-13T22:20:17.2038045Z         refDigest: "249bcde8acf2096643bfa0b7b7e3b279c812092e1aaccc80fbeab0af20be30b7",
+2026-11-13T22:20:17.2038365Z         evidenceLevel: "observed",
+2026-11-13T22:20:17.2038550Z         target: {
+2026-11-13T22:20:17.2038716Z           surface: "dashboard",
+2026-11-13T22:20:17.2038929Z           recordType: "dashboard-page",
+2026-11-13T22:20:17.2039154Z           recordId: "Portfolio Dashboard",
+2026-11-13T22:20:17.2039418Z           incarnation: "685a068c-ce9f-4bcc-be05-03c25abb35f1",
+2026-11-13T22:20:17.2039644Z           version: 1,
+2026-11-13T22:20:17.2039828Z           fields: [ "milestoneDates" ],
+2026-11-13T22:20:17.2040024Z           period: {
+2026-11-13T22:20:17.2040201Z             start: "2026-01-01",
+2026-11-13T22:20:17.2040383Z             end: "2026-12-31",
+2026-11-13T22:20:17.2040541Z           },
+2026-11-13T22:20:17.2040840Z           projectionDigest: "acad19ed6c82dbeae9ed612c6431aa0aca136ebbc5c0067d17624aadfff661c5",
+2026-11-13T22:20:17.2041150Z         },
+2026-11-13T22:20:17.2041283Z       }
+2026-11-13T22:20:17.2041425Z     ],
+2026-11-13T22:20:17.2041562Z     drilldown: {
+2026-11-13T22:20:17.2041926Z       schema: "sf-evidence-v1",
+2026-11-13T22:20:17.2042220Z       kind: "record",
+2026-11-13T22:20:17.2042452Z       refId: "sf-source:685a068c-ce9f-4bcc-be05-03c25abb35f1:1",
+2026-11-13T22:20:17.2042703Z       installationId: "i",
+2026-11-13T22:20:17.2042889Z       projectId: "p",
+2026-11-13T22:20:17.2043186Z       refDigest: "249bcde8acf2096643bfa0b7b7e3b279c812092e1aaccc80fbeab0af20be30b7",
+2026-11-13T22:20:17.2043510Z       evidenceLevel: "observed",
+2026-11-13T22:20:17.2043690Z       target: {
+2026-11-13T22:20:17.2043851Z         surface: "dashboard",
+2026-11-13T22:20:17.2044054Z         recordType: "dashboard-page",
+2026-11-13T22:20:17.2044281Z         recordId: "Portfolio Dashboard",
+2026-11-13T22:20:17.2044540Z         incarnation: "685a068c-ce9f-4bcc-be05-03c25abb35f1",
+2026-11-13T22:20:17.2044767Z         version: 1,
+2026-11-13T22:20:17.2044951Z         fields: [ "milestoneDates" ],
+2026-11-13T22:20:17.2045142Z         period: {
+2026-11-13T22:20:17.2045307Z           start: "2026-01-01",
+2026-11-13T22:20:17.2045491Z           end: "2026-12-31",
+2026-11-13T22:20:17.2045656Z         },
+2026-11-13T22:20:17.2045960Z         projectionDigest: "acad19ed6c82dbeae9ed612c6431aa0aca136ebbc5c0067d17624aadfff661c5",
+2026-11-13T22:20:17.2046276Z       },
+2026-11-13T22:20:17.2046410Z     },
+2026-11-13T22:20:17.2046574Z     evidenceState: "confirmed",
+2026-11-13T22:20:17.2046752Z   }, {
+2026-11-13T22:20:17.2046925Z     id: "milestone:p:historical:name",
+2026-11-13T22:20:17.2047169Z     value: "Past checkpoint",
+2026-11-13T22:20:17.2047432Z     period: {
+2026-11-13T22:20:17.2047622Z       start: "2026-02-05",
+2026-11-13T22:20:17.2047833Z       end: "2026-02-05",
+2026-11-13T22:20:17.2048006Z     },
+2026-11-13T22:20:17.2048155Z     granularity: "record",
+2026-11-13T22:20:17.2048325Z     sourceRefs: [
+2026-11-13T22:20:17.2048472Z       {
+2026-11-13T22:20:17.2048632Z         schema: "sf-evidence-v1",
+2026-11-13T22:20:17.2048816Z         kind: "record",
+2026-11-13T22:20:17.2049057Z         refId: "sf-source:685a068c-ce9f-4bcc-be05-03c25abb35f1:1",
+2026-11-13T22:20:17.2049333Z         installationId: "i",
+2026-11-13T22:20:17.2049532Z         projectId: "p",
+2026-11-13T22:20:17.2049834Z         refDigest: "249bcde8acf2096643bfa0b7b7e3b279c812092e1aaccc80fbeab0af20be30b7",
+2026-11-13T22:20:17.2050165Z         evidenceLevel: "observed",
+2026-11-13T22:20:17.2050353Z         target: {
+2026-11-13T22:20:17.2050527Z           surface: "dashboard",
+2026-11-13T22:20:17.2050732Z           recordType: "dashboard-page",
+2026-11-13T22:20:17.2050985Z           recordId: "Portfolio Dashboard",
+2026-11-13T22:20:17.2051273Z           incarnation: "685a068c-ce9f-4bcc-be05-03c25abb35f1",
+2026-11-13T22:20:17.2051502Z           version: 1,
+2026-11-13T22:20:17.2051873Z           fields: [ "milestoneDates" ],
+2026-11-13T22:20:17.2052076Z           period: {
+2026-11-13T22:20:17.2052248Z             start: "2026-01-01",
+2026-11-13T22:20:17.2052445Z             end: "2026-12-31",
+2026-11-13T22:20:17.2052616Z           },
+2026-11-13T22:20:17.2052932Z           projectionDigest: "acad19ed6c82dbeae9ed612c6431aa0aca136ebbc5c0067d17624aadfff661c5",
+2026-11-13T22:20:17.2053320Z         },
+2026-11-13T22:20:17.2053460Z       }
+2026-11-13T22:20:17.2053591Z     ],
+2026-11-13T22:20:17.2053730Z     drilldown: {
+2026-11-13T22:20:17.2053908Z       schema: "sf-evidence-v1",
+2026-11-13T22:20:17.2054090Z       kind: "record",
+2026-11-13T22:20:17.2054366Z       refId: "sf-source:685a068c-ce9f-4bcc-be05-03c25abb35f1:1",
+2026-11-13T22:20:17.2054627Z       installationId: "i",
+2026-11-13T22:20:17.2054810Z       projectId: "p",
+2026-11-13T22:20:17.2055160Z       refDigest: "249bcde8acf2096643bfa0b7b7e3b279c812092e1aaccc80fbeab0af20be30b7",
+2026-11-13T22:20:17.2055485Z       evidenceLevel: "observed",
+2026-11-13T22:20:17.2055665Z       target: {
+2026-11-13T22:20:17.2055829Z         surface: "dashboard",
+2026-11-13T22:20:17.2056034Z         recordType: "dashboard-page",
+2026-11-13T22:20:17.2056257Z         recordId: "Portfolio Dashboard",
+2026-11-13T22:20:17.2056515Z         incarnation: "685a068c-ce9f-4bcc-be05-03c25abb35f1",
+2026-11-13T22:20:17.2056861Z         version: 1,
+2026-11-13T22:20:17.2057099Z         fields: [ "milestoneDates" ],
+2026-11-13T22:20:17.2057366Z         period: {
+2026-11-13T22:20:17.2057563Z           start: "2026-01-01",
+2026-11-13T22:20:17.2057794Z           end: "2026-12-31",
+2026-11-13T22:20:17.2058021Z         },
+2026-11-13T22:20:17.2058418Z         projectionDigest: "acad19ed6c82dbeae9ed612c6431aa0aca136ebbc5c0067d17624aadfff661c5",
+2026-11-13T22:20:17.2058857Z       },
+2026-11-13T22:20:17.2059022Z     },
+2026-11-13T22:20:17.2059182Z     evidenceState: "confirmed",
+2026-11-13T22:20:17.2059355Z   }
+2026-11-13T22:20:17.2059492Z ]
+2026-11-13T22:20:17.2059577Z 
+2026-11-13T22:20:17.2059980Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp05/dashboard-integration.test.ts:87:48)
+2026-11-13T22:20:17.2060621Z (fail) authorized dashboard source reaches BI through the real UI dispatcher [102.43ms]
+2026-11-13T22:20:17.2060857Z 
+2026-11-13T22:20:17.2061001Z Sucafinav1/test/product/wp05/dashboard.test.ts:
+2026-11-13T22:20:17.2061408Z (pass) dashboard adapter refuses metadata after the source version changes [0.24ms]
+2026-11-13T22:20:17.2062055Z (pass) dashboard binding forwards the original selection and period to the domain [0.18ms]
+2026-11-13T22:20:17.2062304Z 
+2026-11-13T22:20:17.2062426Z Sucafinav1/test/product/wp05/factory.test.ts:
+2026-11-13T22:20:17.2063065Z (pass) composition exposes the shared descriptor and rejects invalid or duplicate routes [0.34ms]
+2026-11-13T22:20:17.2063632Z (pass) overlapping producer routes require a host selection and reject unregistered producers [0.83ms]
+2026-11-13T22:20:17.2063916Z 
+2026-11-13T22:20:17.2064045Z Sucafinav1/test/product/wp05/geometry.test.ts:
+2026-11-13T22:20:17.2064453Z (pass) geometry preserves missing values, observed zero, signs and the selected period [0.31ms]
+2026-11-13T22:20:17.2064869Z (pass) sensitivity never interpolates missing points [0.22ms]
+2026-11-13T22:20:17.2065328Z (pass) waterfall geometry uses supplied endpoints and leaves missing endpoints blank [0.17ms]
+2026-11-13T22:20:17.2065839Z (pass) timeline positions only declared dates and reports unavailable or clipped periods [0.20ms]
+2026-11-13T22:20:17.2066350Z (pass) temporal position preserves a missing month as space instead of interpolation [0.12ms]
+2026-11-13T22:20:17.2066774Z (pass) shared scale keeps equal values at equal positions [0.06ms]
+2026-11-13T22:20:17.2066982Z 
+2026-11-13T22:20:17.2067123Z Sucafinav1/test/product/wp05/milestones.test.ts:
+2026-11-13T22:20:17.2072844Z (pass) planned, confirmed and undated milestones remain distinct [0.23ms]
+2026-11-13T22:20:17.2073106Z 
+2026-11-13T22:20:17.2073319Z Sucafinav1/test/product/wp05/planner-integration.test.ts:
+2026-11-13T22:20:17.2512344Z (pass) real planner projection reaches BI with distinct missing and zero values [41.61ms]
+2026-11-13T22:20:17.2628944Z (pass) real planner comparison supplies the same reconciled waterfall to BI and dispatcher [11.69ms]
+2026-11-13T22:20:17.3038117Z (pass) real planner capacity presents aligned FTE and unavailable HR cost without invented values [40.89ms]
+2026-11-13T22:20:17.3038537Z 
+2026-11-13T22:20:17.3038781Z Sucafinav1/test/product/wp05/planner-projected.test.ts:
+2026-11-13T22:20:17.3067914Z (pass) planner-projected adapter forwards producer projection and detects a changed revision [1.12ms]
+2026-11-13T22:20:17.3069080Z (pass) planner-projected adapter refuses mixed currency or principal before presentation [0.21ms]
+2026-11-13T22:20:17.3069533Z 
+2026-11-13T22:20:17.3069738Z Sucafinav1/test/product/wp05/planner.test.ts:
+2026-11-13T22:20:17.3083963Z (pass) planner adapter returns the selected canonical projection and rejects a changed base [0.24ms]
+2026-11-13T22:20:17.3084853Z (pass) planner binding refuses a resolved comparison outside the selected period [0.17ms]
+2026-11-13T22:20:17.3085211Z 
+2026-11-13T22:20:17.3085427Z Sucafinav1/test/product/wp05/portfolio.test.ts:
+2026-11-13T22:20:17.3112014Z (pass) portfolio presentation keeps conditional coverage and unknown values without calculating totals [0.10ms]
+2026-11-13T22:20:17.3119401Z (pass) portfolio bundle is withheld when authorization changes after the domain read [0.78ms]
+2026-11-13T22:20:17.3122300Z (pass) portfolio binding rejects a different horizon before evaluation [0.31ms]
+2026-11-13T22:20:17.3126988Z (pass) C16 portfolio source rejects metadata after its projection changes [0.47ms]
+2026-11-13T22:20:17.3135408Z (pass) concurrent portfolio reads keep each request-local bundle isolated [0.82ms]
+2026-11-13T22:20:17.3137086Z (pass) portfolio source passes the expected projection to host revalidation [0.20ms]
+2026-11-13T22:20:17.3138199Z (pass) an eligible-complete claim with absent components is not displayed as complete [0.08ms]
+2026-11-13T22:20:17.3138757Z (pass) eligible portfolio without coverage references is not displayed as complete [0.03ms]
+2026-11-13T22:20:17.3139390Z (pass) portfolio source rejects a legacy projection without canonical decision metadata [0.15ms]
+2026-11-13T22:20:17.3143057Z (pass) stored portfolio binding retains the persisted reference and rejects a different result [0.33ms]
+2026-11-13T22:20:17.3143418Z 
+2026-11-13T22:20:17.3143662Z Sucafinav1/test/product/wp05/procurement-integration.test.ts:
+2026-11-13T22:20:17.3633907Z (pass) real procurement registry and port supply scoped BI stock and deny revoked access [46.51ms]
+2026-11-13T22:20:17.3634728Z 
+2026-11-13T22:20:17.3635486Z Sucafinav1/test/product/wp05/procurement.test.ts:
+2026-11-13T22:20:17.3655523Z (pass) aging uses producer values and preserves an unknown age and request reference [0.61ms]
+2026-11-13T22:20:17.3656860Z (pass) unknown request status is not asserted to be open [0.18ms]
+2026-11-13T22:20:17.3659193Z (pass) an aging row is refused when procurement-request evidence disagrees on version or record identity [0.21ms]
+2026-11-13T22:20:17.3660081Z (pass) an aging row is refused when its request drilldown names another incarnation [0.12ms]
+2026-11-13T22:20:17.3662326Z (pass) an aging row keeps every producer value when other evidence accompanies one request [0.19ms]
+2026-11-13T22:20:17.3668328Z (pass) stock snapshot preserves producer stage counts without inventing a conversion [0.58ms]
+2026-11-13T22:20:17.3668657Z 
+2026-11-13T22:20:17.3668811Z Sucafinav1/test/product/wp05/projection.test.ts:
+2026-11-13T22:20:17.3684303Z (pass) observation timestamps do not create stale data, while source and value changes do [0.25ms]
+2026-11-13T22:20:17.3688659Z (pass) nested decision source observation times are ignored without ignoring material changes [0.44ms]
+2026-11-13T22:20:17.3689408Z (pass) sensitivity requires its paired persisted reference [0.11ms]
+2026-11-13T22:20:17.3689664Z 
+2026-11-13T22:20:17.3689854Z Sucafinav1/test/product/wp05/review-chart.test.ts:
+2026-11-13T22:20:17.3716199Z (pass) review capture keeps producer values, endpoints and reconciliation without residuals [0.57ms]
+2026-11-13T22:20:17.3716941Z (pass) review capture rejects dangling series and does not promote absent values [0.13ms]
+2026-11-13T22:20:17.3717682Z (pass) review capture does not advertise absent charts or misaligned capacity [0.05ms]
+2026-11-13T22:20:17.3717996Z 
+2026-11-13T22:20:17.3718174Z Sucafinav1/test/product/wp05/scenario.test.ts:
+2026-11-13T22:20:17.3732011Z (pass) conditioned results retain missing category and never invent a total [0.15ms]
+2026-11-13T22:20:17.3734792Z (pass) sensitivity leaves missing and nonfinite results as gaps [0.29ms]
+2026-11-13T22:20:17.3735429Z (pass) a later resolved revision changes displayed totals without mutating the earlier snapshot [0.07ms]
+2026-11-13T22:20:17.3736064Z (pass) an inconsistent complete comparison cannot promote a conditioned result [0.03ms]
+2026-11-13T22:20:17.3736566Z (pass) sampled sensitivity never claims an exact threshold [0.07ms]
+2026-11-13T22:20:17.3736987Z (pass) an exact threshold requires matching finite engine evidence [0.04ms]
+2026-11-13T22:20:17.3737408Z (pass) missing sensitivity provenance cannot be presented as complete [0.03ms]
+2026-11-13T22:20:17.3738123Z (pass) a result claiming completeness with an absent component cannot display a full total [0.08ms]
+2026-11-13T22:20:17.3738659Z (pass) a comparison without coverage references cannot be displayed as complete [0.04ms]
+2026-11-13T22:20:17.3738902Z 
+2026-11-13T22:20:17.3739042Z Sucafinav1/test/product/wp05/selection.test.ts:
+2026-11-13T22:20:17.3752169Z (pass) selection retains authorized context, source, projection version and zero [0.13ms]
+2026-11-13T22:20:17.3752967Z (pass) a numeric placeholder marked absent is not displayed as observed zero [0.04ms]
+2026-11-13T22:20:17.3753350Z 
+2026-11-13T22:20:17.3753562Z Sucafinav1/test/product/wp05/semantics.test.ts:
+2026-11-13T22:20:17.3765663Z (pass) producer supplies roles, unresolved values remain visible and no months are inferred [0.15ms]
+2026-11-13T22:20:17.3766438Z (pass) rejects unknown references and mixed currencies in one series [0.08ms]
+2026-11-13T22:20:17.3767050Z (pass) alignment keys must uniquely identify every provided value [0.03ms]
+2026-11-13T22:20:17.3767729Z (pass) annual and monthly financial points cannot be blended into one series [0.04ms]
+2026-11-13T22:20:17.3768325Z (pass) a producer cannot relabel a currency as another currency [0.04ms]
+2026-11-13T22:20:17.3768927Z (pass) ticket categories cannot masquerade as consecutive monthly points [0.06ms]
+2026-11-13T22:20:17.3769555Z (pass) a numeric point with missing currency cannot share a priced series [0.04ms]
+2026-11-13T22:20:17.3770066Z (pass) series identifiers must be unique [0.03ms]
+2026-11-13T22:20:17.3770548Z 
+2026-11-13T22:20:17.3770865Z Sucafinav1/test/product/wp05/sensitivity-integration.test.ts:
+2026-11-13T22:20:17.3981247Z 121 |     const baselineScenario: ScenarioRequest = options.mode === "renewal-usd"
+2026-11-13T22:20:17.3982650Z 122 |       ? { baseRef: baselineSourceId, operations: [{ kind: "replace", targetRef: "renewal:11", amount: 240000, currency: "USD", period: november }], assumptions: [] }
+2026-11-13T22:20:17.3983698Z 123 |       : { ...scenario, operations: [{ ...scenario.operations[0]!, amount: 100000 }] }
+2026-11-13T22:20:17.3984411Z 124 |     const selectedPreview = await planner.simulateScenario(scenario, context)
+2026-11-13T22:20:17.3985194Z 125 |     const baselinePreview = await planner.simulateScenario(baselineScenario, context)
+2026-11-13T22:20:17.3986337Z 126 |     if (selectedPreview.status !== "ok" || baselinePreview.status !== "ok") throw new Error(`Planner simulation unavailable: ${JSON.stringify({ selectedPreview, baselinePreview })}`)
+2026-11-13T22:20:17.3987259Z                                                                                             ^
+2026-11-13T22:20:17.3988251Z error: Planner simulation unavailable: {"selectedPreview":{"status":"needs-input","reason":"planner-command-rejected"},"baselinePreview":{"status":"needs-input","reason":"planner-command-rejected"}}
+2026-11-13T22:20:17.3989685Z       at createWp05SensitivityFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts:126:87)
+2026-11-13T22:20:17.3990950Z       at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp05/sensitivity-integration.test.ts:9:25)
+2026-11-13T22:20:17.3992310Z (fail) BI consumes the persisted Planner sensitivity and rejects a changed criterion [14.74ms]
+2026-11-13T22:20:17.3992699Z 
+2026-11-13T22:20:17.3992919Z Sucafinav1/test/product/wp05/stored-scenario.test.ts:
+2026-11-13T22:20:17.4529586Z (pass) stored scenario and comparison flow through one C08 projection and fail after revocation [52.99ms]
+2026-11-13T22:20:17.4529993Z 
+2026-11-13T22:20:17.4530232Z Sucafinav1/test/product/wp05/tickets-integration.test.ts:
+2026-11-13T22:20:17.5107738Z (pass) real Dashboard ticket observations reach BI with source evidence and deny changed selection or revoked authority [55.89ms]
+2026-11-13T22:20:17.5108130Z 
+2026-11-13T22:20:17.5108284Z Sucafinav1/test/product/wp05/tickets.test.ts:
+2026-11-13T22:20:17.5128719Z (pass) ticket snapshot remains a snapshot and preserves missing values [0.46ms]
+2026-11-13T22:20:17.5132057Z (pass) ticket history requires producer supplied dated aggregates [0.16ms]
+2026-11-13T22:20:17.5132435Z 
+2026-11-13T22:20:17.5132660Z Sucafinav1/test/product/wp05/view-browser.test.ts:
+2026-11-13T22:20:17.5222759Z browser fixture: prepare
+2026-11-13T22:20:17.5286296Z browser fixture: installation
+2026-11-13T22:20:17.5360615Z browser fixture: direct pipe Chrome launch
+2026-11-13T22:20:17.7386510Z browser fixture: private enrollment navigation
+2026-11-13T22:20:17.8303429Z browser fixture: authenticated
+2026-11-13T22:20:18.3670015Z browser fixture: cleanup 0
+2026-11-13T22:20:18.3743659Z browser fixture: cleanup 1
+2026-11-13T22:20:18.4425944Z browser fixture: OS proof: isolated owned group has no live members; transport disconnected {
+2026-11-13T22:20:18.4426485Z   pid: 4404,
+2026-11-13T22:20:18.4426708Z   pgid: 4404,
+2026-11-13T22:20:18.4426908Z   uid: 1001,
+2026-11-13T22:20:18.4427123Z   starttime: "18811",
+2026-11-13T22:20:18.4427361Z   pendingCloseRPCs: [],
+2026-11-13T22:20:18.4427641Z }
+2026-11-13T22:20:18.4427880Z browser fixture: cleanup 2
+2026-11-13T22:20:18.4428143Z browser fixture: cleanup 3
+2026-11-13T22:20:18.4428403Z browser fixture: cleanup 4
+2026-11-13T22:20:18.4431109Z (pass) chart and equivalent table preserve selection through keyboard and period brush [928.32ms]
+2026-11-13T22:20:18.4431457Z 
+2026-11-13T22:20:18.4431913Z Sucafinav1/test/product/wp05/waterfall.test.ts:
+2026-11-13T22:20:18.4451058Z (pass) projected endpoints reconcile without inventing a residual [0.21ms]
+2026-11-13T22:20:18.4451564Z (pass) the producer must attest financial reconciliation [0.11ms]
+2026-11-13T22:20:18.4452986Z 
+2026-11-13T22:20:18.4453133Z Sucafinav1/test/product/wp05/consumer.test.ts:
+2026-11-13T22:20:18.4485350Z (pass) consumer goes through the real UI lease and dispatcher, rejects direct calls and reuse [1.79ms]
+2026-11-13T22:20:18.4546616Z (pass) exact mark destination revalidates identity, version and C17 evidence without a collection fallback [6.01ms]
+2026-11-13T22:20:18.4556218Z (pass) checked projections are detached from callback mutation and access is fenced at egress [0.98ms]
+2026-11-13T22:20:18.4563403Z (pass) a new projection between dispatch and presentation is stale [0.74ms]
+2026-11-13T22:20:18.4563755Z 
+2026-11-13T22:20:18.4564002Z Sucafinav1/test/product/wp05/factory-selection.test.ts:
+2026-11-13T22:20:18.4592510Z (pass) producer selection cannot switch between read and revalidation in one bound call [1.34ms]
+2026-11-13T22:20:18.4592949Z 
+2026-11-13T22:20:18.4593259Z Sucafinav1/test/product/wp05/projection-validation.test.ts:
+2026-11-13T22:20:18.4607429Z (pass) absent evidence cannot affect geometry even when its numeric field remains populated [0.14ms]
+2026-11-13T22:20:18.4612522Z (pass) financial and ticket series refuse overlapping or backwards competencies [0.28ms]
+2026-11-13T22:20:18.4613442Z (pass) waterfall retains supplied endpoints and refuses incompatible context instead of relabelling it [0.24ms]
+2026-11-13T22:20:18.4613920Z 
+2026-11-13T22:20:18.4614229Z Sucafinav1/test/product/wp05/render-completion-browser.test.ts:
+2026-11-13T22:20:18.9640829Z (pass) BI components preserve endpoints, undated rows and unknown ages through keyboard navigation [500.97ms]
+2026-11-13T22:20:18.9642917Z 
+2026-11-13T22:20:18.9643199Z Sucafinav1/test/product/wp05/engine-coverage.test.ts:
+2026-11-13T22:20:48.6065095Z (pass) Planner's canonical known-subtotal solver proves the 55000 boundary; its integrated sensitivity still discloses pending coverage [29639.19ms]
+2026-11-13T22:21:44.0832886Z (pass) real Planner results retain omitted training as unknown, then include its 40000 source without mutating the original result [55476.74ms]
+2026-11-13T22:21:44.8396838Z 
+2026-11-13T22:21:44.8397670Z Sucafinav1/test/product/wp05/consumer-dashboard.test.ts:
+2026-11-13T22:21:44.8398472Z (pass) C02 consumer and table reopen the authorized C17 page and reject changed sources and revoked roles [753.09ms]
+2026-11-13T22:21:44.9513700Z 
+2026-11-13T22:21:44.9514806Z omni positive control [bcee81c7e1a897caab28c8cfaad09b5d]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-13T22:21:44.9523233Z 2 tests failed:
+2026-11-13T22:21:44.9523597Z (fail) authorized dashboard source reaches BI through the real UI dispatcher [102.43ms]
+2026-11-13T22:21:44.9524092Z (fail) BI consumes the persisted Planner sensitivity and rejects a changed criterion [14.74ms]
+2026-11-13T22:21:44.9524349Z 
+2026-11-13T22:21:44.9524433Z  98 pass
+2026-11-13T22:21:44.9524581Z  2 fail
+2026-11-13T22:21:44.9524735Z  467 expect() calls
+2026-11-13T22:21:44.9524941Z Ran 100 tests across 33 files. [105.18s]

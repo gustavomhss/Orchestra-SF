@@ -1,0 +1,1117 @@
+{
+  "repository": "gustavomhss/Orchestra-SF",
+  "run_id": 43518126352,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43518126352",
+  "workflow": ".github/workflows/test-ci.yml",
+  "event": "push",
+  "run_attempt": 1,
+  "product_sha": "19a8d725584b89ad97cd9a9bdbb018b5339b9d16",
+  "snapshot_sha": "0b6ffc6b2dfdfc63e73d11684b7173f3b7f52f41",
+  "snapshot_branch": "ci-run-linux-astra-wp05-19a8d72-579ff910-1",
+  "conclusion": "failure",
+  "test_job_id": 132205226949,
+  "request_validation": "Read request step completed successfully with canonical validateRequest/locateTestPackage",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp05/aging-browser.test.ts",
+      "./Sucafinav1/test/product/wp05/approved-catalog.test.ts",
+      "./Sucafinav1/test/product/wp05/capability.test.ts",
+      "./Sucafinav1/test/product/wp05/contextual.test.ts",
+      "./Sucafinav1/test/product/wp05/contributions-browser.test.ts",
+      "./Sucafinav1/test/product/wp05/dashboard-integration.test.ts",
+      "./Sucafinav1/test/product/wp05/dashboard.test.ts",
+      "./Sucafinav1/test/product/wp05/factory.test.ts",
+      "./Sucafinav1/test/product/wp05/geometry.test.ts",
+      "./Sucafinav1/test/product/wp05/milestones.test.ts",
+      "./Sucafinav1/test/product/wp05/planner-integration.test.ts",
+      "./Sucafinav1/test/product/wp05/planner-projected.test.ts",
+      "./Sucafinav1/test/product/wp05/planner.test.ts",
+      "./Sucafinav1/test/product/wp05/portfolio.test.ts",
+      "./Sucafinav1/test/product/wp05/procurement-integration.test.ts",
+      "./Sucafinav1/test/product/wp05/procurement.test.ts",
+      "./Sucafinav1/test/product/wp05/projection.test.ts",
+      "./Sucafinav1/test/product/wp05/review-chart.test.ts",
+      "./Sucafinav1/test/product/wp05/scenario.test.ts",
+      "./Sucafinav1/test/product/wp05/selection.test.ts",
+      "./Sucafinav1/test/product/wp05/semantics.test.ts",
+      "./Sucafinav1/test/product/wp05/sensitivity-integration.test.ts",
+      "./Sucafinav1/test/product/wp05/stored-scenario.test.ts",
+      "./Sucafinav1/test/product/wp05/tickets-integration.test.ts",
+      "./Sucafinav1/test/product/wp05/tickets.test.ts",
+      "./Sucafinav1/test/product/wp05/view-browser.test.ts",
+      "./Sucafinav1/test/product/wp05/waterfall.test.ts",
+      "./Sucafinav1/test/product/wp05/consumer.test.ts",
+      "./Sucafinav1/test/product/wp05/factory-selection.test.ts",
+      "./Sucafinav1/test/product/wp05/projection-validation.test.ts",
+      "./Sucafinav1/test/product/wp05/render-completion-browser.test.ts",
+      "./Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+      "./Sucafinav1/test/product/wp05/consumer-dashboard.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "request_sha256": "579ff9103f5656a14615608b52f0c6f730d804b53bc45bc5182c4c58944adbe2",
+  "execution": {
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "bun_version": "1.3.14 (0d9b296a)",
+    "command_template": "GITHUB_ACTIONS=false bun test \"${args[@]}\"",
+    "argv": [
+      "bun",
+      "test",
+      "./Sucafinav1/test/product/wp05/aging-browser.test.ts",
+      "./Sucafinav1/test/product/wp05/approved-catalog.test.ts",
+      "./Sucafinav1/test/product/wp05/capability.test.ts",
+      "./Sucafinav1/test/product/wp05/contextual.test.ts",
+      "./Sucafinav1/test/product/wp05/contributions-browser.test.ts",
+      "./Sucafinav1/test/product/wp05/dashboard-integration.test.ts",
+      "./Sucafinav1/test/product/wp05/dashboard.test.ts",
+      "./Sucafinav1/test/product/wp05/factory.test.ts",
+      "./Sucafinav1/test/product/wp05/geometry.test.ts",
+      "./Sucafinav1/test/product/wp05/milestones.test.ts",
+      "./Sucafinav1/test/product/wp05/planner-integration.test.ts",
+      "./Sucafinav1/test/product/wp05/planner-projected.test.ts",
+      "./Sucafinav1/test/product/wp05/planner.test.ts",
+      "./Sucafinav1/test/product/wp05/portfolio.test.ts",
+      "./Sucafinav1/test/product/wp05/procurement-integration.test.ts",
+      "./Sucafinav1/test/product/wp05/procurement.test.ts",
+      "./Sucafinav1/test/product/wp05/projection.test.ts",
+      "./Sucafinav1/test/product/wp05/review-chart.test.ts",
+      "./Sucafinav1/test/product/wp05/scenario.test.ts",
+      "./Sucafinav1/test/product/wp05/selection.test.ts",
+      "./Sucafinav1/test/product/wp05/semantics.test.ts",
+      "./Sucafinav1/test/product/wp05/sensitivity-integration.test.ts",
+      "./Sucafinav1/test/product/wp05/stored-scenario.test.ts",
+      "./Sucafinav1/test/product/wp05/tickets-integration.test.ts",
+      "./Sucafinav1/test/product/wp05/tickets.test.ts",
+      "./Sucafinav1/test/product/wp05/view-browser.test.ts",
+      "./Sucafinav1/test/product/wp05/waterfall.test.ts",
+      "./Sucafinav1/test/product/wp05/consumer.test.ts",
+      "./Sucafinav1/test/product/wp05/factory-selection.test.ts",
+      "./Sucafinav1/test/product/wp05/projection-validation.test.ts",
+      "./Sucafinav1/test/product/wp05/render-completion-browser.test.ts",
+      "./Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+      "./Sucafinav1/test/product/wp05/consumer-dashboard.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "argv_provenance": "Reconstructed from the exact request consumed by the logged Run tests shell template; observed file headings separately confirm the selected files.",
+    "environment": {
+      "GITHUB_ACTIONS": "false",
+      "ORCHESTRA_OMNI_CONTROL": "declared"
+    },
+    "total_tests": 100,
+    "passed": 98,
+    "failed": 2,
+    "expect_calls": 467,
+    "file_count": 33,
+    "runtime_seconds": 105.18,
+    "exit_code": 1,
+    "parsed_cases_match_totals": true,
+    "observed_files_match_requested_order": true,
+    "unrequested_files": [],
+    "requested_files_not_observed": []
+  },
+  "omni": {
+    "verdict": "not applicable",
+    "literal": "omni positive control [bcee81c7e1a897caab28c8cfaad09b5d]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "scope": "declared",
+    "spawn_proof": false
+  },
+  "artifacts": [],
+  "artifact_total_count": 0,
+  "artifact_note": "This bun lane skips Upload Playwright evidence by workflow condition; no artifact was published. Logs, exact request and API metadata are retained.",
+  "logs": [
+    {
+      "job_id": 132205226949,
+      "job_name": "test (ubuntu-24.04)",
+      "conclusion": "failure",
+      "path": "/workspace/scratch/b9370847f7d4/ci-evidence/test1-132205226949.log",
+      "bytes": 110253,
+      "sha256": "94beaf80839adc43b272f125d7b1f4a35cb5b6de5ea038d0f667624ac655a9be"
+    },
+    {
+      "job_id": 132207006518,
+      "job_name": "cleanup",
+      "conclusion": "success",
+      "path": "/workspace/scratch/b9370847f7d4/ci-evidence/test1-132207006518.log",
+      "bytes": 2312,
+      "sha256": "a7668b4b5cd6cb1ab680c80d9c05de16816caa73041b91c2a5005ae5fc6904ed"
+    }
+  ],
+  "failures": [
+    {
+      "file": "Sucafinav1/test/product/wp05/dashboard-integration.test.ts",
+      "line": 87,
+      "name": "authorized dashboard source reaches BI through the real UI dispatcher",
+      "observed": "The actual Dashboard projection omitted milestone:p:undated:date (null/absent). The C16 dispatch succeeded before the value assertion.",
+      "classification": "BLOCKED_EXTERNAL_WP02",
+      "producer_cause": "Seed product/dashboard/scope.ts:28 retains only valid string dates for milestoneDates. The seed product/dashboard/port.ts:273 reader also skips a milestone whose date is not a string. Thus milestone:p:undated:date is absent from the producer output before WP05 receives it; the C16 output remains structurally valid.",
+      "wp05_action": "Preserve the assertion and consume the owner producer update during integration; no renderer synthesis or expectation weakening. Browser component keeps producer-supplied undated rows and its CI test passed.",
+      "owner_pin": "WP02 38d340a8857b96904f7246320091c14c051f1929; exact owner delta catalogued in criteria-review/dependency-ledger.md"
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/sensitivity-integration.test.ts",
+      "line": 9,
+      "fixture": "Sucafinav1/test/product/wp05/engine-fixture.ts:126",
+      "name": "BI consumes the persisted Planner sensitivity and rejects a changed criterion",
+      "observed": "Both default EUR fixture simulations returned needs-input / planner-command-rejected before BI projection or browser rendering.",
+      "classification": "WP05_FIXTURE_REQUIRES_FIX",
+      "wp05_action": "ci_protocol and root are correcting the default EUR fixture and will rerun the affected integration without relaxing its assertions."
+    }
+  ],
+  "renderer_triage": {
+    "status": "PASS_AT_PRODUCT_SHA",
+    "files": [
+      "aging-browser.test.ts",
+      "contributions-browser.test.ts",
+      "view-browser.test.ts",
+      "render-completion-browser.test.ts",
+      "consumer-dashboard.test.ts",
+      "projection-validation.test.ts"
+    ],
+    "r1_harness": "The published test consumer-dashboard.test.ts passed with actual C02 persistence/issuer/port, Chromium renderer selection after period brush, a fresh UI admission and the production C17 dashboard-page resolver.",
+    "limits": "BI01 harness, fixture principal, about:blank browser, authorized C17 page. No installed host, provider/native parity or eight granular chart destinations claimed.",
+    "new_renderer_fix_required": false
+  },
+  "files": [
+    {
+      "file": "Sucafinav1/test/product/wp05/aging-browser.test.ts",
+      "status": "pass",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/approved-catalog.test.ts",
+      "status": "pass",
+      "tests": 3,
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/capability.test.ts",
+      "status": "pass",
+      "tests": 10,
+      "passed": 10,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/contextual.test.ts",
+      "status": "pass",
+      "tests": 4,
+      "passed": 4,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/contributions-browser.test.ts",
+      "status": "pass",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/dashboard-integration.test.ts",
+      "status": "fail",
+      "tests": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/dashboard.test.ts",
+      "status": "pass",
+      "tests": 2,
+      "passed": 2,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/factory.test.ts",
+      "status": "pass",
+      "tests": 2,
+      "passed": 2,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/geometry.test.ts",
+      "status": "pass",
+      "tests": 6,
+      "passed": 6,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/milestones.test.ts",
+      "status": "pass",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/planner-integration.test.ts",
+      "status": "pass",
+      "tests": 3,
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/planner-projected.test.ts",
+      "status": "pass",
+      "tests": 2,
+      "passed": 2,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/planner.test.ts",
+      "status": "pass",
+      "tests": 2,
+      "passed": 2,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/portfolio.test.ts",
+      "status": "pass",
+      "tests": 10,
+      "passed": 10,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/procurement-integration.test.ts",
+      "status": "pass",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/procurement.test.ts",
+      "status": "pass",
+      "tests": 6,
+      "passed": 6,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/projection.test.ts",
+      "status": "pass",
+      "tests": 3,
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/review-chart.test.ts",
+      "status": "pass",
+      "tests": 3,
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/scenario.test.ts",
+      "status": "pass",
+      "tests": 9,
+      "passed": 9,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/selection.test.ts",
+      "status": "pass",
+      "tests": 2,
+      "passed": 2,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/semantics.test.ts",
+      "status": "pass",
+      "tests": 8,
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/sensitivity-integration.test.ts",
+      "status": "fail",
+      "tests": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/stored-scenario.test.ts",
+      "status": "pass",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/tickets-integration.test.ts",
+      "status": "pass",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/tickets.test.ts",
+      "status": "pass",
+      "tests": 2,
+      "passed": 2,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/view-browser.test.ts",
+      "status": "pass",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/waterfall.test.ts",
+      "status": "pass",
+      "tests": 2,
+      "passed": 2,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/consumer.test.ts",
+      "status": "pass",
+      "tests": 4,
+      "passed": 4,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/factory-selection.test.ts",
+      "status": "pass",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/projection-validation.test.ts",
+      "status": "pass",
+      "tests": 3,
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/render-completion-browser.test.ts",
+      "status": "pass",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+      "status": "pass",
+      "tests": 2,
+      "passed": 2,
+      "failed": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/consumer-dashboard.test.ts",
+      "status": "pass",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0
+    }
+  ],
+  "cases": [
+    {
+      "file": "Sucafinav1/test/product/wp05/aging-browser.test.ts",
+      "name": "unavailable ages remain in the selected population and retain request drilldown",
+      "status": "pass",
+      "duration_ms": 16256.87,
+      "log_line": 828
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/approved-catalog.test.ts",
+      "name": "catalog requires explicit valid host view definitions",
+      "status": "pass",
+      "duration_ms": 0.37,
+      "log_line": 831
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/approved-catalog.test.ts",
+      "name": "resolution forwards only approved selection and preserves host references",
+      "status": "pass",
+      "duration_ms": 0.39,
+      "log_line": 832
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/approved-catalog.test.ts",
+      "name": "resolution fails closed for unapproved inputs, changed authority, and missing host references",
+      "status": "pass",
+      "duration_ms": 0.35,
+      "log_line": 833
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/capability.test.ts",
+      "name": "read requires current authorization before and after reading",
+      "status": "pass",
+      "duration_ms": 0.99,
+      "log_line": 836
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/capability.test.ts",
+      "name": "read rejects a projection from a different principal or period",
+      "status": "pass",
+      "duration_ms": 0.6,
+      "log_line": 837
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/capability.test.ts",
+      "name": "presentation rejects references absent from the authorized projection",
+      "status": "pass",
+      "duration_ms": 0.6,
+      "log_line": 838
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/capability.test.ts",
+      "name": "descriptor refuses an unconsumed direct call before reading the domain",
+      "status": "pass",
+      "duration_ms": 0.44,
+      "log_line": 839
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/capability.test.ts",
+      "name": "an unregistered view is explicitly unavailable",
+      "status": "pass",
+      "duration_ms": 0.25,
+      "log_line": 840
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/capability.test.ts",
+      "name": "a receipt bound to another principal is denied before source access",
+      "status": "pass",
+      "duration_ms": 0.16,
+      "log_line": 841
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/capability.test.ts",
+      "name": "a receipt for another input is denied before source access",
+      "status": "pass",
+      "duration_ms": 0.18,
+      "log_line": 842
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/capability.test.ts",
+      "name": "a receipt from another UI request cannot read the projection",
+      "status": "pass",
+      "duration_ms": 0.25,
+      "log_line": 843
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/capability.test.ts",
+      "name": "duplicate value identifiers are unavailable instead of targeting the wrong detail",
+      "status": "pass",
+      "duration_ms": 0.39,
+      "log_line": 844
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/capability.test.ts",
+      "name": "decision views require persisted decision metadata in the projection",
+      "status": "pass",
+      "duration_ms": 0.84,
+      "log_line": 845
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/contextual.test.ts",
+      "name": "contextual BI preserves the complete DashboardReadRequest and rejects missing fields",
+      "status": "pass",
+      "duration_ms": 1.75,
+      "log_line": 848
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/contextual.test.ts",
+      "name": "contextual selection passes host-owned refs and denies revoked authority",
+      "status": "pass",
+      "duration_ms": 0.69,
+      "log_line": 849
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/contextual.test.ts",
+      "name": "host must verify references and cannot return a different principal or unlisted evidence",
+      "status": "pass",
+      "duration_ms": 1.02,
+      "log_line": 850
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/contextual.test.ts",
+      "name": "stored contextual selection reopens both references and detects a changed human choice",
+      "status": "pass",
+      "duration_ms": 2.79,
+      "log_line": 851
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/contributions-browser.test.ts",
+      "name": "contribution and capacity panels preserve signs, missing values, selection and focus",
+      "status": "pass",
+      "duration_ms": 640.72,
+      "log_line": 871
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/dashboard-integration.test.ts",
+      "name": "authorized dashboard source reaches BI through the real UI dispatcher",
+      "status": "fail",
+      "duration_ms": 102.43,
+      "log_line": 1226
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/dashboard.test.ts",
+      "name": "dashboard adapter refuses metadata after the source version changes",
+      "status": "pass",
+      "duration_ms": 0.24,
+      "log_line": 1229
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/dashboard.test.ts",
+      "name": "dashboard binding forwards the original selection and period to the domain",
+      "status": "pass",
+      "duration_ms": 0.18,
+      "log_line": 1230
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/factory.test.ts",
+      "name": "composition exposes the shared descriptor and rejects invalid or duplicate routes",
+      "status": "pass",
+      "duration_ms": 0.34,
+      "log_line": 1233
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/factory.test.ts",
+      "name": "overlapping producer routes require a host selection and reject unregistered producers",
+      "status": "pass",
+      "duration_ms": 0.83,
+      "log_line": 1234
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/geometry.test.ts",
+      "name": "geometry preserves missing values, observed zero, signs and the selected period",
+      "status": "pass",
+      "duration_ms": 0.31,
+      "log_line": 1237
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/geometry.test.ts",
+      "name": "sensitivity never interpolates missing points",
+      "status": "pass",
+      "duration_ms": 0.22,
+      "log_line": 1238
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/geometry.test.ts",
+      "name": "waterfall geometry uses supplied endpoints and leaves missing endpoints blank",
+      "status": "pass",
+      "duration_ms": 0.17,
+      "log_line": 1239
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/geometry.test.ts",
+      "name": "timeline positions only declared dates and reports unavailable or clipped periods",
+      "status": "pass",
+      "duration_ms": 0.2,
+      "log_line": 1240
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/geometry.test.ts",
+      "name": "temporal position preserves a missing month as space instead of interpolation",
+      "status": "pass",
+      "duration_ms": 0.12,
+      "log_line": 1241
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/geometry.test.ts",
+      "name": "shared scale keeps equal values at equal positions",
+      "status": "pass",
+      "duration_ms": 0.06,
+      "log_line": 1242
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/milestones.test.ts",
+      "name": "planned, confirmed and undated milestones remain distinct",
+      "status": "pass",
+      "duration_ms": 0.23,
+      "log_line": 1245
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/planner-integration.test.ts",
+      "name": "real planner projection reaches BI with distinct missing and zero values",
+      "status": "pass",
+      "duration_ms": 41.61,
+      "log_line": 1248
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/planner-integration.test.ts",
+      "name": "real planner comparison supplies the same reconciled waterfall to BI and dispatcher",
+      "status": "pass",
+      "duration_ms": 11.69,
+      "log_line": 1249
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/planner-integration.test.ts",
+      "name": "real planner capacity presents aligned FTE and unavailable HR cost without invented values",
+      "status": "pass",
+      "duration_ms": 40.89,
+      "log_line": 1250
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/planner-projected.test.ts",
+      "name": "planner-projected adapter forwards producer projection and detects a changed revision",
+      "status": "pass",
+      "duration_ms": 1.12,
+      "log_line": 1253
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/planner-projected.test.ts",
+      "name": "planner-projected adapter refuses mixed currency or principal before presentation",
+      "status": "pass",
+      "duration_ms": 0.21,
+      "log_line": 1254
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/planner.test.ts",
+      "name": "planner adapter returns the selected canonical projection and rejects a changed base",
+      "status": "pass",
+      "duration_ms": 0.24,
+      "log_line": 1257
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/planner.test.ts",
+      "name": "planner binding refuses a resolved comparison outside the selected period",
+      "status": "pass",
+      "duration_ms": 0.17,
+      "log_line": 1258
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/portfolio.test.ts",
+      "name": "portfolio presentation keeps conditional coverage and unknown values without calculating totals",
+      "status": "pass",
+      "duration_ms": 0.1,
+      "log_line": 1261
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/portfolio.test.ts",
+      "name": "portfolio bundle is withheld when authorization changes after the domain read",
+      "status": "pass",
+      "duration_ms": 0.78,
+      "log_line": 1262
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/portfolio.test.ts",
+      "name": "portfolio binding rejects a different horizon before evaluation",
+      "status": "pass",
+      "duration_ms": 0.31,
+      "log_line": 1263
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/portfolio.test.ts",
+      "name": "C16 portfolio source rejects metadata after its projection changes",
+      "status": "pass",
+      "duration_ms": 0.47,
+      "log_line": 1264
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/portfolio.test.ts",
+      "name": "concurrent portfolio reads keep each request-local bundle isolated",
+      "status": "pass",
+      "duration_ms": 0.82,
+      "log_line": 1265
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/portfolio.test.ts",
+      "name": "portfolio source passes the expected projection to host revalidation",
+      "status": "pass",
+      "duration_ms": 0.2,
+      "log_line": 1266
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/portfolio.test.ts",
+      "name": "an eligible-complete claim with absent components is not displayed as complete",
+      "status": "pass",
+      "duration_ms": 0.08,
+      "log_line": 1267
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/portfolio.test.ts",
+      "name": "eligible portfolio without coverage references is not displayed as complete",
+      "status": "pass",
+      "duration_ms": 0.03,
+      "log_line": 1268
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/portfolio.test.ts",
+      "name": "portfolio source rejects a legacy projection without canonical decision metadata",
+      "status": "pass",
+      "duration_ms": 0.15,
+      "log_line": 1269
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/portfolio.test.ts",
+      "name": "stored portfolio binding retains the persisted reference and rejects a different result",
+      "status": "pass",
+      "duration_ms": 0.33,
+      "log_line": 1270
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/procurement-integration.test.ts",
+      "name": "real procurement registry and port supply scoped BI stock and deny revoked access",
+      "status": "pass",
+      "duration_ms": 46.51,
+      "log_line": 1273
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/procurement.test.ts",
+      "name": "aging uses producer values and preserves an unknown age and request reference",
+      "status": "pass",
+      "duration_ms": 0.61,
+      "log_line": 1276
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/procurement.test.ts",
+      "name": "unknown request status is not asserted to be open",
+      "status": "pass",
+      "duration_ms": 0.18,
+      "log_line": 1277
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/procurement.test.ts",
+      "name": "an aging row is refused when procurement-request evidence disagrees on version or record identity",
+      "status": "pass",
+      "duration_ms": 0.21,
+      "log_line": 1278
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/procurement.test.ts",
+      "name": "an aging row is refused when its request drilldown names another incarnation",
+      "status": "pass",
+      "duration_ms": 0.12,
+      "log_line": 1279
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/procurement.test.ts",
+      "name": "an aging row keeps every producer value when other evidence accompanies one request",
+      "status": "pass",
+      "duration_ms": 0.19,
+      "log_line": 1280
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/procurement.test.ts",
+      "name": "stock snapshot preserves producer stage counts without inventing a conversion",
+      "status": "pass",
+      "duration_ms": 0.58,
+      "log_line": 1281
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/projection.test.ts",
+      "name": "observation timestamps do not create stale data, while source and value changes do",
+      "status": "pass",
+      "duration_ms": 0.25,
+      "log_line": 1284
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/projection.test.ts",
+      "name": "nested decision source observation times are ignored without ignoring material changes",
+      "status": "pass",
+      "duration_ms": 0.44,
+      "log_line": 1285
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/projection.test.ts",
+      "name": "sensitivity requires its paired persisted reference",
+      "status": "pass",
+      "duration_ms": 0.11,
+      "log_line": 1286
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/review-chart.test.ts",
+      "name": "review capture keeps producer values, endpoints and reconciliation without residuals",
+      "status": "pass",
+      "duration_ms": 0.57,
+      "log_line": 1289
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/review-chart.test.ts",
+      "name": "review capture rejects dangling series and does not promote absent values",
+      "status": "pass",
+      "duration_ms": 0.13,
+      "log_line": 1290
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/review-chart.test.ts",
+      "name": "review capture does not advertise absent charts or misaligned capacity",
+      "status": "pass",
+      "duration_ms": 0.05,
+      "log_line": 1291
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/scenario.test.ts",
+      "name": "conditioned results retain missing category and never invent a total",
+      "status": "pass",
+      "duration_ms": 0.15,
+      "log_line": 1294
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/scenario.test.ts",
+      "name": "sensitivity leaves missing and nonfinite results as gaps",
+      "status": "pass",
+      "duration_ms": 0.29,
+      "log_line": 1295
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/scenario.test.ts",
+      "name": "a later resolved revision changes displayed totals without mutating the earlier snapshot",
+      "status": "pass",
+      "duration_ms": 0.07,
+      "log_line": 1296
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/scenario.test.ts",
+      "name": "an inconsistent complete comparison cannot promote a conditioned result",
+      "status": "pass",
+      "duration_ms": 0.03,
+      "log_line": 1297
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/scenario.test.ts",
+      "name": "sampled sensitivity never claims an exact threshold",
+      "status": "pass",
+      "duration_ms": 0.07,
+      "log_line": 1298
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/scenario.test.ts",
+      "name": "an exact threshold requires matching finite engine evidence",
+      "status": "pass",
+      "duration_ms": 0.04,
+      "log_line": 1299
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/scenario.test.ts",
+      "name": "missing sensitivity provenance cannot be presented as complete",
+      "status": "pass",
+      "duration_ms": 0.03,
+      "log_line": 1300
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/scenario.test.ts",
+      "name": "a result claiming completeness with an absent component cannot display a full total",
+      "status": "pass",
+      "duration_ms": 0.08,
+      "log_line": 1301
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/scenario.test.ts",
+      "name": "a comparison without coverage references cannot be displayed as complete",
+      "status": "pass",
+      "duration_ms": 0.04,
+      "log_line": 1302
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/selection.test.ts",
+      "name": "selection retains authorized context, source, projection version and zero",
+      "status": "pass",
+      "duration_ms": 0.13,
+      "log_line": 1305
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/selection.test.ts",
+      "name": "a numeric placeholder marked absent is not displayed as observed zero",
+      "status": "pass",
+      "duration_ms": 0.04,
+      "log_line": 1306
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/semantics.test.ts",
+      "name": "producer supplies roles, unresolved values remain visible and no months are inferred",
+      "status": "pass",
+      "duration_ms": 0.15,
+      "log_line": 1309
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/semantics.test.ts",
+      "name": "rejects unknown references and mixed currencies in one series",
+      "status": "pass",
+      "duration_ms": 0.08,
+      "log_line": 1310
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/semantics.test.ts",
+      "name": "alignment keys must uniquely identify every provided value",
+      "status": "pass",
+      "duration_ms": 0.03,
+      "log_line": 1311
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/semantics.test.ts",
+      "name": "annual and monthly financial points cannot be blended into one series",
+      "status": "pass",
+      "duration_ms": 0.04,
+      "log_line": 1312
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/semantics.test.ts",
+      "name": "a producer cannot relabel a currency as another currency",
+      "status": "pass",
+      "duration_ms": 0.04,
+      "log_line": 1313
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/semantics.test.ts",
+      "name": "ticket categories cannot masquerade as consecutive monthly points",
+      "status": "pass",
+      "duration_ms": 0.06,
+      "log_line": 1314
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/semantics.test.ts",
+      "name": "a numeric point with missing currency cannot share a priced series",
+      "status": "pass",
+      "duration_ms": 0.04,
+      "log_line": 1315
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/semantics.test.ts",
+      "name": "series identifiers must be unique",
+      "status": "pass",
+      "duration_ms": 0.03,
+      "log_line": 1316
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/sensitivity-integration.test.ts",
+      "name": "BI consumes the persisted Planner sensitivity and rejects a changed criterion",
+      "status": "fail",
+      "duration_ms": 14.74,
+      "log_line": 1329
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/stored-scenario.test.ts",
+      "name": "stored scenario and comparison flow through one C08 projection and fail after revocation",
+      "status": "pass",
+      "duration_ms": 52.99,
+      "log_line": 1332
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/tickets-integration.test.ts",
+      "name": "real Dashboard ticket observations reach BI with source evidence and deny changed selection or revoked authority",
+      "status": "pass",
+      "duration_ms": 55.89,
+      "log_line": 1335
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/tickets.test.ts",
+      "name": "ticket snapshot remains a snapshot and preserves missing values",
+      "status": "pass",
+      "duration_ms": 0.46,
+      "log_line": 1338
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/tickets.test.ts",
+      "name": "ticket history requires producer supplied dated aggregates",
+      "status": "pass",
+      "duration_ms": 0.16,
+      "log_line": 1339
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/view-browser.test.ts",
+      "name": "chart and equivalent table preserve selection through keyboard and period brush",
+      "status": "pass",
+      "duration_ms": 928.32,
+      "log_line": 1359
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/waterfall.test.ts",
+      "name": "projected endpoints reconcile without inventing a residual",
+      "status": "pass",
+      "duration_ms": 0.21,
+      "log_line": 1362
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/waterfall.test.ts",
+      "name": "the producer must attest financial reconciliation",
+      "status": "pass",
+      "duration_ms": 0.11,
+      "log_line": 1363
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/consumer.test.ts",
+      "name": "consumer goes through the real UI lease and dispatcher, rejects direct calls and reuse",
+      "status": "pass",
+      "duration_ms": 1.79,
+      "log_line": 1366
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/consumer.test.ts",
+      "name": "exact mark destination revalidates identity, version and C17 evidence without a collection fallback",
+      "status": "pass",
+      "duration_ms": 6.01,
+      "log_line": 1367
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/consumer.test.ts",
+      "name": "checked projections are detached from callback mutation and access is fenced at egress",
+      "status": "pass",
+      "duration_ms": 0.98,
+      "log_line": 1368
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/consumer.test.ts",
+      "name": "a new projection between dispatch and presentation is stale",
+      "status": "pass",
+      "duration_ms": 0.74,
+      "log_line": 1369
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/factory-selection.test.ts",
+      "name": "producer selection cannot switch between read and revalidation in one bound call",
+      "status": "pass",
+      "duration_ms": 1.34,
+      "log_line": 1372
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/projection-validation.test.ts",
+      "name": "absent evidence cannot affect geometry even when its numeric field remains populated",
+      "status": "pass",
+      "duration_ms": 0.14,
+      "log_line": 1375
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/projection-validation.test.ts",
+      "name": "financial and ticket series refuse overlapping or backwards competencies",
+      "status": "pass",
+      "duration_ms": 0.28,
+      "log_line": 1376
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/projection-validation.test.ts",
+      "name": "waterfall retains supplied endpoints and refuses incompatible context instead of relabelling it",
+      "status": "pass",
+      "duration_ms": 0.24,
+      "log_line": 1377
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/render-completion-browser.test.ts",
+      "name": "BI components preserve endpoints, undated rows and unknown ages through keyboard navigation",
+      "status": "pass",
+      "duration_ms": 500.97,
+      "log_line": 1380
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+      "name": "Planner's canonical known-subtotal solver proves the 55000 boundary; its integrated sensitivity still discloses pending coverage",
+      "status": "pass",
+      "duration_ms": 29639.19,
+      "log_line": 1383
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+      "name": "real Planner results retain omitted training as unknown, then include its 40000 source without mutating the original result",
+      "status": "pass",
+      "duration_ms": 55476.74,
+      "log_line": 1384
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/consumer-dashboard.test.ts",
+      "name": "C02 consumer and table reopen the authorized C17 page and reject changed sources and revoked roles",
+      "status": "pass",
+      "duration_ms": 753.09,
+      "log_line": 1387
+    }
+  ]
+}

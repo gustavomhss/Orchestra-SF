@@ -1,0 +1,48 @@
+diff --git a/modules/sucafina/Sucafinav1/product/integration/bi-http.ts b/modules/sucafina/Sucafinav1/product/integration/bi-http.ts
+--- a/modules/sucafina/Sucafinav1/product/integration/bi-http.ts
++++ b/modules/sucafina/Sucafinav1/product/integration/bi-http.ts
+@@ -6,16 +6,14 @@
+ import { documentHtml, pageMain } from "../../src/screen-shell.ts"
+ import { dashboardPages } from "../../src/nav.ts"
+ import { digestSfValue } from "../contracts/canonical.ts"
+-import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
+ import type { SfDomainValidation } from "../contracts/runtime.ts"
+ import type { DomainPortHost } from "../contracts/ports.ts"
+ import { createDashboardPort } from "../dashboard/port.ts"
+ import { createDashboardSourceHost } from "../dashboard/sources.ts"
+ import { presentDashboardBi, resolveDashboardBiSelection } from "../dashboard/bi-metadata.ts"
+-import { createBiDescriptor, readBiPresentation } from "../analytics/capabilities.ts"
++import { dispatchBiPresentation } from "../analytics/consumer.ts"
+ import type { BiPresentationPort } from "../analytics/capabilities.ts"
+ import { sameBiProjection } from "../analytics/projection.ts"
+-import { dispatchSfCapability } from "../host-binding/capability-dispatch.ts"
+ import { createSfUiAuthority } from "./ui-authority.ts"
+ import { createDashboardSourceIssuer } from "./dashboard-sources.ts"
+ import type { SfScopedSourcePort } from "./source-lifecycle.ts"
+@@ -82,7 +80,6 @@
+       return current.status === "ok" && (!projection || sameBiProjection(current.value, projection)) && await host.revalidate(context)
+     },
+   }
+-  const descriptor = createBiDescriptor(source, authority)
+   return async (request: Request, surface: string): Promise<Response | undefined> => {
+     const url = new URL(request.url)
+     const mode = url.searchParams.get("sf")
+@@ -131,15 +128,10 @@
+       const next = await ui.admit(request, "sf_bi_view", digestSfValue(payload))
+       if (next.status !== "ok") return json(next, 403)
+       try {
+-        const result = await dispatchSfCapability({ operation: "sf_bi_view", payload, context: next.value, descriptors: [descriptor], authority,
+-          validateInput: (_descriptor, value) => decodeSfOperationInput("sf_bi_view", value).ok,
+-          validateOutput: (_descriptor, value) => value.status !== "ok" || decodeSfOperationOutput("sf_bi_view", value.result).ok })
++        const result = await dispatchBiPresentation(payload, next.value, source, authority)
+         if (result.status !== "ok") return json(result, result.status === "denied" ? 403 : 409)
+-        const presentation = await readBiPresentation(payload, next.value, source, authority)
+-        if (presentation.status !== "ok") return json(presentation, 409)
+-        const decoded = decodeSfOperationOutput("sf_bi_view", result.result)
+-        if (!decoded.ok || !sameBiProjection(decoded.value, presentation.value.projection) || !await ui.revalidate(next.value)) return json({ status: "stale", reason: "projection-changed" }, 409)
+-        return json({ request: payload, ...presentation.value, receipt: result.receipt })
++        if (!await ui.revalidate(next.value)) return json({ status: "stale", reason: "projection-changed" }, 409)
++        return json(result.value)
+       } finally { ui.finish(next.value) }
+     } finally { ui.finish(context) }
+   }

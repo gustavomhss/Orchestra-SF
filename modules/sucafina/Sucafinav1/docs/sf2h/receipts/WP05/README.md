@@ -1,6 +1,6 @@
 # WP05 — candidato Astra
 
-Estado inicial: **DRAFT / AWAITING_CI**. Este recibo acompanha a implementação; a execução e os SHAs examinados serão registrados em `ci-evidence.json` e na PR. Não constitui PASS de critérios nem runtime.
+Estado: **DRAFT / BLOCKED**. A primeira execução foi concluída e a correção WP05 será revalidada. Estes recibos não constituem aceitação integrada nem prova de runtime nativo. A PR é https://github.com/gustavomhss/Orchestra-SF/pull/24.
 
 ## Pins e escopo
 
@@ -22,7 +22,7 @@ A fixture própria dos motores substitui uma importação ausente de WP13 sem re
 
 ## Validação planejada
 
-`ci-request.json` seleciona os 27 arquivos do seed e seis novos arquivos (33 no total). `request-validation.json` registra a validação por funções reais do candidato e os hashes do request. Nenhum teste de produto foi executado localmente.
+`ci-request.json` seleciona os 27 arquivos do seed e sete novos arquivos (34 no total). A primeira execução selecionou 33; a segunda acrescenta `semantic-discriminants.test.ts`. `request-validation.json` registra a validação por funções reais do candidato e os hashes do request. Nenhum teste de produto foi executado localmente.
 
 Actions examina W (produto) e S (snapshot descendente com apenas `.ci-run.json`). O workflow específico executa `bun typecheck` em `modules/sucafina` e `bun run check:guards --base origin/dev` com a base disponível e registrada. Os resultados devem ser lidos nos jobs/logs, sem atribuir green de outro WP a este candidato.
 
@@ -33,3 +33,14 @@ Actions examina W (produto) e S (snapshot descendente com apenas `.ci-run.json`)
 Há dependências concretas fora do ownership: contratos e schema BI de WP00, composição/authority/store e oito destinos do host WP10, produtores Dashboard/Procurement e o caminho de sensibilidade/cobertura WP11/WP13. `engine-boundary.md` descreve por que solver exato isolado não é limiar integrado, e por que duas variantes reais de treinamento não provam confirmação humana/reconsideração na mesma instância. Esses bloqueios exigem PR draft; não são dispensas dos critérios.
 
 C/G7, D/G8, AM01–AM06, GNATIVE e as oito seleções finais continuam sem alegação de PASS nesta entrega. Não houve merge, deploy nem alteração de infraestrutura, autenticação ou plano.
+
+## Primeira execução observada
+
+- Produto W1: `19a8d725584b89ad97cd9a9bdbb018b5339b9d16`; snapshot S1: `0b6ffc6b2dfdfc63e73d11684b7173f3b7f52f41`.
+- Testes: [43518126352](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43518126352), **98 pass / 2 fail**, 100 testes em 33 arquivos. O request real e todos os casos constam de `test1-summary.json`.
+- Checks: [43518137324](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43518137324), guards **PASS** (78 regras, 0 gate, 0 errors), typecheck **FAIL** (186 diagnósticos). `check1-triage.json` separa fontes herdadas, dependências WP00 e os dois erros de narrowing novos na fixture.
+- Passaram o consumer com UI authority real, o drilldown emitido por Chromium sobre C02 real, os negativos de revogação/stale, as mudanças de renderer e os dois testes dos motores para as fronteiras 55000/15000 e treinamento omitido/40000.
+- A primeira falha conserva a asserção do marco sem data que o produtor WP02 do seed elimina. A segunda foi diagnosticada na própria fixture: EUR faltava no catálogo FX; a correção registra EUR com `rate: null`, mantendo câmbio ausente. O narrowing dos previews conditioned também foi corrigido. As correções só recebem crédito após a segunda execução.
+- O ZIP de checks foi baixado pelo GitHub MCP e verificado pelo SHA256 `b3a306fce9e37af68157f8d3a6f185cfe6c84e8b857c366b957b6d357e284e97`; seus três arquivos (`product.json`, `typecheck.log`, `guards.log`) foram inspecionados. A lane bun de testes não publicou artefatos, conforme workflow; o estado é `[]`, não um upload omitido silenciosamente.
+
+O pack lido tem blob `e58fa5f9ca42fefa0a9453114c6146d4e8942a5b`. A matriz final deve manter exatamente seus 108 IDs. Falha de requisito não foi convertida em sucesso esperado nem removida da seleção.
