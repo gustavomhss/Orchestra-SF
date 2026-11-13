@@ -2,7 +2,7 @@ import { object, rows, text } from "../../runtime/contract.ts"
 import { requestValue } from "../../src/procurement-screen.ts"
 import type { RequestView } from "../../src/procurement-screen.ts"
 
-export const PROCUREMENT_MONETARY_RULE_VERSION = "procurement-money-v2"
+export const PROCUREMENT_MONETARY_RULE_VERSION = "procurement-money-v3"
 
 /** Computes the same monetary facts used by C02 and by scoped confirmations. */
 export function procurementMonetaryFacts(record: Record<string, unknown>, baseCurrency: string, formSettings?: unknown) {
@@ -23,10 +23,11 @@ export function procurementMonetaryFacts(record: Record<string, unknown>, baseCu
     : selected ? typeof selected.total === "number" && Number.isFinite(selected.total) ? selected.total : null
       : quotation ? null
       : typeof pr.estAmount === "number" && Number.isFinite(pr.estAmount) ? pr.estAmount : null
-  const currencyInput = order ? text(po.currency) : quotation ? text(selected?.currency) : baseCurrency
+  const frozen = order ? po.fxRate != null || po.approval != null || po.approvalBaseCurrency != null || ["po_pending", "po_approved", "po_issued"].includes(status) : quotation ? sourcing.fxSnapshot != null || sourcing.approval != null || sourcing.approvalBaseCurrency != null || status === "src_pending" : record.prApproval != null || record.prApprovalBaseCurrency != null || ["pr_pending", "sourcing", "src_rejected"].includes(status)
+  // A submitted PR estimate is denominated in its submission base, even after Settings changes.
+  const currencyInput = order ? text(po.currency) : quotation ? text(selected?.currency) : frozen ? text(record.prApprovalBaseCurrency) : baseCurrency
   const explicitCurrency = /^[A-Z]{3}$/.test(currencyInput) ? currencyInput : ""
   const currency = explicitCurrency
-  const frozen = order ? po.fxRate != null || po.approval != null || po.approvalBaseCurrency != null || ["po_pending", "po_approved", "po_issued"].includes(status) : quotation ? sourcing.fxSnapshot != null || sourcing.approval != null || sourcing.approvalBaseCurrency != null || status === "src_pending" : record.prApproval != null || record.prApprovalBaseCurrency != null || ["pr_pending", "sourcing", "src_rejected"].includes(status)
   const snapshot = order ? po.fxRate : quotation ? object(sourcing.fxSnapshot)[currency] : 1
   const live = rows(object(formSettings).fxRates).find((rate) => rate.code === currency)?.rate
   const submittedBase = order ? po.approvalBaseCurrency : quotation ? sourcing.approvalBaseCurrency : record.prApprovalBaseCurrency

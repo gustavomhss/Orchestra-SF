@@ -53,10 +53,15 @@ test("sourcing entry renders only attached authorized request selectors with the
   const history: string[] = []
   await new HTMLRewriter()
     .on("form[data-sourcing-analysis]", { element: (element) => { config.push(element.getAttribute("data-config")!) } })
-    .on('select[name="requestRef"] option', { element: (element) => { selected.push(element.getAttribute("value")!) } })
+    .on('select[name="requestRef"] option', { element: (element) => {
+      if (!element.hasAttribute("value")) throw new Error("Every request option must declare its value")
+      // HTMLRewriter reports the explicitly empty placeholder attribute as null.
+      selected.push(element.getAttribute("value") ?? "")
+    } })
     .on("[data-analysis-history]", { element: (element) => { history.push(element.getAttribute("data-case")!) } })
     .transform(new Response(html)).text()
   expect(selected).toEqual(["", request.refId])
+  expect(html).toContain('<option value="">Choose an attached request</option>')
   expect(config).toHaveLength(1)
   expect(JSON.parse(config[0]!)).toEqual({ caseRef: { id: "decision", incarnation: "decision-incarnation", version: 3 }, objective: "Compare authorized proposals",
     profileId: "sf_procurement", profileVersion: runtime.selected[0]!.profile.version, skillId: "sf-comparar-sourcing", skillVersion: runtime.selected[0]!.skills[0]!.version,

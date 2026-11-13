@@ -237,6 +237,11 @@ export function createProcurementDecisionHost(input: BridgeInput & {
     const archived = value.status === "ok" ? readArchive(value.value) : undefined
     return archived && digestSfValue(archived.evidence) === digestSfValue(ref) ? archived : undefined
   }
+  // The router asks for continuity immediately after this producer resolves history.
+  // Retain that original observation, not an authorization decision: proveContinuity
+  // must still reread the archive and fence current material and authority below.
+  const historicalProofs = new WeakMap<TrustedDomainContext, Map<string, ArchivedSource>>()
+  const historyKey = (original: BusinessEvidenceRef, current: BusinessEvidenceRef) => digestSfValue({ original, current })
   const physicalContinuity = async (archived: ArchivedSource, currentRef: RecordEvidence, context: TrustedDomainContext) => {
     const request = host.requestFor(context)
     const selected = await input.individual.resolveForPreparation(currentRef.refId, context)
@@ -277,6 +282,10 @@ export function createProcurementDecisionHost(input: BridgeInput & {
     const issuedAgain = await input.individual.issueForActor(ref.target, context)
     if (!again || digestSfValue(again) !== digestSfValue(archived) || issuedAgain.status !== "ok" || digestSfValue(issuedAgain.value) !== digestSfValue(issued.value) || !await physicalContinuity(archived, issued.value, context) || !await host.revalidate(context)) return unavailable()
     const projection: DomainProjection = { ...structuredClone(archived.projection), context: { ...structuredClone(archived.projection.context), principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion } }
+    const proofs = historicalProofs.get(context) ?? new Map<string, ArchivedSource>()
+    proofs.set(historyKey(ref, issued.value), structuredClone(archived))
+    if (proofs.size > 256) proofs.delete(proofs.keys().next().value!)
+    historicalProofs.set(context, proofs)
     return { state: "historical", ref, currentRef: issued.value, authorizedProjection: projection, differences, accessRevision: context.binding.accessRevision, checkedAt: input.now() }
   }
   const resolveReceipt = async (ref: Extract<BusinessEvidenceRef, { kind: "receipt" }>, context: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
@@ -320,8 +329,13 @@ export function createProcurementDecisionHost(input: BridgeInput & {
   }
   const proveContinuity = async (original: BusinessEvidenceRef, currentRef: BusinessEvidenceRef, context: TrustedDomainContext) => {
     if (original.kind !== "record" || currentRef.kind !== "record" || original.target.surface !== "procurement" || original.target.recordType !== "procurement-request" || !original.refId.startsWith("sf-procurement:")) return undefined
-    const result = await resolveEvidence(original, context)
-    return result ? result.state === "historical" && !!result.authorizedProjection && !!result.currentRef && digestSfValue(result.currentRef) === digestSfValue(currentRef) && Array.isArray(result.differences) && await host.revalidate(context) : undefined
+    const observed = historicalProofs.get(context)?.get(historyKey(original, currentRef))
+    if (!observed || !await host.revalidate(context)) return false
+    const archived = await readOriginal(original, context)
+    if (!archived || digestSfValue(archived) !== digestSfValue(observed)) return false
+    // physicalContinuity resolves the current actor's scope again and uses isCurrent,
+    // which compares the canonical material digest and revision as well as identity.
+    return await physicalContinuity(archived, currentRef, context) && await host.revalidate(context)
   }
   return { prepareChanges: mutations.prepareChanges, prepareDomainCommands, reviewChange, apply, authorizeReceiptTarget, resolveEvidence, proveContinuity, dispose: () => reviews.clear() }
 }

@@ -33,7 +33,7 @@ const period = { start: "2026-01-01", end: "2026-12-31" }
 const initialAt = "2026-11-13T00:00:00Z"
 
 test("real host composes C06 confirmation, current evidence routing and the WP09 dossier", async () => {
-  const fixture = await hostFixture()
+  const fixture = await hostFixture("H01")
   try {
     const call = await fixture.ui("sf_request_read", { requestRef: fixture.evidence.refId })
     const issued = await fixture.business.procurementConfirmation.issue("PR-1", ["subject"], period, call)
@@ -91,7 +91,7 @@ test("real host composes C06 confirmation, current evidence routing and the WP09
 })
 
 test("real HTTP prepares, reviews and applies C12 with one durable effect and authorized historical evidence", async () => {
-  const fixture = await hostFixture()
+  const fixture = await hostFixture("H02")
   try {
     const prepared = await prepareChange(fixture)
     const call = await fixture.ui("sf_case_read", { caseRef: encodeCaseRef(prepared.request.caseRef) })
@@ -152,10 +152,11 @@ test("real HTTP prepares, reviews and applies C12 with one durable effect and au
     expect((await fixture.http("decision-apply", prepared.request, "alice", "apply-one")).response.status).toBe(403)
     expect(await fixture.material()).toEqual(after)
   } finally { await fixture.dispose() }
-})
+// W5 measured 30.58s across prepare/review/apply/retry and multi-actor historical reads.
+}, 45_000)
 
 test("private original evidence is immutable and a replacement Request cannot revive historical facts or receipts", async () => {
-  const fixture = await hostFixture()
+  const fixture = await hostFixture("H03")
   try {
     const prepared = await prepareChange(fixture)
     const before = await fixture.authority.state.read(fixture.request(), "preferences", (state) => structuredClone(state.preferences))
@@ -187,6 +188,19 @@ test("private original evidence is immutable and a replacement Request cannot re
     if (current.status !== "ok") throw new Error(`applied case unavailable: ${current.reason}`)
     const receipt = current.value.evidenceRefs.find((ref) => ref.kind === "receipt")
     if (!receipt) throw new Error("receipt source unavailable")
+    const observed = await fixture.business.procurementDecisions.resolveEvidence(fixture.evidence, call)
+    if (observed?.state !== "historical" || observed.currentRef?.kind !== "record") throw new Error("historical observation unavailable")
+    const physicalBefore = await fixture.persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: snapshot.sfSources?.records[JSON.stringify(["procurement-request", "PR-1"])]?.incarnation }))
+    expect(typeof physicalBefore).toBe("string")
+    await fixture.edit({ estAmount: 175 })
+    const physicalAfter = await fixture.persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: snapshot.sfSources?.records[JSON.stringify(["procurement-request", "PR-1"])]?.incarnation }))
+    expect(physicalAfter).toBe(physicalBefore)
+    const edited = await fixture.business.individual.issueForActor(fixture.evidence.target, call)
+    if (edited.status !== "ok") throw new Error("materially edited source unavailable")
+    expect(edited.value.target.incarnation).toBe(observed.currentRef.target.incarnation)
+    expect(edited.value.target.version).toBeGreaterThan(observed.currentRef.target.version)
+    expect(edited.value.target.projectionDigest).not.toBe(observed.currentRef.target.projectionDigest)
+    expect(await fixture.business.procurementDecisions.proveContinuity(fixture.evidence, observed.currentRef, call)).toBe(false)
     const saved = await fixture.material()
     await fixture.persistence.transaction("procurement", async (snapshot) => {
       delete object(object(snapshot.data.store).requests)["PR-1"]
@@ -202,12 +216,13 @@ test("private original evidence is immutable and a replacement Request cannot re
     expect((await fixture.business.context.resolve(receipt, call)).state).toBe("unavailable")
     expect((await fixture.business.cases.read({ caseRef: encodeCaseRef(updated) }, call)).status).toBe("unavailable")
     expect((await fixture.http("decision-apply", chosen)).response.status).toBe(403)
-    expect((await fixture.material()).request.history).toHaveLength(1)
+    expect((await fixture.material()).request).toEqual(saved.request)
   } finally { await fixture.dispose() }
-})
+// W5 measured 23.97s for two preparations, archive guards and historical/ABA checks.
+}, 35_000)
 
 test("Procurement decision HTTP rejects injected commands, ungranted actors and cross-origin intent", async () => {
-  const fixture = await hostFixture()
+  const fixture = await hostFixture("H04")
   try {
     const prepared = await prepareChange(fixture)
     const before = await fixture.material()
@@ -225,7 +240,7 @@ test("Procurement decision HTTP rejects injected commands, ungranted actors and 
 })
 
 test("a real case edit between durable receipt and reconciliation preserves the conflict without reapplying", async () => {
-  const fixture = await hostFixture()
+  const fixture = await hostFixture("H05")
   try {
     const prepared = await prepareChange(fixture)
     expect((await fixture.http("decision-review", { purpose: "review", ...prepared.request })).response.status).toBe(200)
@@ -247,15 +262,20 @@ test("a real case edit between durable receipt and reconciliation preserves the 
     expect(decision.value.preparedChanges[0]?.state).toBe("planned")
     expect(decision.value.receipts).toEqual([])
     const receipts = await fixture.authority.state.read(fixture.request(), "receipts", (state) => Object.values(state.receipts))
-    expect(receipts).toMatchObject({ status: "ok", value: [expect.objectContaining({ result: { ok: true } })] })
+    expect(receipts.status).toBe("ok")
+    if (receipts.status !== "ok") throw new Error("durable receipt namespace unavailable")
+    expect(receipts.value).toHaveLength(1)
+    expect(receipts.value[0]).toMatchObject({ principalRef: "alice", surface: "procurement", version: 1 })
+    expect(receipts.value[0]!.result).toEqual({ ok: true, value: { status: "applied" } })
     expect((await fixture.http("decision-apply", prepared.request)).response.status).toBe(409)
     expect(await fixture.material()).toEqual(after)
     expect(fixture.receiptCommits).toHaveLength(1)
   } finally { await fixture.dispose() }
-})
+// W5 reached the post-commit assertions in 6.34s; the retry adds real case reads.
+}, 15_000)
 
 test("a durable application recovers after a lost commit response and cleared review cache", async () => {
-  const fixture = await hostFixture()
+  const fixture = await hostFixture("H06")
   try {
     const prepared = await prepareChange(fixture)
     expect((await fixture.http("decision-review", { purpose: "review", ...prepared.request })).response.status).toBe(200)
@@ -292,16 +312,32 @@ test("a durable application recovers after a lost commit response and cleared re
     expect((await fixture.material()).request.history).toHaveLength(1)
     expect(fixture.receiptCommits).toHaveLength(1)
   } finally { await fixture.dispose() }
-})
+// W5 measured 15.30s including durable failure recovery and the receipt ABA interleave.
+}, 30_000)
 
-async function hostFixture() {
+async function hostFixture(scenario: string) {
+  const started = performance.now()
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-procurement-host-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
+  const metrics = { sqliteTransactions: 0, sqliteAllTransactions: 0, sqliteMilliseconds: 0, http: [] as { mode: string; status: number; milliseconds: number; sqliteTransactions: number }[] }
+  const meteredStore: typeof store = { ...store,
+    transaction: async (surface, work, options) => {
+      const begin = performance.now()
+      metrics.sqliteTransactions++
+      try { return await store.transaction(surface, work, options) } finally { metrics.sqliteMilliseconds += performance.now() - begin }
+    },
+    transactionAll: async (work, options) => {
+      if (!store.transactionAll) throw new Error("real SQLite transactionAll unavailable")
+      const begin = performance.now()
+      metrics.sqliteAllTransactions++
+      try { return await store.transactionAll(work, options) } finally { metrics.sqliteMilliseconds += performance.now() - begin }
+    },
+  }
   const clock = { at: initialAt }
   const permitted = new Set(["alice", "bob"])
   const origin = "https://local.invalid"
-  const sources = createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => clock.at), createId: randomUUID })
+  const sources = createSfSourcePersistence({ persistence: meteredStore, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => clock.at), createId: randomUUID })
   const scheduling: { afterReceipt?: () => Promise<void>; afterCaptured?: () => Promise<void> } = {}
   const receiptCommits: { beforeCases: number; afterCases: number }[] = []
   // This adapter changes only scheduling: both competing transactions commit through
@@ -402,8 +438,20 @@ async function hostFixture() {
       const result = await persistence.transaction("procurement", async (snapshot) => { const outcome = domain.execute(snapshot, { id: "alice", canWrite: true, roles: ["requester"], assigned: [], domains: [] }, { page: "Requests", action: "save", id: "PR-1", version: snapshot.versions["requests:PR-1"]?.version ?? 0, values: { pr } }, await environment(request())); return { commit: outcome.ok, value: outcome } })
       if (!result.ok) throw new Error(`real requisition edit failed: ${result.status}`)
     },
-    http: async (mode: string, payload: unknown, actor = "alice", key: string = randomUUID()) => { const response = await application(request(actor, mode, payload, key)); if (!response) throw new Error("Procurement HTTP handler absent"); return { response, body: object(await response.json()) } },
-    dispose: async () => { business.dispose(); await store.dispose(); await rm(directory, { recursive: true, force: true }) },
+    http: async (mode: string, payload: unknown, actor = "alice", key: string = randomUUID()) => {
+      const begin = performance.now()
+      const transactions = metrics.sqliteTransactions + metrics.sqliteAllTransactions
+      const response = await application(request(actor, mode, payload, key))
+      if (!response) throw new Error("Procurement HTTP handler absent")
+      metrics.http.push({ mode, status: response.status, milliseconds: Math.round(performance.now() - begin), sqliteTransactions: metrics.sqliteTransactions + metrics.sqliteAllTransactions - transactions })
+      return { response, body: object(await response.json()) }
+    },
+    dispose: async () => {
+      business.dispose()
+      await store.dispose()
+      await rm(directory, { recursive: true, force: true })
+      console.info("wp04-host-metrics", JSON.stringify({ scenario, milliseconds: Math.round(performance.now() - started), ...metrics, sqliteMilliseconds: Math.round(metrics.sqliteMilliseconds) }))
+    },
   }
 }
 

@@ -1,8 +1,9 @@
 import { expect, test } from "bun:test"
 import path from "node:path"
-import { createProcurementCapabilities, readRequest } from "../../../product/procurement/capabilities.ts"
-import type { ProcurementPort } from "../../../product/contracts/ports.ts"
+import { createProcurementCapabilities, readRequest, readSupplier } from "../../../product/procurement/capabilities.ts"
+import type { DomainPortHost, ProcurementPort } from "../../../product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
+import type { SfDomainValidation } from "../../../product/contracts/runtime.ts"
 
 const binding = { kind: "ui", binding: { installationId: "i", projectId: "p", principalRef: "a", requestId: "r", policyVersion: "1", accessRevision: "1", expiresAt: "2099-01-01T00:00:00Z" }, lease: {} } as unknown as TrustedDomainContext
 
@@ -93,6 +94,7 @@ test("authorized capability reads through an issued scoped source and consumes o
     const call = await ui.admit(request, "sf_request_read", digestSfValue(input))
     if (call.status !== "ok") throw new Error("UI admission failed")
     expect((await readRequest(input, call.value, { port, authority })).status).toBe("denied")
+    expect(await readRequest(input, call.value, { port, authority })).toMatchObject({ status: "denied", receipt: { kind: "unbound", code: "invalid-binding" } })
     expect(await ui.validate(call.value, "sf_request_read", digestSfValue(input))).toBe(true)
     const result = await readRequest(input, call.value, { port, authority })
     expect(result.status === "ok" && result.result).toMatchObject({ values: expect.arrayContaining([expect.objectContaining({ id: "subject", value: "Owned" })]) })
@@ -105,6 +107,7 @@ test("authorized capability reads through an issued scoped source and consumes o
     const fromUi = await bindings.readRequest(request, input)
     expect(fromUi.status === "ok" && fromUi.result).toMatchObject({ values: expect.arrayContaining([expect.objectContaining({ id: "subject", value: "Owned" })]) })
     expect(fromUi.receipt).toMatchObject({ kind: "ui", operation: "sf_request_read", handlerExport: "readRequest", principalRef: "a" })
+    expect((await bindings.readRequest(request, { requestRef: "not-issued" })).status).toBe("unavailable")
     if (proposed.status !== "ok") throw new Error("scenario preparation failed")
     const { createProcurementPreparedReview } = await import("../../../product/procurement/prepared-review.ts")
     const review = createProcurementPreparedReview({ port, individual: resolver })
@@ -126,5 +129,75 @@ test("authorized capability reads through an issued scoped source and consumes o
       return { commit: result.ok, value: result }
     })
     expect((await review(proposed.value.command, admission.value)).status).toBe("stale")
+    expect((await bindings.readRequest(request, input)).status).toBe("stale")
+  } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
+})
+
+test("supplier export requires a consumed UI grant and preserves current scoped source failures", async () => {
+  const { mkdtemp, realpath, rm } = await import("node:fs/promises")
+  const { tmpdir } = await import("node:os")
+  const { randomUUID } = await import("node:crypto")
+  const { openLocalStore } = await import("../../../runtime/local-store.ts")
+  const { object, rows } = await import("../../../runtime/contract.ts")
+  const { createSfSourcePersistence } = await import("../../../product/integration/source-lifecycle.ts")
+  const { enumerateSfSources } = await import("../../../product/integration/source-inventory.ts")
+  const { projectProcurementScope } = await import("../../../product/procurement/source-projection.ts")
+  const { createProcurementPort } = await import("../../../product/procurement/port.ts")
+  const { createProcurementSourceResolver } = await import("../../../product/procurement/sources.ts")
+  const { createSfUiAuthority } = await import("../../../product/integration/ui-authority.ts")
+  const { digestSfValue } = await import("../../../product/contracts/canonical.ts")
+  const { createProcurementUiBindings } = await import("../../../product/procurement/ui-bindings.ts")
+  const { dispatchSfCapability } = await import("../../../product/host-binding/capability-dispatch.ts")
+  const { decodeSfOperationInput, decodeSfOperationOutput } = await import("../../../product/contracts/schema-admission.ts")
+  const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-supplier-capability-"))
+  const store = await openLocalStore(directory)
+  try {
+    const persistence = createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources, projectScope: projectProcurementScope, createId: randomUUID })
+    await persistence.initializeSources("procurement")
+    await persistence.transaction("procurement", async (snapshot) => {
+      snapshot.data.store = { requests: {}, settings: { currency: "USD" }, suppliers: [{ id: "s1", legalName: "Supplier", bankAccount: "PRIVATE-BANK" }] }
+      return { commit: true, value: undefined }
+    })
+    const access = { active: true }
+    const request = new Request("https://local.invalid/procurement", { headers: { authorization: "buyer" } })
+    const ui = createSfUiAuthority({ authorize: async (http) => access.active && http.headers.get("authorization") === "buyer" ? { installationId: "i", projectId: "p", principalRef: "buyer", policyVersion: "1", accessRevision: "1" } : undefined, commandIdentity: async () => randomUUID(), createId: randomUUID, now: Date.now })
+    const host: DomainPortHost = { persistence,
+      requestFor: (call) => call.kind === "ui" ? ui.requestFor(call) : undefined,
+      revalidate: (call) => call.kind === "ui" ? ui.revalidate(call) : Promise.resolve(false),
+      environment: async () => ({ at: "2026-01-01T00:00:00Z", directory: [], id: randomUUID }),
+      authenticate: async (http) => access.active && http.headers.get("authorization") === "buyer" ? { id: "buyer", canWrite: true, roles: [{ surface: "procurement", role: "buyer" }] } : null,
+    }
+    const issuerInput = { supplierRef: "issuer", fields: ["legalName"] }
+    const issuer = await ui.admit(request, "sf_supplier_read", digestSfValue(issuerInput))
+    if (issuer.status !== "ok" || !await ui.validate(issuer.value, "sf_supplier_read", digestSfValue(issuerInput))) throw new Error("supplier UI authority unavailable")
+    const resolver = createProcurementSourceResolver({ host, scopedSources: persistence, contextFor: async () => ({ status: "ok", value: { installationId: "i", projectId: "p", principalRef: "buyer", accessRevision: "1", policyVersion: "1", surface: "procurement", period: { start: "2026-01-01", end: "2026-12-31" }, currency: "USD", sourceRefs: [], capabilities: [] } }) })
+    const issued = await resolver.issue("procurement-supplier", "s1", issuer.value)
+    if (issued.status !== "ok") throw new Error(issued.reason)
+    const unavailable = async () => ({ status: "unavailable" as const, reason: "outside-supplier-fixture" })
+    const port = createProcurementPort({ ...host, resolveRequestSource: unavailable, resolveSupplierSource: resolver.resolve, isCurrentRequestSource: () => false, isCurrentSupplierSource: resolver.isCurrent, resolveRequestCollection: unavailable, isCurrentRequestCollection: () => false, readContractSource: unavailable })
+    const authority: SfDomainValidation = { validateDomainContext: (call, operation, digest) => call.kind === "ui" ? ui.validate(call, operation, digest) : Promise.resolve(false), revalidateDomainContext: host.revalidate, receiptFor: (call, operation, digest, result) => call.kind === "ui" ? ui.receiptFor(call, operation, digest, result) : undefined }
+    const descriptors = createProcurementCapabilities({ port, authority })
+    const dispatch = (payload: unknown, context: TrustedDomainContext) => dispatchSfCapability({ operation: "sf_supplier_read", payload, context, descriptors, authority, validateInput: (descriptor, value) => descriptor.id === "sf_supplier_read" && decodeSfOperationInput("sf_supplier_read", value).ok, validateOutput: (descriptor, value) => descriptor.id === "sf_supplier_read" && (value.status !== "ok" || decodeSfOperationOutput("sf_supplier_read", value.result).ok) })
+    const bindings = createProcurementUiBindings({ authority: ui, dispatch: (_operation, payload, context) => dispatch(payload, context) })
+    const input = { supplierRef: issued.value, fields: ["legalName"] }
+    const call = await ui.admit(request, "sf_supplier_read", digestSfValue(input))
+    if (call.status !== "ok") throw new Error("supplier call admission unavailable")
+    expect(await readSupplier(input, call.value, { port, authority })).toMatchObject({ status: "denied", receipt: { kind: "unbound", code: "invalid-binding" } })
+    const result = await dispatch(input, call.value)
+    expect(result).toMatchObject({ status: "ok", receipt: { kind: "ui", operation: "sf_supplier_read", handlerExport: "readSupplier", principalRef: "buyer" } })
+    if (result.status !== "ok") throw new Error("supplier export unavailable")
+    expect(result.result).toMatchObject({ values: [{ id: "legalName", value: "Supplier" }] })
+    expect(JSON.stringify(result.result)).not.toContain("PRIVATE-BANK")
+    expect((await dispatch(input, call.value)).status).toBe("denied")
+    expect((await bindings.readSupplier(request, { supplierRef: "not-issued", fields: ["legalName"] })).status).toBe("unavailable")
+    await persistence.transaction("procurement", async (snapshot) => { rows(object(snapshot.data.store).suppliers)[0]!.legalName = "Changed supplier"; return { commit: true, value: undefined } })
+    expect((await bindings.readSupplier(request, input)).status).toBe("stale")
+    const current = await resolver.issue("procurement-supplier", "s1", issuer.value)
+    if (current.status !== "ok") throw new Error(current.reason)
+    const currentInput = { ...input, supplierRef: current.value }
+    expect((await bindings.readSupplier(request, currentInput)).status).toBe("ok")
+    access.active = false
+    expect((await readSupplier(input, call.value, { port, authority })).status).toBe("denied")
+    expect((await bindings.readSupplier(request, currentInput)).status).toBe("denied")
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })

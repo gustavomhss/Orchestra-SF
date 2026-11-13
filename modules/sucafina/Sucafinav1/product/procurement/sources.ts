@@ -218,6 +218,14 @@ export function createProcurementCollectionRegistry(input: { host: DomainPortHos
       for (const evidence of result.value.requests) members.set(evidence.refId, { entry, evidence })
       return { status: "ok", value: entry.value.selection.refId }
     },
+    /** Dispose one host-owned view and its children without releasing another equivalent selection. */
+    releaseSelection(ref: string) {
+      const selected = entries.get(ref)
+      if (!selected) return false
+      for (const [key, entry] of entries) if (entry.scope === selected.scope) entries.delete(key)
+      for (const [key, member] of members) if (member.entry.scope === selected.scope) members.delete(key)
+      return true
+    },
     async resolveRequestCollection(ref: string, binding: TrustedDomainContext): Promise<PortResult<Selection>> {
       const entry = entries.get(ref)
       if (!entry || entry.expiresAt <= Date.now()) return { status: "unavailable", reason: "Selection unavailable" }

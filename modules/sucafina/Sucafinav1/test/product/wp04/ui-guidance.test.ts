@@ -5,11 +5,22 @@ import { requestValue } from "../../../src/procurement-screen.ts"
 import type { RequestView } from "../../../src/procurement-screen.ts"
 import { presentProcurementFieldErrors, purchaseOrderFieldSources, sourcingFieldErrors } from "../../../product/procurement/guided-request.ts"
 import { domain, render } from "../../../runtime/procurement.ts"
+import { object, rows } from "../../../runtime/contract.ts"
 import type { Snapshot } from "../../../runtime/contract.ts"
 
 const at = "2026-11-13T12:00:00Z"
 const actor = { id: "buyer", roles: ["buyer"], canWrite: true }
 const context = { actor, year: 2026, month: 11, at, versions: {} }
+
+async function renderedRowInputs(html: string, selector: string) {
+  const values: Record<string, unknown> = {}
+  await new HTMLRewriter().on(`${selector} input[name]`, { element(element) {
+    if (element.getAttribute("type") === "checkbox" && !element.hasAttribute("checked")) return
+    const name = element.getAttribute("name")
+    if (name) values[name] = element.getAttribute("value") ?? ""
+  } }).transform(new Response(html)).text()
+  return values
+}
 
 test("sourcing identifies the missing commercial control without blaming completed technical scores", () => {
   const settings = initialProcurementSettings()
@@ -120,6 +131,109 @@ test("contract strategy changes preserve saved references and existing-contract 
   if (rejected.ok || !("fieldErrors" in rejected)) throw new Error("existing-contract order without a reference did not return field errors")
   expect(rejected.fieldErrors).toContainEqual({ field: "po.contractRef", message: error })
   expect(poState).toEqual(before)
+})
+
+test("rendered order rows retain omitted metadata across consecutive saves, reorder, removal and a new row", async () => {
+  const environment = { at, directory: [], id: () => "unused" }
+  const id = "PR-2026-00031"
+  const original = [
+    { desc: "Visible A", description: "Recorded description A", qty: 2, unitPrice: 10, uom: "box", unit: "Recorded unit A", notes: "Keep notes A" },
+    { desc: "Visible B", description: "Recorded description B", qty: 3, unitPrice: 20, uom: "case", unit: "Recorded unit B", notes: "Keep notes B" },
+  ]
+  const state: Snapshot = {
+    data: { store: { settings: initialProcurementSettings(), suppliers: [], requests: { [id]: { request: { number: id, status: "po_draft", createdBy: "owner", createdAt: at, pr: { title: "Retained rows" }, po: { currency: "USD", supplier: "Saved supplier", lines: original } }, version: 1, by: actor.id } } } },
+    versions: { [`requests:${id}`]: { version: 1, by: actor.id } }, sequences: {}, audit: [], notices: [],
+  }
+  const view = domain.view(state, actor, environment)
+  const values = await renderedRowInputs(render("Requests", view.data, { ...context, versions: view.versions })!, `#${id}-po form[data-command="save"] .form-section`)
+  expect(values["po.lines.0._rowRef"]).toMatch(/^0:[a-f0-9]{64}$/)
+  expect(values["po.lines.1._rowRef"]).toMatch(/^1:[a-f0-9]{64}$/)
+  expect(values["po.lines.2._rowRef"]).toBeUndefined()
+  expect(values["po.lines.0.notes"]).toBeUndefined()
+  const save = (submitted: Record<string, unknown>) => domain.execute(state, actor, { page: "Requests", action: "save", id, version: state.versions[`requests:${id}`]!.version, values: submitted }, environment)
+  const savedLines = () => rows(object(rows(domain.view(state, actor, environment).data.requests)[0]!.po).lines)
+  for (const unitPrice of [11, 12]) {
+    values["po.lines.0.unitPrice"] = String(unitPrice)
+    expect(save(values).ok).toBe(true)
+    expect(savedLines()).toEqual([{ ...original[0], unitPrice }, original[1]!])
+  }
+  // The browser may keep these exact controls after a successful save. Do not
+  // rerender or regenerate their references before the next save.
+  const reordered = Object.fromEntries(Object.entries(values).map(([name, value]) => [name.replace(/^po\.lines\.([01])\./, (_match, index) => `po.lines.${index === "0" ? "1" : "0"}.`), value]))
+  expect(save(reordered).ok).toBe(true)
+  expect(savedLines()).toEqual([original[1]!, { ...original[0], unitPrice: 12 }])
+  reordered["po.lines.0._remove"] = "true"
+  reordered["po.lines.2.desc"] = "New row"
+  reordered["po.lines.2.qty"] = "1"
+  reordered["po.lines.2.unitPrice"] = "7"
+  reordered["po.lines.2.uom"] = "day"
+  for (const unitPrice of [13, 14]) {
+    reordered["po.lines.1.unitPrice"] = String(unitPrice)
+    expect(save(reordered).ok).toBe(true)
+    expect(savedLines()).toEqual([{ ...original[0], unitPrice }, { desc: "New row", qty: 1, unitPrice: 7, uom: "day" }])
+  }
+  expect(JSON.stringify(savedLines())).not.toMatch(/_rowRef|_remove|_new/)
+  const beforeInvalid = structuredClone(state)
+  const duplicate = { ...reordered, "po.lines.0._remove": "false", "po.lines.0._rowRef": reordered["po.lines.1._rowRef"] }
+  const invalid = save(duplicate)
+  expect(invalid).toMatchObject({ ok: false, status: 422 })
+  if (invalid.ok || !("fieldErrors" in invalid)) throw new Error("Duplicate row identity did not return an adjacent error")
+  expect(invalid.fieldErrors?.map((error) => error.field)).toEqual(["po.lines.0.desc", "po.lines.1.desc"])
+  expect(state).toEqual(beforeInvalid)
+  expect(save({ ...reordered, "po.lines.1._rowRef": "0:forged" })).toMatchObject({ ok: false, status: 422 })
+  expect(state).toEqual(beforeInvalid)
+
+  const previousVersion = state.versions[`requests:${id}`]!.version
+  const current = savedLines()
+  expect(save({ po: { lines: [{ ...current[0], notes: "Reviewed metadata" }, current[1]!] } }).ok).toBe(true)
+  const afterReview = structuredClone(state)
+  // A current metadata mismatch cannot hide the existing stale-version review.
+  expect(domain.execute(state, actor, { page: "Requests", action: "save", id, version: previousVersion, values: reordered }, environment)).toMatchObject({ ok: false, status: 409 })
+  expect(domain.execute(state, { id: "owner", roles: ["requester"], canWrite: true }, { page: "Requests", action: "save", id, version: state.versions[`requests:${id}`]!.version, values: reordered }, environment)).toMatchObject({ ok: false, status: 403 })
+  expect(save(reordered)).toMatchObject({ ok: false, status: 422 })
+  expect(state).toEqual(afterReview)
+})
+
+test("rendered quotation saves retain omitted metadata by quote ID and never transfer removed metadata to a new quote", async () => {
+  const environment = { at, directory: [], id: () => "unused" }
+  const id = "PR-2026-00032"
+  const quotes = [
+    { id: "quote-a", supplier: "Supplier A", currency: "USD", total: 10, qty: 1, unitPrice: 10, techPass: true, scores: [5, 4, 3, 2, 1], cscores: [0, 4, 3], description: "Recorded A", notes: "Notes A", attachments: [{ id: "attachment-a", name: "A.pdf" }] },
+    { id: "quote-b", supplier: "Supplier B", currency: "USD", total: 20, qty: 1, unitPrice: 20, techPass: true, scores: [1, 2, 3, 4, 5], cscores: [0, 3, 4], description: "Recorded B", notes: "Notes B", attachments: [{ id: "attachment-b", name: "B.pdf" }] },
+  ]
+  const state: Snapshot = {
+    data: { store: { settings: initialProcurementSettings(), suppliers: [], requests: { [id]: { request: { number: id, status: "sourcing", createdBy: "owner", createdAt: at, pr: { title: "Quote identity" }, sourcing: { selectedId: null, quotes } }, version: 1, by: actor.id } } } },
+    versions: { [`requests:${id}`]: { version: 1, by: actor.id } }, sequences: {}, audit: [], notices: [],
+  }
+  const view = domain.view(state, actor, environment)
+  const values = await renderedRowInputs(render("Requests", view.data, { ...context, versions: view.versions })!, `#${id}-sourcing form[data-command="save"] .form-section`)
+  const quoteValues = Object.fromEntries(Object.entries(values).filter(([name]) => name.startsWith("sourcing.quotes.")))
+  expect(quoteValues["sourcing.quotes.0.id"]).toBe("quote-a")
+  expect(quoteValues["sourcing.quotes.1.id"]).toBe("quote-b")
+  expect(quoteValues["sourcing.quotes.0.notes"]).toBeUndefined()
+  const save = (submitted: Record<string, unknown>) => domain.execute(state, actor, { page: "Requests", action: "save", id, version: state.versions[`requests:${id}`]!.version, values: submitted }, environment)
+  const savedQuotes = () => rows(object(rows(domain.view(state, actor, environment).data.requests)[0]!.sourcing).quotes)
+  const reordered = Object.fromEntries(Object.entries(quoteValues).map(([name, value]) => [name.replace(/^sourcing\.quotes\.([01])\./, (_match, index) => `sourcing.quotes.${index === "0" ? "1" : "0"}.`), value]))
+  expect(save(reordered).ok).toBe(true)
+  expect(savedQuotes().map((quote) => ({ id: quote.id, description: quote.description, notes: quote.notes, attachments: quote.attachments }))).toEqual([quotes[1]!, quotes[0]!].map((quote) => ({ id: quote.id, description: quote.description, notes: quote.notes, attachments: quote.attachments })))
+  reordered["sourcing.quotes.0._remove"] = "true"
+  reordered["sourcing.quotes.2.id"] = "quote-b"
+  reordered["sourcing.quotes.2.supplier"] = "New supplier B"
+  reordered["sourcing.quotes.2.currency"] = "USD"
+  reordered["sourcing.quotes.2.total"] = "30"
+  reordered["sourcing.quotes.2.unitPrice"] = "30"
+  reordered["sourcing.quotes.1.notes"] = "Explicit revised A"
+  for (const total of [11, 12]) {
+    reordered["sourcing.quotes.1.total"] = String(total)
+    expect(save(reordered).ok).toBe(true)
+    expect(savedQuotes()[0]).toMatchObject({ id: "quote-a", total, description: "Recorded A", notes: "Explicit revised A", attachments: quotes[0]!.attachments })
+    expect(savedQuotes()[1]).toMatchObject({ id: "quote-b", supplier: "New supplier B", total: 30 })
+    for (const field of ["description", "notes", "attachments"]) expect(savedQuotes()[1]![field]).toBeUndefined()
+  }
+  expect(JSON.stringify(savedQuotes())).not.toMatch(/_rowRef|_remove|_new/)
+  const before = structuredClone(state)
+  expect(save({ ...reordered, "sourcing.quotes.2._new": "false", "sourcing.quotes.2.id": "quote-a" })).toMatchObject({ ok: false, status: 422 })
+  expect(state).toEqual(before)
 })
 
 test("money never labels a missing order or ambiguous quotation as an approved amount", () => {

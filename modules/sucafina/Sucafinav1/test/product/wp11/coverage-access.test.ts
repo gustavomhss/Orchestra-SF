@@ -34,7 +34,7 @@ test("C10 derives omitted renewal costs, distinguishes supported zero, and fails
   const common = { basis, alternativeId: "replacement", alternativeVersion: 2, currency: "USD", horizon, evidence: [resolution(evidenceRef)], supports: () => true }
   const omitted = assessCostCoverage({ ...common, entries: coveredEntries("training"), components: [] })
   expect(omitted).toMatchObject({ coverageState: "pending", derivedMissingCategoryIds: ["training"] })
-  expect(omitted.entries.map((entry) => entry.categoryId)).toEqual(RENEWAL_TRANSITION_CATEGORIES)
+  expect(omitted.entries.map((entry) => entry.categoryId)).toEqual([...RENEWAL_TRANSITION_CATEGORIES])
   expect(omitted.entries.filter((entry) => entry.status === "pending")).toEqual([{ categoryId: "training", status: "pending", reason: "missing-category" }])
   expect(omitted.entries.filter((entry) => entry.status === "not-applicable")).toEqual(coveredEntries())
 
@@ -54,7 +54,7 @@ test("C10 derives omitted renewal costs, distinguishes supported zero, and fails
     components: [{ id: "training-null", amount: null, currency: "USD", period: horizon, evidenceState: "absent", sourceRefs: [trainingSource] }],
   })
   expect(missingValue).toMatchObject({ coverageState: "pending", derivedMissingCategoryIds: [] })
-  expect(missingValue.entries.map((entry) => entry.categoryId)).toEqual(RENEWAL_TRANSITION_CATEGORIES)
+  expect(missingValue.entries.map((entry) => entry.categoryId)).toEqual([...RENEWAL_TRANSITION_CATEGORIES])
   expect(missingValue.entries.filter((entry) => entry.status === "pending")).toEqual([{ categoryId: "training", status: "pending", reason: "component-unresolved" }])
   expect(missingValue.entries.filter((entry) => entry.status === "not-applicable")).toEqual(coveredEntries())
   const revoked = assessCostCoverage({ ...common, evidence: [resolution(evidenceRef, "revoked")], entries: coveredEntries(), components: [] })

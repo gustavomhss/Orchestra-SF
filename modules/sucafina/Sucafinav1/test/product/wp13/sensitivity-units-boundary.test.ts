@@ -51,7 +51,17 @@ const initial = (): Snapshot => ({
   versions: {}, sequences: {}, audit: [], notices: [],
 })
 
+// Hosted W5 measured 145277 ms for this bounded SQLite/portfolio/sensitivity proof.
+// Keep its complete authority and replay assertions; the stage timings diagnose the cost.
 test("real Planner sensitivity keeps EUR input separate from USD output and leaves missing FX conditioned in C08", async () => {
+  const startedAt = performance.now()
+  const timing = { previousMs: 0 }
+  const checkpoint = (stage: string) => {
+    const elapsedMs = Math.round(performance.now() - startedAt)
+    console.info(JSON.stringify({ test: "wp13-sensitivity-boundary", stage, elapsedMs, stageMs: elapsedMs - timing.previousMs }))
+    timing.previousMs = elapsedMs
+  }
+  checkpoint("started")
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-sensitivity-boundary-"))
   await chmod(directory, 0o700)
   const request = new Request("https://example.test")
@@ -66,6 +76,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
       return { commit: true, value: true }
     })
     expect(seededPlanner).toBe(true)
+    checkpoint("planner-seeded")
     const snapshot = initial()
     const projection = projectPlannerSource(snapshot, actor, "v0")!
     const evidenceIdentity: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", refId: "v0", installationId: "install", projectId: "project", refDigest: "", evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "planner-version", recordId: "v0", incarnation: "planner-v0", version: 1, fields: Object.keys(projection), period: horizon, projectionDigest: digestSfValue({ versionId: "v0", projection }) } }
@@ -117,6 +128,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     if (selectedStored.status !== "ok" || baselineStored.status !== "ok") return
     const selectedRef = selectedStored.value.resultRef
     const baselineRef = baselineStored.value.resultRef
+    checkpoint("scenario-previews-persisted")
     const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => "case-op", authorizeCase: async () => access.allowed, evidence: evidenceService, createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
     coverageAccess.resolve = createDecisionCoverageAccess({ state, host, authorizeCase: async () => access.allowed, verifyEvidence: async () => access.allowed })
     const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
@@ -130,6 +142,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     expect(issued.value.units.resultUnit).toBe("USD")
     const registered = await rules.register({ caseRef, criterionId: "renewal-difference", metricRef: "planner:known-subtotal-difference", operator: "gte", value: 0, unit: "USD", period: horizon, evidenceRefs: [evidence], expectedRuleVersion: 0, sensitivity: issued.value.units }, context)
     expect(registered.status).toBe("ok")
+    checkpoint("units-and-rule-registered")
     const plannerWithCriteria = createPlannerPort({ host, sources, scenarios, criteria: { evaluate: (input, trusted) => rules.evaluate({ caseRef, ...input }, trusted) } })
     const comparisonBindings = createCriterionComparisonBindings({ state, host, rules, results, authorizeCase: async () => access.allowed, verifyBinding: async () => access.allowed, verifySnapshot: () => access.allowed, operationIdentity: () => "portfolio-comparison-binding", proposalCoverageWrites, now: () => "2026-11-13T00:00:00Z" })
     const compareCases = createDecisionComparisonService({ cases, state, results, planner: plannerWithCriteria, host })
@@ -147,6 +160,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     const orphanComparison = await results.write({ kind: "comparison", result: compared.value.analysis.comparison, caseRef, requestDigest: digestSfValue({ scenarioRefs: [baselineRef, selectedRef], criteria: ["renewal-difference"] }), sourceRefs: [evidence], idempotencyKey: "orphan-comparison" }, context)
     expect(orphanComparison.status).toBe("ok")
     if (orphanComparison.status === "ok") expect(await analysis.revalidate({ ...compared.value.analysis, comparisonRef: orphanComparison.value.resultRef }, context)).toBe(false)
+    checkpoint("comparison-and-orphan-verified")
     const resolveCandidate = createDecisionCandidateResolver(cases)
     const portfolioBindingOperation = { id: "portfolio-binding" }
     const portfolioBindings = createPortfolioResultBindings({ state, host, results, selection, resolveCandidate, authorizeCase: async () => access.allowed, verifyBinding: async (_binding, value, trusted) => value.kind === "portfolio" && (await Promise.all(value.result.combinations.map((item) => item.analysis ? analysis.revalidate(item.analysis, trusted) : Promise.resolve(true)))).every(Boolean), verifySnapshot: () => access.allowed, operationIdentity: () => portfolioBindingOperation.id, proposalCoverageWrites, now: () => "2026-11-13T00:00:00Z" })
@@ -164,6 +178,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     const unitsFromHttp = await product.http.sensitivityUnits({ caseRef, scenarioRef: selectedRef, baselineRef, parameterRef: "line:11" }, context)
     expect(unitsFromHttp.status === "ok" && unitsFromHttp.value.units.parameterUnit).toBe("EUR")
     expect((await product.http.sensitivityUnits({ caseRef: { ...caseRef, version: 2 }, scenarioRef: selectedRef, baselineRef, parameterRef: "line:11" }, context)).status).toBe("denied")
+    checkpoint("catalog-and-http-preview-verified")
     const catalog = await contribution.catalog({ caseRefs: [encodeCaseRef(caseRef)] }, context)
     expect(catalog.status).toBe("ok")
     if (catalog.status === "ok") {
@@ -180,6 +195,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     expect(listed.status === "ok" && listed.value.some((item) => item.resultRef === portfolioSaved.value.portfolioResultRef)).toBe(true)
     expect((await product.http.read(portfolioSaved.value.portfolioResultRef, caseRef, context)).status).toBe("ok")
     expect(await contribution.persistent.evaluateAndStore(portfolioRequest, caseRef, context)).toEqual(portfolioSaved)
+    checkpoint("portfolio-persisted-and-retried")
     portfolioBindingOperation.id = "cross-case-binding"
     const otherCandidate = portfolioCandidateRef({ caseRef: encodeCaseRef(otherCase), caseVersion: otherCase.version, alternativeId: "selected", alternativeVersion: 1 })
     const crossRequest = { ...portfolioRequest, candidateRefs: [...portfolioRequest.candidateRefs, otherCandidate], explorationLimit: 3 }
@@ -192,6 +208,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     const changedCase = await state.transaction(request, { namespace: "cases", expectedStorageVersion: caseState.storageVersion, idempotencyKey: "change-other", commandDigest: "d".repeat(64), targetRef: otherCase.id, targetIncarnation: otherCase.incarnation }, async (value) => { value.cases.other = { ...value.cases.other, version: 2 }; return { commit: true, value: true } })
     expect(changedCase.status).toBe("ok")
     expect((await contribution.persistent.read(crossSaved.value.portfolioResultRef, context)).status).toBe("stale")
+    checkpoint("cross-case-change-revalidated")
     let exactCalls = 0
     const evaluate = createPlannerSensitivity({ results, resolve: issuer.resolve, revalidate: issuer.revalidate, preview: (input, trusted) => comparePlannerPreview({ host, sources, scenarios, planner }, input, trusted), exactThreshold: async () => { exactCalls++; return { status: "ok", value: { value: 110000, evidenceRefs: [evidence] } } }, idempotencyKey: async (digest) => `sensitivity-${digest}` })
     const portfolio: PortfolioPort = { evaluate: async () => ({ status: "unavailable", reason: "unused-by-sensitivity-test" }), sensitivity: evaluate }
@@ -199,9 +216,11 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     const sensitivityRequest: SensitivityRequest = { scenarioRef: selectedRef, parameterBounds: { parameterRef: "line:11", minimum: 100000, maximum: 120000, steps: 2 }, criterion: { id: "renewal-difference", operator: "gte", value: 0 } }
     const exact = createPlannerExactThreshold({ units: issuer, preview: (input, trusted) => comparePlannerPreview({ host, sources, scenarios, planner }, input, trusted) })
     expect(await exact(sensitivityRequest, baselineRef, context)).toEqual({ status: "unavailable", reason: "exact-threshold-domain-unproven" })
+    checkpoint("exact-threshold-unavailability-verified")
     const saved = await persistent.evaluateAndStore(sensitivityRequest, caseRef, context)
     expect(saved.status).toBe("ok")
     if (saved.status !== "ok") return
+    checkpoint("sensitivity-persisted")
     expect(saved.value.sensitivity.parameterUnit).toBe("EUR")
     expect(saved.value.sensitivity.resultUnit).toBe("USD")
     expect(saved.value.sensitivity.unit).toBe("USD")
@@ -218,6 +237,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     const beforeRead = ids.value
     expect((await product.http.readSensitivity(saved.value.sensitivityResultRef, caseRef, context)).status).toBe("ok")
     expect(ids.value).toBe(beforeRead)
+    checkpoint("sensitivity-read-verified")
     const verifier = createPortfolioProofVerifier({ cases, planner: plannerWithCriteria, sources, evidence: evidenceService, results, revalidate: host.revalidate, readSourceFences: async () => access.allowed ? transactionAll(async (snapshots) => ({ commit: false, value: { dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) } })) : undefined, lockedSourceFences: () => { const snapshots = store.currentSnapshots?.(); return snapshots ? { dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) } : undefined }, caseFor: async () => ({ status: "ok", value: caseRef }), idempotencyKey: async (digest) => `verify-${digest}`, decisions: { prepareChanges: async () => ({ status: "unavailable", reason: "unused" }) }, createReceipt: async () => undefined, candidateCoverageRefFor: async (candidate) => { const ref = parseCaseRef(candidate.caseRef); return ref && candidate.result ? { status: "ok", value: decisionCoverageRef(ref, candidate.result.costCoverage.alternativeId, candidate.result.costCoverage.alternativeVersion) } : { status: "unavailable", reason: "candidate-unavailable" } }, revalidateAnalysis: analysis.revalidate, units: issuer, sensitivityPreview: (input, trusted) => comparePlannerPreview({ host, sources, scenarios, planner }, input, trusted) })
     const portfolioProof = await portfolioBindings.read({ caseRef, resultRef: portfolioSaved.value.portfolioResultRef }, context)
     const portfolioRecord = await results.read({ kind: "portfolio", resultRef: portfolioSaved.value.portfolioResultRef }, context)
@@ -227,9 +247,13 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     const sensitivityRecord = await results.read({ kind: "sensitivity", resultRef: saved.value.sensitivityResultRef }, context)
     if (portfolioProof.status !== "ok" || portfolioRecord.status !== "ok" || comparisonProof.status !== "ok" || comparisonRecord.status !== "ok" || sensitivityProof.status !== "ok" || sensitivityRecord.status !== "ok") throw new Error("proof unavailable")
     const beforeVerification = ids.value
+    checkpoint("proofs-loaded")
     expect(await verifier.verifyPortfolio(portfolioProof.value, portfolioRecord.value, context)).toBe(true)
+    checkpoint("portfolio-replay-verified")
     expect(await verifier.verifyComparison(comparisonProof.value, comparisonRecord.value, context)).toBe(true)
+    checkpoint("comparison-replay-verified")
     expect(await verifier.verifySensitivity(sensitivityProof.value, sensitivityRecord.value, context)).toBe(true)
+    checkpoint("sensitivity-replay-verified")
     const fence = await transactionAll(async (snapshots) => ({ commit: false, value: { current: verifier.verifySnapshot(snapshots.planner, portfolioProof.value, context), changed: verifier.verifySnapshot({ ...snapshots.planner, data: { ...snapshots.planner.data, changed: true } }, portfolioProof.value, context) } }))
     expect(fence).toEqual({ current: true, changed: false })
     expect(ids.value).toBe(beforeVerification)
@@ -237,6 +261,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     const orphan = await results.write({ kind: "sensitivity", result: saved.value.sensitivity, caseRef, requestDigest: digestSfValue(sensitivityRequest), sourceRefs: [evidence], idempotencyKey: "orphan" }, context)
     expect(orphan.status).toBe("ok")
     if (orphan.status === "ok") expect((await persistent.read(orphan.value.resultRef, context)).status).toBe("unavailable")
+    checkpoint("sensitivity-retry-and-orphan-verified")
     expect((await issuer.issue({ scenarioRef: selectedRef, baselineRef, parameterRef: "line:10" }, context)).status).toBe("needs-input")
     expect((await issuer.resolve({ ...sensitivityRequest, criterion: { ...sensitivityRequest.criterion, value: 1 } }, context)).status).toBe("needs-input")
     ruleOperation.id = "criterion-revision"
@@ -248,8 +273,10 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     access.allowed = false
     expect((await contribution.catalog({ caseRefs: [encodeCaseRef(caseRef)] }, context)).status).toBe("denied")
     expect((await persistent.read(saved.value.sensitivityResultRef, context)).status).toBe("denied")
+    checkpoint("rule-and-access-revocation-verified")
   } finally {
     await store.dispose()
     await rm(directory, { recursive: true, force: true })
+    checkpoint("cleanup-finished")
   }
-})
+}, 240_000)

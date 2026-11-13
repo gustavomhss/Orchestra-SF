@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto"
 import {
   createRequest,
   submitPR,
@@ -24,6 +25,8 @@ import { esc } from "../src/screen-shell.ts"
 import { changed, conflict, object, rows, text, finite } from "./contract.ts"
 import { presentProcurementFieldErrors, purchaseOrderFieldErrors, purchaseOrderFieldSources, requisitionFieldErrors, sourcingFieldErrors } from "../product/procurement/guided-request.ts"
 import { procurementMonetaryFacts } from "../product/procurement/monetary.ts"
+import { readProcurementQueueView, procurementApprovalGroups } from "../product/procurement/queue-view.ts"
+import type { ProcurementQueueRow } from "../product/procurement/queue-view.ts"
 import type { Actor, Domain, Snapshot, Command, Environment, Result } from "./contract.ts"
 import { fields, form, table, metric, metricGrid } from "./ui.ts"
 import type { RenderContext } from "./ui.ts"
@@ -269,7 +272,58 @@ function restore(previous: Record<string, unknown>, next: Record<string, unknown
           },
   }
 }
-function inputs(values: Record<string, unknown>): Record<string, unknown> | undefined {
+type FormRowContext = { id: string; request: Record<string, unknown>; section: "sourcing" | "po" }
+type FormRowError = { field: string; message: string }
+const poRowMetadata = ["description", "unit", "notes"]
+const quoteRowMetadata = ["scores", "cscores", "description", "notes", "attachments"]
+
+function orderRowReference(id: string, index: number, line: Record<string, unknown>) {
+  // Only omitted metadata identifies the source. Editing price/quantity or
+  // advancing CAS must not invalidate the still-visible form's reference.
+  const digest = createHash("sha256").update(JSON.stringify([id, pick(line, poRowMetadata)])).digest("hex")
+  return `${index}:${digest}`
+}
+
+function retainedFormRows(path: string[], entries: unknown[], previous: FormRowContext | undefined, errors: FormRowError[]) {
+  if (!previous || path.join(".") !== (previous.section === "sourcing" ? "sourcing.quotes" : "po.lines")) return entries
+  const marked = (value: unknown) => value === true || value === "true" || value === "on"
+  const existing = entries.map(object).filter((row) => !marked(row._remove) && !marked(row._new))
+  if (path.join(".") === "sourcing.quotes") {
+    const quotes = rows(object(previous.request.sourcing).quotes)
+    const identity = (row: Record<string, unknown>) => typeof row.id === "string" || typeof row.id === "number" && Number.isFinite(row.id) ? String(row.id) : ""
+    return entries.map((entry, index) => {
+      const row = object(entry)
+      if (marked(row._new) || marked(row._remove)) return entry
+      const id = identity(row)
+      const matches = quotes.filter((quote) => id && identity(quote) === id)
+      if (!matches.length) return entry
+      if (matches.length !== 1 || existing.filter((quote) => identity(quote) === id).length !== 1) {
+        errors.push({ field: `sourcing.quotes.${index}.supplier`, message: "The recorded quotation is ambiguous. Review the current quotations before saving; your entries are preserved." })
+        return entry
+      }
+      return { ...pick(matches[0], quoteRowMetadata), ...row }
+    })
+  }
+  const lines = rows(object(previous.request.po).lines)
+  const sources = lines.map((line, index) => ({ line, ref: orderRowReference(previous.id, index, line) }))
+  return entries.map((entry, index) => {
+    const row = object(entry)
+    if (marked(row._new) || marked(row._remove) || !Object.hasOwn(row, "_rowRef")) return entry
+    const reference = text(row._rowRef)
+    const digest = /^\d+:[a-f0-9]{64}$/.test(reference) ? reference.slice(reference.indexOf(":") + 1) : ""
+    const matches = sources.filter((source) => digest && source.ref.endsWith(`:${digest}`))
+    if (!matches.length || existing.filter((line) => line._rowRef === reference).length !== 1) {
+      errors.push({ field: `po.lines.${index}.desc`, message: "The recorded row details changed or are ambiguous. Review the current purchase order rows before saving; your entries are preserved." })
+      return entry
+    }
+    // Equal digests represent equal omitted metadata, even after removal or a
+    // reordered submission changes the original position. Explicit edits win.
+    const source = matches.find((item) => item.ref === reference) ?? matches[0]!
+    return { ...pick(source.line, poRowMetadata), ...row }
+  })
+}
+
+function inputs(values: Record<string, unknown>, previous?: FormRowContext, errors: FormRowError[] = []): Record<string, unknown> | undefined {
   const result: Record<string, unknown> = {}
   for (const [key, raw] of Object.entries(values)) {
     const parts = key.split(".")
@@ -328,15 +382,16 @@ function inputs(values: Record<string, unknown>): Record<string, unknown> | unde
     }, result)
     target[name] = normalized
   }
-  return structuredInput(result) as Record<string, unknown>
+  const normalized = structuredInput(result, [], previous, errors) as Record<string, unknown>
+  return errors.length ? undefined : normalized
 }
-function structuredInput(value: unknown): unknown {
+function structuredInput(value: unknown, path: string[] = [], previous?: FormRowContext, errors: FormRowError[] = []): unknown {
   if (value === null || typeof value !== "object") return value
   const record = object(value)
   const keys = Object.keys(record)
   const entries = Array.isArray(value) ? value : keys.length && keys.every((key) => /^\d+$/.test(key)) ? keys.sort((a, b) => Number(a) - Number(b)).map((key) => record[key]) : undefined
   if (entries)
-    return entries.map(structuredInput)
+    return retainedFormRows(path, entries.map((entry, index) => structuredInput(entry, [...path, String(index)], previous, errors)), previous, errors)
       .filter((item) => {
         const row = object(item)
         if (row._remove === true || row._remove === "true" || row._remove === "on") return false
@@ -346,8 +401,8 @@ function structuredInput(value: unknown): unknown {
         ) return false
         return true
       })
-      .map((item) => Object.keys(object(item)).length ? Object.fromEntries(Object.entries(object(item)).filter(([key]) => !["_new", "_remove"].includes(key))) : item)
-  return Object.fromEntries(Object.entries(record).map(([key, item]) => [key, structuredInput(item)]))
+      .map((item) => Object.keys(object(item)).length ? Object.fromEntries(Object.entries(object(item)).filter(([key]) => !["_new", "_remove", "_rowRef"].includes(key))) : item)
+  return Object.fromEntries(Object.entries(record).map(([key, item]) => [key, structuredInput(item, [...path, key], previous, errors)]))
 }
 
 function populatedFormValue(value: unknown): boolean {
@@ -356,7 +411,7 @@ function populatedFormValue(value: unknown): boolean {
   if (Array.isArray(value)) return value.some(populatedFormValue)
   if (value !== null && typeof value === "object")
     return Object.entries(value).some(
-      ([key, item]) => !["_new", "_remove", "id", "qty", "techPass", "auto"].includes(key) && populatedFormValue(item),
+      ([key, item]) => !["_new", "_remove", "_rowRef", "id", "qty", "techPass", "auto"].includes(key) && populatedFormValue(item),
     )
   return value != null && value !== false
 }
@@ -391,7 +446,8 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
             ]
           : []
   if (!allowed.includes(command.action)) return { ok: false, status: 400 }
-  const values = inputs(command.values)
+  const submittedValues = command.values
+  const values = inputs(submittedValues)
   if (!values) return { ok: false, status: 422, errors: ["Invalid form values"] }
   command = { ...command, values }
   const store = load(snapshot)
@@ -435,6 +491,14 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     !has(actor, "buyer", "admin")
   )
     return { ok: false, status: 403 }
+  if (sourceEdit && ["save", "submit_sourcing"].includes(command.action) || poEdit && ["save", "submit_po"].includes(command.action)) {
+    // Retention errors follow the existing version and edit-permission gates,
+    // so a stale form still receives the conflict review response.
+    const fieldErrors: FormRowError[] = []
+    const retained = inputs(submittedValues, { id, request, section: sourceEdit ? "sourcing" : "po" }, fieldErrors)
+    if (!retained) return { ok: false, status: 422, errors: fieldErrors.map((error) => error.message), fieldErrors }
+    command = { ...command, values: retained }
+  }
   // PR editing follows Desenho §4.3; transition Quem is decided by porta §§4–5, including dual-role actors.
   if (row && prEdit && ["save", "submit_pr"].includes(command.action))
     request.pr = {
@@ -747,7 +811,7 @@ function supplier(snapshot: Snapshot, store: Store, actor: Actor, command: Comma
       return {
         ok: false,
         status: 422,
-        errors: missing.length ? missing.map((field) => `Recorded activation prerequisite missing: ${field}`) : ["Supplier activation refused"],
+        errors: missing.length ? missing.map((field) => `Recorded activation prerequisite missing: ${supplierRequirementLabel(field)}`) : ["Supplier activation refused"],
       }
     }
     Object.assign(next, activated.supplier, {
@@ -897,6 +961,9 @@ function amount(request: Record<string, unknown>) {
 function requestStatusLabel(status: string) {
   return ({ draft: "Requisition draft", pr_pending: "Requisition approval", pr_rejected: "Requisition rejected", sourcing: "Sourcing", src_pending: "Sourcing approval", src_rejected: "Sourcing rejected", po_draft: "Purchase order draft", po_pending: "Purchase order approval", po_rejected: "Purchase order rejected", po_approved: "Purchase order approved", po_issued: "Issued internally", cancelled: "Cancelled" } as Record<string, string>)[status] ?? status
 }
+function queueRequestLink(row: ProcurementQueueRow, href: string) {
+  return `<a href="${esc(href)}" data-source-ref="${esc(row.evidence.refId)}" data-source-digest="${esc(row.evidence.refDigest)}" data-source-version="${row.version}">${esc(row.id)}</a>`
+}
 function selectField(name: string, label: string, value: unknown, options: { value: string; label: string }[]) {
   return `<label>${esc(label)}<select name="${esc(name)}">${options.map((option) => `<option value="${esc(option.value)}"${String(value ?? "") === option.value ? " selected" : ""}>${esc(option.label)}</option>`).join("")}</select></label>`
 }
@@ -941,6 +1008,9 @@ const labels: Record<string, string> = {
   escalationDays: "Escalation after days",
   auto: "Automatic price criterion",
 }
+function supplierRequirementLabel(field: string) {
+  return field.split(" or ").map((part) => labels[part] ?? part.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, (letter) => letter.toUpperCase())).join(" or ")
+}
 function scalarFields(prefix: string, record: Record<string, unknown>, names: string[]) {
   return names
     .map((name) => {
@@ -959,13 +1029,18 @@ function scalarFields(prefix: string, record: Record<string, unknown>, names: st
         contractStrategy: ["", "new", "existing"],
         riskRating: ["", "Low", "Medium", "High"],
       }
-      if (options[name])
+      if (options[name]) {
+        const recorded = text(record[name])
         return selectField(
           key,
           label,
           record[name],
-          options[name]!.map((value) => ({ value, label: value || "Choose…" })),
+          [
+            ...options[name]!.map((value) => ({ value, label: value || "Choose…" })),
+            ...(recorded && !options[name]!.includes(recorded) ? [{ value: recorded, label: `Recorded value: ${recorded}` }] : []),
+          ],
         )
+      }
       const boolean = [
         "recurring",
         "dueDiligence",
@@ -1030,7 +1105,7 @@ function repeatRows(
   prefix: string,
   items: Record<string, unknown>[],
   names: string[],
-  extra?: (row: Record<string, unknown>, prefix: string) => string,
+  extra?: (row: Record<string, unknown>, prefix: string, index: number) => string,
 ) {
   return [...items, prefix === "sourcing.quotes" ? { qty: 1, unitPrice: 0, total: 0, techPass: true } : {}]
     .map(
@@ -1039,13 +1114,17 @@ function repeatRows(
           `${prefix}.${index}`,
           row,
           names.filter((name) => name !== "id"),
-        )}${extra?.(row, `${prefix}.${index}`) ?? ""}</fieldset>`,
+        )}${extra?.(row, `${prefix}.${index}`, index) ?? ""}</fieldset>`,
     )
     .join("")
 }
 export function render(page: string, data: Record<string, unknown>, context: RenderContext): string | undefined {
   if (!pages.includes(page as (typeof pages)[number])) return undefined
   const requests = rows(data.requests)
+  const queueView = readProcurementQueueView(data.procurementQueueView)
+  if (["Requests", "My approvals"].includes(page) && Object.hasOwn(data, "procurementQueueView") &&
+    (!queueView || queueView.rows.length !== requests.length || requests.some((request) => !queueView.rows.some((row) => row.id === request.number))))
+    return '<p role="alert">The current procurement queue is unavailable. Reload the page to review current records.</p>'
   const suppliers = rows(data.suppliers)
   const directory = rows(data.directory)
   const settings = { ...object(data.formSettings), ...object(data.settings) }
@@ -1168,6 +1247,28 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
     )
   }
   if (page === "My approvals") {
+    if (queueView) {
+      const grouped = procurementApprovalGroups(queueView, context.actor.id)
+      return '<p>Order: oldest proven entry into the current approval step first; unavailable dates last; request ID breaks ties.</p>' + ["you", "others", "unassigned"].map((group) =>
+        `<h2>${group === "you" ? "Waiting for you" : group === "others" ? "Waiting for others" : "Unassigned"}</h2>` +
+        table(["Request", "Subject", "Decision", "Amount", "Reason", "Holder", "Waiting since", "Next step"],
+          (group === "you" ? grouped.waitingForYou : group === "others" ? grouped.waitingForOthers : grouped.unassigned).map((row) => {
+            const request = requests.find((request) => request.number === row.id)!
+            const decision = approvalDecision(request as RequestView, context.actor, settings.blockSelfApproval === true)
+            const holderName = text(directory.find((person) => String(person.id ?? "") === row.holder)?.name)
+            return [
+              queueRequestLink(row, `?page=Requests&filter=All&request=${encodeURIComponent(row.id)}#${encodeURIComponent(row.id)}`),
+              esc(row.subject ?? "Unavailable"),
+              esc(`${row.status === "pr_pending" ? "Requisition" : row.status === "src_pending" ? "Sourcing selection" : row.status === "po_pending" ? "Purchase order" : "Unrecognized approval stage"}${row.approvalStage ? ` · ${row.approvalStage}` : ""}`),
+              row.submittedAmount !== null ? `${row.submittedAmount} ${row.submittedCurrency ? esc(row.submittedCurrency) : "(submitted base currency unavailable)"}` : "Unavailable",
+              esc(row.reason ?? "Unavailable"),
+              esc(holderName || (row.holder ? `Responsible person not resolved (${row.holder})` : "Unassigned")),
+              row.stageEnteredAt && row.ageDays !== null ? `${esc(row.stageEnteredAt)} · ${Number(row.ageDays.toFixed(2))} days` : "Unavailable",
+              `${esc(row.nextStep ?? "Unavailable")}${decision.allowed ? " · Review approval" : ` · ${esc(decision.reason)}`}`,
+            ]
+          })),
+      ).join("")
+    }
     const grouped = approvalQueue(requests as RequestView[], context.actor.id)
     return '<p>Order: oldest proven entry into the current approval step first; unavailable dates last; request ID breaks ties.</p>' + ["you", "others", "unassigned"]
       .map(
@@ -1245,7 +1346,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
           const bankRevalidation = supplier.status === "pending" && supplier.validatedAt === null && supplier.validatedBy === null && rows(supplier.history).some((line) => bankFields.includes(text(line.field) as typeof bankFields[number]))
             ? '<p role="status">Bank details changed after activation. Supplier validation was cleared; an authorized supplier administrator must review and reactivate the supplier.</p>' : ""
           const readiness = privileged
-            ? `<section><h3>Activation prerequisites</h3><p>This checklist reports recorded prerequisites only; eligibility also depends on authorization and supplier policies. A recorded sanctions screening date does not verify external screening.</p>${bankUnavailable ? "<p>Bank verification is unavailable; the masked or empty bank view cannot establish whether IBAN is recorded.</p>" : ""}${requirements.length ? `<p>Recorded missing prerequisites: ${requirements.map((item) => `<span>${esc(item)}</span>`).join(", ")}</p>` : "<p>No missing prerequisites are visible in this view. Policy eligibility has not been evaluated.</p>"}</section>`
+            ? `<section><h3>Activation prerequisites</h3><p>This checklist reports recorded prerequisites only; eligibility also depends on authorization and supplier policies. A recorded sanctions screening date does not verify external screening.</p>${bankUnavailable ? "<p>Bank verification is unavailable; the masked or empty bank view cannot establish whether IBAN is recorded.</p>" : ""}${requirements.length ? `<p>Complete these recorded prerequisites before activation: ${requirements.map((item) => `<span>${esc(supplierRequirementLabel(item))}</span>`).join(", ")}</p>` : "<p>No missing prerequisites are visible in this view. Policy eligibility has not been evaluated.</p>"}</section>`
             : ""
           return `<details id="supplier-${esc(id)}"${supplier === requestedSupplier ? " open" : ""}><summary>${esc(text(supplier.legalName))}</summary><nav>General · Categories · Contacts · Commercial · Bank · Compliance · Linked requests · Audit</nav>${canMaintain ? controls(page, "save", id, "<h3>Update supplier</h3>" + scalarFields("", supplier, general) + fields([{ name: "categories", label: "Categories (one per line)", type: "textarea", value: Array.isArray(supplier.categories) ? supplier.categories.join("\n") : supplier.categories }]) + repeatRows("contacts", rows(supplier.contacts), ["name", "email", "phone"]) + scalarFields("commercial", object(supplier.commercial), ["notes"]) + scalarFields("compliance", object(supplier.compliance), ["notes"]), "Save supplier") : table(["Supplier field", "Recorded value"], general.map((field) => [esc(labels[field] ?? field), supplier[field] == null ? "Unavailable" : esc(String(supplier[field]))])) + table(["Category"], (Array.isArray(supplier.categories) ? supplier.categories : []).map((category) => [esc(String(category))])) + table(["Contact", "Email", "Phone"], rows(supplier.contacts).map((contact) => [esc(text(contact.name)), esc(text(contact.email)), esc(text(contact.phone))])) + table(["Commercial notes", "Compliance notes"], [[esc(text(object(supplier.commercial).notes)), esc(text(object(supplier.compliance).notes))]])}<section><h3>Bank</h3>${privileged ? controls(page, "change-bank", id, scalarFields("", supplier, [...bankFields]), "Save bank details") : "<p>Bank details masked.</p>"}</section>${bankRevalidation}${readiness}${[...(privileged ? ["activate", "block", "inactivate"] : []), ...(canMaintain && supplier.status === "pending" && !linked ? ["delete"] : [])].map((action) => controls(page, action, id, "", action.charAt(0).toUpperCase() + action.slice(1))).join("")}<h3>Linked requests</h3>${table(
             ["Request"],
@@ -1325,16 +1426,21 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
     ) : "") +
     table(
       ["Request", "Title", "Status", "Stage", "Next action", "Responsibility", "Value basis", "Base amount"],
-      filtered.map((request) => [
-        `<a href="#${encodeURIComponent(String(request.number ?? ""))}">${esc(String(request.number ?? ""))}</a>`,
-        esc(text(object(request.pr).title)),
-        esc(requestStatusLabel(text(request.status))),
-        esc(requestStageGuidance(text(request.status)).stage),
-        esc(requestStageGuidance(text(request.status)).next),
-        esc(`Requester: ${text(request.requesterName) || text(directory.find((person) => person.id === request.createdBy)?.name) || text(request.createdBy) || "Unavailable"}; buyer: ${text(directory.find((person) => person.id === request.buyerId)?.name) || text(request.buyerId) || "Unassigned"}; current holder: ${text(request.status).endsWith("_pending") ? text(directory.find((person) => person.id === pending(request).step?.holderId)?.name) || text(pending(request).step?.holderId) || "Unassigned" : "Not awaiting approval"}`),
-        rows(object(request.po).lines).length ? "Purchase order lines" : rows(object(request.sourcing).quotes).some((quote) => quote.id === object(request.sourcing).selectedId) ? "Selected sourcing proposal" : "Requisition estimate",
-        amount(request) == null ? "Unavailable" : `${amount(request)} ${esc(text(settings.currency))}`,
-      ]),
+      filtered.map((request) => {
+        const projected = queueView?.rows.find((row) => row.id === request.number)
+        const status = projected ? projected.status ?? "" : text(request.status)
+        const holder = projected ? projected.holder : text(pending(request).step?.holderId)
+        return [
+          projected ? queueRequestLink(projected, `?page=Requests&request=${encodeURIComponent(projected.id)}&q=${encodeURIComponent(projected.id)}#${encodeURIComponent(projected.id)}`) : `<a href="#${encodeURIComponent(String(request.number ?? ""))}">${esc(String(request.number ?? ""))}</a>`,
+          esc(projected ? projected.subject ?? "Unavailable" : text(object(request.pr).title)),
+          esc(projected && !projected.status ? "Unknown status" : requestStatusLabel(status)),
+          esc(requestStageGuidance(status).stage),
+          esc(projected ? projected.nextStep ?? "Unavailable" : requestStageGuidance(status).next),
+          esc(`Requester: ${text(request.requesterName) || text(directory.find((person) => person.id === request.createdBy)?.name) || text(request.createdBy) || "Unavailable"}; buyer: ${text(directory.find((person) => person.id === request.buyerId)?.name) || text(request.buyerId) || "Unassigned"}; current holder: ${status.endsWith("_pending") ? text(directory.find((person) => person.id === holder)?.name) || holder || "Unassigned" : "Not awaiting approval"}`),
+          projected ? esc(projected.monetaryState?.replaceAll("-", " ") ?? "Unavailable") : rows(object(request.po).lines).length ? "Purchase order lines" : rows(object(request.sourcing).quotes).some((quote) => quote.id === object(request.sourcing).selectedId) ? "Selected sourcing proposal" : "Requisition estimate",
+          projected ? projected.baseAmount === null ? "Unavailable" : `${projected.baseAmount} ${esc(projected.baseCurrency)}` : amount(request) == null ? "Unavailable" : `${amount(request)} ${esc(text(settings.currency))}`,
+        ]
+      }),
     ) +
     filtered
       .map((request) => {
@@ -1458,6 +1564,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
               })
               .join(""),
         )
+        const orderLines = rows(po.lines)
         const poInputs =
           scalarFields(
             "po",
@@ -1467,12 +1574,13 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
           selectField("po.supplierId", "Registered supplier", po.supplierId, supplierOptions) +
           repeatRows(
             "po.lines",
-            rows(po.lines).map((line) => ({
+            orderLines.map((line) => ({
               ...line,
               desc: line.desc ?? line.description,
               uom: line.uom ?? line.unit,
             })),
             ["desc", "qty", "unitPrice", "uom"],
+            (_line, prefix, index) => index < orderLines.length ? `<input type="hidden" name="${esc(prefix)}._rowRef" value="${esc(orderRowReference(id, index, orderLines[index]!))}">` : "",
           )
         const origins = purchaseOrderFieldSources(request, settings, suppliers)
         const terms = origins.fields.find((field) => field.field === "po.paymentTerms")!

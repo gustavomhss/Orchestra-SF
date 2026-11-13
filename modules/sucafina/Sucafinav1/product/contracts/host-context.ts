@@ -39,6 +39,8 @@ export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
   dispatch: BusinessPorts["dispatch"]
   /** Private HTTP adapters mounted in the existing local application. */
   productHttp?: NonNullable<Application["product"]>
+  /** Private page projection prepared before the page lock and fenced inside it. */
+  productView?: NonNullable<Application["productView"]>
   /** Private UI discovery; absent until its real collection registry is mounted. */
   procurementSelections?: {
     create: (context: TrustedDomainContext, period: Period) => Promise<PortResult<{ selectionRef: string; label: string; period: Period }>>

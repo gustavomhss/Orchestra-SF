@@ -101,6 +101,15 @@ export async function createLocalInstallation(context: { origin: string; createH
     authenticate: identity.authenticate,
     environment: requestEnvironment,
     product: async (request, surface) => await runtime?.services?.()?.productHttp?.(request, surface) ?? await workbench(request, surface) ?? await bi(request, surface),
+    productView: async (request, surface, page) => {
+      if (surface !== "procurement" || page !== "Requests" && page !== "My approvals") return undefined
+      // Preserve the explicitly standalone domain mode; a configured product runtime must fail closed.
+      if (!runtime) return undefined
+      const view = runtime?.services?.()?.productView
+      return view ? view(request, surface, page) : new Response("Procurement is temporarily unavailable. Refresh the page to try again.", {
+        status: 503, headers: { "Cache-Control": "no-store", "Content-Type": "text/plain; charset=utf-8", "X-Content-Type-Options": "nosniff" },
+      })
+    },
     productHtml: decorateSfProductHtml,
     maxJsonBytes: 2 * 1024 * 1024,
     assets,

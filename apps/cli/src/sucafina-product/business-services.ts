@@ -34,6 +34,7 @@ import { createProcurementConfirmationObserver } from "../../../../modules/sucaf
 import { createProcurementCollectionMemberIssuer } from "../../../../modules/sucafina/Sucafinav1/product/procurement/collection-member.ts"
 import { createProcurementDecisionPreparation } from "../../../../modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts"
 import { createProcurementDecisionHost } from "../../../../modules/sucafina/Sucafinav1/product/procurement/decision-host.ts"
+import { createProcurementQueuePageView, procurementQueueIntent } from "../../../../modules/sucafina/Sucafinav1/product/procurement/queue-page.ts"
 import { createCollaborationHost } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/host.ts"
 import { prepareSourcingDossier } from "../../../../modules/sucafina/Sucafinav1/product/routines/dossier.ts"
 import { sfRunSourceFence } from "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts"
@@ -48,6 +49,7 @@ import freeze from "../../../../modules/sucafina/Sucafinav1/product/contracts/fr
 export function createSfBusinessServices(input: { authority: ReturnType<typeof createSfProductAuthority>; persistence: Parameters<CreateSfHostRuntime>[0]["persistence"]; proposalCoverageWrites: WeakSet<object>; procurementEvidenceWrites: WeakSet<object>; extraDescriptors?: readonly CapabilityDescriptor[]; documentRead?: SfDocumentReader; documentEvidenceList?: (documentRef: string, call: TrustedDomainContext) => Promise<PortResult<readonly DocumentEvidence[]>> }) {
   const host = input.authority.host
   const periods = new Map<string, { period: Period; expiresAt: number }>()
+  const pagePeriods = new WeakMap<TrustedDomainContext, { period: Period; expiresAt: number }>()
   const fences = (snapshots: NonNullable<ReturnType<NonNullable<typeof input.persistence.currentSnapshots>>>) => ({
     dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement),
   })
@@ -63,9 +65,10 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   }
   const key = (call: TrustedDomainContext) => digestSfValue({ installationId: call.binding.installationId, projectId: call.binding.projectId,
     principalRef: call.binding.principalRef, policyVersion: call.binding.policyVersion, accessRevision: call.binding.accessRevision })
+  const selectedPeriod = (call: TrustedDomainContext) => pagePeriods.get(call) ?? periods.get(key(call))
   const contextFor = async (call: TrustedDomainContext) => {
     const request = host.requestFor(call)
-    const selected = periods.get(key(call))
+    const selected = selectedPeriod(call)
     if (!request || !selected || selected.expiresAt <= Date.now() || !await host.revalidate(call)) return { status: "unavailable" as const, reason: "procurement-context-unavailable" }
     const environment = await host.environment(request)
     const currency = await host.persistence.transaction("procurement", async (snapshot) => {
@@ -76,7 +79,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       const value = object(domain.view(snapshot, actor, environment).data.formSettings).currency
       return { commit: false, value: typeof value === "string" && value.trim() ? value : undefined }
     }, { signal: request.signal })
-    if (!currency || !await host.revalidate(call) || periods.get(key(call)) !== selected) return { status: "unavailable" as const, reason: "procurement-context-unavailable" }
+    if (!currency || !await host.revalidate(call) || selectedPeriod(call) !== selected) return { status: "unavailable" as const, reason: "procurement-context-unavailable" }
     return { status: "ok" as const, value: { installationId: call.binding.installationId, projectId: call.binding.projectId,
       principalRef: call.binding.principalRef, policyVersion: call.binding.policyVersion, accessRevision: call.binding.accessRevision,
       surface: "procurement" as const, period: structuredClone(selected.period), currency, sourceRefs: [], capabilities: [] } }
@@ -275,6 +278,14 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     }
     return { status: "ok" as const, value: { selectionRef: result.value, label: "Procurement requests", period: structuredClone(selection.period) } }
   } }
+  const procurementQueueView = createProcurementQueuePageView({ host, ui: input.authority.ui, collection: registry, port: procurement,
+    selectPeriod: async (call, period) => {
+      if (!isSfPeriod(period) || !input.authority.ui.matchesIntent(call, "sf_request_read", digestSfValue(procurementQueueIntent(period))) || !await host.revalidate(call)) return undefined
+      const selected = { period: Object.freeze(structuredClone(period)), expiresAt: Date.now() + 5 * 60_000 }
+      pagePeriods.set(call, selected)
+      return () => { if (pagePeriods.get(call) === selected) pagePeriods.delete(call) }
+    },
+  })
   const forecastInputs = { prepare: async (call: TrustedDomainContext, request: ForecastCompareRequest & { caseRef: { id: string; incarnation: string; version: number } }) => {
     const wanted = structuredClone(request)
     if (call.kind !== "ui" || !input.authority.ui.matchesIntent(call, "sf_forecast_compare", digestSfValue(wanted)) || !await host.revalidate(call))
@@ -339,7 +350,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       return current.status === "ok" && digestSfValue(stable(current.value)) === digestSfValue(stable(material)) && await host.revalidate(call)
     },
   }) }
-  return { dashboard, procurement, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, results, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, descriptors, procurementSelections, procurementConfirmation, procurementDecisions, collaboration, procurementDossier, forecastInputs, initializeAtlas,
+  return { dashboard, procurement, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, results, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, descriptors, procurementSelections, procurementQueueView, procurementConfirmation, procurementDecisions, collaboration, procurementDossier, forecastInputs, initializeAtlas,
     remainingOperations: () => freeze.operations.map((entry) => entry.operation).filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation)),
     dispose: () => { periods.clear(); evidence.current = undefined; decisionEvidence.current = undefined; procurementDecisions.dispose(); descriptors.splice(baseCount) } }
 }

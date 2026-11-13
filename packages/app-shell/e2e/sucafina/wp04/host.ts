@@ -2,20 +2,31 @@ import { randomBytes, randomUUID } from "node:crypto"
 import { chmod, mkdtemp, realpath, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
+import { Location } from "@orchestra/core/location"
+import { AbsolutePath } from "@orchestra/core/schema"
 import { createApplication } from "../../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
+import type { Application } from "../../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
 import { openLocalStore } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
 import { createOperatorIdentity } from "../../../../../modules/sucafina/Sucafinav1/runtime/operator-identity.ts"
 import { ProcurementModule } from "../../../../../modules/sucafina/Sucafinav1/runtime/procurement.ts"
 import { initialProcurementSettings } from "../../../../../modules/sucafina/Sucafinav1/src/initial-settings.ts"
 import { object, text } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { Command } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+import { createSfSourcePersistence } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
+import { enumerateSfSources } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-inventory.ts"
+import { createSfSourceScopeProjector } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
+import { createSfProductAuthority } from "../../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+import { createSfBusinessServices } from "../../../../../apps/cli/src/sucafina-product/business-services.ts"
 
 // Playwright starts this composition in Bun because the production adapter uses bun:sqlite.
-// The fixture serves only the real authenticated application, domain, renderer and shell.
+// The fixture serves the real authenticated application, C02 queue producer, domain, renderer and shell.
 // Synthetic local-operator accounts qualify this browser path, not Entra or native residency.
 const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-wp04-browser-"))
 await chmod(directory, 0o700)
-const store = await openLocalStore(directory)
+const at = "2026-11-13T12:00:00Z"
+const driver = await openLocalStore(directory)
+const store = { ...driver, ...createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at), createId: randomUUID }) }
+for (const surface of ["dashboard", "planner", "procurement"] as const) await store.initializeSources(surface)
 const manifest = path.join(import.meta.dirname, ".host-manifest.json")
 const installationId = randomUUID()
 const configurations = [
@@ -35,7 +46,6 @@ const server = Bun.serve({
   },
 })
 const origin = server.url.origin
-const at = "2026-11-13T12:00:00Z"
 const bankKey = randomBytes(32)
 const environment = async () => ({ at, id: randomUUID, directory: people, bankKey })
 const accounts = configurations.map((configuration) => {
@@ -46,19 +56,34 @@ const accounts = configurations.map((configuration) => {
     secrets: store.secrets,
     key: randomBytes(32),
   })
+  const authenticate: Application["authenticate"] = async (request, context) => {
+    if (!context) return null
+    const authenticated = await identity.authenticate(request, context)
+    // This synthetic test policy only reduces the real local-operator session's grants.
+    return authenticated && configuration.key === "viewer"
+      ? { ...authenticated, canWrite: false, roles: [{ surface: context.surface, role: "viewer" }] }
+      : authenticated
+  }
+  const proposalCoverageWrites = new WeakSet<object>()
+  const procurementEvidenceWrites = new WeakSet<object>()
+  const authority = createSfProductAuthority({
+    identity: () => ({ installationId, hostId: "wp04-browser", projectId: installationId, location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }),
+    installationId, origin, policyVersion: "wp04-browser-read", persistence: store, authenticate, environment,
+    grants: [{ principalRef: "macos:" + installationId + ":" + configuration.uid, namespaces: [], operations: ["sf_request_read"] }],
+    createId: randomUUID, now: Date.now, commandIdentity: async () => randomUUID(),
+    inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false,
+    providerGeneration: async () => undefined, authorizeDocument: async () => undefined, proposalCoverageWrites, procurementEvidenceWrites,
+  })
+  const business = createSfBusinessServices({ authority, persistence: store, proposalCoverageWrites, procurementEvidenceWrites })
   return {
     ...configuration,
     identity,
+    business,
     application: createApplication(configuration.mount, {
       persistence: store,
-      authenticate: async (request, context) => {
-        const authenticated = await identity.authenticate(request, context)
-        // This synthetic test policy only reduces the real local-operator session's grants.
-        return authenticated && configuration.key === "viewer"
-          ? { ...authenticated, canWrite: false, roles: [{ surface: context.surface, role: "viewer" }] }
-          : authenticated
-      },
+      authenticate,
       environment,
+      productView: business.procurementQueueView,
       domains: { procurement: [ProcurementModule], dashboard: [], planner: [] },
       maxJsonBytes: 100_000,
     }),
@@ -127,6 +152,7 @@ async function close() {
   closing.started = true
   active.ready = false
   await server.stop(true)
+  for (const account of accounts) account.business.dispose()
   await store.dispose()
   await rm(manifest, { force: true })
   await rm(directory, { recursive: true, force: true })

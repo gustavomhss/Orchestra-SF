@@ -431,6 +431,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
         return run && current && current.incarnation === run.caseRef.incarnation && current.participants.includes(actor.principalRef) && run.principalRef === actor.principalRef &&
           run.accessRevision === actor.accessRevision && run.policyVersion === actor.policyVersion ? run : undefined
       })
+      if (found.status === "unavailable" && found.reason === "product-state-uninitialized") return { status: "denied", reason: "analysis-authority-unavailable" }
       if (found.status !== "ok") return found.status === "preview" ? { status: "unavailable", reason: "analysis-state-unavailable" } : found
       return found.value && await authority.human.authorize(context, "analysis.read", { runRef }) ? { status: "ok", value: found.value } : { status: "denied", reason: "analysis-authority-unavailable" }
     },
@@ -441,12 +442,13 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
         const run = stored.nativeRuns?.[runRef]
         const current = run && stored.cases[run.caseRef.id]
         const output = run?.outputRef && stored.contributions[run.outputRef]
-        if (!run || run.state !== "ready" || !run.native || !output || !current || current.incarnation !== run.caseRef.incarnation ||
+        if (!run || !current || current.incarnation !== run.caseRef.incarnation ||
           !current.participants.includes(actor.principalRef) || run.principalRef !== actor.principalRef || run.policyVersion !== actor.policyVersion || run.accessRevision !== actor.accessRevision) return undefined
         return { run, output }
       })
       const found = await read()
-      if (found.status !== "ok" || !found.value) return { status: "unavailable", reason: "analysis-output-unavailable" }
+      if (found.status === "denied" || (found.status === "unavailable" && found.reason === "product-state-uninitialized") || (found.status === "ok" && !found.value)) return { status: "denied", reason: "analysis-authority-unavailable" }
+      if (found.status !== "ok" || !found.value || found.value.run.state !== "ready" || !found.value.run.native || !found.value.output) return { status: "unavailable", reason: "analysis-output-unavailable" }
       const decoded = decodeSfContributionEnvelope(found.value.output)
       const run = found.value.run
       if (!decoded.ok || !run.native || decoded.value.id !== run.outputRef || decoded.value.outputDigest !== digestSfContribution(decoded.value) ||
@@ -580,7 +582,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
       }, { signal: request.signal })
       return allowed && await authority.host.revalidate(call)
     } })
-  const services: SfHostServices = { ...authority, ...{ procurementSelections: business.procurementSelections, forecastInputs: business.forecastInputs, sourcingInputs, work: business.collaboration.work, analyses, plannerMonthly, personalViews, documents: documents?.documents, productHttp: async (request, surface) => await procurementDecisionHttp(request, surface) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) }, selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
+  const services: SfHostServices = { ...authority, productView: business.procurementQueueView, ...{ procurementSelections: business.procurementSelections, forecastInputs: business.forecastInputs, sourcingInputs, work: business.collaboration.work, analyses, plannerMonthly, personalViews, documents: documents?.documents, productHttp: async (request, surface) => await procurementDecisionHttp(request, surface) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) }, selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
     prepare: async (request) => {
       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }
       if (requests.has(request.runId)) return { status: "conflict", reason: "native-run-already-admitted" }

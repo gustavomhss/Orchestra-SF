@@ -4,6 +4,7 @@ import type { TrustedUiContext } from "../contracts/sf-execution.ts"
 import type { createSfHumanAuthority } from "../integration/human-authority.ts"
 import { encodeCaseRef } from "../decisions/case-port.ts"
 import type { createProcurementDecisionHost } from "./decision-host.ts"
+import { readProcurementBody } from "./http-body.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 type Decisions = ReturnType<typeof createProcurementDecisionHost>
@@ -28,7 +29,7 @@ export function createProcurementDecisionHttp(input: {
     if (request.method !== "POST") return response({ status: "needs-input", reason: "method-not-allowed" }, 405)
     if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1) return response({ status: "needs-input", reason: "invalid-decision-query" })
     if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return response({ status: "needs-input", reason: "invalid-content-type" }, 415)
-    const bytes = await bounded(request, 131072).catch(() => undefined)
+    const bytes = await readProcurementBody(request, 131072).catch(() => undefined)
     if (!bytes) return response({ status: "needs-input", reason: "request-too-large" }, 413)
     const payload: unknown = await Promise.resolve().then(() => JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes))).catch(() => undefined)
     const parsed = parse(mode, payload)
@@ -72,22 +73,3 @@ function object(value: unknown): value is Record<string, unknown> { return !!val
 function closed(value: Record<string, unknown>, keys: readonly string[]) { return Object.keys(value).length === keys.length && Object.keys(value).every((key) => keys.includes(key)) }
 function caseRef(value: unknown): value is CaseRef { return object(value) && closed(value, ["id", "incarnation", "version"]) && typeof value.id === "string" && !!value.id.trim() && typeof value.incarnation === "string" && !!value.incarnation.trim() && Number.isSafeInteger(value.version) && Number(value.version) >= 1 }
 
-async function bounded(request: Request, limit: number) {
-  if (!request.body) return undefined
-  const reader = request.body.getReader()
-  const chunks: Uint8Array[] = []
-  let size = 0
-  try {
-    for (;;) {
-      const chunk = await reader.read()
-      if (chunk.done) break
-      size += chunk.value.byteLength
-      if (size > limit) { await reader.cancel(); return undefined }
-      chunks.push(chunk.value)
-    }
-    const result = new Uint8Array(size)
-    let offset = 0
-    for (const chunk of chunks) { result.set(chunk, offset); offset += chunk.byteLength }
-    return result
-  } finally { reader.releaseLock() }
-}

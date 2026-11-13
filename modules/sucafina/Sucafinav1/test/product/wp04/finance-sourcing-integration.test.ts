@@ -29,7 +29,7 @@ import { createSfBusinessContext } from "../../../product/host-binding/business-
 import { dispatchSfCapability } from "../../../product/host-binding/capability-dispatch.ts"
 import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
 import { createSfProcurementSourceAccess } from "../../../product/decision-memory/source-access.ts"
-import { createProcurementCapabilities } from "../../../product/procurement/capabilities.ts"
+import { compareSourcing, createProcurementCapabilities } from "../../../product/procurement/capabilities.ts"
 import { createProcurementPort } from "../../../product/procurement/port.ts"
 import { createProcurementSourceResolver } from "../../../product/procurement/sources.ts"
 import { projectProcurementScope } from "../../../product/procurement/source-projection.ts"
@@ -78,9 +78,13 @@ test("sourcing comparison crosses the shared dispatcher with frozen money, crite
     expect(decodeSfOperationOutput("sf_sourcing_compare", { ...decoded.value, proposals: decoded.value.proposals.map((proposal) => ({ ...proposal, score: Number.NaN })) }).ok).toBe(false)
 
     const call = await fixture.admit("sf_sourcing_compare", fixture.payload, false)
+    expect(await fixture.directCompare(call)).toMatchObject({ status: "denied", receipt: { kind: "unbound", code: "invalid-binding" } })
     expect((await fixture.dispatch({ ...fixture.payload, actor: "forged" }, call)).status).toBe("denied")
     expect((await fixture.dispatch(fixture.payload, call)).status).toBe("ok")
     expect((await fixture.dispatch(fixture.payload, call)).status).toBe("denied")
+    const unavailableInput = { ...fixture.payload, requestRef: "not-issued" }
+    const unavailableCall = await fixture.admit("sf_sourcing_compare", unavailableInput, false)
+    expect((await fixture.dispatch(unavailableInput, unavailableCall)).status).toBe("unavailable")
   } finally { await fixture.dispose() }
 })
 
@@ -191,6 +195,16 @@ test("case-bound sourcing input crosses the real business composition and HTTP a
       expect(injected.status).toBe(400)
       const crossOrigin = await handleSfSourcingInput(composed.post(composed.selector, { origin: "https://other.invalid" }), composed.origin, composed)
       expect(crossOrigin.status).toBe(403)
+
+      const oversized = { cancelled: false }
+      const stream = new ReadableStream<Uint8Array>({
+        start: (controller) => { controller.enqueue(new Uint8Array(65537)) },
+        cancel: () => { oversized.cancelled = true },
+      })
+      const tooLarge = await handleSfSourcingInput(new Request(composed.post(composed.selector), { body: stream }), composed.origin, composed)
+      expect(tooLarge.status).toBe(413)
+      expect(oversized.cancelled).toBe(true)
+      expect(await fixture.requestMaterial()).toEqual(before)
 
       let preparedBeforeRevocation = false
       const revoked = await handleSfSourcingInput(composed.post(composed.selector), composed.origin, { ui: composed.ui, sourcingInputs: {
@@ -387,6 +401,7 @@ async function sourcingFixture(variant?: "missing-fx" | "missing-assessment" | "
   const analysisRequest = { caseRef: { id: created.value.id, incarnation: created.value.incarnation, version: created.value.version }, profileId: "sf_procurement", profileVersion: "1.0.0", skillId: "sf-comparar-sourcing", skillVersion: "1.0.0", manifestDigest: "a".repeat(64), outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: ["sf_sourcing_compare"], objective: draft.objective }
   return { directory, host, persistence, issuer, evidence, payload, admit, dispatch, verifier, analysisRequest,
     compare: () => bindings.compareSourcing(request, payload), prepareInput: createSfSourcingInput({ sourcingEvidence }),
+    directCompare: (call: TrustedDomainContext) => compareSourcing(payload, call, { port, authority }),
     revoke: () => { access.allowed = false },
     requestMaterial: () => persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: structuredClone(snapshot.data.store) })),
     dispose: async () => { await store.dispose(); await rm(directory, { recursive: true, force: true }) },

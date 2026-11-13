@@ -31,7 +31,17 @@ import { createSfImportServices } from "../../../../../../../apps/cli/src/sucafi
 import { createSfRosterSources } from "../../../../../../../apps/cli/src/sucafina-product/roster-sources.ts"
 import { createSfPlannerSourceHost } from "../../../../product/integration/planner-sources.ts"
 
+// Hosted W5 took 5754 ms across four XLSX writes, document confirmation and the ABA fence.
+// Use a fixture-specific I/O budget; every import and authority assertion still runs.
 test("real host persists procurement document evidence and Planner import under current authority", async () => {
+  const startedAt = performance.now()
+  const timing = { previousMs: 0 }
+  const checkpoint = (stage: string) => {
+    const elapsedMs = Math.round(performance.now() - startedAt)
+    console.info(JSON.stringify({ test: "wp06-documents-runtime", stage, elapsedMs, stageMs: elapsedMs - timing.previousMs }))
+    timing.previousMs = elapsedMs
+  }
+  checkpoint("started")
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-document-host-"))
   const driver = await openLocalStore(directory)
   const at = "2026-11-13T00:00:00Z"
@@ -69,6 +79,7 @@ test("real host persists procurement document evidence and Planner import under 
     const roster = createSfRosterSources({ host: authority.host, scopedSources: store, plannerSources })
     const importing = createSfImportServices({ runtime, authority, roster })
     if (!service || !importing) throw new Error("missing production services")
+    checkpoint("host-and-sources-ready")
     const business = createSfBusinessContext({ revalidate: authority.host.revalidate, resolveSource: createSfDocumentSourceAccess({ host: authority.host, read: service.documents.reader }), proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => { throw new Error("not used") } })
     const uiCall = async <T>(operation: string, payload: unknown, work: (context: TrustedUiContext) => Promise<T>) => {
       const digest = digestSfValue(payload)
@@ -113,6 +124,7 @@ test("real host persists procurement document evidence and Planner import under 
     expect(businessResolution.currentRef).toEqual(confirmed.value.ref)
     const confirmedDossier = await uiCall("sf_evidence_get", { evidenceRef: confirmed.value.ref }, (context) => prepareDossierEvidence({ refs: [confirmed.value.ref], context, reader: service.documents.reader, revalidate: async (_, call) => authority.host.revalidate(call) }))
     expect(confirmedDossier).toMatchObject({ status: "ok", value: { entries: [{ state: "confirmed", evidence: { ref: confirmed.value.ref } }] } })
+    checkpoint("document-confirmation-and-dossier-verified")
     const documentHttp = createSfDocumentHttp({ origin, mount: "/sucafina", runtime: () => ({ ui: authority.ui, human: authority.human, ...service }) })
     const openUrl = new URL(`${origin}/sucafina/dashboard`)
     openUrl.searchParams.set("sf", "document-open")
@@ -181,6 +193,7 @@ test("real host persists procurement document evidence and Planner import under 
       await store.transaction("dashboard", async (_, blobs) => { await blobs.put(`sf-import/${admittedValue.value.ref}`, analysisBytes, "application/octet-stream"); return { commit: true, value: undefined } })
     }
     expect(await store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot }))).toEqual(beforeAnalysis)
+    checkpoint("two-workbook-analyses-and-tamper-verified")
     const workbook = new Workbook(); const sheet = workbook.addWorksheet("OPEX")
     sheet.addRow(["Line ID", "Cost element", "Vendor / item", "Currency", "Measure", "Jan", "Total"]); sheet.addRow(["42", "Licenses", "Licences", "USD", "Forecast", 0, 1200])
     const bytes = new Uint8Array(await workbook.xlsx.writeBuffer())
@@ -208,6 +221,7 @@ test("real host persists procurement document evidence and Planner import under 
     expect(receiptValue.value.receipt.changedFields).toBeGreaterThan(0)
     expect(await store.transaction("planner", async (snapshot) => ({ commit: false, value: ((snapshot.data.versions as { lines: { f: (number | null)[] }[] }[])[0]!).lines[0]!.f[0] }))).toBe(0)
     expect((await uiCall("sf_import_preview", analyses[0]!.importRequest, (context) => analyze(analyses[0]!, context))).status).not.toBe("ok")
+    checkpoint("planner-import-and-stale-analysis-verified")
     const currentChoices = await importHttp(new Request(`${url("import-targets")}&surface=planner`, { headers: { cookie } }), "planner")
     const currentPlanner = ((await currentChoices!.json()) as { value: { label: string; surface: string; selectionRef: string }[] }).value.find((row) => row.label === "FY27")
     if (!currentPlanner) throw new Error("current Planner version not discovered")
@@ -228,6 +242,7 @@ test("real host persists procurement document evidence and Planner import under 
     expect((await post("import-apply", { manifestId: membersManifest.value.id, version: membersManifest.value.version }))?.status).toBe(200)
     const storedRoster = await store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot.data.roster }))
     expect(storedRoster).toEqual([{ name: "Roster person", title: "Analyst", type: "Employee", leader: "Lead", location: "Geneva", start: "2027-01-01", end: "", status: "Active" }])
+    checkpoint("roster-import-verified")
     const originalIdentity = await store.transaction("procurement", async (snapshot) => ({ commit: false, value: sfSourceIdentity(snapshot, "document-asset", "asset-1") }))
     const entered = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
     const locked = store.transactionAll!(async () => {
@@ -243,6 +258,7 @@ test("real host persists procurement document evidence and Planner import under 
     release.resolve()
     await locked
     await replacement
+    checkpoint("concurrent-blob-replacement-finished")
     const modified = await uiCall("sf_evidence_get", { evidenceRef: confirmed.value.ref }, (context) => resolveSfDocumentEvidence(confirmed.value.ref, context, service.documents.reader))
     expect(modified.state).not.toBe("fresh")
     await store.transaction("procurement", async (_, blobs) => { await blobs.put("supplier/s1/asset-1", new TextEncoder().encode("Price: 42"), "text/plain"); return { commit: true, value: undefined } })
@@ -254,6 +270,7 @@ test("real host persists procurement document evidence and Planner import under 
     expect(businessAfterABA.state).not.toBe("fresh")
     const staleDossier = await uiCall("sf_evidence_get", { evidenceRef: confirmed.value.ref }, (context) => prepareDossierEvidence({ refs: [confirmed.value.ref], context, reader: service.documents.reader, revalidate: async (_, call) => authority.host.revalidate(call) }))
     expect(staleDossier).toMatchObject({ status: "ok", value: { entries: [{ state: "unavailable" }] } })
+    checkpoint("aba-evidence-fence-verified")
     await store.transaction("procurement", async (snapshot) => {
       snapshot.data.assets = []
       const suppliers = (snapshot.data.store as { suppliers: { attachments?: unknown[] }[] }).suppliers
@@ -272,5 +289,10 @@ test("real host persists procurement document evidence and Planner import under 
     expect(replaced.ok).toBe(true)
     const oldSource = await uiCall("sf_evidence_get", { evidenceRef: confirmed.value.ref }, (context) => resolveSfDocumentEvidence(confirmed.value.ref, context, service.documents.reader))
     expect(oldSource.state).not.toBe("fresh")
-  } finally { await driver.dispose(); await rm(directory, { recursive: true, force: true }) }
-})
+    checkpoint("revocation-and-source-recreation-verified")
+  } finally {
+    await driver.dispose()
+    await rm(directory, { recursive: true, force: true })
+    checkpoint("cleanup-finished")
+  }
+}, 30_000)

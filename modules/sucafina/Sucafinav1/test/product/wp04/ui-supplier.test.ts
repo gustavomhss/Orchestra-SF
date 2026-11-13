@@ -1,6 +1,8 @@
 import { expect, test } from "bun:test"
 import { domain, render } from "../../../runtime/procurement.ts"
+import { download } from "../../../runtime/downloads.ts"
 import type { Snapshot } from "../../../runtime/contract.ts"
+import { object } from "../../../runtime/contract.ts"
 import { initialProcurementSettings } from "../../../src/initial-settings.ts"
 
 const at = "2026-11-13T12:00:00Z"
@@ -39,7 +41,27 @@ test("supplier activation reports recorded prerequisites and duplicate tax IDs r
   const before = structuredClone(state)
   expect(domain.execute(state, buyer, { page: "Suppliers", action: "create", version: 0, values: { legalName: "Other", taxId: "SYNTHETIC-UNIQUE" } }, { ...environment, id: () => "supplier-2" })).toMatchObject({ ok: false, status: 422, errors: ["taxId must be unique"] })
   expect(state).toEqual(before)
-  expect(domain.execute(state, admin, { page: "Suppliers", action: "activate", id: "supplier-1", version: 1, values: {} }, environment)).toMatchObject({ ok: false, status: 422, errors: expect.arrayContaining(["Recorded activation prerequisite missing: contactEmail", "Recorded activation prerequisite missing: dueDiligence"]) })
+  const refused = domain.execute(state, admin, { page: "Suppliers", action: "activate", id: "supplier-1", version: 1, values: {} }, environment)
+  expect(refused).toMatchObject({ ok: false, status: 422 })
+  if (refused.ok) throw new Error("Incomplete supplier unexpectedly activated")
+  expect(refused.errors).toContain("Recorded activation prerequisite missing: Contact email")
+  expect(refused.errors).toContain("Recorded activation prerequisite missing: Due diligence complete")
+  expect(refused.errors).toContain("Recorded activation prerequisite missing: IBAN or Bank name")
+  expect(JSON.stringify(refused)).not.toContain("contactEmail")
+  expect(JSON.stringify(refused)).not.toContain("dueDiligence")
+  expect(state).toEqual(before)
+  const view = domain.view(state, admin, environment)
+  const html = render("Suppliers", view.data, { actor: admin, year: 2026, month: 11, at, versions: view.versions })!
+  expect(html).toContain("Complete these recorded prerequisites before activation")
+  expect(html).toContain("<span>Contact email</span>")
+  expect(html).toContain("<span>Due diligence complete</span>")
+  expect(html).toContain("<span>IBAN or Bank name</span>")
+  expect(html).not.toContain("<span>contactEmail</span>")
+  expect(html).toContain("A recorded sanctions screening date does not verify external screening")
+  expect(domain.execute(state, buyer, { page: "Suppliers", action: "save", id: "supplier-1", version: 1, values: { country: "CH", address: "Recorded address", contactEmail: "supplier@example.invalid", paymentTerms: "Net 30", riskRating: "Low", dueDiligence: true, sanctionsDate: "2026-11-01" } }, environment).ok).toBe(true)
+  expect(domain.execute(state, admin, { page: "Suppliers", action: "change-bank", id: "supplier-1", version: 2, values: { bankName: "Recorded bank" } }, environment).ok).toBe(true)
+  expect(domain.execute(state, admin, { page: "Suppliers", action: "activate", id: "supplier-1", version: 3, values: {} }, environment)).toMatchObject({ ok: true })
+  expect((domain.view(state, admin, environment).data.suppliers as Record<string, unknown>[])[0]).toMatchObject({ status: "active", validatedBy: admin.id, validatedAt: at })
 })
 
 test("duplicate legal names warn on success while distinct tax IDs remain separate", () => {
@@ -67,4 +89,130 @@ test("Settings exposes complete baseline policy controls and secondary reset wit
   expect(settings.uploadCap).toBeNull()
   expect(settings.reminderDays).toBeNull()
   expect(settings.escalationDays).toBeNull()
+})
+
+test("the real supplier CSV keeps business fields and grants every bank field only to existing privileged roles", async () => {
+  const state: Snapshot = { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
+  const fields = { legalName: "Supplier for downloads", country: "CH", address: "Recorded business address", taxId: "EXPORT-TAX", contactEmail: "exports@example.invalid", paymentTerms: "Net 45", currency: "EUR", riskRating: "Low", dueDiligence: true, sanctionsDate: "2026-11-01" }
+  const bank = { iban: "EXPORT-IBAN-PRIVATE", account: "EXPORT-ACCOUNT-PRIVATE", swift: "EXPORT-SWIFT-PRIVATE", bankName: "EXPORT-BANK-PRIVATE", accountHolder: "EXPORT-HOLDER-PRIVATE", bankCountry: "EXPORT-COUNTRY-PRIVATE" }
+  expect(domain.execute(state, buyer, { page: "Suppliers", action: "create", version: 0, values: fields }, environment).ok).toBe(true)
+  expect(domain.execute(state, admin, { page: "Suppliers", action: "change-bank", id: "supplier-1", version: 1, values: bank }, environment).ok).toBe(true)
+  const before = structuredClone(state)
+  for (const actor of [buyer, { id: "reader", roles: ["viewer"], canWrite: false }, admin, { id: "administrator", roles: ["admin"], canWrite: true }]) {
+    const result = await download("suppliers", state, actor, environment, new URLSearchParams())
+    expect(result.ok).toBe(true)
+    if (!result.ok) throw new Error("Authorized supplier export failed")
+    const csv = new TextDecoder().decode(result.bytes)
+    for (const value of ["SUP-00001", ...Object.values(fields).filter((value) => typeof value === "string")]) expect(csv).toContain(`"${value}"`)
+    for (const [field, value] of Object.entries(bank)) {
+      if (actor.roles.includes("admin") || actor.roles.includes("supplier admin")) {
+        expect(csv).toContain(`"${field}"`)
+        expect(csv).toContain(`"${value}"`)
+      } else {
+        expect(csv).not.toContain(`"${field}"`)
+        expect(csv).not.toContain(value)
+      }
+    }
+  }
+  expect(await download("suppliers", state, admin, { ...environment, bankKey: undefined }, new URLSearchParams())).toEqual({ ok: false, status: 503 })
+  expect(state).toEqual(before)
+})
+
+test("real register and purchase-order downloads preserve recorded business terms and omit restricted bank material", async () => {
+  const request = {
+    number: "PR-2026-0042", status: "po_issued", createdBy: "owner", createdAt: at,
+    pr: { title: "Recorded service", type: "service", category: "Software", costCenter: "Operations", recurring: true, frequency: "Monthly", estAnnual: 1200, estAmount: 100 },
+    sourcing: { selectedId: "quote-1", contractStrategy: "existing", quotes: [{ id: "quote-1", supplier: "Recorded supplier", currency: "EUR", total: 100 }] },
+    po: { number: "PO-2026-0042", supplier: "Recorded supplier", supplierContact: "Supplier contact", quoteRef: "QUOTE-42", currency: "EUR", fxRate: 1.08, expenseType: "OPEX", description: "Recorded purchase scope", lines: [{ desc: "Recorded licence", qty: 2, uom: "seat", unitPrice: 50 }], paymentTerms: "Negotiated Net 60", deliveryDate: "2026-12-01", deliveryConditions: "Recorded delivery conditions", contractRef: "FRAME-42", assetRef: "ASSET-TEXT", incoterm: "DAP", billingAddress: "Recorded invoice address", deliveryAddress: "Recorded warehouse", acceptance: "Recorded acceptance", warranty: "Recorded warranty", notes: "Recorded additional terms", issuedAt: at, approval: { steps: [{ levelName: "Recorded approval", status: "approved", by: "holder", at }] }, iban: "NEVER-EXPORT-IBAN", account: "NEVER-EXPORT-ACCOUNT", bankName: "NEVER-EXPORT-BANK", swift: "NEVER-EXPORT-SWIFT", accountHolder: "NEVER-EXPORT-HOLDER", bankCountry: "NEVER-EXPORT-COUNTRY" },
+    history: [{ at, by: "holder", action: "PO issued internally", note: "PO-2026-0042" }],
+  }
+  const state: Snapshot = { data: { store: { settings: initialProcurementSettings(), requests: { [request.number]: { request, version: 7, by: "holder" } } } }, versions: {}, sequences: {}, audit: [], notices: [] }
+  const before = structuredClone(state)
+  const actor = { id: "owner", roles: ["requester"], canWrite: true }
+  const env = { ...environment, directory: [{ id: "owner", name: "Recorded requester" }, { id: "holder", name: "Recorded approver" }] }
+  const register = await download("register", state, actor, env, new URLSearchParams())
+  const order = await download("po", state, actor, env, new URLSearchParams({ request: request.number }))
+  expect(register.ok).toBe(true)
+  expect(order.ok).toBe(true)
+  if (!register.ok || !order.ok) throw new Error("Authorized recorded export failed")
+  const csv = new TextDecoder().decode(register.bytes)
+  const html = new TextDecoder().decode(order.bytes)
+  for (const value of [request.number, request.po.number, "Recorded requester", "Recorded service", "Software", "Operations", "Monthly", "1200", "100", "108", "EUR 100.00", "existing", "Negotiated Net 60", "2026-12-01", "po_issued"]) expect(csv).toContain(`"${value}"`)
+  for (const value of [request.number, request.po.number, "Supplier contact", "QUOTE-42", "Recorded invoice address", "Recorded purchase scope", "Recorded licence", "seat", "100.00", "Negotiated Net 60", "DAP", "Recorded warehouse", "Recorded delivery conditions", "Recorded acceptance", "Recorded warranty", "FRAME-42", "ASSET-TEXT", "Recorded additional terms", "Recorded approver"]) expect(html).toContain(value)
+  expect(csv + html).not.toContain("NEVER-EXPORT")
+  expect(await download("po", state, { id: "other-owner", roles: ["requester"], canWrite: true }, env, new URLSearchParams({ request: request.number }))).toEqual({ ok: false, status: 404 })
+  const hidden = await download("register", state, { id: "other-owner", roles: ["requester"], canWrite: true }, env, new URLSearchParams())
+  if (!hidden.ok) throw new Error("Authorized empty register failed")
+  expect(new TextDecoder().decode(hidden.bytes)).not.toContain(request.number)
+  expect(state).toEqual(before)
+})
+
+test("real supplier lifecycle covers all four states, authorized search, linked requests and audit without granting buyer status powers", () => {
+  const state: Snapshot = { data: { store: { settings: initialProcurementSettings() } }, versions: {}, sequences: {}, audit: [], notices: [] }
+  const values = { legalName: "Lifecycle supplier", country: "CH", address: "Lifecycle address", taxId: "LIFECYCLE-TAX", contactEmail: "lifecycle@example.invalid", paymentTerms: "Net 30", riskRating: "Low", dueDiligence: true, sanctionsDate: "2026-11-01" }
+  expect(domain.execute(state, buyer, { page: "Suppliers", action: "create", version: 0, values }, environment).ok).toBe(true)
+  expect(domain.execute(state, buyer, { page: "Suppliers", action: "create", version: 0, values: { legalName: "Other pending supplier", taxId: "OTHER-TAX" } }, { ...environment, id: () => "other-supplier" }).ok).toBe(true)
+  expect(domain.execute(state, admin, { page: "Suppliers", action: "change-bank", id: "supplier-1", version: 1, values: { bankName: "LIFECYCLE-PRIVATE-BANK" } }, environment).ok).toBe(true)
+
+  const owner = { id: "request-owner", roles: ["requester"], canWrite: true }
+  const pr = { title: "Linked supplier request", type: "service", description: "Recorded services", estAmount: 100, costCenter: "Operations", needBy: "2026-12-01", justification: "Recorded business need", recurring: false, expenseType: "OPEX" }
+  const created = domain.execute(state, owner, { page: "Requests", action: "create", version: 0, values: { pr } }, environment)
+  if (!created.ok) throw new Error("Linked request creation failed")
+  const id = String(object(created.value).number)
+  expect(domain.execute(state, owner, { page: "Requests", action: "submit_pr", id, version: 1, values: {} }, environment).ok).toBe(true)
+  expect(domain.execute(state, { id: "request-approver", roles: ["admin"], canWrite: true }, { page: "Requests", action: "approve", id, version: 2, values: {} }, environment).ok).toBe(true)
+  expect(domain.execute(state, buyer, { page: "Requests", action: "save", id, version: 3, values: { sourcing: { quotes: [{ id: "linked-quote", supplier: values.legalName, supplierId: "supplier-1", currency: "USD", total: 100, qty: 1, unitPrice: 100, techPass: true, scores: [5, 5, 5, 5, 5], cscores: [null, 4, 4] }] } } }, environment).ok).toBe(true)
+  const linked = structuredClone(state)
+  expect(domain.execute(state, buyer, { page: "Suppliers", action: "delete", id: "supplier-1", version: 2, values: {} }, environment)).toMatchObject({ ok: false, status: 403 })
+  for (const action of ["block", "inactivate"]) expect(domain.execute(state, buyer, { page: "Suppliers", action, id: "supplier-1", version: 2, values: {} }, environment)).toMatchObject({ ok: false, status: 403 })
+  expect(state).toEqual(linked)
+
+  for (const step of [{ status: "pending", action: null }, { status: "active", action: "activate" }, { status: "blocked", action: "block" }, { status: "inactive", action: "inactivate" }]) {
+    if (step.action) expect(domain.execute(state, admin, { page: "Suppliers", action: step.action, id: "supplier-1", version: state.versions["suppliers:supplier-1"]!.version, values: {} }, environment).ok).toBe(true)
+    const view = domain.view(state, buyer, environment)
+    const supplier = (view.data.suppliers as Record<string, unknown>[]).find((item) => item.id === "supplier-1")!
+    expect(supplier).toMatchObject({ ...values, status: step.status, number: "SUP-00001" })
+    const html = render("Suppliers", { ...view.data, status: step.status }, { actor: buyer, year: 2026, month: 11, at, versions: view.versions })!
+    expect(html).toContain('id="supplier-supplier-1"')
+    expect(html).toContain(`<td>${step.status}</td>`)
+    expect(html).toContain(`<td>${id}</td>`)
+    expect(html).not.toContain("LIFECYCLE-PRIVATE-BANK")
+    expect(html).not.toContain('data-command="block"')
+    expect(html).not.toContain('data-command="inactivate"')
+    if (step.status !== "pending") expect(html).not.toContain('id="supplier-other-supplier"')
+    if (step.status !== "pending") expect(supplier).toMatchObject({ validatedBy: admin.id, validatedAt: at })
+  }
+
+  const view = domain.view(state, buyer, environment)
+  for (const q of ["lifecycle supplier", "sup-00001", "lifecycle-tax"]) {
+    const html = render("Suppliers", { ...view.data, status: "All", q }, { actor: buyer, year: 2026, month: 11, at, versions: view.versions })!
+    expect(html).toContain('id="supplier-supplier-1"')
+    expect(html).not.toContain('id="supplier-other-supplier"')
+    expect(html).toContain(`<td>${id}</td>`)
+  }
+  const noMatch = render("Suppliers", { ...view.data, status: "active", q: "lifecycle-tax" }, { actor: buyer, year: 2026, month: 11, at, versions: view.versions })!
+  expect(noMatch).not.toContain('id="supplier-supplier-1"')
+  const privileged = domain.view(state, admin, environment)
+  const audited = render("Suppliers", { ...privileged.data, q: "lifecycle-tax" }, { actor: admin, year: 2026, month: 11, at, versions: privileged.versions })!
+  expect(audited).toContain("<h3>Audit</h3>")
+  expect(audited).toContain("<td>bankName</td>")
+  expect(state.audit.filter((entry) => entry.record === "suppliers:supplier-1").map((entry) => object(entry.became).status)).toEqual(["pending", "pending", "active", "blocked", "inactive"])
+  expect(JSON.stringify(state.audit)).not.toContain("LIFECYCLE-PRIVATE-BANK")
+  expect((view.data.requests as Record<string, unknown>[]).find((item) => item.number === id)).toMatchObject({ pr, sourcing: { quotes: [{ supplierId: "supplier-1" }] } })
+})
+
+test("recorded supplier enum values outside the current options remain selected through a real form save", async () => {
+  const state: Snapshot = { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
+  expect(domain.execute(state, buyer, { page: "Suppliers", action: "create", version: 0, values: { legalName: "Previously recorded supplier", type: "company", riskRating: "low", taxId: "RECORDED-TAX", contactPhone: "Old contact" } }, environment).ok).toBe(true)
+  const view = domain.view(state, buyer, environment)
+  const html = render("Suppliers", view.data, { actor: buyer, year: 2026, month: 11, at, versions: view.versions })!
+  const selected: Record<string, string[]> = { type: [], riskRating: [] }
+  const parser = new HTMLRewriter()
+  for (const field of ["type", "riskRating"]) parser.on(`form[data-command="save"][data-record="supplier-1"] select[name="${field}"] option[selected]`, { element: (element) => { selected[field]!.push(element.getAttribute("value") ?? "") } })
+  await parser.transform(new Response(html)).text()
+  expect(selected).toEqual({ type: ["company"], riskRating: ["low"] })
+  expect(html).toContain('value="company" selected>Recorded value: company</option>')
+  expect(html).toContain('value="low" selected>Recorded value: low</option>')
+  expect(domain.execute(state, buyer, { page: "Suppliers", action: "save", id: "supplier-1", version: 1, values: { type: selected.type![0], riskRating: selected.riskRating![0], contactPhone: "Corrected contact" } }, environment).ok).toBe(true)
+  expect((domain.view(state, buyer, environment).data.suppliers as Record<string, unknown>[])[0]).toMatchObject({ type: "company", riskRating: "low", contactPhone: "Corrected contact", taxId: "RECORDED-TAX" })
 })

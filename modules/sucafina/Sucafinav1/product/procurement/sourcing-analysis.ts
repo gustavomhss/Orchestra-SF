@@ -38,6 +38,8 @@ document.querySelectorAll('[data-sourcing-analysis]').forEach((form) => {
   const controls = [...form.querySelectorAll('select')]
   let runRef
   let timer
+  let generation = 0
+  let readSequence = 0
   form.addEventListener('input', () => { form.dataset.dirty = 'true' })
   const refreshHistory = () => document.querySelector('[data-analysis-history]')?.dispatchEvent(new Event('sf-analysis-refresh'))
   history.addEventListener('click', refreshHistory)
@@ -50,19 +52,30 @@ document.querySelectorAll('[data-sourcing-analysis]').forEach((form) => {
   }
   const refresh = async () => {
     if (!form.isConnected || !runRef) return
+    const readingGeneration = generation; const sequence = ++readSequence; const requestedRun = runRef
+    const current = () => form.isConnected && readingGeneration === generation && sequence === readSequence && requestedRun === runRef
     clearTimeout(timer); check.disabled = true
     try {
-      const run = await send('workbench-analysis', { action: 'read', runRef })
+      const run = await send('workbench-analysis', { action: 'read', runRef: requestedRun })
+      if (!current()) return
       const active = ['preparing', 'queued', 'running'].includes(run.state)
+      const terminal = ['ready', 'stale', 'needs-input', 'unavailable', 'failed', 'cancelled'].includes(run.state)
+      if (!active && !terminal) throw new Error('unavailable')
+      form.dataset.sfSourcingState = run.state
+      if (terminal) delete form.dataset.dirty; else form.dataset.dirty = 'true'
       status.textContent = 'Analysis: ' + run.state + (run.outputRef ? '. Open the result in analysis history to review it.' : '.')
       submit.disabled = active; controls.forEach((control) => { control.disabled = active })
       cancel.hidden = !active; check.hidden = !active
       if (!active) refreshHistory()
       if (active) timer = setTimeout(refresh, 2000)
     } catch {
+      if (!current()) return
+      form.dataset.dirty = 'true'
+      form.dataset.sfSourcingState = 'uncertain'
+      submit.disabled = true; controls.forEach((control) => { control.disabled = true })
       status.textContent = 'Analysis status unavailable. Check its status before starting another analysis.'
       check.hidden = false
-    } finally { check.disabled = false }
+    } finally { if (current()) check.disabled = false }
   }
   check.addEventListener('click', refresh)
   form.addEventListener('submit', async (event) => {
@@ -73,31 +86,40 @@ document.querySelectorAll('[data-sourcing-analysis]').forEach((form) => {
     const requestRef = fields.get('requestRef')
     if (!model || !config.requestRefs.includes(requestRef)) { status.textContent = 'Choose an attached request and an available model.'; return }
     let attempted = false
+    const startingGeneration = ++generation; ++readSequence; clearTimeout(timer)
+    // The shell preserves dirty forms across background refresh. Keep this guard
+    // until an authorized read observes a terminal run, including unknown starts.
+    form.dataset.dirty = 'true'; form.dataset.sfSourcingState = 'preparing'; runRef = undefined
     submit.disabled = true; controls.forEach((control) => { control.disabled = true })
     cancel.hidden = true; check.hidden = true; status.textContent = 'Preparing sourcing analysis…'
     try {
       const skillInput = await send('workbench-sourcing-input', { caseRef: config.caseRef, requestRef })
+      if (generation !== startingGeneration || !form.isConnected) return
       attempted = true
       const started = await send('workbench-analysis', { action: 'start', input: {
         request: { caseRef: config.caseRef, objective: config.objective, profileId: config.profileId, profileVersion: config.profileVersion,
           skillId: config.skillId, skillVersion: config.skillVersion, manifestDigest: config.manifestDigest,
           outputSchemaVersion: config.outputSchemaVersion, requestedOperationScope: config.requestedOperationScope }, skillInput, model,
       } })
-      if (!started.runRef) throw new Error('unavailable')
-      runRef = started.runRef; delete form.dataset.dirty; refreshHistory(); await refresh()
+      if (generation !== startingGeneration || !form.isConnected) return
+      if (typeof started.runRef !== 'string' || !started.runRef) throw new Error('unavailable')
+      runRef = started.runRef; refreshHistory(); await refresh()
     } catch {
-      status.textContent = attempted ? 'Could not confirm whether analysis started. Refresh analysis history before starting another.' : 'Sourcing analysis could not be prepared. Check the attached request and current access, then try again.'
+      if (generation !== startingGeneration || !form.isConnected) return
+      form.dataset.sfSourcingState = attempted ? 'uncertain' : 'editable'
+      status.textContent = attempted ? 'Could not confirm whether analysis started. Review analysis history; leave this decision deliberately before starting another.' : 'Sourcing analysis could not be prepared. Check the attached request and current access, then try again.'
       if (attempted) refreshHistory()
     } finally {
-      if (!attempted) { submit.disabled = false; controls.forEach((control) => { control.disabled = false }) }
+      if (generation === startingGeneration && !attempted) { submit.disabled = false; controls.forEach((control) => { control.disabled = false }) }
     }
   })
   cancel.addEventListener('click', async () => {
     if (!runRef || cancel.disabled) return
+    const cancellingGeneration = ++generation; ++readSequence
     cancel.disabled = true; clearTimeout(timer); status.textContent = 'Cancelling analysis…'
-    try { await send('workbench-analysis', { action: 'cancel', runRef }); await refresh() }
-    catch { status.textContent = 'Could not confirm cancellation. Check the analysis status.'; check.hidden = false }
-    finally { cancel.disabled = false }
+    try { await send('workbench-analysis', { action: 'cancel', runRef }); if (generation === cancellingGeneration && form.isConnected) await refresh() }
+    catch { if (generation === cancellingGeneration && form.isConnected) { form.dataset.dirty = 'true'; form.dataset.sfSourcingState = 'uncertain'; status.textContent = 'Could not confirm cancellation. Check the analysis status.'; check.hidden = false; check.disabled = false } }
+    finally { if (generation === cancellingGeneration) cancel.disabled = false }
   })
 })
 `

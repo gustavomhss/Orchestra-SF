@@ -13,6 +13,7 @@ import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { projectProcurementScope } from "../../../product/procurement/source-projection.ts"
 import { createProcurementCollectionRegistry, createProcurementSourceResolver } from "../../../product/procurement/sources.ts"
 import { createProcurementPort } from "../../../product/procurement/port.ts"
+import { createProcurementBiSource } from "../../../product/analytics/procurement.ts"
 import type { DomainPortHost } from "../../../product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 
@@ -36,6 +37,7 @@ test("durable queue selection, counts and drilldowns keep requester scope across
     const collection = createProcurementCollectionRegistry({ host, scopedSources: persistence, contextFor })
     const unavailable = async () => ({ status: "unavailable" as const, reason: "not selected" })
     const port = createProcurementPort({ ...host, ...collection, resolveSupplierSource: individual.resolve, isCurrentSupplierSource: individual.isCurrent, readContractSource: unavailable })
+    const bi = createProcurementBiSource({ list: port.list, revalidate: (_request, binding) => host.revalidate(binding) })
     const admit = async (principal: string) => {
       const payload = { requestRef: "queue" }
       const result = await ui.admit(new Request("https://example.test/procurement", { headers: { "x-synthetic-principal": principal } }), "sf_request_read", digestSfValue(payload))
@@ -57,15 +59,42 @@ test("durable queue selection, counts and drilldowns keep requester scope across
     expect(requesterBefore.value.stock.values[0]?.value).toBe(1)
     expect(buyerBefore.value.stock.values[0]?.value).toBe(2)
     expect(JSON.stringify(requesterBefore)).not.toContain("PR-2")
+    const period = { start: "2026-01-01", end: "2026-12-31" }
+    const stockRequest = { viewId: "BI05", selectionRef: requesterRef.value, period }
+    const ageRequest = { ...stockRequest, viewId: "BI06" }
+    expect(await bi.read(stockRequest, requester)).toEqual({ status: "ok", value: requesterBefore.value.stock })
+    expect(await bi.read({ ...stockRequest, selectionRef: buyerRef.value }, buyer)).toEqual({ status: "ok", value: buyerBefore.value.stock })
+    const biAge = await bi.read(ageRequest, requester)
+    if (biAge.status !== "ok") throw new Error("Actual BI06 consumer unavailable")
+    expect(JSON.stringify(biAge)).not.toContain("PR-2")
+    const projectedAge = biAge.value.values.find((value) => value.id.endsWith(":ageDays"))
     const age = requesterBefore.value.queue[0]!.values.find((value) => value.id === "ageDays")
     expect(age).toMatchObject({ value: 2, evidenceState: "confirmed" })
+    expect(projectedAge).toEqual({ ...age, id: projectedAge?.id })
     const ref = age!.drilldown
     if (!ref || ref.kind !== "record") throw new Error("Queue drilldown missing")
     expect(await port.read({ requestRef: ref.refId }, requester)).toEqual({ status: "ok", value: requesterBefore.value.queue[0] })
     expect((await port.read({ requestRef: ref.refId }, buyer)).status).toBe("denied")
+    const disposable = await collection.createSelection(requester)
+    if (disposable.status !== "ok") throw new Error("Disposable page selection unavailable")
+    const disposableRead = await collection.resolveRequestCollection(disposable.value, requester)
+    if (disposableRead.status !== "ok") throw new Error("Disposable page members unavailable")
+    expect(collection.releaseSelection(disposable.value)).toBe(true)
+    expect(collection.releaseSelection(disposable.value)).toBe(false)
+    expect((await port.list(disposable.value, requester)).status).toBe("unavailable")
+    for (const child of [...disposableRead.value.requests, ...Object.values(disposableRead.value.statusSelections)]) {
+      expect((await collection.resolveRequestSource(child.refId, requester)).status).toBe("unavailable")
+      expect((await collection.resolveRequestCollection(child.refId, requester)).status).toBe("unavailable")
+    }
+    // Releasing a page does not revoke a distinct Work/BI selection of identical content.
+    expect(await port.list(requesterRef.value, requester)).toEqual(requesterBefore)
+    expect(await bi.read(stockRequest, requester)).toEqual({ status: "ok", value: requesterBefore.value.stock })
     await persistence.transaction("procurement", async (snapshot) => { object(object(snapshot.data.store).requests)["PR-3"] = make("PR-3", "other"); return { commit: true, value: undefined } })
     expect(await port.list(requesterRef.value, requester)).toEqual(requesterBefore)
+    expect(await bi.read(stockRequest, requester)).toEqual({ status: "ok", value: requesterBefore.value.stock })
+    expect(await bi.read(ageRequest, requester)).toEqual(biAge)
     expect((await port.list(buyerRef.value, buyer)).status).toBe("stale")
+    expect((await bi.read({ ...stockRequest, selectionRef: buyerRef.value }, buyer)).status).toBe("stale")
     const refreshed = await collection.createSelection(buyer)
     if (refreshed.status !== "ok") throw new Error("Refreshed buyer selection missing")
     const latest = await port.list(refreshed.value, buyer)
@@ -82,7 +111,12 @@ test("durable queue selection, counts and drilldowns keep requester scope across
     expect(result.value.aging).toHaveLength(1)
     expect(result.value.aging[0]!.values.find((value) => value.id === "ageDays")).toMatchObject({ value: null, evidenceState: "absent" })
     expect(result.value.aging[0]!.missing).toEqual(expect.arrayContaining([{ field: "ageDays", reason: "unavailable" }, { field: "holder", reason: "missing" }]))
+    const unavailableAge = await bi.read({ ...ageRequest, selectionRef: incomplete.value }, requester)
+    if (unavailableAge.status !== "ok") throw new Error("BI06 dropped an authorized Request without proven history")
+    expect(unavailableAge.value.values.find((value) => value.id.endsWith(":ageDays"))).toMatchObject({ value: null, evidenceState: "absent" })
+    expect(unavailableAge.value.missing.some((item) => item.field.endsWith(":ageDays") && item.reason === "unavailable")).toBe(true)
     access.active = false
     expect((await port.list(incomplete.value, requester)).status).toBe("denied")
+    expect((await bi.read({ ...stockRequest, selectionRef: incomplete.value }, requester)).status).toBe("denied")
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })
