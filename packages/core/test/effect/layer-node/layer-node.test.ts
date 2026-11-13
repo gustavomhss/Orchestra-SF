@@ -23,6 +23,48 @@ const value = make({ service: Value, layer: valueLayer, deps: [] })
 const greeting = make({ service: Greeting, layer: greetingLayer, deps: [value] })
 
 describe("layer node", () => {
+  test("rejects equivalent cyclic definitions with a controlled cycle error", () => {
+    const kinds = LayerNode.tags({ global: [] })
+    const shared = Layer.empty
+    const first = kinds.make("global")({ name: "cyclic/global", layer: shared, deps: [] })
+    const second = kinds.make("global")({ name: "cyclic/global", layer: shared, deps: [] })
+    Object.assign(first, { dependencies: [first] })
+    Object.assign(second, { dependencies: [second] })
+    expect(() => LayerNode.hoist(LayerNode.group([first, second]), kinds.values.global)).toThrow("Cycle detected while comparing layer definitions")
+  })
+
+  test("hoists a shared implementation once after a later replacement clones its dependencies", async () => {
+    const kinds = LayerNode.tags({ global: [], location: ["global"] })
+    const starts = { count: 0 }
+    const dependency = kinds.make("global")({ service: Value, layer: valueLayer, deps: [] })
+    const shared = kinds.make("global")({ service: Greeting, deps: [dependency], layer: Layer.effect(Greeting,
+      Effect.map(Value, (value) => {
+        starts.count += 1
+        return Greeting.of({ value: `hello ${value.value}` })
+      })) })
+    const left = kinds.make("location")({ service: Left, deps: [shared], layer: Layer.effect(Left, Effect.map(Greeting, Left.of)) })
+    const rightLayer = Layer.effect(Right, Effect.map(Greeting, Right.of))
+    const right = kinds.make("location")({ service: Right, deps: [shared], layer: rightLayer })
+    const replacement = kinds.make("location")({ service: Right, deps: [shared], layer: rightLayer })
+    const graph = LayerNode.hoist(LayerNode.group([left, right]), kinds.values.global, [
+      [right, replacement], [dependency, Layer.succeed(Value, Value.of({ value: "replaced" }))],
+    ])
+    const result = await Effect.all([Left, Right]).pipe(Effect.provide(LayerNode.compile(graph.node).pipe(
+      Layer.provide(LayerNode.compile(graph.hoisted)),
+    )), Effect.runPromise)
+    expect(result.map((value) => value.value)).toEqual(["hello replaced", "hello replaced"])
+    expect(starts.count).toBe(1)
+  })
+
+  test("still rejects a shared layer whose dependency implementations differ", () => {
+    const kinds = LayerNode.tags({ global: [] })
+    const first = kinds.make("global")({ service: Value, layer: valueLayer, deps: [] })
+    const second = kinds.make("global")({ service: Value, layer: Layer.succeed(Value, Value.of({ value: "different" })), deps: [] })
+    const original = kinds.make("global")({ service: Greeting, layer: greetingLayer, deps: [first] })
+    const conflicting = kinds.make("global")({ service: Greeting, layer: greetingLayer, deps: [second] })
+    expect(() => LayerNode.hoist(LayerNode.group([original, conflicting]), kinds.values.global)).toThrow("conflicting implementations")
+  })
+
   test("builds an untagged graph", async () => {
     const value = LayerNode.make({ service: Value, layer: valueLayer, deps: [] })
     const greeting = LayerNode.make({ service: Greeting, layer: greetingLayer, deps: [value] })
