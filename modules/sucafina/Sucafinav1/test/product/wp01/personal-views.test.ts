@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -72,8 +73,7 @@ test("personal views isolate authenticated principals and reconcile exact retrie
       snapshot.data.versions = [{ id: "v1", year: 2027, closed: 0, lines: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
       return { commit: true, value: undefined }
     })
-    const { chromium } = await import("@playwright/test")
-    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+    const browser = await launchWp01Browser()
     try {
       const tab = await browser.newPage()
       await tab.goto(`${origin}/sucafina/auth/local?code=${await first.enroll()}`)
@@ -88,6 +88,6 @@ test("personal views isolate authenticated principals and reconcile exact retrie
       await tab.getByRole("button", { name: "Filtered plan", exact: true }).waitFor()
       await tab.getByRole("button", { name: "Filtered plan", exact: true }).click()
       await tab.waitForURL((url) => url.searchParams.get("view") === filtered.view.id && url.searchParams.get("q") === "renewal")
-    } finally { await browser.close() }
+    } finally { await closeWp01Browser(browser) }
   } finally { await server.stop(true); await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })

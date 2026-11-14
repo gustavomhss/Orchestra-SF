@@ -1,5 +1,5 @@
-import { expect, test } from "bun:test"
-import type { Browser, Page } from "@playwright/test"
+import { afterAll, beforeAll, expect, test } from "bun:test"
+import type { Browser, BrowserContext, Page } from "@playwright/test"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -9,9 +9,14 @@ import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
 import { decorateSfProductHtml } from "../../../product/interface/html.ts"
 import { initialProcurementSettings } from "../../../src/initial-settings.ts"
+import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 
 type SearchPolicy = { role: "admin" | "viewer"; urls: string[]; entryReads: number; downgradeAtRevalidation: boolean }
 type SearchFixture = { page: Page; origin: string; policy: SearchPolicy; errors: string[]; store: Awaited<ReturnType<typeof openLocalStore>> }
+
+let browser: Browser
+beforeAll(async () => { browser = await launchWp01Browser() }, 35_000)
+afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
 
 async function within<T>(operation: Promise<T>, step: string, timeout = 5_000): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | undefined
@@ -51,8 +56,9 @@ async function withSearch(role: SearchPolicy["role"], check: (fixture: SearchFix
   const environment = async (request: Request) => ({ at: "2026-11-13T08:00:00Z", id: randomUUID, directory: await identity.directory(request) })
   const app = createModule("/sucafina", { persistence: store, authenticate, environment, productHtml: decorateSfProductHtml, maxJsonBytes: 100000 })
   state.handle = async (request) => await identity.handle(request) ?? await app(request)
-  let browser: Browser | undefined
+  let context: BrowserContext | undefined
   let page: Page | undefined
+  let phase = "seed real search records"
   const errors: string[] = []
   const failures: unknown[] = []
   try {
@@ -65,17 +71,22 @@ async function withSearch(role: SearchPolicy["role"], check: (fixture: SearchFix
       snapshot.data.contracts = [{ id: "private-contract", vendor: "Confidential Needle Supplier", amount: 900, amtType: "Annual", renewType: "Manual", eval: "Pending", renewal: "2027-01-01" }]
       return { commit: true, value: undefined }
     })
-    const { chromium } = await import("@playwright/test")
-    browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 8_000 })
-    page = await within(browser.newPage(), "open browser page")
+    phase = "create isolated browser context"
+    context = await within(browser.newContext(), phase)
+    page = await within(context.newPage(), "open browser page")
     page.setDefaultTimeout(10_000)
     page.setDefaultNavigationTimeout(15_000)
     page.on("pageerror", (error) => { errors.push(error.message) })
-    await page.goto(`${origin}/sucafina/auth/local?code=${await within(identity.enroll(), "enroll the real operator")}`)
+    phase = "complete real operator enrollment"
+    const enrollment = await page.goto(`${origin}/sucafina/auth/local?code=${await within(identity.enroll(), "enroll the real operator")}`, { waitUntil: "domcontentloaded" })
+    expect(enrollment?.status()).toBe(200)
+    await page.waitForURL(`${origin}/sucafina/dashboard`, { waitUntil: "domcontentloaded" })
+    await page.locator('main[data-drawn="true"]').waitFor()
+    phase = "exercise authorized record search"
     await check({ page, origin, policy, errors, store })
   } catch (error) {
     failures.push(error)
-    console.error("WP01 record-search failure", error)
+    console.error("WP01 record-search failure", { phase, error })
     if (page) console.error("WP01 record-search failure context", { url: page.url(), errors, document: await within(page.evaluate(() => ({
       title: document.title, ready: document.readyState, surface: document.body?.dataset.surface,
       searchStatus: document.querySelector('[data-record-search] [role="status"]')?.textContent ?? null,
@@ -87,7 +98,7 @@ async function withSearch(role: SearchPolicy["role"], check: (fixture: SearchFix
     // even if browser shutdown stalls; a finally error must not erase the cause.
     for (const [step, close] of [
       ["close page", () => page?.close({ runBeforeUnload: false })],
-      ["close browser", () => browser?.close()],
+      ["close browser context", () => context?.close()],
       ["stop server", () => server.stop(true)],
       ["dispose store", () => store.dispose()],
       ["remove fixture directory", () => rm(directory, { recursive: true, force: true })],

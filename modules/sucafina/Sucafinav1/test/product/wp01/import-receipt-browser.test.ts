@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 import { documentHtml, pageMain } from "../../../src/screen-shell.ts"
 import { importPreviewScript, importPreviewWidget } from "../../../product/ui/import-preview.ts"
 
@@ -15,8 +16,7 @@ test("import reports the persisted unchanged outcome after an uncertain response
     if (mode === "import-detail") return Response.json({ status: "ok", value: { detail: { changes: [] }, ...(applies ? { receipt: { manifestId: "manifest", outcome: "unchanged", changedFields: 0 } } : {}) } })
     return new Response(null, { status: 404 })
   } })
-  const { chromium } = await import("@playwright/test")
-  const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+  const browser = await launchWp01Browser()
   try {
     const page = await browser.newPage()
     await page.goto(server.url.href)
@@ -29,7 +29,7 @@ test("import reports the persisted unchanged outcome after an uncertain response
     await page.getByText("Import completed; no fields needed changing.").waitFor()
     expect(applies).toBe(1)
   } finally {
-    await browser.close()
+    await closeWp01Browser(browser)
     await server.stop(true)
   }
 }, 30000)

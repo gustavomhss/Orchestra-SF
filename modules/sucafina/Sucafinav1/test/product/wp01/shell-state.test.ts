@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, expect, test } from "bun:test"
 import type { Browser } from "@playwright/test"
+import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 import { documentHtml, links, pageMain } from "../../../src/screen-shell.ts"
 import { dashboardScreen } from "../../../src/dashboard-screen.ts"
 import { DASHBOARD_PAGES, PLANNER_TABS, PROCUREMENT_NAV, dashboardPages, setYear, sidebarYear } from "../../../src/nav.ts"
@@ -7,10 +8,9 @@ import { fields, form, table } from "../../../runtime/ui.ts"
 
 const runtime: { browser?: Browser } = {}
 beforeAll(async () => {
-  const { chromium } = await import("@playwright/test")
-  runtime.browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
-}, 30000)
-afterAll(async () => { await runtime.browser?.close() })
+  runtime.browser = await launchWp01Browser()
+}, 35_000)
+afterAll(async () => { if (runtime.browser) await closeWp01Browser(runtime.browser) }, 25_000)
 
 function editor(value = "Original", version = 1) {
   return form("Vendor Contracts", "save", "contract-1", version, fields([{ name: "description", label: "Description", value }]))

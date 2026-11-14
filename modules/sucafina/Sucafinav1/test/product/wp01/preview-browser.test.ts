@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 import { documentHtml, links, pageMain } from "../../../src/screen-shell.ts"
 import { DASHBOARD_PAGES } from "../../../src/nav.ts"
 import { form, fields } from "../../../runtime/ui.ts"
@@ -13,8 +14,7 @@ test("dashboard groups retain every canonical destination and its original index
 test("field errors identify the input and preserve the draft", async () => {
   const html = documentHtml("Dashboard", "dashboard", "", pageMain({ drawn: true, key: "OPEX Detail", index: 3 }, form("OPEX Detail", "year-amount", "line", 1, fields([{ name: "amount", label: "Amount", value: "10" }]))), "")
   const server = Bun.serve({ port: 0, fetch: (request) => request.method === "GET" ? new Response(html, { headers: { "Content-Type": "text/html" } }) : Response.json({ ok: false, fieldErrors: [{ field: "amount", message: "Enter a valid amount." }] }, { status: 422 }) })
-  const { chromium } = await import("@playwright/test")
-  const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+  const browser = await launchWp01Browser()
   try {
     const page = await browser.newPage()
     await page.goto(server.url.href)
@@ -25,7 +25,7 @@ test("field errors identify the input and preserve the draft", async () => {
     expect(await page.getByLabel("Amount").getAttribute("aria-invalid")).toBe("true")
     expect(await page.getByLabel("Amount").evaluate((input) => document.activeElement === input)).toBe(true)
   } finally {
-    await browser.close()
+    await closeWp01Browser(browser)
     await server.stop(true)
   }
 }, 30000)
@@ -39,8 +39,7 @@ test("procurement submission carries edits from its record's editor", async () =
     submitted = await request.json()
     return Response.json({ ok: false, errors: ["Review required."] }, { status: 422 })
   } })
-  const { chromium } = await import("@playwright/test")
-  const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+  const browser = await launchWp01Browser()
   try {
     const page = await browser.newPage()
     await page.goto(server.url.href)
@@ -50,7 +49,7 @@ test("procurement submission carries edits from its record's editor", async () =
     expect(submitted).toMatchObject({ action: "submit_pr", id: "request-1", version: 1, values: { description: "Revised" } })
     expect(await page.getByLabel("Description").inputValue()).toBe("Revised")
   } finally {
-    await browser.close()
+    await closeWp01Browser(browser)
     await server.stop(true)
   }
 }, 30000)
@@ -70,8 +69,7 @@ test("edits made while an apply is in flight remain unsaved in the real shell", 
     }
     return Response.json({ ok: false }, { status: 400 })
   } })
-  const { chromium } = await import("@playwright/test")
-  const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+  const browser = await launchWp01Browser()
   try {
     const page = await browser.newPage()
     await page.goto(server.url.href)
@@ -88,7 +86,7 @@ test("edits made while an apply is in flight remain unsaved in the real shell", 
     expect(state.applied).toBe(1)
   } finally {
     state.release?.()
-    await browser.close()
+    await closeWp01Browser(browser)
     await server.stop(true)
   }
 }, 30000)

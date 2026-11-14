@@ -25,6 +25,7 @@ import type { BusinessEvidenceRef } from "../../../product/contracts/business-co
 import type { SfHostServices } from "../../../product/contracts/host-context.ts"
 import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
 import { decorateSfProductHtml } from "../../../product/interface/html.ts"
+import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 
 async function within<T>(operation: Promise<T>, step: string): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | undefined
@@ -106,9 +107,8 @@ test("contract context uses mounted evidence, survives a lost response, and reje
     const issuedContext = await get(contextUrl())
     expect(issuedContext?.status).toBe(200)
     expect(await issuedContext!.text()).toContain("Create a decision from Context contract Alpha")
-    const { chromium } = await import("@playwright/test")
     phase = "launch browser"
-    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 10000 })
+    const browser = await launchWp01Browser()
     let tab: import("@playwright/test").Page | undefined
     const errors: string[] = []
     let browserFailure: unknown
@@ -222,7 +222,7 @@ test("contract context uses mounted evidence, survives a lost response, and reje
     } finally {
       const cleanup: unknown[] = []
       try { if (tab && !tab.isClosed()) await within(tab.close({ runBeforeUnload: false }), "close page") } catch (error) { cleanup.push(error) }
-      try { await within(browser.close(), "close browser") } catch (error) { cleanup.push(error) }
+      try { await closeWp01Browser(browser) } catch (error) { cleanup.push(error) }
       if (cleanup.length) throw new AggregateError(browserFailure ? [browserFailure, ...cleanup] : cleanup, "Contextual browser cleanup failed")
     }
   } catch (error) { failure = error; console.error("WP01 contextual failure", { phase }); throw error }

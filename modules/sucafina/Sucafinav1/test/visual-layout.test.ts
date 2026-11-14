@@ -7,6 +7,7 @@ import { pathToFileURL } from "node:url"
 import { prepareLocalConfiguration } from "../runtime/local-configuration.ts"
 import { prepareOperatorAccess } from "../local/enroll.ts"
 import { createLocalInstallation } from "../local/entry.ts"
+import { launchWp01Browser, closeWp01Browser } from "./product/wp01/browser-fixture.ts"
 
 async function within<T>(operation: Promise<T>, stage: string): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | undefined
@@ -55,13 +56,9 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
       if (closing) { await within(installation.dispose(), "dispose late installation"); throw new Error("Installation completed after fixture closure") }
       resources.installation = installation
     })
-    const { chromium } = await step("load browser driver", () => import("@playwright/test"))
-    const browser = await step("launch browser", async () => {
-      const value = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 10_000 })
-      if (closing) { await within(value.close(), "close late browser"); throw new Error("Browser completed after fixture closure") }
-      resources.browser = value
-      return value
-    })
+    stage = "launch owned browser server and client"
+    const browser = await launchWp01Browser()
+    resources.browser = browser
     const context = await step("create isolated browser context", async () => {
       const value = await browser.newContext({ viewport: { width: 1440, height: 1000 } })
       if (closing) { await within(value.close(), "close late browser context"); throw new Error("Browser context completed after fixture closure") }
@@ -153,20 +150,24 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
   } finally {
     closing = true
     const cleanup: unknown[] = []
-    const actions: { name: string; close: () => Promise<unknown> }[] = [
+    const actions: { name: string; close: () => Promise<unknown>; managedDeadline?: boolean }[] = [
       { name: "close visual page", close: async () => { if (resources.page && !resources.page.isClosed()) await resources.page.close({ runBeforeUnload: false }) } },
       { name: "close visual browser context", close: async () => resources.context?.close() },
-      { name: "close visual browser", close: async () => resources.browser?.close() },
+      { name: "close visual browser", managedDeadline: true, close: async () => { if (resources.browser) await closeWp01Browser(resources.browser) } },
       { name: "stop visual server", close: async () => resources.server?.stop(true) },
       { name: "dispose real local installation", close: async () => resources.installation?.dispose() },
       { name: "remove private visual installation", close: async () => { if (resources.root) await rm(resources.root, { recursive: true, force: true }) } },
     ]
     for (const action of actions) {
-      try { await step(action.name, action.close) }
+      try {
+        if (action.managedDeadline) { stage = action.name; await action.close() }
+        else await step(action.name, action.close)
+      }
       catch (error) { console.error(`WP01 visual cleanup failed at: ${action.name}`); cleanup.push(error) }
     }
     if (cleanup.length) throw new AggregateError(failure ? [failure, ...cleanup] : cleanup, "Visual layout assertion/setup and cleanup failures")
   }
-  // 28 routes at five widths, plus entry/desktop captures: every operation still
-  // has its own 10s deadline; only this aggregate visual test receives 120s.
+  // 28 routes at five widths, plus entry/desktop captures: visual operations keep
+  // their 10s deadline; browser cleanup owns 10s graceful + 10s forced termination.
+  // Only this aggregate visual test receives 120s.
 }, 120000)

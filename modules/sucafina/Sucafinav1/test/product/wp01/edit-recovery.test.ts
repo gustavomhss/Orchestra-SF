@@ -6,6 +6,7 @@ import { forecastAnalysisScript } from "../../../product/ui/forecast-analysis.ts
 import { decisionChoiceForm, decisionChoiceScript } from "../../../product/ui/decision-choice.ts"
 import type { AuthorizedCaseProjection } from "../../../product/contracts/business-context.ts"
 import type { ScenarioResult } from "../../../product/contracts/decisions.ts"
+import { launchWp01Browser, closeWp01Browser } from "./browser-fixture.ts"
 
 // These transport fixtures exercise the shipped browser consumers, including a lost
 // response after admission. They do not qualify native execution or domain policy.
@@ -20,12 +21,11 @@ async function within<T>(operation: Promise<T>, step: string, timeout = 5_000): 
 // failure. Each case still receives isolated cookies, storage, pages and routes.
 let browser: Browser | undefined
 beforeAll(async () => {
-  const { chromium } = await import("@playwright/test")
-  browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 8_000 })
-}, 10_000)
+  browser = await launchWp01Browser()
+}, 35_000)
 afterAll(async () => {
-  if (browser) await within(browser.close(), "close shared browser")
-}, 8_000)
+  if (browser) await closeWp01Browser(browser)
+}, 25_000)
 
 async function browserCase(body: string, post: (request: Request) => Response | Promise<Response>, check: (page: Page) => Promise<void>, release?: () => void) {
   const server = Bun.serve({ hostname: "localhost", port: 0, idleTimeout: 30, fetch: (request) => request.method === "GET"

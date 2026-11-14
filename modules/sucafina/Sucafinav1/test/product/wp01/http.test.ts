@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -69,8 +70,7 @@ test("workbench uses actual identity, SQLite and case dispatcher with revocation
     const page = await read()
     expect(page?.status).toBe(200)
     expect(await page!.text()).toContain("Review renewal")
-    const { chromium } = await import("@playwright/test")
-    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+    const browser = await launchWp01Browser()
     try {
       const tab = await browser.newPage()
       await tab.goto(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`)
@@ -93,7 +93,7 @@ test("workbench uses actual identity, SQLite and case dispatcher with revocation
         await tab.getByRole("link", { name: "Workbench", exact: true }).click()
         await tab.getByRole("heading", { name: "Workbench", exact: true }).waitFor()
       }
-    } finally { await browser.close() }
+    } finally { await closeWp01Browser(browser) }
     await identity.handle(new Request(`${origin}/sucafina/auth/logout`, { method: "POST", headers: { cookie, origin } }))
     expect((await read())?.status).toBe(403)
   } finally { await server.stop(true); await store.dispose(); await rm(directory, { recursive: true, force: true }) }

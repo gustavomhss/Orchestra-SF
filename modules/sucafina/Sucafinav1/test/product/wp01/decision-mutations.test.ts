@@ -2,6 +2,7 @@ import { afterAll, beforeAll, expect, test } from "bun:test"
 import type { Browser, BrowserContext, Page } from "@playwright/test"
 import { decisionEditScript } from "../../../product/ui/decision-edit.ts"
 import { decisionApplyScript } from "../../../product/ui/decision-apply.ts"
+import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 
 // These are transport fault fixtures for the shipped consumers. A fixture's
 // acknowledgement/counter is not a domain receipt or proof of durable idempotence.
@@ -12,10 +13,9 @@ async function within<T>(operation: Promise<T>, step: string): Promise<T> {
   finally { clearTimeout(timer) }
 }
 beforeAll(async () => {
-  const { chromium } = await import("@playwright/test")
-  browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 10000 })
-})
-afterAll(async () => { if (browser) await within(browser.close(), "close browser") })
+  browser = await launchWp01Browser()
+}, 35000)
+afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25000)
 
 const caseRef = { id: "consumer-case", incarnation: "consumer-incarnation", version: 1 }
 const editContext = { caseRef, sourceRefs: [], criteria: [{ id: "criterion", required: true }] }

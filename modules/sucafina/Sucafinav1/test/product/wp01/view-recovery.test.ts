@@ -5,6 +5,7 @@ import { decisionCreateForm, decisionCreateScript } from "../../../product/ui/de
 import { personalViewsScript, personalViewsWidget } from "../../../product/ui/personal-views.ts"
 import { documentHtml, pageMain } from "../../../src/screen-shell.ts"
 import { fields, form } from "../../../runtime/ui.ts"
+import { launchWp01Browser, closeWp01Browser } from "./browser-fixture.ts"
 
 let browser: Browser | undefined
 const contexts = new WeakMap<Page, BrowserContext>()
@@ -20,12 +21,11 @@ async function within<T>(operation: Promise<T>, step: string, timeout = 5_000): 
 // ran. Keep one process for this file, with a fresh context for every case; do not
 // retry launch or reuse cookies, pages, storage, routes or request state.
 beforeAll(async () => {
-  const { chromium } = await import("@playwright/test")
-  browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 8_000 })
-}, 10_000)
+  browser = await launchWp01Browser()
+}, 35_000)
 afterAll(async () => {
-  if (browser) await within(browser.close(), "close shared browser")
-}, 8_000)
+  if (browser) await closeWp01Browser(browser)
+}, 25_000)
 
 type FixtureServer = { stop(closeActiveConnections?: boolean): void | Promise<void> }
 async function fixturePage(server: FixtureServer) {
@@ -260,19 +260,19 @@ test("opening an authorized saved view requires an explicit decision to discard 
     await page.getByRole("button", { name: "Saved destination", exact: true }).waitFor()
     await page.getByLabel("Business note").fill("Local draft")
     const dialogs: string[] = []
-    const decision = { accept: false }
-    page.on("dialog", async (dialog) => {
-      dialogs.push(dialog.type())
-      if (decision.accept) await dialog.accept()
-      else await dialog.dismiss()
-    })
-    await page.getByRole("button", { name: "Saved destination", exact: true }).click()
+    page.on("dialog", (dialog) => { dialogs.push(dialog.type()) })
+    const openSavedView = async (accept: boolean) => {
+      // Opening revalidates the saved destination over HTTP before asking about
+      // dirty inputs. Wait for that actual dialog and its answer, not click dispatch.
+      const answered = page.waitForEvent("dialog").then((dialog) => accept ? dialog.accept() : dialog.dismiss())
+      await Promise.all([within(answered, "answer saved-view discard confirmation"), page.getByRole("button", { name: "Saved destination", exact: true }).click()])
+    }
+    await openSavedView(false)
     expect(dialogs).toEqual(["confirm"])
     expect(page.url()).toBe(original)
     expect(await page.getByLabel("Business note").inputValue()).toBe("Local draft")
     expect(await page.locator("form[data-dirty]").count()).toBe(1)
-    decision.accept = true
-    await page.getByRole("button", { name: "Saved destination", exact: true }).click()
+    await openSavedView(true)
     await page.getByRole("heading", { name: "Restored saved view" }).waitFor()
     expect(dialogs).toEqual(["confirm", "confirm"])
     expect(new URL(page.url()).searchParams.get("view")).toBe(entry.view.id)

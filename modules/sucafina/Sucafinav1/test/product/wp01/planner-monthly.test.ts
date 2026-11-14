@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -53,8 +54,7 @@ test("Planner grid previews pasted values and preserves a conflicting draft", as
       snapshot.data.versions = [{ id: "v1", year: 2027, closed: 0, lines: [{ id: "line", name: "Planning line", sec: "opex", el: "licenses", cur: "USD", b: Array(12).fill(100), f: [] }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
       return { commit: true, value: undefined }
     })
-    const { chromium } = await import("@playwright/test")
-    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+    const browser = await launchWp01Browser()
     try {
       const tab = await browser.newPage()
       tab.setDefaultTimeout(10_000)
@@ -86,7 +86,7 @@ test("Planner grid previews pasted values and preserves a conflicting draft", as
       await tab.getByText(/Changed by another user/).waitFor()
       expect(await first.inputValue()).toBe("42")
       expect(await second.inputValue()).toBe("99")
-    } finally { await browser.close() }
+    } finally { await closeWp01Browser(browser) }
   } finally { await server.stop(true); await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 }, 60000)
 

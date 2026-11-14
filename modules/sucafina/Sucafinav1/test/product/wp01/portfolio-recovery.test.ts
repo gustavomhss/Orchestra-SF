@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, expect, test } from "bun:test"
 import type { Browser, BrowserContext, Page } from "@playwright/test"
+import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 import { portfolioScript, portfolioWidget } from "../../../product/ui/portfolio.ts"
 
 // These transport fixtures exercise the shipped portfolio consumer. Their catalog,
@@ -13,11 +14,10 @@ async function within<T>(operation: Promise<T>, step: string, timeout = 5_000): 
   } finally { clearTimeout(timer) }
 }
 beforeAll(async () => {
-  const { chromium } = await import("@playwright/test")
-  browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 8_000 })
+  browser = await launchWp01Browser()
   browser.on("disconnected", () => { browserFailure ??= "Chromium disconnected" })
-}, 10_000)
-afterAll(async () => { if (browser) await within(browser.close(), "close browser") }, 8_000)
+}, 35_000)
+afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
 
 const actions = {
   evaluation: { mode: "decision-portfolio-evaluate", label: "Save this evaluation" },
@@ -297,7 +297,11 @@ test.each([401, 403])("portfolio %i clears context and fences a late successful 
     expect(calls.length).toBe(1)
     expect(await page.locator("body").textContent()).not.toContain("Restricted decision")
     expect(await page.locator("body").textContent()).not.toContain("PRIVATE DENIAL")
-    expect(await page.locator("body").textContent()).not.toContain("Portfolio evaluation saved.")
+    // body.textContent includes the shipped script's success string even when no
+    // success was rendered. Inspect all status nodes, including hidden ones.
+    const statuses = await within(page.locator('[data-portfolio] [role="status"], [data-portfolio-history] [role="status"]').allTextContents(), "read portfolio states after revocation")
+    expect(statuses).toEqual(Array(2).fill("Access changed. Portfolio content cleared; reload to continue."))
+    expect(statuses.join("\n")).not.toContain("Portfolio evaluation saved.")
   })
 }, 30_000)
 
