@@ -1,0 +1,39 @@
+{
+  "number": 18,
+  "id": "finance-journey-closure",
+  "branch": "finance-resume",
+  "pr": 42,
+  "expected_head": "454b97daf614176507711df889bd45743467f7af",
+  "actor_pack": "S4-C",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+    "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+    "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+    "modules/sucafina/Sucafinav1/test/product/finance-journey-closure/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/"
+  ],
+  "inputs": {
+    "previous": "PR42@454b97daf614176507711df889bd45743467f7af",
+    "handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-performance/HANDOFF-FINAL.md",
+    "diagnostic": "PR56@0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7",
+    "review": "PR50@29356ad7a554309e9a905749dd84e3f6bd0900ea",
+    "passed": "S5/run43630462257:36pass/297assertions; sourceW7a9a43b3",
+    "failed": "S6/run43631582858:180000ms,18expects; qualify→authority→units.revalidate false; 15000/15001/history/replay/reopen not reached"
+  },
+  "mission": "Fechar FIN-IND-005 por implementação, não outro diagnóstico geral. Localizar custo residual real da qualificação/recertificação usando traces já publicados e fontes/callbacks atuais. Provar hipótese pequena e corrigir amplificação no ownershipFinance sem omitir recertificações ou autoridade. Nova solução pode ser maior que um hunk, mas deve preservar fórmulas, snapshots, dois momentos de observação e Request/headers/CAS/sourcefences. Não aplicar a propostaPR56 sem corrigir o contraexemplo documentado: mesma representação/digest de dados com predicateAfalse/predicateBtrue não prova equivalência das funções; validar autoridade original, retorno antecipado, cleanup, objeto mutável e revogação, sem fallback condicionado indevido. Preservar as seis correções já qualificadas e não refazer diagnósticoS1/S4.",
+  "proof": "Mesmo caso/encarnação/escolha de renovação: baselineResult.knownSubtotal240000 é custo de baseline dafixture, não receita provada; cenário conhecido210000 e treinamento omitidopending. Confirmar40000 produz250000 e diferença−10000; teto15000 atende mínimo20000 e15001falha. Concluir assertions de limiar, histórico original/current reevaluation, replay autorizado e SQLitefechado/reaberto com novaautoridade, conservando orçamento180000 dafixture e300000Bun. Dados/grantsfixture permanecem declarados; não éAMnativo. Sem aumentar timeout, removerassertions ou substituir custo completo por recusa. Só repetir jornada longa após delta causal material; usar prova curtadiscriminante antes. Revalidar testes afetados da antiga seleção36 quando seus inputs mudarem, não rerun por troca dechat.",
+  "limits": "Sem CLI/host-binding/integration WP10, Memory13, exports11, ACK10, forecast12, specs/workflows/nativeharness ativos. product/decisions/apply.ts eC12 ficam com sessão19. Não implantar/mergear em dev ou assumir integraçãocentral14. Publicar resultado na mesmaPR42 e intakemanifest porSHA para14.",
+  "state": "PREPARED_NOT_STARTED",
+  "lease_epoch": 1,
+  "session_id": null,
+  "model_effective": "NOT_VERIFIED",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "common_ref": "c708ec0609dbfc95b259707d8c38481617f74f11:modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/COMMON.md",
+  "rules": "SessãoAstra manual nova, mesma branch/PR. LerAGENTS/COMMON/actorpackcompleto+anexos, handoffterminal, head eautoridadeantesdeeditar. Preservartrabalho/source/provas. RemotoGitHubMCP/CASonly; semgh/gitpushfetchremoto/force/login/deploy/engines/restart. Testesproduto sóActionscirúrgicosnocheckpointfinal,requestcanônico/dedupeWárvoreseleçãoconfigfixtures; reanexarruns.Nenhumlocaltest/epic/fullsuite. Bun typecheck package+guards canônicos, semignorarachados. RegistreW/S/árvore/run/jobs/resultados/limites; recebidosNOTRUNnãoPASS. MesmaPR,handoffdurável,semGLOBAL_RELEASE."
+}
