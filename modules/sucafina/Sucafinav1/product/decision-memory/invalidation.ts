@@ -46,7 +46,7 @@ export function decideSfRecallInvalidation(input: { previous: RecallScope; curre
     const maps = sfEvidenceSourceMaps(input.dependencies)
     if (!input.dependencies.length) return { status: "unavailable" as const, reauthorize: true as const }
     const refs = input.dependencies.flatMap(expand)
-    const changedImmutable: string[] = []
+    const changedReferences: string[] = []
     for (const ref of refs) {
       if (ref.installationId !== input.current.installationId || ref.projectId !== input.current.projectId) return { status: "unavailable" as const, reauthorize: true as const }
       const resolutions = input.resolutions.filter((resolution) => digestSfValue(resolution.ref) === digestSfValue(ref) && resolution.accessRevision === input.current.accessRevision)
@@ -58,10 +58,15 @@ export function decideSfRecallInvalidation(input: { previous: RecallScope; curre
       if (resolutions[0]!.state === "fresh" && current.refDigest !== ref.refDigest && !(ref.kind === "record" && current.kind === "record" && ref.schema === current.schema && ref.evidenceLevel === current.evidenceLevel && ref.target.projectionDigest === current.target.projectionDigest)) return { status: "unavailable" as const, reauthorize: true as const }
       const mapped = sfEvidenceSourceMaps([current])
       if (maps.sourceVersions[ref.refDigest] !== undefined && (mapped.sourceVersions[current.refDigest] !== input.current.sourceVersions[ref.refDigest] || mapped.sourceIncarnations[current.refDigest] !== input.current.sourceIncarnations[ref.refDigest])) return { status: "unavailable" as const, reauthorize: true as const }
-      if (maps.sourceVersions[ref.refDigest] === undefined && current.refDigest !== ref.refDigest) changedImmutable.push("immutable-source")
+      if (current.refDigest !== ref.refDigest) {
+        if (maps.sourceVersions[ref.refDigest] === undefined) changedReferences.push("immutable-source")
+        // Numeric versions alone do not identify historical content: records,
+        // documents and case events also bind their canonical content digests.
+        if (maps.sourceVersions[ref.refDigest] !== undefined && resolutions[0]!.state === "historical") changedReferences.push("source-content")
+      }
     }
     const plan = planSfMemoryInvalidation(input.previous, input.current, input.dependencies)
-    const reasons = [...plan.reasons, ...changedImmutable]
+    const reasons = [...plan.reasons, ...changedReferences]
     if (Object.keys(maps.sourceVersions).some((key) => input.previous.sourceVersions[key] !== maps.sourceVersions[key] || input.current.sourceVersions[key] !== input.previous.sourceVersions[key])) reasons.push("source-version")
     if (Object.keys(maps.sourceIncarnations).some((key) => input.previous.sourceIncarnations[key] !== maps.sourceIncarnations[key] || input.current.sourceIncarnations[key] !== input.previous.sourceIncarnations[key])) reasons.push("source-incarnation")
     const uniqueReasons = [...new Set(reasons)]

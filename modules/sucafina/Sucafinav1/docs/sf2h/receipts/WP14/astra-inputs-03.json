@@ -1,0 +1,51 @@
+{
+  "schema": "sf2h-wp14-input-intake-v1",
+  "owner": "WP14",
+  "parent": "0f4f93ff6b6a4ce4936c2368f5aa2e91dd297470",
+  "reason": "Fix concrete published producer mismatch observed by WP14 consumer test. Exact files from WP04; no authored financial policy or foreign branch changes.",
+  "inputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts",
+      "sourceCommit": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "sourceBlob": "3e8830c3dddc8b9609f583f877b2fe7458eccd28",
+      "owner": "WP04",
+      "reason": "Consume published canonical Procurement scope/fields after run 43580834753 refused issue: issuer includes approvalStage, baseline projector excluded it."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "sourceCommit": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "sourceBlob": "ab9814817d11c0b477636ee54d1b2763d365f405",
+      "owner": "WP04",
+      "reason": "Consume published canonical Procurement scope/fields after run 43580834753 refused issue: issuer includes approvalStage, baseline projector excluded it."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/confirmation-fields.ts",
+      "sourceCommit": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "sourceBlob": "a1e45e803105e76f147e695a7e92246257de9b16",
+      "owner": "WP04",
+      "reason": "Consume published canonical Procurement scope/fields after run 43580834753 refused issue: issuer includes approvalStage, baseline projector excluded it."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+      "sourceCommit": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "sourceBlob": "5ed7b1c7e8f140c2820d9e3095a7427374d10f69",
+      "owner": "WP04",
+      "reason": "Consume published canonical Procurement scope/fields after run 43580834753 refused issue: issuer includes approvalStage, baseline projector excluded it."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "sourceCommit": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "sourceBlob": "615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e",
+      "owner": "WP04",
+      "reason": "Consume published canonical Procurement scope/fields after run 43580834753 refused issue: issuer includes approvalStage, baseline projector excluded it."
+    }
+  ],
+  "observedFailure": {
+    "run": 43580834753,
+    "job": 132405026618,
+    "test": "Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+    "line": 33,
+    "actual": "unavailable",
+    "cause": "Issuer includes approvalStage; baseline scoped projector's canonical fields omit it."
+  }
+}

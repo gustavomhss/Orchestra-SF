@@ -26,8 +26,15 @@ import type { TrustedDomainContext, TrustedUiLease } from "../../../product/cont
 const [directory, scannerPath, scannerVersion] = process.argv.slice(2)
 const pinned = KNOWN_SCANNERS.find((item) => item.name === "gitleaks")
 if (!directory || !scannerPath || !scannerVersion || !pinned) throw new Error("Restart probe arguments are incomplete")
+const startedAt = performance.now()
+const phase = (name: string, details: Record<string, string | number> = {}) => console.log(`SF_ATLAS_RESTART_PHASE:${JSON.stringify({ phase: name, pid: process.pid, elapsedMs: Math.round(performance.now() - startedAt), ...details })}`)
+const cancellation = new AbortController()
 const store = await openLocalStore(directory, { lockTimeoutMs: 500 })
+// Cooperate through the real host fences so a failing child reports its stage
+// and closes SQLite before the parent's existing 180-second test budget.
+const deadline = setTimeout(() => { phase("deadline"); cancellation.abort(new Error("SF_ATLAS_RESTART_DEADLINE")) }, 90_000)
 try {
+  phase("store-opened")
   const session = { id: "bob", evidence: true }
   const authorizedStages: Record<string, { status: string; reason?: string }> = {}
   const recordStage = (stage: string, result: { status: string; reason?: string }) => {
@@ -39,7 +46,8 @@ try {
   const host: DomainPortHost = { persistence, authenticate: async (request, context) => {
     const id = request.headers.get("authorization")
     return id ? resolve(id, [...context!.roleMap], (group) => group === "admins") : null
-  }, environment: async () => ({ at: time, id: randomUUID, directory: [] }), requestFor: () => new Request("https://example.test", { headers: { authorization: session.id } }), revalidate: async (context) => context.binding.principalRef === session.id && await store.transaction("dashboard", async () => ({ commit: false, value: true })) }
+  }, environment: async () => ({ at: time, id: randomUUID, directory: [] }), requestFor: () => new Request("https://example.test", { headers: { authorization: session.id }, signal: cancellation.signal }), revalidate: async (context) => !cancellation.signal.aborted && context.binding.principalRef === session.id && await store.transaction("dashboard", async () => ({ commit: false, value: true })) }
+  const authorizeCase = async (value: DecisionCase, context: TrustedDomainContext) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context)
   const issue = createDashboardSourceIssuer({ host, scopedSources: persistence })
   const dashboard = createDashboardPort({ host, sources: createDashboardSourceHost({ host, scopedSources: persistence }) })
   const source = createSfDashboardSourceAccess({ host, issue, dashboard })
@@ -68,25 +76,39 @@ try {
   const dashboardProof = createSfDashboardContinuityProof({ host, issue, dashboard, readOriginal })
   const eventProof = createSfSourceContinuityProof({ host, readOriginal, readCurrent: eventAccess })
   const proveContinuity = (original: BusinessEvidenceRef, current: BusinessEvidenceRef, context: TrustedDomainContext) => original.kind === "record" && original.target.surface === "dashboard" ? dashboardProof(original, current, context) : original.kind === "case-event" ? eventProof(original, current, context) : Promise.resolve(false)
-  const atlas = createSfAtlasMemory({ state, cases, host, evidence, scanner: createSfAtlasScanner({ scanners: [{ ...pinned, command: scannerPath }] }), scannerVersion, now: () => time, proveContinuity })
+  const atlas = createSfAtlasMemory({ state, cases, host, evidence, authorizeCase, scanner: createSfAtlasScanner({ scanners: [{ ...pinned, command: scannerPath }] }), scannerVersion, now: () => time, proveContinuity })
+  const operations = { reads: 0, ranks: 0 }
   memory = { ...atlas, recall: async (...args: Parameters<typeof atlas.recall>) => {
+    const read = ++operations.reads
+    phase("atlas-read-started", { read })
     const result = await atlas.recall(...args)
+    phase("atlas-read-returned", { read, status: result.status })
     recordStage("atlasRead", result)
     return result
   } }
   const recall = createSfCaseRecall({ host, cases, memory, selectCandidates: async () => [caseRef], featuresForCase: async (value, context) => deriveAuthorizedRecallFeatures(value, context), runtimeVersions: { boundaryVersion: "1", schemaVersion: "1", manifestVersion: "1", skillVersion: "1" }, proveContinuity, rank: async (request) => {
+    const rank = ++operations.ranks
+    phase("rank-started", { rank })
     const result = await rankSfAtlasRecall(request)
+    phase("rank-returned", { rank, status: result.status })
     recordStage("rank", result)
     return result
   } })
   const request = { caseRef, limit: 10, scope: { query: "renewal", recallScope: { cases: [caseRef], period: { start: "2026-01-01", end: "2026-12-31" }, includeHistorical: false } } }
+  phase("authorized-recall-started")
   const authorized = await recall(request, call())
+  phase("authorized-recall-returned", { status: authorized.status })
   session.id = "carol"
   const outsider = await recall(request, call())
+  phase("outsider-recall-returned", { status: outsider.status })
   session.id = "bob"
   session.evidence = false
   const revoked = await recall(request, call())
-  console.log(`SF_ATLAS_RESTART_PROBE:${JSON.stringify({ pid: process.pid, authorized: authorized.status, matches: authorized.status === "ok" ? authorized.matches.length : null, outsider: outsider.status, revoked: revoked.status, authorizedStages })}`)
+  phase("revoked-recall-returned", { status: revoked.status })
+  console.log(`SF_ATLAS_RESTART_PROBE:${JSON.stringify({ pid: process.pid, authorized: authorized.status, matches: authorized.status === "ok" ? authorized.matches.length : null, candidateCaseRef: authorized.status === "ok" ? authorized.matches[0]?.explanation.candidateCaseRef : null, outsider: outsider.status, revoked: revoked.status, authorizedStages })}`)
+  if (cancellation.signal.aborted) throw new Error("SF_ATLAS_RESTART_DEADLINE")
 } finally {
+  clearTimeout(deadline)
   await store.dispose()
+  phase("store-closed")
 }

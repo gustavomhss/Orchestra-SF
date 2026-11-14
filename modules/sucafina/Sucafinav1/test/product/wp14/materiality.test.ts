@@ -124,3 +124,25 @@ test("materiality access distinguishes an advancing observation clock from a mut
   const malformed = createSfMaterialityAccess({ load: async () => ({ condition, change: { ...change, source: { ...change.source, observedAt: "2026-02-30T12:00:00Z" } } }), authorizeEvidence: async () => true, revalidate: async () => true })
   expect(await malformed(condition.id, call)).toEqual({ status: "unavailable" })
 })
+
+test("materiality egress rejects binding and retained evidence mutation during authorization", async () => {
+  const { createSfMaterialityAccess } = await import("../../../product/decision-memory/materiality.ts")
+  for (const mutation of ["binding", "final-evidence", "authorize-evidence"] as const) {
+    const call: import("../../../product/contracts/sf-execution.ts").TrustedDomainContext = { kind: "ui", binding: { installationId: "install", projectId: "project", principalRef: "principal", accessRevision: "1", policyVersion: "1", requestId: "r", expiresAt: "2099-01-01T00:00:00Z" }, lease: {} as import("../../../product/contracts/sf-execution.ts").TrustedUiLease }
+    const captured: (readonly import("../../../product/contracts/business-context.ts").BusinessEvidenceRef[])[] = []
+    const checks = { count: 0 }
+    const read = createSfMaterialityAccess({ load: async () => ({ condition, change }), authorizeEvidence: async (refs) => {
+      captured.push(refs)
+      if (mutation === "authorize-evidence") Object.assign(refs[0]!, { refId: "changed-during-evidence-authorization" })
+      return true
+    }, revalidate: async () => {
+      checks.count += 1
+      await Promise.resolve()
+      if (checks.count === 3 && mutation === "binding") Object.assign(call.binding, { accessRevision: "changed" })
+      if (checks.count === 3 && mutation === "final-evidence") for (const refs of captured) Object.assign(refs[0]!, { refId: "changed-during-final-authorization" })
+      return true
+    } })
+    expect(await read(condition.id, call)).toEqual({ status: "unavailable" })
+    expect(checks.count).toBe(mutation === "authorize-evidence" ? 1 : 3)
+  }
+})

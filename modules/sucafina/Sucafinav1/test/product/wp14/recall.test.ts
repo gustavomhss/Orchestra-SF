@@ -125,12 +125,13 @@ test("recall features require an authorized case and an unambiguous decision typ
 test("native recall keeps the bound case and uses one explicit scoped candidate bundle", async () => {
   // This verifies selection orchestration only; the SQLite restart test supplies
   // the real Atlas/persistence witness. No memory record is fabricated here.
-  const call: TrustedDomainContext = { kind: "native", binding: {
+  const nativeFields: Omit<TrustedExecutionBinding, symbol> = {
     installationId: "install", projectId: "project", principalRef: "alice", hostId: "host", locationId: "location",
     nativeSessionId: "session", runId: "run", caseId: "current", caseIncarnation: "current-inc", caseVersion: 1,
     profileId: "sf_finance", profileVersion: "1", manifestDigest: "m", skillReceipts: [], providerGeneration: 1,
     accessRevision: "a1", policyVersion: "p1", expiresAt: "2099-01-01T00:00:00Z", entryMode: "interactive",
-  } as TrustedExecutionBinding, lease: {} as TrustedCallLease }
+  }
+  const call: TrustedDomainContext = { kind: "native", binding: nativeFields as TrustedExecutionBinding, lease: {} as TrustedCallLease }
   const initialBinding = digestSfValue(call)
   const nativeContext = { ...candidate.case.context, kind: "native" as const, profileId: "sf_finance" as const }
   const precedent = { ...candidate.case, context: nativeContext }

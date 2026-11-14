@@ -120,3 +120,39 @@ test("outcome access snapshots reused producer objects and refuses foreign evide
   const foreign = createSfObservedOutcomeAccess({ load: async () => ({ caseRef: observation.caseRef, choice, observation: { ...observation, sourceRefs: [{ ...ref, projectId: "other-project" }] }, metric }), authorizeEvidence: async () => true, revalidate: async () => true })
   expect(await foreign({ caseRef: observation.caseRef, choiceId: choice.id }, call)).toEqual({ status: "unavailable" })
 })
+
+test("outcome egress rejects changes during its final authorization await", async () => {
+  const { createSfObservedOutcomeAccess } = await import("../../../product/decision-memory/outcome.ts")
+  for (const mutation of ["binding", "request", "final-evidence", "authorize-evidence"] as const) {
+    const call: import("../../../product/contracts/sf-execution.ts").TrustedDomainContext = { kind: "ui", binding: { installationId: "i", projectId: "p", principalRef: "p", accessRevision: "1", policyVersion: "1", requestId: "r", expiresAt: "2099-01-01T00:00:00Z" }, lease: {} as import("../../../product/contracts/sf-execution.ts").TrustedUiLease }
+    const request = { caseRef: structuredClone(observation.caseRef), choiceId: choice.id }
+    const captured: (readonly import("../../../product/contracts/business-context.ts").BusinessEvidenceRef[])[] = []
+    const checks = { count: 0 }
+    const access = createSfObservedOutcomeAccess({ load: async () => ({ caseRef: observation.caseRef, choice, observation, metric }), authorizeEvidence: async (refs) => {
+      captured.push(refs)
+      if (mutation === "authorize-evidence") Object.assign(refs[0]!, { refId: "changed-during-evidence-authorization" })
+      return true
+    }, revalidate: async () => {
+      checks.count += 1
+      await Promise.resolve()
+      if (checks.count === 3 && mutation === "binding") Object.assign(call.binding, { accessRevision: "changed" })
+      if (checks.count === 3 && mutation === "request") request.caseRef.version += 1
+      if (checks.count === 3 && mutation === "final-evidence") for (const refs of captured) Object.assign(refs[0]!, { refId: "changed-during-final-authorization" })
+      return true
+    } })
+    expect(await access(request, call)).toEqual({ status: "unavailable" })
+    expect(checks.count).toBe(mutation === "authorize-evidence" ? 1 : 3)
+  }
+})
+
+test("outcome refuses a nonrepresentable delta even when both operands are finite", () => {
+  for (const expected of [-1e308, 1e308]) {
+    const baseline = { ...choice, values: [{ ...choice.values[0], value: expected }] }
+    const unavailable = compareSfExpectedObserved({ caseRef: observation.caseRef, choice: baseline, observation: { ...observation, expected, observed: -expected }, metric })
+    expect(unavailable).toMatchObject({ status: "unavailable", reason: "observation-out-of-range", compatibility: { compatible: false } })
+    expect("delta" in unavailable).toBe(false)
+    const comparable = compareSfExpectedObserved({ caseRef: observation.caseRef, choice: baseline, observation: { ...observation, expected, observed: expected / 2 }, metric })
+    expect(comparable.status).toBe("comparable")
+    if (comparable.status === "comparable") expect(Number.isFinite(comparable.delta)).toBe(true)
+  }
+})

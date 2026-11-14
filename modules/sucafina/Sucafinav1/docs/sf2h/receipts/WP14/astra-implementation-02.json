@@ -1,0 +1,295 @@
+{
+  "schema": "sf2h-wp14-implementation-v1",
+  "owner": "WP14",
+  "previousProduct": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+  "parent": "0f4f93ff6b6a4ce4936c2368f5aa2e91dd297470",
+  "status": "IMPLEMENTED_PENDING_CI",
+  "reasonToRevalidate": "Material changes resolve three independent review findings, two own typecheck diagnostics, real source issue failure and pathological fallback reads in own Atlas restart fixture.",
+  "changes": [
+    "All final async authorization/producer callbacks are followed by synchronous binding/request/content checks. Persisted host records are isolated from mutable callback aliases.",
+    "Historical record/document/case-event reference content changes invalidate even with identical numeric version/incarnation.",
+    "Outcome arithmetic refuses nonrepresentable deltas while retaining original formula and compatible finite cases.",
+    "Trusted native test fields satisfy complete field shape before test-only branding, without double casts.",
+    "Atlas fixture/helper receive the actual host authorizeCase callback; prior fallback recursively reread the full case on every capture check. Independent process proof remains and repeated positive ranking assertion is moved into its receipt.",
+    "Child restart uses a cooperative 90-second deadline and phases; parent 180-second limit is unchanged."
+  ],
+  "ownFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts",
+      "bytes": 7965,
+      "blob": "7c1b3dd08dc663e9dfa406b09dc2af5920281131",
+      "sha256": "d75df91777528df4f4cf2af8099bbea47ebdf614a20d73803de6e6eb06ed877d",
+      "changed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-features.ts",
+      "bytes": 2534,
+      "blob": "ff95a311352c0c04b9ca42ab6523783284a8001e",
+      "sha256": "58e8c6e365da4262720d1eb8e5d51e97f719ee87ebd56a6934ffdbd7a33f6852",
+      "changed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+      "bytes": 8461,
+      "blob": "03e75875386483c7e37dce3f7bb21189f3066774",
+      "sha256": "1adf7204fc8ff8fb1383418e311ca7a6271065f0301fde3cf7881d6e632d48c9",
+      "changed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/domain-outcome.ts",
+      "bytes": 7464,
+      "blob": "aad2b8a655c3259a86e526efcf562602851df8bc",
+      "sha256": "84c74cc88f568786bdf870f59f5d650bd8c81aba3a52994ec45ed274c23f94dc",
+      "changed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/invalidation.ts",
+      "bytes": 8380,
+      "blob": "028c280bab64f2229aced50af88dcf95ad652d73",
+      "sha256": "494d465928955e773adfd1c74928034739a8803ba5f413db24c110f0731abb07",
+      "changed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/materiality.ts",
+      "bytes": 14286,
+      "blob": "0299a2a5dadecbec526a5dcea127d8a010488824",
+      "sha256": "a96c7f1d806d2f91819e4d7b3d7d0e616f5f0a879bfef8e54cdd2b67c468bb2f",
+      "changed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/observation-time.ts",
+      "bytes": 703,
+      "blob": "0b567eb3c4b4363c41d50e1147f76b97ac051449",
+      "sha256": "8cbb0149e8e6afa02201646abd7161041fbe3408aadfec04ebc6ce4c84a7c0a4",
+      "changed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome-review.ts",
+      "bytes": 986,
+      "blob": "08dbdc8fe96069030afc1a2617260ca2eb7088b6",
+      "sha256": "f7e28893cdcbbed41d5a4128d859db08c72f7b399b2949c1490a5d75ffaf66b2",
+      "changed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts",
+      "bytes": 10413,
+      "blob": "03a3ddf8dacd2e7b050b20b73b14b2bd3e974f4c",
+      "sha256": "8261fcd6fd0e6ec6b15461ef5a8dd066d6cfc6efc16cf712dfe4af02f5e81337",
+      "changed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome.ts",
+      "bytes": 7408,
+      "blob": "d1c524a976e07524d9b2b197635805dde9ae650c",
+      "sha256": "550d775954527b4a44959525922ce3339b8913e44642bb0ebe42061c2029a113",
+      "changed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/planner-materiality.ts",
+      "bytes": 4371,
+      "blob": "0c5f8ba9d7bb2c043ae5d62f044e9fcf8eb9ee7a",
+      "sha256": "ed6fb6e44e06cd40521467fe3fd5fbf0637a21cdda49b3e56b384d455a5a33e1",
+      "changed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/recall.ts",
+      "bytes": 13858,
+      "blob": "57a9f7425de54eda1673a4f488d5567c66e94d5c",
+      "sha256": "5de2e1cdbdfcd82e47481a6aec1180f167c5413f05aab5374cebc8f4603335cc",
+      "changed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-list.ts",
+      "bytes": 11192,
+      "blob": "905770233118a2b0707dfed37f9038f89fb884ac",
+      "sha256": "2f77264f0e55ec52379e244e47050d95149f9ff5b591893e484493b960ea6de5",
+      "changed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+      "bytes": 23716,
+      "blob": "d329fc03041ae86d7d0e57a5d31e05e98be46fe5",
+      "sha256": "f9f8fb4e5926cc9e613fdb0f7f664446a6f7d50995db1578a8caaae160559dbb",
+      "changed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-work.ts",
+      "bytes": 16546,
+      "blob": "8e03cb17343b87304238a8f9f17b9e0e130b5149",
+      "sha256": "bf0894f974114eb9aa934e068929a03295e376d19d798c46032461f872d2ff03",
+      "changed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signals.ts",
+      "bytes": 2371,
+      "blob": "bf432c915607ed99d050faae373c7fab3f741f88",
+      "sha256": "5873a4d766ffbca7b7adcd0ad3c33726c12185926067613242873c50854869f2",
+      "changed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "bytes": 26997,
+      "blob": "8e8c0c470590127d028ae3fb1cd0677c5501886b",
+      "sha256": "72af2e3ad0b6a7f1bd866daeaa45121856371470f4bdd375b933e9c7441c0ee6",
+      "changed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+      "bytes": 6916,
+      "blob": "30ebaf3aac1940c2760b21761dcd72be52d050d9",
+      "sha256": "1d3774b57dc1aec7f6269318d1bf97da29901802f7f04d7ef45bd16deb46e1c2",
+      "changed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "bytes": 10833,
+      "blob": "439ba78e8208133e498ebfb87b00e4eb882dd8fd",
+      "sha256": "ae173af790c4af13359812def4d8386867924249b5c89506ce8a8c885b42cdd5",
+      "changed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/domain-outcome.test.ts",
+      "bytes": 19101,
+      "blob": "210bac0815396bb4769ec8f7a5d3e4b948fe13a6",
+      "sha256": "8b4613ed35330a51dc23d1e7e41a38c01e8d291035afbaab2416834ff7a47905",
+      "changed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/invalidation.test.ts",
+      "bytes": 9430,
+      "blob": "295399eb9d4171b85788b7344de7cee1f4239f1b",
+      "sha256": "982a074ec9745859b865f49690689c91a64b230cb5b1014558364ed0f34439d7",
+      "changed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/materiality.test.ts",
+      "bytes": 16638,
+      "blob": "81a37a4c2945c2af64d0749be3b909a54ae97508",
+      "sha256": "f7bc7e7d6ba7866d92ad1c9ab2f83923fbc16e84b6e5cd791670a38dd43cf498",
+      "changed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/outcome-signals.test.ts",
+      "bytes": 15590,
+      "blob": "62f3667b3f1ac1b450490d7a076ad60244079f73",
+      "sha256": "bcdf8c64d4e147bdf508d3dc795e04b5dc73b5dc7d7b62270f7418490c93fc67",
+      "changed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/planner-materiality.test.ts",
+      "bytes": 13022,
+      "blob": "7361b78c548f4e5fab2a2485b860846ee085cb5f",
+      "sha256": "c7b90c9c0ed29ba4c768bba56123647c7ae2869101df1345e0c73c4035f32c79",
+      "changed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/recall.test.ts",
+      "bytes": 21493,
+      "blob": "7bb228a1f972b5829d3cec10bcde015959fdb359",
+      "sha256": "87475082bba9a6c6f135a9e81f4a59db13700b26da206c6a7f637962c117b631",
+      "changed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/signal-registry.test.ts",
+      "bytes": 23837,
+      "blob": "cef1f6bd6fcecbd569522c7e33d65d6767155182",
+      "sha256": "33b1ef388aa99237943e8113d5c00348d44a4e2820a614c1f12c1124aab248c7",
+      "changed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "bytes": 23388,
+      "blob": "4b0edefc2ed818c2c9cd17e035e6d0b84e110dcf",
+      "sha256": "0cf19a3f8375dfbfb9102d8669405d6129064ca8debefe3039de7a17178e2872",
+      "changed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-dashboard-record.test.ts",
+      "bytes": 4492,
+      "blob": "4c678b20e46cc42dbe3b26fb5a7e0ab038209579",
+      "sha256": "b45ae41588644d9a70f3f27cedb05e4976a2c62f0957b71ab6871146ee74467e",
+      "changed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-document.test.ts",
+      "bytes": 5415,
+      "blob": "6afd17d18f236840e4e97db29a89bbbc011987f9",
+      "sha256": "8da6aac7d5b46a6bef9ec8b6b645124b52f359e23c6a96717de56923b590da3c",
+      "changed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "bytes": 4911,
+      "blob": "18a144fae92af51a76ead136c1fab3398c295adc",
+      "sha256": "0b67be1a8294e83ad0c5806aab841e164ed16ae54ca893bb1af1acde5162e88f",
+      "changed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access.test.ts",
+      "bytes": 6296,
+      "blob": "991d294fdbe41a56990a58acf16bbc7733aba4ba",
+      "sha256": "070ddeb9b6e51398320a765de64deeb79665108addf2a5c734c3491294a7664e",
+      "changed": false
+    }
+  ],
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+      "Sucafinav1/test/product/wp14/domain-outcome.test.ts",
+      "Sucafinav1/test/product/wp14/invalidation.test.ts",
+      "Sucafinav1/test/product/wp14/materiality.test.ts",
+      "Sucafinav1/test/product/wp14/outcome-signals.test.ts",
+      "Sucafinav1/test/product/wp14/planner-materiality.test.ts",
+      "Sucafinav1/test/product/wp14/recall.test.ts",
+      "Sucafinav1/test/product/wp14/signal-registry.test.ts",
+      "Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "Sucafinav1/test/product/wp14/source-access-dashboard-record.test.ts",
+      "Sucafinav1/test/product/wp14/source-access-document.test.ts",
+      "Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "Sucafinav1/test/product/wp14/source-access.test.ts",
+      "Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts",
+      "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "Sucafinav1/test/product/wp10/atlas-business/scanner-probe.test.ts",
+      "Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "precedingRun": {
+    "runId": 43580834753,
+    "jobId": 132405026618,
+    "W": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+    "tree": "fd5a08bfbaaf255ba2fd43b67638cf5532cbc2a9",
+    "S": "749bfcec1b1fa9910a1799d7bf887c24158bb17a",
+    "requestHash": "b2dd550d8128fd7da11d2ba35e9751e9666bd705411a03fecd60156bcc6f290e",
+    "conclusion": "failure",
+    "tests": {
+      "files": 17,
+      "total": 54,
+      "pass": 52,
+      "fail": 2,
+      "expectations": 431
+    },
+    "omni": {
+      "verdict": "pass",
+      "nonce": "3e941da18e436b8b4052a06cb090debc",
+      "declaredTests": 3,
+      "spawns": 7,
+      "delegated": 0
+    },
+    "failures": [
+      "source-access-atlas.test.ts: protected Atlas original binds cross-principal continuity after store reopen; timeout 180000ms; no final restart receipt",
+      "source-access-procurement.test.ts: issued.status unavailable at line 33; baseline projection/issuer field mismatch identified"
+    ],
+    "acceptance": "Partial diagnostic execution only; not product PASS, AM05 or native approval."
+  },
+  "limits": [
+    "Product checks are pending for this candidate.",
+    "Native Sessions/MCP acceptance is not supplied by synthetic test authorities.",
+    "Producer owners retain host/public Atlas/scanner/composition and financial policy ownership."
+  ]
+}

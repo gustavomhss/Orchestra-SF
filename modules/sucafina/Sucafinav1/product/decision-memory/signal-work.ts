@@ -28,36 +28,43 @@ export function createSfWorkSignalList(input: {
   issueWorkRef: (record: SfStoredSignalBinding, call: TrustedDomainContext) => Promise<string | undefined>
   authorizeBinding: (record: SfStoredSignalBinding, projection: AuthorizedCaseProjection, sourceRefs: WorkSourceRefs, call: TrustedDomainContext) => Promise<boolean>
 }) {
-  return async (selectionRef: string, period: Period, call: TrustedDomainContext): Promise<
+  return async (selectionRef: string, requestedPeriod: Period, call: TrustedDomainContext): Promise<
     | { status: "ok"; signals: readonly { label: string; workRef: string; impact: Pick<ChangeImpact, "state" | "reason">; recipientRef: string; destination: string; sourceRefs: WorkSourceRefs }[] }
     | { status: "unavailable" }
   > => {
     try {
+      const period = structuredClone(requestedPeriod)
+      const periodDigest = digestSfValue(period)
       const bindingDigest = digestSfValue([call.kind, call.binding])
       const request = input.host.requestFor(call)
-      if (!selectionRef.trim() || !isSfPeriod(period) || !request || request.signal.aborted || !await input.host.revalidate(call)) return { status: "unavailable" }
-      const selected = await input.resolveSelection(selectionRef, period, call)
-      if (selected.status !== "ok" || !isCaseRef(selected.caseRef)) return { status: "unavailable" }
+      const unchanged = () => !!request && !request.signal.aborted && bindingDigest === digestSfValue([call.kind, call.binding]) && digestSfValue(requestedPeriod) === periodDigest && digestSfValue(period) === periodDigest
+      if (!selectionRef.trim() || !isSfPeriod(period) || !request || request.signal.aborted || !await input.host.revalidate(call) || !unchanged()) return { status: "unavailable" }
+      const selected = structuredClone(await input.resolveSelection(selectionRef, period, call))
+      if (selected.status !== "ok" || !isCaseRef(selected.caseRef) || !unchanged()) return { status: "unavailable" }
       const projection = await readAuthorizedCase(input.cases, selected.caseRef, call)
-      if (!projection || !await input.host.revalidate(call)) return { status: "unavailable" }
+      if (!projection || !await input.host.revalidate(call) || !unchanged()) return { status: "unavailable" }
       const listed = await input.registry.list(selected.caseRef, call)
-      if (listed.status !== "ok" || !validBindings(listed.records, selected.caseRef, projection, call) || !await input.host.revalidate(call)) return { status: "unavailable" }
-      const bindings = listed.records
+      if (listed.status !== "ok") return { status: "unavailable" }
+      const bindings = structuredClone(listed.records)
+      const bindingsDigest = digestSfValue(bindings)
+      const projectionDigest = digestSfValue(projection)
+      if (!validBindings(bindings, selected.caseRef, projection, call) || !await input.host.revalidate(call) || !unchanged()) return { status: "unavailable" }
       const expectedStates = new Map(bindings.map((record) => [record.id, record.signalState]))
       const signals: { label: string; workRef: string; impact: Pick<ChangeImpact, "state" | "reason">; recipientRef: string; destination: string; sourceRefs: WorkSourceRefs; bindingId: string; fingerprint: string; observedSignal: ReconsiderationSignal }[] = []
       for (const record of bindings) {
         if (record.selection.period.end < period.start || record.selection.period.start > period.end) continue
-        const current = await input.materiality(record.id, call)
-        if (current.status !== "ok" || current.impact.conditionId !== record.id || !matchesRegisteredScope(current.scope, record)) return { status: "unavailable" }
+        const current = structuredClone(await input.materiality(record.id, call))
+        if (current.status !== "ok" || current.impact.conditionId !== record.id || !matchesRegisteredScope(current.scope, record) || !unchanged() || digestSfValue(bindings) !== bindingsDigest) return { status: "unavailable" }
         if (!current.signal) {
           const resolutionKey = await input.establishResolution?.(record, call)
+          if (!unchanged() || digestSfValue(bindings) !== bindingsDigest) return { status: "unavailable" }
           if (resolutionKey) {
             const next = reconcileSfSignal(record.signalState, { kind: "resolved", conditionId: record.id, resolutionKey })
             if (!("state" in next)) return { status: "unavailable" }
             if (next.state) {
               const saved = await input.registry.reconcile(record, next.state, call)
-              if (saved.status !== "ok") return { status: "unavailable" }
-              expectedStates.set(record.id, saved.record.signalState)
+              if (saved.status !== "ok" || !unchanged() || digestSfValue(bindings) !== bindingsDigest) return { status: "unavailable" }
+              expectedStates.set(record.id, structuredClone(saved.record.signalState))
             }
           }
           continue
@@ -66,29 +73,35 @@ export function createSfWorkSignalList(input: {
         if (current.signal.choiceId !== selection.choiceId || current.signal.conditionId !== record.id || current.signal.source.surface !== selection.source.surface || current.signal.source.type !== selection.source.type || current.signal.source.id !== selection.source.id) return { status: "unavailable" }
         const sourceRefs = [...new Map([...current.impact.chosen, ...current.impact.current].map((ref) => [ref.refDigest, ref])).values()]
         if (!validEvidenceRefs(sourceRefs, call)) return { status: "unavailable" }
-        if (!await input.authorizeBinding(record, projection, sourceRefs, call)) continue
+        const sourceDigest = digestSfValue(sourceRefs)
+        const authorized = await input.authorizeBinding(record, projection, sourceRefs, call)
+        if (!unchanged() || digestSfValue(bindings) !== bindingsDigest || digestSfValue(projection) !== projectionDigest || digestSfValue(sourceRefs) !== sourceDigest) return { status: "unavailable" }
+        if (!authorized) continue
         const workRef = await input.issueWorkRef(record, call)
-        if (!workRef?.trim() || workRef === record.id) return { status: "unavailable" }
+        if (!workRef?.trim() || workRef === record.id || !unchanged() || digestSfValue(bindings) !== bindingsDigest) return { status: "unavailable" }
         const next = reconcileSfSignal(record.signalState, { kind: "signal", signal: current.signal })
         if (next.action !== "open" && next.action !== "update" && next.action !== "none") return { status: "unavailable" }
         if (!("state" in next) || !next.state) return { status: "unavailable" }
         const saved = await input.registry.reconcile(record, next.state, call)
-        if (saved.status !== "ok") return { status: "unavailable" }
-        expectedStates.set(record.id, saved.record.signalState)
+        if (saved.status !== "ok" || !unchanged() || digestSfValue(bindings) !== bindingsDigest) return { status: "unavailable" }
+        expectedStates.set(record.id, structuredClone(saved.record.signalState))
         if (next.state.status === "resolved") continue
         signals.push({ label: selection.label, workRef, impact: { state: current.impact.state, reason: current.impact.reason }, recipientRef: selection.recipientRef, destination: selection.destination, sourceRefs, bindingId: record.id, fingerprint: sfReconsiderationFingerprint(current.signal, current.impact), observedSignal: current.signal })
       }
       if (new Set(signals.map((signal) => signal.workRef)).size !== signals.length) return { status: "unavailable" }
-      const selectedAgain = await input.resolveSelection(selectionRef, period, call)
+      const selectedAgain = structuredClone(await input.resolveSelection(selectionRef, period, call))
       const projectionAgain = selectedAgain.status === "ok" ? await readAuthorizedCase(input.cases, selectedAgain.caseRef, call) : undefined
-      const refreshed = selectedAgain.status === "ok" ? await input.registry.list(selectedAgain.caseRef, call) : undefined
-      if (selectedAgain.status !== "ok" || digestSfValue(selectedAgain.caseRef) !== digestSfValue(selected.caseRef) || !projectionAgain || digestSfValue(projectionAgain.case) !== digestSfValue(projection.case) || !refreshed || refreshed.status !== "ok" || registryFingerprint(refreshed.records) !== registryFingerprint(bindings) || !validBindings(refreshed.records, selected.caseRef, projectionAgain, call) || refreshed.records.some((record) => digestSfValue(record.signalState) !== digestSfValue(expectedStates.get(record.id))) || request.signal.aborted || bindingDigest !== digestSfValue([call.kind, call.binding]) || !await input.host.revalidate(call)) return { status: "unavailable" }
+      const refreshed = selectedAgain.status === "ok" ? structuredClone(await input.registry.list(selectedAgain.caseRef, call)) : undefined
+      if (selectedAgain.status !== "ok" || digestSfValue(selectedAgain.caseRef) !== digestSfValue(selected.caseRef) || !projectionAgain || digestSfValue(projectionAgain.case) !== digestSfValue(projection.case) || !refreshed || refreshed.status !== "ok" || registryFingerprint(refreshed.records) !== registryFingerprint(bindings) || !validBindings(refreshed.records, selected.caseRef, projectionAgain, call) || refreshed.records.some((record) => digestSfValue(record.signalState) !== digestSfValue(expectedStates.get(record.id))) || !await input.host.revalidate(call) || !unchanged() || digestSfValue(bindings) !== bindingsDigest || digestSfValue(projection) !== projectionDigest) return { status: "unavailable" }
+      const outputDigest = digestSfValue(signals)
+      const egressDigest = digestSfValue([refreshed.records, projectionAgain])
       for (const signal of signals) {
-        const current = await input.materiality(signal.bindingId, call)
+        const current = structuredClone(await input.materiality(signal.bindingId, call))
         const record = refreshed.records.find((item) => item.id === signal.bindingId)
-        if (!record || current.status !== "ok" || !matchesRegisteredScope(current.scope, record) || !current.signal || current.signal.conditionId !== signal.bindingId || current.signal.choiceId !== record.selection.choiceId || current.signal.source.surface !== record.selection.source.surface || current.signal.source.type !== record.selection.source.type || current.signal.source.id !== record.selection.source.id || sfReconsiderationFingerprint(current.signal, current.impact) !== signal.fingerprint || !sfReconsiderationObservationsAdvance(signal.observedSignal, current.signal) || !await input.authorizeBinding(record, projectionAgain, signal.sourceRefs, call) || await input.issueWorkRef(record, call) !== signal.workRef || request.signal.aborted || !await input.host.revalidate(call)) return { status: "unavailable" }
+        if (!record || current.status !== "ok" || !matchesRegisteredScope(current.scope, record) || !current.signal || current.signal.conditionId !== signal.bindingId || current.signal.choiceId !== record.selection.choiceId || current.signal.source.surface !== record.selection.source.surface || current.signal.source.type !== record.selection.source.type || current.signal.source.id !== record.selection.source.id || sfReconsiderationFingerprint(current.signal, current.impact) !== signal.fingerprint || !sfReconsiderationObservationsAdvance(signal.observedSignal, current.signal) || !await input.authorizeBinding(record, projectionAgain, signal.sourceRefs, call) || await input.issueWorkRef(record, call) !== signal.workRef || !await input.host.revalidate(call) || !unchanged() || digestSfValue(signals) !== outputDigest || digestSfValue([refreshed.records, projectionAgain]) !== egressDigest) return { status: "unavailable" }
       }
-      return { status: "ok", signals: signals.map(({ label, workRef, impact, recipientRef, destination, sourceRefs }) => ({ label, workRef, impact, recipientRef, destination, sourceRefs })).sort((left, right) => left.label.localeCompare(right.label) || left.destination.localeCompare(right.destination)) }
+      if (!unchanged()) return { status: "unavailable" }
+      return { status: "ok", signals: structuredClone(signals.map(({ label, workRef, impact, recipientRef, destination, sourceRefs }) => ({ label, workRef, impact, recipientRef, destination, sourceRefs }))).sort((left, right) => left.label.localeCompare(right.label) || left.destination.localeCompare(right.destination)) }
     } catch {
       return { status: "unavailable" }
     }
@@ -98,7 +111,7 @@ export function createSfWorkSignalList(input: {
 async function readAuthorizedCase(cases: Pick<DecisionCasePort, "read">, caseRef: CaseRef, call: TrustedDomainContext) {
   const read = await cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
   if (read.status !== "ok") return undefined
-  const projection = read.value
+  const projection = structuredClone(read.value)
   if (projection.case.id !== caseRef.id || projection.case.incarnation !== caseRef.incarnation || projection.case.version !== caseRef.version || projection.context.kind !== call.kind || projection.context.installationId !== call.binding.installationId || projection.context.projectId !== call.binding.projectId || projection.context.principalRef !== call.binding.principalRef || projection.context.policyVersion !== call.binding.policyVersion || projection.context.accessRevision !== call.binding.accessRevision || (call.kind === "native" && (projection.context.kind !== "native" || projection.context.profileId !== call.binding.profileId || call.binding.caseId !== caseRef.id || call.binding.caseIncarnation !== caseRef.incarnation || call.binding.caseVersion !== caseRef.version))) return undefined
   return projection
 }
@@ -135,10 +148,13 @@ function registryFingerprint(records: readonly SfStoredSignalBinding[]): string 
 export function createSfWorkRefIssuer(input: { key: Uint8Array; revalidate: (call: TrustedDomainContext) => Promise<boolean> }) {
   const key = input.key.length >= 32 ? createHmac("sha256", input.key).update("sf-work-ref-key-v1").digest() : undefined
   return async (record: SfStoredSignalBinding, call: TrustedDomainContext) => {
-    if (!key || record.selection.recipientRef !== call.binding.principalRef || !await input.revalidate(call)) return undefined
+    const bindingDigest = digestSfValue([call.kind, call.binding])
+    const recordDigest = digestSfValue(record)
+    const unchanged = () => digestSfValue([call.kind, call.binding]) === bindingDigest && digestSfValue(record) === recordDigest
+    if (!key || record.selection.recipientRef !== call.binding.principalRef || !await input.revalidate(call) || !unchanged()) return undefined
     const scope = [call.binding.installationId, call.binding.projectId, call.binding.principalRef, record.selection.caseRef.id, record.selection.caseRef.incarnation, record.id]
     if (scope.some((item) => !item.trim())) return undefined
     const reference = `work-v1-${createHmac("sha256", key).update(canonicalSfValue(scope)).digest("hex")}`
-    return await input.revalidate(call) ? reference : undefined
+    return await input.revalidate(call) && unchanged() ? reference : undefined
   }
 }

@@ -36,6 +36,8 @@ const binding = (id: string): TrustedDomainContext => ({ kind: "ui", binding: { 
 const period = { start: "2026-01-01", end: "2026-12-31" }
 
 test("protected Atlas original binds cross-principal continuity after store reopen", async () => {
+  const startedAt = performance.now()
+  const phase = (name: string) => console.log(`SF_WP14_ATLAS_PHASE:${JSON.stringify({ phase: name, pid: process.pid, elapsedMs: Math.round(performance.now() - startedAt) })}`)
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-atlas-source-handoff-"))
   try {
     expectSpawn(import.meta.path)
@@ -47,6 +49,7 @@ test("protected Atlas original binds cross-principal continuity after store reop
     if (probe.exitCode !== 0 || !version) throw new Error("Could not determine the Atlas scanner version")
     const scanner = createSfAtlasScanner({ scanners: [spec] })
     expect(scanner.name).not.toBe(NO_SCANNER_NAME)
+    phase("scanner-ready")
     let store = await openLocalStore(directory, { lockTimeoutMs: 500 })
     const session = { id: "alice", active: true, evidence: true }
     const time = "2026-11-13T12:00:00Z"
@@ -73,7 +76,10 @@ test("protected Atlas original binds cross-principal continuity after store reop
       const dashboardProof = createSfDashboardContinuityProof({ host, issue, dashboard, readOriginal })
       const eventProof = createSfSourceContinuityProof({ host, readOriginal, readCurrent: eventAccess })
       const proveContinuity = (original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext) => original.kind === "record" && original.target.surface === "dashboard" ? dashboardProof(original, current, call) : original.kind === "case-event" ? eventProof(original, current, call) : Promise.resolve(false)
-      atlas = createSfAtlasMemory({ state, cases, host, evidence, scanner, scannerVersion: version, now: () => time, proveContinuity })
+      // Match production's explicit current C08 authorizer. Falling back to
+      // cases.read here would recursively reopen all source dependencies while
+      // their continuity proof is asking for an already protected capture.
+      atlas = createSfAtlasMemory({ state, cases, host, evidence, authorizeCase: async (value, call) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call), scanner, scannerVersion: version, now: () => time, proveContinuity })
       return { persistence, host, issue, dashboard, source, state, cases, atlas, eventAccess, proveContinuity }
     }
     try {
@@ -92,16 +98,18 @@ test("protected Atlas original binds cross-principal continuity after store reop
       const key = JSON.stringify(["case", "case-inc", nestedEvent.id])
       const seed = await first.state.transaction(new Request("https://example.test", { headers: { authorization: "alice" } }), { namespace: "cases", expectedStorageVersion: 0, additionalNamespaces: [{ namespace: "outbox", expectedStorageVersion: 0 }], idempotencyKey: "seed", commandDigest: digestSfValue(nestedRef), targetRef: "seed", targetIncarnation: "seed" }, async (state) => { state.cases.case = decision; state.outbox[key] = { eventRef: nestedRef, writerPrincipalRef: "alice", accessRevision: "1", createdAt: time, attempts: 0, state: "pending" }; return { commit: true, value: null } })
       expect(seed.status).toBe("ok")
+      phase("case-and-outbox-persisted")
       expect((await first.cases.read({ caseRef: encodeCaseRef({ id: "case", incarnation: "case-inc" }) }, binding("alice"))).status).toBe("ok")
       expect((await first.eventAccess(nestedRef, binding("alice"))).state).toBe("fresh")
       expect((await first.eventAccess(eventRef, binding("alice"), new Set([eventRef.refDigest]))).state).toBe("unavailable")
       // The host registry/current case below are synthetic. These assertions test
       // the scoped source callback; the process restart below is the Atlas proof.
-      const native: TrustedDomainContext = { kind: "native", binding: {
+      const nativeFields: Omit<TrustedExecutionBinding, symbol> = {
         installationId: "i", projectId: "p", principalRef: "alice", hostId: "host", locationId: "location", nativeSessionId: "session", runId: "run",
         caseId: "current-case", caseIncarnation: "current-inc", caseVersion: 1, profileId: "sf_finance", profileVersion: "1", manifestDigest: "manifest", skillReceipts: [],
         accessRevision: "1", policyVersion: "1", providerGeneration: 1, expiresAt: "2099-01-01T00:00:00Z", entryMode: "interactive",
-      } as TrustedExecutionBinding, lease: {} as TrustedCallLease }
+      }
+      const native: TrustedDomainContext = { kind: "native", binding: nativeFields as TrustedExecutionBinding, lease: {} as TrustedCallLease }
       const nativeDigest = digestSfValue(native)
       expect((await first.eventAccess(nestedRef, native)).state).toBe("unavailable")
       const selected = { incarnation: "case-inc", version: 1, allowed: true, revokeOnAwait: false, reads: 0 }
@@ -154,21 +162,29 @@ test("protected Atlas original binds cross-principal continuity after store reop
       session.evidence = false
       expect((await first.eventAccess(eventRef, binding("alice"))).state).toBe("unavailable")
       session.evidence = true
+      phase("scoped-ancestry-and-egress-regressions-verified")
       const committed = await first.atlas.emitFromLedger(nestedRef, binding("alice"))
       expect(committed.status).toBe("committed")
+      phase("real-atlas-write-committed")
       const replayed = await first.atlas.emitFromLedger(nestedRef, binding("alice"))
       expect(replayed.status).toBe("already-committed")
       expect(replayed.eventId).toBe(committed.eventId)
       expect(replayed.recordDigest).toBe(committed.recordDigest)
+      phase("durable-receipt-replayed")
       await store.dispose()
+      phase("store-closed-child-starting")
       const restarted = await Effect.runPromise(AppProcess.Service.use((process) => process.run(ChildProcess.make(Bun.argv[0]!, [path.join(import.meta.dir, "atlas-restart-reader.ts"), directory, spec.command, version], { extendEnv: true, stdin: "ignore" }))).pipe(Effect.provide(LayerNode.compile(AppProcess.node))))
+      for (const line of restarted.stdout.toString("utf8").split("\n").filter((value) => value.startsWith("SF_ATLAS_RESTART_PHASE:"))) console.log(line)
+      phase("child-returned")
+      if (restarted.exitCode !== 0) throw new Error(`Restart probe failed (${restarted.exitCode}): ${restarted.stderr.toString("utf8")}`)
       expect(restarted.exitCode).toBe(0)
       const line = restarted.stdout.toString("utf8").split("\n").find((value) => value.startsWith("SF_ATLAS_RESTART_PROBE:"))
       expect(line).toBeDefined()
       if (!line) throw new Error(`Restart probe did not return a receipt: ${restarted.stderr.toString("utf8")}`)
       const receipt = JSON.parse(line.slice("SF_ATLAS_RESTART_PROBE:".length))
       expect(receipt.pid).not.toBe(process.pid)
-      expect(receipt).toMatchObject({ authorized: "ok", matches: 1, outsider: "unavailable", revoked: "unavailable" })
+      expect(receipt).toMatchObject({ authorized: "ok", matches: 1, candidateCaseRef: { id: "case", incarnation: "case-inc", version: 1 }, outsider: "unavailable", revoked: "unavailable" })
+      phase("fresh-process-recall-and-revocation-verified")
       store = await openLocalStore(directory, { lockTimeoutMs: 500 })
       session.id = "bob"
       const reopened = await open(false)
@@ -180,14 +196,16 @@ test("protected Atlas original binds cross-principal continuity after store reop
       if (!current.currentRef) return
       const proof = createSfDashboardContinuityProof({ host: reopened.host, issue: reopened.issue, dashboard: reopened.dashboard, readOriginal: (digest, call) => reopened.atlas.readOriginal({ id: "case", incarnation: "case-inc" }, digest, call) })
       expect(await proof(original, current.currentRef, binding("bob"))).toBe(true)
+      phase("reopened-protected-original-and-continuity-verified")
       const recall = await reopened.atlas.recall({ id: "case", incarnation: "case-inc" }, binding("bob"))
       expect(recall.status).toBe("ok")
       if (recall.status === "ok") expect(recall.records).toHaveLength(1)
+      phase("reopened-direct-atlas-read-verified")
       const caseRecall = createSfCaseRecall({ host: reopened.host, cases: reopened.cases, memory: reopened.atlas, selectCandidates: async () => [{ id: "case", incarnation: "case-inc" }], featuresForCase: async (value, call) => deriveAuthorizedRecallFeatures(value, call), runtimeVersions: { boundaryVersion: "1", schemaVersion: "1", manifestVersion: "1", skillVersion: "1" }, proveContinuity: reopened.proveContinuity, rank: rankSfAtlasRecall })
       const recallRequest = { caseRef: { id: "case", incarnation: "case-inc", version: 1 }, limit: 10, scope: { query: "renewal", recallScope: { cases: [{ id: "case", incarnation: "case-inc", version: 1 }], period, includeHistorical: false } } }
-      const caseMatches = await caseRecall(recallRequest, binding("bob"))
-      expect(caseMatches.status).toBe("ok")
-      if (caseMatches.status === "ok") { expect(caseMatches.matches).toHaveLength(1); expect(caseMatches.matches[0]?.explanation.candidateCaseRef).toEqual(recallRequest.caseRef) }
+      // The positive case-recall and its exact explanation identity were already
+      // asserted from the fresh process above. Keep the distinct scope/revocation
+      // fences here without repeating that entire expensive authorized chain.
       expect((await caseRecall({ ...recallRequest, scope: { ...recallRequest.scope, recallScope: { ...recallRequest.scope.recallScope, cases: [] } } }, binding("bob"))).status).toBe("unavailable")
       session.evidence = false
       expect((await caseRecall(recallRequest, binding("bob"))).status).toBe("unavailable")

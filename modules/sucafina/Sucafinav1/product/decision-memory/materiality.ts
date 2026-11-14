@@ -104,16 +104,19 @@ export function createSfMaterialityAccess(input: {
         const loaded = await input.load(conditionId, call)
         const value = loaded ? structuredClone(loaded) : undefined
         if (!value || value.condition.id !== conditionId || !isSfObservationTime(value.condition.source.observedAt) || !changeSources(value.change).every((source) => isSfObservationTime(source.observedAt))) return undefined
+        const valueDigest = digestSfValue(value)
         const choice = value.condition.choice
         const refs = [...choice.evidenceRefs, ...choice.result.sourceRefs, ...choice.scenario.assumptions.flatMap((item) => item.evidenceRefs), ...choice.costCoverage.evaluatedSourceRefs, ...choice.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs), ...choice.result.costCoverage.evaluatedSourceRefs, ...choice.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs), ...value.change.before, ...value.change.after, ...(value.change.comparison?.resultAfter.sourceRefs ?? []), ...(value.change.comparison?.resultAfter.costCoverage.evaluatedSourceRefs ?? []), ...(value.change.comparison?.resultAfter.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs) ?? [])]
-        if (refs.some((ref) => ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) || !await input.authorizeEvidence(refs, call)) return undefined
+        if (refs.some((ref) => ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) || !await input.authorizeEvidence(refs, call) || digestSfValue(value) !== valueDigest) return undefined
         return value
       }
       const first = await read()
-      if (!first || !await input.revalidate(call)) return { status: "unavailable" as const }
+      const firstDigest = digestSfValue(first)
+      if (!first || !await input.revalidate(call) || digestSfValue(first) !== firstDigest) return { status: "unavailable" as const }
       const result = classifySfMaterialChange(first.condition, first.change)
       const second = await read()
-      if (!second || digestSfValue({ condition: first.condition, change: materialChangeIdentity(first.change) }) !== digestSfValue({ condition: second.condition, change: materialChangeIdentity(second.change) }) || changeSources(first.change).some((source, index) => !sfObservationTimeAdvances(source.observedAt, changeSources(second.change)[index]!.observedAt)) || digestSfValue([call.kind, call.binding]) !== binding || !await input.revalidate(call)) return { status: "unavailable" as const }
+      const secondDigest = digestSfValue(second)
+      if (!second || !await input.revalidate(call) || digestSfValue(first) !== firstDigest || digestSfValue(second) !== secondDigest || digestSfValue({ condition: first.condition, change: materialChangeIdentity(first.change) }) !== digestSfValue({ condition: second.condition, change: materialChangeIdentity(second.change) }) || changeSources(first.change).some((source, index) => !sfObservationTimeAdvances(source.observedAt, changeSources(second.change)[index]!.observedAt)) || digestSfValue([call.kind, call.binding]) !== binding) return { status: "unavailable" as const }
       return { status: "ok" as const, ...result, snapshot: { condition: first.condition, change: first.change }, scope: { source: first.condition.source, fields: first.condition.fields, period: first.condition.period, criterionId: first.condition.criterionId, choiceId: first.condition.choice.id } }
     } catch {
       return { status: "unavailable" as const }

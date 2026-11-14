@@ -39,6 +39,24 @@ test("fresh resolutions cannot smuggle a changed projection behind the same sour
   expect(decideSfRecallInvalidation({ previous: scope(reference), current: scope(reference), dependencies: [reference], resolutions: [resolution(reference, currentRef)] })).toEqual({ status: "unavailable", reauthorize: true })
 })
 
+test("historical content changes invalidate even when numeric version and incarnation are unchanged", () => {
+  const document = { ...source, kind: "document", target: { documentId: "document", incarnation: "one", revision: 1, blobDigest: { algorithm: "sha256", value: "d".repeat(64) }, segment: { start: 0, end: 10, unit: "utf16", textDigest: { algorithm: "sha256", value: "e".repeat(64) } } } } as const
+  const event = { ...source, kind: "case-event", target: { caseId: "case", caseIncarnation: "one", caseVersion: 1, eventId: "choice", outputDigest: "f".repeat(64), evidenceRefs: [reference] } } as const
+  for (const [before, after] of [
+    [reference, { ...reference, target: { ...reference.target, projectionDigest: "c".repeat(64) } }],
+    [document, { ...document, target: { ...document.target, blobDigest: { algorithm: "sha256", value: "c".repeat(64) } } }],
+    [document, { ...document, target: { ...document.target, segment: { ...document.target.segment, textDigest: { algorithm: "sha256", value: "c".repeat(64) } } } }],
+    [event, { ...event, target: { ...event.target, outputDigest: "c".repeat(64) } }],
+  ] satisfies readonly (readonly [BusinessEvidenceRef, BusinessEvidenceRef])[]) {
+    const original = { ...before, refDigest: digestSfEvidenceRef(before) }
+    const current = { ...after, refDigest: digestSfEvidenceRef(after) }
+    const nested = original.kind === "case-event" ? [resolution(reference, reference)] : []
+    const input = { previous: scope(original), current: scope(original), dependencies: [original] }
+    expect(decideSfRecallInvalidation({ ...input, resolutions: [resolution(original, original), ...nested] })).toMatchObject({ status: "reuse" })
+    expect(decideSfRecallInvalidation({ ...input, resolutions: [resolution(original, current, "historical"), ...nested] })).toMatchObject({ status: "invalidate", reasons: ["source-content"], reauthorize: true })
+  }
+})
+
 test("an authorized fresh reissue for another principal invalidates the prior scope without rejecting unchanged content", () => {
   // This is the source-access contract for a Dashboard page reissued under Bob's
   // current scope after physical-source continuity has been established by the host.

@@ -20,11 +20,14 @@ export function createSfDomainOutcomeAccess(input: {
   authorizeEvidence: (refs: readonly BusinessEvidenceRef[], call: TrustedDomainContext) => Promise<boolean>
 }) {
   return createSfObservedOutcomeAccess({ revalidate: input.host.revalidate, authorizeEvidence: input.authorizeEvidence, load: async (caseRef, choiceId, call) => {
+    const binding = digestSfValue([call.kind, call.binding])
+    const argumentsDigest = digestSfValue([caseRef, choiceId])
     const request = input.host.requestFor(call)
     if (!request || request.signal.aborted || !await input.host.revalidate(call)) return undefined
     const selected = await input.select({ caseRef, choiceId }, call)
     const selection = selected && structuredClone(selected)
     if (!selection || digestSfValue(selection.caseRef) !== digestSfValue(caseRef) || selection.choiceId !== choiceId || !selection.criterionRef.trim() || !selection.valueId.trim() || !isSfPeriod(selection.period) || !selection.evidenceRefs.length) return undefined
+    const selectionDigest = digestSfValue(selection)
     const current = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
     if (current.status !== "ok" || current.value.case.id !== caseRef.id || current.value.case.incarnation !== caseRef.incarnation || current.value.case.version !== caseRef.version) return undefined
     const decision = structuredClone(current.value.case)
@@ -42,7 +45,8 @@ export function createSfDomainOutcomeAccess(input: {
     const selectedAgain = await input.select({ caseRef, choiceId }, call)
     const projectionAgain = await input.readProjection(selection, call)
     const caseAgain = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
-    if (!selectedAgain || digestSfValue(selectedAgain) !== digestSfValue(selection) || !projectionAgain || !sfObservationTimeAdvances(observed.cutoff, projectionAgain.cutoff) || projectionFingerprint(projectionAgain) !== projectionFingerprint(observed) || !projectionSources(observed.projection).every((source, index) => sfObservationTimeAdvances(source.observedAt, projectionSources(projectionAgain.projection)[index]!.observedAt)) || caseAgain.status !== "ok" || caseAgain.value.case.id !== caseRef.id || caseAgain.value.case.incarnation !== caseRef.incarnation || digestSfValue(caseAgain.value.case) !== digestSfValue(decision) || request.signal.aborted || !await input.host.revalidate(call)) return undefined
+    const egressDigest = digestSfValue([selectedAgain, projectionAgain, caseAgain])
+    if (!await input.host.revalidate(call) || digestSfValue([selectedAgain, projectionAgain, caseAgain]) !== egressDigest || digestSfValue([call.kind, call.binding]) !== binding || digestSfValue([caseRef, choiceId]) !== argumentsDigest || digestSfValue(selection) !== selectionDigest || !selectedAgain || digestSfValue(selectedAgain) !== selectionDigest || !projectionAgain || !sfObservationTimeAdvances(observed.cutoff, projectionAgain.cutoff) || projectionFingerprint(projectionAgain) !== projectionFingerprint(observed) || !projectionSources(observed.projection).every((source, index) => sfObservationTimeAdvances(source.observedAt, projectionSources(projectionAgain.projection)[index]!.observedAt)) || caseAgain.status !== "ok" || caseAgain.value.case.id !== caseRef.id || caseAgain.value.case.incarnation !== caseRef.incarnation || digestSfValue(caseAgain.value.case) !== digestSfValue(decision) || request.signal.aborted) return undefined
     return { caseRef, choice: choices[0]!, observation: { caseRef, expected: expected.value, observed: actual.value, cutoff: projectionAgain.cutoff, currency: expected.currency, sourceRefs: actual.sourceRefs, limitations: observed.limitations }, metric: { criterionRef: selection.criterionRef, unit: expected.unit, period: selection.period, coverage: observed.coverage } }
   } })
 }

@@ -30,30 +30,33 @@ export function createSfSignalRegistry(input: {
     async register(requested: SfSignalSelection, call: TrustedDomainContext) {
       try {
         const selection = structuredClone(requested)
+        const selectionDigest = digestSfValue(selection)
         const request = input.host.requestFor(call)
         const identity = input.operationIdentity(call)
         const binding = digestSfValue([call.kind, call.binding])
-        if (call.kind !== "ui" || !request || request.signal.aborted || !identity || !validSelection(selection, call) || !await input.host.revalidate(call) || !await input.approveSelection(selection, call)) return { status: "unavailable" as const }
+        const unchanged = () => !!request && !request.signal.aborted && digestSfValue([call.kind, call.binding]) === binding && digestSfValue(requested) === selectionDigest && digestSfValue(selection) === selectionDigest
+        if (call.kind !== "ui" || !request || request.signal.aborted || !identity || !validSelection(selection, call) || !await input.host.revalidate(call) || !await input.approveSelection(selection, call) || !unchanged()) return { status: "unavailable" as const }
         const current = await input.cases.read({ caseRef: encodeCaseRef(selection.caseRef) }, call)
-        if (current.status !== "ok" || current.value.case.version !== selection.caseRef.version || current.value.case.choices.filter((choice) => choice.id === selection.choiceId && choice.criteria.includes(selection.criterionId)).length !== 1 || current.value.case.criteria.filter((criterion) => criterion.id === selection.criterionId).length !== 1 || !current.value.case.participants.includes(selection.recipientRef) || !current.value.evidenceRefs.some((ref) => digestSfValue(ref) === digestSfValue(selection.evidence)) || !await input.authorizeSelection(selection, call)) return { status: "unavailable" as const }
+        if (current.status !== "ok" || current.value.case.id !== selection.caseRef.id || current.value.case.incarnation !== selection.caseRef.incarnation || current.value.case.version !== selection.caseRef.version || current.value.case.choices.filter((choice) => choice.id === selection.choiceId && choice.criteria.includes(selection.criterionId)).length !== 1 || current.value.case.criteria.filter((criterion) => criterion.id === selection.criterionId).length !== 1 || !current.value.case.participants.includes(selection.recipientRef) || !current.value.evidenceRefs.some((ref) => digestSfValue(ref) === digestSfValue(selection.evidence)) || !unchanged()) return { status: "unavailable" as const }
+        const choiceDigest = digestSfValue(current.value.case.choices.find((choice) => choice.id === selection.choiceId))
+        if (!await input.authorizeSelection(selection, call) || !unchanged()) return { status: "unavailable" as const }
         const before = await input.state.read(request, "preferences", () => null)
         const id = input.createId()
-        if (before.status !== "ok" || !id.trim() || !await input.approveSelection(selection, call) || !await input.host.revalidate(call)) return { status: "unavailable" as const }
+        if (before.status !== "ok" || !id.trim() || !await input.approveSelection(selection, call) || !await input.host.revalidate(call) || !unchanged()) return { status: "unavailable" as const }
         const work = async (state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => {
           const value = state.cases[selection.caseRef.id]
-          if (authority.principalRef !== call.binding.principalRef || authority.accessRevision !== call.binding.accessRevision || authority.policyVersion !== call.binding.policyVersion || !value || value.incarnation !== selection.caseRef.incarnation || value.version !== selection.caseRef.version || !value.participants.includes(authority.principalRef) || !value.participants.includes(selection.recipientRef) || !await input.checkSourceFence(snapshot, selection, authority)) return { commit: false, value: false }
+          if (!unchanged() || authority.principalRef !== call.binding.principalRef || authority.accessRevision !== call.binding.accessRevision || authority.policyVersion !== call.binding.policyVersion || !value || value.incarnation !== selection.caseRef.incarnation || value.version !== selection.caseRef.version || !value.participants.includes(authority.principalRef) || !value.participants.includes(selection.recipientRef) || !await input.checkSourceFence(snapshot, selection, authority) || !unchanged()) return { commit: false, value: false }
           const key = `${SF_SIGNAL_REGISTRY_PREFIX}${id}`
           if (Object.hasOwn(state.preferences, key)) return { commit: false, value: false }
           const chosen = value.choices.find((choice) => choice.id === selection.choiceId)
-          const approved = current.value.case.choices.find((choice) => choice.id === selection.choiceId)
-          if (!chosen || !approved || digestSfValue(chosen) !== digestSfValue(approved)) return { commit: false, value: false }
-          const record: SfStoredSignalBinding = { schema: "sf-memory-condition-v1", id, selection, principalRef: authority.principalRef, choiceDigest: digestSfValue(chosen), revision: 1 }
+          if (!chosen || digestSfValue(chosen) !== choiceDigest) return { commit: false, value: false }
+          const record: SfStoredSignalBinding = { schema: "sf-memory-condition-v1", id, selection: structuredClone(selection), principalRef: authority.principalRef, choiceDigest, revision: 1 }
           state.preferences[key] = record
           return { commit: true, value: true }
         }
         input.signalRegistryWrites.add(work)
         const saved = await input.state.transaction(request, { namespace: "preferences", domainSurface: selection.source.surface, expectedStorageVersion: before.storageVersion, targetRef: encodeCaseRef(selection.caseRef), targetIncarnation: selection.caseRef.incarnation, idempotencyKey: `signal-condition:${identity}`, commandDigest: digestSfValue(selection) }, work).finally(() => input.signalRegistryWrites.delete(work))
-        if (saved.status !== "ok" || !saved.value || request.signal.aborted || digestSfValue([call.kind, call.binding]) !== binding || !await input.authorizeSelection(selection, call) || !await input.approveSelection(selection, call) || !await input.host.revalidate(call)) return { status: "unavailable" as const }
+        if (saved.status !== "ok" || !saved.value || !unchanged() || !await input.authorizeSelection(selection, call) || !await input.approveSelection(selection, call) || !await input.host.revalidate(call) || !unchanged()) return { status: "unavailable" as const }
         return { status: "ok" as const }
       } catch {
         return { status: "unavailable" as const }
@@ -64,37 +67,45 @@ export function createSfSignalRegistry(input: {
       try {
         const previous = structuredClone(existing)
         const selection = structuredClone(requested)
+        const selectionDigest = digestSfValue(selection)
+        const previousDigest = digestSfValue(previous)
         const request = input.host.requestFor(call)
         const identity = input.operationIdentity(call)
         const binding = digestSfValue([call.kind, call.binding])
-        if (call.kind !== "ui" || !request || request.signal.aborted || !identity || !validRecord(previous, `${SF_SIGNAL_REGISTRY_PREFIX}${previous.id}`, call) || (previous.principalRef !== call.binding.principalRef && previous.selection.recipientRef !== call.binding.principalRef) || !validSelection(selection, call) || selection.caseRef.id !== previous.selection.caseRef.id || selection.caseRef.incarnation !== previous.selection.caseRef.incarnation || selection.caseRef.version < previous.selection.caseRef.version || selection.choiceId !== previous.selection.choiceId || selection.criterionId !== previous.selection.criterionId || !await input.host.revalidate(call) || !await input.approveSelection(selection, call)) return { status: "unavailable" as const }
+        const unchanged = () => !!request && !request.signal.aborted && digestSfValue([call.kind, call.binding]) === binding && digestSfValue(requested) === selectionDigest && digestSfValue(selection) === selectionDigest && digestSfValue(existing) === previousDigest && digestSfValue(previous) === previousDigest
+        if (call.kind !== "ui" || !request || request.signal.aborted || !identity || !validRecord(previous, `${SF_SIGNAL_REGISTRY_PREFIX}${previous.id}`, call) || (previous.principalRef !== call.binding.principalRef && previous.selection.recipientRef !== call.binding.principalRef) || !validSelection(selection, call) || selection.caseRef.id !== previous.selection.caseRef.id || selection.caseRef.incarnation !== previous.selection.caseRef.incarnation || selection.caseRef.version < previous.selection.caseRef.version || selection.choiceId !== previous.selection.choiceId || selection.criterionId !== previous.selection.criterionId || !await input.host.revalidate(call) || !await input.approveSelection(selection, call) || !unchanged()) return { status: "unavailable" as const }
         const current = await input.cases.read({ caseRef: encodeCaseRef(selection.caseRef) }, call)
-        if (current.status !== "ok" || current.value.case.version !== selection.caseRef.version || current.value.case.choices.filter((choice) => choice.id === selection.choiceId && choice.criteria.includes(selection.criterionId) && digestSfValue(choice) === previous.choiceDigest).length !== 1 || !current.value.case.participants.includes(selection.recipientRef) || !current.value.evidenceRefs.some((ref) => digestSfValue(ref) === digestSfValue(selection.evidence)) || !await input.authorizeSelection(selection, call)) return { status: "unavailable" as const }
+        if (current.status !== "ok" || current.value.case.id !== selection.caseRef.id || current.value.case.incarnation !== selection.caseRef.incarnation || current.value.case.version !== selection.caseRef.version || current.value.case.choices.filter((choice) => choice.id === selection.choiceId && choice.criteria.includes(selection.criterionId) && digestSfValue(choice) === previous.choiceDigest).length !== 1 || !current.value.case.participants.includes(selection.recipientRef) || !current.value.evidenceRefs.some((ref) => digestSfValue(ref) === digestSfValue(selection.evidence)) || !await input.authorizeSelection(selection, call) || !unchanged()) return { status: "unavailable" as const }
         const before = await input.state.read(request, "preferences", (state) => state.preferences[`${SF_SIGNAL_REGISTRY_PREFIX}${previous.id}`])
-        if (before.status !== "ok" || digestSfValue(before.value) !== digestSfValue(previous) || !await input.approveSelection(selection, call) || !await input.host.revalidate(call)) return { status: "unavailable" as const }
+        if (before.status !== "ok" || digestSfValue(before.value) !== previousDigest || !await input.approveSelection(selection, call) || !await input.host.revalidate(call) || !unchanged()) return { status: "unavailable" as const }
         const work = async (state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => {
           const key = `${SF_SIGNAL_REGISTRY_PREFIX}${previous.id}`
           const actual = state.cases[selection.caseRef.id]
-          if (authority.principalRef !== call.binding.principalRef || authority.accessRevision !== call.binding.accessRevision || authority.policyVersion !== call.binding.policyVersion || digestSfValue(state.preferences[key]) !== digestSfValue(previous) || !actual || actual.incarnation !== selection.caseRef.incarnation || actual.version !== selection.caseRef.version || !actual.participants.includes(authority.principalRef) || !actual.participants.includes(selection.recipientRef) || actual.choices.filter((choice) => choice.id === selection.choiceId && digestSfValue(choice) === previous.choiceDigest).length !== 1 || !await input.checkSourceFence(snapshot, selection, authority)) return { commit: false, value: false }
-          state.preferences[key] = { ...previous, selection, revision: previous.revision + 1 }
+          if (!unchanged() || authority.principalRef !== call.binding.principalRef || authority.accessRevision !== call.binding.accessRevision || authority.policyVersion !== call.binding.policyVersion || digestSfValue(state.preferences[key]) !== previousDigest || !actual || actual.incarnation !== selection.caseRef.incarnation || actual.version !== selection.caseRef.version || !actual.participants.includes(authority.principalRef) || !actual.participants.includes(selection.recipientRef) || actual.choices.filter((choice) => choice.id === selection.choiceId && digestSfValue(choice) === previous.choiceDigest).length !== 1 || !await input.checkSourceFence(snapshot, selection, authority) || !unchanged()) return { commit: false, value: false }
+          state.preferences[key] = structuredClone({ ...previous, selection, revision: previous.revision + 1 })
           return { commit: true, value: true }
         }
         input.signalRegistryWrites.add(work)
         const saved = await input.state.transaction(request, { namespace: "preferences", domainSurface: selection.source.surface, expectedStorageVersion: before.storageVersion, targetRef: encodeCaseRef(selection.caseRef), targetIncarnation: selection.caseRef.incarnation, idempotencyKey: `signal-revise:${identity}`, commandDigest: digestSfValue({ id: previous.id, revision: previous.revision, selection }) }, work).finally(() => input.signalRegistryWrites.delete(work))
-        if (saved.status !== "ok" || !saved.value || request.signal.aborted || digestSfValue([call.kind, call.binding]) !== binding || !await input.authorizeSelection(selection, call) || !await input.approveSelection(selection, call) || !await input.host.revalidate(call)) return { status: "unavailable" as const }
+        if (saved.status !== "ok" || !saved.value || !unchanged() || !await input.authorizeSelection(selection, call) || !await input.approveSelection(selection, call) || !await input.host.revalidate(call) || !unchanged()) return { status: "unavailable" as const }
         return { status: "ok" as const }
       } catch {
         return { status: "unavailable" as const }
       }
     },
     /** Host-only: browser clients do not choose condition IDs or previous state. */
-    async list(caseRef: SfSignalSelection["caseRef"], call: TrustedDomainContext) {
+    async list(requested: SfSignalSelection["caseRef"], call: TrustedDomainContext) {
       try {
+        const caseRef = structuredClone(requested)
+        const requestDigest = digestSfValue(caseRef)
         const request = input.host.requestFor(call)
         const binding = digestSfValue([call.kind, call.binding])
-        if (!request || request.signal.aborted || !await input.host.revalidate(call)) return { status: "unavailable" as const }
+        const unchanged = () => !!request && !request.signal.aborted && digestSfValue([call.kind, call.binding]) === binding && digestSfValue(requested) === requestDigest && digestSfValue(caseRef) === requestDigest
+        if (!request || request.signal.aborted || !await input.host.revalidate(call) || !unchanged()) return { status: "unavailable" as const }
         const current = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
-        if (current.status !== "ok" || current.value.case.version !== caseRef.version) return { status: "unavailable" as const }
+        if (current.status !== "ok" || current.value.case.id !== caseRef.id || current.value.case.incarnation !== caseRef.incarnation || current.value.case.version !== caseRef.version || !unchanged()) return { status: "unavailable" as const }
+        const projection = structuredClone(current.value)
+        const caseDigest = digestSfValue(projection.case)
         const read = () => input.state.read(request, "preferences", (state, authority) => {
           if (authority.principalRef !== call.binding.principalRef || authority.accessRevision !== call.binding.accessRevision || authority.policyVersion !== call.binding.policyVersion) return undefined
           return Object.entries(state.preferences).filter(([key]) => key.startsWith(SF_SIGNAL_REGISTRY_PREFIX)).flatMap(([key, value]) => {
@@ -103,18 +114,22 @@ export function createSfSignalRegistry(input: {
           })
         })
         const first = await read()
-        if (first.status !== "ok" || !first.value) return { status: "unavailable" as const }
-        const visible = []
-        for (const record of first.value) {
-          if (current.value.case.choices.filter((choice) => choice.id === record.selection.choiceId && choice.criteria.includes(record.selection.criterionId) && digestSfValue(choice) === record.choiceDigest).length !== 1 || current.value.case.criteria.filter((criterion) => criterion.id === record.selection.criterionId).length !== 1 || !current.value.case.participants.includes(record.selection.recipientRef) || !current.value.evidenceRefs.some((ref) => digestSfValue(ref) === digestSfValue(record.selection.evidence))) continue
-          if (await input.authorizeSelection(record.selection, call)) visible.push(record)
+        if (first.status !== "ok" || !first.value || !unchanged()) return { status: "unavailable" as const }
+        const records = structuredClone(first.value)
+        const recordsDigest = digestSfValue(records)
+        const visible: SfStoredSignalBinding[] = []
+        for (const record of records) {
+          if (projection.case.choices.filter((choice) => choice.id === record.selection.choiceId && choice.criteria.includes(record.selection.criterionId) && digestSfValue(choice) === record.choiceDigest).length !== 1 || projection.case.criteria.filter((criterion) => criterion.id === record.selection.criterionId).length !== 1 || !projection.case.participants.includes(record.selection.recipientRef) || !projection.evidenceRefs.some((ref) => digestSfValue(ref) === digestSfValue(record.selection.evidence))) continue
+          const authorized = await input.authorizeSelection(record.selection, call)
+          if (!unchanged() || digestSfValue(records) !== recordsDigest) return { status: "unavailable" as const }
+          if (authorized) visible.push(record)
         }
         const again = await read()
-        if (again.status !== "ok" || !again.value || first.storageVersion !== again.storageVersion || digestSfValue(first.value) !== digestSfValue(again.value) || request.signal.aborted || digestSfValue([call.kind, call.binding]) !== binding || !await input.host.revalidate(call)) return { status: "unavailable" as const }
+        if (again.status !== "ok" || !again.value || first.storageVersion !== again.storageVersion || digestSfValue(again.value) !== recordsDigest || !unchanged() || !await input.host.revalidate(call) || !unchanged()) return { status: "unavailable" as const }
         for (const record of visible) if (!await input.authorizeSelection(record.selection, call)) return { status: "unavailable" as const }
         const latest = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
-        if (latest.status !== "ok" || digestSfValue(latest.value.case) !== digestSfValue(current.value.case) || !await input.host.revalidate(call)) return { status: "unavailable" as const }
-        return { status: "ok" as const, records: visible }
+        if (latest.status !== "ok" || !await input.host.revalidate(call) || digestSfValue(latest.value.case) !== caseDigest || digestSfValue(records) !== recordsDigest || !unchanged()) return { status: "unavailable" as const }
+        return { status: "ok" as const, records: structuredClone(visible) }
       } catch {
         return { status: "unavailable" as const }
       }
@@ -124,30 +139,34 @@ export function createSfSignalRegistry(input: {
       try {
         const requested = structuredClone(record)
         const state = structuredClone(next)
+        const recordDigest = digestSfValue(requested)
+        const stateDigest = digestSfValue(state)
         const request = input.host.requestFor(call)
         const binding = digestSfValue([call.kind, call.binding])
-        if (!request || request.signal.aborted || !validRecord(requested, `${SF_SIGNAL_REGISTRY_PREFIX}${requested.id}`, call) || requested.selection.recipientRef !== call.binding.principalRef || state.conditionId !== requested.id || !validSignalState(state) || !await input.host.revalidate(call) || !await input.authorizeSelection(requested.selection, call) || !await input.approveReconcile(requested, state, call)) return { status: "unavailable" as const }
+        const unchanged = () => !!request && !request.signal.aborted && digestSfValue([call.kind, call.binding]) === binding && digestSfValue(record) === recordDigest && digestSfValue(requested) === recordDigest && digestSfValue(next) === stateDigest && digestSfValue(state) === stateDigest
+        if (!request || request.signal.aborted || !validRecord(requested, `${SF_SIGNAL_REGISTRY_PREFIX}${requested.id}`, call) || requested.selection.recipientRef !== call.binding.principalRef || state.conditionId !== requested.id || !validSignalState(state) || !await input.host.revalidate(call) || !await input.authorizeSelection(requested.selection, call) || !await input.approveReconcile(requested, state, call) || !unchanged()) return { status: "unavailable" as const }
         const current = await input.cases.read({ caseRef: encodeCaseRef(requested.selection.caseRef) }, call)
-        if (current.status !== "ok" || current.value.case.id !== requested.selection.caseRef.id || current.value.case.incarnation !== requested.selection.caseRef.incarnation || current.value.case.version < requested.selection.caseRef.version || current.value.case.choices.filter((choice) => choice.id === requested.selection.choiceId && digestSfValue(choice) === requested.choiceDigest).length !== 1) return { status: "unavailable" as const }
+        if (current.status !== "ok" || current.value.case.id !== requested.selection.caseRef.id || current.value.case.incarnation !== requested.selection.caseRef.incarnation || current.value.case.version < requested.selection.caseRef.version || current.value.case.choices.filter((choice) => choice.id === requested.selection.choiceId && digestSfValue(choice) === requested.choiceDigest).length !== 1 || !unchanged()) return { status: "unavailable" as const }
+        const caseVersion = current.value.case.version
         const before = await input.state.read(request, "preferences", (value) => value.preferences[`${SF_SIGNAL_REGISTRY_PREFIX}${requested.id}`])
-        if (before.status !== "ok" || digestSfValue(before.value) !== digestSfValue(requested)) return { status: "unavailable" as const }
+        if (before.status !== "ok" || digestSfValue(before.value) !== recordDigest || !unchanged()) return { status: "unavailable" as const }
         if (digestSfValue(requested.signalState) === digestSfValue(state)) {
-          if (request.signal.aborted || digestSfValue([call.kind, call.binding]) !== binding || !await input.authorizeSelection(requested.selection, call) || !await input.approveReconcile(requested, state, call) || !await input.host.revalidate(call)) return { status: "unavailable" as const }
-          return { status: "ok" as const, record: requested }
+          if (!await input.authorizeSelection(requested.selection, call) || !await input.approveReconcile(requested, state, call) || !await input.host.revalidate(call) || !unchanged()) return { status: "unavailable" as const }
+          return { status: "ok" as const, record: structuredClone(requested) }
         }
         const attempt = input.createId()
-        if (!attempt.trim() || !await input.approveReconcile(requested, state, call) || !await input.host.revalidate(call)) return { status: "unavailable" as const }
+        if (!attempt.trim() || !await input.approveReconcile(requested, state, call) || !await input.host.revalidate(call) || !unchanged()) return { status: "unavailable" as const }
         const work = async (product: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => {
           const key = `${SF_SIGNAL_REGISTRY_PREFIX}${requested.id}`
           const actual = product.cases[requested.selection.caseRef.id]
-          if (authority.principalRef !== call.binding.principalRef || authority.accessRevision !== call.binding.accessRevision || authority.policyVersion !== call.binding.policyVersion || digestSfValue(product.preferences[key]) !== digestSfValue(requested) || !actual || actual.incarnation !== requested.selection.caseRef.incarnation || actual.version !== current.value.case.version || actual.choices.filter((choice) => choice.id === requested.selection.choiceId && digestSfValue(choice) === requested.choiceDigest).length !== 1 || !actual.participants.includes(authority.principalRef) || !await input.checkSourceFence(snapshot, requested.selection, authority)) return { commit: false, value: false }
-          product.preferences[key] = { ...requested, revision: requested.revision + 1, signalState: state }
+          if (!unchanged() || authority.principalRef !== call.binding.principalRef || authority.accessRevision !== call.binding.accessRevision || authority.policyVersion !== call.binding.policyVersion || digestSfValue(product.preferences[key]) !== recordDigest || !actual || actual.incarnation !== requested.selection.caseRef.incarnation || actual.version !== caseVersion || actual.choices.filter((choice) => choice.id === requested.selection.choiceId && digestSfValue(choice) === requested.choiceDigest).length !== 1 || !actual.participants.includes(authority.principalRef) || !await input.checkSourceFence(snapshot, requested.selection, authority) || !unchanged()) return { commit: false, value: false }
+          product.preferences[key] = structuredClone({ ...requested, revision: requested.revision + 1, signalState: state })
           return { commit: true, value: true }
         }
         input.signalRegistryWrites.add(work)
         const saved = await input.state.transaction(request, { namespace: "preferences", domainSurface: requested.selection.source.surface, expectedStorageVersion: before.storageVersion, targetRef: encodeCaseRef(requested.selection.caseRef), targetIncarnation: requested.selection.caseRef.incarnation, idempotencyKey: `signal-state:${attempt}`, commandDigest: digestSfValue({ id: requested.id, revision: requested.revision, state }) }, work).finally(() => input.signalRegistryWrites.delete(work))
-        if (saved.status !== "ok" || !saved.value || request.signal.aborted || digestSfValue([call.kind, call.binding]) !== binding || !await input.authorizeSelection(requested.selection, call) || !await input.approveReconcile(requested, state, call) || !await input.host.revalidate(call)) return { status: "unavailable" as const }
-        return { status: "ok" as const, record: { ...requested, revision: requested.revision + 1, signalState: state } }
+        if (saved.status !== "ok" || !saved.value || !unchanged() || !await input.authorizeSelection(requested.selection, call) || !await input.approveReconcile(requested, state, call) || !await input.host.revalidate(call) || !unchanged()) return { status: "unavailable" as const }
+        return { status: "ok" as const, record: structuredClone({ ...requested, revision: requested.revision + 1, signalState: state }) }
       } catch {
         return { status: "unavailable" as const }
       }
