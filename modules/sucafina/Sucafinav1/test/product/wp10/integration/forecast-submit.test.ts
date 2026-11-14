@@ -40,12 +40,12 @@ async function forecastPage() {
     events: [], evidenceRefs: sources, checkedAt: "2026-11-14T12:00:00Z",
   }
   const unavailable = async (): Promise<never> => { throw new Error("This renderer fixture must not call an in-process domain or native service") }
-  const services = {
+  const services: Pick<SfHostServices, "selected" | "models" | "analyses" | "forecastInputs"> = {
     selected: [{ profile, skills: [skill], manifestDigest: bundle.manifestDigest, operationIds: skill.allowedOperations }],
     models: async () => models,
     analyses: { start: unavailable, list: unavailable, read: unavailable, output: unavailable, cancel: unavailable },
     forecastInputs: { prepare: unavailable },
-  } satisfies Pick<SfHostServices, "selected" | "models" | "analyses" | "forecastInputs">
+  }
   // forecastAnalysisForm currently accepts the full host type, but reads only
   // this catalog surface. This cast marks the UI fixture boundary, never a host.
   const form = await forecastAnalysisForm(projection, services as SfHostServices)

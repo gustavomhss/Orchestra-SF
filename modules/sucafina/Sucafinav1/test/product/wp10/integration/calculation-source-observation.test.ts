@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
 import { randomUUID } from "node:crypto"
-import type { AssetPersistence } from "../../../../runtime/assets.ts"
+import type { AssetPersistence, BlobTransaction } from "../../../../runtime/assets.ts"
 import type { Snapshot, TransactionOptions } from "../../../../runtime/contract.ts"
 import type { Surface } from "../../../../src/identity.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
@@ -80,11 +80,14 @@ test("Planner source consolidation retains fresh authority and ABA fences with t
       })
       expect(revoked.result.status).toBe("stale")
       expect(Object.hasOwn(revoked.result, "value")).toBe(false)
+      // Failed real UI revalidation deletes the admission. A later invocation
+      // has no Request and must stop before another source or authority await.
+      expect(fixture.authority.host.requestFor(call)).toBeUndefined()
       const denied = await candidate.read("candidate-next-invocation-denied", reissued.value.evidence.refId)
       expect(denied.result.status).toBe("denied")
       expect(Object.hasOwn(denied.result, "value")).toBe(false)
       expect(denied.counts).toMatchObject({
-        sourceTransactions: 0, authenticate: 0, revalidate: 1, preparedReads: 0,
+        sourceTransactions: 0, authenticate: 0, revalidate: 0, preparedReads: 0,
       })
       expect(await inspectDurableState(fixture)).toEqual(beforeRevocation)
     } finally { fixture.authority.ui.finish(call) }
@@ -132,7 +135,7 @@ function observeSource(fixture: Fixture, call: TrustedDomainContext, mode: "fall
     const started = performance.now()
     let entered = false
     try {
-      return await fixture.store.transaction(surface, async (snapshot, blobs) => {
+      return await fixture.store.transaction(surface, async (snapshot: Snapshot, blobs: BlobTransaction) => {
         const callbackStart = performance.now()
         entered = true
         // Includes queue/admission/open/BEGIN/decode; not an exclusive lock timer.

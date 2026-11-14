@@ -1,0 +1,264 @@
+{
+  "schema": "wp10-w28-hosted-check-observation-v1",
+  "product": {
+    "W": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+    "tree": "232c69db4eed34e913f125bb787b926971d6d031",
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+  },
+  "snapshot": {
+    "S": "66d3a7fc3160a54aad1766e096a6b4cb397ab82b",
+    "tree": "3aaaadc3fc9e1c6264bdc8f54ed6c54ad8ab26c3",
+    "parents": [
+      "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "26db95e4764bf80148543798aa594ac7921f3b22"
+    ],
+    "branch": "astra-check-wp10",
+    "envelope": {
+      "productSha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    },
+    "envelopeBlob": "fb378d1111f83573c8e3f36e979167d1c9f777f6",
+    "envelopeSha256": "239a643676345f9d1cedcdb404cc9e51d7a51470c0ae43c59070181ba8534e12",
+    "compareFiles": [
+      {
+        "filename": ".astra-wp10-check.json",
+        "status": "added",
+        "sha": "fb378d1111f83573c8e3f36e979167d1c9f777f6"
+      }
+    ],
+    "history": "Existing check branch fast-forward preservation via second parent CHECK27; only added .astra-wp10-check.json relative to W28. Workflow exact product/envelope gate passed."
+  },
+  "run": {
+    "id": 43627330840,
+    "head_sha": "66d3a7fc3160a54aad1766e096a6b4cb397ab82b",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-11-14T18:34:14Z",
+    "updated_at": "2026-11-14T18:37:24Z",
+    "run_attempt": 1,
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627330840"
+  },
+  "jobs": [
+    {
+      "id": 132546056147,
+      "name": "composition",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 43627330840,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout check envelope",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Validate exact product and envelope",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Checkout exact product",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Record product and guard base",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Typecheck Sucafina",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 7
+        },
+        {
+          "name": "Typecheck CLI consumers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Typecheck WP10 test consumers",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 9
+        },
+        {
+          "name": "Verify canonical Atlas generation",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Typecheck Atlas boundary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Guard subprocess imports",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Guard product against origin/dev",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Upload exact-check evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Post Checkout exact product",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27
+        },
+        {
+          "name": "Post Checkout check envelope",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 28
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 29
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 14127220650,
+      "name": "astra-wp10-check-1",
+      "size_in_bytes": 5469,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14127220650",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14127220650/zip",
+      "expired": false,
+      "created_at": "2026-11-14T18:37:22Z",
+      "expires_at": "2026-11-28T18:37:21Z",
+      "updated_at": "2026-11-14T18:37:22Z",
+      "digest": "sha256:dd6776908d198c4e130ba5c114da7f5d2eb0a66d0487da99753894228735e42a",
+      "workflow_run": {
+        "id": 43627330840,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "astra-check-wp10",
+        "head_sha": "66d3a7fc3160a54aad1766e096a6b4cb397ab82b"
+      }
+    }
+  ],
+  "artifactDownload": {
+    "provider": "GitHub MCP download_workflow_artifact",
+    "artifactId": 14127220650,
+    "fileId": "file_000000001e24820eb6638d5a7e896102",
+    "fileName": "astra-wp10-check28-1.zip",
+    "mimeType": "application/zip",
+    "localZipBytes": "NOT_MATERIALIZED; opaque MCP file reference retained, no alternative remote fetch used",
+    "temporarySignedDownloadUrl": "NOT_ARCHIVED"
+  },
+  "results": {
+    "overall": "failure",
+    "sucafinaTypecheck": {
+      "result": "failure",
+      "diagnostics": 16,
+      "externalHistorical": 13,
+      "ownWp10": 3
+    },
+    "wp10ConsumersTypecheck": {
+      "result": "failure",
+      "diagnostics": 3
+    },
+    "cliTypecheck": "success",
+    "atlasGenerationCheckDiff": "success",
+    "atlasTypecheck": "success",
+    "spawnImports": "success",
+    "guardsAgainstOriginDev": "success",
+    "snapshotEnvelope": "success",
+    "artifactUpload": "success",
+    "cleanup": "No dedicated cleanup job in this standing check workflow; post Setup Bun and both checkout cleanup steps succeeded.",
+    "omni": "Not applicable: typecheck/guards workflow does not execute product tests or Omni proof."
+  },
+  "ownDiagnostics": [
+    {
+      "file": "test/product/wp10/integration/calculation-source-observation.test.ts",
+      "line": 135,
+      "column": 62,
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type."
+    },
+    {
+      "file": "test/product/wp10/integration/calculation-source-observation.test.ts",
+      "line": 135,
+      "column": 72,
+      "code": "TS7006",
+      "message": "Parameter 'blobs' implicitly has an 'any' type."
+    },
+    {
+      "file": "test/product/wp10/integration/forecast-submit.test.ts",
+      "line": 51,
+      "column": 55,
+      "code": "TS2352",
+      "message": "Direct partial fixture cast to SfHostServices insufficiently overlaps; missing state,ui,human,humanActions and seven more properties."
+    }
+  ],
+  "fullTypeDiagnostics": [
+    "2026-11-14T18:35:57.0520063Z ##[error]product/procurement/sourcing-analysis.ts(4,10): error TS2305: Module '\"../ui/forecast-analysis.ts\"' has no exported member 'analysisHistory'.",
+    "2026-11-14T18:35:57.0531430Z ##[error]test/product/wp04/finance-sourcing-integration.test.ts(388,65): error TS2322: Type '(ref: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>' is not assignable to type 'Pick<{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }, \"resolve\">'.",
+    "2026-11-14T18:35:57.0538502Z ##[error]test/product/wp04/finance-sourcing-integration.test.ts(394,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: Ran...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+    "2026-11-14T18:35:57.0542740Z ##[error]test/product/wp06/native/import-analysis.test.ts(130,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+    "2026-11-14T18:35:57.0546557Z ##[error]test/product/wp06/native/import-analysis.test.ts(166,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+    "2026-11-14T18:35:57.0549961Z ##[error]test/product/wp06/native/import-analysis.test.ts(205,45): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+    "2026-11-14T18:35:57.0552198Z ##[error]test/product/wp06/native/import-analysis.test.ts(324,37): error TS2554: Expected 1 arguments, but got 2.",
+    "2026-11-14T18:35:57.0557295Z ##[error]test/product/wp08/collaboration-journey.test.ts(79,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+    "2026-11-14T18:35:57.0565164Z ##[error]test/product/wp08/confirmation-work-integration.test.ts(83,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+    "2026-11-14T18:35:57.0572285Z ##[error]test/product/wp08/host-answer-reuse.test.ts(79,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+    "2026-11-14T18:35:57.0578941Z ##[error]test/product/wp08/question-consumer.test.ts(44,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+    "2026-11-14T18:35:57.0586255Z ##[error]test/product/wp08/thread-actors-fixture.ts(126,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+    "2026-11-14T18:35:57.0593524Z ##[error]test/product/wp09/decision-answer-consumer.test.ts(76,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; evidence: BusinessContextService; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (binding: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, binding: TrustedDomainContext) => Promise<...>; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+    "2026-11-14T18:35:57.0596666Z ##[error]test/product/wp10/integration/calculation-source-observation.test.ts(135,62): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.",
+    "2026-11-14T18:35:57.0598212Z ##[error]test/product/wp10/integration/calculation-source-observation.test.ts(135,72): error TS7006: Parameter 'blobs' implicitly has an 'any' type.",
+    "2026-11-14T18:35:57.0603138Z ##[error]test/product/wp10/integration/forecast-submit.test.ts(51,55): error TS2352: Conversion of type '{ selected: { profile: ResidentProfile; skills: SkillManifest[]; manifestDigest: string; operationIds: readonly string[]; }[]; models: () => Promise<{ readonly id: string & Brand<\"ModelV2.ID\">; readonly providerID: string & Brand<...>; readonly variant?: (string & Brand<...>) | undefined; }[]>; analyses: { ...; }; f...' to type 'SfHostServices' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.",
+    "2026-11-14T18:36:35.3376211Z ##[error]test/product/wp10/integration/calculation-source-observation.test.ts(135,62): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.",
+    "2026-11-14T18:36:35.3377792Z ##[error]test/product/wp10/integration/calculation-source-observation.test.ts(135,72): error TS7006: Parameter 'blobs' implicitly has an 'any' type.",
+    "2026-11-14T18:36:35.3381096Z ##[error]test/product/wp10/integration/forecast-submit.test.ts(51,55): error TS2352: Conversion of type '{ selected: { profile: ResidentProfile; skills: SkillManifest[]; manifestDigest: string; operationIds: readonly string[]; }[]; models: () => Promise<{ readonly id: string & Brand<\"ModelV2.ID\">; readonly providerID: string & Brand<...>; readonly variant?: (string & Brand<...>) | undefined; }[]>; analyses: { ...; }; f...' to type 'SfHostServices' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first."
+  ],
+  "relevantGuardObservations": [
+    "2026-11-14T18:37:17.8594229Z spawn-imports: 4702 files checked, 66 allow-listed sites",
+    "2026-11-14T18:37:21.7361614Z WARN modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W26/W22-D-partial/publication/verified-W22-tree.json [large-file] Large file added (over 1 MB). Check it belongs in git; generated data and media usually do not.",
+    "2026-11-14T18:37:21.7362762Z WARN modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/stop-handoff.json:5 [local-abs-path] Absolute path into a personal home directory. Use a relative path, an environment variable or os.homedir().",
+    "2026-11-14T18:37:21.7399295Z guards: 78 rules, 2108 changed paths, 0 gate and 53 warn findings, 0 errors."
+  ],
+  "scope": "W28 check evidence only. No overall typecheck PASS and no transfer of green status to a successor W."
+}

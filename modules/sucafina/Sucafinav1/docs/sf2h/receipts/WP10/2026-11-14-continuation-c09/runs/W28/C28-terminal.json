@@ -1,0 +1,435 @@
+{
+  "schema": "wp10-w28-hosted-test-observation-v1",
+  "product": {
+    "W": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+    "tree": "232c69db4eed34e913f125bb787b926971d6d031"
+  },
+  "snapshot": {
+    "S": "8dedb1fa71a0805505e50eda8c0a038de79276a8",
+    "tree": "7d885e25c52af39b9d22357c59910df6e6d78051",
+    "parents": [
+      "90f2c4f81f74edc26a1783bfda7891638b429fa6"
+    ],
+    "branch": "ci-run-linux-astra-wp10-90f2c4f8-3374ee0a-01",
+    "requestBlob": "2a5d2075dd0bc797ddbe251d9b0bc7391856427b",
+    "requestSha256": "3374ee0a5278d8b7b91478bcae1abdfbfc01f2017428190b4a61999f2a3c3905",
+    "compareFiles": [
+      {
+        "filename": ".ci-run.json",
+        "status": "added",
+        "sha": "2a5d2075dd0bc797ddbe251d9b0bc7391856427b"
+      }
+    ]
+  },
+  "run": {
+    "id": 43627315630,
+    "head_sha": "8dedb1fa71a0805505e50eda8c0a038de79276a8",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-11-14T18:34:04Z",
+    "updated_at": "2026-11-14T18:36:16Z",
+    "run_attempt": 1,
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627315630"
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "--timeout",
+      "120000",
+      "Sucafinav1/test/product/wp10/atlas-business/case-event-continuity.test.ts",
+      "Sucafinav1/test/product/wp10/integration/authority-composition.test.ts",
+      "Sucafinav1/test/product/wp10/integration/calculation-source-observation.test.ts"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "jobs": [
+    {
+      "id": 132546009522,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 43627315630,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132546614709,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43627315630,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "artifacts": [],
+  "result": {
+    "pass": 8,
+    "fail": 1,
+    "expects": 136,
+    "tests": 9,
+    "files": 3,
+    "bunSeconds": 16.27
+  },
+  "omni": {
+    "nonce": "81db0eef6ccbc9217052308e67530829",
+    "status": "pass",
+    "declaredTests": 2,
+    "declaringFile": "Sucafinav1/test/product/wp10/atlas-business/case-event-continuity.test.ts",
+    "spawns": 4,
+    "delegated": 0
+  },
+  "passes": [
+    "2026-11-14T18:35:53.6237184Z (pass) Planner prepared source observation refuses abort after the last source authorizer without durable change [36.27ms]",
+    "2026-11-14T18:35:53.6285793Z (pass) composition write capabilities protect both prefixes and cannot authorize each other's writes [2.60ms]",
+    "2026-11-14T18:35:53.6292124Z (pass) a Dashboard host capability does not bypass earlier protected preferences or the BI namespace [0.66ms]",
+    "2026-11-14T18:35:53.6297267Z (pass) target revalidation receives the same command at admission, commit and receipt retry [0.52ms]",
+    "2026-11-14T18:35:53.6503276Z (pass) domain receipt targets cannot borrow a case with the same ID and require the current prepared binding [20.57ms]",
+    "2026-11-14T18:35:53.6590139Z (pass) Procurement receipt authority is live, domain-specific and checked again on retries [8.68ms]",
+    "2026-11-14T18:36:00.3483110Z (pass) FIN-IND-002 composed C09 event retains its identity across case advancement, revocation and authorized replay [6577.14ms]",
+    "2026-11-14T18:36:09.3842718Z (pass) FIN-IND-002 composed C17 distinguishes authorized source history from forged or replaced C09 evidence [9035.97ms]"
+  ],
+  "failure": {
+    "name": "Planner source consolidation retains fresh authority and ABA fences with two source transactions",
+    "file": "Sucafinav1/test/product/wp10/integration/calculation-source-observation.test.ts",
+    "kind": "assertion count mismatch on invocation after revocation",
+    "observation": "Actual denied, no source transaction, no direct authenticate, no prepared read, zero revalidate; expected revalidate count one.",
+    "excerpt": [
+      "2026-11-14T18:35:53.5851733Z 81 |       expect(revoked.result.status).toBe(\"stale\")",
+      "2026-11-14T18:35:53.5855553Z 82 |       expect(Object.hasOwn(revoked.result, \"value\")).toBe(false)",
+      "2026-11-14T18:35:53.5882385Z 83 |       const denied = await candidate.read(\"candidate-next-invocation-denied\", reissued.value.evidence.refId)",
+      "2026-11-14T18:35:53.5906895Z 84 |       expect(denied.result.status).toBe(\"denied\")",
+      "2026-11-14T18:35:53.5907408Z 85 |       expect(Object.hasOwn(denied.result, \"value\")).toBe(false)",
+      "2026-11-14T18:35:53.5907775Z 86 |       expect(denied.counts).toMatchObject({",
+      "2026-11-14T18:35:53.5908025Z                                  ^",
+      "2026-11-14T18:35:53.5908288Z error: expect(received).toMatchObject(expected)",
+      "2026-11-14T18:35:53.5908450Z ",
+      "2026-11-14T18:35:53.5908511Z   {",
+      "2026-11-14T18:35:53.5908665Z     \"authenticate\": 0,",
+      "2026-11-14T18:35:53.5908858Z +   \"beforeCallbackMs\": 0,",
+      "2026-11-14T18:35:53.5909045Z +   \"callbackMs\": 0,",
+      "2026-11-14T18:35:53.5909230Z +   \"legacyReads\": 0,",
+      "2026-11-14T18:35:53.5909432Z +   \"maximumTransactionMs\": 0,",
+      "2026-11-14T18:35:53.5909625Z +   \"notAdmitted\": 0,",
+      "2026-11-14T18:35:53.5909804Z     \"preparedReads\": 0,",
+      "2026-11-14T18:35:53.5909990Z -   \"revalidate\": 1,",
+      "2026-11-14T18:35:53.5910199Z +   \"revalidate\": 0,",
+      "2026-11-14T18:35:53.5910368Z     \"sourceTransactions\": 0,",
+      "2026-11-14T18:35:53.5910593Z +   \"transactionMs\": 0,",
+      "2026-11-14T18:35:53.5911171Z   }",
+      "2026-11-14T18:35:53.5911262Z ",
+      "2026-11-14T18:35:53.5911354Z - Expected  - 1",
+      "2026-11-14T18:35:53.5911548Z + Received  + 7",
+      "2026-11-14T18:35:53.5911657Z ",
+      "2026-11-14T18:35:53.5912210Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-source-observation.test.ts:86:29)",
+      "2026-11-14T18:35:53.5913507Z (fail) Planner source consolidation retains fresh authority and ABA fences with two source transactions [100.21ms]",
+      "2026-11-14T18:35:53.6207125Z SF_CALCULATION_SOURCE_OBSERVATION {\"phase\":\"candidate-abort-at-authorizer-egress\",\"mode\":\"candidate\",\"sourceTransactions\":1,\"authenticate\":3,\"revalidate\":1,\"legacyReads\":0,\"preparedReads\":1,\"transactionMs\":0.914828,\"maximumTransactionMs\":0.914828,\"beforeCallbackMs\":0.2595019999999977,\"callbackMs\":0.5218270000000302,\"notAdmitted\":0,\"status\":\"denied\",\"elapsedMs\":1.5212210000000255}",
+      "2026-11-14T18:35:53.6237184Z (pass) Planner prepared source observation refuses abort after the last source authorizer without durable change [36.27ms]",
+      "2026-11-14T18:35:53.6237554Z ",
+      "2026-11-14T18:35:53.6237765Z Sucafinav1/test/product/wp10/integration/authority-composition.test.ts:",
+      "2026-11-14T18:35:53.6285793Z (pass) composition write capabilities protect both prefixes and cannot authorize each other's writes [2.60ms]",
+      "2026-11-14T18:35:53.6292124Z (pass) a Dashboard host capability does not bypass earlier protected preferences or the BI namespace [0.66ms]"
+    ]
+  },
+  "calculationObservations": [
+    {
+      "phase": "fallback",
+      "mode": "fallback",
+      "sourceTransactions": 4,
+      "authenticate": 6,
+      "revalidate": 4,
+      "legacyReads": 2,
+      "preparedReads": 0,
+      "transactionMs": 3.1396289999999,
+      "maximumTransactionMs": 1.019649999999956,
+      "beforeCallbackMs": 1.3853469999999675,
+      "callbackMs": 1.396840999999938,
+      "notAdmitted": 0,
+      "status": "ok",
+      "elapsedMs": 6.766613000000007
+    },
+    {
+      "phase": "candidate-first",
+      "mode": "candidate",
+      "sourceTransactions": 2,
+      "authenticate": 6,
+      "revalidate": 4,
+      "legacyReads": 0,
+      "preparedReads": 2,
+      "transactionMs": 1.8856949999999983,
+      "maximumTransactionMs": 1.0052870000000098,
+      "beforeCallbackMs": 0.7412890000000516,
+      "callbackMs": 0.970897999999977,
+      "notAdmitted": 0,
+      "status": "ok",
+      "elapsedMs": 5.610253999999998
+    },
+    {
+      "phase": "candidate-second",
+      "mode": "candidate",
+      "sourceTransactions": 2,
+      "authenticate": 6,
+      "revalidate": 4,
+      "legacyReads": 0,
+      "preparedReads": 2,
+      "transactionMs": 1.8369739999999979,
+      "maximumTransactionMs": 0.971285000000023,
+      "beforeCallbackMs": 0.6622650000000476,
+      "callbackMs": 0.9610839999999712,
+      "notAdmitted": 0,
+      "status": "ok",
+      "elapsedMs": 5.013803999999993
+    },
+    {
+      "phase": "candidate-source-aba",
+      "mode": "candidate",
+      "sourceTransactions": 2,
+      "authenticate": 6,
+      "revalidate": 3,
+      "legacyReads": 0,
+      "preparedReads": 2,
+      "transactionMs": 1.7323480000000586,
+      "maximumTransactionMs": 0.9127250000000231,
+      "beforeCallbackMs": 0.6384380000000647,
+      "callbackMs": 0.9463999999999828,
+      "notAdmitted": 0,
+      "status": "stale",
+      "elapsedMs": 6.911774999999977
+    },
+    {
+      "phase": "candidate-egress-revoked",
+      "mode": "candidate",
+      "sourceTransactions": 2,
+      "authenticate": 6,
+      "revalidate": 4,
+      "legacyReads": 0,
+      "preparedReads": 2,
+      "transactionMs": 1.6544890000000123,
+      "maximumTransactionMs": 0.8323230000000308,
+      "beforeCallbackMs": 0.6532530000000065,
+      "callbackMs": 0.8550299999999993,
+      "notAdmitted": 0,
+      "status": "stale",
+      "elapsedMs": 5.043373999999972
+    },
+    {
+      "phase": "candidate-next-invocation-denied",
+      "mode": "candidate",
+      "sourceTransactions": 0,
+      "authenticate": 0,
+      "revalidate": 0,
+      "legacyReads": 0,
+      "preparedReads": 0,
+      "transactionMs": 0,
+      "maximumTransactionMs": 0,
+      "beforeCallbackMs": 0,
+      "callbackMs": 0,
+      "notAdmitted": 0,
+      "status": "denied",
+      "elapsedMs": 0.016790000000014516
+    },
+    {
+      "phase": "candidate-abort-at-authorizer-egress",
+      "mode": "candidate",
+      "sourceTransactions": 1,
+      "authenticate": 3,
+      "revalidate": 1,
+      "legacyReads": 0,
+      "preparedReads": 1,
+      "transactionMs": 0.914828,
+      "maximumTransactionMs": 0.914828,
+      "beforeCallbackMs": 0.2595019999999977,
+      "callbackMs": 0.5218270000000302,
+      "notAdmitted": 0,
+      "status": "denied",
+      "elapsedMs": 1.5212210000000255
+    }
+  ],
+  "qualification": {
+    "C09C17": "Both selected FIN-IND-002 cases passed on W28, using composed real readers per the selected test file. Do not infer unselected inter-observation proofs or full native/runtime acceptance.",
+    "authorityComposition": "Five selected tests passed.",
+    "calculation": "Structural fallback4/candidate2 with6auth/4revalidate observed, fresh second call observed, A→B→A stale and final revocation stale observed; post-revoke denial happened before counted revalidation and assertion expected one. Abort case passed. Whole first calculation test remains FAIL; final state assertion after failed count was not reached.",
+    "next": "Reconcile actual requestFor/context revocation contract before any oracle correction. No unchanged rerun or X qualification from this failed first gate.",
+    "scope": "No full WP10 acceptance, merge or GLOBAL_RELEASE."
+  }
+}

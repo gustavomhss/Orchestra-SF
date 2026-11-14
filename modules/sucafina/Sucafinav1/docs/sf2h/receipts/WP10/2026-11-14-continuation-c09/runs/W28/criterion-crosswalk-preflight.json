@@ -1,0 +1,539 @@
+{
+  "schema": "wp10.scoped-criterion-crosswalk.v1",
+  "purpose": "Mapa mínimo de contribuição das três provas novas, sem substituir matriz canônica, replanejar ou encerrar critérios.",
+  "product_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+  "normative_source": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP10.pack.json",
+    "commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "blob": "f154f186468357e91da3a56de572a7d8d4afce93",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a3d29d011ba3607a57914701300f09117a3e2de9/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP10.pack.json"
+  },
+  "evidence_state": "PENDING_HOSTED_EVIDENCE",
+  "execution_note": "Coordenador informou C28/CHECK28 em voo. Este mapa não consultou resultados nem atribui PASS; U28 é seleção preparada. Atualizar recibos terminais separadamente.",
+  "scope_preservation": "O universo canônico de 171 critérios, 7 tasks e 80 obrigações permanece inalterado. Os itens abaixo são vínculos parciais de evidência, não novos critérios nem substitutos dos demais pendentes.",
+  "status_policy": "pack_source_status é transcrição do pack fixado, não avaliação nova. Mesmo um teste individual positivo não satisfaz sozinho um critério amplo nem converte run falho em sucesso.",
+  "proofs": [
+    {
+      "label": "C09 → resolver real → contexto/continuidade C17",
+      "test_path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/case-event-continuity.test.ts",
+      "test_blob": "3cab95503375cd8c3ed4ea473a2443099a046379",
+      "selection": "C28",
+      "scoped_oracle": "Caso criado pela porta real; ledger sintético declarado em C08/outbox reais; reader canônico/BCS/continuidade/captura/scanner/SQLite reais. Evento mantém identidade após avanço de caso; histórico autorizado conserva projeção original e diferença material; refs forjados, fonte substituída e revogação são recusados; nova admissão e reopen do driver recuperam o mesmo recibo sem duplicação.",
+      "contracts": [
+        {
+          "contract_id": "C09",
+          "name": "Caso de decisão e referências",
+          "source_pointer": "/contracts/8",
+          "literal_anchors": [
+            {
+              "pointer": "/contracts/8/content/0",
+              "text": "caseId, version, state, objective, horizon, currency, criteria, participants autorizados"
+            },
+            {
+              "pointer": "/contracts/8/content/3",
+              "text": "escopo de política reavaliado na leitura; conteúdo privado filtrado inclusive em agregados"
+            },
+            {
+              "pointer": "/contracts/8/content/5",
+              "text": "BusinessEvidenceRef C17 substitui referências livres nas contribuições novas; sourceRefs legados são normalizados sem fabricar origem/hash. Ledger C09 continua fonte oficial; Atlas contém projeções derivadas com outputRef/eventId, nunca outra escolha oficial."
+            }
+          ]
+        },
+        {
+          "contract_id": "C17",
+          "name": "BusinessEvidenceRef, BusinessContextService e memória Atlas protegida",
+          "source_pointer": "/contracts/16",
+          "literal_anchors": [
+            {
+              "pointer": "/contracts/16/content/2",
+              "text": "Resolver cruza installation/project do binding, ID/incarnation/version/digest/fields/period da referência e fontes C01/C02/C09/C12/C14. Request muda apenas seletores; principal/policy/source resolver são injetados. Resultado distingue fresh/historical/stale/revoked/replaced/missing/invalid/unavailable, sem revelar se existe alvo alheio."
+            },
+            {
+              "pointer": "/contracts/16/content/3",
+              "text": "Ledger C09 é oficial. Caso/resultado aceito gera sourceEventId e item pending de projeção. Atlas é derivado: scanner/commit falho mantém evento oficial e projeção pending/refused; recuperação não inventa memória pronta."
+            },
+            {
+              "pointer": "/contracts/16/content/8",
+              "text": "Antes de recall, BCS resolve casos e cada dependência no escopo atual; referência inacessível/revogada/substituída suprime o registro inteiro, inclusive resumo/título/contagens. Versão histórica só é servida como historical se a fonte histórica continua autorizada, com diferenças atuais explícitas. Busca não adivinha owner; args owner/kind/rawAtlasQuery são recusados."
+            }
+          ]
+        }
+      ],
+      "criteria": [
+        {
+          "criterion_id": "WP10.T07.DOD.01",
+          "literal_text": "BCS e Atlas real entregam refs, resolução, emit/read persistentes, scanner e recuperação autorizada após restart.",
+          "source_pointer": "/canonical_work_package/tasks/6/axioms/dod/0",
+          "pack_source_status": "NOT_RUN",
+          "proof_binding": {
+            "criterion_id": "WP10.T07.DOD.01",
+            "scope": "WP10.T07",
+            "owner": "WP10",
+            "family": "dod",
+            "source_status": "NOT_RUN",
+            "proof_plan_status": "planned",
+            "proof_bindings": [
+              {
+                "source": "plan/proof-map.json",
+                "entity_id": "WP10.T07",
+                "proof_packages": [
+                  "E12",
+                  "E15",
+                  "E16"
+                ],
+                "integrated_proofs": [],
+                "status": "NOT_RUN"
+              },
+              {
+                "source": "plan/execution/actors/S0-A.json#proof_bindings",
+                "entity_id": "WP10.T07",
+                "proof_packages": [
+                  "E12",
+                  "E15",
+                  "E16"
+                ],
+                "integrated_proofs": [],
+                "status": "NOT_RUN"
+              }
+            ],
+            "proof_packages_inherited_from_scope": [
+              "E12",
+              "E15",
+              "E16"
+            ],
+            "finding": null
+          },
+          "criterion_closure": "NOT_CLAIMED",
+          "contribution_if_observed": "Resolução/continuidade de case-event, captura Atlas com scanner real, leitura e replay de recibo após reabertura do driver.",
+          "remaining_limit": "Não é reinício de processo, recall completo nem consumidor UI; não fecha todas as modalidades de scanner ou toda T07."
+        },
+        {
+          "criterion_id": "WP10.T07.INV.01",
+          "literal_text": "Ledger SF é oficial; scope Atlas não é ACL; sem novos acessos, store git, identidade técnica ou engine paralelo.",
+          "source_pointer": "/canonical_work_package/tasks/6/axioms/invariants/0",
+          "pack_source_status": "NOT_RUN",
+          "proof_binding": {
+            "criterion_id": "WP10.T07.INV.01",
+            "scope": "WP10.T07",
+            "owner": "WP10",
+            "family": "invariants",
+            "source_status": "NOT_RUN",
+            "proof_plan_status": "planned",
+            "proof_bindings": [
+              {
+                "source": "plan/proof-map.json",
+                "entity_id": "WP10.T07",
+                "proof_packages": [
+                  "E12",
+                  "E15",
+                  "E16"
+                ],
+                "integrated_proofs": [],
+                "status": "NOT_RUN"
+              },
+              {
+                "source": "plan/execution/actors/S0-A.json#proof_bindings",
+                "entity_id": "WP10.T07",
+                "proof_packages": [
+                  "E12",
+                  "E15",
+                  "E16"
+                ],
+                "integrated_proofs": [],
+                "status": "NOT_RUN"
+              }
+            ],
+            "proof_packages_inherited_from_scope": [
+              "E12",
+              "E15",
+              "E16"
+            ],
+            "finding": null
+          },
+          "criterion_closure": "NOT_CLAIMED",
+          "contribution_if_observed": "A leitura canônica antecede C17; ledger mantém evento original e Atlas recebe somente projeção derivada; recusa continua dependendo de autoridade atual.",
+          "remaining_limit": "Ledger de teste é explicitamente sintético; não executa escolha/transição financeira real nem prova todas as partições/atores."
+        },
+        {
+          "criterion_id": "WP10.T07.CMP.01",
+          "literal_text": "Recobrir owner/kind/templates, ACL por campo/registro, incarnation, concurrency, cancel, retry, scanner e consumidor instrumentado.",
+          "source_pointer": "/canonical_work_package/tasks/6/axioms/completeness_criteria/0",
+          "pack_source_status": "NOT_RUN",
+          "proof_binding": {
+            "criterion_id": "WP10.T07.CMP.01",
+            "scope": "WP10.T07",
+            "owner": "WP10",
+            "family": "completeness_criteria",
+            "source_status": "NOT_RUN",
+            "proof_plan_status": "planned",
+            "proof_bindings": [
+              {
+                "source": "plan/proof-map.json",
+                "entity_id": "WP10.T07",
+                "proof_packages": [
+                  "E12",
+                  "E15",
+                  "E16"
+                ],
+                "integrated_proofs": [],
+                "status": "NOT_RUN"
+              },
+              {
+                "source": "plan/execution/actors/S0-A.json#proof_bindings",
+                "entity_id": "WP10.T07",
+                "proof_packages": [
+                  "E12",
+                  "E15",
+                  "E16"
+                ],
+                "integrated_proofs": [],
+                "status": "NOT_RUN"
+              }
+            ],
+            "proof_packages_inherited_from_scope": [
+              "E12",
+              "E15",
+              "E16"
+            ],
+            "finding": null
+          },
+          "criterion_closure": "NOT_CLAIMED",
+          "contribution_if_observed": "Contraprovas de identidade/digest/evidenceRefs, avanço de caso, histórico material, revogação e replay autorizado.",
+          "remaining_limit": "Ficam fora concorrência de writers, cancelamento, scanners ausente/timeout/erro, todos os owners/templates, todos os campos/atores e consumidor final."
+        }
+      ],
+      "outcome": "PENDING_HOSTED_EVIDENCE"
+    },
+    {
+      "label": "Preparação e observação de fonte Planner: 4 → 2 transações",
+      "test_path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-source-observation.test.ts",
+      "test_blob": "3dc987800242cd7ad4e90c8d97825dd8b521bb04",
+      "selection": "C28; guards source-fence em F28 conforme recibos próprios",
+      "scoped_oracle": "Mesmo issuer/resolver/SQLite/autoridade canônicos; fallback 4 e candidato 2 envelopes de fonte, ambos com 6 autenticações diretas e 4 revalidações. Igualdade de referência/digest, repetição fresca na mesma instância, ABA, revogação no egresso e abort após authorizer sem alteração durável.",
+      "contracts": [
+        {
+          "contract_id": "C01",
+          "name": "Contexto, capacidades e referências",
+          "source_pointer": "/contracts/0",
+          "literal_anchors": [
+            {
+              "pointer": "/contracts/0/content",
+              "text": "Identidade de registro e ator, superfície, período, versão, moeda, capabilities e proveniência; dados não legíveis já removidos."
+            },
+            {
+              "pointer": "/contracts/0/proof",
+              "text": "Mesma seleção retorna o mesmo escopo; referência inválida, revogada ou ambígua nunca amplia acesso."
+            }
+          ]
+        }
+      ],
+      "criteria": [
+        {
+          "criterion_id": "WP10.T01.INV.01",
+          "literal_text": "Composição não altera fórmulas/políticas por conveniência e não escreve arquivos de feature de outro WP. Guias normativos usam o README já possuído por S0 e não entram como evidência nova em D.",
+          "source_pointer": "/canonical_work_package/tasks/0/axioms/invariants/0",
+          "pack_source_status": "NOT_RUN",
+          "proof_binding": {
+            "criterion_id": "WP10.T01.INV.01",
+            "scope": "WP10.T01",
+            "owner": "WP10",
+            "family": "invariants",
+            "source_status": "NOT_RUN",
+            "proof_plan_status": "planned",
+            "proof_bindings": [
+              {
+                "source": "plan/proof-map.json",
+                "entity_id": "WP10.T01",
+                "proof_packages": [
+                  "E01",
+                  "E16",
+                  "E17",
+                  "E18"
+                ],
+                "integrated_proofs": [],
+                "status": "NOT_RUN"
+              }
+            ],
+            "proof_packages_inherited_from_scope": [
+              "E01",
+              "E16",
+              "E17",
+              "E18"
+            ],
+            "finding": null
+          },
+          "criterion_closure": "NOT_CLAIMED",
+          "contribution_if_observed": "Intake restrito aos dois arquivos WP10, preservação estática dos produtores/fórmulas e verificação dirigida de identidade/projeção/autoridade da fonte.",
+          "remaining_limit": "Igualdade da fonte não prova equivalência da sensibilidade inteira, cobertura financeira, cinco verificações de binding nem cauda X."
+        },
+        {
+          "criterion_id": "WP10.T01.QLT.01",
+          "literal_text": "Mudanças de compatibilidade são aditivas, pequenas e documentadas junto ao consumidor afetado. O guia por papel descreve as tarefas e os números do produto, reconciliado com o comportamento integrado antes de congelar C.",
+          "source_pointer": "/canonical_work_package/tasks/0/axioms/quality_standards/0",
+          "pack_source_status": "NOT_RUN",
+          "proof_binding": {
+            "criterion_id": "WP10.T01.QLT.01",
+            "scope": "WP10.T01",
+            "owner": "WP10",
+            "family": "quality_standards",
+            "source_status": "NOT_RUN",
+            "proof_plan_status": "planned",
+            "proof_bindings": [
+              {
+                "source": "plan/proof-map.json",
+                "entity_id": "WP10.T01",
+                "proof_packages": [
+                  "E01",
+                  "E16",
+                  "E17",
+                  "E18"
+                ],
+                "integrated_proofs": [],
+                "status": "NOT_RUN"
+              }
+            ],
+            "proof_packages_inherited_from_scope": [
+              "E01",
+              "E16",
+              "E17",
+              "E18"
+            ],
+            "finding": null
+          },
+          "criterion_closure": "NOT_CLAIMED",
+          "contribution_if_observed": "Capacidade preparada opcional com fallback, extração do kernel original e documentação do consumidor; contraprova compara ambos os caminhos.",
+          "remaining_limit": "Não encerra o guia por papel, a compatibilidade global ou o candidato C; desempenho e todos os guards afetados dependem dos recibos próprios."
+        }
+      ],
+      "limits": [
+        "Contagens medem apenas envelopes de fonte instrumentados; transações internas da autoridade não entram nesse total.",
+        "4→2 é oracle estrutural, não speedup, p95 ou conclusão financeira.",
+        "Abort usa scope já materializado; primeira materialização e cancelamento em fila não são demonstrados por esse caso.",
+        "Não repetir X antes dos gates de fonte; manter budgets/assertions e diagnóstico já entregue."
+      ],
+      "outcome": "PENDING_HOSTED_EVIDENCE"
+    },
+    {
+      "label": "Submit real do formulário de forecast no navegador",
+      "test_path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/forecast-submit.test.ts",
+      "test_blob": "44a3a398dfb32afdb6e3d857f44f2987d8c7b997",
+      "selection": "U28 com browser-startup/forecast-submit/browser-lifecycle",
+      "scoped_oracle": "Renderer, catálogo residente distribuído, script completo e semântica do navegador reais; submit implícito por clique e Enter, validação local, POST prepare/start/read/output, resultado exibido, recusa apresentada, campos/entrada preservados e ausência de pageerror.",
+      "fixture_boundary": "Caso/fontes/modelo e respostas HTTP são fixtures explícitas. O servidor não executa o produtor financeiro, autoridade HTTP instalada, análise nativa nem contribuição persistida.",
+      "criteria": [
+        {
+          "criterion_id": "WP10.T02.DOD.01",
+          "literal_text": "Jornadas e estados de interface foram observados na composição real, com evidência suficiente para reproduzir cada conclusão.",
+          "source_pointer": "/canonical_work_package/tasks/1/axioms/dod/0",
+          "pack_source_status": "NOT_RUN",
+          "proof_binding": {
+            "criterion_id": "WP10.T02.DOD.01",
+            "scope": "WP10.T02",
+            "owner": "WP10",
+            "family": "dod",
+            "source_status": "NOT_RUN",
+            "proof_plan_status": "planned",
+            "proof_bindings": [
+              {
+                "source": "plan/proof-map.json",
+                "entity_id": "WP10.T02",
+                "proof_packages": [
+                  "E01",
+                  "E16",
+                  "E17",
+                  "E18"
+                ],
+                "integrated_proofs": [],
+                "status": "NOT_RUN"
+              }
+            ],
+            "proof_packages_inherited_from_scope": [
+              "E01",
+              "E16",
+              "E17",
+              "E18"
+            ],
+            "finding": null
+          },
+          "criterion_closure": "NOT_CLAIMED",
+          "contribution_if_observed": "Observa os estados e ações do script/renderer reais em navegador, incluindo erro e consumo visual da resposta fornecida.",
+          "remaining_limit": "É regressão UI delimitada, não jornada completa na composição real com produtor/run persistidos."
+        },
+        {
+          "criterion_id": "WP10.T02.INV.01",
+          "literal_text": "Captura bonita ou teste de markup não substitui comportamento; identidade de teste não pode ter privilégios extras ocultos.",
+          "source_pointer": "/canonical_work_package/tasks/1/axioms/invariants/0",
+          "pack_source_status": "NOT_RUN",
+          "proof_binding": {
+            "criterion_id": "WP10.T02.INV.01",
+            "scope": "WP10.T02",
+            "owner": "WP10",
+            "family": "invariants",
+            "source_status": "NOT_RUN",
+            "proof_plan_status": "planned",
+            "proof_bindings": [
+              {
+                "source": "plan/proof-map.json",
+                "entity_id": "WP10.T02",
+                "proof_packages": [
+                  "E01",
+                  "E16",
+                  "E17",
+                  "E18"
+                ],
+                "integrated_proofs": [],
+                "status": "NOT_RUN"
+              }
+            ],
+            "proof_packages_inherited_from_scope": [
+              "E01",
+              "E16",
+              "E17",
+              "E18"
+            ],
+            "finding": null
+          },
+          "criterion_closure": "NOT_CLAIMED",
+          "contribution_if_observed": "Exercita comportamento do submit real, inclusive tipo implícito do botão, em vez de mera comparação de markup.",
+          "remaining_limit": "Não demonstra autorização da instalação ou privilégios de usuário real: o limite HTTP/caso de fixture permanece explícito."
+        },
+        {
+          "criterion_id": "WP10.T02.QLT.01",
+          "literal_text": "Toda falha visual com perda de conteúdo/ação e toda perda de contexto relevante recebe correção antes do aceite.",
+          "source_pointer": "/canonical_work_package/tasks/1/axioms/quality_standards/0",
+          "pack_source_status": "NOT_RUN",
+          "proof_binding": {
+            "criterion_id": "WP10.T02.QLT.01",
+            "scope": "WP10.T02",
+            "owner": "WP10",
+            "family": "quality_standards",
+            "source_status": "NOT_RUN",
+            "proof_plan_status": "planned",
+            "proof_bindings": [
+              {
+                "source": "plan/proof-map.json",
+                "entity_id": "WP10.T02",
+                "proof_packages": [
+                  "E01",
+                  "E16",
+                  "E17",
+                  "E18"
+                ],
+                "integrated_proofs": [],
+                "status": "NOT_RUN"
+              }
+            ],
+            "proof_packages_inherited_from_scope": [
+              "E01",
+              "E16",
+              "E17",
+              "E18"
+            ],
+            "finding": null
+          },
+          "criterion_closure": "NOT_CLAIMED",
+          "contribution_if_observed": "Recheck direto da ação bloqueada FIN-IND-004, com mensagens de validação/recusa e preservação da entrada.",
+          "remaining_limit": "Não fecha todas as falhas visuais/contextuais nem o recheck financeiro de produtor→run real."
+        }
+      ],
+      "outcome": "PENDING_HOSTED_EVIDENCE"
+    }
+  ],
+  "excluded_promotions": [
+    {
+      "criterion_id": "WP10.T07.CHK.02",
+      "literal_text": "Append admitido -> commit driver SF real -> reinício de processo -> recall real -> consumidor de UI recupera razão/diferenças.",
+      "source_pointer": "/canonical_work_package/tasks/6/checks/1",
+      "pack_source_status": "NOT_RUN",
+      "proof_binding": {
+        "criterion_id": "WP10.T07.CHK.02",
+        "scope": "WP10.T07",
+        "owner": "WP10",
+        "family": "checks",
+        "source_status": "NOT_RUN",
+        "proof_plan_status": "planned",
+        "proof_bindings": [
+          {
+            "source": "plan/proof-map.json",
+            "entity_id": "WP10.T07",
+            "proof_packages": [
+              "E12",
+              "E15",
+              "E16"
+            ],
+            "integrated_proofs": [],
+            "status": "NOT_RUN"
+          },
+          {
+            "source": "plan/execution/actors/S0-A.json#proof_bindings",
+            "entity_id": "WP10.T07",
+            "proof_packages": [
+              "E12",
+              "E15",
+              "E16"
+            ],
+            "integrated_proofs": [],
+            "status": "NOT_RUN"
+          }
+        ],
+        "proof_packages_inherited_from_scope": [
+          "E12",
+          "E15",
+          "E16"
+        ],
+        "finding": null
+      },
+      "criterion_closure": "NOT_CLAIMED",
+      "reason": "A prova C09/C17 reabre driver/serviços no processo do teste e chama resolve/continuidade/emit; não executa reinício de processo→recall→UI com diferenças."
+    },
+    {
+      "criterion_id": "WP10.T02.CHK.05",
+      "literal_text": "No ambiente/corpus fixados em G0, medir resposta visual e conclusão com30repetições comparáveis. Verificar feedback em até200ms e investigar p95 que regrida mais de20%; registrar resultado observado, sem inventar benchmark.",
+      "source_pointer": "/canonical_work_package/tasks/1/checks/4",
+      "pack_source_status": "NOT_RUN",
+      "proof_binding": {
+        "criterion_id": "WP10.T02.CHK.05",
+        "scope": "WP10.T02",
+        "owner": "WP10",
+        "family": "checks",
+        "source_status": "NOT_RUN",
+        "proof_plan_status": "planned",
+        "proof_bindings": [
+          {
+            "source": "plan/proof-map.json",
+            "entity_id": "WP10.T02",
+            "proof_packages": [
+              "E01",
+              "E16",
+              "E17",
+              "E18"
+            ],
+            "integrated_proofs": [],
+            "status": "NOT_RUN"
+          }
+        ],
+        "proof_packages_inherited_from_scope": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "finding": null
+      },
+      "criterion_closure": "NOT_CLAIMED",
+      "reason": "Nenhuma das três provas executa 30 repetições comparáveis, mede feedback em 200ms ou confronta p95 com baseline G0. 4→2 não substitui esse critério."
+    },
+    {
+      "criterion_id": "CAMP.DOD.02",
+      "literal_text": "As jornadas J01–J13 funcionam nos entrypoints reais, com persistência, autorização, produtores e consumidores reais, incluindo IA, Relay, documentos, portfólio e memória.",
+      "source_pointer": "/global_campaign_axioms/dod/1",
+      "pack_source_status": "NOT_RUN",
+      "criterion_closure": "NOT_CLAIMED",
+      "reason": "Submit usa respostas HTTP e caso de fixture; C09 usa texto de ledger sintético declarado; a observação de fonte não completa a jornada financeira. Nenhuma prova isolada encerra J01–J13."
+    }
+  ],
+  "retained_obligations": "Permanecem recibos/handoffs anteriores, Memory/Calculation não encerrados, FIN001 preparo real de forecast, FIN003 campanha completa/grant correto/reabertura, FIN004 produtor/run reais, FIN005 mesmo caso/escolha/limites financeiros, matrizes de consumidores/native/Atlas e revisões independentes finais. Este mapa não reavalia nem redefine essas pendências.",
+  "global_acceptance": false,
+  "independent_final_acceptance": false,
+  "execution_performed_by_map_author": false
+}
