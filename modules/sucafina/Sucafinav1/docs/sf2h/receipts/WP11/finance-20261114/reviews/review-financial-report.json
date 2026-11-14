@@ -1,0 +1,249 @@
+{
+  "schema": "sf2h-independent-financial-review-v1",
+  "reviewer": {
+    "role": "independent-read-only-financial-reviewer",
+    "author": false
+  },
+  "candidate": {
+    "productSha": "66bbe152c145f04c16223a938589c63cedb3b716",
+    "productTree": "f727ae5bfcef26383ff47a2b06bb65b161295dd2",
+    "branch": "astra-finance",
+    "base": "sf2-stack",
+    "pullRequest": 35,
+    "snapshot": "/workspace/scratch/a97ca4c53050/review-66bbe15"
+  },
+  "planning": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "campaignSha256Verified": true
+  },
+  "verification": {
+    "publishedPathsGitBlobHashesVerified": 37,
+    "publishedPathsGitBlobMismatches": 0,
+    "manifestExistingNonDocBlobCount": 724,
+    "manifestCountIndependentlyReverified": false,
+    "productExecutedLocally": false,
+    "testsExecutedLocally": false,
+    "ciDispatched": false,
+    "productFilesModified": false
+  },
+  "scope": {
+    "instructions": [
+      "AGENTS.md",
+      "docs/sf2h-plan/START.md",
+      "docs/sf2h-plan/execution/COMMON.md",
+      "docs/sf2h-plan/WORKFLOW.md"
+    ],
+    "planningRead": [
+      "WP03/WP05/WP11 pack JSON parsed; canonical work packages and financial criteria reviewed",
+      "C01-C14 financial/replay/consumer contracts",
+      "Numeric oracles FX01/FX02/FX03/AI-RENEWAL/AI-RENEWAL-OMITTED-CATEGORY/CONFIRM-SCOPE"
+    ],
+    "codeRead": [
+      "product/planner/adapter.ts",
+      "product/planner/scenario.ts",
+      "product/planner/scenario-port.ts",
+      "product/planner/port.ts",
+      "product/planner/coverage.ts",
+      "product/planner/comparison.ts",
+      "product/planner/preview-comparison.ts",
+      "product/planner/sensitivity-units.ts",
+      "product/planner/exact-threshold.ts",
+      "product/planner/interval-proof.ts",
+      "product/planner/criterion-metric.ts",
+      "product/planner/persistence.ts",
+      "product/planner/calculation-evidence.ts",
+      "product/planner/source-issuer.ts",
+      "product/planner/scenario-inputs.ts",
+      "product/planner/headcount-months.ts",
+      "product/planner/observed.ts",
+      "product/decisions/cost-coverage.ts",
+      "product/decisions/coverage-interval.ts",
+      "product/decisions/coverage-interval-store.ts",
+      "product/decisions/coverage-classification.ts",
+      "product/decisions/composite-planner.ts",
+      "product/decisions/alternative-replay.ts",
+      "product/decisions/scenario-request-store.ts",
+      "product/analytics/scenario.ts",
+      "product/analytics/catalog.ts",
+      "product/analytics/decision-view.ts",
+      "runtime/planner.ts (relevant source qualification, calculation and save paths)",
+      "src/planner-accounts.ts (relevant primitives)"
+    ],
+    "testsRead": [
+      "test/product/wp03/source-scenario.test.ts",
+      "test/product/wp03/composed-threshold.test.ts",
+      "test/product/wp03/scenario-costs.test.ts",
+      "test/product/wp03/port.test.ts (relevant scenario/threshold/replay cases)",
+      "test/product/wp03/port-hr.test.ts",
+      "test/product/wp03/planner-fixture.ts",
+      "test/product/wp05/engine-fixture.ts (fixture and producer composition)",
+      "test/product/wp11/composite-coverage.test.ts",
+      "test/product/wp11/renewal-choice-history.test.ts"
+    ],
+    "notClaimed": [
+      "Full acceptance of all 303 WP criteria",
+      "Complete resident/native appendices review",
+      "Host, artifact store, UI integration or C/D global acceptance",
+      "Execution success of inspected tests"
+    ]
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "high",
+      "kind": "product-correctness",
+      "blocking": true,
+      "owner": "WP03",
+      "title": "Explicit scenario forecast remains absent when the source component was null",
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "lines": [
+        86,
+        105
+      ],
+      "cause": "Line 92 conditions the preview amount on the pre-command component.amount. A valid replacement/include cannot make an absent USD contribution known; line 93 leaves evidenceState absent and line 105 omits the supplied amount.",
+      "counterexample": {
+        "source": "Finance actor; year 2027; closed=9; existing USD OPEX licenses line missing with b=Array(12).fill(null), a=[], f=[]; another quantified component contributes 2000; current source and valid pending coverage.",
+        "request": {
+          "operations": [
+            {
+              "kind": "replace",
+              "targetRef": "missing:11",
+              "amount": 1000,
+              "currency": "USD"
+            }
+          ],
+          "assumptions": []
+        },
+        "expected": "The canonical command produces outlook[10]=1000; changed component is hypothetical with amount 1000; knownSubtotal=3000; total=null and comparisonStatus=conditioned.",
+        "actualStaticTrace": "scenario-port.ts keeps amount=null and absent; knownSubtotal=2000 despite canonical preview outlook=1000. include on the same existing empty cell has the same defect. Independent HR forecast can also resolve unknown outlook while budget rate remains unknown."
+      },
+      "evidence": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "lines": [
+            152,
+            174
+          ],
+          "observation": "Missing source budget and forecast become component null/absent."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/scenario.ts",
+          "lines": [
+            19,
+            24
+          ],
+          "observation": "Existing open target resolves to the real domain save command."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/scenario.ts",
+          "lines": [
+            42,
+            54
+          ],
+          "observation": "Finite replace/include passes amount to f10 and invokes domain.execute."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "lines": [
+            706,
+            712
+          ],
+          "observation": "Canonical save stores supplied finite forecast."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "lines": [
+            757,
+            799
+          ],
+          "observation": "Canonical non-HR save normalizes budget and keeps explicit forecast."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "lines": [
+            262,
+            271
+          ],
+          "observation": "Canonical calculation uses explicit open-month forecast."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/headcount-months.ts",
+          "lines": [
+            49,
+            54
+          ],
+          "observation": "Independent HR forecast does not require its budget rate."
+        }
+      ],
+      "criteria": [
+        "WP03.T01.CHK.02",
+        "WP03.T01.INV.01",
+        "WP03.T01.QLT.01",
+        "WP11.T02.QLT.01",
+        "C10 knownSubtotal quantifies engine-produced components"
+      ],
+      "fixBoundary": "Qualify the copied post-command snapshot through projectPlannerSource/buildPlannerFinancialProjection and use the canonical qualified cells for changed components. Keep hypothetical state and conditioned total; preserve untouched missing cells and missing FX. Do not simply remove the null guard: legacy FX returns zero.",
+      "requiredRemoteRegression": [
+        "replace and include into absent USD forecast/budget with another known component",
+        "Explicit hypothetical zero remains zero rather than null",
+        "Untouched absent cell remains null",
+        "Foreign amount without FX remains null",
+        "Explicit HR forecast becomes quantified despite missing budget rate",
+        "Original snapshot/request remain unchanged; replay matches"
+      ]
+    },
+    {
+      "id": "G1",
+      "severity": "medium",
+      "kind": "proof-gap",
+      "blocking": "required-evidence-gap",
+      "owner": "WP03",
+      "title": "Long IEEE fallback is not demonstrated by the inspected threshold tests",
+      "path": "modules/sucafina/Sucafinav1/product/planner/exact-threshold.ts",
+      "lines": [
+        35,
+        79
+      ],
+      "observation": "The code contains ordered-bit bisection and adjacent witnesses. Inspected composed tests constrain calls to <=18 and exercise short anchor neighborhoods; no discriminant forcing the full fallback was located. This is not a demonstrated solver defect.",
+      "requiredRemoteRegression": "Use canonical ordered components [2**53, x], baseline 2**53, x in [0,16], criterion difference <= 0. The anchor is the lower bound, forcing bisection; the largest satisfying value is 1 and nextUp(1) must fail. Preserve source and request fences."
+    },
+    {
+      "id": "G2",
+      "severity": "medium",
+      "kind": "proof-gap",
+      "blocking": "required-evidence-gap",
+      "owner": "WP03/WP11",
+      "title": "Confirmed implementation quote 70000 -> total 235000 is not demonstrated in inspected product tests",
+      "criterion": "WP11.T02.CHK.01",
+      "observation": "The 70000 value is present as a sensitivity bound; no explicit 235000/5000 result assertion or same-scope source-quote revision witness was located in wp03/wp05/wp11 tests. Static canonical summation supports the expected arithmetic, but an endpoint bound is not this oracle.",
+      "requiredRemoteRegression": "Revise the confirmed implementation source from 45000 to 70000 preserving shared migration/training/taxes and supported N/A. Observe source-only complete total 235000 and advantage 5000 versus 240000, minimum advantage failure, and original ChoiceRecord/source snapshot unchanged."
+    }
+  ],
+  "staticObservations": [
+    "No-op source branch is distinct from hypothetical execution and requires current complete coverage; unchanged explicit operations remain hypothetical.",
+    "Scenario commands call runtime Planner on a structured clone; financial money and FX originate from canonical domain primitives.",
+    "Cost coverage classifies inventory without adding coverage rows to totals; shared component identities are counted once; duplicate component identities and unsupported N/A are rejected.",
+    "Source-derived sensitivity parameter is returned separately as parameterOperation; metadata includes original stored requestDigest/resultDigest and repeats source checks.",
+    "Exact solver retains all fixed operations and proves adjacent representable inputs; fallback code is present but G1 lacks a discriminant.",
+    "C17 replay checks the persisted canonical request digest and reproduces the original scenario; source-only derivation does not rewrite the request.",
+    "The 210000 -> 250000 and savings 30000 -> -10000 paths have real-producer test assertions in the inspected source/history fixture, but execution was not performed by this reviewer.",
+    "Analytics presents supplied scenario totals/components and sensitivity values; no parallel financial formula was found in the inspected consumers."
+  ],
+  "ciContextFromParentOnly": {
+    "W3TypecheckRun": "43579943285",
+    "reportedDiagnostics": 132,
+    "reportedExternalDiagnostics": 131,
+    "reportedOwnedDiagnostic": "product/decisions/cost-coverage.ts:77 union.includes string -> never; parent reports narrowing fix in progress",
+    "reportedGuards": "78 checks / 759 files / 13 warnings / 0 errors",
+    "independentlyRetrieved": false
+  },
+  "limitations": [
+    "Static review only, no product execution, no local tests and no newly dispatched CI.",
+    "Assertions in test files are plans/evidence paths, not observed passing executions.",
+    "37 published path blobs and the planning campaign hash were independently checked; the remaining snapshot provenance relies on the supplied manifest.",
+    "This report applies only to W3 66bbe152c145f04c16223a938589c63cedb3b716; later deltas need an addendum.",
+    "Host/contract/artifact-store/UI changes and full native composition are outside this review ownership."
+  ],
+  "conclusion": "One concrete owned financial correctness blocker (F1) and two specific required proof gaps (G1/G2). No READY/DONE or global C/D decision is assigned."
+}

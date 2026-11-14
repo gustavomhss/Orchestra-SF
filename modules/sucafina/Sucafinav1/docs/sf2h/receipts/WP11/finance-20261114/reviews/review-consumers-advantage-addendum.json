@@ -1,0 +1,143 @@
+{
+  "schema": "sf2h-independent-consumer-advantage-addendum-v1",
+  "product_sha": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+  "product_tree": "1ce4e9fcb2e9fb81e12dcfd773aa2daae64be39a",
+  "capture": "/workspace/scratch/a97ca4c53050/finance-W14-changes.json",
+  "capture_sha256": "f361dc56d00c3b7289da7e04edd3e8bf14c6b4d16a88bc25c4e527822c729ae5",
+  "independence": "Read-only independent reviewer; not author of the W14 changes.",
+  "method": [
+    "Read all eight frozen path/content/sha entries. Independently recomputed each Git blob identity; eight match, zero mismatches.",
+    "Compared relevant changes to the previously reviewed W10 immutable snapshot and W12 frozen capture. No dirty working-tree source used.",
+    "No product, test, browser, build, typecheck or CI execution. Only this report and its JSON were written."
+  ],
+  "blobs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts",
+      "expected_blob": "f5bb6d732ffc588626553097d53d3c0e1457a81c",
+      "observed_blob": "f5bb6d732ffc588626553097d53d3c0e1457a81c",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "expected_blob": "b7174b16b485323f767d63e6842f3d61284245eb",
+      "observed_blob": "b7174b16b485323f767d63e6842f3d61284245eb",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/advantage-view.ts",
+      "expected_blob": "47b271f492292956a8d8696cc32cd999e9878661",
+      "observed_blob": "47b271f492292956a8d8696cc32cd999e9878661",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "expected_blob": "4a6d481a8c7de805d7e13a3d3ab334beffd5692e",
+      "observed_blob": "4a6d481a8c7de805d7e13a3d3ab334beffd5692e",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/projection.ts",
+      "expected_blob": "29f32617de3ce33bbf414a7439f97d64806bbaa9",
+      "observed_blob": "29f32617de3ce33bbf414a7439f97d64806bbaa9",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+      "expected_blob": "40fbaf6eb4a7b88c3f4feb54773961188cd007da",
+      "observed_blob": "40fbaf6eb4a7b88c3f4feb54773961188cd007da",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+      "expected_blob": "2e18729fa382d1c8c1cc68d98703644e5c018be7",
+      "observed_blob": "2e18729fa382d1c8c1cc68d98703644e5c018be7",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/projection.test.ts",
+      "expected_blob": "52e71583353ca80cfbba6746c5bb0dadac48d042",
+      "observed_blob": "52e71583353ca80cfbba6746c5bb0dadac48d042",
+      "verified": true
+    }
+  ],
+  "finding": {
+    "id": "G2",
+    "prior_status": "Canonical opposite cost orientation was clear, but literal 30000 to -10000 appeared only outside DOM.",
+    "status": "LITERAL_ADVANTAGE_IMPLEMENTED_AND_ASSERTED_IN_AUTHORED_DOM_TEST_EXECUTION_PENDING",
+    "severity": "No new concrete defect found in the eight reviewed blobs.",
+    "semantic_binding": [
+      {
+        "location": "product/analytics/stored-scenario.ts:21-31",
+        "observation": "The optional reference is validated as nonblank; scenario and ordinary comparison must match selected result IDs and the same complete caseRef. Advantage must be the selected comparison record, have the same complete caseRef, and reverse the exact baselineResultRef/alternativeResultRef pair."
+      },
+      {
+        "location": "product/analytics/stored-scenario.ts:36-55",
+        "observation": "Source projection must match installation/project/principal/policy/access and scenario currency/horizon, and cannot supply a conflicting comparison slot. Both host fences receive clones and are checked for mutation. Scenario, ordinary comparison, advantage and optional sensitivity are independently observed again; changed full stored records fail closed."
+      },
+      {
+        "location": "product/analytics/scenario.ts:19,31-43",
+        "observation": "The authenticated resolver optional advantageComparisonRef is forwarded to the stored reader and must equal the resulting comparisonRef. Existing selection cloning and anti-presentation-mutation checks remain."
+      },
+      {
+        "location": "product/analytics/projection.ts:11-22",
+        "observation": "Only context source observation times are normalized in the new comparison slot. Metric/reference, version/engine, values, evidence and other context identity remain part of sameBiProjection equality."
+      }
+    ],
+    "financial_arithmetic": {
+      "location": "product/analytics/stored-scenario.ts:58-65; product/analytics/advantage-view.ts:42-58",
+      "result": "The BI adapter copies persisted advantage.result.knownDifference and comparisonStatus; it does not negate the old difference, subtract totals, or recompute financial results. Renderer calculations are chart coordinates only.",
+      "presence": "Null knownDifference becomes absent; nonnull complete becomes confirmed and noncomplete becomes estimated. Renderer reads finite presence and labels known zero as zero without treating missing as zero.",
+      "existing_cost_measure": "The original explicitly labelled cost difference remains. New advantage is explicitly reference minus alternative, so the two measures are not silently conflated."
+    },
+    "presentation_and_provenance": [
+      {
+        "location": "product/analytics/advantage-view.ts:8-20",
+        "observation": "Renderer requires the expected metric, a distinct nonblank comparisonRef, matching projection version/engine/full context, unique value IDs, valid horizon/currency and recognized comparison status."
+      },
+      {
+        "location": "product/analytics/advantage-view.ts:22-38,61-89",
+        "observation": "An accessible named section exposes an explicitly oriented advantage chart and equivalent table, status text, exact persisted comparisonRef, and source buttons using each original BusinessEvidenceRef. Conditioned value has an explicit pending qualification."
+      },
+      {
+        "location": "product/analytics/view.ts:57-62",
+        "observation": "Existing real renderBiView calls the new renderer and forwards its established openResult/openEvidence callbacks. No C1R code was changed by this delta."
+      }
+    ],
+    "authored_proof": [
+      {
+        "location": "test/product/wp05/choice-history-bi.test.ts:16-20,45-58,72-87",
+        "observation": "The previously reviewed canonical inverse comparison is persisted through the real result store; assertions check stored equality, exact optional result reference, 30000 before/-10000 after and sourceRefs including both scenario origins."
+      },
+      {
+        "location": "test/product/wp05/choice-history-bi.test.ts:132-155",
+        "observation": "DOM assertions now check literal 30000 Condicionada then -10000 Completa in the equivalent table and SVG/rect labels, with a visible nonzero bar, explicit baseline-minus-alternative orientation, exact comparison result callback and every source evidence callback."
+      },
+      {
+        "location": "test/product/wp05/choice-history-bi.test.ts:49-52,64-103,156-177",
+        "observation": "Existing checks retain pending training without zero placeholder, training40000 after resolution, subtotal210000 to total250000, same case identity with newer version, old ChoiceRecord/projection unchanged, stale old selection rejected and no applied state/prepared changes/receipts."
+      },
+      {
+        "location": "test/product/wp05/stored-bi-fences.test.ts:106-166",
+        "observation": "Boundary tests cover omitted optional reference, blank/ref/pair/case mismatch, mutated second observation, revocation, final selection mutation, currency/period mismatch, conflicting slot, forwarding and omitted result rejection. This fixture deliberately uses manually supplied comparisons and empty sourceRefs; it is boundary proof, not the financial oracle."
+      },
+      {
+        "location": "test/product/wp05/projection.test.ts:16-32",
+        "observation": "Comparison equality tests allow changed observedAt only and reject changed reference/version/engine/currency/period/access/source identity."
+      }
+    ],
+    "criterion": {
+      "id": "WP05.T05.CHK.20",
+      "status": "Literal advantage display and authored assertions now present. Execution and installed integration remain pending; no integral criterion acceptance."
+    },
+    "new_concrete_regression_found": false
+  },
+  "new_findings": [],
+  "proof_boundaries": [
+    "S6 remains pending according to the coordinator; no test PASS attributed.",
+    "The same-case test uses real Planner comparison and result persistence through its existing fixture, but fixture authority/capture declarations remain synthetic as previously disclosed.",
+    "New comparison/source navigation tests capture click callbacks; they do not execute installed C17/HTTP routing, keyboard detail-return or external host lifecycle.",
+    "The capture adds the optional resolver contract and its binder but contains no external CLI resolver/asset rollout. Existing hosts that omit advantageComparisonRef retain prior behavior; adoption and installed exact-source navigation must be shown by the host owner.",
+    "No broad rereview of C1R, financial scenario changes, 303 live receipt maps, or all W14 tree files. C1R remains covered by its W12 focus addendum."
+  ],
+  "acceptance": "Independent static closure of the original G2 literal-rendering gap on the eight W14 blobs, with authored test coverage only. No full criterion acceptance, READY/DONE or global C/D verdict."
+}

@@ -1,0 +1,574 @@
+{
+  "schema": "sf2h-finance-external-reconciliation-v2",
+  "composeHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+  "interfaceHead": "0c3d98dd1263a305ce294c78ad5939cdda110a78",
+  "priorComposeHead": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+  "sourceFiles": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "sha": "4b02413b5a98e750187fa8f5fa54f3cb2415f4e3",
+      "sha256": "c6911aa04b6b22750b2f320b680c3b4510ae4f230d29baba76932b4feca12811",
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/apps/cli/src/sucafina-product/business-services.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "sha": "9805676b50cb5d12f37a4a91350f01ba227a168f",
+      "sha256": "5b5822480441f8972ec4ced62d655c933504bcd200c7cb3882aa0170e8244694",
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/apps/cli/src/sucafina-product/planner-calculation-history.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "sha": "bc224c0b2830fe54a02c3b2bc356cb6bf2b1c327",
+      "sha256": "ff4732ca4b8fc8f6b3ffdccc3b04584dbc6739524ab55162196049c30c2357ed",
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/apps/cli/src/sucafina-product/planner-calculation-services.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/intakes/group35-61d923-pending.json",
+      "sha": "9edbba1dec59a8f2d4848fc146022c8155730480",
+      "sha256": "e0e922d52f4fc8a2710fea3fc62f9e6a37bd76a7f2cba403fbecb7e3929ad681",
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/intakes/group35-61d923-pending.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/intakes/own-c17-case-history-w8.json",
+      "sha": "292b777831604a2a60ebd834a862ab7246e74a87",
+      "sha256": "c1de7a496215342b34c0c3e92281968fac971c84f37bc068bc6493e1d5739711",
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/intakes/own-c17-case-history-w8.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/owner-findings/wp11-hot-topic-domain.patch",
+      "sha": "b83d1f95567bc8fce0758c07fd88d22117a4ce3f",
+      "sha256": "90158263803613f9ac289487848573ac70c0809af7fdf5ff301645aad7e7b5d8",
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/owner-findings/wp11-hot-topic-domain.patch"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/owner-findings/wp11-noop-promotion-coverage.json",
+      "sha": "0f39563fb8284aa380aea27188774557331aca87",
+      "sha256": "b1e9ad576a47e9dc353f6fe0de09debb9fdf7c7d02b0ae1bbcddd23dbee7a1be",
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/owner-findings/wp11-noop-promotion-coverage.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/owner-findings/wp11-noop-promotion-coverage.md",
+      "sha": "f2b972355daadec0e30256a033a2824910e7220f",
+      "sha256": "349a04f668d8827acae13dc3213d8c408ba64bb7174b358f545eca8102a99e6a",
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/owner-findings/wp11-noop-promotion-coverage.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/owner-findings/wp11-noop-promotion-coverage.patch",
+      "sha": "3161c93c629249105a358d7acbcc849bc352f12d",
+      "sha256": "88e84008d2412b54fc4ff68d7667ef7420ee300c361232374a46ffe5c19085a5",
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/owner-findings/wp11-noop-promotion-coverage.patch"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "sha": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+      "sha256": "9791fd4c605693711a4508b3b496c0fb67a407c1009d734408659ed10664fefc",
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts",
+      "sha": "3e8830c3dddc8b9609f583f877b2fe7458eccd28",
+      "sha256": "4be293f1b2ab1ea2deefa7ebbef633cb71b9c9a6abe4a4d83a99929e5b6259cc",
+      "bytes": 233,
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "sha": "ab9814817d11c0b477636ee54d1b2763d365f405",
+      "sha256": "c16c6d976d21f4a4f9b166315ad0e0c7fae138262f82aef8fda9df46ed73d4ac",
+      "bytes": 4973,
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/product/procurement/source-projection.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "sha": "615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e",
+      "sha256": "690ad63560314587ecb355a7185650796c6c6ddd5e9da2015f34d1966893b311",
+      "bytes": 32624,
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/product/procurement/sources.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "sha": "4e0fd90ab35f9c03d79d4a1bb65b7bdc7385681c",
+      "sha256": "00e688d1ad8daa3429a415bc51ff5fec23b64d7505cd7774331ff5a6627824b0",
+      "bytes": 10622,
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/confirmation-fields.ts",
+      "sha": "a1e45e803105e76f147e695a7e92246257de9b16",
+      "sha256": "9429d9206907eeea57c593fd75b287981caafa87f15234cf6dc0928b40eb8d71",
+      "bytes": 5889,
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/product/procurement/confirmation-fields.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+      "sha": "5ed7b1c7e8f140c2820d9e3095a7427374d10f69",
+      "sha256": "b49699f8d77b33e172da91004acc96735ac00911f87a527799752b77df044cd3",
+      "bytes": 5912,
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/product/procurement/monetary.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts",
+      "sha": "3adef2d68f54f2e04f9532751f5ddc9bed7e4b60",
+      "sha256": "0525309745c161872e7727dc698f8271fa911f0280ee0e3512b3825b4668f4a8",
+      "bytes": 14899,
+      "sourceHead": "0c3d98dd1263a305ce294c78ad5939cdda110a78",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/0c3d98dd1263a305ce294c78ad5939cdda110a78/modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/planner-http.ts",
+      "sha": "2befb1d4c7964b30830311abe1c93c7c575b8f70",
+      "sha256": "72a07dad1d47efe009e1d256da527a438a6d5c213296248c835a6f08d1ae98d9",
+      "bytes": 3946,
+      "sourceHead": "0c3d98dd1263a305ce294c78ad5939cdda110a78",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/0c3d98dd1263a305ce294c78ad5939cdda110a78/modules/sucafina/Sucafinav1/product/interface/planner-http.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "sha": "920fda293db553096f4d8ab7004fcd9652a69291",
+      "sha256": "0476febc21bf87c35a734e4cae028bc4fee2f72ccfebfd30a0490ecf44fae055",
+      "bytes": 6587,
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/bi-selections.ts",
+      "sha": "5bb690b8072d932f1717206b5967c95b45e3b365",
+      "sha256": "d2ba76e002a6805e4ad321da0d19ef4f1d557a7530c291b71036502659f4571f",
+      "bytes": 2865,
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/apps/cli/src/sucafina-product/bi-selections.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "sha": "7d44c1982c3c62fdaf21f98945ded9e572fd359a",
+      "sha256": "5b89fbb1e7dcd1eaab182171c83bbb562be866a237c1470f4dac772be388d8f2",
+      "bytes": 15216,
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/apps/cli/src/sucafina-product/bi-services.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "sha": "604d2a7806dcd7594e03207bf3011d6c1dc801b8",
+      "sha256": "2194bd5956722a5514704dc13482b28dd728d2ee59ec2ad530d897eebc3862d4",
+      "bytes": 17475,
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+      "sha": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+      "sha256": "96ed59925c95abe55fe15185f30f2026f0713f5f916238d4529c29d812aa86bf",
+      "bytes": 6719,
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+      "sha": "6c08aae11dd559553d5f9274d1aa5750686ff8fc",
+      "sha256": "f377fc7ce657f0f999f6081568872af805f48c7e596ea75db8b242a1dab881f0",
+      "bytes": 8514,
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "sha": "c2f37e94777d2bdd7d7e565b37f6b4140b3906d9",
+      "sha256": "624e80ae47fcbe8070fde0090748e3622eeeffd927e3dc41ab2ba1d69661a323",
+      "bytes": 15859,
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/product/portfolio/verification.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts",
+      "sha": "30697fcbeee6b7011cc7786a0a3bc64bd0d3449e",
+      "sha256": "ac95c12bb81b42f0186c1bafcd801b71e50aebe576791e844f4d7c849e25bb47",
+      "bytes": 13845,
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+      "sha": "e3edc3ed317be3399855edee3b4ffd4eaa5e5b5e",
+      "sha256": "4ca775046eb5c8dbdb146970386cf3189b48b5ead5db31a52028da9f179467b3",
+      "bytes": 16771,
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/apps/cli/src/sucafina-product/extended-bi-browser.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "sha": "43f73f337fa570d87f7a2f5f7aad19a038767fea",
+      "sha256": "60e0714fb024ac77917a09601ef359bbfe7f1a4c7dd0517684cf6355220ff47c",
+      "bytes": 17053,
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/apps/cli/src/sucafina-product/extended-http.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "sha": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+      "sha256": "aa777b4062e785eb69db1724e2be633e4547303310ec02d9b15329affc8f7db8",
+      "bytes": 14023,
+      "sourceHead": "0c3d98dd1263a305ce294c78ad5939cdda110a78",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/0c3d98dd1263a305ce294c78ad5939cdda110a78/modules/sucafina/Sucafinav1/product/decisions/apply.ts"
+    }
+  ],
+  "inspection": "STATIC_PRIMARY_SOURCE_WITH_EXACT_S12_CASE_RESULTS",
+  "externalFilesModified": false,
+  "findings": [
+    {
+      "id": "COMPOSE-C17-ANCESTRY",
+      "state": "OLD_PROPOSAL_SUPERSEDED_IN_OWNER",
+      "paths": [
+        "apps/cli/src/sucafina-product/planner-calculation-services.ts"
+      ],
+      "observed": "Current and historical wrappers use AsyncLocalStorage with private Request/binding/call scopes. Independent calls are not conflated with ancestry. The former global Map finding and compose4 ancestry patch remain historical; preserve cycle/depth checks and call-local authorization.",
+      "proofLimit": "No current owner Actions/native result is transferred to this group."
+    },
+    {
+      "id": "COMPOSE-C17-HISTORY",
+      "state": "IMPLEMENTED_IN_OWNER_RESTRICTED_HISTORY_STATIC_ONLY",
+      "paths": [
+        "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+        "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+        "apps/cli/src/sucafina-product/business-services.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+      ],
+      "observed": "COMPOSE6 composes explicit ledger-bound historical request/result readers, canonical record-only replay, a prior protected Atlas capture and full before/after/egress fences. BCS admits an exactly identical calculation ref through repeated historical continuity. Current-only public readers remain strict. The older generic F1 missing-wiring diagnosis is superseded for this bounded path.",
+      "limits": [
+        "A protected original Atlas capture must already exist; the first capture only after case advancement is not covered.",
+        "Historical source closure must contain only still-fresh records. Nested/mixed calculations, assumptions and replacement references are outside this helper.",
+        "Material change to an original source refuses historical delivery; captured values are not promoted to current source authority.",
+        "COMPOSE6 result/request stores predate Finance W18 final callback read fences. Compose compatible exact pins and validate the resulting candidate.",
+        "The owner receipt declares NOT_RUN; this static review transfers no current runtime/native/Actions acceptance."
+      ],
+      "nextAction": "Run the actual BCS/Atlas/HTTP historical path on the composed pins, including case v→v+1, prior capture, reopen, missing ledger/capture, source drift, revocation, abort and concurrent callbacks.",
+      "review": "reviews/review-compose6.json"
+    },
+    {
+      "id": "COMPOSE-WP13-THRESHOLD",
+      "state": "IMPLEMENTED_IN_OWNER_EXECUTION_NOT_IMPORTED",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/verification.ts"
+      ],
+      "observed": "Current producer admits parameterOperation, validates the canonical exact boundary and adjacent IEEE observation, carries known-subtotal certificate scope and preserves conditioned financial coverage. Writer and verifier call the same threshold validator.",
+      "delta": "Do not apply the older COMPOSE4 proposal blindly. Validate persisted/reopened 55000 and source-only 15000 on the actual owner candidate, including null/zero, source/metadata changes and coverage caveats."
+    },
+    {
+      "id": "COMPOSE-BI-ROUTES",
+      "state": "OLD_MISSING_FACTORY_DIAGNOSIS_SUPERSEDED_PARTIAL_TRANSPORT_GAP",
+      "paths": [
+        "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+        "apps/cli/src/sucafina-product/extended-http.ts",
+        "apps/cli/src/sucafina-product/bi-services.ts"
+      ],
+      "observed": "Extended routes use the common factory. Browser sends valueId and selected refDigest; HTTP checks membership in the authorized current value and rereads the projection. A/B choice and lifecycle changes are present. The older Dashboard-only handler is not the whole installed route.",
+      "delta": "Demonstrate original projection version/engine/context and exact source selection through the mounted route, navigation return and refresh; an endpoint that freshly chooses a current projection is not by itself evidence of the original selection contract."
+    },
+    {
+      "id": "COMPOSE-BI-ADVANTAGE",
+      "state": "OWNER_DELTA_REQUIRED",
+      "paths": [
+        "apps/cli/src/sucafina-product/bi-selections.ts",
+        "apps/cli/src/sucafina-product/bi-services.ts"
+      ],
+      "observed": "COMPOSE6 still has bi-selections5bb690... and bi-services7d44c1.... The parser whitelist and exact revalidation compare scenarioResultRef/comparisonRef/sensitivityResultRef only. The optional advantageComparisonRef is not transported/compared. JSON serialization and spread-forwarding already preserve accepted fields.",
+      "delta": "Reconcile the two-file WP05 advantage-selection-proposal.patch (SHA2568b5b2468feeb88fc81c70c520c5cecc0c139e431823a25f3ed77f9fa1e24c982). Carry the actual persisted inverse comparison reference through parser and equality; no BI financial negation or synthetic comparison."
+    },
+    {
+      "id": "COMPOSE-BI-LIFECYCLE",
+      "state": "IMPLEMENTATION_PRESENT_PROOF_PENDING",
+      "paths": [
+        "apps/cli/src/sucafina-product/extended-bi-browser.ts"
+      ],
+      "observed": "Current source schedules reauthorization, preserves valid selection, clears on revocation/pagehide, reloads BFCache and observes focus/visibility/refresh. The claim that no lifecycle handling exists is superseded.",
+      "delta": "Validate mounted owner refresh contract, cancellation/revocation and focus restore using current interface/compose candidate."
+    },
+    {
+      "id": "INTERFACE-MONTHLY",
+      "state": "BOUNDED_PATCH_STILL_REQUIRES_OWNER",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+        "modules/sucafina/Sucafinav1/product/interface/planner-http.ts",
+        "modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts"
+      ],
+      "observed": "At current pinned COMPOSE6/interface0c3d98, all three monthly proposal base blobs are unchanged: contract920fda..., HTTP2befb1..., UI3adef2.... The actual HTTP file is product/interface/planner-http.ts; the formerly listed integration/planner-monthly-http.ts path does not exist.",
+      "delta": "Apply/reconcile the reviewed three-path monthly proposal: canonical before/after, annual/spread/reset, explicit conflict rebase and stable uncertain retry body/key."
+    },
+    {
+      "id": "COMPOSE-APPLY-CAS",
+      "state": "OWNED_UNION_PUBLISHED_NINE_CASES_PASS_OTHER_RUN_FAILURES_RETAINED",
+      "sourceComment": "https://github.com/gustavomhss/Orchestra-SF/pull/35#issuecomment-6875610872",
+      "sourcePatchHead": "b98264317b39bec01c57e31a5c197802a954429f",
+      "sourcePatchBlob": "fef1826566873e4cdd6b2b48184bf72f79892ab8",
+      "observed": "Finance W18 unites PR40 durable attempt/reserved dispatch and renewed cases CAS with authoritative receipt reread plus receipt/proof/uniqueness fences, including the final observation on reconciled retry. The nine execution-reconciliation cases passed at that exact W/S. S12 as a whole failed17pass/5fail, so the run is not PASS.",
+      "delta": "Consume Finance apply964a533..., not interface0c3d98 apply4bdd12... or earlier group apply. Validate the real domain/receipt/recovery composition and human grants separately; do not transfer the nine cases to another product tree.",
+      "publishedProduct": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+      "publishedBlob": "964a53310c340f4496d7410d66f8b852270b75f1",
+      "validation": {
+        "runId": 43587138878,
+        "jobId": 132423963070,
+        "productSha": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+        "snapshotSha": "0faf62c7f5e10f5ae17037bb6bd8eb512396f2fd",
+        "selectedFile": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+        "selectedCases": {
+          "pass": 9,
+          "fail": 0
+        },
+        "overallRun": {
+          "conclusion": "failure",
+          "pass": 17,
+          "fail": 5
+        }
+      },
+      "interfaceOlderBlob": "4bdd12ac162d61465557363953e25dfd99fad5e8"
+    },
+    {
+      "id": "COMPOSE-WP11-NOOP-PROMOTION",
+      "state": "OWNED_FIX_PUBLISHED_STATIC_REVIEW_ACTIONS_PENDING",
+      "publishedProduct": "5e4c2b288665113e58162a616a9965c03e397e19",
+      "publishedTree": "64510c36da425ed2ec0da67836bfcd691fd1f625",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/decisions/mutations.ts"
+      ],
+      "publishedBlob": "3e7575cddfd52d9f5751c0ee6179c747bb318c98",
+      "observed": "An equal scenario/coverage assessment previously skipped coverageEvidence.entries even though the canonical provider creates its commit proof there. W20 calls entries whenever the provider exists and reassesses through canonical coverage so the complete result/proof agrees, including evaluatedSourceRefs order.",
+      "proofLimit": "Static independent review and two-source/negative test source are present; new runtime validation is pending. No-op source promotion remains distinct from ChoiceRecord or application."
+    },
+    {
+      "id": "COMPOSE-WP11-HOT-TOPIC",
+      "state": "OWNED_FIX_PUBLISHED_STATIC_REVIEW_ACTIONS_PENDING",
+      "publishedProduct": "5e4c2b288665113e58162a616a9965c03e397e19",
+      "publishedTree": "64510c36da425ed2ec0da67836bfcd691fd1f625",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts"
+      ],
+      "publishedBlob": "5e0b80a470958dd201db4283bde96d594935e68d",
+      "observed": "W20 selects domainSurface dashboard for a Dashboard/hotTopics draft, so the canonical dashboardSourceCurrent verifier receives the intended locked snapshot. Human permission, source checks and C08 namespace/CAS fences are retained.",
+      "proofLimit": "The new discriminating multi-surface fixture is authored and statically reviewed; installed Dashboard consumption and exact candidate Actions remain pending."
+    },
+    {
+      "id": "COMPOSE-NA-CLASSIFICATION",
+      "state": "CANONICAL_ROUTE_NOT_DEMONSTRATED",
+      "paths": [
+        "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+        "apps/cli/src/sucafina-product/decision-alternative-services.ts"
+      ],
+      "observed": "The inspected canonical baseline promotion providers reject a baseline containing not-applicable. The own core fix preserves that guard. The new shared all-inclusive fixture is not evidence of the installed human N/A classification route.",
+      "delta": "Integration must demonstrate the intended human classification route or propose a bounded producer-owned change supported by applicability evidence. Do not relax authorization or infer N/A from a missing cost."
+    },
+    {
+      "id": "COMPOSE-PROCUREMENT-PROJECTION",
+      "state": "CURRENT_OWNER_FIX_PRESENT_GROUP_DEPENDENCY_NOT_INTAKEN",
+      "observed": "S12 failed Procurement source issuance before the first two-surface operation. Source inspection identifies incompatible field inventories in the group: issuer includes approvalStage; the older integration projector requires the list without it. COMPOSE6 already delegates to the canonical owner projector, which admits the current field inventory and its legacy form.",
+      "receipt": "procurement-projection-dependency.json",
+      "delta": "Consume the owner adapter and its published dependency closure in astra-compose. Preserve the Finance cross-domain tests and use the canonical projector; no fixture-specific replacement or duplicated field/formula logic.",
+      "proofLimit": "Minimal import closure is statically inspected only. No runtime/typecheck claim or approval to modify financial policy follows from this receipt."
+    }
+  ],
+  "financeObservation": {
+    "productSha": "5e4c2b288665113e58162a616a9965c03e397e19",
+    "productTree": "64510c36da425ed2ec0da67836bfcd691fd1f625",
+    "label": "W20"
+  },
+  "localProductTests": false,
+  "newCiRunsByThisReviewer": 0,
+  "historicalInspections": [
+    {
+      "composeHead": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "interfaceHead": "5886df8aaedb4db179f336e474e123c30a1d1193",
+      "priorComposeHead": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "sourceFiles": [
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "sha": "4b96a408bd43e73a6e614977f959b6f58f9559e0",
+          "sha256": "f9eeb1d30879d062a81f34a11aa731a49e3350d4dc88ae0959b6fb997e71e50f"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+          "sha": "6678372b0c955d551e9910060e405a6765c79ccd",
+          "sha256": "2184af3958d0c4834bd5f7c9748a337b79c862f9afea2edb02ef542886096a1e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/intakes/group35-217c9bcc75d4.json",
+          "sha": "cff58566e2f33ba239d9f997187c7c421d985646",
+          "sha256": "7798736ef1d17f30d965fb9ad14207a167e5fa38a7d98c0dd74f4edc98dbdb80"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/intakes/own-c17-scope-w7.json",
+          "sha": "02332dad2c2963b27afde8825b52dec678546f96",
+          "sha256": "32dfc5340f454d8c430e25eb864e862883c19cacc38365fc2913312bab6719ae"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/intakes/own-planner-history-w7.json",
+          "sha": "1c169d0dc905440ebedc7b89e24273b12a4a122f",
+          "sha256": "5e87256006b6861bf0bee755e47974d067857bcbfc61149ddb14ae1fe157e5c9"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "sha": "5f9a4761693beaf2fc0830d03ea8a2421de7f794",
+          "sha256": "35b4a1d516c076848139db127e77103df230609b5bace26758f2dd8e8b6a0bbd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+          "sha": "604d2a7806dcd7594e03207bf3011d6c1dc801b8",
+          "sha256": "2194bd5956722a5514704dc13482b28dd728d2ee59ec2ad530d897eebc3862d4"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+          "sha": "6c08aae11dd559553d5f9274d1aa5750686ff8fc",
+          "sha256": "f377fc7ce657f0f999f6081568872af805f48c7e596ea75db8b242a1dab881f0"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+          "sha": "c2f37e94777d2bdd7d7e565b37f6b4140b3906d9",
+          "sha256": "624e80ae47fcbe8070fde0090748e3622eeeffd927e3dc41ab2ba1d69661a323"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts",
+          "sha": "30697fcbeee6b7011cc7786a0a3bc64bd0d3449e",
+          "sha256": "ac95c12bb81b42f0186c1bafcd801b71e50aebe576791e844f4d7c849e25bb47"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+          "sha": "e3edc3ed317be3399855edee3b4ffd4eaa5e5b5e",
+          "sha256": "4ca775046eb5c8dbdb146970386cf3189b48b5ead5db31a52028da9f179467b3"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/extended-http.ts",
+          "sha": "43f73f337fa570d87f7a2f5f7aad19a038767fea",
+          "sha256": "60e0714fb024ac77917a09601ef359bbfe7f1a4c7dd0517684cf6355220ff47c"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/intakes/own-bi-lifecycle-w7.json",
+          "sha": "7721f8cebea6831b236641a8605b171d51ae04dd",
+          "sha256": "6fc909102c07bcadb0e88a9f1773ac650a60099dec148366c04982e05df195f8"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/compose-planner-recorded-history.json",
+          "sha": "b130dec3d7f18b8485288c415c431b5a35ac5817",
+          "sha256": "8c07a36d27a364d2f2e034c12c3c31af9a31b18a683c207bd5f0ecccbb96fe00"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+          "sha": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+          "sha256": "96ed59925c95abe55fe15185f30f2026f0713f5f916238d4529c29d812aa86bf"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/bi-selections.ts",
+          "sha": "5bb690b8072d932f1717206b5967c95b45e3b365",
+          "sha256": "d2ba76e002a6805e4ad321da0d19ef4f1d557a7530c291b71036502659f4571f"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/bi-services.ts",
+          "sha": "7d44c1982c3c62fdaf21f98945ded9e572fd359a",
+          "sha256": "5b89fbb1e7dcd1eaab182171c83bbb562be866a237c1470f4dac772be388d8f2"
+        }
+      ],
+      "findings": [
+        {
+          "id": "COMPOSE-C17-ANCESTRY",
+          "state": "OLD_PROPOSAL_SUPERSEDED_IN_OWNER",
+          "paths": [
+            "apps/cli/src/sucafina-product/planner-calculation-services.ts"
+          ],
+          "observed": "Current wrapper uses AsyncLocalStorage with private request/binding/call scopes. The former global Map finding and compose4 ancestry patch are historical, not an outstanding current delta.",
+          "proofLimit": "No current owner Actions/native result is transferred to this group."
+        },
+        {
+          "id": "COMPOSE-C17-HISTORY",
+          "state": "INTEGRATION_UNPROVEN_WITH_STATIC_GAPS",
+          "paths": [
+            "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+            "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+            "modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts"
+          ],
+          "observed": "Current calculation adapters still use current requests.read/readForCalculation. Atlas record-only eligibility requires stored/request caseRef equal to the current selected case. sameHistoricalSource has no calculation branch. New record history and nested calculation support do not establish v1 C17 continuity through a persisted ledger event after case v2.",
+          "delta": "Compose the private ledger-bound historical result/request entry with the current authorized case, canonical replay, ancestry closure and BCS continuity. Preserve current-only public reads."
+        },
+        {
+          "id": "COMPOSE-WP13-THRESHOLD",
+          "state": "IMPLEMENTED_IN_OWNER_EXECUTION_NOT_IMPORTED",
+          "paths": [
+            "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+            "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+            "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+            "modules/sucafina/Sucafinav1/product/portfolio/verification.ts"
+          ],
+          "observed": "Current producer admits parameterOperation, validates the canonical exact boundary and adjacent IEEE observation, carries known-subtotal certificate scope and preserves conditioned financial coverage. Writer and verifier call the same threshold validator.",
+          "delta": "Do not apply the older COMPOSE4 proposal blindly. Validate persisted/reopened 55000 and source-only 15000 on the actual owner candidate, including null/zero, source/metadata changes and coverage caveats."
+        },
+        {
+          "id": "COMPOSE-BI-ROUTES",
+          "state": "OLD_MISSING_FACTORY_DIAGNOSIS_SUPERSEDED_PARTIAL_TRANSPORT_GAP",
+          "paths": [
+            "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+            "apps/cli/src/sucafina-product/extended-http.ts",
+            "apps/cli/src/sucafina-product/bi-services.ts"
+          ],
+          "observed": "Extended routes use the common factory. Browser sends valueId and selected refDigest; HTTP checks membership in the authorized current value and rereads the projection. A/B choice and lifecycle changes are present. The older Dashboard-only handler is not the whole installed route.",
+          "delta": "Demonstrate original projection version/engine/context and exact source selection through the mounted route, navigation return and refresh; an endpoint that freshly chooses a current projection is not by itself evidence of the original selection contract."
+        },
+        {
+          "id": "COMPOSE-BI-ADVANTAGE",
+          "state": "OWNER_DELTA_REQUIRED",
+          "paths": [
+            "apps/cli/src/sucafina-product/bi-selections.ts",
+            "apps/cli/src/sucafina-product/bi-services.ts"
+          ],
+          "observed": "Parser whitelist and revalidation compare scenarioResultRef/comparisonRef/sensitivityResultRef only. New optional advantageComparisonRef is not transported or compared.",
+          "delta": "Add the optional persisted inverse comparison reference to the selection type/serializer/parser and exact revalidation equality. Preserve all existing fields and case/result fences. Consume Finance W14 producer without computing a financial difference in BI."
+        },
+        {
+          "id": "COMPOSE-BI-LIFECYCLE",
+          "state": "IMPLEMENTATION_PRESENT_PROOF_PENDING",
+          "paths": [
+            "apps/cli/src/sucafina-product/extended-bi-browser.ts"
+          ],
+          "observed": "Current source schedules reauthorization, preserves valid selection, clears on revocation/pagehide, reloads BFCache and observes focus/visibility/refresh. The claim that no lifecycle handling exists is superseded.",
+          "delta": "Validate mounted owner refresh contract, cancellation/revocation and focus restore using current interface/compose candidate."
+        },
+        {
+          "id": "INTERFACE-MONTHLY",
+          "state": "BOUNDED_PATCH_STILL_REQUIRES_OWNER",
+          "paths": [
+            "modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts",
+            "modules/sucafina/Sucafinav1/product/integration/planner-monthly-http.ts"
+          ],
+          "observed": "The monthly UI/HTTP blobs were unchanged at interface 5886df8 versus the previously pinned a295 source.",
+          "delta": "Apply/reconcile the reviewed three-path monthly proposal: canonical before/after, annual/spread/reset, explicit conflict rebase and stable uncertain retry body/key."
+        },
+        {
+          "id": "COMPOSE-APPLY-CAS",
+          "state": "OWNED_UNION_PUBLISHED_REVIEWED_STATICALLY_ACTIONS_PENDING",
+          "sourceComment": "https://github.com/gustavomhss/Orchestra-SF/pull/35#issuecomment-6875610872",
+          "sourcePatchHead": "b98264317b39bec01c57e31a5c197802a954429f",
+          "sourcePatchBlob": "fef1826566873e4cdd6b2b48184bf72f79892ab8",
+          "observed": "PR40 persisted attempt plus renewed cases CAS now includes canonical receipt reread, C08 receipt/proof/uniqueness fences and final observation on reconciled retry. Nine adversarial modes are authored; independent static review found no further blocker in the final pair. S12 validates the published union.",
+          "delta": "Consume the published merged apply.ts pin, not Finance W12 old blob or PR40 apply.ts alone. Verify real Procurement/Planner domain receipt and recovery on the composed host.",
+          "publishedProduct": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+          "publishedBlob": "964a53310c340f4496d7410d66f8b852270b75f1"
+        }
+      ],
+      "status": "HISTORICAL_SUPERSEDED_WHERE_CURRENT_FINDINGS_SAY_SO"
+    }
+  ],
+  "globalAcceptance": "NOT_ACCEPTED"
+}

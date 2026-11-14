@@ -1,0 +1,388 @@
+{
+  "schema": "sf-financial-independent-addendum-v1",
+  "language": "pt-BR",
+  "reviewer": "/root/review_financial",
+  "role": "independent-read-only-reviewer-not-author",
+  "date": "2026-11-14",
+  "product": {
+    "label": "W10",
+    "commit": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+    "tree": "bbc79890ba339e0fca0fb34f55bd4d1c69a7953e",
+    "snapshot": "/workspace/scratch/a97ca4c53050/review-660db9a",
+    "manifest": "/workspace/scratch/a97ca4c53050/review-660db9a-manifest.json",
+    "verifiedNonDocBlobs": 734,
+    "blobMismatches": 0,
+    "pr": 35,
+    "branch": "astra-finance",
+    "baseBranch": "sf2-stack"
+  },
+  "planning": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "agentsAndPacksUnchangedFromW3": true
+  },
+  "priorReview": {
+    "commit": "66bbe152c145f04c16223a938589c63cedb3b716",
+    "tree": "f727ae5bfcef26383ff47a2b06bb65b161295dd2",
+    "reports": [
+      "review-financial-report.md",
+      "review-financial-report.json"
+    ]
+  },
+  "conclusion": {
+    "originalF1Counterexample": "statically-addressed",
+    "residualF1": "R1-open-own-blocker",
+    "G1": "discriminating-test-PASS-observed-in-Test4-W7",
+    "G2": "oracle-test-added-execution-unverified",
+    "globalReleaseClaim": false,
+    "independentRuntimePassClaim": false,
+    "suite": "Test4 FAILURE: 15 pass / 4 fail by timeout",
+    "independentlyObservedActionsPasses": [
+      "F1 original four cases at W7, excluding R1",
+      "G1 long IEEE plateau at W7",
+      "source-scenario three cases at W7"
+    ]
+  },
+  "findings": [
+    {
+      "id": "R1",
+      "severity": "high",
+      "blocking": true,
+      "ownership": "WP03-own-product-qualification",
+      "state": "open",
+      "title": "Mês intocado da linha salva perde ausência após normalização incidental do orçamento",
+      "locations": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+          "lines": [
+            84,
+            89,
+            114,
+            118
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "lines": [
+            158,
+            164,
+            758,
+            800
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "lines": [
+            162,
+            180
+          ]
+        }
+      ],
+      "counterexample": {
+        "actor": "Finance",
+        "year": 2027,
+        "closed": 9,
+        "horizon": {
+          "start": "2027-11-01",
+          "end": "2027-12-31"
+        },
+        "line": {
+          "id": "missing",
+          "currency": "USD",
+          "budget": "Array(12).fill(null)",
+          "actual": [],
+          "forecast": []
+        },
+        "operations": [
+          {
+            "kind": "replace",
+            "targetRef": "missing:11",
+            "amount": 1000,
+            "currency": "USD"
+          }
+        ],
+        "alsoAffected": [
+          "include",
+          "exclude",
+          "third unaddressed month of a valid defer"
+        ]
+      },
+      "staticTrace": [
+        "source :11/:12 null+absent",
+        "scenario emits save f10 only",
+        "numericMonths changes all budget nulls to 0; a/f expand preserving null",
+        "December remains forecast=null but budget=0",
+        "canonical outlook December=0",
+        "post-command qualifier publishes :12 amount=0/evidenceState=estimated",
+        "missing-refresh removes missing:12:budget:missing"
+      ],
+      "expected": {
+        "targetNovember": {
+          "amount": 1000,
+          "evidenceState": "hypothetical"
+        },
+        "untouchedDecember": {
+          "amount": null,
+          "evidenceState": "absent"
+        },
+        "retainedCondition": "missing:12:budget:missing",
+        "total": null,
+        "sourceSnapshotUnchanged": true
+      },
+      "impact": "Loss of absence disclosure; total remains conditioned. exactComponents accepts estimated and no longer sees the original absent component. No integrated threshold publication claimed.",
+      "testGap": "scenario-qualification.test.ts:26-58 covers November only and a separate untouched row",
+      "boundedFix": "Preserve original absence and missing metadata for non-addressed components, using canonical post-command qualification for explicit targets; keep FX and HR guards, actual canonical amounts and plannerKnownSubtotal; do not alter engine or request/source snapshot.",
+      "addressedTargets": {
+        "replace": "targetRef only",
+        "include": "targetRef only",
+        "exclude": "targetRef only",
+        "defer": "origin plus destination month",
+        "multipleOperations": "union of each operation targets",
+        "notScenarioOperations": [
+          "annual",
+          "spread",
+          "reset",
+          "budget vector edit"
+        ]
+      },
+      "proofMode": "static-counterexample-no-product-execution"
+    }
+  ],
+  "followupEvidence": [
+    {
+      "id": "F1",
+      "state": "original-counterexample-statically-fixed-residual-R1-open",
+      "producer": "simulatePlannerOperations -> projectPlannerSource -> buildPlannerFinancialProjection -> plannerKnownSubtotal",
+      "test": "test/product/wp03/scenario-qualification.test.ts",
+      "discriminants": [
+        "replace/include missing -> 1000",
+        "explicit zero",
+        "other untouched row null",
+        "missing FX remains null despite domain zero",
+        "HR independent forecast with missing budget rate",
+        "request/replay/snapshot immutable",
+        "self-comparison final revocation"
+      ],
+      "executedByReviewer": false,
+      "actionsEvidence": {
+        "runId": "43581792536",
+        "productPinLabel": "W7",
+        "state": "four tests PASS; residual R1 not covered",
+        "durationsMs": [
+          449.41,
+          92.32,
+          179.63,
+          40.51
+        ]
+      }
+    },
+    {
+      "id": "G1",
+      "state": "executed-PASS-at-W7",
+      "test": "test/product/wp03/exact-threshold-fallback.test.ts",
+      "oracle": {
+        "orderedComponents": [
+          "2**53",
+          "x"
+        ],
+        "range": [
+          0,
+          16
+        ],
+        "criterion": "difference <= 0",
+        "boundary": 1,
+        "adjacent": "nextUp(1)",
+        "metrics": [
+          0,
+          2
+        ],
+        "previewCountGreaterThan": 18
+      },
+      "fixtureLimitation": "unit/rule admission stub; monetary probes real Planner",
+      "executedByReviewer": false,
+      "actionsEvidence": {
+        "runId": "43581792536",
+        "productPinLabel": "W7",
+        "durationMs": 3700.37,
+        "suiteState": "failure-by-four-other-timeouts"
+      }
+    },
+    {
+      "id": "G2",
+      "state": "test-added-execution-pending",
+      "test": "test/product/wp11/implementation-quote-history.test.ts",
+      "oracle": {
+        "implementation": 70000,
+        "bridge": 60000,
+        "newService": 105000,
+        "total": 235000,
+        "advantage": 5000,
+        "costDifference": -5000
+      },
+      "producer": "domain.execute(copy) -> domain.execute(save f10=70000) -> canonical projection/source-only scenario",
+      "assertions": [
+        "same case new version",
+        "shared scopes preserved",
+        "supported N/A preserved",
+        "choice digest unchanged",
+        "original source unchanged",
+        "no preparedChanges or receipts",
+        "SQLite reopen"
+      ],
+      "fixtureLimitation": "synthetic quote and reference/digest harness; no installed issuer proof",
+      "executedByReviewer": false,
+      "selectedInTest4": false
+    }
+  ],
+  "wp13": {
+    "ownership": "external-astra-compose-WP13",
+    "baseCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+    "basePinProvenance": "root supplied; three exact file blob and sha256 values independently matched",
+    "baseDirectory": "/workspace/scratch/a97ca4c53050/foreign-intake/COMPOSE4",
+    "baseFiles": [
+      {
+        "path": "product/portfolio/planner-sensitivity.ts",
+        "blob": "57d7873b88e063038045db0f688dc650f6a82eea",
+        "sha256": "4dec75b5cacb3dc4684840f68829f6f97c57f37ddd1719c307e0b517d0cf859f"
+      },
+      {
+        "path": "product/portfolio/sensitivity.ts",
+        "blob": "049f8d6cb23d444a29642a1d195519977635e40b",
+        "sha256": "a0e5f4c8c9c22a739a3917c6e4b868de542b19e6fee0d7fec117038c95be9b03"
+      },
+      {
+        "path": "product/portfolio/verification.ts",
+        "blob": "b7645ecd8043969fbfe18326bc64366e01b5e6cf",
+        "sha256": "6ae943cc68d6cbb86f63441b44ec609fc421da0c68ebcb14c9526ca80b8c9eab"
+      }
+    ],
+    "historicalW10Proposal": {
+      "sha256": "6e81ef32100ae5b5861d2248d4e0cb9b9bcc4c0b6204a6c0915d18a8681aa21a",
+      "intendedBase": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "applyCheckExit": 1,
+      "failures": [
+        "planner-sensitivity.ts:52",
+        "sensitivity.ts:36"
+      ],
+      "risk": "stale context does not include COMPOSE4 result digests/clones",
+      "supersededBySeparateDocumentaryRevision": true
+    },
+    "updatedDocumentaryProposal": {
+      "notPartOfW10": true,
+      "explicitlyAuthorizedSeparateRead": true,
+      "sha256": "837d5ff6b7896054cfd819e4b73a9865836f4dffea96e119f053185dc6586222",
+      "blob": "468294e0bfbe5e7b0fe25626d5847d666fe73734",
+      "pinsDocumentSha256": "4cb63839e4c0eda04191319c60cb1de6b7d42726797c4b47fe6d4a1d178b986a",
+      "ownerDeltasSha256": "1228dc8f2339b5f5e8cc4c402751745aa301cf81d43d4368d7989b6d66620f42",
+      "hashesStableOnSecondRead": true,
+      "applyCheckExit": 0,
+      "applied": false,
+      "executed": false,
+      "staticChecks": [
+        "resultRef/resultDigest preserved",
+        "structuredClone and revalidation preserved",
+        "writer/verifier source-only operation symmetry",
+        "original requestDigest preserved",
+        "exact distinct from complete",
+        "null/absent/nonfinite/source-less samples reject exact",
+        "C10 and hypothetical conditions retained"
+      ]
+    },
+    "remainingGate": "Owner intake and Actions on integrated exact pin; source-only 55000->15000; zero/missing/FX; persist/replay; revoked source/changed rule after samples. R1 must be fixed before trusting sample absence guards."
+  },
+  "executedValidation": {
+    "productTests": false,
+    "productExecution": false,
+    "localBuildOrTypecheck": false,
+    "newCI": false,
+    "productEdits": false,
+    "readOnlyChecks": [
+      "734 git blob hashes",
+      "three COMPOSE4 target hashes",
+      "document SHA256 twice",
+      "git apply --check historical patch",
+      "git apply --check updated patch",
+      "inspected root-provided final Test4 clean log"
+    ]
+  },
+  "ci": {
+    "runId": "43581792536",
+    "jobId": "132407886238",
+    "name": "Test4",
+    "productPinLabel": "W7",
+    "productPinPrefixSuppliedByRoot": "a274302",
+    "serviceCommitObservedInLog": "91cd4ee008b764d1e06d42a3a7fa2dce606ecdc1",
+    "state": "completed",
+    "conclusion": "failure",
+    "pass": 15,
+    "fail": 4,
+    "failuresAllTimeout": true,
+    "tests": 19,
+    "files": 7,
+    "expects": 378,
+    "durationSeconds": 1513.76,
+    "rawLogSha256SuppliedByRoot": "8d931c7742a974c2d80d096eff8159e3c5650a5c6972e9b662d428f71082a8d9",
+    "rawLogIndependentlyHashed": false,
+    "cleanLogInspected": "/workspace/scratch/a97ca4c53050/test4-clean.log",
+    "cleanLogSha256": "04fbd846e55b390dc73495edfbbfab788f973d7b0edaa0f9ab3746a34f1f6cd3",
+    "logsIndependentlyInspected": true,
+    "failedTests": [
+      {
+        "file": "wp03/composed-threshold.test.ts",
+        "case": "training/zero/missing",
+        "durationMs": 223637.08,
+        "limitMs": 180000
+      },
+      {
+        "file": "wp03/scenario-capability-parity.test.ts",
+        "durationMs": 63938.53,
+        "limitMs": 60000,
+        "assertionsDoneMs": 63934
+      },
+      {
+        "file": "wp05/engine-coverage.test.ts",
+        "case": "omitted->40000",
+        "durationMs": 219940.58,
+        "limitMs": 180000
+      },
+      {
+        "file": "wp11/composite-coverage.test.ts",
+        "case": "coverage variants",
+        "durationMs": 227930.89,
+        "limitMs": 180000
+      }
+    ],
+    "G2Selected": false,
+    "noPassInferenceFor": [
+      "whole Test4 suite",
+      "W10 broader changes",
+      "future R1 fix",
+      "WP13 documentary proposal"
+    ],
+    "timeoutIncreaseProposed": false
+  },
+  "scope": {
+    "read": [
+      "W3->W10 scenario/qualification/missing-refresh delta",
+      "actual-presence and C02/Overview consumers",
+      "F1 G1 G2 tests and producer fixtures",
+      "sensitivity units/exact relevant guards",
+      "three foreign WP13 consumers and proposed patch by exact hashes"
+    ],
+    "excluded": [
+      "W11 fixture type-only change",
+      "unpublished dirty BI advantage consumer change",
+      "unrelated store/authority changes",
+      "installed C17 host acceptance",
+      "foreign contracts/artifact-store/UI acceptance",
+      "resident/native sessions",
+      "global 303-criterion completion"
+    ]
+  },
+  "limitations": [
+    "Static correctness review is not executed regression proof",
+    "G1 unit admission harness and G2 reference harness are synthetic; G1 passed in W7, G2 not selected in Test4",
+    "Updated WP13 docs are separately hash-pinned outside W10; proposal not applied",
+    "Original F1 remains blocked by R1 despite target-cell fix"
+  ]
+}

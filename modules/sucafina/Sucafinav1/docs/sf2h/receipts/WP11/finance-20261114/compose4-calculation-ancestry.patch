@@ -1,0 +1,40 @@
+--- a/apps/cli/src/sucafina-product/planner-calculation-services.ts
++++ b/apps/cli/src/sucafina-product/planner-calculation-services.ts
+@@ -1,3 +1,4 @@
++import { AsyncLocalStorage } from "node:async_hooks"
+ import { digestSfValue, sfEvidenceSourceMaps } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+ import type { DomainProjection, ProjectionValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+@@ -31,7 +32,7 @@
+   withCalculationCase: <T>(call: TrustedDomainContext, caseRef: { id: string; incarnation: string; version: number }, work: () => Promise<PortResult<T>>) => Promise<PortResult<T>>
+ }) {
+   const captures = new WeakMap<TrustedDomainContext, { requestDigest: string; resultDigest: string; resultRef?: string; sources: SourceFences }>()
+-  const replaying = new Map<string, Set<string>>()
++  const replaying = new AsyncLocalStorage<{ binding: string; runs: ReadonlySet<string> }>()
+   const requests = createScenarioRequestStore({ state: input.state, results: input.results, host: input.host,
+     authorizeCase: input.authorizeCase, operationIdentity: input.operationIdentity, writes: input.writes,
+     verifyRequestSources: async (request, stored, call): Promise<boolean> => {
+@@ -81,15 +82,15 @@
+     // The first request read can itself resolve a persisted calculation ancestor,
+     // before the producer's own replay guard has started. Bound that admission too.
+     const key = digestSfValue([call.kind, call.binding])
+-    const active = replaying.get(key) ?? new Set<string>()
++    const parent = replaying.getStore()
++    const active = parent?.binding === key ? parent.runs : new Set<string>()
+     if (active.has(runId) || active.size >= 16) return { status: "unavailable", reason: "calculation-replay-cycle" }
+-    active.add(runId)
+-    replaying.set(key, active)
+-    try {
+-      const binding = await requests.read(runId, call)
+-      return binding.status === "ok" ? await input.withCalculationCase(call, binding.value.caseRef, () => calculation.issue(runId, call)) : binding
+-    } catch { return { status: "unavailable", reason: "calculation-replay-unavailable" } }
+-    finally { active.delete(runId); if (!active.size) replaying.delete(key) }
++    return replaying.run({ binding: key, runs: new Set([...active, runId]) }, async () => {
++      try {
++        const binding = await requests.read(runId, call)
++        return binding.status === "ok" ? await input.withCalculationCase(call, binding.value.caseRef, () => calculation.issue(runId, call)) : binding
++      } catch { return { status: "unavailable", reason: "calculation-replay-unavailable" } }
++    })
+   }
+   const persist: Persist = async (incoming, callId, call, comparisonReplay) => {
+     if (incoming.kind !== "scenario") return input.persist(incoming, callId, call, comparisonReplay)

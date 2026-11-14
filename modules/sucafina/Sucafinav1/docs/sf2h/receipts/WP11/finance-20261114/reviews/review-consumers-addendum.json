@@ -1,0 +1,209 @@
+{
+  "schema": "sf2h-independent-consumer-review-addendum-v1",
+  "role": "Independent read-only reviewer; did not author the reviewed correction",
+  "product_sha": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+  "product_tree": "bbc79890ba339e0fca0fb34f55bd4d1c69a7953e",
+  "snapshot": "/workspace/scratch/a97ca4c53050/review-660db9a",
+  "prior_report": "/workspace/scratch/a97ca4c53050/review-consumers-report.json",
+  "manifest_verification": {
+    "files": 734,
+    "mismatches": 0,
+    "method": "Independently recomputed Git blob SHA-1 over every local file named in verifiedNonDocBlobs; no execution of product or test code."
+  },
+  "methods": [
+    "Read AGENTS.md and followed no-local-test rule.",
+    "Read W10 code and authored tests; compared targeted files with W3.",
+    "Read supplied foreign COMPOSE4/INTERFACE6 evidence and previously inspected real CLI callers.",
+    "No tests, product, browser, build, typecheck or CI executed. Only report artifacts written."
+  ],
+  "scope": [
+    "C1 explicit A/B navigation and current-row source membership",
+    "C2 shared actual presence qualifier and actual runtime Overview",
+    "G2 canonical signed difference and authored DOM assertions",
+    "Real consumers and external composition boundary"
+  ],
+  "reviewed_blobs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/source-navigation.ts",
+      "blob": "3866a95cdad732d51afb9094db7908d107ca920d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/consumer.ts",
+      "blob": "117c0fc6191b9d7797a4e08db19e90c3079fe129"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "blob": "2269a407fe361741775441149e464d919683de4f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/waterfall.ts",
+      "blob": "98d2510a3a44e45ab341aed6a1f2560339ec8578"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/decision-view.ts",
+      "blob": "4a4edc6549684202b3d5ddab4933d6ff56e0aa59"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/actual-presence.ts",
+      "blob": "c7497d7a71e90dd51ad362921e36d0de12fe431f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "blob": "e365ac59376482dfcc6f81aed045b0153f911038"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/planner-origins.test.ts",
+      "blob": "0f4fe1324f56961b044f3ce2ba64c2a3cb79dd46"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/consumer.test.ts",
+      "blob": "d4b730aacf05f0d3c193d78276b41ed3779aecfc"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/runtime-overview-presence.test.ts",
+      "blob": "f140786151f8c3fb77bb7743cc004ee0e51427f1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+      "blob": "9ecb910e6a45fda0f77125fdb6832ad650a011df"
+    }
+  ],
+  "prior_findings": [
+    {
+      "id": "C1",
+      "prior_severity": "high",
+      "status": "ORIGINAL_DEFECT_CORRECTED_IN_CODE_EXECUTION_AND_INSTALLED_PROOF_PENDING",
+      "summary": "Multiple canonical sourceRefs no longer make the contribution unselectable. Explicit A/B choices are presented in the mark chooser and both tables; the selected full reference is checked against the same current redispatched ProjectionValue.",
+      "locations": [
+        "product/analytics/source-navigation.ts:8-30,35-60",
+        "product/analytics/view.ts:182-197,332-348,387-396",
+        "product/analytics/waterfall.ts:57-85,130",
+        "product/analytics/consumer.ts:51-70"
+      ],
+      "reasoning": [
+        "Producer bi-difference remains unchanged and preserves the delta, original sourceRefs and null singular drilldown when ambiguous.",
+        "Labels expose record type, record identity and version; A/B are option labels rather than guessed financial roles. No first-reference auto-dispatch or fabricated calculation reference.",
+        "Membership uses digestSfValue of the entire canonical reference, not refDigest-only equality; projectionVersion, engineVersion, full context, period, currentRef, accessRevision, snapshot revalidation and final authority checks remain."
+      ],
+      "authored_discriminants": [
+        "planner-origins.test.ts:12-135 uses real Planner fixture/issuer, BI02 and BI03, zero and nonzero contributions, A and B, mouse/keyboard/table, exact selection/context/reference, third reference rejected.",
+        "consumer.test.ts:132-174 asserts full-reference membership and rejects changed fields/version, other row, projection/engine/context/selection changes, revoked source, changed currentRef, revocation after resolve."
+      ],
+      "limits": [
+        "Browser callback capture and a C17 boundary harness are explicit; they are not installed HTTP/Atlas navigation.",
+        "No execution of these authored tests has been observed by this reviewer.",
+        "New own focus regression C1R prevents closing the end-to-end return-focus requirement."
+      ]
+    },
+    {
+      "id": "C2",
+      "prior_severity": "medium",
+      "status": "CORRECTED_IN_CODE_AUTHORED_DISCRIMINANT_EXECUTION_PENDING",
+      "summary": "Overview table and SVG now use the same actual-presence qualifier as the Planner projection; absence is not inferred from numerical zero.",
+      "locations": [
+        "product/planner/actual-presence.ts:3-11",
+        "runtime/planner.ts:1072,1084,1854-1880",
+        "product/planner/port.ts:203-206",
+        "test/product/wp03/runtime-overview-presence.test.ts:9-65"
+      ],
+      "reasoning": [
+        "The helper retains domainValue, marks missing raw actual/conversion/lines as absent, and preserves an observed zero in open and closed months.",
+        "Runtime table displays Unavailable plus qualification, or $0.00 plus Observed zero. SVG omits unavailable actual points and keeps observed zero.",
+        "Canonical legacy numerical calculation is not rewritten; the test explicitly expects the underlying summary actual totals to remain zero.",
+        "Independent HR actual does not depend on having an HR budget rate; authored HR no-rate case keeps actual zero known while budget is absent."
+      ],
+      "authored_discriminants": [
+        "Actual runtime render export plus real Planner producer are compared for closed missing, closed zero, open zero, missing FX and HR no-rate.",
+        "Assertions inspect table evidence-state/domain-value, text, SVG point presence/title and unchanged persisted snapshot."
+      ],
+      "limits": [
+        "page.setContent(runtime render output) is stronger than a detached helper check but is not an installed Planner HTTP/session flow.",
+        "No test PASS was independently observed; the authored test must run on the exact published source."
+      ]
+    },
+    {
+      "id": "G2",
+      "prior_severity": "proof_gap",
+      "status": "CANONICAL_SIGN_LABEL_AND_DOM_ASSERTIONS_ADDED_LITERAL_CRITERION_STILL_OPEN",
+      "summary": "The canonical cost convention is now explicit and asserted in DOM: alternative minus baseline is -30000 before and +10000 after. The literal +30000 to -10000 advantage requirement remains asserted only outside the DOM.",
+      "locations": [
+        "product/analytics/decision-view.ts:18-22",
+        "test/product/wp05/choice-history-bi.test.ts:55,78-79,120-134"
+      ],
+      "reasoning": [
+        "The renderer consumes the canonical comparison without adding financial arithmetic.",
+        "The DOM names both result refs and explains the negative/positive cost interpretation; the new assertions check the actual rendered numbers.",
+        "WP05.T05.CHK.20 literally requests difference 30000→-10000 in graph/table. Those values are still advantageComparison assertions at lines55,78-79; the rendered canonical opposite orientation is a transparent different measure, not literal evidence for that requirement."
+      ],
+      "criterion": {
+        "id": "WP05.T05.CHK.20",
+        "text": "A mesma revisão de AI-RENEWAL-OMITTED-CATEGORY aparece no gráfico e tabela: pending sem barra zero; training = 40000 altera total210000→250000 e diferença 30000→-10000, com fontes e snapshot histórico preservados."
+      },
+      "limits": [
+        "No financial defect is inferred from using the explicitly labelled canonical inverse comparison.",
+        "Do not fully accept this criterion from the new signed-DOM assertions; keep the stated convention and proof boundary visible.",
+        "Same-case fixture still has synthetic authority/capture declarations, real addAlternative/recordChoice/domain/persistence operations, and zero application receipts.",
+        "No browser execution observed."
+      ]
+    }
+  ],
+  "new_findings": [
+    {
+      "id": "C1R",
+      "severity": "medium",
+      "status": "OPEN_AT_W10",
+      "title": "Hidden A/B chooser intercepts return-focus lookup after a source selection",
+      "locations": [
+        "product/analytics/source-navigation.ts:27,41,50",
+        "product/analytics/view.ts:186,421-428",
+        "product/analytics/waterfall.ts:57-59",
+        "test/product/wp05/planner-origins.test.ts:109-116"
+      ],
+      "mechanism": "A/B buttons receive the same data-bi-focus as the mark. The chooser is inserted before the SVG, and selecting an origin only sets hidden=true while leaving the buttons in the DOM. restoreBiFocus uses the first matching data-bi-focus without visibility checks, so it picks the hidden chooser button, calls focus with no visible focus result, and returns true.",
+      "static_reproduction": [
+        "Render an actual two-origin BI02/BI03 contribution.",
+        "Open its chooser and select A or B; keep the current mount for a detail overlay or same-mount return.",
+        "Move focus to a visible detail/return control and invoke restoreBiFocus(container, selected).",
+        "The first matching element is a button under the hidden fieldset, preceding the visible SVG mark. Focus is not restored to the visible mark, although the helper returns true."
+      ],
+      "impact": "Keyboard users lose the advertised return position after an origin is chosen. Cancel/Escape works through its separate direct returnFocus path and does not exercise this case.",
+      "criteria": [
+        "WP05.CMP.02",
+        "WP05.T01.CHK.05",
+        "WP05.T02.CHK.05",
+        "WP05.T04.CHK.04"
+      ],
+      "bounded_fix": "Clear chooser contents when hiding after selection, or skip hidden/disconnected focus targets and confirm focus actually moved before reporting success. Preserve selected valueId/reference and cancel behavior.",
+      "required_discriminant": "After choosing each A/B option for zero and nonzero BI02/BI03 rows, move focus elsewhere and call the exported restoreBiFocus on the retained mount; assert the intended visible mark is document.activeElement. Existing focus tests use singular refs and the new origins test only covers cancellation.",
+      "evidence_class": "Static code/DOM reasoning; not an executed browser failure."
+    }
+  ],
+  "external_boundary": {
+    "compose_head_reported": "4306b310e4d6dac77f9beab461adad4e8e924849",
+    "real_callers": [
+      "foreign-intake/WP10/apps/cli/src/sucafina-product/bi-services.ts:114-120 consumes plannerDifferencePresentation for BI02/BI03.",
+      "foreign-intake/COMPOSE4/apps/cli/src/sucafina-product/planner-calculation-services.ts:67-73 supplies nested replayScenario/evidence.",
+      "foreign-intake/COMPOSE4/apps/cli/src/sucafina-product/business-services.ts:334 wires canonical planner.simulateScenario and context."
+    ],
+    "intake": "COMPOSE4 intake-04 accepts source 981ad44102b2e2e67d31bfc8fb7d97208e390e5b (W2), including consumer blob b90dcd9974085ee068f4d86715c4e5b874eb86c9; this is not the W10 consumer blob or proof that W10 source-navigation/renderer assets are installed.",
+    "interface_lifecycle": "INTERFACE6 bi-refresh-lifecycle.md records that current bi-entry blob305ee63cd74658f6665a6ebbca885fe5995ea95f and extended-bi-browser do not register sucafina:main-refresh; BI shell GET is not projection reauthorization. It explicitly leaves positive BI retention/reader reauthorization/consumer integration unproven.",
+    "status": "INSTALLED_INTEGRATION_UNPROVEN; nested C17 source composition is recognized and is not equivalent to an installed exact-mark browser route.",
+    "limits": "No unsupported claim of zero callers; no blanket claim that the latest external host has no BI outside Dashboard. External evidence inspected here is partial intake, source wiring and an owner finding. Full external route and asset proof remains with the owners."
+  },
+  "unchanged_or_unreviewed": {
+    "G1": "Current monthly/409/annual-spread UI delivery is outside this targeted addendum; prior report is not automatically superseded or reconfirmed against INTERFACE6.",
+    "criteria_303": "The W3 report independently checked literal equality of all303 IDs/texts. The W10 immutable manifest excludes receipt docs; this addendum does not claim a new 303/303 literal check or full behavioral acceptance.",
+    "financial_authority": "Scenario financial/source replay and broad authority/persistence review remain the other assigned reviewers scopes."
+  },
+  "ci": {
+    "source": "Coordinator-provided observation, not independently fetched by this reviewer",
+    "W9_check": "43582252267:131 external diagnostics plus3 WP05 fixture type diagnostics; guards PASS",
+    "W10_browser_tests": "Not yet executed/observed according to coordinator; no PASS attributed",
+    "W11": "Coordinator announced test-typing-only successor; not part of W10 pin or this verdict until separately read"
+  },
+  "conclusion": "C2 original defect corrected in source; C1 original noninteractive A/B defect corrected in source with new open medium focus regression C1R; G2 signed-DOM proof authored but literal criterion and execution remain open. No READY/DONE/global C/D or integral acceptance."
+}

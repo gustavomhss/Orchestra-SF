@@ -1,0 +1,36 @@
+{
+  "schema": "sf-finance-remote-reconciliation-v1",
+  "originalPins": {
+    "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "handoff": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "sf2-stack": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0"
+  },
+  "refresh": {
+    "pr22": "90c467cea436daa24987ad68a588a7d80f91064e",
+    "pr24": "0881fee21f07bf8a9a1153d7d55727837cdf497a",
+    "pr40": "2bf0197c5d607b43063c36e1c8fef9e769c716ca",
+    "astra-compose": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+    "astra-interface": "0c3d98dd1263a305ce294c78ad5939cdda110a78"
+  },
+  "intakeStatus": {
+    "pr22": "consumed exact original own files and ancestry",
+    "pr24": "consumed exact original own files and ancestry",
+    "pr40": "be50 consumed as W18;2bf019 consumed as W19,2new commits and36paths reconciled;17receipt versions preserved",
+    "compose": "read-only COMPOSE6 source reconciliation complete; limited prior-capture record-only historical C17 is implemented; runtime/native gates pending",
+    "interface": "latest diff inspected; monthly HTTP/UI files unchanged; borrowed apply4bdd is superseded by ownedW18union"
+  },
+  "noRemoteBranchOverwrites": true,
+  "noDirtyOrArchivedFileOverwrite": true,
+  "noQualificationTransfer": true,
+  "financePublishedHead": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+  "financePublishedTree": "f30c35028acb382d2b38b7be6e105f3a98a0518c",
+  "wp11CurrentHeadConsumedIn": "d9b84003ed6cd6dd77b5738dbfcc6b45d57f72c8",
+  "intakeState": "CURRENT_OBSERVED_PR40_2bf019_CONSUMED;SOURCE_COMMITS39;UPSTREAM_CHECKS_NOT_TRANSFERRED",
+  "latestObservedAt": "2026-11-14T11:32:00Z",
+  "latestObservedPendingReconciliation": {
+    "pr40": "65509f0b8c435b88fb0ec9949299571f011d2347",
+    "astra-compose": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+    "astra-interface": "cccd00c568aea65bb0c1b5cb4a82c2a236c7e775"
+  },
+  "latestObservationNote": "New changes are under bounded reconciliation. Earlier source reviews remain attached to their exact inspected pins, not automatically transferred."
+}

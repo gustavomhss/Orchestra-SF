@@ -1,0 +1,147 @@
+{
+  "schema": "sf2h-finance-independent-apply-review-v1",
+  "reviewer": "review_final_apply",
+  "date": "2026-11-14",
+  "reviewMode": "STATIC_SOURCE_REVIEW_ONLY",
+  "scope": "PR40 plus receipt/CAS union in the two listed files; no approval of unrelated intake or whole WP acceptance",
+  "sourcePr": 40,
+  "sourcePrHead": "be50d42d6a2c030d57d17038dec267ebd33ea78c",
+  "reviewedProductCommit": null,
+  "reviewedProductTree": null,
+  "publicationBinding": "Exact reviewed blobs; root must bind them to the published commit/tree and corresponding Actions snapshot. No commit/tree invented for local candidates.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "gitBlob": "964a53310c340f4496d7410d66f8b852270b75f1",
+      "sha256": "debb437646fff9e9143b713b42e445f34754fe33df379fdd5f62b35e4a26a6da",
+      "bytes": 20833
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "gitBlob": "b6499c30a3a2482cd96c72e3b4b6bf9b2a04c72e",
+      "sha256": "eb621371e679b84989e8a7bbb23b4944e52bc5d3134dd65c272ac30cd4ebf449",
+      "bytes": 18411
+    }
+  ],
+  "dependenciesReadOnly": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "gitBlob": "b7988a2963a2797a96ea19ab2b3a481564548213",
+      "sha256": "f988cc1c91c340628c80523d587bfeec27e92971d6ff467233f9bbb4fff0dfbe",
+      "bytes": 12807
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "gitBlob": "90c3e981d8418c562342660bd3d56d03f9995383",
+      "sha256": "e5fe2ce6591d04a8289a895418225c8fd4ce2e0a58bf789fd4657145ae6d689c",
+      "bytes": 14701
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+      "gitBlob": "6987eddae37ae2c90fe03b2d8e81ea28e8b5221f",
+      "sha256": "d58d1c597a43392b427fabf7ee8e0e7fb4de9a2d052882a3d4351145ff4fb632",
+      "bytes": 2595
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/receipts.ts",
+      "gitBlob": "5649d5292247053e99b429d41dcd4ecbe2d8c3dc",
+      "sha256": "38a03a455a1089157d7ebd51c01b36ebc4216bc6d54424d58f5591ce77b70ef4",
+      "bytes": 2017
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/application-attempt.ts",
+      "gitBlob": "d7ef49df787cc4b058f0992b1fbbdc5c0cb6634e",
+      "sha256": "b952a9869602aee8c6696a769ee3d96278868dafc441bbdb4ff4b15c6b03762c",
+      "bytes": 1585
+    }
+  ],
+  "result": "NO_NEW_CONCRETE_BLOCKER_IN_SCOPED_STATIC_REVIEW",
+  "findings": [
+    {
+      "id": "APPLY-RECEIPT-LATE-MUTATION",
+      "severity": "P1",
+      "origin": "Earlier independent review of intermediate apply blob de2154ed486b526e7dd8844c915e62423af337d5",
+      "state": "CLOSED_BY_STATIC_INSPECTION_EXECUTION_PENDING",
+      "problem": "The last authorization callback could remove or replace a receipt after readReceipt while leaving cases CAS unchanged.",
+      "resolution": "apply.ts:131-135 compares the complete current case and receiptSnapshotMatches within the same C08 transaction snapshot. The final return is fenced again after classifier/authorization callbacks at139-141.",
+      "authoredCounterexamples": [
+        "receipt-removed",
+        "receipt-replaced",
+        "receipt-removed-late",
+        "receipt-replaced-late"
+      ]
+    },
+    {
+      "id": "APPLY-RECONCILED-RETRY-FENCE",
+      "severity": "P1",
+      "origin": "Earlier independent review of intermediate apply blob de2154ed486b526e7dd8844c915e62423af337d5",
+      "state": "CLOSED_BY_STATIC_INSPECTION_EXECUTION_PENDING",
+      "problem": "Already reconciled retries returned after asynchronous application authorization without confirming receipt/proof presence in a current snapshot.",
+      "resolution": "apply.ts:53-57 calls retainReceipt only after final callbacks. The helper checks current case digest, current actor binding, receipt/proof consistency and cancellation through C08. The selected-receipt and postcommit return paths also use the same fence.",
+      "authoredCounterexamples": [
+        "All six receipt fault modes also inject at the last authorization callback of an already reconciled retry."
+      ]
+    },
+    {
+      "id": "APPLY-RECEIPT-CARDINALITY",
+      "severity": "P2",
+      "origin": "This independent review of initial final candidate apply blob 4b92623ba4ca93b1fb9606acb1d68666f2c36e41",
+      "state": "CLOSED_BY_STATIC_INSPECTION_EXECUTION_PENDING",
+      "problem": "A second ID with the same canonical lookup identity could leave the original receipt/proof intact and pass the snapshot fence, although the canonical reader rejects ambiguous receipt identity.",
+      "resolution": "apply.ts:149-150 now requires exactly one match on surface, targetIncarnation, idempotencyKey and principalRef, the exact tuple used by prepared-apply.ts:34-37, alongside the original receipt/proof digests. This is consistency of an already authorized observation, not a new authorization route.",
+      "authoredCounterexamples": [
+        "receipt-collision",
+        "receipt-collision-late",
+        "Both collision modes repeat the fault during reconciled retry and preserve/restore the original receipt without redispatch."
+      ]
+    }
+  ],
+  "openFindings": [],
+  "preservedProperties": [
+    "Canonical apply.readReceipt remains the authority source before reconciling or returning a previously recorded receipt.",
+    "Receipt snapshot checks operate only as consistency fences; they do not issue receipts, classify financial effect or authorize a new principal.",
+    "Fresh cases storageVersion is obtained after domain execution, while complete selected-change and current-case digests preserve unrelated versioned edits.",
+    "The before-dispatch reservation remains durable and global to case/incarnation/change. A transaction replay cannot set createdHere and dispatch again.",
+    "Receipt proof remains bound to the canonical review digest, target identity, command digest, idempotency key and principal-scoped transaction key.",
+    "No readReceipt or other domain lookup is called while holding the C08 reconciliation transaction.",
+    "Actor principal/policy/access revision, current membership, case incarnation, source cancellation and final callback checks remain present.",
+    "Read-only retention and mutation compare the actual current C08 receipt/proof; no cached authority is reused across calls."
+  ],
+  "authoredTestModes": [
+    "normal",
+    "lost-response",
+    "revoked",
+    "receipt-removed",
+    "receipt-replaced",
+    "receipt-collision",
+    "receipt-removed-late",
+    "receipt-replaced-late",
+    "receipt-collision-late"
+  ],
+  "testObservations": [
+    "The three original modes remain. Six receipt faults now bracket the final canonical lookup and also cover reconciled retry.",
+    "Fault cases require exact unavailable reasons and an untouched case before recovery.",
+    "The original authoritative receipt is retained for recovery; collision recovery deletes only the injected extra record.",
+    "The test asserts one execution through recovery, preserves unrelated case edits, tests a separate stale/conflict change, and closes/reopens the local store.",
+    "No assertion or timeout was removed or relaxed by this reviewer."
+  ],
+  "proofBoundary": {
+    "realImplementations": [
+      "createSfProductState with openLocalStore",
+      "createSfPreparedApply and its receipt reader",
+      "Planner source/persistence and prepared mutation/domain execution",
+      "createPreparedExecution and durable reconciliation"
+    ],
+    "syntheticBoundaries": [
+      "TrustedUiContext is supplied by fixture cast; this is not real UI admission.",
+      "Human grants, authorization decisions, producer reviewDigest and receipt classification are fixture callbacks.",
+      "Receipt disappearance/replacement/collision is deliberately injected through C08 for adversarial coverage."
+    ],
+    "productTestsExecutedByReviewer": false,
+    "typecheckExecutedByReviewer": false,
+    "ciRunClaim": null,
+    "nativeRuntimeClaim": false,
+    "acceptance": "NOT_ACCEPTED_GLOBAL_GATES_PENDING"
+  },
+  "requiredExecution": "Run the exact execution-reconciliation.test.ts on the published candidate using the CI.md W/S protocol, then integrate owner host/native/C-D proofs separately. Static closure does not close a failing or unexecuted Actions case."
+}

@@ -1,0 +1,145 @@
+{
+  "schema": "sf-independent-authority-review-addendum-v1",
+  "reviewer": "review_authority",
+  "createdAt": "2026-11-14T10:36:52.409402+00:00",
+  "scope": "Independent read-only review of the three Planner product deltas and two test sources in the W15 batch capture; W16 admission correction separately identified.",
+  "candidate": {
+    "commit": "61d92392e9bded167eb2794995a623b2719cc4ba",
+    "tree": "ffb3cd9e1ee689732cbae33658506c628539d032",
+    "capture": "/workspace/scratch/a97ca4c53050/finance-W15-changes.json",
+    "captureSha256": "f646c0291bebfa38dc4c131e9135f8337199574d30bef0441339457ab6c88ca9",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+        "gitBlob": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+        "sha256": "771b060898fce1b1d851461bee7df743014ab55f9c0994a0331f2664a1c8bfd1",
+        "lines": 71,
+        "previousBlob": "5433cb0518e770ff1a4dc1fa0fe14f8b89869c9b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+        "gitBlob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+        "sha256": "0a7636cb5245b63494e2dc0d83adf909cd750ba71f4be46f62f03f797e71a965",
+        "lines": 85,
+        "previousBlob": "d3098aa94cdeee71193c94ae906f6fafd14bda9b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+        "gitBlob": "1673c86995cf71b61e288d91492ae7b691934171",
+        "sha256": "d83e19bff860ad2a54fc3f41b3b5790d3d31cd3b2b55ea8785a61ea30aa8827b",
+        "lines": 113,
+        "previousBlob": "ed68563245e406aca2dc3ce335943647fd2cb002"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch-fixture.ts",
+        "gitBlob": "76602236238df061e96af1338d05d01799c5ecab",
+        "sha256": "2f03cf054ce89d8ac2e8a5cfc73123b6d991717ab311cf6f9e8e153a91e61e77",
+        "lines": 117,
+        "previousBlob": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+        "gitBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+        "sha256": "6a2576aa4495ec03a38c67f9c5453cd0a9cec3455f21306e435bc269cced8bce",
+        "lines": 175,
+        "previousBlob": null
+      }
+    ]
+  },
+  "fixtureCorrection": {
+    "label": "W16",
+    "publicationCommit": null,
+    "publicationCommitNote": "Not independently supplied or verified at the time of this addendum; 0903057... is the Git blob, not a commit.",
+    "capture": "/workspace/scratch/a97ca4c53050/finance-W16-changes.json",
+    "file": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch-fixture.ts",
+      "gitBlob": "0903057cf81a6c40289544ff6ff6dd40ffee9a36",
+      "sha256": "450c3fe37e17b3b697199c5220b6831adfc352f1c1739e8520dbf9ed535fb40c",
+      "lines": 117,
+      "previousBlob": "76602236238df061e96af1338d05d01799c5ecab"
+    },
+    "verifiedDelta": "Exactly two fixture.admit calls now consume the canonical UI intent before requestFor: initial finance admission and helper admission. No product source is changed by this fixture delta.",
+    "otherCaptureFilesOutsideThisAddendum": [
+      "modules/sucafina/Sucafinav1/test/product/wp05/planner-integration.test.ts"
+    ]
+  },
+  "conclusion": {
+    "status": "no_new_concrete_blocker_found_in_static_delta_review",
+    "productFindingCount": 0,
+    "globalReadinessClaim": false
+  },
+  "invariantsReviewed": [
+    {
+      "location": "product/planner/stored-scenarios.ts:19-30",
+      "observation": "Every result read is still individual and authenticated. The returned observation is cloned immediately, including repeated references."
+    },
+    {
+      "location": "product/planner/stored-scenarios.ts:20-24,31,60",
+      "observation": "Case observations are grouped by the complete stored producer caseRef within one context and one invocation. Initial and final maps are distinct. Different producer versions remain separate groups rather than an added denial."
+    },
+    {
+      "location": "product/planner/stored-scenarios.ts:38-50,54-66",
+      "observation": "Full current case membership, scenario/result digests, unique basis/source and per-scenario forecast remain required. Every successful per-result reread completes before the final case observation begins; a whole-case digest detects drift."
+    },
+    {
+      "location": "product/planner/scenario-comparison-port.ts:27,48,64,75-84",
+      "observation": "Each later observation invokes a new batch. Exact cardinality is required, order is preserved, denials do not fall back to individual success, returned items are cloned independently, and the legacy fallback clones sequentially."
+    },
+    {
+      "location": "product/planner/sensitivity-units.ts:31-35,45,57-63",
+      "observation": "Two new sibling batches replace the two pairs of resolver calls. Outer canonical case reads, individual stores, evidence validation and final comparisons remain."
+    },
+    {
+      "location": "product/planner/preview-comparison.ts",
+      "observation": "No delta in the W15 capture; no sharing of singleton baseline observations or cross-probe cache was introduced."
+    }
+  ],
+  "testSourceAssessment": {
+    "newTestCount": 9,
+    "locations": [
+      "test/product/wp11/scenario-batch-fixture.ts",
+      "test/product/wp11/scenario-batch.test.ts"
+    ],
+    "coverage": [
+      "Case-port reads 6 versus 10 for unit issue, with 12 result-store reads and 4 forecast calls in both paths",
+      "Initial/final observations and independent concurrent calls",
+      "Order, cardinality, duplicate references and independent result objects",
+      "Different cases and producer versions",
+      "Case ledger, alternative and coverage changes without a version shortcut",
+      "Revocation after result rereads",
+      "Actual Planner source change during projection",
+      "Retained callback object mutation",
+      "Refusal and invalid cardinality without fallback"
+    ],
+    "realBoundaries": [
+      "UI admission/validation after the W16 fixture correction",
+      "Planner persistence/source issuer and scenario/forecast primitives",
+      "C08 state and decision case port",
+      "Decision result store"
+    ],
+    "adaptedBoundaries": [
+      "Coverage callback returns fixture-owned pending assessments",
+      "Evidence adapter verifies actual source reads but is not the assembled BCS/native host",
+      "No native tool dispatch, Atlas publication, Choice application or authoritative application receipt is proved by this fixture"
+    ],
+    "financialBoundary": "The fixture asserts conditioned comparison and completeDifference null. It does not establish a financially complete native flow."
+  },
+  "proof": {
+    "method": "Static source inspection and capture Git-blob/SHA256 verification only",
+    "executedProductTests": false,
+    "executedTypecheck": false,
+    "dispatchedCI": false,
+    "productEdits": false,
+    "sourceHashVerificationExecuted": true,
+    "actionsReceiptInspectedForW15OrW16": false
+  },
+  "remainingEvidence": [
+    "Actions must run the corrected fixture at its published pin and retain the reported assertions.",
+    "The four S4 timeouts are not closed by this static review; require a successful relevant Actions run.",
+    "The 6/10 count is the expensive decision-case-port read boundary, not the total number of every internal C08 read."
+  ],
+  "separateWork": [
+    "COMPOSE5 historical C17 finding is in review-authority-compose5-addendum, not a regression in this batch.",
+    "The PR40 apply second-receipt-read union requires a separate exact-delta review."
+  ]
+}

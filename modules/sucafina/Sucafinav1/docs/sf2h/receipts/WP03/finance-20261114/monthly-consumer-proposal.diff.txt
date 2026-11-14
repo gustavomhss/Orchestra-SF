@@ -1,0 +1,238 @@
+--- a/modules/sucafina/Sucafinav1/product/contracts/host-context.ts
++++ b/modules/sucafina/Sucafinav1/product/contracts/host-context.ts
+@@ -18,12 +18,11 @@
+ import type { TrustedUiContext } from "./sf-execution.ts"
+ import type { ForecastExplainInput, SourcingComparisonInput } from "./skill-inputs.ts"
+ import type { ForecastCompareRequest } from "./operations.ts"
+-import type { MonthlyDraft } from "../planner/monthly-edit.ts"
+-import type { View, Result } from "../../runtime/contract.ts"
++import type { MonthlyRequest, MonthlyResult } from "../planner/monthly-host.ts"
+ import type { runSfAnalysis } from "../ai/analysis-port.ts"
+ 
+-export type SfPlannerMonthlyInput = { page: "OPEX" | "CAPEX"; versionId: string; drafts: readonly MonthlyDraft[] }
+-export type SfPlannerMonthlyResult = { view: View; rows: readonly { draft: MonthlyDraft; errors: readonly { cell?: MonthlyDraft["cells"][number]; reason: string }[]; result?: Result }[] }
++export type SfPlannerMonthlyInput = MonthlyRequest
++export type SfPlannerMonthlyResult = MonthlyResult
+ 
+ /** Human-authorized preparation shared by import, document and other analysis consumers. */
+ export type SfAnalysisInputPort = {
+--- a/modules/sucafina/Sucafinav1/product/interface/planner-http.ts
++++ b/modules/sucafina/Sucafinav1/product/interface/planner-http.ts
+@@ -1,4 +1,5 @@
+ import type { SfHostServices, SfPlannerMonthlyInput } from "../contracts/host-context.ts"
++import { validMonthlyRequest } from "../planner/monthly-host.ts"
+ 
+ /** The host resolves the current actor and Planner snapshot for each operation. */
+ export async function handleSfPlannerMonthly(request: Request, origin: string, runtime: SfHostServices) {
+@@ -9,9 +10,6 @@
+   const body = await request.text()
+   if (new TextEncoder().encode(body).byteLength > 65536) return reply({ status: "invalid" }, 413)
+   const parsed: unknown = await Promise.resolve().then(() => JSON.parse(body)).catch(() => undefined)
+-  // WP03/WP00 have not published extended operations in the composed host contract.
+-  // Reject them before admission instead of pretending an operation/entity is a MonthlyDraft.
+-  if (record(parsed) && record(parsed.input) && ("operation" in parsed.input || "entity" in parsed.input)) return reply({ status: "needs-input", reason: "planner-operation-not-published" }, 400)
+   if (!record(parsed) || (parsed.action !== "preview" && parsed.action !== "apply") || Object.keys(parsed).some((key) => !["action", "input"].includes(key)) || !monthlyInput(parsed.input)) return reply({ status: "invalid" }, 400)
+   if (!runtime.plannerMonthly) return reply({ status: "unavailable" }, 503)
+   const admitted = await runtime.human.admit(request, `planner.${parsed.action}`, parsed.input)
+@@ -30,11 +28,9 @@
+ }
+ 
+ function monthlyInput(value: unknown): value is SfPlannerMonthlyInput {
+-  if (!record(value) || Object.keys(value).some((key) => !["page", "versionId", "drafts"].includes(key)) || (value.page !== "OPEX" && value.page !== "CAPEX") || typeof value.versionId !== "string" || !value.versionId.trim()) return false
+-  return Array.isArray(value.drafts) && value.drafts.length > 0 && value.drafts.length <= 500 &&
+-    value.drafts.every((draft: unknown) => record(draft) && Object.keys(draft).every((key) => ["rowId", "revision", "cells"].includes(key)) &&
+-      typeof draft.rowId === "string" && !!draft.rowId.trim() && typeof draft.revision === "number" && Number.isSafeInteger(draft.revision) && draft.revision >= 0 && Array.isArray(draft.cells) && draft.cells.length > 0 && draft.cells.length <= 36 &&
+-      draft.cells.every((cell: unknown) => record(cell) && Object.keys(cell).every((key) => ["measure", "month", "text"].includes(key)) &&
+-        (cell.measure === "budget" || cell.measure === "actual" || cell.measure === "forecast") && typeof cell.month === "number" && Number.isInteger(cell.month) && cell.month >= 1 && cell.month <= 12 && typeof cell.text === "string"))
++  if (!record(value) || !validMonthlyRequest(value as SfPlannerMonthlyInput)) return false
++  // Preserve the HTTP boundary's existing month bounds. Product semantic errors
++  // (including an invalid numeric draft) remain available as row-level feedback.
++  return value.drafts === undefined || (value as SfPlannerMonthlyInput).drafts!.every((draft) =>
++    draft.cells.every((cell) => Number.isInteger(cell.month) && cell.month >= 1 && cell.month <= 12))
+ }
+-
+--- a/modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts
++++ b/modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts
+@@ -26,6 +26,15 @@
+   const measure = document.createElement('select'); measure.setAttribute('aria-label', 'Measure')
+   ;[['budget', 'Budget'], ['actual', 'Actual'], ['forecast', 'Forecast']].forEach(([value, text]) => { const option = document.createElement('option'); option.value = value; option.textContent = text; measure.append(option) })
+   label.append(measure)
++  const actionLabel = document.createElement('label'); actionLabel.textContent = 'Change '
++  const mode = document.createElement('select'); mode.setAttribute('aria-label', 'Monthly change')
++  ;[['drafts', 'Monthly cells'], ['annual', 'Annual budget'], ['spread', 'Spread budget'], ['reset', 'Reset manual budget marks']].forEach(([value, text]) => { const option = document.createElement('option'); option.value = value; option.textContent = text; mode.append(option) })
++  actionLabel.append(mode)
++  const operationFields = document.createElement('span'); operationFields.hidden = true
++  const operationRow = document.createElement('select'); operationRow.setAttribute('aria-label', 'Budget record')
++  rows.filter((row) => !row.id.startsWith('HR:') && Object.keys(row.values).some((key) => /^b(?:[0-9]|1[01])$/.test(key))).forEach((row) => { const option = document.createElement('option'); option.value = row.id; option.textContent = row.label; operationRow.append(option) })
++  const annual = document.createElement('input'); annual.type = 'text'; annual.inputMode = 'decimal'; annual.setAttribute('aria-label', 'Annual budget'); annual.hidden = true
++  operationFields.append(operationRow, annual)
+   const instructions = document.createElement('p'); instructions.textContent = 'Use Tab to move between cells. Paste a range with Ctrl or Command V; a range that does not fit is refused without changing cells. Preview before saving.'
+   const scroll = document.createElement('div'); scroll.className = 'table-scroll'
+   const grid = document.createElement('table'); scroll.append(grid)
+@@ -42,6 +51,70 @@
+   let monthlyUncertain = false
+   let reconciliationRequired = false
+   let accessRevoked = false
++  const markDirty = () => { if (changes.size || mode.value !== 'drafts') dirtyGuard.dataset.dirty = 'true'; else delete dirtyGuard.dataset.dirty }
++  const displayAmount = (value) => value === null ? 'Absent' : typeof value === 'number' && Number.isFinite(value) ? String(value) : 'Unavailable'
++  const displayCell = (cell) => !cell ? 'Unavailable' : displayAmount(cell.value) + (cell.source === 'inherited-budget' ? ' (inherited budget)' : cell.source === 'derived' ? ' (derived)' : cell.value === 0 ? ' (explicit zero)' : '')
++  const publishedRow = (view, rowId) => view?.data?.versions?.find((version) => version.id === versionId)?.summary?.lines?.find((line) => line.id === rowId)
++  const currentRevision = (view, rowId) => {
++    const current = publishedRow(view, rowId)
++    const revision = current && view?.versions?.[versionId + ':' + (current.synthetic === true ? 'hrAF' : 'lines') + ':' + rowId]?.version
++    return Number.isSafeInteger(revision) && revision >= 0 ? revision : undefined
++  }
++  const impactTable = (captionText, values) => {
++    const impact = document.createElement('table'); impact.dataset.sfMonthlyImpact = 'true'
++    const caption = impact.createCaption(); caption.textContent = captionText
++    const head = impact.createTHead().insertRow(); ['Record / month', 'Before', 'After'].forEach((text) => { const cell = document.createElement('th'); cell.scope = 'col'; cell.textContent = text; head.append(cell) })
++    const body = impact.createTBody(); values.forEach(([name, before, after]) => { const row = body.insertRow(); const title = document.createElement('th'); title.scope = 'row'; title.textContent = name; row.append(title); [before, after].forEach((value) => { const cell = row.insertCell(); cell.textContent = value }) })
++    status.append(impact)
++  }
++  const renderDraftImpact = (value, drafts) => {
++    if (value.before?.versionId !== versionId || value.after?.versionId !== versionId || value.before?.page !== page || value.after?.page !== page || !Array.isArray(value.before?.rows) || !Array.isArray(value.after?.rows)) return false
++    const values = drafts.flatMap((draft) => draft.cells.map((cell) => {
++      const before = value.before.rows.find((row) => row.id === draft.rowId)
++      const after = value.after.rows.find((row) => row.id === draft.rowId)
++      return [(before?.label || after?.label || draft.rowId) + ' · ' + cell.measure + ' · month ' + cell.month + ' · ' + (before?.currency || after?.currency || 'currency unavailable'), displayCell(before?.cells?.find((entry) => entry.month === cell.month)?.[cell.measure]), displayCell(after?.cells?.find((entry) => entry.month === cell.month)?.[cell.measure])]
++    }))
++    impactTable('Planner preview · saved values before and after the proposed change', values)
++    return true
++  }
++  const operationReply = (value, operation) => {
++    const result = value?.operation
++    const validAmount = (amount) => amount === null || typeof amount === 'number' && Number.isFinite(amount)
++    const validCells = (cells) => Array.isArray(cells) && cells.length === 12 && cells.every((cell, index) => cell?.month === index + 1 && validAmount(cell.value) && typeof cell.manual === 'boolean')
++    return result?.rowId === operation.rowId && result.revision === operation.revision && result.operation === operation.kind && Array.isArray(value?.rows) && value.rows.length === 0 && Array.isArray(result.errors) && result.errors.every((error) => typeof error === 'string') && validCells(result.before) && validCells(result.after) && validAmount(result.annualBefore) && validAmount(result.annualAfter) && Array.isArray(result.changedMonths) && new Set(result.changedMonths).size === result.changedMonths.length && result.changedMonths.every((month) => Number.isInteger(month) && month >= 1 && month <= 12) ? result : undefined
++  }
++  const renderOperationImpact = (value, operation) => {
++    const row = rows.find((entry) => entry.id === operation.rowId)
++    const currency = publishedRow(value.view, operation.rowId)?.cur
++    const note = document.createElement('p'); note.textContent = (row?.label || operation.rowId) + ' · ' + operation.operation + ' · currency ' + (typeof currency === 'string' ? currency : 'unavailable') + ' · annual budget: ' + displayAmount(operation.annualBefore) + ' → ' + displayAmount(operation.annualAfter) + ' · affected months: ' + (operation.changedMonths.length ? operation.changedMonths.join(', ') : 'none'); status.append(note)
++    impactTable('Budget impact supplied by Planner', operation.before.map((before, index) => ['Month ' + before.month, displayAmount(before.value) + (before.manual ? ' · manual' : ''), displayAmount(operation.after[index].value) + (operation.after[index].manual ? ' · manual' : '')]))
++  }
++  const offerRebase = (view, rowId, reconciling) => {
++    const row = rows.find((entry) => entry.id === rowId)
++    const revision = currentRevision(view, rowId)
++    const stored = publishedRow(view, rowId)
++    if (reconciling || !row || !stored || revision === undefined || revision === row.revision) return
++    const rebase = document.createElement('button'); rebase.type = 'button'; rebase.textContent = 'Use current revision for ' + row.label + ' and keep my entries'
++    rebase.addEventListener('click', () => {
++      if (accessRevoked || busy || monthlyUncertain || reconciliationRequired || pendingApply) return
++      // Only the revision and saved cells of this confirmed conflict are refreshed.
++      // The changes map, including other rows and invalid local text, is retained.
++      row.revision = revision
++      Object.keys(row.values).forEach((key) => { const value = stored[key[0]]?.[Number(key.slice(1))]; row.values[key] = value === null || value === undefined ? '' : String(value) })
++      approved = false; key = crypto.randomUUID(); save.disabled = true; markDirty(); render()
++      status.textContent = 'Current revision loaded for ' + row.label + '. Your entries are preserved. Preview again before saving.'
++      preview.focus()
++    })
++    status.append(rebase)
++  }
++  const operationInput = () => {
++    const row = rows.find((entry) => entry.id === operationRow.value)
++    if (!row || row.saved) { status.textContent = 'Choose an editable budget record.'; return }
++    if ([...changes.values()].some((cell) => cell.rowId === row.id)) { status.textContent = 'This record has monthly entries pending. Save those entries first or choose another record; other drafts are preserved.'; return }
++    if (mode.value === 'annual' && (!annual.value.trim() || !Number.isFinite(Number(annual.value)))) { annual.setAttribute('aria-invalid', 'true'); status.textContent = 'Enter a valid annual budget before previewing.'; return }
++    annual.removeAttribute('aria-invalid')
++    return { page, versionId, operation: { rowId: row.id, revision: row.revision, kind: mode.value, ...(mode.value === 'annual' ? { annual: Number(annual.value) } : {}) } }
++  }
+   const revoke = () => { accessRevoked = true; const scope = table.closest('main') || section; const message = document.createElement('p'); message.setAttribute('role', 'alert'); message.textContent = 'Your Planner access changed. Reload this page with your current access.'; scope.replaceChildren(message); if (scope === section) table.closest('.table-scroll')?.remove(); delete dirtyGuard.dataset.dirty }
+   const idFor = (row, kind, month) => JSON.stringify([row, kind, month])
+   const update = (input) => {
+@@ -50,7 +123,7 @@
+     invalidCells.delete(id); input.removeAttribute('aria-invalid')
+     if (input.value === input.dataset.original) changes.delete(id)
+     else changes.set(id, { rowId: input.dataset.row, measure: input.dataset.measure, month: Number(input.dataset.month), text: input.value })
+-    if (changes.size) dirtyGuard.dataset.dirty = 'true'; else delete dirtyGuard.dataset.dirty
++    markDirty()
+     key = crypto.randomUUID(); approved = false; save.disabled = true
+     status.textContent = changes.size ? changes.size + ' changed cells. Preview before saving.' : 'No pending changes.'
+   }
+@@ -84,11 +157,16 @@
+     })
+   }
+   const send = async (action) => {
+-    if (accessRevoked || reconciliationRequired || busy || !changes.size || (action === 'preview' && monthlyUncertain) || (action === 'apply' && !approved && !pendingApply)) return
++    if (accessRevoked || reconciliationRequired || busy || (mode.value === 'drafts' && !changes.size && !pendingApply) || (action === 'preview' && monthlyUncertain) || (action === 'apply' && !approved && !pendingApply)) return
+     const reconciling = monthlyUncertain
+-    const drafts = rows.flatMap((row) => { const cells = [...changes.values()].filter((cell) => cell.rowId === row.id).map(({ measure, month, text }) => ({ measure, month, text })); return cells.length ? [{ rowId: row.id, revision: row.revision, cells }] : [] })
+-    if (action === 'apply' && !pendingApply) pendingApply = { key, body: JSON.stringify({ action, input: { page, versionId, drafts } }) }
+-    const request = pendingApply || { key, body: JSON.stringify({ action, input: { page, versionId, drafts } }) }
++    const editedDrafts = rows.flatMap((row) => { const cells = [...changes.values()].filter((cell) => cell.rowId === row.id).map(({ measure, month, text }) => ({ measure, month, text })); return cells.length ? [{ rowId: row.id, revision: row.revision, cells }] : [] })
++    const input = pendingApply ? JSON.parse(pendingApply.body).input : mode.value === 'drafts' ? { page, versionId, drafts: editedDrafts } : operationInput()
++    if (!input) return
++    if (action === 'apply' && !pendingApply) pendingApply = { key, body: JSON.stringify({ action, input }) }
++    const request = pendingApply || { key, body: JSON.stringify({ action, input }) }
++    const submitted = JSON.parse(request.body).input
++    const drafts = submitted.drafts || []
++    const operation = submitted.operation
+     const url = new URL(location.href); url.search = '?sf=workbench-planner'
+     busy = true; freeze(true); status.textContent = action === 'preview' ? 'Checking changes…' : 'Saving changes…'
+     const controller = new AbortController(); const timeout = setTimeout(() => controller.abort(), 10000)
+@@ -97,11 +175,25 @@
+       if (response.status === 401 || response.status === 403) throw Object.assign(new Error('access-changed'), { accessDenied: true })
+       const result = await response.json()
+       if (!response.ok || result.status !== 'ok') throw Object.assign(new Error('unavailable'), { rejected: [400, 409, 422].includes(response.status) && ['invalid', 'needs-input', 'stale', 'conflict'].includes(result.status) })
+-      if (!Array.isArray(result.value?.rows) || result.value.rows.length !== drafts.length || new Set(result.value.rows.map((item) => item.draft?.rowId)).size !== drafts.length || result.value.rows.some((item) => { const draft = drafts.find((entry) => entry.rowId === item.draft?.rowId); return !draft || !Array.isArray(item.errors) || item.draft.revision !== draft.revision || !Array.isArray(item.draft.cells) || item.draft.cells.length !== draft.cells.length || item.draft.cells.some((cell, index) => cell.measure !== draft.cells[index].measure || cell.month !== draft.cells[index].month || cell.text !== draft.cells[index].text) })) throw new Error('unavailable')
++      if (operation ? !operationReply(result.value, operation) : !Array.isArray(result.value?.rows) || result.value.rows.length !== drafts.length || new Set(result.value.rows.map((item) => item.draft?.rowId)).size !== drafts.length || result.value.rows.some((item) => { const draft = drafts.find((entry) => entry.rowId === item.draft?.rowId); return !draft || !Array.isArray(item.errors) || item.draft.revision !== draft.revision || !Array.isArray(item.draft.cells) || item.draft.cells.length !== draft.cells.length || item.draft.cells.some((cell, index) => cell.measure !== draft.cells[index].measure || cell.month !== draft.cells[index].month || cell.text !== draft.cells[index].text) })) throw new Error('unavailable')
+       invalidCells.clear()
++      if (operation) {
++        const observed = operationReply(result.value, operation)
++        const problems = observed.errors.length > 0
++        status.replaceChildren(); renderOperationImpact(result.value, observed)
++        observed.errors.forEach((error) => { const message = document.createElement('p'); message.textContent = error; status.append(message) })
++        if (problems) offerRebase(result.value.view, operation.rowId, reconciling)
++        approved = action === 'preview' && !problems
++        if (action === 'apply' && reconciling && problems) { reconciliationRequired = true; const warning = document.createElement('p'); warning.textContent = 'The earlier operation is still unconfirmed. Its original request remains locked; reconcile the stored record before another change.'; status.append(warning); return }
++        if (action === 'apply') {
++          approved = false; pendingApply = undefined; monthlyUncertain = false; key = crypto.randomUUID()
++          if (!problems) { const saved = rows.find((row) => row.id === operation.rowId); if (saved) saved.saved = true; mode.value = 'drafts'; operationFields.hidden = true; markDirty(); const message = document.createElement('p'); message.textContent = 'Budget operation saved. Other monthly drafts are preserved. Refresh before editing this record again.'; status.append(message) }
++        }
++        return
++      }
+       const problems = result.value.rows.filter((row) => row.errors.length || !row.result?.ok)
+       if (action === 'apply' && (!reconciling || !problems.length)) result.value.rows.filter((row) => !row.errors.length && row.result?.ok).forEach((row) => { const saved = rows.find((entry) => entry.id === row.draft.rowId); if (saved) { saved.saved = true; row.draft.cells.forEach((cell) => { const prefix = cell.measure === 'budget' ? 'b' : cell.measure === 'actual' ? 'a' : 'f'; saved.values[prefix + (cell.month - 1)] = cell.text }) } for (const [id, cell] of changes) if (cell.rowId === row.draft.rowId) changes.delete(id) })
+-      if (!changes.size) delete dirtyGuard.dataset.dirty
++      markDirty()
+       status.replaceChildren()
+       const message = document.createElement('p'); message.textContent = problems.length ? 'Some rows need attention. Your entries remain in the grid.' : action === 'preview' ? 'Preview complete. Review the entries and save when ready.' : 'Changes saved. Refresh before editing these rows again.'; status.append(message)
+       problems.forEach((item) => { const row = rows.find((entry) => entry.id === item.draft.rowId); const detail = document.createElement('p'); detail.textContent = (row?.label || 'Row') + ': ' + (item.errors.some((error) => error.reason === 'row-unavailable') ? 'Row unavailable or changed.' : item.result?.status === 409 ? reconciling ? 'The stored row changed. Compare it with your original save attempt.' : 'Changed by another user. Refresh and compare before retrying.' : 'Check the values and your access.'); status.append(detail) })
+@@ -111,12 +203,14 @@
+         const row = rows.find((entry) => entry.id === item.draft.rowId); const labels = { 'invalid-number': 'Enter a valid number.', 'budget-requires-value': 'Budget requires a value.', 'invalid-month': 'Month is invalid.', 'duplicate-cell': 'The same cell appears twice.' }
+         const detail = document.createElement('p'); detail.textContent = (row?.label || 'Row') + ' · ' + error.cell.measure + ' · month ' + error.cell.month + ': ' + (labels[error.reason] || 'Check this value.'); status.append(detail)
+       }))
+-      problems.filter((item) => item.result?.status === 409).forEach((item) => item.draft.cells.forEach((cell) => {
++      problems.filter((item) => item.result?.status === 409).forEach((item) => { offerRebase(result.value.view, item.draft.rowId, reconciling); item.draft.cells.forEach((cell) => {
+         const stored = item.result.stored; const prefix = cell.measure === 'budget' ? 'b' : cell.measure === 'actual' ? 'a' : 'f'
+         const current = stored && Array.isArray(stored[prefix]) ? stored[prefix][cell.month - 1] : undefined
+         const detail = document.createElement('p'); detail.textContent = cell.measure + ' month ' + cell.month + ': current ' + (current === undefined ? 'unavailable' : current === null ? 'empty' : String(current)) + '; your entry ' + cell.text; status.append(detail)
+-      }))
+-      approved = action === 'preview' && !problems.length
++      }) })
++      const impactAvailable = action !== 'preview' || renderDraftImpact(result.value, drafts)
++      if (!impactAvailable) { const warning = document.createElement('p'); warning.textContent = 'Planner did not return the before/after preview. Your entries remain; save is unavailable until a complete preview is received.'; status.append(warning) }
++      approved = action === 'preview' && !problems.length && impactAvailable
+       if (action === 'apply' && reconciling && problems.length) { reconciliationRequired = true; const warning = document.createElement('p'); warning.textContent = 'The retry could not reconcile the earlier save. Its outcome is still uncertain. Your original entries remain locked; reconcile the stored record before starting another change.'; status.append(warning); return }
+       if (action === 'apply') { approved = false; pendingApply = undefined; monthlyUncertain = false; key = crypto.randomUUID() }
+     } catch (error) { if (error?.accessDenied) { revoke(); return } if (error?.rejected) { if (reconciling) { reconciliationRequired = true; status.textContent = 'The retry was rejected but the earlier save is still unconfirmed. Your original entries remain locked; reconcile the stored record before starting another change.'; return } monthlyUncertain = false; pendingApply = undefined; approved = false; key = crypto.randomUUID(); status.textContent = 'The request was rejected. Your entries are preserved; review the values and current record before previewing again.'; return } monthlyUncertain = action === 'apply'; status.textContent = action === 'apply' ? 'Could not confirm the operation. Your entries are preserved and locked; retry the same save request.' : 'Could not confirm the preview. Your entries are preserved; retry the preview.' }
+@@ -125,9 +219,16 @@
+   preview.addEventListener('click', () => send('preview'))
+   save.addEventListener('click', () => send('apply'))
+   measure.addEventListener('change', () => { if (!measure.disabled) render() })
+-  const guidance = document.createElement('p'); guidance.textContent = 'This grid saves monthly values. For annual budgets, spread and reset, use the actions available on each record below.'
+-  const freeze = (locked) => { measure.disabled = locked; preview.disabled = locked; save.disabled = locked || !approved; if (locked) grid.querySelectorAll('input').forEach((input) => { input.disabled = true }); else render() }
+-  section.append(heading, label, instructions, guidance, scroll, preview, save, status, dirtyGuard)
++  const operationChanged = () => {
++    if (accessRevoked || busy || monthlyUncertain || reconciliationRequired) return
++    operationFields.hidden = mode.value === 'drafts'; annual.hidden = mode.value !== 'annual'
++    approved = false; key = crypto.randomUUID(); save.disabled = true; markDirty()
++    status.textContent = 'Preview the selected change before saving. Other monthly drafts are preserved.'
++  }
++  mode.addEventListener('change', operationChanged); operationRow.addEventListener('change', operationChanged); annual.addEventListener('input', operationChanged)
++  const guidance = document.createElement('p'); guidance.textContent = 'Preview shows the values supplied by Planner. Annual, spread and reset use the record budget and manual marks. A confirmed conflict can reload its current revision while retaining your entries; every retry needs a new preview.'
++  const freeze = (locked) => { measure.disabled = locked; mode.disabled = locked; operationRow.disabled = locked; annual.disabled = locked; preview.disabled = locked; save.disabled = locked || !approved; if (locked) grid.querySelectorAll('input').forEach((input) => { input.disabled = true }); else render() }
++  section.append(heading, actionLabel, operationFields, label, instructions, guidance, scroll, preview, save, status, dirtyGuard)
+   table.closest('.table-scroll')?.before(section)
+   render()
+ })

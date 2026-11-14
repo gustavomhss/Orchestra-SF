@@ -1,0 +1,1889 @@
+{
+  "schema": "sf-finance-product-tests-v1",
+  "runs": [
+    {
+      "selection": 1,
+      "runId": 43577975248,
+      "jobId": 132396312530,
+      "productSha": "8184761b61f78d6aeac73232fdc879e93f85bc5e",
+      "productTree": "dca3e3c3aca7dadbd348c71b1c9a3d5934ac4a05",
+      "snapshotSha": "880e0f05557abe8b6c4bb71f5f8cc3ad7272fae4",
+      "snapshotTree": "5a2095d98a092203cc6dc090bcad01802afcbf17",
+      "conclusion": "failure",
+      "branch": "ci-run-linux-astra-finance-8184761-880e0f0-a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43577975248",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+          "./Sucafinav1/test/product/wp03/scenario-persistence-fences.test.ts",
+          "./Sucafinav1/test/product/wp03/persistence.test.ts",
+          "./Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+          "./Sucafinav1/test/product/wp03/port.test.ts",
+          "./Sucafinav1/test/product/wp03/scenario-capability-parity.test.ts",
+          "./Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+          "./Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+          "./Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+          "./Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+          "./Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+          "./Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+          "./Sucafinav1/test/product/wp11/coverage-access.test.ts",
+          "./Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+          "./Sucafinav1/test/product/wp11/planner-apply.test.ts",
+          "./Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+          "./Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "770a909d5b8b5eb681ee305b8f1a6cb003c4d9fddde6308462de51b544c67ac2",
+      "snapshotDiff": [
+        ".ci-run.json"
+      ],
+      "productBlobEqualityVerified": true,
+      "localProductTests": false,
+      "attempt": 1,
+      "logSha256": "6573d7a68f6c40d7032989546a93e3202301f8f56fbe6e706934277241458381",
+      "cases": [
+        {
+          "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+          "status": "pass",
+          "name": "composed Planner operations preserve all fixed costs while proving the real 55000 boundary",
+          "milliseconds": 91271.17
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+          "status": "fail",
+          "name": "composed Planner threshold includes confirmed training once and distinguishes zero from missing price",
+          "milliseconds": 211510.15
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+          "status": "pass",
+          "name": "composed interval and threshold refuse changing fixed costs or source revocation",
+          "milliseconds": 75577.32
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+          "status": "pass",
+          "name": "composed proof refuses duplicate and indirect writes to the varying parameter",
+          "milliseconds": 35486.43
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/scenario-persistence-fences.test.ts",
+          "status": "pass",
+          "name": "scenario persistence replays the real composed producer before and after writing and rejects forged totals",
+          "milliseconds": 29589.16
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/scenario-persistence-fences.test.ts",
+          "status": "pass",
+          "name": "scenario persistence detects a changed case selection after the actual result commit",
+          "milliseconds": 26773.75
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/persistence.test.ts",
+          "status": "pass",
+          "name": "scenario and comparison results use the real case-scoped result store",
+          "milliseconds": 14.49
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+          "status": "pass",
+          "name": "comparison persistence refuses tampered totals, coverage references and criterion outcomes before any write",
+          "milliseconds": 325.06
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+          "status": "pass",
+          "name": "criteria require both replay and durable criterion binding with zero writes when either is missing",
+          "milliseconds": 177.89
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+          "status": "pass",
+          "name": "comparison without criteria persists through real scenarios and SQLite, retries idempotently and survives reopen",
+          "milliseconds": 218.34
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+          "status": "pass",
+          "name": "real WP11 rules bind a comparison, survive reopen and refuse a second binding or a stale rule",
+          "milliseconds": 3410.41
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+          "status": "pass",
+          "name": "a postwrite binding failure reports persisted-but-unbound and a retry repairs the same result",
+          "milliseconds": 1794.29
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+          "status": "pass",
+          "name": "current scenario content and case identity are rechecked before comparison storage",
+          "milliseconds": 193.79
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/port.test.ts",
+          "status": "pass",
+          "name": "headcount projection follows domain visibility and increase preview is disposable",
+          "milliseconds": 4.59
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/port.test.ts",
+          "status": "pass",
+          "name": "catalog preview uses the domain without writing or inventing a missing exchange rate",
+          "milliseconds": 1.24
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/port.test.ts",
+          "status": "pass",
+          "name": "annual budget preview retains manual months and does not write the Planner",
+          "milliseconds": 1.3
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/port.test.ts",
+          "status": "pass",
+          "name": "forecast port compares the real engine, and detects source changes",
+          "milliseconds": 1235.73
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/scenario-capability-parity.test.ts",
+          "status": "fail",
+          "name": "C16 scenario simulation and comparison share UI/MCP handlers and persist their real results in C08",
+          "milliseconds": 64599.38
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+          "status": "pass",
+          "name": "Planner's canonical known-subtotal solver proves the 55000 boundary; its integrated sensitivity still discloses pending coverage",
+          "milliseconds": 128548.41
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+          "status": "fail",
+          "name": "real Planner results retain omitted training as unknown, then include its 40000 source without mutating the original result",
+          "milliseconds": 245197.14
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+          "status": "pass",
+          "name": "real Planner and persisted BI distinguish explicit zero training from an unresolved price",
+          "milliseconds": 140955.63
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+          "status": "pass",
+          "name": "source-specific revocation with a valid UI session withholds persisted BI values and coverage",
+          "milliseconds": 69876.92
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+          "status": "pass",
+          "name": "persisted BI rejects a reused result object changed between its independent observations",
+          "milliseconds": 23.96
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+          "status": "pass",
+          "name": "persisted BI rejects mutation of selection, projection or case by either host fence",
+          "milliseconds": 28.95
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+          "status": "pass",
+          "name": "persisted BI detects a sensitivity object mutated by its reader on replay",
+          "milliseconds": 15.89
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+          "status": "pass",
+          "name": "BI presentation cannot mutate the stored scenario or portfolio projection it describes",
+          "milliseconds": 10.11
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+          "status": "pass",
+          "name": "BI projection cannot rewrite the canonical portfolio result to make a replacement agree",
+          "milliseconds": 10.58
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+          "status": "pass",
+          "name": "shared categories and supported N/A consume one real Planner contribution and retain the complete composed interval",
+          "milliseconds": 111459.1
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+          "status": "fail",
+          "name": "coverage distinguishes omitted and null training from explicit zero and a later 40000 quote",
+          "milliseconds": 195160.44
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+          "status": "pass",
+          "name": "explicit human choice persists the producer result, survives reopen, and never applies the simulated Planner operations",
+          "milliseconds": 67676.57
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+          "status": "pass",
+          "name": "human classification is bound to real components, source identity and fresh evidence",
+          "milliseconds": 2.96
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+          "status": "pass",
+          "name": "conditioned scenarios cannot carry an incomplete coverage seal",
+          "milliseconds": 0.57
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+          "status": "pass",
+          "name": "an unassigned scenario component prevents complete coverage",
+          "milliseconds": 0.49
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+          "status": "pass",
+          "name": "reassessment uses scenario entries and keeps hypothetical totals conditioned",
+          "milliseconds": 1.64
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+          "status": "fail",
+          "name": "C10 derives omitted renewal costs, distinguishes supported zero, and fails closed on bad evidence",
+          "milliseconds": 0.73
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+          "status": "pass",
+          "name": "persisted comparison results are scoped to current case, principal, and source access",
+          "milliseconds": 13.9
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+          "status": "fail",
+          "name": "proposal coverage is durable, scoped, and fenced against changed sources",
+          "milliseconds": 7.88
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+          "status": "fail",
+          "name": "real Planner mutation and case receipt commit atomically across surfaces",
+          "milliseconds": 14.16
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+          "status": "pass",
+          "name": "human-approved prepared dashboard command and receipt commit together",
+          "milliseconds": 38.92
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+          "status": "fail",
+          "name": "promotion commits the reviewed alternative, result and audit event together, and reconciles retries",
+          "milliseconds": 8.31
+        }
+      ],
+      "counts": {
+        "pass": 32,
+        "fail": 8,
+        "error": 0
+      },
+      "expectCalls": 703,
+      "omni": {
+        "nonce": "47823b83ed0c743f95e816503aebc42e",
+        "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      "reported": {
+        "tests": 40,
+        "files": 17,
+        "duration": 1624.95,
+        "unit": "s"
+      }
+    },
+    {
+      "selection": 2,
+      "runId": 43581387704,
+      "jobId": 132406661623,
+      "productSha": "ffe77b53f3c074f03fe6dc3ff7caa788778eca99",
+      "productTree": "0cecbd7b7b034df4156d248f86be080f32ab764f",
+      "snapshotSha": "e63ae9f2a3b05c6adabb93f43057f58ab5185602",
+      "snapshotTree": "77814f5c2896418bf49fe00b20d07c6fad2f4f0a",
+      "conclusion": "success",
+      "branch": "ci-run-linux-astra-finance-ffe77b5-adac19d-a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43581387704",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "adac19d32436b407ba81732a0b038171b847f099c8ebe74d7833262b6d9e146e",
+      "snapshotDiff": [
+        ".ci-run.json"
+      ],
+      "productBlobEqualityVerified": true,
+      "localProductTests": false,
+      "attempt": 1,
+      "logSha256": "ef70fc2c5bf1b8591c95851f0c9290d763850a7f840cf8e872f0da7f8f95475d",
+      "cases": [
+        {
+          "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "status": "pass",
+          "name": "record-only replay binds C10 coverage, complete source closure and both fresh observations",
+          "milliseconds": 16.79
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "status": "pass",
+          "name": "recursive read callbacks are bounded before a second stored read, and release their guard",
+          "milliseconds": 2.67
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "status": "pass",
+          "name": "2 independent C17 replays in one binding do not consume ancestral depth",
+          "milliseconds": 4.0
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "status": "pass",
+          "name": "17 independent C17 replays in one binding do not consume ancestral depth",
+          "milliseconds": 21.83
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "status": "pass",
+          "name": "the C17 depth bound applies to a recursive path and is released after refusal",
+          "milliseconds": 2.86
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "status": "pass",
+          "name": "evidence outside the persisted closure and another project never reaches replay",
+          "milliseconds": 1.6
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "status": "pass",
+          "name": "cyclic calculation references and malformed request fields are unavailable without replay",
+          "milliseconds": 1.82
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "status": "pass",
+          "name": "callback request mutation is detached and private failures never escape the resolver",
+          "milliseconds": 2.98
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "status": "pass",
+          "name": "cancellation and revocation after replay never issue calculation evidence",
+          "milliseconds": 1.58
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "status": "pass",
+          "name": "nested C17 requires replay for calculations and canonical authorization for ledger leaves",
+          "milliseconds": 21.32
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "status": "pass",
+          "name": "nested C17 rejects a digest-valid calculation that cannot reproduce its stored result",
+          "milliseconds": 4.06
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "status": "pass",
+          "name": "nested C17 rejects semantic ancestor cycles and releases traversal guards",
+          "milliseconds": 12.69
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "status": "pass",
+          "name": "nested C17 refuses revoked lineage after replay while the caller remains authorized",
+          "milliseconds": 9.73
+        }
+      ],
+      "counts": {
+        "pass": 13,
+        "fail": 0,
+        "error": 0
+      },
+      "expectCalls": 92,
+      "omni": {
+        "nonce": "02a979695ca721ad8acdb4b15a045e5d",
+        "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      "reported": {
+        "tests": 13,
+        "files": 1,
+        "duration": 241.0,
+        "unit": "ms"
+      }
+    },
+    {
+      "selection": 3,
+      "runId": 43581459736,
+      "jobId": 132406887167,
+      "productSha": "8090bddb8e38faf6209c091b863bff58afe50a9c",
+      "productTree": "ac049ff9d8ad8a6e3f9b84e9bd00440e1350480d",
+      "snapshotSha": "4980a888f46900d2a4ed0c11bb3b1b6dfd331d58",
+      "snapshotTree": "8a3e644691e47bc8c71bea676b0b74ab3c358390",
+      "conclusion": "success",
+      "branch": "ci-run-linux-astra-finance-8090bdd-4cb63b5-a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43581459736",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp11/coverage-access.test.ts",
+          "./Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+          "./Sucafinav1/test/product/wp11/planner-apply.test.ts",
+          "./Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "4cb63b58dcdeb3de8c64e9eb4fdf821c7cdfeb8d9118d542bf5ee25d67c8d781",
+      "snapshotDiff": [
+        ".ci-run.json"
+      ],
+      "productBlobEqualityVerified": true,
+      "localProductTests": false,
+      "attempt": 1,
+      "logSha256": "02daaecf073fc85472a1bc296bf36126de841cf854ffdc3990a7d76e9859c26c",
+      "cases": [
+        {
+          "file": "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+          "status": "pass",
+          "name": "C10 derives omitted renewal costs, distinguishes supported zero, and fails closed on bad evidence",
+          "milliseconds": 6.84
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+          "status": "pass",
+          "name": "persisted comparison results are scoped to current case, principal, and source access",
+          "milliseconds": 32.97
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+          "status": "pass",
+          "name": "proposal coverage is durable, scoped, and fenced against changed sources",
+          "milliseconds": 43.83
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+          "status": "pass",
+          "name": "real Planner mutation and case receipt commit atomically across surfaces",
+          "milliseconds": 83.13
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+          "status": "pass",
+          "name": "promotion commits the reviewed alternative, result and audit event together, and reconciles retries",
+          "milliseconds": 26.37
+        }
+      ],
+      "counts": {
+        "pass": 5,
+        "fail": 0,
+        "error": 0
+      },
+      "expectCalls": 41,
+      "omni": {
+        "nonce": "20096a083b89b4377cb6486a8849b404",
+        "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      "reported": {
+        "tests": 5,
+        "files": 4,
+        "duration": 432.0,
+        "unit": "ms"
+      }
+    },
+    {
+      "selection": 4,
+      "runId": 43581792536,
+      "jobId": 132407886238,
+      "productSha": "a274302d15990919007dbe958d95653508c730a7",
+      "productTree": "df0c8c14ad72fb8447b24d7e4a4ab9c9d871a727",
+      "snapshotSha": "91cd4ee008b764d1e06d42a3a7fa2dce606ecdc1",
+      "snapshotTree": "a42a1fd5c2546b8bfbf158857dddc1756534bae6",
+      "conclusion": "failure",
+      "branch": "ci-run-linux-astra-finance-a274302-0ceb183-a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43581792536",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+          "./Sucafinav1/test/product/wp03/exact-threshold-fallback.test.ts",
+          "./Sucafinav1/test/product/wp03/source-scenario.test.ts",
+          "./Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+          "./Sucafinav1/test/product/wp03/scenario-capability-parity.test.ts",
+          "./Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+          "./Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "0ceb183b45e1c9047f9e4d56c9f15d6e29a74f4894b6563a97e190872f46d3a7",
+      "snapshotDiff": [
+        ".ci-run.json"
+      ],
+      "productBlobEqualityVerified": true,
+      "localProductTests": false,
+      "attempt": 1,
+      "logSha256": "8d931c7742a974c2d80d096eff8159e3c5650a5c6972e9b662d428f71082a8d9",
+      "cases": [
+        {
+          "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+          "status": "pass",
+          "name": "replace and include qualify an absent forecast from the real post-command copy, including explicit zero",
+          "milliseconds": 449.41
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+          "status": "pass",
+          "name": "an explicit foreign forecast without FX stays absent instead of publishing the engine's legacy zero",
+          "milliseconds": 92.32
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+          "status": "pass",
+          "name": "a hypothetical HR forecast remains quantifiable when its independent budget rate is absent",
+          "milliseconds": 179.63
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+          "status": "pass",
+          "name": "a self-comparison reads once per source observation and still rejects revocation at final revalidation",
+          "milliseconds": 40.51
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/exact-threshold-fallback.test.ts",
+          "status": "pass",
+          "name": "the real Planner long IEEE plateau uses bisection and certifies one against nextUp one",
+          "milliseconds": 3700.37
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+          "status": "pass",
+          "name": "source-only scenario publishes the covered confirmed total and replays through persistence and C17 without applying a choice",
+          "milliseconds": 47960.33
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+          "status": "pass",
+          "name": "source-only zero stays confirmed while omitted coverage and null never become a complete total",
+          "milliseconds": 93392.6
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+          "status": "pass",
+          "name": "a source-only observation refuses a coverage change after the real comparison recheck",
+          "milliseconds": 46322.07
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+          "status": "pass",
+          "name": "composed Planner operations preserve all fixed costs while proving the real 55000 boundary",
+          "milliseconds": 71663.78
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+          "status": "fail",
+          "name": "composed Planner threshold includes confirmed training once and distinguishes zero from missing price",
+          "milliseconds": 223637.08
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+          "status": "pass",
+          "name": "composed interval and threshold refuse changing fixed costs or source revocation",
+          "milliseconds": 50935.58
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+          "status": "pass",
+          "name": "composed proof refuses duplicate and indirect writes to the varying parameter",
+          "milliseconds": 51725.38
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/scenario-capability-parity.test.ts",
+          "status": "fail",
+          "name": "C16 scenario simulation and comparison share UI/MCP handlers and persist their real results in C08",
+          "milliseconds": 63938.53
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+          "status": "pass",
+          "name": "Planner's canonical known-subtotal solver proves the 55000 boundary; its integrated sensitivity still discloses pending coverage",
+          "milliseconds": 92737.76
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+          "status": "fail",
+          "name": "real Planner results retain omitted training as unknown, then include its 40000 source without mutating the original result",
+          "milliseconds": 219940.58
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+          "status": "pass",
+          "name": "real Planner and persisted BI distinguish explicit zero training from an unresolved price",
+          "milliseconds": 167626.65
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+          "status": "pass",
+          "name": "source-specific revocation with a valid UI session withholds persisted BI values and coverage",
+          "milliseconds": 83799.56
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+          "status": "pass",
+          "name": "shared categories and supported N/A consume one real Planner contribution and retain the complete composed interval",
+          "milliseconds": 67309.2
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+          "status": "fail",
+          "name": "coverage distinguishes omitted and null training from explicit zero and a later 40000 quote",
+          "milliseconds": 227930.89
+        }
+      ],
+      "counts": {
+        "pass": 15,
+        "fail": 4,
+        "error": 0
+      },
+      "expectCalls": 378,
+      "omni": {
+        "nonce": "e9c0e97ea5f81098ed103c255faba35f",
+        "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      "reported": {
+        "tests": 19,
+        "files": 7,
+        "duration": 1513.76,
+        "unit": "s"
+      }
+    },
+    {
+      "selection": 5,
+      "runId": 43584535059,
+      "jobId": 132416096450,
+      "productSha": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+      "productTree": "1ce4e9fcb2e9fb81e12dcfd773aa2daae64be39a",
+      "snapshotSha": "40b2f66fdf887ddf7c9bc0abef07e20eb47ac030",
+      "snapshotTree": "6cc666edd92e1fe647ef014edd17624ea65bda65",
+      "conclusion": "failure",
+      "branch": "ci-run-linux-astra-finance-fe13ee6-344afef-a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584535059",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+          "./Sucafinav1/test/product/wp03/prepared-apply-integration.test.ts",
+          "./Sucafinav1/test/product/wp03/runtime-overview-presence.test.ts",
+          "./Sucafinav1/test/product/wp11/result-store.test.ts",
+          "./Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+          "./Sucafinav1/test/product/wp11/calculation-history.test.ts",
+          "./Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+          "./Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "344afefa2e340bed54af510df02d0b0a02dce24fb152cdef2f20f3b5a46333dd",
+      "snapshotDiff": [
+        ".ci-run.json"
+      ],
+      "productBlobEqualityVerified": true,
+      "localProductTests": false,
+      "attempt": 1,
+      "logSha256": "9dfd85ecf0936a502481ccd01bbf128af781f6c16fe28fcc895f70ed2a002c23",
+      "cases": [
+        {
+          "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+          "status": "pass",
+          "name": "replace and include qualify an absent forecast from the real post-command copy, including explicit zero",
+          "milliseconds": 374.44
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+          "status": "pass",
+          "name": "a row save preserves an untouched missing December while an explicit December zero is hypothetical",
+          "milliseconds": 299.63
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+          "status": "pass",
+          "name": "deferral quantifies its origin and destination while preserving a third missing month on the same row",
+          "milliseconds": 94.33
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+          "status": "pass",
+          "name": "an explicit foreign forecast without FX stays absent instead of publishing the engine's legacy zero",
+          "milliseconds": 112.71
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+          "status": "pass",
+          "name": "a hypothetical HR forecast remains quantifiable when its independent budget rate is absent",
+          "milliseconds": 139.7
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+          "status": "pass",
+          "name": "a self-comparison reads once per source observation and still rejects revocation at final revalidation",
+          "milliseconds": 216.58
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/prepared-apply-integration.test.ts",
+          "status": "pass",
+          "name": "Planner preparation and the real WP11 apply consumer preserve grants, atomic receipts, retry, reopen and stale rejection",
+          "milliseconds": 1097.15
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/runtime-overview-presence.test.ts",
+          "status": "pass",
+          "name": "runtime Overview table and SVG agree with C02 on missing actual, closed/open zero, FX and independent HR actual",
+          "milliseconds": 12771.19
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/result-store.test.ts",
+          "status": "pass",
+          "name": "decision result persistence binds retries, current case and source authority",
+          "milliseconds": 49.03
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+          "status": "fail",
+          "name": "nested C17 calculations reopen through persisted canonical requests and replay every ancestor",
+          "milliseconds": 195910.67
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+          "status": "fail",
+          "name": "an accepted C17 reference reopens through the explicit ledger lane after the case advances, without becoming a current result",
+          "milliseconds": 55145.81
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+          "status": "pass",
+          "name": "human-confirmed conditional choice persists its C10 caveat and provenance",
+          "milliseconds": 9445.03
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+          "status": "pass",
+          "name": "C10 complete coverage needs every category and fresh source resolution",
+          "milliseconds": 1.04
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+          "status": "pass",
+          "name": "explicit human choice persists the producer result, survives reopen, and never applies the simulated Planner operations",
+          "milliseconds": 65494.53
+        }
+      ],
+      "counts": {
+        "pass": 12,
+        "fail": 2,
+        "error": 0
+      },
+      "expectCalls": 328,
+      "omni": {
+        "nonce": "01796a1b38e179bf9727a792f040e2e1",
+        "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      "reported": {
+        "tests": 14,
+        "files": 8,
+        "duration": 358.21,
+        "unit": "s"
+      }
+    },
+    {
+      "selection": 6,
+      "runId": 43584536276,
+      "jobId": 132416099642,
+      "productSha": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+      "productTree": "1ce4e9fcb2e9fb81e12dcfd773aa2daae64be39a",
+      "snapshotSha": "6bcde71d1fad511d08cf85c7ccc2c6ca067dec1b",
+      "snapshotTree": "0174a1e665cbb0474f8ff373c3879ec64abda96f",
+      "conclusion": "failure",
+      "branch": "ci-run-linux-astra-finance-fe13ee6-d795e94-a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584536276",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+          "./Sucafinav1/test/product/wp05/projection.test.ts",
+          "./Sucafinav1/test/product/wp05/consumer.test.ts",
+          "./Sucafinav1/test/product/wp05/planner-origins.test.ts",
+          "./Sucafinav1/test/product/wp05/capacity-numeric.test.ts",
+          "./Sucafinav1/test/product/wp05/semantic-discriminants.test.ts",
+          "./Sucafinav1/test/product/wp05/planner-integration.test.ts",
+          "./Sucafinav1/test/product/wp05/procurement-stages.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "d795e9498b522b76cb6c8d0bd5992bf72f9f3df0ada73af5992d6e197931b8fd",
+      "snapshotDiff": [
+        ".ci-run.json"
+      ],
+      "productBlobEqualityVerified": true,
+      "localProductTests": false,
+      "attempt": 1,
+      "logSha256": "57c857fe000995f62188b99cfa2e5ea57f17fef22008b2c936af92e7861e69da",
+      "cases": [
+        {
+          "file": "Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+          "status": "pass",
+          "name": "persisted BI rejects a reused result object changed between its independent observations",
+          "milliseconds": 39.49
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+          "status": "pass",
+          "name": "persisted BI rejects mutation of selection, projection or case by either host fence",
+          "milliseconds": 54.98
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+          "status": "pass",
+          "name": "persisted BI detects a sensitivity object mutated by its reader on replay",
+          "milliseconds": 22.43
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+          "status": "pass",
+          "name": "optional persisted advantage is copied only for the exact inverse pair and survives both complete source fences",
+          "milliseconds": 108.54
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+          "status": "pass",
+          "name": "BI presentation cannot mutate the stored scenario or portfolio projection it describes",
+          "milliseconds": 16.87
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+          "status": "pass",
+          "name": "BI projection cannot rewrite the canonical portfolio result to make a replacement agree",
+          "milliseconds": 14.04
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/projection.test.ts",
+          "status": "pass",
+          "name": "observation timestamps do not create stale data, while source and value changes do",
+          "milliseconds": 0.23
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/projection.test.ts",
+          "status": "pass",
+          "name": "persisted comparison keeps its complete scope identity while allowing a later observation time",
+          "milliseconds": 0.53
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/projection.test.ts",
+          "status": "pass",
+          "name": "nested decision source observation times are ignored without ignoring material changes",
+          "milliseconds": 0.62
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/projection.test.ts",
+          "status": "pass",
+          "name": "sensitivity requires its paired persisted reference",
+          "milliseconds": 0.22
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/consumer.test.ts",
+          "status": "pass",
+          "name": "consumer goes through the real UI lease and dispatcher, rejects direct calls and reuse",
+          "milliseconds": 4.05
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/consumer.test.ts",
+          "status": "pass",
+          "name": "exact mark destination revalidates identity, version and C17 evidence without a collection fallback",
+          "milliseconds": 11.76
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/consumer.test.ts",
+          "status": "pass",
+          "name": "checked projections reject a mutating host fence and access is fenced at egress",
+          "milliseconds": 1.53
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/consumer.test.ts",
+          "status": "pass",
+          "name": "the final C17 fence cannot authorize a different selection or projection after evidence resolution",
+          "milliseconds": 3.05
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/consumer.test.ts",
+          "status": "pass",
+          "name": "C17 fresh evidence cannot advertise a different current reference from the selected mark",
+          "milliseconds": 2.78
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/consumer.test.ts",
+          "status": "pass",
+          "name": "an explicit A or B origin must belong in full to the same current comparison row",
+          "milliseconds": 18.99
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/consumer.test.ts",
+          "status": "pass",
+          "name": "a new projection between dispatch and presentation is stale",
+          "milliseconds": 1.51
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/planner-origins.test.ts",
+          "status": "pass",
+          "name": "real Planner zero and nonzero contributions expose explicit A/B origins through waterfall, bars, tables and current C17 selection",
+          "milliseconds": 5755.96
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/capacity-numeric.test.ts",
+          "status": "pass",
+          "name": "real scoped Planner capacity and cost remain numeric in aligned filtered BI panels without personal data",
+          "milliseconds": 1316.55
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/semantic-discriminants.test.ts",
+          "status": "pass",
+          "name": "Top N stays partial; a producer-supplied other group preserves its contribution and C17 component references",
+          "milliseconds": 1101.14
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/semantic-discriminants.test.ts",
+          "status": "pass",
+          "name": "changing only current ticket status cannot rewrite supplied opening and closing periods",
+          "milliseconds": 537.66
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/semantic-discriminants.test.ts",
+          "status": "pass",
+          "name": "a projected date change moves the timeline but cannot create savings or remove supplied obligations",
+          "milliseconds": 495.65
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/planner-integration.test.ts",
+          "status": "pass",
+          "name": "real planner projection reaches BI with distinct missing and zero values",
+          "milliseconds": 1021.45
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/planner-integration.test.ts",
+          "status": "fail",
+          "name": "real planner comparison supplies the same reconciled waterfall to BI and dispatcher",
+          "milliseconds": 73860.6
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/planner-integration.test.ts",
+          "status": "pass",
+          "name": "real planner capacity preserves aligned filtered panels and personal-data absence for finance",
+          "milliseconds": 1291.3
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/planner-integration.test.ts",
+          "status": "pass",
+          "name": "real planner capacity preserves aligned filtered panels and personal-data absence for viewer",
+          "milliseconds": 1214.93
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/procurement-stages.test.ts",
+          "status": "pass",
+          "name": "real request commands traverse every open procurement stage without historical cohort counts",
+          "milliseconds": 925.43
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/procurement-stages.test.ts",
+          "status": "pass",
+          "name": "approver opens the oldest proven request while a missing age stays visible",
+          "milliseconds": 802.68
+        }
+      ],
+      "counts": {
+        "pass": 27,
+        "fail": 1,
+        "error": 0
+      },
+      "expectCalls": 724,
+      "omni": {
+        "nonce": "cb0e58a9d3b2c3e1d58d56efcbc1d472",
+        "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      "reported": {
+        "tests": 28,
+        "files": 8,
+        "duration": 88.92,
+        "unit": "s"
+      }
+    },
+    {
+      "selection": 7,
+      "runId": 43585919034,
+      "jobId": 132420239181,
+      "productSha": "c80144bfa8e0097c6be189ff6dbdb85f4b37e2e7",
+      "productTree": "c009f3dcabf5ebff2c48283fd320be92a2d1f13c",
+      "snapshotSha": "b1ebd5bc75f3551143bf9792a59e9744158407f0",
+      "snapshotTree": "675693c29ea59127718e191b488a0f30a507c03c",
+      "conclusion": "failure",
+      "branch": "ci-run-linux-astra-finance-c80144b-2f73f99-a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43585919034",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "./Sucafinav1/test/product/wp03/resume-engine-freshness.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "2f73f9923893207d661d7f9b7eb5337dd3b9680621b77fda08054d12587e7a84",
+      "snapshotDiff": [
+        ".ci-run.json"
+      ],
+      "productBlobEqualityVerified": true,
+      "localProductTests": false,
+      "attempt": 1,
+      "logSha256": "a01af0c14e7ba58357e81a25ac54bf615e28c31b24d33bb4dd1a9768f3bbbcb5",
+      "cases": [
+        {
+          "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "status": "fail",
+          "name": "one sibling batch shares only its two canonical case observations and retains every result reread",
+          "milliseconds": 1229.74
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "status": "fail",
+          "name": "units emit the identical binding with six canonical case reads, while a legacy host still performs ten",
+          "milliseconds": 6806.5
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "status": "fail",
+          "name": "comparison starts independent batches for its initial and final observations",
+          "milliseconds": 4148.13
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "status": "fail",
+          "name": "different cases and historical producer versions form separate groups and retain order, cardinality and refusal",
+          "milliseconds": 3543.94
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "status": "fail",
+          "name": "ledger, alternative and coverage changes between phases invalidate every sibling without a version shortcut",
+          "milliseconds": 1895.43
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "status": "fail",
+          "name": "authority revoked after result rereads is rejected by the fresh final case observation",
+          "milliseconds": 755.13
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "status": "fail",
+          "name": "a real Planner source change during projection invalidates both stored siblings",
+          "milliseconds": 758.52
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "status": "pass",
+          "name": "retained store and case callback objects cannot rewrite an earlier observation",
+          "milliseconds": 1073.99
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "status": "fail",
+          "name": "batch refusals and malformed cardinality never fall back to individual resolution",
+          "milliseconds": 1705.54
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/resume-engine-freshness.test.ts",
+          "status": "pass",
+          "name": "scenario comparison snapshots each cached resolver result before resolving the next reference",
+          "milliseconds": 377.48
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/resume-engine-freshness.test.ts",
+          "status": "pass",
+          "name": "criterion mutation in a reused response cannot erase the first freshness observation",
+          "milliseconds": 93.91
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/resume-engine-freshness.test.ts",
+          "status": "pass",
+          "name": "distinct criterion observations remain associated when the evaluator reuses one cache object",
+          "milliseconds": 126.56
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/resume-engine-freshness.test.ts",
+          "status": "fail",
+          "name": "preview comparison rejects a reused baseline cache changed after a real simulation",
+          "milliseconds": 116.46
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/resume-engine-freshness.test.ts",
+          "status": "fail",
+          "name": "stable preview remains conditioned with the canonical cost difference and preserved domain",
+          "milliseconds": 95.57
+        }
+      ],
+      "counts": {
+        "pass": 4,
+        "fail": 10,
+        "error": 0
+      },
+      "expectCalls": 50,
+      "omni": {
+        "nonce": "f88832b89de03d30231889791772ff31",
+        "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      "reported": {
+        "tests": 14,
+        "files": 2,
+        "duration": 22.92,
+        "unit": "s"
+      }
+    },
+    {
+      "selection": 8,
+      "runId": 43585919883,
+      "jobId": 132420241714,
+      "productSha": "c80144bfa8e0097c6be189ff6dbdb85f4b37e2e7",
+      "productTree": "c009f3dcabf5ebff2c48283fd320be92a2d1f13c",
+      "snapshotSha": "959deb36601cd40b729eaf2b79b308d8f70b6739",
+      "snapshotTree": "807a911a27a74e40eeede628d1a38ea68ae73c74",
+      "conclusion": "success",
+      "branch": "ci-run-linux-astra-finance-c80144b-c4e56d0-a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43585919883",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp05/planner-integration.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "c4e56d031ff8d3ac39fb0682a02d2d30cba7cb076359bc203ea00e1d6c2c0246",
+      "snapshotDiff": [
+        ".ci-run.json"
+      ],
+      "productBlobEqualityVerified": true,
+      "localProductTests": false,
+      "attempt": 1,
+      "logSha256": "1c94007f9c1615528a01a4c1279d2d4a29404b347d103c11ff80355f1f79d9b1",
+      "cases": [
+        {
+          "file": "Sucafinav1/test/product/wp05/planner-integration.test.ts",
+          "status": "pass",
+          "name": "real planner projection reaches BI with distinct missing and zero values",
+          "milliseconds": 8934.81
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/planner-integration.test.ts",
+          "status": "pass",
+          "name": "real planner comparison supplies the same reconciled waterfall to BI and dispatcher",
+          "milliseconds": 791.16
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/planner-integration.test.ts",
+          "status": "pass",
+          "name": "real planner capacity preserves aligned filtered panels and personal-data absence for finance",
+          "milliseconds": 1338.41
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/planner-integration.test.ts",
+          "status": "pass",
+          "name": "real planner capacity preserves aligned filtered panels and personal-data absence for viewer",
+          "milliseconds": 1296.85
+        }
+      ],
+      "counts": {
+        "pass": 4,
+        "fail": 0,
+        "error": 0
+      },
+      "expectCalls": 146,
+      "omni": {
+        "nonce": "2f72dbf54716e4e6609d7ab4b3c127e8",
+        "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      "reported": {
+        "tests": 4,
+        "files": 1,
+        "duration": 12.62,
+        "unit": "s"
+      }
+    },
+    {
+      "selection": 9,
+      "runId": 43586476432,
+      "jobId": 132421957166,
+      "productSha": "6016a70d7ab0c3d50f1ec2827a534a80e48a5c56",
+      "productTree": "f84399d12c35bb8fd66cf4631bae56b02e84123a",
+      "snapshotSha": "e4757d462dd0b466829b1736eea35f2da0c7b35b",
+      "snapshotTree": "3ebf30b70770f40e075f81d839a81729fe5a5088",
+      "conclusion": "success",
+      "branch": "ci-run-linux-astra-finance-6016a70-2f73f99-a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43586476432",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "./Sucafinav1/test/product/wp03/resume-engine-freshness.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "2f73f9923893207d661d7f9b7eb5337dd3b9680621b77fda08054d12587e7a84",
+      "snapshotDiff": [
+        ".ci-run.json"
+      ],
+      "productBlobEqualityVerified": true,
+      "localProductTests": false,
+      "attempt": 1,
+      "logSha256": "bde9315f7ea7d8155844f3f2024d845accd17e3bb38cd616dad44ec5173629be",
+      "cases": [
+        {
+          "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "status": "pass",
+          "name": "one sibling batch shares only its two canonical case observations and retains every result reread",
+          "milliseconds": 2660.54
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "status": "pass",
+          "name": "units emit the identical binding with six canonical case reads, while a legacy host still performs ten",
+          "milliseconds": 6181.17
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "status": "pass",
+          "name": "comparison starts independent batches for its initial and final observations",
+          "milliseconds": 3210.58
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "status": "pass",
+          "name": "different cases and historical producer versions form separate groups and retain order, cardinality and refusal",
+          "milliseconds": 3252.63
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "status": "pass",
+          "name": "ledger, alternative and coverage changes between phases invalidate every sibling without a version shortcut",
+          "milliseconds": 2585.46
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "status": "pass",
+          "name": "authority revoked after result rereads is rejected by the fresh final case observation",
+          "milliseconds": 678.08
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "status": "pass",
+          "name": "a real Planner source change during projection invalidates both stored siblings",
+          "milliseconds": 638.01
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "status": "pass",
+          "name": "retained store and case callback objects cannot rewrite an earlier observation",
+          "milliseconds": 985.99
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "status": "pass",
+          "name": "batch refusals and malformed cardinality never fall back to individual resolution",
+          "milliseconds": 1541.75
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/resume-engine-freshness.test.ts",
+          "status": "pass",
+          "name": "scenario comparison snapshots each cached resolver result before resolving the next reference",
+          "milliseconds": 92.86
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/resume-engine-freshness.test.ts",
+          "status": "pass",
+          "name": "criterion mutation in a reused response cannot erase the first freshness observation",
+          "milliseconds": 84.69
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/resume-engine-freshness.test.ts",
+          "status": "pass",
+          "name": "distinct criterion observations remain associated when the evaluator reuses one cache object",
+          "milliseconds": 95.46
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/resume-engine-freshness.test.ts",
+          "status": "pass",
+          "name": "preview comparison rejects a reused baseline cache changed after a real simulation",
+          "milliseconds": 103.13
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/resume-engine-freshness.test.ts",
+          "status": "pass",
+          "name": "stable preview remains conditioned with the canonical cost difference and preserved domain",
+          "milliseconds": 91.2
+        }
+      ],
+      "counts": {
+        "pass": 14,
+        "fail": 0,
+        "error": 0
+      },
+      "expectCalls": 78,
+      "omni": {
+        "nonce": "1a41875d3ae8cf5a15f67a6d4d12ff79",
+        "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      "reported": {
+        "tests": 14,
+        "files": 2,
+        "duration": 22.37,
+        "unit": "s"
+      }
+    },
+    {
+      "selection": 10,
+      "runId": 43586901880,
+      "jobId": 132423252559,
+      "productSha": "6016a70d7ab0c3d50f1ec2827a534a80e48a5c56",
+      "productTree": "f84399d12c35bb8fd66cf4631bae56b02e84123a",
+      "snapshotSha": "f9c0d0d2e8ec0b281dce7033cdcfbdb3107bca83",
+      "snapshotTree": "add8af50ad8bc1696423c761f170c20d957a3ef4",
+      "conclusion": "success",
+      "branch": "ci-run-linux-astra-finance-6016a70-f7ad279-a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43586901880",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+          "./Sucafinav1/test/product/wp03/scenario-capability-parity.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "f7ad279bd163f8b1e9294d8eb704d8cd1ea465724bca73ce6732fe81c38b247a",
+      "snapshotDiff": [
+        ".ci-run.json"
+      ],
+      "productBlobEqualityVerified": true,
+      "localProductTests": false,
+      "attempt": 1,
+      "logSha256": "eab0c1461b93e9acf4dd355bb6e99a6ef590a6e2994f758c9b5dbc1a77f32eb6",
+      "cases": [
+        {
+          "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+          "status": "pass",
+          "name": "composed Planner operations preserve all fixed costs while proving the real 55000 boundary",
+          "milliseconds": 53504.7
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+          "status": "pass",
+          "name": "composed Planner threshold includes confirmed training once and distinguishes zero from missing price",
+          "milliseconds": 170489.3
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+          "status": "pass",
+          "name": "composed interval and threshold refuse changing fixed costs or source revocation",
+          "milliseconds": 38205.5
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+          "status": "pass",
+          "name": "composed proof refuses duplicate and indirect writes to the varying parameter",
+          "milliseconds": 37095.46
+        },
+        {
+          "file": "Sucafinav1/test/product/wp03/scenario-capability-parity.test.ts",
+          "status": "pass",
+          "name": "C16 scenario simulation and comparison share UI/MCP handlers and persist their real results in C08",
+          "milliseconds": 48830.77
+        }
+      ],
+      "counts": {
+        "pass": 5,
+        "fail": 0,
+        "error": 0
+      },
+      "expectCalls": 114,
+      "omni": {
+        "nonce": "c8fc158fc64a62fd17560350e76777b8",
+        "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      "reported": {
+        "tests": 5,
+        "files": 2,
+        "duration": 348.46,
+        "unit": "s"
+      }
+    },
+    {
+      "selection": 11,
+      "runId": 43586902727,
+      "jobId": 132423255218,
+      "productSha": "6016a70d7ab0c3d50f1ec2827a534a80e48a5c56",
+      "productTree": "f84399d12c35bb8fd66cf4631bae56b02e84123a",
+      "snapshotSha": "78f709e52a052768188343f93cd5fa36ba867da2",
+      "snapshotTree": "7b59bb2bce6fa132fae746b76a4d85d02370ed6c",
+      "conclusion": "failure",
+      "branch": "ci-run-linux-astra-finance-6016a70-d2c7f2b-a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43586902727",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+          "./Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "d2c7f2bbf95ed449ee192c7aecf05ec3d03b4c4e7e2c7ff3af9c8004baa7d70d",
+      "snapshotDiff": [
+        ".ci-run.json"
+      ],
+      "productBlobEqualityVerified": true,
+      "localProductTests": false,
+      "attempt": 1,
+      "logSha256": "2aceb0c485d40f1518f0d0bf685b690e4b2493229a05b259a6a824764a96cb88",
+      "cases": [
+        {
+          "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+          "status": "pass",
+          "name": "Planner's canonical known-subtotal solver proves the 55000 boundary; its integrated sensitivity still discloses pending coverage",
+          "milliseconds": 53183.52
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+          "status": "pass",
+          "name": "real Planner results retain omitted training as unknown, then include its 40000 source without mutating the original result",
+          "milliseconds": 123982.99
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+          "status": "pass",
+          "name": "real Planner and persisted BI distinguish explicit zero training from an unresolved price",
+          "milliseconds": 94068.22
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+          "status": "pass",
+          "name": "source-specific revocation with a valid UI session withholds persisted BI values and coverage",
+          "milliseconds": 46822.89
+        },
+        {
+          "file": "Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+          "status": "fail",
+          "name": "same-case BI preserves the human choice while the confirmed training revision changes its current source result and table",
+          "milliseconds": 645858.41
+        }
+      ],
+      "counts": {
+        "pass": 4,
+        "fail": 1,
+        "error": 1
+      },
+      "expectCalls": 135,
+      "omni": {
+        "nonce": "47aa50ceb89acaa753452356ed1b3a4d",
+        "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      "reported": {
+        "tests": 5,
+        "files": 2,
+        "duration": 964.1,
+        "unit": "s"
+      }
+    },
+    {
+      "selection": 12,
+      "runId": 43587138878,
+      "jobId": 132423963070,
+      "productSha": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+      "productTree": "a843c5d5767c4a055fcacb77668c3798fd8a564c",
+      "snapshotSha": "0faf62c7f5e10f5ae17037bb6bd8eb512396f2fd",
+      "snapshotTree": "3f7cdb7b3b4183e84173d8c2376c8de777e42d82",
+      "conclusion": "failure",
+      "branch": "ci-run-linux-astra-finance-92f6d97-420e5ad-a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43587138878",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+          "./Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+          "./Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+          "./Sucafinav1/test/product/wp11/calculation-history.test.ts",
+          "./Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+          "./Sucafinav1/test/product/wp11/http.test.ts",
+          "./Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+          "./Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+          "./Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+          "./Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+          "./Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+          "./Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+          "./Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "420e5ad770e099418ecd17a65a3476c1a2769e7ecff9f3c466f9b92feaf6fbf9",
+      "snapshotDiff": [
+        ".ci-run.json"
+      ],
+      "productBlobEqualityVerified": true,
+      "localProductTests": false,
+      "attempt": 1,
+      "logSha256": "c415beda8f93fb85ce37d4e69a7479daed302858c060fe81607eedb10aa2f5a6",
+      "cases": [
+        {
+          "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+          "status": "pass",
+          "name": "real prepared execution reconciles normal without repeating Planner effects",
+          "milliseconds": 93.77
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+          "status": "pass",
+          "name": "real prepared execution reconciles lost-response without repeating Planner effects",
+          "milliseconds": 62.31
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+          "status": "pass",
+          "name": "real prepared execution reconciles revoked without repeating Planner effects",
+          "milliseconds": 67.64
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+          "status": "pass",
+          "name": "real prepared execution reconciles receipt-removed without repeating Planner effects",
+          "milliseconds": 87.97
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+          "status": "pass",
+          "name": "real prepared execution reconciles receipt-replaced without repeating Planner effects",
+          "milliseconds": 80.09
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+          "status": "pass",
+          "name": "real prepared execution reconciles receipt-collision without repeating Planner effects",
+          "milliseconds": 78.21
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+          "status": "pass",
+          "name": "real prepared execution reconciles receipt-removed-late without repeating Planner effects",
+          "milliseconds": 74.82
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+          "status": "pass",
+          "name": "real prepared execution reconciles receipt-replaced-late without repeating Planner effects",
+          "milliseconds": 77.82
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+          "status": "pass",
+          "name": "real prepared execution reconciles receipt-collision-late without repeating Planner effects",
+          "milliseconds": 71.9
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+          "status": "pass",
+          "name": "a dispatched change without its authoritative receipt stays indeterminate across concurrent actors and restart",
+          "milliseconds": 163.73
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+          "status": "fail",
+          "name": "Planner applies and Procurement conflicts in one durable case; ordered receipts replay after restart without effects",
+          "milliseconds": 20.5
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+          "status": "fail",
+          "name": "an accepted C17 reference reopens through the explicit ledger lane after the case advances, without becoming a current result",
+          "milliseconds": 1643.87
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+          "status": "fail",
+          "name": "a current quote replays the same historical choice, requires a separate human promotion, and survives reopen without applying Planner operations",
+          "milliseconds": 49375.05
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/http.test.ts",
+          "status": "pass",
+          "name": "decision HTTP uses the real human admission and case CAS",
+          "milliseconds": 15.21
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/http.test.ts",
+          "status": "pass",
+          "name": "current-choice HTTP binds both human steps and only promotion permits a historical retry",
+          "milliseconds": 1.21
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+          "status": "pass",
+          "name": "a separate human rejection cancels only an undispatched proposal, retains the choice and reconciles retries",
+          "milliseconds": 22.7
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+          "status": "pass",
+          "name": "a human-confirmed March assumption keeps the official May project and exposes the divergence until a separate domain command",
+          "milliseconds": 472.55
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+          "status": "pass",
+          "name": "portfolio history can retain a result at the same case version and still requires private provenance and current access",
+          "milliseconds": 32.53
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+          "status": "pass",
+          "name": "a reopened case admits a second principal and concurrent human edits preserve one commit and its receipt",
+          "milliseconds": 18.67
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+          "status": "fail",
+          "name": "real JSON import preserves the private C08 choice and cannot revive a deleted source under a reused record ID",
+          "milliseconds": 49195.97
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+          "status": "fail",
+          "name": "new human operations replace a choice after the quote revision and retain that choice with a new reason without rewriting any history",
+          "milliseconds": 672856.46
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+          "status": "pass",
+          "name": "AI-RENEWAL observes a confirmed 70000 implementation quote as 235000 total and 5000 savings with complete shared coverage",
+          "milliseconds": 26599.3
+        }
+      ],
+      "counts": {
+        "pass": 17,
+        "fail": 5,
+        "error": 0
+      },
+      "expectCalls": 602,
+      "omni": {
+        "nonce": "c21d9bf329a3796f996f31e62f472d04",
+        "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      "reported": {
+        "tests": 22,
+        "files": 13,
+        "duration": 801.32,
+        "unit": "s"
+      }
+    },
+    {
+      "selection": 13,
+      "runId": 43589341922,
+      "jobId": 132430554445,
+      "productSha": "8d065831356e8a73cfd0e4fbb072c5041b95d05f",
+      "productTree": "77bef954682387ac0fdd3c01e7dd51b9201d2aac",
+      "snapshotSha": "bd50d55e7613e9571e0e9ffaf71ce7a5ba8d9531",
+      "snapshotTree": "9765e9761c48264262c75ef08b4df8ecb7e87320",
+      "conclusion": "failure",
+      "branch": "ci-run-linux-astra-finance-8d06583-fdf4ffe-a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43589341922",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "fdf4ffe89aa485b6fbe3792a93e88282b62b610ba8748c5b7bcf1830135b4652",
+      "snapshotDiff": [
+        ".ci-run.json"
+      ],
+      "productBlobEqualityVerified": true,
+      "localProductTests": false,
+      "attempt": 1,
+      "logSha256": "9a82c70776bd8301ae7fe233465fc51b394e65f016ef7deac477c00263b8771f",
+      "cases": [
+        {
+          "file": "Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+          "status": "fail",
+          "name": "same-case BI preserves the human choice while the confirmed training revision changes its current source result and table",
+          "milliseconds": 158571.55
+        }
+      ],
+      "counts": {
+        "pass": 0,
+        "fail": 1,
+        "error": 0
+      },
+      "expectCalls": 80,
+      "omni": {
+        "nonce": "3d21058b4e85c6534eab78778d16753a",
+        "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      }
+    },
+    {
+      "selection": 14,
+      "runId": 43589528126,
+      "jobId": 132431103700,
+      "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
+      "productTree": "26843c698c3cf7b923d364434fae443a63efafaa",
+      "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
+      "snapshotTree": "660b1e1b331cec536e25295682a51b62d93543e4",
+      "conclusion": null,
+      "branch": "ci-run-linux-astra-finance-cfbf7c8-38f2e35-a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43589528126",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+          "./Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+          "./Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+          "./Sucafinav1/test/product/wp11/case-port.test.ts",
+          "./Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+          "./Sucafinav1/test/product/wp11/calculation-history.test.ts",
+          "./Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+          "./Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+          "./Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+          "./Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+          "./Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "38f2e358b7d7287401823631d16460f7f343c384cd7b5e08694c061a8b38e552",
+      "snapshotDiff": [
+        ".ci-run.json"
+      ],
+      "productBlobEqualityVerified": true,
+      "localProductTests": false,
+      "attempt": 1
+    },
+    {
+      "selection": 15,
+      "runId": 43590340187,
+      "jobId": null,
+      "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "productTree": "f30c35028acb382d2b38b7be6e105f3a98a0518c",
+      "snapshotSha": "a4ee14cce723ac642e48822094809eea4113e11b",
+      "snapshotTree": "322a7a2c62cdb1f6ef905cdbc488837561b889c9",
+      "conclusion": null,
+      "branch": "ci-run-linux-astra-finance-6184a0d-fdf4ffe-a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43590340187",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "fdf4ffe89aa485b6fbe3792a93e88282b62b610ba8748c5b7bcf1830135b4652",
+      "snapshotDiff": [
+        ".ci-run.json"
+      ],
+      "productBlobEqualityVerified": true,
+      "localProductTests": false,
+      "attempt": 1
+    }
+  ],
+  "acceptance": "NOT_ACCEPTED",
+  "nativeProof": null,
+  "C": null,
+  "D": null,
+  "notes": [
+    "A passing selection qualifies only its exact product SHA and selected consumer scope.",
+    "Focused Omni not-applicable controls prove no native spawn or delegated session.",
+    "Later material changes require their own affected selection; original failures remain in this ledger."
+  ]
+}

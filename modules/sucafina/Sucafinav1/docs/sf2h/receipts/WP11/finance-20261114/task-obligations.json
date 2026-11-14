@@ -1,0 +1,2417 @@
+{
+  "schema": "sf-finance-literal-task-obligations-v1",
+  "planCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "handoffCommit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+  "taskCount": 14,
+  "workPackages": [
+    {
+      "wp": "WP03",
+      "pack": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP03.pack.json",
+      "packSha256": "60f25f8ed6575e6b040a54a28de44581147593585fd3b8df54cfc43952ed94a9",
+      "objective": "Permitir que André compare alternativas e entenda cada número, enquanto owners, Finance e HR mantêm o plano com edição mensal previsível, sem alterar as contas, permissões ou fluxos do Planner original.",
+      "scope_in": [
+        "Ownership exclusivo em modules/sucafina/Sucafinav1/runtime/planner.ts, src/planner-* e novos product/planner/**, incluindo provas locais dentro desse namespace.",
+        "Preservação das sete páginas funcionais: Overview, OPEX, CAPEX, Headcount, Entities & allocations, FX rates e Versions; a apresentação usa o contexto e os componentes publicados nos contratos comuns.",
+        "Projeções financeiras reconciliáveis, adapter puro de comando/simulação, edição mensal, composição de valores, posições e premissas, gestão de versões e comparação entre cenários.",
+        "Publicação de séries, componentes e deltas para UI/BI e de simulação financeira para imports; esses consumidores não recalculam dinheiro.",
+        "Descritores C16 das capacidades reais de WP03, consumidos pela ponte nativa sem copiar domínio."
+      ],
+      "scope_out": [
+        "runtime/application.ts, runtime/workbooks.ts, runtime/dashboard-import.ts, persistência, identidade, instalação e entrypoints comuns; WP10 compõe as portas reais.",
+        "Renderizadores e gramática de gráficos do WP05, workflow de importação/recibo do WP06 e navegação global do WP01.",
+        "Motor de rateio, novo ciclo obrigatório de aprovação, integração automática Procurement-orçamento, SAP/Fabric, Azure/deploy e novos acessos.",
+        "Mudança silenciosa de fórmulas, taxa cambial de competência, política contábil, alçadas ou interpretação dos arquivos originais."
+      ],
+      "contract_reads": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C08",
+        "C15",
+        "C16",
+        "C17"
+      ],
+      "contract_provides": [
+        "C02",
+        "C03",
+        "C04",
+        "C16"
+      ],
+      "tasks": [
+        {
+          "id": "WP03.T01",
+          "title": "Publicar projeções e adapter financeiro puros",
+          "intent": "Fornecer uma leitura financeira explicável e uma simulação de comando que reutilizem exatamente as regras do Planner, servindo UI, BI e importação.",
+          "work": [
+            "Mapear no baseline as entradas de cálculo, normalização de versões legadas, permissões e efeitos de comando; preservar IDs, valores mensais e flags sem respread na leitura.",
+            "Publicar em product/planner/** as portas C02/C03/C04 que calculam projeções e executam o mesmo comando sobre cópia, com contexto de ator, revisão, tempo e identificadores conforme os contratos congelados.",
+            "Representar componentes, presença/ausência, budget herdado, conversão FX e HR sintético sem reclassificar ausência como zero observado; preservar o resultado numérico legado quando sua regra calcula zero.",
+            "Retornar mudanças, avisos, conflito e dados autorizados da simulação sem persistência, efeitos externos ou segunda implementação financeira; documentar a correspondência de IDs previstos para inclusões conforme C04.",
+            "Publicar exemplos contratuais e provas locais do adapter para consumo paralelo por WP05/WP06, com interface de montagem real reservada ao WP10.",
+            "Publicar descritores e handlers de sf_forecast_compare, sf_scenario_simulate, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+            "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
+          ],
+          "inputs": [
+            "WP00.T02: C01, C02, C03, C04 e C08 congelados, inventário de paridade e fixtures do baseline.",
+            "runtime/planner.ts, src/planner-accounts.ts, src/planner-role.ts e testes existentes de planner/paridade, lidos como referência.",
+            "Exemplos de versões em array e dicionário, HR/FX ausentes, IDs numéricos legados e atores com diferentes papéis.",
+            "C16",
+            "C15"
+          ],
+          "outputs": [
+            "Adapter e projeções públicos em product/planner/**, com exports de domínio para leitura e simulação sem I/O.",
+            "Catálogo local de componentes/avisos e fixtures C02/C03/C04, incluindo dados restritos e formas legadas.",
+            "Registro de paridade e eventual discrepância comprovada, sem corrigir silenciosamente a regra de negócio.",
+            "modules/sucafina/Sucafinav1/product/planner/capabilities.ts#compareForecast (sf_forecast_compare; ForecastCompareRequest -> FinancialAnalysis)",
+            "modules/sucafina/Sucafinav1/product/planner/capabilities.ts#simulateScenario (sf_scenario_simulate; ScenarioRequest -> ScenarioResult)",
+            "Incremento NATIVE-PLANNER em T+15: product/planner/port.ts exporta createPlannerPort, incluindo compareForecast sobre o motor financeiro real e projeção C02/C10 autorizada. O restante do adapter/projeções continua até 24."
+          ],
+          "depends_on": [
+            "WP00.T02"
+          ],
+          "checks": [
+            {
+              "id": "WP03.T01.CHK.01",
+              "text": "Projetar e simular sobre snapshot congelado deixa snapshot, auditoria, sequências e versões originais idênticos; somente o resultado em memória contém o estado previsto.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP03.T01.CHK.02",
+              "text": "Para o mesmo comando e contexto determinístico, simulação e execução isolada do domínio produzem os mesmos valores, flags, avisos e rejeições; nenhum componente de UI recalcula o resultado.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP03.T01.CHK.03",
+              "text": "Versão legada em dicionário mantém IDs, valores e official por ano; uma leitura repetida não redistribui meses nem cria versão.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP03.T01.CHK.04",
+              "text": "Usuário viewer/budget owner não recebe rates, overrides ou custos individuais em projeções, diffs ou payload de conflito; agregado permitido continua reconciliável.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP03.T01.CHK.18",
+              "text": "Executar sf_forecast_compare, sf_scenario_simulate pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+              "status": "NOT_RUN"
+            }
+          ],
+          "axioms": {
+            "dod": [
+              {
+                "id": "WP03.T01.DOD.01",
+                "text": "As portas puras C02/C03/C04 do Planner estão exportadas e descritas com entradas, saídas, contexto e casos de rejeição.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T01.DOD.02",
+                "text": "Há prova local de paridade numérica, ausência de mutação e remoção de campos restritos, além do pacote de conformidade para WP10.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T01.DOD.18",
+                "text": "Descritores C16 de sf_forecast_compare, sf_scenario_simulate são implementados e consumidos por T06 com referências reais.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "invariants": [
+              {
+                "id": "WP03.T01.INV.01",
+                "text": "Toda projeção e simulação reutiliza o cálculo e a autorização do domínio; não existe fórmula financeira paralela.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T01.INV.02",
+                "text": "Snapshot, relógio e gerador de IDs não são consultados por efeito global; dependências determinísticas seguem o contrato e a entrada original permanece intacta.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T01.INV.03",
+                "text": "Ausência permanece identificável mesmo quando a conta legada contribui zero; não se transforma informação ausente em actual confirmado.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T01.INV.18",
+                "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "quality_standards": [
+              {
+                "id": "WP03.T01.QLT.01",
+                "text": "Cada total publicado possui componentes suficientes para reconstruir sua soma, com versão, período, moeda e regra de origem.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T01.QLT.02",
+                "text": "Falhas e avisos identificam o registro/campo autorizado e distinguem validação, conflito e falta de permissão.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T01.QLT.18",
+                "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "completeness_criteria": [
+              {
+                "id": "WP03.T01.CMP.01",
+                "text": "As projeções cobrem budget, actual, forecast, outlook, comparação, HR, FTE, FX, classificação e versões legadas.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T01.CMP.02",
+                "text": "O adapter cobre comandos existentes de edição e importação sem assumir que todo ator pode consultar os mesmos campos.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T01.CMP.18",
+                "text": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "success_criteria": [
+              {
+                "id": "WP03.T01.SUC.01",
+                "text": "Um consumidor calcula zero fórmulas adicionais para exibir total, composição ou impacto de comando.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T01.SUC.02",
+                "text": "Um mesmo comando inválido é rejeitado pela simulação e pela execução isolada sem qualquer mudança no snapshot de origem.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T01.SUC.18",
+                "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+                "status": "NOT_RUN"
+              }
+            ]
+          },
+          "status": "PLANNED",
+          "owner": "WP03",
+          "ownership_ref": "WP03",
+          "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+          "final_evidence_owner": "WP10",
+          "requirements": [
+            "R10",
+            "R22",
+            "IA03",
+            "RA03",
+            "RA04"
+          ],
+          "journeys": [
+            "J02",
+            "J03"
+          ],
+          "session": "S1",
+          "build_window": [
+            10,
+            24
+          ],
+          "proof_window": [
+            25,
+            75
+          ],
+          "evidence_packages": [
+            "E04",
+            "E11"
+          ],
+          "integrates_with": [
+            "WP01.T02",
+            "WP10.T06"
+          ],
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+          "execution_actor": "S1-C"
+        },
+        {
+          "id": "WP03.T02",
+          "title": "Entregar edição mensal e linhas OPEX/CAPEX previsíveis",
+          "intent": "Permitir manutenção rápida do orçamento e forecast, preservando branco, zero, herança, spread e o trabalho local em conflitos.",
+          "work": [
+            "Construir a contribuição OPEX/CAPEX em product/planner/** com grade mensal, identificação persistente da linha, modos budget/actual/forecast/compare e detalhe contextual; consumir C01/C03 para estados e ações permitidos.",
+            "Apresentar valor herdado de budget sem gravá-lo como forecast; distinguir zero explícito, ausência, meses fechados, meses manuais e alterações locais ainda não salvas.",
+            "Exibir impacto e meses afetados de edição anual, spread e reset antes de aplicar a operação escolhida, preservando inclusive a regra original quando todos os meses estão manuais.",
+            "Cobrir criação/edição/exclusão de linhas e projetos financeiros, breakdown/total-only, classificação OPEX/CAPEX, owner/referências e sequência CPX sem introduzir correspondência automática com Procurement.",
+            "Preservar a entrada local na recusa por revisão e mostrar diferença para o valor armazenado; alterações em linhas independentes não são descartadas por um conflito alheio.",
+            "Implementar edição de várias linhas/meses e colagem de intervalos, com prévia de células inválidas, locks e atualização versionada; não limitar a melhoria a navegar célula por célula."
+          ],
+          "inputs": [
+            "WP03.T01: adapter puro, projeções e fixtures financeiras.",
+            "C01/C03 e contribuição visual contratual do WP01; montagem efetiva pelo WP10.",
+            "Baseline de OPEX/CAPEX, incluindo sete medidas de comparação e permissões de finance/budget owner."
+          ],
+          "outputs": [
+            "Contribuições OPEX/CAPEX e estado local de edição em product/planner/**.",
+            "Comandos de linha/projeto e prévias de spread usando o adapter, sem escrita em application.ts.",
+            "Provas locais de semântica mensal, autoridade, sequência CPX e conflitos de edição."
+          ],
+          "depends_on": [
+            "WP00.T02",
+            "WP03.T01"
+          ],
+          "checks": [
+            {
+              "id": "WP03.T02.CHK.01",
+              "text": "Em mês aberto com budget 100, forecast vazio resulta em 100 e forecast explícito 0 resulta em 0; em mês fechado, actual ausente preserva o resultado legado 0 e a indicação de ausência.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP03.T02.CHK.02",
+              "text": "Com janeiro manual em 200 e annual alterado para 1520, os onze meses abertos recebem 120, janeiro permanece 200 e o total é 1520; reset libera flags e preserva o total com o arredondamento do baseline.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP03.T02.CHK.03",
+              "text": "Duas edições em registros distintos são aceitas com suas revisões; duas edições concorrentes no mesmo registro produzem conflito na segunda, mantendo sua entrada local visível e sem sobrescrever a primeira.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP03.T02.CHK.04",
+              "text": "Owner não altera budget/actual de linha alheia; Finance altera actual/forecast/closed permitido em versão bloqueada; linha sintética HR não admite budget manual.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP03.T02.CHK.05",
+              "text": "CAPEX aceita linha classificada OPEX sem somá-la como capitalização; código CPX não se repete após cópia/exclusão e projeto referenciado não é excluído.",
+              "status": "NOT_RUN"
+            }
+          ],
+          "axioms": {
+            "dod": [
+              {
+                "id": "WP03.T02.DOD.01",
+                "text": "A grade e o detalhe contextual operam todos os fluxos OPEX/CAPEX inventariados com comandos C03 e estados locais explícitos.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T02.DOD.02",
+                "text": "Casos de branco/zero/herança, spread, papel e conflito têm provas específicas e roteiro de montagem para WP10.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "invariants": [
+              {
+                "id": "WP03.T02.INV.01",
+                "text": "Apresentar forecast herdado não preenche seu armazenamento; zero digitado continua override explícito.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T02.INV.02",
+                "text": "Spread, reset, flags e arredondamento seguem o domínio; nenhuma edição anual altera meses fora da operação escolhida sem tornar o efeito visível.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T02.INV.03",
+                "text": "Lock, papel, owner/domínio e revisão esperada são rechecados pelo comando, independentemente da disponibilidade visual do controle.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "quality_standards": [
+              {
+                "id": "WP03.T02.QLT.01",
+                "text": "A grade distingue salvo, pendente, conflito e não editável por texto e estado acessível, sem depender apenas de cor.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T02.QLT.02",
+                "text": "Navegação por teclado, identificação da linha e rótulo de versão/período permanecem utilizáveis ao percorrer os doze meses.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "completeness_criteria": [
+              {
+                "id": "WP03.T02.CMP.01",
+                "text": "Estão cobertos os quatro modos de leitura, sete medidas de comparação, annual/mensal, spread/reset e actuals closed through.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T02.CMP.02",
+                "text": "Estão cobertos linhas, projetos, owners, entidades, allocations, moeda, classificação, total-only/breakdown, exclusões em uso e CPX.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "success_criteria": [
+              {
+                "id": "WP03.T02.SUC.01",
+                "text": "O usuário altera uma previsão mensal e identifica seu efeito anual antes de confirmar, sem editar a versão errada.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T02.SUC.02",
+                "text": "Uma recusa por conflito ou autoridade não perde a entrada local nem deixa o usuário acreditar que os valores foram salvos.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T02.SUC.03",
+                "text": "O operador altera um intervalo mensal real, identifica rejeições e reaplica somente células corrigidas sem redigitação nem perda de valores bloqueados.",
+                "status": "NOT_RUN"
+              }
+            ]
+          },
+          "status": "PLANNED",
+          "owner": "WP03",
+          "ownership_ref": "WP03",
+          "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+          "final_evidence_owner": "WP10",
+          "requirements": [
+            "R04",
+            "R11"
+          ],
+          "journeys": [
+            "J02"
+          ],
+          "session": "S1",
+          "build_window": [
+            24,
+            38
+          ],
+          "proof_window": [
+            25,
+            75
+          ],
+          "evidence_packages": [
+            "E04",
+            "E11"
+          ],
+          "integrates_with": [
+            "WP01.T02"
+          ],
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+          "execution_actor": "S1-C"
+        },
+        {
+          "id": "WP03.T03",
+          "title": "Entregar planejamento de pessoas e premissas de HR",
+          "intent": "Permitir a HR manter posições e compreender seu custo mensal, preservando o orçamento sintético por domínio e a privacidade existente.",
+          "work": [
+            "Construir Headcount com posições agrupadas por domínio, estados de inclusão/roster/rate, detalhe da posição, novas contratações e ações de manutenção compatíveis com o ator.",
+            "Cobrir FTE, intervalo de meses, Employee/Contractor, localização, seleção automática/explicitada de rate card, override, reajuste e mês efetivo usando as funções atuais.",
+            "Preservar sincronização do roster, domínio manual, entradas futuras/saídas e os campos permitidos; a leitura/importação do arquivo permanece na fronteira do WP06.",
+            "Publicar em C02 FTE e custo mensais autorizados para a visualização do WP05, distinguindo capacidade planejada de disponibilidade real e custo incompleto por falta de rate/FX.",
+            "Manter budget HR derivado e actual/forecast HR independentes por domínio; detalhes de composição e comparações respeitam a mesma restrição de remuneração."
+          ],
+          "inputs": [
+            "WP03.T02: contribuição de edição e estados C03.",
+            "Adapter/projeções de WP03.T01 e regras de src/planner-accounts.ts e src/planner-role.ts.",
+            "Fixtures de roster com domínio manual, saída, nova entrada, posição sem rate e papéis HR/finance/owner/viewer."
+          ],
+          "outputs": [
+            "Contribuição Headcount, rates e reajuste em product/planner/**.",
+            "Séries mensais FTE/HR e indicadores de incompletude conforme C02, sem renderizador de gráfico próprio.",
+            "Provas de custo, sincronização, lock, AF independente e ausência de vazamento em composição/diffs."
+          ],
+          "depends_on": [
+            "WP00.T02",
+            "WP03.T02"
+          ],
+          "checks": [
+            {
+              "id": "WP03.T03.CHK.01",
+              "text": "Posição incluída, FTE 1, rate anual USD 120000, início 7 e fim 12 gera budget HR 60000; reajuste de 10% a partir do mês 10 gera 63000 e mantém FTE dezembro 1.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP03.T03.CHK.02",
+              "text": "Posição sem rate continua no FTE planejado, contribui custo zero pela regra atual e exibe No rate; excluir a posição do plano remove sua contribuição sem apagar seu cadastro.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP03.T03.CHK.03",
+              "text": "Sincronização preserva domínio manual, marca ausência do roster e não admite pessoas futuras/terminadas conforme baseline; plano bloqueado não modifica posições.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP03.T03.CHK.04",
+              "text": "Editar actual/forecast HR não altera seu budget derivado; tentativa de importar/editar budget sintético não é aceita como valor manual.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP03.T03.CHK.05",
+              "text": "Owner/viewer vê agregados permitidos e nunca recebe annual cost individual, rate card privado, override ou reajuste em detalhe, comparação ou conflito.",
+              "status": "NOT_RUN"
+            }
+          ],
+          "axioms": {
+            "dod": [
+              {
+                "id": "WP03.T03.DOD.01",
+                "text": "Headcount, rates, reajuste e sincronização estão cobertos por contribuição de produto e comandos autorizados.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T03.DOD.02",
+                "text": "C02 publica FTE/custo por mês e exceções com os mesmos resultados do domínio e provas por papel.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "invariants": [
+              {
+                "id": "WP03.T03.INV.01",
+                "text": "Posições, rate, FTE, intervalo e reajuste alimentam HR sintético; não há budget HR manual paralelo.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T03.INV.02",
+                "text": "Actual/forecast HR permanecem independentes do cálculo de budget e não são substituídos por sincronização do roster.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T03.INV.03",
+                "text": "Campos salariais e Talent Review não são expandidos nem expostos a partir de agregado, diff, mensagem ou importação.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "quality_standards": [
+              {
+                "id": "WP03.T03.QLT.01",
+                "text": "A interface identifica posição excluída, não presente no roster, nova contratação e sem rate sem fazer esses estados parecerem equivalentes.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T03.QLT.02",
+                "text": "Indicadores dizem FTE planejado e explicam o denominador; custo anual dividido por FTE dezembro não recebe rótulo de média anual sem essa definição.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "completeness_criteria": [
+              {
+                "id": "WP03.T03.CMP.01",
+                "text": "Posições, rates automáticos/explícitos, overrides, reajuste, meses, inclusão, tipo, localização e domínio manual estão cobertos.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T03.CMP.02",
+                "text": "A sincronização, privacidade, bloqueio, HR por domínio e referências de rate em uso possuem casos de aceitação.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "success_criteria": [
+              {
+                "id": "WP03.T03.SUC.01",
+                "text": "HR identifica quais posições explicam uma mudança mensal de custo sem editar linhas sintéticas de OPEX.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T03.SUC.02",
+                "text": "André recebe a evolução planejada de FTE/custo dentro de seu acesso, e ausência de rate não parece economia confirmada.",
+                "status": "NOT_RUN"
+              }
+            ]
+          },
+          "status": "PLANNED",
+          "owner": "WP03",
+          "ownership_ref": "WP03",
+          "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+          "final_evidence_owner": "WP10",
+          "requirements": [
+            "R12"
+          ],
+          "journeys": [
+            "J02"
+          ],
+          "session": "S1",
+          "build_window": [
+            38,
+            49
+          ],
+          "proof_window": [
+            38,
+            75
+          ],
+          "evidence_packages": [
+            "E04",
+            "E11"
+          ],
+          "integrates_with": [
+            "WP01.T02"
+          ],
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+          "execution_actor": "S1-C"
+        },
+        {
+          "id": "WP03.T04",
+          "title": "Entregar FX e cadastros com escopo explícito",
+          "intent": "Permitir manutenção de câmbio, entidades e allocations sem ambiguidades sobre moeda, período, referência e alcance entre versões.",
+          "work": [
+            "Construir FX rates com USD fixo em 1, taxas por versão, validação e arredondamento existentes, incluindo edição autorizada, ausência de taxa e moedas em uso.",
+            "Construir Entities & allocations com nomes legíveis, detalhes, chaves comuns, unicidade normalizada e proteção de referências usadas em qualquer versão ou HR AF.",
+            "Distinguir visualmente câmbio desta versão de cadastros compartilhados; a mudança de contexto não permite editar outra versão inadvertidamente.",
+            "Expor composição em moeda original/taxa/USD e incompletude de taxa em C02; não estimar materialidade USD para moeda sem taxa nem introduzir taxa contábil mensal nova.",
+            "Preservar allocations como classificação nome/descrição; não transformar rótulos como By headcount em rateio calculado."
+          ],
+          "inputs": [
+            "WP03.T03: premissas HR e referências de rate/FX.",
+            "C01/C02/C03 e baseline de entidades, allocations, FX e referências entre versões.",
+            "Fixtures de nomes equivalentes por normalização, moedas em uso, taxa ausente, plano bloqueado e HR AF referenciado."
+          ],
+          "outputs": [
+            "Contribuições FX rates e Entities & allocations em product/planner/**.",
+            "Projeções de conversão e escopo dos cadastros, com flags de ausência e referências legíveis.",
+            "Provas locais de validação, bloqueio, unicidade e proteção de referências em uso."
+          ],
+          "depends_on": [
+            "WP00.T02",
+            "WP03.T03"
+          ],
+          "checks": [
+            {
+              "id": "WP03.T04.CHK.01",
+              "text": "Valor 100 em moeda com taxa USD 1.2 produz 120; taxa ausente mantém o resultado legado 0 e aviso de moeda sem taxa, sem informar perda/economia de 120 como fato.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP03.T04.CHK.02",
+              "text": "USD não pode ser alterado/excluído, moeda em uso não é excluída e taxa válida com vírgula segue o mesmo parse e seis casas do baseline.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP03.T04.CHK.03",
+              "text": "Nome equivalente normalizado é recusado como duplicata; entidade/allocation usada em outra versão ou HR AF não pode ser excluída.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP03.T04.CHK.04",
+              "text": "Finance edita FX somente quando permitido pelo lock; administração de catálogos segue o papel original; tela e comando rejeitam a mesma mudança proibida.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP03.T04.CHK.05",
+              "text": "Adicionar chaves comuns é idempotente e não altera distribuição de valores; By headcount continua referência, sem gerar pesos ou lançamentos.",
+              "status": "NOT_RUN"
+            }
+          ],
+          "axioms": {
+            "dod": [
+              {
+                "id": "WP03.T04.DOD.01",
+                "text": "FX e ambos os catálogos possuem os controles originais, contexto de escopo e prova de referência em uso.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T04.DOD.02",
+                "text": "A composição monetária e a ausência de taxa são publicadas para UI/BI/imports sem alterar a política cambial.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "invariants": [
+              {
+                "id": "WP03.T04.INV.01",
+                "text": "FX pertence à versão e entidades/allocations mantêm o escopo compartilhado existente; troca de tela não muda essa autoridade.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T04.INV.02",
+                "text": "USD fixo, validação, precisão e resultado numérico de taxa ausente seguem o domínio, com a ausência explicitada.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T04.INV.03",
+                "text": "Chave de allocation é classificação; nenhum valor é rateado ou escrito em outro módulo por sua seleção.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "quality_standards": [
+              {
+                "id": "WP03.T04.QLT.01",
+                "text": "Valor original, moeda, taxa aplicável e USD convertido podem ser inspecionados sem adivinhar a base.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T04.QLT.02",
+                "text": "Referências são apresentadas por nome legível e exclusões recusadas explicam o uso encontrado sem revelar informação restrita.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "completeness_criteria": [
+              {
+                "id": "WP03.T04.CMP.01",
+                "text": "Criação, edição e exclusão de FX, entidades e allocations, chaves comuns e restrições de uso estão cobertas.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T04.CMP.02",
+                "text": "Casos de taxa ausente, código inválido, vírgula decimal, duplicidade normalizada e lock/papel têm resultados explícitos.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "success_criteria": [
+              {
+                "id": "WP03.T04.SUC.01",
+                "text": "O usuário reconhece antes da gravação se altera uma premissa desta versão ou um cadastro compartilhado.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T04.SUC.02",
+                "text": "Taxa ausente e allocation não calculada permanecem visíveis como tais em qualquer consumidor autorizado.",
+                "status": "NOT_RUN"
+              }
+            ]
+          },
+          "status": "PLANNED",
+          "owner": "WP03",
+          "ownership_ref": "WP03",
+          "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+          "final_evidence_owner": "WP10",
+          "requirements": [
+            "R13"
+          ],
+          "journeys": [
+            "J02"
+          ],
+          "session": "S1",
+          "build_window": [
+            49,
+            59
+          ],
+          "proof_window": [
+            49,
+            75
+          ],
+          "evidence_packages": [
+            "E04",
+            "E11"
+          ],
+          "integrates_with": [
+            "WP01.T02"
+          ],
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+          "execution_actor": "S1-C"
+        },
+        {
+          "id": "WP03.T05",
+          "title": "Entregar Overview e comparação explicável entre versões",
+          "intent": "Permitir que André explore cenários, reconcilie diferenças e escolha uma versão sem confundir hipótese, orçamento oficial e realizado.",
+          "work": [
+            "Construir Overview e gestão de Versions com seleção persistente de contexto, criação inicial, cópia, nome/ano, lock/unlock, official/delete e estados legíveis conforme o fluxo original.",
+            "Entregar comparação A/B de budget, actual fechado, outlook, FTE e diferenças por registro/mês; correspondência usa identidade existente e itens não correspondentes aparecem como incluídos/removidos.",
+            "Separar delta para a versão base de desvio contra o orçamento oficial; expor mudanças de premissas sem atribuição causal inventada quando múltiplos fatores variam.",
+            "Publicar para WP05 trajetória mensal/acumulável e contribuições reconciliáveis do waterfall via C02; o renderizador de gráfico permanece no WP05.",
+            "Consolidar a matriz de paridade das sete páginas e o roteiro sintético de comparação/edição/privacidade, entregando ao WP10 exports de domínio e evidências locais sem editar composição comum.",
+            "Publicar descritores e handlers de sf_scenario_compare, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+            "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
+          ],
+          "inputs": [
+            "WP03.T04: todas as premissas, cadastros e contextos do Planner.",
+            "C01/C02/C03/C08 e fixtures de versões/official/locks legados.",
+            "Cenário sintético: budget 600000, actual janeiro-setembro 400000 e forecast outubro-dezembro 190000 contendo item de 72000.",
+            "C16",
+            "C15"
+          ],
+          "outputs": [
+            "Contribuições Overview/Versions e comparador A/B em product/planner/**.",
+            "Séries e deltas de domínio para gráficos do WP05, com versão/período/moeda e agregados autorizados.",
+            "Exports públicos do WP03, matriz de cobertura, provas locais e roteiro de aceitação real para WP10.",
+            "modules/sucafina/Sucafinav1/product/planner/capabilities.ts#compareScenarios (sf_scenario_compare; ScenarioCompareRequest -> ScenarioComparison)"
+          ],
+          "depends_on": [
+            "WP00.T02",
+            "WP03.T04"
+          ],
+          "checks": [
+            {
+              "id": "WP03.T05.CHK.01",
+              "text": "Base produz outlook 590000; cópia com o item 72000 substituído por 84000 produz 602000 e delta +12000; cópia com 78000 produz 596000 e delta +6000, mantendo budget 600000 e actual 400000.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP03.T05.CHK.02",
+              "text": "No cenário de 596000, a UI mostra +6000 contra a base e -4000 contra budget, sem rotular os 4000 como economia contra a base.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP03.T05.CHK.03",
+              "text": "As contribuições das linhas somam o delta total; diferenças de FX/HR/meses permanecem explicadas por campos alterados, e registros sem identidade correspondente não são unidos por nome.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP03.T05.CHK.04",
+              "text": "Copiar e explorar não modifica official; tornar official troca apenas o ponteiro daquele ano e bloqueia a escolhida; official não é excluída/desbloqueada pela ação proibida.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP03.T05.CHK.05",
+              "text": "A matriz cobre sete páginas e operações originais; provas de montagem real são encaminhadas ao WP10, e gráficos/imports ainda não compostos não são declarados integrados.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP03.T05.CHK.18",
+              "text": "Executar sf_scenario_compare pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+              "status": "NOT_RUN"
+            }
+          ],
+          "axioms": {
+            "dod": [
+              {
+                "id": "WP03.T05.DOD.01",
+                "text": "Overview, gestão completa de Versions e comparação A/B são entregues com composição explicável e estados de hipótese/oficial.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T05.DOD.02",
+                "text": "O handoff contém todas as portas de domínio, matriz de paridade e roteiro exato de consumo por WP05/WP06/WP10.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T05.DOD.18",
+                "text": "Descritores C16 de sf_scenario_compare são implementados e consumidos por T06 com referências reais.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "invariants": [
+              {
+                "id": "WP03.T05.INV.01",
+                "text": "Explorar uma cópia não altera official, budget ou actual de outra versão; oficialização permanece ação explícita autorizada.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T05.INV.02",
+                "text": "Comparação preserva moeda/período/contexto e identidade dos registros; não mistura anos, hipóteses ou naturezas contábeis sem identificá-los.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T05.INV.03",
+                "text": "Deltas são resultados do mesmo motor e respeitam redação salarial; não há integração automática de Procurement nem causalidade inferida.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T05.INV.18",
+                "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "quality_standards": [
+              {
+                "id": "WP03.T05.QLT.01",
+                "text": "Os maiores impactos podem ser abertos até linha/mês e toda diferença agregada reconcilia com seus componentes.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T05.QLT.02",
+                "text": "Orçamento oficial, versão base, hipótese e outlook têm rótulos distintos; seleção e estado permanecem visíveis ao navegar.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T05.QLT.18",
+                "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "completeness_criteria": [
+              {
+                "id": "WP03.T05.CMP.01",
+                "text": "Criar, copiar, editar nome/ano, bloquear, desbloquear, oficializar e excluir são preservados com todas as recusas pertinentes.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T05.CMP.02",
+                "text": "Overview mantém suas medidas e comparações originais e acrescenta detalhamento A/B; as sete páginas possuem cobertura e exports de composição.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T05.CMP.18",
+                "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "success_criteria": [
+              {
+                "id": "WP03.T05.SUC.01",
+                "text": "André identifica em uma comparação o único item que leva 590000 a 602000 e consegue inspecionar o mês sem perder a referência de versão.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T05.SUC.02",
+                "text": "WP10 consegue montar as contribuições reais sem alterar a lógica financeira nem copiar fórmulas para BI ou imports.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP03.T05.SUC.18",
+                "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+                "status": "NOT_RUN"
+              }
+            ]
+          },
+          "status": "PLANNED",
+          "owner": "WP03",
+          "ownership_ref": "WP03",
+          "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+          "final_evidence_owner": "WP10",
+          "requirements": [
+            "R14",
+            "RA03",
+            "RA04"
+          ],
+          "journeys": [
+            "J02"
+          ],
+          "session": "S1",
+          "build_window": [
+            59,
+            72
+          ],
+          "proof_window": [
+            59,
+            75
+          ],
+          "evidence_packages": [
+            "E04",
+            "E11"
+          ],
+          "integrates_with": [
+            "WP01.T02",
+            "WP10.T06"
+          ],
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+          "execution_actor": "S1-C"
+        }
+      ],
+      "handoff": [
+        "Branch de execução prevista: sf2-planner; este arquivo descreve trabalho futuro e não implementa produto nesta conversa.",
+        "Exports e exemplos C02/C03/C04 limitados ao domínio Planner, com contexto C01 e instruções de montagem C08 para WP10.",
+        "WP05 recebe séries, componentes e deltas autorizados; WP06 recebe o adapter puro de simulação/import-command, incluindo convenção de IDs, revisões e avisos.",
+        "Tasks começam após WP00.T02 e encadeiam apenas dentro do WP03; contratos permitem implementação paralela dos consumidores. Fechamento integrado depende WP10.",
+        "Cobertura local, discrepâncias explicitadas, demonstração sintética e pendências reais de composição são entregues sem tratar fixtures contratuais como evidência de integração.",
+        "Descritores C16 das capacidades reais de WP03, consumidos pela ponte nativa sem copiar domínio.",
+        "O manifest canônico identifica os paths/exports/tasks e AM01–AM06; evidência de catálogo isolado não é aceite integrado.",
+        "Construção determinística inicia por WP00.T02 em T+10, incluindo quando GNATIVE/T04 estiver BLOCKED. A prova nativa posterior não é dependência de início nem autoriza atrasar a fila de tasks."
+      ],
+      "source_status_only": true,
+      "integratedAcceptance": false
+    },
+    {
+      "wp": "WP05",
+      "pack": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP05.pack.json",
+      "packSha256": "37d6c0024d96ff2d5a7e24beb5b328a477a9564b671c907c21de29c5957f5f23",
+      "objective": "Permitir que André e o time respondam perguntas financeiras e operacionais com oito gráficos explicáveis, filtros consistentes e drilldown para os registros reais, usando exclusivamente as projeções calculadas pelos domínios.",
+      "scope_in": [
+        "Ownership exclusivo: novos modules/sucafina/Sucafinav1/product/analytics/**, incluindo componentes, modelos visuais, registro de gráficos, interações acessíveis e verificações locais.",
+        "Oito gráficos: trajetória budget/actual/outlook; waterfall de cenários; barras divergentes por contribuição; FTE e custo alinhados; pedidos por etapa; aging; tickets abertos/fechados; agenda de marcos.",
+        "Consumo dos C02 reais de Dashboard, Planner e Procurement; geometria/formatação/interação dos gráficos sem reimplementar cálculos financeiros, autorização ou extração de eventos de domínio.",
+        "Contexto C01 e portas C08 exportadas para composição paralela por WP10; cada seleção visual preserva referência, filtros, período, moeda, versão e recorte autorizado.",
+        "Entregar BI de consequência e sensibilidade",
+        "Descritores C16 das capacidades reais de WP05, consumidos pela ponte nativa sem copiar domínio."
+      ],
+      "scope_out": [
+        "Não escrever runtime de domínio, src financeiro, shell, application, workbooks, product/procurement/**, produtor C02 ou entrypoint comum.",
+        "Não criar motor financeiro, BI builder genérico, ontologia, fontes externas, dashboards sintéticos vendidos como dados reais ou métricas sem suporte na projeção.",
+        "Não inferir séries mensais a partir de um total anual, coortes a partir de estoque por etapa, tempo na etapa a partir de createdAt/último save ou zero a partir de ausência.",
+        "Nenhum Azure/deploy/identidade, acesso SAP/Fabric, política nova, aprovação, edição de negócio ou mensagem externa."
+      ],
+      "contract_reads": [
+        "C01",
+        "C02",
+        "C08",
+        "C09",
+        "C10",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17"
+      ],
+      "contract_provides": [
+        "C08",
+        "C01",
+        "C16"
+      ],
+      "tasks": [
+        {
+          "id": "WP05.T01",
+          "title": "Trajetória financeira e waterfall de cenários",
+          "intent": "Mostrar a evolução de budget/actual/outlook e explicar a diferença entre cenários por componentes reconciliáveis, sem um segundo motor financeiro.",
+          "work": [
+            "Consumir as projeções C02 congeladas para trajetória e cenário, com adaptadores de apresentação restritos a geometria, formatação e seleção; não importar store bruto ou fórmulas financeiras.",
+            "Trajetória: pergunta 'Como orçamento, realizado disponível e outlook evoluem no período?'; eixo X usa competências realmente fornecidas e eixo Y usa valores na mesma moeda/base; marcar competência e partes conhecidas/desconhecidas.",
+            "Waterfall: pergunta 'Quais componentes explicam a diferença deste cenário para a referência?'; mostrar total inicial, contribuições assinadas e total final já projetados pelo domínio, sem parcela residual inventada.",
+            "Exportar o contexto e as referências C01 de cada série/componente, junto de tabela acessível e estados de dados parciais; cada seleção abre o detalhe correspondente pelo callback C08.",
+            "Desenvolver em paralelo contra a assinatura congelada e exemplos originados no motor real; marcar integração pendente quando o produtor final ainda não estiver disponível, sem entregar stub como produtor."
+          ],
+          "inputs": [
+            "WP00.T02: C01/C02/C08 congelados, catálogo de produtores e exemplos com proveniência dos motores reais.",
+            "Projeções reais de trajetória financeira e diferença de cenário fornecidas pelos proprietários Dashboard/Planner.",
+            "Contextos com competência mensal válida, somente total anual, actual parcial, valor negativo e componentes não reconciliados."
+          ],
+          "outputs": [
+            "Gráfico de trajetória budget/actual/outlook e waterfall de cenário em product/analytics/**.",
+            "Contrato de interação e tabela equivalente preservando moeda, competência, versão e referência.",
+            "Casos discriminantes de granularidade, lacunas e reconciliação com produtor C02 identificado."
+          ],
+          "depends_on": [
+            "WP00.T02"
+          ],
+          "checks": [
+            {
+              "id": "WP05.T01.CHK.01",
+              "text": "Receber apenas total anual sem distribuição mensal: a trajetória não gera 12 pontos por divisão/interpolação; informa granularidade disponível e não aparenta conhecer um perfil mensal.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP05.T01.CHK.02",
+              "text": "Dado actual desconhecido em uma competência e zero confirmado em outra: o primeiro produz lacuna/indisponibilidade, o segundo marca zero; os dois casos não compartilham tooltip/representação.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP05.T01.CHK.03",
+              "text": "Usar cenário C02 com referência 100, contribuições +20 e -5 e final 115: waterfall termina em 115 e cada seleção preserva seu componente; trocar o final para 116 deve sinalizar não reconciliação, não criar '+1 ajuste'.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP05.T01.CHK.04",
+              "text": "Alterar moeda, competência ou versão entre contexto e projeção: o gráfico recusa a mistura ou apresenta grupos explicitamente separados conforme C02, sem sobrepor valores incompatíveis.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP05.T01.CHK.05",
+              "text": "Abrir uma contribuição por teclado: destino recebe a referência e os filtros exatos e retorna mantendo foco; componente sem autorização nunca aparece no gráfico ou na tabela.",
+              "status": "NOT_RUN"
+            }
+          ],
+          "axioms": {
+            "dod": [
+              {
+                "id": "WP05.T01.DOD.01",
+                "text": "Trajetória e waterfall estão exportados com tabela equivalente e produtor C02 identificável.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T01.DOD.02",
+                "text": "Granularidade, lacunas e reconciliação têm resultados esperados e falhas demonstráveis.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "invariants": [
+              {
+                "id": "WP05.T01.INV.01",
+                "text": "Nenhum mês, realizado ou contribuição é fabricado para completar a visualização.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T01.INV.02",
+                "text": "O waterfall usa valores de domínio e não recalcula a semântica do cenário.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "quality_standards": [
+              {
+                "id": "WP05.T01.QLT.01",
+                "text": "Competência, moeda, referência e cenário ficam legíveis na própria visualização.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T01.QLT.02",
+                "text": "Lacunas e contribuições negativas preservam significado em cor e texto.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "completeness_criteria": [
+              {
+                "id": "WP05.T01.CMP.01",
+                "text": "Cobrir trajetória completa/parcial/anual e waterfall com aumentos, reduções, zero e falha de reconciliação.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T01.CMP.02",
+                "text": "Cobrir seleção por mouse/teclado e equivalência entre marcas e tabela.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "success_criteria": [
+              {
+                "id": "WP05.T01.SUC.01",
+                "text": "O usuário distingue o que é orçamento, realizado disponível e outlook sem tratar previsão como realizado.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T01.SUC.02",
+                "text": "O usuário explica o delta de um cenário por seus componentes e acessa sua origem com o contexto preservado.",
+                "status": "NOT_RUN"
+              }
+            ]
+          },
+          "status": "PLANNED",
+          "owner": "WP05",
+          "ownership_ref": "WP05",
+          "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+          "final_evidence_owner": "WP10",
+          "requirements": [
+            "R20"
+          ],
+          "journeys": [
+            "J02"
+          ],
+          "session": "S2",
+          "build_window": [
+            10,
+            22
+          ],
+          "proof_window": [
+            25,
+            75
+          ],
+          "evidence_packages": [
+            "E06"
+          ],
+          "integrates_with": [
+            "WP02.T01",
+            "WP03.T01",
+            "WP04.T01",
+            "WP11.T02",
+            "WP13.T02"
+          ],
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+          "execution_actor": "S2-B",
+          "correction_actor": "S2"
+        },
+        {
+          "id": "WP05.T02",
+          "title": "Contribuições divergentes e FTE/custo alinhados",
+          "intent": "Permitir localizar os fatores que aumentam/reduzem um resultado e comparar capacidade com custo sem confundir unidades ou expor dados restritos.",
+          "work": [
+            "Barras divergentes: pergunta 'Quem ou o que mais contribui para o desvio?'; eixo Y usa categorias/componentes autorizados do C02 e eixo X usa contribuição assinada em unidade definida; preservar sinal e referência.",
+            "Usar agregados e agrupamentos fornecidos pelo produtor; Top N/outros só é apresentado quando o C02 fornece agrupamento reconciliável, sem excluir contribuições silenciosamente.",
+            "FTE/custo: pergunta 'Como capacidade e custo se distribuem no mesmo recorte?'; mostrar dois painéis alinhados por período/equipe/domínio disponível, com escalas próprias e labels claros.",
+            "Preservar valores faltantes e proibir granularidade pessoal que o C02 não autoriza; drilldown abre a referência permitida, não reconstrói salário ou custo a partir de nomes.",
+            "Compartilhar controles contextuais e componentes acessíveis de WP05.T01, mantendo as duas medidas independentes e contextualizadas."
+          ],
+          "inputs": [
+            "WP05.T01: apresentação/seleção/tabela C01/C08 e tratamento de ausência.",
+            "Projeções C02 reais de contribuições e capacidade/custo de Dashboard/Planner, com componentes autorizados.",
+            "Casos com sinais opostos, categoria sem dado, agrupamento parcial, FTE zero e custo desconhecido, restrição de dados pessoais."
+          ],
+          "outputs": [
+            "Gráfico de barras divergentes por contribuição.",
+            "Visualização de FTE e custo em painéis alinhados, com tabelas e referências autorizadas.",
+            "Recibo de coerência de sinais, agrupamentos e restrições dos dados."
+          ],
+          "depends_on": [
+            "WP00.T02",
+            "WP05.T01"
+          ],
+          "checks": [
+            {
+              "id": "WP05.T02.CHK.01",
+              "text": "Projetar contribuições +40 e -30: mostrar ambas com sinais corretos e delta 10 somente quando fornecido/reconciliado pelo C02; usar valor absoluto ou omitir a contribuição negativa deve falhar.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP05.T02.CHK.02",
+              "text": "Receber Top N sem agregado do restante: não apresentar o subtotal como total; com 'outros' C02, a marca e o drilldown preservam os componentes definidos pelo produtor.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP05.T02.CHK.03",
+              "text": "No mesmo recorte, FTE confirmado como zero e custo ausente: mostrar zero de FTE e custo indisponível, sem converter nenhum deles no outro ou presumir custo zero.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP05.T02.CHK.04",
+              "text": "Aplicar um filtro/período: ambos os painéis usam o mesmo contexto, mantendo unidades e escalas separadas; nomes/custos pessoais removidos pelo C02 não podem aparecer em tooltip, tabela ou referência.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP05.T02.CHK.05",
+              "text": "Navegar categoria por teclado e abrir detalhe: manter grupo, período, moeda, versão e retorno de foco; nenhuma seleção depende exclusivamente de hover.",
+              "status": "NOT_RUN"
+            }
+          ],
+          "axioms": {
+            "dod": [
+              {
+                "id": "WP05.T02.DOD.01",
+                "text": "Contribuições e FTE/custo estão exportados com eixos, unidades, tabelas e referências reais.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T02.DOD.02",
+                "text": "A entrega documenta a origem de agrupamentos e o tratamento de componentes restritos/ausentes.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "invariants": [
+              {
+                "id": "WP05.T02.INV.01",
+                "text": "Sinal da contribuição e unidade de cada medida não são alterados por ordenação ou formatação.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T02.INV.02",
+                "text": "FTE e custo permanecem medidas distintas e os dados pessoais ausentes do C02 não são reconstruídos.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "quality_standards": [
+              {
+                "id": "WP05.T02.QLT.01",
+                "text": "As maiores contribuições positivas e negativas são comparáveis sem um gráfico visualmente dominado por valores absolutos.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T02.QLT.02",
+                "text": "Painéis alinhados mostram o mesmo recorte e usam escalas explícitas sem eixo duplo enganoso.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "completeness_criteria": [
+              {
+                "id": "WP05.T02.CMP.01",
+                "text": "Cobrir positivos, negativos, zero, desconhecido, Top N parcial e agrupamento reconciliado.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T02.CMP.02",
+                "text": "Cobrir recorte agregado e restrito, filtro conjunto e drilldown autorizado dos dois painéis.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "success_criteria": [
+              {
+                "id": "WP05.T02.SUC.01",
+                "text": "O usuário localiza quem aumenta e quem reduz o desvio e consegue abrir o componente correspondente.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T02.SUC.02",
+                "text": "O usuário compara capacidade e custo sem inferir produtividade ou custo unitário que o domínio não fornece.",
+                "status": "NOT_RUN"
+              }
+            ]
+          },
+          "status": "PLANNED",
+          "owner": "WP05",
+          "ownership_ref": "WP05",
+          "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+          "final_evidence_owner": "WP10",
+          "requirements": [
+            "R20"
+          ],
+          "journeys": [
+            "J02"
+          ],
+          "session": "S2",
+          "build_window": [
+            22,
+            32
+          ],
+          "proof_window": [
+            25,
+            75
+          ],
+          "evidence_packages": [
+            "E06"
+          ],
+          "integrates_with": [
+            "WP02.T01",
+            "WP03.T01",
+            "WP04.T01",
+            "WP11.T02",
+            "WP13.T02"
+          ],
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+          "execution_actor": "S2-B",
+          "correction_actor": "S2"
+        },
+        {
+          "id": "WP05.T03",
+          "title": "Estoque por etapa e aging de Procurement",
+          "intent": "Mostrar onde o trabalho está acumulado e quais aprovações aguardam há mais tempo, distinguindo fatos conhecidos de inferências indevidas.",
+          "work": [
+            "Pedidos por etapa: pergunta 'Onde estão os pedidos abertos agora?'; barras horizontais com Y=etapa atual e X=quantidade C02, explicitamente identificadas como estoque atual e nunca funil de conversão.",
+            "Aging: pergunta 'Quais aprovações esperam há mais tempo e com quem?'; X=dias comprovados na etapa e Y=tipo de aprovação, com um ponto por pedido autorizado e referência de drilldown.",
+            "Consumir idade/entrada na etapa/proveniência fornecidas por Procurement; não interpretar strings de history, createdAt, save ou importação dentro de analytics.",
+            "Exibir contagem separada de pedidos sem idade comprovada, preservando-os no universo; dados ausentes não viram zero dias nem desaparecem.",
+            "Oferecer filtros autorizados de etapa/responsável/buyer e acesso ao detalhe/resumo do pedido, preservando moeda/estado quando houver medida monetária secundária; não criar SLA ou risco numérico."
+          ],
+          "inputs": [
+            "WP05.T02: componentes/interações acessíveis e preservação contextual.",
+            "C02 de Procurement congelado, fornecido realmente por WP04: estoque, etapa, holder, datas comprovadas, idade indisponível e referência.",
+            "Casos com requester restrito, holder ausente, rejeição/ressubmissão, save recente e histórico importado incompleto."
+          ],
+          "outputs": [
+            "Barras de estoque atual por etapa e pontos de aging por aprovação.",
+            "Lista/tabela de pedidos selecionados e grupo explícito de idade indisponível.",
+            "Contraprovas contra funil/coorte falsa e cálculo de idade fora do produtor."
+          ],
+          "depends_on": [
+            "WP00.T02",
+            "WP05.T02"
+          ],
+          "checks": [
+            {
+              "id": "WP05.T03.CHK.01",
+              "text": "Dado estoque com 7 PRs, 2 sourcings e 3 POs distintos: mostrar contagens atuais sem taxas entre barras, abandono ou conversão; rejeição/retorno muda a etapa de um pedido sem criar uma coorte histórica.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP05.T03.CHK.02",
+              "text": "Receber do C02 pedido ressubmetido há 2 dias e salvo hoje: aging continua 2 dias; analytics não recalcula pelo save nem lê o histórico bruto.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP05.T03.CHK.03",
+              "text": "Dois pedidos sem entrada comprovada: ambos aparecem no grupo 'idade indisponível' e no denominador autorizado; não entram em zero dias ou numa média fabricada.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP05.T03.CHK.04",
+              "text": "Filtrar por requester restrito: contagem das barras, pontos e tabela corresponde exatamente aos pedidos visíveis no domínio; pedido alheio não vaza por agregado ou drilldown.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP05.T03.CHK.05",
+              "text": "Clicar numa etapa e depois num pedido mantém o filtro e abre a referência correta; linha de SLA só existe se recebida com política/origem explícita, não pelo mero uso de uma cor vermelha.",
+              "status": "NOT_RUN"
+            }
+          ],
+          "axioms": {
+            "dod": [
+              {
+                "id": "WP05.T03.DOD.01",
+                "text": "Estoque e aging consomem as projeções reais de Procurement e têm drilldown para os pedidos correspondentes.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T03.DOD.02",
+                "text": "Estoque/coorte e idade comprovada/indisponível estão diferenciados na UI e nas contraprovas.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "invariants": [
+              {
+                "id": "WP05.T03.INV.01",
+                "text": "A quantidade em etapas atuais não é convertida em taxa de conversão, abandono ou produtividade.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T03.INV.02",
+                "text": "Analytics não inventa idade nem exclui do universo os pedidos sem evento confiável.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "quality_standards": [
+              {
+                "id": "WP05.T03.QLT.01",
+                "text": "Título e legenda deixam claro que a primeira visualização é estoque e a segunda é tempo na etapa.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T03.QLT.02",
+                "text": "Responsável desconhecido, idade indisponível e prazo informado são distinguíveis sem uso exclusivo de cor.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "completeness_criteria": [
+              {
+                "id": "WP05.T03.CMP.01",
+                "text": "Cobrir todas as etapas abertas e aprovações, holder ausente, rejeição/ressubmissão e histórico insuficiente.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T03.CMP.02",
+                "text": "Cobrir filtros por papel e reconciliação entre agregado, pontos e lista autorizada.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "success_criteria": [
+              {
+                "id": "WP05.T03.SUC.01",
+                "text": "O gestor identifica concentração de trabalho e abre seus pedidos sem inferir uma conversão inexistente.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T03.SUC.02",
+                "text": "O aprovador encontra o pedido mais antigo dentre os tempos comprovados e vê quantos não podem ser comparados.",
+                "status": "NOT_RUN"
+              }
+            ]
+          },
+          "status": "PLANNED",
+          "owner": "WP05",
+          "ownership_ref": "WP05",
+          "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+          "final_evidence_owner": "WP10",
+          "requirements": [
+            "R20"
+          ],
+          "journeys": [
+            "J04"
+          ],
+          "session": "S2",
+          "build_window": [
+            32,
+            42
+          ],
+          "proof_window": [
+            32,
+            75
+          ],
+          "evidence_packages": [
+            "E06"
+          ],
+          "integrates_with": [
+            "WP02.T01",
+            "WP03.T01",
+            "WP04.T01",
+            "WP11.T02",
+            "WP13.T02"
+          ],
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+          "execution_actor": "S2-B",
+          "correction_actor": "S2"
+        },
+        {
+          "id": "WP05.T04",
+          "title": "Tickets, agenda de marcos e catálogo consumível de BI",
+          "intent": "Completar a leitura operacional com eventos/competências de tickets e datas de marcos reais, entregando o catálogo de oito gráficos pronto para composição.",
+          "work": [
+            "Tickets abertos/fechados: pergunta 'O que entrou e o que foi concluído no período?'; X=períodos suportados e Y=contagens C02, usando eventos ou agregados datados válidos. Se só existe fotografia atual, mostrar a fotografia explicitamente e não desenhar tendência.",
+            "Agenda de marcos: pergunta 'Quais entregas e decisões têm data neste horizonte?'; X=tempo e Y=projeto/domínio autorizado, diferenciando marco planejado e conclusão comprovada; marcos sem data ficam em lista própria.",
+            "Preservar definições de aberto/fechado/concluído do produtor e origem/competência; não inferir resolução histórica a partir de status atual nem percentual de progresso de uma lista de marcos.",
+            "Consolidar o registro dos oito gráficos com pergunta, unidades, produtor C02, filtros, ausência e referências, exportando C08 para WP10 sem montar uma segunda entrada de aplicação.",
+            "Qualificar transversalmente foco/teclado, alternativa tabular, estados parciais/restritos, contexto de retorno e consumo de C02 real; fixtures permanecem verificações locais, e a composição final ocorre em WP10.",
+            "Publicar descritores e handlers de sf_bi_view, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+            "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
+          ],
+          "inputs": [
+            "WP05.T03: seis gráficos anteriores e contratos de interação/contexto.",
+            "Projeções C02 reais de operação/tickets e marcos de Dashboard, com granularidade e evidência temporal.",
+            "C01/C08 congelados e catálogo de consumidores para WP01/WP07/WP08/WP10.",
+            "C16",
+            "C15"
+          ],
+          "outputs": [
+            "Gráfico de tickets abertos/fechados e agenda de marcos com listas acessíveis de dados indisponíveis.",
+            "Catálogo exportado dos oito gráficos e referências de drilldown, sem edição de entrypoints.",
+            "Recibo gráfico/produtor/origem e pacote de evidências locais para composição e julgamento independente.",
+            "modules/sucafina/Sucafinav1/product/analytics/capabilities.ts#readBiView (sf_bi_view; BiViewRequest -> ContextualBIView)"
+          ],
+          "depends_on": [
+            "WP00.T02",
+            "WP05.T03"
+          ],
+          "checks": [
+            {
+              "id": "WP05.T04.CHK.01",
+              "text": "Receber apenas contagem/status atual de tickets sem eventos ou agregados datados: mostrar fotografia com data de referência, sem série semanal nem taxa de resolução inventada; ao fornecer série C02 válida, os pontos reproduzem cada período.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP05.T04.CHK.02",
+              "text": "Ticket aberto num período e fechado em outro segue os eventos/projeção do produtor; mover apenas status atual não deve retroativamente reescrever uma série histórica fornecida.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP05.T04.CHK.03",
+              "text": "Marco planejado, marco concluído e marco sem data: os dois primeiros são distinguíveis e o terceiro permanece listado sem receber hoje, primeiro dia do mês ou outro fallback.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP05.T04.CHK.04",
+              "text": "Para os oito gráficos, abrir por teclado uma marca/agregado com filtro, voltar e comparar com o detalhe: referência, versão, período, moeda, recorte e foco são preservados; falhar se o destino cair num overview sem a seleção.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP05.T04.CHK.05",
+              "text": "Injetar valor ausente, componente restrito e série parcial nos consumidores reais de C02: nenhum aparece como zero ou dado completo em marca, tooltip ou tabela; registrar qual produtor/caso foi usado.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP05.T04.CHK.06",
+              "text": "No handoff, cada gráfico aponta seu produtor real e check de composição WP10; um stub/fixture sem produtor identificável impede classificar o gráfico como integrado.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP05.T04.CHK.18",
+              "text": "Executar sf_bi_view pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+              "status": "NOT_RUN"
+            }
+          ],
+          "axioms": {
+            "dod": [
+              {
+                "id": "WP05.T04.DOD.01",
+                "text": "Tickets e agenda estão exportados e o catálogo identifica os oito gráficos, produtores e destinos reais.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T04.DOD.02",
+                "text": "O recibo de interação/ausência/restrição permite a WP10 verificar composição sem descobrir contratos novos.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T04.DOD.18",
+                "text": "Descritores C16 de sf_bi_view são implementados e consumidos por T06 com referências reais.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "invariants": [
+              {
+                "id": "WP05.T04.INV.01",
+                "text": "Fotografia atual não se transforma em histórico de tickets e data planejada não se transforma em conclusão.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T04.INV.02",
+                "text": "Nenhum marco sem data recebe data artificial e nenhuma fonte restrita é recuperada fora do C02.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T04.INV.18",
+                "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "quality_standards": [
+              {
+                "id": "WP05.T04.QLT.01",
+                "text": "A operação distingue entrada, conclusão, planejamento e desconhecido com texto, formas e unidades claros.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T04.QLT.02",
+                "text": "Os oito gráficos têm interação equivalente por teclado/tabela e retorno contextual previsível.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T04.QLT.18",
+                "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "completeness_criteria": [
+              {
+                "id": "WP05.T04.CMP.01",
+                "text": "Cobrir tickets com série válida e só fotografia, além de marcos planejados, concluídos e sem data.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T04.CMP.02",
+                "text": "Fechar o catálogo de oito gráficos com estados vazio/parcial/restrito, filtros e drilldowns verificáveis.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T04.CMP.18",
+                "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "success_criteria": [
+              {
+                "id": "WP05.T04.SUC.01",
+                "text": "O time identifica o que entrou/foi concluído quando há evidência e localiza os marcos do horizonte sem interpretar planejado como entregue.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T04.SUC.02",
+                "text": "WP10 compõe o catálogo e verifica os consumidores reais sem refazer cálculo financeiro ou aceitar uma demonstração desconectada como entrega.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T04.SUC.18",
+                "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+                "status": "NOT_RUN"
+              }
+            ]
+          },
+          "status": "PLANNED",
+          "owner": "WP05",
+          "ownership_ref": "WP05",
+          "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+          "final_evidence_owner": "WP10",
+          "requirements": [
+            "R20",
+            "RA03",
+            "RA04"
+          ],
+          "journeys": [
+            "J05"
+          ],
+          "session": "S2",
+          "build_window": [
+            42,
+            53
+          ],
+          "proof_window": [
+            42,
+            75
+          ],
+          "evidence_packages": [
+            "E06"
+          ],
+          "integrates_with": [
+            "WP02.T01",
+            "WP03.T01",
+            "WP04.T01",
+            "WP11.T02",
+            "WP13.T02",
+            "WP10.T06"
+          ],
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+          "execution_actor": "S2-B",
+          "correction_actor": "S2"
+        },
+        {
+          "id": "WP05.T05",
+          "title": "Entregar BI de consequência e sensibilidade",
+          "intent": "Mostrar o que altera uma decisão e qual variável merece confirmação ou negociação.",
+          "work": [
+            "Reaproveitar waterfall para composição da diferença, acrescentar linha do tempo contratual e sensibilidade derivada do engine.",
+            "Consumir cenários de caso e portfólio, com unidades, horizonte, premissas e intervalos explicitamente informados.",
+            "Ligar marcas à fonte e à tabela equivalente; não inventar séries mensais, probabilidades, scores ou custo evitado por simples arraste de data.",
+            "Consumir comparação/coverage C10 sem cálculo próprio: waterfall e tabela mantêm categorias pendentes, subtotal conhecido e limiar condicionado; ausência não vira barra zero nem residual de ajuste."
+          ],
+          "inputs": [
+            "Contratos publicados por WP00",
+            "Projeções autorizadas e serviços reais dos produtores declarados"
+          ],
+          "outputs": [
+            "Linha do tempo da decisão",
+            "Sensibilidade e limites",
+            "Waterfall aplicável a casos e portfólio"
+          ],
+          "depends_on": [
+            "WP00.T02",
+            "WP05.T04"
+          ],
+          "checks": [
+            {
+              "id": "WP05.T05.CHK.01",
+              "text": "Com outros custos 165 mil e referência 240 mil/meta 20 mil, limiteimplantação 55 mil provém do engine.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP05.T05.CHK.02",
+              "text": "Atraso sem regra financeira não inventa economia ou obrigação eliminada.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP05.T05.CHK.03",
+              "text": "Tabela e marcas retornam exatamente os mesmos valores autorizados.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP05.T05.CHK.20",
+              "text": "A mesma revisão de AI-RENEWAL-OMITTED-CATEGORY aparece no gráfico e tabela: pending sem barra zero; training = 40000 altera total210000→250000 e diferença 30000→-10000, com fontes e snapshot histórico preservados.",
+              "status": "NOT_RUN"
+            }
+          ],
+          "axioms": {
+            "dod": [
+              {
+                "id": "WP05.T05.DOD.01",
+                "text": "As três perguntas analíticas novas e as oito antigas são respondidas com produtores reais e valores reconciliados.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T05.DOD.20",
+                "text": "BI e tabela consomem coverage/result refs reais junto às marcas.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "invariants": [
+              {
+                "id": "WP05.T05.INV.01",
+                "text": "Geometria usa o resultado do motor; visualização não recalcula regra de negócio nem estima probabilidades ausentes.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T05.INV.20",
+                "text": "Gráfico não calcula completude nem converte lacuna em zero, ganho confirmado ou ajuste residual.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "quality_standards": [
+              {
+                "id": "WP05.T05.QLT.01",
+                "text": "Rótulos legíveis, sinais/unidades claros, comparação no mesmo horizonte e dados acessíveis por tabela e teclado.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T05.QLT.20",
+                "text": "Rótulo de condicionado acompanha valor/limiar e a lista acessível explica categorias sem quantificação.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "completeness_criteria": [
+              {
+                "id": "WP05.T05.CMP.01",
+                "text": "Cobrir custo incerto, componente ausente, moeda, limite atingido/não atingido, cenário inviável e referência removida.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T05.CMP.20",
+                "text": "Cobrir omissão inteira, pending, zero confirmado, fonte restrita e atualização que inverte a diferença.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "success_criteria": [
+              {
+                "id": "WP05.T05.SUC.01",
+                "text": "Usuário identifica qual componente ou premissa inverte a escolha e abre sua origem sem perder o caso.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP05.T05.SUC.20",
+                "text": "Usuário encontra a categoria que muda a comparação e abre sua origem com o mesmo contexto.",
+                "status": "NOT_RUN"
+              }
+            ]
+          },
+          "status": "PLANNED",
+          "owner": "WP05",
+          "ownership_ref": "WP05",
+          "requirements": [
+            "IA15"
+          ],
+          "journeys": [
+            "J10"
+          ],
+          "final_evidence_owner": "WP10",
+          "session": "S2",
+          "build_window": [
+            53,
+            70
+          ],
+          "proof_window": [
+            53,
+            75
+          ],
+          "evidence_packages": [
+            "E06"
+          ],
+          "integrates_with": [
+            "WP02.T01",
+            "WP03.T01",
+            "WP04.T01",
+            "WP11.T02",
+            "WP13.T02"
+          ],
+          "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+          "execution_actor": "S2-B",
+          "correction_actor": "S2"
+        }
+      ],
+      "handoff": [
+        "Para WP10: registro C08 dos oito gráficos, parâmetros C01, callbacks de drilldown e roteiro de composição na entrada comum; não há aplicação paralela a integrar por cópia.",
+        "Para produtores WP02/WP03/WP04: recibo de uso de C02 com campos/granularidades consumidos, divergências e casos ausentes; qualquer falta semântica é devolvida ao proprietário, não corrigida por fórmula em analytics.",
+        "Para WP07/WP08: modelos visuais/contextos exportados e referências autorizadas para revisões/Meu trabalho, sem duplicar dados de negócio.",
+        "Evidências por gráfico identificam produtor real, contexto, expectativa, observação e falha discriminada; integração de entrypoints e revisão independente permanecem em WP10.",
+        "Descritores C16 das capacidades reais de WP05, consumidos pela ponte nativa sem copiar domínio.",
+        "O manifest canônico identifica os paths/exports/tasks e AM01–AM06; evidência de catálogo isolado não é aceite integrado.",
+        "S2-B entrega head e lease a S2 em T+72 e encerra, liberando slot para reviewer novo; S2 é escritor exclusivo das correções até 118. Nenhum reviewer corrige produto."
+      ],
+      "source_status_only": true,
+      "integratedAcceptance": false
+    },
+    {
+      "wp": "WP11",
+      "pack": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP11.pack.json",
+      "packSha256": "ede1e8d53af235a96c50a772dc705fbdc4ce5461382e950ec04f8d9f7f46654c",
+      "objective": "Transformar intenção, alternativas, escolha e próximos passos em trabalho durável e retomável.",
+      "scope_in": [
+        "Caso versionado e autorizado",
+        "Alternativas tipadas e critérios",
+        "Escolha humana preservada",
+        "Propostas por domínio e recibos parciais",
+        "Avaliação versionada de cobertura de custos por inventário C10, incluindo categorias ausentes e comparação condicionada.",
+        "Descritores C16 das capacidades reais de WP11, consumidos pela ponte nativa sem copiar domínio."
+      ],
+      "scope_out": [
+        "Persistência concreta e composition root de WP10",
+        "Fórmulas financeiras de WP03",
+        "UI de WP01",
+        "Política de aprovação de Procurement",
+        "Alterar engine de Relay"
+      ],
+      "contract_reads": [
+        "C01",
+        "C02",
+        "C03",
+        "C06",
+        "C08",
+        "C10",
+        "C15",
+        "C16",
+        "C17"
+      ],
+      "contract_provides": [
+        "C09",
+        "C12",
+        "C10",
+        "C16"
+      ],
+      "tasks": [
+        {
+          "id": "WP11.T01",
+          "title": "Implementar caso durável e versionado",
+          "intent": "Conservar objetivo, fontes e trabalho da decisão entre pessoas e sessões.",
+          "work": [
+            "Definir agregado de caso com objetivo, horizonte, moeda, critérios, referências/incarnações, premissas e autores; usar schema congelado por WP00.",
+            "Implementar criar/ler/editar/listar com porta de persistência e autorização injetadas por WP10, expected version e auditoria do ator.",
+            "Preservar metadados confiáveis em área definida por C08; importação de dados referencia a política de WP06 e invalida referências substituídas.",
+            "Publicar descritores e handlers de sf_case_read, sf_case_draft, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+            "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
+          ],
+          "inputs": [
+            "C01",
+            "C08",
+            "DecisionCasePort",
+            "Atores e catálogo autorizado",
+            "C16",
+            "C15"
+          ],
+          "outputs": [
+            "Agregado DecisionCase e migração de schema aditiva",
+            "Comandos e projeção autorizada",
+            "Erros de conflito e referência inválida",
+            "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts#readCase (sf_case_read; CaseReadRequest -> AuthorizedCaseProjection)",
+            "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts#draftCase (sf_case_draft; CaseDraftRequest -> IntentFrame)",
+            "Incremento NATIVE-CASE em T+14: product/decisions/case-port.ts exporta createDecisionCasePort; caso mínimo real C09 com id, version e incarnation, persistido pelo provider C08 do host até 18 e ligado ao principal autenticado. Não aceitar caseId nulo, fixture ou memória efêmera para GNATIVE."
+          ],
+          "depends_on": [
+            "WP00.T02"
+          ],
+          "checks": [
+            {
+              "id": "WP11.T01.CHK.01",
+              "text": "Criar caso em uma sessão, reiniciar provider real e ler em outra identidade autorizada conserva conteúdo/versão/autoria; ator sem acesso recebe projeção reduzida ou recusa.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP11.T01.CHK.02",
+              "text": "Duas atualizações com expected version idêntica produzem um commit e um conflito com rascunho recuperável, sem perda de dado.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP11.T01.CHK.03",
+              "text": "Import JSON malicioso ou troca de registro com ID reutilizado não fabrica confirmação, não apaga histórico confiável nem mantém vínculo à encarnação antiga como válido.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP11.T01.CHK.18",
+              "text": "Executar sf_case_read, sf_case_draft pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+              "status": "NOT_RUN"
+            }
+          ],
+          "axioms": {
+            "dod": [
+              {
+                "id": "WP11.T01.DOD.01",
+                "text": "Caso é criado, retomado e atualizado no provider real da composição; adapter em memória isolado não fecha DoD.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T01.DOD.18",
+                "text": "Descritores C16 de sf_case_read, sf_case_draft são implementados e consumidos por T06 com referências reais.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "invariants": [
+              {
+                "id": "WP11.T01.INV.01",
+                "text": "Ator e autorização vêm do host; versão e histórico não são escolhidos pelo modelo nem importados como confiança.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T01.INV.18",
+                "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "quality_standards": [
+              {
+                "id": "WP11.T01.QLT.01",
+                "text": "Falhas distinguem acesso, referência inválida e versão antiga; cada seção mantém origem/período/versão próprios.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T01.QLT.18",
+                "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "completeness_criteria": [
+              {
+                "id": "WP11.T01.CMP.01",
+                "text": "Cobrir rascunho, objetivo corrigido, referência revogada/substituída, concorrência e reinício.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T01.CMP.18",
+                "text": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "success_criteria": [
+              {
+                "id": "WP11.T01.SUC.01",
+                "text": "André e um colaborador autorizado retomam a mesma pergunta e seus dados sem reconstruir contexto.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T01.SUC.18",
+                "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+                "status": "NOT_RUN"
+              }
+            ]
+          },
+          "status": "PLANNED",
+          "owner": "WP11",
+          "ownership_ref": "WP11",
+          "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+          "final_evidence_owner": "WP10",
+          "requirements": [
+            "IA06",
+            "RA03",
+            "RA04"
+          ],
+          "journeys": [
+            "J06",
+            "J08",
+            "J09"
+          ],
+          "session": "S4",
+          "build_window": [
+            10,
+            23
+          ],
+          "proof_window": [
+            25,
+            75
+          ],
+          "evidence_packages": [
+            "E10",
+            "E12"
+          ],
+          "integrates_with": [
+            "WP03.T01",
+            "WP08.T01",
+            "WP10.T01",
+            "WP10.T06"
+          ],
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+          "execution_actor": "S4-A"
+        },
+        {
+          "id": "WP11.T02",
+          "title": "Estruturar alternativas e premissas comparáveis",
+          "intent": "Transformar ideias em cenários editáveis com composição reproduzível.  A comparação só é financeiramente completa quando o inventário e a quantificação pertinentes estiverem resolvidos.",
+          "work": [
+            "Implementar alternativa como conjunto finito de operações tipadas sobre cópia; chamar adapter financeiro WP03 para simulação.",
+            "Associar componentes a evidência e condição confirmado/estimado/hipotético/ausente, preservando moeda/horizonte; construir a avaliação C10 a partir do inventário do tipo de decisão, não só das linhas existentes.",
+            "Validar cada categoria como included com componentRefs/fonte, not-applicable com justificativa/fonte ou pending. Derivar missing-category para toda categoria esperada ausente; detectar componente sem valor, fonte obsoleta/inacessível, FX ausente e referência inválida. Não criar custos nem alíquotas para preencher lacunas.",
+            "Publicar e persistir o mesmo ScenarioResult/ScenarioComparison e costCoverageRefs para WP01/WP05/WP12/WP13/WP09. Subtotal conhecido e limiar condicionado não recebem selo de total/benefício confirmado.",
+            "Recalcular pelo domínio após resolver categoria ou alterar fonte; preservar AlternativeVersion e ChoiceRecord originais e fornecer a mudança de cobertura/critério ao WP14.",
+            "Publicar descritores e handlers de sf_alternative_draft, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+            "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
+          ],
+          "inputs": [
+            "C01",
+            "C02",
+            "C03",
+            "DecisionCasePort",
+            "ScenarioOps e SimulationResult de WP03",
+            "C10 CostCoverageBasis e CostCoverageAssessment versionados; fontes de aplicabilidade e componentes.",
+            "C16",
+            "C15"
+          ],
+          "outputs": [
+            "AlternativeDraft validado",
+            "PremiseSet e resultado comparável",
+            "Erros estruturados de cenário inválido/incompleto",
+            "CostCoverageAssessment e ScenarioComparison C10, com derivedMissingCategoryIds e comparação complete/conditioned/incompatible/unavailable.",
+            "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts#draftAlternative (sf_alternative_draft; AlternativeDraftRequest -> AlternativeDraft)"
+          ],
+          "depends_on": [
+            "WP00.T02",
+            "WP11.T01"
+          ],
+          "checks": [
+            {
+              "id": "WP11.T02.CHK.01",
+              "text": "AI-RENEWAL com inventário completo e fontes sintéticas confirmadas: 240000 vs 60000+45000+105000 = 210000; diferença 30000; implantação 70000 produz 235000 e diferença 5000. Taxas/migração/treinamento explicitamente cobertos ou inaplicáveis não são somados duas vezes.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP11.T02.CHK.02",
+              "text": "Operação que substituiria contribuição já vinculada troca o componente uma vez; o teste com inclusão duplicada é recusado ou reconciliado pelo domínio.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP11.T02.CHK.03",
+              "text": "Moeda sem FX, custo de saída pending e desconto hipotético mantêm comparação conditioned. Valor 0 confirmado difere de null, categoria omitted e declaração not-applicable sem evidência; nenhum estado desconhecido é promovido a zero.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP11.T02.CHK.20",
+              "text": "AI-RENEWAL-OMITTED-CATEGORY remove training da entrada, sem linha, sem pending pré-cadastrado e com implementação explicitamente sem treinamento: validador deriva missing-category e knownSubtotal 210000; completeDifference/total coberto ficam indisponíveis e a comparação é conditioned em todos os consumidores.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP11.T02.CHK.21",
+              "text": "Na mesma variante, confirmar novo componente training=40000 com fonte torna cobertura completa, total 250000, diferença -10000 e teto de implantação15000. A comparação de custo se inverte, condição mínima 20000 falha e a escolha original mantém subtotal 210000/ressalva pending/versões.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP11.T02.CHK.18",
+              "text": "Executar sf_alternative_draft pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+              "status": "NOT_RUN"
+            }
+          ],
+          "axioms": {
+            "dod": [
+              {
+                "id": "WP11.T02.DOD.01",
+                "text": "Alternativas persistidas consomem cálculo real WP03 e são editáveis no consumidor WP01.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T02.DOD.20",
+                "text": "Alternativa persistida entrega cálculo WP03 e cobertura C10 reais a todos os consumidores nomeados.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T02.DOD.18",
+                "text": "Descritores C16 de sf_alternative_draft são implementados e consumidos por T06 com referências reais.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "invariants": [
+              {
+                "id": "WP11.T02.INV.01",
+                "text": "Simulação não altera oficial/actual/compra; ausência não vira zero e hipótese não vira compromisso.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T02.INV.20",
+                "text": "Nenhuma categoria some por não ter linha; cobertura não soma parcelas nem inventa valor, imposto ou fato confirmado.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T02.INV.18",
+                "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "quality_standards": [
+              {
+                "id": "WP11.T02.QLT.01",
+                "text": "Todo total pode ser reconciliado aos componentes com moeda, período e origem; campos inválidos têm erro específico.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T02.QLT.20",
+                "text": "Cada categoria mostra referência de parcela, motivo suportado de inaplicabilidade ou pergunta pendente; subtotal e total ficam distintos.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T02.QLT.18",
+                "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "completeness_criteria": [
+              {
+                "id": "WP11.T02.CMP.01",
+                "text": "Cobrir mesma base, base incompatível, operação inválida, alternativa incompleta e mudança de critério.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T02.CMP.20",
+                "text": "Cobrir inventário ausente, categoria omitida, not-applicable sem suporte, zero confirmado, fonte revogada, inclusão compartilhada e custo posterior inversor.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T02.CMP.18",
+                "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "success_criteria": [
+              {
+                "id": "WP11.T02.SUC.01",
+                "text": "O usuário altera uma premissa e obtém uma comparação que pode explicar e reproduzir.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T02.SUC.20",
+                "text": "O usuário compreende a ressalva e resolve a informação que altera a comparação, sem refazer manualmente os números.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T02.SUC.18",
+                "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+                "status": "NOT_RUN"
+              }
+            ]
+          },
+          "status": "PLANNED",
+          "owner": "WP11",
+          "ownership_ref": "WP11",
+          "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+          "final_evidence_owner": "WP10",
+          "requirements": [
+            "IA03",
+            "RA03",
+            "RA04"
+          ],
+          "journeys": [
+            "J02",
+            "J04",
+            "J09",
+            "J11"
+          ],
+          "session": "S4",
+          "build_window": [
+            23,
+            38
+          ],
+          "proof_window": [
+            25,
+            75
+          ],
+          "evidence_packages": [
+            "E10",
+            "E12"
+          ],
+          "integrates_with": [
+            "WP03.T01",
+            "WP08.T01",
+            "WP10.T01",
+            "WP10.T06"
+          ],
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+          "execution_actor": "S4-A"
+        },
+        {
+          "id": "WP11.T03",
+          "title": "Registrar escolha humana e preparar mudanças",
+          "intent": "Conectar a razão da decisão ao trabalho que será executado.",
+          "work": [
+            "Registrar escolha explícita com snapshot dos critérios, alternativas, fontes, justificativa e autor; novas escolhas acrescentam revisão sem reescrever a anterior.",
+            "Preparar mudanças por destino com diff, expected version, critério atendido e confirmação exigida; consumir comandos Planner/Procurement/Hot Topics.",
+            "Separar premissa aceita para simulação de atualização oficial; expor a divergência quando a confirmação humana contradiz o registro de origem.",
+            "Capturar no ChoiceRecord a cobertura C10, basisVersion, comparisonStatus e ressalvas escolhidas. Uma escolha explicitamente humana pode registrar comparação condicionada, mas não elimina a pendência nem constitui autorização de aplicação.",
+            "Publicar descritores e handlers de sf_change_prepare, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+            "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
+          ],
+          "inputs": [
+            "C03",
+            "C06",
+            "DecisionCasePort",
+            "AlternativeDraft e SimulationResult",
+            "C16",
+            "C15"
+          ],
+          "outputs": [
+            "ChoiceRecord preservado",
+            "PreparedChangeSet por domínio",
+            "Projeção de divergência entre premissa e registro oficial",
+            "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts#prepareChange (sf_change_prepare; ChangePrepareRequest -> PreparedChangeSet)"
+          ],
+          "depends_on": [
+            "WP00.T02",
+            "WP11.T02"
+          ],
+          "checks": [
+            {
+              "id": "WP11.T03.CHK.01",
+              "text": "Registrar escolha preserva a base financeira; alteração posterior de cotação e nova escolha não modificam o registro original.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP11.T03.CHK.02",
+              "text": "Escolher alternativa não aprova PR/PO, não aplica cenário oficial nem cria ação automaticamente; propostas mostram destino e confirmação cabível.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP11.T03.CHK.03",
+              "text": "Responsável confirma março enquanto projeto oficial segue maio: cenário usa premissa declarada, divergência permanece visível e atualização oficial exige comando próprio.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP11.T03.CHK.20",
+              "text": "Registrar escolha condicionada na variante de treinamento omitido; confirmar treinamento 40000 depois conserva a escolha/subtotal/ressalva originais e apresenta nova alternativa250000/diferença -10000 sem reescrever a razão histórica ou autoalterar a escolha.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP11.T03.CHK.18",
+              "text": "Executar sf_change_prepare pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+              "status": "NOT_RUN"
+            }
+          ],
+          "axioms": {
+            "dod": [
+              {
+                "id": "WP11.T03.DOD.01",
+                "text": "Escolha humana gera propostas revisáveis que chegam aos consumidores reais de cada domínio.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T03.DOD.18",
+                "text": "Descritores C16 de sf_change_prepare são implementados e consumidos por T06 com referências reais.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "invariants": [
+              {
+                "id": "WP11.T03.INV.01",
+                "text": "Escolha gerencial não equivale a aprovação formal; UI ou IA não delegam autoridade inexistente.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T03.INV.18",
+                "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "quality_standards": [
+              {
+                "id": "WP11.T03.QLT.01",
+                "text": "Cada proposta mostra alteração, motivo, destino e estado; a justificativa continua vinculada aos números debatidos.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T03.QLT.18",
+                "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "completeness_criteria": [
+              {
+                "id": "WP11.T03.CMP.01",
+                "text": "Cobrir escolher, manter escolha sob nova justificativa, substituir escolha, rejeitar proposta e conflito da fonte.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T03.CMP.18",
+                "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "success_criteria": [
+              {
+                "id": "WP11.T03.SUC.01",
+                "text": "A equipe consegue continuar o trabalho a partir da escolha sem transcrever sua justificativa e seus valores.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T03.SUC.18",
+                "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+                "status": "NOT_RUN"
+              }
+            ]
+          },
+          "status": "PLANNED",
+          "owner": "WP11",
+          "ownership_ref": "WP11",
+          "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+          "final_evidence_owner": "WP10",
+          "requirements": [
+            "IA06",
+            "IA07",
+            "RA03",
+            "RA04"
+          ],
+          "journeys": [
+            "J04",
+            "J05",
+            "J06",
+            "J09"
+          ],
+          "session": "S4",
+          "build_window": [
+            38,
+            54
+          ],
+          "proof_window": [
+            38,
+            75
+          ],
+          "evidence_packages": [
+            "E10",
+            "E12"
+          ],
+          "integrates_with": [
+            "WP03.T01",
+            "WP08.T01",
+            "WP10.T01",
+            "WP10.T06"
+          ],
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+          "execution_actor": "S4-A"
+        },
+        {
+          "id": "WP11.T04",
+          "title": "Reconciliar recibos e retomar execução parcial",
+          "intent": "Mostrar o que realmente ocorreu e evitar efeitos duplicados.",
+          "work": [
+            "Consumir execuções autorizadas dos domínios e persistir correlação, command identity e resultado de cada mudança.",
+            "Modelar preparado/aplicado/aguardando aprovação/falhou/conflito, incluindo ordem em que houve sucesso parcial.",
+            "Reconciliar confirmação perdida consultando recibo/estado pelo contrato do produtor antes de repetir; retomar apenas itens pendentes.",
+            "Publicar descritores e handlers de sf_receipt_get, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+            "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
+          ],
+          "inputs": [
+            "C03",
+            "C06",
+            "C08",
+            "PreparedChangeSet",
+            "DomainReceiptPort",
+            "C16",
+            "C15"
+          ],
+          "outputs": [
+            "ChangeReceiptSet",
+            "Plano de retomada parcial",
+            "Estado consolidado sem falsa atomicidade",
+            "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts#readReceipt (sf_receipt_get; ReceiptGetRequest -> ChangeReceiptSet)"
+          ],
+          "depends_on": [
+            "WP00.T02",
+            "WP11.T03"
+          ],
+          "checks": [
+            {
+              "id": "WP11.T04.CHK.01",
+              "text": "Aplicar Planner com sucesso e recusar Procurement mantém o primeiro resultado e exibe parcial; retomada não reaplica o Planner.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP11.T04.CHK.02",
+              "text": "Perder resposta depois do commit e reenviar a mesma correlação resulta em um efeito; caso sem receipt autoritativo fica indeterminado e exige reconciliação, nunca retry cego.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP11.T04.CHK.03",
+              "text": "Revogar permissão entre preparação e aplicação recusa a mudança pendente e não expõe resultado restrito em recibo agregado.",
+              "status": "NOT_RUN"
+            },
+            {
+              "id": "WP11.T04.CHK.18",
+              "text": "Executar sf_receipt_get pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+              "status": "NOT_RUN"
+            }
+          ],
+          "axioms": {
+            "dod": [
+              {
+                "id": "WP11.T04.DOD.01",
+                "text": "O módulo integrado recupera falha parcial e resposta perdida usando recibos reais de domínio.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T04.DOD.02",
+                "text": "Recuperação consulta recibos de domínio gravados atomicamente com a mutação e reconcilia o caso; a prova inclui resposta perdida após commit e ausência de efeito duplicado.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T04.DOD.18",
+                "text": "Descritores C16 de sf_receipt_get são implementados e consumidos por T06 com referências reais.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "invariants": [
+              {
+                "id": "WP11.T04.INV.01",
+                "text": "Não existe promessa de transação global; um erro posterior não desfaz ou oculta commits anteriores.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T04.INV.18",
+                "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "quality_standards": [
+              {
+                "id": "WP11.T04.QLT.01",
+                "text": "Estado informa efeito comprovado e ação de recuperação; correlação estável independe de narrativa IA.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T04.QLT.18",
+                "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "completeness_criteria": [
+              {
+                "id": "WP11.T04.CMP.01",
+                "text": "Cobrir sucesso total, sucesso parcial, conflito, pendência de aprovação, permissão revogada e resultado desconhecido.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T04.CMP.18",
+                "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+                "status": "NOT_RUN"
+              }
+            ],
+            "success_criteria": [
+              {
+                "id": "WP11.T04.SUC.01",
+                "text": "O usuário sabe o que já foi feito e retoma só o restante, com ausência verificável de efeitos duplicados.",
+                "status": "NOT_RUN"
+              },
+              {
+                "id": "WP11.T04.SUC.18",
+                "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+                "status": "NOT_RUN"
+              }
+            ]
+          },
+          "status": "PLANNED",
+          "owner": "WP11",
+          "ownership_ref": "WP11",
+          "depends_on_state": "CONTRACT_OR_LOCAL_OUTPUT_READY",
+          "final_evidence_owner": "WP10",
+          "requirements": [
+            "IA07",
+            "IA18",
+            "RA03",
+            "RA04"
+          ],
+          "journeys": [
+            "J03",
+            "J04",
+            "J06",
+            "J09"
+          ],
+          "session": "S4",
+          "build_window": [
+            54,
+            72
+          ],
+          "proof_window": [
+            54,
+            75
+          ],
+          "evidence_packages": [
+            "E10",
+            "E12"
+          ],
+          "integrates_with": [
+            "WP03.T01",
+            "WP08.T01",
+            "WP10.T01",
+            "WP10.T06"
+          ],
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE.",
+          "execution_actor": "S4-A"
+        }
+      ],
+      "handoff": [
+        "Modelos para WP01/WP05/WP07/WP12/WP13/WP14",
+        "Provider e domain ports para WP10",
+        "Receipts e contratos de retomada",
+        "Descritores C16 das capacidades reais de WP11, consumidos pela ponte nativa sem copiar domínio.",
+        "O manifest canônico identifica os paths/exports/tasks e AM01–AM06; evidência de catálogo isolado não é aceite integrado."
+      ],
+      "source_status_only": true,
+      "integratedAcceptance": false
+    }
+  ],
+  "note": "Tasks, work arrays, inputs, outputs, checks, axioms and contracts are copied verbatim from complete handoff packs. Their source status is not acceptance of this group."
+}

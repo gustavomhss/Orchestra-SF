@@ -1,0 +1,295 @@
+{
+  "schema": "sf-finance-independent-review-v1",
+  "reviewedProduct": "66bbe152c145f04c16223a938589c63cedb3b716",
+  "reviewedTree": "f727ae5bfcef26383ff47a2b06bb65b161295dd2",
+  "reviews": [
+    {
+      "role": "financial",
+      "file": "review-financial-report.md",
+      "sha256": "f3e99bed9d5920d546aa8760e7dd6023165c0e81db65d2bc9c24b5a5445b0ea8"
+    },
+    {
+      "role": "financial",
+      "file": "review-financial-report.json",
+      "sha256": "52553827adb6fa5a1fe03c144f05dfd806dace5eef7ef117ece8d4f2fe679e07"
+    },
+    {
+      "role": "authority",
+      "file": "review-authority-report.md",
+      "sha256": "c8e29ac329bf37eaceff4f673e1c55cef734f5edfaf1c872285e7581542013c9"
+    },
+    {
+      "role": "authority",
+      "file": "review-authority-report.json",
+      "sha256": "01ff7610dcfd53e71688d8e0bad31b8baf0e9d950ff7d27c512a01a2f8b98c43"
+    },
+    {
+      "role": "consumers",
+      "file": "review-consumers-report.md",
+      "sha256": "7e2cd81b74fab196fd413605f16a8fdaa93dad034871d610e760c7e303549aed"
+    },
+    {
+      "role": "consumers",
+      "file": "review-consumers-report.json",
+      "sha256": "135ead5cfbc57b4efae5d0f3254ea27547516b72dad97bbbb332dcedfc34c510"
+    }
+  ],
+  "reviewStatus": "PINNED_SCOPED_REVIEWS; HISTORICAL_FINDINGS_PRESERVED; NO_GLOBAL_ACCEPTANCE",
+  "externalSourceEnvelopeNotes": [
+    "Reviewer authority read an extra final newline in local COMPOSE3 business-services.ts: observed blob a48424fcea0b39e20dfce2da079decc4afc04a9d; exact source bytes restored from GitHub MCP structured content and SHA-1 verified as 34a491f859f7b57b0883a122f816803df43c74c8, pin5866bcb2ed610f80138aaabc261acac4acf709cd. The source reasoning is unchanged.",
+    "Reviewer consumers similarly identified the extra newline in local INTERFACE5 bi-entry.ts. Exact GitHub bytes restored and verified as305ee63cd74658f6665a6ebbca885fe5995ea95f, pine5afff327dc64735bbd8a646124570a0c97a9c6b. Original reports are retained unchanged.",
+    "Current external COMPOSE4306b310e4d6dac77f9beab461adad4e8e924849 has since composed group W2 and nested C17. Historical W3 findings must be read with the current group handoff and addenda."
+  ],
+  "addenda": [
+    {
+      "role": "authority",
+      "file": "review-authority-addendum.md",
+      "sha256": "ba8ab1e440949bdfa9032d7201caa71155996de0dadc0b9237bc8e6f4678445c",
+      "reviewedProduct": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+      "reviewedTree": "bbc79890ba339e0fca0fb34f55bd4d1c69a7953e"
+    },
+    {
+      "role": "authority",
+      "file": "review-authority-addendum.json",
+      "sha256": "114a6b4f18283302fd81aeb628f5305808cb921054f9835dc904f298c49df9a3",
+      "reviewedProduct": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+      "reviewedTree": "bbc79890ba339e0fca0fb34f55bd4d1c69a7953e"
+    },
+    {
+      "role": "consumers",
+      "file": "review-consumers-addendum.md",
+      "sha256": "fb36911322bf36fe569f5bfd31cf14c68d85e321357c33909374eb09a8ad7f55",
+      "reviewedProduct": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+      "reviewedTree": "bbc79890ba339e0fca0fb34f55bd4d1c69a7953e"
+    },
+    {
+      "role": "consumers",
+      "file": "review-consumers-addendum.json",
+      "sha256": "d76514485e012766865a4052f5df5d5e39628a7e9e73013163d91a31953a0cb1",
+      "reviewedProduct": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+      "reviewedTree": "bbc79890ba339e0fca0fb34f55bd4d1c69a7953e"
+    },
+    {
+      "role": "financial",
+      "file": "review-financial-addendum.md",
+      "sha256": "aa766b3372d3d1852de5c2d68dc6f8ef48f37fab75c2f5b9021c2ba39a12ab66",
+      "reviewedProduct": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+      "reviewedTree": "bbc79890ba339e0fca0fb34f55bd4d1c69a7953e"
+    },
+    {
+      "role": "financial",
+      "file": "review-financial-addendum.json",
+      "sha256": "2e044959c0525ab35d71824dbe6f5a79b8a3ff59defcbb73eccda70571675ddf",
+      "reviewedProduct": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+      "reviewedTree": "bbc79890ba339e0fca0fb34f55bd4d1c69a7953e"
+    },
+    {
+      "role": "financial",
+      "file": "review-financial-presence-addendum.md",
+      "sha256": "4e0110286edb514001e37390f0f93e498c01e2577cbb80118500f4bdcbbcb807",
+      "reviewedProduct": "7a67364aeb5c478be54e533910c4b4c91bbd1ebe",
+      "reviewedTree": "fdc061f1ab7bbb0b28f591550af391e500dc7c8b"
+    },
+    {
+      "role": "financial",
+      "file": "review-financial-presence-addendum.json",
+      "sha256": "dbba1b606aac40b08783933d7dbbe5bcb46172ceb5ca878c34ef701660adc6e3",
+      "reviewedProduct": "7a67364aeb5c478be54e533910c4b4c91bbd1ebe",
+      "reviewedTree": "fdc061f1ab7bbb0b28f591550af391e500dc7c8b"
+    },
+    {
+      "role": "consumers",
+      "file": "review-consumers-focus-addendum.md",
+      "sha256": "bc7d057fa50c53c7d3014e0c44f7acbb16450a806c6e487aed6e27938c74cc20",
+      "reviewedProduct": "217c9bcc75d499eff3884fb4afe662d5c0029935",
+      "reviewedTree": "eeae1c748b3e1e73be8686c3f1df325e2fac3824"
+    },
+    {
+      "role": "consumers",
+      "file": "review-consumers-focus-addendum.json",
+      "sha256": "69919306d203192f2797cf1598aca19a92b56e74923fffd0c527218ac893fc49",
+      "reviewedProduct": "217c9bcc75d499eff3884fb4afe662d5c0029935",
+      "reviewedTree": "eeae1c748b3e1e73be8686c3f1df325e2fac3824"
+    },
+    {
+      "role": "consumers",
+      "file": "review-consumers-advantage-addendum.md",
+      "sha256": "6c6043d2478dff6722ed15e857edf8c6be9175f65d969165acdfe77a7e7150e5",
+      "reviewedProduct": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+      "reviewedTree": "1ce4e9fcb2e9fb81e12dcfd773aa2daae64be39a",
+      "scope": "Scoped static review; execution linked separately"
+    },
+    {
+      "role": "consumers",
+      "file": "review-consumers-advantage-addendum.json",
+      "sha256": "fb2cad1267d21035b1a5a4dd25864d294be636bd908d946090e94fa6690f82ce",
+      "reviewedProduct": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+      "reviewedTree": "1ce4e9fcb2e9fb81e12dcfd773aa2daae64be39a",
+      "scope": "Scoped static review; execution linked separately"
+    },
+    {
+      "role": "authority",
+      "file": "review-authority-batch-addendum.md",
+      "sha256": "6452ee758bd9b7bf05e372c55007dc412da4d501dc9a14e8988e4fa63ad29b37",
+      "reviewedProduct": "61d92392e9bded167eb2794995a623b2719cc4ba",
+      "reviewedTree": "ffb3cd9e1ee689732cbae33658506c628539d032",
+      "scope": "Scoped static review; execution linked separately"
+    },
+    {
+      "role": "authority",
+      "file": "review-authority-batch-addendum.json",
+      "sha256": "a2e8faabee84a8f54bd206871e58a4823c5127c93653eaf9fc007b64034b06f0",
+      "reviewedProduct": "61d92392e9bded167eb2794995a623b2719cc4ba",
+      "reviewedTree": "ffb3cd9e1ee689732cbae33658506c628539d032",
+      "scope": "Scoped static review; execution linked separately"
+    },
+    {
+      "role": "authority",
+      "file": "review-authority-compose5-addendum.md",
+      "sha256": "4d07fc94569dd037432b0478e19ba43a862fffceee504b05d14a16a51ae3be80",
+      "reviewedProduct": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "reviewedTree": null,
+      "scope": "External owner inspection only"
+    },
+    {
+      "role": "authority",
+      "file": "review-authority-compose5-addendum.json",
+      "sha256": "93f1e348d9c463d04262236bc0c11d00df1cc727df33f5049d5c21f24791afc9",
+      "reviewedProduct": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "reviewedTree": null,
+      "scope": "External owner inspection only"
+    },
+    {
+      "role": "authority-independent-final",
+      "file": "review-authority-apply-final.md",
+      "sha256": "ea38ca5a81961444d90db7a716919c64dfffa8ac47faed31fd046190a6a55bc2",
+      "reviewedProduct": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+      "reviewedTree": "a843c5d5767c4a055fcacb77668c3798fd8a564c",
+      "association": "Root verified remote commit file blobs equal both frozen reviewed blobs; report itself names blobs, not an invented commit",
+      "scope": "Final apply/CAS/receipt consistency static review; hosted execution recorded separately"
+    },
+    {
+      "role": "authority-independent-final",
+      "file": "review-authority-apply-final.json",
+      "sha256": "704375ea06723246f4c0a1fa109bcb603846b41fb1b071ada2dab09995966aaa",
+      "reviewedProduct": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+      "reviewedTree": "a843c5d5767c4a055fcacb77668c3798fd8a564c",
+      "association": "Root verified remote commit file blobs equal both frozen reviewed blobs; report itself names blobs, not an invented commit",
+      "scope": "Final apply/CAS/receipt consistency static review; hosted execution recorded separately"
+    },
+    {
+      "role": "independent-core",
+      "file": "review-late-core.md",
+      "sha256": "760b757aa637c7a936e072068fc47c05708a0659ac6a2304cc8bdf7500bdab74",
+      "reviewedProduct": "5e4c2b288665113e58162a616a9965c03e397e19",
+      "reviewedTree": "64510c36da425ed2ec0da67836bfcd691fd1f625",
+      "scope": "Source-promotion proof and Hot Topic surface;4frozen blobs match W20.",
+      "execution": "Static only; product runs and actual assertions are recorded separately."
+    },
+    {
+      "role": "independent-core",
+      "file": "review-late-core.json",
+      "sha256": "1885c5bd57f3415831b7706c2eaabacf8f981e25bb81294860ce01a8e5a4d26d",
+      "reviewedProduct": "5e4c2b288665113e58162a616a9965c03e397e19",
+      "reviewedTree": "64510c36da425ed2ec0da67836bfcd691fd1f625",
+      "scope": "Source-promotion proof and Hot Topic surface;4frozen blobs match W20.",
+      "execution": "Static only; product runs and actual assertions are recorded separately."
+    },
+    {
+      "role": "independent-fixtures",
+      "file": "review-late-fixtures.md",
+      "sha256": "1dd602d3bb5f6a831099c2d42e5ae28ece5425638ce3db569f7d4aced0ac3470",
+      "reviewedProduct": "8d065831356e8a73cfd0e4fbb072c5041b95d05f",
+      "reviewedTree": "77bef954682387ac0fdd3c01e7dd51b9201d2aac",
+      "scope": "Five S11/S12 fixture fixes;frozen blobs match W21.",
+      "execution": "Static only; product runs and actual assertions are recorded separately."
+    },
+    {
+      "role": "independent-fixtures",
+      "file": "review-late-fixtures.json",
+      "sha256": "e8a6ce2d6a404a6567d041bbacd7b03dacb8e4731f3922b2bad07917a19ce778",
+      "reviewedProduct": "8d065831356e8a73cfd0e4fbb072c5041b95d05f",
+      "reviewedTree": "77bef954682387ac0fdd3c01e7dd51b9201d2aac",
+      "scope": "Five S11/S12 fixture fixes;frozen blobs match W21.",
+      "execution": "Static only; product runs and actual assertions are recorded separately."
+    },
+    {
+      "role": "external-composition",
+      "file": "review-compose6.md",
+      "sha256": "17c54f6999b5eef6a113e79b2ef405cf9bea2e6f4428d74a35fea437496187e6",
+      "reviewedProduct": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "reviewedTree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+      "scope": "External historical C17 record-only path and current limits;not an independent review of that author own2fixes.",
+      "execution": "Static only; product runs and actual assertions are recorded separately."
+    },
+    {
+      "role": "external-composition",
+      "file": "review-compose6.json",
+      "sha256": "3e0d466c47818ecc1f2e3dffbf6be88515aaf8d9bbffed27ce6564045201adbc",
+      "reviewedProduct": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "reviewedTree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+      "scope": "External historical C17 record-only path and current limits;not an independent review of that author own2fixes.",
+      "execution": "Static only; product runs and actual assertions are recorded separately."
+    },
+    {
+      "role": "independent-diagnostic",
+      "file": "review-current-choice-diagnostic.md",
+      "sha256": "a2401087149b18d6e11520f895fc8f23c89378622fedbb5a4785b51e141222d4",
+      "reviewedProduct": "cfbf7c824d4351431d35533dbe2572de11084b9d",
+      "reviewedTree": "26843c698c3cf7b923d364434fae443a63efafaa",
+      "scope": "Diagnostic callback output preserved;no added source I/O or Planner replay;not a functional fix.",
+      "execution": "Static only; product runs and actual assertions are recorded separately."
+    },
+    {
+      "role": "independent-diagnostic",
+      "file": "review-current-choice-diagnostic.json",
+      "sha256": "81d852d78061d7b2d5d2f1039e3a532de4fd6964f5dc2a36209c7894dc5fa7ba",
+      "reviewedProduct": "cfbf7c824d4351431d35533dbe2572de11084b9d",
+      "reviewedTree": "26843c698c3cf7b923d364434fae443a63efafaa",
+      "scope": "Diagnostic callback output preserved;no added source I/O or Planner replay;not a functional fix.",
+      "execution": "Static only; product runs and actual assertions are recorded separately."
+    },
+    {
+      "role": "independent-bi-interaction",
+      "file": "review-bi-timeline.md",
+      "sha256": "e097ea0572769d67b5f7b10e1868264183bc50b91a0156562dc20014587f3de9",
+      "reviewedProduct": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "reviewedTree": "f30c35028acb382d2b38b7be6e105f3a98a0518c",
+      "scope": "Timeline hit geometry and independent table-origin assertion;exact2frozen blobs published inW23;Actions scope separate."
+    },
+    {
+      "role": "independent-bi-interaction",
+      "file": "review-bi-timeline.json",
+      "sha256": "9e43ae288a64c760ca8132c6be24983385ce4026f6cff61c023b6a5737b83b83",
+      "reviewedProduct": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "reviewedTree": "f30c35028acb382d2b38b7be6e105f3a98a0518c",
+      "scope": "Timeline hit geometry and independent table-origin assertion;exact2frozen blobs published inW23;Actions scope separate."
+    }
+  ],
+  "historicalPostReviewImplementation": [
+    {
+      "finding": "financial:F1",
+      "commit": "df29a62e5ede5b9ff9344b4f5b51eba4102e2093",
+      "followup": "a274302d15990919007dbe958d95653508c730a7",
+      "state": "PUBLISHED_PENDING_ACTIONS_AND_ADDENDUM"
+    },
+    {
+      "finding": "authority:F2",
+      "commit": "ffe77b53f3c074f03fe6dc3ff7caa788778eca99",
+      "runId": 43581387704,
+      "state": "OWN_PRODUCER_13_TESTS_PASS_PENDING_INDEPENDENT_ADDENDUM",
+      "external": "COMPOSE4306 wrapper still uses a binding-global replaying Map; bounded owner delta remains."
+    },
+    {
+      "finding": "consumers:C1",
+      "commit": "453edcd3c3c2a20413ef0d3f679b0fbc46fca2b5",
+      "state": "PUBLISHED_PENDING_ACTIONS_AND_ADDENDUM"
+    },
+    {
+      "finding": "consumers:C2",
+      "commit": "9913b0c622aa09da7914f231bd9f2ff54d872634",
+      "state": "PUBLISHED_PENDING_ACTIONS_AND_ADDENDUM"
+    }
+  ],
+  "currentReconciliation": "../external-reconciliation.json"
+}

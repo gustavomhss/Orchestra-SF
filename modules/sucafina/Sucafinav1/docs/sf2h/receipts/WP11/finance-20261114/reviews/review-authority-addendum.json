@@ -1,0 +1,373 @@
+{
+  "schema": "sf2h-independent-authority-addendum-v1",
+  "reviewer": "review_authority",
+  "role": "independent_read_only",
+  "candidate": {
+    "increment": 10,
+    "commit": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+    "tree": "bbc79890ba339e0fca0fb34f55bd4d1c69a7953e",
+    "snapshot": "/workspace/scratch/a97ca4c53050/review-660db9a",
+    "manifest": "/workspace/scratch/a97ca4c53050/review-660db9a-manifest.json"
+  },
+  "previous_review": {
+    "commit": "66bbe152c145f04c16223a938589c63cedb3b716",
+    "tree": "f727ae5bfcef26383ff47a2b06bb65b161295dd2",
+    "report": "/workspace/scratch/a97ca4c53050/review-authority-report.json"
+  },
+  "approved_source": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "external_commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+  "markdown": "/workspace/scratch/a97ca4c53050/review-authority-addendum.md",
+  "execution_by_reviewer": {
+    "product": false,
+    "tests": false,
+    "typecheck": false,
+    "ci_dispatch": false
+  },
+  "authored_changes": {
+    "product": false,
+    "host": false,
+    "tests": false,
+    "reports_only": true
+  },
+  "global_verdict": null,
+  "own_remediation_assessments": [
+    {
+      "finding_id": "F2",
+      "original_severity": "P2",
+      "status": "producer_remediation_confirmed_static_and_scoped_receipt",
+      "locations": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+          "local_path": "/workspace/scratch/a97ca4c53050/review-660db9a/modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+          "lines": [
+            23,
+            35,
+            93,
+            102
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "local_path": "/workspace/scratch/a97ca4c53050/review-660db9a/modules/sucafina/Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "lines": [
+            60,
+            121
+          ]
+        }
+      ],
+      "reasoning": [
+        "AsyncLocalStorage stores one asynchronous ancestry path, with new sets for each child branch.",
+        "Independent root calls and sibling branches no longer mutate a shared binding-wide active set.",
+        "Same-run ancestry, depth limit, verification reentry, canonical replay, closure checks, cancellation and reauthorization remain enforced.",
+        "No authority cache or coalesced permission introduced."
+      ],
+      "executed_evidence_ref": "W4-calculation-evidence-43581387704",
+      "limits": [
+        "W4 producer and test file bytes match W10; the run is not validation of all W10 dependencies or CLI composition.",
+        "The current COMPOSE4 wrapper still has the original global-map pattern."
+      ]
+    },
+    {
+      "finding_id": "F1",
+      "original_severity": "P1",
+      "status": "own_historical_apis_reviewed_static_integration_unproven",
+      "locations": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/calculation-history.ts",
+          "local_path": "/workspace/scratch/a97ca4c53050/review-660db9a/modules/sucafina/Sucafinav1/product/decisions/calculation-history.ts",
+          "lines": [
+            7,
+            38
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+          "local_path": "/workspace/scratch/a97ca4c53050/review-660db9a/modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+          "lines": [
+            51,
+            79
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+          "local_path": "/workspace/scratch/a97ca4c53050/review-660db9a/modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+          "lines": [
+            29,
+            66
+          ]
+        }
+      ],
+      "preserved_boundaries": [
+        "Ordinary read, readForCalculation and requests.read remain current-only.",
+        "Historical selection names current case, event ID and exact calculation reference; caller cannot supply the persisted event.",
+        "Unique persisted ledger event, full reference membership, case and incarnation, producer/event/current version ordering, installation/project origin, result/request/source digests, period and currency are checked.",
+        "Current case authorization and source verification remain required.",
+        "Requests/results/cases are reread and compared, with callback copies and mutation checks.",
+        "Original stored caseRef, result and C17 reference are not rewritten.",
+        "Native binding version remains current; the association helper alone is not an authentication authority."
+      ],
+      "new_access_widening_found": false,
+      "runtime_evidence_for_new_test_observed": false,
+      "limits": [
+        "COMPOSE4 does not invoke these historical APIs.",
+        "The host hooks still select stored.caseRef.",
+        "The BCS historical calculation gate remains closed.",
+        "No new native session proof observed."
+      ]
+    }
+  ],
+  "residual_findings": [
+    {
+      "id": "A1",
+      "relates_to": "F1",
+      "severity": "P1",
+      "owner_scope": "external_COMPOSE4",
+      "title": "Historical C17 continuity remains uncomposed in the pinned host",
+      "locations": [
+        {
+          "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+          "local_path": "/workspace/scratch/a97ca4c53050/foreign-intake/COMPOSE4/apps/cli/src/sucafina-product/planner-calculation-services.ts",
+          "lines": [
+            35,
+            39,
+            67,
+            77,
+            79,
+            90,
+            116,
+            159
+          ],
+          "commit": "4306b310e4d6dac77f9beab461adad4e8e924849"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "local_path": "/workspace/scratch/a97ca4c53050/foreign-intake/COMPOSE4/apps/cli/src/sucafina-product/business-services.ts",
+          "lines": [
+            236,
+            277,
+            280,
+            286
+          ],
+          "commit": "4306b310e4d6dac77f9beab461adad4e8e924849"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "local_path": "/workspace/scratch/a97ca4c53050/foreign-intake/COMPOSE4/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "lines": [
+            74,
+            78,
+            145,
+            150
+          ],
+          "commit": "4306b310e4d6dac77f9beab461adad4e8e924849"
+        }
+      ],
+      "causal_trace": [
+        "Case acceptance retains C17 reference produced at v and advances the case to v+1.",
+        "Pinned adapter still calls requests.read and results.readForCalculation.",
+        "Canonical verification hooks select stored.caseRef v using withCalculationCase, while selectedCase requires the current exact version.",
+        "A prospective historical result would additionally fail sameHistoricalSource because BCS has no calculation branch, before continuity can be accepted."
+      ],
+      "impact": "Accepted case/ledger continuity remains unavailable in this composed flow; no access escalation established.",
+      "bounded_remediation": [
+        "Wire a private ledger-selection path carrying current authorization and persisted full-reference membership through every historical descendant.",
+        "Keep normal public calculation queries current-only.",
+        "Preserve exact withCalculationCase checks using the authorized current selection; do not change native binding or historical references.",
+        "Integrate BCS authorized projection, exact immutable identity and continuity proof explicitly; preserve Atlas-specific proof gates.",
+        "Do not relax version equality globally or invent financial differences to satisfy historical metadata."
+      ],
+      "proposed_fix_review": "host-c17-proposal.md accurately identifies the stores, host-selection and BCS gates; proposal not applied or integration-tested.",
+      "required_checks": [
+        "Real composed acceptance v-to-v+1, reload, case-event/BCS/Atlas consumers and identical historical C17.",
+        "Current public read denied; wrong case/incarnation/origin, missing ledger member, invalid horizon, revoked/changed source and ledger mutation denied.",
+        "Native proof distinguished from fixtures."
+      ],
+      "evidence_kind": "static_execution_trace"
+    },
+    {
+      "id": "A2",
+      "relates_to": "F2",
+      "severity": "P2",
+      "owner_scope": "external_COMPOSE4",
+      "title": "Host admission wrapper retains a binding-global replay map",
+      "locations": [
+        {
+          "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+          "local_path": "/workspace/scratch/a97ca4c53050/foreign-intake/COMPOSE4/apps/cli/src/sucafina-product/planner-calculation-services.ts",
+          "lines": [
+            34,
+            79,
+            92
+          ],
+          "commit": "4306b310e4d6dac77f9beab461adad4e8e924849"
+        }
+      ],
+      "causal_trace": [
+        "First issue(R, call) enters the host map and awaits requests.read.",
+        "Independent second issue(R, call) sees R in the shared set and is rejected as calculation-replay-cycle.",
+        "Seventeen independent shallow runs can exhaust the same shared limit although each real ancestry path has depth one.",
+        "The repaired inner producer cannot override the earlier wrapper refusal."
+      ],
+      "impact": "Availability depends on interleaving; no authentication bypass or deadlock established.",
+      "proposed_fix_review": "compose4-calculation-ancestry.patch replaces only wrapper state with AsyncLocalStorage and new per-chain sets while preserving stores, withCalculationCase, depth/self-cycle checks, errors and revalidation.",
+      "proposed_fix_applied": false,
+      "proposed_fix_executed": false,
+      "required_checks": [
+        "Two independent same-run calls and seventeen distinct shallow runs through actual CLI adapter with explicit promise barriers.",
+        "Real ancestry/self-cycle/excess-depth denial and recovery after refusal/cancellation."
+      ],
+      "evidence_kind": "static_execution_interleaving"
+    }
+  ],
+  "executed_evidence": [
+    {
+      "id": "W4-calculation-evidence-43581387704",
+      "evidence_access": "Local coordinator receipt inspected; no new remote job fetch or execution by reviewer.",
+      "receipt": "/workspace/scratch/a97ca4c53050/Orchestra-SF/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/product-tests.json",
+      "selection": 2,
+      "run_id": 43581387704,
+      "job_id": 132406661623,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43581387704",
+      "product_commit": "ffe77b53f3c074f03fe6dc3ff7caa788778eca99",
+      "product_tree": "0cecbd7b7b034df4156d248f86be080f32ab764f",
+      "snapshot_commit": "e63ae9f2a3b05c6adabb93f43057f58ab5185602",
+      "selected_files": [
+        "Sucafinav1/test/product/wp03/calculation-evidence.test.ts"
+      ],
+      "pass": 13,
+      "fail": 0,
+      "expects": 92,
+      "recorded_log_sha256": "ef70fc2c5bf1b8591c95851f0c9290d763850a7f840cf8e872f0da7f8f95475d",
+      "recorded_omni": "not applicable; no spawn and no omni proof",
+      "byte_comparison": {
+        "source": "/workspace/scratch/a97ca4c53050/finance-W4-changes.json",
+        "producer_identical_to_w10": true,
+        "test_identical_to_w10": true
+      },
+      "qualifies_entire_w10": false,
+      "qualifies_composed_host": false,
+      "qualifies_native_session": false
+    }
+  ],
+  "new_test_review": {
+    "file": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "local_path": "/workspace/scratch/a97ca4c53050/review-660db9a/modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "lines": [
+        23,
+        182
+      ]
+    },
+    "evidence_kind": "static_only_no_execution_receipt_observed",
+    "production_implementations": [
+      "C08 state provider",
+      "durable local storage/reopen",
+      "Planner source and Planner calculation",
+      "result and scenario request stores",
+      "C17 issuer",
+      "createAnalysisAcceptance mutation",
+      "case-port"
+    ],
+    "declared_synthetic_boundaries": [
+      "Controlled forecast coverage at lines 33-35.",
+      "Seeded contribution/native-run metadata and acceptance grants at lines 105-119.",
+      "Fixture historical resolver and BusinessContextService at lines 68-89.",
+      "No COMPOSE4 BCS, Atlas consumer or native session."
+    ],
+    "covered_assertions": [
+      "Acceptance increments case v1 to v2 while preserving C17 ledger evidence.",
+      "Ordinary current result/request/issuance denied after advancement.",
+      "Selected historical result/request and issuer survive durable reopen.",
+      "Origin, event membership, case/incarnation/version, ledger change, horizon, revocation and source change negatives."
+    ]
+  },
+  "inspected_own_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+      "local_path": "/workspace/scratch/a97ca4c53050/review-660db9a/modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+      "lines": [],
+      "git_blob": "aaacc8bf7df9fa67870c4067154fe67a58c34a22",
+      "verified_against_manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/calculation-history.ts",
+      "local_path": "/workspace/scratch/a97ca4c53050/review-660db9a/modules/sucafina/Sucafinav1/product/decisions/calculation-history.ts",
+      "lines": [],
+      "git_blob": "4e92219aae9046891f167502139412bf9c509529",
+      "verified_against_manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "local_path": "/workspace/scratch/a97ca4c53050/review-660db9a/modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "lines": [],
+      "git_blob": "d7d8eb3ca267551797b191ccfb1d037149757898",
+      "verified_against_manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "local_path": "/workspace/scratch/a97ca4c53050/review-660db9a/modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "lines": [],
+      "git_blob": "0d677d2d0b3a9df7127f13b25fe3968757f0dceb",
+      "verified_against_manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "local_path": "/workspace/scratch/a97ca4c53050/review-660db9a/modules/sucafina/Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "lines": [],
+      "git_blob": "a0a67918c69a636120daa66877669020803c108e",
+      "verified_against_manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "local_path": "/workspace/scratch/a97ca4c53050/review-660db9a/modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "lines": [],
+      "git_blob": "714f6a55cb3ed7f32a457259341ea68704bfad7e",
+      "verified_against_manifest": true
+    }
+  ],
+  "inspected_external_files": [
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "local_path": "/workspace/scratch/a97ca4c53050/foreign-intake/COMPOSE4/apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "lines": [],
+      "commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "git_blob": "48a9cdd2d38fad855d8a338f8dc119c64f81057f",
+      "part_of_w10": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "local_path": "/workspace/scratch/a97ca4c53050/foreign-intake/COMPOSE4/apps/cli/src/sucafina-product/business-services.ts",
+      "lines": [],
+      "commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "git_blob": "611831c32ddbf58296b33e1930806185564189b9",
+      "part_of_w10": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "local_path": "/workspace/scratch/a97ca4c53050/foreign-intake/COMPOSE4/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "lines": [],
+      "commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "git_blob": "0ac4c11d4eddb6e4a67c2c41efe40a7ff34fa47e",
+      "part_of_w10": false
+    }
+  ],
+  "proposals": [
+    {
+      "path": "/workspace/scratch/a97ca4c53050/Orchestra-SF/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/host-c17-proposal.md",
+      "sha256": "fc89b97cac32f8c7f6da3a7eede427927d0ed09d2324f78cf5ec70b3a7b10511",
+      "applied": false
+    },
+    {
+      "path": "/workspace/scratch/a97ca4c53050/Orchestra-SF/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/compose4-calculation-ancestry.patch",
+      "sha256": "8b2522ba2935c6c8485ceed50184daf12341cf6d70e2a39b8150c0406f36088e",
+      "applied": false
+    }
+  ],
+  "important_limits": [
+    "COMPOSE4 now includes nested C17 and canonical hooks; previous record-only host conclusion is superseded for that pin.",
+    "Financial complete, historical ChoiceRecord, apply/receipt and GNATIVE proof remain distinct.",
+    "Upcoming W11 was not inspected; coordinator reports only a narrow WP05 TS fixture change.",
+    "No global readiness, completion or C/D verdict."
+  ]
+}
