@@ -59,8 +59,13 @@ test("reconciliation sends a source-bound price observation to the WP14 classifi
   expect(changed.conditions[0]?.observation.comparison?.resultAfter.components[0]).toMatchObject({ amount: 70000, currency: "USD" })
   expect(changed.conditions[0]?.impact.state).toBe("material")
   expect(changed.conditions[0]?.signal).toMatchObject({ conditionId: changed.conditions[0]?.condition.id, choiceId: "human-choice", severity: "reconsider" })
-  expect(unchanged.conditions[0]?.impact.state).toBe("irrelevant")
-  expect(unchanged.conditions[0]?.signal).toBeUndefined()
+  // Identical component evidence does not resolve the choice's unknown criterion.
+  // Preserve WP14's unknown signal while distinguishing it from a price change.
+  expect(unchanged.conditions[0]?.scopeReason).toBe("component-scope-bound")
+  expect(unchanged.conditions[0]?.componentScope?.beforeDigest).toBe(unchanged.conditions[0]?.componentScope?.afterDigest)
+  expect(unchanged.conditions[0]?.impact).toMatchObject({ state: "unknown", reason: "evidence-unavailable" })
+  expect(unchanged.conditions[0]?.signal).toMatchObject({ conditionId: unchanged.conditions[0]?.condition.id, choiceId: "human-choice", severity: "unknown" })
+  expect(unchanged.conditions[0]?.observation.comparison?.after).toEqual(result.value.originalChoice.comparison)
   expect(result.value.originalChoice.result.total).toBeNull()
   expect(result.value.originalChoice.result.components[0]?.amount).toBe(45000)
 })
