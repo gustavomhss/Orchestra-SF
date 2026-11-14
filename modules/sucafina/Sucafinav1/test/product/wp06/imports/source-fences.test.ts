@@ -267,7 +267,10 @@ async function plannerEvidenceFixture() {
         return await work(access.value)
       } finally { app.authority.ui.finish(access.value) }
     }
-    const snapshot = () => app.store.transactionAll(async (snapshots) => ({ commit: false, value: digestSfValue(snapshots) }))
+    const snapshot = () => {
+      if (!app.store.transactionAll) throw new Error("Planner evidence fixture requires transactional snapshots")
+      return app.store.transactionAll(async (snapshots) => ({ commit: false, value: digestSfValue(snapshots) }))
+    }
     return { app, business, issue, withCall, snapshot }
   } catch (error) { resources.business?.dispose(); await app.dispose(); throw error }
 }

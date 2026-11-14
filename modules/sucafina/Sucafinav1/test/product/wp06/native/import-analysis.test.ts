@@ -17,50 +17,9 @@ import { sfAnalysisPrompt } from "../../../../../../../apps/cli/src/sucafina-pro
 import { contribution } from "../../../../product/ui/components.ts"
 import { readNativeResponse, withNativeWp06 } from "./fixture.ts"
 
-test("recorded forecast and intent Sessions preserve selected C04 importPreviewRef through rendered preview links and fail after source or authority change", async () => {
+test("real Session and MCP import previews preserve C04 parity across four admissions and reject unadmitted files", async () => {
   await withNativeWp06(async (fixture) => {
-    const { app } = fixture
-    // Timed delegates still invoke the real producers with the same arguments and grants.
-    const imports = { ...fixture.imports.imports,
-      readPreparedPreviewForAnalysis: (...args: Parameters<typeof fixture.imports.imports.readPreparedPreviewForAnalysis>) =>
-        fixture.stage("import:prepared-preview", () => fixture.imports.imports.readPreparedPreviewForAnalysis(...args)),
-      readPreviewForAnalysis: (...args: Parameters<typeof fixture.imports.imports.readPreviewForAnalysis>) =>
-        fixture.stage("import:preview-view", () => fixture.imports.imports.readPreviewForAnalysis(...args)),
-    }
-    const issueSource: Parameters<typeof createPlannerImportAnalysis>[0]["issueSource"] = (...args) =>
-      fixture.stage("import:issue-source", () => fixture.business.plannerProduct.issueSource(...args))
-    const dependencies = {
-      cases: { ...fixture.business.cases, read: (...args: Parameters<typeof fixture.business.cases.read>) =>
-        fixture.stage("analysis:case-read", () => fixture.business.cases.read(...args)) },
-      planner: fixture.business.planner, procurement: fixture.business.procurement,
-      context: { ...fixture.business.context, context: (...args: Parameters<typeof fixture.business.context.context>) =>
-        fixture.stage("analysis:source-context", () => fixture.business.context.context(...args)) },
-      host: fixture.authority.host,
-    }
-    await app.store.transaction("planner", async (snapshot) => {
-      snapshot.data.versions = [{ id: "v1", name: "FY27", year: 2027, closed: 9, locked: false,
-        lines: [{ id: "42", sec: "opex", el: "licenses", name: "Licences", cur: "USD",
-          b: [40000, 45000, 45000, 50000, 50000, 50000, 50000, 50000, 50000, 50000, 60000, 60000],
-          a: [40000, 40000, 45000, 45000, 45000, 45000, 45000, 45000, 50000, null, null, null],
-          f: [null, null, null, null, null, null, null, null, null, 38000, 112000, 40000] }],
-        projects: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, lists: {} }]
-      snapshot.data.officials = {}; snapshot.data.entities = []; snapshot.data.allocations = []; snapshot.data.roster = []
-      return { commit: true, value: undefined }
-    })
-    const domainBefore = await app.store.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot.data) }))
-    const choices = await readNativeResponse<{ label: string; selectionRef: string; surface: string }[]>(await fixture.http("import", "import-targets", undefined, { surface: "planner" }))
-    const choice = choices.find((value) => value.label === "FY27")
-    if (!choice) throw new Error("Planner source unavailable")
-    const workbook = new Workbook()
-    const sheet = workbook.addWorksheet("OPEX")
-    sheet.addRow(["Line ID", "Cost element", "Vendor / item", "Currency", "Measure", "Oct", "Nov", "Dec"])
-    sheet.addRow(["42", "Licenses", "Licences", "ZZZ", "Forecast", 38000, 124000, 40000])
-    const form = new FormData()
-    form.set("file", new File([new Uint8Array(await fixture.stage("import:workbook", () => workbook.xlsx.writeBuffer()))], "forecast.xlsx"))
-    form.set("surface", "planner"); form.set("selectionRef", choice.selectionRef)
-    form.set("options", JSON.stringify({ newVersion: false, removeMissing: false, preview: {} }))
-    const admitted = await readNativeResponse<{ ref: string }>(await fixture.http("import", "import-admit", form))
-    const request: ImportPreviewRequest = { admittedFileRef: admitted.ref, format: "xlsx", options: {} }
+    const { request } = await prepareImportWorkbook(fixture)
     const ui = await readNativeResponse<ImportManifest>(await fixture.http("import", "import-preview", request))
     expect(ui.domainApplied).toBe(false)
     expect(ui.issues).toContainEqual({ row: 0, field: "domain", reason: "Unknown currency; the existing currency is retained." })
@@ -90,10 +49,43 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
       previews.push(decoded.value)
     }
     expect(new Set([ui.id, uiDispatched.value.id, ...previews.map((value) => value.id)]).size).toBe(4)
-    const chosen = previews[1]!
     const invalid = { ...request, admittedFileRef: "unadmitted-workbook" }
     expect((await fixture.http("import", "import-preview", invalid)).status).not.toBe(200)
     for (const surface of ["native", "mcp"] as const) expect((await previewRun.call(surface, "sf_import_preview", invalid)).status).not.toBe("ok")
+  }, { traceOperations: true })
+}, 120_000)
+
+test("recorded forecast and intent Sessions preserve selected C04 importPreviewRef through rendered preview links and fail after source or authority change", async () => {
+  await withNativeWp06(async (fixture) => {
+    const { app } = fixture
+    // Timed delegates still invoke the real producers with the same arguments and grants.
+    const imports = { ...fixture.imports.imports,
+      readPreparedPreviewForAnalysis: (...args: Parameters<typeof fixture.imports.imports.readPreparedPreviewForAnalysis>) =>
+        fixture.stage("import:prepared-preview", () => fixture.imports.imports.readPreparedPreviewForAnalysis(...args)),
+      readPreviewForAnalysis: (...args: Parameters<typeof fixture.imports.imports.readPreviewForAnalysis>) =>
+        fixture.stage("import:preview-view", () => fixture.imports.imports.readPreviewForAnalysis(...args)),
+    }
+    const issueSource: Parameters<typeof createPlannerImportAnalysis>[0]["issueSource"] = (...args) =>
+      fixture.stage("import:issue-source", () => fixture.business.plannerProduct.issueSource(...args))
+    const dependencies = {
+      cases: { ...fixture.business.cases, read: (...args: Parameters<typeof fixture.business.cases.read>) =>
+        fixture.stage("analysis:case-read", () => fixture.business.cases.read(...args)) },
+      planner: fixture.business.planner, procurement: fixture.business.procurement,
+      context: { ...fixture.business.context, context: (...args: Parameters<typeof fixture.business.context.context>) =>
+        fixture.stage("analysis:source-context", () => fixture.business.context.context(...args)) },
+      host: fixture.authority.host,
+    }
+    const { domainBefore, form, request } = await prepareImportWorkbook(fixture)
+    // This installation selects its own real MCP preview. Both analysis skills keep that exact C04.
+    const ui = await readNativeResponse<ImportManifest>(await fixture.http("import", "import-preview", request))
+    const previewRun = await fixture.bind("sf-explicar-forecast", {}, undefined, "recorded-explicit")
+    const selectedPreview = await previewRun.call("mcp", "sf_import_preview", request)
+    if (selectedPreview.status !== "ok") throw new Error(`MCP selected sf_import_preview: ${selectedPreview.reason}`)
+    const decodedPreview = decodeSfOperationOutput("sf_import_preview", selectedPreview.result)
+    if (!decodedPreview.ok) throw new Error("Selected native C04 output schema invalid")
+    const chosen = decodedPreview.value
+    if (chosen.id === ui.id) throw new Error("Competing preview must have a distinct admitted operation identity")
+    const invalid = { ...request, admittedFileRef: "unadmitted-workbook" }
     const verifyTarget: Parameters<typeof createPlannerImportAnalysis>[0]["verifyTarget"] = (snapshot, manifest, actor, call) => {
       const target = manifest.baseIdentity[0]
       return !!target && target.surface === "planner" && verifyPlannerImportTarget(snapshot, { surface: "planner",
@@ -298,6 +290,35 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     expect(await app.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))).toBe(beforeLogout)
   }, { traceOperations: true })
 }, 120_000)
+
+async function prepareImportWorkbook(fixture: Parameters<Parameters<typeof withNativeWp06>[0]>[0]) {
+  const { app } = fixture
+  await app.store.transaction("planner", async (snapshot) => {
+    snapshot.data.versions = [{ id: "v1", name: "FY27", year: 2027, closed: 9, locked: false,
+      lines: [{ id: "42", sec: "opex", el: "licenses", name: "Licences", cur: "USD",
+        b: [40000, 45000, 45000, 50000, 50000, 50000, 50000, 50000, 50000, 50000, 60000, 60000],
+        a: [40000, 40000, 45000, 45000, 45000, 45000, 45000, 45000, 50000, null, null, null],
+        f: [null, null, null, null, null, null, null, null, null, 38000, 112000, 40000] }],
+      projects: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, lists: {} }]
+    snapshot.data.officials = {}; snapshot.data.entities = []; snapshot.data.allocations = []; snapshot.data.roster = []
+    return { commit: true, value: undefined }
+  })
+  const domainBefore = await app.store.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot.data) }))
+  const choices = await readNativeResponse<{ label: string; selectionRef: string; surface: string }[]>(await fixture.http("import", "import-targets", undefined, { surface: "planner" }))
+  const choice = choices.find((value) => value.label === "FY27")
+  if (!choice) throw new Error("Planner source unavailable")
+  const workbook = new Workbook()
+  const sheet = workbook.addWorksheet("OPEX")
+  sheet.addRow(["Line ID", "Cost element", "Vendor / item", "Currency", "Measure", "Oct", "Nov", "Dec"])
+  sheet.addRow(["42", "Licenses", "Licences", "ZZZ", "Forecast", 38000, 124000, 40000])
+  const form = new FormData()
+  form.set("file", new File([new Uint8Array(await fixture.stage("import:workbook", () => workbook.xlsx.writeBuffer()))], "forecast.xlsx"))
+  form.set("surface", "planner"); form.set("selectionRef", choice.selectionRef)
+  form.set("options", JSON.stringify({ newVersion: false, removeMissing: false, preview: {} }))
+  const admitted = await readNativeResponse<{ ref: string }>(await fixture.http("import", "import-admit", form))
+  const request: ImportPreviewRequest = { admittedFileRef: admitted.ref, format: "xlsx", options: {} }
+  return { domainBefore, form, request }
+}
 
 function renderedPreviewUrl(output: ContributionEnvelope, origin: string) {
   const html = contribution(output, { mount: "/sucafina" })
