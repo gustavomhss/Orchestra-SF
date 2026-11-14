@@ -1,0 +1,134 @@
+{
+  "schema": "sf2-mission31-final-e2e-static-audit-v1",
+  "status": "HOLD",
+  "method": "Textual source and manifest review only; no local tests, parsers, typecheck, build or product execution. No code edits.",
+  "candidate_reported_by_root": {
+    "W": "46e6ef14ebccd4c9ba5850b8c5d73ddd3e9609ad",
+    "S": "239b981856b981bf9e2d3984155ceb4ef6fbdf1c",
+    "branch": "ci-run-linux-astra-wp11-46e6ef14-m31-browser-01",
+    "execution_result": "Not assessed by this static audit; root owns the dispatched Actions result."
+  },
+  "reviewed_e2e_root": "packages/app-shell/e2e/sucafina/",
+  "reviewed_e2e_files": [
+    "decisions.spec.ts",
+    "decisions-support/initial-alternatives.ts",
+    "decisions-support/planner-sources.ts",
+    "decisions-support/choice-history.ts",
+    "decisions-support/closure-response.ts",
+    "decisions-support/comparison-rule.ts",
+    "decisions-support/procurement-source.ts",
+    "decisions-support/procurement-closure.ts",
+    "decisions-support/apply-recovery.ts"
+  ],
+  "reviewed_owner_manifests": [
+    "shared/router-mount.json",
+    "shared/coverage-read.json",
+    "shared/history-read.json",
+    "shared/procurement-read.json",
+    "owner-choice-rule/manifest.json"
+  ],
+  "original_scenarios": {
+    "count": 3,
+    "executable_bodies_preserved": true,
+    "basis": "Plain-text diff of the C3 decisions.spec.ts preimage against the final work file; only the obsolete catalog comment changed inside the original three scenarios.",
+    "nominal_total": 5,
+    "budget_ms": 180000,
+    "retries": 0
+  },
+  "assertion_integrity": {
+    "false_success_for_missing_dependencies_found": false,
+    "findings": [
+      "The fifth nominal test calls the C12 consumer only after real typed-operation controls, persisted choice, preview and a separate financial approval have succeeded. Missing controls are a failing expectation, not an accepted absence or skip.",
+      "The approval helper requires the pending approval stage and the exact proposed amount. A draft PR of 100 cannot count as approval of the selected 140; approval after Apply is not substituted.",
+      "The no-operation choice records financialApproval=false and keeps preparation disabled. This is a safe UI assertion and does not claim positive Apply coverage.",
+      "The public C12 HTTP receipt mapping really exposes receiptId, surface, version and outcome; the helper's applied-receipt assertion matches that mapping.",
+      "Response loss intercepts the original completed HTTP handler response, with no synthetic fulfill, route.fetch, direct test mutation or automatic mutation retry. It does not independently prove the domain-commit to case-reconciliation interruption window.",
+      "A fresh page and admission are not labeled a native process restart. Pending financial categories retain null complete totals."
+    ],
+    "new_concrete_code_defects_confirmed": []
+  },
+  "owner_dependencies": [
+    {
+      "owner": "session23 / shared host",
+      "dependency": "router-mount",
+      "state": "Complete patch artifact, not applied or executed in the candidate",
+      "boundary": "Observed baseline boot failed with duplicate ACL route /sucafina before any browser action; this is distinct from the already composed mission20 alternatives interface."
+    },
+    {
+      "owner": "session23 / shared host",
+      "dependency": "comparison-rule",
+      "state": "Complete patch artifact, not applied or executed in the candidate",
+      "boundary": "The new human numeric rule needs the composed sharedPortfolio verifier; standalone or sensitivity-only verification does not satisfy the UI journey."
+    },
+    {
+      "owner": "session23 / shared host",
+      "dependency": "coverage-read then procurement-read",
+      "state": "Complete sequential patch artifacts, not applied or executed in the candidate",
+      "preimage_chain": "77563520dbfa9cab5876c0312eba294cb579e11d -> 8ba78e4a49d289f1f0f50c2737989ff2ad1c26d6 -> 986450eb9b3a2bf9feb73f8071d8f05e38f1e515",
+      "boundary": "Both modify decision-controls.ts; procurement-read requires coverage-read's postimage and the mission-owned coverage adapter. Durable sources must come from canonical Procurement capture/read admission, not BI06 temporary refs."
+    },
+    {
+      "owner": "session23 / BCS and history producers",
+      "dependency": "history-read plus authorized historical source capture",
+      "state": "Read-only list patch complete; historical capture remains an independent requirement",
+      "boundary": "The Workbench reads business.cases directly. The case-list patch alone cannot prove source-change continuity; BCS must supply authorized historical projection, current reference and differences."
+    },
+    {
+      "owner": "session23 coordinating Decisions scenario producer and Procurement/C12 owners",
+      "dependency": "typed pre-choice Procurement operation producer and approval-before-Apply compatible prepared command",
+      "state": "No complete patch supplied among the five reviewed manifests",
+      "boundary": "Current alternatives carry operations=[] and the host mounts Planner-only business.planner. C12 preparation consumes an existing choice and cannot create the initial operation. Current Procurement save is editable only in draft/rejected stages while approval advances the stage/version, so the required approval-before-Apply path also needs an authorized producer contract.",
+      "delivery_gap": "The user's requirement for complete out-of-authority patches is not fully satisfied for these two dependencies. The nominal failing gate documents the gap; it does not close it."
+    }
+  ],
+  "required_proofs_still_missing": [
+    {
+      "requirement": "Positive end-to-end Apply and C12 recovery",
+      "criteria": [
+        "WP11.T03.CHK.02",
+        "WP11.T04.CHK.02"
+      ],
+      "gap": "The linked consumer is executable code but remains behind unconsumed host patches, the absent typed producer and the incompatible approval path. Its response-loss, concurrent-edit, new-admission and unique-receipt assertions are not executed proof."
+    },
+    {
+      "requirement": "Wrong actor, wrong incarnation and revoked access rejection",
+      "criteria": [
+        "mission31 acceptance",
+        "WP11.T04.CHK.03",
+        "WP11.T04.CMP.01"
+      ],
+      "gap": "No corresponding negative E2E scenario exists among the five selected tests. Existing owner guards or focused tests cannot be presented as this E2E proof."
+    },
+    {
+      "requirement": "Canonical renewal, omitted category and explicit zero distinction",
+      "criteria": [
+        "WP11.T02.CHK.01",
+        "WP11.T02.CHK.03",
+        "WP11.T02.CHK.20",
+        "WP11.T02.CHK.21",
+        "WP11.T03.CHK.20"
+      ],
+      "gap": "The 1200/2400/3600 example preserves pending costs but does not exercise training omitted, confirmed zero, training 40000, total 250000 or difference -10000."
+    },
+    {
+      "requirement": "Original choice retained after a later new choice",
+      "criteria": [
+        "WP11.T03.CHK.01",
+        "WP11.T03.CMP.01"
+      ],
+      "gap": "The fourth scenario asserts historical equality after a source change, but does not record a second choice after that change or test replacement/rejection of a proposal."
+    },
+    {
+      "requirement": "Native provider, native critique, process restart and cross-surface execution parity",
+      "criteria": [
+        "AM01-AM06",
+        "WP11.DOD.01",
+        "WP11.DOD.10",
+        "WP11.T03.CHK.18"
+      ],
+      "gap": "No real native/provider/reviewer/restart execution proof is supplied by these browser helpers; remain NOT_RUN."
+    }
+  ],
+  "conclusion": "No false positive assertion or additional concrete implementation defect was confirmed by the static review. Original executable scenarios remain preserved. The mission remains HOLD: five complete unconsumed seam patches do not cover the missing typed producer/approval contract or all required E2E criteria. Root must attach the exact Actions result without promoting focused green tests or static code connectivity to integrated acceptance.",
+  "published_receipt_note": "This is a static agent review, not native critique or runtime acceptance. Local staging paths in its narrative are historical; consumable complete patch paths and images are in integration/INDEX.json. Exact current executions are in the root run receipts."
+}

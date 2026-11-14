@@ -1,0 +1,315 @@
+{
+  "schema": "mission31-coverage-http-handoff-v1",
+  "agent": "coverage_http",
+  "owner": "session23",
+  "state": "READY_FOR_OWNER_COMPOSITION_NOT_CLOSED",
+  "pins": {
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "source_pr40": "556079fe2fb97c824504ec60a47798c6e0553539",
+    "composed_c3": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+    "composed_record": "0d5bd54a109774d4e3296e00c276be341fe39b00",
+    "c12_published": "c8a03c4f689025ca70a1c815fd292af22b6261cd"
+  },
+  "owned_files_frozen": [
+    {
+      "path": "work/apps/cli/src/sucafina-product/decision-coverage-read.ts",
+      "blob": "cfbff030208adb764f392f637ff7b903c0c64199",
+      "sha256": "821f47c40b5413b353e89a2a19dddc17b41d018c3a5a0c042d1949de761dd580",
+      "bytes": 4754,
+      "repository_path": "apps/cli/src/sucafina-product/decision-coverage-read.ts",
+      "preimage_blob": null,
+      "behavior": "Private read-only adapter delegates to canonical C10 classification/coverage, checks live admission, exact case/source/version/basis/digest, and preserves pending, null and explicit zero. No formula, grant, MCP or Apply."
+    },
+    {
+      "path": "work/modules/sucafina/Sucafinav1/test/product/decisions-functional-closure/coverage-read.test.ts",
+      "blob": "f714f9ce95309f06874dd081c36a45ef1526a6cd",
+      "sha256": "d29e937f709c7da5d9b605ef8060900a69320fb9d6fad8d315dd1e99a5b9ec1f",
+      "bytes": 10676,
+      "repository_path": "modules/sucafina/Sucafinav1/test/product/decisions-functional-closure/coverage-read.test.ts",
+      "preimage_blob": null,
+      "tests": 8,
+      "scope": "Component contract tests with genuine UI admissions and canonical classification; two read-port outputs are explicit fixtures and are not native/E2E evidence."
+    }
+  ],
+  "http_unchanged": {
+    "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+    "blob": "596512b4e12c094fd178ea845f4b560bbf23a348",
+    "source_commit": "556079fe2fb97c824504ec60a47798c6e0553539",
+    "composed_commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+    "reason": "Existing human decision-choose dispatch records through mutations.recordChoice; existing historical retry scoping and current human authority stay intact. No HTTP rewrite required for this slice."
+  },
+  "shared_patches": [
+    {
+      "manifest": "shared/coverage-read.json",
+      "patch": "shared/coverage-read.patch",
+      "owner": "session23",
+      "state": "NOT_APPLIED_SHARED_PATCH",
+      "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "base_commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+      "preimage_blob": "77563520dbfa9cab5876c0312eba294cb579e11d",
+      "postimage_blob": "8ba78e4a49d289f1f0f50c2737989ff2ad1c26d6",
+      "patch_sha256": "50a0a926c46ec1283d1aa02193334fd01b7dd01114c8d498b13595364142214c",
+      "dependencies": [
+        "apps/cli/src/sucafina-product/decision-coverage-read.ts blob cfbff030208adb764f392f637ff7b903c0c64199"
+      ],
+      "behavior": "Expose the already registered canonical coverage through the current authenticated read, preserving pending and absent states; no write, grant, endpoint or financial formula is added.",
+      "preimage": "bundle/apps/cli/src/sucafina-product/decision-controls.ts",
+      "postimage": "shared/decision-controls.ts",
+      "validation": {
+        "status": "NOT_RUN",
+        "mode": "Static review only; owner composition and surgical Actions required."
+      }
+    },
+    {
+      "manifest": "shared/procurement-read.json",
+      "patch": "shared/procurement-read.patch",
+      "owner": "session23",
+      "state": "NOT_APPLIED_SHARED_PATCH",
+      "base_commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+      "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "preimage_blob": "8ba78e4a49d289f1f0f50c2737989ff2ad1c26d6",
+      "postimage_blob": "986450eb9b3a2bf9feb73f8071d8f05e38f1e515",
+      "preimage": "shared/decision-controls.ts",
+      "postimage": "shared/procurement-read/apps/cli/src/sucafina-product/decision-controls.ts",
+      "patch_sha256": "2bb840628ed3bc13bdb5a29c24b829689df8864ddeadaefb0900d10eeb14114b",
+      "dependencies": [
+        "coverage-read.patch with postimage 8ba78e4a49d289f1f0f50c2737989ff2ad1c26d6",
+        "apps/cli/src/sucafina-product/decision-coverage-read.ts blob cfbff030208adb764f392f637ff7b903c0c64199",
+        "Existing canonical collaboration.captureWorkSource → createProcurementCollectionMemberIssuer → individual source producer; canonical Procurement.read and source fences"
+      ],
+      "shape": "selected.procurementEvidence?: { sources: readonly { source: RecordEvidence; projection: DomainProjection; label: string }[] }",
+      "behavior": "Read all authorized request collection members, including drafts, under a real same-Request sf_work_list admission; capture each through the existing durable individual producer; read each canonical DomainProjection twice; release the temporary collection and child admission; revalidate parent authority, exact case and source fences before egress. Every source hash, incarnation, version, period, complete ref and projection reference must agree; the returned projection is the unmodified canonical reread. No new route, grant, MCP operation, financial formula, case mutation or Apply.",
+      "failure_behavior": "Omit optional procurementEvidence when unavailable; Planner/case read remains independently authorized. Consumer must display unavailable, not invent a source.",
+      "budget": "Maximum 100 source records, matching current controls enumeration ceiling; no test timeout or retry increases.",
+      "validation": {
+        "status": "NOT_RUN",
+        "mode": "Static source review only; owner must compose the patch and run existing surgical Actions E2E. No local tests or runtime."
+      },
+      "temporal_projection_decision": "ageDays comes from the canonical producer observation time. Do not compare entire projections across instants, remove ageDays, rewrite a projection, or filter request states. Compare full source, context, source version and engineVersion under source fences, then return the actual whole second projection. Current preparation independently restricts mutable request stages."
+    },
+    {
+      "manifest": "shared/router-mount.json",
+      "patch": "shared/router-mount.patch",
+      "owner": "session23",
+      "state": "NOT_APPLIED_SHARED_PATCH",
+      "base_commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+      "files": [
+        {
+          "path": "apps/cli/src/sucafina-product/installation.ts",
+          "preimage_blob": "30ffcb8353cdf478808fbb8d6bc67b48b10a6109",
+          "postimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+          "preimage": "bundle/apps/cli/src/sucafina-product/installation.ts",
+          "postimage": "shared/router-mount/apps/cli/src/sucafina-product/installation.ts"
+        },
+        {
+          "path": "apps/cli/test/sucafina-installation.test.ts",
+          "preimage_blob": null,
+          "postimage_blob": "6360d706352ec7e4fab097cb9e9152dc2ed5a101",
+          "preimage": null,
+          "postimage": "shared/router-mount/apps/cli/test/sucafina-installation.test.ts"
+        },
+        {
+          "path": "apps/cli/test/fixture/sucafina-installation.ts",
+          "preimage_blob": null,
+          "postimage_blob": "5c43c84dde0f44fbc51dffc3d53a5176bda5e900",
+          "preimage": null,
+          "postimage": "shared/router-mount/apps/cli/test/fixture/sucafina-installation.ts"
+        }
+      ],
+      "patch_sha256": "3d78c688488110854d3fe361c7f1a93979e0aa2131e8261ca591648bfd08b7d7",
+      "failure": {
+        "run": 43641724503,
+        "reported_by": "root",
+        "exact_error": "Error: Method ACL already declared for route /sucafina",
+        "boundary": "Installation HttpRouter layer bootstrap, before Decisions interaction; not missing alternatives montage."
+      },
+      "mechanism": {
+        "dependency": "effect@4.0.0-beta.83",
+        "repo_package_path": "package.json",
+        "repo_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+        "upstream_repository": "Effect-TS/effect-smol",
+        "upstream_ref": "effect@4.0.0-beta.83",
+        "upstream_path": "packages/effect/src/unstable/http/HttpRouter.ts",
+        "upstream_blob": "3a52c4acd7938674bc209059212efd745cff9715",
+        "rule": "addAll registers paths ending in /* at both route.path and route.path.slice(0,-2), for wildcard and explicit methods.",
+        "repo_dependency_patch": "patches/effect@4.0.0-beta.83.patch",
+        "repo_dependency_patch_blob": "aa7a9314ea0058a2dadb4ffac329f6387c89799d",
+        "dependency_patch_effect": "No HttpRouter or FindMyWay changes."
+      },
+      "behavior": "Register exactly the subtree wildcard, which already registers the base. Keep origin/Host admission, catch and handler delegation unchanged. No route or Apply implementation added.",
+      "validation": {
+        "status": "NOT_RUN",
+        "source_review": "Exact dependency source and installation preimage read. No local tests or server.",
+        "owner_action": "Apply by CAS on the pinned preimage; Actions-only cli test/sucafina-installation.test.ts, then existing Decisions E2E dispatcher on composed candidate.",
+        "new_tests": 2,
+        "test_scope": "Actual HttpRouter/loadSfInstallation with a request echo fixture, not a synthetic SF journey."
+      }
+    },
+    {
+      "manifest": "shared/history-read.json",
+      "patch": "shared/history-read.patch",
+      "owner": "session23",
+      "state": "NOT_APPLIED_SHARED_PATCH",
+      "base_commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+      "patch_sha256": "33aea0e43b34c501cd1313c5af45288641a7360e34e7ce1fd5074ef5c0b2ecdc",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts",
+          "preimage_blob": "fafd1c99e96b0d5bac5d9a596b29252829870e62",
+          "postimage_blob": "da41f148e5b3592d700cdfb81d72ea23d8774500",
+          "preimage": "bundle/modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts",
+          "postimage": "shared/history-read/modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/case-management.ts",
+          "preimage_blob": "22cc1a0b08a5952a886fe159590ca0c40eb5f63e",
+          "postimage_blob": "5140fee739f874a5c2d8dfeaf95c3bbb3d6ff585",
+          "preimage": "bundle/modules/sucafina/Sucafinav1/product/decisions/case-management.ts",
+          "postimage": "shared/history-read/modules/sucafina/Sucafinav1/product/decisions/case-management.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/host-product.ts",
+          "preimage_blob": "74450e928e9bdf67df701f0a1e790ce5829016c7",
+          "postimage_blob": "f6e3d0473338553dc71340fe632d3de59b08deb9",
+          "preimage": "bundle/modules/sucafina/Sucafinav1/product/decisions/host-product.ts",
+          "postimage": "shared/history-read/modules/sucafina/Sucafinav1/product/decisions/host-product.ts"
+        }
+      ],
+      "dependencies": [
+        "Canonical BCS must independently return historical with authorizedProjection, currentRef and differences under the current principal. This patch cannot create a historical capture or bypass unavailable evidence."
+      ],
+      "behavior": "Allow authorized historical source references in case-list reads only. Current evidence remains required for edits, coverage, criteria and financial application. ChoiceRecord and source refs are preserved byte for byte.",
+      "unverified": "No local tests or runtime executed. Source-changed calculation closures and native provider/scanner/restart remain independent producer boundaries; this patch does not prove them.",
+      "scope_correction": "This patch repairs the generic management.list read seam. Workbench decision-controls enumerates identities and invokes business.cases.read directly, whose case-port already distinguishes fresh and historical. Therefore this patch alone does not repair or prove Workbench reentry after a source change. Canonical historical captures/continuity and calculation-history remain independently required."
+    }
+  ],
+  "normative_read_receipts": [
+    {
+      "path": "inputs/root-agents-coverage.txt",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "sha256": "f87f3c732f8aafec8d02501a5f11f050c07d33d350890fb12f69d8b288b830f9",
+      "bytes": 16583,
+      "repository_path": "AGENTS.md",
+      "commit": "556079fe2fb97c824504ec60a47798c6e0553539",
+      "read_extent": "FULL"
+    },
+    {
+      "path": "inputs/common.txt",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6",
+      "sha256": "a518cf4b3136d5c1126d59304afedf71b5f93168314f1f2f56743dcae719c94e",
+      "bytes": 45079,
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "read_extent": "FULL"
+    },
+    {
+      "path": "inputs/pack.txt",
+      "blob": "75ead4aae6187f440df6d9f9cdda6b10e444da13",
+      "sha256": "f5ecbabbfba0a4c997341f0c6a7b8d58acdc1f056768dd078ca1fc277aed2c99",
+      "bytes": 393659,
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S4-A.json",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "read_extent": "FULL_ASSIGNED_SECTIONS: resident; resident_ui; resident_handoff_interfaces; resident_gate_requirements; reference_context_rule. Root/team own remainder of the full pack receipt."
+    },
+    {
+      "path": "inputs/modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "blob": "033737b1051b23443e633df7874c550629bf55a1",
+      "sha256": "024795abe175e756f93f1904eba23884bf4d9ad2416c6185b3eea2e6b13ca420",
+      "bytes": 41803,
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "read_extent": "FULL"
+    }
+  ],
+  "procurement_pre_choice_boundary": {
+    "state": "OUTSIDE_AUTHORITY_UNIMPLEMENTED_OWNER_PRODUCER_DEPENDENCY",
+    "observations": [
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+        "blob": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1",
+        "finding": "Currently mounts product.planner directly. Owner must connect a genuine pre-choice domain scenario producer without exposing a command executor."
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+        "commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+        "blob": "f83b79d838deb2fcdd09300903d2469b3de6d32e",
+        "finding": "Existing Procurement proof consumes a stored scenario with a Procurement base. Planner-base incoming replacement is not an initial Procurement producer."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts",
+        "commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+        "blob": "74cd720489adde4b8a341c3d4c378194f58afa16",
+        "finding": "Existing wrapper declares external operation costs unresolved, sets total null and preserves pending coverage. It does not calculate a Procurement financial scenario."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+        "commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+        "blob": "bdea5d497b4e8fa7e540cfb44d427cd3696678db",
+        "finding": "Consumes an explicit replace amount operation already present in ChoiceRecord; cannot bootstrap an alternative before choice. Keep C12 unchanged."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+        "commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+        "blob": "e613a1bf32fe1ee75574139cf699c34843cf25d1",
+        "finding": "Domain executes a cloned snapshot for legitimate preview, but the return includes an executor; owner must isolate a true read-only scenario projection before choice. Mutable stages remain draft/pr_rejected."
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+        "commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+        "blob": "5dfca7fad55453672986fbb3b29d6c68a9e1afa9",
+        "finding": "Canonical persistence/replay is Planner-specific; a Procurement producer needs a truthful producer identity, source witness and replay contract."
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+        "commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+        "blob": "dbf13c657c7d5e93837367eae7bb7b704f7577c4",
+        "finding": "Historical reads need genuine protected captures and current authority, not current-state relabeling or a rewritten old ChoiceRecord."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/baseline-coverage.ts",
+        "commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+        "blob": "b7db14e10babd2a8b53715f5dce9f3034e9aa796",
+        "finding": "Current canonical C10 baseline is Planner evidence. Procurement scenario cost coverage requires canonical producer support; missing cost must remain unavailable/pending, never zero."
+      }
+    ],
+    "minimum_dependency_set": [
+      "An owner-supplied read-only Procurement scenario producer before ChoiceRecord, returning real domain-projected values/source evidence and a stable producer identity; no prepared executor or Apply exposure.",
+      "Shared host composition and incoming scenario-operation proof, under current case selection, exact source identity, version, period/currency and protected fences.",
+      "Canonical result persistence, replay/history and C10 coverage reconciliation for that producer; incomplete costs remain pending/null.",
+      "UI typed operation controls bound to an authorized durable Procurement source, retaining initial-alternative UI and passing the explicitly selected operation through existing human APIs.",
+      "Only after legitimate choice/proposal/preview and explicit financial approval, consume published C12 recovery unchanged."
+    ],
+    "patch_decision": "No pseudo implementation proposed. Swapping composite wrapper alone or calling the post-choice preparation to synthesize initial results would misstate the producer and bypass the required journey. Owner23 must supply the producer contract with its pre/postimages; existing shared patches do not claim to close this dependency."
+  },
+  "c12_consumption": {
+    "state": "EXISTING_CODE_PRESERVED_NO_NEW_APPLY",
+    "ui_path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+    "ui_blob": "a182c632c1714e3c48e6be07142adc7ed87d8f13",
+    "http_path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+    "http_blob": "fa83ce380647f02d8942f01ffbc1981cf1b2494d",
+    "read_observation": "Existing Procurement route handles decision-recover with either reviewDigest or purpose recover under a fresh human admission; UI offers Recover recorded receipt. This is source consumption, not execution proof."
+  },
+  "proof_status": {
+    "local_tests": "NOT_RUN_BY_INSTRUCTION",
+    "actions_by_this_agent": "NONE; root owns dispatcher and exact W/S/run reconciliation",
+    "root_reported_baseline": {
+      "run": 43641724503,
+      "passed": 0,
+      "failed": 4,
+      "boundary": "Installation bootstrap: Error: Method ACL already declared for route /sucafina. No Decisions action reached."
+    },
+    "native_provider": "NOT_RUN: no real native provider execution receipt or generation-bound Session/Child chain produced by this slice.",
+    "native_critique": "NOT_RUN: no native critique capture on an actual chosen alternative produced.",
+    "native_restart": "NOT_RUN: no restart performed; the user forbids Orchestra restart. Browser reload/new UI admission is not native process restart evidence.",
+    "e2e_closure": "NOT_APPROVED: own focused tests and static patches cannot certify the end-to-end journey."
+  },
+  "invariants": [
+    "No shared product file installed or overwritten. Shared changes are complete proposal artifacts only.",
+    "No remote mutation, commit, force, merge, deployment, Azure, credential use or engine change performed by this agent.",
+    "Choice is not financial approval. Missing cost is not zero. Source identity is never replaced by recordId equivalence.",
+    "No local test, server, synthetic positive journey, direct action POST, database edit or seed used.",
+    "All own files and four patches frozen at the manifest hashes; root must update exact Actions results and consumed closure manifest on composition."
+  ],
+  "published_receipt_note": "This is a static agent review, not native critique or runtime acceptance. Local staging paths in its narrative are historical; consumable complete patch paths and images are in integration/INDEX.json. Exact current executions are in the root run receipts."
+}

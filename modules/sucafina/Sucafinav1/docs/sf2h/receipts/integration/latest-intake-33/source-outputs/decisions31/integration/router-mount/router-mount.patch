@@ -1,0 +1,70 @@
+--- a/apps/cli/src/sucafina-product/installation.ts
++++ b/apps/cli/src/sucafina-product/installation.ts
+@@ -2,7 +2,7 @@
+ import { realpath } from "node:fs/promises"
+ import { pathToFileURL } from "node:url"
+ import type { Host } from "@orchestra/core/host"
+-import { Effect, Layer } from "effect"
++import { Effect } from "effect"
+ import { HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
+ import { createSfHostRuntime } from "./host-context"
+ 
+@@ -29,5 +29,6 @@
+     const response = yield* Effect.tryPromise({ try: (signal) => installation.handler(new Request(web, { signal })), catch: () => "installation-unavailable" as const })
+     return response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
+   }).pipe(Effect.catch(() => Effect.succeed(HttpServerResponse.empty({ status: 503 }))))
+-  return { ...installation, layer: Layer.merge(HttpRouter.add("*", installation.mount, route), HttpRouter.add("*", `${installation.mount}/*`, route)) }
++  // Effect registers a trailing wildcard at both the subtree and its base path.
++  return { ...installation, layer: HttpRouter.add("*", `${installation.mount}/*`, route) }
+ }
+--- /dev/null
++++ b/apps/cli/test/sucafina-installation.test.ts
+@@ -0,0 +1,35 @@
++import { expect, test } from "bun:test"
++import { fileURLToPath } from "node:url"
++import { Layer } from "effect"
++import { HttpRouter, HttpServer } from "effect/unstable/http"
++import { loadSfInstallation } from "../src/sucafina-product/installation.ts"
++
++const origin = "http://127.0.0.1:4096"
++const fixture = fileURLToPath(new URL("./fixture/sucafina-installation.ts", import.meta.url))
++
++test("Sucafina registers its base and subtree once for every method", async () => {
++  const installation = await loadSfInstallation(fixture, origin)
++  const router = HttpRouter.toWebHandler(installation.layer.pipe(Layer.provide(HttpServer.layerServices)), { disableLogger: true })
++  try {
++    for (const method of ["GET", "HEAD", "POST", "ACL"]) {
++      for (const pathname of ["/sucafina", "/sucafina/", "/sucafina/planner", "/sucafina/procurement"]) {
++        const response = await router.handler(new Request(origin + pathname, { method, headers: { host: new URL(origin).host } }))
++        expect(response.status).toBe(200)
++        if (method !== "HEAD") expect(await response.text()).toBe(method + " " + pathname)
++      }
++    }
++  } finally { await router.dispose(); await installation.dispose() }
++})
++
++test("Sucafina mount retains the host fence and leaves neighboring paths unclaimed", async () => {
++  const installation = await loadSfInstallation(fixture, origin)
++  const router = HttpRouter.toWebHandler(installation.layer.pipe(Layer.provide(HttpServer.layerServices)), { disableLogger: true })
++  try {
++    const denied = await router.handler(new Request(origin + "/sucafina/planner", { headers: { host: "different.example" } }))
++    expect(denied.status).toBe(403)
++    for (const pathname of ["/sucafina-other", "/outside"]) {
++      const response = await router.handler(new Request(origin + pathname, { headers: { host: new URL(origin).host } }))
++      expect(response.status).toBe(404)
++    }
++  } finally { await router.dispose(); await installation.dispose() }
++})
+--- /dev/null
++++ b/apps/cli/test/fixture/sucafina-installation.ts
+@@ -0,0 +1,10 @@
++import type { SfInstallation } from "../../src/sucafina-product/installation.ts"
++
++// Router fixture only: it does not admit a person, run a provider or mutate SF.
++export default function installation(): SfInstallation {
++  return {
++    mount: "/sucafina",
++    handler: async (request) => new Response(request.method + " " + new URL(request.url).pathname),
++    dispose: () => {},
++  }
++}

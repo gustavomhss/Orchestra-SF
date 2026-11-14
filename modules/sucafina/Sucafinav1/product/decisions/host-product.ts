@@ -41,7 +41,7 @@ export function createDecisionHostProduct(input: Omit<Product, "management" | "b
   verifySelectionSourcesLocked: Product["selection"]["verifySnapshot"]
   verifyMutationSourcesLocked: Product["mutations"]["verifyMutation"]
   mutationGrant: (operation: DecisionMutationOperation, payload: unknown, context: TrustedDomainContext) => { action: MutationAction; payload: unknown } | undefined
-  management: Omit<Product["management"], "authorizeEdit" | "verifyEvidence" | "verifyEdit">
+  management: Omit<Product["management"], "authorizeEdit" | "verifyEvidence" | "verifyReadEvidence" | "verifyEdit">
   baseline: Omit<Product["baseline"], "authorizeCoverage" | "resolveEvidence" | "verifySnapshot">
   criteria: Omit<Product["criteria"], "authorizeRule" | "verifyEvidence" | "verifyMetric" | "verifySnapshot">
   selection: Omit<Product["selection"], "authorizeSelection" | "verifySnapshot">
@@ -73,7 +73,7 @@ export function createDecisionHostProduct(input: Omit<Product, "management" | "b
       promotion: { ...input.currentChoice.promotion, authorizePromotion: (request, context) => intent.authorize(context, "decisions.promote-alternative", request), verifySnapshot: (snapshot, request, choice, result, context) => intent.verify(context, "decisions.promote-alternative", request) && input.verifyCurrentChoicePromotionSourcesLocked(snapshot, request, choice, result, context) },
     },
     hotTopic: { ...input.hotTopic, authorizeDraft: (request, context) => intent.authorize(context, "decisions.draft-hot-topic", request), verifySnapshot: (snapshot, request, draft, context) => intent.verify(context, "decisions.draft-hot-topic", request) && input.verifyHotTopicSourcesLocked(snapshot, request, draft, context) },
-    management: { ...input.management, authorizeEdit: (request, context) => intent.authorize(context, "decisions.edit", request), verifyEvidence: evidence.refs, verifyEdit: (snapshot, before, after, context) => matchesCaptured(context, "decisions.edit") && input.verifyEditSourcesLocked(snapshot, before, after, context) },
+    management: { ...input.management, authorizeEdit: (request, context) => intent.authorize(context, "decisions.edit", request), verifyEvidence: evidence.refs, verifyReadEvidence: evidence.readRefs, verifyEdit: (snapshot, before, after, context) => matchesCaptured(context, "decisions.edit") && input.verifyEditSourcesLocked(snapshot, before, after, context) },
     baseline: { ...input.baseline, authorizeCoverage: (request, context) => intent.authorize(context, "decisions.coverage", request), resolveEvidence: (refs, context) => input.evidence.context({ refs }, context), verifySnapshot: (snapshot, request, record, context) => baselineFence(snapshot, request, record, context) },
     criteria: { ...input.criteria, authorizeRule: (request, context) => intent.authorize(context, "decisions.criteria", request), verifyEvidence: async (rule, context) => await evidence.rule(rule, context) && await input.verifyRuleSource(rule, context), verifyMetric: evidence.metric, verifySnapshot: (snapshot, request, rule, context) => intent.verify(context, "decisions.criteria", request) && input.verifyRuleSourcesLocked(snapshot, request, rule, context) },
     selection: { ...input.selection, authorizeSelection: (request, context) => intent.authorize(context, "decisions.select-portfolio", request), verifySnapshot: (snapshot, request, selection, context) => intent.verify(context, "decisions.select-portfolio", request) && input.verifySelectionSourcesLocked(snapshot, request, selection, context) },

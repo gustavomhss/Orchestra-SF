@@ -1,4 +1,4 @@
-import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { AuthorizedCaseProjection, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DomainProjection, SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
@@ -10,16 +10,18 @@ import type { CoverageClassification } from "../../../../modules/sucafina/Sucafi
 import type { PlannerSensitivityUnits } from "../../../../modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts"
 import { documentHtml, esc, pageMain } from "../../../../modules/sucafina/Sucafinav1/src/screen-shell.ts"
 import type { SfDecisionHttpRuntime } from "./decision-domain-http.ts"
+import { readSfDecisionCoverage } from "./decision-coverage-read.ts"
+import type { SfDecisionCoverageRead } from "./decision-coverage-read.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
-type Forecast = { source: RecordEvidence; projection: DomainProjection; expectedVersion?: number; classification?: CoverageClassification }
+type Forecast = { source: RecordEvidence; projection: DomainProjection; expectedVersion?: number; classification?: CoverageClassification; coverage?: SfDecisionCoverageRead["coverage"] }
 type Scenario = { ref: string; title: string; alternativeId: string; parameters: readonly { ref: string; label: string }[] }
 type Evidence = { evidence: RecordEvidence; source: SourceRef; fields: readonly string[]; label: string }
 type ControlsBody = { cases: readonly { ref: string; title: string; version: number }[]; actions: readonly string[]; accessRevision: string; selected?: {
   ref: string; caseRef: CaseRef; decision: AuthorizedCaseProjection["case"]; forecasts: readonly { source: RecordEvidence; label: string }[]; forecast?: Forecast;
   scenarios: readonly Scenario[]; rules: readonly { id: string; expectedVersion?: number }[]; units?: PlannerSensitivityUnits; unitSelection?: { scenarioRef: string; baselineRef: string; parameterRef: string };
-  evidence: readonly Evidence[]; recipients: readonly { ref: string; label: string }[]; conditions: readonly { label: string; revision: number }[];
+  procurementEvidence?: ProcurementEvidence; evidence: readonly Evidence[]; recipients: readonly { ref: string; label: string }[]; conditions: readonly { label: string; revision: number }[];
 } }
 type Controls = ControlsBody & { fingerprint: string; selectionFingerprint: string }
 
@@ -111,10 +113,12 @@ export async function readSfDecisionControls(runtime: SfDecisionHttpRuntime, req
         return person ? [{ ref, label: person.name }] : []
       })
       const conditions = decision.choices.length ? await runtime.domain.materiality.registry.list(caseRef, call) : undefined
+      const procurementEvidence = await readProcurementEvidence(runtime, request, caseRef, call).catch(() => ({ status: "unavailable" as const, reason: "decision-procurement-evidence-unavailable" }))
       const again = await runtime.business.cases.read({ caseRef: wanted }, call)
       if (again.status !== "ok" || !same(again.value.case, decision) || !await currentList() || !await runtime.authority.host.revalidate(call)) return { status: "denied", reason: "decision-controls-authority-changed" }
       return { status: "ok", value: withFingerprint({ ...base, selected: { ref: wanted, caseRef, decision, forecasts,
         ...(forecast?.status === "ok" ? { forecast: forecast.value } : {}), scenarios, rules,
+        ...(procurementEvidence.status === "ok" ? { procurementEvidence: procurementEvidence.value } : {}),
         ...(units?.status === "ok" && unitSelection ? { units: units.value.units, unitSelection } : {}), evidence, recipients,
         conditions: conditions?.status === "ok" ? conditions.records.map((record) => ({ label: record.selection.label, revision: record.revision })) : [] } }) }
     })
@@ -130,11 +134,106 @@ async function readForecast(runtime: SfDecisionHttpRuntime, request: Request, ca
   const read = () => runtime.authority.state.read(request, "preferences", (state, actor) => sameActor(actor, call) ? { absent: !Object.hasOwn(state.preferences, key) } : undefined)
   const presence = await read()
   if (presence.status !== "ok" || !presence.value) return { status: "unavailable", reason: "decision-controls-classification-unavailable" }
-  const classification = presence.value.absent ? undefined : await runtime.domain.baselineCoverage.readClassification(source.refId, call)
+  const registered = presence.value.absent ? undefined : await readSfDecisionCoverage({ host: runtime.authority.host, baseline: runtime.domain.baselineCoverage }, { caseRef, source }, call)
   const again = await read()
   if (again.status !== "ok" || !same(again.value, presence.value) || !await runtime.authority.host.revalidate(call)) return { status: "stale", reason: "decision-controls-classification-changed" }
   return { status: "ok", value: { source, projection: result.value.baseline,
-    ...(presence.value.absent ? { expectedVersion: 0 } : classification?.status === "ok" ? { expectedVersion: classification.value.version, classification: classification.value } : {}) } }
+    ...(presence.value.absent ? { expectedVersion: 0 } : registered?.status === "ok" ? registered.value : {}) } }
+}
+
+type ProcurementEvidence = { sources: readonly { source: RecordEvidence; projection: DomainProjection; label: string }[] }
+
+/** Convert canonical collection members into durable individual sources before
+ * offering them for a human case edit. The collection never leaves this read.
+ */
+async function readProcurementEvidence(runtime: SfDecisionHttpRuntime, request: Request, incoming: CaseRef, parent: TrustedUiContext): Promise<PortResult<ProcurementEvidence>> {
+  const caseRef = structuredClone(incoming), selected = digestSfValue(caseRef), parentBinding = digestSfValue(parent.binding)
+  const current = () => !request.signal.aborted && runtime.authority.host.requestFor(parent) === request &&
+    digestSfValue(parent.binding) === parentBinding && digestSfValue(incoming) === selected
+  const denied = (): PortResult<never> => ({ status: "denied", reason: "decision-procurement-evidence-authority-unavailable" })
+  if (!current() || !await runtime.authority.host.revalidate(parent) || !current()) return denied()
+  const before = await runtime.business.cases.read({ caseRef: encodeCaseRef(caseRef) }, parent)
+  if (before.status !== "ok") return before
+  if (!same({ id: before.value.case.id, incarnation: before.value.case.incarnation, version: before.value.case.version }, caseRef) || !current())
+    return { status: "stale", reason: "decision-procurement-evidence-case-changed" }
+  const period = before.value.case.horizon, currency = before.value.case.currency, beforeDigest = digestSfValue(before.value.case)
+  const payload = { purpose: "work-selection", period }, digest = digestSfValue(payload)
+  const admitted = await runtime.authority.ui.admit(request, "sf_work_list", digest)
+  if (admitted.status !== "ok") return admitted
+  const call = admitted.value
+  let selectionRef: string | undefined
+  const childCurrent = () => current() && runtime.authority.host.requestFor(call) === request &&
+    ["installationId", "projectId", "principalRef", "accessRevision", "policyVersion"].every((key) =>
+      call.binding[key as keyof typeof call.binding] === parent.binding[key as keyof typeof parent.binding])
+  const canonical = (projection: DomainProjection, source: RecordEvidence) =>
+    projection.context.surface === "procurement" && projection.context.currency === currency &&
+    same(projection.context.period, period) && sameActor(projection.context, parent) &&
+    projection.context.installationId === parent.binding.installationId && projection.context.projectId === parent.binding.projectId &&
+    projection.version === source.target.version && projection.values.length > 0 &&
+    projection.values.every((value) => value.sourceRefs.length > 0 && value.sourceRefs.every((ref) => same(ref, source)) &&
+      (value.drilldown === null || same(value.drilldown, source)))
+  const read = async (): Promise<PortResult<ProcurementEvidence & { fence: string }>> => {
+    if (!await runtime.authority.ui.validate(call, "sf_work_list", digest) || !childCurrent()) return denied()
+    const selection = await runtime.business.procurementSelections.create(call, period)
+    if (selection.status !== "ok") return selection
+    selectionRef = selection.value.selectionRef
+    const collection = await runtime.business.registry.resolveRequestCollection(selectionRef, call)
+    if (collection.status !== "ok") return collection
+    if (!childCurrent() || collection.value.context.currency !== currency || !same(collection.value.context.period, period))
+      return { status: "unavailable", reason: "decision-procurement-evidence-basis-unavailable" }
+    if (collection.value.requests.length > 100) return { status: "needs-input", reason: "decision-procurement-evidence-budget-exceeded" }
+    const sources: { source: RecordEvidence; projection: DomainProjection; label: string }[] = []
+    for (const member of collection.value.requests) {
+      const captured = await runtime.business.collaboration.captureWorkSource(member.refId, call)
+      if (captured.status !== "ok") return captured
+      const source = structuredClone(captured.value)
+      if (!childCurrent() || source.refId !== `sf-procurement:${encodeURIComponent(source.target.incarnation)}:${source.target.version}` ||
+        source.refDigest !== digestSfEvidenceRef(source) ||
+        source.installationId !== parent.binding.installationId || source.projectId !== parent.binding.projectId || source.target.surface !== "procurement" || source.target.recordType !== "procurement-request" ||
+        source.target.recordId !== member.target.recordId || source.target.projectionDigest !== member.target.projectionDigest ||
+        !same(source.target.fields, member.target.fields) || !same(source.target.period, period))
+        return { status: "stale", reason: "decision-procurement-evidence-source-changed" }
+      const projected = await runtime.business.procurement.read({ requestRef: source.refId }, call)
+      if (projected.status !== "ok") return projected
+      const projection = projected.value
+      if (!childCurrent() || !canonical(projection, source))
+        return { status: "unavailable", reason: "decision-procurement-evidence-projection-unavailable" }
+      sources.push({ source, projection, label: `Request ${source.target.recordId} · revision ${source.target.version}` })
+    }
+    if (new Set(sources.map((item) => item.source.refId)).size !== sources.length ||
+      new Set(sources.map((item) => item.source.target.recordId)).size !== sources.length)
+      return { status: "unavailable", reason: "decision-procurement-evidence-ambiguous" }
+    // Capture may materialize source metadata. Fence after that real work.
+    // ageDays is derived from the producer's observation time; preserve the
+    // complete canonical reread rather than rewriting it or comparing clocks.
+    const observed = await runtime.business.readSourceFences(call)
+    if (!observed || !childCurrent()) return denied()
+    const fence = digestSfValue(observed)
+    for (const item of sources) {
+      const again = await runtime.business.procurement.read({ requestRef: item.source.refId }, call)
+      if (again.status !== "ok" || !canonical(again.value, item.source) ||
+        !same(again.value.context, item.projection.context) || again.value.engineVersion !== item.projection.engineVersion || !childCurrent())
+        return { status: "stale", reason: "decision-procurement-evidence-source-changed" }
+      item.projection = again.value
+    }
+    const again = await runtime.business.registry.resolveRequestCollection(selectionRef, call)
+    if (again.status !== "ok" || !same(again.value, collection.value) || !await runtime.authority.host.revalidate(call) ||
+      !childCurrent() || digestSfValue(await runtime.business.readSourceFences(call)) !== fence || !childCurrent())
+      return { status: "stale", reason: "decision-procurement-evidence-source-changed" }
+    return { status: "ok", value: { sources: structuredClone(sources), fence } }
+  }
+  const result = await read().catch(() => ({ status: "unavailable" as const, reason: "decision-procurement-evidence-unavailable" })).finally(() => {
+    if (selectionRef) runtime.business.registry.releaseSelection(selectionRef)
+    runtime.authority.ui.finish(call)
+  })
+  if (!await runtime.authority.host.revalidate(parent) || !current()) return denied()
+  if (result.status !== "ok") return result
+  const after = await runtime.business.cases.read({ caseRef: encodeCaseRef(caseRef) }, parent)
+  if (after.status !== "ok" || digestSfValue(after.value.case) !== beforeDigest ||
+    digestSfValue(await runtime.business.readSourceFences(parent)) !== result.value.fence ||
+    !await runtime.authority.host.revalidate(parent) || !current())
+    return { status: "stale", reason: "decision-procurement-evidence-case-changed" }
+  return { status: "ok", value: { sources: result.value.sources } }
 }
 
 export function sfDecisionControlsHtml(value: Controls, surface: "dashboard" | "planner" | "procurement") {

@@ -2,7 +2,7 @@ import path from "node:path"
 import { realpath } from "node:fs/promises"
 import { pathToFileURL } from "node:url"
 import type { Host } from "@orchestra/core/host"
-import { Effect, Layer } from "effect"
+import { Effect } from "effect"
 import { HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
 import { createSfHostRuntime } from "./host-context"
 
@@ -29,5 +29,6 @@ export async function loadSfInstallation(file: string, origin: string) {
     const response = yield* Effect.tryPromise({ try: (signal) => installation.handler(new Request(web, { signal })), catch: () => "installation-unavailable" as const })
     return response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
   }).pipe(Effect.catch(() => Effect.succeed(HttpServerResponse.empty({ status: 503 }))))
-  return { ...installation, layer: Layer.merge(HttpRouter.add("*", installation.mount, route), HttpRouter.add("*", `${installation.mount}/*`, route)) }
+  // Effect registers a trailing wildcard at both the subtree and its base path.
+  return { ...installation, layer: HttpRouter.add("*", `${installation.mount}/*`, route) }
 }

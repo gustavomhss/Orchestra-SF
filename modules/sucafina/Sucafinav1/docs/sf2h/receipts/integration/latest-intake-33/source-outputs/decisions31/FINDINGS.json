@@ -1,0 +1,128 @@
+{
+  "schema": "sf2-mission31-mandatory-findings-v1",
+  "acceptance": "HOLD_NOT_GRANTED",
+  "findings": [
+    {
+      "id": "M31-BOOTSTRAP",
+      "status": "OPEN_OWNER_PATCH_READY",
+      "owner": "session23/shared router",
+      "finding": "Real C3 bootstrap fails with Error: Method 'ACL' already declared for route '/sucafina', before any human UI action.",
+      "evidence": [
+        "baseline-C3.json",
+        "evidence/baseline-C3-cli.txt"
+      ],
+      "complete_patch": "integration/router-mount/manifest.json",
+      "remaining": "Owner must apply exact preimages and run the proposed actual HttpRouter contract tests and the nominal composed Actions selection. The patch itself was not executed.",
+      "obsolete_diagnosis_excluded": "Mission20 alternative UI is already mounted in C3."
+    },
+    {
+      "id": "M31-COVERAGE",
+      "status": "OPEN_OWNER_PATCH_READY",
+      "owner": "session23/shared host",
+      "finding": "Current decision-controls does not expose the canonical coverage ref needed by the human alternative reopening path.",
+      "owned_implementation": "apps/cli/src/sucafina-product/decision-coverage-read.ts",
+      "complete_patch": "integration/coverage-read/manifest.json",
+      "evidence": [
+        "unit-Wc1.json"
+      ],
+      "remaining": "Consume the read-only adapter in the shared controls seam. Eight focused contract tests are not composed UI proof."
+    },
+    {
+      "id": "M31-NUMERIC-RULE",
+      "status": "OPEN_OWNER_PATCH_READY",
+      "owner": "session23/shared domain services",
+      "finding": "Generic rule registry admits a plain numeric comparison, but the current host evidence gate requires sensitivity. A human known-subtotal limit cannot be supplied through an invented parameter.",
+      "complete_patch": "integration/comparison-rule/manifest.json",
+      "remaining": "Consume existing sharedPortfolio.readMetric with current sources and retain original sensitivity checks; validate through real human registration/recomparison/choice in Actions."
+    },
+    {
+      "id": "M31-PROCUREMENT-EVIDENCE",
+      "status": "OPEN_OWNER_PATCH_READY",
+      "owner": "session23/shared controls",
+      "finding": "BI06 collection members are temporary and pending-focused. They are not durable individual evidence for the draft Procurement case journey.",
+      "owned_implementation": "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts",
+      "complete_patch": "integration/procurement-read/manifest.json",
+      "dependencies": [
+        "M31-COVERAGE"
+      ],
+      "remaining": "Consume coverage-read first, then procurement-read; expose canonical captured individual references and whole canonical projections under current authority. Source refs remain exact; absence is unavailable, not zero."
+    },
+    {
+      "id": "M31-HISTORICAL-READ",
+      "status": "OPEN_PARTIAL_OWNER_PATCH_READY",
+      "owner": "session23 + Memory/Finance22 canonical history owners",
+      "finding": "Generic management.list currently requires fresh evidence and can omit historical-source cases. The complete narrow patch admits only independently authorized historical projections.",
+      "complete_patch": "integration/history-read/manifest.json",
+      "remaining": "This changes generic management.list only; Workbench decision-controls calls cases.read directly. Historical captures and calculation continuity must still be produced canonically under current authority. No claim of an executed source-change/restart journey."
+    },
+    {
+      "id": "M31-PRECHOICE-PROCUREMENT",
+      "status": "OPEN_MANDATORY_IMPLEMENTATION_AND_COMPLETE_PATCH_NOT_DELIVERED",
+      "owner": "session23 coordinating Procurement/Portfolio21/C10/persistence owners",
+      "finding": "No mounted pre-choice Procurement scenario producer or typed operation UI produces the frozen replacement operation required by the existing C12 scenario preparation. Initial alternative UI still correctly emits operations=[] for its current Planner path.",
+      "evidence": [
+        "coverage-owner-review.json",
+        "e2e-static-audit.json"
+      ],
+      "complete_patch": null,
+      "reason_not_fabricated": "The existing composite wrapper deliberately leaves external-operation-cost-unresolved and total null; swapping that wrapper alone does not create a truthful financial producer. Calling the post-choice prepared executor before choice would bypass the required contract.",
+      "remaining": "A complete owner implementation must supply the read-only scenario producer, true producer identity and source witness, result persistence/replay, C10 reconciliation and typed controls. The five delivered patches do not satisfy this mandatory missing patch."
+    },
+    {
+      "id": "M31-FINANCIAL-APPROVAL",
+      "status": "OPEN_MANDATORY_IMPLEMENTATION_AND_COMPLETE_PATCH_NOT_DELIVERED",
+      "owner": "session23 coordinating Procurement/C12 owner",
+      "finding": "The published scenario preparation maps a chosen amount replacement to Requests/save on a draft or pr_rejected request. Formal Procurement Approve requires a pending stage; after approval that prepared save is no longer admissible. The fifth test requires a real approval of the proposed amount before Apply and rejects stale/incompatible review.",
+      "evidence": [
+        "INPUTS.json",
+        "e2e-code-review.json",
+        "e2e-static-audit.json"
+      ],
+      "complete_patch": null,
+      "remaining": "Owner must publish a financial proposal/approval/prepared-command contract compatible with existing domain policies and the existing C12 Apply/recovery. This delivery does not implement another Apply, alter engines, treat choice as financial approval or approve an old amount to pass the gate."
+    },
+    {
+      "id": "M31-C12-PROOF",
+      "status": "NOT_RUN",
+      "owner": "session23 + S4-A continuation after producer composition",
+      "finding": "The fifth nominal test calls applyRecoveryJourney, but no Apply/recovery runtime stage was reached. Connectivity of a helper is not execution evidence.",
+      "remaining": "Demonstrate a single actual effect and authoritative receipt after original response loss, concurrent case edit and fresh legitimate admission; demonstrate wrong actor, incarnation and revoked-access negatives. The current CDP boundary is after handler return, so the internal domain-commit/case-reconciliation gap and AM01-AM06 need their own real proof."
+    },
+    {
+      "id": "M31-CRITERIA-REMAINDERS",
+      "status": "NOT_RUN_OR_UNIMPLEMENTED_NOMINAL_ASSERTION",
+      "owner": "session23 with canonical WP11/proof-package owners",
+      "finding": "All83 literal criteria are preserved. Canonical omitted-training/confirmed-zero/cost-inversion oracle, recording a second choice after source change, partial cross-domain application, malicious import and authorization negatives are not accepted by the illustrative source-history path.",
+      "evidence": [
+        "criteria.json"
+      ],
+      "remaining": "Complete the literal criteria and proof bindings; do not relabel pending-category fixtures as a truly omitted-category oracle."
+    },
+    {
+      "id": "M31-NATIVE",
+      "status": "NOT_RUN_RESOURCE_UNAVAILABLE",
+      "owner": "session23 + native runtime30/provider/critic owners",
+      "finding": "This session has GitHub MCP and an isolated Actions installation fixture, but no actual Orchestra native provider session, independent native critique output or authorized native process restart resource.",
+      "remaining": "Obtain actual provider/reviewer/restart evidence with canonical session and source identities. A helper agent review, real HTTP admission, fresh page or browser reload is not native provider/critique/restart proof. No Orchestra restart was performed."
+    },
+    {
+      "id": "M31-CHECKS",
+      "status": "FAILURE_NO_WAIVER",
+      "owner": "owners of the diagnostic and historical receipt paths; session23 coordination",
+      "finding": "W2 check:130 TypeScript diagnostics at the same sites/codes as Mission20;129 complete messages identical, one textual type rendering difference on an unchanged file.43GATE exactly match the earlier run;18WARN include one new same-budget fifth-test advisory. No diagnostic or GATE at the16 owned paths.",
+      "evidence": [
+        "checks-W2.json"
+      ],
+      "remaining": "Resolve existing package failures and historical evidence GATE findings under their owners. No approved/ignore label, budget increase or acceptance waiver was added."
+    },
+    {
+      "id": "M31-CHECK-LANES",
+      "status": "NOT_RUN_EXISTING_LANE_UNAVAILABLE",
+      "owner": "tooling26/session23",
+      "finding": "The existing check workflow runs Sucafina bun typecheck and root guards. It does not run a separate apps/cli or app-shell/E2E package typecheck. The adapter is imported by the scoped Bun tests, and Playwright collects the final selected tests; neither is a substitute for all package typechecks.",
+      "remaining": "Use or supply an authorized surgical Actions package-typecheck lane. No workflow, engine or tool budget was modified.",
+      "later_observation": "C8 record 07aa9831f1a85f01b42984891c899a887fb48db5 publishes new tooling26 E2E typecheck files after the consumed C3/sourceW2 lanes; those files were not consumed or executed by mission31. The owner must reconcile their surgical entry point without an epic/full suite."
+    }
+  ],
+  "delivery_boundary": "Owned code and five complete shared patch sets delivered. Mandatory pre-choice Procurement producer and approval-compatible command patches are not delivered; the functional mission remains incomplete."
+}

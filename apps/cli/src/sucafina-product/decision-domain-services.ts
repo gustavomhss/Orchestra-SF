@@ -77,10 +77,15 @@ export function createSfDecisionDomainServices(input: {
     verifyEvidence: async (rule, call) => {
       const selected = await input.selectedCase(call)
       if (selected.status !== "ok" || selected.value.id !== rule.caseRef.id || selected.value.incarnation !== rule.caseRef.incarnation || selected.value.version < rule.caseRef.version ||
-        rule.metricRef !== "planner:known-subtotal-difference" || !rule.sensitivity || rule.unit !== rule.sensitivity.resultUnit || !await checks.rule(rule, call)) return false
+        rule.metricRef !== "planner:known-subtotal-difference" || rule.sensitivity && rule.unit !== rule.sensitivity.resultUnit || !await checks.rule(rule, call)) return false
       const current = await rawCase(selected.value, call)
+      if (!current || !same(current.horizon, rule.period) || current.currency !== rule.unit) return false
+      // A human numeric comparison rule does not require a parameter to vary.
+      // The shared authority supplies its metric from the real stored scenarios;
+      // the standalone sensitivity-only composition keeps its existing boundary.
+      if (!rule.sensitivity) return !!input.sharedPortfolio && await host.revalidate(call)
       const baseline = await business.results.readHistoricalScenario({ resultRef: rule.sensitivity.baselineRef }, call)
-      return !!current && same(current.horizon, rule.period) && current.currency === rule.unit && baseline.status === "ok" && baseline.value.kind === "scenario" &&
+      return baseline.status === "ok" && baseline.value.kind === "scenario" &&
         baseline.value.caseRef.id === current.id && baseline.value.caseRef.incarnation === current.incarnation && baseline.value.caseRef.version <= current.version &&
         baseline.value.result.currency === rule.unit && same(baseline.value.result.horizon, rule.period) && await host.revalidate(call)
     },
@@ -94,7 +99,18 @@ export function createSfDecisionDomainServices(input: {
   const threshold = createPlannerExactThreshold({ units, preview })
   const exactThreshold: NonNullable<Parameters<typeof createPortfolioProduct>[0]["exactThreshold"]> =
     (request, binding, call) => threshold(request, binding.baselineRef, call)
-  const metric = createPlannerCriterionMetric({ host, rules, units, preview })
+  const sensitivityMetric = createPlannerCriterionMetric({ host, rules, units, preview })
+  const metric: Parameters<typeof createCriterionRuleRegistry>[0]["readMetric"] = async (request, call) => {
+    const current = await rules.resolve({ caseRef: request.caseRef, criterionId: request.criterionId }, call)
+    if (current.status !== "ok") return current
+    if (current.value.ruleRef !== request.ruleRef || current.value.version !== request.ruleVersion || current.value.metricRef !== request.metricRef)
+      return { status: "stale", reason: "criterion-rule-changed" }
+    if (current.value.sensitivity) return sensitivityMetric(request, call)
+    // No synthesized parameter or subtotal: this existing producer reopens and
+    // compares both canonical scenarios, preserving conditioned/null results.
+    return input.sharedPortfolio ? input.sharedPortfolio.readMetric(request, call)
+      : { status: "unavailable", reason: "criterion-comparison-producer-unavailable" }
+  }
   const plannerCriteria: PlannerCriteriaHost = { evaluate: async (request, call) => {
     const selected = await input.selectedCase(call)
     if (selected.status !== "ok") return selected

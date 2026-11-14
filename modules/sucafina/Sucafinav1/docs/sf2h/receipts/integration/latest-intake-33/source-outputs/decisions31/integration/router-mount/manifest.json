@@ -1,0 +1,66 @@
+{
+  "owner": "session23",
+  "state": "NOT_APPLIED_SHARED_PATCH",
+  "base_commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+  "patch_sha256": "3d78c688488110854d3fe361c7f1a93979e0aa2131e8261ca591648bfd08b7d7",
+  "failure": {
+    "run": 43641724503,
+    "reported_by": "root",
+    "exact_error": "Error: Method ACL already declared for route /sucafina",
+    "boundary": "Installation HttpRouter layer bootstrap, before Decisions interaction; not missing alternatives montage."
+  },
+  "mechanism": {
+    "dependency": "effect@4.0.0-beta.83",
+    "repo_package_path": "package.json",
+    "repo_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+    "upstream_repository": "Effect-TS/effect-smol",
+    "upstream_ref": "effect@4.0.0-beta.83",
+    "upstream_path": "packages/effect/src/unstable/http/HttpRouter.ts",
+    "upstream_blob": "3a52c4acd7938674bc209059212efd745cff9715",
+    "rule": "addAll registers paths ending in /* at both route.path and route.path.slice(0,-2), for wildcard and explicit methods.",
+    "repo_dependency_patch": "patches/effect@4.0.0-beta.83.patch",
+    "repo_dependency_patch_blob": "aa7a9314ea0058a2dadb4ffac329f6387c89799d",
+    "dependency_patch_effect": "No HttpRouter or FindMyWay changes."
+  },
+  "behavior": "Register exactly the subtree wildcard, which already registers the base. Keep origin/Host admission, catch and handler delegation unchanged. No route or Apply implementation added.",
+  "validation": {
+    "status": "NOT_RUN",
+    "source_review": "Exact dependency source and installation preimage read. No local tests or server.",
+    "owner_action": "Apply by CAS on the pinned preimage; Actions-only cli test/sucafina-installation.test.ts, then existing Decisions E2E dispatcher on composed candidate.",
+    "new_tests": 2,
+    "test_scope": "Actual HttpRouter/loadSfInstallation with a request echo fixture, not a synthetic SF journey."
+  },
+  "patch": "router-mount.patch",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "preimage_blob": "30ffcb8353cdf478808fbb8d6bc67b48b10a6109",
+      "postimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+      "preimage": "preimages/apps/cli/src/sucafina-product/installation.ts.txt",
+      "preimage_bytes": 2463,
+      "preimage_sha256": "b480f09a5a0269988ac15e5c9cd38a0793caa2d94f00833564bc7b993bc4edd1",
+      "postimage": "postimages/apps/cli/src/sucafina-product/installation.ts.txt",
+      "postimage_bytes": 2476,
+      "postimage_sha256": "26c989c2ab37d87363e77a06b96ed55eaccb97f9c4f586879bd4539de869f93d"
+    },
+    {
+      "path": "apps/cli/test/sucafina-installation.test.ts",
+      "preimage_blob": null,
+      "postimage_blob": "6360d706352ec7e4fab097cb9e9152dc2ed5a101",
+      "preimage": null,
+      "postimage": "postimages/apps/cli/test/sucafina-installation.test.ts.txt",
+      "postimage_bytes": 1959,
+      "postimage_sha256": "13b088b99001c1cc60b5bdd9f205169c27a41754af3048b6554ea7f1a86010fa"
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-installation.ts",
+      "preimage_blob": null,
+      "postimage_blob": "5c43c84dde0f44fbc51dffc3d53a5176bda5e900",
+      "preimage": null,
+      "postimage": "postimages/apps/cli/test/fixture/sucafina-installation.ts.txt",
+      "postimage_bytes": 384,
+      "postimage_sha256": "d9147bec935f1b98ac29d62cef7415e91e4d0f2555560c6977ba9069c2a07598"
+    }
+  ],
+  "artifact_note": "Images use .ts.txt so uninstalled owner proposals are not included as executable TypeScript. Strip only the final .txt when applying to the declared target path."
+}

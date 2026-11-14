@@ -1,0 +1,201 @@
+{
+  "schema": "sf2-mission31-terminal-handoff-v1",
+  "mission": 31,
+  "actor": "S4-A",
+  "lease_epoch": "decisions-browser31",
+  "consumer": "session23",
+  "state": "TERMINAL_PARTIAL_DELIVERY_HOLD",
+  "created_at_utc": "2026-11-14T21:48:01.502561Z",
+  "terminal_record": "The Git commit containing this receipt. Its assigned SHA is published in the PR40 body and final delivery; the product source commit is pinned below.",
+  "branch": "astra-wp11",
+  "pr": 40,
+  "source_head": "386d1f9f52ba720e994f9d8feedfca8aa9c9e270",
+  "source_tree": "3fc1bd258bb05ffd7ec6e05618961633fff253ce",
+  "initial_source": "556079fe2fb97c824504ec60a47798c6e0553539",
+  "source_commits": [
+    {
+      "sha": "f7ef0a807f94040975dae9620f95e3db310ff06a",
+      "tree": "d17db55c192b11713054fc68f00a1b1f300cf90d"
+    },
+    {
+      "sha": "386d1f9f52ba720e994f9d8feedfca8aa9c9e270",
+      "tree": "3fc1bd258bb05ffd7ec6e05618961633fff253ce"
+    }
+  ],
+  "consumed_C3": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+  "consumed_C12_source": "c8a03c4f689025ca70a1c815fd292af22b6261cd",
+  "tested_W": "46e6ef14ebccd4c9ba5850b8c5d73ddd3e9609ad",
+  "tested_S": "239b981856b981bf9e2d3984155ceb4ef6fbdf1c",
+  "latest_target_observed": "07aa9831f1a85f01b42984891c899a887fb48db5",
+  "target_qualification": "C6 then C8 record observed only. Tested closure remains pinned C3 plus16 owned postimages. Later target has Operations24/tooling26 changes but none to the six existing shared patch target preimages. No target writes or proof transfer.",
+  "product_files": 16,
+  "complete_shared_patch_sets": 5,
+  "mandatory_shared_patch_sets_not_delivered": 2,
+  "acceptance": {
+    "positive_journey": "NOT_GRANTED",
+    "literal_criteria_accepted": 0,
+    "criteria_total": 83,
+    "C_G7": "NOT_GRANTED",
+    "D_G8": "NOT_GRANTED",
+    "AM01_AM06": "NOT_GRANTED",
+    "native_provider": "NOT_RUN",
+    "native_critique": "NOT_RUN",
+    "native_restart": "NOT_RUN"
+  },
+  "runs": [
+    {
+      "name": "C3 baseline",
+      "W": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+      "S": "bfd7cd656c66310bd832e0e38926aac827ec048e",
+      "run": 43641724503,
+      "result": "0 pass / 4 fail / 0 skip / 0 flaky"
+    },
+    {
+      "name": "focused Wc1",
+      "source": "f7ef0a807f94040975dae9620f95e3db310ff06a",
+      "W": "21b4b6dd7779468062c6a169e7c7b14d8612717b",
+      "S": "5e4765300eab9f50416468d50b2543027a7e8d11",
+      "run": 43642837425,
+      "result": "35 pass / 0 fail; 192 expect; six files"
+    },
+    {
+      "name": "changed Edit Wc2",
+      "source": "386d1f9f52ba720e994f9d8feedfca8aa9c9e270",
+      "W": "46e6ef14ebccd4c9ba5850b8c5d73ddd3e9609ad",
+      "S": "36faa62ddb086142a7c0599ac096519ef25d2888",
+      "run": 43643273465,
+      "result": "15 pass / 0 fail; 68 expect; three files"
+    },
+    {
+      "name": "final nominal Wc2",
+      "source": "386d1f9f52ba720e994f9d8feedfca8aa9c9e270",
+      "W": "46e6ef14ebccd4c9ba5850b8c5d73ddd3e9609ad",
+      "S": "239b981856b981bf9e2d3984155ceb4ef6fbdf1c",
+      "run": 43643567632,
+      "result": "failure",
+      "actual_tests": {
+        "selected": 5,
+        "executed": 5,
+        "pass": 0,
+        "fail": 5,
+        "skip": 0,
+        "flaky": 0,
+        "attempts_each": 1,
+        "runtime_duration_ms": 438397.673,
+        "start_time": "2026-11-14T21:36:38.368Z",
+        "cases": [
+          {
+            "title": "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+            "file": "sucafina/decisions.spec.ts",
+            "line": 12,
+            "expected_status": "passed",
+            "classification": "unexpected",
+            "status": "failed",
+            "retry": 0,
+            "attempts": 1,
+            "timeout_ms": 180000,
+            "duration_ms": 79779,
+            "error": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate",
+            "bootstrap_error_confirmed": true
+          },
+          {
+            "title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+            "file": "sucafina/decisions.spec.ts",
+            "line": 21,
+            "expected_status": "passed",
+            "classification": "unexpected",
+            "status": "failed",
+            "retry": 0,
+            "attempts": 1,
+            "timeout_ms": 180000,
+            "duration_ms": 79848,
+            "error": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate",
+            "bootstrap_error_confirmed": true
+          },
+          {
+            "title": "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+            "file": "sucafina/decisions.spec.ts",
+            "line": 35,
+            "expected_status": "passed",
+            "classification": "unexpected",
+            "status": "failed",
+            "retry": 0,
+            "attempts": 1,
+            "timeout_ms": 180000,
+            "duration_ms": 79765,
+            "error": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate",
+            "bootstrap_error_confirmed": true
+          },
+          {
+            "title": "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+            "file": "sucafina/decisions.spec.ts",
+            "line": 87,
+            "expected_status": "passed",
+            "classification": "unexpected",
+            "status": "failed",
+            "retry": 0,
+            "attempts": 1,
+            "timeout_ms": 180000,
+            "duration_ms": 74407,
+            "error": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate",
+            "bootstrap_error_confirmed": true
+          },
+          {
+            "title": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting",
+            "file": "sucafina/decisions.spec.ts",
+            "line": 135,
+            "expected_status": "passed",
+            "classification": "unexpected",
+            "status": "failed",
+            "retry": 0,
+            "attempts": 1,
+            "timeout_ms": 180000,
+            "duration_ms": 79717,
+            "error": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate",
+            "bootstrap_error_confirmed": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "existing WP11 checks",
+      "W": "386d1f9f52ba720e994f9d8feedfca8aa9c9e270",
+      "S": null,
+      "run": 43643267543,
+      "result": "FAILURE:130 TS /43GATE /18WARN; no waiver"
+    }
+  ],
+  "safety_and_authority": {
+    "github_remote": "MCP only; CAS expected head; force:false",
+    "local_tests": 0,
+    "full_or_epic_suites": 0,
+    "automatic_mutation_retries": 0,
+    "sleeps_added": 0,
+    "skips_added": 0,
+    "budgets_increased": 0,
+    "shared_product_writes": 0,
+    "C12_producer_edits": 0,
+    "dev_merges": 0,
+    "deploys": 0,
+    "engine_changes": 0,
+    "Orchestra_restarts": 0,
+    "messages_to_third_parties": 0
+  },
+  "terminal_authority": "This source lease ends with this terminal record. No background source mutation, active test run or deferred polling remains. A future continuation requires explicit renewed scope; a missing writer must not be inferred.",
+  "owner_consumption": [
+    "Check INPUTS/PRODUCT/TARGET-OBSERVATION and every preimage blob. Consume owned-C3.patch or the exact16 W2 postimages without replacing shared host files.",
+    "Shared order: router-mount; coverage-read then procurement-read; comparison-rule independently; history-read only within its stated generic list scope.",
+    "Implement missing genuine pre-choice Procurement producer and a domain-approved proposal/Apply contract. Those two complete patches are explicitly not delivered here.",
+    "Run the existing surgical Actions selections on the owner composed candidate after material changes; retain all83criteria, authorization negatives, canonical financial oracles and native proof obligations."
+  ],
+  "files": {
+    "inputs": "INPUTS.json",
+    "product": "PRODUCT.json",
+    "criteria": "criteria.json",
+    "journey": "journey-matrix.json",
+    "findings": "FINDINGS.json",
+    "patches": "integration/INDEX.json",
+    "checks": "checks-W2.json",
+    "target": "TARGET-OBSERVATION.json"
+  }
+}

@@ -1,0 +1,251 @@
+{
+  "source_commit": "386d1f9f52ba720e994f9d8feedfca8aa9c9e270",
+  "source_tree": "3fc1bd258bb05ffd7ec6e05618961633fff253ce",
+  "W": "46e6ef14ebccd4c9ba5850b8c5d73ddd3e9609ad",
+  "W_tree": "54abd2ea5ab6c15454032f4a0183ea6cef641ea7",
+  "S": "239b981856b981bf9e2d3984155ceb4ef6fbdf1c",
+  "S_tree": "2c5a315b19679d9607c9eac98b7247f83cf246d9",
+  "request": {
+    "package": "app",
+    "packageSelector": "packages/app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/decisions.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "run": {
+    "id": 43643567632,
+    "job": 132596197349,
+    "cleanup_job": 132598703416,
+    "attempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43643567632",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-11-14T21:34:49Z",
+    "updated_at": "2026-11-14T21:44:06Z"
+  },
+  "artifact": {
+    "id": 14133447499,
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 313793,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14133447499",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14133447499/zip",
+    "expired": false,
+    "created_at": "2026-11-14T21:43:58Z",
+    "expires_at": "2026-11-21T21:43:57Z",
+    "updated_at": "2026-11-14T21:43:58Z",
+    "digest": "sha256:90b32cc4a5d4a751164d5a9df25988a37bc08e60ef0872da880b72c57126c00f",
+    "workflow_run": {
+      "id": 43643567632,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-linux-astra-wp11-46e6ef14-m31-browser-01",
+      "head_sha": "239b981856b981bf9e2d3984155ceb4ef6fbdf1c"
+    }
+  },
+  "product_files": [
+    {
+      "path": "apps/cli/src/sucafina-product/decision-coverage-read.ts",
+      "blob": "cfbff030208adb764f392f637ff7b903c0c64199"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+      "blob": "cf61bf000836c0a7cd257366a30708f9e1000d9e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts",
+      "blob": "1c4bd231075bf149a31924cf651063bf1c3ef6d3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-functional-closure/choice-forms.test.ts",
+      "blob": "76110418a19b55c8c96e5aefbd153c14cf9a3495"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-functional-closure/choice-intention.test.ts",
+      "blob": "2ac5b2e8824cea076e1e57b4b9a6dc174da6807a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-functional-closure/coverage-read.test.ts",
+      "blob": "f714f9ce95309f06874dd081c36a45ef1526a6cd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-functional-closure/procurement-evidence.test.ts",
+      "blob": "040cee1856a4187b978552e4bf8f97110a6e3c9a"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/apply-recovery.ts",
+      "blob": "cb70480c28e9382629d289c1c954e88379e173d3"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts",
+      "blob": "c469187a2e04d49d157cf9d3830145ca845f4064"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts",
+      "blob": "fa509e9d7a7da9d0024c9487975f7b26b3b29146"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts",
+      "blob": "9e02b30fee0e1f37afeac28b0296bdfbbbab70aa"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts",
+      "blob": "979bfeeb460e85fe1911affe0ac9ad4d21a27e3a"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts",
+      "blob": "c27eb39b9ef0d36a48d329e5767ba5cb3a4aa0ad"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/procurement-closure.ts",
+      "blob": "5784a995ba25d042101fe2eed63ce96957b711b1"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts",
+      "blob": "7a7553b89af8f90592603f7d454ba164cbb81afd"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "blob": "952ce06a276bca7723e11e8ea9067637e6bbf8e4"
+    }
+  ],
+  "schema": "sf2-nominal-actions-v1",
+  "selection": "CI-UI-DECISIONS",
+  "stage": "real installation bootstrap before UI callback",
+  "status": "BLOCKED_BOOTSTRAP_FAILURE",
+  "closure_base": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+  "overlay": "Only16 owned UI/adapter/test paths. No shared owner patch consumed. Not a final global C candidate.",
+  "envelope_only": ".ci-run.json",
+  "envelope_blob": "bde2ada71f7d4e7da104aea562c130dbfcb86270",
+  "actual_tests": {
+    "selected": 5,
+    "executed": 5,
+    "pass": 0,
+    "fail": 5,
+    "skip": 0,
+    "flaky": 0,
+    "attempts_each": 1,
+    "runtime_duration_ms": 438397.673,
+    "start_time": "2026-11-14T21:36:38.368Z",
+    "cases": [
+      {
+        "title": "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+        "file": "sucafina/decisions.spec.ts",
+        "line": 12,
+        "expected_status": "passed",
+        "classification": "unexpected",
+        "status": "failed",
+        "retry": 0,
+        "attempts": 1,
+        "timeout_ms": 180000,
+        "duration_ms": 79779,
+        "error": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate",
+        "bootstrap_error_confirmed": true
+      },
+      {
+        "title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+        "file": "sucafina/decisions.spec.ts",
+        "line": 21,
+        "expected_status": "passed",
+        "classification": "unexpected",
+        "status": "failed",
+        "retry": 0,
+        "attempts": 1,
+        "timeout_ms": 180000,
+        "duration_ms": 79848,
+        "error": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate",
+        "bootstrap_error_confirmed": true
+      },
+      {
+        "title": "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+        "file": "sucafina/decisions.spec.ts",
+        "line": 35,
+        "expected_status": "passed",
+        "classification": "unexpected",
+        "status": "failed",
+        "retry": 0,
+        "attempts": 1,
+        "timeout_ms": 180000,
+        "duration_ms": 79765,
+        "error": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate",
+        "bootstrap_error_confirmed": true
+      },
+      {
+        "title": "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+        "file": "sucafina/decisions.spec.ts",
+        "line": 87,
+        "expected_status": "passed",
+        "classification": "unexpected",
+        "status": "failed",
+        "retry": 0,
+        "attempts": 1,
+        "timeout_ms": 180000,
+        "duration_ms": 74407,
+        "error": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate",
+        "bootstrap_error_confirmed": true
+      },
+      {
+        "title": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting",
+        "file": "sucafina/decisions.spec.ts",
+        "line": 135,
+        "expected_status": "passed",
+        "classification": "unexpected",
+        "status": "failed",
+        "retry": 0,
+        "attempts": 1,
+        "timeout_ms": 180000,
+        "duration_ms": 79717,
+        "error": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate",
+        "bootstrap_error_confirmed": true
+      }
+    ]
+  },
+  "runtime": {
+    "playwright": "1.59.1",
+    "project": "chromium",
+    "workers": 1,
+    "actual_workers": 1,
+    "retries": 0,
+    "repeat_each": 1,
+    "per_test_timeout_ms": 180000,
+    "readiness_budget_ms": 75000,
+    "config": "e2e/playwright.production.config.ts",
+    "platform": "linux",
+    "arch": "x64",
+    "channel": "prod"
+  },
+  "ui_actions_reached": 0,
+  "omni_positive_control": {
+    "verdict": "not applicable",
+    "reason": "Playwright lane; no native/omni acceptance inferred"
+  },
+  "cause": {
+    "error": "Error: Method 'ACL' already declared for route '/sucafina'",
+    "cli_exit": 1,
+    "layer": "installation HttpRouter registration",
+    "all_five_same_bootstrap_failure": true,
+    "initial_alternatives_mount": "already present in C3, not missing",
+    "owner_patch": "integration/router-mount/manifest.json"
+  },
+  "artifact_integrity": {
+    "sha256": "90b32cc4a5d4a751164d5a9df25988a37bc08e60ef0872da880b72c57126c00f",
+    "bytes": 313793,
+    "download_digest_verified": true,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43643567632/artifacts/14133447499",
+    "expires_at": "2026-11-21T21:43:57Z"
+  },
+  "evidence": {
+    "runtime": "evidence/final-E2E-playwright-runtime.json",
+    "selection": "evidence/final-E2E-playwright-selection.json",
+    "runner_request": "evidence/final-E2E-runner-request.json",
+    "cli": "evidence/final-E2E-cli.txt"
+  },
+  "selection_only_note": "The collection-only JSON lists5 skipped while enumerating. Runtime executes5 and reports0 skipped. Do not conflate collection with execution.",
+  "acceptance": "NOT_GRANTED; focused green results do not accept E2E. Apply/receipt/history stages were not reached.",
+  "dedup": "Only one WP11 test-ci run in flight; attempt1; final nominal run after material owned source/selection changes. No unchanged mutation retry."
+}

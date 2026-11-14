@@ -1,0 +1,61 @@
+{
+  "schema": "sf2-actions-observation-v1",
+  "selection": "CI-UI-DECISIONS",
+  "stage": "published-C3-baseline",
+  "status": "FAILURE",
+  "W": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+  "W_tree": "5a0f4aae93e4df629816982a36a0720754c4d3d9",
+  "S": "bfd7cd656c66310bd832e0e38926aac827ec048e",
+  "S_tree": "976b34e67172e3ce0dbd3aec743437394beba9ee",
+  "envelope_only": ".ci-run.json",
+  "request": {
+    "package": "app",
+    "packageSelector": "packages/app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/decisions.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "run": {
+    "id": 43641724503,
+    "attempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43641724503",
+    "job": 132590547575,
+    "conclusion": "failure"
+  },
+  "actual_tests": {
+    "selected": 4,
+    "executed": 4,
+    "pass": 0,
+    "fail": 4,
+    "skip": 0,
+    "flaky": 0,
+    "retries": 0,
+    "workers": 1,
+    "repeat": 1
+  },
+  "ui_actions_reached": 0,
+  "omni_positive_control": "not applicable: Playwright runner",
+  "cause": {
+    "stage": "real CLI bootstrap",
+    "error": "Method 'ACL' already declared for route '/sucafina'",
+    "fixture": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+    "timeout_ms": 75000,
+    "increased": false,
+    "obsolete_missing_alternatives_mount": false
+  },
+  "artifact": {
+    "id": 14132666679,
+    "name": "playwright-ubuntu-24.04-1",
+    "bytes": 295305,
+    "sha256": "b19a089ba571da23b022a72d429c4483cdb390882d6657557125c36baaa90ade",
+    "expires_at": "2026-11-21T21:22:16Z"
+  },
+  "acceptance": "NOT_GRANTED",
+  "dedup": "No in-flight WP11 nominal run and no identical C3 selection found before dispatch. No retry of unchanged tree."
+}

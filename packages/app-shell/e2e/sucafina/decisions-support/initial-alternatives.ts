@@ -5,12 +5,14 @@ import { loseAlternativeResponse } from "./alternative-response"
 
 const titles = { baseline: "Keep the baseline service", candidate: "Consider the candidate service" }
 const pendingReason = "Cost categories still need evidence; a known service amount does not establish complete coverage."
+export const knownIncreaseCriterion = "Keep the increase in known annual subtotal at or below 2000 USD; unresolved cost categories remain pending."
 
 export async function initialAlternativesJourney(page: Page, installation: { origin: string; actorId: string }, observations: Record<string, unknown>[]) {
   const sources = await test.step("create two actual Planner versions through human controls", () => createPlannerSources(page, installation.origin, installation.actorId, observations))
   await enterWorkbench(page, installation.origin)
   const objective = `${draft.objective} — initial alternatives`
   const form = await fillDecision(page, objective)
+  await form.getByLabel("Criteria, one per line", { exact: true }).fill(knownIncreaseCriterion)
   const created = await clickCommand(page, form.getByRole("button", { name: "Create decision", exact: true }), "workbench-command", observations)
   expect(typeof created.outputRef).toBe("string")
   const reference = created.outputRef as string
@@ -150,7 +152,7 @@ export async function initialAlternativesJourney(page: Page, installation: { ori
       })))
       expect(asRecord(value.comparison).unresolvedConditions).toContain("criterion-rules-unavailable")
       await expect(choice.locator("[data-comparison]")).toContainText("Comparison: conditioned · Known difference: 1200")
-      await expect(choice.getByRole("button", { name: "Record choice", exact: true })).toBeEnabled()
+      await expect(choice.getByRole("button", { name: "Record choice", exact: true })).toBeDisabled()
       await expect(page.getByText("No changes prepared.", { exact: true })).toBeVisible()
       await expect(page.getByRole("button", { name: "Apply reviewed change", exact: true })).toHaveCount(0)
       expect(promotions).toHaveLength(3)
@@ -183,6 +185,7 @@ export async function initialAlternativesJourney(page: Page, installation: { ori
         alternativeIds: candidates.map((candidate) => candidate.alternativeId), portfolioEvaluated: false })
     })
   } finally { page.off("request", listener) }
+  return { reference, objective, sources, titles }
 }
 
 async function selectSource(select: Locator, name: string, id: string) {

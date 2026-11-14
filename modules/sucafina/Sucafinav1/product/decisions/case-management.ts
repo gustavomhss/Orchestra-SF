@@ -16,6 +16,8 @@ export function createDecisionCaseManagement(input: {
   authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<boolean>
   authorizeEdit: (request: Edit, context: TrustedDomainContext) => Promise<boolean>
   verifyEvidence: (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<boolean>
+  /** Read-only history admission; edits continue using current evidence. */
+  verifyReadEvidence?: (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<boolean>
   verifyEdit: (snapshot: import("../../runtime/contract.ts").Snapshot, before: DecisionCase, after: DecisionCase, context: TrustedDomainContext) => boolean
   operationIdentity: (context: TrustedDomainContext) => string | undefined
 }) {
@@ -26,11 +28,11 @@ export function createDecisionCaseManagement(input: {
       const read = () => input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? Object.values(state.cases).filter((value) => value.participants.includes(context.binding.principalRef)) : undefined)
       const current = await read().catch(() => undefined)
       if (!current || current.status !== "ok" || !current.value) return { status: "unavailable", reason: "case-list-unavailable" }
-      const allowed = await Promise.all(current.value.map(async (value) => context.kind === "native" && (context.binding.caseId !== value.id || context.binding.caseIncarnation !== value.incarnation || context.binding.caseVersion !== value.version) ? undefined : await input.authorizeCase(value, context).catch(() => false) && await input.verifyEvidence(value.sourceRefs, context).catch(() => false) ? value : undefined))
+      const allowed = await Promise.all(current.value.map(async (value) => context.kind === "native" && (context.binding.caseId !== value.id || context.binding.caseIncarnation !== value.incarnation || context.binding.caseVersion !== value.version) ? undefined : await input.authorizeCase(value, context).catch(() => false) && await (input.verifyReadEvidence ?? input.verifyEvidence)(value.sourceRefs, context).catch(() => false) ? value : undefined))
       const again = await read().catch(() => undefined)
       if (!again || again.status !== "ok" || again.storageVersion !== current.storageVersion || digestSfValue(again.value) !== digestSfValue(current.value) || !await input.host.revalidate(context).catch(() => false)) return { status: "stale", reason: "case-list-changed" }
       const authorized = allowed.filter((value): value is DecisionCase => !!value)
-      if (!(await Promise.all(authorized.map(async (value) => await input.authorizeCase(value, context).catch(() => false) && await input.verifyEvidence(value.sourceRefs, context).catch(() => false)))).every(Boolean) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "case-list-access-changed" }
+      if (!(await Promise.all(authorized.map(async (value) => await input.authorizeCase(value, context).catch(() => false) && await (input.verifyReadEvidence ?? input.verifyEvidence)(value.sourceRefs, context).catch(() => false)))).every(Boolean) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "case-list-access-changed" }
       return { status: "ok", value: authorized.map((value) => ({ caseRef: { id: value.id, incarnation: value.incarnation, version: value.version }, objective: value.objective, state: value.state })) }
     },
     edit: async (incoming: Edit, context: TrustedDomainContext): Promise<PortResult<{ caseRef: CaseRef }>> => {

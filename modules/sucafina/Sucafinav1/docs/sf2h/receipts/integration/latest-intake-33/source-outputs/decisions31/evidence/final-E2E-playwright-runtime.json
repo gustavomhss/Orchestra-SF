@@ -1,0 +1,572 @@
+{
+  "config": {
+    "configFile": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/playwright.production.config.ts",
+    "rootDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e",
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": {},
+    "maxFailures": 0,
+    "metadata": {
+      "bundle": "production",
+      "ci": {
+        "commitHref": "https://github.com/gustavomhss/Orchestra-SF/commit/239b981856b981bf9e2d3984155ceb4ef6fbdf1c",
+        "commitHash": "239b981856b981bf9e2d3984155ceb4ef6fbdf1c",
+        "buildHref": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43643567632"
+      },
+      "gitCommit": {
+        "shortHash": "239b9818",
+        "hash": "239b981856b981bf9e2d3984155ceb4ef6fbdf1c",
+        "subject": "ci(sucafina): verify final Mission31 Decisions browser selection on C3",
+        "body": "ci(sucafina): verify final Mission31 Decisions browser selection on C3",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "time": 1794692087000
+        },
+        "committer": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "time": 1794692087000
+        },
+        "branch": "ci-run-linux-astra-wp11-46e6ef14-m31-browser-01"
+      },
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "bundle": "production",
+          "ci": {
+            "commitHref": "https://github.com/gustavomhss/Orchestra-SF/commit/239b981856b981bf9e2d3984155ceb4ef6fbdf1c",
+            "commitHash": "239b981856b981bf9e2d3984155ceb4ef6fbdf1c",
+            "buildHref": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43643567632"
+          },
+          "gitCommit": {
+            "shortHash": "239b9818",
+            "hash": "239b981856b981bf9e2d3984155ceb4ef6fbdf1c",
+            "subject": "ci(sucafina): verify final Mission31 Decisions browser selection on C3",
+            "body": "ci(sucafina): verify final Mission31 Decisions browser selection on C3",
+            "author": {
+              "name": "gustavomhss",
+              "email": "gmhelmold@gmail.com",
+              "time": 1794692087000
+            },
+            "committer": {
+              "name": "gustavomhss",
+              "email": "gmhelmold@gmail.com",
+              "time": 1794692087000
+            },
+            "branch": "ci-run-linux-astra-wp11-46e6ef14-m31-browser-01"
+          },
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e",
+        "testIgnore": [
+          "performance/**"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "html"
+      ],
+      [
+        "line"
+      ],
+      [
+        "json"
+      ],
+      [
+        "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/utils/flaky-reporter.ts"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.59.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "sucafina/decisions.spec.ts",
+      "file": "sucafina/decisions.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [
+                {
+                  "type": "proof-limit",
+                  "description": "Human choice and historical C10 coverage with pending costs; this path has no executable Procurement operation and does not accept financial approval, C12 Apply, native model or AM proofs"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 79779,
+                  "error": {
+                    "message": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate",
+                    "stack": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate\n    at startPlannerInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts:83:5)\n    at withInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:34:24)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:15:3",
+                    "location": {
+                      "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+                      "column": 5,
+                      "line": 83
+                    },
+                    "snippet": "   at sucafina/wp03/installation-fixture.ts:83\n\n\u001b[0m \u001b[90m 81 |\u001b[39m   }\n \u001b[90m 82 |\u001b[39m   \u001b[36mtry\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 83 |\u001b[39m     \u001b[36mawait\u001b[39m expect\u001b[33m.\u001b[39mpoll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n \u001b[90m    |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 84 |\u001b[39m       \u001b[36mif\u001b[39m (exited()) \u001b[36mreturn\u001b[39m \u001b[32m`CLI exited: ${state.error?.message ?? child.exitCode ?? child.signalCode}`\u001b[39m\n \u001b[90m 85 |\u001b[39m       \u001b[36mtry\u001b[39m {\n \u001b[90m 86 |\u001b[39m         \u001b[36mconst\u001b[39m response \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m fetch(\u001b[32m`${origin}/sucafina/status`\u001b[39m\u001b[33m,\u001b[39m { signal\u001b[33m:\u001b[39m \u001b[33mAbortSignal\u001b[39m\u001b[33m.\u001b[39mtimeout(\u001b[35m1\u001b[39m_000) })\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+                        "column": 5,
+                        "line": 83
+                      },
+                      "message": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate\n\n   at sucafina/wp03/installation-fixture.ts:83\n\n  81 |   }\n  82 |   try {\n> 83 |     await expect.poll(async () => {\n     |     ^\n  84 |       if (exited()) return `CLI exited: ${state.error?.message ?? child.exitCode ?? child.signalCode}`\n  85 |       try {\n  86 |         const response = await fetch(`${origin}/sucafina/status`, { signal: AbortSignal.timeout(1_000) })\n    at startPlannerInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts:83:5)\n    at withInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:34:24)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:15:3"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-14T21:37:19.998Z",
+                  "annotations": [
+                    {
+                      "type": "proof-limit",
+                      "description": "Human choice and historical C10 coverage with pending costs; this path has no executable Procurement operation and does not accept financial approval, C12 Apply, native model or AM proofs"
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "wp03-real-cli.log",
+                      "contentType": "text/plain",
+                      "body": "WzIxOjM3OjIyLjkyNl0gRVJST1IgKCMyKTogRXJyb3I6IE1ldGhvZCAnQUNMJyBhbHJlYWR5IGRlY2xhcmVkIGZvciByb3V0ZSAnL3N1Y2FmaW5hJwogICAgYXQgX29uICgvaG9tZS9ydW5uZXIvd29yay9PcmNoZXN0cmEtU0YvT3JjaGVzdHJhLVNGL25vZGVfbW9kdWxlcy8uYnVuL2ZpbmQtbXktd2F5LXRzQDAuMS42L25vZGVfbW9kdWxlcy9maW5kLW15LXdheS10cy9kaXN0L2VzbS9pbnRlcm5hbC9yb3V0ZXIuanM6MTQxOjE5KQogICAgYXQgb24gKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZmluZC1teS13YXktdHNAMC4xLjYvbm9kZV9tb2R1bGVzL2ZpbmQtbXktd2F5LXRzL2Rpc3QvZXNtL2ludGVybmFsL3JvdXRlci5qczozNzoxMikKICAgIGF0IGFsbCAoL2hvbWUvcnVubmVyL3dvcmsvT3JjaGVzdHJhLVNGL09yY2hlc3RyYS1TRi9ub2RlX21vZHVsZXMvLmJ1bi9maW5kLW15LXdheS10c0AwLjEuNi9ub2RlX21vZHVsZXMvZmluZC1teS13YXktdHMvZGlzdC9lc20vaW50ZXJuYWwvcm91dGVyLmpzOjQxOjEwKQogICAgYXQgPGFub255bW91cz4gKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L3Vuc3RhYmxlL2h0dHAvSHR0cFJvdXRlci5qczo2ODoxOCkKICAgIGF0IHJ1bkxvb3AgKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L2ludGVybmFsL2VmZmVjdC5qczo0NDQ6OTgpCiAgICBhdCBldmFsdWF0ZSAoL2hvbWUvcnVubmVyL3dvcmsvT3JjaGVzdHJhLVNGL09yY2hlc3RyYS1TRi9ub2RlX21vZHVsZXMvLmJ1bi9lZmZlY3RANC4wLjAtYmV0YS44My9ub2RlX21vZHVsZXMvZWZmZWN0L2Rpc3QvaW50ZXJuYWwvZWZmZWN0LmpzOjQxMjoyMykKICAgIGF0IGZvcmtVbnNhZmUgKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L2ludGVybmFsL2VmZmVjdC5qczoyMDc5OjExKQogICAgYXQgZ28gKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L2ludGVybmFsL2VmZmVjdC5qczoxOTI2OjI1KQogICAgYXQgPGFub255bW91cz4gKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L2ludGVybmFsL2VmZmVjdC5qczoxOTE0OjI4KQogICAgYXQgY2xpLnNlcnZlICgvaG9tZS9ydW5uZXIvd29yay9PcmNoZXN0cmEtU0YvT3JjaGVzdHJhLVNGL25vZGVfbW9kdWxlcy8uYnVuL2VmZmVjdEA0LjAuMC1iZXRhLjgzL25vZGVfbW9kdWxlcy9lZmZlY3QvZGlzdC9pbnRlcm5hbC9lZmZlY3QuanM6NDQ0Ojk4KQogICAgYXQgY2xpLnNlcnZlIChkZWZpbml0aW9uKSAoL2hvbWUvcnVubmVyL3dvcmsvT3JjaGVzdHJhLVNGL09yY2hlc3RyYS1TRi9hcHBzL2NsaS9zcmMvY29tbWFuZHMvaGFuZGxlcnMvc2VydmUudHM6NTI6MzYpCg=="
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+                    "column": 5,
+                    "line": 83
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "9a11cdde3860c3b31dc6-928f17f39ed8eac1bcc1",
+          "file": "sucafina/decisions.spec.ts",
+          "line": 12,
+          "column": 1
+        },
+        {
+          "title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [
+                {
+                  "type": "dependency",
+                  "description": "Public typed Procurement alternative authoring, authorized composite producer, numeric criterion rule and a domain financial approval compatible with the prepared change are mandatory. Missing controls fail; no fixture inserts them."
+                },
+                {
+                  "type": "proof-limit",
+                  "description": "Consumes the published C12 Apply and recovery; selection and confirmation alone do not prove financial approval, native provider/critique or restart."
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 79848,
+                  "error": {
+                    "message": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate",
+                    "stack": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate\n    at startPlannerInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts:83:5)\n    at withInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:34:24)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:25:3",
+                    "location": {
+                      "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+                      "column": 5,
+                      "line": 83
+                    },
+                    "snippet": "   at sucafina/wp03/installation-fixture.ts:83\n\n\u001b[0m \u001b[90m 81 |\u001b[39m   }\n \u001b[90m 82 |\u001b[39m   \u001b[36mtry\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 83 |\u001b[39m     \u001b[36mawait\u001b[39m expect\u001b[33m.\u001b[39mpoll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n \u001b[90m    |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 84 |\u001b[39m       \u001b[36mif\u001b[39m (exited()) \u001b[36mreturn\u001b[39m \u001b[32m`CLI exited: ${state.error?.message ?? child.exitCode ?? child.signalCode}`\u001b[39m\n \u001b[90m 85 |\u001b[39m       \u001b[36mtry\u001b[39m {\n \u001b[90m 86 |\u001b[39m         \u001b[36mconst\u001b[39m response \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m fetch(\u001b[32m`${origin}/sucafina/status`\u001b[39m\u001b[33m,\u001b[39m { signal\u001b[33m:\u001b[39m \u001b[33mAbortSignal\u001b[39m\u001b[33m.\u001b[39mtimeout(\u001b[35m1\u001b[39m_000) })\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+                        "column": 5,
+                        "line": 83
+                      },
+                      "message": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate\n\n   at sucafina/wp03/installation-fixture.ts:83\n\n  81 |   }\n  82 |   try {\n> 83 |     await expect.poll(async () => {\n     |     ^\n  84 |       if (exited()) return `CLI exited: ${state.error?.message ?? child.exitCode ?? child.signalCode}`\n  85 |       try {\n  86 |         const response = await fetch(`${origin}/sucafina/status`, { signal: AbortSignal.timeout(1_000) })\n    at startPlannerInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts:83:5)\n    at withInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:34:24)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:25:3"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-14T21:38:40.659Z",
+                  "annotations": [
+                    {
+                      "type": "dependency",
+                      "description": "Public typed Procurement alternative authoring, authorized composite producer, numeric criterion rule and a domain financial approval compatible with the prepared change are mandatory. Missing controls fail; no fixture inserts them."
+                    },
+                    {
+                      "type": "proof-limit",
+                      "description": "Consumes the published C12 Apply and recovery; selection and confirmation alone do not prove financial approval, native provider/critique or restart."
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "wp03-real-cli.log",
+                      "contentType": "text/plain",
+                      "body": "WzIxOjM4OjQzLjU1M10gRVJST1IgKCMyKTogRXJyb3I6IE1ldGhvZCAnQUNMJyBhbHJlYWR5IGRlY2xhcmVkIGZvciByb3V0ZSAnL3N1Y2FmaW5hJwogICAgYXQgX29uICgvaG9tZS9ydW5uZXIvd29yay9PcmNoZXN0cmEtU0YvT3JjaGVzdHJhLVNGL25vZGVfbW9kdWxlcy8uYnVuL2ZpbmQtbXktd2F5LXRzQDAuMS42L25vZGVfbW9kdWxlcy9maW5kLW15LXdheS10cy9kaXN0L2VzbS9pbnRlcm5hbC9yb3V0ZXIuanM6MTQxOjE5KQogICAgYXQgb24gKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZmluZC1teS13YXktdHNAMC4xLjYvbm9kZV9tb2R1bGVzL2ZpbmQtbXktd2F5LXRzL2Rpc3QvZXNtL2ludGVybmFsL3JvdXRlci5qczozNzoxMikKICAgIGF0IGFsbCAoL2hvbWUvcnVubmVyL3dvcmsvT3JjaGVzdHJhLVNGL09yY2hlc3RyYS1TRi9ub2RlX21vZHVsZXMvLmJ1bi9maW5kLW15LXdheS10c0AwLjEuNi9ub2RlX21vZHVsZXMvZmluZC1teS13YXktdHMvZGlzdC9lc20vaW50ZXJuYWwvcm91dGVyLmpzOjQxOjEwKQogICAgYXQgPGFub255bW91cz4gKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L3Vuc3RhYmxlL2h0dHAvSHR0cFJvdXRlci5qczo2ODoxOCkKICAgIGF0IHJ1bkxvb3AgKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L2ludGVybmFsL2VmZmVjdC5qczo0NDQ6OTgpCiAgICBhdCBldmFsdWF0ZSAoL2hvbWUvcnVubmVyL3dvcmsvT3JjaGVzdHJhLVNGL09yY2hlc3RyYS1TRi9ub2RlX21vZHVsZXMvLmJ1bi9lZmZlY3RANC4wLjAtYmV0YS44My9ub2RlX21vZHVsZXMvZWZmZWN0L2Rpc3QvaW50ZXJuYWwvZWZmZWN0LmpzOjQxMjoyMykKICAgIGF0IGZvcmtVbnNhZmUgKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L2ludGVybmFsL2VmZmVjdC5qczoyMDc5OjExKQogICAgYXQgZ28gKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L2ludGVybmFsL2VmZmVjdC5qczoxOTI2OjI1KQogICAgYXQgPGFub255bW91cz4gKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L2ludGVybmFsL2VmZmVjdC5qczoxOTE0OjI4KQogICAgYXQgY2xpLnNlcnZlICgvaG9tZS9ydW5uZXIvd29yay9PcmNoZXN0cmEtU0YvT3JjaGVzdHJhLVNGL25vZGVfbW9kdWxlcy8uYnVuL2VmZmVjdEA0LjAuMC1iZXRhLjgzL25vZGVfbW9kdWxlcy9lZmZlY3QvZGlzdC9pbnRlcm5hbC9lZmZlY3QuanM6NDQ0Ojk4KQogICAgYXQgY2xpLnNlcnZlIChkZWZpbml0aW9uKSAoL2hvbWUvcnVubmVyL3dvcmsvT3JjaGVzdHJhLVNGL09yY2hlc3RyYS1TRi9hcHBzL2NsaS9zcmMvY29tbWFuZHMvaGFuZGxlcnMvc2VydmUudHM6NTI6MzYpCg=="
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+                    "column": 5,
+                    "line": 83
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "9a11cdde3860c3b31dc6-a1b7dce60d02523feadb",
+          "file": "sucafina/decisions.spec.ts",
+          "line": 21,
+          "column": 1
+        },
+        {
+          "title": "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 79765,
+                  "error": {
+                    "message": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate",
+                    "stack": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate\n    at startPlannerInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts:83:5)\n    at withInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:34:24)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:37:3",
+                    "location": {
+                      "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+                      "column": 5,
+                      "line": 83
+                    },
+                    "snippet": "   at sucafina/wp03/installation-fixture.ts:83\n\n\u001b[0m \u001b[90m 81 |\u001b[39m   }\n \u001b[90m 82 |\u001b[39m   \u001b[36mtry\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 83 |\u001b[39m     \u001b[36mawait\u001b[39m expect\u001b[33m.\u001b[39mpoll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n \u001b[90m    |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 84 |\u001b[39m       \u001b[36mif\u001b[39m (exited()) \u001b[36mreturn\u001b[39m \u001b[32m`CLI exited: ${state.error?.message ?? child.exitCode ?? child.signalCode}`\u001b[39m\n \u001b[90m 85 |\u001b[39m       \u001b[36mtry\u001b[39m {\n \u001b[90m 86 |\u001b[39m         \u001b[36mconst\u001b[39m response \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m fetch(\u001b[32m`${origin}/sucafina/status`\u001b[39m\u001b[33m,\u001b[39m { signal\u001b[33m:\u001b[39m \u001b[33mAbortSignal\u001b[39m\u001b[33m.\u001b[39mtimeout(\u001b[35m1\u001b[39m_000) })\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+                        "column": 5,
+                        "line": 83
+                      },
+                      "message": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate\n\n   at sucafina/wp03/installation-fixture.ts:83\n\n  81 |   }\n  82 |   try {\n> 83 |     await expect.poll(async () => {\n     |     ^\n  84 |       if (exited()) return `CLI exited: ${state.error?.message ?? child.exitCode ?? child.signalCode}`\n  85 |       try {\n  86 |         const response = await fetch(`${origin}/sucafina/status`, { signal: AbortSignal.timeout(1_000) })\n    at startPlannerInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts:83:5)\n    at withInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:34:24)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:37:3"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-14T21:40:01.261Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "wp03-real-cli.log",
+                      "contentType": "text/plain",
+                      "body": "WzIxOjQwOjAzLjk5NV0gRVJST1IgKCMyKTogRXJyb3I6IE1ldGhvZCAnQUNMJyBhbHJlYWR5IGRlY2xhcmVkIGZvciByb3V0ZSAnL3N1Y2FmaW5hJwogICAgYXQgX29uICgvaG9tZS9ydW5uZXIvd29yay9PcmNoZXN0cmEtU0YvT3JjaGVzdHJhLVNGL25vZGVfbW9kdWxlcy8uYnVuL2ZpbmQtbXktd2F5LXRzQDAuMS42L25vZGVfbW9kdWxlcy9maW5kLW15LXdheS10cy9kaXN0L2VzbS9pbnRlcm5hbC9yb3V0ZXIuanM6MTQxOjE5KQogICAgYXQgb24gKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZmluZC1teS13YXktdHNAMC4xLjYvbm9kZV9tb2R1bGVzL2ZpbmQtbXktd2F5LXRzL2Rpc3QvZXNtL2ludGVybmFsL3JvdXRlci5qczozNzoxMikKICAgIGF0IGFsbCAoL2hvbWUvcnVubmVyL3dvcmsvT3JjaGVzdHJhLVNGL09yY2hlc3RyYS1TRi9ub2RlX21vZHVsZXMvLmJ1bi9maW5kLW15LXdheS10c0AwLjEuNi9ub2RlX21vZHVsZXMvZmluZC1teS13YXktdHMvZGlzdC9lc20vaW50ZXJuYWwvcm91dGVyLmpzOjQxOjEwKQogICAgYXQgPGFub255bW91cz4gKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L3Vuc3RhYmxlL2h0dHAvSHR0cFJvdXRlci5qczo2ODoxOCkKICAgIGF0IHJ1bkxvb3AgKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L2ludGVybmFsL2VmZmVjdC5qczo0NDQ6OTgpCiAgICBhdCBldmFsdWF0ZSAoL2hvbWUvcnVubmVyL3dvcmsvT3JjaGVzdHJhLVNGL09yY2hlc3RyYS1TRi9ub2RlX21vZHVsZXMvLmJ1bi9lZmZlY3RANC4wLjAtYmV0YS44My9ub2RlX21vZHVsZXMvZWZmZWN0L2Rpc3QvaW50ZXJuYWwvZWZmZWN0LmpzOjQxMjoyMykKICAgIGF0IGZvcmtVbnNhZmUgKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L2ludGVybmFsL2VmZmVjdC5qczoyMDc5OjExKQogICAgYXQgZ28gKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L2ludGVybmFsL2VmZmVjdC5qczoxOTI2OjI1KQogICAgYXQgPGFub255bW91cz4gKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L2ludGVybmFsL2VmZmVjdC5qczoxOTE0OjI4KQogICAgYXQgY2xpLnNlcnZlICgvaG9tZS9ydW5uZXIvd29yay9PcmNoZXN0cmEtU0YvT3JjaGVzdHJhLVNGL25vZGVfbW9kdWxlcy8uYnVuL2VmZmVjdEA0LjAuMC1iZXRhLjgzL25vZGVfbW9kdWxlcy9lZmZlY3QvZGlzdC9pbnRlcm5hbC9lZmZlY3QuanM6NDQ0Ojk4KQogICAgYXQgY2xpLnNlcnZlIChkZWZpbml0aW9uKSAoL2hvbWUvcnVubmVyL3dvcmsvT3JjaGVzdHJhLVNGL09yY2hlc3RyYS1TRi9hcHBzL2NsaS9zcmMvY29tbWFuZHMvaGFuZGxlcnMvc2VydmUudHM6NTI6MzYpCg=="
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-a974e-able-case-through-Workbench-chromium/test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-a974e-able-case-through-Workbench-chromium/video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-a974e-able-case-through-Workbench-chromium/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+                    "column": 5,
+                    "line": 83
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "9a11cdde3860c3b31dc6-bda890b3776db594a8c3",
+          "file": "sucafina/decisions.spec.ts",
+          "line": 35,
+          "column": 1
+        },
+        {
+          "title": "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [
+                {
+                  "type": "dependency",
+                  "description": "WP10: installed decision-list/decision-portfolio-catalog and a public UI producer for initial C09/C10 alternatives"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 74407,
+                  "error": {
+                    "message": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate",
+                    "stack": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate\n    at startPlannerInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts:83:5)\n    at withInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:34:24)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:90:3",
+                    "location": {
+                      "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+                      "column": 5,
+                      "line": 83
+                    },
+                    "snippet": "   at sucafina/wp03/installation-fixture.ts:83\n\n\u001b[0m \u001b[90m 81 |\u001b[39m   }\n \u001b[90m 82 |\u001b[39m   \u001b[36mtry\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 83 |\u001b[39m     \u001b[36mawait\u001b[39m expect\u001b[33m.\u001b[39mpoll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n \u001b[90m    |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 84 |\u001b[39m       \u001b[36mif\u001b[39m (exited()) \u001b[36mreturn\u001b[39m \u001b[32m`CLI exited: ${state.error?.message ?? child.exitCode ?? child.signalCode}`\u001b[39m\n \u001b[90m 85 |\u001b[39m       \u001b[36mtry\u001b[39m {\n \u001b[90m 86 |\u001b[39m         \u001b[36mconst\u001b[39m response \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m fetch(\u001b[32m`${origin}/sucafina/status`\u001b[39m\u001b[33m,\u001b[39m { signal\u001b[33m:\u001b[39m \u001b[33mAbortSignal\u001b[39m\u001b[33m.\u001b[39mtimeout(\u001b[35m1\u001b[39m_000) })\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+                        "column": 5,
+                        "line": 83
+                      },
+                      "message": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate\n\n   at sucafina/wp03/installation-fixture.ts:83\n\n  81 |   }\n  82 |   try {\n> 83 |     await expect.poll(async () => {\n     |     ^\n  84 |       if (exited()) return `CLI exited: ${state.error?.message ?? child.exitCode ?? child.signalCode}`\n  85 |       try {\n  86 |         const response = await fetch(`${origin}/sucafina/status`, { signal: AbortSignal.timeout(1_000) })\n    at startPlannerInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts:83:5)\n    at withInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:34:24)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:90:3"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-14T21:41:21.751Z",
+                  "annotations": [
+                    {
+                      "type": "dependency",
+                      "description": "WP10: installed decision-list/decision-portfolio-catalog and a public UI producer for initial C09/C10 alternatives"
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "wp03-real-cli.log",
+                      "contentType": "text/plain",
+                      "body": "WzIxOjQxOjI0LjUyMl0gRVJST1IgKCMyKTogRXJyb3I6IE1ldGhvZCAnQUNMJyBhbHJlYWR5IGRlY2xhcmVkIGZvciByb3V0ZSAnL3N1Y2FmaW5hJwogICAgYXQgX29uICgvaG9tZS9ydW5uZXIvd29yay9PcmNoZXN0cmEtU0YvT3JjaGVzdHJhLVNGL25vZGVfbW9kdWxlcy8uYnVuL2ZpbmQtbXktd2F5LXRzQDAuMS42L25vZGVfbW9kdWxlcy9maW5kLW15LXdheS10cy9kaXN0L2VzbS9pbnRlcm5hbC9yb3V0ZXIuanM6MTQxOjE5KQogICAgYXQgb24gKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZmluZC1teS13YXktdHNAMC4xLjYvbm9kZV9tb2R1bGVzL2ZpbmQtbXktd2F5LXRzL2Rpc3QvZXNtL2ludGVybmFsL3JvdXRlci5qczozNzoxMikKICAgIGF0IGFsbCAoL2hvbWUvcnVubmVyL3dvcmsvT3JjaGVzdHJhLVNGL09yY2hlc3RyYS1TRi9ub2RlX21vZHVsZXMvLmJ1bi9maW5kLW15LXdheS10c0AwLjEuNi9ub2RlX21vZHVsZXMvZmluZC1teS13YXktdHMvZGlzdC9lc20vaW50ZXJuYWwvcm91dGVyLmpzOjQxOjEwKQogICAgYXQgPGFub255bW91cz4gKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L3Vuc3RhYmxlL2h0dHAvSHR0cFJvdXRlci5qczo2ODoxOCkKICAgIGF0IHJ1bkxvb3AgKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L2ludGVybmFsL2VmZmVjdC5qczo0NDQ6OTgpCiAgICBhdCBldmFsdWF0ZSAoL2hvbWUvcnVubmVyL3dvcmsvT3JjaGVzdHJhLVNGL09yY2hlc3RyYS1TRi9ub2RlX21vZHVsZXMvLmJ1bi9lZmZlY3RANC4wLjAtYmV0YS44My9ub2RlX21vZHVsZXMvZWZmZWN0L2Rpc3QvaW50ZXJuYWwvZWZmZWN0LmpzOjQxMjoyMykKICAgIGF0IGZvcmtVbnNhZmUgKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L2ludGVybmFsL2VmZmVjdC5qczoyMDc5OjExKQogICAgYXQgZ28gKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L2ludGVybmFsL2VmZmVjdC5qczoxOTI2OjI1KQogICAgYXQgPGFub255bW91cz4gKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L2ludGVybmFsL2VmZmVjdC5qczoxOTE0OjI4KQogICAgYXQgY2xpLnNlcnZlICgvaG9tZS9ydW5uZXIvd29yay9PcmNoZXN0cmEtU0YvT3JjaGVzdHJhLVNGL25vZGVfbW9kdWxlcy8uYnVuL2VmZmVjdEA0LjAuMC1iZXRhLjgzL25vZGVfbW9kdWxlcy9lZmZlY3QvZGlzdC9pbnRlcm5hbC9lZmZlY3QuanM6NDQ0Ojk4KQogICAgYXQgY2xpLnNlcnZlIChkZWZpbml0aW9uKSAoL2hvbWUvcnVubmVyL3dvcmsvT3JjaGVzdHJhLVNGL09yY2hlc3RyYS1TRi9hcHBzL2NsaS9zcmMvY29tbWFuZHMvaGFuZGxlcnMvc2VydmUudHM6NTI6MzYpCg=="
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-1bbc9-isions-catalog-not-HTML-200-chromium/test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-1bbc9-isions-catalog-not-HTML-200-chromium/video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-1bbc9-isions-catalog-not-HTML-200-chromium/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+                    "column": 5,
+                    "line": 83
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "9a11cdde3860c3b31dc6-87abcdb1535382c7b5d0",
+          "file": "sucafina/decisions.spec.ts",
+          "line": 87,
+          "column": 1
+        },
+        {
+          "title": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [
+                {
+                  "type": "proof-limit",
+                  "description": "Creation confirmation C09 only; not a financial Apply receipt/retry proof under C12 or AM04"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 79717,
+                  "error": {
+                    "message": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate",
+                    "stack": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate\n    at startPlannerInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts:83:5)\n    at withInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:34:24)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:138:3",
+                    "location": {
+                      "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+                      "column": 5,
+                      "line": 83
+                    },
+                    "snippet": "   at sucafina/wp03/installation-fixture.ts:83\n\n\u001b[0m \u001b[90m 81 |\u001b[39m   }\n \u001b[90m 82 |\u001b[39m   \u001b[36mtry\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 83 |\u001b[39m     \u001b[36mawait\u001b[39m expect\u001b[33m.\u001b[39mpoll(\u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n \u001b[90m    |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 84 |\u001b[39m       \u001b[36mif\u001b[39m (exited()) \u001b[36mreturn\u001b[39m \u001b[32m`CLI exited: ${state.error?.message ?? child.exitCode ?? child.signalCode}`\u001b[39m\n \u001b[90m 85 |\u001b[39m       \u001b[36mtry\u001b[39m {\n \u001b[90m 86 |\u001b[39m         \u001b[36mconst\u001b[39m response \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m fetch(\u001b[32m`${origin}/sucafina/status`\u001b[39m\u001b[33m,\u001b[39m { signal\u001b[33m:\u001b[39m \u001b[33mAbortSignal\u001b[39m\u001b[33m.\u001b[39mtimeout(\u001b[35m1\u001b[39m_000) })\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+                        "column": 5,
+                        "line": 83
+                      },
+                      "message": "Error: the real CLI serves the isolated local-operator installation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"local-operator\"\u001b[39m\nReceived: \u001b[31m\"CLI exited: 1\"\u001b[39m\n\nCall Log:\n- Timeout 75000ms exceeded while waiting on the predicate\n\n   at sucafina/wp03/installation-fixture.ts:83\n\n  81 |   }\n  82 |   try {\n> 83 |     await expect.poll(async () => {\n     |     ^\n  84 |       if (exited()) return `CLI exited: ${state.error?.message ?? child.exitCode ?? child.signalCode}`\n  85 |       try {\n  86 |         const response = await fetch(`${origin}/sucafina/status`, { signal: AbortSignal.timeout(1_000) })\n    at startPlannerInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts:83:5)\n    at withInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:34:24)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:138:3"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-14T21:42:36.899Z",
+                  "annotations": [
+                    {
+                      "type": "proof-limit",
+                      "description": "Creation confirmation C09 only; not a financial Apply receipt/retry proof under C12 or AM04"
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "wp03-real-cli.log",
+                      "contentType": "text/plain",
+                      "body": "WzIxOjQyOjM5LjU3MV0gRVJST1IgKCMyKTogRXJyb3I6IE1ldGhvZCAnQUNMJyBhbHJlYWR5IGRlY2xhcmVkIGZvciByb3V0ZSAnL3N1Y2FmaW5hJwogICAgYXQgX29uICgvaG9tZS9ydW5uZXIvd29yay9PcmNoZXN0cmEtU0YvT3JjaGVzdHJhLVNGL25vZGVfbW9kdWxlcy8uYnVuL2ZpbmQtbXktd2F5LXRzQDAuMS42L25vZGVfbW9kdWxlcy9maW5kLW15LXdheS10cy9kaXN0L2VzbS9pbnRlcm5hbC9yb3V0ZXIuanM6MTQxOjE5KQogICAgYXQgb24gKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZmluZC1teS13YXktdHNAMC4xLjYvbm9kZV9tb2R1bGVzL2ZpbmQtbXktd2F5LXRzL2Rpc3QvZXNtL2ludGVybmFsL3JvdXRlci5qczozNzoxMikKICAgIGF0IGFsbCAoL2hvbWUvcnVubmVyL3dvcmsvT3JjaGVzdHJhLVNGL09yY2hlc3RyYS1TRi9ub2RlX21vZHVsZXMvLmJ1bi9maW5kLW15LXdheS10c0AwLjEuNi9ub2RlX21vZHVsZXMvZmluZC1teS13YXktdHMvZGlzdC9lc20vaW50ZXJuYWwvcm91dGVyLmpzOjQxOjEwKQogICAgYXQgPGFub255bW91cz4gKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L3Vuc3RhYmxlL2h0dHAvSHR0cFJvdXRlci5qczo2ODoxOCkKICAgIGF0IHJ1bkxvb3AgKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L2ludGVybmFsL2VmZmVjdC5qczo0NDQ6OTgpCiAgICBhdCBldmFsdWF0ZSAoL2hvbWUvcnVubmVyL3dvcmsvT3JjaGVzdHJhLVNGL09yY2hlc3RyYS1TRi9ub2RlX21vZHVsZXMvLmJ1bi9lZmZlY3RANC4wLjAtYmV0YS44My9ub2RlX21vZHVsZXMvZWZmZWN0L2Rpc3QvaW50ZXJuYWwvZWZmZWN0LmpzOjQxMjoyMykKICAgIGF0IGZvcmtVbnNhZmUgKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L2ludGVybmFsL2VmZmVjdC5qczoyMDc5OjExKQogICAgYXQgZ28gKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L2ludGVybmFsL2VmZmVjdC5qczoxOTI2OjI1KQogICAgYXQgPGFub255bW91cz4gKC9ob21lL3J1bm5lci93b3JrL09yY2hlc3RyYS1TRi9PcmNoZXN0cmEtU0Yvbm9kZV9tb2R1bGVzLy5idW4vZWZmZWN0QDQuMC4wLWJldGEuODMvbm9kZV9tb2R1bGVzL2VmZmVjdC9kaXN0L2ludGVybmFsL2VmZmVjdC5qczoxOTE0OjI4KQogICAgYXQgY2xpLnNlcnZlICgvaG9tZS9ydW5uZXIvd29yay9PcmNoZXN0cmEtU0YvT3JjaGVzdHJhLVNGL25vZGVfbW9kdWxlcy8uYnVuL2VmZmVjdEA0LjAuMC1iZXRhLjgzL25vZGVfbW9kdWxlcy9lZmZlY3QvZGlzdC9pbnRlcm5hbC9lZmZlY3QuanM6NDQ0Ojk4KQogICAgYXQgY2xpLnNlcnZlIChkZWZpbml0aW9uKSAoL2hvbWUvcnVubmVyL3dvcmsvT3JjaGVzdHJhLVNGL09yY2hlc3RyYS1TRi9hcHBzL2NsaS9zcmMvY29tbWFuZHMvaGFuZGxlcnMvc2VydmUudHM6NTI6MzYpCg=="
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-74dca-e-case-without-resubmitting-chromium/test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-74dca-e-case-without-resubmitting-chromium/video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-74dca-e-case-without-resubmitting-chromium/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+                    "column": 5,
+                    "line": 83
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "9a11cdde3860c3b31dc6-15ba801b0a33853f24c2",
+          "file": "sucafina/decisions.spec.ts",
+          "line": 135,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-14T21:36:38.368Z",
+    "duration": 438397.673,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 5,
+    "flaky": 0
+  }
+}
