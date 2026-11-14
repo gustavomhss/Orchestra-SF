@@ -9,7 +9,7 @@
   "status": "OWNED_IMPLEMENTATION_COMMITTED_SHARED_ASSEMBLY_AWAITING_SESSION23_NOMINAL_NOT_RUN",
   "sourceHead": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
   "sourceTree": "fb3b512c69f249960bd768aef723425d5e2d6740",
-  "receiptCommitRule": "The commit containing this manifest is receipt-only with parent source W2; resolve its exact SHA from Git history/PR27. It is not represented as an executed product candidate.",
+  "receiptCommitRule": "Receipt-only commits follow source W2; the initial receipt is df204294fe0778db95c70a66ef4715487badeb00, followed by this composition-only reconciliation. Resolve the current receipt commit in PR27; no later receipt tree is represented as an executed product candidate.",
   "receiptRoot": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-installed-closure",
   "primaryDocuments": [
     "HANDOFF.md",
@@ -20,7 +20,8 @@
     "ACK-REQUEST.json",
     "READINGS.json",
     "e2e-implementation.json",
-    "shared-static-review.json"
+    "shared-static-review.json",
+    "COMPOSITION-C4.json"
   ],
   "currentSharedPatchSHA256": "42cce7c5b42604636c77584e6e86f5594a2a1fa1b6d265f9fc16c7a028f78f47",
   "artifactPolicy": "Only source proposals, complete inert source images, checks/build logs, hashes and status receipts. No live credentials, private installations, downloaded user reports or Playwright recordings.",
@@ -30,14 +31,14 @@
     "approved": 0
   },
   "localVerification": "Byte hashing, JSON serialization and file/link integrity only; no local product tests, build, typecheck, server or browser.",
-  "filesExcludingThisManifest": 50,
-  "totalBytesExcludingThisManifest": 1741841,
+  "filesExcludingThisManifest": 51,
+  "totalBytesExcludingThisManifest": 1745957,
   "files": [
     {
       "path": "ACK-REQUEST.json",
-      "bytes": 5716,
-      "sha256": "d9b960a1bd444f3b7adb083f536a78d51f4785c1156c55ee8bb4cb86718ffc04",
-      "gitBlobSHA1": "c87baaad0b5311db227b3dfe3cd0823e6eb67909"
+      "bytes": 5906,
+      "sha256": "c7945e0b33d3631ff6c27abc20899156c9ca9e2fc04f725149d1351118f56a33",
+      "gitBlobSHA1": "e9b5226e6ce1205fc3f376591aba7b05e3c5075c"
     },
     {
       "path": "checks/EVIDENCE-INDEX.json",
@@ -118,6 +119,12 @@
       "gitBlobSHA1": "d5e2641c9d230e697c6d11d5a51be3c3eca5344b"
     },
     {
+      "path": "COMPOSITION-C4.json",
+      "bytes": 3484,
+      "sha256": "1270136e1b072e15c867fb6aaffb12b9c5f47d86068accad6185b7b48359f8f9",
+      "gitBlobSHA1": "685702804effa1beae234dbf8450d22098b09b74"
+    },
+    {
       "path": "COMPOSITION.json",
       "bytes": 6241,
       "sha256": "c70aab12b2b174bb8e047c0fca074adc0da2c0807314cde3581a021da6702af0",
@@ -137,9 +144,9 @@
     },
     {
       "path": "HANDOFF.md",
-      "bytes": 13313,
-      "sha256": "a1a3e3624f97e3fdc6f9f2d3a9133292d85e3b54ac7e663175984a3b09ccc0fe",
-      "gitBlobSHA1": "b21011e94df9f16a08ae248649e7282bee82c750"
+      "bytes": 13755,
+      "sha256": "0ff0638b0d5252121c92e43dc8449c28979f7d4dec052e7bbc6d1c3fdc89345b",
+      "gitBlobSHA1": "35901e66e092cee0672a7bb86fef92c8b51597bf"
     },
     {
       "path": "owned-assembly/MANIFEST.json",
@@ -333,5 +340,7 @@
       "sha256": "9d8e1bb084485cc951d449d8dac161fbfc3700b7ca9d48f9611d506bf09ab6bb",
       "gitBlobSHA1": "85cc913ac7ac47fce62b5e188bf7df41f8bbe553"
     }
-  ]
+  ],
+  "previousReceiptCommit": "df204294fe0778db95c70a66ef4715487badeb00",
+  "latestCompositionRead": "402a091485e11d60dff433049c7dedd7fcead687"
 }
