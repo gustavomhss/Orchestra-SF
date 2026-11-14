@@ -1,0 +1,1255 @@
+{
+  "schema": "sf-wp12-hosted-product-run-v1",
+  "phase": 21,
+  "scope": "Three newly implemented Review/Work missions on W26; terminal runtime evidence, including the failed Question deadline.",
+  "product": {
+    "sha": "6880666b15dc18bf400c908a8457580526b70f4d",
+    "tree": "258bc03adf6343a10847f80060b6983cfc65ad43",
+    "checkRun": 43614850352,
+    "checkResult": "PASS"
+  },
+  "snapshot": {
+    "sha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+    "tree": "3113a6c8c57dda0cd8ec740faaa3862ca1117a09",
+    "directParent": "6880666b15dc18bf400c908a8457580526b70f4d",
+    "onlyDelta": ".ci-run.json"
+  },
+  "request": {
+    "bytes": 666,
+    "sha256": "f70f8bd781179de5d2bddda44c66a00975ddcc9ed394ee13b4ad9d96932794a9",
+    "blob": "7da6158d86bb67894540a3da08b9cc8fa46e6d96",
+    "body": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts",
+        "./Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+        "--timeout",
+        "120000",
+        "-t",
+        "^(native executive report routes and meeting review preparation consume real public human selections without changing either output contract|native question work list uses a public Procurement selection for its own pending case and reopens its real consumers|native executive work list matches its selected real Hot Topic review and reopens the existing human action)$"
+      ],
+      "env": {}
+    }
+  },
+  "run": {
+    "id": 43615955284,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43615955284",
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "failure",
+    "createdAt": "2026-11-14T16:30:21Z",
+    "updatedAt": "2026-11-14T16:44:20Z",
+    "jobs": [
+      {
+        "id": 132510939072,
+        "name": "test (ubuntu-24.04)",
+        "conclusion": "failure",
+        "startedAt": "2026-11-14T16:30:24Z",
+        "completedAt": "2026-11-14T16:44:13Z"
+      },
+      {
+        "id": 132514821904,
+        "name": "cleanup",
+        "conclusion": "success",
+        "startedAt": "2026-11-14T16:44:15Z",
+        "completedAt": "2026-11-14T16:44:20Z"
+      }
+    ],
+    "artifacts": {
+      "total_count": 0,
+      "artifacts": []
+    }
+  },
+  "summary": {
+    "pass": 2,
+    "fail": 1,
+    "assertions": 446,
+    "files": 2,
+    "tests": 3,
+    "seconds": 729.62,
+    "line": 1029,
+    "noUnhandledErrorAggregateReported": true
+  },
+  "cases": [
+    {
+      "name": "native executive report routes and meeting review preparation consume real public human selections without changing either output contract",
+      "result": "PASS_SCOPED_UI_INPUT_AND_REOPEN",
+      "reportedMs": 72209.63,
+      "declaredTimeoutMs": 420000,
+      "sourceBlob": "33a8103345de3addbd5dd75ed1303d3ff9826095",
+      "resultLine": 904,
+      "observed": [
+        "Actual public Review agenda and preserved review chosen before C08 case creation",
+        "Two closed real inputs: executive review and meeting material",
+        "Actual UI sf_report_prepare and sf_artifact_get receipts; downloaded selected artifact checked and reopened",
+        "44 selected values and immutable review/artifact digests survive reload"
+      ],
+      "notProved": [
+        "Native inference, native tool receipts or model-generated contribution",
+        "Autonomous model discovery of a public selection",
+        "C07 admission/execution",
+        "The original historical mutation 403 regression or annual Review runtime"
+      ]
+    },
+    {
+      "name": "native question work list uses a public Procurement selection for its own pending case and reopens its real consumers",
+      "result": "FAIL_TEST_TIMEOUT",
+      "reportedMs": 448134.68,
+      "declaredTimeoutMs": 360000,
+      "sourceBlob": "d305c89fcbf42eef0290e744880342b3b017b48d",
+      "resultLine": 956,
+      "reasonLine": 957,
+      "observedBeforeFailure": [
+        "Actual one-alternative case with explicitly human-classified pending training, not C10-derived omission proof",
+        "Public HTML work selection for the same real PR/action/relation/case",
+        "Real QuestionPreparationInput and UI sf_work_list result/receipt",
+        "Reopened workbench consumer marker before timeout, with explicit public reselection and prior-host selector refusal"
+      ],
+      "lateContinuation": {
+        "line": 997,
+        "observation": "Selected-request deletion returned stale/409 after Bun had already marked this test failed. It does not convert the case into a pass or prove cleanup isolation."
+      },
+      "notProved": [
+        "Completed bounded execution of the whole Question mission",
+        "Native QuestionProposal, C11 contribution or native C06 question consumer",
+        "Confirmed-answer reuse via sf_answer_read",
+        "Derived missing-category training proof"
+      ],
+      "nextAction": "Fix or diagnose own repeated reads while preserving actual sources, consumers, negative cases and original deadlines; re-run only after a relevant bounded change."
+    },
+    {
+      "name": "native executive work list matches its selected real Hot Topic review and reopens the existing human action",
+      "result": "PASS_SCOPED_UI_INPUT_AND_REOPEN",
+      "reportedMs": 207566.33,
+      "declaredTimeoutMs": 360000,
+      "sourceBlob": "d305c89fcbf42eef0290e744880342b3b017b48d",
+      "resultLine": 1024,
+      "observed": [
+        "Actual same PR/action selected into Review and Work",
+        "Real ExecutiveReviewInput with distinct observed Hot Topic day and case horizon",
+        "Reopened human action, preserved review and new public Work selection",
+        "Unadmitted HTTP and selected-request deletion refused; stale/409"
+      ],
+      "timingLimit": "The prior timed-out Question callback continued during the next test interval. Reported Bun timing is recorded verbatim; no independent runtime isolation or performance attribution is claimed.",
+      "notProved": [
+        "Native DecisionBrief or contribution consumer",
+        "C07 admission/execution",
+        "All required operations in one native mission"
+      ]
+    }
+  ],
+  "omni": {
+    "status": "PASS_FOCUSED_NO_DECLARING_TEST_RAN",
+    "nonce": "591afaaf0ac71df56c73467600b093a9",
+    "spawns": 189,
+    "delegated": 0,
+    "line": 1023
+  },
+  "log": {
+    "path": "evidence/resume-21-review-work.log",
+    "bytes": 105069,
+    "sha256": "bacf25008bb8c9a5ab330211851a652462a294a126cc90a93536a25584a808a0",
+    "blob": "aaafdbe638e24321abad0c9bf92205114ca2ff5d",
+    "fetchCount": 1,
+    "bundled": false,
+    "encoding": "Exact decoded UTF-8 GitHub MCP job log, without an added newline."
+  },
+  "sourcePins": [
+    {
+      "path": ".ci-run.json",
+      "ref": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+      "bytes": 666,
+      "sha256": "f70f8bd781179de5d2bddda44c66a00975ddcc9ed394ee13b4ad9d96932794a9",
+      "blob": "7da6158d86bb67894540a3da08b9cc8fa46e6d96",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/89799ce8ca1d9a78e25695353879dfe2bd0c229a/.ci-run.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts",
+      "ref": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+      "bytes": 33596,
+      "sha256": "65563a4d9499c410720a97efef55e0d96222e3307a4d2229032d1836ea35b742",
+      "blob": "33a8103345de3addbd5dd75ed1303d3ff9826095",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/89799ce8ca1d9a78e25695353879dfe2bd0c229a/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+      "ref": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+      "bytes": 46720,
+      "sha256": "cb26d5358dc10b8f303301b2d49708eff3a0b192730fb745cacd5fc2d8b76fbf",
+      "blob": "d305c89fcbf42eef0290e744880342b3b017b48d",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/89799ce8ca1d9a78e25695353879dfe2bd0c229a/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "ref": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+      "bytes": 20042,
+      "sha256": "050238396e5f12c067de3ab488f1dc207350cb636fc68d71fc72ef2d8a1b59bc",
+      "blob": "49300a78a44ac0739791d10a11c386b317f4b51a",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/89799ce8ca1d9a78e25695353879dfe2bd0c229a/modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-question-preparation.ts",
+      "ref": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+      "bytes": 10795,
+      "sha256": "1ff25c69a32523eed1d1aadaf9f94d42c54ca416f345dfe309254b7d5d83aa04",
+      "blob": "c3c2efe6004c513370ab04077f7d2c79a704d9c6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/89799ce8ca1d9a78e25695353879dfe2bd0c229a/modules/sucafina/Sucafinav1/test/product/wp12/native-question-preparation.ts"
+    }
+  ],
+  "markers": {
+    "count": 48,
+    "prefixCount": 13,
+    "counts": {
+      "SF_WP12_NATIVE_MISSION_CATALOG": 7,
+      "SF_WP12_REVIEW_CROSSROUTES_PHASE": 22,
+      "SF_WP12_REVIEW_CROSSROUTES_INPUT": 1,
+      "SF_WP12_NATIVE_MISSION": 4,
+      "SF_WP12_REVIEW_CROSSROUTES_UI_ONLY": 1,
+      "SF_WP12_REVIEW_CROSSROUTES_REOPEN": 1,
+      "SF_WP12_FOCUSED_QUESTION_PHASE": 5,
+      "SF_WP12_FOCUSED_QUESTION_PREPARATION": 1,
+      "SF_WP12_QUESTION_WORK_INPUT": 1,
+      "SF_WP12_QUESTION_WORK_CONSUMER": 1,
+      "SF_WP12_WORK_SOURCE_REFUSAL": 2,
+      "SF_WP12_EXECUTIVE_WORK_INPUT": 1,
+      "SF_WP12_EXECUTIVE_WORK_REOPEN": 1
+    },
+    "entries": [
+      {
+        "line": 856,
+        "prefix": "SF_WP12_NATIVE_MISSION_CATALOG",
+        "value": {
+          "label": "review-crossroutes",
+          "phase": "initial",
+          "scope": "host-installed-catalog",
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "state": "empty",
+          "available": [],
+          "supported": [],
+          "published": [],
+          "intersection": []
+        }
+      },
+      {
+        "line": 857,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 1,
+          "phase": "sources",
+          "state": "started",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "line": 858,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 1,
+          "phase": "sources",
+          "state": "returned",
+          "elapsedMs": 62
+        }
+      },
+      {
+        "line": 859,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 2,
+          "phase": "review-agenda",
+          "state": "started",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "line": 860,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 2,
+          "phase": "review-agenda",
+          "state": "returned",
+          "elapsedMs": 81
+        }
+      },
+      {
+        "line": 861,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 3,
+          "phase": "review-preview",
+          "state": "started",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "line": 862,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 3,
+          "phase": "review-preview",
+          "state": "returned",
+          "elapsedMs": 335
+        }
+      },
+      {
+        "line": 863,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 4,
+          "phase": "review-preserve",
+          "state": "started",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "line": 864,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 4,
+          "phase": "review-preserve",
+          "state": "returned",
+          "elapsedMs": 1271
+        }
+      },
+      {
+        "line": 865,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 5,
+          "phase": "case",
+          "state": "started",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "line": 866,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 5,
+          "phase": "case",
+          "state": "returned",
+          "elapsedMs": 584
+        }
+      },
+      {
+        "line": 867,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 6,
+          "phase": "prepare:sf-preparar-revisao-executiva",
+          "state": "started",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "line": 868,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 6,
+          "phase": "prepare:sf-preparar-revisao-executiva",
+          "state": "returned",
+          "elapsedMs": 13144
+        }
+      },
+      {
+        "line": 869,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 7,
+          "phase": "prepare:sf-produzir-material-reuniao",
+          "state": "started",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "line": 870,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 7,
+          "phase": "prepare:sf-produzir-material-reuniao",
+          "state": "returned",
+          "elapsedMs": 11330
+        }
+      },
+      {
+        "line": 871,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_INPUT",
+        "value": {
+          "scope": "real-public-human-selections-before-case-and-closed-host-inputs",
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "caseRef": {
+            "id": "0e220852-f5c4-4282-84ab-0510a411b75a",
+            "incarnation": "7995150f-68b8-4f19-a7db-d51642feeb0c",
+            "version": 1
+          },
+          "publicSelection": {
+            "preservedReviewRef": {
+              "id": "review:bfa57e7e898ab8a2a234bddb140e7c282c4aa5fac305a51534ff3c736ad1d23f",
+              "version": 1
+            },
+            "reviewSelection": {
+              "selectionRef": "review-agenda:838e80bd-7b3d-4e01-9be5-dad4f6b94357",
+              "sectionRefs": [
+                "crossreview-selected:baseline",
+                "crossreview-selected:candidate"
+              ],
+              "period": {
+                "start": "2027-01-01",
+                "end": "2027-01-31"
+              }
+            }
+          },
+          "objectiveDigest": "fe81b3594a901c5e3f2452f68fdbdd83d071d4a55c7ebdcde27a358240dbf31a",
+          "reviewDigest": "30182869e3f31674dfe1274533de1625f87676f01849c46e31a2d468c37f2c0b",
+          "selectedValueCount": 44,
+          "selectionsDiscoveredByModel": false,
+          "privateStoreIdsSupplied": false,
+          "c07AdmissionObserved": false,
+          "inferenceExecuted": false,
+          "gnativeAccepted": false
+        }
+      },
+      {
+        "line": 872,
+        "prefix": "SF_WP12_NATIVE_MISSION",
+        "value": {
+          "scope": "real-host-input-preparation-and-availability",
+          "status": "unavailable",
+          "reason": "installed-host-catalog-empty",
+          "catalogState": "empty",
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "profileId": "sf_maestro",
+          "skillId": "sf-preparar-revisao-executiva",
+          "caseRef": {
+            "id": "0e220852-f5c4-4282-84ab-0510a411b75a",
+            "incarnation": "7995150f-68b8-4f19-a7db-d51642feeb0c",
+            "version": 1
+          },
+          "inputPrepared": true,
+          "inputDigest": "bf709e6561ec1c7f2d4fda5da6a973a1700ae0fba8b4d0a37389d2109f320b45",
+          "inferenceExecuted": false,
+          "outputRef": null,
+          "consumerRef": null,
+          "gnativeAccepted": false
+        }
+      },
+      {
+        "line": 873,
+        "prefix": "SF_WP12_NATIVE_MISSION",
+        "value": {
+          "scope": "real-host-input-preparation-and-availability",
+          "status": "unavailable",
+          "reason": "installed-host-catalog-empty",
+          "catalogState": "empty",
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "profileId": "sf_maestro",
+          "skillId": "sf-produzir-material-reuniao",
+          "caseRef": {
+            "id": "0e220852-f5c4-4282-84ab-0510a411b75a",
+            "incarnation": "7995150f-68b8-4f19-a7db-d51642feeb0c",
+            "version": 1
+          },
+          "inputPrepared": true,
+          "inputDigest": "d886e268206c1f6cb9d6174eeadeb2b591b199792003eb3fb32c28941c25ede2",
+          "inferenceExecuted": false,
+          "outputRef": null,
+          "consumerRef": null,
+          "gnativeAccepted": false
+        }
+      },
+      {
+        "line": 874,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 8,
+          "phase": "download-selected-artifact",
+          "state": "started",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "line": 875,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 8,
+          "phase": "download-selected-artifact",
+          "state": "returned",
+          "elapsedMs": 4302
+        }
+      },
+      {
+        "line": 876,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_UI_ONLY",
+        "value": {
+          "scope": "actual-ui-report-and-download-no-native-attribution",
+          "artifactRef": "report:ef57856954d10f67841a486a2762e3325ae884d7e5eb865aa4adee77e4487363",
+          "reportReceipt": {
+            "kind": "ui",
+            "operation": "sf_report_prepare",
+            "handlerExport": "prepareReport",
+            "inputDigest": "b5bf5758512614b20d0af5066eea8384fefdc34515d13c70e89b4c856882d042",
+            "resultDigest": "6c2f504d92e605ad7d8b4259cec01ed28af73dbeb067f954dc27362200a27a13",
+            "principalRef": "wp12-synthetic-review-crossroutes-principal",
+            "callId": "17d1e683-d0b8-489b-82e8-4682a961674e",
+            "requestId": "17d1e683-d0b8-489b-82e8-4682a961674e",
+            "accessRevision": "3c15a8b9c1d4efde9d3f5edb3b17b85cd301892ec271b09c686c93f8e5ce68b1",
+            "at": "2026-11-14T16:32:39.455Z"
+          },
+          "artifactReceipt": {
+            "kind": "ui",
+            "operation": "sf_artifact_get",
+            "handlerExport": "readArtifact",
+            "inputDigest": "8de1c4195b7e9b075865653cf6c87b6c917c32329544c3c8a7be6190bcfd4d80",
+            "resultDigest": "f00a28dbfc3155fcd970978818d7096765a596d8750918a6a0916587967b7343",
+            "principalRef": "wp12-synthetic-review-crossroutes-principal",
+            "callId": "c83485d4-3b6d-4132-9ef9-0b4e1bf16e78",
+            "requestId": "c83485d4-3b6d-4132-9ef9-0b4e1bf16e78",
+            "accessRevision": "3c15a8b9c1d4efde9d3f5edb3b17b85cd301892ec271b09c686c93f8e5ce68b1",
+            "at": "2026-11-14T16:32:42.293Z"
+          },
+          "nativeCallObserved": false,
+          "gnativeAccepted": false
+        }
+      },
+      {
+        "line": 896,
+        "prefix": "SF_WP12_NATIVE_MISSION_CATALOG",
+        "value": {
+          "label": "review-crossroutes",
+          "phase": "reopened",
+          "scope": "host-installed-catalog",
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "state": "empty",
+          "available": [],
+          "supported": [],
+          "published": [],
+          "intersection": []
+        }
+      },
+      {
+        "line": 897,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 9,
+          "phase": "review-read-after-reload",
+          "state": "started",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "line": 898,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 9,
+          "phase": "review-read-after-reload",
+          "state": "returned",
+          "elapsedMs": 1515
+        }
+      },
+      {
+        "line": 899,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 10,
+          "phase": "prepare:sf-produzir-material-reuniao",
+          "state": "started",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "line": 900,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 10,
+          "phase": "prepare:sf-produzir-material-reuniao",
+          "state": "returned",
+          "elapsedMs": 17726
+        }
+      },
+      {
+        "line": 901,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 11,
+          "phase": "download-selected-artifact",
+          "state": "started",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "line": 902,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_PHASE",
+        "value": {
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "sequence": 11,
+          "phase": "download-selected-artifact",
+          "state": "returned",
+          "elapsedMs": 4350
+        }
+      },
+      {
+        "line": 903,
+        "prefix": "SF_WP12_REVIEW_CROSSROUTES_REOPEN",
+        "value": {
+          "scope": "durable-public-review-native-tool-artifact-and-wp07-consumer",
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "reviewRef": "review:bfa57e7e898ab8a2a234bddb140e7c282c4aa5fac305a51534ff3c736ad1d23f",
+          "reviewDigest": "30182869e3f31674dfe1274533de1625f87676f01849c46e31a2d468c37f2c0b",
+          "uiArtifact": {
+            "artifactRef": "report:ef57856954d10f67841a486a2762e3325ae884d7e5eb865aa4adee77e4487363",
+            "digest": "11ebb81a845eb8907c7b249a7e6c9c57f4a11d98790e0e8599bb5f212f8b2980"
+          },
+          "nativeArtifacts": [],
+          "selectionsDiscoveredByModel": false,
+          "originalAgendaRecreatedAfterReload": false,
+          "newExecutivePreparationAfterReloadClaimed": false,
+          "historicalSourceMutationCoveredHere": false,
+          "c07AdmissionObserved": false,
+          "gnativeAccepted": false,
+          "independentGnativeReview": false
+        }
+      },
+      {
+        "line": 926,
+        "prefix": "SF_WP12_NATIVE_MISSION_CATALOG",
+        "value": {
+          "label": "question-work-list",
+          "phase": "initial",
+          "scope": "host-installed-catalog",
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "state": "empty",
+          "available": [],
+          "supported": [],
+          "published": [],
+          "intersection": []
+        }
+      },
+      {
+        "line": 927,
+        "prefix": "SF_WP12_FOCUSED_QUESTION_PHASE",
+        "value": {
+          "stage": "source-start",
+          "at": "2026-11-14T16:33:18.223Z"
+        }
+      },
+      {
+        "line": 928,
+        "prefix": "SF_WP12_FOCUSED_QUESTION_PHASE",
+        "value": {
+          "stage": "source-ready",
+          "at": "2026-11-14T16:33:18.310Z"
+        }
+      },
+      {
+        "line": 929,
+        "prefix": "SF_WP12_FOCUSED_QUESTION_PHASE",
+        "value": {
+          "stage": "support-ready",
+          "at": "2026-11-14T16:33:23.464Z"
+        }
+      },
+      {
+        "line": 930,
+        "prefix": "SF_WP12_FOCUSED_QUESTION_PHASE",
+        "value": {
+          "stage": "coverage-ready",
+          "at": "2026-11-14T16:33:31.732Z"
+        }
+      },
+      {
+        "line": 931,
+        "prefix": "SF_WP12_FOCUSED_QUESTION_PHASE",
+        "value": {
+          "stage": "promotion-ready",
+          "at": "2026-11-14T16:33:45.541Z"
+        }
+      },
+      {
+        "line": 932,
+        "prefix": "SF_WP12_FOCUSED_QUESTION_PREPARATION",
+        "value": {
+          "scope": "one-real-alternative-with-explicit-human-pending-coverage",
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "caseRef": {
+            "id": "19388db7-3993-42fd-bed9-17580d0d5279",
+            "incarnation": "58332dca-997e-44ae-92ac-db7d2ea89381",
+            "version": 2
+          },
+          "sourceRef": "planner-version:wp12-question-source:a5284138-459e-431b-b9b4-fae794ce9c2e:1",
+          "alternativeId": "8e122b1e-56d4-40c6-8afa-6b3a68496a79",
+          "resultRef": "decision-result:7eef335654a90f557f6009fbbe9ba775f74f640fcc3c17a29da12210fb11c91f",
+          "coverageRef": "baseline-coverage:0afdc061ec4a1ad86da8f2fb28f8be83152d63ff959c4d74737a3dee8d531f66",
+          "pendingReason": "human-awaiting-training-confirmation",
+          "questionRef": null,
+          "plannerSourceCount": 1,
+          "alternativeCount": 1,
+          "derivedMissingCategoryIds": [],
+          "conditionOrigin": "human-classification",
+          "derivedOmissionProof": false,
+          "total": null,
+          "inferenceExecuted": false,
+          "gnativeAccepted": false
+        }
+      },
+      {
+        "line": 933,
+        "prefix": "SF_WP12_QUESTION_WORK_INPUT",
+        "value": {
+          "scope": "real-same-case-request-action-condition-and-public-ui-work-selection",
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "caseRef": {
+            "id": "19388db7-3993-42fd-bed9-17580d0d5279",
+            "incarnation": "58332dca-997e-44ae-92ac-db7d2ea89381",
+            "version": 2
+          },
+          "inputDigest": "d21df92971aedb578ecd230a20d2904a09333c33368d8a6d4be68eb2be15e9af",
+          "selectionRef": "24056d65-34c1-4dd9-a3a5-b848c34257be",
+          "selectionOrigin": "actual-workbench-work-select-html",
+          "requestRef": {
+            "schema": "sf-evidence-v1",
+            "kind": "record",
+            "refId": "sf-procurement:1d49496d-c27d-4483-a7d2-d13216652523:1",
+            "installationId": "wp12-native-question-work-list-installation",
+            "projectId": "88259c17f0867887b06141437729c674e4bb31a8",
+            "refDigest": "d9cf181e142590439c6470234cdec514bd9800b9c361c0b734be38813bfba80c",
+            "evidenceLevel": "observed",
+            "target": {
+              "surface": "procurement",
+              "recordType": "procurement-request",
+              "recordId": "WP12-WORK-REQUEST",
+              "incarnation": "1d49496d-c27d-4483-a7d2-d13216652523",
+              "version": 1,
+              "fields": [
+                "status",
+                "holder",
+                "approvalStage",
+                "stageEnteredAt",
+                "ageDays",
+                "baseAmount",
+                "submittedAmount",
+                "submittedCurrency",
+                "submittedFxRate",
+                "originalAmount",
+                "originalCurrency",
+                "fxRate",
+                "fxSource",
+                "monetaryState",
+                "subject",
+                "reason",
+                "nextStep",
+                "sourcing"
+              ],
+              "period": {
+                "start": "2027-01-01",
+                "end": "2027-12-31"
+              },
+              "projectionDigest": "d34d375d9e28f8114e6ec45b0b2eb2e17511a54dd975108210a0cac05689e138"
+            }
+          },
+          "actionRef": {
+            "schema": "sf-evidence-v1",
+            "kind": "record",
+            "refId": "sf-source:c770ead7-34a7-47f2-bc0f-caea2770c679:1",
+            "installationId": "wp12-native-question-work-list-installation",
+            "projectId": "88259c17f0867887b06141437729c674e4bb31a8",
+            "refDigest": "14d0f1961ddd960f560364d3d83d9480035d9f1927cd03ad14eb2b8183bc6aca",
+            "evidenceLevel": "observed",
+            "target": {
+              "surface": "dashboard",
+              "recordType": "hotTopics",
+              "recordId": "64df23b0-7587-4ce8-93ba-51efc95a3092",
+              "incarnation": "c770ead7-34a7-47f2-bc0f-caea2770c679",
+              "version": 1,
+              "fields": [
+                "status"
+              ],
+              "period": {
+                "start": "2026-11-14",
+                "end": "2026-11-14"
+              },
+              "projectionDigest": "0f1c4784128b83a5a47c235b3e9d079619bfbbb14c8e1934d6cfebbc45629313"
+            }
+          },
+          "relationId": "047451a0-3a9c-4606-a505-444f7f2d3d99",
+          "conditionOrigin": "actual-C10-explicit-human-pending-coverage",
+          "conditionId": "question:342f0ed364c666f839961d2991487851fa397e9ab17da2f6cf49800203fd8d38",
+          "uiWorkReceipt": {
+            "kind": "ui",
+            "operation": "sf_work_list",
+            "handlerExport": "listWork",
+            "inputDigest": "8e91727142fc774fbecb66b84fa923e4a0402f4a3694677b00b1c35a8262e0cb",
+            "resultDigest": "e781d83c1c9d01a424b4f7c9bf09b5e440937265af945605fa112863442f6f95",
+            "principalRef": "wp12-synthetic-question-work-list-principal",
+            "callId": "ffc02318-0b6e-4ce7-be90-d02dcfadd434",
+            "requestId": "ffc02318-0b6e-4ce7-be90-d02dcfadd434",
+            "accessRevision": "ebe08ddd7d3f61c273137bf080897d779857d032330b839b1e7c576d4c1336f1",
+            "at": "2026-11-14T16:35:59.428Z"
+          },
+          "uiWorkItems": [
+            {
+              "actionRef": "sf-source:c770ead7-34a7-47f2-bc0f-caea2770c679:1",
+              "ownerRef": "wp12-synthetic-question-work-list-principal",
+              "state": "open",
+              "sourceRefs": [
+                {
+                  "schema": "sf-evidence-v1",
+                  "kind": "record",
+                  "refId": "sf-procurement:1d49496d-c27d-4483-a7d2-d13216652523:1",
+                  "installationId": "wp12-native-question-work-list-installation",
+                  "projectId": "88259c17f0867887b06141437729c674e4bb31a8",
+                  "refDigest": "d9cf181e142590439c6470234cdec514bd9800b9c361c0b734be38813bfba80c",
+                  "evidenceLevel": "observed",
+                  "target": {
+                    "surface": "procurement",
+                    "recordType": "procurement-request",
+                    "recordId": "WP12-WORK-REQUEST",
+                    "incarnation": "1d49496d-c27d-4483-a7d2-d13216652523",
+                    "version": 1,
+                    "fields": [
+                      "status",
+                      "holder",
+                      "approvalStage",
+                      "stageEnteredAt",
+                      "ageDays",
+                      "baseAmount",
+                      "submittedAmount",
+                      "submittedCurrency",
+                      "submittedFxRate",
+                      "originalAmount",
+                      "originalCurrency",
+                      "fxRate",
+                      "fxSource",
+                      "monetaryState",
+                      "subject",
+                      "reason",
+                      "nextStep",
+                      "sourcing"
+                    ],
+                    "period": {
+                      "start": "2027-01-01",
+                      "end": "2027-12-31"
+                    },
+                    "projectionDigest": "d34d375d9e28f8114e6ec45b0b2eb2e17511a54dd975108210a0cac05689e138"
+                  }
+                },
+                {
+                  "schema": "sf-evidence-v1",
+                  "kind": "record",
+                  "refId": "planner-version:wp12-question-source:a5284138-459e-431b-b9b4-fae794ce9c2e:1",
+                  "installationId": "wp12-native-question-work-list-installation",
+                  "projectId": "88259c17f0867887b06141437729c674e4bb31a8",
+                  "refDigest": "0b6f3bc7d4418c4b5ec430068dea8b00b9e25e8fb9b59bc5e3fff9dfdf7ccb37",
+                  "evidenceLevel": "observed",
+                  "target": {
+                    "surface": "planner",
+                    "recordType": "planner-version",
+                    "recordId": "wp12-question-source",
+                    "incarnation": "a5284138-459e-431b-b9b4-fae794ce9c2e",
+                    "version": 1,
+                    "fields": [
+                      "id",
+                      "name",
+                      "year",
+                      "closed",
+                      "lines",
+                      "fx",
+                      "hc",
+                      "projects",
+                      "lists",
+                      "locked",
+                      "summary",
+                      "hr",
+                      "fteInputsKnown",
+                      "sharedEntities",
+                      "sharedAllocations"
+                    ],
+                    "period": {
+                      "start": "2027-01-01",
+                      "end": "2027-12-31"
+                    },
+                    "projectionDigest": "7ac3fb559f17c85c1113e5801357cb86773f2980578182d85f9f19ed55f2f7d1"
+                  }
+                },
+                {
+                  "schema": "sf-evidence-v1",
+                  "kind": "record",
+                  "refId": "sf-source:c770ead7-34a7-47f2-bc0f-caea2770c679:1",
+                  "installationId": "wp12-native-question-work-list-installation",
+                  "projectId": "88259c17f0867887b06141437729c674e4bb31a8",
+                  "refDigest": "14d0f1961ddd960f560364d3d83d9480035d9f1927cd03ad14eb2b8183bc6aca",
+                  "evidenceLevel": "observed",
+                  "target": {
+                    "surface": "dashboard",
+                    "recordType": "hotTopics",
+                    "recordId": "64df23b0-7587-4ce8-93ba-51efc95a3092",
+                    "incarnation": "c770ead7-34a7-47f2-bc0f-caea2770c679",
+                    "version": 1,
+                    "fields": [
+                      "status"
+                    ],
+                    "period": {
+                      "start": "2026-11-14",
+                      "end": "2026-11-14"
+                    },
+                    "projectionDigest": "0f1c4784128b83a5a47c235b3e9d079619bfbbb14c8e1934d6cfebbc45629313"
+                  }
+                }
+              ]
+            }
+          ],
+          "autonomousDiscovery": false,
+          "privateSelectorInjected": false,
+          "inferenceExecuted": false,
+          "gnativeAccepted": false
+        }
+      },
+      {
+        "line": 934,
+        "prefix": "SF_WP12_NATIVE_MISSION",
+        "value": {
+          "scope": "real-host-input-preparation-and-availability",
+          "status": "unavailable",
+          "reason": "installed-host-catalog-empty",
+          "catalogState": "empty",
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "profileId": "sf_maestro",
+          "skillId": "sf-coordenar-perguntas",
+          "caseRef": {
+            "id": "19388db7-3993-42fd-bed9-17580d0d5279",
+            "incarnation": "58332dca-997e-44ae-92ac-db7d2ea89381",
+            "version": 2
+          },
+          "inputPrepared": true,
+          "inputDigest": "d21df92971aedb578ecd230a20d2904a09333c33368d8a6d4be68eb2be15e9af",
+          "inferenceExecuted": false,
+          "outputRef": null,
+          "consumerRef": null,
+          "gnativeAccepted": false
+        }
+      },
+      {
+        "line": 954,
+        "prefix": "SF_WP12_NATIVE_MISSION_CATALOG",
+        "value": {
+          "label": "question-work-list",
+          "phase": "reopened",
+          "scope": "host-installed-catalog",
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "state": "empty",
+          "available": [],
+          "supported": [],
+          "published": [],
+          "intersection": []
+        }
+      },
+      {
+        "line": 955,
+        "prefix": "SF_WP12_QUESTION_WORK_CONSUMER",
+        "value": {
+          "scope": "real-workbench-and-c06-consumers-after-explicit-public-reselection",
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "selectionRef": "f3362160-6503-4937-8325-d51662a6f9d7",
+          "priorHostSelectionRefused": true,
+          "actionId": "64df23b0-7587-4ce8-93ba-51efc95a3092",
+          "questionId": null,
+          "outputRef": null,
+          "nativeCallId": null,
+          "nativeReceipt": null,
+          "inferenceExecuted": false,
+          "questionConsumerOrigin": null,
+          "allSkillRequiredOperationsAccepted": false,
+          "unexercisedRequiredOperations": [
+            "sf_answer_read"
+          ],
+          "confirmedAnswerReuseAccepted": false,
+          "gnativeAccepted": false
+        }
+      },
+      {
+        "line": 996,
+        "prefix": "SF_WP12_NATIVE_MISSION_CATALOG",
+        "value": {
+          "label": "question-work-list",
+          "phase": "reopened",
+          "scope": "host-installed-catalog",
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "state": "empty",
+          "available": [],
+          "supported": [],
+          "published": [],
+          "intersection": []
+        }
+      },
+      {
+        "line": 997,
+        "prefix": "SF_WP12_WORK_SOURCE_REFUSAL",
+        "value": {
+          "scope": "real-unauthenticated-http-and-selected-request-deletion-refusal",
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "requestRef": "sf-procurement:1d49496d-c27d-4483-a7d2-d13216652523:1",
+          "actionRef": "sf-source:c770ead7-34a7-47f2-bc0f-caea2770c679:1",
+          "uiStatus": "stale",
+          "uiReason": "Selection changed",
+          "httpStatus": 409,
+          "nativeOutputStatus": null,
+          "nativeOutputReadAttempted": false,
+          "inferenceExecuted": false,
+          "gnativeAccepted": false
+        }
+      },
+      {
+        "line": 998,
+        "prefix": "SF_WP12_NATIVE_MISSION_CATALOG",
+        "value": {
+          "label": "executive-work-list",
+          "phase": "initial",
+          "scope": "host-installed-catalog",
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "state": "empty",
+          "available": [],
+          "supported": [],
+          "published": [],
+          "intersection": []
+        }
+      },
+      {
+        "line": 999,
+        "prefix": "SF_WP12_EXECUTIVE_WORK_INPUT",
+        "value": {
+          "scope": "same-actual-request-action-work-item-and-selected-review",
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "caseRef": {
+            "id": "bf3dec53-0c7e-4a3f-b0e1-304ca863e6ce",
+            "incarnation": "90ca7d31-3d00-4a22-827b-9629003bce97",
+            "version": 1
+          },
+          "inputDigest": "d6d6ceff7f25251aa4f6e77488f5bf1c714fcc52068d18aabd57d78349224480",
+          "selectionRef": "6ab3fdc3-6e47-41b3-bb61-9d6b653716ac",
+          "selectionOrigin": "actual-workbench-work-select-html",
+          "requestRef": {
+            "schema": "sf-evidence-v1",
+            "kind": "record",
+            "refId": "sf-procurement:95b845a3-2daa-4eaf-af66-a3fa877264ce:1",
+            "installationId": "wp12-native-executive-work-list-installation",
+            "projectId": "88259c17f0867887b06141437729c674e4bb31a8",
+            "refDigest": "1a75b898f7c09612cedcaae93ccab549e1132a7ed367ad9fd4a17e771b6f92b2",
+            "evidenceLevel": "observed",
+            "target": {
+              "surface": "procurement",
+              "recordType": "procurement-request",
+              "recordId": "WP12-WORK-REQUEST",
+              "incarnation": "95b845a3-2daa-4eaf-af66-a3fa877264ce",
+              "version": 1,
+              "fields": [
+                "status",
+                "holder",
+                "approvalStage",
+                "stageEnteredAt",
+                "ageDays",
+                "baseAmount",
+                "submittedAmount",
+                "submittedCurrency",
+                "submittedFxRate",
+                "originalAmount",
+                "originalCurrency",
+                "fxRate",
+                "fxSource",
+                "monetaryState",
+                "subject",
+                "reason",
+                "nextStep",
+                "sourcing"
+              ],
+              "period": {
+                "start": "2027-01-01",
+                "end": "2027-12-31"
+              },
+              "projectionDigest": "73d0282498f8468541be53bb95b8cfd5da720ee1af29b8ea7feaca8744fdc199"
+            }
+          },
+          "actionRef": {
+            "schema": "sf-evidence-v1",
+            "kind": "record",
+            "refId": "sf-source:c3bcec89-89d2-43be-a217-afa196eb7e5a:1",
+            "installationId": "wp12-native-executive-work-list-installation",
+            "projectId": "88259c17f0867887b06141437729c674e4bb31a8",
+            "refDigest": "87be60aa1dd0ab35105966db3a62b61b3340d8ef00d599dbce7a615af9988217",
+            "evidenceLevel": "observed",
+            "target": {
+              "surface": "dashboard",
+              "recordType": "hotTopics",
+              "recordId": "67e46f28-5533-423f-8e55-4557437e07db",
+              "incarnation": "c3bcec89-89d2-43be-a217-afa196eb7e5a",
+              "version": 1,
+              "fields": [
+                "status"
+              ],
+              "period": {
+                "start": "2026-11-14",
+                "end": "2026-11-14"
+              },
+              "projectionDigest": "0f1c4784128b83a5a47c235b3e9d079619bfbbb14c8e1934d6cfebbc45629313"
+            }
+          },
+          "reviewRef": "review:2840aba20a72f5d3ef8572ca2987f6d24b2591e7024ff83da0dc3a0c0e6ad6c7",
+          "reviewSelection": {
+            "selectionRef": "review-agenda:81d474a1-157e-49a5-8176-af60ef37fde0",
+            "sectionRefs": [
+              "selected-request-action"
+            ],
+            "period": {
+              "start": "2026-11-14",
+              "end": "2026-11-14"
+            }
+          },
+          "capturedAction": {
+            "id": "67e46f28-5533-423f-8e55-4557437e07db",
+            "text": "Obtain training cost evidence for the selected renewal request",
+            "state": "open"
+          },
+          "uiWorkReceipt": {
+            "kind": "ui",
+            "operation": "sf_work_list",
+            "handlerExport": "listWork",
+            "inputDigest": "887dae100af51b0f14026ab47447c4730aa4861ca8ba258de05b080d94964286",
+            "resultDigest": "3da3bd94a58b95ed2888ef5682622a0338275d13f8871626b43a95d74081d3cb",
+            "principalRef": "wp12-synthetic-executive-work-list-principal",
+            "callId": "eea7d213-5052-4afa-8578-2ad19b7aad60",
+            "requestId": "eea7d213-5052-4afa-8578-2ad19b7aad60",
+            "accessRevision": "7799fce6272f105da2f06fb32412c7b4ba956a18bb06b7d72d73504bb00f280f",
+            "at": "2026-11-14T16:43:42.797Z"
+          },
+          "auxiliaryWorkInsideDecisionBrief": false,
+          "inferenceExecuted": false,
+          "gnativeAccepted": false
+        }
+      },
+      {
+        "line": 1000,
+        "prefix": "SF_WP12_NATIVE_MISSION",
+        "value": {
+          "scope": "real-host-input-preparation-and-availability",
+          "status": "unavailable",
+          "reason": "installed-host-catalog-empty",
+          "catalogState": "empty",
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "profileId": "sf_maestro",
+          "skillId": "sf-preparar-revisao-executiva",
+          "caseRef": {
+            "id": "bf3dec53-0c7e-4a3f-b0e1-304ca863e6ce",
+            "incarnation": "90ca7d31-3d00-4a22-827b-9629003bce97",
+            "version": 1
+          },
+          "inputPrepared": true,
+          "inputDigest": "d6d6ceff7f25251aa4f6e77488f5bf1c714fcc52068d18aabd57d78349224480",
+          "inferenceExecuted": false,
+          "outputRef": null,
+          "consumerRef": null,
+          "gnativeAccepted": false
+        }
+      },
+      {
+        "line": 1020,
+        "prefix": "SF_WP12_NATIVE_MISSION_CATALOG",
+        "value": {
+          "label": "executive-work-list",
+          "phase": "reopened",
+          "scope": "host-installed-catalog",
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "state": "empty",
+          "available": [],
+          "supported": [],
+          "published": [],
+          "intersection": []
+        }
+      },
+      {
+        "line": 1021,
+        "prefix": "SF_WP12_EXECUTIVE_WORK_REOPEN",
+        "value": {
+          "scope": "real-workbench-action-and-preserved-review-reopened",
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "actionId": "67e46f28-5533-423f-8e55-4557437e07db",
+          "reviewRef": "review:2840aba20a72f5d3ef8572ca2987f6d24b2591e7024ff83da0dc3a0c0e6ad6c7",
+          "selectionRef": "fc6afdcd-e942-4062-ac12-0b5feb732025",
+          "priorHostSelectionRefused": true,
+          "outputRef": null,
+          "nativeCallId": null,
+          "nativeReceipt": null,
+          "nativeContributionConsumed": false,
+          "c07Executed": false,
+          "allSkillRequiredOperationsAccepted": false,
+          "inferenceExecuted": false,
+          "gnativeAccepted": false
+        }
+      },
+      {
+        "line": 1022,
+        "prefix": "SF_WP12_WORK_SOURCE_REFUSAL",
+        "value": {
+          "scope": "real-unauthenticated-http-and-selected-request-deletion-refusal",
+          "githubSha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+          "requestRef": "sf-procurement:95b845a3-2daa-4eaf-af66-a3fa877264ce:1",
+          "actionRef": "sf-source:c3bcec89-89d2-43be-a217-afa196eb7e5a:1",
+          "uiStatus": "stale",
+          "uiReason": "Selection changed",
+          "httpStatus": 409,
+          "nativeOutputStatus": null,
+          "nativeOutputReadAttempted": false,
+          "inferenceExecuted": false,
+          "gnativeAccepted": false
+        }
+      }
+    ]
+  },
+  "acceptance": {
+    "catalogObservations": 7,
+    "allCatalogsEmpty": true,
+    "unavailableNativeMissions": 4,
+    "inferenceExecuted": 0,
+    "nativeToolReceipts": 0,
+    "nativeOutputs": 0,
+    "nativeConsumers": 0,
+    "gnative": false,
+    "completeWp12": false,
+    "uiResultsAreNotNativeResults": true
+  },
+  "followup": {
+    "excludeEquivalentGreenTests": [
+      "Review crossroutes",
+      "Executive Work"
+    ],
+    "questionFailureRequiresRelevantChangeBeforeRetry": true,
+    "nextNewMissions": [
+      "Forecast with human-selected auxiliary Budget KPI",
+      "BI with actual public artifact/selection handles"
+    ],
+    "supersedesOnlyInProgressStatus": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-21-review-work-dispatch.json"
+  },
+  "localProductTests": false,
+  "localTypecheck": false,
+  "foreignSourceEdited": false
+}
