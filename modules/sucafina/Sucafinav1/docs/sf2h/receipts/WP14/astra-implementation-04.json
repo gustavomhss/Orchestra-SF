@@ -1,0 +1,79 @@
+{
+  "schema": "sf2h-wp14-implementation-v1",
+  "owner": "WP14",
+  "previousProduct": "c84ec9f4528d66bbaa3dd70689f6f9d568c463ca",
+  "parent": "c84ec9f4528d66bbaa3dd70689f6f9d568c463ca",
+  "status": "IMPLEMENTED_PENDING_CI",
+  "reason": "Restore the callable Procurement resolver contract used by the existing host. W1-W3 had a coupling diagnostic in business-services.ts:188 because WP14 required an object; the published WP10 f075e982 callback is callable with attached methods and remains compatible.",
+  "changedProduct": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "sha256": "9efb6954aea16338a03ee5119561738814e184024583502b4bcb71b5070c69a2",
+      "blob": "e4e648feecb4e12ace3da41e1b91c45b527c7247"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "sha256": "f3d0788aa9d15db15b0a6bff8292563cd3e0c7678c1c88492be8506e6caae0c0",
+      "blob": "8adc906eac19e275118d1e5b3d9f66ce09104aa8"
+    }
+  ],
+  "consumerEvidence": {
+    "baselineDiagnostic": "apps/cli/src/sucafina-product/business-services.ts(188,20): TS2322",
+    "auditedProducer": "f075e9824b7d8aed50b7f42c597528ef198177db",
+    "auditedFile": "apps/cli/src/sucafina-product/business-services.ts",
+    "auditedBlob": "14600913fcf85e6311d0d4ec3b90500231444372",
+    "currentProducerExpression": "Object.assign(resolveProcurement, { ...individual, resolve: resolveProcurement })",
+    "fix": "Use ReturnType<typeof createProcurementSourceResolver>[\"resolve\"] and invoke that exact callback twice; the existing test injects resolver.resolve. No host file edited."
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "requestHash": "6ff7a0f1ebc779d1e1c480da8928325d9311e4d874c5b6ab3d9ff65259cf5f89",
+  "scope": "One affected Procurement test file. All other product/test/config/fixture blobs identical to W3. Typecheck and guards use exact W4 via the existing scoped envelope.",
+  "precedingVerification": {
+    "runId": 43582306795,
+    "jobId": 132409435524,
+    "W": "c84ec9f4528d66bbaa3dd70689f6f9d568c463ca",
+    "tree": "cf7b3f8a74f101b3d580f6395808d0ddc6d75750",
+    "S": "11d95450508039b538e7dcc25754d9b1b3adf9ce",
+    "snapshotTree": "b1d0a675b735519fd1cc3fb5a6ff753740c23ead",
+    "conclusion": "success",
+    "tests": {
+      "files": 2,
+      "total": 14,
+      "pass": 14,
+      "fail": 0,
+      "durationSeconds": 0.2
+    },
+    "omni": {
+      "verdict": "not applicable",
+      "scope": "focused: no declaring test ran",
+      "nonce": "63bfdcfed6faaa1f3ab9e7666a4e76cc",
+      "spawns": 0,
+      "delegated": 0
+    },
+    "check": {
+      "runId": 43582318468,
+      "jobId": 132409471352,
+      "conclusion": "failure",
+      "typecheckDiagnostics": 140,
+      "wp14PathDiagnostics": 0,
+      "couplingDiagnosticStillPresent": true,
+      "guards": {
+        "rules": 78,
+        "changedPaths": 606,
+        "gates": 0,
+        "warnings": 11,
+        "errors": 0
+      }
+    }
+  }
+}
