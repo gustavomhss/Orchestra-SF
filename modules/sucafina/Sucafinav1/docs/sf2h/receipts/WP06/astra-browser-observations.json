@@ -1,0 +1,160 @@
+{
+  "product": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+  "snapshot": "417b7f11e6a8c3f3e02093868ce733f65fb60674",
+  "run_id": 43524990304,
+  "job_id": 132228409185,
+  "artifact_id": 14085011660,
+  "artifact_sha256": "1288b4bdd7c9ca5e127378fe91987942408388a536fd66017532fb1630fc32df",
+  "report_sha256": "1a5816a48568acf6e60206efe7e33c0e28b44232a3c4ed59ca2c8eec3d663414",
+  "selection_sha256": "cb9850369e949606233a3e6d7dac496c1242e74abf290454b3ab3e7088459d5d",
+  "stats": {
+    "startTime": "2026-11-13T23:11:45.877Z",
+    "duration": 48520.907,
+    "expected": 10,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "cases": [
+    {
+      "title": "WP06 real document renderer shows a candidate and source as data until explicit confirmation",
+      "file": "sucafina/wp06/documents.spec.ts",
+      "ok": true,
+      "expectedStatus": "passed",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration": 968,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "WP06 real document renderer preserves an explicit stale refusal and removes unusable source content",
+      "file": "sucafina/wp06/documents.spec.ts",
+      "ok": true,
+      "expectedStatus": "passed",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration": 1117,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "WP06 real renderer: simulation, literal source content and cancel preserve inputs without Apply",
+      "file": "sucafina/wp06/imports.spec.ts",
+      "ok": true,
+      "expectedStatus": "passed",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration": 923,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "WP06 real renderer: stale Apply requires a new destination and explicit preview",
+      "file": "sucafina/wp06/imports.spec.ts",
+      "ok": true,
+      "expectedStatus": "passed",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration": 1207,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "WP06 real renderer: failed preview detail cannot enable Apply before review",
+      "file": "sucafina/wp06/imports.spec.ts",
+      "ok": true,
+      "expectedStatus": "passed",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration": 827,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "WP06 real renderer: a receipt read failure retries without another Apply",
+      "file": "sucafina/wp06/imports.spec.ts",
+      "ok": true,
+      "expectedStatus": "passed",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration": 940,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "WP06 real renderer: rejected Apply displays a rejected receipt and disables replay",
+      "file": "sucafina/wp06/imports.spec.ts",
+      "ok": true,
+      "expectedStatus": "passed",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration": 814,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "WP06 real renderer: a stale analysis reference never claims an applied import",
+      "file": "sucafina/wp06/imports.spec.ts",
+      "ok": true,
+      "expectedStatus": "passed",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration": 1062,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "WP06 real renderer: explicit Apply displays confirmed applied receipt",
+      "file": "sucafina/wp06/imports.spec.ts",
+      "ok": true,
+      "expectedStatus": "passed",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration": 804,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "WP06 real renderer: explicit Apply displays confirmed unchanged receipt",
+      "file": "sucafina/wp06/imports.spec.ts",
+      "ok": true,
+      "expectedStatus": "passed",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration": 809,
+          "retry": 0
+        }
+      ]
+    }
+  ]
+}

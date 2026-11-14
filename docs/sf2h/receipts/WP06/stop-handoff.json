@@ -1,0 +1,238 @@
+{
+  "schema": "sf2h-stop-handoff-v1",
+  "wp": "WP06",
+  "branch": "astra-wp06",
+  "status": "INCOMPLETE_NOT_APPROVED",
+  "product_sha": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+  "product_tree": "be543a7c5b48d697573bf905b9d9793bdb53f45a",
+  "pr": {
+    "number": 26,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/26",
+    "base": "sf2-stack",
+    "draft": true
+  },
+  "provenance": {
+    "handoff": "6074055e46116d770c6673449ec8c5da6dc74933",
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "seed": "95faa3e66a5640ca37407b072c65eaf731d0ca1f",
+    "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "prior_recovered_receipt": {
+      "blob": "70eac54a044d8ce3706b093de68abfbc0f63bca2",
+      "source_head": "396758eab95e61460416b7ec1d52adb0d57a1afe",
+      "branch": "sf2-import-ready",
+      "stopped_at_utc": "2026-11-13T20:31:38.551346+00:00",
+      "shared_manifest_reference": "accepted-inputs/shared.json"
+    }
+  },
+  "tasks": {
+    "WP06.T01": {
+      "implementation": "Physical workbook provenance, supported format catalogue, scalar/null/zero preservation, authorized exports, and trusted Dashboard backup adapter.",
+      "acceptance": "All 16 own criteria VERIFIED in criterion map v3; no aggregate WP06 approval inferred."
+    },
+    "WP06.T02": {
+      "implementation": "Shared capability dispatch; private prepared command and public C04; actual Planner financial projection; missing-adapter refusal; retained input classification and source/authority fences.",
+      "acceptance": "16 VERIFIED / 12 PARTIAL; governed native import analysis composition and genuine native witnesses remain unqualified."
+    },
+    "WP06.T03": {
+      "implementation": "Human import workbench with detailed preview, explicit atomic Apply, terminal receipt, retry/cancel/repreview and read-only recovery.",
+      "acceptance": "18 VERIFIED / 6 PARTIAL; 8 import workbench browser cases passed against production renderers/scripts/CSP with synthetic HTTP; native-produced importPreviewRef journey remains unqualified."
+    },
+    "WP06.T04": {
+      "implementation": "Actual SQLite/CLI/HTTP rich roundtrip, newVersion/removeMissing, roster composition, source ABA refusal, authorized private-data boundaries and unchanged receipt.",
+      "acceptance": "All 18 own criteria VERIFIED; hosted actual SQLite/CLI/HTTP and domain assertions passed within an aggregate failed job."
+    },
+    "WP06.T05": {
+      "implementation": "Scoped Request attachment selection; actual TXT/DOCX/digital-PDF extraction, explicit confirmation, BCS/source bridge, private search and source revalidation; native verifier seam exposed.",
+      "acceptance": "14 VERIFIED / 12 PARTIAL / 1 BLOCKED; actual extraction, confirmation, BCS and document browser assertions passed, while dossier composition, native/Atlas witnesses and historical relay obligations remain open."
+    }
+  },
+  "validations": {
+    "local_product_tests": "NOT_RUN per user instruction",
+    "local_typecheck": "NOT_RUN per user instruction",
+    "hosted_backend": {
+      "run_id": 43525466970,
+      "job_id": 132230001270,
+      "snapshot": "d87f2c19f9d97edb90591ac1f5fd58a1fffd1e4b",
+      "snapshot_tree": "ddec64eeb282ecabfc59f5472c79bc8a2bdbd8e8",
+      "conclusion": "failure",
+      "selected_files": 46,
+      "tests": 176,
+      "passed": 175,
+      "failed": 1,
+      "errors": 1,
+      "assertion_failures": 0,
+      "duration_seconds": 173.22,
+      "omni_verdict": "not applicable (focused: no declaring test ran)",
+      "omni_nonce": "a24834b574ee72ef15bd904384b02631",
+      "dependency_error": "Cannot find module product/routines/dossier.ts from the retained documents/runtime-e2e.test.ts; no assertions in that file executed.",
+      "request_sha256": "b6188b844f6e699806b2faf21af98280eb80fa383e8318e60e9f5688901889ed"
+    },
+    "hosted_checks": {
+      "run_id": 43524992830,
+      "job_id": 132228417938,
+      "snapshot": "d57e2a7cc9881bee7bfd3dbbc7e140a343f9050c",
+      "snapshot_tree": "b353483149e9c16037a8144dc871563915c8592e",
+      "conclusion": "failure",
+      "typecheck_sucafina": "FAIL",
+      "typecheck_cli": "FAIL",
+      "guards": "PASS",
+      "wp06_production_diagnostics": 0,
+      "total_diagnostics": 159,
+      "unique_diagnostics": 117,
+      "unowned_unique_diagnostics": 116,
+      "unowned_files": 42,
+      "owned_test_missing_dossier_diagnostics": 1
+    },
+    "browser": {
+      "run_id": 43524990304,
+      "job_id": 132228409185,
+      "snapshot": "417b7f11e6a8c3f3e02093868ce733f65fb60674",
+      "snapshot_tree": "d1a42613463474bd53451f4d1d446d81372087a7",
+      "conclusion": "success",
+      "spec_files": 2,
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "retries": 0,
+      "request_sha256": "47a5201cc8efa3dd2145cd115d4214b6731979367804a98cb936450361df9df5",
+      "scope": "Actual production HTML/JavaScript/CSP in Chromium; synthetic HTTP boundary. Real backend domain/parsing/authority is qualified by the separate unit request; native identity remains unqualified."
+    },
+    "epic": "NOT_RUN",
+    "merge": "NOT_PERFORMED",
+    "deploy": "NOT_PERFORMED"
+  },
+  "evidence": {
+    "criterion_map": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/astra-criterion-map-v3.json",
+    "ci": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/astra-ci-evidence.json",
+    "findings": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/astra-check-findings.json",
+    "deltas": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/astra-owner-deltas.md",
+    "outgoing": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/handoffs/doc-ref.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/handoffs/doc-extract.json"
+    ]
+  },
+  "integration_blockers": [
+    "WP09 dossier.ts is absent from this candidate; its retained test fails at import before assertions. Use the pinned real producer and WP06 Request-document evidence bridge.",
+    "WP10/WP12 native SessionV2, private MCP, actual skill receipts and installed scanner/Atlas witnesses are not supplied by deterministic local-identity fixtures.",
+    "Both complete package typechecks fail: 116 unique unowned diagnostics in 42 files plus the retained missing dossier import. Exact paths/messages are recorded.",
+    "Historical T+20/T+35 relay, original lease transfer and consumer acknowledgements cannot be backdated or inferred from this continuation."
+  ],
+  "next_owner": "S0 reviews the draft PR, composes the exact unowned deltas, resolves package diagnostics and supplies integrated witnesses before approval/integration. No merge into dev or deploy was performed.",
+  "stopped_at_utc": "2026-11-13T23:23:41Z",
+  "delivery": {
+    "kind": "EVIDENCE_ONLY_COMMIT_AFTER_QUALIFIED_PRODUCT",
+    "commit_reference": "Final published PR #26 head",
+    "verification": "The final PR records the delivery commit/tree and GitHub MCP comparison proving only evidence documents changed after this product."
+  },
+  "acceptance": {
+    "status": "INCOMPLETE_NOT_APPROVED",
+    "criteria": 140,
+    "counts": {
+      "VERIFIED": 100,
+      "PARTIAL": 39,
+      "BLOCKED": 1
+    },
+    "blocked_criterion": "WP06.T05.CHK.20",
+    "all_five_tasks_complete": false,
+    "counts_by_scope": {
+      "WP06": {
+        "criterion_count": 27,
+        "counts": {
+          "VERIFIED": 18,
+          "PARTIAL": 9
+        },
+        "all_criteria_verified": false,
+        "not_fully_verified_ids": [
+          "WP06.DOD.10",
+          "WP06.DOD.40",
+          "WP06.INV.10",
+          "WP06.INV.40",
+          "WP06.QLT.10",
+          "WP06.CMP.10",
+          "WP06.CMP.40",
+          "WP06.SUC.10",
+          "WP06.SUC.40"
+        ]
+      },
+      "WP06.T01": {
+        "criterion_count": 16,
+        "counts": {
+          "VERIFIED": 16
+        },
+        "all_criteria_verified": true,
+        "not_fully_verified_ids": []
+      },
+      "WP06.T02": {
+        "criterion_count": 28,
+        "counts": {
+          "VERIFIED": 16,
+          "PARTIAL": 12
+        },
+        "all_criteria_verified": false,
+        "not_fully_verified_ids": [
+          "WP06.T02.CHK.18",
+          "WP06.T02.CHK.60",
+          "WP06.T02.DOD.18",
+          "WP06.T02.DOD.60",
+          "WP06.T02.INV.18",
+          "WP06.T02.INV.60",
+          "WP06.T02.QLT.18",
+          "WP06.T02.QLT.60",
+          "WP06.T02.CMP.18",
+          "WP06.T02.CMP.60",
+          "WP06.T02.SUC.18",
+          "WP06.T02.SUC.60"
+        ]
+      },
+      "WP06.T03": {
+        "criterion_count": 24,
+        "counts": {
+          "VERIFIED": 18,
+          "PARTIAL": 6
+        },
+        "all_criteria_verified": false,
+        "not_fully_verified_ids": [
+          "WP06.T03.CHK.60",
+          "WP06.T03.DOD.60",
+          "WP06.T03.INV.60",
+          "WP06.T03.QLT.60",
+          "WP06.T03.CMP.60",
+          "WP06.T03.SUC.60"
+        ]
+      },
+      "WP06.T04": {
+        "criterion_count": 18,
+        "counts": {
+          "VERIFIED": 18
+        },
+        "all_criteria_verified": true,
+        "not_fully_verified_ids": []
+      },
+      "WP06.T05": {
+        "criterion_count": 27,
+        "counts": {
+          "VERIFIED": 14,
+          "BLOCKED": 1,
+          "PARTIAL": 12
+        },
+        "all_criteria_verified": false,
+        "not_fully_verified_ids": [
+          "WP06.T05.CHK.20",
+          "WP06.T05.CHK.18",
+          "WP06.T05.CHK.40",
+          "WP06.T05.DOD.18",
+          "WP06.T05.DOD.40",
+          "WP06.T05.INV.18",
+          "WP06.T05.INV.40",
+          "WP06.T05.QLT.18",
+          "WP06.T05.CMP.18",
+          "WP06.T05.CMP.40",
+          "WP06.T05.SUC.01",
+          "WP06.T05.SUC.18",
+          "WP06.T05.SUC.40"
+        ]
+      }
+    }
+  }
+}

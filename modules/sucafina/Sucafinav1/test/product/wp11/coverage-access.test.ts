@@ -4,6 +4,8 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
 import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../product/contracts/business-context.ts"
+import type { SourceRef } from "../../../product/contracts/context.ts"
+import type { ScenarioComparison } from "../../../product/contracts/decisions.ts"
 import { assessCostCoverage } from "../../../product/decisions/cost-coverage.ts"
 import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
@@ -31,9 +33,12 @@ function coveredEntries(except?: string) {
 test("C10 derives omitted renewal costs, distinguishes supported zero, and fails closed on bad evidence", () => {
   const common = { basis, alternativeId: "replacement", alternativeVersion: 2, currency: "USD", horizon, evidence: [resolution(evidenceRef)], supports: () => true }
   const omitted = assessCostCoverage({ ...common, entries: coveredEntries("training"), components: [] })
-  expect(omitted).toMatchObject({ coverageState: "pending", derivedMissingCategoryIds: ["training"], entries: [{ categoryId: "training", status: "pending", reason: "missing-category" }] })
+  expect(omitted).toMatchObject({ coverageState: "pending", derivedMissingCategoryIds: ["training"] })
+  expect(omitted.entries.map((entry) => entry.categoryId)).toEqual([...RENEWAL_TRANSITION_CATEGORIES])
+  expect(omitted.entries.filter((entry) => entry.categoryId === "training")).toEqual([{ categoryId: "training", status: "pending", reason: "missing-category" }])
+  expect(omitted.entries.filter((entry) => entry.categoryId !== "training")).toEqual(coveredEntries())
 
-  const trainingSource = { surface: "planner", type: "quote", id: "quote-1", incarnation: "quote-inc-1", version: 3, fields: ["amount"], period: horizon, observedAt: "2026-11-13T00:00:00Z" }
+  const trainingSource: SourceRef = { surface: "planner", type: "quote", id: "quote-1", incarnation: "quote-inc-1", version: 3, fields: ["amount"], period: horizon, observedAt: "2026-11-13T00:00:00Z" }
   const zero = assessCostCoverage({ ...common,
     entries: [...coveredEntries(), { status: "included", categoryId: "training", componentRefs: ["training-zero"], evidenceRefs: [evidenceRef], scopeNote: "Confirmed no charge" }],
     components: [{ id: "training-zero", amount: 0, currency: "USD", period: horizon, evidenceState: "confirmed", sourceRefs: [trainingSource] }],
@@ -42,12 +47,16 @@ test("C10 derives omitted renewal costs, distinguishes supported zero, and fails
   expect(zero.derivedMissingCategoryIds).toEqual([])
 
   const unsupportedNa = assessCostCoverage({ ...common, supports: () => false, entries: coveredEntries(), components: [] })
-  expect(unsupportedNa).toMatchObject({ coverageState: "pending", entries: [{ categoryId: "service", status: "pending", reason: "scope-not-supported" }] })
+  expect(unsupportedNa.coverageState).toBe("pending")
+  expect(unsupportedNa.entries.map((entry) => entry.categoryId)).toEqual([...RENEWAL_TRANSITION_CATEGORIES])
+  expect(unsupportedNa.entries.filter((entry) => entry.categoryId === "service")).toEqual([{ categoryId: "service", status: "pending", reason: "scope-not-supported" }])
   const missingValue = assessCostCoverage({ ...common,
     entries: [...coveredEntries(), { status: "included", categoryId: "training", componentRefs: ["training-null"], evidenceRefs: [evidenceRef], scopeNote: "Unpriced" }],
     components: [{ id: "training-null", amount: null, currency: "USD", period: horizon, evidenceState: "absent", sourceRefs: [trainingSource] }],
   })
-  expect(missingValue).toMatchObject({ coverageState: "pending", entries: [{ categoryId: "training", status: "pending", reason: "component-unresolved" }] })
+  expect(missingValue.coverageState).toBe("pending")
+  expect(missingValue.entries.map((entry) => entry.categoryId)).toEqual([...RENEWAL_TRANSITION_CATEGORIES])
+  expect(missingValue.entries.filter((entry) => entry.categoryId === "training")).toEqual([{ categoryId: "training", status: "pending", reason: "component-unresolved" }])
   const revoked = assessCostCoverage({ ...common, evidence: [resolution(evidenceRef, "revoked")], entries: coveredEntries(), components: [] })
   expect(revoked).toMatchObject({ coverageState: "unavailable", issues: ["evidence-unavailable"] })
   const invalidInventory = assessCostCoverage({ ...common, basis: { ...basis, categoryIds: RENEWAL_TRANSITION_CATEGORIES.slice(1) }, entries: [], components: [] })
@@ -73,7 +82,7 @@ test("persisted comparison results are scoped to current case, principal, and so
       return { commit: true, value: true }
     })
     const results = createSfDecisionResultStore({ state, host, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef), verifySources: async (_value, refs, context) => !access.revoked && context.binding.principalRef === "owner" && refs.every((ref) => ref.refDigest === evidenceRef.refDigest), createId: () => "comparison-1", now: () => "2026-11-13T00:00:00Z" })
-    const result = { baselineResultRef: "baseline-result", alternativeResultRef: "alternative-result", costCoverageRefs: ["coverage-ref"], criterionResults: [], unresolvedConditions: ["training:missing-category"], comparisonStatus: "conditioned", knownDifference: 30000, completeDifference: null }
+    const result: ScenarioComparison = { baselineResultRef: "baseline-result", alternativeResultRef: "alternative-result", costCoverageRefs: ["coverage-ref"], criterionResults: [], unresolvedConditions: ["training:missing-category"], comparisonStatus: "conditioned", knownDifference: 30000, completeDifference: null }
     const written = await results.write({ kind: "comparison", result, caseRef: { id: "case", incarnation: "case-inc", version: 1 }, requestDigest: "d".repeat(64), sourceRefs: [evidenceRef], idempotencyKey: "comparison-run-1" }, owner)
     expect(written.status).toBe("ok")
     if (written.status !== "ok") throw new Error(written.reason)

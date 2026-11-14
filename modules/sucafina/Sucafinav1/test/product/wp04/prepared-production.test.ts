@@ -177,7 +177,7 @@ async function createFixture() {
   const host = {
     persistence,
     authenticate,
-    environment: async () => ({ at, id: randomUUID, directory: [{ id: "alice", name: "Alice" }] }),
+    environment: async (_request: Request) => ({ at, id: randomUUID, directory: [{ id: "alice", name: "Alice" }] }),
     requestFor: (binding: TrustedDomainContext) => binding.kind === "ui" ? ui.requestFor(binding) : undefined,
     revalidate: (binding: TrustedDomainContext) => binding.kind === "ui" ? ui.revalidate(binding) : Promise.resolve(false),
   }

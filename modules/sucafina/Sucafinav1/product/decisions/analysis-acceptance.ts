@@ -43,8 +43,8 @@ export function createAnalysisAcceptance(input: {
       const saved = prior.value
       if (!saved || typeof saved !== "object" || !("id" in saved) || !("incarnation" in saved) || !("version" in saved) || saved.id !== decision.id || saved.incarnation !== decision.incarnation || !Number.isSafeInteger(saved.version) || !await input.host.revalidate(context).catch(() => false)) return { status: "unavailable", reason: "invalid-acceptance-receipt" }
       if (!("ledger" in saved) || !Array.isArray(saved.ledger)) return { status: "unavailable", reason: "invalid-acceptance-receipt" }
-      const events = (saved as unknown as DecisionCase).ledger.filter((event) => event.kind === "analysis-accepted" && event.analysisRunId === request.runRef && event.caseRef.id === decision.id && event.caseRef.incarnation === decision.incarnation && event.caseRef.version === saved.version && event.principalRef === context.binding.principalRef)
-      if (events.length !== 1 || !/^[a-f0-9]{64}$/.test(events[0]!.outputDigest) || decision.ledger.filter((event) => event.id === events[0]!.id && digestSfValue(event) === digestSfValue(events[0])).length !== 1 || !await input.host.revalidate(context).catch(() => false)) return { status: "unavailable", reason: "acceptance-event-unavailable" }
+      const events = decision.ledger.filter((event) => event.kind === "analysis-accepted" && event.analysisRunId === request.runRef && event.caseRef.id === decision.id && event.caseRef.incarnation === decision.incarnation && event.caseRef.version === saved.version && event.principalRef === context.binding.principalRef)
+      if (events.length !== 1 || !/^[a-f0-9]{64}$/.test(events[0]!.outputDigest) || saved.ledger.filter((event: unknown) => digestSfValue(event) === digestSfValue(events[0])).length !== 1 || !await input.host.revalidate(context).catch(() => false)) return { status: "unavailable", reason: "acceptance-event-unavailable" }
       return { status: "ok", value: { caseRef: { id: decision.id, incarnation: decision.incarnation, version: Number(saved.version) } } }
     }
     if (decision.version !== request.caseRef.version) return { status: "stale", reason: "case-changed" }

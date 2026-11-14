@@ -72,6 +72,9 @@ describe("portfolio composition", () => {
     if (result.status !== "ok") return
     expect(result.value.combinations[0].eligibility).toBe("ineligible")
     expect(result.value.combinations[0].restrictions).toContain("ceiling:250000 exceeds 240000")
+    expect(result.value.combinations[0].comparisonStatus).toBe("conditioned")
+    expect(result.value.combinations[0].restrictions).toContain("analysis-unavailable")
+    expect(result.value.combinations[0].restrictions).toContain("coverage-evidence-unavailable")
   })
 
 
@@ -110,7 +113,7 @@ describe("portfolio composition", () => {
 
   test("retains validated canonical analysis and rejects a mismatched scenario reference", async () => {
     const input = host()
-    const comparison = { baselineResultRef: "base", alternativeResultRef: "scenario-ref", costCoverageRefs: ["coverage-a"], criterionResults: [], unresolvedConditions: ["training missing"], comparisonStatus: "conditioned", knownDifference: 30000, completeDifference: null } as const
+    const comparison = { baselineResultRef: "base", alternativeResultRef: "scenario-ref", costCoverageRefs: ["coverage-a"], criterionResults: [{ criterionId: "ceiling", state: "satisfied", reason: "subtotal" }], unresolvedConditions: ["training missing"], comparisonStatus: "conditioned", knownDifference: 30000, completeDifference: null } as const
     const analysis = { scenarioResultRef: "scenario-ref", scenario, comparisonRef: "comparison-ref", comparison }
     input.evaluate = async () => ({ status: "ok", value: { scenario, costCoverageRefs: ["coverage-a"], analysis, constraints: [{ ref: "ceiling", state: "satisfied", reason: "subtotal" }] } })
     const result = await createPortfolioPort(input).evaluate({ ...request, candidateRefs: ["a"] }, context)

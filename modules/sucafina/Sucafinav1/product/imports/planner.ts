@@ -1,9 +1,19 @@
 import { digestSfValue } from "../contracts/canonical.ts"
 import { domain } from "../../runtime/planner.ts"
 import { projectPlanner } from "../planner/adapter.ts"
+import { projectPlannerSource } from "../planner/port.ts"
 import type { Actor, Command, Environment, Snapshot } from "../../runtime/contract.ts"
 import { compareImportProjections } from "./changes.ts"
 import { publicSfData } from "../integration/public-state.ts"
+
+/** Match the Planner's roster-shaped Headcount admission as well as All Members. */
+export function plannerWorkbookHasRoster(sheets: Record<string, unknown>) {
+  if (Object.hasOwn(sheets, "All Members")) return true
+  const headcount = Object.entries(sheets).find(([name]) => name.trim().toLowerCase() === "headcount")?.[1]
+  if (!Array.isArray(headcount)) return false
+  const rows = headcount.filter((row): row is Record<string, unknown> => !!row && typeof row === "object" && !Array.isArray(row))
+  return rows.some((row) => ["Start Date", "End Date", "Start", "End", "Leader", "Status"].some((key) => key in row)) && !rows.some((row) => ["Position ID", "FTE", "Start month"].some((key) => key in row))
+}
 
 /** Build the exact Planner command whose simulation and transactional execution must match. */
 export function preparePlannerWorkbook(input: {
@@ -32,7 +42,9 @@ export function preparePlannerWorkbook(input: {
   const result = domain.execute(staged, input.actor, command, environment)
   const previewDigest = digestSfValue({ result, audit: staged.audit.slice(input.snapshot.audit.length) })
   const after = result.ok ? projectPlanner(staged, input.actor, environment) : before
-  return { command, commandDigest: digestSfValue({ command, previewDigest, principal: input.actor.id, operationId: input.operationId, idempotencyKey: input.idempotencyKey, targetIncarnation: input.targetIncarnation, previewAt: input.environment.at }), previewDigest, result, before, after, changes: compareImportProjections(before.data, after.data) }
+  const financialBefore = projectPlannerSource(input.snapshot, input.actor, input.versionId)
+  const financialAfter = result.ok ? projectPlannerSource(staged, input.actor, typeof result.value === "string" ? result.value : input.versionId) : financialBefore
+  return { command, commandDigest: digestSfValue({ command, previewDigest, principal: input.actor.id, operationId: input.operationId, idempotencyKey: input.idempotencyKey, targetIncarnation: input.targetIncarnation, previewAt: input.environment.at }), previewDigest, result, before, after, financialBefore, financialAfter, changes: compareImportProjections(before.data, after.data) }
 }
 
 /** Recreate the same generated identities at preview and commit; never consume host ID state. */

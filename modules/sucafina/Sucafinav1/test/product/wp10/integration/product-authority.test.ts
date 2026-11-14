@@ -8,6 +8,8 @@ import { SessionSchema } from "@orchestra/core/session/schema"
 import { Schema } from "effect"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
 import type { LocalStore } from "../../../../runtime/local-contract.ts"
+import type { Snapshot } from "../../../../runtime/contract.ts"
+import type { BlobTransaction } from "../../../../runtime/assets.ts"
 import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
 import type { SfProductGrant } from "../../../../product/integration/product-authority.ts"
 import type { ResidentProfile, SkillLoadReceipt } from "../../../../product/contracts/resident-ai.ts"
@@ -21,7 +23,7 @@ async function fixture(grants: readonly SfProductGrant[], work: (input: { produc
   const callback = { active: false }
   const persistence: LocalStore = options.rejectNested ? { ...driver, transaction: (surface, work, transactionOptions) => {
     if (callback.active) throw new Error("Cross-surface nested transaction forbidden")
-    return driver.transaction(surface, async (snapshot, blobs) => {
+    return driver.transaction(surface, async (snapshot: Snapshot, blobs: BlobTransaction) => {
       callback.active = true
       try { return await work(snapshot, blobs) }
       finally { callback.active = false }

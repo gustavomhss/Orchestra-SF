@@ -1,4 +1,8 @@
 import { expect, test } from "bun:test"
+import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
+import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { createReviewPort } from "../../../product/reviews/port.ts"
 import type { ReviewSection } from "../../../product/reviews/port.ts"
@@ -9,9 +13,12 @@ import type { TrustedDomainContext } from "../../../product/contracts/sf-executi
 import { testPersistence } from "../../fixture/persistence.ts"
 
 test("preserved review survives changed projections and is denied after access revocation", async () => {
-  const storage = testPersistence()
+  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-review-artifacts-"))
+  await chmod(directory, 0o700)
+  const storage = await openLocalStore(directory)
+  try {
   const state = createSfProductState({
-    persistence: storage.persistence,
+    persistence: storage,
     createId: () => "state-incarnation",
     resolveTarget: async () => ({ incarnation: "review-incarnation" }),
     authorize: async () => ({ principalRef: "principal", accessRevision: "access", policyVersion: "policy" }),
@@ -103,14 +110,14 @@ test("preserved review survives changed projections and is denied after access r
   if (savedArtifact.status !== "ok") throw new Error(`artifact unavailable: ${savedArtifact.reason}`)
   const download = await persisted.download(savedArtifact.value.artifactRef, binding)
   expect(download.status).toBe(200)
-  expect(new Uint8Array(await download.arrayBuffer())).toEqual(artifacts[0]!)
+  expect(Array.from(new Uint8Array(await download.arrayBuffer()))).toEqual(Array.from(artifacts[0]!))
   const { renderPreservedReview } = await import("../../../product/reviews/render.ts")
   const slides = await renderPreservedReview(read.value, { title: "Review", format: "pptx", sectionRefs: ["forecast"] })
   if (!slides.ok) throw new Error("slides unavailable")
   artifactOperation.value = "slides-save"
   const savedSlides = await persisted.put({ reviewRef: "review-1", sectionRefs: ["forecast"], artifact: slides, format: "pptx", recordCount: 1, evidenceRefs: [evidence, evidence] }, binding)
   if (savedSlides.status !== "ok") throw new Error(`slides unavailable: ${savedSlides.reason}`)
-  expect(new Uint8Array(await (await persisted.download(savedSlides.value.artifactRef, binding)).arrayBuffer())).toEqual(slides.bytes)
+  expect(Array.from(new Uint8Array(await (await persisted.download(savedSlides.value.artifactRef, binding)).arrayBuffer()))).toEqual(Array.from(slides.bytes))
   const { createSfUiAuthority } = await import("../../../product/integration/ui-authority.ts")
   const { createReviewDownloadHandler } = await import("../../../product/reports/download.ts")
   const authority = createSfUiAuthority({
@@ -121,7 +128,7 @@ test("preserved review survives changed projections and is denied after access r
   const handler = createReviewDownloadHandler({ authority, storage: downloadStorage })
   const response = await handler(new Request("https://example.test/report"), savedArtifact.value.artifactRef)
   expect(response.status).toBe(200)
-  expect(new Uint8Array(await response.arrayBuffer())).toEqual(artifacts[0]!)
+  expect(Array.from(new Uint8Array(await response.arrayBuffer()))).toEqual(Array.from(artifacts[0]!))
   expect((await handler(new Request("https://example.test/report", { method: "POST" }), savedArtifact.value.artifactRef)).status).toBe(405)
   access.comments = false
   expect((await handler(new Request("https://example.test/report"), savedArtifact.value.artifactRef)).status).toBe(403)
@@ -136,11 +143,19 @@ test("preserved review survives changed projections and is denied after access r
   expect(artifacts).toHaveLength(1)
   expect(await port.read("review-1", binding)).toEqual({ status: "denied", reason: "access-unavailable" })
   access.allowed = true
-  const stored = storage.state.dashboard.data.__sfProductV1 as SfProductState
-  stored.reviews["review-1"]!.sections[0]!.title = "Tampered"
+  await storage.transaction("dashboard", async (snapshot) => {
+    const stored = snapshot.data.__sfProductV1 as SfProductState
+    stored.reviews["review-1"]!.sections[0]!.title = "Tampered"
+    return { commit: true, value: undefined }
+  })
   expect(await port.preserve(input, binding)).toEqual({ status: "conflict", reason: "preserved-review-changed" })
-  stored.reviews["review-1"]!.sourceRefs = []
+  await storage.transaction("dashboard", async (snapshot) => {
+    const stored = snapshot.data.__sfProductV1 as SfProductState
+    stored.reviews["review-1"]!.sourceRefs = []
+    return { commit: true, value: undefined }
+  })
   expect(await port.read("review-1", binding)).toEqual({ status: "unavailable", reason: "invalid-review-sources" })
+  } finally { await storage.dispose(); await rm(directory, { recursive: true, force: true }) }
 })
 
 test("comparison requires identity and a compatible period before calculating a delta", async () => {
