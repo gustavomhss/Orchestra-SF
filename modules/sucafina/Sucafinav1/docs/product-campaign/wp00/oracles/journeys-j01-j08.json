@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "source_plan_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "synthetic_inputs_only": true,
+  "journeys": [
+    {
+      "id": "J01",
+      "title": "Contribuir e retomar",
+      "actors": [
+        "Contribuidor autorizado",
+        "Segundo usuário autorizado"
+      ],
+      "given": "Mesmo conjunto compartilhado, competência escolhida e registros atribuídos; um item sem dado e outro com zero.",
+      "when": "Abrir Meu trabalho; editar três valores e justificativa; voltar; confirmar outro registro sem alteração; provocar conflito por edição do segundo ator.",
+      "then": "Filtros/posição preservados; projeção compartilhada atualizada; confirmação guarda versão observada e validade material C06. Fevereiro independente não recobra janeiro; alteração pertinente gera uma pendência. Conflito preserva rascunho e ausência continua visível."
+    },
+    {
+      "id": "J02",
+      "title": "Entender e comparar forecast",
+      "actors": [
+        "Finance",
+        "Budget owner",
+        "HR"
+      ],
+      "given": "Budget USD600000; actual Jan–Sep400000; aberto190000 inclui licença72000; versão oficial/locked e cópia de hipótese.",
+      "when": "Abrir composição; substituir licença por84000 e depois78000 em cenários distintos; comparar; examinar monthly HR/FTE e moeda sem FX; tentar alteração não autorizada.",
+      "then": "Outlooks602000/596000; deltas+12000/+6000 contra590000; margens−2000/+4000 contra budget; official/actual não mudam por efeito colateral; desconhecido não vira conhecido."
+    },
+    {
+      "id": "J03",
+      "title": "Importar com confiança",
+      "actors": [
+        "Finance",
+        "Domain leader"
+      ],
+      "given": "Workbook válido, inválido e alteração concorrente; dados Dashboard com referências privadas preservadas.",
+      "when": "Parsear; simular; cancelar; simular novamente; mudar base; aplicar; refazer prévia; confirmar e exportar/reimportar.",
+      "then": "Cancelamento não grava; base velha exige nova prévia; falha não aplica parcialmente; manifesto e recibo conferem; roundtrip mantém identidades/valores conforme formatos."
+    },
+    {
+      "id": "J04",
+      "title": "Comprar e decidir com contexto",
+      "actors": [
+        "Requester",
+        "Buyer",
+        "Holder aprovador",
+        "Supplier admin"
+      ],
+      "given": "PR32000USD; ofertas A32400USD,B28000EUR a1.08,C29000USD tecnicamente inelegível; atores separados.",
+      "when": "Criar pedido guiado; comparar ofertas; revisar justificativa; passar PR/sourcing/PO por seus estados; ressubmeter; verificar fila e supplier.",
+      "then": "B30240USD; C excluída; notas87.9333/85; decisão mostra seu valor/diferença/etapa; aging deriva da entrada atual comprovada; emissão segue sendo interna."
+    },
+    {
+      "id": "J05",
+      "title": "Preparar, conduzir e preservar reunião",
+      "actors": [
+        "André ou papel executivo autorizado",
+        "Leitor de acesso menor"
+      ],
+      "given": "Pauta com competências diferentes,25projetos e notas longas; primeira revisão e revisão anterior compatível.",
+      "when": "Selecionar pauta; preservar; mudar origem; conduzir meeting view; comparar; exportar PPTX/DOCX; revogar acesso e repetir leitura/export.",
+      "then": "Conteúdo apresentado permanece estável; diferenças corretas ou incompatibilidade declarada;25 registros presentes uma vez; acesso atual respeitado em todos os meios."
+    },
+    {
+      "id": "J06",
+      "title": "Encaminhar e acompanhar sem duplicar",
+      "actors": [
+        "Executivo autorizado",
+        "Responsável explicitamente escolhido"
+      ],
+      "given": "Nota da revisão, contrato e linha Planner que têm IDs distintos; homônimos e owner textual sem vínculo.",
+      "when": "Criar relação explícita; pedir esclarecimento; confirmar ação proposta; perder resposta; reenviar; concluir no Hot Topics; retomar Meu trabalho.",
+      "then": "Uma ação canônica; contexto e responsável corretos; thread não é approval; link não lança valor no Planner; estado acompanha a origem."
+    },
+    {
+      "id": "J07",
+      "title": "Usar rotinas com retorno verificável",
+      "actors": [
+        "Executivo",
+        "Finance",
+        "Buyer"
+      ],
+      "given": "Receitas publicadas/pinadas, recorte autorizado, pendências reais e admissão nativa qualificada.",
+      "when": "Executar as quatro preparações; explicar diferença; cancelar/falhar; mudar origem/permissão; repetir handoff; agendar, pausar e observar ocorrência.",
+      "then": "Cada resultado aponta run/receita/entrada; versão velha é sinalizada; acesso revogado não vaza; não há aprovação nem envio externo; duplicatas e ocorrências perdidas são tratadas."
+    },
+    {
+      "id": "J08",
+      "title": "Preservar o conjunto e operar a interface",
+      "actors": [
+        "Papéis reais distintos das três superfícies"
+      ],
+      "given": "Estado anterior ao upgrade, corpus normal/adverso/volume e28capacidades.",
+      "when": "Abrir cada entrada e ação; usar teclado,320/768/1440 px e zoom200%; pesquisar, filtrar, voltar e ler restrições; julgar a composição final.",
+      "then": "Capacidades preservadas, nenhuma fuga de escopo/dados, contexto recuperável, componentes reais e evidência coerente com o candidato final."
+    }
+  ]
+}

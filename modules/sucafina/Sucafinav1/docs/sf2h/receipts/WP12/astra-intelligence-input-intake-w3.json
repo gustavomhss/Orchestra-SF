@@ -1,0 +1,587 @@
+{
+  "schema": "astra-intelligence-input-intake-v1",
+  "productBase": "46c904ead4e9b363422f6739258e492913ae6e2e",
+  "intake": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "bc00a2fe70bb37d6132369c3767388e544e18510",
+      "sourcePr": 32,
+      "purpose": "Consume exact published native bridge capture, cleanup/egress and skill-load diagnostics; no authored foreign edit",
+      "previousBlob": "ef3573e1c14d317edb7a7368aee794732d7bb0c1",
+      "method": "exact-blob-consumption"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "0a26a1ed086b9ce0a4a1907a233b705e6061e659",
+      "sourcePr": 32,
+      "purpose": "Consume exact published native bridge capture, cleanup/egress and skill-load diagnostics; no authored foreign edit",
+      "previousBlob": "0998a00b1564b865d7a77f46f585c7b07416ba3c",
+      "method": "exact-blob-consumption"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/verified-call.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "d4d8f62ae7418535d382fa47b464eb778b008831",
+      "sourcePr": 32,
+      "purpose": "Consume exact published native bridge capture, cleanup/egress and skill-load diagnostics; no authored foreign edit",
+      "previousBlob": null,
+      "method": "exact-blob-consumption"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+      "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+      "blob": "0ccf287ecd225ddcae99a1490f255b4c2b4358ed",
+      "sourcePr": 35,
+      "purpose": "Exact published fixture dependency for recovered WP13 real C10/C17 producer proofs",
+      "previousBlob": null,
+      "method": "exact-blob-consumption"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-revision-fixture.ts",
+      "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+      "blob": "09d517d6139b55d0b43dce817464be1aef836903",
+      "sourcePr": 35,
+      "purpose": "Exact published fixture dependency for recovered WP13 real C10/C17 producer proofs",
+      "previousBlob": null,
+      "method": "exact-blob-consumption"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+      "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+      "blob": "dd85ea61929f7a7180ed81b60ab4f866b6423f0c",
+      "sourcePr": 35,
+      "purpose": "Exact published fixture dependency for recovered WP13 real C10/C17 producer proofs",
+      "previousBlob": null,
+      "method": "exact-blob-consumption"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+      "blob": "f65cd5b9b427a612f18acaaac4779f210b58bbb4",
+      "sourcePr": 35,
+      "purpose": "Exact published fixture dependency for recovered WP13 real C10/C17 producer proofs",
+      "previousBlob": null,
+      "method": "exact-blob-consumption"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "previousBlob": "9a2da03da92ce07fc8506c72dc1f4139143a7615",
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Restore real Documents → BusinessContext → Atlas proof using published host producer and its runtime imports"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts",
+      "sourceCommit": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "blob": "3e8830c3dddc8b9609f583f877b2fe7458eccd28",
+      "previousBlob": "08fdfb878f6f9282f70ec71b3e66122f1b95f6f5",
+      "sourcePr": 34,
+      "method": "exact-blob-consumption",
+      "purpose": "Use producer's canonical procurement field projection including approvalStage"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "611831c32ddbf58296b33e1930806185564189b9",
+      "previousBlob": "54cb9612b58e6c3bd1e665d0a0093011ea1aa2d5",
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Restore real Documents → BusinessContext → Atlas proof using published host producer and its runtime imports"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/document-services.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "9e63a31a088d1e17e69a4721aec0fdcd4a7146e4",
+      "previousBlob": "1351ac57f7a71062dd5018de302b332657a2ba81",
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Restore real Documents → BusinessContext → Atlas proof using published host producer and its runtime imports"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-services.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "0891d178833165fff098e3c05f3a64c5f5b35043",
+      "previousBlob": null,
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Restore real Documents → BusinessContext → Atlas proof using published host producer and its runtime imports"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "2b8aef91bb7f88db3ee467b32f76d4d3911e73c1",
+      "previousBlob": null,
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Restore real Documents → BusinessContext → Atlas proof using published host producer and its runtime imports"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-evidence.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "692adcc1100cf0894817f9023bf5c45c9c28232c",
+      "previousBlob": null,
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Restore real Documents → BusinessContext → Atlas proof using published host producer and its runtime imports"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "48a9cdd2d38fad855d8a338f8dc119c64f81057f",
+      "previousBlob": null,
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Restore real Documents → BusinessContext → Atlas proof using published host producer and its runtime imports"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "f27b25e5e7fdea3a4a228cbe7d79ef82bf4b0fdf",
+      "previousBlob": null,
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Restore real Documents → BusinessContext → Atlas proof using published host producer and its runtime imports"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-baseline-services.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "1c5cc2cc2f3c0f5aff1ce730972a2eda80292dab",
+      "previousBlob": null,
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Restore real Documents → BusinessContext → Atlas proof using published host producer and its runtime imports"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "sourceCommit": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "blob": "ab9814817d11c0b477636ee54d1b2763d365f405",
+      "previousBlob": null,
+      "sourcePr": 34,
+      "method": "exact-blob-consumption",
+      "purpose": "Use producer's canonical procurement field projection including approvalStage"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+      "previousBlob": "ad72a4d73e2b31003deb028a6f761e164b7a860d",
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Restore real Documents → BusinessContext → Atlas proof using published host producer and its runtime imports"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/runtime-fixture.ts",
+      "sourceCommit": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "blob": "5f45ba3357aa724af2746687761fc32fd4ca48ef",
+      "previousBlob": null,
+      "sourcePr": 34,
+      "method": "exact-blob-consumption",
+      "purpose": "Restore real Documents → BusinessContext → Atlas proof using published host producer and its runtime imports"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/scenario-inputs.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "566776cda673751c1b6fe78f55ef53f573e83b37",
+      "previousBlob": null,
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Unmodified transitive runtime import of the published BusinessContext/Document producer needed by restored WP06→WP14 proof"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/confirmation.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "4fcda499e060bd77d595e4d567d7e9daed671fc4",
+      "previousBlob": null,
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Unmodified transitive runtime import of the published BusinessContext/Document producer needed by restored WP06→WP14 proof"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/queue-page.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "91784d3ea3358565e19b62922c8867f134af9ac4",
+      "previousBlob": null,
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Unmodified transitive runtime import of the published BusinessContext/Document producer needed by restored WP06→WP14 proof"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/selections.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "0d1a8d58a9e9e4eab376eb4b10861e7b30d96448",
+      "previousBlob": null,
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Unmodified transitive runtime import of the published BusinessContext/Document producer needed by restored WP06→WP14 proof"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/agenda.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "32b95d4a270cb9b9c987c6cb3097dbd6de975895",
+      "previousBlob": null,
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Unmodified transitive runtime import of the published BusinessContext/Document producer needed by restored WP06→WP14 proof"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/historical-bindings.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "01ab380bd9a2b0b4c8db0d62984492e12598c034",
+      "previousBlob": null,
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Unmodified transitive runtime import of the published BusinessContext/Document producer needed by restored WP06→WP14 proof"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/hot-topic-draft.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "bc8daed892bb2020ecf15852bf9717fb0200d40a",
+      "previousBlob": null,
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Unmodified transitive runtime import of the published BusinessContext/Document producer needed by restored WP06→WP14 proof"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/prepared-review.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "fd3639ec521dd858e5d1b427af358f32394f6409",
+      "previousBlob": null,
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Unmodified transitive runtime import of the published BusinessContext/Document producer needed by restored WP06→WP14 proof"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/confirmation-fields.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "a1e45e803105e76f147e695a7e92246257de9b16",
+      "previousBlob": null,
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Unmodified transitive runtime import of the published BusinessContext/Document producer needed by restored WP06→WP14 proof"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/queue-view.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "a03998f3b87df91c6c84b198f2b51aa9c391bcd2",
+      "previousBlob": null,
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Complete published Procurement projection/queue runtime imports needed by BusinessContext composition"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "5ed7b1c7e8f140c2820d9e3095a7427374d10f69",
+      "previousBlob": null,
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Complete published Procurement projection/queue runtime imports needed by BusinessContext composition"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/byte-port.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "2a0ad10bd7748c0c2c2bf22fe66085e1ac627dd7",
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Pin complete published byte/extract/capability closure for the restored Documents → BCS → Atlas source-access proof",
+      "previousBlob": "c2cb5a7d8a69dfd1b861e2c39b82af9f3d33a781"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "6b655187d4444cff5b8966e868ba163191adfc42",
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Pin complete published byte/extract/capability closure for the restored Documents → BCS → Atlas source-access proof",
+      "previousBlob": "d2eb0f7c3532a56ce547429c66f5e6dd9af8e072"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/host.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "fede075378ee964fccdb73f0d95958a5f56c7159",
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Pin complete published byte/extract/capability closure for the restored Documents → BCS → Atlas source-access proof",
+      "previousBlob": "094240128a3f4257d85f799f31b2b25e056cae69"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/parser-worker.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "eb61a085ca1a80861277e88e7788450bf71d0901",
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Pin complete published byte/extract/capability closure for the restored Documents → BCS → Atlas source-access proof",
+      "previousBlob": "72fec6093aa9c968bf7d36d4c1c2b931140b63d8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/parser.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "8d38f0e11069f102496e99db487f695238784bb8",
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Pin complete published byte/extract/capability closure for the restored Documents → BCS → Atlas source-access proof",
+      "previousBlob": "39c3dec8018b58d673c2a169d21bee23a49c92ad"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/presentation.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "2ab4736c3bdea1ae77bdc307228346bd524e8c98",
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Pin complete published byte/extract/capability closure for the restored Documents → BCS → Atlas source-access proof",
+      "previousBlob": "12e17a4b8762727ddcd9756680f9d2d2a6cb6612"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "1b2bb4b9ab9b2e06a82f3038b02600c3bdba220f",
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Align published scoped source identity/projectors with current BusinessContext and Document producer",
+      "previousBlob": "8a3201272fddf48b25d137886dcdd290e2d2db3e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "ddc5323d714c58de2d5b47eed2563176099f15b5",
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Align published scoped source identity/projectors with current BusinessContext and Document producer",
+      "previousBlob": "1b183b82758f8f49954a5038b675bb784fc89915"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539",
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Align published scoped source identity/projectors with current BusinessContext and Document producer",
+      "previousBlob": "d0cab7f33b08806a6bb01a869fa789dc77e087ee"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "4e0fd90ab35f9c03d79d4a1bb65b7bdc7385681c",
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Align published scoped source identity/projectors with current BusinessContext and Document producer",
+      "previousBlob": "c28a167575bf2713590f97798e463ccb33dc50c8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/calculation-history.ts",
+      "sourceCommit": "88144ff9495c4061fd1661c55e8c6d802bf197a7",
+      "blob": "4e92219aae9046891f167502139412bf9c509529",
+      "previousBlob": null,
+      "sourcePr": 35,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume latest exact Finance C17 calculation lineage and actual-presence producer deltas required by WP13 replay and sensitivity; preserve real producer validation"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "sourceCommit": "88144ff9495c4061fd1661c55e8c6d802bf197a7",
+      "blob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "previousBlob": "e0c190513d16938e14bd8626796ec952efcd5611",
+      "sourcePr": 35,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume latest exact Finance C17 calculation lineage and actual-presence producer deltas required by WP13 replay and sensitivity; preserve real producer validation"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "sourceCommit": "88144ff9495c4061fd1661c55e8c6d802bf197a7",
+      "blob": "d7d8eb3ca267551797b191ccfb1d037149757898",
+      "previousBlob": "338889513cfc681bdda91697a9d5bbc16bde8fd1",
+      "sourcePr": 35,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume latest exact Finance C17 calculation lineage and actual-presence producer deltas required by WP13 replay and sensitivity; preserve real producer validation"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "sourceCommit": "88144ff9495c4061fd1661c55e8c6d802bf197a7",
+      "blob": "0d677d2d0b3a9df7127f13b25fe3968757f0dceb",
+      "previousBlob": "54c5155aa64b4528a75a601950b56bed8e021471",
+      "sourcePr": 35,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume latest exact Finance C17 calculation lineage and actual-presence producer deltas required by WP13 replay and sensitivity; preserve real producer validation"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/actual-presence.ts",
+      "sourceCommit": "88144ff9495c4061fd1661c55e8c6d802bf197a7",
+      "blob": "c7497d7a71e90dd51ad362921e36d0de12fe431f",
+      "previousBlob": null,
+      "sourcePr": 35,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume latest exact Finance C17 calculation lineage and actual-presence producer deltas required by WP13 replay and sensitivity; preserve real producer validation"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+      "sourceCommit": "88144ff9495c4061fd1661c55e8c6d802bf197a7",
+      "blob": "aaacc8bf7df9fa67870c4067154fe67a58c34a22",
+      "previousBlob": "6d09c74ff03eef72aa564355fd7da52ae6fb503d",
+      "sourcePr": 35,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume latest exact Finance C17 calculation lineage and actual-presence producer deltas required by WP13 replay and sensitivity; preserve real producer validation"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "sourceCommit": "88144ff9495c4061fd1661c55e8c6d802bf197a7",
+      "blob": "e365ac59376482dfcc6f81aed045b0153f911038",
+      "previousBlob": "dba62042653bd061fa099e2956cae4d11a0475ce",
+      "sourcePr": 35,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume latest exact Finance C17 calculation lineage and actual-presence producer deltas required by WP13 replay and sensitivity; preserve real producer validation"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "sourceCommit": "88144ff9495c4061fd1661c55e8c6d802bf197a7",
+      "blob": "9ef6d197759bbfb9513cce5118c93c08ac797303",
+      "previousBlob": "40c4c72cf9b6863cf5eb791e78e4a87de751192d",
+      "sourcePr": 35,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume latest exact Finance C17 calculation lineage and actual-presence producer deltas required by WP13 replay and sensitivity; preserve real producer validation"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario.ts",
+      "sourceCommit": "88144ff9495c4061fd1661c55e8c6d802bf197a7",
+      "blob": "dd92a35b3025a69c198a2d99c4ef38a472dd3bc7",
+      "previousBlob": "52b09da8ee31f6681bdc2c29a69bc76755f9d232",
+      "sourcePr": 35,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume latest exact Finance C17 calculation lineage and actual-presence producer deltas required by WP13 replay and sensitivity; preserve real producer validation"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-revision-fixture.ts",
+      "sourceCommit": "88144ff9495c4061fd1661c55e8c6d802bf197a7",
+      "blob": "93e9c37cfea05574c3c0b3ae080a03fdd5063056",
+      "previousBlob": "09d517d6139b55d0b43dce817464be1aef836903",
+      "sourcePr": 35,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume latest exact Finance C17 calculation lineage and actual-presence producer deltas required by WP13 replay and sensitivity; preserve real producer validation"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "sourceCommit": "88144ff9495c4061fd1661c55e8c6d802bf197a7",
+      "blob": "52dc09126bc81da39aa4b5beb0a28d0218d7560d",
+      "previousBlob": "f65cd5b9b427a612f18acaaac4779f210b58bbb4",
+      "sourcePr": 35,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume latest exact Finance C17 calculation lineage and actual-presence producer deltas required by WP13 replay and sensitivity; preserve real producer validation"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "sourceCommit": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "blob": "0e5a508722c9e741a1737beb7d88ccb596a6f495",
+      "previousBlob": "611831c32ddbf58296b33e1930806185564189b9",
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume exact published Atlas protected historical capture and current-access continuity producer with public BusinessContext and Dashboard evidence dependencies for WP14 real source/recall proof"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-decision-evidence.ts",
+      "sourceCommit": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "blob": "4c205439aed7779dff66079a1ebaad1927d75d77",
+      "previousBlob": null,
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume exact published Atlas protected historical capture and current-access continuity producer with public BusinessContext and Dashboard evidence dependencies for WP14 real source/recall proof"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "sourceCommit": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "blob": "f8914c141ba5c72439f5fdba50e9153c4cd477d4",
+      "previousBlob": "2b8aef91bb7f88db3ee467b32f76d4d3911e73c1",
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume exact published Atlas protected historical capture and current-access continuity producer with public BusinessContext and Dashboard evidence dependencies for WP14 real source/recall proof"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "sourceCommit": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "blob": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+      "previousBlob": "d2860d3b241c90ecd5dc45bb4010de3c85449a27",
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume exact published Atlas protected historical capture and current-access continuity producer with public BusinessContext and Dashboard evidence dependencies for WP14 real source/recall proof"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "sourceCommit": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "blob": "f6cfe69432142cdc4063494522627d6d3d50c5d8",
+      "previousBlob": "0ac4c11d4eddb6e4a67c2c41efe40a7ff34fa47e",
+      "sourcePr": 32,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume exact published Atlas protected historical capture and current-access continuity producer with public BusinessContext and Dashboard evidence dependencies for WP14 real source/recall proof"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/components.ts",
+      "sourceCommit": "50906b86da953f9e6fb24f989c51db0fc69496c1",
+      "blob": "8de96e7fef8b1db5f174baaff47864b68f8d2fca",
+      "previousBlob": "eb2f3741d45126427e4fd0060607bd5c16d8c22f",
+      "sourcePr": 31,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume UI owner's exact AlternativeDraft label and renderer so the preserved WP12 contribution has its actual proposal-only consumer; no authored UI edit"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+      "sourceCommit": "50906b86da953f9e6fb24f989c51db0fc69496c1",
+      "blob": "42878a8eb5eb6e33c0140559e6390d537c3000f0",
+      "previousBlob": "ded48e014cf170eae0e6e39f1fa3fc083806af2f",
+      "sourcePr": 31,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume UI owner's exact AlternativeDraft label and renderer so the preserved WP12 contribution has its actual proposal-only consumer; no authored UI edit"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "sourceCommit": "768a189c92bae0353e546c29a71fda95fac1c4bf",
+      "blob": "dbcc51d75ccefb23f328f1d4151504be96a35a45",
+      "previousBlob": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac",
+      "sourcePr": 40,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume owner WP11 exact same-version portfolio ancestry/history and receipt-bound prepared execution outputs required by WP13 durable handoff and replay; retain newer Finance C17 files separately"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-bindings.ts",
+      "sourceCommit": "768a189c92bae0353e546c29a71fda95fac1c4bf",
+      "blob": "8815cc1fc27b570d241e2dd464d925eff05e5455",
+      "previousBlob": "2a8111a810d878a4cf6133c3842c5320fb1f5b9e",
+      "sourcePr": 40,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume owner WP11 exact same-version portfolio ancestry/history and receipt-bound prepared execution outputs required by WP13 durable handoff and replay; retain newer Finance C17 files separately"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-history.ts",
+      "sourceCommit": "768a189c92bae0353e546c29a71fda95fac1c4bf",
+      "blob": "b90dcbc9e79e6dc505780da885c1fbd504c1fb4c",
+      "previousBlob": "6834ac4460c8f98fa3b6c2db0743e0d1e39769c5",
+      "sourcePr": 40,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume owner WP11 exact same-version portfolio ancestry/history and receipt-bound prepared execution outputs required by WP13 durable handoff and replay; retain newer Finance C17 files separately"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+      "sourceCommit": "768a189c92bae0353e546c29a71fda95fac1c4bf",
+      "blob": "64deee2c7570d718686eb2181ff197f4347e6764",
+      "previousBlob": "64deee2c7570d718686eb2181ff197f4347e6764",
+      "sourcePr": 40,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume owner WP11 exact same-version portfolio ancestry/history and receipt-bound prepared execution outputs required by WP13 durable handoff and replay; retain newer Finance C17 files separately"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "sourceCommit": "768a189c92bae0353e546c29a71fda95fac1c4bf",
+      "blob": "acb3b7fb3050264758a5470ffe8168fa5f581370",
+      "previousBlob": "90c3e981d8418c562342660bd3d56d03f9995383",
+      "sourcePr": 40,
+      "method": "exact-blob-consumption",
+      "purpose": "Consume owner WP11 exact same-version portfolio ancestry/history and receipt-bound prepared execution outputs required by WP13 durable handoff and replay; retain newer Finance C17 files separately"
+    }
+  ],
+  "limits": [
+    "No foreign source authored or old branch merged",
+    "Native bridge and registration are not inference proof",
+    "Tests are executed only by pinned hosted CI"
+  ]
+}

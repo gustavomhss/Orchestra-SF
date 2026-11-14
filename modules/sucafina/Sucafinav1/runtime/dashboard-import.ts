@@ -19,6 +19,7 @@ export function prepareDashboardImport(
   imported: Record<string, unknown>,
 ): PreparedDashboardImport {
   const errors: string[] = []
+  if (Object.hasOwn(imported, "__sfProductV1")) errors.push("Product metadata cannot be imported from a business backup.")
   const currentContracts = contracts(current.contracts, "Current", errors)
   const importedContracts = contracts(imported.contracts, "Imported", errors)
   for (const parent of currentContracts) {
@@ -49,9 +50,10 @@ export function prepareDashboardImport(
 
   // Omit untrusted installation values before cloning, including indexes supplied by backups.
   const data = structuredClone(
-    Object.fromEntries(Object.entries(imported).filter(([key]) => !installationKeys.includes(key))),
+    Object.fromEntries(Object.entries(imported).filter(([key]) => !installationKeys.includes(key) && key !== "__sfProductV1")),
   )
   for (const key of installationKeys) if (Object.hasOwn(current, key)) data[key] = structuredClone(current[key])
+  if (Object.hasOwn(current, "__sfProductV1")) data.__sfProductV1 = structuredClone(current.__sfProductV1)
   if (Array.isArray(data.contracts)) {
     data.contracts = data.contracts.map((value: unknown) => {
       const parent = object(value)

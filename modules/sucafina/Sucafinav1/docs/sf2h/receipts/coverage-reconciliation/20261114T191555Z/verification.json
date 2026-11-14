@@ -1,0 +1,27 @@
+{
+  "schema": "sf2h-census-verification-v1",
+  "result": "PASS",
+  "meaning": "Mechanical identity, reference and envelope checks only; no product proof or accepted C.",
+  "canonical_counts": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "literal_published_rows_checked": 1560,
+  "published_git_blobs_verified": 253,
+  "source_catalog_entries": 700,
+  "task_effort_charged_once": 74,
+  "namespace_delta_files_checked": 33,
+  "product_tests_executed": false,
+  "ci_dispatched": false,
+  "checks": [
+    "Canonical bytes/hash/IDs/text/pointers/families/proof-map",
+    "74 tasks and17 contracts identical to canonical structures",
+    "No duplicates; source/evidence/task references resolve",
+    "Current axes and explicit UNKNOWN distinct from historical claims",
+    "Remaining owners/paths/dependencies/actions and unique effort pools",
+    "Source byte identities, optional literal matrix pointers and publication namespace envelope"
+  ]
+}

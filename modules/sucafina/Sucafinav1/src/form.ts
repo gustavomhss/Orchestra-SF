@@ -153,6 +153,10 @@ export function quoteRanking(rec: { sourcing?: SourcingForm | null }, settings: 
   return evalQuotes(rec, settings).map((item) => ({ id: item.id, rank: item.rank, overall: item.overall }))
 }
 
+export function quoteAssessment(rec: { sourcing?: SourcingForm | null }, settings: FormSettings) {
+  return evalQuotes(rec, settings)
+}
+
 function evalQuotes(rec: { sourcing?: SourcingForm | null }, settings: FormSettings) {
   const sourcing = rec.sourcing ?? emptySourcing()
   const weight = weights(sourcing, settings)
@@ -164,7 +168,7 @@ function evalQuotes(rec: { sourcing?: SourcingForm | null }, settings: FormSetti
   const base = (quote: Quote) => {
     const code = quote.currency || settings.currency
     const snap = sourcing.fxSnapshot
-    const rate = snap && snap[code] != null ? snap[code] : fx(settings, code)
+    const rate = code === settings.currency ? 1 : snap ? snap[code] : fx(settings, code)
     if (rate == null) return 0
     return num(quote.total) * rate
   }
@@ -194,7 +198,7 @@ function evalQuotes(rec: { sourcing?: SourcingForm | null }, settings: FormSetti
     const tech = (techSum / techWeight) * 100
     const comm = commSum / commWeight
     const overall = inPool ? (tech * num(weight.tech) + comm * num(weight.comm)) / (num(weight.tech) + num(weight.comm) || 1) : 0
-    return { id: quote.id, complete, eligible: inPool, overall, rank: null as number | null }
+    return { id: quote.id, complete, eligible: inPool, technical: tech, price, commercial: comm, overall, rank: null as number | null }
   })
   scored
     .filter((item) => item.eligible)

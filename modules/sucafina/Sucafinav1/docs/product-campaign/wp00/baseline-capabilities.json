@@ -1,0 +1,2575 @@
+{
+  "schema_version": 1,
+  "artifact": "baseline-capabilities",
+  "purpose": "WP00.T01 static source traceability aid for S0; separates immutable baseline observations from planned campaign mappings.",
+  "baseline": {
+    "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "repository": "Orchestra-SF",
+    "plan_campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "capabilities_source": "campaign.json#/coverage/capabilities",
+    "nav_source": "modules/sucafina/Sucafinav1/src/nav.ts",
+    "registry_source": "modules/sucafina/Sucafinav1/index.ts",
+    "runtime_source_receipt_ids": null,
+    "source_catalog": {
+      "nav": {
+        "path": "modules/sucafina/Sucafinav1/src/nav.ts",
+        "blob_sha": "12c7c92b109f1653e9bc9db79566a2e380868827",
+        "line_anchor": "3-58,60-145",
+        "observation": "static source read at pinned commit; functions were not executed",
+        "related_campaign_source_id": "S04",
+        "source_id": null,
+        "source_identity_rule": "Additional observed source identified by baseline SHA/path/blob; related campaign source is contextual."
+      },
+      "registry": {
+        "source_id": "S01",
+        "path": "modules/sucafina/Sucafinav1/index.ts",
+        "blob_sha": "91facf5b78b1d7150a28a25749057e474acb7fe7",
+        "line_anchor": "12-32",
+        "observation": "static source read at pinned commit; functions were not executed"
+      },
+      "application": {
+        "source_id": "S02",
+        "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "blob_sha": "20a02597d8ef1e81120c6f331e9557d59828663b",
+        "line_anchor": "54-98,391-435,590-610,737-806",
+        "observation": "static source read at pinned commit; functions were not executed"
+      },
+      "budget": {
+        "source_id": "S05",
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+        "blob_sha": "62e63815d16261a3d8bc1bd793ec718facc81287",
+        "line_anchor": "27,41-63,230-270,295-350,577,996-1010",
+        "observation": "static source read at pinned commit; functions were not executed"
+      },
+      "people": {
+        "source_id": "S06",
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+        "blob_sha": "c75320feb6f0c0c2f323697330c5476f5cf60a25",
+        "line_anchor": "9,30-135,138-177,278+,393+",
+        "observation": "static source read at pinned commit; functions were not executed"
+      },
+      "operations": {
+        "source_id": "S07",
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-operations.ts",
+        "blob_sha": "b077b5e96c37c8c910ba430c74393773b971f941",
+        "line_anchor": "16,54-67,155-424,424-497,498+",
+        "observation": "static source read at pinned commit; functions were not executed"
+      },
+      "portfolio": {
+        "source_id": "S08",
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+        "blob_sha": "5bbf58cd8d7ba871b1d0561c558c82ad0e7c8783",
+        "line_anchor": "26-41,120-253,259-266,361+,639+",
+        "observation": "static source read at pinned commit; functions were not executed"
+      },
+      "planner": {
+        "source_id": "S09",
+        "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "blob_sha": "e836d3f83bd7707b27f5bd3052494c84d67a2442",
+        "line_anchor": "33-41,295-352,354-512,1411+,1510+,1842+,1979+",
+        "observation": "static source read at pinned commit; functions were not executed"
+      },
+      "procurement": {
+        "source_id": "S11",
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "blob_sha": "67991a6eb2c876f3ce0ffcd9fce921434111c31a",
+        "line_anchor": "26,358-420,602-710,797-849,1026+",
+        "observation": "static source read at pinned commit; functions were not executed"
+      },
+      "exports": {
+        "source_id": "S15",
+        "path": "modules/sucafina/Sucafinav1/runtime/reports.ts",
+        "blob_sha": "c4cadcf399b8e835f6876b0686f48867f724c83b",
+        "line_anchor": "dashboard exports; application footer at 590-610",
+        "observation": "static source read at pinned commit; functions were not executed"
+      },
+      "workbooks": {
+        "source_id": "S13",
+        "path": "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+        "blob_sha": "d0c8e5f7f4ad337f71768e3b0ac0a3121a0c18a7",
+        "line_anchor": "XLSX import/export consumer",
+        "observation": "static source read at pinned commit; functions were not executed"
+      },
+      "planner_accounts": {
+        "source_id": "S10",
+        "path": "modules/sucafina/Sucafinav1/src/planner-accounts.ts",
+        "blob_sha": "7a67d5d44084e739be8f0f855faf035460b40eaa",
+        "line_anchor": "planner calculation/schema helpers",
+        "observation": "static source read at pinned commit; functions were not executed"
+      },
+      "procurement_accounts": {
+        "source_id": "S12",
+        "path": "modules/sucafina/Sucafinav1/src/procurement.ts",
+        "blob_sha": "eb486f52910425e9ca06d1f11ce18c90528ff36c",
+        "line_anchor": "request actions and types",
+        "observation": "static source read at pinned commit; functions were not executed"
+      },
+      "dashboard_accounts": {
+        "path": "modules/sucafina/Sucafinav1/src/dashboard-accounts.ts",
+        "blob_sha": "afde75b53d9faa75fc0312833c98b7018301a051",
+        "line_anchor": "MonthEntry and dashboard account helpers",
+        "observation": "static source read at pinned commit; functions were not executed",
+        "related_campaign_source_id": "S05",
+        "source_id": null,
+        "source_identity_rule": "Additional observed source identified by baseline SHA/path/blob; related campaign source is contextual."
+      },
+      "imports": {
+        "source_id": "S14",
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-import.ts",
+        "blob_sha": "cb911dca8a6dd1d20f06a23437c0d6701640f07f",
+        "line_anchor": "installation-preserving import helpers",
+        "observation": "static source read at pinned commit; functions were not executed"
+      }
+    },
+    "campaign_source_ids": [
+      "S01",
+      "S02",
+      "S04",
+      "S05",
+      "S06",
+      "S07",
+      "S08",
+      "S09",
+      "S10",
+      "S11",
+      "S12",
+      "S13",
+      "S14",
+      "S15"
+    ],
+    "campaign_sources": [
+      {
+        "id": "S01",
+        "path": "modules/sucafina/Sucafinav1/index.ts",
+        "supports": "Composição e inventário canônico de páginas",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/index.ts"
+      },
+      {
+        "id": "S02",
+        "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "supports": "Entry points, composição, importação e compartilhamento",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/runtime/application.ts"
+      },
+      {
+        "id": "S04",
+        "path": "modules/sucafina/Sucafinav1/src/surfaces.ts",
+        "supports": "Arquivo compartilhado: navegação, permissões, importação e apresentação de relatório",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/src/surfaces.ts"
+      },
+      {
+        "id": "S05",
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+        "supports": "Semântica de Budget/forecast e sinais",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts"
+      },
+      {
+        "id": "S06",
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+        "supports": "Pessoas/Talent e restrições",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/runtime/dashboard-people.ts"
+      },
+      {
+        "id": "S07",
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-operations.ts",
+        "supports": "Métricas operacionais e manutenção",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/runtime/dashboard-operations.ts"
+      },
+      {
+        "id": "S08",
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+        "supports": "Projetos, riscos, contratos, performance e ações",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts"
+      },
+      {
+        "id": "S09",
+        "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "supports": "Versões, comandos, locks e importação Planner",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/runtime/planner.ts"
+      },
+      {
+        "id": "S10",
+        "path": "modules/sucafina/Sucafinav1/src/planner-accounts.ts",
+        "supports": "Cálculos, moedas, HR e outlook",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/src/planner-accounts.ts"
+      },
+      {
+        "id": "S11",
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "supports": "Estados e interfaces Procurement",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/runtime/procurement.ts"
+      },
+      {
+        "id": "S12",
+        "path": "modules/sucafina/Sucafinav1/src/procurement.ts",
+        "supports": "Ranking, policy e semântica de compra",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/src/procurement.ts"
+      },
+      {
+        "id": "S13",
+        "path": "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+        "supports": "XLSX/XLS, formatos, ausência e referências",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/runtime/workbooks.ts"
+      },
+      {
+        "id": "S14",
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-import.ts",
+        "supports": "Preservação de chaves de instalação e de referências privadas",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/runtime/dashboard-import.ts"
+      },
+      {
+        "id": "S15",
+        "path": "modules/sucafina/Sucafinav1/runtime/reports.ts",
+        "supports": "Exportação de relatórios",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/runtime/reports.ts"
+      }
+    ]
+  },
+  "counts": {
+    "capabilities": 28,
+    "Dashboard": 16,
+    "Planner": 7,
+    "Procurement": 5,
+    "rows_without_planned_task_destination": 0,
+    "rows_without_static_domain_source": 0,
+    "criteria_status": "all inherited criterion IDs retain campaign status NOT_RUN; this inventory assigns no PASS",
+    "registry_mismatch_or_orphan_rows": 0
+  },
+  "definitions": {
+    "static_observation": "Source code, page registries and role/action guards were read at the pinned baseline; no function was executed.",
+    "planned_mapping": "Owner/task/criterion destinations copied from campaign coverage; they are planned links, not evidence that destination code or behavior exists.",
+    "source_receipts": "The campaign source_receipts array has no Sucafina runtime-file entries; runtime provenance here uses campaign.sources S01-S15, pinned Git blob IDs and line anchors. This keeps static source evidence distinct from general CI/environment receipts."
+  },
+  "capabilities": [
+    {
+      "capability_id": "CAP01",
+      "surface": "Dashboard",
+      "capability_label": "Executive Dashboard",
+      "baseline_page_label": "Executive Dashboard",
+      "label_alias_observation": null,
+      "baseline_domain": "budget",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "budget",
+          "dashboard_accounts"
+        ],
+        "page_source": {
+          "source_id": "S05",
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+          "blob_sha": "62e63815d16261a3d8bc1bd793ec718facc81287",
+          "line_anchor": "27,41-63,230-270,295-350,577,996-1010",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation: admin/domain leader see all dashboard pages; viewer sees Executive Dashboard plus explicitly configured summaries; contributor sees pages mapped by assigned modules. Budget view allows admin/domain leader/viewer; edit execute guard requires canWrite and admin/domain leader; budget-line guard has separate assignment rules. See nav.ts 51-58,84-120 and dashboard-budget.ts 42-58.",
+        "command_route_observation": "Read aggregate through composed dashboard view; render source is DashboardBudget.",
+        "commands_and_roles_observed": "No page-level write action asserted; reports use selected topics.",
+        "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Dashboard reports (PPTX/DOCX); admin-only JSON export/import; no page-specific import observed.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+          "line_anchor": "27,41-63,230-270,295-350,577,996-1010",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP02",
+        "task_ids": [
+          "WP02.T01",
+          "WP02.T03"
+        ],
+        "journey": "J08",
+        "criteria_ids": [
+          "WP02.T01.CHK.01",
+          "WP02.T01.CHK.02",
+          "WP02.T01.CHK.03",
+          "WP02.T01.CHK.04",
+          "WP02.T01.CHK.05",
+          "WP02.T01.CHK.18",
+          "WP02.T01.CMP.01",
+          "WP02.T01.CMP.02",
+          "WP02.T01.CMP.18",
+          "WP02.T01.DOD.01",
+          "WP02.T01.DOD.02",
+          "WP02.T01.DOD.18",
+          "WP02.T01.INV.01",
+          "WP02.T01.INV.02",
+          "WP02.T01.INV.18",
+          "WP02.T01.QLT.01",
+          "WP02.T01.QLT.02",
+          "WP02.T01.QLT.18",
+          "WP02.T01.SUC.01",
+          "WP02.T01.SUC.02",
+          "WP02.T01.SUC.18",
+          "WP02.T03.CHK.01",
+          "WP02.T03.CHK.02",
+          "WP02.T03.CHK.03",
+          "WP02.T03.CMP.01",
+          "WP02.T03.CMP.02",
+          "WP02.T03.DOD.01",
+          "WP02.T03.DOD.02",
+          "WP02.T03.INV.01",
+          "WP02.T03.INV.02",
+          "WP02.T03.QLT.01",
+          "WP02.T03.QLT.02",
+          "WP02.T03.QLT.03",
+          "WP02.T03.SUC.01",
+          "WP02.T03.SUC.02"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP02",
+      "surface": "Dashboard",
+      "capability_label": "Hot Topics & Actions",
+      "baseline_page_label": "Hot Topics & Actions",
+      "label_alias_observation": null,
+      "baseline_domain": "people",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "people"
+        ],
+        "page_source": {
+          "source_id": "S06",
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+          "blob_sha": "c75320feb6f0c0c2f323697330c5476f5cf60a25",
+          "line_anchor": "9,30-135,138-177,278+,393+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation/read uses dashboardPages (same Dashboard rules). Hot Topics writes require admin/domain leader; Headcount Overview execute returns 400; Team Structure and Talent Review require admin; Talent Review data/export is admin-only and non-admin people projections omit cls/outlook/notes. dashboard-people.ts 31-105,138-177.",
+        "command_route_observation": "DashboardPeople.hotTopics.",
+        "commands_and_roles_observed": "save/delete hot topic.",
+        "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Dashboard report topic when allowed; no page-specific import/export observed.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+          "line_anchor": "9,30-135,138-177,278+,393+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP02",
+        "task_ids": [
+          "WP02.T01",
+          "WP02.T02",
+          "WP02.T04"
+        ],
+        "journey": "J08",
+        "criteria_ids": [
+          "WP02.T01.CHK.01",
+          "WP02.T01.CHK.02",
+          "WP02.T01.CHK.03",
+          "WP02.T01.CHK.04",
+          "WP02.T01.CHK.05",
+          "WP02.T01.CHK.18",
+          "WP02.T01.CMP.01",
+          "WP02.T01.CMP.02",
+          "WP02.T01.CMP.18",
+          "WP02.T01.DOD.01",
+          "WP02.T01.DOD.02",
+          "WP02.T01.DOD.18",
+          "WP02.T01.INV.01",
+          "WP02.T01.INV.02",
+          "WP02.T01.INV.18",
+          "WP02.T01.QLT.01",
+          "WP02.T01.QLT.02",
+          "WP02.T01.QLT.18",
+          "WP02.T01.SUC.01",
+          "WP02.T01.SUC.02",
+          "WP02.T01.SUC.18",
+          "WP02.T02.CHK.01",
+          "WP02.T02.CHK.02",
+          "WP02.T02.CHK.03",
+          "WP02.T02.CHK.04",
+          "WP02.T02.CMP.01",
+          "WP02.T02.CMP.02",
+          "WP02.T02.CMP.03",
+          "WP02.T02.DOD.01",
+          "WP02.T02.DOD.02",
+          "WP02.T02.INV.01",
+          "WP02.T02.INV.02",
+          "WP02.T02.QLT.01",
+          "WP02.T02.QLT.02",
+          "WP02.T02.SUC.01",
+          "WP02.T02.SUC.02",
+          "WP02.T04.CHK.01",
+          "WP02.T04.CHK.02",
+          "WP02.T04.CHK.03",
+          "WP02.T04.CMP.01",
+          "WP02.T04.CMP.02",
+          "WP02.T04.DOD.01",
+          "WP02.T04.DOD.02",
+          "WP02.T04.INV.01",
+          "WP02.T04.INV.02",
+          "WP02.T04.QLT.01",
+          "WP02.T04.QLT.02",
+          "WP02.T04.SUC.01",
+          "WP02.T04.SUC.02"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP03",
+      "surface": "Dashboard",
+      "capability_label": "Budget Overview",
+      "baseline_page_label": "Budget Overview",
+      "label_alias_observation": null,
+      "baseline_domain": "budget",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "budget",
+          "dashboard_accounts"
+        ],
+        "page_source": {
+          "source_id": "S05",
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+          "blob_sha": "62e63815d16261a3d8bc1bd793ec718facc81287",
+          "line_anchor": "27,41-63,230-270,295-350,577,996-1010",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation: admin/domain leader see all dashboard pages; viewer sees Executive Dashboard plus explicitly configured summaries; contributor sees pages mapped by assigned modules. Budget view allows admin/domain leader/viewer; edit execute guard requires canWrite and admin/domain leader; budget-line guard has separate assignment rules. See nav.ts 51-58,84-120 and dashboard-budget.ts 42-58.",
+        "command_route_observation": "DashboardBudget.",
+        "commands_and_roles_observed": "save-month/save-revenue; admin/domain-leader module gate.",
+        "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Dashboard report topic; admin-only JSON export/import; no page-specific import observed.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+          "line_anchor": "27,41-63,230-270,295-350,577,996-1010",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP02",
+        "task_ids": [
+          "WP02.T01",
+          "WP02.T02"
+        ],
+        "journey": "J08",
+        "criteria_ids": [
+          "WP02.T01.CHK.01",
+          "WP02.T01.CHK.02",
+          "WP02.T01.CHK.03",
+          "WP02.T01.CHK.04",
+          "WP02.T01.CHK.05",
+          "WP02.T01.CHK.18",
+          "WP02.T01.CMP.01",
+          "WP02.T01.CMP.02",
+          "WP02.T01.CMP.18",
+          "WP02.T01.DOD.01",
+          "WP02.T01.DOD.02",
+          "WP02.T01.DOD.18",
+          "WP02.T01.INV.01",
+          "WP02.T01.INV.02",
+          "WP02.T01.INV.18",
+          "WP02.T01.QLT.01",
+          "WP02.T01.QLT.02",
+          "WP02.T01.QLT.18",
+          "WP02.T01.SUC.01",
+          "WP02.T01.SUC.02",
+          "WP02.T01.SUC.18",
+          "WP02.T02.CHK.01",
+          "WP02.T02.CHK.02",
+          "WP02.T02.CHK.03",
+          "WP02.T02.CHK.04",
+          "WP02.T02.CMP.01",
+          "WP02.T02.CMP.02",
+          "WP02.T02.CMP.03",
+          "WP02.T02.DOD.01",
+          "WP02.T02.DOD.02",
+          "WP02.T02.INV.01",
+          "WP02.T02.INV.02",
+          "WP02.T02.QLT.01",
+          "WP02.T02.QLT.02",
+          "WP02.T02.SUC.01",
+          "WP02.T02.SUC.02"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP04",
+      "surface": "Dashboard",
+      "capability_label": "OPEX Detail",
+      "baseline_page_label": "OPEX Detail",
+      "label_alias_observation": null,
+      "baseline_domain": "budget",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "budget",
+          "dashboard_accounts"
+        ],
+        "page_source": {
+          "source_id": "S05",
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+          "blob_sha": "62e63815d16261a3d8bc1bd793ec718facc81287",
+          "line_anchor": "27,41-63,230-270,295-350,577,996-1010",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation: admin/domain leader see all dashboard pages; viewer sees Executive Dashboard plus explicitly configured summaries; contributor sees pages mapped by assigned modules. Budget view allows admin/domain leader/viewer; edit execute guard requires canWrite and admin/domain leader; budget-line guard has separate assignment rules. See nav.ts 51-58,84-120 and dashboard-budget.ts 42-58.",
+        "command_route_observation": "DashboardBudget; MonthEntry ownerId.",
+        "commands_and_roles_observed": "save/delete/save-entry/save-deviation/annual-entry/year-amount/import.",
+        "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Dashboard report topic; OPEX workbook import; OPEX Excel template download; admin-only JSON export/import.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+          "line_anchor": "27,41-63,230-270,295-350,577,996-1010",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP02",
+        "task_ids": [
+          "WP02.T01",
+          "WP02.T02"
+        ],
+        "journey": "J08",
+        "criteria_ids": [
+          "WP02.T01.CHK.01",
+          "WP02.T01.CHK.02",
+          "WP02.T01.CHK.03",
+          "WP02.T01.CHK.04",
+          "WP02.T01.CHK.05",
+          "WP02.T01.CHK.18",
+          "WP02.T01.CMP.01",
+          "WP02.T01.CMP.02",
+          "WP02.T01.CMP.18",
+          "WP02.T01.DOD.01",
+          "WP02.T01.DOD.02",
+          "WP02.T01.DOD.18",
+          "WP02.T01.INV.01",
+          "WP02.T01.INV.02",
+          "WP02.T01.INV.18",
+          "WP02.T01.QLT.01",
+          "WP02.T01.QLT.02",
+          "WP02.T01.QLT.18",
+          "WP02.T01.SUC.01",
+          "WP02.T01.SUC.02",
+          "WP02.T01.SUC.18",
+          "WP02.T02.CHK.01",
+          "WP02.T02.CHK.02",
+          "WP02.T02.CHK.03",
+          "WP02.T02.CHK.04",
+          "WP02.T02.CMP.01",
+          "WP02.T02.CMP.02",
+          "WP02.T02.CMP.03",
+          "WP02.T02.DOD.01",
+          "WP02.T02.DOD.02",
+          "WP02.T02.INV.01",
+          "WP02.T02.INV.02",
+          "WP02.T02.QLT.01",
+          "WP02.T02.QLT.02",
+          "WP02.T02.SUC.01",
+          "WP02.T02.SUC.02"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP05",
+      "surface": "Dashboard",
+      "capability_label": "CAPEX Projects",
+      "baseline_page_label": "CAPEX Projects",
+      "label_alias_observation": null,
+      "baseline_domain": "budget",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "budget",
+          "dashboard_accounts"
+        ],
+        "page_source": {
+          "source_id": "S05",
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+          "blob_sha": "62e63815d16261a3d8bc1bd793ec718facc81287",
+          "line_anchor": "27,41-63,230-270,295-350,577,996-1010",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation: admin/domain leader see all dashboard pages; viewer sees Executive Dashboard plus explicitly configured summaries; contributor sees pages mapped by assigned modules. Budget view allows admin/domain leader/viewer; edit execute guard requires canWrite and admin/domain leader; budget-line guard has separate assignment rules. See nav.ts 51-58,84-120 and dashboard-budget.ts 42-58.",
+        "command_route_observation": "DashboardBudget; MonthEntry projId/projectId.",
+        "commands_and_roles_observed": "save/delete/save-entry/save-deviation/annual-entry/year-amount.",
+        "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Dashboard report topic; admin-only JSON export/import; no page-specific import observed.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+          "line_anchor": "27,41-63,230-270,295-350,577,996-1010",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP02",
+        "task_ids": [
+          "WP02.T01",
+          "WP02.T02"
+        ],
+        "journey": "J08",
+        "criteria_ids": [
+          "WP02.T01.CHK.01",
+          "WP02.T01.CHK.02",
+          "WP02.T01.CHK.03",
+          "WP02.T01.CHK.04",
+          "WP02.T01.CHK.05",
+          "WP02.T01.CHK.18",
+          "WP02.T01.CMP.01",
+          "WP02.T01.CMP.02",
+          "WP02.T01.CMP.18",
+          "WP02.T01.DOD.01",
+          "WP02.T01.DOD.02",
+          "WP02.T01.DOD.18",
+          "WP02.T01.INV.01",
+          "WP02.T01.INV.02",
+          "WP02.T01.INV.18",
+          "WP02.T01.QLT.01",
+          "WP02.T01.QLT.02",
+          "WP02.T01.QLT.18",
+          "WP02.T01.SUC.01",
+          "WP02.T01.SUC.02",
+          "WP02.T01.SUC.18",
+          "WP02.T02.CHK.01",
+          "WP02.T02.CHK.02",
+          "WP02.T02.CHK.03",
+          "WP02.T02.CHK.04",
+          "WP02.T02.CMP.01",
+          "WP02.T02.CMP.02",
+          "WP02.T02.CMP.03",
+          "WP02.T02.DOD.01",
+          "WP02.T02.DOD.02",
+          "WP02.T02.INV.01",
+          "WP02.T02.INV.02",
+          "WP02.T02.QLT.01",
+          "WP02.T02.QLT.02",
+          "WP02.T02.SUC.01",
+          "WP02.T02.SUC.02"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP06",
+      "surface": "Dashboard",
+      "capability_label": "Headcount Overview",
+      "baseline_page_label": "Headcount Overview",
+      "label_alias_observation": null,
+      "baseline_domain": "people",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "people"
+        ],
+        "page_source": {
+          "source_id": "S06",
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+          "blob_sha": "c75320feb6f0c0c2f323697330c5476f5cf60a25",
+          "line_anchor": "9,30-135,138-177,278+,393+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation/read uses dashboardPages (same Dashboard rules). Hot Topics writes require admin/domain leader; Headcount Overview execute returns 400; Team Structure and Talent Review require admin; Talent Review data/export is admin-only and non-admin people projections omit cls/outlook/notes. dashboard-people.ts 31-105,138-177.",
+        "command_route_observation": "DashboardPeople member projection; baseline execute explicitly rejects this page.",
+        "commands_and_roles_observed": "Read-only in this domain; no execute action observed.",
+        "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Dashboard report topic; admin-only JSON export/import; member export/import is on Talent Review, not this page.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+          "line_anchor": "9,30-135,138-177,278+,393+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP02",
+        "task_ids": [
+          "WP02.T01",
+          "WP02.T02"
+        ],
+        "journey": "J08",
+        "criteria_ids": [
+          "WP02.T01.CHK.01",
+          "WP02.T01.CHK.02",
+          "WP02.T01.CHK.03",
+          "WP02.T01.CHK.04",
+          "WP02.T01.CHK.05",
+          "WP02.T01.CHK.18",
+          "WP02.T01.CMP.01",
+          "WP02.T01.CMP.02",
+          "WP02.T01.CMP.18",
+          "WP02.T01.DOD.01",
+          "WP02.T01.DOD.02",
+          "WP02.T01.DOD.18",
+          "WP02.T01.INV.01",
+          "WP02.T01.INV.02",
+          "WP02.T01.INV.18",
+          "WP02.T01.QLT.01",
+          "WP02.T01.QLT.02",
+          "WP02.T01.QLT.18",
+          "WP02.T01.SUC.01",
+          "WP02.T01.SUC.02",
+          "WP02.T01.SUC.18",
+          "WP02.T02.CHK.01",
+          "WP02.T02.CHK.02",
+          "WP02.T02.CHK.03",
+          "WP02.T02.CHK.04",
+          "WP02.T02.CMP.01",
+          "WP02.T02.CMP.02",
+          "WP02.T02.CMP.03",
+          "WP02.T02.DOD.01",
+          "WP02.T02.DOD.02",
+          "WP02.T02.INV.01",
+          "WP02.T02.INV.02",
+          "WP02.T02.QLT.01",
+          "WP02.T02.QLT.02",
+          "WP02.T02.SUC.01",
+          "WP02.T02.SUC.02"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP07",
+      "surface": "Dashboard",
+      "capability_label": "Team Structure",
+      "baseline_page_label": "Team Structure",
+      "label_alias_observation": null,
+      "baseline_domain": "people",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "people"
+        ],
+        "page_source": {
+          "source_id": "S06",
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+          "blob_sha": "c75320feb6f0c0c2f323697330c5476f5cf60a25",
+          "line_anchor": "9,30-135,138-177,278+,393+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation/read uses dashboardPages (same Dashboard rules). Hot Topics writes require admin/domain leader; Headcount Overview execute returns 400; Team Structure and Talent Review require admin; Talent Review data/export is admin-only and non-admin people projections omit cls/outlook/notes. dashboard-people.ts 31-105,138-177.",
+        "command_route_observation": "DashboardPeople CIO/leaders/members.",
+        "commands_and_roles_observed": "saveCio/saveLeader/deleteLeader/saveMember/deleteMember; admin only.",
+        "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Dashboard report topic; admin-only JSON export/import; no page-specific import observed.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+          "line_anchor": "9,30-135,138-177,278+,393+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP02",
+        "task_ids": [
+          "WP02.T01",
+          "WP02.T02"
+        ],
+        "journey": "J08",
+        "criteria_ids": [
+          "WP02.T01.CHK.01",
+          "WP02.T01.CHK.02",
+          "WP02.T01.CHK.03",
+          "WP02.T01.CHK.04",
+          "WP02.T01.CHK.05",
+          "WP02.T01.CHK.18",
+          "WP02.T01.CMP.01",
+          "WP02.T01.CMP.02",
+          "WP02.T01.CMP.18",
+          "WP02.T01.DOD.01",
+          "WP02.T01.DOD.02",
+          "WP02.T01.DOD.18",
+          "WP02.T01.INV.01",
+          "WP02.T01.INV.02",
+          "WP02.T01.INV.18",
+          "WP02.T01.QLT.01",
+          "WP02.T01.QLT.02",
+          "WP02.T01.QLT.18",
+          "WP02.T01.SUC.01",
+          "WP02.T01.SUC.02",
+          "WP02.T01.SUC.18",
+          "WP02.T02.CHK.01",
+          "WP02.T02.CHK.02",
+          "WP02.T02.CHK.03",
+          "WP02.T02.CHK.04",
+          "WP02.T02.CMP.01",
+          "WP02.T02.CMP.02",
+          "WP02.T02.CMP.03",
+          "WP02.T02.DOD.01",
+          "WP02.T02.DOD.02",
+          "WP02.T02.INV.01",
+          "WP02.T02.INV.02",
+          "WP02.T02.QLT.01",
+          "WP02.T02.QLT.02",
+          "WP02.T02.SUC.01",
+          "WP02.T02.SUC.02"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP08",
+      "surface": "Dashboard",
+      "capability_label": "Talent Review",
+      "baseline_page_label": "Talent Review",
+      "label_alias_observation": null,
+      "baseline_domain": "people",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "people",
+          "imports"
+        ],
+        "page_source": {
+          "source_id": "S06",
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+          "blob_sha": "c75320feb6f0c0c2f323697330c5476f5cf60a25",
+          "line_anchor": "9,30-135,138-177,278+,393+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation/read uses dashboardPages (same Dashboard rules). Hot Topics writes require admin/domain leader; Headcount Overview execute returns 400; Team Structure and Talent Review require admin; Talent Review data/export is admin-only and non-admin people projections omit cls/outlook/notes. dashboard-people.ts 31-105,138-177.",
+        "command_route_observation": "DashboardPeople member fields cls/outlook/notes.",
+        "commands_and_roles_observed": "save/delete/import/exportAllMembers; admin only.",
+        "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Admin-only report topic; admin-only member import and Export All Members action; dashboard JSON backup is admin-only.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+          "line_anchor": "9,30-135,138-177,278+,393+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP02",
+        "task_ids": [
+          "WP02.T01",
+          "WP02.T02"
+        ],
+        "journey": "J08",
+        "criteria_ids": [
+          "WP02.T01.CHK.01",
+          "WP02.T01.CHK.02",
+          "WP02.T01.CHK.03",
+          "WP02.T01.CHK.04",
+          "WP02.T01.CHK.05",
+          "WP02.T01.CHK.18",
+          "WP02.T01.CMP.01",
+          "WP02.T01.CMP.02",
+          "WP02.T01.CMP.18",
+          "WP02.T01.DOD.01",
+          "WP02.T01.DOD.02",
+          "WP02.T01.DOD.18",
+          "WP02.T01.INV.01",
+          "WP02.T01.INV.02",
+          "WP02.T01.INV.18",
+          "WP02.T01.QLT.01",
+          "WP02.T01.QLT.02",
+          "WP02.T01.QLT.18",
+          "WP02.T01.SUC.01",
+          "WP02.T01.SUC.02",
+          "WP02.T01.SUC.18",
+          "WP02.T02.CHK.01",
+          "WP02.T02.CHK.02",
+          "WP02.T02.CHK.03",
+          "WP02.T02.CHK.04",
+          "WP02.T02.CMP.01",
+          "WP02.T02.CMP.02",
+          "WP02.T02.CMP.03",
+          "WP02.T02.DOD.01",
+          "WP02.T02.DOD.02",
+          "WP02.T02.INV.01",
+          "WP02.T02.INV.02",
+          "WP02.T02.QLT.01",
+          "WP02.T02.QLT.02",
+          "WP02.T02.SUC.01",
+          "WP02.T02.SUC.02"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP09",
+      "surface": "Dashboard",
+      "capability_label": "Portfolio Dashboard",
+      "baseline_page_label": "Portfolio Dashboard",
+      "label_alias_observation": null,
+      "baseline_domain": "portfolio",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "portfolio"
+        ],
+        "page_source": {
+          "source_id": "S08",
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+          "blob_sha": "5bbf58cd8d7ba871b1d0561c558c82ad0e7c8783",
+          "line_anchor": "26-41,120-253,259-266,361+,639+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation/read follows dashboardPages. Portfolio mutation helper allows admin or contributor with matching assigned collection projects/risks/contracts; other collections are admin-only. dashboard-portfolio.ts 120-148,226-266.",
+        "command_route_observation": "DashboardPortfolio projects collection.",
+        "commands_and_roles_observed": "Read; writes follow projects collection gate.",
+        "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Dashboard report topic; admin-only JSON export/import; no page-specific import observed.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+          "line_anchor": "26-41,120-253,259-266,361+,639+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP02",
+        "task_ids": [
+          "WP02.T01",
+          "WP02.T03"
+        ],
+        "journey": "J08",
+        "criteria_ids": [
+          "WP02.T01.CHK.01",
+          "WP02.T01.CHK.02",
+          "WP02.T01.CHK.03",
+          "WP02.T01.CHK.04",
+          "WP02.T01.CHK.05",
+          "WP02.T01.CHK.18",
+          "WP02.T01.CMP.01",
+          "WP02.T01.CMP.02",
+          "WP02.T01.CMP.18",
+          "WP02.T01.DOD.01",
+          "WP02.T01.DOD.02",
+          "WP02.T01.DOD.18",
+          "WP02.T01.INV.01",
+          "WP02.T01.INV.02",
+          "WP02.T01.INV.18",
+          "WP02.T01.QLT.01",
+          "WP02.T01.QLT.02",
+          "WP02.T01.QLT.18",
+          "WP02.T01.SUC.01",
+          "WP02.T01.SUC.02",
+          "WP02.T01.SUC.18",
+          "WP02.T03.CHK.01",
+          "WP02.T03.CHK.02",
+          "WP02.T03.CHK.03",
+          "WP02.T03.CMP.01",
+          "WP02.T03.CMP.02",
+          "WP02.T03.DOD.01",
+          "WP02.T03.DOD.02",
+          "WP02.T03.INV.01",
+          "WP02.T03.INV.02",
+          "WP02.T03.QLT.01",
+          "WP02.T03.QLT.02",
+          "WP02.T03.QLT.03",
+          "WP02.T03.SUC.01",
+          "WP02.T03.SUC.02"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP10",
+      "surface": "Dashboard",
+      "capability_label": "All Projects",
+      "baseline_page_label": "All Projects",
+      "label_alias_observation": null,
+      "baseline_domain": "portfolio",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "portfolio",
+          "imports"
+        ],
+        "page_source": {
+          "source_id": "S08",
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+          "blob_sha": "5bbf58cd8d7ba871b1d0561c558c82ad0e7c8783",
+          "line_anchor": "26-41,120-253,259-266,361+,639+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation/read follows dashboardPages. Portfolio mutation helper allows admin or contributor with matching assigned collection projects/risks/contracts; other collections are admin-only. dashboard-portfolio.ts 120-148,226-266.",
+        "command_route_observation": "DashboardPortfolio projects collection.",
+        "commands_and_roles_observed": "save/delete/save-milestone/delete-milestone/import; importProjects helper.",
+        "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Dashboard report topic; project import route/helper; admin-only JSON export/import.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+          "line_anchor": "26-41,120-253,259-266,361+,639+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP02",
+        "task_ids": [
+          "WP02.T01",
+          "WP02.T02",
+          "WP02.T03"
+        ],
+        "journey": "J08",
+        "criteria_ids": [
+          "WP02.T01.CHK.01",
+          "WP02.T01.CHK.02",
+          "WP02.T01.CHK.03",
+          "WP02.T01.CHK.04",
+          "WP02.T01.CHK.05",
+          "WP02.T01.CHK.18",
+          "WP02.T01.CMP.01",
+          "WP02.T01.CMP.02",
+          "WP02.T01.CMP.18",
+          "WP02.T01.DOD.01",
+          "WP02.T01.DOD.02",
+          "WP02.T01.DOD.18",
+          "WP02.T01.INV.01",
+          "WP02.T01.INV.02",
+          "WP02.T01.INV.18",
+          "WP02.T01.QLT.01",
+          "WP02.T01.QLT.02",
+          "WP02.T01.QLT.18",
+          "WP02.T01.SUC.01",
+          "WP02.T01.SUC.02",
+          "WP02.T01.SUC.18",
+          "WP02.T02.CHK.01",
+          "WP02.T02.CHK.02",
+          "WP02.T02.CHK.03",
+          "WP02.T02.CHK.04",
+          "WP02.T02.CMP.01",
+          "WP02.T02.CMP.02",
+          "WP02.T02.CMP.03",
+          "WP02.T02.DOD.01",
+          "WP02.T02.DOD.02",
+          "WP02.T02.INV.01",
+          "WP02.T02.INV.02",
+          "WP02.T02.QLT.01",
+          "WP02.T02.QLT.02",
+          "WP02.T02.SUC.01",
+          "WP02.T02.SUC.02",
+          "WP02.T03.CHK.01",
+          "WP02.T03.CHK.02",
+          "WP02.T03.CHK.03",
+          "WP02.T03.CMP.01",
+          "WP02.T03.CMP.02",
+          "WP02.T03.DOD.01",
+          "WP02.T03.DOD.02",
+          "WP02.T03.INV.01",
+          "WP02.T03.INV.02",
+          "WP02.T03.QLT.01",
+          "WP02.T03.QLT.02",
+          "WP02.T03.QLT.03",
+          "WP02.T03.SUC.01",
+          "WP02.T03.SUC.02"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP11",
+      "surface": "Dashboard",
+      "capability_label": "IT Operations",
+      "baseline_page_label": "IT Operations",
+      "label_alias_observation": null,
+      "baseline_domain": "operations",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "operations",
+          "imports"
+        ],
+        "page_source": {
+          "source_id": "S07",
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-operations.ts",
+          "blob_sha": "b077b5e96c37c8c910ba430c74393773b971f941",
+          "line_anchor": "16,54-67,155-424,424-497,498+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Read allows admin/domain leader/contributor; viewer only when the admin-owned summaries list contains the page. Write requires canWrite plus admin or contributor assigned Operations/security as applicable. dashboard-operations.ts 54-67,155-160.",
+        "command_route_observation": "DashboardOperations ticket/SLA/heatmap.",
+        "commands_and_roles_observed": "save-categories/save-items/save-tickets/save-sla/save-heatmap/import-month.",
+        "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Dashboard report topic; IT Operations month workbook import; admin-only JSON export/import.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/dashboard-operations.ts",
+          "line_anchor": "16,54-67,155-424,424-497,498+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP02",
+        "task_ids": [
+          "WP02.T01",
+          "WP02.T02"
+        ],
+        "journey": "J08",
+        "criteria_ids": [
+          "WP02.T01.CHK.01",
+          "WP02.T01.CHK.02",
+          "WP02.T01.CHK.03",
+          "WP02.T01.CHK.04",
+          "WP02.T01.CHK.05",
+          "WP02.T01.CHK.18",
+          "WP02.T01.CMP.01",
+          "WP02.T01.CMP.02",
+          "WP02.T01.CMP.18",
+          "WP02.T01.DOD.01",
+          "WP02.T01.DOD.02",
+          "WP02.T01.DOD.18",
+          "WP02.T01.INV.01",
+          "WP02.T01.INV.02",
+          "WP02.T01.INV.18",
+          "WP02.T01.QLT.01",
+          "WP02.T01.QLT.02",
+          "WP02.T01.QLT.18",
+          "WP02.T01.SUC.01",
+          "WP02.T01.SUC.02",
+          "WP02.T01.SUC.18",
+          "WP02.T02.CHK.01",
+          "WP02.T02.CHK.02",
+          "WP02.T02.CHK.03",
+          "WP02.T02.CHK.04",
+          "WP02.T02.CMP.01",
+          "WP02.T02.CMP.02",
+          "WP02.T02.CMP.03",
+          "WP02.T02.DOD.01",
+          "WP02.T02.DOD.02",
+          "WP02.T02.INV.01",
+          "WP02.T02.INV.02",
+          "WP02.T02.QLT.01",
+          "WP02.T02.QLT.02",
+          "WP02.T02.SUC.01",
+          "WP02.T02.SUC.02"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP12",
+      "surface": "Dashboard",
+      "capability_label": "IT Security KPIs",
+      "baseline_page_label": "IT Security KPIs",
+      "label_alias_observation": null,
+      "baseline_domain": "operations",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "operations"
+        ],
+        "page_source": {
+          "source_id": "S07",
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-operations.ts",
+          "blob_sha": "b077b5e96c37c8c910ba430c74393773b971f941",
+          "line_anchor": "16,54-67,155-424,424-497,498+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Read allows admin/domain leader/contributor; viewer only when the admin-owned summaries list contains the page. Write requires canWrite plus admin or contributor assigned Operations/security as applicable. dashboard-operations.ts 54-67,155-160.",
+        "command_route_observation": "DashboardOperations security KPI/campaign/incident collections.",
+        "commands_and_roles_observed": "save-campaign/save-incident plus security action handlers.",
+        "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Dashboard report topic; admin-only JSON export/import; no page-specific import observed.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/dashboard-operations.ts",
+          "line_anchor": "16,54-67,155-424,424-497,498+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP02",
+        "task_ids": [
+          "WP02.T01",
+          "WP02.T02"
+        ],
+        "journey": "J08",
+        "criteria_ids": [
+          "WP02.T01.CHK.01",
+          "WP02.T01.CHK.02",
+          "WP02.T01.CHK.03",
+          "WP02.T01.CHK.04",
+          "WP02.T01.CHK.05",
+          "WP02.T01.CHK.18",
+          "WP02.T01.CMP.01",
+          "WP02.T01.CMP.02",
+          "WP02.T01.CMP.18",
+          "WP02.T01.DOD.01",
+          "WP02.T01.DOD.02",
+          "WP02.T01.DOD.18",
+          "WP02.T01.INV.01",
+          "WP02.T01.INV.02",
+          "WP02.T01.INV.18",
+          "WP02.T01.QLT.01",
+          "WP02.T01.QLT.02",
+          "WP02.T01.QLT.18",
+          "WP02.T01.SUC.01",
+          "WP02.T01.SUC.02",
+          "WP02.T01.SUC.18",
+          "WP02.T02.CHK.01",
+          "WP02.T02.CHK.02",
+          "WP02.T02.CHK.03",
+          "WP02.T02.CHK.04",
+          "WP02.T02.CMP.01",
+          "WP02.T02.CMP.02",
+          "WP02.T02.CMP.03",
+          "WP02.T02.DOD.01",
+          "WP02.T02.DOD.02",
+          "WP02.T02.INV.01",
+          "WP02.T02.INV.02",
+          "WP02.T02.QLT.01",
+          "WP02.T02.QLT.02",
+          "WP02.T02.SUC.01",
+          "WP02.T02.SUC.02"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP13",
+      "surface": "Dashboard",
+      "capability_label": "IT Risks",
+      "baseline_page_label": "IT Risks",
+      "label_alias_observation": null,
+      "baseline_domain": "portfolio",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "portfolio"
+        ],
+        "page_source": {
+          "source_id": "S08",
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+          "blob_sha": "5bbf58cd8d7ba871b1d0561c558c82ad0e7c8783",
+          "line_anchor": "26-41,120-253,259-266,361+,639+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation/read follows dashboardPages. Portfolio mutation helper allows admin or contributor with matching assigned collection projects/risks/contracts; other collections are admin-only. dashboard-portfolio.ts 120-148,226-266.",
+        "command_route_observation": "DashboardPortfolio risks collection.",
+        "commands_and_roles_observed": "save/delete; contributor must be assigned risks, or admin.",
+        "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Dashboard report topic; admin-only JSON export/import; no page-specific import observed.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+          "line_anchor": "26-41,120-253,259-266,361+,639+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP02",
+        "task_ids": [
+          "WP02.T01",
+          "WP02.T02"
+        ],
+        "journey": "J08",
+        "criteria_ids": [
+          "WP02.T01.CHK.01",
+          "WP02.T01.CHK.02",
+          "WP02.T01.CHK.03",
+          "WP02.T01.CHK.04",
+          "WP02.T01.CHK.05",
+          "WP02.T01.CHK.18",
+          "WP02.T01.CMP.01",
+          "WP02.T01.CMP.02",
+          "WP02.T01.CMP.18",
+          "WP02.T01.DOD.01",
+          "WP02.T01.DOD.02",
+          "WP02.T01.DOD.18",
+          "WP02.T01.INV.01",
+          "WP02.T01.INV.02",
+          "WP02.T01.INV.18",
+          "WP02.T01.QLT.01",
+          "WP02.T01.QLT.02",
+          "WP02.T01.QLT.18",
+          "WP02.T01.SUC.01",
+          "WP02.T01.SUC.02",
+          "WP02.T01.SUC.18",
+          "WP02.T02.CHK.01",
+          "WP02.T02.CHK.02",
+          "WP02.T02.CHK.03",
+          "WP02.T02.CHK.04",
+          "WP02.T02.CMP.01",
+          "WP02.T02.CMP.02",
+          "WP02.T02.CMP.03",
+          "WP02.T02.DOD.01",
+          "WP02.T02.DOD.02",
+          "WP02.T02.INV.01",
+          "WP02.T02.INV.02",
+          "WP02.T02.QLT.01",
+          "WP02.T02.QLT.02",
+          "WP02.T02.SUC.01",
+          "WP02.T02.SUC.02"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP14",
+      "surface": "Dashboard",
+      "capability_label": "Vendor Contracts",
+      "baseline_page_label": "Vendor Contracts",
+      "label_alias_observation": null,
+      "baseline_domain": "portfolio",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "portfolio"
+        ],
+        "page_source": {
+          "source_id": "S08",
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+          "blob_sha": "5bbf58cd8d7ba871b1d0561c558c82ad0e7c8783",
+          "line_anchor": "26-41,120-253,259-266,361+,639+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation/read follows dashboardPages. Portfolio mutation helper allows admin or contributor with matching assigned collection projects/risks/contracts; other collections are admin-only. dashboard-portfolio.ts 120-148,226-266.",
+        "command_route_observation": "DashboardPortfolio contracts collection.",
+        "commands_and_roles_observed": "save/delete; contributor must be assigned contracts, or admin.",
+        "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Dashboard report topic; admin-only JSON export/import; no page-specific import observed.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+          "line_anchor": "26-41,120-253,259-266,361+,639+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP02",
+        "task_ids": [
+          "WP02.T01",
+          "WP02.T02"
+        ],
+        "journey": "J08",
+        "criteria_ids": [
+          "WP02.T01.CHK.01",
+          "WP02.T01.CHK.02",
+          "WP02.T01.CHK.03",
+          "WP02.T01.CHK.04",
+          "WP02.T01.CHK.05",
+          "WP02.T01.CHK.18",
+          "WP02.T01.CMP.01",
+          "WP02.T01.CMP.02",
+          "WP02.T01.CMP.18",
+          "WP02.T01.DOD.01",
+          "WP02.T01.DOD.02",
+          "WP02.T01.DOD.18",
+          "WP02.T01.INV.01",
+          "WP02.T01.INV.02",
+          "WP02.T01.INV.18",
+          "WP02.T01.QLT.01",
+          "WP02.T01.QLT.02",
+          "WP02.T01.QLT.18",
+          "WP02.T01.SUC.01",
+          "WP02.T01.SUC.02",
+          "WP02.T01.SUC.18",
+          "WP02.T02.CHK.01",
+          "WP02.T02.CHK.02",
+          "WP02.T02.CHK.03",
+          "WP02.T02.CHK.04",
+          "WP02.T02.CMP.01",
+          "WP02.T02.CMP.02",
+          "WP02.T02.CMP.03",
+          "WP02.T02.DOD.01",
+          "WP02.T02.DOD.02",
+          "WP02.T02.INV.01",
+          "WP02.T02.INV.02",
+          "WP02.T02.QLT.01",
+          "WP02.T02.QLT.02",
+          "WP02.T02.SUC.01",
+          "WP02.T02.SUC.02"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP15",
+      "surface": "Dashboard",
+      "capability_label": "Stakeholder Management",
+      "baseline_page_label": "Stakeholder Management",
+      "label_alias_observation": null,
+      "baseline_domain": "portfolio",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "portfolio"
+        ],
+        "page_source": {
+          "source_id": "S08",
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+          "blob_sha": "5bbf58cd8d7ba871b1d0561c558c82ad0e7c8783",
+          "line_anchor": "26-41,120-253,259-266,361+,639+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation/read follows dashboardPages. Portfolio mutation helper allows admin or contributor with matching assigned collection projects/risks/contracts; other collections are admin-only. dashboard-portfolio.ts 120-148,226-266.",
+        "command_route_observation": "DashboardPortfolio stakeholders collection.",
+        "commands_and_roles_observed": "save/delete; action-plan warning when action priority has no owner.",
+        "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Dashboard report topic; admin-only JSON export/import; no page-specific import observed.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+          "line_anchor": "26-41,120-253,259-266,361+,639+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP02",
+        "task_ids": [
+          "WP02.T01",
+          "WP02.T02"
+        ],
+        "journey": "J08",
+        "criteria_ids": [
+          "WP02.T01.CHK.01",
+          "WP02.T01.CHK.02",
+          "WP02.T01.CHK.03",
+          "WP02.T01.CHK.04",
+          "WP02.T01.CHK.05",
+          "WP02.T01.CHK.18",
+          "WP02.T01.CMP.01",
+          "WP02.T01.CMP.02",
+          "WP02.T01.CMP.18",
+          "WP02.T01.DOD.01",
+          "WP02.T01.DOD.02",
+          "WP02.T01.DOD.18",
+          "WP02.T01.INV.01",
+          "WP02.T01.INV.02",
+          "WP02.T01.INV.18",
+          "WP02.T01.QLT.01",
+          "WP02.T01.QLT.02",
+          "WP02.T01.QLT.18",
+          "WP02.T01.SUC.01",
+          "WP02.T01.SUC.02",
+          "WP02.T01.SUC.18",
+          "WP02.T02.CHK.01",
+          "WP02.T02.CHK.02",
+          "WP02.T02.CHK.03",
+          "WP02.T02.CHK.04",
+          "WP02.T02.CMP.01",
+          "WP02.T02.CMP.02",
+          "WP02.T02.CMP.03",
+          "WP02.T02.DOD.01",
+          "WP02.T02.DOD.02",
+          "WP02.T02.INV.01",
+          "WP02.T02.INV.02",
+          "WP02.T02.QLT.01",
+          "WP02.T02.QLT.02",
+          "WP02.T02.SUC.01",
+          "WP02.T02.SUC.02"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP16",
+      "surface": "Dashboard",
+      "capability_label": "IT Performance Contract",
+      "baseline_page_label": "IT Performance Contract",
+      "label_alias_observation": null,
+      "baseline_domain": "portfolio",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "portfolio"
+        ],
+        "page_source": {
+          "source_id": "S08",
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+          "blob_sha": "5bbf58cd8d7ba871b1d0561c558c82ad0e7c8783",
+          "line_anchor": "26-41,120-253,259-266,361+,639+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation/read follows dashboardPages. Portfolio mutation helper allows admin or contributor with matching assigned collection projects/risks/contracts; other collections are admin-only. dashboard-portfolio.ts 120-148,226-266.",
+        "command_route_observation": "DashboardPortfolio itperf collection.",
+        "commands_and_roles_observed": "save-item/delete-item/save-sub/delete-sub.",
+        "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Dashboard report topic; admin-only JSON export/import; no page-specific import observed.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+          "line_anchor": "26-41,120-253,259-266,361+,639+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP02",
+        "task_ids": [
+          "WP02.T01",
+          "WP02.T02"
+        ],
+        "journey": "J08",
+        "criteria_ids": [
+          "WP02.T01.CHK.01",
+          "WP02.T01.CHK.02",
+          "WP02.T01.CHK.03",
+          "WP02.T01.CHK.04",
+          "WP02.T01.CHK.05",
+          "WP02.T01.CHK.18",
+          "WP02.T01.CMP.01",
+          "WP02.T01.CMP.02",
+          "WP02.T01.CMP.18",
+          "WP02.T01.DOD.01",
+          "WP02.T01.DOD.02",
+          "WP02.T01.DOD.18",
+          "WP02.T01.INV.01",
+          "WP02.T01.INV.02",
+          "WP02.T01.INV.18",
+          "WP02.T01.QLT.01",
+          "WP02.T01.QLT.02",
+          "WP02.T01.QLT.18",
+          "WP02.T01.SUC.01",
+          "WP02.T01.SUC.02",
+          "WP02.T01.SUC.18",
+          "WP02.T02.CHK.01",
+          "WP02.T02.CHK.02",
+          "WP02.T02.CHK.03",
+          "WP02.T02.CHK.04",
+          "WP02.T02.CMP.01",
+          "WP02.T02.CMP.02",
+          "WP02.T02.CMP.03",
+          "WP02.T02.DOD.01",
+          "WP02.T02.DOD.02",
+          "WP02.T02.INV.01",
+          "WP02.T02.INV.02",
+          "WP02.T02.QLT.01",
+          "WP02.T02.QLT.02",
+          "WP02.T02.SUC.01",
+          "WP02.T02.SUC.02"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP17",
+      "surface": "Planner",
+      "capability_label": "Overview",
+      "baseline_page_label": "Overview",
+      "label_alias_observation": null,
+      "baseline_domain": "planner",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "planner",
+          "planner_accounts",
+          "workbooks"
+        ],
+        "page_source": {
+          "source_id": "S09",
+          "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "blob_sha": "e836d3f83bd7707b27f5bd3052494c84d67a2442",
+          "line_anchor": "33-41,295-352,354-512,1411+,1510+,1842+,1979+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation allows admin/finance/hr/budget owner/viewer; execution requires canWrite and admin/finance/hr/budget owner. Private fields are redacted for roles outside privateAccess. nav.ts 52,122-126; planner.ts 295-351.",
+        "command_route_observation": "PlannerModule page.",
+        "commands_and_roles_observed": "Read summary; no write action for Overview observed.",
+        "import_export": "Surface footer exposes XLSX export; module supports import-workbook. application.ts 595-596; planner.ts 301-313,368,1979+; workbooks source S13.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Planner XLSX export surface-wide; no page-specific workbook import form observed for Overview.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "line_anchor": "33-41,295-352,354-512,1411+,1510+,1842+,1979+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP03",
+        "task_ids": [
+          "WP03.T01",
+          "WP03.T05"
+        ],
+        "journey": "J02",
+        "criteria_ids": [
+          "WP03.T01.CHK.01",
+          "WP03.T01.CHK.02",
+          "WP03.T01.CHK.03",
+          "WP03.T01.CHK.04",
+          "WP03.T01.CHK.18",
+          "WP03.T01.CMP.01",
+          "WP03.T01.CMP.02",
+          "WP03.T01.CMP.18",
+          "WP03.T01.DOD.01",
+          "WP03.T01.DOD.02",
+          "WP03.T01.DOD.18",
+          "WP03.T01.INV.01",
+          "WP03.T01.INV.02",
+          "WP03.T01.INV.03",
+          "WP03.T01.INV.18",
+          "WP03.T01.QLT.01",
+          "WP03.T01.QLT.02",
+          "WP03.T01.QLT.18",
+          "WP03.T01.SUC.01",
+          "WP03.T01.SUC.02",
+          "WP03.T01.SUC.18",
+          "WP03.T05.CHK.01",
+          "WP03.T05.CHK.02",
+          "WP03.T05.CHK.03",
+          "WP03.T05.CHK.04",
+          "WP03.T05.CHK.05",
+          "WP03.T05.CHK.18",
+          "WP03.T05.CMP.01",
+          "WP03.T05.CMP.02",
+          "WP03.T05.CMP.18",
+          "WP03.T05.DOD.01",
+          "WP03.T05.DOD.02",
+          "WP03.T05.DOD.18",
+          "WP03.T05.INV.01",
+          "WP03.T05.INV.02",
+          "WP03.T05.INV.03",
+          "WP03.T05.INV.18",
+          "WP03.T05.QLT.01",
+          "WP03.T05.QLT.02",
+          "WP03.T05.QLT.18",
+          "WP03.T05.SUC.01",
+          "WP03.T05.SUC.02",
+          "WP03.T05.SUC.18"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP18",
+      "surface": "Planner",
+      "capability_label": "OPEX",
+      "baseline_page_label": "OPEX",
+      "label_alias_observation": null,
+      "baseline_domain": "planner",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "planner",
+          "planner_accounts",
+          "workbooks"
+        ],
+        "page_source": {
+          "source_id": "S09",
+          "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "blob_sha": "e836d3f83bd7707b27f5bd3052494c84d67a2442",
+          "line_anchor": "33-41,295-352,354-512,1411+,1510+,1842+,1979+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation allows admin/finance/hr/budget owner/viewer; execution requires canWrite and admin/finance/hr/budget owner. Private fields are redacted for roles outside privateAccess. nav.ts 52,122-126; planner.ts 295-351.",
+        "command_route_observation": "PlannerModule version.lines (OPEX).",
+        "commands_and_roles_observed": "save/delete/spread/reset; import-workbook available at module boundary.",
+        "import_export": "Surface footer exposes XLSX export; module supports import-workbook. application.ts 595-596; planner.ts 301-313,368,1979+; workbooks source S13.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Planner XLSX export; workbook import action exists on supported workbook forms.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "line_anchor": "33-41,295-352,354-512,1411+,1510+,1842+,1979+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP03",
+        "task_ids": [
+          "WP03.T01",
+          "WP03.T02"
+        ],
+        "journey": "J02",
+        "criteria_ids": [
+          "WP03.T01.CHK.01",
+          "WP03.T01.CHK.02",
+          "WP03.T01.CHK.03",
+          "WP03.T01.CHK.04",
+          "WP03.T01.CHK.18",
+          "WP03.T01.CMP.01",
+          "WP03.T01.CMP.02",
+          "WP03.T01.CMP.18",
+          "WP03.T01.DOD.01",
+          "WP03.T01.DOD.02",
+          "WP03.T01.DOD.18",
+          "WP03.T01.INV.01",
+          "WP03.T01.INV.02",
+          "WP03.T01.INV.03",
+          "WP03.T01.INV.18",
+          "WP03.T01.QLT.01",
+          "WP03.T01.QLT.02",
+          "WP03.T01.QLT.18",
+          "WP03.T01.SUC.01",
+          "WP03.T01.SUC.02",
+          "WP03.T01.SUC.18",
+          "WP03.T02.CHK.01",
+          "WP03.T02.CHK.02",
+          "WP03.T02.CHK.03",
+          "WP03.T02.CHK.04",
+          "WP03.T02.CHK.05",
+          "WP03.T02.CMP.01",
+          "WP03.T02.CMP.02",
+          "WP03.T02.DOD.01",
+          "WP03.T02.DOD.02",
+          "WP03.T02.INV.01",
+          "WP03.T02.INV.02",
+          "WP03.T02.INV.03",
+          "WP03.T02.QLT.01",
+          "WP03.T02.QLT.02",
+          "WP03.T02.SUC.01",
+          "WP03.T02.SUC.02",
+          "WP03.T02.SUC.03"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP19",
+      "surface": "Planner",
+      "capability_label": "CAPEX",
+      "baseline_page_label": "CAPEX",
+      "label_alias_observation": null,
+      "baseline_domain": "planner",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "planner",
+          "planner_accounts",
+          "workbooks"
+        ],
+        "page_source": {
+          "source_id": "S09",
+          "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "blob_sha": "e836d3f83bd7707b27f5bd3052494c84d67a2442",
+          "line_anchor": "33-41,295-352,354-512,1411+,1510+,1842+,1979+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation allows admin/finance/hr/budget owner/viewer; execution requires canWrite and admin/finance/hr/budget owner. Private fields are redacted for roles outside privateAccess. nav.ts 52,122-126; planner.ts 295-351.",
+        "command_route_observation": "PlannerModule version.projects (CAPEX).",
+        "commands_and_roles_observed": "save/delete/spread/reset; import-workbook available at module boundary.",
+        "import_export": "Surface footer exposes XLSX export; module supports import-workbook. application.ts 595-596; planner.ts 301-313,368,1979+; workbooks source S13.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Planner XLSX export; workbook import action exists on supported workbook forms.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "line_anchor": "33-41,295-352,354-512,1411+,1510+,1842+,1979+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP03",
+        "task_ids": [
+          "WP03.T01",
+          "WP03.T02"
+        ],
+        "journey": "J02",
+        "criteria_ids": [
+          "WP03.T01.CHK.01",
+          "WP03.T01.CHK.02",
+          "WP03.T01.CHK.03",
+          "WP03.T01.CHK.04",
+          "WP03.T01.CHK.18",
+          "WP03.T01.CMP.01",
+          "WP03.T01.CMP.02",
+          "WP03.T01.CMP.18",
+          "WP03.T01.DOD.01",
+          "WP03.T01.DOD.02",
+          "WP03.T01.DOD.18",
+          "WP03.T01.INV.01",
+          "WP03.T01.INV.02",
+          "WP03.T01.INV.03",
+          "WP03.T01.INV.18",
+          "WP03.T01.QLT.01",
+          "WP03.T01.QLT.02",
+          "WP03.T01.QLT.18",
+          "WP03.T01.SUC.01",
+          "WP03.T01.SUC.02",
+          "WP03.T01.SUC.18",
+          "WP03.T02.CHK.01",
+          "WP03.T02.CHK.02",
+          "WP03.T02.CHK.03",
+          "WP03.T02.CHK.04",
+          "WP03.T02.CHK.05",
+          "WP03.T02.CMP.01",
+          "WP03.T02.CMP.02",
+          "WP03.T02.DOD.01",
+          "WP03.T02.DOD.02",
+          "WP03.T02.INV.01",
+          "WP03.T02.INV.02",
+          "WP03.T02.INV.03",
+          "WP03.T02.QLT.01",
+          "WP03.T02.QLT.02",
+          "WP03.T02.SUC.01",
+          "WP03.T02.SUC.02",
+          "WP03.T02.SUC.03"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP20",
+      "surface": "Planner",
+      "capability_label": "Headcount",
+      "baseline_page_label": "Headcount",
+      "label_alias_observation": null,
+      "baseline_domain": "planner",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "planner",
+          "planner_accounts",
+          "workbooks"
+        ],
+        "page_source": {
+          "source_id": "S09",
+          "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "blob_sha": "e836d3f83bd7707b27f5bd3052494c84d67a2442",
+          "line_anchor": "33-41,295-352,354-512,1411+,1510+,1842+,1979+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation allows admin/finance/hr/budget owner/viewer; execution requires canWrite and admin/finance/hr/budget owner. Private fields are redacted for roles outside privateAccess. nav.ts 52,122-126; planner.ts 295-351.",
+        "command_route_observation": "PlannerModule version.hc/positions/rates.",
+        "commands_and_roles_observed": "save/delete/sync; HR/private-field redaction applies.",
+        "import_export": "Surface footer exposes XLSX export; module supports import-workbook. application.ts 595-596; planner.ts 301-313,368,1979+; workbooks source S13.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Planner XLSX export; workbook import action exists on supported workbook forms.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "line_anchor": "33-41,295-352,354-512,1411+,1510+,1842+,1979+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP03",
+        "task_ids": [
+          "WP03.T03"
+        ],
+        "journey": "J02",
+        "criteria_ids": [
+          "WP03.T03.CHK.01",
+          "WP03.T03.CHK.02",
+          "WP03.T03.CHK.03",
+          "WP03.T03.CHK.04",
+          "WP03.T03.CHK.05",
+          "WP03.T03.CMP.01",
+          "WP03.T03.CMP.02",
+          "WP03.T03.DOD.01",
+          "WP03.T03.DOD.02",
+          "WP03.T03.INV.01",
+          "WP03.T03.INV.02",
+          "WP03.T03.INV.03",
+          "WP03.T03.QLT.01",
+          "WP03.T03.QLT.02",
+          "WP03.T03.SUC.01",
+          "WP03.T03.SUC.02"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP21",
+      "surface": "Planner",
+      "capability_label": "Entities & allocations",
+      "baseline_page_label": "Entities & allocations",
+      "label_alias_observation": null,
+      "baseline_domain": "planner",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "planner",
+          "planner_accounts",
+          "workbooks"
+        ],
+        "page_source": {
+          "source_id": "S09",
+          "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "blob_sha": "e836d3f83bd7707b27f5bd3052494c84d67a2442",
+          "line_anchor": "33-41,295-352,354-512,1411+,1510+,1842+,1979+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation allows admin/finance/hr/budget owner/viewer; execution requires canWrite and admin/finance/hr/budget owner. Private fields are redacted for roles outside privateAccess. nav.ts 52,122-126; planner.ts 295-351.",
+        "command_route_observation": "PlannerModule lists entities and allocations.",
+        "commands_and_roles_observed": "common/save/delete.",
+        "import_export": "Surface footer exposes XLSX export; module supports import-workbook. application.ts 595-596; planner.ts 301-313,368,1979+; workbooks source S13.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Planner XLSX export; workbook import action is module-level; no page-specific form asserted.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "line_anchor": "33-41,295-352,354-512,1411+,1510+,1842+,1979+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP03",
+        "task_ids": [
+          "WP03.T04"
+        ],
+        "journey": "J02",
+        "criteria_ids": [
+          "WP03.T04.CHK.01",
+          "WP03.T04.CHK.02",
+          "WP03.T04.CHK.03",
+          "WP03.T04.CHK.04",
+          "WP03.T04.CHK.05",
+          "WP03.T04.CMP.01",
+          "WP03.T04.CMP.02",
+          "WP03.T04.DOD.01",
+          "WP03.T04.DOD.02",
+          "WP03.T04.INV.01",
+          "WP03.T04.INV.02",
+          "WP03.T04.INV.03",
+          "WP03.T04.QLT.01",
+          "WP03.T04.QLT.02",
+          "WP03.T04.SUC.01",
+          "WP03.T04.SUC.02"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP22",
+      "surface": "Planner",
+      "capability_label": "FX rates",
+      "baseline_page_label": "FX rates",
+      "label_alias_observation": null,
+      "baseline_domain": "planner",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "planner",
+          "planner_accounts",
+          "workbooks"
+        ],
+        "page_source": {
+          "source_id": "S09",
+          "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "blob_sha": "e836d3f83bd7707b27f5bd3052494c84d67a2442",
+          "line_anchor": "33-41,295-352,354-512,1411+,1510+,1842+,1979+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation allows admin/finance/hr/budget owner/viewer; execution requires canWrite and admin/finance/hr/budget owner. Private fields are redacted for roles outside privateAccess. nav.ts 52,122-126; planner.ts 295-351.",
+        "command_route_observation": "PlannerModule rate data; FX capability is an observed page.",
+        "commands_and_roles_observed": "save/delete actions through page collection; import-workbook module action.",
+        "import_export": "Surface footer exposes XLSX export; module supports import-workbook. application.ts 595-596; planner.ts 301-313,368,1979+; workbooks source S13.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Planner XLSX export; workbook import action is module-level; no page-specific form asserted.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "line_anchor": "33-41,295-352,354-512,1411+,1510+,1842+,1979+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP03",
+        "task_ids": [
+          "WP03.T04"
+        ],
+        "journey": "J02",
+        "criteria_ids": [
+          "WP03.T04.CHK.01",
+          "WP03.T04.CHK.02",
+          "WP03.T04.CHK.03",
+          "WP03.T04.CHK.04",
+          "WP03.T04.CHK.05",
+          "WP03.T04.CMP.01",
+          "WP03.T04.CMP.02",
+          "WP03.T04.DOD.01",
+          "WP03.T04.DOD.02",
+          "WP03.T04.INV.01",
+          "WP03.T04.INV.02",
+          "WP03.T04.INV.03",
+          "WP03.T04.QLT.01",
+          "WP03.T04.QLT.02",
+          "WP03.T04.SUC.01",
+          "WP03.T04.SUC.02"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP23",
+      "surface": "Planner",
+      "capability_label": "Versions",
+      "baseline_page_label": "Versions",
+      "label_alias_observation": null,
+      "baseline_domain": "planner",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "planner",
+          "planner_accounts",
+          "workbooks"
+        ],
+        "page_source": {
+          "source_id": "S09",
+          "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "blob_sha": "e836d3f83bd7707b27f5bd3052494c84d67a2442",
+          "line_anchor": "33-41,295-352,354-512,1411+,1510+,1842+,1979+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation allows admin/finance/hr/budget owner/viewer; execution requires canWrite and admin/finance/hr/budget owner. Private fields are redacted for roles outside privateAccess. nav.ts 52,122-126; planner.ts 295-351.",
+        "command_route_observation": "PlannerModule versions/officials.",
+        "commands_and_roles_observed": "save/copy/lock/unlock/official/delete.",
+        "import_export": "Surface footer exposes XLSX export; module supports import-workbook. application.ts 595-596; planner.ts 301-313,368,1979+; workbooks source S13.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Planner XLSX export; workbook import action is module-level; no page-specific form asserted.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "line_anchor": "33-41,295-352,354-512,1411+,1510+,1842+,1979+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP03",
+        "task_ids": [
+          "WP03.T05"
+        ],
+        "journey": "J02",
+        "criteria_ids": [
+          "WP03.T05.CHK.01",
+          "WP03.T05.CHK.02",
+          "WP03.T05.CHK.03",
+          "WP03.T05.CHK.04",
+          "WP03.T05.CHK.05",
+          "WP03.T05.CHK.18",
+          "WP03.T05.CMP.01",
+          "WP03.T05.CMP.02",
+          "WP03.T05.CMP.18",
+          "WP03.T05.DOD.01",
+          "WP03.T05.DOD.02",
+          "WP03.T05.DOD.18",
+          "WP03.T05.INV.01",
+          "WP03.T05.INV.02",
+          "WP03.T05.INV.03",
+          "WP03.T05.INV.18",
+          "WP03.T05.QLT.01",
+          "WP03.T05.QLT.02",
+          "WP03.T05.QLT.18",
+          "WP03.T05.SUC.01",
+          "WP03.T05.SUC.02",
+          "WP03.T05.SUC.18"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP24",
+      "surface": "Procurement",
+      "capability_label": "Dashboard",
+      "baseline_page_label": "Dashboard",
+      "label_alias_observation": "CAP24 planned label \"Procurement Dashboard\" maps to the observed baseline nav/runtime key \"Dashboard\".",
+      "baseline_domain": "procurement",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "procurement",
+          "procurement_accounts"
+        ],
+        "page_source": {
+          "source_id": "S11",
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "blob_sha": "67991a6eb2c876f3ce0ffcd9fce921434111c31a",
+          "line_anchor": "26,358-420,602-710,797-849,1026+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation allows requester/buyer/approver/supplier admin/admin/viewer; view applies visibleRequests to requester data. Settings are admin-only. Supplier create/save requires buyer; activate/block/inactivate/bank actions require admin or supplier admin. procurement.ts 602-710,797-828 and nav.ts 53,129-145.",
+        "command_route_observation": "ProcurementModule baseline page label; capability label is Procurement Dashboard.",
+        "commands_and_roles_observed": "Read dashboard; no domain edit route for Dashboard.",
+        "import_export": "Surface footer exports register CSV, or suppliers CSV on Suppliers; per-request PO download is present. No bulk import route observed. application.ts 597-600; procurement.ts render 1026+.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Procurement request-register CSV via surface footer; no import route observed.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "line_anchor": "26,358-420,602-710,797-849,1026+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP04",
+        "task_ids": [
+          "WP04.T01"
+        ],
+        "journey": "J04",
+        "criteria_ids": [
+          "WP04.T01.CHK.01",
+          "WP04.T01.CHK.02",
+          "WP04.T01.CHK.03",
+          "WP04.T01.CHK.04",
+          "WP04.T01.CHK.18",
+          "WP04.T01.CMP.01",
+          "WP04.T01.CMP.02",
+          "WP04.T01.CMP.18",
+          "WP04.T01.DOD.01",
+          "WP04.T01.DOD.02",
+          "WP04.T01.DOD.18",
+          "WP04.T01.INV.01",
+          "WP04.T01.INV.02",
+          "WP04.T01.INV.18",
+          "WP04.T01.QLT.01",
+          "WP04.T01.QLT.02",
+          "WP04.T01.QLT.18",
+          "WP04.T01.SUC.01",
+          "WP04.T01.SUC.02",
+          "WP04.T01.SUC.18"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP25",
+      "surface": "Procurement",
+      "capability_label": "Requests",
+      "baseline_page_label": "Requests",
+      "label_alias_observation": null,
+      "baseline_domain": "procurement",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "procurement",
+          "procurement_accounts"
+        ],
+        "page_source": {
+          "source_id": "S11",
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "blob_sha": "67991a6eb2c876f3ce0ffcd9fce921434111c31a",
+          "line_anchor": "26,358-420,602-710,797-849,1026+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation allows requester/buyer/approver/supplier admin/admin/viewer; view applies visibleRequests to requester data. Settings are admin-only. Supplier create/save requires buyer; activate/block/inactivate/bank actions require admin or supplier admin. procurement.ts 602-710,797-828 and nav.ts 53,129-145.",
+        "command_route_observation": "ProcurementModule Store.requests / RequestView.",
+        "commands_and_roles_observed": "create/save/submit_pr/submit_sourcing/select_quote/submit_po/approve/reject/issue/cancel/delete.",
+        "import_export": "Surface footer exports register CSV, or suppliers CSV on Suppliers; per-request PO download is present. No bulk import route observed. application.ts 597-600; procurement.ts render 1026+.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Request-register CSV and per-request PO download; no bulk import route observed.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "line_anchor": "26,358-420,602-710,797-849,1026+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP04",
+        "task_ids": [
+          "WP04.T02",
+          "WP04.T03",
+          "WP04.T04"
+        ],
+        "journey": "J04",
+        "criteria_ids": [
+          "WP04.T02.CHK.01",
+          "WP04.T02.CHK.02",
+          "WP04.T02.CHK.03",
+          "WP04.T02.CHK.04",
+          "WP04.T02.CMP.01",
+          "WP04.T02.CMP.02",
+          "WP04.T02.DOD.01",
+          "WP04.T02.DOD.02",
+          "WP04.T02.INV.01",
+          "WP04.T02.INV.02",
+          "WP04.T02.QLT.01",
+          "WP04.T02.QLT.02",
+          "WP04.T02.SUC.01",
+          "WP04.T02.SUC.02",
+          "WP04.T03.CHK.01",
+          "WP04.T03.CHK.02",
+          "WP04.T03.CHK.03",
+          "WP04.T03.CHK.04",
+          "WP04.T03.CHK.05",
+          "WP04.T03.CHK.18",
+          "WP04.T03.CMP.01",
+          "WP04.T03.CMP.02",
+          "WP04.T03.CMP.18",
+          "WP04.T03.DOD.01",
+          "WP04.T03.DOD.02",
+          "WP04.T03.DOD.18",
+          "WP04.T03.INV.01",
+          "WP04.T03.INV.02",
+          "WP04.T03.INV.18",
+          "WP04.T03.QLT.01",
+          "WP04.T03.QLT.02",
+          "WP04.T03.QLT.18",
+          "WP04.T03.SUC.01",
+          "WP04.T03.SUC.02",
+          "WP04.T03.SUC.18",
+          "WP04.T04.CHK.01",
+          "WP04.T04.CHK.02",
+          "WP04.T04.CHK.03",
+          "WP04.T04.CHK.04",
+          "WP04.T04.CHK.05",
+          "WP04.T04.CMP.01",
+          "WP04.T04.CMP.02",
+          "WP04.T04.DOD.01",
+          "WP04.T04.DOD.02",
+          "WP04.T04.INV.01",
+          "WP04.T04.INV.02",
+          "WP04.T04.QLT.01",
+          "WP04.T04.QLT.02",
+          "WP04.T04.SUC.01",
+          "WP04.T04.SUC.02"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP26",
+      "surface": "Procurement",
+      "capability_label": "My approvals",
+      "baseline_page_label": "My approvals",
+      "label_alias_observation": null,
+      "baseline_domain": "procurement",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "procurement",
+          "procurement_accounts"
+        ],
+        "page_source": {
+          "source_id": "S11",
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "blob_sha": "67991a6eb2c876f3ce0ffcd9fce921434111c31a",
+          "line_anchor": "26,358-420,602-710,797-849,1026+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation allows requester/buyer/approver/supplier admin/admin/viewer; view applies visibleRequests to requester data. Settings are admin-only. Supplier create/save requires buyer; activate/block/inactivate/bank actions require admin or supplier admin. procurement.ts 602-710,797-828 and nav.ts 53,129-145.",
+        "command_route_observation": "ProcurementModule approvals over Store.requests.",
+        "commands_and_roles_observed": "approve/reject and request-level actions accepted by shared route; role/state guards remain in handlers.",
+        "import_export": "Surface footer exports register CSV, or suppliers CSV on Suppliers; per-request PO download is present. No bulk import route observed. application.ts 597-600; procurement.ts render 1026+.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Request-register CSV via surface footer; no import route observed.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "line_anchor": "26,358-420,602-710,797-849,1026+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP04",
+        "task_ids": [
+          "WP04.T01",
+          "WP04.T04"
+        ],
+        "journey": "J04",
+        "criteria_ids": [
+          "WP04.T01.CHK.01",
+          "WP04.T01.CHK.02",
+          "WP04.T01.CHK.03",
+          "WP04.T01.CHK.04",
+          "WP04.T01.CHK.18",
+          "WP04.T01.CMP.01",
+          "WP04.T01.CMP.02",
+          "WP04.T01.CMP.18",
+          "WP04.T01.DOD.01",
+          "WP04.T01.DOD.02",
+          "WP04.T01.DOD.18",
+          "WP04.T01.INV.01",
+          "WP04.T01.INV.02",
+          "WP04.T01.INV.18",
+          "WP04.T01.QLT.01",
+          "WP04.T01.QLT.02",
+          "WP04.T01.QLT.18",
+          "WP04.T01.SUC.01",
+          "WP04.T01.SUC.02",
+          "WP04.T01.SUC.18",
+          "WP04.T04.CHK.01",
+          "WP04.T04.CHK.02",
+          "WP04.T04.CHK.03",
+          "WP04.T04.CHK.04",
+          "WP04.T04.CHK.05",
+          "WP04.T04.CMP.01",
+          "WP04.T04.CMP.02",
+          "WP04.T04.DOD.01",
+          "WP04.T04.DOD.02",
+          "WP04.T04.INV.01",
+          "WP04.T04.INV.02",
+          "WP04.T04.QLT.01",
+          "WP04.T04.QLT.02",
+          "WP04.T04.SUC.01",
+          "WP04.T04.SUC.02"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP27",
+      "surface": "Procurement",
+      "capability_label": "Suppliers",
+      "baseline_page_label": "Suppliers",
+      "label_alias_observation": null,
+      "baseline_domain": "procurement",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "procurement",
+          "procurement_accounts"
+        ],
+        "page_source": {
+          "source_id": "S11",
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "blob_sha": "67991a6eb2c876f3ce0ffcd9fce921434111c31a",
+          "line_anchor": "26,358-420,602-710,797-849,1026+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation allows requester/buyer/approver/supplier admin/admin/viewer; view applies visibleRequests to requester data. Settings are admin-only. Supplier create/save requires buyer; activate/block/inactivate/bank actions require admin or supplier admin. procurement.ts 602-710,797-828 and nav.ts 53,129-145.",
+        "command_route_observation": "ProcurementModule Store.suppliers.",
+        "commands_and_roles_observed": "create/save/activate/block/inactivate/delete/change-bank.",
+        "import_export": "Surface footer exports register CSV, or suppliers CSV on Suppliers; per-request PO download is present. No bulk import route observed. application.ts 597-600; procurement.ts render 1026+.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Suppliers CSV; no import route observed.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "line_anchor": "26,358-420,602-710,797-849,1026+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP04",
+        "task_ids": [
+          "WP04.T05"
+        ],
+        "journey": "J04",
+        "criteria_ids": [
+          "WP04.T05.CHK.01",
+          "WP04.T05.CHK.02",
+          "WP04.T05.CHK.03",
+          "WP04.T05.CHK.04",
+          "WP04.T05.CHK.05",
+          "WP04.T05.CHK.18",
+          "WP04.T05.CMP.01",
+          "WP04.T05.CMP.02",
+          "WP04.T05.CMP.18",
+          "WP04.T05.DOD.01",
+          "WP04.T05.DOD.02",
+          "WP04.T05.DOD.18",
+          "WP04.T05.INV.01",
+          "WP04.T05.INV.02",
+          "WP04.T05.INV.18",
+          "WP04.T05.QLT.01",
+          "WP04.T05.QLT.02",
+          "WP04.T05.QLT.18",
+          "WP04.T05.SUC.01",
+          "WP04.T05.SUC.02",
+          "WP04.T05.SUC.18"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    },
+    {
+      "capability_id": "CAP28",
+      "surface": "Procurement",
+      "capability_label": "Settings",
+      "baseline_page_label": "Settings",
+      "label_alias_observation": null,
+      "baseline_domain": "procurement",
+      "baseline_observation": {
+        "kind": "static source evidence",
+        "source_refs": [
+          "nav",
+          "registry",
+          "application",
+          "procurement",
+          "procurement_accounts"
+        ],
+        "page_source": {
+          "source_id": "S11",
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "blob_sha": "67991a6eb2c876f3ce0ffcd9fce921434111c31a",
+          "line_anchor": "26,358-420,602-710,797-849,1026+",
+          "observation": "static source read at pinned commit; functions were not executed"
+        },
+        "read_role_rule": "Navigation allows requester/buyer/approver/supplier admin/admin/viewer; view applies visibleRequests to requester data. Settings are admin-only. Supplier create/save requires buyer; activate/block/inactivate/bank actions require admin or supplier admin. procurement.ts 602-710,797-828 and nav.ts 53,129-145.",
+        "command_route_observation": "ProcurementModule Store.settings.",
+        "commands_and_roles_observed": "save/reset; admin-only.",
+        "import_export": "Surface footer exports register CSV, or suppliers CSV on Suppliers; per-request PO download is present. No bulk import route observed. application.ts 597-600; procurement.ts render 1026+.",
+        "runtime_execution": "NOT_RUN",
+        "import_export_page_relevance": "Request-register CSV is exposed by the procurement surface footer; no Settings-specific import/export observed.",
+        "command_role_evidence": {
+          "source": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "line_anchor": "26,358-420,602-710,797-849,1026+",
+          "meaning": "Page registration, execute/view/render branches and role checks at these baseline lines are static observations, not executed behavior."
+        }
+      },
+      "planned_mapping": {
+        "owner": "WP04",
+        "task_ids": [
+          "WP04.T05"
+        ],
+        "journey": "J04",
+        "criteria_ids": [
+          "WP04.T05.CHK.01",
+          "WP04.T05.CHK.02",
+          "WP04.T05.CHK.03",
+          "WP04.T05.CHK.04",
+          "WP04.T05.CHK.05",
+          "WP04.T05.CHK.18",
+          "WP04.T05.CMP.01",
+          "WP04.T05.CMP.02",
+          "WP04.T05.CMP.18",
+          "WP04.T05.DOD.01",
+          "WP04.T05.DOD.02",
+          "WP04.T05.DOD.18",
+          "WP04.T05.INV.01",
+          "WP04.T05.INV.02",
+          "WP04.T05.INV.18",
+          "WP04.T05.QLT.01",
+          "WP04.T05.QLT.02",
+          "WP04.T05.QLT.18",
+          "WP04.T05.SUC.01",
+          "WP04.T05.SUC.02",
+          "WP04.T05.SUC.18"
+        ],
+        "mapping_status": "planned in campaign coverage; not an implementation/acceptance result"
+      },
+      "preservation_intent": "Chave/URL canônica, ações, campos, autorização e efeitos observados entram no inventário de WP00.T01; a campanha pode reorganizar a UI sem eliminar a capacidade."
+    }
+  ],
+  "surface_io_summary": {
+    "dashboard": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
+    "planner": "Surface footer exposes XLSX export; module supports import-workbook. application.ts 595-596; planner.ts 301-313,368,1979+; workbooks source S13.",
+    "procurement": "Surface footer exports register CSV, or suppliers CSV on Suppliers; per-request PO download is present. No bulk import route observed. application.ts 597-600; procurement.ts render 1026+."
+  },
+  "orphans": [],
+  "status": "STATIC_TRACEABILITY_DRAFT_NOT_RUNTIME_VERIFIED",
+  "registry_reconciliation": {
+    "kind": "static string-array comparison at pinned baseline; no functions executed",
+    "results": {
+      "Dashboard": {
+        "nav_pages": 16,
+        "module_pages": 16,
+        "coverage_capabilities": 16,
+        "module_equals_nav": true,
+        "coverage_equals_nav_after_label_mapping": true,
+        "duplicates": 0,
+        "missing_or_extra": []
+      },
+      "Planner": {
+        "nav_pages": 7,
+        "module_pages": 7,
+        "coverage_capabilities": 7,
+        "module_equals_nav": true,
+        "coverage_equals_nav_after_label_mapping": true,
+        "duplicates": 0,
+        "missing_or_extra": []
+      },
+      "Procurement": {
+        "nav_pages": 5,
+        "module_pages": 5,
+        "coverage_capabilities": 5,
+        "module_equals_nav": true,
+        "coverage_equals_nav_after_label_mapping": true,
+        "label_alias": {
+          "capability": "Procurement Dashboard",
+          "baseline_page": "Dashboard"
+        },
+        "duplicates": 0,
+        "missing_or_extra": []
+      }
+    },
+    "total_orphan_capabilities": 0,
+    "total_unmapped_baseline_pages": 0
+  },
+  "ownership": {
+    "artifact_role": "static traceability support for WP00.T01 at S0 request",
+    "canonical_task_owner": "WP00",
+    "ownership_change": false,
+    "product_source_write": false
+  },
+  "provenance_delta": {
+    "input_sha256": "a890817957c0e84146cbd1d6b3cfd64b43a2ed0b33420879c019fbd692cc6736",
+    "owner": "S0/WP00.T01",
+    "reason": "Correct extra observed source identities; immutable campaign source catalog preserved."
+  }
+}

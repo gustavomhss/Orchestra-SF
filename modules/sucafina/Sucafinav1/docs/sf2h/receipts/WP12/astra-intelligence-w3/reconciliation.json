@@ -1,0 +1,387 @@
+{
+  "schema": "sf2h.wp12.selective-reconciliation.v1",
+  "source_pr": 39,
+  "source_head": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+  "source_prior_product": "378e17c0ba8c1f87c51a1957f9efd5e47711851f",
+  "w2_product": "46c904ead4e9b363422f6739258e492913ae6e2e",
+  "canonical_campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "proof_status": "NOT_RUN_ON_W3",
+  "paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "f97ff2c8ddf7ae856f3259020998867892e61306",
+      "w2_blob": "337f6764a6e4fa84c09d4b53afd87c814a8d1fab",
+      "w3_blob": "337f6764a6e4fa84c09d4b53afd87c814a8d1fab",
+      "w3_sha256": "54e0f971b348eaf495fecb63bb3a84f3153d753b132c4e7e658b32cb64a5f693",
+      "disposition": "keep_w2",
+      "reason": "PR39 replaces readLifecycle with strict source read; retain authorized lifecycle/cancellation on stale sources."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "5f0cb57b7b9263d68e743165828fd75bc9df076d",
+      "w2_blob": "03f6ba173ca1d27693f784fdf149d2c674ca5edf",
+      "w3_blob": "5526b59d0c7a06791968c9dbb4d94cd3145a5bf6",
+      "w3_sha256": "0805ac5f3e5a36d8c288ef2ff625905b79aad0b980b62b5ac0317b81d9b391f4",
+      "disposition": "selective_patch",
+      "reason": "Add fresh-authority settlement of unavailable/needs-input after publication. Preserve W2 stale-write reconciliation, failed settlement, durable cancellation target and explicit progress type; do not restore caller-selected reviewTarget."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/continuation.ts",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "fa0e6dce5d63c7a1f9fadb20005b77e2e4c0a227",
+      "w2_blob": "fa0e6dce5d63c7a1f9fadb20005b77e2e4c0a227",
+      "w3_blob": "fa0e6dce5d63c7a1f9fadb20005b77e2e4c0a227",
+      "w3_sha256": "717c8ca3b67112aea7bc6b652536413a93619ae7b65422287777c0d43eb17357",
+      "disposition": "unchanged_same_blob",
+      "reason": "Same Git blob in source and W2; no transplant needed."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/contribution-builder.ts",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "19599d970f22eeab98fffd57d78629de914f8bf9",
+      "w2_blob": "28a1af7a227af64f98d83cc32be5b997a898e4d6",
+      "w3_blob": "28a1af7a227af64f98d83cc32be5b997a898e4d6",
+      "w3_sha256": "e7b624e0fae9cab52283023a48cbd331778f2d8c3e85611368103696ef9f9263",
+      "disposition": "keep_w2",
+      "reason": "PR39 still returns denied for malformed model payload/ungranted kind, reintroducing R3; retain failed/denied distinction."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "e21faab024f4f908b3578f561c063f48c3c786c3",
+      "w2_blob": "98ed7307c8970ecb35f2eedb8427b37dd9ceeb5d",
+      "w3_blob": "35a98360792cd8a7ebde6128dbe6ab59aa15b5bb",
+      "w3_sha256": "a8028f5941a75970c81aec3100396548e3d89ee9269cdb7ed2c4feca2d765d24",
+      "disposition": "selective_patch",
+      "reason": "Add exact native current-case id/incarnation/version binding before historical reads."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+      "w2_blob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+      "w3_blob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+      "w3_sha256": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430",
+      "disposition": "unchanged_same_blob",
+      "reason": "Same Git blob in source and W2; no transplant needed."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_portfolio.json",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "744918076fa510339a3216487da8f59b06fe45e8",
+      "w2_blob": "744918076fa510339a3216487da8f59b06fe45e8",
+      "w3_blob": "744918076fa510339a3216487da8f59b06fe45e8",
+      "w3_sha256": "249ec91f7d1a76fef83c4408795b66953589d3b3f45e91c64ca691c60c8c2b83",
+      "disposition": "unchanged_same_blob",
+      "reason": "Same Git blob in source and W2; no transplant needed."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/resident.ts",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+      "w2_blob": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+      "w3_blob": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+      "w3_sha256": "7de5f0c1630a547fcfae4de691d96d1d138a983955b31622194689b24067b27a",
+      "disposition": "unchanged_same_blob",
+      "reason": "Same Git blob in source and W2; no transplant needed."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-provenance.ts",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "b303ef7a4968ffb2cc2f51e6318e165a07ac3c73",
+      "w2_blob": "b303ef7a4968ffb2cc2f51e6318e165a07ac3c73",
+      "w3_blob": "b303ef7a4968ffb2cc2f51e6318e165a07ac3c73",
+      "w3_sha256": "c0c0538f71fb15b12df0d6e2e3feab662c49b0966d41b3d2cc394e7a41d8ac8f",
+      "disposition": "unchanged_same_blob",
+      "reason": "Same Git blob in source and W2; no transplant needed."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "3e0b32af1d5e4350d619a6db975551d6fde5c80a",
+      "w2_blob": "a3c306b720fd7f82e32340682e5001b1e6f4ef8e",
+      "w3_blob": "460ea7d043351f1b401b005d0cc383ff2e876a86",
+      "w3_sha256": "90727faf94f3632d7ae7054d4f48cec148056068c50fea5e4be3be42f0d86221",
+      "disposition": "selective_patch",
+      "reason": "Bind mutation/read digests before awaits and reject input mutation in preflight, authority and commit callbacks. Include W2 preservation guard in command digest and use safe digest comparisons. Retain readLifecycle, ready stale CAS, exact-output preservation and AlternativeDraft lifecycle-only settlement. Root independent-review correction severs retained aliases when staging into C08 and proves original bytes persist during final C08 authorization."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-compor-portfolio/SKILL.md",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "255226879e40d87bfba55a644b67fd7bc7371115",
+      "w2_blob": "255226879e40d87bfba55a644b67fd7bc7371115",
+      "w3_blob": "255226879e40d87bfba55a644b67fd7bc7371115",
+      "w3_sha256": "8910dd159591b5849f60a734ed27549e57ec3de6d05c125b004202c217166642",
+      "disposition": "unchanged_same_blob",
+      "reason": "Same Git blob in source and W2; no transplant needed."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "839354e9b0c51a7c919539dbf246edd723194a9c",
+      "w2_blob": "6d81c4df8d69be1a24581a316ba6e346343d6f67",
+      "w3_blob": "a790afa68ce1e4257d2251495e8ab160cc76493a",
+      "w3_sha256": "5a0e45c03ffc8ed4176c298206abe2f1209adc69f2afdff162704f8e98268af4",
+      "disposition": "selective_patch",
+      "reason": "Keep W2 durable readRun cancellation setup; add upstream publication failure/unavailable/needs-input versus denied/conflict assertions."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "bc76ac585880bb3d160aa5156878b62234cd4c3b",
+      "w2_blob": "9b92175ccc462d20af3d6afec3c44b41f7aeb75e",
+      "w3_blob": "9b92175ccc462d20af3d6afec3c44b41f7aeb75e",
+      "w3_sha256": "15c4060cbd923d28277a7ebe3263997c90f77624c3f6637f850dafac3b224f98",
+      "disposition": "keep_w2_equivalent",
+      "reason": "Both lines fix incomplete DecisionCase; retain shared complete sfCaseFixture used by W2."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/continuation.test.ts",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "4a4191b7b7b556d5e3c0fd6b66f96bb042f375df",
+      "w2_blob": "4a4191b7b7b556d5e3c0fd6b66f96bb042f375df",
+      "w3_blob": "4a4191b7b7b556d5e3c0fd6b66f96bb042f375df",
+      "w3_sha256": "e4e6c37477ca534e1f022fad78532380c16f4940f2af317bf4b9f55a24e2dff9",
+      "disposition": "unchanged_same_blob",
+      "reason": "Same Git blob in source and W2; no transplant needed."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "0ff0519df135fb971dc49822e28849ea3d97aadb",
+      "w2_blob": "786bbff6817c82f7c11e69a29c2633a1e839eb3f",
+      "w3_blob": "786bbff6817c82f7c11e69a29c2633a1e839eb3f",
+      "w3_sha256": "97c0dc6b9858f4616d9748a8111be2a0b0eb4126f95bcebc0c84cb2695f79793",
+      "disposition": "keep_w2",
+      "reason": "Retain failed expectations required by R3 instead of upstream denied expectations."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "d481eb6824b062da49d56e2608a51f90bbdb248c",
+      "w2_blob": "d481eb6824b062da49d56e2608a51f90bbdb248c",
+      "w3_blob": "d481eb6824b062da49d56e2608a51f90bbdb248c",
+      "w3_sha256": "423e2a6cf681bf6964aa1c3f89b91c8f74acba0c1999f0f3ed41bdf776deed7a",
+      "disposition": "unchanged_same_blob",
+      "reason": "Same Git blob in source and W2; no transplant needed."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/historical-reader.test.ts",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "8daf1d4de7432504250a4d44cddc2eaa3b661a59",
+      "w2_blob": "5445b432c30e233e33d77dc950388f7aa5249985",
+      "w3_blob": "33294499ff25edfc52015e30a375c4c5bb019918",
+      "w3_sha256": "fbb2b5b02cb5c6dd78ce5fc31adc5cf42b5b07f02da87558c8b63a0bd991c3a3",
+      "disposition": "selective_patch",
+      "reason": "Keep complete shared case fixture; add three native binding negatives and same-case positive control."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-authority.test.ts",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "81840ce2745a2d970f8bacb4878a9b537a2f96b6",
+      "w2_blob": null,
+      "w3_blob": "a2da68aa5f5bf2122616b82b74a06aa4f54a3988",
+      "w3_sha256": "23cf982e3d7d083ac811ed2e39dfc99e88cb13fb4eb716485396978e30f6c25e",
+      "disposition": "selective_patch",
+      "reason": "Add real native source homonym, forged grant, changed bytes and scope revocation counterproofs. Root independent-review correction declares Omni expectSpawn for the actual Git Location in the scope-revocation test only."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-native-fixture.ts",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "3b5b19e78a3dfe04c445e098841d488d36d5a51a",
+      "w2_blob": null,
+      "w3_blob": "3b5b19e78a3dfe04c445e098841d488d36d5a51a",
+      "w3_sha256": "ceabe739a68283e65900e2523e8dc30340a6f82a42efb2217726b6d5565c5c8c",
+      "disposition": "exact_blob",
+      "reason": "Register in every Location acquisition via makeLocationNode; export real SessionExecutionLocal through SessionExecution."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-native.test.ts",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "dcca1255b1a05ed082a72367419d6469907bd4d2",
+      "w2_blob": "1edebb418e33025cf4d33c853807ed9bb040d931",
+      "w3_blob": "c62d40665f8d3db156cf3702992f8643ef757292",
+      "w3_sha256": "b2cd789539f688f03500752345affadf60207458a7b223fdcd12371ddc4a56ed",
+      "disposition": "selective_patch",
+      "reason": "Use per-Location registration fixture and exact grants/steps assertions for every profile. Preserve 18 distinct SessionV2.skill messages/receipts; add safe per-skill failure diagnostics. Declare expectSpawn before real Location/Git/AppProcess initialization; no artificial spawn or budget increase."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident.test.ts",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "6b83c09abb8a65ca109f31d953de30e8f9f955d3",
+      "w2_blob": "2234f0e18974e1e44528f2a591f03b97f5b813a4",
+      "w3_blob": "a5151b55edd232a5bb3426ff705f759e02e1326e",
+      "w3_sha256": "89a3214c7f553d8d367eac8156e5e0af3bc166d10a2dca99852a2d8b9e826882",
+      "disposition": "selective_patch",
+      "reason": "Add root/symlink escape and duplicate/unknown/incomplete catalog negatives, preserving all W2 tests."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-fixture.ts",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "423095899a5080f69df14120dfacd2b809e26dd8",
+      "w2_blob": "5d528e810ab79fb1e3beb571dcb216192d551e91",
+      "w3_blob": "5d528e810ab79fb1e3beb571dcb216192d551e91",
+      "w3_sha256": "e46bd4eb13bba2fafe489ae7d73a96749e1608c17f42dc70ab8c7f6ff6bd65a5",
+      "disposition": "keep_w2",
+      "reason": "Retain shared complete DecisionCase fixture required by W2 tests."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "source_commit": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "source_blob": "542403e347b2cf09282bfde4f3c9078ccccebeeb",
+      "w2_blob": "88bceff95ecf08681ff65b7888b7105b73b57062",
+      "w3_blob": "75399d5f593bba467151e6debe34a7b17e6f13f3",
+      "w3_sha256": "dd2d50822e28f72ea5c42c092bcd7b884fb8110074f131dbe2b9bff2a60dad32",
+      "disposition": "selective_patch",
+      "reason": "Add six upstream immutability/concurrency/terminal tests and callback hooks. Preserve W2 stale-review cancellation, current membership checks and complete case fixture. Replace the partial executor cast diagnosed in W2 with explicitly unavailable unused methods; upstream caller-selected reviewTarget test is superseded by durable-target tests. Root independent-review correction severs retained aliases when staging into C08 and proves original bytes persist during final C08 authorization."
+    }
+  ],
+  "additional_own_work": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "change": "Add three real C08/SQLite counterproofs for fresh-authority publication settlement, denial/revocation, and protection of already committed ready output; retain all nine W2 lifecycle tests. Explicit running state fixes the W2 AlternativeDraft fixture union diagnostic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/restart-reader.ts",
+      "source": "astra-intelligence W3 own addition",
+      "change": "New own fixture/child: real SQLite, C08, lifecycle and contribution readers with persisted source ACL and case membership, current/historical digest validation and private per-process Request registry. Inference records and source observation are explicitly synthetic; no provider or public consumer witness.",
+      "w3_blob": "430ca1ac52a85bdd56840175326e492d12c9cc31",
+      "w3_sha256": "54bac943b27cfbec0a05809a8f34d765dcff3b2b6c6a122e4554024f35f1270a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-restart.test.ts",
+      "source": "astra-intelligence W3 own addition",
+      "change": "New own counterproof: four AppProcess readers after writer disposal, current/historical recovery, persisted source/case revocation, no serialized context/ticket/lease, no read writes/native calls, distinct PIDs, stages/elapsed, bounded child deadlines and teardown.",
+      "w3_blob": "2bb82f2940853f0a07a5fe2ff9696fba488a1216",
+      "w3_sha256": "90ce9d528672fdaae1fbe6a47c15a7fe4abd4430d4d52d6025d02bcca29bce60"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-native.test.ts",
+      "source": "astra-intelligence W3 own addition",
+      "change": "Declare expectSpawn for real Location -> Project.resolve -> Git.repo.discover -> AppProcess path, before native registration/load; no fabricated control spawn.",
+      "w3_blob": "c62d40665f8d3db156cf3702992f8643ef757292",
+      "w3_sha256": "b2cd789539f688f03500752345affadf60207458a7b223fdcd12371ddc4a56ed"
+    }
+  ],
+  "foreign_product_files_not_transplanted_by_wp12": [
+    "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+    "modules/sucafina/Sucafinav1/product/contracts/normative-contracts.json",
+    "modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts",
+    "modules/sucafina/Sucafinav1/product/contracts/outputs.ts",
+    "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+    "modules/sucafina/Sucafinav1/product/contracts/state-layout.ts",
+    "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+    "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts",
+    "modules/sucafina/Sucafinav1/product/decision-memory/recall.ts",
+    "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/alternative-provenance.ts",
+    "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+    "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+    "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+    "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+    "modules/sucafina/Sucafinav1/product/host-binding/evidence-order.ts",
+    "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+    "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+    "modules/sucafina/Sucafinav1/product/routines/decision.ts",
+    "modules/sucafina/Sucafinav1/product/routines/result-access.ts"
+  ],
+  "policy": "No whole snapshot merge. No upstream CI evidence is transferred. No own source is claimed accepted until the W3 product and hosted snapshot are published and measured.",
+  "hosted_selection": {
+    "files": [
+      "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp12/continuation.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp12/historical-reader.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp12/resident-authority.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp12/resident-native.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp12/resident.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp12/run-restart.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts"
+    ],
+    "test_declarations": 65,
+    "status": "NOT_RUN_ON_W3"
+  },
+  "independent_review_followup": {
+    "reviewer": "review_intelligence",
+    "status": "STATIC_RESOLVED_EXECUTION_NOT_RUN",
+    "findings": [
+      {
+        "id": "WP12-W3-R1",
+        "issue": "Caller aliases remained reachable by staged C08 through final authorization waits",
+        "resolution": "Clone admitted record, output and alternative at staging; transaction receipt references private admitted record; two real C08/SQLite counterproofs inspect original persisted bytes"
+      },
+      {
+        "id": "WP12-W3-R2",
+        "issue": "Native scope-revocation test lacked its own Omni spawn declaration",
+        "resolution": "Declare expectSpawn before actual repository Location acquisition only in the affected test"
+      }
+    ],
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+        "beforeBlob": "ce9b961d042d834d797627881b16d8304be656c7",
+        "afterBlob": "460ea7d043351f1b401b005d0cc383ff2e876a86",
+        "sha256": "90727faf94f3632d7ae7054d4f48cec148056068c50fea5e4be3be42f0d86221"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+        "beforeBlob": "97a82f6b7b1ee80cf0ca9014e6c8eadb484d9658",
+        "afterBlob": "75399d5f593bba467151e6debe34a7b17e6f13f3",
+        "sha256": "dd2d50822e28f72ea5c42c092bcd7b884fb8110074f131dbe2b9bff2a60dad32"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-authority.test.ts",
+        "beforeBlob": "81840ce2745a2d970f8bacb4878a9b537a2f96b6",
+        "afterBlob": "a2da68aa5f5bf2122616b82b74a06aa4f54a3988",
+        "sha256": "23cf982e3d7d083ac811ed2e39dfc99e88cb13fb4eb716485396978e30f6c25e"
+      }
+    ]
+  },
+  "later_head_observation": {
+    "head": "5623a35fe42b4a2f0f309c2ae56e66677c6f4fc6",
+    "previous": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-wp12-criteria.json",
+        "blob": "3696e68bade0f3b264df2c477a2073908d93183a",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-wp12-criteria.md",
+        "blob": "02c8478bd16ace0041483907af597179f6f71eca",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-wp12-evidence.json",
+        "blob": "a544a1cb5f352392e3e6ed34430d96fec35a350d",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-wp12-handoff.md",
+        "blob": "8d845a8c21cfdb64fc1fc7670d99e3557b86a8f5",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-wp12-owner-deltas.json",
+        "blob": "291935c3deb90a50f9a8f91a7374e2eed2b2c495",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-wp12-skills-consumers.json",
+        "blob": "a86de1884933a39506de4b29e16ec382c6963936",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-wp12-typecheck.txt",
+        "blob": "809a425830ed728e7ac8843932d9d4699a23e6d7",
+        "status": "added"
+      }
+    ],
+    "disposition": "All seven later files are receipts/documentation; own product/test blobs unchanged. Source evidence is not transferred as W3 execution."
+  }
+}

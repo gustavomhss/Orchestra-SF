@@ -166,6 +166,7 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     )
     console.info("browser phase: page loaded")
     const form = page.locator('form[data-command="save"]').last()
+    await page.getByText("Add risk", { exact: true }).click()
     await form.locator('[name="name"]').fill("Browser risk")
     await form.locator('[name="impact"]').selectOption("3")
     await form.locator('[name="probability"]').selectOption("2")

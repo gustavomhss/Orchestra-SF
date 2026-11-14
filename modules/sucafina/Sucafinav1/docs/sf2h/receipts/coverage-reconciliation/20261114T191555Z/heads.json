@@ -1,0 +1,790 @@
+{
+  "schema": "sf2h-heads-cut-v1",
+  "initial_observation_utc": "2026-11-14T19:15:55Z",
+  "last_head_recheck_utc": "2026-11-14T19:26:54Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "intel-resume",
+  "expected_parent_sha": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+  "preserve_existing_commits": true,
+  "pr_before_census": null,
+  "evidential_base": "sf2-control",
+  "control_initial_sha": "1b715160fcabd46443947aa60fa9d37d3d73d322",
+  "control_recheck_sha": "3e3c329e9f4ab94d70c02d2cf69b030a9726769a",
+  "control_delta": "Two commits, six new mission JSON files only; no mission namespace conflict.",
+  "heads": [
+    {
+      "pr": 61,
+      "branch": "work-reuse",
+      "consulted_sha": "854f3dd9a5257c83b703424a8fd73d831f705f46",
+      "base": "ui-work",
+      "base_sha": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/61",
+      "mission_expected_sha": "854f3dd9a5257c83b703424a8fd73d831f705f46",
+      "changed_since_mission": false,
+      "final_recheck_sha": "854f3dd9a5257c83b703424a8fd73d831f705f46",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 60,
+      "branch": "procurement-apply",
+      "consulted_sha": "8e23e592602fb9f2fae9ce8f824322a073073e23",
+      "base": "astra-operations",
+      "base_sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/60",
+      "mission_expected_sha": "897484c9a472bd43d17cabe56552f2f8fa890185",
+      "changed_since_mission": true,
+      "final_recheck_sha": "8e23e592602fb9f2fae9ce8f824322a073073e23",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 59,
+      "branch": "diagnose-calculation",
+      "consulted_sha": "e80fdc933dfd25956a50c22dea76bf077e79815b",
+      "base": "astra-wp10",
+      "base_sha": "ab8fb4f29d078d179742a77679ef85e5c549b114",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/59",
+      "mission_expected_sha": "e80fdc933dfd25956a50c22dea76bf077e79815b",
+      "changed_since_mission": false,
+      "final_recheck_sha": "e80fdc933dfd25956a50c22dea76bf077e79815b",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 58,
+      "branch": "import-recovery",
+      "consulted_sha": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+      "base": "astra-operations",
+      "base_sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/58",
+      "mission_expected_sha": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+      "changed_since_mission": false,
+      "final_recheck_sha": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 57,
+      "branch": "sourcing-money",
+      "consulted_sha": "2a185e05967f611d63796684379761ded991092b",
+      "base": "astra-operations",
+      "base_sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/57",
+      "mission_expected_sha": "2a185e05967f611d63796684379761ded991092b",
+      "changed_since_mission": false,
+      "final_recheck_sha": "2a185e05967f611d63796684379761ded991092b",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 56,
+      "branch": "finance-journey",
+      "consulted_sha": "0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7",
+      "base": "finance-resume",
+      "base_sha": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/56",
+      "mission_expected_sha": "0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7",
+      "changed_since_mission": false,
+      "final_recheck_sha": "0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 55,
+      "branch": "diagnose-memory",
+      "consulted_sha": "0d7fb6f12ed053340391ff6e4f95b6f3c1276ea8",
+      "base": "astra-wp10",
+      "base_sha": "ab8fb4f29d078d179742a77679ef85e5c549b114",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/55",
+      "mission_expected_sha": "0d7fb6f12ed053340391ff6e4f95b6f3c1276ea8",
+      "changed_since_mission": false,
+      "final_recheck_sha": "0d7fb6f12ed053340391ff6e4f95b6f3c1276ea8",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 54,
+      "branch": "work-ack",
+      "consulted_sha": "92243fc68ff81df7fc563ec081ac9db686a24dfa",
+      "base": "ui-work",
+      "base_sha": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/54",
+      "mission_expected_sha": "92243fc68ff81df7fc563ec081ac9db686a24dfa",
+      "changed_since_mission": false,
+      "final_recheck_sha": "92243fc68ff81df7fc563ec081ac9db686a24dfa",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 53,
+      "branch": "work-g03",
+      "consulted_sha": "031ec153bbd42119dcf8787d8ce358858680f28b",
+      "base": "ui-work",
+      "base_sha": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/53",
+      "mission_expected_sha": "031ec153bbd42119dcf8787d8ce358858680f28b",
+      "changed_since_mission": false,
+      "final_recheck_sha": "031ec153bbd42119dcf8787d8ce358858680f28b",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 52,
+      "branch": "operations-fixes",
+      "consulted_sha": "d48065d391e1557d43b63525bdc7f55b168d5206",
+      "base": "astra-operations",
+      "base_sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/52",
+      "mission_expected_sha": "d48065d391e1557d43b63525bdc7f55b168d5206",
+      "changed_since_mission": false,
+      "final_recheck_sha": "d48065d391e1557d43b63525bdc7f55b168d5206",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 51,
+      "branch": "review-contracts",
+      "consulted_sha": "fa520193f5df9d6585d5f4c40d071215efb42923",
+      "base": "sf2-control",
+      "base_sha": "d3d411f7e2476a562a57aa7620823980eaf34e46",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/51",
+      "mission_expected_sha": null,
+      "changed_since_mission": false,
+      "final_recheck_sha": "7124fce97198ca37a866ee2e39641c85c0694a48",
+      "changed_during_census": true,
+      "final_delta_disposition": "PR29 latest receipts separately inspected; PR49/50/51 later review revisions observed but not semantically re-audited."
+    },
+    {
+      "pr": 50,
+      "branch": "review-finance",
+      "consulted_sha": "7155f90a6492597a3dd79cfcfda9330fef8be2a2",
+      "base": "sf2-control",
+      "base_sha": "d3d411f7e2476a562a57aa7620823980eaf34e46",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/50",
+      "mission_expected_sha": null,
+      "changed_since_mission": false,
+      "final_recheck_sha": "628f1f26b0fcd679d09c47b976b81d9b1ee92ba0",
+      "changed_during_census": true,
+      "final_delta_disposition": "PR29 latest receipts separately inspected; PR49/50/51 later review revisions observed but not semantically re-audited."
+    },
+    {
+      "pr": 49,
+      "branch": "review-operations",
+      "consulted_sha": "048b46acd3d70dc7ddafbea9e9b439f0d2e781d9",
+      "base": "sf2-control",
+      "base_sha": "d3d411f7e2476a562a57aa7620823980eaf34e46",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/49",
+      "mission_expected_sha": null,
+      "changed_since_mission": false,
+      "final_recheck_sha": "c7171a4d038cd807dd4ca5510243d3641cf74eef",
+      "changed_during_census": true,
+      "final_delta_disposition": "PR29 latest receipts separately inspected; PR49/50/51 later review revisions observed but not semantically re-audited."
+    },
+    {
+      "pr": 48,
+      "branch": "ui-source",
+      "consulted_sha": "1bf7bfff20c5f04dfc0b6faf9ab41024a2feb326",
+      "base": "interface-resume",
+      "base_sha": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/48",
+      "mission_expected_sha": "1bf7bfff20c5f04dfc0b6faf9ab41024a2feb326",
+      "changed_since_mission": false,
+      "final_recheck_sha": "1bf7bfff20c5f04dfc0b6faf9ab41024a2feb326",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 47,
+      "branch": "ui-work",
+      "consulted_sha": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+      "base": "interface-resume",
+      "base_sha": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/47",
+      "mission_expected_sha": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+      "changed_since_mission": false,
+      "final_recheck_sha": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 46,
+      "branch": "ui-recovery",
+      "consulted_sha": "db1dd1709483478ca2c8db2f0a479b72aea59821",
+      "base": "interface-resume",
+      "base_sha": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/46",
+      "mission_expected_sha": "db1dd1709483478ca2c8db2f0a479b72aea59821",
+      "changed_since_mission": false,
+      "final_recheck_sha": "db1dd1709483478ca2c8db2f0a479b72aea59821",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 45,
+      "branch": "ui-review",
+      "consulted_sha": "32bae2bcc8008b2e81948e434dc1e3326dc4f947",
+      "base": "interface-resume",
+      "base_sha": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/45",
+      "mission_expected_sha": "32bae2bcc8008b2e81948e434dc1e3326dc4f947",
+      "changed_since_mission": false,
+      "final_recheck_sha": "32bae2bcc8008b2e81948e434dc1e3326dc4f947",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 44,
+      "branch": "compose-resume",
+      "consulted_sha": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/44",
+      "mission_expected_sha": null,
+      "changed_since_mission": false,
+      "final_recheck_sha": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 43,
+      "branch": "interface-resume",
+      "consulted_sha": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/43",
+      "mission_expected_sha": null,
+      "changed_since_mission": false,
+      "final_recheck_sha": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 42,
+      "branch": "finance-resume",
+      "consulted_sha": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/42",
+      "mission_expected_sha": "ab38a14c09d2292553670033b8c1eaea1d26f31f",
+      "changed_since_mission": true,
+      "final_recheck_sha": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 41,
+      "branch": "collab-resume",
+      "consulted_sha": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/41",
+      "mission_expected_sha": "9ec98ac9cdc807d2b95040274f4312df768d932d",
+      "changed_since_mission": true,
+      "final_recheck_sha": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 40,
+      "branch": "astra-wp11",
+      "consulted_sha": "e8949be0e31952d5be4987c099003cd0b46e2add",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/40",
+      "mission_expected_sha": null,
+      "changed_since_mission": false,
+      "final_recheck_sha": "e8949be0e31952d5be4987c099003cd0b46e2add",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 39,
+      "branch": "astra-wp12",
+      "consulted_sha": "ba27411a7cda9301aa162680a94153a5e643be4d",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/39",
+      "mission_expected_sha": "ba27411a7cda9301aa162680a94153a5e643be4d",
+      "changed_since_mission": false,
+      "final_recheck_sha": "ba27411a7cda9301aa162680a94153a5e643be4d",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 38,
+      "branch": "astra-wp14",
+      "consulted_sha": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/38",
+      "mission_expected_sha": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+      "changed_since_mission": false,
+      "final_recheck_sha": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 37,
+      "branch": "astra-wp13",
+      "consulted_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/37",
+      "mission_expected_sha": null,
+      "changed_since_mission": false,
+      "final_recheck_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 36,
+      "branch": "astra-intelligence",
+      "consulted_sha": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/36",
+      "mission_expected_sha": null,
+      "changed_since_mission": false,
+      "final_recheck_sha": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 35,
+      "branch": "astra-finance",
+      "consulted_sha": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/35",
+      "mission_expected_sha": null,
+      "changed_since_mission": false,
+      "final_recheck_sha": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 34,
+      "branch": "astra-operations",
+      "consulted_sha": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/34",
+      "mission_expected_sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "changed_since_mission": true,
+      "final_recheck_sha": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 33,
+      "branch": "astra-collaboration",
+      "consulted_sha": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/33",
+      "mission_expected_sha": null,
+      "changed_since_mission": false,
+      "final_recheck_sha": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 32,
+      "branch": "astra-compose",
+      "consulted_sha": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/32",
+      "mission_expected_sha": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "changed_since_mission": false,
+      "final_recheck_sha": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 31,
+      "branch": "astra-interface",
+      "consulted_sha": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/31",
+      "mission_expected_sha": null,
+      "changed_since_mission": false,
+      "final_recheck_sha": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 30,
+      "branch": "astra-wp09",
+      "consulted_sha": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/30",
+      "mission_expected_sha": null,
+      "changed_since_mission": false,
+      "final_recheck_sha": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 29,
+      "branch": "astra-wp10",
+      "consulted_sha": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/29",
+      "mission_expected_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "changed_since_mission": true,
+      "final_recheck_sha": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+      "changed_during_census": true,
+      "final_delta_disposition": "PR29 latest receipts separately inspected; PR49/50/51 later review revisions observed but not semantically re-audited."
+    },
+    {
+      "pr": 28,
+      "branch": "astra-wp08",
+      "consulted_sha": "08d808aa91696a30c6eb04293858fcae4fde4229",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/28",
+      "mission_expected_sha": null,
+      "changed_since_mission": false,
+      "final_recheck_sha": "08d808aa91696a30c6eb04293858fcae4fde4229",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 27,
+      "branch": "astra-wp07",
+      "consulted_sha": "9839a46aa8d4e379268b2a724050247e2a0d8aa1",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/27",
+      "mission_expected_sha": null,
+      "changed_since_mission": false,
+      "final_recheck_sha": "9839a46aa8d4e379268b2a724050247e2a0d8aa1",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 26,
+      "branch": "astra-wp06",
+      "consulted_sha": "e7fd8ff797441681f360e7775155a8cc2830280c",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/26",
+      "mission_expected_sha": null,
+      "changed_since_mission": false,
+      "final_recheck_sha": "e7fd8ff797441681f360e7775155a8cc2830280c",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 25,
+      "branch": "astra-wp01",
+      "consulted_sha": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/25",
+      "mission_expected_sha": null,
+      "changed_since_mission": false,
+      "final_recheck_sha": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 24,
+      "branch": "astra-wp05",
+      "consulted_sha": "0881fee21f07bf8a9a1153d7d55727837cdf497a",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/24",
+      "mission_expected_sha": null,
+      "changed_since_mission": false,
+      "final_recheck_sha": "0881fee21f07bf8a9a1153d7d55727837cdf497a",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 23,
+      "branch": "astra-wp04",
+      "consulted_sha": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/23",
+      "mission_expected_sha": null,
+      "changed_since_mission": false,
+      "final_recheck_sha": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 22,
+      "branch": "astra-wp03",
+      "consulted_sha": "90c467cea436daa24987ad68a588a7d80f91064e",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/22",
+      "mission_expected_sha": null,
+      "changed_since_mission": false,
+      "final_recheck_sha": "90c467cea436daa24987ad68a588a7d80f91064e",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 21,
+      "branch": "astra-wp02",
+      "consulted_sha": "6ce14163ec6de963b50ada3d610aa8161176adee",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/21",
+      "mission_expected_sha": null,
+      "changed_since_mission": false,
+      "final_recheck_sha": "6ce14163ec6de963b50ada3d610aa8161176adee",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    },
+    {
+      "pr": 20,
+      "branch": "astra-wp00",
+      "consulted_sha": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/20",
+      "mission_expected_sha": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+      "changed_since_mission": false,
+      "final_recheck_sha": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+      "changed_during_census": false,
+      "final_delta_disposition": "UNCHANGED_AT_RECHECK"
+    }
+  ],
+  "late_wp10": {
+    "new_publication_head": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+    "unchanged_product_candidate": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+    "comparison": {
+      "url": "https://github.com/gustavomhss/Orchestra-SF/compare/d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7...54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+      "source_cache": "/workspace/scratch/c5cd980b8fbf/cache/wp10-late-delta.json",
+      "sha256": "8939691b397e940e2364ca57f19987df494a6b986edb5558784547f6117cdeb5",
+      "ahead_by": 1,
+      "file_count": 40,
+      "only_added_WP10_receipts": true,
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/HANDOFF.md",
+          "sha": "ff67547a8b4bce811e3b34bbfc75aab530c150fc",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/comparisons/W29-W30.json",
+          "sha": "c7fd7447bb706467a512bfc917ba0b9e95aa0ec8",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/criteria-current-contribution.json",
+          "sha": "8a3d15a4f5a2bf4ff6e96691bb4d3bde2fd38840",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/delivery-files-manifest.json",
+          "sha": "7da77db4bd1ac1742f9bf6e6918b0cd33452ad07",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/final-ref-observation.json",
+          "sha": "ac3d6c992aecaca6043fec0d85d81fd6a929b824",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/outcomes.json",
+          "sha": "08dddfca45a3b291ab2064ec04ae9d8c588cbd18",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/receipt-consistency-review.json",
+          "sha": "c10354eff90b9e5b18fd5201a41e6442aee58cf1",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/W30/CHECK30-artifacts.json",
+          "sha": "60948f9d926a3a7995876bb1fedbea4ad72d9dce",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/W30/CHECK30-jobs.json",
+          "sha": "5ddbb2c90d81982e1990ea76e5a85ac2ce4f608e",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/W30/CHECK30-provenance.json",
+          "sha": "ec90876a3af1a1a43042d25f4feba0a886a14608",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/W30/CHECK30-request.json",
+          "sha": "44644019c1aa76864506d1d59d99ae61500a5774",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/W30/CHECK30-run.json",
+          "sha": "9a82c3ba43ecb7b809cd44b9c07060bbd6bf7f0e",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/W30/CHECK30-terminal.json",
+          "sha": "da0d96f2e528bbed98548ec5a8689b14255399b4",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/W30/CHECK30.log.txt",
+          "sha": "ccce2f37c90077b6336fcde03cdb89968ebf0979",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/W30/SUMMARY.md",
+          "sha": "579bee1db3d2f997101d0d2cefaf7bd71e6c1053",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/W30/U30-artifacts.json",
+          "sha": "08944e0f51c515b2a160ffd22abef9ef99fda766",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/W30/U30-cleanup.log.txt",
+          "sha": "09d839cc3759696554b08bf8272f162592d0acc0",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/W30/U30-jobs.json",
+          "sha": "49595f8c3a15ce3dd49246381b1cc58a6472c022",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/W30/U30-provenance.json",
+          "sha": "8eb4ccd760a07900973ddf09e620c0343d2a3712",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/W30/U30-request.json",
+          "sha": "789d044c489eae96aef1877d98a249ba86d854ed",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/W30/U30-run.json",
+          "sha": "c4e2c1fd4481cd566c48da2da9a5719c3a703ccb",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/W30/U30-terminal.json",
+          "sha": "7bf85317d9383b0c83c6a0af6e8976bdb254f281",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/W30/U30-ui-phases.json",
+          "sha": "9c44dbdf278b7d0c3742219da2fe208274d71348",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/W30/U30.log.txt",
+          "sha": "337f421873b9eeeaf905b7fe7e0ef0ae88805de3",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/W30/files-manifest.json",
+          "sha": "199c58c89dae96d417859687c44db78f383e66d1",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/W30/log-manifest.json",
+          "sha": "d82f811d197841d0cd1e3b2e0adc952b65884658",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/X29/SUMMARY.md",
+          "sha": "9214b7e5b3faacc804cbe80f09c4b9ed887bf148",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/X29/X27-X29-comparison.json",
+          "sha": "f6b07d53720f39f260a274df5b46a4e46430bcef",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/X29/X27-baseline-traces.json",
+          "sha": "fe78788a4437ce1eb2b4e27471d31832cc4f159d",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/X29/X29-artifacts.json",
+          "sha": "08944e0f51c515b2a160ffd22abef9ef99fda766",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/X29/X29-cleanup.log.txt",
+          "sha": "b91ced5197f629a58172b3a75961b784537e64cd",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/X29/X29-jobs.json",
+          "sha": "1a96e3e23c6e1c1c5f5a4e03399bc839e6ee6c53",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/X29/X29-provenance.json",
+          "sha": "471b2603cc0a2f3664eff74ddfa6eb6cd4e6d9e8",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/X29/X29-request.json",
+          "sha": "e21191fec19858eeaf49109057fb9203ac72dd3b",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/X29/X29-run.json",
+          "sha": "5b0665a94f4c96871c61d260c81dedf7a71ac604",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/X29/X29-terminal.json",
+          "sha": "84b18f59c16346404e42649c3b2da7889875ff99",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/X29/X29-traces.json",
+          "sha": "8b88e15a984c3776a83676e2d504723e7ebc627c",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/X29/X29.log.txt",
+          "sha": "d87752bb906ce9d70c899d6aebb70e7dc231f8a0",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/X29/files-manifest.json",
+          "sha": "5768be8f8382dfcbe3fbfdaef0a9396655f2196b",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/runs/X29/log-manifest.json",
+          "sha": "c6fcb770ff6a85e59101bf1a7d879adcea51131b",
+          "status": "added"
+        }
+      ]
+    },
+    "limits": [
+      "Scoped late publication review only; all other original audit pins preserved.",
+      "Five new receipt bodies and both requested Actions metadata read; no fresh product execution or new tests.",
+      "Other runs remain original W/S published receipt claims, already covered in root audit; not relabeled as W30 executions.",
+      "No WP10.pack or other actor pack read in this subtask; normative equality checked against the root canonical proof-map.",
+      "No delivery-mode check result inferred from HANDOFF; this subtask was limited to U30/CHECK30."
+    ]
+  },
+  "diff_limit": {
+    "initial_compare_ahead_by": 60,
+    "initial_compare_behind_by": 21,
+    "returned_files": 300,
+    "complete_diff_claimed": false,
+    "warning": "Inherited product commits remain. New commit must have only two allowed namespace prefixes. PR is evidential; select admitted receipt blobs instead of merging its inherited branch tree."
+  }
+}
