@@ -1,6 +1,8 @@
 import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { DashboardPortfolio } from "../../../runtime/dashboard-portfolio.ts"
+import { object, rows } from "../../../runtime/contract.ts"
+import { sfSourceIdentity } from "../../../product/integration/source-lifecycle.ts"
 import { available } from "./relations-fixture.ts"
 import { createReviewAnswersFixture } from "./review-answers-fixture.ts"
 import { dispatchSfCapability } from "../../../product/host-binding/capability-dispatch.ts"
@@ -10,7 +12,9 @@ import { createSfHumanAuthority, sfHumanReadActions } from "../../../product/int
 import type { SfHumanAction } from "../../../product/integration/human-authority.ts"
 
 test("C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL", async () => {
+  const mark = checkpoints("preserved-answer")
   const f = await createReviewAnswersFixture()
+  mark("fixture-ready")
   try {
     let port = f.port
     if (!port.recipientActions || !port.answerReuse || !port.threadHistory) throw new Error("Review answer consumers unavailable")
@@ -20,15 +24,22 @@ test("C05 answers confirm only the preserved review, suppress one work item, and
     const before = await f.snapshots()
     await f.mutate("dashboard", DashboardPortfolio.domain, { page: "All Projects", action: "save", id: "project", version: before.dashboard.versions["projects:project"]!.version, values: { status: "On Hold" } })
     const afterDomain = await f.snapshots()
+    mark("question-and-source-change")
     const body = "C05-ANSWER: the old review preceded the later project pause."
     const replyMutation = { expectedStorageVersion: available(await port.storageVersion("threads", f.recipient)), idempotencyKey: "review-answer-response" }
     const replied = available(await port.recipientActions.reply(thread.id, body, replyMutation, await f.admit("reader-b", "collaboration.thread.reply", { id: thread.id, body, mutation: replyMutation })))
     expect(replied.messages[1]!.sourceContext).toEqual(f.basis)
+    mark("recipient-reply")
     const answerRef = available(await port.answerEvidence.issue(thread.id, replied.messages[1]!.id, f.recipient)).refId
+    const wrongReference = await port.answerReuse.prepare(thread.id, `${answerRef}0`, f.recipient)
+    expect(wrongReference).toEqual({ status: "unavailable", reason: "answer-observation-unavailable" })
+    expect(JSON.stringify(wrongReference)).not.toContain(body)
+    mark("exact-answer-reference-checked")
     const workSelection = await f.select("reader-b", f.recipient)
     const pending = available(await port.work.listPresentation(workSelection, f.recipient))
     expect(pending.items.filter((item) => item.actionRef === thread.id)).toMatchObject([{ state: "clarification-open", reviewContext: f.basis.reviewContext }])
     expect(await port.answerReuse.read(thread.id, f.recipient)).toEqual({ status: "needs-input", reason: "answer-unconfirmed" })
+    mark("unconfirmed-read")
     const httpHuman = createSfHumanAuthority({ origin: "https://example.test", ui: f.ui })
     const http = createCollaborationHttp({ origin: "https://example.test", mount: "/product", host: port, human: httpHuman, admitRead: async (request, operation, payload) => sfHumanReadActions.some((action) => action === operation) ? httpHuman.admit(request, operation as SfHumanAction, payload) : { status: "denied", reason: "unregistered-read" }, finishRead: httpHuman.finish })
     const httpPrepared = await http(new Request("https://example.test/product?sf=collaboration-answer-prepare", { method: "POST", headers: { origin: "https://example.test", "content-type": "application/json", actor: "reader-b" }, body: JSON.stringify({ questionId: thread.id, answerRef }) }))
@@ -38,7 +49,10 @@ test("C05 answers confirm only the preserved review, suppress one work item, and
     expect(JSON.parse(displayed)).toMatchObject({ status: "ok", value: { reviewContext: f.basis.reviewContext, answer: body } })
     expect(displayed).not.toContain("accessLeaseRef")
     expect(displayed).not.toContain("physicalIncarnation")
-    const prepared = available(await port.answerReuse.prepare(thread.id, answerRef, f.recipient))
+    mark("http-observation")
+    // Confirm the exact observation displayed by the real HTTP preparation.
+    // A second prepare would replace the human observation with an unshown one.
+    const prepared = JSON.parse(displayed).value
     expect(prepared.reviewContext).toEqual(f.basis.reviewContext)
     expect(prepared.scope.scopeDefinitionVersion).toBe("review-thread-c06-v1")
     expect(prepared.observedSourceVersion).toBe(f.source.target.version)
@@ -48,6 +62,7 @@ test("C05 answers confirm only the preserved review, suppress one work item, and
     const version = available(await port.storageVersion("threads", f.recipient))
     expect(available(await confirm())).toEqual({ answerRef, observedVersion: f.source.target.version })
     expect(available(await port.storageVersion("threads", f.recipient))).toBe(version)
+    mark("confirmation-retry")
     expect(available(await port.answerReuse.read(thread.id, f.recipient))).toMatchObject({ answerRef, answer: body, authorRef: "reader-b", observedVersion: f.source.target.version, reviewContext: f.basis.reviewContext })
     expect(available(await port.work.listPresentation(workSelection, f.recipient)).items.filter((item) => item.actionRef === thread.id)).toEqual([])
     expect(digestSfValue(available(await f.services.reviews.read(f.review.id, f.recipient)))).toBe(f.basis.reviewContext.reviewDigest)
@@ -63,6 +78,7 @@ test("C05 answers confirm only the preserved review, suppress one work item, and
     expect(shared).toMatchObject({ status: "unavailable", reason: "review-answer-output-contract-unavailable" })
     expect(JSON.stringify(shared)).not.toContain(body)
     expect(JSON.stringify(shared)).not.toContain(f.review.id)
+    mark("confirmed-read-work-and-shared-denial")
 
     // Reopen the actual SQLite file and compose new answer/host consumers. The
     // baseline survives; the old in-memory human observation is not resurrected.
@@ -73,7 +89,9 @@ test("C05 answers confirm only the preserved review, suppress one work item, and
     expect(available(await port.answerReuse.read(thread.id, f.recipient))).toMatchObject({ answerRef, answer: body, observedVersion: f.source.target.version, reviewContext: f.basis.reviewContext })
     expect(available(await port.work.listPresentation(workSelection, f.recipient)).items.filter((item) => item.actionRef === thread.id)).toEqual([])
     expect(await confirm()).toEqual({ status: "denied", reason: "answer-observation-unavailable" })
+    mark("sqlite-reopen-and-reuse")
     expect(available(await port.storageVersion("threads", f.recipient))).toBe(version)
+    mark("reopened-storage-unchanged")
 
     // Changing the answer invalidates its confirmation, while its preserved
     // source stays exact. My Work reopens one communication item with the C05 pin.
@@ -84,6 +102,7 @@ test("C05 answers confirm only the preserved review, suppress one work item, and
     expect(stale).toHaveLength(1)
     expect(stale).toMatchObject([{ state: "answer-stale", reason: "answer-changed", reviewContext: f.basis.reviewContext }])
     expect(available(await port.work.listPresentation(workSelection, f.recipient)).items.filter((item) => item.actionRef === thread.id)).toEqual(stale)
+    mark("answer-edit-and-stale-work")
     expect((await confirm()).status).not.toBe("ok")
     const currentAnswerRef = available(await port.answerEvidence.issue(thread.id, message.id, f.recipient)).refId
     expect(currentAnswerRef).not.toBe(answerRef)
@@ -97,6 +116,7 @@ test("C05 answers confirm only the preserved review, suppress one work item, and
     const resolution = { expectedStorageVersion: available(await port.storageVersion("threads", f.recipient)), idempotencyKey: "review-answer-resolve" }
     expect(available(await port.recipientActions.resolve(thread.id, resolution, await f.admit("reader-b", "collaboration.thread.resolve", { id: thread.id, mutation: resolution }))).state).toBe("resolved")
     expect(available(await port.answerReuse.read(thread.id, f.recipient))).toMatchObject({ answer: edit.body, reviewContext: f.basis.reviewContext })
+    mark("reconfirmation-history-and-resolution")
 
     // Current-source answers cannot inherit the C05 confirmation by text, ID
     // proximity or a still-current project selector.
@@ -108,17 +128,20 @@ test("C05 answers confirm only the preserved review, suppress one work item, and
     available(await port.recipientActions.reply(live.id, edit.body, liveReplyMutation, await f.admit("reader-b", "collaboration.thread.reply", { id: live.id, body: edit.body, mutation: liveReplyMutation })))
     expect(await port.answerReuse.read(live.id, f.recipient)).toEqual({ status: "needs-input", reason: "answer-unconfirmed" })
     expect(await dispatch(live.id)).toMatchObject({ status: "ok", result: { questionRef: live.id, answer: edit.body, state: "unconfirmed" } })
+    mark("distinct-current-source-answer")
     f.access["reader-b"] = false
     for (const result of [await port.answerReuse.read(thread.id, f.recipient), await port.answerReuse.prepare(thread.id, currentAnswerRef, f.recipient), await port.work.listPresentation(workSelection, f.recipient)]) {
       expect(result.status).not.toBe("ok")
       expect(JSON.stringify(result)).not.toContain("C05-ANSWER")
       expect(JSON.stringify(result)).not.toContain(f.review.id)
     }
-  } finally { await f.dispose() }
+  } finally { await f.dispose(); mark("disposed") }
 }, 120000)
 
 test("C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source", async () => {
+  const mark = checkpoints("current-lease")
   const f = await createReviewAnswersFixture()
+  mark("fixture-ready")
   try {
     const port = f.port
     if (!port.recipientActions || !port.answerReuse) throw new Error("Review answer consumers unavailable")
@@ -141,9 +164,11 @@ test("C05 confirmation refuses a lease revoked at commit and cannot revive a rep
       expect(JSON.stringify(refused)).not.toContain(body)
     } finally { f.human.authorize = authorize; f.access["reader-b"] = true }
     expect(available(await port.storageVersion("threads", f.recipient))).toBe(replyMutation.expectedStorageVersion)
+    mark("reply-denied-at-last-human-await")
     const reply = available(await port.recipientActions.reply(thread.id, body, replyMutation, await f.admit("reader-b", "collaboration.thread.reply", { id: thread.id, body, mutation: replyMutation })))
     const answerRef = available(await port.answerEvidence.issue(thread.id, reply.messages[1]!.id, f.recipient)).refId
     const observed = available(await port.answerReuse.prepare(thread.id, answerRef, f.recipient))
+    mark("reply-and-private-observation")
     const version = available(await port.storageVersion("threads", f.recipient))
     const confirmation = { expectedStorageVersion: version, idempotencyKey: "review-confirm-revoked-at-commit", observationRef: observed.observationRef, observedSourceVersion: observed.observedSourceVersion, expectedScopeFingerprint: observed.expectedScopeFingerprint }
     const transaction = f.state.transaction
@@ -159,17 +184,37 @@ test("C05 confirmation refuses a lease revoked at commit and cannot revive a rep
       expect(JSON.stringify(raced)).not.toContain(body)
     } finally { f.state.transaction = transaction; f.access["reader-b"] = true }
     expect(available(await port.storageVersion("threads", f.recipient))).toBe(version)
+    mark("confirmation-denied-at-commit")
     expect(await port.answerReuse.read(thread.id, f.recipient)).toEqual({ status: "needs-input", reason: "answer-unconfirmed" })
+    mark("unconfirmed-read")
     const fresh = available(await port.answerReuse.prepare(thread.id, answerRef, f.recipient))
     const retried = { ...confirmation, idempotencyKey: "review-confirm-after-human-review", observationRef: fresh.observationRef, observedSourceVersion: fresh.observedSourceVersion, expectedScopeFingerprint: fresh.expectedScopeFingerprint }
     available(await port.answerReuse.confirm(thread.id, answerRef, retried, await f.admit("reader-b", "collaboration.answer.confirm", { questionId: thread.id, answerRef, mutation: retried })))
     expect(available(await port.answerReuse.read(thread.id, f.recipient)).reviewContext).toEqual(f.basis.reviewContext)
+    mark("restored-access-confirmation")
     const current = await f.snapshots()
+    const oldPhysical = sfSourceIdentity(current.dashboard, "projects", "project")
+    if (!oldPhysical) throw new Error("Original physical source unavailable")
     await f.mutate("dashboard", DashboardPortfolio.domain, { page: "All Projects", action: "delete", id: "project", version: current.dashboard.versions["projects:project"]!.version, values: {} })
-    await f.mutate("dashboard", DashboardPortfolio.domain, { page: "All Projects", action: "save", version: 0, values: { name: "Replacement with the same text ID", status: "In Progress", risk: "Low" } }, "project")
+    // Canonical commands refuse a tombstoned ID. This is an explicit hostile
+    // storage replacement, checked by the actual physical lifecycle producer.
+    await f.persistence.transaction("dashboard", async (snapshot) => {
+      snapshot.data.projects = [...rows(snapshot.data.projects), { ...object(rows(current.dashboard.data.projects).find((row) => row.id === "project")), id: "project", name: "Replacement with the same text ID", status: "In Progress", notes: "Hostile physical replacement" }]
+      return { commit: true, value: undefined }
+    })
+    const replacement = await f.snapshots()
+    const replacedPhysical = sfSourceIdentity(replacement.dashboard, "projects", "project")
+    expect(replacedPhysical).toBeDefined()
+    expect(replacedPhysical?.incarnation).not.toBe(oldPhysical.incarnation)
     const replaced = await port.answerReuse.read(thread.id, f.recipient)
     expect(replaced.status).not.toBe("ok")
     expect(JSON.stringify(replaced)).not.toContain(body)
     expect(JSON.stringify(replaced)).not.toContain(f.review.id)
-  } finally { await f.dispose() }
+    mark("physical-replacement-denied")
+  } finally { await f.dispose(); mark("disposed") }
 }, 120000)
+
+function checkpoints(scenario: string) {
+  const started = performance.now()
+  return (stage: string) => console.info(`WP08_C05_STAGE ${scenario} ${stage} ${Math.round(performance.now() - started)}ms`)
+}

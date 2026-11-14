@@ -184,6 +184,10 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
     if (confirmed.some((person) => !person) || digestSfValue(current) !== digestSfValue(directory) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "recipient-directory-unavailable" }
     return { status: "ok", value: confirmed.filter((person): person is { id: string; name: string } => !!person).sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id)) }
   }
+  // A reference identifies a message; it does not authorize it. Derive it only
+  // from a thread already returned by the authenticated reader, then keep the
+  // canonical reread and answer-reuse source/commit fences below.
+  const answerReference = (questionId: string, message: { id: string; incarnation: string; version: number }) => `sf-thread-answer:${encodeURIComponent(questionId)}:${encodeURIComponent(message.id)}:${encodeURIComponent(message.incarnation)}:${message.version}`
   const answerReuse = input.confirmationSource ? createAnswerReusePort<T>({
     host: input.host,
     state: input.state,
@@ -197,28 +201,32 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
       if (visible.status !== "ok") return visible
       const message = visible.value.messages.findLast((entry, index) => index > 0 && entry.authorRef === visible.value.recipientRef)
       if (!message || visible.value.kind === "comment") return { status: "unavailable", reason: "answer-unavailable" }
-      const evidence = await answerEvidence.issue(questionId, message.id, context)
-      if (evidence.status !== "ok") return evidence
       const raw = await input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[questionId] : undefined)
-      if (raw.status !== "ok" || !isThread(raw.value) || raw.value.id !== questionId || digestSfValue(raw.value.messages) !== digestSfValue(visible.value.messages) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "answer-unavailable" }
-      return { status: "ok", value: { id: message.id, ref: evidence.value.refId, authorRef: message.authorRef, questionId, body: message.body, digest: digestSfValue({ questionId, ...message }), threadDigest: digestSfValue(raw.value) } }
+      if (raw.status !== "ok" || !isThread(raw.value) || raw.value.id !== questionId || raw.value.recipientRef !== visible.value.recipientRef || raw.value.kind !== visible.value.kind || raw.value.state !== visible.value.state || digestSfValue(raw.value.messages) !== digestSfValue(visible.value.messages) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "answer-unavailable" }
+      return { status: "ok", value: { id: message.id, ref: answerReference(questionId, message), authorRef: message.authorRef, questionId, body: message.body, digest: digestSfValue({ questionId, ...message }), threadDigest: digestSfValue(raw.value) } }
     },
     belongsToQuestion: answerEvidence.belongsToQuestion,
     scopeForAnswer: async (questionId, answerRef, context) => {
-      if (!await answerEvidence.belongsToQuestion(questionId, answerRef, context)) return { status: "unavailable", reason: "answer-scope-unavailable" }
-      const thread = await threadReads.read(questionId, context)
-      const answer = await answerEvidence.resolve(answerRef, context)
-      if (thread.status !== "ok" || answer.status !== "ok") return { status: "unavailable", reason: "answer-scope-unavailable" }
-      const message = thread.value.messages.find((entry) => entry.id === answer.value.target.recordId && entry.incarnation === answer.value.target.incarnation && entry.version === answer.value.target.version && entry.authorRef === thread.value.recipientRef)
+      // The display reader may pair current refs with an original observedVersion.
+      // Scope comes from the authorized canonical message basis, never that mixed
+      // display projection. Compare the entire deterministic answer reference.
+      const thread = await threadReads.readHistorical(questionId, context)
+      if (thread.status !== "ok" || thread.value.kind === "comment" || thread.value.id !== questionId) return { status: "unavailable", reason: "answer-scope-unavailable" }
+      const message = thread.value.messages.find((entry, index) => index > 0 && entry.authorRef === thread.value.recipientRef && answerReference(thread.value.id, entry) === answerRef)
       if (!message) return { status: "unavailable", reason: "answer-scope-unavailable" }
       const basis = threadMessageContext(thread.value, message)
       if (!basis) return { status: "unavailable", reason: "answer-scope-unavailable" }
       if (basis.reviewContext) {
         const source = input.reviewAnswerSource
-        if (!source || !await authority.reviewThreadBasis(basis, context) || !await authority.historicalSources(basis.evidenceRefs, context)) return { status: "unavailable", reason: "review-answer-confirmation-scope-unavailable" }
+        const resolve = source?.resolve
+        if (!source || !resolve || !await authority.historicalSources(basis.evidenceRefs, context)) return { status: "unavailable", reason: "review-answer-confirmation-scope-unavailable" }
         const reviewBasis = { ...basis, reviewContext: basis.reviewContext }
-        const derived = await source.resolve(reviewBasis, context)
-        if (derived.status !== "ok" || input.reviewAnswerSource !== source || !await authority.reviewThreadBasis(reviewBasis, context)) return { status: "unavailable", reason: "review-answer-confirmation-scope-unavailable" }
+        const current = () => input.reviewAnswerSource === source && source.resolve === resolve
+        if (!current()) return { status: "unavailable", reason: "review-answer-confirmation-scope-unavailable" }
+        // resolve performs the producer's two current C05 reads. Repeating the
+        // whole authorizer around it would recollect exactly the same sources.
+        const derived = await resolve.call(source, reviewBasis, context)
+        if (derived.status !== "ok" || !current() || !await input.host.revalidate(context) || !current()) return { status: "unavailable", reason: "review-answer-confirmation-scope-unavailable" }
         return { status: "ok", value: { scope: derived.value.scope, reviewBasis } }
       }
       if (!basis.evidenceRefs.length || basis.evidenceRefs.some((ref) => ref.kind !== "record")) return { status: "unavailable", reason: "answer-scope-unavailable" }

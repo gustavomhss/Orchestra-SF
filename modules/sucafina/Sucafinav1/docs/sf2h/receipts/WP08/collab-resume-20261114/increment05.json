@@ -1,0 +1,88 @@
+{
+  "schema": "sf2h.collab-resume.increment.v1",
+  "increment": "W5",
+  "origin_pr": 33,
+  "delivery_pr": 41,
+  "base_sha": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+  "base_tree": "44a6c14f500f88dc8b01f82f64dedb6cc4d3c47f",
+  "status": "IMPLEMENTED_PENDING_HOSTED_VALIDATION",
+  "trigger": {
+    "run_id": 43616934900,
+    "job_id": 132513933634,
+    "product_sha": "20821df310ebc6ea08ccab27e829008d72a04de6",
+    "snapshot_sha": "161f5f9b547dcb7ca7868a70ab0ffa05413131b3",
+    "conclusion": "failure",
+    "counts": {
+      "pass": 29,
+      "fail": 4,
+      "error": 1,
+      "expect_calls": 518
+    },
+    "findings": [
+      "WP07 syntax error already corrected by W3",
+      "Two C05 answer journeys exceeded unchanged 120000ms deadline",
+      "Historical answer reuse returned unavailable instead of stale"
+    ]
+  },
+  "changes": [
+    "Derive answer identity from the same authenticated message; retain canonical reread, current ACL, belongs-to-question, source observation and commit fences.",
+    "Derive confirmation scope from the authenticated historical message basis; preserve later current-source answers and expected stale classification.",
+    "Prepare full-review source leases without repeating the complete C05 read already authenticated by the adapter.",
+    "Confirm the exact observation returned by HTTP; retain all previous assertions and add exact-reference and physical-incarnation counterexamples.",
+    "Add content-free phase timings; retain both journeys and their original 120000ms deadlines. No claimed performance result before hosted execution."
+  ],
+  "manifest_sha256": "0dc06542fce3e77ebaf0c5d77846bb734cd99fb9f6d0d087400874718134d16d",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "preimage_blob": "119f642392a046dabc280c785acd2ad1fa65a838",
+      "postimage_blob": "d80d441aa5775a3747303a60161e5a049f84ac16",
+      "postimage_sha256": "af2fa984081282b83371da97ab36cb0651f0412288e5c4f70ca7bad4e33a21ba"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answers-fixture.ts",
+      "preimage_blob": "55a72783e18a18b0f267b45e4b2b09dd41b244ae",
+      "postimage_blob": "be15f9ad9c6477491fd0c9418ac776ea97199d68",
+      "postimage_sha256": "c65c3f308423b6431a99c5537b1cd46117ab02f242c6b065adeab6c379b52866"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "preimage_blob": "7a97f5f1b8f3728c49f64f0b49c84ac91d98919c",
+      "postimage_blob": "16b38f72bcbb6046647a7c0dde90b67d51e95029",
+      "postimage_sha256": "8a0d60e4a0b9b6cc44ea093d72feedae63a3610880b0d0d9714f2189574388c2"
+    }
+  ],
+  "independent_review": {
+    "reviewer": "wp09_audit",
+    "status": "APPROVED_FOR_HOSTED_VALIDATION",
+    "physical_oracle_finding": "Fixed before publication: compare two defined physical incarnations from before deletion and after hostile replacement.",
+    "runtime_or_native_success_claimed": false
+  },
+  "next_selection": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp07/review-thread-context.test.ts",
+      "./Sucafinav1/test/product/wp08/case-selection-cas.test.ts",
+      "./Sucafinav1/test/product/wp08/review-recipient-authority.test.ts",
+      "./Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "./Sucafinav1/test/product/wp08/thread-history-continuity.test.ts",
+      "./Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+      "./Sucafinav1/test/product/wp08/answer-first-confirm-http.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "request_sha256": "1a023927eb151674cc2763b489b9cb7b0abb65c7d3845fd9cedf397a2f11168d",
+  "unchanged_limits": {
+    "human_observation_expiry_ms": 300000,
+    "test_deadline_ms": 120000,
+    "local_product_tests": false,
+    "foreign_paths_edited": false,
+    "global_DONE": false
+  }
+}

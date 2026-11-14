@@ -82,7 +82,10 @@ export async function createReviewAnswersFixture() {
   const review = available(await services.reviews.preserve({ id: "review-answer-original", selectionRef: "project-original-selection", sectionRefs: ["project"], expectedStorageVersion: reviewStorageVersion, idempotencyKey: "review-answer-preserve", targetIncarnation: f.creationTarget.incarnation }, f.author))
   const reviewPort = services.reviews
   const composeAnswerSource = () => createReviewAnswerSource({ reviews: reviewPort, host: f.host, prepareAccess: async (pin, basis, selected, context) => {
-    if (!services || !access[context.binding.principalRef] || !await services.threadContext.authorize(pin, basis, context) || digestSfValue(selected) !== pin.reviewDigest) return { status: "denied", reason: "review-access-unavailable" }
+    // The adapter has just authenticated the full C05 twice. This producer
+    // prepares current ACL/physical leases for every original section source;
+    // it does not repeat the complete review read or cache a successful grant.
+    if (!services || !access[context.binding.principalRef] || !await f.host.revalidate(context) || digestSfValue(selected) !== pin.reviewDigest || digestSfValue(basis.reviewContext) !== digestSfValue(pin)) return { status: "denied", reason: "review-access-unavailable" }
     const references = allReferences(selected.sections)
     if (!references.length || references.some((ref) => ref.kind !== "record")) return { status: "unavailable", reason: "review-source-unavailable" }
     const records = references.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> => ref.kind === "record")
