@@ -15,7 +15,7 @@ test("historical contribution survives SQLite reopen and requires current access
   const request = new Request("https://example.test/history")
   const authority = { principalRef: "principal", policyVersion: "policy-current", accessRevision: "access-current" }
   const context = { kind: "ui", binding: authority } as unknown as TrustedDomainContext
-  const access = { case: true, source: true, revokeAtSecondVerification: false, verifications: 0, mutateAtVerification: 0, mutateAtEgress: false }
+  const access = { case: true, source: true, revokeAtSecondVerification: false, verifications: 0, mutateAtVerification: 0, mutateAtEgress: false, cyclicAtVerification: 0 }
   const retained: { output?: ContributionEnvelope } = {}
   const fixture = sfRunFixture()
   const open = async () => {
@@ -30,6 +30,7 @@ test("historical contribution survives SQLite reopen and requires current access
         access.verifications++
         retained.output = output
         if (access.mutateAtVerification === access.verifications) output.createdAt = "2026-11-14T00:00:00Z"
+        if (access.cyclicAtVerification === access.verifications) Object.assign(output, { evidenceRefs: [output] })
         if (!access.source || (access.revokeAtSecondVerification && access.verifications % 2 === 0)) return { status: "denied", reason: "source-access-revoked" }
         return { status: "ok", value: true }
       } })
@@ -78,6 +79,12 @@ test("historical contribution survives SQLite reopen and requires current access
         expect(await reopened.read(selection, context)).toEqual({ status: "denied", reason: "historical-verification-mutated-input" })
       }
       access.mutateAtVerification = 0
+      for (const phase of [1, 2]) {
+        access.verifications = 0
+        access.cyclicAtVerification = phase
+        expect(await reopened.read(selection, context)).toEqual({ status: "denied", reason: "historical-verification-mutated-input" })
+      }
+      access.cyclicAtVerification = 0
       access.verifications = 0
       access.mutateAtEgress = true
       expect(await reopened.read(selection, context)).toEqual({ status: "denied", reason: "historical-verification-mutated-input" })
